@@ -21,7 +21,6 @@ import MessageAlert from '../../../../components/MessageAlert';
 import { FormCategoryDeleteMutation } from '../../graphql/form_category_mutations';
 import { formatError } from '../../../../utils/helpers';
 
-
 export default function Form({ editMode, formId }) {
   const [categoryFormOpen, setCategoryFormOpen] = useState(false);
   const [propertyFormOpen, setPropertyFormOpen] = useState(false);
@@ -35,8 +34,8 @@ export default function Form({ editMode, formId }) {
   const { data: formDetailData, loading } = useQuery(FormQuery, { variables: { id: formId } });
   const { formState, saveFormData, setFormState } = useContext(FormContext);
   const authState = useContext(Context);
-  const history = useHistory()
-  const [categoryDelete, { loading: isDeleting, error }] = useMutation(FormCategoryDeleteMutation)
+  const history = useHistory();
+  const [categoryDelete, { loading: isDeleting, error }] = useMutation(FormCategoryDeleteMutation);
 
   function handleEditCategory(category) {
     setCategoryFormOpen(true);
@@ -50,13 +49,13 @@ export default function Form({ editMode, formId }) {
   function handleDeleteCategory(category) {
     categoryDelete({
       variables: { categoryId: category, formId }
-    }).then((res) => {
+    }).then(res => {
       const formPropResponse = res.data.categoryDelete;
       if (formPropResponse.message === 'New version created') {
         history.push(`/edit_form/${formPropResponse.newFormVersion.id}`);
       }
-      categoriesData.refetch()
-    })
+      categoriesData.refetch();
+    });
   }
 
   function handleAddField(catId) {
@@ -81,12 +80,12 @@ export default function Form({ editMode, formId }) {
   }
 
   useEffect(() => {
-    if(formState?.successfulSubmit) {
+    if (formState?.successfulSubmit) {
       // Reset Form
       history.push(`/form/${formId}/${formDetailData.form?.name}`);
       window.location.reload();
     }
-  }, [formState.successfulSubmit])
+  }, [formState.successfulSubmit]);
 
   const formData = flattenFormProperties(categoriesData.data?.formCategories);
 
@@ -125,7 +124,14 @@ export default function Form({ editMode, formId }) {
           <DialogContentText component="div">
             <FormPreview
               loading={formState.isSubmitting}
-              handleFormSubmit={() => saveFormData(formData, formId, authState.user.id, categoriesData.data?.formCategories)}
+              handleFormSubmit={() =>
+                saveFormData(
+                  formData,
+                  formId,
+                  authState.user.id,
+                  categoriesData.data?.formCategories
+                )
+              }
               categoriesData={categoriesData}
             />
           </DialogContentText>
@@ -141,16 +147,20 @@ export default function Form({ editMode, formId }) {
           description={formDetailData.form?.description}
         />
       )}
-
-      <CategoryList
-        categoriesData={categoriesData}
-        editMode={editMode}
-        formId={formId}
-        propertyFormOpen={propertyFormOpen}
-        categoryId={categoryId}
-        categoryItem={{ handleAddField, handleEditCategory, handleDeleteCategory }}
-        loading={isDeleting}
-      />
+      <div
+        data-testid="category-list-container"
+        style={formState.isSubmitting ? { opacity: '0.3', pointerEvents: 'none' } : {}}
+      >
+        <CategoryList
+          categoriesData={categoriesData}
+          editMode={editMode}
+          formId={formId}
+          propertyFormOpen={propertyFormOpen}
+          categoryId={categoryId}
+          categoryItem={{ handleAddField, handleEditCategory, handleDeleteCategory }}
+          loading={isDeleting}
+        />
+      </div>
       <br />
       {editMode && (
         <Button
@@ -173,9 +183,12 @@ export default function Form({ editMode, formId }) {
             aria-label="form_submit"
             style={{ marginTop: '25px' }}
             onClick={() => formSubmit(formData)}
+            disabled={formState.isSubmitting}
             data-testid="submit_form_btn"
           >
-            {t('common:form_actions.submit')}
+            {!formState.isSubmitting
+              ? t('common:form_actions.submit')
+              : t('common:form_actions.submitting')}
           </Button>
         </CenteredContent>
       )}
@@ -185,5 +198,5 @@ export default function Form({ editMode, formId }) {
 
 Form.propTypes = {
   editMode: PropTypes.bool.isRequired,
-  formId: PropTypes.string.isRequired,
+  formId: PropTypes.string.isRequired
 };
