@@ -59,7 +59,7 @@ module Mutations
           guest_id: user.id,
           granted_at: Time.zone.now,
           grantor_id: grantor.id,
-          granted_state: 1,
+          granted_state: 3,
         )
       end
 
