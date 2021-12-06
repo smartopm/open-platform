@@ -40,6 +40,8 @@ describe('Form Component', () => {
         </BrowserRouter>
       </MockedProvider>
     );
+
+    expect(wrapper.queryByTestId('category-list-container')).toBeInTheDocument();
     expect(wrapper.queryByTestId('add_category').textContent).toContain(
       'form:actions.add_category'
     );
@@ -48,11 +50,33 @@ describe('Form Component', () => {
     expect(wrapper.queryByText('form_fields.name')).toBeInTheDocument();
     expect(wrapper.queryByText('form_fields.description')).toBeInTheDocument();
     expect(wrapper.queryAllByText('form_fields.rendered_text')[0]).toBeInTheDocument();
-    expect(wrapper.queryAllByTestId('loader')[0]).toBeInTheDocument()
+    expect(wrapper.queryAllByTestId('loader')[0]).toBeInTheDocument();
 
     await waitFor(() => {
-        expect(wrapper.queryByText('Another Registry V2')).toBeInTheDocument();
-        expect(wrapper.queryByText('This is a customs form')).toBeInTheDocument();
-    }, 50)
+      expect(wrapper.queryByText('Another Registry V2')).toBeInTheDocument();
+      expect(wrapper.queryByText('This is a customs form')).toBeInTheDocument();
+    }, 50);
+  });
+
+  it('should render without crashing if editMode is false', async () => {
+    const wrapper = render(
+      <MockedProvider mocks={[formMock]} addTypename={false}>
+        <BrowserRouter>
+          <FormContextProvider>
+            <Form formId="7d05e98e-e6bb-43cb-838e-e6d76005e326" />
+          </FormContextProvider>
+        </BrowserRouter>
+      </MockedProvider>
+    );
+
+    expect(wrapper.queryByTestId('category-list-container')).toBeInTheDocument();
+    expect(wrapper.queryByTestId('submit_form_btn').textContent).toContain(
+      'common:form_actions.submit'
+    );
+
+    await waitFor(() => {
+      expect(wrapper.queryByText('Another Registry V2')).toBeInTheDocument();
+      expect(wrapper.queryByText('This is a customs form')).toBeInTheDocument();
+    }, 50);
   });
 });
