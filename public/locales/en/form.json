@@ -22,6 +22,7 @@
     "created_form_category": "Successfully created a category",
     "updated_form_category": "Successfully updated a category",
     "form_submitted": "You have successfully submitted the form",
+    "saved_as_draft": "You have successfully saved the form as draft",
     "required_fields_empty": "Required fields must be filled",
     "no_form_entries": "No Form Entries Available",
     "submission_date": "Date of Submitted",

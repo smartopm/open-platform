@@ -71,16 +71,22 @@ export default function Form({ editMode, formId }) {
     setFormState({ ...formState, previewable: false });
   }
 
-  function formSubmit(propertiesData) {
+  function formSubmit(propertiesData, status) {
     if (formDetailData.form?.preview) {
       setFormState({ ...formState, previewable: formDetailData.form?.preview });
       return;
     }
-    saveFormData(propertiesData, formId, authState.user.id, categoriesData.data?.formCategories);
+    saveFormData(
+      propertiesData,
+      formId,
+      authState.user.id,
+      categoriesData.data?.formCategories,
+      status
+    );
   }
 
   useEffect(() => {
-    if (formState?.successfulSubmit) {
+    if (formState?.successfulSubmit && !formState?.isDraft) {
       // Reset Form
       history.push(`/form/${formId}/${formDetailData.form?.name}`);
       window.location.reload();
@@ -176,6 +182,18 @@ export default function Form({ editMode, formId }) {
       )}
       {!editMode && (
         <CenteredContent>
+          <Button
+            variant="outlined"
+            type="submit"
+            color="secondary"
+            aria-label="form_draft"
+            style={{ margin: '25px 25px 0 0' }}
+            onClick={() => formSubmit(formData, 'draft')}
+            disabled={formState.isSubmitting}
+            data-testid="save_as_draft"
+          >
+            {t('common:form_actions.save_as_draft')}
+          </Button>
           <Button
             variant="outlined"
             type="submit"

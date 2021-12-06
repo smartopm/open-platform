@@ -60,7 +60,7 @@ export default function FormContextProvider({ children }) {
    * @param {String} formId form being submitted
    * @param {String} userId  the currently logged in user
    */
-  function saveFormData(formData, formId, userId, categories) {
+  function saveFormData(formData, formId, userId, categories, formStatus = null) {
     setFormState({
         ...formState,
         isSubmitting: true
@@ -93,7 +93,7 @@ export default function FormContextProvider({ children }) {
     formData.map(prop => addPropWithValue(filledInProperties, prop.id));
     const cleanFormData = JSON.stringify({ user_form_properties: filledInProperties });
 
-    if (requiredFieldIsEmpty(filledInProperties, categories)) {
+    if (requiredFieldIsEmpty(filledInProperties, categories) && formStatus !== 'draft') {
       setFormState({
         ...formState,
         error: true,
@@ -110,6 +110,7 @@ export default function FormContextProvider({ children }) {
       variables: {
         formId,
         userId,
+        status: formStatus,
         propValues: cleanFormData
       }
     })
@@ -129,11 +130,12 @@ export default function FormContextProvider({ children }) {
         setFormState({
             ...formState,
             error: false,
-            info: t('misc.form_submitted'),
+            info: (formStatus === 'draft' ? t('misc.saved_as_draft') : t('misc.form_submitted')),
             alertOpen: true,
             isSubmitting: false,
             previewable: false,
             successfulSubmit: true,
+            isDraft: formStatus === 'draft'
           })
       })
       .catch(err => {

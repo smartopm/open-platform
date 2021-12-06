@@ -47,6 +47,7 @@ export const UserFragment = {
         id
         status
         createdAt
+        userId
         form {
           id
           name
