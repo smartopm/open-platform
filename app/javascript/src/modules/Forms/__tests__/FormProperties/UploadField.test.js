@@ -21,4 +21,16 @@ describe('Upload component', () => {
     expect(container.queryByText('form:misc.upload_file')).toBeInTheDocument()
     expect(container.queryByText('Image Label *')).toBeInTheDocument()
   })
+
+  it('should show validation error message', () => {
+    const handler = jest.fn()
+    const props = {
+        upload: handler,
+        handleValue: jest.fn(),
+        detail: { status: '', type: 'file', label: 'Image Label', required: true },
+        editable: false
+    }
+    const rendered = render(<Upload {...props} inputValidation={{error: true}} />)
+    expect(rendered.queryByText('form:errors.required_field')).toBeInTheDocument()
+  })
 })

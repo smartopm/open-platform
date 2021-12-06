@@ -212,6 +212,10 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
             upload={evt => onImageSelect(evt, formPropertiesData.id)}
             editable={editable}
             uploaded={!!uploadedFile}
+            inputValidation={{
+              error: checkRequiredFormPropertyIsFilled(formPropertiesData, formState),
+              fieldName: formPropertiesData.fieldName,
+            }}
           />
         </Grid>
         {formState.isUploading && formState.currentPropId === formPropertiesData.id ? (
