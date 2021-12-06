@@ -37,6 +37,8 @@ module Mutations
         u_form
       end
 
+      # rubocop:disable Metrics/AbcSize
+      # rubocop:disable Metrics/MethodLength
       def create_form_user(form, vals)
         unless form.multiple_submissions_allowed
           raise_multiple_submissions_error(form, vals[:user_id])
@@ -54,6 +56,8 @@ module Mutations
           raise GraphQL::ExecutionError, form_user.errors.full_messages
         end
       end
+      # rubocop:enable Metrics/MethodLength
+      # rubocop:enable Metrics/AbcSize
 
       def add_user_form_properties(form_user, vals)
         JSON.parse(vals[:prop_values])['user_form_properties'].each do |value|
