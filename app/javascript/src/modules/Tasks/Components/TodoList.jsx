@@ -69,7 +69,7 @@ export default function TodoList({
   const [searchText, setSearchText] = useState('');
   const debouncedSearchText = useDebounce(searchText, 500);
   const debouncedFilterInputText = useDebounce(userNameSearchTerm, 500);
-  const [taskUpdateStatus, setTaskUpdateStatus] = useState({ message: '', success: false, isUpdating:  false })
+  const [taskUpdateStatus, setTaskUpdateStatus] = useState({ message: '', success: false })
   const [checkedOptions, setCheckOptions] = useState('none')
   const taskQuery = {
     completedTasks: 'completed: true',
@@ -226,10 +226,6 @@ export default function TodoList({
   }
 
   function handleCompleteNote(noteId, completed) {
-    setTaskUpdateStatus({
-      ...taskUpdateStatus,
-      isUpdating: true
-    })
     taskUpdate({
       variables: { id: noteId, completed: !completed }
     })
@@ -238,7 +234,6 @@ export default function TodoList({
           ...taskUpdateStatus,
           success: true,
           message: `${t('task.task_marked_as')} ${completed ? t('task.incomplete') : t('task.complete')}`,
-          isUpdating: false
         })
         refetch()
       })
@@ -247,7 +242,6 @@ export default function TodoList({
           ...taskUpdateStatus,
           success: false,
           message: formatError(err.message),
-          isUpdating: false
         })
       })
   }
@@ -572,7 +566,6 @@ export default function TodoList({
                     handleCompleteNote={handleCompleteNote}
                     handleAddSubTask={handleAddSubTask}
                     handleUploadDocument={handleUploadDocument}
-                    isUpdating={taskUpdateStatus.isUpdating}
                   />
                 ))}
               </div>
