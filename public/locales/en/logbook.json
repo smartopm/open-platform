@@ -134,6 +134,7 @@
     "entered_at": "Entered at {{time}}",
     "visits": "Visits",
     "manual_entry": "Manual entry",
+    "scanned_entry": "Scanned entry",
     "pending": "Pending",
     "approved": "Approved",
     "phone_number_not_available": "Phone number not available"

@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 /* eslint-disable no-nested-ternary */
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
@@ -89,7 +90,7 @@ export default function VisitView({
           >
             <Grid container spacing={1}>
               <Grid item md={2} xs={5}>
-                <Avatar alt={visit.name} className={classes.avatar} variant="square">
+                <Avatar alt={visit.name} className={classes.avatar} variant="square" data-testid="request_avatar">
                   {visit.name.charAt(0)}
                 </Avatar>
               </Grid>
@@ -98,8 +99,8 @@ export default function VisitView({
                   {visit.name}
                 </Typography>
                 <br />
-                <Typography variant="caption">
-                  {`${visit.guestId ? t('logbook:logbook.host'): t('logbook:log_title.guard')}: `}
+                <Typography variant="caption" data-testid="host_title">
+                  {`${visit.guestId && visit.grantedState === 1 ? t('logbook:logbook.host'): t('logbook:log_title.guard')}: `}
                   {' '}
                 </Typography>
                 <Text
@@ -158,9 +159,9 @@ export default function VisitView({
                   </Button>
                 )}
               </Grid>
-              <Grid item md={3} xs={6} style={!matches ? { paddingTop: '15px' } : {}}>
+              <Grid item md={3} xs={6} style={!matches ? { paddingTop: '15px' } : {}} data-testid="entry_state">
                 {
-                  visit.guestId
+                  visit.guestId && visit.grantedState === 1
                   ? (
                     <Chip
                       label={
@@ -176,6 +177,14 @@ export default function VisitView({
                         marginRight: '16px'
                       }}
                       data-testid="guest_validity"
+                      size="small"
+                    />
+                  )
+                  : visit.grantedState === 3 ? (
+                    <Chip
+                      label={t('guest_book.scanned_entry')}
+                      style={{ backgroundColor: theme.palette.info.main, color: 'white', }}
+                      data-testid="scanned_entry"
                       size="small"
                     />
                   )

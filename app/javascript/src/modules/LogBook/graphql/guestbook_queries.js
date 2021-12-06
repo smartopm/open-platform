@@ -61,6 +61,7 @@ export const CurrentGuestEntriesQuery = gql`
       }
       exitedAt
       grantedAt
+      grantedState
       status
       guestId
     }
