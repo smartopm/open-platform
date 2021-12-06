@@ -57,6 +57,8 @@ RSpec.describe Mutations::ActivityLog::Add do
                                               }).as_json
       expect(result['errors']).to be_nil
       expect(user.community.entry_requests.count).to eql 1
+      request = user.community.entry_requests.find_by(guest_id: user.id)
+      expect(request.granted_state).to eql 3
     end
 
     it 'should grant access to an entry_request if request already exist' do
