@@ -851,25 +851,22 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
                 </>
               </FeatureCheck>
               <AccessCheck module="entry_request" allowedPermissions={['can_update_entry_request']}>
-                {
-                  communityName !== 'Nkwashi'  && (
-                    <Grid item>
-                      <Button
-                        onClick={event => handleModal(event, 'create')}
-                        color="primary"
-                        disabled={isLoading}
-                        data-testid="entry_user_next"
-                        startIcon={isLoading && <Spinner />}
-                      >
-                        {
+                <FeatureCheck features={authState?.user?.community?.features} name="LogBook" subFeature={CommunityFeaturesWhiteList.guestVerification}>
+                  <Grid item>
+                    <Button
+                      onClick={event => handleModal(event, 'create')}
+                      color="primary"
+                      disabled={isLoading}
+                      data-testid="entry_user_next"
+                      startIcon={isLoading && <Spinner />}
+                    >
+                      {
                           t('logbook:logbook.next_step')
                         }
-                      </Button>
-                    </Grid>
-                )
-              }
+                    </Button>
+                  </Grid>
+                </FeatureCheck>
               </AccessCheck>
-
             </Grid>
             <br />
           </>
