@@ -124,7 +124,7 @@ export default function TaskInfoTop({
           )}
         </Grid>
         {!editingBody && (
-          <Grid item xs={2} md={1} data-testid="edit_body_action">
+          <Grid item xs={2} md={2} data-testid="edit_body_action" style={{textAlign: 'right'}}>
             <IconButton
               onClick={() => setEditingBody(true)}
               data-testid="edit_body_icon"
@@ -150,7 +150,7 @@ export default function TaskInfoTop({
             </Button>
           </Grid>
         )}
-        <Grid item md={1} xs={1}>
+        <Grid item md={1} xs={1} style={{textAlign: 'right'}}>
           <IconButton
             edge="end"
             onClick={event => menuData.handleTaskInfoMenu(event)}
