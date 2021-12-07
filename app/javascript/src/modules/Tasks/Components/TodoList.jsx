@@ -599,7 +599,7 @@ export default function TodoList({
             )}
             <br />
             <CenteredContent>
-              <Paginate offSet={offset} limit={limit} active={offset >= 1} handlePageChange={paginate} />
+              <Paginate count={data?.flaggedNotes?.length} offSet={offset} limit={limit} active={offset >= 1} handlePageChange={paginate} />
             </CenteredContent>
           </>
         )}

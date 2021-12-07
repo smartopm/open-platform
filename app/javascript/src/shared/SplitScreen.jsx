@@ -10,6 +10,7 @@ export default function SplitScreen({ children, open, onClose, classes }) {
       open={open}
       onClose={onClose}
       classes={classes}
+      data-testid='drawer'
     >
       {children}
     </Drawer>
