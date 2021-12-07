@@ -5,8 +5,13 @@ function checkUserInformation(req) {
 }
 
 function checkInfo(req) {
-  const info = req.name || req.email || req.phoneNumber || req.imageUrls || req.videoUrl;
+  const info = checkUserInformation(req) || req.imageUrls || req.videoUrl;
   return !!info
+}
+
+function validateAllSteps(request){
+  const status = checkStepStatus(request)
+  return status.basicInfo && status.idCapture && status.videoRecording
 }
 
 /**
@@ -28,4 +33,4 @@ function checkStepStatus(request){
  return status
 }
 
-export { checkUserInformation,  checkInfo, checkStepStatus }
+export { checkUserInformation,  checkInfo, checkStepStatus, validateAllSteps }
