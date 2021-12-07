@@ -1,3 +1,4 @@
+// TODO: check by required field per community
 function checkUserInformation(req) {
   const info = req.name || req.email || req.phoneNumber;
   return !!info
@@ -15,6 +16,9 @@ function checkInfo(req) {
 function checkStepStatus(request){
   let status = { basicInfo: false, idCapture: false, videoRecording: false}
  if(!request) return status
+ if (checkUserInformation(request)) {
+   status = {...status, basicInfo: true}
+ }
  if (request.imageUrls) {
    status = {...status, idCapture: true}
  }
