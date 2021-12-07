@@ -6,7 +6,6 @@ namespace :db do
   task add_permissions_to_global_roles: :environment do
     permissions = YAML.load_file("#{::Rails.root}/app/policies/permissions.yml")
     permission_list = permissions.deep_transform_keys!(&:to_sym)
-    available_roles = Role.where(community_id: nil)
     valid_modules = %w[action_flow activity_log].freeze
 
     available_roles.each do |role|
