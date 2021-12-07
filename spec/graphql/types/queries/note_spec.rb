@@ -300,15 +300,15 @@ RSpec.describe Types::Queries::Note do
         )
       end
 
-      it 'retrieves tasks and their sub tasks' do
+      it 'retrieves parent tasks' do
         result = DoubleGdpSchema.execute(flagged_notes_query, context: {
                                            current_user: site_worker,
                                            site_community: site_worker.community,
                                          }).as_json
 
-        expect(result.dig('data', 'flaggedNotes').length).to eql 6
+        expect(result.dig('data', 'flaggedNotes').length).to eql 2
         expect(result.dig('data', 'flaggedNotes')
-                     .select { |task| task['subTasks'].present? }.size).to eq(4)
+                     .select { |task| task['subTasks'].present? }.size).to eq(2)
       end
 
       it 'retrieves nested sub tasks up to 3 levels deep' do

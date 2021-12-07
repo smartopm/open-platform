@@ -156,7 +156,8 @@ export default function FormContextProvider({ children }) {
         saveFormData,
         onChange,
         signature,
-        uploadedImages
+        uploadedImages,
+        setUploadedImages
       }}
     >
       {children}

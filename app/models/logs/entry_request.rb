@@ -50,14 +50,17 @@ module Logs
 
     ENTRY_REQUEST_STATE = %w[Active Revoked].freeze
 
-    def grant!(grantor)
+    # granted_state: 1 granted
+    # granted_state: 2 denied
+    # granted_state: 3 granted for a scanned entry
+    def grant!(grantor, type = 'event')
       update(
         grantor_id: grantor.id,
-        granted_state: 1,
+        granted_state: type == 'event' ? 1 : 3,
         granted_at: Time.zone.now,
         exited_at: nil,
       )
-      log_entry_start('granted')
+      log_entry_start('granted') if type == 'event'
     end
 
     def deny!(grantor)

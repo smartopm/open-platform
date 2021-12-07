@@ -5,7 +5,7 @@ import { Button, FormHelperText } from '@material-ui/core'
 import PropTypes from 'prop-types'
 import { useTranslation } from 'react-i18next'
 
-export default function UploadField({ detail, upload, editable, uploaded }) {
+export default function UploadField({ detail, upload, editable, uploaded, inputValidation }) {
   const { t } = useTranslation(['common', 'form'])
   return (
     <>
@@ -36,13 +36,18 @@ export default function UploadField({ detail, upload, editable, uploaded }) {
         >
           {uploaded ? t('form:misc.file_uploaded') : t('form:misc.upload_file')}
         </Button>
+        {inputValidation.error && <FormHelperText error data-testid="error-msg">{t('form:errors.required_field', { fieldName: inputValidation.fieldName })}</FormHelperText>}
       </label>
     </>
   )
 }
 
 UploadField.defaultProps = {
-  uploaded: false
+  uploaded: false,
+  inputValidation: {
+    error: false,
+    fieldName: ""
+  }
 }
 
 UploadField.propTypes = {
@@ -53,5 +58,9 @@ UploadField.propTypes = {
   }).isRequired,
   upload: PropTypes.func.isRequired,
   editable: PropTypes.bool.isRequired,
-  uploaded: PropTypes.bool
+  uploaded: PropTypes.bool,
+  inputValidation: PropTypes.shape({
+    error: PropTypes.bool,
+    fieldName: PropTypes.string
+  })
 }

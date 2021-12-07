@@ -1,5 +1,6 @@
 import React from 'react';
 import { StyleSheet, css } from 'aphrodite';
+import LinearProgress from '@mui/material/LinearProgress';
 import { withStyles } from '@material-ui/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import CenteredContent from './CenteredContent';
@@ -31,6 +32,12 @@ export function Spinner() {
     <CenteredContent>
       <ColorCircularProgress size={30} thickness={5} data-testid="loader" />
     </CenteredContent>
+  );
+}
+
+export function LinearSpinner() {
+  return (
+    <LinearProgress color="inherit" data-testid="linear-loader" variant="indeterminate" />
   );
 }
 
