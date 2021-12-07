@@ -5,8 +5,8 @@ require 'rails_helper'
 RSpec.describe Mutations::ActivityLog::Add do
   describe 'user' do
     let!(:user) { create(:user_with_community) }
-    let!(:reporting_user) { create(:user, community_id: user.community_id) }
-    let!(:other_community_user) { create(:user_with_community) }
+    let!(:reporting_user) { create(:user, community_id: user.community_id, role: user.role) }
+    let!(:other_community_user) { create(:user_with_community, role: user.role) }
 
     let(:query) do
       <<~GQL

@@ -13,9 +13,9 @@ RSpec.describe Mutations::Discussion do
                           permissions: %w[can_create_discussion can_update_discussion])
     end
 
-    let!(:non_admin) { create(:user_with_community, role: resident_role) }
+    let!(:non_admin) { create(:user_with_community, user_type: 'resident', role: resident_role) }
     let!(:current_user) do
-      create(:admin_user, community_id: non_admin.community_id,
+      create(:admin_user, community_id: non_admin.community_id, user_type: 'admin',
                           role: admin_role)
     end
     let!(:guard) do

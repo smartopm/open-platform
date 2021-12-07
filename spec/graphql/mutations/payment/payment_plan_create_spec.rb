@@ -12,9 +12,11 @@ RSpec.describe Mutations::PaymentPlan::PaymentPlanCreate do
                           permissions: %w[can_create_payment_plan])
     end
 
-    let!(:user) { create(:user_with_community, role: resident_role) }
-    let!(:admin) { create(:admin_user, community_id: user.community_id, role: admin_role) }
-    let!(:another_user) { create(:user_with_community, role: resident_role) }
+    let!(:user) { create(:user_with_community, role: resident_role, user_type: 'resident') }
+    let!(:admin) do
+      create(:admin_user, community_id: user.community_id, role: admin_role, user_type: 'admin')
+    end
+    let!(:another_user) { create(:user_with_community, role: resident_role, user_type: 'resident') }
     let!(:community) { user.community }
     let!(:land_parcel) { create(:land_parcel, community_id: community.id) }
     let(:payment_plan_mutation) do

@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe ActionFlows::Actions::Sms do
   let!(:user) { create(:user_with_community, name: 'some name', phone_number: '2341234567') }
   let!(:acting_user) do
-    create(:user_with_community, community: user.community, user_type: 'custodian')
+    create(:store_custodian, community: user.community)
   end
   let!(:user_note) do
     create(:note, community_id: user.community_id,

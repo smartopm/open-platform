@@ -171,7 +171,8 @@ RSpec.describe Users::User, type: :model do
     let!(:user) { create(:user_with_community, email: 'john@doublegdp.com') }
     it 'checks for uniqueness of email per community' do
       expect do
-        user.community.users.create!(name: 'john doe', email: 'JOHN@DOUBLEGDP.COM')
+        user.community.users.create!(name: 'john doe', email: 'JOHN@DOUBLEGDP.COM',
+                                     role: user.role)
       end.to raise_error(
         ActiveRecord::RecordInvalid,
         'Validation failed: Email has already been taken',
@@ -181,6 +182,8 @@ RSpec.describe Users::User, type: :model do
 
   describe 'Creating a user from a oauth authentication callback' do
     let!(:community) { create(:community, name: 'Nkwashi') }
+    let!(:role) { create(:role, name: 'visitor') }
+    let!(:admin_role) { create(:role, name: 'admin') }
     auth_obj = OpenStruct.new(
       uid: 'abc12345',
       provider: 'google_oauth2',
@@ -220,212 +223,202 @@ RSpec.describe Users::User, type: :model do
   end
 
   describe 'Authenticating the user with a token via sms' do
-    before :each do
-      @user = FactoryBot.create(:user_with_community, phone_number: '14157351116')
-    end
+    let!(:user) { create(:user_with_community, phone_number: '14157351116') }
 
     it 'should create a token' do
-      @user.create_new_phone_token
-      expect(@user.phone_token).to be
-      expect(@user.phone_token.length).to equal(Users::User::PHONE_TOKEN_LEN)
+      user.create_new_phone_token
+      expect(user.phone_token).to be
+      expect(user.phone_token.length).to equal(Users::User::PHONE_TOKEN_LEN)
       expect(
-        @user.phone_token_expires_at <=
+        user.phone_token_expires_at <=
         Users::User::PHONE_TOKEN_EXPIRATION_MINUTES.minutes.from_now,
       ).to be true
     end
 
     it 'should accept a valid token' do
-      token = @user.create_new_phone_token
-      expect(@user.verify_phone_token!(token)).to be true
+      token = user.create_new_phone_token
+      expect(user.verify_phone_token!(token)).to be true
     end
 
     it 'should reject invalid and expired token' do
-      token = @user.create_new_phone_token
+      token = user.create_new_phone_token
 
       # With a wrong token
       wrong_token = (token.to_i(10) - 1).to_s(10)
-      expect { @user.verify_phone_token!(wrong_token) }
+      expect { user.verify_phone_token!(wrong_token) }
         .to raise_exception(Users::User::PhoneTokenResultInvalid)
 
       # With an expired token
-      @user.update(phone_token_expires_at: 1.minute.ago)
-      expect { @user.verify_phone_token!(token) }
+      user.update(phone_token_expires_at: 1.minute.ago)
+      expect { user.verify_phone_token!(token) }
         .to raise_exception(Users::User::PhoneTokenResultExpired)
     end
 
     it 'should send phone token via sms if token generation is successful' do
       expect(Sms).to receive(:send)
-      @user.send_phone_token
+      user.send_phone_token
     end
 
     it 'should UserError raise error if no phone number' do
-      @user.phone_number = nil
+      user.phone_number = nil
 
       expect do
-        @user.send_phone_token
+        user.send_phone_token
       end.to raise_error(Users::User::UserError)
     end
 
     it 'should TokenGenerationFailed raise error if token generation is not successful' do
-      allow(@user).to receive(:create_new_phone_token).and_return(nil)
+      allow(user).to receive(:create_new_phone_token).and_return(nil)
 
       expect do
-        @user.send_phone_token
+        user.send_phone_token
       end.to raise_error(Users::User::TokenGenerationFailed)
     end
 
     it 'should send one time login via sms if token generation is successful' do
       expect(Sms).to receive(:send)
-      @user.send_one_time_login
+      user.send_one_time_login
     end
 
     it 'should UserError raise error if no phone number' do
-      @user.phone_number = nil
+      user.phone_number = nil
 
       expect do
-        @user.send_one_time_login
+        user.send_one_time_login
       end.to raise_error(Users::User::UserError)
     end
 
     it 'should raise TokenGenerationFailed error if token generation is not successful' do
-      allow(@user).to receive(:create_new_phone_token).and_return(nil)
+      allow(user).to receive(:create_new_phone_token).and_return(nil)
 
       expect do
-        @user.send_one_time_login
+        user.send_one_time_login
       end.to raise_error(Users::User::TokenGenerationFailed)
     end
 
     it 'should send one time login via email if token generation is successful' do
-      create(:email_template, community: @user.community,
+      create(:email_template, community: user.community,
                               name: 'one_time_login_template', tag: 'system')
 
       expect(EmailMsg).to receive(:send_mail_from_db)
-      @user.send_one_time_login_email
+      user.send_one_time_login_email
     end
 
     it 'should not send one time login via email if no email template is found' do
       expect(EmailMsg).not_to receive(:send_mail_from_db)
-      @user.send_one_time_login_email
+      user.send_one_time_login_email
     end
 
     it 'should UserError raise error if no email' do
-      @user.email = nil
+      user.email = nil
 
       expect do
-        @user.send_one_time_login_email
+        user.send_one_time_login_email
       end.to raise_error(Users::User::UserError)
     end
 
     it 'should raise TokenGenerationFailed error if token generation is not successful' do
-      allow(@user).to receive(:create_new_phone_token).and_return(nil)
+      allow(user).to receive(:create_new_phone_token).and_return(nil)
 
       expect do
-        @user.send_one_time_login_email
+        user.send_one_time_login_email
       end.to raise_error(Users::User::TokenGenerationFailed)
     end
   end
 
   describe 'User state, type and roles' do
-    before :each do
-      create(:role, name: 'visitor')
-      create(:role, name: 'admin')
-      @user = create(:user_with_community, phone_number: '14157351116')
-    end
+    let!(:role) { create(:role, name: 'visitor') }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:user) { create(:user_with_community, phone_number: '14157351116', role: role) }
 
     it 'without a state/type it should be pending and visitor' do
-      expect(@user.pending?).to be true
-      expect(@user.user_type).to eq('visitor')
-      expect(@user.role.name).to eq('visitor')
+      expect(user.pending?).to be true
+      expect(user.user_type).to eq('visitor')
+      expect(user.role.name).to eq('visitor')
     end
 
     it 'updates user_type alongside role' do
-      @user.update(user_type: 'admin')
-      expect(@user.user_type).to eq('admin')
-      expect(@user.role.name).to eq('admin')
+      user.update(user_type: 'admin')
+      expect(user.user_type).to eq('admin')
+      expect(user.role.name).to eq('admin')
     end
 
     it 'Roles should have a human name' do
-      @user.update(user_type: 'admin')
-      expect(@user.role_name).to eql 'Admin'
+      user.update(user_type: 'admin')
+      expect(user.role_name).to eql 'Admin'
     end
 
     it 'should be expired if it\'s expired' do
-      @user.update(state: 'pending')
-      expect(@user.state).to eql 'pending'
+      user.update(state: 'pending')
+      expect(user.state).to eql 'pending'
     end
 
     it 'should be expired if it\'s expired' do
-      @user.update(expires_at: 1.week.ago)
-      expect(@user.expired?).to be true
+      user.update(expires_at: 1.week.ago)
+      expect(user.expired?).to be true
     end
   end
 
   describe 'User with user_type roles' do
-    before :each do
-      @security_guard = FactoryBot.create(:security_guard)
-      @admin = FactoryBot.create(:admin_user, community: @security_guard.community)
-      @user = FactoryBot.create(:user, community: @security_guard.community)
-    end
+    let!(:security_guard) { create(:security_guard) }
+    let!(:admin) { create(:admin_user, community: security_guard.community) }
+    let!(:user) { create(:user, community: security_guard.community) }
 
     it 'should know if user an admin' do
-      @user.update(user_type: 'admin')
-      expect(@user.admin?).to be true
+      user.update(user_type: 'admin')
+      expect(user.admin?).to be true
     end
 
     it 'should be able to check if user belongs to a role?' do
-      expect(@admin.role?(%i[security_guard admin])).to be true
-      expect(@admin.role?([:security_guard])).to be false
+      expect(admin.role?(%i[security_guard admin])).to be true
+      expect(admin.role?([:security_guard])).to be false
     end
 
     it 'should allow users to become other users' do
-      expect(@admin.can_become?(@security_guard)).to be true
-      expect(@user.can_become?(@security_guard)).to be false
-      expect(@security_guard.can_become?(@admin)).to be false
+      expect(admin.can_become?(security_guard)).to be true
+      expect(user.can_become?(security_guard)).to be false
+      expect(security_guard.can_become?(admin)).to be false
     end
   end
 
   describe 'User phone numbers' do
-    before :each do
-      @user = FactoryBot.create(:user_with_community)
-    end
+    let!(:user) { create(:user_with_community) }
 
     it 'should be valid' do
-      @user.update(phone_number: '+1 415 735 1116')
-      expect(@user.errors.messages[:phone_number]).to be_empty
+      user.update(phone_number: '+1 415 735 1116')
+      expect(user.errors.messages[:phone_number]).to be_empty
     end
 
     it 'should be the proper length' do
-      @user.update(phone_number: '+1 415 735')
-      expect(@user.errors.messages[:phone_number]).to_not be_empty
+      user.update(phone_number: '+1 415 735')
+      expect(user.errors.messages[:phone_number]).to_not be_empty
     end
 
     it 'should not contain more than "-", " ", "+" and numbers' do
-      @user.update(phone_number: '+1415.735.1116')
-      expect(@user.errors.messages[:phone_number]).to_not be_empty
+      user.update(phone_number: '+1415.735.1116')
+      expect(user.errors.messages[:phone_number]).to_not be_empty
     end
   end
 
   describe 'User with user_type roles' do
-    before :each do
-      @security_guard = FactoryBot.create(:security_guard)
-      @admin = FactoryBot.create(:admin_user, community: @security_guard.community)
-      @user = FactoryBot.create(:user, community: @security_guard.community)
-    end
+    let!(:security_guard) { create(:security_guard) }
+    let!(:admin) { create(:admin_user, community: security_guard.community) }
+    let!(:user) { create(:user, community: security_guard.community) }
 
     it 'should know if user an admin' do
-      @user.update(user_type: 'admin')
-      expect(@user.admin?).to be true
+      user.update(user_type: 'admin')
+      expect(user.admin?).to be true
     end
 
     it 'should be able to check if user belongs to a role?' do
-      expect(@admin.role?(%i[security_guard admin])).to be true
-      expect(@admin.role?([:security_guard])).to be false
+      expect(admin.role?(%i[security_guard admin])).to be true
+      expect(admin.role?([:security_guard])).to be false
     end
 
     it 'should allow users to become other users' do
-      expect(@admin.can_become?(@security_guard)).to be true
-      expect(@user.can_become?(@security_guard)).to be false
-      expect(@security_guard.can_become?(@admin)).to be false
+      expect(admin.can_become?(security_guard)).to be true
+      expect(user.can_become?(security_guard)).to be false
+      expect(security_guard.can_become?(admin)).to be false
     end
 
     it 'should allow admin to enroll users' do
@@ -436,24 +429,22 @@ RSpec.describe Users::User, type: :model do
         vehicle: nil,
         phone_number: '1234567890',
       }
-      @nuser = @admin.enroll_user(vals)
-      expect(@nuser.community_id).to be @admin.community_id
-      expect(@nuser.id).to_not be_empty
-      @nuser1 = nil
+      nuser = admin.enroll_user(vals)
+      expect(nuser.community_id).to be admin.community_id
+      expect(nuser.id).to_not be_empty
+      nuser1 = nil
       begin
-        @nuser1 = @admin.enroll_user(vals)
+        nuser1 = admin.enroll_user(vals)
       rescue ActiveRecord::RecordNotUnique
-        expect(@nuser1).to be nil
+        expect(nuser1).to be nil
       end
-      @el = Logs::EventLog.where(acting_user_id: @admin.id).last
-      expect(@nuser.id).to eq @el.ref_id
-      expect(@admin.id).to eq @el.acting_user_id
+      el = Logs::EventLog.where(acting_user_id: admin.id).last
+      expect(nuser.id).to eq el.ref_id
+      expect(admin.id).to eq el.acting_user_id
     end
 
     it 'it should create a todo after a referral client has been created' do
-      user = FactoryBot.create(:user_with_community, phone_number: '34566784567')
-      other_user = FactoryBot.create(:user_with_community, phone_number: '34566784561',
-                                                           user_type: 'client')
+      other_user = FactoryBot.create(:client, phone_number: '34566784561')
       user_ref = {
         id: user.id,
         name: 'Test name',
@@ -526,8 +517,8 @@ RSpec.describe Users::User, type: :model do
   describe '#note_assigned?' do
     let!(:user) { create(:user_with_community) }
     let!(:note) do
-      create(:note, user: create(:user_with_community),
-                    author: create(:user_with_community))
+      create(:note, user: create(:user_with_community, role: user.role),
+                    author: create(:user_with_community, role: user.role))
     end
     let!(:assignee_note) { create(:assignee_note, user: user, note: note) }
 
@@ -580,7 +571,7 @@ RSpec.describe Users::User, type: :model do
 
   describe '#invite_guest' do
     let!(:user) { create(:user_with_community) }
-    let!(:resident) { create(:user_with_community, user_type: 'resident') }
+    let!(:resident) { create(:resident) }
 
     it 'creates an invite' do
       expect(resident.invitees.count).to eq(0)

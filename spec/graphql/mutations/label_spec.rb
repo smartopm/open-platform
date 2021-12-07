@@ -12,9 +12,9 @@ RSpec.describe Mutations::Label do
                           permissions: %w[can_create_label])
     end
 
-    let!(:admin) { create(:admin_user, role: admin_role) }
+    let!(:admin) { create(:admin_user, user_type: 'admin', role: admin_role) }
 
-    let!(:user) { create(:user_with_community, role: resident_role) }
+    let!(:user) { create(:user_with_community, role: resident_role, user_type: 'resident') }
     let(:query) do
       <<~GQL
         mutation {
@@ -68,9 +68,13 @@ RSpec.describe Mutations::Label do
     end
 
     let!(:user) { create(:user_with_community) }
-    let!(:user2) { create(:user_with_community) }
-    let!(:admin) { create(:admin_user, community_id: user.community_id, role: admin_role) }
-    let!(:admin2) { create(:admin_user, community_id: user2.community_id, role: admin_role) }
+    let!(:user2) { create(:user, community: user.community, role: user.role) }
+    let!(:admin) do
+      create(:admin_user, community_id: user.community_id, role: admin_role, user_type: 'admin')
+    end
+    let!(:admin2) do
+      create(:admin_user, community_id: user2.community_id, role: admin_role, user_type: 'admin')
+    end
 
     let!(:first_label) do
       create(:label, community_id: user.community_id)
@@ -139,9 +143,13 @@ RSpec.describe Mutations::Label do
                           role: admin_role,
                           permissions: %w[can_update_label can_create_label])
     end
-    let!(:user) { create(:user_with_community, role: resident_role) }
-    let!(:admin) { create(:admin_user, community_id: user.community_id, role: admin_role) }
-    let!(:user2) { create(:user, community_id: user.community_id, role: resident_role) }
+    let!(:user) { create(:user_with_community, role: resident_role, user_type: 'resident') }
+    let!(:admin) do
+      create(:admin_user, community_id: user.community_id, role: admin_role, user_type: 'admin')
+    end
+    let!(:user2) do
+      create(:user, community_id: user.community_id, role: resident_role, user_type: 'resident')
+    end
 
     # create a label for the user
     let!(:first_label) do
@@ -218,8 +226,10 @@ RSpec.describe Mutations::Label do
                           role: admin_role,
                           permissions: %w[can_update_label can_create_label])
     end
-    let!(:user) { create(:user_with_community, role: resident_role) }
-    let!(:admin) { create(:admin_user, community_id: user.community_id, role: admin_role) }
+    let!(:user) { create(:user_with_community, role: resident_role, user_type: 'resident') }
+    let!(:admin) do
+      create(:admin_user, community_id: user.community_id, role: admin_role, user_type: 'admin')
+    end
     let!(:label) { create(:label, community_id: user.community_id) }
 
     let(:query) do
@@ -261,8 +271,10 @@ RSpec.describe Mutations::Label do
                           role: admin_role,
                           permissions: %w[can_update_label can_delete_label])
     end
-    let!(:user) { create(:user_with_community, role: resident_role) }
-    let!(:admin) { create(:admin_user, community_id: user.community_id, role: admin_role) }
+    let!(:user) { create(:user_with_community, role: resident_role, user_type: 'resident') }
+    let!(:admin) do
+      create(:admin_user, community_id: user.community_id, role: admin_role, user_type: 'admin')
+    end
     let!(:label) { create(:label, community_id: user.community_id) }
 
     let(:query) do
@@ -302,8 +314,10 @@ RSpec.describe Mutations::Label do
                           role: admin_role,
                           permissions: %w[can_merge_labels can_delete_label])
     end
-    let!(:user) { create(:user_with_community, role: resident_role) }
-    let!(:admin) { create(:admin_user, community_id: user.community_id, role: admin_role) }
+    let!(:user) { create(:user_with_community, role: resident_role, user_type: 'resident') }
+    let!(:admin) do
+      create(:admin_user, community_id: user.community_id, role: admin_role, user_type: 'admin')
+    end
 
     let!(:f_label) { create(:label, community_id: user.community_id) }
     let!(:s_label) { create(:label, community_id: user.community_id) }

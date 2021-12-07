@@ -12,9 +12,12 @@ RSpec.describe Mutations::EntryRequest do
                           permissions: %w[can_create_entry_request])
     end
 
-    let!(:user) { create(:user_with_community, role: visitor_role) }
-    let!(:admin) { create(:admin_user, community_id: user.community_id, role: admin_role) }
-
+    let!(:user) do
+      create(:user_with_community, user_type: 'visitor', role: visitor_role)
+    end
+    let!(:admin) do
+      create(:user, user_type: 'admin', community_id: user.community_id, role: admin_role)
+    end
     let(:query) do
       <<~GQL
         mutation CreateEntryRequest(
@@ -383,7 +386,6 @@ RSpec.describe Mutations::EntryRequest do
     end
 
     let!(:guard) { create(:security_guard, community_id: user.community_id, role: guard_role) }
-    let!(:contractor) { create(:contractor, community_id: user.community_id) }
     let!(:entry_request) { guard.entry_requests.create(name: 'Mark Percival', reason: 'Visiting') }
     let!(:event) do
       guard.generate_events('observation_log', entry_request)

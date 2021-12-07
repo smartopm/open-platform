@@ -12,8 +12,12 @@ RSpec.describe Mutations::EntryRequest::GuestEntryRequestRevoke do
                           permissions: %w[can_revoke_entry_request])
     end
 
-    let!(:user) { create(:user_with_community, role: prospective_client_role) }
-    let!(:admin) { create(:admin_user, community_id: user.community_id, role: admin_role) }
+    let!(:user) do
+      create(:user_with_community, user_type: 'prospective_client', role: prospective_client_role)
+    end
+    let!(:admin) do
+      create(:admin_user, user_type: 'admin', community_id: user.community_id, role: admin_role)
+    end
     let!(:community) { user.community }
     let!(:entry_request) { user.entry_requests.create(name: 'John Doe', reason: 'Visiting') }
     let!(:admin_entry_request) { admin.entry_requests.create(name: 'John Doe', reason: 'Visiting') }

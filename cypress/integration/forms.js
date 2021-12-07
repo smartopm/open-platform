@@ -22,7 +22,8 @@ describe('Custom Forms', () => {
           phone_number: '2348167740149',
           email: 'adminuser@gmail.com',
           state: 'valid',
-          community_id: commRes.body.id
+          community_id: commRes.body.id,
+          role_id: roleRes.body.id
         })  
       }
       )

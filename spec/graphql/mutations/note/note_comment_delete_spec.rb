@@ -12,8 +12,10 @@ RSpec.describe Mutations::Note::NoteCommentDelete do
                           permissions: %w[can_delete_note_comment])
     end
 
-    let!(:user) { create(:user_with_community, role: resident_role) }
-    let!(:admin) { create(:admin_user, community_id: user.community_id, role: admin_role) }
+    let!(:user) { create(:user_with_community, role: resident_role, user_type: 'resident') }
+    let!(:admin) do
+      create(:admin_user, community_id: user.community_id, role: admin_role, user_type: 'admin')
+    end
     let!(:note) do
       admin.notes.create!(
         body: 'Note body',
