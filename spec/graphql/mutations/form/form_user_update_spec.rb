@@ -12,11 +12,14 @@ RSpec.describe Mutations::Form::FormUserUpdate do
                           permissions: %w[can_update_form_user])
     end
 
-    let!(:current_user) { create(:user_with_community, role: resident_role) }
-    let!(:admin) { create(:admin_user, community_id: current_user.community_id, role: admin_role) }
+    let!(:current_user) { create(:user_with_community, role: resident_role, user_type: 'resident') }
+    let!(:admin) do
+      create(:admin_user, community_id: current_user.community_id, role: admin_role,
+                          user_type: 'admin')
+    end
     let!(:another_user) do
       create(:user, community_id: current_user.community_id,
-                    role: resident_role)
+                    role: resident_role, user_type: 'resident')
     end
     let!(:form) { create(:form, community_id: current_user.community_id) }
     let!(:form_property) { create(:form_property, form: form, field_type: 'text') }

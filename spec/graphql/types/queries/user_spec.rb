@@ -73,7 +73,7 @@ RSpec.describe Types::Queries::User do
     end
     let!(:another_admin) do
       create(:admin_user, community_id: current_user.community_id,
-                          email: 'cd@dc.ef', state: 'valid')
+                          email: 'cd@dc.ef', state: 'valid', role: admin_role)
     end
 
     let(:query) do
@@ -406,21 +406,24 @@ RSpec.describe Types::Queries::User do
   end
 
   describe 'user_search' do
+    let!(:visitor_role) { create(:role, name: 'visitor') }
     let!(:admin_role) { create(:role, name: 'admin') }
     let!(:permission) do
       create(:permission, module: 'user',
                           role: admin_role,
                           permissions: %w[can_search_guests])
     end
-    let!(:user) { create(:user_with_community, name: 'Jose') }
-    let!(:user2) { create(:user_with_community, name: 'Josè', community: user.community) }
+    let!(:user) { create(:user_with_community, name: 'Jose', role: visitor_role) }
+    let!(:user2) do
+      create(:user_with_community, name: 'Josè', community: user.community, role: visitor_role)
+    end
     let!(:admin_user) do
       create(:user_with_community, name: 'Joe Test', user_type: 'admin',
                                    role: admin_role, community_id: user.community_id)
     end
     let!(:visitor) do
       create(:user_with_community, user_type: 'visitor', email: 'visiting@admin.com',
-                                   community_id: user.community_id)
+                                   community_id: user.community_id, role: visitor_role)
     end
 
     let(:query) do
@@ -602,6 +605,7 @@ RSpec.describe Types::Queries::User do
   describe 'users_count' do
     let!(:admin_role) { create(:role, name: 'admin') }
     let!(:client_role) { create(:role, name: 'client') }
+    let!(:resident_role) { create(:role, name: 'resident') }
     let!(:permission) do
       create(:permission, module: 'user',
                           role: admin_role,
@@ -616,7 +620,8 @@ RSpec.describe Types::Queries::User do
     end
     let!(:resident) do
       create(:user_with_community, user_type: 'resident',
-                                   community: admin_user.community)
+                                   community: admin_user.community,
+                                   role: resident_role)
     end
     let!(:second_community) { create(:community) }
     let!(:second_community_user) { create(:user_with_community, community: second_community) }

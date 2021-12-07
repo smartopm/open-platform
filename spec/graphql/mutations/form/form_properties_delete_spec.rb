@@ -12,8 +12,10 @@ RSpec.describe Mutations::Form::FormPropertiesDelete do
                           permissions: %w[can_delete_form_properties])
     end
 
-    let!(:user) { create(:user_with_community, role: resident_role) }
-    let!(:admin) { create(:admin_user, community_id: user.community_id, role: admin_role) }
+    let!(:user) { create(:user_with_community, user_type: 'resident', role: resident_role) }
+    let!(:admin) do
+      create(:admin_user, community_id: user.community_id, role: admin_role, user_type: 'admin')
+    end
     let!(:form) { create(:form, community_id: user.community_id) }
     let!(:category) { create(:category, form: form, field_name: 'Business Info') }
     let!(:form_property) do
@@ -26,7 +28,9 @@ RSpec.describe Mutations::Form::FormPropertiesDelete do
                         display_condition: { 'grouping_id': form_property.reload.grouping_id,
                                              'value': 'Fishing' })
     end
-    let(:form_user) { create(:form_user, form: form, user: user, status: :approved) }
+    let(:form_user) do
+      create(:form_user, form: form, user: user, status: :approved, status_updated_by: admin)
+    end
     let(:mutation) do
       <<~GQL
         mutation formPropertiesDelete($formId: ID!, $formPropertyId: ID!){

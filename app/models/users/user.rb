@@ -88,7 +88,7 @@ module Users
                       }
 
     belongs_to :community
-    belongs_to :role, optional: true
+    belongs_to :role
     has_many :entry_requests, class_name: 'Logs::EntryRequest', dependent: :destroy
     has_many :granted_entry_requests, class_name: 'Logs::EntryRequest', foreign_key: :grantor_id,
                                       dependent: :destroy, inverse_of: :user
@@ -143,7 +143,7 @@ module Users
     has_one_attached :avatar
     has_many_attached :note_documents
 
-    before_save :add_default_state_type_and_role
+    before_validation :add_default_state_type_and_role
     after_create :send_email_msg
     after_create :add_notification_preference
 

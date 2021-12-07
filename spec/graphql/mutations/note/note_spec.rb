@@ -17,12 +17,14 @@ RSpec.describe Mutations::Note do
                         permissions: %w[can_create_note can_assign_note])
   end
 
-  let!(:user) { create(:user_with_community, role: resident_role) }
-  let!(:admin) { create(:admin_user, community_id: user.community_id, role: admin_role) }
+  let!(:user) { create(:user_with_community, role: resident_role, user_type: 'resident') }
+  let!(:admin) do
+    create(:admin_user, community_id: user.community_id, role: admin_role, user_type: 'admin')
+  end
 
   let!(:site_worker) do
     create(:site_worker, community_id: user.community_id,
-                         role: site_worker_role)
+                         role: site_worker_role, user_type: 'site_worker')
   end
 
   let(:user_note) do

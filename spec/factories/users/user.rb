@@ -18,38 +18,57 @@ FactoryBot.define do
     email
     provider { 'google' }
     uid
+    role { create(:role, name: 'visitor') }
 
     factory :user_with_community do
       community
+      role { create(:role, name: 'visitor') }
     end
 
     factory :contractor do
       user_type { 'contractor' }
+      role { create(:role, name: 'contractor') }
       community
     end
 
     factory :security_guard do
       user_type { 'security_guard' }
+      role { create(:role, name: 'security_guard') }
       community
     end
+
     factory :admin_user do
       user_type { 'admin' }
+      role { create(:role, name: 'admin') }
       community
     end
+
     factory :pending_user do
       request_status { 'pending' }
       community
     end
+
     factory :store_custodian do
       user_type { 'custodian' }
+      role { create(:role, name: 'custodian') }
       community
     end
+
     factory :site_worker do
       user_type { 'site_worker' }
+      role { create(:role, name: 'site_worker') }
       community
     end
+
     factory :resident do
       user_type { 'resident' }
+      role { create(:role, name: 'resident') }
+      community
+    end
+
+    factory :client do
+      user_type { 'client' }
+      role { create(:role, name: 'client') }
       community
     end
   end

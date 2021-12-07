@@ -4,9 +4,9 @@ require 'rails_helper'
 
 RSpec.describe Mutations::User do
   describe 'create pending member' do
-    let!(:current_user) { create(:user_with_community, user_type: 'security_guard') }
-    let!(:user) { create(:user_with_community, user_type: 'client') }
-    let!(:admin_user) { create(:user_with_community, user_type: 'admin') }
+    let!(:current_user) { create(:security_guard) }
+    let!(:user) { create(:client, community: current_user.community) }
+    let!(:admin_user) { create(:admin_user, community: current_user.community) }
 
     let(:query) do
       <<~GQL
@@ -154,6 +154,7 @@ RSpec.describe Mutations::User do
 
   describe 'update pending user' do
     let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:client_role) { create(:role, name: 'client') }
     let!(:permission) do
       create(:permission, module: 'user',
                           role: admin_role,
@@ -261,7 +262,9 @@ RSpec.describe Mutations::User do
       create(:security_guard, community_id: admin.community_id,
                               role: security_guard_role)
     end
-    let!(:pending_user) { create(:pending_user, community_id: admin.community_id) }
+    let!(:pending_user) do
+      create(:pending_user, community_id: admin.community_id, role: user.role)
+    end
     let!(:client) do
       create(:pending_user, community_id: admin.community_id,
                             user_type: 'client', role: client_role)
@@ -456,7 +459,6 @@ RSpec.describe Mutations::User do
     end
 
     describe 'substatus change log' do
-      let!(:admin_role) { create(:role, name: 'admin') }
       let!(:permission) do
         create(:permission, module: 'user',
                             role: admin_role,
@@ -557,6 +559,7 @@ RSpec.describe Mutations::User do
 
   describe 'creating avatars and adding them to the user' do
     let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:resident_role) { create(:role, name: 'resident') }
     let!(:permission) do
       create(:permission, module: 'user',
                           role: admin_role,
@@ -678,7 +681,7 @@ RSpec.describe Mutations::User do
     let!(:admin) { create(:admin_user, role: admin_role) }
 
     let!(:non_admin) { create(:user, community_id: admin.community_id) }
-    let!(:resident) { create(:user, community_id: admin.community_id) }
+    let!(:resident) { create(:resident, community_id: admin.community_id) }
 
     let(:send_one_time_login) do
       <<~GQL

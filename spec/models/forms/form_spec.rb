@@ -1,12 +1,11 @@
 # frozen_string_literal: true
 
 require 'rails_helper'
-
 RSpec.describe Forms::Form, type: :model do
   describe 'form crud' do
-    let!(:current_user) { create(:user_with_community, user_type: 'admin') }
+    let!(:current_user) { create(:admin_user) }
     let!(:community) { create(:community) }
-    let!(:different_community_user) { create(:admin_user, community: community) }
+    let!(:different_community_user) { create(:user_with_community) }
     let(:form) { create(:form, community_id: current_user.community_id) }
 
     it 'should create a form record' do

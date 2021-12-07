@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe Mutations::Message do
   describe 'update message notification' do
-    let!(:current_user) { create(:user_with_community, user_type: 'admin') }
+    let!(:current_user) { create(:admin_user) }
     let(:query) do
       <<~GQL
         mutation MsgNotificationUpdate {

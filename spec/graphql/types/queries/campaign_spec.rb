@@ -7,14 +7,13 @@ require 'rails_helper'
 RSpec.describe Types::QueryType do
   describe 'campaign queries' do
     let!(:admin_role) { create(:role, name: 'admin') }
-    let!(:resident_role) { create(:role, name: 'resident') }
     let!(:permission) do
       create(:permission, module: 'campaign',
                           role: admin_role,
                           permissions: %w[can_access_campaign])
     end
 
-    let!(:current_user) { create(:user_with_community, role: resident_role) }
+    let!(:current_user) { create(:user_with_community) }
     let!(:admin) { create(:admin_user, community_id: current_user.community_id, role: admin_role) }
     let!(:label) { create(:label, community_id: current_user.community_id) }
     # create a campaign for the user community

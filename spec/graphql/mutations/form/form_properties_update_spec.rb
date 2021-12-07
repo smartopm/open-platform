@@ -12,8 +12,10 @@ RSpec.describe Mutations::Form::FormPropertiesUpdate do
                           permissions: %w[can_update_form_properties])
     end
 
-    let!(:user) { create(:user_with_community, role: resident_role) }
-    let!(:admin) { create(:admin_user, community_id: user.community_id, role: admin_role) }
+    let!(:user) { create(:user_with_community, user_type: 'resident', role: resident_role) }
+    let!(:admin) do
+      create(:admin_user, community_id: user.community_id, role: admin_role, user_type: 'admin')
+    end
     let!(:form) { create(:form, community_id: user.community_id) }
     let!(:category) { create(:category, form: form, field_name: 'Business Info') }
     let!(:form_property) do
@@ -30,7 +32,9 @@ RSpec.describe Mutations::Form::FormPropertiesUpdate do
       create(:form_property, form: form, field_type: 'text', category: other_category,
                              field_name: 'Upload fishing license')
     end
-    let(:form_user) { create(:form_user, form: form, user: user, status: :approved) }
+    let(:form_user) do
+      create(:form_user, form: form, user: user, status: :approved, status_updated_by: admin)
+    end
 
     let(:mutation) do
       <<~GQL

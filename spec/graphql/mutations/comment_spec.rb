@@ -6,7 +6,10 @@ RSpec.describe Mutations::Comment do
   describe 'creating a Comment' do
     let!(:user) { create(:user_with_community) }
     let!(:admin) { create(:admin_user, community_id: user.community.id) }
-    let!(:another_admin) { create(:user_with_community, user_type: 'admin') }
+    let!(:another_community) { create(:community) }
+    let!(:another_admin) do
+      create(:user, user_type: 'admin', role: admin.role, community: another_community)
+    end
     let!(:u_discussion) { create(:discussion, user_id: user.id, community_id: user.community_id) }
     let!(:user_comments) do
       user.comments.create(content: 'This is an awesome comment',

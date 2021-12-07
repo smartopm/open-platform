@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_24_093931) do
+ActiveRecord::Schema.define(version: 2021_11_30_114052) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -808,7 +808,7 @@ ActiveRecord::Schema.define(version: 2021_11_24_093931) do
     t.string "address"
     t.uuid "latest_substatus_id"
     t.string "ext_ref_id"
-    t.uuid "role_id"
+    t.uuid "role_id", null: false
     t.index ["community_id", "email"], name: "index_users_on_community_id_and_email", unique: true
     t.index ["latest_substatus_id"], name: "index_users_on_latest_substatus_id"
     t.index ["role_id"], name: "index_users_on_role_id"

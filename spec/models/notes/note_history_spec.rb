@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe Notes::NoteHistory, type: :model do
-  let!(:current_user) { create(:user_with_community, user_type: 'admin') }
+  let!(:current_user) { create(:user_with_community) }
   let!(:admin) { create(:admin_user, community_id: current_user.community_id) }
   let!(:note) do
     admin.notes.create!(

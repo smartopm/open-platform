@@ -5,7 +5,7 @@ require 'rails_helper'
 RSpec.describe Labels::Label, type: :model do
   let!(:label) { create(:label) }
   let!(:current_user1) { create(:user, community: label.community) }
-  let!(:current_user2) { create(:user, community: label.community) }
+  let!(:current_user2) { create(:user, community: label.community, role: current_user1.role) }
   describe 'schema' do
     it { is_expected.to have_db_column(:id).of_type(:uuid) }
     it { is_expected.to have_db_column(:short_desc).of_type(:string) }
