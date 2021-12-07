@@ -13,8 +13,14 @@ RSpec.describe Mutations::ActivityLog::UpdateLog do
                             can_update_activity_log
                           ])
     end
-    let!(:user) { create(:user_with_community, role: resident_role) }
-    let!(:admin) { create(:admin_user, community_id: user.community_id, role: admin_role) }
+    let!(:user) do
+      create(:user_with_community, user_type: 'resident',
+                                   role: resident_role)
+    end
+    let!(:admin) do
+      create(:admin_user, community_id: user.community_id,
+                          user_type: 'admin', role: admin_role)
+    end
     let!(:entry_request) { user.entry_requests.create(name: 'Benje', reason: 'Passing through') }
     # since we no longer create an event after creating an entry, we can only check after grant!
     let!(:grant) { admin.grant!(entry_request.id) }

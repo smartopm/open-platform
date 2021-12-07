@@ -17,12 +17,16 @@ RSpec.describe Types::Queries::ActionFlow do
                             can_get_action_flow_action_fields
                           ])
     end
-    let!(:current_user) { create(:user_with_community,
-      user_type: 'resident',
-       role: resident_role) }
-    let!(:admin) { create(:user_with_community,
-       user_type: 'admin',
-      role: admin_role) }
+    let!(:current_user) do
+      create(:user_with_community,
+             user_type: 'resident',
+             role: resident_role)
+    end
+    let!(:admin) do
+      create(:user_with_community,
+             user_type: 'admin',
+             role: admin_role)
+    end
 
     let(:events_query) do
       %(query {

@@ -11,8 +11,14 @@ RSpec.describe Mutations::ActionFlow::ActionFlowDelete do
                           role: admin_role,
                           permissions: %w[can_delete_action_flow])
     end
-    let!(:user) { create(:user_with_community, role: resident_role) }
-    let!(:admin) { create(:admin_user, community_id: user.community_id, role: admin_role) }
+    let!(:user) do
+      create(:user_with_community, user_type: 'resident',
+                                   role: resident_role)
+    end
+    let!(:admin) do
+      create(:admin_user, community_id: user.community_id,
+                          user_type: 'admin', role: admin_role)
+    end
     let!(:action_flow) do
       create(:action_flow, event_type: 'task_update',
                            community_id: user.community_id)
