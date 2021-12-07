@@ -21,6 +21,13 @@ function FeatureCheck({ features, name, children, subFeature }) {
   return children
 }
 
+/**
+ * Check if a feature is enabled and if its subfeature is not disabled
+ * @param {Object} features List of features for the current community
+ * @param {string} name The main feature we want to check for
+ * @param {string} subFeature The small part of the main feature
+ * @returns {boolean} true if enabled and false otherwise
+ */
 export function featureCheckHelper(features, name, subFeature) {
   const subFeatureList = objectAccessor(features, name)?.features || [];
   const isSubFeatureDisabled = subFeature ? new Set(subFeatureList).has(subFeature) : false ;

@@ -7,13 +7,13 @@ import EntryRequestContextProvider from '../Context';
 
 export default function GuestValidate() {
   const authState = useContext(Context)
-  const communityName = authState.user.community.name
+  const communityFeatures = authState.user.community.features
   return (
     <EntryRequestContextProvider>
       <ObservationDialog />
       <HorizontalStepper
         steps={steps}
-        communityName={communityName}
+        communityFeatures={communityFeatures}
       />
     </EntryRequestContextProvider>
   )

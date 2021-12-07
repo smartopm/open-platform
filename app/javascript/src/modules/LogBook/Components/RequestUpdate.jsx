@@ -346,16 +346,6 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
     }
     setEmailError(false);
 
-
-    if (isGuestRequest && !formData.visitationDate) {
-      setDetails({
-        ...observationDetails,
-        isError: true,
-        message: t('logbook:logbook.visit_end_error')
-      });
-      return;
-    }
-
     switch (type) {
       case 'grant':
         handleCreateRequest('grant')
