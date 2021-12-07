@@ -571,7 +571,7 @@ RSpec.describe Users::User, type: :model do
 
   describe '#invite_guest' do
     let!(:user) { create(:user_with_community) }
-    let!(:resident) { create(:user_with_community, user_type: 'resident') }
+    let!(:resident) { create(:resident) }
     let!(:entry_request) do
       create(:entry_request, name: 'Test User', reason: 'Visiting', user: user,
                              guest: resident)

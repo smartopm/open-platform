@@ -62,7 +62,7 @@ describe('Should render Visits View Component', () => {
               name: 'Js user x',
               imageUrl: 'https://lh3.googleusercontent.com'
             },
-            accessHours: null,
+            closestEntryTime: null,
             grantedAt: '2021-10-31 02:51',
             status: 'approved',
             exitedAt: '2021-10-31 03:51',
@@ -77,7 +77,7 @@ describe('Should render Visits View Component', () => {
               name: 'user x'
             },
             guest: null,
-            accessHours: null,
+            closestEntryTime: null,
             grantedAt: '2021-10-31 02:51',
             status: 'pending',
             exitedAt: null,
