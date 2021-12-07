@@ -62,17 +62,14 @@ describe('Top part of the task form component', () => {
       </MockedProvider>
     );
 
-    expect(container.getByTestId('task-details-breadcrumb')).toBeInTheDocument();
     expect(container.queryByText('task.due_date_text')).toBeInTheDocument();
     expect(props.isAssignee).toHaveBeenCalled();
     expect(container.getByTestId('active-reminder')).toBeInTheDocument();
     expect(container.queryByText('task.active_reminder')).toBeInTheDocument();
     expect(container.queryByText('task.none')).toBeInTheDocument();
     expect(container.getByTestId('date_created')).toBeInTheDocument();
-    expect(container.queryByText('task.task_details_text')).toBeInTheDocument();
     expect(container.queryByText('task.assigned_to_txt')).toBeInTheDocument();
     expect(container.queryByText('task.chip_add_assignee')).toBeInTheDocument();
-    expect(container.queryByText('common:form_fields.description')).toBeInTheDocument();
 
     expect(container.queryByText('task.chip_close')).not.toBeInTheDocument();
     expect(container.queryByText('task.task_assignee_label')).not.toBeInTheDocument();

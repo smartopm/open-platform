@@ -1,7 +1,6 @@
 import React from 'react';
 import Tasks from './containers/Todo';
 import TaskReminder from './TaskReminder';
-import TaskUpdate from './containers/TaskUpdate';
 import {siteManagers} from '../../utils/constants';
 import AccessCheck from '../Permissions/Components/AccessCheck';
 
@@ -26,18 +25,6 @@ const taskUpdatePermissions = [
 ];
 
 const currentModule = 'note'
-
-/**
- * @deprecated in favour of split screen page view
- */
-function RenderTaskUpdate() {
-  return (
-    <AccessCheck module={currentModule} allowedPermissions={taskUpdatePermissions}>
-      <TaskUpdate />
-    </AccessCheck>
-)
-}
-
 
 function RenderTasks() {
   return (
