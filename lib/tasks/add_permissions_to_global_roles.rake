@@ -8,12 +8,7 @@ namespace :db do
       permissions = YAML.load_file("#{::Rails.root}/app/policies/permissions.yml")
       permission_list = permissions.deep_transform_keys!(&:to_sym)
       available_roles = Role.where(community_id: nil)
-      valid_modules = %w[user note plan_payment payment_plan post action_flow activity_log business
-                         campaign comment community contact_info discussion email_template
-                         entry_request feedback forms invoice label land_parcel login
-                         message settings showroom subscription_plan substatus_log
-                         temparature timesheet transaction upload user gate_access dashboard
-                         guest_list profile logout communication community_settings sos].freeze
+      valid_modules = %w[note plan_payment payment_plan transaction].freeze
 
       available_roles.each do |role|
         valid_modules.each do |valid_module|
