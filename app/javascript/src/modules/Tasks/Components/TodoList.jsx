@@ -11,10 +11,14 @@ import {
   Grid,
   TextField,
   InputAdornment,
-  Typography,
+  Typography
 } from '@material-ui/core';
 import FilterListIcon from '@material-ui/icons/FilterList';
-import SearchIcon from '@material-ui/icons/Search'
+import Drawer from '@mui/material/Drawer';
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+
+import SearchIcon from '@material-ui/icons/Search';
 import MaterialConfig from 'react-awesome-query-builder/lib/config/material';
 import { makeStyles } from '@material-ui/core/styles';
 import { useMutation, useLazyQuery, useApolloClient } from 'react-apollo';
@@ -33,7 +37,12 @@ import DatePickerDialog from '../../../components/DatePickerDialog';
 import { Spinner } from '../../../shared/Loading';
 import QueryBuilder from '../../../components/QueryBuilder';
 import { ModalDialog } from '../../../components/Dialog';
-import { formatError, pluralizeCount, objectAccessor, useParamsQuery } from '../../../utils/helpers';
+import {
+  formatError,
+  pluralizeCount,
+  objectAccessor,
+  useParamsQuery
+} from '../../../utils/helpers';
 import useDebounce from '../../../utils/useDebounce';
 import MessageAlert from '../../../components/MessageAlert';
 import { TaskBulkUpdateMutation } from '../graphql/task_mutation';
@@ -72,8 +81,12 @@ export default function TodoList({
   const [checkedOptions, setCheckOptions] = useState('none')
   const taskQuery = {
     completedTasks: 'completed: true',
-    tasksDueIn10Days: `due_date >= '${dateToString(new Date())}' AND due_date <= '${futureDateAndTimeToString(10)}' AND completed: false`,
-    tasksDueIn30Days: `due_date >= '${dateToString(new Date())}' AND due_date <= '${futureDateAndTimeToString(30)}' AND completed: false`,
+    tasksDueIn10Days: `due_date >= '${dateToString(
+      new Date()
+    )}' AND due_date <= '${futureDateAndTimeToString(10)}' AND completed: false`,
+    tasksDueIn30Days: `due_date >= '${dateToString(
+      new Date()
+    )}' AND due_date <= '${futureDateAndTimeToString(30)}' AND completed: false`,
     tasksOpen: 'completed: false',
     tasksOpenAndOverdue: `due_date <= '${futureDateAndTimeToString(0)}' AND completed: false`,
     tasksWithNoDueDate: 'due_date:nil',
@@ -83,10 +96,12 @@ export default function TodoList({
   };
   const [selectedTasks, setSelected] = useState([]);
   const [selectedTask, setSelectedTask] = useState(null);
-  const [bulkUpdating, setBulkUpdating] = useState(false)
-  const { t } = useTranslation(['task', 'common'])
+  const [bulkUpdating, setBulkUpdating] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
+  const matches = useMediaQuery('(max-width:800px)');
+  const { t } = useTranslation(['task', 'common']);
 
-  const path = useParamsQuery()
+  const path = useParamsQuery();
   const taskURLFilter = path.get('filter');
 
   const { onChange, signedBlobId, status } = useFileUpload({
@@ -107,21 +122,25 @@ export default function TodoList({
   }
 
   const [loadAssignees, { data: liteData }] = useLazyQuery(UsersLiteQuery, {
-    variables: { query: 'user_type:admin OR user_type:custodian OR user_type:security_guard OR user_type:contractor OR user_type:site_worker'},
+    variables: {
+      query:
+        'user_type:admin OR user_type:custodian OR user_type:security_guard OR user_type:contractor OR user_type:site_worker'
+    },
     errorPolicy: 'all'
   });
 
-  // eslint-disable-next-line no-nested-ternary
-  const qr = query && query.length
-    ? query
-    : location === 'my_tasks'
-    ? `assignees: '${currentUser.name}'`
-    : '';
+  const qr =
+    // eslint-disable-next-line no-nested-ternary
+    query && query.length
+      ? query
+      : location === 'my_tasks'
+      ? `assignees: '${currentUser.name}'`
+      : '';
 
-   const joinedTaskQuery =  `${qr} ${
+  const joinedTaskQuery = `${qr} ${
     // eslint-disable-next-line no-nested-ternary
     filterQuery ? `AND ${filterQuery}` : searchInputQuery ? `AND ${searchInputQuery}` : ''
-  }`
+  }`;
 
   const [
     loadTasks,
@@ -136,9 +155,9 @@ export default function TodoList({
   });
 
   const [assignUserToNote] = useMutation(AssignUser);
-  const [taskUpdate] = useMutation(UpdateNote)
-  const [bulkUpdate] = useMutation(TaskBulkUpdateMutation)
-  const taskListIds = data?.flaggedNotes.map(task => task.id)
+  const [taskUpdate] = useMutation(UpdateNote);
+  const [bulkUpdate] = useMutation(TaskBulkUpdateMutation);
+  const taskListIds = data?.flaggedNotes.map(task => task.id);
   function openModal() {
     setModalOpen(!open);
   }
@@ -168,8 +187,8 @@ export default function TodoList({
     }
 
     // TODO: Remove this quick fix after we move a modularized dashboard for each logged in user
-    if(taskURLFilter) {
-      if(taskURLFilter in taskQuery){
+    if (taskURLFilter) {
+      if (taskURLFilter in taskQuery) {
         setCurrentTile(taskURLFilter);
         setQuery(objectAccessor(taskQuery, taskURLFilter));
         loadTasks();
@@ -181,7 +200,7 @@ export default function TodoList({
       setQuery(objectAccessor(taskQuery, 'myOpenTasks'));
       loadTasks();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedFilterInputText, debouncedSearchText, loadTasks]);
 
   function handleRefetch() {
@@ -202,7 +221,7 @@ export default function TodoList({
         })
       });
     }
-  }, [status, selectedTask,signedBlobId, taskUpdate, refetch]);
+  }, [status, selectedTask, signedBlobId, taskUpdate, refetch]);
 
   function assignUnassignUser(noteId, userId) {
     assignUserToNote({ variables: { noteId, userId } })
@@ -261,7 +280,7 @@ export default function TodoList({
     setQuery(objectAccessor(taskQuery, key));
     // show tasks when a filter has been applied, we might have to move this to useEffect
     loadTasks();
-    history.push(`/tasks?filter=${key}`)
+    history.push(`/tasks?filter=${key}`);
   }
 
   function inputToSearch(e) {
@@ -278,7 +297,6 @@ export default function TodoList({
     }
     setOpenFilter(!filterOpen);
   }
-
 
   function handleQueryOnChange(selectedOptions) {
     if (selectedOptions) {
@@ -377,15 +395,15 @@ export default function TodoList({
     setCheckOptions(option)
     switch (option) {
       case 'all':
-       return setSelected([])
+        return setSelected([]);
       case 'all_on_the_page':
-       return setSelected(taskListIds)
+        return setSelected(taskListIds);
       default:
-        return setSelected([])
+        return setSelected([]);
     }
   }
 
-  function handleBulkUpdate(){
+  function handleBulkUpdate() {
     // handle update here
     setBulkUpdating(true)
     bulkUpdate({ variables: {
@@ -411,6 +429,22 @@ export default function TodoList({
         message: formatError(err.message),
       })
     })
+      .then(() => {
+        handleRefetch();
+        setBulkUpdating(false);
+        setSelected([]);
+        setIsSuccessAlert(true);
+        setMessage(
+          `Selected Tasks have been successfully marked as ${
+            currentTile === 'completedTasks' ? 'incomplete' : 'complete'
+          }`
+        );
+      })
+      .catch(err => {
+        setBulkUpdating(false);
+        setIsSuccessAlert(false);
+        setMessage(formatError(err.message));
+      });
   }
 
   if (tasksError) return <ErrorPage error={tasksError.message} />;
@@ -448,7 +482,9 @@ export default function TodoList({
           {/* show task details when on task page load */}
           <DialogTitle id="task_modal">
             <CenteredContent>
-              <span>{taskId ? t('task.task_modal_detail_text') : t('task.task_modal_create_text')}</span>
+              <span>
+                {taskId ? t('task.task_modal_detail_text') : t('task.task_modal_create_text')}
+              </span>
             </CenteredContent>
           </DialogTitle>
           <DialogContent>
@@ -486,15 +522,15 @@ export default function TodoList({
               margin="dense"
               style={{ width: '89%' }}
               InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <IconButton>
-                        <SearchIcon />
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                  'aria-label': 'search tasks'
-                }}
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <IconButton>
+                      <SearchIcon />
+                    </IconButton>
+                  </InputAdornment>
+                ),
+                'aria-label': 'search tasks'
+              }}
             />
           </Grid> 
           <Grid item md={1} xs={4} style={{ display: 'flex', alignItems: 'center'}}>
@@ -552,6 +588,28 @@ export default function TodoList({
               selectedTasks={selectedTasks}
               currentTile={currentTile}
             />
+            {/* <div style={{ height: '100vw' }}>
+              <p>Task list</p>
+              <IconButton onClick={() => setDrawerOpen(!drawerOpen)}>
+                <SearchIcon />
+              </IconButton>
+            </div> */}
+            <Drawer
+              variant="persistent"
+              anchor="right"
+              open={drawerOpen}
+              onClose={() => setDrawerOpen(false)}
+              classes={{ paper: matches ? classes.drawerPaperMobile : classes.drawerPaper }}
+            >
+              <IconButton onClick={() => setDrawerOpen(false)} edge="start">
+                <KeyboardArrowRightIcon />
+              </IconButton>
+              <img
+                src="https://i.postimg.cc/5NZm6Fm4/task-details.png"
+                alt="task-details-page"
+                border="0"
+              />
+            </Drawer>
             {data?.flaggedNotes.length ? (
               <div>
                 {data?.flaggedNotes.map(task => (
@@ -565,6 +623,8 @@ export default function TodoList({
                     handleCompleteNote={handleCompleteNote}
                     handleAddSubTask={handleAddSubTask}
                     handleUploadDocument={handleUploadDocument}
+                    setDrawerOpen={() => setDrawerOpen(!drawerOpen)}
+                    drawerOpen={drawerOpen}
                   />
                 ))}
               </div>
@@ -601,18 +661,28 @@ const useStyles = makeStyles(() => ({
     alignItems: 'right',
     justifyContent: 'space-between',
     width: '100%',
-    overflowX: 'auto',
+    overflowX: 'auto'
   },
   formControl: {
     minWidth: 160,
     maxWidth: 300
   },
-  iconButton: {
+  iconButton: {},
+  drawerPaper: {
+    width: '60%',
+    marginTop: '51px',
+    opacity: '1',
+    backgroundColor: '#f5f5f4 !important'
+  },
+  drawerPaperMobile: {
+    width: '100%',
+    marginTop: '51px',
+    opacity: '1',
+    backgroundColor: '#f5f5f4 !important'
   },
   divider: {
     height: 28,
     margin: 4
   },
-  input: {
-  }
+  input: {}
 }));

@@ -1,3 +1,6 @@
+/* eslint-disable complexity */
+/* eslint-disable max-len */
+/* eslint-disable max-lines */
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
@@ -171,7 +174,7 @@ export function TaskDataList({
                 aria-haspopup="true"
                 data-testid="show_task_subtasks"
                 size="medium"
-                onClick={handleOpenSubTasksClick}
+                onClick={(e) => handleOpenSubTasksClick(e)}
               >
                 {openSubTask
                   ? <KeyboardArrowUpIcon fontSize="small" color="primary" />
@@ -315,7 +318,7 @@ export function TaskDataList({
         <Grid item md={2} style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }} data-testid="task_menu_section">
           <Hidden smDown>
             {task.completed
-              ? <Chip size="small" label={t('task.complete')} className={classes.completed} /> 
+              ? <Chip size="small" label={t('task.complete')} className={classes.completed} />
               : <Chip size="small" label={t('task.open')} className={classes.open} />}
           </Hidden>
           <Hidden smDown>

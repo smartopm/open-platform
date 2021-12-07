@@ -21,6 +21,8 @@ export default function TodoItem({
   handleCompleteNote,
   handleAddSubTask,
   handleUploadDocument,
+  setDrawerOpen,
+  drawerOpen
 }) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
@@ -111,12 +113,18 @@ export default function TodoItem({
     });
   }
 
-  function handleParentTaskClick(){
+  function handleParentTaskClick(e){
+    e.stopPropagation();
     if(task && !(data?.taskSubTasks?.length > 0)){
        loadSubTasks();
     }
 
     toggleTask(task)
+  }
+
+  function handleTodoItemClick(e) {
+    e.stopPropagation();
+    setDrawerOpen(!drawerOpen);
   }
 
   return (
@@ -134,6 +142,8 @@ export default function TodoItem({
             styles={{marginBottom: 0}}
             openSubTask={objectAccessor(tasksOpen, task.id)}
             handleOpenSubTasksClick={handleParentTaskClick}
+            clickable
+            handleClick={handleTodoItemClick}
           />
           {(isLoadingSubTasks || (isUpdating && objectAccessor(tasksOpen, task.id))) && <LinearSpinner />}
         </div>
@@ -155,6 +165,8 @@ export default function TodoItem({
               styles={{backgroundColor: '#F5F5F4'}}
               openSubTask={objectAccessor(tasksOpen, firstLevelSubTask.id)}
               handleOpenSubTasksClick={() => toggleTask(firstLevelSubTask)}
+              clickable
+              handleClick={handleTodoItemClick}
             />
           </div>
           {firstLevelSubTask?.subTasks?.length > 0 &&
@@ -171,6 +183,8 @@ export default function TodoItem({
                       isSelected={isSelected}
                       menuData={menuData}
                       styles={{backgroundColor: '#ECECEA'}}
+                      clickable
+                      handleClick={handleTodoItemClick}
                     />
                   </div>
                 ))}
@@ -216,6 +230,8 @@ const Task = {
   handleCompleteNote: PropTypes.func.isRequired,
   handleAddSubTask: PropTypes.func.isRequired,
   handleUploadDocument: PropTypes.func.isRequired,
+  setDrawerOpen: PropTypes.func.isRequired,
+  drawerOpen: PropTypes.bool.isRequired
 };
 
 const useStyles = makeStyles(() => ({
