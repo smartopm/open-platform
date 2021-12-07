@@ -93,6 +93,7 @@ export default function TodoList({
 
   const path = useParamsQuery()
   const taskURLFilter = path.get('filter');
+  const redirectedTaskId = path.get('taskId');
 
   const { onChange, signedBlobId, status } = useFileUpload({
     client: useApolloClient()
@@ -565,7 +566,8 @@ export default function TodoList({
                 classes={{ paper: matches ? classes.drawerPaperMobile : classes.drawerPaper }}
               >
                 <TaskUpdate
-                  taskId={selectedTask ? selectedTask.id : data?.flaggedNotes[0].id}
+                  // eslint-disable-next-line no-nested-ternary
+                  taskId={selectedTask ? selectedTask.id : redirectedTaskId || data?.flaggedNotes[0].id}
                   handleSplitScreenOpen={handleTodoItemClick}
                   handleSplitScreenClose={() => setSplitScreenOpen(false)}
                 />

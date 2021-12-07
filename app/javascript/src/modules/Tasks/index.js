@@ -3,6 +3,7 @@ import Tasks from './containers/Todo';
 import TaskReminder from './TaskReminder';
 import {siteManagers} from '../../utils/constants';
 import AccessCheck from '../Permissions/Components/AccessCheck';
+import TaskPageRedirect from './Components/TaskPageRedirect';
 
 const tasksPermissions = [
   'can_create_note',
@@ -26,6 +27,15 @@ const taskUpdatePermissions = [
 
 const currentModule = 'note'
 
+
+function RenderTaskUpdate() {
+  return (
+    <AccessCheck module={currentModule} allowedPermissions={taskUpdatePermissions}>
+      <TaskPageRedirect />
+    </AccessCheck>
+)
+}
+
 function RenderTasks() {
   return (
     <AccessCheck module={currentModule} allowedPermissions={[...tasksPermissions, ...taskUpdatePermissions]}>
@@ -47,6 +57,15 @@ export default {
   accessibleBy: [],
   moduleName: currentModule,
   subRoutes: [
+    {
+      routeProps: {
+        path: '/tasks/:taskId',
+        exact: true,
+        component: RenderTaskUpdate
+      },
+      name: 'Task Update',
+      accessibleBy: siteManagers,
+    },
     {
       routeProps: {
         path: '/my_tasks',
