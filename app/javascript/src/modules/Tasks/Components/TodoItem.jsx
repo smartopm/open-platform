@@ -17,7 +17,6 @@ export default function TodoItem({
   handleChange,
   selectedTasks,
   isSelected,
-  handleTaskDetails,
   handleCompleteNote,
   handleAddSubTask,
   handleUploadDocument,
@@ -44,7 +43,7 @@ export default function TodoItem({
     {
       content: t('menu.open_task_details'),
       isAdmin: true,
-      handleClick: () => handleTaskDetails({ id: selectedTask.id })
+      handleClick: () => handleTaskDetails()
     },
     {
       content: t('menu.add_subtask'),
@@ -83,6 +82,11 @@ export default function TodoItem({
     event.stopPropagation();
     setAnchorEl(event.currentTarget);
     setSelectedTask(taskItem);
+  }
+
+  function handleTaskDetails() {
+    setAnchorEl(null);
+    handleTodoClick(selectedTask);
   }
 
   function handleClose(event) {
@@ -224,7 +228,6 @@ const Task = {
   handleChange: PropTypes.func.isRequired,
   selectedTasks: PropTypes.arrayOf(PropTypes.string).isRequired,
   isSelected: PropTypes.bool.isRequired,
-  handleTaskDetails: PropTypes.func.isRequired,
   handleCompleteNote: PropTypes.func.isRequired,
   handleAddSubTask: PropTypes.func.isRequired,
   handleUploadDocument: PropTypes.func.isRequired,

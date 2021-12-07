@@ -73,8 +73,6 @@ export default function TodoList({
   const debouncedFilterInputText = useDebounce(userNameSearchTerm, 500);
   const [taskUpdateStatus, setTaskUpdateStatus] = useState({ message: '', success: false })
   const [checkedOptions, setCheckOptions] = useState('none')
-  const [drawerOpen, setDrawerOpen] = useState(true);
-  const [isSuccessAlert, setIsSuccessAlert] = useState(false);
   const taskQuery = {
     completedTasks: 'completed: true',
     tasksDueIn10Days: `due_date >= '${dateToString(new Date())}' AND due_date <= '${futureDateAndTimeToString(10)}' AND completed: false`,
@@ -107,10 +105,6 @@ export default function TodoList({
     } else {
       setSelected([...selectedTasks, selectedId]);
     }
-  }
-
-  function handleTaskDetails({ id, comment }) {
-    history.push(`/tasks/${id}${comment ? '?comment=true' : ''}`);
   }
 
   const [loadAssignees, { data: liteData }] = useLazyQuery(UsersLiteQuery, {
@@ -586,7 +580,6 @@ export default function TodoList({
                     handleChange={handleChange}
                     selectedTasks={selectedTasks}
                     isSelected={checkedOptions === 'all'}
-                    handleTaskDetails={handleTaskDetails}
                     handleCompleteNote={handleCompleteNote}
                     handleAddSubTask={handleAddSubTask}
                     handleUploadDocument={handleUploadDocument}
