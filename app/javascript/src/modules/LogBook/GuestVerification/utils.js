@@ -9,14 +9,21 @@ function checkInfo(req) {
   return !!info
 }
 
+/**
+ * Checks if all verification steps are completed
+ * @param {Object} request The entry we are checking aganst
+ * @returns true if all steps have been completed and false otherwise
+ */
 function validateAllSteps(request){
+  if(!request) return false
   const status = checkStepStatus(request)
   return status.basicInfo && status.idCapture && status.videoRecording
 }
 
 /**
  * checks if a given step has been completed based on the entry request
- * @param {Object} request
+ * @param {Object} request request The entry we are checking aganst
+ * @return {{ basicInfo: boolean, idCapture: boolean, videoRecording: boolean}}
  */
 function checkStepStatus(request){
   let status = { basicInfo: false, idCapture: false, videoRecording: false}
@@ -24,7 +31,7 @@ function checkStepStatus(request){
  if (checkUserInformation(request)) {
    status = {...status, basicInfo: true}
  }
- if (request.imageUrls) {
+ if (request.imageUrls && request.imageUrls.length === 2) {
    status = {...status, idCapture: true}
  }
  if (request.videoUrl) {

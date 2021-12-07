@@ -10,7 +10,6 @@ import { CommunityFeaturesWhiteList } from '../../../../utils/constants';
 import { checkStepStatus } from '../utils';
 
 export default function steps(handleNext, handleGotoStep, communityFeatures, request) {
-  console.log(request.status)
   const verificationSteps = [
     {
       title: 'Guest Form',
@@ -30,7 +29,7 @@ export default function steps(handleNext, handleGotoStep, communityFeatures, req
     {
       title: 'Review and Confirmation',
       component: <GuestReview handleNext={handleNext} handleGotoStep={handleGotoStep} />,
-      isCompleted: request.status === 'approved'
+      isCompleted: request?.status === 'approved'
     }
   ];
   if (!featureCheckHelper(communityFeatures, 'LogBook', CommunityFeaturesWhiteList.guestVerification)) {
