@@ -1,5 +1,6 @@
 import React, { useContext } from 'react'
 import {  useParams } from 'react-router-dom'
+import PropTypes from 'prop-types';
 import { useQuery, useMutation } from 'react-apollo'
 import { Container } from '@material-ui/core'
 import { UsersLiteQuery, HistoryQuery } from '../../../graphql/queries'
@@ -10,8 +11,8 @@ import TaskUpdateForm from '../Components/TaskUpdateForm'
 import { AssignUser } from '../../../graphql/mutations'
 import { TaskQuery } from '../graphql/task_queries'
 
-export default function TaskUpdate() {
-  const { taskId } = useParams()
+export default function TaskUpdate({ taskId }) {
+  // const { taskId } = useParams()
   const authState = useContext(AuthStateContext)
   const { data, error, loading, refetch } = useQuery(TaskQuery, {
     variables: { taskId },
@@ -52,4 +53,8 @@ export default function TaskUpdate() {
       />
     </Container>
   )
+}
+
+TaskUpdate.propTypes = {
+  taskId: PropTypes.string.isRequired
 }

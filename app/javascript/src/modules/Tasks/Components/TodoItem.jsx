@@ -21,8 +21,7 @@ export default function TodoItem({
   handleCompleteNote,
   handleAddSubTask,
   handleUploadDocument,
-  setDrawerOpen,
-  drawerOpen
+  handleDrawerOpen
 }) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
@@ -124,7 +123,7 @@ export default function TodoItem({
 
   function handleTodoItemClick(e) {
     e.stopPropagation();
-    setDrawerOpen(!drawerOpen);
+    handleDrawerOpen(task);
   }
 
   return (
@@ -230,8 +229,7 @@ const Task = {
   handleCompleteNote: PropTypes.func.isRequired,
   handleAddSubTask: PropTypes.func.isRequired,
   handleUploadDocument: PropTypes.func.isRequired,
-  setDrawerOpen: PropTypes.func.isRequired,
-  drawerOpen: PropTypes.bool.isRequired
+  handleDrawerOpen: PropTypes.func.isRequired
 };
 
 const useStyles = makeStyles(() => ({

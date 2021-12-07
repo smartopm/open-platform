@@ -17,7 +17,6 @@ import FilterListIcon from '@material-ui/icons/FilterList';
 import Drawer from '@mui/material/Drawer';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
-
 import SearchIcon from '@material-ui/icons/Search';
 import MaterialConfig from 'react-awesome-query-builder/lib/config/material';
 import { makeStyles } from '@material-ui/core/styles';
@@ -32,6 +31,7 @@ import ErrorPage from '../../../components/Error';
 import Paginate from '../../../components/Paginate';
 import CenteredContent from '../../../components/CenteredContent';
 import TaskQuickSearch from './TaskQuickSearch';
+import TaskUpdate from '../containers/TaskUpdate';
 import { futureDateAndTimeToString, dateToString } from '../../../components/DateContainer';
 import DatePickerDialog from '../../../components/DatePickerDialog';
 import { Spinner } from '../../../shared/Loading';
@@ -79,6 +79,8 @@ export default function TodoList({
   const debouncedFilterInputText = useDebounce(userNameSearchTerm, 500);
   const [taskUpdateStatus, setTaskUpdateStatus] = useState({ message: '', success: false })
   const [checkedOptions, setCheckOptions] = useState('none')
+  const [drawerOpen, setDrawerOpen] = useState(true);
+  const [isSuccessAlert, setIsSuccessAlert] = useState(false);
   const taskQuery = {
     completedTasks: 'completed: true',
     tasksDueIn10Days: `due_date >= '${dateToString(
@@ -97,7 +99,6 @@ export default function TodoList({
   const [selectedTasks, setSelected] = useState([]);
   const [selectedTask, setSelectedTask] = useState(null);
   const [bulkUpdating, setBulkUpdating] = useState(false);
-  const [drawerOpen, setDrawerOpen] = useState(false);
   const matches = useMediaQuery('(max-width:800px)');
   const { t } = useTranslation(['task', 'common']);
 
@@ -206,6 +207,12 @@ export default function TodoList({
   function handleRefetch() {
     refetch();
   }
+
+  function handleTodoItemClick(task) {
+    setSelectedTask(task);
+    setDrawerOpen(true);
+  }
+
 
   useEffect(() => {
     if(status === 'DONE') {
@@ -588,28 +595,20 @@ export default function TodoList({
               selectedTasks={selectedTasks}
               currentTile={currentTile}
             />
-            {/* <div style={{ height: '100vw' }}>
-              <p>Task list</p>
-              <IconButton onClick={() => setDrawerOpen(!drawerOpen)}>
-                <SearchIcon />
-              </IconButton>
-            </div> */}
-            <Drawer
-              variant="persistent"
-              anchor="right"
-              open={drawerOpen}
-              onClose={() => setDrawerOpen(false)}
-              classes={{ paper: matches ? classes.drawerPaperMobile : classes.drawerPaper }}
-            >
-              <IconButton onClick={() => setDrawerOpen(false)} edge="start">
-                <KeyboardArrowRightIcon />
-              </IconButton>
-              <img
-                src="https://i.postimg.cc/5NZm6Fm4/task-details.png"
-                alt="task-details-page"
-                border="0"
-              />
-            </Drawer>
+            {data?.flaggedNotes.length && (
+              <Drawer
+                variant="persistent"
+                anchor="right"
+                open={drawerOpen}
+                onClose={() => setDrawerOpen(false)}
+                classes={{ paper: matches ? classes.drawerPaperMobile : classes.drawerPaper }}
+              >
+                <IconButton onClick={() => setDrawerOpen(false)} edge="start">
+                  <KeyboardArrowRightIcon />
+                </IconButton>
+                <TaskUpdate taskId={selectedTask ? selectedTask.id : data?.flaggedNotes[0].id} />
+              </Drawer>
+            )}
             {data?.flaggedNotes.length ? (
               <div>
                 {data?.flaggedNotes.map(task => (
@@ -623,7 +622,7 @@ export default function TodoList({
                     handleCompleteNote={handleCompleteNote}
                     handleAddSubTask={handleAddSubTask}
                     handleUploadDocument={handleUploadDocument}
-                    setDrawerOpen={() => setDrawerOpen(!drawerOpen)}
+                    handleDrawerOpen={handleTodoItemClick}
                     drawerOpen={drawerOpen}
                   />
                 ))}
