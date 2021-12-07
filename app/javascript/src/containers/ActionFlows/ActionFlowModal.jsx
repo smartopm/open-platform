@@ -94,7 +94,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
         actionFieldsValues = setObjectValue(
           actionFieldsValues,
           key,
-          val.value.includes('_') ? titleize(val.value) : val.value
+          val.type === "variable" ? titleize(val.value) : val.value
         );
       });
       setMetaData(actionFieldsValues);
@@ -391,6 +391,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
                   <Select
                     labelId={`select-${actionField.name}`}
                     id={`${actionField.name}-id-section`}
+                    data-testid="select-label-action-field"
                     name={actionField.name}
                     value={objectAccessor(data, actionField.name) || ''}
                     onChange={handleSelect}

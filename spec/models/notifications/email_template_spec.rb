@@ -69,4 +69,15 @@ RSpec.describe Notifications::EmailTemplate, type: :model do
       )
     end
   end
+
+  describe '#variable_names' do
+    it 'extracts all variables into an array' do
+      body = '<h1> Hello %name%</h1>'
+      subject = 'This is a %subject_variable%'
+      template = create(:email_template, body: body, name: 'Template 1', subject: subject,
+                                         community_id: community.id)
+
+      expect(template.variable_names).to eql %w[name subject_variable]
+    end
+  end
 end

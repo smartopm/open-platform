@@ -408,3 +408,5 @@ en:
       body: We're building a better place to live, work and play.<br/><br/>And it's powered by a mobile app that will help us<br/>connect with residents, accelerate growth, and deliver<br/>responsive public services.<br/><br/>This is an automated email to confirm that your account<br/>just got created. Would you like to see more?
       action: GET STARTED
       subject: Welcome To %{community_name}
+  action_flow:
+    never: Never
