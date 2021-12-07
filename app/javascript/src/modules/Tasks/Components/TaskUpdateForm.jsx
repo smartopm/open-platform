@@ -209,7 +209,7 @@ export default function TaskUpdateForm({
           message={t('task.update_successful')}
         />
 
-        <Grid item md={7}>
+        <Grid item>
           <div className={classes.section} data-testid="task-info-section">
             <TaskInfoTop
               users={users}

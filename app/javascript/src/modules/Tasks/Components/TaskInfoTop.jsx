@@ -1,6 +1,7 @@
+/* eslint-disable complexity */
 import React, { useState } from 'react';
 import TextField from '@material-ui/core/TextField';
-import { Grid, Chip, Typography, Breadcrumbs, Button, IconButton } from '@material-ui/core';
+import { Grid, Chip, Typography, Button, IconButton } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from 'react-router';
 import PropTypes from 'prop-types';
@@ -11,7 +12,6 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import AlarmIcon from '@material-ui/icons/Alarm';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import moment from 'moment-timezone';
-import { Link } from 'react-router-dom';
 import Edit from '@material-ui/icons/Edit';
 import { useMutation } from 'react-apollo';
 import DatePickerDialog from '../../../components/DatePickerDialog';
@@ -90,17 +90,7 @@ export default function TaskInfoTop({
         handleClose={menuData.handleClose}
         list={menuData.menuList}
       />
-      <Grid container>
-        <Grid item md={12} xs={12}>
-          <Breadcrumbs aria-label="breadcrumb" data-testid="task-details-breadcrumb">
-            <Link color="inherit" to="/tasks">
-              {t('task.my_tasks')}
-            </Link>
-            <Typography gutterBottom color="textPrimary" style={{ marginTop: '4px' }}>
-              {t('task.task_details_text')}
-            </Typography>
-          </Breadcrumbs>
-        </Grid>
+      <Grid container spacing={1}>
         <Grid item md={9} xs={9}>
           {editingBody ? (
             <TextField
@@ -128,7 +118,7 @@ export default function TaskInfoTop({
           )}
         </Grid>
         {!editingBody && (
-          <Grid item xs={2} data-testid="edit_body_action">
+          <Grid item xs={2} md={1} data-testid="edit_body_action">
             <IconButton
               onClick={() => setEditingBody(true)}
               data-testid="edit_body_icon"
@@ -185,12 +175,12 @@ export default function TaskInfoTop({
       </Grid>
       <Grid item md={7}>
         <Grid container>
-          <Grid item xs={6} md={4}>
+          <Grid item xs={6} md={5}>
             <Typography variant="body1" style={{ marginTop: '21px' }} className={classes.title}>
               {t('task.due_date_text')}
             </Typography>
           </Grid>
-          <Grid item xs={6} md={4}>
+          <Grid item xs={6} md={6}>
             <DatePickerDialog
               handleDateChange={date => setDate(date)}
               selectedDate={selectedDate}
@@ -204,12 +194,12 @@ export default function TaskInfoTop({
 
         {isAssignee() && (
           <Grid container className={classes.inlineContainer}>
-            <Grid item xs={6} md={4}>
+            <Grid item xs={6} md={5}>
               <Typography variant="body1" className={classes.title} data-testid="active-reminder">
                 {t('task.active_reminder')}
               </Typography>
             </Grid>
-            <Grid item xs={6} md={4} style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <Grid item xs={6} md={6} style={{ display: 'flex', justifyContent: 'space-between' }}>
               {activeReminder ? (
                 <>
                   <AlarmIcon />
@@ -223,23 +213,23 @@ export default function TaskInfoTop({
         )}
 
         <Grid container className={classes.inlineContainer}>
-          <Grid item xs={6} md={4}>
+          <Grid item xs={6} md={5}>
             <Typography variant="body1" className={classes.title} data-testid="date_created_title">
               {t('task.date_created')}
             </Typography>
           </Grid>
-          <Grid item xs={6} md={4}>
+          <Grid item xs={6} md={6}>
             <Typography data-testid="date_created">{dateToString(data.createdAt)}</Typography>
           </Grid>
         </Grid>
 
         <Grid container className={classes.inlineContainer}>
-          <Grid item xs={4}>
+          <Grid item xs={6} md={5}>
             <Typography variant="body1" className={classes.title}>
               {t('task.assigned_to_txt')}
             </Typography>
           </Grid>
-          <Grid item xs={8}>
+          <Grid item xs={6} md={6}>
             {data.assignees.map(user => (
               <UserChip
                 key={user.id}
@@ -288,29 +278,34 @@ export default function TaskInfoTop({
             )}
           </Grid>
         </Grid>
-
-        <Grid container>
-          <Typography variant="body1" className={classes.title}>
-            {t('common:form_fields.description')}
-          </Typography>
-          <EditableField
-            value={description}
-            setValue={setDescription}
-            action={(
-              <Button
-                variant="outlined"
-                color="primary"
-                disabled={loading}
-                data-testid="edit_action_btn"
-                onClick={() => updateTask('description', description)}
-                startIcon={loading && <Spinner />}
-                style={{ marginTop: '10px' }}
-              >
-                {t('common:form_actions.update')}
-              </Button>
-            )}
-          />
-        </Grid>
+        {description && (
+          <Grid container>
+            <Grid item xs={12} md={5} style={{ paddingTop: '17px' }}>
+              <Typography variant="body1" className={classes.title}>
+                {t('common:form_fields.description')}
+              </Typography>
+            </Grid>
+            <Grid item xs={12} md={6}>
+              <EditableField
+                value={description}
+                setValue={setDescription}
+                action={(
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    disabled={loading}
+                    data-testid="edit_action_btn"
+                    onClick={() => updateTask('description', description)}
+                    startIcon={loading && <Spinner />}
+                    style={{ marginTop: '10px' }}
+                  >
+                    {t('common:form_actions.update')}
+                  </Button>
+                )}
+              />
+            </Grid>
+          </Grid>
+        )}
       </Grid>
     </>
   );

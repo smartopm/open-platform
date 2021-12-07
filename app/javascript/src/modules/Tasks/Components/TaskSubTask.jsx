@@ -119,88 +119,82 @@ export default function TaskSubTask({ taskId, users, assignUser }) {
         </Grid>
       </Grid>
       {data?.taskSubTasks?.length ? (
-        <Grid container style={{ alignItems: 'center' }}>
+        <Grid container>
           <Grid item md={12} xs={12} style={{ marginBottom: '2px'}}><Divider /></Grid>
           {data.taskSubTasks.map(task => (
             <Fragment key={task.id}>
-              <Grid item md={6} xs={12} style={{ display: 'flex', alignItems: 'center' }}>
-                <Checkbox
-                  inputProps={{ 'aria-label': 'primary checkbox' }}
-                  color="primary"
-                  data-testid="task-select-action"
-                  size="small"
-                  key={task.id}
-                  style={{ padding: 0 }}
-                />
-                <Typography
-                  variant="body2"
-                  data-testid="task_body"
-                  component="p"
-                  className={matches ? classes.taskBodyMobile : classes.taskBody}
-                >
-                  {task.body}
+              <Grid container spacing={1} item md={5} xs={6} className={classes.bodyAlign}>
+                <Grid item md={2}>
+                  <Checkbox
+                    inputProps={{ 'aria-label': 'primary checkbox' }}
+                    color="primary"
+                    data-testid="task-select-action"
+                    size="small"
+                    key={task.id}
+                    style={{ padding: 0 }}
+                  />
+                </Grid>
+                <Grid item md={10}>
+                  <Typography
+                    variant="body2"
+                    data-testid="task_body"
+                    component="p"
+                    className={matches ? classes.taskBodyMobile : classes.taskBody}
+                  >
+                    {task.body}
+                  </Typography>
+                </Grid>
+              </Grid>
+              <Grid item md={2} xs={6} className={classes.bodyAlign} style={{textAlign: 'right'}}>
+                <Typography variant="body2" component="span">
+                  {t('task:sub_task.due')}
+                  {task.dueDate ? dateToString(task.dueDate) : 'Never '}
                 </Typography>
               </Grid>
-              <Grid item md={6} xs={12} className={classes.details}>
+              <Grid item md={3} xs={6}>
                 <Grid container>
-                  <Grid item md={4} xs={8} style={matches ? {paddingLeft: '1.7rem', alignItems: 'center'} : { display: 'flex', alignItems: 'center', justifyContent: 'end' }}>
-                    <Typography variant="body2" component="span">
-                      {t('task:sub_task.due')}
-                      {task.dueDate ? dateToString(task.dueDate) : 'Never '}
-                    </Typography>
+                  <Grid item md={4}>
+                    <IconButton
+                      aria-controls="task-subtasks-icon"
+                      data-testid="task_subtasks_count"
+                      size="medium"
+                    >
+                      <AccountTreeIcon fontSize="small" color={task?.subTasks?.length ? 'primary': 'disabled'} />
+                    </IconButton>
+                    <span>{task?.subTasks?.length || 0}</span>
                   </Grid>
-                  <Grid item md={4} xs={4} className={matches ? classes.iconsMobile : classes.icons}>
-                    <Grid container>
-                      <Grid item md={8}>
-                        <IconButton
-                          aria-controls="task-subtasks-icon"
-                          data-testid="task_subtasks_count"
-                          size="medium"
-                        >
-                          <AccountTreeIcon fontSize="small" color={task?.subTasks?.length ? 'primary': 'disabled'} />
-                        </IconButton>
-                      </Grid>
-                      <Grid item md={4} className={classes.iconItem}>
-                        <span>{task?.subTasks?.length || 0}</span>
-                      </Grid>
-                    </Grid>
-                    <Grid container>
-                      <Grid item md={8}>
-                        <IconButton
-                          aria-controls="task-comment-icon"
-                          data-testid="task_comments_count"
-                          size="medium"
-                        >
-                          <QuestionAnswerIcon fontSize="small" color="disabled" />
-                        </IconButton>
-                      </Grid>
-                      <Grid item md={4} className={classes.iconItem}>
-                        <span>0</span>
-                      </Grid>
-                    </Grid>
-                    <Grid container>
-                      <Grid item md={8}>
-                        <IconButton
-                          key={task.id}
-                          aria-controls="task-attach-file-icon"
-                          size="medium"
-                        >
-                          <AttachFileIcon fontSize="small" color={task?.documents?.length ? 'primary': 'disabled'} />
-                        </IconButton>
-                      </Grid>
-                      <Grid item={4} className={classes.iconItem}>
-                        <span data-testid="file_attachments_total">{task.documents?.length}</span>
-                      </Grid>
-                    </Grid>
+                  <Grid item md={4}>
+                    <IconButton
+                      aria-controls="task-comment-icon"
+                      data-testid="task_comments_count"
+                      size="medium"
+                    >
+                      <QuestionAnswerIcon fontSize="small" color="disabled" />
+                    </IconButton>
+                    <span>0</span>
                   </Grid>
-                  <Grid item md={3} xs={3} className={classes.status}>
+                  <Grid item md={4}>
+                    <IconButton
+                      key={task.id}
+                      aria-controls="task-attach-file-icon"
+                      size="medium"
+                    >
+                      <AttachFileIcon fontSize="small" color={task?.documents?.length ? 'primary': 'disabled'} />
+                    </IconButton>
+                    <span data-testid="file_attachments_total">{task.documents?.length}</span>
+                  </Grid>
+                </Grid>
+              </Grid>
+              <Grid item md={2} xs={6} className={classes.bodyAlign} style={{textAlign: 'right'}}>
+                <Grid container>
+                  <Grid item md={8} xs={8}>
                     {task.completed
                     ? <Chip size="small" label={t('task.complete')} className={classes.completed} />
                     : <Chip size="small" label={t('task.open')} className={classes.open} />}
                   </Grid>
-                  <Grid item md={1} xs={1} className={classes.menu}>
+                  <Grid item md={4} xs={4}>
                     <IconButton
-                      edge="end"
+                      // edge="end"
                       onClick={event => handleOpenMenu(event, task)}
                       size="small"
                       color="primary"
@@ -258,6 +252,12 @@ TaskSubTask.propTypes = {
 };
 
 const useStyles = makeStyles(() => ({
+  bodyAlign: {
+    paddingTop: '10px'
+  },
+  alignText: {
+    textAlign: 'right'
+  },
   header: {
     alignItems: 'center',
     marginBottom: '8px'
