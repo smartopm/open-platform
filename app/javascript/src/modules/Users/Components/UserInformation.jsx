@@ -126,7 +126,7 @@ export default function UserInformation({
                 aria-controls="long-menu"
                 aria-haspopup="true"
                 onClick={() => setDrawerOpen(true)}
-                className='right-menu-drawer'
+                className="right-menu-drawer"
                 style={{
                   float: 'right',
                   marginRight: -23
@@ -229,7 +229,11 @@ export default function UserInformation({
         )}
         <FeatureCheck features={authState.user.community.features} name="Forms">
           <TabPanel value={tabValue} index="Forms">
-            <UserFilledForms userFormsFilled={data.user.formUsers} userId={data.user.id} />
+            <UserFilledForms
+              userFormsFilled={data.user.formUsers}
+              userId={data.user.id}
+              currentUser={authState.user.id}
+            />
           </TabPanel>
         </FeatureCheck>
         <FeatureCheck features={authState.user.community.features} name="Payments">

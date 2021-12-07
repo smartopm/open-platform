@@ -34,10 +34,11 @@ RSpec.describe Mutations::Form::FormUserCreate do
 
     let(:mutation) do
       <<~GQL
-        mutation formUserCreate($formId: ID!, $userId: ID!, $propValues: JSON!) {
-          formUserCreate(formId: $formId, userId: $userId, propValues: $propValues){
+        mutation formUserCreate($formId: ID!, $userId: ID!, $propValues: JSON!, $status: String) {
+          formUserCreate(formId: $formId, userId: $userId, propValues: $propValues, status: $status){
             formUser {
               id
+              status
               form {
                 id
               }
@@ -126,6 +127,7 @@ RSpec.describe Mutations::Form::FormUserCreate do
                                                           }).as_json
         expect(second_result.dig('data', 'formUserCreate', 'formUser', 'id')).not_to be_nil
         expect(second_result.dig('data', 'formUserCreate', 'formUser', 'form', 'id')).to eql form.id
+        expect(second_result.dig('data', 'formUserCreate', 'formUser', 'status')).to eq('pending')
         expect(current_user.notes.count).to eql 2
         expect(second_result['errors']).to be_nil
       end
@@ -175,6 +177,32 @@ RSpec.describe Mutations::Form::FormUserCreate do
                                                    user_role: another_user.role,
                                                  }).as_json
       expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'
+    end
+
+    it 'should create with status if it is provided' do
+      values = {
+        user_form_properties: [
+          {
+            form_property_id: form_property.id,
+            value: 'something new',
+          },
+        ],
+      }
+      variables = {
+        formId: form.id,
+        userId: current_user.id,
+        propValues: values.to_json,
+        status: 'draft',
+      }
+      result = DoubleGdpSchema.execute(mutation, variables: variables,
+                                                 context: {
+                                                   current_user: current_user,
+                                                   site_community: current_user.community,
+                                                   user_role: current_user.role,
+                                                 }).as_json
+
+      expect(result.dig('data', 'formUserCreate', 'formUser', 'status')).to eq('draft')
+      expect(result.dig('errors', 0, 'message')).to be_nil
     end
   end
 end

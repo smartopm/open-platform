@@ -7,6 +7,7 @@ module Mutations
       argument :form_id, ID, required: true
       argument :user_id, ID, required: true
       argument :prop_values, GraphQL::Types::JSON, required: true
+      argument :status, String, required: false
 
       # Prop Values should be passed in this format
       # propValues: {
@@ -36,19 +37,27 @@ module Mutations
         u_form
       end
 
+      # rubocop:disable Metrics/AbcSize
+      # rubocop:disable Metrics/MethodLength
       def create_form_user(form, vals)
         unless form.multiple_submissions_allowed
           raise_multiple_submissions_error(form, vals[:user_id])
         end
 
+        if vals[:status] == 'draft'
+          form.form_users.find_by(user_id: vals[:user_id], status: 'draft')&.destroy!
+        end
+
         form_user = form.form_users.new(vals.except(:form_id, :prop_values)
-                                            .merge(status: 'pending'))
+                                            .merge(status: (vals[:status] || 'pending')))
         ActiveRecord::Base.transaction do
           return add_user_form_properties(form_user, vals) if form_user.save
 
           raise GraphQL::ExecutionError, form_user.errors.full_messages
         end
       end
+      # rubocop:enable Metrics/MethodLength
+      # rubocop:enable Metrics/AbcSize
 
       def add_user_form_properties(form_user, vals)
         JSON.parse(vals[:prop_values])['user_form_properties'].each do |value|
