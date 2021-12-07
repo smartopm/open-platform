@@ -55,7 +55,6 @@ export default function TodoList({
   const [offset, setOffset] = useState(0);
   const [open, setModalOpen] = useState(false);
   const [filterOpen, setOpenFilter] = useState(false);
-  const [message, setMessage] = useState('');
   const [query, setQuery] = useState('');
   const [currentTile, setCurrentTile] = useState('');
   const [displayBuilder, setDisplayBuilder] = useState('none');
@@ -69,7 +68,7 @@ export default function TodoList({
   const [searchText, setSearchText] = useState('');
   const debouncedSearchText = useDebounce(searchText, 500);
   const debouncedFilterInputText = useDebounce(userNameSearchTerm, 500);
-  const [isSuccessAlert, setIsSuccessAlert] = useState(false);
+  const [taskUpdateStatus, setTaskUpdateStatus] = useState({ message: '', success: false })
   const [checkedOptions, setCheckOptions] = useState('none')
   const taskQuery = {
     completedTasks: 'completed: true',
@@ -196,7 +195,11 @@ export default function TodoList({
         refetch();
       })
       .catch((error) => {
-        setMessage(formatError(error.message));
+        setTaskUpdateStatus({
+          ...taskUpdateStatus,
+          success: false,
+          message: formatError(error.message),
+        })
       });
     }
   }, [status, selectedTask,signedBlobId, taskUpdate, refetch]);
@@ -208,7 +211,7 @@ export default function TodoList({
           refetch();
         }
       })
-      .catch(err => setMessage(err.message));
+      .catch(err => setTaskUpdateStatus({...taskUpdateStatus, success: false, message: err.message}));
   }
 
   function handleAddSubTask({ id }) {
@@ -226,13 +229,19 @@ export default function TodoList({
       variables: { id: noteId, completed: !completed }
     })
       .then(() => {
-        setMessage(`Task has been successfully marked as ${completed ? 'incomplete': 'complete'}`);
-        setIsSuccessAlert(true);
+        setTaskUpdateStatus({
+          ...taskUpdateStatus,
+          success: true,
+          message: `${t('task.task_marked_as')} ${completed ? t('task.incomplete') : t('task.complete')}`,
+        })
         refetch()
       })
       .catch(err => {
-        setMessage(formatError(err.message))
-        setIsSuccessAlert(false);
+        setTaskUpdateStatus({
+          ...taskUpdateStatus,
+          success: false,
+          message: formatError(err.message),
+        })
       })
   }
 
@@ -312,7 +321,10 @@ export default function TodoList({
     if (reason === 'clickaway') {
       return;
     }
-    setMessage('');
+    setTaskUpdateStatus({
+      ...taskUpdateStatus,
+      message: '',
+    })
   }
 
   const InitialConfig = MaterialConfig;
@@ -361,16 +373,6 @@ export default function TodoList({
     userName: 'user'
   };
 
-  function setSelectAllOption(){
-    if(taskListIds.length === selectedTasks.length){
-      setCheckOptions('none')
-      setSelected([])
-    } else {
-      setCheckOptions('all_on_the_page')
-      setSelected(taskListIds)
-    }
-  }
-
   function handleCheckOptions(option){
     setCheckOptions(option)
     switch (option) {
@@ -395,13 +397,19 @@ export default function TodoList({
       handleRefetch()
       setBulkUpdating(false)
       setSelected([])
-      setIsSuccessAlert(true);
-      setMessage(`Selected Tasks have been successfully marked as ${currentTile === 'completedTasks' ? 'incomplete' : 'complete'}`);
+      setTaskUpdateStatus({
+        ...taskUpdateStatus,
+        success: true,
+        message: `${t('task.selected_task_marked_as')} ${currentTile === 'completedTasks' ? t('task.incomplete') : t('task.complete')}`
+      })
      })
     .catch(err => {
       setBulkUpdating(false)
-      setIsSuccessAlert(false);
-      setMessage(formatError(err.message))
+      setTaskUpdateStatus({
+        ...taskUpdateStatus,
+        success: false,
+        message: formatError(err.message),
+      })
     })
   }
 
@@ -411,9 +419,9 @@ export default function TodoList({
     <>
       <div className="container" data-testid="todo-container">
         <MessageAlert
-          type={isSuccessAlert ? 'success' : 'error'}
-          message={message}
-          open={!!message}
+          type={taskUpdateStatus.success ? 'success' : 'error'}
+          message={taskUpdateStatus.message}
+          open={!!taskUpdateStatus.message}
           handleClose={handleMessageAlertClose}
         />
         <ModalDialog
@@ -454,22 +462,20 @@ export default function TodoList({
           </DialogContent>
         </Dialog>
         <Grid container spacing={1}>
-          <Grid item md={2} xs={5}>
-            <TaskQuickAction
-              currentTile={currentTile}
-              setSelectAllOption={setSelectAllOption}
-              selectedTasks={selectedTasks}
-              taskListIds={taskListIds}
-              checkedOptions={checkedOptions}
-              handleCheckOptions={handleCheckOptions}
-              bulkUpdating={bulkUpdating}
-              handleBulkUpdate={handleBulkUpdate}
-            />
+          <Grid item md={7} xs={12} style={{ display: 'flex', alignItems: 'center' }}>
+            <Grid container>
+              <Grid item md={4} xs={6} style={{ display: 'flex', alignItems: 'center'}}>
+                <TaskQuickAction
+                  checkedOptions={checkedOptions}
+                  handleCheckOptions={handleCheckOptions}
+                />
+              </Grid>
+              <Grid item md={6} xs={6} style={{ display: 'flex', alignItems: 'center' }}>
+                <TaskQuickSearch filterTasks={handleTaskFilter} currentTile={currentTile} />
+              </Grid>
+            </Grid>
           </Grid>
-          <Grid item md={4} xs={7}>
-            <TaskQuickSearch filterTasks={handleTaskFilter} currentTile={currentTile} />
-          </Grid>
-          <Grid item md={4} xs={8}>
+          <Grid item md={4} xs={8} style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
             <TextField
               data-testid="search_input"
               className={`border ${classes.input}`}
@@ -490,22 +496,21 @@ export default function TodoList({
                   'aria-label': 'search tasks'
                 }}
             />
-          </Grid>
-          <Grid item md={1} xs={4}>
-            <div style={{display: 'flex'}}>
-              <IconButton
-                data-testid="toggle_filter_btn"
-                type="submit"
-                className={classes.iconButton}
-                aria-label="search"
-                onClick={toggleFilterMenu}
-              >
-                <FilterListIcon />
-              </IconButton>
-              <Typography style={{marginTop: '10px'}}>
-                {filterCount ? `${filterCount} ${pluralizeCount(filterCount, 'Filter')}` : t('common:misc.filter')}
-              </Typography>
-            </div>
+          </Grid> 
+          <Grid item md={1} xs={4} style={{ display: 'flex', alignItems: 'center'}}>
+            <IconButton
+              data-testid="toggle_filter_btn"
+              type="submit"
+              className={classes.iconButton}
+              aria-label="search"
+              onClick={toggleFilterMenu}
+              size="medium"
+            >
+              <FilterListIcon />
+            </IconButton>
+            <Typography>
+              {filterCount ? `${filterCount} ${pluralizeCount(filterCount, 'Filter')}` : t('common:misc.filter')}
+            </Typography>
           </Grid>
         </Grid>
         <div

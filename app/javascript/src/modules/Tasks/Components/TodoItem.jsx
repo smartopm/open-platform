@@ -26,6 +26,7 @@ export default function TodoItem({
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedTask, setSelectedTask] = useState(null);
   const [tasksOpen, setTasksOpen] = useState({});
+  const [isUpdating, setIsUpdating] = useState(false)
   const anchorElOpen = Boolean(anchorEl);
   const { t } = useTranslation('common');
 
@@ -65,7 +66,7 @@ export default function TodoItem({
           ? t('menu.mark_incomplete')
           : t('menu.mark_complete'),
       isAdmin: true,
-      handleClick: () => handleCompleteNote(selectedTask.id, selectedTask.completed)
+      handleClick: () => handleNoteComplete()
     }
   ];
 
@@ -89,8 +90,16 @@ export default function TodoItem({
     setSelectedTask(null);
   }
 
+  function handleNoteComplete(){
+    setIsUpdating(true)
+    toggleTask(selectedTask)
+    handleCompleteNote(selectedTask.id, selectedTask.completed)
+  }
+
   function handleFileInputChange(event, taskToAttach = null) {
     event.stopPropagation()
+    setIsUpdating(true)
+    toggleTask(selectedTask || taskToAttach)
     handleUploadDocument(event, selectedTask || taskToAttach);
     handleClose(event);
   }
@@ -126,7 +135,7 @@ export default function TodoItem({
             openSubTask={objectAccessor(tasksOpen, task.id)}
             handleOpenSubTasksClick={handleParentTaskClick}
           />
-          {isLoadingSubTasks && <LinearSpinner />}
+          {(isLoadingSubTasks || (isUpdating && objectAccessor(tasksOpen, task.id))) && <LinearSpinner />}
         </div>
       )}
       {objectAccessor(tasksOpen, task.id) && data?.taskSubTasks?.length > 0 && data?.taskSubTasks?.map(firstLevelSubTask => (
@@ -192,13 +201,13 @@ const Task = {
       id: PropTypes.string,
       name: PropTypes.string
     })
-  ),
-  subTasks: PropTypes.arrayOf(PropTypes.object)
-};
+    ),
+    subTasks: PropTypes.arrayOf(PropTypes.object)
+  };
+  
+  TodoItem.defaultProps = {};
 
-TodoItem.defaultProps = {};
-
-TodoItem.propTypes = {
+  TodoItem.propTypes = {
   task: PropTypes.shape(Task).isRequired,
   handleChange: PropTypes.func.isRequired,
   selectedTasks: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -206,7 +215,7 @@ TodoItem.propTypes = {
   handleTaskDetails: PropTypes.func.isRequired,
   handleCompleteNote: PropTypes.func.isRequired,
   handleAddSubTask: PropTypes.func.isRequired,
-  handleUploadDocument: PropTypes.func.isRequired
+  handleUploadDocument: PropTypes.func.isRequired,
 };
 
 const useStyles = makeStyles(() => ({

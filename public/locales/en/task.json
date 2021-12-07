@@ -46,7 +46,10 @@
     "no_assignee": "No Assignee",
     "date_created": "Date Created",
     "complete": "Complete",
-    "open": "Open"
+    "open": "Open",
+    "task_marked_as": "Task has been successfully marked as",
+    "selected_task_marked_as": "Selected Tasks have been successfully marked as",
+    "incomplete": "Incomplete"
   },
   "document": {
     "uploaded_at": "Uploaded at",

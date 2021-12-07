@@ -264,7 +264,7 @@ export function TaskDataList({
           )}
         </Grid>
         <Grid item data-testid="task_details_section" md={2} xs={6}>
-          <Grid container style={{ display: 'flex', justifyContent: 'end' }}>
+          <Grid container style={{ display: 'flex', justifyContent: 'flex-end' }}>
             <Grid item md={2} xs={2}>
               <IconButton
                 aria-controls="task-subtasks-icon"
@@ -312,7 +312,7 @@ export function TaskDataList({
             </Grid>
           </Grid>
         </Grid>
-        <Grid item md={2} style={{ display: 'flex', alignItems: 'center', justifyContent: 'end' }} data-testid="task_menu_section">
+        <Grid item md={2} style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }} data-testid="task_menu_section">
           <Hidden smDown>
             {task.completed
               ? <Chip size="small" label={t('task.complete')} className={classes.completed} /> 
