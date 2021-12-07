@@ -67,7 +67,6 @@ class Campaign < ApplicationRecord
     result = sms_log.send_sms(add_prefix: false)
     sms_delivered = result.messages.select { |mm| success_codes.include?(mm.status.to_i) }.present?
     sms_log.save if sms_delivered
-    sms_delivered
   end
 
   def send_email(user_email)
@@ -93,9 +92,9 @@ class Campaign < ApplicationRecord
 
     users.each do |acc|
       if campaign_type.eql?('email')
-        return false unless send_email(acc.email)
+        send_email(acc.email)
       elsif acc.phone_number.present?
-        return false unless send_messages(admin_user, acc)
+        send_messages(admin_user, acc)
       end
     end
 
