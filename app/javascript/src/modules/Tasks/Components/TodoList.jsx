@@ -573,7 +573,7 @@ export default function TodoList({
                 <TaskUpdate
                   taskId={selectedTask ? selectedTask.id : data?.flaggedNotes[0].id}
                   handleSplitScreenOpen={handleTodoItemClick}
-                  handleDrawerClose={() => setSplitScreenOpen(false)}
+                  handleSplitScreenClose={() => setSplitScreenOpen(false)}
                 />
               </SplitScreen>
             )}
