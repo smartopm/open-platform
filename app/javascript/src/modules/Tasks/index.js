@@ -27,6 +27,9 @@ const taskUpdatePermissions = [
 
 const currentModule = 'note'
 
+/**
+ * @deprecated in favour of split screen page view
+ */
 function RenderTaskUpdate() {
   return (
     <AccessCheck module={currentModule} allowedPermissions={taskUpdatePermissions}>
@@ -38,7 +41,7 @@ function RenderTaskUpdate() {
 
 function RenderTasks() {
   return (
-    <AccessCheck module={currentModule} allowedPermissions={tasksPermissions}>
+    <AccessCheck module={currentModule} allowedPermissions={[...tasksPermissions, ...taskUpdatePermissions]}>
       <Tasks />
     </AccessCheck>
 )
@@ -57,15 +60,6 @@ export default {
   accessibleBy: [],
   moduleName: currentModule,
   subRoutes: [
-    {
-      routeProps: {
-        path: '/tasks/:taskId',
-        exact: true,
-        component: RenderTaskUpdate
-      },
-      name: 'Task Update',
-      accessibleBy: siteManagers,
-    },
     {
       routeProps: {
         path: '/my_tasks',

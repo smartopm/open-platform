@@ -13,7 +13,6 @@ import {
   InputAdornment,
   Typography,
 } from '@material-ui/core';
-import Drawer from '@mui/material/Drawer';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import SearchIcon from '@material-ui/icons/Search'
@@ -43,6 +42,7 @@ import { TaskBulkUpdateMutation } from '../graphql/task_mutation';
 import { TaskBulkUpdateAction, TaskQuickAction } from './TaskActionMenu';
 import TodoItem from './TodoItem';
 import FloatingButton from '../../../shared/buttons/FloatingButton';
+import SplitScreen from '../../../shared/SplitScreen';
 
 export default function TodoList({
   isDialogOpen,
@@ -89,7 +89,7 @@ export default function TodoList({
   const [selectedTasks, setSelected] = useState([]);
   const [selectedTask, setSelectedTask] = useState(null);
   const [bulkUpdating, setBulkUpdating] = useState(false);
-  const [drawerOpen, setDrawerOpen] = useState(true);
+  const [splitScreenOpen, setSplitScreenOpen] = useState(true);
   const matches = useMediaQuery('(max-width:800px)');
   const { t } = useTranslation(['task', 'common'])
 
@@ -422,7 +422,7 @@ export default function TodoList({
 
   function handleTodoItemClick(task) {
     setSelectedTask(task);
-    setDrawerOpen(true);
+    setSplitScreenOpen(true);
   }
 
   if (tasksError) return <ErrorPage error={tasksError.message} />;
@@ -565,18 +565,17 @@ export default function TodoList({
               currentTile={currentTile}
             />
             {data?.flaggedNotes.length && (
-              <Drawer
-                variant="persistent"
-                anchor="right"
-                open={drawerOpen}
-                onClose={() => setDrawerOpen(false)}
+              <SplitScreen
+                open={splitScreenOpen}
+                onClose={() => setSplitScreenOpen(false)}
                 classes={{ paper: matches ? classes.drawerPaperMobile : classes.drawerPaper }}
               >
-                {/* <IconButton onClick={() => setDrawerOpen(false)} edge="start">
-                  <KeyboardArrowRightIcon />
-                </IconButton> */}
-                <TaskUpdate taskId={selectedTask ? selectedTask.id : data?.flaggedNotes[0].id} handleDrawerOpen={handleTodoItemClick} />
-              </Drawer>
+                <TaskUpdate
+                  taskId={selectedTask ? selectedTask.id : data?.flaggedNotes[0].id}
+                  handleSplitScreenOpen={handleTodoItemClick}
+                  handleDrawerClose={() => setSplitScreenOpen(false)}
+                />
+              </SplitScreen>
             )}
             {data?.flaggedNotes.length ? (
               <div>
@@ -591,8 +590,7 @@ export default function TodoList({
                     handleCompleteNote={handleCompleteNote}
                     handleAddSubTask={handleAddSubTask}
                     handleUploadDocument={handleUploadDocument}
-                    handleDrawerOpen={handleTodoItemClick}
-                    drawerOpen={drawerOpen}
+                    handleTodoClick={handleTodoItemClick}
                   />
                 ))}
               </div>

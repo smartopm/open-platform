@@ -6,12 +6,12 @@ import { UsersLiteQuery, HistoryQuery } from '../../../graphql/queries'
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider'
 import Loading from '../../../shared/Loading'
 import ErrorPage from '../../../components/Error'
-import TaskUpdateForm from '../Components/TaskUpdateForm'
+import TaskDetail from '../Components/TaskDetail'
 import { AssignUser } from '../../../graphql/mutations'
 import { TaskQuery } from '../graphql/task_queries'
 
 // This will be deprecated in favour of split screen view
-export default function TaskUpdate({ taskId, handleDrawerOpen }) {
+export default function TaskUpdate({ taskId, handleSplitScreenOpen, handleSplitScreenClose }) {
   const authState = useContext(AuthStateContext)
   const { data, error, loading, refetch } = useQuery(TaskQuery, {
     variables: { taskId },
@@ -40,7 +40,7 @@ export default function TaskUpdate({ taskId, handleDrawerOpen }) {
 
   return (
     <Container maxWidth="xl">
-      <TaskUpdateForm
+      <TaskDetail
         data={data?.task}
         refetch={refetch}
         users={liteData?.usersLite}
@@ -49,17 +49,20 @@ export default function TaskUpdate({ taskId, handleDrawerOpen }) {
         historyData={taskHistoryData?.taskHistories}
         historyRefetch={historyRefetch}
         taskId={taskId}
-        handleDrawerOpen={handleDrawerOpen}
+        handleSplitScreenOpen={handleSplitScreenOpen}
+        handleSplitScreenClose={handleSplitScreenClose}
       />
     </Container>
   )
 }
 
 TaskUpdate.defaultProps = {
-  handleDrawerOpen: () => {}
+  handleSplitScreenOpen: () => {},
+  handleSplitScreenClose: () => {}
 }
 
 TaskUpdate.propTypes = {
   taskId: PropTypes.string.isRequired,
-  handleDrawerOpen: PropTypes.func
+  handleSplitScreenOpen: PropTypes.func,
+  handleSplitScreenClose: PropTypes.func
 }

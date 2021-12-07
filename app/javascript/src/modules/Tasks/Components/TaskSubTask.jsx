@@ -30,7 +30,7 @@ import { SubTasksQuery } from '../graphql/task_queries';
 import { Spinner } from '../../../shared/Loading';
 import TaskAddForm from './TaskForm';
 
-export default function TaskSubTask({ taskId, users, assignUser, handleDrawerOpen }) {
+export default function TaskSubTask({ taskId, users, assignUser, handleSplitScreenOpen }) {
   const classes = useStyles();
   const matches = useMediaQuery('(max-width:800px)');
   const limit = 3;
@@ -229,7 +229,7 @@ export default function TaskSubTask({ taskId, users, assignUser, handleDrawerOpe
         <MenuItem
           id="open_sub_task_details"
           key="open_sub_task_details"
-          onClick={() => handleDrawerOpen(selectedSubTask)}
+          onClick={() => handleSplitScreenOpen(selectedSubTask)}
         >
           {t('common:menu.open_task_details')}
         </MenuItem>
@@ -242,7 +242,7 @@ TaskSubTask.propTypes = {
   taskId: PropTypes.string.isRequired,
   users: PropTypes.arrayOf(PropTypes.object).isRequired,
   assignUser: PropTypes.func.isRequired,
-  handleDrawerOpen: PropTypes.func.isRequired
+  handleSplitScreenOpen: PropTypes.func.isRequired
 };
 
 const useStyles = makeStyles(() => ({

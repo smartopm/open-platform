@@ -1,6 +1,7 @@
 /* eslint-disable complexity */
 import React, { useState } from 'react';
 import TextField from '@material-ui/core/TextField';
+import Fab from '@mui/material/Fab';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { Grid, Chip, Typography, Button, IconButton } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
@@ -39,7 +40,8 @@ export default function TaskInfoTop({
   searchUser,
   menuData,
   isAssignee,
-  activeReminder
+  activeReminder,
+  handleSplitScreenClose
 }) {
   const { t } = useTranslation(['task', 'common']);
   const classes = useStyles();
@@ -92,10 +94,10 @@ export default function TaskInfoTop({
         list={menuData.menuList}
       />
       <Grid container spacing={1}>
+        <Fab sx={{borderRadius: '0', position: 'absolute', top: 20, left: 0, width: '20px' }} onClick={handleSplitScreenClose}>
+          <KeyboardArrowRightIcon />
+        </Fab>
         <Grid item md={9} xs={9}>
-          <div style={{paddingLeft: '-50px'}}>
-            <KeyboardArrowRightIcon />
-          </div>
           {editingBody ? (
             <TextField
               name="body"
@@ -335,7 +337,8 @@ TaskInfoTop.defaultProps = {
   data: {},
   liteData: {},
   selectedDate: null,
-  activeReminder: null
+  activeReminder: null,
+  handleSplitScreenClose: () => {}
 };
 TaskInfoTop.propTypes = {
   users: PropTypes.arrayOf(PropTypes.object),
@@ -366,5 +369,6 @@ TaskInfoTop.propTypes = {
         handleClick: PropTypes.func
       })
     )
-  }).isRequired
+  }).isRequired,
+  handleSplitScreenClose: PropTypes.func
 };
