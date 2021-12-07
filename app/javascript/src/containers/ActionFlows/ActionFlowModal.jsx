@@ -391,6 +391,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
                   <Select
                     labelId={`select-${actionField.name}`}
                     id={`${actionField.name}-id-section`}
+                    data-testid="select-label-action-field"
                     name={actionField.name}
                     value={objectAccessor(data, actionField.name) || ''}
                     onChange={handleSelect}

@@ -200,8 +200,9 @@ describe('render eventType, actionTypes, actionFields, ruleFields', () => {
   ];
 
   it('should display element to customize action flow', async () => {
+    let container;
     await act(async () => {
-      render(
+      container = render(
         <Context.Provider value={userMock}>
           <MockedProvider mocks={mocks} addTypename={false}>
             <MockedThemeProvider>
@@ -211,6 +212,12 @@ describe('render eventType, actionTypes, actionFields, ruleFields', () => {
         </Context.Provider>
       );
     });
+
+    expect(container.queryByTestId('select-event-type')).toBeInTheDocument();
+    expect(container.queryByTestId('select-event-type').textContent).toContain('On Task Update')
+    expect(container.queryByTestId('select-action-type')).toBeInTheDocument();
+    expect(container.queryByTestId('select-action-type').textContent).toContain('Send Notification')
+    expect(container.queryByTestId('select-label-action-field')).toBeInTheDocument();
   });
 
   it('should render email templates options', async () => {
