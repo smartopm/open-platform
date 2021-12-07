@@ -4,11 +4,11 @@ import { useHistory } from 'react-router-dom';
 import { objectAccessor, useParamsQuery } from '../utils/helpers';
 import CustomStepper from './CustomStepper';
 
-export default function HorizontalStepper({ steps, communityName }) {
+export default function HorizontalStepper({ steps, communityFeatures }) {
   const params = useParamsQuery();
   const currentStep = parseInt(params.get('step'), 10) || 0;
   const history = useHistory();
-  const listOfSteps = steps(handleNext, handleGotoStep, communityName);
+  const listOfSteps = steps(handleNext, handleGotoStep, communityFeatures);
   const validSteps = Boolean(listOfSteps?.length);
 
   /**
@@ -44,10 +44,12 @@ export default function HorizontalStepper({ steps, communityName }) {
 }
 
 HorizontalStepper.defaultProps = {
-  steps: () => null
+  steps: () => null,
+  communityFeatures: {}
 };
 
 HorizontalStepper.propTypes = {
   steps: PropTypes.func,
-  communityName: PropTypes.string.isRequired
+  // eslint-disable-next-line react/forbid-prop-types
+  communityFeatures: PropTypes.object
 };

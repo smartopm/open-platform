@@ -5,8 +5,10 @@ import GuestForm from './GuestForm';
 import VideoCapture from './VideoCapture';
 import IdCapture from './IdCapture';
 import GuestReview from './GuestReview';
+import { featureCheckHelper } from '../../../Features';
+import { CommunityFeaturesWhiteList } from '../../../../utils/constants';
 
-export default function steps(handleNext, handleGotoStep, communityName) {
+export default function steps(handleNext, handleGotoStep, communityFeatures) {
   const verificationSteps = [
     {
       title: 'Guest Form',
@@ -26,7 +28,7 @@ export default function steps(handleNext, handleGotoStep, communityName) {
     }
   ];
   // hardcoding this for now before we make this a community setting
-  if (communityName === 'Nkwashi') {
+  if (!featureCheckHelper(communityFeatures, 'LogBook', CommunityFeaturesWhiteList.guestVerification)) {
     return verificationSteps.slice(0, 1);
   }
   return verificationSteps;

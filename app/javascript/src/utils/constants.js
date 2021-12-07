@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 // values that can be reused across the codebase
 import MaterialConfig from 'react-awesome-query-builder/lib/config/material'
 import { toTitleCase } from './helpers';
@@ -780,5 +781,6 @@ export const entryLogsQueryBuilderInitialValue = {
   // Single place to manage list of specific community features to exclude
   export const CommunityFeaturesWhiteList = {
     denyGateAccessButton: 'Deny Gate Access Button',
-    automatedTaskReminders: 'Automated Task Reminders'
+    automatedTaskReminders: 'Automated Task Reminders',
+    guestVerification: "Guest Verification"
   }

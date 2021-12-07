@@ -33,7 +33,7 @@ import {
 import MessageAlert from '../../../components/MessageAlert';
 import { checkInValidRequiredFields, defaultRequiredFields , checkRequests } from '../utils';
 import QRCodeConfirmation from './QRCodeConfirmation';
-import FeatureCheck from '../../Features';
+import FeatureCheck, { featureCheckHelper } from '../../Features';
 import { EntryRequestContext } from '../GuestVerification/Context';
 import { initialRequestState } from '../GuestVerification/constants'
 import AccessCheck from '../../Permissions/Components/AccessCheck';
@@ -201,7 +201,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
       isGuest: guestListRequest,
       visitationDate: previousRoute !== 'entry_logs' ? formData.visitationDate : null,
     }
-    if(requestContext.request.id && communityName !== 'Nkwashi'){
+    if(requestContext.request.id && featureCheckHelper(authState?.user?.community?.features, 'LogBook', CommunityFeaturesWhiteList.guestVerification)){
       handleNext()
     }
 
@@ -223,7 +223,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
             return false
           }
           // hardcoding this for now before we make this a community setting
-          if ((communityName === 'Nkwashi' && type !==  'deny') || type === 'grant') {
+          if ((!featureCheckHelper(authState?.user?.community?.features, 'LogBook', CommunityFeaturesWhiteList.guestVerification) && type !==  'deny') || type === 'grant') {
             return requestContext.grantAccess(response.data.result.entryRequest.id)
           }
           requestContext.updateRequest({
@@ -232,7 +232,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
            return response.data.result.entryRequest.id
         })
         .then(response => {
-          if (communityName !== 'Nkwashi' && type !== 'grant') {
+          if (featureCheckHelper(authState?.user?.community?.features, 'LogBook', CommunityFeaturesWhiteList.guestVerification) && type !== 'grant') {
             handleNext()
           }
           return response
@@ -346,16 +346,6 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
     }
     setEmailError(false);
 
-
-    if (isGuestRequest && !formData.visitationDate) {
-      setDetails({
-        ...observationDetails,
-        isError: true,
-        message: t('logbook:logbook.visit_end_error')
-      });
-      return;
-    }
-
     switch (type) {
       case 'grant':
         handleCreateRequest('grant')
@@ -408,7 +398,6 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
       return true;
     return false;
   }
-  const communityName = authState.user.community.name
   return (
     <>
       <ReasonInputModal
@@ -851,25 +840,22 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
                 </>
               </FeatureCheck>
               <AccessCheck module="entry_request" allowedPermissions={['can_update_entry_request']}>
-                {
-                  communityName !== 'Nkwashi'  && (
-                    <Grid item>
-                      <Button
-                        onClick={event => handleModal(event, 'create')}
-                        color="primary"
-                        disabled={isLoading}
-                        data-testid="entry_user_next"
-                        startIcon={isLoading && <Spinner />}
-                      >
-                        {
+                <FeatureCheck features={authState?.user?.community?.features} name="LogBook" subFeature={CommunityFeaturesWhiteList.guestVerification}>
+                  <Grid item>
+                    <Button
+                      onClick={event => handleModal(event, 'create')}
+                      color="primary"
+                      disabled={isLoading}
+                      data-testid="entry_user_next"
+                      startIcon={isLoading && <Spinner />}
+                    >
+                      {
                           t('logbook:logbook.next_step')
                         }
-                      </Button>
-                    </Grid>
-                )
-              }
+                    </Button>
+                  </Grid>
+                </FeatureCheck>
               </AccessCheck>
-
             </Grid>
             <br />
           </>

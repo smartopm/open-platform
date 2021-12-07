@@ -43,6 +43,7 @@
       "tasks_settings": "Tasks Settings",
       "enable_auomated_reminders": "Enable Automated Task Reminders",
       "crop_image": "click to crop image",
-      "upload_error": "Selected image must not be greater than 150x40 in size"
+      "upload_error": "Selected image must not be greater than 150x40 in size",
+      "guest_verification": "Disable Guest Verification"
     }
 }

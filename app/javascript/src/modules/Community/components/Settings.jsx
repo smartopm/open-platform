@@ -281,7 +281,7 @@ export default function CommunitySettings({ data, refetch }) {
               setMessage({ isError: true, detail: t('community.upload_error') });
               setAlertOpen(true);
               return false
-            } 
+            }
             uploadLogo(file);
           },
           false
@@ -828,6 +828,26 @@ export default function CommunitySettings({ data, refetch }) {
                 onChange={e => handleModuleFeatures(e, 'LogBook', 'denyGateAccessButton')}
                 name="disable-deny-gate-access"
                 data-testid="disable_deny_gate_access"
+                color="primary"
+              />
+            )}
+          />
+        </Grid>
+      </Grid>
+      <Grid container spacing={3}>
+        <Grid item xs={12} sm={3} className={classes.checkBox}>
+          <Typography>{t('community.guest_verification')}</Typography>
+        </Grid>
+        <Grid item xs={12} sm={9}>
+          <FormControlLabel
+            control={(
+              <Checkbox
+                checked={objectAccessor(communityFeatures, String('LogBook'))?.features.includes(
+                  CommunityFeaturesWhiteList.guestVerification
+                )}
+                onChange={e => handleModuleFeatures(e, 'LogBook', 'guestVerification')}
+                name="disable-deny-gate-access"
+                data-testid="guest_verification"
                 color="primary"
               />
             )}

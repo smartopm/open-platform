@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import FeatureCheck from '..';
+import FeatureCheck, { featureCheckHelper } from '..';
 
 describe('Feature Check component', () => {
   const features = { Any: { features: ['Any SubFeature'] }, Payments: { features: [] } };
@@ -51,4 +51,14 @@ describe('Feature Check component', () => {
     expect(wrapper.queryByText('This is a sub feature of a module')).toBeInTheDocument();
   });
 
+  it('should check if a sub feature is enabled using the helper', () => {
+    const anyFeatures = { Any: { features: [''] }, Payments: { features: [] } };
+    const isVisible = featureCheckHelper(anyFeatures, 'Any', 'Any SubFeature')
+    expect(isVisible).toBe(true);
+  });
+  it('should check if a sub feature is disabled using the helper', () => {
+    const anyFeatures = { Any: { features: ['Any SubFeature'] }, Payments: { features: [] } };
+    const isVisible = featureCheckHelper(anyFeatures, 'Any', 'Any SubFeature')
+    expect(isVisible).toBe(false);
+  });
 });
