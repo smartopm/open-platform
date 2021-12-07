@@ -10,7 +10,7 @@ export default function CustomStepper({ activeStep, steps, handleStep, children 
       <Stepper nonLinear activeStep={activeStep} data-testid="stepper_container">
         {steps?.length > 1 &&
         steps.map((step, index) => (
-          <Step key={step.title}>
+          <Step key={step.title} completed={step.isCompleted}>
             <StepButton onClick={handleStep(index)} data-testid="step_button" />
           </Step>
         ))}
