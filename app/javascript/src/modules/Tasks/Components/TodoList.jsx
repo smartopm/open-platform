@@ -14,7 +14,6 @@ import {
   Typography,
 } from '@material-ui/core';
 import Drawer from '@mui/material/Drawer';
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import SearchIcon from '@material-ui/icons/Search'
@@ -286,6 +285,7 @@ export default function TodoList({
     }
     setOpenFilter(!filterOpen);
   }
+
 
   function handleQueryOnChange(selectedOptions) {
     if (selectedOptions) {
@@ -575,7 +575,7 @@ export default function TodoList({
                 {/* <IconButton onClick={() => setDrawerOpen(false)} edge="start">
                   <KeyboardArrowRightIcon />
                 </IconButton> */}
-                <TaskUpdate taskId={selectedTask ? selectedTask.id : data?.flaggedNotes[0].id} />
+                <TaskUpdate taskId={selectedTask ? selectedTask.id : data?.flaggedNotes[0].id} handleDrawerOpen={handleTodoItemClick} />
               </Drawer>
             )}
             {data?.flaggedNotes.length ? (

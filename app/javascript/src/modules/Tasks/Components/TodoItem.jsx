@@ -121,9 +121,8 @@ export default function TodoItem({
     toggleTask(task)
   }
 
-  function handleTodoItemClick(e) {
-    e.stopPropagation();
-    handleDrawerOpen(task);
+  function handleTodoItemClick(subTask) {
+    handleDrawerOpen(subTask);
   }
 
   return (
@@ -142,7 +141,7 @@ export default function TodoItem({
             openSubTask={objectAccessor(tasksOpen, task.id)}
             handleOpenSubTasksClick={handleParentTaskClick}
             clickable
-            handleClick={handleTodoItemClick}
+            handleClick={() => handleTodoItemClick(task)}
           />
           {(isLoadingSubTasks || (isUpdating && objectAccessor(tasksOpen, task.id))) && <LinearSpinner />}
         </div>
@@ -165,7 +164,7 @@ export default function TodoItem({
               openSubTask={objectAccessor(tasksOpen, firstLevelSubTask.id)}
               handleOpenSubTasksClick={() => toggleTask(firstLevelSubTask)}
               clickable
-              handleClick={handleTodoItemClick}
+              handleClick={() => handleTodoItemClick(firstLevelSubTask)}
             />
           </div>
           {firstLevelSubTask?.subTasks?.length > 0 &&
@@ -183,7 +182,7 @@ export default function TodoItem({
                       menuData={menuData}
                       styles={{backgroundColor: '#ECECEA'}}
                       clickable
-                      handleClick={handleTodoItemClick}
+                      handleClick={() => handleTodoItemClick(secondLevelSubTask)}
                     />
                   </div>
                 ))}
@@ -229,7 +228,7 @@ const Task = {
   handleCompleteNote: PropTypes.func.isRequired,
   handleAddSubTask: PropTypes.func.isRequired,
   handleUploadDocument: PropTypes.func.isRequired,
-  handleDrawerOpen: PropTypes.func.isRequired
+  handleDrawerOpen: PropTypes.func.isRequired,
 };
 
 const useStyles = makeStyles(() => ({

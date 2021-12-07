@@ -29,7 +29,8 @@ export default function TaskUpdateForm({
   currentUser,
   historyData,
   historyRefetch,
-  taskId
+  taskId,
+  handleDrawerOpen
 }) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -209,7 +210,7 @@ export default function TaskUpdateForm({
           message={t('task.update_successful')}
         />
 
-        <Grid item>
+        <Grid>
           <div className={classes.section} data-testid="task-info-section">
             <TaskInfoTop
               users={users}
@@ -233,6 +234,7 @@ export default function TaskUpdateForm({
               users={users}
               assignUser={assignUser}
               refetch={refetch}
+              handleDrawerOpen={handleDrawerOpen}
             />
           </div>
           <div className={classes.section} data-testid="task-comments-section">
@@ -260,7 +262,8 @@ TaskUpdateForm.defaultProps = {
   users: [],
   data: {},
   historyData: [],
-  taskId: ''
+  taskId: '',
+  handleDrawerOpen: () => {}
 };
 TaskUpdateForm.propTypes = {
   users: PropTypes.arrayOf(PropTypes.object),
@@ -276,5 +279,6 @@ TaskUpdateForm.propTypes = {
     })
   ),
   historyRefetch: PropTypes.func.isRequired,
-  taskId: PropTypes.string
+  taskId: PropTypes.string,
+  handleDrawerOpen: PropTypes.func
 };

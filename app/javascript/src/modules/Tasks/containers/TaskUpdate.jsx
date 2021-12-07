@@ -1,5 +1,4 @@
 import React, { useContext } from 'react'
-import {  useParams } from 'react-router-dom'
 import PropTypes from 'prop-types';
 import { useQuery, useMutation } from 'react-apollo'
 import { Container } from '@material-ui/core'
@@ -11,8 +10,8 @@ import TaskUpdateForm from '../Components/TaskUpdateForm'
 import { AssignUser } from '../../../graphql/mutations'
 import { TaskQuery } from '../graphql/task_queries'
 
-export default function TaskUpdate({ taskId }) {
-  // const { taskId } = useParams()
+// This will be deprecated in favour of split screen view
+export default function TaskUpdate({ taskId, handleDrawerOpen }) {
   const authState = useContext(AuthStateContext)
   const { data, error, loading, refetch } = useQuery(TaskQuery, {
     variables: { taskId },
@@ -50,11 +49,17 @@ export default function TaskUpdate({ taskId }) {
         historyData={taskHistoryData?.taskHistories}
         historyRefetch={historyRefetch}
         taskId={taskId}
+        handleDrawerOpen={handleDrawerOpen}
       />
     </Container>
   )
 }
 
+TaskUpdate.defaultProps = {
+  handleDrawerOpen: () => {}
+}
+
 TaskUpdate.propTypes = {
-  taskId: PropTypes.string.isRequired
+  taskId: PropTypes.string.isRequired,
+  handleDrawerOpen: PropTypes.func
 }

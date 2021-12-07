@@ -1,6 +1,7 @@
 /* eslint-disable complexity */
 import React, { useState } from 'react';
 import TextField from '@material-ui/core/TextField';
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import { Grid, Chip, Typography, Button, IconButton } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from 'react-router';
@@ -92,6 +93,9 @@ export default function TaskInfoTop({
       />
       <Grid container spacing={1}>
         <Grid item md={9} xs={9}>
+          <div style={{paddingLeft: '-50px'}}>
+            <KeyboardArrowRightIcon />
+          </div>
           {editingBody ? (
             <TextField
               name="body"
@@ -280,7 +284,7 @@ export default function TaskInfoTop({
         </Grid>
         {description && (
           <Grid container>
-            <Grid item xs={12} md={5} style={{ paddingTop: '17px' }}>
+            <Grid item xs={12} md={5} style={{paddingTop: '17px'}}>
               <Typography variant="body1" className={classes.title}>
                 {t('common:form_fields.description')}
               </Typography>
@@ -301,7 +305,7 @@ export default function TaskInfoTop({
                   >
                     {t('common:form_actions.update')}
                   </Button>
-                )}
+            )}
               />
             </Grid>
           </Grid>
