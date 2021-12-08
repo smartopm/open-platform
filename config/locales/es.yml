@@ -1,5 +1,7 @@
 ---
 es:
+  action_flow:
+    never: Nunca
   activerecord:
     attributes:
       action_flows/action_flow:
@@ -310,7 +312,7 @@ es:
         y brindar<br/>servicios públicos efectivamente.<br/><br/>Su usuario ha sido
         creado en nuestra Aplicación. Presione aquí para ver más.
       subject: Bienvenido a %{community_name}
-      title: <b>Bienvenido</b><br/> a la comunidad en línea de %{community_name}
+      title: Bienvenido</b><br/> a la comunidad en línea de %{community_name}
   emergency_sos:
     am_safe_message: Emergencia SOS %{user_name} está bien y ha cancelado la solicitud
       de ayuda.
