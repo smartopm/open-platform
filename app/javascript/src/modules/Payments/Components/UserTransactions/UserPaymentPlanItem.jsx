@@ -443,7 +443,7 @@ export default function UserPaymentPlanItem({
           </MenuItem>
         ))}
       </Menu>
-      {plans?.map(plan => (
+      {plans.filter(plan => plan.status !== 'general').map(plan => (
         <Accordion key={plan.id} style={{ backgroundColor: '#FDFDFD' }}>
           <AccordionSummary
             aria-label="Expand"

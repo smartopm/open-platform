@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import IconButton from '@material-ui/core/IconButton';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
+import { useHistory } from 'react-router-dom';
 import Card from '../../../../shared/Card';
 import { formatMoney, objectAccessor, InvoiceStatusColor } from '../../../../utils/helpers';
 import ListHeader from '../../../../shared/list/ListHeader';
@@ -34,6 +35,7 @@ export default function GeneralPlanList({
   const [statementOpen, setStatementOpen] = useState(false);
   const [openAllocateModal, setOpenAllocateModal] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
+  const [planId, setPlanId] = useState(null);
   const classes = useStyles();
   const { t } = useTranslation(['payment', 'common']);
   const [receiptOpen, setReceiptOpen] = useState(false);
@@ -43,6 +45,7 @@ export default function GeneralPlanList({
   const matches = useMediaQuery(theme.breakpoints.up('md'));
   const anchorElOpen = Boolean(anchor);
   const open = Boolean(anchorEl);
+  const history = useHistory();
   const paymentHeader = [
     { title: 'Payment Date', value: t('common:table_headers.payment_date'), col: 2 },
     { title: 'Payment Type', value: t('common:table_headers.payment_type'), col: 2 },
@@ -68,6 +71,11 @@ export default function GeneralPlanList({
       content: t('common:menu.allocate_funds'),
       isAdmin: true,
       handleClick: event => handleAllocateFunds(event)
+    },
+    {
+      content: t('common:menu.view_transactions'),
+      isAdmin: true,
+      handleClick: event => handleTransactionClick(event)
     }
   ];
 
@@ -124,8 +132,9 @@ export default function GeneralPlanList({
     setAnchor(null);
   }
 
-  function handlePlanMenu(event) {
+  function handlePlanMenu(event, plan) {
     event.stopPropagation();
+    setPlanId(plan.id)
     setAnchorEl(event.currentTarget);
   }
 
@@ -134,6 +143,12 @@ export default function GeneralPlanList({
     setStatementOpen(true);
     setAnchorEl(null);
   }
+
+  function handleTransactionClick(event) {
+    event.stopPropagation();
+    history.push(`?tab=Plans&subtab=Transactions&id=${planId}`);
+  }
+
   return (
     <>
       <Card
@@ -153,7 +168,7 @@ export default function GeneralPlanList({
               aria-controls="simple-menu"
               aria-haspopup="true"
               data-testid="plan-menu"
-              onClick={event => handlePlanMenu(event)}
+              onClick={event => handlePlanMenu(event, data)}
               color="primary"
             >
               <MoreVertIcon />

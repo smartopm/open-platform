@@ -132,9 +132,9 @@ export default function TransactionsList({
               <MenuItem value="all">{t('common:misc.all')}</MenuItem>
               {planData?.map(plan => (
                 <MenuItem value={plan.id} key={plan.id}>
-                  {dateToString(plan.startDate)}
+                  {plan.status !== 'general' ? dateToString(plan.startDate) : ''}
                   {' '}
-                  {plan.landParcel.parcelNumber}
+                  {plan.status !== 'general' ? plan.landParcel.parcelNumber: 'General Funds'}
                 </MenuItem>
               ))}
             </TextField>
