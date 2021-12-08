@@ -23,6 +23,6 @@ namespace :db do
       end
       puts 'A role processed'
     end
-  puts 'Successfully added permissions to current global roles'
+    puts 'Successfully added permissions to current global roles'
   end
 end
