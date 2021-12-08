@@ -42,13 +42,7 @@ module Mutations
 
       # Verifies if current user is admin or not.
       def authorized?(_vals)
-        return true if ::Policy::ApplicationPolicy.new(
-          context[:current_user], nil
-        ).permission?(
-          admin: true,
-          module: :forms,
-          permission: :can_delete_form_properties,
-        )
+        return true if permitted?(module: :forms, permission: :can_delete_form_properties)
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end

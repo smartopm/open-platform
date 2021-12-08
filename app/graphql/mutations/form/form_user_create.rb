@@ -89,13 +89,7 @@ module Mutations
       end
 
       def permissions_checks?
-        ::Policy::ApplicationPolicy.new(
-          context[:current_user], nil
-        ).permission?(
-          admin: true,
-          module: :forms,
-          permission: :can_create_form_user,
-        )
+        permitted?(module: :forms, permission: :can_create_form_user)
       end
 
       # Raises GraphQL execution error if form is already submitted once by the user
