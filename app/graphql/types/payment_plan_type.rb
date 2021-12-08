@@ -10,7 +10,7 @@ module Types
     field :percentage, String, null: true
     field :plot_balance, Float, null: true
     field :pending_balance, Float, null: true
-    field :land_parcel, Types::LandParcelType, null: false
+    field :land_parcel, Types::LandParcelType, null: true
     field :invoices, [Types::InvoiceType], null: false
     field :user, Types::UserType, null: false
     field :start_date, GraphQL::Types::ISO8601DateTime, null: true

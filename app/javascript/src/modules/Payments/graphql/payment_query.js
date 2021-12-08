@@ -21,6 +21,7 @@ export const UserTransactions = gql`
         receiptNumber
         amount
         paymentPlan {
+          status
           pendingBalance
           landParcel {
             parcelNumber

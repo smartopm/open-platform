@@ -71,7 +71,7 @@ module Types::Queries::LandParcel
     raise_unauthorized_error_for_land_parcels(:can_fetch_land_parcels_with_plans)
 
     user = context[:site_community].users.find_by(id: user_id)
-    user.payment_plans.includes(:land_parcel).where.not(pending_balance: 0)
+    user.payment_plans.excluding_general_plans.includes(:land_parcel).where.not(pending_balance: 0)
   end
 
   def land_parcel(id:)

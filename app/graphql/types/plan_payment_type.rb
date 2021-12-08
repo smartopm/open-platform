@@ -21,7 +21,7 @@ module Types
     #
     # @return [Float]
     def current_plot_pending_balance
-      plan = Properties::PaymentPlan.unscoped.find_by(id: object.payment_plan_id)
+      plan = object.payment_plan
       total_balance = plan.installment_amount * plan.duration
       plan_payments = plan.plan_payments.not_cancelled.created_at_lteq(object.created_at)
 

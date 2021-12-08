@@ -70,7 +70,7 @@ export default function PlotDetailCard({ authState }) {
                 }
               >
                 <GridList className={classes.gridList} cols={matches ? 1 : 3.5}>
-                  {data?.userPlansWithPayments?.map(plan => (
+                  {data?.userPlansWithPayments?.filter(plan => plan.status !== 'general')?.map(plan => (
                     <GridListTile key={plan.id}>
                       <div
                         className={matches ? classes.gridTileMobile : classes.gridTile}

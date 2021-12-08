@@ -28,7 +28,7 @@ module Types::Queries::Balance
 
     {
       balance: general_fund_balance(user),
-      pending_balance: user.payment_plans.sum(:pending_balance),
+      pending_balance: user.payment_plans.excluding_general_plans.sum(:pending_balance),
       total_transactions: user.transactions.accepted.sum(:amount),
     }
   end
@@ -56,7 +56,7 @@ module Types::Queries::Balance
   #
   # @return [Float]
   def general_fund_balance(user)
-    return 0 if user.payment_plans.general_plans.nil?
+    return 0 if user.payment_plans.general.nil?
 
     user.general_payment_plan.plan_payments.paid.sum(:amount)
   end

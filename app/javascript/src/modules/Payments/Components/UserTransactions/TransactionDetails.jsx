@@ -104,7 +104,7 @@ export function TransactionDetailsCard({ data, currencyData }) {
       <Grid item xs={6}>
         <Typography className={classes.detailsTitle}>{t('table_headers.plot_no')}</Typography>
         <Typography className={classes.plot}>
-          {data?.paymentPlan?.landParcel?.parcelNumber}
+          {data?.paymentPlan?.status !== 'general' ? data?.paymentPlan?.landParcel?.parcelNumber : 'General Funds'}
         </Typography>
         <Typography className={classes.detailsTitle} style={{ marginBottom: '15px' }}>
           {t('table_headers.remaining_balance', {
@@ -183,6 +183,7 @@ TransactionDetailsCard.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   data: PropTypes.shape({
     paymentPlan: PropTypes.shape({
+      status: PropTypes.string,
       landParcel: PropTypes.shape({
         parcelNumber: PropTypes.string
       }),

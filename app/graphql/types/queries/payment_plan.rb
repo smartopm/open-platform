@@ -101,7 +101,7 @@ module Types::Queries::PaymentPlan
   # @return PaymentPlan
   def user_general_plan(user_id: nil)
     user = verified_user(user_id)
-    user.payment_plans.general_plans.includes(plan_payments: :user_transaction).first
+    user.payment_plans.general.includes(plan_payments: :user_transaction).first
   end
 
   private
