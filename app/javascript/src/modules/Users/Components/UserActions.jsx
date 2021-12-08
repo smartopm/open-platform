@@ -25,8 +25,10 @@ export default function UserAction() {
   const { t } = useTranslation(['users', 'common'])
   return (
     <div className={matches ? classes.bodyMobile : classes.body}>
-      <Avatar imageUrl={authState?.user?.imageUrl} user={authState.user} style="big" />
-      <Typography data-testid='text' className={matches ? classes.nameMobile : classes.name}>{authState?.user?.name}</Typography>
+      <div className={matches ? classes.avatarMobile : classes.avatar}>
+        <Avatar imageUrl={authState?.user?.imageUrl} user={authState.user} style="big" />
+      </div>
+      <Typography data-testid='text' className={matches ? classes.name : classes.name}>{authState?.user?.name}</Typography>
       <UserOptions 
         icon={<AccountCircleIcon style={{height: '36px', width: '36px'}} />} 
         primaryText={t('users.personal_details')} 
@@ -87,14 +89,10 @@ const useStyles = makeStyles(() => ({
     marginTop: '-40px'
   },
   avatar: {
-    width: '145px',
-    height: '145px',
-    marginLeft: '297px'
+    textAlign: 'center'
   },
   avatarMobile: {
-    height: '71px',
-    width: '71px',
-    marginLeft: '135px'
+    textAlign: 'center'
   },
   name: {
     padding: '29px 0 64px 0',
