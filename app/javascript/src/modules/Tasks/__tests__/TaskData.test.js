@@ -3,7 +3,7 @@ import { MockedProvider } from '@apollo/react-testing'
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom';
-import renderTaskData, { LinkToUser } from '../Components/RenderTaskData';
+import renderTaskData, { LinkToUser, TaskDataList } from '../Components/RenderTaskData';
 import TodoItem from '../Components/TodoItem'
 import MockedThemeProvider from '../../__mocks__/mock_theme'
 import t from '../../__mocks__/t'
@@ -205,5 +205,34 @@ describe('Task Data components', () => {
     expect(results[0]).toHaveProperty('Duedate');
     expect(results[0]).toHaveProperty('Assignees');
     expect(results[0]).toHaveProperty('Menu');
+  });
+
+  it('should render TaskDataList', () => {
+    const container = render(
+      <BrowserRouter>
+        <MockedProvider>
+          <MockedThemeProvider>
+            <TaskDataList
+              task={task}
+              handleChange={jest.fn()}
+              handleFileInputChange={jest.fn()}
+              selectedTasks={[]}
+              isSelected
+              menuData={{}}
+              clickable
+              handleClick={jest.fn()}
+              openSubTask
+              handleOpenSubTasksClick={jest.fn()}
+            />
+          </MockedThemeProvider>
+        </MockedProvider>
+      </BrowserRouter>
+    );
+    
+    expect(container.queryByTestId('task-select-action')).toBeInTheDocument();
+    fireEvent.click(container.queryByTestId('task-select-action'));
+
+    expect(container.queryByTestId('task_attach_file')).toBeInTheDocument();
+    fireEvent.click(container.queryByTestId('task_attach_file'));
   });
 });
