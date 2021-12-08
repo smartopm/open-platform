@@ -166,6 +166,7 @@ export default function TaskInfoTop({
             <Typography
               variant="body2"
               color="primary"
+              data-testid='parent-note'
               onClick={event => openParentLink(event, data.parentNote)}
               className={classes.parentTask}
             >

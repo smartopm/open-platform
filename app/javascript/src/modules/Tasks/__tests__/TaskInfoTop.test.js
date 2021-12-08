@@ -151,4 +151,54 @@ describe('Top part of the task form component', () => {
       expect(container2.queryByText('task.update_successful')).toBeInTheDocument();
     }, 10)
   })
+
+  it('should test update body', () => {
+    const newProps = {
+      ...props,
+      data: {
+        ...props.data,
+        description: 'some description',
+        body: 'some body',
+        parentNote: { id: '1234', body: 'some parent body' }
+      },
+      autoCompleteOpen: true,
+    };
+    const updateMock = {
+      request: {
+        query: UpdateNote,
+        variables: { id: '', body: '' }
+      },
+      result: {
+        data: {
+          noteUpdate: {
+            note: {
+              id: data.id,
+              flagged: true,
+              body: "some parent body",
+              dueDate: "",
+              parentNote:  {
+                id: "1234"
+              }
+            }
+          }
+        }
+      }
+    }
+    const container = render(
+      <MockedProvider mocks={[updateMock]} addTypename={false}>
+        <BrowserRouter>
+          <TaskInfoTop {...newProps} />
+        </BrowserRouter>
+      </MockedProvider>
+    );
+
+    expect(container.queryByTestId('edit_body_icon')).toBeInTheDocument();
+
+    fireEvent.click(container.queryByTestId('edit_body_icon'));
+    expect(container.queryByTestId('edit_body_action_btn')).toBeInTheDocument();
+    fireEvent.click(container.queryByTestId('edit_body_action_btn'));
+
+    expect(container.queryByTestId('parent-note')).toBeInTheDocument();
+    fireEvent.click(container.queryByTestId('parent-note'));
+  });
 });
