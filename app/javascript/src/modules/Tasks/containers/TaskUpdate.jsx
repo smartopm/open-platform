@@ -1,17 +1,17 @@
 import React, { useContext } from 'react'
-import {  useParams } from 'react-router-dom'
+import PropTypes from 'prop-types';
 import { useQuery, useMutation } from 'react-apollo'
 import { Container } from '@material-ui/core'
 import { UsersLiteQuery, HistoryQuery } from '../../../graphql/queries'
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider'
 import Loading from '../../../shared/Loading'
 import ErrorPage from '../../../components/Error'
-import TaskUpdateForm from '../Components/TaskUpdateForm'
+import TaskDetail from '../Components/TaskDetail'
 import { AssignUser } from '../../../graphql/mutations'
 import { TaskQuery } from '../graphql/task_queries'
 
-export default function TaskUpdate() {
-  const { taskId } = useParams()
+// This will be deprecated in favour of split screen view
+export default function TaskUpdate({ taskId, handleSplitScreenOpen, handleSplitScreenClose }) {
   const authState = useContext(AuthStateContext)
   const { data, error, loading, refetch } = useQuery(TaskQuery, {
     variables: { taskId },
@@ -40,7 +40,7 @@ export default function TaskUpdate() {
 
   return (
     <Container maxWidth="xl">
-      <TaskUpdateForm
+      <TaskDetail
         data={data?.task}
         refetch={refetch}
         users={liteData?.usersLite}
@@ -49,7 +49,20 @@ export default function TaskUpdate() {
         historyData={taskHistoryData?.taskHistories}
         historyRefetch={historyRefetch}
         taskId={taskId}
+        handleSplitScreenOpen={handleSplitScreenOpen}
+        handleSplitScreenClose={handleSplitScreenClose}
       />
     </Container>
   )
+}
+
+TaskUpdate.defaultProps = {
+  handleSplitScreenOpen: () => {},
+  handleSplitScreenClose: () => {}
+}
+
+TaskUpdate.propTypes = {
+  taskId: PropTypes.string.isRequired,
+  handleSplitScreenOpen: PropTypes.func,
+  handleSplitScreenClose: PropTypes.func
 }

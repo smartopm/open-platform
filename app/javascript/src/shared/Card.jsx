@@ -12,7 +12,7 @@ export default function CardComponent({ children, clickData, styles, contentStyl
       <Card
         elevation={0}
         className={clickData?.clickable ? classes.cardClickable : classes.card}
-        onClick={clickData?.clickable ? () =>  clickData?.handleClick() : null}
+        onClick={clickData?.clickable ? (e) =>  clickData?.handleClick(e) : null}
         style={styles}
         variant='outlined'
         data-testid='card'

@@ -13,6 +13,7 @@ import {
   InputAdornment,
   Typography,
 } from '@material-ui/core';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import SearchIcon from '@material-ui/icons/Search'
 import MaterialConfig from 'react-awesome-query-builder/lib/config/material';
@@ -27,6 +28,7 @@ import TaskForm from './TaskForm';
 import ErrorPage from '../../../components/Error';
 import Paginate from '../../../components/Paginate';
 import CenteredContent from '../../../components/CenteredContent';
+import TaskUpdate from '../containers/TaskUpdate';
 import TaskQuickSearch from './TaskQuickSearch';
 import { futureDateAndTimeToString, dateToString } from '../../../components/DateContainer';
 import DatePickerDialog from '../../../components/DatePickerDialog';
@@ -40,6 +42,7 @@ import { TaskBulkUpdateMutation } from '../graphql/task_mutation';
 import { TaskBulkUpdateAction, TaskQuickAction } from './TaskActionMenu';
 import TodoItem from './TodoItem';
 import FloatingButton from '../../../shared/buttons/FloatingButton';
+import SplitScreen from '../../../shared/SplitScreen';
 
 export default function TodoList({
   isDialogOpen,
@@ -83,11 +86,14 @@ export default function TodoList({
   };
   const [selectedTasks, setSelected] = useState([]);
   const [selectedTask, setSelectedTask] = useState(null);
-  const [bulkUpdating, setBulkUpdating] = useState(false)
+  const [bulkUpdating, setBulkUpdating] = useState(false);
+  const [splitScreenOpen, setSplitScreenOpen] = useState(true);
+  const matches = useMediaQuery('(max-width:800px)');
   const { t } = useTranslation(['task', 'common'])
 
   const path = useParamsQuery()
   const taskURLFilter = path.get('filter');
+  const redirectedTaskId = path.get('taskId');
 
   const { onChange, signedBlobId, status } = useFileUpload({
     client: useApolloClient()
@@ -100,10 +106,6 @@ export default function TodoList({
     } else {
       setSelected([...selectedTasks, selectedId]);
     }
-  }
-
-  function handleTaskDetails({ id, comment }) {
-    history.push(`/tasks/${id}${comment ? '?comment=true' : ''}`);
   }
 
   const [loadAssignees, { data: liteData }] = useLazyQuery(UsersLiteQuery, {
@@ -413,6 +415,11 @@ export default function TodoList({
     })
   }
 
+  function handleTodoItemClick(task) {
+    setSelectedTask(task);
+    setSplitScreenOpen(true);
+  }
+
   if (tasksError) return <ErrorPage error={tasksError.message} />;
 
   return (
@@ -552,6 +559,20 @@ export default function TodoList({
               selectedTasks={selectedTasks}
               currentTile={currentTile}
             />
+            {data?.flaggedNotes.length && (
+              <SplitScreen
+                open={splitScreenOpen}
+                onClose={() => setSplitScreenOpen(false)}
+                classes={{ paper: matches ? classes.drawerPaperMobile : classes.drawerPaper }}
+              >
+                <TaskUpdate
+                  // eslint-disable-next-line no-nested-ternary
+                  taskId={selectedTask ? selectedTask.id : redirectedTaskId || data?.flaggedNotes[0].id}
+                  handleSplitScreenOpen={handleTodoItemClick}
+                  handleSplitScreenClose={() => setSplitScreenOpen(false)}
+                />
+              </SplitScreen>
+            )}
             {data?.flaggedNotes.length ? (
               <div>
                 {data?.flaggedNotes.map(task => (
@@ -561,10 +582,10 @@ export default function TodoList({
                     handleChange={handleChange}
                     selectedTasks={selectedTasks}
                     isSelected={checkedOptions === 'all'}
-                    handleTaskDetails={handleTaskDetails}
                     handleCompleteNote={handleCompleteNote}
                     handleAddSubTask={handleAddSubTask}
                     handleUploadDocument={handleUploadDocument}
+                    handleTodoClick={handleTodoItemClick}
                   />
                 ))}
               </div>
@@ -573,13 +594,7 @@ export default function TodoList({
             )}
             <br />
             <CenteredContent>
-              <Paginate
-                count={data?.flaggedNotes.length}
-                offSet={offset}
-                limit={limit}
-                active={offset >= 1}
-                handlePageChange={paginate}
-              />
+              <Paginate count={data?.flaggedNotes?.length} offSet={offset} limit={limit} active={offset >= 1} handlePageChange={paginate} />
             </CenteredContent>
           </>
         )}
@@ -614,5 +629,19 @@ const useStyles = makeStyles(() => ({
     margin: 4
   },
   input: {
-  }
+  },
+  drawerPaper: {
+    width: '50%',
+    marginTop: '51px',
+    padding: '30px 10px',
+    opacity: '1',
+    backgroundColor: "#FAFAFA !important"
+  },
+  drawerPaperMobile: {
+    width: '100%',
+    marginTop: '51px',
+    opacity: '1',
+    backgroundColor: "#FAFAFA !important",
+    padding: '20px'
+  },
 }));

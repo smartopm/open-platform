@@ -1,9 +1,9 @@
 import React from 'react';
 import Tasks from './containers/Todo';
 import TaskReminder from './TaskReminder';
-import TaskUpdate from './containers/TaskUpdate';
 import {siteManagers} from '../../utils/constants';
 import AccessCheck from '../Permissions/Components/AccessCheck';
+import TaskPageRedirect from './Components/TaskPageRedirect';
 
 const tasksPermissions = [
   'can_create_note',
@@ -27,18 +27,18 @@ const taskUpdatePermissions = [
 
 const currentModule = 'note'
 
+
 function RenderTaskUpdate() {
   return (
     <AccessCheck module={currentModule} allowedPermissions={taskUpdatePermissions}>
-      <TaskUpdate />
+      <TaskPageRedirect />
     </AccessCheck>
 )
 }
 
-
 function RenderTasks() {
   return (
-    <AccessCheck module={currentModule} allowedPermissions={tasksPermissions}>
+    <AccessCheck module={currentModule} allowedPermissions={[...tasksPermissions, ...taskUpdatePermissions]}>
       <Tasks />
     </AccessCheck>
 )

@@ -21,11 +21,7 @@ const initialData = {
   userId: ''
 };
 
-/**
- * @deprecated in favour of ./TaskDetail.jsx which is a split screen page view
- */
-
-export default function TaskUpdateForm({
+export default function TaskDetail({
   users,
   data,
   assignUser,
@@ -33,7 +29,9 @@ export default function TaskUpdateForm({
   currentUser,
   historyData,
   historyRefetch,
-  taskId
+  taskId,
+  handleSplitScreenOpen,
+  handleSplitScreenClose
 }) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -213,7 +211,7 @@ export default function TaskUpdateForm({
           message={t('task.update_successful')}
         />
 
-        <Grid item md={7}>
+        <Grid>
           <div className={classes.section} data-testid="task-info-section">
             <TaskInfoTop
               users={users}
@@ -229,6 +227,7 @@ export default function TaskUpdateForm({
               menuData={menuData}
               isAssignee={isCurrentUserAnAssignee}
               activeReminder={currentActiveReminder()}
+              handleSplitScreenClose={handleSplitScreenClose}
             />
           </div>
           <div className={classes.section} data-testid="task-subtasks-section">
@@ -237,6 +236,7 @@ export default function TaskUpdateForm({
               users={users}
               assignUser={assignUser}
               refetch={refetch}
+              handleSplitScreenOpen={handleSplitScreenOpen}
             />
           </div>
           <div className={classes.section} data-testid="task-comments-section">
@@ -260,13 +260,15 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-TaskUpdateForm.defaultProps = {
+TaskDetail.defaultProps = {
   users: [],
   data: {},
   historyData: [],
-  taskId: ''
+  taskId: '',
+  handleSplitScreenOpen: () => {},
+  handleSplitScreenClose: ()=> {}
 };
-TaskUpdateForm.propTypes = {
+TaskDetail.propTypes = {
   users: PropTypes.arrayOf(PropTypes.object),
   // eslint-disable-next-line react/forbid-prop-types
   data: PropTypes.object,
@@ -280,5 +282,7 @@ TaskUpdateForm.propTypes = {
     })
   ),
   historyRefetch: PropTypes.func.isRequired,
-  taskId: PropTypes.string
+  taskId: PropTypes.string,
+  handleSplitScreenOpen: PropTypes.func,
+  handleSplitScreenClose: PropTypes.func
 };

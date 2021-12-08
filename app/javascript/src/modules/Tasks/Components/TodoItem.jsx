@@ -17,10 +17,10 @@ export default function TodoItem({
   handleChange,
   selectedTasks,
   isSelected,
-  handleTaskDetails,
   handleCompleteNote,
   handleAddSubTask,
   handleUploadDocument,
+  handleTodoClick
 }) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
@@ -43,7 +43,7 @@ export default function TodoItem({
     {
       content: t('menu.open_task_details'),
       isAdmin: true,
-      handleClick: () => handleTaskDetails({ id: selectedTask.id })
+      handleClick: () => handleTaskDetails()
     },
     {
       content: t('menu.add_subtask'),
@@ -84,6 +84,11 @@ export default function TodoItem({
     setSelectedTask(taskItem);
   }
 
+  function handleTaskDetails() {
+    setAnchorEl(null);
+    handleTodoClick(selectedTask);
+  }
+
   function handleClose(event) {
     event.stopPropagation();
     setAnchorEl(null);
@@ -111,12 +116,17 @@ export default function TodoItem({
     });
   }
 
-  function handleParentTaskClick(){
+  function handleParentTaskClick(e){
+    e.stopPropagation();
     if(task && !(data?.taskSubTasks?.length > 0)){
        loadSubTasks();
     }
 
     toggleTask(task)
+  }
+
+  function handleTodoItemClick(taskItem) {
+    handleTodoClick(taskItem);
   }
 
   return (
@@ -134,6 +144,8 @@ export default function TodoItem({
             styles={{marginBottom: 0}}
             openSubTask={objectAccessor(tasksOpen, task.id)}
             handleOpenSubTasksClick={handleParentTaskClick}
+            clickable
+            handleClick={() => handleTodoItemClick(task)}
           />
           {(isLoadingSubTasks || (isUpdating && objectAccessor(tasksOpen, task.id))) && <LinearSpinner />}
         </div>
@@ -155,6 +167,8 @@ export default function TodoItem({
               styles={{backgroundColor: '#F5F5F4'}}
               openSubTask={objectAccessor(tasksOpen, firstLevelSubTask.id)}
               handleOpenSubTasksClick={() => toggleTask(firstLevelSubTask)}
+              clickable
+              handleClick={() => handleTodoItemClick(firstLevelSubTask)}
             />
           </div>
           {firstLevelSubTask?.subTasks?.length > 0 &&
@@ -171,6 +185,8 @@ export default function TodoItem({
                       isSelected={isSelected}
                       menuData={menuData}
                       styles={{backgroundColor: '#ECECEA'}}
+                      clickable
+                      handleClick={() => handleTodoItemClick(secondLevelSubTask)}
                     />
                   </div>
                 ))}
@@ -212,10 +228,10 @@ const Task = {
   handleChange: PropTypes.func.isRequired,
   selectedTasks: PropTypes.arrayOf(PropTypes.string).isRequired,
   isSelected: PropTypes.bool.isRequired,
-  handleTaskDetails: PropTypes.func.isRequired,
   handleCompleteNote: PropTypes.func.isRequired,
   handleAddSubTask: PropTypes.func.isRequired,
   handleUploadDocument: PropTypes.func.isRequired,
+  handleTodoClick: PropTypes.func.isRequired,
 };
 
 const useStyles = makeStyles(() => ({
