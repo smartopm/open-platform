@@ -13,7 +13,7 @@ module Mutations
         user = context[:site_community].users.find(vals[:user_id])
         raise_user_not_found_error(user)
 
-        payment_plan = user.payment_plans.find_by(id: vals[:id])
+        payment_plan = user.payment_plans.excluding_general_plans.find_by(id: vals[:id])
         raise_payment_plan_not_found_error(payment_plan)
 
         return { payment_plan: payment_plan } if payment_plan.cancel!

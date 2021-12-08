@@ -20,8 +20,10 @@ module Properties
     has_many :plan_ownerships, dependent: :destroy
     has_many :co_owners, class_name: 'Users::User', through: :plan_ownerships, source: :user
 
-    default_scope { where.not(status: %i[deleted general]) }
-    scope :general_plans, -> { unscope(where: :status).general }
+    default_scope { where.not(status: :deleted) }
+    scope :excluding_general_plans, lambda {
+      where.not(status: :general)
+    }
 
     before_create :set_pending_balance
     after_create :allocate_general_funds
@@ -217,7 +219,7 @@ module Properties
     #
     # @return [void]
     def allocate_general_funds
-      return if !status.eql?('active') || user.payment_plans.general_plans.nil?
+      return if !status.eql?('active') || user.payment_plans.general.empty?
 
       payments = user.general_payment_plan.plan_payments.paid.order(:amount)
       payments.each do |payment|

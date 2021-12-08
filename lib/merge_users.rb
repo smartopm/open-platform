@@ -35,6 +35,10 @@ class MergeUsers
     merge_accounts_and_general_payments(user, duplicate_user)
     raise_update_failed_error if Payments::PlanPayment.where(user_id: user_id).any?
 
+    # Update PaymentPlan user
+    user.payment_plans.update_all(user_id: duplicate_id)
+    raise_update_failed_error if Properties::PaymentPlan.where(user_id: user_id).any?
+
     # Updates accounts details to their associated user's details
     duplicate_user.update_associated_accounts_details
     raise_update_failed_error if Properties::Account.where(user_id: user_id).any?
@@ -201,7 +205,7 @@ class MergeUsers
     model_names = []
     payment_models = %w[Invoice PaymentInvoice Payment Wallet WalletTransaction
                         Transaction]
-    property_models = %w[PaymentPlan Valuation]
+    property_models = %w[Valuation]
     note_models = %w[Note NoteHistory]
     form_models = %w[FormUser UserFormProperty]
     discussion_models = %w[Discussion]

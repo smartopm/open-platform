@@ -91,7 +91,7 @@ module Payments
     # @return [void]
     # rubocop:disable Rails/SkipsModelValidations
     def revert_payments
-      payment_plans = user.payment_plans.unscope(where: :status)
+      payment_plans = user.payment_plans
                           .joins(:plan_payments)
                           .where(plan_payments: { status: 'paid', transaction_id: id })
                           .distinct

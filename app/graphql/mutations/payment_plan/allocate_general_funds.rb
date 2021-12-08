@@ -54,7 +54,7 @@ module Mutations
       #
       # @return [GraphQL::ExecutionError]
       def raise_general_funds_related_errors(user)
-        general_fund = user.payment_plans.general_plans.first
+        general_fund = user.payment_plans.general.first
         return unless general_fund.nil? || !general_fund.plan_payments.exists?(status: :paid)
 
         raise GraphQL::ExecutionError, I18n.t('errors.payment_plan.general_funds_does_not_exist')

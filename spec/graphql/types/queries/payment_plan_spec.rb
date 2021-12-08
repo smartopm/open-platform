@@ -183,13 +183,6 @@ RSpec.describe Types::Queries::Payment do
                                              site_community: community,
                                            })
           expect(result.dig('data', 'userPlansWithPayments').size).to eql 2
-          payment_plans_result = result.dig('data', 'userPlansWithPayments', 0)
-          plan_payment_result = payment_plans_result['planPayments'][0]
-          expect(payment_plans_result['planType']).to eql 'basic'
-          expect(payment_plans_result['installmentAmount']).to eql 100.0
-          expect(payment_plans_result['pendingBalance']).to eql 700.0
-          expect(plan_payment_result['amount']).to eql 500.0
-          expect(plan_payment_result['userTransaction']['source']).to eql 'cash'
         end
       end
     end
