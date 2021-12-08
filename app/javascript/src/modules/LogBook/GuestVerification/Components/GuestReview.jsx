@@ -13,7 +13,7 @@ import CenteredContent from '../../../../components/CenteredContent';
 import ImageUploadPreview from '../../../../shared/imageUpload/ImageUploadPreview';
 import { EntryRequestUpdateMutation } from '../../graphql/logbook_mutations';
 import MessageAlert from '../../../../components/MessageAlert';
-import { checkUserInformation, checkInfo } from '../utils';
+import { checkUserInformation, checkInfo, validateAllSteps } from '../utils';
 
 export default function RequestConfirmation({ handleGotoStep }) {
   const requestContext = useContext(EntryRequestContext);
@@ -217,19 +217,17 @@ export default function RequestConfirmation({ handleGotoStep }) {
             )}
           </>
         )}
-        {checkInfo(req) && (
-          <Grid item xs={12} style={{ textAlign: 'center', marginTop: '40px' }}>
-            <Button
-              disabled={loading}
-              onClick={() => handleSubmit()}
-              color="primary"
-              variant="contained"
-              data-testid="submit"
-            >
-              {t('review_screen.submit')}
-            </Button>
-          </Grid>
-        )}
+        <Grid item xs={12} style={{ textAlign: 'center', marginTop: '40px' }}>
+          <Button
+            disabled={loading || !validateAllSteps(req)}
+            onClick={handleSubmit}
+            color="primary"
+            variant="contained"
+            data-testid="submit"
+          >
+            {t('review_screen.submit')}
+          </Button>
+        </Grid>
       </Grid>
     </>
   );

@@ -1,20 +1,13 @@
-import React, { useContext } from 'react';
-import { Context } from '../../../../containers/Provider/AuthStateProvider';
-import HorizontalStepper from '../../../../shared/HorizontalStepper';
-import steps from '../Components';
+import React from 'react';
 import ObservationDialog from '../Components/ObservationDialog';
 import EntryRequestContextProvider from '../Context';
+import VerificationStepContainer from './VerificationStepContainer';
 
 export default function GuestValidate() {
-  const authState = useContext(Context)
-  const communityFeatures = authState.user.community.features
   return (
     <EntryRequestContextProvider>
       <ObservationDialog />
-      <HorizontalStepper
-        steps={steps}
-        communityFeatures={communityFeatures}
-      />
+      <VerificationStepContainer />
     </EntryRequestContextProvider>
   )
 }

@@ -14,7 +14,10 @@ describe('HorizontalStepper component', () => {
     jest.spyOn(routeData, 'useHistory').mockReturnValue(mockHistory);
   });
   const features = { LogBook: { features: ['Guest Verification'] }};
-
+  const request = {
+    id: '9328129321',
+    imageUrls: "https://image.com"
+  }
   const steps = jest.fn(next => [
     {
       title: 'First Step',
@@ -42,6 +45,7 @@ describe('HorizontalStepper component', () => {
         <HorizontalStepper
           steps={steps}
           communityFeatures={features}
+          request={request}
         />
       </MemoryRouter>
     );
@@ -59,6 +63,7 @@ describe('HorizontalStepper component', () => {
         <HorizontalStepper
           steps={manySteps}
           communityFeatures={features}
+          request={request}
         />
       </MemoryRouter>
     );
