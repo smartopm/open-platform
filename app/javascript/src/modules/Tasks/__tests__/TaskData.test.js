@@ -217,7 +217,7 @@ describe('Task Data components', () => {
               handleChange={jest.fn()}
               handleFileInputChange={jest.fn()}
               selectedTasks={[]}
-              isSelected
+              isSelected={false}
               menuData={{}}
               clickable
               handleClick={jest.fn()}
