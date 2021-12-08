@@ -15,9 +15,8 @@ export const GuestEntriesQuery = gql`
       guest {
         id
         name
-        avatarUrl
       }
-      accessHours {
+      closestEntryTime {
         occursOn
         visitEndDate
         visitationDate
@@ -50,9 +49,8 @@ export const CurrentGuestEntriesQuery = gql`
       guest {
         id
         name
-        imageUrl
       }
-      accessHours {
+      closestEntryTime {
         occursOn
         visitEndDate
         visitationDate

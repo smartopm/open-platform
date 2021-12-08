@@ -35,18 +35,15 @@ describe('Should render Visits View Component', () => {
             },
             guest: {
               id: '162f7517',
-              name: 'Js user x',
-              imageUrl: 'https://lh3.googleusercontent.com'
+              name: 'Js user x'
             },
-            accessHours: [
-              {
-                visitEndDate: null,
-                visitationDate: '2021-08-20T10:51:00+02:00',
-                endsAt: '2021-10-31 22:51',
-                startsAt: '2021-10-31 02:51',
-                occursOn: []
-              }
-            ],
+            closestEntryTime: {
+              visitEndDate: null,
+              visitationDate: '2021-08-20T10:51:00+02:00',
+              endsAt: '2021-10-31 22:51',
+              startsAt: '2021-10-31 02:51',
+              occursOn: []
+            },
             grantedAt: '2021-10-31 02:51',
             status: 'pending',
             exitedAt: null,
@@ -65,7 +62,7 @@ describe('Should render Visits View Component', () => {
               name: 'Js user x',
               imageUrl: 'https://lh3.googleusercontent.com'
             },
-            accessHours: null,
+            closestEntryTime: null,
             grantedAt: '2021-10-31 02:51',
             status: 'approved',
             exitedAt: '2021-10-31 03:51',
@@ -80,7 +77,7 @@ describe('Should render Visits View Component', () => {
               name: 'user x'
             },
             guest: null,
-            accessHours: null,
+            closestEntryTime: null,
             grantedAt: '2021-10-31 02:51',
             status: 'pending',
             exitedAt: null,

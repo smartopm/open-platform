@@ -41,8 +41,8 @@ module Types
     field :video_url, String, null: true
     field :image_urls, [String], null: true
     field :status, String, null: true
-    field :access_hours, [Types::EntryTimeType], null: true
     field :exited_at, GraphQL::Types::ISO8601DateTime, null: true
+    field :closest_entry_time, Types::EntryTimeType, null: true
 
     def active
       object.active?
@@ -72,6 +72,12 @@ module Types
       base_url = HostEnv.base_url(object.user.community)
       path = Rails.application.routes.url_helpers.rails_blob_path(type)
       "https://#{base_url}#{path}"
+    end
+
+    def closest_entry_time
+      object.entry_times.where.not(visitation_date: nil).min do |a, b|
+        (Time.zone.now - a.visitation_date) - (Time.zone.now - b.visitation_date)
+      end
     end
   end
 end

@@ -8,6 +8,7 @@ module Logs
     has_one :entry_time, as: :visitable, dependent: :destroy
     belongs_to :host, class_name: 'Users::User'
     belongs_to :guest, class_name: 'Users::User'
+    belongs_to :entry_request
 
     search_scope :search do
       attributes guest: ['guest.phone_number', 'guest.email', 'guest.name']

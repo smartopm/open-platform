@@ -14,7 +14,7 @@ import { Spinner } from '../../../shared/Loading';
 import Card from '../../../shared/Card';
 import { dateTimeToString, dateToString } from '../../../components/DateContainer';
 import Text from '../../../shared/Text';
-import { findClosestEntry, IsAnyRequestValid } from '../utils';
+import { checkRequests } from '../utils';
 import { EntryRequestGrant } from '../../../graphql/mutations';
 import MessageAlert from '../../../components/MessageAlert';
 import CenteredContent from '../../../shared/CenteredContent';
@@ -142,7 +142,7 @@ export default function GuestsView({
                 <Typography variant="caption">
                   {t('guest_book.start_of_visit', {
                     date: dateToString(
-                      findClosestEntry(visit.accessHours, timeZone)?.visitationDate
+                      visit.closestEntryTime?.visitationDate
                     )
                   })}
                 </Typography>
@@ -151,21 +151,21 @@ export default function GuestsView({
                 <Typography variant="caption">
                   {t('guest_book.visit_time', {
                     startTime: dateTimeToString(
-                      findClosestEntry(visit.accessHours, timeZone)?.startsAt
+                      visit.closestEntryTime?.startsAt
                     ),
-                    endTime: dateTimeToString(findClosestEntry(visit.accessHours, timeZone)?.endsAt)
+                    endTime: dateTimeToString(visit.closestEntryTime?.endsAt)
                   })}
                 </Typography>
               </Grid>
               <Grid item md={2} xs={6} style={!matches ? { paddingTop: '15px' } : {}}>
                 <Chip
                   label={
-                    IsAnyRequestValid(visit.accessHours, t, timeZone)
+                    checkRequests(visit.closestEntryTime, t, timeZone).valid
                       ? t('guest_book.valid')
                       : t('guest_book.invalid_now')
                   }
                   style={{
-                    background: IsAnyRequestValid(visit.accessHours, t, timeZone)
+                    background: checkRequests(visit.closestEntryTime, t, timeZone).valid
                       ? theme.palette.success.main
                       : theme.palette.error.main,
                     color: 'white',
@@ -177,7 +177,7 @@ export default function GuestsView({
               <Grid item md={2} xs={12} style={!matches ? { paddingTop: '8px' } : {}}>
                 <Button
                   disabled={
-                    !IsAnyRequestValid(visit.accessHours, t, timeZone) ||
+                    !checkRequests(visit.closestEntryTime, t, timeZone).valid ||
                     (loadingStatus.loading && Boolean(loadingStatus.currentId))
                   }
                   variant="outlined"

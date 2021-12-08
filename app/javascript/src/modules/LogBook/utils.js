@@ -24,12 +24,11 @@ export const defaultRequiredFields = ['name', 'phoneNumber', 'nrc', 'vehiclePlat
  */
 // eslint-disable-next-line complexity
 export function checkRequests(req, translate, tz) {
+  if (!req) {
+    return { title: translate('guest_book.invalid_now'), color: '#E74540', valid: false };
+  }
   /**
-   * moved the conversion here because:
-   *  - If a user updates a request's visitation date, the time wont be changed, this will fail our validity check
-   *  - If the guest is re-occuring then the visitation date won't be the same as the date for the endsAt or startsAt time
-   *  - moment's isSameOrAfter() and isSameOrBefore() rely on a full date instead of just time to validate the time.
-   *  - Having the updateDateWithTime here, allows us to always rely on today's date as the date for both the endsAt and startsAt times
+   *  Having the updateDateWithTime here, allows us to always rely on today's date as the date for both the endsAt and startsAt times
    */
 
   // today in the timezone of the current community

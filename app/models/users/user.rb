@@ -676,13 +676,13 @@ module Users
       payment_plans.general.first.presence || create_general_plan
     end
 
-    def invite_guest(guest_id)
-      return unless guest_id
+    def invite_guest(guest_id, request_id)
+      return unless guest_id && request_id
 
       invite = invitees.find_by(guest_id: guest_id)
       return invite unless invite.nil?
 
-      Logs::Invite.create!(host_id: id, guest_id: guest_id)
+      Logs::Invite.create!(host_id: id, guest_id: guest_id, entry_request_id: request_id)
     end
 
     private

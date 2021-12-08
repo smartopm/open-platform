@@ -20,7 +20,7 @@ describe('Should render Guests View Component', () => {
   const mocks = {
     request: {
       query: GuestEntriesQuery,
-      variables: { offset: 0, limit: 50, query: ''}
+      variables: { offset: 0, limit: 50, query: '' }
     },
     result: {
       data: {
@@ -34,19 +34,16 @@ describe('Should render Guests View Component', () => {
             },
             guest: {
               id: '162f7517',
-              name: 'Js user x',
-              avatarUrl: 'https://lh3.googleusercontent.com'
+              name: 'Js user x'
             },
-            accessHours: [
-              {
-                visitEndDate: null,
-                visitationDate: '2021-08-20T10:51:00+02:00',
-                endsAt: '2021-10-31 22:51',
-                startsAt: '2021-10-31 02:51',
-                occursOn: []
-              }
-            ],
-            status: "approved",
+            closestEntryTime: {
+              visitEndDate: null,
+              visitationDate: '2021-08-20T10:51:00+02:00',
+              endsAt: '2021-10-31 22:51',
+              startsAt: '2021-10-31 02:51',
+              occursOn: []
+            },
+            status: 'approved',
             occursOn: [],
             visitEndDate: null,
             visitationDate: '2021-08-20T10:51:00+02:00',
@@ -66,19 +63,16 @@ describe('Should render Guests View Component', () => {
             },
             guest: {
               id: '162f7517',
-              name: 'Js user x',
-              avatarUrl: 'https://lh3.googleusercontent.com'
+              name: 'Js user x'
             },
-            accessHours: [
-              {
-                visitEndDate: null,
-                visitationDate: '2021-08-20T10:51:00+02:00',
-                endsAt: '2021-10-31 22:51',
-                startsAt: '2021-10-31 02:51',
-                occursOn: []
-              }
-            ],
-            status: "approved",
+            closestEntryTime: {
+              visitEndDate: null,
+              visitationDate: '2021-08-20T10:51:00+02:00',
+              endsAt: '2021-10-31 22:51',
+              startsAt: '2021-10-31 02:51',
+              occursOn: []
+            },
+            status: 'approved',
             occursOn: [],
             visitEndDate: null,
             visitationDate: '2021-08-31T10:20:21+02:00',

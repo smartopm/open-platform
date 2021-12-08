@@ -15,6 +15,8 @@ module Logs
     belongs_to :grantor, class_name: 'Users::User', optional: true
     belongs_to :revoker, class_name: 'Users::User', optional: true
     belongs_to :guest, class_name: 'Users::User', optional: true
+    has_many :invites, dependent: :destroy
+    has_many :entry_times, through: :invites
 
     before_validation :attach_community
     validates :name, presence: true
@@ -136,15 +138,6 @@ module Logs
       Rails.logger.info "Phone number to send #{number}"
       # disabled rubocop to keep the structure of the message
       Sms.send(number, I18n.t('general.thanks_for_using_our_app', feedback_link: feedback_link))
-    end
-
-    def access_hours
-      invites = Logs::Invite.where(guest_id: guest_id)
-      hours = []
-      invites.find_each do |invite|
-        hours << invite.entry_time
-      end
-      hours
     end
 
     private
