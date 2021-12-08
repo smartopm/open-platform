@@ -36,13 +36,20 @@ module Types::Queries::ActionFlow
   end
 
   def events
-    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless current_user&.admin?
+    unless permitted?(module: :action_flow,
+                      permission: :can_get_action_flow_events)
+      raise GraphQL::ExecutionError,
+            I18n.t('errors.unauthorized')
+    end
 
     ActionFlows::EventPop.event_list.map { |event| event::EVENT_TYPE }
   end
 
   def actions
-    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless current_user&.admin?
+    unless permitted?(module: :action_flow, permission: :can_get_action_flow_actions)
+      raise GraphQL::ExecutionError,
+            I18n.t('errors.unauthorized')
+    end
 
     actions = ActionFlows::Actions.constants.select do |c|
       ActionFlows::Actions.const_get(c).is_a?(Class)
@@ -52,7 +59,10 @@ module Types::Queries::ActionFlow
   end
 
   def action_fields(action:)
-    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless current_user&.admin?
+    unless permitted?(module: :action_flow, permission: :can_get_action_flow_action_fields)
+      raise GraphQL::ExecutionError,
+            I18n.t('errors.unauthorized')
+    end
 
     begin
       fields = "ActionFlows::Actions::#{action.gsub(' ', '_').camelize}::ACTION_FIELDS".constantize
@@ -63,8 +73,7 @@ module Types::Queries::ActionFlow
   end
 
   def rule_fields(event_type:)
-    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless current_user&.admin?
-
+    permission_checks?
     begin
       event_class = "ActionFlows::Events::#{event_type.camelize}Event".constantize
       metadata = event_class.event_metadata
@@ -77,8 +86,19 @@ module Types::Queries::ActionFlow
   end
 
   def action_flows(offset: 0, limit: 10)
-    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless current_user&.admin?
+    unless permitted?(module: :action_flow,
+                      permission: :can_get_action_flow_list)
+      raise GraphQL::ExecutionError,
+            I18n.t('errors.unauthorized')
+    end
 
     context[:site_community].action_flows.order(created_at: :desc).limit(limit).offset(offset)
+  end
+
+  def permission_checks?
+    return true if permitted?(module: :action_flow, permission: :can_get_action_flow_rule_fields)
+
+    raise GraphQL::ExecutionError,
+          I18n.t('errors.unauthorized')
   end
 end

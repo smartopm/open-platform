@@ -4,8 +4,21 @@ require 'rails_helper'
 
 RSpec.describe Mutations::ActionFlow::ActionFlowDelete do
   describe 'delete actionflows' do
-    let!(:user) { create(:user_with_community) }
-    let!(:admin) { create(:admin_user, community_id: user.community_id) }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:resident_role) { create(:role, name: 'resident') }
+    let!(:permission) do
+      create(:permission, module: 'action_flow',
+                          role: admin_role,
+                          permissions: %w[can_delete_action_flow])
+    end
+    let!(:user) do
+      create(:user_with_community, user_type: 'resident',
+                                   role: resident_role)
+    end
+    let!(:admin) do
+      create(:admin_user, community_id: user.community_id,
+                          user_type: 'admin', role: admin_role)
+    end
     let!(:action_flow) do
       create(:action_flow, event_type: 'task_update',
                            community_id: user.community_id)

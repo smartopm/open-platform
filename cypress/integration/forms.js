@@ -8,8 +8,8 @@ describe('Custom Forms', () => {
       }).then(roleRes =>{
         cy.factory('permission', {
           module: 'forms',
-          permissions: ['can_access_forms', 
-          'can_see_menu_item', 'can_create_form', 'can_fill_a_form'],
+          permissions: ['can_access_forms', 'can_create_category', 'can_create_form_user',
+          'can_see_menu_item', 'can_create_form', 'can_create_form_properties'],
           role_id: roleRes.body.id,
         })
         cy.factory('permission', {

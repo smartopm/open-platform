@@ -6,8 +6,7 @@ namespace :db do
   task add_permissions_to_global_roles: :environment do
     permissions = YAML.load_file("#{::Rails.root}/app/policies/permissions.yml")
     permission_list = permissions.deep_transform_keys!(&:to_sym)
-    available_roles = Role.where(community_id: nil)
-    valid_modules = %w[note plan_payment payment_plan transaction].freeze
+    valid_modules = %w[action_flow activity_log].freeze
 
     available_roles.each do |role|
       valid_modules.each do |valid_module|
@@ -22,7 +21,8 @@ namespace :db do
           Permission.create(role: role, module: valid_module, permissions: role_permissions)
         end
       end
+      puts 'A role processed'
     end
-    puts 'Successfully added permissions to current roles'
+    puts 'Successfully added permissions to current global roles'
   end
 end

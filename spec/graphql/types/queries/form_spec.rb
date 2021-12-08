@@ -20,8 +20,6 @@ RSpec.describe Types::Queries::Form do
     let!(:current_user) { create(:user_with_community, name: 'John Test', role: visitor_role) }
     let!(:admin) { create(:admin_user, community_id: current_user.community_id, role: admin_role) }
 
-    # let!(:admin) { create(:admin_user, community_id: current_user.community_id) }
-    # let!(:current_user) { create(:user_with_community, name: 'John Test') }
     let!(:form) do
       create(:form, community_id: current_user.community_id, status: :published,
                     roles: %w[client resident])
