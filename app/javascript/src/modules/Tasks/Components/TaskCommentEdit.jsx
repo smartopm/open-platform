@@ -42,7 +42,7 @@ export default function EditField({ handleClose, data, refetch }) {
     <>
       <div style={{ display: 'flex', margin: '10px 0 0 13px' }}>
         <Avatar style={{ margin: '-7px 10px 0 0' }} src={data.user.imageUrl} alt="avatar-image" />
-        <form className={classes.root} onSubmit={handleSubmit}>
+        <form className={classes.root}>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <TextField
               multiline
@@ -61,6 +61,7 @@ export default function EditField({ handleClose, data, refetch }) {
                 type="submit"
                 color="primary"
                 style={{ marginRight: '5px' }}
+                onClick={handleSubmit}
               >
                 {t('form_actions.save_changes')}
               </Button>
