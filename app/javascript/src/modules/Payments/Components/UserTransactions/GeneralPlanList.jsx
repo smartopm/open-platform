@@ -89,7 +89,7 @@ export default function GeneralPlanList({
   };
 
   const statementData = {
-    statements: data?.planPayments.map(res => ({
+    statements: data?.planPayments.filter(payment => payment.status === 'paid').map(res => ({
       paymentDate: res.createdAt,
       amountPaid: res.amount,
       receiptNumber: res.receiptNumber
