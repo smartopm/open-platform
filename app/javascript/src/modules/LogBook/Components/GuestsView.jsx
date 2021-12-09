@@ -37,7 +37,7 @@ export default function GuestsView({
   });
 
   const { t } = useTranslation('logbook');
-  const [loadingStatus, setLoading] = useState({ loading: false, currentId: '' });
+  const [loadingStatus, setLoadingInfo] = useState({ loading: false, currentId: '' });
   const [grantEntry] = useMutation(EntryRequestGrant);
   const [message, setMessage] = useState({ isError: false, detail: '' });
   const history = useHistory();
@@ -45,8 +45,6 @@ export default function GuestsView({
   const classes = useLogbookStyles();
   const theme = useTheme()
   const [anchorEl, setAnchorEl] = useState(null);
-  const [currentGuest, setCurrentGuest] = useState({})
-
 
   useEffect(() => {
     if (tabValue === 1) {
@@ -57,7 +55,7 @@ export default function GuestsView({
 
   function handleGrantAccess(event, user) {
     event.stopPropagation();
-    setLoading({ loading: true, currentId: user.id });
+    setLoadingInfo({ loading: true, currentId: user.id });
     // handling compatibility with event log
     const log = {
       refId: user.id,
@@ -73,12 +71,12 @@ export default function GuestsView({
           isError: false,
           detail: t('logbook:logbook.success_message', { action: t('logbook:logbook.granted') })
         });
-        setLoading({ ...loadingStatus, loading: false });
+        setLoadingInfo({ ...loadingStatus, loading: false });
         handleAddObservation(log);
       })
       .catch(err => {
         setMessage({ isError: true, detail: err.message });
-        setLoading({ ...loadingStatus, loading: false });
+        setLoadingInfo({ ...loadingStatus, loading: false });
       });
   }
 
@@ -98,12 +96,12 @@ export default function GuestsView({
   function handleMenu(event, entry) {
     event.stopPropagation();
     setAnchorEl(event.currentTarget);
-    setCurrentGuest(entry)
+    setLoadingInfo({ ...loadingStatus, currentId: entry.id})
   }
 
   function handleInvite(event){
     event.stopPropagation();
-    history.push(`/logbook/guests/invite?guestId=${currentGuest.id}`)
+    history.push(`/logbook/guests/invite/${loadingStatus.currentId}`)
   }
 
   function handleMenuClose(event) {
@@ -180,7 +178,7 @@ export default function GuestsView({
                   })}
                 </Typography>
               </Grid>
-              <Grid item md={2} xs={6} style={!matches ? { paddingTop: '15px' } : {}}>
+              <Grid item md={1} xs={6} style={!matches ? { paddingTop: '15px' } : {}}>
                 <Typography variant="caption">
                   {t('guest_book.visit_time', {
                     startTime: dateTimeToString(
@@ -190,7 +188,7 @@ export default function GuestsView({
                   })}
                 </Typography>
               </Grid>
-              <Grid item md={1} xs={6} style={!matches ? { paddingTop: '15px' } : {}}>
+              <Grid item md={2} xs={6} style={!matches ? { paddingTop: '15px' } : {}}>
                 <Chip
                   label={
                     checkRequests(visit.closestEntryTime, t, timeZone).valid
@@ -210,22 +208,22 @@ export default function GuestsView({
               <Grid item md={2} xs={8} style={!matches ? { paddingTop: '8px' } : {}}>
                 <Button
                   disabled={
-                    !checkRequests(visit.closestEntryTime, t, timeZone).valid ||
-                    (loadingStatus.loading && Boolean(loadingStatus.currentId))
-                  }
+                        !checkRequests(visit.closestEntryTime, t, timeZone).valid ||
+                        (loadingStatus.loading && Boolean(loadingStatus.currentId))
+                      }
                   variant="outlined"
                   color="primary"
                   onClick={event => handleGrantAccess(event, visit)}
                   disableElevation
                   startIcon={
-                    loadingStatus.loading && loadingStatus.currentId === visit.id && <Spinner />
-                  }
+                        loadingStatus.loading && loadingStatus.currentId === visit.id && <Spinner />
+                      }
                   data-testid="grant_access_btn"
                 >
                   {t('access_actions.grant_access')}
                 </Button>
               </Grid>
-              <Grid item md={1} xs={4} style={!matches ? { paddingTop: '8px' } : {}}>
+              <Grid item md={1} xs={4} style={!matches ? { paddingTop: '8px'} : {}}>
                 <IconButton
                   aria-controls="sub-menu"
                   aria-haspopup="true"

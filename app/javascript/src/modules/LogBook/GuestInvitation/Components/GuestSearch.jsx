@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useLazyQuery, useQuery } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import AddIcon from '@material-ui/icons/Add';
+import { useParams } from 'react-router-dom';
 import CenteredContent from '../../../../shared/CenteredContent';
 import { Spinner } from '../../../../shared/Loading';
 import SearchInput from '../../../../shared/search/SearchInput';
@@ -12,13 +13,11 @@ import CustomDialog from '../../../../shared/dialogs/CustomDialog';
 import GuestInviteForm from './GuestInviteForm';
 import GuestSearchCard from './GuestSearchCard';
 import { useStyles } from '../styles';
-import { useParamsQuery } from '../../../../utils/helpers';
 
 export default function GuestSearch() {
   const [searchValue, setSearchValue] = useState('');
   const [dialogOpen, setDialogOpen] = useState(false);
-  const path = useParamsQuery()
-  const guestId = path.get('guestId')
+  const { guestId } = useParams()
   const [guest, setGuest] = useState({ id: '', name: '', email: '', phoneNumber: '' });
   const debouncedValue = useDebounce(searchValue, 500);
   const { data, loading, error } = useQuery(SearchGuestsQuery, {
@@ -33,7 +32,6 @@ export default function GuestSearch() {
     setGuest(guestUser);
     setDialogOpen(true);
   }
-
   useEffect(() => {
     // query our new guest here
     if(guestId){
