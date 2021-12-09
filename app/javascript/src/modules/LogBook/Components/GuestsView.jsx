@@ -8,7 +8,8 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
-import { Avatar, Chip, useTheme } from '@material-ui/core';
+import { Avatar, Chip, IconButton, useTheme } from '@material-ui/core';
+import MoreVertOutlined from '@material-ui/icons/MoreVertOutlined';
 import { GuestEntriesQuery } from '../graphql/guestbook_queries';
 import { Spinner } from '../../../shared/Loading';
 import Card from '../../../shared/Card';
@@ -20,6 +21,7 @@ import MessageAlert from '../../../components/MessageAlert';
 import CenteredContent from '../../../shared/CenteredContent';
 import { formatError } from '../../../utils/helpers';
 import useLogbookStyles from '../styles';
+import MenuList from '../../../shared/MenuList';
 
 export default function GuestsView({
   tabValue,
@@ -42,6 +44,16 @@ export default function GuestsView({
   const matches = useMediaQuery('(max-width:800px)');
   const classes = useLogbookStyles();
   const theme = useTheme()
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [currentGuest, setCurrentGuest] = useState({})
+
+
+  useEffect(() => {
+    if (tabValue === 1) {
+      loadGuests();
+    }
+  }, [tabValue, loadGuests, query, offset]);
+
 
   function handleGrantAccess(event, user) {
     event.stopPropagation();
@@ -83,11 +95,32 @@ export default function GuestsView({
     history.push(`/user/${user.id}`)
   }
 
-  useEffect(() => {
-    if (tabValue === 1) {
-      loadGuests();
-    }
-  }, [tabValue, loadGuests, query, offset]);
+  function handleMenu(event, entry) {
+    event.stopPropagation();
+    setAnchorEl(event.currentTarget);
+    setCurrentGuest(entry)
+  }
+
+  function handleInvite(event){
+    event.stopPropagation();
+    history.push(`/logbook/guests/invite/${currentGuest.id}`)
+  }
+
+  function handleMenuClose(event) {
+    event.stopPropagation();
+    setAnchorEl(null);
+  }
+
+  const menuData = {
+    list: [{
+      content: t('logbook.re_invite'),
+      isVisible: true,
+      handleClick: (event) => handleInvite(event)
+    }],
+    handleMenu,
+    anchorEl,
+    handleClose: event => handleMenuClose(event)
+  };
 
   return (
     <div style={{ marginTop: '20px' }}>
@@ -157,7 +190,7 @@ export default function GuestsView({
                   })}
                 </Typography>
               </Grid>
-              <Grid item md={2} xs={6} style={!matches ? { paddingTop: '15px' } : {}}>
+              <Grid item md={1} xs={6} style={!matches ? { paddingTop: '15px' } : {}}>
                 <Chip
                   label={
                     checkRequests(visit.closestEntryTime, t, timeZone).valid
@@ -174,7 +207,7 @@ export default function GuestsView({
                   size="small"
                 />
               </Grid>
-              <Grid item md={2} xs={12} style={!matches ? { paddingTop: '8px' } : {}}>
+              <Grid item md={2} xs={8} style={!matches ? { paddingTop: '8px' } : {}}>
                 <Button
                   disabled={
                     !checkRequests(visit.closestEntryTime, t, timeZone).valid ||
@@ -191,6 +224,25 @@ export default function GuestsView({
                 >
                   {t('access_actions.grant_access')}
                 </Button>
+              </Grid>
+              <Grid item md={1} xs={4} style={!matches ? { paddingTop: '8px' } : {}}>
+                <IconButton
+                  aria-controls="sub-menu"
+                  aria-haspopup="true"
+                  dataid={visit.id}
+                  onClick={event => menuData.handleMenu(event, visit)}
+                  data-testid="menu-list"
+                >
+                  <MoreVertOutlined />
+                </IconButton>
+                <MenuList
+                  open={
+                        Boolean(anchorEl) && menuData?.anchorEl?.getAttribute('dataid') === visit.id
+                      }
+                  anchorEl={menuData?.anchorEl}
+                  handleClose={menuData?.handleClose}
+                  list={menuData.list}
+                />
               </Grid>
             </Grid>
           </Card>
