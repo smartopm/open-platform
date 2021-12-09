@@ -48,7 +48,7 @@ module Mutations
             updates_hash[:user_id] = [note.user.name, value]
             next
           end
-          updates_hash[key] = [note.send(key), value]
+          updates_hash[key] = [note.send(key), value] unless note.send(key).eql? value
         end
         updates_hash
       end
