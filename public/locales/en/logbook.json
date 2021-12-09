@@ -137,7 +137,8 @@
     "scanned_entry": "Scanned entry",
     "pending": "Pending",
     "approved": "Approved",
-    "phone_number_not_available": "Phone number not available"
+    "phone_number_not_available": "Phone number not available",
+    "re_invite": "Invite again"
   },
   "date_picker": {
     "ok_label": "Ok",

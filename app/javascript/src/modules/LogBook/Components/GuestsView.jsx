@@ -111,7 +111,7 @@ export default function GuestsView({
 
   const menuData = {
     list: [{
-      content: t('logbook.re_invite'),
+      content: t('guest_book.re_invite'),
       isVisible: true,
       handleClick: (event) => handleInvite(event)
     }],
