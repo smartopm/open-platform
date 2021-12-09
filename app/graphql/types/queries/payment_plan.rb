@@ -110,10 +110,7 @@ module Types::Queries::PaymentPlan
   #
   # @return [GraphQL::ExecutionError]
   def raise_unauthorized_error_for_payment_plans(permission)
-    return if ::Policy::ApplicationPolicy.new(
-      context[:current_user], nil
-    ).permission?(module: :payment_plan, permission: permission) ||
-              context[:current_user]&.admin?
+    return true if permitted?(module: :payment_plan, permission: permission)
 
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
   end
