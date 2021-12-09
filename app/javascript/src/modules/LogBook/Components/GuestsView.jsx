@@ -103,7 +103,7 @@ export default function GuestsView({
 
   function handleInvite(event){
     event.stopPropagation();
-    history.push(`/logbook/guests/invite/${currentGuest.id}`)
+    history.push(`/logbook/guests/invite?guestId=${currentGuest.id}`)
   }
 
   function handleMenuClose(event) {
