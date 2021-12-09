@@ -31,6 +31,8 @@ module ActionFlows
 
       # rubocop:disable Metrics/AbcSize
       # rubocop:disable Metrics/MethodLength
+      # rubocop:disable Metrics/CyclomaticComplexity
+      # rubocop:disable Metrics/PerceivedComplexity
       def preload_data(eventlog)
         note = eventlog.ref_type.constantize.find eventlog.ref_id
         assignees_email = note.assignees.map(&:email).join(',')
@@ -39,13 +41,15 @@ module ActionFlows
           { 'Note' => note },
           'assignees_emails' => assignees_email,
           'url' => "https://#{HostEnv.base_url(eventlog.community)}/tasks/#{note.id}",
-          'updated_by' => note_history.user.name,
-          'updated_field' => note_history.attr_changed,
-          'updated_date' => note_history.created_at.strftime('%Y-%m-%d'),
-          'new_updated_value' => note.send(note_history.attr_changed)&.to_s&.truncate_words(5),
+          'updated_by' => note_history&.user&.name,
+          'updated_field' => note_history&.attr_changed,
+          'updated_date' => note_history&.created_at&.strftime('%Y-%m-%d'),
+          'new_updated_value' => note.send(note_history&.attr_changed)&.to_s&.truncate_words(5),
           'due_at' => (note.due_date&.strftime('%Y-%m-%d') || 'Never'),
         )
       end
+      # rubocop:enable Metrics/PerceivedComplexity
+      # rubocop:enable Metrics/CyclomaticComplexity
       # rubocop:enable Metrics/MethodLength
       # rubocop:enable Metrics/AbcSize
     end
