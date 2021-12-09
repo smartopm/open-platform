@@ -24,6 +24,7 @@ module Mutations
         raise_note_not_found_error(note)
 
         update_attributes = attributes.except(:document_blob_id)
+        old_note = note.attributes.with_indifferent_access
         unless note.update!(update_attributes)
           raise GraphQL::ExecutionError, note.errors.full_messages
         end
@@ -33,14 +34,14 @@ module Mutations
           context[:current_user].note_documents.attach(attributes[:document_blob_id])
         end
 
-        updates_hash = record_attributes(update_attributes, note)
+        updates_hash = record_attributes(update_attributes, note, old_note)
         note.record_note_history(context[:current_user], updates_hash)
         { note: note }
       end
       # rubocop:enable Metrics/AbcSize
       # rubocop:enable Metrics/MethodLength
 
-      def record_attributes(attributes, note)
+      def record_attributes(attributes, note, old_note)
         updates_hash = {}
         attributes.each do |key, value|
           if key.eql?(:user_id)
@@ -48,7 +49,7 @@ module Mutations
             updates_hash[:user_id] = [note.user.name, value]
             next
           end
-          updates_hash[key] = [note.send(key), value] unless note.send(key).eql? value
+          updates_hash[key] = [old_note[key], value] unless old_note[key].eql? value
         end
         updates_hash
       end
