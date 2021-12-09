@@ -214,7 +214,7 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
           refetch={refetch}
           categoryId={categoryId}
         />
-        <Grid item xs={editMode ? 10 : 12}>
+        <Grid item xs={editMode ? 10 : 12} style={formState.isUploading ? { opacity: 0.3, pointerEvents: 'none' } : {}}>
           <UploadField
             detail={{
               type: 'file',
