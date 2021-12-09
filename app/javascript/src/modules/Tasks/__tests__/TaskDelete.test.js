@@ -42,7 +42,7 @@ describe('Comment Delete Component', () => {
       </MockedProvider>
     )
 
-    expect(container.queryByText('Are you sure you want to delete your comment?')).toBeInTheDocument()
+    expect(container.queryByText('task.delete_confirmation_text')).toBeInTheDocument()
     fireEvent.click(container.queryByTestId('button'))
   })
 })
