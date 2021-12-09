@@ -43,8 +43,8 @@ module ActionFlows
           'author_id' => author_id,
           'body' => body,
           'user_email' => note_assign.user.email,
-          'updated_by' => note_history.user.name,
-          'updated_date' => note_history.created_at.strftime('%Y-%m-%d'),
+          'updated_by' => note_history&.user&.name,
+          'updated_date' => note_history&.created_at&.strftime('%Y-%m-%d'),
           'due_at' => (note_assign.note.due_date&.strftime('%Y-%m-%d') || 'Never'),
           'url' => "https://#{HostEnv.base_url(eventlog.community)}/tasks/#{note_assign.note.id}",
         )

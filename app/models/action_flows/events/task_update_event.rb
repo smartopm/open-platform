@@ -39,10 +39,10 @@ module ActionFlows
           { 'Note' => note },
           'assignees_emails' => assignees_email,
           'url' => "https://#{HostEnv.base_url(eventlog.community)}/tasks/#{note.id}",
-          'updated_by' => note_history.user.name,
-          'updated_field' => note_history.attr_changed,
-          'updated_date' => note_history.created_at.strftime('%Y-%m-%d'),
-          'new_updated_value' => note.send(note_history.attr_changed)&.to_s&.truncate_words(5),
+          'updated_by' => note_history&.user&.name,
+          'updated_field' => note_history&.attr_changed,
+          'updated_date' => note_history&.created_at&.strftime('%Y-%m-%d'),
+          'new_updated_value' => note.send(note_history&.attr_changed)&.to_s&.truncate_words(5),
           'due_at' => (note.due_date&.strftime('%Y-%m-%d') || 'Never'),
         )
       end
