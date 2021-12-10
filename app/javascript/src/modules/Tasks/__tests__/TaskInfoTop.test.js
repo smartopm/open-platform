@@ -49,7 +49,8 @@ const props = {
   selectedDate: new Date(),
   menuData,
   isAssignee: jest.fn().mockResolvedValue(true),
-  activeReminder: ''
+  activeReminder: '',
+  refetch: jest.fn
 };
 
 describe('Top part of the task form component', () => {
@@ -90,6 +91,7 @@ describe('Top part of the task form component', () => {
         parentNote: { id: '1234', body: 'some parent body' }
       },
       autoCompleteOpen: true,
+      refetch: jest.fn
     };
     const updateMock = {
       request: {
@@ -146,6 +148,8 @@ describe('Top part of the task form component', () => {
     const bodyInput = container2.queryByTestId('editable_body')
     fireEvent.change(bodyInput, { target: { value: 'Body changed' } })
     expect(bodyInput.value).toBe('Body changed')
+
+    expect(container2.queryByTestId('task_completion_checkbox')).toBeInTheDocument();
 
     await waitFor(() => {
       expect(container2.queryByText('task.update_successful')).toBeInTheDocument();

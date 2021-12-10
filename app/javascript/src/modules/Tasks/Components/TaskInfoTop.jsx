@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Fab from '@mui/material/Fab';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
-import { Grid, Chip, Typography, Button, IconButton } from '@material-ui/core';
+import { Grid, Chip, Typography, Button, IconButton, Checkbox } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from 'react-router';
 import PropTypes from 'prop-types';
@@ -41,7 +41,8 @@ export default function TaskInfoTop({
   menuData,
   isAssignee,
   activeReminder,
-  handleSplitScreenClose
+  handleSplitScreenClose,
+  refetch
 }) {
   const { t } = useTranslation(['task', 'common']);
   const classes = useStyles();
@@ -71,6 +72,9 @@ export default function TaskInfoTop({
       .then(() => {
         setLoadingStatus(false);
         setUpdateDetails({ isError: false, message: t('task.update_successful') });
+        setTimeout(() => {
+          refetch()
+        }, 500)
         if (property === 'body') setEditingBody(false);
       })
       .catch(err => {
@@ -313,6 +317,22 @@ export default function TaskInfoTop({
             </Grid>
           </Grid>
         )}
+        <Grid container className={classes.inlineContainer}>
+          <Grid item xs={6} md={5}>
+            <Typography variant="body1" className={classes.title} data-testid="date_created_title">
+              {t('task.task_completed')}
+            </Typography>
+          </Grid>
+          <Grid item xs={6} md={6}>
+            <Checkbox
+              checked={data.completed}
+              onChange={() => updateTask('completed', !data.completed)}
+              name="task-completion-checkbox"
+              data-testid="task_completion_checkbox"
+              color="primary"
+            />
+          </Grid>
+        </Grid>
       </Grid>
     </>
   );
@@ -371,5 +391,6 @@ TaskInfoTop.propTypes = {
       })
     )
   }).isRequired,
-  handleSplitScreenClose: PropTypes.func
+  handleSplitScreenClose: PropTypes.func,
+  refetch: PropTypes.func.isRequired
 };
