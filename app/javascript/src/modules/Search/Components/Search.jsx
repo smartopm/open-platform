@@ -101,7 +101,7 @@ export default function SearchContainer({ location }) {
     setOffset(0);
   }
 
-  if (!['security_guard', 'admin', 'custodian'].includes(authState.user?.userType.toLowerCase())) {
+  if (!['security_guard', 'admin', 'custodian', 'security_supervisor'].includes(authState.user?.userType.toLowerCase())) {
     return <Redirect to="/" />;
   }
   if (error && !/permission|permiso/.test(error.message)) {

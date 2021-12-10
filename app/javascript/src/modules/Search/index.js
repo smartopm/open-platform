@@ -12,5 +12,5 @@ export default {
   },
   name: t => t('menu.search'),
   featureName: 'Search',
-  accessibleBy: ['admin', 'custodian', 'security_guard']
+  accessibleBy: ['admin', 'custodian', 'security_guard', 'security_supervisor']
 };
