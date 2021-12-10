@@ -34,7 +34,8 @@ const props = {
   ],
   historyRefetch: jest.fn(),
   authState: {},
-  taskId: 'abc123'
+  taskId: 'abc123',
+  handleTaskCompletion: jest.fn
 };
 
 describe('task form component', () => {

@@ -12,7 +12,9 @@ describe('Feedback Component', () => {
     const container = render(
       <MockedProvider>
         <BrowserRouter>
-          <TaskUpdate />
+          <TaskUpdate
+            handleTaskCompletion={jest.fn}
+          />
         </BrowserRouter>
       </MockedProvider>
     );

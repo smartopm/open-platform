@@ -31,7 +31,8 @@ export default function TaskDetail({
   historyRefetch,
   taskId,
   handleSplitScreenOpen,
-  handleSplitScreenClose
+  handleSplitScreenClose,
+  handleTaskCompletion
 }) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -238,6 +239,7 @@ export default function TaskDetail({
               assignUser={assignUser}
               refetch={refetch}
               handleSplitScreenOpen={handleSplitScreenOpen}
+              handleTaskCompletion={handleTaskCompletion}
             />
           </div>
           <div className={classes.section} data-testid="task-comments-section">
@@ -285,5 +287,6 @@ TaskDetail.propTypes = {
   historyRefetch: PropTypes.func.isRequired,
   taskId: PropTypes.string,
   handleSplitScreenOpen: PropTypes.func,
-  handleSplitScreenClose: PropTypes.func
+  handleSplitScreenClose: PropTypes.func,
+  handleTaskCompletion: PropTypes.func.isRequired
 };
