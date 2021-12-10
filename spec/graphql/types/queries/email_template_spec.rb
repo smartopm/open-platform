@@ -9,7 +9,8 @@ RSpec.describe Types::Queries::EmailTemplate do
     let!(:permission) do
       create(:permission, module: 'email_template',
                           role: admin_role,
-                          permissions: %w[can_view_email_templates can_view_email_template])
+                          permissions: %w[can_view_email_templates can_view_email_template
+                                          can_view_email_template_variables])
     end
 
     let!(:current_user) { create(:user_with_community, role: visitor_role) }

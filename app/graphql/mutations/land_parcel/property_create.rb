@@ -43,9 +43,7 @@ module Mutations
 
       # Verifies if current user is admin or not.
       def authorized?(_vals)
-        return true if ::Policy::ApplicationPolicy.new(
-          context[:current_user], nil
-        ).permission?(admin: true, module: :land_parcel, permission: :can_create_land_parcel)
+        return true if permitted?(module: :land_parcel, permission: :can_create_land_parcel)
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end

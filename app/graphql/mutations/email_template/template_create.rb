@@ -21,13 +21,7 @@ module Mutations
 
       # Verifies if current user is admin or not.
       def authorized?(_vals)
-        return true if ::Policy::ApplicationPolicy.new(
-          context[:current_user], nil
-        ).permission?(
-          admin: true,
-          module: :email_template,
-          permission: :can_create_email_template,
-        )
+        return true if permitted?(module: :email_template, permission: :can_create_email_template)
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end
