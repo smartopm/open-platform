@@ -589,6 +589,7 @@ export default function TodoList({
                   taskId={selectedTask ? selectedTask.id : redirectedTaskId || data?.flaggedNotes[0].id}
                   handleSplitScreenOpen={handleTodoItemClick}
                   handleSplitScreenClose={() => setSplitScreenOpen(false)}
+                  handleTaskCompletion={handleTaskCompletion}
                 />
               </SplitScreen>
             )}
