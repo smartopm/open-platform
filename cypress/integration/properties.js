@@ -11,7 +11,7 @@ describe('Properties & Co-ownership Payment Plan', () => {
           module: 'land_parcel',
           permissions: ['can_see_menu_item', 'can_fetch_land_parcels',
                         'can_view_all_land_parcels', 'can_create_land_parcel',
-                        'can_fetch_house'],
+                        'can_fetch_house', 'can_update_land_parcel'],
           role_id: roleRes.body.id,
         })
         cy.factory('permission', {

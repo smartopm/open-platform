@@ -10,7 +10,8 @@ RSpec.describe Types::QueryType do
     let!(:permission) do
       create(:permission, module: 'campaign',
                           role: admin_role,
-                          permissions: %w[can_access_campaign])
+                          permissions: %w[can_access_campaign can_list_campaigns
+                                          can_get_campaign_details])
     end
 
     let!(:current_user) { create(:user_with_community) }

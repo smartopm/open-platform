@@ -65,13 +65,8 @@ module Types
     end
 
     def campaigns(offset: 0, limit: 50)
-      unless ::Policy::ApplicationPolicy.new(
-        context[:current_user], nil
-      ).permission?(
-        admin: true,
-        module: :campaign,
-        permission: :can_list_campaigns,
-      )
+      unless permitted?(module: :campaign,
+                        permission: :can_list_campaigns)
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end
 
@@ -84,13 +79,8 @@ module Types
     end
 
     def campaign(id:)
-      unless ::Policy::ApplicationPolicy.new(
-        context[:current_user], nil
-      ).permission?(
-        admin: true,
-        module: :campaign,
-        permission: :can_get_campaign_details,
-      )
+      unless permitted?(module: :campaign,
+                        permission: :can_get_campaign_details)
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end
 
