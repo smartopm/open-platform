@@ -147,13 +147,7 @@ module Types::Queries::LandParcel
   end
 
   def raise_unauthorized_error_for_land_parcels(permission)
-    return if ::Policy::ApplicationPolicy.new(
-      context[:current_user], nil
-    ).permission?(
-      admin: true,
-      module: :land_parcel,
-      permission: permission,
-    )
+    return if permitted?(module: :land_parcel, permission: permission)
 
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
   end
