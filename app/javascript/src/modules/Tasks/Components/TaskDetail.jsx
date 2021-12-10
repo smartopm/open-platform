@@ -228,6 +228,7 @@ export default function TaskDetail({
               isAssignee={isCurrentUserAnAssignee}
               activeReminder={currentActiveReminder()}
               handleSplitScreenClose={handleSplitScreenClose}
+              refetch={refetch}
             />
           </div>
           <div className={classes.section} data-testid="task-subtasks-section">

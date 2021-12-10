@@ -206,6 +206,25 @@ export default function TodoList({
     }
   }, [status, selectedTask,signedBlobId, taskUpdate, refetch]);
 
+  function handleTaskCompletion(selectedTaskId, completed) {
+    taskUpdate({variables: {  id: selectedTaskId, completed }})
+      .then(() => {
+        refetch();
+        setTaskUpdateStatus({
+          ...taskUpdateStatus,
+          success: true,
+          message: `${t('task.task_marked_as')} ${completed ? t('task.complete') : t('task.incomplete')}`
+        })
+      })
+      .catch((error) => {
+        setTaskUpdateStatus({
+          ...taskUpdateStatus,
+          success: false,
+          message: formatError(error.message),
+        })
+      });
+  }
+
   function assignUnassignUser(noteId, userId) {
     assignUserToNote({ variables: { noteId, userId } })
       .then(() => {
@@ -586,6 +605,7 @@ export default function TodoList({
                     handleAddSubTask={handleAddSubTask}
                     handleUploadDocument={handleUploadDocument}
                     handleTodoClick={handleTodoItemClick}
+                    handleTaskCompletion={handleTaskCompletion}
                   />
                 ))}
               </div>

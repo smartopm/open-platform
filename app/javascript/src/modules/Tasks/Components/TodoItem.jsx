@@ -20,7 +20,8 @@ export default function TodoItem({
   handleCompleteNote,
   handleAddSubTask,
   handleUploadDocument,
-  handleTodoClick
+  handleTodoClick,
+  handleTaskCompletion
 }) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
@@ -146,6 +147,7 @@ export default function TodoItem({
             handleOpenSubTasksClick={handleParentTaskClick}
             clickable
             handleClick={() => handleTodoItemClick(task)}
+            handleTaskCompletion={handleTaskCompletion}
           />
           {(isLoadingSubTasks || (isUpdating && objectAccessor(tasksOpen, task.id))) && <LinearSpinner />}
         </div>
@@ -169,6 +171,7 @@ export default function TodoItem({
               handleOpenSubTasksClick={() => toggleTask(firstLevelSubTask)}
               clickable
               handleClick={() => handleTodoItemClick(firstLevelSubTask)}
+              handleTaskCompletion={handleTaskCompletion}
             />
           </div>
           {firstLevelSubTask?.subTasks?.length > 0 &&
@@ -187,6 +190,7 @@ export default function TodoItem({
                       styles={{backgroundColor: '#ECECEA'}}
                       clickable
                       handleClick={() => handleTodoItemClick(secondLevelSubTask)}
+                      handleTaskCompletion={handleTaskCompletion}
                     />
                   </div>
                 ))}
@@ -232,6 +236,7 @@ const Task = {
   handleAddSubTask: PropTypes.func.isRequired,
   handleUploadDocument: PropTypes.func.isRequired,
   handleTodoClick: PropTypes.func.isRequired,
+  handleTaskCompletion: PropTypes.func.isRequired
 };
 
 const useStyles = makeStyles(() => ({

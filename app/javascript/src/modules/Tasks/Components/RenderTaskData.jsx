@@ -4,7 +4,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
-import { Checkbox, Grid, IconButton, Typography, Chip } from '@material-ui/core';
+import { Checkbox, Grid, IconButton, Typography, Chip, Button } from '@material-ui/core';
 import Hidden from '@material-ui/core/Hidden';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
@@ -16,6 +16,8 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { useTheme, makeStyles } from '@material-ui/styles';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import { removeNewLines, sanitizeText } from '../../../utils/helpers';
 import DateContainer, { dateToString } from '../../../components/DateContainer';
 import MenuList from '../../../shared/MenuList';
@@ -132,40 +134,30 @@ export default function renderTaskData({
 
 export function TaskDataList({
   task,
-  handleChange,
   handleFileInputChange,
-  selectedTasks,
-  isSelected,
   menuData,
   clickable,
   handleClick,
   styles,
   openSubTask,
-  handleOpenSubTasksClick
+  handleOpenSubTasksClick,
+  handleTaskCompletion
 }) {
   const classes = useStyles();
   const { t } = useTranslation('task');
   const matches = useMediaQuery('(max-width:800px)');
 
-  // This is not working as expected yet.
-  function handleCheckbox(event, currentTask) {
-    event.stopPropagation();
-    handleChange(currentTask.id);
-  }
-
   return (
     <Card clickData={{clickable, handleClick}} styles={styles} contentStyles={{ padding: '4px' }}>
       <Grid container>
         <Grid item md={5} xs={8} style={{ display: 'flex', alignItems: 'center' }} data-testid="task_body_section">
-          <Checkbox
-            checked={selectedTasks.includes(task.id) || isSelected}
-            onChange={event => handleCheckbox(event, task)}
-            inputProps={{ 'aria-label': 'primary checkbox' }}
-            color="primary"
-            data-testid="task-select-action"
-            size="small"
-            key={task.id}
-            style={{ padding: 0 }}
+          <Button
+            onClick={() => handleTaskCompletion(task.id, !task.completed)}
+            startIcon={
+              task.completed ? <CheckCircleIcon htmlColor='#4caf50' /> : <CheckCircleOutlineIcon />
+            }
+            style={{ textTransform: 'none' }}
+            data-testid="task_completion_toggle_button"
           />
           {task?.subTasks?.length > 0
             ? (
@@ -367,9 +359,6 @@ TaskDataList.defaultProps = {
 }
 TaskDataList.propTypes = {
   task: PropTypes.shape(Task).isRequired,
-  handleChange: PropTypes.func.isRequired,
-  selectedTasks: PropTypes.arrayOf(PropTypes.string).isRequired,
-  isSelected: PropTypes.bool.isRequired,
   handleFileInputChange: PropTypes.func.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   menuData: PropTypes.object.isRequired,
@@ -379,6 +368,7 @@ TaskDataList.propTypes = {
   styles: PropTypes.object,
   openSubTask: PropTypes.bool,
   handleOpenSubTasksClick: PropTypes.func,
+  handleTaskCompletion: PropTypes.func.isRequired
 };
 LinkToUser.propTypes = {
   userId: PropTypes.string.isRequired,
