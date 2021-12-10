@@ -47,6 +47,7 @@ export default function UserInformation({
   const [tabValue, setValue] = useState(tab || 'Contacts');
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [isDrawerOpen, setDrawerOpen] = useState(false);
+  const securityPersonnelList = ['security_guard' , 'security_supervisor']
 
   const [noteCreate, { loading: mutationLoading }] = useMutation(CreateNote);
   const { handleSubmit, register } = useForm();
@@ -255,13 +256,13 @@ export default function UserInformation({
         )}
 
         <div className="container d-flex justify-content-between">
-          {data.user.state === 'valid' && authState.user.userType === 'security_guard' || 'security_supervisor' ? (
+          {data.user.state === 'valid' && securityPersonnelList.includes(authState.user.userType) ? (
             <Button id="log-entry" className="log-entry-btn" color="primary" onClick={onLogEntry}>
               {t('common:misc.log_entry')}
             </Button>
           ) : null}
 
-          {authState.user.userType === 'security_guard' || 'security_supervisor' ? (
+          {securityPersonnelList.includes(authState.user.userType) ? (
             <Button
               id="call_poniso"
               startIcon={<PhoneIcon />}
