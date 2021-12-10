@@ -162,7 +162,7 @@ export default function UserInformation({
         <br />
         <FeatureCheck features={authState.user.community.features} name="Time Card">
           {authState.user.userType === 'custodian' &&
-            ['security_guard', 'contractor'].includes(data.user.userType) && (
+            ['security_guard', 'contractor', 'security_supervisor'].includes(data.user.userType) && (
               <ShiftButtons userId={userId} />
             )}
         </FeatureCheck>
@@ -213,7 +213,7 @@ export default function UserInformation({
             </FeatureCheck>
           </>
         )}
-        {!['security_guard', 'custodian'].includes(userType) && (
+        {!['security_guard', 'custodian', 'security_supervisor'].includes(userType) && (
           <>
             <FeatureCheck features={authState.user.community.features} name="Properties">
               <TabPanel value={tabValue} index="Plots">
@@ -255,13 +255,13 @@ export default function UserInformation({
         )}
 
         <div className="container d-flex justify-content-between">
-          {data.user.state === 'valid' && authState.user.userType === 'security_guard' ? (
+          {data.user.state === 'valid' && authState.user.userType === 'security_guard' || 'security_supervisor' ? (
             <Button id="log-entry" className="log-entry-btn" color="primary" onClick={onLogEntry}>
               {t('common:misc.log_entry')}
             </Button>
           ) : null}
 
-          {authState.user.userType === 'security_guard' ? (
+          {authState.user.userType === 'security_guard' || 'security_supervisor' ? (
             <Button
               id="call_poniso"
               startIcon={<PhoneIcon />}
