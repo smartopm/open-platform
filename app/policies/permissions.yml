@@ -210,6 +210,8 @@ admin:
       - can_create_campaign_through_users
       - can_remove_campaign_label
       - can_update_campaign
+      - can_list_campaigns
+      - can_get_campaign_details
   dashboard:
     permissions:
       - can_access_dashboard
