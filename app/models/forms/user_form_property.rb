@@ -18,5 +18,10 @@ module Forms
         send(attr).attach(vals['image_blob_id'])
       end
     end
+
+    def file_blob
+      ActiveStorage::Attachment.find_by(record_id: id,
+                                              record_type: 'Forms::UserFormProperty')&.blob
+    end
   end
 end
