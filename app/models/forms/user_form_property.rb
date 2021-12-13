@@ -21,7 +21,7 @@ module Forms
 
     def file_blob
       ActiveStorage::Attachment.find_by(record_id: id,
-                                              record_type: 'Forms::UserFormProperty')&.blob
+                                        record_type: 'Forms::UserFormProperty')&.blob
     end
   end
 end
