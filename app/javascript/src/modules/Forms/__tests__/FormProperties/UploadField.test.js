@@ -10,7 +10,8 @@ describe('Upload component', () => {
         upload: handler,
         detail: { status: '', type: 'file', label: 'Image Label', required: true },
         editable: false,
-        uploaded: false
+        uploaded: false,
+        btnColor: 'primary'
     }
     const container = render(<Upload {...props} />)
     const uploadBtn = container.queryByLabelText('upload_button_Image Label')
