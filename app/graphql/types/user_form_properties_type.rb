@@ -23,11 +23,11 @@ module Types
     end
 
     def file_type
-      object.file_blob&.content_type
+      object.image.blob&.content_type
     end
 
     def file_name
-      object.file_blob&.filename
+      object.image.blob&.filename
     end
 
     def host_url(type)
