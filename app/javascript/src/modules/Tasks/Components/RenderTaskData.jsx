@@ -150,14 +150,8 @@ export function TaskDataList({
   return (
     <Card styles={styles} contentStyles={{ padding: '4px' }}>
       <Grid container>
-        <Grid
-          item
-          md={5}
-          xs={8}
-          style={{ display: 'flex', alignItems: 'center' }}
-          data-testid="task_body_section"
-        >
-          <Grid container>
+        <Grid item md={5} xs={8} style={{ display: 'flex', alignItems: 'center' }} data-testid="task_body_section">
+          <Grid container style={{ display: 'flex', alignItems: 'center' }}>
             <Grid item md={2}>
               <Button
                 onClick={() => handleTaskCompletion(task.id, !task.completed)}
@@ -172,7 +166,7 @@ export function TaskDataList({
                 data-testid="task_completion_toggle_button"
               />
             </Grid>
-            <Grid item md={8} style={{ paddingTop: '5px' }}>
+            <Grid item md={8}>
               <Typography
                 variant="body2"
                 data-testid="task_body"
@@ -180,10 +174,10 @@ export function TaskDataList({
                 className={matches ? classes.taskBodyMobile : classes.taskBody}
               >
                 <span
-                  // eslint-disable-next-line react/no-danger
+            // eslint-disable-next-line react/no-danger
                   dangerouslySetInnerHTML={{
-                    __html: sanitizeText(removeNewLines(task.body))
-                  }}
+              __html: sanitizeText(removeNewLines(task.body))
+            }}
                 />
               </Typography>
             </Grid>
@@ -195,7 +189,6 @@ export function TaskDataList({
                   data-testid="task-item-menu"
                   dataid={task.id}
                   onClick={event => menuData.handleTodoMenu(event, task)}
-                  size="small"
                   color="primary"
                 >
                   <MoreVertIcon />
@@ -203,33 +196,25 @@ export function TaskDataList({
               </Hidden>
             </Grid>
             <Hidden smDown>
-              <Divider orientation="vertical" flexItem sx={{ margin: '-20px 0' }} />
+              <Divider orientation="vertical" flexItem sx={{margin: '-20px 0'}} />
             </Hidden>
           </Grid>
         </Grid>
         <Hidden mdUp>
-          <Grid item md={1} xs={3} style={{ display: 'flex', alignItems: 'center' }}>
-            {task.completed ? (
-              <Chip size="small" label={t('task.complete')} className={classes.completed} />
-            ) : (
-              <Chip size="small" label={t('task.open')} className={classes.open} />
-            )}
+          <Grid item md={1} xs={3} style={{display: 'flex', alignItems: 'center' }}>
+            {task.completed
+            ? <Chip size="small" label={t('task.complete')} className={classes.completed} />
+            : <Chip size="small" label={t('task.open')} className={classes.open} />}
           </Grid>
         </Hidden>
         <Hidden mdUp>
-          <Grid
-            item
-            md={1}
-            xs={1}
-            style={{ display: 'flex', alignItems: 'center', justifyContent: 'end' }}
-          >
+          <Grid item md={1} xs={1} style={{display: 'flex', alignItems: 'center', justifyContent: 'end'}}>
             <IconButton
               aria-controls="simple-menu"
               aria-haspopup="true"
               data-testid="task-item-menu"
               dataid={task.id}
               onClick={event => menuData.handleTodoMenu(event, task)}
-              size="small"
               color="primary"
             >
               <MoreVertIcon />
@@ -237,91 +222,74 @@ export function TaskDataList({
           </Grid>
         </Hidden>
         <Hidden smDown>
-          <Grid
-            item
-            data-testid="task_due_date"
-            md={2}
-            xs={12}
-            style={{ display: 'flex', alignItems: 'center' }}
-          >
+          <Grid item data-testid="task_due_date" md={2} xs={12} style={{ display: 'flex', alignItems: 'center', }}>
             <Typography variant="body2" component="span">
               {t('task.due_date')}
               {task.dueDate ? dateToString(task.dueDate) : 'Never '}
             </Typography>
           </Grid>
         </Hidden>
-        <Grid
-          item
-          md={1}
-          xs={6}
-          data-testid="task_assignee"
-          style={{ display: 'flex', alignItems: 'center' }}
-        >
+        <Grid item md={1} xs={6} data-testid="task_assignee" style={{ display: 'flex', alignItems: 'center' }}>
           {task.assignees.length > 0 && (
-            <Grid container style={{ paddingLeft: '5px' }}>
+            <Grid container style={{paddingLeft: '5px'}}>
               {/* Restrict to 2 users */}
               {task.assignees.slice(0, 2).map(user => (
                 <Grid item md={4} xs={2} key={user.id}>
                   <LinkToUserAvatar key={user.id} user={user} />
                 </Grid>
-              ))}
+                ))}
               <Grid item md={2} xs={1}>
                 {task.assignees.length > 2 && (
-                  <IconButton
-                    aria-controls="more-assignees"
-                    aria-haspopup="true"
-                    data-testid="more-assignees"
-                    size="small"
-                    style={{
+                <IconButton
+                  aria-controls="more-assignees"
+                  aria-haspopup="true"
+                  data-testid="more-assignees"
+                  style={{
                       padding: 0,
                       margin: 0,
                       fontSize: '8px',
                       color: '#000000',
                       opacity: '0.2'
                     }}
-                  >
-                    <MoreHorizIcon />
-                  </IconButton>
+                >
+                  <MoreHorizIcon />
+                </IconButton>
                 )}
               </Grid>
             </Grid>
           )}
         </Grid>
         <Grid item data-testid="task_details_section" md={2} xs={5}>
-          <Grid container style={{ paddingTop: '10px' }}>
-            <Grid item md={4} xs={4} style={{ display: 'flex' }}>
+          <Grid container style={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <Grid item md={2} xs={2}>
               <IconButton
                 aria-controls="task-subtasks-icon"
                 aria-haspopup="true"
                 data-testid="task_subtasks"
-                size="medium"
                 onClick={handleClick}
               >
-                <AccountTreeIcon
-                  fontSize="small"
-                  color={task?.subTasks?.length ? 'primary' : 'disabled'}
-                />
+                <AccountTreeIcon fontSize="small" color={task?.subTasks?.length ? 'primary': 'disabled'} />
               </IconButton>
             </Grid>
-            <Grid item md={4} xs={4} style={{ display: 'flex' }}>
+            <Grid item md={1} xs={2} className={classes.iconItem}><span>{task?.subTasks?.length}</span></Grid>
+            <Grid item md={2} xs={2}>
               <IconButton
                 aria-controls="task-comment-icon"
                 aria-haspopup="true"
                 data-testid="task_comments"
-                size="medium"
                 onClick={handleClick}
               >
                 <QuestionAnswerIcon fontSize="small" color="disabled" />
               </IconButton>
             </Grid>
-            <Grid item md={4} xs={4} style={{ display: 'flex' }}>
+            <Grid item md={1} xs={2} className={classes.iconItem}><span>0</span></Grid>
+            <Grid item md={2} xs={2}>
               <IconButton
                 key={task.id}
                 aria-controls="task-attach-file-icon"
                 aria-haspopup="true"
                 data-testid="task_attach_file"
                 component="label"
-                size="medium"
                 onClick={handleClick}
               >
                 <input
@@ -330,59 +298,45 @@ export function TaskDataList({
                   onChange={event => handleFileInputChange(event, task)}
                   id="task-attach-file"
                 />
-                <AttachFileIcon
-                  fontSize="small"
-                  color={task?.documents?.length ? 'primary' : 'disabled'}
-                />
+                <AttachFileIcon fontSize="small" color={task?.documents?.length ? 'primary': 'disabled'} />
               </IconButton>
-              <span data-testid="file_attachments_total">{task.documents?.length}</span>
+            </Grid>
+            <Grid item md={1} xs={2} className={classes.iconItem}>
+              <span data-testid="file_attachments_total">
+                {task.documents?.length}
+              </span>
             </Grid>
           </Grid>
         </Grid>
-        <Grid
-          item
-          md={1}
-          style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}
-          data-testid="task_menu_section"
-        >
+        <Grid item md={1} style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }} data-testid="task_menu_section">
           <Hidden smDown>
-            {task.completed ? (
-              <Chip size="small" label={t('task.complete')} className={classes.completed} />
-            ) : (
-              <Chip size="small" label={t('task.open')} className={classes.open} />
-            )}
+            {task.completed
+              ? <Chip size="small" label={t('task.complete')} className={classes.completed} />
+              : <Chip size="small" label={t('task.open')} className={classes.open} />}
           </Hidden>
         </Grid>
-        <Grid
-          item
-          md={1}
-          xs={1}
-          style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}
-        >
-          {task?.subTasks?.length > 0 ? (
-            <IconButton
-              aria-controls="show-task-subtasks-icon"
-              aria-haspopup="true"
-              data-testid="show_task_subtasks"
-              size="small"
-              onClick={e => handleOpenSubTasksClick(e)}
-            >
-              {openSubTask ? (
-                <KeyboardArrowUpIcon fontSize="small" color="primary" />
-              ) : (
-                <KeyboardArrowDownIcon fontSize="small" color="primary" />
-              )}
-            </IconButton>
-          ) : (
-            <IconButton
-              aria-controls="show-task-subtasks-icon"
-              aria-haspopup="true"
-              data-testid="show_task_subtasks"
-              size="small"
-              disabled
-            >
-              <KeyboardArrowDownIcon fontSize="small" />
-            </IconButton>
+        <Grid item md={1} xs={1} style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
+          {task?.subTasks?.length > 0
+            ? (
+              <IconButton
+                aria-controls="show-task-subtasks-icon"
+                aria-haspopup="true"
+                data-testid="show_task_subtasks"
+                onClick={(e) => handleOpenSubTasksClick(e)}
+              >
+                {openSubTask
+                  ? <KeyboardArrowUpIcon fontSize="small" color="primary" />
+                  : <KeyboardArrowDownIcon fontSize="small" color="primary" />}
+              </IconButton>
+            ) : (
+              <IconButton
+                aria-controls="show-task-subtasks-icon"
+                aria-haspopup="true"
+                data-testid="show_task_subtasks"
+                disabled
+              >
+                <KeyboardArrowDownIcon fontSize="small" />
+              </IconButton>
           )}
         </Grid>
       </Grid>
