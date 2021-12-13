@@ -6,14 +6,23 @@
 /* eslint-disable no-unused-expressions */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { Fragment, useRef, useState, useEffect } from 'react';
-import { Button, Container, Grid, TextField, Typography } from '@material-ui/core';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import { GetApp } from '@material-ui/icons';
+import {
+  Button,
+  Container,
+  Grid,
+  TextField,
+  Typography,
+  IconButton,
+  ListItem,
+  ListItemSecondaryAction,
+  ListItemText
+} from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { useApolloClient, useMutation, useQuery } from 'react-apollo';
 import { useHistory } from 'react-router';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
+import DownloadIcon from '@mui/icons-material/Download';
 import DatePickerDialog, {
   DateAndTimePickers,
   ThemedTimePicker
@@ -28,13 +37,14 @@ import DialogueBox from '../../../shared/dialogs/DeleteDialogue';
 import UploadField from './FormProperties/UploadField';
 import SignaturePad from './FormProperties/SignaturePad';
 import { useFileUpload } from '../../../graphql/useFileUpload';
-import { dateFormatter } from '../../../components/DateContainer';
+import { dateFormatter , dateToString } from '../../../components/DateContainer';
 import { formStatus as updatedFormStatus } from '../../../utils/constants';
 import RadioInput from './FormProperties/RadioInput';
 import ImageAuth from '../../../shared/ImageAuth';
 import Loading from '../../../shared/Loading';
 import FormTitle from './FormTitle';
 import CheckboxInput from './FormProperties/CheckboxInput';
+
 
 // date
 // text input (TextField or TextArea)
@@ -59,7 +69,6 @@ export default function FormUpdate({ formUserId, userId, authState }) {
   // create form user
   const [updateFormUser] = useMutation(FormUserUpdateMutation);
   const [updateFormUserStatus] = useMutation(FormUserStatusUpdateMutation);
-  const matches = useMediaQuery('(max-width:600px)');
 
   const { data, error, loading } = useQuery(UserFormPropertiesQuery, {
     variables: { userId, formUserId },
@@ -314,52 +323,100 @@ export default function FormUpdate({ formUserId, userId, authState }) {
       ),
       file_upload: (
         <div key={formPropertiesData.formProperty.id}>
-          <div data-testid="attachment-name">
+          <div data-testid="attachment-name" style={{ margin: '15px 0 -15px 0' }}>
             {formPropertiesData.formProperty.fieldName}
           </div>
-          <Grid container direction="row" spacing={1} alignItems="flex-start" className={classes.fileUploadField}>
-            <Grid item xs={12} md={2}>
-              <UploadField
-                detail={{ type: 'file', status, detail: {  label: formPropertiesData.value } }}
-                key={formPropertiesData.id}
-                upload={evt => onChange(evt.target.files[0])}
-                editable={editable}
-                style={{ flex: 1 }}
-              />
-            </Grid>
-            <Grid item xs={12} md={2}>
-              {formPropertiesData.imageUrl && (
-                <div className={matches ? classes.downloadButtonMobile : classes.downloadButton}>
-                  <Button
-                    variant="text"
-                    component="span"
-                    aria-label={`${formPropertiesData.formProperty.fieldName}-download-button}`}
-                    startIcon={<GetApp />}
-                  >
-                    <a
-                      href={formPropertiesData.imageUrl}
-                      download={formPropertiesData.imageUrl}
-                      style={{ textDecoration: 'none', color: '#000000DE' }}
-                    >
-                      {t('form:misc.download_file')}
-                    </a>
-                  </Button>
-                </div>
-              )}
-            </Grid>
-            <Grid item xs={12}>
+          <Grid
+            container
+            direction="row"
+            spacing={1}
+            alignItems="flex-start"
+            className={classes.fileUploadField}
+          >
+            <Grid item md={6}>
               <div>
                 {formPropertiesData.imageUrl && (
-                  <div className={matches ? classes.filePreviewMobile : classes.filePreview}>
-                    <ImageAuth
-                      type={formPropertiesData.fileType?.split('/')[0]}
-                      imageLink={formPropertiesData.imageUrl}
-                    />
-                  </div>
+                  <>
+                    <div>
+                      <ListItem style={{ paddingLeft: 0, marginBottom: '-20px' }}>
+                        <Grid container>
+                          <Grid item xs={11}>
+                            <ListItemText
+                              disableTypography
+                              primary={(
+                                <Typography
+                                  variant="body1"
+                                  color="primary"
+                                  style={{ fontWeight: 700 }}
+                                  data-testid="filename"
+                                >
+                                  {formPropertiesData.fileName}
+                                </Typography>
+                              )}
+                              secondary={(
+                                <>
+                                  <Typography
+                                    component="span"
+                                    variant="body2"
+                                    data-testid="uploaded_at"
+                                  >
+                                    {`${t('common:misc.uploaded_at')}: ${dateToString(
+                                      formPropertiesData.createdAt
+                                    )}`}
+                                  </Typography>
+                                  <Typography
+                                    component="span"
+                                    variant="body2"
+                                    data-testid="uploaded_by"
+                                    style={{ marginLeft: '20px' }}
+                                  >
+                                    {`${t('common:misc.uploaded_by')}: ${
+                                      formPropertiesData.user.name
+                                    }`}
+                                  </Typography>
+                                </>
+                              )}
+                            />
+                          </Grid>
+                          <Grid item xs={1} className="">
+                            <ListItemSecondaryAction className={classes.menu}>
+                              <IconButton
+                                edge="end"
+                                aria-label="download-icon"
+                                data-testid="download-icon"
+                              >
+                                <a
+                                  href={formPropertiesData.imageUrl}
+                                  download={formPropertiesData.imageUrl}
+                                  style={{
+                                    textDecoration: 'none',
+                                    color: '#000000',
+                                    opacity: '0.5'
+                                  }}
+                                >
+                                  <DownloadIcon />
+                                </a>
+                              </IconButton>
+                            </ListItemSecondaryAction>
+                          </Grid>
+                        </Grid>
+                      </ListItem>
+                    </div>
+                  </>
                 )}
               </div>
             </Grid>
           </Grid>
+          <div>
+            <UploadField
+              detail={{ type: 'file', status, detail: { label: formPropertiesData.value } }}
+              key={formPropertiesData.id}
+              upload={evt => onChange(evt.target.files[0])}
+              editable={editable}
+              style={{ flex: 1 }}
+              btnColor="primary"
+            />
+          </div>
         </div>
       ),
       signature: (
@@ -558,6 +615,6 @@ FormUpdate.propTypes = {
   userId: PropTypes.string.isRequired,
   formUserId: PropTypes.string.isRequired,
   authState: PropTypes.shape({
-    user: PropTypes.shape({ userType: PropTypes.string }),
+    user: PropTypes.shape({ userType: PropTypes.string })
   }).isRequired
 };

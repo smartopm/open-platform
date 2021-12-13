@@ -12,6 +12,7 @@ module Types
     field :value, String, null: true
     field :image_url, String, null: true
     field :file_type, String, null: true
+    field :file_name, String, null: true
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
 
@@ -22,11 +23,11 @@ module Types
     end
 
     def file_type
-      return nil unless object.image.attached?
+      object.image.blob&.content_type
+    end
 
-      file = ActiveStorage::Attachment.where(record_id: object.id,
-                                             record_type: 'Forms::UserFormProperty').first.blob
-      file.content_type
+    def file_name
+      object.image.blob&.filename
     end
 
     def host_url(type)

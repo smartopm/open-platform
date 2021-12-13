@@ -249,7 +249,9 @@
     "allocating_message": "I accept that by clicking the allocate button the general fund will be allocated to the selected plan",
     "allocate_select": "Select the plan you want to allocate the general fund",
     "allocating_success": "General funds successfully allocated",
-    "no_allocating": "There are no active plans for this user to allocate the general funds"
+    "no_allocating": "There are no active plans for this user to allocate the general funds",
+    "uploaded_at": "Uploaded at",
+    "uploaded_by": "Uploaded by"
   },
   "menu": {
     "invoice": "Invoice",

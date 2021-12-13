@@ -137,6 +137,10 @@ RSpec.describe Types::Queries::Form do
             value
             imageUrl
             fileType
+            fileName
+            user {
+              name
+            }
             formProperty {
               fieldName
               fieldType
@@ -353,6 +357,7 @@ RSpec.describe Types::Queries::Form do
           expect(user_property['value']).to eql 'name'
           expect(user_property['formProperty']['fieldName']).to eql form_property_text.field_name
           expect(user_property['formProperty']['category']['fieldName']).to eql category.field_name
+          expect(user_property['user']['name']).to eql current_user.name
         end
 
         it 'returns Unauthorized when no user for form user properties' do

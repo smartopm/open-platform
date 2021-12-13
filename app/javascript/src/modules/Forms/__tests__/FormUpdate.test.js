@@ -66,7 +66,12 @@ describe('Form Component', () => {
               },
               value: '7th Street',
               imageUrl: 'https://image.com',
-              fileType: null
+              fileType: null,
+              fileName: 'img.jpg',
+              createdAt: "2020-10-07T09:37:03Z",
+              user: {
+                name: 'John Does'
+              }
             },
             {
               formProperty: {
@@ -80,7 +85,12 @@ describe('Form Component', () => {
               },
               value: null,
               imageUrl: 'https://another_image.com',
-              fileType: 'null'
+              fileType: 'null',
+              fileName: 'img2.jpg',
+              createdAt: "2020-10-07T09:37:03Z",
+              user: {
+                name: 'John Doe'
+              }
             },
             {
               formProperty: {
@@ -94,7 +104,12 @@ describe('Form Component', () => {
               },
               value: 'some values',
               imageUrl: 'https://another2_image.com',
-              fileType: 'image/jpg'
+              fileType: 'image/jpg',
+              fileName: 'img3.jpg',
+              createdAt: "2020-10-07T09:37:03Z",
+              user: {
+                name: 'John Doe'
+              }
             },
             {
               formProperty: {
@@ -108,7 +123,12 @@ describe('Form Component', () => {
               },
               value: null,
               imageUrl: null,
-              fileType: null
+              fileType: null,
+              fileName: null,
+              createdAt: "2020-10-07T09:37:03Z",
+              user: {
+                name: 'John Doe'
+              }
             },
             {
               formProperty: {
@@ -132,6 +152,11 @@ describe('Form Component', () => {
               value: "{\"checked\"=>\"Yes\", \"label\"=>\"Would you rather?\"}",
               imageUrl: null,
               fileType: null,
+              fileName: null,
+              createdAt: "2020-10-07T09:37:03Z",
+              user: {
+                name: 'John Doe'
+              }
             },
             {
               formProperty: {
@@ -159,6 +184,11 @@ describe('Form Component', () => {
               value: "{\"Red\"=>true, \"Blue\"=>true}",
               imageUrl: null,
               fileType: null,
+              fileName: null,
+              createdAt: "2020-10-07T09:37:03Z",
+              user: {
+                name: 'John Doe'
+              }
             }
           ]
         }
@@ -193,13 +223,19 @@ describe('Form Component', () => {
         expect(
           container.queryAllByTestId('attachment-name')[0]
           ).toHaveTextContent('Image 1')
-        expect(container.queryByText('form:misc.download_file')).toBeInTheDocument()
+        expect(container.queryByTestId('download-icon')).toBeInTheDocument()
+        expect(container.queryByTestId('filename')).toBeInTheDocument()
+        expect(container.queryByTestId('uploaded_by')).toBeInTheDocument()
+        expect(container.queryByTestId('uploaded_at')).toBeInTheDocument()
         expect(container.queryByLabelText('Yes')).toBeInTheDocument()
         expect(container.queryByLabelText('No')).toBeInTheDocument()
         expect(container.queryByTestId('radio_field_name')).toBeInTheDocument()
         expect(container.queryByTestId('checkbox_field_name')).toBeInTheDocument()
         expect(container.queryByTestId('radio_field_name').textContent).toContain('Would you rather?')
         expect(container.queryByTestId('checkbox_field_name').textContent).toContain('Select your favorite colors')
+        expect(container.queryByTestId('filename').textContent).toContain('img3.jpg')
+        expect(container.queryByTestId('uploaded_at').textContent).toContain('common:misc.uploaded_at: 2020-10-07')
+        expect(container.queryByTestId('uploaded_by').textContent).toContain('common:misc.uploaded_by: John Doe')
       },
       { timeout: 50 }
     )
@@ -229,7 +265,12 @@ describe('Form Component', () => {
               },
               value: null,
               imageUrl: null,
-              fileType: null
+              fileType: null,
+              fileName: null,
+              createdAt: "2020-10-07T09:37:03Z",
+              user: {
+                name: 'John Doe'
+              }
             }
           ]
         }
@@ -252,7 +293,7 @@ describe('Form Component', () => {
       expect(
         screen.queryAllByTestId('attachment-name')[0]
         ).toHaveTextContent('Attach a file here')
-      expect(screen.queryByText('form:misc.download_file')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('download-icon')).not.toBeInTheDocument();
     });
   });
 })

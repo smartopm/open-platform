@@ -76,6 +76,11 @@ export const UserFormPropertiesQuery = gql`
       value
       imageUrl
       fileType
+      fileName
+      createdAt
+      user {
+        name
+      }
     }
   }
 `
