@@ -14,11 +14,13 @@ import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import { makeStyles } from '@material-ui/core/styles';
-import { DeleteNoteComment } from '../../../graphql/mutations'
+import { useTranslation } from 'react-i18next';
+import { DeleteNoteComment } from '../../../graphql/mutations';
 
 export default function TaskDelete({ open, handleClose, id, name, imageUrl, body, refetch }) {
   const classes = useStyles();
-  const [commentDelete] = useMutation(DeleteNoteComment)
+  const [commentDelete] = useMutation(DeleteNoteComment);
+  const { t } = useTranslation('task', 'common');
 
   function handleDelete(comId) {
     commentDelete({ variables: {
@@ -33,7 +35,7 @@ export default function TaskDelete({ open, handleClose, id, name, imageUrl, body
     <>
       <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
         <DialogTitle id="customized-dialog-title" onClose={handleClose} className={classes.title}>
-          Are you sure you want to delete your comment?
+          {t('task.delete_confirmation_text')}
         </DialogTitle>
         <DialogContent style={{ margin: '15px' }}>
           <Card style={{ display: 'flex' }} className={classes.root}>
@@ -53,10 +55,10 @@ export default function TaskDelete({ open, handleClose, id, name, imageUrl, body
         <Divider />
         <DialogActions style={{ margin: '10px' }}>
           <Button onClick={handleClose} variant="outlined" color="secondary" data-testid='cancel-delete'>
-            Cancel
+            {t('common:form_actions.cancel')}
           </Button>
           <Button autoFocus data-testid='button' onClick={() => handleDelete(id)} variant="contained" style={{ backgroundColor: '#dc402b', color: 'white' }}>
-            Save changes
+            {t('common:form_actions.save_changes')}
           </Button>
         </DialogActions>
       </Dialog>
