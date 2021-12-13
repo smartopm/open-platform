@@ -272,14 +272,16 @@ const useStyles = makeStyles(() => ({
     overflow: 'hidden',
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
-    paddingLeft: '3px'
+    paddingLeft: '3px',
+    marginTop: '5px'
   },
   taskBodyMobile: {
     maxWidth: '33ch',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
-    paddingLeft: '6px'
+    paddingLeft: '6px',
+    marginTop: '5px'
   },
   completed: {
     backgroundColor: '#4caf50',
