@@ -90,6 +90,7 @@ export default function UserItem({
         key={user.id}
         className={classes.userItem}
         onClick={showUserDetails}
+        data-testid="user_item"
       >
         <Grid container alignItems="center">
           <Checkbox
@@ -133,7 +134,7 @@ export default function UserItem({
                   to={{pathname: `/user/${user.id}`, state: { from: 'users', offset }}}
                   key={user.id}
                 >
-                  <Typography component="span" variant="subtitle1">
+                  <Typography component="span" variant="subtitle1" data-testid="user_name">
                     <strong>
                       {' '}
                       {user.name}
@@ -150,8 +151,8 @@ export default function UserItem({
                   marginRight: 30
                 }}
               >
-                <Typography variant="body2">{user.email}</Typography>
-                <Typography component="span" variant="body2">
+                <Typography variant="body2" data-testid="user_email">{user.email}</Typography>
+                <Typography component="span" variant="body2" data-testid="user_phone_number">
                   {user.phoneNumber}
                 </Typography>
                 {user.subStatus && (
@@ -164,7 +165,7 @@ export default function UserItem({
           </Box>
 
           <Grid className={classes.userTypeRow}>
-            <Typography variant="subtitle1" data-testid="label-users">
+            <Typography variant="subtitle1" data-testid="user_type">
               {t(`common:user_types.${user?.userType}`)}
             </Typography>
           </Grid>

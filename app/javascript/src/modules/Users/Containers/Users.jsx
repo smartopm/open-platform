@@ -1,6 +1,3 @@
-/* eslint-disable max-lines */
-/* eslint-disable max-statements */
-/* eslint-disable complexity */
 /* eslint-disable no-use-before-define */
 import React, { useState, useEffect, useContext } from 'react'
 import { useQuery, useMutation, useLazyQuery } from 'react-apollo'
@@ -88,11 +85,14 @@ export default function UsersList() {
     fetchPolicy: 'cache-and-network'
   })
 
-  const [loadAllUsers, { loading: usersLoading, data: usersData, called }] = useLazyQuery(UsersDetails, {
-    // TODO: have a separate query with no limits
-    variables: {limit: 2000, query: searchQuery },
-    errorPolicy: 'all'
-  });
+  const [loadAllUsers, { loading: usersLoading, data: usersData, called }] = useLazyQuery(
+    UsersDetails,
+    {
+      // TODO: have a separate query with no limits
+      variables: { limit: 2000, query: searchQuery },
+      errorPolicy: 'all'
+    }
+  );
 
   let csvUserData;
   let userList;
@@ -357,8 +357,9 @@ export default function UsersList() {
   }
 
   if (labelsLoading) return <Loading />
-  if (error || labelsError)
-    return <ErrorPage error={error.message || labelsError.message} />
+  if (error || labelsError){
+    return <ErrorPage error={error?.message || labelsError?.message} />
+  }
   if (redirect) {
     return (
       <Redirect
@@ -565,7 +566,7 @@ export default function UsersList() {
               type="text"
               placeholder={t('common:form_placeholders.search_user')}
               onFocus={inputToSearch}
-              inputProps={{ 'aria-label': 'search User' }}
+              inputProps={{ 'aria-label': 'search User', 'data-testid': 'search_user' }}
             />
             <Divider className={classes.divider} orientation="vertical" />
             <IconButton
@@ -586,6 +587,7 @@ export default function UsersList() {
                 variant="outlined"
                 color="primary"
                 className={classes.reportBtn}
+                data-testid="download_csv_btn"
               >
                 {
                 !called ? (
@@ -634,7 +636,7 @@ export default function UsersList() {
           }}
         >
           <Grid container alignItems="center" style={{ width: '40%' }}>
-            <div className="d-flex justify-content-center row">
+            <div className="d-flex justify-content-center row" data-testid="label_error">
               <span>{labelError}</span>
             </div>
           </Grid>
@@ -698,6 +700,7 @@ export default function UsersList() {
               direction="row"
               justify="center"
               alignItems="center"
+              data-testid="pagination_section"
             >
               <Paginate
                 count={data.users.length}
