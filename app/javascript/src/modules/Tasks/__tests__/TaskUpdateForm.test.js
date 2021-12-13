@@ -74,12 +74,11 @@ describe('task form component', () => {
       );
     });
 
-    const taskInfoMenu = container.queryByTestId('task-info-menu');
+    const taskInfoMenu = container.queryAllByTestId('task-info-menu')[0];
     expect(taskInfoMenu).toBeInTheDocument();
 
     fireEvent.click(taskInfoMenu);
 
-    expect(container.queryByText('common:form_actions.note_complete')).toBeInTheDocument();
     expect(container.queryByText('task:task.task_reminder_in_1_hr')).toBeInTheDocument();
     expect(container.queryByText('task:task.task_reminder_in_24_hr')).toBeInTheDocument();
     expect(container.queryByText('task:task.task_reminder_in_72_hr')).toBeInTheDocument();

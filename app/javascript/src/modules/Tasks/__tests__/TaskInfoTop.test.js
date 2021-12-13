@@ -50,7 +50,8 @@ const props = {
   menuData,
   isAssignee: jest.fn().mockResolvedValue(true),
   activeReminder: '',
-  refetch: jest.fn
+  refetch: jest.fn,
+  handleTaskComplete: jest.fn()
 };
 
 describe('Top part of the task form component', () => {
@@ -75,11 +76,11 @@ describe('Top part of the task form component', () => {
     expect(container.queryByText('task.chip_close')).not.toBeInTheDocument();
     expect(container.queryByText('task.task_assignee_label')).not.toBeInTheDocument();
 
-    const taskInfoMenu = container.getByTestId('task-info-menu')
+    const taskInfoMenu = container.getAllByTestId('task-info-menu')[0]
     expect(taskInfoMenu).toBeInTheDocument();
 
     fireEvent.click(taskInfoMenu);
-    expect(props.menuData.handleTaskInfoMenu).toHaveBeenCalled();
+    expect(props.handleTaskComplete).toHaveBeenCalled();
   });
   it('shows the description', async () => {
     const newProps = {
