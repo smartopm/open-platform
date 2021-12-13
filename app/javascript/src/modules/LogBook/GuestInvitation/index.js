@@ -37,8 +37,9 @@ const GuestInvitationRoutes = {
   subRoutes: [
     {
       routeProps: {
-        path: '/logbook/guests/invite',
+        path: '/logbook/guests/invite/:guestId?',
         component: RenderGuestSearch,
+        exact: true
       },
       name: 'Visit Request',
       featureName: 'LogBook',

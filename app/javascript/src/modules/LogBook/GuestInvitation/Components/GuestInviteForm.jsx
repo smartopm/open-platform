@@ -102,7 +102,6 @@ export default function GuestInviteForm({ guest }) {
     };
     return props;
   }
-
   return (
     <>
       <MessageAlert

@@ -40,3 +40,15 @@ export const SearchGuestsQuery = gql`
     }
   }
 `;
+
+
+export const EntryRequestQuery = gql`
+  query EntryRequest($id: ID!) {
+    entryRequest(id: $id) {
+      id
+      name
+      phoneNumber
+      email
+    }
+  }
+`
