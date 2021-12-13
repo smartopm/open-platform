@@ -173,7 +173,7 @@ TaskForm.defaultProps = {
 }
 
 TaskForm.propTypes = {
-  users: PropTypes.arrayOf(PropTypes.string),
+  users: PropTypes.arrayOf(PropTypes.shape),
   close: PropTypes.func.isRequired,
   refetch: PropTypes.func.isRequired,
   assignUser: PropTypes.func.isRequired,

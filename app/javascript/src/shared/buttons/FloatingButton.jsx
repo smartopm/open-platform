@@ -25,7 +25,7 @@ export default function FloatingButton({ variant, color, handleClick, size, ...o
 FloatingButton.defaultProps = {
   variant: 'extended',
   color: 'primary',
-  size: ''
+  size: 'large'
  }
 
 FloatingButton.propTypes = {
