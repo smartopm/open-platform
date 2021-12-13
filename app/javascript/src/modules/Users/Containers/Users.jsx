@@ -1,3 +1,6 @@
+/* eslint-disable max-lines */
+/* eslint-disable max-statements */
+/* eslint-disable complexity */
 /* eslint-disable no-use-before-define */
 import React, { useState, useEffect, useContext } from 'react'
 import { useQuery, useMutation, useLazyQuery } from 'react-apollo'
@@ -555,7 +558,7 @@ export default function UsersList() {
                 : t('common:misc.filter')}
             </div>
             <div className={classes.searchButton}>
-              <Link to="/users/import" style={{ textDecoration: 'none' }}>
+              {/* <Link to="/users/import" style={{ textDecoration: 'none' }}>
                 <Button variant="outlined">
                   {t('users.upload')}
                 </Button>
@@ -566,13 +569,44 @@ export default function UsersList() {
                 onClick={handleReportDialog}
               >
                 {t('users.create_report')}
-              </Button>
-              <Button
+              </Button> */}
+              {/* <Button
                 variant="outlined"
                 className={classes.reportBtn}
                 onClick={() => history.push('/users/stats')}
               >
                 {t('users.user_stats')}
+              </Button> */}
+              <Button
+                variant="outlined"
+                color="primary"
+                className={classes.reportBtn}
+              >
+                {
+                !called ? (
+                  // eslint-disable-next-line jsx-a11y/click-events-have-key-events
+                  <span role="button" tabIndex={0} aria-label="download csv" color="textPrimary" onClick={handleDownloadCSV}>
+                    {usersLoading ? <Spinner /> : t('users.process_csv')}
+                  </span>
+                )
+                : (
+                  <CSVLink
+                    data={csvUserData || []}
+                    headers={csvHeaders}
+                    style={{ color: theme.palette.primary.main }}
+                    filename={`user-data-${dateToString(new Date())}.csv`}
+                  >
+                    {usersLoading ? <Spinner /> : t('users.download_csv')}
+                  </CSVLink>
+                )
+              }
+
+              </Button>
+              <Button
+                variant="outlined"
+                className={classes.reportBtn}
+              >
+                menu
               </Button>
             </div>
           </>
