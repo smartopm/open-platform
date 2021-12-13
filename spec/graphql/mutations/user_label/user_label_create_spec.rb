@@ -9,7 +9,7 @@ RSpec.describe Mutations::Label::UserLabelCreate do
     let!(:permission) do
       create(:permission, module: 'label',
                           role: admin_role,
-                          permissions: %w[can_create_label])
+                          permissions: %w[can_create_user_label])
     end
 
     let!(:admin_user) { create(:admin_user, user_type: 'admin', role: admin_role) }

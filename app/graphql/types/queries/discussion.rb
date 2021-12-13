@@ -26,9 +26,7 @@ module Types::Queries::Discussion
   end
 
   def discussions(offset: 0, limit: 100)
-    unless ::Policy::ApplicationPolicy.new(
-      context[:current_user], nil
-    ).permission?(module: :discussion, permission: :can_access_all_discussions)
+    unless permitted?(module: :discussion, permission: :can_access_all_discussions)
       raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
     end
 

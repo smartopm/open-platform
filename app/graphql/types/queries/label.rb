@@ -26,13 +26,7 @@ module Types::Queries::Label
   end
 
   def labels(offset: 0, limit: 50)
-    unless ::Policy::ApplicationPolicy.new(
-      context[:current_user], nil
-    ).permission?(
-      admin: true,
-      module: :label,
-      permission: :can_fetch_all_labels,
-    )
+    unless permitted?(module: :label, permission: :can_fetch_all_labels)
       raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
     end
 
@@ -45,13 +39,7 @@ module Types::Queries::Label
   end
 
   def label_users(labels:)
-    unless ::Policy::ApplicationPolicy.new(
-      context[:current_user], nil
-    ).permission?(
-      admin: true,
-      module: :label,
-      permission: :can_fetch_label_users,
-    )
+    unless permitted?(module: :label, permission: :can_fetch_label_users)
       raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
     end
 

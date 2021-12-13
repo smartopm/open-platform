@@ -141,7 +141,7 @@ RSpec.describe Mutations::Label do
     let!(:permission) do
       create(:permission, module: 'label',
                           role: admin_role,
-                          permissions: %w[can_update_label can_create_label])
+                          permissions: %w[can_update_label can_create_label can_update_user_label can_fetch_all_labels])
     end
     let!(:user) { create(:user_with_community, role: resident_role, user_type: 'resident') }
     let!(:admin) do

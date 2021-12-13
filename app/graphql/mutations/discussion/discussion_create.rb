@@ -22,9 +22,7 @@ module Mutations
 
       # Verifies if current user is admin or not.
       def authorized?(_vals)
-        return true if ::Policy::ApplicationPolicy.new(
-          context[:current_user], nil
-        ).permission?(admin: true, module: :discussion, permission: :can_create_discussion)
+        return true if permitted?(module: :discussion, permission: :can_create_discussion)
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end
