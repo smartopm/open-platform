@@ -138,7 +138,6 @@ export default function TaskInfoTop({
                   )}
                 </IconButton>
               </Grid>
-              {console.log(isAssignee)}
               {isAssignee && (
                 <Grid item xs={2} style={{ textAlign: 'right' }}>
                   <IconButton
