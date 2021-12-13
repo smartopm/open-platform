@@ -4,13 +4,13 @@
 /* eslint-disable no-use-before-define */
 import React, { useState, useEffect, useContext } from 'react'
 import { useQuery, useMutation, useLazyQuery } from 'react-apollo'
-import { Redirect, Link , useLocation, useHistory} from 'react-router-dom'
+import { Redirect, useLocation, useHistory} from 'react-router-dom'
 import { makeStyles, useTheme } from '@material-ui/core/styles'
 import { Button, Divider, IconButton, InputBase, Grid, Typography } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
 import FilterListIcon from '@material-ui/icons/FilterList'
 import MaterialConfig from 'react-awesome-query-builder/lib/config/material'
-import Fab from '@material-ui/core/Fab';
+import MoreVertOutlined from '@material-ui/icons/MoreVertOutlined';
 import { CSVLink } from 'react-csv';
 import Loading, { Spinner } from '../../../shared/Loading'
 import ErrorPage from '../../../components/Error'
@@ -31,6 +31,7 @@ import { dateToString } from '../../../utils/dateutil'
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider'
 import { pluralizeCount, objectAccessor, toTitleCase } from '../../../utils/helpers'
 import SubStatusReportDialog from '../../CustomerJourney/Components/SubStatusReport'
+import MenuList from '../../../shared/MenuList'
 
 const limit = 25
 const USERS_CAMPAIGN_WARNING_LIMIT = 2000
@@ -67,6 +68,7 @@ export default function UsersList() {
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [selectCheckBox, setSelectCheckBox] = useState(false);
   const [substatusReportOpen, setSubstatusReportOpen] = useState(false);
+  const [menuAnchorEl, setAnchorEl] = useState(null);
   const history = useHistory();
   const location = useLocation();
   const { t } = useTranslation(['users', 'common']);
@@ -451,6 +453,28 @@ export default function UsersList() {
     subStatus: 'sub_status'
   }
 
+  const menuData = [
+    {
+      content: t('users.upload'),
+      isVisible: true,
+      handleClick: () => history.push('/users/import')
+    },
+    {
+      content: t('users.create_report'),
+      isVisible: true,
+      handleClick: () => handleReportDialog()
+    },
+    {
+      content: t('users.user_stats'),
+      isVisible: true,
+      handleClick: () => history.push('/users/stats')
+    },
+  ]
+
+  function handleMenu(event){
+    setAnchorEl(event.currentTarget);
+  }
+
   return (
     <>
       <div className="container">
@@ -558,25 +582,6 @@ export default function UsersList() {
                 : t('common:misc.filter')}
             </div>
             <div className={classes.searchButton}>
-              {/* <Link to="/users/import" style={{ textDecoration: 'none' }}>
-                <Button variant="outlined">
-                  {t('users.upload')}
-                </Button>
-              </Link>
-              <Button
-                variant="outlined"
-                className={classes.reportBtn}
-                onClick={handleReportDialog}
-              >
-                {t('users.create_report')}
-              </Button> */}
-              {/* <Button
-                variant="outlined"
-                className={classes.reportBtn}
-                onClick={() => history.push('/users/stats')}
-              >
-                {t('users.user_stats')}
-              </Button> */}
               <Button
                 variant="outlined"
                 color="primary"
@@ -602,12 +607,22 @@ export default function UsersList() {
               }
 
               </Button>
-              <Button
-                variant="outlined"
+              <IconButton
+                aria-controls="sub-menu"
+                aria-haspopup="true"
+                onClick={handleMenu}
+                data-testid="menu-list"
                 className={classes.reportBtn}
               >
-                menu
-              </Button>
+                <MoreVertOutlined />
+              </IconButton>
+
+              <MenuList
+                open={Boolean(menuAnchorEl)}
+                anchorEl={menuAnchorEl}
+                handleClose={() => setAnchorEl(null)}
+                list={menuData}
+              />
             </div>
           </>
         </div>
@@ -669,26 +684,6 @@ export default function UsersList() {
               labelsData={labelsData}
               labelsRefetch={labelsRefetch}
             />
-            <Fab color="primary" variant="extended" className={classes.download}>
-              {
-                !called ? (
-                  // eslint-disable-next-line jsx-a11y/click-events-have-key-events
-                  <span style={{ color: theme.palette.primary.contrastText }} role="button" tabIndex={0} aria-label="download csv" color="textPrimary" onClick={handleDownloadCSV}>
-                    {usersLoading ? <Spinner /> : t('users.process_csv')}
-                  </span>
-                )
-                : (
-                  <CSVLink
-                    data={csvUserData || []}
-                    style={{ color: 'white' }}
-                    headers={csvHeaders}
-                    filename={`user-data-${dateToString(new Date())}.csv`}
-                  >
-                    {usersLoading ? <Spinner /> : t('users.download_csv')}
-                  </CSVLink>
-                )
-              }
-            </Fab>
             <UserListCard
               userData={data}
               handleNoteModal={handleNoteModal}
