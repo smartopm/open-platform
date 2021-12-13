@@ -1,16 +1,25 @@
 /* eslint-disable complexity */
 import React, { useState } from 'react';
 import TextField from '@material-ui/core/TextField';
-import Fab from '@mui/material/Fab';
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
-import { Grid, Chip, Typography, Button, IconButton } from '@material-ui/core';
+import {
+  Grid,
+  Chip,
+  Typography,
+  Button,
+  IconButton,
+  useMediaQuery
+} from '@material-ui/core';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import AccessAlarmIcon from '@mui/icons-material/AccessAlarm';
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from 'react-router';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import CancelIcon from '@material-ui/icons/Cancel';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
+import KeyboardTabIcon from '@mui/icons-material/KeyboardTab';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import AlarmIcon from '@material-ui/icons/Alarm';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import moment from 'moment-timezone';
@@ -42,10 +51,12 @@ export default function TaskInfoTop({
   isAssignee,
   activeReminder,
   handleSplitScreenClose,
-  refetch
+  refetch,
+  handleTaskComplete
 }) {
   const { t } = useTranslation(['task', 'common']);
   const classes = useStyles();
+  const matches = useMediaQuery('(max-width:800px)');
   const history = useHistory();
   const [description, setDescription] = useState(data.description);
   const [taskUpdate] = useMutation(UpdateNote);
@@ -98,10 +109,52 @@ export default function TaskInfoTop({
         list={menuData.menuList}
       />
       <Grid container spacing={1}>
-        <Fab sx={{borderRadius: '0', position: 'absolute', top: 20, left: 0, width: '20px' }} onClick={handleSplitScreenClose}>
-          <KeyboardArrowRightIcon />
-        </Fab>
-        <Grid item md={9} xs={9}>
+        {matches && (
+          <Grid item xs={12}>
+            <Grid container>
+              <Grid item xs={8}>
+                <IconButton
+                  edge="end"
+                  onClick={handleSplitScreenClose}
+                  size="small"
+                  data-testid="task-info-menu"
+                  color="primary"
+                >
+                  <ArrowBackIcon />
+                </IconButton>
+              </Grid>
+              <Grid item xs={2} style={{ textAlign: 'right' }}>
+                <IconButton
+                  edge="end"
+                  onClick={handleTaskComplete}
+                  size="small"
+                  data-testid="task-info-menu"
+                  color="primary"
+                >
+                  {data.completed ? (
+                    <CheckCircleIcon htmlColor="#4caf50" />
+                  ) : (
+                    <CheckCircleOutlineIcon />
+                  )}
+                </IconButton>
+              </Grid>
+              {isAssignee && (
+                <Grid item xs={2} style={{ textAlign: 'right' }}>
+                  <IconButton
+                    edge="end"
+                    onClick={event => menuData.handleTaskInfoMenu(event)}
+                    size="small"
+                    data-testid="task-info-menu"
+                    color="primary"
+                  >
+                    <AccessAlarmIcon />
+                  </IconButton>
+                </Grid>
+              )}
+            </Grid>
+          </Grid>
+        )}
+        <Grid item md={editingBody ? 7 : 8} xs={9}>
           {editingBody ? (
             <TextField
               name="body"
@@ -128,7 +181,7 @@ export default function TaskInfoTop({
           )}
         </Grid>
         {!editingBody && (
-          <Grid item xs={2} md={2} data-testid="edit_body_action" style={{textAlign: 'right'}}>
+          <Grid item xs={3} md={1} data-testid="edit_body_action" style={{ textAlign: 'right' }}>
             <IconButton
               onClick={() => setEditingBody(true)}
               data-testid="edit_body_icon"
@@ -154,23 +207,55 @@ export default function TaskInfoTop({
             </Button>
           </Grid>
         )}
-        <Grid item md={1} xs={1} style={{textAlign: 'right'}}>
-          <IconButton
-            edge="end"
-            onClick={event => menuData.handleTaskInfoMenu(event)}
-            size="small"
-            data-testid="task-info-menu"
-            color="primary"
-          >
-            <MoreVertIcon />
-          </IconButton>
-        </Grid>
+        {!matches && (
+          <>
+            <Grid item md={1} xs={1} style={{ textAlign: 'right' }}>
+              <IconButton
+                edge="end"
+                onClick={handleTaskComplete}
+                size="small"
+                data-testid="task-info-menu"
+                color="primary"
+              >
+                {data.completed ? (
+                  <CheckCircleIcon htmlColor="#4caf50" />
+                ) : (
+                  <CheckCircleOutlineIcon />
+                )}
+              </IconButton>
+            </Grid>
+            {isAssignee && (
+              <Grid item md={1} xs={1} style={{ textAlign: 'right' }}>
+                <IconButton
+                  edge="end"
+                  onClick={event => menuData.handleTaskInfoMenu(event)}
+                  size="small"
+                  data-testid="task-info-menu"
+                  color="primary"
+                >
+                  <AccessAlarmIcon />
+                </IconButton>
+              </Grid>
+            )}
+            <Grid item md={1} xs={1} style={{ textAlign: 'right' }}>
+              <IconButton
+                edge="end"
+                onClick={handleSplitScreenClose}
+                size="small"
+                data-testid="task-info-menu"
+                color="primary"
+              >
+                <KeyboardTabIcon />
+              </IconButton>
+            </Grid>
+          </>
+        )}
         <Grid item md={12} xs={12}>
           {data.parentNote && (
             <Typography
               variant="body2"
               color="primary"
-              data-testid='parent-note'
+              data-testid="parent-note"
               onClick={event => openParentLink(event, data.parentNote)}
               className={classes.parentTask}
             >
@@ -291,7 +376,7 @@ export default function TaskInfoTop({
         </Grid>
         {description && (
           <Grid container>
-            <Grid item xs={12} md={5} style={{paddingTop: '17px'}}>
+            <Grid item xs={12} md={5} style={{ paddingTop: '17px' }}>
               <Typography variant="body1" className={classes.title}>
                 {t('common:form_fields.description')}
               </Typography>
@@ -312,7 +397,7 @@ export default function TaskInfoTop({
                   >
                     {t('common:form_actions.update')}
                   </Button>
-            )}
+                )}
               />
             </Grid>
           </Grid>
@@ -376,5 +461,6 @@ TaskInfoTop.propTypes = {
     )
   }).isRequired,
   handleSplitScreenClose: PropTypes.func,
-  refetch: PropTypes.func.isRequired
+  refetch: PropTypes.func.isRequired,
+  handleTaskComplete: PropTypes.func.isRequired
 };

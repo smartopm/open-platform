@@ -25,7 +25,7 @@ export default function EditableField({ value, setValue, action }) {
   const classes = useStyles();
 
   return (
-    <Grid container onMouseLeave={handleOutsideClick} data-testid="editable_field_section">
+    <Grid container spacing={1} onMouseLeave={handleOutsideClick} data-testid="editable_field_section">
       <Grid item xs={10}>
         <TextField
           name="email"

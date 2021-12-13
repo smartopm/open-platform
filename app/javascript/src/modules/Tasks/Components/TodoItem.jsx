@@ -145,7 +145,6 @@ export default function TodoItem({
             styles={{marginBottom: 0}}
             openSubTask={objectAccessor(tasksOpen, task.id)}
             handleOpenSubTasksClick={handleParentTaskClick}
-            clickable
             handleClick={() => handleTodoItemClick(task)}
             handleTaskCompletion={handleTaskCompletion}
           />

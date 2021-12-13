@@ -668,7 +668,7 @@ const useStyles = makeStyles(() => ({
     width: '100%',
     marginTop: '51px',
     opacity: '1',
-    backgroundColor: "#FAFAFA !important",
+    backgroundColor: "#FFFFFF !important",
     padding: '20px'
   },
 }));

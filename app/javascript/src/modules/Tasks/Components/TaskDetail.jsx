@@ -77,16 +77,7 @@ export default function TaskDetail({
   }
 
   function getMenuList(){
-    const defaultMenuItems = [
-      { content:!taskStatus
-        ? t('common:form_actions.note_complete')
-        : t('common:form_actions.note_incomplete'), isAdmin: false, handleClick: () =>  handleTaskComplete() },
-    ]
-
-    if(!isCurrentUserAnAssignee()) return defaultMenuItems
-
     return [
-      ...defaultMenuItems,
       { content: t('task:task.task_reminder_in_1_hr'), isAdmin: false, handleClick: () =>  setTaskReminder(1) },
       { content: t('task:task.task_reminder_in_24_hr'), isAdmin: false, handleClick: () =>  setTaskReminder(24) },
       { content: t('task:task.task_reminder_in_72_hr'), isAdmin: false, handleClick: () =>  setTaskReminder(72) },
@@ -230,6 +221,7 @@ export default function TaskDetail({
               activeReminder={currentActiveReminder()}
               handleSplitScreenClose={handleSplitScreenClose}
               refetch={refetch}
+              handleTaskComplete={handleTaskComplete}
             />
           </div>
           <div className={classes.section} data-testid="task-subtasks-section">
