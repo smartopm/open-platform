@@ -74,6 +74,7 @@ export default function UsersList() {
 
   function handleReportDialog(){
     setSubstatusReportOpen(!substatusReportOpen)
+    setAnchorEl(null)
   }
 
   const { loading, error, data, refetch } = useQuery(UsersDetails, {
