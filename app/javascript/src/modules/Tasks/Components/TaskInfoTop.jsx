@@ -117,7 +117,7 @@ export default function TaskInfoTop({
                   edge="end"
                   onClick={handleSplitScreenClose}
                   size="small"
-                  data-testid="task-info-menu"
+                  data-testid="arrow-back"
                   color="primary"
                 >
                   <ArrowBackIcon />
@@ -128,7 +128,7 @@ export default function TaskInfoTop({
                   edge="end"
                   onClick={handleTaskComplete}
                   size="small"
-                  data-testid="task-info-menu"
+                  data-testid="check-box"
                   color="primary"
                 >
                   {data.completed ? (
@@ -138,13 +138,14 @@ export default function TaskInfoTop({
                   )}
                 </IconButton>
               </Grid>
+              {console.log(isAssignee)}
               {isAssignee && (
                 <Grid item xs={2} style={{ textAlign: 'right' }}>
                   <IconButton
                     edge="end"
                     onClick={event => menuData.handleTaskInfoMenu(event)}
                     size="small"
-                    data-testid="task-info-menu"
+                    data-testid="alarm"
                     color="primary"
                   >
                     <AccessAlarmIcon />

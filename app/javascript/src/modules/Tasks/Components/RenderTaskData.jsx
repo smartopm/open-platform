@@ -294,7 +294,7 @@ export function TaskDataList({
                 aria-controls="task-subtasks-icon"
                 aria-haspopup="true"
                 data-testid="task_subtasks"
-                size="small"
+                size="medium"
                 onClick={handleClick}
               >
                 <AccountTreeIcon
@@ -302,19 +302,17 @@ export function TaskDataList({
                   color={task?.subTasks?.length ? 'primary' : 'disabled'}
                 />
               </IconButton>
-              <span>{task?.subTasks?.length}</span>
             </Grid>
             <Grid item md={4} xs={4} style={{ display: 'flex' }}>
               <IconButton
                 aria-controls="task-comment-icon"
                 aria-haspopup="true"
                 data-testid="task_comments"
-                size="small"
+                size="medium"
                 onClick={handleClick}
               >
                 <QuestionAnswerIcon fontSize="small" color="disabled" />
               </IconButton>
-              <span>0</span>
             </Grid>
             <Grid item md={4} xs={4} style={{ display: 'flex' }}>
               <IconButton
@@ -323,7 +321,8 @@ export function TaskDataList({
                 aria-haspopup="true"
                 data-testid="task_attach_file"
                 component="label"
-                size="small"
+                size="medium"
+                onClick={handleClick}
               >
                 <input
                   hidden
