@@ -25,6 +25,7 @@ module Mutations
       argument :emergency_call_number, String, required: false
       argument :templates, GraphQL::Types::JSON, required: false
       argument :features, GraphQL::Types::JSON, required: false
+      argument :ga_id, String, required: false
 
       field :community, Types::CommunityType, null: true
 

@@ -31,6 +31,7 @@ module Types
     field :emergency_call_number, String, null: true
     field :templates, GraphQL::Types::JSON, null: true
     field :roles, [String, { null: true }], null: true
+    field :ga_id, String, null: true
 
     def image_url
       return nil unless object.image.attached?
