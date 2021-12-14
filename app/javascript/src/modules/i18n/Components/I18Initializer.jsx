@@ -12,7 +12,6 @@ export default function I18Initializer() {
     errorPolicy: 'all'
   });
   const savedLang = localStorage.getItem('default-language');
-
   useEffect(() => {
     if (!error && !loading && data.currentCommunity) {
       // This was put here because it is the only place we get access to community details
