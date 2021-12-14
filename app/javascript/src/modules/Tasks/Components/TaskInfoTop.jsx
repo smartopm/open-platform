@@ -9,8 +9,9 @@ import {
   IconButton,
   useMediaQuery
 } from '@material-ui/core';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import AccessAlarmIcon from '@mui/icons-material/AccessAlarm';
+import Breadcrumbs from '@mui/material/Breadcrumbs';
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from 'react-router';
 import PropTypes from 'prop-types';
@@ -113,21 +114,27 @@ export default function TaskInfoTop({
           <Grid item xs={12}>
             <Grid container>
               <Grid item xs={8}>
-                <IconButton
-                  edge="end"
-                  onClick={handleSplitScreenClose}
-                  size="small"
-                  data-testid="arrow-back"
-                  color="primary"
-                >
-                  <ArrowBackIcon />
-                </IconButton>
+                <Breadcrumbs aria-label="breadcrumb" style={{marginLeft: '-15px'}}>
+                  <Typography color='primary' style={{cursor: 'pointer'}} onClick={handleSplitScreenClose}>
+                    <IconButton
+                      edge="end"
+                      data-testid="arrow-back"
+                      color="primary"
+                      style={{marginRight: '2px'}}
+                    >
+                      <KeyboardBackspaceIcon />
+                    </IconButton>
+                    My Tasks
+                  </Typography>
+                  <Typography>
+                    Task Detail
+                  </Typography>
+                </Breadcrumbs>
               </Grid>
               <Grid item xs={2} style={{ textAlign: 'right' }}>
                 <IconButton
                   edge="end"
                   onClick={handleTaskComplete}
-                  size="small"
                   data-testid="check-box"
                   color="primary"
                 >
@@ -143,7 +150,6 @@ export default function TaskInfoTop({
                   <IconButton
                     edge="end"
                     onClick={event => menuData.handleTaskInfoMenu(event)}
-                    size="small"
                     data-testid="alarm"
                     color="primary"
                   >
@@ -213,7 +219,6 @@ export default function TaskInfoTop({
               <IconButton
                 edge="end"
                 onClick={handleTaskComplete}
-                size="small"
                 data-testid="task-info-menu"
                 color="primary"
               >
@@ -229,7 +234,6 @@ export default function TaskInfoTop({
                 <IconButton
                   edge="end"
                   onClick={event => menuData.handleTaskInfoMenu(event)}
-                  size="small"
                   data-testid="task-info-menu"
                   color="primary"
                 >
@@ -241,7 +245,6 @@ export default function TaskInfoTop({
               <IconButton
                 edge="end"
                 onClick={handleSplitScreenClose}
-                size="small"
                 data-testid="task-info-menu"
                 color="primary"
               >
@@ -272,7 +275,7 @@ export default function TaskInfoTop({
       <Grid item md={7}>
         <Grid container>
           <Grid item xs={6} md={5}>
-            <Typography variant="body1" style={{ marginTop: '21px' }} className={classes.title}>
+            <Typography variant="body1" color='textSecondary' style={{ marginTop: '21px' }} className={classes.title}>
               {t('task.due_date_text')}
             </Typography>
           </Grid>
@@ -291,7 +294,7 @@ export default function TaskInfoTop({
         {isAssignee() && (
           <Grid container className={classes.inlineContainer}>
             <Grid item xs={6} md={5}>
-              <Typography variant="body1" className={classes.title} data-testid="active-reminder">
+              <Typography variant="body1" color='textSecondary' className={classes.title} data-testid="active-reminder">
                 {t('task.active_reminder')}
               </Typography>
             </Grid>
@@ -310,7 +313,7 @@ export default function TaskInfoTop({
 
         <Grid container className={classes.inlineContainer}>
           <Grid item xs={6} md={5}>
-            <Typography variant="body1" className={classes.title} data-testid="date_created_title">
+            <Typography variant="body1" color='textSecondary' className={classes.title} data-testid="date_created_title">
               {t('task.date_created')}
             </Typography>
           </Grid>
@@ -321,7 +324,7 @@ export default function TaskInfoTop({
 
         <Grid container className={classes.inlineContainer}>
           <Grid item xs={6} md={5}>
-            <Typography variant="body1" className={classes.title}>
+            <Typography variant="body1" color='textSecondary' className={classes.title}>
               {t('task.assigned_to_txt')}
             </Typography>
           </Grid>

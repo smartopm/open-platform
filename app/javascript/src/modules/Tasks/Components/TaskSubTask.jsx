@@ -105,7 +105,6 @@ export default function TaskSubTask({ taskId, users, assignUser, handleSplitScre
           <IconButton
             edge="end"
             onClick={handleAddSubTask}
-            size="small"
             data-testid="add_sub_task_icon"
             color="primary"
           >
