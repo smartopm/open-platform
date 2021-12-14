@@ -149,7 +149,7 @@ describe('Top part of the task form component', () => {
     fireEvent.change(bodyInput, { target: { value: 'Body changed' } })
     expect(bodyInput.value).toBe('Body changed')
 
-    expect(container2.queryByTestId('task_completion_checkbox')).toBeInTheDocument();
+    expect(container2.queryByTestId('task_completion_toggle_button')).toBeInTheDocument();
 
     await waitFor(() => {
       expect(container2.queryByText('task.update_successful')).toBeInTheDocument();

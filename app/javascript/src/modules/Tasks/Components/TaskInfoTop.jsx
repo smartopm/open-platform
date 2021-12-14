@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Fab from '@mui/material/Fab';
 import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
-import { Grid, Chip, Typography, Button, IconButton, Checkbox } from '@material-ui/core';
+import { Grid, Chip, Typography, Button, IconButton } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from 'react-router';
 import PropTypes from 'prop-types';
@@ -15,6 +15,8 @@ import AlarmIcon from '@material-ui/icons/Alarm';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import moment from 'moment-timezone';
 import Edit from '@material-ui/icons/Edit';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import { useMutation } from 'react-apollo';
 import DatePickerDialog from '../../../components/DatePickerDialog';
 import { UserChip } from './UserChip';
@@ -324,12 +326,13 @@ export default function TaskInfoTop({
             </Typography>
           </Grid>
           <Grid item xs={6} md={6}>
-            <Checkbox
-              checked={data.completed}
-              onChange={() => updateTask('completed', !data.completed)}
-              name="task-completion-checkbox"
-              data-testid="task_completion_checkbox"
-              color="primary"
+            <Button
+              onClick={() => updateTask('completed', !data.completed)}
+              startIcon={
+                data.completed ? <CheckCircleIcon htmlColor='#4caf50' /> : <CheckCircleOutlineIcon />
+              }
+              style={{ textTransform: 'none' }}
+              data-testid="task_completion_toggle_button"
             />
           </Grid>
         </Grid>
