@@ -15,8 +15,6 @@ import AlarmIcon from '@material-ui/icons/Alarm';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import moment from 'moment-timezone';
 import Edit from '@material-ui/icons/Edit';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import { useMutation } from 'react-apollo';
 import DatePickerDialog from '../../../components/DatePickerDialog';
 import { UserChip } from './UserChip';
@@ -319,23 +317,6 @@ export default function TaskInfoTop({
             </Grid>
           </Grid>
         )}
-        <Grid container className={classes.inlineContainer}>
-          <Grid item xs={6} md={5}>
-            <Typography variant="body1" className={classes.title} data-testid="date_created_title">
-              {t('task.task_completed')}
-            </Typography>
-          </Grid>
-          <Grid item xs={6} md={6}>
-            <Button
-              onClick={() => updateTask('completed', !data.completed)}
-              startIcon={
-                data.completed ? <CheckCircleIcon htmlColor='#4caf50' /> : <CheckCircleOutlineIcon />
-              }
-              style={{ textTransform: 'none' }}
-              data-testid="task_completion_toggle_button"
-            />
-          </Grid>
-        </Grid>
       </Grid>
     </>
   );
