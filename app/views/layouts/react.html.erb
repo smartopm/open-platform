@@ -2,13 +2,13 @@
 <html lang="en">
   <head>
     <!-- Global site tag (gtag.js) - Google Analytics - app.doublegdp.com stream -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-150647211-2"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=<%= current_community.ga_id %>"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
 
-      gtag('config', 'UA-150647211-2');
+      gtag('config', "<%= current_community.ga_id %>");
     </script>
 
     <title><%= current_community.name %></title>
