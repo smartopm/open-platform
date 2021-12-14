@@ -69,11 +69,9 @@ import EmployeeTimeSheetLog
   from '../src/modules/TimeCard/Components/EmployeeLogs';
 import EmailBuilderDialog
   from '../src/modules/Emails/components/EmailBuilderDialog';
+import { PRIMARY_DOMAINS } from '../src/utils/constants';
 
 // The routes defined here are carefully arranged, be mindful when changing them
-
-// Prevent Google Analytics reporting from staging and dev domains
-const PRIMARY_DOMAINS = ['app.doublegdp.com', 'olivier.dgdp.site'];
 
 const LoggedInOnly = props => {
   const authState = useContext (AuthStateContext);
@@ -175,9 +173,9 @@ const App = () => {
       <ApolloProvider>
         <Router history={history}>
           <AuthStateProvider>
+            <I18Initializer />
             <Analytics>
               {/* onboarding */}
-              <I18Initializer />
               <Switch>
                 <Route path="/welcome" component={WelcomePage} />
                 <Route path="/login" component={LoginScreen} />

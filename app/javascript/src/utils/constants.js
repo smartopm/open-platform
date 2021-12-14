@@ -3,6 +3,14 @@
 import MaterialConfig from 'react-awesome-query-builder/lib/config/material'
 import { toTitleCase } from './helpers';
 
+
+// Prevent Google Analytics reporting from staging and dev domains
+export const PRIMARY_DOMAINS = [
+    'app.doublegdp.com',
+    'tilisi.doublegdp.com',
+    'morazancity.doublegdp.com',
+  ];
+
 export const filterUserByLoggedin = {
   log_from: 'login after',
   log_to: 'login before',
