@@ -90,11 +90,6 @@ module Types::Queries::TimeSheet
   end
 
   def authorized_to_access_timesheets(permission)
-    ::Policy::ApplicationPolicy.new(
-      context[:current_user], nil
-    ).permission?(
-      module: :timesheet,
-      permission: permission,
-    )
+    permitted?(module: :timesheet, permission: permission)
   end
 end

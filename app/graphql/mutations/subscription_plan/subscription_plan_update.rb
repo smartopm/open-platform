@@ -24,10 +24,7 @@ module Mutations
 
       # Verifies if current user is admin or not.
       def authorized?(_vals)
-        return true if ::Policy::ApplicationPolicy.new(
-          context[:current_user], nil
-        ).permission?(
-          admin: true,
+        return true if permitted?(
           module: :subscription_plan,
           permission: :can_update_subscription_plan,
         )
