@@ -109,6 +109,7 @@ export default function CommunitySettings({ data, refetch }) {
   const [tagline, setTagline] = useState(data?.tagline || '');
   const [logoUrl, setLogoUrl] = useState(data?.logoUrl || '');
   const [wpLink, setWpLink] = useState(data?.wpLink || '');
+  const [analyticsId, setAnalyticsId] = useState(data?.gaId || '');
   const [securityManager, setSecurityManager] = useState(data?.securityManager || '');
   const [subAdministratorId, setSubAdministrator] = useState(data?.subAdministrator?.id || '');
   const [locale, setLocale] = useState('en-ZM');
@@ -350,6 +351,7 @@ export default function CommunitySettings({ data, refetch }) {
         menuItems: menuItemOptions,
         imageBlobId: signedBlobId,
         templates: templateOptions,
+        gaId: analyticsId,
         currency,
         locale,
         language,
@@ -673,6 +675,14 @@ export default function CommunitySettings({ data, refetch }) {
           name="wp_link"
           margin="normal"
           inputProps={{ 'data-testid': 'wp_link' }}
+        />
+        <TextField
+          label={t('community.google_analytics_id')}
+          value={analyticsId}
+          onChange={event => setAnalyticsId(event.target.value)}
+          name="google_analytics_id"
+          margin="normal"
+          inputProps={{ 'data-testid': 'google_analytics_id' }}
         />
       </div>
 
@@ -1035,6 +1045,7 @@ CommunitySettings.propTypes = {
     language: PropTypes.string,
     tagline: PropTypes.string,
     wpLink: PropTypes.string,
+    gaId: PropTypes.string,
     securityManager: PropTypes.string,
     subAdministrator: PropTypes.shape({
       id: PropTypes.string,

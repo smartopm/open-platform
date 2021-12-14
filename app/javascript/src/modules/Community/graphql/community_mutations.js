@@ -24,6 +24,7 @@ export const CommunityUpdateMutation = gql`
     $smsPhoneNumbers: [String]
     $emergencyCallNumber: String
     $features: JSON
+    $gaId: String
   ) {
     communityUpdate(
       name: $name
@@ -47,6 +48,7 @@ export const CommunityUpdateMutation = gql`
       smsPhoneNumbers: $smsPhoneNumbers
       emergencyCallNumber: $emergencyCallNumber
       features: $features
+      gaId: $gaId
     ) {
       community {
         id

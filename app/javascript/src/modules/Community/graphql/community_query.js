@@ -20,6 +20,7 @@ export const CurrentCommunityQuery = gql`
       wpLink
       themeColors
       features
+      gaId
       securityManager
       templates
       subAdministrator {
