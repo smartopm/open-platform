@@ -32,6 +32,7 @@ describe('TaskSubTask Component', () => {
               taskId='23'
               users={[]}
               assignUser={jest.fn()}
+              handleTaskCompletion={jest.fn}
             />
           </BrowserRouter>
         </MockedProvider>
@@ -52,6 +53,7 @@ describe('TaskSubTask Component', () => {
               taskId='23'
               users={[]}
               assignUser={jest.fn()}
+              handleTaskCompletion={jest.fn}
             />
           </BrowserRouter>
         </MockedProvider>

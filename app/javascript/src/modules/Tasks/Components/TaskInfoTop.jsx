@@ -41,7 +41,8 @@ export default function TaskInfoTop({
   menuData,
   isAssignee,
   activeReminder,
-  handleSplitScreenClose
+  handleSplitScreenClose,
+  refetch
 }) {
   const { t } = useTranslation(['task', 'common']);
   const classes = useStyles();
@@ -71,6 +72,9 @@ export default function TaskInfoTop({
       .then(() => {
         setLoadingStatus(false);
         setUpdateDetails({ isError: false, message: t('task.update_successful') });
+        setTimeout(() => {
+          refetch()
+        }, 500)
         if (property === 'body') setEditingBody(false);
       })
       .catch(err => {
@@ -371,5 +375,6 @@ TaskInfoTop.propTypes = {
       })
     )
   }).isRequired,
-  handleSplitScreenClose: PropTypes.func
+  handleSplitScreenClose: PropTypes.func,
+  refetch: PropTypes.func.isRequired
 };

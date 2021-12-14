@@ -94,13 +94,16 @@ describe('Task Data components', () => {
               handleTaskDetails={() => {}}
               handleCompleteNote={() => {}}
               handleAddSubTask={jest.fn()}
+              handleTodoClick={jest.fn}
+              handleTaskCompletion={jest.fn}
+              handleUploadDocument={jest.fn}
             />
           </MockedThemeProvider>
         </MockedProvider>
       </BrowserRouter>
     )
 
-    expect(container.getByTestId("task-select-action")).toBeInTheDocument()
+    expect(container.getByTestId("task_completion_toggle_button")).toBeInTheDocument()
     expect(container.getByTestId("task_body_section")).toBeInTheDocument()
     expect(container.getByTestId("task_body")).toBeInTheDocument()
     expect(container.getByTestId("task_assignee")).toBeInTheDocument()
@@ -123,13 +126,16 @@ describe('Task Data components', () => {
               handleTaskDetails={() => {}}
               handleCompleteNote={() => {}}
               handleAddSubTask={jest.fn()}
+              handleTodoClick={jest.fn}
+              handleTaskCompletion={jest.fn}
+              handleUploadDocument={jest.fn}
             />
           </MockedThemeProvider>
         </MockedProvider>
       </BrowserRouter>
     )
 
-    expect(screen.getByTestId("task-select-action")).toBeInTheDocument();
+    expect(screen.getByTestId("task_completion_toggle_button")).toBeInTheDocument();
     expect(screen.getByTestId("task_body_section")).toBeInTheDocument();
     expect(screen.getByTestId("task_body")).toBeInTheDocument();
     expect(screen.getByTestId("task_assignee")).toBeInTheDocument();
@@ -149,6 +155,9 @@ describe('Task Data components', () => {
               handleCompleteNote={() => {}}
               handleAddSubTask={jest.fn()}
               taskHeader={taskHeader}
+              handleTodoClick={jest.fn}
+              handleTaskCompletion={jest.fn}
+              handleUploadDocument={jest.fn}
             />
           </MockedThemeProvider>
         </MockedProvider>
@@ -180,6 +189,9 @@ describe('Task Data components', () => {
               handleCompleteNote={() => {}}
               handleAddSubTask={jest.fn()}
               taskHeader={taskHeader}
+              handleTodoClick={jest.fn}
+              handleTaskCompletion={jest.fn}
+              handleUploadDocument={jest.fn}
             />
           </MockedThemeProvider>
         </MockedProvider>
@@ -223,14 +235,15 @@ describe('Task Data components', () => {
               handleClick={jest.fn()}
               openSubTask
               handleOpenSubTasksClick={jest.fn()}
+              handleTaskCompletion={jest.fn}
             />
           </MockedThemeProvider>
         </MockedProvider>
       </BrowserRouter>
     );
     
-    expect(container.queryByTestId('task-select-action')).toBeInTheDocument();
-    fireEvent.click(container.queryByTestId('task-select-action'));
+    expect(container.queryByTestId('task_completion_toggle_button')).toBeInTheDocument();
+    fireEvent.click(container.queryByTestId('task_completion_toggle_button'));
 
     expect(container.queryByTestId('task_attach_file')).toBeInTheDocument();
     fireEvent.click(container.queryByTestId('task_attach_file'));

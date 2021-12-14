@@ -11,7 +11,12 @@ import { AssignUser } from '../../../graphql/mutations'
 import { TaskQuery } from '../graphql/task_queries'
 
 // This will be deprecated in favour of split screen view
-export default function TaskUpdate({ taskId, handleSplitScreenOpen, handleSplitScreenClose }) {
+export default function TaskUpdate({
+  taskId,
+  handleSplitScreenOpen,
+  handleSplitScreenClose,
+  handleTaskCompletion
+}) {
   const authState = useContext(AuthStateContext)
   const { data, error, loading, refetch } = useQuery(TaskQuery, {
     variables: { taskId },
@@ -51,6 +56,7 @@ export default function TaskUpdate({ taskId, handleSplitScreenOpen, handleSplitS
         taskId={taskId}
         handleSplitScreenOpen={handleSplitScreenOpen}
         handleSplitScreenClose={handleSplitScreenClose}
+        handleTaskCompletion={handleTaskCompletion}
       />
     </Container>
   )
@@ -64,5 +70,6 @@ TaskUpdate.defaultProps = {
 TaskUpdate.propTypes = {
   taskId: PropTypes.string.isRequired,
   handleSplitScreenOpen: PropTypes.func,
-  handleSplitScreenClose: PropTypes.func
+  handleSplitScreenClose: PropTypes.func,
+  handleTaskCompletion: PropTypes.func.isRequired
 }

@@ -9,7 +9,6 @@ import {
   Grid,
   Chip,
   Button,
-  Checkbox,
   useMediaQuery,
   Dialog,
   DialogTitle,
@@ -23,6 +22,8 @@ import AttachFileIcon from '@material-ui/icons/AttachFile';
 import AccountTreeIcon from '@material-ui/icons/AccountTree';
 import QuestionAnswerIcon from '@material-ui/icons/QuestionAnswer'
 import AddIcon from '@material-ui/icons/Add';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import { useTranslation } from 'react-i18next';
 import { dateToString } from '../../../components/DateContainer';
 import CenteredContent from '../../../shared/CenteredContent';
@@ -30,7 +31,7 @@ import { SubTasksQuery } from '../graphql/task_queries';
 import { Spinner } from '../../../shared/Loading';
 import TaskAddForm from './TaskForm';
 
-export default function TaskSubTask({ taskId, users, assignUser, handleSplitScreenOpen }) {
+export default function TaskSubTask({ taskId, users, assignUser, handleSplitScreenOpen, handleTaskCompletion }) {
   const classes = useStyles();
   const matches = useMediaQuery('(max-width:800px)');
   const limit = 3;
@@ -119,13 +120,13 @@ export default function TaskSubTask({ taskId, users, assignUser, handleSplitScre
             <Fragment key={task.id}>
               <Grid container spacing={1} item md={5} xs={6} className={classes.bodyAlign}>
                 <Grid item md={2}>
-                  <Checkbox
-                    inputProps={{ 'aria-label': 'primary checkbox' }}
-                    color="primary"
-                    data-testid="task-select-action"
-                    size="small"
-                    key={task.id}
-                    style={{ padding: 0 }}
+                  <Button
+                    onClick={() => handleTaskCompletion(task.id, !task.completed)}
+                    startIcon={
+                      task.completed ? <CheckCircleIcon htmlColor='#4caf50' /> : <CheckCircleOutlineIcon />
+                    }
+                    style={{ textTransform: 'none' }}
+                    data-testid="task_completion_toggle_button"
                   />
                 </Grid>
                 <Grid item md={10}>
@@ -242,7 +243,8 @@ TaskSubTask.propTypes = {
   taskId: PropTypes.string.isRequired,
   users: PropTypes.arrayOf(PropTypes.object).isRequired,
   assignUser: PropTypes.func.isRequired,
-  handleSplitScreenOpen: PropTypes.func.isRequired
+  handleSplitScreenOpen: PropTypes.func.isRequired,
+  handleTaskCompletion: PropTypes.func.isRequired
 };
 
 const useStyles = makeStyles(() => ({
@@ -270,14 +272,16 @@ const useStyles = makeStyles(() => ({
     overflow: 'hidden',
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
-    paddingLeft: '3px'
+    paddingLeft: '3px',
+    marginTop: '5px'
   },
   taskBodyMobile: {
     maxWidth: '33ch',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
-    paddingLeft: '6px'
+    paddingLeft: '6px',
+    marginTop: '5px'
   },
   completed: {
     backgroundColor: '#4caf50',
