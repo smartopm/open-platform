@@ -29,7 +29,7 @@ import {
   handleQueryOnChange
 } from '../../../utils/helpers';
 import Label from '../../../shared/label/Label';
-import CenteredContent from '../../../components/CenteredContent';
+import CenteredContent from '../../../shared/CenteredContent';
 import Paginate from '../../../components/Paginate';
 import ListHeader from '../../../shared/list/ListHeader';
 import Text from '../../../shared/Text';
@@ -504,8 +504,6 @@ export function SubscriptionPlans({
       )}
       {subscriptionPlansLoading ? (
         <Spinner />
-      ) : subscriptionPlansData?.subscriptionPlans?.length === 0 ? (
-        <CenteredContent>{t('errors.no_plan_available')}</CenteredContent>
       ) : (
         <>
           <div className={classes.planList}>
@@ -557,13 +555,14 @@ export function SubscriptionPlans({
               </div>
             </div>
 
-            {matches && (
+            {matches && subscriptionPlansData?.subscriptionPlans?.length > 0 && (
               <div style={{ padding: '0 20px' }}>
                 <ListHeader headers={subscriptionPlanHeaders} />
               </div>
             )}
-
-            {subscriptionPlansData?.subscriptionPlans?.map(sub => (
+            {subscriptionPlansData?.subscriptionPlans?.length === 0 ? (
+              <CenteredContent>{t('errors.no_plan_available')}</CenteredContent>
+            ): (subscriptionPlansData?.subscriptionPlans?.map(sub => (
               <div style={{ padding: '0 20px' }} key={sub.id}>
                 <DataList
                   keys={subscriptionPlanHeaders}
@@ -571,7 +570,7 @@ export function SubscriptionPlans({
                   hasHeader={false}
                 />
               </div>
-            ))}
+            )))}
           </div>
         </>
       )}
