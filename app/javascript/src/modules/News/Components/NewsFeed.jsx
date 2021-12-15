@@ -29,7 +29,8 @@ const useStyles = makeStyles(theme => ({
     color: theme.palette.primary.light
   },
   image: {
-    borderRadius: '8px'
+    borderRadius: '8px',
+    width: '100%'
   },
   tile: {
     borderRadius: '8px'
