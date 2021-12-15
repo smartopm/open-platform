@@ -32,6 +32,7 @@ module Forms
         body: "<a href=\"https://#{hostname}/user/#{user.id}\">#{user.name}</a> Submitted
                 <a href=\"https://#{hostname}/user_form/#{user.id}/#{id}/task\">
                 #{form.name}</a>",
+        description: description,
         category: 'form',
         form_user_id: id,
         flagged: true,
@@ -52,6 +53,13 @@ module Forms
     # rubocop:enable Metrics/MethodLength
 
     private
+
+    def description
+      return unless form.report_an_issue?
+
+      form_property = form.form_properties.find_by(field_name: 'description')
+      user_form_properties.find_by(form_property_id: form_property&.id)&.value
+    end
 
     def log_create_event
       user.generate_events('form_submit', self)
