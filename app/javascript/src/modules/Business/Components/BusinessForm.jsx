@@ -78,7 +78,7 @@ export default function BusinessForm({ close }) {
         />
 
         <br />
-        <UserSearch userData={userData} update={setUserData} />
+        <UserSearch userData={userData} update={setUserData} required />
         <br />
 
         <TextField

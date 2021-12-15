@@ -9,7 +9,7 @@ import UserAutoResult from '../../../shared/UserAutoResult';
 import useDebounce from '../../../utils/useDebounce';
 
 // TODO: should be moved to shared directory
-export default function UserSearch({ userData, update }) {
+export default function UserSearch({ userData, update, required }) {
   const debouncedValue = useDebounce(userData.user, 500);
   const classes = useStyles();
   const [searchUser, { data }] = useLazyQuery(UsersLiteQuery, {
@@ -43,6 +43,7 @@ export default function UserSearch({ userData, update }) {
             onChange={event => update({ ...userData, user: event.target.value })}
                         // eslint-disable-next-line no-unused-vars
             onKeyDown={(_e) => searchUser()}
+            required={required}
           />
         )}
       />
@@ -56,11 +57,16 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
+UserSearch.defaultProps = {
+  required: false
+}
+
 UserSearch.propTypes = {
   update: PropTypes.func.isRequired,
   userData: PropTypes.exact({
     user: PropTypes.string,
     userId: PropTypes.string,
     imageUrl: PropTypes.string
-  }).isRequired
+  }).isRequired,
+  required: PropTypes.bool
 };
