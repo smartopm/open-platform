@@ -40,6 +40,7 @@ class TaskCreate
       body: data[:body],
       category: data[:category],
       description: data[:description],
+      form_user_id: data[:form_user_id],
       flagged: true,
       user_id: data[:user_id] || data[:author_id],
       due_date: data[:due_date],

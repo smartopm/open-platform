@@ -30,7 +30,15 @@ RSpec.describe Mutations::Form::FormUserCreate do
       create(:form, community_id: current_user.community_id,
                     multiple_submissions_allowed: false)
     end
+    let!(:report_an_issue_form) do
+      create(:form, community_id: current_user.community_id, name: 'Report an Issue',
+                    multiple_submissions_allowed: false)
+    end
     let!(:form_property) { create(:form_property, form: form, field_type: 'text') }
+    let!(:description_form_property) do
+      create(:form_property, form: report_an_issue_form,
+                             field_name: 'description', field_type: 'text')
+    end
 
     let(:mutation) do
       <<~GQL
@@ -203,6 +211,34 @@ RSpec.describe Mutations::Form::FormUserCreate do
 
       expect(result.dig('data', 'formUserCreate', 'formUser', 'status')).to eq('draft')
       expect(result.dig('errors', 0, 'message')).to be_nil
+    end
+
+    context 'when a report an issue form is submitted' do
+      it 'is expected to submit a form and create a task with description' do
+        values = {
+          user_form_properties: [
+            {
+              form_property_id: description_form_property.id,
+              value: 'something new',
+            },
+          ],
+        }
+        variables = {
+          formId: report_an_issue_form.id,
+          userId: current_user.id,
+          propValues: values.to_json,
+        }
+        result = DoubleGdpSchema.execute(mutation, variables: variables,
+                                                   context: {
+                                                     current_user: current_user,
+                                                     site_community: current_user.community,
+                                                     user_role: current_user.role,
+                                                   }).as_json
+        expect(Notes::Note.count).to eq(1)
+        note = Notes::Note.last
+        expect(result.dig('data', 'formUserCreate', 'formUser', 'id')).to eql note.form_user_id
+        expect(note.description).to eq('something new')
+      end
     end
   end
 end
