@@ -47,10 +47,7 @@ module Types::Queries::Comment
   end
 
   def fetch_comments(offset: 0, limit: 20)
-    unless ::Policy::ApplicationPolicy.new(
-      context[:current_user], nil
-    ).permission?(admin: true, module: :comment,
-                  permission: :can_fetch_all_comments)
+    unless permitted?(module: :comment, permission: :can_fetch_all_comments)
       raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
     end
 

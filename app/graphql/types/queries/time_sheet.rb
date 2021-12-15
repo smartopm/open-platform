@@ -30,7 +30,7 @@ module Types::Queries::TimeSheet
 
   # rubocop:disable Metrics/MethodLength
   def time_sheet_logs(offset: 0, limit: 100)
-    unless authorized_to_access_timesheets(:can_fetch_time_sheet_logs) || admin_or_custodian
+    unless authorized_to_access_timesheets(:can_fetch_time_sheet_logs)
       raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
     end
 
@@ -56,7 +56,7 @@ module Types::Queries::TimeSheet
   # rubocop:disable Metrics/AbcSize
   def user_time_sheet_logs(user_id:, offset: 0, limit: 300, date_to: nil, date_from: nil)
     unless authorized_to_access_timesheets(:can_fetch_user_time_sheet_logs) ||
-           admin_or_custodian || context[:current_user]&.id.eql?(user_id)
+           context[:current_user]&.id.eql?(user_id)
       raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
     end
 
@@ -70,7 +70,7 @@ module Types::Queries::TimeSheet
   # rubocop:enable Metrics/AbcSize
 
   def user_last_shift(user_id:)
-    unless authorized_to_access_timesheets(:can_fetch_user_last_shift) || admin_or_custodian
+    unless authorized_to_access_timesheets(:can_fetch_user_last_shift)
       raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
     end
 
@@ -90,11 +90,6 @@ module Types::Queries::TimeSheet
   end
 
   def authorized_to_access_timesheets(permission)
-    ::Policy::ApplicationPolicy.new(
-      context[:current_user], nil
-    ).permission?(
-      module: :timesheet,
-      permission: permission,
-    )
+    permitted?(module: :timesheet, permission: permission)
   end
 end

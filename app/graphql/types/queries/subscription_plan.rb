@@ -11,10 +11,7 @@ module Types::Queries::SubscriptionPlan
   end
 
   def subscription_plans
-    unless ::Policy::ApplicationPolicy.new(
-      context[:current_user], nil
-    ).permission?(
-      admin: true,
+    unless permitted?(
       module: :subscription_plan,
       permission: :can_fetch_subscription_plans,
     )
