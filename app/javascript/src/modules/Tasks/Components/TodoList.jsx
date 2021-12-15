@@ -87,7 +87,7 @@ export default function TodoList({
   const [selectedTasks, setSelected] = useState([]);
   const [selectedTask, setSelectedTask] = useState(null);
   const [bulkUpdating, setBulkUpdating] = useState(false);
-  const [splitScreenOpen, setSplitScreenOpen] = useState(true);
+  const [splitScreenOpen, setSplitScreenOpen] = useState(false);
   const matches = useMediaQuery('(max-width:800px)');
   const { t } = useTranslation(['task', 'common'])
 
