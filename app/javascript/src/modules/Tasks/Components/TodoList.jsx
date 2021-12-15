@@ -27,7 +27,7 @@ import { useFileUpload } from '../../../graphql/useFileUpload';
 import TaskForm from './TaskForm';
 import ErrorPage from '../../../components/Error';
 import Paginate from '../../../components/Paginate';
-import CenteredContent from '../../../components/CenteredContent';
+import CenteredContent from '../../../shared/CenteredContent';
 import TaskUpdate from '../containers/TaskUpdate';
 import TaskQuickSearch from './TaskQuickSearch';
 import { futureDateAndTimeToString, dateToString } from '../../../components/DateContainer';
@@ -522,7 +522,7 @@ export default function TodoList({
                   'aria-label': 'search tasks'
                 }}
             />
-          </Grid> 
+          </Grid>
           <Grid item md={1} xs={4} style={{ display: 'flex', alignItems: 'center'}}>
             <IconButton
               data-testid="toggle_filter_btn"
@@ -578,7 +578,7 @@ export default function TodoList({
               selectedTasks={selectedTasks}
               currentTile={currentTile}
             />
-            {data?.flaggedNotes.length && (
+            {Boolean(data?.flaggedNotes.length) && (
               <SplitScreen
                 open={splitScreenOpen}
                 onClose={() => setSplitScreenOpen(false)}
@@ -615,7 +615,13 @@ export default function TodoList({
             )}
             <br />
             <CenteredContent>
-              <Paginate count={data?.flaggedNotes?.length} offSet={offset} limit={limit} active={offset >= 1} handlePageChange={paginate} />
+              <Paginate
+                count={data?.flaggedNotes?.length}
+                offSet={offset}
+                limit={limit}
+                active={offset >= 1}
+                handlePageChange={paginate}
+              />
             </CenteredContent>
           </>
         )}
