@@ -87,7 +87,7 @@ export default function TodoList({
   const [selectedTasks, setSelected] = useState([]);
   const [selectedTask, setSelectedTask] = useState(null);
   const [bulkUpdating, setBulkUpdating] = useState(false);
-  const [splitScreenOpen, setSplitScreenOpen] = useState(true);
+  const [splitScreenOpen, setSplitScreenOpen] = useState(false);
   const matches = useMediaQuery('(max-width:800px)');
   const { t } = useTranslation(['task', 'common'])
 
@@ -522,7 +522,7 @@ export default function TodoList({
                   'aria-label': 'search tasks'
                 }}
             />
-          </Grid> 
+          </Grid>
           <Grid item md={1} xs={4} style={{ display: 'flex', alignItems: 'center'}}>
             <IconButton
               data-testid="toggle_filter_btn"
