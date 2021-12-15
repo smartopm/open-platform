@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+# rubocop:disable Rails/SkipsModelValidations
+
 namespace :db do
   desc 'Add description to report an issue task'
   task add_description_to_report_an_issue_task: :environment do
@@ -10,10 +12,10 @@ namespace :db do
         form_user = Forms::FormUser.find_by(id: form_user_id)
         next if form_user.nil?
 
-        form_property = form_user.form.form_properties.find_by(field_name: 'description')
+        form_property = form_user.form.form_properties.find_by(field_name: 'Description')
         description = form_user.user_form_properties.find_by(form_property_id: form_property&.id)
 
-        note.update!(description: description&.value)
+        note.update_columns(description: description&.value)
       end
       puts 'Added description for tasks'
     end
@@ -22,3 +24,4 @@ namespace :db do
     puts e.message.to_s
   end
 end
+# rubocop:enable Rails/SkipsModelValidations
