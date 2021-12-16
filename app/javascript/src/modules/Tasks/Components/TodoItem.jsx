@@ -138,7 +138,6 @@ export default function TodoItem({
             key={task.id}
             task={task}
             handleChange={handleChange}
-            handleFileInputChange={handleFileInputChange}
             selectedTasks={selectedTasks}
             isSelected={isSelected}
             menuData={menuData}
@@ -161,7 +160,6 @@ export default function TodoItem({
               key={firstLevelSubTask.id}
               task={firstLevelSubTask}
               handleChange={handleChange}
-              handleFileInputChange={handleFileInputChange}
               selectedTasks={selectedTasks}
               isSelected={isSelected}
               menuData={menuData}
@@ -182,7 +180,6 @@ export default function TodoItem({
                       key={secondLevelSubTask.id}
                       task={secondLevelSubTask}
                       handleChange={handleChange}
-                      handleFileInputChange={handleFileInputChange}
                       selectedTasks={selectedTasks}
                       isSelected={isSelected}
                       menuData={menuData}

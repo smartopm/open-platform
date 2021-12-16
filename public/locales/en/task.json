@@ -4,6 +4,7 @@
     "my_tasks": "My Tasks",
     "task_details_text": "Task Details",
     "due_date_text": "Due Date",
+    "parent_task": "Parent Task",
     "assigned_to_txt": "Assigned To",
     "active_reminder": "Reminder",
     "none": "None",
@@ -69,5 +70,10 @@
     "see_more": "See More",
     "no_sub_tasks": "Add a subtask",
     "due": "due: "
+  },
+  "bread_crumps": {
+    "my_tasks": "My Tasks",
+    "task_details": "Task Detail"
+
   }
 }

@@ -437,6 +437,7 @@ export default function TodoList({
   function handleTodoItemClick(task) {
     setSelectedTask(task);
     setSplitScreenOpen(true);
+    window.document.getElementById('anchor-section').scrollIntoView()
   }
 
   if (tasksError) return <ErrorPage error={tasksError.message} />;

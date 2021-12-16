@@ -135,7 +135,6 @@ export default function renderTaskData({
 
 export function TaskDataList({
   task,
-  handleFileInputChange,
   menuData,
   handleClick,
   styles,
@@ -289,15 +288,8 @@ export function TaskDataList({
                 aria-controls="task-attach-file-icon"
                 aria-haspopup="true"
                 data-testid="task_attach_file"
-                component="label"
                 onClick={handleClick}
               >
-                <input
-                  hidden
-                  type="file"
-                  onChange={event => handleFileInputChange(event, task)}
-                  id="task-attach-file"
-                />
                 <AttachFileIcon fontSize="small" color={task?.documents?.length ? 'primary': 'disabled'} />
               </IconButton>
             </Grid>
@@ -370,7 +362,6 @@ TaskDataList.defaultProps = {
 };
 TaskDataList.propTypes = {
   task: PropTypes.shape(Task).isRequired,
-  handleFileInputChange: PropTypes.func.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   menuData: PropTypes.object.isRequired,
   handleClick: PropTypes.func,
