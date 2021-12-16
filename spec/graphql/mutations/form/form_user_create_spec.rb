@@ -37,7 +37,7 @@ RSpec.describe Mutations::Form::FormUserCreate do
     let!(:form_property) { create(:form_property, form: form, field_type: 'text') }
     let!(:description_form_property) do
       create(:form_property, form: report_an_issue_form,
-                             field_name: 'description', field_type: 'text')
+                             field_name: 'Description', field_type: 'text')
     end
 
     let(:mutation) do
