@@ -57,7 +57,7 @@ module Forms
     def description
       return unless form.report_an_issue?
 
-      form_property = form.form_properties.find_by(field_name: 'description')
+      form_property = form.form_properties.find_by(field_name: 'Description')
       user_form_properties.find_by(form_property_id: form_property&.id)&.value
     end
 
