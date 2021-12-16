@@ -254,7 +254,7 @@ RSpec.describe Mutations::User do
     let!(:permission) do
       create(:permission, module: 'user',
                           role: admin_role,
-                          permissions: %w[can_update_user_details])
+                          permissions: %w[can_update_user_details can_merge_users])
     end
     let!(:admin) { create(:admin_user, role: admin_role) }
     let!(:user) { create(:user_with_community) }
@@ -676,7 +676,7 @@ RSpec.describe Mutations::User do
     let!(:permission) do
       create(:permission, module: 'user',
                           role: admin_role,
-                          permissions: %w[can_update_user_details])
+                          permissions: %w[can_update_user_details can_send_one_time_login])
     end
     let!(:admin) { create(:admin_user, role: admin_role) }
 

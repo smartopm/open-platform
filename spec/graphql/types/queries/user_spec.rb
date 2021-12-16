@@ -16,7 +16,7 @@ RSpec.describe Types::Queries::User do
     let!(:permission) do
       create(:permission, module: 'user',
                           role: admin_role,
-                          permissions: %w[can_view_admin_users can_get_users_lite])
+                          permissions: %w[can_view_admin_users can_get_users_lite can_get_users])
     end
     let!(:current_user) { create(:user_with_community, user_type: 'client', role: client_role) }
     let!(:another_user) do
@@ -411,7 +411,7 @@ RSpec.describe Types::Queries::User do
     let!(:permission) do
       create(:permission, module: 'user',
                           role: admin_role,
-                          permissions: %w[can_search_guests])
+                          permissions: %w[can_search_guests can_view_guests])
     end
     let!(:user) { create(:user_with_community, name: 'Jose', role: visitor_role) }
     let!(:user2) do
@@ -609,7 +609,8 @@ RSpec.describe Types::Queries::User do
     let!(:permission) do
       create(:permission, module: 'user',
                           role: admin_role,
-                          permissions: %w[can_get_user_count can_get_users])
+                          permissions: %w[can_get_user_count can_get_users can_get_substatus_count
+                                          can_get_substatus_distribution])
     end
 
     let!(:admin_user) { create(:admin_user, role: admin_role) }

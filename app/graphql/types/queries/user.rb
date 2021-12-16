@@ -97,13 +97,7 @@ module Types::Queries::User
   # rubocop:disable Metrics/MethodLength
   # rubocop:disable Metrics/AbcSize
   def users(offset: 0, limit: 50, query: nil)
-    unless ::Policy::ApplicationPolicy.new(
-      context[:current_user], nil
-    ).permission?(
-      admin: true,
-      module: :user,
-      permission: :can_get_users,
-    )
+    unless permitted?(module: :user, permission: :can_get_users)
       raise GraphQL::ExecutionError,
             I18n.t('errors.unauthorized')
     end
@@ -184,13 +178,7 @@ module Types::Queries::User
 
   # rubocop:disable Metrics/MethodLength
   def users_lite(offset: 0, limit: 50, query: nil)
-    current = context[:current_user]
-    unless ::Policy::ApplicationPolicy.new(
-      context[:current_user], nil
-    ).permission?(
-      module: :user,
-      permission: :can_get_users_lite,
-    ) || current.site_manager? || current.site_worker?
+    unless permitted?(module: :user, permission: :can_get_users_lite)
       raise GraphQL::ExecutionError,
             I18n.t('errors.unauthorized')
     end
@@ -235,15 +223,8 @@ module Types::Queries::User
     end
   end
 
-  # rubocop:disable Metrics/MethodLength
   def substatus_query
-    unless ::Policy::ApplicationPolicy.new(
-      context[:current_user], nil
-    ).permission?(
-      admin: true,
-      module: :user,
-      permission: :can_get_substatus_count,
-    )
+    unless permitted?(module: :user, permission: :can_get_substatus_count)
       raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
     end
 
@@ -251,16 +232,9 @@ module Types::Queries::User
     residents_count = users.where(user_type: :resident).count
     users.group(:sub_status).count.merge(residents_count: residents_count)
   end
-  # rubocop:enable Metrics/MethodLength
 
   def substatus_distribution_query
-    unless ::Policy::ApplicationPolicy.new(
-      context[:current_user], nil
-    ).permission?(
-      admin: true,
-      module: :user,
-      permission: :can_get_substatus_distribution,
-    )
+    unless permitted?(module: :user, permission: :can_get_substatus_distribution)
       raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
     end
 
@@ -274,13 +248,7 @@ module Types::Queries::User
   end
 
   def admin_users
-    unless ::Policy::ApplicationPolicy.new(
-      context[:current_user], nil
-    ).permission?(
-      admin: true,
-      module: :user,
-      permission: :can_view_admin_users,
-    )
+    unless permitted?(module: :user, permission: :can_view_admin_users)
       raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
     end
 
@@ -311,13 +279,7 @@ module Types::Queries::User
   end
 
   def user_permissions_check?(permission)
-    ::Policy::ApplicationPolicy.new(
-      context[:current_user], nil
-    ).permission?(
-      admin: true,
-      module: :user,
-      permission: permission.to_sym,
-    )
+    permitted?(module: :user, permission: permission.to_sym)
   end
 end
 # rubocop:enable Metrics/ModuleLength
