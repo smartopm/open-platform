@@ -9,8 +9,6 @@ import {
   DialogContent,
   IconButton,
   Grid,
-  TextField,
-  InputAdornment,
   Typography,
 } from '@material-ui/core';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
@@ -28,6 +26,7 @@ import TaskForm from './TaskForm';
 import ErrorPage from '../../../components/Error';
 import Paginate from '../../../components/Paginate';
 import CenteredContent from '../../../shared/CenteredContent';
+import SearchInput from '../../../shared/search/SearchInput';
 import TaskUpdate from '../containers/TaskUpdate';
 import TaskQuickSearch from './TaskQuickSearch';
 import { futureDateAndTimeToString, dateToString } from '../../../components/DateContainer';
@@ -63,7 +62,6 @@ export default function TodoList({
   const [displayBuilder, setDisplayBuilder] = useState('none');
   const [filterCount, setFilterCount] = useState(0);
   const [filterQuery, setFilterQuery] = useState('');
-  const [searchInputQuery, setSearchInputQuery] = useState('');
   const { taskId } = useParams();
   const [parentTaskId, setParentTaskId] = useState('');
   const history = useHistory();
@@ -122,7 +120,7 @@ export default function TodoList({
 
    const joinedTaskQuery =  `${qr} ${
     // eslint-disable-next-line no-nested-ternary
-    filterQuery ? `AND ${filterQuery}` : searchInputQuery ? `AND ${searchInputQuery}` : ''
+    filterQuery ? `AND ${filterQuery}` : searchText ? `AND ${searchText}` : ''
   }`
 
   const [
@@ -165,7 +163,7 @@ export default function TodoList({
 
     // for tasks searched using the top search bar input
     if (debouncedSearchText) {
-      setSearchInputQuery(`user: '${debouncedSearchText}'`);
+      setSearchText(debouncedSearchText);
       loadTasks();
     }
 
@@ -503,28 +501,17 @@ export default function TodoList({
             </Grid>
           </Grid>
           <Grid item md={4} xs={8} style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
-            <TextField
+            <SearchInput
+              filterRequired
+              title={t('common:form_placeholders.search_tasks')}
+              searchValue={searchText}
+              handleSearch={inputToSearch}
+              handleFilter={toggleFilterMenu}
+              handleClear={() => setSearchText('')}
               data-testid="search_input"
-              className={`border ${classes.input}`}
-              onChange={inputToSearch}
-              value={searchText}
-              label={t('common:form_placeholders.search_tasks')}
-              variant="outlined"
-              margin="dense"
-              style={{ width: '89%' }}
-              InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <IconButton>
-                        <SearchIcon />
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                  'aria-label': 'search tasks'
-                }}
             />
           </Grid>
-          <Grid item md={1} xs={4} style={{ display: 'flex', alignItems: 'center'}}>
+          {/* <Grid item md={1} xs={4} style={{ display: 'flex', alignItems: 'center'}}>
             <IconButton
               data-testid="toggle_filter_btn"
               type="submit"
@@ -538,7 +525,7 @@ export default function TodoList({
             <Typography>
               {filterCount ? `${filterCount} ${pluralizeCount(filterCount, 'Filter')}` : t('common:misc.filter')}
             </Typography>
-          </Grid>
+          </Grid> */}
         </Grid>
         <div
           style={{
