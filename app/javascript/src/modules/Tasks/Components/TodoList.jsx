@@ -1,20 +1,15 @@
 /* eslint-disable max-lines */
 /* eslint-disable max-statements */
 /* eslint-disable complexity */
-/* eslint-disable react/prop-types */
 import React, { useState, useEffect } from 'react';
+import PropTypes from 'prop-types'
 import {
   Dialog,
   DialogTitle,
   DialogContent,
-  IconButton,
   Grid,
-  Typography,
 } from '@material-ui/core';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
-import FilterListIcon from '@material-ui/icons/FilterList';
-import SearchIcon from '@material-ui/icons/Search'
-import MaterialConfig from 'react-awesome-query-builder/lib/config/material';
 import { makeStyles } from '@material-ui/core/styles';
 import { useMutation, useLazyQuery, useApolloClient } from 'react-apollo';
 import { useParams, useHistory } from 'react-router';
@@ -34,7 +29,7 @@ import DatePickerDialog from '../../../components/DatePickerDialog';
 import { Spinner } from '../../../shared/Loading';
 import QueryBuilder from '../../../components/QueryBuilder';
 import { ModalDialog } from '../../../components/Dialog';
-import { formatError, pluralizeCount, objectAccessor, useParamsQuery } from '../../../utils/helpers';
+import { formatError, objectAccessor, useParamsQuery } from '../../../utils/helpers';
 import useDebounce from '../../../utils/useDebounce';
 import MessageAlert from '../../../components/MessageAlert';
 import { TaskBulkUpdateMutation } from '../graphql/task_mutation';
@@ -42,6 +37,7 @@ import { TaskBulkUpdateAction, TaskQuickAction } from './TaskActionMenu';
 import TodoItem from './TodoItem';
 import FloatingButton from '../../../shared/buttons/FloatingButton';
 import SplitScreen from '../../../shared/SplitScreen';
+import { tasksQueryBuilderInitialValue, tasksQueryBuilderConfig, tasksFilterFields } from '../../../utils/constants';
 
 export default function TodoList({
   isDialogOpen,
@@ -60,7 +56,7 @@ export default function TodoList({
   const [query, setQuery] = useState('');
   const [currentTile, setCurrentTile] = useState('');
   const [displayBuilder, setDisplayBuilder] = useState('none');
-  const [filterCount, setFilterCount] = useState(0);
+  const [, setFilterCount] = useState(0);
   const [filterQuery, setFilterQuery] = useState('');
   const { taskId } = useParams();
   const [parentTaskId, setParentTaskId] = useState('');
@@ -298,6 +294,22 @@ export default function TodoList({
     setOpenFilter(!filterOpen);
   }
 
+  const builderConfig = {
+    ...tasksQueryBuilderConfig,
+    fields: {
+      assignee: {
+        ...tasksQueryBuilderConfig.fields.assignee,
+        fieldSettings: {
+          listValues: liteData?.usersLite.map(u => {
+            return { value: u.name, title: u.name };
+          })
+        }
+      },
+      userName: {
+        ...tasksQueryBuilderConfig.fields.userName,
+      },
+    }
+  };
 
   function handleQueryOnChange(selectedOptions) {
     if (selectedOptions) {
@@ -314,7 +326,7 @@ export default function TodoList({
             let operator = Object.keys(option)[0];
             const [inputFilterProperty, inputFilterValue] = objectAccessor(option, operator);
 
-            property = filterFields[inputFilterProperty.var];
+            property = tasksFilterFields[inputFilterProperty.var];
             value = inputFilterValue;
             operator = property === 'assignees' ? '=' : ':';
 
@@ -345,52 +357,6 @@ export default function TodoList({
       message: '',
     })
   }
-
-  const InitialConfig = MaterialConfig;
-  const queryBuilderConfig = {
-    ...InitialConfig,
-    fields: {
-      assignee: {
-        label: 'Assignee',
-        type: 'select',
-        valueSources: ['value'],
-        fieldSettings: {
-          listValues: liteData?.usersLite.map(u => {
-            return { value: u.name, title: u.name };
-          })
-        }
-      },
-      userName: {
-        label: "User's Name",
-        type: 'text',
-        valueSources: ['value'],
-        excludeOperators: ['not_equal']
-      }
-    }
-  };
-
-  const queryBuilderInitialValue = {
-    // Just any random UUID
-    id: '76a8a9ba-0123-3344-c56d-b16e532c8cd0',
-    type: 'group',
-    children1: {
-      '98a8a9ba-0123-4456-b89a-b16e721c8cd0': {
-        type: 'rule',
-        properties: {
-          field: 'assignee',
-          operator: 'select_equals',
-          value: [''],
-          valueSrc: ['value'],
-          valueType: ['select']
-        }
-      }
-    }
-  };
-
-  const filterFields = {
-    assignee: 'assignees',
-    userName: 'user'
-  };
 
   function handleCheckOptions(option){
     setCheckOptions(option)
@@ -511,21 +477,6 @@ export default function TodoList({
               data-testid="search_input"
             />
           </Grid>
-          {/* <Grid item md={1} xs={4} style={{ display: 'flex', alignItems: 'center'}}>
-            <IconButton
-              data-testid="toggle_filter_btn"
-              type="submit"
-              className={classes.iconButton}
-              aria-label="search"
-              onClick={toggleFilterMenu}
-              size="medium"
-            >
-              <FilterListIcon />
-            </IconButton>
-            <Typography>
-              {filterCount ? `${filterCount} ${pluralizeCount(filterCount, 'Filter')}` : t('common:misc.filter')}
-            </Typography>
-          </Grid> */}
         </Grid>
         <div
           style={{
@@ -548,8 +499,8 @@ export default function TodoList({
           >
             <QueryBuilder
               handleOnChange={handleQueryOnChange}
-              builderConfig={queryBuilderConfig}
-              initialQueryValue={queryBuilderInitialValue}
+              builderConfig={builderConfig}
+              initialQueryValue={tasksQueryBuilderInitialValue}
               addRuleLabel="Add filter"
             />
           </Grid>
@@ -660,3 +611,13 @@ const useStyles = makeStyles(() => ({
     padding: '20px'
   },
 }));
+
+TodoList.propTypes = {
+  isDialogOpen: PropTypes.bool.isRequired,
+  handleModal: PropTypes.func.isRequired,
+  saveDate: PropTypes.func.isRequired,
+  selectedDate: PropTypes.instanceOf(Date).isRequired,
+  handleDateChange: PropTypes.func.isRequired,
+  location: PropTypes.string.isRequired,
+  currentUser: PropTypes.shape.isRequired,
+}
