@@ -6,7 +6,6 @@ import Typography from '@mui/material/Typography';
 import Button from '@material-ui/core/Button';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useApolloClient, useMutation } from 'react-apollo';
-import { Link } from 'react-router-dom';
 import Hidden from '@material-ui/core/Hidden';
 import { useTranslation } from 'react-i18next';
 import makeStyles from '@material-ui/core/styles/makeStyles';
@@ -32,7 +31,6 @@ import { objectAccessor } from '../../../utils/helpers';
 import GuestsView from './GuestsView';
 import VisitView from './VisitView';
 import MessageAlert from '../../../components/MessageAlert';
-import Text from '../../../shared/Text';
 import CenteredContent from '../../../shared/CenteredContent';
 import { accessibleMenus } from '../utils'
 
@@ -284,11 +282,6 @@ export default function LogBookItem({
                 />
               </Grid>
             </Hidden>
-            <Grid item md={3} xs={10} style={!matches ? {textAlign: 'right'} : {}}>
-              <Link to='/entry_logs'>
-                <Text color="secondary" content={t('logbook.old_switch')} />
-              </Link>
-            </Grid>
             <Grid item xs={12} md={7} lg={6}>
               <StyledTabs
                 value={tabValue}
