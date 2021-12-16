@@ -11,7 +11,8 @@ export default function ImageAuth({ imageLink, className, type, alt, style }) {
     const options = {
       method: 'GET',
       headers: {
-        Authorization: `Bearer ${authState.token}`
+        Authorization: `Bearer ${authState.token}`,
+        'Cache-Control': 'no-cache'
       }
     }
     const { response, isError, loading } = useFetchMedia(imageLink, options)
