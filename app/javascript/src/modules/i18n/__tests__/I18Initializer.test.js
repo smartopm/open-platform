@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import { MockedProvider } from '@apollo/react-testing';
 import I18Initializer from '../Components/I18Initializer';
 import { CurrentCommunityQuery } from '../../Community/graphql/community_query';
@@ -17,7 +17,7 @@ jest.mock('react-i18next', () => ({
 }));
 
 describe('I18n Initializer component', () => {
-  it('renders with no errors', () => {
+  it('renders with no errors', async () => {
     const mock = {
       request: {
         query: CurrentCommunityQuery
@@ -33,10 +33,22 @@ describe('I18n Initializer component', () => {
             supportNumber: [{ email: 'support@test.com', category: 'customer_care' }],
             currency: 'kwacha',
             locale: 'en-ZM',
+            gaId: 'G-KAIADJQ',
             tagline: 'This is a tagline for this community',
             logoUrl: '',
             language: 'en-US',
-            features: { Dashboard: { features: [] }}
+            features: { Dashboard: { features: [] }},
+            socialLinks: null,
+            menuItems: null,
+            wpLink: null,
+            themeColors: null,
+            securityManager: null,
+            templates: null,
+            subAdministrator: null,
+            bankingDetails: null,
+            smsPhoneNumbers: null,
+            emergencyCallNumber: null,
+
           }
         }
       }
@@ -47,5 +59,8 @@ describe('I18n Initializer component', () => {
         <I18Initializer />
       </MockedProvider>
     );
+    await waitFor(() => {
+      expect(window.localStorage.getItem('default-language')).toEqual('en-US')
+    }, 20)
   });
 });

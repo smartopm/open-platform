@@ -93,6 +93,7 @@ describe('Community settings page', () => {
           tagline: '',
           logoUrl: '',
           wpLink: '',
+          gaId: '',
           securityManager: '',
           subAdministratorId: '',
           themeColors: { primaryColor: '#69ABA4', secondaryColor: '#cf5628' },
@@ -170,6 +171,7 @@ describe('Community settings page', () => {
     expect(container.queryByText('community.sms_phone_numbers')).not.toBeDisabled();
     expect(container.queryByText('community.emergency_call_number')).not.toBeDisabled();
     expect(container.queryByText('community.sms_phone_numbers_header')).toBeInTheDocument();
+    expect(container.queryByText('community.google_analytics_id')).toBeInTheDocument();
 
     expect(container.queryAllByLabelText('remove')).toHaveLength(6);
 
@@ -283,6 +285,9 @@ describe('Community settings page', () => {
 
     fireEvent.change(container.queryByTestId('emergencyCallNumber'), { target: { value: '+94848584844' } });
     expect(container.queryByTestId('emergencyCallNumber').value).toBe('+94848584844');
+
+    fireEvent.change(container.queryByTestId('google_analytics_id'), { target: { value: 'G-AIJDIWWI' } });
+    expect(container.queryByTestId('google_analytics_id').value).toBe('G-AIJDIWWI');
 
     await waitFor(() => {
       expect(refetchMock).toBeCalled();

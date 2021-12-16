@@ -69,11 +69,9 @@ import EmployeeTimeSheetLog
   from '../src/modules/TimeCard/Components/EmployeeLogs';
 import EmailBuilderDialog
   from '../src/modules/Emails/components/EmailBuilderDialog';
+import { PRIMARY_DOMAINS } from '../src/utils/constants';
 
 // The routes defined here are carefully arranged, be mindful when changing them
-
-// Prevent Google Analytics reporting from staging and dev domains
-const PRIMARY_DOMAINS = ['app.doublegdp.com'];
 
 const LoggedInOnly = props => {
   const authState = useContext (AuthStateContext);
@@ -109,7 +107,6 @@ const Logout = () => {
   return <Redirect to="/login" />;
 };
 // page tracking
-ReactGA.initialize ('UA-150647211-2');
 
 const Analytics = props => {
   const {gtag} = window;
@@ -117,8 +114,8 @@ const Analytics = props => {
     return PRIMARY_DOMAINS.includes (host);
   }) (window.location.host);
 
-  const authState = useContext (AuthStateContext);
-  const history = useHistory ();
+  const authState = useContext(AuthStateContext);
+  const history = useHistory();
 
   useEffect (
     () => {
@@ -131,8 +128,8 @@ const Analytics = props => {
             user.id,
             user.userType
           );
-          gtag ('set', {user_id: user.id});
-          gtag ('set', 'user_properties', {Role: user.userType});
+          gtag('set', {user_id: user.id});
+          gtag('set', 'user_properties', {Role: user.userType});
           ReactGA.event ({
             category: 'LoggedInUserType',
             action: user.userType,
@@ -176,9 +173,9 @@ const App = () => {
       <ApolloProvider>
         <Router history={history}>
           <AuthStateProvider>
+            <I18Initializer />
             <Analytics>
               {/* onboarding */}
-              <I18Initializer />
               <Switch>
                 <Route path="/welcome" component={WelcomePage} />
                 <Route path="/login" component={LoginScreen} />
@@ -293,7 +290,7 @@ const App = () => {
                                     return routes;
                                   });
                                 }
-                                // module.accessibleBy.includes(user.userType) 
+                                // module.accessibleBy.includes(user.userType)
                                 // to be deprecated and permissions checked at module level
                                 if (
                                   checkAllowedCommunityFeatures (

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_30_114052) do
+ActiveRecord::Schema.define(version: 2021_12_14_085530) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -221,6 +221,7 @@ ActiveRecord::Schema.define(version: 2021_11_30_114052) do
     t.uuid "sub_administrator_id"
     t.string "sms_phone_numbers", default: [], array: true
     t.string "emergency_call_number"
+    t.string "ga_id"
     t.index ["slug"], name: "index_communities_on_slug", unique: true
   end
 
