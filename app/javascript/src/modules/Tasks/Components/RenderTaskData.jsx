@@ -4,7 +4,8 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
-import { Checkbox, Grid, IconButton, Typography, Chip, Button } from '@material-ui/core';
+import { Checkbox, Grid, IconButton, Typography, Chip } from '@material-ui/core';
+import Divider from '@mui/material/Divider';
 import Hidden from '@material-ui/core/Hidden';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
@@ -134,9 +135,7 @@ export default function renderTaskData({
 
 export function TaskDataList({
   task,
-  handleFileInputChange,
   menuData,
-  clickable,
   handleClick,
   styles,
   openSubTask,
@@ -148,54 +147,58 @@ export function TaskDataList({
   const matches = useMediaQuery('(max-width:800px)');
 
   return (
-    <Card clickData={{clickable, handleClick}} styles={styles} contentStyles={{ padding: '4px' }}>
+    <Card styles={styles} contentStyles={{ padding: '4px' }}>
       <Grid container>
         <Grid item md={5} xs={8} style={{ display: 'flex', alignItems: 'center' }} data-testid="task_body_section">
-          <Button
-            onClick={() => handleTaskCompletion(task.id, !task.completed)}
-            startIcon={
-              task.completed ? <CheckCircleIcon htmlColor='#4caf50' /> : <CheckCircleOutlineIcon />
-            }
-            style={{ textTransform: 'none' }}
-            data-testid="task_completion_toggle_button"
-          />
-          {task?.subTasks?.length > 0
-            ? (
+          <Grid container style={{ display: 'flex', alignItems: 'center' }}>
+            <Grid item md={2}>
               <IconButton
-                aria-controls="show-task-subtasks-icon"
+                aria-controls="task-completion-toggle-button"
                 aria-haspopup="true"
-                data-testid="show_task_subtasks"
+                data-testid="task_completion_toggle_button"
+                onClick={() => handleTaskCompletion(task.id, !task.completed)}
                 size="medium"
-                onClick={(e) => handleOpenSubTasksClick(e)}
               >
-                {openSubTask
-                  ? <KeyboardArrowUpIcon fontSize="small" color="primary" />
-                  : <KeyboardArrowDownIcon fontSize="small" color="primary" />}
+                { task.completed ? (
+                  <CheckCircleIcon htmlColor="#4caf50" />
+                  ) : (
+                    <CheckCircleOutlineIcon />
+                  )}
               </IconButton>
-            ) : (
-              <IconButton
-                aria-controls="show-task-subtasks-icon"
-                aria-haspopup="true"
-                data-testid="show_task_subtasks"
-                size="medium"
-                disabled
+            </Grid>
+            <Grid item md={8}>
+              <Typography
+                variant="body2"
+                data-testid="task_body"
+                component="p"
+                className={matches ? classes.taskBodyMobile : classes.taskBody}
               >
-                <KeyboardArrowDownIcon fontSize="small" />
-              </IconButton>
-          )}
-          <Typography
-            variant="body2"
-            data-testid="task_body"
-            component="p"
-            className={matches ? classes.taskBodyMobile : classes.taskBody}
-          >
-            <span
+                <span
             // eslint-disable-next-line react/no-danger
-              dangerouslySetInnerHTML={{
+                  dangerouslySetInnerHTML={{
               __html: sanitizeText(removeNewLines(task.body))
             }}
-            />
-          </Typography>
+                />
+              </Typography>
+            </Grid>
+            <Grid item md={1}>
+              <Hidden smDown>
+                <IconButton
+                  aria-controls="simple-menu"
+                  aria-haspopup="true"
+                  data-testid="task-item-menu"
+                  dataid={task.id}
+                  onClick={event => menuData.handleTodoMenu(event, task)}
+                  color="primary"
+                >
+                  <MoreVertIcon />
+                </IconButton>
+              </Hidden>
+            </Grid>
+            <Hidden smDown>
+              <Divider orientation="vertical" flexItem sx={{margin: '-20px 0'}} />
+            </Hidden>
+          </Grid>
         </Grid>
         <Hidden mdUp>
           <Grid item md={1} xs={3} style={{display: 'flex', alignItems: 'center' }}>
@@ -212,7 +215,6 @@ export function TaskDataList({
               data-testid="task-item-menu"
               dataid={task.id}
               onClick={event => menuData.handleTodoMenu(event, task)}
-              size="small"
               color="primary"
             >
               <MoreVertIcon />
@@ -229,7 +231,7 @@ export function TaskDataList({
         </Hidden>
         <Grid item md={1} xs={6} data-testid="task_assignee" style={{ display: 'flex', alignItems: 'center' }}>
           {task.assignees.length > 0 && (
-            <Grid container>
+            <Grid container style={{paddingLeft: '5px'}}>
               {/* Restrict to 2 users */}
               {task.assignees.slice(0, 2).map(user => (
                 <Grid item md={4} xs={2} key={user.id}>
@@ -242,7 +244,6 @@ export function TaskDataList({
                   aria-controls="more-assignees"
                   aria-haspopup="true"
                   data-testid="more-assignees"
-                  size="small"
                   style={{
                       padding: 0,
                       margin: 0,
@@ -258,14 +259,14 @@ export function TaskDataList({
             </Grid>
           )}
         </Grid>
-        <Grid item data-testid="task_details_section" md={2} xs={6}>
+        <Grid item data-testid="task_details_section" md={2} xs={5}>
           <Grid container style={{ display: 'flex', justifyContent: 'flex-end' }}>
             <Grid item md={2} xs={2}>
               <IconButton
                 aria-controls="task-subtasks-icon"
                 aria-haspopup="true"
                 data-testid="task_subtasks"
-                size="medium"
+                onClick={handleClick}
               >
                 <AccountTreeIcon fontSize="small" color={task?.subTasks?.length ? 'primary': 'disabled'} />
               </IconButton>
@@ -276,7 +277,7 @@ export function TaskDataList({
                 aria-controls="task-comment-icon"
                 aria-haspopup="true"
                 data-testid="task_comments"
-                size="medium"
+                onClick={handleClick}
               >
                 <QuestionAnswerIcon fontSize="small" color="disabled" />
               </IconButton>
@@ -288,15 +289,8 @@ export function TaskDataList({
                 aria-controls="task-attach-file-icon"
                 aria-haspopup="true"
                 data-testid="task_attach_file"
-                component="label"
-                size="medium"
+                onClick={handleClick}
               >
-                <input
-                  hidden
-                  type="file"
-                  onChange={event => handleFileInputChange(event, task)}
-                  id="task-attach-file"
-                />
                 <AttachFileIcon fontSize="small" color={task?.documents?.length ? 'primary': 'disabled'} />
               </IconButton>
             </Grid>
@@ -307,25 +301,36 @@ export function TaskDataList({
             </Grid>
           </Grid>
         </Grid>
-        <Grid item md={2} style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }} data-testid="task_menu_section">
+        <Grid item md={1} style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }} data-testid="task_menu_section">
           <Hidden smDown>
             {task.completed
               ? <Chip size="small" label={t('task.complete')} className={classes.completed} />
               : <Chip size="small" label={t('task.open')} className={classes.open} />}
           </Hidden>
-          <Hidden smDown>
-            <IconButton
-              aria-controls="simple-menu"
-              aria-haspopup="true"
-              data-testid="task-item-menu"
-              dataid={task.id}
-              onClick={event => menuData.handleTodoMenu(event, task)}
-              size="small"
-              color="primary"
-            >
-              <MoreVertIcon />
-            </IconButton>
-          </Hidden>
+        </Grid>
+        <Grid item md={1} xs={1} style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
+          {task?.subTasks?.length > 0
+            ? (
+              <IconButton
+                aria-controls="show-task-subtasks-icon"
+                aria-haspopup="true"
+                data-testid="show_task_subtasks"
+                onClick={(e) => handleOpenSubTasksClick(e)}
+              >
+                {openSubTask
+                  ? <KeyboardArrowUpIcon fontSize="small" color="primary" />
+                  : <KeyboardArrowDownIcon fontSize="small" color="primary" />}
+              </IconButton>
+            ) : (
+              <IconButton
+                aria-controls="show-task-subtasks-icon"
+                aria-haspopup="true"
+                data-testid="show_task_subtasks"
+                disabled
+              >
+                <KeyboardArrowDownIcon fontSize="small" />
+              </IconButton>
+          )}
         </Grid>
       </Grid>
     </Card>
@@ -351,18 +356,15 @@ const Task = {
 };
 
 TaskDataList.defaultProps = {
-  clickable: false,
   handleClick: null,
   styles: {},
   openSubTask: false,
-  handleOpenSubTasksClick: null,
-}
+  handleOpenSubTasksClick: null
+};
 TaskDataList.propTypes = {
   task: PropTypes.shape(Task).isRequired,
-  handleFileInputChange: PropTypes.func.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   menuData: PropTypes.object.isRequired,
-  clickable: PropTypes.bool,
   handleClick: PropTypes.func,
   // eslint-disable-next-line react/forbid-prop-types
   styles: PropTypes.object,
@@ -408,7 +410,7 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    fontSize: '14px',
+    fontSize: '14px'
   },
   completed: {
     backgroundColor: '#4caf50',

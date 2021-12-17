@@ -437,6 +437,7 @@ export default function TodoList({
   function handleTodoItemClick(task) {
     setSelectedTask(task);
     setSplitScreenOpen(true);
+    window.document.getElementById('anchor-section').scrollIntoView()
   }
 
   if (tasksError) return <ErrorPage error={tasksError.message} />;
@@ -668,7 +669,7 @@ const useStyles = makeStyles(() => ({
     width: '100%',
     marginTop: '51px',
     opacity: '1',
-    backgroundColor: "#FAFAFA !important",
+    backgroundColor: "#FFFFFF !important",
     padding: '20px'
   },
 }));

@@ -138,14 +138,12 @@ export default function TodoItem({
             key={task.id}
             task={task}
             handleChange={handleChange}
-            handleFileInputChange={handleFileInputChange}
             selectedTasks={selectedTasks}
             isSelected={isSelected}
             menuData={menuData}
             styles={{marginBottom: 0}}
             openSubTask={objectAccessor(tasksOpen, task.id)}
             handleOpenSubTasksClick={handleParentTaskClick}
-            clickable
             handleClick={() => handleTodoItemClick(task)}
             handleTaskCompletion={handleTaskCompletion}
           />
@@ -162,7 +160,6 @@ export default function TodoItem({
               key={firstLevelSubTask.id}
               task={firstLevelSubTask}
               handleChange={handleChange}
-              handleFileInputChange={handleFileInputChange}
               selectedTasks={selectedTasks}
               isSelected={isSelected}
               menuData={menuData}
@@ -183,7 +180,6 @@ export default function TodoItem({
                       key={secondLevelSubTask.id}
                       task={secondLevelSubTask}
                       handleChange={handleChange}
-                      handleFileInputChange={handleFileInputChange}
                       selectedTasks={selectedTasks}
                       isSelected={isSelected}
                       menuData={menuData}

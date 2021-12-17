@@ -105,7 +105,6 @@ export default function TaskSubTask({ taskId, users, assignUser, handleSplitScre
           <IconButton
             edge="end"
             onClick={handleAddSubTask}
-            size="small"
             data-testid="add_sub_task_icon"
             color="primary"
           >
@@ -146,7 +145,7 @@ export default function TaskSubTask({ taskId, users, assignUser, handleSplitScre
                   {task.dueDate ? dateToString(task.dueDate) : 'Never '}
                 </Typography>
               </Grid>
-              <Grid item md={3} xs={6}>
+              <Grid item md={3} xs={7}>
                 <Grid container>
                   <Grid item md={4} style={{display: 'flex'}}>
                     <IconButton
@@ -180,7 +179,7 @@ export default function TaskSubTask({ taskId, users, assignUser, handleSplitScre
                   </Grid>
                 </Grid>
               </Grid>
-              <Grid item md={2} xs={6} className={classes.bodyAlign} style={{textAlign: 'right'}}>
+              <Grid item md={2} xs={5} className={classes.bodyAlign} style={{textAlign: 'right'}}>
                 <Grid container>
                   <Grid item md={8} xs={8}>
                     {task.completed

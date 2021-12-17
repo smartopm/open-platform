@@ -7,7 +7,7 @@ import { makeStyles } from '@material-ui/styles';
 import { Grid } from '@material-ui/core';
 import PropTypes from 'prop-types';
 
-export default function EditableField({ value, setValue, action }) {
+export default function EditableField({ value, setValue, action, customStyles }) {
   const [isEditMode, setIsEditMode] = useState(false);
 
   function handleChange(event) {
@@ -25,7 +25,7 @@ export default function EditableField({ value, setValue, action }) {
   const classes = useStyles();
 
   return (
-    <Grid container onMouseLeave={handleOutsideClick} data-testid="editable_field_section">
+    <Grid container spacing={1} onMouseLeave={handleOutsideClick} data-testid="editable_field_section">
       <Grid item xs={10}>
         <TextField
           name="email"
@@ -37,7 +37,7 @@ export default function EditableField({ value, setValue, action }) {
           className={classes.textField}
           multiline
           rows={1}
-          style={{ width: '100%' }}
+          style={{ ...customStyles, width: '100%' }}
           InputProps={{
             classes: {
               disabled: classes.disabled
@@ -62,10 +62,16 @@ export default function EditableField({ value, setValue, action }) {
   );
 }
 
+EditableField.defaultProps = {
+  customStyles: {}
+}
+
 EditableField.propTypes = {
   value: PropTypes.string.isRequired,
   setValue: PropTypes.func.isRequired,
-  action: PropTypes.node.isRequired
+  action: PropTypes.node.isRequired,
+   // eslint-disable-next-line react/forbid-prop-types
+  customStyles: PropTypes.object
 };
 
 const useStyles = makeStyles(() => ({
