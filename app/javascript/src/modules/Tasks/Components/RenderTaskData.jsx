@@ -4,7 +4,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
-import { Checkbox, Grid, IconButton, Typography, Chip, Button } from '@material-ui/core';
+import { Checkbox, Grid, IconButton, Typography, Chip } from '@material-ui/core';
 import Divider from '@mui/material/Divider';
 import Hidden from '@material-ui/core/Hidden';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
@@ -152,18 +152,19 @@ export function TaskDataList({
         <Grid item md={5} xs={8} style={{ display: 'flex', alignItems: 'center' }} data-testid="task_body_section">
           <Grid container style={{ display: 'flex', alignItems: 'center' }}>
             <Grid item md={2}>
-              <Button
+              <IconButton
+                aria-controls="task-completion-toggle-button"
+                aria-haspopup="true"
+                data-testid="task_completion_toggle_button"
                 onClick={() => handleTaskCompletion(task.id, !task.completed)}
-                startIcon={
-                  task.completed ? (
-                    <CheckCircleIcon htmlColor="#4caf50" />
+                size="medium"
+              >
+                { task.completed ? (
+                  <CheckCircleIcon htmlColor="#4caf50" />
                   ) : (
                     <CheckCircleOutlineIcon />
-                  )
-                }
-                style={{ textTransform: 'none' }}
-                data-testid="task_completion_toggle_button"
-              />
+                  )}
+              </IconButton>
             </Grid>
             <Grid item md={8}>
               <Typography
