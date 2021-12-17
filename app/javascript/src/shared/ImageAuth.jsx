@@ -11,11 +11,12 @@ export default function ImageAuth({ imageLink, className, type, alt, style }) {
     const options = {
       method: 'GET',
       headers: {
-        Authorization: `Bearer ${authState.token}`,
-        'Cache-Control': 'no-store'
+        Authorization: `Bearer ${authState.token}`
       }
     }
-    const { response, isError, loading } = useFetchMedia(imageLink, options)
+    // The dummy param is a hack to prevent this caching
+    // issue: (https://gitlab.com/doublegdp/app/-/issues/1921)
+    const { response, isError, loading } = useFetchMedia(`${imageLink}?dummy=${Date.now()}`, options)
 
 
   if(loading) return <Spinner />
