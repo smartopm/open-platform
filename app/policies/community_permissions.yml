@@ -117,3 +117,47 @@ Ciudad Morazán:
     logout:
       permissions:
         - can_see_menu_item
+Tilisi:
+  consultant:
+    note:
+      permissions:
+        - can_see_menu_item
+        - can_create_note
+        - can_update_note
+        - can_set_note_reminder
+        - can_assign_note
+        - can_bulk_assign_note
+        - can_create_note_comment
+        - can_create_note_comment
+        - can_update_note_comment
+        - can_fetch_flagged_notes
+        - can_fetch_task_by_id
+        - can_fetch_task_comments
+        - can_fetch_task_histories
+        - can_get_task_count
+        - can_get_task_stats
+        - can_get_own_tasks
+    forms:
+      permissions:
+       - can_see_menu_item
+      - can_access_forms
+    user:
+      permissions:
+        - can_view_own_profile
+        - can_edit_own_profile
+    profile:
+      permissions:
+        - can_see_menu_item
+    logout:
+      permissions:
+        - can_see_menu_item
+    communication:
+      permissions:
+        - can_see_menu_item
+    community:
+      permissions:
+        - can_see_menu_item
+    dashboard:
+      permissions:
+        - can_access_dashboard
+        - can_see_menu_item

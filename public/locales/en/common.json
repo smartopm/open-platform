@@ -348,7 +348,8 @@
     "contractor": "Contractor",
     "site_worker": "Site Worker",
     "site_manager": "Site Manager",
-    "security_supervisor": "Security Supervisor"
+    "security_supervisor": "Security Supervisor",
+    "consultant": "Consultant"
   },
   "table_headers": {
     "date_created": "Date Created",

@@ -152,7 +152,7 @@ module Users
 
     VALID_USER_TYPES = %w[security_guard admin resident contractor
                           prospective_client client visitor
-                          custodian site_worker site_manager security_supervisor].freeze
+                          custodian site_worker site_manager security_supervisor consultant].freeze
     VALID_STATES = %w[valid pending banned expired].freeze
     DEFAULT_PREFERENCE = %w[com_news_sms com_news_email weekly_point_reminder_email].freeze
 
