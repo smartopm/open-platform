@@ -135,13 +135,7 @@ module Mutations
       end
 
       def permissions_checks?
-        ::Policy::ApplicationPolicy.new(
-          context[:current_user], nil
-        ).permission?(
-          admin: true,
-          module: :user,
-          permission: :can_update_user_details,
-        )
+        permitted?(module: :user, permission: :can_update_user_details)
       end
     end
     # rubocop: enable Metrics/ClassLength

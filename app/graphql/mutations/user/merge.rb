@@ -41,13 +41,7 @@ module Mutations
       end
 
       def permissions_checks?
-        ::Policy::ApplicationPolicy.new(
-          context[:current_user], nil
-        ).permission?(
-          admin: true,
-          module: :user,
-          permission: :can_merge_users,
-        )
+        permitted?(module: :user, permission: :can_merge_users)
       end
     end
   end
