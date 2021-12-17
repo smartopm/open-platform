@@ -12,7 +12,7 @@ export default function ImageAuth({ imageLink, className, type, alt, style }) {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${authState.token}`,
-        'Cache-Control': 'no-cache'
+        'Cache-Control': 'no-store'
       }
     }
     const { response, isError, loading } = useFetchMedia(imageLink, options)
