@@ -417,7 +417,7 @@ export default function CommunitySettings({ data, refetch }) {
         <ImageAuth
           imageLink={data.imageUrl}
           className="img-responsive img-thumbnail"
-          style={{ height: '70px', width: '70px' }}
+          style={{ height: '150px', width: '40px' }}
         />
         <div className={classes.upload}>
           <Typography variant="caption" style={{ fontWeight: 'bold', marginLeft: '10px' }}>

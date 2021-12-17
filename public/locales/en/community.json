@@ -1,7 +1,7 @@
 {
     "community": {
       "community_logo": "Community Logo",
-      "change_community_logo": "You can change your community logo here",
+      "change_community_logo": "You can change your community logo here. Recommended format is a 150 x 40 px PNG",
       "upload_logo": "Upload new logo",
       "support_contact": "Support Contact Information",
       "make_changes_support_contact": "Make changes to your contact information here.",
