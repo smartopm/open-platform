@@ -42,8 +42,7 @@ class Notifier
   def self.label(short_desc)
     return nil if short_desc.blank?
 
-    Labels::Label.where(short_desc: short_desc)
-                 .includes(:users, :community).first
+    Labels::Label.where(short_desc: short_desc).first
   end
 
   # rubocop:disable Metrics/CyclomaticComplexity

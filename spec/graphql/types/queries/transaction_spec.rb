@@ -66,6 +66,9 @@ RSpec.describe Types::Queries::Transaction do
             depositor{
               name
             }
+            planPayments {
+              id
+            }
           }
         }
       GQL

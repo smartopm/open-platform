@@ -165,6 +165,7 @@ RSpec.describe Types::Queries::Note do
           id
           name
           imageUrl
+          avatarUrl
         }
         author {
           id
@@ -179,6 +180,10 @@ RSpec.describe Types::Queries::Note do
           userId
           reminderTime
         }
+        parentNote {
+          id
+        }
+        documents
       GQL
     end
 

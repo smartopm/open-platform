@@ -70,6 +70,10 @@ RSpec.describe Types::Queries::LandParcel do
           address1
           longX
           latY
+          imageUrls
+          accounts {
+            id
+          }
           paymentPlans{
             id
             startDate
@@ -155,6 +159,16 @@ RSpec.describe Types::Queries::LandParcel do
           landParcel(id: "#{land_parcel.id}") {
             id
             address1
+            imageUrls
+            accounts {
+              id
+            }
+            paymentPlans{
+              id
+              planPayments{
+                id
+              }
+            }
           }
           })
       end
@@ -230,6 +244,9 @@ RSpec.describe Types::Queries::LandParcel do
         %(query {
             userLandParcels(userId: "#{current_user.id}"){
               id
+              accounts{
+                id
+              }
             }
           })
       end

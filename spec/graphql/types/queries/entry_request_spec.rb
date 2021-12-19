@@ -57,6 +57,8 @@ RSpec.describe Types::Queries::EntryRequest do
       %(query {
         entryRequests {
             id
+            videoUrl
+            imageUrls
           }
         })
     end
@@ -77,6 +79,11 @@ RSpec.describe Types::Queries::EntryRequest do
           visitationDate
           endsAt
           startsAt
+          imageUrls
+          videoUrl
+          guest {
+            id
+          }
         }
         })
     end
@@ -100,6 +107,8 @@ RSpec.describe Types::Queries::EntryRequest do
           revokedAt
           revoked
           active
+          imageUrls
+          videoUrl
         }
         })
     end
@@ -111,6 +120,9 @@ RSpec.describe Types::Queries::EntryRequest do
           guest {
             id
             name
+          }
+          user {
+            id
           }
         }
         })
