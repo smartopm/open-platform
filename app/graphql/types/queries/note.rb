@@ -60,6 +60,13 @@ module Types::Queries::Note
       argument :limit, Integer, required: false
       argument :offset, Integer, required: false
     end
+
+    field :processes, [Types::NoteType], null: false do
+      description 'Returns a list of processes'
+      argument :offset, Integer, required: false
+      argument :limit, Integer, required: false
+      argument :query, String, required: false
+    end
   end
   # rubocop:enable Metrics/BlockLength
 
@@ -197,6 +204,20 @@ module Types::Queries::Note
                             .with_attached_documents
   end
   # rubocop:enable Metrics/MethodLength
+
+  def processes(offset: 0, limit: 50, query: nil)
+    unless permitted?(module: :note, permission: :can_fetch_flagged_notes)
+      raise GraphQL::ExecutionError,
+            I18n.t('errors.unauthorized')
+    end
+
+    notes = flagged_notes_query(query)
+
+    notes
+      .where(category: 'form')
+      .for_site_manager(current_user)
+      .limit(limit).offset(offset)
+  end
 
   private
 
