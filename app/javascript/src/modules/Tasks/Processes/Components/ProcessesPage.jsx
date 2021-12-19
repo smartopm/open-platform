@@ -1,9 +1,8 @@
 import React from 'react';
+import ProcessesList from './ProcessesList';
 
 export default function ProcessesPage() {
   return(
-    <>
-      <div>My list of processes</div>
-    </>
+    <ProcessesList />
   );
 };
