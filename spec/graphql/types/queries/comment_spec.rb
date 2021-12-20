@@ -54,6 +54,7 @@ RSpec.describe Types::Queries::Comment do
               content
               discussionId
               id
+              imageUrl
             }
         })
     end

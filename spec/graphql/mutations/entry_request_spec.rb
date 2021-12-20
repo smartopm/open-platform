@@ -419,7 +419,11 @@ RSpec.describe Mutations::EntryRequest do
     end
 
     it 'adds a note to an entry request' do
-      image = Rack::Test::UploadedFile.new('spec/support/test_image.png', 'image/png')
+      image = ActiveStorage::Blob.create_and_upload!(
+        io: File.open(Rails.root.join('spec/support/test_image.png')),
+        filename: 'test_image.png',
+        content_type: 'image/png',
+      )
       variables = {
         id: entry_request.id,
         note: 'The vehicle was too noisy',

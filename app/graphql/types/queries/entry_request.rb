@@ -78,7 +78,7 @@ module Types::Queries::EntryRequest
 
     entry_requests = context[:site_community].entry_requests
                                              .where('guest_id IS NOT NULL AND visitation_date IS NOT NULL')
-                                             .includes(:user, :guest, :entry_times, :invites)
+                                             .includes(:user, :guest)
                                              .limit(limit)
                                              .offset(offset)
                                              .unscope(:order)
@@ -113,7 +113,7 @@ module Types::Queries::EntryRequest
     context[:site_community]
       .entry_requests
       .where.not(granted_at: nil)
-      .includes(:user, :guest, :entry_times, :invites)
+      .includes(:user, :guest)
       .search(or: [{ query: (query.presence || '.') }, { name: { matches: query } }])
       .limit(limit).offset(offset)
       .unscope(:order).order(granted_at: :desc)

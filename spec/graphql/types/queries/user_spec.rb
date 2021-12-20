@@ -80,6 +80,10 @@ RSpec.describe Types::Queries::User do
       %(query {
         user(id:"#{current_user.id}") {
           id
+          avatarUrl
+          accounts {
+            id
+          }
         }
       })
     end
@@ -124,6 +128,10 @@ RSpec.describe Types::Queries::User do
           usersLite(query: $query, limit: $limit) {
             id
             name
+            avatarUrl
+            accounts {
+              id
+            }
           }
       })
     end

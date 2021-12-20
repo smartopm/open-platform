@@ -70,7 +70,7 @@ module Types::Queries::Note
     end
 
     context[:site_community].notes.where(flagged: false)
-                            .includes(:user, :note_comments)
+                            .includes(:user)
                             .limit(limit).offset(offset)
   end
 

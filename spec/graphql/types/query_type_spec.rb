@@ -37,6 +37,10 @@ RSpec.describe Types::QueryType do
               name
               id
             }
+            user {
+              id
+            }
+            imageUrls
           }
         })
     end
@@ -295,7 +299,24 @@ RSpec.describe Types::QueryType do
               id
               user {
                 name
+                avatarUrl
               }
+              author {
+                id
+              }
+              assignees {
+                id
+              }
+              assigneeNotes {
+                id
+              }
+              parentNote {
+                id
+              }
+              subTasks {
+                id
+              }
+              attachments
             }
         })
     end
