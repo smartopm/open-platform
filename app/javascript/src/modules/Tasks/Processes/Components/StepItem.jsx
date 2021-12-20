@@ -28,7 +28,7 @@ export default function StepItem({
   return (
     <Card clickData={{clickable, handleClick}} styles={styles} contentStyles={{ padding: '4px' }}>
       <Grid container>
-        <Grid item md={5} xs={8} style={{ display: 'flex', alignItems: 'center' }} data-testid="task_body_section">
+        <Grid item md={12} xs={8} style={{ display: 'flex', alignItems: 'center' }} data-testid="task_body_section">
           <Button
             onClick={(e) => handleStepCompletion(e, step.id, !step.completed)}
             startIcon={
@@ -113,10 +113,6 @@ StepItem.propTypes = {
 
 const useStyles = makeStyles(() => ({
   taskBody: {
-    maxWidth: '42ch',
-    overflow: 'hidden',
-    whiteSpace: 'nowrap',
-    textOverflow: 'ellipsis',
     paddingLeft: '3px'
   },
   taskBodyMobile: {
@@ -126,24 +122,4 @@ const useStyles = makeStyles(() => ({
     textOverflow: 'ellipsis',
     paddingLeft: '3px'
   },
-  icons: {
-    display: 'flex',
-    alignItems: 'center',
-    width: '45%',
-    justifyContent: 'space-evenly'
-  },
-  iconItem: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontSize: '14px',
-  },
-  completed: {
-    backgroundColor: '#4caf50',
-    color: '#ffffff'
-  },
-  open: {
-    backgroundColor: '#2196f3',
-    color: '#ffffff'
-  }
 }));
