@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
-import { StepItem } from './StepItem';
+import StepItem from './StepItem';
 import { objectAccessor } from '../../../../utils/helpers';
 
 export default function ProjectSteps({
@@ -99,7 +99,6 @@ const Step = {
 
   ProjectSteps.propTypes = {
   data: PropTypes.arrayOf(PropTypes.shape(Step)).isRequired,
-  handleCompleteNote: PropTypes.func.isRequired,
   setSelectedStep: PropTypes.func.isRequired,
   handleStepCompletion: PropTypes.func.isRequired,
 };

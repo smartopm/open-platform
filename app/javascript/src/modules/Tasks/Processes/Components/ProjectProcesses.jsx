@@ -1,7 +1,7 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext } from 'react'
 import PropTypes from 'prop-types';
 import { Typography } from '@mui/material';
-import { TaskContext } from '../../Context/';
+import { TaskContext } from "../../Context";
 import ProjectSteps from './Steps';
 import TaskUpdate from '../../containers/TaskUpdate';
 
@@ -32,24 +32,31 @@ export function ProjectProcessesSplitView({ refetch }) {
   )
 }
 
+const Step = {
+  id: PropTypes.string,
+  body: PropTypes.string,
+  completed: PropTypes.bool,
+  author: PropTypes.shape({
+    name: PropTypes.string,
+    id: PropTypes.string
+  }),
+  assignees: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string,
+      name: PropTypes.string
+    })
+  ),
+  subTasks: PropTypes.arrayOf(PropTypes.object),
+  dueDate: PropTypes.string,
+  formUserId: PropTypes.string
+}
 ProjectProcesses.defaultProps = {}
 
 ProjectProcesses.propTypes = {
-  data: PropTypes.shape({
-    id: PropTypes.string,
-    body: PropTypes.string,
-    completed: PropTypes.bool,
-    author: PropTypes.shape({
-      name: PropTypes.string,
-      id: PropTypes.string
-    }),
-    assignees: PropTypes.arrayOf(
-      PropTypes.shape({
-        id: PropTypes.string,
-        name: PropTypes.string
-      })
-    ),
-    subTasks: PropTypes.arrayOf(PropTypes.object),
-    dueDate: PropTypes.string
-  }).isRequired
+  data: PropTypes.arrayOf(PropTypes.shape(Step)).isRequired,
+  refetch: PropTypes.func.isRequired
+}
+
+ProjectProcessesSplitView.propTypes = {
+ refetch: PropTypes.func.isRequired
 }

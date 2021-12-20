@@ -2,7 +2,6 @@
 /* eslint-disable max-len */
 /* eslint-disable max-lines */
 import React from 'react';
-import { useTranslation } from 'react-i18next';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { Grid, IconButton, Typography, Button } from '@material-ui/core';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
@@ -14,7 +13,7 @@ import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import Card from '../../../../shared/Card';
 
 
-export function StepItem({
+export default function StepItem({
   step,
   clickable,
   handleClick,
@@ -24,7 +23,6 @@ export function StepItem({
   handleStepCompletion
 }) {
   const classes = useStyles();
-  const { t } = useTranslation('task');
   const matches = useMediaQuery('(max-width:800px)');
 
   return (
@@ -69,7 +67,7 @@ export function StepItem({
             component="p"
             className={matches ? classes.taskBodyMobile : classes.taskBody}
           >
-           {step.body}
+            {step.body}
           </Typography>
         </Grid>
       </Grid>

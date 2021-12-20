@@ -1,13 +1,12 @@
 import React, {useState, useEffect } from 'react'
-import PropTypes from 'prop-types';
 import { useHistory, useParams } from 'react-router';
 import { useQuery } from 'react-apollo';
 import { Grid,Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import TaskContextProvider from '../../Context/';
+import TaskContextProvider from "../../Context";
 import { StyledTabs, StyledTab, TabPanel, a11yProps } from '../../../../components/Tabs';
 import ProjectOverview, { ProjectOverviewSplitView } from './ProjectOverview';
-import { sanitizeText, useParamsQuery } from '../../../../utils/helpers';
+import { objectAccessor, sanitizeText, useParamsQuery } from '../../../../utils/helpers';
 import ProjectProcesses, { ProjectProcessesSplitView } from './ProjectProcesses';
 import ErrorPage from '../../../../components/Error'
 import Loading from '../../../../shared/Loading'
@@ -42,13 +41,13 @@ export default function TaskProcessDetail() {
 
 
   function handleTabValueChange(_event, newValue) {
-    history.push(`?tab=${Object.keys(TAB_VALUES).find(key => TAB_VALUES[key] === newValue)}`);
-    setTabValue(newValue);
+    history.push(`?tab=${Object.keys(TAB_VALUES).find(key => objectAccessor(TAB_VALUES, key) === newValue)}`);
+    setTabValue(Number(newValue));
   }
 
   useEffect(() => {
     if (tab) {
-      setTabValue(TAB_VALUES[tab]);
+      setTabValue(objectAccessor(TAB_VALUES, tab));
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [path, tab]);
@@ -64,14 +63,14 @@ export default function TaskProcessDetail() {
           <Grid item md={6} xs={12}>
             <Grid container>
               <Grid item>
-                  <Typography variant="h6">
-                    <span
+                <Typography variant="h6">
+                  <span
                   // eslint-disable-next-line react/no-danger
-                  dangerouslySetInnerHTML={{
+                    dangerouslySetInnerHTML={{
                     __html: sanitizeText(projectData?.task?.body)
                   }}
-                />
-              </Typography>
+                  />
+                </Typography>
               </Grid>
             </Grid>
             <StyledTabs
@@ -86,18 +85,18 @@ export default function TaskProcessDetail() {
             </StyledTabs>
 
             <TabPanel value={tabValue} index={0}>
-                <ProjectOverview data={projectData?.task} />
+              <ProjectOverview data={projectData?.task} />
             </TabPanel>
             <TabPanel value={tabValue} index={1}>
-                <ProjectProcesses data={stepsData?.taskSubTasks} refetch={refetch} />
+              <ProjectProcesses data={stepsData?.taskSubTasks} refetch={refetch} />
             </TabPanel>
           </Grid>
           <Grid item md={6} xs={12}>
             <TabPanel value={tabValue} index={0}>
-                <ProjectOverviewSplitView data={stepsData?.taskSubTasks} refetch={refetch}/>
+              <ProjectOverviewSplitView data={stepsData?.taskSubTasks} refetch={refetch} />
             </TabPanel>
             <TabPanel value={tabValue} index={1}>
-                <ProjectProcessesSplitView refetch={refetch}/>
+              <ProjectProcessesSplitView refetch={refetch} />
             </TabPanel>
           </Grid>
         </Grid>
@@ -105,7 +104,3 @@ export default function TaskProcessDetail() {
     </div>
   )
 }
-
-TaskProcessDetail.defaultProps = {}
-
-TaskProcessDetail.propTypes = {}
