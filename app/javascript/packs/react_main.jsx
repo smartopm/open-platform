@@ -70,6 +70,7 @@ import EmployeeTimeSheetLog
 import EmailBuilderDialog
   from '../src/modules/Emails/components/EmailBuilderDialog';
 import { PRIMARY_DOMAINS } from '../src/utils/constants';
+import TaskProcessDetail from '../src/modules/Tasks/Processes/Components/TaskProcessDetail';
 
 // The routes defined here are carefully arranged, be mindful when changing them
 
@@ -392,6 +393,10 @@ const App = () => {
                               <Route
                                 path="/user_form/:userId?/:formUserId?/:type?"
                                 component={FormPage}
+                              />
+                               <Route
+                                path="/processes/:id"
+                                component={TaskProcessDetail}
                               />
 
                               <AdminRoutes>

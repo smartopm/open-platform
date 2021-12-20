@@ -24,6 +24,7 @@ module Types
     field :sub_tasks, [Types::NoteType], null: true
     field :documents, [GraphQL::Types::JSON], null: true
     field :attachments, [GraphQL::Types::JSON], null: true
+    field :form_user_id, ID, null: true
 
     # move this in a shareable place
     def host_url(type)
