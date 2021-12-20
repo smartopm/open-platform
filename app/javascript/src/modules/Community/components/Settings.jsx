@@ -118,6 +118,7 @@ export default function CommunitySettings({ data, refetch }) {
   const [smsPhoneNumbers, setSMSPhoneNumbers] = useState(data?.smsPhoneNumbers?.join(',') || '');
   const [emergencyCallNumber, setEmergencyCallNumber] = useState(data?.emergencyCallNumber || '');
   const [communityFeatures, setCommunityFeatures] = useState(features);
+  const [logoDimension, setLogoDimension] = useState([])
   const { t } = useTranslation(['community', 'common']);
   const { onChange, signedBlobId } = useFileUpload({
     client: useApolloClient()
@@ -283,6 +284,7 @@ export default function CommunitySettings({ data, refetch }) {
               setAlertOpen(true);
               return false
             }
+            setLogoDimension([image.width, image.height])
             uploadLogo(file);
           },
           false
@@ -400,8 +402,17 @@ export default function CommunitySettings({ data, refetch }) {
     setCurrency(data.currency);
     setLocale(data.locale);
     setLanguage(data.language);
+    updateLogoDimension(data.imageUrl);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
+
+  function updateLogoDimension(url) {
+    const img = new Image();
+    img.addEventListener("load", function() {
+      setLogoDimension([img.width, img.height])
+    });
+    img.src = url;
+  }
 
   return (
     <Container>
@@ -416,8 +427,8 @@ export default function CommunitySettings({ data, refetch }) {
       <div className={classes.avatar}>
         <ImageAuth
           imageLink={data.imageUrl}
-          className="img-responsive img-thumbnail"
-          style={{ height: '70px', width: '70px' }}
+          className="img-responsive"
+          style={{ marginTop: '10px', padding: '0.25rem', height: (logoDimension[1] + 6), width: (logoDimension[0] + 7) }}
         />
         <div className={classes.upload}>
           <Typography variant="caption" style={{ fontWeight: 'bold', marginLeft: '10px' }}>
