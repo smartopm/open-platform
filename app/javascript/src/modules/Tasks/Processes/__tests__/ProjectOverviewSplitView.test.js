@@ -8,7 +8,7 @@ import authState from '../../../../__mocks__/authstate';
 import { TaskContext } from '../../Context';
 import MockedThemeProvider from '../../../__mocks__/mock_theme';
 import taskMock from '../../__mocks__/taskMock'
-import ProjectProcesses from '../Components/ProjectProcesses';
+import { ProjectOverviewSplitView } from '../Components/ProjectOverview';
 
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
@@ -27,7 +27,7 @@ describe('Project Processes Tab', () => {
                   handleStepCompletion: jest.fn
               }}
               >
-                <ProjectProcesses data={data} refetch={jest.fn} />
+                <ProjectOverviewSplitView data={data} refetch={jest.fn} />
               </TaskContext.Provider>
             </MockedThemeProvider>
           </BrowserRouter>
@@ -35,7 +35,7 @@ describe('Project Processes Tab', () => {
       </Context.Provider>
     );
 
-    expect(container.queryByTestId('processes-header')).toBeInTheDocument();
+    expect(container.queryByTestId('requirements-section')).toBeInTheDocument();
     expect(container.queryByTestId('step_completion_toggle_button')).toBeInTheDocument();
     expect(container.queryByTestId('step_body')).toBeInTheDocument();
     expect(container.queryByTestId('show_step_sub_steps')).toBeInTheDocument();
@@ -53,14 +53,14 @@ describe('Project Processes Tab', () => {
                   handleStepCompletion: jest.fn
               }}
               >
-                <ProjectProcesses data={[]} refetch={jest.fn} />
+                <ProjectOverviewSplitView data={data} refetch={jest.fn} />
               </TaskContext.Provider>
             </MockedThemeProvider>
           </BrowserRouter>
         </MockedProvider>
       </Context.Provider>
     );
-    
+
     expect(container.queryByTestId('no-steps')).toBeInTheDocument();
   });
 });

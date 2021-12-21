@@ -52,7 +52,7 @@ export default function ProjectOverview({ data }){
         open={!!updateStatus.message}
         handleClose={handleMessageAlertClose}
       />
-      <Grid container>
+      <Grid container data-testid="project-information">
         {formEntriesData?.length
         ? (formEntriesData.map((d) => (
           <Grid container key={d.id}>
@@ -61,7 +61,7 @@ export default function ProjectOverview({ data }){
           </Grid>
         )))
         : (
-          <CenteredContent>No Project Information</CenteredContent>
+          <CenteredContent data-testid="no-project-info">No Project Information</CenteredContent>
         )}
         {descriptionData && (
         <Grid container spacing={1} style={{ marginTop: '32px' }}>
@@ -82,7 +82,7 @@ export function ProjectOverviewSplitView({ data, refetch }) {
   return (
     <>
       <Grid container>
-        <Grid item md={12}>
+        <Grid item md={12} data-testid="requirements-section">
           <Typography variant="h6">Requirements</Typography>
           <Typography variant="subtitle">Please read the required guideline. </Typography>
           <Link to="https://tilisi.doublegdp.com/news/post/8">Go to Guideline.</Link>

@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
+import { Typography } from '@material-ui/core';
 import StepItem from './StepItem';
 import { objectAccessor } from '../../../../utils/helpers';
 
@@ -38,7 +39,8 @@ export default function ProjectSteps({
 
   return (
     <>
-      {data?.length > 0 && data?.map(firstLevelStep => (
+      {data?.length > 0 
+      ? (data?.map(firstLevelStep => (
         <>
           <div
             className={classes.levelOne}
@@ -73,7 +75,8 @@ export default function ProjectSteps({
               </>
             )}
         </>
-      ))}
+      )))
+    :(<Typography data-testid="no-steps">No Steps</Typography>)}
     </>
   );
 }

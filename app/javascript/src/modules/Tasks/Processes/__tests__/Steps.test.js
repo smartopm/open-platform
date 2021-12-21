@@ -29,4 +29,20 @@ describe('Project Steps', () => {
     fireEvent.click(container.queryByTestId('step_completion_toggle_button'));
     expect(handleStepCompletion).toHaveBeenCalled();
   });
+
+  it('should render No Steps', () => {
+    const handleStepCompletion = jest.fn()
+    const container = render(
+      <BrowserRouter>
+        <ProjectSteps
+          data={[]}
+          clickable
+          setSelectedStep={jest.fn()}
+          handleStepCompletion={handleStepCompletion}
+        />
+      </BrowserRouter>
+    );
+    
+    expect(container.queryByTestId('no-steps')).toBeInTheDocument();
+  });
 });
