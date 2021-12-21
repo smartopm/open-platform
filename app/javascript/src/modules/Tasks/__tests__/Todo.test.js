@@ -71,7 +71,6 @@ describe('Todo list main page', () => {
         }
     ];
 
-
       const container = render(
         <ApolloProvider client={createClient}>
           <Context.Provider value={data}>
@@ -84,25 +83,9 @@ describe('Todo list main page', () => {
         </ApolloProvider>
       );
 
-      expect(container.queryByTestId('toggle_filter_btn')).toBeInTheDocument();
+      expect(container.queryByTestId('filter')).toBeInTheDocument();
       expect(container.queryByTestId('filter_container')).toBeInTheDocument();
       expect(container.queryByTestId('create_task_btn')).toBeInTheDocument();
-      expect(container.queryByLabelText('search tasks')).toBeInTheDocument();
-      /*
-      TODO: Bonny & Victor
-      With the TodoList component now rendering asynchronously, we need to wait for
-      some elements to render.
-
-      However, this is an issue because mocking the nested flaggedNotes query is not working,
-      Graphql throws an error in the test.
-
-      We will figure out how to properly handle that query in tests. This is commented out but it
-      has been manually verified in the UI.
-
-      await waitFor(() => {
-        expect(container.queryByTestId('prev-btn')).toBeInTheDocument();
-        expect(container.queryByTestId('next-btn')).toBeInTheDocument();
-      })
-      */
+      expect(container.queryByTestId('search')).toBeInTheDocument();
   });
 });

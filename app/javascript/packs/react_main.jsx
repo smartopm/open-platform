@@ -40,6 +40,7 @@ import {AUTH_TOKEN_KEY} from '../src/utils/apollo';
 import Feedback from '../src/containers/Activity/Feedback';
 import FeedbackSuccess from '../src/containers/Activity/FeedbackSuccess';
 import AllNotes from '../src/containers/Activity/AllNotes';
+import ProcessesPage from '../src/modules/Tasks/Processes/Components/ProcessesPage';
 import FeedbackPage from '../src/containers/Activity/AllFeedback';
 import ShowroomLogs from '../src/containers/showroom/ShowroomLogs';
 import ClientRequestForm from '../src/containers/ClientRequestForm';
@@ -424,6 +425,7 @@ const App = () => {
                                     path="/todo"
                                     render={() => <Redirect to="/tasks" />}
                                   />
+                                  <Route exact path="/processes" component={ProcessesPage} />
                                   <Route path="/feedbacks" component={FeedbackPage} />
                                   <Route path="/event_logs" component={EventLogs} />
                                   <Route path="/comments" exact component={CommentsPage} />

@@ -7,16 +7,16 @@ module Notes
     include NoteHistoryRecordable
 
     search_scope :search do
-      attributes :created_at, :completed, :due_date, :flagged, :category
+      attributes :created_at, :completed, :due_date, :flagged, :category, :body
     end
 
     search_scope :search_user do
-      attributes :created_at, :completed, :due_date, :flagged, :category
+      attributes :created_at, :completed, :due_date, :flagged, :category, :body
       attributes user: 'user.name'
     end
 
     search_scope :search_assignee do
-      attributes :created_at, :completed, :due_date, :flagged, :category
+      attributes :created_at, :completed, :due_date, :flagged, :category, :body
       attributes assignees: ['assignees.name']
     end
 

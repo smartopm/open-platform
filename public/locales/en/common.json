@@ -312,6 +312,7 @@
     "edit_task": "Edit Task",
     "add_subtask": "Add Sub Task",
     "open_task_details": "Open Task Details",
+    "open_project_details": "Open Project Details",
     "upload_document": "Upload a Document",
     "leave_a_comment": "Leave a comment",
     "mark_complete": "Mark as Complete",

@@ -79,5 +79,9 @@
     "overview": "Overview",
     "processes": "Processes",
     "documents": "Documents"
+
+  },
+  "process": {
+    "processes": "Processes"
   }
 }

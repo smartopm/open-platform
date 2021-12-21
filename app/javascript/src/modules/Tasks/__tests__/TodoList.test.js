@@ -54,8 +54,8 @@ describe('Test the Todo page', () => {
 
     expect(screen.queryByTestId('create_task_btn')).toBeTruthy()
     expect(screen.queryByTestId('todo-container')).toBeTruthy()
-    expect(screen.queryByTestId('search_input')).toBeTruthy()
-    expect(screen.queryByTestId('toggle_filter_btn')).toBeTruthy()
+    expect(screen.queryByTestId('search')).toBeTruthy()
+    expect(screen.queryByTestId('filter_container')).toBeInTheDocument();
   })
 
   it('renders task form modal', async () => {

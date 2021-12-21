@@ -55,7 +55,7 @@ RSpec.describe Types::Queries::Note do
         body: 'Note body',
         description: 'Test parent task 1',
         user_id: site_worker.id,
-        category: 'emergency',
+        category: 'form',
         flagged: true,
         community_id: site_worker.community_id,
         author_id: site_worker.id,
@@ -137,6 +137,25 @@ RSpec.describe Types::Queries::Note do
       <<~GQL
         query flaggedNotes($query: String) {
           flaggedNotes(query: $query) {
+            #{task_fragment}
+            subTasks {
+              #{task_fragment}
+              subTasks {
+                #{task_fragment}
+                subTasks {
+                  #{task_fragment}
+                }
+              }
+            }
+          }
+        }
+      GQL
+    end
+
+    let(:processes_query) do
+      <<~GQL
+        query processes($query: String) {
+          processes(query: $query) {
             #{task_fragment}
             subTasks {
               #{task_fragment}
@@ -236,6 +255,35 @@ RSpec.describe Types::Queries::Note do
                                          site_community: site_worker.community,
                                        }).as_json
       expect(result.dig('data', 'flaggedNotes').length).to eql 2
+    end
+
+    it 'should retrieve list of processes' do
+      result = DoubleGdpSchema.execute(processes_query, context: {
+                                         current_user: site_worker,
+                                         site_community: site_worker.community,
+                                       }).as_json
+      expect(result.dig('data', 'processes').length).to eql 1
+    end
+
+    it 'should retrieve list of processes without due date' do
+      variables = { query: 'due_date:nil' }
+      result = DoubleGdpSchema.execute(processes_query,
+                                       variables: variables,
+                                       context: {
+                                         current_user: site_worker,
+                                         site_community: site_worker.community,
+                                       }).as_json
+      expect(result.dig('errors', 0, 'message')).to be_nil
+      expect(result.dig('data', 'processes').length).to eql 1
+    end
+
+    it 'should raise unauthorised error when current user is nil' do
+      result = DoubleGdpSchema.execute(processes_query, context: {
+                                         current_user: nil,
+                                         site_community: site_worker.community,
+                                       }).as_json
+      expect(result.dig('errors', 0, 'message'))
+        .to include('Unauthorized')
     end
 
     it 'returns empty array if no flagged notes exits' do
