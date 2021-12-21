@@ -27,7 +27,7 @@ const authState = {
     userType: 'admin',
     permissions: [
       { module: 'note',
-        permissions: ['can_see_menu_item', 'can_get_user_tasks', 'can_fetch_task_by_id']
+        permissions: ['can_see_menu_item', 'can_get_user_tasks', 'can_fetch_task_by_id', 'can_create_parent_task', 'can_create_sub_task']
       },
       { module: 'gate_access',
         permissions: ['can_see_menu_item']

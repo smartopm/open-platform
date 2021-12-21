@@ -38,6 +38,7 @@ import TodoItem from './TodoItem';
 import FloatingButton from '../../../shared/buttons/FloatingButton';
 import SplitScreen from '../../../shared/SplitScreen';
 import { tasksQueryBuilderInitialValue, tasksQueryBuilderConfig, tasksFilterFields } from '../../../utils/constants';
+import AccessCheck from '../../Permissions/Components/AccessCheck';
 
 export default function TodoList({
   isDialogOpen,
@@ -564,12 +565,14 @@ export default function TodoList({
             </CenteredContent>
           </>
         )}
-        <FloatingButton
-          variant="extended"
-          handleClick={openModal}
-          color="primary"
-          data-testid="create_task_btn"
-        />
+        <AccessCheck module='note' allowedPermissions={['can_create_parent_task']}>
+          <FloatingButton
+            variant="extended"
+            handleClick={openModal}
+            color="primary"
+            data-testid="create_task_btn"
+          />
+        </AccessCheck>
       </div>
     </>
   );

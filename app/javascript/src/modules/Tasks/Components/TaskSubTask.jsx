@@ -30,6 +30,7 @@ import CenteredContent from '../../../shared/CenteredContent';
 import { SubTasksQuery } from '../graphql/task_queries';
 import { Spinner } from '../../../shared/Loading';
 import TaskAddForm from './TaskForm';
+import AccessCheck from '../../Permissions/Components/AccessCheck';
 
 export default function TaskSubTask({ taskId, users, assignUser, handleSplitScreenOpen, handleTaskCompletion }) {
   const classes = useStyles();
@@ -102,14 +103,16 @@ export default function TaskSubTask({ taskId, users, assignUser, handleSplitScre
           </Typography>
         </Grid>
         <Grid item md={1} xs={1} className={classes.addSubTask}>
-          <IconButton
-            edge="end"
-            onClick={handleAddSubTask}
-            data-testid="add_sub_task_icon"
-            color="primary"
-          >
-            <AddIcon />
-          </IconButton>
+          <AccessCheck module='note' allowedPermissions={['can_create_sub_task']}> 
+            <IconButton
+              edge="end"
+              onClick={handleAddSubTask}
+              data-testid="add_sub_task_icon"
+              color="primary"
+            >
+              <AddIcon />
+            </IconButton>
+          </AccessCheck>
         </Grid>
       </Grid>
       {data?.taskSubTasks?.length ? (
