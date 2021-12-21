@@ -6,7 +6,7 @@ import AccessCheck from '../Permissions/Components/AccessCheck';
 import TaskPageRedirect from './Components/TaskPageRedirect';
 
 const tasksPermissions = [
-  'can_create_note',
+  // 'can_create_note',
   'can_get_task_count',
   'can_get_task_stats',
   'can_get_own_tasks',
@@ -15,12 +15,12 @@ const tasksPermissions = [
   'can_fetch_flagged_notes',
 ];
 const taskUpdatePermissions = [
-  'can_update_note',
-  'can_assign_note',
+  // 'can_update_note',
+  // 'can_assign_note',
   'can_set_note_reminder',
   'can_create_note_comment',
-  'can_update_note_comment',
-  'can_bulk_assign_note',
+  // 'can_update_note_comment',
+  // 'can_bulk_assign_note',
   'can_fetch_task_comments',
   'can_fetch_task_by_id'
 ];

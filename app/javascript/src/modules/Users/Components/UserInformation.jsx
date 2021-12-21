@@ -164,7 +164,7 @@ export default function UserInformation({
         <br />
         <FeatureCheck features={authState.user.community.features} name="Time Card">
           {authState.user.userType === 'custodian' &&
-            ['security_guard', 'contractor', 'security_supervisor'].includes(data.user.userType) && (
+            ['security_guard', 'contractor', 'security_supervisor', 'developer'].includes(data.user.userType) && (
               <ShiftButtons userId={userId} />
             )}
         </FeatureCheck>

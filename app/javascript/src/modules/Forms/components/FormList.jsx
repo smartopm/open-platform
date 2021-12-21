@@ -281,10 +281,10 @@ export function FormDialog({actionType, form, formMutation, open, setOpen, messa
   const [expiresAt, setExpiresAtDate] = useState(form?.expiresAt || null)
   const [isLoading, setLoading] = useState(false);
   const [multipleSubmissionsAllowed, setMultipleSubmissionsAllowed] = useState(form ? form.multipleSubmissionsAllowed : true)
-  const [preview, setPreview] = useState(form ? form.preview : false);
+  const [preview, setPreview] = useState(form ? form.preview : false)
   const authState = React.useContext(AuthStateContext);
-  const [roles, setRoles] = useState(form?.roles || []);
-  const communityRoles = authState?.user?.community?.roles;
+  const [roles, setRoles] = useState(form?.roles || [])
+  const communityRoles = authState?.user?.community?.roles
 
   function handleDateChange(date) {
     setExpiresAtDate(date)

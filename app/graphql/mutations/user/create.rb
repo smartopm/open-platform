@@ -38,6 +38,7 @@ module Mutations
         site_manager: { except: %i[state user_type phone_number email] },
         security_supervisor: { except: %i[state user_type phone_number email] },
         consultant: { except: %i[state user_type phone_number email] },
+        developer: { except: %i[state user_type phone_number email] },
 
       }.freeze
 

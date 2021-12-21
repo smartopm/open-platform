@@ -61,7 +61,7 @@ export default function TaskDetail({
       query:
         debouncedValue.length > 0
           ? debouncedValue
-          : 'user_type:admin OR user_type:custodian OR user_type:security_guard OR user_type:contractor',
+          : 'user_type:admin OR user_type:custodian OR user_type:security_guard OR user_type:contractor OR user_type:site_worker OR user_type:developer',
       limit: 10
     },
     errorPolicy: 'all',
@@ -206,6 +206,7 @@ export default function TaskDetail({
         <Grid>
           <div className={classes.section} data-testid="task-info-section">
             <TaskInfoTop
+              currentUser={currentUser}
               users={users}
               data={data}
               setDate={setDueDate}

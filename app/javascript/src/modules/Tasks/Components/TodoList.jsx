@@ -104,7 +104,7 @@ export default function TodoList({
   }
 
   const [loadAssignees, { data: liteData }] = useLazyQuery(UsersLiteQuery, {
-    variables: { query: 'user_type:admin OR user_type:custodian OR user_type:security_guard OR user_type:contractor OR user_type:site_worker OR user_type:consultant'},
+    variables: { query: 'user_type:admin OR user_type:custodian OR user_type:security_guard OR user_type:contractor OR user_type:site_worker OR user_type:consultant OR user_type:developer'},
     errorPolicy: 'all'
   });
 
