@@ -7,12 +7,14 @@ import '@testing-library/jest-dom/extend-expect'
 
 const props = {
   openFlowModal: jest.fn(),
+  refetch: jest.fn(),
   actionFlow: {
     id: 'uuid00120',
     eventType: 'task_update',
     description: 'Some description',
     title: 'A workflow',
-    active: true
+    active: true,
+    createdAt: "2021-01-01"
   }
 }
 
