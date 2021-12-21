@@ -1125,7 +1125,7 @@ const useStyles = makeStyles(theme => ({
   preview: {
     marginTop: '10px',
     padding: '0.25rem',
-    height: ({ heightValue }) => heightValue + 6,
-    width: ({ widthValue }) => widthValue + 7
+    height: ({ heightValue }) => `${heightValue + 6}px`,
+    width: ({ widthValue }) => `${widthValue + 7}px`
   }
 }));
