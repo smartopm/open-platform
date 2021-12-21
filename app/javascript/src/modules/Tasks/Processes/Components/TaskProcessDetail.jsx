@@ -59,10 +59,10 @@ export default function TaskProcessDetail() {
   return (
     <div>
       <TaskContextProvider>
-        <Grid container>
+        <Grid container data-testid="process-detail-section">
           <Grid item md={6} xs={12}>
             <Grid container>
-              <Grid item>
+              <Grid item data-testid="project-title">
                 <Typography variant="h6">
                   <span
                   // eslint-disable-next-line react/no-danger
