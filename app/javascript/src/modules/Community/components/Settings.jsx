@@ -118,7 +118,8 @@ export default function CommunitySettings({ data, refetch }) {
   const [smsPhoneNumbers, setSMSPhoneNumbers] = useState(data?.smsPhoneNumbers?.join(',') || '');
   const [emergencyCallNumber, setEmergencyCallNumber] = useState(data?.emergencyCallNumber || '');
   const [communityFeatures, setCommunityFeatures] = useState(features);
-  const [logoDimension, setLogoDimension] = useState([])
+  const [logoDimension, setLogoDimension] = useState([]);
+  const [imageSrc, setImageSrc] = useState(null);
   const { t } = useTranslation(['community', 'common']);
   const { onChange, signedBlobId } = useFileUpload({
     client: useApolloClient()
@@ -133,7 +134,7 @@ export default function CommunitySettings({ data, refetch }) {
     errorPolicy: 'all'
   });
 
-  const classes = useStyles();
+  const classes = useStyles({ heightValue: logoDimension[1], widthValue: logoDimension[0] });
 
   function handleAddNumberOption() {
     setNumberOptions([...numberOptions, numbers]);
@@ -279,12 +280,13 @@ export default function CommunitySettings({ data, refetch }) {
           'load',
           // eslint-disable-next-line consistent-return
           () => {
-            if(image.height > 40 || image.width > 150) {
+            if (image.height > 40 || image.width > 150) {
               setMessage({ isError: true, detail: t('community.upload_error') });
               setAlertOpen(true);
-              return false
+              return false;
             }
-            setLogoDimension([image.width, image.height])
+            setLogoDimension([image.width, image.height]);
+            setImageSrc(reader.result);
             uploadLogo(file);
           },
           false
@@ -408,8 +410,8 @@ export default function CommunitySettings({ data, refetch }) {
 
   function updateLogoDimension(url) {
     const img = new Image();
-    img.addEventListener("load", function() {
-      setLogoDimension([img.width, img.height])
+    img.addEventListener('load', function() {
+      setLogoDimension([img.width, img.height]);
     });
     img.src = url;
   }
@@ -425,11 +427,13 @@ export default function CommunitySettings({ data, refetch }) {
       <Typography variant="h6">{t('community.community_logo')}</Typography>
       <Typography variant="caption">{t('community.change_community_logo')}</Typography>
       <div className={classes.avatar}>
-        <ImageAuth
-          imageLink={data.imageUrl}
-          className="img-responsive"
-          style={{ marginTop: '10px', padding: '0.25rem', height: (logoDimension[1] + 6), width: (logoDimension[0] + 7) }}
-        />
+        <>
+          {imageSrc ? (
+            <img src={imageSrc} className={classes.preview} alt="community logo" />
+          ) : (
+            <ImageAuth imageLink={data.imageUrl} className={`${classes.preview} img-responsive`} />
+          )}
+        </>
         <div className={classes.upload}>
           <Typography variant="caption" style={{ fontWeight: 'bold', marginLeft: '10px' }}>
             {t('community.upload_logo')}
@@ -1117,5 +1121,11 @@ const useStyles = makeStyles(theme => ({
   },
   menuItemRight: {
     marginLeft: '2.5em'
+  },
+  preview: {
+    marginTop: '10px',
+    padding: '0.25rem',
+    height: ({ heightValue }) => heightValue + 6,
+    width: ({ widthValue }) => widthValue + 7
   }
 }));
