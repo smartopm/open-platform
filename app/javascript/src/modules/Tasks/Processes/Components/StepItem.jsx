@@ -29,13 +29,13 @@ export default function StepItem({
   return (
     <Card clickData={{clickable, handleClick}} styles={styles} contentStyles={{ padding: '4px' }}>
       <Grid container>
-        <Grid item md={11} xs={8} style={{ display: 'flex', alignItems: 'center' }} data-testid="task_body_section">
+        <Grid item md={11} xs={8} style={{ display: 'flex', alignItems: 'center' }} data-testid="step_body_section">
           <Grid container style={{ display: 'flex', alignItems: 'center' }}>
             <Grid item md={1}>
               <IconButton
-                aria-controls="task-completion-toggle-button"
+                aria-controls="step-completion-toggle-button"
                 aria-haspopup="true"
-                data-testid="task_completion_toggle_button"
+                data-testid="step_completion_toggle_button"
                 onClick={(e) => handleStepCompletion(e, step.id, !step.completed)}
                 size="medium"
               >
@@ -49,7 +49,7 @@ export default function StepItem({
             <Grid item md={10}>
               <Typography
                 variant="body2"
-                data-testid="task_body"
+                data-testid="step_body"
                 component="p"
                 className={matches ? classes.taskBodyMobile : classes.taskBody}
               >
@@ -67,9 +67,9 @@ export default function StepItem({
           {step?.subTasks?.length > 0
             ? (
               <IconButton
-                aria-controls="show-task-subtasks-icon"
+                aria-controls="show-step-sub-steps-icon"
                 aria-haspopup="true"
-                data-testid="show_task_subtasks"
+                data-testid="show_step_sub_steps"
                 onClick={(e) => handleOpenSubStepsClick(e)}
               >
                 {openSubSteps
@@ -80,7 +80,7 @@ export default function StepItem({
               <IconButton
                 aria-controls="show-task-subtasks-icon"
                 aria-haspopup="true"
-                data-testid="show_task_subtasks"
+                data-testid="show_step_sub_steps"
                 disabled
               >
                 <KeyboardArrowDownIcon fontSize="small" />

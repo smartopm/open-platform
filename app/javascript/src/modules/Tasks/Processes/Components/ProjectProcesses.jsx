@@ -11,7 +11,7 @@ export default function ProjectProcesses({ data, refetch }){
   return (
     <>
       <br />
-      <Typography variant="h6">Process Steps</Typography>
+      <Typography variant="h6" data-testid="processes-header">Process Steps</Typography>
       <ProjectSteps
         data={data}
         setSelectedStep={setSelectedStep}
