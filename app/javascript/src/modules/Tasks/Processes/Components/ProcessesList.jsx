@@ -51,7 +51,7 @@ export default function ProcessesList() {
       <Grid item md={6} xs={6} style={{ display: 'flex', alignItems: 'center' }}>
         {/* <TaskQuickSearch filterTasks={handleTaskFilter} currentTile={currentTile} /> */}
       </Grid>
-      {data.processes.length ?
+      {data?.processes?.length ?
         (
           <div>
             {data.processes.map(task => (
