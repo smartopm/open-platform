@@ -52,6 +52,7 @@ export const TaskQuery = gql`
         body
       }
       attachments
+      formUserId
     }
   }
 `

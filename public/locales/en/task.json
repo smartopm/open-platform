@@ -74,6 +74,10 @@
   "bread_crumps": {
     "my_tasks": "My Tasks",
     "task_details": "Task Detail"
-
+  },
+  "processes": {
+    "overview": "Overview",
+    "processes": "Processes",
+    "documents": "Documents"
   }
 }
