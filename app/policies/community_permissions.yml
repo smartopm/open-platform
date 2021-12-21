@@ -19,8 +19,8 @@ Ciudad Morazán:
         - can_get_task_count
         - can_get_task_stats
         - can_get_own_tasks
-        - can_create_parent_task
-        - can_create_sub_task
+        - can_view_create_task_button
+        - can_view_create_sub_task_button
     profile:
       permissions:
         - can_see_menu_item
@@ -139,7 +139,7 @@ Tilisi:
         - can_get_task_count
         - can_get_task_stats
         - can_get_own_tasks
-        - can_create_sub_task
+        - can_view_create_sub_task_button
     forms:
       permissions:
         - can_see_menu_item

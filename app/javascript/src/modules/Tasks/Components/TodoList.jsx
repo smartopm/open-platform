@@ -565,7 +565,7 @@ export default function TodoList({
             </CenteredContent>
           </>
         )}
-        <AccessCheck module='note' allowedPermissions={['can_create_parent_task']}>
+        <AccessCheck module='note' allowedPermissions={['can_view_create_task_button']}>
           <FloatingButton
             variant="extended"
             handleClick={openModal}

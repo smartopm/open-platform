@@ -103,7 +103,7 @@ export default function TaskSubTask({ taskId, users, assignUser, handleSplitScre
           </Typography>
         </Grid>
         <Grid item md={1} xs={1} className={classes.addSubTask}>
-          <AccessCheck module='note' allowedPermissions={['can_create_sub_task']}> 
+          <AccessCheck module='note' allowedPermissions={['can_view_create_sub_task_button']}> 
             <IconButton
               edge="end"
               onClick={handleAddSubTask}

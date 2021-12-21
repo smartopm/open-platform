@@ -31,7 +31,7 @@ describe('Todo list main page', () => {
       permissions: [
         {
           module: 'note',
-          permissions: ['can_create_sub_task', 'can_create_parent_task']
+          permissions: ['can_view_create_sub_task_button', 'can_view_create_task_button']
         }
       ]
     }
