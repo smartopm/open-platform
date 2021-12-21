@@ -3,7 +3,7 @@
 /* eslint-disable max-lines */
 import React from 'react';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
-import { Grid, IconButton, Typography, Button } from '@material-ui/core';
+import { Grid, IconButton, Typography } from '@material-ui/core';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import PropTypes from 'prop-types';
@@ -11,6 +11,7 @@ import { makeStyles } from '@material-ui/styles';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import Card from '../../../../shared/Card';
+import { removeNewLines, sanitizeText } from '../../../../utils/helpers';
 
 
 export default function StepItem({
@@ -28,22 +29,47 @@ export default function StepItem({
   return (
     <Card clickData={{clickable, handleClick}} styles={styles} contentStyles={{ padding: '4px' }}>
       <Grid container>
-        <Grid item md={12} xs={8} style={{ display: 'flex', alignItems: 'center' }} data-testid="task_body_section">
-          <Button
-            onClick={(e) => handleStepCompletion(e, step.id, !step.completed)}
-            startIcon={
-              step.completed ? <CheckCircleIcon htmlColor='#4caf50' /> : <CheckCircleOutlineIcon />
-            }
-            style={{ textTransform: 'none' }}
-            data-testid="task_completion_toggle_button"
-          />
+        <Grid item md={11} xs={8} style={{ display: 'flex', alignItems: 'center' }} data-testid="task_body_section">
+          <Grid container style={{ display: 'flex', alignItems: 'center' }}>
+            <Grid item md={1}>
+              <IconButton
+                aria-controls="task-completion-toggle-button"
+                aria-haspopup="true"
+                data-testid="task_completion_toggle_button"
+                onClick={(e) => handleStepCompletion(e, step.id, !step.completed)}
+                size="medium"
+              >
+                { step.completed ? (
+                  <CheckCircleIcon htmlColor="#4caf50" />
+                  ) : (
+                    <CheckCircleOutlineIcon />
+                  )}
+              </IconButton>
+            </Grid>
+            <Grid item md={10}>
+              <Typography
+                variant="body2"
+                data-testid="task_body"
+                component="p"
+                className={matches ? classes.taskBodyMobile : classes.taskBody}
+              >
+                <span
+            // eslint-disable-next-line react/no-danger
+                  dangerouslySetInnerHTML={{
+              __html: sanitizeText(removeNewLines(step.body))
+            }}
+                />
+              </Typography>
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid item md={1} xs={1} className={classes.subStepsSection}>
           {step?.subTasks?.length > 0
             ? (
               <IconButton
                 aria-controls="show-task-subtasks-icon"
                 aria-haspopup="true"
                 data-testid="show_task_subtasks"
-                size="medium"
                 onClick={(e) => handleOpenSubStepsClick(e)}
               >
                 {openSubSteps
@@ -55,20 +81,11 @@ export default function StepItem({
                 aria-controls="show-task-subtasks-icon"
                 aria-haspopup="true"
                 data-testid="show_task_subtasks"
-                size="medium"
                 disabled
               >
                 <KeyboardArrowDownIcon fontSize="small" />
               </IconButton>
           )}
-          <Typography
-            variant="body2"
-            data-testid="task_body"
-            component="p"
-            className={matches ? classes.taskBodyMobile : classes.taskBody}
-          >
-            {step.body}
-          </Typography>
         </Grid>
       </Grid>
     </Card>
@@ -113,6 +130,10 @@ StepItem.propTypes = {
 
 const useStyles = makeStyles(() => ({
   taskBody: {
+    maxWidth: '70ch',
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
     paddingLeft: '3px'
   },
   taskBodyMobile: {
@@ -122,4 +143,10 @@ const useStyles = makeStyles(() => ({
     textOverflow: 'ellipsis',
     paddingLeft: '3px'
   },
+  subStepsSection: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'flex-end',
+    borderLeft: 'solid 1px rgba(0, 0, 0, 0.12)'
+  }
 }));
