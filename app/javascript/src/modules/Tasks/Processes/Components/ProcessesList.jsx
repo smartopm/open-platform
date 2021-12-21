@@ -1,5 +1,5 @@
 /* eslint-disable max-statements */
-import React, { useState } from 'react';
+import React from 'react';
 import { useQuery } from 'react-apollo';
 import { Grid, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
@@ -13,7 +13,7 @@ import ProcessItem from './ProcessItem'
 export default function ProcessesList() {
   const { t } = useTranslation('task');
   const limit = 50;
-  const [offset, setOffset] = useState(0);
+  const offset = 0;
   const classes = useStyles();
 
   const { loading, error, data, refetch }
