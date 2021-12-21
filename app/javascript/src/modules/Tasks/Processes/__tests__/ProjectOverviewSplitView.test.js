@@ -53,7 +53,7 @@ describe('Project Processes Tab', () => {
                   handleStepCompletion: jest.fn
               }}
               >
-                <ProjectOverviewSplitView data={data} refetch={jest.fn} />
+                <ProjectOverviewSplitView data={[]} refetch={jest.fn} />
               </TaskContext.Provider>
             </MockedThemeProvider>
           </BrowserRouter>
