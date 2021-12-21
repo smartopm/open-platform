@@ -51,6 +51,6 @@ describe('Project Processes Split View', () => {
       </Context.Provider>
     );
 
-    expect(await screen.findByTestId("task-info-section")).toBeInTheDocument();
+    expect(await screen.findByTestId("loader")).toBeInTheDocument();
   });
 });
