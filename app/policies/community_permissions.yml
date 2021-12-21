@@ -1,4 +1,4 @@
-# Community permissions
+Community permissions
 Ciudad Morazán:
   security_supervisor:
     note:
@@ -19,6 +19,8 @@ Ciudad Morazán:
         - can_get_task_count
         - can_get_task_stats
         - can_get_own_tasks
+        - can_create_parent_task
+        - can_create_sub_task
     profile:
       permissions:
         - can_see_menu_item
@@ -137,14 +139,16 @@ Tilisi:
         - can_get_task_count
         - can_get_task_stats
         - can_get_own_tasks
+        - can_create_sub_task
     forms:
       permissions:
-       - can_see_menu_item
-      - can_access_forms
+        - can_see_menu_item
+        - can_access_forms
     user:
       permissions:
         - can_view_own_profile
         - can_edit_own_profile
+        - can_get_users_lite
     profile:
       permissions:
         - can_see_menu_item
