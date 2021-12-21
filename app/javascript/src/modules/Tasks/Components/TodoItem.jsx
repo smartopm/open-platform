@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { useLazyQuery } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/core/styles';
+import { useLocation } from 'react-router'
 import { TaskDataList } from './RenderTaskData';
 import FileUploader from './FileUploader';
 import { objectAccessor } from '../../../utils/helpers';
@@ -21,7 +22,7 @@ export default function TodoItem({
   handleAddSubTask,
   handleUploadDocument,
   handleTodoClick,
-  handleTaskCompletion
+  handleTaskCompletion,
 }) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
@@ -30,6 +31,7 @@ export default function TodoItem({
   const [isUpdating, setIsUpdating] = useState(false)
   const anchorElOpen = Boolean(anchorEl);
   const { t } = useTranslation('common');
+  const location = useLocation()
 
   const [
     loadSubTasks,
@@ -40,7 +42,7 @@ export default function TodoItem({
     errorPolicy: 'all'
   });
 
-  const menuList = [
+  let menuList = [
     {
       content: t('menu.open_task_details'),
       isAdmin: true,
@@ -70,6 +72,15 @@ export default function TodoItem({
       handleClick: () => handleNoteComplete()
     }
   ];
+
+  if (location.pathname === '/processes') {
+    menuList = [
+      {
+        content: t('menu.open_project_details'),
+        isAdmin: true,
+        handleClick: () => handleTaskDetails()
+      }]
+  }
 
   const menuData = {
     menuList,
@@ -220,7 +231,7 @@ const Task = {
     ),
     subTasks: PropTypes.arrayOf(PropTypes.object)
   };
-  
+
   TodoItem.defaultProps = {};
 
   TodoItem.propTypes = {
