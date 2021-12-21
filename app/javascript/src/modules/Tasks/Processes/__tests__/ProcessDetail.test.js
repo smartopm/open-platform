@@ -35,11 +35,11 @@ describe('Payment List Item Component', () => {
 ];
   it('should render the payment item component', () => {
     const container = render(
-        <MockedProvider mocks={[]} addTypename={false}>
-          <BrowserRouter>
-            <TaskProcessDetail />
-          </BrowserRouter>
-        </MockedProvider>
+      <MockedProvider mocks={mocks} addTypename={false}>
+        <BrowserRouter>
+          <TaskProcessDetail />
+        </BrowserRouter>
+      </MockedProvider>
     );
 
     expect(container.getByTestId('loader')).toBeInTheDocument();
