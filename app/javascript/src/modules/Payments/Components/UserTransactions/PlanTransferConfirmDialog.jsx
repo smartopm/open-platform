@@ -167,7 +167,7 @@ PlanTransferConfirmDialog.propTypes = {
   balanceRefetch: PropTypes.func.isRequired,
   paymentId: PropTypes.string.isRequired,
   transferType: PropTypes.string.isRequired,
-  paymentAmount: PropTypes.number
+  paymentAmount: PropTypes.string
 };
 
 const useStyles = makeStyles(() => ({

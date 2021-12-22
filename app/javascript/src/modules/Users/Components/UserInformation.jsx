@@ -112,7 +112,7 @@ export default function UserInformation({
           <Grid item xs={3}>
             {' '}
           </Grid>
-          <Grid item xs={6} style={{ textAlign: 'center' }}>
+          <Grid item xs={6} style={{ textAlign: 'center' }} data-testid="user_avatar">
             <Avatar
               user={data.user}
               // eslint-disable-next-line react/style-prop-object
@@ -128,6 +128,7 @@ export default function UserInformation({
                 aria-haspopup="true"
                 onClick={() => setDrawerOpen(true)}
                 className="right-menu-drawer"
+                data-testid="right_menu_drawer"
                 style={{
                   float: 'right',
                   marginRight: -23
@@ -269,6 +270,7 @@ export default function UserInformation({
               className={`${css(styles.callButton)}`}
               href={`tel:${authState.user.community.securityManager}`}
               color="primary"
+              data-testid="call_manager"
             >
               {t('common:misc.call_manager')}
             </Button>
@@ -280,7 +282,7 @@ export default function UserInformation({
 }
 
 const User = PropTypes.shape({
-  id: PropTypes.string.isRequired,
+  id: PropTypes.string,
   name: PropTypes.string,
   userType: PropTypes.string,
   state: PropTypes.string,
@@ -290,7 +292,7 @@ const User = PropTypes.shape({
     // eslint-disable-next-line react/forbid-prop-types
     features: PropTypes.object,
     securityManager: PropTypes.string
-  })
+  }),
 });
 UserInformation.propTypes = {
   data: PropTypes.shape({ user: User }).isRequired,
@@ -299,8 +301,17 @@ UserInformation.propTypes = {
   refetch: PropTypes.func.isRequired,
   userId: PropTypes.string.isRequired,
   router: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
-  accountData: PropTypes.shape({ user: User }).isRequired
+  accountData: PropTypes.shape({ user: User })
 };
+
+UserInformation.defaultProps = {
+  accountData: {
+    user: {
+      accounts: []
+    }
+  }
+}
+
 
 const styles = StyleSheet.create({
   linkItem: {
