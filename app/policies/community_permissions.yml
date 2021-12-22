@@ -130,7 +130,6 @@ Tilisi:
         - can_assign_note
         - can_bulk_assign_note
         - can_create_note_comment
-        - can_create_note_comment
         - can_update_note_comment
         - can_fetch_flagged_notes
         - can_fetch_task_by_id
