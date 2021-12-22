@@ -8,7 +8,7 @@ describe('user message item component', () => {
   const message = `Please share your feedback with this 30 seconds survey: https://app.doublegdp.com/news/posts/survey/
     and your email test@testdotcom.com`;
   const data = {
-    id: 1,
+    id: "1",
     name: 'joen',
     user: {},
     category: 'SMS',
@@ -78,7 +78,7 @@ describe('user message item component', () => {
   // new data
 
   const newData = {
-    id: 2,
+    id: "2",
     name: 'brieen',
     user: {
       userType: 'client'
