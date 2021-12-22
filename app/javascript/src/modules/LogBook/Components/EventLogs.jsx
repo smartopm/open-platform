@@ -18,7 +18,7 @@ const AllEventLogs = (history, authState) => {
     variables: { subject: null, refId: null, refType: null, offset, limit },
     fetchPolicy: "cache-and-network"
   });
-  const { token: { token } = {} } = authState;
+  const { token } = authState;
   if (loading) return <Loading />;
   if (error) return <ErrorPage title={error.message} />;
   function handleNextPage() {
