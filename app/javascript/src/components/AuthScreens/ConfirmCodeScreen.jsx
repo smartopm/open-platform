@@ -102,7 +102,7 @@ export default function ConfirmCodeScreen({ match }) {
     <div style={{ height: '100vh' }}>
       <nav className={`${css(styles.navBar)} navbar`}>
         <Link to="/login">
-          <i className="material-icons">arrow_back</i>
+          <i className="material-icons" data-testid="arrow_back">arrow_back</i>
         </Link>
       </nav>
       <div className="container ">
@@ -111,9 +111,15 @@ export default function ConfirmCodeScreen({ match }) {
             styles.welcomeContainer
           )}`}
         >
-          <p data-testid="welcome" className={css(styles.welcomeText)}>
-            { loading ? <Spinner /> : t('login.welcome', { appName: communityData?.currentCommunity?.name  })}
-          </p>
+
+          { loading
+            ? <Spinner />
+            : (
+              <p data-testid="welcome" className={css(styles.welcomeText)}>
+                {t('login.welcome', { appName: communityData?.currentCommunity?.name  })}
+              </p>
+)
+            }
         </div>
         <br />
         <br />
@@ -157,6 +163,7 @@ export default function ConfirmCodeScreen({ match }) {
             ref={submitRef}
             disabled={isLoading}
             color="primary"
+            data-testid="submit_btn"
           >
             {isLoading ? (
               <CircularProgress size={25} color="primary" />

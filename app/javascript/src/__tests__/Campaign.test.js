@@ -1,5 +1,5 @@
 import React from 'react'
-import { render, fireEvent, cleanup } from '@testing-library/react'
+import { render, fireEvent, cleanup, waitFor } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import { BrowserRouter } from 'react-router-dom/'
 import { MockedProvider } from '@apollo/react-testing'
@@ -41,7 +41,7 @@ describe('Campaign page', () => {
     }
   }
 
-  it('should render without error', () => {
+  it('should render without error', async () => {
     const { getByText } = render(
       <MockedProvider mocks={[mocks]}>
         <BrowserRouter>
@@ -49,9 +49,11 @@ describe('Campaign page', () => {
         </BrowserRouter>
       </MockedProvider>
     )
-    expect(getByText('form_fields.message')).toBeInTheDocument()
+    await waitFor(() => {
+      expect(getByText('form_fields.message')).toBeInTheDocument()
+    }, 10)
   })
-  it('should render input elements', () => {
+  it('should render input elements', async () => {
     const { getByText } = render(
       <MockedProvider mocks={[mocks]}>
         <BrowserRouter>
@@ -59,11 +61,13 @@ describe('Campaign page', () => {
         </BrowserRouter>
       </MockedProvider>
     )
-    expect(getByText('form_fields.message')).toBeInTheDocument()
-    expect(getByText('form_fields.campaign_name')).toBeInTheDocument()
-    expect(getByText('form_fields.user_id_list')).toBeInTheDocument()
+    await waitFor(() => {
+      expect(getByText('form_fields.message')).toBeInTheDocument()
+      expect(getByText('form_fields.campaign_name')).toBeInTheDocument()
+      expect(getByText('form_fields.user_id_list')).toBeInTheDocument()
+    }, 10)
   })
-  it('should not render form when user is not admin', () => {
+  it('should not render form when user is not admin', async () => {
     const residentAuthState = {
       loaded: true,
       loggedIn: true,
@@ -87,12 +91,14 @@ describe('Campaign page', () => {
         </BrowserRouter>
       </MockedProvider>
     )
-    expect(container.queryByText('Tasks')).toBeNull()
-    expect(container.queryByText('form_fields.campaign_name')).toBeNull()
-    expect(container.queryByText('form_fields.user_id_list')).toBeNull()
+    await waitFor(() => {
+      expect(container.queryByText('Tasks')).toBeNull()
+      expect(container.queryByText('form_fields.campaign_name')).toBeNull()
+      expect(container.queryByText('form_fields.user_id_list')).toBeNull()
+    }, 10)
   })
 
-  it('should allow campain name inputs', () => {
+  it('should allow campain name inputs', async () => {
     const container = render(
       <MockedProvider mocks={[mocks]}>
         <BrowserRouter>
@@ -100,12 +106,14 @@ describe('Campaign page', () => {
         </BrowserRouter>
       </MockedProvider>
     )
-    const nameInput = container.queryByTestId('campaign_name')
-    fireEvent.change(nameInput, { target: { value: 'Marketing' } })
-    expect(nameInput.value).toBe('Marketing')
+    await waitFor(() => {
+      const nameInput = container.queryByTestId('campaign_name')
+      fireEvent.change(nameInput, { target: { value: 'Marketing' } })
+      expect(nameInput.value).toBe('Marketing')
+    }, 10)
   })
 
-  it('should allow campain fields inputs', () => {
+  it('should allow campain fields inputs', async () => {
     const container = render(
       <MockedProvider mocks={[mocks]}>
         <BrowserRouter>
@@ -117,6 +125,10 @@ describe('Campaign page', () => {
     const idsInput = container.queryByTestId('campaign_ids')
     const nameInput = container.queryByTestId('campaign_name')
     const checkInput = container.queryByTestId('reply_link')
+
+    await waitFor(() => {
+
+
 
     fireEvent.change(nameInput, { target: { value: 'new campaign' } })
     expect(nameInput.value).toBe('new campaign')
@@ -135,5 +147,6 @@ describe('Campaign page', () => {
 
     fireEvent.change(checkInput, { target: { checked: true } })
     expect(checkInput.checked).toBe(true)
+  })
   })
 })

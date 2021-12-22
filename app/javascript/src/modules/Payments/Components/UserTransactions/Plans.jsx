@@ -77,7 +77,7 @@ export default function PaymentPlans({ userId, user, userData }) {
   const currency = objectAccessor(currencies, user.community.currency) || '';
   const { locale } = user.community;
   const currencyData = { currency, locale };
-  
+
   const userTransactionPermissions = user?.permissions?.find(permissionObject => permissionObject.module === 'transaction')
   const canFetchUserTransactions = userTransactionPermissions? userTransactionPermissions.permissions.includes('can_fetch_user_transactions'): false
 
@@ -252,7 +252,7 @@ export default function PaymentPlans({ userId, user, userData }) {
                 )}
               </div>
               {Boolean(genData?.userGeneralPlan?.generalPayments) && genData?.userGeneralPlan?.generalPayments > 0 && (
-                <GeneralPlanList 
+                <GeneralPlanList
                   data={genData?.userGeneralPlan}
                   currencyData={currencyData}
                   currentUser={user}
@@ -275,7 +275,7 @@ export default function PaymentPlans({ userId, user, userData }) {
                 userId={userId}
                 refetch={refetch}
                 balanceRefetch={balanceRefetch}
-                
+
               />
             </div>
           ) : (
@@ -307,12 +307,12 @@ PaymentPlans.propTypes = {
   user: PropTypes.shape({
     id: PropTypes.string,
     userType: PropTypes.string,
-    permissions: PropTypes.arrayOf({
-      transaction: PropTypes.shape({
-        permissions: PropTypes.arrayOf(PropTypes.string)
+    permissions: PropTypes.arrayOf(
+      PropTypes.shape({
+        permissions: PropTypes.arrayOf(PropTypes.string),
+        module: PropTypes.string
       }),
-      find: PropTypes.func
-    }),
+    ),
     community: PropTypes.shape({
       imageUrl: PropTypes.string,
       name: PropTypes.string,

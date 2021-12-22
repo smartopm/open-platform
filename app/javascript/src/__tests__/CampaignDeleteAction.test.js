@@ -56,12 +56,12 @@ describe('campaign action menu component', () => {
     const loader = render(<Spinner />);
 
     expect(loader.queryAllByTestId('loader')[0]).toBeInTheDocument();
-    
+
     await waitFor(
       () => {
         expect(container.queryByText("actions.delete_campaign")).not.toBeInTheDocument()
       },
-      { timeout: 300 }
+      { timeout: 30 }
     );
   })
 })

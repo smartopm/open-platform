@@ -9,6 +9,7 @@ const props = {
   open: true,
   handleClose: jest.fn(),
   openFlowModal: jest.fn(),
+  refetch: jest.fn(),
   data: {
     id: 'uuid000120',
     eventType: 'task_update',

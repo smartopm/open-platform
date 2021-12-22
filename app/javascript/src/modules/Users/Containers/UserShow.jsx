@@ -10,7 +10,7 @@ import { UserQuery, UserAccountQuery } from '../../../graphql/queries'
 import { AddActivityLog, SendOneTimePasscode } from '../../../graphql/mutations'
 import ErrorPage from '../../../components/Error'
 
-export default ({ history }) => {
+export default function UserShow({ history }) {
   const { id, dg, tm } = useParams() // get timestamp and dg
   const authState = useContext(AuthStateContext)
   const {
@@ -49,7 +49,7 @@ export default ({ history }) => {
     return <ErrorPage title={error.message || error} /> // error could be a string sometimes
   }
   return (
-    <>      
+    <>
       <UserInformation
         data={data}
         accountData={accountData}

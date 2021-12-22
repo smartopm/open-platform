@@ -174,9 +174,13 @@ describe('render eventType, actionTypes, actionFields, ruleFields', () => {
         data: {
           emailTemplates: [
             {
-              id: '1234',
+              id: '02932',
               name: 'My Template',
-              variableNames: ['url']
+              variableNames: ['url'],
+              createdAt: "2021-01-01",
+              subject: null,
+              data: null,
+              tag: null
             }
           ]
         }
