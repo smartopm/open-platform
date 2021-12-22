@@ -14,12 +14,24 @@ import Contact from '../Contact'
 import Referral from '../Referrals'
 import Showroom from '../Showroom'
 import Report from '../Reports'
+import AccessCheck from '../Permissions/Components/AccessCheck';
+
+const communitySettingPermissions = ['can_update_community_details'];
+const communityModule = 'community'
+
+function renderCommunitySettings() {
+  return (
+    <AccessCheck module={communityModule} allowedPermissions={communitySettingPermissions}>
+      <CommunitySettings />
+    </AccessCheck>
+)
+}
 
 // we can discuss on changing this to preferences instead of settings
 const Settings =   {
   routeProps: {
     path: '/community',
-    component: CommunitySettings
+    component: renderCommunitySettings
   },
   styleProps: {
     icon: <GroupIcon />
