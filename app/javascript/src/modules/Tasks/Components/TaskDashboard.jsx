@@ -53,6 +53,8 @@ export default function TaskDashboard({ taskData, filterTasks, currentTile }) {
 
 TaskDashboard.propTypes = {
   taskData: PropTypes.shape({
+    loading: PropTypes.string,
+    error: PropTypes.string,
     data: PropTypes.shape({
       taskStats: PropTypes.shape({
         myOpenTasks: PropTypes.number,

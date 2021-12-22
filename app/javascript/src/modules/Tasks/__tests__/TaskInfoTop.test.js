@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min';
-import { render, fireEvent, waitFor } from '@testing-library/react';
+import { render, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { MockedProvider } from '@apollo/react-testing';
 import { Context } from '../../../containers/Provider/AuthStateProvider'
@@ -138,7 +138,7 @@ describe('Top part of the task form component', () => {
             <TaskInfoTop {...newProps} />
           </BrowserRouter>
         </MockedProvider>
-       </Context.Provider>
+      </Context.Provider>
     );
     expect(container2.queryByText('task.chip_close')).toBeInTheDocument();
     expect(container2.queryByText('task.task_assignee_label')).toBeInTheDocument();

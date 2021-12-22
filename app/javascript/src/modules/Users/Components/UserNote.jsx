@@ -88,6 +88,7 @@ UserNote.propTypes = {
 }
 
 UserNotes.propTypes = {
+  tabValue: PropTypes.string.isRequired,
   userId: PropTypes.string.isRequired
 }
 
