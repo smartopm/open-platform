@@ -47,7 +47,8 @@ describe('Invited Guests Component', () => {
                 visitationDate: '2021-11-30T11:54:00Z',
                 endsAt: '2021-11-01T21:15:29Z',
                 startsAt: '2021-11-01T09:15:29Z'
-              }
+              },
+              thumbnailUrl: null
             }
           ]
         }
