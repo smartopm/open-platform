@@ -23,19 +23,22 @@ module Logs
     enum status: { pending: 0, approved: 1 }
 
     default_scope { order(created_at: :asc) }
+
+    # rubocop:disable Style/RedundantInterpolation
     search_scope :search do
       attributes :name, :phone_number, :visitation_date, :visit_end_date, :starts_at, :ends_at,
                  :end_time
 
       generator :matches do |column_name, raw_value|
-        pattern = "#{raw_value}%"
-        "unaccent(LOWER(#{column_name})) LIKE unaccent(LOWER(#{quote pattern}))"
+        pattern = "%#{raw_value}%"
+        QueryFetchable.accent_insensitive_search(column_name, "#{quote pattern}")
       end
     end
 
     search_scope :search_guest do
       attributes guest: ['guest.phone_number', 'guest.email']
     end
+    # rubocop:enable Style/RedundantInterpolation
 
     scope :by_end_time, lambda { |date|
       where('(visit_end_date IS NOT NULL and visit_end_date > ?)
