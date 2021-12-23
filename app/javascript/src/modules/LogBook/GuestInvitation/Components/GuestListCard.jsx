@@ -34,9 +34,15 @@ export default function GuestListCard({ invite, translate, tz, styles }) {
                 src={invite.thumbnailUrl}
                 variant="square"
                 className={classes.avatar}
+                data-testid="video_preview"
               />
             ) : (
-              <Avatar alt={invite.guest?.request?.name} className={classes.avatar} variant="square">
+              <Avatar
+                alt={invite.guest?.request?.name}
+                className={classes.avatar}
+                variant="square"
+                data-testid="request_avatar"
+              >
                 {invite.guest?.request?.name?.charAt(0)}
               </Avatar>
             )}

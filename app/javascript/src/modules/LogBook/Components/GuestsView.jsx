@@ -148,9 +148,15 @@ export default function GuestsView({
                     src={visit.thumbnailUrl}
                     variant="square"
                     className={classes.avatar}
+                    data-testid="video_preview"
                   />
                 ) : (
-                  <Avatar alt={visit.guest?.name} className={classes.avatar} variant="square">
+                  <Avatar
+                    alt={visit.guest?.name}
+                    className={classes.avatar}
+                    variant="square"
+                    data-testid="request_preview"
+                  >
                     {visit.name.charAt(0)}
                   </Avatar>
                 )}

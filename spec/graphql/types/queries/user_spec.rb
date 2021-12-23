@@ -469,6 +469,7 @@ RSpec.describe Types::Queries::User do
                 imageUrl
                 avatarUrl
               }
+              thumbnailUrl
             }
           }
         )

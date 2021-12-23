@@ -95,7 +95,7 @@ export default function VisitView({
                     alt={visit.name}
                     src={visit.thumbnailUrl}
                     variant="square"
-                    data-testid="request_avatar"
+                    data-testid="video_preview"
                     className={classes.avatar}
                   />
                 ) : (

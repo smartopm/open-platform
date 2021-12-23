@@ -84,6 +84,7 @@ RSpec.describe Types::Queries::EntryRequest do
           guest {
             id
           }
+          thumbnailUrl
         }
         })
     end
