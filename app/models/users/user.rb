@@ -20,14 +20,16 @@ module Users
     class DecodeError < StandardError; end
 
     include SearchCop
+    include QueryFetchable
 
+    # rubocop:disable Style/RedundantInterpolation
     search_scope :search do
       attributes :name, :phone_number, :user_type, :email, :sub_status, :ext_ref_id
       attributes labels: ['labels.short_desc']
 
       generator :matches do |column_name, raw_value|
-        pattern = "#{raw_value}%"
-        "unaccent(LOWER(#{column_name})) LIKE unaccent(LOWER(#{quote pattern}))"
+        pattern = "%#{raw_value}%"
+        QueryFetchable.accent_insensitive_search(column_name, "#{quote pattern}")
       end
     end
 
@@ -38,8 +40,8 @@ module Users
       scope { joins(:acting_event_log).eager_load(:labels) }
 
       generator :matches do |column_name, raw_value|
-        pattern = "#{raw_value}%"
-        "unaccent(LOWER(#{column_name})) LIKE unaccent(LOWER(#{quote pattern}))"
+        pattern = "%#{raw_value}%"
+        QueryFetchable.accent_insensitive_search(column_name, "#{quote pattern}")
       end
     end
 
@@ -56,8 +58,8 @@ module Users
       attributes :name, :phone_number, :user_type, :email, :sub_status
 
       generator :matches do |column_name, raw_value|
-        pattern = "#{raw_value}%"
-        "unaccent(LOWER(#{column_name})) LIKE unaccent(LOWER(#{quote pattern}))"
+        pattern = "%#{raw_value}%"
+        QueryFetchable.accent_insensitive_search(column_name, "#{quote pattern}")
       end
     end
 
@@ -65,10 +67,11 @@ module Users
       attributes :phone_number, :email, :name
 
       generator :matches do |column_name, raw_value|
-        pattern = "#{raw_value}%"
-        "unaccent(LOWER(#{column_name})) LIKE unaccent(LOWER(#{quote pattern}))"
+        pattern = "%#{raw_value}%"
+        QueryFetchable.accent_insensitive_search(column_name, "#{quote pattern}")
       end
     end
+    # rubocop:enable Style/RedundantInterpolation
 
     scope :allowed_users, lambda { |current_user|
       policy = ::Policy::User::UserPolicy.new(current_user, nil)
