@@ -33,6 +33,7 @@ export const GuestEntriesQuery = gql`
       endsAt
       startsAt
       revoked
+      thumbnailUrl
     }
   }
 `;
@@ -62,6 +63,7 @@ export const CurrentGuestEntriesQuery = gql`
       grantedState
       status
       guestId
+      thumbnailUrl
     }
   }
 `;

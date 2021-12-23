@@ -2,6 +2,7 @@ FROM ruby:2.6
 RUN apt-get update -qq && apt-get install -y curl postgresql-client cmake
 RUN curl -sL https://deb.nodesource.com/setup_12.x | bash -
 RUN apt-get update && apt-get install -y nodejs
+RUN apt-get update && apt-get install -y ffmpeg
 # Needed for PDF preview. In Heroku is available with
 # `heroku buildpacks:add -i 1 https://github.com/heroku/heroku-buildpack-activestorage-preview`
 RUN apt-get install -y vim nano

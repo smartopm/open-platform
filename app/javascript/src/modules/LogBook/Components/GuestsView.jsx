@@ -43,7 +43,7 @@ export default function GuestsView({
   const history = useHistory();
   const matches = useMediaQuery('(max-width:800px)');
   const classes = useLogbookStyles();
-  const theme = useTheme()
+  const theme = useTheme();
   const [anchorEl, setAnchorEl] = useState(null);
 
   useEffect(() => {
@@ -51,7 +51,6 @@ export default function GuestsView({
       loadGuests();
     }
   }, [tabValue, loadGuests, query, offset]);
-
 
   function handleGrantAccess(event, user) {
     event.stopPropagation();
@@ -64,8 +63,8 @@ export default function GuestsView({
 
     grantEntry({
       variables: { id: user.id },
-      fetchPolicy: "no-cache"
-     })
+      fetchPolicy: 'no-cache'
+    })
       .then(() => {
         setMessage({
           isError: false,
@@ -88,20 +87,20 @@ export default function GuestsView({
     });
   }
 
-  function handleViewUser(event, user){
-    event.stopPropagation()
-    history.push(`/user/${user.id}`)
+  function handleViewUser(event, user) {
+    event.stopPropagation();
+    history.push(`/user/${user.id}`);
   }
 
   function handleMenu(event, entry) {
     event.stopPropagation();
     setAnchorEl(event.currentTarget);
-    setLoadingInfo({ ...loadingStatus, currentId: entry.id})
+    setLoadingInfo({ ...loadingStatus, currentId: entry.id });
   }
 
-  function handleInvite(event){
+  function handleInvite(event) {
     event.stopPropagation();
-    history.push(`/logbook/guests/invite/${loadingStatus.currentId}`)
+    history.push(`/logbook/guests/invite/${loadingStatus.currentId}`);
   }
 
   function handleMenuClose(event) {
@@ -110,11 +109,13 @@ export default function GuestsView({
   }
 
   const menuData = {
-    list: [{
-      content: t('guest_book.re_invite'),
-      isVisible: true,
-      handleClick: (event) => handleInvite(event)
-    }],
+    list: [
+      {
+        content: t('guest_book.re_invite'),
+        isVisible: true,
+        handleClick: event => handleInvite(event)
+      }
+    ],
     handleMenu,
     anchorEl,
     handleClose: event => handleMenuClose(event)
@@ -141,9 +142,18 @@ export default function GuestsView({
           >
             <Grid container spacing={1}>
               <Grid item md={2} xs={5}>
-                <Avatar alt={visit.guest?.name} className={classes.avatar} variant="square">
-                  {visit.name.charAt(0)}
-                </Avatar>
+                {visit.thumbnailUrl ? (
+                  <Avatar
+                    alt={visit.guest?.name}
+                    src={visit.thumbnailUrl}
+                    variant="square"
+                    className={classes.avatar}
+                  />
+                ) : (
+                  <Avatar alt={visit.guest?.name} className={classes.avatar} variant="square">
+                    {visit.name.charAt(0)}
+                  </Avatar>
+                )}
               </Grid>
               <Grid item md={2} xs={7}>
                 <Typography variant="caption" color="primary">
@@ -163,7 +173,11 @@ export default function GuestsView({
                 <div style={{ paddingTop: '7px' }} data-testid="request_status">
                   <Chip
                     data-testid="user-entry"
-                    label={visit.status === 'approved' ? t('guest_book.approved') : t('guest_book.pending')}
+                    label={
+                      visit.status === 'approved'
+                        ? t('guest_book.approved')
+                        : t('guest_book.pending')
+                    }
                     color={visit.status === 'approved' ? 'primary' : 'secondary'}
                     size="small"
                   />
@@ -172,18 +186,14 @@ export default function GuestsView({
               <Grid item md={2} xs={6} style={!matches ? { paddingTop: '15px' } : {}}>
                 <Typography variant="caption">
                   {t('guest_book.start_of_visit', {
-                    date: dateToString(
-                      visit.closestEntryTime?.visitationDate
-                    )
+                    date: dateToString(visit.closestEntryTime?.visitationDate)
                   })}
                 </Typography>
               </Grid>
               <Grid item md={1} xs={6} style={!matches ? { paddingTop: '15px' } : {}}>
                 <Typography variant="caption">
                   {t('guest_book.visit_time', {
-                    startTime: dateTimeToString(
-                      visit.closestEntryTime?.startsAt
-                    ),
+                    startTime: dateTimeToString(visit.closestEntryTime?.startsAt),
                     endTime: dateTimeToString(visit.closestEntryTime?.endsAt)
                   })}
                 </Typography>
@@ -208,22 +218,22 @@ export default function GuestsView({
               <Grid item md={2} xs={8} style={!matches ? { paddingTop: '8px' } : {}}>
                 <Button
                   disabled={
-                        !checkRequests(visit.closestEntryTime, t, timeZone).valid ||
-                        (loadingStatus.loading && Boolean(loadingStatus.currentId))
-                      }
+                    !checkRequests(visit.closestEntryTime, t, timeZone).valid ||
+                    (loadingStatus.loading && Boolean(loadingStatus.currentId))
+                  }
                   variant="outlined"
                   color="primary"
                   onClick={event => handleGrantAccess(event, visit)}
                   disableElevation
                   startIcon={
-                        loadingStatus.loading && loadingStatus.currentId === visit.id && <Spinner />
-                      }
+                    loadingStatus.loading && loadingStatus.currentId === visit.id && <Spinner />
+                  }
                   data-testid="grant_access_btn"
                 >
                   {t('access_actions.grant_access')}
                 </Button>
               </Grid>
-              <Grid item md={1} xs={4} style={!matches ? { paddingTop: '8px'} : {}}>
+              <Grid item md={1} xs={4} style={!matches ? { paddingTop: '8px' } : {}}>
                 <IconButton
                   aria-controls="sub-menu"
                   aria-haspopup="true"
@@ -235,8 +245,8 @@ export default function GuestsView({
                 </IconButton>
                 <MenuList
                   open={
-                        Boolean(anchorEl) && menuData?.anchorEl?.getAttribute('dataid') === visit.id
-                      }
+                    Boolean(anchorEl) && menuData?.anchorEl?.getAttribute('dataid') === visit.id
+                  }
                   anchorEl={menuData?.anchorEl}
                   handleClose={menuData?.handleClose}
                   list={menuData.list}
