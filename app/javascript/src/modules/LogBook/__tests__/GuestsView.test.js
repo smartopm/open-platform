@@ -52,7 +52,8 @@ describe('Should render Guests View Component', () => {
             endsAt: '2021-10-31 22:51',
             startsAt: '2021-10-31 02:51',
             exitedAt: '2021-10-31 22:51',
-            revoked: true
+            revoked: true,
+            thumbnailUrl: 'https://some-video.com'
           },
           {
             id: '696d857',
@@ -81,7 +82,8 @@ describe('Should render Guests View Component', () => {
             endsAt: '2021-10-31 22:51',
             startsAt: '2021-10-31 02:51',
             exitedAt: '2021-10-31 22:51',
-            revoked: false
+            revoked: false,
+            thumbnailUrl: null
           }
         ]
       }
@@ -130,6 +132,8 @@ describe('Should render Guests View Component', () => {
       expect(getByText('Js user x')).toBeInTheDocument();
       expect(getAllByTestId('request_status')[0]).toBeInTheDocument();
       expect(getAllByTestId('request_status')[0].textContent).toContain('guest_book.approved');
+      expect(getAllByTestId('request_preview')[0].textContent).toContain('X');
+      expect(getAllByTestId('video_preview')[0]).toBeInTheDocument();
       expect(getAllByText('guest_book.start_of_visit')[0]).toBeInTheDocument();
       expect(getAllByTestId('grant_access_btn')[0]).toBeInTheDocument();
       expect(getAllByTestId('grant_access_btn')[0].textContent).toContain(

@@ -34,7 +34,8 @@ describe('Render Guest List Card Component', () => {
         visitationDate: '2021-11-30T11:54:00Z',
         endsAt: '2021-11-01T21:15:29Z',
         startsAt: '2021-11-01T09:15:29Z'
-      }
+      },
+      thumbnailUrl: 'https://some-video.com'
     };
     const t = jest.fn(() => 'translated');
     const container = render(
@@ -60,6 +61,7 @@ describe('Render Guest List Card Component', () => {
     expect(container.getByTestId('guest_info')).toBeInTheDocument();
     expect(container.getByTestId('start_of_visit')).toBeInTheDocument();
     expect(container.getByTestId('ends_on_date')).toBeInTheDocument();
+    expect(container.getByTestId('video_preview')).toBeInTheDocument();
     expect(container.getByTestId('visit_time')).toBeInTheDocument();
     expect(container.getByTestId('status')).toBeInTheDocument();
     expect(container.getByTestId('validity')).toBeInTheDocument();

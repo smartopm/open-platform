@@ -4,11 +4,10 @@ import Card from '@material-ui/core/Card';
 import PropTypes from 'prop-types';
 import CardContent from '@material-ui/core/CardContent';
 import { useHistory } from 'react-router';
-import { Chip } from '@material-ui/core';
+import { Chip, Avatar } from '@material-ui/core';
 import { dateToString, dateTimeToString } from '../../../../components/DateContainer';
 import Text from '../../../../shared/Text';
 import { checkRequests } from '../../utils';
-import Avatar from '../../../../components/Avatar';
 import useLogbookStyles from '../../styles';
 
 export default function GuestListCard({ invite, translate, tz, styles }) {
@@ -28,13 +27,30 @@ export default function GuestListCard({ invite, translate, tz, styles }) {
     >
       <CardContent>
         <Grid container direction="row" spacing={2}>
-          <Grid item xs={6} sm={4} lg={3} data-testid="guest_info">
-            <Avatar alt={invite.guest?.request?.name} className={classes.avatar} variant="square">
-              {invite.guest?.request?.name?.charAt(0)}
-            </Avatar>
+          <Grid item xs={6} sm={4} lg={2} data-testid="guest_info">
+            {invite.thumbnailUrl ? (
+              <Avatar
+                alt={invite.guest?.request?.name}
+                src={invite.thumbnailUrl}
+                variant="square"
+                className={classes.avatar}
+                data-testid="video_preview"
+              />
+            ) : (
+              <Avatar
+                alt={invite.guest?.request?.name}
+                className={classes.avatar}
+                variant="square"
+                data-testid="request_avatar"
+              >
+                {invite.guest?.request?.name?.charAt(0)}
+              </Avatar>
+            )}
+          </Grid>
+          <Grid item xs={6} sm={4} lg={2} data-testid="guest_name">
             <Text content={invite.guest?.request?.name} className={styles.classes?.text} />
           </Grid>
-          <Grid item xs={6} sm={4} lg={3} data-testid="start_of_visit">
+          <Grid item xs={6} sm={4} lg={2} data-testid="start_of_visit">
             <Text
               content={translate('guest_book.start_of_visit', {
                 date: dateToString(invite.entryTime.visitationDate)
@@ -87,7 +103,7 @@ export default function GuestListCard({ invite, translate, tz, styles }) {
                 background: checkRequests(invite.entryTime, translate, tz).valid
                   ? styles.theme.palette.success?.main
                   : styles.theme.palette.error?.main,
-                color: 'white',
+                color: 'white'
               }}
               data-testid="guest_validity"
               size="small"
@@ -121,7 +137,8 @@ GuestListCard.propTypes = {
       }),
       imageUrl: PropTypes.string,
       name: PropTypes.string
-    })
+    }),
+    thumbnailUrl: PropTypes.string
   }).isRequired,
   translate: PropTypes.func.isRequired,
   tz: PropTypes.string.isRequired,

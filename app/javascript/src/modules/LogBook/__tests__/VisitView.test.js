@@ -48,7 +48,8 @@ describe('Should render Visits View Component', () => {
             status: 'pending',
             exitedAt: null,
             guestId: "92839182",
-            grantedState: 1
+            grantedState: 1,
+            thumbnailUrl: 'https://some-videourl.com'
           },
           {
             id: 'a91dbad4-293849dasda',
@@ -67,7 +68,8 @@ describe('Should render Visits View Component', () => {
             status: 'approved',
             exitedAt: '2021-10-31 03:51',
             guestId: "162f7517",
-            grantedState: 3
+            grantedState: 3,
+            thumbnailUrl: null
           },
           {
             id: '92384932edas-293849dasda',
@@ -82,7 +84,8 @@ describe('Should render Visits View Component', () => {
             status: 'pending',
             exitedAt: null,
             guestId: null,
-            grantedState: 1
+            grantedState: 1,
+            thumbnailUrl: null
           },
         ]
       }
@@ -136,9 +139,9 @@ describe('Should render Visits View Component', () => {
       expect(getByText('Js user x')).toBeInTheDocument();
       expect(getByText('logbook:logbook.host:')).toBeInTheDocument();
       expect(getAllByTestId('entered_at')[0]).toBeInTheDocument();
-      expect(getAllByTestId('request_avatar')[0].textContent).toContain('T');
-      expect(getAllByTestId('request_avatar')[1].textContent).toContain('U');
-      expect(getAllByTestId('request_avatar')[2].textContent).toContain('S');
+      expect(getAllByTestId('request_avatar')[0].textContent).toContain('U');
+      expect(getAllByTestId('request_avatar')[1].textContent).toContain('S');
+      expect(getAllByTestId('video_preview')[0]).toBeInTheDocument();
       expect(getAllByTestId('exited_at')[0]).toBeInTheDocument();
       expect(getAllByTestId('exited_at')[0].textContent).toContain('logbook.log_exit');
       expect(getAllByTestId('exited_at')[1].textContent).toContain('guest_book.exited_at');

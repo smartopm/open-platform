@@ -39,6 +39,7 @@ module Types
     field :active, Boolean, null: true
     field :revoked, Boolean, null: true
     field :video_url, String, null: true
+    field :thumbnail_url, String, null: true
     field :image_urls, [String], null: true
     field :status, String, null: true
     field :exited_at, GraphQL::Types::ISO8601DateTime, null: true
@@ -56,6 +57,12 @@ module Types
       return nil unless object.video.attached?
 
       host_url(object.video)
+    end
+
+    def thumbnail_url
+      return nil unless object.video.attached?
+
+      host_url(object.video.preview(resize_to_limit: [300, 300]).processed.image)
     end
 
     def image_urls

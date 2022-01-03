@@ -25,6 +25,7 @@ export const MyInvitedGuestsQuery = gql`
           endsAt
           startsAt
         }
+        thumbnailUrl
       }
     }
 
