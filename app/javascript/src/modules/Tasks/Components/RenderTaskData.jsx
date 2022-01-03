@@ -146,7 +146,6 @@ export function TaskDataList({
   const classes = useStyles();
   const { t } = useTranslation('task');
   const matches = useMediaQuery('(max-width:800px)');
-  console.log("Mutuba on progress bar for task", task)
   return (
     <Card styles={styles} contentStyles={{ padding: '4px' }}>
       <Grid container>

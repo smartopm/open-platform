@@ -25,7 +25,7 @@ module Types
     field :documents, [GraphQL::Types::JSON], null: true
     field :attachments, [GraphQL::Types::JSON], null: true
     field :form_user_id, ID, null: true
-    field :progress, [GraphQL::Types::JSON], null: true
+    field :progress, GraphQL::Types::JSON, null: true
 
     # move this in a shareable place
     def host_url(type)
@@ -65,7 +65,7 @@ module Types
           complete+=1
         end
       end
-      progress_percentage = complete/total*100
+      progress_percentage = complete.fdiv(total).round(2)*100
       {
         'complete': complete,
         'total': total,
