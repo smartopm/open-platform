@@ -26,7 +26,6 @@ module Mutations
       def authorized?(vals)
         comment = Comments::NoteComment.find_by(id: vals[:id])
         raise_comment_not_found_error(comment)
-
         return true if permitted?(module: :note, permission: :can_update_note_comment) ||
                        comment.user_id.eql?(context[:current_user]&.id)
 
