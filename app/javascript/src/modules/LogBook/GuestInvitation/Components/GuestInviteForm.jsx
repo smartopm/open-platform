@@ -41,7 +41,7 @@ export default function GuestInviteForm({ guest }) {
     // });
     // eslint-disable-next-line security/detect-object-injection
     invitees[parseInt(index, 10)][name] = value; // TODO: Fix the object injection
-    // setInvitees([...values]);
+    setInvitees([...invitees]);
   }
 
   function handlePhoneNumber(number, i){
@@ -178,7 +178,6 @@ export default function GuestInviteForm({ guest }) {
         handleChange={handleInputChange}
         handleChangeOccurrence={handleChangeOccurrence}
       />
-      <AddMoreButton title='Add Guest' handleAdd={handleAddInvitees} />
       <br />
       {
           invitees.map((invite, index) => (
@@ -191,6 +190,8 @@ export default function GuestInviteForm({ guest }) {
             />
           ))
         }
+      <AddMoreButton title='Add Guest' handleAdd={handleAddInvitees} />
+
       <CenteredContent>
         <Button
           variant="contained"
