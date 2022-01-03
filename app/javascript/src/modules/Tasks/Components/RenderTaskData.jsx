@@ -24,7 +24,8 @@ import DateContainer, { dateToString } from '../../../components/DateContainer';
 import MenuList from '../../../shared/MenuList';
 import UserAvatar from '../../Users/Components/UserAvatar';
 import Card from '../../../shared/Card';
-
+import LinearProgress from '@mui/material/LinearProgress';
+import Box from '@mui/material/Box';
 // TODO: Put in a more shareable directory
 export function LinkToUser({ userId, name }) {
   const theme = useTheme();
@@ -145,7 +146,7 @@ export function TaskDataList({
   const classes = useStyles();
   const { t } = useTranslation('task');
   const matches = useMediaQuery('(max-width:800px)');
-
+  console.log("Mutuba on progress bar for task", task)
   return (
     <Card styles={styles} contentStyles={{ padding: '4px' }}>
       <Grid container>
@@ -301,13 +302,25 @@ export function TaskDataList({
             </Grid>
           </Grid>
         </Grid>
-        <Grid item md={1} style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }} data-testid="task_menu_section">
-          <Hidden smDown>
+        <Grid item md={1} style={{ display: 'flex', alignItems: 'center',
+          justifyContent: 'flex-end' }} data-testid="task_menu_section">
+          <Box sx={{ width: '100%' }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+                <Box sx={{ width: '100%', ml: 4 }}>
+                  <LinearProgress variant="determinate" value= {task?.progress?.progress_percentage} />
+                </Box>
+                <Box sx={{ minWidth: 5 }}>
+                  <Typography variant="body2" color="text.secondary">{task?.progress?.complete} of {task?.progress?.total}</Typography>
+                </Box>
+            </Box>
+          </Box>
+          {/* <Hidden smDown>
             {task.completed
               ? <Chip size="small" label={t('task.complete')} className={classes.completed} />
               : <Chip size="small" label={t('task.open')} className={classes.open} />}
-          </Hidden>
+          </Hidden> */}
         </Grid>
+
         <Grid item md={1} xs={1} style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
           {task?.subTasks?.length > 0
             ? (
