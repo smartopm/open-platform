@@ -1,4 +1,4 @@
-import { Button, TextField } from '@material-ui/core';
+import { Button, TextField, Grid } from '@material-ui/core';
 import React, { useContext, useState } from 'react';
 import { useMutation } from 'react-apollo';
 import PropTypes from 'prop-types';
@@ -14,7 +14,6 @@ import MessageAlert from '../../../../components/MessageAlert';
 import { capitalize, extractCountry, formatError, objectAccessor } from '../../../../utils/helpers';
 import { checkInValidRequiredFields } from '../../utils';
 import { invitationRequiredFields as requiredFields } from '../constants';
-import { useStyles } from '../styles';
 import { Context } from '../../../../containers/Provider/AuthStateProvider'
 
 export default function GuestInviteForm({ guest }) {
@@ -30,7 +29,6 @@ export default function GuestInviteForm({ guest }) {
     isSubmitting: false
   });
 
-  const classes = useStyles()
   function handleInputChange(event) {
     const { name, value } = event.target;
     setGuestData({
@@ -112,43 +110,49 @@ export default function GuestInviteForm({ guest }) {
       />
       {!guest?.id && (
         <>
-          <TextField
-            variant="outlined"
-            type="text"
-            value={guestData.name}
-            label={t('common:form_fields.full_name')}
-            onChange={handleInputChange}
-            name="name"
-            inputProps={{ 'data-testid': 'guest_entry_name' }}
-            margin="normal"
-            fullWidth
-            required
-            {...validate('name')}
-          />
-          <PhoneInput
-            value={phoneNumber}
-            containerStyle={{ width: "100%"}}
-            inputClass={classes.invitePhoneNumber}
-            inputStyle={{ width: "100%", height: "4em",  }}
-            country={extractCountry(authState.user.community?.locale)}
-            placeholder={t('common:form_placeholders.phone_number')}
-            onChange={value => setPhoneNumber(value)}
-            preferredCountries={['hn', 'ke', 'zm', 'ng', 'in', 'us']}
-            inputProps={{ 'data-testid': 'guest_entry_phone_number' }}
-          />
-          <TextField
-            variant="outlined"
-            type="email"
-            value={guestData.email}
-            label={t('common:form_fields.email')}
-            onChange={handleInputChange}
-            name="email"
-            inputProps={{ 'data-testid': 'guest_entry_email' }}
-            margin="normal"
-            {...validate('email')}
-            fullWidth
-          />
-
+          <Grid container spacing={3}>
+            <Grid item xs={4}>
+              <TextField
+                variant="outlined"
+                type="text"
+                value={guestData.name}
+                label={t('common:form_fields.full_name')}
+                onChange={handleInputChange}
+                name="name"
+                inputProps={{ 'data-testid': 'guest_entry_name' }}
+                margin="normal"
+                fullWidth
+                required
+                {...validate('name')}
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <PhoneInput
+                value={phoneNumber}
+                containerStyle={{ marginTop: 17 }}
+                inputStyle={{ height: "3.96em",  }}
+                country={extractCountry(authState.user.community?.locale)}
+                placeholder={t('common:form_placeholders.phone_number')}
+                onChange={value => setPhoneNumber(value)}
+                preferredCountries={['hn', 'ke', 'zm', 'ng', 'in', 'us']}
+                inputProps={{ 'data-testid': 'guest_entry_phone_number' }}
+              />
+            </Grid>
+            <Grid item xs={4}>
+              <TextField
+                variant="outlined"
+                type="email"
+                value={guestData.email}
+                label={t('common:form_fields.email')}
+                onChange={handleInputChange}
+                name="email"
+                inputProps={{ 'data-testid': 'guest_entry_email' }}
+                margin="normal"
+                {...validate('email')}
+                fullWidth
+              />
+            </Grid>
+          </Grid>
         </>
       )}
       <GuestTime
