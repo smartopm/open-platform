@@ -15,26 +15,37 @@ import { capitalize, extractCountry, formatError, objectAccessor } from '../../.
 import { checkInValidRequiredFields } from '../../utils';
 import { invitationRequiredFields as requiredFields } from '../constants';
 import { Context } from '../../../../containers/Provider/AuthStateProvider'
+import AddMoreButton from '../../../../shared/buttons/AddMoreButton';
+import InviteeForm from './InviteeForm';
 
 export default function GuestInviteForm({ guest }) {
   const history = useHistory();
   const authState = useContext(Context)
+  const initialData = { name: '', email: '', phoneNumber: '' }
   const [guestData, setGuestData] = useState(initialRequestState);
   const [phoneNumber, setPhoneNumber] = useState('')
   const [details, setDetails] = useState({ message: '', isError: false });
   const [createInvitation] = useMutation(InvitationCreateMutation);
   const { t } = useTranslation(['logbook', 'common', 'discussion']);
+  const [invitees, setInvitees] = useState([initialData])
   const [validation, setInputValidationMsg] = useState({
     isError: false,
     isSubmitting: false
   });
 
-  function handleInputChange(event) {
+  function handleInputChange(event, index) {
     const { name, value } = event.target;
-    setGuestData({
-      ...guestData,
-      [name]: value
-    });
+    // setGuestData({
+    //   ...guestData,
+    //   [name]: value
+    // });
+    // eslint-disable-next-line security/detect-object-injection
+    invitees[parseInt(index, 10)][name] = value; // TODO: Fix the object injection
+    // setInvitees([...values]);
+  }
+
+  function handlePhoneNumber(number, i){
+    invitees[parseInt(i, 10)].phoneNumber = number;
   }
 
   function handleChangeOccurrence(day) {
@@ -100,6 +111,12 @@ export default function GuestInviteForm({ guest }) {
     };
     return props;
   }
+
+
+  function handleAddInvitees(){
+    setInvitees([...invitees, initialData]);
+  }
+
   return (
     <>
       <MessageAlert
@@ -161,9 +178,19 @@ export default function GuestInviteForm({ guest }) {
         handleChange={handleInputChange}
         handleChangeOccurrence={handleChangeOccurrence}
       />
-
+      <AddMoreButton title='Add Guest' handleAdd={handleAddInvitees} />
       <br />
-
+      {
+          invitees.map((invite, index) => (
+            <InviteeForm
+              // eslint-disable-next-line react/no-array-index-key
+              key={index}
+              guestData={invite}
+              handlePhoneNumber={number => handlePhoneNumber(number, index)}
+              handleInputChange={event => handleInputChange(event, index)}
+            />
+          ))
+        }
       <CenteredContent>
         <Button
           variant="contained"
