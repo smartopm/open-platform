@@ -134,22 +134,13 @@ export default function CampaignList() {
                     </Grid>
                     <Grid item>
                       <Typography className={css(style.subTitle)}>
-                        {t('campaign.total_clicked')}
-                        :
-                        {' '}
-                        {camp.campaignMetrics.totalClicked}
-                      </Typography>
-                    </Grid>
-                    <Grid item>
-                      <Typography className={css(style.subTitle)}>
                         {t('campaign.success')}
                         :
                         {' '}
                         {String(parseInt(
-                        (100 * camp.campaignMetrics.totalClicked) /
-                          (camp.campaignMetrics.totalSent &&
-                            camp.campaignMetrics.totalSent > 0
-                            ? camp.campaignMetrics.totalSent
+                        (100 * camp.campaignMetrics.totalSent) /
+                          (camp.campaignMetrics.totalScheduled > 0
+                            ? camp.campaignMetrics.totalScheduled
                             : 1), 10)
                       )}
                         %
