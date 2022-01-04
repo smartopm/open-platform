@@ -59,18 +59,12 @@ module Types
 
     def progress
       total = object.sub_notes.count + 1
-      object.completed == true ? complete = 1: complete=0
-      object.sub_notes.each do |note| 
-        if note.completed
-          complete+=1
-        end
+      complete = object.completed == true ? 1 : 0
+      object.sub_notes.each do |note|
+        complete += 1 if note.completed
       end
-      progress_percentage = complete.fdiv(total).round(2)*100
-      {
-        'complete': complete,
-        'total': total,
-        'progress_percentage': progress_percentage
-      }
+      progress_percentage = complete.fdiv(total).round(2) * 100
+      { 'complete': complete, 'total': total, 'progress_percentage': progress_percentage }
     end
   end
 end
