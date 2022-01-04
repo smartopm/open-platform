@@ -43,7 +43,7 @@ export default function ProcessesList() {
         <Grid item md={11} xs={11} className={classes.header}>
           <Grid container spacing={1}>
             <Grid item md={9} xs={10}>
-              <Typography variant="h4" style={{marginLeft: '5px'}}>{t('process.processes')}</Typography>
+              <Typography variant="h4" style={{marginLeft: '5px', marginBottom: '24px'}}>{t('process.processes')}</Typography>
             </Grid>
           </Grid>
         </Grid>
