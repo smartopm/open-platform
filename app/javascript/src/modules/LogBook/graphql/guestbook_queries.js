@@ -50,6 +50,10 @@ export const CurrentGuestEntriesQuery = gql`
         id
         name
       }
+      grantor {
+        id
+        name
+      }
       closestEntryTime {
         occursOn
         visitEndDate
