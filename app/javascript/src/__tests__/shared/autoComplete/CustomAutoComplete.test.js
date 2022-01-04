@@ -9,7 +9,8 @@ describe('CustomAutoComplete component', () => {
         const props = {
             onChange: jest.fn(),
             isMultiple: true,
-            users: []
+            users: [],
+            label: 'search'
         }
 
 

@@ -13,6 +13,8 @@ module Mutations
       argument :ends_at, String, required: false
       argument :occurs_on, [String], required: false
       argument :visit_end_date, String, required: false
+      argument :user_ids, [String], required: false
+      argument :guests, [GraphQL::Types::JSON], required: false # TODO: Fix with actual types
 
       field :entry_time, Types::EntryTimeType, null: true
 

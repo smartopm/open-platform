@@ -4,6 +4,7 @@
       "no_results": "No results Found",
       "load_more": "Load more",
       "type_your_search": "Type your search query",
-      "search_for": "Search for {{title}}"
+      "search_for": "Search for {{title}}",
+      "search_users": "Search Users"
     }
 }

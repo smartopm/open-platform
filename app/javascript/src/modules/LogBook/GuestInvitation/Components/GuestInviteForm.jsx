@@ -15,7 +15,7 @@ import { capitalize, formatError, objectAccessor } from '../../../../utils/helpe
 import { checkInValidRequiredFields } from '../../utils';
 import { invitationRequiredFields as requiredFields } from '../constants';
 import InviteeForm from './InviteeForm';
-import CustomAutoComplete from '../../../../shared/autoComplete/CustomAutoComplete';
+import SearchInput from '../../../../shared/search/SearchInput';
 
 export default function GuestInviteForm({ guest }) {
   const history = useHistory();
@@ -25,7 +25,7 @@ export default function GuestInviteForm({ guest }) {
   const [phoneNumber, setPhoneNumber] = useState(''); // TODO: fix this unused-vars
   const [details, setDetails] = useState({ message: '', isError: false });
   const [createInvitation] = useMutation(InvitationCreateMutation);
-  const { t } = useTranslation(['logbook', 'common', 'discussion']);
+  const { t } = useTranslation(['logbook', 'common', 'discussion', 'search']);
   const [invitees, setInvitees] = useState([initialData]);
   const [validation, setInputValidationMsg] = useState({
     isError: false,
@@ -35,7 +35,7 @@ export default function GuestInviteForm({ guest }) {
   function handleInputChange(event, index) {
     const { name, value } = event.target;
     // eslint-disable-next-line security/detect-object-injection
-    invitees[parseInt(index, 10)][name] = value; // TODO: Fix the object injection
+    invitees[parseInt(index, 10)][name] = value;
     setInvitees([...invitees]);
   }
 
@@ -74,9 +74,11 @@ export default function GuestInviteForm({ guest }) {
     createInvitation({
       variables: {
         guestId: guest?.id,
-        name: guestData.name.trim() || guest?.name,
-        email: guestData?.email || guest?.email,
-        phoneNumber: phoneNumber || guest?.phoneNumber,
+        // name: guestData.name.trim() || guest?.name,
+        // email: guestData?.email || guest?.email,
+        // phoneNumber: phoneNumber || guest?.phoneNumber,
+        userIds: [], // this will be for existing users
+        guests: invitees,
         visitationDate: guestData.visitationDate,
         startsAt: guestData.startsAt,
         endsAt: guestData.endsAt,
@@ -139,7 +141,12 @@ export default function GuestInviteForm({ guest }) {
       <br />
       <Grid container>
         <Grid item xs={12} md={6}>
-          <CustomAutoComplete users={[]} onChange={handleSearch} isMultiple />
+          <SearchInput
+            title={t('search:search.search_users')}
+            searchValue="searchTerm"
+            filterRequired={false}
+            handleSearch={handleSearch}
+          />
         </Grid>
       </Grid>
       <br />

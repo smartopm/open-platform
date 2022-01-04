@@ -125,6 +125,7 @@ export default function TaskForm({ close, refetch, users, assignUser, parentTask
         }
         setAssignees(value)
       }}
+        label={t('task.task_search_placeholder')}
       />
 
       <br />
