@@ -14,11 +14,11 @@ import { Context } from '../../../../containers/Provider/AuthStateProvider';
 
 export default function InviteeForm({
   guestData,
-  handlePhoneNumber,
+  // handlePhoneNumber,
   handleInputChange,
   handleRemoveUser,
   handleAddUser,
-  ...otherProps
+  validate
 }) {
   const { t } = useTranslation('common');
   const authState = useContext(Context);
@@ -39,7 +39,7 @@ export default function InviteeForm({
             margin="normal"
             required
             fullWidth
-            {...otherProps}
+            {...validate('firstName')}
           />
         </Grid>
         <Grid item xs={12} md={3} sm={6}>
@@ -54,7 +54,7 @@ export default function InviteeForm({
             margin="normal"
             required
             fullWidth
-            {...otherProps}
+            {...validate('lastName')}
           />
         </Grid>
 
@@ -69,7 +69,7 @@ export default function InviteeForm({
             inputProps={{ 'data-testid': 'guest_entry_email' }}
             margin="normal"
             fullWidth
-            {...otherProps}
+            {...validate('email')}
           />
         </Grid>
         <Grid item xs={12} md={2} sm={6}>
@@ -93,7 +93,7 @@ export default function InviteeForm({
             inputProps={{ 'data-testid': 'guest_entry_phone_number' }}
             margin="normal"
             fullWidth
-            {...otherProps}
+            {...validate('phoneNumber')}
           />
         </Grid>
         <Grid item xs={12} md={1} sm={6} style={{ marginTop: !matches ? 26 : 0 }}>
@@ -127,8 +127,7 @@ InviteeForm.propTypes = {
     isAdded: PropTypes.bool,
   }).isRequired,
   handleInputChange: PropTypes.func.isRequired,
-  handlePhoneNumber: PropTypes.func.isRequired,
-  // eslint-disable-next-line react/require-default-props
+  // handlePhoneNumber: PropTypes.func.isRequired,
   handleRemoveUser: PropTypes.func.isRequired,
   handleAddUser: PropTypes.func.isRequired,
 }
