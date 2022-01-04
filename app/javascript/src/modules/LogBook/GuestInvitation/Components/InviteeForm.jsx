@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
@@ -7,10 +7,10 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import CancelIcon from '@mui/icons-material/Cancel';
 import PropTypes from 'prop-types';
-import PhoneInput from 'react-phone-input-2';
+// import PhoneInput from 'react-phone-input-2';
 import { useTranslation } from 'react-i18next';
-import { extractCountry } from '../../../../utils/helpers';
-import { Context } from '../../../../containers/Provider/AuthStateProvider';
+// import { extractCountry } from '../../../../utils/helpers';
+// import { Context } from '../../../../containers/Provider/AuthStateProvider';
 
 export default function InviteeForm({
   guestData,
@@ -21,12 +21,13 @@ export default function InviteeForm({
   validate
 }) {
   const { t } = useTranslation('common');
-  const authState = useContext(Context);
+  // const authState = useContext(Context);
   const theme = useTheme();
-  const matches = useMediaQuery(theme.breakpoints.down('md'));
+  const matchesMedium = useMediaQuery(theme.breakpoints.down('md'));
+  const matchesSmall = useMediaQuery(theme.breakpoints.down('sm'));
   return (
     <Grid container direction="row">
-      <Grid container spacing={1}>
+      <Grid container spacing={matchesSmall ? 0 : 1}>
         <Grid item xs={12} md={3} sm={6}>
           <TextField
             variant="outlined"
@@ -96,7 +97,7 @@ export default function InviteeForm({
             {...validate('phoneNumber')}
           />
         </Grid>
-        <Grid item xs={12} md={1} sm={6} style={{ marginTop: !matches ? 26 : 0 }}>
+        <Grid item xs={12} md={1} sm={6} style={{ marginTop: !matchesMedium ? 26 : 0 }}>
           {
             guestData.isAdded
             ? (
@@ -130,4 +131,5 @@ InviteeForm.propTypes = {
   // handlePhoneNumber: PropTypes.func.isRequired,
   handleRemoveUser: PropTypes.func.isRequired,
   handleAddUser: PropTypes.func.isRequired,
+  validate: PropTypes.func.isRequired,
 }
