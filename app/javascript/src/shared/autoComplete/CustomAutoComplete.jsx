@@ -40,26 +40,28 @@ export default function CustomAutoComplete({users, onChange, isMultiple }){
         renderInput={(params) => (
           <TextField
             {...params}
-            variant="standard"
+            variant="outlined"
             label={t('task.task_assignee_label')}
-            placeholder={t('task.task_search_placeholder')} 
+            placeholder={t('task.task_search_placeholder')}
             onChange={event => setSearchUser(event.target.value)}
             onKeyDown={() => searchUser()}
+            fullWidth
           />
         )}
       />
     )
-
 }
 
 CustomAutoComplete.defaultProps = {
-  users: []
+  users: [],
 }
 
 CustomAutoComplete.propTypes = {
   users: PropTypes.arrayOf(PropTypes.string),
   onChange: PropTypes.func.isRequired,
-  isMultiple: PropTypes.bool.isRequired
+  isMultiple: PropTypes.bool.isRequired,
+  // label: PropTypes.string,
+  // placeholder: PropTypes.string,
 }
 
 

@@ -8,7 +8,7 @@ export default function GuestTime({ userData, handleChange, handleChangeOccurren
   const { t } = useTranslation(['logbook', 'common', 'days']);
   return (
     <Grid container direction="row" spacing={2}>
-      <Grid item xs={12}>
+      <Grid item xs={12} sm={4}>
         <DatePickerDialog
           selectedDate={userData.visitationDate}
           handleDateChange={date => handleChange({ target: { name: 'visitationDate', value: date } })}
@@ -19,7 +19,7 @@ export default function GuestTime({ userData, handleChange, handleChangeOccurren
         />
         <br />
       </Grid>
-      <Grid item xs={6}>
+      <Grid item xs={6} sm={4}>
         <ThemedTimePicker
           time={userData.startsAt || userData.startTime}
           handleTimeChange={date => handleChange({ target: { name: 'startsAt', value: date } })}
@@ -30,7 +30,7 @@ export default function GuestTime({ userData, handleChange, handleChangeOccurren
           fullWidth
         />
       </Grid>
-      <Grid item xs={6}>
+      <Grid item xs={6} sm={4}>
         <ThemedTimePicker
           time={userData.endsAt || userData.endTime}
           handleTimeChange={date => handleChange({ target: { name: 'endsAt', value: date } })}

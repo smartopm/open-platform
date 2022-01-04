@@ -1,4 +1,6 @@
-import { Button, TextField, Grid } from '@material-ui/core';
+import Grid from '@mui/material/Grid';
+import Button from '@mui/material/Button';
+// import TextField from '@mui/material/TextField';
 import React, { useContext, useState } from 'react';
 import { useMutation } from 'react-apollo';
 import PropTypes from 'prop-types';
@@ -17,6 +19,7 @@ import { invitationRequiredFields as requiredFields } from '../constants';
 import { Context } from '../../../../containers/Provider/AuthStateProvider'
 import AddMoreButton from '../../../../shared/buttons/AddMoreButton';
 import InviteeForm from './InviteeForm';
+import CustomAutoComplete from '../../../../shared/autoComplete/CustomAutoComplete';
 
 export default function GuestInviteForm({ guest }) {
   const history = useHistory();
@@ -117,6 +120,11 @@ export default function GuestInviteForm({ guest }) {
     setInvitees([...invitees, initialData]);
   }
 
+
+  function handleSearch(){
+
+  }
+
   return (
     <>
       <MessageAlert
@@ -125,59 +133,23 @@ export default function GuestInviteForm({ guest }) {
         open={!!details.message}
         handleClose={() => setDetails({ ...details, message: '' })}
       />
-      {!guest?.id && (
-        <>
-          <Grid container spacing={3}>
-            <Grid item xs={4}>
-              <TextField
-                variant="outlined"
-                type="text"
-                value={guestData.name}
-                label={t('common:form_fields.full_name')}
-                onChange={handleInputChange}
-                name="name"
-                inputProps={{ 'data-testid': 'guest_entry_name' }}
-                margin="normal"
-                fullWidth
-                required
-                {...validate('name')}
-              />
-            </Grid>
-            <Grid item xs={4}>
-              <PhoneInput
-                value={phoneNumber}
-                containerStyle={{ marginTop: 17 }}
-                inputStyle={{ height: "3.96em",  }}
-                country={extractCountry(authState.user.community?.locale)}
-                placeholder={t('common:form_placeholders.phone_number')}
-                onChange={value => setPhoneNumber(value)}
-                preferredCountries={['hn', 'ke', 'zm', 'ng', 'in', 'us']}
-                inputProps={{ 'data-testid': 'guest_entry_phone_number' }}
-              />
-            </Grid>
-            <Grid item xs={4}>
-              <TextField
-                variant="outlined"
-                type="email"
-                value={guestData.email}
-                label={t('common:form_fields.email')}
-                onChange={handleInputChange}
-                name="email"
-                inputProps={{ 'data-testid': 'guest_entry_email' }}
-                margin="normal"
-                {...validate('email')}
-                fullWidth
-              />
-            </Grid>
-          </Grid>
-        </>
-      )}
+
       <GuestTime
         days={guestData.occursOn}
         userData={guestData}
         handleChange={handleInputChange}
         handleChangeOccurrence={handleChangeOccurrence}
       />
+      <br />
+      <Grid container>
+        <Grid item xs={12} md={6}>
+          <CustomAutoComplete
+            users={[]}
+            onChange={handleSearch}
+            isMultiple
+          />
+        </Grid>
+      </Grid>
       <br />
       {
           invitees.map((invite, index) => (
