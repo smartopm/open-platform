@@ -59,7 +59,7 @@ module Types
 
     def progress
       total = object.sub_notes.count + 1
-      complete = object.completed == true ? 1 : 0
+      complete = object.completed ? 1 : 0
       object.sub_notes.each do |note|
         complete += 1 if note.completed
       end
