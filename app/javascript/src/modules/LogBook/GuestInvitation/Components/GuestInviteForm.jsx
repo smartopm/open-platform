@@ -24,7 +24,7 @@ import CustomAutoComplete from '../../../../shared/autoComplete/CustomAutoComple
 export default function GuestInviteForm({ guest }) {
   const history = useHistory();
   const authState = useContext(Context)
-  const initialData = { name: '', email: '', phoneNumber: '' }
+  const initialData = { name: '', email: '', phoneNumber: '', isAdded: false }
   const [guestData, setGuestData] = useState(initialRequestState);
   const [phoneNumber, setPhoneNumber] = useState('')
   const [details, setDetails] = useState({ message: '', isError: false });
@@ -116,10 +116,15 @@ export default function GuestInviteForm({ guest }) {
   }
 
 
-  function handleAddInvitees(){
+  function handleAddInvitee(index){
+    invitees[parseInt(index, 10)].isAdded = true;
     setInvitees([...invitees, initialData]);
   }
 
+  function handleRemoveInvitee(index) {
+    invitees.splice(index, 1);
+    setInvitees([...invitees]);
+  }
 
   function handleSearch(){
 
@@ -159,10 +164,11 @@ export default function GuestInviteForm({ guest }) {
               guestData={invite}
               handlePhoneNumber={number => handlePhoneNumber(number, index)}
               handleInputChange={event => handleInputChange(event, index)}
+              handleAddUser={() => handleAddInvitee(index)}
+              handleRemoveUser={() => handleRemoveInvitee(index)}
             />
           ))
         }
-      <AddMoreButton title='Add Guest' handleAdd={handleAddInvitees} />
 
       <CenteredContent>
         <Button

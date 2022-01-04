@@ -5,7 +5,7 @@ import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
-import DeleteOutline from '@mui/icons-material/DeleteOutline';
+import CancelIcon from '@mui/icons-material/Cancel';
 import PropTypes from 'prop-types';
 import PhoneInput from 'react-phone-input-2';
 import { useTranslation } from 'react-i18next';
@@ -16,7 +16,8 @@ export default function InviteeForm({
   guestData,
   handlePhoneNumber,
   handleInputChange,
-  handleRemoveOption,
+  handleRemoveUser,
+  handleAddUser,
   ...otherProps
 }) {
   const { t } = useTranslation('common');
@@ -88,20 +89,29 @@ export default function InviteeForm({
             value={guestData.phoneNumber}
             label={t('form_fields.phone_number')}
             onChange={handleInputChange}
-            name="email"
-            inputProps={{ 'data-testid': 'guest_entry_email' }}
+            name="phoneNumber"
+            inputProps={{ 'data-testid': 'guest_entry_phone_number' }}
             margin="normal"
             fullWidth
             {...otherProps}
           />
         </Grid>
-        <Grid item xs={12} md={1} sm={6}>
-          {/* <IconButton onClick={handleRemoveOption} aria-label="remove">
-            <DeleteOutline color="secondary" />
-          </IconButton> */}
-          <Button variant="outlined" style={{ marginTop: !matches ? 26 : 0 }}>
-            Add
-          </Button>
+        <Grid item xs={12} md={1} sm={6} style={{ marginTop: !matches ? 26 : 0 }}>
+          {
+            guestData.isAdded
+            ? (
+              <IconButton onClick={handleRemoveUser} aria-label="remove">
+                <CancelIcon color="primary" />
+              </IconButton>
+            )
+            : (
+              <Button variant="outlined" onClick={handleAddUser}>
+                Add
+              </Button>
+            )
+          }
+
+
         </Grid>
       </Grid>
     </Grid>
@@ -112,10 +122,12 @@ InviteeForm.propTypes = {
   guestData: PropTypes.shape({
     name: PropTypes.string,
     email: PropTypes.string,
-    phoneNumber: PropTypes.string
+    phoneNumber: PropTypes.string,
+    isAdded: PropTypes.bool,
   }).isRequired,
   handleInputChange: PropTypes.func.isRequired,
   handlePhoneNumber: PropTypes.func.isRequired,
   // eslint-disable-next-line react/require-default-props
-  handleRemoveOption: PropTypes.func // TODO: @olivier: Fix this when done
-};
+  handleRemoveUser: PropTypes.func.isRequired,
+  handleAddUser: PropTypes.func.isRequired,
+}
