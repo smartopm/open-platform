@@ -24,7 +24,7 @@ import CustomAutoComplete from '../../../../shared/autoComplete/CustomAutoComple
 export default function GuestInviteForm({ guest }) {
   const history = useHistory();
   const authState = useContext(Context)
-  const initialData = { name: '', email: '', phoneNumber: '', isAdded: false }
+  const initialData = { firstName: '', lastName: '', email: '', phoneNumber: '', isAdded: false }
   const [guestData, setGuestData] = useState(initialRequestState);
   const [phoneNumber, setPhoneNumber] = useState('')
   const [details, setDetails] = useState({ message: '', isError: false });

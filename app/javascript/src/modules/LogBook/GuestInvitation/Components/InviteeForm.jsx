@@ -31,11 +31,11 @@ export default function InviteeForm({
           <TextField
             variant="outlined"
             type="text"
-            value={guestData.name}
-            label={t('form_fields.full_name')}
+            value={guestData.firstName}
+            label={t('form_fields.first_name')}
             onChange={handleInputChange}
-            name="name"
-            inputProps={{ 'data-testid': 'guest_entry_name' }}
+            name="firstName"
+            inputProps={{ 'data-testid': 'guest_entry_first_name' }}
             margin="normal"
             required
             fullWidth
@@ -46,11 +46,11 @@ export default function InviteeForm({
           <TextField
             variant="outlined"
             type="text"
-            value={guestData.name}
-            label={t('form_fields.full_name')}
+            value={guestData.lastName}
+            label={t('form_fields.last_name')}
             onChange={handleInputChange}
-            name="name"
-            inputProps={{ 'data-testid': 'guest_entry_name' }}
+            name="lastName"
+            inputProps={{ 'data-testid': 'guest_entry_last_name' }}
             margin="normal"
             required
             fullWidth
@@ -120,7 +120,8 @@ export default function InviteeForm({
 
 InviteeForm.propTypes = {
   guestData: PropTypes.shape({
-    name: PropTypes.string,
+    firstName: PropTypes.string,
+    lastName: PropTypes.string,
     email: PropTypes.string,
     phoneNumber: PropTypes.string,
     isAdded: PropTypes.bool,
