@@ -7,7 +7,6 @@ import {
   MenuItem,
   Typography,
   Grid,
-  Chip,
   Button,
   useMediaQuery,
   Dialog,
@@ -31,6 +30,7 @@ import { SubTasksQuery } from '../graphql/task_queries';
 import { Spinner } from '../../../shared/Loading';
 import TaskAddForm from './TaskForm';
 import AccessCheck from '../../Permissions/Components/AccessCheck';
+import CustomProgressBar from '../../../shared/CustomProgressBar';
 
 export default function TaskSubTask({ taskId, users, assignUser, handleSplitScreenOpen, handleTaskCompletion }) {
   const classes = useStyles();
@@ -185,9 +185,7 @@ export default function TaskSubTask({ taskId, users, assignUser, handleSplitScre
               <Grid item md={2} xs={5} className={classes.bodyAlign} style={{textAlign: 'right'}}>
                 <Grid container>
                   <Grid item md={8} xs={8}>
-                    {task.completed
-                    ? <Chip size="small" label={t('task.complete')} className={classes.completed} />
-                    : <Chip size="small" label={t('task.open')} className={classes.open} />}
+                    <CustomProgressBar task={task} smDown={false} />  
                   </Grid>
                   <Grid item md={4} xs={4}>
                     <IconButton

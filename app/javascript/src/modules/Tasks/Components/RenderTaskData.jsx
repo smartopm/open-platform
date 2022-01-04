@@ -19,13 +19,13 @@ import PropTypes from 'prop-types';
 import { useTheme, makeStyles } from '@material-ui/styles';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
-import LinearProgress from '@mui/material/LinearProgress';
 import Box from '@mui/material/Box';
 import { removeNewLines, sanitizeText } from '../../../utils/helpers';
 import DateContainer, { dateToString } from '../../../components/DateContainer';
 import MenuList from '../../../shared/MenuList';
 import UserAvatar from '../../Users/Components/UserAvatar';
 import Card from '../../../shared/Card';
+import CustomProgressBar from '../../../shared/CustomProgressBar';
 // TODO: Put in a more shareable directory
 export function LinkToUser({ userId, name }) {
   const theme = useTheme();
@@ -258,25 +258,12 @@ export function TaskDataList({
         </Grid>
         <Grid item data-testid="task_details_section" md={2} xs={10}>
           <Grid container style={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <Grid item md={2} xs={4}>
+              <Hidden mdUp>
+                <CustomProgressBar task={task} smDown />
+              </Hidden>
 
-            <Hidden mdUp>
-              <Grid item md={2} xs={4}>
-                <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-                  <Box className={classes.progressBar}>
-                    <LinearProgress variant="determinate" value={task?.progress?.progress_percentage} />
-                  </Box>
-                  <Box className={classes.progressBarText}>
-                    <Typography variant="body2" color="text.secondary">
-                      {task?.progress?.complete}
-                      {' '}
-                      of 
-                      {' '}
-                      {task?.progress?.total}
-                    </Typography>
-                  </Box>
-                </Box>
-              </Grid>
-            </Hidden>
+            </Grid>
 
             <Grid item md={2} xs={1}>
               <IconButton
@@ -318,7 +305,6 @@ export function TaskDataList({
             </Grid>
           </Grid>
         </Grid>
-
         <Grid
           item
           md={1}
@@ -327,23 +313,9 @@ export function TaskDataList({
           data-testid="task_menu_section"
         >
           <Hidden smDown>
-            <Box sx={{ width: '100%' }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-                <Box sx={{ width: '100%', ml: 4 }}>
-                  <LinearProgress variant="determinate" value={task?.progress?.progress_percentage} />
-                </Box>
-                <Box sx={{ minWidth: 5, ml: 4 }}>
-                  <Typography variant="body2" color="text.secondary">
-                    {task?.progress?.complete}
-                    {' '}
-                    of 
-                    {' '}
-                    {task?.progress?.total}
-                  </Typography>
-                </Box>
-              </Box>
-            </Box>
+            <CustomProgressBar task={task} smDown={false} />
           </Hidden>
+
         </Grid>
 
         <Grid item md={1} xs={2} style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }} className={classes.arrowDownUpIcon}>
@@ -475,47 +447,6 @@ const useStyles = makeStyles(() => ({
   '@media (min-device-width: 768px) and (max-device-height: 1024px) and (orientation: portrait)' : {
     marginLeft: "20px",
   },
-  },
-  progressBar: {
-    '@media (min-device-width: 320px) and (max-device-height: 568px) and (orientation: portrait)' : {
-      marginLeft: "-40px",
-      marginTop: '10px',
-      width: '100%'
-    },
-    '@media (min-device-width: 360px) and (max-device-height: 640px) and (orientation: portrait)' : {
-      marginLeft: "-40px",
-      marginTop: '10px',
-      width: '100%'
-    },
-    '@media (min-device-width: 375px) and (max-device-height: 812px) and (orientation: portrait)' : {
-      marginLeft: "-50px",
-      marginTop: '10px',
-      width: '100%'
-    },
-    '@media (min-device-width: 768px) and (max-device-height: 1024px) and (orientation: portrait)' : {
-      marginLeft: "-150px",
-      marginTop: '10px',
-      width: '100%'
-    },
-
-  },
-  progressBarText: {
-    '@media (min-device-width: 320px) and (max-device-height: 568px) and (orientation: portrait)' : {
-      marginLeft: "0",
-      width: '100%'
-    },
-    '@media (min-device-width: 360px) and (max-device-height: 640px) and (orientation: portrait)' : {
-      marginLeft: "0",
-      width: '100%'
-    },
-    '@media (min-device-width: 375px) and (max-device-height: 812px) and (orientation: portrait)' : {
-      marginLeft: "0",
-      width: '100%'
-    },
-    '@media (min-device-width: 768px) and (max-device-height: 1024px) and (orientation: portrait)' : {
-      marginLeft: "0",
-      width: '100%'
-    },
   },
 
   arrowDownUpIcon: {
