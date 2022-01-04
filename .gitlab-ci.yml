@@ -150,6 +150,7 @@ staging:appdeploy:
     - curl https://cli-assets.heroku.com/install-ubuntu.sh | sh
     - apt-get update -qy
     - gem install dpl
+    - gem install faraday -v 1.8.0
     - dpl --provider=heroku --app=double-gdp-staging --api-key=$HEROKU_STAGING_API_KEY
     - echo 'running migration on STAGING'
     - HEROKU_API_KEY=$HEROKU_STAGING_API_KEY heroku run bundle exec rake db:migrate --exit-code --app double-gdp-staging
@@ -171,6 +172,7 @@ dev:deploy:
     - curl https://cli-assets.heroku.com/install-ubuntu.sh | sh
     - apt-get update -qy
     - gem install dpl
+    - gem install faraday -v 1.8.0
     - dpl --provider=heroku --app=double-gdp-dev --api-key=$HEROKU_DEV_API_KEY
     - echo 'running migration on DEV'
     - HEROKU_API_KEY=$HEROKU_DEV_API_KEY heroku run bundle exec rake db:migrate --exit-code --app double-gdp-dev
@@ -190,6 +192,7 @@ production:
   script:
     - echo 'deploying to PRODUCTION'
     - gem install dpl
+    - gem install faraday -v 1.8.0
     - dpl --provider=heroku --app=double-gdp-fe --api-key=$HEROKU_PRODUCTION_API_KEY
     - echo 'deployed to PRODUCTION'
   environment:
