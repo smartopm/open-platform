@@ -138,7 +138,7 @@ export default function TodoItem({
   }
 
   function handleTodoItemClick(taskItem) {
-    handleTodoClick(taskItem);
+    handleTodoClick(taskItem, 'processes');
   }
 
   return (
