@@ -96,6 +96,12 @@ const useStyles = makeStyles(() => ({
         marginTop: '10px',
         width: '100%'
       },
+
+      '@media (min-device-width: 411px) and (max-device-height: 823px) and (orientation: portrait)' : {
+        marginLeft: "-50px",
+        marginTop: '10px',
+        width: '100%'
+      },
       '@media (min-device-width: 768px) and (max-device-height: 1024px) and (orientation: portrait)' : {
         marginLeft: "-150px",
         marginTop: '10px',
@@ -113,6 +119,11 @@ const useStyles = makeStyles(() => ({
         width: '100%'
       },
       '@media (min-device-width: 375px) and (max-device-height: 812px) and (orientation: portrait)' : {
+        marginLeft: "0",
+        width: '100%'
+      },
+
+      '@media (min-device-width: 411px) and (max-device-height: 823px) and (orientation: portrait)' : {
         marginLeft: "0",
         width: '100%'
       },
