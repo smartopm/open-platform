@@ -96,7 +96,7 @@ const LoggedInOnly = props => {
  */
 const AdminRoutes = props => {
   const authState = useContext (AuthStateContext);
-  if (authState.user.userType === 'admin') {
+  if (authState.user.userType === 'admin' || 'developer') {
     return props.children;
   }
   return <Redirect to="/" />;
