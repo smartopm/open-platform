@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# Auth check on activestorage urls
 class SecureBlobsController < ActiveStorage::BaseController
   include ActiveStorage::SetBlob
   include Authorizable
