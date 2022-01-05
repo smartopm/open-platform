@@ -13,16 +13,16 @@ export default function GuestSearchCard({ guest, translate, styles, handInviteGu
   return (
     <Card className={styles.card} elevation={0}>
       <CardContent>
-        <Grid container direction="row" justify="flex-end" alignItems="center" spacing={2}>
-          <Grid item xs={2} data-testid="guest_avatar">
+        <Grid container direction="row" justify="flex-start" alignItems="center" spacing={2}>
+          <Grid item xs={4} sm={2} data-testid="guest_avatar">
             <Avatar imageUrl={guest.imageUrl} user={guest} alt="avatar-image" />
           </Grid>
-          <Grid item xs={5} data-testid="guest_name">
+          <Grid item xs={4} sm={2} data-testid="guest_name">
             <Link to={`/user/${guest.id}`}>
               <Text content={guest.name} />
             </Link>
           </Grid>
-          <Grid item xs={5}>
+          <Grid item xs={4} sm={2}>
             <CenteredContent>
               <Button
                 variant="contained"
@@ -31,7 +31,7 @@ export default function GuestSearchCard({ guest, translate, styles, handInviteGu
                 disableElevation
                 data-testid="invite_guest_btn"
               >
-                {translate('form_actions.invite_guest')}
+                {translate('logbook:review_screen.add')}
               </Button>
             </CenteredContent>
           </Grid>

@@ -1,7 +1,8 @@
+/* eslint-disable max-statements */
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import React, { useState } from 'react';
-import { useMutation } from 'react-apollo';
+import { useMutation, useQuery } from 'react-apollo';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -16,6 +17,11 @@ import { checkInValidRequiredFields } from '../../utils';
 import { invitationRequiredFields as requiredFields } from '../constants';
 import InviteeForm from './InviteeForm';
 import SearchInput from '../../../../shared/search/SearchInput';
+import { SearchGuestsQuery } from '../graphql/queries';
+import useDebounce from '../../../../utils/useDebounce';
+import GuestSearchCard from './GuestSearchCard';
+import { useStyles } from '../styles';
+import { UserChip } from '../../../Tasks/Components/UserChip';
 
 export default function GuestInviteForm({ guest }) {
   const history = useHistory();
@@ -27,9 +33,17 @@ export default function GuestInviteForm({ guest }) {
   const [createInvitation] = useMutation(InvitationCreateMutation);
   const { t } = useTranslation(['logbook', 'common', 'discussion', 'search']);
   const [invitees, setInvitees] = useState([initialData]);
+  const [searchValue, setSearchValue] = useState('');
+  const [guestUsers, setGuestUsers] = useState([])
+  const debouncedValue = useDebounce(searchValue, 500);
+  const classes = useStyles()
   const [validation, setInputValidationMsg] = useState({
     isError: false,
     isSubmitting: false
+  });
+  const { data, loading, error } = useQuery(SearchGuestsQuery, {
+    variables: { query: debouncedValue.trim() },
+    fetchPolicy: 'network-only'
   });
 
   function handleInputChange(event, index) {
@@ -91,9 +105,9 @@ export default function GuestInviteForm({ guest }) {
         setDetails({ ...details, isError: false, message: t('guest.guest_invited') });
         setTimeout(() => history.push('/logbook/guests'), 500);
       })
-      .catch(error => {
+      .catch(err => {
         setGuestData({ ...guestData, isLoading: false });
-        setDetails({ ...details, message: formatError(error.message), isError: true });
+        setDetails({ ...details, message: formatError(err.message), isError: true });
       });
   }
 
@@ -121,7 +135,16 @@ export default function GuestInviteForm({ guest }) {
     setInvitees([...invitees]);
   }
 
-  function handleSearch() {}
+  function inviteGuest(user) {
+    setGuestUsers([ ...guestUsers, user]);
+    setSearchValue('')
+  }
+
+  function handleDelete(id){
+    // do the filtering here to remove guest users
+    const filteredGuests = guestUsers.filter(gst => gst.id !== id);
+    setGuestUsers(filteredGuests);
+  }
 
   return (
     <>
@@ -143,13 +166,33 @@ export default function GuestInviteForm({ guest }) {
         <Grid item xs={12} md={6}>
           <SearchInput
             title={t('search:search.search_users')}
-            searchValue="searchTerm"
+            searchValue={searchValue}
             filterRequired={false}
-            handleSearch={handleSearch}
+            handleSearch={event => setSearchValue(event.target.value)}
+            handleClear={() => setSearchValue('')}
           />
         </Grid>
       </Grid>
       <br />
+
+      {!loading &&
+          !error && searchValue &&
+          data?.searchGuests?.map(guestInfo => (
+            <GuestSearchCard
+              key={guestInfo.id}
+              guest={guestInfo}
+              translate={t}
+              styles={classes}
+              handInviteGuest={inviteGuest}
+            />
+          ))}
+
+      <br />
+      {
+        guestUsers.map((user) => (
+          <UserChip key={user.id} user={user} onDelete={() => handleDelete(user.id)} />
+        ))
+      }
       {invitees.map((invite, index) => (
         <InviteeForm
           // eslint-disable-next-line react/no-array-index-key
