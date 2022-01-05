@@ -73,7 +73,7 @@ export default function TaskInfoTop({
 
   const taskPermissions = currentUser?.permissions?.find(permissionObject => permissionObject.module === 'note')
   const canUpdateNote = taskPermissions? taskPermissions.permissions.includes('can_update_note'): false
-
+  
   function openParentLink(event, parent) {
     event.preventDefault();
     history.push(`/tasks/${parent.id}`);

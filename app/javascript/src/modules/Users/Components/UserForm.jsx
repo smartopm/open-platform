@@ -78,7 +78,7 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
   });
   const [userImage, setUserImage] = React.useState(null);
   
-  let communityRoles = authState?.user?.community?.name === "Tilisi" ?  authState?.user?.community?.roles.filter(e => e !== 'client') : communityRoles = authState?.user?.community?.roles
+  const communityRoles = authState?.user?.community?.name === "Tilisi" ?  authState?.user?.community?.roles.filter(e => e !== 'client') : authState?.user?.community?.roles
 
   function uploadUserImage(image) {
     setUserImage(URL.createObjectURL(image));
