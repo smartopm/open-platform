@@ -27,7 +27,13 @@ describe('Todo list main page', () => {
           primaryColor: "#nnn",
           secondaryColor: "#nnn"
         }
-      }
+      },
+      permissions: [
+        {
+          module: 'note',
+          permissions: ['can_view_create_sub_task_button', 'can_view_create_task_button']
+        }
+      ]
     }
   };
 

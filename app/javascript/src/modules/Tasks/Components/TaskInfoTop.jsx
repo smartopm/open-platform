@@ -68,7 +68,7 @@ export default function TaskInfoTop({
     message: ''
   });
 
-  const allowedAssignees = ['admin', 'custodian', 'security_guard', 'contractor', 'site_worker'];
+  const allowedAssignees = ['admin', 'custodian', 'security_guard', 'contractor', 'site_worker', 'consultant'];
 
   function openParentLink(event, parent) {
     event.preventDefault();

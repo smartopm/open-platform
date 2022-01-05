@@ -1,9 +1,11 @@
-import React from 'react'
-import { render, fireEvent } from '@testing-library/react'
-import { BrowserRouter } from 'react-router-dom/'
-import { MockedProvider } from '@apollo/react-testing'
-import CommentCard from '../modules/Tasks/Components/CommentCard'
-import '@testing-library/jest-dom/extend-expect'
+import React from 'react';
+import { render, fireEvent } from '@testing-library/react';
+import { BrowserRouter } from 'react-router-dom/';
+import { MockedProvider } from '@apollo/react-testing';
+import CommentCard from '../modules/Tasks/Components/CommentCard';
+import '@testing-library/jest-dom/extend-expect';
+import { Context } from '../containers/Provider/AuthStateProvider';
+import authState from '../__mocks__/authstate';
 
 describe('Comment Card Component', () => {
   const data = {
@@ -22,14 +24,16 @@ describe('Comment Card Component', () => {
 
   it('render without error', () => {
     const container = render(
-      <MockedProvider>
-        <BrowserRouter>
-          <CommentCard
-            data={data}
-            refetch={jest.fn}
-          />
-        </BrowserRouter>
-      </MockedProvider>
+      <Context.Provider value={authState}>
+        <MockedProvider>
+          <BrowserRouter>
+            <CommentCard
+              data={data}
+              refetch={jest.fn}
+            />
+          </BrowserRouter>
+        </MockedProvider>
+      </Context.Provider>
     )
 
     expect(container.getByTestId('comment-body')).toBeInTheDocument();

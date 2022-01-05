@@ -69,6 +69,7 @@ const cards = [
         'site_worker',
         'site_manager',
         'security_supervisor',
+        'consultant'
       ]
     },
     {

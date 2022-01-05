@@ -6,6 +6,8 @@ import { MockedProvider } from '@apollo/react-testing'
 import TaskSubTask from '../Components/TaskSubTask'
 import { SubTasksQuery } from '../graphql/task_queries'
 import taskMock from '../__mocks__/taskMock';
+import { Context } from '../../../containers/Provider/AuthStateProvider';
+import authState from '../../../__mocks__/authstate';
 
 describe('TaskSubTask Component', () => {
   const subTaskMock = [
@@ -26,16 +28,18 @@ describe('TaskSubTask Component', () => {
     let container 
     await act(async () => {
       container = render(
-        <MockedProvider mocks={subTaskMock} addTypename={false}>
-          <BrowserRouter>
-            <TaskSubTask
-              taskId='23'
-              users={[]}
-              assignUser={jest.fn()}
-              handleTaskCompletion={jest.fn}
-            />
-          </BrowserRouter>
-        </MockedProvider>
+        <Context.Provider value={authState}>
+          <MockedProvider mocks={subTaskMock} addTypename={false}>
+            <BrowserRouter>
+              <TaskSubTask
+                taskId='23'
+                users={[]}
+                assignUser={jest.fn()}
+                handleTaskCompletion={jest.fn}
+              />
+            </BrowserRouter>
+          </MockedProvider>
+        </Context.Provider>
       )})
 
     expect(container.queryByTestId('sub_tasks_header')).toBeInTheDocument();
@@ -47,16 +51,18 @@ describe('TaskSubTask Component', () => {
     let container 
     await act(async () => {
       container = render(
-        <MockedProvider mocks={[]} addTypename={false}>
-          <BrowserRouter>
-            <TaskSubTask
-              taskId='23'
-              users={[]}
-              assignUser={jest.fn()}
-              handleTaskCompletion={jest.fn}
-            />
-          </BrowserRouter>
-        </MockedProvider>
+        <Context.Provider value={authState}>
+          <MockedProvider mocks={[]} addTypename={false}>
+            <BrowserRouter>
+              <TaskSubTask
+                taskId='23'
+                users={[]}
+                assignUser={jest.fn()}
+                handleTaskCompletion={jest.fn}
+              />
+            </BrowserRouter>
+          </MockedProvider>
+        </Context.Provider>
       )})
 
     expect(container.queryByTestId('no_subtasks')).toBeInTheDocument();

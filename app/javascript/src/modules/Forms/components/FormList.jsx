@@ -35,12 +35,13 @@ import CenteredContent from '../../../components/CenteredContent'
 import TitleDescriptionForm from './TitleDescriptionForm'
 import { DateAndTimePickers } from '../../../components/DatePickerDialog'
 import { FormCreateMutation, FormUpdateMutation } from '../graphql/forms_mutation'
-import { formStatus , allUserTypes } from '../../../utils/constants'
+import { formStatus } from '../../../utils/constants'
 import { ActionDialog } from '../../../components/Dialog'
 import MessageAlert from '../../../components/MessageAlert'
 import FloatButton from '../../../components/FloatButton'
 import { objectAccessor, formatError } from '../../../utils/helpers'
 import SwitchInput from './FormProperties/SwitchInput';
+import {Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
 
 
 // here we get existing google forms and we mix them with our own created forms
@@ -280,8 +281,10 @@ export function FormDialog({actionType, form, formMutation, open, setOpen, messa
   const [expiresAt, setExpiresAtDate] = useState(form?.expiresAt || null)
   const [isLoading, setLoading] = useState(false);
   const [multipleSubmissionsAllowed, setMultipleSubmissionsAllowed] = useState(form ? form.multipleSubmissionsAllowed : true)
-  const [preview, setPreview] = useState(form ? form.preview : false)
-  const [roles, setRoles] = useState(form?.roles || [])
+  const [preview, setPreview] = useState(form ? form.preview : false);
+  const authState = React.useContext(AuthStateContext);
+  const [roles, setRoles] = useState(form?.roles || []);
+  const communityRoles = authState?.user?.community?.roles;
 
   function handleDateChange(date) {
     setExpiresAtDate(date)
@@ -374,10 +377,11 @@ export function FormDialog({actionType, form, formMutation, open, setOpen, messa
                 },
               }}
               >
-                {Object.entries(allUserTypes).map(([key, val]) => (
-                  <MenuItem key={key} value={val}>
-                    {t(`common:user_types.${val}`)}
-                  </MenuItem>
+                {communityRoles &&
+              communityRoles.map(key => (
+                <MenuItem key={key} value={key}>
+                  {t(`common:user_types.${key}`)}
+                </MenuItem>
               ))}
               </Select>
             </FormControl>

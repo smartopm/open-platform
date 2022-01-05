@@ -1,6 +1,6 @@
 /* eslint-disable import/no-cycle */
 /* eslint-disable no-use-before-define */
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, useContext } from 'react';
 import {
   IconButton,
   List,
@@ -18,6 +18,7 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import TaskDelete from './TaskDelete';
 import EditField from './TaskCommentEdit';
 import { dateToString } from '../../../components/DateContainer';
+import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
 
 export default function CommentCard({ data, refetch }) {
   const [open, setOpen] = useState(false);
@@ -30,6 +31,7 @@ export default function CommentCard({ data, refetch }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const [currentComment, setCurrentComment] = useState('');
   const menuOpen = Boolean(anchorEl);
+  const authState = useContext (AuthStateContext);
 
   const { t } = useTranslation('common');
 
@@ -103,18 +105,20 @@ export default function CommentCard({ data, refetch }) {
                       </div>
                     )}
                   />
-                  <ListItemSecondaryAction>
-                    <IconButton
-                      edge="end"
-                      aria-label="more_details"
-                      data-testid="more_details"
-                      onClick={event => handleOpenMenu(event, com)}
-                      size="small"
-                      color="primary"
-                    >
-                      <MoreVertIcon />
-                    </IconButton>
-                  </ListItemSecondaryAction>
+                  {(authState.user.userType === 'admin' || (com.user.id === authState.user.id)) && (
+                    <ListItemSecondaryAction>
+                      <IconButton
+                        edge="end"
+                        aria-label="more_details"
+                        data-testid="more_details"
+                        onClick={event => handleOpenMenu(event, com)}
+                        size="small"
+                        color="primary"
+                      >
+                        <MoreVertIcon />
+                      </IconButton>
+                    </ListItemSecondaryAction>
+                  )}
                 </ListItem>
               )}
               {editId === com.id && (

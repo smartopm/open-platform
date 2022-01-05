@@ -10,9 +10,7 @@ module Mutations
       field :note_comment, Types::NoteCommentType, null: true
 
       def resolve(id:, body:)
-        comment = Comments::NoteComment.find(id)
-        raise_comment_not_found_error(comment)
-
+        comment = Comments::NoteComment.find_by(id: id)
         return { note_comment: comment } if comment.body.eql?(body)
 
         updates_hash = { body: [comment.body, body] }
@@ -25,8 +23,12 @@ module Mutations
       end
 
       # Verifies if current user is present or not.
-      def authorized?(_vals)
-        return true if permitted?(module: :note, permission: :can_update_note_comment)
+      def authorized?(vals)
+        comment = Comments::NoteComment.find_by(id: vals[:id])
+        raise_comment_not_found_error(comment)
+
+        return true if permitted?(module: :note, permission: :can_update_note_comment) ||
+                       comment.user_id.eql?(context[:current_user]&.id)
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end
