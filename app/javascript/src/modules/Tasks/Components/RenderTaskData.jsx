@@ -453,6 +453,9 @@ const useStyles = makeStyles(() => ({
     '@media (min-device-width: 768px) and (max-device-height: 1024px) and (orientation: portrait)' : {
       marginLeft: "-45px",
     },
+    '@media (min-device-width: 540px) and (max-device-height: 720px) and (orientation: portrait)' : {
+      marginLeft: "-25px",
+    },
 
   }
 }));
