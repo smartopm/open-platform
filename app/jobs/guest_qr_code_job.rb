@@ -15,20 +15,25 @@ class GuestQrCodeJob < ApplicationJob
     base_url = HostEnv.base_url(community)
 
     # TODO: start the loop here
-    qr_code_url = 'https://api.qrserver.com/v1/create-qr-code/' \
-                  "?data=#{CGI.escape("https://#{base_url}/request/#{entry_request.id}?type=#{type}")}&size=256x256"
-    request_url = "https://#{base_url}/request/#{entry_request.id}"
 
-    template_data = [
-      { key: '%community_name%', value: community.name },
-      { key: '%qr_code_image%', value: "<img src=#{qr_code_url} />" },
-      { key: '%request_url%', value: "<a href=#{request_url}>#{request_url}</a>" },
-    ]
+    contact_infos.each do |user|
+      qr_code_url = 'https://api.qrserver.com/v1/create-qr-code/' \
+                    "?data=#{CGI.escape("https://#{base_url}/request/#{user[:request].id}?type=#{type}")}&size=256x256"
+      request_url = "https://#{base_url}/request/#{user[:request].id}"
 
-    Notify.call(contact_info, template: template,
-                              template_data: template_data,
-                              sms_body: I18n.t('general.guest_invite_message',
-                                               invite_link: request_url, community_name: community.name))
+      template_data = [
+        { key: '%community_name%', value: community.name },
+        { key: '%qr_code_image%', value: "<img src=#{qr_code_url} />" },
+        { key: '%request_url%', value: "<a href=#{request_url}>#{request_url}</a>" },
+      ]
+
+      Notify.call(user, template: template,
+                                template_data: template_data,
+                                sms_body: I18n.t('general.guest_invite_message',
+                                                 invite_link: request_url, community_name: community.name))
+
+    end
+
   end
   # rubocop:enable Metrics/MethodLength
 end

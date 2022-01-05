@@ -43,7 +43,7 @@ module Mutations
     end
 
     def raise_duplicate_email_error(email)
-      return unless email
+      return if email.blank?
 
       user = context[:site_community].users.find_any_via_email(email)
       return if user.nil?

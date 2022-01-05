@@ -4,24 +4,19 @@ module Mutations
   module EntryRequest
     # Create a new entry time
     class InvitationCreate < BaseMutation
-      # argument :guest_id, ID, required: false
-      # argument :name, String, required: false
-      # argument :phone_number, String, required: false
-      # argument :email, String, required: false
       argument :visitation_date, String, required: true
       argument :starts_at, String, required: false
       argument :ends_at, String, required: false
       argument :occurs_on, [String], required: false
       argument :visit_end_date, String, required: false
       argument :user_ids, [String], required: false
-      argument :guests, [GraphQL::Types::JSON], required: false # TODO: Fix with actual types
+      argument :guests, [GraphQL::Types::JSON], required: false
 
       field :success, GraphQL::Types::Boolean, null: true
 
       # rubocop:disable Metrics/AbcSize
       # rubocop:disable Metrics/MethodLength
       def resolve(vals)
-        puts "===========some ==== some=============="
         ActiveRecord::Base.transaction do
           users = []
 
@@ -32,22 +27,21 @@ module Mutations
           end
 
           all_users = users + vals[:user_ids]
-          user_info = []
-          all_users.each do |usr|
-            user = context[:site_community].users.find_by(id: usr.id)
+          users_info = []
+          all_users.each do |id|
+            user = context[:site_community].users.find_by(id: id)
             request = generate_request(vals, user)
             invite = context[:current_user].invite_guest(user.id, request.id)
             entry = generate_entry_time(vals.except(:guests, :user_ids), invite)
-            user_info << { email: user.email, phone_number: user.phone_number, request: request }
+            users_info << { email: user.email, phone_number: user.phone_number, request: request }
           end
 
           # TODO: refactor this guy to handle multiple users
-          # GuestQrCodeJob.perform_now(
-          #   community: context[:site_community],
-          #   contact_infos: user_info,
-          #   # entry_request: request, # TODO: remove this
-          #   type: 'verify',
-          # )
+          GuestQrCodeJob.perform_now(
+            community: context[:site_community],
+            contact_infos: users_info,
+            type: 'verify',
+          )
           return { success: true }
 
         # rescue
@@ -100,7 +94,7 @@ module Mutations
 
         enrolled_user = context[:current_user].enroll_user(
           name: "#{user[:firstName]} #{user[:lastName]}", phone_number: user[:phoneNumber],
-          email: user[:email], user_type: 'visitor'
+          email: nil, user_type: 'visitor' # TODO: Fix the email here
         )
         return enrolled_user if enrolled_user.persisted?
 
