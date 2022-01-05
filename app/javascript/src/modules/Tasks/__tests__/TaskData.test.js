@@ -110,6 +110,7 @@ describe('Task Data components', () => {
     expect(container.getByTestId("task_subtasks")).toBeInTheDocument()
     expect(container.getByTestId("task_comments")).toBeInTheDocument()
     expect(container.getByTestId("task_details_section")).toBeInTheDocument()
+    expect(container.getByTestId("progress_bar_large_screen")).toBeInTheDocument()
   });
 
   it('applies filter without error', () => {
@@ -242,6 +243,7 @@ describe('Task Data components', () => {
       </BrowserRouter>
     );
     
+    expect(container.getByTestId("progress_bar_large_screen")).toBeInTheDocument()
     expect(container.queryByTestId('task_completion_toggle_button')).toBeInTheDocument();
     fireEvent.click(container.queryByTestId('task_completion_toggle_button'));
 

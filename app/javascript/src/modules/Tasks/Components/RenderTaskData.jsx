@@ -257,7 +257,7 @@ export function TaskDataList({
           </Hidden>
         </Grid>
         <Grid item data-testid="task_details_section" md={2} xs={10}>
-          <Grid container style={{ display: 'flex', justifyContent: 'flex-end' }}>
+          <Grid container data-testid="progress_bar_small_screen" style={{ display: 'flex', justifyContent: 'flex-end' }}>
             <Grid item md={2} xs={4}>
               <Hidden mdUp>
                 <CustomProgressBar task={task} smDown />
@@ -310,7 +310,7 @@ export function TaskDataList({
           md={1}
           style={{ display: 'flex', alignItems: 'center',
           justifyContent: 'flex-end' }}
-          data-testid="task_menu_section"
+          data-testid="progress_bar_large_screen"
         >
           <Hidden smDown>
             <CustomProgressBar task={task} smDown={false} />
