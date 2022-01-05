@@ -1,6 +1,7 @@
 /* eslint-disable max-statements */
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
 import React, { useState } from 'react';
 import { useMutation, useQuery } from 'react-apollo';
 import PropTypes from 'prop-types';
@@ -25,7 +26,8 @@ import { UserChip } from '../../../Tasks/Components/UserChip';
 
 export default function GuestInviteForm({ guest }) {
   const history = useHistory();
-  const initialData = { firstName: '', lastName: '', email: '', phoneNumber: '', isAdded: false };
+  const initialData = { firstName: '', lastName: '', email: null, phoneNumber: null, isAdded: false };
+  // const initialData = { firstName: '', lastName: '', isAdded: false };
   const [guestData, setGuestData] = useState({ ...initialRequestState });
   // eslint-disable-next-line no-unused-vars
   const [phoneNumber, setPhoneNumber] = useState(''); // TODO: fix this unused-vars
@@ -48,6 +50,13 @@ export default function GuestInviteForm({ guest }) {
 
   function handleInputChange(event, index) {
     const { name, value } = event.target;
+    if(index == null){
+      setGuestData({
+        ...guestData,
+        [name]: value
+      });
+      return
+    }
     // eslint-disable-next-line security/detect-object-injection
     invitees[parseInt(index, 10)][name] = value;
     setInvitees([...invitees]);
@@ -79,6 +88,7 @@ export default function GuestInviteForm({ guest }) {
     const isAnyInvalid = invitees.some(invite =>
       checkInValidRequiredFields(invite, requiredFields)
     );
+    const userIds = guestUsers.map(gst => gst.id)
     if (isAnyInvalid && !guest?.id) {
       setInputValidationMsg({ isError: true });
       return;
@@ -87,11 +97,11 @@ export default function GuestInviteForm({ guest }) {
 
     createInvitation({
       variables: {
-        guestId: guest?.id,
+        // guestId: guest?.id,
         // name: guestData.name.trim() || guest?.name,
         // email: guestData?.email || guest?.email,
         // phoneNumber: phoneNumber || guest?.phoneNumber,
-        userIds: [], // this will be for existing users
+        userIds, // this will be for existing users
         guests: invitees,
         visitationDate: guestData.visitationDate,
         startsAt: guestData.startsAt,
@@ -164,8 +174,9 @@ export default function GuestInviteForm({ guest }) {
       <br />
       <Grid container>
         <Grid item xs={12} md={6}>
+          <Typography variant="h6">{t('common:menu.guest_list')}</Typography>
           <SearchInput
-            title={t('search:search.search_users')}
+            title={t('common:misc.users')}
             searchValue={searchValue}
             filterRequired={false}
             handleSearch={event => setSearchValue(event.target.value)}
@@ -202,7 +213,7 @@ export default function GuestInviteForm({ guest }) {
           handleInputChange={event => handleInputChange(event, index)}
           handleAddUser={() => handleAddInvitee(index)}
           handleRemoveUser={() => handleRemoveInvitee(index)}
-          validate={validate}
+          validate={() => {}}
         />
       ))}
 

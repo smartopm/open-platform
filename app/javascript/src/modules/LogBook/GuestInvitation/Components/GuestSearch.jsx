@@ -46,15 +46,18 @@ export default function GuestSearch() {
 
   return (
     <>
-      <CustomDialog
+      {/* <CustomDialog
         title={t('logbook:guest.invite_guest')}
         open={dialogOpen}
         handleDialogStatus={() => setDialogOpen(!dialogOpen)}
       >
         <GuestInviteForm guest={guest} />
-      </CustomDialog>
-      <Container maxWidth="xl">
-        <Grid container spacing={2}>
+      </CustomDialog> */}
+      <Container maxWidth="lg">
+        <br />
+        <br />
+        <GuestInviteForm guest={guest} />
+        {/* <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>
             <Typography variant="h4">{t('common:menu.guest_list')}</Typography>
           </Grid>
@@ -105,7 +108,7 @@ export default function GuestSearch() {
             </Button>
           </CenteredContent>
         )}
-        {loading && <Spinner />}
+        {loading && <Spinner />} */}
       </Container>
     </>
   );
