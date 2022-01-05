@@ -77,7 +77,8 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
     client: useApolloClient()
   });
   const [userImage, setUserImage] = React.useState(null);
-  const communityRoles = authState?.user?.community?.roles
+  
+  const communityRoles = authState?.user?.community?.name === "Tilisi" ?  authState?.user?.community?.roles.filter(e => e !== 'client') : communityRoles = authState?.user?.community?.roles
 
   function uploadUserImage(image) {
     setUserImage(URL.createObjectURL(image));

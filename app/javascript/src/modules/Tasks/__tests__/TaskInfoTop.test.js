@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min';
-import { render, fireEvent } from '@testing-library/react';
+import { render, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { MockedProvider } from '@apollo/react-testing';
 import { Context } from '../../../containers/Provider/AuthStateProvider'
@@ -167,9 +167,10 @@ describe('Top part of the task form component', () => {
     const bodyInput = container2.queryByTestId('editable_body')
     fireEvent.change(bodyInput, { target: { value: 'Body changed' } })
     expect(bodyInput.value).toBe('Body changed')
-    // await waitFor(() => {
-    //   expect(container2.queryByText('task.update_successful')).toBeInTheDocument();
-    // })
+    fireEvent.click(container2.queryByTestId('edit_action_btn'))
+    await waitFor(() => {
+      expect(container2.queryByText('task.update_successful')).toBeInTheDocument();
+    })
   })
 
   it('should test update body', () => {

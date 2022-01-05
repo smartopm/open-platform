@@ -126,6 +126,7 @@ Tilisi:
         - can_see_menu_item
         - can_set_note_reminder
         - can_create_note_comment
+        - can_update_note_comment
         - can_fetch_flagged_notes
         - can_fetch_task_by_id
         - can_fetch_task_comments

@@ -128,18 +128,36 @@ export default function TaskInfoTop({
                 </Breadcrumbs>
               </Grid>
               <Grid item xs={3} style={{ display: 'flex' }}>
-                <IconButton
-                  edge="end"
-                  onClick={handleTaskComplete}
-                  data-testid="check-box"
-                  color="primary"
-                >
-                  {data.completed ? (
-                    <CheckCircleIcon htmlColor="#4caf50" />
-                  ) : (
-                    <CheckCircleOutlineIcon />
-                  )}
-                </IconButton>
+                {
+                  canUpdateNote ? (
+                    <IconButton
+                      edge="end"
+                      onClick={handleTaskComplete}
+                      data-testid="task-info-menu"
+                      color="primary"
+                    >
+                      {data.completed ? (
+                        <CheckCircleIcon htmlColor="#4caf50"  />
+                    ) : (
+                      <CheckCircleOutlineIcon />
+                    )}
+                    </IconButton>
+): (
+  <IconButton
+    edge="end"
+    onClick={handleTaskComplete}
+    data-testid="task-info-menu"
+    color="primary"
+    disabled
+  >
+    {data.completed ? (
+      <CheckCircleIcon htmlColor="#4caf50"  />
+                    ) : (
+                      <CheckCircleOutlineIcon />
+                    )}
+  </IconButton>
+                  )
+                }
                 {isAssignee && (
                   <IconButton
                     edge="end"
@@ -221,19 +239,38 @@ export default function TaskInfoTop({
         {!matches && (
           <>
             <Grid item md={1} xs={1} style={{ textAlign: 'right' }}>
-              <IconButton
-                edge="end"
-                onClick={handleTaskComplete}
-                data-testid="task-info-menu"
-                color="primary"
-              >
-                {data.completed ? (
-                  <CheckCircleIcon htmlColor="#4caf50" />
+              {
+              canUpdateNote ? (
+                <IconButton
+                  edge="end"
+                  onClick={handleTaskComplete}
+                  data-testid="task-info-menu"
+                  color="primary"
+                >
+                  {data.completed ? (
+                    <CheckCircleIcon htmlColor="#4caf50"  />
                 ) : (
                   <CheckCircleOutlineIcon />
                 )}
-              </IconButton>
+                </IconButton>
+): (
+  <IconButton
+    edge="end"
+    onClick={handleTaskComplete}
+    data-testid="task-info-menu"
+    color="primary"
+    disabled
+  >
+    {data.completed ? (
+      <CheckCircleIcon htmlColor="#4caf50"  />
+                ) : (
+                  <CheckCircleOutlineIcon />
+                )}
+  </IconButton>
+              )
+            }
             </Grid>
+          
             {isAssignee && (
               <Grid item md={1} xs={1} style={{ textAlign: 'right' }}>
                 <IconButton
