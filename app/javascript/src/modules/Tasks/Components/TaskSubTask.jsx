@@ -335,7 +335,7 @@ const useStyles = makeStyles(() => ({
   },
   arrowDownUpIcon: {
     marginTop: '-8px',
-    marginLeft: '4px',
+    marginLeft: '5px',
     '@media (min-device-width: 540px) and (max-device-height: 720px) and (orientation: portrait)' : {
       marginLeft: "32px",
     },
