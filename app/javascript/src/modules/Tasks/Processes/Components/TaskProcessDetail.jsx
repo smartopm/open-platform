@@ -62,8 +62,8 @@ export default function TaskProcessDetail() {
   return (
     <div>
       <TaskContextProvider>
-        <Grid container data-testid="process-detail-section">
-          <Grid item md={6} xs={12}>
+        <Grid container data-testid="process-detail-section" style={{padding: '0 56px'}}>
+          <Grid item md={5} xs={12}>
             <Grid container>
               <Grid item data-testid="project-title">
                 <Typography variant="h4">
@@ -102,7 +102,7 @@ export default function TaskProcessDetail() {
               <ProjectProcesses data={stepsData?.taskSubTasks} refetch={refetch} />
             </TabPanel>
           </Grid>
-          <Grid item md={6} xs={12}>
+          <Grid item md={7} xs={12}>
             <TabPanel value={tabValue} index={0}>
               <ProjectOverviewSplitView data={stepsData?.taskSubTasks} refetch={refetch} />
             </TabPanel>
