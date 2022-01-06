@@ -3,13 +3,8 @@ import AccessCheck from '../../Permissions/Components/AccessCheck';
 import ProcessesPage from './Components/ProcessesPage';
 
 const processesPermissions = [
-  'can_create_note',
-  'can_get_task_count',
-  'can_get_task_stats',
-  'can_get_own_tasks',
-  'can_fetch_task_histories',
-  'can_fetch_task_comments',
-  'can_fetch_flagged_notes',
+  'can_access_tasks',
+  'can_access_processes',
 ];
 
 // To switch to processes and set up permissions
