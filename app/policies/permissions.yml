@@ -21,6 +21,8 @@ admin:
       - can_fetch_user_notes
       - can_view_create_task_button
       - can_view_create_sub_task_button
+      - can_access_tasks
+      - can_access_processes
   payment_plan:
     permissions:
       - can_cancel_payment_plan
@@ -252,6 +254,7 @@ contractor:
       - can_get_own_tasks
       - can_view_create_task_button
       - can_view_create_sub_task_button
+      - can_access_tasks
   forms:
     permissions:
       - can_see_menu_item
@@ -295,6 +298,7 @@ custodian:
       - can_get_own_tasks
       - can_view_create_task_button
       - can_view_create_sub_task_button
+      - can_access_tasks
   gate_access:
     permissions:
       - can_see_menu_item
@@ -366,6 +370,7 @@ security_guard:
       - can_get_own_tasks
       - can_view_create_task_button
       - can_view_create_sub_task_button
+      - can_access_tasks
   entry_request:
     permissions:
       - can_see_menu_item
@@ -433,6 +438,7 @@ site_worker:
       - can_get_own_tasks
       - can_view_create_task_button
       - can_view_create_sub_task_button
+      - can_access_tasks
   forms:
     permissions:
       - can_see_menu_item

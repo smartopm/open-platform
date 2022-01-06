@@ -19,8 +19,7 @@ Ciudad Morazán:
         - can_get_task_count
         - can_get_task_stats
         - can_get_own_tasks
-        - can_view_create_task_button
-        - can_view_create_sub_task_button
+        - can_access_tasks
     profile:
       permissions:
         - can_see_menu_item
@@ -119,6 +118,7 @@ Ciudad Morazán:
     logout:
       permissions:
         - can_see_menu_item
+
 Tilisi:
   consultant:
     note:
@@ -166,4 +166,47 @@ Tilisi:
     dashboard:
       permissions:
         - can_access_dashboard
+        - can_see_menu_item
+
+  developer:
+    note:
+      permissions:
+        - can_see_menu_item
+        - can_set_note_reminder
+        - can_create_note_comment
+        - can_fetch_flagged_notes
+        - can_fetch_task_by_id
+        - can_fetch_task_comments
+        - can_fetch_task_histories
+        - can_get_task_count
+        - can_get_task_stats
+        - can_get_own_tasks
+        - can_upload_documents
+        - can_access_tasks
+        - can_access_processes
+        - can_upload_documents
+    forms:
+      permissions:
+        - can_see_menu_item
+        - can_access_forms
+        - can_fill_a_form
+        - can_update_form
+        - can_view_own_forms
+    profile:
+      permissions:
+        - can_see_menu_item
+    user:
+      permissions:
+        - can_view_own_profile
+        - can_edit_own_profile
+        - can_get_users_lite
+    community:
+      permissions:
+        - can_see_menu_item
+    dashboard:
+      permissions:
+        - can_access_dashboard
+        - can_see_menu_item
+    logout:
+      permissions:
         - can_see_menu_item

@@ -14,7 +14,7 @@ jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
 const mck = jest.fn()
 const props = {
   isDialogOpen: false,
-  currentUser: { name: 'Tester', id: '93sd45435' },
+  currentUser: authState.user,
   handleModal: mck,
   saveDate: mck,
   selectedDate: new Date(Date.now()).toISOString(),

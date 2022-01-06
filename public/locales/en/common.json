@@ -349,7 +349,8 @@
     "site_worker": "Site Worker",
     "site_manager": "Site Manager",
     "security_supervisor": "Security Supervisor",
-    "consultant": "Consultant"
+    "consultant": "Consultant",
+    "developer": "Developer"
   },
   "table_headers": {
     "date_created": "Date Created",
