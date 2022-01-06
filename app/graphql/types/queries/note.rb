@@ -104,12 +104,12 @@ module Types::Queries::Note
   end
 
   def task(task_id:)
+    # Disable loading tasks by assignee to allow viewing of subtasks
     unless permitted?(module: :note, permission: :can_fetch_task_by_id)
       raise GraphQL::ExecutionError,
             I18n.t('errors.unauthorized')
     end
     context[:site_community].notes.includes(:assignees, :author, :user)
-                            .for_site_manager(current_user)
                             .eager_load(:assignee_notes, :assignees, :user)
                             .where(flagged: true)
                             .find(task_id)
