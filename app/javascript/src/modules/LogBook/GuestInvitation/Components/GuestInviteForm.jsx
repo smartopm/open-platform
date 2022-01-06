@@ -4,7 +4,6 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import React, { useState } from 'react';
 import { useMutation, useQuery } from 'react-apollo';
-import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import CenteredContent from '../../../../shared/CenteredContent';
@@ -13,9 +12,7 @@ import { initialRequestState } from '../../GuestVerification/constants';
 import InvitationCreateMutation from '../graphql/mutations';
 import { Spinner } from '../../../../shared/Loading';
 import MessageAlert from '../../../../components/MessageAlert';
-import { capitalize, formatError, objectAccessor } from '../../../../utils/helpers';
-import { checkInValidRequiredFields } from '../../utils';
-import { invitationRequiredFields as requiredFields } from '../constants';
+import { formatError } from '../../../../utils/helpers';
 import InviteeForm from './InviteeForm';
 import SearchInput from '../../../../shared/search/SearchInput';
 import { SearchGuestsQuery } from '../graphql/queries';
@@ -24,7 +21,7 @@ import GuestSearchCard from './GuestSearchCard';
 import { useStyles } from '../styles';
 import { UserChip } from '../../../Tasks/Components/UserChip';
 
-export default function GuestInviteForm({ guest }) {
+export default function GuestInviteForm() {
   const history = useHistory();
   const initialData = { firstName: '', lastName: '', email: null, phoneNumber: null, isAdded: false };
   // const initialData = { firstName: '', lastName: '', isAdded: false };
@@ -39,10 +36,6 @@ export default function GuestInviteForm({ guest }) {
   const [guestUsers, setGuestUsers] = useState([])
   const debouncedValue = useDebounce(searchValue, 500);
   const classes = useStyles()
-  const [validation, setInputValidationMsg] = useState({
-    isError: false,
-    isSubmitting: false
-  });
   const { data, loading, error } = useQuery(SearchGuestsQuery, {
     variables: { query: debouncedValue.trim() },
     fetchPolicy: 'network-only'
@@ -62,9 +55,10 @@ export default function GuestInviteForm({ guest }) {
     setInvitees([...invitees]);
   }
 
-  // function handlePhoneNumber(number, i){
-  //   invitees[parseInt(i, 10)].phoneNumber = number;
-  // }
+  function handlePhoneNumber(number, i){
+    invitees[parseInt(i, 10)].phoneNumber = number;
+    setInvitees([...invitees]);
+  }
 
   function handleChangeOccurrence(day) {
     if (guestData.occursOn.includes(day)) {
@@ -85,23 +79,12 @@ export default function GuestInviteForm({ guest }) {
     // enroll user as a visitor
     // create a request for that user
     // then invite them
-    const isAnyInvalid = invitees.some(invite =>
-      checkInValidRequiredFields(invite, requiredFields)
-    );
     const userIds = guestUsers.map(gst => gst.id)
-    if (isAnyInvalid && !guest?.id) {
-      setInputValidationMsg({ isError: true });
-      return;
-    }
     setGuestData({ ...guestData, isLoading: true });
 
     createInvitation({
       variables: {
-        // guestId: guest?.id,
-        // name: guestData.name.trim() || guest?.name,
-        // email: guestData?.email || guest?.email,
-        // phoneNumber: phoneNumber || guest?.phoneNumber,
-        userIds, // this will be for existing users
+        userIds,
         guests: invitees,
         visitationDate: guestData.visitationDate,
         startsAt: guestData.startsAt,
@@ -121,20 +104,6 @@ export default function GuestInviteForm({ guest }) {
       });
   }
 
-  // Fixes the eslint maximum complexity issue
-  function validate(field) {
-    const props = {
-      error:
-        validation.isError && requiredFields.includes(field) && !objectAccessor(guestData, field),
-      helperText:
-        validation.isError &&
-        requiredFields.includes(field) &&
-        !objectAccessor(guestData, field) &&
-        t('logbook:errors.required_field', { fieldName: capitalize(field) })
-    };
-    return props;
-  }
-
   function handleAddInvitee(index) {
     invitees[parseInt(index, 10)].isAdded = true;
     setInvitees([...invitees, initialData]);
@@ -151,7 +120,6 @@ export default function GuestInviteForm({ guest }) {
   }
 
   function handleDelete(id){
-    // do the filtering here to remove guest users
     const filteredGuests = guestUsers.filter(gst => gst.id !== id);
     setGuestUsers(filteredGuests);
   }
@@ -175,6 +143,7 @@ export default function GuestInviteForm({ guest }) {
       <Grid container>
         <Grid item xs={12} md={6}>
           <Typography variant="h6">{t('common:menu.guest_list')}</Typography>
+          <br />
           <SearchInput
             title={t('common:misc.users')}
             searchValue={searchValue}
@@ -209,14 +178,13 @@ export default function GuestInviteForm({ guest }) {
           // eslint-disable-next-line react/no-array-index-key
           key={index}
           guestData={invite}
-          // handlePhoneNumber={number => handlePhoneNumber(number, index)}
+          handlePhoneNumber={number => handlePhoneNumber(number, index)}
           handleInputChange={event => handleInputChange(event, index)}
           handleAddUser={() => handleAddInvitee(index)}
           handleRemoveUser={() => handleRemoveInvitee(index)}
-          validate={() => {}}
         />
       ))}
-
+      <br />
       <CenteredContent>
         <Button
           variant="contained"
@@ -232,15 +200,3 @@ export default function GuestInviteForm({ guest }) {
     </>
   );
 }
-GuestInviteForm.defaultProps = {
-  guest: null
-};
-
-GuestInviteForm.propTypes = {
-  guest: PropTypes.shape({
-    id: PropTypes.string,
-    name: PropTypes.string,
-    email: PropTypes.string,
-    phoneNumber: PropTypes.string
-  })
-};

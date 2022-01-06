@@ -36,17 +36,12 @@ module Mutations
             users_info << { email: user.email, phone_number: user.phone_number, request: request }
           end
 
-          # TODO: refactor this guy to handle multiple users
           GuestQrCodeJob.perform_now(
             community: context[:site_community],
             contact_infos: users_info,
             type: 'verify',
           )
           return { success: true }
-
-        # rescue
-        #   # TODO: find a more generic error message to use here
-        #   raise GraphQL::ExecutionError, I18n.t('errors.duplicate.guest')
         end
       end
 
@@ -101,7 +96,6 @@ module Mutations
         raise GraphQL::ExecutionError, enrolled_user.errors.full_messages&.join(', ')
       end
 
-      # Verifies if current user admin or security guard.
       def authorized?(_vals)
         return true if permitted?(module: :entry_request, permission: :can_invite_guest)
 

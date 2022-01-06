@@ -263,7 +263,7 @@ module Types::Queries::User
     users = context[:site_community].users
     users.where(user_type: 'visitor')
          .search_guest(or: [{ query: (query.presence || '.') }, { name: { matches: query } }])
-         .limit(1).with_attached_avatar
+         .limit(5).with_attached_avatar
   end
 
   def my_guests(query: nil)

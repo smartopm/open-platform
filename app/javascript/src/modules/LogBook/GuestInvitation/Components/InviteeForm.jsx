@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
@@ -7,21 +7,20 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import CancelIcon from '@mui/icons-material/Cancel';
 import PropTypes from 'prop-types';
-// import PhoneInput from 'react-phone-input-2';
+import PhoneInput from 'react-phone-input-2';
 import { useTranslation } from 'react-i18next';
-// import { extractCountry } from '../../../../utils/helpers';
-// import { Context } from '../../../../containers/Provider/AuthStateProvider';
+import { extractCountry } from '../../../../utils/helpers';
+import { Context } from '../../../../containers/Provider/AuthStateProvider';
 
 export default function InviteeForm({
   guestData,
-  // handlePhoneNumber,
+  handlePhoneNumber,
   handleInputChange,
   handleRemoveUser,
   handleAddUser,
-  validate
 }) {
   const { t } = useTranslation('common');
-  // const authState = useContext(Context);
+  const authState = useContext(Context);
   const theme = useTheme();
   const matchesMedium = useMediaQuery(theme.breakpoints.down('md'));
   const matchesSmall = useMediaQuery(theme.breakpoints.down('sm'));
@@ -38,9 +37,8 @@ export default function InviteeForm({
             name="firstName"
             inputProps={{ 'data-testid': 'guest_entry_first_name' }}
             margin="normal"
-            required
             fullWidth
-            {...validate('firstName')}
+            required
           />
         </Grid>
         <Grid item xs={12} md={3} sm={6}>
@@ -53,51 +51,23 @@ export default function InviteeForm({
             name="lastName"
             inputProps={{ 'data-testid': 'guest_entry_last_name' }}
             margin="normal"
+            fullWidth
             required
-            fullWidth
-            {...validate('lastName')}
           />
         </Grid>
-
-        <Grid item xs={12} md={3} sm={6}>
-          <TextField
-            variant="outlined"
-            type="email"
-            value={guestData.email}
-            label={t('form_fields.email')}
-            onChange={handleInputChange}
-            name="email"
-            inputProps={{ 'data-testid': 'guest_entry_email' }}
-            margin="normal"
-            fullWidth
-            {...validate('email')}
-          />
-        </Grid>
-        <Grid item xs={12} md={2} sm={6}>
-          {/* <PhoneInput
+        <Grid item xs={12} md={4} sm={6}>
+          <PhoneInput
             value={guestData.phoneNumber}
-            containerStyle={{ marginTop: 17, width: '100%' }}
-            inputStyle={{ height: '3.96em' }}
+            containerStyle={{ marginTop: !matchesMedium ? 17 : 0,  }}
+            inputStyle={{ height: '3.96em', width: '100%' }}
             country={extractCountry(authState.user.community?.locale)}
             placeholder={t('form_placeholders.phone_number')}
             onChange={handlePhoneNumber}
             preferredCountries={['hn', 'ke', 'zm', 'ng', 'in', 'us']}
             inputProps={{ 'data-testid': 'guest_entry_phone_number' }}
-          /> */}
-          <TextField
-            variant="outlined"
-            type="email"
-            value={guestData.phoneNumber}
-            label={t('form_fields.phone_number')}
-            onChange={handleInputChange}
-            name="phoneNumber"
-            inputProps={{ 'data-testid': 'guest_entry_phone_number' }}
-            margin="normal"
-            fullWidth
-            {...validate('phoneNumber')}
           />
         </Grid>
-        <Grid item xs={12} md={1} sm={6} style={{ marginTop: !matchesMedium ? 26 : 0 }}>
+        <Grid item xs={12} md={2} sm={6} style={{ marginTop: !matchesMedium ? 26 : 10 }}>
           {
             guestData.isAdded
             ? (
@@ -111,8 +81,6 @@ export default function InviteeForm({
               </Button>
             )
           }
-
-
         </Grid>
       </Grid>
     </Grid>
@@ -128,8 +96,7 @@ InviteeForm.propTypes = {
     isAdded: PropTypes.bool,
   }).isRequired,
   handleInputChange: PropTypes.func.isRequired,
-  // handlePhoneNumber: PropTypes.func.isRequired,
+  handlePhoneNumber: PropTypes.func.isRequired,
   handleRemoveUser: PropTypes.func.isRequired,
   handleAddUser: PropTypes.func.isRequired,
-  validate: PropTypes.func.isRequired,
 }
