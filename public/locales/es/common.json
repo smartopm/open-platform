@@ -474,6 +474,7 @@
   "user_types": {
     "admin": "Administrador",
     "client": "Cliente",
+    "consultant": "Consultor",
     "contractor": "Contratista",
     "custodian": "Custodio",
     "prospective_client": "Futuro Cliente",
