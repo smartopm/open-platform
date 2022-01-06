@@ -9,6 +9,7 @@ import PropTypes from 'prop-types';
 import PhoneInput from 'react-phone-input-2';
 import { useTranslation } from 'react-i18next';
 import { extractCountry } from '../../../../utils/helpers';
+import { useStyles } from '../styles'
 import { Context } from '../../../../containers/Provider/AuthStateProvider';
 
 export default function InviteeForm({
@@ -22,10 +23,11 @@ export default function InviteeForm({
   const { t } = useTranslation(['common', 'logbook']);
   const authState = useContext(Context);
   const theme = useTheme();
+  const classes = useStyles()
   const matchesSmall = useMediaQuery(theme.breakpoints.down('sm'));
   const largerScreens = useMediaQuery(theme.breakpoints.up('md'));
   return (
-    <div>
+    <div className={guestData && classes.inviteForm}>
       <Typography>{`${t('logbook:guest_book.guest')} #${guestCount}`}</Typography>
       <Grid container spacing={matchesSmall ? 0 : 1}>
         <Grid item xs={12} md={4} sm={6}>

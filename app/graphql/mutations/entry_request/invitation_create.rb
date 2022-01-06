@@ -33,7 +33,7 @@ module Mutations
             request = generate_request(vals, user)
             invite = context[:current_user].invite_guest(user.id, request.id)
             entry = generate_entry_time(vals.except(:guests, :user_ids), invite)
-            users_info << { email: user.email, phone_number: user.phone_number, request: request }
+            users_info << { phone_number: user.phone_number, request: request }
           end
 
           GuestQrCodeJob.perform_now(
@@ -84,12 +84,11 @@ module Mutations
       end
 
       def check_or_create_guest(user)
-        raise_duplicate_email_error(user[:email])
         raise_duplicate_number_error(user[:phone_number])
 
         enrolled_user = context[:current_user].enroll_user(
           name: "#{user[:firstName]} #{user[:lastName]}", phone_number: user[:phoneNumber],
-          email: nil, user_type: 'visitor' # TODO: Fix the email here
+          user_type: 'visitor'
         )
         return enrolled_user if enrolled_user.persisted?
 

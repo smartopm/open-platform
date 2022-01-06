@@ -148,7 +148,6 @@ export default function GuestInviteForm() {
           />
         </Grid>
       </Grid>
-      <br />
 
       {!loading &&
           !error && searchValue &&
@@ -161,13 +160,13 @@ export default function GuestInviteForm() {
             />
           ))
       }
-
       <br />
       {
         guestUsers.map((user) => (
           <UserChip key={user.id} user={user} onDelete={() => handleDelete(user.id)} />
-        ))
+          ))
       }
+      <br />
       {invitees.map((invite, index) => (
         <InviteeForm
           // eslint-disable-next-line react/no-array-index-key

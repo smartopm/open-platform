@@ -17,5 +17,8 @@ export const useStyles = makeStyles({
   },
   invitePhoneNumberCheck: {
     marginBottom: -10
+  },
+  inviteForm: {
+    marginTop: 5
   }
 });
