@@ -253,7 +253,9 @@
     "allocating_success": "General funds successfully allocated",
     "no_allocating": "There are no active plans for this user to allocate the general funds",
     "uploaded_at": "Uploaded at",
-    "uploaded_by": "Uploaded by"
+    "uploaded_by": "Uploaded by",
+    "remove": "Remove",
+    "add": "Add"
   },
   "menu": {
     "invoice": "Invoice",

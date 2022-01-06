@@ -138,7 +138,8 @@
     "pending": "Pending",
     "approved": "Approved",
     "phone_number_not_available": "Phone number not available",
-    "re_invite": "Invite again"
+    "re_invite": "Invite again",
+    "guest": "Guest"
   },
   "date_picker": {
     "ok_label": "Ok",

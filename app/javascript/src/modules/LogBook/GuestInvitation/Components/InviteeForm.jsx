@@ -19,14 +19,14 @@ export default function InviteeForm({
   handleAddUser,
   guestCount
 }) {
-  const { t } = useTranslation('common');
+  const { t } = useTranslation(['common', 'logbook']);
   const authState = useContext(Context);
   const theme = useTheme();
   const matchesSmall = useMediaQuery(theme.breakpoints.down('sm'));
   const largerScreens = useMediaQuery(theme.breakpoints.up('md'));
   return (
     <div>
-      <Typography>{`Guest #${guestCount}`}</Typography>
+      <Typography>{`${t('logbook:guest_book.guest')} #${guestCount}`}</Typography>
       <Grid container spacing={matchesSmall ? 0 : 1}>
         <Grid item xs={12} md={4} sm={6}>
           <TextField
@@ -71,7 +71,7 @@ export default function InviteeForm({
         </Grid>
         <Grid item xs={12} md={1} sm={2} style={{ marginTop: largerScreens ? 17 : 10 }}>
           <Button variant="outlined" color="primary" onClick={guestData.isAdded ? handleRemoveUser : handleAddUser}>
-            { guestData.isAdded ? 'Remove' : 'Add'}
+            { guestData.isAdded ? t('misc.remove') : t('misc.add')}
           </Button>
         </Grid>
       </Grid>
