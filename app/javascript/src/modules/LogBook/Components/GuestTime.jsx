@@ -52,6 +52,7 @@ export default function GuestTime({ userData, handleChange, handleChangeOccurren
             onClick={() => handleChangeOccurrence(key)}
             data-testid="week_days"
             disabled={disableEdit()}
+            size='small'
           >
             <Avatar style={{ backgroundColor: new Set(userData.occursOn).has(key) ? '#009CFF' : '#ADA7A7' }}>
               {value.charAt(0)}

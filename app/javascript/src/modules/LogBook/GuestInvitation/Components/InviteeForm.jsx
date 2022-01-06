@@ -1,11 +1,10 @@
 import React, { useContext } from 'react';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
-import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
-import CancelIcon from '@mui/icons-material/Cancel';
 import PropTypes from 'prop-types';
 import PhoneInput from 'react-phone-input-2';
 import { useTranslation } from 'react-i18next';
@@ -18,16 +17,18 @@ export default function InviteeForm({
   handleInputChange,
   handleRemoveUser,
   handleAddUser,
+  guestCount
 }) {
   const { t } = useTranslation('common');
   const authState = useContext(Context);
   const theme = useTheme();
-  const matchesMedium = useMediaQuery(theme.breakpoints.down('md'));
   const matchesSmall = useMediaQuery(theme.breakpoints.down('sm'));
+  const largerScreens = useMediaQuery(theme.breakpoints.up('md'));
   return (
-    <Grid container direction="row">
+    <div>
+      <Typography>{`Guest #${guestCount}`}</Typography>
       <Grid container spacing={matchesSmall ? 0 : 1}>
-        <Grid item xs={12} md={3} sm={6}>
+        <Grid item xs={12} md={4} sm={6}>
           <TextField
             variant="outlined"
             type="text"
@@ -36,12 +37,12 @@ export default function InviteeForm({
             onChange={handleInputChange}
             name="firstName"
             inputProps={{ 'data-testid': 'guest_entry_first_name' }}
-            margin="normal"
+            margin="dense"
             fullWidth
             required
           />
         </Grid>
-        <Grid item xs={12} md={3} sm={6}>
+        <Grid item xs={12} md={4} sm={6}>
           <TextField
             variant="outlined"
             type="text"
@@ -50,15 +51,16 @@ export default function InviteeForm({
             onChange={handleInputChange}
             name="lastName"
             inputProps={{ 'data-testid': 'guest_entry_last_name' }}
-            margin="normal"
+            margin="dense"
             fullWidth
             required
           />
         </Grid>
-        <Grid item xs={12} md={4} sm={6}>
+        <Grid item xs={12} md={3} sm={10}>
           <PhoneInput
             value={guestData.phoneNumber}
-            containerStyle={{ marginTop: !matchesMedium ? 17 : 0,  }}
+            // eslint-disable-next-line no-nested-ternary
+            containerStyle={{ marginTop: largerScreens ? 8 : matchesSmall ? 9 : 0  }}
             inputStyle={{ height: '3.96em', width: '100%' }}
             country={extractCountry(authState.user.community?.locale)}
             placeholder={t('form_placeholders.phone_number')}
@@ -67,23 +69,14 @@ export default function InviteeForm({
             inputProps={{ 'data-testid': 'guest_entry_phone_number' }}
           />
         </Grid>
-        <Grid item xs={12} md={2} sm={6} style={{ marginTop: !matchesMedium ? 26 : 10 }}>
-          {
-            guestData.isAdded
-            ? (
-              <IconButton onClick={handleRemoveUser} aria-label="remove">
-                <CancelIcon color="primary" />
-              </IconButton>
-            )
-            : (
-              <Button variant="outlined" onClick={handleAddUser}>
-                Add
-              </Button>
-            )
-          }
+        <Grid item xs={12} md={1} sm={2} style={{ marginTop: largerScreens ? 17 : 10 }}>
+          <Button variant="outlined" color="primary" onClick={guestData.isAdded ? handleRemoveUser : handleAddUser}>
+            { guestData.isAdded ? 'Remove' : 'Add'}
+          </Button>
         </Grid>
       </Grid>
-    </Grid>
+      <br />
+    </div>
   );
 }
 
@@ -99,4 +92,5 @@ InviteeForm.propTypes = {
   handlePhoneNumber: PropTypes.func.isRequired,
   handleRemoveUser: PropTypes.func.isRequired,
   handleAddUser: PropTypes.func.isRequired,
+  guestCount: PropTypes.number.isRequired,
 }

@@ -9,9 +9,9 @@ import Text from '../../../../shared/Text';
 import Avatar from '../../../../components/Avatar';
 import CenteredContent from '../../../../shared/CenteredContent';
 
-export default function GuestSearchCard({ guest, translate, styles, handInviteGuest }) {
+export default function GuestSearchCard({ guest, translate, handInviteGuest }) {
   return (
-    <Card className={styles.card} elevation={0}>
+    <Card elevation={0}>
       <CardContent>
         <Grid container direction="row" justify="flex-start" alignItems="center" spacing={2}>
           <Grid item xs={4} sm={2} data-testid="guest_avatar">
@@ -49,7 +49,4 @@ GuestSearchCard.propTypes = {
   }).isRequired,
   translate: PropTypes.func.isRequired,
   handInviteGuest: PropTypes.func.isRequired,
-  styles: PropTypes.shape({
-    card: PropTypes.string
-  }).isRequired
 };

@@ -1,4 +1,3 @@
-/* eslint-disable max-statements */
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
@@ -18,16 +17,13 @@ import SearchInput from '../../../../shared/search/SearchInput';
 import { SearchGuestsQuery } from '../graphql/queries';
 import useDebounce from '../../../../utils/useDebounce';
 import GuestSearchCard from './GuestSearchCard';
-import { useStyles } from '../styles';
 import { UserChip } from '../../../Tasks/Components/UserChip';
 
+
 export default function GuestInviteForm() {
+  const initialData = { firstName: '', lastName: '', phoneNumber: null, isAdded: false };
   const history = useHistory();
-  const initialData = { firstName: '', lastName: '', email: null, phoneNumber: null, isAdded: false };
-  // const initialData = { firstName: '', lastName: '', isAdded: false };
   const [guestData, setGuestData] = useState({ ...initialRequestState });
-  // eslint-disable-next-line no-unused-vars
-  const [phoneNumber, setPhoneNumber] = useState(''); // TODO: fix this unused-vars
   const [details, setDetails] = useState({ message: '', isError: false });
   const [createInvitation] = useMutation(InvitationCreateMutation);
   const { t } = useTranslation(['logbook', 'common', 'discussion', 'search']);
@@ -35,7 +31,6 @@ export default function GuestInviteForm() {
   const [searchValue, setSearchValue] = useState('');
   const [guestUsers, setGuestUsers] = useState([])
   const debouncedValue = useDebounce(searchValue, 500);
-  const classes = useStyles()
   const { data, loading, error } = useQuery(SearchGuestsQuery, {
     variables: { query: debouncedValue.trim() },
     fetchPolicy: 'network-only'
@@ -51,7 +46,7 @@ export default function GuestInviteForm() {
       return
     }
     // eslint-disable-next-line security/detect-object-injection
-    invitees[parseInt(index, 10)][name] = value;
+    invitees[parseInt(index, 10)][name] = value; // TODO: Fix this object injection
     setInvitees([...invitees]);
   }
 
@@ -114,7 +109,7 @@ export default function GuestInviteForm() {
     setInvitees([...invitees]);
   }
 
-  function inviteGuest(user) {
+  function addToGuests(user) {
     setGuestUsers([ ...guestUsers, user]);
     setSearchValue('')
   }
@@ -162,10 +157,10 @@ export default function GuestInviteForm() {
               key={guestInfo.id}
               guest={guestInfo}
               translate={t}
-              styles={classes}
-              handInviteGuest={inviteGuest}
+              handInviteGuest={addToGuests}
             />
-          ))}
+          ))
+      }
 
       <br />
       {
@@ -182,6 +177,7 @@ export default function GuestInviteForm() {
           handleInputChange={event => handleInputChange(event, index)}
           handleAddUser={() => handleAddInvitee(index)}
           handleRemoveUser={() => handleRemoveInvitee(index)}
+          guestCount={index + 1}
         />
       ))}
       <br />
