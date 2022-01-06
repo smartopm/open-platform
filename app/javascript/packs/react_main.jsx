@@ -399,6 +399,11 @@ const App = () => {
                                 path="/processes/:id"
                                 component={TaskProcessDetail}
                               />
+                               <Route
+                                exact
+                                path="/processes"
+                                component={ProcessesPage}
+                              />
 
                               <AdminRoutes>
                                 <Switch>
@@ -425,7 +430,6 @@ const App = () => {
                                     path="/todo"
                                     render={() => <Redirect to="/tasks" />}
                                   />
-                                  <Route exact path="/processes" component={ProcessesPage} />
                                   <Route path="/feedbacks" component={FeedbackPage} />
                                   <Route path="/event_logs" component={EventLogs} />
                                   <Route path="/comments" exact component={CommentsPage} />
