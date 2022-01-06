@@ -20,7 +20,6 @@ module Mutations
         ActiveRecord::Base.transaction do
           users = []
 
-          puts vals[:guests]
           vals[:guests].each do |guest|
             user = check_or_create_guest(guest)
             users << user.id
@@ -32,7 +31,7 @@ module Mutations
             user = context[:site_community].users.find_by(id: id)
             request = generate_request(vals, user)
             invite = context[:current_user].invite_guest(user.id, request.id)
-            entry = generate_entry_time(vals.except(:guests, :user_ids), invite)
+            generate_entry_time(vals.except(:guests, :user_ids), invite)
             users_info << { phone_number: user.phone_number, request: request }
           end
 
@@ -87,7 +86,7 @@ module Mutations
         raise_duplicate_number_error(user[:phone_number])
 
         enrolled_user = context[:current_user].enroll_user(
-          name: "#{user[:firstName]} #{user[:lastName]}", phone_number: user[:phoneNumber],
+          name: "#{user['firstName']} #{user['lastName']}", phone_number: user['phoneNumber'],
           user_type: 'visitor'
         )
         return enrolled_user if enrolled_user.persisted?

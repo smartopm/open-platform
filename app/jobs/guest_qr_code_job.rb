@@ -28,12 +28,10 @@ class GuestQrCodeJob < ApplicationJob
       ]
 
       Notify.call(user, template: template,
-                                template_data: template_data,
-                                sms_body: I18n.t('general.guest_invite_message',
-                                                 invite_link: request_url, community_name: community.name))
-
+                        template_data: template_data,
+                        sms_body: I18n.t('general.guest_invite_message',
+                                         invite_link: request_url, community_name: community.name))
     end
-
   end
   # rubocop:enable Metrics/MethodLength
 end

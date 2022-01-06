@@ -23,15 +23,15 @@ RSpec.describe GuestQrCodeJob, type: :job do
     it 'enqueues the job' do
       expect do
         described_class.perform_later(community: user.community,
-                                      contact_info: { email: 'email@gmail.com' }, entry_request: entry_req)
+                                      contact_infos: [{ email: 'email@gmail.com', request: entry_req }])
       end.to have_enqueued_job
     end
 
     it 'enqueues job with matched arguments' do
       described_class.perform_later(community: user.community,
-                                    contact_info: { email: 'email@gmail.com' }, entry_request: entry_req)
+                                    contact_infos: [{ email: 'email@gmail.com', request: entry_req }])
       expect(GuestQrCodeJob).to have_been_enqueued.with(community: user.community,
-                                                        contact_info: { email: 'email@gmail.com' }, entry_request: entry_req)
+                                                        contact_infos: [{ email: 'email@gmail.com', request: entry_req }])
     end
 
     it 'invokes EmailMsg' do
@@ -48,7 +48,7 @@ RSpec.describe GuestQrCodeJob, type: :job do
       expect(EmailMsg).to receive(:send_mail_from_db).with('email@gmail.com', template, template_data)
       perform_enqueued_jobs do
         described_class.perform_later(community: user.community,
-                                      contact_info: { email: 'email@gmail.com' }, entry_request: entry_req, type: 'scan')
+                                      contact_infos: [{ email: 'email@gmail.com', request: entry_req }], type: 'scan')
       end
     end
   end

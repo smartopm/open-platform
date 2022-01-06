@@ -272,7 +272,7 @@ module Users
         enrolled_user.send(attr).attach(vals[key]) if vals[key]
       end
       data = { ref_name: enrolled_user.name, note: '', type: enrolled_user.user_type }
-      return enrolled_user unless enrolled_user.save!
+      return enrolled_user unless enrolled_user.save
 
       record_secondary_info(enrolled_user, vals[:secondary_info])
       generate_events('user_enrolled', enrolled_user, data)
