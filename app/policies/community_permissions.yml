@@ -140,6 +140,8 @@ Tilisi:
         - can_get_own_tasks
         - can_view_create_sub_task_button
         - can_access_tasks
+        - can_access_processes
+        - can_upload_documents
     forms:
       permissions:
         - can_see_menu_item
