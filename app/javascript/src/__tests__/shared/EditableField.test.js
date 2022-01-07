@@ -7,6 +7,7 @@ describe('Editable Field component', () => {
   it('should properly render the text field', () => {
     const updateMock = jest.fn()
     const props = {
+      canUpdateNote: true,
       value: 'some description',
       setValue: jest.fn(),
       action: <button type="button" data-testid="update_btn" onClick={updateMock}>update me</button>
