@@ -55,7 +55,7 @@ export default function TaskProcessDetail() {
 
   async function shareOnclick() {
     await navigator.clipboard.writeText(linkExtractor(projectData?.task?.body)[1])
-    setMessageAlert('Link coppied to clipboard')
+    setMessageAlert('Link copied to clipboard')
   }
 
   useEffect(() => {
