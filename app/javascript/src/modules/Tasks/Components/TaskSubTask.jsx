@@ -192,7 +192,7 @@ export default function TaskSubTask({ taskId, users, assignUser, handleSplitScre
                           <LinearProgress variant="determinate" value={task?.progress?.progress_percentage} />
                         </Box>
                         <Box sx={{ minWidth: 2, ml: 2 }}>
-                          <Typography variant="body2" color="text.secondary">
+                          <Typography variant="body2">
                             {task?.progress?.complete}
                             {' '}
                             of 

@@ -14,11 +14,11 @@ export default function CustomProgressBar({task, smDown}){
       <>
         {smDown ? (
           <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-            <Box className={classes.progressBar}>
+            <Box className={classes.progressBar} data-testid="custom_progress_bar_mobile">
               <LinearProgress variant="determinate" value={task?.progress?.progress_percentage} />
             </Box>
-            <Box className={classes.progressBarText}>
-              <Typography variant="body2" color="text.secondary">
+            <Box className={classes.progressBarText} data-testid="custom_progress_bar_text_mobile">
+              <Typography variant="body2">
                 {task?.progress?.complete}
                 {' '}
                 of 
@@ -30,11 +30,11 @@ export default function CustomProgressBar({task, smDown}){
            ) : (
              <Box sx={{ width: '100%' }}>
                <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-                 <Box sx={{ width: '100%', ml: 4 }}>
+                 <Box sx={{ width: '100%', ml: 4 }} data-testid="custom_progress_bar">
                    <LinearProgress variant="determinate" value={task?.progress?.progress_percentage} />
                  </Box>
-                 <Box sx={{ minWidth: 5, ml: 4 }}>
-                   <Typography variant="body2" color="text.secondary">
+                 <Box sx={{ minWidth: 5, ml: 4 }} data-testid="custom_progress_bar_text">
+                   <Typography variant="body2">
                      {task?.progress?.complete}
                      {' '}
                      of 
