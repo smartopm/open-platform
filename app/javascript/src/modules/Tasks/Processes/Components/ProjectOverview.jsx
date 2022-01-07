@@ -56,12 +56,12 @@ export default function ProjectOverview({ data }){
         {formEntriesData?.length
         ? (formEntriesData.map((d) => (
           <Grid container spacing={2} key={d.id}>
-            <Grid item md={4}>
+            <Grid item md={4} xs={5}>
               <Typography variant="caption" color='textSecondary'>
                 {d.formProperty.fieldName}
               </Typography>
             </Grid>
-            <Grid item md={8}>
+            <Grid item md={8} xs={7}>
               <Typography variant="subtitle1">{d.value}</Typography>
             </Grid>
           </Grid>

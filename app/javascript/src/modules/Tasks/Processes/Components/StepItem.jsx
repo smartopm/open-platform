@@ -29,7 +29,7 @@ export default function StepItem({
   return (
     <Card clickData={{clickable, handleClick}} styles={styles} contentStyles={{ padding: '4px' }}>
       <Grid container>
-        <Grid item md={11} xs={8} style={{ display: 'flex', alignItems: 'center' }} data-testid="step_body_section">
+        <Grid item md={11} xs={10} style={{ display: 'flex', alignItems: 'center' }} data-testid="step_body_section">
           <Grid container style={{ display: 'flex', alignItems: 'center' }}>
             <Grid item md={1}>
               <IconButton
@@ -63,7 +63,7 @@ export default function StepItem({
             </Grid>
           </Grid>
         </Grid>
-        <Grid item md={1} xs={1} className={classes.subStepsSection} data-testid="show_step_sub_steps">
+        <Grid item md={1} xs={2} className={classes.subStepsSection} data-testid="show_step_sub_steps">
           {step?.subTasks?.length > 0
             && (
               <IconButton

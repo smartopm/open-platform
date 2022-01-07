@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory, useParams } from 'react-router';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useQuery } from 'react-apollo';
 import { Grid, Typography, IconButton } from '@mui/material';
 import ShareIcon from '@mui/icons-material/Share';
@@ -12,7 +13,7 @@ import ProjectProcesses, { ProjectProcessesSplitView } from './ProjectProcesses'
 import ErrorPage from '../../../../components/Error';
 import Loading from '../../../../shared/Loading';
 import { SubTasksQuery, TaskQuery } from '../../graphql/task_queries';
-import linkExtractor from '../util'
+import hrefsExtractor from '../util'
 import MessageAlert from '../../../../components/MessageAlert';
 
 export default function TaskProcessDetail() {
@@ -24,6 +25,7 @@ export default function TaskProcessDetail() {
   const tab = path.get('tab');
   const [tabValue, setTabValue] = useState(0);
   const [messageAlert, setMessageAlert] = useState('');
+  const matches = useMediaQuery('(max-width:600px)');
 
   const { data: projectData, error: projectDataError, loading: projectDataLoading } = useQuery(
     TaskQuery,
@@ -54,7 +56,7 @@ export default function TaskProcessDetail() {
   }
 
   async function shareOnclick() {
-    await navigator.clipboard.writeText(linkExtractor(projectData?.task?.body)[1])
+    await navigator.clipboard.writeText(hrefsExtractor(projectData?.task?.body)[1])
     setMessageAlert('Link copied to clipboard')
   }
 
@@ -77,10 +79,10 @@ export default function TaskProcessDetail() {
         handleClose={() => setMessageAlert('')}
       />
       <TaskContextProvider>
-        <Grid container data-testid="process-detail-section" style={{padding: '0 56px'}}>
+        <Grid container data-testid="process-detail-section" style={!matches ? {padding: '0 56px'} : {padding: '0 10px'}}>
           <Grid item md={5} xs={12}>
             <Grid container>
-              <Grid item md={11} data-testid="project-title" style={{paddingTop: '20px'}}>
+              <Grid item md={11} xs={10} data-testid="project-title" style={{paddingTop: '20px'}}>
                 <Typography variant="h4">
                   <span
                     // eslint-disable-next-line react/no-danger
@@ -90,7 +92,7 @@ export default function TaskProcessDetail() {
                   />
                 </Typography>
               </Grid>
-              <Grid item md={1}>
+              <Grid item md={1} xs={2} style={{textAlign: 'right'}}>
                 <IconButton color='primary' onClick={shareOnclick}>
                   <ShareIcon />
                 </IconButton>

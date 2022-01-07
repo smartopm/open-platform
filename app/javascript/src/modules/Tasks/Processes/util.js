@@ -1,4 +1,4 @@
-export default function linkExtractor(link) {
+export default function hrefsExtractor(link) {
   const doc = document.createElement('html');
   doc.innerHTML = link;
   const links = doc.getElementsByTagName('a');
