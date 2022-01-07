@@ -124,7 +124,7 @@ export default function VisitView({
                 </Typography>
                 <Text
                   color="secondary"
-                  content={visit.user.name}
+                  content={visit.guestId && visit.grantedState === 1 ? visit.user.name : visit.grantor?.name}
                   data-testid="user_name"
                   onClick={event => handleViewUser(event, visit.user)}
                 />
