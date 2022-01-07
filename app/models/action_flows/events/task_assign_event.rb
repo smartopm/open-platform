@@ -36,7 +36,7 @@ module ActionFlows
         user_type = note_assign.user.user_type
         author_id = note_assign.note.author_id
         body = note_assign.note.body
-        note_assign_version = note_assign.versions.where(event: 'create').first
+        note_assign_version = note_assign.versions.find_by(event: 'create')
         load_data(
           { 'TaskAssign' => note_assign },
           'user_type' => user_type,

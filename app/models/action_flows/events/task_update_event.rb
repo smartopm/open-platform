@@ -31,8 +31,6 @@ module ActionFlows
 
       # rubocop:disable Metrics/AbcSize
       # rubocop:disable Metrics/MethodLength
-      # rubocop:disable Metrics/CyclomaticComplexity
-      # rubocop:disable Metrics/PerceivedComplexity
       def preload_data(eventlog)
         note = eventlog.ref_type.constantize.find eventlog.ref_id
         assignees_email = note.assignees.map(&:email).join(',')
@@ -48,8 +46,6 @@ module ActionFlows
           'due_at' => (note.due_date&.strftime('%Y-%m-%d') || 'Never'),
         )
       end
-      # rubocop:enable Metrics/PerceivedComplexity
-      # rubocop:enable Metrics/CyclomaticComplexity
       # rubocop:enable Metrics/MethodLength
       # rubocop:enable Metrics/AbcSize
     end
