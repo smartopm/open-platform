@@ -55,7 +55,7 @@ export default function ProjectOverview({ data }){
       <Grid container data-testid="project-information">
         {formEntriesData?.length
         ? (formEntriesData.map((d) => (
-          <Grid container spacing={2} key={d.id}>
+          <Grid container spacing={2} key={d.formProperty.fieldName}>
             <Grid item md={4} xs={5}>
               <Typography variant="caption" color='textSecondary'>
                 {d.formProperty.fieldName}
