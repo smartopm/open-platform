@@ -40,7 +40,7 @@ export default function VisitView({
   const history = useHistory();
   const matches = useMediaQuery('(max-width:800px)');
   const classes = useLogbookStyles();
-  const theme = useTheme()
+  const theme = useTheme();
 
   function handleCardClick(visit) {
     history.push({
@@ -60,9 +60,9 @@ export default function VisitView({
     handleAddObservation(log, 'exit');
   }
 
-  function handleViewUser(event, user){
-    event.stopPropagation()
-    history.push(`/user/${user.id}`)
+  function handleViewUser(event, user) {
+    event.stopPropagation();
+    history.push(`/user/${user.id}`);
   }
 
   useEffect(() => {
@@ -90,9 +90,24 @@ export default function VisitView({
           >
             <Grid container spacing={1}>
               <Grid item md={2} xs={5}>
-                <Avatar alt={visit.name} className={classes.avatar} variant="square" data-testid="request_avatar">
-                  {visit.name.charAt(0)}
-                </Avatar>
+                {visit.thumbnailUrl ? (
+                  <Avatar
+                    alt={visit.name}
+                    src={visit.thumbnailUrl}
+                    variant="square"
+                    data-testid="video_preview"
+                    className={classes.avatar}
+                  />
+                ) : (
+                  <Avatar
+                    alt={visit.name}
+                    className={classes.avatar}
+                    variant="square"
+                    data-testid="request_avatar"
+                  >
+                    {visit.name.charAt(0)}
+                  </Avatar>
+                )}
               </Grid>
               <Grid item md={2} xs={7}>
                 <Typography variant="caption" color="primary">
@@ -100,7 +115,11 @@ export default function VisitView({
                 </Typography>
                 <br />
                 <Typography variant="caption" data-testid="host_title">
-                  {`${visit.guestId && visit.grantedState === 1 ? t('logbook:logbook.host'): t('logbook:log_title.guard')}: `}
+                  {`${
+                    visit.guestId && visit.grantedState === 1
+                      ? t('logbook:logbook.host')
+                      : t('logbook:log_title.guard')
+                  }: `}
                   {' '}
                 </Typography>
                 <Text
@@ -112,7 +131,11 @@ export default function VisitView({
                 <div style={{ paddingTop: '7px' }} data-testid="request_status">
                   <Chip
                     data-testid="user-entry"
-                    label={visit.status === 'approved' ? t('guest_book.approved') : t('guest_book.pending')}
+                    label={
+                      visit.status === 'approved'
+                        ? t('guest_book.approved')
+                        : t('guest_book.pending')
+                    }
                     color={visit.status === 'approved' ? 'primary' : 'secondary'}
                     size="small"
                   />
@@ -159,44 +182,45 @@ export default function VisitView({
                   </Button>
                 )}
               </Grid>
-              <Grid item md={3} xs={6} style={!matches ? { paddingTop: '15px' } : {}} data-testid="entry_state">
-                {
-                  visit.guestId && visit.grantedState === 1
-                  ? (
-                    <Chip
-                      label={
-                        checkRequests(visit.closestEntryTime, t, timeZone).valid
-                          ? t('guest_book.valid')
-                          : t('guest_book.invalid_now')
-                      }
-                      style={{
-                        background: checkRequests(visit.closestEntryTime, t, timeZone).valid
-                          ? theme.palette.success.main
-                          : theme.palette.error.main,
-                        color: 'white',
-                        marginRight: '16px'
-                      }}
-                      data-testid="guest_validity"
-                      size="small"
-                    />
-                  )
-                  : visit.grantedState === 3 ? (
-                    <Chip
-                      label={t('guest_book.scanned_entry')}
-                      style={{ backgroundColor: theme.palette.info.main, color: 'white', }}
-                      data-testid="scanned_entry"
-                      size="small"
-                    />
-                  )
-                  : (
-                    <Chip
-                      label={t('guest_book.manual_entry')}
-                      style={{ backgroundColor: theme.palette.warning.main, color: 'white', }}
-                      data-testid="manual_entry"
-                      size="small"
-                    />
-                  )
-                }
+              <Grid
+                item
+                md={3}
+                xs={6}
+                style={!matches ? { paddingTop: '15px' } : {}}
+                data-testid="entry_state"
+              >
+                {visit.guestId && visit.grantedState === 1 ? (
+                  <Chip
+                    label={
+                      checkRequests(visit.closestEntryTime, t, timeZone).valid
+                        ? t('guest_book.valid')
+                        : t('guest_book.invalid_now')
+                    }
+                    style={{
+                      background: checkRequests(visit.closestEntryTime, t, timeZone).valid
+                        ? theme.palette.success.main
+                        : theme.palette.error.main,
+                      color: 'white',
+                      marginRight: '16px'
+                    }}
+                    data-testid="guest_validity"
+                    size="small"
+                  />
+                ) : visit.grantedState === 3 ? (
+                  <Chip
+                    label={t('guest_book.scanned_entry')}
+                    style={{ backgroundColor: theme.palette.info.main, color: 'white' }}
+                    data-testid="scanned_entry"
+                    size="small"
+                  />
+                ) : (
+                  <Chip
+                    label={t('guest_book.manual_entry')}
+                    style={{ backgroundColor: theme.palette.warning.main, color: 'white' }}
+                    data-testid="manual_entry"
+                    size="small"
+                  />
+                )}
               </Grid>
             </Grid>
           </Card>

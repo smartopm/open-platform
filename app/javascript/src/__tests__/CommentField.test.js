@@ -7,6 +7,8 @@ import CommentField from '../modules/Tasks/Components/CommentField'
 import '@testing-library/jest-dom/extend-expect'
 import { TaskComment } from '../graphql/mutations'
 import { Spinner } from '../shared/Loading';
+import { Context } from '../containers/Provider/AuthStateProvider';
+import authState from '../__mocks__/authstate';
 
 describe('Comment Field Component', () => {
   const mocks = [
@@ -31,24 +33,21 @@ describe('Comment Field Component', () => {
       }
     ]
   }
-  const authState = {
-    user: {
-      avatarUrl: null
-    }
-  }
 
   it('render without error', async () => {
     const container = render(
-      <MockedProvider mocks={mocks} addTypename={false}>
-        <BrowserRouter>
-          <CommentField
-            authState={authState}
-            data={data}
-            refetch={jest.fn}
-            taskId='j83hdj3jhu334'
-          />
-        </BrowserRouter>
-      </MockedProvider>
+      <Context.Provider value={authState}>
+        <MockedProvider mocks={mocks} addTypename={false}>
+          <BrowserRouter>
+            <CommentField
+              authState={authState}
+              data={data}
+              refetch={jest.fn}
+              taskId='j83hdj3jhu334'
+            />
+          </BrowserRouter>
+        </MockedProvider>
+      </Context.Provider>
     )
     const body = container.queryByTestId('body_input')
     ReactTestUtils.Simulate.change(body, { target: { value: "new body" } });
@@ -81,16 +80,18 @@ describe('Comment Field Component', () => {
       },
     ];
     const container = render(
-      <MockedProvider mocks={errorMocks} addTypename={false}>
-        <BrowserRouter>
-          <CommentField
-            authState={authState}
-            data={data}
-            refetch={jest.fn}
-            taskId='j83hdj3jhu334'
-          />
-        </BrowserRouter>
-      </MockedProvider>
+      <Context.Provider value={authState}>
+        <MockedProvider mocks={errorMocks} addTypename={false}>
+          <BrowserRouter>
+            <CommentField
+              authState={authState}
+              data={data}
+              refetch={jest.fn}
+              taskId='j83hdj3jhu334'
+            />
+          </BrowserRouter>
+        </MockedProvider>
+      </Context.Provider>
     )
     const body = container.queryByTestId('body_input')
     ReactTestUtils.Simulate.change(body, { target: { value: "new error body" } });

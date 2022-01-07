@@ -37,4 +37,8 @@ Rails.application.routes.draw do
       resource :factories, only: %i[create]
     end
   end
+
+  scope ActiveStorage.routes_prefix do
+    get "/blobs/redirect/:signed_id/*filename/auth" => "secure_blobs#show"
+  end
 end

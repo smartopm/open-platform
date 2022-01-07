@@ -38,12 +38,12 @@ export default function ProcessesList() {
   if (error) return <CenteredContent>{formatError(error.message)}</CenteredContent>;
   if (loading) return <Spinner />;
   return(
-    <>
+    <div className='container'>
       <Grid container>
         <Grid item md={11} xs={11} className={classes.header}>
           <Grid container spacing={1}>
             <Grid item md={9} xs={10}>
-              <Typography variant="h4" style={{marginLeft: '5px'}}>{t('process.processes')}</Typography>
+              <Typography variant="h4" style={{marginLeft: '5px', marginBottom: '24px'}}>{t('process.processes')}</Typography>
             </Grid>
           </Grid>
         </Grid>
@@ -61,7 +61,7 @@ export default function ProcessesList() {
         )
         : (<CenteredContent>No projects</CenteredContent>)
       }
-    </>
+    </div>
   )
 }
 

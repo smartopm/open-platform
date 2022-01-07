@@ -762,7 +762,9 @@ export const entryLogsQueryBuilderInitialValue = {
     'custodian',
     'site_worker',
     'site_manager',
-    'security_supervisor'
+    'security_supervisor',
+    'consultant',
+    'developer'
   ];
 
   export const siteManagers = [
@@ -770,7 +772,8 @@ export const entryLogsQueryBuilderInitialValue = {
     'security_guard',
     'contractor',
     'custodian',
-    'site_worker'
+    'site_worker',
+    'developer'
   ]
 
   export const gateAccessUsers = [

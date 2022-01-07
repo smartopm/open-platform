@@ -69,6 +69,8 @@ const cards = [
         'site_worker',
         'site_manager',
         'security_supervisor',
+        'consultant',
+        'developer'
       ]
     },
     {
@@ -101,7 +103,8 @@ const cards = [
         'contractor',
         'resident',
         'visitor',
-        'security_supervisor'
+        'security_supervisor',
+        'developer'
       ]
     },
     {
@@ -123,7 +126,8 @@ const cards = [
         'contractor',
         'resident',
         'visitor',
-        'security_supervisor'
+        'security_supervisor',
+        'developer'
       ]
     },
     {
@@ -230,7 +234,8 @@ const cards = [
         'visitor',
         'site_worker',
         'site_manager',
-        'security_supervisor'
+        'security_supervisor',
+        'developer'
       ]
     },
 
@@ -254,7 +259,8 @@ const cards = [
         'prospective_client',
         'contractor',
         'resident',
-        'visitor'
+        'visitor',
+        'developer'
       ]
     },
     {

@@ -62,7 +62,8 @@ module Mutations
 
       # Verifies if current user is admin or not.
       def authorized?(_vals)
-        return true if permitted?(module: :note, permission: :can_update_note)
+        return true if permitted?(module: :note, permission: :can_update_note) ||
+                       permitted?(module: :note, permission: :can_upload_documents)
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end

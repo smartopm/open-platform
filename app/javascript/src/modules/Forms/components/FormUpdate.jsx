@@ -5,6 +5,9 @@
 /* eslint-disable security/detect-object-injection */
 /* eslint-disable no-unused-expressions */
 /* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { Fragment, useRef, useState, useEffect } from 'react';
 import {
   Button,
@@ -32,7 +35,7 @@ import ErrorPage from '../../../components/Error';
 import CenteredContent from '../../../components/CenteredContent';
 import { FormUserStatusUpdateMutation, FormUserUpdateMutation } from '../graphql/forms_mutation';
 import TextInput from './FormProperties/TextInput';
-import { convertBase64ToFile, sortPropertyOrder, objectAccessor } from '../../../utils/helpers';
+import { convertBase64ToFile, sortPropertyOrder, objectAccessor, secureFileDownload } from '../../../utils/helpers';
 import DialogueBox from '../../../shared/dialogs/DeleteDialogue';
 import UploadField from './FormProperties/UploadField';
 import SignaturePad from './FormProperties/SignaturePad';
@@ -253,6 +256,11 @@ export default function FormUpdate({ formUserId, userId, authState }) {
     }, 2000);
   }
 
+  function downloadFile(event, path) {
+    event.preventDefault();
+    secureFileDownload(path)
+  }
+
   function renderForm(formPropertiesData) {
     const editable = !formPropertiesData.formProperty.adminUse
       ? false
@@ -386,8 +394,7 @@ export default function FormUpdate({ formUserId, userId, authState }) {
                                 data-testid="download-icon"
                               >
                                 <a
-                                  href={formPropertiesData.imageUrl}
-                                  download={formPropertiesData.imageUrl}
+                                  onClick={(event) => downloadFile(event, formPropertiesData.imageUrl)}
                                   style={{
                                     textDecoration: 'none',
                                     color: '#000000',
@@ -425,7 +432,7 @@ export default function FormUpdate({ formUserId, userId, authState }) {
             <>
               {t('misc.signature')}
               <br />
-              <ImageAuth imageLink={formPropertiesData.imageUrl} />
+              <ImageAuth imageLink={formPropertiesData.imageUrl} auth />
             </>
           )}
           <SignaturePad

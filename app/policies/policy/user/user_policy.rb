@@ -36,6 +36,11 @@ module Policy
             'ability_list' => ['admin@can_see?', 'site_manager@can_see?'],
             'can_see_self' => true,
           },
+          'consultant' => { 'ability_list' => ['admin@can_see?'], 'can_see_self' => true },
+          'developer' => {
+            'ability_list' => ['admin@can_see?', 'developer@can_see?'],
+            'can_see_self' => true,
+          },
         }
       end
       # rubocop:enable Metrics/MethodLength

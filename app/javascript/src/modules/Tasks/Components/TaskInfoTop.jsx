@@ -37,6 +37,7 @@ import MessageAlert from '../../../components/MessageAlert';
 import MenuList from '../../../shared/MenuList';
 
 export default function TaskInfoTop({
+  currentUser,
   users,
   data,
   setDate,
@@ -68,8 +69,11 @@ export default function TaskInfoTop({
     message: ''
   });
 
-  const allowedAssignees = ['admin', 'custodian', 'security_guard', 'contractor', 'site_worker'];
+  const allowedAssignees = ['admin', 'custodian', 'security_guard', 'contractor', 'site_worker', 'consultant', 'developer'];
 
+  const taskPermissions = currentUser?.permissions?.find(permissionObject => permissionObject.module === 'note')
+  const canUpdateNote = taskPermissions? taskPermissions.permissions.includes('can_update_note'): false
+  
   function openParentLink(event, parent) {
     event.preventDefault();
     history.push(`/tasks/${parent.id}`);
@@ -124,18 +128,36 @@ export default function TaskInfoTop({
                 </Breadcrumbs>
               </Grid>
               <Grid item xs={3} style={{ display: 'flex' }}>
-                <IconButton
-                  edge="end"
-                  onClick={handleTaskComplete}
-                  data-testid="check-box"
-                  color="primary"
-                >
-                  {data.completed ? (
-                    <CheckCircleIcon htmlColor="#4caf50" />
-                  ) : (
-                    <CheckCircleOutlineIcon />
-                  )}
-                </IconButton>
+                {
+                  canUpdateNote ? (
+                    <IconButton
+                      edge="end"
+                      onClick={handleTaskComplete}
+                      data-testid="task-info-menu"
+                      color="primary"
+                    >
+                      {data.completed ? (
+                        <CheckCircleIcon htmlColor="#4caf50"  />
+                    ) : (
+                      <CheckCircleOutlineIcon />
+                    )}
+                    </IconButton>
+): (
+  <IconButton
+    edge="end"
+    onClick={handleTaskComplete}
+    data-testid="task-info-menu"
+    color="primary"
+    disabled
+  >
+    {data.completed ? (
+      <CheckCircleIcon htmlColor="#4caf50"  />
+                    ) : (
+                      <CheckCircleOutlineIcon />
+                    )}
+  </IconButton>
+                  )
+                }
                 {isAssignee && (
                   <IconButton
                     edge="end"
@@ -176,7 +198,7 @@ export default function TaskInfoTop({
             </Typography>
           )}
         </Grid>
-        {!editingBody && (
+        {!editingBody && canUpdateNote ? (
           <Grid item xs={3} md={1} data-testid="edit_body_action" style={{ textAlign: 'right' }}>
             <IconButton
               onClick={() => setEditingBody(true)}
@@ -187,7 +209,18 @@ export default function TaskInfoTop({
               <Edit />
             </IconButton>
           </Grid>
-        )}
+        ): (
+          <Grid item xs={3} md={1} data-testid="edit_body_action" style={{ textAlign: 'right' }}>
+            <IconButton
+              data-testid="edit_body_icon"
+              style={{ marginTop: '-6px' }}
+              color="primary"
+              disabled
+            >
+              <Edit />
+            </IconButton>
+          </Grid>
+)}
         {editingBody && (
           <Grid item xs={2} data-testid="edit_action">
             <Button
@@ -206,19 +239,38 @@ export default function TaskInfoTop({
         {!matches && (
           <>
             <Grid item md={1} xs={1} style={{ textAlign: 'right' }}>
-              <IconButton
-                edge="end"
-                onClick={handleTaskComplete}
-                data-testid="task-info-menu"
-                color="primary"
-              >
-                {data.completed ? (
-                  <CheckCircleIcon htmlColor="#4caf50" />
+              {
+              canUpdateNote ? (
+                <IconButton
+                  edge="end"
+                  onClick={handleTaskComplete}
+                  data-testid="task-info-menu"
+                  color="primary"
+                >
+                  {data.completed ? (
+                    <CheckCircleIcon htmlColor="#4caf50"  />
                 ) : (
                   <CheckCircleOutlineIcon />
                 )}
-              </IconButton>
+                </IconButton>
+): (
+  <IconButton
+    edge="end"
+    onClick={handleTaskComplete}
+    data-testid="task-info-menu"
+    color="primary"
+    disabled
+  >
+    {data.completed ? (
+      <CheckCircleIcon htmlColor="#4caf50"  />
+                ) : (
+                  <CheckCircleOutlineIcon />
+                )}
+  </IconButton>
+              )
+            }
             </Grid>
+          
             {isAssignee && (
               <Grid item md={1} xs={1} style={{ textAlign: 'right' }}>
                 <IconButton
@@ -277,14 +329,17 @@ export default function TaskInfoTop({
             </Typography>
           </Grid>
           <Grid item xs={7} md={3}>
-            <DatePickerDialog
-              handleDateChange={date => setDate(date)}
-              selectedDate={selectedDate}
-              InputProps={{
+            {canUpdateNote ?             (
+              <DatePickerDialog
+                handleDateChange={date => setDate(date)}
+                selectedDate={selectedDate}
+                InputProps={{
                 disableUnderline: true,
                 style: { color: moment().isAfter(selectedDate) ? 'red' : '#575757' }
               }}
-            />
+              />
+): <DatePickerDialog disabled />
+            }
           </Grid>
         </Grid>
 
@@ -326,26 +381,52 @@ export default function TaskInfoTop({
           </Grid>
           <Grid item xs={7} md={9}>
             <Grid container style={{ alignItems: 'center'}}>
-              <Grid item md={4} xs={12}>
-                {data.assignees.map(user => (
-                  <UserChip
-                    key={user.id}
-                    user={user}
-                    size="medium"
-                    onDelete={() => assignUser(data.id, user.id)}
-                  />
+              {canUpdateNote ?             (
+                <Grid item md={4} xs={12}>
+                  {data.assignees.map(user => (
+                    <UserChip
+                      key={user.id}
+                      user={user}
+                      size="medium"
+                      onDelete={() => assignUser(data.id, user.id)}
+                    />
                 ))}
-              </Grid>
+                </Grid>
+):             (
+  <Grid item md={4} xs={12}>
+    {data.assignees.map(user => (
+      <UserChip
+        key={user.id}
+        user={user}
+        size="medium"
+        disabled
+      />
+                ))}
+  </Grid>
+)}
               <Grid item md={3} xs={12} style={{ marginLeft: matches ? '5px' : '' }}>
-                <Chip
-                  key={data.id}
-                  variant="outlined"
-                  label={autoCompleteOpen ? t('task.chip_close') : t('task.chip_add_assignee')}
-                  size="medium"
-                  icon={autoCompleteOpen ? <CancelIcon /> : <AddCircleIcon />}
-                  onClick={event => handleOpenAutoComplete(event, data.id)}
-                  color="primary"
-                />
+                {canUpdateNote ? (
+                  <Chip
+                    key={data.id}
+                    variant="outlined"
+                    label={autoCompleteOpen ? t('task.chip_close') : t('task.chip_add_assignee')}
+                    size="medium"
+                    icon={autoCompleteOpen ? <CancelIcon /> : <AddCircleIcon />}
+                    onClick={event => handleOpenAutoComplete(event, data.id)}
+                    color="primary"
+                  />
+): (
+  <Chip
+    key={data.id}
+    variant="outlined"
+    label={t('task.chip_add_assignee')}
+    size="medium"
+    disabled
+    icon={<AddCircleIcon />}
+    color="primary"
+  />
+)}
+
                 {autoCompleteOpen && (
                   <Autocomplete
                     disablePortal
@@ -370,6 +451,7 @@ export default function TaskInfoTop({
                         label={t('task.task_assignee_label')}
                         placeholder={t('task.task_search_placeholder')}
                         onChange={event => setSearchUser(event.target.value)}
+                        autoComplete='off'
                         onKeyDown={() => searchUser()}
                       />
                     )}
@@ -455,6 +537,15 @@ TaskInfoTop.defaultProps = {
   handleSplitScreenClose: () => {}
 };
 TaskInfoTop.propTypes = {
+  currentUser: PropTypes.shape({
+    permissions: PropTypes.arrayOf(
+      PropTypes.shape({
+        note: PropTypes.shape({
+            permissions: PropTypes.arrayOf(PropTypes.string)
+          })
+          })
+    ),
+  }).isRequired,      
   users: PropTypes.arrayOf(PropTypes.object),
   // eslint-disable-next-line react/forbid-prop-types
   data: PropTypes.object,

@@ -38,6 +38,7 @@ import TodoItem from './TodoItem';
 import FloatingButton from '../../../shared/buttons/FloatingButton';
 import SplitScreen from '../../../shared/SplitScreen';
 import { tasksQueryBuilderInitialValue, tasksQueryBuilderConfig, tasksFilterFields } from '../../../utils/constants';
+import AccessCheck from '../../Permissions/Components/AccessCheck';
 
 export default function TodoList({
   isDialogOpen,
@@ -103,7 +104,7 @@ export default function TodoList({
   }
 
   const [loadAssignees, { data: liteData }] = useLazyQuery(UsersLiteQuery, {
-    variables: { query: 'user_type:admin OR user_type:custodian OR user_type:security_guard OR user_type:contractor OR user_type:site_worker'},
+    variables: { query: 'user_type:admin OR user_type:custodian OR user_type:security_guard OR user_type:contractor OR user_type:site_worker OR user_type:consultant OR user_type:developer'},
     errorPolicy: 'all'
   });
 
@@ -564,12 +565,14 @@ export default function TodoList({
             </CenteredContent>
           </>
         )}
-        <FloatingButton
-          variant="extended"
-          handleClick={openModal}
-          color="primary"
-          data-testid="create_task_btn"
-        />
+        <AccessCheck module='note' allowedPermissions={['can_view_create_task_button']}>
+          <FloatingButton
+            variant="extended"
+            handleClick={openModal}
+            color="primary"
+            data-testid="create_task_btn"
+          />
+        </AccessCheck>
       </div>
     </>
   );

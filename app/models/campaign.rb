@@ -41,7 +41,7 @@ class Campaign < ApplicationRecord
     user_id_list.split(',') + labels.joins(:users).pluck(:user_id)
   end
 
-  def target_list_user
+  def target_list_users
     label = community.labels.find_by(short_desc: "com_news_#{campaign_type}")
     user_ids = target_list.uniq - already_sent_user_ids.uniq
     return [] if label.nil? || user_ids.empty?
@@ -49,59 +49,45 @@ class Campaign < ApplicationRecord
     label.users.where(state: 'valid', id: user_ids)
   end
 
-  def update_campaign(**vals)
-    campaign = Campaign.find(vals[:id])
-    return if campaign.nil?
-
-    campaign.update!(vals)
-    campaign
-  end
-
-  def send_messages(campaign_user, acc)
+  def send_messages(user)
     success_codes = [0, 7, 3, 6, 22, 29, 33]
-    sms_log = Notifications::Message.new
-    sms_log.assign_attributes(
-      receiver: acc.phone_number, message: message, user_id: acc.id,
-      sender_id: campaign_user.id, category: 'sms', campaign_id: id
-    )
-    result = sms_log.send_sms(add_prefix: false)
-    sms_delivered = result.messages.select { |mm| success_codes.include?(mm.status.to_i) }.present?
-    sms_log.save if sms_delivered
+    message_log = initialize_message(user)
+    result = message_log.send_sms(add_prefix: false)
+    sms_delivered = result&.messages&.select do |msg|
+      success_codes.include?(msg.status.to_i)
+    end.present?
+    message_log.save if sms_delivered
   end
 
-  def send_email(user_email)
-    template = community.email_templates.find(email_templates_id)
-    return unless template
+  # rubocop:disable Metrics/AbcSize
+  def send_email(user)
+    template = community.email_templates.find_by(id: email_templates_id)
+    return if template.nil? || user.email.blank?
 
+    message_log = initialize_message(user)
     # we will add more data here when needed
     template_data = [
       { key: '%community%', value: community.name.to_s },
       { key: '%logo_url%', value: community.logo_url.to_s },
       { key: '%message%', value: message },
     ]
-    EmailMsg.send_mail_from_db(user_email, template, template_data)
+    response = EmailMsg.send_mail_from_db(user.email, template, template_data)
+    message_log.save if response&.status_code.eql?('202')
   end
+  # rubocop:enable Metrics/AbcSize
 
-  # rubocop:disable Metrics/AbcSize
-  # rubocop:disable Metrics/MethodLength
   def run_campaign
-    admin_user = campaign_admin_user
     update(start_time: Time.current, status: 'in_progress')
-    users = target_list_user
-    CampaignMetricsJob.set(wait: 2.hours).perform_later(id, users.pluck(:id).join(','))
-
-    users.each do |acc|
+    target_list_users.each do |user|
       if campaign_type.eql?('email')
-        send_email(acc.email)
-      elsif acc.phone_number.present?
-        send_messages(admin_user, acc)
+        send_email(user)
+      elsif user.phone_number.present?
+        send_messages(user)
       end
     end
 
     update({ end_time: Time.current, status: :done })
   end
-  # rubocop:enable Metrics/AbcSize
-  # rubocop:enable Metrics/MethodLength
 
   def label_users
     labels.map(&:users)
@@ -122,5 +108,15 @@ class Campaign < ApplicationRecord
     return false if start_time.nil?
 
     Time.zone.now > (start_time + EXPIRATION_DAYS.days)
+  end
+
+  def initialize_message(user)
+    receiver = campaign_type.eql?('sms') ? user.phone_number : user.email
+    message_log = Notifications::Message.new
+    message_log.assign_attributes(
+      receiver: receiver, message: message, user_id: user.id,
+      sender_id: campaign_admin_user.id, category: campaign_type, campaign_id: id
+    )
+    message_log
   end
 end

@@ -8,8 +8,8 @@ namespace :db do
     ActiveRecord::Base.transaction do
       permissions = YAML.load_file("#{::Rails.root}/app/policies/permissions.yml")
       permission_list = permissions.deep_transform_keys!(&:to_sym)
-      valid_modules = %w[campaign].freeze
-      Role.find_each do |role|
+      valid_modules = %w[note user].freeze
+      Role.where(community_id: nil).find_each do |role|
         puts "Adding/updating permissions for #{role.name}"
         valid_modules.each do |valid_module|
           role_permissions = permission_list.dig(role.name.to_sym,

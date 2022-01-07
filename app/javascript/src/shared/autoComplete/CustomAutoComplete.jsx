@@ -16,7 +16,7 @@ export default function CustomAutoComplete({users, onChange, isMultiple, label }
     const debouncedValue = useDebounce(searchedUser, 500);
     const { t } = useTranslation('common')
 
-    const allowedAssignees = ["admin", "custodian", "security_guard", "contractor", "site_worker" ]
+    const allowedAssignees = ["admin", "custodian", "security_guard", "contractor", "site_worker", 'consultant']
 
     const [searchUser, { data: liteData }] = useLazyQuery(UsersLiteQuery, {
       variables: { query: debouncedValue.length > 0 ? debouncedValue : 'user_type:admin OR user_type:custodian OR user_type:security_guard OR user_type:contractor', limit: 10 },

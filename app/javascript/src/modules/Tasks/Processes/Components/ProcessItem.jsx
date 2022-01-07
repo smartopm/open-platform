@@ -49,8 +49,8 @@ export default function ProcessItem({ task, refetch }) {
     redirectToOverviewPage(id);
   }
 
-  function handleTodoItemClick(taskItem) {
-    redirectToOverviewPage(taskItem.id);
+  function handleTodoItemClick(taskItem, tab='overview') {
+    redirectToOverviewPage(taskItem.id, tab);
   }
 
   function handleTaskCompletion(selectedTaskId, completed) {
@@ -78,8 +78,8 @@ export default function ProcessItem({ task, refetch }) {
     redirectToOverviewPage(todoItem.id);
   }
 
-  function redirectToOverviewPage(taskId) {
-    history.push(`/processes/${taskId}`)
+  function redirectToOverviewPage(taskId, tab='overview') {
+    history.push(`/processes/${taskId}?tab=${tab}`)
   }
 
   return(

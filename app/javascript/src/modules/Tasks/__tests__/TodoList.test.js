@@ -14,7 +14,7 @@ jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
 const mck = jest.fn()
 const props = {
   isDialogOpen: false,
-  currentUser: { name: 'Tester', id: '93sd45435' },
+  currentUser: authState.user,
   handleModal: mck,
   saveDate: mck,
   selectedDate: new Date(Date.now()).toISOString(),
@@ -43,7 +43,7 @@ const mocks = [
 describe('Test the Todo page', () => {
   it('Mount the Todo component', () => {
     render(
-      <Context.Provider value={authState.user}>
+      <Context.Provider value={authState}>
         <MockedProvider mocks={mocks} addTypename={false}>
           <BrowserRouter>
             <TodoList {...props} />
@@ -60,7 +60,7 @@ describe('Test the Todo page', () => {
 
   it('renders task form modal', async () => {
     render(
-      <Context.Provider value={authState.user}>
+      <Context.Provider value={authState}>
         <MockedProvider mocks={mocks} addTypename={false}>
           <BrowserRouter>
             <TodoList {...props} />
@@ -82,7 +82,7 @@ describe('Test the Todo page', () => {
 
   it('does not render split screen on initial page load', async () => {
     render(
-      <Context.Provider value={authState.user}>
+      <Context.Provider value={authState}>
         <MockedProvider mocks={mocks} addTypename={false}>
           <BrowserRouter>
             <TodoList {...props} />
