@@ -146,25 +146,25 @@ describe('Task Data components', () => {
   it('renders task menu options', () => {
     render(
       <Context.Provider value={authState}>
-      <BrowserRouter>
-        <MockedProvider>
-          <MockedThemeProvider>
-            <TodoItem
-              task={task}
-              handleChange={() => {}}
-              selectedTasks={[]}
-              isSelected={false}
-              handleTaskDetails={() => {}}
-              handleCompleteNote={() => {}}
-              handleAddSubTask={jest.fn()}
-              taskHeader={taskHeader}
-              handleTodoClick={jest.fn}
-              handleTaskCompletion={jest.fn}
-              handleUploadDocument={jest.fn}
-            />
-          </MockedThemeProvider>
-        </MockedProvider>
-      </BrowserRouter>
+        <BrowserRouter>
+          <MockedProvider>
+            <MockedThemeProvider>
+              <TodoItem
+                task={task}
+                handleChange={() => {}}
+                selectedTasks={[]}
+                isSelected={false}
+                handleTaskDetails={() => {}}
+                handleCompleteNote={() => {}}
+                handleAddSubTask={jest.fn()}
+                taskHeader={taskHeader}
+                handleTodoClick={jest.fn}
+                handleTaskCompletion={jest.fn}
+                handleUploadDocument={jest.fn}
+              />
+            </MockedThemeProvider>
+          </MockedProvider>
+        </BrowserRouter>
       </Context.Provider>
     );
 

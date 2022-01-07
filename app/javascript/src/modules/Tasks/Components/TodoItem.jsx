@@ -47,6 +47,7 @@ export default function TodoItem({
     errorPolicy: 'all'
   });
 
+
   let menuList = [
     {
       content: t('menu.open_task_details'),
@@ -70,9 +71,10 @@ export default function TodoItem({
     },
     {
       content:
-        canUpdateNote ? (selectedTask && selectedTask.completed
+      // eslint-disable-next-line no-nested-ternary
+        canUpdateNote ? selectedTask && selectedTask.completed
           ? t('menu.mark_incomplete')
-          : t('menu.mark_complete')): null,
+          : t('menu.mark_complete'): null,
       isAdmin: true,
       handleClick: () => handleNoteComplete()
     }
