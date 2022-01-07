@@ -35,7 +35,7 @@ export default function InviteeForm({
             variant="outlined"
             type="text"
             value={guestData.firstName}
-            label={t('form_fields.first_name')}
+            label={t('form_fields.full_first_name')}
             onChange={handleInputChange}
             name="firstName"
             inputProps={{ 'data-testid': 'guest_entry_first_name' }}
@@ -49,7 +49,7 @@ export default function InviteeForm({
             variant="outlined"
             type="text"
             value={guestData.lastName}
-            label={t('form_fields.last_name')}
+            label={t('form_fields.full_last_name')}
             onChange={handleInputChange}
             name="lastName"
             inputProps={{ 'data-testid': 'guest_entry_last_name' }}
