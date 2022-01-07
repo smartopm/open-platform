@@ -36,6 +36,7 @@ export default function TodoItem({
   const authState = React.useContext(AuthStateContext);
   const taskPermissions = authState?.user?.permissions?.find(permissionObject => permissionObject.module === 'note')
   const canCreateNote = taskPermissions? taskPermissions.permissions.includes('can_create_note'): false
+  const canUpdateNote = taskPermissions? taskPermissions.permissions.includes('can_update_note'): false
 
   const [
     loadSubTasks,
@@ -69,9 +70,9 @@ export default function TodoItem({
     },
     {
       content:
-        selectedTask && selectedTask.completed
+        canUpdateNote ? (selectedTask && selectedTask.completed
           ? t('menu.mark_incomplete')
-          : t('menu.mark_complete'),
+          : t('menu.mark_complete')): null,
       isAdmin: true,
       handleClick: () => handleNoteComplete()
     }
