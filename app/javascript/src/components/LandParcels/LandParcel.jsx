@@ -1,7 +1,9 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect } from 'react';
 import { useQuery, useLazyQuery, useMutation } from 'react-apollo';
-import { Grid, Typography, Link } from '@material-ui/core';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
+import Link from '@mui/material/Link';
 import { useHistory, useLocation } from 'react-router-dom';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme } from '@material-ui/core/styles';
@@ -24,8 +26,8 @@ import LandParcelMap from './LandParcelMap'
 import useDebounce from '../../utils/useDebounce';
 import QueryBuilder from '../QueryBuilder';
 import {
-  propertyQueryBuilderConfig, 
-  propertyQueryBuilderInitialValue, 
+  propertyQueryBuilderConfig,
+  propertyQueryBuilderInitialValue,
   propertyFilterFields } from '../../utils/constants';
 import ListHeader from '../../shared/list/ListHeader';
 
@@ -57,6 +59,7 @@ export default function LandParcelList() {
   const [searchQuery, setSearchQuery] = useState('')
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
+
   const location = useLocation()
   const { t } = useTranslation(['common', 'property'])
 
@@ -209,6 +212,7 @@ export default function LandParcelList() {
     setSearchQuery(handleQueryOnChange(selectedOptions, propertyFilterFields))
   }
 
+
   if (parcelDataLoading) return <Loading />;
 
   if (error) {
@@ -221,17 +225,17 @@ export default function LandParcelList() {
 
   return (
     <>
-      <Grid container style={{padding: '20px 0 20px 20px'}}>
-        <Grid item xs={12} sm={10}>
-          <SearchInput 
+      <Grid container style={{padding: '20px 0 20px 20px'}} direction="row" justifyContent="space-between">
+        <Grid item xs={12} sm={8} md={10}>
+          <SearchInput
             title={t('property:misc.plot_properties')}
-            searchValue={searchValue} 
-            handleSearch={event => setSearchValue(event.target.value)} 
+            searchValue={searchValue}
+            handleSearch={event => setSearchValue(event.target.value)}
             handleFilter={toggleFilter}
             handleClear={() => setSearchValue('')}
           />
         </Grid>
-        <Grid item xs={12} sm={2}>
+        <Grid item xs={12} sm={4} md={2}>
           {type === 'plots' && (
             <CreateLandParcel refetch={refetch} selectedLandParcel={selectedLandParcel} newHouse={subaction === 'new_house'} refetchHouseData={refetchHouseData} />
           )}
@@ -284,7 +288,7 @@ export default function LandParcelList() {
         <MultipleToggler type={type} handleType={handleType} options={['plots', 'houses', 'map']} />
       </Grid>
 
-      {type === 'plots' && 
+      {type === 'plots' &&
         (
           <>
             <Grid container spacing={0}>
@@ -292,7 +296,7 @@ export default function LandParcelList() {
                 {canViewSearchResultsOnMap() && (
                   <Typography>
                     <RoomIcon size="small" />
-                    <Link 
+                    <Link
                       component="button"
                       variant="body2"
                       onClick={onViewResultsOnMapClick}
