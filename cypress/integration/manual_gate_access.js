@@ -57,10 +57,11 @@ describe('Manual Gate Access', () => {
       cy.get('.save_and_record_other').click()
 
       // Check if Test Manual User was recorded in the logbook
-      cy.visit('/entry_logs')
+      cy.visit('/logbook')
       cy.get('.entry-log-visitor-name').should('contain', 'Test Manual User')
       // check if an observation was successfully added
-      cy.visit('/entry_logs?tab=3')
-      cy.get('.exit_note').should('contain', 'Observation example')
+      // cy.visit('/logbook?tab=3')
+      // cy.get('.exit_note').should('contain', 'Observation example')
+      cy.get('[data-testid=observation_note]').should('contain', 'Observation example')
     })
   });
