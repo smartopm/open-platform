@@ -36,14 +36,14 @@ module ActionFlows
         user_type = note_assign.user.user_type
         author_id = note_assign.note.author_id
         body = note_assign.note.body
-        note_history = note_assign.note.note_histories.order(:created_at).last
+        note_assign_version = note_assign.versions.where(event: 'create').first
         load_data(
           { 'TaskAssign' => note_assign },
           'user_type' => user_type,
           'author_id' => author_id,
           'body' => body,
           'user_email' => note_assign.user.email,
-          'updated_by' => note_history&.user&.name || 'Unknown user',
+          'updated_by' => Users::User.find(note_assign_version.whodunnit).name,
           'updated_date' => eventlog.created_at.strftime('%Y-%m-%d'),
           'due_at' => (note_assign.note.due_date&.strftime('%Y-%m-%d') || 'Never'),
           'url' => "https://#{HostEnv.base_url(eventlog.community)}/tasks/#{note_assign.note.id}",
