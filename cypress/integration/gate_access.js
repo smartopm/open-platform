@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 
-describe.skip('Gate Access', () => {
+describe('Gate Access', () => {
   it('allows security guards to record entry logs', () => {
     cy.factory('community', { name: 'Nkwashi' }).then((commRes) => {
       cy.factory('role', {

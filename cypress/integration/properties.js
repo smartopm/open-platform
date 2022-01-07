@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 
-describe.skip('Properties & Co-ownership Payment Plan', () => {
+describe('Properties & Co-ownership Payment Plan', () => {
   it('creates a co-owned property and a payment plan', () => {
     // Create 2 users
     cy.factory('community', { name: 'Nkwashi' }).then((commRes) => {

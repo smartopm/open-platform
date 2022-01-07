@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 
-describe.skip('Payment', () => {
+describe('Payment', () => {
   it('records a new payment successfully', () => {
     cy.factory('community', { name: 'Nkwashi' }).then(commRes => {
       cy.factory('role', {

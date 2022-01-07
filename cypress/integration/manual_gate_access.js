@@ -60,8 +60,6 @@ describe('Manual Gate Access', () => {
       cy.visit('/logbook')
       cy.get('.entry-log-visitor-name').should('contain', 'Test Manual User')
       // check if an observation was successfully added
-      // cy.visit('/logbook?tab=3')
-      // cy.get('.exit_note').should('contain', 'Observation example')
       cy.get('[data-testid=observation_note]').should('contain', 'Observation example')
     })
   });
