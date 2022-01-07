@@ -12,6 +12,7 @@ import { objectAccessor } from '../../../utils/helpers';
 import MenuList from '../../../shared/MenuList';
 import { SubTasksQuery } from '../graphql/task_queries';
 import { LinearSpinner } from '../../../shared/Loading';
+import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
 
 export default function TodoItem({
   task,
@@ -32,6 +33,9 @@ export default function TodoItem({
   const anchorElOpen = Boolean(anchorEl);
   const { t } = useTranslation('common');
   const location = useLocation()
+  const authState = React.useContext(AuthStateContext);
+  const taskPermissions = authState?.user?.permissions?.find(permissionObject => permissionObject.module === 'note')
+  const canCreateNote = taskPermissions? taskPermissions.permissions.includes('can_create_note'): false
 
   const [
     loadSubTasks,
@@ -49,7 +53,7 @@ export default function TodoItem({
       handleClick: () => handleTaskDetails()
     },
     {
-      content: t('menu.add_subtask'),
+      content:  canCreateNote ? t('menu.add_subtask'): null,
       isAdmin: true,
       handleClick: () => handleAddSubTask({ id: selectedTask.id })
     },
@@ -209,7 +213,7 @@ export default function TodoItem({
         open={menuData.open}
         anchorEl={menuData.anchorEl}
         handleClose={menuData.handleClose}
-        list={menuData.menuList}
+        list={menuData.menuList.filter(menuItem => menuItem.content !== null)}
       />
     </>
   );

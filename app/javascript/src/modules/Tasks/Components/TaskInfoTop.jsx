@@ -472,7 +472,9 @@ export default function TaskInfoTop({
           <Grid item xs={12} md={12}>
             <EditableField
               value={description}
+              disabled
               setValue={setDescription}
+              canUpdateNote={canUpdateNote}
               customStyles={{ margin: 0 }}
               action={(
                 <Button
