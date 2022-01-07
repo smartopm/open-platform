@@ -7,6 +7,8 @@ import renderTaskData, { LinkToUser, TaskDataList } from '../Components/RenderTa
 import TodoItem from '../Components/TodoItem'
 import MockedThemeProvider from '../../__mocks__/mock_theme'
 import t from '../../__mocks__/t'
+import { Context } from '../../../containers/Provider/AuthStateProvider'
+import authState from '../../../__mocks__/authstate';
 
 describe('Task Data components', () => {
   const menuData = {
@@ -143,6 +145,7 @@ describe('Task Data components', () => {
 
   it('renders task menu options', () => {
     render(
+      <Context.Provider value={authState}>
       <BrowserRouter>
         <MockedProvider>
           <MockedThemeProvider>
@@ -162,6 +165,7 @@ describe('Task Data components', () => {
           </MockedThemeProvider>
         </MockedProvider>
       </BrowserRouter>
+      </Context.Provider>
     );
 
     const menuButton = screen.getByTestId('task-item-menu');
