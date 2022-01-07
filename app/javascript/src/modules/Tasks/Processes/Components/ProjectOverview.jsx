@@ -101,6 +101,7 @@ export function ProjectOverviewSplitView({ data, refetch }) {
             data={data}
             setSelectedStep={setSelectedStep}
             handleStepCompletion={(id, completed) => handleStepCompletion(id, completed, refetch)}
+            redirect
           />
         </Grid>
       </Grid>

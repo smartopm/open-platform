@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory, useParams } from 'react-router';
 import { useQuery } from 'react-apollo';
-import { Grid, Typography } from '@mui/material';
+import { Grid, Typography, IconButton } from '@mui/material';
+import ShareIcon from '@mui/icons-material/Share';
 import { useTranslation } from 'react-i18next';
 import TaskContextProvider from '../../Context';
 import { StyledTabs, StyledTab, TabPanel, a11yProps } from '../../../../components/Tabs';
@@ -11,6 +12,8 @@ import ProjectProcesses, { ProjectProcessesSplitView } from './ProjectProcesses'
 import ErrorPage from '../../../../components/Error';
 import Loading from '../../../../shared/Loading';
 import { SubTasksQuery, TaskQuery } from '../../graphql/task_queries';
+import linkExtractor from '../util'
+import MessageAlert from '../../../../components/MessageAlert';
 
 export default function TaskProcessDetail() {
   const limit = 20;
@@ -20,6 +23,7 @@ export default function TaskProcessDetail() {
   const path = useParamsQuery();
   const tab = path.get('tab');
   const [tabValue, setTabValue] = useState(0);
+  const [messageAlert, setMessageAlert] = useState('');
 
   const { data: projectData, error: projectDataError, loading: projectDataLoading } = useQuery(
     TaskQuery,
@@ -49,6 +53,11 @@ export default function TaskProcessDetail() {
     setTabValue(Number(newValue));
   }
 
+  async function shareOnclick() {
+    await navigator.clipboard.writeText(linkExtractor(projectData?.task?.body)[1])
+    setMessageAlert('Link coppied to clipboard')
+  }
+
   useEffect(() => {
     if (tab) {
       setTabValue(objectAccessor(TAB_VALUES, tab));
@@ -61,11 +70,17 @@ export default function TaskProcessDetail() {
 
   return (
     <div>
+      <MessageAlert
+        type='success'
+        message={messageAlert}
+        open={!!messageAlert}
+        handleClose={() => setMessageAlert('')}
+      />
       <TaskContextProvider>
         <Grid container data-testid="process-detail-section" style={{padding: '0 56px'}}>
           <Grid item md={5} xs={12}>
             <Grid container>
-              <Grid item data-testid="project-title">
+              <Grid item md={11} data-testid="project-title" style={{paddingTop: '20px'}}>
                 <Typography variant="h4">
                   <span
                     // eslint-disable-next-line react/no-danger
@@ -74,6 +89,11 @@ export default function TaskProcessDetail() {
                     }}
                   />
                 </Typography>
+              </Grid>
+              <Grid item md={1}>
+                <IconButton color='primary' onClick={shareOnclick}>
+                  <ShareIcon />
+                </IconButton>
               </Grid>
             </Grid>
             <StyledTabs
