@@ -72,7 +72,12 @@ export default function InviteeForm({
           />
         </Grid>
         <Grid item xs={12} md={1} sm={2} style={{ marginTop: largerScreens ? 17 : 10 }}>
-          <Button variant="outlined" color="primary" onClick={guestData.isAdded ? handleRemoveUser : handleAddUser}>
+          <Button
+            variant="outlined"
+            color="primary"
+            onClick={guestData.isAdded ? handleRemoveUser : handleAddUser}
+            data-testid="add_remove_guest_btn"
+          >
             { guestData.isAdded ? t('misc.remove') : t('misc.add')}
           </Button>
         </Grid>
@@ -86,7 +91,6 @@ InviteeForm.propTypes = {
   guestData: PropTypes.shape({
     firstName: PropTypes.string,
     lastName: PropTypes.string,
-    email: PropTypes.string,
     phoneNumber: PropTypes.string,
     isAdded: PropTypes.bool,
   }).isRequired,
