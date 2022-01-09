@@ -32,19 +32,11 @@ export default function StepItem({
         <Grid item md={11} xs={8} style={{ display: 'flex', alignItems: 'center' }} data-testid="step_body_section">
           <Grid container style={{ display: 'flex', alignItems: 'center' }}>
             <Grid item md={1}>
-              <IconButton
-                aria-controls="step-completion-toggle-button"
-                aria-haspopup="true"
-                data-testid="step_completion_toggle_button"
-                onClick={(e) => handleStepCompletion(e, step.id, !step.completed)}
-                size="medium"
-              >
-                { step.completed ? (
-                  <CheckCircleIcon htmlColor="#4caf50" />
+              { step.completed ? (
+                <CheckCircleIcon htmlColor="#4caf50" onClick={(e) => handleStepCompletion(e, step.id, !step.completed)} />
                   ) : (
-                    <CheckCircleOutlineIcon />
+                    <CheckCircleOutlineIcon htmlColor="#9A9A9A" onClick={(e) => handleStepCompletion(e, step.id, !step.completed)} />
                   )}
-              </IconButton>
             </Grid>
             <Grid item md={10}>
               <Typography
@@ -65,7 +57,7 @@ export default function StepItem({
         </Grid>
         <Grid item md={1} xs={1} className={classes.subStepsSection}>
           {step?.subTasks?.length > 0
-            ? (
+            && (
               <IconButton
                 aria-controls="show-step-sub-steps-icon"
                 aria-haspopup="true"
@@ -76,16 +68,7 @@ export default function StepItem({
                   ? <KeyboardArrowUpIcon fontSize="small" color="primary" />
                   : <KeyboardArrowDownIcon fontSize="small" color="primary" />}
               </IconButton>
-            ) : (
-              <IconButton
-                aria-controls="show-task-subtasks-icon"
-                aria-haspopup="true"
-                data-testid="show_step_sub_steps"
-                disabled
-              >
-                <KeyboardArrowDownIcon fontSize="small" />
-              </IconButton>
-          )}
+            )}
         </Grid>
       </Grid>
     </Card>
