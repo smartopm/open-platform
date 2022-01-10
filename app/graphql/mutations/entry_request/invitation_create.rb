@@ -18,16 +18,16 @@ module Mutations
       # rubocop:disable Metrics/MethodLength
       def resolve(vals)
         ActiveRecord::Base.transaction do
-          users = []
+          visitors_ids = []
 
           vals[:guests].each do |guest|
             user = check_or_create_guest(guest)
-            users << user.id
+            visitors_ids << user.id
           end
 
-          all_users = users + vals[:user_ids]
+          all_users_ids = visitors_ids + vals[:user_ids]
           users_info = []
-          all_users.each do |id|
+          all_users_ids.each do |id|
             user = context[:site_community].users.find_by(id: id)
             request = generate_request(vals, user)
             invite = context[:current_user].invite_guest(user.id, request.id)

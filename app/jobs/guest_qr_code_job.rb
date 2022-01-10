@@ -8,13 +8,10 @@ require 'notify'
 class GuestQrCodeJob < ApplicationJob
   queue_as :default
 
-  # TODO: handle multiple users here
   # rubocop:disable Metrics/MethodLength
   def perform(community:, contact_infos:, type:)
     template = community.email_templates.find_by(name: 'Guest QR Code')
     base_url = HostEnv.base_url(community)
-
-    # TODO: start the loop here
 
     contact_infos.each do |user|
       qr_code_url = 'https://api.qrserver.com/v1/create-qr-code/' \
