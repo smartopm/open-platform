@@ -126,7 +126,7 @@ export default function LogEvents({
               <Grid item md={4} xs={8}>
                 {entry.entryRequest ? (
                   <>
-                    <Typography variant="caption" color="primary" data-testid="name">
+                    <Typography variant="caption" color="primary" data-testid="name" className="entry-log-visitor-name">
                       {entry.entryRequest?.name}
                     </Typography>
                     <br />
@@ -141,6 +141,7 @@ export default function LogEvents({
                         >
                           <Text
                             color="secondary"
+                            className="entry-log-visitor-name"
                             content={
                               entry.data.ref_name || entry.data.visitor_name || entry.data.name
                             }
