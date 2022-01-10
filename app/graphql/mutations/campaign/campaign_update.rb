@@ -29,8 +29,8 @@ module Mutations
         update_campaign_label(campaign, vals.delete(:labels)&.split(','))
 
         if campaign.update(vals)
-          schedule_campaign_job(campaign, old_status)
-          return { campaign: campaign }
+          campaign.schedule_campaign_job(old_status)
+          return { campaign: campaign.reload }
         end
 
         raise GraphQL::ExecutionError, campaign.errors.full_message
@@ -73,17 +73,6 @@ module Mutations
         return I18n.t('errors.campaign.campaign_completed') if campaign.status.eql?('done')
 
         I18n.t('errors.campaign.in_progress')
-      end
-
-      def schedule_campaign_job(campaign, old_status)
-        return unless campaign.status.eql?('scheduled') && old_status.eql?('draft')
-
-        if campaign.batch_time < Time.zone.now
-          CampaignSchedulerJob.perform_later(campaign.id)
-        else
-          CampaignSchedulerJob.set(wait_until: campaign.batch_time)
-                              .perform_later(campaign.id)
-        end
       end
 
       # Verifies if current user is admin or not.

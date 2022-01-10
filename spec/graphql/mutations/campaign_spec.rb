@@ -12,6 +12,7 @@ RSpec.describe Mutations::Campaign do
 
     let!(:current_user) { create(:admin_user, user_type: 'admin', role: admin_role) }
     let!(:community) { current_user.community }
+    let(:user) { create(:user, community: community) }
     let(:query) do
       <<~GQL
         mutation campaignCreate(
@@ -149,14 +150,41 @@ RSpec.describe Mutations::Campaign do
           message: 'Visiting',
           status: 'scheduled',
           labels: 'label 1,label 2',
+          campaignType: 'sms',
+          batchTime: '',
+          userIdList: '23fsafsafa1147',
         }
 
         result = DoubleGdpSchema.execute(query, variables: variables,
                                                 context: {
                                                   current_user: current_user,
-                                                  site_community: current_user.community,
+                                                  site_community: community,
                                                 }).as_json
-        expect(result.dig('data', 'campaignCreate', 'campaign', 'id')).to be_nil
+        expect(result.dig('data', 'campaignCreate')).to be_nil
+        expect(result.dig('errors', 0, 'message')).to eql 'Missing Parameter: Please Supply' \
+                ' batch_time parameter'
+      end
+    end
+
+    context 'when currrent user is not an admin' do
+      it 'raises unauthorized error' do
+        variables = {
+          name: 'This is a Campaign',
+          message: 'Visiting',
+          status: 'scheduled',
+          labels: 'label 1,label 2',
+          campaignType: 'sms',
+          batchTime: '17/06/2020 03:49',
+          userIdList: '23fsafsafa1147',
+        }
+
+        result = DoubleGdpSchema.execute(query, variables: variables,
+                                                context: {
+                                                  current_user: user,
+                                                  site_community: community,
+                                                }).as_json
+        expect(result.dig('data', 'campaignCreate')).to be_nil
+        expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'
       end
     end
   end
@@ -236,16 +264,20 @@ RSpec.describe Mutations::Campaign do
                           role: admin_role,
                           permissions: %w[can_update_campaign can_remove_campaign_label])
     end
-
     let!(:current_user) { create(:admin_user, user_type: 'admin', role: admin_role) }
-    let!(:user) { create(:site_worker, user_type: 'site_worker', role: site_worker_role) }
-    let!(:campaign) do
-      current_user.community.campaigns.create(name: 'Test Campaign',
-                                              message: 'Visiting',
-                                              campaign_type: 'sms',
-                                              batch_time: '17/06/2020 03:49',
-                                              user_id_list: '2saf60afsfdad9618af7114sfda7')
+    let!(:community) { current_user.community }
+    let!(:user) do
+      create(:site_worker, user_type: 'site_worker', role: site_worker_role, community: community)
     end
+    let!(:campaign) do
+      community.campaigns.create(name: 'Test Campaign',
+                                 message: 'Visiting',
+                                 campaign_type: 'sms',
+                                 batch_time: '17/06/2020 03:49',
+                                 user_id_list: '2saf60afsfdad9618af7114sfda7')
+    end
+    let!(:label) { create(:label, community: community, short_desc: 'demo_label') }
+    let!(:campaign_label) { create(:campaign_label, campaign: campaign, label: label) }
 
     let(:query) do
       <<~GQL
@@ -300,7 +332,7 @@ RSpec.describe Mutations::Campaign do
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
                                                 current_user: current_user,
-                                                site_community: current_user.community,
+                                                site_community: community,
                                               }).as_json
       expect(result.dig('data', 'campaignUpdate', 'campaign', 'id')).not_to be_nil
       expect(result.dig('data', 'campaignUpdate', 'campaign', 'name'))

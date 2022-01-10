@@ -30,7 +30,7 @@ module Mutations
         labels = Array(vals[:labels]&.split(',')).map(&:downcase)
         labels.each { |label| create_campaign_label(campaign, label) }
         if campaign.persisted?
-          schedule_campaign_job(campaign)
+          campaign.schedule_campaign_job
           return { campaign: campaign }
         end
 
@@ -58,17 +58,6 @@ module Mutations
 
           raise GraphQL::ExecutionError,
                 I18n.t('errors.campaign.missing_parameter', attribute: attr)
-        end
-      end
-
-      def schedule_campaign_job(campaign)
-        return unless campaign.status.eql?('scheduled')
-
-        if campaign.batch_time < Time.zone.now
-          CampaignSchedulerJob.perform_later(campaign.id)
-        else
-          CampaignSchedulerJob.set(wait_until: campaign.batch_time)
-                              .perform_later(campaign.id)
         end
       end
 
