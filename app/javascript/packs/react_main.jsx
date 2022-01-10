@@ -24,7 +24,6 @@ import AuthStateProvider, {
 } from '../src/containers/Provider/AuthStateProvider';
 import UserShow from '../src/modules/Users/Containers/UserShow';
 import IDCard from '../src/containers/IdCard';
-import EntryLogs from '../src/modules/LogBook/Components/EntryLogs';
 import EventLogs from '../src/modules/LogBook/Components/EventLogs';
 import Loading from '../src/shared/Loading';
 import '../src/modules/i18n';
@@ -314,10 +313,6 @@ const App = () => {
 
                               <Route exact path="/scan" component={Scan} />
                               <Route path="/id/:id" component={IDCard} />
-                              <Route
-                                path="/entry_logs/:userId"
-                                component={EntryLogs}
-                              />
                               <Route path="/map" component={Map} />
                               <Route path="/myplot" component={GeoMap} />
                               <Route
@@ -405,6 +400,15 @@ const App = () => {
                                 component={ProcessesPage}
                               />
 
+                              <Route
+                                exact
+                                path="/entry_logs"
+                                render={() => (
+                                  <Redirect
+                                    to='/logbook'
+                                  />
+                                )}
+                              />
                               <AdminRoutes>
                                 <Switch>
                                   <Route

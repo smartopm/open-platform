@@ -10,8 +10,6 @@ import UserActions from './Components/UserActions'
 import Preferences from '../Preferences/Components/Notifications'
 import { allUserTypes } from '../../utils/constants';
 import AccessCheck from '../Permissions/Components/AccessCheck';
-import EntryLogs from '../LogBook/Components/EntryLogs'
-
 // name in here is only used as key in routes, make sure it is unique
 
 
@@ -33,14 +31,6 @@ function RenderUserEdit() {
 )
 }
 
-function RenderEntryLog() {
-  return (
-    <AccessCheck module={entryRequest.module} allowedPermissions={logBookPermissions}>
-      <EntryLogs />
-    </AccessCheck>
-  )
-}
-
 function RenderOTPFeedbackScreen() {
   return (
     <AccessCheck module={user.module} allowedPermissions={otpPermissions}>
@@ -49,7 +39,7 @@ function RenderOTPFeedbackScreen() {
 )
 }
 
-function RenderLogBook() {
+function RenderUserLogs() {
   return (
     <AccessCheck module={entryRequest.module} allowedPermissions={logBookPermissions}>
       <UserLogs />
@@ -83,7 +73,7 @@ const routes = [
   {
     routeProps: {
       path: '/user/:id/logs',
-      component: RenderLogBook,
+      component: RenderUserLogs,
       exact: true,
     },
     accessibleBy: allUserTypes,
@@ -149,15 +139,6 @@ const routes = [
     name: 'Preferences',
     featureName: 'Preferences'
   },
-  {
-    routeProps: {
-      path: '/entry_logs',
-      component: RenderEntryLog
-    },
-    accessibleBy: allUserTypes,
-    name: 'log_book',
-    featureName: 'LogBook'
-  }
 ];
 
 export default routes;
