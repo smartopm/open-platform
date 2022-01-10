@@ -20,8 +20,10 @@ module Mutations
       field :campaign, Types::CampaignType, null: true
 
       def resolve(id:, **vals)
-        campaign = context[:site_community].campaigns.find(id)
+        campaign = context[:site_community].campaigns.find_by(id: id)
         return if campaign.nil?
+
+        raise_campaign_in_progress_error(campaign)
 
         update_campaign_label(campaign, vals.delete(:labels)&.split(','))
         campaign.update!(vals)
@@ -55,6 +57,19 @@ module Mutations
         return false if campaign_labels.empty?
 
         campaign_labels.pluck(:short_desc).include?(label_text)
+      end
+
+      def raise_campaign_in_progress_error(campaign)
+        return if %w[in_progress done].exclude?(campaign.status)
+
+        raise GraphQL::ExecutionError,
+              "#{campaign_error_message(campaign)} #{I18n.t('errors.campaign.create_new_campaign')}"
+      end
+
+      def campaign_error_message(campaign)
+        return I18n.t('errors.campaign.campaign_completed') if campaign.status.eql?('done')
+
+        I18n.t('errors.campaign.in_progress')
       end
 
       # Verifies if current user is admin or not.

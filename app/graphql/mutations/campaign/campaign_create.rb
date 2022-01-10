@@ -20,6 +20,7 @@ module Mutations
 
       # TODO: Rollback if Label fails to save - Saurabh
       # rubocop:disable Metrics/AbcSize
+      # rubocop:disable Metrics/MethodLength
       def resolve(vals)
         check_missing_args(vals) if vals[:status] == 'scheduled'
         campaign = context[:current_user].community.campaigns.new
@@ -28,9 +29,15 @@ module Mutations
 
         labels = Array(vals[:labels]&.split(',')).map(&:downcase)
         labels.each { |label| create_campaign_label(campaign, label) }
-        return { campaign: campaign } if campaign.persisted?
+        if campaign.persisted?
+          schedule_campaign_job(campaign)
+          return { campaign: campaign }
+        end
+
+        raise GraphQL::ExecutionError, campaign.errors.full_message
       end
       # rubocop:enable Metrics/AbcSize
+      # rubocop:enable Metrics/MethodLength
 
       def add_attributes(campaign, vals)
         %w[name campaign_type message user_id_list batch_time
@@ -51,6 +58,17 @@ module Mutations
 
           raise GraphQL::ExecutionError,
                 I18n.t('errors.campaign.missing_parameter', attribute: attr)
+        end
+      end
+
+      def schedule_campaign_job(campaign)
+        return unless campaign.status.eql?('scheduled')
+
+        if campaign.batch_time < Time.zone.now
+          CampaignSchedulerJob.perform_later(campaign.id)
+        else
+          CampaignSchedulerJob.set(wait_until: campaign.batch_time)
+                              .perform_later(campaign.id)
         end
       end
 

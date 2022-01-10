@@ -101,6 +101,27 @@ RSpec.describe Mutations::Campaign do
       end
     end
 
+    context 'when campaign status is scheduled' do
+      it 'enqueues the campaign job' do
+        variables = {
+          name: 'This is a Campaign',
+          message: 'Visiting',
+          campaignType: 'sms',
+          status: 'scheduled',
+          batchTime: '17/06/2022 03:49',
+          labels: 'label 1',
+          userIdList: '23fsafsafa1147,2609adf61sfsdfs871fd147',
+        }
+        result = DoubleGdpSchema.execute(query, variables: variables,
+                                                context: {
+                                                  current_user: current_user,
+                                                  site_community: current_user.community,
+                                                }).as_json
+        expect(result['errors']).to be_nil
+        expect(CampaignSchedulerJob).to have_been_enqueued
+      end
+    end
+
     context 'when campaign type is not present' do
       it 'fails to create campaign' do
         variables = {
@@ -316,6 +337,26 @@ RSpec.describe Mutations::Campaign do
       expect(result.dig('data', 'campaignUpdate', 'campaign', 'name')).to be_nil
       expect(result.dig('data', 'campaignUpdate', 'campaign', 'userId')).to be_nil
       expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
+    end
+
+    context 'when a campaign is in progress' do
+      before { campaign.in_progress! }
+
+      it 'raises updates cannot be made error' do
+        variables = {
+          id: campaign.id,
+          name: 'This is a Campaign Update',
+          message: 'Visiting Update',
+          labels: 'label 3',
+        }
+        result = DoubleGdpSchema.execute(query, variables: variables,
+                                                context: {
+                                                  current_user: current_user,
+                                                  site_community: current_user.community,
+                                                }).as_json
+        expect(result.dig('errors', 0, 'message')).to eql 'The updates cannot be made as campaign' \
+        ' is in progress. Please create a new campaign.'
+      end
     end
   end
 
