@@ -86,7 +86,7 @@ describe('Invited Guests Component', () => {
     fireEvent.click(getByTestId('speed_dial_btn'))
     expect(mockHistory.push).toBeCalled()
   });
-  it('renders proper text when there are no guests', () => {
+  it('renders proper text when there are no guests', async () => {
     const {queryByText } = render(
       <Context.Provider value={userMock}>
         <MemoryRouter>
@@ -98,6 +98,8 @@ describe('Invited Guests Component', () => {
         </MemoryRouter>
       </Context.Provider>
     );
-    expect(queryByText('logbook.no_invited_guests')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(queryByText('logbook.no_invited_guests')).toBeInTheDocument();
+    }, 10)
   })
 });
