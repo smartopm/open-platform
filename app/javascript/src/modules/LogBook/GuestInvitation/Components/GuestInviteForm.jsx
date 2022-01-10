@@ -33,7 +33,8 @@ export default function GuestInviteForm() {
   const [details, setDetails] = useState({ message: '', isError: false });
   const [createInvitation] = useMutation(InvitationCreateMutation);
   const { t } = useTranslation(['logbook', 'common', 'discussion', 'search']);
-  const [invitees, setInvitees] = useState([initialData]);
+  const [invitees, setInvitees] = useState([]);
+  const [user, setUser] = useState(initialData)
   const [searchValue, setSearchValue] = useState('');
   const [guestUsers, setGuestUsers] = useState([]);
   const debouncedValue = useDebounce(searchValue, 500);
@@ -108,8 +109,8 @@ export default function GuestInviteForm() {
   }
 
   function handleAddInvitee(index) {
-    invitees[parseInt(index, 10)].isAdded = true;
-    setInvitees([...invitees, initialData]);
+    setInvitees([...invitees, user]);
+    setUser(initialData)
   }
 
   function handleRemoveInvitee(index) {
@@ -126,6 +127,7 @@ export default function GuestInviteForm() {
     setGuestUsers(filteredGuests);
   }
 
+  const noUserFound = searchValue && !loading && !data?.searchGuests.length
   return (
     <>
       <MessageAlert
@@ -168,13 +170,22 @@ export default function GuestInviteForm() {
             handInviteGuest={addToGuests}
           />
         ))}
-      {searchValue && !loading && !data?.searchGuests.length && (
-        <Typography variant="body2" gutterBottom style={{ marginTop: 16 }} data-testid="user_not_found_add_new">
-          {t('common:errors.user_not_found_add_new')}
-        </Typography>
+      {noUserFound && (
+        <>
+          <Typography variant="body2" gutterBottom style={{ marginTop: 16 }} data-testid="user_not_found_add_new">
+            {t('common:errors.user_not_found_add_new')}
+          </Typography>
+          <InviteeForm
+            guestData={user}
+            handlePhoneNumber={number => setUser({ ...user, phoneNumber: number})}
+            handleInputChange={(event) => setUser({ ...user, [event.target.name]: event.target.value})}
+            handleAction={() => handleAddInvitee()}
+            primary
+          />
+        </>
       )}
-      <br />
       <div>
+        <br />
         {Boolean(guestUsers.length) && (
           <Typography variant="subtitle2" gutterBottom>
             {t('guest_book.previous_guests')}
@@ -186,25 +197,33 @@ export default function GuestInviteForm() {
         {Boolean(guestUsers.length) && (
           <>
             <br />
-            <br />
           </>
         )}
       </div>
-      <Typography variant="subtitle2" gutterBottom>
-        {t('guest_book.new_guest', { count: 2 })}
-      </Typography>
-      {invitees.map((invite, index) => (
-        <InviteeForm
-          // eslint-disable-next-line react/no-array-index-key
-          key={index}
-          guestData={invite}
-          handlePhoneNumber={number => handlePhoneNumber(number, index)}
-          handleInputChange={event => handleInputChange(event, index)}
-          handleAddUser={() => handleAddInvitee(index)}
-          handleRemoveUser={() => handleRemoveInvitee(index)}
-          guestCount={index + 1}
-        />
-      ))}
+      <br />
+      {
+        Boolean(invitees.length) && (
+          <>
+            <Typography variant="subtitle2" gutterBottom>
+              {t('guest_book.new_guest', { count: 2 })}
+            </Typography>
+            {
+            invitees.map((invite, index) => (
+              <InviteeForm
+                // eslint-disable-next-line react/no-array-index-key
+                key={index}
+                guestData={invite}
+                handlePhoneNumber={number => handlePhoneNumber(number, index)}
+                handleInputChange={event => handleInputChange(event, index)}
+                handleAction={() => handleRemoveInvitee(index)}
+                guestCount={index + 1}
+              />
+            ))
+            }
+          </>
+      )
+      }
+
       <br />
       <CenteredContent>
         <Button

@@ -17,9 +17,9 @@ export default function InviteeForm({
   guestData,
   handlePhoneNumber,
   handleInputChange,
-  handleRemoveUser,
-  handleAddUser,
-  guestCount
+  handleAction,
+  guestCount,
+  primary
 }) {
   const { t } = useTranslation(['common', 'logbook']);
   const authState = useContext(Context);
@@ -29,7 +29,12 @@ export default function InviteeForm({
   const largerScreens = useMediaQuery(theme.breakpoints.up('md'));
   return (
     <div className={guestData && classes.inviteForm}>
-      <Typography variant="caption">{`${t('logbook:guest_book.new_guest', { count: 1 })} #${guestCount}`}</Typography>
+      {
+        !primary
+        ? <Typography variant="caption">{`${t('logbook:guest_book.new_guest', { count: 1 })} #${guestCount}`}</Typography>
+        : null
+      }
+
       <Grid container spacing={matchesSmall ? 0 : 1}>
         <Grid item xs={12} md={4} sm={6}>
           <TextField
@@ -76,10 +81,10 @@ export default function InviteeForm({
           <Button
             variant="outlined"
             color="primary"
-            onClick={guestData.isAdded ? handleRemoveUser : handleAddUser}
+            onClick={handleAction}
             data-testid="add_remove_guest_btn"
           >
-            { guestData.isAdded ? t('misc.remove') : t('misc.add')}
+            { primary ? t('misc.add') : t('misc.remove')}
           </Button>
         </Grid>
       </Grid>
@@ -91,6 +96,10 @@ export default function InviteeForm({
   );
 }
 
+InviteeForm.defaultProps = {
+  primary: false,
+  guestCount: 0,
+}
 InviteeForm.propTypes = {
   guestData: PropTypes.shape({
     firstName: PropTypes.string,
@@ -100,7 +109,7 @@ InviteeForm.propTypes = {
   }).isRequired,
   handleInputChange: PropTypes.func.isRequired,
   handlePhoneNumber: PropTypes.func.isRequired,
-  handleRemoveUser: PropTypes.func.isRequired,
-  handleAddUser: PropTypes.func.isRequired,
-  guestCount: PropTypes.number.isRequired,
+  handleAction: PropTypes.func.isRequired,
+  guestCount: PropTypes.number,
+  primary: PropTypes.bool,
 }
