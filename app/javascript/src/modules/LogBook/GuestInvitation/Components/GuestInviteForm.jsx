@@ -1,8 +1,9 @@
+/* eslint-disable max-statements */
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import React, { useState } from 'react';
-import { useMutation, useQuery } from 'react-apollo';
+import React, { useEffect, useState, Fragment } from 'react';
+import { useLazyQuery, useMutation } from 'react-apollo';
 import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import CenteredContent from '../../../../shared/CenteredContent';
@@ -19,7 +20,6 @@ import useDebounce from '../../../../utils/useDebounce';
 import GuestSearchCard from './GuestSearchCard';
 import { UserChip } from '../../../Tasks/Components/UserChip';
 
-
 export default function GuestInviteForm() {
   const initialData = { firstName: '', lastName: '', phoneNumber: null, isAdded: false };
   const history = useHistory();
@@ -29,28 +29,33 @@ export default function GuestInviteForm() {
   const { t } = useTranslation(['logbook', 'common', 'discussion', 'search']);
   const [invitees, setInvitees] = useState([initialData]);
   const [searchValue, setSearchValue] = useState('');
-  const [guestUsers, setGuestUsers] = useState([])
+  const [guestUsers, setGuestUsers] = useState([]);
   const debouncedValue = useDebounce(searchValue, 500);
-  const { data, loading, error } = useQuery(SearchGuestsQuery, {
+  const [searchGuests, { data, loading, error }] = useLazyQuery(SearchGuestsQuery, {
     variables: { query: debouncedValue.trim() },
     fetchPolicy: 'network-only'
   });
+  useEffect(() => {
+    if (searchValue) {
+      searchGuests();
+    }
+  }, [debouncedValue]);
 
   function handleInputChange(event, index) {
     const { name, value } = event.target;
-    if(index == null){
+    if (index == null) {
       setGuestData({
         ...guestData,
         [name]: value
       });
-      return
+      return;
     }
     // eslint-disable-next-line security/detect-object-injection
     invitees[parseInt(index, 10)][name] = value; // TODO: Fix this object injection
     setInvitees([...invitees]);
   }
 
-  function handlePhoneNumber(number, i){
+  function handlePhoneNumber(number, i) {
     invitees[parseInt(i, 10)].phoneNumber = number;
     setInvitees([...invitees]);
   }
@@ -71,10 +76,7 @@ export default function GuestInviteForm() {
   }
 
   function handleInviteGuest() {
-    // enroll user as a visitor
-    // create a request for that user
-    // then invite them
-    const userIds = guestUsers.map(gst => gst.id)
+    const userIds = guestUsers.map(gst => gst.id);
     setGuestData({ ...guestData, isLoading: true });
 
     createInvitation({
@@ -110,11 +112,11 @@ export default function GuestInviteForm() {
   }
 
   function addToGuests(user) {
-    setGuestUsers([ ...guestUsers, user]);
-    setSearchValue('')
+    setGuestUsers([...guestUsers, user]);
+    setSearchValue('');
   }
 
-  function handleDelete(id){
+  function handleDelete(id) {
     const filteredGuests = guestUsers.filter(gst => gst.id !== id);
     setGuestUsers(filteredGuests);
   }
@@ -127,7 +129,8 @@ export default function GuestInviteForm() {
         open={!!details.message}
         handleClose={() => setDetails({ ...details, message: '' })}
       />
-
+      <Typography variant="subtitle1">{t('guest_book.schedule_visit')}</Typography>
+      <br />
       <GuestTime
         days={guestData.occursOn}
         userData={guestData}
@@ -137,7 +140,7 @@ export default function GuestInviteForm() {
       <br />
       <Grid container>
         <Grid item xs={12} md={6}>
-          <Typography variant="h6">{t('common:menu.guest_list')}</Typography>
+          <Typography variant="subtitle1">{t('common:menu.guest_list')}</Typography>
           <br />
           <SearchInput
             title={t('common:misc.users')}
@@ -150,23 +153,41 @@ export default function GuestInviteForm() {
       </Grid>
 
       {!loading &&
-          !error && searchValue &&
-          data?.searchGuests?.map(guestInfo => (
-            <GuestSearchCard
-              key={guestInfo.id}
-              guest={guestInfo}
-              translate={t}
-              handInviteGuest={addToGuests}
-            />
-          ))
-      }
+        !error &&
+        searchValue &&
+        data?.searchGuests?.map(guestInfo => (
+          <GuestSearchCard
+            key={guestInfo.id}
+            guest={guestInfo}
+            translate={t}
+            handInviteGuest={addToGuests}
+          />
+        ))}
+      {searchValue && !loading && !data?.searchGuests.length && (
+        <Typography variant="body2" gutterBottom style={{ marginTop: 16 }}>
+          {t('common:errors.user_not_found_add_new')}
+        </Typography>
+      )}
       <br />
-      {
-        guestUsers.map((user) => (
+      <div>
+        {Boolean(guestUsers.length) && (
+          <Typography variant="subtitle2" gutterBottom>
+            {t('guest_book.previous_guests')}
+          </Typography>
+        )}
+        {guestUsers.map(user => (
           <UserChip key={user.id} user={user} onDelete={() => handleDelete(user.id)} />
-          ))
-      }
-      <br />
+        ))}
+        {Boolean(guestUsers.length) && (
+          <>
+            <br />
+            <br />
+          </>
+        )}
+      </div>
+      <Typography variant="subtitle2" gutterBottom>
+        {t('guest_book.new_guest', { count: 2 })}
+      </Typography>
       {invitees.map((invite, index) => (
         <InviteeForm
           // eslint-disable-next-line react/no-array-index-key

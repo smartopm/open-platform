@@ -8,6 +8,7 @@ import { useTheme } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import PhoneInput from 'react-phone-input-2';
 import { useTranslation } from 'react-i18next';
+import { Divider } from '@mui/material';
 import { extractCountry } from '../../../../utils/helpers';
 import { useStyles } from '../styles'
 import { Context } from '../../../../containers/Provider/AuthStateProvider';
@@ -28,7 +29,7 @@ export default function InviteeForm({
   const largerScreens = useMediaQuery(theme.breakpoints.up('md'));
   return (
     <div className={guestData && classes.inviteForm}>
-      <Typography>{`${t('logbook:guest_book.guest')} #${guestCount}`}</Typography>
+      <Typography variant="caption">{`${t('logbook:guest_book.new_guest', { count: 1 })} #${guestCount}`}</Typography>
       <Grid container spacing={matchesSmall ? 0 : 1}>
         <Grid item xs={12} md={4} sm={6}>
           <TextField
@@ -83,6 +84,9 @@ export default function InviteeForm({
         </Grid>
       </Grid>
       <br />
+      {
+        matchesSmall && <Divider />
+      }
     </div>
   );
 }

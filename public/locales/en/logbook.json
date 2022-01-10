@@ -139,7 +139,11 @@
     "approved": "Approved",
     "phone_number_not_available": "Phone number not available",
     "re_invite": "Invite again",
-    "guest": "Guest"
+    "guest": "Guest",
+    "new_guest": "New Guest",
+    "new_guest_plural": "New Guests",
+    "previous_guests": "Previous Guests",
+    "schedule_visit": "Schedule Visit"
   },
   "date_picker": {
     "ok_label": "Ok",

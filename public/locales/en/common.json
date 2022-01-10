@@ -434,7 +434,8 @@
     "invalid_color_code": "The theme color code is invalid",
     "no_user_selected": "You have to select a user",
     "no_result_found": "No results were found for {{searchValue}}",
-    "something_wrong_qr_code": "Something went wrong while downloading QR Code"
+    "something_wrong_qr_code": "Something went wrong while downloading QR Code",
+    "user_not_found_add_new": "User Not Found - Please Add New Guest"
   },
   "dialogs": {
     "dialog_action": "Are you sure you want to {{action}} this {{title}}?",

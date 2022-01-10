@@ -20,5 +20,5 @@ export const useStyles = makeStyles({
   },
   inviteForm: {
     marginTop: 5
-  }
+  },
 });
