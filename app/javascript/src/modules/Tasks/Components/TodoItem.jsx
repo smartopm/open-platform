@@ -12,6 +12,7 @@ import { objectAccessor } from '../../../utils/helpers';
 import MenuList from '../../../shared/MenuList';
 import { SubTasksQuery } from '../graphql/task_queries';
 import { LinearSpinner } from '../../../shared/Loading';
+import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
 
 export default function TodoItem({
   task,
@@ -32,6 +33,10 @@ export default function TodoItem({
   const anchorElOpen = Boolean(anchorEl);
   const { t } = useTranslation('common');
   const location = useLocation()
+  const authState = React.useContext(AuthStateContext);
+  const taskPermissions = authState?.user?.permissions?.find(permissionObject => permissionObject.module === 'note')
+  const canCreateNote = taskPermissions? taskPermissions.permissions.includes('can_create_note'): false
+  const canUpdateNote = taskPermissions? taskPermissions.permissions.includes('can_update_note'): false
 
   const [
     loadSubTasks,
@@ -42,6 +47,7 @@ export default function TodoItem({
     errorPolicy: 'all'
   });
 
+
   let menuList = [
     {
       content: t('menu.open_task_details'),
@@ -49,7 +55,7 @@ export default function TodoItem({
       handleClick: () => handleTaskDetails()
     },
     {
-      content: t('menu.add_subtask'),
+      content:  canCreateNote ? t('menu.add_subtask'): null,
       isAdmin: true,
       handleClick: () => handleAddSubTask({ id: selectedTask.id })
     },
@@ -65,9 +71,10 @@ export default function TodoItem({
     },
     {
       content:
-        selectedTask && selectedTask.completed
+      // eslint-disable-next-line no-nested-ternary
+        canUpdateNote ? selectedTask && selectedTask.completed
           ? t('menu.mark_incomplete')
-          : t('menu.mark_complete'),
+          : t('menu.mark_complete'): null,
       isAdmin: true,
       handleClick: () => handleNoteComplete()
     }
@@ -209,7 +216,7 @@ export default function TodoItem({
         open={menuData.open}
         anchorEl={menuData.anchorEl}
         handleClose={menuData.handleClose}
-        list={menuData.menuList}
+        list={menuData.menuList.filter(menuItem => menuItem.content !== null)}
       />
     </>
   );
