@@ -78,7 +78,10 @@ module Notes
     end
 
     def log_update_event
-      user.generate_events('task_update', self)
+      update_changes = saved_changes.except('updated_at').first
+      field = update_changes&.first
+      value = update_changes&.last&.last
+      user.generate_events('task_update', self, { updated_field: field, new_value: value })
     end
   end
 end
