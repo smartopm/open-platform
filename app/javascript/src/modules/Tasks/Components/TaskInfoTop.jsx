@@ -473,6 +473,7 @@ export default function TaskInfoTop({
             <EditableField
               value={description}
               setValue={setDescription}
+              canUpdateNote={canUpdateNote}
               customStyles={{ margin: 0 }}
               action={(
                 <Button
