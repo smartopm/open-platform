@@ -66,7 +66,7 @@ export function DateAndTimePickers({ selectedDateTime, handleDateChange, label, 
         onChange={handleDateChange}
         clearable
         disablePast={pastDate || false}
-        minutesStep={pastDate ? 60 : 1}
+        minutesStep={1}
         error={pastDate ? checkPastDate(selectedDateTime) : inputValidation.error}
         /* eslint-disable no-nested-ternary */
         helperText={pastDate
