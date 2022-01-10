@@ -12,7 +12,7 @@ import { initialRequestState } from '../../GuestVerification/constants';
 import InvitationCreateMutation from '../graphql/mutations';
 import { Spinner } from '../../../../shared/Loading';
 import MessageAlert from '../../../../components/MessageAlert';
-import { formatError } from '../../../../utils/helpers';
+import { formatError, setObjectValue } from '../../../../utils/helpers';
 import InviteeForm from './InviteeForm';
 import SearchInput from '../../../../shared/search/SearchInput';
 import { SearchGuestsQuery } from '../graphql/queries';
@@ -35,6 +35,7 @@ export default function GuestInviteForm() {
     variables: { query: debouncedValue.trim() },
     fetchPolicy: 'network-only'
   });
+
   useEffect(() => {
     if (searchValue) {
       searchGuests();
@@ -50,8 +51,7 @@ export default function GuestInviteForm() {
       });
       return;
     }
-    // eslint-disable-next-line security/detect-object-injection
-    invitees[parseInt(index, 10)][name] = value; // TODO: Fix this object injection
+    setObjectValue(invitees[parseInt(index, 10)], name, value)
     setInvitees([...invitees]);
   }
 
