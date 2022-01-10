@@ -37,7 +37,7 @@ describe('Guest Invitation Form', () => {
     expect(firstName).toBeInTheDocument();
     expect(lastName).toBeInTheDocument();
     expect(phoneNumber).toBeInTheDocument();
-    expect(getByText('logbook:guest_book.guest #1')).toBeInTheDocument();
+    expect(getByText('logbook:guest_book.new_guest #1')).toBeInTheDocument();
 
     fireEvent.change(firstName, { target: { value: 'Some random firstName' } });
     expect(firstName.value).toBe('Some random firstName');
