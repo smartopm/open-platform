@@ -118,7 +118,8 @@ RSpec.describe Mutations::Campaign do
                                                   site_community: current_user.community,
                                                 }).as_json
         expect(result['errors']).to be_nil
-        expect(CampaignSchedulerJob).to have_been_enqueued
+        campaign_id = result.dig('data', 'campaignCreate', 'campaign', 'id')
+        expect(CampaignSchedulerJob).to have_been_enqueued.with(campaign_id)
       end
     end
 
@@ -253,12 +254,14 @@ RSpec.describe Mutations::Campaign do
           $name: String!
           $message: String!
           $labels: String!
+          $status: String
         ) {
           campaignUpdate(
             id: $id
             name: $name
             message: $message
             labels: $labels
+            status: $status
           ) {
             campaign {
               id
@@ -292,6 +295,7 @@ RSpec.describe Mutations::Campaign do
         name: 'This is a Campaign Update',
         message: 'Visiting Update',
         labels: 'label 3',
+        status: 'scheduled',
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
@@ -304,6 +308,7 @@ RSpec.describe Mutations::Campaign do
       expect(result.dig('data', 'campaignUpdate', 'campaign', 'message')).to eql 'Visiting Update'
       expect(result.dig('data', 'campaignUpdate', 'campaign', 'labels', 0, 'shortDesc'))
         .to eql 'label 3'
+      expect(CampaignSchedulerJob).to have_been_enqueued.with(campaign.id)
       expect(result['errors']).to be_nil
 
       other_variables = {

@@ -6,7 +6,7 @@ class CampaignSchedulerJob < ApplicationJob
 
   def perform(campaign_id)
     campaign = Campaign.find_by(id: campaign_id)
-    return if campaign.nil? || campaign.expired?
+    return unless campaign.present? && %w[scheduled in_progress].include?(campaign.status)
 
     if campaign.batch_time > Time.current + 2.minutes
       CampaignSchedulerJob.set(wait_until: campaign.batch_time)
