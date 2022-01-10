@@ -8,6 +8,7 @@ import '@testing-library/jest-dom/extend-expect';
 import InvitationCreateMutation from '../../graphql/mutations';
 import { Context } from '../../../../../containers/Provider/AuthStateProvider';
 import userMock from '../../../../../__mocks__/authstate';
+import { SearchGuestsQuery } from '../../graphql/queries';
 
 describe('Guest Invitation Form', () => {
   const mockHistory = {
@@ -35,7 +36,7 @@ describe('Guest Invitation Form', () => {
           endsAt: guest.endsAt,
           occursOn: guest.occursOn,
           visitEndDate: guest.visitEndDate,
-          guests: [],
+          guests: [{"firstName":"","lastName":"","phoneNumber":null,"isAdded":true}],
           userIds: []
         }
       },
@@ -47,10 +48,29 @@ describe('Guest Invitation Form', () => {
         }
       }
     };
+
+    const searchGuestsMock = {
+      request: {
+        query: SearchGuestsQuery,
+        variables: { query: "some user" }
+      },
+      result: {
+        data: {
+          searchGuests: [
+            {
+              id: "some id",
+              name: "some user",
+              imageUrl: null,
+              avatarUrl: null
+            }
+          ]
+        }
+      }
+    }
     const { getByTestId, getAllByTestId, getAllByText } = render(
       <MemoryRouter>
         <Context.Provider value={userMock}>
-          <MockedProvider mocks={[createInviteMock]} addTypename={false}>
+          <MockedProvider mocks={[createInviteMock, searchGuestsMock]} addTypename={false}>
             <GuestInviteForm />
           </MockedProvider>
         </Context.Provider>
@@ -76,29 +96,31 @@ describe('Guest Invitation Form', () => {
     fireEvent.change(phoneNumber, { target: { value: '090909090' } });
     expect(phoneNumber.value).toBe('090909090');
 
-
     expect(getByTestId('add_remove_guest_btn')).toBeInTheDocument();
     expect(getByTestId('add_remove_guest_btn').textContent).toContain('misc.add')
 
     fireEvent.click(getByTestId('add_remove_guest_btn'));
-    // we should expect multiple guest inputs
     expect(getAllByTestId('add_remove_guest_btn')).toHaveLength(2);
 
-    expect(getAllByTestId('add_remove_guest_btn')[0].textContent).toContain('misc.remove')
+      // we should expect multiple guest inputs
 
-    fireEvent.click(getAllByTestId('add_remove_guest_btn')[0]);
-    // we should expect to only have input after clicking the remove btn
-    expect(getAllByTestId('add_remove_guest_btn')).toHaveLength(1);
+      expect(getAllByTestId('add_remove_guest_btn')[0].textContent).toContain('misc.remove')
 
-    expect(getAllByText('common:misc.day_of_visit')[0]).toBeInTheDocument();
-    expect(getAllByText('common:misc.start_time')[0]).toBeInTheDocument();
-    expect(getAllByText('common:misc.end_time')[0]).toBeInTheDocument();
+      fireEvent.click(getAllByTestId('add_remove_guest_btn')[0]);
+      // we should expect to only have input after clicking the remove btn
+      expect(getAllByTestId('add_remove_guest_btn')).toHaveLength(1);
 
+      expect(getAllByText('common:misc.day_of_visit')[0]).toBeInTheDocument();
+      expect(getAllByText('common:misc.start_time')[0]).toBeInTheDocument();
+      expect(getAllByText('common:misc.end_time')[0]).toBeInTheDocument();
 
-    fireEvent.click(getByTestId('invite_button'));
+      fireEvent.change(getByTestId('search'))
 
-    await waitFor(() => {
-      expect(mockHistory.push).not.toBeCalled();
-    }, 10);
+      fireEvent.click(getByTestId('invite_button'));
+
+      await waitFor(() => {
+        expect(getAllByText('guest.guest_invited')[0]).toBeInTheDocument();
+        expect(mockHistory.push).toBeCalled(); // check if we redirected after timeout
+    }, 600);
   });
 });

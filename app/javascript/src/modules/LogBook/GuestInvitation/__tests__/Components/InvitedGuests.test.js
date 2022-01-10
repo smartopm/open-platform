@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, waitFor } from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 import routeData, { MemoryRouter } from 'react-router';
 import { MockedProvider } from '@apollo/react-testing';
 import MockedThemeProvider from '../../../../__mocks__/mock_theme';
@@ -70,6 +70,7 @@ describe('Invited Guests Component', () => {
 
     expect(search).toBeInTheDocument();
 
+
     expect(queryByText('common:menu.guest_list')).toBeInTheDocument();
     expect(getByTestId('speed_dial_add_guest')).toBeInTheDocument();
 
@@ -81,5 +82,22 @@ describe('Invited Guests Component', () => {
       expect(getByTestId('speed_dial_add_guest')).toBeInTheDocument();
       expect(queryAllByText('guest_book.start_of_visit')[0]).toBeInTheDocument();
     }, 20);
+
+    fireEvent.click(getByTestId('speed_dial_btn'))
+    expect(mockHistory.push).toBeCalled()
   });
+  it('renders proper text when there are no guests', () => {
+    const {queryByText } = render(
+      <Context.Provider value={userMock}>
+        <MemoryRouter>
+          <MockedProvider mocks={[]} addTypename={false}>
+            <MockedThemeProvider>
+              <InvitedGuests />
+            </MockedThemeProvider>
+          </MockedProvider>
+        </MemoryRouter>
+      </Context.Provider>
+    );
+    expect(queryByText('logbook.no_invited_guests')).toBeInTheDocument();
+  })
 });

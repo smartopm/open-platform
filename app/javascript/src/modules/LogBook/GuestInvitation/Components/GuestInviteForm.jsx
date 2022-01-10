@@ -8,7 +8,6 @@ import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import CenteredContent from '../../../../shared/CenteredContent';
 import GuestTime from '../../Components/GuestTime';
-import { initialRequestState } from '../../GuestVerification/constants';
 import InvitationCreateMutation from '../graphql/mutations';
 import { Spinner } from '../../../../shared/Loading';
 import MessageAlert from '../../../../components/MessageAlert';
@@ -23,7 +22,14 @@ import { UserChip } from '../../../Tasks/Components/UserChip';
 export default function GuestInviteForm() {
   const initialData = { firstName: '', lastName: '', phoneNumber: null, isAdded: false };
   const history = useHistory();
-  const [guestData, setGuestData] = useState({ ...initialRequestState });
+  const [guestData, setGuestData] = useState({
+    visitationDate: null,
+    startsAt: null,
+    endsAt: null,
+    occursOn: [],
+    visitEndDate: null,
+    isLoading: false
+   });
   const [details, setDetails] = useState({ message: '', isError: false });
   const [createInvitation] = useMutation(InvitationCreateMutation);
   const { t } = useTranslation(['logbook', 'common', 'discussion', 'search']);
@@ -110,7 +116,6 @@ export default function GuestInviteForm() {
     invitees.splice(index, 1);
     setInvitees([...invitees]);
   }
-
   function addToGuests(user) {
     setGuestUsers([...guestUsers, user]);
     setSearchValue('');
@@ -164,7 +169,7 @@ export default function GuestInviteForm() {
           />
         ))}
       {searchValue && !loading && !data?.searchGuests.length && (
-        <Typography variant="body2" gutterBottom style={{ marginTop: 16 }}>
+        <Typography variant="body2" gutterBottom style={{ marginTop: 16 }} data-testid="user_not_found_add_new">
           {t('common:errors.user_not_found_add_new')}
         </Typography>
       )}
