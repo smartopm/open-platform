@@ -98,7 +98,6 @@ export default function GuestInviteForm() {
     });
 
     if (!validInfo.valid && ifNotTest()) {
-      console.log(validInfo)
       setDetails({ ...details, isError: true, message: validInfo.msg });
       return
     }

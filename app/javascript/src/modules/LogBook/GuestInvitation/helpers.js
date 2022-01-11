@@ -9,13 +9,13 @@ export function filterEmptyObjectByKey(arr, key) {
 
 export function validateGuest({ guests, userIds, t, guestData }) {
   if (!userIds?.length && !guests?.length) {
-    return { msg: t('errors.no_guests_to_invite'), valid: false };
+    return { msg: t('common:errors.no_guests_to_invite'), valid: false };
   }
   const values = Object.values(guestData);
   const isAnyInvalid = values.some(value => !value);
 
   if (isAnyInvalid) {
-    return { msg: t('errors.invalid_time'), valid: false };
+    return { msg: t('common:errors.invalid_time'), valid: false };
   }
   return { msg: null, valid: true };
 }
