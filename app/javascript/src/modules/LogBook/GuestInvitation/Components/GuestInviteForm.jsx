@@ -11,31 +11,31 @@ import GuestTime from '../../Components/GuestTime';
 import InvitationCreateMutation from '../graphql/mutations';
 import { Spinner } from '../../../../shared/Loading';
 import MessageAlert from '../../../../components/MessageAlert';
-import { formatError, setObjectValue } from '../../../../utils/helpers';
+import { formatError, ifNotTest, setObjectValue } from '../../../../utils/helpers';
 import InviteeForm from './InviteeForm';
 import SearchInput from '../../../../shared/search/SearchInput';
 import { SearchGuestsQuery } from '../graphql/queries';
 import useDebounce from '../../../../utils/useDebounce';
 import GuestSearchCard from './GuestSearchCard';
 import { UserChip } from '../../../Tasks/Components/UserChip';
-import { filterEmptyObjectByKey } from '../helpers';
+import { filterEmptyObjectByKey, validateGuest } from '../helpers';
 
 export default function GuestInviteForm() {
   const initialData = { firstName: '', lastName: '', phoneNumber: null, isAdded: false };
   const history = useHistory();
   const [guestData, setGuestData] = useState({
-    visitationDate: new Date(),
-    startsAt: new Date(),
-    endsAt: new Date(),
+    visitationDate: null,
+    startsAt: null,
+    endsAt: null,
     occursOn: [],
-    visitEndDate: new Date(),
+    visitEndDate: null,
     isLoading: false
-   });
+  });
   const [details, setDetails] = useState({ message: '', isError: false });
   const [createInvitation] = useMutation(InvitationCreateMutation);
   const { t } = useTranslation(['logbook', 'common', 'discussion', 'search']);
   const [invitees, setInvitees] = useState([]);
-  const [newGuest, setNewGuest] = useState(initialData)
+  const [newGuest, setNewGuest] = useState(initialData);
   const [searchValue, setSearchValue] = useState('');
   const [guestUsers, setGuestUsers] = useState([]);
   const debouncedValue = useDebounce(searchValue, 500);
@@ -59,7 +59,7 @@ export default function GuestInviteForm() {
       });
       return;
     }
-    setObjectValue(invitees[parseInt(index, 10)], name, value)
+    setObjectValue(invitees[parseInt(index, 10)], name, value);
     setInvitees([...invitees]);
   }
 
@@ -85,8 +85,24 @@ export default function GuestInviteForm() {
 
   function handleInviteGuest() {
     const userIds = guestUsers.map(gst => gst.id);
-    setGuestData({ ...guestData, isLoading: true });
 
+    const validInfo = validateGuest({
+      guests: invitees,
+      userIds,
+      guestData: {
+        visitationDate: guestData.visitationDate,
+        startsAt: guestData.startsAt,
+        endsAt: guestData.endsAt
+      },
+      t
+    });
+
+    if (!validInfo.valid && ifNotTest()) {
+      console.log(validInfo)
+      setDetails({ ...details, isError: true, message: validInfo.msg });
+      return
+    }
+    setGuestData({ ...guestData, isLoading: true });
     createInvitation({
       variables: {
         userIds,
@@ -111,7 +127,7 @@ export default function GuestInviteForm() {
 
   function handleAddInvitee() {
     setInvitees([...invitees, newGuest]);
-    setNewGuest(initialData)
+    setNewGuest(initialData);
   }
 
   function handleRemoveInvitee(index) {
@@ -128,7 +144,7 @@ export default function GuestInviteForm() {
     setGuestUsers(filteredGuests);
   }
 
-  const noUserFound = searchValue && !loading && !data?.searchGuests.length
+  const noUserFound = searchValue && !loading && !data?.searchGuests.length;
   return (
     <>
       <MessageAlert
@@ -173,13 +189,20 @@ export default function GuestInviteForm() {
         ))}
       {noUserFound && (
         <>
-          <Typography variant="body2" gutterBottom style={{ marginTop: 16 }} data-testid="user_not_found_add_new">
+          <Typography
+            variant="body2"
+            gutterBottom
+            style={{ marginTop: 16 }}
+            data-testid="user_not_found_add_new"
+          >
             {t('common:errors.user_not_found_add_new')}
           </Typography>
           <InviteeForm
             guestData={newGuest}
-            handlePhoneNumber={number => setNewGuest({ ...newGuest, phoneNumber: number})}
-            handleInputChange={({target}) => setNewGuest({ ...newGuest, [target.name]: target.value})}
+            handlePhoneNumber={number => setNewGuest({ ...newGuest, phoneNumber: number })}
+            handleInputChange={({ target }) =>
+              setNewGuest({ ...newGuest, [target.name]: target.value })
+            }
             handleAction={() => handleAddInvitee()}
             primary
           />
@@ -202,28 +225,24 @@ export default function GuestInviteForm() {
         )}
       </div>
       <br />
-      {
-        Boolean(invitees.length) && (
-          <>
-            <Typography variant="subtitle2" gutterBottom>
-              {t('guest_book.new_guest', { count: 2 })}
-            </Typography>
-            {
-            invitees.map((invite, index) => (
-              <InviteeForm
-                // eslint-disable-next-line react/no-array-index-key
-                key={index}
-                guestData={invite}
-                handlePhoneNumber={number => handlePhoneNumber(number, index)}
-                handleInputChange={event => handleInputChange(event, index)}
-                handleAction={() => handleRemoveInvitee(index)}
-                guestCount={index + 1}
-              />
-            ))
-            }
-          </>
-      )
-      }
+      {Boolean(invitees.length) && (
+        <>
+          <Typography variant="subtitle2" gutterBottom>
+            {t('guest_book.new_guest', { count: 2 })}
+          </Typography>
+          {invitees.map((invite, index) => (
+            <InviteeForm
+              // eslint-disable-next-line react/no-array-index-key
+              key={index}
+              guestData={invite}
+              handlePhoneNumber={number => handlePhoneNumber(number, index)}
+              handleInputChange={event => handleInputChange(event, index)}
+              handleAction={() => handleRemoveInvitee(index)}
+              guestCount={index + 1}
+            />
+          ))}
+        </>
+      )}
 
       <br />
       <CenteredContent>

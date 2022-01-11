@@ -16,16 +16,14 @@ describe('Guest Invitation Form', () => {
   beforeEach(() => {
     jest.spyOn(routeData, 'useHistory').mockReturnValue(mockHistory);
   });
-  jest.useFakeTimers('modern');
-  jest.setSystemTime(new Date('2021-05-20 13:00'));
 
   it('should render the invitation form', async () => {
     const guest = {
-      visitationDate: new Date(),
-      startsAt: new Date(),
-      endsAt: new Date(),
+      visitationDate: null,
+      startsAt: null,
+      endsAt: null,
       occursOn: [],
-      visitEndDate: new Date()
+      visitEndDate: null
     };
 
     const createInviteMock = {
