@@ -246,7 +246,7 @@ namespace :imports do
               created_at: date,
               source: modes[payment_mode],
               user_id: user.id,
-              plan_payments: { manual_receipt_number: receipt_number },
+              plan_payments: { manual_receipt_number: "MI#{receipt_number}" },
             )
             if transaction.present?
               warnings[row_num + 1] = 'Warning: Transaction already exists.'
