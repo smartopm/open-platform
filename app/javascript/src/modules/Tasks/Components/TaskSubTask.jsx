@@ -7,7 +7,6 @@ import {
   MenuItem,
   Typography,
   Grid,
-  Chip,
   Button,
   useMediaQuery,
   Dialog,
@@ -25,6 +24,8 @@ import AddIcon from '@material-ui/icons/Add';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import { useTranslation } from 'react-i18next';
+import Box from '@mui/material/Box';
+import LinearProgress from '@mui/material/LinearProgress';
 import { dateToString } from '../../../components/DateContainer';
 import CenteredContent from '../../../shared/CenteredContent';
 import { SubTasksQuery } from '../graphql/task_queries';
@@ -120,7 +121,7 @@ export default function TaskSubTask({ taskId, users, assignUser, handleSplitScre
           <Grid item md={12} xs={12} style={{ marginBottom: '2px'}}><Divider /></Grid>
           {data.taskSubTasks.map(task => (
             <Fragment key={task.id}>
-              <Grid container spacing={1} item md={5} xs={6} className={classes.bodyAlign}>
+              <Grid container item md={4} xs={4} className={classes.bodyAlign}>
                 <Grid item md={2}>
                   <Button
                     onClick={() => handleTaskCompletion(task.id, !task.completed)}
@@ -131,7 +132,7 @@ export default function TaskSubTask({ taskId, users, assignUser, handleSplitScre
                     data-testid="task_completion_toggle_button"
                   />
                 </Grid>
-                <Grid item md={10}>
+                <Grid item md={8}>
                   <Typography
                     variant="body2"
                     data-testid="task_body"
@@ -142,7 +143,7 @@ export default function TaskSubTask({ taskId, users, assignUser, handleSplitScre
                   </Typography>
                 </Grid>
               </Grid>
-              <Grid item md={2} xs={6} className={classes.bodyAlign} style={{textAlign: 'right'}}>
+              <Grid item md={3} xs={5} className={classes.bodyAlign} style={{textAlign: 'right'}}>
                 <Typography variant="body2" component="span">
                   {t('task:sub_task.due')}
                   {task.dueDate ? dateToString(task.dueDate) : 'Never '}
@@ -184,12 +185,25 @@ export default function TaskSubTask({ taskId, users, assignUser, handleSplitScre
               </Grid>
               <Grid item md={2} xs={5} className={classes.bodyAlign} style={{textAlign: 'right'}}>
                 <Grid container>
-                  <Grid item md={8} xs={8}>
-                    {task.completed
-                    ? <Chip size="small" label={t('task.complete')} className={classes.completed} />
-                    : <Chip size="small" label={t('task.open')} className={classes.open} />}
+                  <Grid item md={8} xs={8} className={classes.progressBarComponent}>
+                    <Box sx={{ width: '100%' }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+                        <Box sx={{ width: '100%', ml: 2 }}>
+                          <LinearProgress variant="determinate" value={task?.progress?.progress_percentage} />
+                        </Box>
+                        <Box sx={{ minWidth: 2, ml: 2 }}>
+                          <Typography variant="body2">
+                            {task?.progress?.complete}
+                            {' '}
+                            of 
+                            {' '}
+                            {task?.progress?.total}
+                          </Typography>
+                        </Box>
+                      </Box>
+                    </Box>
                   </Grid>
-                  <Grid item md={4} xs={4}>
+                  <Grid item md={2} xs={2} className={classes.arrowDownUpIcon}>
                     <IconButton
                       onClick={event => handleOpenMenu(event, task)}
                       size="small"
@@ -318,5 +332,20 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'end',
+  },
+  arrowDownUpIcon: {
+    marginTop: '-8px',
+    marginLeft: '5px',
+    '@media (min-device-width: 540px) and (max-device-height: 720px) and (orientation: portrait)' : {
+      marginLeft: "32px",
+    },
+
+    '@media (min-device-width: 768px) and (max-device-height: 1024px) and (orientation: portrait)' : {
+      marginLeft: "45px",
+    },
+  },
+  progressBarComponent: {
+    marginTop: '1px'
   }
+  
 }));

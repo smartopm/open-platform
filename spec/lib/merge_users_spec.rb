@@ -110,6 +110,12 @@ RSpec.describe MergeUsers do
     create(:event_log, community_id: community.id, acting_user_id: user.id,
                        ref_type: 'Users::User', ref_id: user.id, subject: 'user_entry')
   end
+  let!(:other_contact_info) do
+    create(:contact_info, user: user, contact_type: 'phone', info: '99998888')
+  end
+  let!(:duplicate_contact_info) do
+    create(:contact_info, user: duplicate_user, contact_type: 'phone', info: '99998888')
+  end
 
   shared_examples 'merges_wallet_details_and_destroy_duplicate_user' do |pending_balance, balance|
     before { MergeUsers.merge(user.id, duplicate_user.id) }
@@ -124,6 +130,7 @@ RSpec.describe MergeUsers do
 
   it 'updates user_id on neccessary tables' do
     community.update(sub_administrator_id: user.id)
+    expect(Users::ContactInfo.count).to eq 3
     MergeUsers.merge(user.id, duplicate_user.id)
 
     expect(activity_point.reload.user_id).to eq(duplicate_user.id)
@@ -164,6 +171,7 @@ RSpec.describe MergeUsers do
     expect(community.reload.sub_administrator_id).to eq(duplicate_user.id)
     expect(event_log.reload.acting_user_id).to eq(duplicate_user.id)
     expect(event_log.ref_id).to eq(duplicate_user.id)
+    expect(Users::ContactInfo.count).to eq 2
   end
 
   context 'when user have general plan and duplicate user do not have general plan' do

@@ -167,6 +167,19 @@ class MergeUsers
     end
     raise_update_failed_error if PostTags::PostTagUser.where(user_id: user_id).any?
 
+    # Update ContactInfo user
+    contact_infos = Users::ContactInfo.where(user_id: user_id)
+    contact_infos.each do |contact_info|
+      if Users::ContactInfo.exists?(user_id: duplicate_id,
+                                    contact_type: contact_info.contact_type,
+                                    info: contact_info.info)
+        contact_info.destroy
+      else
+        contact_info.update(user_id: duplicate_id)
+      end
+    end
+    raise_update_failed_error if Users::ContactInfo.where(user_id: user_id).any?
+
     models_with_user_id.each do |table_name|
       next if table_name.constantize.where(user_id: user_id).empty?
 
@@ -212,7 +225,7 @@ class MergeUsers
     comment_models = %w[Comment NoteComment]
     log_models = %w[ActivityLog EventLog ImportLog SubstatusLog EntryRequest]
     notification_models = %w[EmailTemplate Message Notification]
-    user_models = %w[ContactInfo Feedback ActivityPoint TimeSheet]
+    user_models = %w[Feedback ActivityPoint TimeSheet]
     ActiveRecord::Base.connection.tables.map(&:classify).each do |class_name|
       model_name = case class_name
                    when *payment_models then "Payments::#{class_name}"

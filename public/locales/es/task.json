@@ -1,20 +1,55 @@
 {
+  "bread_crumps": {
+    "task_details": "Detalle de la Tarea"
+  },
+  "document": {
+    "documents": "Documentos",
+    "download": "Descargar",
+    "no_documents": "Agregar un documento",
+    "upload_error": "No se pudo cargar el documento",
+    "uploaded_by": "Subido por"
+  },
+  "history": {
+    "updates": "Actualizaciones"
+  },
+  "processes": {
+    "documents": "Documentos",
+    "processes": "Procesos"
+  },
+  "sub_task": {
+    "due": "vence:",
+    "no_sub_tasks": "Agregar una subtarea"
+  },
   "task": {
+    "active_reminder": "Recordatorio",
+    "assigned_to_txt": "Asignado a:",
     "change_reminder_text": "Cambiar recordatorio",
     "chip_add_assignee": "Agregar Responsable",
     "chip_add_assignee_placeholder": "Nombre del responsable",
     "chip_close": "Cerrar",
     "click_a_card_to_filter": "Haga clic en una tarjeta de arriba para filtrar",
+    "complete": "Completo",
+    "created": "Creado",
+    "date_created": "Fecha de Creación",
+    "delete_confirmation_text": "¿Está seguro que desea eliminar su comentario?",
     "history_create_new_note_comment": "agregó un nuevo comentario",
     "history_update_attribute": "Cambiar {{attribute}} de {{initialValue}} a {{updatedValue}}",
     "history_update_body": "El contenido de la tarea ha sido actualizado",
     "history_update_no_data": "Actualización no disponible",
+    "incomplete": "Incompleto",
     "my_tasks": "Mis tareas",
+    "no_tasks": "No hay tareas",
+    "none": "Ninguno",
+    "open": "Abierto",
     "overdue_tasks": "Tareas vencidas",
+    "quick_search": "Búsqueda Rápida",
     "reminder_text": "Recuérdame más tarde",
+    "selected_task_marked_as": "Las tareas seleccionadas han sido marcadas correctamente como",
     "task_assignee_label": "Asignar esta tarea a usuarios",
     "task_body_label": "Contenido de la tarea",
+    "task_completed": "Tarea completada",
     "task_description_label": "Descripcion de Tareas",
+    "task_details_text": "Detalles de la Tarea",
     "task_modal_create_text": "Crear una tarea",
     "task_modal_detail_text": "Página de detalles de la tarea",
     "task_reminder_in_1_hr": "En 1 hora",
