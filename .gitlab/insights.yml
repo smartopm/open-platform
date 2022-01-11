@@ -10,8 +10,7 @@ bugReport:
           - Priority::1
           - Priority::2
           - Priority::3
-        group_by: day
-        period_limit: 15
+        group_by: week
     - title: Open bugs by Cringiness
       type: bar
       query:
@@ -20,8 +19,7 @@ bugReport:
         collection_labels:
           - Cringy::High
           - Cringy::low
-        group_by: day
-        period_limit: 15
+        group_by: week
     - title: Open bugs by Severity
       type: bar
       query:
@@ -32,8 +30,7 @@ bugReport:
           - S::2
           - S::3
           - S::4
-        group_by: day
-        period_limit: 15
+        group_by: week
     - title: Issues created per month
       type: bar
       query:
@@ -49,24 +46,21 @@ bugReport:
 mergeRequest:
   title: Merge Request Dashboard
   charts:
-    - title: Merge Requests opened this sprint
+    - title: Merge Requests opened in the last 2 weeks
       type: bar
       query:
         issuable_type: merge_request
         issuable_state: all
-        group_by: day
-        period_limit: 15
-    - title: Merge Requests merged this sprint
+        group_by: week
+    - title: Merge Requests merged in the last 2 weeks
       type: bar
       query:
         issuable_type: merge_request
         issuable_state: merged
-        group_by: day
-        period_limit: 15
-    - title: Merge Requests closed this sprint
+        group_by: week
+    - title: Merge Requests closed in the last 2 weeks
       type: bar
       query:
         issuable_type: merge_request
         issuable_state: closed
-        group_by: day
-        period_limit: 15
+        group_by: week
