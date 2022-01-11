@@ -1,0 +1,36 @@
+bugReport:
+  title: Issue Dashboard
+  charts:
+    - title: Open bugs by Priority
+      type: bar
+      query:
+        issuable_type: issue
+        issuable_state: opened
+        collection_labels:
+          - Priority::1
+          - Priority::2
+          - Priority::3
+        group_by: day
+        period_limit: 15
+    - title: Open bugs by Cringiness
+      type: bar
+      query:
+        issuable_type: issue
+        issuable_state: opened
+        collection_labels:
+          - Cringy::High
+          - Cringy::low
+        group_by: day
+        period_limit: 15
+    - title: Open bugs by Severity
+      type: bar
+      query:
+        issuable_type: issue
+        issuable_state: opened
+        collection_labels:
+          - S::1
+          - S::2
+          - S::3
+          - S::4
+        group_by: day
+        period_limit: 15
