@@ -141,12 +141,6 @@ describe('Should render Guests View Component', () => {
       );
       expect(getAllByTestId('grant_access_btn')[0]).toBeDisabled();
       expect(getAllByTestId('user_name')[0]).toBeInTheDocument();
-      expect(getAllByTestId('menu-list')[0]).toBeInTheDocument();
-
-      // for some reason the following test causes an endless run of the tests 🤔
-      // TODO: @olivier: Find a fix
-      // fireEvent.click(getAllByTestId('menu-list')[0])
-      // expect(getAllByTestId('menu-item')[0]).toBeInTheDocument()
 
       fireEvent.click(getAllByTestId('card')[0]);
       expect(mockHistory.push).toBeCalled();

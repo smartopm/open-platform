@@ -13,9 +13,12 @@ export const useStyles = makeStyles({
     cursor: 'pointer',
   },
   invitePhoneNumber: {
-    marginBottom: 2
+    marginBottom: 15
   },
   invitePhoneNumberCheck: {
     marginBottom: -10
-  }
+  },
+  inviteForm: {
+    marginTop: 5
+  },
 });

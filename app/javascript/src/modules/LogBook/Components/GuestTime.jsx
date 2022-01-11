@@ -8,7 +8,7 @@ export default function GuestTime({ userData, handleChange, handleChangeOccurren
   const { t } = useTranslation(['logbook', 'common', 'days']);
   return (
     <Grid container direction="row" spacing={2}>
-      <Grid item xs={12}>
+      <Grid item xs={12} sm={4}>
         <DatePickerDialog
           selectedDate={userData.visitationDate}
           handleDateChange={date => handleChange({ target: { name: 'visitationDate', value: date } })}
@@ -19,7 +19,7 @@ export default function GuestTime({ userData, handleChange, handleChangeOccurren
         />
         <br />
       </Grid>
-      <Grid item xs={6}>
+      <Grid item xs={6} sm={4}>
         <ThemedTimePicker
           time={userData.startsAt || userData.startTime}
           handleTimeChange={date => handleChange({ target: { name: 'startsAt', value: date } })}
@@ -30,7 +30,7 @@ export default function GuestTime({ userData, handleChange, handleChangeOccurren
           fullWidth
         />
       </Grid>
-      <Grid item xs={6}>
+      <Grid item xs={6} sm={4}>
         <ThemedTimePicker
           time={userData.endsAt || userData.endTime}
           handleTimeChange={date => handleChange({ target: { name: 'endsAt', value: date } })}
@@ -42,7 +42,7 @@ export default function GuestTime({ userData, handleChange, handleChangeOccurren
         />
       </Grid>
       <Grid item xs={12} md={6}>
-        <Typography gutterBottom data-testid="guest_repeats_on">{t('guest_book.repeats_on')}</Typography>
+        <Typography gutterBottom data-testid="guest_repeats_on" variant="subtitle2">{t('guest_book.repeats_on')}</Typography>
         {Object.entries(t('days:days', { returnObjects: true })).map(([key, value]) => (
           <IconButton
             key={key}
@@ -52,6 +52,7 @@ export default function GuestTime({ userData, handleChange, handleChangeOccurren
             onClick={() => handleChangeOccurrence(key)}
             data-testid="week_days"
             disabled={disableEdit()}
+            size='small'
           >
             <Avatar style={{ backgroundColor: new Set(userData.occursOn).has(key) ? '#009CFF' : '#ADA7A7' }}>
               {value.charAt(0)}

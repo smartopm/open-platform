@@ -25,7 +25,6 @@ export default function DatePickerDialog({ selectedDate, handleDateChange, label
           data-testid='date-picker'
           style={{ width: `${width || '100%'}`, ...styles }}
           clearable
-          margin="normal"
           id={`date-picker-dialog-${label}`}
           label={label}
           format="yyyy-MM-dd"
@@ -40,7 +39,6 @@ export default function DatePickerDialog({ selectedDate, handleDateChange, label
           KeyboardButtonProps={{
                         'aria-label': 'change date'
                     }}
-          // {...inputValidation}
           helperText={inputValidation.error && t('form:errors.required_field', { fieldName: inputValidation.fieldName })}
           {...others}
           disabled={disabled}

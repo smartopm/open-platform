@@ -4,39 +4,43 @@ module Mutations
   module EntryRequest
     # Create a new entry time
     class InvitationCreate < BaseMutation
-      argument :guest_id, ID, required: false
-      argument :name, String, required: false
-      argument :phone_number, String, required: false
-      argument :email, String, required: false
       argument :visitation_date, String, required: true
       argument :starts_at, String, required: false
       argument :ends_at, String, required: false
       argument :occurs_on, [String], required: false
       argument :visit_end_date, String, required: false
+      argument :user_ids, [String], required: false
+      argument :guests, [GraphQL::Types::JSON], required: false
 
-      field :entry_time, Types::EntryTimeType, null: true
+      field :success, GraphQL::Types::Boolean, null: true
 
       # rubocop:disable Metrics/AbcSize
       # rubocop:disable Metrics/MethodLength
       def resolve(vals)
         ActiveRecord::Base.transaction do
-          user = context[:site_community].users.find_by(id: vals[:guest_id])
+          visitors_ids = []
 
-          guest = check_or_create_guest(vals, user)
-          request = generate_request(vals, guest)
-          invite = context[:current_user].invite_guest(guest.id, request.id)
+          vals[:guests].each do |guest|
+            user = check_or_create_guest(guest)
+            visitors_ids << user.id
+          end
 
-          entry = generate_entry_time(vals.except(:guest_id, :name, :phone_number, :email), invite)
+          all_users_ids = visitors_ids + vals[:user_ids]
+          users_info = []
+          all_users_ids.each do |id|
+            user = context[:site_community].users.find_by(id: id)
+            request = generate_request(vals, user)
+            invite = context[:current_user].invite_guest(user.id, request.id)
+            generate_entry_time(vals.except(:guests, :user_ids), invite)
+            users_info << { phone_number: user.phone_number, request: request }
+          end
+
           GuestQrCodeJob.perform_now(
             community: context[:site_community],
-            contact_info: { email: guest.email, phone_number: guest.phone_number },
-            entry_request: request,
+            contact_infos: users_info,
             type: 'verify',
           )
-          return { entry_time: entry } if entry
-
-        rescue ActiveRecord::RecordNotUnique
-          raise GraphQL::ExecutionError, I18n.t('errors.duplicate.guest')
+          return { success: true }
         end
       end
 
@@ -73,26 +77,23 @@ module Mutations
 
         context[:current_user].entry_requests.create!(
           guest_id: guest.id,
-          **vals.except(:guest_id, :phone_number),
+          name: guest.name,
+          **vals.except(:user_ids, :guests),
         )
       end
 
-      def check_or_create_guest(vals, user)
-        return user unless user.nil?
-
-        raise_duplicate_email_error(vals[:email])
-        raise_duplicate_number_error(vals[:phone_number])
+      def check_or_create_guest(user)
+        raise_duplicate_number_error(user[:phone_number])
 
         enrolled_user = context[:current_user].enroll_user(
-          name: vals[:name], phone_number: vals[:phone_number],
-          email: vals[:email], user_type: 'visitor'
+          name: "#{user['firstName']} #{user['lastName']}", phone_number: user['phoneNumber'],
+          user_type: 'visitor'
         )
         return enrolled_user if enrolled_user.persisted?
 
         raise GraphQL::ExecutionError, enrolled_user.errors.full_messages&.join(', ')
       end
 
-      # Verifies if current user admin or security guard.
       def authorized?(_vals)
         return true if permitted?(module: :entry_request, permission: :can_invite_guest)
 
