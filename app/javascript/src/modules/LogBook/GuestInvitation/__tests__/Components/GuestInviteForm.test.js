@@ -1,4 +1,3 @@
-/* eslint-disable max-statements */
 import React from 'react';
 import { fireEvent, render, waitFor } from '@testing-library/react';
 import routeData, { MemoryRouter } from 'react-router';
@@ -17,14 +16,16 @@ describe('Guest Invitation Form', () => {
   beforeEach(() => {
     jest.spyOn(routeData, 'useHistory').mockReturnValue(mockHistory);
   });
+  jest.useFakeTimers('modern');
+  jest.setSystemTime(new Date('2021-05-20 13:00'));
 
   it('should render the invitation form', async () => {
     const guest = {
-      visitationDate: null,
-      startsAt: null,
-      endsAt: null,
+      visitationDate: new Date(),
+      startsAt: new Date(),
+      endsAt: new Date(),
       occursOn: [],
-      visitEndDate: null
+      visitEndDate: new Date()
     };
 
     const createInviteMock = {
@@ -36,7 +37,7 @@ describe('Guest Invitation Form', () => {
           endsAt: guest.endsAt,
           occursOn: guest.occursOn,
           visitEndDate: guest.visitEndDate,
-          guests: [{"firstName":"","lastName":"","phoneNumber":null,"isAdded":true}],
+          guests: [],
           userIds: []
         }
       },
@@ -52,7 +53,7 @@ describe('Guest Invitation Form', () => {
     const searchGuestsMock = {
       request: {
         query: SearchGuestsQuery,
-        variables: { query: "some user" }
+        variables: { query: "" }
       },
       result: {
         data: {
@@ -67,7 +68,7 @@ describe('Guest Invitation Form', () => {
         }
       }
     }
-    const { getByTestId, getAllByTestId, getAllByText } = render(
+    const { getByTestId, getAllByText } = render(
       <MemoryRouter>
         <Context.Provider value={userMock}>
           <MockedProvider mocks={[createInviteMock, searchGuestsMock]} addTypename={false}>
@@ -77,50 +78,20 @@ describe('Guest Invitation Form', () => {
       </MemoryRouter>
     );
 
-    const firstName = getByTestId('guest_entry_first_name');
-    const lastName = getByTestId('guest_entry_last_name');
-    const phoneNumber = getByTestId('guest_entry_phone_number');
-
-    expect(firstName).toBeInTheDocument();
-    expect(lastName).toBeInTheDocument();
-    expect(phoneNumber).toBeInTheDocument();
     expect(getByTestId('invite_button')).toBeInTheDocument();
 
-    fireEvent.change(firstName, { target: { value: 'Some random firstName' } });
-    expect(firstName.value).toBe('Some random firstName');
+    expect(getAllByText('common:misc.day_of_visit')[0]).toBeInTheDocument();
+    expect(getAllByText('common:misc.start_time')[0]).toBeInTheDocument();
+    expect(getAllByText('common:misc.end_time')[0]).toBeInTheDocument();
 
-    fireEvent.change(lastName, { target: { value: 'Some random lastName' } });
-    expect(lastName.value).toBe('Some random lastName');
+    fireEvent.change(getByTestId('search'), { target: { value: '090909090' } })
 
-    expect(phoneNumber).not.toBeDisabled()
-    fireEvent.change(phoneNumber, { target: { value: '090909090' } });
-    expect(phoneNumber.value).toBe('090909090');
+    fireEvent.click(getByTestId('invite_button'));
 
-    expect(getByTestId('add_remove_guest_btn')).toBeInTheDocument();
-    expect(getByTestId('add_remove_guest_btn').textContent).toContain('misc.add')
-
-    fireEvent.click(getByTestId('add_remove_guest_btn'));
-    expect(getAllByTestId('add_remove_guest_btn')).toHaveLength(2);
-
-      // we should expect multiple guest inputs
-
-      expect(getAllByTestId('add_remove_guest_btn')[0].textContent).toContain('misc.remove')
-
-      fireEvent.click(getAllByTestId('add_remove_guest_btn')[0]);
-      // we should expect to only have input after clicking the remove btn
-      expect(getAllByTestId('add_remove_guest_btn')).toHaveLength(1);
-
-      expect(getAllByText('common:misc.day_of_visit')[0]).toBeInTheDocument();
-      expect(getAllByText('common:misc.start_time')[0]).toBeInTheDocument();
-      expect(getAllByText('common:misc.end_time')[0]).toBeInTheDocument();
-
-      fireEvent.change(getByTestId('search'))
-
-      fireEvent.click(getByTestId('invite_button'));
-
-      await waitFor(() => {
+    await waitFor(() => {
         expect(getAllByText('guest.guest_invited')[0]).toBeInTheDocument();
-        expect(mockHistory.push).toBeCalled(); // check if we redirected after timeout
-    }, 600);
+        expect(mockHistory.push).toBeCalled();
+        expect(mockHistory.push).toBeCalledWith('/logbook/guests');
+    }, 50);
   });
 });

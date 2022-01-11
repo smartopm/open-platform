@@ -2,7 +2,7 @@
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import React, { useEffect, useState, Fragment } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLazyQuery, useMutation } from 'react-apollo';
 import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -18,23 +18,24 @@ import { SearchGuestsQuery } from '../graphql/queries';
 import useDebounce from '../../../../utils/useDebounce';
 import GuestSearchCard from './GuestSearchCard';
 import { UserChip } from '../../../Tasks/Components/UserChip';
+import { filterEmptyObjectByKey } from '../helpers';
 
 export default function GuestInviteForm() {
   const initialData = { firstName: '', lastName: '', phoneNumber: null, isAdded: false };
   const history = useHistory();
   const [guestData, setGuestData] = useState({
-    visitationDate: null,
-    startsAt: null,
-    endsAt: null,
+    visitationDate: new Date(),
+    startsAt: new Date(),
+    endsAt: new Date(),
     occursOn: [],
-    visitEndDate: null,
+    visitEndDate: new Date(),
     isLoading: false
    });
   const [details, setDetails] = useState({ message: '', isError: false });
   const [createInvitation] = useMutation(InvitationCreateMutation);
   const { t } = useTranslation(['logbook', 'common', 'discussion', 'search']);
   const [invitees, setInvitees] = useState([]);
-  const [user, setUser] = useState(initialData)
+  const [newGuest, setNewGuest] = useState(initialData)
   const [searchValue, setSearchValue] = useState('');
   const [guestUsers, setGuestUsers] = useState([]);
   const debouncedValue = useDebounce(searchValue, 500);
@@ -89,7 +90,7 @@ export default function GuestInviteForm() {
     createInvitation({
       variables: {
         userIds,
-        guests: invitees,
+        guests: filterEmptyObjectByKey(invitees, 'firstName'),
         visitationDate: guestData.visitationDate,
         startsAt: guestData.startsAt,
         endsAt: guestData.endsAt,
@@ -108,9 +109,9 @@ export default function GuestInviteForm() {
       });
   }
 
-  function handleAddInvitee(index) {
-    setInvitees([...invitees, user]);
-    setUser(initialData)
+  function handleAddInvitee() {
+    setInvitees([...invitees, newGuest]);
+    setNewGuest(initialData)
   }
 
   function handleRemoveInvitee(index) {
@@ -176,9 +177,9 @@ export default function GuestInviteForm() {
             {t('common:errors.user_not_found_add_new')}
           </Typography>
           <InviteeForm
-            guestData={user}
-            handlePhoneNumber={number => setUser({ ...user, phoneNumber: number})}
-            handleInputChange={(event) => setUser({ ...user, [event.target.name]: event.target.value})}
+            guestData={newGuest}
+            handlePhoneNumber={number => setNewGuest({ ...newGuest, phoneNumber: number})}
+            handleInputChange={({target}) => setNewGuest({ ...newGuest, [target.name]: target.value})}
             handleAction={() => handleAddInvitee()}
             primary
           />
