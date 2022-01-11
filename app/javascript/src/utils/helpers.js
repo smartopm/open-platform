@@ -581,3 +581,13 @@ export function extractCountry(locale){
 export function ifNotTest(){
   return process.env.NODE_ENV !== 'test'
 }
+
+
+export function secureFileDownload(path) {
+  const element = document.createElement('a');
+  element.setAttribute('href', path);
+  element.setAttribute('download', '');
+  document.body.appendChild(element);
+  element.click();
+  document.body.removeChild(element);
+}

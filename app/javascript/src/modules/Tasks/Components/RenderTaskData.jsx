@@ -4,7 +4,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
-import { Checkbox, Grid, IconButton, Typography, Chip } from '@material-ui/core';
+import { Checkbox, Grid, IconButton, Typography } from '@material-ui/core';
 import Divider from '@mui/material/Divider';
 import Hidden from '@material-ui/core/Hidden';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
@@ -19,12 +19,13 @@ import PropTypes from 'prop-types';
 import { useTheme, makeStyles } from '@material-ui/styles';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
+import Box from '@mui/material/Box';
 import { removeNewLines, sanitizeText } from '../../../utils/helpers';
 import DateContainer, { dateToString } from '../../../components/DateContainer';
 import MenuList from '../../../shared/MenuList';
 import UserAvatar from '../../Users/Components/UserAvatar';
 import Card from '../../../shared/Card';
-
+import CustomProgressBar from '../../../shared/CustomProgressBar';
 // TODO: Put in a more shareable directory
 export function LinkToUser({ userId, name }) {
   const theme = useTheme();
@@ -145,13 +146,12 @@ export function TaskDataList({
   const classes = useStyles();
   const { t } = useTranslation('task');
   const matches = useMediaQuery('(max-width:800px)');
-
   return (
     <Card styles={styles} contentStyles={{ padding: '4px' }}>
       <Grid container>
-        <Grid item md={5} xs={8} style={{ display: 'flex', alignItems: 'center' }} data-testid="task_body_section">
+        <Grid item md={5} xs={10} style={{ display: 'flex', alignItems: 'center' }} data-testid="task_body_section">
           <Grid container style={{ display: 'flex', alignItems: 'center' }}>
-            <Grid item md={2}>
+            <Grid item md={2} xs={2}>
               <IconButton
                 aria-controls="task-completion-toggle-button"
                 aria-haspopup="true"
@@ -166,7 +166,7 @@ export function TaskDataList({
                   )}
               </IconButton>
             </Grid>
-            <Grid item md={8}>
+            <Grid item md={8} xs={4}>
               <Typography
                 variant="body2"
                 data-testid="task_body"
@@ -181,7 +181,7 @@ export function TaskDataList({
                 />
               </Typography>
             </Grid>
-            <Grid item md={1}>
+            <Grid item md={1} xl={1}>
               <Hidden smDown>
                 <IconButton
                   aria-controls="simple-menu"
@@ -201,24 +201,19 @@ export function TaskDataList({
           </Grid>
         </Grid>
         <Hidden mdUp>
-          <Grid item md={1} xs={3} style={{display: 'flex', alignItems: 'center' }}>
-            {task.completed
-            ? <Chip size="small" label={t('task.complete')} className={classes.completed} />
-            : <Chip size="small" label={t('task.open')} className={classes.open} />}
-          </Grid>
-        </Hidden>
-        <Hidden mdUp>
-          <Grid item md={1} xs={1} style={{display: 'flex', alignItems: 'center', justifyContent: 'end'}}>
-            <IconButton
-              aria-controls="simple-menu"
-              aria-haspopup="true"
-              data-testid="task-item-menu"
-              dataid={task.id}
-              onClick={event => menuData.handleTodoMenu(event, task)}
-              color="primary"
-            >
-              <MoreVertIcon />
-            </IconButton>
+          <Grid item md={1} xs={1} style={{ display: 'flex', alignItems: 'center', }}>
+            <Box className={classes.taskMenuIcon}>
+              <IconButton
+                aria-controls="simple-menu"
+                aria-haspopup="true"
+                data-testid="task-item-menu"
+                dataid={task.id}
+                onClick={event => menuData.handleTodoMenu(event, task)}
+                color="primary"
+              >
+                <MoreVertIcon />
+              </IconButton>
+            </Box>
           </Grid>
         </Hidden>
         <Hidden smDown>
@@ -230,7 +225,8 @@ export function TaskDataList({
           </Grid>
         </Hidden>
         <Grid item md={1} xs={6} data-testid="task_assignee" style={{ display: 'flex', alignItems: 'center' }}>
-          {task.assignees.length > 0 && (
+          <Hidden smDown>
+            {task.assignees.length > 0 && (
             <Grid container style={{paddingLeft: '5px'}}>
               {/* Restrict to 2 users */}
               {task.assignees.slice(0, 2).map(user => (
@@ -258,10 +254,18 @@ export function TaskDataList({
               </Grid>
             </Grid>
           )}
+          </Hidden>
         </Grid>
-        <Grid item data-testid="task_details_section" md={2} xs={5}>
-          <Grid container style={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <Grid item md={2} xs={2}>
+        <Grid item data-testid="task_details_section" md={2} xs={10}>
+          <Grid container data-testid="progress_bar_small_screen" style={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <Grid item md={2} xs={4}>
+              <Hidden mdUp>
+                <CustomProgressBar task={task} smDown />
+              </Hidden>
+
+            </Grid>
+
+            <Grid item md={2} xs={1}>
               <IconButton
                 aria-controls="task-subtasks-icon"
                 aria-haspopup="true"
@@ -271,8 +275,8 @@ export function TaskDataList({
                 <AccountTreeIcon fontSize="small" color={task?.subTasks?.length ? 'primary': 'disabled'} />
               </IconButton>
             </Grid>
-            <Grid item md={1} xs={2} className={classes.iconItem}><span>{task?.subTasks?.length}</span></Grid>
-            <Grid item md={2} xs={2}>
+            <Grid item md={1} xs={1} className={classes.iconItem}><span>{task?.subTasks?.length}</span></Grid>
+            <Grid item md={2} xs={1}>
               <IconButton
                 aria-controls="task-comment-icon"
                 aria-haspopup="true"
@@ -282,8 +286,8 @@ export function TaskDataList({
                 <QuestionAnswerIcon fontSize="small" color="disabled" />
               </IconButton>
             </Grid>
-            <Grid item md={1} xs={2} className={classes.iconItem}><span>0</span></Grid>
-            <Grid item md={2} xs={2}>
+            <Grid item md={1} xs={1} className={classes.iconItem}><span>0</span></Grid>
+            <Grid item md={2} xs={1}>
               <IconButton
                 key={task.id}
                 aria-controls="task-attach-file-icon"
@@ -294,21 +298,27 @@ export function TaskDataList({
                 <AttachFileIcon fontSize="small" color={task?.documents?.length ? 'primary': 'disabled'} />
               </IconButton>
             </Grid>
-            <Grid item md={1} xs={2} className={classes.iconItem}>
+            <Grid item md={1} xs={1} className={classes.iconItem}>
               <span data-testid="file_attachments_total">
                 {task.documents?.length}
               </span>
             </Grid>
           </Grid>
         </Grid>
-        <Grid item md={1} style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }} data-testid="task_menu_section">
+        <Grid
+          item
+          md={1}
+          style={{ display: 'flex', alignItems: 'center',
+          justifyContent: 'flex-end' }}
+          data-testid="progress_bar_large_screen"
+        >
           <Hidden smDown>
-            {task.completed
-              ? <Chip size="small" label={t('task.complete')} className={classes.completed} />
-              : <Chip size="small" label={t('task.open')} className={classes.open} />}
+            <CustomProgressBar task={task} smDown={false} />
           </Hidden>
+
         </Grid>
-        <Grid item md={1} xs={1} style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
+
+        <Grid item md={1} xs={2} style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }} className={classes.arrowDownUpIcon}>
           {task?.subTasks?.length > 0
             ? (
               <IconButton
@@ -419,5 +429,33 @@ const useStyles = makeStyles(() => ({
   open: {
     backgroundColor: '#2196f3',
     color: '#ffffff'
+  },
+
+  taskMenuIcon: {
+   '@media (min-device-width: 375px) and (max-device-height: 667px) and (orientation: portrait)' : {
+    marginLeft: "6px",
+  },
+  '@media (min-device-width: 375px) and (max-device-height: 812px) and (orientation: portrait)' : {
+    marginLeft: "6px",
+  },
+  '@media (min-device-width: 360px) and (max-device-height: 640px) and (orientation: portrait)' : {
+    marginLeft: "7px",
+  },
+  '@media (min-device-width: 414px) and (max-device-height: 736px) and (orientation: portrait)' : {
+    marginLeft: "12px",
+  },
+  '@media (min-device-width: 768px) and (max-device-height: 1024px) and (orientation: portrait)' : {
+    marginLeft: "20px",
+  },
+  },
+
+  arrowDownUpIcon: {
+    '@media (min-device-width: 768px) and (max-device-height: 1024px) and (orientation: portrait)' : {
+      marginLeft: "-45px",
+    },
+    '@media (min-device-width: 540px) and (max-device-height: 720px) and (orientation: portrait)' : {
+      marginLeft: "-25px",
+    },
+
   }
 }));

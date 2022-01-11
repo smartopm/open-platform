@@ -37,6 +37,10 @@ describe('Should render Visits View Component', () => {
               id: '162f7517',
               name: 'Js user x'
             },
+            grantor: {
+              id: '8877hiolp',
+              name: 'New Guard'
+            },
             closestEntryTime: {
               visitEndDate: null,
               visitationDate: '2021-08-20T10:51:00+02:00',
@@ -63,6 +67,10 @@ describe('Should render Visits View Component', () => {
               name: 'Js user x',
               imageUrl: 'https://lh3.googleusercontent.com'
             },
+            grantor: {
+              id: '8877hiolp',
+              name: 'New Guard'
+            },
             closestEntryTime: null,
             grantedAt: '2021-10-31 02:51',
             status: 'approved',
@@ -77,6 +85,10 @@ describe('Should render Visits View Component', () => {
             user: {
               id: 'some some',
               name: 'user x'
+            },
+            grantor: {
+              id: '8877hiolp',
+              name: 'New Guard'
             },
             guest: null,
             closestEntryTime: null,

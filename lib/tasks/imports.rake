@@ -231,7 +231,7 @@ namespace :imports do
 
         existing_parcel = parcel_with_comm_no || parcel_with_govt_no
         if existing_parcel.present?
-          payment_plan = existing_parcel.payment_plan
+          payment_plan = existing_parcel.payment_plans.order(:start_date).first
           if payment_plan.present?
             modes = {
               'CASH' => 'cash',
@@ -246,7 +246,7 @@ namespace :imports do
               created_at: date,
               source: modes[payment_mode],
               user_id: user.id,
-              plan_payments: { manual_receipt_number: receipt_number },
+              plan_payments: { manual_receipt_number: "MI#{receipt_number}" },
             )
             if transaction.present?
               warnings[row_num + 1] = 'Warning: Transaction already exists.'
@@ -268,7 +268,7 @@ namespace :imports do
               next
             end
 
-            transaction.execute_transaction_callbacks(payment_plan, receipt_number)
+            transaction.execute_transaction_callbacks(payment_plan, amount, receipt_number)
           else
             errors[row_num + 1] = 'Error: Payment plan not available.'
           end

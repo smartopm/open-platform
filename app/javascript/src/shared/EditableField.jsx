@@ -7,7 +7,7 @@ import { makeStyles } from '@material-ui/styles';
 import { Grid } from '@material-ui/core';
 import PropTypes from 'prop-types';
 
-export default function EditableField({ value, setValue, action, customStyles }) {
+export default function EditableField({ value, setValue, action, customStyles, canUpdateNote }) {
   const [isEditMode, setIsEditMode] = useState(false);
 
   function handleChange(event) {
@@ -23,7 +23,6 @@ export default function EditableField({ value, setValue, action, customStyles })
     setIsEditMode(true);
   }
   const classes = useStyles();
-
   return (
     <Grid container spacing={1} onMouseLeave={handleOutsideClick} data-testid="editable_field_section">
       <Grid item xs={10}>
@@ -45,7 +44,7 @@ export default function EditableField({ value, setValue, action, customStyles })
             'data-testid': 'editable_description',
             endAdornment: (
               <InputAdornment position="end">
-                <IconButton onClick={handleClick} data-testid="edit_icon" color="primary">
+                <IconButton onClick={handleClick} data-testid="edit_icon" color="primary" disabled={!canUpdateNote}>
                   <Edit />
                 </IconButton>
               </InputAdornment>
@@ -71,7 +70,8 @@ EditableField.propTypes = {
   setValue: PropTypes.func.isRequired,
   action: PropTypes.node.isRequired,
    // eslint-disable-next-line react/forbid-prop-types
-  customStyles: PropTypes.object
+  customStyles: PropTypes.object,
+  canUpdateNote: PropTypes.bool.isRequired
 };
 
 const useStyles = makeStyles(() => ({
