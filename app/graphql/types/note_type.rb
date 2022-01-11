@@ -25,6 +25,7 @@ module Types
     field :documents, [GraphQL::Types::JSON], null: true
     field :attachments, [GraphQL::Types::JSON], null: true
     field :form_user_id, ID, null: true
+    field :progress, GraphQL::Types::JSON, null: true
 
     # move this in a shareable place
     def host_url(type)
@@ -55,5 +56,15 @@ module Types
     end
     # rubocop:enable Metrics/AbcSize
     # rubocop:enable Metrics/MethodLength
+
+    def progress
+      total = object.sub_notes.count + 1
+      complete = object.completed ? 1 : 0
+      object.sub_notes.each do |note|
+        complete += 1 if note.completed
+      end
+      progress_percentage = complete.fdiv(total).round(2) * 100
+      { 'complete': complete, 'total': total, 'progress_percentage': progress_percentage }
+    end
   end
 end
