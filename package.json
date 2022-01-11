@@ -8,7 +8,7 @@
     "lint": "eslint app/javascript/src --ext .js --ext .jsx app/javascript/packs/react_main.jsx",
     "test": "NODE_ENV=test jest",
     "format": "prettier --no-semi --single-quote --write app/javascript/src/**/*.jsx",
-    "storybook": "start-storybook -p 6006 --no-dll --quiet",
+    "storybook": "start-storybook -p 6006 --ci --no-dll --quiet",
     "build-storybook": "build-storybook --no-dll"
   },
   "dependencies": {
@@ -95,10 +95,10 @@
   "devDependencies": {
     "@babel/core": "^7.12.3",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.4.3",
-    "@storybook/addon-actions": "6.4.10",
-    "@storybook/addon-essentials": "6.4.10",
-    "@storybook/addon-links": "6.4.10",
-    "@storybook/react": "6.4.10",
+    "@storybook/addon-actions": "6.5.0-alpha.13",
+    "@storybook/addon-essentials": "6.5.0-alpha.13",
+    "@storybook/addon-links": "6.5.0-alpha.13",
+    "@storybook/react": "6.5.0-alpha.13",
     "@testing-library/dom": "^8.2.0",
     "@testing-library/jest-dom": "^5.5.0",
     "@testing-library/react": "^10.0.3",
