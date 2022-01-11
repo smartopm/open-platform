@@ -369,7 +369,7 @@ export default function TaskInfoTop({
             </Typography>
           </Grid>
           <Grid item xs={8} md={9}>
-            <Grid container spacing={1} style={{ alignItems: 'center' }}>
+            <Grid container spacing={1} style={{ alignItems: 'center' }} data-testid='user-chip'>
               {canUpdateNote && data.assignees.length > 0 && (
                 <Grid item>
                   {data.assignees.map(user => (
@@ -382,7 +382,7 @@ export default function TaskInfoTop({
                   ))}
                 </Grid>
               )}
-              <Grid item>
+              <Grid item data-testid='add-assignee'>
                 {canUpdateNote && (
                   <Chip
                     key={data.id}
