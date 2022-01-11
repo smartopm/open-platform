@@ -206,7 +206,7 @@ export default function LoginScreen() {
                 enableSearch
                 placeholder={t('common:form_placeholders.phone_number')}
                 onChange={value => setUserLogin({phone: value, email: '' })}
-                preferredCountries={['hn', 'ke', 'zm', 'ng', 'in', 'us']}
+                preferredCountries={['hn', 'ke', 'zm', 'cr', 'ng', 'in', 'us']}
               />
             </div>
           </Grid>
