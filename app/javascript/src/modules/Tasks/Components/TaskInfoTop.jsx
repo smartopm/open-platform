@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable complexity */
 import React, { useState } from 'react';
 import TextField from '@material-ui/core/TextField';
@@ -135,32 +136,19 @@ export default function TaskInfoTop({
                 </Breadcrumbs>
               </Grid>
               <Grid item xs={3} style={{ display: 'flex' }}>
-                {canUpdateNote ? (
+                {canUpdateNote && (
                   <IconButton
                     edge="end"
                     onClick={handleTaskComplete}
                     data-testid="task-info-menu"
                     color="primary"
+                    style={{backgroundColor: 'transparent'}}
                   >
                     {data.completed ? (
                       <CheckCircleIcon htmlColor="#4caf50" style={{fontSize: '20px'}} />
                     ) : (
-                      <CheckCircleOutlineIcon style={{fontSize: '20px'}} />
-                    )}
-                  </IconButton>
-                ) : (
-                  <IconButton
-                    edge="end"
-                    onClick={handleTaskComplete}
-                    data-testid="task-info-menu"
-                    color="primary"
-                    disabled
-                  >
-                    {data.completed ? (
-                      <CheckCircleIcon htmlColor="#4caf50" />
-                    ) : (
-                      <CheckCircleOutlineIcon />
-                    )}
+                      <CheckCircleOutlineIcon onClick={handleTaskComplete} />
+                  )}
                   </IconButton>
                 )}
                 {isAssignee && (
@@ -193,7 +181,7 @@ export default function TaskInfoTop({
               }}
             />
           ) : (
-            <Typography variant="h6" style={{ color: '#575757' }}>
+            <Typography variant="h5" style={{ color: '#575757' }}>
               <span
                 // eslint-disable-next-line react/no-danger
                 dangerouslySetInnerHTML={{
@@ -208,7 +196,7 @@ export default function TaskInfoTop({
             <IconButton
               onClick={() => setEditingBody(true)}
               data-testid="edit_body_icon"
-              style={{ marginTop: '-6px' }}
+              style={{ marginTop: '-4px' }}
               color="primary"
             >
               <Edit />
@@ -244,26 +232,13 @@ export default function TaskInfoTop({
         {!matches && (
           <>
             <Grid item md={1} xs={1} style={{ textAlign: 'right' }}>
-              {canUpdateNote ? (
+              {canUpdateNote && (
                 <IconButton
                   edge="end"
                   onClick={handleTaskComplete}
                   data-testid="task-info-menu"
                   color="primary"
-                >
-                  {data.completed ? (
-                    <CheckCircleIcon htmlColor="#4caf50" />
-                  ) : (
-                    <CheckCircleOutlineIcon />
-                  )}
-                </IconButton>
-              ) : (
-                <IconButton
-                  edge="end"
-                  onClick={handleTaskComplete}
-                  data-testid="task-info-menu"
-                  color="primary"
-                  disabled
+                  style={{backgroundColor: 'transparent'}}
                 >
                   {data.completed ? (
                     <CheckCircleIcon htmlColor="#4caf50" />
@@ -393,10 +368,10 @@ export default function TaskInfoTop({
               {t('task.assigned_to_txt')}
             </Typography>
           </Grid>
-          <Grid item xs={7} md={9}>
-            <Grid container style={{ alignItems: 'center' }}>
-              {canUpdateNote ? (
-                <Grid item md={4} xs={12}>
+          <Grid item xs={8} md={9}>
+            <Grid container spacing={1} style={{ alignItems: 'center' }}>
+              {canUpdateNote && data.assignees.length > 0 && (
+                <Grid item>
                   {data.assignees.map(user => (
                     <UserChip
                       key={user.id}
@@ -406,15 +381,9 @@ export default function TaskInfoTop({
                     />
                   ))}
                 </Grid>
-              ) : (
-                <Grid item md={4} xs={12}>
-                  {data.assignees.map(user => (
-                    <UserChip key={user.id} user={user} size="medium" disabled />
-                  ))}
-                </Grid>
               )}
-              <Grid item md={3} xs={12} style={{ marginLeft: matches ? '5px' : '' }}>
-                {canUpdateNote ? (
+              <Grid item>
+                {canUpdateNote && (
                   <Chip
                     key={data.id}
                     variant="outlined"
@@ -422,16 +391,6 @@ export default function TaskInfoTop({
                     size="medium"
                     icon={autoCompleteOpen ? <CancelIcon /> : <AddCircleIcon />}
                     onClick={event => handleOpenAutoComplete(event, data.id)}
-                    color="primary"
-                  />
-                ) : (
-                  <Chip
-                    key={data.id}
-                    variant="outlined"
-                    label={t('task.chip_add_assignee')}
-                    size="medium"
-                    disabled
-                    icon={<AddCircleIcon />}
                     color="primary"
                   />
                 )}
@@ -535,6 +494,11 @@ const useStyles = makeStyles({
   },
   descriptionSection: {
     marginTop: '8px'
+  },
+  root: {
+    '&.MuiIconButton-colorPrimary:hover': {
+      backgroundColor: 'none'
+    }
   }
 });
 

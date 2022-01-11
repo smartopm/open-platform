@@ -44,6 +44,7 @@ export default function CommentTextField({ data, refetch, taskId }) {
             value={body}
             onChange={e => setBody(e.target.value)}
             multiline
+            size='medium'
             rows={1}
             margin="normal"
             variant="outlined"
@@ -62,6 +63,7 @@ export default function CommentTextField({ data, refetch, taskId }) {
             data-testid="share"
             style={{ height: '56px' }}
             onClick={handleSubmit}
+            size='medium'
           >
             {t('misc.comment')}
           </Button>

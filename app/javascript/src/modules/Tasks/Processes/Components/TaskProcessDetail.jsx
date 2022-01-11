@@ -63,7 +63,7 @@ export default function TaskProcessDetail() {
           <Grid item md={6} xs={12}>
             <Grid container>
               <Grid item data-testid="project-title">
-                <Typography variant="h6">
+                <Typography variant="h4">
                   <span
                   // eslint-disable-next-line react/no-danger
                     dangerouslySetInnerHTML={{

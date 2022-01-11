@@ -32,11 +32,19 @@ export default function StepItem({
         <Grid item md={11} xs={8} style={{ display: 'flex', alignItems: 'center' }} data-testid="step_body_section">
           <Grid container style={{ display: 'flex', alignItems: 'center' }}>
             <Grid item md={1}>
-              { step.completed ? (
-                <CheckCircleIcon htmlColor="#4caf50" onClick={(e) => handleStepCompletion(e, step.id, !step.completed)} />
+              <IconButton
+                aria-controls="process-check-box"
+                aria-haspopup="true"
+                data-testid="process-check-box"
+                onClick={(e) => handleStepCompletion(e, step.id, !step.completed)}
+                style={{backgroundColor: 'transparent'}}
+              >
+                { step.completed ? (
+                  <CheckCircleIcon htmlColor="#4caf50" />
                   ) : (
-                    <CheckCircleOutlineIcon htmlColor="#9A9A9A" onClick={(e) => handleStepCompletion(e, step.id, !step.completed)} />
+                    <CheckCircleOutlineIcon htmlColor="#9A9A9A" />
                   )}
+              </IconButton>
             </Grid>
             <Grid item md={10}>
               <Typography
