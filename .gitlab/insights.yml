@@ -34,3 +34,39 @@ bugReport:
           - S::4
         group_by: day
         period_limit: 15
+    - title: Issues created per month
+      type: bar
+      query:
+        issuable_type: issue
+        issuable_state: opened
+        group_by: month
+    - title: Issues closed per month
+      type: bar
+      query:
+        issuable_type: issue
+        issuable_state: closed
+        group_by: month
+mergeRequest:
+  title: Merge Request Dashboard
+  charts:
+    - title: Merge Requests opened this sprint
+      type: bar
+      query:
+        issuable_type: merge_request
+        issuable_state: all
+        group_by: day
+        period_limit: 15
+    - title: Merge Requests merged this sprint
+      type: bar
+      query:
+        issuable_type: merge_request
+        issuable_state: merged
+        group_by: day
+        period_limit: 15
+    - title: Merge Requests closed this sprint
+      type: bar
+      query:
+        issuable_type: merge_request
+        issuable_state: closed
+        group_by: day
+        period_limit: 15
