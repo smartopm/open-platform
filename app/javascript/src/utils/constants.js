@@ -294,7 +294,8 @@ export const formStatus = {
 export const currencies = {
   zambian_kwacha: 'ZMW',
   honduran_lempira: 'HNL',
-  kenyan_shilling: 'KES'
+  kenyan_shilling: 'KES',
+  costa_rican_colon: 'CRC'
 };
 export const locales = [
   'en-IN',
@@ -303,7 +304,8 @@ export const locales = [
   'en-US',
   'en-ZM',
   'es-HN',
-  'en-KE'
+  'en-KE',
+  'es-CR'
 ]
 export const languages = {
   'English': 'en-US',

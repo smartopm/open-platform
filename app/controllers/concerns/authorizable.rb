@@ -29,6 +29,8 @@ module Authorizable
                        'morazancity-staging.doublegdp.com' => 'Ciudad Morazán',
                        'tilisi-staging.doublegdp.com' => 'Tilisi',
                        'tilisi.doublegdp.com' => 'Tilisi',
+                       'greenpark.doublegdp.com' => 'Greenpark',
+                       'greenpark-staging.doublegdp.com' => 'Greenpark',
                        'dev.dgdp.site' => 'DoubleGDP',
                        'double-gdp-dev.herokuapp.com' => 'DAST' }
     if ['dgdp.site', 'rails'].include?(request.domain) && request.subdomain != 'dev'
