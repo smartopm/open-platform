@@ -52,17 +52,17 @@ export default function ProjectOverview({ data }){
         open={!!updateStatus.message}
         handleClose={handleMessageAlertClose}
       />
-      <Grid container data-testid="project-information">
+      <Grid container style={{marginLeft: '-20px'}} data-testid="project-information">
         {formEntriesData?.length
         ? (formEntriesData.map((d) => (
-          <Grid container spacing={2} key={d.formProperty.fieldName}>
+          <Grid container spacing={4} key={d.formProperty.fieldName}>
             <Grid item md={4} xs={5}>
               <Typography variant="caption" color='textSecondary'>
-                {d.formProperty.fieldName}
+                {d.formProperty.fieldName.replace('Project', '')}
               </Typography>
             </Grid>
             <Grid item md={8} xs={7}>
-              <Typography variant="subtitle1">{d.value}</Typography>
+              <Typography variant="subtitle2" color='#6C6C6C' style={{fontWeight: 400}}>{d.value}</Typography>
             </Grid>
           </Grid>
         )))
@@ -71,10 +71,12 @@ export default function ProjectOverview({ data }){
         )}
         {descriptionData && (
         <Grid container spacing={1} style={{ marginTop: '32px' }}>
-          <Grid item md={12}>
-            <Typography variant="subtitle">Project Description</Typography>
+          <Grid item md={12} xs={12}>
+            <Typography variant="subtitle1">Project Description</Typography>
           </Grid>
-          <Grid item md={12}>{descriptionData.value}</Grid>
+          <Grid item md={12} xs={12} color='#6C6C6C'>
+            <Typography variant="subtitle2" style={{fontWeight: 400}}>{descriptionData.value}</Typography>
+          </Grid>
         </Grid>
       )}
       </Grid>

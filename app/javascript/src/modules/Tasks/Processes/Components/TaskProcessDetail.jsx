@@ -92,7 +92,7 @@ export default function TaskProcessDetail() {
                   />
                 </Typography>
               </Grid>
-              <Grid item md={1} xs={2} style={{textAlign: 'right'}}>
+              <Grid item md={1} xs={2} style={{textAlign: 'right', marginTop: '20px'}}>
                 <IconButton color='primary' onClick={shareOnclick}>
                   <ShareIcon />
                 </IconButton>
