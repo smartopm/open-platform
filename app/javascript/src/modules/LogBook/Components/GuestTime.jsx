@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import DatePickerDialog, { ThemedTimePicker } from '../../../components/DatePickerDialog';
 
-export default function GuestTime({ userData, handleChange, handleChangeOccurrence, disableEdit }) {
+export default function GuestTime({ userData, handleChange, handleChangeOccurrence, disableEdit, smallDevice }) {
   const { t } = useTranslation(['logbook', 'common', 'days']);
   return (
     <Grid container direction="row" spacing={2}>
@@ -42,7 +42,7 @@ export default function GuestTime({ userData, handleChange, handleChangeOccurren
         />
       </Grid>
       <Grid item xs={12} md={6}>
-        <Typography gutterBottom data-testid="guest_repeats_on" variant="subtitle2">{t('guest_book.repeats_on')}</Typography>
+        <Typography data-testid="guest_repeats_on" variant="subtitle2">{t('guest_book.repeats_on')}</Typography>
         {Object.entries(t('days:days', { returnObjects: true })).map(([key, value]) => (
           <IconButton
             key={key}
@@ -71,6 +71,7 @@ export default function GuestTime({ userData, handleChange, handleChangeOccurren
           disablePastDate
           disabled={disableEdit()}
           inputVariant="outlined"
+          styles={{ marginTop: !smallDevice && 16 }}
         />
       )}
       </Grid>
@@ -79,7 +80,8 @@ export default function GuestTime({ userData, handleChange, handleChangeOccurren
 }
 
 GuestTime.defaultProps = {
-  disableEdit: () => {}
+  disableEdit: () => {},
+  smallDevice: false
 }
 GuestTime.propTypes = {
   userData: PropTypes.shape({
@@ -93,5 +95,6 @@ GuestTime.propTypes = {
   }).isRequired,
   handleChange: PropTypes.func.isRequired,
   handleChangeOccurrence: PropTypes.func.isRequired,
-  disableEdit: PropTypes.func
+  disableEdit: PropTypes.func,
+  smallDevice: PropTypes.bool,
 };
