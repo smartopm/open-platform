@@ -1,5 +1,5 @@
 /* eslint-disable no-use-before-define */
-import React, { useContext } from "react";
+import React, { useContext } from 'react';
 import Divider from '@material-ui/core/Divider';
 import { useTranslation } from 'react-i18next';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
@@ -21,24 +21,31 @@ import { filterQuickLinksByRole } from '../utils';
 const Home = () => {
   const authState = useContext(AuthStateContext);
   const { t } = useTranslation(['dashboard', 'common']);
-  const dashboardQuickLinks = authState?.user?.community?.menuItems?.filter((quickLink) => quickLink?.display_on?.includes('Dashboard'));
-  const filteredQuickLinks = filterQuickLinksByRole(dashboardQuickLinks, authState.user.userType);
+  const dashboardQuickLinks = authState?.user?.community?.menuItems?.filter(quickLink =>
+    quickLink?.display_on?.includes('Dashboard')
+  );
+  const { userType } = authState.user;
+  const filteredQuickLinks = filterQuickLinksByRole(dashboardQuickLinks, userType);
 
   if (!authState.loggedIn) return <Loading />;
 
   return (
     <div style={{ marginTop: '-30px' }}>
       <LanguageToggle />
-      {authState.user.userType === 'admin' && (
+      {['admin', 'developer', 'consultant'].includes(userType) && (
         <div>
           <UserDetail user={authState.user} />
-          <FeatureCheck features={authState.user.community.features} name="Customer Journey">
-            <ViewCustomerJourney translate={t} />
-          </FeatureCheck>
+          {userType === 'admin' && (
+            <FeatureCheck features={authState.user.community.features} name="Customer Journey">
+              <ViewCustomerJourney translate={t} />
+            </FeatureCheck>
+          )}
           <QuickLinks menuItems={filteredQuickLinks} translate={t} />
-          <FeatureCheck features={authState.user.community.features} name="Payments">
-            <PaymentSummary authState={authState} translate={t} />
-          </FeatureCheck>
+          {userType === 'admin' && (
+            <FeatureCheck features={authState.user.community.features} name="Payments">
+              <PaymentSummary authState={authState} translate={t} />
+            </FeatureCheck>
+          )}
           <br />
           <Divider />
           <FeatureCheck features={authState.user.community.features} name="Tasks">
@@ -72,7 +79,7 @@ const Home = () => {
           </FeatureCheck>
         </div>
       )}
-      {authState.user.userType !== 'admin' && authState.user.userType !== 'client' && (
+      {!['admin', 'client', 'developer', 'consultant'].includes(userType) && (
         <div style={{ paddingTop: '50px' }}>
           <FeatureCheck features={authState.user.community.features} name="News">
             <NewsFeed wordpressEndpoint={authState.user?.community.wpLink} />
@@ -80,9 +87,12 @@ const Home = () => {
           <Homepage authState={authState} quickLinks={filteredQuickLinks} />
         </div>
       )}
-      <SocialMediaLinks data={authState.user.community.socialLinks} communityName={authState.user.community.name} />
+      <SocialMediaLinks
+        data={authState.user.community.socialLinks}
+        communityName={authState.user.community.name}
+      />
     </div>
   );
-}
+};
 
 export default Home;
