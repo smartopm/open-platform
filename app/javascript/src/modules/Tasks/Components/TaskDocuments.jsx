@@ -14,7 +14,7 @@ import {
   MenuItem,
   Typography
 } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { makeStyles } from '@material-ui/styles';
 import PropTypes from 'prop-types';
@@ -92,7 +92,7 @@ export default function TaskDocuments({ taskId }) {
       />
       <Grid container alignItems="center">
         <Grid item xs={11} md={11}>
-          <Typography variant="h6" data-testid="documents_title">
+          <Typography variant="subtitle2" data-testid="documents_title">
             {t('document.documents')}
           </Typography>
         </Grid>
@@ -103,6 +103,7 @@ export default function TaskDocuments({ taskId }) {
             data-testid="add_document"
             component="label"
             color="primary"
+            style={{backgroundColor: 'transparent'}}
           >
             <input
               hidden
@@ -111,7 +112,10 @@ export default function TaskDocuments({ taskId }) {
               id="task-attach-file"
               data-testid="add_document_input"
             />
-            <AddIcon />
+            <div style={{display: 'flex'}}>
+              <AddCircleIcon />
+              <Typography style={{padding: '2px 0 0 5px'}} variant="caption">Add Document</Typography>
+            </div>
           </IconButton>
         </Grid>
       </Grid>

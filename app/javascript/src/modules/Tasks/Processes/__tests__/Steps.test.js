@@ -21,12 +21,12 @@ describe('Project Steps', () => {
       </BrowserRouter>
     );
     
-    expect(container.queryByTestId('step_completion_toggle_button')).toBeInTheDocument();
+    expect(container.queryByTestId('process-check-box')).toBeInTheDocument();
     expect(container.queryByTestId('step_body')).toBeInTheDocument();
     expect(container.queryByTestId('show_step_sub_steps')).toBeInTheDocument();
 
 
-    fireEvent.click(container.queryByTestId('step_completion_toggle_button'));
+    fireEvent.click(container.queryByTestId('process-check-box'));
     expect(handleStepCompletion).toHaveBeenCalled();
   });
 

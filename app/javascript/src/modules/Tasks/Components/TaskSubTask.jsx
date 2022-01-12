@@ -1,5 +1,5 @@
 import React, { Fragment, useState } from 'react';
-import { useQuery } from 'react-apollo'
+import { useQuery } from 'react-apollo';
 import {
   Divider,
   IconButton,
@@ -11,21 +11,19 @@ import {
   useMediaQuery,
   Dialog,
   DialogTitle,
-  DialogContent,
+  DialogContent
 } from '@material-ui/core';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import AttachFileIcon from '@material-ui/icons/AttachFile';
 import AccountTreeIcon from '@material-ui/icons/AccountTree';
-import QuestionAnswerIcon from '@material-ui/icons/QuestionAnswer'
-import AddIcon from '@material-ui/icons/Add';
+import QuestionAnswerIcon from '@material-ui/icons/QuestionAnswer';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import { useTranslation } from 'react-i18next';
-import Box from '@mui/material/Box';
-import LinearProgress from '@mui/material/LinearProgress';
 import { dateToString } from '../../../components/DateContainer';
 import CenteredContent from '../../../shared/CenteredContent';
 import { SubTasksQuery } from '../graphql/task_queries';
@@ -33,12 +31,18 @@ import { Spinner } from '../../../shared/Loading';
 import TaskAddForm from './TaskForm';
 import AccessCheck from '../../Permissions/Components/AccessCheck';
 
-export default function TaskSubTask({ taskId, users, assignUser, handleSplitScreenOpen, handleTaskCompletion }) {
+export default function TaskSubTask({
+  taskId,
+  users,
+  assignUser,
+  handleSplitScreenOpen,
+  handleTaskCompletion
+}) {
   const classes = useStyles();
   const matches = useMediaQuery('(max-width:800px)');
   const limit = 3;
   const [anchorEl, setAnchorEl] = useState(null);
-  const [selectedSubTask, setSelectedSubTask] = useState(null)
+  const [selectedSubTask, setSelectedSubTask] = useState(null);
   const [open, setModalOpen] = useState(false);
   const { t } = useTranslation(['task', 'common']);
 
@@ -48,7 +52,7 @@ export default function TaskSubTask({ taskId, users, assignUser, handleSplitScre
     variables: { taskId, limit },
     fetchPolicy: 'cache-and-network',
     errorPolicy: 'all'
-  })
+  });
 
   function handleOpenMenu(event, task) {
     event.stopPropagation();
@@ -59,19 +63,23 @@ export default function TaskSubTask({ taskId, users, assignUser, handleSplitScre
   function fetchMoreSubTasks() {
     try {
       fetchMore({
-        variables: { taskId, limit: Number(data.taskSubTasks.length + limit), offset: data.taskSubTasks.length },
+        variables: {
+          taskId,
+          limit: Number(data.taskSubTasks.length + limit),
+          offset: data.taskSubTasks.length
+        },
         updateQuery: (prev, { fetchMoreResult }) => {
-          if (!fetchMoreResult) return prev
-          return { ...prev, taskSubTasks: [...prev.taskSubTasks, ...fetchMoreResult.taskSubTasks]}
+          if (!fetchMoreResult) return prev;
+          return { ...prev, taskSubTasks: [...prev.taskSubTasks, ...fetchMoreResult.taskSubTasks] };
         }
-      })
+      });
     } catch (error) {
-      console.error(error.message)
+      console.error(error.message);
     }
   }
 
   function handleAddSubTask() {
-   setModalOpen(true)
+    setModalOpen(true);
   }
 
   return (
@@ -98,41 +106,54 @@ export default function TaskSubTask({ taskId, users, assignUser, handleSplitScre
         </DialogContent>
       </Dialog>
       <Grid container className={classes.header}>
-        <Grid item md={11} xs={11}>
-          <Typography variant="h6" data-testid="sub_tasks_header">
+        <Grid item md={9} xs={11}>
+          <Typography variant="subtitle2" data-testid="sub_tasks_header">
             {t('task:sub_task.sub_tasks')}
           </Typography>
         </Grid>
-        <Grid item md={1} xs={1} className={classes.addSubTask}>
-          <AccessCheck module='note' allowedPermissions={['can_view_create_sub_task_button']}> 
+        <Grid item md={3} xs={1} className={classes.addSubTask}>
+          <AccessCheck module="note" allowedPermissions={['can_view_create_sub_task_button']}>
             <IconButton
               edge="end"
               onClick={handleAddSubTask}
               data-testid="add_sub_task_icon"
               color="primary"
+              style={{ backgroundColor: 'transparent' }}
             >
-              <AddIcon />
+              <div style={{ display: 'flex' }}>
+                <AddCircleIcon />
+                <Typography color="primary" style={{ padding: '2px 0 0 5px' }} variant="caption">
+                  Add Task
+                </Typography>
+              </div>
             </IconButton>
           </AccessCheck>
         </Grid>
       </Grid>
       {data?.taskSubTasks?.length ? (
         <Grid container>
-          <Grid item md={12} xs={12} style={{ marginBottom: '2px'}}><Divider /></Grid>
+          <Grid item md={12} xs={12} style={{ marginBottom: '2px' }}>
+            <Divider />
+          </Grid>
           {data.taskSubTasks.map(task => (
             <Fragment key={task.id}>
-              <Grid container item md={4} xs={4} className={classes.bodyAlign}>
+              <Grid container spacing={1} item md={5} xs={6} className={classes.bodyAlign}>
                 <Grid item md={2}>
-                  <Button
-                    onClick={() => handleTaskCompletion(task.id, !task.completed)}
-                    startIcon={
-                      task.completed ? <CheckCircleIcon htmlColor='#4caf50' /> : <CheckCircleOutlineIcon />
-                    }
-                    style={{ textTransform: 'none' }}
+                  <IconButton
+                    aria-controls="task-completion-toggle-button"
+                    aria-haspopup="true"
                     data-testid="task_completion_toggle_button"
-                  />
+                    onClick={() => handleTaskCompletion(task.id, !task.completed)}
+                    style={{ backgroundColor: 'transparent', margin: '-10px 0 0 -10px' }}
+                  >
+                    {task.completed ? (
+                      <CheckCircleIcon htmlColor="#4caf50" />
+                    ) : (
+                      <CheckCircleOutlineIcon htmlColor="#acacac" />
+                    )}
+                  </IconButton>
                 </Grid>
-                <Grid item md={8}>
+                <Grid item md={10}>
                   <Typography
                     variant="body2"
                     data-testid="task_body"
@@ -143,86 +164,87 @@ export default function TaskSubTask({ taskId, users, assignUser, handleSplitScre
                   </Typography>
                 </Grid>
               </Grid>
-              <Grid item md={3} xs={5} className={classes.bodyAlign} style={{textAlign: 'right'}}>
+              <Grid item md={2} xs={6} className={classes.bodyAlign} style={{ textAlign: 'right' }}>
                 <Typography variant="body2" component="span">
                   {t('task:sub_task.due')}
                   {task.dueDate ? dateToString(task.dueDate) : 'Never '}
                 </Typography>
               </Grid>
               <Grid item md={3} xs={7}>
-                <Grid container>
-                  <Grid item md={4} style={{display: 'flex'}}>
+                <Grid container style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                  <Grid item md={2} xs={2}>
                     <IconButton
                       aria-controls="task-subtasks-icon"
                       data-testid="task_subtasks_count"
-                      size="medium"
                     >
-                      <AccountTreeIcon fontSize="small" color={task?.subTasks?.length ? 'primary': 'disabled'} />
+                      <AccountTreeIcon
+                        fontSize="small"
+                        color={task?.subTasks?.length ? 'primary' : 'disabled'}
+                      />
                     </IconButton>
-                    <span style={{paddingTop: '10px'}}>{task?.subTasks?.length || 0}</span>
                   </Grid>
-                  <Grid item md={4} style={{display: 'flex'}}>
-                    <IconButton
-                      aria-controls="task-comment-icon"
-                      data-testid="task_comments_count"
-                      size="medium"
-                    >
+                  <Grid
+                    item
+                    md={1}
+                    xs={2}
+                    className={classes.iconItem}
+                    style={{ paddingLeft: '8px' }}
+                  >
+                    <span>{task?.subTasks?.length || 0}</span>
+                  </Grid>
+                  <Grid item md={2} xs={2}>
+                    <IconButton aria-controls="task-comment-icon" data-testid="task_comments_count">
                       <QuestionAnswerIcon fontSize="small" color="disabled" />
                     </IconButton>
-                    <span style={{paddingTop: '10px'}}>0</span>
                   </Grid>
-                  <Grid item md={4} style={{display: 'flex'}}>
-                    <IconButton
-                      key={task.id}
-                      aria-controls="task-attach-file-icon"
-                      size="medium"
-                    >
-                      <AttachFileIcon fontSize="small" color={task?.documents?.length ? 'primary': 'disabled'} />
+                  <Grid
+                    item
+                    md={1}
+                    xs={2}
+                    className={classes.iconItem}
+                    style={{ paddingLeft: '8px' }}
+                  >
+                    <span>0</span>
+                  </Grid>
+                  <Grid item md={2} xs={2}>
+                    <IconButton aria-controls="task-attach-file-icon">
+                      <AttachFileIcon
+                        fontSize="small"
+                        color={task?.documents?.length ? 'primary' : 'disabled'}
+                      />
                     </IconButton>
-                    <span style={{paddingTop: '10px'}} data-testid="file_attachments_total">{task.documents?.length}</span>
+                  </Grid>
+                  <Grid
+                    item
+                    md={1}
+                    xs={2}
+                    className={classes.iconItem}
+                    style={{ paddingLeft: '5px' }}
+                  >
+                    <span data-testid="file_attachments_total">{task.documents?.length}</span>
                   </Grid>
                 </Grid>
               </Grid>
-              <Grid item md={2} xs={5} className={classes.bodyAlign} style={{textAlign: 'right'}}>
-                <Grid container>
-                  <Grid item md={8} xs={8} className={classes.progressBarComponent}>
-                    <Box sx={{ width: '100%' }}>
-                      <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-                        <Box sx={{ width: '100%', ml: 2 }}>
-                          <LinearProgress variant="determinate" value={task?.progress?.progress_percentage} />
-                        </Box>
-                        <Box sx={{ minWidth: 2, ml: 2 }}>
-                          <Typography variant="body2">
-                            {task?.progress?.complete}
-                            {' '}
-                            of 
-                            {' '}
-                            {task?.progress?.total}
-                          </Typography>
-                        </Box>
-                      </Box>
-                    </Box>
-                  </Grid>
-                  <Grid item md={2} xs={2} className={classes.arrowDownUpIcon}>
-                    <IconButton
-                      onClick={event => handleOpenMenu(event, task)}
-                      size="small"
-                      color="primary"
-                    >
-                      <MoreVertIcon />
-                    </IconButton>
-                  </Grid>
-                </Grid>
+              <Grid item md={2} xs={5} className={classes.bodyAlign} style={{ textAlign: 'right' }}>
+                <IconButton
+                  onClick={event => handleOpenMenu(event, task)}
+                  color="primary"
+                  style={{ marginTop: '-10px' }}
+                >
+                  <MoreVertIcon />
+                </IconButton>
               </Grid>
-              <Grid item md={12} xs={12} style={{ marginTop: '2px', marginBottom: '2px' }}><Divider data-testid="closing_divider" /></Grid>
+              <Grid item md={12} xs={12} style={{ marginTop: '2px', marginBottom: '2px' }}>
+                <Divider data-testid="closing_divider" />
+              </Grid>
             </Fragment>
           ))}
           <Grid item md={12} xs={12}>
             {data.taskSubTasks.length >= limit && (
               <>
-                {loading
-                ? <Spinner />
-                : (
+                {loading ? (
+                  <Spinner />
+                ) : (
                   <Button onClick={fetchMoreSubTasks} className={classes.fetchMore}>
                     <Typography variant="body2">{t('task:sub_task.see_more')}</Typography>
                     <ArrowDropDownIcon />
@@ -281,7 +303,7 @@ const useStyles = makeStyles(() => ({
   details: {
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'space-evenly',
+    justifyContent: 'space-evenly'
   },
   taskBody: {
     maxWidth: '53ch',
@@ -307,45 +329,31 @@ const useStyles = makeStyles(() => ({
     backgroundColor: '#2196f3',
     color: '#ffffff'
   },
-  fetchMore:{
+  fetchMore: {
     padding: '7px',
+    marginTop: '16px'
   },
   iconsMobile: {
     display: 'none'
   },
   icons: {
     display: 'flex',
-    justifyContent: 'space-between',
+    justifyContent: 'space-between'
   },
   iconItem: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    fontSize: '14px',
+    fontSize: '14px'
   },
   status: {
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'center'
   },
   menu: {
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'end',
-  },
-  arrowDownUpIcon: {
-    marginTop: '-8px',
-    marginLeft: '5px',
-    '@media (min-device-width: 540px) and (max-device-height: 720px) and (orientation: portrait)' : {
-      marginLeft: "32px",
-    },
-
-    '@media (min-device-width: 768px) and (max-device-height: 1024px) and (orientation: portrait)' : {
-      marginLeft: "45px",
-    },
-  },
-  progressBarComponent: {
-    marginTop: '1px'
+    justifyContent: 'end'
   }
-  
 }));
