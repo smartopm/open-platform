@@ -24,8 +24,6 @@ import QuestionAnswerIcon from '@material-ui/icons/QuestionAnswer';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import { useTranslation } from 'react-i18next';
-import Box from '@mui/material/Box';
-import LinearProgress from '@mui/material/LinearProgress';
 import { dateToString } from '../../../components/DateContainer';
 import CenteredContent from '../../../shared/CenteredContent';
 import { SubTasksQuery } from '../graphql/task_queries';
@@ -139,7 +137,7 @@ export default function TaskSubTask({
           </Grid>
           {data.taskSubTasks.map(task => (
             <Fragment key={task.id}>
-              <Grid container item md={4} xs={4} className={classes.bodyAlign}>
+              <Grid container spacing={1} item md={5} xs={6} className={classes.bodyAlign}>
                 <Grid item md={2}>
                   <IconButton
                     aria-controls="task-completion-toggle-button"
@@ -155,7 +153,7 @@ export default function TaskSubTask({
                     )}
                   </IconButton>
                 </Grid>
-                <Grid item md={8}>
+                <Grid item md={10}>
                   <Typography
                     variant="body2"
                     data-testid="task_body"
@@ -199,37 +197,6 @@ export default function TaskSubTask({
                       <QuestionAnswerIcon fontSize="small" color="disabled" />
                     </IconButton>
                   </Grid>
-                </Grid>
-              </Grid>
-              <Grid item md={2} xs={5} className={classes.bodyAlign} style={{textAlign: 'right'}}>
-                <Grid container>
-                  <Grid item md={8} xs={8} className={classes.progressBarComponent}>
-                    <Box sx={{ width: '100%' }}>
-                      <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-                        <Box sx={{ width: '100%', ml: 2 }}>
-                          <LinearProgress variant="determinate" value={task?.progress?.progress_percentage} />
-                        </Box>
-                        <Box sx={{ minWidth: 2, ml: 2 }}>
-                          <Typography variant="body2">
-                            {task?.progress?.complete}
-                            {' '}
-                            of 
-                            {' '}
-                            {task?.progress?.total}
-                          </Typography>
-                        </Box>
-                      </Box>
-                    </Box>
-                  </Grid>
-                </Grid>
-                <Grid item md={2} xs={2} className={classes.arrowDownUpIcon}>
-                  <IconButton
-                    onClick={event => handleOpenMenu(event, task)}
-                    size="small"
-                    color="primary"
-                  >
-                    <MoreVertIcon />
-                  </IconButton>
                   <Grid
                     item
                     md={1}
@@ -387,22 +354,6 @@ const useStyles = makeStyles(() => ({
   menu: {
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'end',
-  },
-  arrowDownUpIcon: {
-    marginTop: '-8px',
-    marginLeft: '5px',
-    '@media (min-device-width: 540px) and (max-device-height: 720px) and (orientation: portrait)' : {
-      marginLeft: "32px",
-    },
-
-    '@media (min-device-width: 768px) and (max-device-height: 1024px) and (orientation: portrait)' : {
-      marginLeft: "45px",
-    },
-  },
-  progressBarComponent: {
-    marginTop: '1px',
     justifyContent: 'end'
   }
-  
 }));
