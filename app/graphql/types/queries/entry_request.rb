@@ -121,7 +121,7 @@ module Types::Queries::EntryRequest
 
   private
 
-   # This is deprecated
+  # This is deprecated
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/CyclomaticComplexity
   # rubocop:disable Metrics/PerceivedComplexity

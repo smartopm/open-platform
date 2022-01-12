@@ -77,7 +77,6 @@ RSpec.describe Mutations::EntryRequest::InvitationCreate do
                                            }).as_json
           expect(result.dig('data', 'invitationCreate', 'success')).to eql true
           expect(community.entry_times.count).to eql 1
-          # expect(community.entry_requests.count).to eql 2
           expect(admin.invitees.count).to eql 1
           expect(result.dig('errors', 0, 'message')).to be_nil
         end
