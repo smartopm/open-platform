@@ -25,7 +25,7 @@ import { UserChip } from './UserChip';
 import { formatError, sanitizeText } from '../../../utils/helpers';
 import UserAutoResult from '../../../shared/UserAutoResult';
 import { dateToString } from '../../../components/DateContainer';
-import EditableField from '../../../shared/EditableField';
+import EditableField, { LiveEditableField } from '../../../shared/EditableField';
 import { UpdateNote } from '../../../graphql/mutations';
 import { Spinner } from '../../../shared/Loading';
 import MessageAlert from '../../../components/MessageAlert';
@@ -438,7 +438,7 @@ export default function TaskInfoTop({
           </Grid>
         </Grid>
       </Grid>
-      {description && (
+      {/* {description && ( */}
         <Grid container className={classes.descriptionSection}>
           <Grid item xs={12} md={12}>
             <Typography variant="caption" color="textSecondary">
@@ -446,7 +446,7 @@ export default function TaskInfoTop({
             </Typography>
           </Grid>
           <Grid item xs={12} md={12}>
-            <EditableField
+            {/* <EditableField
               value={description}
               setValue={setDescription}
               canUpdateNote={canUpdateNote}
@@ -464,10 +464,15 @@ export default function TaskInfoTop({
                   {t('common:form_actions.update')}
                 </Button>
               )}
+            /> */}
+             <LiveEditableField
+              value={description}
+              setValue={setDescription}
+              action={(data) => updateTask('description', data)}
             />
           </Grid>
         </Grid>
-      )}
+      {/* // )} */}
     </>
   );
 }

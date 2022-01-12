@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Edit from '@material-ui/icons/Edit';
 import IconButton from '@material-ui/core/IconButton';
@@ -6,6 +6,7 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import { makeStyles } from '@material-ui/styles';
 import { Grid } from '@material-ui/core';
 import PropTypes from 'prop-types';
+import useDebounce from '../utils/useDebounce';
 
 export default function EditableField({ value, setValue, action, customStyles, canUpdateNote }) {
   const [isEditMode, setIsEditMode] = useState(false);
@@ -24,7 +25,7 @@ export default function EditableField({ value, setValue, action, customStyles, c
   }
   const classes = useStyles();
   return (
-    <Grid container spacing={1} onMouseLeave={handleOutsideClick} data-testid="editable_field_section">
+    <Grid container spacing={1} onMouseOver={handleClick} onMouseLeave={handleOutsideClick} data-testid="editable_field_section">
       <Grid item xs={10}>
         <TextField
           name="email"
@@ -59,6 +60,82 @@ export default function EditableField({ value, setValue, action, customStyles, c
       )}
     </Grid>
   );
+}
+
+export function LiveEditableField({ value, action }) {
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [input, setInput] = useState(value || '')
+  const [isTyping, setIsTyping] = useState(true);
+  const debouncedValue = useDebounce(input, 500)
+
+  function handleMouseLeave() {
+    setIsEditMode(false);
+  }
+
+  function handleMouseOver() {
+    setIsEditMode(true);
+  }
+  const classes = useStyles();
+
+  useEffect(() => {
+    let timer = setTimeout(() => {}, 0);
+    document.getElementById('live-text-field').addEventListener('keypress', function() {
+      clearTimeout(timer);
+      setIsTyping(true);
+      timer = setTimeout(() => setIsTyping(false), 1000);
+    });
+  }, []);
+
+  return (
+    <Grid container onMouseOver={handleMouseOver} onMouseLeave={handleMouseLeave} data-testid="live_editable_field">
+      <Grid item xs={12}>
+        <TextField
+          id="live-text-field"
+          name="live-text-field"
+          value={input}
+          fullWidth
+          // onChange={handleChange}
+          onChange={(e) => setInput(e.target.value)}
+          disabled={!isEditMode}
+          // className={classes.liveTextField}
+          multiline
+          variant="outlined"
+          // rows={1}
+          // style={{ ...customStyles, width: '100%' }}
+          InputProps={{
+            // classes: {
+            //   disabled: classes.disabled
+            // },
+            'data-testid': 'live_editable_description',
+          }}
+        />
+      </Grid>
+      {isEditMode && !isTyping && <AutoSave previous={value} data={debouncedValue} autoSaveAction={(data) => action(data)}/>}
+    </Grid>
+  );
+}
+
+function AutoSave({ data, autoSaveAction, delay, previous}) {
+  const wait = delay || 1000;
+  
+  const memoisedAction = useCallback((value) => {
+    console.log({ value })
+    const handler = setTimeout(() => {
+      autoSaveAction(value);
+    }, wait);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  },[])
+
+  useEffect(() => {
+    if(data && data !== previous) {
+      memoisedAction(data)
+    }
+  }, [data])
+
+  return null;
 }
 
 EditableField.defaultProps = {
