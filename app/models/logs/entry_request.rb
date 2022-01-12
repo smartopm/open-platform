@@ -38,11 +38,7 @@ module Logs
     end
     # rubocop:enable Style/RedundantInterpolation
 
-    scope :by_end_time, lambda { |date|
-      where('(visit_end_date IS NOT NULL and visit_end_date > ?)
-      OR (visit_end_date IS NULL AND (ends_at > ? OR end_time > ?))', date, date, date)
-    }
-    scope :order_by_recent_invites, -> {
+    scope :order_by_recent_invites, lambda {
       joins(:entry_times).order(Logs::EntryTime.arel_table[:created_at].desc)
     }
 
