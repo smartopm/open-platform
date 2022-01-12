@@ -88,6 +88,7 @@ module Types::Queries::EntryRequest
     entry_requests
   end
 
+  # This is deprecated
   # rubocop:disable Metrics/AbcSize
   def scheduled_guest_list(offset: 0, limit: 50, query: nil)
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless context[:current_user]
@@ -114,12 +115,13 @@ module Types::Queries::EntryRequest
       .includes(:user, :guest)
       .search(or: [{ query: (query.presence || '.') }, { name: { matches: query } }])
       .limit(limit).offset(offset)
-      .unscope(:order).order(granted_at: :desc)
+      .order(granted_at: :desc)
   end
   # rubocop:enable Metrics/AbcSize
 
   private
 
+   # This is deprecated
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/CyclomaticComplexity
   # rubocop:disable Metrics/PerceivedComplexity
