@@ -119,4 +119,15 @@ class Campaign < ApplicationRecord
     )
     message_log
   end
+
+  def schedule_campaign_job(old_status = 'draft')
+    return unless status.eql?('scheduled') && old_status.eql?('draft')
+
+    if batch_time < Time.zone.now
+      CampaignSchedulerJob.perform_later(id)
+    else
+      CampaignSchedulerJob.set(wait_until: batch_time)
+                          .perform_later(id)
+    end
+  end
 end
