@@ -39,7 +39,7 @@ module Logs
     # rubocop:enable Style/RedundantInterpolation
 
     scope :order_by_recent_invites, lambda {
-      joins(:entry_times).order(Logs::EntryTime.arel_table[:created_at].desc)
+      joins(:entry_times).order(Logs::EntryTime.arel_table[:updated_at].desc)
     }
 
     has_paper_trail
