@@ -30,7 +30,6 @@ export default function ClientPilotViewList(){
           </Typography>
           <br />
           <br />
-          <Divider light /> 
           {data?.processes?.map(process => (
                                     
             <ClientPilotViewItem key={process.id} process={process} />
