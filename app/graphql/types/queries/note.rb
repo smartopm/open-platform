@@ -243,7 +243,7 @@ module Types::Queries::Note
     # rubocop:enable Metrics/AbcSize
     # rubocop:enable Metrics/MethodLength
 
-    drc_form = context[:site_community].forms.find_by(name: 'DRC Project Review Process V2')
+    drc_form = context[:site_community].forms.find_by(name: 'DRC Project Review Process V3')
     return unless drc_form
 
     drc_form_users = Forms::FormUser.includes(:form).where(form_id: drc_form.id).pluck(:id)

@@ -276,7 +276,7 @@ RSpec.describe Types::Queries::Note do
     end
 
     it 'fetches projects' do
-      create(:form, name: 'DRC Project Review Process V2', community: site_worker.community)
+      create(:form, name: 'DRC Project Review Process V3', community: site_worker.community)
 
       result = DoubleGdpSchema.execute(projects_query, context: {
                                          current_user: site_worker,
