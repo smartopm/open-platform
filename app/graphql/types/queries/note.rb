@@ -40,6 +40,13 @@ module Types::Queries::Note
       argument :task_id, GraphQL::Types::ID, required: true
     end
 
+    field :project_open_tasks, [Types::NoteType], null: false do
+      description "return details for project's open tasks"
+      argument :task_id, GraphQL::Types::ID, required: true
+      argument :limit, Integer, required: false
+      argument :offset, Integer, required: false
+    end
+
     field :task_comments, [Types::NoteCommentType], null: false do
       description 'return comments for one task'
       argument :task_id, GraphQL::Types::ID, required: true
@@ -274,6 +281,17 @@ module Types::Queries::Note
       .group(:body).count
   end
 
+  def project_open_tasks(task_id:, limit: 3, offset: 0)
+    authorize
+    context[:site_community].notes.find(task_id)
+                            .sub_tasks
+                            .where(completed: false)
+                            .includes(:sub_notes, :assignee_notes, :assignees, :author, :user)
+                            .order(created_at: :asc)
+                            .limit(limit).offset(offset)
+                            .with_attached_documents
+  end
+
   private
 
   # rubocop:disable Metrics/MethodLength
@@ -322,6 +340,13 @@ module Types::Queries::Note
     else
       'search'
     end
+  end
+
+  def authorize
+    return if permitted?(module: :note, permission: :can_fetch_task_by_id)
+
+    raise GraphQL::ExecutionError,
+          I18n.t('errors.unauthorized')
   end
 end
 # rubocop:enable Metrics/ModuleLength

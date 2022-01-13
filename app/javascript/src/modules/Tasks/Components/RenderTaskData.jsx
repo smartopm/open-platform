@@ -141,7 +141,8 @@ export function TaskDataList({
   styles,
   openSubTask,
   handleOpenSubTasksClick,
-  handleTaskCompletion
+  handleTaskCompletion,
+  clientView
 }) {
   const classes = useStyles();
   const { t } = useTranslation('task');
@@ -158,6 +159,7 @@ export function TaskDataList({
                 data-testid="task_completion_toggle_button"
                 onClick={() => handleTaskCompletion(task.id, !task.completed)}
                 size="medium"
+                disabled={clientView}
               >
                 { task.completed ? (
                   <CheckCircleIcon htmlColor="#4caf50" />
@@ -195,27 +197,32 @@ export function TaskDataList({
                 </IconButton>
               </Hidden>
             </Grid>
+            {  !clientView &&  (
             <Hidden smDown>
               <Divider orientation="vertical" flexItem sx={{margin: '-20px 0'}} />
             </Hidden>
+)}
           </Grid>
         </Grid>
-        <Hidden mdUp>
-          <Grid item md={1} xs={1} style={{ display: 'flex', alignItems: 'center', }}>
-            <Box className={classes.taskMenuIcon}>
-              <IconButton
-                aria-controls="simple-menu"
-                aria-haspopup="true"
-                data-testid="task-item-menu"
-                dataid={task.id}
-                onClick={event => menuData.handleTodoMenu(event, task)}
-                color="primary"
-              >
-                <MoreVertIcon />
-              </IconButton>
-            </Box>
-          </Grid>
-        </Hidden>
+        {
+          !clientView && (
+          <Hidden mdUp>
+            <Grid item md={1} xs={1} style={{ display: 'flex', alignItems: 'center', }}>
+              <Box className={classes.taskMenuIcon}>
+                <IconButton
+                  aria-controls="simple-menu"
+                  aria-haspopup="true"
+                  data-testid="task-item-menu"
+                  dataid={task.id}
+                  onClick={event => menuData.handleTodoMenu(event, task)}
+                  color="primary"
+                >
+                  <MoreVertIcon />
+                </IconButton>
+              </Box>
+            </Grid>
+          </Hidden>
+        )}
         <Hidden smDown>
           <Grid item data-testid="task_due_date" md={2} xs={12} style={{ display: 'flex', alignItems: 'center', }}>
             <Typography variant="body2" component="span">
@@ -258,12 +265,15 @@ export function TaskDataList({
         </Grid>
         <Grid item data-testid="task_details_section" md={2} xs={10}>
           <Grid container data-testid="progress_bar_small_screen" style={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <Grid item md={2} xs={4}>
-              <Hidden mdUp>
-                <CustomProgressBar task={task} smDown />
-              </Hidden>
+            {
+              !clientView && (
+              <Grid item md={2} xs={4}>
+                <Hidden mdUp>
+                  <CustomProgressBar task={task} smDown />
+                </Hidden>
 
-            </Grid>
+              </Grid>
+            )}
 
             <Grid item md={2} xs={1}>
               <IconButton
@@ -286,7 +296,7 @@ export function TaskDataList({
                 <QuestionAnswerIcon fontSize="small" color="disabled" />
               </IconButton>
             </Grid>
-            <Grid item md={1} xs={1} className={classes.iconItem}><span>0</span></Grid>
+            {/* <Grid item md={1} xs={1} className={classes.iconItem}><span>0</span></Grid> */}
             <Grid item md={2} xs={1}>
               <IconButton
                 key={task.id}
@@ -305,18 +315,21 @@ export function TaskDataList({
             </Grid>
           </Grid>
         </Grid>
-        <Grid
-          item
-          md={1}
-          style={{ display: 'flex', alignItems: 'center',
-          justifyContent: 'flex-end' }}
-          data-testid="progress_bar_large_screen"
-        >
-          <Hidden smDown>
-            <CustomProgressBar task={task} smDown={false} />
-          </Hidden>
-
-        </Grid>
+        {
+              !clientView && (
+              <Grid
+                item
+                md={1}
+                style={{ display: 'flex', alignItems: 'center',
+              justifyContent: 'flex-end' }}
+                data-testid="progress_bar_large_screen"
+              >
+                <Hidden smDown>
+                  <CustomProgressBar task={task} smDown={false} />
+                </Hidden>
+    
+              </Grid>
+            )}
 
         <Grid item md={1} xs={2} style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }} className={classes.arrowDownUpIcon}>
           {task?.subTasks?.length > 0
@@ -369,7 +382,8 @@ TaskDataList.defaultProps = {
   handleClick: null,
   styles: {},
   openSubTask: false,
-  handleOpenSubTasksClick: null
+  handleOpenSubTasksClick: null,
+  clientView: false
 };
 TaskDataList.propTypes = {
   task: PropTypes.shape(Task).isRequired,
@@ -380,7 +394,8 @@ TaskDataList.propTypes = {
   styles: PropTypes.object,
   openSubTask: PropTypes.bool,
   handleOpenSubTasksClick: PropTypes.func,
-  handleTaskCompletion: PropTypes.func.isRequired
+  handleTaskCompletion: PropTypes.func.isRequired,
+  clientView: PropTypes.bool
 };
 LinkToUser.propTypes = {
   userId: PropTypes.string.isRequired,

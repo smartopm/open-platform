@@ -207,6 +207,7 @@ Tilisi:
       permissions:
         - can_access_dashboard
         - can_see_menu_item
+        - can_access_client_processes_dashboard
     logout:
       permissions:
         - can_see_menu_item

@@ -235,6 +235,25 @@ RSpec.describe Types::Queries::Note do
       })
     end
 
+    let(:project_open_tasks_query) do
+      %(query($taskId: ID!) {
+        projectOpenTasks(taskId: $taskId) {
+          category
+          description
+          flagged
+          body
+          createdAt
+          user {
+            name
+            id
+          }
+          parentNote {
+            id
+          }
+        }
+      })
+    end
+
     let(:note_count) do
       %(query {
             myTasksCount
@@ -454,12 +473,50 @@ RSpec.describe Types::Queries::Note do
       expect(result.dig('data', 'taskSubTasks', 0, 'parentNote', 'id')).to eq third_note.id
     end
 
+    it 'should retrieve projectOpenTasks of a parent note' do
+      admin.notes.create!(
+        body: 'Subtask body',
+        description: 'Subtask 1',
+        user_id: site_worker.id,
+        category: 'other',
+        flagged: true,
+        completed: false,
+        community_id: site_worker.community_id,
+        author_id: site_worker.id,
+        due_date: Time.zone.today,
+        parent_note_id: third_note.id,
+      )
+
+      variables = {
+        taskId: third_note.id,
+      }
+      result = DoubleGdpSchema.execute(project_open_tasks_query, context: {
+                                         current_user: site_worker,
+                                         site_community: site_worker.community,
+                                       }, variables: variables).as_json
+      expect(result.dig('data', 'projectOpenTasks')).not_to be_empty
+      expect(result.dig('data', 'projectOpenTasks', 0, 'parentNote', 'id')).to eq third_note.id
+    end
+
     it 'should raise unautorised error/
       for retrieve comments when current user is nil' do
       variables = {
         taskId: third_note.id,
       }
       result = DoubleGdpSchema.execute(note_sub_tasks_query, context: {
+                                         current_user: nil,
+                                         site_community: site_worker.community,
+                                       }, variables: variables).as_json
+      expect(result.dig('errors', 0, 'message'))
+        .to include('Unauthorized')
+    end
+
+    it 'should raise unautorised error/
+    for retrieve projectOpenTasks when current user is nil' do
+      variables = {
+        taskId: third_note.id,
+      }
+      result = DoubleGdpSchema.execute(project_open_tasks_query, context: {
                                          current_user: nil,
                                          site_community: site_worker.community,
                                        }, variables: variables).as_json
