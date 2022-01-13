@@ -35,18 +35,4 @@ describe('Client processes dashboard', () => {
 
     expect(screen.queryByTestId('loader')).toBeInTheDocument();
   });
-
-//   it('renders process stages', async () => {
-//     render(
-//       <MockedProvider mocks={mocks} addTypename={false}>
-//         <BrowserRouter>
-//           <ClientPilotViewList />
-//         </BrowserRouter>
-//       </MockedProvider>
-//     );
-
-//     await waitFor(() => {
-//       expect(screen.queryByTestId('project-stage-information')).toBeInTheDocument();
-//     });
-//   });
 });

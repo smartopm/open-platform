@@ -2,7 +2,7 @@ import React, { useContext } from 'react'
 import { Grid,Typography } from '@mui/material';
 import { useQuery } from 'react-apollo';
 import { useHistory } from 'react-router-dom'
-import { makeStyles } from '@mui/styles';
+import PropTypes from 'prop-types';
 import Divider from '@mui/material/Divider';
 import { TaskContext } from "../../Context";
 import ProjectSteps from './Steps';
@@ -13,10 +13,9 @@ import { Spinner } from '../../../../shared/Loading';
 import CenteredContent from '../../../../shared/CenteredContent';
 
 
-export default function ClientPilotViewItem(process){
+export default function ClientPilotViewItem({process}){
     const limit = 5;
-    const { id: taskId } = process?.process
-    const classes = useStyles();
+    const  taskId  = process?.id
     const history = useHistory()
 
     const { data, error, loading, refetch } = useQuery(ProjectOpenTasksQuery, {
@@ -33,9 +32,8 @@ export default function ClientPilotViewItem(process){
 
     if (error) return <CenteredContent>{formatError(error.message)}</CenteredContent>;
     if (loading) return <Spinner />;
-
     return (
-      <Grid container data-testid="project-stage-information" spacing={2}>
+      <Grid container spacing={2}>
 
         <Grid item md={12} xs={12}>
           <Typography variant="h6">
@@ -57,8 +55,8 @@ export default function ClientPilotViewItem(process){
             </Grid>
           </Grid>
         </Grid>
-        <Grid item md={12} xs={12}>
-          <Grid container spacing={2}> 
+        <Grid item md={12} xs={12} data-testid="project-container">
+          <Grid container spacing={2} data-testid="project-open-tasks"> 
             <Grid item md={6} xs={12}>
               <div>
                 {data?.projectOpenTasks?.length?
@@ -75,9 +73,9 @@ export default function ClientPilotViewItem(process){
       
             </Grid>
 
-            <Grid item md={6} xs={12} className={classes.steps}>
+            <Grid item md={6} xs={12} data-testid="project-step-information">
               <ProjectSteps
-                data={process?.process?.subTasks}
+                data={process?.subTasks}
                 setSelectedStep={routeToProcessDetailsPage}
                 handleStepCompletion={(id, completed) => handleStepCompletion(id, completed, refetch)}
               />
@@ -93,8 +91,24 @@ export default function ClientPilotViewItem(process){
     )
   }
 
+  const Task = {
+    id: PropTypes.string,
+    body: PropTypes.string,
+    completed: PropTypes.bool,
+    author: PropTypes.shape({
+      name: PropTypes.string,
+      id: PropTypes.string
+    }),
+    assignees: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.string,
+        name: PropTypes.string
+      })
+      ),
+      subTasks: PropTypes.arrayOf(PropTypes.object)
+    };
 
-  const useStyles = makeStyles({
-    steps: {
-    },
-  });
+  ClientPilotViewItem.propTypes = {
+    process: PropTypes.shape(Task).isRequired,
+
+  }
