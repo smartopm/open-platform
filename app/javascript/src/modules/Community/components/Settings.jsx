@@ -85,7 +85,7 @@ export default function CommunitySettings({ data, refetch }) {
   const features = data?.features || {};
 
   const quickLinksDisplayOptions = ['Dashboard', 'Menu'];
-  const roleOptions = ['admin', 'client', 'resident'];
+  const roleOptions = ['admin', 'client', 'resident', 'developer', 'consultant'];
 
   const [communityUpdate] = useMutation(CommunityUpdateMutation);
   const [numberOptions, setNumberOptions] = useState([numbers]);
