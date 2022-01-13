@@ -1,7 +1,6 @@
 import React from 'react'
 import { useQuery } from 'react-apollo';
 import { Grid,Typography } from '@mui/material';
-import Divider from '@mui/material/Divider';
 import { ProcessesQuery } from '../graphql/process_queries';
 import ClientPilotViewItem from './ClientPilotViewItem';
 import { Spinner } from '../../../../shared/Loading';
@@ -21,9 +20,8 @@ export default function ClientPilotViewList(){
     });
     if (error) return <CenteredContent>{formatError(error.message)}</CenteredContent>;
     if (loading) return <Spinner />;
-
     return (
-      <div className='container' justifyContent="center">
+      <div className='container'>
         <Grid container data-testid="project-information">
           <Typography variant="h6" data-testid="processes-header">
             Processes

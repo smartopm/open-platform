@@ -22,8 +22,10 @@ export default function ProcessesPage() {
   }
   return(
     <>
-    
-      {canAccessAdminProcessesDashboard ? <AdminDashboard /> : canAccessClientProcessesDashboard ? <ClientPilotViewList /> : <ProjectsList />}
+      {
+      // eslint-disable-next-line no-nested-ternary
+      canAccessAdminProcessesDashboard ? <AdminDashboard /> : canAccessClientProcessesDashboard ? <ClientPilotViewList /> : <ProjectsList />
+      }
     </>
   );
 };

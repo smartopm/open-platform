@@ -35,7 +35,7 @@ export default function ClientPilotViewItem(process){
     if (loading) return <Spinner />;
 
     return (
-      <Grid container data-testid="project-information" spacing={2}>
+      <Grid container data-testid="project-stage-information" spacing={2}>
 
         <Grid item md={12} xs={12}>
           <Typography variant="h6">
@@ -47,14 +47,14 @@ export default function ClientPilotViewItem(process){
             />
           </Typography>
           <Grid item md={12} xs={12}>
-              <Grid container spacing={2}> 
-                <Grid item md={6} xs={12}>
+            <Grid container spacing={2}> 
+              <Grid item md={6} xs={12}>
                 <Typography variant="h6">Your Tasks</Typography>
-                </Grid>
-                <Grid item md={6} xs={12}>
-                <Typography variant="h6">Process Steps</Typography>
-                </Grid>
               </Grid>
+              <Grid item md={6} xs={12}>
+                <Typography variant="h6">Process Steps</Typography>
+              </Grid>
+            </Grid>
           </Grid>
         </Grid>
         <Grid item md={12} xs={12}>
