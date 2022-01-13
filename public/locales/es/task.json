@@ -18,9 +18,22 @@
     "processes": "Procesos"
   },
   "processes": {
+    "completed_by_quarter": "Completado por Trimestre",
     "documents": "Documentos",
+    "drc_process": "Proceso de DRC",
+    "drc_stages": {
+      "concept_design_review": "Revisión del Diseño Conceptual",
+      "construction_starts": " Inicia la Construcción",
+      "detailed_design_review": "Revisión Detallada del Diseño",
+      "inspections": "Inspecciones",
+      "kiambu_county_submission": "Presentación del Condado de Kiambu",
+      "post_construction": "Post Construcciones",
+      "scheme_design_review": "Revisión del Esquema de Diseño"
+    },
+    "no_data": "No hay información que mostrar",
     "overview": "Descripción General",
-    "processes": "Procesos"
+    "processes": "Procesos",
+    "projects_by_stage": "Proyectos por Etapa"
   },
   "sub_task": {
     "due": "vence:",
