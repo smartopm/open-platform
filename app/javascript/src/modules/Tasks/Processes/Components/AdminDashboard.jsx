@@ -10,7 +10,7 @@ import {
 } from '@material-ui/core';
 import { useQuery } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from '@material-ui/styles';
 import { formatError } from '../../../../utils/helpers';
 import CenteredContent from '../../../../shared/CenteredContent';
 import { Spinner } from '../../../../shared/Loading';
