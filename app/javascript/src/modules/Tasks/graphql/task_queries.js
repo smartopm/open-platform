@@ -19,6 +19,18 @@ export const TaskStatsQuery = gql`
   }
 `;
 
+// TODO: olivier sync with Bonny to verify if this matches accordingly
+export const TaskSummaryQuery = gql`
+  {
+    taskSummary {
+      first_quarter
+      second_quarter
+      third_quarter
+      fourth_quarter
+    }
+  }
+`;
+
 
 
 export const TaskQuery = gql`
