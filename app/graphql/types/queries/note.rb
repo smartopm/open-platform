@@ -277,8 +277,7 @@ module Types::Queries::Note
     context[:site_community].notes.find(task_id)
                             .sub_tasks
                             .where(completed: false)
-                            .includes(:sub_notes)
-                            .eager_load(:assignee_notes, :assignees, :author, :user)
+                            .includes(:sub_notes, :assignee_notes, :assignees, :author, :user)
                             .order(created_at: :asc)
                             .limit(limit).offset(offset)
                             .with_attached_documents

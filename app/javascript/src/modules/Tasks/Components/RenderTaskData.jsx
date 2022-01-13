@@ -197,7 +197,7 @@ export function TaskDataList({
                 </IconButton>
               </Hidden>
             </Grid>
-            {  clientView === false &&  (
+            {  !clientView &&  (
             <Hidden smDown>
               <Divider orientation="vertical" flexItem sx={{margin: '-20px 0'}} />
             </Hidden>
@@ -205,7 +205,7 @@ export function TaskDataList({
           </Grid>
         </Grid>
         {
-          clientView === false && (
+          !clientView && (
           <Hidden mdUp>
             <Grid item md={1} xs={1} style={{ display: 'flex', alignItems: 'center', }}>
               <Box className={classes.taskMenuIcon}>
@@ -266,7 +266,7 @@ export function TaskDataList({
         <Grid item data-testid="task_details_section" md={2} xs={10}>
           <Grid container data-testid="progress_bar_small_screen" style={{ display: 'flex', justifyContent: 'flex-end' }}>
             {
-              clientView === false && (
+              !clientView && (
               <Grid item md={2} xs={4}>
                 <Hidden mdUp>
                   <CustomProgressBar task={task} smDown />
@@ -316,7 +316,7 @@ export function TaskDataList({
           </Grid>
         </Grid>
         {
-              clientView === false && (
+              !clientView && (
               <Grid
                 item
                 md={1}
