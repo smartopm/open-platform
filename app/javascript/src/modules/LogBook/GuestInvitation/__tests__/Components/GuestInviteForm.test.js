@@ -7,6 +7,7 @@ import '@testing-library/jest-dom/extend-expect';
 import InvitationCreateMutation from '../../graphql/mutations';
 import { Context } from '../../../../../containers/Provider/AuthStateProvider';
 import userMock from '../../../../../__mocks__/authstate';
+import { SearchGuestsQuery } from '../../graphql/queries';
 
 describe('Guest Invitation Form', () => {
   const mockHistory = {
@@ -18,10 +19,6 @@ describe('Guest Invitation Form', () => {
 
   it('should render the invitation form', async () => {
     const guest = {
-      id: null,
-      name: '342',
-      email: '232',
-      phoneNumber: '232',
       visitationDate: null,
       startsAt: null,
       endsAt: null,
@@ -33,63 +30,66 @@ describe('Guest Invitation Form', () => {
       request: {
         query: InvitationCreateMutation,
         variables: {
-          guestId: guest.id,
-          name: guest.name,
-          email: guest.email,
-          phoneNumber: guest.phoneNumber,
           visitationDate: guest.visitationDate,
           startsAt: guest.startsAt,
           endsAt: guest.endsAt,
           occursOn: guest.occursOn,
-          visitEndDate: guest.visitEndDate
+          visitEndDate: guest.visitEndDate,
+          guests: [],
+          userIds: []
         }
       },
       result: {
         data: {
           invitationCreate: {
-            entryTime: {
-              id: '6a7e722a-9bd5-48d4-aaf7-f3285ccff4a3'
-            }
+            success: true
           }
         }
       }
     };
-    const { getByTestId, queryAllByText } = render(
+
+    const searchGuestsMock = {
+      request: {
+        query: SearchGuestsQuery,
+        variables: { query: "" }
+      },
+      result: {
+        data: {
+          searchGuests: [
+            {
+              id: "some id",
+              name: "some user",
+              imageUrl: null,
+              avatarUrl: null
+            }
+          ]
+        }
+      }
+    }
+    const { getByTestId, getAllByText } = render(
       <MemoryRouter>
         <Context.Provider value={userMock}>
-          <MockedProvider mocks={[createInviteMock]} addTypename={false}>
-            <GuestInviteForm guest={guest} />
+          <MockedProvider mocks={[createInviteMock, searchGuestsMock]} addTypename={false}>
+            <GuestInviteForm />
           </MockedProvider>
         </Context.Provider>
       </MemoryRouter>
     );
 
-    const name = getByTestId('guest_entry_name');
-    const email = getByTestId('guest_entry_email');
-    const phoneNumber = getByTestId('guest_entry_phone_number');
-
-    expect(name).toBeInTheDocument();
-    expect(email).toBeInTheDocument();
-    expect(phoneNumber).toBeInTheDocument();
     expect(getByTestId('invite_button')).toBeInTheDocument();
 
-    fireEvent.change(name, { target: { value: 'Some random name' } });
-    expect(name.value).toBe('Some random name');
+    expect(getAllByText('common:misc.day_of_visit')[0]).toBeInTheDocument();
+    expect(getAllByText('common:misc.start_time')[0]).toBeInTheDocument();
+    expect(getAllByText('common:misc.end_time')[0]).toBeInTheDocument();
 
-    fireEvent.change(email, { target: { value: 'Some@random.name' } });
-    expect(email.value).toBe('Some@random.name');
-
-    expect(phoneNumber).not.toBeDisabled()
-    fireEvent.change(phoneNumber, { target: { value: '090909090' } });
-    expect(phoneNumber.value).toBe('090909090');
-
+    fireEvent.change(getByTestId('search'), { target: { value: '090909090' } })
 
     fireEvent.click(getByTestId('invite_button'));
 
     await waitFor(() => {
-      expect(queryAllByText('logbook:errors.required_field')[0]).toBeInTheDocument();
-      expect(queryAllByText('logbook:errors.required_field')).toHaveLength(1);
-      expect(mockHistory.push).not.toBeCalled(); // due to failure in validation
-    }, 10);
+        expect(getAllByText('guest.guest_invited')[0]).toBeInTheDocument();
+        expect(mockHistory.push).toBeCalled();
+        expect(mockHistory.push).toBeCalledWith('/logbook/guests');
+    }, 50);
   });
 });

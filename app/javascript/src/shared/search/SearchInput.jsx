@@ -6,7 +6,9 @@ import {
   InputLabel,
   OutlinedInput
 } from '@material-ui/core';
-import { ClearOutlined, FilterListOutlined } from '@material-ui/icons';
+import SearchIcon from '@mui/icons-material/Search';
+import ClearOutlined from '@mui/icons-material/ClearOutlined';
+import FilterListOutlined from '@mui/icons-material/FilterListOutlined';
 import PropTypes from 'prop-types'
 import { useTranslation } from 'react-i18next';
 
@@ -23,6 +25,7 @@ export default function SearchInput({ title, searchValue, filterRequired, handle
         onChange={handleSearch}
         placeholder={t('search.type_your_search')}
         inputProps={{ "data-testid": "search" }}
+        startAdornment={<SearchIcon style={{ color: '#a1a1a1', marginRight: 8 }} />}
         endAdornment={(
           <InputAdornment position="end">
             {

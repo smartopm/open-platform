@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 
 describe('Properties & Co-ownership Payment Plan', () => {
-  it('creates a co-owned property and a payment plan ', () => {
+  it('creates a co-owned property and a payment plan', () => {
     // Create 2 users
     cy.factory('community', { name: 'Nkwashi' }).then((commRes) => {
       cy.factory('role', {
@@ -21,7 +21,7 @@ describe('Properties & Co-ownership Payment Plan', () => {
         })
         cy.factory('permission', {
           module: 'user',
-          permissions: ['can_get_users_lite', 'can_see_menu_item',, 
+          permissions: ['can_get_users_lite', 'can_see_menu_item',,
                         'can_get_users', 'can_view_admin_users',
                         'can_access_all_users'],
           role_id: roleRes.body.id,
@@ -50,7 +50,7 @@ describe('Properties & Co-ownership Payment Plan', () => {
           community_id: commRes.body.id,
           role_id: roleRes.body.id
         })
-  
+
         cy.factory('admin_user', {
           name: 'John Doe',
           phone_number: '2348064014977',
@@ -58,7 +58,7 @@ describe('Properties & Co-ownership Payment Plan', () => {
           state: 'valid',
           community_id: commRes.body.id,
           role_id: roleRes.body.id
-        })  
+        })
       }
       )
     })
@@ -71,7 +71,7 @@ describe('Properties & Co-ownership Payment Plan', () => {
 
      // Property List should not contain our proposed property initially
     cy.contains('Co-owned Plot').should('not.exist');
-    
+
     // Create New Property
     cy.get('.new-property-btn').click();
     cy.wait(1000);
@@ -85,7 +85,7 @@ describe('Properties & Co-ownership Payment Plan', () => {
     cy.contains('Ownership').click();
     cy.wait(1000);
     cy.contains('New Owner').click();
-    cy.wait(1000);    
+    cy.wait(1000);
     cy.get('.property-owner-name-txt-input-0').type('Larry Bird');
     cy.wait(1000);
     cy.contains('Larry Bird').click();
@@ -93,9 +93,9 @@ describe('Properties & Co-ownership Payment Plan', () => {
     cy.get('.property-owner-address-txt-input-0').type('Larry Bird Address');
     cy.contains('Save').click();
     cy.wait(2000);
-    
+
     cy.contains('Co-owned Plot').should('exist');
-    
+
     // Edit Property
     cy.get('[data-testid=edit_property_menu]').click();
     cy.wait(1000);
@@ -108,7 +108,7 @@ describe('Properties & Co-ownership Payment Plan', () => {
     cy.get('[data-testid=custom-dialog-button]').click();
     cy.wait(1000);
     cy.contains('New Owner').click();
-    cy.wait(1000);    
+    cy.wait(1000);
     cy.get('.property-owner-name-txt-input-1').type('John Doe');
     cy.wait(1000);
     cy.contains('John Doe').click();
@@ -116,16 +116,16 @@ describe('Properties & Co-ownership Payment Plan', () => {
     cy.get('.property-owner-address-txt-input-1').type('John Doe Address');
     cy.contains('Save changes').click();
     cy.wait(2000);
-    
+
     // Verify User 2 does not have payment plan initially
     cy.visitUserProfile('John Doe');
     cy.visitUserMenu('.right-menu-payment-item');
-    
+
     // User 2 has no payment plan initially
     cy.contains('Total Balance').should('not.exist');
     cy.get('[data-testid=no-plan-available]').should('contain', 'No Plan Available');
     cy.get('[data-testid=no-plan-available]').click();
-    
+
     // Add Payment plan under Primary Owner (User 1)
     cy.myProfile()
     cy.visitUserMenu('.right-menu-payment-item');
@@ -136,22 +136,22 @@ describe('Properties & Co-ownership Payment Plan', () => {
       plot: 'Land: Co-owned Plot',
       coOwner: 'John Doe'
     })
-    
+
     // Verify Pending Balance & Payment plan is updated for Primary Owner  (User 1)
     cy.get('[data-testid=no-plan-available]').should('not.exist');
     cy.contains('Total Balance').should('exist');
     cy.contains('- K 6000').should('exist');
-    
-    // Verify Pending balance & payment plan for Co-owner (User 2) 
+
+    // Verify Pending balance & payment plan for Co-owner (User 2)
     cy.visitUserProfile('John Doe');
     cy.visitUserMenu('.right-menu-payment-item');
     cy.get('[data-testid=no-plan-available]').should('not.exist');
     cy.wait(1000);
-    
+
     // Pending balance should be attached to primary owner
     cy.contains('Total Balance').should('not.exist');
     cy.contains('- K 6000').should('not.exist');
-    
+
     // User 2 should be listed as co-owner in payment plan
     cy.get('[data-testid=plan-menu]').click();
     cy.wait(1000);

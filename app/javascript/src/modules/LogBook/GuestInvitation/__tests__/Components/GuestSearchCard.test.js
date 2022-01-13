@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { fireEvent, render } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom';
 import GuestSearchCard from '../../Components/GuestSearchCard';
@@ -21,7 +21,6 @@ describe('Render guest Card Component', () => {
           styles={{ card: 'some' }}
           handInviteGuest={invite}
         />
-
       </BrowserRouter>
     );
 
@@ -29,5 +28,9 @@ describe('Render guest Card Component', () => {
     expect(container.getByTestId('guest_name')).toBeInTheDocument();
     expect(container.getByTestId('invite_guest_btn')).toBeInTheDocument();
     expect(container.getByTestId('invite_guest_btn').textContent).toContain('translated');
+
+    fireEvent.click(container.getByTestId('invite_guest_btn'))
+    expect(invite).toBeCalled()
+    expect(invite).toBeCalledWith(guest)
   });
 });

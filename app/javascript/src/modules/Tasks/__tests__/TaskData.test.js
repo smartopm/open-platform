@@ -7,6 +7,8 @@ import renderTaskData, { LinkToUser, TaskDataList } from '../Components/RenderTa
 import TodoItem from '../Components/TodoItem'
 import MockedThemeProvider from '../../__mocks__/mock_theme'
 import t from '../../__mocks__/t'
+import { Context } from '../../../containers/Provider/AuthStateProvider'
+import authState from '../../../__mocks__/authstate';
 
 describe('Task Data components', () => {
   const menuData = {
@@ -110,6 +112,7 @@ describe('Task Data components', () => {
     expect(container.getByTestId("task_subtasks")).toBeInTheDocument()
     expect(container.getByTestId("task_comments")).toBeInTheDocument()
     expect(container.getByTestId("task_details_section")).toBeInTheDocument()
+    expect(container.getByTestId("progress_bar_large_screen")).toBeInTheDocument()
   });
 
   it('applies filter without error', () => {
@@ -143,25 +146,27 @@ describe('Task Data components', () => {
 
   it('renders task menu options', () => {
     render(
-      <BrowserRouter>
-        <MockedProvider>
-          <MockedThemeProvider>
-            <TodoItem
-              task={task}
-              handleChange={() => {}}
-              selectedTasks={[]}
-              isSelected={false}
-              handleTaskDetails={() => {}}
-              handleCompleteNote={() => {}}
-              handleAddSubTask={jest.fn()}
-              taskHeader={taskHeader}
-              handleTodoClick={jest.fn}
-              handleTaskCompletion={jest.fn}
-              handleUploadDocument={jest.fn}
-            />
-          </MockedThemeProvider>
-        </MockedProvider>
-      </BrowserRouter>
+      <Context.Provider value={authState}>
+        <BrowserRouter>
+          <MockedProvider>
+            <MockedThemeProvider>
+              <TodoItem
+                task={task}
+                handleChange={() => {}}
+                selectedTasks={[]}
+                isSelected={false}
+                handleTaskDetails={() => {}}
+                handleCompleteNote={() => {}}
+                handleAddSubTask={jest.fn()}
+                taskHeader={taskHeader}
+                handleTodoClick={jest.fn}
+                handleTaskCompletion={jest.fn}
+                handleUploadDocument={jest.fn}
+              />
+            </MockedThemeProvider>
+          </MockedProvider>
+        </BrowserRouter>
+      </Context.Provider>
     );
 
     const menuButton = screen.getByTestId('task-item-menu');
@@ -242,6 +247,7 @@ describe('Task Data components', () => {
       </BrowserRouter>
     );
     
+    expect(container.getByTestId("progress_bar_large_screen")).toBeInTheDocument()
     expect(container.queryByTestId('task_completion_toggle_button')).toBeInTheDocument();
     fireEvent.click(container.queryByTestId('task_completion_toggle_button'));
 

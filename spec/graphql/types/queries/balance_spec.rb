@@ -55,28 +55,54 @@ RSpec.describe Types::Queries::Balance do
       end
 
       context 'when current_user is admin' do
-        before do
+        before :each do
           payment_plan.pending_balance -= plan_payment.amount
           payment_plan.save
-          user.general_payment_plan.plan_payments.create!(transaction_id: transaction.id,
-                                                          community_id: community.id,
-                                                          user_id: user.id, amount: 500.0,
-                                                          status: 'paid')
         end
-        it 'should retrieve balance and pending balance of user' do
-          variables = {
-            userId: user.id,
-          }
-          result = DoubleGdpSchema.execute(user_balance_query,
-                                           variables: variables,
-                                           context: {
-                                             current_user: user,
-                                             site_community: community,
-                                           }).as_json
-          query_result = result.dig('data', 'userBalance')
-          expect(query_result['balance']).to eql 500.0
-          expect(query_result['pendingBalance']).to eql 0.0
-          expect(query_result['totalTransactions']).to eql 1500.0
+
+        context 'when the user have general plan' do
+          before do
+            user.general_payment_plan.plan_payments.create!(transaction_id: transaction.id,
+                                                            community_id: community.id,
+                                                            user_id: user.id, amount: 500.0,
+                                                            status: 'paid')
+          end
+
+          it 'should retrieve balance and pending balance of user' do
+            variables = {
+              userId: user.id,
+            }
+            result = DoubleGdpSchema.execute(user_balance_query,
+                                             variables: variables,
+                                             context: {
+                                               current_user: user,
+                                               site_community: community,
+                                             }).as_json
+            query_result = result.dig('data', 'userBalance')
+            expect(query_result['balance']).to eql 500.0
+            expect(query_result['pendingBalance']).to eql 0.0
+            expect(query_result['totalTransactions']).to eql 1500.0
+          end
+        end
+
+        context 'when user does not have general plan' do
+          it 'should display balance as 0' do
+            variables = {
+              userId: user.id,
+            }
+            expect(Properties::PaymentPlan.count).to eql 1
+            result = DoubleGdpSchema.execute(user_balance_query,
+                                             variables: variables,
+                                             context: {
+                                               current_user: user,
+                                               site_community: community,
+                                             }).as_json
+            query_result = result.dig('data', 'userBalance')
+            expect(query_result['balance']).to eql 0.0
+            expect(query_result['pendingBalance']).to eql 0.0
+            expect(query_result['totalTransactions']).to eql 1500.0
+            expect(Properties::PaymentPlan.count).to eql 1
+          end
         end
       end
     end

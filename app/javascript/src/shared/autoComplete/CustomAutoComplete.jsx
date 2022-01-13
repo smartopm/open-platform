@@ -11,10 +11,10 @@ import useDebounce from '../../utils/useDebounce';
 import UserAutoResult from '../UserAutoResult';
 
 
-export default function CustomAutoComplete({users, onChange, isMultiple }){
+export default function CustomAutoComplete({users, onChange, isMultiple, label }){
     const [searchedUser, setSearchUser] = useState('');
     const debouncedValue = useDebounce(searchedUser, 500);
-    const { t } = useTranslation(['task', 'common'])
+    const { t } = useTranslation('common')
 
     const allowedAssignees = ["admin", "custodian", "security_guard", "contractor", "site_worker", 'consultant']
 
@@ -40,26 +40,28 @@ export default function CustomAutoComplete({users, onChange, isMultiple }){
         renderInput={(params) => (
           <TextField
             {...params}
-            variant="standard"
-            label={t('task.task_assignee_label')}
-            placeholder={t('task.task_search_placeholder')} 
+            variant="outlined"
+            label={label}
+            placeholder={t('form_placeholders.search_user')}
             onChange={event => setSearchUser(event.target.value)}
             onKeyDown={() => searchUser()}
+            fullWidth
           />
         )}
       />
     )
-
 }
 
 CustomAutoComplete.defaultProps = {
-  users: []
+  users: [],
 }
 
 CustomAutoComplete.propTypes = {
   users: PropTypes.arrayOf(PropTypes.string),
   onChange: PropTypes.func.isRequired,
-  isMultiple: PropTypes.bool.isRequired
+  isMultiple: PropTypes.bool.isRequired,
+  label: PropTypes.string.isRequired
+  // placeholder: PropTypes.string,
 }
 
 

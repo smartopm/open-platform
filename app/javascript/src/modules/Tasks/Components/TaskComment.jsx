@@ -26,7 +26,7 @@ export default function TaskComment({ taskId }) {
         </div>
       )}
 
-      <Typography variant="h6" data-testid="comments" style={{ margin: '15px 0 10px 0' }} id="anchor-section">
+      <Typography variant="subtitle2" data-testid="comments" style={{ margin: '15px 0 10px 0' }} id="anchor-section">
         {t('misc.comment_plural')}
       </Typography>
       <CommentTextField

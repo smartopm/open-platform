@@ -32,30 +32,24 @@ RSpec.describe Mutations::EntryRequest::InvitationCreate do
     let(:invitation_create_mutation) do
       <<~GQL
         mutation invitationCreate(
-            $guestId: ID
-            $name: String
-            $email: String
-            $phoneNumber: String
             $visitationDate: String!
             $startsAt: String
             $endsAt: String
             $occursOn: [String!]
             $visitEndDate: String
+            $guests: [JSON!]
+            $userIds: [String!]
         ) {
             invitationCreate(
-            guestId: $guestId
-            name: $name
-            email: $email
-            phoneNumber: $phoneNumber
             visitationDate: $visitationDate
             startsAt: $startsAt
             endsAt: $endsAt
             occursOn: $occursOn
             visitEndDate: $visitEndDate
+            guests: $guests
+            userIds: $userIds
             ) {
-            entryTime {
-                id
-            }
+            success
             }
         }
       GQL
@@ -65,10 +59,61 @@ RSpec.describe Mutations::EntryRequest::InvitationCreate do
       context 'when guest does not exist' do
         it 'returns created invitation' do
           variables = {
-            name: 'John Doe',
-            email: 'email@test.com',
-            phoneNumber: '9019201920319',
+            userIds: [visitor.id],
+            guests: [],
             visitationDate: '2021-10-10',
+          }
+
+          expect(community.entry_times.count).to eql 0
+          expect(community.entry_requests.count).to eql 1
+          expect(admin.invitees.count).to eql 0
+
+          result = DoubleGdpSchema.execute(invitation_create_mutation,
+                                           variables: variables,
+                                           context: {
+                                             current_user: admin,
+                                             site_community: community,
+                                             user_role: admin.role,
+                                           }).as_json
+          expect(result.dig('data', 'invitationCreate', 'success')).to eql true
+          expect(community.entry_times.count).to eql 1
+          # expect(community.entry_requests.count).to eql 2
+          expect(admin.invitees.count).to eql 1
+          expect(result.dig('errors', 0, 'message')).to be_nil
+        end
+      end
+      context 'when guest already exists' do
+        it 'returns an updated invitation' do
+          variables = {
+            guests: [],
+            visitationDate: '2021-10-10',
+            userIds: [entry_request.guest_id],
+          }
+
+          expect(community.entry_times.count).to eql 0
+          expect(community.entry_requests.count).to eql 1
+          expect(community.users.count).to eql 3
+
+          result = DoubleGdpSchema.execute(invitation_create_mutation,
+                                           variables: variables,
+                                           context: {
+                                             current_user: admin,
+                                             site_community: community,
+                                             user_role: admin.role,
+                                           }).as_json
+          expect(result.dig('data', 'invitationCreate', 'success')).to eql true
+          # it should just update existing records
+          expect(community.users.count).to eql 3
+          expect(community.entry_requests.count).to eql 1
+          expect(admin.invitees.count).to eql 1
+          expect(result.dig('errors', 0, 'message')).to be_nil
+        end
+
+        it 'returns an updated invitation when no entry request' do
+          variables = {
+            visitationDate: '2021-10-10',
+            guests: [],
+            userIds: [user.id],
           }
 
           expect(community.entry_times.count).to eql 0
@@ -83,124 +128,47 @@ RSpec.describe Mutations::EntryRequest::InvitationCreate do
                                              site_community: community,
                                              user_role: admin.role,
                                            }).as_json
-          expect(result.dig('data', 'invitationCreate', 'entryTime', 'id')).not_to be_nil
-          expect(community.entry_times.count).to eql 1
-          expect(community.entry_requests.count).to eql 2
-          expect(community.users.count).to eql 4
+          expect(result.dig('data', 'invitationCreate', 'success')).to eql true
+          expect(community.users.count).to eql 3
           expect(admin.invitees.count).to eql 1
           expect(result.dig('errors', 0, 'message')).to be_nil
-        end
-
-        it 'returns an error when an email aready exist' do
-          variables = {
-            name: 'John Doe',
-            email: 'u@admin.com',
-            phoneNumber: '9019201920319',
-            visitationDate: '2021-10-10',
-          }
-
-          result = DoubleGdpSchema.execute(invitation_create_mutation,
-                                           variables: variables,
-                                           context: {
-                                             current_user: admin,
-                                             site_community: community,
-                                             user_role: admin.role,
-                                           }).as_json
-          expect(result.dig('data', 'invitationCreate', 'entryTime', 'id')).to be_nil
-        end
-      end
-      context 'when guest already exists' do
-        it 'returns an updated invitation' do
-          variables = {
-            name: 'John Doe',
-            visitationDate: '2021-10-10',
-            guestId: entry_request.guest_id,
-          }
-
-          expect(community.entry_times.count).to eql 0
-          expect(community.entry_requests.count).to eql 1
-          expect(community.users.count).to eql 3
-
-          result = DoubleGdpSchema.execute(invitation_create_mutation,
-                                           variables: variables,
-                                           context: {
-                                             current_user: admin,
-                                             site_community: community,
-                                             user_role: admin.role,
-                                           }).as_json
-          expect(result.dig('data', 'invitationCreate', 'entryTime', 'id')).not_to be_nil
-          # it should just update existing records
-          expect(community.users.count).to eql 3
-          expect(community.entry_requests.count).to eql 1
-          expect(admin.invitees.count).to eql 1
-          expect(result.dig('errors', 0, 'message')).to be_nil
-        end
-
-        it 'returns an updated invitation when no entry request' do
-          variables = {
-            name: 'John Doe',
-            visitationDate: '2021-10-10',
-            guestId: user.id,
-          }
-
-          expect(community.entry_times.count).to eql 0
-          expect(community.entry_requests.count).to eql 1
-          expect(community.users.count).to eql 3
-
-          result = DoubleGdpSchema.execute(invitation_create_mutation,
-                                           variables: variables,
-                                           context: {
-                                             current_user: admin,
-                                             site_community: community,
-                                             user_role: admin.role,
-                                           }).as_json
-          expect(result.dig('data', 'invitationCreate', 'entryTime', 'id')).not_to be_nil
-          expect(community.users.count).to eql 3
-          expect(community.entry_requests.count).to eql 2
-          expect(admin.invitees.count).to eql 1
-          expect(result.dig('errors', 0, 'message')).to be_nil
-        end
-      end
-
-      context 'when user with same email exits but with different case' do
-        it 'raises email has already been taken error' do
-          variables = {
-            name: 'John Doe',
-            email: 'U@ADmin.com',
-            phoneNumber: '9019201920319',
-            visitationDate: '2021-10-10',
-          }
-
-          result = DoubleGdpSchema.execute(invitation_create_mutation,
-                                           variables: variables,
-                                           context: {
-                                             current_user: admin,
-                                             site_community: community,
-                                             user_role: admin.role,
-                                           }).as_json
-          expect(result.dig('data', 'invitationCreate', 'entryTime', 'id')).to be_nil
-          expect(result.dig('errors', 0, 'message')).to eql 'Email has already been taken'
         end
       end
 
       context 'when user has no email or phone number' do
-        it 'it should create an invitation with a fake number' do
+        it 'it should create invitations for multiple guests' do
+          guests = [
+            {
+              firstName: 'John',
+              lastName: 'Desdc',
+              phoneNumber: '9232422312',
+            },
+            {
+              firstName: 'some',
+              lastName: 'other',
+              phoneNumber: '43423323213',
+            },
+          ]
           variables = {
-            name: 'John Doe Invited',
-            email: nil,
-            phoneNumber: nil,
+            guests: guests,
             visitationDate: '2021-10-10',
+            userIds: [visitor.id],
           }
 
+          expect(community.users.count).to eql 3
+          expect(admin.invitees.count).to eql 0
           result = DoubleGdpSchema.execute(invitation_create_mutation,
                                            variables: variables,
                                            context: {
                                              current_user: admin,
                                              site_community: community,
                                            }).as_json
-          expect(result.dig('data', 'invitationCreate', 'entryTime', 'id')).to_not be_nil
           expect(result.dig('errors', 0, 'message')).to be_nil
-          expect(community.users.find_by(name: 'John Doe Invited').user_type).to eql 'visitor'
+          expect(community.users.count).to eql 5
+          expect(admin.invitees.count).to eql 3
+          expect(community.users.find_by(name: 'John Desdc').user_type).to eql 'visitor'
+          expect(community.users.find_by(name: 'some other').user_type).to eql 'visitor'
+          expect(result.dig('data', 'invitationCreate', 'success')).to eql true
         end
       end
     end
@@ -209,9 +177,8 @@ RSpec.describe Mutations::EntryRequest::InvitationCreate do
       context 'when current user is not admin, security_guard' do
         it 'raises unauthorized error' do
           variables = {
-            name: 'John Doe',
-            email: 'user@admin.com',
-            phoneNumber: '9019201920319',
+            guests: [],
+            userIds: [],
             visitationDate: '2021-10-10',
           }
           result = DoubleGdpSchema.execute(invitation_create_mutation,

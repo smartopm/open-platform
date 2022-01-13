@@ -45,12 +45,14 @@ UserAvatar.defaultProps = {
   searchedUser: null,
   size: 'small',
   altText: '',
-  pathname: '/user/settings'
+  pathname: '/user/settings',
+  imageUrl: '/images/default_avatar.svg'
 };
 UserAvatar.propTypes = {
-  imageUrl: PropTypes.string.isRequired,
+  imageUrl: PropTypes.string,
+  // Find out different types of props are being passed here
+  customStyle: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
   /* eslint-disable react/forbid-prop-types */
-  customStyle: PropTypes.object,
   searchedUser: PropTypes.object,
   size: PropTypes.string,
   altText: PropTypes.string,

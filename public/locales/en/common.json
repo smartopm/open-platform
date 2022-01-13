@@ -1,6 +1,8 @@
 {
   "form_fields": {
     "full_name": "Full Name",
+    "full_first_name": "First Name",
+    "full_last_name": "Last Name",
     "email": "Email",
     "phone_number": "Phone Number",
     "primary_number": "Primary Phone Number",
@@ -46,7 +48,7 @@
     "phone_number": "Enter Phone Number",
     "email": "Enter Email",
     "action_note": "Type action note here",
-    "search_user": "Search User",
+    "search_user": "Search for a user",
     "search_tasks": "Search Tasks",
     "search_guests": "Search guest list",
     "search": "Search",
@@ -251,7 +253,9 @@
     "allocating_success": "General funds successfully allocated",
     "no_allocating": "There are no active plans for this user to allocate the general funds",
     "uploaded_at": "Uploaded at",
-    "uploaded_by": "Uploaded by"
+    "uploaded_by": "Uploaded by",
+    "remove": "Remove",
+    "add": "Add"
   },
   "menu": {
     "invoice": "Invoice",
@@ -430,7 +434,10 @@
     "invalid_color_code": "The theme color code is invalid",
     "no_user_selected": "You have to select a user",
     "no_result_found": "No results were found for {{searchValue}}",
-    "something_wrong_qr_code": "Something went wrong while downloading QR Code"
+    "something_wrong_qr_code": "Something went wrong while downloading QR Code",
+    "user_not_found_add_new": "User Not Found - Please Add New Guest",
+    "no_guests_to_invite": "No selected guests to invite",
+    "invalid_time": "Invitation time is invalid"
   },
   "dialogs": {
     "dialog_action": "Are you sure you want to {{action}} this {{title}}?",

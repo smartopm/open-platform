@@ -1,3 +1,6 @@
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { Fragment, useState, useEffect } from 'react';
 import {
   Divider,
@@ -11,7 +14,7 @@ import {
   MenuItem,
   Typography
 } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { makeStyles } from '@material-ui/styles';
 import PropTypes from 'prop-types';
@@ -23,7 +26,7 @@ import CenteredContent from '../../../shared/CenteredContent';
 import MessageAlert from '../../../components/MessageAlert';
 import { TaskDocumentsQuery } from '../graphql/task_queries';
 import { Spinner } from '../../../shared/Loading';
-import { formatError } from '../../../utils/helpers';
+import { formatError, secureFileDownload } from '../../../utils/helpers';
 import { UpdateNote } from '../../../graphql/mutations';
 
 export default function TaskDocuments({ taskId }) {
@@ -71,9 +74,9 @@ export default function TaskDocuments({ taskId }) {
     onChange(event.target.files[0]);
   }
 
-  // we close the menu after downloading the file
-  function handleDownload() {
-    setAnchorEl(null);
+  function downloadFile(event, path) {
+    event.preventDefault();
+    secureFileDownload(path)
   }
 
   if (loading) return <Spinner />;
@@ -89,7 +92,7 @@ export default function TaskDocuments({ taskId }) {
       />
       <Grid container alignItems="center">
         <Grid item xs={11} md={11}>
-          <Typography variant="h6" data-testid="documents_title">
+          <Typography variant="subtitle2" data-testid="documents_title">
             {t('document.documents')}
           </Typography>
         </Grid>
@@ -100,6 +103,7 @@ export default function TaskDocuments({ taskId }) {
             data-testid="add_document"
             component="label"
             color="primary"
+            style={{backgroundColor: 'transparent'}}
           >
             <input
               hidden
@@ -108,7 +112,10 @@ export default function TaskDocuments({ taskId }) {
               id="task-attach-file"
               data-testid="add_document_input"
             />
-            <AddIcon />
+            <div style={{display: 'flex'}}>
+              <AddCircleIcon />
+              <Typography style={{padding: '2px 0 0 5px'}} variant="caption">Add Document</Typography>
+            </div>
           </IconButton>
         </Grid>
       </Grid>
@@ -185,10 +192,9 @@ export default function TaskDocuments({ taskId }) {
         keepMounted={false}
         data-testid="more_details_menu"
       >
-        <MenuItem id="download_button" key="download" onClick={handleDownload}>
+        <MenuItem id="download_button" key="download" onClick={() => setAnchorEl(null)}>
           <a
-            href={currentDoc.url}
-            download={currentDoc.filename}
+            onClick={(event) => downloadFile(event, currentDoc.url)}
             style={{ textDecoration: 'none', color: '#000000' }}
           >
             {t('document.download')}

@@ -1,14 +1,8 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable complexity */
 import React, { useState } from 'react';
 import TextField from '@material-ui/core/TextField';
-import {
-  Grid,
-  Chip,
-  Typography,
-  Button,
-  IconButton,
-  useMediaQuery
-} from '@material-ui/core';
+import { Grid, Chip, Typography, Button, IconButton, useMediaQuery } from '@material-ui/core';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import AccessAlarmIcon from '@mui/icons-material/AccessAlarm';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
@@ -69,11 +63,23 @@ export default function TaskInfoTop({
     message: ''
   });
 
-  const allowedAssignees = ['admin', 'custodian', 'security_guard', 'contractor', 'site_worker', 'consultant', 'developer'];
+  const allowedAssignees = [
+    'admin',
+    'custodian',
+    'security_guard',
+    'contractor',
+    'site_worker',
+    'consultant',
+    'developer'
+  ];
 
-  const taskPermissions = currentUser?.permissions?.find(permissionObject => permissionObject.module === 'note')
-  const canUpdateNote = taskPermissions? taskPermissions.permissions.includes('can_update_note'): false
-  
+  const taskPermissions = currentUser?.permissions?.find(
+    permissionObject => permissionObject.module === 'note'
+  );
+  const canUpdateNote = taskPermissions
+    ? taskPermissions.permissions.includes('can_update_note')
+    : false;
+
   function openParentLink(event, parent) {
     event.preventDefault();
     history.push(`/tasks/${parent.id}`);
@@ -88,8 +94,8 @@ export default function TaskInfoTop({
         setLoadingStatus(false);
         setUpdateDetails({ isError: false, message: t('task.update_successful') });
         setTimeout(() => {
-          refetch()
-        }, 500)
+          refetch();
+        }, 500);
         if (property === 'body') setEditingBody(false);
       })
       .catch(err => {
@@ -118,46 +124,33 @@ export default function TaskInfoTop({
             <Grid container>
               <Grid item xs={9} style={{ display: 'flex', alignItems: 'center' }}>
                 <Breadcrumbs aria-label="breadcrumb">
-                  <Typography color='primary' style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }} onClick={handleSplitScreenClose}>
+                  <Typography
+                    color="primary"
+                    style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+                    onClick={handleSplitScreenClose}
+                  >
                     <KeyboardBackspaceIcon style={{ marginRight: '4px' }} />
                     {t('task:bread_crumps.my_tasks')}
                   </Typography>
-                  <Typography>
-                    {t('task:bread_crumps.task_details')}
-                  </Typography>
+                  <Typography>{t('task:bread_crumps.task_details')}</Typography>
                 </Breadcrumbs>
               </Grid>
               <Grid item xs={3} style={{ display: 'flex' }}>
-                {
-                  canUpdateNote ? (
-                    <IconButton
-                      edge="end"
-                      onClick={handleTaskComplete}
-                      data-testid="task-info-menu"
-                      color="primary"
-                    >
-                      {data.completed ? (
-                        <CheckCircleIcon htmlColor="#4caf50"  />
+                {canUpdateNote && (
+                  <IconButton
+                    edge="end"
+                    onClick={handleTaskComplete}
+                    data-testid="task-info-menu"
+                    color="primary"
+                    style={{backgroundColor: 'transparent'}}
+                  >
+                    {data.completed ? (
+                      <CheckCircleIcon htmlColor="#4caf50" style={{fontSize: '20px'}} />
                     ) : (
-                      <CheckCircleOutlineIcon />
-                    )}
-                    </IconButton>
-): (
-  <IconButton
-    edge="end"
-    onClick={handleTaskComplete}
-    data-testid="task-info-menu"
-    color="primary"
-    disabled
-  >
-    {data.completed ? (
-      <CheckCircleIcon htmlColor="#4caf50"  />
-                    ) : (
-                      <CheckCircleOutlineIcon />
-                    )}
-  </IconButton>
-                  )
-                }
+                      <CheckCircleOutlineIcon onClick={handleTaskComplete} />
+                  )}
+                  </IconButton>
+                )}
                 {isAssignee && (
                   <IconButton
                     edge="end"
@@ -188,7 +181,7 @@ export default function TaskInfoTop({
               }}
             />
           ) : (
-            <Typography variant="h6" style={{ color: '#575757' }}>
+            <Typography variant="h5" style={{ color: '#575757' }}>
               <span
                 // eslint-disable-next-line react/no-danger
                 dangerouslySetInnerHTML={{
@@ -203,13 +196,13 @@ export default function TaskInfoTop({
             <IconButton
               onClick={() => setEditingBody(true)}
               data-testid="edit_body_icon"
-              style={{ marginTop: '-6px' }}
+              style={{ marginTop: '-4px' }}
               color="primary"
             >
               <Edit />
             </IconButton>
           </Grid>
-        ): (
+        ) : (
           <Grid item xs={3} md={1} data-testid="edit_body_action" style={{ textAlign: 'right' }}>
             <IconButton
               data-testid="edit_body_icon"
@@ -220,7 +213,7 @@ export default function TaskInfoTop({
               <Edit />
             </IconButton>
           </Grid>
-)}
+        )}
         {editingBody && (
           <Grid item xs={2} data-testid="edit_action">
             <Button
@@ -239,38 +232,23 @@ export default function TaskInfoTop({
         {!matches && (
           <>
             <Grid item md={1} xs={1} style={{ textAlign: 'right' }}>
-              {
-              canUpdateNote ? (
+              {canUpdateNote && (
                 <IconButton
                   edge="end"
                   onClick={handleTaskComplete}
                   data-testid="task-info-menu"
                   color="primary"
+                  style={{backgroundColor: 'transparent'}}
                 >
                   {data.completed ? (
-                    <CheckCircleIcon htmlColor="#4caf50"  />
-                ) : (
-                  <CheckCircleOutlineIcon />
-                )}
+                    <CheckCircleIcon htmlColor="#4caf50" />
+                  ) : (
+                    <CheckCircleOutlineIcon />
+                  )}
                 </IconButton>
-): (
-  <IconButton
-    edge="end"
-    onClick={handleTaskComplete}
-    data-testid="task-info-menu"
-    color="primary"
-    disabled
-  >
-    {data.completed ? (
-      <CheckCircleIcon htmlColor="#4caf50"  />
-                ) : (
-                  <CheckCircleOutlineIcon />
-                )}
-  </IconButton>
-              )
-            }
+              )}
             </Grid>
-          
+
             {isAssignee && (
               <Grid item md={1} xs={1} style={{ textAlign: 'right' }}>
                 <IconButton
@@ -300,7 +278,7 @@ export default function TaskInfoTop({
         {data.parentNote && (
           <Grid container className={classes.parentTaskSection}>
             <Grid item xs={5} md={3}>
-              <Typography variant="caption" color='textSecondary'>
+              <Typography variant="caption" color="textSecondary">
                 {t('task.parent_task')}
               </Typography>
             </Grid>
@@ -313,10 +291,10 @@ export default function TaskInfoTop({
                 className={classes.parentTask}
               >
                 <span
-                    // eslint-disable-next-line react/no-danger
+                  // eslint-disable-next-line react/no-danger
                   dangerouslySetInnerHTML={{
-                      __html: sanitizeText(data.parentNote.body)
-                    }}
+                    __html: sanitizeText(data.parentNote.body)
+                  }}
                 />
               </Typography>
             </Grid>
@@ -324,29 +302,30 @@ export default function TaskInfoTop({
         )}
         <Grid container className={classes.dueDateSection}>
           <Grid item xs={5} md={3}>
-            <Typography variant="caption" color='textSecondary'>
+            <Typography variant="caption" color="textSecondary">
               {t('task.due_date_text')}
             </Typography>
           </Grid>
           <Grid item xs={7} md={3}>
-            {canUpdateNote ?             (
+            {canUpdateNote ? (
               <DatePickerDialog
                 handleDateChange={date => setDate(date)}
                 selectedDate={selectedDate}
                 InputProps={{
-                disableUnderline: true,
-                style: { color: moment().isAfter(selectedDate) ? 'red' : '#575757' }
-              }}
+                  disableUnderline: true,
+                  style: { color: moment().isAfter(selectedDate) ? 'red' : '#575757' }
+                }}
               />
-): <DatePickerDialog disabled />
-            }
+            ) : (
+              <DatePickerDialog disabled />
+            )}
           </Grid>
         </Grid>
 
         {isAssignee() && (
           <Grid container className={classes.reminderSection}>
             <Grid item xs={5} md={3}>
-              <Typography variant="caption" color='textSecondary' data-testid="active-reminder">
+              <Typography variant="caption" color="textSecondary" data-testid="active-reminder">
                 {t('task.active_reminder')}
               </Typography>
             </Grid>
@@ -364,25 +343,35 @@ export default function TaskInfoTop({
 
         <Grid container className={classes.createdAtSection}>
           <Grid item xs={5} md={3}>
-            <Typography variant="caption" color='textSecondary' data-testid="date_created_title">
+            <Typography variant="caption" color="textSecondary" data-testid="date_created_title">
               {t('task.date_created')}
             </Typography>
           </Grid>
           <Grid item xs={7} md={6}>
-            <Typography variant="subtitle1" data-testid="date_created">{dateToString(data.createdAt)}</Typography>
+            <Typography variant="subtitle1" data-testid="date_created">
+              {dateToString(data.createdAt)}
+            </Typography>
           </Grid>
         </Grid>
 
-        <Grid container className={matches ? classes.assigneesSectionMobile : classes.assigneesSection}>
-          <Grid item xs={4} md={2} style={matches? {marginRight: '9px', paddingTop: '5px' } : { marginRight: '41px' }}>
-            <Typography variant="caption" color='textSecondary'>
+        <Grid
+          container
+          className={matches ? classes.assigneesSectionMobile : classes.assigneesSection}
+        >
+          <Grid
+            item
+            xs={4}
+            md={2}
+            style={matches ? { marginRight: '9px', paddingTop: '5px' } : { marginRight: '41px' }}
+          >
+            <Typography variant="caption" color="textSecondary">
               {t('task.assigned_to_txt')}
             </Typography>
           </Grid>
-          <Grid item xs={7} md={9}>
-            <Grid container style={{ alignItems: 'center'}}>
-              {canUpdateNote ?             (
-                <Grid item md={4} xs={12}>
+          <Grid item xs={8} md={9}>
+            <Grid container spacing={1} style={{ alignItems: 'center' }} data-testid='user-chip'>
+              {canUpdateNote && data.assignees.length > 0 && (
+                <Grid item>
                   {data.assignees.map(user => (
                     <UserChip
                       key={user.id}
@@ -390,22 +379,11 @@ export default function TaskInfoTop({
                       size="medium"
                       onDelete={() => assignUser(data.id, user.id)}
                     />
-                ))}
+                  ))}
                 </Grid>
-):             (
-  <Grid item md={4} xs={12}>
-    {data.assignees.map(user => (
-      <UserChip
-        key={user.id}
-        user={user}
-        size="medium"
-        disabled
-      />
-                ))}
-  </Grid>
-)}
-              <Grid item md={3} xs={12} style={{ marginLeft: matches ? '5px' : '' }}>
-                {canUpdateNote ? (
+              )}
+              <Grid item data-testid='add-assignee'>
+                {canUpdateNote && (
                   <Chip
                     key={data.id}
                     variant="outlined"
@@ -415,17 +393,7 @@ export default function TaskInfoTop({
                     onClick={event => handleOpenAutoComplete(event, data.id)}
                     color="primary"
                   />
-): (
-  <Chip
-    key={data.id}
-    variant="outlined"
-    label={t('task.chip_add_assignee')}
-    size="medium"
-    disabled
-    icon={<AddCircleIcon />}
-    color="primary"
-  />
-)}
+                )}
 
                 {autoCompleteOpen && (
                   <Autocomplete
@@ -451,7 +419,7 @@ export default function TaskInfoTop({
                         label={t('task.task_assignee_label')}
                         placeholder={t('task.task_search_placeholder')}
                         onChange={event => setSearchUser(event.target.value)}
-                        autoComplete='off'
+                        autoComplete="off"
                         onKeyDown={() => searchUser()}
                       />
                     )}
@@ -465,7 +433,7 @@ export default function TaskInfoTop({
       {description && (
         <Grid container className={classes.descriptionSection}>
           <Grid item xs={12} md={12}>
-            <Typography variant="caption" color='textSecondary'>
+            <Typography variant="caption" color="textSecondary">
               {t('common:form_fields.description')}
             </Typography>
           </Grid>
@@ -473,6 +441,7 @@ export default function TaskInfoTop({
             <EditableField
               value={description}
               setValue={setDescription}
+              canUpdateNote={canUpdateNote}
               customStyles={{ margin: 0 }}
               action={(
                 <Button
@@ -525,6 +494,11 @@ const useStyles = makeStyles({
   },
   descriptionSection: {
     marginTop: '8px'
+  },
+  root: {
+    '&.MuiIconButton-colorPrimary:hover': {
+      backgroundColor: 'none'
+    }
   }
 });
 
@@ -541,11 +515,11 @@ TaskInfoTop.propTypes = {
     permissions: PropTypes.arrayOf(
       PropTypes.shape({
         note: PropTypes.shape({
-            permissions: PropTypes.arrayOf(PropTypes.string)
-          })
-          })
-    ),
-  }).isRequired,      
+          permissions: PropTypes.arrayOf(PropTypes.string)
+        })
+      })
+    )
+  }).isRequired,
   users: PropTypes.arrayOf(PropTypes.object),
   // eslint-disable-next-line react/forbid-prop-types
   data: PropTypes.object,

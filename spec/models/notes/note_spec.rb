@@ -97,4 +97,11 @@ RSpec.describe Notes::Note, type: :model do
       expect(notes).not_to be_nil
     end
   end
+
+  describe 'after update' do
+    it 'creates an event log' do
+      expect(admin_note).to receive(:log_update_event)
+      admin_note.update!(body: 'A new body')
+    end
+  end
 end
