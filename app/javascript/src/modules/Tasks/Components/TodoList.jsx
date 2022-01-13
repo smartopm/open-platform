@@ -535,6 +535,7 @@ export default function TodoList({
             )}
             {data?.flaggedNotes.length ? (
               <div>
+                {console.log(data?.flaggedNotes)}
                 {data?.flaggedNotes.map(task => (
                   <TodoItem
                     key={task.id}
