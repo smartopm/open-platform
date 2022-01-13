@@ -76,7 +76,7 @@ export default function ProjectSteps({
             )}
         </>
       )))
-    :(<Typography data-testid="no-steps">No Steps</Typography>)}
+    :(<Typography data-testid="no-steps">No Stages currrently assigned to this process</Typography>)}
     </>
   );
 }

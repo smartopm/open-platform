@@ -68,6 +68,16 @@ export const SubTasksQuery = gql`
   ${NotesFragment.note}
 `
 
+export const ProjectOpenTasksQuery = gql`
+  query projectOpenTasks($taskId: ID!, $offset: Int, $limit: Int) {
+    projectOpenTasks(taskId: $taskId, offset: $offset, limit: $limit) {
+      ...NoteFields
+    }
+  }
+  ${NotesFragment.note}
+`
+
+
 export const flaggedNotes = gql`
   query GetTodos($offset: Int, $limit: Int, $query: String) {
     flaggedNotes(offset: $offset, limit: $limit, query: $query) {

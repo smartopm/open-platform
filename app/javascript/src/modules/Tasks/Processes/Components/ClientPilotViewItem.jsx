@@ -1,0 +1,95 @@
+import React, { useContext } from 'react'
+import { Grid,Typography } from '@mui/material';
+import { useQuery } from 'react-apollo';
+import { useHistory } from 'react-router-dom'
+// import { useTranslation } from 'react-i18next';
+import { makeStyles } from '@mui/styles';
+import { TaskContext } from "../../Context";
+import ProjectSteps from './Steps';
+import { ProjectOpenTasksQuery } from '../../graphql/task_queries';
+import { sanitizeText , formatError } from '../../../../utils/helpers';
+import ProcessItem from './ProcessItem'
+import { Spinner } from '../../../../shared/Loading';
+import CenteredContent from '../../../../shared/CenteredContent';
+import Divider from '@mui/material/Divider';
+
+
+export default function ClientPilotViewItem(process){
+    // const { t } = useTranslation('task');
+    const limit = 20;
+    const { id: taskId } = process?.process
+    const classes = useStyles();
+    const history = useHistory()
+
+    const { data, error, loading, refetch } = useQuery(ProjectOpenTasksQuery, {
+        variables: { taskId, limit },
+        fetchPolicy: 'cache-and-network',
+        errorPolicy: 'all'
+      });
+
+    const { handleStepCompletion } = useContext(TaskContext);
+
+    function routeToProcessDetailsPage(id) {
+      console.log("Mutuba clicked", id)
+      return history.push(`/processes/${taskId}?tab=processes`)
+    }
+
+    if (error) return <CenteredContent>{formatError(error.message)}</CenteredContent>;
+    if (loading) return <Spinner />;
+
+    return (
+      <Grid container data-testid="project-information" spacing={2}>
+
+        <Grid item md={12} xs={12}>
+          <Typography variant="h6">
+            <span
+                  // eslint-disable-next-line react/no-danger
+              dangerouslySetInnerHTML={{
+                    __html: sanitizeText(process?.process?.body)
+                  }}
+            />
+          </Typography>
+
+          <Typography variant="h6">Your Tasks</Typography>
+        </Grid>
+        <Grid item md={12} xs={12}>
+          <Grid container spacing={2}> 
+              <Grid item md={6} xs={12}>
+              <div>
+                {data?.projectOpenTasks?.length?
+                      (
+                        <div>
+                          {data?.projectOpenTasks.map(task => (
+                            <ProcessItem key={task.id} task={task} refetch={refetch} clientView />
+                        ))}
+                        </div>
+                      )
+                      : (<Typography>Project does not have open tasks</Typography>)
+                    }
+              </div>
+      
+            </Grid>
+
+            <Grid item md={6} xs={12} className={classes.steps}>
+              <ProjectSteps
+                data={process?.process?.subTasks}
+                setSelectedStep={(id) => routeToProcessDetailsPage(id)}
+                handleStepCompletion={(id, completed) => handleStepCompletion(id, completed, refetch)}
+              />
+            </Grid>
+
+          </Grid>
+      
+        </Grid>
+
+        <Grid item md={12} xs={12} style={{ marginBottom: '2px'}}><Divider /></Grid>
+        
+      </Grid>
+    )
+  }
+
+
+  const useStyles = makeStyles({
+    steps: {
+    },
+  });

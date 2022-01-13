@@ -72,6 +72,8 @@ import EmailBuilderDialog
   from '../src/modules/Emails/components/EmailBuilderDialog';
 import { PRIMARY_DOMAINS } from '../src/utils/constants';
 import TaskProcessDetail from '../src/modules/Tasks/Processes/Components/TaskProcessDetail';
+import ClientPilotViewList from '../src/modules/Tasks/Processes/Components/ClientPilotViewList';
+
 
 
 // The routes defined here are carefully arranged, be mindful when changing them
@@ -405,6 +407,12 @@ const App = () => {
                                 path="/processes"
                                 component={ProcessesPage}
                               />
+                              <Route
+                                exact
+                                path="/processes_dashboard"
+                                component={ClientPilotViewList}
+                              />
+
                               <Route
                                 exact
                                 path="/entry_logs"
