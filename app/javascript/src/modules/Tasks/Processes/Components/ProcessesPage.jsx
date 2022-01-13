@@ -23,7 +23,7 @@ export default function ProcessesPage() {
   return(
     <>
     
-      {canAccessAdminProcessesDashboard ? <AdminDashboard /> : canAccessClientProcessesDashboard ? <ClientPilotViewList/> : <ProjectsList />}
+      {canAccessAdminProcessesDashboard ? <AdminDashboard /> : canAccessClientProcessesDashboard ? <ClientPilotViewList /> : <ProjectsList />}
     </>
   );
 };
