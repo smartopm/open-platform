@@ -382,7 +382,7 @@ export default function TaskInfoTop({
                   ))}
                 </Grid>
               )}
-              <Grid item data-testid='add-assignee'>
+              <Grid item sm={6} xs={12} data-testid='add-assignee'>
                 {canUpdateNote && (
                   <Chip
                     key={data.id}
