@@ -271,6 +271,7 @@ module Types::Queries::Note
       .where(parent_note_id: drc_projects.pluck(:id), completed: true)
       .group(:body).count
   end
+
   def project_open_tasks(task_id:, limit: 3, offset: 0)
     authorize
     context[:site_community].notes.find(task_id)

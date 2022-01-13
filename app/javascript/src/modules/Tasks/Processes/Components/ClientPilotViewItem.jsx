@@ -2,20 +2,18 @@ import React, { useContext } from 'react'
 import { Grid,Typography } from '@mui/material';
 import { useQuery } from 'react-apollo';
 import { useHistory } from 'react-router-dom'
-// import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@mui/styles';
 import Divider from '@mui/material/Divider';
 import { TaskContext } from "../../Context";
 import ProjectSteps from './Steps';
 import { ProjectOpenTasksQuery } from '../../graphql/task_queries';
 import { sanitizeText , formatError } from '../../../../utils/helpers';
-import ProcessItem from './ProcessItem'
+import ProcessItem from './ProjectItem';
 import { Spinner } from '../../../../shared/Loading';
 import CenteredContent from '../../../../shared/CenteredContent';
 
 
 export default function ClientPilotViewItem(process){
-    // const { t } = useTranslation('task');
     const limit = 5;
     const { id: taskId } = process?.process
     const classes = useStyles();
@@ -30,7 +28,7 @@ export default function ClientPilotViewItem(process){
     const { handleStepCompletion } = useContext(TaskContext);
 
     function routeToProcessDetailsPage() {
-      return history.push(`/processes/${taskId}?tab=processes`)
+      return history.push(`/processes/drc/projects/${taskId}?tab=processes`)
     }
 
     if (error) return <CenteredContent>{formatError(error.message)}</CenteredContent>;

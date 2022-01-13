@@ -3,12 +3,11 @@ import { useHistory } from 'react-router-dom';
 import AdminDashboard from './AdminDashboard';
 import ClientPilotViewList from './ClientPilotViewList';
 import { Context as AuthStateContext } from '../../../../containers/Provider/AuthStateProvider';
+import ProjectsList from './ProjectsList';
 
 export default function ProcessesPage() {
   const authState = React.useContext(AuthStateContext);
   const history = useHistory();
-
-  const authState = React.useContext(AuthStateContext);
   const processesDashboardPermissions = authState?.user?.permissions?.find((permission) => (
     permission.module === 'dashboard'
   ));
@@ -24,7 +23,7 @@ export default function ProcessesPage() {
   return(
     <>
     
-      {canAccessAdminProcessesDashboard ? <AdminDashboard /> : canAccessClientProcessesDashboard ? <ClientPilotViewList/> : <ProcessesList />}
+      {canAccessAdminProcessesDashboard ? <AdminDashboard /> : canAccessClientProcessesDashboard ? <ClientPilotViewList/> : <ProjectsList />}
     </>
   );
 };
