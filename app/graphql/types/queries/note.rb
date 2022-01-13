@@ -246,9 +246,18 @@ module Types::Queries::Note
     drc_form = context[:site_community].forms.find_by(name: 'DRC Project Review Process V3')
     return unless drc_form
 
-    drc_form_users = Forms::FormUser.includes(:form).where(form_id: drc_form.id).pluck(:id)
+    drc_form_users = Forms::FormUser.where(form_id: drc_form.id).pluck(:id)
     context[:site_community]
       .notes
+      .includes(
+        :parent_note,
+        :user,
+        :author,
+        :sub_notes,
+        :assignees,
+        :assignee_notes,
+        :documents_attachments,
+      )
       .where(parent_note_id: nil, form_user_id: drc_form_users)
       .limit(limit).offset(offset)
   end
