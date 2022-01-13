@@ -11,6 +11,9 @@ import {
 
 describe('logbook utils', () => {
   const tz = 'Africa/Lusaka';
+  const history = {
+    push: jest.fn()
+  }
   it('checks required fields', () => {
     const initialState = {
       name: '',
@@ -198,17 +201,20 @@ describe('logbook utils', () => {
     expect(checkVisitorsName(entry4)).toBe(false)
   })
   it('should handle pagination properly when next button is emulated', () => {
-    const history = {
-      push: jest.fn()
-    }
      // test next, increments offset
     paginate('next', history, 2, { offset: 0, limit: 5 })
     expect(history.push).toBeCalled()
     expect(history.push).toBeCalledWith('/logbook?tab=2&offset=5')
-
+  })
+  it('should handle pagination properly when prev button is emulated', () => {
     // test previous, reduces offset
     paginate('prev', history, 1, { offset: 20, limit: 5 })
     expect(history.push).toBeCalled()
     expect(history.push).toBeCalledWith('/logbook?tab=1&offset=15')
+  })
+  it('should handle pagination properly when prev button is emulated with fewer results', () => {
+    // test previous, when results are fewer
+    paginate('prev', history, 1, { offset: 2, limit: 5 })
+    expect(history.push).not.toBeCalled()
   })
 });
