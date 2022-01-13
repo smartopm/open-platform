@@ -368,15 +368,19 @@ export default function LogBookItem({
           </Grid>
         </Hidden>
       </Grid>
-      <CenteredContent>
-        <Paginate
-          offSet={offset}
-          limit={limit}
-          active={offset >= 1}
-          handlePageChange={(action) => paginate(action, router, tabValue, {offset, limit})}
-          count={filteredEvents?.length}
-        />
-      </CenteredContent>
+      {
+        Boolean(tabValue === 0) && (
+          <CenteredContent>
+            <Paginate
+              offSet={offset}
+              limit={limit}
+              active={offset >= 1}
+              handlePageChange={(action) => paginate(action, router, tabValue, {offset, limit})}
+              count={filteredEvents?.length}
+            />
+          </CenteredContent>
+        )
+      }
     </>
 );
 }

@@ -30,6 +30,7 @@ export default function LogBook() {
 
   useEffect(() => {
     setSearchTerm(dbcSearchTerm);
+
   }, [dbcSearchTerm]);
 
   const query = useParamsQuery();
