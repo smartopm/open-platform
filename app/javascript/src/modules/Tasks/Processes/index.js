@@ -7,7 +7,6 @@ const processesPermissions = [
   'can_access_processes',
 ];
 
-// To switch to processes and set up permissions
 const currentModule = 'note';
 
 function RenderProcesses() {

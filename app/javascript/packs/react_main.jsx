@@ -40,6 +40,7 @@ import Feedback from '../src/containers/Activity/Feedback';
 import FeedbackSuccess from '../src/containers/Activity/FeedbackSuccess';
 import AllNotes from '../src/containers/Activity/AllNotes';
 import ProcessesPage from '../src/modules/Tasks/Processes/Components/ProcessesPage';
+import ProjectsList from '../src/modules/Tasks/Processes/Components/ProjectsList';
 import FeedbackPage from '../src/containers/Activity/AllFeedback';
 import ShowroomLogs from '../src/containers/showroom/ShowroomLogs';
 import ClientRequestForm from '../src/containers/ClientRequestForm';
@@ -71,6 +72,7 @@ import EmailBuilderDialog
   from '../src/modules/Emails/components/EmailBuilderDialog';
 import { PRIMARY_DOMAINS } from '../src/utils/constants';
 import TaskProcessDetail from '../src/modules/Tasks/Processes/Components/TaskProcessDetail';
+
 
 // The routes defined here are carefully arranged, be mindful when changing them
 
@@ -390,16 +392,19 @@ const App = () => {
                                 path="/user_form/:userId?/:formUserId?/:type?"
                                 component={FormPage}
                               />
-                               <Route
-                                path="/processes/:id"
+                              <Route
+                                path="/processes/:type/projects/:id"
                                 component={TaskProcessDetail}
                               />
                                <Route
+                                path="/processes/:type/projects"
+                                component={ProjectsList}
+                              />
+                              <Route
                                 exact
                                 path="/processes"
                                 component={ProcessesPage}
                               />
-
                               <Route
                                 exact
                                 path="/entry_logs"

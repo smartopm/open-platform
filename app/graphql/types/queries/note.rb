@@ -67,6 +67,16 @@ module Types::Queries::Note
       argument :limit, Integer, required: false
       argument :query, String, required: false
     end
+
+    field :projects, [Types::NoteType], null: false do
+      description 'Returns a list of projects under a process'
+      argument :offset, Integer, required: false
+      argument :limit, Integer, required: false
+    end
+
+    field :project_stages, [GraphQL::Types::JSON], null: false do
+      description 'Returns an aggregated list of projects'
+    end
   end
   # rubocop:enable Metrics/BlockLength
 
@@ -217,6 +227,42 @@ module Types::Queries::Note
       .where(category: 'form')
       .for_site_manager(current_user)
       .limit(limit).offset(offset)
+  end
+
+  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/MethodLength
+  def projects(offset: 0, limit: 50)
+    # This query only shows projects under the DRC process for now
+    # Our notes does not allow us to categorise processes by type
+    # This should be implemented in the future to allow us to fetch...
+    # projects by the process they belong to
+    unless permitted?(module: :note, permission: :can_fetch_flagged_notes)
+      raise GraphQL::ExecutionError,
+            I18n.t('errors.unauthorized')
+    end
+    # rubocop:enable Metrics/AbcSize
+    # rubocop:enable Metrics/MethodLength
+
+    drc_form = context[:site_community].forms.find_by(name: 'DRC Project Review Process V2')
+    return unless drc_form
+
+    drc_form_users = Forms::FormUser.includes(:form).where(form_id: drc_form.id).pluck(:id)
+    context[:site_community]
+      .notes
+      .where(parent_note_id: nil, form_user_id: drc_form_users)
+      .limit(limit).offset(offset)
+  end
+
+  def project_stages
+    # This will get the total project steps for each DRC process
+    # To be modified to allow for other types of processes
+    drc_projects = projects
+
+    context[:site_community]
+      .notes
+      .unscoped
+      .where(parent_note_id: drc_projects.pluck(:id), completed: true)
+      .group(:body).count
   end
 
   private

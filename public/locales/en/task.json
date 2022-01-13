@@ -78,10 +78,19 @@
   "processes": {
     "overview": "Overview",
     "processes": "Processes",
-    "documents": "Documents"
-
-  },
-  "process": {
-    "processes": "Processes"
+    "documents": "Documents",
+    "drc_process": "DRC Process",
+    "completed_by_quarter": "Completed by Quarter",
+    "projects_by_stage": "Projects by Stage",
+    "no_data": "No data to display",
+    "drc_stages": {
+      "concept_design_review": "Concept Design Review",
+      "scheme_design_review": "Scheme Design Review",
+      "detailed_design_review": "Detailed Design Review",
+      "kiambu_county_submission": "Kiambu County Submission",
+      "construction_starts": "Construction Starts",
+      "inspections": "Inspections",
+      "post_construction": "Post Constructions"
+    }
   }
 }

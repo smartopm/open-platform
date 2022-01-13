@@ -52,7 +52,6 @@ export default function TaskProcessDetail() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [path, tab]);
 
-  
   if (projectDataLoading || subStepsLoading) return <Loading />
   if (projectDataError) return <ErrorPage title={projectDataError.message} />
 

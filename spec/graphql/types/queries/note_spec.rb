@@ -171,6 +171,16 @@ RSpec.describe Types::Queries::Note do
       GQL
     end
 
+    let(:projects_query) do
+      <<~GQL
+        query GetProjects($offset: Int, $limit: Int) {
+          projects(offset: $offset, limit: $limit) {
+            #{task_fragment}
+          }
+        }
+      GQL
+    end
+
     let(:task_fragment) do
       <<~GQL
         body
@@ -263,6 +273,17 @@ RSpec.describe Types::Queries::Note do
                                          site_community: site_worker.community,
                                        }).as_json
       expect(result.dig('data', 'processes').length).to eql 1
+    end
+
+    it 'fetches projects' do
+      create(:form, name: 'DRC Project Review Process V2', community: site_worker.community)
+
+      result = DoubleGdpSchema.execute(projects_query, context: {
+                                         current_user: site_worker,
+                                         site_community: site_worker.community,
+                                       }).as_json
+
+      expect(result['errors']).to be_nil
     end
 
     it 'should retrieve list of processes without due date' do

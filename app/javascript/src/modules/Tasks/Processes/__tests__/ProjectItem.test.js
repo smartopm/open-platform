@@ -4,7 +4,7 @@ import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min';
 import '@testing-library/jest-dom/extend-expect';
 import { render, screen } from '@testing-library/react';
-import ProcessItem from '../Components/ProcessItem';
+import ProjectItem from '../Components/ProjectItem';
 import taskMock from '../../__mocks__/taskMock';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
@@ -18,7 +18,7 @@ describe('Process Item', () => {
     render(
       <MockedProvider mocks={[]} addTypename={false}>
         <BrowserRouter>
-          <ProcessItem {...props} />
+          <ProjectItem {...props} />
         </BrowserRouter>
       </MockedProvider>
     );

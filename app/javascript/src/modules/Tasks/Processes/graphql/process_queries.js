@@ -1,7 +1,6 @@
 import gql from 'graphql-tag';
 import { NotesFragment } from '../../../../graphql/fragments';
 
-// eslint-disable-next-line import/prefer-default-export
 export const ProcessesQuery = gql`
   query GetProcesses($offset: Int, $limit: Int, $query: String) {
     processes(offset: $offset, limit: $limit, query: $query) {
@@ -12,4 +11,21 @@ export const ProcessesQuery = gql`
     }
   }
   ${NotesFragment.note}
+`
+
+export const ProjectsQuery = gql`
+  query GetProjects($offset: Int, $limit: Int) {
+    projects(offset: $offset, limit: $limit) {
+      ...NoteFields
+      subTasks {
+        ...NoteFields
+      }
+    }
+  }
+  ${NotesFragment.note}
+`
+export const ProjectStagesQuery = gql`
+  query projectStages {
+    projectStages
+  }
 `
