@@ -25,7 +25,7 @@ export default function TaskUpdateList({ data }) {
     <>
       <Grid container className={classes.header}>
         <Grid item md={11} xs={11}>
-          <Typography variant="h6" data-testid="history_title">
+          <Typography variant="subtitle2" data-testid="history_title">
             {t('history.updates')}
           </Typography>
         </Grid>

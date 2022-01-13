@@ -52,10 +52,8 @@ describe('task form component', () => {
 
     expect(container.queryByText('common:form_actions.note_complete')).toBeInTheDocument();
     expect(container.queryByText('common:form_actions.note_complete')).not.toBeDisabled();
-    expect(container.queryAllByText('tolulope O.')[0]).toBeInTheDocument();
-    expect(container.queryAllByText('another_user')[0]).toBeInTheDocument();
-    // needs to be updated
-    expect(container.queryAllByTestId('user_chip')).toHaveLength(2);
+    expect(container.queryAllByTestId('user-chip')[0]).toBeInTheDocument();
+    expect(container.queryAllByTestId('add-assignee')[0]).toBeInTheDocument();;
   });
 
   it('should render the remind-me-later button if current user is an assignee', async () => {

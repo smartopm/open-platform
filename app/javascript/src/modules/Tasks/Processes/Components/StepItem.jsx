@@ -33,16 +33,16 @@ export default function StepItem({
           <Grid container style={{ display: 'flex', alignItems: 'center' }}>
             <Grid item md={1}>
               <IconButton
-                aria-controls="step-completion-toggle-button"
+                aria-controls="process-check-box"
                 aria-haspopup="true"
-                data-testid="step_completion_toggle_button"
+                data-testid="process-check-box"
                 onClick={(e) => handleStepCompletion(e, step.id, !step.completed)}
-                size="medium"
+                style={{backgroundColor: 'transparent'}}
               >
                 { step.completed ? (
                   <CheckCircleIcon htmlColor="#4caf50" />
                   ) : (
-                    <CheckCircleOutlineIcon />
+                    <CheckCircleOutlineIcon htmlColor="#9A9A9A" />
                   )}
               </IconButton>
             </Grid>
@@ -63,29 +63,19 @@ export default function StepItem({
             </Grid>
           </Grid>
         </Grid>
-        <Grid item md={1} xs={1} className={classes.subStepsSection}>
+        <Grid item md={1} xs={1} className={classes.subStepsSection} data-testid="show_step_sub_steps">
           {step?.subTasks?.length > 0
-            ? (
+            && (
               <IconButton
                 aria-controls="show-step-sub-steps-icon"
                 aria-haspopup="true"
-                data-testid="show_step_sub_steps"
                 onClick={(e) => handleOpenSubStepsClick(e)}
               >
                 {openSubSteps
                   ? <KeyboardArrowUpIcon fontSize="small" color="primary" />
                   : <KeyboardArrowDownIcon fontSize="small" color="primary" />}
               </IconButton>
-            ) : (
-              <IconButton
-                aria-controls="show-task-subtasks-icon"
-                aria-haspopup="true"
-                data-testid="show_step_sub_steps"
-                disabled
-              >
-                <KeyboardArrowDownIcon fontSize="small" />
-              </IconButton>
-          )}
+            )}
         </Grid>
       </Grid>
     </Card>

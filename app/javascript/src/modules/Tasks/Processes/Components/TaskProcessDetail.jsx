@@ -63,7 +63,7 @@ export default function TaskProcessDetail() {
           <Grid item md={6} xs={12}>
             <Grid container>
               <Grid item data-testid="project-title">
-                <Typography variant="h6">
+                <Typography variant="h4">
                   <span
                   // eslint-disable-next-line react/no-danger
                     dangerouslySetInnerHTML={{
@@ -78,10 +78,10 @@ export default function TaskProcessDetail() {
               onChange={handleTabValueChange}
               aria-label="process-tabs"
               variant="standard"
-              style={{ borderBottom: 'solid 4px #ececea'}}
+              style={{ borderBottom: 'solid 1px #ececea'}}
             >
-              <StyledTab label={t('task:processes.overview')} {...a11yProps(0)} />
-              <StyledTab label={t('task:processes.processes')} {...a11yProps(1)} />
+              <StyledTab label={t('task:processes.overview')} style={{fontSize: '12px', textAlign: 'left'}} {...a11yProps(0)} />
+              <StyledTab label={t('task:processes.processes')} style={{fontSize: '12px'}} {...a11yProps(1)} />
             </StyledTabs>
 
             <TabPanel value={tabValue} index={0}>

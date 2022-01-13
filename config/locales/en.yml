@@ -294,6 +294,9 @@ en:
       not_found: Action flow not found
     campaign:
       missing_parameter: 'Missing Parameter: Please Supply %{attribute} parameter'
+      in_progress: 'The updates cannot be made as campaign is in progress.'
+      campaign_completed: 'The updates cannot be made as campaign have been sent out to the users specified.'
+      create_new_campaign: 'Please create a new campaign.'
     can_not_process_request: For some reason, I can't process your request
     category:
       not_found: Category not found

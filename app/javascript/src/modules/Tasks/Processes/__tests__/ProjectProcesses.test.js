@@ -36,7 +36,7 @@ describe('Project Processes Tab', () => {
     );
 
     expect(container.queryByTestId('processes-header')).toBeInTheDocument();
-    expect(container.queryByTestId('step_completion_toggle_button')).toBeInTheDocument();
+    expect(container.queryByTestId('process-check-box')).toBeInTheDocument();
     expect(container.queryByTestId('step_body')).toBeInTheDocument();
     expect(container.queryByTestId('show_step_sub_steps')).toBeInTheDocument();
   });

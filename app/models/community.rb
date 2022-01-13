@@ -48,7 +48,7 @@ class Community < ApplicationRecord
   has_many :time_sheets, class_name: 'Users::TimeSheet', dependent: :destroy
   has_many :entry_times, class_name: 'Logs::EntryTime', dependent: :destroy
 
-  VALID_CURRENCIES = %w[zambian_kwacha honduran_lempira kenyan_shilling].freeze
+  VALID_CURRENCIES = %w[zambian_kwacha honduran_lempira kenyan_shilling costa_rican_colon].freeze
 
   validates :currency, inclusion: { in: VALID_CURRENCIES, allow_nil: false }
 
@@ -57,6 +57,7 @@ class Community < ApplicationRecord
     'DoubleGDP': ['doublegdp.com'],
     'Ciudad Morazán': ['doublegdp.com'],
     'Tilisi': ['doublegdp.com'],
+    'Greenpark': ['doublegdp.com'],
     'DAST': ['doublegdp.com'],
   }.freeze
 
