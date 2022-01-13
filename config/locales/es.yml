@@ -334,6 +334,11 @@ es:
       invalid_event_type: Tipo de evento invalido
       not_found: Flujo de acción no encontrado
     campaign:
+      campaign_completed: Las actualizaciones no se pueden realizar ya que la campaña
+        se ha enviado a los usuarios especificados.
+      create_new_campaign: Por favor cree una nueva campaña.
+      in_progress: Las actualizaciones no se pueden realizar ya que la campaña está
+        en curso.
       missing_parameter: 'Falta el parámetro: proporcione el parámetro% {atributo}'
     can_not_process_request: Por alguna razón, no puedo procesar su solicitud.
     category:
