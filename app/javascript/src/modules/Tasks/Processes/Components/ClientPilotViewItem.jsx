@@ -4,6 +4,7 @@ import { useQuery } from 'react-apollo';
 import { useHistory } from 'react-router-dom'
 // import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@mui/styles';
+import Divider from '@mui/material/Divider';
 import { TaskContext } from "../../Context";
 import ProjectSteps from './Steps';
 import { ProjectOpenTasksQuery } from '../../graphql/task_queries';
@@ -11,12 +12,11 @@ import { sanitizeText , formatError } from '../../../../utils/helpers';
 import ProcessItem from './ProcessItem'
 import { Spinner } from '../../../../shared/Loading';
 import CenteredContent from '../../../../shared/CenteredContent';
-import Divider from '@mui/material/Divider';
 
 
 export default function ClientPilotViewItem(process){
     // const { t } = useTranslation('task');
-    const limit = 20;
+    const limit = 5;
     const { id: taskId } = process?.process
     const classes = useStyles();
     const history = useHistory()
@@ -29,8 +29,7 @@ export default function ClientPilotViewItem(process){
 
     const { handleStepCompletion } = useContext(TaskContext);
 
-    function routeToProcessDetailsPage(id) {
-      console.log("Mutuba clicked", id)
+    function routeToProcessDetailsPage() {
       return history.push(`/processes/${taskId}?tab=processes`)
     }
 
@@ -54,7 +53,7 @@ export default function ClientPilotViewItem(process){
         </Grid>
         <Grid item md={12} xs={12}>
           <Grid container spacing={2}> 
-              <Grid item md={6} xs={12}>
+            <Grid item md={6} xs={12}>
               <div>
                 {data?.projectOpenTasks?.length?
                       (
@@ -73,7 +72,7 @@ export default function ClientPilotViewItem(process){
             <Grid item md={6} xs={12} className={classes.steps}>
               <ProjectSteps
                 data={process?.process?.subTasks}
-                setSelectedStep={(id) => routeToProcessDetailsPage(id)}
+                setSelectedStep={routeToProcessDetailsPage}
                 handleStepCompletion={(id, completed) => handleStepCompletion(id, completed, refetch)}
               />
             </Grid>

@@ -272,11 +272,7 @@ module Types::Queries::Note
       .group(:body).count
   end
   def project_open_tasks(task_id:, limit: 3, offset: 0)
-    unless permitted?(module: :note, permission: :can_fetch_task_by_id)
-      raise GraphQL::ExecutionError,
-            I18n.t('errors.unauthorized')
-    end
-
+    authorize
     context[:site_community].notes.find(task_id)
                             .sub_tasks
                             .where(completed: false)
@@ -335,6 +331,13 @@ module Types::Queries::Note
     else
       'search'
     end
+  end
+
+  def authorize
+    return if permitted?(module: :note, permission: :can_fetch_task_by_id)
+
+    raise GraphQL::ExecutionError,
+          I18n.t('errors.unauthorized')
   end
 end
 # rubocop:enable Metrics/ModuleLength

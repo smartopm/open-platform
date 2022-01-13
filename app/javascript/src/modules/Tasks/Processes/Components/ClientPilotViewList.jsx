@@ -1,12 +1,12 @@
 import React from 'react'
 import { useQuery } from 'react-apollo';
 import { Grid,Typography } from '@mui/material';
+import Divider from '@mui/material/Divider';
 import { ProcessesQuery } from '../graphql/process_queries';
 import ClientPilotViewItem from './ClientPilotViewItem';
 import { Spinner } from '../../../../shared/Loading';
 import CenteredContent from '../../../../shared/CenteredContent';
 import { formatError } from '../../../../utils/helpers';
-import Divider from '@mui/material/Divider';
 
 export default function ClientPilotViewList(){
     const limit = 50;
