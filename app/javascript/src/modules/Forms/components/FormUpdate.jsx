@@ -15,7 +15,6 @@ import {
   Grid,
   TextField,
   Typography,
-  IconButton,
   ListItem,
   ListItemSecondaryAction,
   ListItemText
@@ -25,7 +24,6 @@ import { useApolloClient, useMutation, useQuery } from 'react-apollo';
 import { useHistory } from 'react-router';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import DownloadIcon from '@mui/icons-material/Download';
 import DatePickerDialog, {
   DateAndTimePickers,
   ThemedTimePicker
@@ -388,22 +386,14 @@ export default function FormUpdate({ formUserId, userId, authState }) {
                           </Grid>
                           <Grid item xs={1} className="">
                             <ListItemSecondaryAction className={classes.menu}>
-                              <IconButton
-                                edge="end"
+                              <Button
                                 aria-label="download-icon"
                                 data-testid="download-icon"
+                                variant="outlined"
+                                onClick={(event) => downloadFile(event, formPropertiesData.imageUrl)}
                               >
-                                <a
-                                  onClick={(event) => downloadFile(event, formPropertiesData.imageUrl)}
-                                  style={{
-                                    textDecoration: 'none',
-                                    color: '#000000',
-                                    opacity: '0.5'
-                                  }}
-                                >
-                                  <DownloadIcon />
-                                </a>
-                              </IconButton>
+                                {t('common:misc.open')}
+                              </Button>
                             </ListItemSecondaryAction>
                           </Grid>
                         </Grid>
