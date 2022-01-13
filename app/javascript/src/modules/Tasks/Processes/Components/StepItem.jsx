@@ -31,7 +31,7 @@ export default function StepItem({
       <Grid container>
         <Grid item md={11} xs={10} style={{ display: 'flex', alignItems: 'center' }} data-testid="step_body_section">
           <Grid container style={{ display: 'flex', alignItems: 'center' }}>
-            <Grid item md={1}>
+            <Grid item md={2}>
               <IconButton
                 aria-controls="process-check-box"
                 aria-haspopup="true"
