@@ -53,6 +53,18 @@ module Forms
       ['Report an Issue', 'Informar de un problema'].include?(name)
     end
 
+    def drc_form?
+      form_name = 'DRC Project Review Process'
+      first_version = community.forms.find_by(name: form_name)
+
+      return false if first_version.blank?
+
+      latest_version = community.forms.where('name ILIKE ?', "#{form_name}%")
+                                .order(version_number: :desc).first
+
+      first_version.id == latest_version.grouping_id
+    end
+
     private
 
     # rubocop:disable Metrics/AbcSize

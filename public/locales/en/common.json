@@ -255,7 +255,8 @@
     "uploaded_at": "Uploaded at",
     "uploaded_by": "Uploaded by",
     "remove": "Remove",
-    "add": "Add"
+    "add": "Add",
+    "open": "Open"
   },
   "menu": {
     "invoice": "Invoice",
