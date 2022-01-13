@@ -71,15 +71,6 @@ export default function LogBook() {
     fetchPolicy: 'cache-and-network'
   });
 
-  function paginate(action) {
-    if (action === 'prev') {
-      if (offset < limit) return;
-      history.push(`/logbook?tab=${value}&offset=${offset - limit}`);
-    } else if (action === 'next') {
-      history.push(`/logbook?tab=${value}&offset=${offset + limit}`);
-    }
-  }
-
   function handleSearch(event) {
     setSearchTerm(event.target.value);
   }
@@ -102,7 +93,6 @@ export default function LogBook() {
   return (
     <LogBookItem
       data={data?.result}
-      paginate={paginate}
       offset={offset}
       router={history}
       scope={scope}

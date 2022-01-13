@@ -14,10 +14,11 @@ import { Spinner } from '../../../shared/Loading';
 import Card from '../../../shared/Card';
 import { dateToString } from '../../../components/DateContainer';
 import Text from '../../../shared/Text';
-import { checkRequests } from '../utils';
+import { checkRequests, paginate } from '../utils';
 import CenteredContent from '../../../shared/CenteredContent';
 import { formatError } from '../../../utils/helpers';
 import useLogbookStyles from '../styles';
+import Paginate from '../../../components/Paginate';
 
 export default function VisitView({
   tabValue,
@@ -228,6 +229,15 @@ export default function VisitView({
       ) : (
         <CenteredContent>{t('logbook.no_invited_guests')}</CenteredContent>
       )}
+      <CenteredContent>
+        <Paginate
+          offSet={offset}
+          limit={limit}
+          active={offset >= 1}
+          handlePageChange={(action) => paginate(action, history, tabValue, {offset, limit})}
+          count={data?.currentGuests?.length}
+        />
+      </CenteredContent>
     </div>
   );
 }
