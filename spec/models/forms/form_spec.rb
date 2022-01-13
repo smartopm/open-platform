@@ -97,14 +97,13 @@ RSpec.describe Forms::Form, type: :model do
   describe '#drc_form?' do
     it 'returns true if a form is a DRC form' do
       user = create(:admin_user)
-      form = create(:form, community: user.community)
       drc_form = create(:form, community: user.community,
                                name: 'DRC Project Review Process')
-      drc_form_V2 = create(:form, community: user.community,
+      drc_form_v2 = create(:form, community: user.community,
                                   name: 'DRC Project Review Process V2',
                                   grouping_id: drc_form.id, version_number: 2)
 
-      expect(drc_form_V2.drc_form?).to eq(true)
+      expect(drc_form_v2.drc_form?).to eq(true)
     end
     it 'returns false if a form is not a DRC form' do
       user = create(:admin_user)
