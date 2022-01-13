@@ -3,7 +3,7 @@ import React from 'react';
 import { useQuery } from 'react-apollo';
 import { Grid, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from '@material-ui/styles';
 import { formatError } from '../../../../utils/helpers';
 import { Spinner } from '../../../../shared/Loading';
 import CenteredContent from '../../../../shared/CenteredContent';

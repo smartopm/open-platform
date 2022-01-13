@@ -1,7 +1,7 @@
 
 
 import React from 'react';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from '@material-ui/styles';
 import LinearProgress from '@mui/material/LinearProgress';
 import Box from '@mui/material/Box';
 import { Typography } from '@material-ui/core';
@@ -21,7 +21,7 @@ export default function CustomProgressBar({task, smDown}){
               <Typography variant="body2">
                 {task?.progress?.complete}
                 {' '}
-                of 
+                of
                 {' '}
                 {task?.progress?.total}
               </Typography>
@@ -37,7 +37,7 @@ export default function CustomProgressBar({task, smDown}){
                    <Typography variant="body2">
                      {task?.progress?.complete}
                      {' '}
-                     of 
+                     of
                      {' '}
                      {task?.progress?.total}
                    </Typography>
@@ -79,7 +79,7 @@ const useStyles = makeStyles(() => ({
     colorPrimary: {
       backgroundColor: 'red',
     },
-  
+
     progressBar: {
       '@media (min-device-width: 320px) and (max-device-height: 568px) and (orientation: portrait)' : {
         marginLeft: "-40px",
@@ -107,7 +107,7 @@ const useStyles = makeStyles(() => ({
         marginTop: '10px',
         width: '100%'
       },
-  
+
     },
     progressBarText: {
       '@media (min-device-width: 320px) and (max-device-height: 568px) and (orientation: portrait)' : {
@@ -132,5 +132,5 @@ const useStyles = makeStyles(() => ({
         width: '100%'
       },
     },
-  
+
   }));
