@@ -220,6 +220,7 @@ admin:
     permissions:
       - can_access_dashboard
       - can_see_menu_item
+      - can_access_admin_processes_dashboard
   activity_log:
     permissions:
       - can_update_activity_log

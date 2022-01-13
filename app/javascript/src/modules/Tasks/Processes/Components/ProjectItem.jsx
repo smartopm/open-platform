@@ -8,7 +8,7 @@ import { UpdateNote } from '../../../../graphql/mutations';
 import { useFileUpload } from '../../../../graphql/useFileUpload';
 import TodoItem from '../../Components/TodoItem';
 
-export default function ProcessItem({ task, refetch }) {
+export default function ProjectItem({ task, refetch }) {
   const { t } = useTranslation('task');
   const [selectedTasks, setSelectedTasks] = useState([]);
   const [selectedTask, setSelectedTask] = useState(null);
@@ -79,7 +79,7 @@ export default function ProcessItem({ task, refetch }) {
   }
 
   function redirectToOverviewPage(taskId, tab='overview') {
-    history.push(`/processes/${taskId}?tab=${tab}`)
+    history.push(`/processes/drc/projects/${taskId}?tab=${tab}`)
   }
 
   return(
@@ -98,7 +98,7 @@ export default function ProcessItem({ task, refetch }) {
   )
 }
 
-ProcessItem.propTypes = {
+ProjectItem.propTypes = {
   task: PropTypes.shape.isRequired,
   refetch: PropTypes.func.isRequired
 }

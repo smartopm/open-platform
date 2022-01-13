@@ -4,7 +4,7 @@ import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min';
 import '@testing-library/jest-dom/extend-expect';
 import { render, screen, waitFor } from '@testing-library/react';
-import ProcessesList from '../Components/ProcessesList';
+import ProjectsList from '../Components/ProjectsList';
 import { ProcessesQuery } from '../graphql/process_queries';
 import taskMock from "../../__mocks__/taskMock";
 
@@ -26,12 +26,12 @@ const mocks = [
   }
 ];
 
-describe('Processes List', () => {
+describe('Projects List', () => {
   it('renders necessary elements', async () => {
     render(
       <MockedProvider mocks={mocks} addTypename={false}>
         <BrowserRouter>
-          <ProcessesList />
+          <ProjectsList />
         </BrowserRouter>
       </MockedProvider>
     );
