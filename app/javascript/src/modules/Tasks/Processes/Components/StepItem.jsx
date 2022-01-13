@@ -70,6 +70,7 @@ export default function StepItem({
                 aria-controls="show-step-sub-steps-icon"
                 aria-haspopup="true"
                 onClick={(e) => handleOpenSubStepsClick(e)}
+                color='primary'
               >
                 {openSubSteps
                   ? <KeyboardArrowUpIcon fontSize="small" color="primary" />

@@ -60,12 +60,12 @@ export default function ProjectOverview({ data }) {
         {formEntriesData?.length ? (
           formEntriesData.map(d => (
             <Grid container spacing={10} key={d.formProperty.fieldName}>
-              <Grid item md={4} xs={5}>
+              <Grid item md={5} xs={5}>
                 <Typography variant="caption" color="textSecondary">
                   {d.formProperty.fieldName.replace('Project', '')}
                 </Typography>
               </Grid>
-              <Grid item md={8} xs={7}>
+              <Grid item md={7} xs={7}>
                 <Typography variant="subtitle2" color="#6C6C6C" style={{ fontWeight: 400 }}>
                   {d.value}
                 </Typography>

@@ -357,6 +357,7 @@ export default function TaskInfoTop({
         <Grid
           container
           className={matches ? classes.assigneesSectionMobile : classes.assigneesSection}
+          style={autoCompleteOpen ? {marginTop: '-40px'} : undefined}
         >
           <Grid
             item
@@ -385,6 +386,7 @@ export default function TaskInfoTop({
               <Grid item sm={6} xs={12} data-testid='add-assignee'>
                 {canUpdateNote && (
                   <Chip
+                    style={autoCompleteOpen ? {marginTop: '50px'} : undefined}
                     key={data.id}
                     variant="outlined"
                     label={autoCompleteOpen ? t('task.chip_close') : t('task.chip_add_assignee')}
