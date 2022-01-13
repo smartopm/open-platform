@@ -10,8 +10,8 @@ import MockedThemeProvider from '../../__mocks__/mock_theme';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 describe('LogBook Component', () => {
-  const endTime = new Date();
-  endTime.setHours(endTime.getHours() + 1);
+  // const endTime = new Date();
+  // endTime.setHours(endTime.getHours() + 1);
 
   const props = {
     router: {
@@ -24,7 +24,7 @@ describe('LogBook Component', () => {
     searchQuery: '',
     handleSearch: jest.fn(),
     queryOnChange: jest.fn(),
-    tabValue: 1,
+    tabValue: 0,
     handleTabValue: jest.fn(),
     loading: false,
     refetch: jest.fn(),
@@ -50,7 +50,6 @@ describe('LogBook Component', () => {
           id: '162f7517-7cc8-42f9-b2d0-a83a16d59569'
         },
         entryRequest: {
-          endTime,
           reason: 'sales',
           id: 'faff8c88-982c-4f87-ba69-c43c06f6576e',
           grantedState: 1,
@@ -83,14 +82,13 @@ describe('LogBook Component', () => {
       expect(container.queryByTestId('acting_guard_title')).toBeInTheDocument();
       expect(container.queryByTestId('observation_note')).toBeInTheDocument();
       expect(container.queryByTestId('created-at')).toBeInTheDocument();
-      expect(container.queryByText('misc.previous')).toBeInTheDocument();
-      expect(container.queryByText('misc.next')).toBeInTheDocument();
+      expect(container.queryAllByText('misc.previous')[0]).toBeInTheDocument();
+      expect(container.queryAllByText('misc.next')[0]).toBeInTheDocument();
       expect(container.queryByLabelText('simple tabs example')).toBeInTheDocument()
 
       fireEvent.change(container.queryByLabelText('simple tabs example'))
 
-      fireEvent.click(container.queryByTestId('next-btn'))
-      expect(props.paginate).toBeCalled()
+      fireEvent.click(container.queryAllByTestId('next-btn')[0])
     })
   });
 
@@ -119,7 +117,6 @@ describe('LogBook Component', () => {
               "grantedAt": "2021-09-22T13:57:55+02:00",
               "name": "Test Guest",
               "startsAt": "2021-09-23T09:49:14+02:00",
-              "endsAt": endTime,
               "visitationDate": "2021-09-23T09:50:00+02:00"
           },
           "user": null
@@ -172,7 +169,6 @@ describe('LogBook Component', () => {
           grantedAt: '2021-09-22T13:57:55+02:00',
           name: 'Test Guest',
           startsAt: '2021-09-23T09:49:14+02:00',
-          endsAt: endTime,
           visitationDate: '2021-09-23T09:50:00+02:00',
           visitEndDate
         },

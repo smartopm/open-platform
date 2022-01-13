@@ -304,7 +304,7 @@ export default function LogBookItem({
               />
               <Grid
                 container
-                justifyContent="flex-end"
+                justify="flex-end"
                 className={classes.filter}
                 style={{
                 display: displayBuilder

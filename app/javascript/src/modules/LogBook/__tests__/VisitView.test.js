@@ -157,6 +157,8 @@ describe('Should render Visits View Component', () => {
       expect(getAllByTestId('request_status')[0].textContent).toContain('guest_book.pending');
       expect(getAllByTestId('request_status')[1].textContent).toContain('guest_book.approved');
       expect(getAllByTestId('log_exit')[0]).not.toBeDisabled();
+      expect(getAllByTestId('prev-btn')[0]).toBeInTheDocument();
+      expect(getAllByTestId('next-btn')[0]).toBeInTheDocument();
 
       fireEvent.click(getAllByTestId('log_exit')[0]);
       expect(props.handleAddObservation).toBeCalled();

@@ -5,7 +5,8 @@ import {
   IsAnyRequestValid,
   isNotValidCheck,
   accessibleMenus,
-  checkVisitorsName
+  checkVisitorsName,
+  paginate
 } from '../utils';
 
 describe('logbook utils', () => {
@@ -195,5 +196,19 @@ describe('logbook utils', () => {
     expect(checkVisitorsName(entry2)).toBe(true)
     expect(checkVisitorsName(entry3)).toBe(true)
     expect(checkVisitorsName(entry4)).toBe(false)
+  })
+  it('should handle pagination properly when next button is emulated', () => {
+    const history = {
+      push: jest.fn()
+    }
+     // test next, increments offset
+    paginate('next', history, 2, { offset: 0, limit: 5 })
+    expect(history.push).toBeCalled()
+    expect(history.push).toBeCalledWith('/logbook?tab=2&offset=5')
+
+    // test previous, reduces offset
+    paginate('prev', history, 1, { offset: 20, limit: 5 })
+    expect(history.push).toBeCalled()
+    expect(history.push).toBeCalledWith('/logbook?tab=1&offset=15')
   })
 });
