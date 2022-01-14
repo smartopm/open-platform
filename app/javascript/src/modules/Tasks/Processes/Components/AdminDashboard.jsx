@@ -15,23 +15,25 @@ import { useHistory } from 'react-router-dom';
 import { formatError } from '../../../../utils/helpers';
 import CenteredContent from '../../../../shared/CenteredContent';
 import { Spinner } from '../../../../shared/Loading';
-import { ProjectStagesQuery, TaskQuarterySummaryQuery } from '../graphql/process_queries';
-import { updateStageCount } from '../utils';
+import { TaskQuarterySummaryQuery, ProjectsQuery } from '../graphql/process_queries';
+import { filterProjectAndStages, calculateOpenProjectsByStage } from '../utils';
 
 export default function AdminDashboard() {
   const { t } = useTranslation('task');
   const classes = useStyles();
   const history = useHistory()
 
-  const { loading, error, data } = useQuery(ProjectStagesQuery, {
-    fetchPolicy: 'cache-and-network'
-  });
-
   const {
     loading: summaryLoading,
     error: summaryError,
     data: summaryData
   } = useQuery(TaskQuarterySummaryQuery);
+
+  const { loading: projectsLoading, error: projectsError, data: projectsData, }
+  = useQuery(ProjectsQuery, {
+  variables: { offset: 0, limit: 50 },
+  fetchPolicy: 'cache-and-network'
+});
 
   const results = summaryData?.completedByQuarter[0] || []
 
@@ -58,7 +60,7 @@ export default function AdminDashboard() {
     }
   ];
 
-  const projectStages = {
+  const projectStageLookup = {
     concept_design_review: 0,
     scheme_design_review: 0,
     detailed_design_review: 0,
@@ -72,7 +74,9 @@ export default function AdminDashboard() {
     history.push('/processes/drc/projects')
   }
 
-  const updatedProjectStages = updateStageCount(projectStages, data);
+  const filteredProjects = filterProjectAndStages(projectsData?.projects);
+  const stats = calculateOpenProjectsByStage(filteredProjects, projectStageLookup)
+
   return(
     <Container maxWidth="xl">
       <Typography variant="h4" className={classes.title}>{t('processes.processes')}</Typography>
@@ -111,13 +115,13 @@ export default function AdminDashboard() {
         <Grid item xs={12} sm={6}>
           <Typography variant="body1">{t('processes.projects_by_stage')}</Typography>
           {
-            loading && <Spinner />
+            projectsLoading && <Spinner />
           }
           {
-            error && <CenteredContent>{formatError(error.message)}</CenteredContent>
+            projectsError && <CenteredContent>{formatError(projectsError.message)}</CenteredContent>
           }
           <List data-testid="project-stages">
-            {Object.entries(updatedProjectStages).map(([stage, count]) => (
+            {Object.entries(stats).map(([stage, count]) => (
               <>
                 <ListItem
                   key={stage}
