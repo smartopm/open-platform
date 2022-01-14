@@ -167,23 +167,9 @@ export default function TaskInfoTop({
             </Grid>
           </Grid>
         )}
-        <Grid item md={editingBody ? 7 : 8} xs={9}>
-          {editingBody ? (
-            <TextField
-              name="body"
-              value={body}
-              margin="normal"
-              fullWidth
-              onChange={event => setBody(event.target.value)}
-              multiline
-              rows={4}
-              style={{ width: '100%' }}
-              inputProps={{
-                'data-testid': 'editable_body'
-              }}
-            />
-          ) : (
-            <Typography variant="h5" style={{ color: '#575757' }}>
+        <Grid item md={8} xs={12}>
+          {!editingBody && (
+              <Typography variant="h6" style={{ color: '#575757' }} onMouseOver={() =>{canUpdateNote && setEditingBody(true)}}>
               <span
                 // eslint-disable-next-line react/no-danger
                 dangerouslySetInnerHTML={{
@@ -192,6 +178,12 @@ export default function TaskInfoTop({
               />
             </Typography>
           )}
+          {editingBody && (
+            <LiveEditableField
+              value={body}
+              action={(data) => updateTask('body', data)}
+              handleSetEditTaskBody={(value) => setEditingBody(value)}
+            />)}
         </Grid>
         {!editingBody && canUpdateNote ? (
           <Grid item xs={3} md={1} data-testid="edit_body_action" style={{ textAlign: 'right' }}>
@@ -467,7 +459,6 @@ export default function TaskInfoTop({
             /> */}
              <LiveEditableField
               value={description}
-              setValue={setDescription}
               action={(data) => updateTask('description', data)}
             />
           </Grid>

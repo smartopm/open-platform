@@ -7,6 +7,7 @@ import { makeStyles } from '@material-ui/styles';
 import { Grid } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import useDebounce from '../utils/useDebounce';
+import { sanitizeText } from '../utils/helpers';
 
 export default function EditableField({ value, setValue, action, customStyles, canUpdateNote }) {
   const [isEditMode, setIsEditMode] = useState(false);
@@ -62,7 +63,7 @@ export default function EditableField({ value, setValue, action, customStyles, c
   );
 }
 
-export function LiveEditableField({ value, action }) {
+export function LiveEditableField({ value, action, handleSetEditTaskBody }) {
   const [isEditMode, setIsEditMode] = useState(false);
   const [input, setInput] = useState(value || '')
   const [isTyping, setIsTyping] = useState(true);
@@ -70,11 +71,13 @@ export function LiveEditableField({ value, action }) {
 
   function handleMouseLeave() {
     setIsEditMode(false);
+    handleSetEditTaskBody(false)
   }
 
   function handleMouseOver() {
     setIsEditMode(true);
   }
+
   const classes = useStyles();
 
   useEffect(() => {
@@ -106,6 +109,7 @@ export function LiveEditableField({ value, action }) {
             // classes: {
             //   disabled: classes.disabled
             // },
+            // value: () => renderInput(),
             'data-testid': 'live_editable_description',
           }}
         />
@@ -149,6 +153,16 @@ EditableField.propTypes = {
    // eslint-disable-next-line react/forbid-prop-types
   customStyles: PropTypes.object,
   canUpdateNote: PropTypes.bool.isRequired
+};
+
+LiveEditableField.defaultProps = {
+  handleSetEditTaskBody: () => {}
+}
+
+LiveEditableField.propTypes = {
+  value: PropTypes.string.isRequired,
+  action: PropTypes.func.isRequired,
+  handleSetEditTaskBody: PropTypes.func,
 };
 
 const useStyles = makeStyles(() => ({
