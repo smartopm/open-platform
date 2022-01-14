@@ -1,20 +1,23 @@
 /* eslint-disable max-statements */
 import React from 'react';
 import { useQuery } from 'react-apollo';
-import { Grid, Typography } from '@mui/material';
+import { Grid, Typography, Breadcrumbs } from '@mui/material';
+import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 import { formatError } from '../../../../utils/helpers';
 import { Spinner } from '../../../../shared/Loading';
 import CenteredContent from '../../../../shared/CenteredContent';
 import { ProjectsQuery } from '../graphql/process_queries';
 import ProjectItem from './ProjectItem'
+import { Context as AuthStateContext } from '../../../../containers/Provider/AuthStateProvider';
 
 export default function ProjectsList() {
   const { t } = useTranslation('task');
   const limit = 50;
   const offset = 0;
   const classes = useStyles();
+  const authState = React.useContext(AuthStateContext);
 
   const { loading, error, data, refetch }
     = useQuery(ProjectsQuery, {
@@ -30,7 +33,19 @@ export default function ProjectsList() {
   return(
     <div className='container'>
       <Grid container>
-        <Grid item md={11} xs={11} className={classes.header}>
+        {authState.user.userType === 'admin' && (
+          <Grid item md={12} xs={12} style={{paddingleft: '10px'}}>
+            <div role="presentation">
+              <Breadcrumbs aria-label="breadcrumb" style={{paddingBottom: '10px'}}>
+                <Link to="/processes">
+                  <Typography color="primary" style={{marginLeft: '5px'}}>Processes</Typography>
+                </Link>
+                <Typography color="text.primary">{t('processes.drc_process')}</Typography>
+              </Breadcrumbs>
+            </div>
+          </Grid>
+        )}
+        <Grid item md={12} xs={11} className={classes.header}>
           <Grid container spacing={1}>
             <Grid item md={9} xs={10}>
               <Typography variant="h4" style={{marginLeft: '5px', marginBottom: '24px'}}>{t('processes.drc_process')}</Typography>
