@@ -87,6 +87,16 @@ RSpec.describe Types::Queries::Note do
              user: site_worker,
              status: 'active')
     end
+    let(:form) do
+      create(:form, name: 'DRC Project Review Process V3', community: site_worker.community)
+    end
+    let(:another_form) do
+      create(:form, name: 'DRC Project Review Process V2', community: site_worker.community)
+    end
+    let(:form_user) { create(:form_user, form: form, user: admin, status_updated_by: admin) }
+    let(:another_form_user) do
+      create(:form_user, form: another_form, user: admin, status_updated_by: admin)
+    end
 
     let(:notes_query) do
       %(query {
@@ -294,15 +304,25 @@ RSpec.describe Types::Queries::Note do
       expect(result.dig('data', 'processes').length).to eql 1
     end
 
-    it 'fetches projects' do
-      create(:form, name: 'DRC Project Review Process V3', community: site_worker.community)
-
-      result = DoubleGdpSchema.execute(projects_query, context: {
-                                         current_user: site_worker,
-                                         site_community: site_worker.community,
-                                       }).as_json
-
-      expect(result['errors']).to be_nil
+    describe '#projects' do
+      context 'when projects are fetched' do
+        before do
+          form
+          another_form
+          form_user
+          another_form_user
+          first_note.update(form_user_id: form_user.id)
+          second_note.update(form_user_id: another_form_user.id)
+        end
+        it 'returns the projects for DRC' do
+          result = DoubleGdpSchema.execute(projects_query, context: {
+                                             current_user: site_worker,
+                                             site_community: site_worker.community,
+                                           }).as_json
+          expect(result['errors']).to be_nil
+          expect(result.dig('data', 'projects').length).to eql 2
+        end
+      end
     end
 
     it 'should retrieve list of processes without due date' do
