@@ -38,7 +38,7 @@ export default function AdminDashboard() {
   const cards = [
     {
       name: 'Q1',
-      completed: results[2],
+      completed: results[2] || 0,
       primary: false
     },
     {
