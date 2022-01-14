@@ -32,12 +32,7 @@ export const ProjectStagesQuery = gql`
 
 // TODO: olivier sync with Bonny to verify if this matches accordingly
 export const TaskQuarterySummaryQuery = gql`
-  {
-    taskSummary {
-      first_quarter
-      second_quarter
-      third_quarter
-      fourth_quarter
+    query completedByQuarter {
+      completedByQuarter
     }
-  }
 `;

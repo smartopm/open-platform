@@ -87,7 +87,6 @@ module Types::Queries::Note
 
     field :completed_by_quarter, [GraphQL::Types::JSON], null: false do
       description 'Completed tasks by quarter'
-      argument :community_id, GraphQL::Types::ID, required: true
     end
   end
   # rubocop:enable Metrics/BlockLength
@@ -297,7 +296,8 @@ module Types::Queries::Note
                             .with_attached_documents
   end
 
-  def completed_by_quarter(community_id:)
+  def completed_by_quarter
+    community_id = context[:site_community].id
     Notes::Note.tasks_by_quarter(community_id)
   end
 

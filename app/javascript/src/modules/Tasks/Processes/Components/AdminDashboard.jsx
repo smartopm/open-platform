@@ -29,30 +29,31 @@ export default function AdminDashboard() {
 
   const {
     loading: summaryLoading,
-    // error: summaryError,
+    error: summaryError,
     data: summaryData
   } = useQuery(TaskQuarterySummaryQuery);
 
-  console.log(summaryData)
+  const results = summaryData?.completedByQuarter[0]
+
   const cards = [
     {
       name: 'Q1',
-      completed: 42,
+      completed: results[2],
       primary: false
     },
     {
       name: 'Q2',
-      completed: 63,
+      completed: 0,
       primary: true
     },
     {
       name: 'Q3',
-      completed: 87,
+      completed: 0,
       primary: true
     },
     {
       name: 'Q4',
-      completed: 103,
+      completed: 0,
       primary: false
     }
   ];
@@ -80,16 +81,14 @@ export default function AdminDashboard() {
       </Link>
       <Grid container justifyContent="space-between" spacing={4}>
 
-        {/* To be continued... */}
-
         <Grid item xs={12} sm={6}>
           <Typography className={classes.quarterSection} variant="body1">{t('processes.completed_by_quarter')}</Typography>
           {
             summaryLoading && <Spinner />
           }
-          {/* {
+          {
             summaryError && <CenteredContent>{formatError(summaryError.message)}</CenteredContent>
-          } */}
+          }
           <Grid container spacing={2} className={classes.cards}>
             {cards.map((card, index) => (
               // eslint-disable-next-line react/no-array-index-key
