@@ -71,6 +71,15 @@ module Notes
       end
     end
 
+    def self.tasks_by_quarter(community_id)
+      sql = "
+        SELECT DATE_PART('year', updated_at) as yr, DATE_PART('quarter', updated_at) as qtr, \
+        count(*) FROM notes WHERE completed = true AND community_id='#{community_id}'
+        AND parent_note_id IS NULL GROUP BY yr, qtr;
+      "
+      ActiveRecord::Base.connection.exec_query(sql).rows
+    end
+
     private
 
     def log_create_event

@@ -29,7 +29,7 @@ describe('Admin processes dashboard', () => {
     }
   ];
 
-  it('renders loader', () => {
+  it('renders the summary page correctly', async () => {
     render(
       <MockedProvider mocks={mocks} addTypename={false}>
         <BrowserRouter>
@@ -37,8 +37,19 @@ describe('Admin processes dashboard', () => {
         </BrowserRouter>
       </MockedProvider>
     );
+    expect(screen.queryAllByTestId('loader')[0]).toBeInTheDocument();
 
-    expect(screen.queryByTestId('loader')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.queryByText('processes.processes')).toBeInTheDocument()
+      expect(screen.queryByText('processes.drc_process')).toBeInTheDocument()
+      expect(screen.queryByText('processes.completed_by_quarter')).toBeInTheDocument()
+      expect(screen.queryAllByText('Total completed')[0]).toBeInTheDocument()
+      expect(screen.queryAllByText('Total completed')).toHaveLength(4)
+      expect(screen.queryByText('Q1 completed')).toBeInTheDocument()
+      expect(screen.queryByText('Q2 completed')).toBeInTheDocument()
+      expect(screen.queryByText('Q3 completed')).toBeInTheDocument()
+      expect(screen.queryByText('Q4 completed')).toBeInTheDocument()
+    })
   });
 
   it('renders project stages', async () => {

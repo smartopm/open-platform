@@ -29,3 +29,10 @@ export const ProjectStagesQuery = gql`
     projectStages
   }
 `
+
+// TODO: olivier sync with Bonny to verify if this matches accordingly
+export const TaskQuarterySummaryQuery = gql`
+    query completedByQuarter {
+      completedByQuarter
+    }
+`;
