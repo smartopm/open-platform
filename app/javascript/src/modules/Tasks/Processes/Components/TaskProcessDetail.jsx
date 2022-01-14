@@ -1,15 +1,15 @@
-import React, {useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react';
 import { useHistory, useParams } from 'react-router';
 import { useQuery } from 'react-apollo';
-import { Grid,Typography } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import TaskContextProvider from "../../Context";
+import TaskContextProvider from '../../Context';
 import { StyledTabs, StyledTab, TabPanel, a11yProps } from '../../../../components/Tabs';
 import ProjectOverview, { ProjectOverviewSplitView } from './ProjectOverview';
 import { objectAccessor, sanitizeText, useParamsQuery } from '../../../../utils/helpers';
 import ProjectProcesses, { ProjectProcessesSplitView } from './ProjectProcesses';
-import ErrorPage from '../../../../components/Error'
-import Loading from '../../../../shared/Loading'
+import ErrorPage from '../../../../components/Error';
+import Loading from '../../../../shared/Loading';
 import { SubTasksQuery, TaskQuery } from '../../graphql/task_queries';
 
 export default function TaskProcessDetail() {
@@ -21,14 +21,17 @@ export default function TaskProcessDetail() {
   const tab = path.get('tab');
   const [tabValue, setTabValue] = useState(0);
 
-  const { data: projectData, error: projectDataError, loading: projectDataLoading } = useQuery(TaskQuery, {
-    variables: { taskId },
-    fetchPolicy: 'cache-and-network',
-    errorPolicy: 'all'
-  });
+  const { data: projectData, error: projectDataError, loading: projectDataLoading } = useQuery(
+    TaskQuery,
+    {
+      variables: { taskId },
+      fetchPolicy: 'cache-and-network',
+      errorPolicy: 'all'
+    }
+  );
 
   const { data: stepsData, loading: subStepsLoading, refetch } = useQuery(SubTasksQuery, {
-    variables: { taskId, limit:  projectData?.subTasks?.length || limit },
+    variables: { taskId, limit: projectData?.subTasks?.length || limit },
     fetchPolicy: 'cache-and-network',
     errorPolicy: 'all'
   });
@@ -39,9 +42,10 @@ export default function TaskProcessDetail() {
     documents: 2
   };
 
-
   function handleTabValueChange(_event, newValue) {
-    history.push(`?tab=${Object.keys(TAB_VALUES).find(key => objectAccessor(TAB_VALUES, key) === newValue)}`);
+    history.push(
+      `?tab=${Object.keys(TAB_VALUES).find(key => objectAccessor(TAB_VALUES, key) === newValue)}`
+    );
     setTabValue(Number(newValue));
   }
 
@@ -52,8 +56,8 @@ export default function TaskProcessDetail() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [path, tab]);
 
-  if (projectDataLoading || subStepsLoading) return <Loading />
-  if (projectDataError) return <ErrorPage title={projectDataError.message} />
+  if (projectDataLoading || subStepsLoading) return <Loading />;
+  if (projectDataError) return <ErrorPage title={projectDataError.message} />;
 
   return (
     <div>
@@ -64,10 +68,10 @@ export default function TaskProcessDetail() {
               <Grid item data-testid="project-title">
                 <Typography variant="h4">
                   <span
-                  // eslint-disable-next-line react/no-danger
+                    // eslint-disable-next-line react/no-danger
                     dangerouslySetInnerHTML={{
-                    __html: sanitizeText(projectData?.task?.body)
-                  }}
+                      __html: sanitizeText(projectData?.task?.body)
+                    }}
                   />
                 </Typography>
               </Grid>
@@ -77,10 +81,18 @@ export default function TaskProcessDetail() {
               onChange={handleTabValueChange}
               aria-label="process-tabs"
               variant="standard"
-              style={{ borderBottom: 'solid 1px #ececea'}}
+              style={{ borderBottom: 'solid 1px #ececea' }}
             >
-              <StyledTab label={t('task:processes.overview')} style={{fontSize: '12px', textAlign: 'left'}} {...a11yProps(0)} />
-              <StyledTab label={t('task:processes.processes')} style={{fontSize: '12px'}} {...a11yProps(1)} />
+              <StyledTab
+                label={t('task:processes.overview')}
+                style={{ fontSize: '12px', textAlign: 'left' }}
+                {...a11yProps(0)}
+              />
+              <StyledTab
+                label={t('task:processes.processes')}
+                style={{ fontSize: '12px' }}
+                {...a11yProps(1)}
+              />
             </StyledTabs>
 
             <TabPanel value={tabValue} index={0}>
@@ -101,5 +113,5 @@ export default function TaskProcessDetail() {
         </Grid>
       </TaskContextProvider>
     </div>
-  )
+  );
 }
