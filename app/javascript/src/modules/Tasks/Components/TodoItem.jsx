@@ -24,6 +24,7 @@ export default function TodoItem({
   handleUploadDocument,
   handleTodoClick,
   handleTaskCompletion,
+  clientView
 }) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
@@ -164,6 +165,7 @@ export default function TodoItem({
             handleOpenSubTasksClick={handleParentTaskClick}
             handleClick={() => handleTodoItemClick(task)}
             handleTaskCompletion={handleTaskCompletion}
+            clientView={clientView}
           />
           {(isLoadingSubTasks || (isUpdating && objectAccessor(tasksOpen, task.id))) && <LinearSpinner />}
         </div>
@@ -187,6 +189,7 @@ export default function TodoItem({
               clickable
               handleClick={() => handleTodoItemClick(firstLevelSubTask)}
               handleTaskCompletion={handleTaskCompletion}
+              clientView={clientView}
             />
           </div>
           {firstLevelSubTask?.subTasks?.length > 0 &&
@@ -205,6 +208,7 @@ export default function TodoItem({
                       clickable
                       handleClick={() => handleTodoItemClick(secondLevelSubTask)}
                       handleTaskCompletion={handleTaskCompletion}
+                      clientView={clientView}
                     />
                   </div>
                 ))}
@@ -239,7 +243,9 @@ const Task = {
     subTasks: PropTypes.arrayOf(PropTypes.object)
   };
 
-  TodoItem.defaultProps = {};
+  TodoItem.defaultProps = {
+    clientView: false
+  };
 
   TodoItem.propTypes = {
   task: PropTypes.shape(Task).isRequired,
@@ -250,7 +256,8 @@ const Task = {
   handleAddSubTask: PropTypes.func.isRequired,
   handleUploadDocument: PropTypes.func.isRequired,
   handleTodoClick: PropTypes.func.isRequired,
-  handleTaskCompletion: PropTypes.func.isRequired
+  handleTaskCompletion: PropTypes.func.isRequired,
+  clientView: PropTypes.bool
 };
 
 const useStyles = makeStyles(() => ({
