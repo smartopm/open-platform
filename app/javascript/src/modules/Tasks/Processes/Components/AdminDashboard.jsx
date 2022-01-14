@@ -10,7 +10,7 @@ import {
 } from '@material-ui/core';
 import { useQuery } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
-import { Card, CardContent, Grid } from '@mui/material';
+import { Card, CardContent, Container, Grid } from '@mui/material';
 import { useHistory } from 'react-router-dom';
 import { formatError } from '../../../../utils/helpers';
 import CenteredContent from '../../../../shared/CenteredContent';
@@ -29,7 +29,7 @@ export default function AdminDashboard() {
 
   const {
     loading: summaryLoading,
-    error: summaryError,
+    // error: summaryError,
     data: summaryData
   } = useQuery(TaskQuarterySummaryQuery);
 
@@ -73,12 +73,12 @@ export default function AdminDashboard() {
 
   const updatedProjectStages = updateStageCount(projectStages, data);
   return(
-    <div className="container">
+    <Container maxWidth="xl">
       <Typography variant="h4" className={classes.title}>{t('processes.processes')}</Typography>
       <Link href="/processes/drc/projects">
-        <Typography className={classes.processTitle} variant="h5">{t('processes.drc_process')}</Typography>
+        <Typography className={classes.processTitle} color='primary' variant="h5">{t('processes.drc_process')}</Typography>
       </Link>
-      <Grid container justifyContent="space-between" spacing={3}>
+      <Grid container justifyContent="space-between" spacing={4}>
 
         {/* To be continued... */}
 
@@ -92,6 +92,7 @@ export default function AdminDashboard() {
           } */}
           <Grid container spacing={2} className={classes.cards}>
             {cards.map((card, index) => (
+              // eslint-disable-next-line react/no-array-index-key
               <Grid key={index} item xs={6} sm={12} md={6}>
                 <Card className={classes.card}>
                   <CardContent
@@ -132,7 +133,7 @@ export default function AdminDashboard() {
                     </Grid>
                     <Grid item xs={1}>
                       <ListItemText>
-                        <Typography variant="body2">{count}</Typography>
+                        <Typography color='primary' className={classes.projectStageCount}>{count}</Typography>
                       </ListItemText>
                     </Grid>
                   </Grid>
@@ -143,7 +144,7 @@ export default function AdminDashboard() {
           </List>
         </Grid>
       </Grid>
-    </div>
+    </Container>
   )
 }
 
@@ -152,7 +153,6 @@ const useStyles = makeStyles(theme => ({
     marginBottom: '24px'
   },
   processTitle: {
-    color: '#53A2BE',
     marginBottom: '20px'
   },
   quarterSection: {
@@ -175,5 +175,8 @@ const useStyles = makeStyles(theme => ({
   projectStageLink: {
     textDecoration: 'none',
     cursor: 'pointer'
+  },
+  projectStageCount: {
+    fontWeight: 700
   }
 }));
