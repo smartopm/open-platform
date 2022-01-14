@@ -33,7 +33,7 @@ export default function AdminDashboard() {
     data: summaryData
   } = useQuery(TaskQuarterySummaryQuery);
 
-  const results = summaryData?.completedByQuarter[0]
+  const results = summaryData?.completedByQuarter[0] || []
 
   const cards = [
     {
@@ -166,10 +166,10 @@ const useStyles = makeStyles(theme => ({
     marginRight: '15px'
   },
   oddCardsBackground: {
-    backgroundColor: theme.palette.primary.main
+    backgroundColor: theme.palette?.primary?.main
   },
   evenCardsBackground: {
-    backgroundColor: theme.palette.secondary.main
+    backgroundColor: theme.palette?.secondary?.main
   },
   projectStageLink: {
     textDecoration: 'none',
