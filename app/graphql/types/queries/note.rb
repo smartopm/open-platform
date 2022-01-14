@@ -255,11 +255,11 @@ module Types::Queries::Note
     # rubocop:enable Metrics/MethodLength
     form_name = 'DRC Project Review Process'
     drc_form = context[:site_community].forms.where('name ILIKE ?', "#{form_name}%").first
-    drc_forms_ids = context[:site_community].forms.where(grouping_id: drc_form.grouping_id).pluck(:id)
+    drc_ids = context[:site_community].forms.where(grouping_id: drc_form.grouping_id).pluck(:id)
 
     return unless drc_form
 
-    drc_form_users = Forms::FormUser.where(form_id: drc_forms_ids).pluck(:id)
+    drc_form_users = Forms::FormUser.where(form_id: drc_ids).pluck(:id)
     context[:site_community]
       .notes
       .includes(

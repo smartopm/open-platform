@@ -12,7 +12,7 @@ export default function ProcessesPage() {
     permission.module === 'dashboard'
   ));
 
-  const allowedCommunities = ['Tilisi', 'DoubleGDP'];
+  const allowedCommunities = ['Tilisi', 'DoubleGDP', 'Nkwashi'];
   const communityCanViewDashboard = allowedCommunities.includes(authState?.user?.community?.name)
 
   const canAccessAdminProcessesDashboard = processesDashboardPermissions ? processesDashboardPermissions.permissions.includes('can_access_admin_processes_dashboard') : false
