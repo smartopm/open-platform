@@ -84,6 +84,11 @@ module Types::Queries::Note
     field :project_stages, [GraphQL::Types::JSON], null: false do
       description 'Returns an aggregated list of projects'
     end
+
+    field :completed_by_quarter, [GraphQL::Types::JSON], null: false do
+      description 'Completed tasks by quarter'
+      argument :community_id, GraphQL::Types::ID, required: true
+    end
   end
   # rubocop:enable Metrics/BlockLength
 
@@ -250,7 +255,7 @@ module Types::Queries::Note
     # rubocop:enable Metrics/AbcSize
     # rubocop:enable Metrics/MethodLength
 
-    drc_form = context[:site_community].forms.find_by(name: 'DRC Project Review Process V3')
+    drc_form = context[:site_community].forms.find_by(name: 'DRC Project Review Process V2')
     return unless drc_form
 
     drc_form_users = Forms::FormUser.where(form_id: drc_form.id).pluck(:id)
@@ -290,6 +295,10 @@ module Types::Queries::Note
                             .order(created_at: :asc)
                             .limit(limit).offset(offset)
                             .with_attached_documents
+  end
+
+  def completed_by_quarter(community_id:)
+    Notes::Note.tasks_by_quarter(community_id)
   end
 
   private

@@ -71,12 +71,13 @@ module Notes
       end
     end
 
-    # TODO: Fix
     def self.tasks_by_quarter(community_id)
-      # select date_part('year', updated_at) as yr, date_part('quarter', updated_at) as qtr, count(*) from notes where completed = true and community_id = 'fc80b1ed-114f-4274-a3b1-2e19f01479c2' and parent_note_id is  null group by yr, qtr;
-      Note.find_by_sql(
-        "SELECT DATE_PART('year', updated_at) as yr, DATE_PART('quarter', updated_at) as qtr, count(*) FROM notes WHERE completed = true AND community_id='#{community_id}' AND parent_note_id IS NULL GROUP BY yr, qtr;"
-      )
+      sql = "
+        SELECT DATE_PART('year', updated_at) as yr, DATE_PART('quarter', updated_at) as qtr, \
+        count(*) FROM notes WHERE completed = true AND community_id='#{community_id}'
+        AND parent_note_id IS NULL GROUP BY yr, qtr;
+      "
+      ActiveRecord::Base.connection.exec_query(sql).rows
     end
 
     private
