@@ -1,10 +1,10 @@
 /* eslint-disable max-statements */
 import React from 'react';
 import { useQuery } from 'react-apollo';
-import { Grid, Typography, Breadcrumbs } from '@mui/material';
+import { Grid, Typography, Breadcrumbs } from '@material-ui/core';
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next';
-import { makeStyles } from '@mui/styles';
+import {makeStyles} from '@material-ui/core/styles';
 import { formatError } from '../../../../utils/helpers';
 import { Spinner } from '../../../../shared/Loading';
 import CenteredContent from '../../../../shared/CenteredContent';
