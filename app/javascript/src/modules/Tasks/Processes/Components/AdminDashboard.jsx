@@ -167,10 +167,10 @@ const useStyles = makeStyles(theme => ({
     marginRight: '15px'
   },
   oddCardsBackground: {
-    backgroundColor: theme.palette.secondary.main // '#53A2BE'
+    backgroundColor: theme.palette.primary.main
   },
   evenCardsBackground: {
-    backgroundColor: theme.palette.primary.main // '#1E4785'
+    backgroundColor: theme.palette.secondary.main
   },
   projectStageLink: {
     textDecoration: 'none',
