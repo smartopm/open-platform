@@ -58,7 +58,7 @@ module Types
     # rubocop:enable Metrics/MethodLength
 
     def progress
-      total = object.sub_notes.count + 1
+      total = object.sub_notes.count
       complete = object.completed ? 1 : 0
       object.sub_notes.each do |note|
         complete += 1 if note.completed
