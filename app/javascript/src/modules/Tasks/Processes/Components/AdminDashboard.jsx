@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  Grid,
   Divider,
   Link,
   List,
@@ -11,6 +10,7 @@ import {
 import { useQuery } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@mui/styles';
+import { Card, CardContent, Grid } from '@mui/material';
 import { formatError } from '../../../../utils/helpers';
 import CenteredContent from '../../../../shared/CenteredContent';
 import { Spinner } from '../../../../shared/Loading';
@@ -25,28 +25,28 @@ export default function AdminDashboard() {
     fetchPolicy: 'cache-and-network'
   });
 
-  // const cards = [
-  //   {
-  //     name: 'Q1',
-  //     completed: 42,
-  //     primary: false
-  //   },
-  //   {
-  //     name: 'Q2',
-  //     completed: 63,
-  //     primary: true
-  //   },
-  //   {
-  //     name: 'Q3',
-  //     completed: 87,
-  //     primary: true
-  //   },
-  //   {
-  //     name: 'Q4',
-  //     completed: 103,
-  //     primary: false
-  //   }
-  // ];
+  const cards = [
+    {
+      name: 'Q1',
+      completed: 42,
+      primary: false
+    },
+    {
+      name: 'Q2',
+      completed: 63,
+      primary: true
+    },
+    {
+      name: 'Q3',
+      completed: 87,
+      primary: true
+    },
+    {
+      name: 'Q4',
+      completed: 103,
+      primary: false
+    }
+  ];
 
   const projectStages = {
     concept_design_review: 0,
@@ -64,35 +64,34 @@ export default function AdminDashboard() {
   return(
     <div className="container">
       <Typography variant="h4" className={classes.title}>{t('processes.processes')}</Typography>
-      <Grid container spacing={2} justifyContent="space-between">
+      <Link href="/processes/drc/projects">
+        <Typography className={classes.processTitle} variant="h5">{t('processes.drc_process')}</Typography>
+      </Link>
+      <Grid container justifyContent="space-between" spacing={3}>
+
+        {/* To be continued... */}
+
         <Grid item xs={12} sm={6}>
-          <Link href="/processes/drc/projects">
-            <Typography className={classes.processTitle} variant="h5">{t('processes.drc_process')}</Typography>
-          </Link>
-
-          {/* To be continued... */}
-
-          {/* <Grid item sm={8}>
-            <Typography className={classes.quarterSection} variant="body1">{t('processes.completed_by_quarter')}</Typography>
-            <Grid container spacing={2} className={classes.cards} justifyContent="center" alignItems="center">
-              {cards.map((card, index) => (
-                <Grid key={index} item xs={6}>
-                  <Card className={classes.card}>
-                    <CardContent
-                      className={`${card.primary ? classes.evenCardsBackground : classes.oddCardsBackground} ${classes.cardContent}`}
-                    >
-                      <Grid container justifyContent="center" alignItems="center" direction="column">
-                        <Typography variant="body2">Total completed</Typography>
-                        <Typography variant="body2">{`${card.name} completed`}</Typography>
-                        <Typography variant="body1" style={{fontSize: '2rem'}}>{card.completed}</Typography>
-                      </Grid>
-                    </CardContent>
-                  </Card>
-                </Grid>
+          <Typography className={classes.quarterSection} variant="body1">{t('processes.completed_by_quarter')}</Typography>
+          <Grid container spacing={2} className={classes.cards}>
+            {cards.map((card, index) => (
+              <Grid key={index} item xs={6} sm={12} md={6}>
+                <Card className={classes.card}>
+                  <CardContent
+                    className={`${card.primary ? classes.evenCardsBackground : classes.oddCardsBackground} ${classes.cardContent}`}
+                  >
+                    <Grid container justifyContent="center" alignItems="center" direction="column">
+                      <Typography variant="body2">Total completed</Typography>
+                      <Typography variant="body2">{`${card.name} completed`}</Typography>
+                      <Typography variant="body1" style={{fontSize: '2rem'}}>{card.completed}</Typography>
+                    </Grid>
+                  </CardContent>
+                </Card>
+              </Grid>
               ))}
-            </Grid>
-          </Grid> */}
-
+          </Grid>
+        </Grid>
+        <Grid item xs={12} sm={6}>
           <Typography variant="body1">{t('processes.projects_by_stage')}</Typography>
           <List data-testid="project-stages">
             {Object.entries(updatedProjectStages).map(([stage, count]) => (
