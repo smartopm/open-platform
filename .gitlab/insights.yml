@@ -52,8 +52,6 @@ bugReport:
       query:
         issuable_type: issue
         issuable_state: all
-        filter_labels:
-          - bug
         collection_labels:
           - dept::ceo
           - dept::cs
