@@ -10,9 +10,6 @@ import MockedThemeProvider from '../../__mocks__/mock_theme';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 describe('LogBook Component', () => {
-  // const endTime = new Date();
-  // endTime.setHours(endTime.getHours() + 1);
-
   const props = {
     router: {
       push: jest.fn()
