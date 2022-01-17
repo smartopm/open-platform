@@ -17,14 +17,14 @@ describe('Guest Invitation Form', () => {
     jest.spyOn(routeData, 'useHistory').mockReturnValue(mockHistory);
   });
 
+  const guest = {
+    visitationDate: null,
+    startsAt: null,
+    endsAt: null,
+    occursOn: [],
+    visitEndDate: null
+  };
   it('should render the invitation form', async () => {
-    const guest = {
-      visitationDate: null,
-      startsAt: null,
-      endsAt: null,
-      occursOn: [],
-      visitEndDate: null
-    };
 
     const createInviteMock = {
       request: {

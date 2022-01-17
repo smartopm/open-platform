@@ -72,24 +72,23 @@ module Types::Queries::EntryRequest
   end
 
   # check if we need to allow residents to see all scheduled requests
-  # rubocop:disable Metrics/MethodLength, Layout/LineLength
+  # rubocop:disable Metrics/MethodLength
   def scheduled_requests(offset: 0, limit: 50, query: nil)
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless can_view_entry_requests?
 
     entry_requests = context[:site_community].entry_requests
-                                             .where('guest_id IS NOT NULL AND visitation_date IS NOT NULL')
+                                             .where.not('entry_requests.guest_id' => nil)
                                              .includes(:user, :guest)
                                              .limit(limit)
                                              .offset(offset)
-                                             .unscope(:order)
-                                             .order(created_at: :desc)
+                                             .order_by_recent_invites
                                              .with_attached_images
                                              .with_attached_video
     entry_requests = handle_search(entry_requests, query) if query
     entry_requests
   end
-  # rubocop:enable Layout/LineLength
 
+  # This is deprecated
   # rubocop:disable Metrics/AbcSize
   def scheduled_guest_list(offset: 0, limit: 50, query: nil)
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless context[:current_user]
@@ -116,12 +115,13 @@ module Types::Queries::EntryRequest
       .includes(:user, :guest)
       .search(or: [{ query: (query.presence || '.') }, { name: { matches: query } }])
       .limit(limit).offset(offset)
-      .unscope(:order).order(granted_at: :desc)
+      .order(granted_at: :desc)
   end
   # rubocop:enable Metrics/AbcSize
 
   private
 
+  # This is deprecated
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/CyclomaticComplexity
   # rubocop:disable Metrics/PerceivedComplexity

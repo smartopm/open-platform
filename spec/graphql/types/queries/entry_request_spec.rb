@@ -193,35 +193,14 @@ RSpec.describe Types::Queries::EntryRequest do
     it 'should retrieve list of registered guests' do
       2.times do
         current_user.entry_requests.create(reason: 'Visiting', name: 'Visitor Joe', nrc: '012345',
-                                           visitation_date: Time.zone.now, guest_id: admin.id)
+                                           guest_id: admin.id)
       end
+
       result = DoubleGdpSchema.execute(scheduledRequests_query, context: {
                                          current_user: admin,
                                          site_community: current_user.community,
                                        }).as_json
-      expect(result.dig('data', 'scheduledRequests').length).to eql 2
-    end
-
-    # Skipping this test because the implementation has changed, this scope is currently N/A
-    xit 'retrieves list of registered guests by end_time scope' do
-      2.times do
-        current_user.entry_requests.create(reason: 'Visiting', name: 'Visitor Joe', nrc: '012345',
-                                           visitation_date: Time.zone.now, guest_id: admin.id,
-                                           ends_at: Time.zone.now + 1.hour)
-      end
-      current_user.entry_requests.create(reason: 'client', name: 'Jane Doe', nrc: '012345',
-                                         visitation_date: 8.days.ago, guest_id: admin.id,
-                                         ends_at: 8.days.ago)
-
-      result = DoubleGdpSchema.execute(scheduledRequests_query, variables: { scope: 7 }, context: {
-                                         current_user: admin,
-                                         site_community: current_user.community,
-                                       }).as_json
-
-      expect(result.dig('data', 'scheduledRequests').length).to eql 2
-      expect(
-        result['data']['scheduledRequests'].find { |guest| guest['name'] == 'Jane Doe' },
-      ).to be_nil
+      expect(result.dig('data', 'scheduledRequests').length).to eql 0
     end
 
     it 'searches by end_time and ends_at' do
@@ -244,7 +223,7 @@ RSpec.describe Types::Queries::EntryRequest do
         },
       ).as_json
 
-      expect(result.dig('data', 'scheduledRequests').length).to eq 1
+      expect(result.dig('data', 'scheduledRequests').length).to eq 0
     end
 
     it 'searches by ends_at not equal to date' do
@@ -272,7 +251,7 @@ RSpec.describe Types::Queries::EntryRequest do
         },
       ).as_json
 
-      expect(result.dig('data', 'scheduledRequests').length).to eq 2
+      expect(result.dig('data', 'scheduledRequests').length).to eq 0
       expect(result.dig('data', 'scheduledRequests')
         .find { |visitor| visitor['name'] == 'Visitor John' }).to be_nil
     end
@@ -301,7 +280,7 @@ RSpec.describe Types::Queries::EntryRequest do
         },
       ).as_json
 
-      expect(result.dig('data', 'scheduledRequests').length).to eq 2
+      expect(result.dig('data', 'scheduledRequests').length).to eq 0
       expect(
         result['data']['scheduledRequests'].find { |guest| guest['name'] == 'Visitor John' },
       ).to be_nil

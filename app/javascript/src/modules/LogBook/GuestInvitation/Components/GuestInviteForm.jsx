@@ -6,6 +6,7 @@ import React, { useEffect, useState } from 'react';
 import { useLazyQuery, useMutation } from 'react-apollo';
 import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { useMediaQuery, useTheme } from '@mui/material';
 import CenteredContent from '../../../../shared/CenteredContent';
 import GuestTime from '../../Components/GuestTime';
 import InvitationCreateMutation from '../graphql/mutations';
@@ -38,11 +39,13 @@ export default function GuestInviteForm() {
   const [newGuest, setNewGuest] = useState(initialData);
   const [searchValue, setSearchValue] = useState('');
   const [guestUsers, setGuestUsers] = useState([]);
+  const theme = useTheme();
   const debouncedValue = useDebounce(searchValue, 500);
   const [searchGuests, { data, loading, error }] = useLazyQuery(SearchGuestsQuery, {
     variables: { query: debouncedValue.trim() },
     fetchPolicy: 'network-only'
   });
+  const matchesSmall = useMediaQuery(theme.breakpoints.down('md'));
 
   useEffect(() => {
     if (searchValue) {
@@ -159,6 +162,7 @@ export default function GuestInviteForm() {
         userData={guestData}
         handleChange={handleInputChange}
         handleChangeOccurrence={handleChangeOccurrence}
+        smallDevice={matchesSmall}
       />
       <br />
       <Grid container>
