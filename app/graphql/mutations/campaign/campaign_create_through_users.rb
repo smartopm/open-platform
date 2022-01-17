@@ -27,7 +27,7 @@ module Mutations
         campaign.campaign_type = 'sms'
         campaign.status = 'draft'
         campaign.message = I18n.t('campaign.default.message')
-        campaign.batch_time = 10.years.from_now
+        campaign.batch_time = Time.current
         campaign
       end
 
