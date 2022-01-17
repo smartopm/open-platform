@@ -9,6 +9,7 @@ bugReport:
         filter_labels:
           - bug
         collection_labels:
+          - Priority::0
           - Priority::1
           - Priority::2
           - Priority::3
