@@ -1,3 +1,4 @@
+/* eslint-disable max-statements */
 /* eslint-disable import/prefer-default-export */
 import moment from 'moment-timezone'
 import { updateDateWithTime } from '../../components/DateContainer';
@@ -120,4 +121,22 @@ export function accessibleMenus(menus){
 export function checkVisitorsName(entry) {
   const visitorName = entry.data.ref_name || entry.data.visitor_name || entry.data.name;
   return !!visitorName;
+}
+
+
+/**
+ *
+ * @param {String} type
+ * @param {object} history
+ * @param {Number} tabValue
+ * @param {object} value
+ * @returns
+ */
+export function paginate(type, history, tabValue, value) {
+  if (type === 'prev') {
+    if (value.offset < value.limit) return;
+    history.push(`/logbook?tab=${tabValue}&offset=${value.offset - value.limit}`);
+  } else if (type === 'next') {
+    history.push(`/logbook?tab=${tabValue}&offset=${value.offset + value.limit}`);
+  }
 }

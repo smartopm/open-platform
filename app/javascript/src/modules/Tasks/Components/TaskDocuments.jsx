@@ -179,7 +179,7 @@ export default function TaskDocuments({ taskId }) {
         </List>
       ) : (
         <>
-          <Typography data-testid="no_documents" className={classes.noDocuments}>
+          <Typography variant='caption' data-testid="no_documents" className={classes.noDocuments}>
             {t('document.no_documents')}
           </Typography>
         </>

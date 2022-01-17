@@ -32,7 +32,7 @@ import GuestsView from './GuestsView';
 import VisitView from './VisitView';
 import MessageAlert from '../../../components/MessageAlert';
 import CenteredContent from '../../../shared/CenteredContent';
-import { accessibleMenus } from '../utils'
+import { accessibleMenus, paginate } from '../utils'
 
 
 const limit = 20;
@@ -40,7 +40,6 @@ const limit = 20;
 export default function LogBookItem({
   data,
   router,
-  paginate,
   offset,
   searchTerm,
   scope,
@@ -305,7 +304,7 @@ export default function LogBookItem({
               />
               <Grid
                 container
-                justifyContent="flex-end"
+                justify="flex-end"
                 className={classes.filter}
                 style={{
                 display: displayBuilder
@@ -369,15 +368,19 @@ export default function LogBookItem({
           </Grid>
         </Hidden>
       </Grid>
-      <CenteredContent>
-        <Paginate
-          offSet={offset}
-          limit={limit}
-          active={offset >= 1}
-          handlePageChange={paginate}
-          count={filteredEvents?.length}
-        />
-      </CenteredContent>
+      {
+        Boolean(tabValue === 0) && (
+          <CenteredContent>
+            <Paginate
+              offSet={offset}
+              limit={limit}
+              active={offset >= 1}
+              handlePageChange={(action) => paginate(action, router, tabValue, {offset, limit})}
+              count={filteredEvents?.length}
+            />
+          </CenteredContent>
+        )
+      }
     </>
 );
 }
@@ -404,7 +407,6 @@ LogBookItem.propTypes = {
   router: PropTypes.shape({
     push: PropTypes.func
   }).isRequired,
-  paginate: PropTypes.func.isRequired,
   offset: PropTypes.number.isRequired,
   searchTerm: PropTypes.string.isRequired,
   scope: PropTypes.number.isRequired,
