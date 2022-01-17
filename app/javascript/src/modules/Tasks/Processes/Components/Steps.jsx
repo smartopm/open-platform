@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useState } from 'react';
+import { useHistory, useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
@@ -10,9 +11,12 @@ import { objectAccessor } from '../../../../utils/helpers';
 export default function ProjectSteps({
   data,
   setSelectedStep,
-  handleStepCompletion
+  handleStepCompletion,
+  redirect
 }) {
+  const history = useHistory();
   const classes = useStyles();
+  const { id } = useParams();
   const [stepsOpen, setStepsOpen] = useState({});
 
   function toggleStep(stepItem){
@@ -25,6 +29,9 @@ export default function ProjectSteps({
   function handleStepItemClick(e, stepItem) {
     e.stopPropagation();
     setSelectedStep({ ...stepItem });
+    if (redirect) {
+      history.push(`/processes/${id}?tab=processes`)
+    }
   }
 
   function handleOpenSubStepsClick(e, stepItem){
@@ -98,12 +105,15 @@ const Step = {
     subTasks: PropTypes.arrayOf(PropTypes.object)
   };
   
-  ProjectSteps.defaultProps = {};
+  ProjectSteps.defaultProps = {
+    redirect: false
+  };
 
   ProjectSteps.propTypes = {
   data: PropTypes.arrayOf(PropTypes.shape(Step)).isRequired,
   setSelectedStep: PropTypes.func.isRequired,
   handleStepCompletion: PropTypes.func.isRequired,
+  redirect: PropTypes.bool
 };
 
 const useStyles = makeStyles(() => ({

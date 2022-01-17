@@ -255,7 +255,7 @@ export default function TaskSubTask({
           </Grid>
         </Grid>
       ) : (
-        <Typography data-testid="no_subtasks">{t('task:sub_task.no_sub_tasks')}</Typography>
+        <Typography data-testid="no_subtasks" variant='caption'>{t('task:sub_task.no_sub_tasks')}</Typography>
       )}
       <Menu
         id={`kabab-menu-${selectedSubTask?.id}`}
