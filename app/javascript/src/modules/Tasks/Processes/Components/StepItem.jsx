@@ -12,7 +12,7 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import Card from '../../../../shared/Card';
 import { removeNewLines, sanitizeText } from '../../../../utils/helpers';
-
+import CustomProgressBar from '../../../../shared/CustomProgressBar';
 
 export default function StepItem({
   step,
@@ -29,7 +29,13 @@ export default function StepItem({
   return (
     <Card clickData={{clickable, handleClick}} styles={styles} contentStyles={{ padding: '4px' }}>
       <Grid container>
-        <Grid item md={11} xs={10} style={{ display: 'flex', alignItems: 'center' }} data-testid="step_body_section">
+        <Grid
+          item
+          md={11}
+          xs={11}
+          style={{ display: 'flex', alignItems: 'center' }}
+          data-testid="step_body_section"
+        >
           <Grid container style={{ display: 'flex', alignItems: 'center' }}>
             <Grid item md={2}>
               <IconButton
@@ -46,7 +52,7 @@ export default function StepItem({
                   )}
               </IconButton>
             </Grid>
-            <Grid item md={10}>
+            <Grid item md={6} xs={8}>
               <Typography
                 variant="body2"
                 data-testid="step_body"
@@ -61,6 +67,11 @@ export default function StepItem({
                 />
               </Typography>
             </Grid>
+
+            <Grid item md={2} xs={6}>
+              <CustomProgressBar task={step} smDown={false} />
+            </Grid>
+
           </Grid>
         </Grid>
         <Grid item md={1} xs={2} className={classes.subStepsSection} data-testid="show_step_sub_steps">
@@ -138,6 +149,9 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'flex-end',
-    borderLeft: 'solid 1px rgba(0, 0, 0, 0.12)'
+    borderLeft: 'solid 1px rgba(0, 0, 0, 0.12)',
+    '@media (min-device-width: 360px) and (max-device-height: 1368px) and (orientation: portrait)' : {
+      justifyContent: 'center',
+    },
   }
 }));

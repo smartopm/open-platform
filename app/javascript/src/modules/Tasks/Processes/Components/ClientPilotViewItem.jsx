@@ -37,7 +37,7 @@ export default function ClientPilotViewItem({process}){
         <Grid item md={12} xs={12}>
           <Typography variant="h6">
             <span
-                  // eslint-disable-next-line react/no-danger
+              // eslint-disable-next-line react/no-danger
               dangerouslySetInnerHTML={{
                     __html: sanitizeText(process?.body)
                   }}
