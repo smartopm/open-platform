@@ -14,11 +14,12 @@ import { Spinner } from '../../../shared/Loading';
 import Card from '../../../shared/Card';
 import { dateTimeToString, dateToString } from '../../../components/DateContainer';
 import Text from '../../../shared/Text';
-import { checkRequests } from '../utils';
+import { checkRequests, paginate } from '../utils';
 import { EntryRequestGrant } from '../../../graphql/mutations';
 import MessageAlert from '../../../components/MessageAlert';
 import CenteredContent from '../../../shared/CenteredContent';
 import { formatError } from '../../../utils/helpers';
+import Paginate from '../../../components/Paginate';
 import useLogbookStyles from '../styles';
 
 export default function GuestsView({
@@ -30,7 +31,7 @@ export default function GuestsView({
   timeZone
 }) {
   const [loadGuests, { data, loading: guestsLoading, error }] = useLazyQuery(GuestEntriesQuery, {
-    variables: { offset, limit, query: query.trim() },
+    variables: { offset: query.length ? 0 : offset, limit, query: query.trim() },
     fetchPolicy: 'cache-and-network'
   });
 
@@ -213,6 +214,15 @@ export default function GuestsView({
       ) : (
         <CenteredContent>{t('logbook.no_invited_guests')}</CenteredContent>
       )}
+      <CenteredContent>
+        <Paginate
+          offSet={offset}
+          limit={limit}
+          active={offset >= 1}
+          handlePageChange={(action) => paginate(action, history, tabValue, {offset, limit})}
+          count={data?.scheduledRequests?.length}
+        />
+      </CenteredContent>
     </div>
   );
 }

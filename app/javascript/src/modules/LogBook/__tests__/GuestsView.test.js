@@ -11,7 +11,7 @@ import userMock from '../../../__mocks__/userMock';
 
 describe('Should render Guests View Component', () => {
   const mockHistory = {
-    push: jest.fn()
+    push: jest.fn(),
   };
   beforeEach(() => {
     jest.spyOn(routeData, 'useHistory').mockReturnValue(mockHistory);
@@ -141,6 +141,8 @@ describe('Should render Guests View Component', () => {
       );
       expect(getAllByTestId('grant_access_btn')[0]).toBeDisabled();
       expect(getAllByTestId('user_name')[0]).toBeInTheDocument();
+      expect(getAllByText('misc.previous')[0]).toBeInTheDocument();
+      expect(getAllByText('misc.next')[0]).toBeInTheDocument();
 
       fireEvent.click(getAllByTestId('card')[0]);
       expect(mockHistory.push).toBeCalled();
