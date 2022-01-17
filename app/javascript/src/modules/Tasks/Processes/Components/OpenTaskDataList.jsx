@@ -97,12 +97,12 @@ export default function OpenTaskDataList({
                   aria-haspopup="true"
                   data-testid="more-assignees"
                   style={{
-                                  padding: 0,
-                                  margin: 0,
-                                  fontSize: '8px',
-                                  color: '#000000',
-                                  opacity: '0.2'
-                                }}
+                    padding: 0,
+                    margin: 0,
+                    fontSize: '8px',
+                    color: '#000000',
+                    opacity: '0.2'
+                  }}
                 >
                   <MoreHorizIcon />
                 </IconButton>
