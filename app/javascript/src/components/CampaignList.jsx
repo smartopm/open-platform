@@ -2,7 +2,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { Fragment, useState } from 'react'
 import { StyleSheet, css } from 'aphrodite'
-import { useQuery } from 'react-apollo'
+import { useQuery, useMutation } from 'react-apollo'
 import Fab from '@material-ui/core/Fab'
 import AddIcon from '@material-ui/icons/Add'
 import { useHistory } from 'react-router-dom'
@@ -13,23 +13,94 @@ import { useTranslation } from 'react-i18next';
 import { allCampaigns } from '../graphql/queries'
 import Loading from "../shared/Loading"
 import ErrorPage from "./Error"
-import { dateTimeToString, dateToString } from "./DateContainer"
+import { dateToString } from "./DateContainer"
 import CampaignDeleteAction from "./Campaign/CampaignDeleteAction"
-import CenteredContent from './CenteredContent'
+import CenteredContent from '../shared/CenteredContent'
 import Paginate from './Paginate'
+import SearchInput from '../shared/search/SearchInput'
+import useDebounce from '../utils/useDebounce'
+import { makeStyles } from '@material-ui/styles';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { IconButton } from '@material-ui/core'
+import Card from '../shared/Card';
+import Hidden from '@material-ui/core/Hidden';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
+import CampaignDeleteDialogue from './Campaign/CampaignDeleteDialogue';
+import { DeleteCampaign } from '../graphql/mutations';
+import MenuList from '../shared/MenuList';
 
 export default function CampaignList() {
-  const history = useHistory()
-  const limit = 50
-  const [offset, setOffset] = useState(0)
+  const history = useHistory();
+  const limit = 50;
+  const classes = useStyles();
+  const matches = useMediaQuery('(max-width:800px)');
+  const [offset, setOffset] = useState(0);
+  const [searchText, setSearchText] = useState('');
+  const [anchorEl, setAnchorEl] = useState(null);;
+  const [openModal, setOpenModal] = useState(false);
+  const [campaign, setCampaign] = useState(null);
+  const [deleteCampaign] = useMutation(DeleteCampaign);
+  const anchorElOpen = Boolean(anchorEl);
+  const debouncedSearchText = useDebounce(searchText, 500);
   const { data, error, loading, refetch } = useQuery(allCampaigns, {
-    variables: { limit, offset },
+    variables: { limit, offset, query: debouncedSearchText },
     fetchPolicy: 'cache-and-network'
   })
   const { t } = useTranslation(['campaign', 'common']);
 
-  function routeToAction(_event, id) {
-    return history.push(`/campaign/${id}`)
+  let menuList = [
+    {
+      content: t('misc.open_campaign_details'),
+      isAdmin: true,
+      handleClick: () => routeToAction()
+    },
+    {
+      content: t('actions.delete_campaign'),
+      isAdmin: true,
+      handleClick: () => handleDeleteClick()
+    }
+  ];
+
+  const menuData = {
+    menuList,
+    anchorEl,
+    handleMenu,
+    open: anchorElOpen,
+    handleMenuClose
+  };
+
+  function handleMenu(event, campaign) {
+    event.stopPropagation();
+    setAnchorEl(event.currentTarget);
+    setCampaign(campaign);
+  }
+
+  function handleMenuClose(event) {
+    event.stopPropagation();
+    setAnchorEl(null);
+    setCampaign(null);
+  }
+
+  function handleSearchText(e) {
+    setSearchText(e.target.value);
+  }
+
+  function handleDeleteClick() {
+    setOpenModal(!openModal)
+  }
+
+  function handleDelete() {
+    deleteCampaign({
+      variables: { id: campaign.id }
+    }).then(() => {
+      handleMenuClose();
+      handleDeleteClick();
+      refetch();
+    })
+  }
+
+  function routeToAction() {
+    return history.push(`/campaign/${campaign.id}`)
   }
   function routeToCreateCampaign() {
     return history.push('/campaign-create')
@@ -49,129 +120,66 @@ export default function CampaignList() {
   if (loading) return <Loading />
   if (error) return <ErrorPage />
   return (
+    data.campaigns.length > 0 ? ( 
     <div className="container">
+      {openModal && (
+      <CampaignDeleteDialogue handleClose={handleDeleteClick} handleDelete={handleDelete} open={openModal} /> 
+      )}
+      <SearchInput
+        filterRequired={false}
+        title={t('common:misc.campaigns')}
+        searchValue={searchText}
+        handleSearch={handleSearchText}
+        handleClear={() => setSearchText('')}
+        data-testid="search_input"
+      />
       {data.campaigns.map(camp => (
         <Fragment key={camp.id}>
           <div>
-            <Grid container spacing={2}>
-              <Grid item container direction="column" spacing={2}>
-                <Grid item>
-                  <Typography
-                    className={css(style.logTitle)}
-                    gutterBottom
-                    variant="subtitle1"
-                    data-testid="c_name"
-                  >
-                    {camp.name}
-                  </Typography>
-                  <Typography
-                    className={css(style.subTitle)}
-                    variant="body2"
-                    data-testid="c_message"
-                    color="textSecondary"
-                  >
-                    {camp.message}
-                  </Typography>
-                </Grid>
-                {camp.status === 'draft' && (
-                  <Grid item>
-                    <Grid item container direction="row">
-                      <Grid item>
-                        <Typography className={css(style.subTitle)}>
-                          <strong>
-                            {t('campaign.status')}
-                            :
-                            {' '}
-                          </strong>
-                          {' '}
-                          {t('campaign.draft')}
-                        </Typography>
-                      </Grid>
-                    </Grid>
+            <Card styles={{marginBottom: 0}} contentStyles={{ padding: '4px' }}>
+              <Grid container spacing={2}>
+                <Grid item md={5} xs={10} style={{ display: 'flex', alignItems: 'center' }} data-testid="task_body_section">
+                  <Grid item md={8} xs={4}>
+                    <Typography variant="body2" component="span">
+                      {camp.batchTime ? dateToString(camp.batchTime) : 'Never '}
+                    </Typography>
                   </Grid>
-                )}
-                <Grid item>
-                  {camp.batchTime && (
-                  <Typography
-                    className={css(style.subTitle)}
-                    variant="body2"
-                    gutterBottom
-                  >
-                    <strong>
-                      {t('campaign.scheduled_date')}
-                      :
-                      {' '}
-                    </strong>
-                    {dateToString(camp.batchTime)}
-                    {' '}
-                    <strong>
-                      {t('campaign.scheduled_time')}
-                      :
-                      {' '}
-                    </strong>
-                    {dateTimeToString(camp.batchTime)}
-                  </Typography>
-                    )}
-
-                </Grid>
-                <Grid item>
-                  <Grid item container direction="row" spacing={2}>
-                    <Grid item>
-                      <Typography className={css(style.subTitle)}>
-                        {t('campaign.total_scheduled')}
-                        :
-                        {' '}
-                        {camp.campaignMetrics.totalScheduled}
-                      </Typography>
-                    </Grid>
-                    <Grid item>
-                      <Typography className={css(style.subTitle)}>
-                        {t('campaign.total_sent')}
-                        :
-                        {' '}
-                        {camp.campaignMetrics.totalSent}
-                      </Typography>
-                    </Grid>
-                    <Grid item>
-                      <Typography className={css(style.subTitle)}>
-                        {t('campaign.success')}
-                        :
-                        {' '}
-                        {String(parseInt(
-                        (100 * camp.campaignMetrics.totalSent) /
-                          (camp.campaignMetrics.totalScheduled > 0
-                            ? camp.campaignMetrics.totalScheduled
-                            : 1), 10)
-                      )}
-                        %
-                      </Typography>
-                    </Grid>
-                  </Grid>
-                </Grid>
-                <Grid item container direction="row">
-                  <Typography
-                    variant="body1"
-                    color="primary"
-                    style={{ cursor: 'pointer', marginTop: "11px" }}
-                  >
-                    <Link
-                      data-testid="more_details_btn"
-                      href="#"
-                      style={{ cursor: 'pointer'}}
-                      onClick={event => routeToAction(event, camp.id)}
+                  <Grid item md={8} xs={4}>
+                    <Typography
+                      variant="body2"
+                      data-testid="campaign_name"
+                      component="p"
+                      className={matches ? classes.campaignBodyMobile : classes. campaignBody}
                     >
-                      {t('campaign.more_details')}
-                    </Link>
-                  </Typography>
-                  {(camp.status === "draft" || camp.status === "scheduled") && (
-                    <CampaignDeleteAction data={camp} refetch={refetch} />
-                  )}
+                      {camp.name}
+                    </Typography>
+                  </Grid>
+                  <Grid item md={1} xl={1}>
+                    <Hidden smDown>
+                      <IconButton
+                        aria-controls="simple-menu"
+                        aria-haspopup="true"
+                        data-testid="campaign-item-menu"
+                        dataid={camp.id}
+                        onClick={event => menuData.handleMenu(event, camp)}
+                        color="primary"
+                      >
+                        <MoreVertIcon />
+                      </IconButton>
+                    </Hidden>
+                  </Grid>
                 </Grid>
               </Grid>
-            </Grid>
+            </Card>
+            <MenuList
+              open={menuData.open}
+              anchorEl={menuData.anchorEl}
+              handleClose={menuData.handleMenuClose}
+              list={menuData.menuList.filter(menuItem => menuItem.content !== null)}
+            />
           </div>
 
-          <div className="border-top my-3" />
+          {/* <div className="border-top my-3" /> */}
         </Fragment>
       ))}
 
@@ -202,19 +210,27 @@ export default function CampaignList() {
         {t('common:menu.create')}
       </Fab>
     </div>
+    ) : (
+      // TODO add translation
+      <p> No campaigns have been created yet</p>
+    )
   )
 }
 
-const style = StyleSheet.create({
-  logTitle: {
-    color: '#1f2026',
-    fontSize: 16,
-    fontWeight: 700
+const useStyles = makeStyles(() => ({
+  campaignBody: {
+    maxWidth: '42ch',
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+    paddingLeft: '3px'
   },
-  subTitle: {
-    color: 'black',
-    fontSize: 14,
-    letterSpacing: 0.17,
-    fontWeight: 400
+  campaignBodyMobile: {
+    maxWidth: '17ch',
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+    paddingLeft: '3px'
   },
-})
+}));
+

@@ -31,6 +31,7 @@
   },
   "misc": {
     "yes": "Yes",
-    "no": "No"
+    "no": "No",
+    "open_campaign_details": "Open Campaign Details"
   }
 }
