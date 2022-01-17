@@ -4,6 +4,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { useQuery } from 'react-apollo';
 import { Checkbox, Grid, IconButton, Typography } from '@material-ui/core';
 import Divider from '@mui/material/Divider';
 import Hidden from '@material-ui/core/Hidden';
@@ -26,6 +27,7 @@ import MenuList from '../../../shared/MenuList';
 import UserAvatar from '../../Users/Components/UserAvatar';
 import Card from '../../../shared/Card';
 import CustomProgressBar from '../../../shared/CustomProgressBar';
+import { CommentQuery } from '../../../graphql/queries';
 // TODO: Put in a more shareable directory
 export function LinkToUser({ userId, name }) {
   const theme = useTheme();
@@ -147,6 +149,12 @@ export function TaskDataList({
   const classes = useStyles();
   const { t } = useTranslation('task');
   const matches = useMediaQuery('(max-width:800px)');
+
+  const { data } = useQuery(CommentQuery, {
+    variables: { taskId: task.id },
+    fetchPolicy: 'cache-and-network',
+    errorPolicy: 'all'
+  });
   return (
     <Card styles={styles} contentStyles={{ padding: '4px' }}>
       <Grid container>
@@ -293,10 +301,10 @@ export function TaskDataList({
                 data-testid="task_comments"
                 onClick={handleClick}
               >
-                <QuestionAnswerIcon fontSize="small" color="disabled" />
+                <QuestionAnswerIcon fontSize="small" color={data?.taskComments.length ? 'primary': 'disabled'} />
               </IconButton>
             </Grid>
-            {/* <Grid item md={1} xs={1} className={classes.iconItem}><span>0</span></Grid> */}
+            <Grid item md={1} xs={1} className={classes.iconItem}><span data-testid='task-comment'>{data?.taskComments.length || 0}</span></Grid>
             <Grid item md={2} xs={1}>
               <IconButton
                 key={task.id}
