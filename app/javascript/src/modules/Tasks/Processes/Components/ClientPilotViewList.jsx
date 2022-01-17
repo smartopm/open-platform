@@ -2,6 +2,7 @@ import React from 'react'
 import { useQuery } from 'react-apollo';
 import { Grid,Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
+import { useTranslation } from 'react-i18next';
 import { ProcessesQuery } from '../graphql/process_queries';
 import ClientPilotViewItem from './ClientPilotViewItem';
 import { Spinner } from '../../../../shared/Loading';
@@ -13,6 +14,7 @@ export default function ClientPilotViewList(){
     const limit = 50;
     const offset = 0;
     const classes = useStyles();
+    const { t } = useTranslation(['task', 'common'])
     const { loading, error, data }
         = useQuery(ProcessesQuery, {
         variables: {
@@ -36,7 +38,7 @@ export default function ClientPilotViewList(){
                     <Grid container spacing={1}>
                       <Grid item md={9} xs={10}>
                         <Typography variant="h4" style={{marginLeft: '5px', marginBottom: '24px'}} data-testid="processes-header">
-                          Processes
+                          t('task.processes')
                         </Typography>
                       </Grid>
                     </Grid>
@@ -48,7 +50,7 @@ export default function ClientPilotViewList(){
                     ))}
               </div>
             )
-        : (<CenteredContent>You do not have any assigned projects yet!</CenteredContent>)
+        : (<CenteredContent>t('task.no_ssigned_projects')</CenteredContent>)
       }
     
         </Grid>
