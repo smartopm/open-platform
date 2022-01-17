@@ -9,6 +9,7 @@ import MockedThemeProvider from '../../__mocks__/mock_theme'
 import t from '../../__mocks__/t'
 import { Context } from '../../../containers/Provider/AuthStateProvider'
 import authState from '../../../__mocks__/authstate';
+import { CommentQuery } from '../../../graphql/queries';
 
 describe('Task Data components', () => {
   const menuData = {
@@ -224,10 +225,30 @@ describe('Task Data components', () => {
     expect(results[0]).toHaveProperty('Menu');
   });
 
-  it('should render TaskDataList', () => {
+  it('should render TaskDataList', async () => {
+    const taskCommentMock = {
+      request: {
+        query: CommentQuery,
+        variables: { taskId: task.id }
+      },
+      result: {
+        data: {
+          taskComments: [{
+            id: '5617geg2783',
+            body: 'sample-body',
+            createdAt: '2022-10-10',
+            user: {
+              id: '2g872gh',
+              name: 'sample-name',
+              url: 'use.jpg'
+            }
+          }]
+        }
+      }
+    }
     const container = render(
       <BrowserRouter>
-        <MockedProvider>
+        <MockedProvider mocks={[taskCommentMock]}>
           <MockedThemeProvider>
             <TaskDataList
               task={task}
@@ -247,6 +268,7 @@ describe('Task Data components', () => {
       </BrowserRouter>
     );
     
+    expect(container.queryByTestId('task-comment')).toBeInTheDocument();
     expect(container.getByTestId("progress_bar_large_screen")).toBeInTheDocument()
     expect(container.queryByTestId('task_completion_toggle_button')).toBeInTheDocument();
     fireEvent.click(container.queryByTestId('task_completion_toggle_button'));
