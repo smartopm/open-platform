@@ -675,6 +675,7 @@ export const CampaignUpdateMutation = gql`
     $userIdList: String
     $labels: String
     $includeReplyLink: Boolean
+    $emailTemplatesId: ID
   ) {
     campaignUpdate(
       id: $id
@@ -686,6 +687,7 @@ export const CampaignUpdateMutation = gql`
       userIdList: $userIdList
       labels: $labels
       includeReplyLink: $includeReplyLink
+      emailTemplatesId: $emailTemplatesId
     ) {
       campaign {
         batchTime
