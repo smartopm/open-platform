@@ -38,7 +38,7 @@ export default function ClientPilotViewList(){
                     <Grid container spacing={1}>
                       <Grid item md={9} xs={10}>
                         <Typography variant="h4" style={{marginLeft: '5px', marginBottom: '24px'}} data-testid="processes-header">
-                          {t('task.processes')}
+                          {t('task.processes.processes')}
                         </Typography>
                       </Grid>
                     </Grid>
@@ -50,7 +50,7 @@ export default function ClientPilotViewList(){
                     ))}
               </div>
             )
-        : (<CenteredContent>{t('task.no_ssigned_projects')}</CenteredContent>)
+        : (<CenteredContent>{t('task.process.no_ssigned_projects')}</CenteredContent>)
       }
     
         </Grid>

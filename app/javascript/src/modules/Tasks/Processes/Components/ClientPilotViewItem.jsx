@@ -2,6 +2,7 @@ import React, { useContext } from 'react'
 import { Grid,Typography } from '@mui/material';
 import { useQuery } from 'react-apollo';
 import { useHistory } from 'react-router-dom'
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import Divider from '@mui/material/Divider';
 import { TaskContext } from "../../Context";
@@ -23,7 +24,7 @@ export default function ClientPilotViewItem({process}){
         fetchPolicy: 'cache-and-network',
         errorPolicy: 'all'
       });
-
+    const { t } = useTranslation(['task', 'common'])
     const { handleStepCompletion } = useContext(TaskContext);
 
     function routeToProcessDetailsPage() {
@@ -47,7 +48,7 @@ export default function ClientPilotViewItem({process}){
         <Grid item md={12} xs={12} data-testid="project-container">
           <Grid container spacing={6} data-testid="project-open-tasks"> 
             <Grid item md={6} xs={12}>
-              <Typography variant="h6">Your Tasks</Typography>
+              <Typography variant="h6">{t('task.process.your_tasks')}</Typography>
               <br />
               {data?.projectOpenTasks?.length?
                       (
@@ -57,12 +58,12 @@ export default function ClientPilotViewItem({process}){
                         ))}
                         </div>
                       )
-                      : (<Typography>Project does not have open tasks</Typography>)
+                      : (<Typography>{t('task.process.no_open_tasks')}</Typography>)
                     }
             </Grid>
 
             <Grid item md={6} xs={12} data-testid="project-step-information">
-              <Typography variant="h6">Process Steps</Typography>
+              <Typography variant="h6">{t('task.process.process_steps')}</Typography>
               <br />
               <ProjectSteps
                 data={process?.subTasks}
