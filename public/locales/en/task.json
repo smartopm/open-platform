@@ -91,6 +91,8 @@
       "construction_starts": "Construction Starts",
       "inspections": "Inspections",
       "post_construction": "Post Constructions"
-    }
+    },
+    "activity_summary": "Activity Summary",
+    "no_activity_summary": "No activity summary"
   }
 }

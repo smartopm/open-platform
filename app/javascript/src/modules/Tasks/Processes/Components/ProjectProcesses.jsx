@@ -1,22 +1,32 @@
 import React, { useContext } from 'react'
 import PropTypes from 'prop-types';
-import { Typography } from '@mui/material';
+import { Grid, Divider, Typography } from '@mui/material';
+import { makeStyles } from '@mui/styles';
 import { TaskContext } from "../../Context";
 import ProjectSteps from './Steps';
 import TaskUpdate from '../../containers/TaskUpdate';
+import ProjectActivitySummary from './ProjectActivitySummary';
 
 export default function ProjectProcesses({ data, refetch }){
+  const classes = useStyles();
   const { setSelectedStep, handleStepCompletion } = useContext(TaskContext);
 
   return (
     <>
-      <br />
-      <Typography variant="subtitle1" style={{marginBottom: '16px', fontWeight: 200}} data-testid="processes-header">Process Steps</Typography>
-      <ProjectSteps
-        data={data}
-        setSelectedStep={setSelectedStep}
-        handleStepCompletion={(id, completed) => handleStepCompletion(id, completed, refetch)}
-      />
+      <Grid container direction="column">
+        <Grid item xs={12} className={classes.activitySummary}>
+          <ProjectActivitySummary />
+        </Grid>
+      </Grid>
+      <Divider className={classes.divider} />
+      <Grid item xs={12} className={classes.processSteps}>
+        <Typography variant="subtitle1" className={classes.processesHeader} data-testid="processes-header">Process Steps</Typography>
+        <ProjectSteps
+          data={data}
+          setSelectedStep={setSelectedStep}
+          handleStepCompletion={(id, completed) => handleStepCompletion(id, completed, refetch)}
+        />
+      </Grid>
     </>
   )
 }
@@ -60,3 +70,19 @@ ProjectProcesses.propTypes = {
 ProjectProcessesSplitView.propTypes = {
  refetch: PropTypes.func.isRequired
 }
+
+const useStyles = makeStyles(() => ({
+  activitySummary: {
+    marginBottom: '20px'
+  },
+  divider: {
+    height: '0px'
+  },
+  processSteps: {
+    marginTop: '20px'
+  },
+  processesHeader: {
+    marginBottom: '16px',
+    fontWeight: 200
+  }
+}));

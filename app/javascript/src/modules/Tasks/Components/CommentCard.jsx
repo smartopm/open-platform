@@ -10,6 +10,7 @@ import {
   Menu,
   MenuItem
 } from '@material-ui/core';
+import { makeStyles } from '@material-ui/styles';
 import Avatar from '@material-ui/core/Avatar';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
@@ -20,7 +21,7 @@ import EditField from './TaskCommentEdit';
 import { dateToString } from '../../../components/DateContainer';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
 
-export default function CommentCard({ data, refetch }) {
+export default function CommentCard({ comments, refetch }) {
   const [open, setOpen] = useState(false);
   const [editId, setEditId] = useState(null);
   const [edit, setEdit] = useState(false);
@@ -32,6 +33,7 @@ export default function CommentCard({ data, refetch }) {
   const [currentComment, setCurrentComment] = useState('');
   const menuOpen = Boolean(anchorEl);
   const authState = useContext (AuthStateContext);
+  const classes = useStyles();
 
   const { t } = useTranslation('common');
 
@@ -79,7 +81,7 @@ export default function CommentCard({ data, refetch }) {
           </MenuItem>
         </Menu>
         <List>
-          {data?.taskComments?.map(com => (
+          {comments?.map(com => (
             <Fragment key={com.id}>
               {!edit && editId !== com.id && (
                 <ListItem>
@@ -106,7 +108,7 @@ export default function CommentCard({ data, refetch }) {
                     )}
                   />
                   {(authState.user.userType === 'admin' || (com.user.id === authState.user.id)) && (
-                    <ListItemSecondaryAction>
+                    <ListItemSecondaryAction className={classes.kabab}>
                       <IconButton
                         edge="end"
                         aria-label="more_details"
@@ -143,10 +145,18 @@ export default function CommentCard({ data, refetch }) {
 }
 
 CommentCard.defaultProps = {
-  data: {}
+  comments: []
 };
 CommentCard.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
-  data: PropTypes.object,
+  comments: PropTypes.array,
   refetch: PropTypes.func.isRequired
 };
+
+const useStyles = makeStyles(() => ({
+  kabab: {
+    '@media (min-device-width: 375px) and (max-device-height: 900px)': {
+      top: '40%'
+    }
+  }
+}));

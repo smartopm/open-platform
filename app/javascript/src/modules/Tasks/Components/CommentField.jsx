@@ -69,7 +69,7 @@ export default function CommentTextField({ data, refetch, taskId }) {
           </Button>
         </Grid>
       </Grid>
-      <CommentCard data={data} refetch={refetch} />
+      <CommentCard comments={data.taskComments} refetch={refetch} />
       { Boolean(error.length) && (<p className="text-center">{error}</p>)}
     </>
   );
