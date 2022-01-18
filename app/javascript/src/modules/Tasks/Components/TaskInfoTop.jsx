@@ -1,9 +1,14 @@
-/* eslint-disable no-nested-ternary */
-/* eslint-disable complexity */
+// /* eslint-disable complexity */
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import TextField from '@material-ui/core/TextField';
-import { Grid, Chip, Typography, Button, IconButton, useMediaQuery } from '@material-ui/core';
+import {
+  Grid,
+  Chip,
+  Typography,
+  IconButton,
+  useMediaQuery
+} from '@material-ui/core';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import AccessAlarmIcon from '@mui/icons-material/AccessAlarm';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
@@ -18,16 +23,14 @@ import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import moment from 'moment-timezone';
-import Edit from '@material-ui/icons/Edit';
 import { useMutation } from 'react-apollo';
 import DatePickerDialog from '../../../components/DatePickerDialog';
 import { UserChip } from './UserChip';
 import { formatError, sanitizeText } from '../../../utils/helpers';
 import UserAutoResult from '../../../shared/UserAutoResult';
 import { dateToString } from '../../../components/DateContainer';
-import EditableField, { LiveEditableField } from '../../../shared/EditableField';
+import AutoSaveField from '../../../shared/AutoSaveField';
 import { UpdateNote } from '../../../graphql/mutations';
-import { Spinner } from '../../../shared/Loading';
 import MessageAlert from '../../../components/MessageAlert';
 import MenuList from '../../../shared/MenuList';
 
@@ -57,9 +60,8 @@ export default function TaskInfoTop({
   const urlParams = useParams();
   const [description, setDescription] = useState(data.description);
   const [taskUpdate] = useMutation(UpdateNote);
-  const [loading, setLoadingStatus] = useState(false);
-  const [body, setBody] = useState(data.body);
   const [editingBody, setEditingBody] = useState(false);
+  const [editingDueDate, setEditingDueDate] = useState(false);
   const [updateDetails, setUpdateDetails] = useState({
     isError: false,
     message: ''
@@ -88,20 +90,16 @@ export default function TaskInfoTop({
   }
 
   function updateTask(property, value) {
-    setLoadingStatus(true);
     taskUpdate({
       variables: { id: data.id, [property]: value }
     })
       .then(() => {
-        setLoadingStatus(false);
         setUpdateDetails({ isError: false, message: t('task.update_successful') });
         setTimeout(() => {
-          refetch();
-        }, 500);
-        if (property === 'body') setEditingBody(false);
+          refetch()
+        }, 500)
       })
       .catch(err => {
-        setLoadingStatus(false);
         setUpdateDetails({ isError: true, message: formatError(err?.message) });
       });
   }
@@ -169,21 +167,27 @@ export default function TaskInfoTop({
         )}
         <Grid item md={8} xs={12}>
           {!editingBody && (
-              <Typography variant="h6" style={{ color: '#575757' }} onMouseOver={() =>{canUpdateNote && setEditingBody(true)}}>
-              <span
+          <Typography
+            variant="h6"
+            style={{ color: '#575757' }}
+            // onMouseOver={() =>{canUpdateNote && setEditingBody(true)}}
+            onMouseOver={canUpdateNote ? () => setEditingBody(true) : null}
+          >
+            <span
                 // eslint-disable-next-line react/no-danger
-                dangerouslySetInnerHTML={{
-                  __html: sanitizeText(body)
+              dangerouslySetInnerHTML={{
+                  __html: sanitizeText(data.body)
                 }}
-              />
-            </Typography>
+            />
+          </Typography>
           )}
           {editingBody && (
-            <LiveEditableField
-              value={body}
-              action={(data) => updateTask('body', data)}
-              handleSetEditTaskBody={(value) => setEditingBody(value)}
-            />)}
+            <AutoSaveField
+              value={data.body}
+              mutationAction={(value) => updateTask('body', value)}
+              stateAction={(value) => setEditingBody(value)}
+            />
+)}
         </Grid>
         {!editingBody && canUpdateNote ? (
           <Grid item xs={3} md={1} data-testid="edit_body_action" style={{ textAlign: 'right' }}>
@@ -304,8 +308,15 @@ export default function TaskInfoTop({
               {t('task.due_date_text')}
             </Typography>
           </Grid>
-          <Grid item xs={7} md={3}>
-            {canUpdateNote ? (
+          <Grid
+            item
+            xs={7}
+            md={4}
+            className={editingDueDate ? classes.dueDateEnabled : classes.dueDateDisabled}
+            onMouseOver={() => setEditingDueDate(true)}
+            onMouseLeave={() => setEditingDueDate(false)}
+          >
+            {canUpdateNote ?             (
               <DatePickerDialog
                 handleDateChange={date => setDate(date)}
                 selectedDate={selectedDate}
@@ -430,40 +441,19 @@ export default function TaskInfoTop({
           </Grid>
         </Grid>
       </Grid>
-      {/* {description && ( */}
-        <Grid container className={classes.descriptionSection}>
-          <Grid item xs={12} md={12}>
-            <Typography variant="caption" color="textSecondary">
-              {t('common:form_fields.description')}
-            </Typography>
-          </Grid>
-          <Grid item xs={12} md={12}>
-            {/* <EditableField
-              value={description}
-              setValue={setDescription}
-              canUpdateNote={canUpdateNote}
-              customStyles={{ margin: 0 }}
-              action={(
-                <Button
-                  variant="outlined"
-                  color="primary"
-                  disabled={loading}
-                  data-testid="edit_action_btn"
-                  onClick={() => updateTask('description', description)}
-                  startIcon={loading && <Spinner />}
-                  style={{ marginTop: '10px' }}
-                >
-                  {t('common:form_actions.update')}
-                </Button>
-              )}
-            /> */}
-             <LiveEditableField
-              value={description}
-              action={(data) => updateTask('description', data)}
-            />
-          </Grid>
+      <Grid container className={classes.descriptionSection}>
+        <Grid item xs={12} md={12}>
+          <Typography variant="caption" color='textSecondary'>
+            {t('common:form_fields.description')}
+          </Typography>
         </Grid>
-      {/* // )} */}
+        <Grid item xs={12} md={12}>
+          <AutoSaveField
+            value={data.description}
+            mutationAction={(value) => updateTask('description', value)}
+          />
+        </Grid>
+      </Grid>
     </>
   );
 }
@@ -501,10 +491,13 @@ const useStyles = makeStyles({
   descriptionSection: {
     marginTop: '8px'
   },
-  root: {
-    '&.MuiIconButton-colorPrimary:hover': {
-      backgroundColor: 'none'
-    }
+  dueDateEnabled: {
+    border: 'solid 1px',
+    padding: '0 5px 0 5px',
+    borderRadius: '4px'
+  },
+  dueDateDisabled: {
+    padding: '0 5px 0 0',
   }
 });
 
