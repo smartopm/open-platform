@@ -58,7 +58,7 @@ export default function ClientPilotViewItem({process}){
                         ))}
                         </div>
                       )
-                      : (<Typography>{t('process.no_open_tasks')}</Typography>)
+                      : (<Typography>{t('processes.no_open_tasks')}</Typography>)
                     }
             </Grid>
 
