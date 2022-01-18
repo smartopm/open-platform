@@ -60,7 +60,11 @@ export default function CampaignLabels({ handleLabelSelect, handleDelete }) {
     )
 }
 
+CampaignLabels.defaultProps = {
+  handleDelete: () => {}
+}
+
 CampaignLabels.propTypes = {
     handleLabelSelect: PropTypes.func.isRequired,
-    handleDelete: PropTypes.func.isRequired,
+    handleDelete: PropTypes.func,
 }

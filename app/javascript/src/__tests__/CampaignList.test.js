@@ -60,7 +60,8 @@ describe('Campaign List page', () => {
     }, { timeout: 10 }
     )
   })
-  it('should render with an error', () => {
+  // TODO: Improve this test
+  it('should render with an error', async () => {
     const err = 'oops something went wrong'
     const mocks = [
       {
@@ -94,7 +95,9 @@ describe('Campaign List page', () => {
         <ErrorPage title={err} />
       </BrowserRouter>
     )
-    expect(ErrorC.queryAllByText('Home')[0]).toBeInTheDocument()
-    expect(ErrorC.queryAllByText(err)[0]).toBeInTheDocument()
+    await waitFor(() => {
+      expect(ErrorC.queryAllByText('Home')[0]).toBeInTheDocument()
+      expect(ErrorC.queryAllByText(err)[0]).toBeInTheDocument()
+    }, 10)
   })
 })
