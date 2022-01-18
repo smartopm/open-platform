@@ -1,5 +1,5 @@
+/* istanbul ignore next */
 // eslint-disable-next-line no-unused-vars
- /* istanbul ignore next */
 import React, { useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
