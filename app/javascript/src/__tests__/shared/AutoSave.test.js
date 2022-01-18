@@ -1,0 +1,21 @@
+import React from 'react';
+import { render, waitFor } from '@testing-library/react';
+import '@testing-library/jest-dom/extend-expect';
+import AutoSave from '../../shared/AutoSave';
+
+describe('AutoSave component', () => {
+  it('trigger auto save after 5 milliseconds', async () => {
+    const props = {
+      data: 'current value',
+      autoSaveAction: jest.fn(),
+      delay: 500,
+      previous: 'previous value'
+    };
+
+    render(<AutoSave {...props} />);
+
+    waitFor(() => {
+      expect(props.autoSaveAction).toHaveBeenCalled();
+    }, 1000)
+  });
+});
