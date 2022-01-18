@@ -19,7 +19,7 @@ export default function ProjectSteps({
   const classes = useStyles();
   const { id } = useParams();
   const [stepsOpen, setStepsOpen] = useState({});
-  const { t } = useTranslation(['task', 'common'])
+  const { t } = useTranslation('task')
 
   function toggleStep(stepItem){
     setStepsOpen({
@@ -85,7 +85,7 @@ export default function ProjectSteps({
             )}
         </>
       )))
-    :(<Typography data-testid="no-steps">{t('task.processes.no_steps_assigned')}</Typography>)}
+    :(<Typography data-testid="no-steps">{t('processes.no_steps_assigned')}</Typography>)}
     </>
   );
 }
