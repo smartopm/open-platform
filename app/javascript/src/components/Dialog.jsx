@@ -317,7 +317,7 @@ ActionDialog.propTypes = {
   handleClose: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
   message: PropTypes.string.isRequired,
-  type: PropTypes.oneOf(['warning', 'confirm']),
+  type: PropTypes.oneOf(['warning', 'confirm', 'misc.confirm']), // To silence errors in tests due to i18n
   handleOnSave: PropTypes.func.isRequired,
   disableActionBtn: PropTypes.bool
 }

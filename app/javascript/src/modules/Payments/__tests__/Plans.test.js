@@ -7,7 +7,7 @@ import UserPlan from '../Components/UserTransactions/Plans';
 import { UserBalance } from '../../../graphql/queries';
 import TransactionQuery, { UserPlans, GeneralPlanQuery } from '../graphql/payment_query';
 import { Spinner } from '../../../shared/Loading';
-import { AuthStateProvider } from '../../../containers/Provider/AuthStateProvider';
+import { Context } from '../../../containers/Provider/AuthStateProvider';
 import { generateId } from '../../../utils/helpers';
 import authState from '../../../__mocks__/authstate';
 
@@ -26,7 +26,7 @@ describe('Plan List Component', () => {
               id: 'f280159d-ac71-4c22-997a-07fd07344c94',
               planType: 'basic',
               startDate: '2021-01-26',
-              installmentAmount: '200',
+              installmentAmount: 200,
               paymentDay: 1,
               pendingBalance: 200,
               planValue: 300,
@@ -177,14 +177,14 @@ describe('Plan List Component', () => {
       result: {
         data: {
           userBalance: {
-            balance: '2000',
-            pendingBalance: '-12.0',
-            totalTransactions: '2000'
+            balance: 2000,
+            pendingBalance: -12,
+            totalTransactions: 2000
           }
         }
       }
     };
-    
+
     const userData = {
       name: 'some name'
     };
@@ -194,11 +194,11 @@ describe('Plan List Component', () => {
         mocks={[planMock, balanceMock, transactionMock, genFundsMock]}
         addTypename={false}
       >
-        <AuthStateProvider>
+        <Context.Provider value={authState}>
           <BrowserRouter>
             <UserPlan userId={userId} user={authState.user} userData={userData} tab='Plans' />
           </BrowserRouter>
-        </AuthStateProvider>
+        </Context.Provider>
       </MockedProvider>
     );
 

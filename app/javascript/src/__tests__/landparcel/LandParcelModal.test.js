@@ -50,8 +50,10 @@ describe('Land Property Modal Component', () => {
       modalType: 'details',
       landParcel: {
         id: '1u2y3y4',
-        parcelNumber: '15800'
-      }
+        parcelNumber: '15800',
+        accounts: []
+      },
+      landParcels: []
     }
     const container = render(
       <MockedProvider>
@@ -212,9 +214,9 @@ describe('Land Property Modal Component', () => {
 
     expect(container.queryByText(/proceed/i)).toBeTruthy()
     const proceedButton = container.queryByText(/proceed/i)
-    
+
     fireEvent.click(proceedButton)
-    
+
     expect(container.getByText(('buttons.merge_and_save'))).toBeInTheDocument()
     expect(container.getByText(('messages.merge_properties'))).toBeInTheDocument()
     expect(container.getAllByText(('misc.selected_property'))[0]).toBeInTheDocument()
