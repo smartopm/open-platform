@@ -170,7 +170,6 @@ export default function TaskInfoTop({
           <Typography
             variant="h6"
             style={{ color: '#575757' }}
-            // onMouseOver={() =>{canUpdateNote && setEditingBody(true)}}
             onMouseOver={canUpdateNote ? () => setEditingBody(true) : null}
           >
             <span
