@@ -761,8 +761,8 @@ export const TaskQuery = gql`
 `
 
 export const CommentQuery = gql`
-  query commentDetail($taskId: ID!) {
-    taskComments(taskId: $taskId) {
+  query commentDetail($taskId: ID!, $limit: Int, $offset: Int) {
+    taskComments(taskId: $taskId, limit: $limit, offset: $offset) {
       id
       body
       createdAt

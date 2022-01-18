@@ -24,6 +24,7 @@ export const ProjectsQuery = gql`
   }
   ${NotesFragment.note}
 `
+
 export const ProjectStagesQuery = gql`
   query projectStages {
     projectStages
@@ -36,3 +37,18 @@ export const TaskQuarterySummaryQuery = gql`
       completedByQuarter
     }
 `;
+
+export const ProjectCommentsQuery = gql`
+  query GetProjectComments($taskId: ID!, $limit: Int, $offset: Int) {
+    projectComments(taskId: $taskId, limit: $limit, offset: $offset) {
+      id
+      body
+      createdAt
+      user {
+        id
+        name
+        imageUrl
+      }
+    }
+  }
+`

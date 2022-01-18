@@ -8,19 +8,17 @@ import { Context } from '../containers/Provider/AuthStateProvider';
 import authState from '../__mocks__/authstate';
 
 describe('Comment Card Component', () => {
-  const data = {
-    taskComments: [
-      {
-      id: 'jwhekw',
-      body: 'body',
-      createdAt: "2020-09-30T20:32:17Z",
-      user: {
-        imageUrl: '',
-        name: 'name'
-        }
+  const comments = [
+    {
+    id: 'jwhekw',
+    body: 'body',
+    createdAt: "2020-09-30T20:32:17Z",
+    user: {
+      imageUrl: '',
+      name: 'name'
       }
-    ]
-  }
+    }
+  ];
 
   it('render without error', () => {
     const container = render(
@@ -28,7 +26,7 @@ describe('Comment Card Component', () => {
         <MockedProvider>
           <BrowserRouter>
             <CommentCard
-              data={data}
+              comments={comments}
               refetch={jest.fn}
             />
           </BrowserRouter>

@@ -50,6 +50,15 @@ module Types::Queries::Note
     field :task_comments, [Types::NoteCommentType], null: false do
       description 'return comments for one task'
       argument :task_id, GraphQL::Types::ID, required: true
+      argument :limit, Integer, required: false
+      argument :offset, Integer, required: false
+    end
+
+    field :project_comments, [Types::NoteCommentType], null: false do
+      description 'return comments for a project'
+      argument :task_id, GraphQL::Types::ID, required: true
+      argument :limit, Integer, required: false
+      argument :offset, Integer, required: false
     end
 
     field :task_histories, [Types::NoteHistoryType], null: false do
@@ -136,13 +145,39 @@ module Types::Queries::Note
                             .find(task_id)
   end
 
-  def task_comments(task_id:)
+  def task_comments(task_id:, offset: 0, limit: nil)
     unless permitted?(module: :note, permission: :can_fetch_task_comments)
       raise GraphQL::ExecutionError,
             I18n.t('errors.unauthorized')
     end
-    context[:site_community].notes.find(task_id).note_comments.eager_load(:user)
+
+    context[:site_community]
+      .notes.find(task_id)
+      .note_comments
+      .eager_load(:user)
+      .limit(limit).offset(offset)
   end
+
+  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/MethodLength
+  def project_comments(task_id:, offset: 0, limit: nil)
+    unless permitted?(module: :note, permission: :can_fetch_task_comments)
+      raise GraphQL::ExecutionError,
+            I18n.t('errors.unauthorized')
+    end
+
+    parent_task = context[:site_community].notes.find(task_id)
+    sub_task_ids = parent_task.sub_tasks.pluck(:id)
+    sub_sub_task_ids = Notes::Note.where(parent_note_id: sub_task_ids).pluck(:id)
+
+    parent_task
+      .note_comments
+      .eager_load(:user)
+      .or(Comments::NoteComment.where(note_id: sub_task_ids.concat(sub_sub_task_ids)))
+      .limit(limit).offset(offset)
+  end
+  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/MethodLength
 
   def task_histories(task_id:)
     unless permitted?(module: :note, permission: :can_fetch_task_histories)
