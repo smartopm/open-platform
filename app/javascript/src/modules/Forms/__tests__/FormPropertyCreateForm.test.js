@@ -38,7 +38,7 @@ describe('Form that creates other forms component', () => {
       query: FormPropertyUpdateMutation,
       variables: {
         formPropertyId: '5290d212-edf8-4c1e-a20b',
-        categoryId: '394892348329',
+        categoryId: '',
         fieldName: 'This should be there',
         fieldType: 'text',
         required: false,
@@ -67,7 +67,7 @@ describe('Form that creates other forms component', () => {
       query: FormPropertyCreateMutation,
       variables: {
         formId: '39c3b38e-136d-42e0',
-        // categoryId: '394892348329',
+        // categoryId: '',
         fieldName: '',
         fieldType: '',
         required: false,
@@ -97,7 +97,7 @@ describe('Form that creates other forms component', () => {
         <FormPropertyCreateForm
           propertyId={mocks.request.variables.formPropertyId}
           formId="39c3b38e-136d-42e0"
-          categoryId="394892348329"
+          categoryId=""
           refetch={refetchMock}
           close={closeMock}
         />
@@ -130,7 +130,7 @@ describe('Form that creates other forms component', () => {
       <MockedProvider mocks={[mocks, createPropertyMock]} addTypename>
         <FormPropertyCreateForm
           formId={createPropertyMock.request.variables.formId}
-          categoryId="394892348329"
+          categoryId=""
           refetch={refetchMock}
           close={closeMock}
         />

@@ -37,7 +37,7 @@ describe('It should test the comment component', () => {
     const container = render(
       <BrowserRouter>
         <MockedProvider>
-          <ParcelItem parcel={data} onParcelClick={() => {}} />
+          <ParcelItem parcel={data} onParcelClick={() => {}} onAddHouseClick={() => {}} />
         </MockedProvider>
       </BrowserRouter>
     )

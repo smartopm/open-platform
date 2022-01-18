@@ -218,7 +218,7 @@ MainNav.propTypes = {
 NewsNav.propTypes = {
   children: PropTypes.node.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
-  history: PropTypes.func.isRequired
+  history: PropTypes.object.isRequired
 
 };
 

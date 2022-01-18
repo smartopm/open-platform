@@ -175,7 +175,7 @@ export default function TransactionDetails({ data, detailsOpen, handleClose, cur
               {
                 isEditing
                 ? (
-                  <DatePickerDialog 
+                  <DatePickerDialog
                     selectedDate={inputValues.PaymentDate}
                     label="Payment Date"
                     handleDateChange={date => setInputValues({...inputValues, PaymentDate: date})}

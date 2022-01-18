@@ -45,7 +45,7 @@ describe('CommentBox', () => {
 describe('CommentSection', () => {
   const commentsProps = {
     data: {
-      user: { name: 'someimagesource' },
+      user: { name: 'someimagesource', id: 'sdfjshds' },
       comment: 'This is another comment',
       imageUrl: 'https://dev.dgdp.site/activestorage',
       isAdmin: true,

@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/react-testing';
@@ -39,7 +39,7 @@ describe('UserId Detail component', () => {
   });
 
 //   test the mother component here
-it('renders id card page', () => {
+it('renders id card page', async () => {
     const container = render(
       <MockedProvider>
         <BrowserRouter>
@@ -47,6 +47,8 @@ it('renders id card page', () => {
         </BrowserRouter>
       </MockedProvider>
     );
-    expect(container.queryByTestId('loader')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(container.queryByTestId('loader')).toBeInTheDocument();
+    })
   });
 });

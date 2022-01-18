@@ -63,7 +63,7 @@ describe('Form Component', () => {
       <MockedProvider mocks={[formMock]} addTypename={false}>
         <BrowserRouter>
           <FormContextProvider>
-            <Form formId="7d05e98e-e6bb-43cb-838e-e6d76005e326" />
+            <Form formId="7d05e98e-e6bb-43cb-838e-e6d76005e326" editMode={false} />
           </FormContextProvider>
         </BrowserRouter>
       </MockedProvider>

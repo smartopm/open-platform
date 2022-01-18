@@ -22,7 +22,7 @@ const currentCommunityMock = {
         features: { Dashboard: { features: [] } },
         socialLinks: null,
         menuItems: null,
-        wpLink: null,
+        wpLink: 'http://wp.com',
         themeColors: null,
         securityManager: null,
         templates: null,
