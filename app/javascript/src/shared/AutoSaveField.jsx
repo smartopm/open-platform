@@ -52,7 +52,7 @@ export default function AutoSaveField({ value, mutationAction, stateAction }) {
           disabled={!isEditMode}
           multiline
           variant="outlined"
-          data-testid="live_editable_field_text_input"
+          inputProps={{ 'data-testid': 'live-text-field' }}
         />
       </Grid>
       {isEditMode && !isTyping && <AutoSave previous={value} data={debouncedValue} autoSaveAction={(data) => mutationAction(data)} />}
