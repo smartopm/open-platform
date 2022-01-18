@@ -1,7 +1,7 @@
 // The file should be moved to shared directory
 
 import React from 'react';
-import { act, render, waitFor } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import ImageAuth from '../../shared/ImageAuth';
 import '@testing-library/jest-dom/extend-expect';
 
@@ -9,15 +9,49 @@ describe('ImageAuth Component', () => {
   it('should render image or text', async () => {
     const props = {
       imageLink: 'http://image.url',
-      auth: true
+      auth: false
     };
-    let container;
-    await act(async () => {
-      container = render(<ImageAuth {...props} />);
-    });
+    const container = render(<ImageAuth {...props} />);
 
     await waitFor(() => {
-      expect(container.queryAllByTestId('loader')[0]).toBeInTheDocument();
-    }, 10)
+      expect(container.queryByTestId('authenticated_image')).toBeInTheDocument();
+    }, 10);
   });
+  it('should render file', async () => {
+    const props = {
+      imageLink: 'http://image.url',
+      auth: false,
+      type: 'some_file'
+    };
+    const container = render(<ImageAuth {...props} />);
+
+    await waitFor(() => {
+      expect(container.queryByTestId('authenticated_file')).toBeInTheDocument();
+    }, 10);
+  });
+  it('should render default image', async () => {
+    const props = {
+      imageLink: 'null',
+      auth: true,
+      type: 'nomatter'
+    };
+    const container = render(<ImageAuth {...props} />);
+
+    await waitFor(() => {
+      expect(container.queryByTestId('default_image')).toBeInTheDocument();
+    }, 10);
+  });
+  it('should render imageAvatar', async () => {
+    const props = {
+      imageLink: 'http://image.url',
+      auth: false,
+      type: 'imageAvatar'
+    };
+    const container = render(<ImageAuth {...props} />);
+
+    await waitFor(() => {
+      expect(container.queryByTestId('authenticated_avatar')).toBeInTheDocument();
+    }, 10);
+  })
 });
+
