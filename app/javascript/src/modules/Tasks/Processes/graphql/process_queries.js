@@ -6,7 +6,10 @@ export const ProcessesQuery = gql`
     processes(offset: $offset, limit: $limit, query: $query) {
       ...NoteFields
       subTasks {
-        ...NoteFields
+        ...NoteFields,
+        subTasks {
+          ...NoteFields
+        }
       }
     }
   }

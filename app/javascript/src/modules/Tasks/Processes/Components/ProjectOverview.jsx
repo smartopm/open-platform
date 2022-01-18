@@ -105,7 +105,7 @@ export function ProjectOverviewSplitView({ data, refetch }) {
             <Typography variant="caption">Go to Guideline.</Typography>
           </Link>
         </Grid>
-        <Grid item md={12}>
+        <Grid item md={12} xs={12}>
           <br />
           <br />
           <br />

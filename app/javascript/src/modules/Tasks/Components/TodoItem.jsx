@@ -13,6 +13,7 @@ import MenuList from '../../../shared/MenuList';
 import { SubTasksQuery } from '../graphql/task_queries';
 import { LinearSpinner } from '../../../shared/Loading';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
+import OpenTaskDataList from '../Processes/Components/OpenTaskDataList';
 
 export default function TodoItem({
   task,
@@ -153,6 +154,14 @@ export default function TodoItem({
     <>
       {task && (
         <div style={{ marginBottom: '10px' }} key={task.id}>
+          { clientView ? (
+            <OpenTaskDataList
+              key={task.id}
+              task={task}
+              handleTaskCompletion={handleTaskCompletion}
+              handleTodoClick={handleTodoClick}
+            />
+        ) : (
           <TaskDataList
             key={task.id}
             task={task}
@@ -167,6 +176,8 @@ export default function TodoItem({
             handleTaskCompletion={handleTaskCompletion}
             clientView={clientView}
           />
+         )}
+
           {(isLoadingSubTasks || (isUpdating && objectAccessor(tasksOpen, task.id))) && <LinearSpinner />}
         </div>
       )}
@@ -176,40 +187,62 @@ export default function TodoItem({
             className={classes.levelOne}
             key={firstLevelSubTask.id}
           >
-            <TaskDataList
-              key={firstLevelSubTask.id}
-              task={firstLevelSubTask}
-              handleChange={handleChange}
-              selectedTasks={selectedTasks}
-              isSelected={isSelected}
-              menuData={menuData}
-              styles={{backgroundColor: '#F5F5F4'}}
-              openSubTask={objectAccessor(tasksOpen, firstLevelSubTask.id)}
-              handleOpenSubTasksClick={() => toggleTask(firstLevelSubTask)}
-              clickable
-              handleClick={() => handleTodoItemClick(firstLevelSubTask)}
-              handleTaskCompletion={handleTaskCompletion}
-              clientView={clientView}
-            />
+            {
+              clientView ? (
+                <OpenTaskDataList
+                  key={firstLevelSubTask.id}
+                  task={firstLevelSubTask}
+                  handleTaskCompletion={handleTaskCompletion}
+                  handleTodoClick={handleTodoClick}
+                />
+            ) : (
+              <TaskDataList
+                key={firstLevelSubTask.id}
+                task={firstLevelSubTask}
+                handleChange={handleChange}
+                selectedTasks={selectedTasks}
+                isSelected={isSelected}
+                menuData={menuData}
+                styles={{backgroundColor: '#F5F5F4'}}
+                openSubTask={objectAccessor(tasksOpen, firstLevelSubTask.id)}
+                handleOpenSubTasksClick={() => toggleTask(firstLevelSubTask)}
+                clickable
+                handleClick={() => handleTodoItemClick(firstLevelSubTask)}
+                handleTaskCompletion={handleTaskCompletion}
+                clientView={clientView}
+              />
+            )}
+   
           </div>
           {firstLevelSubTask?.subTasks?.length > 0 &&
             objectAccessor(tasksOpen, firstLevelSubTask.id) && (
               <>
                 {firstLevelSubTask?.subTasks?.map(secondLevelSubTask => (
                   <div className={classes.levelTwo} key={secondLevelSubTask.id}>
-                    <TaskDataList
-                      key={secondLevelSubTask.id}
-                      task={secondLevelSubTask}
-                      handleChange={handleChange}
-                      selectedTasks={selectedTasks}
-                      isSelected={isSelected}
-                      menuData={menuData}
-                      styles={{backgroundColor: '#ECECEA'}}
-                      clickable
-                      handleClick={() => handleTodoItemClick(secondLevelSubTask)}
-                      handleTaskCompletion={handleTaskCompletion}
-                      clientView={clientView}
-                    />
+                    {
+                      clientView ? (
+                        <OpenTaskDataList
+                          key={secondLevelSubTask.id}
+                          task={secondLevelSubTask}
+                          handleTaskCompletion={handleTaskCompletion}
+                          handleTodoClick={handleTodoClick}
+                        />
+                    ) : (
+                      <TaskDataList
+                        key={secondLevelSubTask.id}
+                        task={secondLevelSubTask}
+                        handleChange={handleChange}
+                        selectedTasks={selectedTasks}
+                        isSelected={isSelected}
+                        menuData={menuData}
+                        styles={{backgroundColor: '#ECECEA'}}
+                        clickable
+                        handleClick={() => handleTodoItemClick(secondLevelSubTask)}
+                        handleTaskCompletion={handleTaskCompletion}
+                        clientView={clientView}
+                      />
+                    )}
+
                   </div>
                 ))}
               </>
