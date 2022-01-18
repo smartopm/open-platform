@@ -73,7 +73,7 @@ export default function UserMerge({ userId, close }) {
         open={open}
         handleClose={() => setConfirmOpen(!open)}
         handleConfirm={handleMerge}
-        action="proceed"
+        action={t('menu.proceed')}
       >
         <Typography variant="body1">
           {t('misc.user_merge_warning_text')}
