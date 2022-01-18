@@ -122,31 +122,25 @@ phrase:
         locale_id: 5c6c3e050e8493da0e428087555a7b00
         tags: feedback
         update_translations: true
-     - file: ./public/locales/en/users.json
+    - file: ./public/locales/en/users.json
       params:
         file_format: i18next
         locale_id: 5c6c3e050e8493da0e428087555a7b00
         tags: users
         update_translations: true
-     - file: ./public/locales/en/search.json
+    - file: ./public/locales/en/search.json
       params:
         file_format: i18next
         locale_id: 5c6c3e050e8493da0e428087555a7b00
         tags: search
         update_translations: true
-     - file: ./public/locales/en/community.json
+    - file: ./public/locales/en/community.json
       params:
         file_format: i18next
         locale_id: 5c6c3e050e8493da0e428087555a7b00
         tags: community
         update_translations: true
-    - file: ./public/locales/en/days.json
-      params:
-        file_format: i18next
-        locale_id: 5c6c3e050e8493da0e428087555a7b00
-        tags: days
-        update_translations: true
-     - file: ./public/locales/en/news.json
+    - file: ./public/locales/en/news.json
       params:
         file_format: i18next
         locale_id: 5c6c3e050e8493da0e428087555a7b00
@@ -169,6 +163,7 @@ phrase:
         file_format: i18next
         locale_id: fa26b7d00b593c4578f0e9749221cace
         tags: dashboard
+    - file: ./public/locales/es/scan.json
       params:
         file_format: i18next
         locale_id: fa26b7d00b593c4578f0e9749221cace
@@ -238,12 +233,7 @@ phrase:
         file_format: i18next
         locale_id: fa26b7d00b593c4578f0e9749221cace
         tags: community
-    - file: ./public/locales/es/days.json
-      params:
-        file_format: i18next
-        locale_id: fa26b7d00b593c4578f0e9749221cace
-        tags: days
-  - file: ./public/locales/es/news.json
+    - file: ./public/locales/es/news.json
       params:
         file_format: i18next
         locale_id: fa26b7d00b593c4578f0e9749221cace
@@ -365,11 +355,6 @@ phrase:
         file_format: i18next
         locale_id: fa26b7d00b593c4578f0e9749221cace
         tags: news
-    - file: ./public/locales/es/days.json
-      params:
-        file_format: i18next
-        locale_id: fa26b7d00b593c4578f0e9749221cace
-        tags: days
     - file: ./config/locales/es.yml
       params:
         file_format: yml
