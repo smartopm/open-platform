@@ -21,7 +21,8 @@ export default function StepItem({
   styles,
   openSubSteps,
   handleOpenSubStepsClick,
-  handleStepCompletion
+  handleStepCompletion,
+  clientView
 }) {
   const classes = useStyles();
   const matches = useMediaQuery('(max-width:800px)');
@@ -42,6 +43,7 @@ export default function StepItem({
                 aria-controls="process-check-box"
                 aria-haspopup="true"
                 data-testid="process-check-box"
+                disabled={clientView}
                 onClick={(e) => handleStepCompletion(e, step.id, !step.completed)}
                 style={{backgroundColor: 'transparent'}}
               >
@@ -74,14 +76,13 @@ export default function StepItem({
 
           </Grid>
         </Grid>
-        <Grid item md={1} xs={2} className={classes.subStepsSection} data-testid="show_step_sub_steps">
+        <Grid item md={1} xs={1} className={classes.subStepsSection} data-testid="show_step_sub_steps">
           {step?.subTasks?.length > 0
             && (
               <IconButton
                 aria-controls="show-step-sub-steps-icon"
                 aria-haspopup="true"
                 onClick={(e) => handleOpenSubStepsClick(e)}
-                color='primary'
               >
                 {openSubSteps
                   ? <KeyboardArrowUpIcon fontSize="small" color="primary" />
@@ -118,10 +119,12 @@ StepItem.defaultProps = {
   styles: {},
   openSubSteps: false,
   handleOpenSubStepsClick: null,
+  clientView: false
 }
 StepItem.propTypes = {
   step: PropTypes.shape(Step).isRequired,
   clickable: PropTypes.bool,
+  clientView: PropTypes.bool,
   handleClick: PropTypes.func,
   // eslint-disable-next-line react/forbid-prop-types
   styles: PropTypes.object,

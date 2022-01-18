@@ -69,6 +69,7 @@ export default function ClientPilotViewItem({process}){
                 data={process?.subTasks}
                 setSelectedStep={routeToProcessDetailsPage}
                 handleStepCompletion={(id, completed) => handleStepCompletion(id, completed, refetch)}
+                clientView
               />
             </Grid>
 

@@ -97,6 +97,7 @@
     "no_ssigned_projects": "You do not have any assigned projects yet!",
     "your_tasks": "Your Tasks",
     "no_open_tasks": "Project does not have open tasks",
-    "process_steps": "Process Steps"
+    "process_steps": "Process Steps",
+    "no_steps_assigned": "There are not Steps currently assigned to this process."
   }
 }
