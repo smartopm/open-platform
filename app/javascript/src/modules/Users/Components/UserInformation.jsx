@@ -100,7 +100,7 @@ export default function UserInformation({
         >
           <DialogTitle id="user_merge">
             <CenteredContent>
-              <span>Merge Users</span>
+              <span>{t('users.merge_user')}</span>
             </CenteredContent>
           </DialogTitle>
           <DialogContent>
