@@ -2,6 +2,7 @@ import React, { useContext } from 'react'
 import { Grid,Typography } from '@mui/material';
 import { useQuery } from 'react-apollo';
 import { useHistory } from 'react-router-dom'
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import Divider from '@mui/material/Divider';
 import { TaskContext } from "../../Context";
@@ -23,7 +24,7 @@ export default function ClientPilotViewItem({process}){
         fetchPolicy: 'cache-and-network',
         errorPolicy: 'all'
       });
-
+    const { t } = useTranslation('task')
     const { handleStepCompletion } = useContext(TaskContext);
 
     function routeToProcessDetailsPage() {
@@ -34,32 +35,22 @@ export default function ClientPilotViewItem({process}){
     if (loading) return <Spinner />;
     return (
       <Grid container spacing={2}>
-
         <Grid item md={12} xs={12}>
           <Typography variant="h6">
             <span
-                  // eslint-disable-next-line react/no-danger
+              // eslint-disable-next-line react/no-danger
               dangerouslySetInnerHTML={{
-                    __html: sanitizeText(process?.process?.body)
+                    __html: sanitizeText(process?.body)
                   }}
             />
           </Typography>
-          <Grid item md={12} xs={12}>
-            <Grid container spacing={2}> 
-              <Grid item md={6} xs={12}>
-                <Typography variant="h6">Your Tasks</Typography>
-              </Grid>
-              <Grid item md={6} xs={12}>
-                <Typography variant="h6">Process Steps</Typography>
-              </Grid>
-            </Grid>
-          </Grid>
         </Grid>
         <Grid item md={12} xs={12} data-testid="project-container">
-          <Grid container spacing={2} data-testid="project-open-tasks"> 
+          <Grid container spacing={6} data-testid="project-open-tasks"> 
             <Grid item md={6} xs={12}>
-              <div>
-                {data?.projectOpenTasks?.length?
+              <Typography variant="h6">{t('processes.your_tasks')}</Typography>
+              <br />
+              {data?.projectOpenTasks?.length?
                       (
                         <div>
                           {data?.projectOpenTasks.map(task => (
@@ -67,17 +58,18 @@ export default function ClientPilotViewItem({process}){
                         ))}
                         </div>
                       )
-                      : (<Typography>Project does not have open tasks</Typography>)
+                      : (<Typography>{t('processes.no_open_tasks')}</Typography>)
                     }
-              </div>
-      
             </Grid>
 
             <Grid item md={6} xs={12} data-testid="project-step-information">
+              <Typography variant="h6">{t('processes.process_steps')}</Typography>
+              <br />
               <ProjectSteps
                 data={process?.subTasks}
                 setSelectedStep={routeToProcessDetailsPage}
                 handleStepCompletion={(id, completed) => handleStepCompletion(id, completed, refetch)}
+                clientView
               />
             </Grid>
 

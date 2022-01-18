@@ -2,6 +2,7 @@ export default {
   body: 'Task example',
   id: '23',
   createdAt: new Date('2020-08-01'),
+  dueDate:  new Date('2020-08-01').toString(),
   author: {
     name: 'Johnsc',
     id: '23453435',
@@ -27,6 +28,7 @@ export default {
       body: 'Task example',
       id: '23',
       createdAt: new Date('2020-08-01'),
+      dueDate:  new Date('2020-08-01').toString(),
       author: {
         name: 'Johnsc',
         id: '23453435',
@@ -52,6 +54,7 @@ export default {
           body: 'Task example',
             id: '23',
             createdAt: new Date('2020-08-01'),
+            dueDate:  new Date('2020-08-01').toString(),
             author: {
               name: 'Johnsc',
               id: '23453435',

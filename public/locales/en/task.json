@@ -93,6 +93,12 @@
       "post_construction": "Post Constructions"
     },
     "activity_summary": "Activity Summary",
-    "no_activity_summary": "No activity summary"
+    "no_activity_summary": "No activity summary",
+    "no_ssigned_projects": "You do not have any assigned projects yet!",
+    "no_assigned_projects": "You do not have any assigned projects yet!",
+    "your_tasks": "Your Tasks",
+    "no_open_tasks": "Project does not have open tasks",
+    "process_steps": "Process Steps",
+    "no_steps_assigned": "There are no Steps currently assigned to this process."
   }
 }

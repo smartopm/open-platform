@@ -2,6 +2,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
@@ -18,6 +19,7 @@ export default function ProjectSteps({
   const classes = useStyles();
   const { id } = useParams();
   const [stepsOpen, setStepsOpen] = useState({});
+  const { t } = useTranslation('task')
 
   function toggleStep(stepItem){
     setStepsOpen({
@@ -83,7 +85,7 @@ export default function ProjectSteps({
             )}
         </>
       )))
-    :(<Typography data-testid="no-steps">No Stages currrently assigned to this process</Typography>)}
+    :(<Typography data-testid="no-steps">{t('processes.no_steps_assigned')}</Typography>)}
     </>
   );
 }

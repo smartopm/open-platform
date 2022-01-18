@@ -12,7 +12,7 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import Card from '../../../../shared/Card';
 import { removeNewLines, sanitizeText } from '../../../../utils/helpers';
-
+import CustomProgressBar from '../../../../shared/CustomProgressBar';
 
 export default function StepItem({
   step,
@@ -21,7 +21,8 @@ export default function StepItem({
   styles,
   openSubSteps,
   handleOpenSubStepsClick,
-  handleStepCompletion
+  handleStepCompletion,
+  clientView
 }) {
   const classes = useStyles();
   const matches = useMediaQuery('(max-width:800px)');
@@ -29,13 +30,20 @@ export default function StepItem({
   return (
     <Card clickData={{clickable, handleClick}} styles={styles} contentStyles={{ padding: '4px' }}>
       <Grid container>
-        <Grid item md={11} xs={10} style={{ display: 'flex', alignItems: 'center' }} data-testid="step_body_section">
+        <Grid
+          item
+          md={11}
+          xs={11}
+          style={{ display: 'flex', alignItems: 'center' }}
+          data-testid="step_body_section"
+        >
           <Grid container style={{ display: 'flex', alignItems: 'center' }}>
             <Grid item md={2}>
               <IconButton
                 aria-controls="process-check-box"
                 aria-haspopup="true"
                 data-testid="process-check-box"
+                disabled={clientView}
                 onClick={(e) => handleStepCompletion(e, step.id, !step.completed)}
                 style={{backgroundColor: 'transparent'}}
               >
@@ -46,7 +54,7 @@ export default function StepItem({
                   )}
               </IconButton>
             </Grid>
-            <Grid item md={10}>
+            <Grid item md={6} xs={8}>
               <Typography
                 variant="body2"
                 data-testid="step_body"
@@ -61,16 +69,20 @@ export default function StepItem({
                 />
               </Typography>
             </Grid>
+
+            <Grid item md={2} xs={6}>
+              <CustomProgressBar task={step} smDown={false} />
+            </Grid>
+
           </Grid>
         </Grid>
-        <Grid item md={1} xs={2} className={classes.subStepsSection} data-testid="show_step_sub_steps">
+        <Grid item md={1} xs={1} className={classes.subStepsSection} data-testid="show_step_sub_steps">
           {step?.subTasks?.length > 0
             && (
               <IconButton
                 aria-controls="show-step-sub-steps-icon"
                 aria-haspopup="true"
                 onClick={(e) => handleOpenSubStepsClick(e)}
-                color='primary'
               >
                 {openSubSteps
                   ? <KeyboardArrowUpIcon fontSize="small" color="primary" />
@@ -107,10 +119,12 @@ StepItem.defaultProps = {
   styles: {},
   openSubSteps: false,
   handleOpenSubStepsClick: null,
+  clientView: false
 }
 StepItem.propTypes = {
   step: PropTypes.shape(Step).isRequired,
   clickable: PropTypes.bool,
+  clientView: PropTypes.bool,
   handleClick: PropTypes.func,
   // eslint-disable-next-line react/forbid-prop-types
   styles: PropTypes.object,
@@ -138,6 +152,9 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'flex-end',
-    borderLeft: 'solid 1px rgba(0, 0, 0, 0.12)'
+    borderLeft: 'solid 1px rgba(0, 0, 0, 0.12)',
+    '@media (min-device-width: 360px) and (max-device-height: 1368px) and (orientation: portrait)' : {
+      justifyContent: 'center',
+    },
   }
 }));
