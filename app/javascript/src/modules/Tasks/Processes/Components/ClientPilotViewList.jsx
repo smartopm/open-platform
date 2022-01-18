@@ -14,7 +14,7 @@ export default function ClientPilotViewList(){
     const limit = 50;
     const offset = 0;
     const classes = useStyles();
-    const { t } = useTranslation(['task', 'common'])
+    const { t } = useTranslation('task')
     const { loading, error, data }
         = useQuery(ProcessesQuery, {
         variables: {
@@ -38,7 +38,7 @@ export default function ClientPilotViewList(){
                     <Grid container spacing={1}>
                       <Grid item md={9} xs={10}>
                         <Typography variant="h4" style={{marginLeft: '5px', marginBottom: '24px'}} data-testid="processes-header">
-                          {t('task.processes.processes')}
+                          {t('processes.processes')}
                         </Typography>
                       </Grid>
                     </Grid>
@@ -50,7 +50,7 @@ export default function ClientPilotViewList(){
                     ))}
               </div>
             )
-        : (<CenteredContent>{t('task.processes.no_assigned_projects')}</CenteredContent>)
+        : (<CenteredContent>{t('processes.no_assigned_projects')}</CenteredContent>)
       }
     
         </Grid>
