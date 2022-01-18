@@ -1,4 +1,4 @@
-// /* eslint-disable complexity */
+/* eslint-disable complexity */
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import TextField from '@material-ui/core/TextField';

@@ -1,0 +1,36 @@
+// eslint-disable-next-line no-unused-vars
+import React, { useCallback, useEffect } from 'react';
+import PropTypes from 'prop-types';
+
+export default function AutoSave({ data, autoSaveAction, delay, previous}) {
+  const wait = delay || 1000;
+  
+  const memoisedAction = useCallback((value) => {
+    const handler = setTimeout(() => {
+      autoSaveAction(value);
+    }, wait);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  },[])
+
+  useEffect(() => {
+    if(data && data !== previous) {
+      memoisedAction(data)
+    }
+  }, [data])
+
+  return null;
+}
+
+AutoSave.defaultProps = {
+  delay: null,
+}
+
+AutoSave.propTypes = {
+  data: PropTypes.string.isRequired,
+  previous: PropTypes.string.isRequired,
+  delay: PropTypes.number,
+  autoSaveAction: PropTypes.func.isRequired,
+};

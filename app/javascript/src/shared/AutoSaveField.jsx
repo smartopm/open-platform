@@ -1,8 +1,9 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/styles';
 import { Grid } from '@material-ui/core';
 import PropTypes from 'prop-types';
+import AutoSave from './AutoSave'
 import useDebounce from '../utils/useDebounce';
 
 export default function AutoSaveField({ value, mutationAction, stateAction }) {
@@ -29,6 +30,8 @@ export default function AutoSaveField({ value, mutationAction, stateAction }) {
       setIsTyping(true);
       timer = setTimeout(() => setIsTyping(false), 1000);
     });
+
+    return () => clearTimeout(timer);
   }, []);
 
   return (
@@ -49,39 +52,13 @@ export default function AutoSaveField({ value, mutationAction, stateAction }) {
           disabled={!isEditMode}
           multiline
           variant="outlined"
-          InputProps={{
-            'data-testid': 'live_editable_description',
-          }}
+          data-testid="live_editable_field_text_input"
         />
       </Grid>
       {isEditMode && !isTyping && <AutoSave previous={value} data={debouncedValue} autoSaveAction={(data) => mutationAction(data)} />}
     </Grid>
   );
 }
-
-export function AutoSave({ data, autoSaveAction, delay, previous}) {
-  const wait = delay || 1000;
-  
-  const memoisedAction = useCallback((value) => {
-    const handler = setTimeout(() => {
-      autoSaveAction(value);
-    }, wait);
-
-    return () => {
-      clearTimeout(handler);
-    };
-  },[])
-
-  useEffect(() => {
-    if(data && data !== previous) {
-      memoisedAction(data)
-    }
-  }, [data])
-
-  return null;
-}
-
-
 AutoSaveField.defaultProps = {
   stateAction: () => {}
 }
@@ -90,17 +67,6 @@ AutoSaveField.propTypes = {
   value: PropTypes.string.isRequired,
   mutationAction: PropTypes.func.isRequired,
   stateAction: PropTypes.func,
-};
-
-AutoSave.defaultProps = {
-  delay: null,
-}
-
-AutoSave.propTypes = {
-  data: PropTypes.string.isRequired,
-  previous: PropTypes.string.isRequired,
-  delay: PropTypes.number,
-  autoSaveAction: PropTypes.func.isRequired,
 };
 
 const useStyles = makeStyles(() => ({
