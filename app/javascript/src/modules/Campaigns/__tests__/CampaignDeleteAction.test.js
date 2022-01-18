@@ -3,9 +3,9 @@ import { render, fireEvent, waitFor } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import { BrowserRouter } from 'react-router-dom'
 import { MockedProvider } from '@apollo/react-testing'
-import CampaignActionMenu from '../components/Campaign/CampaignDeleteAction'
-import { DeleteCampaign } from '../graphql/mutations'
-import { Spinner } from '../shared/Loading';
+import CampaignActionMenu from '../components/CampaignDeleteAction'
+import { DeleteCampaign } from '../../../graphql/mutations'
+import { Spinner } from '../../../shared/Loading';
 
 describe('campaign action menu component', () => {
   it('show correct action menu', async () => {

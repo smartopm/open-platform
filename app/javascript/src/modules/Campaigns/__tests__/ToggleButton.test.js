@@ -4,7 +4,7 @@ import {
     render
 } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
-import ToggleButton, { MultipleToggler } from "../components/Campaign/ToggleButton"
+import ToggleButton, { MultipleToggler } from "../components/ToggleButton"
 
 describe('It should render the toggle button delete', () => {
   const mock = jest.fn()

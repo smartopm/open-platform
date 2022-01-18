@@ -103,7 +103,7 @@ RSpec.describe Types::Queries::Campaign do
           result = DoubleGdpSchema.execute(campaigns_query, variables: variables,
                                                             context: {
                                                               current_user: admin,
-                                                              site_community: community.id,
+                                                              site_community: community,
                                                             }).as_json
           expect(result.dig('data', 'campaigns', 0, 'name')).to eql 'Test campaign'
         end
@@ -115,7 +115,7 @@ RSpec.describe Types::Queries::Campaign do
           result = DoubleGdpSchema.execute(campaigns_query, variables: variables,
                                                             context: {
                                                               current_user: admin,
-                                                              site_community: community.id,
+                                                              site_community: community,
                                                             }).as_json
           expect(result.dig('data', 'campaigns').length).to eql 0
         end

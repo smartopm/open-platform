@@ -3,18 +3,16 @@ import { render } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom/';
 import { MockedProvider } from '@apollo/react-testing';
-import UpdateCampaign from '../../containers/Campaigns/CampaignUpdate';
+import CreateCampaign from '../containers/CampaignCreate';
 
-describe('CampaignUpdate Component', () => {
-  it('redirects to / and not render campaign update form', () => {
-    const container = render(
+describe('CampaignCreate Component', () => {
+  it('renders loader when loading notes', () => {
+    render(
       <MockedProvider>
         <BrowserRouter>
-          <UpdateCampaign match={{ params: { id: '123' } }} />
+          <CreateCampaign />
         </BrowserRouter>
       </MockedProvider>
     );
-
-    expect(container.queryByTestId('campaign-form')).toBeNull();
   });
 });

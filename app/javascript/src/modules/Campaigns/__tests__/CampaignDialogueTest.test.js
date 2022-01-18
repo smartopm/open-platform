@@ -3,7 +3,7 @@ import {
     render
 } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
-import DeleteDialogue from "../components/Campaign/CampaignDeleteDialogue"
+import DeleteDialogue from "../components/CampaignDeleteDialogue"
 
 describe('It should render the dialog box for delete', () => {
   const container = render(

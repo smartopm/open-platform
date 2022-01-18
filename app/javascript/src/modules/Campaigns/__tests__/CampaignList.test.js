@@ -3,10 +3,10 @@ import { render, waitFor } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import { BrowserRouter } from 'react-router-dom/'
 import { MockedProvider } from '@apollo/react-testing'
-import { allCampaigns } from '../graphql/queries'
+import { allCampaigns } from '../../../graphql/queries'
 import Campaign from '../components/CampaignList'
-import Loading from '../shared/Loading'
-import ErrorPage from '../components/Error'
+import Loading from '../../../shared/Loading'
+import ErrorPage from '../../../components/Error'
 
 describe('Campaign List page', () => {
   it('should render without error', async () => {
