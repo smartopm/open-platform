@@ -188,44 +188,6 @@ export default function TaskInfoTop({
             />
 )}
         </Grid>
-        {!editingBody && canUpdateNote ? (
-          <Grid item xs={3} md={1} data-testid="edit_body_action" style={{ textAlign: 'right' }}>
-            <IconButton
-              onClick={() => setEditingBody(true)}
-              data-testid="edit_body_icon"
-              style={{ marginTop: '-4px' }}
-              color="primary"
-            >
-              <Edit />
-            </IconButton>
-          </Grid>
-        ) : (
-          <Grid item xs={3} md={1} data-testid="edit_body_action" style={{ textAlign: 'right' }}>
-            <IconButton
-              data-testid="edit_body_icon"
-              style={{ marginTop: '-6px' }}
-              color="primary"
-              disabled
-            >
-              <Edit />
-            </IconButton>
-          </Grid>
-        )}
-        {editingBody && (
-          <Grid item xs={2} data-testid="edit_action">
-            <Button
-              variant="outlined"
-              color="primary"
-              disabled={loading}
-              data-testid="edit_body_action_btn"
-              onClick={() => updateTask('body', body)}
-              startIcon={loading && <Spinner />}
-              style={{ marginTop: '70px' }}
-            >
-              {t('common:form_actions.update')}
-            </Button>
-          </Grid>
-        )}
         {!matches && (
           <Grid item md={3}>
             <Grid container style={{ justifyContent: 'right' }}>
