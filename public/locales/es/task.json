@@ -18,6 +18,7 @@
     "processes": "Procesos"
   },
   "processes": {
+    "activity_summary": "Resumen de la Actividad",
     "completed_by_quarter": "Completado por Trimestre",
     "documents": "Documentos",
     "drc_process": "Proceso de DRC",
@@ -30,8 +31,12 @@
       "post_construction": "Post Construcciones",
       "scheme_design_review": "Revisión del Esquema de Diseño"
     },
+    "no_assigned_projects": "¡Aún no tiene ningún proyecto asignado!",
     "no_data": "No hay información que mostrar",
+    "no_open_tasks": "El proyecto no tiene tareas abiertas",
+    "no_steps_assigned": "Actualmente no hay pasos asignados a este proceso.",
     "overview": "Descripción General",
+    "process_steps": "Pasos del Proceso",
     "processes": "Procesos",
     "projects_by_stage": "Proyectos por Etapa"
   },

@@ -1,7 +1,8 @@
 {
   "search": {
     "create_request": "Crea una nueva solicitud",
+    "load_more": "Carga más",
     "no_results": "No se han encontrado resultados",
-    "load_more": "Carga más"
+    "search_for": "Buscar {{title}}"
   }
 }
