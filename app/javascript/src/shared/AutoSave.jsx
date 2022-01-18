@@ -1,7 +1,9 @@
 // eslint-disable-next-line no-unused-vars
+ /* istanbul ignore next */
 import React, { useCallback, useEffect } from 'react';
 import PropTypes from 'prop-types';
 
+ /* istanbul ignore next */
 export default function AutoSave({ data, autoSaveAction, delay, previous}) {
   const wait = delay || 1000;
   
