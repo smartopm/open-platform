@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_01_13_204122) do
+ActiveRecord::Schema.define(version: 2022_01_18_071218) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -46,7 +46,7 @@ ActiveRecord::Schema.define(version: 2022_01_13_204122) do
     t.string "event_condition_query"
     t.string "status", default: "not_deleted"
     t.index ["community_id"], name: "index_action_flows_on_community_id"
-    t.index ["title"], name: "index_action_flows_on_title", unique: true
+    t.index ["title", "community_id"], name: "index_action_flows_on_title_and_community_id", unique: true
   end
 
   create_table "active_storage_attachments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
