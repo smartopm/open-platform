@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 export default function AutoSave({ data, autoSaveAction, delay, previous}) {
   const wait = delay || 1000;
   
+  /* istanbul ignore next */
   const memoisedAction = useCallback((value) => {
     const handler = setTimeout(() => {
       autoSaveAction(value);
@@ -15,6 +16,7 @@ export default function AutoSave({ data, autoSaveAction, delay, previous}) {
     };
   },[])
 
+  /* istanbul ignore next */
   useEffect(() => {
     if(data && data !== previous) {
       memoisedAction(data)

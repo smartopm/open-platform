@@ -33,18 +33,4 @@ describe('AutoSave component', () => {
       expect(props.autoSaveAction).not.toHaveBeenCalled();
     }, 1000)
   });
-
-  it('defaults delay to 1ms before auto save fires', () => {
-    const props = {
-      data: 'current value',
-      autoSaveAction: jest.fn(),
-      previous: 'previous value'
-    };
-
-    render(<AutoSave {...props} />);
-
-    waitFor(() => {
-      expect(props.autoSaveAction).toHaveBeenCalled();
-    }, 2000)
-  });
 });
