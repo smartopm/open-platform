@@ -48,7 +48,7 @@ export default function ClientPilotViewItem({process}){
         <Grid item md={12} xs={12} data-testid="project-container">
           <Grid container spacing={6} data-testid="project-open-tasks"> 
             <Grid item md={6} xs={12}>
-              <Typography variant="h6">{t('task.process.your_tasks')}</Typography>
+              <Typography variant="h6">{t('task.processes.your_tasks')}</Typography>
               <br />
               {data?.projectOpenTasks?.length?
                       (
@@ -63,7 +63,7 @@ export default function ClientPilotViewItem({process}){
             </Grid>
 
             <Grid item md={6} xs={12} data-testid="project-step-information">
-              <Typography variant="h6">{t('task.process.process_steps')}</Typography>
+              <Typography variant="h6">{t('task.processes.process_steps')}</Typography>
               <br />
               <ProjectSteps
                 data={process?.subTasks}

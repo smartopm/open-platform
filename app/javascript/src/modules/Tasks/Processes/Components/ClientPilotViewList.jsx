@@ -50,7 +50,7 @@ export default function ClientPilotViewList(){
                     ))}
               </div>
             )
-        : (<CenteredContent>{t('task.process.no_ssigned_projects')}</CenteredContent>)
+        : (<CenteredContent>{t('task.processes.no_assigned_projects')}</CenteredContent>)
       }
     
         </Grid>
