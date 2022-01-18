@@ -1,5 +1,5 @@
 import React from 'react'
-import Campaigns from '../../containers/Campaigns/Campaigns';
+import Campaigns from './containers/Campaigns';
 import AccessCheck from '../Permissions/Components/AccessCheck';
 
 const campaignPermissions = ['can_access_campaign'];

@@ -2,11 +2,11 @@
 import React, { useContext } from 'react';
 import { Redirect } from 'react-router-dom';
 import { useQuery } from 'react-apollo';
-import { Campaign } from '../../graphql/queries';
-import { Context as AuthStateContext } from '../Provider/AuthStateProvider';
-import Loading from '../../shared/Loading';
-import ErrorPage from '../../components/Error';
-import CampaignForm from '../../components/CampaignForm';
+import { Campaign } from '../../../graphql/queries';
+import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
+import Loading from '../../../shared/Loading';
+import ErrorPage from '../../../components/Error';
+import CampaignForm from '../components/CampaignForm';
 
 export default function CampaignUpdate({ match }) {
   const authState = useContext(AuthStateContext);

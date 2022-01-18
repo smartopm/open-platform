@@ -4,7 +4,7 @@ import { TextField, Chip } from '@material-ui/core'
 import { useQuery } from 'react-apollo'
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types'
-import { LabelsQuery } from '../graphql/queries'
+import { LabelsQuery } from '../../../graphql/queries'
 
 export default function CampaignLabels({ handleLabelSelect, handleDelete }) {
     const { data } = useQuery(LabelsQuery)

@@ -21,7 +21,7 @@ import { MergeProperty } from '../../graphql/mutations/land_parcel';
 import MessageAlert from '../MessageAlert';
 import { formatError, handleQueryOnChange, useParamsQuery } from '../../utils/helpers';
 import SearchInput from '../../shared/search/SearchInput';
-import { MultipleToggler } from '../Campaign/ToggleButton'
+import { MultipleToggler } from '../../modules/Campaigns/components/ToggleButton'
 import LandParcelMap from './LandParcelMap'
 import useDebounce from '../../utils/useDebounce';
 import QueryBuilder from '../QueryBuilder';

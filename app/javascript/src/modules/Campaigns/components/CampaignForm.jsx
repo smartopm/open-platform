@@ -8,16 +8,16 @@ import {
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
 import { useTranslation } from 'react-i18next';
-import { DateAndTimePickers } from './DatePickerDialog'
+import { DateAndTimePickers } from '../../../components/DatePickerDialog'
 import {
   CampaignCreate,
   CampaignUpdateMutation,
   CampaignLabelRemoveMutation
-} from '../graphql/mutations'
-import { saniteError, getJustLabels, delimitorFormator } from '../utils/helpers'
+} from '../../../graphql/mutations'
+import { saniteError, getJustLabels, delimitorFormator } from '../../../utils/helpers'
 import CampaignLabels from './CampaignLabels'
-import Toggler from './Campaign/ToggleButton'
-import TemplateList from '../modules/Emails/components/TemplateList'
+import Toggler from './ToggleButton'
+import TemplateList from '../../Emails/components/TemplateList'
 
 const initData = {
   id: '',

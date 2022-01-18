@@ -44,10 +44,10 @@ import ProjectsList from '../src/modules/Tasks/Processes/Components/ProjectsList
 import FeedbackPage from '../src/containers/Activity/AllFeedback';
 import ShowroomLogs from '../src/containers/showroom/ShowroomLogs';
 import ClientRequestForm from '../src/containers/ClientRequestForm';
-import CampaignCreate from '../src/containers/Campaigns/CampaignCreate';
+import CampaignCreate from '../src/modules/Campaigns/containers/CampaignCreate';
 import Scan from '../src/containers/Scan';
 import WelcomePage from '../src/components/AuthScreens/WelcomePage';
-import CampaignUpdate from '../src/containers/Campaigns/CampaignUpdate';
+import CampaignUpdate from '../src/modules/Campaigns/containers/CampaignUpdate';
 import DiscussonPage from '../src/containers/Discussions/DiscussionPage';
 import GeoMap from '../src/containers/GeoMap';
 import Notifications from '../src/modules/Preferences/Components/Notifications';

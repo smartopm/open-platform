@@ -13,7 +13,7 @@ import { useTranslation } from 'react-i18next'
 import { useTheme } from '@material-ui/styles'
 import { CustomizedDialogs, ActionDialog } from '../../../components/Dialog'
 import CreateLabel from '../../Labels/Components/CreateLabel'
-import CampaignIcon from '../../../components/Campaign/CampaignIcon'
+import CampaignIcon from '../../Campaigns/components/CampaignIcon'
 import MessageAlert from '../../../components/MessageAlert';
 // TODO: @olivier ==> Find a way to reuse this for other similar actions like we have on tasks
 const USERS_LABEL_WARNING_LIMIT = 2000
