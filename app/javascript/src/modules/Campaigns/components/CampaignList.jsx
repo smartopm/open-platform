@@ -13,7 +13,6 @@ import { Typography } from '@material-ui/core';
 import { allCampaigns } from '../../../graphql/queries';
 import Loading from '../../../shared/Loading';
 import ErrorPage from '../../../components/Error';
-// import CampaignDeleteAction from "./CampaignDeleteAction"
 import CenteredContent from '../../../shared/CenteredContent';
 import Paginate from '../../../components/Paginate';
 import SearchInput from '../../../shared/search/SearchInput';
@@ -22,6 +21,7 @@ import { DeleteCampaign } from '../../../graphql/mutations';
 import MenuList from '../../../shared/MenuList';
 import CampaignCard from './CampaignCard';
 import CampaignSplitScreen from './CampaignSplitScreen';
+import DeleteDialogueBox from '../../../shared/dialogs/DeleteDialogue';
 
 export default function CampaignList() {
   const classes = useStyles();
@@ -30,7 +30,8 @@ export default function CampaignList() {
   const [offset, setOffset] = useState(0);
   const [searchText, setSearchText] = useState('');
   const [anchorEl, setAnchorEl] = useState(null);
-  const [openModal, setOpenModal] = useState(false);
+  const [openDeleteModal, setOpenDeleteModal] = useState(false);
+  const [deletingCampaign, setDeletingCampaign] = useState(false);
   const [campaign, setCampaign] = useState(null);
   const [deleteCampaign] = useMutation(DeleteCampaign);
   const anchorElOpen = Boolean(anchorEl);
@@ -68,8 +69,7 @@ export default function CampaignList() {
     setCampaign(camp);
   }
 
-  function handleMenuClose(event) {
-    event.stopPropagation();
+  function handleMenuClose() {
     setAnchorEl(null);
     setCampaign(null);
   }
@@ -79,13 +79,15 @@ export default function CampaignList() {
   }
 
   function handleDeleteClick() {
-    setOpenModal(!openModal);
+    setOpenDeleteModal(!openDeleteModal);
   }
 
   function handleDelete() {
+    setDeletingCampaign(true)
     deleteCampaign({
       variables: { id: campaign.id }
     }).then(() => {
+      setDeletingCampaign(false)
       handleMenuClose();
       handleDeleteClick();
       refetch();
@@ -130,9 +132,16 @@ export default function CampaignList() {
             <Grid item sm={12}>
               {data.campaigns.length > 0 ? (
                 <>
-                  {/* {openModal && (
-              <CampaignDeleteDialogue handleClose={handleDeleteClick} handleDelete={handleDelete} open={openModal} /> 
-            )} */}
+                  {openDeleteModal && (
+                    <DeleteDialogueBox
+                      open={openDeleteModal}
+                      handleClose={handleDeleteClick}
+                      handleAction={handleDelete}
+                      title="Campaign"
+                      action="delete"
+                      loading={deletingCampaign}
+                    />
+                  )}
                   <div style={{ marginBottom: '20px' }}>
                     <SearchInput
                       filterRequired={false}
