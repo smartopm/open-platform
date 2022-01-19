@@ -1,41 +1,35 @@
 /* eslint-disable max-statements */
 /* eslint-disable no-use-before-define */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { Fragment, useState } from 'react'
-import { useQuery, useMutation } from 'react-apollo'
-import Fab from '@material-ui/core/Fab'
-import AddIcon from '@material-ui/icons/Add'
-import { useHistory } from 'react-router-dom'
+import React, { Fragment, useState } from 'react';
+import { useQuery, useMutation } from 'react-apollo';
 import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
+import Fab from '@material-ui/core/Fab';
+import AddIcon from '@material-ui/icons/Add';
+import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/styles';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import { IconButton } from '@material-ui/core'
-import Hidden from '@material-ui/core/Hidden';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import { allCampaigns } from '../../../graphql/queries'
-import Loading from "../../../shared/Loading"
-import ErrorPage from "../../../components/Error"
-import { dateToString } from "../../../components/DateContainer"
+import { Typography } from '@material-ui/core';
+import { allCampaigns } from '../../../graphql/queries';
+import Loading from '../../../shared/Loading';
+import ErrorPage from '../../../components/Error';
 // import CampaignDeleteAction from "./CampaignDeleteAction"
-import CenteredContent from '../../../shared/CenteredContent'
-import Paginate from '../../../components/Paginate'
-import SearchInput from '../../../shared/search/SearchInput'
-import useDebounce from '../../../utils/useDebounce'
-import Card from '../../../shared/Card';
-import CampaignDeleteDialogue from './CampaignDeleteDialogue';
+import CenteredContent from '../../../shared/CenteredContent';
+import Paginate from '../../../components/Paginate';
+import SearchInput from '../../../shared/search/SearchInput';
+import useDebounce from '../../../utils/useDebounce';
 import { DeleteCampaign } from '../../../graphql/mutations';
 import MenuList from '../../../shared/MenuList';
+import CampaignCard from './CampaignCard';
+import CampaignSplitScreen from './CampaignSplitScreen';
 
 export default function CampaignList() {
+  const classes = useStyles();
   const history = useHistory();
   const limit = 50;
-  const classes = useStyles();
-  const matches = useMediaQuery('(max-width:800px)');
   const [offset, setOffset] = useState(0);
   const [searchText, setSearchText] = useState('');
-  const [anchorEl, setAnchorEl] = useState(null);;
+  const [anchorEl, setAnchorEl] = useState(null);
   const [openModal, setOpenModal] = useState(false);
   const [campaign, setCampaign] = useState(null);
   const [deleteCampaign] = useMutation(DeleteCampaign);
@@ -44,7 +38,7 @@ export default function CampaignList() {
   const { data, error, loading, refetch } = useQuery(allCampaigns, {
     variables: { limit, offset, query: debouncedSearchText },
     fetchPolicy: 'cache-and-network'
-  })
+  });
   const { t } = useTranslation(['campaign', 'common']);
 
   const menuList = [
@@ -85,7 +79,7 @@ export default function CampaignList() {
   }
 
   function handleDeleteClick() {
-    setOpenModal(!openModal)
+    setOpenModal(!openModal);
   }
 
   function handleDelete() {
@@ -95,125 +89,110 @@ export default function CampaignList() {
       handleMenuClose();
       handleDeleteClick();
       refetch();
-    })
+    });
   }
 
   function routeToAction() {
-    return history.push(`/campaign/${campaign.id}`)
+    return history.push(`/campaign/${campaign.id}`);
   }
   function routeToCreateCampaign() {
-    return history.push('/campaign-create')
+    return history.push('/campaign-create');
   }
 
   function paginate(action) {
     if (action === 'prev') {
       if (offset < limit) {
-        return
+        return;
       }
-      setOffset(offset - limit)
+      setOffset(offset - limit);
     } else if (action === 'next') {
-      setOffset(offset + limit)
+      setOffset(offset + limit);
     }
   }
 
-  if (loading) return <Loading />
-  if (error) return <ErrorPage />
+  if (loading) return <Loading />;
+  if (error) return <ErrorPage />;
   return (
-    data.campaigns.length > 0 ? ( 
-      <div className="container">
-        {openModal && (
-        <CampaignDeleteDialogue handleClose={handleDeleteClick} handleDelete={handleDelete} open={openModal} /> 
-      )}
-        <SearchInput
-          filterRequired={false}
-          title={t('common:misc.campaigns')}
-          searchValue={searchText}
-          handleSearch={handleSearchText}
-          handleClear={() => setSearchText('')}
-          data-testid="search_input"
-        />
-        {data.campaigns.map(camp => (
-          <Fragment key={camp.id}>
-            <div>
-              <Card styles={{marginBottom: 0}} contentStyles={{ padding: '4px' }}>
-                <Grid container spacing={2}>
-                  <Grid item md={5} xs={10} style={{ display: 'flex', alignItems: 'center' }} data-testid="task_body_section">
-                    <Grid item md={8} xs={4}>
-                      <Typography variant="body2" component="span">
-                        {camp.batchTime ? dateToString(camp.batchTime) : 'Never '}
-                      </Typography>
-                    </Grid>
-                    <Grid item md={8} xs={4}>
-                      <Typography
-                        variant="body2"
-                        data-testid="campaign_name"
-                        component="p"
-                        className={matches ? classes.campaignBodyMobile : classes. campaignBody}
-                      >
-                        {camp.name}
-                      </Typography>
-                    </Grid>
-                    <Grid item md={1} xl={1}>
-                      <Hidden smDown>
-                        <IconButton
-                          aria-controls="simple-menu"
-                          aria-haspopup="true"
-                          data-testid="campaign-item-menu"
-                          dataid={camp.id}
-                          onClick={event => menuData.handleMenu(event, camp)}
-                          color="primary"
-                        >
-                          <MoreVertIcon />
-                        </IconButton>
-                      </Hidden>
-                    </Grid>
-                  </Grid>
+    <Grid container>
+      <Grid item sm={5}>
+        <div className="container">
+          <Grid container>
+            <Grid item sm={12} style={{marginBottom: '20px'}}>
+              <Grid container>
+                <Grid item sm={12}>
+                  <Typography variant='h4'>Campaigns</Typography>
                 </Grid>
-              </Card>
-              <MenuList
-                open={menuData.open}
-                anchorEl={menuData.anchorEl}
-                handleClose={menuData.handleMenuClose}
-                list={menuData.menuList.filter(menuItem => menuItem.content !== null)}
-              />
-            </div>
+                <Grid item sm={12}>
+                  <Typography variant='body2'>Communicate with the community.</Typography>
+                </Grid>
+              </Grid>
+            </Grid>
+            <Grid item sm={12}>
+              {data.campaigns.length > 0 ? (
+                <>
+                  {/* {openModal && (
+              <CampaignDeleteDialogue handleClose={handleDeleteClick} handleDelete={handleDelete} open={openModal} /> 
+            )} */}
+                  <div style={{ marginBottom: '20px' }}>
+                    <SearchInput
+                      filterRequired={false}
+                      title={t('common:misc.campaigns')}
+                      searchValue={searchText}
+                      handleSearch={handleSearchText}
+                      handleClear={() => setSearchText('')}
+                      data-testid="search_input"
+                    />
+                  </div>
+                  {data.campaigns.map(camp => (
+                    <Fragment key={camp.id}>
+                      <CampaignCard camp={camp} menuData={menuData} />
+                      <MenuList
+                        open={menuData.open && menuData?.anchorEl?.getAttribute('dataid') === camp.id}
+                        anchorEl={menuData.anchorEl}
+                        handleClose={menuData.handleMenuClose}
+                        list={menuData.menuList.filter(menuItem => menuItem.content !== null)}
+                      />
+                    </Fragment>
+                  ))}
 
-            {/* <div className="border-top my-3" /> */}
-          </Fragment>
-      ))}
-
-        <br />
-        <CenteredContent>
-          <Paginate
-            offSet={offset}
-            limit={limit}
-            active={offset >= 1}
-            handlePageChange={paginate}
-          />
-        </CenteredContent>
-        <Fab
-          variant="extended"
-          color="primary"
-          style={{
-          position: 'fixed',
-          bottom: 24,
-          right: 57,
-          color: 'white',
-        }}
-          onClick={() => {
-          routeToCreateCampaign()
-        }}
-        >
-          <AddIcon />
-          {' '}
-          {t('common:menu.create')}
-        </Fab>
-      </div>
-    ) : (
-      // TODO add translation
-      <p> No campaigns have been created yet</p>
-    )
-  )
+                  <br />
+                  <CenteredContent>
+                    <Paginate
+                      offSet={offset}
+                      limit={limit}
+                      active={offset >= 1}
+                      handlePageChange={paginate}
+                    />
+                  </CenteredContent>
+                  <Fab
+                    variant="extended"
+                    color="primary"
+                    style={{
+                      position: 'fixed',
+                      bottom: 24,
+                      right: 57,
+                      color: 'white'
+                    }}
+                    onClick={() => {
+                      routeToCreateCampaign();
+                    }}
+                  >
+                    <AddIcon /> 
+                    {' '}
+                    {t('common:menu.create')}
+                  </Fab>
+                </>
+              ) : (
+                // TODO add translation
+                <p> No campaigns have been created yet</p>
+              )}
+            </Grid>
+          </Grid>
+        </div>
+      </Grid>
+      <Grid item sm={7} />
+    </Grid>
+  );
 }
 
 const useStyles = makeStyles(() => ({
@@ -230,6 +209,5 @@ const useStyles = makeStyles(() => ({
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
     paddingLeft: '3px'
-  },
+  }
 }));
-
