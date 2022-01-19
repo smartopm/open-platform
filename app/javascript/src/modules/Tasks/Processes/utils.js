@@ -1,14 +1,15 @@
-/* eslint-disable import/prefer-default-export */
-export function updateStageCount(stages, data) {
-  if(!data) return {}
-  const updatedStages = {}
-    data.projectStages.forEach(([stageName, count]) => {
-      updatedStages[stageName.toLowerCase().replace(/\s/g, '_')] = count
-    });
-    return {...stages, ...updatedStages}
+export function hrefsExtractor(link) {
+  const doc = document.createElement('html');
+  doc.innerHTML = link;
+  const links = doc.getElementsByTagName('a');
+  const urls = [];
+
+  Object.values(links).forEach(l => urls.push(l.getAttribute('href')));
+
+  return urls;
 }
 
-export function filterProjectAndStages(projectData){
+export function filterProjectAndStages(projectData, projectStages){
   if (!projectData) return [];
 
   if(!Array.isArray(projectData) && projectData.length < 0) {
@@ -17,7 +18,9 @@ export function filterProjectAndStages(projectData){
 
   return projectData.map((project) => ({
     ...project,
-    subTasks: project.subTasks,
+    subTasks: project.subTasks.filter(
+      (subTask) => (Object.keys(projectStages).includes(sentenceToSnakeCase(subTask.body)))
+      ),
   }))
 }
 
@@ -34,9 +37,9 @@ export function calculateOpenProjectsByStage(projects, stages){
 
   projects.forEach((project) => {
     const currentStage = getCurrentStage(project)
-    
+
     if(currentStage) {
-      const key = currentStage.toLowerCase().replace(/\s/g, '_')
+      const key = sentenceToSnakeCase(currentStage)
       lookup[String(key)] += 1;
     }
   });
@@ -44,3 +47,7 @@ export function calculateOpenProjectsByStage(projects, stages){
   return lookup;
 }
 
+export function sentenceToSnakeCase(text) {
+  if (!text) return null;
+  return text.toLowerCase().replace(/\s/g, '_');
+}

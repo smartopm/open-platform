@@ -14,7 +14,7 @@ import ProjectProcesses, { ProjectProcessesSplitView } from './ProjectProcesses'
 import ErrorPage from '../../../../components/Error';
 import Loading from '../../../../shared/Loading';
 import { SubTasksQuery, TaskQuery } from '../../graphql/task_queries';
-import hrefsExtractor from '../util'
+import { hrefsExtractor } from '../utils';
 import MessageAlert from '../../../../components/MessageAlert';
 
 export default function TaskProcessDetail() {
