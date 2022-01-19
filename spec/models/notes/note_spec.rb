@@ -104,4 +104,24 @@ RSpec.describe Notes::Note, type: :model do
       admin_note.update!(body: 'A new body')
     end
   end
+
+  describe 'before_save' do
+    describe '#log_completed_at' do
+      context 'when a note is marked as completed' do
+        before { admin_note.update(completed: true) }
+
+        it 'stores the datetime for the task when it was completed' do
+          expect(admin_note.completed_at).to_not be_nil
+        end
+      end
+
+      context 'when any other attribute is updated' do
+        before { admin_note.update(completed: false) }
+
+        it 'does not populate the completed_at' do
+          expect(admin_note.completed_at).to be_nil
+        end
+      end
+    end
+  end
 end

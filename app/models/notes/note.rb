@@ -36,6 +36,7 @@ module Notes
     has_many_attached :documents, dependent: :destroy
     has_paper_trail
 
+    before_save :log_completed_at, if: -> { completed_changed? && completed.eql?(true) }
     after_create :log_create_event
     after_update :log_update_event
 
@@ -73,7 +74,7 @@ module Notes
 
     def self.tasks_by_quarter(community_id)
       sql = "
-        SELECT DATE_PART('year', updated_at) as yr, DATE_PART('quarter', updated_at) as qtr, \
+        SELECT DATE_PART('year', completed_at) as yr, DATE_PART('quarter', completed_at) as qtr, \
         count(*) FROM notes WHERE completed = true AND community_id='#{community_id}'
         AND parent_note_id IS NULL GROUP BY yr, qtr;
       "
@@ -91,6 +92,10 @@ module Notes
       field = update_changes&.first
       value = update_changes&.last&.last
       user.generate_events('task_update', self, { updated_field: field, new_value: value })
+    end
+
+    def log_completed_at
+      self.completed_at = Time.current
     end
   end
 end
