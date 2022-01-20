@@ -32,12 +32,13 @@ export default function ProjectProcesses({ data, refetch }){
 }
 
 export function ProjectProcessesSplitView({ refetch }) {
-  const { projectId, selectedStep, handleStepCompletion } = useContext(TaskContext);
+  const { projectId, selectedStep, setSelectedStep, handleStepCompletion } = useContext(TaskContext);
 
   return (
     <TaskUpdate
       taskId={selectedStep?.id || projectId}
       handleTaskCompletion={(id, completed) => handleStepCompletion(id, completed, refetch)}
+      handleSplitScreenOpen={setSelectedStep}
     />
   )
 }
