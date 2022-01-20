@@ -29,6 +29,7 @@ export default function OpenTaskDataList({
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedTask, setSelectedTask] = useState(null);
   const kebabMenuOpen = Boolean(anchorEl);
+  const limit = 1;
 
   function openKebabMenu(event, _task) {
     event.stopPropagation();
@@ -180,7 +181,24 @@ export default function OpenTaskDataList({
           <Divider data-testid="closing_divider" />
         </Grid>
 
+        <Grid item md={12} xs={12}>
+            {data.projectOpenTasks.length >= limit && (
+              <>
+                {loading ? (
+                  <Spinner />
+                ) : (
+                  <Button onClick={fetchMoreSubTasks} className={classes.fetchMore}>
+                    <Typography variant="body2">{t('task:sub_task.see_more')}</Typography>
+                    <ArrowDropDownIcon />
+                  </Button>
+                )}
+              </>
+            )}
+          </Grid>
+
       </Grid>
+
+      
 
       <Menu
         id={`kabab-menu-${selectedTask?.id}`}

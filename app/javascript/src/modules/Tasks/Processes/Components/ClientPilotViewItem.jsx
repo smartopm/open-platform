@@ -19,11 +19,29 @@ export default function ClientPilotViewItem({process}){
     const  taskId  = process?.id
     const history = useHistory()
 
-    const { data, error, loading, refetch } = useQuery(ProjectOpenTasksQuery, {
+    const { data, error, loading, refetch , fetchMore} = useQuery(ProjectOpenTasksQuery, {
         variables: { taskId, limit },
         fetchPolicy: 'cache-and-network',
         errorPolicy: 'all'
       });
+
+    function fetchMoreOpenTasks() {
+      try {
+        fetchMore({
+          variables: {
+            taskId: taskId,
+            limit: Number(data?.projectOpenTasks?.length + limit),
+            offset: data.projectOpenTasks.length
+          },
+          updateQuery: (prev, { fetchMoreResult }) => {
+            if (!fetchMoreResult) return prev;
+            return { ...prev, projectOpenTasks: [...prev.projectOpenTasks, ...fetchMoreResult.projectOpenTasks] };
+          }
+        });
+      } catch (error) {
+        console.error(error.message);
+      }
+      }  
     const { t } = useTranslation('task')
     const { handleStepCompletion } = useContext(TaskContext);
 
