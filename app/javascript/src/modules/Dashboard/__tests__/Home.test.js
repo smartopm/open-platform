@@ -43,7 +43,7 @@ describe('Admin home page', () => {
         </Context.Provider>
       </ApolloProvider>
     );
-    const quickLinks = screen.queryAllByTestId('link-button');
+    const quickLinks = screen.queryAllByTestId('link-name');
     expect(quickLinks[0]).toBeInTheDocument();
   });
 });
@@ -87,7 +87,7 @@ describe('Client home page', () => {
         </Context.Provider>
       </ApolloProvider>
     );
-    const quickLinks = screen.queryAllByTestId('link-button');
+    const quickLinks = screen.queryAllByTestId('link-name');
     expect(quickLinks[0]).toBeInTheDocument();
     expect(quickLinks).toHaveLength(1);
   });

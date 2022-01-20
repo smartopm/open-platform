@@ -201,7 +201,7 @@ describe('HomePage component', () => {
           </BrowserRouter>
         </MockedProvider>
       );
-      const quickLinks = screen.queryAllByTestId('link-button')
+      const quickLinks = screen.queryAllByTestId('link-name')
 
       expect(quickLinks[0]).toBeInTheDocument();
     });
