@@ -203,42 +203,4 @@ describe('RequestUpdate Component', () => {
       expect(container.queryByTestId('entry_user_grant')).toBeInTheDocument();
     }, 50);
   });
-
-  it('should render proper form when enrolling a user for the first time', async () => {
-    const previousRoute = 'enroll';
-    const isGuestRequest = false;
-    const isScannedRequest = false;
-    const container = render(
-      <MockedProvider mocks={[mocks]} addTypename>
-        <BrowserRouter>
-          <MockedThemeProvider>
-            <Context.Provider value={authState}>
-              <EntryRequestContext.Provider
-                value={{
-                  request: { id: '3c2f8ee2-598b-437c-b217-3e4c0f86c761' },
-                  grantAccess: jest.fn()
-                }}
-              >
-                <RequestUpdate
-                  id="3c2f8ee2-598b-437c-b217-3e4c0f86c761"
-                  previousRoute={previousRoute}
-                  isGuestRequest={isGuestRequest}
-                  isScannedRequest={isScannedRequest}
-                  tabValue=""
-                />
-              </EntryRequestContext.Provider>
-            </Context.Provider>
-          </MockedThemeProvider>
-        </BrowserRouter>
-      </MockedProvider>
-    );
-    await waitFor(() => {
-      expect(container.queryByText('form_fields.full_name')).toBeInTheDocument();
-      expect(container.queryByTestId('entry_user_call_mgr')).not.toBeInTheDocument();
-      expect(container.queryByTestId('entry_user_enroll')).toBeInTheDocument();
-      expect(container.queryByTestId('entry_user_enroll').textContent).toContain(
-        'logbook:logbook.enroll'
-      );
-    }, 50);
-  });
 });

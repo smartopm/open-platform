@@ -34,7 +34,6 @@ export default function LogEvents({
   handleExitEvent,
   handleAddObservation,
   routeToAction,
-  enrollUser
 }) {
   const [imageOpen, setImageOpen] = useState(false);
   const [id, setId] = useState('');
@@ -87,12 +86,6 @@ export default function LogEvents({
       isVisible: true,
       handleClick: () => routeToAction(eventData)
     },
-    {
-      content: t('logbook.enroll_user'),
-      isAdmin: true,
-      isVisible: true,
-      handleClick: () => enrollUser(eventData)
-    }
   ];
 
   function handleMenu(event, entry) {
@@ -328,6 +321,5 @@ LogEvents.propTypes = {
   handleAddObservation: PropTypes.func.isRequired,
   handleExitEvent: PropTypes.func.isRequired,
   routeToAction: PropTypes.func.isRequired,
-  enrollUser: PropTypes.func.isRequired,
   error: PropTypes.string
 };
