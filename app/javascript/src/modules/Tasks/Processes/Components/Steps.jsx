@@ -32,7 +32,7 @@ export default function ProjectSteps({
     e.stopPropagation();
     setSelectedStep({ ...stepItem });
     if (redirect) {
-      history.push(`/processes/${id}?tab=processes`)
+      history.push(`/processes/drc/projects/${id}?tab=processes`)
     }
   }
 
