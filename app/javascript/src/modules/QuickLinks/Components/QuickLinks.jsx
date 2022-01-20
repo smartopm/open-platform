@@ -1,7 +1,6 @@
 import React from 'react';
-import { Card, CardContent, Grid, IconButton, Typography } from '@material-ui/core'
+import { Card, CardContent, Grid, Typography } from '@material-ui/core'
 import Link from '@material-ui/core/Link';
-import LinkIcon from '@material-ui/icons/Link';
 import PropTypes from 'prop-types';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { makeStyles } from '@material-ui/core/styles';
@@ -48,9 +47,6 @@ export default function QuickLinks({ menuItems, translate }) {
                   <Link href={item.menu_link}>
                     <Card variant="outlined" elevation={0} className={classes.card}>
                       <CardContent className={classes.card_content}>
-                        <IconButton aria-label="link" className={classes.icon_border} data-testid='link-button'>
-                          <LinkIcon className={classes.icon} />
-                        </IconButton>
                         <Typography color="textSecondary" className={classes.root} data-testid='link-name'>
                           { item.menu_name }
                         </Typography>
@@ -79,7 +75,7 @@ const useStyles = makeStyles(() => ({
   },
   card_content: {
     textAlign: 'center',
-    paddingTop: '2em',
+    paddingTop: '3.5em',
     textOverflow: 'ellipsis'
   },
   icon: {

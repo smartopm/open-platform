@@ -20,7 +20,6 @@ describe('Quick Links', () => {
       <QuickLinks menuItems={menuItems} translate={translate} />
     )
 
-    expect(container.queryAllByTestId('link-button')[0]).toBeInTheDocument();
     expect(container.queryAllByTestId('link-name')[0]).toBeInTheDocument();
     expect(container.queryAllByTestId('link-name')[0].textContent).toEqual('Quick Link 1');
   })
