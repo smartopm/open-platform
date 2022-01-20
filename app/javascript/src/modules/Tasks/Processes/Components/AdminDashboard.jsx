@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import {
   Divider,
   Link,
@@ -17,6 +17,7 @@ import CenteredContent from '../../../../shared/CenteredContent';
 import { Spinner } from '../../../../shared/Loading';
 import { TaskQuarterySummaryQuery, ProjectsQuery } from '../graphql/process_queries';
 import { filterProjectAndStages, calculateOpenProjectsByStage } from '../utils';
+
 
 export default function AdminDashboard() {
   const { t } = useTranslation('task');
@@ -122,9 +123,8 @@ export default function AdminDashboard() {
           }
           <List data-testid="project-stages">
             {Object.entries(stats).map(([stage, count]) => (
-              <>
+              <Fragment key={stage}>
                 <ListItem
-                  key={stage}
                   onClick={routeToProjects}
                   className={classes.projectStageLink}
                 >
@@ -142,7 +142,7 @@ export default function AdminDashboard() {
                   </Grid>
                 </ListItem>
                 <Divider variant="inset" className={classes.divider} />
-              </>
+              </Fragment>
             ))}
           </List>
         </Grid>

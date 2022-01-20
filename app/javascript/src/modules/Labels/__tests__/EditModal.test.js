@@ -8,7 +8,7 @@ import EditModal from '../Components/EditModal';
 import { LabelEdit, LabelCreate } from '../../../graphql/mutations';
 import { Spinner } from '../../../shared/Loading';
 
-describe('Comment Edit Field Component', () => {
+describe('Label Edit Component', () => {
   const mocks = {
     request: {
       query: LabelEdit,

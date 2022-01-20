@@ -1,6 +1,6 @@
 import React from 'react';
 import { MockedProvider } from '@apollo/react-testing'
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom';
 import renderTaskData, { LinkToUser, TaskDataList } from '../Components/RenderTaskData';
@@ -61,6 +61,9 @@ describe('Task Data components', () => {
       subTasks: [],
       completed: false,
       parentNote: null,
+      progress: {
+        progress_percentage: 20
+      },
       documents: [
         {
           id: 'a6428125-1527-4001-ab9c-60a13584d1a4',
@@ -84,7 +87,7 @@ describe('Task Data components', () => {
     expect(container.queryByText('Joe doe')).toBeInTheDocument();
   });
 
-  it('should check if TodoItem renders with no error', () => {
+  it('should check if TodoItem renders with no error', async () => {
     const container = render(
       <BrowserRouter>
         <MockedProvider>
@@ -106,17 +109,19 @@ describe('Task Data components', () => {
       </BrowserRouter>
     )
 
-    expect(container.getByTestId("task_completion_toggle_button")).toBeInTheDocument()
-    expect(container.getByTestId("task_body_section")).toBeInTheDocument()
-    expect(container.getByTestId("task_body")).toBeInTheDocument()
-    expect(container.getByTestId("task_assignee")).toBeInTheDocument()
-    expect(container.getByTestId("task_subtasks")).toBeInTheDocument()
-    expect(container.getByTestId("task_comments")).toBeInTheDocument()
-    expect(container.getByTestId("task_details_section")).toBeInTheDocument()
-    expect(container.getByTestId("progress_bar_large_screen")).toBeInTheDocument()
+    await waitFor(() => {
+      expect(container.getByTestId("task_completion_toggle_button")).toBeInTheDocument()
+      expect(container.getByTestId("task_body_section")).toBeInTheDocument()
+      expect(container.getByTestId("task_body")).toBeInTheDocument()
+      expect(container.getByTestId("task_assignee")).toBeInTheDocument()
+      expect(container.getByTestId("task_subtasks")).toBeInTheDocument()
+      expect(container.getByTestId("task_comments")).toBeInTheDocument()
+      expect(container.getByTestId("task_details_section")).toBeInTheDocument()
+      expect(container.getByTestId("progress_bar_large_screen")).toBeInTheDocument()
+    }, 10)
   });
 
-  it('applies filter without error', () => {
+  it('applies filter without error', async () => {
     render(
       <BrowserRouter>
         <MockedProvider>
@@ -139,13 +144,15 @@ describe('Task Data components', () => {
       </BrowserRouter>
     )
 
-    expect(screen.getByTestId("task_completion_toggle_button")).toBeInTheDocument();
-    expect(screen.getByTestId("task_body_section")).toBeInTheDocument();
-    expect(screen.getByTestId("task_body")).toBeInTheDocument();
-    expect(screen.getByTestId("task_assignee")).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByTestId("task_completion_toggle_button")).toBeInTheDocument();
+      expect(screen.getByTestId("task_body_section")).toBeInTheDocument();
+      expect(screen.getByTestId("task_body")).toBeInTheDocument();
+      expect(screen.getByTestId("task_assignee")).toBeInTheDocument();
+    }, 10)
   });
 
-  it('renders task menu options', () => {
+  it('renders task menu options', async () => {
     render(
       <Context.Provider value={authState}>
         <BrowserRouter>
@@ -174,14 +181,16 @@ describe('Task Data components', () => {
     expect(menuButton).toBeInTheDocument();
     fireEvent.click(menuButton);
 
-    expect(screen.getByText('menu.open_task_details')).toBeInTheDocument();
-    expect(screen.getByText('menu.upload_document')).toBeInTheDocument();
-    expect(screen.getByText('menu.add_subtask')).toBeInTheDocument();
-    expect(screen.getByText('menu.leave_a_comment')).toBeInTheDocument();
-    expect(screen.getByText('menu.mark_complete')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText('menu.open_task_details')).toBeInTheDocument();
+      expect(screen.getByText('menu.upload_document')).toBeInTheDocument();
+      expect(screen.getByText('menu.add_subtask')).toBeInTheDocument();
+      expect(screen.getByText('menu.leave_a_comment')).toBeInTheDocument();
+      expect(screen.getByText('menu.mark_complete')).toBeInTheDocument();
+    }, 10)
   });
 
-  it('renders attachment icon', () => {
+  it('renders attachment icon', async () => {
     render(
       <BrowserRouter>
         <MockedProvider>
@@ -204,8 +213,10 @@ describe('Task Data components', () => {
       </BrowserRouter>
     );
 
-    expect(screen.getByTestId('task_attach_file')).toBeInTheDocument();
-    expect(screen.getByTestId('file_attachments_total')).toHaveTextContent('1');
+    await waitFor(() => {
+      expect(screen.getByTestId('task_attach_file')).toBeInTheDocument();
+      expect(screen.getByTestId('file_attachments_total')).toHaveTextContent('1');
+    }, 10)
   });
 
   it('should check if renderTaskData has correct property names', () => {
@@ -240,7 +251,8 @@ describe('Task Data components', () => {
             user: {
               id: '2g872gh',
               name: 'sample-name',
-              url: 'use.jpg'
+              url: 'use.jpg',
+              imageUrl: ''
             }
           }]
         }
@@ -248,7 +260,7 @@ describe('Task Data components', () => {
     }
     const container = render(
       <BrowserRouter>
-        <MockedProvider mocks={[taskCommentMock]}>
+        <MockedProvider mocks={[taskCommentMock]} addTypename={false}>
           <MockedThemeProvider>
             <TaskDataList
               task={task}
@@ -267,13 +279,15 @@ describe('Task Data components', () => {
         </MockedProvider>
       </BrowserRouter>
     );
-    
-    expect(container.queryByTestId('task-comment')).toBeInTheDocument();
-    expect(container.getByTestId("progress_bar_large_screen")).toBeInTheDocument()
-    expect(container.queryByTestId('task_completion_toggle_button')).toBeInTheDocument();
-    fireEvent.click(container.queryByTestId('task_completion_toggle_button'));
 
-    expect(container.queryByTestId('task_attach_file')).toBeInTheDocument();
-    fireEvent.click(container.queryByTestId('task_attach_file'));
+    await waitFor(() => {
+      expect(container.queryByTestId('task-comment')).toBeInTheDocument();
+      expect(container.getByTestId("progress_bar_large_screen")).toBeInTheDocument()
+      expect(container.queryByTestId('task_completion_toggle_button')).toBeInTheDocument();
+      fireEvent.click(container.queryByTestId('task_completion_toggle_button'));
+
+      expect(container.queryByTestId('task_attach_file')).toBeInTheDocument();
+      fireEvent.click(container.queryByTestId('task_attach_file'));
+    })
   });
 });

@@ -622,5 +622,7 @@ TodoList.propTypes = {
   selectedDate: PropTypes.instanceOf(Date).isRequired,
   handleDateChange: PropTypes.func.isRequired,
   location: PropTypes.string.isRequired,
-  currentUser: PropTypes.shape.isRequired,
+  currentUser: PropTypes.shape({
+    name: PropTypes.string
+  }).isRequired,
 }

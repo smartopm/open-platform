@@ -46,7 +46,7 @@ export default function ImageAuth({ imageLink, className, type, alt, style, auth
     );
   }
   if (type === 'imageAvatar') {
-    return <Avatar alt={alt} src={auth ? response.url : `${imageLink}?dummy=${Date.now()}`} />;
+    return <Avatar alt={alt} src={auth ? response.url : `${imageLink}?dummy=${Date.now()}`} data-testid="authenticated_avatar" />;
   }
   return (
     <iframe
@@ -54,6 +54,7 @@ export default function ImageAuth({ imageLink, className, type, alt, style, auth
       width={width < 550 ? width - 20 : 600}
       title="attachment"
       src={auth ? response.url : `${imageLink}?dummy=${Date.now()}`}
+      data-testid="authenticated_file"
     />
   );
 }

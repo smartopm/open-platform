@@ -32,7 +32,7 @@ describe('Transaction Details Component', () => {
         },
         result: {
           data: {
-            result : {
+            result : [{
               id: "385u9432n384ujdf",
               createdAt: '2021-03-03T12:40:38Z',
               refId: '5e246346-50d8-4c1f-9b90',
@@ -44,9 +44,15 @@ describe('Transaction Details Component', () => {
                 name: 'Joe',
                 id: '162f7517-7cc8-42f9-b2d0-a83a16d59569'
               },
+              user: {
+                name: 'Joe',
+                id: '162f-42f9-b2d0-a83a16d59569',
+                imageUrls: null,
+                userType: 'admin'
+              },
               entryRequest: null,
-              __typename: "EventLogs"
-            }
+              imageUrls: null,
+            }]
           }
         }
       }
@@ -58,7 +64,7 @@ describe('Transaction Details Component', () => {
 
     const container = render(
       <BrowserRouter>
-        <MockedProvider mocks={mock}>
+        <MockedProvider mocks={mock} addTypename={false}>
           <TransactionDetails
             data={dataMock}
             currencyData={currency}

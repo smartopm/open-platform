@@ -10,9 +10,10 @@ describe('TextInput component', () => {
     const props = {
         handleClose: jest.fn(),
         formId: 'sjhef3042432',
-        anchorEl: null,
+        anchorEl: <p>some element to be triggered</p>,
         open: true,
-        refetch: jest.fn()
+        refetch: jest.fn(),
+        formName: 'sexample'
     }
     const rendered = render(
       <BrowserRouter>

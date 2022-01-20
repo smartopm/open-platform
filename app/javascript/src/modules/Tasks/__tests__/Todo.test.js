@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom';
 import { ApolloProvider } from 'react-apollo';
@@ -67,11 +67,13 @@ describe('Todo list main page', () => {
           </Context.Provider>
         </ApolloProvider>
       );
+      await waitFor(() => {
+        expect(container.queryByTestId('filter')).toBeInTheDocument();
+        expect(container.queryByTestId('filter_container')).toBeInTheDocument();
+        expect(container.queryByTestId('create_task_btn')).toBeInTheDocument();
+        expect(container.queryByTestId('search')).toBeInTheDocument();
+      }, 10)
 
-      expect(container.queryByTestId('filter')).toBeInTheDocument();
-      expect(container.queryByTestId('filter_container')).toBeInTheDocument();
-      expect(container.queryByTestId('create_task_btn')).toBeInTheDocument();
-      expect(container.queryByTestId('search')).toBeInTheDocument();
       /*
       TODO: Bonny & Victor
       With the TodoList component now rendering asynchronously, we need to wait for

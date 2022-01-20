@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min';
-import { render, fireEvent } from '@testing-library/react';
+import { render, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { MockedProvider } from '@apollo/react-testing';
 import { Context } from '../../../containers/Provider/AuthStateProvider'
@@ -140,36 +140,36 @@ describe('Top part of the task form component', () => {
         </MockedProvider>
       </Context.Provider>
     );
-    expect(container2.queryByText('task.chip_close')).toBeInTheDocument();
-    expect(container2.queryByText('task.task_assignee_label')).toBeInTheDocument();
-    expect(container2.queryByText('some description')).toBeInTheDocument();
-    expect(container2.queryByText('some body')).toBeInTheDocument();
-    expect(container2.queryByText('some parent body')).toBeInTheDocument();
+      expect(container2.queryByText('task.chip_close')).toBeInTheDocument();
+      expect(container2.queryByText('task.task_assignee_label')).toBeInTheDocument();
+      expect(container2.queryByText('some description')).toBeInTheDocument();
+      expect(container2.queryByText('some body')).toBeInTheDocument();
+      expect(container2.queryByText('some parent body')).toBeInTheDocument();
 
-    expect(container2.queryByTestId('editable_description')).toBeInTheDocument();
-    expect(container2.queryByTestId('edit_body_icon')).toBeInTheDocument();
-  
-    // show the edit button and click on update button to trigger the mutation
-    fireEvent.mouseEnter(container2.queryByTestId('editable_description'))
-    expect(container2.queryByTestId('edit_icon')).toBeInTheDocument();
+      expect(container2.queryByTestId('editable_description')).toBeInTheDocument();
+      expect(container2.queryByTestId('edit_body_icon')).toBeInTheDocument();
 
-    fireEvent.click(container2.queryByTestId('edit_icon'))
-    expect(container2.queryByTestId('edit_action')).toBeInTheDocument();
+      // show the edit button and click on update button to trigger the mutation
+      fireEvent.mouseEnter(container2.queryByTestId('editable_description'))
+      expect(container2.queryByTestId('edit_icon')).toBeInTheDocument();
 
-    fireEvent.click(container2.queryByTestId('edit_action_btn'))
-    expect(container2.queryByTestId('edit_action_btn')).toBeDisabled();
-    expect(container2.queryByTestId('edit_action_btn').textContent).toContain('common:form_actions.update');
+      fireEvent.click(container2.queryByTestId('edit_icon'))
+      expect(container2.queryByTestId('edit_action')).toBeInTheDocument();
 
-    fireEvent.click(container2.queryByTestId('edit_body_icon'))
-    expect(container2.queryByTestId('editable_body')).toBeInTheDocument();
-    expect(container2.queryByTestId('edit_body_action_btn')).toBeInTheDocument();
+      fireEvent.click(container2.queryByTestId('edit_action_btn'))
+      expect(container2.queryByTestId('edit_action_btn')).toBeDisabled();
+      expect(container2.queryByTestId('edit_action_btn').textContent).toContain('common:form_actions.update');
 
-    const bodyInput = container2.queryByTestId('editable_body')
-    fireEvent.change(bodyInput, { target: { value: 'Body changed' } })
-    expect(bodyInput.value).toBe('Body changed')
-  },)
+      fireEvent.click(container2.queryByTestId('edit_body_icon'))
+      expect(container2.queryByTestId('editable_body')).toBeInTheDocument();
+      expect(container2.queryByTestId('edit_body_action_btn')).toBeInTheDocument();
 
-  it('should test update body', () => {
+      const bodyInput = container2.queryByTestId('editable_body')
+      fireEvent.change(bodyInput, { target: { value: 'Body changed' } })
+      expect(bodyInput.value).toBe('Body changed')
+  })
+
+  it('should test update body', async () => {
     const newProps = {
       ...props,
       data: {
@@ -209,13 +209,16 @@ describe('Top part of the task form component', () => {
       </MockedProvider>
     );
 
-    expect(container.queryByTestId('edit_body_icon')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(container.queryByTestId('edit_body_icon')).toBeInTheDocument();
 
-    fireEvent.click(container.queryByTestId('edit_body_icon'));
-    expect(container.queryByTestId('edit_body_action_btn')).toBeInTheDocument();
-    fireEvent.click(container.queryByTestId('edit_body_action_btn'));
+      fireEvent.click(container.queryByTestId('edit_body_icon'));
+      expect(container.queryByTestId('edit_body_action_btn')).toBeInTheDocument();
+      fireEvent.click(container.queryByTestId('edit_body_action_btn'));
 
-    expect(container.queryByTestId('parent-note')).toBeInTheDocument();
-    fireEvent.click(container.queryByTestId('parent-note'));
+      expect(container.queryByTestId('parent-note')).toBeInTheDocument();
+      fireEvent.click(container.queryByTestId('parent-note'));
+
+    }, 10)
   });
 });
