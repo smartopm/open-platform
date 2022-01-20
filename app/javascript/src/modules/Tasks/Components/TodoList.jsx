@@ -201,6 +201,12 @@ export default function TodoList({
     }
   }, [status, selectedTask,signedBlobId, taskUpdate, refetch]);
 
+  useEffect(() => {
+    if(redirectedTaskId) {
+      setSplitScreenOpen(true);
+    }
+  }, [redirectedTaskId])
+
   function handleTaskCompletion(selectedTaskId, completed) {
     taskUpdate({variables: {  id: selectedTaskId, completed }})
       .then(() => {
@@ -402,7 +408,29 @@ export default function TodoList({
   function handleTodoItemClick(task) {
     setSelectedTask(task);
     setSplitScreenOpen(true);
+    history.push({
+      pathname: '/tasks',
+      search: `?taskId=${task?.id}`,
+      state: { from: history.location.pathname,  search: history.location.search }
+    })
     window.document.getElementById('anchor-section').scrollIntoView()
+  }
+
+  function handleSplitScreenClose(){
+    setSplitScreenOpen(false)
+    if(history.location.state.search.includes('filter')) {
+      return history.push({
+        pathname: '/tasks',
+        search: history.location.state.search,
+      })
+    }
+    return history.push('/tasks')
+  }
+
+  function handleTaskNotFoundError(error){
+    setSplitScreenOpen(false)
+    setTaskUpdateStatus({ ...taskUpdateStatus, message: formatError(error.message)})
+    history.push('/tasks')
   }
 
   if (tasksError) return <ErrorPage error={tasksError.message} />;
@@ -520,16 +548,20 @@ export default function TodoList({
             />
             {Boolean(data?.flaggedNotes.length) && (
               <SplitScreen
+                // open={splitScreenOpen || Boolean(redirectedTaskId)}
                 open={splitScreenOpen}
                 onClose={() => setSplitScreenOpen(false)}
                 classes={{ paper: matches ? classes.drawerPaperMobile : classes.drawerPaper }}
               >
                 <TaskUpdate
                   // eslint-disable-next-line no-nested-ternary
-                  taskId={selectedTask ? selectedTask.id : redirectedTaskId || data?.flaggedNotes[0].id}
+                  // taskId={selectedTask ? selectedTask.id : redirectedTaskId || data?.flaggedNotes[0].id}
+                  taskId={redirectedTaskId || data?.flaggedNotes[0].id}
                   handleSplitScreenOpen={handleTodoItemClick}
-                  handleSplitScreenClose={() => setSplitScreenOpen(false)}
+                  // handleSplitScreenClose={() => setSplitScreenOpen(false)}
+                  handleSplitScreenClose={handleSplitScreenClose}
                   handleTaskCompletion={handleTaskCompletion}
+                  handleTaskNotFoundError={handleTaskNotFoundError}
                 />
               </SplitScreen>
             )}
