@@ -75,7 +75,7 @@ export default function AdminDashboard() {
     history.push('/processes/drc/projects')
   }
 
-  const filteredProjects = filterProjectAndStages(projectsData?.projects);
+  const filteredProjects = filterProjectAndStages(projectsData?.projects, projectStageLookup);
   const stats = calculateOpenProjectsByStage(filteredProjects, projectStageLookup)
 
   return(
