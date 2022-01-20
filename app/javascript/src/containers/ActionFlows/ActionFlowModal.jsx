@@ -61,6 +61,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
   const [metaData, setMetaData] = useState({});
   const [selectedDate, setDate] = useState(new Date());
   const [assignees, setAssignees] = useState([]);
+  const [isError, setIsError] = useState(false);
   const theme = useTheme();
   const { t } = useTranslation(['actionflow', 'common']);
 
@@ -286,6 +287,15 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
     return Object.keys(selectedActionFlow).length > 0;
   }
 
+  function confirmSubmission() {
+    if(!data.title || !data.eventType || !data.description){
+      setIsError(true);
+      return;
+    }
+
+    handleSave(data, metaData);
+  }
+
   return (
     <Dialog open={open} onClose={closeModal} aria-labelledby="form-dialog-title">
       <DialogTitle
@@ -308,8 +318,11 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
           name="title"
           type="text"
           fullWidth
+          required
           value={data.title}
           onChange={handleInputChange}
+          error={isError && !data.title}
+          helperText={isError && !data.title && t('misc.fill_title')}
         />
         <TextField
           margin="dense"
@@ -318,14 +331,22 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
           name="description"
           type="text"
           fullWidth
+          required
           multiline
           value={data.description}
           onChange={handleInputChange}
+          error={isError && !data.description}
+          helperText={isError && !data.description && t('misc.fill_description')}
         />
         <FormControl fullWidth>
           {eventData.data && (
             <>
-              <InputLabel id="select-event">{t('actionflow:form_fields.select_event')}</InputLabel>
+              <InputLabel
+                id="select-event"
+                required
+              >
+                {t('actionflow:form_fields.select_event')}
+              </InputLabel>
               <Select
                 labelId="select-event"
                 id="select-event"
@@ -342,6 +363,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
                   </MenuItem>
                 ))}
               </Select>
+              {isError && !data.eventType && <FormHelperText error data-testid="error-msg">{t('misc.select_event_type')}</FormHelperText>}
             </>
           )}
         </FormControl>
@@ -579,7 +601,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
         <Button onClick={closeModal} color="secondary" variant="outlined">
           {t('common:form_actions.cancel')}
         </Button>
-        <Button onClick={() => handleSave(data, metaData)} color="primary" variant="contained">
+        <Button onClick={() => confirmSubmission()} color="primary" variant="contained">
           {isEdit() ? t('common:form_actions.save_changes') : t('common:form_actions.save')}
         </Button>
       </DialogActions>
