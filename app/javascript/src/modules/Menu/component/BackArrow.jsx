@@ -11,7 +11,7 @@ export default function BackArrow({ path }) {
   const theme = useTheme()
   const matches = useMediaQuery(theme.breakpoints.only('xs'));
   const history = useHistory();
-  console.log(matches)
+
   return (
     <>
       {path !== '/' && !matches && (

@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import React, { useContext } from 'react'
+import React, { useContext } from 'react';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
@@ -8,16 +8,41 @@ import { useHistory } from 'react-router';
 import Avatar from '../../../components/Avatar';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 
-export default function UserAvatar({ imageUrl, customStyle, searchedUser, size, altText, pathname }) {
+export default function UserAvatar({
+  imageUrl,
+  customStyle,
+  searchedUser,
+  size,
+  altText,
+  pathname,
+  handleOpenMenu
+}) {
   const classes = useStyles();
-  const history = useHistory()
-  const matches = useMediaQuery('(max-width:600px)')
-  const authState = useContext(Context)
+  const history = useHistory();
+  const matches = useMediaQuery('(max-width:600px)');
+  const authState = useContext(Context);
+
+  function handleAvatarTrigger(e) {
+    if(pathname) return history.push({ pathname })
+    return handleOpenMenu(e)
+  }
+
   return (
-    <div className={matches ? (customStyle || classes.avatarMobile) : (customStyle || classes.avatar)} onClick={() => history.push({pathname})} style={{cursor: 'pointer'}}>
-      <Avatar data-testid='avatar' alt={altText} imageUrl={imageUrl} user={authState.user} searchedUser={searchedUser} style={size} />
+    <div
+      className={matches ? customStyle || classes.avatarMobile : customStyle || classes.avatar}
+      onClick={handleAvatarTrigger}
+      style={{ cursor: 'pointer' }}
+    >
+      <Avatar
+        data-testid="avatar"
+        alt={altText}
+        imageUrl={imageUrl}
+        user={authState.user}
+        searchedUser={searchedUser}
+        style={size}
+      />
     </div>
-  )
+  );
 }
 
 const useStyles = makeStyles(() => ({
@@ -28,7 +53,7 @@ const useStyles = makeStyles(() => ({
     marginBottom: '10px',
     marginRight: '30px',
     right: 20,
-    height: 20,
+    height: 20
   },
   avatarMobile: {
     cursor: 'pointer',
@@ -36,7 +61,7 @@ const useStyles = makeStyles(() => ({
     bottom: 27,
     marginRight: '30px',
     right: 20,
-    height: 20,
+    height: 20
   }
 }));
 
@@ -45,9 +70,11 @@ UserAvatar.defaultProps = {
   searchedUser: null,
   size: 'small',
   altText: '',
-  pathname: '/user/settings',
-  imageUrl: '/images/default_avatar.svg'
+  pathname: '',
+  imageUrl: '/images/default_avatar.svg',
+  handleOpenMenu: () => {}
 };
+
 UserAvatar.propTypes = {
   imageUrl: PropTypes.string,
   // Find out different types of props are being passed here
@@ -56,5 +83,6 @@ UserAvatar.propTypes = {
   searchedUser: PropTypes.object,
   size: PropTypes.string,
   altText: PropTypes.string,
-  pathname: PropTypes.string
+  pathname: PropTypes.string,
+  handleOpenMenu: PropTypes.func,
 };

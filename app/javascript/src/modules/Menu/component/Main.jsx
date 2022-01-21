@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import React, { useContext, useState } from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -18,7 +19,6 @@ import modules from '../..';
 import CommunityName from '../../../shared/CommunityName';
 import CenteredContent from '../../../components/CenteredContent';
 import userProps from '../../../shared/types/user';
-import UserAvatar from '../../Users/Components/UserAvatar';
 import UserActionOptions from '../../Users/Components/UserActionOptions';
 import Loading from '../../../shared/Loading';
 import SOSModal from './SOSModal';
@@ -147,9 +147,8 @@ export function MainNav({ authState }) {
 
           <SOSModal open={open} setOpen={setOpen} location={location} {...{ authState }} />
 
-          <UserAvatar imageUrl={authState?.user?.imageUrl} />
-          <UserActionOptions />
           <NotificationBell user={authState.user} />
+          <UserActionOptions />
           {matches ? (
             <CommunityName authState={authState} />
           ) : (
