@@ -548,17 +548,13 @@ export default function TodoList({
             />
             {Boolean(data?.flaggedNotes.length) && (
               <SplitScreen
-                // open={splitScreenOpen || Boolean(redirectedTaskId)}
                 open={splitScreenOpen}
                 onClose={() => setSplitScreenOpen(false)}
                 classes={{ paper: matches ? classes.drawerPaperMobile : classes.drawerPaper }}
               >
                 <TaskUpdate
-                  // eslint-disable-next-line no-nested-ternary
-                  // taskId={selectedTask ? selectedTask.id : redirectedTaskId || data?.flaggedNotes[0].id}
                   taskId={redirectedTaskId || data?.flaggedNotes[0].id}
                   handleSplitScreenOpen={handleTodoItemClick}
-                  // handleSplitScreenClose={() => setSplitScreenOpen(false)}
                   handleSplitScreenClose={handleSplitScreenClose}
                   handleTaskCompletion={handleTaskCompletion}
                   handleTaskNotFoundError={handleTaskNotFoundError}
