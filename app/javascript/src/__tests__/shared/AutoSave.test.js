@@ -33,17 +33,4 @@ describe('AutoSave component', () => {
       expect(props.autoSaveAction).not.toHaveBeenCalled();
     }, 1000)
   });
-
-  it('renders component', () => {
-    const props = {
-      data: 'current value',
-      autoSaveAction: jest.fn(),
-      previous: 'previous value',
-      delay: 0,
-    };
-
-    const container = render(<AutoSave {...props} />);
-
-    expect(container).toMatchSnapshot();
-  });
 });
