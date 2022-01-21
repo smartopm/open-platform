@@ -74,7 +74,6 @@ describe('Log Events Component', () => {
   ];
 
   const actions = jest.fn();
-  const enroll = jest.fn();
   const logExit = jest.fn();
 
   it('renders log event component', () => {
@@ -90,7 +89,6 @@ describe('Log Events Component', () => {
                 handleExitEvent={logExit}
                 handleAddObservation={jest.fn()}
                 routeToAction={actions}
-                enrollUser={enroll}
               />
             </Context.Provider>
           </BrowserRouter>
@@ -109,14 +107,10 @@ describe('Log Events Component', () => {
 
     fireEvent.click(container.queryByTestId('menu-list'));
     expect(container.queryByText('logbook.view_details')).toBeInTheDocument();
-    expect(container.queryByText('logbook.enroll_user')).toBeInTheDocument();
     expect(container.queryByText('logbook.exit_log')).toBeInTheDocument();
 
     fireEvent.click(container.queryByText('logbook.view_details'));
     expect(actions).toBeCalled();
-
-    fireEvent.click(container.queryByText('logbook.enroll_user'));
-    expect(enroll).toBeCalled();
 
     fireEvent.click(container.queryByText('logbook.exit_log'));
     expect(logExit).toBeCalled();
@@ -135,7 +129,6 @@ describe('Log Events Component', () => {
                 handleExitEvent={jest.fn()}
                 handleAddObservation={jest.fn()}
                 routeToAction={jest.fn()}
-                enrollUser={jest.fn}
               />
             </Context.Provider>
           </BrowserRouter>
@@ -159,7 +152,6 @@ describe('Log Events Component', () => {
                 handleExitEvent={logExit}
                 handleAddObservation={jest.fn()}
                 routeToAction={actions}
-                enrollUser={enroll}
               />
             </Context.Provider>
           </BrowserRouter>

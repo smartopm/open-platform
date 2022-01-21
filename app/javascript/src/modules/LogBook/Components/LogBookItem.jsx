@@ -110,12 +110,6 @@ export default function LogBookItem({
     }
   }
 
-  function enrollUser(event) {
-    return router.push({
-      pathname: `/request/${event.refId}?tabValue=0`,
-      state: { from: 'enroll', offset }
-    });
-  }
   const searchPlaceholder = {
     0: t('logbook.all_visits'),
     1: t('guest.guests'),
@@ -329,7 +323,6 @@ export default function LogBookItem({
               handleExitEvent={handleExitEvent}
               handleAddObservation={handleAddObservation}
               routeToAction={routeToAction}
-              enrollUser={enrollUser}
             />
           </TabPanel>
           <TabPanel pad value={tabValue} index={1}>
