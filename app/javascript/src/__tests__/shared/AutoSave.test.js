@@ -3,8 +3,8 @@ import { render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import AutoSave from '../../shared/AutoSave';
 
-describe.skip('AutoSave component', () => {
-  it('trigger auto save after 5 milliseconds', () => {
+describe('AutoSave component', () => {
+  it('trigger auto save after 5 milliseconds', async () => {
     const props = {
       data: 'current value',
       autoSaveAction: jest.fn(),
@@ -14,12 +14,12 @@ describe.skip('AutoSave component', () => {
 
     render(<AutoSave {...props} />);
 
-    waitFor(() => {
+    await waitFor(() => {
       expect(props.autoSaveAction).toHaveBeenCalled();
     }, 1000)
   });
 
-  it('should not trigger auto save if data is unchanged', () => {
+  it('should not trigger auto save if data is unchanged', async () => {
     const props = {
       data: 'current value',
       autoSaveAction: jest.fn(),
@@ -29,12 +29,12 @@ describe.skip('AutoSave component', () => {
 
     render(<AutoSave {...props} />);
 
-    waitFor(() => {
+    await waitFor(() => {
       expect(props.autoSaveAction).not.toHaveBeenCalled();
     }, 1000)
   });
 
-  it('defaults delay to 1ms before auto save fires', () => {
+  it('renders component', () => {
     const props = {
       data: 'current value',
       autoSaveAction: jest.fn(),
@@ -42,10 +42,8 @@ describe.skip('AutoSave component', () => {
       delay: 0,
     };
 
-    render(<AutoSave {...props} />);
+    const container = render(<AutoSave {...props} />);
 
-    waitFor(() => {
-      expect(props.autoSaveAction).toHaveBeenCalled();
-    }, 1000)
+    expect(container).toMatchSnapshot();
   });
 });
