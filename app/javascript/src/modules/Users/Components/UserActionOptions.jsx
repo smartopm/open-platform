@@ -31,17 +31,17 @@ export default function UserActionOptions(){
   }
 
   return (
-    <div className={classes.menuButton}>
+    <div className={classes.menuButton} data-testid="avatar_menu">
       <UserAvatar
          // eslint-disable-next-line react/prop-types
         imageUrl={authState?.user?.imageUrl}
         handleOpenMenu={handleOpen}
       />
       <Popover open={open} anchorEl={anchorEl} onClose={handleClose} className={classes.popOver}>
-        <Typography data-testid='text' align="center" className={classes.logOut} gutterBottom onClick={() => handleMenuItemLink('/user/settings')}>
+        <Typography data-testid='user_settings' align="center" className={classes.logOut} gutterBottom onClick={() => handleMenuItemLink('/user/settings')}>
           {t('common:menu.logout')}
         </Typography>
-        <Typography data-testid='text' align="center" className={classes.logOut} gutterBottom onClick={() => handleMenuItemLink('/logout')}>
+        <Typography data-testid='logout' align="center" className={classes.logOut} gutterBottom onClick={() => handleMenuItemLink('/logout')}>
           {t('common:menu.logout')}
         </Typography>
       </Popover>

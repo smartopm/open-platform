@@ -226,11 +226,11 @@ NewsNav.propTypes = {
 
 const styles = StyleSheet.create({
   logo: {
-    '@media (max-width: 360px)': {
-      marginLeft: 10
+    '@media (max-width: 367px)': {
+      marginLeft: 0
     },
     '@media (max-width: 470px)': {
-      marginLeft: 40
+      marginLeft: 20
     }
   },
   topNav: {
