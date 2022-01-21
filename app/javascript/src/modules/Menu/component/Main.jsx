@@ -66,6 +66,7 @@ export default function Main() {
 
 export function MainNav({ authState }) {
   const matches = useMediaQuery('(max-width:600px)');
+  const matchesSmall = useMediaQuery('(max-width:500px)');
   const path = useLocation().pathname
   const classes = useStyles();
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -147,15 +148,17 @@ export function MainNav({ authState }) {
 
           <SOSModal open={open} setOpen={setOpen} location={location} {...{ authState }} />
 
+          {
+              matchesSmall
+              ? <CommunityName authState={authState} logoStyles={styles} />
+              : (
+                <CenteredContent>
+                  <CommunityName authState={authState} />
+                </CenteredContent>
+              )
+            }
           <NotificationBell user={authState.user} />
           <UserActionOptions />
-          {matches ? (
-            <CommunityName authState={authState} />
-          ) : (
-            <CenteredContent>
-              <CommunityName authState={authState} />
-            </CenteredContent>
-          )}
         </Toolbar>
       </AppBar>
       {authState.loggedIn && (
@@ -223,7 +226,12 @@ NewsNav.propTypes = {
 
 const styles = StyleSheet.create({
   logo: {
-    height: '25px'
+    '@media (max-width: 360px)': {
+      marginLeft: 10
+    },
+    '@media (max-width: 470px)': {
+      marginLeft: 40
+    }
   },
   topNav: {
     width: '100%',

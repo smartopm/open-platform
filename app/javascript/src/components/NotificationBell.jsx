@@ -86,8 +86,13 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 5,
     marginRight: 90,
+    bottom: 27,
     ':hover': {
       cursor: 'pointer'
+    },
+    '@media (max-width: 600px)': {
+      bottom: 17,
+      marginRight: 73,
     }
   },
   popup: {
