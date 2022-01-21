@@ -3,6 +3,8 @@
     "create_request": "Crea una nueva solicitud",
     "load_more": "Carga más",
     "no_results": "No se han encontrado resultados",
-    "search_for": "Buscar {{title}}"
+    "search_for": "Buscar {{title}}",
+    "search_users": "Buscar Usuarios",
+    "type_your_search": "Escriba su consulta de búsqueda"
   }
 }
