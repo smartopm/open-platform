@@ -16,7 +16,6 @@ import CenteredContent from '../../../components/CenteredContent';
 const NUMBER_OF_POSTS_TO_DISPLAY = 5;
 const useStyles = makeStyles(theme => ({
   root: {
-    display: 'flex',
     flexWrap: 'wrap',
     justifyContent: 'space-around',
     overflow: 'hidden',
