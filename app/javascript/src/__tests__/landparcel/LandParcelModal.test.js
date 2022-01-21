@@ -105,7 +105,7 @@ describe('Land Property Modal Component', () => {
       landParcel: {
         id: '1u2y3y4',
         parcelNumber: '15800',
-        accounts: [{fullName: 'John'}],
+        accounts: [{id: '123ghj', fullName: 'John'}],
         valuations: [],
         geom: null,
       },
@@ -114,7 +114,7 @@ describe('Land Property Modal Component', () => {
         {
           id: '1u2y3y4',
           parcelNumber: '15800',
-          accounts: [{fullName: 'Doe'}],
+          accounts: [{id: '123ghj', fullName: 'Doe'}],
           valuations: [],
           geom: null,
         }
@@ -187,7 +187,7 @@ describe('Land Property Modal Component', () => {
       landParcel: {
         id: '1u2y3y4',
         parcelNumber: '15800',
-        accounts: [{fullName: 'John'}],
+        accounts: [{id: '123ghj', fullName: 'John'}],
         valuations: [],
         geom: null,
       },

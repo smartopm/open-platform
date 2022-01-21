@@ -115,7 +115,7 @@ describe('Payment List Item Component', () => {
     expect(loader.queryAllByTestId('loader')[0]).toBeInTheDocument();
 
     fireEvent.click(container.getAllByTestId('filter')[1]);
-    expect(container.queryByText('Plan Status')).toBeInTheDocument();
+    expect(container.queryByText('Amount Owed')).toBeInTheDocument();
   });
 
   it('should check if renderPayment works as expected', () => {

@@ -384,7 +384,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
             // REFACTOR THESE IF-ELSEs (Nurudeen)
             if (actionField.type === 'select' && actionField.name === 'label') {
               return (
-                <FormControl fullWidth>
+                <FormControl key={index} fullWidth>
                   <InputLabel id={`select-${actionField.name}`}>
                     {t('actionflow:form_actions.select', { name: capitalize(actionField.name) })}
                   </InputLabel>
@@ -408,7 +408,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
             }
             if (actionField.type === 'select' && actionField.name === 'category') {
               return (
-                <FormControl fullWidth>
+                <FormControl key={index} fullWidth>
                   <InputLabel id={`select-${actionField.name}`}>
                     {t('actionflow:form_actions.select', { name: capitalize(actionField.name) })}
                   </InputLabel>
@@ -431,7 +431,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
             }
             if (actionField.type === 'select' && actionField.name === 'assignees') {
               return (
-                <FormControl fullWidth>
+                <FormControl key={index} fullWidth>
                   <FormHelperText>{t('actionflow:form_fields.assign_user')}</FormHelperText>
                   <Select
                     labelId={`select-${actionField.name}`}
@@ -461,7 +461,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
             }
             if (actionField.type === 'select' && actionField.name === 'template') {
               return (
-                <FormControl fullWidth>
+                <FormControl key={index} fullWidth>
                   <InputLabel id={`select-${actionField.name}`}>
                     {t('actionflow:form_actions.select', { name: capitalize(actionField.name) })}
                   </InputLabel>
@@ -484,7 +484,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
             }
             if (actionField.type === 'date' && actionField.name === 'due_date') {
               return (
-                <FormControl fullWidth>
+                <FormControl key={index} fullWidth>
                   <FormHelperText>{t('actionflow:form_fields.pick_date')}</FormHelperText>
                   <DatePickerDialog
                     handleDateChange={date =>
@@ -498,6 +498,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
             if (actionField.type === 'text' && actionField.name === 'phone_number') {
               return (
                 <PhoneInput
+                  key={index}
                   value={metaData.phone_number || ''}
                   inputStyle={{ width: '100%' }}
                   enableSearch

@@ -7,13 +7,15 @@ import { useTranslation } from 'react-i18next';
 import PaymentPlan, { renderPlan } from '../Components/UserTransactions/UserPaymentPlanItem';
 import currency from '../../../__mocks__/currency';
 import PaymentPlanUpdateMutation from '../graphql/payment_plan_mutations';
+import authState from '../../../__mocks__/authstate';
+import { Context } from '../../../containers/Provider/AuthStateProvider';
 
 describe('Render Payment Plan Item', () => {
   const { t } = useTranslation('common');
   const plan = {
     planType: 'basic',
     startDate: '2021-01-26',
-    installmentAmount: '200',
+    installmentAmount: 200,
     paymentDay: 1,
     frequency: 'monthly',
     paidPaymentsExists: true,
@@ -48,19 +50,19 @@ describe('Render Payment Plan Item', () => {
         query: PaymentPlanUpdateMutation,
         variables: { planId: plan.id, paymentDay: 2 }
       },
-      result: { data: { paymentDayUpdate: { paymentPlan: { id: plan.id } } } }
+      result: { data: { paymentPlanUpdate: { paymentPlan: { id: plan.id } } } }
     };
     const refetch = jest.fn();
     const currentUser =  {
       userType: 'admin',
       permissions: [
-          {  
+          {
             module: 'payment_plan',
             permissions: [
             'can_update_payment_day',
             'can_view_menu_list']
-          },  
-          { 
+          },
+          {
           module: 'plan_payment',
           permissions: [
           'can_view_menu_list'
@@ -69,18 +71,20 @@ describe('Render Payment Plan Item', () => {
       ]
     };
     const container = render(
-      <MockedProvider mocks={[requestMock]} addTypename={false}>
-        <BrowserRouter>
-          <PaymentPlan
-            plans={plans}
-            currencyData={currency}
-            userId={user.userId}
-            currentUser={currentUser}
-            refetch={refetch}
-            walletRefetch={() => {}}
-          />
-        </BrowserRouter>
-      </MockedProvider>
+      <Context.Provider value={authState}>
+        <MockedProvider mocks={[requestMock]} addTypename={false}>
+          <BrowserRouter>
+            <PaymentPlan
+              plans={plans}
+              currencyData={currency}
+              userId={user.userId}
+              currentUser={currentUser}
+              refetch={refetch}
+              balanceRefetch={() => {}}
+            />
+          </BrowserRouter>
+        </MockedProvider>
+      </Context.Provider>
     );
 
     expect(container.getAllByTestId('payment-date')[0]).toBeInTheDocument();

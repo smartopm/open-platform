@@ -14,7 +14,7 @@ import MessageAlert from '../../../components/MessageAlert';
 export default function EditModal({ open, handleClose, data, refetch, type }) {
   const [editLabel] = useMutation(LabelEdit);
   const [createLabel] = useMutation(LabelCreate);
-  const [color, setColor] = useState(null);
+  const [color, setColor] = useState('');
   const [shortDesc, setShortDesc] = useState('');
   const [description, setDescription] = useState('');
   const [mutationLoading, setMutationLoading] = useState(false);
@@ -50,7 +50,7 @@ export default function EditModal({ open, handleClose, data, refetch, type }) {
         setMutationLoading(false);
         setShortDesc('');
         setDescription('');
-        setColor(null);
+        setColor('');
         setMessageAlert(t('label.label_created'));
         setIsSuccessAlert(true);
         handleClose();

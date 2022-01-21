@@ -1,6 +1,5 @@
 import React from 'react';
 import { render, act, fireEvent, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event'
 import { BrowserRouter } from 'react-router-dom/';
 import { MockedProvider } from '@apollo/react-testing';
 import '@testing-library/jest-dom/extend-expect';
@@ -22,7 +21,7 @@ describe('Label Edit Component', () => {
     result: {
       data: {
         labelUpdate: {
-          label: { id: '6a7e722a-9bd5-48d4-aaf7-f3285ccff4', __typename: 'typename' },
+          label: { id: '6a7e722a-9bd5-48d4-aaf7-f3285ccff4a3', shortDesc: 'whgeukhw',__typename: 'typename' },
           __typename: 'typename'
         }
       }
@@ -36,7 +35,7 @@ describe('Label Edit Component', () => {
     result: {
       data: {
         labelCreate: {
-          label: { id: '6a7e722a-9bd5-48d4-aaf7-f3285ccff4', __typename: 'typename' },
+          label: { id: '6a7e722a-9bd5-48d4-aaf7-f3285ccff4', shortDesc: 'whgeukhw', __typename: 'typename' },
           __typename: 'typename'
         }
       }
@@ -75,11 +74,15 @@ describe('Label Edit Component', () => {
     expect(color).toBeInTheDocument();
 
     await act(async () => {
-      userEvent.type(title, 'title');
-      expect(title.value).toBe('whgeukhwtitle');
+      fireEvent.change(title, {
+        target: { value: 'title' }
+      })
+      expect(title.value).toBe('title');
 
-      userEvent.type(description, 'description');
-      expect(description.value).toBe('Thisdescription');
+      fireEvent.change(description, {
+        target: { value: 'description' }
+      })
+      expect(description.value).toBe('description');
 
       fireEvent.change(color, {
         target: { value: '#fff' }
