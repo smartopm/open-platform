@@ -41,7 +41,7 @@ export default function UserActionOptions(){
         <Typography data-testid='user_settings' align="center" className={classes.logOut} gutterBottom onClick={() => handleMenuItemLink('/user/settings')}>
           {t('common:menu.user_settings')}
         </Typography>
-        <Typography data-testid='my_profile' align="center" className={classes.logOut} gutterBottom onClick={() => handleMenuItemLink(`/${authState?.user?.id}`)}>
+        <Typography data-testid='my_profile' align="center" className={classes.logOut} gutterBottom onClick={() => handleMenuItemLink(`/user/${authState?.user?.id}`)}>
           {t('common:menu.my_profile')}
         </Typography>
         <Typography data-testid='logout' align="center" className={classes.logOut} gutterBottom onClick={() => handleMenuItemLink('/logout')}>
