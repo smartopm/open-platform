@@ -138,13 +138,12 @@ export function MainNav({ authState }) {
             )}
           </IconButton>
 
-          {matches && <BackArrow path={path} />}
+          {!matches && <BackArrow path={path} />}
 
           {canAccessSOS({authState})
            && communityHasEmergencyNumber && communityHasEmergencySMSNumber
            && <SvgIcon component={SOSIcon} viewBox="0 0 384 512" setOpen={setOpen} data-testid="sos-icon" />}
 
-          {!matches && <BackArrow path={path} />}
 
           <SOSModal open={open} setOpen={setOpen} location={location} {...{ authState }} />
 
@@ -226,12 +225,25 @@ NewsNav.propTypes = {
 
 const styles = StyleSheet.create({
   logo: {
-    '@media (max-width: 367px)': {
-      marginLeft: 0
+    '@media (max-width: 600px)': {
+      height: 35
     },
-    '@media (max-width: 470px)': {
-      marginLeft: 20
-    }
+    '@media (max-width: 350px)': {
+      marginLeft: 6,
+      height: 30
+    },
+    '@media (min-width: 350px) and (max-width: 400px)': {
+      marginLeft: 22,
+    },
+    '@media (min-width: 401px) and (max-width: 470px)': {
+      marginLeft: 47,
+    },
+    '@media (min-width: 470px) and (max-width: 500px)': {
+      marginLeft: 50
+    },
+    '@media (min-width: 500px)': {
+      marginLeft: -73
+    },
   },
   topNav: {
     width: '100%',
