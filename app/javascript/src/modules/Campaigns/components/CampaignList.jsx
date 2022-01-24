@@ -148,7 +148,7 @@ export default function CampaignList() {
               />
             </Grid>
             <Grid item sm={12}>
-              {data.campaigns.length > 0 ? (
+              {data.campaigns.length > 0 && (
                 <>
                   {openDeleteModal && (
                     <DeleteDialogueBox
@@ -182,32 +182,22 @@ export default function CampaignList() {
                     />
                   </CenteredContent>
                 </>
-              ) : (
-                // TODO add translation
-                <p> No campaigns have been created yet</p>
               )}
             </Grid>
           </Grid>
         </div>
       </Grid>
-      <Grid item sm={7} />
+      <Grid item sm={7} className={classes.splitScreen}>
+        <CampaignSplitScreen campaignLength={data.campaigns.length} />
+      </Grid>
     </Grid>
   );
 }
 
 const useStyles = makeStyles(() => ({
-  campaignBody: {
-    maxWidth: '42ch',
-    overflow: 'hidden',
-    whiteSpace: 'nowrap',
-    textOverflow: 'ellipsis',
-    paddingLeft: '3px'
-  },
-  campaignBodyMobile: {
-    maxWidth: '17ch',
-    overflow: 'hidden',
-    whiteSpace: 'nowrap',
-    textOverflow: 'ellipsis',
-    paddingLeft: '3px'
+  splitScreen: {
+    background: '#FAFAFA',
+    height: '100vh',
+    marginTop: '-5%'
   }
 }));
