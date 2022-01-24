@@ -1,7 +1,7 @@
 /* eslint-disable complexity */
 /* eslint-disable max-len */
 /* eslint-disable max-lines */
-import React, { useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useQuery } from 'react-apollo';
@@ -18,7 +18,7 @@ import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { LinkToUserAvatar } from '../../Components/RenderTaskData';
-import { dateToString } from '../../../../components/DateContainer'; 
+import { dateToString } from '../../../../components/DateContainer';
 import { Spinner } from '../../../../shared/Loading'
 import CenteredContent from '../../../../shared/CenteredContent';
 import { ProjectOpenTasksQuery } from '../../graphql/task_queries'
@@ -68,9 +68,6 @@ function fetchMoreOpenTasks() {
   }
   }
 
-  console.log("Testing", data)
-  console.log("Error", error)
-
   if (error) return <CenteredContent>{formatError(error.message)}</CenteredContent>;
   if (loading) return <Spinner />;
 
@@ -84,7 +81,7 @@ function fetchMoreOpenTasks() {
           </Grid>
 
           {data?.projectOpenTasks?.map(task => (
-            <>
+            <Fragment key={task.id}>
               <Grid container spacing={1} item md={4} xs={6} className={classes.bodyAlign}>
                 <Grid item md={2} xs={2}>
                   <IconButton
@@ -121,7 +118,7 @@ function fetchMoreOpenTasks() {
                   {t('task:sub_task.due')}
                   {task.dueDate ? dateToString(task.dueDate) : 'Never '}
                 </Typography>
-              
+
               </Grid>
 
               <Grid item md={1} xs={4} data-testid="task_assignee" style={{ display: 'flex', alignItems: 'center' }}>
@@ -223,8 +220,8 @@ function fetchMoreOpenTasks() {
               </Grid>
 
 
-            </>
-          
+            </Fragment>
+
         ))}
 
           <Grid item md={12} xs={12}>
@@ -234,7 +231,7 @@ function fetchMoreOpenTasks() {
                 <Spinner />
                 ) : (
                   <Button onClick={fetchMoreOpenTasks} className={classes.fetchMore}>
-                    <Typography variant="body2">{t('task:sub_task.see_more')}</Typography>
+                    <Typography variant="body2" data-testid="sub_task_see_more">{t('task:sub_task.see_more')}</Typography>
                     <ArrowDropDownIcon />
                   </Button>
                 )}
@@ -244,7 +241,7 @@ function fetchMoreOpenTasks() {
 
         </Grid>
 
-      ):( 
+      ):(
         <Typography>{t('processes.no_open_tasks')}</Typography>
       )
     }
@@ -306,7 +303,7 @@ const useStyles = makeStyles(() => ({
   open: {
     backgroundColor: '#2196f3',
     color: '#ffffff'
-  },  
+  },
   bodyAlign: {
     paddingTop: '5px'
   },
@@ -316,7 +313,7 @@ const useStyles = makeStyles(() => ({
     '@media (min-device-width: 360px) and (max-device-height: 1368px) and (orientation: portrait)' : {
       textAlign: "right",
     },
-  }, 
+  },
   fetchMore: {
     padding: '7px',
     marginTop: '16px'
