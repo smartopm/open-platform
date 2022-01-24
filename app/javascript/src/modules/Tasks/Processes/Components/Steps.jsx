@@ -110,7 +110,8 @@ const Step = {
   };
 
   ProjectSteps.defaultProps = {
-    redirect: false
+    redirect: false,
+    handleStepCompletion: null
   };
 
   ProjectSteps.propTypes = {
@@ -118,7 +119,9 @@ const Step = {
   setSelectedStep: PropTypes.func.isRequired,
   handleStepCompletion: PropTypes.func.isRequired,
   redirect: PropTypes,
-  handleProjectStepClick: PropTypes.func.isRequired
+  handleProjectStepClick: PropTypes.func.isRequired,
+  handleStepCompletion: PropTypes.func,
+  redirect: PropTypes.bool
 };
 
 const useStyles = makeStyles(() => ({

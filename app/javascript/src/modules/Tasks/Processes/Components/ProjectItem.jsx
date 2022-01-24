@@ -8,7 +8,7 @@ import { UpdateNote } from '../../../../graphql/mutations';
 import { useFileUpload } from '../../../../graphql/useFileUpload';
 import TodoItem from '../../Components/TodoItem';
 
-export default function ProcessItem({ task, refetch, clientView }) {
+export default function ProcessItem({ task, taskId, refetch, clientView }) {
   const { t } = useTranslation('task');
   const [selectedTasks, setSelectedTasks] = useState([]);
   const [selectedTask, setSelectedTask] = useState(null);
@@ -78,14 +78,15 @@ export default function ProcessItem({ task, refetch, clientView }) {
     redirectToOverviewPage(todoItem.id);
   }
 
-  function redirectToOverviewPage(taskId, tab='overview') {
-    history.push(`/processes/drc/projects/${taskId}?tab=${tab}`)
+  function redirectToOverviewPage(_taskId, tab='overview') {
+    history.push(`/processes/drc/projects/${_taskId}?tab=${tab}`)
   }
 
   return(
     <TodoItem
-      key={task.id}
+      key={task?.id}
       task={task}
+      taskId={taskId}
       handleChange={handleChange}
       selectedTasks={selectedTasks}
       isSelected={false}
@@ -100,10 +101,13 @@ export default function ProcessItem({ task, refetch, clientView }) {
 }
 
 ProcessItem.defaultProps ={
-  clientView: false
+  clientView: false,
+  taskId: null,
+  task: null
 }
 ProcessItem.propTypes = {
-  task: PropTypes.shape.isRequired,
+  task: PropTypes.shape,
   refetch: PropTypes.func.isRequired,
-  clientView: PropTypes.bool
+  clientView: PropTypes.bool,
+  taskId: PropTypes.string
 }
