@@ -64,15 +64,19 @@ function fetchMoreOpenTasks() {
       }
     });
   } catch (_error) {
+    // TODO: User should be able to see this error
     console.error(_error.message);
   }
   }
 
   if (error) return <CenteredContent>{formatError(error.message)}</CenteredContent>;
-  if (loading) return <Spinner />;
 
   return (
     <>
+      {
+        // TODO: Find out from the UI if this works as expected
+        !data?.projectOpenTasks?.length && loading ? <Spinner /> : null
+      }
       {
       data?.projectOpenTasks?.length? (
         <Grid container data-testid="open_task_container">

@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, act, waitFor } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom/';
 import { MockedProvider } from '@apollo/react-testing';
@@ -25,22 +25,19 @@ describe('TaskSubTask Component', () => {
   ];
 
   it('renders without error', async () => {
-    let container;
-    await act(async () => {
-      container = render(
-        <Context.Provider value={authState}>
-          <MockedProvider mocks={openTaskMock} addTypename>
-            <BrowserRouter>
-              <OpenTaskDataList
-                taskId="23"
-                handleTodoClick={jest.fn()}
-                handleTaskCompletion={jest.fn()}
-              />
-            </BrowserRouter>
-          </MockedProvider>
-        </Context.Provider>
+     const container = render(
+       <Context.Provider value={authState}>
+         <MockedProvider mocks={openTaskMock} addTypename>
+           <BrowserRouter>
+             <OpenTaskDataList
+               taskId="23"
+               handleTodoClick={jest.fn()}
+               handleTaskCompletion={jest.fn()}
+             />
+           </BrowserRouter>
+         </MockedProvider>
+       </Context.Provider>
       );
-    });
 
     expect(container.queryByTestId('loader')).toBeInTheDocument();
     await waitFor(() => {
