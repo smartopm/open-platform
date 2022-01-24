@@ -230,17 +230,17 @@ const styles = StyleSheet.create({
       height: 30
     },
     '@media (min-width: 350px) and (max-width: 405px)': {
-      marginLeft: 22,
-      height: 30
+      marginLeft: '1.8em',
+      height: 25
     },
     '@media (min-width: 406px) and (max-width: 470px)': {
-      marginLeft: 47,
+      marginLeft: '3em',
     },
     '@media (min-width: 470px) and (max-width: 500px)': {
-      marginLeft: 50
+      marginLeft: '5em'
     },
-    '@media (min-width: 500px)': {
-      marginLeft: '-6em'
+    '@media (min-width: 501px) and (max-width: 550px)': {
+      marginLeft: '-3em'
     },
   },
   topNav: {
