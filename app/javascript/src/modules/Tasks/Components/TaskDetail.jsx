@@ -155,7 +155,7 @@ export default function TaskDetail({
   }
 
   function currentActiveReminder() {
-    const assignedNote = data.assigneeNotes.find(
+    const assignedNote = data.assigneeNotes?.find(
       assigneeNote => assigneeNote.userId === currentUser.id
     );
 
