@@ -3,9 +3,10 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { Fragment, useState } from 'react';
 import { useQuery, useMutation } from 'react-apollo';
+import AddCircleIcon from '@material-ui/icons/AddCircle';
 import Grid from '@material-ui/core/Grid';
-import Fab from '@material-ui/core/Fab';
-import AddIcon from '@material-ui/icons/Add';
+import IconButton from '@material-ui/core/IconButton';
+import Tooltip from '@material-ui/core/Tooltip';
 import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/styles';
@@ -121,8 +122,15 @@ export default function CampaignList() {
           <Grid container>
             <Grid item sm={12} style={{marginBottom: '20px'}}>
               <Grid container>
-                <Grid item sm={12}>
+                <Grid item sm={10}>
                   <Typography variant='h4'>Campaigns</Typography>
+                </Grid>
+                <Grid item sm={2} style={{textAlign: 'right'}}>
+                  <Tooltip title="New Campaign" placement="top">
+                    <IconButton aria-label="new-campaign" color='primary' onClick={() => routeToCreateCampaign()}>
+                      <AddCircleIcon />
+                    </IconButton>
+                  </Tooltip>
                 </Grid>
                 <Grid item sm={12}>
                   <Typography variant='body2'>Communicate with the community.</Typography>
@@ -173,23 +181,6 @@ export default function CampaignList() {
                       handlePageChange={paginate}
                     />
                   </CenteredContent>
-                  <Fab
-                    variant="extended"
-                    color="primary"
-                    style={{
-                      position: 'fixed',
-                      bottom: 24,
-                      right: 57,
-                      color: 'white'
-                    }}
-                    onClick={() => {
-                      routeToCreateCampaign();
-                    }}
-                  >
-                    <AddIcon /> 
-                    {' '}
-                    {t('common:menu.create')}
-                  </Fab>
                 </>
               ) : (
                 // TODO add translation
