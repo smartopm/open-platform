@@ -1,17 +1,36 @@
-<!-- > Thank you for contributing to DoubleGDP source code -->
 
-**Describe changes made and the chosen implementation strategy**
+**1. What this MR does / why we need it:**
 
-<!-- remove this comment and  explain here -->
+- Ticket# 
+- Description: 
 
-**Issue number this closes**
 
-**Does this merge request introduce any new gem or package**
+**2. Verification
+- [ ] Merge Request does not include breaking changes.
+- [ ] The functionality has been tested and works fine. 
 
+**3. Browser and Responsiveness Testing:**
+
+- [ ] Chrome
+- [ ] Safari
+- [ ] FireFox
+- [ ] IE (until depricated)
+- [ ] Has been tested for cringies across all breakpoints (XL-XS)
+
+
+**4. New gem or package: (optional)
+- [ ] The source and name of any newly added gem or node_module package has been added.
 <!-- If Yes add a link here -->
 
-- [ ] Merge Request does not include breaking changes
-- [ ] I have tested and verified security guard's flow works fine
-- [ ] I have tested and verified event logs works fine
-- [ ] I have linked the source and name of any newly added gem or node_module package
+**5. Components Management: (optional)** 
+
+- [ ] New components have been added to Storybook
+- [ ] Updated components have been updated on Storybook
+- [ ] Documentation has been added or updated
+
+
+**5. CHANGELOG/Release Notes: (optional)**
+
+
+Thanks for your MR, you're awesome! :+1:
 
