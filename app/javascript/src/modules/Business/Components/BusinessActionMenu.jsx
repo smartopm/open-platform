@@ -58,6 +58,14 @@ export default function BusinessActionMenu({
             </MenuItem>
             <MenuItem>
               <Link
+                to={`/business/edit/${data.id}`}
+                className={linkStyles}
+              >
+                {'Edit'}
+              </Link>
+            </MenuItem>
+            <MenuItem>
+              <Link
                 to={`/business/${data.id}`}
                 className={linkStyles}
               >

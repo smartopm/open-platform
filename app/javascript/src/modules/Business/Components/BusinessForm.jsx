@@ -9,11 +9,12 @@ import { css } from 'aphrodite';
 import { useMutation } from 'react-apollo';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import CenteredContent from '../../../components/CenteredContent';
+import CenteredContent from '../../../shared/CenteredContent';
 import { discussStyles } from '../../../components/Discussion/Discuss';
-import { BusinessCreateMutation } from '../graphql/business_mutations';
+import { BusinessCreateMutation, BusinessUpdateMutation } from '../graphql/business_mutations';
 import UserSearch from '../../Users/Components/UserSearch';
 import { businessCategories, businessStatus } from '../../../utils/constants';
+import { useHistory } from 'react-router-dom';
 
 const initialData = {
   name: '',
@@ -33,13 +34,15 @@ const initialUserData = {
   userId: ''
 };
 
-export default function BusinessForm({ close }) {
-  const [data, setData] = useState(initialData);
-  const [userData, setUserData] = useState(initialUserData);
+export default function BusinessForm({ close, businessData, action }) {
+  const [data, setData] = useState(action === 'edit' ? businessData : initialData);
+  const [userData, setUserData] = useState(action === 'edit' ? { userId: businessData.userId } : initialUserData);
   const [error, setError] = useState(null);
-  const { t } = useTranslation(['common'])
+  const { t } = useTranslation(['common']);
+  const history = useHistory();
 
   const [createBusiness] = useMutation(BusinessCreateMutation);
+  const [updateBusiness] = useMutation(BusinessUpdateMutation);
 
   function handleInputChange(event) {
     const { name, value } = event.target;
@@ -49,22 +52,38 @@ export default function BusinessForm({ close }) {
     });
   }
 
-  function handleCreateBusiness(event) {
+  function show(){
+    console.log("DISPLAYING DATA");
+    console.log(businessData);
+  }
+
+  function handleSubmit(event) {
     event.preventDefault();
     const {
       name, email, phoneNumber, status, homeUrl, category, description, imageUrl, address, operatingHours,
     } = data;
-    createBusiness({
-      variables: {
-        name, email, phoneNumber, status, homeUrl, category, description, imageUrl, address, operatingHours, userId: userData.userId
-      }
-    }).then(() => {
-      close();
-    }).catch((err) => setError(err.message));
+
+    if(action === 'edit'){
+      updateBusiness({
+        variables: {
+          id: businessData.id, name, email, phoneNumber, status, homeUrl, category, description, imageUrl, address, operatingHours, userId: userData.userId
+        }
+      }).then(() => {
+        history.push('/businesses')
+      }).catch((err) => setError(err.message));
+    }else{
+      createBusiness({
+        variables: {
+          name, email, phoneNumber, status, homeUrl, category, description, imageUrl, address, operatingHours, userId: userData.userId
+        }
+      }).then(() => {
+        close();
+      }).catch((err) => setError(err.message));
+    }
   }
   return (
     <Container maxWidth="md">
-      <form onSubmit={handleCreateBusiness}>
+      <form onSubmit={handleSubmit}>
         <TextField
           label={t('form_fields.full_name')}
           name="name"
@@ -223,7 +242,7 @@ export default function BusinessForm({ close }) {
             className={`${css(discussStyles.submitBtn)}`}
             data-testid='create_business'
           >
-            {t('form_actions.create_business')}
+            {action === 'edit' ? t('form_actions.update_business') : t('form_actions.create_business')}
           </Button>
         </CenteredContent>
       </form>
@@ -231,6 +250,12 @@ export default function BusinessForm({ close }) {
   );
 }
 
+BusinessForm.defaultProps = {
+
+}
+
 BusinessForm.propTypes = {
-  close: PropTypes.func.isRequired
+  close: PropTypes.func.isRequired,
+  businessData: PropTypes.object,
+  action: PropTypes.string
 };

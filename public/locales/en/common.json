@@ -88,6 +88,7 @@
     "save_changes": "Save changes",
     "merge": "Merge",
     "create_business": "Create a Business",
+    "update_busines": "Update Business",
     "create_plan": "Create Plan",
     "add_type": "Add {{label}}",
     "close": "Close",

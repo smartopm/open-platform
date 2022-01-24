@@ -72,6 +72,7 @@ import EmailBuilderDialog
   from '../src/modules/Emails/components/EmailBuilderDialog';
 import { PRIMARY_DOMAINS } from '../src/utils/constants';
 import TaskProcessDetail from '../src/modules/Tasks/Processes/Components/TaskProcessDetail';
+import BusinessEdit from '../src/modules/Business/Components/BusinessEdit';
 
 
 
@@ -372,6 +373,11 @@ const App = () => {
                                 path="/business/:id"
                                 exact
                                 component={BusinessProfile}
+                              />
+                              <Route
+                                path="/business/edit/:id"
+                                exact
+                                component={BusinessEdit}
                               />
                               <Route
                                 path="/form/:formId?/:formName?"
