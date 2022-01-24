@@ -242,7 +242,8 @@ TransferPlanModal.propTypes = {
 PaymentPlansForTransferPlan.defaultProps = {
   data: {
     userLandParcelWithPlan: []
-  }
+  },
+  sourcePlanId: null
 }
 
 PaymentPlansForTransferPlan.propTypes = {
@@ -253,7 +254,7 @@ PaymentPlansForTransferPlan.propTypes = {
       })
     )
   }),
-  sourcePlanId: PropTypes.string.isRequired,
+  sourcePlanId: PropTypes.string,
   destinationPlanId: PropTypes.string.isRequired,
   handleRadioChange: PropTypes.func.isRequired,
   acceptanceCheckbox: PropTypes.bool.isRequired,

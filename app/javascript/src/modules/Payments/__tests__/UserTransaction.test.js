@@ -40,7 +40,7 @@ describe('Render Transaction', () => {
   const userData = {
     name: 'test-name'
   }
-  
+
   it('should render the Transaction item component', async () => {
     const mock = [
       {
@@ -93,11 +93,11 @@ describe('Render Transaction', () => {
     const container = render(
       <MockedProvider mocks={mock} addTypename={false}>
         <BrowserRouter>
-          <UserTransactionsList transaction={transaction} currencyData={currency} userType='admin' userData={userData} />
+          <UserTransactionsList transaction={transaction} currencyData={currency} userType='admin' userData={userData} refetch={() => {}} balanceRefetch={() => {}} />
         </BrowserRouter>
       </MockedProvider>
     );
-    
+
     expect(container.queryByTestId('date')).toBeInTheDocument();
     expect(container.queryByTestId('recorded')).toBeInTheDocument();
     expect(container.queryByTestId('description')).toBeInTheDocument();
@@ -115,11 +115,11 @@ describe('Render Transaction', () => {
     const container = render(
       <MockedProvider>
         <BrowserRouter>
-          <UserTransactionsList transaction={{}} currencyData={currency} userType='admin' userData={userData} />
+          <UserTransactionsList transaction={{}} currencyData={currency} userType='admin' userData={userData} refetch={() => {}} balanceRefetch={() => {}} />
         </BrowserRouter>
       </MockedProvider>
     );
-    
+
     expect(container.queryByText('No Transactions Yet')).toBeInTheDocument();
   });
 

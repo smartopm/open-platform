@@ -337,8 +337,8 @@ export function PlansList({
               </div>
               <Grid container>
                 {checkbox && selectedPlans.length > 0 && (
-                  <Grid item xs={12} className={matches && classes.filterCount} data-testid='plan_count'>
-                    <Typography variant='body2'> 
+                  <Grid item xs={12} className={matches ? classes.filterCount : ''} data-testid='plan_count'>
+                    <Typography variant='body2'>
                       {' '}
                       {t('misc.plan_count', {count: `${selectedPlans.length}`})}
                       {' '}
@@ -358,7 +358,7 @@ export function PlansList({
                       />
                     </Grid>
                     <Grid>
-                      <Typography> 
+                      <Typography>
                         {' '}
                         {t('common:misc.select')}
                         {' '}
