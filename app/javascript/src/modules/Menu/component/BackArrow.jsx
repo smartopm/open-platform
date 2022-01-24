@@ -25,7 +25,7 @@ export default function BackArrow({ path }) {
 
 const useStyles = makeStyles(() => ({
   body: {
-    marginTop: '-15px'
+    marginTop: '-8px'
   }
 }));
 

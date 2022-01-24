@@ -65,7 +65,6 @@ export default function Main() {
 }
 
 export function MainNav({ authState }) {
-  const matches = useMediaQuery('(max-width:600px)');
   const matchesSmall = useMediaQuery('(max-width:500px)');
   const path = useLocation().pathname
   const classes = useStyles();
@@ -138,13 +137,11 @@ export function MainNav({ authState }) {
             )}
           </IconButton>
 
-          {!matches && <BackArrow path={path} />}
-
           {canAccessSOS({authState})
            && communityHasEmergencyNumber && communityHasEmergencySMSNumber
            && <SvgIcon component={SOSIcon} viewBox="0 0 384 512" setOpen={setOpen} data-testid="sos-icon" />}
 
-
+          <BackArrow path={path} />
           <SOSModal open={open} setOpen={setOpen} location={location} {...{ authState }} />
 
           {
@@ -232,17 +229,18 @@ const styles = StyleSheet.create({
       marginLeft: 6,
       height: 30
     },
-    '@media (min-width: 350px) and (max-width: 400px)': {
+    '@media (min-width: 350px) and (max-width: 405px)': {
       marginLeft: 22,
+      height: 30
     },
-    '@media (min-width: 401px) and (max-width: 470px)': {
+    '@media (min-width: 406px) and (max-width: 470px)': {
       marginLeft: 47,
     },
     '@media (min-width: 470px) and (max-width: 500px)': {
       marginLeft: 50
     },
     '@media (min-width: 500px)': {
-      marginLeft: -73
+      marginLeft: '-6em'
     },
   },
   topNav: {
