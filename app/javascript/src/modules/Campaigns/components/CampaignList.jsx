@@ -129,6 +129,16 @@ export default function CampaignList() {
                 </Grid>
               </Grid>
             </Grid>
+            <Grid item sm={12} style={{ marginBottom: '20px' }}>
+              <SearchInput
+                filterRequired={false}
+                title={t('common:misc.campaigns')}
+                searchValue={searchText}
+                handleSearch={handleSearchText}
+                handleClear={() => setSearchText('')}
+                data-testid="search_input"
+              />
+            </Grid>
             <Grid item sm={12}>
               {data.campaigns.length > 0 ? (
                 <>
@@ -142,16 +152,6 @@ export default function CampaignList() {
                       loading={deletingCampaign}
                     />
                   )}
-                  <div style={{ marginBottom: '20px' }}>
-                    <SearchInput
-                      filterRequired={false}
-                      title={t('common:misc.campaigns')}
-                      searchValue={searchText}
-                      handleSearch={handleSearchText}
-                      handleClear={() => setSearchText('')}
-                      data-testid="search_input"
-                    />
-                  </div>
                   {data.campaigns.map(camp => (
                     <Fragment key={camp.id}>
                       <CampaignCard camp={camp} menuData={menuData} />
