@@ -2,7 +2,7 @@ import React, { useContext } from 'react'
 import PropTypes from 'prop-types';
 import { Grid, Divider, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from '@material-ui/styles';
 import { TaskContext } from "../../Context";
 import ProjectSteps from './Steps';
 import ProjectActivitySummary from './ProjectActivitySummary';
