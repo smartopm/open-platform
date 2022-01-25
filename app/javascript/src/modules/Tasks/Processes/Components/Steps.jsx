@@ -13,13 +13,14 @@ export default function ProjectSteps({
   data,
   setSelectedStep,
   handleStepCompletion,
+  handleProjectStepClick,
   redirect
 }) {
   const history = useHistory();
   const classes = useStyles();
   const { id } = useParams();
   const [stepsOpen, setStepsOpen] = useState({});
-  const { t } = useTranslation('task')
+  const { t } = useTranslation('task');
 
   function toggleStep(stepItem){
     setStepsOpen({
@@ -30,6 +31,7 @@ export default function ProjectSteps({
 
   function handleStepItemClick(e, stepItem) {
     e.stopPropagation();
+    handleProjectStepClick(stepItem);
     setSelectedStep({ ...stepItem });
     if (redirect) {
       history.push(`/processes/drc/projects/${id}?tab=processes`)
@@ -48,7 +50,7 @@ export default function ProjectSteps({
 
   return (
     <>
-      {data?.length > 0 
+      {data?.length > 0
       ? (data?.map(firstLevelStep => (
         <>
           <div
@@ -106,7 +108,7 @@ const Step = {
     ),
     subTasks: PropTypes.arrayOf(PropTypes.object)
   };
-  
+
   ProjectSteps.defaultProps = {
     redirect: false
   };
@@ -115,7 +117,8 @@ const Step = {
   data: PropTypes.arrayOf(PropTypes.shape(Step)).isRequired,
   setSelectedStep: PropTypes.func.isRequired,
   handleStepCompletion: PropTypes.func.isRequired,
-  redirect: PropTypes.bool
+  redirect: PropTypes,
+  handleProjectStepClick: PropTypes.func.isRequired
 };
 
 const useStyles = makeStyles(() => ({

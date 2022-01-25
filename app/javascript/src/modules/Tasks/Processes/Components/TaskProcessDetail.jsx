@@ -10,7 +10,8 @@ import TaskContextProvider from '../../Context';
 import { StyledTabs, StyledTab, TabPanel, a11yProps } from '../../../../components/Tabs';
 import ProjectOverview, { ProjectOverviewSplitView } from './ProjectOverview';
 import { objectAccessor, sanitizeText, useParamsQuery } from '../../../../utils/helpers';
-import ProjectProcesses, { ProjectProcessesSplitView } from './ProjectProcesses';
+import ProjectProcesses from './ProjectProcesses';
+import ProjectProcessesSplitView from './ProjectProcessesSplitView';
 import ErrorPage from '../../../../components/Error';
 import Loading from '../../../../shared/Loading';
 import { SubTasksQuery, TaskQuery } from '../../graphql/task_queries';
@@ -27,6 +28,7 @@ export default function TaskProcessDetail() {
   const [tabValue, setTabValue] = useState(0);
   const [messageAlert, setMessageAlert] = useState('');
   const matches = useMediaQuery('(max-width:600px)');
+  const [splitScreenOpen, setSplitScreenOpen] = useState(false);
 
   const { data: projectData, error: projectDataError, loading: projectDataLoading } = useQuery(
     TaskQuery,
@@ -67,6 +69,10 @@ export default function TaskProcessDetail() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [path, tab]);
+
+  function handleProjectStepClick() {
+    setSplitScreenOpen(true);
+  }
 
   if (projectDataLoading || subStepsLoading) return <Loading />;
   if (projectDataError) return <ErrorPage title={projectDataError.message} />;
@@ -122,15 +128,28 @@ export default function TaskProcessDetail() {
               <ProjectOverview data={projectData?.task} />
             </TabPanel>
             <TabPanel value={tabValue} index={1}>
-              <ProjectProcesses data={stepsData?.taskSubTasks} refetch={refetch} />
+              <ProjectProcesses
+                data={stepsData?.taskSubTasks}
+                refetch={refetch}
+                handleProjectStepClick={handleProjectStepClick}
+              />
             </TabPanel>
           </Grid>
           <Grid item md={7} xs={12}>
             <TabPanel value={tabValue} index={0}>
-              <ProjectOverviewSplitView data={stepsData?.taskSubTasks} refetch={refetch} />
+              <ProjectOverviewSplitView
+                data={stepsData?.taskSubTasks}
+                refetch={refetch}
+                handleProjectStepClick={handleProjectStepClick}
+              />
             </TabPanel>
             <TabPanel value={tabValue} index={1}>
-              <ProjectProcessesSplitView refetch={refetch} />
+              <ProjectProcessesSplitView
+                splitScreenOpen={splitScreenOpen}
+                setSplitScreenOpen={setSplitScreenOpen}
+                handleProjectStepClick={handleProjectStepClick}
+                refetch={refetch}
+              />
             </TabPanel>
           </Grid>
         </Grid>
