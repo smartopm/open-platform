@@ -117,8 +117,6 @@ const Step = {
   ProjectSteps.propTypes = {
   data: PropTypes.arrayOf(PropTypes.shape(Step)).isRequired,
   setSelectedStep: PropTypes.func.isRequired,
-  handleStepCompletion: PropTypes.func.isRequired,
-  redirect: PropTypes,
   handleProjectStepClick: PropTypes.func.isRequired,
   handleStepCompletion: PropTypes.func,
   redirect: PropTypes.bool

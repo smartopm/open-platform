@@ -90,7 +90,7 @@ export default {
   assignees: [
     {
       id: 'cfc7e3d3-d875-4d50-a7a4-994df8ab7f42',
-      name: 'Daniel Mutuba',
+      name: 'John Doctor',
       imageUrl:
         'https://lh3.googleusercontent.com/a-/AOh14Ghj2JnWVlVC_cPrzJrAJ2YyV_UyVTXcEew8YKVp=s96-c',
       avatarUrl: null,
