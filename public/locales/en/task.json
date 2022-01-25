@@ -73,7 +73,8 @@
   },
   "bread_crumps": {
     "my_tasks": "My Tasks",
-    "task_details": "Task Detail"
+    "task_details": "Task Detail",
+    "summary": "Summary"
   },
   "processes": {
     "overview": "Overview",
