@@ -10,7 +10,17 @@ import { Context } from '../../../containers/Provider/AuthStateProvider'
 import authState from '../../../__mocks__/authstate'
 import taskMock from '../__mocks__/taskMock';
 
-jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
+jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
+jest.mock('react-router', () => ({
+  ...jest.requireActual('react-router'),
+  useLocation: () => ({
+    pathname: '/tasks',
+    search: '?taskId=23',
+    state: { from: '/',  search: '/' }
+  }),
+  useParams: () => ({ id: '23' })
+}));
+
 const mck = jest.fn()
 const props = {
   isDialogOpen: false,
@@ -29,19 +39,35 @@ const mocks = [
       variables: {
         offset: 0,
         limit: 50,
-        query: 'assignees: Tester AND completed: false'
+        query: "assignees: John Doctor AND completed: false "
       }
     },
     result: {
-     flaggedNotes: [
-      taskMock
-     ]
+      data: {
+        flaggedNotes: [
+          taskMock
+        ]
+      }
     }
   }
 ]
 
 describe('Test the Todo page', () => {
-  it('Mount the Todo component', () => {
+  it('renders loader', () => {
+    render(
+      <Context.Provider value={authState}>
+        <MockedProvider mocks={mocks} addTypename={false}>
+          <BrowserRouter>
+            <TodoList {...props} />
+          </BrowserRouter>
+        </MockedProvider>
+      </Context.Provider>
+    );
+
+    expect(screen.getByTestId('loader')).toBeInTheDocument();
+  });
+
+  it('mounts the TodoList component', () => {
     render(
       <Context.Provider value={authState}>
         <MockedProvider mocks={mocks} addTypename={false}>
@@ -56,7 +82,24 @@ describe('Test the Todo page', () => {
     expect(screen.queryByTestId('todo-container')).toBeTruthy()
     expect(screen.queryByTestId('search')).toBeTruthy()
     expect(screen.queryByTestId('filter_container')).toBeInTheDocument();
-  })
+  });
+
+  it('renders todo list section', async () => {
+    render(
+      <Context.Provider value={authState}>
+        <MockedProvider mocks={mocks} addTypename={false}>
+          <BrowserRouter>
+            <TodoList {...props} />
+          </BrowserRouter>
+        </MockedProvider>
+      </Context.Provider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByTestId('todo-list-container')).toBeInTheDocument();
+      expect(screen.queryAllByTestId('card')).toHaveLength(1);
+    });
+  });
 
   it('renders task form modal', async () => {
     render(
@@ -80,19 +123,42 @@ describe('Test the Todo page', () => {
     });
   });
 
-  it('does not render split screen on initial page load', async () => {
-    render(
-      <Context.Provider value={authState}>
-        <MockedProvider mocks={mocks} addTypename={false}>
-          <BrowserRouter>
-            <TodoList {...props} />
-          </BrowserRouter>
-        </MockedProvider>
-      </Context.Provider>
-    );
+  describe('Task details', () => {
+    it('does not render split screen on initial page load', async () => {
+      render(
+        <Context.Provider value={authState}>
+          <MockedProvider mocks={mocks} addTypename={false}>
+            <BrowserRouter>
+              <TodoList {...props} />
+            </BrowserRouter>
+          </MockedProvider>
+        </Context.Provider>
+      );
 
-    await waitFor(() => {
-      expect(screen.queryByTestId('drawer')).not.toBeInTheDocument();
+      await waitFor(() => {
+        expect(screen.queryByTestId('drawer')).not.toBeInTheDocument();
+      });
+    });
+
+    it('opens split screen view', async () => {
+      render(
+        <Context.Provider value={authState}>
+          <MockedProvider mocks={mocks} addTypename={false}>
+            <BrowserRouter>
+              <TodoList {...props} />
+            </BrowserRouter>
+          </MockedProvider>
+        </Context.Provider>
+      );
+
+      await waitFor(() => {
+        const card = screen.queryAllByTestId('card')[0];
+        fireEvent.click(card);
+        const openTaskDetailsMenu = screen.queryAllByTestId('show_task_subtasks')[0];
+        expect(openTaskDetailsMenu).toBeInTheDocument();
+        fireEvent.click(openTaskDetailsMenu);
+        expect(screen.queryByTestId('drawer')).toBeInTheDocument();
+      });
     });
   });
 })

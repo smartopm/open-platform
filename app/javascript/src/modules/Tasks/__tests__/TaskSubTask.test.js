@@ -18,14 +18,14 @@ describe('TaskSubTask Component', () => {
       },
       result: {
         data: {
-          taskSubTasks: [...taskMock.subtasks]
+          taskSubTasks: [taskMock.subtasks]
         }
       }
     }
   ];
 
   it('renders without error', async () => {
-    let container 
+    let container
     await act(async () => {
       container = render(
         <Context.Provider value={authState}>
@@ -36,6 +36,7 @@ describe('TaskSubTask Component', () => {
                 users={[]}
                 assignUser={jest.fn()}
                 handleTaskCompletion={jest.fn}
+                handleSplitScreenOpen={jest.fn}
               />
             </BrowserRouter>
           </MockedProvider>
@@ -48,7 +49,7 @@ describe('TaskSubTask Component', () => {
   })
 
   it('renders no subtasks', async () => {
-    let container 
+    let container
     await act(async () => {
       container = render(
         <Context.Provider value={authState}>
@@ -59,6 +60,7 @@ describe('TaskSubTask Component', () => {
                 users={[]}
                 assignUser={jest.fn()}
                 handleTaskCompletion={jest.fn}
+                handleSplitScreenOpen={jest.fn}
               />
             </BrowserRouter>
           </MockedProvider>
