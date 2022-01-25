@@ -45,7 +45,6 @@ export default function CommentTextField({ data, refetch, taskId }) {
             onChange={e => setBody(e.target.value)}
             multiline
             size='medium'
-            rows={1}
             margin="normal"
             variant="outlined"
             InputLabelProps={{
