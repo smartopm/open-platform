@@ -14,7 +14,7 @@ describe('TaskSubTask Component', () => {
     {
       request: {
         query: ProjectOpenTasksQuery,
-        variables: { taskId: '23', limit: 1 }
+        variables: { taskId: '23', limit: 10 }
       },
       result: {
         data: {
