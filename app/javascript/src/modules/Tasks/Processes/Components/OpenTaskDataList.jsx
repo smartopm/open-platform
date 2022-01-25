@@ -64,7 +64,7 @@ function fetchMoreOpenTasks() {
       }
     });
   } catch (_error) {
-    return <CenteredContent>{formatError(_error?.message)}</CenteredContent>;
+    <CenteredContent>{formatError(_error?.message)}</CenteredContent>;
   }
   }
 
