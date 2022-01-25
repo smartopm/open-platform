@@ -33,7 +33,7 @@ export default function CommentTextField({ value, setValue, handleSubmit }) {
           color="primary"
           type="submit"
           disabled={!value.length}
-          data-testid="share"
+          data-testid="comment_btn"
           style={{ height: '56px' }}
           onClick={handleSubmit}
           size="medium"
