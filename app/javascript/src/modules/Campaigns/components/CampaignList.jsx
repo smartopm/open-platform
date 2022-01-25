@@ -197,7 +197,7 @@ export default function CampaignList() {
 const useStyles = makeStyles(() => ({
   splitScreen: {
     background: '#FAFAFA',
-    height: '100vh',
-    marginTop: '-5%'
+    height: '92vh',
+    marginTop: '-20px'
   }
 }));

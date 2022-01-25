@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/styles';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import CenteredContent from '../../../shared/CenteredContent';
+import CampaignSplitScreenContent from './CampaignSplitScreenContent';
 
 export default function CampaignSplitScreen({ campaignLength }) {
   const classes = useStyles();
@@ -16,6 +17,7 @@ export default function CampaignSplitScreen({ campaignLength }) {
           </div>
         </CenteredContent>
       )}
+      <CampaignSplitScreenContent />
     </div>
   )
 }
