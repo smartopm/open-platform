@@ -78,8 +78,8 @@ export default function ProcessItem({ task, taskId, refetch, clientView }) {
     redirectToOverviewPage(todoItem.id);
   }
 
-  function redirectToOverviewPage(_taskId, tab='overview') {
-    history.push(`/processes/drc/projects/${_taskId}?tab=${tab}`)
+  function redirectToOverviewPage(id, tab='overview') {
+    history.push(`/processes/drc/projects/${id}?tab=${tab}`)
   }
 
   return(
