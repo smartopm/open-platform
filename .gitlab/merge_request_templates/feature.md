@@ -5,7 +5,7 @@
 - Description:
 
 
-**2. Verification
+**2. Verification:**
 - [ ] Merge Request does not include breaking changes.
 - [ ] The functionality has been tested and works fine.
 
@@ -14,7 +14,7 @@
 - [ ] Chrome
 - [ ] Safari
 - [ ] FireFox
-- [ ] IE (until depricated)
+- [ ] Microsoft Edge for Mac (until IE is depricated)
 - [ ] Has been tested for cringies across all breakpoints (XL-XS)
 
 
