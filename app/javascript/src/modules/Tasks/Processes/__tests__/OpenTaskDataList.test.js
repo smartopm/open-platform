@@ -4,7 +4,7 @@ import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom/';
 import { MockedProvider } from '@apollo/react-testing';
 import OpenTaskDataList from '../Components/OpenTaskDataList';
-import { TaskMock } from '../../__mocks__/taskMock';
+import taskMock from '../../__mocks__/taskMock';
 import { ProjectOpenTasksQuery } from '../../graphql/task_queries';
 import authState from '../../../../__mocks__/authstate';
 import { Context } from '../../../../containers/Provider/AuthStateProvider';
@@ -18,7 +18,7 @@ describe('TaskSubTask Component', () => {
       },
       result: {
         data: {
-          projectOpenTasks: [TaskMock]
+          projectOpenTasks: [taskMock]
         }
       }
     }
