@@ -37,7 +37,7 @@ export default function OpenTaskDataList({
   const [selectedTask, setSelectedTask] = useState(null);
   const [loadMoreError, setloadMoreError] = useState(null);
   const kebabMenuOpen = Boolean(anchorEl);
-  const limit = 1;
+  const limit = 10;
 
   function openKebabMenu(event, _task) {
     event.stopPropagation();
