@@ -538,7 +538,7 @@ export default function TodoList({
         {isLoading ? (
           <Spinner />
         ) : (
-          <>
+          <div data-testid="todo-list-container">
             <TaskBulkUpdateAction
               checkedOptions={checkedOptions}
               bulkUpdating={bulkUpdating}
@@ -591,7 +591,7 @@ export default function TodoList({
                 handlePageChange={paginate}
               />
             </CenteredContent>
-          </>
+          </div>
         )}
         <AccessCheck module='note' allowedPermissions={['can_view_create_task_button']}>
           <FloatingButton
