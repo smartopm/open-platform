@@ -10,6 +10,7 @@ import authState from '../../../../__mocks__/authstate';
 import { Context } from '../../../../containers/Provider/AuthStateProvider';
 
 describe('TaskSubTask Component', () => {
+
   const openTaskMock = [
     {
       request: {
@@ -18,7 +19,7 @@ describe('TaskSubTask Component', () => {
       },
       result: {
         data: {
-          projectOpenTasks: [taskMock]
+          projectOpenTasks: new Array(12).fill(taskMock)
         }
       }
     }
@@ -43,24 +44,18 @@ describe('TaskSubTask Component', () => {
     await waitFor(() => {
       expect(container.queryByTestId('open_task_container')).toBeInTheDocument();
 
-      expect(container.queryByTestId('open_task_container')).toBeInTheDocument();
-      expect(container.queryByTestId('task_completion_toggle_button')).toBeInTheDocument();
+      expect(container.getAllByTestId('task_completion_toggle_button')[0]).toBeInTheDocument();
 
-      expect(container.queryByTestId('task_body')).toBeInTheDocument();
+      expect(container.getAllByTestId('task_body')[0]).toBeInTheDocument();
 
-      expect(container.queryByTestId('task_due_date')).toBeInTheDocument();
+      expect(container.getAllByTestId('task_due_date')[0]).toBeInTheDocument();
 
-      expect(container.queryByTestId('task_completion_toggle_button')).toBeInTheDocument();
-      expect(container.queryByTestId('task_assignee')).toBeInTheDocument();
+      expect(container.getAllByTestId('task_assignee')[0]).toBeInTheDocument();
 
-      expect(container.queryByTestId('task_subtasks_count')).toBeInTheDocument();
-      expect(container.queryByTestId('task_comments_count')).toBeInTheDocument();
-      expect(container.queryByTestId('file_attachments_total')).toBeInTheDocument();
-      expect(container.queryByTestId('closing_divider')).toBeInTheDocument();
+      expect(container.getAllByTestId('task_subtasks_count')[0]).toBeInTheDocument();
+      expect(container.getAllByTestId('task_comments_count')[0]).toBeInTheDocument();
+      expect(container.getAllByTestId('closing_divider')[0]).toBeInTheDocument();
       expect(container.queryByTestId('sub_task_see_more')).toBeInTheDocument();
-      expect(container.queryByTestId('file_attachments_total')).toBeInTheDocument();
-      expect(container.queryByTestId('file_attachments_total')).toHaveTextContent('0');
-      expect(container.queryByText('Consultant sub-task')).toBeInTheDocument();
     }, 10);
   });
 });

@@ -64,8 +64,8 @@ function fetchMoreOpenTasks() {
         return { ...prev, projectOpenTasks: [...prev.projectOpenTasks, ...fetchMoreResult.projectOpenTasks] };
       }
     });
-  } catch (_error) {
-    setloadMoreError(_error)
+  } catch (e) {
+    setloadMoreError(e)
   }
   }
 
