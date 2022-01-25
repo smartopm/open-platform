@@ -23,6 +23,9 @@
     "active": "Activo",
     "created": "Creado:",
     "event_type": "Tipo de Evento: ON {{eventType}}",
-    "inactive": "Inactivo"
+    "fill_description": "Por favor complete la descripción",
+    "fill_title": "Por favor complete el título",
+    "inactive": "Inactivo",
+    "select_event_type": "Por favor seleccione un tipo de evento"
   }
 }

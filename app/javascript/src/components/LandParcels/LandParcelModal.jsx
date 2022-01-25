@@ -524,9 +524,6 @@ export default function LandParcelModal({
                 <Autocomplete
                   style={{ width: "100%" }}
                   id="address-input"
-                  inputProps={{
-                    'data-testid': 'owner'
-                  }}
                   options={filteredOwnerList(data?.usersLite)}
                   getOptionLabel={option => option?.name}
                   getOptionSelected={(option, value) => option.name === value.name}

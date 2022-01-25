@@ -578,11 +578,11 @@ export const planQueryBuilderInitialValue = {
     '98a8a9ba-0123-4456-b89a-b16e721c8cd0': {
       type: 'rule',
       properties: {
-        field: 'status',
-          operator: 'select_equals',
-          value: ['all'],
+        field: 'amountOwned',
+          operator: 'equal',
+          value: [''],
           valueSrc: ['value'],
-          valueType: ['select']
+          valueType: ['number']
       },
     }
   }
@@ -636,7 +636,7 @@ export const entryLogsQueryBuilderInitialValue = {
         operator: 'equal',
         value: [''],
         valueSrc: ['value'],
-        valueType: ['text']
+        valueType: ['datetime']
       }
     }
   }
