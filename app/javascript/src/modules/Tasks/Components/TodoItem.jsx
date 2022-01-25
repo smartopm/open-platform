@@ -153,18 +153,16 @@ export default function TodoItem({
 
   return (
     <>
-      {/* {task && ( */}
       <div style={{ marginBottom: '10px' }} key={task?.id}>
         { clientView && taskId !== null ? (
           <OpenTaskDataList
-              // key={task.id}
             taskId={taskId}
             handleTaskCompletion={handleTaskCompletion}
             handleTodoClick={handleTodoClick}
           />
         ) : task && (
           <TaskDataList
-            // key={task.id}
+            key={task?.id}
             task={task}
             handleChange={handleChange}
             selectedTasks={selectedTasks}
@@ -181,7 +179,6 @@ export default function TodoItem({
 
         {(isLoadingSubTasks || (isUpdating && objectAccessor(tasksOpen, task?.id))) && <LinearSpinner />}
       </div>
-      {/* )} */}
 
       {
         
