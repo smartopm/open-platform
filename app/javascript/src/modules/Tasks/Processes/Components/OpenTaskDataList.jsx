@@ -35,6 +35,7 @@ export default function OpenTaskDataList({
   const matches = useMediaQuery('(max-width:800px)');
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedTask, setSelectedTask] = useState(null);
+  const [loadMoreError, setloadMoreError] = useState(null);
   const kebabMenuOpen = Boolean(anchorEl);
   const limit = 1;
 
@@ -64,7 +65,7 @@ function fetchMoreOpenTasks() {
       }
     });
   } catch (_error) {
-    <CenteredContent>{formatError(_error?.message)}</CenteredContent>;
+    setloadMoreError(_error)
   }
   }
 
@@ -229,6 +230,7 @@ function fetchMoreOpenTasks() {
           <Grid item md={12} xs={12}>
             {data.projectOpenTasks.length >= limit && (
             <>
+              { loadMoreError && <CenteredContent>{formatError(loadMoreError.message)}</CenteredContent> }
               {loading ? (
                 <Spinner />
                 ) : (
