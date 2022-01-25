@@ -26,6 +26,7 @@ describe('business action menu component', () => {
       },
     ];
     const handleClose = jest.fn();
+    const handleEdit = jest.fn();
     const refetch = jest.fn();
     const container = render(
       <MockedProvider mocks={mocks} addTypename={false}>
@@ -37,6 +38,7 @@ describe('business action menu component', () => {
             authState={authState}
             refetch={refetch}
             open
+            handleEditClick={handleEdit}
           />
         </BrowserRouter>
       </MockedProvider>
@@ -54,6 +56,12 @@ describe('business action menu component', () => {
     await waitFor(() => {
       expect(handleClose).toBeCalled()
       expect(refetch).toBeCalled()
+    }, 10)
+
+    expect(container.queryByText('menu.edit')).toBeInTheDocument();
+    fireEvent.click(container.queryByTestId('edit_button'));
+    await waitFor(() => {
+      expect(handleEdit).toBeCalled();
     }, 10)
   })
 })

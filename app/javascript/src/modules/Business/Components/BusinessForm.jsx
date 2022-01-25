@@ -14,7 +14,6 @@ import { discussStyles } from '../../../components/Discussion/Discuss';
 import { BusinessCreateMutation, BusinessUpdateMutation } from '../graphql/business_mutations';
 import UserSearch from '../../Users/Components/UserSearch';
 import { businessCategories, businessStatus } from '../../../utils/constants';
-import { useHistory } from 'react-router-dom';
 
 const initialData = {
   name: '',
@@ -26,7 +25,7 @@ const initialData = {
   description: '',
   imageUrl: '',
   address: '',
-  operatingHours: ''
+  operationHours: ''
 };
 
 const initialUserData = {
@@ -36,10 +35,9 @@ const initialUserData = {
 
 export default function BusinessForm({ close, businessData, action }) {
   const [data, setData] = useState(action === 'edit' ? businessData : initialData);
-  const [userData, setUserData] = useState(action === 'edit' ? { userId: businessData.userId } : initialUserData);
+  const [userData, setUserData] = useState(initialUserData);
   const [error, setError] = useState(null);
   const { t } = useTranslation(['common']);
-  const history = useHistory();
 
   const [createBusiness] = useMutation(BusinessCreateMutation);
   const [updateBusiness] = useMutation(BusinessUpdateMutation);
@@ -52,29 +50,24 @@ export default function BusinessForm({ close, businessData, action }) {
     });
   }
 
-  function show(){
-    console.log("DISPLAYING DATA");
-    console.log(businessData);
-  }
-
   function handleSubmit(event) {
     event.preventDefault();
     const {
-      name, email, phoneNumber, status, homeUrl, category, description, imageUrl, address, operatingHours,
+      name, email, phoneNumber, status, homeUrl, category, description, imageUrl, address, operationHours,
     } = data;
 
     if(action === 'edit'){
       updateBusiness({
         variables: {
-          id: businessData.id, name, email, phoneNumber, status, homeUrl, category, description, imageUrl, address, operatingHours, userId: userData.userId
+          id: businessData.id, name, email, phoneNumber, status, homeUrl, category, description, imageUrl, address, operationHours, userId: userData.userId
         }
       }).then(() => {
-        history.push('/businesses')
+        close()
       }).catch((err) => setError(err.message));
     }else{
       createBusiness({
         variables: {
-          name, email, phoneNumber, status, homeUrl, category, description, imageUrl, address, operatingHours, userId: userData.userId
+          name, email, phoneNumber, status, homeUrl, category, description, imageUrl, address, operationHours, userId: userData.userId
         }
       }).then(() => {
         close();
@@ -97,7 +90,7 @@ export default function BusinessForm({ close, businessData, action }) {
         />
 
         <br />
-        <UserSearch userData={userData} update={setUserData} required />
+        <UserSearch userData={userData} update={setUserData} required selectedUser={data.userId} displayExisting />
         <br />
 
         <TextField
@@ -204,9 +197,9 @@ export default function BusinessForm({ close, businessData, action }) {
 
         <TextField
           label={t('form_fields.operating_hours')}
-          name="operatingHours"
+          name="operationHours"
           className="form-control"
-          value={data.operatingHours}
+          value={data.operationHours}
           onChange={handleInputChange}
           aria-label="business_operating_hours"
           inputProps={{ 'data-testid': 'business_operating_hours' }}
@@ -251,11 +244,14 @@ export default function BusinessForm({ close, businessData, action }) {
 }
 
 BusinessForm.defaultProps = {
-
+  businessData: {},
+  action: 'create'
 }
 
 BusinessForm.propTypes = {
   close: PropTypes.func.isRequired,
-  businessData: PropTypes.object,
+  businessData: PropTypes.shape({
+    id: PropTypes.string
+  }),
   action: PropTypes.string
 };

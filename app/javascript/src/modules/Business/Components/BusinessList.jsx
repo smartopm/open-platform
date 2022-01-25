@@ -27,6 +27,8 @@ import {canDeleteBusiness, canCreateBusiness} from '../utils'
 export default function BusinessList({ businessData, authState, refetch }) {
   const [anchorEl, setAnchorEl] = useState(null)
   const [modalOpen, setModalOpen] = useState(false)
+  const [action, setAction] = useState('create');
+  const [singleBusinessData, setSingleBusinessData] = useState(null);
   const { t } = useTranslation('common')
 
   const open = Boolean(anchorEl)
@@ -40,13 +42,22 @@ export default function BusinessList({ businessData, authState, refetch }) {
   }
 
   function openModal() {
-    setModalOpen(!modalOpen)
-    refetch()
+    setModalOpen(!modalOpen);
+    refetch();
+    setAnchorEl(null);
   }
 
   function handleClose() {
-    setAnchorEl(null)
+    setAnchorEl(null);
+    setSingleBusinessData(null);
   }
+
+  function handleEditClick(business) {
+    setSingleBusinessData(business)
+    setAction('edit');
+    setModalOpen(true);
+  }
+
   return (
     <div className="container">
       <Dialog
@@ -58,11 +69,11 @@ export default function BusinessList({ businessData, authState, refetch }) {
       >
         <DialogTitle id="task_modal">
           <CenteredContent>
-            <span>{t('form_actions.create_business')}</span>
+            <span>{action === 'create' ? t('form_actions.create_business') : t('form_actions.update_business')}</span>
           </CenteredContent>
         </DialogTitle>
         <DialogContent>
-          <BusinessForm close={openModal} />
+          <BusinessForm close={openModal} action={action} businessData={singleBusinessData} />
         </DialogContent>
       </Dialog>
       <List>
@@ -124,6 +135,7 @@ export default function BusinessList({ businessData, authState, refetch }) {
               // eslint-disable-next-line no-use-before-define
               linkStyles={css(styles.linkItem)}
               refetch={refetch}
+              handleEditClick={() => handleEditClick(business)}
             />
           </ListItem>
         ))}
