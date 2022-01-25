@@ -8,7 +8,7 @@ import authState from '../../../../__mocks__/authstate';
 import { TaskContext } from '../../Context';
 import MockedThemeProvider from '../../../__mocks__/mock_theme';
 import taskMock from '../../__mocks__/taskMock'
-import { ProjectProcessesSplitView } from '../Components/ProjectProcesses';
+import ProjectProcessesSplitView from '../Components/ProjectProcessesSplitView';
 import { TaskQuery } from '../../graphql/task_queries';
 
 

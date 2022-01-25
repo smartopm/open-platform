@@ -92,7 +92,7 @@ export default function ProjectOverview({ data }) {
   );
 }
 
-export function ProjectOverviewSplitView({ data, refetch }) {
+export function ProjectOverviewSplitView({ data, refetch, handleProjectStepClick }) {
   const { setSelectedStep, handleStepCompletion } = useContext(TaskContext);
 
   return (
@@ -112,6 +112,7 @@ export function ProjectOverviewSplitView({ data, refetch }) {
           <ProjectSteps
             data={data}
             setSelectedStep={setSelectedStep}
+            handleProjectStepClick={handleProjectStepClick}
             handleStepCompletion={(id, completed) => handleStepCompletion(id, completed, refetch)}
             redirect
           />
@@ -147,5 +148,6 @@ ProjectOverview.propTypes = {
 
 ProjectOverviewSplitView.propTypes = {
   data: PropTypes.arrayOf(PropTypes.shape(Step)).isRequired,
-  refetch: PropTypes.func.isRequired
+  refetch: PropTypes.func.isRequired,
+  handleProjectStepClick: PropTypes.func.isRequired
 };

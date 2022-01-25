@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min';
-import { render, fireEvent, waitFor } from '@testing-library/react';
+import { render, fireEvent, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { MockedProvider } from '@apollo/react-testing';
 import { Context } from '../../../containers/Provider/AuthStateProvider'
@@ -97,6 +97,7 @@ describe('Top part of the task form component', () => {
     fireEvent.click(taskInfoMenu);
     expect(props.handleTaskComplete).toHaveBeenCalled();
   });
+
   it('shows the description', async () => {
     const newProps = {
       ...props,
@@ -109,8 +110,8 @@ describe('Top part of the task form component', () => {
       autoCompleteOpen: true,
       refetch: jest.fn
     };
-    const updateMock = {
 
+    const updateMock = {
       request: {
         query: UpdateNote,
         variables: { id: newProps.data.id, description: newProps.data.description }
@@ -131,6 +132,7 @@ describe('Top part of the task form component', () => {
         }
       }
     }
+
     const container2 = render(
       <Context.Provider value={authState.user}>
         <MockedProvider mocks={[updateMock]} addTypename={false}>
@@ -200,7 +202,8 @@ describe('Top part of the task form component', () => {
           }
         }
       }
-    }
+    };
+
     const container = render(
       <MockedProvider mocks={[updateMock]} addTypename={false}>
         <BrowserRouter>
@@ -218,7 +221,19 @@ describe('Top part of the task form component', () => {
 
       expect(container.queryByTestId('parent-note')).toBeInTheDocument();
       fireEvent.click(container.queryByTestId('parent-note'));
-
     }, 10)
+  });
+
+  it('does not render remind me later icon if not assigned', () => {
+    const unassignedUserProps = { ...props, isAssignee: jest.fn().mockResolvedValue(false) }
+    render(
+      <MockedProvider addTypename={false}>
+        <BrowserRouter>
+          <TaskInfoTop {...unassignedUserProps} />
+        </BrowserRouter>
+      </MockedProvider>
+    );
+
+    expect(screen.queryByTestId('alarm')).toBeNull();
   });
 });

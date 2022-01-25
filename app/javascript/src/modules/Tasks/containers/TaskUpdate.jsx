@@ -2,6 +2,7 @@ import React, { useContext } from 'react'
 import PropTypes from 'prop-types';
 import { useQuery, useMutation } from 'react-apollo'
 import { Container } from '@material-ui/core'
+import { useHistory } from 'react-router';
 import { UsersLiteQuery, HistoryQuery } from '../../../graphql/queries'
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider'
 import Loading from '../../../shared/Loading'
@@ -10,14 +11,15 @@ import TaskDetail from '../Components/TaskDetail'
 import { AssignUser } from '../../../graphql/mutations'
 import { TaskQuery } from '../graphql/task_queries'
 
-// This will be deprecated in favour of split screen view
 export default function TaskUpdate({
   taskId,
   handleSplitScreenOpen,
   handleSplitScreenClose,
-  handleTaskCompletion
+  handleTaskCompletion,
+  handleTaskNotFoundError,
 }) {
   const authState = useContext(AuthStateContext)
+  const history = useHistory()
   const { data, error, loading, refetch } = useQuery(TaskQuery, {
     variables: { taskId },
     fetchPolicy: 'cache-and-network',
@@ -40,8 +42,21 @@ export default function TaskUpdate({
     await assignUserToNote({ variables: { noteId, userId } })
     refetch()
   }
+
+  function showTaskNotFoundError() {
+    const { location } = history;
+    
+    // Skip if on the /processes page
+    if(location.pathname.includes('/tasks')) {
+      handleTaskNotFoundError(error)
+      return null;
+    }
+  
+  return <ErrorPage title={error.message} />;
+}
+
   if (loading) return <Loading />
-  if (error) return <ErrorPage title={error.message} />
+  if(error) return showTaskNotFoundError();
 
   return (
     <Container maxWidth="xl">
@@ -64,12 +79,14 @@ export default function TaskUpdate({
 
 TaskUpdate.defaultProps = {
   handleSplitScreenOpen: () => {},
-  handleSplitScreenClose: () => {}
+  handleSplitScreenClose: () => {},
+  handleTaskNotFoundError: () => {}
 }
 
 TaskUpdate.propTypes = {
   taskId: PropTypes.string.isRequired,
   handleSplitScreenOpen: PropTypes.func,
   handleSplitScreenClose: PropTypes.func,
-  handleTaskCompletion: PropTypes.func.isRequired
+  handleTaskCompletion: PropTypes.func.isRequired,
+  handleTaskNotFoundError: PropTypes.func,
 }

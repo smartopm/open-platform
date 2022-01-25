@@ -77,7 +77,9 @@ export default function ProjectActivitySummary() {
 
 const useStyles = makeStyles(() => ({
   activitySummaryHeader: {
-    marginBottom: '2px'
+    marginBottom: '2px',
+    fontWeight: 200,
+    fontSize: '1rem'
   },
   seeMoreBtn: {
     color: '#212529'
