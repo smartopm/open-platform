@@ -180,9 +180,6 @@ export default function TodoItem({
         {(isLoadingSubTasks || (isUpdating && objectAccessor(tasksOpen, task?.id))) && <LinearSpinner />}
       </div>
 
-      {
-        
-      }
       {objectAccessor(tasksOpen, task?.id) && data?.taskSubTasks?.length > 0 && data?.taskSubTasks?.map(firstLevelSubTask => (
         <>
           <div
