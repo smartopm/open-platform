@@ -42,7 +42,7 @@ describe('UsersImport component', () => {
     await waitFor(() => expect(FileReader).toHaveBeenCalled, { timeout: 10 })
   })
 
-  it('should render upload description', () => {
+  it('should render upload description', async () => {
     const container = render(
       <MockedProvider mocks={[]}>
         <BrowserRouter>
@@ -50,6 +50,16 @@ describe('UsersImport component', () => {
         </BrowserRouter>
       </MockedProvider>
     )
+    const rows = [
+      'NAME,ADDRESS,ZIP',
+      'james,1800 sunny ln,40000',
+      'ronda,1200 peaches ln,50000'
+    ]
     expect(container.queryByText(/You can upload a .csv file with users./)).toBeInTheDocument()
+    const file = new Blob([rows.join('\n')], { type: 'csv' })
+    fireEvent.change(container.queryByTestId('csv-input'), { target: { files: [file] } });
+    await waitFor(() => {
+      expect(container.getByTestId('csv-input')).toBeInTheDocument();
+    })
   })
 })

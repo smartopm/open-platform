@@ -125,6 +125,7 @@ export default function UsersImport() {
                     color="secondary"
                     className={css(styles.cancelBtn)}
                     onClick={onCancel}
+                    data-testid="cancel-btn"
                   >
                     Cancel
                   </Button>

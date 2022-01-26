@@ -603,6 +603,7 @@ export default function UsersList() {
                     headers={csvHeaders}
                     style={{ color: theme.palette.primary.main }}
                     filename={`user-data-${dateToString(new Date())}.csv`}
+                    data-testid="download-csv"
                   >
                     {usersLoading ? <Spinner /> : t('users.download_csv')}
                   </CSVLink>
