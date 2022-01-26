@@ -413,7 +413,7 @@ export default function TodoList({
       search: `?taskId=${task?.id}`,
       state: { from: history.location.pathname,  search: history.location.search }
     })
-    window.document.getElementById('anchor-section').scrollIntoView()
+    // window.document.getElementById('anchor-section').scrollIntoView()
   }
 
   function handleSplitScreenClose(){
