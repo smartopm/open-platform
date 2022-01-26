@@ -9,7 +9,7 @@ import { ProjectOpenTasksQuery } from '../../graphql/task_queries';
 import authState from '../../../../__mocks__/authstate';
 import { Context } from '../../../../containers/Provider/AuthStateProvider';
 
-describe('TaskSubTask Component', () => {
+describe('OpenTaskDataList Component', () => {
 
   const openTaskMock = [
     {

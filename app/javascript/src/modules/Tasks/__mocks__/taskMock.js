@@ -3,7 +3,7 @@
 export default {
   body: 'Consultant sub-task',
   createdAt: '2022-01-06T11:22:28Z',
-  id: '4f5bfb50-0fe1-455a-bff5-ca76b3f3eb2b',
+  id: '4f5bfb50-0fe1-455a-bff5-ca76b3f3eb2c',
   completed: false,
   category: 'to_do',
   description: 'Consultant sub-task',
@@ -21,6 +21,11 @@ export default {
       'https://lh3.googleusercontent.com/a-/AOh14Ghj2JnWVlVC_cPrzJrAJ2YyV_UyVTXcEew8YKVp=s96-c',
     __typename: 'User'
   },
+  documents: [],
+  parentNote: {
+    id: '90ba44ef-4306-416b-945f-1d2ea4eb4c50',
+    __typename: 'Note'
+  },
   author: {
     id: 'a7b3e608-5ca8-44da-b0f2-8f94239f5a1f',
     name: 'Daniel Mutuba',
@@ -34,7 +39,7 @@ export default {
       body: 'Consultant sub-task',
       createdAt: '2022-01-06T11:22:28Z',
       id: '4f5bfb50-0fe1-455a-bff5-ca76b3f3eb2b',
-      completed: true,
+      completed: false,
       category: 'to_do',
       description: 'Consultant sub-task',
       dueDate: '2022-01-22T21:00:00Z',
