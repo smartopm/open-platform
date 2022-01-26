@@ -293,7 +293,6 @@ export default function TaskDetail({
               styles={{ background: '#FAFAFA' }}
               component={<TaskUpdateList data={historyData} />}
             />
-            {/* <TaskUpdateList data={historyData} /> */}
           </div>
         </Grid>
       </form>
