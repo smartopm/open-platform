@@ -418,7 +418,7 @@ export default function TodoList({
 
   function handleSplitScreenClose(){
     setSplitScreenOpen(false)
-    if(history.location.state.search.includes('filter')) {
+    if(history.location.state?.search?.includes('filter')) {
       return history.push({
         pathname: '/tasks',
         search: history.location.state.search,
