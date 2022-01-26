@@ -2,12 +2,13 @@
 /* eslint-disable max-len */
 /* eslint-disable max-lines */
 import React from 'react';
-import { useTranslation } from 'react-i18next';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-apollo';
 import { Checkbox, Grid, IconButton, Typography } from '@material-ui/core';
 import Divider from '@mui/material/Divider';
 import Hidden from '@material-ui/core/Hidden';
+import Tooltip from '@mui/material/Tooltip';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import AccountTreeIcon from '@material-ui/icons/AccountTree';
@@ -158,7 +159,7 @@ export function TaskDataList({
   return (
     <Card styles={styles} contentStyles={{ padding: '4px' }}>
       <Grid container>
-        <Grid item md={5} xs={10} style={{ display: 'flex', alignItems: 'center' }} data-testid="task_body_section">
+        <Grid item md={4} xs={10} style={{ display: 'flex', alignItems: 'center' }} data-testid="task_body_section">
           <Grid container style={{ display: 'flex', alignItems: 'center' }}>
             <Grid item md={2} xs={2}>
               <IconButton
@@ -176,19 +177,22 @@ export function TaskDataList({
                   )}
               </IconButton>
             </Grid>
-            <Grid item md={8} xs={4}>
+            <Grid item md={8} xs={6}>
               <Typography
                 variant="body2"
                 data-testid="task_body"
                 component="p"
                 className={matches ? classes.taskBodyMobile : classes.taskBody}
               >
-                <span
-            // eslint-disable-next-line react/no-danger
-                  dangerouslySetInnerHTML={{
-              __html: sanitizeText(removeNewLines(task.body))
-            }}
-                />
+                <Tooltip title={task.body} arrow placement="bottom-start">
+                  <span
+                    sx={{ m: 1 }}
+                  // eslint-disable-next-line react/no-danger
+                    dangerouslySetInnerHTML={{
+                    __html: sanitizeText(removeNewLines(task.body))
+                  }}
+                  />
+                </Tooltip>
               </Typography>
             </Grid>
             <Grid item md={1} xl={1}>
@@ -234,16 +238,15 @@ export function TaskDataList({
         <Hidden smDown>
           <Grid item data-testid="task_due_date" md={2} xs={12} style={{ display: 'flex', alignItems: 'center', }}>
             <Typography variant="body2" component="span">
-              {t('task.due_date')}
-              {task.dueDate ? dateToString(task.dueDate) : 'Never '}
+              {task.dueDate && t('task:sub_task.due')}
+              {task.dueDate && dateToString(task.dueDate)}
             </Typography>
           </Grid>
         </Hidden>
-        <Grid item md={1} xs={6} data-testid="task_assignee" style={{ display: 'flex', alignItems: 'center' }}>
+        <Grid item md={1} xs={4} data-testid="task_assignee" style={{ display: 'flex', alignItems: 'center' }}>
           <Hidden smDown>
             {task.assignees.length > 0 && (
             <Grid container style={{paddingLeft: '5px'}}>
-              {/* Restrict to 2 users */}
               {task.assignees.slice(0, 2).map(user => (
                 <Grid item md={4} xs={2} key={user.id}>
                   <LinkToUserAvatar key={user.id} user={user} />
@@ -271,11 +274,11 @@ export function TaskDataList({
           )}
           </Hidden>
         </Grid>
-        <Grid item data-testid="task_details_section" md={2} xs={10}>
+        <Grid item data-testid="task_details_section" md={3} xs={10} className={classes.detailsSection}>
           <Grid container data-testid="progress_bar_small_screen" style={{ display: 'flex', justifyContent: 'flex-end' }}>
             {
-              !clientView && (
-              <Grid item md={2} xs={4}>
+              !clientView &&  task?.subTasks?.length > 0 && (
+              <Grid item md={2} xs={4} className={classes.progressBar}>
                 <Hidden mdUp>
                   <CustomProgressBar task={task} smDown />
                 </Hidden>
@@ -293,7 +296,12 @@ export function TaskDataList({
                 <AccountTreeIcon fontSize="small" color={task?.subTasks?.length ? 'primary': 'disabled'} />
               </IconButton>
             </Grid>
+
+
+
             <Grid item md={1} xs={1} className={classes.iconItem}><span>{task?.subTasks?.length}</span></Grid>
+
+
             <Grid item md={2} xs={1}>
               <IconButton
                 aria-controls="task-comment-icon"
@@ -304,7 +312,11 @@ export function TaskDataList({
                 <QuestionAnswerIcon fontSize="small" color={data?.taskComments.length ? 'primary': 'disabled'} />
               </IconButton>
             </Grid>
+
+
             <Grid item md={1} xs={1} className={classes.iconItem}><span data-testid='task-comment'>{data?.taskComments.length || 0}</span></Grid>
+
+
             <Grid item md={2} xs={1}>
               <IconButton
                 key={task.id}
@@ -324,7 +336,7 @@ export function TaskDataList({
           </Grid>
         </Grid>
         {
-              !clientView && (
+              !clientView &&  task?.subTasks?.length > 0 && (
               <Grid
                 item
                 md={1}
@@ -340,28 +352,18 @@ export function TaskDataList({
             )}
 
         <Grid item md={1} xs={2} style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }} className={classes.arrowDownUpIcon}>
-          {task?.subTasks?.length > 0
-            ? (
-              <IconButton
-                aria-controls="show-task-subtasks-icon"
-                aria-haspopup="true"
-                data-testid="show_task_subtasks"
-                onClick={(e) => handleOpenSubTasksClick(e)}
-              >
-                {openSubTask
+          {task?.subTasks?.length > 0 && (
+          <IconButton
+            aria-controls="show-task-subtasks-icon"
+            aria-haspopup="true"
+            data-testid="show_task_subtasks"
+            onClick={(e) => handleOpenSubTasksClick(e)}
+          >
+            {openSubTask
                   ? <KeyboardArrowUpIcon fontSize="small" color="primary" />
                   : <KeyboardArrowDownIcon fontSize="small" color="primary" />}
-              </IconButton>
-            ) : (
-              <IconButton
-                aria-controls="show-task-subtasks-icon"
-                aria-haspopup="true"
-                data-testid="show_task_subtasks"
-                disabled
-              >
-                <KeyboardArrowDownIcon fontSize="small" />
-              </IconButton>
-          )}
+          </IconButton>
+            )}
         </Grid>
       </Grid>
     </Card>
@@ -443,7 +445,11 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    fontSize: '14px'
+    fontSize: '14px',
+    '@media (min-device-width: 320px) and (max-device-height: 1024px) and (orientation: portrait)' : {
+      paddingLeft: "20px",
+    },
+
   },
   completed: {
     backgroundColor: '#4caf50',
@@ -453,7 +459,6 @@ const useStyles = makeStyles(() => ({
     backgroundColor: '#2196f3',
     color: '#ffffff'
   },
-
   taskMenuIcon: {
    '@media (min-device-width: 375px) and (max-device-height: 667px) and (orientation: portrait)' : {
     marginLeft: "6px",
