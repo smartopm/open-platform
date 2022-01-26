@@ -97,7 +97,7 @@ export default function CommentCard({ comments, refetch }) {
                         <Typography
                           component="span"
                           variant="body2"
-                          style={{ color: '#575757' }}
+                          style={{ color: '#575757', overflowWrap: 'anywhere' }}
                           data-testid="comment-body"
                         >
                           {dateToString(com.createdAt)}

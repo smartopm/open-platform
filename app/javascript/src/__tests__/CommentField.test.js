@@ -42,7 +42,7 @@ describe('Comment Field Component', () => {
             <CommentField
               authState={authState}
               data={data}
-              refetch={jest.fn}
+              refetch={jest.fn()}
               taskId="j83hdj3jhu334"
             />
           </BrowserRouter>
@@ -50,23 +50,21 @@ describe('Comment Field Component', () => {
       </Context.Provider>
     );
 
+    await waitFor(
+      () => {
         const body = container.queryByTestId('body_input');
         ReactTestUtils.Simulate.change(body, { target: { value: 'new body' } });
         expect(body.value).toBe('new body');
 
-        const share = container.queryByTestId('share');
+        const share = container.queryByTestId('comment_btn');
         expect(share).toBeInTheDocument();
 
         fireEvent.click(share);
-
         const loader = render(<Spinner />);
-        await waitFor(
-          () => {
+
         expect(loader.queryAllByTestId('loader')[0]).toBeInTheDocument();
         expect(container.queryByText('new body')).toBeInTheDocument();
-      },
-      { timeout: 10 }
-    );
+      }, 20);
   });
 
   it('render with error', async () => {
@@ -99,7 +97,7 @@ describe('Comment Field Component', () => {
       ReactTestUtils.Simulate.change(body, { target: { value: 'new error body' } });
       expect(body.value).toBe('new error body');
 
-      const share = container.queryByTestId('share');
+      const share = container.queryByTestId('comment_btn');
       expect(share).toBeInTheDocument();
 
       fireEvent.click(share);

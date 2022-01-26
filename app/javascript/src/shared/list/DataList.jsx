@@ -10,6 +10,9 @@ import { objectAccessor } from '../../utils/helpers';
 import ListHeader from './ListHeader';
 import CenteredContent from '../../components/CenteredContent';
 
+/**
+ * @deprecated
+ */
 export default function DataList({ keys, data, hasHeader, clickable, handleClick, color, defaultView }) {
   const classes = useStyles();
   const theme = useTheme();
