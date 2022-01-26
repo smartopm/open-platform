@@ -17,6 +17,7 @@ import OpenTaskDataList from '../Processes/Components/OpenTaskDataList';
 
 export default function TodoItem({
   task,
+  taskId,
   handleChange,
   selectedTasks,
   isSelected,
@@ -152,18 +153,16 @@ export default function TodoItem({
 
   return (
     <>
-      {task && (
-        <div style={{ marginBottom: '10px' }} key={task.id}>
-          { clientView ? (
-            <OpenTaskDataList
-              key={task.id}
-              task={task}
-              handleTaskCompletion={handleTaskCompletion}
-              handleTodoClick={handleTodoClick}
-            />
-        ) : (
+      <div style={{ marginBottom: '10px' }} key={task?.id}>
+        { clientView && taskId !== null ? (
+          <OpenTaskDataList
+            taskId={taskId}
+            handleTaskCompletion={handleTaskCompletion}
+            handleTodoClick={handleTodoClick}
+          />
+        ) : task && (
           <TaskDataList
-            key={task.id}
+            key={task?.id}
             task={task}
             handleChange={handleChange}
             selectedTasks={selectedTasks}
@@ -178,71 +177,50 @@ export default function TodoItem({
           />
          )}
 
-          {(isLoadingSubTasks || (isUpdating && objectAccessor(tasksOpen, task.id))) && <LinearSpinner />}
-        </div>
-      )}
-      {objectAccessor(tasksOpen, task.id) && data?.taskSubTasks?.length > 0 && data?.taskSubTasks?.map(firstLevelSubTask => (
+        {(isLoadingSubTasks || (isUpdating && objectAccessor(tasksOpen, task?.id))) && <LinearSpinner />}
+      </div>
+
+      {objectAccessor(tasksOpen, task?.id) && data?.taskSubTasks?.length > 0 && data?.taskSubTasks?.map(firstLevelSubTask => (
         <>
           <div
             className={classes.levelOne}
             key={firstLevelSubTask.id}
           >
-            {
-              clientView ? (
-                <OpenTaskDataList
-                  key={firstLevelSubTask.id}
-                  task={firstLevelSubTask}
-                  handleTaskCompletion={handleTaskCompletion}
-                  handleTodoClick={handleTodoClick}
-                />
-            ) : (
-              <TaskDataList
-                key={firstLevelSubTask.id}
-                task={firstLevelSubTask}
-                handleChange={handleChange}
-                selectedTasks={selectedTasks}
-                isSelected={isSelected}
-                menuData={menuData}
-                styles={{backgroundColor: '#F5F5F4'}}
-                openSubTask={objectAccessor(tasksOpen, firstLevelSubTask.id)}
-                handleOpenSubTasksClick={() => toggleTask(firstLevelSubTask)}
-                clickable
-                handleClick={() => handleTodoItemClick(firstLevelSubTask)}
-                handleTaskCompletion={handleTaskCompletion}
-                clientView={clientView}
-              />
-            )}
+            <TaskDataList
+              key={firstLevelSubTask.id}
+              task={firstLevelSubTask}
+              handleChange={handleChange}
+              selectedTasks={selectedTasks}
+              isSelected={isSelected}
+              menuData={menuData}
+              styles={{backgroundColor: '#F5F5F4'}}
+              openSubTask={objectAccessor(tasksOpen, firstLevelSubTask.id)}
+              handleOpenSubTasksClick={() => toggleTask(firstLevelSubTask)}
+              clickable
+              handleClick={() => handleTodoItemClick(firstLevelSubTask)}
+              handleTaskCompletion={handleTaskCompletion}
+              clientView={clientView}
+            />
    
           </div>
           {firstLevelSubTask?.subTasks?.length > 0 &&
-            objectAccessor(tasksOpen, firstLevelSubTask.id) && (
+            objectAccessor(tasksOpen, firstLevelSubTask?.id) && (
               <>
                 {firstLevelSubTask?.subTasks?.map(secondLevelSubTask => (
                   <div className={classes.levelTwo} key={secondLevelSubTask.id}>
-                    {
-                      clientView ? (
-                        <OpenTaskDataList
-                          key={secondLevelSubTask.id}
-                          task={secondLevelSubTask}
-                          handleTaskCompletion={handleTaskCompletion}
-                          handleTodoClick={handleTodoClick}
-                        />
-                    ) : (
-                      <TaskDataList
-                        key={secondLevelSubTask.id}
-                        task={secondLevelSubTask}
-                        handleChange={handleChange}
-                        selectedTasks={selectedTasks}
-                        isSelected={isSelected}
-                        menuData={menuData}
-                        styles={{backgroundColor: '#ECECEA'}}
-                        clickable
-                        handleClick={() => handleTodoItemClick(secondLevelSubTask)}
-                        handleTaskCompletion={handleTaskCompletion}
-                        clientView={clientView}
-                      />
-                    )}
-
+                    <TaskDataList
+                      key={secondLevelSubTask.id}
+                      task={secondLevelSubTask}
+                      handleChange={handleChange}
+                      selectedTasks={selectedTasks}
+                      isSelected={isSelected}
+                      menuData={menuData}
+                      styles={{backgroundColor: '#ECECEA'}}
+                      clickable
+                      handleClick={() => handleTodoItemClick(secondLevelSubTask)}
+                      handleTaskCompletion={handleTaskCompletion}
+                      clientView={clientView}
+                    />
                   </div>
                 ))}
               </>
@@ -277,11 +255,13 @@ const Task = {
   };
 
   TodoItem.defaultProps = {
-    clientView: false
+    clientView: false,
+    taskId: null,
+    task: null
   };
 
   TodoItem.propTypes = {
-  task: PropTypes.shape(Task).isRequired,
+  task: PropTypes.shape(Task),
   handleChange: PropTypes.func.isRequired,
   selectedTasks: PropTypes.arrayOf(PropTypes.string).isRequired,
   isSelected: PropTypes.bool.isRequired,
@@ -290,7 +270,8 @@ const Task = {
   handleUploadDocument: PropTypes.func.isRequired,
   handleTodoClick: PropTypes.func.isRequired,
   handleTaskCompletion: PropTypes.func.isRequired,
-  clientView: PropTypes.bool
+  clientView: PropTypes.bool,
+  taskId: PropTypes.string,
 };
 
 const useStyles = makeStyles(() => ({

@@ -1,37 +1,61 @@
-import React from 'react'
-import { render, act } from '@testing-library/react'
-import '@testing-library/jest-dom/extend-expect'
-import { BrowserRouter } from 'react-router-dom/'
-import OpenTaskDataList from '../Components/OpenTaskDataList'
-import taskMock from '../../__mocks__/taskMock'
+import React from 'react';
+import { render, waitFor } from '@testing-library/react';
+import '@testing-library/jest-dom/extend-expect';
+import { BrowserRouter } from 'react-router-dom/';
+import { MockedProvider } from '@apollo/react-testing';
+import OpenTaskDataList from '../Components/OpenTaskDataList';
+import taskMock from '../../__mocks__/taskMock';
+import { ProjectOpenTasksQuery } from '../../graphql/task_queries';
+import authState from '../../../../__mocks__/authstate';
+import { Context } from '../../../../containers/Provider/AuthStateProvider';
 
-describe('TaskSubTask Component', () => {
+describe('OpenTaskDataList Component', () => {
+
+  const openTaskMock = [
+    {
+      request: {
+        query: ProjectOpenTasksQuery,
+        variables: { taskId: '23', limit: 10 }
+      },
+      result: {
+        data: {
+          projectOpenTasks: new Array(12).fill(taskMock)
+        }
+      }
+    }
+  ];
+
   it('renders without error', async () => {
-    let container 
-    await act(async () => {
-      container = render(
-        <BrowserRouter>
-          <OpenTaskDataList
-            task={taskMock}
-            handleTodoClick={jest.fn()}
-            handleTaskCompletion={jest.fn}
-          />
-        </BrowserRouter>
-      )})
+     const container = render(
+       <Context.Provider value={authState}>
+         <MockedProvider mocks={openTaskMock} addTypename>
+           <BrowserRouter>
+             <OpenTaskDataList
+               taskId="23"
+               handleTodoClick={jest.fn()}
+               handleTaskCompletion={jest.fn()}
+             />
+           </BrowserRouter>
+         </MockedProvider>
+       </Context.Provider>
+      );
 
-    expect(container.queryByTestId('open_task_container')).toBeInTheDocument();
-    expect(container.queryByTestId('task_completion_toggle_button')).toBeInTheDocument();
+    expect(container.queryByTestId('loader')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(container.queryByTestId('open_task_container')).toBeInTheDocument();
 
-    expect(container.queryByTestId('task_body')).toBeInTheDocument();
+      expect(container.getAllByTestId('task_completion_toggle_button')[0]).toBeInTheDocument();
 
-    expect(container.queryByTestId('task_due_date')).toBeInTheDocument();
+      expect(container.getAllByTestId('task_body')[0]).toBeInTheDocument();
 
-    expect(container.queryByTestId('task_completion_toggle_button')).toBeInTheDocument();
-    expect(container.queryByTestId('task_assignee')).toBeInTheDocument();
+      expect(container.getAllByTestId('task_due_date')[0]).toBeInTheDocument();
 
-    expect(container.queryByTestId('task_subtasks_count')).toBeInTheDocument();
-    expect(container.queryByTestId('task_comments_count')).toBeInTheDocument();
-    expect(container.queryByTestId('file_attachments_total')).toBeInTheDocument();
-    expect(container.queryByTestId('closing_divider')).toBeInTheDocument();
-  })
-})
+      expect(container.getAllByTestId('task_assignee')[0]).toBeInTheDocument();
+
+      expect(container.getAllByTestId('task_subtasks_count')[0]).toBeInTheDocument();
+      expect(container.getAllByTestId('task_comments_count')[0]).toBeInTheDocument();
+      expect(container.getAllByTestId('closing_divider')[0]).toBeInTheDocument();
+      expect(container.queryByTestId('sub_task_see_more')).toBeInTheDocument();
+    }, 10);
+  });
+});

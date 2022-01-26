@@ -1,38 +1,23 @@
 import React, { useContext } from 'react'
 import { Grid,Typography } from '@mui/material';
-import { useQuery } from 'react-apollo';
 import { useHistory } from 'react-router-dom'
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import Divider from '@mui/material/Divider';
 import { TaskContext } from "../../Context";
 import ProjectSteps from './Steps';
-import { ProjectOpenTasksQuery } from '../../graphql/task_queries';
-import { sanitizeText , formatError } from '../../../../utils/helpers';
+import { sanitizeText } from '../../../../utils/helpers';
 import ProcessItem from './ProjectItem';
-import { Spinner } from '../../../../shared/Loading';
-import CenteredContent from '../../../../shared/CenteredContent';
-
 
 export default function ClientPilotViewItem({process}){
-    const limit = 5;
     const  taskId  = process?.id
     const history = useHistory()
-
-    const { data, error, loading, refetch } = useQuery(ProjectOpenTasksQuery, {
-        variables: { taskId, limit },
-        fetchPolicy: 'cache-and-network',
-        errorPolicy: 'all'
-      });
     const { t } = useTranslation('task')
     const { handleStepCompletion } = useContext(TaskContext);
 
     function routeToProcessDetailsPage() {
       return history.push(`/processes/drc/projects/${taskId}?tab=processes`)
     }
-
-    if (error) return <CenteredContent>{formatError(error.message)}</CenteredContent>;
-    if (loading) return <Spinner />;
     return (
       <Grid container spacing={2}>
         <Grid item md={12} xs={12}>
@@ -50,16 +35,10 @@ export default function ClientPilotViewItem({process}){
             <Grid item md={6} xs={12}>
               <Typography variant="h6">{t('processes.your_tasks')}</Typography>
               <br />
-              {data?.projectOpenTasks?.length?
-                      (
-                        <div>
-                          {data?.projectOpenTasks.map(task => (
-                            <ProcessItem key={task.id} task={task} refetch={refetch} clientView />
-                        ))}
-                        </div>
-                      )
-                      : (<Typography>{t('processes.no_open_tasks')}</Typography>)
-                    }
+              <div>
+                <ProcessItem taskId={taskId} clientView />
+              </div>
+
             </Grid>
 
             <Grid item md={6} xs={12} data-testid="project-step-information">
@@ -68,7 +47,7 @@ export default function ClientPilotViewItem({process}){
               <ProjectSteps
                 data={process?.subTasks}
                 setSelectedStep={routeToProcessDetailsPage}
-                handleStepCompletion={(id, completed) => handleStepCompletion(id, completed, refetch)}
+                handleStepCompletion={(id, completed) => handleStepCompletion(id, completed)}
                 clientView
               />
             </Grid>
