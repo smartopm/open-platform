@@ -1,11 +1,12 @@
 import React from 'react';
-import { fireEvent, render } from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core';
 import { BrowserRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/react-testing';
 import Main, { MainNav, NewsNav } from '../component/Main';
 import authState from '../../../__mocks__/authstate';
+import { Context } from '../../../containers/Provider/AuthStateProvider';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 describe('Main Nav component', () => {
@@ -22,7 +23,7 @@ describe('Main Nav component', () => {
   };
   global.navigator.geolocation = mockGeolocation;
 
-  it('should render proper the main nav', () => {
+  it('should render proper the main nav', async () => {
     const container = render(
       <ThemeProvider theme={theme}>
         <MockedProvider>
@@ -33,31 +34,42 @@ describe('Main Nav component', () => {
       </ThemeProvider>
     );
 
-    expect(container.queryByTestId('nav-container')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(container.queryByTestId('nav-container')).toBeInTheDocument();
 
-    fireEvent.click(container.queryByTestId('drawer'));
+      fireEvent.click(container.queryByTestId('drawer'));
 
-    expect(container.queryAllByTestId('sidenav-container')[0]).toBeInTheDocument();
-    expect(container.queryAllByTestId('sidenav-container')).toHaveLength(1);
+      expect(container.queryAllByTestId('sidenav-container')[0]).toBeInTheDocument();
+      expect(container.queryAllByTestId('sidenav-container')).toHaveLength(1);
+    }, 10)
+
   });
-  it('should render the main', () => {
-    render(
+  it('should render the main', async () => {
+    const wrapper =  render(
       <ThemeProvider theme={theme}>
         <MockedProvider>
-          <BrowserRouter>
-            <Main />
-          </BrowserRouter>
+          <Context.Provider value={authState}>
+            <BrowserRouter>
+              <Main />
+            </BrowserRouter>
+          </Context.Provider>
         </MockedProvider>
       </ThemeProvider>
     );
+
+    await waitFor(() => {
+      expect(wrapper.queryByTestId('loader')).toBeInTheDocument();
+    }, 10)
   });
   it('should test the ordinary nav', () => {
-    const historyMock = jest.fn()
+    const historyMock = { push: jest.fn() }
     const wrapper = render(
       <NewsNav history={historyMock}>
         <h4>This is the content for the nav maybe a title</h4>
       </NewsNav>
     );
     expect(wrapper.queryByText('This is the content for the nav maybe a title')).toBeInTheDocument()
+    fireEvent.click(wrapper.queryByTestId('take_me_back_icon'));
+    expect(historyMock.push).toBeCalled()
   });
 });

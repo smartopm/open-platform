@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import React, { useContext, useState } from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -18,7 +19,6 @@ import modules from '../..';
 import CommunityName from '../../../shared/CommunityName';
 import CenteredContent from '../../../components/CenteredContent';
 import userProps from '../../../shared/types/user';
-import UserAvatar from '../../Users/Components/UserAvatar';
 import UserActionOptions from '../../Users/Components/UserActionOptions';
 import Loading from '../../../shared/Loading';
 import SOSModal from './SOSModal';
@@ -65,7 +65,7 @@ export default function Main() {
 }
 
 export function MainNav({ authState }) {
-  const matches = useMediaQuery('(max-width:600px)');
+  const matchesSmall = useMediaQuery('(max-width:500px)');
   const path = useLocation().pathname
   const classes = useStyles();
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -137,26 +137,24 @@ export function MainNav({ authState }) {
             )}
           </IconButton>
 
-          {matches && <BackArrow path={path} />}
-
           {canAccessSOS({authState})
            && communityHasEmergencyNumber && communityHasEmergencySMSNumber
            && <SvgIcon component={SOSIcon} viewBox="0 0 384 512" setOpen={setOpen} data-testid="sos-icon" />}
 
-          {!matches && <BackArrow path={path} />}
-
+          <BackArrow path={path} />
           <SOSModal open={open} setOpen={setOpen} location={location} {...{ authState }} />
 
-          <UserAvatar imageUrl={authState?.user?.imageUrl} />
-          <UserActionOptions />
+          {
+              matchesSmall
+              ? <CommunityName authState={authState} logoStyles={styles} />
+              : (
+                <CenteredContent>
+                  <CommunityName authState={authState} />
+                </CenteredContent>
+              )
+            }
           <NotificationBell user={authState.user} />
-          {matches ? (
-            <CommunityName authState={authState} />
-          ) : (
-            <CenteredContent>
-              <CommunityName authState={authState} />
-            </CenteredContent>
-          )}
+          <UserActionOptions />
         </Toolbar>
       </AppBar>
       {authState.loggedIn && (
@@ -194,7 +192,7 @@ export function NewsNav({ children, history }) {
   return (
     <nav className={css(styles.topNav)} style={{ minHeight: '50px' }}>
       <div className={css(styles.topNav)}>
-        <Button onClick={() => history.push('/')}>
+        <Button onClick={() => history.push('/')} data-testid="take_me_back_icon">
           <i className={`material-icons ${css(styles.icon)}`}>arrow_back</i>
         </Button>
         <ul
@@ -224,7 +222,26 @@ NewsNav.propTypes = {
 
 const styles = StyleSheet.create({
   logo: {
-    height: '25px'
+    '@media (max-width: 600px)': {
+      height: 35
+    },
+    '@media (max-width: 350px)': {
+      marginLeft: 6,
+      height: 30
+    },
+    '@media (min-width: 350px) and (max-width: 405px)': {
+      marginLeft: '1.8em',
+      height: 25
+    },
+    '@media (min-width: 406px) and (max-width: 470px)': {
+      marginLeft: '3em',
+    },
+    '@media (min-width: 470px) and (max-width: 500px)': {
+      marginLeft: '5em'
+    },
+    '@media (min-width: 501px) and (max-width: 550px)': {
+      marginLeft: '-3em'
+    },
   },
   topNav: {
     width: '100%',
