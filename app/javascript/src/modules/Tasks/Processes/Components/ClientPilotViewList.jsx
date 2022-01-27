@@ -1,7 +1,7 @@
 import React from 'react'
 import { useQuery } from 'react-apollo';
 import { Grid,Typography } from '@mui/material';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from '@material-ui/styles';
 import { useTranslation } from 'react-i18next';
 import { ProcessesQuery } from '../graphql/process_queries';
 import ClientPilotViewItem from './ClientPilotViewItem';

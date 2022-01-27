@@ -73,11 +73,12 @@ module Notes
     end
 
     def self.tasks_by_quarter(community_id)
-      sql = "
-        SELECT DATE_PART('year', completed_at) as yr, DATE_PART('quarter', completed_at) as qtr, \
-        count(*) FROM notes WHERE completed = true AND community_id='#{community_id}'
-        AND parent_note_id IS NULL GROUP BY yr, qtr;
-      "
+      sql = sanitize_sql_for_conditions(["
+      SELECT DATE_PART('year', completed_at) as yr, DATE_PART('quarter', completed_at) as qtr, \
+      count(*) FROM notes WHERE completed = true AND community_id=?
+      AND parent_note_id IS NULL GROUP BY yr, qtr;
+    ", community_id])
+
       ActiveRecord::Base.connection.exec_query(sql).rows
     end
 
