@@ -64,8 +64,6 @@ describe('Task Documents', () => {
     );
 
     await waitFor(() => {
-      expect(screen.queryByTestId('documents_title')).toBeInTheDocument();
-      expect(screen.queryByTestId('documents_title').textContent).toContain('document.documents');
       expect(screen.queryByTestId('add_document')).toBeInTheDocument();
       expect(screen.queryByTestId('opening_divider')).toBeInTheDocument();
       expect(screen.queryByTestId('filename')).toBeInTheDocument();
@@ -76,21 +74,6 @@ describe('Task Documents', () => {
       expect(screen.queryByTestId('uploaded_by').textContent).toContain('John Doe');
       expect(screen.queryByTestId('more_details')).toBeInTheDocument();
       expect(screen.queryByTestId('closing_divider')).toBeInTheDocument();
-    });
-  });
-
-  it('renders no documents', async () => {
-    render(
-      <MockedProvider mocks={EmptyDocumentsMock} addTypename={false}>
-        <BrowserRouter>
-          <TaskDocuments taskId='302df8c3-27bb-4175-adc1-43857e972eb4' />
-        </BrowserRouter>
-      </MockedProvider>
-    );
-
-    await waitFor(() => {
-      expect(screen.queryByTestId('no_documents')).toBeInTheDocument();
-      expect(screen.queryByTestId('no_documents').textContent).toContain('document.no_documents');
     });
   });
 });
