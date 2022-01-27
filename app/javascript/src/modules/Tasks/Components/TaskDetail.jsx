@@ -263,7 +263,7 @@ export default function TaskDetail({
               )}
             />
           </div>
-          <div className={classes.section} data-testid="task-comments-section">
+          <div className={classes.section} data-testid="task-comments-section" id="anchor-section">
             <TaskDetailAccordion
               icon={<QuestionAnswerIcon color="primary" />}
               title="Comments"

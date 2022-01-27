@@ -18,7 +18,7 @@ export default function TaskComment({ taskId }) {
 
   if (error) return <ErrorPage title={error.message} />;
   return (
-    <div id="anchor-section" style={{marginTop: '20px'}}>
+    <div style={{marginTop: '20px'}}>
       {!commentData && (
         <div>
           <p>{t('misc.data_not_available')}</p>
