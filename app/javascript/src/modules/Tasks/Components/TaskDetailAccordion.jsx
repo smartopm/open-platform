@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
@@ -12,6 +12,12 @@ import Card from '../../../shared/Card';
 export default function TaskDetailAccordion({ icon, title, styles, component, openDetails }) {
   const classes = useStyles();
   const [showComponent, setShowComponent] = useState(false)
+
+  useEffect(() => {
+    if (openDetails) {
+      setShowComponent(true)
+    }
+  }, [openDetails])
 
   return (
     <>
@@ -35,7 +41,7 @@ export default function TaskDetailAccordion({ icon, title, styles, component, op
           </Grid>
         </Grid>
       </Card>
-      {(openDetails || showComponent) && (
+      {showComponent && (
         <>
           {component}
         </>
