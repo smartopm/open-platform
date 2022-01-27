@@ -81,6 +81,18 @@ module Notes
       ActiveRecord::Base.connection.exec_query(sql).rows
     end
 
+    def check_current_process_step
+      steps = []
+      self.sub_notes.each do |note|
+        steps << note if !note.completed
+      end
+      steps&.first
+    end
+
+    def update_current_step
+      self.update(current_step: check_current_process_step&.id)
+    end
+
     private
 
     def log_create_event
@@ -97,5 +109,6 @@ module Notes
     def log_completed_at
       self.completed_at = Time.current
     end
+
   end
 end
