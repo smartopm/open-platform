@@ -43,31 +43,6 @@ describe('TaskSubTask Component', () => {
         </Context.Provider>
       )})
 
-    expect(container.queryByTestId('sub_tasks_header')).toBeInTheDocument();
     expect(container.queryByTestId('add_sub_task_icon')).toBeInTheDocument();
-    expect(container.queryByText('task:sub_task.sub_tasks')).toBeInTheDocument();
-  })
-
-  it('renders no subtasks', async () => {
-    let container
-    await act(async () => {
-      container = render(
-        <Context.Provider value={authState}>
-          <MockedProvider mocks={[]} addTypename={false}>
-            <BrowserRouter>
-              <TaskSubTask
-                taskId='23'
-                users={[]}
-                assignUser={jest.fn()}
-                handleTaskCompletion={jest.fn}
-                handleSplitScreenOpen={jest.fn}
-              />
-            </BrowserRouter>
-          </MockedProvider>
-        </Context.Provider>
-      )})
-
-    expect(container.queryByTestId('no_subtasks')).toBeInTheDocument();
-    expect(container.queryByText('task:sub_task.no_sub_tasks')).toBeInTheDocument();
   })
 })
