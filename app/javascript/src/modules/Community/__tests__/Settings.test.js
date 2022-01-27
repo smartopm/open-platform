@@ -266,6 +266,9 @@ describe('Community settings page', () => {
     });
     expect(container.queryByTestId('logo_url').value).toBe('https://something.com');
 
+    const file = new Blob(['some text'], { type: 'image/png' })
+    fireEvent.change(container.queryByTestId('logo-input'), { target: { files: [file] } });
+
     fireEvent.change(container.queryByTestId('tagline'), {
       target: { value: 'This is our tagline' }
     });

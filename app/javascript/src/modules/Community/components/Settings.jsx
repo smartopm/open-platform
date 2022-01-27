@@ -446,6 +446,7 @@ export default function CommunitySettings({ data, refetch }) {
                 hidden
                 onChange={event => onInputChange(event.target.files[0])}
                 accept="image/*"
+                data-testid='logo-input'
               />
             </Button>
           </div>

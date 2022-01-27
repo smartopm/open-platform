@@ -79,10 +79,19 @@ describe('UserPage Component', () => {
       expect(container.getByTestId('search_user')).toBeInTheDocument();
       expect(container.getByTestId('download_csv_btn')).toBeInTheDocument();
 
+      // fireEvent.click(container.getByTestId('download-csv'))
+      // expect(container.getByTestId('loader')).toBeInTheDocument();
+
+      fireEvent.click(container.getByLabelText('search'))
+      expect(container.queryByText('Role')).toBeInTheDocument();
+
       fireEvent.click(container.getByTestId('menu-list'))
       expect(container.getByTestId('menu_list')).toBeInTheDocument();
       expect(container.getAllByTestId('menu_item')[0]).toBeInTheDocument();
       expect(container.getAllByTestId('menu_item')).toHaveLength(3);
+
+      fireEvent.click(container.getAllByTestId('menu_item')[1])
+      expect(container.queryByText('Customer Journey Stage')).toBeInTheDocument();
 
       expect(container.getByTestId('pagination_section')).toBeInTheDocument();
       expect(container.getByTestId('user_item')).toBeInTheDocument();

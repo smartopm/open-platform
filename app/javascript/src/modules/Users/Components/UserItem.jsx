@@ -187,6 +187,7 @@ export default function UserItem({
                 aria-haspopup="true"
                 onClick={handleOpenMenu}
                 dataid={user.id}
+                data-testid="user-menu-list"
               >
                 <MoreHorizIcon />
               </IconButton>
