@@ -9,7 +9,7 @@ import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import Card from '../../../shared/Card';
 
-export default function TaskDetailAccordion({ icon, title, styles, component }) {
+export default function TaskDetailAccordion({ icon, title, styles, component, openDetails }) {
   const classes = useStyles();
   const [showComponent, setShowComponent] = useState(false)
 
@@ -35,7 +35,7 @@ export default function TaskDetailAccordion({ icon, title, styles, component }) 
           </Grid>
         </Grid>
       </Card>
-      {showComponent && (
+      {(openDetails || showComponent) && (
         <>
           {component}
         </>
@@ -55,7 +55,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 TaskDetailAccordion.defaultProps = {
-  styles: {}
+  styles: {},
+  openDetails: false
 }
 
 TaskDetailAccordion.propTypes = {
@@ -63,5 +64,6 @@ TaskDetailAccordion.propTypes = {
   title: PropTypes.string.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   styles: PropTypes.object,
-  component: PropTypes.node.isRequired
+  component: PropTypes.node.isRequired,
+  openDetails: PropTypes.bool
 };

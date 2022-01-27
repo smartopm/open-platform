@@ -20,6 +20,7 @@ import TaskDocuments from './TaskDocuments';
 import TaskInfoTop from './TaskInfoTop';
 import TaskSubTask from './TaskSubTask';
 import TaskDetailAccordion from './TaskDetailAccordion';
+import { useParamsQuery } from '../../../utils/helpers';
 
 const initialData = {
   user: '',
@@ -53,6 +54,8 @@ export default function TaskDetail({
   const [reminderTime, setReminderTime] = useState(null);
   const { t } = useTranslation(['task', 'common']);
   const classes = useStyles();
+  const path = useParamsQuery();
+  const tab = path.get('detailTab');
 
   const [anchorEl, setAnchorEl] = useState(null);
   const anchorElOpen = Boolean(anchorEl);
@@ -247,6 +250,7 @@ export default function TaskDetail({
               icon={<AccountTreeIcon color="primary" />}
               title="Sub Tasks"
               styles={{ background: '#FAFAFA' }}
+              openDetails={tab === 'subtasks'}
               component={(
                 <TaskSubTask
                   taskId={taskId}
@@ -265,6 +269,7 @@ export default function TaskDetail({
               title="Comments"
               styles={{ background: '#FAFAFA' }}
               component={<TaskComment taskId={taskId} />}
+              openDetails={tab === 'comments'}
             />
           </div>
           <div className={classes.section} data-testid="task-documents-section">
@@ -273,6 +278,7 @@ export default function TaskDetail({
               title="Documents"
               styles={{ background: '#FAFAFA' }}
               component={<TaskDocuments taskId={taskId} />}
+              openDetails={tab === 'documents'}
             />
           </div>
           <div className={classes.section} data-testid="task-updates-section">
