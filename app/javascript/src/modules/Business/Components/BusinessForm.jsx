@@ -3,7 +3,7 @@
 
 import React, { useState } from 'react';
 import {
-  TextField, Container, Button, Typography, FormControl, InputLabel, Select, MenuItem, Grid
+  TextField, Container, Button, Typography, FormControl, InputLabel, Select, MenuItem, Grid, IconButton
 } from '@material-ui/core';
 import { css } from 'aphrodite';
 import { useMutation } from 'react-apollo';
@@ -109,8 +109,10 @@ export default function BusinessForm({ close, businessData, action }) {
                   required
                 />
               </Grid>
-              <Grid item sm={1} xs={1}>
-                <EditIcon style={{ marginBottom: '-40px', marginLeft: '7px' }} fontSize="small" onClick={() => setEditingUser(true)} />
+              <Grid item sm={1} xs={1} style={{textAlign: 'right'}}>
+                <IconButton color='primary' style={{ marginTop: '20px'}}>
+                  <EditIcon fontSize="small" onClick={() => setEditingUser(true)} />
+                </IconButton>
               </Grid>
             </Grid>
           </>
