@@ -22,18 +22,18 @@ export default function TaskDetailAccordion({ icon, title, styles, component, op
   return (
     <>
       <Card primaryColor styles={styles}>
-        <Grid container alignItems="center" justifyContent="center">
-          <Grid item sm={2} xs={2}>
+        <Grid container className={classes.body} data-testid='body'>
+          <Grid item sm={2} xs={2} data-testid='icon'>
             {icon}
           </Grid>
           <Grid item sm={9} xs={8}>
-            <Typography color='primary' variant='subtitle2' className={classes.typography}>{title}</Typography>
+            <Typography data-testid='title' color='primary' variant='subtitle2' className={classes.typography}>{title}</Typography>
           </Grid>
           <Grid item sm={1} xs={2}>
             <Grid container>
               <Divider orientation="vertical" flexItem className={classes.divider} color='primary' />
               <Grid item sm={12} xs={12} className={classes.icon}>
-                <IconButton color='primary' onClick={() => setShowComponent(!showComponent)}>
+                <IconButton color='primary' onClick={() => setShowComponent(!showComponent)} data-testid='toggle-icon'>
                   {showComponent ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                 </IconButton>
               </Grid>
@@ -42,9 +42,9 @@ export default function TaskDetailAccordion({ icon, title, styles, component, op
         </Grid>
       </Card>
       {showComponent && (
-        <>
+        <div data-testid='component'>
           {component}
-        </>
+        </div>
       )}
     </>
   );
@@ -60,6 +60,10 @@ const useStyles = makeStyles((theme) => ({
   },
   icon: {
     textAlign: 'right'
+  },
+  body: {
+    alignItems: 'center',
+    justifyContent: 'center'
   }
 }));
 
