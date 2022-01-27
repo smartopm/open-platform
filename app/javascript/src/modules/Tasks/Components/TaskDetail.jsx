@@ -245,7 +245,7 @@ export default function TaskDetail({
               handleTaskComplete={handleTaskComplete}
             />
           </div>
-          <div className={classes.section} data-testid="task-subtasks-section">
+          <div className={classes.section} data-testid="task-subtasks-section" id="anchor-section">
             <TaskDetailAccordion
               icon={<AccountTreeIcon color="primary" />}
               title="Sub Tasks"
@@ -263,7 +263,7 @@ export default function TaskDetail({
               )}
             />
           </div>
-          <div className={classes.section} data-testid="task-comments-section" id="anchor-section">
+          <div className={classes.section} data-testid="task-comments-section">
             <TaskDetailAccordion
               icon={<QuestionAnswerIcon color="primary" />}
               title="Comments"

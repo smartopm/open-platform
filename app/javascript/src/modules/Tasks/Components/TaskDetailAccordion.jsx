@@ -23,16 +23,16 @@ export default function TaskDetailAccordion({ icon, title, styles, component, op
     <>
       <Card primaryColor styles={styles}>
         <Grid container alignItems="center" justifyContent="center">
-          <Grid item sm={2}>
+          <Grid item sm={2} xs={2}>
             {icon}
           </Grid>
-          <Grid item sm={9}>
+          <Grid item sm={9} xs={8}>
             <Typography color='primary' variant='subtitle2' className={classes.typography}>{title}</Typography>
           </Grid>
-          <Grid item sm={1}>
+          <Grid item sm={1} xs={2}>
             <Grid container>
               <Divider orientation="vertical" flexItem className={classes.divider} color='primary' />
-              <Grid item>
+              <Grid item sm={12} xs={12} className={classes.icon}>
                 <IconButton color='primary' onClick={() => setShowComponent(!showComponent)}>
                   {showComponent ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                 </IconButton>
@@ -55,8 +55,11 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: 400
   },
   divider: {
-    margin: '-20px 0',
+    margin: '-4.25rem 0',
     backgroundColor: theme.palette.primary.main
+  },
+  icon: {
+    textAlign: 'right'
   }
 }));
 
