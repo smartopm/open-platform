@@ -18,6 +18,10 @@ export const BusinessesQuery = gql`
       phoneNumber
       operationHours
       links
+      user {
+        id
+        name
+      }
     }
   }
 `;

@@ -45,11 +45,14 @@ export default function BusinessList({ businessData, authState, refetch }) {
     setModalOpen(!modalOpen);
     refetch();
     setAnchorEl(null);
+    setSingleBusinessData(null);
+    setAction('create');
   }
 
   function handleClose() {
     setAnchorEl(null);
     setSingleBusinessData(null);
+    setAction('create');
   }
 
   function handleEditClick(business) {

@@ -9,6 +9,7 @@ import { css } from 'aphrodite';
 import { useMutation } from 'react-apollo';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
+import EditIcon from '@material-ui/icons/Edit';
 import CenteredContent from '../../../shared/CenteredContent';
 import { discussStyles } from '../../../components/Discussion/Discuss';
 import { BusinessCreateMutation, BusinessUpdateMutation } from '../graphql/business_mutations';
@@ -35,8 +36,9 @@ const initialUserData = {
 
 export default function BusinessForm({ close, businessData, action }) {
   const [data, setData] = useState(action === 'edit' ? businessData : initialData);
-  const [userData, setUserData] = useState(initialUserData);
+  const [userData, setUserData] = useState(action === 'edit' ? { userId: businessData?.userId } : initialUserData);
   const [error, setError] = useState(null);
+  const [editingUser, setEditingUser] = useState(false);
   const { t } = useTranslation(['common']);
 
   const [createBusiness] = useMutation(BusinessCreateMutation);
@@ -90,8 +92,24 @@ export default function BusinessForm({ close, businessData, action }) {
         />
 
         <br />
-        <UserSearch userData={userData} update={setUserData} required selectedUser={data.userId} displayExisting />
-        <br />
+        {(editingUser || action === 'create') && <UserSearch userData={userData} update={setUserData} required={!editingUser} />}
+        {(!editingUser && data?.user) && (
+          <>
+            <TextField
+              label={t('misc.user')}
+              name="email"
+              className="form-control"
+              value={data?.user?.name}
+              aria-label="business_user"
+              inputProps={{ 'data-testid': 'business_user' }}
+              margin="normal"
+              disabled
+              required
+              style={{ width: '97%' }}
+            />
+            <EditIcon style={{ marginBottom: '-40px', marginLeft: '7px' }} fontSize="small" onClick={() => setEditingUser(true)} />
+          </>
+        )}
 
         <TextField
           label={t('form_fields.email')}
@@ -251,7 +269,8 @@ BusinessForm.defaultProps = {
 BusinessForm.propTypes = {
   close: PropTypes.func.isRequired,
   businessData: PropTypes.shape({
-    id: PropTypes.string
+    id: PropTypes.string,
+    userId: PropTypes.string
   }),
   action: PropTypes.string
 };
