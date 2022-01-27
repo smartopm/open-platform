@@ -405,12 +405,12 @@ export default function TodoList({
     })
   }
 
-  function handleTodoItemClick(task, tab) {
+  function handleTodoItemClick(task, pro, tab ) {
     setSelectedTask(task);
     setSplitScreenOpen(true);
     history.push({
       pathname: '/tasks',
-      search: `?taskId=${task?.id}?detailTab=${tab}`,
+      search: `?taskId=${task?.id}&detailTab=${tab}`,
       state: { from: history.location.pathname,  search: history.location.search }
     })
     // window.document.getElementById('anchor-section').scrollIntoView()

@@ -242,16 +242,6 @@ export default function TaskDetail({
               handleTaskComplete={handleTaskComplete}
             />
           </div>
-          {/* <div className={classes.section} data-testid="task-subtasks-section">
-            <TaskSubTask
-              taskId={taskId}
-              users={users}
-              assignUser={assignUser}
-              refetch={refetch}
-              handleSplitScreenOpen={handleSplitScreenOpen}
-              handleTaskCompletion={handleTaskCompletion}
-            />
-          </div> */}
           <div className={classes.section} data-testid="task-subtasks-section">
             <TaskDetailAccordion
               icon={<AccountTreeIcon color="primary" />}
@@ -268,7 +258,6 @@ export default function TaskDetail({
                 />
               )}
             />
-            {/* <TaskComment taskId={taskId} /> */}
           </div>
           <div className={classes.section} data-testid="task-comments-section">
             <TaskDetailAccordion
