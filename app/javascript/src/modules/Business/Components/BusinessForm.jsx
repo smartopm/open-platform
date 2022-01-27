@@ -3,7 +3,7 @@
 
 import React, { useState } from 'react';
 import {
-  TextField, Container, Button, Typography, FormControl, InputLabel, Select, MenuItem
+  TextField, Container, Button, Typography, FormControl, InputLabel, Select, MenuItem, Grid
 } from '@material-ui/core';
 import { css } from 'aphrodite';
 import { useMutation } from 'react-apollo';
@@ -95,19 +95,24 @@ export default function BusinessForm({ close, businessData, action }) {
         {(editingUser || action === 'create') && <UserSearch userData={userData} update={setUserData} required={!editingUser} />}
         {(!editingUser && data?.user) && (
           <>
-            <TextField
-              label={t('misc.user')}
-              name="email"
-              className="form-control"
-              value={data?.user?.name}
-              aria-label="business_user"
-              inputProps={{ 'data-testid': 'business_user' }}
-              margin="normal"
-              disabled
-              required
-              style={{ width: '97%' }}
-            />
-            <EditIcon style={{ marginBottom: '-40px', marginLeft: '7px' }} fontSize="small" onClick={() => setEditingUser(true)} />
+            <Grid container>
+              <Grid item sm={11} xs={11}>
+                <TextField
+                  label={t('misc.user')}
+                  name="email"
+                  className="form-control"
+                  value={data?.user?.name}
+                  aria-label="business_user"
+                  inputProps={{ 'data-testid': 'business_user' }}
+                  margin="normal"
+                  disabled
+                  required
+                />
+              </Grid>
+              <Grid item sm={1} xs={1}>
+                <EditIcon style={{ marginBottom: '-40px', marginLeft: '7px' }} fontSize="small" onClick={() => setEditingUser(true)} />
+              </Grid>
+            </Grid>
           </>
         )}
 
