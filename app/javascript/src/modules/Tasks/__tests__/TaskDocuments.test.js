@@ -37,23 +37,6 @@ describe('Task Documents', () => {
     }
   ];
 
-  const EmptyDocumentsMock = [
-    {
-      request: {
-        query: TaskDocumentsQuery,
-        variables: { taskId: '302df8c3-27bb-4175-adc1-43857e972eb4' }
-      },
-      result: {
-        data: {
-          task: {
-            id: '302df8c3-27bb-4175-adc1-43857e972eb4',
-            attachments: [],
-          }
-        }
-      }
-    }
-  ]
-
   it('renders properly when there are documents', async () => {
     render(
       <MockedProvider mocks={DocumentsMock} addTypename={false}>
