@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Grid from '@material-ui/core/Grid';
+import { useMutation } from 'react-apollo'
 import { makeStyles } from '@material-ui/styles';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -10,7 +11,12 @@ import Typography from '@material-ui/core/Typography';
 import TextFieldLiveEdit from '../../../shared/TextFieldLiveEdit';
 import { DateAndTimePickers } from '../../../components/DatePickerDialog';
 import CampaignLabels from './CampaignLabels';
-import { getJustLabels } from '../../../utils/helpers';
+import { getJustLabels, delimitorFormator, saniteError } from '../../../utils/helpers';
+import {
+  CampaignCreate,
+  CampaignUpdateMutation,
+  CampaignLabelRemoveMutation
+} from '../../../graphql/mutations'
 
 const initData = {
   id: '',
@@ -26,11 +32,16 @@ const initData = {
   includeReplyLink: false
 };
 
-export default function CampaignSplitScreenContent() {
+export default function CampaignSplitScreenContent({ refetch }) {
   const classes = useStyles();
   const [formData, setFormData] = useState(initData);
   const [mailListType, setMailListType] = useState('label');
   const [label, setLabel] = useState([]);
+  const [errorMsg, setErrorMsg] = useState('')
+  const [isSubmitted, setIsSubmitted] = useState(false)
+  const [mutationLoading, setLoading] = useState(false)
+  const [campaignCreate] = useMutation(CampaignCreate)
+  
 
   // function handleLabelDelete(labelId) {
   //   // need campaign id and labelId
@@ -80,6 +91,40 @@ export default function CampaignSplitScreenContent() {
   function handleLabelSelect(value) {
     setLabel([...getJustLabels(value)]);
   }
+
+  async function createCampaignOnSubmit(campData) {
+    setLoading(true)
+    try {
+      await campaignCreate({ variables: campData })
+      setIsSubmitted(true)
+      setFormData(initData)
+      setLoading(false)
+      refetch()
+    } catch (err) {
+      setErrorMsg(err.message)
+      setLoading(false)
+    }
+  }
+
+  function handleSubmit(e) {
+    e.preventDefault()
+    // if creating a campaign don't spread
+    const labels = label
+    const campaignData = {
+      id: formData.id,
+      name: formData.name,
+      campaignType: formData.campaignType,
+      status: formData.status,
+      emailTemplatesId: formData.emailTemplatesId,
+      message: formData.message,
+      batchTime: formData.batchTime,
+      userIdList: delimitorFormator(formData.userIdList).toString(),
+      labels: labels.toString(),
+      includeReplyLink: formData.includeReplyLink
+    }
+
+    return createCampaignOnSubmit(campaignData)
+  }
   return (
     <Grid container className={classes.container}>
       <Grid item sm={9}>
@@ -88,7 +133,7 @@ export default function CampaignSplitScreenContent() {
         </Typography>
       </Grid>
       <Grid item sm={3} className={classes.buttonGrid}>
-        <Button disableElevation className={classes.button} variant="contained">
+        <Button disableElevation className={classes.button} variant="contained" onClick={(e) => handleSubmit(e)}>
           Save Changes
         </Button>
       </Grid>
@@ -261,6 +306,13 @@ export default function CampaignSplitScreenContent() {
           </Grid>
         )}
       </Grid>
+      <div className="d-flex row justify-content-center">
+        {Boolean(errorMsg.length) && (
+        <p className="text-danger text-center">
+          {saniteError([], errorMsg)}
+        </p>
+          )}
+      </div>
     </Grid>
   );
 }

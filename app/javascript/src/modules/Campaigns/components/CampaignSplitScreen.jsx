@@ -5,7 +5,7 @@ import Button from '@material-ui/core/Button';
 import CenteredContent from '../../../shared/CenteredContent';
 import CampaignSplitScreenContent from './CampaignSplitScreenContent';
 
-export default function CampaignSplitScreen({ campaignLength }) {
+export default function CampaignSplitScreen({ campaignLength, refetch }) {
   const classes = useStyles();
   return (
     <div>
@@ -17,7 +17,7 @@ export default function CampaignSplitScreen({ campaignLength }) {
           </div>
         </CenteredContent>
       )}
-      <CampaignSplitScreenContent />
+      <CampaignSplitScreenContent refetch={refetch} />
     </div>
   )
 }

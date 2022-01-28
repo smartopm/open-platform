@@ -188,7 +188,7 @@ export default function CampaignList() {
         </div>
       </Grid>
       <Grid item sm={7} className={classes.splitScreen}>
-        <CampaignSplitScreen campaignLength={data.campaigns.length} />
+        <CampaignSplitScreen campaignLength={data.campaigns.length} refetch={refetch} />
       </Grid>
     </Grid>
   );
