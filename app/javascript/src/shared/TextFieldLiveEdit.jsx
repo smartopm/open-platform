@@ -5,10 +5,13 @@ import { makeStyles } from '@material-ui/styles';
 
 export default function TextFieldLiveEdit({
   text,
+  placeHolderText,
   textVariant,
   styles,
   textFieldVariant,
-  fullWidth
+  fullWidth,
+  handleChange,
+  name
 }) {
   const [edit, setEdit] = useState(false);
   const classes = useStyles();
@@ -24,15 +27,18 @@ export default function TextFieldLiveEdit({
           color="textSecondary"
           className={classes.typography}
         >
-          {text}
+          {text === '' ? placeHolderText : text}
         </Typography>
       ) : (
         <TextField
-          placeholder={text}
+          placeholder={placeHolderText}
           onMouseOut={() => setEdit(false)}
           variant={textFieldVariant}
-          fullWidth
+          fullWidth={fullWidth || undefined}
           color='primary'
+          value={text}
+          onChange={(e) => handleChange(e)}
+          name={name}
         />
       )}
     </div>

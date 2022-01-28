@@ -1,3 +1,6 @@
+/* eslint-disable max-statements */
+/* eslint-disable max-len */
+/* eslint-disable complexity */
 /* eslint-disable react/prop-types */
 /* eslint-disable no-use-before-define */
 import React, { useState, useEffect } from 'react'
