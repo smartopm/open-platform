@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import React, { useState } from 'react';
 import Grid from '@material-ui/core/Grid';
 import { useMutation } from 'react-apollo'
@@ -11,12 +12,13 @@ import Typography from '@material-ui/core/Typography';
 import TextFieldLiveEdit from '../../../shared/TextFieldLiveEdit';
 import { DateAndTimePickers } from '../../../components/DatePickerDialog';
 import CampaignLabels from './CampaignLabels';
-import { getJustLabels, delimitorFormator, saniteError } from '../../../utils/helpers';
+import { getJustLabels, delimitorFormator, saniteError, formatError } from '../../../utils/helpers';
 import {
   CampaignCreate,
   CampaignUpdateMutation,
   CampaignLabelRemoveMutation
 } from '../../../graphql/mutations'
+import MessageAlert from "../../../components/MessageAlert"
 
 const initData = {
   id: '',
@@ -38,9 +40,10 @@ export default function CampaignSplitScreenContent({ refetch }) {
   const [mailListType, setMailListType] = useState('label');
   const [label, setLabel] = useState([]);
   const [errorMsg, setErrorMsg] = useState('')
-  const [isSubmitted, setIsSubmitted] = useState(false)
+  const [isSuccessAlert, setIsSuccessAlert] = useState(false)
   const [mutationLoading, setLoading] = useState(false)
   const [campaignCreate] = useMutation(CampaignCreate)
+  const [messageAlert, setMessageAlert] = useState('')
   
 
   // function handleLabelDelete(labelId) {
@@ -96,18 +99,25 @@ export default function CampaignSplitScreenContent({ refetch }) {
     setLoading(true)
     try {
       await campaignCreate({ variables: campData })
-      setIsSubmitted(true)
+      setIsSuccessAlert(true)
       setFormData(initData)
       setLoading(false)
+      setMessageAlert('Campaign succesfully created')
       refetch()
     } catch (err) {
-      setErrorMsg(err.message)
+      setIsSuccessAlert(false)
+      setMessageAlert(formatError(err.message))
       setLoading(false)
     }
   }
 
+  // function validateFormDataFields(formData) {
+  //   if (!formData.name || )
+  // }
+
   function handleSubmit(e) {
     e.preventDefault()
+    // validateFormDataFields(formData)
     // if creating a campaign don't spread
     const labels = label
     const campaignData = {
@@ -127,6 +137,15 @@ export default function CampaignSplitScreenContent({ refetch }) {
   }
   return (
     <Grid container className={classes.container}>
+      <div className={classes.messageAlert}>
+        <MessageAlert
+          type={isSuccessAlert ? 'success' : 'error'}
+          message={messageAlert}
+          open={!!messageAlert}
+          handleClose={() => setMessageAlert('')}
+          style={{marginTop: '30px'}}
+        />
+      </div>
       <Grid item sm={9}>
         <Typography variant="h6" className={classes.title}>
           New Campaign
@@ -306,13 +325,6 @@ export default function CampaignSplitScreenContent({ refetch }) {
           </Grid>
         )}
       </Grid>
-      <div className="d-flex row justify-content-center">
-        {Boolean(errorMsg.length) && (
-        <p className="text-danger text-center">
-          {saniteError([], errorMsg)}
-        </p>
-          )}
-      </div>
     </Grid>
   );
 }
