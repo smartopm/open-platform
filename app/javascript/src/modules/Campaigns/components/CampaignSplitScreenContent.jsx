@@ -236,13 +236,13 @@ export default function CampaignSplitScreenContent({ refetch }) {
           />
         </Grid>
       </Grid>
-      <Grid container className={classes.topInfo}>
+      <Grid container>
         <Grid item sm={12}>
           <Typography variant="caption" color="textSecondary">
             Message
           </Typography>
         </Grid>
-        <Grid item sm={12}>
+        <Grid item sm={12} className={classes.liveField}>
           <TextFieldLiveEdit
             placeHolderText="Add a message"
             textVariant="body2"
@@ -254,7 +254,7 @@ export default function CampaignSplitScreenContent({ refetch }) {
           />
         </Grid>
       </Grid>
-      <Grid container className={classes.mailingList}>
+      <Grid container>
         <Grid item sm={3}>
           <Typography variant="caption" color="textSecondary">
             Setup Mailing List
@@ -319,7 +319,7 @@ export default function CampaignSplitScreenContent({ refetch }) {
 
 const useStyles = makeStyles(() => ({
   container: {
-    padding: '50px 40px'
+    padding: '40px'
   },
   title: {
     color: '#616161',
@@ -334,13 +334,11 @@ const useStyles = makeStyles(() => ({
     textAlign: 'right'
   },
   liveEvent: {
-    paddingBottom: '30px'
+    paddingBottom: '30px',
+    height: '100px'
   },
   topInfo: {
     marginBottom: '20px'
-  },
-  mailingList: {
-    marginTop: '30px'
   },
   label: {
     fontSize: '14px'
@@ -358,6 +356,10 @@ const useStyles = makeStyles(() => ({
     paddingRight: '10px'
   },
   listId: {
-    paddingBottom: '30px'
+    paddingBottom: '30px',
+    height: '150px'
+  },
+  liveField: {
+    height: '100px'
   }
 }));

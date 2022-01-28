@@ -117,7 +117,7 @@ export default function CampaignList() {
   if (error) return <ErrorPage />;
   return (
     <Grid container>
-      <Grid item sm={5}>
+      <Grid item sm={5} className={classes.campaignList}>
         <div className="container">
           <Grid container>
             <Grid item sm={12} style={{marginBottom: '20px'}}>
@@ -198,6 +198,12 @@ const useStyles = makeStyles(() => ({
   splitScreen: {
     background: '#FAFAFA',
     height: '92vh',
-    marginTop: '-20px'
+    marginTop: '-20px',
+    position: 'fixed',
+    right: 0
+  },
+  campaignList: {
+    overflowX: 'hidden',
+    overflowY: 'auto'
   }
 }));
