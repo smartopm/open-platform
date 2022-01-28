@@ -178,23 +178,34 @@ export function TaskDataList({
               </IconButton>
             </Grid>
             <Grid item md={8} xs={10}>
-            <Tooltip 
-              title={task.body}
-              arrow placement="bottom"
-             >
-              <Typography
-                variant="body2"
-                data-testid="task_body"
-                component="p"
-                className={matches ? classes.taskBodyMobile : classes.taskBody}
+              <Tooltip 
+                title={task.body}
+                arrow
+                placement="bottom"
+                componentsProps={{
+                tooltip: {
+                  sx: {
+                    bgcolor: 'primary',
+                    '& .MuiTooltip-arrow': {
+                      color: 'primary',
+                    },
+                  },
+                },
+              }}
               >
+                <Typography
+                  variant="body2"
+                  data-testid="task_body"
+                  component="p"
+                  className={matches ? classes.taskBodyMobile : classes.taskBody}
+                >
                   <span
                   // eslint-disable-next-line react/no-danger
                     dangerouslySetInnerHTML={{
                     __html: sanitizeText(removeNewLines(task.body))
                   }}
                   />
-              </Typography>
+                </Typography>
               </Tooltip>
             </Grid>
             <Grid item md={1} xl={1}>
