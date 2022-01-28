@@ -177,23 +177,25 @@ export function TaskDataList({
                   )}
               </IconButton>
             </Grid>
-            <Grid item md={8} xs={6}>
+            <Grid item md={8} xs={10}>
+            <Tooltip 
+              title={task.body}
+              arrow placement="bottom"
+             >
               <Typography
                 variant="body2"
                 data-testid="task_body"
                 component="p"
                 className={matches ? classes.taskBodyMobile : classes.taskBody}
               >
-                <Tooltip title={task.body} arrow placement="bottom-start">
                   <span
-                    sx={{ m: 1 }}
                   // eslint-disable-next-line react/no-danger
                     dangerouslySetInnerHTML={{
                     __html: sanitizeText(removeNewLines(task.body))
                   }}
                   />
-                </Tooltip>
               </Typography>
+              </Tooltip>
             </Grid>
             <Grid item md={1} xl={1}>
               <Hidden smDown>
@@ -429,7 +431,7 @@ const useStyles = makeStyles(() => ({
     paddingLeft: '3px'
   },
   taskBodyMobile: {
-    maxWidth: '17ch',
+    maxWidth: '30ch',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
@@ -485,5 +487,13 @@ const useStyles = makeStyles(() => ({
       marginLeft: "-25px",
     },
 
-  }
+  },
+
+  customTooltip: {
+    backgroundColor: '#FFFFFF',
+    color: '#000000',
+    border: '.5px solid #999999',
+    fontSize: '.85rem',
+    fontWeight: '400'
+  },
 }));
