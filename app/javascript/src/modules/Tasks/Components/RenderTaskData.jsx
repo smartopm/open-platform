@@ -183,15 +183,15 @@ export function TaskDataList({
                 arrow
                 placement="bottom"
                 componentsProps={{
-                tooltip: {
-                  sx: {
-                    bgcolor: 'primary',
-                    '& .MuiTooltip-arrow': {
-                      color: 'primary',
+                  tooltip: {
+                    sx: {
+                      bgcolor: 'primary',
+                      '& .MuiTooltip-arrow': {
+                        color: 'primary',
+                      },
                     },
                   },
-                },
-              }}
+                }}
               >
                 <Typography
                   variant="body2"
