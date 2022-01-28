@@ -5,7 +5,7 @@ import { Grid, Typography, Breadcrumbs } from '@material-ui/core';
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next';
 import {makeStyles} from '@material-ui/core/styles';
-import { formatError } from '../../../../utils/helpers';
+import { formatError, useParamsQuery } from '../../../../utils/helpers';
 import { Spinner } from '../../../../shared/Loading';
 import CenteredContent from '../../../../shared/CenteredContent';
 import { ProjectsQuery } from '../graphql/process_queries';
@@ -16,6 +16,8 @@ export default function ProjectsList() {
   const { t } = useTranslation('task');
   const limit = 50;
   const offset = 0;
+  const path = useParamsQuery()
+  const currentStep = path.get('current_step')
   const classes = useStyles();
   const authState = React.useContext(AuthStateContext);
 
@@ -24,6 +26,7 @@ export default function ProjectsList() {
     variables: {
       offset,
       limit,
+      step: `"${currentStep}"`
     },
     fetchPolicy: 'cache-and-network'
   });

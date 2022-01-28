@@ -25,6 +25,7 @@ module Mutations
 
         update_attributes = attributes.except(:document_blob_id)
         old_note = note.attributes.with_indifferent_access
+
         unless note.update!(update_attributes)
           raise GraphQL::ExecutionError, note.errors.full_messages
         end

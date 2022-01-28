@@ -1,3 +1,5 @@
+import { toTitleCase } from "../../../utils/helpers";
+
 export function hrefsExtractor(link) {
   const doc = document.createElement('html');
   doc.innerHTML = link;
@@ -50,4 +52,10 @@ export function calculateOpenProjectsByStage(projects, stages){
 export function sentenceToSnakeCase(text) {
   if (!text) return null;
   return text.toLowerCase().replace(/\s/g, '_');
+}
+
+export function snakeCaseToSentence(text){
+  if (!text) return null;
+  const plainText = text.replace(/_/g, ' ')
+  return toTitleCase(plainText)
 }

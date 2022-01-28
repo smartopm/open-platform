@@ -20,6 +20,10 @@ module Notes
       attributes assignees: ['assignees.name']
     end
 
+    search_scope :search_by_step do
+      attributes :current_step_body
+    end
+
     belongs_to :community
     belongs_to :user, class_name: 'Users::User'
     belongs_to :author, class_name: 'Users::User'
@@ -39,6 +43,7 @@ module Notes
     before_save :log_completed_at, if: -> { completed_changed? && completed.eql?(true) }
     after_create :log_create_event
     after_update :log_update_event
+    # before_save :update_current_step, if: -> { completed_changed? }
 
     default_scope { order(created_at: :desc) }
     scope :by_due_date, ->(date) { where('due_date <= ?', date) }
@@ -89,8 +94,9 @@ module Notes
       steps&.first
     end
 
+    # update the note
     def update_current_step
-      self.update(current_step: check_current_process_step&.id)
+        self.update(current_step_body: check_current_process_step&.body)
     end
 
     private

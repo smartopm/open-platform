@@ -544,6 +544,7 @@ ActiveRecord::Schema.define(version: 2022_01_26_113114) do
     t.uuid "parent_note_id"
     t.datetime "completed_at"
     t.uuid "current_step"
+    t.string "current_step_body"
     t.index ["form_user_id"], name: "index_notes_on_form_user_id"
     t.index ["parent_note_id"], name: "index_notes_on_parent_note_id"
   end

@@ -88,6 +88,7 @@ module Types::Queries::Note
       description 'Returns a list of projects under a process'
       argument :offset, Integer, required: false
       argument :limit, Integer, required: false
+      argument :step, String, required: false
     end
 
     field :project_stages, [GraphQL::Types::JSON], null: false do
@@ -277,7 +278,7 @@ module Types::Queries::Note
 
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/MethodLength
-  def projects(offset: 0, limit: 50)
+  def projects(offset: 0, limit: 50, step: nil)
     # This query only shows projects under the DRC process for now
     # Our notes does not allow us to categorise processes by type
     # This should be implemented in the future to allow us to fetch...
@@ -306,7 +307,8 @@ module Types::Queries::Note
         :assignee_notes,
         :documents_attachments,
       )
-      .where(parent_note_id: nil, form_user_id: drc_form_users)
+      .where(parent_note_id: nil)
+      .search_by_step(step)
       .limit(limit).offset(offset)
   end
 
