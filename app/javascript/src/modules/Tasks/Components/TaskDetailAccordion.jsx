@@ -11,29 +11,50 @@ import Card from '../../../shared/Card';
 
 export default function TaskDetailAccordion({ icon, title, styles, component, openDetails }) {
   const classes = useStyles();
-  const [showComponent, setShowComponent] = useState(false)
+  const [showComponent, setShowComponent] = useState(false);
 
   useEffect(() => {
     if (openDetails) {
-      setShowComponent(true)
+      setShowComponent(true);
     }
-  }, [openDetails])
+  }, [openDetails]);
 
   return (
     <>
-      <Card primaryColor styles={styles}>
-        <Grid container className={classes.body} data-testid='body'>
-          <Grid item sm={2} xs={2} data-testid='icon'>
+      <Card primaryColor styles={styles} contentStyles={{padding: 0}}>
+        <Grid container className={classes.body} data-testid="body">
+          <Grid item sm={2} xs={2} data-testid="icon" className={classes.container}>
             {icon}
           </Grid>
           <Grid item sm={9} xs={8}>
-            <Typography data-testid='title' color='primary' variant='subtitle2' className={classes.typography}>{title}</Typography>
+            <Typography
+              data-testid="title"
+              color="primary"
+              variant="h6"
+              className={classes.typography}
+            >
+              {title}
+            </Typography>
           </Grid>
-          <Grid item sm={1} xs={2}>
+          <Grid item sm={1} xs={2} style={showComponent ? { backgroundColor: '#EEF6F9' } : undefined}>
             <Grid container>
-              <Divider orientation="vertical" flexItem className={classes.divider} color='primary' />
-              <Grid item sm={12} xs={12} className={classes.icon}>
-                <IconButton color='primary' onClick={() => setShowComponent(!showComponent)} data-testid='toggle-icon'>
+              <Divider
+                orientation="vertical"
+                flexItem
+                className={classes.divider}
+                color="primary"
+              />
+              <Grid
+                item
+                sm={12}
+                xs={12}
+                className={classes.icon}
+              >
+                <IconButton
+                  color="primary"
+                  onClick={() => setShowComponent(!showComponent)}
+                  data-testid="toggle-icon"
+                >
                   {showComponent ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                 </IconButton>
               </Grid>
@@ -41,16 +62,12 @@ export default function TaskDetailAccordion({ icon, title, styles, component, op
           </Grid>
         </Grid>
       </Card>
-      {showComponent && (
-        <div data-testid='component'>
-          {component}
-        </div>
-      )}
+      {showComponent && <div data-testid="component">{component}</div>}
     </>
   );
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   typography: {
     fontWeight: 400
   },
@@ -59,18 +76,22 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.primary.main
   },
   icon: {
-    textAlign: 'right'
+    textAlign: 'right',
+    padding: '10px 0'
   },
   body: {
     alignItems: 'center',
     justifyContent: 'center'
+  },
+  container: {
+    padding: '10px'
   }
 }));
 
 TaskDetailAccordion.defaultProps = {
   styles: {},
   openDetails: false
-}
+};
 
 TaskDetailAccordion.propTypes = {
   icon: PropTypes.node.isRequired,

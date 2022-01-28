@@ -247,7 +247,7 @@ export default function TaskDetail({
           </div>
           <div className={classes.section} data-testid="task-subtasks-section" id="anchor-section">
             <TaskDetailAccordion
-              icon={<AccountTreeIcon color="primary" />}
+              icon={<AccountTreeIcon fontSize='large' color="primary" />}
               title="Sub Tasks"
               styles={{ background: '#FAFAFA' }}
               openDetails={tab === 'subtasks'}
@@ -265,16 +265,16 @@ export default function TaskDetail({
           </div>
           <div className={classes.section} data-testid="task-comments-section">
             <TaskDetailAccordion
-              icon={<QuestionAnswerIcon color="primary" />}
+              icon={<QuestionAnswerIcon fontSize='large' color="primary" />}
               title="Comments"
-              styles={{ background: '#FAFAFA' }}
+              styles={{ background: '#FAFAFA', padding: 0 }}
               component={<TaskComment taskId={taskId} />}
               openDetails={tab === 'comments'}
             />
           </div>
           <div className={classes.section} data-testid="task-documents-section">
             <TaskDetailAccordion
-              icon={<AttachFileIcon color="primary" />}
+              icon={<AttachFileIcon fontSize='large' color="primary" />}
               title="Documents"
               styles={{ background: '#FAFAFA' }}
               component={<TaskDocuments taskId={taskId} />}
@@ -283,7 +283,7 @@ export default function TaskDetail({
           </div>
           <div className={classes.section} data-testid="task-updates-section">
             <TaskDetailAccordion
-              icon={<EventNoteIcon color="primary" />}
+              icon={<EventNoteIcon fontSize='large' color="primary" />}
               title="Updates"
               styles={{ background: '#FAFAFA' }}
               component={<TaskUpdateList data={historyData} />}
