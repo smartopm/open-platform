@@ -11,7 +11,9 @@ export default function TextFieldLiveEdit({
   textFieldVariant,
   fullWidth,
   handleChange,
-  name
+  name,
+  multiline,
+  rows
 }) {
   const [edit, setEdit] = useState(false);
   const classes = useStyles();
@@ -35,6 +37,8 @@ export default function TextFieldLiveEdit({
           onMouseOut={() => setEdit(false)}
           variant={textFieldVariant}
           fullWidth={fullWidth || undefined}
+          multiline={multiline || undefined}
+          rows={rows || undefined}
           color='primary'
           value={text}
           onChange={(e) => handleChange(e)}

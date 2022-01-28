@@ -3,11 +3,14 @@ import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/styles';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
+import Chip from '@material-ui/core/Chip';
 import Button from '@material-ui/core/Button';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import Typography from '@material-ui/core/Typography';
 import TextFieldLiveEdit from '../../../shared/TextFieldLiveEdit';
 import { DateAndTimePickers } from '../../../components/DatePickerDialog';
+import CampaignLabels from './CampaignLabels';
+import { getJustLabels } from '../../../utils/helpers';
 
 const initData = {
   id: '',
@@ -26,7 +29,17 @@ const initData = {
 export default function CampaignSplitScreenContent() {
   const classes = useStyles();
   const [formData, setFormData] = useState(initData);
-  const [mailListType, setMailListType] = useState('label')
+  const [mailListType, setMailListType] = useState('label');
+  const [label, setLabel] = useState([]);
+
+  // function handleLabelDelete(labelId) {
+  //   // need campaign id and labelId
+  //   campaignLabelRemove({
+  //     variables: { campaignId: id, labelId }
+  //   })
+  //     .then(() => refetch())
+  //     .catch((err) => setErrorMsg(err.message))
+  // }
 
   function handleInputChange(e) {
     const { name, value } = e.target;
@@ -62,6 +75,10 @@ export default function CampaignSplitScreenContent() {
       ...formData,
       campaignType
     });
+  }
+
+  function handleLabelSelect(value) {
+    setLabel([...getJustLabels(value)]);
   }
   return (
     <Grid container className={classes.container}>
@@ -156,17 +173,21 @@ export default function CampaignSplitScreenContent() {
           <FormControlLabel
             control={(
               <Checkbox
-                classes={{root: classes.root}}
+                classes={{ root: classes.root }}
                 name="include_link_check"
                 checked={formData.includeReplyLink}
                 color="default"
-                size='small'
+                size="small"
                 onChange={event =>
                   setFormData({ ...formData, includeReplyLink: event.target.checked })
                 }
               />
             )}
-            label={<Typography variant='caption' color='textSecondary'>Include Link</Typography>}
+            label={(
+              <Typography variant="caption" color="textSecondary">
+                Include Link
+              </Typography>
+            )}
           />
         </Grid>
       </Grid>
@@ -196,10 +217,49 @@ export default function CampaignSplitScreenContent() {
         </Grid>
         <Grid item sm={9}>
           <ButtonGroup color="primary" aria-label="mailing list button">
-            <Button onClick={() => setMailListType('label')} style={buttonStyle('label')}>USE LABEL</Button>
-            <Button onClick={() => setMailListType('idlist')} style={buttonStyle('idlist')}>USE ID LIST</Button>
+            <Button onClick={() => setMailListType('label')} style={buttonStyle('label')}>
+              USE LABEL
+            </Button>
+            <Button onClick={() => setMailListType('idlist')} style={buttonStyle('idlist')}>
+              USE ID LIST
+            </Button>
           </ButtonGroup>
         </Grid>
+        {mailListType === 'label' && (
+          <Grid item sm={12}>
+            <Grid container>
+              <Grid item sm={4} className={classes.labelText}>
+                <CampaignLabels handleLabelSelect={handleLabelSelect} />
+              </Grid>
+              <Grid item sm={8}>
+                {label.map((labl, i) => (
+                  <Chip
+                    data-testid="campaignChip-label"
+                    // eslint-disable-next-line react/no-array-index-key
+                    key={i}
+                    label={labl?.shortDesc || labl}
+                    className={classes.chip}
+                  />
+                ))}
+              </Grid>
+            </Grid>
+          </Grid>
+        )}
+        {mailListType === 'idlist' && (
+          <Grid item sm={12} className={classes.listId}>
+            <TextFieldLiveEdit
+              placeHolderText="Paste User ID list from User's page here to build a mailing list"
+              textVariant="body2"
+              textFieldVariant="outlined"
+              fullWidth
+              multiline
+              text={formData.userIdList}
+              handleChange={handleInputChange}
+              rows={4}
+              name="userIdList"
+            />
+          </Grid>
+        )}
       </Grid>
     </Grid>
   );
@@ -236,7 +296,16 @@ const useStyles = makeStyles(() => ({
   root: {
     color: '#797979',
     '&$checked': {
-      color: '#797979',
-    },
+      color: '#797979'
+    }
+  },
+  chip: {
+    margin: '20px 10px 0 10px'
+  },
+  labelText: {
+    paddingRight: '10px'
+  },
+  listId: {
+    paddingBottom: '30px'
   }
 }));
