@@ -1,7 +1,8 @@
+/* eslint-disable max-statements */
 /* eslint-disable max-lines */
 import React, { useState, useEffect } from 'react';
 import Grid from '@material-ui/core/Grid';
-import { useMutation } from 'react-apollo'
+import { useMutation } from 'react-apollo';
 import { makeStyles } from '@material-ui/styles';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -17,8 +18,8 @@ import {
   CampaignCreate,
   CampaignUpdateMutation,
   CampaignLabelRemoveMutation
-} from '../../../graphql/mutations'
-import MessageAlert from "../../../components/MessageAlert"
+} from '../../../graphql/mutations';
+import MessageAlert from '../../../components/MessageAlert';
 
 const initData = {
   id: '',
@@ -39,22 +40,22 @@ export default function CampaignSplitScreenContent({ refetch, campaign }) {
   const [formData, setFormData] = useState(initData);
   const [mailListType, setMailListType] = useState('label');
   const [label, setLabel] = useState([]);
-  const [isSuccessAlert, setIsSuccessAlert] = useState(false)
-  const [mutationLoading, setLoading] = useState(false)
-  const [campaignCreate] = useMutation(CampaignCreate)
-  const [messageAlert, setMessageAlert] = useState('')
-  const [campaignLabelRemove] = useMutation(CampaignLabelRemoveMutation)
-  
+  const [isSuccessAlert, setIsSuccessAlert] = useState(false);
+  const [mutationLoading, setLoading] = useState(false);
+  const [campaignCreate] = useMutation(CampaignCreate);
+  const [messageAlert, setMessageAlert] = useState('');
+  const [campaignLabelRemove] = useMutation(CampaignLabelRemoveMutation);
+  const [campaignUpdate] = useMutation(CampaignUpdateMutation);
 
   function handleLabelDelete(labelId) {
     campaignLabelRemove({
       variables: { campaignId: campaign.id, labelId }
     })
       .then(() => refetch())
-      .catch((err) => {
-        setIsSuccessAlert(false)
-        setMessageAlert(formatError(err.message))
-      })
+      .catch(err => {
+        setIsSuccessAlert(false);
+        setMessageAlert(formatError(err.message));
+      });
   }
 
   function handleInputChange(e) {
@@ -98,30 +99,41 @@ export default function CampaignSplitScreenContent({ refetch, campaign }) {
   }
 
   async function createCampaignOnSubmit(campData) {
-    setLoading(true)
+    setLoading(true);
     try {
-      await campaignCreate({ variables: campData })
-      setIsSuccessAlert(true)
-      setFormData(initData)
-      setLoading(false)
-      setMessageAlert('Campaign succesfully created')
-      refetch()
+      await campaignCreate({ variables: campData });
+      setIsSuccessAlert(true);
+      setFormData(initData);
+      setLoading(false);
+      setMessageAlert('Campaign succesfully created');
+      refetch();
     } catch (err) {
-      setIsSuccessAlert(false)
-      setMessageAlert(formatError(err.message))
-      setLoading(false)
+      setIsSuccessAlert(false);
+      setMessageAlert(formatError(err.message));
+      setLoading(false);
     }
   }
 
-  // function validateFormDataFields(formData) {
-  //   if (!formData.name || )
-  // }
+  async function campaignUpdateOnSubmit(campData) {
+    setLoading(true);
+    try {
+      await campaignUpdate({ variables: campData });
+      setIsSuccessAlert(true);
+      setLoading(false);
+      setMessageAlert('Campaign succesfully updated');
+      refetch();
+    } catch (err) {
+      setIsSuccessAlert(false);
+      setMessageAlert(formatError(err.message));
+      setLoading(false);
+    }
+  }
 
   function handleSubmit(e) {
-    e.preventDefault()
+    e.preventDefault();
     // validateFormDataFields(formData)
     // if creating a campaign don't spread
-    const labels = label
+    const labels = campaign ? [...label, ...getJustLabels(formData.labels)] : label
     const campaignData = {
       id: formData.id,
       name: formData.name,
@@ -133,16 +145,18 @@ export default function CampaignSplitScreenContent({ refetch, campaign }) {
       userIdList: delimitorFormator(formData.userIdList).toString(),
       labels: labels.toString(),
       includeReplyLink: formData.includeReplyLink
+    };
+    if (campaign) {
+      return campaignUpdateOnSubmit(campaignData);
     }
-
-    return createCampaignOnSubmit(campaignData)
+    return createCampaignOnSubmit(campaignData);
   }
 
   useEffect(() => {
     if (campaign) {
-      setFormData(campaign)
+      setFormData(campaign);
     }
-  }, [campaign])
+  }, [campaign]);
   return (
     <Grid container className={classes.container}>
       <div className={classes.messageAlert}>
@@ -151,7 +165,7 @@ export default function CampaignSplitScreenContent({ refetch, campaign }) {
           message={messageAlert}
           open={!!messageAlert}
           handleClose={() => setMessageAlert('')}
-          style={{marginTop: '30px'}}
+          style={{ marginTop: '30px' }}
         />
       </div>
       <Grid item sm={9}>
@@ -160,7 +174,13 @@ export default function CampaignSplitScreenContent({ refetch, campaign }) {
         </Typography>
       </Grid>
       <Grid item sm={3} className={classes.buttonGrid}>
-        <Button disableElevation disabled={mutationLoading} className={classes.button} variant="contained" onClick={(e) => handleSubmit(e)}>
+        <Button
+          disableElevation
+          disabled={mutationLoading}
+          className={classes.button}
+          variant="contained"
+          onClick={e => handleSubmit(e)}
+        >
           Save Changes
         </Button>
       </Grid>
@@ -313,8 +333,8 @@ export default function CampaignSplitScreenContent({ refetch, campaign }) {
                     className={classes.chip}
                   />
                 ))}
-                {Boolean(formData.labels.length)
-                  && formData.labels.map((labl) => (
+                {Boolean(formData.labels.length) &&
+                  formData.labels.map(labl => (
                     <Chip
                       data-testid="campaignChip-label"
                       key={labl.id}

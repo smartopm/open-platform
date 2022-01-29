@@ -7,12 +7,9 @@ import CenteredContent from '../../../shared/CenteredContent';
 import CampaignSplitScreenContent from './CampaignSplitScreenContent';
 import { Campaign } from '../../../graphql/queries';
 import { Spinner } from '../../../shared/Loading';
-import { useParamsQuery } from '../../../utils/helpers';
 
-export default function CampaignSplitScreen({ campaignLength, refetch }) {
+export default function CampaignSplitScreen({ campaignId, campaignLength, refetch }) {
   const classes = useStyles();
-  const path = useParamsQuery();
-  const campaignId = path.get('id');
   const [loadCampaign, { data, error, loading }] = useLazyQuery(Campaign, {
     variables: { id: campaignId },
     fetchPolicy: 'cache-and-network',

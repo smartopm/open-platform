@@ -103,11 +103,6 @@ export default function CampaignList() {
     return history.push('/campaign-create');
   }
 
-  function handleCardClick(id) {
-    setCampaignId(id)
-    routeToAction()
-  }
-
   function paginate(action) {
     if (action === 'prev') {
       if (offset < limit) {
@@ -174,7 +169,7 @@ export default function CampaignList() {
                     <Fragment key={camp.id}>
                       <CampaignCard
                         camp={camp}
-                        handleClick={() => handleCardClick(camp.id)}
+                        handleClick={() =>  setCampaignId(camp.id)}
                         menuData={menuData}
                       />
                       <MenuList
