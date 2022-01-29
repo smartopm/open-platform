@@ -34,6 +34,7 @@ export default function CampaignList() {
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [deletingCampaign, setDeletingCampaign] = useState(false);
   const [campaign, setCampaign] = useState(null);
+  const [campaignId, setCampaignId] = useState(null);
   const [deleteCampaign] = useMutation(DeleteCampaign);
   const anchorElOpen = Boolean(anchorEl);
   const debouncedSearchText = useDebounce(searchText, 500);
@@ -84,11 +85,11 @@ export default function CampaignList() {
   }
 
   function handleDelete() {
-    setDeletingCampaign(true)
+    setDeletingCampaign(true);
     deleteCampaign({
       variables: { id: campaign.id }
     }).then(() => {
-      setDeletingCampaign(false)
+      setDeletingCampaign(false);
       handleMenuClose();
       handleDeleteClick();
       refetch();
@@ -100,6 +101,11 @@ export default function CampaignList() {
   }
   function routeToCreateCampaign() {
     return history.push('/campaign-create');
+  }
+
+  function handleCardClick(id) {
+    setCampaignId(id)
+    routeToAction()
   }
 
   function paginate(action) {
@@ -120,20 +126,24 @@ export default function CampaignList() {
       <Grid item sm={5} className={classes.campaignList}>
         <div className="container">
           <Grid container>
-            <Grid item sm={12} style={{marginBottom: '20px'}}>
+            <Grid item sm={12} style={{ marginBottom: '20px' }}>
               <Grid container>
                 <Grid item sm={10}>
-                  <Typography variant='h4'>Campaigns</Typography>
+                  <Typography variant="h4">Campaigns</Typography>
                 </Grid>
-                <Grid item sm={2} style={{textAlign: 'right'}}>
+                <Grid item sm={2} style={{ textAlign: 'right' }}>
                   <Tooltip title="New Campaign" placement="top">
-                    <IconButton aria-label="new-campaign" color='primary' onClick={() => routeToCreateCampaign()}>
+                    <IconButton
+                      aria-label="new-campaign"
+                      color="primary"
+                      onClick={() => routeToCreateCampaign()}
+                    >
                       <AddCircleIcon />
                     </IconButton>
                   </Tooltip>
                 </Grid>
                 <Grid item sm={12}>
-                  <Typography variant='body2'>Communicate with the community.</Typography>
+                  <Typography variant="body2">Communicate with the community.</Typography>
                 </Grid>
               </Grid>
             </Grid>
@@ -162,9 +172,15 @@ export default function CampaignList() {
                   )}
                   {data.campaigns.map(camp => (
                     <Fragment key={camp.id}>
-                      <CampaignCard camp={camp} menuData={menuData} />
+                      <CampaignCard
+                        camp={camp}
+                        handleClick={() => handleCardClick(camp.id)}
+                        menuData={menuData}
+                      />
                       <MenuList
-                        open={menuData.open && menuData?.anchorEl?.getAttribute('dataid') === camp.id}
+                        open={
+                          menuData.open && menuData?.anchorEl?.getAttribute('dataid') === camp.id
+                        }
                         anchorEl={menuData.anchorEl}
                         handleClose={menuData.handleMenuClose}
                         list={menuData.menuList.filter(menuItem => menuItem.content !== null)}
@@ -188,7 +204,11 @@ export default function CampaignList() {
         </div>
       </Grid>
       <Grid item sm={7} className={classes.splitScreen}>
-        <CampaignSplitScreen campaignLength={data.campaigns.length} refetch={refetch} />
+        <CampaignSplitScreen
+          campaignId={campaignId}
+          campaignLength={data?.campaigns.length}
+          refetch={refetch}
+        />
       </Grid>
     </Grid>
   );
@@ -200,7 +220,8 @@ const useStyles = makeStyles(() => ({
     height: '92vh',
     marginTop: '-20px',
     position: 'fixed',
-    right: 0
+    right: 0,
+    width: '100%'
   },
   campaignList: {
     overflowX: 'hidden',

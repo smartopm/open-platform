@@ -1,23 +1,27 @@
-import React from 'react'
+import React from 'react';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/styles';
-import { IconButton } from '@material-ui/core'
+import { IconButton } from '@material-ui/core';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Card from '../../../shared/Card';
 // import CampaignDeleteDialogue from './CampaignDeleteDialogue';
-import { dateToString } from "../../../components/DateContainer"
+import { dateToString } from '../../../components/DateContainer';
 
-export default function CampaignCard({ camp, menuData }) {
+export default function CampaignCard({ camp, menuData, handleClick }) {
   const classes = useStyles();
   const matches = useMediaQuery('(max-width:800px)');
   return (
     <>
-      <Card styles={{marginBottom: '10px'}} contentStyles={{ padding: '4px 4px 4px 10px' }}>
+      <Card
+        clickData={{ clickable: true, handleClick: () => handleClick(camp) }}
+        styles={{ marginBottom: '10px' }}
+        contentStyles={{ padding: '4px 4px 4px 10px' }}
+      >
         <Grid container spacing={5} justifyContent="center" alignItems="center">
           <Grid item md={2}>
-            <Typography variant="caption" color='textSecondary' component="span">
+            <Typography variant="caption" color="textSecondary" component="span">
               {camp.batchTime ? dateToString(camp.batchTime) : 'Never '}
             </Typography>
           </Grid>
@@ -26,13 +30,13 @@ export default function CampaignCard({ camp, menuData }) {
               variant="body2"
               data-testid="campaign_name"
               component="p"
-              color='textSecondary'
+              color="textSecondary"
               className={matches ? classes.campaignBodyMobile : classes.campaignBody}
             >
               {camp.name}
             </Typography>
           </Grid>
-          <Grid item md={2} style={{textAlign: 'right'}}>
+          <Grid item md={2} style={{ textAlign: 'right' }}>
             <IconButton
               aria-controls="simple-menu"
               aria-haspopup="true"
@@ -47,7 +51,7 @@ export default function CampaignCard({ camp, menuData }) {
         </Grid>
       </Card>
     </>
-  )
+  );
 }
 
 const useStyles = makeStyles(() => ({
@@ -64,5 +68,5 @@ const useStyles = makeStyles(() => ({
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
     paddingLeft: '3px'
-  },
+  }
 }));

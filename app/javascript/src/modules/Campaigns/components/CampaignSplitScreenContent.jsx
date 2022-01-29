@@ -1,5 +1,5 @@
 /* eslint-disable max-lines */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Grid from '@material-ui/core/Grid';
 import { useMutation } from 'react-apollo'
 import { makeStyles } from '@material-ui/styles';
@@ -12,7 +12,7 @@ import Typography from '@material-ui/core/Typography';
 import TextFieldLiveEdit from '../../../shared/TextFieldLiveEdit';
 import { DateAndTimePickers } from '../../../components/DatePickerDialog';
 import CampaignLabels from './CampaignLabels';
-import { getJustLabels, delimitorFormator, saniteError, formatError } from '../../../utils/helpers';
+import { getJustLabels, delimitorFormator, formatError } from '../../../utils/helpers';
 import {
   CampaignCreate,
   CampaignUpdateMutation,
@@ -34,26 +34,28 @@ const initData = {
   includeReplyLink: false
 };
 
-export default function CampaignSplitScreenContent({ refetch }) {
+export default function CampaignSplitScreenContent({ refetch, campaign }) {
   const classes = useStyles();
   const [formData, setFormData] = useState(initData);
   const [mailListType, setMailListType] = useState('label');
   const [label, setLabel] = useState([]);
-  const [errorMsg, setErrorMsg] = useState('')
   const [isSuccessAlert, setIsSuccessAlert] = useState(false)
   const [mutationLoading, setLoading] = useState(false)
   const [campaignCreate] = useMutation(CampaignCreate)
   const [messageAlert, setMessageAlert] = useState('')
+  const [campaignLabelRemove] = useMutation(CampaignLabelRemoveMutation)
   
 
-  // function handleLabelDelete(labelId) {
-  //   // need campaign id and labelId
-  //   campaignLabelRemove({
-  //     variables: { campaignId: id, labelId }
-  //   })
-  //     .then(() => refetch())
-  //     .catch((err) => setErrorMsg(err.message))
-  // }
+  function handleLabelDelete(labelId) {
+    campaignLabelRemove({
+      variables: { campaignId: campaign.id, labelId }
+    })
+      .then(() => refetch())
+      .catch((err) => {
+        setIsSuccessAlert(false)
+        setMessageAlert(formatError(err.message))
+      })
+  }
 
   function handleInputChange(e) {
     const { name, value } = e.target;
@@ -135,6 +137,12 @@ export default function CampaignSplitScreenContent({ refetch }) {
 
     return createCampaignOnSubmit(campaignData)
   }
+
+  useEffect(() => {
+    if (campaign) {
+      setFormData(campaign)
+    }
+  }, [campaign])
   return (
     <Grid container className={classes.container}>
       <div className={classes.messageAlert}>
@@ -148,11 +156,11 @@ export default function CampaignSplitScreenContent({ refetch }) {
       </div>
       <Grid item sm={9}>
         <Typography variant="h6" className={classes.title}>
-          New Campaign
+          {campaign ? 'Edit Campaign' : 'New Campaign'}
         </Typography>
       </Grid>
       <Grid item sm={3} className={classes.buttonGrid}>
-        <Button disableElevation className={classes.button} variant="contained" onClick={(e) => handleSubmit(e)}>
+        <Button disableElevation disabled={mutationLoading} className={classes.button} variant="contained" onClick={(e) => handleSubmit(e)}>
           Save Changes
         </Button>
       </Grid>
@@ -267,7 +275,7 @@ export default function CampaignSplitScreenContent({ refetch }) {
             textVariant="body2"
             textFieldVariant="outlined"
             fullWidth
-            text={formData.message}
+            text={formData.message || ''}
             handleChange={handleInputChange}
             name="message"
           />
@@ -305,6 +313,17 @@ export default function CampaignSplitScreenContent({ refetch }) {
                     className={classes.chip}
                   />
                 ))}
+                {Boolean(formData.labels.length)
+                  && formData.labels.map((labl) => (
+                    <Chip
+                      data-testid="campaignChip-label"
+                      key={labl.id}
+                      size="medium"
+                      onDelete={() => handleLabelDelete(labl.id)}
+                      label={labl.shortDesc}
+                      className={classes.chip}
+                    />
+                  ))}
               </Grid>
             </Grid>
           </Grid>

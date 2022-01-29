@@ -343,10 +343,10 @@ const App = () => {
                                 path="/campaign-create"
                                 component={CampaignCreate}
                               />
-                              <Route
+                              {/* <Route
                                 path="/campaign/:id"
                                 component={CampaignUpdate}
-                              />
+                              /> */}
                               <Route
                                 path="/timesheet/:id"
                                 exact
