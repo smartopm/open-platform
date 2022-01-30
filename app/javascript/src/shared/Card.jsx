@@ -10,15 +10,16 @@ export default function CardComponent({
   clickData,
   styles,
   contentStyles,
-  primaryColor
+  primaryColor,
+  className
 }) {
   const classes = useStyles(primaryColor)();
   return (
     <>
       <Card
         elevation={0}
-        className={clickData?.clickable ? classes.cardClickable : classes.card}
-        onClick={clickData?.clickable ? e => clickData?.handleClick(e) : null}
+        className={`${clickData?.clickable ? classes.cardClickable : classes.card} ${className}`}
+        onClick={clickData?.clickable ? (e) =>  clickData?.handleClick(e) : null}
         style={styles}
         variant="outlined"
         data-testid="card"

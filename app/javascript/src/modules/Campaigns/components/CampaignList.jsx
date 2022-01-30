@@ -104,10 +104,6 @@ export default function CampaignList() {
     history.push(`/campaign/campaign-create`);
   }
 
-  // function handleCampaignCard(campId) {
-  //   history.push(`/campaign/${campId}`);
-  // }
-
   function paginate(action) {
     if (action === 'prev') {
       if (offset < limit) {
@@ -219,12 +215,14 @@ const useStyles = makeStyles(() => ({
     background: '#FAFAFA',
     height: '92vh',
     marginTop: '-20px',
-    position: 'fixed',
+    // position: 'absolute',
     right: 0,
-    width: '100%'
+    width: '100%',
+    overflowX: 'hidden',
+    overflowY: 'auto'
   },
   campaignList: {
     overflowX: 'hidden',
-    overflowY: 'auto'
+    overflowY: 'auto',
   }
 }));

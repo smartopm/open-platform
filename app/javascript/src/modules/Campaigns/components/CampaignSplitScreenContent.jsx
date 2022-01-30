@@ -20,6 +20,7 @@ import {
   CampaignLabelRemoveMutation
 } from '../../../graphql/mutations';
 import MessageAlert from '../../../components/MessageAlert';
+import CampaignStatCard from './CampaignStatCard'
 
 const initData = {
   id: '',
@@ -168,22 +169,27 @@ export default function CampaignSplitScreenContent({ refetch, campaign }) {
           style={{ marginTop: '30px' }}
         />
       </div>
+      {campaign?.status === 'done' && (
+        <CampaignStatCard data={campaign.campaignMetrics} />
+      )}
       <Grid item sm={9}>
         <Typography variant="h6" className={classes.title}>
           {campaign ? 'Edit Campaign' : 'New Campaign'}
         </Typography>
       </Grid>
-      <Grid item sm={3} className={classes.buttonGrid}>
-        <Button
-          disableElevation
-          disabled={mutationLoading}
-          className={classes.button}
-          variant="contained"
-          onClick={e => handleSubmit(e)}
-        >
-          Save Changes
-        </Button>
-      </Grid>
+      {campaign?.status !== 'done' && (
+        <Grid item sm={3} className={classes.buttonGrid}>
+          <Button
+            disableElevation
+            disabled={mutationLoading}
+            className={classes.button}
+            variant="contained"
+            onClick={e => handleSubmit(e)}
+          >
+            Save Changes
+          </Button>
+        </Grid>
+      )}
       <Grid item sm={12} className={classes.liveEvent}>
         <TextFieldLiveEdit
           placeHolderText="Add a Campaign Title"
