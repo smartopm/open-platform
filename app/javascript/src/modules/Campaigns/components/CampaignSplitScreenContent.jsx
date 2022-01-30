@@ -324,7 +324,7 @@ export default function CampaignSplitScreenContent({ refetch, campaign }) {
                 <CampaignLabels handleLabelSelect={handleLabelSelect} />
               </Grid>
               <Grid item sm={8}>
-                {label.map((labl, i) => (
+                {Boolean(label.length) && label.map((labl, i) => (
                   <Chip
                     data-testid="campaignChip-label"
                     // eslint-disable-next-line react/no-array-index-key

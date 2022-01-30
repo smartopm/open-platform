@@ -7,7 +7,7 @@ import AddCircleIcon from '@material-ui/icons/AddCircle';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/styles';
 import { Typography } from '@material-ui/core';
@@ -26,6 +26,7 @@ import DeleteDialogueBox from '../../../shared/dialogs/DeleteDialogue';
 
 export default function CampaignList() {
   const classes = useStyles();
+  const { id } = useParams()
   const history = useHistory();
   const limit = 50;
   const [offset, setOffset] = useState(0);
@@ -34,7 +35,6 @@ export default function CampaignList() {
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [deletingCampaign, setDeletingCampaign] = useState(false);
   const [campaign, setCampaign] = useState(null);
-  const [campaignId, setCampaignId] = useState(null);
   const [deleteCampaign] = useMutation(DeleteCampaign);
   const anchorElOpen = Boolean(anchorEl);
   const debouncedSearchText = useDebounce(searchText, 500);
@@ -48,7 +48,7 @@ export default function CampaignList() {
     {
       content: t('misc.open_campaign_details'),
       isAdmin: true,
-      handleClick: () => routeToAction()
+      handleClick: () => routeToAction(campaign.id)
     },
     {
       content: t('actions.delete_campaign'),
@@ -96,12 +96,17 @@ export default function CampaignList() {
     });
   }
 
-  function routeToAction() {
-    return history.push(`/campaign/${campaign.id}`);
+  function routeToAction(camId) {
+    return history.push(`/campaign/${camId}`);
   }
-  function routeToCreateCampaign() {
-    return history.push('/campaign-create');
+
+  function handleCreateCampaign() {
+    history.push(`/campaign/campaign-create`);
   }
+
+  // function handleCampaignCard(campId) {
+  //   history.push(`/campaign/${campId}`);
+  // }
 
   function paginate(action) {
     if (action === 'prev') {
@@ -131,7 +136,7 @@ export default function CampaignList() {
                     <IconButton
                       aria-label="new-campaign"
                       color="primary"
-                      onClick={() => routeToCreateCampaign()}
+                      onClick={() => handleCreateCampaign()}
                     >
                       <AddCircleIcon />
                     </IconButton>
@@ -153,7 +158,7 @@ export default function CampaignList() {
               />
             </Grid>
             <Grid item sm={12}>
-              {data.campaigns.length > 0 && (
+              {data?.campaigns.length > 0 && (
                 <>
                   {openDeleteModal && (
                     <DeleteDialogueBox
@@ -169,7 +174,7 @@ export default function CampaignList() {
                     <Fragment key={camp.id}>
                       <CampaignCard
                         camp={camp}
-                        handleClick={() =>  setCampaignId(camp.id)}
+                        handleClick={() =>  routeToAction(camp.id)}
                         menuData={menuData}
                       />
                       <MenuList
@@ -200,7 +205,7 @@ export default function CampaignList() {
       </Grid>
       <Grid item sm={7} className={classes.splitScreen}>
         <CampaignSplitScreen
-          campaignId={campaignId}
+          campaignId={id}
           campaignLength={data?.campaigns.length}
           refetch={refetch}
         />

@@ -1,44 +1,60 @@
-import React, { useEffect } from 'react'
+import React, { useEffect } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { useLazyQuery } from 'react-apollo';
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
+import { useLocation, useHistory } from 'react-router-dom';
 import CenteredContent from '../../../shared/CenteredContent';
 import CampaignSplitScreenContent from './CampaignSplitScreenContent';
 import { Campaign } from '../../../graphql/queries';
 import { Spinner } from '../../../shared/Loading';
+import CampaignInfo from './CampaignInfo';
 
 export default function CampaignSplitScreen({ campaignId, campaignLength, refetch }) {
+  const location = useLocation();
   const classes = useStyles();
+  const history = useHistory();
+  const path = location.pathname;
+  const campaignPath = path === '/campaigns' || path === '/campaigns/';
   const [loadCampaign, { data, error, loading }] = useLazyQuery(Campaign, {
     variables: { id: campaignId },
     fetchPolicy: 'cache-and-network',
     errorPolicy: 'all'
   });
 
+  function campaignRoute() {
+    history.push('/campaign-create');
+  }
+
   useEffect(() => {
     if (campaignId) {
-      loadCampaign()
+      loadCampaign();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [campaignId])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [campaignId]);
 
   if (loading) return <Spinner />;
-  
+
   return (
     <div>
       {error && !data?.length && <CenteredContent>{error}</CenteredContent>}
-      {campaignLength === 0 && (
-        <CenteredContent>
-          <div className={classes.noCampaigns}>
-            <Typography variant='body1' color='textSecondary'>No Campaigns have been created yet.</Typography>
-            <Button className={classes.createCampaign} variant='contained' color='primary'>Create Campaign</Button>
-          </div>
-        </CenteredContent>
+      {campaignPath && campaignLength === 0 && (
+        <CampaignInfo
+          title="No campaigns has been created yet."
+          buttonText="Create Campaign"
+          handleClick={campaignRoute}
+        />
       )}
-      <CampaignSplitScreenContent refetch={refetch} campaign={data?.campaign} />
+      {campaignPath && campaignLength > 0 && (
+        <CampaignInfo
+          title="Select a campaign to edit or create a new one."
+          buttonText="Create Campaign"
+          handleClick={campaignRoute}
+        />
+      )}
+      {(path === '/campaign-create' || campaignId) && (
+        <CampaignSplitScreenContent refetch={refetch} campaign={data?.campaign} />
+      )}
     </div>
-  )
+  );
 }
 
 const useStyles = makeStyles(() => ({
