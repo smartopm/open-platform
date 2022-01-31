@@ -75,7 +75,6 @@ export default function ProcessItem({ task, taskId, refetch, clientView }) {
   function handleUploadDocument(event, todoItem) {
     onChange(event.target.files[0]);
     setSelectedTask(todoItem);
-    redirectToOverviewPage(todoItem.id);
   }
 
   function redirectToOverviewPage(id, tab='overview', detailTab) {
