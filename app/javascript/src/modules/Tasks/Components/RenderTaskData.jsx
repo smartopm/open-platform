@@ -224,7 +224,7 @@ export function TaskDataList({
             </Grid>
             {  !clientView &&  (
             <Hidden smDown>
-              <Divider orientation="vertical" flexItem sx={{margin: '-20px 0'}} />
+              <Divider orientation="vertical" flexItem sx={{margin: '-20px 10px'}} />
             </Hidden>
 )}
           </Grid>
@@ -299,53 +299,61 @@ export function TaskDataList({
               </Grid>
             )}
 
-            <Grid item md={2} xs={1}>
-              <IconButton
-                aria-controls="task-subtasks-icon"
-                aria-haspopup="true"
-                data-testid="task_subtasks"
-                onClick={handleClick}
-              >
-                <AccountTreeIcon fontSize="small" color={task?.subTasks?.length ? 'primary': 'disabled'} />
-              </IconButton>
+            <Grid item md={10} xs={6}>
+              <Grid container style={{ display: 'flex', justifyContent: 'space-between' }} className={classes.detailsContainer}>
+                <Grid item md={2} xs={1}>
+                  <IconButton
+                    aria-controls="task-subtasks-icon"
+                    aria-haspopup="true"
+                    data-testid="task_subtasks"
+                    onClick={handleClick}
+                  >
+                    <AccountTreeIcon fontSize="small" color={task?.subTasks?.length ? 'primary': 'disabled'} />
+                  </IconButton>
+                </Grid>
+
+
+
+                <Grid item md={1} xs={1} className={classes.iconItem} style={{marginLeft: '-20px'}}><span>{task?.subTasks?.length}</span></Grid>
+
+
+                <Grid item md={2} xs={1}>
+                  <IconButton
+                    aria-controls="task-comment-icon"
+                    aria-haspopup="true"
+                    data-testid="task_comments"
+                    onClick={handleClick}
+                  >
+                    <QuestionAnswerIcon fontSize="small" color={data?.taskComments.length ? 'primary': 'disabled'} />
+                  </IconButton>
+                </Grid>
+
+
+                <Grid item md={1} xs={1} className={classes.iconItem} style={{marginLeft: '-20px'}}><span data-testid='task-comment'>{data?.taskComments.length || 0}</span></Grid>
+
+
+                <Grid item md={2} xs={1}>
+                  <IconButton
+                    key={task.id}
+                    aria-controls="task-attach-file-icon"
+                    aria-haspopup="true"
+                    data-testid="task_attach_file"
+                    onClick={handleClick}
+                  >
+                    <AttachFileIcon fontSize="small" color={task?.documents?.length ? 'primary': 'disabled'} />
+                  </IconButton>
+                </Grid>
+                <Grid item md={1} xs={1} className={classes.iconItem} style={{marginLeft: '-25px'}}>
+                  <span data-testid="file_attachments_total">
+                    {task.documents?.length || 0}
+                  </span>
+                </Grid>
+
+              </Grid>
+
+
             </Grid>
 
-
-
-            <Grid item md={1} xs={1} className={classes.iconItem}><span>{task?.subTasks?.length}</span></Grid>
-
-
-            <Grid item md={2} xs={1}>
-              <IconButton
-                aria-controls="task-comment-icon"
-                aria-haspopup="true"
-                data-testid="task_comments"
-                onClick={handleClick}
-              >
-                <QuestionAnswerIcon fontSize="small" color={data?.taskComments.length ? 'primary': 'disabled'} />
-              </IconButton>
-            </Grid>
-
-
-            <Grid item md={1} xs={1} className={classes.iconItem}><span data-testid='task-comment'>{data?.taskComments.length || 0}</span></Grid>
-
-
-            <Grid item md={2} xs={1}>
-              <IconButton
-                key={task.id}
-                aria-controls="task-attach-file-icon"
-                aria-haspopup="true"
-                data-testid="task_attach_file"
-                onClick={handleClick}
-              >
-                <AttachFileIcon fontSize="small" color={task?.documents?.length ? 'primary': 'disabled'} />
-              </IconButton>
-            </Grid>
-            <Grid item md={1} xs={1} className={classes.iconItem}>
-              <span data-testid="file_attachments_total">
-                {task.documents?.length}
-              </span>
-            </Grid>
           </Grid>
         </Grid>
         {
@@ -454,13 +462,22 @@ const useStyles = makeStyles(() => ({
     width: '45%',
     justifyContent: 'space-evenly'
   },
+  detailsContainer: {
+
+    '@media (min-device-width: 768px) and (max-device-height: 1024px) and (orientation: portrait)' : {
+      justifyContent: 'flex-end'
+    },
+
+  },
   iconItem: {
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center',
-    fontSize: '14px',
+    fontSize: '12px',
     '@media (min-device-width: 320px) and (max-device-height: 1024px) and (orientation: portrait)' : {
       paddingLeft: "20px",
+    },
+    '@media (min-device-width: 768px) and (max-device-height: 1024px) and (orientation: portrait)' : {
+      marginLeft: '-85px !important',
     },
 
   },
