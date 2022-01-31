@@ -405,12 +405,12 @@ export default function TodoList({
     })
   }
 
-  function handleTodoItemClick(task) {
+  function handleTodoItemClick(task, pro, tab ) {
     setSelectedTask(task);
     setSplitScreenOpen(true);
     history.push({
       pathname: '/tasks',
-      search: `?taskId=${task?.id}`,
+      search: `?taskId=${task?.id}&detailTab=${tab}`,
       state: { from: history.location.pathname,  search: history.location.search }
     })
     window.document.getElementById('anchor-section').scrollIntoView()
@@ -418,7 +418,7 @@ export default function TodoList({
 
   function handleSplitScreenClose(){
     setSplitScreenOpen(false)
-    if(history.location.state.search.includes('filter')) {
+    if(history.location.state?.search?.includes('filter')) {
       return history.push({
         pathname: '/tasks',
         search: history.location.state.search,

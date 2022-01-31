@@ -24,3 +24,13 @@
     }
     return userPermissionsModule?.permissions?.includes('can_delete_business')
   }
+
+  export function canUpdateBusiness(authState){
+    if (!authState) return false;
+
+    const userPermissionsModule = authState.user?.permissions.find(permissionObject => permissionObject.module === business.module);
+    if (!userPermissionsModule){
+      return false;
+    }
+    return userPermissionsModule?.permissions?.includes('can_update_business')
+  }

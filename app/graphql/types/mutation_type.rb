@@ -85,8 +85,8 @@ module Types
 
     # businesses
     field :business_create, mutation: Mutations::Business::BusinessCreate
-    # Businesses
     field :business_delete, mutation: Mutations::Business::BusinessDelete
+    field :business_update, mutation: Mutations::Business::BusinessUpdate
 
     # posts
     field :log_read_post, mutation: Mutations::Post::LogReadPost

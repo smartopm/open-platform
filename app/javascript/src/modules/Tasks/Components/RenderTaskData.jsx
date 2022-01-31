@@ -2,12 +2,13 @@
 /* eslint-disable max-len */
 /* eslint-disable max-lines */
 import React from 'react';
-import { useTranslation } from 'react-i18next';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-apollo';
 import { Checkbox, Grid, IconButton, Typography } from '@material-ui/core';
 import Divider from '@mui/material/Divider';
 import Hidden from '@material-ui/core/Hidden';
+import Tooltip from '@mui/material/Tooltip';
 import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import AccountTreeIcon from '@material-ui/icons/AccountTree';
@@ -158,7 +159,13 @@ export function TaskDataList({
   return (
     <Card styles={styles} contentStyles={{ padding: '4px' }}>
       <Grid container>
-        <Grid item md={5} xs={10} style={{ display: 'flex', alignItems: 'center' }} data-testid="task_body_section">
+        <Grid
+          item
+          md={4}
+          xs={10}
+          style={{ display: 'flex', alignItems: 'center' }}
+          data-testid="task_body_section"
+        >
           <Grid container style={{ display: 'flex', alignItems: 'center' }}>
             <Grid item md={2} xs={2}>
               <IconButton
@@ -169,27 +176,43 @@ export function TaskDataList({
                 size="medium"
                 disabled={clientView}
               >
-                { task.completed ? (
+                {task.completed ? (
                   <CheckCircleIcon htmlColor="#4caf50" />
-                  ) : (
-                    <CheckCircleOutlineIcon />
-                  )}
+                ) : (
+                  <CheckCircleOutlineIcon />
+                )}
               </IconButton>
             </Grid>
-            <Grid item md={8} xs={4}>
-              <Typography
-                variant="body2"
-                data-testid="task_body"
-                component="p"
-                className={matches ? classes.taskBodyMobile : classes.taskBody}
+            <Grid item md={8} xs={10}>
+              <Tooltip
+                title={task.body}
+                arrow
+                placement="bottom"
+                componentsProps={{
+                  tooltip: {
+                    sx: {
+                      bgcolor: 'primary',
+                      '& .MuiTooltip-arrow': {
+                        color: 'primary'
+                      }
+                    }
+                  }
+                }}
               >
-                <span
-            // eslint-disable-next-line react/no-danger
-                  dangerouslySetInnerHTML={{
-              __html: sanitizeText(removeNewLines(task.body))
-            }}
-                />
-              </Typography>
+                <Typography
+                  variant="body2"
+                  data-testid="task_body"
+                  component="p"
+                  className={matches ? classes.taskBodyMobile : classes.taskBody}
+                >
+                  <span
+                    // eslint-disable-next-line react/no-danger
+                    dangerouslySetInnerHTML={{
+                      __html: sanitizeText(removeNewLines(task.body))
+                    }}
+                  />
+                </Typography>
+              </Tooltip>
             </Grid>
             <Grid item md={1} xl={1}>
               <Hidden smDown>
@@ -205,17 +228,16 @@ export function TaskDataList({
                 </IconButton>
               </Hidden>
             </Grid>
-            {  !clientView &&  (
-            <Hidden smDown>
-              <Divider orientation="vertical" flexItem sx={{margin: '-20px 0'}} />
-            </Hidden>
-)}
+            {!clientView && (
+              <Hidden smDown>
+                <Divider orientation="vertical" flexItem sx={{ margin: '-20px 10px' }} />
+              </Hidden>
+            )}
           </Grid>
         </Grid>
-        {
-          !clientView && (
+        {!clientView && (
           <Hidden mdUp>
-            <Grid item md={1} xs={1} style={{ display: 'flex', alignItems: 'center', }}>
+            <Grid item md={1} xs={1} style={{ display: 'flex', alignItems: 'center' }}>
               <Box className={classes.taskMenuIcon}>
                 <IconButton
                   aria-controls="simple-menu"
@@ -232,135 +254,190 @@ export function TaskDataList({
           </Hidden>
         )}
         <Hidden smDown>
-          <Grid item data-testid="task_due_date" md={2} xs={12} style={{ display: 'flex', alignItems: 'center', }}>
+          <Grid
+            item
+            data-testid="task_due_date"
+            md={2}
+            xs={12}
+            style={{ display: 'flex', alignItems: 'center' }}
+          >
             <Typography variant="body2" component="span">
-              {t('task.due_date')}
-              {task.dueDate ? dateToString(task.dueDate) : 'Never '}
+              {task.dueDate && t('task:sub_task.due')}
+              {task.dueDate && dateToString(task.dueDate)}
             </Typography>
           </Grid>
         </Hidden>
-        <Grid item md={1} xs={6} data-testid="task_assignee" style={{ display: 'flex', alignItems: 'center' }}>
+        <Grid
+          item
+          md={1}
+          xs={4}
+          data-testid="task_assignee"
+          style={{ display: 'flex', alignItems: 'center' }}
+        >
           <Hidden smDown>
             {task.assignees.length > 0 && (
-            <Grid container style={{paddingLeft: '5px'}}>
-              {/* Restrict to 2 users */}
-              {task.assignees.slice(0, 2).map(user => (
-                <Grid item md={4} xs={2} key={user.id}>
-                  <LinkToUserAvatar key={user.id} user={user} />
-                </Grid>
+              <Grid container style={{ paddingLeft: '5px' }}>
+                {task.assignees.slice(0, 2).map(user => (
+                  <Grid item md={4} xs={2} key={user.id}>
+                    <LinkToUserAvatar key={user.id} user={user} />
+                  </Grid>
                 ))}
-              <Grid item md={2} xs={1}>
-                {task.assignees.length > 2 && (
-                <IconButton
-                  aria-controls="more-assignees"
-                  aria-haspopup="true"
-                  data-testid="more-assignees"
-                  style={{
-                      padding: 0,
-                      margin: 0,
-                      fontSize: '8px',
-                      color: '#000000',
-                      opacity: '0.2'
-                    }}
-                >
-                  <MoreHorizIcon />
-                </IconButton>
-                )}
+                <Grid item md={2} xs={1}>
+                  {task.assignees.length > 2 && (
+                    <IconButton
+                      aria-controls="more-assignees"
+                      aria-haspopup="true"
+                      data-testid="more-assignees"
+                      style={{
+                        padding: 0,
+                        margin: 0,
+                        fontSize: '8px',
+                        color: '#000000',
+                        opacity: '0.2'
+                      }}
+                    >
+                      <MoreHorizIcon />
+                    </IconButton>
+                  )}
+                </Grid>
               </Grid>
-            </Grid>
-          )}
+            )}
           </Hidden>
         </Grid>
-        <Grid item data-testid="task_details_section" md={2} xs={10}>
-          <Grid container data-testid="progress_bar_small_screen" style={{ display: 'flex', justifyContent: 'flex-end' }}>
-            {
-              !clientView && (
-              <Grid item md={2} xs={4}>
+        <Grid
+          item
+          data-testid="task_details_section"
+          md={3}
+          xs={10}
+          className={classes.detailsSection}
+        >
+          <Grid
+            container
+            data-testid="progress_bar_small_screen"
+            style={{ display: 'flex', justifyContent: 'flex-end' }}
+          >
+            {!clientView && task?.subTasks?.length > 0 && (
+              <Grid item md={2} xs={4} className={classes.progressBar}>
                 <Hidden mdUp>
                   <CustomProgressBar task={task} smDown />
                 </Hidden>
-
               </Grid>
             )}
 
-            <Grid item md={2} xs={1}>
-              <IconButton
-                aria-controls="task-subtasks-icon"
-                aria-haspopup="true"
-                data-testid="task_subtasks"
-                onClick={handleClick}
+            <Grid item md={10} xs={6}>
+              <Grid
+                container
+                style={{ display: 'flex', justifyContent: 'space-between' }}
+                className={classes.detailsContainer}
               >
-                <AccountTreeIcon fontSize="small" color={task?.subTasks?.length ? 'primary': 'disabled'} />
-              </IconButton>
-            </Grid>
-            <Grid item md={1} xs={1} className={classes.iconItem}><span>{task?.subTasks?.length}</span></Grid>
-            <Grid item md={2} xs={1}>
-              <IconButton
-                aria-controls="task-comment-icon"
-                aria-haspopup="true"
-                data-testid="task_comments"
-                onClick={handleClick}
-              >
-                <QuestionAnswerIcon fontSize="small" color={data?.taskComments.length ? 'primary': 'disabled'} />
-              </IconButton>
-            </Grid>
-            <Grid item md={1} xs={1} className={classes.iconItem}><span data-testid='task-comment'>{data?.taskComments.length || 0}</span></Grid>
-            <Grid item md={2} xs={1}>
-              <IconButton
-                key={task.id}
-                aria-controls="task-attach-file-icon"
-                aria-haspopup="true"
-                data-testid="task_attach_file"
-                onClick={handleClick}
-              >
-                <AttachFileIcon fontSize="small" color={task?.documents?.length ? 'primary': 'disabled'} />
-              </IconButton>
-            </Grid>
-            <Grid item md={1} xs={1} className={classes.iconItem}>
-              <span data-testid="file_attachments_total">
-                {task.documents?.length}
-              </span>
+                <Grid item md={2} xs={1}>
+                  <IconButton
+                    aria-controls="task-subtasks-icon"
+                    aria-haspopup="true"
+                    data-testid="task_subtasks"
+                    onClick={() => handleClick('subtasks')}
+                  >
+                    <AccountTreeIcon
+                      fontSize="small"
+                      color={task?.subTasks?.length ? 'primary' : 'disabled'}
+                    />
+                  </IconButton>
+                </Grid>
+
+                <Grid
+                  item
+                  md={1}
+                  xs={1}
+                  className={classes.iconItem}
+                  style={{ marginLeft: '-20px' }}
+                >
+                  <span>{task?.subTasks?.length}</span>
+                </Grid>
+
+                <Grid item md={2} xs={1}>
+                  <IconButton
+                    aria-controls="task-comment-icon"
+                    aria-haspopup="true"
+                    data-testid="task_comments"
+                    onClick={() => handleClick('comments')}
+                  >
+                    <QuestionAnswerIcon
+                      fontSize="small"
+                      color={data?.taskComments.length ? 'primary' : 'disabled'}
+                    />
+                  </IconButton>
+                </Grid>
+
+                <Grid
+                  item
+                  md={1}
+                  xs={1}
+                  className={classes.iconItem}
+                  style={{ marginLeft: '-20px' }}
+                >
+                  <span data-testid="task-comment">{data?.taskComments.length || 0}</span>
+                </Grid>
+
+                <Grid item md={2} xs={1}>
+                  <IconButton
+                    key={task.id}
+                    aria-controls="task-attach-file-icon"
+                    aria-haspopup="true"
+                    data-testid="task_attach_file"
+                    onClick={() => handleClick('documents')}
+                  >
+                    <AttachFileIcon
+                      fontSize="small"
+                      color={task?.documents?.length ? 'primary' : 'disabled'}
+                    />
+                  </IconButton>
+                </Grid>
+                <Grid
+                  item
+                  md={1}
+                  xs={1}
+                  className={classes.iconItem}
+                  style={{ marginLeft: '-25px' }}
+                >
+                  <span data-testid="file_attachments_total">{task.documents?.length || 0}</span>
+                </Grid>
+              </Grid>
             </Grid>
           </Grid>
         </Grid>
-        {
-              !clientView && (
-              <Grid
-                item
-                md={1}
-                style={{ display: 'flex', alignItems: 'center',
-              justifyContent: 'flex-end' }}
-                data-testid="progress_bar_large_screen"
-              >
-                <Hidden smDown>
-                  <CustomProgressBar task={task} smDown={false} />
-                </Hidden>
-    
-              </Grid>
-            )}
+        {!clientView && task?.subTasks?.length > 0 && (
+          <Grid
+            item
+            md={1}
+            style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}
+            data-testid="progress_bar_large_screen"
+          >
+            <Hidden smDown>
+              <CustomProgressBar task={task} smDown={false} />
+            </Hidden>
+          </Grid>
+        )}
 
-        <Grid item md={1} xs={2} style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }} className={classes.arrowDownUpIcon}>
-          {task?.subTasks?.length > 0
-            ? (
-              <IconButton
-                aria-controls="show-task-subtasks-icon"
-                aria-haspopup="true"
-                data-testid="show_task_subtasks"
-                onClick={(e) => handleOpenSubTasksClick(e)}
-              >
-                {openSubTask
-                  ? <KeyboardArrowUpIcon fontSize="small" color="primary" />
-                  : <KeyboardArrowDownIcon fontSize="small" color="primary" />}
-              </IconButton>
-            ) : (
-              <IconButton
-                aria-controls="show-task-subtasks-icon"
-                aria-haspopup="true"
-                data-testid="show_task_subtasks"
-                disabled
-              >
-                <KeyboardArrowDownIcon fontSize="small" />
-              </IconButton>
+        <Grid
+          item
+          md={1}
+          xs={2}
+          style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}
+          className={classes.arrowDownUpIcon}
+        >
+          {task?.subTasks?.length > 0 && (
+            <IconButton
+              aria-controls="show-task-subtasks-icon"
+              aria-haspopup="true"
+              data-testid="show_task_subtasks"
+              onClick={e => handleOpenSubTasksClick(e)}
+            >
+              {openSubTask ? (
+                <KeyboardArrowUpIcon fontSize="small" color="primary" />
+              ) : (
+                <KeyboardArrowDownIcon fontSize="small" color="primary" />
+              )}
+            </IconButton>
           )}
         </Grid>
       </Grid>
@@ -427,7 +504,7 @@ const useStyles = makeStyles(() => ({
     paddingLeft: '3px'
   },
   taskBodyMobile: {
-    maxWidth: '17ch',
+    maxWidth: '30ch',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
@@ -439,11 +516,21 @@ const useStyles = makeStyles(() => ({
     width: '45%',
     justifyContent: 'space-evenly'
   },
+  detailsContainer: {
+    '@media (min-device-width: 768px) and (max-device-height: 1024px) and (orientation: portrait)': {
+      justifyContent: 'flex-end'
+    }
+  },
   iconItem: {
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'center',
-    fontSize: '14px'
+    fontSize: '12px',
+    '@media (min-device-width: 320px) and (max-device-height: 1024px) and (orientation: portrait)': {
+      paddingLeft: '20px'
+    },
+    '@media (min-device-width: 768px) and (max-device-height: 1024px) and (orientation: portrait)': {
+      marginLeft: '-85px !important'
+    }
   },
   completed: {
     backgroundColor: '#4caf50',
@@ -453,32 +540,38 @@ const useStyles = makeStyles(() => ({
     backgroundColor: '#2196f3',
     color: '#ffffff'
   },
-
   taskMenuIcon: {
-   '@media (min-device-width: 375px) and (max-device-height: 667px) and (orientation: portrait)' : {
-    marginLeft: "6px",
-  },
-  '@media (min-device-width: 375px) and (max-device-height: 812px) and (orientation: portrait)' : {
-    marginLeft: "6px",
-  },
-  '@media (min-device-width: 360px) and (max-device-height: 640px) and (orientation: portrait)' : {
-    marginLeft: "7px",
-  },
-  '@media (min-device-width: 414px) and (max-device-height: 736px) and (orientation: portrait)' : {
-    marginLeft: "12px",
-  },
-  '@media (min-device-width: 768px) and (max-device-height: 1024px) and (orientation: portrait)' : {
-    marginLeft: "20px",
-  },
+    '@media (min-device-width: 375px) and (max-device-height: 667px) and (orientation: portrait)': {
+      marginLeft: '6px'
+    },
+    '@media (min-device-width: 375px) and (max-device-height: 812px) and (orientation: portrait)': {
+      marginLeft: '6px'
+    },
+    '@media (min-device-width: 360px) and (max-device-height: 640px) and (orientation: portrait)': {
+      marginLeft: '7px'
+    },
+    '@media (min-device-width: 414px) and (max-device-height: 736px) and (orientation: portrait)': {
+      marginLeft: '12px'
+    },
+    '@media (min-device-width: 768px) and (max-device-height: 1024px) and (orientation: portrait)': {
+      marginLeft: '20px'
+    }
   },
 
   arrowDownUpIcon: {
-    '@media (min-device-width: 768px) and (max-device-height: 1024px) and (orientation: portrait)' : {
-      marginLeft: "-45px",
+    '@media (min-device-width: 768px) and (max-device-height: 1024px) and (orientation: portrait)': {
+      marginLeft: '-45px'
     },
-    '@media (min-device-width: 540px) and (max-device-height: 720px) and (orientation: portrait)' : {
-      marginLeft: "-25px",
-    },
+    '@media (min-device-width: 540px) and (max-device-height: 720px) and (orientation: portrait)': {
+      marginLeft: '-25px'
+    }
+  },
 
+  customTooltip: {
+    backgroundColor: '#FFFFFF',
+    color: '#000000',
+    border: '.5px solid #999999',
+    fontSize: '.85rem',
+    fontWeight: '400'
   }
 }));

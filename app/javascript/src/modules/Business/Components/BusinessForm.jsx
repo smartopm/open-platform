@@ -3,15 +3,16 @@
 
 import React, { useState } from 'react';
 import {
-  TextField, Container, Button, Typography, FormControl, InputLabel, Select, MenuItem
+  TextField, Container, Button, Typography, FormControl, InputLabel, Select, MenuItem, Grid, IconButton
 } from '@material-ui/core';
 import { css } from 'aphrodite';
 import { useMutation } from 'react-apollo';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import CenteredContent from '../../../components/CenteredContent';
+import EditIcon from '@material-ui/icons/Edit';
+import CenteredContent from '../../../shared/CenteredContent';
 import { discussStyles } from '../../../components/Discussion/Discuss';
-import { BusinessCreateMutation } from '../graphql/business_mutations';
+import { BusinessCreateMutation, BusinessUpdateMutation } from '../graphql/business_mutations';
 import UserSearch from '../../Users/Components/UserSearch';
 import { businessCategories, businessStatus } from '../../../utils/constants';
 
@@ -25,7 +26,7 @@ const initialData = {
   description: '',
   imageUrl: '',
   address: '',
-  operatingHours: ''
+  operationHours: ''
 };
 
 const initialUserData = {
@@ -33,13 +34,15 @@ const initialUserData = {
   userId: ''
 };
 
-export default function BusinessForm({ close }) {
-  const [data, setData] = useState(initialData);
-  const [userData, setUserData] = useState(initialUserData);
+export default function BusinessForm({ close, businessData, action }) {
+  const [data, setData] = useState(action === 'edit' ? businessData : initialData);
+  const [userData, setUserData] = useState(action === 'edit' ? { userId: businessData?.userId } : initialUserData);
   const [error, setError] = useState(null);
-  const { t } = useTranslation(['common'])
+  const [editingUser, setEditingUser] = useState(false);
+  const { t } = useTranslation(['common']);
 
   const [createBusiness] = useMutation(BusinessCreateMutation);
+  const [updateBusiness] = useMutation(BusinessUpdateMutation);
 
   function handleInputChange(event) {
     const { name, value } = event.target;
@@ -49,22 +52,33 @@ export default function BusinessForm({ close }) {
     });
   }
 
-  function handleCreateBusiness(event) {
+  function handleSubmit(event) {
     event.preventDefault();
     const {
-      name, email, phoneNumber, status, homeUrl, category, description, imageUrl, address, operatingHours,
+      name, email, phoneNumber, status, homeUrl, category, description, imageUrl, address, operationHours,
     } = data;
-    createBusiness({
-      variables: {
-        name, email, phoneNumber, status, homeUrl, category, description, imageUrl, address, operatingHours, userId: userData.userId
-      }
-    }).then(() => {
-      close();
-    }).catch((err) => setError(err.message));
+
+    if(action === 'edit'){
+      updateBusiness({
+        variables: {
+          id: businessData.id, name, email, phoneNumber, status, homeUrl, category, description, imageUrl, address, operationHours, userId: userData.userId
+        }
+      }).then(() => {
+        close()
+      }).catch((err) => setError(err.message));
+    }else{
+      createBusiness({
+        variables: {
+          name, email, phoneNumber, status, homeUrl, category, description, imageUrl, address, operationHours, userId: userData.userId
+        }
+      }).then(() => {
+        close();
+      }).catch((err) => setError(err.message));
+    }
   }
   return (
     <Container maxWidth="md">
-      <form onSubmit={handleCreateBusiness}>
+      <form onSubmit={handleSubmit}>
         <TextField
           label={t('form_fields.full_name')}
           name="name"
@@ -78,8 +92,31 @@ export default function BusinessForm({ close }) {
         />
 
         <br />
-        <UserSearch userData={userData} update={setUserData} required />
-        <br />
+        {(editingUser || action === 'create') && <UserSearch userData={userData} update={setUserData} required={!editingUser} />}
+        {(!editingUser && data?.user) && (
+          <>
+            <Grid container>
+              <Grid item sm={11} xs={11}>
+                <TextField
+                  label={t('misc.user')}
+                  name="email"
+                  className="form-control"
+                  value={data?.user?.name}
+                  aria-label="business_user"
+                  inputProps={{ 'data-testid': 'business_user' }}
+                  margin="normal"
+                  disabled
+                  required
+                />
+              </Grid>
+              <Grid item sm={1} xs={1} style={{textAlign: 'right'}}>
+                <IconButton color='primary' style={{ marginTop: '20px'}}>
+                  <EditIcon fontSize="small" onClick={() => setEditingUser(true)} />
+                </IconButton>
+              </Grid>
+            </Grid>
+          </>
+        )}
 
         <TextField
           label={t('form_fields.email')}
@@ -185,9 +222,9 @@ export default function BusinessForm({ close }) {
 
         <TextField
           label={t('form_fields.operating_hours')}
-          name="operatingHours"
+          name="operationHours"
           className="form-control"
-          value={data.operatingHours}
+          value={data.operationHours}
           onChange={handleInputChange}
           aria-label="business_operating_hours"
           inputProps={{ 'data-testid': 'business_operating_hours' }}
@@ -223,7 +260,7 @@ export default function BusinessForm({ close }) {
             className={`${css(discussStyles.submitBtn)}`}
             data-testid='create_business'
           >
-            {t('form_actions.create_business')}
+            {action === 'edit' ? t('form_actions.update_business') : t('form_actions.create_business')}
           </Button>
         </CenteredContent>
       </form>
@@ -231,6 +268,16 @@ export default function BusinessForm({ close }) {
   );
 }
 
+BusinessForm.defaultProps = {
+  businessData: {},
+  action: 'create'
+}
+
 BusinessForm.propTypes = {
-  close: PropTypes.func.isRequired
+  close: PropTypes.func.isRequired,
+  businessData: PropTypes.shape({
+    id: PropTypes.string,
+    userId: PropTypes.string
+  }),
+  action: PropTypes.string
 };

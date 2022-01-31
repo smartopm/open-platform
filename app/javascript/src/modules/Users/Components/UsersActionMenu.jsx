@@ -105,7 +105,7 @@ export default function UsersActionMenu({
             style={{ padding: '0px', marginRight: '15px' }}
           />
         </Grid>
-        <Typography> 
+        <Typography>
           {' '}
           {t('common:misc.select')}
           {' '}

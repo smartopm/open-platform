@@ -147,8 +147,8 @@ export default function TodoItem({
     toggleTask(task)
   }
 
-  function handleTodoItemClick(taskItem) {
-    handleTodoClick(taskItem, 'processes');
+  function handleTodoItemClick(taskItem, tab) {
+    handleTodoClick(taskItem, 'processes', tab);
   }
 
   return (
@@ -171,7 +171,7 @@ export default function TodoItem({
             styles={{marginBottom: 0}}
             openSubTask={objectAccessor(tasksOpen, task.id)}
             handleOpenSubTasksClick={handleParentTaskClick}
-            handleClick={() => handleTodoItemClick(task)}
+            handleClick={(tab) => handleTodoItemClick(task, tab)}
             handleTaskCompletion={handleTaskCompletion}
             clientView={clientView}
           />

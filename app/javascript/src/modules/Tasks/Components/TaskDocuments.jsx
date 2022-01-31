@@ -91,11 +91,7 @@ export default function TaskDocuments({ taskId }) {
         handleClose={() => setMessageDetails({ ...messageDetails, message: '' })}
       />
       <Grid container alignItems="center">
-        <Grid item xs={11} md={11}>
-          <Typography variant="subtitle2" data-testid="documents_title">
-            {t('document.documents')}
-          </Typography>
-        </Grid>
+        <Grid item xs={11} md={11} />
         <Grid item xs={1} md={1} className={classes.addIcon}>
           <IconButton
             edge="end"
@@ -119,8 +115,10 @@ export default function TaskDocuments({ taskId }) {
           </IconButton>
         </Grid>
       </Grid>
-      <Divider variant="fullWidth" data-testid="opening_divider" />
-      {documents?.length ? (
+      {documents?.length > 0 && (
+        <Divider variant="fullWidth" data-testid="opening_divider" />
+      )}
+      {documents?.length && (
         <List>
           {documents.map(doc => (
             <Fragment key={doc.id}>
@@ -177,12 +175,6 @@ export default function TaskDocuments({ taskId }) {
             </Fragment>
           ))}
         </List>
-      ) : (
-        <>
-          <Typography variant='caption' data-testid="no_documents" className={classes.noDocuments}>
-            {t('document.no_documents')}
-          </Typography>
-        </>
       )}
       <Menu
         id={`long-menu-${currentDoc.id}`}

@@ -85,6 +85,19 @@ describe('LogBook Component', () => {
 
       fireEvent.change(container.queryByLabelText('simple tabs example'))
 
+      fireEvent.change(container.queryByTestId('menu-list'))
+      expect(container.queryByText('logbook.view_details')).toBeInTheDocument();
+      expect(container.queryByText('logbook.add_observation')).toBeInTheDocument();
+
+      fireEvent.click(container.queryByText('logbook.add_observation'))
+      expect(container.queryByText('observations.add_your_observation')).toBeInTheDocument();
+
+      fireEvent.change(container.queryByTestId('entry-dialog-field'), {
+        target: { value: 'This is an observation' }
+      });
+      expect(container.queryByTestId('entry-dialog-field').value).toBe('This is an observation');
+      fireEvent.click(container.queryByTestId('save'))
+
       fireEvent.click(container.queryAllByTestId('next-btn')[0])
     })
   });
