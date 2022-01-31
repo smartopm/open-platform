@@ -58,7 +58,6 @@ export default function TaskInfoTop({
   const matches = useMediaQuery('(max-width:800px)');
   const history = useHistory();
   const urlParams = useParams();
-  const [description, setDescription] = useState(data.description);
   const [taskUpdate] = useMutation(UpdateNote);
   const [editingBody, setEditingBody] = useState(false);
   const [editingDueDate, setEditingDueDate] = useState(false);
