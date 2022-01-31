@@ -82,7 +82,7 @@ describe('Campaign List page', () => {
           expect(container.queryByTestId('campaign-title')).toHaveTextContent('Campaigns');
           expect(container.queryByTestId('campaign-item-menu')).toBeInTheDocument();
         },
-        { timeout: 100 }
+        { timeout: 200 }
       );
 
       fireEvent.click(container.queryByTestId('campaign-item-menu'));

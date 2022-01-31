@@ -352,7 +352,7 @@ export default function CampaignSplitScreenContent({ refetch, campaign, handleCl
         </Grid>
         {mailListType === 'label' && (
           <Grid item sm={12} xs={12}>
-            <Grid container>
+            <Grid container style={{paddingBottom: '30px'}}>
               <Grid item sm={4} xs={6} className={classes.labelText}>
                 <CampaignLabels handleLabelSelect={handleLabelSelect} />
               </Grid>

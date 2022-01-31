@@ -134,7 +134,9 @@ export default function CampaignList() {
   if (error) return <ErrorPage />;
   return (
     <Grid container data-testid='container'>
-      <CenteredContent><p>{deleteError}</p></CenteredContent>
+      {deleteError && (
+        <CenteredContent><p>{deleteError}</p></CenteredContent>
+      )}
       <Grid item sm={5} data-testid='campaign-list' className={classes.campaignList} style={{ paddingRight: '10px' }}>
         <div className="container">
           <Grid container>
