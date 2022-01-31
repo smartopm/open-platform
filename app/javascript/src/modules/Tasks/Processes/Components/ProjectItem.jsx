@@ -90,7 +90,6 @@ export default function ProcessItem({ task, taskId, refetch, clientView }) {
       handleChange={handleChange}
       selectedTasks={selectedTasks}
       isSelected={false}
-      handleCompleteNote={() => {}}
       handleAddSubTask={handleAddSubTask}
       handleUploadDocument={handleUploadDocument}
       handleTodoClick={handleTodoItemClick}

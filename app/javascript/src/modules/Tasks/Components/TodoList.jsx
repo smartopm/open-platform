@@ -246,27 +246,6 @@ export default function TodoList({
     setSelectedTask(todoItem);
   }
 
-  function handleCompleteNote(noteId, completed) {
-    taskUpdate({
-      variables: { id: noteId, completed: !completed }
-    })
-      .then(() => {
-        setTaskUpdateStatus({
-          ...taskUpdateStatus,
-          success: true,
-          message: `${t('task.task_marked_as')} ${completed ? t('task.incomplete') : t('task.complete')}`,
-        })
-        refetch()
-      })
-      .catch(err => {
-        setTaskUpdateStatus({
-          ...taskUpdateStatus,
-          success: false,
-          message: formatError(err.message),
-        })
-      })
-  }
-
   function paginate(action) {
     if (action === 'prev') {
       if (offset < limit) {
@@ -570,7 +549,6 @@ export default function TodoList({
                     handleChange={handleChange}
                     selectedTasks={selectedTasks}
                     isSelected={checkedOptions === 'all'}
-                    handleCompleteNote={handleCompleteNote}
                     handleAddSubTask={handleAddSubTask}
                     handleUploadDocument={handleUploadDocument}
                     handleTodoClick={handleTodoItemClick}
