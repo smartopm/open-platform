@@ -335,7 +335,7 @@ export function TaskDataList({
                     aria-controls="task-subtasks-icon"
                     aria-haspopup="true"
                     data-testid="task_subtasks"
-                    onClick={handleClick}
+                    onClick={() => handleClick('subtasks')}
                   >
                     <AccountTreeIcon
                       fontSize="small"
@@ -359,7 +359,7 @@ export function TaskDataList({
                     aria-controls="task-comment-icon"
                     aria-haspopup="true"
                     data-testid="task_comments"
-                    onClick={handleClick}
+                    onClick={() => handleClick('comments')}
                   >
                     <QuestionAnswerIcon
                       fontSize="small"
@@ -384,7 +384,7 @@ export function TaskDataList({
                     aria-controls="task-attach-file-icon"
                     aria-haspopup="true"
                     data-testid="task_attach_file"
-                    onClick={handleClick}
+                    onClick={() => handleClick('documents')}
                   >
                     <AttachFileIcon
                       fontSize="small"
