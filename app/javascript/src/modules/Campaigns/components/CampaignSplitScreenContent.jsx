@@ -166,7 +166,7 @@ export default function CampaignSplitScreenContent({ refetch, campaign, handleCl
     }
   }, [campaign]);
   return (
-    <Grid container className={matches ? classes.container : classes.containerMobile}>
+    <Grid container data-testid='container' className={matches ? classes.container : classes.containerMobile}>
       {!matches && (
         <Grid item xs={12} className={classes.breadCrumb}>
           <Breadcrumbs aria-label="breadcrumb">
@@ -195,7 +195,7 @@ export default function CampaignSplitScreenContent({ refetch, campaign, handleCl
         <CampaignStatCard data={campaign.campaignMetrics} />
       )}
       <Grid item sm={9} xs={6}>
-        <Typography variant="h6" className={classes.title}>
+        <Typography variant="h6" data-testid='title' className={classes.title}>
           {campaign ? 'Edit Campaign' : 'New Campaign'}
         </Typography>
       </Grid>
@@ -206,13 +206,14 @@ export default function CampaignSplitScreenContent({ refetch, campaign, handleCl
             disabled={mutationLoading}
             className={classes.button}
             variant="contained"
+            data-testid='save-campaign'
             onClick={e => handleSubmit(e)}
           >
             Save Changes
           </Button>
         </Grid>
       )}
-      <Grid item sm={12} xs={12} className={classes.liveEvent}>
+      <Grid item sm={12} xs={12} className={classes.liveEvent} data-testid='name'>
         <TextFieldLiveEdit
           placeHolderText="Add a Campaign Title"
           textVariant="h5"
@@ -225,7 +226,7 @@ export default function CampaignSplitScreenContent({ refetch, campaign, handleCl
       </Grid>
       <Grid container className={classes.topInfo}>
         <Grid item sm={3} xs={12}>
-          <Typography variant="caption" color="textSecondary">
+          <Typography variant="caption" color="textSecondary" data-testid='status'>
             Status
           </Typography>
         </Grid>
@@ -254,7 +255,7 @@ export default function CampaignSplitScreenContent({ refetch, campaign, handleCl
       </Grid>
       <Grid container className={classes.topInfo}>
         <Grid item sm={3} xs={12}>
-          <Typography variant="caption" color="textSecondary">
+          <Typography variant="caption" color="textSecondary" data-testid='batch-time'>
             Batch Time
           </Typography>
         </Grid>
@@ -274,7 +275,7 @@ export default function CampaignSplitScreenContent({ refetch, campaign, handleCl
             </Typography>
           </Grid>
           <Grid item sm={9} xs={12}>
-            <ButtonGroup color="primary" aria-label="status button">
+            <ButtonGroup color="primary" aria-label="status button" data-testid='type'>
               <Button style={buttonStyle('sms')} onClick={() => handleTypeButtonClick('sms')}>
                 <Typography variant='body2'>SMS</Typography>
               </Button>
@@ -317,7 +318,7 @@ export default function CampaignSplitScreenContent({ refetch, campaign, handleCl
       </Grid>
       <Grid container>
         <Grid item sm={12} xs={12}>
-          <Typography variant="caption" color="textSecondary">
+          <Typography variant="caption" color="textSecondary" data-testid='message'>
             Message
           </Typography>
         </Grid>
@@ -335,7 +336,7 @@ export default function CampaignSplitScreenContent({ refetch, campaign, handleCl
       </Grid>
       <Grid container>
         <Grid item sm={3} xs={12}>
-          <Typography variant="caption" color="textSecondary">
+          <Typography variant="caption" color="textSecondary" data-testid='mail-list'>
             Setup Mailing List
           </Typography>
         </Grid>
@@ -365,7 +366,7 @@ export default function CampaignSplitScreenContent({ refetch, campaign, handleCl
                     className={classes.chip}
                   />
                 ))}
-                {Boolean(formData.labels.length) &&
+                {Boolean(formData.labels?.length) &&
                   formData.labels.map(labl => (
                     <Chip
                       data-testid="campaignChip-label"
@@ -430,10 +431,7 @@ const useStyles = makeStyles(() => ({
     fontSize: '14px'
   },
   root: {
-    color: '#797979',
-    '&$checked': {
-      color: '#797979'
-    }
+    color: '#797979'
   },
   chip: {
     margin: '20px 10px 0 10px'
@@ -455,13 +453,17 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
+CampaignSplitScreenContent.defaultProps= {
+  campaign: null
+}
+
 CampaignSplitScreenContent.propTypes = {
   campaign: PropTypes.shape({
     id: PropTypes.string,
     status: PropTypes.string,
     // eslint-disable-next-line react/forbid-prop-types
     campaignMetrics: PropTypes.object
-  }).isRequired,
+  }),
   refetch: PropTypes.func.isRequired,
   handleClose: PropTypes.func.isRequired
 };

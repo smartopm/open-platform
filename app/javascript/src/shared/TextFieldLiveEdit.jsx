@@ -29,6 +29,7 @@ export default function TextFieldLiveEdit({
           variant={textVariant}
           color="textSecondary"
           className={classes.typography}
+          data-testid="live-field-text"
         >
           {text === '' ? placeHolderText : text}
         </Typography>
@@ -44,6 +45,7 @@ export default function TextFieldLiveEdit({
           value={text}
           onChange={e => handleChange(e)}
           name={name}
+          data-testid="live-field-input"
         />
       )}
     </div>

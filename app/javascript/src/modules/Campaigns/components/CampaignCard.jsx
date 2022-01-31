@@ -19,13 +19,13 @@ export default function CampaignCard({ camp, menuData, handleClick }) {
         styles={{ marginBottom: '10px' }}
         contentStyles={{ padding: '4px 4px 4px 10px' }}
       >
-        <Grid container spacing={5} justifyContent="center" alignItems="center">
+        <Grid container spacing={5} className={classes.container}>
           <Grid item md={2} xs={3}>
-            <Typography variant="caption" color="textSecondary" component="span">
+            <Typography variant="caption" color="textSecondary" component="span" data-testid='batch-time'>
               {camp.batchTime ? dateToString(camp.batchTime) : 'Never '}
             </Typography>
           </Grid>
-          <Grid item md={8} xs={6}>
+          <Grid item md={8} xs={6} data-testid='name'>
             <Typography
               variant="body2"
               data-testid="campaign_name"
@@ -68,6 +68,10 @@ const useStyles = makeStyles(() => ({
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
     paddingLeft: '3px'
+  },
+  container: {
+    justifyContent: "center", 
+    alignItems: "center"
   }
 }));
 

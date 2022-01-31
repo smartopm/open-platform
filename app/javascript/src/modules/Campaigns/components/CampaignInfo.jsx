@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/styles';
 import Button from '@material-ui/core/Button';
@@ -9,7 +10,7 @@ export default function CampaignInfo({ title, buttonText, handleClick }) {
   return (
     <CenteredContent>
       <div className={classes.noCampaigns}>
-        <Typography variant="body1" color="textSecondary">
+        <Typography variant="body1" color="textSecondary" data-testid='title'>
           {title}
         </Typography>
         <Button
@@ -17,6 +18,7 @@ export default function CampaignInfo({ title, buttonText, handleClick }) {
           variant="contained"
           color="primary"
           onClick={handleClick}
+          data-testid='button'
         >
           {buttonText}
         </Button>
@@ -38,3 +40,9 @@ const useStyles = makeStyles(() => ({
     color: 'white'
   }
 }));
+
+CampaignInfo.propTypes = {
+  title: PropTypes.string.isRequired,
+  buttonText: PropTypes.string.isRequired,
+  handleClick: PropTypes.func.isRequired
+};

@@ -19,13 +19,14 @@ export default function SplitScreen({ children, open, onClose, classes }) {
 }
 
 SplitScreen.defaultProps = {
-  classes: {}
+  classes: {},
+  onClose: () => {}
 }
 
 SplitScreen.propTypes = {
   open: PropTypes.bool.isRequired,
   children: PropTypes.node.isRequired,
-  onClose: PropTypes.func.isRequired,
+  onClose: PropTypes.func,
   // eslint-disable-next-line react/forbid-prop-types
   classes: PropTypes.object,
 };

@@ -40,9 +40,9 @@ export default function CampaignList() {
   const [deletingCampaign, setDeletingCampaign] = useState(false);
   const [campaign, setCampaign] = useState(null);
   const [show, setShow] = useState(false);
-  // const [showMobileSplitScreen, setShowMobileSplitScreen] = useState(false);
   const [deleteCampaign] = useMutation(DeleteCampaign);
   const anchorElOpen = Boolean(anchorEl);
+  const [deleteError, setDeleteError] = useState(null)
   const debouncedSearchText = useDebounce(searchText, 500);
   const { data, error, loading, refetch } = useQuery(allCampaigns, {
     variables: { limit, offset, query: debouncedSearchText },
@@ -104,7 +104,9 @@ export default function CampaignList() {
       handleMenuClose();
       handleDeleteClick();
       refetch();
-    });
+    }).catch(err => {
+      setDeleteError(err.message)
+    })
   }
 
   function routeToAction(camId) {
@@ -131,20 +133,22 @@ export default function CampaignList() {
   if (loading) return <Loading />;
   if (error) return <ErrorPage />;
   return (
-    <Grid container>
-      <Grid item sm={5} className={classes.campaignList} style={{ paddingRight: '10px' }}>
+    <Grid container data-testid='container'>
+      <CenteredContent><p>{deleteError}</p></CenteredContent>
+      <Grid item sm={5} data-testid='campaign-list' className={classes.campaignList} style={{ paddingRight: '10px' }}>
         <div className="container">
           <Grid container>
             <Grid item sm={12} style={{ marginBottom: '20px' }}>
               <Grid container>
                 <Grid item sm={10} xs={10}>
-                  <Typography variant="h4">Campaigns</Typography>
+                  <Typography data-testid='campaign-title' variant="h4">Campaigns</Typography>
                 </Grid>
                 <Grid item sm={2} xs={2} style={{ textAlign: 'right' }}>
                   <Tooltip title="New Campaign" placement="top">
                     <IconButton
                       aria-label="new-campaign"
                       color="primary"
+                      data-testid='new-campaign'
                       onClick={() => handleCreateCampaign()}
                     >
                       <AddCircleIcon />
