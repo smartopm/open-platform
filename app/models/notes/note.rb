@@ -43,7 +43,7 @@ module Notes
     before_save :log_completed_at, if: -> { completed_changed? && completed.eql?(true) }
     after_create :log_create_event
     after_update :log_update_event
-    # before_save :update_current_step, if: -> { completed_changed? }
+    after_update :update_current_step
 
     default_scope { order(created_at: :desc) }
     scope :by_due_date, ->(date) { where('due_date <= ?', date) }
@@ -87,16 +87,13 @@ module Notes
     end
 
     def check_current_process_step
-      steps = []
-      self.sub_notes.each do |note|
-        steps << note if !note.completed
-      end
-      steps&.first
+      step = self.parent_note.sub_notes&.where(completed: false)&.first
+      step
     end
 
     # update the note
     def update_current_step
-        self.update(current_step_body: check_current_process_step&.body)
+      self.parent_note.update(current_step_body: check_current_process_step&.body)
     end
 
     private
