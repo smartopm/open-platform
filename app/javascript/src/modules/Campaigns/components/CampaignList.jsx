@@ -213,9 +213,9 @@ export default function CampaignList() {
 const useStyles = makeStyles(() => ({
   splitScreen: {
     background: '#FAFAFA',
-    height: '92vh',
+    height: '100vh',
     marginTop: '-20px',
-    // position: 'absolute',
+    // position: 'fixed',
     right: 0,
     width: '100%',
     overflowX: 'hidden',
@@ -223,6 +223,6 @@ const useStyles = makeStyles(() => ({
   },
   campaignList: {
     overflowX: 'hidden',
-    overflowY: 'auto',
+    overflowY: 'auto'
   }
 }));
