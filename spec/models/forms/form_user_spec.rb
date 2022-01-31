@@ -35,5 +35,26 @@ RSpec.describe Forms::FormUser, type: :model do
       expect(latest_note.user_id).to eq(user.id)
       expect(latest_note.author_id).to eq(user.id)
     end
+
+    it 'calls TaskCreate.new_from_template for DRC form' do
+      form.update(name: 'DRC Project Review Process', grouping_id: form.id)
+      form.community.update(name: 'DoubleGDP')
+
+      expect(TaskCreate).to receive(:new_from_template)
+      form_user.create_form_task('dev.dgdp.site')
+    end
+
+    it 'does not call TaskCreate.new_from_template for non DRC form' do
+      # Create DRC form to ensure is will be ignored
+      drc_form = create(:form, community: user.community, name: 'DRC Project Review Process')
+      drc_form.update(grouping_id: drc_form.id)
+
+      form.update(name: 'A random form', grouping_id: form.id)
+      form.community.update(name: 'DoubleGDP')
+
+      expect(TaskCreate).not_to receive(:new_from_template)
+      expect(TaskCreate).to receive(:new_from_action)
+      form_user.create_form_task('dev.dgdp.site')
+    end
   end
 end

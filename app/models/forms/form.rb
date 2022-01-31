@@ -55,6 +55,8 @@ module Forms
 
     def drc_form?
       form_name = 'DRC Project Review Process'
+      return false unless name.match?(/^#{form_name}/i)
+
       first_version = community.forms.find_by(name: form_name)
 
       return false if first_version.blank?
