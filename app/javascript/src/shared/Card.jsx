@@ -19,7 +19,7 @@ export default function CardComponent({
       <Card
         elevation={0}
         className={`${clickData?.clickable ? classes.cardClickable : classes.card} ${className}`}
-        onClick={clickData?.clickable ? (e) =>  clickData?.handleClick(e) : null}
+        onClick={clickData?.clickable ? e => clickData?.handleClick(e) : null}
         style={styles}
         variant="outlined"
         data-testid="card"
@@ -50,7 +50,8 @@ CardComponent.defaultProps = {
   },
   styles: {},
   contentStyles: { padding: '10px' },
-  primaryColor: false
+  primaryColor: false,
+  className: {}
 };
 
 CardComponent.propTypes = {
@@ -63,5 +64,7 @@ CardComponent.propTypes = {
   styles: PropTypes.object,
   // eslint-disable-next-line react/forbid-prop-types
   contentStyles: PropTypes.object,
-  primaryColor: PropTypes.bool
+  primaryColor: PropTypes.bool,
+  // eslint-disable-next-line react/forbid-prop-types
+  className: PropTypes.object
 };

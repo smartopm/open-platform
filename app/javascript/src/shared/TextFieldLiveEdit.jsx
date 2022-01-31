@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/styles';
+import PropTypes from 'prop-types';
 
 export default function TextFieldLiveEdit({
   text,
@@ -36,12 +37,12 @@ export default function TextFieldLiveEdit({
           placeholder={placeHolderText}
           onMouseOut={() => setEdit(false)}
           variant={textFieldVariant}
-          fullWidth={fullWidth || undefined}
-          multiline={multiline || undefined}
-          rows={rows || undefined}
-          color='primary'
+          fullWidth={fullWidth}
+          multiline={multiline}
+          rows={rows}
+          color="primary"
           value={text}
-          onChange={(e) => handleChange(e)}
+          onChange={e => handleChange(e)}
           name={name}
         />
       )}
@@ -57,3 +58,25 @@ const useStyles = makeStyles(() => ({
     fontWeight: '300'
   }
 }));
+
+TextFieldLiveEdit.defaultProps = {
+  styles: {},
+  text: '',
+  fullWidth: undefined,
+  multiline: undefined,
+  rows: undefined
+};
+
+TextFieldLiveEdit.propTypes = {
+  text: PropTypes.string,
+  placeHolderText: PropTypes.string.isRequired,
+  textVariant: PropTypes.string.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  styles: PropTypes.object,
+  textFieldVariant: PropTypes.string.isRequired,
+  fullWidth: PropTypes.bool,
+  multiline: PropTypes.bool,
+  handleChange: PropTypes.func.isRequired,
+  name: PropTypes.string.isRequired,
+  rows: PropTypes.number
+};

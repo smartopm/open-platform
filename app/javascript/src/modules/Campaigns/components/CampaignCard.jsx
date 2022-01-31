@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/styles';
@@ -6,7 +7,6 @@ import { IconButton } from '@material-ui/core';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Card from '../../../shared/Card';
-// import CampaignDeleteDialogue from './CampaignDeleteDialogue';
 import { dateToString } from '../../../components/DateContainer';
 
 export default function CampaignCard({ camp, menuData, handleClick }) {
@@ -70,3 +70,15 @@ const useStyles = makeStyles(() => ({
     paddingLeft: '3px'
   }
 }));
+
+CampaignCard.propTypes = {
+  camp: PropTypes.shape({
+    batchTime: PropTypes.string,
+    name: PropTypes.string,
+    id: PropTypes.string
+  }).isRequired,
+  menuData: PropTypes.shape({
+    handleMenu: PropTypes.func
+  }).isRequired,
+  handleClick: PropTypes.func.isRequired
+};

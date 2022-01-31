@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { makeStyles } from '@material-ui/styles';
+import PropTypes from 'prop-types';
 import { useLazyQuery } from 'react-apollo';
 import { useLocation, useHistory } from 'react-router-dom';
 import CenteredContent from '../../../shared/CenteredContent';
@@ -10,7 +10,6 @@ import CampaignInfo from './CampaignInfo';
 
 export default function CampaignSplitScreen({ campaignId, campaignLength, refetch, setShow }) {
   const location = useLocation();
-  const classes = useStyles();
   const history = useHistory();
   const path = location.pathname;
   const campaignPath = path === '/campaigns' || path === '/campaigns/';
@@ -52,22 +51,23 @@ export default function CampaignSplitScreen({ campaignId, campaignLength, refetc
         />
       )}
       {(path === '/campaign-create' || campaignId) && (
-        <CampaignSplitScreenContent refetch={refetch} campaign={data?.campaign} handleClose={setShow} />
+        <CampaignSplitScreenContent
+          refetch={refetch}
+          campaign={data?.campaign}
+          handleClose={setShow}
+        />
       )}
     </div>
   );
 }
 
-const useStyles = makeStyles(() => ({
-  noCampaigns: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    flexDirection: 'column',
-    paddingTop: '200px'
-  },
-  createCampaign: {
-    marginTop: '20px',
-    color: 'white'
-  }
-}));
+CampaignSplitScreen.defaultProps = {
+  campaignId: null
+};
+
+CampaignSplitScreen.propTypes = {
+  campaignId: PropTypes.string,
+  campaignLength: PropTypes.number.isRequired,
+  refetch: PropTypes.func.isRequired,
+  setShow: PropTypes.func.isRequired
+};

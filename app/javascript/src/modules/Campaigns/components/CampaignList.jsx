@@ -114,7 +114,7 @@ export default function CampaignList() {
 
   function handleCreateCampaign() {
     history.push(`/campaign/campaign-create`);
-    setShow(true)
+    setShow(true);
   }
 
   function paginate(action) {
@@ -132,7 +132,7 @@ export default function CampaignList() {
   if (error) return <ErrorPage />;
   return (
     <Grid container>
-      <Grid item sm={5} className={classes.campaignList} style={{paddingRight: '10px'}}>
+      <Grid item sm={5} className={classes.campaignList} style={{ paddingRight: '10px' }}>
         <div className="container">
           <Grid container>
             <Grid item sm={12} style={{ marginBottom: '20px' }}>
@@ -168,50 +168,50 @@ export default function CampaignList() {
             </Grid>
             <Grid item sm={12} xs={12}>
               {data?.campaigns.length > 0 && (
-              <>
-                {openDeleteModal && (
-                <DeleteDialogueBox
-                  open={openDeleteModal}
-                  handleClose={handleDeleteClick}
-                  handleAction={handleDelete}
-                  title="Campaign"
-                  action="delete"
-                  loading={deletingCampaign}
-                />
-                    )}
-                {data.campaigns.map(camp => (
-                  <Fragment key={camp.id}>
-                    <CampaignCard
-                      camp={camp}
-                      handleClick={() => routeToAction(camp.id)}
-                      menuData={menuData}
+                <>
+                  {openDeleteModal && (
+                    <DeleteDialogueBox
+                      open={openDeleteModal}
+                      handleClose={handleDeleteClick}
+                      handleAction={handleDelete}
+                      title="Campaign"
+                      action="delete"
+                      loading={deletingCampaign}
                     />
-                    <MenuList
-                      open={
-                            menuData.open && menuData?.anchorEl?.getAttribute('dataid') === camp.id
-                          }
-                      anchorEl={menuData.anchorEl}
-                      handleClose={menuData.handleMenuClose}
-                      list={menuData.menuList.filter(menuItem => menuItem.content !== null)}
+                  )}
+                  {data.campaigns.map(camp => (
+                    <Fragment key={camp.id}>
+                      <CampaignCard
+                        camp={camp}
+                        handleClick={() => routeToAction(camp.id)}
+                        menuData={menuData}
+                      />
+                      <MenuList
+                        open={
+                          menuData.open && menuData?.anchorEl?.getAttribute('dataid') === camp.id
+                        }
+                        anchorEl={menuData.anchorEl}
+                        handleClose={menuData.handleMenuClose}
+                        list={menuData.menuList.filter(menuItem => menuItem.content !== null)}
+                      />
+                    </Fragment>
+                  ))}
+                  <br />
+                  <CenteredContent>
+                    <Paginate
+                      offSet={offset}
+                      limit={limit}
+                      active={offset >= 1}
+                      handlePageChange={paginate}
                     />
-                  </Fragment>
-                    ))}
-                <br />
-                <CenteredContent>
-                  <Paginate
-                    offSet={offset}
-                    limit={limit}
-                    active={offset >= 1}
-                    handlePageChange={paginate}
-                  />
-                </CenteredContent>
-              </>
-                )}
+                  </CenteredContent>
+                </>
+              )}
             </Grid>
           </Grid>
         </div>
       </Grid>
-      <Grid item sm={7} className={classes.splitScreen}>
+      <Grid item sm={7}>
         <SplitScreen
           open={matches ? true : show}
           classes={{ paper: matches ? classes.drawerPaper : classes.drawerPaperMobile }}
@@ -229,16 +229,6 @@ export default function CampaignList() {
 }
 
 const useStyles = makeStyles(() => ({
-  splitScreen: {
-    // background: '#FAFAFA',
-    // height: '100vh',
-    // marginTop: '-20px',
-    // // position: 'fixed',
-    // right: 0,
-    // width: '100%',
-    // overflowX: 'hidden',
-    // overflowY: 'auto'
-  },
   drawerPaper: {
     width: '50%',
     marginTop: '50px',

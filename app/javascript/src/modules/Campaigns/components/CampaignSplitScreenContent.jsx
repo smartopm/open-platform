@@ -3,6 +3,7 @@
 /* eslint-disable max-lines */
 import React, { useState, useEffect } from 'react';
 import Grid from '@material-ui/core/Grid';
+import PropTypes from 'prop-types';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
@@ -453,3 +454,14 @@ const useStyles = makeStyles(() => ({
     paddingBottom: '20px'
   }
 }));
+
+CampaignSplitScreenContent.propTypes = {
+  campaign: PropTypes.shape({
+    id: PropTypes.string,
+    status: PropTypes.string,
+    // eslint-disable-next-line react/forbid-prop-types
+    campaignMetrics: PropTypes.object
+  }).isRequired,
+  refetch: PropTypes.func.isRequired,
+  handleClose: PropTypes.func.isRequired
+};
