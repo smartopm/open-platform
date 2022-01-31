@@ -43,7 +43,7 @@ module Notes
     before_save :log_completed_at, if: -> { completed_changed? && completed.eql?(true) }
     after_create :log_create_event
     after_update :log_update_event
-    after_update :update_current_step
+    after_update :update_parent_current_step, if: -> { parent_note_id.present? }
 
     default_scope { order(created_at: :desc) }
     scope :by_due_date, ->(date) { where('due_date <= ?', date) }
@@ -86,17 +86,15 @@ module Notes
       ActiveRecord::Base.connection.exec_query(sql).rows
     end
 
-    def check_current_process_step
-      step = self.parent_note.sub_notes&.where(completed: false)&.first
-      step
-    end
-
-    # update the note
-    def update_current_step
-      self.parent_note.update(current_step_body: check_current_process_step&.body)
-    end
-
     private
+
+    def check_current_process_step
+      parent_note.sub_notes&.where(completed: false)&.first
+    end
+
+    def update_parent_current_step
+      parent_note.update(current_step_body: check_current_process_step&.body)
+    end
 
     def log_create_event
       user.generate_events('task_create', self)
@@ -112,6 +110,5 @@ module Notes
     def log_completed_at
       self.completed_at = Time.current
     end
-
   end
 end
