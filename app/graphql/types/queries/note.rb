@@ -307,7 +307,7 @@ module Types::Queries::Note
         :assignee_notes,
         :documents_attachments,
       )
-      .where(parent_note_id: nil)
+      .where(parent_note_id: nil, form_user_id: drc_form_users)
       .search_by_step(step)
       .limit(limit).offset(offset)
   end

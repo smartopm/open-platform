@@ -83,7 +83,7 @@ RSpec.describe Notes::Note, type: :model do
       expect(admin_note.sub_tasks).to eq(admin_note.sub_notes)
     end
 
-    it "updates parent note after an update" do
+    it 'updates parent note after an update' do
       user_note.update!(completed: true)
       expect(admin_note.saved_changes?).to eq true
     end
