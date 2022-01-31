@@ -5,6 +5,10 @@ import { makeStyles } from '@material-ui/core/styles';
 import { useMutation, useLazyQuery } from 'react-apollo';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
+import AccountTreeIcon from '@material-ui/icons/AccountTree';
+import QuestionAnswerIcon from '@material-ui/icons/QuestionAnswer';
+import AttachFileIcon from '@material-ui/icons/AttachFile';
+import EventNoteIcon from '@material-ui/icons/EventNote';
 import { UpdateNote } from '../../../graphql/mutations';
 import { TaskReminderMutation } from '../graphql/task_reminder_mutation';
 import TaskUpdateList from './TaskUpdateList';
@@ -15,6 +19,8 @@ import useDebounce from '../../../utils/useDebounce';
 import TaskDocuments from './TaskDocuments';
 import TaskInfoTop from './TaskInfoTop';
 import TaskSubTask from './TaskSubTask';
+import TaskDetailAccordion from './TaskDetailAccordion';
+import { useParamsQuery } from '../../../utils/helpers';
 
 const initialData = {
   user: '',
@@ -48,6 +54,8 @@ export default function TaskDetail({
   const [reminderTime, setReminderTime] = useState(null);
   const { t } = useTranslation(['task', 'common']);
   const classes = useStyles();
+  const path = useParamsQuery();
+  const tab = path.get('detailTab');
 
   const [anchorEl, setAnchorEl] = useState(null);
   const anchorElOpen = Boolean(anchorEl);
@@ -73,15 +81,27 @@ export default function TaskDetail({
     anchorEl,
     handleTaskInfoMenu,
     open: anchorElOpen,
-    handleClose,
-  }
+    handleClose
+  };
 
-  function getMenuList(){
+  function getMenuList() {
     return [
-      { content: t('task:task.task_reminder_in_1_hr'), isAdmin: false, handleClick: () =>  setTaskReminder(1) },
-      { content: t('task:task.task_reminder_in_24_hr'), isAdmin: false, handleClick: () =>  setTaskReminder(24) },
-      { content: t('task:task.task_reminder_in_72_hr'), isAdmin: false, handleClick: () =>  setTaskReminder(72) },
-    ]
+      {
+        content: t('task:task.task_reminder_in_1_hr'),
+        isAdmin: false,
+        handleClick: () => setTaskReminder(1)
+      },
+      {
+        content: t('task:task.task_reminder_in_24_hr'),
+        isAdmin: false,
+        handleClick: () => setTaskReminder(24)
+      },
+      {
+        content: t('task:task.task_reminder_in_72_hr'),
+        isAdmin: false,
+        handleClick: () => setTaskReminder(72)
+      }
+    ];
   }
 
   function handleTaskComplete() {
@@ -169,7 +189,7 @@ export default function TaskDetail({
   }
 
   function handleTaskInfoMenu(event) {
-    event.stopPropagation()
+    event.stopPropagation();
     setAnchorEl(event.currentTarget);
   }
 
@@ -225,24 +245,49 @@ export default function TaskDetail({
               handleTaskComplete={handleTaskComplete}
             />
           </div>
-          <div className={classes.section} data-testid="task-subtasks-section">
-            <TaskSubTask
-              taskId={taskId}
-              users={users}
-              assignUser={assignUser}
-              refetch={refetch}
-              handleSplitScreenOpen={handleSplitScreenOpen}
-              handleTaskCompletion={handleTaskCompletion}
+          <div className={classes.section} data-testid="task-subtasks-section" id="anchor-section">
+            <TaskDetailAccordion
+              icon={<AccountTreeIcon fontSize='large' color="primary" />}
+              title="Sub Tasks"
+              styles={{ background: '#FAFAFA' }}
+              openDetails={tab === 'subtasks'}
+              component={(
+                <TaskSubTask
+                  taskId={taskId}
+                  users={users}
+                  assignUser={assignUser}
+                  refetch={refetch}
+                  handleSplitScreenOpen={handleSplitScreenOpen}
+                  handleTaskCompletion={handleTaskCompletion}
+                />
+              )}
             />
           </div>
           <div className={classes.section} data-testid="task-comments-section">
-            <TaskComment taskId={taskId} />
+            <TaskDetailAccordion
+              icon={<QuestionAnswerIcon fontSize='large' color="primary" />}
+              title="Comments"
+              styles={{ background: '#FAFAFA', padding: 0 }}
+              component={<TaskComment taskId={taskId} />}
+              openDetails={tab === 'comments'}
+            />
           </div>
           <div className={classes.section} data-testid="task-documents-section">
-            <TaskDocuments taskId={taskId} />
+            <TaskDetailAccordion
+              icon={<AttachFileIcon fontSize='large' color="primary" />}
+              title="Documents"
+              styles={{ background: '#FAFAFA' }}
+              component={<TaskDocuments taskId={taskId} />}
+              openDetails={tab === 'documents'}
+            />
           </div>
           <div className={classes.section} data-testid="task-updates-section">
-            <TaskUpdateList data={historyData} />
+            <TaskDetailAccordion
+              icon={<EventNoteIcon fontSize='large' color="primary" />}
+              title="Updates"
+              styles={{ background: '#FAFAFA' }}
+              component={<TaskUpdateList data={historyData} />}
+            />
           </div>
         </Grid>
       </form>
@@ -262,7 +307,7 @@ TaskDetail.defaultProps = {
   historyData: [],
   taskId: '',
   handleSplitScreenOpen: () => {},
-  handleSplitScreenClose: ()=> {}
+  handleSplitScreenClose: () => {}
 };
 TaskDetail.propTypes = {
   users: PropTypes.arrayOf(PropTypes.object),

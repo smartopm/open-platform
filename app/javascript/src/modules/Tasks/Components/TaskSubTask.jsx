@@ -106,11 +106,7 @@ export default function TaskSubTask({
         </DialogContent>
       </Dialog>
       <Grid container className={classes.header}>
-        <Grid item md={9} xs={11}>
-          <Typography variant="subtitle2" data-testid="sub_tasks_header">
-            {t('task:sub_task.sub_tasks')}
-          </Typography>
-        </Grid>
+        <Grid item md={9} xs={11} />
         <Grid item md={3} xs={1} className={classes.addSubTask}>
           <AccessCheck module="note" allowedPermissions={['can_view_create_sub_task_button']}>
             <IconButton
@@ -130,7 +126,7 @@ export default function TaskSubTask({
           </AccessCheck>
         </Grid>
       </Grid>
-      {data?.taskSubTasks?.length ? (
+      {Boolean(data?.taskSubTasks?.length) && (
         <Grid container>
           <Grid item md={12} xs={12} style={{ marginBottom: '2px' }}>
             <Divider />
@@ -254,8 +250,6 @@ export default function TaskSubTask({
             )}
           </Grid>
         </Grid>
-      ) : (
-        <Typography data-testid="no_subtasks" variant='caption'>{t('task:sub_task.no_sub_tasks')}</Typography>
       )}
       <Menu
         id={`kabab-menu-${selectedSubTask?.id}`}
