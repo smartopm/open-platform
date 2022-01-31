@@ -76,10 +76,6 @@ CustomProgressBar.propTypes = {
 
 
 const useStyles = makeStyles(() => ({
-    colorPrimary: {
-      backgroundColor: 'red',
-    },
-
     progressBar: {
       '@media (min-device-width: 320px) and (max-device-height: 568px) and (orientation: portrait)' : {
         marginLeft: "-40px",
@@ -122,7 +118,9 @@ const useStyles = makeStyles(() => ({
         marginLeft: "0",
         width: '100%'
       },
-
+      '@media (min-device-width: 375px) and (max-device-height: 667) and (orientation: portrait)' : {
+        marginLeft: '-60px'
+      },
       '@media (min-device-width: 411px) and (max-device-height: 823px) and (orientation: portrait)' : {
         marginLeft: "0",
         width: '100%'
@@ -134,3 +132,5 @@ const useStyles = makeStyles(() => ({
     },
 
   }));
+
+  
