@@ -8,7 +8,7 @@ import { Campaign } from '../../../graphql/queries';
 import { Spinner } from '../../../shared/Loading';
 import CampaignInfo from './CampaignInfo';
 
-export default function CampaignSplitScreen({ campaignId, campaignLength, refetch }) {
+export default function CampaignSplitScreen({ campaignId, campaignLength, refetch, setShow }) {
   const location = useLocation();
   const classes = useStyles();
   const history = useHistory();
@@ -22,6 +22,7 @@ export default function CampaignSplitScreen({ campaignId, campaignLength, refetc
 
   function campaignRoute() {
     history.push('/campaign-create');
+    // setShow(false);
   }
 
   useEffect(() => {
@@ -51,7 +52,7 @@ export default function CampaignSplitScreen({ campaignId, campaignLength, refetc
         />
       )}
       {(path === '/campaign-create' || campaignId) && (
-        <CampaignSplitScreenContent refetch={refetch} campaign={data?.campaign} />
+        <CampaignSplitScreenContent refetch={refetch} campaign={data?.campaign} handleClose={setShow} />
       )}
     </div>
   );

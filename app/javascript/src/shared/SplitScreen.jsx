@@ -11,6 +11,7 @@ export default function SplitScreen({ children, open, onClose, classes }) {
       onClose={onClose}
       classes={classes}
       data-testid='drawer'
+      elevation={0}
     >
       {children}
     </Drawer>

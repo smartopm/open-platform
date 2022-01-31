@@ -3,13 +3,14 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { Fragment, useState } from 'react';
 import { useQuery, useMutation } from 'react-apollo';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import { useHistory, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles, useTheme } from '@material-ui/styles';
 import { Typography } from '@material-ui/core';
 import { allCampaigns } from '../../../graphql/queries';
 import Loading from '../../../shared/Loading';
@@ -23,10 +24,13 @@ import MenuList from '../../../shared/MenuList';
 import CampaignCard from './CampaignCard';
 import CampaignSplitScreen from './CampaignSplitScreen';
 import DeleteDialogueBox from '../../../shared/dialogs/DeleteDialogue';
+import SplitScreen from '../../../shared/SplitScreen';
 
 export default function CampaignList() {
   const classes = useStyles();
-  const { id } = useParams()
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up('sm'));
+  const { id } = useParams();
   const history = useHistory();
   const limit = 50;
   const [offset, setOffset] = useState(0);
@@ -35,6 +39,8 @@ export default function CampaignList() {
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [deletingCampaign, setDeletingCampaign] = useState(false);
   const [campaign, setCampaign] = useState(null);
+  const [show, setShow] = useState(false);
+  // const [showMobileSplitScreen, setShowMobileSplitScreen] = useState(false);
   const [deleteCampaign] = useMutation(DeleteCampaign);
   const anchorElOpen = Boolean(anchorEl);
   const debouncedSearchText = useDebounce(searchText, 500);
@@ -48,7 +54,7 @@ export default function CampaignList() {
     {
       content: t('misc.open_campaign_details'),
       isAdmin: true,
-      handleClick: () => routeToAction(campaign.id)
+      handleClick: () => openDetailsClick()
     },
     {
       content: t('actions.delete_campaign'),
@@ -84,6 +90,11 @@ export default function CampaignList() {
     setOpenDeleteModal(!openDeleteModal);
   }
 
+  function openDetailsClick() {
+    routeToAction(campaign.id);
+    setAnchorEl(null);
+  }
+
   function handleDelete() {
     setDeletingCampaign(true);
     deleteCampaign({
@@ -97,11 +108,13 @@ export default function CampaignList() {
   }
 
   function routeToAction(camId) {
-    return history.push(`/campaign/${camId}`);
+    history.push(`/campaign/${camId}`);
+    setShow(true);
   }
 
   function handleCreateCampaign() {
     history.push(`/campaign/campaign-create`);
+    setShow(true)
   }
 
   function paginate(action) {
@@ -119,15 +132,15 @@ export default function CampaignList() {
   if (error) return <ErrorPage />;
   return (
     <Grid container>
-      <Grid item sm={5} className={classes.campaignList}>
+      <Grid item sm={5} className={classes.campaignList} style={{paddingRight: '10px'}}>
         <div className="container">
           <Grid container>
             <Grid item sm={12} style={{ marginBottom: '20px' }}>
               <Grid container>
-                <Grid item sm={10}>
+                <Grid item sm={10} xs={10}>
                   <Typography variant="h4">Campaigns</Typography>
                 </Grid>
-                <Grid item sm={2} style={{ textAlign: 'right' }}>
+                <Grid item sm={2} xs={2} style={{ textAlign: 'right' }}>
                   <Tooltip title="New Campaign" placement="top">
                     <IconButton
                       aria-label="new-campaign"
@@ -138,12 +151,12 @@ export default function CampaignList() {
                     </IconButton>
                   </Tooltip>
                 </Grid>
-                <Grid item sm={12}>
+                <Grid item sm={12} xs={12}>
                   <Typography variant="body2">Communicate with the community.</Typography>
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item sm={12} style={{ marginBottom: '20px' }}>
+            <Grid item sm={12} xs={12} style={{ marginBottom: '20px' }}>
               <SearchInput
                 filterRequired={false}
                 title={t('common:misc.campaigns')}
@@ -153,58 +166,63 @@ export default function CampaignList() {
                 data-testid="search_input"
               />
             </Grid>
-            <Grid item sm={12}>
+            <Grid item sm={12} xs={12}>
               {data?.campaigns.length > 0 && (
-                <>
-                  {openDeleteModal && (
-                    <DeleteDialogueBox
-                      open={openDeleteModal}
-                      handleClose={handleDeleteClick}
-                      handleAction={handleDelete}
-                      title="Campaign"
-                      action="delete"
-                      loading={deletingCampaign}
+              <>
+                {openDeleteModal && (
+                <DeleteDialogueBox
+                  open={openDeleteModal}
+                  handleClose={handleDeleteClick}
+                  handleAction={handleDelete}
+                  title="Campaign"
+                  action="delete"
+                  loading={deletingCampaign}
+                />
+                    )}
+                {data.campaigns.map(camp => (
+                  <Fragment key={camp.id}>
+                    <CampaignCard
+                      camp={camp}
+                      handleClick={() => routeToAction(camp.id)}
+                      menuData={menuData}
                     />
-                  )}
-                  {data.campaigns.map(camp => (
-                    <Fragment key={camp.id}>
-                      <CampaignCard
-                        camp={camp}
-                        handleClick={() =>  routeToAction(camp.id)}
-                        menuData={menuData}
-                      />
-                      <MenuList
-                        open={
-                          menuData.open && menuData?.anchorEl?.getAttribute('dataid') === camp.id
-                        }
-                        anchorEl={menuData.anchorEl}
-                        handleClose={menuData.handleMenuClose}
-                        list={menuData.menuList.filter(menuItem => menuItem.content !== null)}
-                      />
-                    </Fragment>
-                  ))}
-
-                  <br />
-                  <CenteredContent>
-                    <Paginate
-                      offSet={offset}
-                      limit={limit}
-                      active={offset >= 1}
-                      handlePageChange={paginate}
+                    <MenuList
+                      open={
+                            menuData.open && menuData?.anchorEl?.getAttribute('dataid') === camp.id
+                          }
+                      anchorEl={menuData.anchorEl}
+                      handleClose={menuData.handleMenuClose}
+                      list={menuData.menuList.filter(menuItem => menuItem.content !== null)}
                     />
-                  </CenteredContent>
-                </>
-              )}
+                  </Fragment>
+                    ))}
+                <br />
+                <CenteredContent>
+                  <Paginate
+                    offSet={offset}
+                    limit={limit}
+                    active={offset >= 1}
+                    handlePageChange={paginate}
+                  />
+                </CenteredContent>
+              </>
+                )}
             </Grid>
           </Grid>
         </div>
       </Grid>
       <Grid item sm={7} className={classes.splitScreen}>
-        <CampaignSplitScreen
-          campaignId={id}
-          campaignLength={data?.campaigns.length}
-          refetch={refetch}
-        />
+        <SplitScreen
+          open={matches ? true : show}
+          classes={{ paper: matches ? classes.drawerPaper : classes.drawerPaperMobile }}
+        >
+          <CampaignSplitScreen
+            campaignId={id}
+            campaignLength={data?.campaigns.length}
+            refetch={refetch}
+            setShow={setShow}
+          />
+        </SplitScreen>
       </Grid>
     </Grid>
   );
@@ -212,14 +230,25 @@ export default function CampaignList() {
 
 const useStyles = makeStyles(() => ({
   splitScreen: {
-    background: '#FAFAFA',
-    height: '100vh',
-    marginTop: '-20px',
-    // position: 'fixed',
-    right: 0,
+    // background: '#FAFAFA',
+    // height: '100vh',
+    // marginTop: '-20px',
+    // // position: 'fixed',
+    // right: 0,
+    // width: '100%',
+    // overflowX: 'hidden',
+    // overflowY: 'auto'
+  },
+  drawerPaper: {
+    width: '50%',
+    marginTop: '50px',
+    background: '#FAFAFA !important',
+    border: '0px !important'
+  },
+  drawerPaperMobile: {
     width: '100%',
-    overflowX: 'hidden',
-    overflowY: 'auto'
+    background: '#FAFAFA !important',
+    marginTop: '50px'
   },
   campaignList: {
     overflowX: 'hidden',

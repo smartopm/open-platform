@@ -20,12 +20,12 @@ export default function CampaignCard({ camp, menuData, handleClick }) {
         contentStyles={{ padding: '4px 4px 4px 10px' }}
       >
         <Grid container spacing={5} justifyContent="center" alignItems="center">
-          <Grid item md={2}>
+          <Grid item md={2} xs={3}>
             <Typography variant="caption" color="textSecondary" component="span">
               {camp.batchTime ? dateToString(camp.batchTime) : 'Never '}
             </Typography>
           </Grid>
-          <Grid item md={8}>
+          <Grid item md={8} xs={6}>
             <Typography
               variant="body2"
               data-testid="campaign_name"
@@ -36,7 +36,7 @@ export default function CampaignCard({ camp, menuData, handleClick }) {
               {camp.name}
             </Typography>
           </Grid>
-          <Grid item md={2} style={{ textAlign: 'right' }}>
+          <Grid item md={2} xs={3} style={{ textAlign: 'right' }}>
             <IconButton
               aria-controls="simple-menu"
               aria-haspopup="true"
