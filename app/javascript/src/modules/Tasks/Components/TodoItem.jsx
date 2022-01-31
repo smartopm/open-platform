@@ -21,7 +21,6 @@ export default function TodoItem({
   handleChange,
   selectedTasks,
   isSelected,
-  handleCompleteNote,
   handleAddSubTask,
   handleUploadDocument,
   handleTodoClick,
@@ -120,7 +119,7 @@ export default function TodoItem({
   function handleNoteComplete(){
     setIsUpdating(true)
     toggleTask(selectedTask)
-    handleCompleteNote(selectedTask.id, selectedTask.completed)
+    handleTaskCompletion(selectedTask.id, !selectedTask.completed)
   }
 
   function handleFileInputChange(event, taskToAttach = null) {
@@ -201,7 +200,7 @@ export default function TodoItem({
               handleTaskCompletion={handleTaskCompletion}
               clientView={clientView}
             />
-   
+
           </div>
           {firstLevelSubTask?.subTasks?.length > 0 &&
             objectAccessor(tasksOpen, firstLevelSubTask?.id) && (
@@ -265,7 +264,6 @@ const Task = {
   handleChange: PropTypes.func.isRequired,
   selectedTasks: PropTypes.arrayOf(PropTypes.string).isRequired,
   isSelected: PropTypes.bool.isRequired,
-  handleCompleteNote: PropTypes.func.isRequired,
   handleAddSubTask: PropTypes.func.isRequired,
   handleUploadDocument: PropTypes.func.isRequired,
   handleTodoClick: PropTypes.func.isRequired,

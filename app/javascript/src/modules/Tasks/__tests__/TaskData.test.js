@@ -98,7 +98,6 @@ describe('Task Data components', () => {
               selectedTasks={[]}
               isSelected={false}
               handleTaskDetails={() => {}}
-              handleCompleteNote={() => {}}
               handleAddSubTask={jest.fn()}
               handleTodoClick={jest.fn}
               handleTaskCompletion={jest.fn}
@@ -133,7 +132,6 @@ describe('Task Data components', () => {
               selectedTasks={[]}
               isSelected={false}
               handleTaskDetails={() => {}}
-              handleCompleteNote={() => {}}
               handleAddSubTask={jest.fn()}
               handleTodoClick={jest.fn}
               handleTaskCompletion={jest.fn}
@@ -164,7 +162,6 @@ describe('Task Data components', () => {
                 selectedTasks={[]}
                 isSelected={false}
                 handleTaskDetails={() => {}}
-                handleCompleteNote={() => {}}
                 handleAddSubTask={jest.fn()}
                 taskHeader={taskHeader}
                 handleTodoClick={jest.fn}
@@ -201,7 +198,6 @@ describe('Task Data components', () => {
               selectedTasks={[]}
               isSelected={false}
               handleTaskDetails={() => {}}
-              handleCompleteNote={() => {}}
               handleAddSubTask={jest.fn()}
               taskHeader={taskHeader}
               handleTodoClick={jest.fn}
