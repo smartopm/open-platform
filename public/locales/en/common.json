@@ -88,6 +88,7 @@
     "save_changes": "Save changes",
     "merge": "Merge",
     "create_business": "Create a Business",
+    "update_business": "Update Business",
     "create_plan": "Create Plan",
     "add_type": "Add {{label}}",
     "close": "Close",
@@ -256,7 +257,8 @@
     "uploaded_by": "Uploaded by",
     "remove": "Remove",
     "add": "Add",
-    "open": "Open"
+    "open": "Open",
+    "user": "User"
   },
   "menu": {
     "invoice": "Invoice",

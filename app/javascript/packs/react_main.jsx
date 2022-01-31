@@ -75,7 +75,6 @@ import TaskProcessDetail from '../src/modules/Tasks/Processes/Components/TaskPro
 
 
 
-
 // The routes defined here are carefully arranged, be mindful when changing them
 
 const LoggedInOnly = props => {

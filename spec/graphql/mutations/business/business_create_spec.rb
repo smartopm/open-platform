@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Mutations::Business do
+RSpec.describe Mutations::Business::BusinessCreate do
   describe 'creating a business' do
     let!(:resident_role) { create(:role, name: 'resident') }
     let!(:admin_role) { create(:role, name: 'admin') }

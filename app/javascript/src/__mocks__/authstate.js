@@ -68,7 +68,8 @@ const authState = {
           'can_see_menu_item',
           'can_access_business',
           'can_create_business',
-          'can_delete_business'
+          'can_delete_business',
+          'can_update_business'
         ]
       },
       { module: 'campaign',
