@@ -67,7 +67,7 @@ ProjectProcesses.propTypes = {
 
 const useStyles = makeStyles(() => ({
   activitySummary: {
-    marginBottom: '20px'
+    marginBottom: '32px !important',
   },
   divider: {
     height: '0px'
@@ -76,7 +76,8 @@ const useStyles = makeStyles(() => ({
     marginTop: '20px'
   },
   processesHeader: {
-    marginBottom: '16px',
+    marginBottom: '32px !important',
+    marginTop: '32px !important',
     fontWeight: 200
   }
 }));

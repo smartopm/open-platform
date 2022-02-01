@@ -106,7 +106,11 @@ export default function TaskSubTask({
         </DialogContent>
       </Dialog>
       <Grid container className={classes.header}>
-        <Grid item md={9} xs={11} />
+        <Grid item md={9} xs={11}>
+          <Typography variant="subtitle2" data-testid="sub_tasks_header">
+            {t('task:sub_task.sub_tasks')}
+          </Typography>
+        </Grid>
         <Grid item md={3} xs={1} className={classes.addSubTask}>
           <AccessCheck module="note" allowedPermissions={['can_view_create_sub_task_button']}>
             <IconButton
@@ -126,14 +130,14 @@ export default function TaskSubTask({
           </AccessCheck>
         </Grid>
       </Grid>
-      {Boolean(data?.taskSubTasks?.length) && (
+      {data?.taskSubTasks?.length ? (
         <Grid container>
           <Grid item md={12} xs={12} style={{ marginBottom: '2px' }}>
             <Divider />
           </Grid>
           {data.taskSubTasks.map(task => (
             <Fragment key={task.id}>
-              <Grid container spacing={1} item md={5} xs={6} className={classes.bodyAlign}>
+              <Grid container spacing={1} item md={4} xs={6} className={classes.bodyAlign}>
                 <Grid item md={2}>
                   <IconButton
                     aria-controls="task-completion-toggle-button"
@@ -160,7 +164,7 @@ export default function TaskSubTask({
                   </Typography>
                 </Grid>
               </Grid>
-              <Grid item md={2} xs={6} className={classes.bodyAlign} style={{ textAlign: 'right' }}>
+              <Grid item md={3} xs={6} className={classes.bodyAlign} style={{ textAlign: 'right' }}>
                 <Typography variant="body2" component="span">
                   {t('task:sub_task.due')}
                   {task.dueDate ? dateToString(task.dueDate) : 'Never '}
@@ -250,6 +254,8 @@ export default function TaskSubTask({
             )}
           </Grid>
         </Grid>
+      ) : (
+        <Typography data-testid="no_subtasks" variant='caption'>{t('task:sub_task.no_sub_tasks')}</Typography>
       )}
       <Menu
         id={`kabab-menu-${selectedSubTask?.id}`}

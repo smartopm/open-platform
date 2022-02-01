@@ -47,7 +47,7 @@ export default function ProjectActivitySummary() {
   return (
     <>
       <Typography
-        variant="h6"
+        variant="subtitle1"
         className={classes.activitySummaryHeader}
         data-testid="activity-summary"
       >
@@ -59,8 +59,12 @@ export default function ProjectActivitySummary() {
           refetch={refetch}
         />
       )
-        :
-        t('processes.no_activity_summary') }
+        : (
+          <Typography variant="body2">
+            {t('processes.no_activity_summary')}
+          </Typography>
+      )}
+      <br />
       {comments?.projectComments.length >= limit && moreComments && (
         <Button onClick={fetchMoreComments} className={classes.seeMoreBtn}>
           {commentsLoading ? <Spinner /> : (
@@ -77,9 +81,10 @@ export default function ProjectActivitySummary() {
 
 const useStyles = makeStyles(() => ({
   activitySummaryHeader: {
-    marginBottom: '2px',
+    marginBottom: '10px !important',
     fontWeight: 200,
     fontSize: '1rem'
+
   },
   seeMoreBtn: {
     color: '#212529'

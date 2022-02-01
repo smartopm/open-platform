@@ -54,7 +54,7 @@ export default function StepItem({
                   )}
               </IconButton>
             </Grid>
-            <Grid item md={6} xs={8}>
+            <Grid item md={5} xs={8}>
               <Typography
                 variant="body2"
                 data-testid="step_body"
@@ -70,9 +70,12 @@ export default function StepItem({
               </Typography>
             </Grid>
 
-            <Grid item md={2} xs={6}>
-              <CustomProgressBar task={step} smDown={false} />
-            </Grid>
+            {
+              step?.subTasks?.length > 0 && (
+              <Grid item md={3} xs={6}>
+                <CustomProgressBar task={step} smDown={false} />
+              </Grid>
+            )}
 
           </Grid>
         </Grid>

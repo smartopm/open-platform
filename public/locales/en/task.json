@@ -94,7 +94,7 @@
       "post_construction": "Post Constructions"
     },
     "activity_summary": "Activity Summary",
-    "no_activity_summary": "No activity summary",
+    "no_activity_summary": "This project has no activity yet. Add a comment to start the activity.",
     "no_ssigned_projects": "You do not have any assigned projects yet!",
     "no_assigned_projects": "You do not have any assigned projects yet!",
     "your_tasks": "Your Tasks",
