@@ -49,7 +49,7 @@ export default function ProcessItem({ task, taskId, refetch, clientView }) {
     redirectToOverviewPage(id);
   }
 
-  function handleTodoItemClick(taskItem, tab='overview', detailTab) {
+  function handleTodoItemClick(taskItem, tab='processes', detailTab) {
     redirectToOverviewPage(taskItem.id, tab, detailTab);
   }
 
@@ -78,7 +78,7 @@ export default function ProcessItem({ task, taskId, refetch, clientView }) {
     redirectToOverviewPage(todoItem.id);
   }
 
-  function redirectToOverviewPage(id, tab='overview', detailTab) {
+  function redirectToOverviewPage(id, tab='processes', detailTab) {
     history.push(`/processes/drc/projects/${id}?tab=${tab}&detailTab=${detailTab}`)
   }
 
