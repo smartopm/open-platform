@@ -4,36 +4,30 @@ import { Button, Typography } from '@mui/material';
 import { makeStyles } from '@material-ui/styles';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { useTranslation } from 'react-i18next';
-import { useQuery } from 'react-apollo';
+import PropTypes from 'prop-types';
 import CenteredContent from '../../../../shared/CenteredContent';
-import { ProjectCommentsQuery } from '../graphql/process_queries';
 import CommentCard from '../../Components/CommentCard';
 import { formatError } from '../../../../utils/helpers';
 import { Spinner } from '../../../../shared/Loading';
 
-export default function ProjectActivitySummary() {
+export default function ProjectActivitySummary({comments, commentsLoading, commentsError, commentsRefetch, commentsFetchMore}) {
   const classes = useStyles();
   const { t } = useTranslation(['task']);
   const { id: taskId } = useParams();
   const limit = 3;
-  const [commentsLoading, setCommentsLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [moreComments, setMoreComments] = useState(true);
-  const { data: comments, loading, error, refetch, fetchMore } = useQuery(ProjectCommentsQuery, {
-    variables: { taskId, limit },
-    fetchPolicy: 'cache-and-network',
-    errorPolicy: 'all'
-  });
 
   function fetchMoreComments() {
-    setCommentsLoading(true);
-    fetchMore({
+    setLoading(true);
+    commentsFetchMore({
       variables: { taskId, limit, offset: comments.projectComments.length },
       updateQuery: (prev, { fetchMoreResult }) => {
         if (!fetchMoreResult) return prev;
         if (fetchMoreResult.projectComments.length < limit) {
           setMoreComments(false);
         }
-        setCommentsLoading(false);
+        setLoading(false);
         return { ...prev, projectComments: [
             ...prev.projectComments,
             ...fetchMoreResult.projectComments
@@ -42,8 +36,8 @@ export default function ProjectActivitySummary() {
     });
   }
 
-  if (error) return <CenteredContent>{formatError(error.message)}</CenteredContent>;
-  if (loading) return <Spinner />;
+  if (commentsError) return <CenteredContent>{formatError(commentsError.message)}</CenteredContent>;
+  if (commentsLoading) return <Spinner />;
   return (
     <>
       <Typography
@@ -56,14 +50,14 @@ export default function ProjectActivitySummary() {
       {comments?.projectComments.length > 0 ? (
         <CommentCard
           comments={comments.projectComments}
-          refetch={refetch}
+          refetch={commentsRefetch}
         />
       )
         :
         t('processes.no_activity_summary') }
       {comments?.projectComments.length >= limit && moreComments && (
         <Button onClick={fetchMoreComments} className={classes.seeMoreBtn}>
-          {commentsLoading ? <Spinner /> : (
+          {loading ? <Spinner /> : (
             <>
               <Typography className={classes.seeMoreText} variant="button">{t('task:sub_task.see_more')}</Typography>
               <KeyboardArrowDownIcon fontSize="small" />
@@ -88,3 +82,13 @@ const useStyles = makeStyles(() => ({
     fontWeight: '400'
   }
 }));
+
+ProjectActivitySummary.propTypes = {
+  comments: PropTypes.shape({
+    projectComments: PropTypes.arrayOf(PropTypes.shape())
+  }).isRequired,
+  commentsLoading: PropTypes.bool.isRequired,
+  commentsError: PropTypes.string.isRequired,
+  commentsRefetch: PropTypes.func.isRequired,
+  commentsFetchMore: PropTypes.func.isRequired
+}

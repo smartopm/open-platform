@@ -21,7 +21,7 @@ import EditField from './TaskCommentEdit';
 import { dateToString } from '../../../components/DateContainer';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
 
-export default function CommentCard({ comments, refetch }) {
+export default function CommentCard({ comments, refetch, commentsRefetch }) {
   const [open, setOpen] = useState(false);
   const [editId, setEditId] = useState(null);
   const [edit, setEdit] = useState(false);
@@ -123,7 +123,7 @@ export default function CommentCard({ comments, refetch }) {
                 </ListItem>
               )}
               {editId === com.id && (
-                <EditField handleClose={handleClose} data={com} refetch={refetch} />
+                <EditField handleClose={handleClose} data={com} refetch={refetch} commentsRefetch={commentsRefetch} />
               )}
             </Fragment>
           ))}
@@ -138,6 +138,7 @@ export default function CommentCard({ comments, refetch }) {
           imageUrl={imageUrl}
           refetch={refetch}
           body={body}
+          commentsRefetch={commentsRefetch}
         />
       )}
     </>
@@ -145,12 +146,14 @@ export default function CommentCard({ comments, refetch }) {
 }
 
 CommentCard.defaultProps = {
-  comments: []
+  comments: [],
+  commentsRefetch: () => {}
 };
 CommentCard.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   comments: PropTypes.array,
-  refetch: PropTypes.func.isRequired
+  refetch: PropTypes.func.isRequired,
+  commentsRefetch: PropTypes.func
 };
 
 const useStyles = makeStyles(() => ({

@@ -9,7 +9,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import { TaskCommentUpdate } from '../../../graphql/mutations';
 
-export default function EditField({ handleClose, data, refetch }) {
+export default function EditField({ handleClose, data, refetch, commentsRefetch }) {
   const classes = useStyles();
   const [body, setBody] = useState('');
   const [commentUpdate] = useMutation(TaskCommentUpdate);
@@ -27,6 +27,7 @@ export default function EditField({ handleClose, data, refetch }) {
       .then(() => {
         handleClose();
         refetch();
+        commentsRefetch();
       })
       .catch(err => {
         setErrorMessage(err);
@@ -96,12 +97,14 @@ const useStyles = makeStyles({
 });
 
 EditField.defaultProps = {
-  data: {}
+  data: {},
+  commentsRefetch: () => {}
 };
 
 EditField.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   data: PropTypes.object,
   refetch: PropTypes.func.isRequired,
-  handleClose: PropTypes.func.isRequired
+  handleClose: PropTypes.func.isRequired,
+  commentsRefetch: PropTypes.func
 };

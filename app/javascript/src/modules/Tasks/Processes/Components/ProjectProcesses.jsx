@@ -7,7 +7,16 @@ import { TaskContext } from "../../Context";
 import ProjectSteps from './Steps';
 import ProjectActivitySummary from './ProjectActivitySummary';
 
-export default function ProjectProcesses({ data, refetch, handleProjectStepClick }){
+export default function ProjectProcesses({
+  data,
+  refetch,
+  handleProjectStepClick,
+  comments,
+  commentsLoading,
+  commentsError,
+  commentsRefetch,
+  commentsFetchMore
+ }){
   const classes = useStyles();
   const { setSelectedStep, handleStepCompletion } = useContext(TaskContext);
   const { t } = useTranslation('task');
@@ -16,7 +25,13 @@ export default function ProjectProcesses({ data, refetch, handleProjectStepClick
     <>
       <Grid container direction="column">
         <Grid item xs={12} className={classes.activitySummary}>
-          <ProjectActivitySummary />
+          <ProjectActivitySummary
+            comments={comments}
+            commentsLoading={commentsLoading}
+            commentsError={commentsError}
+            commentsRefetch={commentsRefetch}
+            commentsFetchMore={commentsFetchMore}
+          />
         </Grid>
       </Grid>
       <Divider className={classes.divider} />
@@ -62,7 +77,12 @@ ProjectProcesses.defaultProps = {}
 ProjectProcesses.propTypes = {
   data: PropTypes.arrayOf(PropTypes.shape(Step)).isRequired,
   refetch: PropTypes.func.isRequired,
-  handleProjectStepClick: PropTypes.func.isRequired
+  handleProjectStepClick: PropTypes.func.isRequired,
+  comments: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  commentsLoading: PropTypes.bool.isRequired,
+  commentsError: PropTypes.string.isRequired,
+  commentsRefetch: PropTypes.func.isRequired,
+  commentsFetchMore: PropTypes.func.isRequired
 }
 
 const useStyles = makeStyles(() => ({
