@@ -3,7 +3,7 @@ import { MockedProvider } from '@apollo/react-testing'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom';
-import renderTaskData, { LinkToUser, TaskDataList } from '../Components/RenderTaskData';
+import { LinkToUser, TaskDataList } from '../Components/RenderTaskData';
 import TodoItem from '../Components/TodoItem'
 import MockedThemeProvider from '../../__mocks__/mock_theme'
 import t from '../../__mocks__/t'
@@ -12,19 +12,6 @@ import authState from '../../../__mocks__/authstate';
 import { CommentQuery } from '../../../graphql/queries';
 
 describe('Task Data components', () => {
-  const menuData = {
-    menuList: [
-      { content: t('menu.open_task_details'), isAdmin: true, handleClick: jest.fn() },
-      { content: t('menu.add_subtask'), isAdmin: true, handleClick: jest.fn() },
-      { content: t('menu.leave_a_comment'), isAdmin: true, handleClick: jest.fn() },
-      { content: t('menu.mark_complete'), isAdmin: true, handleClick: jest.fn() },
-    ],
-    handleTodoMenu: jest.fn(),
-    anchorEl: null,
-    open: true,
-    handleClose: jest.fn()
-  }
-
   const taskHeader = [
     { title: 'Select', col: 1 },
     { title: 'Task', value: t('common:table_headers.task'), col: 4 },
@@ -34,7 +21,6 @@ describe('Task Data components', () => {
     { title: 'Menu', col: 1 }
   ];
 
-  const mock = jest.fn();
   const task =
     {
       body: 'Task example',
@@ -213,23 +199,6 @@ describe('Task Data components', () => {
       expect(screen.getByTestId('task_attach_file')).toBeInTheDocument();
       expect(screen.getByTestId('file_attachments_total')).toHaveTextContent('1');
     }, 10)
-  });
-
-  it('should check if renderTaskData has correct property names', () => {
-    const results = renderTaskData({
-      task,
-      handleChange: mock,
-      selectedTasks: [],
-      isSelected: false,
-      menuData
-    });
-    expect(results).toBeInstanceOf(Array);
-    expect(results[0]).toHaveProperty('Select');
-    expect(results[0]).toHaveProperty('Task');
-    expect(results[0]).toHaveProperty('Created By');
-    expect(results[0]).toHaveProperty('Duedate');
-    expect(results[0]).toHaveProperty('Assignees');
-    expect(results[0]).toHaveProperty('Menu');
   });
 
   it('should render TaskDataList', async () => {
