@@ -18,7 +18,7 @@ task :update_current_step, %i[community_name] => :environment do |_t, args|
 
   drc_tasks = community.notes.where(form_user_id: drc_form_users)
 
-  drc_tasks.each do |task|
+  drc_tasks.find_each do |task|
     task.update_parent_current_step if task.parent_note_id
   end
   puts 'done updating tasks .............'
