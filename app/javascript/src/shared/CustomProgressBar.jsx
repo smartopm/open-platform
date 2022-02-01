@@ -82,7 +82,18 @@ const useStyles = makeStyles(() => ({
         marginTop: '10px',
         width: '100%'
       },
+      '@media (min-device-width: 280px) and (max-device-height: 653px) and (orientation: portrait)' : {
+        marginLeft: "-40px",
+        marginTop: '10px',
+        width: '100%'
+      },
       '@media (min-device-width: 360px) and (max-device-height: 640px) and (orientation: portrait)' : {
+        marginLeft: "-40px",
+        marginTop: '10px',
+        width: '100%'
+      },
+      // sumsung S8
+      '@media (min-device-width: 360px) and (max-device-height: 740px) and (orientation: portrait)' : {
         marginLeft: "-40px",
         marginTop: '10px',
         width: '100%'
@@ -92,25 +103,57 @@ const useStyles = makeStyles(() => ({
         marginTop: '10px',
         width: '100%'
       },
-
-      '@media (min-device-width: 411px) and (max-device-height: 823px) and (orientation: portrait)' : {
+      // iPhone 12 pro
+      '@media (min-device-width: 390px) and (max-device-height: 844px) and (orientation: portrait)' : {
         marginLeft: "-50px",
         marginTop: '10px',
         width: '100%'
       },
-      '@media (min-device-width: 768px) and (max-device-height: 1024px) and (orientation: portrait)' : {
+      // pixel 5
+      '@media (min-device-width: 393px) and (max-device-height: 851px) and (orientation: portrait)' : {
+        marginLeft: "-50px",
+        marginTop: '10px',
+        width: '100%'
+      },
+      '@media (min-device-width: 411px) and (max-device-height: 915px) and (orientation: portrait)' : {
+        marginLeft: "-50px",
+        marginTop: '10px',
+        width: '100%'
+      },
+      // iPhone XR
+      '@media (min-device-width: 414px) and (max-device-height: 896px) and (orientation: portrait)' : {
+        marginLeft: "-50px",
+        marginTop: '10px',
+        width: '100%'
+      },
+
+      '@media (min-device-width: 768px) and (max-device-height: 1368px) and (orientation: portrait)' : {
         marginLeft: "-150px",
         marginTop: '10px',
         width: '100%'
       },
 
+      '@media (min-device-width: 500px) ' : {
+        marginLeft: "-140px",
+        marginTop: '10px',
+        width: '100%'
+      },
     },
     progressBarText: {
+      '@media (min-device-width: 280px) and (max-device-height: 653px) and (orientation: portrait)' : {
+        marginLeft: "0",
+        width: '100%'
+      },
       '@media (min-device-width: 320px) and (max-device-height: 568px) and (orientation: portrait)' : {
         marginLeft: "0",
         width: '100%'
       },
       '@media (min-device-width: 360px) and (max-device-height: 640px) and (orientation: portrait)' : {
+        marginLeft: "0",
+        width: '100%'
+      },
+      // sumsung S8
+      '@media (min-device-width: 360px) and (max-device-height: 740px) and (orientation: portrait)' : {
         marginLeft: "0",
         width: '100%'
       },
@@ -121,11 +164,33 @@ const useStyles = makeStyles(() => ({
       '@media (min-device-width: 375px) and (max-device-height: 667) and (orientation: portrait)' : {
         marginLeft: '-60px'
       },
-      '@media (min-device-width: 411px) and (max-device-height: 823px) and (orientation: portrait)' : {
+      // iPhone 12 pro
+      '@media (min-device-width: 390px) and (max-device-height: 844px) and (orientation: portrait)' : {
         marginLeft: "0",
         width: '100%'
       },
-      '@media (min-device-width: 768px) and (max-device-height: 1024px) and (orientation: portrait)' : {
+
+      // pixel 5
+      '@media (min-device-width: 393px) and (max-device-height: 851px) and (orientation: portrait)' : {
+        marginLeft: "0",
+        width: '100%'
+      },
+
+      // iPhone XR
+      '@media (min-device-width: 414px) and (max-device-height: 896px) and (orientation: portrait)' : {
+        marginLeft: "0",
+        width: '100%'
+      },
+
+      '@media (min-device-width: 411px) and (max-device-height: 915px) and (orientation: portrait)' : {
+        marginLeft: "0",
+        width: '100%'
+      },
+      '@media (min-device-width: 768px) and (max-device-height: 1368px) and (orientation: portrait)' : {
+        marginLeft: "0",
+        width: '100%'
+      },
+      '@media (min-device-width: 500px) ' : {
         marginLeft: "0",
         width: '100%'
       },

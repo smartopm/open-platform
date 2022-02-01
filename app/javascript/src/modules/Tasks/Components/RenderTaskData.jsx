@@ -237,7 +237,7 @@ export function TaskDataList({
         </Grid>
         {!clientView && (
           <Hidden mdUp>
-            <Grid item md={1} xs={1} style={{ display: 'flex', alignItems: 'center' }}>
+            <Grid item md={1} xs={2} style={{ display: 'flex-end', alignItems: 'center', }}>
               <Box className={classes.taskMenuIcon}>
                 <IconButton
                   aria-controls="simple-menu"
@@ -541,37 +541,38 @@ const useStyles = makeStyles(() => ({
     color: '#ffffff'
   },
   taskMenuIcon: {
-    '@media (min-device-width: 375px) and (max-device-height: 667px) and (orientation: portrait)': {
-      marginLeft: '6px'
-    },
-    '@media (min-device-width: 375px) and (max-device-height: 812px) and (orientation: portrait)': {
-      marginLeft: '6px'
-    },
-    '@media (min-device-width: 360px) and (max-device-height: 640px) and (orientation: portrait)': {
-      marginLeft: '7px'
-    },
-    '@media (min-device-width: 414px) and (max-device-height: 736px) and (orientation: portrait)': {
-      marginLeft: '12px'
-    },
-    '@media (min-device-width: 768px) and (max-device-height: 1024px) and (orientation: portrait)': {
-      marginLeft: '20px'
-    }
+   '@media (min-device-width: 375px) and (max-device-height: 667px) and (orientation: portrait)' : {
+    marginLeft: "6px",
   },
+  '@media (min-device-width: 375px) and (max-device-height: 812px) and (orientation: portrait)' : {
+    marginLeft: "6px",
+  },
+  '@media (min-device-width: 360px) and (max-device-height: 640px) and (orientation: portrait)' : {
+    marginLeft: "7px",
+  },
+  '@media (min-device-width: 414px) and (max-device-height: 736px) and (orientation: portrait)' : {
+    marginLeft: "12px",
+  },
+  '@media (min-device-width: 768px) and (max-device-height: 1024px) and (orientation: portrait)' : {
+    marginLeft: "20px",
+  },
+
+  '@media (min-device-width: 320px) and (max-device-height: 1368px) and (orientation: portrait)' : {
+    marginLeft: "12px",
+  },
+
+  '@media (min-device-width: 500px) ' : {
+    marginLeft: "65px",
+  },
+},
 
   arrowDownUpIcon: {
-    '@media (min-device-width: 768px) and (max-device-height: 1024px) and (orientation: portrait)': {
-      marginLeft: '-45px'
+    '@media (min-device-width: 768px) and (max-device-height: 1024px) and (orientation: portrait)' : {
+      marginLeft: "0",
     },
-    '@media (min-device-width: 540px) and (max-device-height: 720px) and (orientation: portrait)': {
-      marginLeft: '-25px'
-    }
+    '@media (min-device-width: 540px) and (max-device-height: 720px) and (orientation: portrait)' : {
+      marginLeft: "-25px",
+    },
   },
 
-  customTooltip: {
-    backgroundColor: '#FFFFFF',
-    color: '#000000',
-    border: '.5px solid #999999',
-    fontSize: '.85rem',
-    fontWeight: '400'
-  }
 }));
