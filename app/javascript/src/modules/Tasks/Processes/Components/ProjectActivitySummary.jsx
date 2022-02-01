@@ -59,11 +59,12 @@ export default function ProjectActivitySummary() {
           refetch={refetch}
         />
       )
-        :
-        <Typography variant="body2">
-          {t('processes.no_activity_summary')}
-        </Typography> }
-        <br/>
+        : (
+          <Typography variant="body2">
+            {t('processes.no_activity_summary')}
+          </Typography>
+      )}
+      <br />
       {comments?.projectComments.length >= limit && moreComments && (
         <Button onClick={fetchMoreComments} className={classes.seeMoreBtn}>
           {commentsLoading ? <Spinner /> : (

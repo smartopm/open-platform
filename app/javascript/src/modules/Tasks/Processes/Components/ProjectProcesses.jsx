@@ -14,7 +14,7 @@ export default function ProjectProcesses({ data, refetch, handleProjectStepClick
 
   return (
     <>
-      <Grid container direction="column" >
+      <Grid container direction="column">
         <Grid item xs={12} className={classes.activitySummary}>
           <ProjectActivitySummary />
         </Grid>
