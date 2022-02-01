@@ -17,8 +17,8 @@ export const ProcessesQuery = gql`
 `
 
 export const ProjectsQuery = gql`
-  query GetProjects($offset: Int, $limit: Int) {
-    projects(offset: $offset, limit: $limit) {
+  query GetProjects($offset: Int, $limit: Int, $step: String) {
+    projects(offset: $offset, limit: $limit, step: $step) {
       ...NoteFields
       subTasks {
         ...NoteFields

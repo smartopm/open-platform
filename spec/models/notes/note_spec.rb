@@ -12,6 +12,14 @@ RSpec.describe Notes::Note, type: :model do
            author_id: admin.id,
            community_id: current_user.community_id)
   end
+  let(:user_note) do
+    create(:note,
+           body: 'This is another note',
+           user_id: current_user.id,
+           author_id: admin.id,
+           parent_note_id: admin_note.id,
+           community_id: current_user.community_id)
+  end
 
   describe 'note crud' do
     it 'should let an admin create a note for a user' do
@@ -74,6 +82,12 @@ RSpec.describe Notes::Note, type: :model do
       expect { admin_note.sub_tasks }.not_to raise_error
       expect(admin_note.sub_tasks).to eq(admin_note.sub_notes)
     end
+
+    it 'updates parent note after an update' do
+      user_note.update!(completed: true)
+      expect(admin_note.saved_changes?).to eq true
+    end
+    it { is_expected.to callback(:update_parent_current_step).after(:update) }
   end
 
   describe 'attachments' do

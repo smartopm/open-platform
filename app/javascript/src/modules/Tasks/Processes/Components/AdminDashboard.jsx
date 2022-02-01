@@ -16,7 +16,7 @@ import { formatError } from '../../../../utils/helpers';
 import CenteredContent from '../../../../shared/CenteredContent';
 import { Spinner } from '../../../../shared/Loading';
 import { TaskQuarterySummaryQuery, ProjectsQuery } from '../graphql/process_queries';
-import { filterProjectAndStages, calculateOpenProjectsByStage } from '../utils';
+import { filterProjectAndStages, calculateOpenProjectsByStage, snakeCaseToSentence } from '../utils';
 
 
 export default function AdminDashboard() {
@@ -71,8 +71,8 @@ export default function AdminDashboard() {
     post_construction: 0,
   };
 
-  function routeToProjects(){
-    history.push('/processes/drc/projects')
+  function routeToProjects(projectStep){
+    history.push(`/processes/drc/projects?current_step=${projectStep}`)
   }
 
   const filteredProjects = filterProjectAndStages(projectsData?.projects, projectStageLookup);
@@ -125,7 +125,7 @@ export default function AdminDashboard() {
             {Object.entries(stats).map(([stage, count]) => (
               <Fragment key={stage}>
                 <ListItem
-                  onClick={routeToProjects}
+                  onClick={() => routeToProjects(snakeCaseToSentence(stage))}
                   className={classes.projectStageLink}
                 >
                   <Grid container>

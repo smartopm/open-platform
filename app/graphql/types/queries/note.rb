@@ -88,6 +88,7 @@ module Types::Queries::Note
       description 'Returns a list of projects under a process'
       argument :offset, Integer, required: false
       argument :limit, Integer, required: false
+      argument :step, String, required: false
     end
 
     field :project_stages, [GraphQL::Types::JSON], null: false do
@@ -275,9 +276,7 @@ module Types::Queries::Note
       .limit(limit).offset(offset)
   end
 
-  # rubocop:disable Metrics/AbcSize
-  # rubocop:disable Metrics/MethodLength
-  def projects(offset: 0, limit: 50)
+  def projects(offset: 0, limit: 50, step: nil)
     # This query only shows projects under the DRC process for now
     # Our notes does not allow us to categorise processes by type
     # This should be implemented in the future to allow us to fetch...
@@ -286,28 +285,12 @@ module Types::Queries::Note
       raise GraphQL::ExecutionError,
             I18n.t('errors.unauthorized')
     end
-    # rubocop:enable Metrics/AbcSize
-    # rubocop:enable Metrics/MethodLength
-    form_name = 'DRC Project Review Process'
-    drc_form = context[:site_community].forms.where('name ILIKE ?', "#{form_name}%").first
-    drc_ids = context[:site_community].forms.where(grouping_id: drc_form.grouping_id).pluck(:id)
 
-    return unless drc_form
-
-    drc_form_users = Forms::FormUser.where(form_id: drc_ids).pluck(:id)
-    context[:site_community]
-      .notes
-      .includes(
-        :parent_note,
-        :user,
-        :author,
-        :sub_notes,
-        :assignees,
-        :assignee_notes,
-        :documents_attachments,
-      )
-      .where(parent_note_id: nil, form_user_id: drc_form_users)
-      .limit(limit).offset(offset)
+    if step.nil?
+      projects_query.limit(limit).offset(offset)
+    else
+      projects_query.where(current_step_body: step).limit(limit).offset(offset)
+    end
   end
 
   def project_stages
@@ -387,6 +370,33 @@ module Types::Queries::Note
       'search'
     end
   end
+
+  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/MethodLength
+  def projects_query
+    form_name = 'DRC Project Review Process'
+    drc_form = context[:site_community].forms.where('name ILIKE ?', "#{form_name}%").first
+    drc_ids = context[:site_community].forms.where(grouping_id: drc_form.grouping_id).pluck(:id)
+
+    return unless drc_form
+
+    drc_form_users = Forms::FormUser.where(form_id: drc_ids).pluck(:id)
+
+    context[:site_community]
+      .notes
+      .includes(
+        :parent_note,
+        :user,
+        :author,
+        :sub_notes,
+        :assignees,
+        :assignee_notes,
+        :documents_attachments,
+      )
+      .where(parent_note_id: nil, form_user_id: drc_form_users)
+  end
+  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/MethodLength
 
   def authorize
     return if permitted?(module: :note, permission: :can_fetch_task_by_id)
