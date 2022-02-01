@@ -97,7 +97,6 @@ module Notes
 
     private
 
-
     def log_create_event
       user.generate_events('task_create', self)
     end
