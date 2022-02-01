@@ -219,6 +219,7 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
             detail={{
               type: 'file',
               label: formPropertiesData.fieldName,
+              id: formPropertiesData.id,
               required: formPropertiesData.required
             }}
             upload={evt => onImageSelect(evt, formPropertiesData.id)}

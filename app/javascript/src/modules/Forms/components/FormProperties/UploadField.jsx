@@ -9,7 +9,7 @@ export default function UploadField({ detail, upload, editable, uploaded, inputV
   const { t } = useTranslation(['common', 'form'])
   return (
     <>
-      <label htmlFor={`button-${detail.label}`}>
+      <label htmlFor={`button-${detail.id}`}>
         <FormHelperText
           style={{
             margin: '4px 4px -12px 0',
@@ -20,7 +20,7 @@ export default function UploadField({ detail, upload, editable, uploaded, inputV
         <input
           type="file"
           name={`image-${detail.label}`}
-          id={`button-${detail.label}`}
+          id={`button-${detail.id}`}
           aria-label={`upload_field_${detail.label}`}
           capture
           onChange={upload}
@@ -56,6 +56,7 @@ UploadField.propTypes = {
   detail: PropTypes.shape({
     type: PropTypes.string,
     label: PropTypes.string,
+    id: PropTypes.string,
     required: PropTypes.bool,
   }).isRequired,
   upload: PropTypes.func.isRequired,
