@@ -26,7 +26,7 @@ export default function ProjectsList() {
     variables: {
       offset,
       limit,
-      step: `"${currentStep}"`
+      step: currentStep
     },
     fetchPolicy: 'cache-and-network'
   });
