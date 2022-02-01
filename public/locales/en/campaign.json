@@ -19,7 +19,8 @@
     "reply_link": "Include reply link",
     "sms": "SMS",
     "email": "Email",
-    "assign_label": "Assign Label"
+    "assign_label": "Assign Label",
+    "select_label": "Select Label"
   },
   "actions": {
     "create_campaign": "Create Campaign",
@@ -31,6 +32,7 @@
   },
   "misc": {
     "yes": "Yes",
-    "no": "No"
+    "no": "No",
+    "open_campaign_details": "Open Campaign Details"
   }
 }

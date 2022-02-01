@@ -3,7 +3,10 @@
 require 'email_msg'
 
 # its a campaign class
+# rubocop: disable Metrics/ClassLength
 class Campaign < ApplicationRecord
+  include SearchCop
+
   belongs_to :community
   has_many :messages, class_name: 'Notifications::Message', dependent: :restrict_with_exception
   has_many :campaign_labels, class_name: 'Labels::CampaignLabel', dependent: :destroy
@@ -20,6 +23,10 @@ class Campaign < ApplicationRecord
   scope :still_pending, -> { where(status: %i[in_progress scheduled]) }
 
   default_scope { order(created_at: :desc) }
+
+  search_scope :search do
+    attributes :name, :created_at
+  end
 
   def clean_message
     self.user_id_list = '' if user_id_list.blank?
@@ -130,4 +137,5 @@ class Campaign < ApplicationRecord
                           .perform_later(id)
     end
   end
+  # rubocop: enable Metrics/ClassLength
 end

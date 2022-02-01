@@ -29,6 +29,7 @@ module Types
     include Types::Queries::PlanPayment
     include Types::Queries::SubscriptionPlan
     include Types::Queries::Discussion
+    include Types::Queries::Campaign
 
     # Add root-level fields here.
     # They will be entry points for queries on your schema.
@@ -56,35 +57,6 @@ module Types
 
       context[:site_community].feedbacks.all.order(created_at: :desc)
                               .limit(limit).offset(offset)
-    end
-
-    field :campaigns, [Types::CampaignType], null: true do
-      description 'Get a list of all Campaigns'
-      argument :offset, Integer, required: false
-      argument :limit, Integer, required: false
-    end
-
-    def campaigns(offset: 0, limit: 50)
-      unless permitted?(module: :campaign,
-                        permission: :can_list_campaigns)
-        raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
-      end
-
-      context[:site_community].campaigns.existing.offset(offset).limit(limit)
-    end
-
-    field :campaign, Types::CampaignType, null: true do
-      description 'Find Campaign by Id'
-      argument :id, ID, required: true
-    end
-
-    def campaign(id:)
-      unless permitted?(module: :campaign,
-                        permission: :can_get_campaign_details)
-        raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
-      end
-
-      context[:site_community].campaigns.find_by(id: id)
     end
 
     def admin_or_self(id)

@@ -344,8 +344,8 @@ export const UserLandParcelWithPlan = gql`
 `
 
 export const allCampaigns = gql`
-  query allCampaigns($limit: Int, $offset: Int) {
-    campaigns(limit: $limit, offset: $offset) {
+  query allCampaigns($limit: Int, $offset: Int, $query: String) {
+    campaigns(limit: $limit, offset: $offset, query: $query) {
       id
       batchTime
       status
