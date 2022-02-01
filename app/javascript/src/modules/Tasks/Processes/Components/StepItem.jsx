@@ -71,11 +71,11 @@ export default function StepItem({
             </Grid>
 
             {
-              step.subTasks.length > 0 &&
+              step.subTasks.length > 0 && (
               <Grid item md={2} xs={6}>
-              <CustomProgressBar task={step} smDown={false} />
-            </Grid>
-            }
+                <CustomProgressBar task={step} smDown={false} />
+              </Grid>
+            )}
 
           </Grid>
         </Grid>
