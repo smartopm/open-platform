@@ -47,6 +47,7 @@
     "submit": "Enviar",
     "submitting": "Enviando ...",
     "update": "Actualizacion",
+    "update_business": "Actualizar Negocio",
     "update_task": "Actualizar tarea",
     "updating_task": "Actualizando Tarea ..."
   },
@@ -363,6 +364,7 @@
     "uploaded": "Subido con éxito",
     "uploaded_at": "Subido el ",
     "uploaded_by": "Subido por ",
+    "user": "Usuario",
     "user_label": "Etiqueta de usuario",
     "user_merge_warning_text": "La unión de este usuario mantendrá esta cuenta y consolidará los datos de la cuenta seleccionada en esta cuenta. La cuenta que se fusiona dejará de existir. Quieres proceder?",
     "user_name_search_warning_text": "La cuenta seleccionada se eliminará del sistema y se fusionará con el perfil en el que se encuentra actualmente.",

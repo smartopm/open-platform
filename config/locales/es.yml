@@ -333,6 +333,8 @@ es:
       invalid_action_name: Nombre de acción no válido
       invalid_event_type: Tipo de evento invalido
       not_found: Flujo de acción no encontrado
+    business:
+      not_found: Negocio no encontrado
     campaign:
       campaign_completed: Las actualizaciones no se pueden realizar ya que la campaña
         se ha enviado a los usuarios especificados.
