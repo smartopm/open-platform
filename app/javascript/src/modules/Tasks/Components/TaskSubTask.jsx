@@ -60,8 +60,6 @@ export default function TaskSubTask({
     setSelectedSubTask(task);
   }
 
-  console.log("Mutuba in a subtask")
-
   function fetchMoreSubTasks() {
     try {
       fetchMore({
