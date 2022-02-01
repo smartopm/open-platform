@@ -241,13 +241,10 @@ export default function CampaignSplitScreenContent({ refetch, campaign, handleCl
             >
               <Typography variant='body2'>Scheduled</Typography>
             </Button>
-            <Button
-              onClick={() => handleStatusButtonClick('sending')}
-              style={buttonStyle('sending')}
-            >
+            <Button style={buttonStyle('sending')}>
               <Typography variant='body2'>Sending</Typography>
             </Button>
-            <Button onClick={() => handleStatusButtonClick('done')} style={buttonStyle('done')}>
+            <Button style={buttonStyle('done')}>
               <Typography variant='body2'>Done</Typography>
             </Button>
           </ButtonGroup>
