@@ -87,8 +87,6 @@ module Notes
       ActiveRecord::Base.connection.exec_query(sql).rows
     end
 
-    private
-
     def check_current_process_step
       parent_note.sub_notes&.where(completed: false)&.first
     end
@@ -96,6 +94,8 @@ module Notes
     def update_parent_current_step
       parent_note.update(current_step_body: check_current_process_step&.body)
     end
+
+    private
 
     def log_create_event
       user.generate_events('task_create', self)
