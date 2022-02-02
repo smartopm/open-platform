@@ -17,6 +17,7 @@ import Loading from '../../../../shared/Loading';
 import { SubTasksQuery, TaskQuery } from '../../graphql/task_queries';
 import { hrefsExtractor } from '../utils';
 import MessageAlert from '../../../../components/MessageAlert';
+import { ProjectCommentsQuery } from '../graphql/process_queries';
 
 export default function TaskProcessDetail() {
   const limit = 20;
@@ -41,6 +42,18 @@ export default function TaskProcessDetail() {
 
   const { data: stepsData, loading: subStepsLoading, refetch } = useQuery(SubTasksQuery, {
     variables: { taskId, limit: projectData?.subTasks?.length || limit },
+    fetchPolicy: 'cache-and-network',
+    errorPolicy: 'all'
+  });
+
+  const {
+    data: comments,
+    loading: commentsLoading,
+    error: commentsError,
+    refetch: commentsRefetch,
+    fetchMore: commentsFetchMore
+  } = useQuery(ProjectCommentsQuery, {
+    variables: { taskId, limit },
     fetchPolicy: 'cache-and-network',
     errorPolicy: 'all'
   });
@@ -132,6 +145,11 @@ export default function TaskProcessDetail() {
                 data={stepsData?.taskSubTasks}
                 refetch={refetch}
                 handleProjectStepClick={handleProjectStepClick}
+                comments={comments}
+                commentsLoading={commentsLoading}
+                commentsError={commentsError}
+                commentsRefetch={commentsRefetch}
+                commentsFetchMore={commentsFetchMore}
               />
             </TabPanel>
           </Grid>
@@ -149,6 +167,7 @@ export default function TaskProcessDetail() {
                 setSplitScreenOpen={setSplitScreenOpen}
                 handleProjectStepClick={handleProjectStepClick}
                 refetch={refetch}
+                commentsRefetch={commentsRefetch}
               />
             </TabPanel>
           </Grid>

@@ -5,7 +5,7 @@ import CommentCard from './CommentCard';
 import { TaskComment } from '../../../graphql/mutations';
 import CommentTextField from '../../../shared/CommentTextField';
 
-export default function CommentField({ data, refetch, taskId }) {
+export default function CommentField({ data, refetch, taskId, commentsRefetch }) {
   const [commentCreate] = useMutation(TaskComment);
   const [body, setBody] = useState('');
   const [error, setErrorMessage] = useState('');
@@ -21,6 +21,7 @@ export default function CommentField({ data, refetch, taskId }) {
       .then(() => {
         setBody('');
         refetch();
+        commentsRefetch();
       })
       .catch(err => {
         setErrorMessage(err);
@@ -33,7 +34,7 @@ export default function CommentField({ data, refetch, taskId }) {
         setValue={setBody}
         handleSubmit={handleSubmit}
       />
-      <CommentCard comments={data.taskComments} refetch={refetch} />
+      <CommentCard comments={data.taskComments} refetch={refetch} commentsRefetch={commentsRefetch} />
       { Boolean(error.length) && (<p className="text-center">{error}</p>)}
     </>
   );
@@ -41,12 +42,14 @@ export default function CommentField({ data, refetch, taskId }) {
 
 CommentField.defaultProps = {
   data: {},
-  taskId: ''
+  taskId: '',
+  commentsRefetch: () => {}
 };
 CommentField.propTypes = {
   data: PropTypes.shape({
     taskComments: PropTypes.arrayOf(PropTypes.object)
   }),
   refetch: PropTypes.func.isRequired,
-  taskId: PropTypes.string
+  taskId: PropTypes.string,
+  commentsRefetch: PropTypes.func
 };

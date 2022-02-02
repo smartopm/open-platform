@@ -78,15 +78,26 @@ describe('Activity Summary', () => {
     }
   ];
 
+  const comments = {
+    projectComments
+  }
+
+  const emptyComments = {
+    projectComments: []
+  }
 
   it('renders loader', () => {
     render(
       <Context.Provider value={authState}>
-        <MockedProvider mocks={projectCommentsMock} addTypename={false}>
-          <BrowserRouter>
-            <ProjectActivitySummary />
-          </BrowserRouter>
-        </MockedProvider>
+        <BrowserRouter>
+          <ProjectActivitySummary
+            comments={comments}
+            commentsLoading
+            commentsError=""
+            commentsRefetch={jest.fn}
+            commentsFetchMore={jest.fn}
+          />
+        </BrowserRouter>
       </Context.Provider>
     );
 
@@ -98,7 +109,13 @@ describe('Activity Summary', () => {
       <Context.Provider value={authState}>
         <MockedProvider mocks={emptyProjectCommentsMock} addTypename={false}>
           <BrowserRouter>
-            <ProjectActivitySummary />
+            <ProjectActivitySummary
+              comments={emptyComments}
+              commentsLoading={false}
+              commentsError=""
+              commentsRefetch={jest.fn}
+              commentsFetchMore={jest.fn}
+            />
           </BrowserRouter>
         </MockedProvider>
       </Context.Provider>
@@ -115,7 +132,13 @@ describe('Activity Summary', () => {
       <Context.Provider value={authState}>
         <MockedProvider mocks={projectCommentsMock} addTypename={false}>
           <BrowserRouter>
-            <ProjectActivitySummary />
+            <ProjectActivitySummary
+              comments={comments}
+              commentsLoading={false}
+              commentsError=""
+              commentsRefetch={jest.fn}
+              commentsFetchMore={jest.fn}
+            />
           </BrowserRouter>
         </MockedProvider>
       </Context.Provider>

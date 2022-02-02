@@ -10,7 +10,8 @@ export default function ProjectProcessesSplitView({
   splitScreenOpen,
   setSplitScreenOpen,
   handleProjectStepClick,
-  refetch
+  refetch,
+  commentsRefetch
 }) {
   const classes = useStyles();
   const matches = useMediaQuery('(max-width:800px)');
@@ -29,12 +30,14 @@ export default function ProjectProcessesSplitView({
             handleSplitScreenOpen={handleProjectStepClick}
             handleSplitScreenClose={() => setSplitScreenOpen(false)}
             handleTaskCompletion={(id, completed) => handleStepCompletion(id, completed, refetch)}
+            commentsRefetch={commentsRefetch}
           />
         </SplitScreen>
         ) : (
           <TaskUpdate
             taskId={selectedStep?.id || projectId}
             handleTaskCompletion={(id, completed) => handleStepCompletion(id, completed, refetch)}
+            commentsRefetch={commentsRefetch}
           />
       )}
     </>
@@ -51,9 +54,14 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
+ProjectProcessesSplitView.defaultProps = {
+  commentsRefetch: () => {}
+}
+
 ProjectProcessesSplitView.propTypes = {
   refetch: PropTypes.func.isRequired,
   splitScreenOpen: PropTypes.bool.isRequired,
   setSplitScreenOpen: PropTypes.func.isRequired,
-  handleProjectStepClick: PropTypes.func.isRequired
+  handleProjectStepClick: PropTypes.func.isRequired,
+  commentsRefetch: PropTypes.func
  }

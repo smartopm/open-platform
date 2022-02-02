@@ -17,7 +17,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
 import { DeleteNoteComment } from '../../../graphql/mutations';
 
-export default function TaskDelete({ open, handleClose, id, name, imageUrl, body, refetch }) {
+export default function TaskDelete({ open, handleClose, id, name, imageUrl, body, refetch, commentsRefetch }) {
   const classes = useStyles();
   const [commentDelete] = useMutation(DeleteNoteComment);
   const { t } = useTranslation('task', 'common');
@@ -28,6 +28,7 @@ export default function TaskDelete({ open, handleClose, id, name, imageUrl, body
     }}).then(() => {
       handleClose()
       refetch()
+      commentsRefetch()
     })
   }
 
@@ -87,12 +88,17 @@ const useStyles = makeStyles({
   }
 });
 
- TaskDelete.propTypes = {
+TaskDelete.defaultProps = {
+  commentsRefetch: () => {}
+}
+
+TaskDelete.propTypes = {
    id: PropTypes.string.isRequired,
    body: PropTypes.string.isRequired,
    imageUrl: PropTypes.string.isRequired,
    name: PropTypes.string.isRequired,
    refetch: PropTypes.func.isRequired,
    open: PropTypes.bool.isRequired,
-   handleClose: PropTypes.func.isRequired
+   handleClose: PropTypes.func.isRequired,
+   commentsRefetch: PropTypes.func
  }

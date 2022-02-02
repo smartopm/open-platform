@@ -38,7 +38,8 @@ export default function TaskDetail({
   taskId,
   handleSplitScreenOpen,
   handleSplitScreenClose,
-  handleTaskCompletion
+  handleTaskCompletion,
+  commentsRefetch
 }) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -268,7 +269,7 @@ export default function TaskDetail({
               icon={<QuestionAnswerIcon fontSize='large' color="primary" />}
               title="Comments"
               styles={{ background: '#FAFAFA', padding: 0 }}
-              component={<TaskComment taskId={taskId} />}
+              component={<TaskComment taskId={taskId} commentsRefetch={commentsRefetch} />}
               openDetails={tab === 'comments'}
             />
           </div>
@@ -307,7 +308,8 @@ TaskDetail.defaultProps = {
   historyData: [],
   taskId: '',
   handleSplitScreenOpen: () => {},
-  handleSplitScreenClose: () => {}
+  handleSplitScreenClose: () => {},
+  commentsRefetch: () => {}
 };
 TaskDetail.propTypes = {
   users: PropTypes.arrayOf(PropTypes.object),
@@ -326,5 +328,6 @@ TaskDetail.propTypes = {
   taskId: PropTypes.string,
   handleSplitScreenOpen: PropTypes.func,
   handleSplitScreenClose: PropTypes.func,
-  handleTaskCompletion: PropTypes.func.isRequired
+  handleTaskCompletion: PropTypes.func.isRequired,
+  commentsRefetch: PropTypes.func
 };
