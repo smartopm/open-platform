@@ -27,6 +27,7 @@ module Types
     field :form_user_id, ID, null: true
     field :progress, GraphQL::Types::JSON, null: true
     field :sub_tasks_count, Integer, null: true
+    field :task_comments_count, Integer, null: true
 
     # move this in a shareable place
     def host_url(type)
@@ -59,11 +60,15 @@ module Types
     # rubocop:enable Metrics/MethodLength
 
     def sub_tasks_count
-      object.sub_notes&.count
+      object.sub_notes&.size
+    end
+
+    def task_comments_count
+      object.note_comments&.size
     end
 
     def progress
-      total = object.sub_notes.count
+      total = object.sub_notes.size
       complete = 0
       object.sub_notes.each do |note|
         complete += 1 if note.completed

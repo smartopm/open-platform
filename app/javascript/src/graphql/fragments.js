@@ -169,6 +169,7 @@ export const TasksFragment = {
       dueDate
       progress
       subTasksCount
+      taskCommentsCount
       documents
       assignees {
         id

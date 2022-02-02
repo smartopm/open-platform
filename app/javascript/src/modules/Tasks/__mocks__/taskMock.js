@@ -9,6 +9,7 @@ export default {
   description: 'Consultant sub-task',
   dueDate: '2022-01-22T21:00:00Z',
   subTasksCount: 4,
+  taskCommentsCount: 4,
   progress: {
     complete: 0,
     total: 0,

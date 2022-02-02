@@ -343,6 +343,7 @@ module Types::Queries::Note
                   :assignees,
                   :assignee_notes,
                   :documents_attachments,
+                  :note_comments,
                 ],
               )
     end

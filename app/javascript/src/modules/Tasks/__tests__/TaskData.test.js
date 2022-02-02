@@ -9,7 +9,6 @@ import MockedThemeProvider from '../../__mocks__/mock_theme'
 import t from '../../__mocks__/t'
 import { Context } from '../../../containers/Provider/AuthStateProvider'
 import authState from '../../../__mocks__/authstate';
-import { CommentQuery } from '../../../graphql/queries';
 
 describe('Task Data components', () => {
   const taskHeader = [
@@ -202,46 +201,24 @@ describe('Task Data components', () => {
   });
 
   it('should render TaskDataList', async () => {
-    const taskCommentMock = {
-      request: {
-        query: CommentQuery,
-        variables: { taskId: task.id }
-      },
-      result: {
-        data: {
-          taskComments: [{
-            id: '5617geg2783',
-            body: 'sample-body',
-            createdAt: '2022-10-10',
-            user: {
-              id: '2g872gh',
-              name: 'sample-name',
-              url: 'use.jpg',
-              imageUrl: ''
-            }
-          }]
-        }
-      }
-    }
+
     const container = render(
       <BrowserRouter>
-        <MockedProvider mocks={[taskCommentMock]} addTypename={false}>
-          <MockedThemeProvider>
-            <TaskDataList
-              task={task}
-              handleChange={jest.fn()}
-              handleFileInputChange={jest.fn()}
-              selectedTasks={[]}
-              isSelected={false}
-              menuData={{}}
-              clickable
-              handleClick={jest.fn()}
-              openSubTask
-              handleOpenSubTasksClick={jest.fn()}
-              handleTaskCompletion={jest.fn}
-            />
-          </MockedThemeProvider>
-        </MockedProvider>
+        <MockedThemeProvider>
+          <TaskDataList
+            task={task}
+            handleChange={jest.fn()}
+            handleFileInputChange={jest.fn()}
+            selectedTasks={[]}
+            isSelected={false}
+            menuData={{}}
+            clickable
+            handleClick={jest.fn()}
+            openSubTask
+            handleOpenSubTasksClick={jest.fn()}
+            handleTaskCompletion={jest.fn}
+          />
+        </MockedThemeProvider>
       </BrowserRouter>
     );
 
