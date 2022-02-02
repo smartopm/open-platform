@@ -27,6 +27,7 @@ export default function StepItem({
   const classes = useStyles();
   const matches = useMediaQuery('(max-width:800px)');
 
+
   return (
     <Card clickData={{clickable, handleClick}} styles={styles} contentStyles={{ padding: '4px' }}>
       <Grid container>
@@ -43,9 +44,8 @@ export default function StepItem({
                 aria-controls="process-check-box"
                 aria-haspopup="true"
                 data-testid="process-check-box"
-                disabled={clientView}
                 onClick={(e) => handleStepCompletion(e, step.id, !step.completed)}
-                style={{backgroundColor: 'transparent'}}
+                style={{backgroundColor: 'transparent', cursor: clientView ? 'not-allowed' : 'pointer' }}
               >
                 { step.completed ? (
                   <CheckCircleIcon htmlColor="#4caf50" />
