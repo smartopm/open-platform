@@ -116,6 +116,10 @@ export const EntryRequestFragment = {
 }
 
 
+// TODO: Don't use this fragment
+/**
+ * @deprecated
+ */
 export const NotesFragment = {
   note: gql`
     fragment NoteFields on Note {
@@ -127,6 +131,7 @@ export const NotesFragment = {
       description
       dueDate
       progress
+      subTasksCount
       user {
         id
         name
@@ -153,6 +158,25 @@ export const NotesFragment = {
         id
       }
       documents
+    }
+  `
+}
+export const TasksFragment = {
+  task: gql`
+    fragment TaskFields on Note {
+      id
+      body
+      dueDate
+      progress
+      subTasksCount
+      taskCommentsCount
+      documents
+      assignees {
+        id
+        name
+        imageUrl
+        avatarUrl
+      }
     }
   `
 }

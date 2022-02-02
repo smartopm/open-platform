@@ -4,7 +4,6 @@
 import React from 'react';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTranslation } from 'react-i18next';
-import { useQuery } from 'react-apollo';
 import { Grid, IconButton, Typography } from '@material-ui/core';
 import Divider from '@mui/material/Divider';
 import Hidden from '@material-ui/core/Hidden';
@@ -27,7 +26,7 @@ import { dateToString } from '../../../components/DateContainer';
 import UserAvatar from '../../Users/Components/UserAvatar';
 import Card from '../../../shared/Card';
 import CustomProgressBar from '../../../shared/CustomProgressBar';
-import { CommentQuery } from '../../../graphql/queries';
+
 // TODO: Put in a more shareable directory
 export function LinkToUser({ userId, name }) {
   const theme = useTheme();
@@ -70,11 +69,6 @@ export function TaskDataList({
   const { t } = useTranslation('task');
   const matches = useMediaQuery('(max-width:800px)');
 
-  const { data } = useQuery(CommentQuery, {
-    variables: { taskId: task.id },
-    fetchPolicy: 'cache-and-network',
-    errorPolicy: 'all'
-  });
   return (
     <Card styles={styles} contentStyles={{ padding: '4px' }}>
       <Grid container>
@@ -235,7 +229,7 @@ export function TaskDataList({
             data-testid="progress_bar_small_screen"
             style={{ display: 'flex', justifyContent: 'flex-end' }}
           >
-            {!clientView && task?.subTasks?.length > 0 && (
+            {!clientView && task?.subTasksCount > 0 && (
               <Grid item md={2} xs={4} className={classes.progressBar}>
                 <Hidden mdUp>
                   <CustomProgressBar task={task} smDown />
@@ -258,7 +252,7 @@ export function TaskDataList({
                   >
                     <AccountTreeIcon
                       fontSize="small"
-                      color={task?.subTasks?.length ? 'primary' : 'disabled'}
+                      color={task?.subTasksCount ? 'primary' : 'disabled'}
                     />
                   </IconButton>
                 </Grid>
@@ -270,7 +264,7 @@ export function TaskDataList({
                   className={classes.iconItem}
                   style={{ marginLeft: '-20px' }}
                 >
-                  <span>{task?.subTasks?.length}</span>
+                  <span>{task?.subTasksCount}</span>
                 </Grid>
 
                 <Grid item md={2} xs={1}>
@@ -282,7 +276,7 @@ export function TaskDataList({
                   >
                     <QuestionAnswerIcon
                       fontSize="small"
-                      color={data?.taskComments.length ? 'primary' : 'disabled'}
+                      color={task?.taskCommentsCount ? 'primary' : 'disabled'}
                     />
                   </IconButton>
                 </Grid>
@@ -294,7 +288,7 @@ export function TaskDataList({
                   className={classes.iconItem}
                   style={{ marginLeft: '-20px' }}
                 >
-                  <span data-testid="task-comment">{data?.taskComments.length || 0}</span>
+                  <span data-testid="task-comment">{task?.taskCommentsCount || 0}</span>
                 </Grid>
 
                 <Grid item md={2} xs={1}>
@@ -324,7 +318,7 @@ export function TaskDataList({
             </Grid>
           </Grid>
         </Grid>
-        {!clientView && task?.subTasks?.length > 0 && (
+        {!clientView && task?.subTasksCount > 0 && (
           <Grid
             item
             md={1}
@@ -344,7 +338,7 @@ export function TaskDataList({
           style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}
           className={classes.arrowDownUpIcon}
         >
-          {task?.subTasks?.length > 0 && (
+          {task?.subTasksCount > 0 && (
             <IconButton
               aria-controls="show-task-subtasks-icon"
               aria-haspopup="true"

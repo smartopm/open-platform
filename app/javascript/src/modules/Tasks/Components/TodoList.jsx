@@ -14,7 +14,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { useMutation, useLazyQuery, useApolloClient } from 'react-apollo';
 import { useParams, useHistory } from 'react-router';
 import { useTranslation } from 'react-i18next';
-import { UsersLiteQuery, flaggedNotes } from '../../../graphql/queries';
+import { UsersLiteQuery } from '../../../graphql/queries';
 import { AssignUser, UpdateNote } from '../../../graphql/mutations';
 import { useFileUpload } from '../../../graphql/useFileUpload';
 import TaskForm from './TaskForm';
@@ -39,6 +39,7 @@ import FloatingButton from '../../../shared/buttons/FloatingButton';
 import SplitScreen from '../../../shared/SplitScreen';
 import { tasksQueryBuilderInitialValue, tasksQueryBuilderConfig, tasksFilterFields } from '../../../utils/constants';
 import AccessCheck from '../../Permissions/Components/AccessCheck';
+import { TasksLiteQuery } from '../graphql/task_queries';
 
 export default function TodoList({
   isDialogOpen,
@@ -123,7 +124,7 @@ export default function TodoList({
   const [
     loadTasks,
     { loading: isLoading, error: tasksError, data, refetch, called }
-  ] = useLazyQuery(flaggedNotes, {
+  ] = useLazyQuery(TasksLiteQuery, {
     variables: {
       offset,
       limit,

@@ -5,10 +5,10 @@ import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min'
 import '@testing-library/jest-dom/extend-expect';
 import { render, fireEvent, screen, waitFor } from '@testing-library/react'
 import TodoList from '../Components/TodoList'
-import { flaggedNotes } from '../../../graphql/queries'
 import { Context } from '../../../containers/Provider/AuthStateProvider'
 import authState from '../../../__mocks__/authstate'
 import taskMock from '../__mocks__/taskMock';
+import { TasksLiteQuery } from '../graphql/task_queries';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 jest.mock('react-router', () => ({
@@ -35,7 +35,7 @@ const props = {
 const mocks = [
   {
     request: {
-      query: flaggedNotes,
+      query: TasksLiteQuery,
       variables: {
         offset: 0,
         limit: 50,
@@ -56,7 +56,7 @@ describe('Test the Todo page', () => {
   it('renders loader', () => {
     render(
       <Context.Provider value={authState}>
-        <MockedProvider mocks={mocks} addTypename={false}>
+        <MockedProvider mocks={mocks} addTypename>
           <BrowserRouter>
             <TodoList {...props} />
           </BrowserRouter>
@@ -70,7 +70,7 @@ describe('Test the Todo page', () => {
   it('mounts the TodoList component', () => {
     render(
       <Context.Provider value={authState}>
-        <MockedProvider mocks={mocks} addTypename={false}>
+        <MockedProvider mocks={mocks} addTypename>
           <BrowserRouter>
             <TodoList {...props} />
           </BrowserRouter>
@@ -87,7 +87,7 @@ describe('Test the Todo page', () => {
   it('renders todo list section', async () => {
     render(
       <Context.Provider value={authState}>
-        <MockedProvider mocks={mocks} addTypename={false}>
+        <MockedProvider mocks={mocks} addTypename>
           <BrowserRouter>
             <TodoList {...props} />
           </BrowserRouter>
@@ -104,7 +104,7 @@ describe('Test the Todo page', () => {
   it('renders task form modal', async () => {
     render(
       <Context.Provider value={authState}>
-        <MockedProvider mocks={mocks} addTypename={false}>
+        <MockedProvider mocks={mocks} addTypename>
           <BrowserRouter>
             <TodoList {...props} />
           </BrowserRouter>
@@ -127,7 +127,7 @@ describe('Test the Todo page', () => {
     it('does not render split screen on initial page load', async () => {
       render(
         <Context.Provider value={authState}>
-          <MockedProvider mocks={mocks} addTypename={false}>
+          <MockedProvider mocks={mocks} addTypename>
             <BrowserRouter>
               <TodoList {...props} />
             </BrowserRouter>
@@ -143,7 +143,7 @@ describe('Test the Todo page', () => {
     it('opens split screen view', async () => {
       render(
         <Context.Provider value={authState}>
-          <MockedProvider mocks={mocks} addTypename={false}>
+          <MockedProvider mocks={mocks} addTypename>
             <BrowserRouter>
               <TodoList {...props} />
             </BrowserRouter>
