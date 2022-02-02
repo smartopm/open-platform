@@ -29,7 +29,10 @@ import SplitScreen from '../../../shared/SplitScreen';
 export default function CampaignList() {
   const classes = useStyles();
   const theme = useTheme();
-  const matches = useMediaQuery(theme.breakpoints.up('sm'));
+  const matches = useMediaQuery(theme.breakpoints.up('md'));
+  const matches0 = useMediaQuery(theme.breakpoints.only('sm'));
+  const matches1 = useMediaQuery(theme.breakpoints.only('md'));
+  const matches2 = useMediaQuery(theme.breakpoints.only('lg'));
   const { id } = useParams();
   const history = useHistory();
   const limit = 50;
@@ -130,6 +133,20 @@ export default function CampaignList() {
     }
   }
 
+  function drawerStyles() {
+    if (matches0) {
+      return classes.drawerPaperMobile
+    }
+    if (matches1) {
+      return classes.mdDrawerPaper
+    }
+    if (matches2) {
+      return classes.drawerPaper
+    }
+
+    return null
+  }
+
   if (loading) return <Loading />;
   if (error) return <ErrorPage />;
   return (
@@ -137,7 +154,7 @@ export default function CampaignList() {
       {deleteError && (
         <CenteredContent><p>{deleteError}</p></CenteredContent>
       )}
-      <Grid item sm={5} data-testid='campaign-list' className={classes.campaignList} style={{ paddingRight: '10px' }}>
+      <Grid item lg={5} md={5} sm={12} xs={12} data-testid='campaign-list' className={classes.campaignList} style={{ paddingRight: '10px' }}>
         <div className="container">
           <Grid container>
             <Grid item sm={12} style={{ marginBottom: '20px' }}>
@@ -172,7 +189,7 @@ export default function CampaignList() {
                 data-testid="search_input"
               />
             </Grid>
-            <Grid item sm={12} xs={12}>
+            <Grid item lg={12} sm={12} md={12} xs={12}>
               {data?.campaigns.length > 0 && (
                 <>
                   {openDeleteModal && (
@@ -217,10 +234,10 @@ export default function CampaignList() {
           </Grid>
         </div>
       </Grid>
-      <Grid item sm={7}>
+      <Grid item lg={6} md={12} sm={12} xs={12}>
         <SplitScreen
           open={matches ? true : show}
-          classes={{ paper: matches ? classes.drawerPaper : classes.drawerPaperMobile }}
+          classes={{ paper: drawerStyles() }}
         >
           <CampaignSplitScreen
             campaignId={id}
@@ -236,7 +253,7 @@ export default function CampaignList() {
 
 const useStyles = makeStyles(() => ({
   drawerPaper: {
-    width: '50%',
+    width: '48%',
     marginTop: '50px',
     background: '#FAFAFA !important',
     border: '0px !important'
@@ -245,6 +262,12 @@ const useStyles = makeStyles(() => ({
     width: '100%',
     background: '#FAFAFA !important',
     marginTop: '50px'
+  },
+  mdDrawerPaper: {
+    width: '40%',
+    marginTop: '50px',
+    background: '#FAFAFA !important',
+    border: '0px !important'
   },
   campaignList: {
     overflowX: 'hidden',

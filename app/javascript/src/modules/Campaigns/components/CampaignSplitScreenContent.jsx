@@ -45,6 +45,7 @@ export default function CampaignSplitScreenContent({ refetch, campaign, handleCl
   const classes = useStyles();
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
+  const breadCrumbShow = useMediaQuery(theme.breakpoints.up('md'));
   const [formData, setFormData] = useState(initData);
   const [mailListType, setMailListType] = useState('label');
   const [label, setLabel] = useState([]);
@@ -167,7 +168,7 @@ export default function CampaignSplitScreenContent({ refetch, campaign, handleCl
   }, [campaign]);
   return (
     <Grid container data-testid='container' className={matches ? classes.container : classes.containerMobile}>
-      {!matches && (
+      {!breadCrumbShow && (
         <Grid item xs={12} className={classes.breadCrumb}>
           <Breadcrumbs aria-label="breadcrumb">
             <Typography
