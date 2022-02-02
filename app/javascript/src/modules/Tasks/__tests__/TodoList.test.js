@@ -56,7 +56,7 @@ describe('Test the Todo page', () => {
   it('renders loader', () => {
     render(
       <Context.Provider value={authState}>
-        <MockedProvider mocks={mocks} addTypename={false}>
+        <MockedProvider mocks={mocks} addTypename>
           <BrowserRouter>
             <TodoList {...props} />
           </BrowserRouter>
@@ -70,7 +70,7 @@ describe('Test the Todo page', () => {
   it('mounts the TodoList component', () => {
     render(
       <Context.Provider value={authState}>
-        <MockedProvider mocks={mocks} addTypename={false}>
+        <MockedProvider mocks={mocks} addTypename>
           <BrowserRouter>
             <TodoList {...props} />
           </BrowserRouter>
@@ -87,7 +87,7 @@ describe('Test the Todo page', () => {
   it('renders todo list section', async () => {
     render(
       <Context.Provider value={authState}>
-        <MockedProvider mocks={mocks} addTypename={false}>
+        <MockedProvider mocks={mocks} addTypename>
           <BrowserRouter>
             <TodoList {...props} />
           </BrowserRouter>
@@ -104,7 +104,7 @@ describe('Test the Todo page', () => {
   it('renders task form modal', async () => {
     render(
       <Context.Provider value={authState}>
-        <MockedProvider mocks={mocks} addTypename={false}>
+        <MockedProvider mocks={mocks} addTypename>
           <BrowserRouter>
             <TodoList {...props} />
           </BrowserRouter>
@@ -127,7 +127,7 @@ describe('Test the Todo page', () => {
     it('does not render split screen on initial page load', async () => {
       render(
         <Context.Provider value={authState}>
-          <MockedProvider mocks={mocks} addTypename={false}>
+          <MockedProvider mocks={mocks} addTypename>
             <BrowserRouter>
               <TodoList {...props} />
             </BrowserRouter>
@@ -143,7 +143,7 @@ describe('Test the Todo page', () => {
     it('opens split screen view', async () => {
       render(
         <Context.Provider value={authState}>
-          <MockedProvider mocks={mocks} addTypename={false}>
+          <MockedProvider mocks={mocks} addTypename>
             <BrowserRouter>
               <TodoList {...props} />
             </BrowserRouter>

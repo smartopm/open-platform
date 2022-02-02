@@ -8,6 +8,7 @@ export default {
   category: 'to_do',
   description: 'Consultant sub-task',
   dueDate: '2022-01-22T21:00:00Z',
+  subTasksCount: 4,
   progress: {
     complete: 0,
     total: 0,
@@ -43,6 +44,7 @@ export default {
       category: 'to_do',
       description: 'Consultant sub-task',
       dueDate: '2022-01-22T21:00:00Z',
+      subTasksCount: 4,
       progress: {
         complete: 1,
         total: 0,
@@ -65,7 +67,7 @@ export default {
         __typename: 'User'
       },
       subTasks: [],
-      
+
       assignees: [
         {
           id: 'cfc7e3d3-d875-4d50-a7a4-994df8ab7f42',
