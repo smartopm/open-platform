@@ -15,9 +15,11 @@ export default function ClientPilotViewItem({process}){
     const { t } = useTranslation('task')
     const { handleStepCompletion } = useContext(TaskContext);
 
-    function routeToProcessDetailsPage() {
+    function handleProjectStepClick() {
       return history.push(`/processes/drc/projects/${taskId}?tab=processes`)
     }
+
+
     return (
       <Grid container spacing={2}>
         <Grid item md={12} xs={12}>
@@ -46,7 +48,7 @@ export default function ClientPilotViewItem({process}){
               <br />
               <ProjectSteps
                 data={process?.subTasks}
-                setSelectedStep={routeToProcessDetailsPage}
+                handleProjectStepClick={handleProjectStepClick}
                 handleStepCompletion={(id, completed) => handleStepCompletion(id, completed)}
                 clientView
               />

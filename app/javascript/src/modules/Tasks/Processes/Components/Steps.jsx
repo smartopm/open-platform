@@ -14,7 +14,8 @@ export default function ProjectSteps({
   setSelectedStep,
   handleStepCompletion,
   handleProjectStepClick,
-  redirect
+  redirect,
+  clientView
 }) {
   const history = useHistory();
   const classes = useStyles();
@@ -45,7 +46,10 @@ export default function ProjectSteps({
 
   function handleStepComplete(e, stepItemId, completed) {
     e.stopPropagation();
-    handleStepCompletion(stepItemId, completed)
+    if(!clientView){
+      handleStepCompletion(stepItemId, completed)
+    }
+   
   }
 
   return (
@@ -66,6 +70,7 @@ export default function ProjectSteps({
               openSubSteps={objectAccessor(stepsOpen, firstLevelStep.id)}
               handleOpenSubStepsClick={(e) => handleOpenSubStepsClick(e, firstLevelStep)}
               handleStepCompletion={handleStepComplete}
+              clientView={clientView}
             />
           </div>
           {firstLevelStep?.subTasks?.length > 0 &&
@@ -80,6 +85,7 @@ export default function ProjectSteps({
                       clickable
                       handleClick={(e) => handleStepItemClick(e, secondLevelStep)}
                       handleStepCompletion={handleStepComplete}
+                      clientView={clientView}
                     />
                   </div>
                 ))}
@@ -111,15 +117,18 @@ const Step = {
 
   ProjectSteps.defaultProps = {
     redirect: false,
-    handleStepCompletion: null
+    clientView: false,
+    handleStepCompletion: ()=> {},
+    setSelectedStep: ()=> {}
   };
 
   ProjectSteps.propTypes = {
   data: PropTypes.arrayOf(PropTypes.shape(Step)).isRequired,
-  setSelectedStep: PropTypes.func.isRequired,
+  setSelectedStep: PropTypes.func,
   handleProjectStepClick: PropTypes.func.isRequired,
   handleStepCompletion: PropTypes.func,
-  redirect: PropTypes.bool
+  redirect: PropTypes.bool,
+  clientView: PropTypes.bool,
 };
 
 const useStyles = makeStyles(() => ({
