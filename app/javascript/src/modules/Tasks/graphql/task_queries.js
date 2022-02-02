@@ -1,6 +1,6 @@
 /* eslint-disable import/prefer-default-export */
 import gql from 'graphql-tag';
-import { NotesFragment } from '../../../graphql/fragments';
+import { NotesFragment, TasksFragment } from '../../../graphql/fragments';
 
 export const TaskStatsQuery = gql`
   {
@@ -57,13 +57,13 @@ export const TaskQuery = gql`
 export const SubTasksQuery = gql`
   query subTasks($taskId: ID!, $offset: Int, $limit: Int) {
     taskSubTasks(taskId: $taskId, offset: $offset, limit: $limit) {
-      ...NoteFields
+      ...TaskFields
       subTasks {
-        ...NoteFields
+        ...TaskFields
       }
     }
   }
-  ${NotesFragment.note}
+  ${TasksFragment.task}
 `
 
 export const ProjectOpenTasksQuery = gql`
@@ -76,6 +76,9 @@ export const ProjectOpenTasksQuery = gql`
 `
 
 
+/**
+ * @deprecated
+ */
 export const flaggedNotes = gql`
   query GetTodos($offset: Int, $limit: Int, $query: String) {
     flaggedNotes(offset: $offset, limit: $limit, query: $query) {
@@ -87,6 +90,16 @@ export const flaggedNotes = gql`
   }
   ${NotesFragment.note}
 `
+
+export const TasksLiteQuery = gql`
+  query tasksListQuery($offset: Int, $limit: Int, $query: String) {
+    flaggedNotes(offset: $offset, limit: $limit, query: $query) {
+      ...TaskFields
+    }
+  }
+  ${TasksFragment.task}
+`
+
 
 export const TaskDocumentsQuery = gql`
   query taskDetail($taskId: ID!) {
