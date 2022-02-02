@@ -26,6 +26,7 @@ module Types
     field :attachments, [GraphQL::Types::JSON], null: true
     field :form_user_id, ID, null: true
     field :progress, GraphQL::Types::JSON, null: true
+    field :sub_tasks_count, Integer, null: true
 
     # move this in a shareable place
     def host_url(type)
@@ -56,6 +57,10 @@ module Types
     end
     # rubocop:enable Metrics/AbcSize
     # rubocop:enable Metrics/MethodLength
+
+    def sub_tasks_count
+      object.sub_notes&.count
+    end
 
     def progress
       total = object.sub_notes.count

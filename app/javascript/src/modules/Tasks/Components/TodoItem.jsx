@@ -44,7 +44,7 @@ export default function TodoItem({
     loadSubTasks,
     { data, loading: isLoadingSubTasks }
   ] = useLazyQuery(SubTasksQuery, {
-    variables: { taskId: task?.id, limit: task?.subTasks?.length },
+    variables: { taskId: task?.id, limit: task?.subTasksCount },
     fetchPolicy: 'cache-and-network',
     errorPolicy: 'all'
   });
