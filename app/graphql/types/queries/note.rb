@@ -323,44 +323,33 @@ module Types::Queries::Note
 
   private
 
-  # rubocop:disable Metrics/MethodLength
   def flagged_notes_query(query)
     search = search_method(query)
 
-    notes = if query&.include?('due_date:nil')
-              tasks_query.where(due_date: nil)
-            else
-              tasks_query.send(search, query)
-            end
-
-    if search == 'search_assignee'
-      notes = notes
-              .includes(
-                parent_note: [
-                  { user: [:avatar_attachment] },
-                  :author,
-                  :sub_notes,
-                  :assignees,
-                  :assignee_notes,
-                  :documents_attachments,
-                  :note_comments,
-                ],
-              )
+    if query&.include?('due_date:nil')
+      tasks_query.where(due_date: nil)
+    else
+      tasks_query.send(search, query)
     end
-    notes
   end
-  # rubocop:enable Metrics/MethodLength
 
+  # rubocop:disable Metrics/MethodLength
   def tasks_query
     context[:site_community]
       .notes
-      .includes({ user: [:avatar_attachment] }, :author, :sub_notes, :assignees, :assignee_notes)
-      .includes(:parent_note)
+      .includes(
+        :sub_notes,
+        :assignees,
+        :assignee_notes,
+        :note_comments,
+        { user: %i[avatar_attachment community] },
+      )
       .where(flagged: true, parent_note_id: nil) # Return only parent tasks
       .where.not(category: 'template')
       .order(completed: :desc, created_at: :desc)
       .with_attached_documents
   end
+  # rubocop:enable Metrics/MethodLength
 
   def search_method(query)
     if query&.include?('assignees')
