@@ -64,6 +64,7 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
   const [isModalOpen, setDenyModal] = React.useState(false);
   const [modalAction, setModalAction] = React.useState('grant');
   const [msg, setMsg] = React.useState('');
+  const [emailError, setEmailValidationError] = React.useState(null);
   const [selectedDate, handleDateChange] = React.useState(null);
   const [showResults, setShowResults] = React.useState(false);
   const [submitting, setSubmitting] = React.useState(false);
@@ -112,9 +113,8 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
       secondaryInfo: isEditing ? vals : JSON.stringify(secondaryInfo)
     };
 
-    console.log(validateEmail(data.email))
     if(!validateEmail(data.email)){
-      setMsg(t('common:upload_state.invalid_email'));
+      setEmailValidationError(t('common:errors.invalid_email'));
       return
     }
 
@@ -131,7 +131,7 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
         if (isFromRef) {
           setShowResults(true);
         } else {
-          // history.push(`/user/${data.result.user.id}`);
+          history.push(`/user/${data.result.user.id}`);
         }
       })
       .catch(err => {
@@ -329,6 +329,8 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
             value={data.email || ''}
             inputProps={{ 'data-testid': 'email' }}
             disabled={!isFromRef && !isAdmin}
+            error={!!emailError}
+            helperText={emailError}
           />
         </div>
 
