@@ -1,3 +1,5 @@
+/* eslint-disable complexity */
+/* eslint-disable max-statements */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React from 'react';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -77,7 +79,7 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
     client: useApolloClient()
   });
   const [userImage, setUserImage] = React.useState(null);
-  
+
   const communityRoles = authState?.user?.community?.name === "Tilisi" ?  authState?.user?.community?.roles.filter(e => e !== 'client') : authState?.user?.community?.roles
 
   function uploadUserImage(image) {
@@ -245,18 +247,26 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
               </Typography>
               <br />
             </div>
-            <div className={`${css(styles.photoUpload)}`}>
+            <div>
               <br />
-              <input
-                type="file"
-                accepts="image/*"
-                capture
-                id="file"
-                onChange={event => uploadUserImage(event.target.files[0])}
-                className={`${css(styles.fileInput)}`}
-              />
-              <PhotoCameraIcon />
-              <label htmlFor="file">{t('common:misc.take_photo')}</label>
+
+              <label htmlFor="file" className={`${css(styles.photoUpload)}`}>
+                <span>
+                  <PhotoCameraIcon className={css(styles.uploadIcon)} />
+                  <br />
+                  <span>
+                    {t('common:misc.take_photo')}
+                  </span>
+                </span>
+                <input
+                  type="file"
+                  accepts="image/*"
+                  capture
+                  id="file"
+                  onChange={event => uploadUserImage(event.target.files[0])}
+                  className={`${css(styles.fileInput)}`}
+                />
+              </label>
             </div>
           </div>
         )}
@@ -549,10 +559,6 @@ const styles = StyleSheet.create({
     width: '100%'
   },
   photoUpload: {
-    flex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
     padding: '20px',
     borderWidth: 2,
     borderRadius: 2,
@@ -563,14 +569,9 @@ const styles = StyleSheet.create({
     outline: 'none',
     transition: 'border .24s ease-in-out',
     cursor: 'pointer',
-    width: '40%'
-  },
-  idUpload: {
-    width: '80%',
-    padding: '60px'
   },
   fileInput: {
-    width: 0.1,
+    width: '40%',
     height: 0.1,
     opacity: 0,
     overflow: 'hidden',
@@ -578,9 +579,13 @@ const styles = StyleSheet.create({
     zIndex: -1,
   },
   uploadedImage: {
-    width: '40%',
+    width: '35%',
     borderRadius: 8
-  }
+  },
+  uploadIcon: {
+    marginTop: 3,
+    marginLeft: '40%'
+  },
 });
 
 UserForm.propTypes = {
