@@ -15,7 +15,7 @@
       "unfollow_tag": "Unfollow Tag",
       "filtered_categories": ["Private", "Uncategorized", "news", "Nkwashi Digest"],
       "visit_news_page": "Hi, visit {{communityName}} news page",
-      "posts": "Posts"
+      "posts": "Posts",
+      "no_post_found": "No post was found"
     }
 }
-  

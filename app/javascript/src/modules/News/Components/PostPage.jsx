@@ -21,13 +21,13 @@ import IframeContainer from '../../../components/IframeContainer'
 import { PostDiscussionQuery, PostCommentsQuery } from '../../../graphql/queries'
 import Comments from '../../../components/Discussion/Comment'
 import { DiscussionMutation } from '../../../graphql/mutations'
-import CenteredContent from '../../../components/CenteredContent'
+import CenteredContent from '../../../shared/CenteredContent';
 import TagsComponent from './Tags'
 import MessageAlert from "../../../components/MessageAlert"
 import { NewsNav } from "../../Menu"
 import { CurrentCommunityQuery } from '../../Community/graphql/community_query'
 
-  // TODO: Reuse this component 
+  // TODO: Reuse this component
   // eslint-disable-next-line
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -61,8 +61,8 @@ export default function PostPage() {
       const result = await fetch(url);
       const json = await result.json();
       setData(json);
-    } catch (err) {
-      setError(err);
+    } catch {
+      setError(t('news.no_post_found'));
     }
   };
 
@@ -138,7 +138,7 @@ export default function PostPage() {
           width={width}
           height={height}
         />
-        {error}
+        <CenteredContent>{error}</CenteredContent>
         <TagsComponent
           tags={response?.tags}
           wordpressEndpoint={communityQuery.data?.currentCommunity.wpLink}
