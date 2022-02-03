@@ -1,5 +1,3 @@
-/* eslint-disable complexity */
-/* eslint-disable max-statements */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React from 'react';
 import MenuItem from '@material-ui/core/MenuItem';
