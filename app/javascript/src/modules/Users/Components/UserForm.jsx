@@ -216,7 +216,6 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
         handleClose={handleModal}
         handleConfirm={handleModalConfirm}
         open={isModalOpen}
-        imageURL={result.avatarUrl} // TODO: this should be removed
         action={modalAction}
         name={data.name}
       />
@@ -224,7 +223,8 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
         {!isFromRef && (
           <div className="form-group">
             <div style={{ width: 200, height: 'auto' }}>
-              {status === 'INIT' && !userImage && data.dataLoaded && (
+              {status === 'INIT' && !userImage && data.avatarUrl && (
+                // Here we only display uploaded avatar
                 <ImageAuth imageLink={data.avatarUrl} />
               )}
             </div>
