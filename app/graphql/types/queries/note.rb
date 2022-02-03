@@ -342,7 +342,7 @@ module Types::Queries::Note
         :assignees,
         :assignee_notes,
         :note_comments,
-        { user: %i[avatar_attachment community] },
+        { user: %i[avatar_attachment] },
       )
       .where(flagged: true, parent_note_id: nil) # Return only parent tasks
       .where.not(category: 'template')
