@@ -8,19 +8,20 @@ import { useTranslation } from 'react-i18next'
 import { useTheme } from '@material-ui/styles'
 import { useFetch } from '../../../utils/customHooks'
 import { Spinner } from '../../../shared/Loading'
+import CenteredContent from '../../../shared/CenteredContent'
 
 export default function Categories({ wordpressEndpoint }) {
   const { response, error } = useFetch(`${wordpressEndpoint}/categories`)
   const { t } = useTranslation('news')
   const theme = useTheme()
-  // TODO: @olivier ==> add better error page and loading component here
+
   if (error) {
-    return error.message
+    return <CenteredContent>{t('news.no_categories_found')}</CenteredContent>
   }
   if (!response || !response.found) {
     return <Spinner />
   }
-  const cats = response.categories.filter(
+  const cats = response?.categories.filter(
     // eslint-disable-next-line func-names
     function(cat) {
       // eslint-disable-next-line react/no-this-in-sfc
