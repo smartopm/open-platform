@@ -113,7 +113,7 @@ export function saniteError(requiredFields, errorMessage) {
   }
   // if we don't know the error
   if (!errorMessage.includes("GraphQL error")) {
-    return "Unexpected error happened, Please try again";
+    return errorMessage;
   }
 
   return `${errorMessage.replace(/GraphQL error:/, "")}`;
@@ -189,7 +189,8 @@ export function getJustLabels(labels) {
  * @returns {boolean} true or false
  */
 export function validateEmail(email) {
-  const re = /\S+@\S+\.\S+/;
+  // const re = /\S+@\S+\.\S+/;
+  const re = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
   return re.test(String(email).toLowerCase());
 }
 

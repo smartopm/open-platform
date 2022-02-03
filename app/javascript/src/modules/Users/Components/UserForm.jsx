@@ -26,7 +26,7 @@ import Loading from '../../../shared/Loading';
 import FormOptionInput, {
   FormOptionWithOwnActions
 } from '../../Forms/components/FormOptionInput';
-import { saniteError } from '../../../utils/helpers';
+import { saniteError, validateEmail } from '../../../utils/helpers';
 import { ModalDialog } from '../../../components/Dialog';
 import CenteredContent from '../../../components/CenteredContent';
 import { UpdateUserMutation } from '../../../graphql/mutations/user';
@@ -77,7 +77,7 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
     client: useApolloClient()
   });
   const [userImage, setUserImage] = React.useState(null);
-  
+
   const communityRoles = authState?.user?.community?.name === "Tilisi" ?  authState?.user?.community?.roles.filter(e => e !== 'client') : authState?.user?.community?.roles
 
   function uploadUserImage(image) {
@@ -112,6 +112,12 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
       secondaryInfo: isEditing ? vals : JSON.stringify(secondaryInfo)
     };
 
+    console.log(validateEmail(data.email))
+    if(!validateEmail(data.email)){
+      setMsg(t('common:upload_state.invalid_email'));
+      return
+    }
+
     if (isFromRef) {
       setTimeout(() => {
         window.location.reload(false);
@@ -125,7 +131,7 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
         if (isFromRef) {
           setShowResults(true);
         } else {
-          history.push(`/user/${data.result.user.id}`);
+          // history.push(`/user/${data.result.user.id}`);
         }
       })
       .catch(err => {
@@ -318,7 +324,7 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
             className="form-control"
             label={t('common:form_fields.primary_email')}
             name="email"
-            type="email"
+            // type="email"
             onChange={handleInputChange}
             value={data.email || ''}
             inputProps={{ 'data-testid': 'email' }}
