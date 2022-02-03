@@ -4,11 +4,15 @@ import { act, render, fireEvent, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { MockedProvider } from '@apollo/react-testing';
 import TaskDetail from '../Components/TaskDetail';
+import { Context } from '../../../containers/Provider/AuthStateProvider';
+import authState from '../../../__mocks__/authstate';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 
 const data = {
   id: '6v2y3etyu2g3eu2',
+  body: 'a task smsd',
+  formUserId: '454353453',
   user: {
     id: '543rfsdf34',
     name: 'tolulope',
@@ -44,9 +48,11 @@ describe('task form component', () => {
     await act(async () => {
       container = render(
         <MockedProvider>
-          <BrowserRouter>
-            <TaskDetail {...props} />
-          </BrowserRouter>
+          <Context.Provider value={authState}>
+            <BrowserRouter>
+              <TaskDetail {...props} />
+            </BrowserRouter>
+          </Context.Provider>
         </MockedProvider>
       );
     });
@@ -64,9 +70,11 @@ describe('task form component', () => {
     await act(async () => {
       container = render(
         <MockedProvider>
-          <BrowserRouter>
-            <TaskDetail {...newProps} />
-          </BrowserRouter>
+          <Context.Provider value={authState}>
+            <BrowserRouter>
+              <TaskDetail {...newProps} />
+            </BrowserRouter>
+          </Context.Provider>
         </MockedProvider>
       );
     });
@@ -85,9 +93,11 @@ describe('task form component', () => {
     it('renders page sections', async () => {
       render(
         <MockedProvider>
-          <BrowserRouter>
-            <TaskDetail {...props} />
-          </BrowserRouter>
+          <Context.Provider value={authState}>
+            <BrowserRouter>
+              <TaskDetail {...props} />
+            </BrowserRouter>
+          </Context.Provider>
         </MockedProvider>
       );
 

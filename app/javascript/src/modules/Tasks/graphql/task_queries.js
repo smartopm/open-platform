@@ -48,6 +48,7 @@ export const TaskQuery = gql`
       parentNote {
         id
         body
+        formUserId
       }
       attachments
       formUserId

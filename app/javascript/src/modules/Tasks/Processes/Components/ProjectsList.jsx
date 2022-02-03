@@ -9,7 +9,7 @@ import { formatError, useParamsQuery } from '../../../../utils/helpers';
 import { Spinner } from '../../../../shared/Loading';
 import CenteredContent from '../../../../shared/CenteredContent';
 import { ProjectsQuery } from '../graphql/process_queries';
-import ProjectItem from './ProjectItem'
+import ProjectItem from './ProjectItem';
 import { Context as AuthStateContext } from '../../../../containers/Provider/AuthStateProvider';
 
 export default function ProjectsList() {
@@ -41,7 +41,7 @@ export default function ProjectsList() {
             <div role="presentation">
               <Breadcrumbs aria-label="breadcrumb" style={{paddingBottom: '10px'}}>
                 <Link to="/processes">
-                  <Typography color="primary" style={{marginLeft: '5px'}}>Processes</Typography>
+                  <Typography color="primary" style={{marginLeft: '5px'}}>{t('processes.processes')}</Typography>
                 </Link>
                 <Typography color="text.primary">{t('processes.drc_process')}</Typography>
               </Breadcrumbs>
@@ -66,7 +66,7 @@ export default function ProjectsList() {
           ))}
           </div>
         )
-        : (<CenteredContent>No projects</CenteredContent>)
+        : (<CenteredContent>{t('processes.no_projects')}</CenteredContent>)
       }
     </div>
   )

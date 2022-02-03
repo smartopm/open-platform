@@ -26,13 +26,14 @@ import moment from 'moment-timezone';
 import { useMutation } from 'react-apollo';
 import DatePickerDialog from '../../../components/DatePickerDialog';
 import { UserChip } from './UserChip';
-import { formatError, sanitizeText } from '../../../utils/helpers';
+import { formatError } from '../../../utils/helpers';
 import UserAutoResult from '../../../shared/UserAutoResult';
 import { dateToString } from '../../../components/DateContainer';
 import AutoSaveField from '../../../shared/AutoSaveField';
 import { UpdateNote } from '../../../graphql/mutations';
 import MessageAlert from '../../../components/MessageAlert';
 import MenuList from '../../../shared/MenuList';
+import TaskTitle from './TaskTitle';
 
 export default function TaskInfoTop({
   currentUser,
@@ -165,19 +166,14 @@ export default function TaskInfoTop({
           </Grid>
         )}
         <Grid item md={8} xs={12}>
-          {!editingBody && (
-          <Typography
-            variant="h6"
-            style={{ color: '#575757' }}
-            onMouseOver={canUpdateNote ? () => setEditingBody(true) : null}
-          >
-            <span
-                // eslint-disable-next-line react/no-danger
-              dangerouslySetInnerHTML={{
-                  __html: sanitizeText(data.body)
-                }}
-            />
-          </Typography>
+          {!editingBody && urlParams?.type !== 'drc' && (
+            <Typography
+              variant="h6"
+              style={{ color: '#575757' }}
+              onMouseOver={canUpdateNote ? () => setEditingBody(true) : null}
+            >
+              <TaskTitle task={data} />
+            </Typography>
           )}
           {editingBody && (
             <AutoSaveField
@@ -252,12 +248,7 @@ export default function TaskInfoTop({
                 onClick={event => openParentLink(event, data.parentNote)}
                 className={classes.parentTask}
               >
-                <span
-                  // eslint-disable-next-line react/no-danger
-                  dangerouslySetInnerHTML={{
-                    __html: sanitizeText(data.parentNote.body)
-                  }}
-                />
+                <TaskTitle task={data.parentNote} />
               </Typography>
             </Grid>
           </Grid>
