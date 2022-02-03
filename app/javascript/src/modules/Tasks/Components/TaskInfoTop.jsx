@@ -165,15 +165,13 @@ export default function TaskInfoTop({
             </Grid>
           </Grid>
         )}
-        <Grid
-          item
-          md={10}
-          xs={12}
-          style={{ border: 'solid 1px red'}}>
+        <Grid item md={10} xs={12}>
           {!editingBody && (
           <Typography
-            variant="h6"
-            style={{ color: '#575757' }}
+            style={{
+              color: '#575757',
+              padding: '15px'
+            }}
             onMouseOver={canUpdateNote ? () => setEditingBody(true) : null}
           >
             <span
@@ -193,11 +191,7 @@ export default function TaskInfoTop({
 )}
         </Grid>
         {!matches && (
-          <Grid
-            item
-            md={2}
-            style={{ border: 'solid 1px blue'}}
-          >
+          <Grid item md={2}>
             <Grid container style={{ justifyContent: 'right' }}>
               <Grid item md={4} xs={1} style={{ textAlign: 'right' }}>
                 {canUpdateNote && (
@@ -245,7 +239,7 @@ export default function TaskInfoTop({
           </Grid>
         )}
       </Grid>
-      <Grid item md={12}>
+      <Grid item md={12} style={{ marginTop: '24px'}}>
         {data.parentNote && (
           <Grid container className={classes.parentTaskSection}>
             <Grid item xs={5} md={3}>
