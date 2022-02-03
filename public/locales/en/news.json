@@ -16,6 +16,7 @@
       "filtered_categories": ["Private", "Uncategorized", "news", "Nkwashi Digest"],
       "visit_news_page": "Hi, visit {{communityName}} news page",
       "posts": "Posts",
-      "no_post_found": "No post was found"
+      "no_post_found": "No post found",
+      "no_tags_found": "No tags found"
     }
 }
