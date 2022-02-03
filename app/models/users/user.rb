@@ -386,7 +386,7 @@ module Users
     # rubocop:enable Metrics/MethodLength
 
     def construct_message(vals)
-      mess = messages.new(vals)
+      mess = Notifications::Message.new(vals)
       mess[:user_id] = vals[:user_id]
       mess.sender_id = self[:id]
       mess
