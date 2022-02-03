@@ -28,6 +28,10 @@
       "today": "Importe total pagado hoy"
     },
     "pending_tasks_text": "Tus tareas pendientes aparecerán aquí",
+    "plot": "Gráfico",
+    "plot_plural": "Parcelas",
+    "plot_detail": "Detalle de la trama",
+    "plot_detail_plural": "Detalle de la tramas",
     "plots_appear_here": "Tus lotes aparecerán aquí ",
     "quick_links": "Enlaces Rápidos",
     "recent_news": "Ultimas Novedades",
@@ -36,10 +40,6 @@
     "support": "Ayuda",
     "task_reminders": "Recordatorio de tareas",
     "view_customer_journey": "Ver Etapa del Cliente",
-    "your_customer_journey": "Su Etapa de Cliente",
-    "plot": "Gráfico",
-    "plot_plural": "Parcelas",
-    "plot_detail": "Detalle de la trama",
-    "plot_detail_plural": "Detalle de la tramas"
+    "your_customer_journey": "Su Etapa de Cliente"
   }
 }
