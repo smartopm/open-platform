@@ -3,7 +3,8 @@ import { MockedProvider } from '@apollo/react-testing'
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom';
-import { LinkToUser, TaskDataList } from '../Components/RenderTaskData';
+import { LinkToUser } from '../Components/RenderTaskData';
+import TaskDataList from '../Components/TaskDataList';
 import TodoItem from '../Components/TodoItem'
 import MockedThemeProvider from '../../__mocks__/mock_theme'
 import t from '../../__mocks__/t'
@@ -23,6 +24,7 @@ describe('Task Data components', () => {
   const task =
     {
       body: 'Task example',
+      formUserId: '242321',
       id: '23',
       createdAt: new Date('2020-08-01'),
       author: {
@@ -76,19 +78,22 @@ describe('Task Data components', () => {
     const container = render(
       <BrowserRouter>
         <MockedProvider>
-          <MockedThemeProvider>
-            <TodoItem
-              task={task}
-              handleChange={() => {}}
-              selectedTasks={[]}
-              isSelected={false}
-              handleTaskDetails={() => {}}
-              handleAddSubTask={jest.fn()}
-              handleTodoClick={jest.fn}
-              handleTaskCompletion={jest.fn}
-              handleUploadDocument={jest.fn}
-            />
-          </MockedThemeProvider>
+          <Context.Provider value={authState}>
+            <MockedThemeProvider>
+              <TodoItem
+                task={task}
+                handleChange={() => {}}
+                selectedTasks={[]}
+                isSelected={false}
+                handleTaskDetails={() => {}}
+                handleCompleteNote={() => {}}
+                handleAddSubTask={jest.fn()}
+                handleTodoClick={jest.fn}
+                handleTaskCompletion={jest.fn}
+                handleUploadDocument={jest.fn}
+              />
+            </MockedThemeProvider>
+          </Context.Provider>
         </MockedProvider>
       </BrowserRouter>
     )
@@ -109,20 +114,23 @@ describe('Task Data components', () => {
     render(
       <BrowserRouter>
         <MockedProvider>
-          <MockedThemeProvider>
-            <TodoItem
-              task={task}
-              query='assignees: John Doe'
-              handleChange={() => {}}
-              selectedTasks={[]}
-              isSelected={false}
-              handleTaskDetails={() => {}}
-              handleAddSubTask={jest.fn()}
-              handleTodoClick={jest.fn}
-              handleTaskCompletion={jest.fn}
-              handleUploadDocument={jest.fn}
-            />
-          </MockedThemeProvider>
+          <Context.Provider value={authState}>
+            <MockedThemeProvider>
+              <TodoItem
+                task={task}
+                query='assignees: John Doe'
+                handleChange={() => {}}
+                selectedTasks={[]}
+                isSelected={false}
+                handleTaskDetails={() => {}}
+                handleCompleteNote={() => {}}
+                handleAddSubTask={jest.fn()}
+                handleTodoClick={jest.fn}
+                handleTaskCompletion={jest.fn}
+                handleUploadDocument={jest.fn}
+              />
+            </MockedThemeProvider>
+          </Context.Provider>
         </MockedProvider>
       </BrowserRouter>
     )
@@ -137,9 +145,9 @@ describe('Task Data components', () => {
 
   it('renders task menu options', async () => {
     render(
-      <Context.Provider value={authState}>
-        <BrowserRouter>
-          <MockedProvider>
+      <BrowserRouter>
+        <MockedProvider>
+          <Context.Provider value={authState}>
             <MockedThemeProvider>
               <TodoItem
                 task={task}
@@ -154,9 +162,9 @@ describe('Task Data components', () => {
                 handleUploadDocument={jest.fn}
               />
             </MockedThemeProvider>
-          </MockedProvider>
-        </BrowserRouter>
-      </Context.Provider>
+          </Context.Provider>
+        </MockedProvider>
+      </BrowserRouter>
     );
 
     const menuButton = screen.getByTestId('task-item-menu');
@@ -176,20 +184,23 @@ describe('Task Data components', () => {
     render(
       <BrowserRouter>
         <MockedProvider>
-          <MockedThemeProvider>
-            <TodoItem
-              task={task}
-              handleChange={() => {}}
-              selectedTasks={[]}
-              isSelected={false}
-              handleTaskDetails={() => {}}
-              handleAddSubTask={jest.fn()}
-              taskHeader={taskHeader}
-              handleTodoClick={jest.fn}
-              handleTaskCompletion={jest.fn}
-              handleUploadDocument={jest.fn}
-            />
-          </MockedThemeProvider>
+          <Context.Provider value={authState}>
+            <MockedThemeProvider>
+              <TodoItem
+                task={task}
+                handleChange={() => {}}
+                selectedTasks={[]}
+                isSelected={false}
+                handleTaskDetails={() => {}}
+                handleCompleteNote={() => {}}
+                handleAddSubTask={jest.fn()}
+                taskHeader={taskHeader}
+                handleTodoClick={jest.fn}
+                handleTaskCompletion={jest.fn}
+                handleUploadDocument={jest.fn}
+              />
+            </MockedThemeProvider>
+          </Context.Provider>
         </MockedProvider>
       </BrowserRouter>
     );
@@ -201,24 +212,27 @@ describe('Task Data components', () => {
   });
 
   it('should render TaskDataList', async () => {
-
     const container = render(
       <BrowserRouter>
-        <MockedThemeProvider>
-          <TaskDataList
-            task={task}
-            handleChange={jest.fn()}
-            handleFileInputChange={jest.fn()}
-            selectedTasks={[]}
-            isSelected={false}
-            menuData={{}}
-            clickable
-            handleClick={jest.fn()}
-            openSubTask
-            handleOpenSubTasksClick={jest.fn()}
-            handleTaskCompletion={jest.fn}
-          />
-        </MockedThemeProvider>
+        <MockedProvider>
+          <Context.Provider value={authState}>
+            <MockedThemeProvider>
+              <TaskDataList
+                task={task}
+                handleChange={jest.fn()}
+                handleFileInputChange={jest.fn()}
+                selectedTasks={[]}
+                isSelected={false}
+                menuData={{}}
+                clickable
+                handleClick={jest.fn()}
+                openSubTask
+                handleOpenSubTasksClick={jest.fn()}
+                handleTaskCompletion={jest.fn}
+              />
+            </MockedThemeProvider>
+          </Context.Provider>
+        </MockedProvider>
       </BrowserRouter>
     );
 

@@ -3,9 +3,11 @@ import React from 'react';
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min';
 import '@testing-library/jest-dom/extend-expect';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import ProjectItem from '../Components/ProjectItem';
 import taskMock from '../../__mocks__/taskMock';
+import authState from '../../../../__mocks__/authstate';
+import { Context } from '../../../../containers/Provider/AuthStateProvider';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 const props = {
@@ -14,15 +16,19 @@ const props = {
 };
 
 describe('Process Item', () => {
-  it('renders necessary elements', () => {
+  it('renders necessary elements', async () => {
     render(
       <MockedProvider mocks={[]} addTypename={false}>
-        <BrowserRouter>
-          <ProjectItem {...props} />
-        </BrowserRouter>
+        <Context.Provider value={authState}>
+          <BrowserRouter>
+            <ProjectItem {...props} />
+          </BrowserRouter>
+        </Context.Provider>
       </MockedProvider>
     );
 
-    expect(screen.queryByTestId('task_body_section')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.queryByTestId('task_body_section')).toBeInTheDocument();
+    }, 5)
   });
 });
