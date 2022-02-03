@@ -1,9 +1,8 @@
-
 **1. What this MR does / why we need it:**
 
-- Ticket#
+- Ticket #
 - Description:
-
+- Loom: 
 
 **2. Verification:**
 - [ ] Merge Request does not include breaking changes.
@@ -33,4 +32,7 @@
 
 
 Thanks for your MR, you're awesome! :+1:
+
+<!-- If it is a user related changes, you can append @vanessa43 to the list below  -->
+/assign_reviewer @nurudeen1 @saurabh44 @tolulope3 @DMutuba @victor369 @bonny2 @olivierjmm 
 
