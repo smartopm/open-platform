@@ -12,7 +12,7 @@ import { useFetch } from '../../../utils/customHooks'
 import Categories from './Categories'
 import { ShareButton } from '../../../components/ShareButton'
 import { Spinner } from '../../../shared/Loading'
-import CenteredContent from '../../../components/CenteredContent'
+import CenteredContent from '../../../shared/CenteredContent';
 import { titleize } from '../../../utils/helpers'
 
 export default function PostsList({ wordpressEndpoint, communityName }) {
@@ -33,13 +33,13 @@ export default function PostsList({ wordpressEndpoint, communityName }) {
     }
 
     if (error) {
-        return error.message
+        return <CenteredContent>{t('news.no_posts')}</CenteredContent>
     }
     if (!response) {
         return <Spinner />
     }
-    const totalPosts = response.found
-    const publicPosts = totalPosts && response.posts.filter(post => post.categories.Private == null)
+    const totalPosts = response?.found || 0
+    const publicPosts = Boolean(totalPosts) && response.posts.filter(post => post.categories.Private == null)
     return (
       <>
         <Box style={{ display: 'flex', justifyContent: 'center', 'marginTop': '7px'}}>

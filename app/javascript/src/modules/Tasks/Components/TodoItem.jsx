@@ -1,3 +1,5 @@
+/* eslint-disable max-statements */
+/* eslint-disable complexity */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useState } from 'react';
@@ -6,7 +8,7 @@ import { useLazyQuery } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/core/styles';
 import { useLocation } from 'react-router'
-import { TaskDataList } from './RenderTaskData';
+import TaskDataList from './TaskDataList';
 import FileUploader from './FileUploader';
 import { objectAccessor } from '../../../utils/helpers';
 import MenuList from '../../../shared/MenuList';

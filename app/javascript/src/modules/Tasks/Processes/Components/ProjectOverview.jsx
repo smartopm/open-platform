@@ -101,7 +101,7 @@ export function ProjectOverviewSplitView({ data, refetch, handleProjectStepClick
         <Grid item md={12} data-testid="requirements-section">
           <Typography variant="subtitle1" style={{fontWeight: 400}}>Requirements</Typography>
           <Typography variant="caption">Please read the required guideline. </Typography>
-          <Link to="https://tilisi.doublegdp.com/news/post/8">
+          <Link to="/news/post/8">
             <Typography variant="caption">Go to Guideline.</Typography>
           </Link>
         </Grid>

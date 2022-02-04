@@ -24,6 +24,9 @@ import { useApolloClient, useMutation, useQuery } from 'react-apollo';
 import { useHistory } from 'react-router';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
+import CloseIcon from '@material-ui/icons/Close';
+import IconButton from '@material-ui/core/IconButton';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import DatePickerDialog, {
   DateAndTimePickers,
   ThemedTimePicker
@@ -33,19 +36,24 @@ import ErrorPage from '../../../components/Error';
 import CenteredContent from '../../../components/CenteredContent';
 import { FormUserStatusUpdateMutation, FormUserUpdateMutation } from '../graphql/forms_mutation';
 import TextInput from './FormProperties/TextInput';
-import { convertBase64ToFile, sortPropertyOrder, objectAccessor, secureFileDownload } from '../../../utils/helpers';
+import {
+  convertBase64ToFile,
+  sortPropertyOrder,
+  objectAccessor,
+  secureFileDownload
+} from '../../../utils/helpers';
 import DialogueBox from '../../../shared/dialogs/DeleteDialogue';
 import UploadField from './FormProperties/UploadField';
 import SignaturePad from './FormProperties/SignaturePad';
 import { useFileUpload } from '../../../graphql/useFileUpload';
-import { dateFormatter , dateToString } from '../../../components/DateContainer';
+import { dateFormatter, dateToString } from '../../../components/DateContainer';
 import { formStatus as updatedFormStatus } from '../../../utils/constants';
 import RadioInput from './FormProperties/RadioInput';
 import ImageAuth from '../../../shared/ImageAuth';
-import Loading from '../../../shared/Loading';
+import Loading, { Spinner } from '../../../shared/Loading';
+
 import FormTitle from './FormTitle';
 import CheckboxInput from './FormProperties/CheckboxInput';
-
 
 // date
 // text input (TextField or TextArea)
@@ -70,6 +78,9 @@ export default function FormUpdate({ formUserId, userId, authState }) {
   // create form user
   const [updateFormUser] = useMutation(FormUserUpdateMutation);
   const [updateFormUserStatus] = useMutation(FormUserStatusUpdateMutation);
+  const [uploadedFiles, setUploadedFiles] = useState([]);
+  const [formState, setFormState] = useState({});
+  const matches = useMediaQuery('(max-width:600px)');
 
   const { data, error, loading } = useQuery(UserFormPropertiesQuery, {
     variables: { userId, formUserId },
@@ -83,7 +94,7 @@ export default function FormUpdate({ formUserId, userId, authState }) {
     errorPolicy: 'all'
   });
 
-  const { onChange, status, url, signedBlobId } = useFileUpload({
+  const { onChange, status, url, signedBlobId, contentType } = useFileUpload({
     client: useApolloClient()
   });
   const {
@@ -108,6 +119,33 @@ export default function FormUpdate({ formUserId, userId, authState }) {
       });
     });
   }, [data]);
+
+  useEffect(() => {
+    if (
+      status === 'DONE' &&
+      formState.currentPropId &&
+      !uploadedFiles.find(im => im.propertyId === formState.currentPropId)
+    ) {
+      setFormState({
+        ...formState,
+        isUploading: false
+      });
+      setUploadedFiles([
+        ...uploadedFiles,
+        { blobId: signedBlobId, propertyId: formState.currentPropId, contentType, url }
+      ]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [status]);
+
+  function onFileSelect(event, currentProperty) {
+    setFormState({
+      ...formState,
+      currentPropId: currentProperty,
+      isUploading: true
+    });
+    onChange(event.target.files[0]);
+  }
 
   async function handleSignatureUpload() {
     setMessage({ ...message, signed: true });
@@ -169,9 +207,6 @@ export default function FormUpdate({ formUserId, userId, authState }) {
   }
 
   function saveFormData() {
-    const fileUploadType = data.formUserProperties.filter(
-      item => item.formProperty.fieldType === 'image'
-    )[0];
     const fileSignType = data.formUserProperties.filter(
       item => item.formProperty.fieldType === 'signature'
     )[0];
@@ -191,14 +226,15 @@ export default function FormUpdate({ formUserId, userId, authState }) {
       };
       filledInProperties.push(newValue);
     }
-    // check if we uploaded then attach the blob id to the newValue
-    if (signedBlobId && url) {
-      const newValue = {
-        value: signedBlobId,
-        form_property_id: fileUploadType.formProperty.id,
-        image_blob_id: signedBlobId
-      };
-      filledInProperties.push(newValue);
+
+    if (uploadedFiles.length > 0) {
+      uploadedFiles.forEach(upload => {
+        filledInProperties.push({
+          value: upload.blobId,
+          form_property_id: upload.propertyId,
+          image_blob_id: upload.blobId
+        });
+      });
     }
 
     const cleanFormData = JSON.stringify({ user_form_properties: filledInProperties });
@@ -256,13 +292,22 @@ export default function FormUpdate({ formUserId, userId, authState }) {
 
   function downloadFile(event, path) {
     event.preventDefault();
-    secureFileDownload(path)
+    secureFileDownload(path);
+  }
+
+  function onImageRemove(filePropertyId) {
+    const filteredFiles = uploadedFiles.filter(im => im.propertyId !== filePropertyId);
+    setUploadedFiles(filteredFiles);
   }
 
   function renderForm(formPropertiesData) {
     const editable = !formPropertiesData.formProperty.adminUse
       ? false
       : !(formPropertiesData.formProperty.adminUse && authState.user.userType === 'admin');
+
+    const uploadedFile = uploadedFiles.find(
+      im => im.propertyId === formPropertiesData.formProperty.id
+    );
     const fields = {
       text: (
         <TextInput
@@ -339,76 +384,99 @@ export default function FormUpdate({ formUserId, userId, authState }) {
             alignItems="flex-start"
             className={classes.fileUploadField}
           >
-            <Grid item md={6}>
-              <div>
-                {formPropertiesData.imageUrl && (
-                  <>
-                    <div>
-                      <ListItem style={{ paddingLeft: 0, marginBottom: '-20px' }}>
-                        <Grid container>
-                          <Grid item xs={11}>
-                            <ListItemText
-                              disableTypography
-                              primary={(
-                                <Typography
-                                  variant="body1"
-                                  color="primary"
-                                  style={{ fontWeight: 700 }}
-                                  data-testid="filename"
-                                >
-                                  {formPropertiesData.fileName}
-                                </Typography>
-                              )}
-                              secondary={(
-                                <>
-                                  <Typography
-                                    component="span"
-                                    variant="body2"
-                                    data-testid="uploaded_at"
+            {formState.isUploading &&
+            formState.currentPropId === formPropertiesData.formProperty.id ? (
+              <Spinner />
+            ) : (
+              (!!uploadedFile && (
+                <div className={matches ? classes.filePreviewMobile : classes.filePreview}>
+                  <IconButton
+                    className={classes.iconButton}
+                    onClick={() => onImageRemove(formPropertiesData.formProperty.id)}
+                    data-testid="image_close"
+                  >
+                    <CloseIcon className={classes.closeButton} />
+                  </IconButton>
+                  <ImageAuth
+                    type={uploadedFile.contentType.split('/')[0]}
+                    imageLink={uploadedFile.url}
+                  />
+                </div>
+              )) || (
+                <Grid item md={6}>
+                  <div>
+                    {formPropertiesData.imageUrl && (
+                      <>
+                        <div>
+                          <ListItem style={{ paddingLeft: 0, marginBottom: '-20px' }}>
+                            <Grid container>
+                              <Grid item xs={11}>
+                                <ListItemText
+                                  disableTypography
+                                  primary={(
+                                    <Typography
+                                      variant="body1"
+                                      color="primary"
+                                      style={{ fontWeight: 700 }}
+                                      data-testid="filename"
+                                    >
+                                      {formPropertiesData.fileName}
+                                    </Typography>
+                                  )}
+                                  secondary={(
+                                    <>
+                                      <Typography
+                                        component="span"
+                                        variant="body2"
+                                        data-testid="uploaded_at"
+                                      >
+                                        {`${t('common:misc.uploaded_at')}: ${dateToString(
+                                          formPropertiesData.createdAt
+                                        )}`}
+                                      </Typography>
+                                      <Typography
+                                        component="span"
+                                        variant="body2"
+                                        data-testid="uploaded_by"
+                                        style={{ marginLeft: '20px' }}
+                                      >
+                                        {`${t('common:misc.uploaded_by')}: ${
+                                          formPropertiesData.user.name
+                                        }`}
+                                      </Typography>
+                                    </>
+                                  )}
+                                />
+                              </Grid>
+                              <Grid item xs={1} className="">
+                                <ListItemSecondaryAction className={classes.menu}>
+                                  <Button
+                                    aria-label="download-icon"
+                                    data-testid="download-icon"
+                                    variant="outlined"
+                                    onClick={event =>
+                                      downloadFile(event, formPropertiesData.imageUrl)
+                                    }
                                   >
-                                    {`${t('common:misc.uploaded_at')}: ${dateToString(
-                                      formPropertiesData.createdAt
-                                    )}`}
-                                  </Typography>
-                                  <Typography
-                                    component="span"
-                                    variant="body2"
-                                    data-testid="uploaded_by"
-                                    style={{ marginLeft: '20px' }}
-                                  >
-                                    {`${t('common:misc.uploaded_by')}: ${
-                                      formPropertiesData.user.name
-                                    }`}
-                                  </Typography>
-                                </>
-                              )}
-                            />
-                          </Grid>
-                          <Grid item xs={1} className="">
-                            <ListItemSecondaryAction className={classes.menu}>
-                              <Button
-                                aria-label="download-icon"
-                                data-testid="download-icon"
-                                variant="outlined"
-                                onClick={(event) => downloadFile(event, formPropertiesData.imageUrl)}
-                              >
-                                {t('common:misc.open')}
-                              </Button>
-                            </ListItemSecondaryAction>
-                          </Grid>
-                        </Grid>
-                      </ListItem>
-                    </div>
-                  </>
-                )}
-              </div>
-            </Grid>
+                                    {t('common:misc.open')}
+                                  </Button>
+                                </ListItemSecondaryAction>
+                              </Grid>
+                            </Grid>
+                          </ListItem>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                </Grid>
+              )
+            )}
           </Grid>
           <div>
             <UploadField
-              detail={{ type: 'file', status, detail: { label: formPropertiesData.value } }}
+              detail={{ type: 'file', status, id: formPropertiesData.formProperty.id }}
               key={formPropertiesData.id}
-              upload={evt => onChange(evt.target.files[0])}
+              upload={evt => onFileSelect(evt, formPropertiesData.formProperty.id)}
               editable={editable}
               style={{ flex: 1 }}
               btnColor="primary"
@@ -593,6 +661,8 @@ const useStyles = makeStyles(() => ({
     marginTop: '-12px'
   },
   filePreview: {
+    position: 'relative',
+    marginTop: 18,
     maxWidth: '50%',
     '& iframe': {
       height: '400px',
@@ -600,10 +670,22 @@ const useStyles = makeStyles(() => ({
     }
   },
   filePreviewMobile: {
+    position: 'relative',
+    marginTop: 18,
     maxWidth: '80%',
     '& iframe': {
       height: '300px',
       width: '300px'
+    }
+  },
+  iconButton: {
+    right: 2,
+    marginRight: -25,
+    marginTop: -25,
+    background: 'white',
+    position: 'absolute',
+    '&:hover': {
+      background: 'white'
     }
   }
 }));

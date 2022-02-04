@@ -342,7 +342,7 @@ module Types::Queries::Note
         :assignees,
         :assignee_notes,
         :note_comments,
-        { user: %i[avatar_attachment community] },
+        { user: %i[avatar_attachment] },
       )
       .where(flagged: true, parent_note_id: nil) # Return only parent tasks
       .where.not(category: 'template')
@@ -366,10 +366,9 @@ module Types::Queries::Note
   def projects_query
     form_name = 'DRC Project Review Process'
     drc_form = context[:site_community].forms.where('name ILIKE ?', "#{form_name}%").first
-    drc_ids = context[:site_community].forms.where(grouping_id: drc_form.grouping_id).pluck(:id)
-
     return unless drc_form
 
+    drc_ids = context[:site_community].forms.where(grouping_id: drc_form.grouping_id).pluck(:id)
     drc_form_users = Forms::FormUser.where(form_id: drc_ids).pluck(:id)
 
     context[:site_community]

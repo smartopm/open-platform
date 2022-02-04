@@ -437,6 +437,57 @@ RSpec.describe Types::Queries::Note do
         expect(result.dig('data', 'userNotes').length).to eql 2
       end
 
+      describe 'Get tasks by role' do
+        let(:developer_role) { create(:role, name: 'developer', community: admin.community) }
+        let(:developer) { create(:developer, role: developer_role, community: admin.community) }
+        let!(:developer_permissions) do
+          create(:permission, module: 'note',
+                              role: developer_role,
+                              permissions: %w[can_fetch_flagged_notes])
+        end
+
+        it 'retrieves tasks by role for non admins and custodians' do
+          result = DoubleGdpSchema.execute(flagged_notes_query, context: {
+                                             current_user: developer,
+                                             site_community: developer.community,
+                                           }, variables: { id: admin.id }).as_json
+
+          expect(result.dig('data', 'flaggedNotes')).not_to be_nil
+          expect(result.dig('data', 'flaggedNotes').length).to eql 0
+        end
+
+        it 'retrieves assigned and created tasks for non admin roles' do
+          developer.notes.create!(
+            body: 'Developer task',
+            user_id: developer.id,
+            description: 'Developer created task',
+            category: 'form',
+            flagged: true,
+            community_id: developer.community_id,
+            author_id: developer.id,
+          )
+
+          # Assign task
+          developer.tasks.create!(
+            body: 'Developer assigned task',
+            user_id: developer.id,
+            description: 'Developer assigned task',
+            category: 'form',
+            flagged: true,
+            community_id: developer.community_id,
+            author_id: developer.id,
+          )
+
+          result = DoubleGdpSchema.execute(flagged_notes_query, context: {
+                                             current_user: developer,
+                                             site_community: developer.community,
+                                           }, variables: { id: admin.id }).as_json
+
+          expect(result.dig('data', 'flaggedNotes')).not_to be_nil
+          expect(result.dig('data', 'flaggedNotes').length).to eql 2
+        end
+      end
+
       it 'should query tasks stats' do
         admin.notes.create!(
           body: 'Task for stats',

@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 import TaskContextProvider from '../../Context';
 import { StyledTabs, StyledTab, TabPanel, a11yProps } from '../../../../components/Tabs';
 import ProjectOverview, { ProjectOverviewSplitView } from './ProjectOverview';
-import { objectAccessor, sanitizeText, useParamsQuery } from '../../../../utils/helpers';
+import { objectAccessor, useParamsQuery } from '../../../../utils/helpers';
 import ProjectProcesses from './ProjectProcesses';
 import ProjectProcessesSplitView from './ProjectProcessesSplitView';
 import ErrorPage from '../../../../components/Error';
@@ -18,6 +18,7 @@ import { SubTasksQuery, TaskQuery } from '../../graphql/task_queries';
 import { hrefsExtractor } from '../utils';
 import MessageAlert from '../../../../components/MessageAlert';
 import { ProjectCommentsQuery } from '../graphql/process_queries';
+import TaskTitle from '../../Components/TaskTitle';
 
 export default function TaskProcessDetail() {
   const limit = 20;
@@ -104,12 +105,7 @@ export default function TaskProcessDetail() {
             <Grid container>
               <Grid item md={11} xs={10} data-testid="project-title" style={{paddingTop: '20px'}}>
                 <Typography variant="h4">
-                  <span
-                    // eslint-disable-next-line react/no-danger
-                    dangerouslySetInnerHTML={{
-                      __html: sanitizeText(projectData?.task?.body)
-                    }}
-                  />
+                  <TaskTitle task={projectData?.task} />
                 </Typography>
               </Grid>
               <Grid item md={1} xs={2} style={{textAlign: 'right', marginTop: '20px'}}>

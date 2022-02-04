@@ -10,6 +10,7 @@ export default {
   dueDate: '2022-01-22T21:00:00Z',
   subTasksCount: 4,
   taskCommentsCount: 4,
+  formUserId: "0358e014-1440-46ee-988d-d5338f019ba3",
   progress: {
     complete: 0,
     total: 0,
@@ -26,6 +27,8 @@ export default {
   documents: [],
   parentNote: {
     id: '90ba44ef-4306-416b-945f-1d2ea4eb4c50',
+    formUserId: "816864d4-4815-4043-a9a5-def5282c9e2a",
+    body: "Parent task body",
     __typename: 'Note'
   },
   author: {
@@ -46,6 +49,7 @@ export default {
       description: 'Consultant sub-task',
       dueDate: '2022-01-22T21:00:00Z',
       subTasksCount: 4,
+      formUserId: "65b665e0-959c-4c08-aaef-3f4b70e85495",
       progress: {
         complete: 1,
         total: 0,

@@ -72,7 +72,8 @@ describe('TaskUpdate Component', () => {
               ],
               parentNote: {
                 id: 'fghs9',
-                body: ''
+                body: '',
+                formUserId: '12345'
               }
             }
           }

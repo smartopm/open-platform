@@ -6,8 +6,8 @@ import PropTypes from 'prop-types';
 import Divider from '@mui/material/Divider';
 import { TaskContext } from "../../Context";
 import ProjectSteps from './Steps';
-import { sanitizeText } from '../../../../utils/helpers';
 import ProcessItem from './ProjectItem';
+import TaskTitle from '../../Components/TaskTitle';
 
 export default function ClientPilotViewItem({process}){
     const  taskId  = process?.id
@@ -24,16 +24,11 @@ export default function ClientPilotViewItem({process}){
       <Grid container spacing={2}>
         <Grid item md={12} xs={12}>
           <Typography variant="h6">
-            <span
-              // eslint-disable-next-line react/no-danger
-              dangerouslySetInnerHTML={{
-                    __html: sanitizeText(process?.body)
-                  }}
-            />
+            <TaskTitle task={process} />
           </Typography>
         </Grid>
         <Grid item md={12} xs={12} data-testid="project-container">
-          <Grid container spacing={6} data-testid="project-open-tasks"> 
+          <Grid container spacing={6} data-testid="project-open-tasks">
             <Grid item md={6} xs={12}>
               <Typography variant="h6">{t('processes.your_tasks')}</Typography>
               <br />
@@ -55,11 +50,11 @@ export default function ClientPilotViewItem({process}){
             </Grid>
 
           </Grid>
-      
+
         </Grid>
 
         <Grid item md={12} xs={12} style={{ marginBottom: '2px'}}><Divider /></Grid>
-        
+
       </Grid>
     )
   }

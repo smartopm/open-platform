@@ -8,7 +8,7 @@ import { UpdateNote } from '../../../../graphql/mutations';
 import { useFileUpload } from '../../../../graphql/useFileUpload';
 import TodoItem from '../../Components/TodoItem';
 
-export default function ProcessItem({ task, taskId, refetch, clientView }) {
+export default function ProjectItem({ task, taskId, refetch, clientView }) {
   const { t } = useTranslation('task');
   const [selectedTasks, setSelectedTasks] = useState([]);
   const [selectedTask, setSelectedTask] = useState(null);
@@ -98,13 +98,13 @@ export default function ProcessItem({ task, taskId, refetch, clientView }) {
   )
 }
 
-ProcessItem.defaultProps ={
+ProjectItem.defaultProps ={
   clientView: false,
   taskId: null,
   task: null
 }
-ProcessItem.propTypes = {
-  task: PropTypes.shape,
+ProjectItem.propTypes = {
+  task: PropTypes.shape({ id: PropTypes.string }),
   refetch: PropTypes.func.isRequired,
   clientView: PropTypes.bool,
   taskId: PropTypes.string

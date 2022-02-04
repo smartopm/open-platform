@@ -15,6 +15,7 @@ import MessageAlert from '../../../components/MessageAlert';
 import { PostTagUser } from '../../../graphql/queries';
 import { Spinner } from '../../../shared/Loading'
 import { FollowPostTag } from '../../../graphql/mutations';
+import CenteredContent from '../../../shared/CenteredContent';
 
 export default function TagPosts({ open, handleClose, tagName, wordpressEndpoint }) {
   const classes = useStyles();
@@ -35,7 +36,7 @@ export default function TagPosts({ open, handleClose, tagName, wordpressEndpoint
   }, [tagName, open])
 
   if (error || lazyError) {
-    return error?.message || lazyError?.message
+    return <CenteredContent>{t('news.no_tags_found') || lazyError?.message}</CenteredContent>
   }
 
   function loadPostPage(postId) {
@@ -102,7 +103,9 @@ export default function TagPosts({ open, handleClose, tagName, wordpressEndpoint
               </Button>
             </div>
           </div>
-          {response.posts?.map((post) => (
+
+
+          { Boolean(response?.posts) && response.posts?.map((post) => (
             // eslint-disable-next-line jsx-a11y/no-static-element-interactions
             <div key={post.ID} onClick={() => loadPostPage(post.ID)}>
               <PostItem

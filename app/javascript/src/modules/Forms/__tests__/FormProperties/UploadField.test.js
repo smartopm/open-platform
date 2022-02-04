@@ -8,7 +8,7 @@ describe('Upload component', () => {
       const handler = jest.fn()
     const props = {
         upload: handler,
-        detail: { status: '', type: 'file', label: 'Image Label', required: true },
+        detail: { status: '', type: 'file', label: 'Image Label', required: true, id: '1234' },
         editable: false,
         uploaded: false,
         btnColor: 'primary'
@@ -28,7 +28,7 @@ describe('Upload component', () => {
     const props = {
         upload: handler,
         handleValue: jest.fn(),
-        detail: { status: '', type: 'file', label: 'Image Label', required: true },
+        detail: { status: '', type: 'file', label: 'Image Label', required: true, id: '123' },
         editable: false
     }
     const rendered = render(<Upload {...props} inputValidation={{error: true}} />)
