@@ -33,7 +33,7 @@ import DatePickerDialog, {
 } from '../../../components/DatePickerDialog';
 import { FormUserQuery, UserFormPropertiesQuery } from '../graphql/forms_queries';
 import ErrorPage from '../../../components/Error';
-import CenteredContent from '../../../components/CenteredContent';
+import CenteredContent from '../../../shared/CenteredContent';
 import { FormUserStatusUpdateMutation, FormUserUpdateMutation } from '../graphql/forms_mutation';
 import TextInput from './FormProperties/TextInput';
 import {
