@@ -1,5 +1,6 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
+import TaskContextProvider from '../../Context';
 import AdminDashboard from './AdminDashboard';
 import ClientPilotViewList from './ClientPilotViewList';
 import { Context as AuthStateContext } from '../../../../containers/Provider/AuthStateProvider';
@@ -21,11 +22,11 @@ export default function ProcessesPage() {
     history.push('/')
   }
   return(
-    <>
+    <TaskContextProvider>
       {
       // eslint-disable-next-line no-nested-ternary
       canAccessAdminProcessesDashboard ? <AdminDashboard /> : canAccessClientProcessesDashboard ? <ClientPilotViewList /> : <ProjectsList />
       }
-    </>
+    </TaskContextProvider>
   );
 };
