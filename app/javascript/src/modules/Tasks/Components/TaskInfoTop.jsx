@@ -26,7 +26,7 @@ import moment from 'moment-timezone';
 import { useMutation } from 'react-apollo';
 import DatePickerDialog from '../../../components/DatePickerDialog';
 import { UserChip } from './UserChip';
-import { formatError } from '../../../utils/helpers';
+import { formatError, useParamsQuery } from '../../../utils/helpers';
 import UserAutoResult from '../../../shared/UserAutoResult';
 import { dateToString } from '../../../components/DateContainer';
 import AutoSaveField from '../../../shared/AutoSaveField';
@@ -60,6 +60,8 @@ export default function TaskInfoTop({
   const matches = useMediaQuery('(max-width:800px)');
   const history = useHistory();
   const urlParams = useParams();
+  const searchParams = useParamsQuery();
+  const currentTab = searchParams.get('tab');
   const [taskUpdate] = useMutation(UpdateNote);
   const [editingBody, setEditingBody] = useState(false);
   const [editingDueDate, setEditingDueDate] = useState(false);
@@ -171,7 +173,7 @@ export default function TaskInfoTop({
           </Grid>
         )}
         <Grid item md={10} xs={12}>
-          {!editingBody && (
+          {!editingBody && (urlParams?.type !== 'drc' || (urlParams?.type === 'drc' && currentTab === 'processes')) && (
           <Typography
             style={{
               color: '#575757',
