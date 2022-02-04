@@ -88,7 +88,6 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
 
   function handleSubmit(event) {
     event.preventDefault();
-    setSubmitting(true);
     const secondaryInfo = {
       phone: phoneNumbers,
       email: emails,
@@ -124,6 +123,7 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
       }, 3000);
     }
 
+    setSubmitting(true);
     createOrUpdate(values)
       // eslint-disable-next-line no-shadow
       .then(({ data }) => {
@@ -324,7 +324,6 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
             className="form-control"
             label={t('common:form_fields.primary_email')}
             name="email"
-            // type="email"
             onChange={handleInputChange}
             value={data.email || ''}
             inputProps={{ 'data-testid': 'email' }}
