@@ -79,6 +79,8 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
   });
   const [userImage, setUserImage] = React.useState(null);
 
+
+  // TODO: Refactor this
   const communityRoles = authState?.user?.community?.name === "Tilisi" ?  authState?.user?.community?.roles.filter(e => e !== 'client') : authState?.user?.community?.roles
 
   function uploadUserImage(image) {
@@ -421,12 +423,18 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
                     required
                     className={`${css(styles.selectInput)}`}
                   >
-                    {communityRoles &&
-                   communityRoles.map(key => (
-                     <MenuItem key={key} value={key}>
-                       {t(`user_types.${key}`)}
-                     </MenuItem>
-                    ))}
+
+
+                    {
+                    communityRoles ?
+                      communityRoles.map(key => (
+                        <MenuItem key={key} value={key}>
+                          {t(`user_types.${key}`)}
+                        </MenuItem>
+                      ))
+                      // Fix test errors
+                      : <MenuItem />
+                  }
 
                   </TextField>
                 </div>

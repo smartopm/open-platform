@@ -1,3 +1,4 @@
+/* eslint-disable max-statements */
 import React from 'react';
 import { act, fireEvent, render } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
@@ -55,7 +56,8 @@ describe('UserForm Component', () => {
     expect(container.queryByTestId('address').value).toContain('24th street, west');
     // when we hit submit button, it should get disabled
     fireEvent.click(container.queryByTestId('submit_btn'));
-    expect(container.queryByTestId('submit_btn')).toBeDisabled();
+    expect(container.queryByTestId('submit_btn')).not.toBeDisabled();
+    expect(container.queryByText('common:errors.invalid_email')).toBeInTheDocument();
   });
   it('should contain referral form when referring', async () => {
     const props = { isEditing: false, isFromRef: true };

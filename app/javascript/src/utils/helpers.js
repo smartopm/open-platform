@@ -189,7 +189,6 @@ export function getJustLabels(labels) {
  * @returns {boolean} true or false
  */
 export function validateEmail(email) {
-  // const re = /\S+@\S+\.\S+/;
   const re = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
   return re.test(String(email).toLowerCase());
 }
