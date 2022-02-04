@@ -174,12 +174,7 @@ export default function TaskInfoTop({
             }}
             onMouseOver={canUpdateNote ? () => setEditingBody(true) : null}
           >
-            <span
-                // eslint-disable-next-line react/no-danger
-              dangerouslySetInnerHTML={{
-                  __html: sanitizeText(data.body)
-                }}
-            />
+            <TaskTitle task={data} />
           </Typography>
           )}
           {editingBody && (
