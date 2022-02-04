@@ -9,7 +9,7 @@ import ProjectSteps from './Steps';
 import ProcessItem from './ProjectItem';
 import TaskTitle from '../../Components/TaskTitle';
 
-export default function ClientPilotViewItem({process}){
+export default function ClientPilotViewItem({process, refetch }){
     const  taskId  = process?.id
     const history = useHistory()
     const { t } = useTranslation('task')
@@ -44,7 +44,7 @@ export default function ClientPilotViewItem({process}){
               <ProjectSteps
                 data={process?.subTasks}
                 handleProjectStepClick={handleProjectStepClick}
-                handleStepCompletion={(id, completed) => handleStepCompletion(id, completed)}
+                handleStepCompletion={(id, completed) => handleStepCompletion(id, completed, refetch)}
                 clientView
               />
             </Grid>
@@ -78,5 +78,5 @@ export default function ClientPilotViewItem({process}){
 
   ClientPilotViewItem.propTypes = {
     process: PropTypes.shape(Task).isRequired,
-
+    refetch: PropTypes.func.isRequired,
   }

@@ -15,7 +15,7 @@ export default function ClientPilotViewList(){
     const offset = 0;
     const classes = useStyles();
     const { t } = useTranslation('task')
-    const { loading, error, data }
+    const { loading, error, data, refetch }
         = useQuery(ProcessesQuery, {
         variables: {
             offset,
@@ -46,7 +46,7 @@ export default function ClientPilotViewList(){
                 </Grid>
                 {data?.processes?.map(process => (
                                         
-                  <ClientPilotViewItem key={process.id} process={process} />
+                  <ClientPilotViewItem key={process.id} process={process} refetch={refetch} />
                     ))}
               </div>
             )
