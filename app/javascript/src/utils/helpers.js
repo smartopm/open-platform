@@ -112,8 +112,9 @@ export function saniteError(requiredFields, errorMessage) {
     return `${cleanFields.join(" or ")} value is required`;
   }
   // if we don't know the error
+  // TODO: Return the original error of what went wrong
   if (!errorMessage.includes("GraphQL error")) {
-    return errorMessage;
+    return "Unexpected error happened, Please try again";
   }
 
   return `${errorMessage.replace(/GraphQL error:/, "")}`;
