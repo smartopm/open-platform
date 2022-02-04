@@ -594,41 +594,51 @@ export default function FormUpdate({ formUserId, userId, authState }) {
           {data?.formUserProperties.sort(sortPropertyOrder).map(renderForm)}
           <br />
           <br />
-          <div className="d-flex row justify-content-center">
-            <Button
-              type="submit"
-              color="primary"
-              aria-label="form_update"
-              variant="outlined"
-              disabled={isLoading}
-            >
-              {t('form_status_actions.update')}
-            </Button>
+          <Grid container justify="space-between" direction='row' spacing={2}>
+            <Grid item xs={4}>
+              <Button
+                type="submit"
+                color="primary"
+                aria-label="form_update"
+                variant="outlined"
+                disabled={isLoading}
+                size="small"
+                fullWidth={matches}
+              >
+                {t('form_status_actions.update')}
+              </Button>
+            </Grid>
             {authState.user.userType === 'admin' && (
               <>
-                <Button
-                  variant="contained"
-                  onClick={event => handleActionClick(event, 'approve')}
-                  color="primary"
-                  aria-label="form_approve"
-                  style={{ marginLeft: '10vw' }}
-                  disabled={isLoading}
-                >
-                  {t('form_status_actions.approved')}
-                </Button>
-                <Button
-                  variant="contained"
-                  onClick={event => handleActionClick(event, 'reject')}
-                  aria-label="form_reject"
-                  style={{ marginLeft: '10vw', backgroundColor: '#DC004E', color: '#FFFFFF' }}
-                  disabled={isLoading}
-                >
-                  {t('form_status_actions.rejected')}
-                </Button>
+                <Grid item xs={4}>
+                  <Button
+                    variant="contained"
+                    onClick={event => handleActionClick(event, 'approve')}
+                    color="primary"
+                    aria-label="form_approve"
+                    disabled={isLoading}
+                    size="small"
+                    fullWidth={matches}
+                  >
+                    {t('form_status_actions.approved')}
+                  </Button>
+                </Grid>
+                <Grid item xs={4}>
+                  <Button
+                    variant="contained"
+                    onClick={event => handleActionClick(event, 'reject')}
+                    aria-label="form_reject"
+                    style={{ backgroundColor: '#DC004E', color: '#FFFFFF' }}
+                    disabled={isLoading}
+                    size="small"
+                    fullWidth={matches}
+                  >
+                    {t('form_status_actions.rejected')}
+                  </Button>
+                </Grid>
               </>
             )}
-          </div>
-
+          </Grid>
           <br />
           <CenteredContent>
             {Boolean(message.info.length) && (
