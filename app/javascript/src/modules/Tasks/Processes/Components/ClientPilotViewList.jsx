@@ -9,7 +9,6 @@ import { Spinner } from '../../../../shared/Loading';
 import CenteredContent from '../../../../shared/CenteredContent';
 import { formatError } from '../../../../utils/helpers';
 
-
 export default function ClientPilotViewList(){
     const limit = 50;
     const offset = 0;
@@ -27,32 +26,28 @@ export default function ClientPilotViewList(){
     if (loading) return <Spinner />;
     return (
       <div className='container'>
+        <Grid container>
+          <Grid item md={11} xs={11} className={classes.header}>
+            <Grid container spacing={1}>
+              <Grid item md={9} xs={10}>
+                <Typography variant="h4" style={{marginLeft: '5px', marginBottom: '24px'}} data-testid="processes-header">
+                  {t('processes.processes')}
+                </Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
         <Grid container data-testid="project-information">
-
-
           {data?.processes?.length ?
             (
               <div>
-                <Grid container>
-                  <Grid item md={11} xs={11} className={classes.header}>
-                    <Grid container spacing={1}>
-                      <Grid item md={9} xs={10}>
-                        <Typography variant="h4" style={{marginLeft: '5px', marginBottom: '24px'}} data-testid="processes-header">
-                          {t('processes.processes')}
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                </Grid>
                 {data?.processes?.map(process => (
-                                        
                   <ClientPilotViewItem key={process.id} process={process} refetch={refetch} />
                     ))}
               </div>
             )
         : (<CenteredContent>{t('processes.no_assigned_projects')}</CenteredContent>)
       }
-    
         </Grid>
       </div>
     )
