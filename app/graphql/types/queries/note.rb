@@ -383,6 +383,7 @@ module Types::Queries::Note
         :documents_attachments,
       )
       .where(parent_note_id: nil, form_user_id: drc_form_users)
+      .for_site_manager(current_user)
   end
   # rubocop:enable Metrics/AbcSize
   # rubocop:enable Metrics/MethodLength
