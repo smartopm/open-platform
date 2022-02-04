@@ -314,6 +314,7 @@ module Types::Queries::Note
                             .order(created_at: :asc)
                             .limit(limit).offset(offset)
                             .with_attached_documents
+                            .for_site_manager(current_user)
   end
 
   def completed_by_quarter
