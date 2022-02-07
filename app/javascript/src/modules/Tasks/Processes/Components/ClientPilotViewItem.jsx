@@ -9,7 +9,7 @@ import ProjectSteps from './Steps';
 import ProjectItem from './ProjectItem';
 import TaskTitle from '../../Components/TaskTitle';
 
-export default function ClientPilotViewItem({process, refetch}){
+export default function ClientPilotViewItem({process, refetch}) {
     const taskId  = process?.id
     const history = useHistory()
     const { t } = useTranslation('task')

@@ -3,7 +3,7 @@ import { useQuery } from 'react-apollo';
 import { Grid,Typography } from '@mui/material';
 import { makeStyles } from '@material-ui/styles';
 import { useTranslation } from 'react-i18next';
-import { ProcessesQuery } from '../graphql/process_queries';
+import { ClientAssignedProjectsQuery } from '../graphql/process_queries';
 import ClientPilotViewItem from './ClientPilotViewItem';
 import { Spinner } from '../../../../shared/Loading';
 import CenteredContent from '../../../../shared/CenteredContent';
@@ -15,7 +15,7 @@ export default function ClientPilotViewList(){
     const classes = useStyles();
     const { t } = useTranslation('task')
     const { loading, error, data, refetch }
-        = useQuery(ProcessesQuery, {
+        = useQuery(ClientAssignedProjectsQuery, {
         variables: {
             offset,
             limit,
@@ -38,11 +38,11 @@ export default function ClientPilotViewList(){
           </Grid>
         </Grid>
         <Grid container data-testid="project-information">
-          {data?.processes?.length ?
+          {data?.clientAssignedProjects?.length ?
             (
               <div>
-                {data?.processes?.map(process => (
-                  <ClientPilotViewItem key={process.id} process={process} refetch={refetch} />
+                {data?.clientAssignedProjects?.map(project => (
+                  <ClientPilotViewItem key={project.id} process={project} refetch={refetch} />
                     ))}
               </div>
             )

@@ -84,6 +84,13 @@ module Types::Queries::Note
       argument :query, String, required: false
     end
 
+    field :client_assigned_projects, [Types::NoteType], null: false do
+      description 'Returns assigned projects for the client'
+      argument :limit, Integer, required: false
+      argument :offset, Integer, required: false
+      argument :query, String, required: false
+    end
+
     field :projects, [Types::NoteType], null: false do
       description 'Returns a list of projects under a process'
       argument :offset, Integer, required: false
@@ -315,6 +322,28 @@ module Types::Queries::Note
                             .limit(limit).offset(offset)
                             .with_attached_documents
                             .for_site_manager(current_user)
+  end
+
+  def client_assigned_projects(offset: 0, limit: 50, query: nil)
+    unless permitted?(module: :note, permission: :can_fetch_flagged_notes)
+      raise GraphQL::ExecutionError,
+            I18n.t('errors.unauthorized')
+    end
+
+    assigned_parent_tasks = current_user.tasks.where(parent_note_id: nil)
+    sub_tasks = current_user.tasks.where.not(parent_note_id: nil)
+    assigned_sub_tasks = []
+    # Get sub task parent notes
+    sub_tasks.each do |task|
+      if task.parent_note.present?
+        if task.parent_note.parent_note.present?
+          assigned_sub_tasks << task.parent_note.parent_note
+          next
+        end
+        assigned_sub_tasks << task.parent_note
+      end
+    end
+    assigned_parent_tasks | assigned_sub_tasks
   end
 
   def completed_by_quarter
