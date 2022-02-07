@@ -74,13 +74,14 @@ export default function TaskDataList({
               </IconButton>
             </Grid>
             <Grid item md={8} xs={10}>
-                  {
+              {
                     task.body.length > 35 ?
-                    ( <Tooltip
-                      title={task.body}
-                      arrow
-                      placement="bottom"
-                      componentsProps={{
+                    ( 
+                      <Tooltip
+                        title={task.body}
+                        arrow
+                        placement="bottom"
+                        componentsProps={{
                         tooltip: {
                           sx: {
                             bgcolor: 'primary',
@@ -90,24 +91,25 @@ export default function TaskDataList({
                           }
                         }
                       }}
-                    >
-                      <Typography
-                        variant="body2"
-                        data-testid="task_body"
-                        component="p"
-                        className={matches ? classes.taskBodyMobile : classes.taskBody}
                       >
-                        <TaskTitle task={task} />
-                      </Typography>
-                    </Tooltip>): (       
-                      <Typography
-                        variant="body2"
-                        data-testid="task_body"
-                        component="p"
-                        className={matches ? classes.taskBodyMobile : classes.taskBody}
-                      >
-                        <TaskTitle task={task} />
-                      </Typography>
+                        <Typography
+                          variant="body2"
+                          data-testid="task_body"
+                          component="p"
+                          className={matches ? classes.taskBodyMobile : classes.taskBody}
+                        >
+                          <TaskTitle task={task} />
+                        </Typography>
+                      </Tooltip>
+): (       
+  <Typography
+    variant="body2"
+    data-testid="task_body"
+    component="p"
+    className={matches ? classes.taskBodyMobile : classes.taskBody}
+  >
+    <TaskTitle task={task} />
+  </Typography>
                     )
                   }
             </Grid>
