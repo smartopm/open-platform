@@ -44,6 +44,8 @@ module Types
     field :status, String, null: true
     field :exited_at, GraphQL::Types::ISO8601DateTime, null: true
     field :closest_entry_time, Types::EntryTimeType, null: true
+    field :multiple_invites, Boolean, null: true
+
 
     def active
       object.active?
@@ -85,6 +87,10 @@ module Types
       object.entry_times.where.not(visitation_date: nil).min do |a, b|
         (Time.zone.now - a.visitation_date) - (Time.zone.now - b.visitation_date)
       end
+    end
+
+    def multiple_invites
+      object.invites.size > 1
     end
   end
 end
