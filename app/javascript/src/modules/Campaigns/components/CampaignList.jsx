@@ -13,7 +13,7 @@ import { useTranslation } from 'react-i18next';
 import { makeStyles, useTheme } from '@material-ui/styles';
 import { Typography } from '@material-ui/core';
 import { allCampaigns } from '../../../graphql/queries';
-import Loading from '../../../shared/Loading';
+import { Spinner } from '../../../shared/Loading';
 import ErrorPage from '../../../components/Error';
 import CenteredContent from '../../../shared/CenteredContent';
 import Paginate from '../../../components/Paginate';
@@ -57,12 +57,14 @@ export default function CampaignList() {
     {
       content: t('misc.open_campaign_details'),
       isAdmin: true,
-      handleClick: () => openDetailsClick()
+      handleClick: () => openDetailsClick(),
+      show: true
     },
     {
       content: t('actions.delete_campaign'),
       isAdmin: true,
-      handleClick: () => handleDeleteClick()
+      handleClick: () => handleDeleteClick(),
+      show: showMenu()
     }
   ];
 
@@ -78,6 +80,10 @@ export default function CampaignList() {
     event.stopPropagation();
     setAnchorEl(event.currentTarget);
     setCampaign(camp);
+  }
+
+  function showMenu() {
+    return (campaign?.status === 'draft' || campaign?.status === 'scheduled')
   }
 
   function handleMenuClose() {
@@ -147,7 +153,7 @@ export default function CampaignList() {
     return null
   }
 
-  if (loading) return <Loading />;
+  if (loading) return <Spinner />;
   if (error) return <ErrorPage />;
   return (
     <Grid container data-testid='container'>
@@ -160,10 +166,10 @@ export default function CampaignList() {
             <Grid item sm={12} style={{ marginBottom: '20px' }}>
               <Grid container>
                 <Grid item sm={10} xs={10}>
-                  <Typography data-testid='campaign-title' variant="h4">Campaigns</Typography>
+                  <Typography data-testid='campaign-title' variant="h4">{t('campaign.campaigns')}</Typography>
                 </Grid>
                 <Grid item sm={2} xs={2} style={{ textAlign: 'right' }}>
-                  <Tooltip title="New Campaign" placement="top">
+                  <Tooltip title={t('actions.new_campaign')} placement="top">
                     <IconButton
                       aria-label="new-campaign"
                       color="primary"
@@ -175,7 +181,7 @@ export default function CampaignList() {
                   </Tooltip>
                 </Grid>
                 <Grid item sm={12} xs={12}>
-                  <Typography variant="body2">Communicate with the community.</Typography>
+                  <Typography variant="body2">{t('campaign.communicate')}</Typography>
                 </Grid>
               </Grid>
             </Grid>
@@ -197,8 +203,8 @@ export default function CampaignList() {
                       open={openDeleteModal}
                       handleClose={handleDeleteClick}
                       handleAction={handleDelete}
-                      title="Campaign"
-                      action="delete"
+                      title={t('campaign.campaign')}
+                      action={t('common:menu.delete')}
                       loading={deletingCampaign}
                     />
                   )}
@@ -215,7 +221,7 @@ export default function CampaignList() {
                         }
                         anchorEl={menuData.anchorEl}
                         handleClose={menuData.handleMenuClose}
-                        list={menuData.menuList.filter(menuItem => menuItem.content !== null)}
+                        list={menuData.menuList.filter(menuItem => menuItem.show)}
                       />
                     </Fragment>
                   ))}
