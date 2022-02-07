@@ -1,9 +1,10 @@
+/* eslint-disable complexity */
 /* eslint-disable no-nested-ternary */
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useLazyQuery, useMutation } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
-import { useHistory } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
@@ -139,12 +140,18 @@ export default function GuestsView({
                   {t('logbook:logbook.host')}
                   {' '}
                 </Typography>
-                <Text
-                  color="secondary"
-                  content={visit.user.name}
-                  data-testid="user_name"
-                  onClick={event => handleViewUser(event, visit.user)}
-                />
+                {
+                  visit.multipleInvites
+                  ? <Link to={`/user/${visit.guest.id}`}>Multiple</Link>
+                  : (
+                    <Text
+                      color="secondary"
+                      content={visit.user.name}
+                      data-testid="user_name"
+                      onClick={event => handleViewUser(event, visit.user)}
+                    />
+                  )
+                }
                 <div style={{ paddingTop: '7px' }} data-testid="request_status">
                   <Chip
                     data-testid="user-entry"
