@@ -1,10 +1,12 @@
 import React from 'react';
-import { render, screen , waitFor} from '@testing-library/react';
+import { fireEvent, render, screen , waitFor} from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min';
 import { MockedProvider } from '@apollo/react-testing';
 import TaskDocuments from '../Components/TaskDocuments';
 import { TaskDocumentsQuery } from '../graphql/task_queries';
+import authState from "../../../__mocks__/authstate";
+import { Context } from '../../../containers/Provider/AuthStateProvider'
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 
@@ -38,12 +40,14 @@ describe('Task Documents', () => {
   ];
 
   it('renders properly when there are documents', async () => {
-    render(
-      <MockedProvider mocks={DocumentsMock} addTypename={false}>
-        <BrowserRouter>
-          <TaskDocuments taskId='302df8c3-27bb-4175-adc1-43857e972eb4' />
-        </BrowserRouter>
-      </MockedProvider>
+         render(
+           <Context.Provider value={authState}>
+             <MockedProvider mocks={DocumentsMock} addTypename={false}>
+               <BrowserRouter>
+                 <TaskDocuments taskId='302df8c3-27bb-4175-adc1-43857e972eb4' />
+               </BrowserRouter>
+             </MockedProvider>
+           </Context.Provider>
     );
 
     await waitFor(() => {
@@ -57,6 +61,16 @@ describe('Task Documents', () => {
       expect(screen.queryByTestId('uploaded_by').textContent).toContain('John Doe');
       expect(screen.queryByTestId('more_details')).toBeInTheDocument();
       expect(screen.queryByTestId('closing_divider')).toBeInTheDocument();
+
+      fireEvent.click(screen.queryByTestId('more_details'));
+      expect(screen.queryByText('document.download')).toBeInTheDocument();
+      expect(screen.queryByText('document.delete')).toBeInTheDocument();
+
+      fireEvent.click(screen.queryByTestId('delete_button'));
+      expect(screen.queryByText('document.delete_confirmation_message')).toBeInTheDocument();
+      expect(screen.queryByTestId('proceed_button')).toBeInTheDocument();
+
+      fireEvent.click(screen.queryByTestId('proceed_button'));
     });
   });
 });

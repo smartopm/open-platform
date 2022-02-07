@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { Fragment, useState, useEffect, useContext } from 'react';
 import {
   Divider,
   Grid,
@@ -27,12 +27,18 @@ import MessageAlert from '../../../components/MessageAlert';
 import { TaskDocumentsQuery } from '../graphql/task_queries';
 import { Spinner } from '../../../shared/Loading';
 import { formatError, secureFileDownload } from '../../../utils/helpers';
-import { UpdateNote } from '../../../graphql/mutations';
+import { UpdateNote , DeleteNoteDocument } from '../../../graphql/mutations';
+import { ActionDialog } from '../../../components/Dialog';
+
+import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider'
 
 export default function TaskDocuments({ taskId }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const [currentDoc, setCurrentDoc] = useState('');
+  const [open, setOpen] = useState(false);
   const [taskUpdate] = useMutation(UpdateNote);
+  const [taskDocumentDelete] = useMutation(DeleteNoteDocument);
+  const authState = useContext(AuthStateContext);
   const [messageDetails, setMessageDetails] = useState({ isError: false, message: '' });
   const classes = useStyles();
   const { data, loading, error, refetch } = useQuery(TaskDocumentsQuery, {
@@ -43,6 +49,8 @@ export default function TaskDocuments({ taskId }) {
   const { onChange, signedBlobId, status } = useFileUpload({
     client: useApolloClient()
   });
+  const userTaskPermissions = authState.user?.permissions.find(permissionObject => permissionObject.module === 'note');
+  const canDeleteDocument = userTaskPermissions ? userTaskPermissions.permissions.includes('can_delete_note_document'): false
 
   useEffect(() => {
     if (status === 'ERROR') {
@@ -70,6 +78,16 @@ export default function TaskDocuments({ taskId }) {
     setCurrentDoc(document);
   }
 
+  function handleCloseDialog() {
+    setOpen(false);
+    handleCloseMenu();
+  }
+
+  function handleCloseMenu() {
+    setAnchorEl(null);
+    setCurrentDoc(null);
+  }
+
   function handleUploadDocument(event) {
     onChange(event.target.files[0]);
   }
@@ -77,6 +95,19 @@ export default function TaskDocuments({ taskId }) {
   function downloadFile(event, path) {
     event.preventDefault();
     secureFileDownload(path)
+  }
+
+  function handleDeleteDocument() {
+    taskDocumentDelete({ variables: { documentId: currentDoc?.id } })
+    .then(() => {
+      setMessageDetails({ isError: false, message: t('document.document_deleted') });
+      handleCloseDialog();
+      refetch();
+    })
+    .catch(err => {
+      setMessageDetails({ isError: true, message: err.message });
+      handleCloseDialog();
+    })
   }
 
   if (loading) return <Spinner />;
@@ -89,6 +120,13 @@ export default function TaskDocuments({ taskId }) {
         message={messageDetails.message}
         open={!!messageDetails.message}
         handleClose={() => setMessageDetails({ ...messageDetails, message: '' })}
+      />
+      <ActionDialog
+        open={open}
+        type={t('misc.confirm')}
+        message={t('document.delete_confirmation_message')}
+        handleClose={handleCloseDialog}
+        handleOnSave={handleDeleteDocument}
       />
       <Grid container alignItems="center">
         <Grid item xs={11} md={11} />
@@ -118,7 +156,7 @@ export default function TaskDocuments({ taskId }) {
       {documents?.length > 0 && (
         <Divider variant="fullWidth" data-testid="opening_divider" />
       )}
-      {documents?.length && (
+      {documents?.length > 0 && (
         <List>
           {documents.map(doc => (
             <Fragment key={doc.id}>
@@ -177,21 +215,31 @@ export default function TaskDocuments({ taskId }) {
         </List>
       )}
       <Menu
-        id={`long-menu-${currentDoc.id}`}
+        id={`long-menu-${currentDoc?.id}`}
         anchorEl={anchorEl}
         open={menuOpen}
-        onClose={() => setAnchorEl(null)}
+        onClose={() => handleCloseMenu()}
         keepMounted={false}
         data-testid="more_details_menu"
       >
-        <MenuItem id="download_button" key="download" onClick={() => setAnchorEl(null)}>
+        <MenuItem id="download_button" key="download" onClick={() => handleCloseMenu()}>
           <a
-            onClick={(event) => downloadFile(event, currentDoc.url)}
+            onClick={(event) => downloadFile(event, currentDoc?.url)}
             style={{ textDecoration: 'none', color: '#000000' }}
           >
             {t('document.download')}
           </a>
         </MenuItem>
+        {canDeleteDocument && (
+          <MenuItem
+            id="delete_button"
+            key="delete"
+            onClick={() => setOpen(true)}
+            data-testid='delete_button'
+          >
+            {t('document.delete')}
+          </MenuItem>
+        )}
       </Menu>
     </div>
   );

@@ -60,6 +60,16 @@ describe('Task Data components', () => {
           blob_id: '21b8b3d1-40fa-4f9d-a7ac-721ce6e7f772',
           created_at: '2021-11-02T13:37:26.664+02:00'
       },
+      ],
+      attachments: [
+        {
+          id: 'a6428125-1527-4001-ab9c-60a13584d1a4',
+          name: 'documents',
+          record_type: 'Notes::Note',
+          record_id: '302df8c3-27bb-4175-adc1-43857e972eb4',
+          blob_id: '21b8b3d1-40fa-4f9d-a7ac-721ce6e7f772',
+          created_at: '2021-11-02T13:37:26.664+02:00'
+        },
       ]
     }
 

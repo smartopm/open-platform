@@ -132,6 +132,7 @@ export const NotesFragment = {
       dueDate
       progress
       subTasksCount
+      attachments
       user {
         id
         name
@@ -172,6 +173,7 @@ export const TasksFragment = {
       subTasksCount
       taskCommentsCount
       documents
+      attachments
       assignees {
         id
         name
