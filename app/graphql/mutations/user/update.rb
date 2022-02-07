@@ -24,6 +24,9 @@ module Mutations
       field :user, Types::UserType, null: true
 
       def resolve(vals)
+        user = nil
+        raise_duplicate_number_error(vals[:phone_number])
+
         user = context[:site_community].users.find(vals.delete(:id))
         raise GraphQL::ExecutionError, I18n.t('errors.user.not_found') unless user
 
