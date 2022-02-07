@@ -374,7 +374,7 @@ export default function FormUpdate({ formUserId, userId, authState }) {
       ),
       file_upload: (
         <div key={formPropertiesData.formProperty.id}>
-          <div data-testid="attachment-name" style={{ margin: '15px 0 -15px 0' }}>
+          <div data-testid="attachment-name" style={{ margin: '15px 0 -10px 0' }}>
             {formPropertiesData.formProperty.fieldName}
           </div>
           <Grid
