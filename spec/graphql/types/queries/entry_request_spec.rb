@@ -85,6 +85,7 @@ RSpec.describe Types::Queries::EntryRequest do
             id
           }
           thumbnailUrl
+          multipleInvites
         }
         })
     end
@@ -200,7 +201,8 @@ RSpec.describe Types::Queries::EntryRequest do
                                          current_user: admin,
                                          site_community: current_user.community,
                                        }).as_json
-      expect(result.dig('data', 'scheduledRequests').length).to eql 0
+      expect(result.dig('data', 'scheduledRequests').length).to eql 2
+      expect(result.dig('data', 'scheduledRequests', 0, 'multipleInvites')).to eql false
     end
 
     it 'searches by end_time and ends_at' do
@@ -223,7 +225,7 @@ RSpec.describe Types::Queries::EntryRequest do
         },
       ).as_json
 
-      expect(result.dig('data', 'scheduledRequests').length).to eq 0
+      expect(result.dig('data', 'scheduledRequests').length).to eq 1
     end
 
     it 'searches by ends_at not equal to date' do
@@ -251,7 +253,7 @@ RSpec.describe Types::Queries::EntryRequest do
         },
       ).as_json
 
-      expect(result.dig('data', 'scheduledRequests').length).to eq 0
+      expect(result.dig('data', 'scheduledRequests').length).to eq 2
       expect(result.dig('data', 'scheduledRequests')
         .find { |visitor| visitor['name'] == 'Visitor John' }).to be_nil
     end
@@ -280,7 +282,7 @@ RSpec.describe Types::Queries::EntryRequest do
         },
       ).as_json
 
-      expect(result.dig('data', 'scheduledRequests').length).to eq 0
+      expect(result.dig('data', 'scheduledRequests').length).to eq 2
       expect(
         result['data']['scheduledRequests'].find { |guest| guest['name'] == 'Visitor John' },
       ).to be_nil

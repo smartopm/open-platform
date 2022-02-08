@@ -147,7 +147,8 @@
     "starts": "Starts: {{date}}",
     "ends": "Ends: {{date}}",
     "repeats": "Repeats",
-    "invite_created_at": "Invite Created: {{date}}"
+    "invite_created_at": "Invite Created: {{date}}",
+    "multiple": "Multiple"
   },
   "date_picker": {
     "ok_label": "Ok",

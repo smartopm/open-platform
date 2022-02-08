@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useLazyQuery, useMutation } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
@@ -88,7 +88,7 @@ export default function GuestsView({
 
   function handleViewUser(event, user) {
     event.stopPropagation();
-    history.push(`/user/${user.id}`);
+    history.push(`/user/${user.id}?tab=Invitations`);
   }
 
   return (
@@ -142,7 +142,14 @@ export default function GuestsView({
                 </Typography>
                 {
                   visit.multipleInvites
-                  ? <Link to={`/user/${visit.guest.id}`}>Multiple</Link>
+                  ? (
+                    <Text
+                      color="primary"
+                      content={t('guest_book.multiple')}
+                      data-testid="multiple_host"
+                      onClick={event => handleViewUser(event, visit.guest)}
+                    />
+                    )
                   : (
                     <Text
                       color="secondary"
