@@ -158,7 +158,6 @@ export const NotesFragment = {
       parentNote {
         id
       }
-      documents
       formUserId
     }
   `
@@ -172,7 +171,6 @@ export const TasksFragment = {
       progress
       subTasksCount
       taskCommentsCount
-      documents
       attachments
       assignees {
         id
