@@ -85,7 +85,7 @@ module Types::Queries::User
     end
 
     field :my_hosts, [Types::InviteType], null: true do
-      argument :id, GraphQL::Types::ID, required: true
+      argument :user_id, GraphQL::Types::ID, required: true
       description 'Get a list of hosts who invited me'
     end
   end
@@ -283,8 +283,8 @@ module Types::Queries::User
                           .order(created_at: :desc)
   end
 
-  def my_hosts(id:)
-    user = context[:site_community].users.find(id)
+  def my_hosts(user_id:)
+    user = context[:site_community].users.find_by(id: user_id)
 
     raise GraphQL::ExecutionError, I18n.t('errors.user.not_found') unless user.present?
 

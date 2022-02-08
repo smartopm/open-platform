@@ -24,11 +24,11 @@ export default function UserInvitations({ invitation, handleViewUser }) {
     <Card key={invitation.id}>
       <Grid container spacing={1}>
         <Grid item md={2} xs={4}>
-          <Avatar imageUrl={invitation.user.imageUrl} user={invitation.user} alt="avatar-image" />
+          <Avatar imageUrl={invitation.host.imageUrl} user={invitation.host} alt="avatar-image" />
         </Grid>
         <Grid item md={2} xs={8}>
           <Typography variant="caption" color="primary" onClick={handleViewUser}>
-            <Link to={`/user/${invitation.user.id}`}>{invitation.user.name}</Link>
+            <Link to={`/user/${invitation.host.id}`}>{invitation.host.name}</Link>
           </Typography>
         </Grid>
         <Grid item md={3} xs={12} style={!matches ? { paddingTop: '15px' } : {}}>
@@ -65,15 +65,15 @@ UserInvitations.propTypes = {
       id: PropTypes.string,
       startsAt: PropTypes.string,
       endsAt: PropTypes.string,
-      invitationationDate: PropTypes.string
+      visitationDate: PropTypes.string
     }),
-    user: PropTypes.shape({
+    host: PropTypes.shape({
       name: PropTypes.string,
       id: PropTypes.string,
       imageUrl: PropTypes.string
     }),
     id: PropTypes.string,
-    name: PropTypes.string,
+    createdAt: PropTypes.string,
   }).isRequired,
   handleViewUser: PropTypes.func.isRequired
 };
