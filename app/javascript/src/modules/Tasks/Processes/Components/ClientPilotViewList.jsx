@@ -42,7 +42,7 @@ export default function ClientPilotViewList(){
             (
               <div>
                 {data?.clientAssignedProjects?.map(project => (
-                  <ClientPilotViewItem key={project.id} process={project} refetch={refetch} />
+                  <ClientPilotViewItem key={project.id} project={project} refetch={refetch} />
                     ))}
               </div>
             )
