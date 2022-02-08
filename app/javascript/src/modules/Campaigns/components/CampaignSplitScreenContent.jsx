@@ -4,6 +4,7 @@
 import React, { useState, useEffect } from 'react';
 import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
+import { useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
@@ -57,6 +58,7 @@ export default function CampaignSplitScreenContent({ refetch, campaign, handleCl
   const [campaignLabelRemove] = useMutation(CampaignLabelRemoveMutation);
   const [campaignUpdate] = useMutation(CampaignUpdateMutation);
   const { t } = useTranslation(['campaign', 'common']);
+  const { state: { from } } = useLocation();
 
   function handleLabelDelete(labelId) {
     campaignLabelRemove({
@@ -167,7 +169,10 @@ export default function CampaignSplitScreenContent({ refetch, campaign, handleCl
     if (campaign) {
       setFormData(campaign);
     }
-  }, [campaign]);
+    if (from === '/users') {
+      setMailListType('idlist')
+    }
+  }, [campaign, from]);
   return (
     <Grid
       container
