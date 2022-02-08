@@ -58,7 +58,7 @@ export default function CampaignSplitScreenContent({ refetch, campaign, handleCl
   const [campaignLabelRemove] = useMutation(CampaignLabelRemoveMutation);
   const [campaignUpdate] = useMutation(CampaignUpdateMutation);
   const { t } = useTranslation(['campaign', 'common']);
-  const { state: { from } } = useLocation();
+  const { state } = useLocation();
 
   function handleLabelDelete(labelId) {
     campaignLabelRemove({
@@ -169,10 +169,11 @@ export default function CampaignSplitScreenContent({ refetch, campaign, handleCl
     if (campaign) {
       setFormData(campaign);
     }
-    if (from === '/users') {
+    if (state?.from === '/users') {
       setMailListType('idlist')
     }
-  }, [campaign, from]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [campaign]);
   return (
     <Grid
       container
