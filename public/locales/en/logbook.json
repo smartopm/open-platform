@@ -150,7 +150,7 @@
     "invite_created_at": "Invite Created: {{date}}",
     "multiple": "Multiple",
     "invite_history": "Invite History",
-    "no_hosts": "There are no invitations for this user"
+    "no_hosts": "There are no invitations for this user."
   },
   "date_picker": {
     "ok_label": "Ok",
