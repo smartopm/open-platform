@@ -28,15 +28,14 @@ const userMenus = [
     moduleName: 'communication',
     accessibleBy: []
   },
-  // TODO: @olivierjm Please change this back
   {
     routeProps: {
       path: '/user/:id?tab=Invitations',
       component: <span />
     },
-    name: () => 'Invitations',
-    featureName: 'Messages',
-    moduleName: 'communication',
+    name: t => t('menu.invitations'),
+    featureName: 'LogBook',
+    moduleName: 'entry_request',
     accessibleBy: []
   },
   {

@@ -46,7 +46,6 @@ module Types
     field :closest_entry_time, Types::EntryTimeType, null: true
     field :multiple_invites, Boolean, null: true
 
-
     def active
       object.active?
     end

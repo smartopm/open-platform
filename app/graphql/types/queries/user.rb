@@ -286,7 +286,7 @@ module Types::Queries::User
   def my_hosts(user_id:)
     user = context[:site_community].users.find_by(id: user_id)
 
-    raise GraphQL::ExecutionError, I18n.t('errors.user.not_found') unless user.present?
+    raise GraphQL::ExecutionError, I18n.t('errors.user.not_found') if user.blank?
 
     unless user_permissions_check?('can_view_hosts')
       raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
