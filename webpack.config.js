@@ -32,12 +32,6 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.jsx']
   },
-  devServer: {
-    contentBase: path.resolve(__dirname, 'app/assets/builds'),
-    host: 'webpacker',
-    port: 3035,
-    publicPath: '0.0.0.0'
-  },
   plugins: [
     new webpack.optimize.LimitChunkCountPlugin({
       maxChunks: 1
