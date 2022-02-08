@@ -113,7 +113,7 @@ cypress:
   image: docker:latest
   services:
     - docker:dind
-  stage: test
+  stage: staging
   before_script:
     - apk --update add nodejs=12.22.10-r0 --repository="http://dl-cdn.alpinelinux.org/alpine/v3.12/main/"
     - apk add yarn
@@ -127,8 +127,9 @@ cypress:
       - "tmp/cypress/"
     name: "Cypress $CI_PIPELINE_ID Visual Report"
     expire_in: 24 hours
+  only:
+    - master
   except:
-    - tags
     - schedules
 
 start_prod_push:
