@@ -263,7 +263,8 @@ RSpec.describe Mutations::User do
                               role: security_guard_role)
     end
     let!(:pending_user) do
-      create(:pending_user, community_id: admin.community_id, role: user.role)
+      create(:pending_user, community_id: admin.community_id,
+                            role: user.role, phone_number: '0909090909')
     end
     let!(:client) do
       create(:pending_user, community_id: admin.community_id,
@@ -278,6 +279,7 @@ RSpec.describe Mutations::User do
             $vehicle: String
             $name: String,
             $subStatus: String
+            $phoneNumber: String
           ) {
           userUpdate(
               id: $id,
@@ -285,6 +287,7 @@ RSpec.describe Mutations::User do
               vehicle: $vehicle,
               name: $name,
               subStatus: $subStatus
+              phoneNumber: $phoneNumber
             ) {
             user {
               id
@@ -292,6 +295,7 @@ RSpec.describe Mutations::User do
               roleName
               vehicle
               name
+              phoneNumber
             }
           }
         }
@@ -322,6 +326,22 @@ RSpec.describe Mutations::User do
       expect(result.dig('data', 'userUpdate', 'user', 'id')).not_to be_nil
       expect(result.dig('data', 'userUpdate', 'user', 'roleName')).to eql 'Security Guard'
       expect(result['errors']).to be_nil
+    end
+
+    it 'should not update the user with existing phone number' do
+      variables = {
+        id: client.id,
+        phoneNumber: '0909090909',
+      }
+      result = DoubleGdpSchema.execute(query, variables: variables,
+                                              context: {
+                                                current_user: admin,
+                                                site_community: admin.community,
+                                              }).as_json
+      expect(result.dig('data', 'userUpdate', 'user', 'id')).to be_nil
+      expect(result.dig('data', 'userUpdate', 'user', 'phoneNumber')).to be_nil
+      expect(result['errors']).not_to be_nil
+      expect(result.dig('errors', 0, 'message')).to include 'Duplicate phone'
     end
 
     it 'should not update with restricted field' do

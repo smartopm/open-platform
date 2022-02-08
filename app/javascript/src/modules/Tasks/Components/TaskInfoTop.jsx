@@ -52,7 +52,8 @@ export default function TaskInfoTop({
   activeReminder,
   handleSplitScreenClose,
   refetch,
-  handleTaskComplete
+  handleTaskComplete,
+  forProcess
 }) {
   const { t } = useTranslation(['task', 'common']);
   const classes = useStyles();
@@ -86,7 +87,11 @@ export default function TaskInfoTop({
 
   function openParentLink(event, parent) {
     event.preventDefault();
-    history.push(`/tasks/${parent.id}`);
+    if(forProcess){
+      history.push(`/processes/drc/projects/${parent.id}/tab=processes`);
+    }else{
+      history.push(`/tasks/${parent.id}`);
+    }
   }
 
   function updateTask(property, value) {
@@ -458,8 +463,10 @@ TaskInfoTop.defaultProps = {
   liteData: {},
   selectedDate: null,
   activeReminder: null,
-  handleSplitScreenClose: () => {}
+  handleSplitScreenClose: () => {},
+  forProcess: false
 };
+
 TaskInfoTop.propTypes = {
   currentUser: PropTypes.shape({
     permissions: PropTypes.arrayOf(
@@ -501,5 +508,6 @@ TaskInfoTop.propTypes = {
   }).isRequired,
   handleSplitScreenClose: PropTypes.func,
   refetch: PropTypes.func.isRequired,
-  handleTaskComplete: PropTypes.func.isRequired
+  handleTaskComplete: PropTypes.func.isRequired,
+  forProcess: PropTypes.bool
 };
