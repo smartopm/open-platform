@@ -57,7 +57,12 @@ export default function UserMessageItem({
         primary={(
           <>
             <span className="nz_msg_owner">
-              {name}
+              <Link
+                to={`/user/${user.id}`}
+                style={{ textDecoration: 'none', color: 'inherit' }}
+              >
+                {name}
+              </Link>
               {
                 checkRoute(location.pathname) !== 'is_post' && (
                   <Badge
