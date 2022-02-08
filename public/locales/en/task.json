@@ -60,7 +60,10 @@
     "download": "Download",
     "no_documents": "Add a document",
     "documents": "Documents",
-    "upload_error": "Document could not be uploaded"
+    "upload_error": "Document could not be uploaded",
+    "delete": "Delete",
+    "delete_confirmation_message": "Are you sure you want to delete the document?",
+    "document_deleted": "Document deleted successfully"
   },
   "history": {
     "updates": "Updates"
@@ -102,5 +105,8 @@
     "no_open_tasks": "Project does not have open tasks",
     "process_steps": "Process Steps",
     "no_steps_assigned": "There are no Steps currently assigned to this process."
+  },
+  "misc": {
+    "confirm": "Confirm"
   }
 }
