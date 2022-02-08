@@ -19,7 +19,7 @@ export default function UserInvitations({ invitation, handleViewUser }) {
   const matches = useMediaQuery('(max-width:800px)');
 
   const timeZone = authState.user.community.timezone;
-  const isValid = checkRequests(invitation.closestEntryTime, t, timeZone).valid;
+  const isValid = checkRequests(invitation.entryTime, t, timeZone).valid;
   return (
     <Card key={invitation.id}>
       <Grid container spacing={1}>
@@ -61,7 +61,7 @@ export default function UserInvitations({ invitation, handleViewUser }) {
 
 UserInvitations.propTypes = {
   invitation: PropTypes.shape({
-    closestEntryTime: PropTypes.shape({
+    entryTime: PropTypes.shape({
       id: PropTypes.string,
       startsAt: PropTypes.string,
       endsAt: PropTypes.string,
@@ -72,14 +72,8 @@ UserInvitations.propTypes = {
       id: PropTypes.string,
       imageUrl: PropTypes.string
     }),
-    guest: PropTypes.shape({
-      name: PropTypes.string,
-      id: PropTypes.string
-    }),
-    multipleInvites: PropTypes.bool,
     id: PropTypes.string,
     name: PropTypes.string,
-    status: PropTypes.string
   }).isRequired,
   handleViewUser: PropTypes.func.isRequired
 };
