@@ -146,7 +146,7 @@
     "schedule_visit": "Schedule Visit",
     "starts": "Starts: {{date}}",
     "ends": "Ends: {{date}}",
-    "repeats": "Repeats: {{days}}",
+    "repeats": "Repeats",
     "invite_created_at": "Invite Created: {{date}}"
   },
   "date_picker": {
