@@ -31,6 +31,7 @@ export default function ProjectProcessesSplitView({
             handleSplitScreenClose={() => setSplitScreenOpen(false)}
             handleTaskCompletion={(id, completed) => handleStepCompletion(id, completed, refetch)}
             commentsRefetch={commentsRefetch}
+            forProcess
           />
         </SplitScreen>
         ) : (
@@ -38,6 +39,7 @@ export default function ProjectProcessesSplitView({
             taskId={selectedStep?.id || projectId}
             handleTaskCompletion={(id, completed) => handleStepCompletion(id, completed, refetch)}
             commentsRefetch={commentsRefetch}
+            forProcess
           />
       )}
     </>
