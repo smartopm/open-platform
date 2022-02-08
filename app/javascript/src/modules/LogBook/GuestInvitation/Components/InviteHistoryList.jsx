@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useLazyQuery } from 'react-apollo';
 import { Typography } from '@material-ui/core';
+import { useTranslation } from 'react-i18next';
 import { MyHostsQuery } from '../graphql/queries';
 import CenteredContent from '../../../../shared/CenteredContent';
 import { Spinner } from '../../../../shared/Loading';
@@ -13,6 +14,7 @@ export default function InviteHistoryList({ tab, userId }) {
     variables: { userId },
     fetchPolicy: 'cache-and-network'
   });
+  const { t } = useTranslation('logbook')
 
   useEffect(() => {
     if (tab === 'Invitations') {
@@ -28,6 +30,9 @@ export default function InviteHistoryList({ tab, userId }) {
     );
   return (
     <>
+      <CenteredContent>
+        <Typography variant='h6' gutterBottom>{t('guest_book.invite_history')}</Typography>
+      </CenteredContent>
       {
         <CenteredContent>
           {Boolean(error) && (
@@ -41,6 +46,7 @@ export default function InviteHistoryList({ tab, userId }) {
       {data?.myHosts.map(invite => (
         <InviteListCard key={invite.id} invitation={invite} />
       ))}
+      {!data?.myHosts?.length ? <CenteredContent>{t('guest_book.no_hosts')}</CenteredContent> : null}
     </>
   );
 }

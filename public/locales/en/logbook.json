@@ -148,7 +148,9 @@
     "ends": "Ends: {{date}}",
     "repeats": "Repeats",
     "invite_created_at": "Invite Created: {{date}}",
-    "multiple": "Multiple"
+    "multiple": "Multiple",
+    "invite_history": "Invite History",
+    "no_hosts": "There are no invitations for this user"
   },
   "date_picker": {
     "ok_label": "Ok",

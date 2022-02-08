@@ -83,6 +83,8 @@ describe('Invitation History list Component', () => {
 
     await waitFor(() => {
         expect(container.getByTestId('error')).toBeInTheDocument();
+        expect(container.queryByText('guest_book.no_hosts')).toBeInTheDocument();
+        expect(container.queryByText('guest_book.invite_history')).toBeInTheDocument();
     }, 30)
   });
 });
