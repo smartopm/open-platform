@@ -261,7 +261,7 @@ export default function UserInformation({
 
         <FeatureCheck features={authState.user.community.features} name="LogBook">
           <TabPanel value={tabValue} index="Invitations">
-            <InviteHistoryList />
+            <InviteHistoryList userId={userId} tab={tabValue} />
           </TabPanel>
         </FeatureCheck>
 

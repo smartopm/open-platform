@@ -25,31 +25,31 @@ export default function InviteListCard({ invitation }) {
   return (
     <Card key={invitation.id}>
       <Grid container spacing={1}>
-        <Grid item md={1} sm={1} xs={4} className={classes.hostAvatar}>
-          <Avatar imageUrl={invitation.host.imageUrl} user={invitation.host} alt="avatar-image" />
+        <Grid item sm={1} xs={2} className={classes.hostAvatar}>
+          <Avatar imageUrl={invitation.host.imageUrl} user={invitation.host} alt="host_avatar" />
         </Grid>
-        <Grid item md={3} sm={5} xs={8} className={classes.hostDetailsAlign}>
-          <Typography variant="h6" color="primary">
+        <Grid item md={3} sm={5} xs={10} className={classes.hostDetailsAlign}>
+          <Typography variant="subtitle1" color="primary" data-testid="host_name">
             <Link style={{ textDecoration: 'none' }} to={`/user/${invitation.host.id}`}>{invitation.host.name}</Link>
           </Typography>
         </Grid>
         <Grid item md={3} sm={6} xs={12}>
-          <Typography variant="body2" gutterButtom>
+          <Typography variant="body2" gutterBottom data-testid="starts_at_time">
             {t('guest_book.starts', { date: dateToString(invitation.entryTime.startsAt, 'YYYY-MM-DD, HH:mm') })}
           </Typography>
-          <Typography variant="body2" gutterButtom>
+          <Typography variant="body2" gutterBottom data-testid="ends_at_time">
             {t('guest_book.ends', { date: dateToString(invitation.entryTime.endsAt, 'YYYY-MM-DD, HH:mm') })}
           </Typography>
         </Grid>
         <Grid item md={3} sm={6} xs={12}>
-          <Typography variant="body2" gutterButtom>
+          <Typography variant="body2" gutterBottom data-testid="reoccuring_days">
             {`${t('guest_book.repeats')}: ${formatReoccuringDays(invitation.entryTime.occursOn)}`}
           </Typography>
-          <Typography variant="body2" gutterButtom>
+          <Typography variant="body2" gutterBottom data-testid="created_at">
             {t('guest_book.invite_created_at', { date: dateToString(invitation.createdAt, 'YYYY-MM-DD') })}
           </Typography>
         </Grid>
-        <Grid item md={2} sm={6} xs={12} className={!matches ? classes.hostDetailsAlign : ''}>
+        <Grid item md={2} sm={6} xs={12} className={!matches ? classes.hostDetailsAlign : ''} data-testid="validity">
           <Chip
             label={isValid ? t('guest_book.valid') : t('guest_book.invalid_now')}
             color={isValid ? 'success' : 'error'}
@@ -83,7 +83,7 @@ InviteListCard.propTypes = {
 
 const useStyles = makeStyles(() => ({
   hostDetailsAlign: {
-    marginTop: 6
+    marginTop: 10
   },
   hostAvatar: {
     marginTop: 4

@@ -32,13 +32,14 @@ export const MyInvitedGuestsQuery = gql`
 
 // All the hosts for a visitor
 export const MyHostsQuery = gql`
-    query hosts($userId: ID!){
+    query myHosts($userId: ID!){
       myHosts(userId: $userId) {
         id
         createdAt
         host {
           id
           name
+          imageUrl
         }
         entryTime {
           id

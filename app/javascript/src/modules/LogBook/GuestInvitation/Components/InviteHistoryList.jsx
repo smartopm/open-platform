@@ -1,22 +1,16 @@
 import React, { useEffect } from 'react';
-
+import PropTypes from 'prop-types';
 import { useLazyQuery } from 'react-apollo';
-import { useParams } from 'react-router-dom';
-import { useParamsQuery } from '../../../../utils/helpers';
+import { Typography } from '@material-ui/core';
 import { MyHostsQuery } from '../graphql/queries';
 import CenteredContent from '../../../../shared/CenteredContent';
 import { Spinner } from '../../../../shared/Loading';
 import InviteListCard from './InviteListCard';
+import { formatError } from '../../../../utils/helpers';
 
-// call myhost query
-//
-export default function InviteHistoryList() {
-  const { id } = useParams();
-  const path = useParamsQuery();
-  const tab = path.get('tab');
-
+export default function InviteHistoryList({ tab, userId }) {
   const [loadHosts, { data, loading, error }] = useLazyQuery(MyHostsQuery, {
-    variables: { userId: id },
+    variables: { userId },
     fetchPolicy: 'cache-and-network'
   });
 
@@ -26,26 +20,32 @@ export default function InviteHistoryList() {
     }
   }, [loadHosts, tab]);
 
-  console.log(tab, id);
-  console.log(loading, error, data);
-
+  if (loading)
+    return (
+      <CenteredContent>
+        <Spinner />
+      </CenteredContent>
+    );
   return (
     <>
-      {loading && !data ? (
-        <CenteredContent>
-          <Spinner />
-        </CenteredContent>
-      ) : null}
-
       {
-            data?.myHosts.map(invite => (
-              <InviteListCard
-                key={invite.id}
-                invitation={invite}
-              />
-            ))
-        }
+        <CenteredContent>
+          {Boolean(error) && (
+            <Typography data-testid="error" color="error">
+              {formatError(error?.message)}
+            </Typography>
+          )}
+        </CenteredContent>
+      }
 
+      {data?.myHosts.map(invite => (
+        <InviteListCard key={invite.id} invitation={invite} />
+      ))}
     </>
   );
 }
+
+InviteHistoryList.propTypes = {
+  tab: PropTypes.string.isRequired,
+  userId: PropTypes.string.isRequired
+};
