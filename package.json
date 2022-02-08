@@ -60,7 +60,7 @@
     "i18next-phrase-in-context-editor-post-processor": "^1.2.1",
     "isomorphic-unfetch": "^3.0.0",
     "jquery": "^3.4.1",
-    "jsdom": "^15.2.1",
+    "jsdom": "^19.0.0",
     "leaflet": "^1.6.0",
     "leaflet-draw": "^1.0.4",
     "material-ui-confirm": "^2.1.1",
