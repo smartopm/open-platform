@@ -219,7 +219,7 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
         action={modalAction}
         name={data.name}
       />
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} data-testid='submit-form'>
         {!isFromRef && (
           <div className="form-group">
             <div style={{ width: 200, height: 'auto' }}>
