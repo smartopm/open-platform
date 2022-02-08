@@ -5,7 +5,6 @@ import {
   Typography,
   ListItemAvatar,
   Box,
-  Chip,
   IconButton,
   Grid,
   Dialog,
@@ -14,15 +13,15 @@ import {
   Hidden,
   Checkbox
 } from '@material-ui/core'
-import MoreHorizIcon from '@material-ui/icons/MoreHoriz'
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/core/styles'
 import { useTranslation } from 'react-i18next'
 import { Link, useHistory } from 'react-router-dom'
+import MoreVertIcon from '@material-ui/icons/MoreVert';
 import Avatar from '../../../components/Avatar'
 import UserActionMenu from "./UserActionMenu"
 import UserMerge from './UserMerge'
-import CenteredContent from '../../../components/CenteredContent'
+import CenteredContent from '../../../shared/CenteredContent'
 import { userSubStatus } from '../../../utils/constants'
 
 export default function UserItem({
@@ -115,7 +114,7 @@ export default function UserItem({
                 onClick={handleOpenMenu}
                 dataid={user.id}
               >
-                <MoreHorizIcon />
+                <MoreVertIcon />
               </IconButton>
             </Grid>
           </Hidden>
@@ -143,40 +142,23 @@ export default function UserItem({
                   </Typography>
                 </Link>
               </Box>
-              <Box
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'space-around',
-                  marginRight: 30
-                }}
-              >
-                <Typography variant="body2" data-testid="user_email">{user.email}</Typography>
-                <Typography component="span" variant="body2" data-testid="user_phone_number">
-                  {user.phoneNumber}
-                </Typography>
-                {user.subStatus && (
-                  <Typography variant="body2" data-testid="user-substatus">
-                    {userSubStatus[user.subStatus]}
-                  </Typography>
-                )}
-              </Box>
             </Box>
           </Box>
-
+          <Grid className={classes.userTypeRow}>
+            <Typography variant="body2" data-testid="user_email">{user.email}</Typography>
+            <Typography component="span" variant="body2" data-testid="user_phone_number">
+              {user.phoneNumber}
+            </Typography>
+          </Grid>
           <Grid className={classes.userTypeRow}>
             <Typography variant="subtitle1" data-testid="user_type">
               {t(`common:user_types.${user?.userType}`)}
             </Typography>
-          </Grid>
-          <Grid container className={classes.labelsRow}>
-            {user.labels.map(label => (
-              <Chip
-                key={label.id}
-                label={label.shortDesc}
-                style={{ height: 25, margin: 5 }}
-              />
-            ))}
+            {user.subStatus && (
+              <Typography variant="body2" data-testid="user-substatus">
+                {userSubStatus[user.subStatus]}
+              </Typography>
+            )}
           </Grid>
           <Hidden xsDown>
             <Grid className={classes.actionIcon}>
@@ -189,7 +171,7 @@ export default function UserItem({
                 dataid={user.id}
                 data-testid="user-menu-list"
               >
-                <MoreHorizIcon />
+                <MoreVertIcon />
               </IconButton>
             </Grid>
           </Hidden>
@@ -252,7 +234,7 @@ const useStyles = makeStyles(() => ({
       width: '25%'
     },
     userTypeRow: {
-      width: '16%',
+      width: '30%',
       textAlign: 'center'
     },
     labelsRow: {
