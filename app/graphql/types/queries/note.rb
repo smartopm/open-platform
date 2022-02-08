@@ -312,17 +312,26 @@ module Types::Queries::Note
       .group(:body).count
   end
 
+  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/MethodLength
   def project_open_tasks(task_id:, limit: 3, offset: 0)
     authorize
-    context[:site_community].notes.find(task_id)
-                            .sub_tasks
-                            .where(completed: false)
-                            .includes(:sub_notes, :assignee_notes, :assignees, :author, :user)
+    sub_task_ids = context[:site_community].notes.find(task_id).sub_tasks.pluck(:id)
+    context[:site_community].notes
+                            .includes(:parent_note, :sub_notes, :assignee_notes, :assignees, :author, :user)
+                            .where(id: sub_task_ids, completed: false)
+                            .for_site_manager(current_user)
+                            .with_attached_documents
+                            .or(context[:site_community].notes
+                              .includes(:parent_note, :sub_notes, :assignee_notes, :assignees, :author, :user)
+                              .where(parent_note_id: sub_task_ids, completed: false)
+                              .for_site_manager(current_user)
+                              .with_attached_documents)
                             .order(created_at: :asc)
                             .limit(limit).offset(offset)
-                            .with_attached_documents
-                            .for_site_manager(current_user)
   end
+  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/MethodLength
 
   def client_assigned_projects(offset: 0, limit: 50, query: nil)
     unless permitted?(module: :note, permission: :can_fetch_flagged_notes)
