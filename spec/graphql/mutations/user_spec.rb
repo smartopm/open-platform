@@ -329,6 +329,23 @@ RSpec.describe Mutations::User do
       expect(result['errors']).to be_nil
     end
 
+    it 'should not update the user with existing phone number' do
+      variables = {
+        id: client.id,
+        name: 'Jane Doe',
+        phoneNumber: '0909090909',
+      }
+      result = DoubleGdpSchema.execute(query, variables: variables,
+                                              context: {
+                                                current_user: admin,
+                                                site_community: admin.community,
+                                              }).as_json
+      expect(result.dig('data', 'userUpdate', 'user', 'id')).to be_nil
+      expect(result.dig('data', 'userUpdate', 'user', 'phoneNumber')).to be_nil
+      expect(result['errors']).not_to be_nil
+      expect(result.dig('errors', 0, 'message')).to include 'Duplicate phone'
+    end
+
     it 'should not update with restricted field' do
       variables = {
         id: pending_user.id,
