@@ -4,7 +4,7 @@
 import React, { useState, useEffect } from 'react';
 import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
-import { useLocation, useHistory } from 'react-router-dom'
+import { useLocation, useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
@@ -45,7 +45,7 @@ const initData = {
 
 export default function CampaignSplitScreenContent({ refetch, campaign, handleClose }) {
   const classes = useStyles();
-  const history = useHistory()
+  const history = useHistory();
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
   const breadCrumbShow = useMediaQuery(theme.breakpoints.up('md'));
@@ -113,8 +113,8 @@ export default function CampaignSplitScreenContent({ refetch, campaign, handleCl
   }
 
   function handleBreadCrumbClose() {
-    handleClose(false)
-    history.push('/campaigns')
+    handleClose(false);
+    history.push('/campaigns');
   }
 
   async function createCampaignOnSubmit(campData) {
@@ -176,9 +176,9 @@ export default function CampaignSplitScreenContent({ refetch, campaign, handleCl
       setFormData(campaign);
     }
     if (state?.from === '/users') {
-      setMailListType('idlist')
+      setMailListType('idlist');
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [campaign]);
   return (
     <Grid
@@ -401,7 +401,7 @@ export default function CampaignSplitScreenContent({ refetch, campaign, handleCl
           </Grid>
         )}
         {mailListType === 'idlist' && (
-          <Grid item sm={12} xs={12} className={classes.listId}>
+          <Grid item sm={12} xs={12} className={classes.liveEvent}>
             <TextFieldLiveEdit
               placeHolderText={t('message.paste_userid_list')}
               textVariant="body2"
@@ -456,10 +456,6 @@ const useStyles = makeStyles(() => ({
   },
   labelText: {
     paddingRight: '10px'
-  },
-  listId: {
-    paddingBottom: '30px',
-    height: '150px'
   },
   breadCrumb: {
     display: 'flex',

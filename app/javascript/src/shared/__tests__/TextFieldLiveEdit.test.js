@@ -19,9 +19,8 @@ describe('It should render Textfield live edit', () => {
       />
     );
 
-    expect(container.queryByTestId('live-field-text')).toBeInTheDocument();
-
-    fireEvent.click(container.queryByTestId('live-field-text'))
+    expect(container.queryByTestId('live-field-input')).toBeInTheDocument();
+    fireEvent.click(container.queryByTestId('live-field-input'));
     expect(container.queryByTestId('live-field-input')).toBeInTheDocument();
   });
 });
