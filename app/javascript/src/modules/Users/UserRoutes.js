@@ -80,6 +80,7 @@ const routes = [
     moduleName: 'user',
     featureName: 'Users'
   },
+
   {
     routeProps: {
       path: '/new/user',
