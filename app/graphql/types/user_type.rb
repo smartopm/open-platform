@@ -88,9 +88,7 @@ module Types
     field :followup_at, GraphQL::Types::ISO8601DateTime, null: true
     field :company_employees, String, null: true
     field :secondary_email, String, null: true
-    field :secondary_phone_number, String, null: true
     field :contact_details, GraphQL::Types::JSON, null: true
-    field :secondary_email, String, null: true
     field :secondary_phone_number, String, null: true
     field :african_presence, String, null: true
     field :region, String, null: true
