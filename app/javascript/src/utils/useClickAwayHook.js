@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import { useEffect } from 'react';
 
 export default function useClickAwayHook(ref, handleClick ) {
