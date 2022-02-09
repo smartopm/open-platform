@@ -82,6 +82,17 @@ const routes = [
   },
   {
     routeProps: {
+      path: '/user/:id/lead_management',
+      component: LeadManagementDetails,
+      exact: true
+    },
+    accessibleBy: [],
+    name: 'lead_management',
+    moduleName: 'user',
+    featureName: 'Users'
+  },
+  {
+    routeProps: {
       path: '/new/user',
       component: RenderUserEdit,
       exact: true
