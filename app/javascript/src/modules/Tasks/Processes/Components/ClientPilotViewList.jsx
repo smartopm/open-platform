@@ -24,8 +24,9 @@ export default function ClientPilotViewList(){
     });
     if (error) return <CenteredContent>{formatError(error.message)}</CenteredContent>;
     if (loading) return <Spinner />;
+
     return (
-      <div className='container'>
+      <div className='container' data-testid="processes-client-dashboard">
         <Grid container>
           <Grid item md={11} xs={11} className={classes.header}>
             <Grid container spacing={1}>
