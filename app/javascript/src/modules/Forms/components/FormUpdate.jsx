@@ -16,7 +16,6 @@ import {
   TextField,
   Typography,
   ListItem,
-  ListItemSecondaryAction,
   ListItemText
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
@@ -410,7 +409,7 @@ export default function FormUpdate({ formUserId, userId, authState }) {
                         <div>
                           <ListItem style={{ paddingLeft: 0, marginBottom: '-20px' }}>
                             <Grid container>
-                              <Grid item xs={11}>
+                              <Grid item md={11} xs={12}>
                                 <ListItemText
                                   disableTypography
                                   primary={(
@@ -448,19 +447,17 @@ export default function FormUpdate({ formUserId, userId, authState }) {
                                   )}
                                 />
                               </Grid>
-                              <Grid item xs={1} className="">
-                                <ListItemSecondaryAction className={classes.menu}>
-                                  <Button
-                                    aria-label="download-icon"
-                                    data-testid="download-icon"
-                                    variant="outlined"
-                                    onClick={event =>
+                              <Grid item md={1} xs={12} className="">
+                                <Button
+                                  aria-label="download-icon"
+                                  data-testid="download-icon"
+                                  variant="outlined"
+                                  onClick={event =>
                                       downloadFile(event, formPropertiesData.imageUrl)
                                     }
-                                  >
-                                    {t('common:misc.open')}
-                                  </Button>
-                                </ListItemSecondaryAction>
+                                >
+                                  {t('common:misc.open')}
+                                </Button>
                               </Grid>
                             </Grid>
                           </ListItem>
