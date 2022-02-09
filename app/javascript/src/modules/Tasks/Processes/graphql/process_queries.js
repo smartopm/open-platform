@@ -30,8 +30,8 @@ export const ProjectsQuery = gql`
 `
 
 export const ClientAssignedProjectsQuery = gql`
-  query GetClientAssignedProjects($offset: Int, $limit: Int, $query: String) {
-    clientAssignedProjects(offset: $offset, limit: $limit, query: $query) {
+  query GetClientAssignedProjects($offset: Int, $limit: Int) {
+    clientAssignedProjects(offset: $offset, limit: $limit) {
       ...TaskFields
       subTasks {
           ...TaskFields
