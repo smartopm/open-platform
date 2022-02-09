@@ -25,7 +25,14 @@ module.exports = {
       },
       {
         test: /\.(png|jpe?g|gif|eot|woff2|woff|ttf|svg)$/i,
-        use: 'file-loader'
+        use: [
+          {
+            loader: 'url-loader',
+            options: {
+              limit: 8000
+            }
+          }
+        ]
       }
     ]
   },
@@ -35,6 +42,6 @@ module.exports = {
   plugins: [
     new webpack.optimize.LimitChunkCountPlugin({
       maxChunks: 1
-    }),
+    })
   ]
 };
