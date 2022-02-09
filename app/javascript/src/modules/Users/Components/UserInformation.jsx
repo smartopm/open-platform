@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import React, { useEffect, useState } from 'react';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme } from '@material-ui/core/styles';
@@ -27,6 +28,7 @@ import RightSideMenu from '../../Menu/component/RightSideMenu';
 import FeatureCheck from '../../Features';
 import PaymentPlans from '../../Payments/Components/UserTransactions/Plans';
 import ShiftButtons from '../../TimeCard/Components/ShiftButtons';
+import InviteHistoryList from '../../LogBook/GuestInvitation/Components/InviteHistoryList';
 
 export default function UserInformation({
   data,
@@ -255,6 +257,13 @@ export default function UserInformation({
             </TabPanel>
           </FeatureCheck>
         )}
+
+
+        <FeatureCheck features={authState.user.community.features} name="LogBook">
+          <TabPanel value={tabValue} index="Invitations">
+            <InviteHistoryList userId={userId} tab={tabValue} />
+          </TabPanel>
+        </FeatureCheck>
 
         <div className="container d-flex justify-content-between">
           {data.user.state === 'valid' && securityPersonnelList.includes(authState.user.userType) ? (

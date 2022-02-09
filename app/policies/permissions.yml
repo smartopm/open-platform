@@ -158,6 +158,7 @@ admin:
       - can_invite_guest
       - can_create_user
       - can_view_guests
+      - can_view_hosts
   profile:
     permissions:
       - can_see_menu_item
@@ -411,6 +412,7 @@ security_guard:
       - can_edit_own_profile
       - can_view_guests
       - can_get_users_lite
+      - can_view_hosts
   community:
     permissions:
       - can_see_menu_item
@@ -480,6 +482,7 @@ visitor:
     permissions:
       - can_view_own_profile
       - can_edit_own_profile
+      - can_view_hosts
   community:
     permissions:
       - can_see_menu_item

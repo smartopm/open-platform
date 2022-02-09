@@ -34,6 +34,7 @@ export const GuestEntriesQuery = gql`
       startsAt
       revoked
       thumbnailUrl
+      multipleInvites
     }
   }
 `;

@@ -1,4 +1,4 @@
-import { filterEmptyObjectByKey, validateGuest } from '../../helpers';
+import { filterEmptyObjectByKey, validateGuest, formatReoccuringDays } from '../../helpers';
 
 describe('helpers', () => {
   it('should remove items that dont have certain keys values', () => {
@@ -58,4 +58,10 @@ describe('helpers', () => {
       }).valid
     ).toBe(true);
   });
+
+  it('formats days', () => {
+    const occursOn = ['tuesday', 'monday', 'thursday']
+    expect(formatReoccuringDays(occursOn)).toMatchObject([' T ', ' M ', ' T '])
+    expect(formatReoccuringDays([])).toBe('-')
+  })
 });

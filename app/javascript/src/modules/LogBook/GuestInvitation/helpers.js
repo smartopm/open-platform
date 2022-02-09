@@ -19,3 +19,13 @@ export function validateGuest({ guests, userIds, t, guestData }) {
   }
   return { msg: null, valid: true };
 }
+
+
+/**
+ * Return initial letters for each days, if none return nothing
+ * @param {[String]} days
+ */
+export function formatReoccuringDays(days){
+  if (!days || !days.length) return '-'
+  return days.map(day => ` ${day.charAt(0).toUpperCase()} `)
+}

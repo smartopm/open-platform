@@ -11,6 +11,7 @@ module Types
     field :host_id, ID, null: true
     field :entry_time, Types::EntryTimeType, null: true
     field :guest, Types::UserType, null: true
+    field :host, Types::UserType, null: true
     field :thumbnail_url, String, null: true
 
     def thumbnail_url
