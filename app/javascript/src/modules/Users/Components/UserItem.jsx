@@ -1,5 +1,4 @@
-/* eslint-disable no-use-before-define */
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import {
   ListItem,
   Typography,
@@ -11,17 +10,17 @@ import {
   DialogContent,
   Hidden,
   Checkbox
-} from '@material-ui/core'
-import PropTypes from 'prop-types'
-import { makeStyles } from '@material-ui/core/styles'
-import { useTranslation } from 'react-i18next'
-import { Link, useHistory } from 'react-router-dom'
+} from '@material-ui/core';
+import PropTypes from 'prop-types';
+import { makeStyles } from '@material-ui/core/styles';
+import { useTranslation } from 'react-i18next';
+import { Link, useHistory } from 'react-router-dom';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-import Avatar from '../../../components/Avatar'
-import UserActionMenu from "./UserActionMenu"
-import UserMerge from './UserMerge'
-import CenteredContent from '../../../shared/CenteredContent'
-import { userSubStatus } from '../../../utils/constants'
+import Avatar from '../../../components/Avatar';
+import UserActionMenu from './UserActionMenu';
+import UserMerge from './UserMerge';
+import CenteredContent from '../../../shared/CenteredContent';
+import { userSubStatus } from '../../../utils/constants';
 
 export default function UserItem({
   user,
@@ -31,24 +30,24 @@ export default function UserItem({
   offset,
   selectCheckBox
 }) {
-  const classes = useStyles()
-  const [anchorEl, setAnchorEl] = useState(null)
-  const open = Boolean(anchorEl)
-  const history = useHistory()
-  const { t } = useTranslation('common')
+  const classes = useStyles();
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+  const history = useHistory();
+  const { t } = useTranslation('common');
   /**
    * @deprecated prefer getting this contact from the community
    */
-  const CSMNumber = '260974624243'
-  const [isDialogOpen, setDialogOpen] = useState(false)
+  const CSMNumber = '260974624243';
+  const [isDialogOpen, setDialogOpen] = useState(false);
 
   function handleClose(event) {
-    event.stopPropagation()
-    setAnchorEl(null)
+    event.stopPropagation();
+    setAnchorEl(null);
   }
 
   function handleOpenMenu(event) {
-    setAnchorEl(event.currentTarget)
+    setAnchorEl(event.currentTarget);
   }
 
   function showUserDetails(event) {
@@ -56,13 +55,13 @@ export default function UserItem({
       history.push({
         pathname: `/user/${user.id}`,
         state: { from: 'users', offset }
-      })
+      });
     }
   }
 
   function handleMergeDialog() {
-    setAnchorEl(null)
-    setDialogOpen(!isDialogOpen)
+    setAnchorEl(null);
+    setDialogOpen(!isDialogOpen);
   }
 
   return (
@@ -90,12 +89,7 @@ export default function UserItem({
         onClick={showUserDetails}
         data-testid="user_item"
       >
-        <Grid
-          container
-          direction="row"
-          justifyContent="flex-start"
-          alignItems="center"
-        >
+        <Grid container direction="row" justifyContent="flex-start" alignItems="center">
           <Grid item md={1} sm={1} xs={2}>
             <Checkbox
               checked={selectedUsers.includes(user.id) || selectCheckBox}
@@ -103,6 +97,7 @@ export default function UserItem({
               name="includeReplyLink"
               data-testid="reply_link"
               color="primary"
+              // className={classes.checkBox}
             />
           </Grid>
           <Grid item md={1} sm={1} xs={2}>
@@ -113,10 +108,15 @@ export default function UserItem({
           <Grid item md={2} sm={9} xs={7} className={classes.userNameItem}>
             <Link
               style={{ color: 'black' }}
-              to={{pathname: `/user/${user.id}`, state: { from: 'users', offset }}}
+              to={{ pathname: `/user/${user.id}`, state: { from: 'users', offset } }}
               key={user.id}
             >
-              <Typography component="span" variant="subtitle1" data-testid="user_name" className={classes.userName}>
+              <Typography
+                component="span"
+                variant="subtitle1"
+                data-testid="user_name"
+                className={classes.userName}
+              >
                 <strong>
                   {' '}
                   {user.name}
@@ -140,17 +140,40 @@ export default function UserItem({
             </Grid>
           </Hidden>
           <Grid item md={3} sm={6} xs={12}>
-            <Typography variant="body2" data-testid="user_email">{user.email}</Typography>
-            <Typography component="span" variant="body2" data-testid="user_phone_number">
+            <Typography
+              variant="body2"
+              data-testid="user_email"
+              gutterBottom
+              className={classes.alignDetailsToAvatarFromSm}
+            >
+              {user.email}
+            </Typography>
+            <Typography
+              component="span"
+              variant="body2"
+              data-testid="user_phone_number"
+              gutterBottom
+              className={classes.alignDetailsToAvatarFromSm}
+            >
               {user.phoneNumber}
             </Typography>
           </Grid>
           <Grid item md={3} sm={6} xs={12}>
-            <Typography variant="subtitle1" data-testid="user_type">
+            <Typography
+              variant="body2"
+              data-testid="user_type"
+              gutterBottom
+              className={classes.alignDetailsToAvatarForXs}
+            >
               {t(`common:user_types.${user?.userType}`)}
             </Typography>
             {user.subStatus && (
-              <Typography variant="body2" data-testid="user-substatus">
+              <Typography
+                variant="body2"
+                data-testid="user-substatus"
+                gutterBottom
+                className={classes.alignDetailsToAvatarForXs}
+              >
                 {userSubStatus[user.subStatus]}
               </Typography>
             )}
@@ -184,7 +207,7 @@ export default function UserItem({
         </Grid>
       </ListItem>
     </>
-  )
+  );
 }
 
 UserItem.propTypes = {
@@ -204,7 +227,7 @@ UserItem.propTypes = {
   offset: PropTypes.number.isRequired,
   handleUserSelect: PropTypes.func.isRequired,
   selectedUsers: PropTypes.arrayOf(PropTypes.string).isRequired
-}
+};
 
 const useStyles = makeStyles(() => ({
   userItem: {
@@ -260,4 +283,25 @@ const useStyles = makeStyles(() => ({
       marginRight: '-3.5em'
     }
   },
-}))
+  '@media (max-width: 960px)': {
+    alignDetailsToAvatarFromSm: {
+      marginLeft: '18%'
+    }
+  },
+  '@media (max-width: 600px)': {
+    alignDetailsToAvatarForXs: {
+      marginLeft: '11%'
+    },
+    alignDetailsToAvatarFromSm: {
+      marginLeft: '11%'
+    },
+  },
+  '@media (max-width: 430px)': {
+    alignDetailsToAvatarForXs: {
+      marginLeft: '18%'
+    },
+    alignDetailsToAvatarFromSm: {
+      marginLeft: '18%'
+    }
+  },
+}));
