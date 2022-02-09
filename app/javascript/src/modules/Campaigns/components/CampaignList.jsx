@@ -1,14 +1,14 @@
 /* eslint-disable max-statements */
 /* eslint-disable no-use-before-define */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, useEffect } from 'react';
 import { useQuery, useMutation } from 'react-apollo';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import AddCircleIcon from '@material-ui/icons/AddCircle';
 import Grid from '@material-ui/core/Grid';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
-import { useHistory, useParams } from 'react-router-dom';
+import { useHistory, useParams, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { makeStyles, useTheme } from '@material-ui/styles';
 import { Typography } from '@material-ui/core';
@@ -28,6 +28,7 @@ import SplitScreen from '../../../shared/SplitScreen';
 
 export default function CampaignList() {
   const classes = useStyles();
+  const path = useLocation().pathname
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('md'));
   const matches0 = useMediaQuery(theme.breakpoints.only('sm'));
@@ -152,6 +153,12 @@ export default function CampaignList() {
 
     return null
   }
+
+  useEffect(() => {
+    if(id || path === '/campaign-create') {
+      setShow(true);
+    }
+  }, [id, path])
 
   if (loading) return <Spinner />;
   if (error) return <ErrorPage />;

@@ -4,7 +4,7 @@
 import React, { useState, useEffect } from 'react';
 import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
-import { useLocation } from 'react-router-dom'
+import { useLocation, useHistory } from 'react-router-dom'
 import { useTranslation } from 'react-i18next';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
@@ -45,6 +45,7 @@ const initData = {
 
 export default function CampaignSplitScreenContent({ refetch, campaign, handleClose }) {
   const classes = useStyles();
+  const history = useHistory()
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
   const breadCrumbShow = useMediaQuery(theme.breakpoints.up('md'));
@@ -109,6 +110,11 @@ export default function CampaignSplitScreenContent({ refetch, campaign, handleCl
 
   function handleLabelSelect(value) {
     setLabel([...getJustLabels(value)]);
+  }
+
+  function handleBreadCrumbClose() {
+    handleClose(false)
+    history.push('/campaigns')
   }
 
   async function createCampaignOnSubmit(campData) {
@@ -186,7 +192,7 @@ export default function CampaignSplitScreenContent({ refetch, campaign, handleCl
             <Typography
               color="primary"
               style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}
-              onClick={() => handleClose(false)}
+              onClick={() => handleBreadCrumbClose()}
             >
               <KeyboardBackspaceIcon style={{ marginRight: '4px' }} />
               {t('campaign.campaigns')}
@@ -231,8 +237,10 @@ export default function CampaignSplitScreenContent({ refetch, campaign, handleCl
           textFieldVariant="outlined"
           text={formData.name}
           handleChange={handleInputChange}
+          styles={{ margin: '0 -12px' }}
           fullWidth
           name="name"
+          multiline
         />
       </Grid>
       <Grid container className={classes.topInfo}>
@@ -330,15 +338,17 @@ export default function CampaignSplitScreenContent({ refetch, campaign, handleCl
             {t('form_fields.message')}
           </Typography>
         </Grid>
-        <Grid item sm={12} xs={12} className={classes.liveField}>
+        <Grid item sm={12} xs={12} className={classes.liveEvent}>
           <TextFieldLiveEdit
             placeHolderText={t('message.add_a_message')}
             textVariant="body2"
             textFieldVariant="outlined"
             fullWidth
+            multiline
             text={formData.message || ''}
             handleChange={handleInputChange}
             name="message"
+            styles={{ margin: '0 -12px' }}
           />
         </Grid>
       </Grid>
@@ -400,8 +410,8 @@ export default function CampaignSplitScreenContent({ refetch, campaign, handleCl
               multiline
               text={formData.userIdList}
               handleChange={handleInputChange}
-              rows={4}
               name="userIdList"
+              styles={{ margin: '0 -12px' }}
             />
           </Grid>
         )}
@@ -430,8 +440,7 @@ const useStyles = makeStyles(() => ({
     textAlign: 'right'
   },
   liveEvent: {
-    paddingBottom: '30px',
-    height: '100px'
+    paddingBottom: '30px'
   },
   topInfo: {
     marginBottom: '20px'
@@ -451,9 +460,6 @@ const useStyles = makeStyles(() => ({
   listId: {
     paddingBottom: '30px',
     height: '150px'
-  },
-  liveField: {
-    height: '100px'
   },
   breadCrumb: {
     display: 'flex',
