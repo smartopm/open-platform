@@ -277,7 +277,7 @@ RSpec.describe Mutations::User do
             $id: ID!,
             $userType: String
             $vehicle: String
-            $name: String,
+            $name: String!,
             $subStatus: String
             $phoneNumber: String
           ) {
@@ -315,6 +315,7 @@ RSpec.describe Mutations::User do
     it 'should update the user' do
       variables = {
         id: pending_user.id,
+        name: 'Jane Doe',
         userType: 'security_guard',
         vehicle: 'Toyota Corolla',
       }
@@ -331,6 +332,7 @@ RSpec.describe Mutations::User do
     it 'should not update the user with existing phone number' do
       variables = {
         id: client.id,
+        name: 'Jane Doe',
         phoneNumber: '0909090909',
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
@@ -623,12 +625,14 @@ RSpec.describe Mutations::User do
       <<~GQL
         mutation UpdateUserMutation(
             $id: ID!,
+            $name: String!,
             $avatarBlobId: String,
             $phoneNumber: String!
             $userType: String!
           ) {
           userUpdate(
               id: $id,
+              name: $name,
               avatarBlobId: $avatarBlobId,
               phoneNumber: $phoneNumber
               userType: $userType
@@ -677,6 +681,7 @@ RSpec.describe Mutations::User do
       )
       variables = {
         id: pending_user.id,
+        name: 'Jane Doe',
         avatarBlobId: avatar_blob.signed_id,
         phoneNumber: '26923422232',
         userType: 'resident',
@@ -686,7 +691,6 @@ RSpec.describe Mutations::User do
                                                        current_user: admin,
                                                        site_community: admin.community,
                                                      }).as_json
-
       expect(result.dig('data', 'userUpdate', 'user', 'avatarUrl')).not_to be_nil
       expect(result['errors']).to be_nil
     end
