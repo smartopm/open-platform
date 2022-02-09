@@ -46,6 +46,7 @@ export default function UserShow({ history }) {
   if (error && !error.message.includes('permission')) {
     return <ErrorPage title={error.message || error} />; // error could be a string sometimes
   }
+  console.log("UserShow", id)
   return (
     <>
       <UserInformation
