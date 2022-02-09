@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, fireEvent } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom/';
 import { MockedProvider } from '@apollo/react-testing';
 import '@testing-library/jest-dom/extend-expect';
@@ -56,5 +56,9 @@ describe('It should render the campaign split screen content', () => {
     expect(container.queryByTestId('type')).toBeInTheDocument();
     expect(container.queryAllByTestId('live-field-input')[0]).toBeInTheDocument();
     expect(container.queryByTestId('save-campaign')).toBeInTheDocument();
+    expect(container.queryByTestId('email')).toBeInTheDocument();
+
+    fireEvent.click(container.queryByTestId('email'));
+    expect(container.queryByTestId('email-template')).toBeInTheDocument();
   });
 });
