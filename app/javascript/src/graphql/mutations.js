@@ -47,7 +47,7 @@ export const CreateUserMutation = gql`
 export const UpdateUserMutation = gql`
   mutation UpdateUserMutation(
     $id: ID!
-    $name: String
+    $name: String!
     $email: String
     $phoneNumber: String
     $userType: String!
@@ -91,7 +91,7 @@ export const UpdateUserMutation = gql`
 export const NonAdminUpdateMutation = gql`
 mutation UpdateUserMutation(
   $id: ID!
-  $name: String
+  $name: String!
   $avatarBlobId: String
   $address: String
   $secondaryInfo: [JSON!]
@@ -181,8 +181,8 @@ export const CreateUpload = gql`
 `
 
 export const AttachAvatar = gql`
-  mutation AttachAvatar($id: ID!, $signedBlobId: String!) {
-    userUpdate(id: $id, avatarBlobId: $signedBlobId) {
+  mutation AttachAvatar($id: ID!, $name: String!, $signedBlobId: String!) {
+    userUpdate(id: $id, name: $name, avatarBlobId: $signedBlobId) {
       user {
         ...UserFields
       }

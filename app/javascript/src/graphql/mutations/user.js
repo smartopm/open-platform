@@ -6,7 +6,7 @@ import { UserFragment } from '../fragments';
 export const UpdateUserMutation = gql`
   mutation UpdateUserMutation(
     $id: ID!
-    $name: String
+    $name: String!
     $email: String
     $phoneNumber: String
     $userType: String!
