@@ -151,14 +151,15 @@ export default function CampaignList() {
       return classes.drawerPaper
     }
 
-    return null
+    return classes.drawerPaper
   }
 
   useEffect(() => {
-    if(id || path === '/campaign-create') {
+    if((id || path === '/campaign-create') && !matches) {
       setShow(true);
     }
-  }, [id, path])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   if (loading) return <Spinner />;
   if (error) return <ErrorPage />;
