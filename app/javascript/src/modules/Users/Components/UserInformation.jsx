@@ -27,6 +27,7 @@ import RightSideMenu from '../../Menu/component/RightSideMenu';
 import FeatureCheck from '../../Features';
 import PaymentPlans from '../../Payments/Components/UserTransactions/Plans';
 import ShiftButtons from '../../TimeCard/Components/ShiftButtons';
+import LeadManagementDetails from './LeadManagementDetails';
 
 export default function UserInformation({
   data,
@@ -49,6 +50,7 @@ export default function UserInformation({
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const securityPersonnelList = ['security_guard' , 'security_supervisor']
 
+  console.log("Mutuba", tab)
   const [noteCreate, { loading: mutationLoading }] = useMutation(CreateNote);
   const { handleSubmit, register } = useForm();
 
@@ -213,6 +215,9 @@ export default function UserInformation({
                 <UserMessages />
               </TabPanel>
             </FeatureCheck>
+            <TabPanel value={tabValue} index="LeadManagement">
+              <LeadManagementDetails  tabValue={tabValue} userId={data.user.id} />
+             </TabPanel>
           </>
         )}
         {!['security_guard', 'custodian', 'security_supervisor'].includes(userType) && (

@@ -10,6 +10,7 @@ import UserActions from './Components/UserActions'
 import Preferences from '../Preferences/Components/Notifications'
 import { allUserTypes } from '../../utils/constants';
 import AccessCheck from '../Permissions/Components/AccessCheck';
+import LeadManagementDetails from './Components/LeadManagementDetails';
 // name in here is only used as key in routes, make sure it is unique
 
 
@@ -56,6 +57,17 @@ const routes = [
     },
     accessibleBy: [],
     name: 'user_edit',
+    moduleName: "user",
+    featureName: 'Users'
+  },
+  {
+    routeProps: {
+      path: '/user/:id/lead_management',
+      component: LeadManagementDetails,
+      exact: true,
+    },
+    accessibleBy: [],
+    name: 'lead_management',
     moduleName: "user",
     featureName: 'Users'
   },

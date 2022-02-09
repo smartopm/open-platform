@@ -30,6 +30,16 @@ const userMenus = [
   },
   {
     routeProps: {
+      path: '/user/:id?tab=LeadManagement',
+      component: <span />
+    },
+    name: t => t('menu.lead_management'),
+    featureName: 'Users',
+    moduleName: 'user',
+    accessibleBy: []
+  },
+  {
+    routeProps: {
       path: '/user/:id?tab=Notes',
       component: <span />
     },
