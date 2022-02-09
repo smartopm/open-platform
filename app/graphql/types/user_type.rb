@@ -59,6 +59,30 @@ module Types
     field :invites, [Types::InviteType], null: true, visible: { roles: %i[admin], user: :id }
     field :invitees, [Types::InviteType], null: true, visible: { roles: %i[admin], user: :id }
     field :request, Types::EntryRequestType, null: true
+    field :title, String, null: true
+    field :linkedin_url, String, null: true
+    field :country, String, null: true
+    field :company_name, String, null: true
+    field :company_description, String, null: true
+    field :company_linkedin, String, null: true
+    field :company_website, String, null: true
+    field :company_annual_revenue, String, null: true
+    field :company_contacted, String, null: true
+    field :industry, String, null: true
+    field :level_of_internationalization, String, null: true
+    field :lead_temperature, String, null: true
+    field :lead_status, String, null: true
+    field :lead_source, String, null: true
+    field :lead_owner, String, null: true
+    field :lead_type, String, null: true
+    field :client_category, String, null: true
+    field :next_steps, String, null: true
+    field :created_by, String, null: true
+    field :modified_by, String, null: true
+    field :relevant_link, String, null: true
+    field :first_contact_date, GraphQL::Types::ISO8601DateTime, null: true
+    field :last_contact_date, GraphQL::Types::ISO8601DateTime, null: true
+    field :followup_at, GraphQL::Types::ISO8601DateTime, null: true
 
     def avatar_url
       return nil unless object.avatar.attached?
