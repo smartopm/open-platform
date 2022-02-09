@@ -95,7 +95,6 @@ export default function UserItem({
           direction="row"
           justifyContent="flex-start"
           alignItems="center"
-          // spacing={2}
         >
           <Grid item md={1} sm={1} xs={2}>
             <Checkbox
@@ -221,25 +220,6 @@ const useStyles = makeStyles(() => ({
     color: '#000000',
     textDecoration: 'none'
   },
-
-  '@media (min-width: 768px)': {
-    avatarList: {
-      width: '5%'
-    },
-    detailsRow: {
-      width: '25%'
-    },
-    userTypeRow: {
-      width: '30%',
-      textAlign: 'center'
-    },
-    labelsRow: {
-      width: '44%'
-    },
-    actionIcon: {
-      width: '5%'
-    }
-  },
   '@media (min-width: 600px) and (max-width: 766px)': {
     userNameItem: {
       paddingLeft: 8
@@ -280,28 +260,4 @@ const useStyles = makeStyles(() => ({
       marginRight: '-3.5em'
     }
   },
-  '@media only screen and (min-width: 320px) and (max-width: 374px)': {
-    detailsRow: {
-      width: '60%'
-    },
-    userTypeRow: {
-      width: '60%',
-      textAlign: 'right'
-    },
-    actionIcon: {
-      width: '57%'
-    }
-  },
-  '@media only screen and (min-width: 375px) and (max-width: 767px)': {
-    detailsRow: {
-      width: '60%'
-    },
-    userTypeRow: {
-      width: '60%',
-      textAlign: 'right'
-    },
-    actionIcon: {
-      width: '60%'
-    }
-  }
 }))
