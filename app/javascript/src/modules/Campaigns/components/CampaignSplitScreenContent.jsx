@@ -27,7 +27,8 @@ import {
   CampaignLabelRemoveMutation
 } from '../../../graphql/mutations';
 import MessageAlert from '../../../components/MessageAlert';
-import CampaignStatCard from './CampaignStatCard';
+import CampaignStatCard from './CampaignStatCard'
+import TemplateList from '../../Emails/components/TemplateList'
 
 const initData = {
   id: '',
@@ -146,6 +147,13 @@ export default function CampaignSplitScreenContent({ refetch, campaign, handleCl
       setMessageAlert(formatError(err.message));
       setLoading(false);
     }
+  }
+
+  function handleTemplateValue(event){
+    setFormData({
+      ...formData,
+      emailTemplatesId: event.target.value
+    })
   }
 
   function handleSubmit(e) {
@@ -283,7 +291,7 @@ export default function CampaignSplitScreenContent({ refetch, campaign, handleCl
           />
         </Grid>
       </Grid>
-      <Grid item sm={12} xs={6}>
+      <Grid item sm={12} xs={12}>
         <Grid container className={classes.topInfo}>
           <Grid item sm={3} xs={12}>
             <Typography variant="caption" color="textSecondary">
@@ -302,7 +310,18 @@ export default function CampaignSplitScreenContent({ refetch, campaign, handleCl
           </Grid>
         </Grid>
       </Grid>
-      <Grid item sm={12} xs={6}>
+      <Grid item sm={6} xs={6} className={classes.topInfo}>
+        {formData.campaignType === 'email' && (
+        <>
+          <TemplateList
+            value={formData.emailTemplatesId || ''}
+            handleValue={handleTemplateValue}
+            isRequired
+          />
+        </>
+        )}
+      </Grid>
+      <Grid item sm={12} xs={12}>
         <Grid container className={classes.topInfo}>
           <Grid item sm={3} xs={12}>
             <Typography variant="caption" color="textSecondary">

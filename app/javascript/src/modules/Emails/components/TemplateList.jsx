@@ -16,8 +16,8 @@ export default function TemplateList({ value, handleValue, isRequired }) {
   }
   return (
     <FormControl style={{ width: '100%' }}>
-      <InputLabel>Select a template</InputLabel>
-      <Select value={value} onChange={handleValue} required={isRequired} data-testid="template_list">
+      <InputLabel style={{padding: '0 10px'}}>Select a template</InputLabel>
+      <Select value={value} variant='outlined' onChange={handleValue} required={isRequired} data-testid="template_list">
         {data?.emailTemplates.map(template => (
           <MenuItem key={template.id} value={template.id}>
             {template.name}
