@@ -38,6 +38,17 @@ const userMenus = [
     moduleName: 'entry_request',
     accessibleBy: []
   },
+
+  {
+    routeProps: {
+      path: '/user/:id?tab=LeadManagement',
+      component: <span />
+    },
+    name: t => t('menu.lead_management'),
+    featureName: 'Users',
+    moduleName: 'user',
+    accessibleBy: []
+  },
   {
     routeProps: {
       path: '/user/:id?tab=Notes',
