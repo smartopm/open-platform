@@ -90,8 +90,14 @@ export default function UserItem({
         onClick={showUserDetails}
         data-testid="user_item"
       >
-        <Grid container alignItems="center">
-          <Grid item md={1} sm={1} xs={1}>
+        <Grid
+          container
+          direction="row"
+          justifyContent="flex-start"
+          alignItems="center"
+          // spacing={2}
+        >
+          <Grid item md={1} sm={1} xs={2}>
             <Checkbox
               checked={selectedUsers.includes(user.id) || selectCheckBox}
               onChange={() => handleUserSelect(user)}
@@ -100,18 +106,18 @@ export default function UserItem({
               color="primary"
             />
           </Grid>
-          <Grid item md={1} sm={1} xs={1}>
-            <ListItemAvatar>
+          <Grid item md={1} sm={1} xs={2}>
+            <ListItemAvatar className={classes.userAvatar}>
               <Avatar user={user} />
             </ListItemAvatar>
           </Grid>
-          <Grid item md={2} sm={4} xs={9}>
+          <Grid item md={2} sm={9} xs={7} className={classes.userNameItem}>
             <Link
               style={{ color: 'black' }}
               to={{pathname: `/user/${user.id}`, state: { from: 'users', offset }}}
               key={user.id}
             >
-              <Typography component="span" variant="subtitle1" data-testid="user_name">
+              <Typography component="span" variant="subtitle1" data-testid="user_name" className={classes.userName}>
                 <strong>
                   {' '}
                   {user.name}
@@ -134,13 +140,13 @@ export default function UserItem({
               </IconButton>
             </Grid>
           </Hidden>
-          <Grid item md={3} sm={4} xs={12}>
+          <Grid item md={3} sm={6} xs={12}>
             <Typography variant="body2" data-testid="user_email">{user.email}</Typography>
             <Typography component="span" variant="body2" data-testid="user_phone_number">
               {user.phoneNumber}
             </Typography>
           </Grid>
-          <Grid item md={3} sm={3} xs={12}>
+          <Grid item md={3} sm={6} xs={12}>
             <Typography variant="subtitle1" data-testid="user_type">
               {t(`common:user_types.${user?.userType}`)}
             </Typography>
@@ -232,6 +238,46 @@ const useStyles = makeStyles(() => ({
     },
     actionIcon: {
       width: '5%'
+    }
+  },
+  '@media (min-width: 600px) and (max-width: 766px)': {
+    userNameItem: {
+      paddingLeft: 8
+    }
+  },
+  '@media (min-width: 499px) and (max-width: 599px)': {
+    userName: {
+      marginLeft: '-22%'
+    },
+    userAvatar: {
+      marginLeft: '-42%'
+    }
+  },
+  '@media (min-width: 450px) and (max-width: 499px)': {
+    userName: {
+      marginLeft: '-19%'
+    },
+    userAvatar: {
+      marginLeft: '-40%'
+    }
+  },
+  '@media (min-width: 390px) and (max-width: 450px)': {
+    userName: {
+      marginLeft: '-6%'
+    },
+    userAvatar: {
+      marginLeft: '-18%'
+    }
+  },
+  '@media (min-width: 991px)': {
+    userName: {
+      marginLeft: '-37%'
+    },
+    userAvatar: {
+      marginLeft: '-40%'
+    },
+    menuButton: {
+      marginRight: '-3.5em'
     }
   },
   '@media only screen and (min-width: 320px) and (max-width: 374px)': {
