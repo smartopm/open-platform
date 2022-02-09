@@ -39,7 +39,7 @@ export default function Balance({
             <Typography variant={matches ? 'caption' : 'subtitle1'}>
               {t('common:misc.total_balance')}
             </Typography>
-            <Typography variant={matches ? 'body2' : 'h5'} color="primary">
+            <Typography variant={matches ? 'body2' : 'h5'} color="primary" data-testid="pending-balance">
               {balanceData?.pendingBalance === 0
                 ? formatMoney(currencyData, balanceData?.pendingBalance)
                 : `- ${formatMoney(currencyData, balanceData?.pendingBalance)}`}

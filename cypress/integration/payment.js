@@ -88,7 +88,7 @@ describe('Payment', () => {
     // The plan table should have these info
     cy.get('[data-testid=plot-number]').should('contain', '1000001');
     cy.get('[data-testid=payment-plan]').should('contain', 'Basic');
-    cy.get('[data-testid=balance]').should('contain', 'K 6000');
+    cy.get('[data-testid=balance]').should('contain', '6,000');
 
     // Now make a payment
     cy.get('.record-new-payment-btn').click();
@@ -106,8 +106,8 @@ describe('Payment', () => {
     // Verify receipt info
     cy.get('[data-testid=client-name]').should('contain', 'An Admin User');
     cy.get('[data-testid=cashier-name]').should('contain', 'An Admin User');
-    cy.get('[data-testid=total-amount-paid]').should('contain', 'K 2000');
-    cy.get('[data-testid=expected-monthly-amount]').should('contain', 'K 500');
+    cy.get('[data-testid=total-amount-paid]').should('contain', '2,000');
+    cy.get('[data-testid=expected-monthly-amount]').should('contain', '500');
 
     cy.get('.close-receipt-details').click();
     cy.wait(1000);
@@ -116,7 +116,7 @@ describe('Payment', () => {
 
     // Verify transaction table
     cy.get('[data-testid=payment-type]').should('contain', 'cash');
-    cy.get('[data-testid=amount]').should('contain', 'K 2000');
+    cy.get('[data-testid=amount]').should('contain', '2,000');
     cy.get('.custom-label').should('contain', 'Paid');
   });
 });
