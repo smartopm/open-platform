@@ -826,6 +826,7 @@ ActiveRecord::Schema.define(version: 2022_02_09_065133) do
     t.string "company_contacted"
     t.string "industry_sub_sector"
     t.string "industry_business_activity"
+    t.integer "company_employees"
     t.string "industry"
     t.string "level_of_internationalization"
     t.string "lead_temperature"
