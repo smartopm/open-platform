@@ -4,7 +4,6 @@ import {
   ListItem,
   Typography,
   ListItemAvatar,
-  Box,
   IconButton,
   Grid,
   Dialog,
@@ -92,20 +91,37 @@ export default function UserItem({
         data-testid="user_item"
       >
         <Grid container alignItems="center">
-          <Checkbox
-            checked={selectedUsers.includes(user.id) || selectCheckBox}
-            onChange={() => handleUserSelect(user)}
-            name="includeReplyLink"
-            data-testid="reply_link"
-            color="primary"
-            style={{padding: '0px', marginRight: '15px'}}
-          />
-          <ListItemAvatar className={classes.avatarList}>
-            <Avatar user={user} />
-          </ListItemAvatar>
-
-          <Hidden smUp>
-            <Grid className={classes.actionIcon}>
+          <Grid item md={1} sm={1} xs={1}>
+            <Checkbox
+              checked={selectedUsers.includes(user.id) || selectCheckBox}
+              onChange={() => handleUserSelect(user)}
+              name="includeReplyLink"
+              data-testid="reply_link"
+              color="primary"
+            />
+          </Grid>
+          <Grid item md={1} sm={1} xs={1}>
+            <ListItemAvatar>
+              <Avatar user={user} />
+            </ListItemAvatar>
+          </Grid>
+          <Grid item md={2} sm={4} xs={9}>
+            <Link
+              style={{ color: 'black' }}
+              to={{pathname: `/user/${user.id}`, state: { from: 'users', offset }}}
+              key={user.id}
+            >
+              <Typography component="span" variant="subtitle1" data-testid="user_name">
+                <strong>
+                  {' '}
+                  {user.name}
+                  {' '}
+                </strong>
+              </Typography>
+            </Link>
+          </Grid>
+          <Hidden mdUp>
+            <Grid item md={1} sm={1} xs={1}>
               <IconButton
                 className={classes.menuButton}
                 aria-label={`more-${user.name}`}
@@ -118,39 +134,13 @@ export default function UserItem({
               </IconButton>
             </Grid>
           </Hidden>
-
-          <Box className={classes.detailsRow}>
-            <Box style={{ margin: 5 }}>
-              <Box
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'space-around'
-                }}
-              >
-                <Link
-                  style={{ color: 'black' }}
-                  to={{pathname: `/user/${user.id}`, state: { from: 'users', offset }}}
-                  key={user.id}
-                >
-                  <Typography component="span" variant="subtitle1" data-testid="user_name">
-                    <strong>
-                      {' '}
-                      {user.name}
-                      {' '}
-                    </strong>
-                  </Typography>
-                </Link>
-              </Box>
-            </Box>
-          </Box>
-          <Grid className={classes.userTypeRow}>
+          <Grid item md={3} sm={4} xs={12}>
             <Typography variant="body2" data-testid="user_email">{user.email}</Typography>
             <Typography component="span" variant="body2" data-testid="user_phone_number">
               {user.phoneNumber}
             </Typography>
           </Grid>
-          <Grid className={classes.userTypeRow}>
+          <Grid item md={3} sm={3} xs={12}>
             <Typography variant="subtitle1" data-testid="user_type">
               {t(`common:user_types.${user?.userType}`)}
             </Typography>
@@ -160,8 +150,9 @@ export default function UserItem({
               </Typography>
             )}
           </Grid>
-          <Hidden xsDown>
-            <Grid className={classes.actionIcon}>
+
+          <Hidden smDown>
+            <Grid item md={1} sm={1}>
               <IconButton
                 className={classes.menuButton}
                 aria-label={`more-${user.name}`}
@@ -169,7 +160,6 @@ export default function UserItem({
                 aria-haspopup="true"
                 onClick={handleOpenMenu}
                 dataid={user.id}
-                data-testid="user-menu-list"
               >
                 <MoreVertIcon />
               </IconButton>
