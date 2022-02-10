@@ -20,8 +20,6 @@ module Mutations
       argument :sub_status, String, required: false
       argument :secondary_info, [GraphQL::Types::JSON], required: false
       argument :ext_ref_id, String, required: false
-      argument :title, String, required: false
-      argument :linkedin_url, String, required: false
       argument :country, String, required: false
       argument :company_name, String, required: false
       argument :company_description, String, required: false
