@@ -1,3 +1,4 @@
+/* eslint-disable max-statements */
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
@@ -7,7 +8,11 @@ import CloseIcon from '@material-ui/icons/Close';
 import { useQuery, useMutation } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { TextField, IconButton, Chip } from '@material-ui/core';
+import { TextField, IconButton, Chip, Container } from '@material-ui/core';
+import { Typography } from '@mui/material';
+import { makeStyles } from '@material-ui/styles';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+// import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { UserLabelsQuery, LabelsQuery } from '../../../graphql/queries';
 import { LabelCreate, UserLabelCreate, UserLabelUpdate } from '../../../graphql/mutations';
 import useDebounce from '../../../utils/useDebounce';
@@ -28,6 +33,7 @@ export default function UserLabels({ userId }) {
   const [messageAlert, setMessageAlert] = useState('');
   const [isSuccessAlert, setIsSuccessAlert] = useState(false);
   const { t } = useTranslation('common')
+  const classes = useStyles()
 
   useEffect(() => {
     setLabel(newUserLabel);
@@ -86,14 +92,27 @@ export default function UserLabels({ userId }) {
     return <ErrorPage title={error.message || _error.message} />;
   }
   return (
-    <div className="container">
+    <div className="">
       <MessageAlert
         type={isSuccessAlert ? 'success' : 'error'}
         message={messageAlert}
         open={!!messageAlert}
         handleClose={handleMessageAlertClose}
       />
-      <div className="row d-flex justifiy-content-around align-items-center">
+      <br />
+      <Typography>
+        Labels
+        {' '}
+
+      </Typography>
+
+      <Typography variant="subtitle1" className={classes.wrapIcon}>
+        Labels
+        {' '}
+        {'  '}
+        <KeyboardArrowDownIcon className={classes.linkIcon}  />
+      </Typography>
+      <Container maxWidth="xl">
         {userData.userLabels.length
           ? userData?.userLabels.map(lab => (
             <Chip
@@ -102,15 +121,14 @@ export default function UserLabels({ userId }) {
               size="medium"
               label={lab.shortDesc}
               onDelete={() => handleDelete(lab.id)}
-              style={matches ? {marginRight: '24px', backgroundColor: lab.color, marginBottom: '5px' } : {marginRight: '4px', backgroundColor: lab.color, marginBottom: '5px' }}
+              // style={matches ? {marginRight: '24px', backgroundColor: lab.color, marginBottom: '5px' } : {marginRight: '4px', backgroundColor: lab.color, marginBottom: '5px' }}
             />
             ))
           : null}
         <IconButton aria-label="add-label" onClick={() => setshowAddTextBox(!showAddTextBox)}>
           {!showAddTextBox ? <AddIcon /> : <CloseIcon />}
         </IconButton>
-      </div>
-
+      </Container>
       <div className="row d-flex justifiy-content-around align-items-center">
         {showAddTextBox ? (
           <Autocomplete
@@ -164,3 +182,11 @@ export default function UserLabels({ userId }) {
 UserLabels.propTypes = {
   userId: PropTypes.string.isRequired
 };
+
+
+const useStyles = makeStyles(() => ({
+  wrapIcon: {
+    verticalAlign: 'middle',
+    display: 'inline-flex'
+   }
+}));
