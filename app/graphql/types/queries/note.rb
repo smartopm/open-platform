@@ -84,6 +84,12 @@ module Types::Queries::Note
       argument :query, String, required: false
     end
 
+    field :client_assigned_projects, [Types::NoteType], null: false do
+      description 'Returns assigned projects for the client'
+      argument :limit, Integer, required: false
+      argument :offset, Integer, required: false
+    end
+
     field :projects, [Types::NoteType], null: false do
       description 'Returns a list of projects under a process'
       argument :offset, Integer, required: false
@@ -305,16 +311,66 @@ module Types::Queries::Note
       .group(:body).count
   end
 
+  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/MethodLength
   def project_open_tasks(task_id:, limit: 3, offset: 0)
     authorize
-    context[:site_community].notes.find(task_id)
-                            .sub_tasks
-                            .where(completed: false)
-                            .includes(:sub_notes, :assignee_notes, :assignees, :author, :user)
+    sub_task_ids = context[:site_community].notes.find(task_id).sub_tasks.pluck(:id)
+    context[:site_community].notes
+                            .includes(
+                              :parent_note,
+                              :sub_notes,
+                              :assignee_notes,
+                              :assignees,
+                              :author,
+                              :user,
+                            )
+                            .where(id: sub_task_ids, completed: false)
+                            .for_site_manager(current_user)
+                            .with_attached_documents
+                            .or(context[:site_community].notes
+                              .includes(
+                                :parent_note,
+                                :sub_notes,
+                                :assignee_notes,
+                                :assignees,
+                                :author,
+                                :user,
+                              )
+                              .where(parent_note_id: sub_task_ids, completed: false)
+                              .for_site_manager(current_user)
+                              .with_attached_documents)
                             .order(created_at: :asc)
                             .limit(limit).offset(offset)
-                            .with_attached_documents
   end
+
+  def client_assigned_projects(offset: 0, limit: 50)
+    unless permitted?(module: :note, permission: :can_fetch_flagged_notes)
+      raise GraphQL::ExecutionError,
+            I18n.t('errors.unauthorized')
+    end
+
+    assigned_tasks = current_user
+                     .tasks
+                     .includes(:parent_note)
+    # Get the top level parent for each assigned task
+    projects_assigned = []
+    assigned_tasks.each do |task|
+      if task.parent_note_id.present?
+        parent = task.parent_note.parent_note.presence || task.parent_note
+        projects_assigned << parent
+      else
+        projects_assigned << task
+      end
+    end
+    context[:site_community]
+      .notes
+      .includes(:sub_notes, :assignees, :assignee_notes, :documents_attachments)
+      .where(id: projects_assigned.pluck(:id))
+      .offset(offset).limit(limit)
+  end
+  # rubocop:enable Metrics/MethodLength
+  # rubocop:enable Metrics/AbcSize
 
   def completed_by_quarter
     community_id = context[:site_community].id
@@ -383,6 +439,7 @@ module Types::Queries::Note
         :documents_attachments,
       )
       .where(parent_note_id: nil, form_user_id: drc_form_users)
+      .for_site_manager(current_user)
   end
   # rubocop:enable Metrics/AbcSize
   # rubocop:enable Metrics/MethodLength

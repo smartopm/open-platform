@@ -227,6 +227,25 @@ RSpec.describe Types::Queries::Note do
       GQL
     end
 
+    let(:task_fields_fragment) do
+      <<~GQL
+        id
+        body
+        dueDate
+        progress
+        subTasksCount
+        taskCommentsCount
+        documents
+        formUserId
+        assignees {
+          id
+          name
+          imageUrl
+          avatarUrl
+        }
+      GQL
+    end
+
     let(:note_sub_tasks_query) do
       %(query($taskId: ID!) {
         taskSubTasks(taskId: $taskId) {
@@ -260,6 +279,17 @@ RSpec.describe Types::Queries::Note do
           }
           parentNote {
             id
+          }
+        }
+      })
+    end
+
+    let(:client_assigned_projects_query) do
+      %(query GetClientAssignedProjects($offset: Int, $limit: Int) {
+        clientAssignedProjects(offset: $offset, limit: $limit) {
+          #{task_fields_fragment}
+          subTasks {
+              #{task_fields_fragment}
           }
         }
       })
@@ -485,6 +515,53 @@ RSpec.describe Types::Queries::Note do
 
           expect(result.dig('data', 'flaggedNotes')).not_to be_nil
           expect(result.dig('data', 'flaggedNotes').length).to eql 2
+        end
+
+        it 'gets project for a client assigned task' do
+          level1_parent = admin.notes.create!(
+            body: 'Top level parent',
+            description: 'Top level parent',
+            user_id: site_worker.id,
+            category: 'form',
+            flagged: true,
+            community_id: site_worker.community_id,
+            author_id: site_worker.id,
+            completed: false,
+          )
+
+          fourth_note.update(parent_note_id: level1_parent.id)
+
+          developer.tasks.create!(
+            body: 'Developer assigned task',
+            user_id: developer.id,
+            description: 'Developer assigned sub task',
+            category: 'to_do',
+            flagged: true,
+            community_id: developer.community_id,
+            author_id: developer.id,
+            parent_note_id: third_note.id,
+          )
+
+          developer.tasks.create!(
+            body: 'Developer assigned sub subtask',
+            user_id: developer.id,
+            description: 'Developer assigned sub subtask',
+            category: 'to_do',
+            flagged: true,
+            community_id: developer.community_id,
+            author_id: developer.id,
+            parent_note_id: fourth_note.id,
+          )
+
+          result = DoubleGdpSchema.execute(client_assigned_projects_query, context: {
+                                             current_user: developer,
+                                             site_community: developer.community,
+                                           }, variables: { id: admin.id }).as_json
+
+          expect(result['errors']).to be_nil
+          expect(result.dig('data', 'clientAssignedProjects').length).to eql 2
+          parent_ids = result.dig('data', 'clientAssignedProjects').map { |task| task['id'] }
+          expect(parent_ids).to contain_exactly(level1_parent.id, third_note.id)
         end
       end
 
