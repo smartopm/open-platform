@@ -9,7 +9,7 @@ export const UpdateUserMutation = gql`
     $name: String!
     $email: String
     $phoneNumber: String
-    $userType: String!
+    $userType: String
     $requestReason: String
     $vehicle: String
     $state: String
@@ -20,6 +20,19 @@ export const UpdateUserMutation = gql`
     $address: String
     $secondaryInfo: [JSON!]
     $extRefId: String
+
+    $followupAt: String
+    $lastContactDate: String
+    $firstContactDate: String
+    $createdBy: String
+    $modifiedBy: String
+    $nextSteps: String
+    $leadOwner: String
+    $leadType: String
+    $clientCategory: String
+
+
+
   ) {
     result: userUpdate(
       id: $id
