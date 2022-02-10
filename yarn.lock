@@ -13098,6 +13098,11 @@ react-colorful@^5.1.2:
   resolved "https://registry.yarnpkg.com/react-colorful/-/react-colorful-5.5.0.tgz#8359f218984a927095477a190ab9927eaf865c0c"
   integrity sha512-BuzrlrM0ylg7coPkXOrRqlf2BgHLw5L44sybbr9Lg4xy7w9e5N7fGYbojOO0s8J0nvrM3PERN2rVFkvSa24lnQ==
 
+react-country-dropdown@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/react-country-dropdown/-/react-country-dropdown-1.0.4.tgz#14bf17f028f0eb72dcf57e1500d87f9f2e63e190"
+  integrity sha512-3FaBsuF+leBhz9+lOXmiKXGRtJly2n+3j82Z7jIJqTemp7WYTBBe4EiKYi6Esx9EMotTQs0JqC+1sDLSLv4kjA==
+
 react-csv@^2.0.3:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/react-csv/-/react-csv-2.0.3.tgz#f5d17a3c71107d9bcbe580049350200debdc042a"
