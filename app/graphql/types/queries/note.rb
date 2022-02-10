@@ -365,7 +365,7 @@ module Types::Queries::Note
     end
     context[:site_community]
       .notes
-      .includes(:assignees, :assignee_notes, :documents_attachments)
+      .includes(:sub_notes, :assignees, :assignee_notes, :documents_attachments)
       .where(id: projects_assigned.pluck(:id))
       .offset(offset).limit(limit)
   end
