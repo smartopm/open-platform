@@ -16,15 +16,32 @@ jest.mock('react-router-dom', () => ({
   }),
 }));
 
-describe('Processes page', () => {
-  beforeEach(() => {
-    authState.user.community.name = 'Tilisi';
-  });
+const mockAuthState = {
+  ...authState,
+  user: {
+    ...authState.user,
+    community: {
+      ...authState.user.community,
+      name: 'Tilisi'
+    }
+  }
+};
 
+describe('Processes page', () => {
   it('redirects if community not allowed', () => {
-    authState.user.community.name = 'Not Allowed City';
+    const newAuthState = {
+      ...authState,
+      user: {
+        ...authState.user,
+        community: {
+          ...authState.user.community,
+          name: 'Not Allowed City'
+        }
+      }
+    };
+
     render(
-      <Context.Provider value={authState}>
+      <Context.Provider value={newAuthState}>
         <MockedProvider>
           <BrowserRouter>
             <ProcessesPage />
@@ -37,10 +54,10 @@ describe('Processes page', () => {
   });
 
   it('renders processes dashboard for admins', async () => {
-    const mockAuthState = {
-      ...authState,
+    const newAuthState = {
+      ...mockAuthState,
       user: {
-        ...authState.user,
+        ...mockAuthState.user,
         permissions: [
           {
             module: 'dashboard',
@@ -51,7 +68,7 @@ describe('Processes page', () => {
     };
 
     render(
-      <Context.Provider value={mockAuthState}>
+      <Context.Provider value={newAuthState}>
         <MockedProvider>
           <BrowserRouter>
             <ProcessesPage />
@@ -66,10 +83,10 @@ describe('Processes page', () => {
   });
 
   it('renders processes dashboard for clients', async () => {
-    const mockAuthState = {
-      ...authState,
+    const newAuthState = {
+      ...mockAuthState,
       user: {
-        ...authState.user,
+        ...mockAuthState.user,
         userType: 'developer',
         permissions: [
           {
@@ -81,7 +98,7 @@ describe('Processes page', () => {
     };
 
     render(
-      <Context.Provider value={mockAuthState}>
+      <Context.Provider value={newAuthState}>
         <MockedProvider>
           <BrowserRouter>
             <ProcessesPage />
