@@ -8,7 +8,7 @@ import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import { makeStyles } from '@material-ui/styles';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { useMediaQuery, useTheme } from '@mui/material';
 import Container from '@mui/material/Container';
 import PropTypes from 'prop-types'
 import LeadManagementForm from './LeadManagementForm';
@@ -21,16 +21,18 @@ export default function LeadManagementDetails({ userId, tabValue }){
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tabValue])
-  const classes = useStyles();
+  // const classes = useStyles();
+  const theme = useTheme();
 
   const [value, setValue] = React.useState('1');
-  const matches = useMediaQuery('(max-width:800px)');
+  const matches = useMediaQuery('(max-width:1200px)');
+  // const matchesSmall = useMediaQuery(theme.breakpoints.down('md'));
 
   const handleChange = (_event, newValue) => {
     setValue(newValue);
   };
   return (
-    <Container maxWidth="md" >
+    <Container maxWidth='xl' >
       <Grid container style={{ display: 'flex', justifyContent: 'center' }}>
         <Grid item md={10} xs ={12}>
         <Typography variant="h5">Lead Management</Typography>
