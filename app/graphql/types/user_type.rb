@@ -4,6 +4,7 @@ require 'host_env'
 
 module Types
   # UserType
+  # rubocop: disable Metrics/ClassLength
   class UserType < Types::BaseObject
     field :id, ID, null: false
     field :community, Types::CommunityType, null: false
@@ -107,5 +108,20 @@ module Types
     def permissions
       context[:current_user].role.permissions
     end
+
+    # Field for lead secondary mail
+    def secondary_email
+      secondary_details('email').first&.info
+    end
+
+    # Field for lead secondary phone number
+    def secondary_phone_number
+      secondary_details('phone').first&.info
+    end
+
+    def secondary_details(contact_type)
+      object.contact_infos.select { |info| info.contact_type.eql?(contact_type) }
+    end
   end
+  # rubocop: enable Metrics/ClassLength
 end
