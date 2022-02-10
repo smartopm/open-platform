@@ -303,7 +303,7 @@ export default function CampaignSplitScreenContent({ refetch, campaign, handleCl
               <Button style={buttonStyle('sms')} onClick={() => handleTypeButtonClick('sms')}>
                 <Typography variant="body2">SMS</Typography>
               </Button>
-              <Button style={buttonStyle('email')} onClick={() => handleTypeButtonClick('email')}>
+              <Button style={buttonStyle('email')} onClick={() => handleTypeButtonClick('email')} data-testid='email'>
                 <Typography variant="body2">{t('common:form_fields.email')}</Typography>
               </Button>
             </ButtonGroup>
