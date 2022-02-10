@@ -45,9 +45,9 @@ describe('Template List Component', () => {
     expect(loader.queryAllByTestId('loader')[0]).toBeInTheDocument();
 
     await waitFor(() => {
-      expect(container.queryAllByText('Select a template')[0]).toBeInTheDocument();
+      expect(container.queryByText('Select a template')).toBeInTheDocument();
       expect(container.queryByTestId('template_list')).toBeInTheDocument();
-    }, 50);
+    }, 10);
   });
 
   it('should return an error when fetching was not successful', async () => {
