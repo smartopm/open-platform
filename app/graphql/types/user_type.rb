@@ -4,6 +4,7 @@ require 'host_env'
 
 module Types
   # UserType
+  # rubocop: disable Metrics/ClassLength
   class UserType < Types::BaseObject
     field :id, ID, null: false
     field :community, Types::CommunityType, null: false
@@ -124,4 +125,5 @@ module Types
       object.contact_infos.select { |info| info.contact_type.eql?(contact_type) }
     end
   end
+  # rubocop: enable Metrics/ClassLength
 end
