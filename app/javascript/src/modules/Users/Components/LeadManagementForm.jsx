@@ -19,8 +19,12 @@ import { UpdateUserMutation } from '../../../graphql/mutations/user';
 import { Spinner } from '../../../shared/Loading';
 import CenteredContent from '../../../shared/CenteredContent';
 import { formatError } from '../../../utils/helpers';
-
-export default function LeadManagementForm({ close, userId }) {
+import { clientCategories, internationalizationLevels, 
+        leadTemperatureOptions, leadStatusOptions, industrySubSectorOptions,
+        leadSourceOptions, leadTypeOptions, industryCategoryOptions, industryBusinessActivityOptions, regionOptions } from '../../../utils/constants';
+import { ReactCountryDropdown } from 'react-country-dropdown'
+import 'react-country-dropdown/dist/index.css'
+export default function LeadManagementForm({ userId }) {
   const matches = useMediaQuery('(max-width:800px)');
   const initialData = {
     user: {
@@ -63,25 +67,32 @@ export default function LeadManagementForm({ close, userId }) {
 
   const [errors, setErr] = useState('')
 
-  const [industry, setIndustry] = useState('');
+  // const industryCategories = {
+  //   call: 'Call',
+  //   message: 'Message',
+  //   email: 'Email',
+  //   to_do: 'To-Do',
+  //   form: 'Form',
+  //   emergency: 'Emergency SOS',
+  //   template: 'DRC Process Template'
+  // };
 
-  const NotesCategories = {
-    call: 'Call',
-    message: 'Message',
-    email: 'Email',
-    to_do: 'To-Do',
-    form: 'Form',
-    emergency: 'Emergency SOS',
-    template: 'DRC Process Template'
-  };
+  // const levelOfInternationalizationCategories = {
+  //   call: 'Call',
+  //   message: 'Message',
+  //   email: 'Email',
+  //   to_do: 'To-Do',
+  //   form: 'Form',
+  //   emergency: 'Emergency SOS',
+  //   template: 'DRC Process Template'
+  // };
 
-  function handleChange(event) {
-    const { name, value } = event.target;
-    setLeadFormData({
-      ...leadFormData,
-      user: { [name]: value }
-    });
-  }
+  // function handleChange(event) {
+  //   const { name, value } = event.target;
+  //   setLeadFormData({
+  //     user: { ...leadFormData?.user, [name]: value }
+  //   });
+  // }
 
   function handleTimeInputChange(event) {
     const { name, value } = event.target;
@@ -127,7 +138,15 @@ export default function LeadManagementForm({ close, userId }) {
   if (error || errors) return <CenteredContent>{formatError(error.message)}</CenteredContent>;
   if (loading || loadingStatus) return <Spinner />;
   return (
-    <form onSubmit={handleSubmit}>
+<Grid container>
+  <Grid item md={12} xs={12}>
+  <form onSubmit={handleSubmit} style={{ margin: '0 -25px 0 -25px' }} >
+
+  <div>
+      <ReactCountryDropdown onSelect={handleSelect} countryCode='IN' />
+    </div>
+
+
       <Grid container  >
         <Grid item md={6} xs={6}>
           <Typography variant="h6">{ matches ? 'Contact Info' : "Primary Contact"}</Typography>
@@ -172,7 +191,7 @@ export default function LeadManagementForm({ close, userId }) {
         // placeholder={t('common:form_placeholders.title')}
         style={{ width: '100%' }}
         onChange={handleChange}
-        value={leadFormData?.user?.title}
+        // value={leadFormData?.user?.title}
         multiline
         variant="outlined"
         fullWidth
@@ -189,7 +208,7 @@ export default function LeadManagementForm({ close, userId }) {
 
 
      <TextField
-        name="primary_email"
+        name="email"
         label="Primary Email"
         // placeholder={t('common:form_placeholders.primary_email')}
         style={{ width: '100%' }}
@@ -210,7 +229,7 @@ export default function LeadManagementForm({ close, userId }) {
       />
 
       <TextField
-        name="secondary_email"
+        name="secondaryEmail"
         label="Secondary Email"
         // placeholder={t('common:form_placeholders.secondary_email')}
         style={{ width: '100%' }}
@@ -231,7 +250,7 @@ export default function LeadManagementForm({ close, userId }) {
       />
 
       <TextField
-        name="mobile"
+        name="phoneNumber"
         label="Mobile"
         // placeholder={t('common:form_placeholders.primary_phone')}
         style={{ width: '100%' }}
@@ -252,7 +271,7 @@ export default function LeadManagementForm({ close, userId }) {
       />
 
       <TextField
-        name="phone"
+        name="secondaryPhoneNumber"
         label="Phone"
         // placeholder={t('common:form_placeholders.secondary_phone')}
         style={{ width: '100%' }}
@@ -278,7 +297,7 @@ export default function LeadManagementForm({ close, userId }) {
         // placeholder={t('common:form_placeholders.linkedin')}
         style={{ width: '100%' }}
         onChange={handleChange}
-        value={leadFormData?.user?.linkedinUrl}
+        // value={leadFormData?.user?.linkedinUrl}
         multiline
         variant="outlined"
         fullWidth
@@ -1069,6 +1088,10 @@ export default function LeadManagementForm({ close, userId }) {
         {/* {Boolean(error.length) && error} */}
       </p>
     </form>
+
+  </Grid>
+
+  </Grid>
   )
 }
 

@@ -1,54 +1,71 @@
 /* eslint-disable no-use-before-define */
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Grid,Typography } from '@mui/material';
-
-import Box from '@mui/material/Box';
-import Tab from '@mui/material/Tab';
-import TabContext from '@mui/lab/TabContext';
-import TabList from '@mui/lab/TabList';
-import TabPanel from '@mui/lab/TabPanel';
 import { makeStyles } from '@material-ui/styles';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Container from '@mui/material/Container';
 import PropTypes from 'prop-types'
 import LeadManagementForm from './LeadManagementForm';
+import { objectAccessor } from '../../../utils/helpers'
 
+import { StyledTabs, StyledTab, TabPanel, a11yProps } from '../../../components/Tabs'
+export default function LeadManagementDetails({ userId }){
+  const [tabValue, setTabValue] = useState(0);
 
-export default function LeadManagementDetails({ userId, tabValue }){
-  useEffect(() => {
-    if (tabValue === 'Lead Management') {
-      console.log("Am in lead management page")
-    }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tabValue])
-  const classes = useStyles();
-
-  const [value, setValue] = React.useState('1');
-  const matches = useMediaQuery('(max-width:800px)');
-
-  const handleChange = (_event, newValue) => {
-    setValue(newValue);
+  const TAB_VALUES = {
+    details: 0,
+    task: 1,
+    notes: 2
   };
+  function handleTabValueChange(_event, newValue) {
+    setTabValue(Number(newValue));
+  }
+
   return (
     <Container maxWidth="md" >
       <Grid container style={{ display: 'flex', justifyContent: 'center' }}>
         <Grid item md={10} xs ={12}>
-        <Typography variant="h5">Lead Management</Typography>
-          <TabContext value={value}>
-            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-              <TabList onChange={handleChange} fullWidth >
-                  <Tab label="DETAILS" value="1" />
-                  <Tab label="TASK" value="2" />
-                  <Tab label="NOTES" value="3" />
-              </TabList>
-            </Box>
+          <Typography variant="h5">Lead Management</Typography>
 
-          <Box style={{ padding: 0 }} p={3}>
-              <TabPanel value="1"><LeadManagementForm userId={userId}/></TabPanel>
-              <TabPanel value="2">Item Two</TabPanel>
-              <TabPanel value="3">Item Three</TabPanel>
-          </Box>
-          </TabContext>
+          <StyledTabs
+              value={tabValue}
+              onChange={handleTabValueChange}
+              aria-label="lead-management-tabs"
+              variant="standard"
+              style={{ borderBottom: 'solid 1px #ececea' }}
+            >
+              <StyledTab
+                label="DETAILS"
+                style={tabValue === objectAccessor(TAB_VALUES, 'overview')
+                  ? { fontSize: '12px', textAlign: 'left', borderBottom: 'solid 1px' }
+                  : { fontSize: '12px', textAlign: 'left' }}
+                {...a11yProps(0)}
+              />
+              <StyledTab
+                label="TASK"
+                style={tabValue ===  objectAccessor(TAB_VALUES, 'task') ?
+                { fontSize: '12px', borderBottom: 'solid 1px' }
+                : { fontSize: '12px' }}
+                {...a11yProps(1)}
+              />
+               <StyledTab
+                label="NOTES"
+                style={tabValue ===  objectAccessor(TAB_VALUES, 'notes') ?
+                { fontSize: '12px', borderBottom: 'solid 1px' }
+                : { fontSize: '12px' }}
+                {...a11yProps(2)}
+              />
+            </StyledTabs>
+
+
+            <TabPanel value={tabValue} index={0}>
+              <LeadManagementForm userId={userId} />
+            </TabPanel>
+            <TabPanel value={tabValue} index={1}>
+              <h1>Tasks</h1>
+            </TabPanel>
+            <TabPanel value={tabValue} index={2}>
+              <h1>Notes</h1>
+            </TabPanel>
         </Grid>
      </Grid>
     </Container>
