@@ -352,15 +352,11 @@ module Types::Queries::Note
 
     assigned_tasks = current_user
                      .tasks
-                     .includes(
-                       parent_note: {
-                         parent_note: %i[assignees assignee_notes documents_attachments],
-                       },
-                     )
+                     .includes(:parent_note)
     # Get the top level parent for each assigned task
     projects_assigned = []
     assigned_tasks.each do |task|
-      if task.parent_note.present?
+      if task.parent_note_id.present?
         parent = task.parent_note.parent_note.presence || task.parent_note
         projects_assigned << parent
       else
@@ -369,6 +365,7 @@ module Types::Queries::Note
     end
     context[:site_community]
       .notes
+      .includes(:assignees, :assignee_notes, :documents_attachments)
       .where(id: projects_assigned.pluck(:id))
       .offset(offset).limit(limit)
   end
