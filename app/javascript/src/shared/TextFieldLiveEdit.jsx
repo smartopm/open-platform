@@ -1,13 +1,12 @@
-import React, { useState } from 'react';
-import Typography from '@material-ui/core/Typography';
+import React, { useState, useRef } from 'react';
 import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/styles';
 import PropTypes from 'prop-types';
+import useClickAwayHook from '../utils/useClickAwayHook';
 
 export default function TextFieldLiveEdit({
   text,
   placeHolderText,
-  textVariant,
   styles,
   textFieldVariant,
   fullWidth,
@@ -17,37 +16,42 @@ export default function TextFieldLiveEdit({
   rows
 }) {
   const [edit, setEdit] = useState(false);
+  const [click, setClick] = useState(false);
   const classes = useStyles();
+  const wrapperRef = useRef(null);
+  useClickAwayHook(wrapperRef, handleClickAway);
+
+  function handleClick() {
+    if (!click) {
+      setEdit(false);
+    }
+  }
+
+  function handleClickAway() {
+    setClick(false);
+    setEdit(false);
+  }
 
   return (
-    <div className={classes.container}>
-      {!edit ? (
-        <Typography
-          onMouseOver={() => setEdit(true)}
-          onClick={() => setEdit(true)}
-          styles={styles}
-          variant={textVariant}
-          color="textSecondary"
-          className={classes.typography}
-          data-testid="live-field-text"
-        >
-          {text === '' ? placeHolderText : text}
-        </Typography>
-      ) : (
-        <TextField
-          placeholder={placeHolderText}
-          onMouseOut={() => setEdit(false)}
-          variant={textFieldVariant}
-          fullWidth={fullWidth}
-          multiline={multiline}
-          rows={rows}
-          color="primary"
-          value={text}
-          onChange={e => handleChange(e)}
-          name={name}
-          data-testid="live-field-input"
-        />
-      )}
+    <div className={classes.container} style={styles} ref={wrapperRef}>
+      <TextField
+        placeholder={placeHolderText}
+        onMouseOver={() => setEdit(true)}
+        onMouseOut={() => handleClick()}
+        onClick={() => setClick(true)}
+        variant={textFieldVariant}
+        fullWidth={fullWidth}
+        multiline={multiline}
+        rows={rows}
+        color="primary"
+        value={text}
+        onChange={e => handleChange(e)}
+        name={name}
+        data-testid="live-field-input"
+        InputProps={{
+          classes: { notchedOutline: !edit ? classes.noBorder : undefined }
+        }}
+      />
     </div>
   );
 }
@@ -58,6 +62,9 @@ const useStyles = makeStyles(() => ({
   },
   typography: {
     fontWeight: '300'
+  },
+  noBorder: {
+    border: 'none'
   }
 }));
 
@@ -72,7 +79,6 @@ TextFieldLiveEdit.defaultProps = {
 TextFieldLiveEdit.propTypes = {
   text: PropTypes.string,
   placeHolderText: PropTypes.string.isRequired,
-  textVariant: PropTypes.string.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   styles: PropTypes.object,
   textFieldVariant: PropTypes.string.isRequired,

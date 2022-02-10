@@ -54,7 +54,7 @@ describe('It should render the campaign split screen content', () => {
     expect(container.queryByTestId('message')).toBeInTheDocument();
     expect(container.queryByTestId('mail-list')).toBeInTheDocument();
     expect(container.queryByTestId('type')).toBeInTheDocument();
-    expect(container.queryAllByTestId('live-field-text')[0]).toBeInTheDocument();
+    expect(container.queryAllByTestId('live-field-input')[0]).toBeInTheDocument();
     expect(container.queryByTestId('save-campaign')).toBeInTheDocument();
   });
 });
