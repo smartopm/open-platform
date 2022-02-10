@@ -2,6 +2,7 @@
 // values that can be reused across the codebase
 import MaterialConfig from 'react-awesome-query-builder/lib/config/material'
 import { toTitleCase } from './helpers';
+import { industryCategory } from './constants';
 
 
 // Prevent Google Analytics reporting from staging and dev domains
@@ -844,3 +845,233 @@ export const entryLogsQueryBuilderInitialValue = {
     automatedTaskReminders: 'Automated Task Reminders',
     guestVerification: "Guest Verification"
   }
+
+
+  export const clientCategories = {
+    company: 'Company',
+    intermediary: 'Intermediary',
+    multilateralOrganization: 'Multilateral Organization',
+    industryAssociation: 'Industry Association',
+    publicSector: 'Public sector',
+  };
+
+  export const internationalizationLevels = {
+    exportingOutsideOfAfrica: 'Exporting outside of Africa',
+    exportingToNigeria: 'Exporting to Nigeria',
+    exportingToWestAfrica: 'Exporting to West Africa',
+    exportingToAfrica: 'Exporting to Africa',
+    operatingInternationallyOutsideOfAfrica: 'Operating internationally outside of Africa',
+    operatingInNigeria: 'Operating in Nigeria',
+    operatingInWestAfrica: 'Operating in West Africa',
+    operatingInAfrica: 'Operating in Africa'
+  };
+
+  export const leadTemperatureOptions = {
+    cold: 'Cold',
+    neutral: 'Neutral',
+    warm: 'Warm',
+    hot: 'Hot',
+  };
+
+  export const leadStatusOptions = {
+    interestShown: 'Interest shown',
+    investimentMotiveVerified: 'Investment motive verified',
+    evaluation: 'Evaluation',
+    stakeholderMeetings: 'Stakeholder meetings',
+    siteVisit: 'Site Visit',
+    readyToSign: 'Ready to sign',
+  };
+
+  export const leadSourceOptions = {
+    companyDatabase:  "Company database",
+    digitalMarketing: "Digital marketing",
+    inboundInquiry: "Inbound inquiry",
+    coldCalling: "Cold calling",
+    network: "Network",
+    referral: "Referral",
+    events: "Events"
+  }
+
+  export const leadTypeOptions = {
+    company: "Company",
+    investmentFund: "Investment fund"
+  }
+
+  export const industryCategoryOptions = {
+    softwareServices:  "Software & IT services",
+    businessServices: "Business Services",
+    financialServices: "Financial Services",
+    industrialMachinery: "Industrial Machinery, Equipment & Tools",
+    communications: "Communications",
+    transportation: "Transportation",
+    automotiveComponents: "Automotive Components",
+    realEstate: "Real Estate",
+    chemicals: "Chemicals",
+    foodAndTobacco: "Food & Tobacco",
+    metals: "Metals",
+    electronicComponents: "Electronic Components",
+    plastics: "Plastics",
+    consumerProducts: "Consumer Products",
+    hotelsAndTourism: "Hotels & Tourism",
+    alternativeOrRenewableEnergy: "Alternative/Renewable energy",
+    automotiveOEM: "Automotive OEM",
+    pharmaceuticals: "Pharmaceuticals",
+    textiles: "Textiles",
+    medicalDevices: "Medical Devices",
+    healthcare: "Healthcare",
+    businessMachinesAndEquipment: "Business Machines & Equipment",
+    consumerElectronics: "Consumer Electronics",
+    aerospace: "Aerospace",
+    semiconductors: "Semiconductors",
+    paperAndprintingAndPackaging: "Paper, Printing & Packaging",
+    buildingAndConstructionMaterials: "Building & Construction Materials",
+    rubber: "Rubber",
+    warehousingAndStorage: "Warehousing & Storage",
+    beverages: "Beverages",
+    nonAutomotiveTransportOEM: "Non-Automotive Transport OEM",
+    biotechnology: "Biotechnology",
+    ceramicsAndGlass: "Ceramics & Glass",
+    enginesAndTurbines: "Engines & Turbines",
+    woodProducts: "Wood Products",
+    leisureAndEntertainment: "Leisure & Entertainment",
+    spaceDefence: "Space & Defence",
+    minerals: "Minerals"
+  }
+
+  export const industryBusinessActivityOptions = {
+    salesMarketingAndSupport:  "Sales, Marketing & Support",
+    manufacturing: "Manufacturing",
+    businessServices: "Business Services",
+    logisticsDistributionAndTransportation: "Logistics, Distribution & Transportation",
+    designDevelopmentAndTesting: "Design, Development & Testing",
+    headquarters: "Headquarters",
+    construction: "Construction",
+    internetInfrastructure: "ICT & Internet Infrastructure",
+    customerContactCentre: "Customer Contact Centre",
+    electricity: "Electricity",
+    researchDevelopment: "Research & Development",
+    maintenanceServicing: "Maintenance & Servicing",
+    extraction: "Extraction",
+    educationTraining: "Education & Training",
+    sharedServicesCentre: "Shared Services Centre",
+    technicalSupportCentre: "Technical Support Centre",
+    recycling: "Recycling"
+  }
+
+  export const industrySubSectorOptions = {
+    softwarePublishersExceptVideoGames: "Software publishers, except video games",
+    retailBanking: "Retail banking",
+    freightDistributionServices: "Freight/Distribution Services",
+    corporateInvestmentBanking: "Corporate & investment banking",
+    customComputerProgrammingServices: "Custom computer programming services",
+    internetPublishingBroadcastingWebSearch: "Internet publishing & broadcasting & web search",
+    advertisingPrRelated: "Advertising, PR, & related",
+    legalServices: "Legal services",
+    allOtherElectricalEquipmentComponents: "All other electrical equipment & components",
+    generalPurposeMachinery: "General purpose machinery",
+    professionalScientificTechnicalServices: "Professional, scientific & technical services",
+    insurance: "Insurance",
+    accommodation: "Accommodation",
+    pharmaceuticalPreparations: "Pharmaceutical preparations",
+    basicChemicals: "Basic chemicals",
+    paintsCoatingsAdditivesAdhesives: "Paints, coatings, additives & adhesives",
+    communicationsEquipment: "Communications equipment",
+    employmentServices: "Employment services",
+    automobiles: "Automobiles",
+    investmentManagement: "Investment management",
+    businessSupportServices: "Business support services",
+    dataProcessingHostingRelatedServices: "Data processing, hosting, & related services",
+    wirelessTelecommunicationCarriers: "Wireless telecommunication carriers",
+    otherMotorVehicleParts: "Other motor vehicle parts",
+    realEstateServices: "Real estate services",
+    commercialInstitutionalBuildingConstruction: "Commercial & institutional building construction",
+    computerPeripheralEquipment: "Computer & peripheral equipment",
+    wiredTelecommunicationCarriers: "Wired telecommunication carriers",
+    semiconductorsOtherElectronicComponents: "Semiconductors & other electronic components",
+    medicalEquipmentSupplies: "Medical equipment & supplies",
+    architecturalEngineeringRelatedServices: "Architectural, engineering, & related services",
+    agricultureConstructionMiningMachinery: "Agriculture, construction, & mining machinery",
+    steelProducts: "Steel products",
+    managementConsultingServices: "Management consulting services",
+    airTransportation: "Air transportation",
+    otherSupportServices: "Other support services",
+    solarElectricPower: "Solar electric power",
+    motorVehicleGasolineEnginesEngineParts: "Motor vehicle gasoline engines & engine parts",
+    clothingClothingAccessories: "Clothing & clothing accessories",
+    measuringControlInstruments: "Measuring & control instruments",
+    plasticsPackagingMaterialsUnlaminatedFilmSheets: "Plastics packaging materials & unlaminated film & sheets",
+    audioVideoEquipment: "Audio & video equipment",
+    warehousingStorage: "Warehousing & storage",
+    cosmeticsPerfumePersonalCareHouseholdProducts: "Cosmetics, perfume, personal care & household products",
+    oilGasExtraction: "Oil & gas extraction",
+    otherFabricatedMetalProducts: "Other fabricated metal products",
+    convertedPaperProducts: "Converted paper products",
+    cementConcreteProducts: "Cement & concrete products",
+    aircraftEnginesOtherPartsAuxiliaryEquipment: "Aircraft engines, other parts & auxiliary equipment",
+    laminatedPlasticsPlatesSheetsShapes: "Laminated plastics plates, sheets & shapes",
+    windElectricPower: "Wind electric power",
+    rentalLeasingServices: "Rental & leasing services",
+    residentialBuildingConstruction: "Residential building construction",
+    officesOfPhysiciansDentistsOtherHealthcarePractitioners: "Offices of physicians, dentists, & other healthcare practitioners",
+    travelArrangementReservationServices: "Travel arrangement & reservation services",
+    biologicalProducts: "Biological products (except diagnostic)",
+    motorVehicleElectricalElectronicEquipment: "Motor vehicle electrical & electronic equipment",
+    powerTransmissionEquipment: "Power transmission equipment",
+    aAircraft: "Aircraft",
+    urethaneFoamProductsOtherCompounds: "Urethane, foam products & other compounds",
+    otherPetroleumCoalProducts: "Other petroleum & coal products",
+    ventilationHeatingAirConditioningAndCommercialRefrigerationEquipmentManufacturing: "Ventilation, heating, air conditioning, and commercial refrigeration equipment manufacturing",
+    tyres: "Tyres",
+    waterTransportation: "Water transportation",
+    heavyDutyTrucks: "Heavy duty trucks",
+    biomassPower: "Biomass power",
+    householdAppliances: "Household appliances",
+    fruitsVegetablesSpecialistFoods: "Fruits & vegetables & specialist foods ",
+    aluminaAluminiumProductionAndProcessing: "Alumina & aluminium production and processing",
+    enginesTurbines: "Engines & Turbines",
+    furnitureHomewareRelatedProducts: "Furniture, homeware & related products (Consumer Products)",
+    videoGamesApplicationsAndDigitalContent: "Video games, applications and digital content",
+    accountingTaxPreparationBookkeepingPayrollServices: "Accounting, tax preparation, bookkeeping, & payroll services",
+    industrialBuildingConstruction: "Industrial building construction",
+    metalworkingMachinery: "Metalworking machinery",
+    computerSystemsDesignServices: "Computer systems design services",
+    motorVehicleSeatingInteriorTrim: "Motor vehicle seating & interior trim",
+    heavyCivilEngineering: "Heavy & civil engineering",
+    dairyProducts: "Dairy products",
+    allOtherIndustrialMachinery: "All other industrial machinery",
+    softDrinksIce: "Soft drinks & ice",
+    schoolsCollegesUniversitiesProfessionalSchools: "Schools, colleges, universities, & professional schools",
+    grainsOilseed: "Grains & oilseed",
+    motorVehicleSteeringSuspensionComponents: "Motor vehicle steering & suspension components",
+    sugarConfectionaryProducts: "Sugar & confectionary products",
+    radioTvBroadcasting: "Radio & TV broadcasting",
+    goldOreSilverOreMining: "Gold ore & silver ore mining",
+    glassGlassProducts: "Glass & glass products",
+    pesticideFertilisersOtherAgriculturalChemicals: "Pesticide, fertilisers & other agricultural chemicals",
+    outpatientCareCentresMedicalDiagnosticLaboratories: "Outpatient care centres & medical & diagnostic laboratories",
+    breweriesDistilleries: "Breweries & distilleries",
+    motorVehicleBodyTrailers: "Motor vehicle body & trailers",
+    woodProducts: "Wood products",
+    nonstoreRetailers: "Nonstore retailers",
+    motionPictureSoundRecordingIndustries: "Motion picture & sound recording industries",
+    shipsBoats: "Ships & boats",
+    textilesTextileMills: "Textiles & Textile Mills",
+    electricLightingEquipment: "Electric lighting equipment",
+    foodBeverageStores: "Food & Beverage Stores (Food & Tobacco)",
+    naturalLiquefiedAndCompressedGas: "Natural, liquefied and compressed gas"
+    }
+
+
+    export const regionOptions = {
+    asia: "Asia (Ex. Near East)",
+    baltics: "Baltics",
+    cWOfIndStates: "C.W. Of Ind. States",
+    easternEurope: "Eastern Europe",
+    latinAmerAndCarib: "Latin Amer. & Carib",
+    nearEast: "Near East",
+    northernAfrica: "Northern Africa",
+    northernAmerica: "Northern America",
+    oceania: "Oceania",
+    subSaharanAfrica: "Sub-Saharan Africa",
+    westernEurope: "Western Europe Asia (Ex. Near East)"
+    }

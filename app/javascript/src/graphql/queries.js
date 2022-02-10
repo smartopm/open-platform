@@ -237,8 +237,6 @@ export const LeadDetailsQuery = gql`
         id
         shortDesc
       }
-      title
-      linkedinUrl
       companyName
       country
       companyDescription

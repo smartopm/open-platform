@@ -43,8 +43,6 @@ export const UpdateUserMutation = gql`
     $companyDescription: String
     $country: String
     $companyName: String
-    $linkedinUrl: String
-    $title: String
  
   ) {
     result: userUpdate(
@@ -86,8 +84,6 @@ export const UpdateUserMutation = gql`
       companyDescription: $companyDescription
       country: $country
       companyName: $companyName
-      linkedinUrl: $linkedinUrl
-      title: $title
 
     ) {
       user {
