@@ -50,7 +50,6 @@ export const UpdateUserMutation = gql`
     $companyName: String
     $contactDetails: JSON
     $africanPresence: String
- 
   ) {
     result: userUpdate(
       id: $id
@@ -98,7 +97,6 @@ export const UpdateUserMutation = gql`
       companyName: $companyName
       contactDetails: $contactDetails
       africanPresence: $africanPresence
-
     ) {
       user {
         ...UserFields
@@ -106,4 +104,4 @@ export const UpdateUserMutation = gql`
     }
   }
   ${UserFragment.publicFields}
-`
+`;
