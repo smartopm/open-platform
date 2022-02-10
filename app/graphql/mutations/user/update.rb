@@ -20,8 +20,6 @@ module Mutations
       argument :sub_status, String, required: false
       argument :secondary_info, [GraphQL::Types::JSON], required: false
       argument :ext_ref_id, String, required: false
-      argument :title, String, required: false
-      argument :linkedin_url, String, required: false
       argument :country, String, required: false
       argument :company_name, String, required: false
       argument :company_description, String, required: false
@@ -31,6 +29,8 @@ module Mutations
       argument :company_annual_revenue, String, required: false
       argument :company_contacted, String, required: false
       argument :industry, String, required: false
+      argument :industry_sub_sector, String, required: false
+      argument :industry_business_activity, String, required: false
       argument :level_of_internationalization, String, required: false
       argument :lead_temperature, String, required: false
       argument :lead_status, String, required: false
@@ -45,6 +45,7 @@ module Mutations
       argument :first_contact_date, String, required: false
       argument :last_contact_date, String, required: false
       argument :followup_at, String, required: false
+      argument :contact_details, GraphQL::Types::JSON, required: false
 
       field :user, Types::UserType, null: true
 
