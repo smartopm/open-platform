@@ -20,7 +20,6 @@ export const UpdateUserMutation = gql`
     $address: String
     $secondaryInfo: [JSON!]
     $extRefId: String
-
     $followupAt: String
     $lastContactDate: String
     $firstContactDate: String
@@ -30,12 +29,22 @@ export const UpdateUserMutation = gql`
     $leadOwner: String
     $leadType: String
     $clientCategory: String
-
-
-
+    $companyContacted: String
+    $leadStatus: String
+    $leadTemperature: String
+    $levelOfInternationalization: String
+    $industry: String
+    $companyAnnualRevenue: String
+    $companyEmployees: String
+    $relevantLink: String
+    $companyWebsite: String
+    $companyLinkedin: String
+    $companyDescription: String
+    $country: String
+    $companyName: String
+ 
   ) {
     result: userUpdate(
-      id: $id
       name: $name
       email: $email
       phoneNumber: $phoneNumber
@@ -50,6 +59,30 @@ export const UpdateUserMutation = gql`
       address: $address
       secondaryInfo: $secondaryInfo
       extRefId: $extRefId
+      followupAt: $followupAt
+      lastContactDate: $lastContactDate
+      firstContactDate: $firstContactDate
+      createdBy: $createdBy
+      modifiedBy: $modifiedBy
+      nextSteps: $nextSteps
+      leadOwner: $leadOwner
+      leadType: $leadType
+      clientCategory: $clientCategory
+      companyContacted: $companyContacted
+      leadSource: $leadSource
+      leadStatus: $leadStatus
+      leadTemperature: $leadTemperature
+      levelOfInternationalization: $levelOfInternationalization
+      industry: $industry
+      companyAnnualRevenue: $companyAnnualRevenue
+      companyEmployees: $companyEmployees
+      relevantLink: $relevantLink
+      companyWebsite: $companyWebsite
+      companyLinkedin: $companyLinkedin
+      companyDescription: $companyDescription
+      country: $country
+      companyName: $companyName
+
     ) {
       user {
         ...UserFields
