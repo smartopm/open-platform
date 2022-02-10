@@ -475,6 +475,15 @@ export default function UsersList() {
     setAnchorEl(event.currentTarget);
   }
 
+  const filterObject = {
+    labelError,
+    displayBuilder,
+    handleQueryOnChange,
+    queryBuilderConfig,
+    queryBuilderInitialValue,
+    toggleFilterMenu
+  }
+
   return (
     <>
       <div className="container">
@@ -688,7 +697,11 @@ export default function UsersList() {
           <Loading />
         ) : (
           <>
-            <UserHeader setCampaignOption={setCampaignOption} />
+            <UserHeader 
+              setCampaignOption={setCampaignOption}
+              handleSearchClick={inputToSearch}
+              filterObject={filterObject} 
+            />
             <UserListCard
               userData={data}
               handleNoteModal={handleNoteModal}
