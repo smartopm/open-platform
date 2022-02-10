@@ -4,7 +4,6 @@ require 'host_env'
 
 module Types
   # UserType
-  # rubocop: disable Metrics/ClassLength
   class UserType < Types::BaseObject
     field :id, ID, null: false
     field :community, Types::CommunityType, null: false
@@ -60,8 +59,6 @@ module Types
     field :invites, [Types::InviteType], null: true, visible: { roles: %i[admin], user: :id }
     field :invitees, [Types::InviteType], null: true, visible: { roles: %i[admin], user: :id }
     field :request, Types::EntryRequestType, null: true
-    field :title, String, null: true
-    field :linkedin_url, String, null: true
     field :country, String, null: true
     field :company_name, String, null: true
     field :company_description, String, null: true
@@ -127,5 +124,4 @@ module Types
       object.contact_infos.select { |info| info.contact_type.eql?(contact_type) }
     end
   end
-  # rubocop: enable Metrics/ClassLength
 end
