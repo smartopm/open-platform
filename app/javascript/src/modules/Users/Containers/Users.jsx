@@ -32,6 +32,7 @@ import { Context as AuthStateContext } from '../../../containers/Provider/AuthSt
 import { pluralizeCount, objectAccessor, toTitleCase } from '../../../utils/helpers';
 import SubStatusReportDialog from '../../CustomerJourney/Components/SubStatusReport';
 import MenuList from '../../../shared/MenuList';
+import UserHeader from '../Components/UserHeader';
 
 const limit = 25;
 const USERS_CAMPAIGN_WARNING_LIMIT = 2000;
@@ -477,7 +478,7 @@ export default function UsersList() {
   return (
     <>
       <div className="container">
-        <ActionDialog
+        {/* <ActionDialog
           open={openCampaignWarning}
           handleClose={() => setOpenCampaignWarning(false)}
           handleOnSave={createCampaign}
@@ -682,7 +683,12 @@ export default function UsersList() {
               selectCheckBox={selectCheckBox}
               labelsData={labelsData}
               labelsRefetch={labelsRefetch}
-            />
+            /> */}
+        {loading ? (
+          <Loading />
+        ) : (
+          <>
+            <UserHeader setCampaignOption={setCampaignOption} />
             <UserListCard
               userData={data}
               handleNoteModal={handleNoteModal}

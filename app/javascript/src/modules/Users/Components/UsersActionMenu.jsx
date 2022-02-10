@@ -1,22 +1,15 @@
-import React, { useState } from 'react'
-import {
-  Grid,
-  Select,
-  MenuItem,
-  Typography,
-  Button,
-  Checkbox
-} from '@material-ui/core'
-import PropTypes from 'prop-types'
-import LabelIcon from '@material-ui/icons/Label'
-import { useTranslation } from 'react-i18next'
-import { useTheme } from '@material-ui/styles'
-import { CustomizedDialogs, ActionDialog } from '../../../components/Dialog'
-import CreateLabel from '../../Labels/Components/CreateLabel'
-import CampaignIcon from '../../Campaigns/components/CampaignIcon'
+import React, { useState } from 'react';
+import { Grid, Select, MenuItem, Typography, Button, Checkbox } from '@material-ui/core';
+import PropTypes from 'prop-types';
+import LabelIcon from '@material-ui/icons/Label';
+import { useTranslation } from 'react-i18next';
+import { useTheme } from '@material-ui/styles';
+import { CustomizedDialogs, ActionDialog } from '../../../components/Dialog';
+import CreateLabel from '../../Labels/Components/CreateLabel';
+import CampaignIcon from '../../Campaigns/components/CampaignIcon';
 import MessageAlert from '../../../components/MessageAlert';
 // TODO: @olivier ==> Find a way to reuse this for other similar actions like we have on tasks
-const USERS_LABEL_WARNING_LIMIT = 2000
+const USERS_LABEL_WARNING_LIMIT = 2000;
 export default function UsersActionMenu({
   campaignCreateOption,
   setCampaignCreateOption,
@@ -30,36 +23,29 @@ export default function UsersActionMenu({
   labelsData,
   labelsRefetch
 }) {
-  const [labelSelectModalOpen, setLabelSelectModalOpen] = useState(false)
-  const [labelAssignWarningOpen, setLabelAssignWarningOpen] = useState(false)
-  const [selectedLabels, setSelectedLabels] = useState([])
+  const [labelSelectModalOpen, setLabelSelectModalOpen] = useState(false);
+  const [labelAssignWarningOpen, setLabelAssignWarningOpen] = useState(false);
+  const [selectedLabels, setSelectedLabels] = useState([]);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({ isError: false, detail: '' });
-  const { t } = useTranslation(['users', 'common'])
-  const theme = useTheme()
+  const { t } = useTranslation(['users', 'common']);
+  const theme = useTheme();
 
   function openLabelSelectModal() {
-    setLabelSelectModalOpen(true)
+    setLabelSelectModalOpen(true);
   }
 
   function handleAssignLabel() {
-    if (
-      campaignCreateOption === 'all' &&
-      usersCountData.usersCount > USERS_LABEL_WARNING_LIMIT
-    ) {
-      setLabelAssignWarningOpen(true)
-      return
+    if (campaignCreateOption === 'all' && usersCountData.usersCount > USERS_LABEL_WARNING_LIMIT) {
+      setLabelAssignWarningOpen(true);
+      return;
     }
     setLoading(true);
-    handleLabelSelect(selectedLabels)
+    handleLabelSelect(selectedLabels);
   }
 
   function isAllSelected() {
-    return (
-      !!selectedUsers.length &&
-      !!userList.length &&
-      selectedUsers.length === userList.length
-    )
+    return !!selectedUsers.length && !!userList.length && selectedUsers.length === userList.length;
   }
 
   return (
@@ -105,7 +91,7 @@ export default function UsersActionMenu({
             style={{ padding: '0px', marginRight: '15px' }}
           />
         </Grid>
-        <Typography>
+        <Typography> 
           {' '}
           {t('common:misc.select')}
           {' '}
@@ -145,7 +131,7 @@ export default function UsersActionMenu({
         </Grid>
       )}
     </Grid>
-  )
+  );
 }
 
 UsersActionMenu.defaultProps = {
@@ -167,10 +153,12 @@ UsersActionMenu.propTypes = {
     usersCount: PropTypes.number.isRequired
   }),
   labelsData: PropTypes.shape({
-    labels: PropTypes.arrayOf(PropTypes.shape({
-      id: PropTypes.string,
-      shortDesc: PropTypes.string
-    }))
+    labels: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.string,
+        shortDesc: PropTypes.string
+      })
+    )
   }).isRequired,
   labelsRefetch: PropTypes.func.isRequired
-}
+};
