@@ -83,6 +83,7 @@ module Types
     field :first_contact_date, GraphQL::Types::ISO8601DateTime, null: true
     field :last_contact_date, GraphQL::Types::ISO8601DateTime, null: true
     field :followup_at, GraphQL::Types::ISO8601DateTime, null: true
+    field :company_employees, Integer, null: true
 
     def avatar_url
       return nil unless object.avatar.attached?

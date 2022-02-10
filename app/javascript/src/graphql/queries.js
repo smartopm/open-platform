@@ -218,6 +218,53 @@ export const UsersDetails = gql`
     }
   }
 `
+export const LeadDetailsQuery = gql`
+  query User($id: ID!) {
+    user(id: $id) {
+      name
+      phoneNumber
+      roleName
+      userType
+      id
+      email
+      avatarUrl
+      imageUrl
+      subStatus
+      extRefId
+      expiresAt
+      state
+      labels {
+        id
+        shortDesc
+      }
+      title
+      linkedinUrl
+      companyName
+      country
+      companyDescription
+      companyLinkedin
+      companyWebsite
+      relevantLink
+      companyEmployees
+      companyAnnualRevenue
+      industry
+      levelOfInternationalization
+      leadTemperature
+      leadStatus
+      leadSource
+      companyContacted
+      clientCategory
+      leadType
+      leadOwner
+      modifiedBy
+      createdBy
+      nextSteps
+      firstContactDate
+      lastContactDate
+      followupAt
+    }
+  }
+`
 
 export const UsersLiteQuery = gql`
   query usersLite($query: String!, $limit: Int) {
