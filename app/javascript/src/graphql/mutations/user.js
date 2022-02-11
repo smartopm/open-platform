@@ -51,6 +51,7 @@ export const UpdateUserMutation = gql`
  
   ) {
     result: userUpdate(
+      id: $id
       name: $name
       email: $email
       linkedinUrl: $linkedinUrl
