@@ -54,7 +54,7 @@ export default function TaskProcessDetail() {
     refetch: commentsRefetch,
     fetchMore: commentsFetchMore
   } = useQuery(ProjectCommentsQuery, {
-    variables: { taskId, limit },
+    variables: { taskId, limit: 3 },
     fetchPolicy: 'cache-and-network',
     errorPolicy: 'all'
   });
