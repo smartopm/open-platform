@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { Grid, Select, MenuItem, Typography, Button, Checkbox } from '@material-ui/core';
+import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
 import PropTypes from 'prop-types';
 import LabelIcon from '@material-ui/icons/Label';
 import { useTranslation } from 'react-i18next';
@@ -8,20 +10,19 @@ import { CustomizedDialogs, ActionDialog } from '../../../components/Dialog';
 import CreateLabel from '../../Labels/Components/CreateLabel';
 import CampaignIcon from '../../Campaigns/components/CampaignIcon';
 import MessageAlert from '../../../components/MessageAlert';
-// TODO: @olivier ==> Find a way to reuse this for other similar actions like we have on tasks
+import { pluralizeCount } from '../../../utils/helpers';
+
 const USERS_LABEL_WARNING_LIMIT = 2000;
 export default function UsersActionMenu({
   campaignCreateOption,
-  setCampaignCreateOption,
-  setSelectAllOption,
   handleCampaignCreate,
   handleLabelSelect,
   usersCountData,
   selectedUsers,
-  userList,
-  selectCheckBox,
   labelsData,
-  labelsRefetch
+  labelsRefetch,
+  viewFilteredUserCount,
+  userList
 }) {
   const [labelSelectModalOpen, setLabelSelectModalOpen] = useState(false);
   const [labelAssignWarningOpen, setLabelAssignWarningOpen] = useState(false);
@@ -42,10 +43,6 @@ export default function UsersActionMenu({
     }
     setLoading(true);
     handleLabelSelect(selectedLabels);
-  }
-
-  function isAllSelected() {
-    return !!selectedUsers.length && !!userList.length && selectedUsers.length === userList.length;
   }
 
   return (
@@ -80,38 +77,16 @@ export default function UsersActionMenu({
         handleOnSave={() => handleLabelSelect(selectedLabels)}
         message={t('users.label_message')}
       />
-      <Grid item style={{ display: 'flex' }}>
-        <Grid>
-          <Checkbox
-            checked={isAllSelected() || selectCheckBox}
-            onChange={setSelectAllOption}
-            name="includeReplyLink"
-            data-testid="reply_link"
-            color="primary"
-            style={{ padding: '0px', marginRight: '15px' }}
-          />
-        </Grid>
-        <Typography> 
-          {' '}
-          {t('common:misc.select')}
-          {' '}
-        </Typography>
-        <Grid>
-          <Select
-            labelId="user-action-select"
-            id="user-action-select"
-            value={campaignCreateOption}
-            onChange={event => setCampaignCreateOption(event.target.value)}
-            style={{ height: '23px', marginLeft: '10px' }}
-          >
-            <MenuItem value="all">{t('common:misc.all')}</MenuItem>
-            <MenuItem value="all_on_the_page">{t('common:misc.all_this_page')}</MenuItem>
-            <MenuItem value="none">{t('common:misc.none')}</MenuItem>
-          </Select>
-        </Grid>
-      </Grid>
       {(campaignCreateOption !== 'none' || selectedUsers.length > 0) && (
-        <Grid item style={{ marginLeft: '20px', marginTop: '-4px' }}>
+        <Grid item style={{ marginTop: '-4px' }}>
+          {viewFilteredUserCount() && (
+            <Typography variant="body2">
+              {`Showing ${usersCountData?.usersCount || userList.length} ${pluralizeCount(
+                usersCountData?.usersCount || userList.length,
+                'Result'
+              )}`}
+            </Typography>
+          )}
           <Button
             onClick={openLabelSelectModal}
             color="primary"
@@ -142,13 +117,9 @@ UsersActionMenu.defaultProps = {
 
 UsersActionMenu.propTypes = {
   campaignCreateOption: PropTypes.string.isRequired,
-  setCampaignCreateOption: PropTypes.func.isRequired,
   handleCampaignCreate: PropTypes.func.isRequired,
   handleLabelSelect: PropTypes.func.isRequired,
-  setSelectAllOption: PropTypes.func.isRequired,
   selectedUsers: PropTypes.arrayOf(PropTypes.string).isRequired,
-  userList: PropTypes.arrayOf(PropTypes.string).isRequired,
-  selectCheckBox: PropTypes.bool.isRequired,
   usersCountData: PropTypes.shape({
     usersCount: PropTypes.number.isRequired
   }),

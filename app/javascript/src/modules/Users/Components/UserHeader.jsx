@@ -4,6 +4,8 @@ import { useTheme, makeStyles } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
+import MoreVertOutlined from '@material-ui/icons/MoreVertOutlined';
 import { CSVLink } from 'react-csv';
 import SelectButton from '../../../shared/buttons/SelectButton';
 import { objectAccessor } from '../../../utils/helpers';
@@ -11,6 +13,8 @@ import SearchInput from '../../../shared/search/SearchInput';
 import QueryBuilder from '../../../components/QueryBuilder';
 import { dateToString } from '../../../utils/dateutil';
 import { Spinner } from '../../../shared/Loading';
+import MenuList from '../../../shared/MenuList';
+import UsersActionMenu from './UsersActionMenu';
 
 const csvHeaders = [
   { label: 'Name', key: 'name' },
@@ -27,7 +31,9 @@ export default function UserHeader({
   setCampaignOption,
   handleSearchClick,
   filterObject,
-  csvObject
+  csvObject,
+  menuObject,
+  actionObject
 }) {
   const [open, setOpen] = useState(false);
   const [selectedKey, setSelectedKey] = useState('');
@@ -64,11 +70,11 @@ export default function UserHeader({
   }
 
   return (
-    <>
-      <Grid container>
-        <Grid item lg={12} md={12} sm={12}>
-          <Typography variant="h5">Users</Typography>
-        </Grid>
+    <Grid container>
+      <Grid item lg={12} md={12} sm={12}>
+        <Typography variant="h5">Users</Typography>
+      </Grid>
+      <Grid container className={classes.container}>
         <Grid item lg={3} md={3} sm={3}>
           <SelectButton
             buttonText={selectedOptions}
@@ -148,16 +154,51 @@ export default function UserHeader({
             )}
           </Button>
         </Grid>
+        <Grid item lg={1} md={1} sm={1} className={classes.csvButtonGrid}>
+          <IconButton
+            aria-controls="sub-menu"
+            aria-haspopup="true"
+            onClick={menuObject.handleMenu}
+            data-testid="menu-list"
+            className={classes.reportBtn}
+          >
+            <MoreVertOutlined />
+          </IconButton>
+
+          <MenuList
+            open={Boolean(menuObject.menuAnchorEl)}
+            anchorEl={menuObject.menuAnchorEl}
+            handleClose={() => menuObject.setAnchorEl(null)}
+            list={menuObject.menuData}
+          />
+        </Grid>
       </Grid>
-    </>
+      <Grid item lg={12} md={12} sm={12}>
+        <UsersActionMenu
+          campaignCreateOption={actionObject.campaignCreateOption}
+          selectedUsers={actionObject.selectedUsers}
+          handleCampaignCreate={actionObject.handleCampaignCreate}
+          handleLabelSelect={actionObject.handleLabelSelect}
+          usersCountData={actionObject.usersCountData}
+          labelsData={actionObject.labelsData}
+          labelsRefetch={actionObject.labelsRefetch}
+          viewFilteredUserCount={actionObject.viewFilteredUserCount}
+          userList={actionObject.userList}
+        />
+      </Grid>
+    </Grid>
   );
 }
 
-export const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(() => ({
   csvButtonGrid: {
     textAlign: 'right'
   },
   csvButton: {
     color: 'white'
+  },
+  container: {
+    justifyContent: 'center',
+    alignItems: 'center'
   }
 }))
