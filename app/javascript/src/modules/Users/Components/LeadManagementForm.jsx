@@ -9,7 +9,6 @@ import {
 } from '@material-ui/core'
 import { Grid,Typography } from '@mui/material';
 import { useLazyQuery, useMutation } from 'react-apollo'
-import Box from '@mui/material/Box';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import PropTypes from 'prop-types'
 // import { useTranslation } from 'react-i18next';
@@ -22,7 +21,7 @@ import { formatError } from '../../../utils/helpers';
 import { clientCategories, internationalizationLevels, 
         leadTemperatureOptions, leadStatusOptions, industrySubSectorOptions,
         leadSourceOptions, leadTypeOptions, industryCategoryOptions,
-         industryBusinessActivityOptions, regionOptions } from '../../../utils/constants';
+         industryBusinessActivityOptions, regionOptions, countries } from '../../../utils/constants';
 
 export default function LeadManagementForm({ userId }) {
   const matches = useMediaQuery('(max-width:800px)');
@@ -31,6 +30,7 @@ export default function LeadManagementForm({ userId }) {
       roleName: '',
       companyName: '',
       phoneNumber: '',
+      email: '',
       country: '',
       companyDescription: '',
       companyLinkedin: '',
@@ -56,7 +56,7 @@ export default function LeadManagementForm({ userId }) {
       followupAt: '',
       secondaryPhoneNumber: '',
       secondaryInfo: [],
-      industrySubSector,
+      industrySubSector: '',
 
       // Contact information to help pick values from form
       name: '',
@@ -66,22 +66,6 @@ export default function LeadManagementForm({ userId }) {
       primaryPhoneNumber: '',
       secondaryPhoneNumber: '',
       linkedinUrl: '',
-
-      name1: '',
-      title1: '',
-      primaryEmail1: '',
-      secondaryEmail1: '',
-      primaryPhoneNumber1: '',
-      secondaryPhoneNumber1: '',
-      linkedinUrl1: '',
-
-      name2: '',
-      title2: '',
-      primaryEmail2: '',
-      secondaryEmail2: '',
-      primaryPhoneNumber2: '',
-      secondaryPhoneNumber2: '',
-      linkedinUrl2: '',
 
       // contact details object for easier update
       contactDetails: {
@@ -122,31 +106,18 @@ export default function LeadManagementForm({ userId }) {
 
   const [errors, setErr] = useState('')
 
+  const[disabled, setDisabled] = useState(true)
+
   function handleChange(event) {
+    setDisabled(false)
     const { name, value } = event.target;
     setLeadFormData({
       user: { ...leadFormData?.user, [name]: value }
     });
   }
 
-
-  function handlePrimaryContactChange(event){
-    const {name, value } = event.target
-    
-    setLeadFormData({
-      user: {...leadFormData?.user,
-        contactDetails: {
-          ...leadFormData?.user?.contactDetails,
-          primaryContact: {
-            ...leadFormData?.user?.contactDetails?.primaryContact,
-            [name]: value 
-          }
-        }
-      },
-    });
-  }
-
   function handleSecondaryContact1Change(event){
+    setDisabled(false)
     const {name, value} = event.target
     setLeadFormData({
       user: {...leadFormData?.user,
@@ -163,6 +134,7 @@ export default function LeadManagementForm({ userId }) {
 
 
   function handleSecondaryContact2Change(event){
+    setDisabled(false)
     const {name, value} = event.target
     setLeadFormData({
       user: {...leadFormData?.user,
@@ -179,6 +151,7 @@ export default function LeadManagementForm({ userId }) {
 
 
   function handleTimeInputChange(event) {
+    setDisabled(false)
     const { name, value } = event.target;
       setLeadFormData({
         ...leadFormData,
@@ -196,10 +169,10 @@ export default function LeadManagementForm({ userId }) {
   function handleSubmit(event) {
     event.preventDefault()
     setLoadingStatus(true)
-    
     leadDataUpdate({
       variables: {
         ...leadFormData?.user,
+        // secondaryInfo: [...secondaryInfo],
         id: userId,
       }
     })
@@ -209,6 +182,16 @@ export default function LeadManagementForm({ userId }) {
     .catch(err => setErr(err))
   }
 
+  // user: {...leadFormData?.user,
+  //   contactDetails: {
+  //     ...leadFormData?.user?.contactDetails,
+  //     secondaryContact2: {
+  //       ...leadFormData?.user?.contactDetails?.secondaryContact2,
+  //       [name]: value 
+  //     }
+  //   }
+  // },
+
   useEffect(() => {
     loadLeadData();
     if (data?.user) {
@@ -217,7 +200,7 @@ export default function LeadManagementForm({ userId }) {
       });
     }
   }, [data]);
-  console.log("Api Data", leadFormData)
+  console.log("Api Data", leadFormData?.user?.contactDetails?.secondaryContact1?.name)
 
   if (error) return <CenteredContent>{formatError(error.message)}</CenteredContent>;
   if (errors) return <CenteredContent>{formatError(errors.message)}</CenteredContent>;
@@ -234,6 +217,7 @@ export default function LeadManagementForm({ userId }) {
           <Button
             variant="contained"
             type="submit"
+            disabled={disabled}
             color="primary"
             aria-label="task_submit"
           >
@@ -247,8 +231,8 @@ export default function LeadManagementForm({ userId }) {
         label="Name"
         // placeholder={t('common:form_placeholders.name')}
         style={{ width: '100%' }}
-        onChange={handlePrimaryContactChange}
-        value={leadFormData?.user?.contactDetails?.primaryContact?.name}
+        onChange={handleChange}
+        value={leadFormData?.user?.name}
         multiline
         variant="outlined"
         fullWidth
@@ -269,8 +253,8 @@ export default function LeadManagementForm({ userId }) {
         label="Title"
         // placeholder={t('common:form_placeholders.title')}
         style={{ width: '100%' }}
-        onChange={handlePrimaryContactChange}
-        value={leadFormData?.user?.contactDetails?.primaryContact?.title}
+        onChange={handleChange}
+        value={leadFormData?.user?.title}
         multiline
         variant="outlined"
         fullWidth
@@ -288,11 +272,12 @@ export default function LeadManagementForm({ userId }) {
 
      <TextField
         name="primaryEmail"
+        name="email"
         label="Primary Email"
         // placeholder={t('common:form_placeholders.primary_email')}
         style={{ width: '100%' }}
-        onChange={handlePrimaryContactChange}
-        value={leadFormData?.user?.contactDetails?.primaryContact?.primaryEmail}
+        onChange={handleChange}
+        value={leadFormData?.user?.email}
         multiline
         variant="outlined"
         fullWidth
@@ -312,8 +297,8 @@ export default function LeadManagementForm({ userId }) {
         label="Secondary Email"
         // placeholder={t('common:form_placeholders.secondary_email')}
         style={{ width: '100%' }}
-        onChange={handlePrimaryContactChange}
-        value={leadFormData?.user?.contactDetails?.primaryContact?.secondaryEmail}
+        onChange={handleChange}
+        value={leadFormData?.user?.secondaryEmail}
         multiline
         variant="outlined"
         fullWidth
@@ -332,9 +317,12 @@ export default function LeadManagementForm({ userId }) {
         name="primaryPhoneNumber"
         label="Primary Phone/Mobile"
         // placeholder={t('common:form_placeholders.primary_phone_number')}
+        name="phoneNumber"
+        label="Mobile"
+        // placeholder={t('common:form_placeholders.primary_phone')}
         style={{ width: '100%' }}
-        onChange={handlePrimaryContactChange}
-        value={leadFormData?.user?.contactDetails?.primaryContact?.primaryPhoneNumber}
+        onChange={handleChange}
+        value={leadFormData?.user?.phoneNumber}
         multiline
         variant="outlined"
         fullWidth
@@ -353,9 +341,11 @@ export default function LeadManagementForm({ userId }) {
         name="secondaryPhoneNumber"
         label="Secondary Phone/Mobile"
         // placeholder={t('common:form_placeholders.secondary_phone_number')}
+        label="Phone"
+        // placeholder={t('common:form_placeholders.secondary_phone')}
         style={{ width: '100%' }}
-        onChange={handlePrimaryContactChange}
-        value={leadFormData?.user?.contactDetails?.primaryContact?.secondaryPhoneNumber}
+        onChange={handleChange}
+        value={leadFormData?.user?.secondaryPhoneNumber}
         multiline
         variant="outlined"
         fullWidth
@@ -375,8 +365,8 @@ export default function LeadManagementForm({ userId }) {
         label="Linkedin"
         // placeholder={t('common:form_placeholders.linkedin_url')}
         style={{ width: '100%' }}
-        onChange={handlePrimaryContactChange}
-        value={leadFormData?.user?.contactDetails?.primaryContact?.linkedinUrl}
+        onChange={handleChange}
+        value={leadFormData?.user?.linkedinUrl}
         multiline
         variant="outlined"
         fullWidth
@@ -415,7 +405,6 @@ export default function LeadManagementForm({ userId }) {
         InputLabelProps={{
           shrink: true
         }}
-        required
       />
 
      <TextField
@@ -569,7 +558,6 @@ export default function LeadManagementForm({ userId }) {
         InputLabelProps={{
           shrink: true
         }}
-        required
       />
 
      <TextField
@@ -814,13 +802,13 @@ export default function LeadManagementForm({ userId }) {
               <InputLabel id="country">Country</InputLabel>
               <Select
                 id="country"
-                value={leadFormData?.user?.leadSource}
+                value={leadFormData?.user?.countries}
                 onChange={handleChange}
                 name="country"
                 fullWidth
                 variant="outlined"
               >
-           {Object.entries(leadSourceOptions).map(([key, val]) => (
+           {Object.entries(countries).map(([key, val]) => (
             <MenuItem key={key} value={key}>
               {val}
             </MenuItem>))}
@@ -834,7 +822,7 @@ export default function LeadManagementForm({ userId }) {
               <InputLabel id="industryBusinessActivity">Industry Business Activity</InputLabel>
               <Select
                 id="industryBusinessActivity"
-                // value={leadFormData?.user?.industryBusinessActivity}
+                value={leadFormData?.user?.industryBusinessActivity}
                 onChange={handleChange}
                 name="industryBusinessActivity"
                 fullWidth
@@ -915,15 +903,14 @@ export default function LeadManagementForm({ userId }) {
               // placeholder={t('common:form_placeholders.number_of_employees')}
               style={{ width: '100%' }}
               onChange={handleChange}
-              value={leadFormData?.user?.numberOfEmployees}
+              value={leadFormData?.user?.companyEmployees}
               multiline
               variant="outlined"
               fullWidth
-              // rows={2}
+              rows={2}
               size="small"
-              margin="normal"
               inputProps={{
-                'aria-label': 'number_of_employees'
+                'aria-label': 'number_of_employees',
               }}
               InputLabelProps={{
                 shrink: true
@@ -934,9 +921,9 @@ export default function LeadManagementForm({ userId }) {
 
           <Grid item md={6} xs={12}>
             <FormControl variant="standard" fullWidth>
-              <InputLabel id="industry">Industry Sub Sector</InputLabel>
+              <InputLabel id="industrySubSector">Industry Sub Sector</InputLabel>
               <Select
-                id="industry"
+                id="industrySubSector"
                 value={leadFormData?.user?.industrySubSector}
                 onChange={handleChange}
                 name="industrySubSector"
@@ -952,72 +939,31 @@ export default function LeadManagementForm({ userId }) {
             </FormControl>
           </Grid>
 
-
-
-
-
-
-
-
-
-
-
-
+          <Grid item md={6} xs={12}>
+            <TextField
+              name="companyAnnualRevenue"
+              label="Annual Revenue"
+              // placeholder={t('common:form_placeholders.number_of_employees')}
+              style={{ width: '100%' }}
+              onChange={handleChange}
+              value={leadFormData?.user?.companyAnnualRevenue}
+              multiline
+              variant="outlined"
+              fullWidth
+              rows={2}
+              size="small"
+              inputProps={{
+                'aria-label': 'annual_revenue',
+              }}
+              InputLabelProps={{
+                shrink: true
+              }}
+            />
+          </Grid>
 
       </Grid>
-
-      {/* <TextField
-        name="companyEmployees"
-        label="No. of Employees"
-        // placeholder={t('common:form_placeholders.number_of_employees')}
-        style={{ width: '100%' }}
-        onChange={handleChange}
-        value={leadFormData?.user?.numberOfEmployees}
-        multiline
-        variant="outlined"
-        fullWidth
-        rows={2}
-        size="small"
-        margin="normal"
-        inputProps={{
-          'aria-label': 'number_of_employees'
-        }}
-        InputLabelProps={{
-          shrink: true
-        }}
-      /> */}
-
-    <TextField
-        name="companyAnnualRevenue"
-        label="Annual Revenue"
-        // placeholder={t('common:form_placeholders.annual_revenue')}
-        style={{ width: '100%' }}
-        onChange={handleChange}
-        value={leadFormData?.user?.annualRevenue}
-        multiline
-        variant="outlined"
-        fullWidth
-        rows={2}
-        size="small"
-        margin="normal"
-        inputProps={{
-          'aria-label': 'annual_revenue'
-        }}
-        InputLabelProps={{
-          shrink: true
-        }}
-      />
       <br/>
       <br/>
-
-      <br/>
-      <br/>
-
-
-
-
-
-
 
       <br/>
       <Typography variant="h6">Lead Information</Typography>

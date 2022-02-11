@@ -2,6 +2,7 @@
 import React, { useState } from 'react'
 import { Grid,Typography } from '@mui/material';
 import { makeStyles } from '@material-ui/styles';
+import { useHistory, useParams } from 'react-router';
 import Container from '@mui/material/Container';
 import PropTypes from 'prop-types'
 import LeadManagementForm from './LeadManagementForm';
@@ -11,8 +12,7 @@ import { StyledTabs, StyledTab, TabPanel, a11yProps } from '../../../components/
 
 
 export default function LeadManagementDetails({ userId }){
-  // const matches = useMediaQuery('(max-width:1200px)');
-  // const matchesSmall = useMediaQuery(theme.breakpoints.down('md'));
+  const path = useParamsQuery();
   const [tabValue, setTabValue] = useState(0);
 
   const TAB_VALUES = {
@@ -39,10 +39,10 @@ export default function LeadManagementDetails({ userId }){
             >
               <StyledTab
                 label="DETAILS"
-                style={tabValue === objectAccessor(TAB_VALUES, 'overview')
-                  ? { fontSize: '12px', textAlign: 'left', borderBottom: 'solid 1px' }
-                  : { fontSize: '12px', textAlign: 'left' }}
-                {...a11yProps(0)}
+                style={tabValue === objectAccessor(TAB_VALUES, 'details')
+                ? { fontSize: '12px', textAlign: 'left', borderBottom: 'solid 1px' }
+                : { fontSize: '12px', textAlign: 'left' }}
+              {...a11yProps(0)}
               />
               <StyledTab
                 label="TASK"

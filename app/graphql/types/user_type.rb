@@ -127,6 +127,37 @@ module Types
     def secondary_details(contact_type)
       object.contact_infos.find { |info| info.contact_type.eql?(contact_type) }
     end
+
+    def contac_details
+      { primaryContact: {
+        name: '',
+        title: '',
+        primaryEmail: '',
+        secondaryEmail: '',
+        primaryPhoneNumber: '',
+        secondaryPhoneNumber: '',
+        linkedinUrl: ''
+      },
+      secondaryContact1: {
+        name: '',
+        title: '',
+        primaryEmail: '',
+        secondaryEmail: '',
+        primaryPhoneNumber: '',
+        secondaryPhoneNumber: '',
+        linkedinUrl: ''
+      },
+      secondaryContact2: {
+        name: '',
+        title: '',
+        primaryEmail: '',
+        secondaryEmail: '',
+        primaryPhoneNumber: '',
+        secondaryPhoneNumber: '',
+        linkedinUrl: ''
+      }
+    }
+    end
   end
   # rubocop: enable Metrics/ClassLength
 end
