@@ -19,6 +19,12 @@ RSpec.describe Types::Queries::User do
                           permissions: %w[can_view_admin_users can_get_users_lite can_get_users])
     end
     let!(:current_user) { create(:user_with_community, user_type: 'client', role: client_role) }
+    let!(:secondary_number) do
+      create(:contact_info, contact_type: 'phone', info: '99887766', user: current_user)
+    end
+    let!(:secondary_email) do
+      create(:contact_info, contact_type: 'email', info: 'test@dgdp.com', user: current_user)
+    end
     let!(:another_user) do
       create(:user_with_community,
              user_type: 'client',
@@ -84,6 +90,8 @@ RSpec.describe Types::Queries::User do
           accounts {
             id
           }
+          secondaryEmail
+          secondaryPhoneNumber
         }
       })
     end
@@ -159,6 +167,8 @@ RSpec.describe Types::Queries::User do
       result = DoubleGdpSchema.execute(query, context: { current_user: current_user }).as_json
       user_data = result.dig('data', 'user')
       expect(user_data['id']).to eql current_user.id
+      expect(user_data['secondaryEmail']).to eq 'test@dgdp.com'
+      expect(user_data['secondaryPhoneNumber']).to eq '99887766'
     end
 
     it 'returns list of admins' do

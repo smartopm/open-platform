@@ -4,6 +4,7 @@ require 'host_env'
 
 module Types
   # UserType
+  # rubocop: disable Metrics/ClassLength
   class UserType < Types::BaseObject
     field :id, ID, null: false
     field :community, Types::CommunityType, null: false
@@ -59,6 +60,8 @@ module Types
     field :invites, [Types::InviteType], null: true, visible: { roles: %i[admin], user: :id }
     field :invitees, [Types::InviteType], null: true, visible: { roles: %i[admin], user: :id }
     field :request, Types::EntryRequestType, null: true
+    field :title, String, null: true
+    field :linkedin_url, String, null: true
     field :country, String, null: true
     field :company_name, String, null: true
     field :company_description, String, null: true
@@ -87,6 +90,9 @@ module Types
     field :secondary_email, String, null: true
     field :secondary_phone_number, String, null: true
     field :contact_details, GraphQL::Types::JSON, null: true
+    field :secondary_email, String, null: true
+    field :secondary_phone_number, String, null: true
+    field :african_presence, String, null: true
 
     def avatar_url
       return nil unless object.avatar.attached?
@@ -107,5 +113,20 @@ module Types
     def permissions
       context[:current_user].role.permissions
     end
+
+    # Field for lead secondary mail
+    def secondary_email
+      secondary_details('email')&.info
+    end
+
+    # Field for lead secondary phone number
+    def secondary_phone_number
+      secondary_details('phone')&.info
+    end
+
+    def secondary_details(contact_type)
+      object.contact_infos.find { |info| info.contact_type.eql?(contact_type) }
+    end
   end
+  # rubocop: enable Metrics/ClassLength
 end
