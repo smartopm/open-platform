@@ -124,6 +124,8 @@ module Logs
     def closest_entry_time
       closest_start_entry = find_closest_entry(:start)
       closest_end_entry = find_closest_entry(:end)
+      return if closest_start_entry.blank? && closest_end_entry.blank?
+
       active_entry_time?(closest_end_entry) ? closest_end_entry : closest_start_entry
     end
 
@@ -201,12 +203,18 @@ module Logs
       end
     end
 
+    # rubocop:disable Metrics/CyclomaticComplexity
+    # rubocop:disable Metrics/PerceivedComplexity
     def visit_date_time(entry_time, for_time)
-      date = entry_time.visitation_date.to_date
-      time = for_time.eql?(:start) ? entry_time.starts_at.time : entry_time.ends_at.time
+      return if entry_time.blank?
+
+      date = entry_time.visitation_date&.to_date
+      time = for_time.eql?(:start) ? entry_time.starts_at&.time : entry_time.ends_at&.time
 
       (date + time.seconds_since_midnight.seconds).to_datetime
     end
+    # rubocop:enable Metrics/CyclomaticComplexity
+    # rubocop:enable Metrics/PerceivedComplexity
 
     def active_entry_time?(entry_time)
       Time.zone.now >= visit_date_time(entry_time, :start) &&
