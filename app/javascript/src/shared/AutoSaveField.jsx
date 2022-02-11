@@ -3,13 +3,11 @@ import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/styles';
 import { Grid } from '@material-ui/core';
 import PropTypes from 'prop-types';
-import AutoSave from './AutoSave'
 import useDebounce from '../utils/useDebounce';
 
 export default function AutoSaveField({ value, mutationAction, stateAction }) {
   const [isEditMode, setIsEditMode] = useState(false);
   const [input, setInput] = useState(value || '')
-  const [isTyping, setIsTyping] = useState(true);
   const debouncedValue = useDebounce(input, 500)
 
   function handleMouseLeave() {
@@ -26,23 +24,10 @@ export default function AutoSaveField({ value, mutationAction, stateAction }) {
     const previous = value;
     if (debouncedValue !== previous){
       mutationAction(debouncedValue)
-      // prevent reload of component
-      // TODO: prevent reload of entire page
     }
   }
 
   const classes = useStyles();
-
-  // useEffect(() => {
-  //   let timer = setTimeout(() => {}, 0);
-  //   document.getElementById('live-text-field').addEventListener('keypress', function() {
-  //     clearTimeout(timer);
-  //     setIsTyping(true);
-  //     timer = setTimeout(() => setIsTyping(false), 1000);
-  //   });
-
-  //   return () => clearTimeout(timer);
-  // }, []);
 
   return (
     <Grid
@@ -65,7 +50,6 @@ export default function AutoSaveField({ value, mutationAction, stateAction }) {
           inputProps={{ 'data-testid': 'live-text-field' }}
         />
       </Grid>
-      {/* {isEditMode && !isTyping && <AutoSave previous={value} data={debouncedValue} autoSaveAction={(data) => mutationAction(data)} />} */}
     </Grid>
   );
 }
