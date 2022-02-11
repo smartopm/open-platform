@@ -12,7 +12,7 @@ gem 'puma', '~> 5'
 # Use SCSS for stylesheets
 gem 'sass-rails', '>= 5'
 # Transpile app-like JavaScript. Read more: https://github.com/rails/webpacker
-gem 'webpacker', '~> 4.0'
+gem 'jsbundling-rails'
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
 gem 'turbolinks', '~> 5'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
@@ -99,13 +99,7 @@ group :development, :test do
   gem "pronto", "~> 0.11.0"
   gem "rubocop-rails", "~> 2.3"
 
-  # RSpec
-  # TODO: @mdp figure out why this needs bundle run twice
-  gem 'rspec-rails', git: 'https://github.com/rspec/rspec-rails', branch: 'main'
-  gem 'rspec-core', git: 'https://github.com/rspec/rspec-core', branch: 'main'
-  gem 'rspec-expectations', git: 'https://github.com/rspec/rspec-expectations', branch: 'main'
-  gem 'rspec-mocks', git: 'https://github.com/rspec/rspec-mocks', branch: 'main'
-  gem 'rspec-support', git: 'https://github.com/rspec/rspec-support', branch: 'main'
+  gem 'rspec-rails', '~> 5.0.0'
   gem 'rails-controller-testing'
 end
 

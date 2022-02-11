@@ -1,5 +1,5 @@
 import React from 'react'
-import Grid from '@material-ui/core/Grid'
+import Grid from '@mui/material/Grid';
 import PropTypes from 'prop-types'
 
 export default function CenteredContent({children}) {

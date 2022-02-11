@@ -34,7 +34,7 @@ describe('Should render Guests View Component', () => {
             },
             guest: {
               id: '162f7517',
-              name: 'Js user x'
+              name: 'Js user a'
             },
             closestEntryTime: {
               visitEndDate: null,
@@ -53,7 +53,8 @@ describe('Should render Guests View Component', () => {
             startsAt: '2021-10-31 02:51',
             exitedAt: '2021-10-31 22:51',
             revoked: true,
-            thumbnailUrl: 'https://some-video.com'
+            thumbnailUrl: 'https://some-video.com',
+            multipleInvites: true
           },
           {
             id: '696d857',
@@ -83,7 +84,8 @@ describe('Should render Guests View Component', () => {
             startsAt: '2021-10-31 02:51',
             exitedAt: '2021-10-31 22:51',
             revoked: false,
-            thumbnailUrl: null
+            thumbnailUrl: null,
+            multipleInvites: false
           }
         ]
       }
@@ -129,7 +131,9 @@ describe('Should render Guests View Component', () => {
       expect(getByText('Test another')).toBeInTheDocument();
       expect(getByText('X Name')).toBeInTheDocument();
       expect(getByText('Js sdd')).toBeInTheDocument();
-      expect(getByText('Js user x')).toBeInTheDocument();
+      expect(getAllByTestId('multiple_host')[0]).toBeInTheDocument();
+      expect(getAllByTestId('user_name')[0]).toBeInTheDocument();
+      // expect(getByText('Js user x')).toBeInTheDocument();
       expect(getAllByTestId('request_status')[0]).toBeInTheDocument();
       expect(getAllByTestId('request_status')[0].textContent).toContain('guest_book.approved');
       expect(getAllByTestId('request_preview')[0].textContent).toContain('X');
@@ -149,7 +153,7 @@ describe('Should render Guests View Component', () => {
 
       fireEvent.click(getAllByTestId('user_name')[0]);
       expect(mockHistory.push).toBeCalled();
-      expect(mockHistory.push).toBeCalledWith('/user/162f7517'); // check if it routes to the user page
+      expect(mockHistory.push).toBeCalledWith('/user/162f7517-69?tab=Invitations'); // check if it routes to the user page
     }, 10);
   });
 

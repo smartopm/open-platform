@@ -287,7 +287,7 @@ export default function TaskDataList({
                   >
                     <AttachFileIcon
                       fontSize="small"
-                      color={task?.documents?.length ? 'primary' : 'disabled'}
+                      color={task?.attachments?.length ? 'primary' : 'disabled'}
                     />
                   </IconButton>
                 </Grid>
@@ -298,7 +298,7 @@ export default function TaskDataList({
                   className={classes.iconItem}
                   style={{ marginLeft: '-25px' }}
                 >
-                  <span data-testid="file_attachments_total">{task.documents?.length || 0}</span>
+                  <span data-testid="file_attachments_total">{task.attachments?.length || 0}</span>
                 </Grid>
               </Grid>
             </Grid>

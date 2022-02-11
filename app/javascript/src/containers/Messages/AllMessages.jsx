@@ -12,7 +12,7 @@ import { useWindowDimensions } from '../../utils/customHooks'
 import { useStyles } from '../../modules/Users/Containers/Users';
 import { messageFilters } from '../../utils/constants';
 import { MessagesQuery } from '../../graphql/queries'
-import CenteredContent from '../../components/CenteredContent'
+import CenteredContent from '../../shared/CenteredContent'
 import ErrorPage from '../../components/Error'
 import MessageList from '../../components/Messaging/MessageList'
 import { Spinner } from '../../shared/Loading';
@@ -129,14 +129,14 @@ export default function AllMessages() {
                     <ul className="pagination">
                       <li className={`page-item ${offset < limit && 'disabled'}`}>
                         <a className="page-link" onClick={handlePreviousPage} href="#">
-                          Previous
+                          {t('common:misc.previous')}
                         </a>
                       </li>
                       <li className={`page-item ${data.messages.length < limit &&
                                         'disabled'}`}
                       >
                         <a className="page-link" onClick={handleNextPage} href="#">
-                          Next
+                          {t('common:misc.next')}
                         </a>
                       </li>
                     </ul>

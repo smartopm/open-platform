@@ -5,6 +5,9 @@
     "task_details": "Detalle de la Tarea"
   },
   "document": {
+    "delete": "Eliminar",
+    "delete_confirmation_message": "¿Está seguro de que desea eliminar el documento?",
+    "document_deleted": "Documento eliminado con éxito",
     "documents": "Documentos",
     "download": "Descargar",
     "no_documents": "Agregar un documento",
@@ -14,6 +17,9 @@
   },
   "history": {
     "updates": "Actualizaciones"
+  },
+  "misc": {
+    "confirm": "Confirmar"
   },
   "process": {
     "processes": "Procesos"

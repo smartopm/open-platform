@@ -7,6 +7,7 @@
   "scripts": {
     "lint": "eslint app/javascript/src --ext .js --ext .jsx app/javascript/packs/react_main.jsx",
     "test": "NODE_ENV=test jest",
+    "build": "webpack --config ./webpack.config.js",
     "format": "prettier --no-semi --single-quote --write app/javascript/src/**/*.jsx",
     "storybook": "start-storybook -p 6006 --ci --no-dll --quiet",
     "build-storybook": "build-storybook --no-dll"
@@ -16,6 +17,7 @@
     "@apollo/react-testing": "^3.1.3",
     "@babel/plugin-proposal-private-property-in-object": "^7.16.0",
     "@babel/plugin-syntax-dynamic-import": "^7.8.3",
+    "@babel/plugin-transform-runtime": "^7.17.0",
     "@babel/preset-env": "^7.12.11",
     "@babel/preset-react": "^7.0.0",
     "@date-io/date-fns": "1.x",
@@ -33,7 +35,6 @@
     "@rails/actioncable": "^6.0.0-alpha",
     "@rails/activestorage": "^6.0.0-alpha",
     "@rails/ujs": "^6.0.0-alpha",
-    "@rails/webpacker": "^4.0.7",
     "aphrodite": "^2.4.0",
     "apollo-cache-inmemory": "^1.6.3",
     "apollo-client": "^2.6.4",
@@ -59,7 +60,7 @@
     "i18next-phrase-in-context-editor-post-processor": "^1.2.1",
     "isomorphic-unfetch": "^3.0.0",
     "jquery": "^3.4.1",
-    "jsdom": "^15.2.1",
+    "jsdom": "^19.0.0",
     "leaflet": "^1.6.0",
     "leaflet-draw": "^1.0.4",
     "material-ui-confirm": "^2.1.1",
@@ -89,12 +90,14 @@
     "recharts": "^2.0.6",
     "regenerator-runtime": "^0.13.9",
     "styled-components": "^5.3.1",
-    "use-long-press": "^1.1.1"
+    "url-loader": "^4.1.1",
+    "use-long-press": "^1.1.1",
+    "webpack": "^5.68.0",
+    "webpack-cli": "^4.9.2"
   },
   "version": "0.1.0",
   "devDependencies": {
     "@babel/core": "^7.12.3",
-    "@pmmmwh/react-refresh-webpack-plugin": "^0.4.3",
     "@storybook/addon-actions": "6.5.0-alpha.13",
     "@storybook/addon-essentials": "6.5.0-alpha.13",
     "@storybook/addon-links": "6.5.0-alpha.13",
@@ -122,10 +125,8 @@
     "lint-staged": ">=10",
     "prettier": "^1.19.1",
     "react-is": "^17.0.1",
-    "react-refresh": "^0.9.0",
     "storybook-addon-designs": "^6.2.1",
-    "webpack-bundle-analyzer": "^3.5.1",
-    "webpack-dev-server": "^3.8.0"
+    "webpack-bundle-analyzer": "^3.5.1"
   },
   "resolutions": {
     "lodash": "4.17.21",
