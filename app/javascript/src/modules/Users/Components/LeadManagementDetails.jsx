@@ -35,10 +35,10 @@ export default function LeadManagementDetails({ userId }){
             >
               <StyledTab
                 label="DETAILS"
-                style={tabValue === objectAccessor(TAB_VALUES, 'overview')
-                  ? { fontSize: '12px', textAlign: 'left', borderBottom: 'solid 1px' }
-                  : { fontSize: '12px', textAlign: 'left' }}
-                {...a11yProps(0)}
+                style={tabValue === objectAccessor(TAB_VALUES, 'details')
+                ? { fontSize: '12px', textAlign: 'left', borderBottom: 'solid 1px' }
+                : { fontSize: '12px', textAlign: 'left' }}
+              {...a11yProps(0)}
               />
               <StyledTab
                 label="TASK"
