@@ -37,17 +37,6 @@ import UserHeader from '../Components/UserHeader';
 const limit = 25;
 const USERS_CAMPAIGN_WARNING_LIMIT = 2000;
 
-const csvHeaders = [
-  { label: 'Name', key: 'name' },
-  { label: 'Primary Email', key: 'email' },
-  { label: 'Primary Phone', key: 'phoneNumber' },
-  { label: 'External Ref ID', key: 'extRefId' },
-  { label: 'User Type', key: 'userType' },
-  { label: 'Customer Journey Stage', key: 'subStatus' },
-  { label: 'User State', key: 'state' },
-  { label: 'Expiration Date', key: 'expiresAt' }
-];
-
 export default function UsersList() {
   const classes = useStyles();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -484,6 +473,13 @@ export default function UsersList() {
     toggleFilterMenu
   }
 
+  const csvObject = {
+    called,
+    handleDownloadCSV,
+    usersLoading,
+    csvUserData
+  }
+
   return (
     <>
       <div className="container">
@@ -700,7 +696,8 @@ export default function UsersList() {
             <UserHeader 
               setCampaignOption={setCampaignOption}
               handleSearchClick={inputToSearch}
-              filterObject={filterObject} 
+              filterObject={filterObject}
+              csvObject={csvObject} 
             />
             <UserListCard
               userData={data}
