@@ -95,7 +95,6 @@ module Types
       (date + time.seconds_since_midnight.seconds).to_datetime
     end
 
-
     def multiple_invites
       object.invites.size > 1
     end

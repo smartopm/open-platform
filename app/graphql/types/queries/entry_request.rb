@@ -78,7 +78,8 @@ module Types::Queries::EntryRequest
 
     entry_requests = context[:site_community].entry_requests
                                              .includes(:user, :guest)
-                                             .where('entry_requests.guest_id IS NOT NULL AND entry_requests.visitation_date IS NOT NULL')
+                                             .where('entry_requests.guest_id IS NOT NULL
+                                                  AND entry_requests.visitation_date IS NOT NULL')
                                              .limit(limit)
                                              .offset(offset)
                                              .order_by_recent_invites
