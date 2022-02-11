@@ -60,6 +60,8 @@ module Types
     field :invites, [Types::InviteType], null: true, visible: { roles: %i[admin], user: :id }
     field :invitees, [Types::InviteType], null: true, visible: { roles: %i[admin], user: :id }
     field :request, Types::EntryRequestType, null: true
+    field :title, String, null: true
+    field :linkedin_url, String, null: true
     field :country, String, null: true
     field :company_name, String, null: true
     field :company_description, String, null: true
@@ -88,6 +90,9 @@ module Types
     field :secondary_email, String, null: true
     field :secondary_phone_number, String, null: true
     field :contact_details, GraphQL::Types::JSON, null: true
+    field :secondary_email, String, null: true
+    field :secondary_phone_number, String, null: true
+    field :african_presence, String, null: true
 
     def avatar_url
       return nil unless object.avatar.attached?
@@ -111,7 +116,7 @@ module Types
 
     # Field for lead secondary mail
     def secondary_email
-      secondary_details('email').first&.info
+      secondary_details('email')&.info
     end
 
     # Field for lead secondary phone number
