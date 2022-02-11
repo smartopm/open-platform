@@ -43,6 +43,7 @@ export const UpdateUserMutation = gql`
     $companyDescription: String
     $country: String
     $companyName: String
+    $contactDetails: JSON
  
   ) {
     result: userUpdate(
@@ -84,6 +85,7 @@ export const UpdateUserMutation = gql`
       companyDescription: $companyDescription
       country: $country
       companyName: $companyName
+      contactDetails: $contactDetails
 
     ) {
       user {

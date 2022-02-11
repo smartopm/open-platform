@@ -260,6 +260,8 @@ export const LeadDetailsQuery = gql`
       firstContactDate
       lastContactDate
       followupAt
+      contactDetails
+      industrySubSector
     }
   }
 `
