@@ -28,7 +28,7 @@ RSpec.describe Forms::FormUser, type: :model do
     it 'creates a task' do
       previous_notes_count = Notes::Note.count
 
-      form_user.create_form_task('nurudeen.dgdp.site')
+      form_user.create_form_task
       expect(Notes::Note.count).to eq(previous_notes_count + 1)
 
       latest_note = Notes::Note.order(:created_at).first
@@ -41,7 +41,7 @@ RSpec.describe Forms::FormUser, type: :model do
       form.community.update(name: 'DoubleGDP')
 
       expect(TaskCreate).to receive(:new_from_template)
-      form_user.create_form_task('dev.dgdp.site')
+      form_user.create_form_task
     end
 
     it 'does not call TaskCreate.new_from_template for non DRC form' do
@@ -54,7 +54,54 @@ RSpec.describe Forms::FormUser, type: :model do
 
       expect(TaskCreate).not_to receive(:new_from_template)
       expect(TaskCreate).to receive(:new_from_action)
-      form_user.create_form_task('dev.dgdp.site')
+      form_user.create_form_task
+    end
+
+    describe 'Task body' do
+      let(:project_name_property) { create(:form_property, form: form, field_name: 'Test Field') }
+      let(:user_form_property) do
+        create(:user_form_property,
+               form_property: project_name_property,
+               form_user: form_user,
+               value: 'Test value',
+               user: user)
+      end
+
+      before do
+        form.community.update(name: 'DoubleGDP')
+      end
+
+      it 'sets body as Project Developer name for DRC forms' do
+        form.update(name: 'DRC Project Review Process', grouping_id: form.id)
+        developer_name_field = create(:form_property, form: form, field_name: 'Project Developer')
+        project_developer_user_property = create(:user_form_property,
+                                                 form_property: developer_name_field,
+                                                 form_user: form_user,
+                                                 value: 'DoubleGDP LLC',
+                                                 user: user)
+
+        expect(TaskCreate).to receive(:new_from_action).with(
+          hash_including(body: project_developer_user_property.value),
+        )
+        form_user.create_form_task
+      end
+
+      it 'set body as form name for non DRC forms' do
+        create(:user_form_property,
+               form_property: project_name_property,
+               form_user: form_user,
+               value: 'DoubleGDP LLC', user: user)
+
+        expect(TaskCreate).to receive(:new_from_action).with(hash_including(body: form.name))
+        form_user.create_form_task
+      end
+
+      it 'sets a default body for DRC form with no set developer name' do
+        form.update(name: 'DRC Project Review Process', grouping_id: form.id)
+
+        expect(TaskCreate).to receive(:new_from_action).with(hash_including(body: form.name))
+        form_user.create_form_task
+      end
     end
   end
 end

@@ -25,23 +25,7 @@ module Forms
       attributes user: ['user.name']
     end
 
-    # rubocop:disable Metrics/AbcSize
-    # rubocop:disable Metrics/MethodLength
-    def create_form_task(hostname)
-      task_params = {
-        body: "<a href=\"https://#{hostname}/user/#{user.id}\">#{user.name}</a> Submitted
-                <a href=\"https://#{hostname}/user_form/#{user.id}/#{id}/task\">
-                #{form.name}</a>",
-        description: description,
-        category: 'form',
-        form_user_id: id,
-        flagged: true,
-        completed: false,
-        user_id: user.id,
-        author_id: user.id,
-        assignees: user.community.sub_administrator_id,
-      }
-
+    def create_form_task
       allowed_community = %w[DoubleGDP Tilisi].include?(form.community.name)
       if allowed_community && form.drc_form?
         return TaskCreate.new_from_template(task_params, form.community)
@@ -49,8 +33,6 @@ module Forms
 
       TaskCreate.new_from_action(task_params)
     end
-    # rubocop:enable Metrics/AbcSize
-    # rubocop:enable Metrics/MethodLength
 
     private
 
@@ -60,6 +42,31 @@ module Forms
       form_property = form.form_properties.find_by(field_name: 'Description')
       user_form_properties.find_by(form_property_id: form_property&.id)&.value
     end
+
+    def body
+      if form.drc_form?
+        project_developer_field = form.form_properties.find_by(field_name: 'Project Developer')
+        user_form_properties.find_by(form_property_id: project_developer_field&.id)&.value
+      else
+        form.name
+      end
+    end
+
+    # rubocop:disable Metrics/MethodLength
+    def task_params
+      {
+        body: body || form.name,
+        description: description,
+        category: 'form',
+        form_user_id: id,
+        flagged: true,
+        completed: false,
+        user_id: user.id,
+        author_id: user.id,
+        assignees: user.community.sub_administrator_id,
+      }
+    end
+    # rubocop:enable Metrics/MethodLength
 
     def log_create_event
       user.generate_events('form_submit', self)
