@@ -1,5 +1,7 @@
 class AddColumnsForLeadManagement < ActiveRecord::Migration[6.1]
   def change
+    add_column :users, :title, :string
+    add_column :users, :linkedin_url, :string
     add_column :users, :company_name, :string
     add_column :users, :country, :string
     add_column :users, :company_description, :string
@@ -25,5 +27,6 @@ class AddColumnsForLeadManagement < ActiveRecord::Migration[6.1]
     add_column :users, :modified_by, :string
     add_column :users, :relevant_link, :string
     add_column :users, :contact_details, :jsonb
+    add_column :users, :african_presence, :string
   end
 end
