@@ -1,8 +1,7 @@
+/* eslint-disable complexity */
 /* eslint-disable max-statements */
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import { useTheme } from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
 import CloseIcon from '@material-ui/icons/Close';
 import { useQuery, useMutation } from 'react-apollo';
@@ -12,7 +11,7 @@ import { TextField, IconButton, Chip, Container } from '@material-ui/core';
 import { Typography } from '@mui/material';
 import { makeStyles } from '@material-ui/styles';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-// import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { UserLabelsQuery, LabelsQuery } from '../../../graphql/queries';
 import { LabelCreate, UserLabelCreate, UserLabelUpdate } from '../../../graphql/mutations';
 import useDebounce from '../../../utils/useDebounce';
@@ -23,8 +22,6 @@ import ErrorPage from '../../../components/Error';
 
 export default function UserLabels({ userId }) {
   const [showAddTextBox, setshowAddTextBox] = useState(false);
-  const theme = useTheme();
-  const matches = useMediaQuery(theme.breakpoints.up('sm'));
   const [label, setLabel] = useState('');
   const newUserLabel = useDebounce(label, 500);
   const [labelCreate] = useMutation(LabelCreate);
@@ -32,6 +29,7 @@ export default function UserLabels({ userId }) {
   const [userLabelUpdate] = useMutation(UserLabelUpdate);
   const [messageAlert, setMessageAlert] = useState('');
   const [isSuccessAlert, setIsSuccessAlert] = useState(false);
+  const [isLabelOpen, setIsLabelOpen] = useState(false);
   const { t } = useTranslation('common')
   const classes = useStyles()
 
@@ -100,35 +98,36 @@ export default function UserLabels({ userId }) {
         handleClose={handleMessageAlertClose}
       />
       <br />
-      <Typography>
-        Labels
-        {' '}
-
-      </Typography>
-
-      <Typography variant="subtitle1" className={classes.wrapIcon}>
+      <Typography variant="subtitle1" className={classes.wrapIcon} onClick={() => setIsLabelOpen(!isLabelOpen)}>
         Labels
         {' '}
         {'  '}
-        <KeyboardArrowDownIcon className={classes.linkIcon}  />
+        {
+          isLabelOpen 
+          ? <KeyboardArrowUpIcon className={classes.linkIcon}  />
+          : <KeyboardArrowDownIcon className={classes.linkIcon}  />
+        }
       </Typography>
-      <Container maxWidth="xl">
-        {userData.userLabels.length
-          ? userData?.userLabels.map(lab => (
-            <Chip
-              data-testid="chip-label"
-              key={lab.id}
-              size="medium"
-              label={lab.shortDesc}
-              onDelete={() => handleDelete(lab.id)}
-              // style={matches ? {marginRight: '24px', backgroundColor: lab.color, marginBottom: '5px' } : {marginRight: '4px', backgroundColor: lab.color, marginBottom: '5px' }}
-            />
-            ))
-          : null}
-        <IconButton aria-label="add-label" onClick={() => setshowAddTextBox(!showAddTextBox)}>
-          {!showAddTextBox ? <AddIcon /> : <CloseIcon />}
-        </IconButton>
-      </Container>
+      {
+        isLabelOpen && (
+        <Container maxWidth="xl">
+          {userData.userLabels.length
+            ? userData?.userLabels.map(lab => (
+              <Chip
+                data-testid="chip-label"
+                key={lab.id}
+                size="medium"
+                label={lab.shortDesc}
+                onDelete={() => handleDelete(lab.id)}
+              />
+              ))
+            : null}
+          <IconButton aria-label="add-label" onClick={() => setshowAddTextBox(!showAddTextBox)}>
+            {!showAddTextBox ? <AddIcon /> : <CloseIcon />}
+          </IconButton>
+        </Container>
+        )
+      }
       <div className="row d-flex justifiy-content-around align-items-center">
         {showAddTextBox ? (
           <Autocomplete
@@ -188,5 +187,9 @@ const useStyles = makeStyles(() => ({
   wrapIcon: {
     verticalAlign: 'middle',
     display: 'inline-flex'
+   },
+   linkIcon: {
+     marginTop: 3, 
+     marginLeft: 6
    }
 }));
