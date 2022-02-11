@@ -86,9 +86,9 @@ export default function GuestsView({
     });
   }
 
-  function handleViewUser(event, user) {
+  function handleViewUser(event, user, isMultiple=false) {
     event.stopPropagation();
-    history.push(`/user/${user.id}?tab=Invitations`);
+    history.push(`/user/${user.id}?tab=${isMultiple ? 'Invitations' : null}`);
   }
 
   return (
@@ -147,7 +147,7 @@ export default function GuestsView({
                       color="primary"
                       content={t('guest_book.multiple')}
                       data-testid="multiple_host"
-                      onClick={event => handleViewUser(event, visit.guest)}
+                      onClick={event => handleViewUser(event, visit.guest, true)}
                     />
                     )
                   : (
@@ -155,7 +155,7 @@ export default function GuestsView({
                       color="secondary"
                       content={visit.user.name}
                       data-testid="user_name"
-                      onClick={event => handleViewUser(event, visit.user)}
+                      onClick={event => handleViewUser(event, visit.user, false)}
                     />
                   )
                 }

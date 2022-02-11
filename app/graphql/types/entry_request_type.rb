@@ -84,9 +84,17 @@ module Types
 
     def closest_entry_time
       object.entry_times.where.not(visitation_date: nil).min do |a, b|
-        (Time.zone.now - a.visitation_date) - (Time.zone.now - b.visitation_date)
+        (Time.zone.now - visit_date_time(a)) - (Time.zone.now - visit_date_time(b))
       end
     end
+
+    def visit_date_time(entry_time)
+      date = entry_time.visitation_date.to_date
+      time = entry_time.starts_at.time
+
+      (date + time.seconds_since_midnight.seconds).to_datetime
+    end
+
 
     def multiple_invites
       object.invites.size > 1

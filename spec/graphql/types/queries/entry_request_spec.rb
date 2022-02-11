@@ -201,8 +201,8 @@ RSpec.describe Types::Queries::EntryRequest do
                                          current_user: admin,
                                          site_community: current_user.community,
                                        }).as_json
-      expect(result.dig('data', 'scheduledRequests').length).to eql 2
-      expect(result.dig('data', 'scheduledRequests', 0, 'multipleInvites')).to eql false
+      expect(result.dig('data', 'scheduledRequests').length).to eql 0
+      expect(result.dig('data', 'scheduledRequests', 0, 'multipleInvites')).to eql nil
     end
 
     it 'searches by end_time and ends_at' do
