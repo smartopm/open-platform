@@ -16,7 +16,7 @@ export default function TaskTitle({ task }) {
     }
   );
 
-  if (formDataLoading) return <span />;
+  if (formDataLoading) return <span data-testid="loader"/>;
   const projectDeveloper = formData?.formUserProperties?.find(
     f => f.formProperty.fieldName === 'Project Developer'
   );
