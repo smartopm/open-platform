@@ -9,7 +9,6 @@ import {
 } from '@material-ui/core'
 import { Grid,Typography } from '@mui/material';
 import { useLazyQuery, useMutation } from 'react-apollo'
-import Box from '@mui/material/Box';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import PropTypes from 'prop-types'
 // import { useTranslation } from 'react-i18next';
@@ -22,7 +21,7 @@ import { formatError } from '../../../utils/helpers';
 import { clientCategories, internationalizationLevels, 
         leadTemperatureOptions, leadStatusOptions, industrySubSectorOptions,
         leadSourceOptions, leadTypeOptions, industryCategoryOptions,
-         industryBusinessActivityOptions, regionOptions } from '../../../utils/constants';
+         industryBusinessActivityOptions, regionOptions, countries } from '../../../utils/constants';
 
 export default function LeadManagementForm({ userId }) {
   const matches = useMediaQuery('(max-width:800px)');
@@ -34,6 +33,7 @@ export default function LeadManagementForm({ userId }) {
       roleName: '',
       companyName: '',
       phoneNumber: '',
+      email: '',
       country: '',
       companyDescription: '',
       companyLinkedin: '',
@@ -66,31 +66,18 @@ export default function LeadManagementForm({ userId }) {
 
   const [errors, setErr] = useState('')
 
+  const[disabled, setDisabled] = useState(true)
+
   function handleChange(event) {
+    setDisabled(false)
     const { name, value } = event.target;
     setLeadFormData({
       user: { ...leadFormData?.user, [name]: value }
     });
   }
 
-
-  function handlePrimaryContactChange(event){
-    const {name, value } = event.target
-    
-    setLeadFormData({
-      user: {...leadFormData?.user,
-        contactDetails: {
-          ...leadFormData?.user?.contactDetails,
-          primaryContact: {
-            ...leadFormData?.user?.contactDetails?.primaryContact,
-            [name]: value 
-          }
-        }
-      },
-    });
-  }
-
   function handleSecondaryContact1Change(event){
+    setDisabled(false)
     const {name, value} = event.target
     setLeadFormData({
       user: {...leadFormData?.user,
@@ -107,6 +94,7 @@ export default function LeadManagementForm({ userId }) {
 
 
   function handleSecondaryContact2Change(event){
+    setDisabled(false)
     const {name, value} = event.target
     setLeadFormData({
       user: {...leadFormData?.user,
@@ -123,6 +111,7 @@ export default function LeadManagementForm({ userId }) {
 
 
   function handleTimeInputChange(event) {
+    setDisabled(false)
     const { name, value } = event.target;
       setLeadFormData({
         ...leadFormData,
@@ -153,6 +142,16 @@ export default function LeadManagementForm({ userId }) {
     .catch(err => setErr(err))
   }
 
+  // user: {...leadFormData?.user,
+  //   contactDetails: {
+  //     ...leadFormData?.user?.contactDetails,
+  //     secondaryContact2: {
+  //       ...leadFormData?.user?.contactDetails?.secondaryContact2,
+  //       [name]: value 
+  //     }
+  //   }
+  // },
+
   useEffect(() => {
     loadLeadData();
     if (data?.user) {
@@ -176,6 +175,7 @@ export default function LeadManagementForm({ userId }) {
           <Button
             variant="contained"
             type="submit"
+            disabled={disabled}
             color="primary"
             aria-label="task_submit"
           >
@@ -189,8 +189,8 @@ export default function LeadManagementForm({ userId }) {
         label="Name"
         // placeholder={t('common:form_placeholders.name')}
         style={{ width: '100%' }}
-        onChange={handlePrimaryContactChange}
-        value={leadFormData?.user?.contactDetails?.primaryContact?.name}
+        onChange={handleChange}
+        value={leadFormData?.user?.name}
         multiline
         variant="outlined"
         fullWidth
@@ -211,8 +211,8 @@ export default function LeadManagementForm({ userId }) {
         label="Title"
         // placeholder={t('common:form_placeholders.title')}
         style={{ width: '100%' }}
-        onChange={handlePrimaryContactChange}
-        value={leadFormData?.user?.contactDetails?.primaryContact?.title}
+        onChange={handleChange}
+        value={leadFormData?.user?.title}
         multiline
         variant="outlined"
         fullWidth
@@ -230,6 +230,7 @@ export default function LeadManagementForm({ userId }) {
 
      <TextField
         name="primaryEmail"
+        name="email"
         label="Primary Email"
         // placeholder={t('common:form_placeholders.primary_email')}
         style={{ width: '100%' }}
@@ -274,9 +275,12 @@ export default function LeadManagementForm({ userId }) {
         name="primaryPhoneNumber"
         label="Primary Phone/Mobile"
         // placeholder={t('common:form_placeholders.primary_phone_number')}
+        name="phoneNumber"
+        label="Mobile"
+        // placeholder={t('common:form_placeholders.primary_phone')}
         style={{ width: '100%' }}
-        onChange={handlePrimaryContactChange}
-        value={leadFormData?.user?.contactDetails?.primaryContact?.primaryPhoneNumber}
+        onChange={handleChange}
+        value={leadFormData?.user?.phoneNumber}
         multiline
         variant="outlined"
         fullWidth
@@ -295,6 +299,8 @@ export default function LeadManagementForm({ userId }) {
         name="secondaryPhoneNumber"
         label="Secondary Phone/Mobile"
         // placeholder={t('common:form_placeholders.secondary_phone_number')}
+        label="Phone"
+        // placeholder={t('common:form_placeholders.secondary_phone')}
         style={{ width: '100%' }}
         onChange={handleChange}
         // value={leadFormData?.user?.secondaryPhoneNumber}
@@ -317,8 +323,8 @@ export default function LeadManagementForm({ userId }) {
         label="Linkedin"
         // placeholder={t('common:form_placeholders.linkedin_url')}
         style={{ width: '100%' }}
-        onChange={handlePrimaryContactChange}
-        value={leadFormData?.user?.contactDetails?.primaryContact?.linkedinUrl}
+        onChange={handleChange}
+        value={leadFormData?.user?.linkedinUrl}
         multiline
         variant="outlined"
         fullWidth
@@ -357,7 +363,6 @@ export default function LeadManagementForm({ userId }) {
         InputLabelProps={{
           shrink: true
         }}
-        required
       />
 
      <TextField
@@ -511,7 +516,6 @@ export default function LeadManagementForm({ userId }) {
         InputLabelProps={{
           shrink: true
         }}
-        required
       />
 
      <TextField

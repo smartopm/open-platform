@@ -222,6 +222,7 @@ export const LeadDetailsQuery = gql`
   query User($id: ID!) {
     user(id: $id) {
       name
+      title
       phoneNumber
       roleName
       userType
@@ -243,6 +244,8 @@ export const LeadDetailsQuery = gql`
       companyLinkedin
       companyWebsite
       relevantLink
+      linkedinUrl
+      africanPresence
       companyEmployees
       companyAnnualRevenue
       industry
@@ -262,6 +265,7 @@ export const LeadDetailsQuery = gql`
       followupAt
       contactDetails
       industrySubSector
+      industryBusinessActivity
     }
   }
 `
