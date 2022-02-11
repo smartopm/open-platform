@@ -15,24 +15,34 @@ export default function AutoSaveField({ value, mutationAction, stateAction }) {
   function handleMouseLeave() {
     setIsEditMode(false);
     stateAction(false)
+    handleAutoSave()
   }
 
   function handleMouseOver() {
     setIsEditMode(true);
   }
 
+  function handleAutoSave(){
+    const previous = value;
+    if (debouncedValue !== previous){
+      mutationAction(debouncedValue)
+      // prevent reload of component
+      // TODO: prevent reload of entire page
+    }
+  }
+
   const classes = useStyles();
 
-  useEffect(() => {
-    let timer = setTimeout(() => {}, 0);
-    document.getElementById('live-text-field').addEventListener('keypress', function() {
-      clearTimeout(timer);
-      setIsTyping(true);
-      timer = setTimeout(() => setIsTyping(false), 1000);
-    });
+  // useEffect(() => {
+  //   let timer = setTimeout(() => {}, 0);
+  //   document.getElementById('live-text-field').addEventListener('keypress', function() {
+  //     clearTimeout(timer);
+  //     setIsTyping(true);
+  //     timer = setTimeout(() => setIsTyping(false), 1000);
+  //   });
 
-    return () => clearTimeout(timer);
-  }, []);
+  //   return () => clearTimeout(timer);
+  // }, []);
 
   return (
     <Grid
@@ -55,7 +65,7 @@ export default function AutoSaveField({ value, mutationAction, stateAction }) {
           inputProps={{ 'data-testid': 'live-text-field' }}
         />
       </Grid>
-      {isEditMode && !isTyping && <AutoSave previous={value} data={debouncedValue} autoSaveAction={(data) => mutationAction(data)} />}
+      {/* {isEditMode && !isTyping && <AutoSave previous={value} data={debouncedValue} autoSaveAction={(data) => mutationAction(data)} />} */}
     </Grid>
   );
 }
