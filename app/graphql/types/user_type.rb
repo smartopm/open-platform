@@ -93,6 +93,7 @@ module Types
     field :secondary_email, String, null: true
     field :secondary_phone_number, String, null: true
     field :african_presence, String, null: true
+    field :region, String, null: true
 
     def avatar_url
       return nil unless object.avatar.attached?

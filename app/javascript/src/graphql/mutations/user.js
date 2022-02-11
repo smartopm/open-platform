@@ -45,6 +45,7 @@ export const UpdateUserMutation = gql`
     $companyLinkedin: String
     $companyDescription: String
     $country: String
+    $region: String
     $companyName: String
     $contactDetails: JSON
  
@@ -90,6 +91,7 @@ export const UpdateUserMutation = gql`
       companyLinkedin: $companyLinkedin
       companyDescription: $companyDescription
       country: $country
+      region: $region
       companyName: $companyName
       contactDetails: $contactDetails
 

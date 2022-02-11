@@ -49,6 +49,7 @@ module Mutations
       argument :followup_at, String, required: false
       argument :contact_details, GraphQL::Types::JSON, required: false
       argument :african_presence, String, required: false
+      field :region, String, null: true
 
       field :user, Types::UserType, null: true
 
