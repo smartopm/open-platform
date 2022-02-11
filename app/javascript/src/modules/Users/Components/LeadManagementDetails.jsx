@@ -5,8 +5,7 @@ import { makeStyles } from '@material-ui/styles';
 import Container from '@mui/material/Container';
 import PropTypes from 'prop-types'
 import LeadManagementForm from './LeadManagementForm';
-import { objectAccessor } from '../../../utils/helpers'
-
+import { objectAccessor, useParamsQuery } from '../../../utils/helpers'
 import { StyledTabs, StyledTab, TabPanel, a11yProps } from '../../../components/Tabs'
 export default function LeadManagementDetails({ userId }){
   const [tabValue, setTabValue] = useState(0);
@@ -21,7 +20,7 @@ export default function LeadManagementDetails({ userId }){
   }
 
   return (
-    <Container maxWidth="md" >
+    <Container maxWidth='xl' >
       <Grid container style={{ display: 'flex', justifyContent: 'center' }}>
         <Grid item md={10} xs ={12}>
           <Typography variant="h5">Lead Management</Typography>

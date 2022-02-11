@@ -30,7 +30,7 @@ module Mutations
       argument :company_employees, String, required: false
       argument :company_annual_revenue, String, required: false
       argument :company_contacted, String, required: false
-      argument :industry, String, required: false
+      argument :industry_sub, String, required: false
       argument :industry_sub_sector, String, required: false
       argument :industry_business_activity, String, required: false
       argument :level_of_internationalization, String, required: false
@@ -49,7 +49,7 @@ module Mutations
       argument :followup_at, String, required: false
       argument :contact_details, GraphQL::Types::JSON, required: false
       argument :african_presence, String, required: false
-      field :region, String, null: true
+      argument :region, String, required: false
 
       field :user, Types::UserType, null: true
 

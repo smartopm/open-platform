@@ -33,9 +33,9 @@ export const UpdateUserMutation = gql`
     $clientCategory: String
     $companyContacted: String
     $leadStatus: String
+    $leadSource: String
     $leadTemperature: String
     $levelOfInternationalization: String
-    $industry: String
     $companyAnnualRevenue: String
     $companyEmployees: String
     $industryBusinessActivity: String
@@ -81,7 +81,6 @@ export const UpdateUserMutation = gql`
       leadStatus: $leadStatus
       leadTemperature: $leadTemperature
       levelOfInternationalization: $levelOfInternationalization
-      industry: $industry
       companyAnnualRevenue: $companyAnnualRevenue
       companyEmployees: $companyEmployees
       industryBusinessActivity: $industryBusinessActivity
