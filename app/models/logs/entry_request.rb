@@ -203,8 +203,6 @@ module Logs
       end
     end
 
-    # rubocop:disable Metrics/CyclomaticComplexity
-    # rubocop:disable Metrics/PerceivedComplexity
     def visit_date_time(entry_time, for_time)
       return if entry_time.blank?
 
@@ -213,8 +211,6 @@ module Logs
 
       (date + time.seconds_since_midnight.seconds).to_datetime
     end
-    # rubocop:enable Metrics/CyclomaticComplexity
-    # rubocop:enable Metrics/PerceivedComplexity
 
     def active_entry_time?(entry_time)
       Time.zone.now >= visit_date_time(entry_time, :start) &&
