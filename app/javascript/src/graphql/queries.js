@@ -249,7 +249,6 @@ export const LeadDetailsQuery = gql`
       africanPresence
       companyEmployees
       companyAnnualRevenue
-      industry
       levelOfInternationalization
       leadTemperature
       leadStatus
@@ -265,7 +264,7 @@ export const LeadDetailsQuery = gql`
       lastContactDate
       followupAt
       contactDetails
-      industrySubSector
+      industrySub
       industryBusinessActivity
     }
   }

@@ -69,7 +69,7 @@ module Types
     field :company_website, String, null: true
     field :company_annual_revenue, String, null: true
     field :company_contacted, String, null: true
-    field :industry, String, null: true
+    field :industry_sub, String, null: true
     field :industry_sub_sector, String, null: true
     field :industry_business_activity, String, null: true
     field :level_of_internationalization, String, null: true
