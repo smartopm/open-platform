@@ -97,10 +97,8 @@ export const UpdateUserMutation = gql`
       companyName: $companyName
       contactDetails: $contactDetails
       africanPresence: $africanPresence
+
     ) {
-      user {
-        ...UserFields
-      }
     }
   }
   ${UserFragment.publicFields}
