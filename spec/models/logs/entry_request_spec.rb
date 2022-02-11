@@ -121,25 +121,37 @@ RSpec.describe Logs::EntryRequest, type: :model do
     end
   end
 
-  describe '#access_hours' do
-    let!(:user) { create(:resident) }
-    let!(:admin) { create(:admin_user, community: user.community) }
-    let!(:visitor) { create(:user, community: user.community) }
-    let!(:entry_request) do
-      admin.entry_requests.create(name: 'Test User', reason: 'Visiting',
-                                  guest_id: visitor.id)
-    end
-    let!(:invite) { admin.invite_guest(visitor.id, entry_request.id) }
+  describe '#closest_entry_time' do
+    let(:admin) { create(:admin_user) }
+    let(:community) { admin.community }
+    let(:resident) { create(:resident, community: community) }
+    let(:visitor) { create(:user, community: community) }
+    let(:entry_request) { create(:entry_request, user: admin, community: community) }
+    let(:invite) { admin.invite_guest(visitor.id, entry_request.id) }
+    let(:other_invite) { resident.invite_guest(visitor.id, entry_request.id) }
     let!(:entry_time) do
-      user.community.entry_times.create(
-        visitation_date: '2021-11-16 10:02:25',
-        starts_at: '2021-11-16 10:02:25',
-        ends_at: '2021-11-16 12:02:25',
-        occurs_on: [],
-        visit_end_date: nil,
+      community.entry_times.create(
+        visitation_date: Time.zone.now,
+        starts_at: Time.zone.now - 8.hours,
+        ends_at: Time.zone.now - 7.hours,
         visitable_id: invite.id,
         visitable_type: 'Logs::Invite',
       )
+    end
+    let!(:other_entry_time) do
+      community.entry_times.create(
+        visitation_date: Time.zone.now,
+        starts_at: Time.zone.now - 3.hours,
+        ends_at: Time.zone.now - 2.hours,
+        visitable_id: other_invite.id,
+        visitable_type: 'Logs::Invite',
+      )
+    end
+
+    context 'when closest_entry_time is called' do
+      it 'is expected to return closest entry time with respect to current time' do
+        expect(entry_request.closest_entry_time.id).to eql(other_entry_time.id)
+      end
     end
   end
 end
