@@ -30,7 +30,7 @@ export default function UserLabels({ userId }) {
   const [messageAlert, setMessageAlert] = useState('');
   const [isSuccessAlert, setIsSuccessAlert] = useState(false);
   const [isLabelOpen, setIsLabelOpen] = useState(false);
-  const { t } = useTranslation('common')
+  const { t } = useTranslation(['common', 'label'])
   const classes = useStyles()
 
   useEffect(() => {
@@ -121,7 +121,7 @@ export default function UserLabels({ userId }) {
                 onDelete={() => handleDelete(lab.id)}
               />
               ))
-            : null}
+            : <span>t('label:label.no_user_labels')</span>}
           <IconButton aria-label="add-label" onClick={() => setshowAddTextBox(!showAddTextBox)}>
             {!showAddTextBox ? <AddIcon /> : <CloseIcon />}
           </IconButton>
