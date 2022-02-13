@@ -821,7 +821,7 @@ ActiveRecord::Schema.define(version: 2022_02_09_065133) do
     t.string "company_description"
     t.string "company_linkedin"
     t.string "company_website"
-    t.integer "company_employees"
+    t.string "company_employees"
     t.string "company_annual_revenue"
     t.string "company_contacted"
     t.string "industry_sub_sector"

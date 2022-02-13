@@ -480,4 +480,25 @@
     "construction_completed": "Construction Completed",
     "construction_in_progress_self_build": "Construction in Progress (Self Build)"
   }
+  ,
+  "lead_management": {
+    "task_header": "TASKS",
+    "detail_header": "DETAILS",
+    "note_header": "NOTE",
+    "main_header": "Lead Management",
+    "contact_info": "Contact Info",
+    "primary_info": "Primary Contact",
+    "save": "Save",
+    "save_updates": "Save Updates",
+    "name": "Name",
+    "title": "Title",
+    "secondary_phone": "Secondary Phone/Mobile",
+    "primary_phone": "Primary Phone/Mobile",
+    "secondary_email": "Secondary Email",
+    "primary_email": "Primary Email",
+    "linkedin_url": "Linkedin Url",
+    "lead_section_header": "Lead Information",
+    "secondary_contact_section1": "Secondary Contact 1",
+    "secondary_contact_section2": "Secondary Contact 2"
+  }
 }

@@ -30,7 +30,7 @@ module Mutations
       argument :company_employees, String, required: false
       argument :company_annual_revenue, String, required: false
       argument :company_contacted, String, required: false
-      argument :industry_sub, String, required: false
+      argument :industry, String, required: false
       argument :industry_sub_sector, String, required: false
       argument :industry_business_activity, String, required: false
       argument :level_of_internationalization, String, required: false
@@ -54,7 +54,7 @@ module Mutations
       field :user, Types::UserType, null: true
 
       def resolve(vals)
-        raise_duplicate_number_error(vals[:phone_number])
+        # raise_duplicate_number_error(vals[:phone_number])
 
         user = context[:site_community].users.find(vals.delete(:id))
         raise GraphQL::ExecutionError, I18n.t('errors.user.not_found') unless user
@@ -87,7 +87,7 @@ module Mutations
 
         contact_info.each do |value|
           if value['id'].nil?
-            user.contact_infos.create(contact_type: value['contactType'], info: value['info'])
+            user.contact_infos.create!(contact_type: value['contactType'], info: value['info'])
           else
             contact = user.contact_infos.find(value['id'])
             contact.update(info: value['info']) unless contact.info.eql?(value['info'])

@@ -264,8 +264,17 @@ export const LeadDetailsQuery = gql`
       lastContactDate
       followupAt
       contactDetails
-      industrySub
+      industry
+      industrySubSector
       industryBusinessActivity
+      africanPresence
+      secondaryPhoneNumber
+      secondaryEmail
+      contactInfos{
+        id
+        info
+        contactType
+      }
     }
   }
 `

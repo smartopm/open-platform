@@ -69,7 +69,7 @@ module Types
     field :company_website, String, null: true
     field :company_annual_revenue, String, null: true
     field :company_contacted, String, null: true
-    field :industry_sub, String, null: true
+    field :industry, String, null: true
     field :industry_sub_sector, String, null: true
     field :industry_business_activity, String, null: true
     field :level_of_internationalization, String, null: true
@@ -86,7 +86,7 @@ module Types
     field :first_contact_date, GraphQL::Types::ISO8601DateTime, null: true
     field :last_contact_date, GraphQL::Types::ISO8601DateTime, null: true
     field :followup_at, GraphQL::Types::ISO8601DateTime, null: true
-    field :company_employees, Integer, null: true
+    field :company_employees, String, null: true
     field :secondary_email, String, null: true
     field :secondary_phone_number, String, null: true
     field :contact_details, GraphQL::Types::JSON, null: true
@@ -122,11 +122,11 @@ module Types
 
     # Field for lead secondary phone number
     def secondary_phone_number
-      secondary_details('phone').first&.info
+      secondary_details('phone')&.info
     end
 
     def secondary_details(contact_type)
-      object.contact_infos.select { |info| info.contact_type.eql?(contact_type) }
+      object.contact_infos.find { |info| info.contact_type.eql?(contact_type) }
     end
   end
   # rubocop: enable Metrics/ClassLength
