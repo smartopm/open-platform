@@ -7,7 +7,7 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 // import { useTranslation } from 'react-i18next';
-import { userProps } from '../utils';
+import { userProps } from '../../utils';
 import {
   internationalizationLevels,
   industrySubSectorOptions,
@@ -15,7 +15,7 @@ import {
   industryBusinessActivityOptions,
   regionOptions,
   countries
-} from '../../../utils/constants';
+} from '../../../../utils/constants';
 
 export default function CompanyInformation({ leadFormData, handleChange }) {
   return (

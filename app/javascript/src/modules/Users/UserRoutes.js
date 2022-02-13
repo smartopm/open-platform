@@ -1,37 +1,36 @@
 // These are exportable routes to clean up the route file
-import React from 'react'
+import React from 'react';
 import UserShow from './Containers/UserShow';
 import UserEdit from './Containers/UserEdit';
 import UserLogs from './Containers/UserLogs';
 import IdPrintPage from '../../containers/IdPrint';
 import UserMessagePage from '../../containers/Messages/UserMessagePage';
 import OTPFeedbackScreen from '../../containers/OTPScreen';
-import UserActions from './Components/UserActions'
-import Preferences from '../Preferences/Components/Notifications'
+import UserActions from './Components/UserActions';
+import Preferences from '../Preferences/Components/Notifications';
 import { allUserTypes } from '../../utils/constants';
 import AccessCheck from '../Permissions/Components/AccessCheck';
-import LeadManagementDetails from './Components/LeadManagementDetails';
+import LeadManagementDetails from './LeadManagement/Components/LeadManagementDetails';
 // name in here is only used as key in routes, make sure it is unique
 
+const user = { module: 'user' };
 
-const user = { module: 'user' }
-
-const entryRequest = { module: 'entry_request' }
+const entryRequest = { module: 'entry_request' };
 
 const editProfilePermissions = ['can_edit_own_profile'];
 
 const logBookPermissions = ['can_access_logbook'];
 
-const otpPermissions = ['can_send_one_time_login']
+const otpPermissions = ['can_send_one_time_login'];
 
-const leadManagementPermissions = ['can_update_user_details']
+const leadManagementPermissions = ['can_update_user_details'];
 
 function RenderUserEdit() {
   return (
     <AccessCheck module={user.module} allowedPermissions={editProfilePermissions}>
       <UserEdit />
     </AccessCheck>
-)
+  );
 }
 
 function RenderOTPFeedbackScreen() {
@@ -39,7 +38,7 @@ function RenderOTPFeedbackScreen() {
     <AccessCheck module={user.module} allowedPermissions={otpPermissions}>
       <OTPFeedbackScreen />
     </AccessCheck>
-)
+  );
 }
 
 function RenderUserLogs() {
@@ -47,7 +46,7 @@ function RenderUserLogs() {
     <AccessCheck module={entryRequest.module} allowedPermissions={logBookPermissions}>
       <UserLogs />
     </AccessCheck>
-)
+  );
 }
 
 function RenderLeadManagementTab() {
@@ -55,7 +54,7 @@ function RenderLeadManagementTab() {
     <AccessCheck module={user.module} allowedPermissions={leadManagementPermissions}>
       <LeadManagementDetails />
     </AccessCheck>
-)
+  );
 }
 
 const routes = [
@@ -63,44 +62,44 @@ const routes = [
     routeProps: {
       path: '/user/:id/edit',
       component: RenderUserEdit,
-      exact: true,
+      exact: true
     },
     accessibleBy: [],
     name: 'user_edit',
-    moduleName: "user",
+    moduleName: 'user',
     featureName: 'Users'
   },
   {
     routeProps: {
       path: '/user/:id/lead_management',
       component: RenderLeadManagementTab,
-      exact: true,
+      exact: true
     },
     accessibleBy: [],
     name: 'lead_management',
-    moduleName: "user",
+    moduleName: 'user',
     featureName: 'Users'
   },
   {
     routeProps: {
       path: '/new/user',
       component: RenderUserEdit,
-      exact: true,
-  },
+      exact: true
+    },
     accessibleBy: [],
     name: 'user_edit',
-    moduleName: "user",
-    featureName: 'Users',
+    moduleName: 'user',
+    featureName: 'Users'
   },
   {
     routeProps: {
       path: '/user/:id/logs',
       component: RenderUserLogs,
-      exact: true,
+      exact: true
     },
     accessibleBy: allUserTypes,
     name: 'user_logs',
-    moduleName: "user",
+    moduleName: 'user',
     featureName: 'Users'
   },
   {
@@ -111,7 +110,7 @@ const routes = [
     },
     accessibleBy: [],
     name: 'user_otp',
-    moduleName: "user",
+    moduleName: 'user',
     featureName: 'Users'
   },
   {
@@ -160,7 +159,7 @@ const routes = [
     accessibleBy: allUserTypes,
     name: 'Preferences',
     featureName: 'Preferences'
-  },
+  }
 ];
 
 export default routes;

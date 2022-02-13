@@ -6,8 +6,8 @@ import { useTranslation } from 'react-i18next';
 import Paper from '@mui/material/Paper';
 import PropTypes from 'prop-types';
 import LeadManagementForm from './LeadManagementForm';
-import { objectAccessor } from '../../../utils/helpers';
-import { StyledTabs, StyledTab, TabPanel, a11yProps } from '../../../components/Tabs';
+import { objectAccessor } from '../../../../utils/helpers';
+import { StyledTabs, StyledTab, TabPanel, a11yProps } from '../../../../components/Tabs';
 
 export default function LeadManagementDetails({ userId }) {
   const { t } = useTranslation('common');
@@ -74,7 +74,7 @@ export default function LeadManagementDetails({ userId }) {
           </StyledTabs>
 
           <TabPanel value={tabValue} index={0} data-testid="lead-management-details-tab">
-            {/* <LeadManagementForm userId={userId} /> */}
+            <LeadManagementForm userId={userId} />
           </TabPanel>
           <TabPanel value={tabValue} index={1} data-testid="lead-management-task-tab">
             <></>
