@@ -7,7 +7,7 @@ class AddColumnsForLeadManagement < ActiveRecord::Migration[6.1]
     add_column :users, :company_description, :string
     add_column :users, :company_linkedin, :string
     add_column :users, :company_website, :string
-    add_column :users, :company_employees, :integer
+    add_column :users, :company_employees, :string
     add_column :users, :company_annual_revenue, :string
     add_column :users, :company_contacted, :string
     add_column :users, :industry_sub_sector, :string

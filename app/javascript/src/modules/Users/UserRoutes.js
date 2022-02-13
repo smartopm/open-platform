@@ -24,6 +24,8 @@ const logBookPermissions = ['can_access_logbook'];
 
 const otpPermissions = ['can_send_one_time_login']
 
+const leadManagementPermissions = ['can_update_user_details']
+
 function RenderUserEdit() {
   return (
     <AccessCheck module={user.module} allowedPermissions={editProfilePermissions}>
@@ -48,6 +50,14 @@ function RenderUserLogs() {
 )
 }
 
+function RenderLeadManagementTab() {
+  return (
+    <AccessCheck module={user.module} allowedPermissions={leadManagementPermissions}>
+      <LeadManagementDetails />
+    </AccessCheck>
+)
+}
+
 const routes = [
   {
     routeProps: {
@@ -63,7 +73,7 @@ const routes = [
   {
     routeProps: {
       path: '/user/:id/lead_management',
-      component: LeadManagementDetails,
+      component: RenderLeadManagementTab,
       exact: true,
     },
     accessibleBy: [],

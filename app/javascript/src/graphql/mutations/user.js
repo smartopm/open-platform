@@ -39,7 +39,8 @@ export const UpdateUserMutation = gql`
     $companyAnnualRevenue: String
     $companyEmployees: String
     $industryBusinessActivity: String
-    $industrySub: String
+    $industrySubSector: String
+    $industry: String
     $relevantLink: String
     $companyWebsite: String
     $companyLinkedin: String
@@ -48,6 +49,7 @@ export const UpdateUserMutation = gql`
     $region: String
     $companyName: String
     $contactDetails: JSON
+    $africanPresence: String
  
   ) {
     result: userUpdate(
@@ -85,7 +87,8 @@ export const UpdateUserMutation = gql`
       companyAnnualRevenue: $companyAnnualRevenue
       companyEmployees: $companyEmployees
       industryBusinessActivity: $industryBusinessActivity
-      industrySub: $industrySub
+      industry: $industry
+      industrySubSector: $industrySubSector
       relevantLink: $relevantLink
       companyWebsite: $companyWebsite
       companyLinkedin: $companyLinkedin
@@ -94,6 +97,7 @@ export const UpdateUserMutation = gql`
       region: $region
       companyName: $companyName
       contactDetails: $contactDetails
+      africanPresence: $africanPresence
 
     ) {
       user {
