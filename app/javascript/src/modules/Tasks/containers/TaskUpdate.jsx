@@ -17,7 +17,8 @@ export default function TaskUpdate({
   handleSplitScreenClose,
   handleTaskCompletion,
   handleTaskNotFoundError,
-  commentsRefetch
+  commentsRefetch,
+  forProcess
 }) {
   const authState = useContext(AuthStateContext)
   const history = useHistory()
@@ -74,6 +75,7 @@ export default function TaskUpdate({
         handleSplitScreenClose={handleSplitScreenClose}
         handleTaskCompletion={handleTaskCompletion}
         commentsRefetch={commentsRefetch}
+        forProcess={forProcess}
       />
     </Container>
   )
@@ -83,7 +85,8 @@ TaskUpdate.defaultProps = {
   handleSplitScreenOpen: () => {},
   handleSplitScreenClose: () => {},
   handleTaskNotFoundError: () => {},
-  commentsRefetch: () => {}
+  commentsRefetch: () => {},
+  forProcess: false
 }
 
 TaskUpdate.propTypes = {
@@ -92,5 +95,6 @@ TaskUpdate.propTypes = {
   handleSplitScreenClose: PropTypes.func,
   handleTaskCompletion: PropTypes.func.isRequired,
   handleTaskNotFoundError: PropTypes.func,
-  commentsRefetch: PropTypes.func
+  commentsRefetch: PropTypes.func,
+  forProcess: PropTypes.bool
 }

@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 /* eslint-disable no-nested-ternary */
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
@@ -85,9 +86,9 @@ export default function GuestsView({
     });
   }
 
-  function handleViewUser(event, user) {
+  function handleViewUser(event, user, isMultiple=false) {
     event.stopPropagation();
-    history.push(`/user/${user.id}`);
+    history.push(`/user/${user.id}?tab=${isMultiple ? 'Invitations' : null}`);
   }
 
   return (
@@ -139,12 +140,25 @@ export default function GuestsView({
                   {t('logbook:logbook.host')}
                   {' '}
                 </Typography>
-                <Text
-                  color="secondary"
-                  content={visit.user.name}
-                  data-testid="user_name"
-                  onClick={event => handleViewUser(event, visit.user)}
-                />
+                {
+                  visit.multipleInvites
+                  ? (
+                    <Text
+                      color="primary"
+                      content={t('guest_book.multiple')}
+                      data-testid="multiple_host"
+                      onClick={event => handleViewUser(event, visit.guest, true)}
+                    />
+                    )
+                  : (
+                    <Text
+                      color="secondary"
+                      content={visit.user.name}
+                      data-testid="user_name"
+                      onClick={event => handleViewUser(event, visit.user, false)}
+                    />
+                  )
+                }
                 <div style={{ paddingTop: '7px' }} data-testid="request_status">
                   <Chip
                     data-testid="user-entry"

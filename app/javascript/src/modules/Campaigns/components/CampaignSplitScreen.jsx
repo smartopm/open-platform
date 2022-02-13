@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 import { useLazyQuery } from 'react-apollo';
 import { useLocation, useHistory } from 'react-router-dom';
 import CenteredContent from '../../../shared/CenteredContent';
@@ -18,10 +19,10 @@ export default function CampaignSplitScreen({ campaignId, campaignLength, refetc
     fetchPolicy: 'cache-and-network',
     errorPolicy: 'all'
   });
+  const { t } = useTranslation('campaign');
 
   function campaignRoute() {
     history.push('/campaign-create');
-    // setShow(false);
   }
 
   useEffect(() => {
@@ -38,15 +39,15 @@ export default function CampaignSplitScreen({ campaignId, campaignLength, refetc
       {error && !data?.length && <CenteredContent>{error}</CenteredContent>}
       {campaignPath && campaignLength === 0 && (
         <CampaignInfo
-          title="No campaigns has been created yet."
-          buttonText="Create Campaign"
+          title={t('message.no_campaigns')}
+          buttonText={t('actions.create_campaign')}
           handleClick={campaignRoute}
         />
       )}
       {campaignPath && campaignLength > 0 && (
         <CampaignInfo
-          title="Select a campaign to edit or create a new one."
-          buttonText="Create Campaign"
+          title={t('message.select_campaign')}
+          buttonText={t('actions.create_campaign')}
           handleClick={campaignRoute}
         />
       )}

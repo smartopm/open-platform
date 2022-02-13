@@ -45,7 +45,7 @@ describe('Template List Component', () => {
     expect(loader.queryAllByTestId('loader')[0]).toBeInTheDocument();
 
     await waitFor(() => {
-      expect(container.queryByText('Select a template')).toBeInTheDocument();
+      expect(container.queryAllByText('Select a template')[0]).toBeInTheDocument();
       expect(container.queryByTestId('template_list')).toBeInTheDocument();
     }, 10);
   });

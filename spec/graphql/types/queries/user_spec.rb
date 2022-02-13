@@ -419,7 +419,7 @@ RSpec.describe Types::Queries::User do
     let!(:permission) do
       create(:permission, module: 'user',
                           role: admin_role,
-                          permissions: %w[can_search_guests can_view_guests])
+                          permissions: %w[can_search_guests can_view_guests can_view_hosts])
     end
     let!(:user) { create(:user_with_community, name: 'Jose', role: visitor_role) }
     let!(:user2) do
@@ -432,6 +432,11 @@ RSpec.describe Types::Queries::User do
     let!(:visitor) do
       create(:user_with_community, user_type: 'visitor', email: 'visiting@admin.com',
                                    community_id: user.community_id, role: visitor_role)
+    end
+
+    let!(:invite) do
+      entry = admin_user.entry_requests.create!(name: visitor.name)
+      Logs::Invite.create!(host_id: admin_user.id, guest_id: visitor.id, entry_request_id: entry.id)
     end
 
     let(:query) do
@@ -470,6 +475,22 @@ RSpec.describe Types::Queries::User do
                 avatarUrl
               }
               thumbnailUrl
+            }
+          }
+        )
+    end
+
+    let(:my_hosts_query) do
+      %(
+          query guests($userId: ID!){
+            myHosts(userId: $userId) {
+              id
+              host {
+                id
+                name
+                imageUrl
+                avatarUrl
+              }
             }
           }
         )
@@ -532,7 +553,30 @@ RSpec.describe Types::Queries::User do
                                                                 query: 'visiting@admin.com',
                                                               }).as_json
 
-      expect(result.dig('data', 'myGuests').length).to eql 0
+      expect(result.dig('data', 'myGuests').length).to eql 1
+    end
+
+    it 'returns list of my hosts' do
+      result = DoubleGdpSchema.execute(my_hosts_query, context: {
+                                         current_user: admin_user,
+                                         site_community: admin_user.community,
+                                       },
+                                                       variables: {
+                                                         userId: visitor.id,
+                                                       }).as_json
+      expect(result.dig('data', 'myHosts').length).to eql 1
+    end
+
+    it 'returns nil when not authorized ' do
+      result = DoubleGdpSchema.execute(my_hosts_query, context: {
+                                         current_user: user,
+                                         site_community: admin_user.community,
+                                       },
+                                                       variables: {
+                                                         userId: visitor.id,
+                                                       }).as_json
+      expect(result.dig('data', 'myHosts')).to be_nil
+      expect(result['errors'][0]['message']).to eq('Unauthorized')
     end
 
     it 'should fail if no logged in' do

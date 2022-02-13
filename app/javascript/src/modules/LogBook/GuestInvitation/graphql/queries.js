@@ -28,7 +28,29 @@ export const MyInvitedGuestsQuery = gql`
         thumbnailUrl
       }
     }
+`
 
+// All the hosts for a visitor
+export const MyHostsQuery = gql`
+    query myHosts($userId: ID!){
+      myHosts(userId: $userId) {
+        id
+        createdAt
+        host {
+          id
+          name
+          imageUrl
+        }
+        entryTime {
+          id
+          occursOn
+          visitEndDate
+          visitationDate
+          endsAt
+          startsAt
+        }
+      }
+    }
 `
 
 export const SearchGuestsQuery = gql`

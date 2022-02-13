@@ -343,7 +343,8 @@
     "allocate_funds": "Allocate Funds",
     "allocating": "Allocating...",
     "allocate_plan": "Allocate Plan",
-    "allocate": "Allocate"
+    "allocate": "Allocate",
+    "invitations": "Invitations"
   },
   "user_types": {
     "admin": "Admin",

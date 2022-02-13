@@ -52,7 +52,8 @@ export default function TaskInfoTop({
   activeReminder,
   handleSplitScreenClose,
   refetch,
-  handleTaskComplete
+  handleTaskComplete,
+  forProcess
 }) {
   const { t } = useTranslation(['task', 'common']);
   const classes = useStyles();
@@ -86,7 +87,11 @@ export default function TaskInfoTop({
 
   function openParentLink(event, parent) {
     event.preventDefault();
-    history.push(`/tasks/${parent.id}`);
+    if(forProcess){
+      history.push(`/processes/drc/projects/${parent.id}/tab=processes`);
+    }else{
+      history.push(`/tasks/${parent.id}`);
+    }
   }
 
   function updateTask(property, value) {
@@ -165,15 +170,17 @@ export default function TaskInfoTop({
             </Grid>
           </Grid>
         )}
-        <Grid item md={8} xs={12}>
-          {!editingBody && urlParams?.type !== 'drc' && (
-            <Typography
-              variant="h6"
-              style={{ color: '#575757' }}
-              onMouseOver={canUpdateNote ? () => setEditingBody(true) : null}
-            >
-              <TaskTitle task={data} />
-            </Typography>
+        <Grid item md={10} xs={12}>
+          {!editingBody && (
+          <Typography
+            style={{
+              color: '#575757',
+              padding: '15px'
+            }}
+            onMouseOver={canUpdateNote ? () => setEditingBody(true) : null}
+          >
+            <TaskTitle task={data} />
+          </Typography>
           )}
           {editingBody && (
             <AutoSaveField
@@ -184,7 +191,7 @@ export default function TaskInfoTop({
 )}
         </Grid>
         {!matches && (
-          <Grid item md={3}>
+          <Grid item md={2}>
             <Grid container style={{ justifyContent: 'right' }}>
               <Grid item md={4} xs={1} style={{ textAlign: 'right' }}>
                 {canUpdateNote && (
@@ -232,7 +239,7 @@ export default function TaskInfoTop({
           </Grid>
         )}
       </Grid>
-      <Grid item md={12}>
+      <Grid item md={12} style={{ marginTop: '24px'}}>
         {data.parentNote && (
           <Grid container className={classes.parentTaskSection}>
             <Grid item xs={5} md={3}>
@@ -458,8 +465,10 @@ TaskInfoTop.defaultProps = {
   liteData: {},
   selectedDate: null,
   activeReminder: null,
-  handleSplitScreenClose: () => {}
+  handleSplitScreenClose: () => {},
+  forProcess: false
 };
+
 TaskInfoTop.propTypes = {
   currentUser: PropTypes.shape({
     permissions: PropTypes.arrayOf(
@@ -501,5 +510,6 @@ TaskInfoTop.propTypes = {
   }).isRequired,
   handleSplitScreenClose: PropTypes.func,
   refetch: PropTypes.func.isRequired,
-  handleTaskComplete: PropTypes.func.isRequired
+  handleTaskComplete: PropTypes.func.isRequired,
+  forProcess: PropTypes.bool
 };

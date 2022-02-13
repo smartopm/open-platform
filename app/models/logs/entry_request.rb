@@ -39,7 +39,7 @@ module Logs
     # rubocop:enable Style/RedundantInterpolation
 
     scope :order_by_recent_invites, lambda {
-      joins(:entry_times).order(Logs::EntryTime.arel_table[:updated_at].desc)
+      includes(:entry_times).order('entry_times.updated_at DESC')
     }
 
     has_paper_trail
@@ -121,6 +121,14 @@ module Logs
       self[:entry_request_state].nil? || self[:entry_request_state].zero?
     end
 
+    def closest_entry_time
+      closest_start_entry = find_closest_entry(:start)
+      closest_end_entry = find_closest_entry(:end)
+      return if closest_start_entry.blank? && closest_end_entry.blank?
+
+      active_entry_time?(closest_end_entry) ? closest_end_entry : closest_start_entry
+    end
+
     def revoked?
       self[:entry_request_state] == 1
     end
@@ -186,6 +194,27 @@ module Logs
           type: 'showroom',
         }
       )
+    end
+
+    def find_closest_entry(for_time)
+      entry_times.where.not(visitation_date: nil).min do |a, b|
+        (Time.zone.now - visit_date_time(a, for_time)).abs <=>
+          (Time.zone.now - visit_date_time(b, for_time)).abs
+      end
+    end
+
+    def visit_date_time(entry_time, for_time)
+      return if entry_time.blank?
+
+      date = entry_time.visitation_date&.to_date
+      time = for_time.eql?(:start) ? entry_time.starts_at&.time : entry_time.ends_at&.time
+
+      (date + time.seconds_since_midnight.seconds).to_datetime
+    end
+
+    def active_entry_time?(entry_time)
+      Time.zone.now >= visit_date_time(entry_time, :start) &&
+        Time.zone.now <= visit_date_time(entry_time, :end)
     end
   end
   # rubocop:enable Metrics/ClassLength

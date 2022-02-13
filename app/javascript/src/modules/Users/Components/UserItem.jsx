@@ -1,11 +1,8 @@
-/* eslint-disable no-use-before-define */
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import {
   ListItem,
   Typography,
   ListItemAvatar,
-  Box,
-  Chip,
   IconButton,
   Grid,
   Dialog,
@@ -13,17 +10,17 @@ import {
   DialogContent,
   Hidden,
   Checkbox
-} from '@material-ui/core'
-import MoreHorizIcon from '@material-ui/icons/MoreHoriz'
-import PropTypes from 'prop-types'
-import { makeStyles } from '@material-ui/core/styles'
-import { useTranslation } from 'react-i18next'
-import { Link, useHistory } from 'react-router-dom'
-import Avatar from '../../../components/Avatar'
-import UserActionMenu from "./UserActionMenu"
-import UserMerge from './UserMerge'
-import CenteredContent from '../../../components/CenteredContent'
-import { userSubStatus } from '../../../utils/constants'
+} from '@material-ui/core';
+import PropTypes from 'prop-types';
+import { makeStyles } from '@material-ui/core/styles';
+import { useTranslation } from 'react-i18next';
+import { Link, useHistory } from 'react-router-dom';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
+import Avatar from '../../../components/Avatar';
+import UserActionMenu from './UserActionMenu';
+import UserMerge from './UserMerge';
+import CenteredContent from '../../../shared/CenteredContent';
+import { userSubStatus } from '../../../utils/constants';
 
 export default function UserItem({
   user,
@@ -33,24 +30,24 @@ export default function UserItem({
   offset,
   selectCheckBox
 }) {
-  const classes = useStyles()
-  const [anchorEl, setAnchorEl] = useState(null)
-  const open = Boolean(anchorEl)
-  const history = useHistory()
-  const { t } = useTranslation('common')
+  const classes = useStyles();
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+  const history = useHistory();
+  const { t } = useTranslation('common');
   /**
    * @deprecated prefer getting this contact from the community
    */
-  const CSMNumber = '260974624243'
-  const [isDialogOpen, setDialogOpen] = useState(false)
+  const CSMNumber = '260974624243';
+  const [isDialogOpen, setDialogOpen] = useState(false);
 
   function handleClose(event) {
-    event.stopPropagation()
-    setAnchorEl(null)
+    event.stopPropagation();
+    setAnchorEl(null);
   }
 
   function handleOpenMenu(event) {
-    setAnchorEl(event.currentTarget)
+    setAnchorEl(event.currentTarget);
   }
 
   function showUserDetails(event) {
@@ -58,13 +55,13 @@ export default function UserItem({
       history.push({
         pathname: `/user/${user.id}`,
         state: { from: 'users', offset }
-      })
+      });
     }
   }
 
   function handleMergeDialog() {
-    setAnchorEl(null)
-    setDialogOpen(!isDialogOpen)
+    setAnchorEl(null);
+    setDialogOpen(!isDialogOpen);
   }
 
   return (
@@ -92,21 +89,44 @@ export default function UserItem({
         onClick={showUserDetails}
         data-testid="user_item"
       >
-        <Grid container alignItems="center">
-          <Checkbox
-            checked={selectedUsers.includes(user.id) || selectCheckBox}
-            onChange={() => handleUserSelect(user)}
-            name="includeReplyLink"
-            data-testid="reply_link"
-            color="primary"
-            style={{padding: '0px', marginRight: '15px'}}
-          />
-          <ListItemAvatar className={classes.avatarList}>
-            <Avatar user={user} />
-          </ListItemAvatar>
-
-          <Hidden smUp>
-            <Grid className={classes.actionIcon}>
+        <Grid container direction="row" justifyContent="flex-start" alignItems="center">
+          <Grid item md={1} sm={1} xs={2}>
+            <Checkbox
+              checked={selectedUsers.includes(user.id) || selectCheckBox}
+              onChange={() => handleUserSelect(user)}
+              name="includeReplyLink"
+              data-testid="reply_link"
+              color="primary"
+              // className={classes.checkBox}
+            />
+          </Grid>
+          <Grid item md={1} sm={1} xs={2}>
+            <ListItemAvatar className={classes.userAvatar}>
+              <Avatar user={user} />
+            </ListItemAvatar>
+          </Grid>
+          <Grid item md={2} sm={9} xs={7} className={classes.userNameItem}>
+            <Link
+              style={{ color: 'black' }}
+              to={{ pathname: `/user/${user.id}`, state: { from: 'users', offset } }}
+              key={user.id}
+            >
+              <Typography
+                component="span"
+                variant="subtitle1"
+                data-testid="user_name"
+                className={classes.userName}
+              >
+                <strong>
+                  {' '}
+                  {user.name}
+                  {' '}
+                </strong>
+              </Typography>
+            </Link>
+          </Grid>
+          <Hidden mdUp>
+            <Grid item md={1} sm={1} xs={1}>
               <IconButton
                 className={classes.menuButton}
                 aria-label={`more-${user.name}`}
@@ -115,71 +135,52 @@ export default function UserItem({
                 onClick={handleOpenMenu}
                 dataid={user.id}
               >
-                <MoreHorizIcon />
+                <MoreVertIcon />
               </IconButton>
             </Grid>
           </Hidden>
-
-          <Box className={classes.detailsRow}>
-            <Box style={{ margin: 5 }}>
-              <Box
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'space-around'
-                }}
-              >
-                <Link
-                  style={{ color: 'black' }}
-                  to={{pathname: `/user/${user.id}`, state: { from: 'users', offset }}}
-                  key={user.id}
-                >
-                  <Typography component="span" variant="subtitle1" data-testid="user_name">
-                    <strong>
-                      {' '}
-                      {user.name}
-                      {' '}
-                    </strong>
-                  </Typography>
-                </Link>
-              </Box>
-              <Box
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'space-around',
-                  marginRight: 30
-                }}
-              >
-                <Typography variant="body2" data-testid="user_email">{user.email}</Typography>
-                <Typography component="span" variant="body2" data-testid="user_phone_number">
-                  {user.phoneNumber}
-                </Typography>
-                {user.subStatus && (
-                  <Typography variant="body2" data-testid="user-substatus">
-                    {userSubStatus[user.subStatus]}
-                  </Typography>
-                )}
-              </Box>
-            </Box>
-          </Box>
-
-          <Grid className={classes.userTypeRow}>
-            <Typography variant="subtitle1" data-testid="user_type">
-              {t(`common:user_types.${user?.userType}`)}
+          <Grid item md={3} sm={6} xs={12}>
+            <Typography
+              variant="body2"
+              data-testid="user_email"
+              gutterBottom
+              className={classes.alignDetailsToAvatarFromSm}
+            >
+              {user.email}
+            </Typography>
+            <Typography
+              component="span"
+              variant="body2"
+              data-testid="user_phone_number"
+              gutterBottom
+              className={classes.alignDetailsToAvatarFromSm}
+            >
+              {user.phoneNumber}
             </Typography>
           </Grid>
-          <Grid container className={classes.labelsRow}>
-            {user.labels.map(label => (
-              <Chip
-                key={label.id}
-                label={label.shortDesc}
-                style={{ height: 25, margin: 5 }}
-              />
-            ))}
+          <Grid item md={3} sm={6} xs={12}>
+            <Typography
+              variant="body2"
+              data-testid="user_type"
+              gutterBottom
+              className={classes.alignDetailsToAvatarForXs}
+            >
+              {t(`common:user_types.${user?.userType}`)}
+            </Typography>
+            {user.subStatus && (
+              <Typography
+                variant="body2"
+                data-testid="user-substatus"
+                gutterBottom
+                className={classes.alignDetailsToAvatarForXs}
+              >
+                {userSubStatus[user.subStatus]}
+              </Typography>
+            )}
           </Grid>
-          <Hidden xsDown>
-            <Grid className={classes.actionIcon}>
+
+          <Hidden smDown>
+            <Grid item md={1} sm={1}>
               <IconButton
                 className={classes.menuButton}
                 aria-label={`more-${user.name}`}
@@ -187,9 +188,8 @@ export default function UserItem({
                 aria-haspopup="true"
                 onClick={handleOpenMenu}
                 dataid={user.id}
-                data-testid="user-menu-list"
               >
-                <MoreHorizIcon />
+                <MoreVertIcon />
               </IconButton>
             </Grid>
           </Hidden>
@@ -207,7 +207,7 @@ export default function UserItem({
         </Grid>
       </ListItem>
     </>
-  )
+  );
 }
 
 UserItem.propTypes = {
@@ -227,7 +227,7 @@ UserItem.propTypes = {
   offset: PropTypes.number.isRequired,
   handleUserSelect: PropTypes.func.isRequired,
   selectedUsers: PropTypes.arrayOf(PropTypes.string).isRequired
-}
+};
 
 const useStyles = makeStyles(() => ({
   userItem: {
@@ -243,47 +243,65 @@ const useStyles = makeStyles(() => ({
     color: '#000000',
     textDecoration: 'none'
   },
-
-  '@media (min-width: 768px)': {
-    avatarList: {
-      width: '5%'
-    },
-    detailsRow: {
-      width: '25%'
-    },
-    userTypeRow: {
-      width: '16%',
-      textAlign: 'center'
-    },
-    labelsRow: {
-      width: '44%'
-    },
-    actionIcon: {
-      width: '5%'
+  '@media (min-width: 600px) and (max-width: 766px)': {
+    userNameItem: {
+      paddingLeft: 8
     }
   },
-  '@media only screen and (min-width: 320px) and (max-width: 374px)': {
-    detailsRow: {
-      width: '60%'
+  '@media (min-width: 499px) and (max-width: 599px)': {
+    userName: {
+      marginLeft: '-22%'
     },
-    userTypeRow: {
-      width: '60%',
-      textAlign: 'right'
-    },
-    actionIcon: {
-      width: '57%'
+    userAvatar: {
+      marginLeft: '-42%'
     }
   },
-  '@media only screen and (min-width: 375px) and (max-width: 767px)': {
-    detailsRow: {
-      width: '60%'
+  '@media (min-width: 450px) and (max-width: 499px)': {
+    userName: {
+      marginLeft: '-19%'
     },
-    userTypeRow: {
-      width: '60%',
-      textAlign: 'right'
-    },
-    actionIcon: {
-      width: '60%'
+    userAvatar: {
+      marginLeft: '-40%'
     }
-  }
-}))
+  },
+  '@media (min-width: 390px) and (max-width: 450px)': {
+    userName: {
+      marginLeft: '-6%'
+    },
+    userAvatar: {
+      marginLeft: '-18%'
+    }
+  },
+  '@media (min-width: 991px)': {
+    userName: {
+      marginLeft: '-37%'
+    },
+    userAvatar: {
+      marginLeft: '-40%'
+    },
+    menuButton: {
+      marginRight: '-3.5em'
+    }
+  },
+  '@media (max-width: 960px)': {
+    alignDetailsToAvatarFromSm: {
+      marginLeft: '18%'
+    }
+  },
+  '@media (max-width: 600px)': {
+    alignDetailsToAvatarForXs: {
+      marginLeft: '11%'
+    },
+    alignDetailsToAvatarFromSm: {
+      marginLeft: '11%'
+    },
+  },
+  '@media (max-width: 430px)': {
+    alignDetailsToAvatarForXs: {
+      marginLeft: '18%'
+    },
+    alignDetailsToAvatarFromSm: {
+      marginLeft: '18%'
+    }
+  },
+}));

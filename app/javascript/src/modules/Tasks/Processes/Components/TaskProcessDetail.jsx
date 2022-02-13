@@ -54,7 +54,7 @@ export default function TaskProcessDetail() {
     refetch: commentsRefetch,
     fetchMore: commentsFetchMore
   } = useQuery(ProjectCommentsQuery, {
-    variables: { taskId, limit },
+    variables: { taskId, limit: 3 },
     fetchPolicy: 'cache-and-network',
     errorPolicy: 'all'
   });
@@ -123,12 +123,16 @@ export default function TaskProcessDetail() {
             >
               <StyledTab
                 label={t('task:processes.overview')}
-                style={{ fontSize: '12px', textAlign: 'left' }}
+                style={tabValue === objectAccessor(TAB_VALUES, 'overview')
+                  ? { fontSize: '12px', textAlign: 'left', borderBottom: 'solid 1px' }
+                  : { fontSize: '12px', textAlign: 'left' }}
                 {...a11yProps(0)}
               />
               <StyledTab
                 label={t('task:processes.processes')}
-                style={{ fontSize: '12px' }}
+                style={tabValue ===  objectAccessor(TAB_VALUES, 'processes') ?
+                  { fontSize: '12px', borderBottom: 'solid 1px' }
+                  : { fontSize: '12px' }}
                 {...a11yProps(1)}
               />
             </StyledTabs>

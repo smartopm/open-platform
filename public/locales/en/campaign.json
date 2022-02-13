@@ -8,7 +8,12 @@
     "total_sent": "Total Sent",
     "total_clicked": "Total Clicked",
     "success": "Total Success",
-    "more_details": "More Details"
+    "more_details": "More Details",
+    "campaigns": "Campaigns",
+    "communicate": "Communicate with the community.",
+    "campaign": "Campaign",
+    "campaign_detail": "Campaign Detail",
+    "click_rate": "Click Rate"
   },
   "form_fields": {
     "campaign_type": "Campaign Type",
@@ -20,15 +25,31 @@
     "sms": "SMS",
     "email": "Email",
     "assign_label": "Assign Label",
-    "select_label": "Select Label"
+    "select_label": "Select Label",
+    "draft": "Draft",
+    "scheduled": "Scheduled",
+    "sending": "Sending",
+    "done": "Done",
+    "link_reply": "Reply Link",
+    "include_link": "Include Link",
+    "mailing_list": "Setup Mailing List"
   },
   "actions": {
     "create_campaign": "Create Campaign",
     "update_campaign": "Update Campaign",
-    "delete_campaign": "Delete Campaign"
+    "delete_campaign": "Delete Campaign",
+    "new_campaign": "New Campaign",
+    "edit_campaign": "Edit Campaign",
+    "use_label": "USE LABEL",
+    "use_id_lists": "USE ID LIST"
   },
   "message": {
-    "sure_to_delete": "Are you sure you want to delete this campaign?"
+    "sure_to_delete": "Are you sure you want to delete this campaign?",
+    "no_campaigns": "No campaigns has been created yet.",
+    "select_campaign": "Select a campaign to edit or create a new one.",
+    "add_a_campaign": "Add a Campaign Title",
+    "add_a_message": "Add a message",
+    "paste_userid_list": "Paste User ID list from User's page here to build a mailing list"
   },
   "misc": {
     "yes": "Yes",

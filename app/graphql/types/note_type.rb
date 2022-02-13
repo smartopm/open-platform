@@ -42,7 +42,7 @@ module Types
       return nil unless object.documents.attached?
 
       urls = []
-      object.documents.order(created_at: 'desc').each do |doc|
+      object.documents.where.not(status: 1).order(created_at: 'desc').each do |doc|
         file = {
           id: doc.id,
           filename: doc.blob.filename,

@@ -90,6 +90,12 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
 
   function handleSubmit(event) {
     event.preventDefault();
+
+    if(!validateEmail(data.email)){
+      setEmailValidationError(t('common:errors.invalid_email'));
+      return
+    }
+
     const secondaryInfo = {
       phone: phoneNumbers,
       email: emails,
@@ -113,11 +119,6 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
       expiresAt: selectedDate ? new Date(selectedDate).toISOString() : null,
       secondaryInfo: isEditing ? vals : JSON.stringify(secondaryInfo)
     };
-
-    if(!validateEmail(data.email)){
-      setEmailValidationError(t('common:errors.invalid_email'));
-      return
-    }
 
     if (isFromRef) {
       setTimeout(() => {
@@ -227,7 +228,7 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
         action={modalAction}
         name={data.name}
       />
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} data-testid='submit-form'>
         {!isFromRef && (
           <div className="form-group">
             <div style={{ width: 200, height: 'auto' }}>

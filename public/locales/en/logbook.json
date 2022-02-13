@@ -143,7 +143,14 @@
     "new_guest": "New Guest",
     "new_guest_plural": "New Guests",
     "previous_guests": "Previous Guests",
-    "schedule_visit": "Schedule Visit"
+    "schedule_visit": "Schedule Visit",
+    "starts": "Starts: {{date}}",
+    "ends": "Ends: {{date}}",
+    "repeats": "Repeats",
+    "invite_created_at": "Invite Created: {{date}}",
+    "multiple": "Multiple",
+    "invite_history": "Invite History",
+    "no_hosts": "There are no invitations for this user."
   },
   "date_picker": {
     "ok_label": "Ok",

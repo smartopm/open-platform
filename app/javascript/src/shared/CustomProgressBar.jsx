@@ -120,6 +120,11 @@ const useStyles = makeStyles(() => ({
         marginTop: '10px',
         width: '100%'
       },
+      '@media (min-device-width: 412px) and (max-device-height: 914px) and (orientation: portrait)' : {
+        marginLeft: "-70px",
+        marginTop: '10px',
+        width: '100%'
+      },
       // iPhone XR
       '@media (min-device-width: 414px) and (max-device-height: 896px) and (orientation: portrait)' : {
         marginLeft: "-50px",
@@ -183,6 +188,10 @@ const useStyles = makeStyles(() => ({
       },
 
       '@media (min-device-width: 411px) and (max-device-height: 915px) and (orientation: portrait)' : {
+        marginLeft: "0",
+        width: '100%'
+      },
+      '@media (min-device-width: 412px) and (max-device-height: 914px) and (orientation: portrait)' : {
         marginLeft: "0",
         width: '100%'
       },

@@ -41,11 +41,11 @@ describe('UserForm Component', () => {
 
     await act(async () => {
       fireEvent.change(container.queryByTestId('email'), {
-        target: { value: 'abc@def.jkl' }
+        target: { value: 'abc@def.jkl.232' }
       });
     });
 
-    expect(container.queryByTestId('email').value).toContain('abc@def.jkl');
+    expect(container.queryByTestId('email').value).toContain('abc@def.jkl.232');
 
     await act(async () => {
       fireEvent.change(container.queryByTestId('address'), {
@@ -55,7 +55,7 @@ describe('UserForm Component', () => {
 
     expect(container.queryByTestId('address').value).toContain('24th street, west');
     // when we hit submit button, it should get disabled
-    fireEvent.click(container.queryByTestId('submit_btn'));
+    fireEvent.submit(container.queryByTestId('submit-form'));
     expect(container.queryByTestId('submit_btn')).not.toBeDisabled();
     expect(container.queryByText('common:errors.invalid_email')).toBeInTheDocument();
   });

@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import PropTypes from 'prop-types';
 import { useMediaQuery } from '@mui/material';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from '@material-ui/styles';
 import { TaskContext } from "../../Context";
 import SplitScreen from '../../../../shared/SplitScreen';
 import TaskUpdate from '../../containers/TaskUpdate';
@@ -31,6 +31,7 @@ export default function ProjectProcessesSplitView({
             handleSplitScreenClose={() => setSplitScreenOpen(false)}
             handleTaskCompletion={(id, completed) => handleStepCompletion(id, completed, refetch)}
             commentsRefetch={commentsRefetch}
+            forProcess
           />
         </SplitScreen>
         ) : (
@@ -38,6 +39,7 @@ export default function ProjectProcessesSplitView({
             taskId={selectedStep?.id || projectId}
             handleTaskCompletion={(id, completed) => handleStepCompletion(id, completed, refetch)}
             commentsRefetch={commentsRefetch}
+            forProcess
           />
       )}
     </>
