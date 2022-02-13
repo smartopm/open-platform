@@ -1,10 +1,7 @@
 import React from 'react';
 import TextField from '@material-ui/core/TextField';
+import { MenuItem, Select, InputLabel, FormControl } from '@material-ui/core';
 import { Grid, Typography } from '@mui/material';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import DatePickerDialog from '../../../../components/DatePickerDialog';

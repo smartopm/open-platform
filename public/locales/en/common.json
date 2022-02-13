@@ -512,6 +512,21 @@
     "created_by": "Created By",
     "last_contact_date": "Last Contact Date",
     "modified_by": "Modified By",
-    "date_follow_up": "Date Follow Up"
+    "date_follow_up": "Date Follow Up",
+    "company_information_section_header": "Company Information",
+    "company_name": "Company Name",
+    "company_description": "Company Description",
+    "company_linkedin": "Company Linkedin",
+    "company_website": "Company Website",
+    "relevant_link": "Relevant Link/News",
+    "country": "Country",
+    "industry_business_activity": "Industry Business Activity",
+    "region": "Region",
+    "level_of_internationalization": "Level of Internationalization",
+    "industry_sector": "Industry Sector",
+    "number_of_employees": "Number of Employees",
+    "industry_sub_sector": "Industry Sub Sector",
+    "annual_revenue": "Annual Revenue",
+    "african_presence": "African Presences"
   }
 }

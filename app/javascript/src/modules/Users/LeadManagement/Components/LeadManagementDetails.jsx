@@ -31,7 +31,7 @@ export default function LeadManagementDetails({ userId }) {
       style={{ display: 'flex', justifyContent: 'center' }}
       columns={{ xs: 12, md: 12 }}
     >
-      <Grid item md={8} xs={10} data-testid="lead-management-container-header">
+      <Grid item md={6} xs={10} data-testid="lead-management-container-header">
         <Item>
           <Typography variant="h5">{t('lead_management.main_header')}</Typography>
 
