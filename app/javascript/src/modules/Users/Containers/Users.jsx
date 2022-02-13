@@ -467,16 +467,18 @@ export default function UsersList() {
         <Loading />
         ) : (
           <>
-            <FixedHeader>
-              <UserHeader 
-                setCampaignOption={setCampaignOption}
-                handleSearchClick={inputToSearch}
-                filterObject={filterObject}
-                csvObject={csvObject}
-                menuObject={menuObject} 
-                actionObject={actionObject}
-              />
-            </FixedHeader>
+            <div className="container">
+              <FixedHeader>
+                <UserHeader 
+                  setCampaignOption={setCampaignOption}
+                  handleSearchClick={inputToSearch}
+                  filterObject={filterObject}
+                  csvObject={csvObject}
+                  menuObject={menuObject} 
+                  actionObject={actionObject}
+                />
+              </FixedHeader>
+            </div>
             <div className="container">
               <ActionDialog
                 open={openCampaignWarning}

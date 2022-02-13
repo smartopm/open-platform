@@ -1,22 +1,30 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
+import Container from '@material-ui/core/Container';
+import Divider from '@material-ui/core/Divider';
 
 export default function FixedHeader({ children }) {
   const classes = useStyles();
   return (
-    <div className="container">
-      <div style={{position: 'fixed', zIndex: 1000, background: "#FFFFFF"}}>
-        {children}
-      </div>
-    </div>
+    <Grid container>
+      <Grid item sm={12}>
+        <div className={classes.container}>
+          {children}
+        </div>
+      </Grid>
+    </Grid>
   )
 }
 
 const useStyles = makeStyles(() => ({
   container: {
-    padding: '10px 0',
+    padding: '30px 0 10px 0',
     position: 'fixed',
     zIndex: 1000,
-    background: "#FFFFFF"
+    background: "#FFFFFF",
+    width: '78%',
+    top: 50,
+    borderBottom: '2px solid #F9F9F9'
   }
 }))
