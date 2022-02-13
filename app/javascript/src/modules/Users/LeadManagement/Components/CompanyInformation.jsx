@@ -1,5 +1,6 @@
 import React from 'react';
 import TextField from '@material-ui/core/TextField';
+import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Typography } from '@mui/material';
 import PropTypes from 'prop-types';
 import { MenuItem, Select, InputLabel, FormControl } from '@material-ui/core';
@@ -16,6 +17,24 @@ import {
 
 export default function CompanyInformation({ leadFormData, handleChange }) {
   const { t } = useTranslation('common');
+
+  const useStyles = makeStyles(theme => ({
+    formControl: {
+      margin: theme.spacing(1)
+    },
+    selectEmpty: {
+      marginTop: theme.spacing(2)
+    },
+    menuPaper: {
+      maxHeight: 400
+    },
+
+    input: {
+      height: 40
+    }
+  }));
+
+  const classes = useStyles();
 
   return (
     <div data-testid="lead-management-company-section">
@@ -115,6 +134,7 @@ export default function CompanyInformation({ leadFormData, handleChange }) {
               name="country"
               fullWidth
               variant="outlined"
+              MenuProps={{ classes: { paper: classes.menuPaper } }}
             >
               {Object.entries(countries).map(([key, val]) => (
                 <MenuItem key={key} value={key}>
@@ -126,7 +146,7 @@ export default function CompanyInformation({ leadFormData, handleChange }) {
         </Grid>
 
         <Grid item md={6} xs={12}>
-          <FormControl fullWidth>
+          <FormControl fullWidth size="small">
             <InputLabel id="industryBusinessActivity">
               {t('lead_management.industry_business_activity')}
             </InputLabel>
@@ -137,6 +157,7 @@ export default function CompanyInformation({ leadFormData, handleChange }) {
               name="industryBusinessActivity"
               fullWidth
               variant="outlined"
+              MenuProps={{ classes: { paper: classes.menuPaper } }}
             >
               {Object.entries(industryBusinessActivityOptions).map(([key, val]) => (
                 <MenuItem key={key} value={key}>
@@ -168,7 +189,7 @@ export default function CompanyInformation({ leadFormData, handleChange }) {
         </Grid>
 
         <Grid item md={6} xs={12}>
-          <FormControl variant="standard" fullWidth>
+          <FormControl variant="standard" fullWidth size="small">
             <InputLabel id="level_of_internationalization">
               {t('lead_management.level_of_internationalization')}
             </InputLabel>
@@ -179,6 +200,7 @@ export default function CompanyInformation({ leadFormData, handleChange }) {
               name="levelOfInternationalization"
               fullWidth
               variant="outlined"
+              MenuProps={{ classes: { paper: classes.menuPaper } }}
             >
               {Object.entries(internationalizationLevels).map(([key, val]) => (
                 <MenuItem key={key} value={key}>
@@ -190,7 +212,7 @@ export default function CompanyInformation({ leadFormData, handleChange }) {
         </Grid>
 
         <Grid item md={6} xs={12}>
-          <FormControl variant="standard" fullWidth>
+          <FormControl variant="standard" fullWidth size="small">
             <InputLabel id="industry">{t('lead_management.industry_sector')}</InputLabel>
             <Select
               id="industry"
@@ -199,6 +221,7 @@ export default function CompanyInformation({ leadFormData, handleChange }) {
               name="industry"
               fullWidth
               variant="outlined"
+              MenuProps={{ classes: { paper: classes.menuPaper } }}
             >
               {Object.entries(industryCategoryOptions).map(([key, val]) => (
                 <MenuItem key={key} value={key}>
@@ -218,17 +241,17 @@ export default function CompanyInformation({ leadFormData, handleChange }) {
             value={leadFormData?.user?.companyEmployees}
             variant="outlined"
             fullWidth
-            multiline
-            rows={2}
-            size="small"
-            inputProps={{
+            InputProps={{
+              className: classes.input,
               'aria-label': 'number_of_employees'
             }}
+            rows={2}
+            size="small"
           />
         </Grid>
 
         <Grid item md={6} xs={12}>
-          <FormControl variant="standard" fullWidth>
+          <FormControl variant="standard" fullWidth size="small">
             <InputLabel id="industrySubSector">
               {t('lead_management.industry_sub_sector')}
             </InputLabel>
@@ -239,6 +262,7 @@ export default function CompanyInformation({ leadFormData, handleChange }) {
               name="industrySubSector"
               fullWidth
               variant="outlined"
+              MenuProps={{ classes: { paper: classes.menuPaper } }}
             >
               {Object.entries(industrySubSectorOptions).map(([key, val]) => (
                 <MenuItem key={key} value={key}>
@@ -258,11 +282,11 @@ export default function CompanyInformation({ leadFormData, handleChange }) {
             value={leadFormData?.user?.companyAnnualRevenue}
             variant="outlined"
             fullWidth
-            multiline
             rows={2}
             size="small"
-            inputProps={{
-              'aria-label': 'annual_revenue'
+            InputProps={{
+              className: classes.input,
+              'aria-label': 'number_of_employees'
             }}
           />
         </Grid>
