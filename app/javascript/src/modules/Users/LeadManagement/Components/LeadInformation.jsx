@@ -7,33 +7,33 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import DatePickerDialog from '../../../components/DatePickerDialog';
-import { userProps } from '../utils';
+import DatePickerDialog from '../../../../components/DatePickerDialog';
+import { userProps } from '../../utils';
 import {
   clientCategories,
   leadTemperatureOptions,
   leadStatusOptions,
   leadSourceOptions,
   leadTypeOptions
-} from '../../../utils/constants';
+} from '../../../../utils/constants';
 
 export default function LeadInformation({ leadFormData, handleChange, handleTimeInputChange }) {
-  const { t } = useTranslation('common')
+  const { t } = useTranslation('common');
   return (
     <>
+      <Typography variant="h6" data-testid="lead-management-lead-information-header">
+        {t('lead_management.lead_section_header')}
+      </Typography>
+      <br />
       <Grid
         container
         spacing={2}
         style={{ display: 'flex', justifyContent: 'center' }}
         data-testid="lead-management-lead-information-section"
       >
-        <Typography variant="h6" data-testid="lead-management-lead-information-header">
-          {t('lead_management.lead_section_header')}
-        </Typography>
-        <br />
         <Grid item md={6} xs={12}>
           <FormControl fullWidth>
-            <InputLabel id="lead_temperature">{t('lead_mana')}</InputLabel>
+            <InputLabel id="lead_temperature">{t('lead_management.lead_temperature')}</InputLabel>
             <Select
               id="leadTemperature"
               value={leadFormData?.user?.leadTemperature}
@@ -52,7 +52,7 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
         </Grid>
         <Grid item md={6} xs={12}>
           <FormControl fullWidth>
-            <InputLabel id="leadStatus">Lead Status</InputLabel>
+            <InputLabel id="leadStatus">{t('lead_management.lead_status')}</InputLabel>
             <Select
               id="leadStatus"
               value={leadFormData?.user?.leadStatus}
@@ -71,7 +71,7 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
         </Grid>
         <Grid item md={6} xs={12}>
           <FormControl fullWidth>
-            <InputLabel id="leadSource">Lead Source</InputLabel>
+            <InputLabel id="leadSource">{t('lead_management.lead_source')}</InputLabel>
             <Select
               id="lead_source"
               value={leadFormData?.user?.leadSource}
@@ -92,7 +92,7 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
         <Grid item md={6} xs={12}>
           <TextField
             name="companyContacted"
-            label="Company Contacted"
+            label={t('lead_management.company_contacted')}
             style={{ width: '100%' }}
             onChange={handleChange}
             value={leadFormData?.user?.companyContacted}
@@ -109,7 +109,7 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
 
         <Grid item md={6} xs={12}>
           <FormControl fullWidth>
-            <InputLabel id="client_category">Client Category</InputLabel>
+            <InputLabel id="client_category">{t('lead_management.client_category')}</InputLabel>
             <Select
               id="client_category"
               value={leadFormData?.user?.clientCategory}
@@ -129,7 +129,7 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
 
         <Grid item md={6} xs={12}>
           <FormControl fullWidth>
-            <InputLabel id="lead_type">Lead Type</InputLabel>
+            <InputLabel id="lead_type">{t('lead_management.lead_type')}</InputLabel>
             <Select
               id="lead_type"
               value={leadFormData?.user?.leadType}
@@ -151,7 +151,7 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
 
       <TextField
         name="nextSteps"
-        label="Next Steps"
+        label={t('lead_management.next_steps')}
         style={{ width: '100%' }}
         onChange={handleChange}
         value={leadFormData?.user?.nextSteps}
@@ -179,7 +179,7 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
         <Grid item md={6} xs={12}>
           <TextField
             name="leadOwner"
-            label="Lead Owner"
+            label={t('lead_management.lead_owner')}
             style={{ width: '100%' }}
             onChange={handleChange}
             value={leadFormData?.user?.leadOwner}
@@ -197,7 +197,7 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
 
         <Grid item md={6} xs={12}>
           <DatePickerDialog
-            label="First Contact Date"
+            label={t('lead_management.first_contact_date')}
             handleDateChange={date =>
               handleTimeInputChange({ target: { name: 'firstContactDate', value: date } })
             }
@@ -210,7 +210,7 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
         <Grid item md={6} xs={12}>
           <TextField
             name="createdBy"
-            label="Created By"
+            label={t('lead_management.created_by')}
             style={{ width: '100%' }}
             onChange={handleChange}
             value={leadFormData?.user?.createdBy}
@@ -228,7 +228,7 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
 
         <Grid item md={6} xs={12}>
           <DatePickerDialog
-            label="Last Contact Date"
+            label={t('lead_management.last_contact_date')}
             inputProps={{ 'data-testid': 'last_contact_date_input' }}
             handleDateChange={date =>
               handleTimeInputChange({ target: { name: 'lastContactDate', value: date } })
@@ -241,7 +241,7 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
         <Grid item md={6} xs={12}>
           <TextField
             name="modifiedBy"
-            label="Modified By"
+            label={t('lead_management.modified_by')}
             style={{ width: '100%' }}
             onChange={handleChange}
             value={leadFormData?.user?.modifiedBy}
@@ -259,7 +259,7 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
 
         <Grid item md={6} xs={12}>
           <DatePickerDialog
-            label="Date Follow Up"
+            label={t('lead_management.date_follow_up')}
             inputProps={{ 'data-testid': 'date_follow_up_input' }}
             handleDateChange={date =>
               handleTimeInputChange({ target: { name: 'followupAt', value: date } })

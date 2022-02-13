@@ -2,7 +2,7 @@ import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
 import { render, screen, waitFor } from '@testing-library/react';
 import { MockedProvider } from '@apollo/react-testing';
-import authState from '../../../__mocks__/authstate';
+import authState from '../../../../__mocks__/authstate';
 import LeadManagementDetails from '../Components/LeadManagementDetails';
 
 describe('LeadManagementDetails Page', () => {

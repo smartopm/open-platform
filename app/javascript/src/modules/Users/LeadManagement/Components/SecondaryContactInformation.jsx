@@ -4,7 +4,7 @@ import { Divider } from '@material-ui/core';
 import { Grid, Typography } from '@mui/material';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import { secondaryInfoUserObject } from '../utils';
+import { secondaryInfoUserObject } from '../../utils';
 
 export default function SecondaryCcntactInformation({
   leadFormData,
@@ -16,7 +16,7 @@ export default function SecondaryCcntactInformation({
     <>
       <Typography variant="h6" data-testid="lead-management-secondary-info-section-header">
         {' '}
-        {t('lead_management.secondary_contact_section1.header')}
+        {t('lead_management.secondary_contact_section1_header')}
       </Typography>
       <br />
       <TextField
@@ -32,9 +32,6 @@ export default function SecondaryCcntactInformation({
         margin="normal"
         inputProps={{
           'aria-label': 'name'
-        }}
-        InputLabelProps={{
-          shrink: true
         }}
       />
 
@@ -52,9 +49,6 @@ export default function SecondaryCcntactInformation({
         inputProps={{
           'aria-label': 'title'
         }}
-        InputLabelProps={{
-          shrink: true
-        }}
       />
       <TextField
         name="primaryEmail"
@@ -69,9 +63,6 @@ export default function SecondaryCcntactInformation({
         margin="normal"
         inputProps={{
           'aria-label': 'primary_email'
-        }}
-        InputLabelProps={{
-          shrink: true
         }}
       />
 
@@ -89,9 +80,6 @@ export default function SecondaryCcntactInformation({
         inputProps={{
           'aria-label': 'secondary_email'
         }}
-        InputLabelProps={{
-          shrink: true
-        }}
       />
 
       <TextField
@@ -107,9 +95,6 @@ export default function SecondaryCcntactInformation({
         margin="normal"
         inputProps={{
           'aria-label': 'primary_phone_number/mobile'
-        }}
-        InputLabelProps={{
-          shrink: true
         }}
       />
 
@@ -127,9 +112,6 @@ export default function SecondaryCcntactInformation({
         inputProps={{
           'aria-label': 'secondary_phone_number/mobile'
         }}
-        InputLabelProps={{
-          shrink: true
-        }}
       />
 
       <TextField
@@ -146,9 +128,6 @@ export default function SecondaryCcntactInformation({
         inputProps={{
           'aria-label': 'linkedin'
         }}
-        InputLabelProps={{
-          shrink: true
-        }}
       />
 
       <br />
@@ -160,7 +139,7 @@ export default function SecondaryCcntactInformation({
 
       <Typography variant="h6">
         {' '}
-        {t('lead_management.secondary_contact_section2.header')}
+        {t('lead_management.secondary_contact_section2_header')}
       </Typography>
       <br />
       <TextField
@@ -176,9 +155,6 @@ export default function SecondaryCcntactInformation({
         margin="normal"
         inputProps={{
           'aria-label': 'name'
-        }}
-        InputLabelProps={{
-          shrink: true
         }}
       />
 
@@ -196,9 +172,6 @@ export default function SecondaryCcntactInformation({
         inputProps={{
           'aria-label': 'title'
         }}
-        InputLabelProps={{
-          shrink: true
-        }}
       />
 
       <TextField
@@ -214,9 +187,6 @@ export default function SecondaryCcntactInformation({
         margin="normal"
         inputProps={{
           'aria-label': 'primary_email'
-        }}
-        InputLabelProps={{
-          shrink: true
         }}
       />
 
@@ -234,9 +204,6 @@ export default function SecondaryCcntactInformation({
         inputProps={{
           'aria-label': 'secondary_email'
         }}
-        InputLabelProps={{
-          shrink: true
-        }}
       />
 
       <TextField
@@ -252,9 +219,6 @@ export default function SecondaryCcntactInformation({
         margin="normal"
         inputProps={{
           'aria-label': 'primary_phone_number/mobile'
-        }}
-        InputLabelProps={{
-          shrink: true
         }}
       />
 
@@ -272,9 +236,6 @@ export default function SecondaryCcntactInformation({
         inputProps={{
           'aria-label': 'secondary_phone_number/mobile'
         }}
-        InputLabelProps={{
-          shrink: true
-        }}
       />
 
       <TextField
@@ -290,9 +251,6 @@ export default function SecondaryCcntactInformation({
         margin="normal"
         inputProps={{
           'aria-label': 'linkedin'
-        }}
-        InputLabelProps={{
-          shrink: true
         }}
       />
     </>

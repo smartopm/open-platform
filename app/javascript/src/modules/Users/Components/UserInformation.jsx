@@ -29,7 +29,7 @@ import FeatureCheck from '../../Features';
 import PaymentPlans from '../../Payments/Components/UserTransactions/Plans';
 import ShiftButtons from '../../TimeCard/Components/ShiftButtons';
 import InviteHistoryList from '../../LogBook/GuestInvitation/Components/InviteHistoryList';
-import LeadManagementDetails from './LeadManagementDetails';
+import LeadManagementDetails from '../LeadManagement/Components/LeadManagementDetails';
 
 export default function UserInformation({
   data,

@@ -498,7 +498,20 @@
     "primary_email": "Primary Email",
     "linkedin_url": "Linkedin Url",
     "lead_section_header": "Lead Information",
-    "secondary_contact_section1": "Secondary Contact 1",
-    "secondary_contact_section2": "Secondary Contact 2"
+    "secondary_contact_section1_header": "Secondary Contact 1",
+    "secondary_contact_section2_header": "Secondary Contact 2",
+    "lead_temperature": "Lead Temperature",
+    "lead_status": "Lead Status",
+    "lead_source": "Lead Source",
+    "company_contacted": "Company Contacted",
+    "client_category": "Client Category",
+    "lead_type": "Lead Type",
+    "next_steps": "Next Steps",
+    "lead_owner": "Lead Owner",
+    "first_contact_date": "First Contact Date",
+    "created_by": "Created By",
+    "last_contact_date": "Last Contact Date",
+    "modified_by": "Modified By",
+    "date_follow_up": "Date Follow Up"
   }
 }
