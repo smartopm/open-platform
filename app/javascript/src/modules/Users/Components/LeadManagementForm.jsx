@@ -152,9 +152,11 @@ export default function LeadManagementForm({ userId }) {
     }
   }, [data, loadLeadData]);
 
-  if (error) return <CenteredContent>{formatError(error.message)}</CenteredContent>;
-  if (errors) return <CenteredContent>{formatError(errors.message)}</CenteredContent>;
   if (loading || loadingStatus) return <Spinner />;
+  if (error) return <CenteredContent>{formatError(error.message)}</CenteredContent>;
+  // TODO: This error should be an alert instead of blocking the whole UI.
+  if (errors) return <CenteredContent>{formatError(errors.message)}</CenteredContent>;
+
   return (
     <Grid container data-testid="lead-management-form">
       <Grid item md={12} xs={12}>
