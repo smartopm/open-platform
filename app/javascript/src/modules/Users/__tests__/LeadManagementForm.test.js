@@ -8,8 +8,6 @@ import authState from '../../../__mocks__/authstate';
 import { LeadDetailsQuery } from '../../../graphql/queries';
 import LeadManagementForm from '../Components/LeadManagementForm';
 
-jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
-
 describe('LeadManagementForm', () => {
   const leadDataMock = [
     {
@@ -21,6 +19,16 @@ describe('LeadManagementForm', () => {
         data: {
           user: {
             africanPresence: 'Everywhere',
+            title: 'Everywhere',
+            userType: 'Admin',
+            imageUrl: '',
+            subStatus: '',
+            extRefId: '',
+            expiresAt: null,
+            state: 'valid',
+            labels: null,
+            contactDetails: null,
+            contactInfos: null,
             avatarUrl:
               'https://daniel.dgdp.site/rails/active_storage/blobs/redirect/eyRsa0xU-unsplash.jpg',
             clientCategory: 'industryAssociation',
@@ -55,8 +63,8 @@ describe('LeadManagementForm', () => {
             region: 'cWOfIndStates',
             relevantLink: 'today is hot',
             roleName: 'Admin',
-            secondaryEmail: null,
-            secondaryPhoneNumber: null
+            secondaryEmail: '',
+            secondaryPhoneNumber: ''
           }
         }
       }
@@ -66,7 +74,7 @@ describe('LeadManagementForm', () => {
   it('LeadManagementForm component', async () => {
     render(
       <Context.Provider value={authState}>
-        <MockedProvider mocks={leadDataMock} addTypename>
+        <MockedProvider mocks={leadDataMock} addTypename={false}>
           <BrowserRouter>
             <LeadManagementForm userId={authState?.user?.id} />
           </BrowserRouter>
@@ -74,16 +82,20 @@ describe('LeadManagementForm', () => {
       </Context.Provider>
     );
 
+
     await waitFor(() => {
       expect(screen.queryByTestId('lead-management-form')).toBeInTheDocument();
-      //   expect(screen.queryByTestId('lead-management-main-contact-section')).toBeInTheDocument();
-      //   expect(screen.queryByTestId('lead-management-lead-information-section')).toBeInTheDocument();
-
-      //   expect(
-      //     screen.queryByTestId('lead-management-secondary-info-section-header')
-      //   ).toBeInTheDocument();
-
-      //   expect(screen.queryByTestId('lead-management-company-section')).toBeInTheDocument();
-    });
+      expect(screen.queryByTestId('lead-management-main-contact-section')).toBeInTheDocument();
+      expect(screen.queryByTestId('lead-management-lead-information-section')).toBeInTheDocument();
+        expect(
+          screen.queryByTestId('lead-management-secondary-info-section-header')
+        ).toBeInTheDocument();
+        expect(screen.queryByTestId('lead-management-company-section')).toBeInTheDocument();
+        expect(screen.queryByTestId('contact_info')).toBeInTheDocument();
+        expect(screen.queryByText('lead_management.primary_info')).toBeInTheDocument();
+        expect(screen.queryByTestId('lead_management_button')).toBeInTheDocument();
+        expect(screen.queryByTestId('lead_management_button')).toBeDisabled();
+        expect(screen.queryByText('lead_management.save_updates')).toBeInTheDocument();
+    }, 20);
   });
 });

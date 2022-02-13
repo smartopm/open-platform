@@ -16,7 +16,7 @@ export default function MainContactInformation({ leadFormData, handleChange, dis
         <>
           <Grid container data-testid="lead-management-main-contact-section">
             <Grid item md={6} xs={6}>
-              <Typography variant="h6">
+              <Typography variant="h6" data-testid="contact_info">
                 {matches ? t('lead_management.contact_info') : t('lead_management.primary_info')}
               </Typography>
             </Grid>
@@ -36,7 +36,8 @@ export default function MainContactInformation({ leadFormData, handleChange, dis
                 type="submit"
                 disabled={disabled}
                 color="primary"
-                aria-label="task_submit"
+                aria-label="lead_management_button"
+                data-testid="lead_management_button"
               >
                 {matches ? t('lead_management.save') : t('lead_management.save_updates')}
               </Button>
