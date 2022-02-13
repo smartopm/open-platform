@@ -1,4 +1,3 @@
-/* eslint-disable no-use-before-define */
 import React, { useState } from 'react';
 import { Grid, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
@@ -74,7 +73,7 @@ export default function LeadManagementDetails({ userId }) {
           </StyledTabs>
 
           <TabPanel value={tabValue} index={0} data-testid="lead-management-details-tab">
-            {/* <LeadManagementForm userId={userId} /> */}
+            <LeadManagementForm userId={userId} />
           </TabPanel>
           <TabPanel value={tabValue} index={1} data-testid="lead-management-task-tab">
             <></>
