@@ -10,7 +10,7 @@ import LeadManagementForm from '../Components/LeadManagementForm';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 
-describe('LeadManagementDetails Page', () => {
+describe('LeadManagementForm', () => {
   const leadDataMock = [
     {
       request: {
@@ -63,7 +63,7 @@ describe('LeadManagementDetails Page', () => {
     }
   ];
 
-  it('LeadManagementDetails component', async () => {
+  it('LeadManagementForm component', async () => {
     render(
       <Context.Provider value={authState}>
         <MockedProvider mocks={leadDataMock} addTypename>
@@ -75,7 +75,7 @@ describe('LeadManagementDetails Page', () => {
     );
 
     await waitFor(() => {
-        expect(screen.queryByTestId('lead-management-form')).toBeInTheDocument();
+      expect(screen.queryByTestId('lead-management-form')).toBeInTheDocument();
       //   expect(screen.queryByTestId('lead-management-main-contact-section')).toBeInTheDocument();
       //   expect(screen.queryByTestId('lead-management-lead-information-section')).toBeInTheDocument();
 
