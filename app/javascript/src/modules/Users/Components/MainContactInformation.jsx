@@ -12,6 +12,7 @@ export default function MainContactInformation({ leadFormData, handleChange, dis
   const matches = useMediaQuery('(max-width:800px)');
   return (
     <>
+      {/* TODO: Shouldn't the user be able to see something if there is no leadFormData */}
       {leadFormData && (
         <>
           <Grid container data-testid="lead-management-main-contact-section">
@@ -140,7 +141,7 @@ export default function MainContactInformation({ leadFormData, handleChange, dis
 
           <TextField
             name="linkedinUrl"
-            label={t('lead_management.linkedin_url')}
+            label={t('lead_management.linkedinUrl')}
             style={{ width: '100%' }}
             onChange={handleChange}
             value={leadFormData?.user?.linkedinUrl}

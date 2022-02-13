@@ -1,13 +1,7 @@
 import React from 'react';
-import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min';
 import '@testing-library/jest-dom/extend-expect';
-import { render, screen, waitFor } from '@testing-library/react';
-import { MockedProvider } from '@apollo/react-testing';
-import { Context } from '../../../containers/Provider/AuthStateProvider';
-import authState from '../../../__mocks__/authstate';
+import { render, screen } from '@testing-library/react';
 import MainContactInformation from '../Components/MainContactInformation';
-
-jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 
 describe('LeadManagementDetails Page', () => {
   const data = {
@@ -47,42 +41,28 @@ describe('LeadManagementDetails Page', () => {
       region: 'cWOfIndStates',
       relevantLink: 'today is hot',
       roleName: 'Admin',
-      secondaryEmail: null,
-      secondaryPhoneNumber: null
+      secondaryEmail: '',
+      secondaryPhoneNumber: ''
     }
   };
 
-  it('LeadManagementDetails component', async () => {
-    render(
-      <Context.Provider value={authState}>
-        <MockedProvider mocks={[]} addTypename>
-          <BrowserRouter>
-            <MainContactInformation leadDataMock={data} handleChange={jest.fn} disabled />
-          </BrowserRouter>
-        </MockedProvider>
-      </Context.Provider>
-    );
+  it('LeadManagementDetails component', () => {
+    const onChange = jest.fn();
+    render(<MainContactInformation leadFormData={data} handleChange={onChange} disabled />);
 
-    await waitFor(() => {
-      screen.debug(undefined, 30000);
-      expect(screen.queryByTestId('lead-management-container')).toBeInTheDocument();
+    expect(screen.queryByTestId('lead-management-main-contact-section')).toBeInTheDocument();
+    expect(screen.queryByTestId('contact_info')).toBeInTheDocument();
+    expect(screen.queryByText('lead_management.primary_info')).toBeInTheDocument();
+    expect(screen.queryByTestId('lead_management_button')).toBeInTheDocument();
+    expect(screen.queryByTestId('lead_management_button')).toBeDisabled();
+    expect(screen.queryByText('lead_management.save_updates')).toBeInTheDocument();
+    expect(screen.queryByText('lead_management.name')).toBeInTheDocument();
 
-      //   expect(screen.queryByTestId('lead-management-container-header')).toBeInTheDocument();
-      //   expect(screen.queryByTestId('lead-management-tabs')).toBeInTheDocument();
-
-      //   expect(screen.queryByTestId('lead-management-details-tab')).toBeInTheDocument();
-      //   expect(screen.queryByTestId('lead-management-task-tab')).toBeInTheDocument();
-      //   expect(screen.queryByTestId('lead-management-note-tab')).toBeInTheDocument();
-
-      //   expect(screen.queryByTestId('lead-management-form')).toBeInTheDocument();
-      //   expect(screen.queryByTestId('lead-management-main-contact-section')).toBeInTheDocument();
-      //   expect(screen.queryByTestId('lead-management-lead-information-section')).toBeInTheDocument();
-
-      //   expect(
-      //     screen.queryByTestId('lead-management-secondary-info-section-header')
-      //   ).toBeInTheDocument();
-
-      //   expect(screen.queryByTestId('lead-management-company-section')).toBeInTheDocument();
-    });
+    expect(screen.queryAllByText('lead_management.title')[0]).toBeInTheDocument();
+    expect(screen.queryAllByText('lead_management.primary_email')[0]).toBeInTheDocument();
+    expect(screen.queryAllByText('lead_management.secondary_email')[0]).toBeInTheDocument();
+    expect(screen.queryAllByText('lead_management.primary_phone')[0]).toBeInTheDocument();
+    expect(screen.queryAllByText('lead_management.secondary_phone')[0]).toBeInTheDocument();
+    expect(screen.queryByLabelText('linkedin')).toBeInTheDocument();
   });
 });
