@@ -2,11 +2,8 @@ import React from 'react';
 import TextField from '@material-ui/core/TextField';
 import { Grid, Typography } from '@mui/material';
 import PropTypes from 'prop-types';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
-// import { useTranslation } from 'react-i18next';
+import { MenuItem, Select, InputLabel, FormControl } from '@material-ui/core';
+import { useTranslation } from 'react-i18next';
 import { userProps } from '../../utils';
 import {
   internationalizationLevels,
@@ -18,12 +15,16 @@ import {
 } from '../../../../utils/constants';
 
 export default function CompanyInformation({ leadFormData, handleChange }) {
+  const { t } = useTranslation('common');
+
   return (
     <div data-testid="lead-management-company-section">
-      <Typography variant="h6">Company Information</Typography>
+      <Typography variant="h6">
+        {t('lead_management.company_information_section_header')}
+      </Typography>
       <TextField
         name="companyName"
-        label="Company Name"
+        label={t('lead_management.company_name')}
         style={{ width: '100%' }}
         onChange={handleChange}
         value={leadFormData?.user?.companyName}
@@ -35,13 +36,10 @@ export default function CompanyInformation({ leadFormData, handleChange }) {
         inputProps={{
           'aria-label': 'company_name'
         }}
-        InputLabelProps={{
-          shrink: true
-        }}
       />
       <TextField
         name="companyDescription"
-        label="Company Description"
+        label={t('lead_management.company_description')}
         style={{ width: '100%' }}
         onChange={handleChange}
         value={leadFormData?.user?.companyDescription}
@@ -53,14 +51,11 @@ export default function CompanyInformation({ leadFormData, handleChange }) {
         inputProps={{
           'aria-label': 'company_description'
         }}
-        InputLabelProps={{
-          shrink: true
-        }}
       />
 
       <TextField
         name="companyLinkedin"
-        label="Company Linkedin"
+        label={t('lead_management.company_linkedin')}
         style={{ width: '100%' }}
         onChange={handleChange}
         value={leadFormData?.user?.companyLinkedin}
@@ -72,14 +67,11 @@ export default function CompanyInformation({ leadFormData, handleChange }) {
         inputProps={{
           'aria-label': 'company_linkedin'
         }}
-        InputLabelProps={{
-          shrink: true
-        }}
       />
 
       <TextField
         name="companyWebsite"
-        label="Company Website"
+        label={t('lead_management.company_website')}
         style={{ width: '100%' }}
         onChange={handleChange}
         value={leadFormData?.user?.companyWebsite}
@@ -91,14 +83,11 @@ export default function CompanyInformation({ leadFormData, handleChange }) {
         inputProps={{
           'aria-label': 'company_website'
         }}
-        InputLabelProps={{
-          shrink: true
-        }}
       />
 
       <TextField
         name="relevantLink"
-        label="Relevant Links/News"
+        label={t('lead_management.relevant_link')}
         style={{ width: '100%' }}
         onChange={handleChange}
         value={leadFormData?.user?.relevantLink}
@@ -110,9 +99,6 @@ export default function CompanyInformation({ leadFormData, handleChange }) {
         inputProps={{
           'aria-label': 'news'
         }}
-        InputLabelProps={{
-          shrink: true
-        }}
       />
 
       <br />
@@ -121,7 +107,7 @@ export default function CompanyInformation({ leadFormData, handleChange }) {
       <Grid container spacing={2}>
         <Grid item md={6} xs={12}>
           <FormControl fullWidth size="small">
-            <InputLabel id="country">Country</InputLabel>
+            <InputLabel id="country">{t('lead_management.country')}</InputLabel>
             <Select
               id="country"
               value={leadFormData?.user?.country}
@@ -141,7 +127,9 @@ export default function CompanyInformation({ leadFormData, handleChange }) {
 
         <Grid item md={6} xs={12}>
           <FormControl fullWidth>
-            <InputLabel id="industryBusinessActivity">Industry Business Activity</InputLabel>
+            <InputLabel id="industryBusinessActivity">
+              {t('lead_management.industry_business_activity')}
+            </InputLabel>
             <Select
               id="industryBusinessActivity"
               value={leadFormData?.user?.industryBusinessActivity}
@@ -161,7 +149,7 @@ export default function CompanyInformation({ leadFormData, handleChange }) {
 
         <Grid item md={6} xs={12}>
           <FormControl fullWidth size="small">
-            <InputLabel id="region">Region</InputLabel>
+            <InputLabel id="region">{t('lead_management.region')}</InputLabel>
             <Select
               id="region"
               value={leadFormData?.user?.region}
@@ -182,7 +170,7 @@ export default function CompanyInformation({ leadFormData, handleChange }) {
         <Grid item md={6} xs={12}>
           <FormControl variant="standard" fullWidth>
             <InputLabel id="level_of_internationalization">
-              Level of Internationalization
+              {t('lead_management.level_of_internationalization')}
             </InputLabel>
             <Select
               id="level_of_internationalization"
@@ -203,7 +191,7 @@ export default function CompanyInformation({ leadFormData, handleChange }) {
 
         <Grid item md={6} xs={12}>
           <FormControl variant="standard" fullWidth>
-            <InputLabel id="industry">Industry Sector</InputLabel>
+            <InputLabel id="industry">{t('lead_management.industry_sector')}</InputLabel>
             <Select
               id="industry"
               value={leadFormData?.user?.industry}
@@ -224,7 +212,7 @@ export default function CompanyInformation({ leadFormData, handleChange }) {
         <Grid item md={6} xs={12}>
           <TextField
             name="companyEmployees"
-            label="Number Of Employees"
+            label={t('lead_management.number_of_employees')}
             style={{ width: '100%' }}
             onChange={handleChange}
             value={leadFormData?.user?.companyEmployees}
@@ -241,7 +229,9 @@ export default function CompanyInformation({ leadFormData, handleChange }) {
 
         <Grid item md={6} xs={12}>
           <FormControl variant="standard" fullWidth>
-            <InputLabel id="industrySubSector">Industry Sub Sector</InputLabel>
+            <InputLabel id="industrySubSector">
+              {t('lead_management.industry_sub_sector')}
+            </InputLabel>
             <Select
               id="industrySubSector"
               value={leadFormData?.user?.industrySubSector}
@@ -262,7 +252,7 @@ export default function CompanyInformation({ leadFormData, handleChange }) {
         <Grid item md={6} xs={12}>
           <TextField
             name="companyAnnualRevenue"
-            label="Annual Revenue"
+            label={t('lead_management.annual_revenue')}
             style={{ width: '100%' }}
             onChange={handleChange}
             value={leadFormData?.user?.companyAnnualRevenue}
@@ -280,7 +270,7 @@ export default function CompanyInformation({ leadFormData, handleChange }) {
         <Grid item md={12} xs={12}>
           <TextField
             name="africanPresence"
-            label="African Presence"
+            label={t('lead_management.african_presence')}
             style={{ width: '100%' }}
             onChange={handleChange}
             value={leadFormData?.user?.africanPresence}
