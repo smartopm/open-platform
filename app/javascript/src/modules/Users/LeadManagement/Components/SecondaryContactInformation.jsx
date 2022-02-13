@@ -33,9 +33,6 @@ export default function SecondaryCcntactInformation({
         inputProps={{
           'aria-label': 'name'
         }}
-        InputLabelProps={{
-          shrink: true
-        }}
       />
 
       <TextField
@@ -52,9 +49,6 @@ export default function SecondaryCcntactInformation({
         inputProps={{
           'aria-label': 'title'
         }}
-        InputLabelProps={{
-          shrink: true
-        }}
       />
       <TextField
         name="primaryEmail"
@@ -69,9 +63,6 @@ export default function SecondaryCcntactInformation({
         margin="normal"
         inputProps={{
           'aria-label': 'primary_email'
-        }}
-        InputLabelProps={{
-          shrink: true
         }}
       />
 
@@ -89,9 +80,6 @@ export default function SecondaryCcntactInformation({
         inputProps={{
           'aria-label': 'secondary_email'
         }}
-        InputLabelProps={{
-          shrink: true
-        }}
       />
 
       <TextField
@@ -107,9 +95,6 @@ export default function SecondaryCcntactInformation({
         margin="normal"
         inputProps={{
           'aria-label': 'primary_phone_number/mobile'
-        }}
-        InputLabelProps={{
-          shrink: true
         }}
       />
 
@@ -127,9 +112,6 @@ export default function SecondaryCcntactInformation({
         inputProps={{
           'aria-label': 'secondary_phone_number/mobile'
         }}
-        InputLabelProps={{
-          shrink: true
-        }}
       />
 
       <TextField
@@ -145,9 +127,6 @@ export default function SecondaryCcntactInformation({
         margin="normal"
         inputProps={{
           'aria-label': 'linkedin'
-        }}
-        InputLabelProps={{
-          shrink: true
         }}
       />
 
@@ -177,9 +156,6 @@ export default function SecondaryCcntactInformation({
         inputProps={{
           'aria-label': 'name'
         }}
-        InputLabelProps={{
-          shrink: true
-        }}
       />
 
       <TextField
@@ -195,9 +171,6 @@ export default function SecondaryCcntactInformation({
         margin="normal"
         inputProps={{
           'aria-label': 'title'
-        }}
-        InputLabelProps={{
-          shrink: true
         }}
       />
 
@@ -215,9 +188,6 @@ export default function SecondaryCcntactInformation({
         inputProps={{
           'aria-label': 'primary_email'
         }}
-        InputLabelProps={{
-          shrink: true
-        }}
       />
 
       <TextField
@@ -233,9 +203,6 @@ export default function SecondaryCcntactInformation({
         margin="normal"
         inputProps={{
           'aria-label': 'secondary_email'
-        }}
-        InputLabelProps={{
-          shrink: true
         }}
       />
 
@@ -253,9 +220,6 @@ export default function SecondaryCcntactInformation({
         inputProps={{
           'aria-label': 'primary_phone_number/mobile'
         }}
-        InputLabelProps={{
-          shrink: true
-        }}
       />
 
       <TextField
@@ -272,9 +236,6 @@ export default function SecondaryCcntactInformation({
         inputProps={{
           'aria-label': 'secondary_phone_number/mobile'
         }}
-        InputLabelProps={{
-          shrink: true
-        }}
       />
 
       <TextField
@@ -290,9 +251,6 @@ export default function SecondaryCcntactInformation({
         margin="normal"
         inputProps={{
           'aria-label': 'linkedin'
-        }}
-        InputLabelProps={{
-          shrink: true
         }}
       />
     </>
