@@ -1,6 +1,6 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import MainContactInformation from '../Components/MainContactInformation';
 
 describe('LeadManagementDetails Page', () => {
@@ -64,5 +64,10 @@ describe('LeadManagementDetails Page', () => {
     expect(screen.queryAllByText('lead_management.primary_phone')[0]).toBeInTheDocument();
     expect(screen.queryAllByText('lead_management.secondary_phone')[0]).toBeInTheDocument();
     expect(screen.queryByLabelText('linkedin')).toBeInTheDocument();
+
+    // simulate input
+    const input = screen.queryByTestId('main-section-title-input');
+    fireEvent.change(input, { target: { value: 'Mr. Boss' } });
+    expect(input.value).toBe('Mr. Boss');
   });
 });

@@ -7,30 +7,30 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import DatePickerDialog from '../../../components/DatePickerDialog';
-import { userProps } from '../utils';
+import DatePickerDialog from '../../../../components/DatePickerDialog';
+import { userProps } from '../../utils';
 import {
   clientCategories,
   leadTemperatureOptions,
   leadStatusOptions,
   leadSourceOptions,
   leadTypeOptions
-} from '../../../utils/constants';
+} from '../../../../utils/constants';
 
 export default function LeadInformation({ leadFormData, handleChange, handleTimeInputChange }) {
-  const { t } = useTranslation('common')
+  const { t } = useTranslation('common');
   return (
     <>
+      <Typography variant="h6" data-testid="lead-management-lead-information-header">
+        {t('lead_management.lead_section_header')}
+      </Typography>
+      <br />
       <Grid
         container
         spacing={2}
         style={{ display: 'flex', justifyContent: 'center' }}
         data-testid="lead-management-lead-information-section"
       >
-        <Typography variant="h6" data-testid="lead-management-lead-information-header">
-          {t('lead_management.lead_section_header')}
-        </Typography>
-        <br />
         <Grid item md={6} xs={12}>
           <FormControl fullWidth>
             <InputLabel id="lead_temperature">{t('lead_mana')}</InputLabel>

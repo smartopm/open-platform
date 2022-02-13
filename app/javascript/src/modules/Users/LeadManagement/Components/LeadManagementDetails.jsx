@@ -5,8 +5,8 @@ import { useTranslation } from 'react-i18next';
 import Paper from '@mui/material/Paper';
 import PropTypes from 'prop-types';
 import LeadManagementForm from './LeadManagementForm';
-import { objectAccessor } from '../../../utils/helpers';
-import { StyledTabs, StyledTab, TabPanel, a11yProps } from '../../../components/Tabs';
+import { objectAccessor } from '../../../../utils/helpers';
+import { StyledTabs, StyledTab, TabPanel, a11yProps } from '../../../../components/Tabs';
 
 export default function LeadManagementDetails({ userId }) {
   const { t } = useTranslation('common');

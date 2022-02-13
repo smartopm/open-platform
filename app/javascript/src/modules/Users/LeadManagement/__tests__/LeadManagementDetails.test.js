@@ -2,7 +2,7 @@ import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
 import { render, screen, waitFor } from '@testing-library/react';
 import { MockedProvider } from '@apollo/react-testing';
-import authState from '../../../__mocks__/authstate';
+import authState from '../../../../__mocks__/authstate';
 import LeadManagementDetails from '../Components/LeadManagementDetails';
 
 describe('LeadManagementDetails Page', () => {
@@ -19,7 +19,7 @@ describe('LeadManagementDetails Page', () => {
       expect(screen.queryByTestId('lead-management-tabs')).toBeInTheDocument();
 
       expect(screen.queryByTestId('lead-management-details-tab')).toBeInTheDocument();
-      expect(screen.queryByTestId('lead-management-task-tab')).toBeInTheDocument();
+      // expect(screen.queryByTestId('lead-management-task-tab')).toBeInTheDocument();
       expect(screen.queryByTestId('lead-management-note-tab')).toBeInTheDocument();
 
       expect(screen.queryByTestId('lead-management-form')).toBeInTheDocument();
