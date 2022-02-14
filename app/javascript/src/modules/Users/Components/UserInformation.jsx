@@ -52,7 +52,6 @@ export default function UserInformation({
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const securityPersonnelList = ['security_guard', 'security_supervisor'];
 
-  console.log("Mutuba", tab)
   const [noteCreate, { loading: mutationLoading }] = useMutation(CreateNote);
   const { handleSubmit, register } = useForm();
 
