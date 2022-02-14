@@ -148,6 +148,7 @@
     "ends": "Ends: {{date}}",
     "repeats": "Repeats",
     "invite_created_at": "Invite Created: {{date}}",
+    "date_of_visit": "Date of Visit: {{date}}",
     "multiple": "Multiple",
     "invite_history": "Invite History",
     "no_hosts": "There are no invitations for this user."
