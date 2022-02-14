@@ -3,16 +3,13 @@ import React, { useEffect, useState } from 'react';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
-import { useForm } from 'react-hook-form';
 import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
 import DoubleArrowOutlinedIcon from '@material-ui/icons/DoubleArrowOutlined';
 import PhoneIcon from '@material-ui/icons/Phone';
-import { Dialog, DialogTitle, DialogContent, Grid, TextField } from '@material-ui/core';
+import { Dialog, DialogTitle, DialogContent, Grid } from '@material-ui/core';
 import { css, StyleSheet } from 'aphrodite';
-import { useMutation } from 'react-apollo';
 import PropTypes from 'prop-types';
-import { CreateNote } from '../../../graphql/mutations';
 import Avatar from '../../../components/Avatar';
 import UserPlotInfo from './UserPlotInfo';
 import UserMerge from './UserMerge';
@@ -50,19 +47,6 @@ export default function UserInformation({
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const securityPersonnelList = ['security_guard' , 'security_supervisor']
-
-  const [noteCreate, { loading: mutationLoading }] = useMutation(CreateNote);
-  const { handleSubmit, register } = useForm();
-
-  const onSaveNote = ({ note }) => {
-    const form = document.getElementById('note-form');
-    noteCreate({
-      variables: { userId, body: note, flagged: false }
-    }).then(() => {
-      refetch();
-      form.reset();
-    });
-  };
 
   useEffect(() => {
     if (tab) {

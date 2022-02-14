@@ -11,10 +11,9 @@ import MessageAlert from '../../../components/MessageAlert';
 import { formatError } from '../../../utils/helpers';
 
 export default function UserNotes({ userId, tabValue }) {
-  const [isLoading, setLoading] = useState(false);
   const [value, setValue] = useState('');
   const [message, setMessage] = useState({ isError: false, detail: '' });
-  const [noteCreate] = useMutation(CreateNote);
+  const [noteCreate, { loading: isLoading }] = useMutation(CreateNote);
   const { t } = useTranslation(['task', 'common']);
   const [loadNotes, { loading, error, refetch, data }] = useLazyQuery(UserNotesQuery, {
     variables: { userId },
@@ -29,16 +28,13 @@ export default function UserNotes({ userId, tabValue }) {
   }, [tabValue]);
 
   function handleSubmit() {
-    setLoading(true);
     noteCreate({ variables: { userId, body: value, flagged: false } })
       .then(() => {
-        setLoading(false);
         setMessage({ ...message, isError: false, detail: t('common:misc.misc_successfully_created', { type: t('common:menu.note') }) });
         setValue('');
         refetch();
       })
       .catch(err => {
-        setLoading(false);
         setMessage({ ...message, isError: true, detail: formatError(err.message) });
       });
   }
@@ -58,6 +54,8 @@ export default function UserNotes({ userId, tabValue }) {
         setValue={setValue}
         handleSubmit={handleSubmit}
         actionTitle={t('common:form_actions.save')}
+        placeholder={t('task.add_note')}
+        loading={isLoading}
       />
       {isLoading || (loading && <Spinner />)}
       {data?.userNotes.map(note => (

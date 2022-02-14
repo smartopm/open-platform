@@ -9,7 +9,8 @@ describe('CommentText Field component', () => {
       handleSubmit: jest.fn(),
       value: 'some description',
       setValue: jest.fn(),
-      actionTitle: 'misc.comment'
+      actionTitle: 'misc.comment',
+      placeholder: 'comment',
     };
 
     const wrapper = render(<CommentTextField {...props} />);

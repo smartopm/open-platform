@@ -52,7 +52,8 @@
     "selected_task_marked_as": "Selected Tasks have been successfully marked as",
     "incomplete": "Incomplete",
     "delete_confirmation_text": "Are you sure you want to delete your comment?",
-    "task_completed": "Task completed"
+    "task_completed": "Task completed",
+    "add_note": "Add a note"
   },
   "document": {
     "uploaded_at": "Uploaded at",

@@ -36,6 +36,7 @@ export default function CommentField({ data, refetch, taskId, commentsRefetch })
         setValue={setBody}
         handleSubmit={handleSubmit}
         actionTitle={t('misc.comment')}
+        placeholder={t('misc.type_comment')}
       />
       <CommentCard
         comments={data.taskComments}

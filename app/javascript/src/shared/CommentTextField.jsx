@@ -2,11 +2,16 @@ import React from 'react';
 import Grid from '@mui/material/Grid';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 
-export default function CommentTextField({ value, setValue, handleSubmit, actionTitle }) {
-  const { t } = useTranslation('common');
+export default function CommentTextField({
+  value,
+  setValue,
+  handleSubmit,
+  actionTitle,
+  placeholder,
+  loading
+}) {
   return (
     <Grid container>
       <Grid item md={10} xs={8} style={{ paddingRight: '10px' }}>
@@ -14,7 +19,7 @@ export default function CommentTextField({ value, setValue, handleSubmit, action
           fullWidth
           id="standard-full-width"
           style={{ margin: 0 }}
-          placeholder={t('common:misc.type_comment')}
+          placeholder={placeholder}
           value={value}
           onChange={e => setValue(e.target.value)}
           multiline
@@ -32,7 +37,7 @@ export default function CommentTextField({ value, setValue, handleSubmit, action
           variant="outlined"
           color="primary"
           type="submit"
-          disabled={!value.length}
+          disabled={!value.length || loading}
           data-testid="comment_btn"
           style={{ height: '56px' }}
           onClick={handleSubmit}
@@ -44,10 +49,15 @@ export default function CommentTextField({ value, setValue, handleSubmit, action
     </Grid>
   );
 }
+CommentTextField.defaultProps = {
+  loading: false
+}
 
 CommentTextField.propTypes = {
   value: PropTypes.string.isRequired,
   actionTitle: PropTypes.string.isRequired,
+  placeholder: PropTypes.string.isRequired,
   handleSubmit: PropTypes.func.isRequired,
-  setValue: PropTypes.func.isRequired
+  setValue: PropTypes.func.isRequired,
+  loading: PropTypes.bool,
 };
