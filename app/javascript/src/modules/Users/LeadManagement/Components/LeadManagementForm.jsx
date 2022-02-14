@@ -3,7 +3,6 @@ import { Grid } from '@mui/material';
 import { useLazyQuery, useMutation } from 'react-apollo';
 import { Divider } from '@material-ui/core';
 import PropTypes from 'prop-types';
-// import { useTranslation } from 'react-i18next';
 import { LeadDetailsQuery } from '../../../../graphql/queries';
 import { UpdateUserMutation } from '../../../../graphql/mutations/user';
 import { Spinner } from '../../../../shared/Loading';
