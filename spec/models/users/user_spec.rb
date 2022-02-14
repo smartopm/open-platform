@@ -168,7 +168,9 @@ RSpec.describe Users::User, type: :model do
   end
 
   describe 'scoped validations' do
-    let!(:user) { create(:user_with_community, email: 'john@doublegdp.com') }
+    let!(:user) do
+      create(:user_with_community, email: 'john@doublegdp.com', phone_number: '9988776655')
+    end
     it 'checks for uniqueness of email per community' do
       expect do
         user.community.users.create!(name: 'john doe', email: 'JOHN@DOUBLEGDP.COM',
@@ -176,6 +178,16 @@ RSpec.describe Users::User, type: :model do
       end.to raise_error(
         ActiveRecord::RecordInvalid,
         'Validation failed: Email has already been taken',
+      )
+    end
+
+    it 'checks for uniqueness of phone number per community' do
+      expect do
+        user.community.users.create!(name: 'john doe', phone_number: '9988776655',
+                                     role: user.role)
+      end.to raise_error(
+        ActiveRecord::RecordInvalid,
+        'Validation failed: Phone Number has already been taken',
       )
     end
   end

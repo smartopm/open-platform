@@ -2,6 +2,7 @@
 // values that can be reused across the codebase
 import MaterialConfig from 'react-awesome-query-builder/lib/config/material'
 import { toTitleCase } from './helpers';
+import { industryCategory } from './constants';
 
 
 // Prevent Google Analytics reporting from staging and dev domains
