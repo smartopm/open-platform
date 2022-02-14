@@ -5,7 +5,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import { useQuery, useMutation } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { TextField, IconButton, Chip, Container } from '@material-ui/core';
+import { TextField, IconButton, Chip, Container, useTheme, useMediaQuery } from '@material-ui/core';
 import { Tooltip, Typography } from '@mui/material';
 import { makeStyles } from '@material-ui/styles';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
@@ -30,6 +30,8 @@ export default function UserLabels({ userId }) {
   const [isLabelOpen, setIsLabelOpen] = useState(false);
   const { t } = useTranslation(['common', 'label']);
   const classes = useStyles();
+  const theme = useTheme()
+  const matches = useMediaQuery(theme.breakpoints.only('sm'));
 
   useEffect(() => {
     setLabel(newUserLabel);
@@ -127,7 +129,11 @@ export default function UserLabels({ userId }) {
               </Tooltip>
             ))
           ) : (
-            <span data-testid="no_labels">{t('label:label.no_user_labels')}</span>
+            <span data-testid="no_labels">
+              {
+                matches ? t('label:label.no_labels') : t('label:label.no_user_labels')
+              }
+            </span>
           )}
           <IconButton
             aria-label="add-label"
