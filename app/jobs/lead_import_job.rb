@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'task_create'
+
 # Execute user bulk import
 # rubocop: disable Metrics/ClassLength
 class LeadImportJob < ApplicationJob
@@ -151,7 +153,11 @@ class LeadImportJob < ApplicationJob
           },
         )
 
-        errors[index + 1] = user.errors.full_messages unless user.save
+        if user.save
+          create_task(user, current_user)
+        else
+          errors[index + 1] = user.errors.full_messages
+        end
       end
 
       raise ActiveRecord::Rollback unless errors.empty?
@@ -164,15 +170,12 @@ class LeadImportJob < ApplicationJob
       community: current_user.community,
     )
   end
-  # rubocop:enable Metrics/AbcSize
-  # rubocop:enable Metrics/MethodLength
   # rubocop:enable Metrics/BlockLength
   # rubocop:enable Metrics/CyclomaticComplexity
   # rubocop:enable Metrics/PerceivedComplexity
 
   private
 
-  # rubocop:disable Metrics/AbcSize
   def duplicate_user(email, phone_list, community)
     users = Users::User.arel_table
     Users::User.where.not(email: nil).where(community: community).where(
@@ -184,6 +187,22 @@ class LeadImportJob < ApplicationJob
           { contact_type: 'phone', info: phone_list }),
         ).first
   end
+
+  def create_task(user, current_user)
+    task_params = {
+      body: "Lead management task by #{user.name}",
+      description: 'Lead Management',
+      category: 'to_do',
+      flagged: true,
+      completed: false,
+      user_id: current_user.id,
+      author_id: current_user.id,
+      assignees: user.id,
+    }
+
+    TaskCreate.new_from_action(task_params)
+  end
   # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/MethodLength
 end
 # rubocop: enable Metrics/ClassLength
