@@ -95,11 +95,10 @@ export default function UsersImport() {
             <li> Notes on client: i.e Here&apos;s a new note </li>
           </ol>
           You can click
-          {' '}
           <a href={`/csv_import_sample/download?token=${token}`}>here</a>
           {' '}
-          to download
-          a sample csv file.
+          to download a sample csv
+          file.
         </Grid>
         <Grid item md={6} style={{ margin: '5px auto' }}>
           {isLoading ? (

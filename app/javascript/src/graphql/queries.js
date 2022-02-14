@@ -218,6 +218,66 @@ export const UsersDetails = gql`
     }
   }
 `
+export const LeadDetailsQuery = gql`
+  query User($id: ID!) {
+    user(id: $id) {
+      name
+      title
+      phoneNumber
+      roleName
+      userType
+      id
+      email
+      avatarUrl
+      imageUrl
+      subStatus
+      extRefId
+      expiresAt
+      state
+      labels {
+        id
+        shortDesc
+      }
+      companyName
+      country
+      region
+      companyDescription
+      companyLinkedin
+      companyWebsite
+      relevantLink
+      linkedinUrl
+      africanPresence
+      companyEmployees
+      companyAnnualRevenue
+      levelOfInternationalization
+      leadTemperature
+      leadStatus
+      leadSource
+      companyContacted
+      clientCategory
+      leadType
+      leadOwner
+      modifiedBy
+      createdBy
+      nextSteps
+      firstContactDate
+      lastContactDate
+      followupAt
+      contactDetails
+      industry
+      industrySubSector
+      industryBusinessActivity
+      africanPresence
+      secondaryPhoneNumber
+      secondaryEmail
+      contactInfos{
+        id
+        info
+        contactType
+      }
+    }
+  }
+`
 
 export const UsersLiteQuery = gql`
   query usersLite($query: String!, $limit: Int) {
