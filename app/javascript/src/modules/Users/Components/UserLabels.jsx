@@ -30,8 +30,8 @@ export default function UserLabels({ userId }) {
   const [messageAlert, setMessageAlert] = useState('');
   const [isSuccessAlert, setIsSuccessAlert] = useState(false);
   const [isLabelOpen, setIsLabelOpen] = useState(false);
-  const { t } = useTranslation(['common', 'label'])
-  const classes = useStyles()
+  const { t } = useTranslation(['common', 'label']);
+  const classes = useStyles();
 
   useEffect(() => {
     setLabel(newUserLabel);
@@ -107,38 +107,43 @@ export default function UserLabels({ userId }) {
         {t('label:label.labels')}
         {' '}
         {'  '}
-        {
-          isLabelOpen
-          ? <KeyboardArrowUpIcon className={classes.linkIcon} data-testid="labels_open_icon" />
-          : <KeyboardArrowDownIcon className={classes.linkIcon} data-testid="labels_closed_icon" />
-        }
+        {isLabelOpen ? (
+          <KeyboardArrowUpIcon className={classes.linkIcon} data-testid="labels_open_icon" />
+        ) : (
+          <KeyboardArrowDownIcon className={classes.linkIcon} data-testid="labels_closed_icon" />
+        )}
       </Typography>
       <br />
-      {
-        isLabelOpen && (
+      {isLabelOpen && (
         <Container maxWidth="xl">
-          {userData.userLabels.length
-            ? userData?.userLabels.map(lab => (
+          {userData.userLabels.length ? (
+            userData?.userLabels.map(lab => (
               <Tooltip key={lab.id} title={lab.shortDesc} arrow>
                 <Chip
                   data-testid="chip-label"
                   size="medium"
                   label={truncateString(lab.shortDesc, 12)}
                   onDelete={() => handleDelete(lab.id)}
+                  style={{ marginRight: 5, marginBottom: 5 }}
                 />
               </Tooltip>
-              ))
-            : <span data-testid="no_labels">{t('label:label.no_user_labels')}</span>}
+            ))
+          ) : (
+            <span data-testid="no_labels">{t('label:label.no_user_labels')}</span>
+          )}
           <IconButton
             aria-label="add-label"
             onClick={() => setshowAddTextBox(!showAddTextBox)}
             data-testid="add_label"
           >
-            {!showAddTextBox ? <AddIcon data-testid="add_label_closed" /> : <CloseIcon data-testid="add_label_open" />}
+            {!showAddTextBox ? (
+              <AddIcon data-testid="add_label_closed" />
+            ) : (
+              <CloseIcon data-testid="add_label_open" />
+            )}
           </IconButton>
         </Container>
-        )
-      }
+      )}
       <div className="row d-flex justifiy-content-around align-items-center">
         {showAddTextBox ? (
           <Autocomplete
@@ -174,8 +179,8 @@ export default function UserLabels({ userId }) {
               <TextField
                 {...params}
                 variant="outlined"
-                label={t("common:misc.user_label")}
-                placeholder={t("common:misc.add_label")}
+                label={t('common:misc.user_label')}
+                placeholder={t('common:misc.add_label')}
                 onKeyDown={createLabel}
                 onChange={e => setLabel(e.target.value)}
               />
@@ -193,14 +198,13 @@ UserLabels.propTypes = {
   userId: PropTypes.string.isRequired
 };
 
-
 const useStyles = makeStyles(() => ({
   wrapIcon: {
     verticalAlign: 'middle',
     display: 'inline-flex'
-   },
-   linkIcon: {
-     marginTop: 3,
-     marginLeft: 6
-   }
+  },
+  linkIcon: {
+    marginTop: 3,
+    marginLeft: 6
+  }
 }));
