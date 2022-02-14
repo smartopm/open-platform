@@ -256,8 +256,8 @@ RSpec.describe Mutations::User do
                           role: admin_role,
                           permissions: %w[can_update_user_details can_merge_users])
     end
-    let!(:admin) { create(:admin_user, role: admin_role) }
-    let!(:user) { create(:user_with_community) }
+    let!(:admin) { create(:admin_user, role: admin_role, phone_number: '9988776655') }
+    let!(:user) { create(:user, community: admin.community) }
     let!(:security_guard) do
       create(:security_guard, community_id: admin.community_id,
                               role: security_guard_role)
@@ -387,6 +387,22 @@ RSpec.describe Mutations::User do
 
       expect(result.dig('data', 'userUpdate', 'user', 'userType')).to eql nil
       expect(result['errors']).to_not be nil
+    end
+
+    context 'when a user in community exists with same phone number' do
+      it 'is expected to raise error' do
+        variables = {
+          id: pending_user.id,
+          name: 'Jane Doe',
+          phoneNumber: '9988776655',
+        }
+        result = DoubleGdpSchema.execute(query, variables: variables,
+                                                context: {
+                                                  current_user: admin,
+                                                  site_community: admin.community,
+                                                }).as_json
+        expect(result.dig('errors', 0, 'message')).to eql 'Phone Number has already been taken'
+      end
     end
 
     it 'should merge the 2 given users' do
