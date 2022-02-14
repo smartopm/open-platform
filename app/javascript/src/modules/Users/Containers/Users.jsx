@@ -509,7 +509,7 @@ export default function UsersList() {
 
 export const useStyles = makeStyles(() => ({
   userCard: {
-    marginTop: '80px'
+    marginTop: '130px'
   },
   userCardMobile: {
     marginTop: '200px'

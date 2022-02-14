@@ -80,7 +80,7 @@ export default function UsersActionMenu({
         message={t('users.label_message')}
       />
       {(campaignCreateOption !== 'none' || selectedUsers.length > 0) && (
-        <Grid item style={{ marginTop: '-4px' }}>
+        <Grid item>
           {!matches && viewFilteredUserCount() && (
             <Typography variant="body2">
               {`Showing ${usersCountData?.usersCount || userList.length} ${pluralizeCount(
