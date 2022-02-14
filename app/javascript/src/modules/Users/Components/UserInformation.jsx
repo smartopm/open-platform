@@ -14,7 +14,6 @@ import Avatar from '../../../components/Avatar';
 import UserPlotInfo from './UserPlotInfo';
 import UserMerge from './UserMerge';
 import CenteredContent from '../../../components/CenteredContent';
-import UserNotes from './UserNote';
 import UserDetail from './UserProfileDetail';
 import { TabPanel } from '../../../components/Tabs';
 import UserFilledForms from './UserFilledForms';
@@ -52,11 +51,8 @@ export default function UserInformation({
   useEffect(() => {
     if (tab) {
       setValue(tab);
-    } else {
-      setValue('Contacts');
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [path, tab]);
+  }, [tab]);
 
   useEffect(() => {
     // open merge modal
@@ -158,13 +154,6 @@ export default function UserInformation({
 
         {['admin'].includes(userType) && (
           <>
-            <FeatureCheck features={authState.user.community.features} name="Tasks">
-              <TabPanel value={tabValue} index="Notes">
-                <div className="container">
-                  <UserNotes tabValue={tabValue} userId={data.user.id} />
-                </div>
-              </TabPanel>
-            </FeatureCheck>
             <FeatureCheck features={authState.user.community.features} name="Messages">
               <TabPanel value={tabValue} index="Communication">
                 <UserMessages />

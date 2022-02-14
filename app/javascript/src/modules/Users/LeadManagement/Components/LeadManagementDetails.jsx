@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import { Grid, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
-import Paper from '@mui/material/Paper';
+import Box from '@mui/material/Box';
 import PropTypes from 'prop-types';
 import LeadManagementForm from './LeadManagementForm';
 import { objectAccessor } from '../../../../utils/helpers';
 import { StyledTabs, StyledTab, TabPanel, a11yProps } from '../../../../components/Tabs';
+import UserNotes from '../../Components/UserNote';
 
 export default function LeadManagementDetails({ userId }) {
   const { t } = useTranslation('common');
@@ -21,7 +22,7 @@ export default function LeadManagementDetails({ userId }) {
     setTabValue(Number(newValue));
   }
 
-  const Item = styled(Paper)(({ theme }) => ({
+  const Item = styled(Box)(({ theme }) => ({
     padding: theme.spacing(1)
   }));
 
@@ -79,7 +80,7 @@ export default function LeadManagementDetails({ userId }) {
             <></>
           </TabPanel>
           <TabPanel value={tabValue} index={2} data-testid="lead-management-note-tab">
-            <></>
+            <UserNotes userId={userId} tabValue={tabValue} />
           </TabPanel>
         </Item>
       </Grid>
