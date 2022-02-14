@@ -16,6 +16,8 @@ class HostEnv
         return 'tilisi.doublegdp.com'
       when 'Greenpark'
         return 'greenpark.doublegdp.com'
+      when 'Enyimba'
+        return 'enyimba.doublegdp.com'
       else
         return ENV['HOST']
       end
