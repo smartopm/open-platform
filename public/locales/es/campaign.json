@@ -2,9 +2,18 @@
   "actions": {
     "create_campaign": "Crear campaña",
     "delete_campaign": "Borrar campaña ",
-    "update_campaign": "Actualizar campaña"
+    "edit_campaign": "Editar Campaña",
+    "new_campaign": "Nueva Campaña",
+    "update_campaign": "Actualizar campaña",
+    "use_id_lists": "LISTA DE ID DE USO",
+    "use_label": "USAR ETIQUETA"
   },
   "campaign": {
+    "campaign": "Campaña",
+    "campaign_detail": "Detalle de Campaña",
+    "campaigns": "Campañas",
+    "click_rate": "Tasa de Clics",
+    "communicate": "Comunicarse con la comunidad.",
     "draft": "Borrador",
     "more_details": "Más detalles",
     "scheduled_date": "Fecha programada",
@@ -20,14 +29,26 @@
     "batch_time": "Tiempo de Lote",
     "campaign_name": "Nombre de la campaña",
     "campaign_type": "Tipo de campaña",
+    "done": "Hecho",
+    "draft": "Borrador",
     "email": "Correo electrónico",
+    "include_link": "Incluir Enlace",
+    "link_reply": "Enlace de Respuesta",
+    "mailing_list": "Configurar Lista de Correos",
     "message": "Mensaje",
     "reply_link": "Incluir enlace de respuesta",
+    "scheduled": "Programado",
     "select_label": "Seleccionar Etiqueta",
+    "sending": "Enviando",
     "sms": "SMS",
     "user_id_list": "Lista de usuarios"
   },
   "message": {
+    "add_a_campaign": "Agregar un Título de Campaña",
+    "add_a_message": "Agregar un mensaje",
+    "no_campaigns": "Aún no se ha creado ninguna campaña.",
+    "paste_userid_list": "Para crear una lista de correos, pegue aquí la lista de ID de Usuarios obtenida de la página de Usuarios.",
+    "select_campaign": "Seleccione una campaña para editar o cree una nueva.",
     "sure_to_delete": "¿Estás seguro de que deseas eliminar esta campaña?"
   },
   "misc": {

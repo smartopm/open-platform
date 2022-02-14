@@ -79,7 +79,7 @@ describe('Campaign List page', () => {
         () => {
           expect(container.queryByTestId('container')).toBeInTheDocument();
           expect(container.queryByTestId('campaign-list')).toBeInTheDocument();
-          expect(container.queryByTestId('campaign-title')).toHaveTextContent('Campaigns');
+          expect(container.queryByTestId('campaign-title')).toHaveTextContent('campaign.campaigns');
           expect(container.queryByTestId('campaign-item-menu')).toBeInTheDocument();
         },
         { timeout: 200 }

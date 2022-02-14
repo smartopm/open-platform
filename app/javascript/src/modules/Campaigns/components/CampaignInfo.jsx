@@ -33,7 +33,8 @@ const useStyles = makeStyles(() => ({
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'column',
-    paddingTop: '200px'
+    paddingTop: '200px',
+    width: '100%'
   },
   createCampaign: {
     marginTop: '20px',

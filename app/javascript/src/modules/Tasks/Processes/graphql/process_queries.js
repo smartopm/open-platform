@@ -1,5 +1,6 @@
 import gql from 'graphql-tag';
-import { NotesFragment } from '../../../../graphql/fragments';
+import { NotesFragment , TasksFragment } from '../../../../graphql/fragments';
+
 
 export const ProcessesQuery = gql`
   query GetProcesses($offset: Int, $limit: Int, $query: String) {
@@ -26,6 +27,18 @@ export const ProjectsQuery = gql`
     }
   }
   ${NotesFragment.note}
+`
+
+export const ClientAssignedProjectsQuery = gql`
+  query GetClientAssignedProjects($offset: Int, $limit: Int) {
+    clientAssignedProjects(offset: $offset, limit: $limit) {
+      ...TaskFields
+      subTasks {
+          ...TaskFields
+      }
+    }
+  }
+  ${TasksFragment.task}
 `
 
 export const ProjectStagesQuery = gql`

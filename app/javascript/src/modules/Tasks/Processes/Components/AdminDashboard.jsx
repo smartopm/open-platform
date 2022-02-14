@@ -79,7 +79,7 @@ export default function AdminDashboard() {
   const stats = calculateOpenProjectsByStage(filteredProjects, projectStageLookup)
 
   return(
-    <Container maxWidth="xl">
+    <Container maxWidth="xl" data-testid='processes-admin-dashboard'>
       <Typography variant="h4" className={classes.title}>{t('processes.processes')}</Typography>
       <Link href="/processes/drc/projects">
         <Typography className={classes.processTitle} color='primary' variant="h5">{t('processes.drc_process')}</Typography>

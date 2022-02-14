@@ -3,12 +3,11 @@ import { useQuery } from 'react-apollo';
 import { Grid,Typography } from '@mui/material';
 import { makeStyles } from '@material-ui/styles';
 import { useTranslation } from 'react-i18next';
-import { ProcessesQuery } from '../graphql/process_queries';
+import { ClientAssignedProjectsQuery } from '../graphql/process_queries';
 import ClientPilotViewItem from './ClientPilotViewItem';
 import { Spinner } from '../../../../shared/Loading';
 import CenteredContent from '../../../../shared/CenteredContent';
 import { formatError } from '../../../../utils/helpers';
-
 
 export default function ClientPilotViewList(){
     const limit = 50;
@@ -16,7 +15,7 @@ export default function ClientPilotViewList(){
     const classes = useStyles();
     const { t } = useTranslation('task')
     const { loading, error, data, refetch }
-        = useQuery(ProcessesQuery, {
+        = useQuery(ClientAssignedProjectsQuery, {
         variables: {
             offset,
             limit,
@@ -25,34 +24,31 @@ export default function ClientPilotViewList(){
     });
     if (error) return <CenteredContent>{formatError(error.message)}</CenteredContent>;
     if (loading) return <Spinner />;
+
     return (
-      <div className='container'>
+      <div className='container' data-testid="processes-client-dashboard">
+        <Grid container>
+          <Grid item md={11} xs={11} className={classes.header}>
+            <Grid container spacing={1}>
+              <Grid item md={9} xs={10}>
+                <Typography variant="h4" style={{marginLeft: '5px', marginBottom: '24px'}} data-testid="processes-header">
+                  {t('processes.processes')}
+                </Typography>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
         <Grid container data-testid="project-information">
-
-
-          {data?.processes?.length ?
+          {data?.clientAssignedProjects?.length ?
             (
               <div>
-                <Grid container>
-                  <Grid item md={11} xs={11} className={classes.header}>
-                    <Grid container spacing={1}>
-                      <Grid item md={9} xs={10}>
-                        <Typography variant="h4" style={{marginLeft: '5px', marginBottom: '24px'}} data-testid="processes-header">
-                          {t('processes.processes')}
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                  </Grid>
-                </Grid>
-                {data?.processes?.map(process => (
-                                        
-                  <ClientPilotViewItem key={process.id} process={process} refetch={refetch} />
+                {data?.clientAssignedProjects?.map(project => (
+                  <ClientPilotViewItem key={project.id} project={project} refetch={refetch} />
                     ))}
               </div>
             )
         : (<CenteredContent>{t('processes.no_assigned_projects')}</CenteredContent>)
       }
-    
         </Grid>
       </div>
     )
