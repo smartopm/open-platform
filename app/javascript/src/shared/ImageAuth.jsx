@@ -20,10 +20,8 @@ export default function ImageAuth({ imageLink, className, type, alt, style, auth
       }
     };
 
-    // The dummy param is a hack to prevent this caching
-    // issue: (https://gitlab.com/doublegdp/app/-/issues/1921)
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const result = useFetchMedia(`${imageLink}/auth?dummy=${Date.now()}`, options);
+    const result = useFetchMedia(`${imageLink}/auth`, options);
     isError = result.isError;
     loading = result.loading;
     response = result.response;
@@ -38,7 +36,7 @@ export default function ImageAuth({ imageLink, className, type, alt, style, auth
     return (
       <img
         data-testid="authenticated_image"
-        src={auth ? response.url : `${imageLink}?dummy=${Date.now()}`}
+        src={auth ? response.url : imageLink}
         style={style}
         className={className}
         alt={alt}
@@ -46,14 +44,14 @@ export default function ImageAuth({ imageLink, className, type, alt, style, auth
     );
   }
   if (type === 'imageAvatar') {
-    return <Avatar alt={alt} src={auth ? response.url : `${imageLink}?dummy=${Date.now()}`} data-testid="authenticated_avatar" />;
+    return <Avatar alt={alt} src={auth ? response.url : imageLink} data-testid="authenticated_avatar" />;
   }
   return (
     <iframe
       height={600}
       width={width < 550 ? width - 20 : 600}
       title="attachment"
-      src={auth ? response.url : `${imageLink}?dummy=${Date.now()}`}
+      src={auth ? response.url : imageLink}
       data-testid="authenticated_file"
     />
   );

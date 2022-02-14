@@ -140,7 +140,7 @@ describe('Properties & Co-ownership Payment Plan', () => {
     // Verify Pending Balance & Payment plan is updated for Primary Owner  (User 1)
     cy.get('[data-testid=no-plan-available]').should('not.exist');
     cy.contains('Total Balance').should('exist');
-    cy.contains('- K 6000').should('exist');
+    cy.contains('6,000').should('exist');
 
     // Verify Pending balance & payment plan for Co-owner (User 2)
     cy.visitUserProfile('John Doe');
@@ -150,7 +150,7 @@ describe('Properties & Co-ownership Payment Plan', () => {
 
     // Pending balance should be attached to primary owner
     cy.contains('Total Balance').should('not.exist');
-    cy.contains('- K 6000').should('not.exist');
+    cy.get('[data-testid=pending-balance]').should('not.exist');
 
     // User 2 should be listed as co-owner in payment plan
     cy.get('[data-testid=plan-menu]').click();

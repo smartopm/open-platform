@@ -240,6 +240,7 @@ export const LeadDetailsQuery = gql`
       }
       companyName
       country
+      region
       companyDescription
       companyLinkedin
       companyWebsite
@@ -248,7 +249,6 @@ export const LeadDetailsQuery = gql`
       africanPresence
       companyEmployees
       companyAnnualRevenue
-      industry
       levelOfInternationalization
       leadTemperature
       leadStatus
@@ -264,8 +264,17 @@ export const LeadDetailsQuery = gql`
       lastContactDate
       followupAt
       contactDetails
+      industry
       industrySubSector
       industryBusinessActivity
+      africanPresence
+      secondaryPhoneNumber
+      secondaryEmail
+      contactInfos{
+        id
+        info
+        contactType
+      }
     }
   }
 `

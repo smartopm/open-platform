@@ -194,7 +194,7 @@ function fetchMoreOpenTasks() {
                     <IconButton aria-controls="task-attach-file-icon">
                       <AttachFileIcon
                         fontSize="small"
-                        color={task?.documents?.length ? 'primary' : 'disabled'}
+                        color={task?.attachments?.length ? 'primary' : 'disabled'}
                       />
                     </IconButton>
                   </Grid>
@@ -205,7 +205,7 @@ function fetchMoreOpenTasks() {
                     className={classes.iconItem}
                     style={{ paddingLeft: '5px' }}
                   >
-                    <span data-testid="file_attachments_total">{task.documents?.length}</span>
+                    <span data-testid="file_attachments_total">{task.attachments?.length}</span>
                   </Grid>
                   <Grid item md={1} xs={1}>
                     <IconButton

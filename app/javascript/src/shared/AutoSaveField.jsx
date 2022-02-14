@@ -70,7 +70,13 @@ AutoSaveField.propTypes = {
 };
 
 const useStyles = makeStyles(() => ({
-  liveTextField: {},
+  liveTextField: {
+    color: '#575757',
+    letterSpacing: 0,
+    lineHeight: '3em',
+    fontSize: '1rem',
+    fontWeight: '0',
+  },
   disabled: {
     borderBottom: 0,
     '&:before': {

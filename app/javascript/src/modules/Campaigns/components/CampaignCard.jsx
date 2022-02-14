@@ -19,13 +19,13 @@ export default function CampaignCard({ camp, menuData, handleClick }) {
         styles={{ marginBottom: '10px' }}
         contentStyles={{ padding: '4px 4px 4px 10px' }}
       >
-        <Grid container spacing={5} className={classes.container}>
-          <Grid item lg={2} md={3} sm={3} xs={3}>
+        <Grid container className={classes.container}>
+          <Grid item lg={3} md={3} sm={3} xs={3}>
             <Typography variant="caption" color="textSecondary" component="span" data-testid='batch-time'>
               {camp.batchTime ? dateToString(camp.batchTime) : 'Never '}
             </Typography>
           </Grid>
-          <Grid item lg={8} md={6} sm={6} xs={6} data-testid='name'>
+          <Grid item lg={7} md={6} sm={6} xs={6} data-testid='name'>
             <Typography
               variant="body2"
               data-testid="campaign_name"

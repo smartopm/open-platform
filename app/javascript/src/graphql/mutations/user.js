@@ -8,6 +8,8 @@ export const UpdateUserMutation = gql`
     $id: ID!
     $name: String!
     $email: String
+    $linkedinUrl: String
+    $title: String
     $phoneNumber: String
     $userType: String
     $requestReason: String
@@ -30,26 +32,32 @@ export const UpdateUserMutation = gql`
     $leadType: String
     $clientCategory: String
     $companyContacted: String
-    $leadSource: String
     $leadStatus: String
+    $leadSource: String
     $leadTemperature: String
     $levelOfInternationalization: String
-    $industry: String
     $companyAnnualRevenue: String
     $companyEmployees: String
+    $industryBusinessActivity: String
+    $industrySubSector: String
+    $industry: String
     $relevantLink: String
     $companyWebsite: String
     $companyLinkedin: String
     $companyDescription: String
     $country: String
+    $region: String
     $companyName: String
     $contactDetails: JSON
+    $africanPresence: String
  
   ) {
     result: userUpdate(
       id: $id
       name: $name
       email: $email
+      linkedinUrl: $linkedinUrl
+      title: $title
       phoneNumber: $phoneNumber
       userType: $userType
       requestReason: $requestReason
@@ -76,16 +84,20 @@ export const UpdateUserMutation = gql`
       leadStatus: $leadStatus
       leadTemperature: $leadTemperature
       levelOfInternationalization: $levelOfInternationalization
-      industry: $industry
       companyAnnualRevenue: $companyAnnualRevenue
       companyEmployees: $companyEmployees
+      industryBusinessActivity: $industryBusinessActivity
+      industry: $industry
+      industrySubSector: $industrySubSector
       relevantLink: $relevantLink
       companyWebsite: $companyWebsite
       companyLinkedin: $companyLinkedin
       companyDescription: $companyDescription
       country: $country
+      region: $region
       companyName: $companyName
       contactDetails: $contactDetails
+      africanPresence: $africanPresence
 
     ) {
       user {

@@ -387,6 +387,14 @@ export const DeleteNoteComment = gql`
   }
 `
 
+export const DeleteNoteDocument = gql`
+mutation noteDocumentDelete($documentId: ID!) {
+  noteDocumentDelete(documentId: $documentId){
+    documentDeleted
+  }
+}
+`
+
 export const AddNewProperty = gql`
 mutation AddNewProperty($parcelNumber: String!,
   $address1: String,

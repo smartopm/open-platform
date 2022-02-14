@@ -258,6 +258,7 @@ export function ActionDialog({ handleClose, open, handleOnSave, message, type, d
           variant="contained"
           color="primary"
           disabled={disableActionBtn}
+          data-testid="proceed_button"
         >
           {t('menu.proceed')}
         </Button>

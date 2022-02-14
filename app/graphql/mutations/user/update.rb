@@ -49,6 +49,7 @@ module Mutations
       argument :followup_at, String, required: false
       argument :contact_details, GraphQL::Types::JSON, required: false
       argument :african_presence, String, required: false
+      argument :region, String, required: false
 
       field :user, Types::UserType, null: true
 
@@ -86,7 +87,7 @@ module Mutations
 
         contact_info.each do |value|
           if value['id'].nil?
-            user.contact_infos.create(contact_type: value['contactType'], info: value['info'])
+            user.contact_infos.create!(contact_type: value['contactType'], info: value['info'])
           else
             contact = user.contact_infos.find(value['id'])
             contact.update(info: value['info']) unless contact.info.eql?(value['info'])

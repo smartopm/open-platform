@@ -30,6 +30,17 @@ const userMenus = [
   },
   {
     routeProps: {
+      path: '/user/:id?tab=Invitations',
+      component: <span />
+    },
+    name: t => t('menu.invitations'),
+    featureName: 'LogBook',
+    moduleName: 'entry_request',
+    accessibleBy: []
+  },
+
+  {
+    routeProps: {
       path: '/user/:id?tab=LeadManagement',
       component: <span />
     },
