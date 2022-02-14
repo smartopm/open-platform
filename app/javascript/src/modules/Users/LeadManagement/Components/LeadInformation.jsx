@@ -202,9 +202,7 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
             onChange={handleChange}
             value={leadFormData?.user?.leadOwner}
             variant="outlined"
-            multiline
             fullWidth
-            rows={2}
             size="small"
             margin="normal"
             inputProps={{
@@ -222,6 +220,7 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
             selectedDate={leadFormData?.user?.firstContactDate}
             inputProps={{ 'data-testid': 'start_time_input' }}
             inputVariant="outlined"
+            size="small"
           />
         </Grid>
 
@@ -234,8 +233,6 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
             value={leadFormData?.user?.createdBy}
             variant="outlined"
             multiline
-            fullWidth
-            rows={2}
             size="small"
             margin="normal"
             inputProps={{
@@ -253,6 +250,7 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
             }
             selectedDate={leadFormData?.user?.lastContactDate}
             inputVariant="outlined"
+            size="small"
           />
         </Grid>
 
@@ -265,8 +263,6 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
             value={leadFormData?.user?.modifiedBy}
             variant="outlined"
             fullWidth
-            multiline
-            rows={2}
             size="small"
             margin="normal"
             inputProps={{
@@ -284,6 +280,7 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
             }
             selectedDate={leadFormData?.user?.followupAt}
             inputVariant="outlined"
+            size="small"
           />
         </Grid>
       </Grid>

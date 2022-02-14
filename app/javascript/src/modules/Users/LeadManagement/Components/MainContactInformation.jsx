@@ -51,6 +51,7 @@ export default function MainContactInformation({ leadFormData, handleChange, dis
             style={{ width: '100%' }}
             onChange={handleChange}
             value={leadFormData?.user?.name}
+            data-testid="lead_management_main_section_name"
             variant="outlined"
             fullWidth
             rows={2}
@@ -71,7 +72,8 @@ export default function MainContactInformation({ leadFormData, handleChange, dis
             size="small"
             margin="normal"
             inputProps={{
-              'aria-label': 'title'
+              'aria-label': 'title',
+              'data-testid': 'main-section-title-input'
             }}
           />
 

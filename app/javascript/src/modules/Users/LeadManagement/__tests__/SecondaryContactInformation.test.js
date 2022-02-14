@@ -1,7 +1,7 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
-import { render, screen, fireEvent } from '@testing-library/react';
-import MainContactInformation from '../Components/MainContactInformation';
+import { render, screen } from '@testing-library/react';
+import SecondaryCcntactInformation from '../Components/SecondaryContactInformation';
 
 describe('LeadManagementDetails Page', () => {
   const data = {
@@ -42,32 +42,57 @@ describe('LeadManagementDetails Page', () => {
       relevantLink: 'today is hot',
       roleName: 'Admin',
       secondaryEmail: '',
-      secondaryPhoneNumber: ''
+      secondaryPhoneNumber: '',
+      contactDetails: {
+        primaryContact: {
+          name: '',
+          title: '',
+          primaryEmail: '',
+          secondaryEmail: '',
+          primaryPhoneNumber: '',
+          secondaryPhoneNumber: '',
+          linkedinUrl: ''
+        },
+        secondaryContact1: {
+          name: '',
+          title: '',
+          primaryEmail: '',
+          secondaryEmail: '',
+          primaryPhoneNumber: '',
+          secondaryPhoneNumber: '',
+          linkedinUrl: ''
+        },
+        secondaryContact2: {
+          name: '',
+          title: '',
+          primaryEmail: '',
+          secondaryEmail: '',
+          primaryPhoneNumber: '',
+          secondaryPhoneNumber: '',
+          linkedinUrl: ''
+        }
+      }
     }
   };
 
   it('LeadManagementDetails component', () => {
     const onChange = jest.fn();
-    render(<MainContactInformation leadFormData={data} handleChange={onChange} disabled />);
+    render(
+      <SecondaryCcntactInformation
+        leadFormData={data}
+        handleSecondaryContact1Change={onChange}
+        handleSecondaryContact2Change={onChange}
+      />
+    );
 
-    expect(screen.queryByTestId('lead-management-main-contact-section')).toBeInTheDocument();
-    expect(screen.queryByTestId('contact_info')).toBeInTheDocument();
-    expect(screen.queryByText('lead_management.primary_info')).toBeInTheDocument();
-    expect(screen.queryByTestId('lead_management_button')).toBeInTheDocument();
-    expect(screen.queryByTestId('lead_management_button')).toBeDisabled();
-    expect(screen.queryByText('lead_management.save_updates')).toBeInTheDocument();
-    expect(screen.queryByText('lead_management.name')).toBeInTheDocument();
-
-    expect(screen.queryAllByText('lead_management.title')[0]).toBeInTheDocument();
-    expect(screen.queryAllByText('lead_management.primary_email')[0]).toBeInTheDocument();
-    expect(screen.queryAllByText('lead_management.secondary_email')[0]).toBeInTheDocument();
-    expect(screen.queryAllByText('lead_management.primary_phone')[0]).toBeInTheDocument();
-    expect(screen.queryAllByText('lead_management.secondary_phone')[0]).toBeInTheDocument();
-    expect(screen.queryByLabelText('linkedin')).toBeInTheDocument();
-
-    // simulate input
-    const input = screen.queryByTestId('main-section-title-input');
-    fireEvent.change(input, { target: { value: 'Mr. Boss' } });
-    expect(input.value).toBe('Mr. Boss');
+    expect(
+      screen.queryByTestId('lead-management-secondary-info-section-header')
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByText('lead_management.secondary_contact_section1_header')
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByText('lead_management.secondary_contact_section2_header')
+    ).toBeInTheDocument();
   });
 });
