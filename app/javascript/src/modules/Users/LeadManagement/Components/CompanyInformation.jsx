@@ -26,7 +26,8 @@ export default function CompanyInformation({ leadFormData, handleChange }) {
       marginTop: theme.spacing(2)
     },
     menuPaper: {
-      maxHeight: 400
+      maxHeight: 400,
+      padding: 4
     },
 
     input: {

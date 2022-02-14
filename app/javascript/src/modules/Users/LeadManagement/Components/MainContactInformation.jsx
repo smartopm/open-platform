@@ -78,7 +78,7 @@ export default function MainContactInformation({ leadFormData, handleChange, dis
           />
 
           <TextField
-            name="primaryEmail"
+            name="email"
             label={t('lead_management.primary_email')}
             style={{ width: '100%' }}
             onChange={handleChange}

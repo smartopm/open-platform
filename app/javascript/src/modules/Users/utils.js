@@ -51,15 +51,6 @@ export const initialLeadFormData = {
 
     // contact details object for easier update
     contactDetails: {
-      primaryContact: {
-        name: '',
-        title: '',
-        primaryEmail: '',
-        secondaryEmail: '',
-        primaryPhoneNumber: '',
-        secondaryPhoneNumber: '',
-        linkedinUrl: ''
-      },
       secondaryContact1: {
         name: '',
         title: '',
