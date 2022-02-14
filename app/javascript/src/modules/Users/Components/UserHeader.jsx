@@ -1,5 +1,7 @@
+/* eslint-disable react/forbid-prop-types */
 import React, { useState, useRef } from 'react';
 import Typography from '@material-ui/core/Typography';
+import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTranslation } from 'react-i18next';
@@ -73,10 +75,10 @@ export default function UserHeader({
 
   return (
     <Grid container>
-      <Grid item lg={12} md={12} sm={12} xs={12}>
+      <Grid item lg={12} md={12} sm={12} xs={12} data-testid='title'>
         <Typography variant="h4">Users</Typography>
       </Grid>
-      <Grid container className={classes.container}>
+      <Grid container className={classes.container} data-testid='select'>
         <Hidden smDown>
           <Grid item lg={3} md={3} sm={6} xs={6}>
             <SelectButton
@@ -253,3 +255,19 @@ const useStyles = makeStyles(() => ({
     margin: '10px 20px 10px 0'
   }
 }));
+
+UserHeader.propTypes = {
+  setCampaignOption: PropTypes.func.isRequired,
+  handleSearchClick: PropTypes.func.isRequired,
+  filterObject: PropTypes.shape({
+    toggleFilterMenu: PropTypes.func,
+    labelError: PropTypes.string,
+    displayBuilder: PropTypes.func,
+    handleQueryOnChange: PropTypes.func,
+    queryBuilderConfig: PropTypes.object,
+    queryBuilderInitialValue: PropTypes.object
+  }).isRequired,
+  csvObject: PropTypes.object.isRequired,
+  menuObject: PropTypes.object.isRequired,
+  actionObject: PropTypes.object.isRequired
+}

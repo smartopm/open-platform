@@ -117,6 +117,10 @@ UsersActionMenu.defaultProps = {
   }
 };
 
+UsersActionMenu.defaultProps = {
+  userList: []
+}
+
 UsersActionMenu.propTypes = {
   campaignCreateOption: PropTypes.string.isRequired,
   handleCampaignCreate: PropTypes.func.isRequired,
@@ -133,5 +137,7 @@ UsersActionMenu.propTypes = {
       })
     )
   }).isRequired,
-  labelsRefetch: PropTypes.func.isRequired
+  labelsRefetch: PropTypes.func.isRequired,
+  viewFilteredUserCount: PropTypes.func.isRequired,
+  userList: PropTypes.arrayOf(PropTypes.object)
 };

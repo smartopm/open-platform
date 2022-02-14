@@ -1,11 +1,12 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
+// import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
 
 export default function FixedHeader({ children }) {
-  const matches = useMediaQuery('(max-width:600px)');
+  // const matches = useMediaQuery('(max-width:600px)');
   const classes = useStyles();
   return (
     <div className="container">
@@ -37,3 +38,7 @@ const useStyles = makeStyles(() => ({
     margin: '20px -200px 0 -200px'
   }
 }));
+
+FixedHeader.propTypes = {
+  children: PropTypes.node.isRequired
+};

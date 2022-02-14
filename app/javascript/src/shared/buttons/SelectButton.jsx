@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
 import Button from '@material-ui/core/Button';
 import Popper from '@material-ui/core/Popper';
@@ -22,13 +23,13 @@ export default function SelectButton({
 }) {
   return (
     <>
-      <ButtonGroup color="primary" ref={anchorRef} aria-label="outlined select button">
+      <ButtonGroup color="primary" ref={anchorRef} aria-label="outlined select button" data-testid='button'>
         <Button>{buttonText}</Button>
         <Button onClick={handleClick}>
           <ArrowDropDownIcon />
         </Button>
       </ButtonGroup>
-      <Popper open={open} anchorEl={anchorEl} transition style={{zIndex: 2000}}>
+      <Popper open={open} anchorEl={anchorEl} transition style={{zIndex: 2000}} data-testid='list'>
         {({ TransitionProps, placement }) => (
           <Grow
             {...TransitionProps}
@@ -57,4 +58,21 @@ export default function SelectButton({
       </Popper>
     </>
   );
+}
+
+SelectButton.defaultProps = {
+  selectedKey: ''
+}
+
+SelectButton.propTypes = {
+  buttonText: PropTypes.string.isRequired,
+  open: PropTypes.bool.isRequired,
+  anchorEl: PropTypes.string.isRequired,
+  anchorRef: PropTypes.string.isRequired,
+  handleClose: PropTypes.func.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  options: PropTypes.object.isRequired,
+  selectedKey: PropTypes.string,
+  handleMenuItemClick: PropTypes.func.isRequired,
+  handleClick: PropTypes.func.isRequired
 }
