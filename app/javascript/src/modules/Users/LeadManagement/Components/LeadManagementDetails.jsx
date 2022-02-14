@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import LeadManagementForm from './LeadManagementForm';
 import { objectAccessor } from '../../../../utils/helpers';
 import { StyledTabs, StyledTab, TabPanel, a11yProps } from '../../../../components/Tabs';
-import UserNotes from '../../Components/UserNote';
+import UserNotes from '../../Components/UserNotes';
 
 export default function LeadManagementDetails({ userId }) {
   const { t } = useTranslation('common');

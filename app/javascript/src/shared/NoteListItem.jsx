@@ -14,16 +14,17 @@ export default function NoteListItem({ hasActions, note, handleOpenMenu }) {
   return (
     <ListItem className={classes.alignItem}>
       <ListItemText
+        disableTypography
         secondary={(
           <>
-            <Typography variant="body2" gutterBottom>
+            <Typography variant="body2" data-testid="note_created_at">
               {dateToString(note.createdAt)}
             </Typography>
             <Typography
               component="span"
               variant="body2"
               className={classes.noteBody}
-              data-testid="note-body"
+              data-testid="note_body"
             >
               {note.body}
             </Typography>
