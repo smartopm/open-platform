@@ -30,6 +30,8 @@ export default function UserLabels({ userId }) {
   const [isLabelOpen, setIsLabelOpen] = useState(false);
   const { t } = useTranslation(['common', 'label']);
   const classes = useStyles();
+  const theme = useTheme()
+  const matches = useMediaQuery(theme.breakpoints.only('sm'));
 
   useEffect(() => {
     setLabel(newUserLabel);
