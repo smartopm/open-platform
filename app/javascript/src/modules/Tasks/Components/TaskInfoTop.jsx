@@ -1,8 +1,10 @@
+/* eslint-disable max-lines */
 /* eslint-disable complexity */
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import TextField from '@material-ui/core/TextField';
 import {
+  Button,
   Grid,
   Chip,
   Typography,
@@ -195,7 +197,7 @@ export default function TaskInfoTop({
               mutationAction={(value) => updateTask('body', value)}
               stateAction={(value) => setEditingBody(value)}
             />
-)}
+          )}
         </Grid>
         {!matches && (
           <Grid item md={2}>
@@ -336,8 +338,8 @@ export default function TaskInfoTop({
           <Grid
             item
             xs={4}
-            md={2}
-            style={matches ? { marginRight: '9px', paddingTop: '5px' } : { marginRight: '41px' }}
+            md={3}
+            style={matches ? { marginRight: '9px', paddingTop: '5px' } : { marginRight: '0' }}
           >
             <Typography variant="caption" color="textSecondary">
               {t('task.assigned_to_txt')}
@@ -406,6 +408,25 @@ export default function TaskInfoTop({
           </Grid>
         </Grid>
       </Grid>
+      {data?.formUser?.user && (
+        <Grid container className={classes.submittedFormSection}>
+          <Grid item xs={4} md={3}>
+            <Typography variant="caption" color="textSecondary">
+              {t('processes.submitted_form')}
+            </Typography>
+          </Grid>
+          <Grid item xs={12} md={9}>
+            <Button
+              href={`/user_form/${data.formUser.user.id}/${data.formUser.id}/task`}
+              variant="outlined"
+              color="primary"
+              className={classes.button}
+            >
+              {t('processes.open_submitted_form')}
+            </Button>
+          </Grid>
+        </Grid>
+      )}
       <Grid container className={classes.descriptionSection}>
         <Grid item xs={12} md={12}>
           <Typography variant="caption" color='textSecondary'>
@@ -459,6 +480,9 @@ const useStyles = makeStyles({
   parentTaskSection: {
     alignItems: 'center',
     marginBottom: '8px'
+  },
+  submittedFormSection: {
+    marginTop: '8px'
   },
   descriptionSection: {
     marginTop: '8px'

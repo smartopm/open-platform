@@ -1,6 +1,8 @@
 import React, { useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Grid, Typography } from '@mui/material';
+import { Button } from '@material-ui/core';
+import { makeStyles } from '@material-ui/styles';
 import { Link } from 'react-router-dom';
 import { useLazyQuery } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
@@ -15,6 +17,7 @@ import CenteredContent from '../../../../shared/CenteredContent';
 export default function ProjectOverview({ data }) {
   const { authState, updateStatus, handleMessageAlertClose } = useContext(TaskContext);
   const { t } = useTranslation('task');
+  const classes = useStyles();
 
   const FORM_FIELD_NAMES_TO_INCLUDE = [
     'Project Developer',
@@ -61,7 +64,12 @@ export default function ProjectOverview({ data }) {
       <Grid container style={{ marginLeft: '-20px' }} data-testid="project-information">
         {formEntriesData?.length ? (
           formEntriesData.map(d => (
-            <Grid container spacing={10} key={d.formProperty.fieldName}>
+            <Grid
+              container
+              spacing={10}
+              key={d.formProperty.fieldName}
+              className={classes.overViewItem}
+            >
               <Grid item md={5} xs={5}>
                 <Typography variant="caption" color="textSecondary">
                   {d.formProperty.fieldName.replace('Project', '')}
@@ -79,30 +87,33 @@ export default function ProjectOverview({ data }) {
         )}
         { data?.formUser?.user && (
           <>
-            <Grid container spacing={10}>
+            <Grid container spacing={10} className={classes.overViewItem}>
               <Grid item md={5} xs={5}>
                 <Typography variant="caption" color="textSecondary">
                   {t('processes.submitted_by')}
                 </Typography>
               </Grid>
               <Grid item md={7} xs={7}>
-                <Typography variant="subtitle2" color="#6C6C6C" style={{ fontWeight: 400 }}>
+                <Typography className={classes.link} variant="subtitle2" style={{ fontWeight: 400 }}>
                   {data.formUser.user?.name}
                 </Typography>
               </Grid>
             </Grid>
-            <Grid container spacing={10}>
+            <Grid container spacing={10} className={classes.overViewItem}>
               <Grid item md={5} xs={5}>
                 <Typography variant="caption" color="textSecondary">
                   {t('processes.submitted_form')}
                 </Typography>
               </Grid>
               <Grid item md={7} xs={7}>
-                <Link to={`/user_form/${data.formUser.user.id}/${data.formUser.id}/task`}>
-                  <Typography variant="subtitle2" color="#6C6C6C" style={{ fontWeight: 400 }}>
-                    {t('processes.open_submitted_form').toUpperCase()}
-                  </Typography>
-                </Link>
+                <Button
+                  href={`/user_form/${data.formUser.user.id}/${data.formUser.id}/task`}
+                  variant="outlined"
+                  color="primary"
+                  className={classes.button}
+                >
+                  {t('processes.open_submitted_form')}
+                </Button>
               </Grid>
             </Grid>
           </>
@@ -183,3 +194,15 @@ ProjectOverviewSplitView.propTypes = {
   refetch: PropTypes.func.isRequired,
   handleProjectStepClick: PropTypes.func.isRequired
 };
+
+const useStyles = makeStyles(theme => ({
+  link: {
+    color: theme.palette?.primary?.main
+  },
+  button: {
+    padding: '2px 10px'
+  },
+  overViewItem: {
+    marginBottom: '-30px'
+  }
+}));
