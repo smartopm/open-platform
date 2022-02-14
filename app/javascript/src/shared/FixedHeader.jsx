@@ -1,12 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Grid from '@material-ui/core/Grid';
 import Divider from '@material-ui/core/Divider';
 
 export default function FixedHeader({ children }) {
-  const matches = useMediaQuery('(max-width:600px)');
   const classes = useStyles();
   return (
     <div className="container">
@@ -14,7 +12,6 @@ export default function FixedHeader({ children }) {
         <Grid
           item
           className={classes.container}
-          style={matches ? { paddingRight: '5%' } : { paddingRight: '25%' }}
         >
           {children}
           <Divider className={classes.divider} />
@@ -31,7 +28,14 @@ const useStyles = makeStyles(() => ({
     zIndex: 10,
     background: '#FFFFFF',
     top: 50,
-    width: '100%'
+    width: '100%',
+    paddingRight: '25%',
+    '@media (max-width: 600px)': {
+      paddingRight: '5%'
+    },
+    '@media (min-width: 601px) and (max-width: 1400px)': {
+      paddingRight: '20%'
+    }
   },
   divider: {
     margin: '20px -200px 0 -200px'
