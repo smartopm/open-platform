@@ -99,11 +99,11 @@ export default function UserLabels({ userId }) {
       />
       <br />
       <Typography variant="subtitle1" className={classes.wrapIcon} onClick={() => setIsLabelOpen(!isLabelOpen)}>
-        Labels
+        {t('label.labels')}
         {' '}
         {'  '}
         {
-          isLabelOpen 
+          isLabelOpen
           ? <KeyboardArrowUpIcon className={classes.linkIcon}  />
           : <KeyboardArrowDownIcon className={classes.linkIcon}  />
         }
@@ -189,7 +189,7 @@ const useStyles = makeStyles(() => ({
     display: 'inline-flex'
    },
    linkIcon: {
-     marginTop: 3, 
+     marginTop: 3,
      marginLeft: 6
    }
 }));
