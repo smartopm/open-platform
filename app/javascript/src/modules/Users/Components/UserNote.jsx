@@ -11,6 +11,7 @@ import dateutil from '../../../utils/dateutil'
 import { UpdateNote } from '../../../graphql/mutations'
 import { UserNotesQuery } from '../../../graphql/queries'
 import { Spinner } from '../../../shared/Loading'
+import NoteListItem from '../../../shared/NoteListItem';
 
 export function UserNote({ note, handleFlagNote }) {
   const { t } = useTranslation('users')
@@ -25,16 +26,7 @@ export function UserNote({ note, handleFlagNote }) {
         </i>
       </div>
 
-      <Tooltip title={t("common:form_placeholders.flag")}>
-        <IconButton 
-          aria-label="Flag as a todo" 
-          onClick={() => handleFlagNote(note.id)}
-          className={css(styles.actionIcon)}
-          color="primary"
-        >
-          <AddBoxIcon />
-        </IconButton>
-      </Tooltip>
+
       <br />
     </Fragment>
   )
@@ -42,7 +34,6 @@ export function UserNote({ note, handleFlagNote }) {
 
 export default function UserNotes({ userId, tabValue }){
   const [isLoading, setLoading] = useState(false)
-  const [noteUpdate] = useMutation(UpdateNote)
   const [loadNotes, { loading, error, refetch, data }] = useLazyQuery(UserNotesQuery, {
     variables: { userId },
     fetchPolicy: 'cache-and-network'
@@ -55,24 +46,17 @@ export default function UserNotes({ userId, tabValue }){
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tabValue])
 
-  function handleFlagNote(id) {
-    setLoading(true)
-    noteUpdate({ variables: { id, flagged: true } }).then(() => {
-      setLoading(false)
-      refetch()
-    })
-  }
-
   if (loading || isLoading || !data) return <Spinner />
   if (error) return error.message
 
-  return data?.userNotes.map(note => (
-    <UserNote
-      key={note.id}
-      note={note}
-      handleFlagNote={handleFlagNote}
-    />
-  ))
+  return (
+    <>
+      {
+      data?.userNotes.map(note => <NoteListItem key={note.id} note={note} />)
+    }
+    </>
+
+  )
 }
 
 

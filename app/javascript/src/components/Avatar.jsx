@@ -17,6 +17,7 @@ const handleImgError = (e) => {
   e.target.src = '/images/default_avatar.svg';
 }
 
+// TODO: Refactor this component to make it simpler and use MUI's Avatar
 export default function Avatar({ imageUrl, user, style, searchedUser, alt }) {
   const imageStyles = {
     xSmall: styles.extraSmall,
