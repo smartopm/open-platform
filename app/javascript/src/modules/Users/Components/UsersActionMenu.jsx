@@ -39,7 +39,7 @@ export default function UsersActionMenu({
   }
 
   function handleAssignLabel() {
-    if (campaignCreateOption === 'all' && usersCountData.usersCount > USERS_LABEL_WARNING_LIMIT) {
+    if (usersCountData.usersCount > USERS_LABEL_WARNING_LIMIT) {
       setLabelAssignWarningOpen(true);
       return;
     }
@@ -139,5 +139,5 @@ UsersActionMenu.propTypes = {
   }).isRequired,
   labelsRefetch: PropTypes.func.isRequired,
   viewFilteredUserCount: PropTypes.func.isRequired,
-  userList: PropTypes.arrayOf(PropTypes.object)
+  userList: PropTypes.arrayOf(PropTypes.string)
 };

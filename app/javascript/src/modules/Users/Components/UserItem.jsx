@@ -4,13 +4,13 @@ import {
   Typography,
   ListItemAvatar,
   IconButton,
-  Grid,
   Dialog,
   DialogTitle,
   DialogContent,
   Hidden,
   Checkbox
 } from '@material-ui/core';
+import Grid from '@mui/material/Grid';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';

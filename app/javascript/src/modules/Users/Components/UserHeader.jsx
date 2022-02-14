@@ -75,10 +75,10 @@ export default function UserHeader({
 
   return (
     <Grid container>
-      <Grid item lg={12} md={12} sm={12} xs={12} data-testid='title'>
+      <Grid item lg={12} md={12} sm={12} xs={12} data-testid="title">
         <Typography variant="h4">Users</Typography>
       </Grid>
-      <Grid container className={classes.container} data-testid='select'>
+      <Grid container className={classes.container} data-testid="select">
         <Hidden smDown>
           <Grid item lg={3} md={3} sm={6} xs={6}>
             <SelectButton
@@ -259,15 +259,8 @@ const useStyles = makeStyles(() => ({
 UserHeader.propTypes = {
   setCampaignOption: PropTypes.func.isRequired,
   handleSearchClick: PropTypes.func.isRequired,
-  filterObject: PropTypes.shape({
-    toggleFilterMenu: PropTypes.func,
-    labelError: PropTypes.string,
-    displayBuilder: PropTypes.func,
-    handleQueryOnChange: PropTypes.func,
-    queryBuilderConfig: PropTypes.object,
-    queryBuilderInitialValue: PropTypes.object
-  }).isRequired,
+  filterObject: PropTypes.object.isRequired,
   csvObject: PropTypes.object.isRequired,
   menuObject: PropTypes.object.isRequired,
   actionObject: PropTypes.object.isRequired
-}
+};

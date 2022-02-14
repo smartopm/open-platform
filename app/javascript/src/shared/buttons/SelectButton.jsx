@@ -1,3 +1,4 @@
+/* eslint-disable react/forbid-prop-types */
 import React from 'react';
 import PropTypes from 'prop-types';
 import ButtonGroup from '@material-ui/core/ButtonGroup';
@@ -61,16 +62,17 @@ export default function SelectButton({
 }
 
 SelectButton.defaultProps = {
-  selectedKey: ''
+  selectedKey: '',
+  anchorEl: {},
+  anchorRef: {}
 }
 
 SelectButton.propTypes = {
   buttonText: PropTypes.string.isRequired,
   open: PropTypes.bool.isRequired,
-  anchorEl: PropTypes.string.isRequired,
-  anchorRef: PropTypes.string.isRequired,
+  anchorEl: PropTypes.object,
+  anchorRef: PropTypes.object,
   handleClose: PropTypes.func.isRequired,
-  // eslint-disable-next-line react/forbid-prop-types
   options: PropTypes.object.isRequired,
   selectedKey: PropTypes.string,
   handleMenuItemClick: PropTypes.func.isRequired,
