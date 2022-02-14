@@ -104,42 +104,26 @@ export default function UserLabels({ userId }) {
         {'  '}
         {
           isLabelOpen
-          ? <KeyboardArrowUpIcon className={classes.linkIcon}  />
-          : <KeyboardArrowDownIcon className={classes.linkIcon}  />
+          ? <KeyboardArrowUpIcon className={classes.linkIcon} data-testid="labels_open_icon" />
+          : <KeyboardArrowDownIcon className={classes.linkIcon} data-testid="labels_closed_icon" />
         }
       </Typography>
       <br />
       {isLabelOpen && (
         <Container maxWidth="xl">
-          {userData.userLabels.length ? (
-            userData?.userLabels.map(lab => (
-              <Tooltip key={lab.id} title={lab.shortDesc} arrow>
-                <Chip
-                  data-testid="chip-label"
-                  size="medium"
-                  label={truncateString(lab.shortDesc, 12)}
-                  onDelete={() => handleDelete(lab.id)}
-                  style={{ marginRight: 5, marginBottom: 5 }}
-                />
-              </Tooltip>
-            ))
-          ) : (
-            <span data-testid="no_labels">
-              {
-                matches ? t('label:label.no_labels') : t('label:label.no_user_labels')
-              }
-            </span>
-          )}
-          <IconButton
-            aria-label="add-label"
-            onClick={() => setshowAddTextBox(!showAddTextBox)}
-            data-testid="add_label"
-          >
-            {!showAddTextBox ? (
-              <AddIcon data-testid="add_label_closed" />
-            ) : (
-              <CloseIcon data-testid="add_label_open" />
-            )}
+          {userData.userLabels.length
+            ? userData?.userLabels.map(lab => (
+              <Chip
+                data-testid="chip-label"
+                key={lab.id}
+                size="medium"
+                label={lab.shortDesc}
+                onDelete={() => handleDelete(lab.id)}
+              />
+              ))
+            : <span>{t('label:label.no_user_labels')}</span>}
+          <IconButton aria-label="add-label" onClick={() => setshowAddTextBox(!showAddTextBox)}>
+            {!showAddTextBox ? <AddIcon /> : <CloseIcon />}
           </IconButton>
         </Container>
       )}
