@@ -398,6 +398,7 @@ module Types::Queries::Note
         :assignees,
         :assignee_notes,
         :note_comments,
+        :form_user,
         { user: %i[avatar_attachment] },
       )
       .where(flagged: true, parent_note_id: nil) # Return only parent tasks
