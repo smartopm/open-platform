@@ -30,8 +30,6 @@ export default function UserLabels({ userId }) {
   const [isLabelOpen, setIsLabelOpen] = useState(false);
   const { t } = useTranslation(['common', 'label']);
   const classes = useStyles();
-  const theme = useTheme()
-  const matches = useMediaQuery(theme.breakpoints.only('sm'));
 
   useEffect(() => {
     setLabel(newUserLabel);
@@ -102,11 +100,11 @@ export default function UserLabels({ userId }) {
         {t('label.labels')}
         {' '}
         {'  '}
-        {
-          isLabelOpen
-          ? <KeyboardArrowUpIcon className={classes.linkIcon} data-testid="labels_open_icon" />
-          : <KeyboardArrowDownIcon className={classes.linkIcon} data-testid="labels_closed_icon" />
-        }
+        {isLabelOpen ? (
+          <KeyboardArrowUpIcon className={classes.linkIcon} data-testid="labels_open_icon" />
+        ) : (
+          <KeyboardArrowDownIcon className={classes.linkIcon} data-testid="labels_closed_icon" />
+        )}
       </Typography>
       <br />
       {isLabelOpen && (
@@ -185,9 +183,9 @@ const useStyles = makeStyles(() => ({
   wrapIcon: {
     verticalAlign: 'middle',
     display: 'inline-flex'
-   },
-   linkIcon: {
-     marginTop: 3,
-     marginLeft: 6
-   }
+  },
+  linkIcon: {
+    marginTop: 3,
+    marginLeft: 6
+  }
 }));
