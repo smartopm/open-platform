@@ -88,19 +88,19 @@ export default function ProjectOverview({ data }) {
         { data?.formUser?.user && (
           <>
             <Grid container spacing={10} className={classes.overViewItem}>
-              <Grid item md={5} xs={5}>
+              <Grid item xs={5} md={5}>
                 <Typography variant="caption" color="textSecondary">
                   {t('processes.submitted_by')}
                 </Typography>
               </Grid>
-              <Grid item md={7} xs={7}>
+              <Grid item xs={7} md={7}>
                 <Typography className={classes.link} variant="subtitle2" style={{ fontWeight: 400 }}>
                   {data.formUser.user?.name}
                 </Typography>
               </Grid>
             </Grid>
             <Grid container spacing={10} className={classes.overViewItem}>
-              <Grid item md={5} xs={5}>
+              <Grid item xs={5} md={5}>
                 <Typography variant="caption" color="textSecondary">
                   {t('processes.submitted_form')}
                 </Typography>
