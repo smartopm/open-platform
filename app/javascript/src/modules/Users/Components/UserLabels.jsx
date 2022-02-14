@@ -98,14 +98,19 @@ export default function UserLabels({ userId }) {
         handleClose={handleMessageAlertClose}
       />
       <br />
-      <Typography variant="subtitle1" className={classes.wrapIcon} onClick={() => setIsLabelOpen(!isLabelOpen)}>
+      <Typography
+        variant="subtitle1"
+        className={classes.wrapIcon}
+        onClick={() => setIsLabelOpen(!isLabelOpen)}
+        data-testid="label_toggler"
+      >
         {t('label:label.labels')}
         {' '}
         {'  '}
         {
           isLabelOpen
-          ? <KeyboardArrowUpIcon className={classes.linkIcon}  />
-          : <KeyboardArrowDownIcon className={classes.linkIcon}  />
+          ? <KeyboardArrowUpIcon className={classes.linkIcon} data-testid="labels_open_icon" />
+          : <KeyboardArrowDownIcon className={classes.linkIcon} data-testid="labels_closed_icon" />
         }
       </Typography>
       <br />
@@ -123,9 +128,13 @@ export default function UserLabels({ userId }) {
                 />
               </Tooltip>
               ))
-            : <span>{t('label:label.no_user_labels')}</span>}
-          <IconButton aria-label="add-label" onClick={() => setshowAddTextBox(!showAddTextBox)}>
-            {!showAddTextBox ? <AddIcon /> : <CloseIcon />}
+            : <span data-testid="no_labels">{t('label:label.no_user_labels')}</span>}
+          <IconButton
+            aria-label="add-label"
+            onClick={() => setshowAddTextBox(!showAddTextBox)}
+            data-testid="add_label"
+          >
+            {!showAddTextBox ? <AddIcon data-testid="add_label_closed" /> : <CloseIcon data-testid="add_label_open" />}
           </IconButton>
         </Container>
         )
