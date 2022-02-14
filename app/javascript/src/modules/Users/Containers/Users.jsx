@@ -284,14 +284,6 @@ export default function UsersList() {
     createCampaign();
   }
 
-  function viewFilteredUserCount() {
-    return (
-      filterCount !== 0 ||
-      campaignCreateOption === 'all' ||
-      campaignCreateOption === 'all_on_the_page'
-    );
-  }
-
   if (labelsLoading) return <Loading />;
   if (error || labelsError) {
     return <ErrorPage error={error?.message || labelsError?.message} />;
@@ -442,27 +434,25 @@ export default function UsersList() {
     usersCountData,
     selectedUsers,
     labelsData,
-    labelsRefetch,
-    viewFilteredUserCount,
-    userList
+    labelsRefetch
   };
 
   return (
     <>
+      <FixedHeader>
+        <UserHeader
+          setCampaignOption={setCampaignOption}
+          handleSearchClick={inputToSearch}
+          filterObject={filterObject}
+          csvObject={csvObject}
+          menuObject={menuObject}
+          actionObject={actionObject}
+        />
+      </FixedHeader>
       {loading || labelsLoading || fetchingUsersCount ? (
         <Loading />
       ) : (
         <>
-          <FixedHeader>
-            <UserHeader
-              setCampaignOption={setCampaignOption}
-              handleSearchClick={inputToSearch}
-              filterObject={filterObject}
-              csvObject={csvObject}
-              menuObject={menuObject}
-              actionObject={actionObject}
-            />
-          </FixedHeader>
           <div className="container">
             <ActionDialog
               open={openCampaignWarning}
@@ -509,7 +499,7 @@ export default function UsersList() {
 
 export const useStyles = makeStyles(() => ({
   userCard: {
-    marginTop: '130px'
+    marginTop: '120px'
   },
   userCardMobile: {
     marginTop: '200px'

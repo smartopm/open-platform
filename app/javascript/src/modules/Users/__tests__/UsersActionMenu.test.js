@@ -12,8 +12,6 @@ const props = {
   setSelectAllOption: jest.fn(),
   selectedUsers: [],
   selectCheckBox: true,
-  userList: [],
-  viewFilteredUserCount: jest.fn,
   usersCountData: {
     usersCount: 25
   }

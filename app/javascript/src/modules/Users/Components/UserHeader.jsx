@@ -118,9 +118,8 @@ export default function UserHeader({
 
             <Grid
               container
-              justify="flex-end"
               style={{
-                width: '100.5%',
+                width: '200%',
                 position: 'absolute',
                 zIndex: 1,
                 marginTop: '-2px',
@@ -231,8 +230,6 @@ export default function UserHeader({
             usersCountData={actionObject.usersCountData}
             labelsData={actionObject.labelsData}
             labelsRefetch={actionObject.labelsRefetch}
-            viewFilteredUserCount={actionObject.viewFilteredUserCount}
-            userList={actionObject.userList}
           />
         </Grid>
       </Hidden>

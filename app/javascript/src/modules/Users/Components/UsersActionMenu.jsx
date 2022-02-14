@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import Grid from '@material-ui/core/Grid';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
 import PropTypes from 'prop-types';
 import LabelIcon from '@material-ui/icons/Label';
 import { useTranslation } from 'react-i18next';
@@ -11,7 +9,6 @@ import { CustomizedDialogs, ActionDialog } from '../../../components/Dialog';
 import CreateLabel from '../../Labels/Components/CreateLabel';
 import CampaignIcon from '../../Campaigns/components/CampaignIcon';
 import MessageAlert from '../../../components/MessageAlert';
-import { pluralizeCount } from '../../../utils/helpers';
 
 const USERS_LABEL_WARNING_LIMIT = 2000;
 export default function UsersActionMenu({
@@ -22,11 +19,8 @@ export default function UsersActionMenu({
   selectedUsers,
   labelsData,
   labelsRefetch,
-  viewFilteredUserCount,
-  userList
 }) {
   const [labelSelectModalOpen, setLabelSelectModalOpen] = useState(false);
-  const matches = useMediaQuery('(max-width:600px)');
   const [labelAssignWarningOpen, setLabelAssignWarningOpen] = useState(false);
   const [selectedLabels, setSelectedLabels] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -81,14 +75,6 @@ export default function UsersActionMenu({
       />
       {(campaignCreateOption !== 'none' || selectedUsers.length > 0) && (
         <Grid item>
-          {!matches && viewFilteredUserCount() && (
-            <Typography variant="body2">
-              {`Showing ${usersCountData?.usersCount || userList.length} ${pluralizeCount(
-                usersCountData?.usersCount || userList.length,
-                'Result'
-              )}`}
-            </Typography>
-          )}
           <Button
             onClick={openLabelSelectModal}
             color="primary"
@@ -117,10 +103,6 @@ UsersActionMenu.defaultProps = {
   }
 };
 
-UsersActionMenu.defaultProps = {
-  userList: []
-}
-
 UsersActionMenu.propTypes = {
   campaignCreateOption: PropTypes.string.isRequired,
   handleCampaignCreate: PropTypes.func.isRequired,
@@ -137,7 +119,5 @@ UsersActionMenu.propTypes = {
       })
     )
   }).isRequired,
-  labelsRefetch: PropTypes.func.isRequired,
-  viewFilteredUserCount: PropTypes.func.isRequired,
-  userList: PropTypes.arrayOf(PropTypes.string)
+  labelsRefetch: PropTypes.func.isRequired
 };
