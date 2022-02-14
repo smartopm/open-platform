@@ -1,8 +1,10 @@
 import React, { useState, useRef } from 'react';
 import Typography from '@material-ui/core/Typography';
-import { useTheme, makeStyles } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTranslation } from 'react-i18next';
 import Grid from '@material-ui/core/Grid';
+import Hidden from '@material-ui/core/Hidden';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MoreVertOutlined from '@material-ui/icons/MoreVertOutlined';
@@ -37,9 +39,9 @@ export default function UserHeader({
 }) {
   const [open, setOpen] = useState(false);
   const [selectedKey, setSelectedKey] = useState('');
+  const matches = useMediaQuery('(max-width:959px)');
   const { t } = useTranslation(['users', 'common']);
   const anchorRef = useRef(null);
-  const theme = useTheme();
   const classes = useStyles();
   const options = {
     all: 'All',
@@ -71,30 +73,34 @@ export default function UserHeader({
 
   return (
     <Grid container>
-      <Grid item lg={12} md={12} sm={12}>
-        <Typography variant="h5">Users</Typography>
+      <Grid item lg={12} md={12} sm={12} xs={12}>
+        <Typography variant="h4">Users</Typography>
       </Grid>
       <Grid container className={classes.container}>
-        <Grid item lg={3} md={3} sm={3}>
-          <SelectButton
-            buttonText={selectedOptions}
-            open={open}
-            anchorEl={anchorRef.current}
-            anchorRef={anchorRef}
-            handleClose={handleClose}
-            options={options}
-            selectedKey={selectedKey}
-            handleMenuItemClick={handleMenuItemClick}
-            handleClick={() => setOpen(!open)}
-          />
-        </Grid>
-        <Grid item lg={4} md={4} sm={4}>
-          <SearchInput
-            title="Users"
-            handleClick={handleSearchClick}
-            searchValue=""
-            handleFilter={handleFilter}
-          />
+        <Hidden smDown>
+          <Grid item lg={3} md={3} sm={6} xs={6}>
+            <SelectButton
+              buttonText={selectedOptions}
+              open={open}
+              anchorEl={anchorRef.current}
+              anchorRef={anchorRef}
+              handleClose={handleClose}
+              options={options}
+              selectedKey={selectedKey}
+              handleMenuItemClick={handleMenuItemClick}
+              handleClick={() => setOpen(!open)}
+            />
+          </Grid>
+        </Hidden>
+        <Grid item lg={4} md={4} sm={12} xs={12}>
+          <div className={matches ? classes.search : undefined}>
+            <SearchInput
+              title="Users"
+              handleClick={handleSearchClick}
+              searchValue=""
+              handleFilter={handleFilter}
+            />
+          </div>
           <div
             style={{
               display: 'flex',
@@ -128,15 +134,55 @@ export default function UserHeader({
             </Grid>
           </div>
         </Grid>
-        <Grid item lg={4} md={4} sm={4} className={classes.csvButtonGrid}>
-          <Button variant="contained" color="primary" data-testid="download_csv_btn" className={classes.csvButton}>
+        <Hidden mdUp>
+          <Grid item lg={3} md={3} sm={6} xs={6}>
+            <SelectButton
+              buttonText={selectedOptions}
+              open={open}
+              anchorEl={anchorRef.current}
+              anchorRef={anchorRef}
+              handleClose={handleClose}
+              options={options}
+              selectedKey={selectedKey}
+              handleMenuItemClick={handleMenuItemClick}
+              handleClick={() => setOpen(!open)}
+            />
+          </Grid>
+          <Grid item lg={12} md={12} sm={6} xs={6}>
+            <UsersActionMenu
+              campaignCreateOption={actionObject.campaignCreateOption}
+              selectedUsers={actionObject.selectedUsers}
+              handleCampaignCreate={actionObject.handleCampaignCreate}
+              handleLabelSelect={actionObject.handleLabelSelect}
+              usersCountData={actionObject.usersCountData}
+              labelsData={actionObject.labelsData}
+              labelsRefetch={actionObject.labelsRefetch}
+              viewFilteredUserCount={actionObject.viewFilteredUserCount}
+              userList={actionObject.userList}
+            />
+          </Grid>
+        </Hidden>
+        <Grid
+          item
+          lg={4}
+          md={4}
+          sm={6}
+          xs={6}
+          className={matches ? undefined : classes.csvButtonGrid}
+        >
+          <Button
+            variant="contained"
+            color="primary"
+            data-testid="download_csv_btn"
+            className={classes.csvButton}
+          >
             {!csvObject.called ? (
               // eslint-disable-next-line jsx-a11y/click-events-have-key-events
               <span
                 role="button"
                 tabIndex={0}
                 aria-label="download csv"
-                style={{color: 'white'}}
+                style={{ color: 'white' }}
                 onClick={csvObject.handleDownloadCSV}
               >
                 {csvObject.usersLoading ? <Spinner /> : t('users.process_csv')}
@@ -154,7 +200,7 @@ export default function UserHeader({
             )}
           </Button>
         </Grid>
-        <Grid item lg={1} md={1} sm={1} className={classes.csvButtonGrid}>
+        <Grid item lg={1} md={1} sm={6} xs={6} className={classes.csvButtonGrid}>
           <IconButton
             aria-controls="sub-menu"
             aria-haspopup="true"
@@ -173,19 +219,21 @@ export default function UserHeader({
           />
         </Grid>
       </Grid>
-      <Grid item lg={12} md={12} sm={12}>
-        <UsersActionMenu
-          campaignCreateOption={actionObject.campaignCreateOption}
-          selectedUsers={actionObject.selectedUsers}
-          handleCampaignCreate={actionObject.handleCampaignCreate}
-          handleLabelSelect={actionObject.handleLabelSelect}
-          usersCountData={actionObject.usersCountData}
-          labelsData={actionObject.labelsData}
-          labelsRefetch={actionObject.labelsRefetch}
-          viewFilteredUserCount={actionObject.viewFilteredUserCount}
-          userList={actionObject.userList}
-        />
-      </Grid>
+      <Hidden smDown>
+        <Grid item lg={12} md={12} sm={6} xs={6}>
+          <UsersActionMenu
+            campaignCreateOption={actionObject.campaignCreateOption}
+            selectedUsers={actionObject.selectedUsers}
+            handleCampaignCreate={actionObject.handleCampaignCreate}
+            handleLabelSelect={actionObject.handleLabelSelect}
+            usersCountData={actionObject.usersCountData}
+            labelsData={actionObject.labelsData}
+            labelsRefetch={actionObject.labelsRefetch}
+            viewFilteredUserCount={actionObject.viewFilteredUserCount}
+            userList={actionObject.userList}
+          />
+        </Grid>
+      </Hidden>
     </Grid>
   );
 }
@@ -200,5 +248,8 @@ const useStyles = makeStyles(() => ({
   container: {
     justifyContent: 'center',
     alignItems: 'center'
+  },
+  search: {
+    margin: '10px 20px 10px 0'
   }
-}))
+}));

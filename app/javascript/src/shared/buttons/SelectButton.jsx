@@ -28,7 +28,7 @@ export default function SelectButton({
           <ArrowDropDownIcon />
         </Button>
       </ButtonGroup>
-      <Popper open={open} anchorEl={anchorEl} transition>
+      <Popper open={open} anchorEl={anchorEl} transition style={{zIndex: 2000}}>
         {({ TransitionProps, placement }) => (
           <Grow
             {...TransitionProps}

@@ -1,30 +1,39 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Grid from '@material-ui/core/Grid';
-import Container from '@material-ui/core/Container';
 import Divider from '@material-ui/core/Divider';
 
 export default function FixedHeader({ children }) {
+  const matches = useMediaQuery('(max-width:600px)');
   const classes = useStyles();
   return (
-    <Grid container>
-      <Grid item sm={12}>
-        <div className={classes.container}>
+    <div className="container">
+      <Grid container>
+        <Grid
+          item
+          className={classes.container}
+          // style={matches ? { width: '95%' } : { width: '78%' }}
+        >
           {children}
-        </div>
+          <Divider className={classes.divider} />
+        </Grid>
       </Grid>
-    </Grid>
-  )
+    </div>
+  );
 }
 
 const useStyles = makeStyles(() => ({
   container: {
-    padding: '30px 0 10px 0',
+    paddingTop: '30px',
     position: 'fixed',
-    zIndex: 1000,
-    background: "#FFFFFF",
-    width: '78%',
+    zIndex: 10,
+    background: '#FFFFFF',
     top: 50,
-    borderBottom: '2px solid #F9F9F9'
+    width: '100%',
+    paddingRight: '25%'
+  },
+  divider: {
+    margin: '20px -200px 0 -200px'
   }
-}))
+}));

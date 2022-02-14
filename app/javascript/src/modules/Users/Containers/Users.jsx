@@ -5,18 +5,15 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useQuery, useMutation, useLazyQuery } from 'react-apollo';
 import { Redirect, useLocation, useHistory } from 'react-router-dom';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
-import  Grid from '@material-ui/core/Grid';
+import { makeStyles } from '@material-ui/core/styles';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import Grid from '@material-ui/core/Grid';
 import { useTranslation } from 'react-i18next';
 import MaterialConfig from 'react-awesome-query-builder/lib/config/material';
 import Loading from '../../../shared/Loading';
 import ErrorPage from '../../../components/Error';
 import { UsersDetails, LabelsQuery, UsersCount } from '../../../graphql/queries';
-import {
-  CreateNote,
-  UserLabelCreate,
-  CampaignCreateThroughUsers
-} from '../../../graphql/mutations';
+import { UserLabelCreate, CampaignCreateThroughUsers } from '../../../graphql/mutations';
 import { ActionDialog } from '../../../components/Dialog';
 import { userType, subStatus } from '../../../utils/constants';
 import Paginate from '../../../components/Paginate';
@@ -27,13 +24,14 @@ import { Context as AuthStateContext } from '../../../containers/Provider/AuthSt
 import { objectAccessor, toTitleCase } from '../../../utils/helpers';
 import SubStatusReportDialog from '../../CustomerJourney/Components/SubStatusReport';
 import UserHeader from '../Components/UserHeader';
-import FixedHeader from '../../../shared/FixedHeader'
- 
+import FixedHeader from '../../../shared/FixedHeader';
+
 const limit = 25;
 const USERS_CAMPAIGN_WARNING_LIMIT = 2000;
 
 export default function UsersList() {
   const [redirect, setRedirect] = useState(false);
+  const classes = useStyles();
   const [offset, setOffset] = useState(0);
   const [searchQuery, setSearchQuery] = useState('');
   const [displayBuilder, setDisplayBuilder] = useState('none');
@@ -50,7 +48,6 @@ export default function UsersList() {
   const history = useHistory();
   const location = useLocation();
   const { t } = useTranslation(['users', 'common']);
-  const theme = useTheme();
 
   function handleReportDialog() {
     setSubstatusReportOpen(!substatusReportOpen);
@@ -65,6 +62,8 @@ export default function UsersList() {
     },
     fetchPolicy: 'cache-and-network'
   });
+
+  const matches = useMediaQuery('(max-width:959px)');
 
   const [loadAllUsers, { loading: usersLoading, data: usersData, called }] = useLazyQuery(
     UsersDetails,
@@ -246,19 +245,6 @@ export default function UsersList() {
     }
   }
 
-  // function setSelectAll() {
-  //   if (!!selectedUsers.length && !!userList.length && selectedUsers.length === userList.length) {
-  //     setSelectedUsers([]);
-  //     setCampaignCreateOption('none');
-  //   } else if (selectCheckBox) {
-  //     setSelectCheckBox(false);
-  //     setCampaignCreateOption('none');
-  //   } else {
-  //     setSelectedUsers(userList);
-  //     setCampaignCreateOption('all_on_the_page');
-  //   }
-  // }
-
   function handleUserSelect(user) {
     if (selectedUsers.length === 0) setCampaignCreateOption('none');
 
@@ -433,21 +419,21 @@ export default function UsersList() {
     queryBuilderConfig,
     queryBuilderInitialValue,
     toggleFilterMenu
-  }
+  };
 
   const csvObject = {
     called,
     handleDownloadCSV,
     usersLoading,
     csvUserData
-  }
+  };
 
   const menuObject = {
     handleMenu,
     menuAnchorEl,
     setAnchorEl,
     menuData
-  }
+  };
 
   const actionObject = {
     campaignCreateOption,
@@ -459,38 +445,37 @@ export default function UsersList() {
     labelsRefetch,
     viewFilteredUserCount,
     userList
-  }
+  };
 
   return (
     <>
       {loading || labelsLoading || fetchingUsersCount ? (
         <Loading />
-        ) : (
-          <>
-            <div className="container">
-              <FixedHeader>
-                <UserHeader 
-                  setCampaignOption={setCampaignOption}
-                  handleSearchClick={inputToSearch}
-                  filterObject={filterObject}
-                  csvObject={csvObject}
-                  menuObject={menuObject} 
-                  actionObject={actionObject}
-                />
-              </FixedHeader>
-            </div>
-            <div className="container">
-              <ActionDialog
-                open={openCampaignWarning}
-                handleClose={() => setOpenCampaignWarning(false)}
-                handleOnSave={createCampaign}
-                message={t('users.message_campaign')}
-              />
-              <SubStatusReportDialog
-                open={substatusReportOpen}
-                handleClose={handleReportDialog}
-                handleFilter={handleFilterUserBySubstatus}
-              />
+      ) : (
+        <>
+          <FixedHeader>
+            <UserHeader
+              setCampaignOption={setCampaignOption}
+              handleSearchClick={inputToSearch}
+              filterObject={filterObject}
+              csvObject={csvObject}
+              menuObject={menuObject}
+              actionObject={actionObject}
+            />
+          </FixedHeader>
+          <div className="container">
+            <ActionDialog
+              open={openCampaignWarning}
+              handleClose={() => setOpenCampaignWarning(false)}
+              handleOnSave={createCampaign}
+              message={t('users.message_campaign')}
+            />
+            <SubStatusReportDialog
+              open={substatusReportOpen}
+              handleClose={handleReportDialog}
+              handleFilter={handleFilterUserBySubstatus}
+            />
+            <div className={matches ? classes.userCardMobile : classes.userCard}>
               <UserListCard
                 userData={data}
                 currentUserType={authState.user.userType}
@@ -499,87 +484,34 @@ export default function UsersList() {
                 offset={offset}
                 selectCheckBox={selectCheckBox}
               />
-              <Grid
-                container
-                direction="row"
-                justify="center"
-                alignItems="center"
-                data-testid="pagination_section"
-              >
-                <Paginate
-                  count={data.users.length}
-                  active={offset >= 1}
-                  offset={offset}
-                  handlePageChange={paginate}
-                  limit={limit}
-                />
-              </Grid>
             </div>
-          </>
-        )}
-        
+            <Grid
+              container
+              direction="row"
+              justify="center"
+              alignItems="center"
+              data-testid="pagination_section"
+            >
+              <Paginate
+                count={data.users.length}
+                active={offset >= 1}
+                offset={offset}
+                handlePageChange={paginate}
+                limit={limit}
+              />
+            </Grid>
+          </div>
+        </>
+      )}
     </>
   );
 }
 
-export const useStyles = makeStyles(theme => ({
-  root: {
-    padding: '2px 4px',
-    display: 'flex',
-    flexWrap: 'wrap',
-    alignItems: 'right',
-    width: '100%'
+export const useStyles = makeStyles(() => ({
+  userCard: {
+    marginTop: '80px'
   },
-  input: {
-    marginLeft: theme.spacing(1),
-    flex: 1
-  },
-  table: {
-    display: 'block',
-    width: '100%',
-    overflowX: 'auto'
-  },
-  iconButton: {
-    padding: 10
-  },
-  divider: {
-    height: 28,
-    margin: 4
-  },
-  formControl: {
-    margin: theme.spacing(1),
-    minWidth: 150,
-    maxWidth: '100%'
-  },
-  chips: {
-    display: 'flex',
-    flexWrap: 'wrap'
-  },
-  chip: {
-    margin: 2
-  },
-  filterButton: {
-    textTransform: 'none'
-  },
-  searchButton: {
-    display: 'flex'
-  },
-  reportBtn: {
-    display: 'flex',
-    height: 36,
-    marginLeft: 20
-  },
-  '@media only screen and (max-width: 768px)': {
-    searchButton: {
-      flexBasis: '100%'
-    }
-  },
-  download: {
-    boxShadow: 'none',
-    position: 'fixed',
-    bottom: 30,
-    right: 57,
-    marginLeft: '30%',
-    zIndex: '1000'
+  userCardMobile: {
+    marginTop: '200px'
   }
 }));

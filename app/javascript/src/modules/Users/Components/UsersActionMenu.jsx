@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Grid from '@material-ui/core/Grid';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import PropTypes from 'prop-types';
@@ -25,6 +26,7 @@ export default function UsersActionMenu({
   userList
 }) {
   const [labelSelectModalOpen, setLabelSelectModalOpen] = useState(false);
+  const matches = useMediaQuery('(max-width:600px)');
   const [labelAssignWarningOpen, setLabelAssignWarningOpen] = useState(false);
   const [selectedLabels, setSelectedLabels] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -79,7 +81,7 @@ export default function UsersActionMenu({
       />
       {(campaignCreateOption !== 'none' || selectedUsers.length > 0) && (
         <Grid item style={{ marginTop: '-4px' }}>
-          {viewFilteredUserCount() && (
+          {!matches && viewFilteredUserCount() && (
             <Typography variant="body2">
               {`Showing ${usersCountData?.usersCount || userList.length} ${pluralizeCount(
                 usersCountData?.usersCount || userList.length,
