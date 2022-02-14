@@ -47,8 +47,8 @@ export default function LeadManagementDetails({ userId }) {
               label={t('lead_management.detail_header')}
               style={
                 tabValue === objectAccessor(TAB_VALUES, 'details')
-                  ? { fontSize: '12px', textAlign: 'left', borderBottom: 'solid 1px' }
-                  : { fontSize: '12px', textAlign: 'left' }
+                  ? { fontSize: '10px', textAlign: 'left', borderBottom: 'solid 1px' }
+                  : { fontSize: '10px', textAlign: 'left' }
               }
               {...a11yProps(0)}
             />
@@ -56,8 +56,8 @@ export default function LeadManagementDetails({ userId }) {
               label={t('lead_management.task_header')}
               style={
                 tabValue === objectAccessor(TAB_VALUES, 'task')
-                  ? { fontSize: '12px', borderBottom: 'solid 1px' }
-                  : { fontSize: '12px' }
+                  ? { fontSize: '10px', borderBottom: 'solid 1px' }
+                  : { fontSize: '10px' }
               }
               {...a11yProps(1)}
             />
@@ -65,8 +65,8 @@ export default function LeadManagementDetails({ userId }) {
               label={t('lead_management.note_header')}
               style={
                 tabValue === objectAccessor(TAB_VALUES, 'notes')
-                  ? { fontSize: '12px', borderBottom: 'solid 1px' }
-                  : { fontSize: '12px' }
+                  ? { fontSize: '10px', borderBottom: 'solid 1px' }
+                  : { fontSize: '10px' }
               }
               {...a11yProps(2)}
             />
