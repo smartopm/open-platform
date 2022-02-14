@@ -8,7 +8,7 @@ import { useQuery, useMutation } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { TextField, IconButton, Chip, Container } from '@material-ui/core';
-import { Typography } from '@mui/material';
+import { Tooltip, Typography } from '@mui/material';
 import { makeStyles } from '@material-ui/styles';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
@@ -16,7 +16,7 @@ import { UserLabelsQuery, LabelsQuery } from '../../../graphql/queries';
 import { LabelCreate, UserLabelCreate, UserLabelUpdate } from '../../../graphql/mutations';
 import useDebounce from '../../../utils/useDebounce';
 import Loading from '../../../shared/Loading';
-import { formatError } from '../../../utils/helpers';
+import { formatError, truncateString } from '../../../utils/helpers';
 import MessageAlert from '../../../components/MessageAlert';
 import ErrorPage from '../../../components/Error';
 
@@ -30,7 +30,7 @@ export default function UserLabels({ userId }) {
   const [messageAlert, setMessageAlert] = useState('');
   const [isSuccessAlert, setIsSuccessAlert] = useState(false);
   const [isLabelOpen, setIsLabelOpen] = useState(false);
-  const { t } = useTranslation('common')
+  const { t } = useTranslation(['common', 'label'])
   const classes = useStyles()
 
   useEffect(() => {
@@ -99,7 +99,7 @@ export default function UserLabels({ userId }) {
       />
       <br />
       <Typography variant="subtitle1" className={classes.wrapIcon} onClick={() => setIsLabelOpen(!isLabelOpen)}>
-        {t('label.labels')}
+        {t('label:label.labels')}
         {' '}
         {'  '}
         {
@@ -108,20 +108,22 @@ export default function UserLabels({ userId }) {
           : <KeyboardArrowDownIcon className={classes.linkIcon}  />
         }
       </Typography>
+      <br />
       {
         isLabelOpen && (
         <Container maxWidth="xl">
           {userData.userLabels.length
             ? userData?.userLabels.map(lab => (
-              <Chip
-                data-testid="chip-label"
-                key={lab.id}
-                size="medium"
-                label={lab.shortDesc}
-                onDelete={() => handleDelete(lab.id)}
-              />
+              <Tooltip key={lab.id} title={lab.shortDesc} arrow>
+                <Chip
+                  data-testid="chip-label"
+                  size="medium"
+                  label={truncateString(lab.shortDesc, 12)}
+                  onDelete={() => handleDelete(lab.id)}
+                />
+              </Tooltip>
               ))
-            : null}
+            : <span>{t('label:label.no_user_labels')}</span>}
           <IconButton aria-label="add-label" onClick={() => setshowAddTextBox(!showAddTextBox)}>
             {!showAddTextBox ? <AddIcon /> : <CloseIcon />}
           </IconButton>
