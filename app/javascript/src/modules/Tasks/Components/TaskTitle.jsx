@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { useQuery } from 'react-apollo';
 import { removeNewLines, sanitizeText } from '../../../utils/helpers';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
-import { Spinner } from '../../../shared/Loading';
 import { UserFormPropertiesQuery } from '../../Forms/graphql/forms_queries';
 import { taskTitleContent } from '../utils';
 
@@ -17,7 +16,7 @@ export default function TaskTitle({ task }) {
     }
   );
 
-  if (formDataLoading) return <Spinner />;
+  if (formDataLoading) return <span data-testid="loader" />;
   const projectDeveloper = formData?.formUserProperties?.find(
     f => f.formProperty.fieldName === 'Project Developer'
   );

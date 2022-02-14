@@ -44,6 +44,7 @@ describe('Invitation Card Component', () => {
     expect(container.getByTestId('reoccuring_days').textContent).toContain('guest_book.repeats: -');
     expect(container.getByTestId('created_at')).toBeInTheDocument();
     expect(container.getByTestId('created_at').textContent).toContain('guest_book.invite_created_at');
+    expect(container.getByTestId('date_of_visit').textContent).toContain('guest_book.date_of_visit');
     expect(container.getByTestId('validity')).toBeInTheDocument();
     expect(container.getByTestId('validity').textContent).toContain('guest_book.invalid_now');
     expect(container.getByTestId('host_name')).toBeInTheDocument();

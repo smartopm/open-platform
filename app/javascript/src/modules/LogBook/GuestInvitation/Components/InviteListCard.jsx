@@ -42,14 +42,17 @@ export default function InviteListCard({ invitation }) {
           </Typography>
         </Grid>
         <Grid item md={3} sm={6} xs={12}>
-          <Typography variant="body2" gutterBottom data-testid="reoccuring_days">
-            {`${t('guest_book.repeats')}: ${formatReoccuringDays(invitation.entryTime.occursOn)}`}
+          <Typography variant="body2" gutterBottom data-testid="date_of_visit">
+            {`${t('guest_book.date_of_visit')}: ${dateToString(invitation.entryTime.visitationDate)}`}
           </Typography>
           <Typography variant="body2" gutterBottom data-testid="created_at">
             {t('guest_book.invite_created_at', { date: dateToString(invitation.createdAt, 'YYYY-MM-DD') })}
           </Typography>
         </Grid>
         <Grid item md={2} sm={6} xs={12} className={!matches ? classes.hostDetailsAlign : ''} data-testid="validity">
+          <Typography variant="body2" gutterBottom data-testid="reoccuring_days">
+            {`${t('guest_book.repeats')}: ${formatReoccuringDays(invitation.entryTime.occursOn)}`}
+          </Typography>
           <Chip
             label={isValid ? t('guest_book.valid') : t('guest_book.invalid_now')}
             color={isValid ? 'success' : 'error'}

@@ -153,7 +153,7 @@ describe('Should render Guests View Component', () => {
 
       fireEvent.click(getAllByTestId('user_name')[0]);
       expect(mockHistory.push).toBeCalled();
-      expect(mockHistory.push).toBeCalledWith('/user/162f7517-69?tab=Invitations'); // check if it routes to the user page
+      expect(mockHistory.push).toBeCalledWith('/user/162f7517-69?tab=null'); // check if it routes to the user page
     }, 10);
   });
 

@@ -9,8 +9,12 @@ RSpec.describe Types::Queries::EntryRequest do
       create(:entry_request, user: admin, name: 'Jose', is_guest: true,
                              community: community, visitation_date: Time.zone.today)
     end
+    let!(:visitor) do
+      create(:user_with_community, user_type: 'visitor', email: 'visiting@admin.com',
+                                   community_id: admin.community_id, role: visitor_role)
+    end
     let(:another_guest) do
-      create(:entry_request, user: admin, name: 'Josè', is_guest: true,
+      create(:entry_request, user: admin, name: 'Josè', is_guest: true, guest_id: visitor.id,
                              community: community, visitation_date: Time.zone.today)
     end
 
@@ -24,6 +28,19 @@ RSpec.describe Types::Queries::EntryRequest do
 
     let!(:current_user) { create(:user_with_community, role: visitor_role) }
     let!(:admin) { create(:admin_user, community_id: current_user.community_id, role: admin_role) }
+
+    let!(:invite) { admin.invite_guest(visitor.id, another_guest.id) }
+    let!(:entry_time) do
+      admin.community.entry_times.create(
+        visitation_date: '2021-11-16 10:02:25',
+        starts_at: '2021-11-16 10:02:25',
+        ends_at: '2021-11-16 12:02:25',
+        occurs_on: [],
+        visit_end_date: nil,
+        visitable_id: invite.id,
+        visitable_type: 'Logs::Invite',
+      )
+    end
 
     let(:entry_request_query) do
       <<~GQL
@@ -188,7 +205,7 @@ RSpec.describe Types::Queries::EntryRequest do
                                          current_user: admin,
                                          site_community: current_user.community,
                                        }).as_json
-      expect(result.dig('data', 'entryRequests').length).to eql 2
+      expect(result.dig('data', 'entryRequests').length).to eql 3
     end
 
     it 'should retrieve list of registered guests' do
@@ -201,7 +218,7 @@ RSpec.describe Types::Queries::EntryRequest do
                                          current_user: admin,
                                          site_community: current_user.community,
                                        }).as_json
-      expect(result.dig('data', 'scheduledRequests').length).to eql 2
+      expect(result.dig('data', 'scheduledRequests').length).to eql 1
       expect(result.dig('data', 'scheduledRequests', 0, 'multipleInvites')).to eql false
     end
 
@@ -297,7 +314,7 @@ RSpec.describe Types::Queries::EntryRequest do
                                          current_user: admin,
                                          site_community: current_user.community,
                                        }).as_json
-      expect(result.dig('data', 'scheduledGuestList').length).to eql 2
+      expect(result.dig('data', 'scheduledGuestList').length).to eql 3
     end
 
     context 'when guest are present with special characters' do
