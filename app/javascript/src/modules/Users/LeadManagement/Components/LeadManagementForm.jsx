@@ -110,7 +110,9 @@ export default function LeadManagementForm({ userId }) {
       { contactType: 'phone', info: formSecondaryPhoneNumber },
       { contactType: 'email', info: formSecondaryEmail }
     ];
+    
     const cleanedSecondaryInfo = secondaryInfo.filter(obj => obj.info !== undefined);
+
     leadDataUpdate({
       variables: {
         ...leadFormData?.user,

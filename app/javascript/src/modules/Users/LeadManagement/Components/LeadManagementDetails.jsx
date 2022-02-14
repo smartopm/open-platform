@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Grid, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
-import Paper from '@mui/material/Paper';
+import Box from '@mui/material/Box';
 import PropTypes from 'prop-types';
 import LeadManagementForm from './LeadManagementForm';
 import { objectAccessor } from '../../../../utils/helpers';
@@ -21,7 +21,7 @@ export default function LeadManagementDetails({ userId }) {
     setTabValue(Number(newValue));
   }
 
-  const Item = styled(Paper)(({ theme }) => ({
+  const Item = styled(Box)(({ theme }) => ({
     padding: theme.spacing(1)
   }));
 
