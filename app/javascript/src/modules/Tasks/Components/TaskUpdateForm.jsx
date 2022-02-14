@@ -229,6 +229,7 @@ export default function TaskUpdateForm({
               menuData={menuData}
               isAssignee={isCurrentUserAnAssignee}
               activeReminder={currentActiveReminder()}
+              currentUser={currentUser}
             />
           </div>
           <div className={classes.section} data-testid="task-subtasks-section">
