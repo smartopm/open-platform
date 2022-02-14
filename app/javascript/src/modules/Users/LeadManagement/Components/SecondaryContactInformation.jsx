@@ -18,7 +18,6 @@ export default function SecondaryCcntactInformation({
         {' '}
         {t('lead_management.secondary_contact_section1_header')}
       </Typography>
-      <br />
       <TextField
         name="name"
         label={t('lead_management.name')}
@@ -141,7 +140,7 @@ export default function SecondaryCcntactInformation({
         {' '}
         {t('lead_management.secondary_contact_section2_header')}
       </Typography>
-      <br />
+
       <TextField
         name="name"
         label={t('lead_management.name')}

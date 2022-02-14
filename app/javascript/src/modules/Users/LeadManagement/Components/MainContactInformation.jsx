@@ -143,7 +143,7 @@ export default function MainContactInformation({ leadFormData, handleChange, dis
 
           <TextField
             name="linkedinUrl"
-            label={t('lead_management.linkedinUrl')}
+            label={t('lead_management.linkedin_url')}
             style={{ width: '100%' }}
             onChange={handleChange}
             value={leadFormData?.user?.linkedinUrl}
