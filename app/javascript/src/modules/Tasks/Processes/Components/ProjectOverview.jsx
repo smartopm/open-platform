@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Grid, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { useLazyQuery } from 'react-apollo';
+import { useTranslation } from 'react-i18next';
 import { TaskContext } from '../../Context';
 import ProjectSteps from './Steps';
 import { UserFormPropertiesQuery } from '../../../Forms/graphql/forms_queries';
@@ -13,6 +14,7 @@ import CenteredContent from '../../../../shared/CenteredContent';
 
 export default function ProjectOverview({ data }) {
   const { authState, updateStatus, handleMessageAlertClose } = useContext(TaskContext);
+  const { t } = useTranslation('task');
 
   const FORM_FIELD_NAMES_TO_INCLUDE = [
     'Project Developer',
@@ -74,6 +76,36 @@ export default function ProjectOverview({ data }) {
           ))
         ) : (
           <CenteredContent data-testid="no-project-info">No Project Information</CenteredContent>
+        )}
+        { data?.formUser?.user && (
+          <>
+            <Grid container spacing={10}>
+              <Grid item md={5} xs={5}>
+                <Typography variant="caption" color="textSecondary">
+                  {t('processes.submitted_by')}
+                </Typography>
+              </Grid>
+              <Grid item md={7} xs={7}>
+                <Typography variant="subtitle2" color="#6C6C6C" style={{ fontWeight: 400 }}>
+                  {data.formUser.user?.name}
+                </Typography>
+              </Grid>
+            </Grid>
+            <Grid container spacing={10}>
+              <Grid item md={5} xs={5}>
+                <Typography variant="caption" color="textSecondary">
+                  {t('processes.submitted_form')}
+                </Typography>
+              </Grid>
+              <Grid item md={7} xs={7}>
+                <Link to={`/user_form/${data.formUser.user.id}/${data.formUser.id}/task`}>
+                  <Typography variant="subtitle2" color="#6C6C6C" style={{ fontWeight: 400 }}>
+                    {t('processes.open_submitted_form').toUpperCase()}
+                  </Typography>
+                </Link>
+              </Grid>
+            </Grid>
+          </>
         )}
         {descriptionData && (
           <Grid container spacing={1} style={{ marginTop: '32px' }}>
