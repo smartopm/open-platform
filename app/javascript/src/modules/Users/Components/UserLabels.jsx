@@ -98,8 +98,13 @@ export default function UserLabels({ userId }) {
         handleClose={handleMessageAlertClose}
       />
       <br />
-      <Typography variant="subtitle1" className={classes.wrapIcon} onClick={() => setIsLabelOpen(!isLabelOpen)}>
-        {t('label.labels')}
+      <Typography
+        variant="subtitle1"
+        className={classes.wrapIcon}
+        onClick={() => setIsLabelOpen(!isLabelOpen)}
+        data-testid="label_toggler"
+      >
+        {t('label:label.labels')}
         {' '}
         {'  '}
         {isLabelOpen ? (
@@ -111,19 +116,35 @@ export default function UserLabels({ userId }) {
       <br />
       {isLabelOpen && (
         <Container maxWidth="xl">
-          {userData.userLabels.length
-            ? userData?.userLabels.map(lab => (
-              <Chip
-                data-testid="chip-label"
-                key={lab.id}
-                size="medium"
-                label={lab.shortDesc}
-                onDelete={() => handleDelete(lab.id)}
-              />
-              ))
-            : <span>{t('label:label.no_user_labels')}</span>}
-          <IconButton aria-label="add-label" onClick={() => setshowAddTextBox(!showAddTextBox)}>
-            {!showAddTextBox ? <AddIcon /> : <CloseIcon />}
+          {userData.userLabels.length ? (
+            userData?.userLabels.map(lab => (
+              <Tooltip key={lab.id} title={lab.shortDesc} arrow>
+                <Chip
+                  data-testid="chip-label"
+                  size="medium"
+                  label={truncateString(lab.shortDesc, 12)}
+                  onDelete={() => handleDelete(lab.id)}
+                  style={{ marginRight: 5, marginBottom: 5 }}
+                />
+              </Tooltip>
+            ))
+          ) : (
+            <span data-testid="no_labels">
+              {
+                matches ? t('label:label.no_labels') : t('label:label.no_user_labels')
+              }
+            </span>
+          )}
+          <IconButton
+            aria-label="add-label"
+            onClick={() => setshowAddTextBox(!showAddTextBox)}
+            data-testid="add_label"
+          >
+            {!showAddTextBox ? (
+              <AddIcon data-testid="add_label_closed" />
+            ) : (
+              <CloseIcon data-testid="add_label_open" />
+            )}
           </IconButton>
         </Container>
       )}

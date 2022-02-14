@@ -91,7 +91,7 @@ export default function UserInformation({
           </DialogContent>
         </Dialog>
 
-        <Grid container>
+        {/* <Grid container>
           <Grid item xs={3}>
             {' '}
           </Grid>
@@ -130,9 +130,9 @@ export default function UserInformation({
               />
             </>
           </Grid>
-        </Grid>
+        </Grid> */}
 
-        <Grid container>
+        {/* <Grid container>
           <Grid item xs={matches ? 3 : 1}>
             {' '}
           </Grid>
@@ -142,7 +142,7 @@ export default function UserInformation({
           <Grid item xs={matches ? 3 : 1}>
             {' '}
           </Grid>
-        </Grid>
+        </Grid> */}
 
         <br />
         <FeatureCheck features={authState.user.community.features} name="Time Card">
