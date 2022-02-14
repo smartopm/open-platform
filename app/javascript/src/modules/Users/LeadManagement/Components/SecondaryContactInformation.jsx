@@ -238,7 +238,7 @@ export default function SecondaryCcntactInformation({
       />
 
       <TextField
-        name="linkedin"
+        name="linkedinUrl"
         label={t('lead_management.linkedin_url')}
         style={{ width: '100%' }}
         onChange={handleSecondaryContact2Change}
