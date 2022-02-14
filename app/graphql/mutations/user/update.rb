@@ -54,18 +54,18 @@ module Mutations
       field :user, Types::UserType, null: true
 
       def resolve(vals)
-        # raise_duplicate_number_error(vals[:phone_number])
+        ActiveRecord::Base.transaction do
+          user = context[:site_community].users.find_by(id: vals.delete(:id))
+          raise GraphQL::ExecutionError, I18n.t('errors.user.not_found') unless user
 
-        user = context[:site_community].users.find(vals.delete(:id))
-        raise GraphQL::ExecutionError, I18n.t('errors.user.not_found') unless user
+          attach_avatars(user, vals)
+          log_user_update(user)
+          update_secondary_info(user, vals.delete(:secondary_info))
 
-        attach_avatars(user, vals)
-        log_user_update(user)
-        update_secondary_info(user, vals.delete(:secondary_info))
-
-        user_with_substatus_log = update_sub_status_log(user, vals) if vals[:sub_status]
-        user_to_update = user_with_substatus_log || user
-        update_user(vals, user_to_update)
+          user_with_substatus_log = update_sub_status_log(user, vals) if vals[:sub_status]
+          user_to_update = user_with_substatus_log || user
+          update_user(vals, user_to_update)
+        end
       end
 
       def update_user(vals, user_to_update)
@@ -87,7 +87,7 @@ module Mutations
 
         contact_info.each do |value|
           if value['id'].nil?
-            user.contact_infos.create!(contact_type: value['contactType'], info: value['info'])
+            user.contact_infos.create(contact_type: value['contactType'], info: value['info'])
           else
             contact = user.contact_infos.find(value['id'])
             contact.update(info: value['info']) unless contact.info.eql?(value['info'])

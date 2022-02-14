@@ -202,7 +202,9 @@ en:
         user: User
       users/user:
         community: Community
+        email: Email
         name: Name
+        phone_number: Phone Number
         state: State
         sub_status: Sub status
         user_type: User type
