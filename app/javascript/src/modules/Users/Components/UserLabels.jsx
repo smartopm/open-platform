@@ -98,20 +98,15 @@ export default function UserLabels({ userId }) {
         handleClose={handleMessageAlertClose}
       />
       <br />
-      <Typography
-        variant="subtitle1"
-        className={classes.wrapIcon}
-        onClick={() => setIsLabelOpen(!isLabelOpen)}
-        data-testid="label_toggler"
-      >
-        {t('label:label.labels')}
+      <Typography variant="subtitle1" className={classes.wrapIcon} onClick={() => setIsLabelOpen(!isLabelOpen)}>
+        {t('label.labels')}
         {' '}
         {'  '}
-        {isLabelOpen ? (
-          <KeyboardArrowUpIcon className={classes.linkIcon} data-testid="labels_open_icon" />
-        ) : (
-          <KeyboardArrowDownIcon className={classes.linkIcon} data-testid="labels_closed_icon" />
-        )}
+        {
+          isLabelOpen
+          ? <KeyboardArrowUpIcon className={classes.linkIcon}  />
+          : <KeyboardArrowDownIcon className={classes.linkIcon}  />
+        }
       </Typography>
       <br />
       {isLabelOpen && (
@@ -206,9 +201,9 @@ const useStyles = makeStyles(() => ({
   wrapIcon: {
     verticalAlign: 'middle',
     display: 'inline-flex'
-  },
-  linkIcon: {
-    marginTop: 3,
-    marginLeft: 6
-  }
+   },
+   linkIcon: {
+     marginTop: 3,
+     marginLeft: 6
+   }
 }));
