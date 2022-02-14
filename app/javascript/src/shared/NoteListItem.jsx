@@ -12,7 +12,7 @@ import { dateToString } from '../components/DateContainer';
 export default function NoteListItem({ hasActions, note, handleOpenMenu }) {
   const classes = useStyles();
   return (
-    <ListItem>
+    <ListItem className={classes.alignItem}>
       <ListItemText
         secondary={(
           <>
@@ -56,6 +56,9 @@ const useStyles = makeStyles(() => ({
   noteBody: {
     color: '#575757',
     overflowWrap: 'anywhere'
+  },
+  alignItem: {
+    marginLeft: -15
   }
 }));
 

@@ -1,89 +1,73 @@
-/* eslint-disable no-use-before-define */
-import React, { Fragment, useEffect, useState } from 'react'
-import { useLazyQuery, useMutation } from 'react-apollo'
-import AddBoxIcon from '@material-ui/icons/AddBox'
+import React, { useEffect, useState } from 'react';
+import { useLazyQuery, useMutation } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
-import Tooltip from '@material-ui/core/Tooltip'
-import { css, StyleSheet } from 'aphrodite'
-import PropTypes from 'prop-types'
-import { IconButton } from '@material-ui/core'
-import dateutil from '../../../utils/dateutil'
-import { UpdateNote } from '../../../graphql/mutations'
-import { UserNotesQuery } from '../../../graphql/queries'
-import { Spinner } from '../../../shared/Loading'
+import PropTypes from 'prop-types';
+import { CreateNote } from '../../../graphql/mutations';
+import { UserNotesQuery } from '../../../graphql/queries';
+import { Spinner } from '../../../shared/Loading';
 import NoteListItem from '../../../shared/NoteListItem';
+import NoteTextField from '../../../shared/CommentTextField';
+import MessageAlert from '../../../components/MessageAlert';
+import { formatError } from '../../../utils/helpers';
 
-export function UserNote({ note, handleFlagNote }) {
-  const { t } = useTranslation('users')
-  return (
-    <Fragment key={note.id}>
-      <div className={css(styles.commentBox)}>
-        <p className="comment">{note.body}</p>
-        <i>
-          {t("common:misc.created_at")}
-          :
-          {dateutil.formatDate(note.createdAt)}
-        </i>
-      </div>
-
-
-      <br />
-    </Fragment>
-  )
-}
-
-export default function UserNotes({ userId, tabValue }){
-  const [isLoading, setLoading] = useState(false)
+export default function UserNotes({ userId, tabValue }) {
+  const [isLoading, setLoading] = useState(false);
+  const [value, setValue] = useState('');
+  const [message, setMessage] = useState({ isError: false, detail: '' });
+  const [noteCreate] = useMutation(CreateNote);
+  const { t } = useTranslation(['task', 'common']);
   const [loadNotes, { loading, error, refetch, data }] = useLazyQuery(UserNotesQuery, {
     variables: { userId },
     fetchPolicy: 'cache-and-network'
-  })
+  });
 
   useEffect(() => {
     if (tabValue === 'Notes') {
-      loadNotes()
+      loadNotes();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tabValue])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tabValue]);
 
-  if (loading || isLoading || !data) return <Spinner />
-  if (error) return error.message
+  function handleSubmit() {
+    setLoading(true);
+    noteCreate({ variables: { userId, body: value, flagged: false } })
+      .then(() => {
+        setLoading(false);
+        setMessage({ ...message, isError: false, detail: t('common:misc.misc_successfully_created', { type: t('common:menu.note') }) });
+        setValue('');
+        refetch();
+      })
+      .catch(err => {
+        setLoading(false);
+        setMessage({ ...message, isError: true, detail: formatError(err.message) });
+      });
+  }
+
+  if (error) return error.message;
 
   return (
     <>
-      {
-      data?.userNotes.map(note => <NoteListItem key={note.id} note={note} />)
-    }
+      <MessageAlert
+        type={message.isError ? 'error' : 'success'}
+        message={message.detail}
+        open={!!message.detail}
+        handleClose={() => setMessage({ ...message, detail: '' })}
+      />
+      <NoteTextField
+        value={value}
+        setValue={setValue}
+        handleSubmit={handleSubmit}
+        actionTitle={t('common:form_actions.save')}
+      />
+      {isLoading || (loading && <Spinner />)}
+      {data?.userNotes.map(note => (
+        <NoteListItem key={note.id} note={note} />
+      ))}
     </>
-
-  )
-}
-
-
-UserNote.propTypes = {
-  note: PropTypes.shape({
-    id: PropTypes.string,
-    completed: PropTypes.bool,
-    createdAt: PropTypes.string,
-    body: PropTypes.string,
-    flagged: PropTypes.bool
-  }).isRequired,
-  handleFlagNote: PropTypes.func.isRequired,
+  );
 }
 
 UserNotes.propTypes = {
   tabValue: PropTypes.string.isRequired,
   userId: PropTypes.string.isRequired
-}
-
-const styles = StyleSheet.create({
-  commentBox: {
-    borderLeft: '2px solid',
-    padding: '0.5%',
-  },
-  actionIcon: {
-    float: 'right',
-    cursor: 'pointer',
-    marginRight: 12
-  }
-})
+};

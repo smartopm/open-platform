@@ -176,36 +176,6 @@ export default function UserInformation({
             <FeatureCheck features={authState.user.community.features} name="Tasks">
               <TabPanel value={tabValue} index="Notes">
                 <div className="container">
-                  <form id="note-form">
-                    <div className="form-group">
-                      {t('common:misc.notes')}
-                      <br />
-                      <TextField
-                        className="form-control"
-                        placeholder={t('common:form_placeholders.add_note')}
-                        id="notes"
-                        rows="4"
-                        inputRef={register({ required: true })}
-                        name="note"
-                        multiline
-                        required
-                      />
-                    </div>
-                    <Button
-                      type="button"
-                      style={{ float: 'right' }}
-                      onClick={handleSubmit(onSaveNote)}
-                      disabled={mutationLoading}
-                      color="primary"
-                      variant="outlined"
-                    >
-                      {mutationLoading
-                        ? t('common:form_actions.saving')
-                        : t('common:form_actions.save')}
-                    </Button>
-                  </form>
-                  <br />
-                  <br />
                   <UserNotes tabValue={tabValue} userId={data.user.id} />
                 </div>
               </TabPanel>

@@ -5,7 +5,7 @@ import Button from '@material-ui/core/Button';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 
-export default function CommentTextField({ value, setValue, handleSubmit }) {
+export default function CommentTextField({ value, setValue, handleSubmit, actionTitle }) {
   const { t } = useTranslation('common');
   return (
     <Grid container>
@@ -38,7 +38,7 @@ export default function CommentTextField({ value, setValue, handleSubmit }) {
           onClick={handleSubmit}
           size="medium"
         >
-          {t('misc.comment')}
+          {actionTitle}
         </Button>
       </Grid>
     </Grid>
@@ -47,6 +47,7 @@ export default function CommentTextField({ value, setValue, handleSubmit }) {
 
 CommentTextField.propTypes = {
   value: PropTypes.string.isRequired,
+  actionTitle: PropTypes.string.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   setValue: PropTypes.func.isRequired
 };
