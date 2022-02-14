@@ -1,55 +1,105 @@
-import React from 'react'
-import { render } from '@testing-library/react'
-import { BrowserRouter } from 'react-router-dom'
-import '@testing-library/jest-dom/extend-expect'
-import { MockedProvider } from '@apollo/react-testing'
-import UserLabels from '../Components/UserLabels'
-import { UserLabelsQuery } from '../../../graphql/queries'
+import React from 'react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
+import '@testing-library/jest-dom/extend-expect';
+import { MockedProvider } from '@apollo/react-testing';
+import UserLabels from '../Components/UserLabels';
+import { LabelsQuery, UserLabelsQuery } from '../../../graphql/queries';
 
 describe('It should test the user label component', () => {
-
+  it('should render component', async () => {
     const mockData = [
-        {
-            request: {
-                query: UserLabelsQuery,
-                variables: { userId: "59927651-9bb4-4e47-8afe-0989d03d210d" }
-            },
-            result: {
-                data: {
-                    userLabels: [
-                        {
-                            id: '12345678890',
-                            shortDesc: "Client"
-                        }
-                    ]
-                }
+      {
+        request: {
+          query: UserLabelsQuery,
+          variables: { userId: '59927651-9bb4-4e47-8afe-0989d03d210d' }
+        },
+        result: {
+          data: {
+            userLabels: [
+              {
+                id: '12345678890',
+                shortDesc: 'Client',
+                color: '#000',
+                userCount: 23,
+                description: 'some description'
+              }
+            ]
+          }
+        }
+      }
+    ];
+
+    const labelsMockData = {
+      request: {
+        query: LabelsQuery
+      },
+      result: {
+        data: {
+          labels: [
+            {
+              id: '12345678890',
+              shortDesc: 'Client',
+              color: '#000',
+              userCount: 23,
+              description: 'some description'
             }
-        }]
+          ]
+        }
+      }
+    };
+    const container = render(
+      <MockedProvider mocks={[...mockData, labelsMockData]} addTypename={false}>
+        <UserLabels userId="59927651-9bb4-4e47-8afe-0989d03d210d" />
+      </MockedProvider>
+    );
+    await waitFor(() => {
+      expect(container.queryByTestId('chip-label')).not.toBeInTheDocument();
+      expect(container.queryByTestId('labels_closed_icon')).toBeInTheDocument();
+      // click to show list of labels
+      fireEvent.click(container.queryByTestId('label_toggler'));
+      expect(container.queryByTestId('chip-label')).toBeInTheDocument();
+      expect(container.queryByTestId('labels_open_icon')).toBeInTheDocument();
 
+      expect(container.queryByTestId('add_label_closed')).toBeInTheDocument();
+      // click to add new label
+      fireEvent.click(container.queryByTestId('add_label'));
+      expect(container.queryByTestId('add_label_open')).toBeInTheDocument();
+      expect(container.queryByTestId('userLabel-autoCreate')).toBeInTheDocument();
+    }, 10);
+  });
 
-    it('should render component', () => {
+  it('should display no labels when user has no labels', async () => {
+    const mockData = {
+      request: {
+        query: UserLabelsQuery,
+        variables: { userId: '59927651-9bb4-4e47-8afe-0989d03d210d' }
+      },
+      result: {
+        data: {
+          userLabels: []
+        }
+      }
+    };
 
-        const container = render(
-          // eslint-disable-next-line react/jsx-filename-extension
-          <MockedProvider mocks={mockData} addTypename={false}>
-            <BrowserRouter>
-              <UserLabels userId="59927651-9bb4-4e47-8afe-0989d03d210d" />
-            </BrowserRouter>
-          </MockedProvider>
-        )
-        expect(container.queryByTestId("chip-label")).toBeDefined();
-    })
-
-    it('should display the chip', async () => {
-        const container = render(
-          <MockedProvider mocks={mockData} addTypename={false}>
-            <BrowserRouter>
-              <UserLabels userId="59927651-9bb4-4e47-8afe-0989d03d210d" />
-            </BrowserRouter>
-          </MockedProvider>
-        )
-        expect(container.queryByTestId("chip-label")).toBeDefined();
-        await new Promise(resolve => setTimeout(resolve, 500));
-        expect(container.queryByTestId('chip-label')).toBeNull()
-    })
+    const labelsMockData = {
+      request: {
+        query: LabelsQuery
+      },
+      result: {
+        data: {
+          labels: []
+        }
+      }
+    };
+    const container = render(
+      <MockedProvider mocks={[mockData, labelsMockData]} addTypename={false}>
+        <UserLabels userId="59927651-9bb4-4e47-8afe-0989d03d210d" />
+      </MockedProvider>
+    );
+    await waitFor(() => {
+      fireEvent.click(container.queryByTestId('label_toggler'));
+      expect(container.queryByTestId('no_labels')).toBeInTheDocument();
+      expect(container.queryByText('label:label.no_user_labels')).toBeInTheDocument();
+    }, 10)
+  });
 });
