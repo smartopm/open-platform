@@ -26,6 +26,8 @@ import PaymentPlans from '../../Payments/Components/UserTransactions/Plans';
 import ShiftButtons from '../../TimeCard/Components/ShiftButtons';
 import InviteHistoryList from '../../LogBook/GuestInvitation/Components/InviteHistoryList';
 import LeadManagementDetails from '../LeadManagement/Components/LeadManagementDetails';
+import UserDetailHeader from './UserDetailHeader'
+import FixedHeader from '../../../shared/FixedHeader'
 
 export default function UserInformation({
   data,
@@ -90,6 +92,11 @@ export default function UserInformation({
             <UserMerge close={handleMergeDialog} userId={userId} />
           </DialogContent>
         </Dialog>
+        <FixedHeader>
+          <UserDetailHeader
+            data={data}
+          />
+        </FixedHeader>
 
         {/* <Grid container>
           <Grid item xs={3}>
