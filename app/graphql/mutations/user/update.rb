@@ -87,10 +87,11 @@ module Mutations
 
         contact_info.each do |value|
           if value['id'].nil?
-            puts("Mutuba Create#{contact_info}")
+            # prevent an error incase its an account update without sec info
+            next if value['info'].nil?
+
             user.contact_infos.create!(contact_type: value['contactType'], info: value['info'])
           else
-            puts("Mutuba Update#{contact_info}")
             contact = user.contact_infos.find(value['id'])
             contact.update(info: value['info']) unless contact.info.eql?(value['info'])
           end

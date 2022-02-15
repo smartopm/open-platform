@@ -111,7 +111,9 @@ export default function LeadManagementForm({ userId }) {
       { contactType: 'email', info: formSecondaryEmail }
     ];
 
-    const cleanedSecondaryInfo = secondaryInfo.filter(obj => obj.info !== undefined);
+    const cleanedSecondaryInfo = secondaryInfo.filter(
+      obj => obj.info !== null || obj.info !== null
+    );
 
     leadDataUpdate({
       variables: {
