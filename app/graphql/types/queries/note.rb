@@ -95,6 +95,7 @@ module Types::Queries::Note
       argument :offset, Integer, required: false
       argument :limit, Integer, required: false
       argument :step, String, required: false
+      argument :quarter, String, required: false
     end
 
     field :project_stages, [GraphQL::Types::JSON], null: false do
@@ -282,7 +283,7 @@ module Types::Queries::Note
       .limit(limit).offset(offset)
   end
 
-  def projects(offset: 0, limit: 50, step: nil)
+  def projects(offset: 0, limit: 50, step: nil, quarter: nil)
     # This query only shows projects under the DRC process for now
     # Our notes does not allow us to categorise processes by type
     # This should be implemented in the future to allow us to fetch...
@@ -292,11 +293,17 @@ module Types::Queries::Note
             I18n.t('errors.unauthorized')
     end
 
-    if step.nil?
-      projects_query.limit(limit).offset(offset)
-    else
-      projects_query.where(current_step_body: step).limit(limit).offset(offset)
+    results = projects_query
+
+    if step
+      results = projects_query.where(current_step_body: step)
     end
+
+    if quarter
+      results = projects_query.where(completed: true).by_quarter(quarter)
+    end
+
+    results.limit(limit).offset(offset)
   end
 
   def project_stages
