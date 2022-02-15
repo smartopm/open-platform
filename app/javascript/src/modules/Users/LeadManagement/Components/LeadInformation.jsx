@@ -49,8 +49,8 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
               input={<OutlinedInput label={t('lead_management.lead_temperature')} />}
               MenuProps={MenuProps}
             >
-              {Object.entries(leadTemperatureOptions).map(([key, val]) => (
-                <MenuItem key={key} value={key}>
+              {leadTemperatureOptions.map(val => (
+                <MenuItem key={val} value={val}>
                   {val}
                 </MenuItem>
               ))}
@@ -69,8 +69,8 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
               input={<OutlinedInput label={t('lead_management.lead_status')} />}
               MenuProps={MenuProps}
             >
-              {Object.entries(leadStatusOptions).map(([key, val]) => (
-                <MenuItem key={key} value={key}>
+              {leadStatusOptions.map(val => (
+                <MenuItem key={val} value={val}>
                   {val}
                 </MenuItem>
               ))}
@@ -90,8 +90,8 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
               input={<OutlinedInput label={t('lead_management.lead_source')} />}
               MenuProps={MenuProps}
             >
-              {Object.entries(leadSourceOptions).map(([key, val]) => (
-                <MenuItem key={key} value={key}>
+              {leadSourceOptions.map(val => (
+                <MenuItem key={val} value={val}>
                   {val}
                 </MenuItem>
               ))}
@@ -129,8 +129,8 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
               input={<OutlinedInput label={t('lead_management.client_category')} />}
               MenuProps={MenuProps}
             >
-              {Object.entries(clientCategories).map(([key, val]) => (
-                <MenuItem key={key} value={key}>
+              {clientCategories.map(val => (
+                <MenuItem key={val} value={val}>
                   {val}
                 </MenuItem>
               ))}
@@ -150,8 +150,8 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
               input={<OutlinedInput label={t('lead_management.lead_type')} />}
               MenuProps={MenuProps}
             >
-              {Object.entries(leadTypeOptions).map(([key, val]) => (
-                <MenuItem key={key} value={key}>
+              {leadTypeOptions.map(val => (
+                <MenuItem key={val} value={val}>
                   {val}
                 </MenuItem>
               ))}
