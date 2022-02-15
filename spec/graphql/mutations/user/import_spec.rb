@@ -21,8 +21,8 @@ RSpec.describe Mutations::User::Import do
 
     let(:query) do
       <<~GQL
-        mutation usersImport($csvString: String!, $csvFileName: String!) {
-          usersImport(csvString: $csvString, csvFileName: $csvFileName) {
+        mutation usersImport($csvString: String!, $csvFileName: String!, $importType: String!) {
+          usersImport(csvString: $csvString, csvFileName: $csvFileName, importType: $importType) {
             success
           }
         }
@@ -34,8 +34,25 @@ RSpec.describe Mutations::User::Import do
       variables = {
         csvString: csv_string,
         csvFileName: 'My File.csv',
+        importType: 'user',
       }
       expect(UserImportJob).to receive(:perform_later).with(csv_string, 'My File.csv', user)
+      result = DoubleGdpSchema.execute(query, variables: variables,
+                                              context: {
+                                                current_user: user,
+                                              }).as_json
+
+      expect(result.dig('data', 'usersImport', 'success')).to eql(true)
+    end
+
+    it 'calls LeadImportJob' do
+      csv_string = "Name,Title,Email\nThomas Shalongolo,CFO,thomas@gmail.com"
+      variables = {
+        csvString: csv_string,
+        csvFileName: 'lead_management.csv',
+        importType: 'lead',
+      }
+      expect(LeadImportJob).to receive(:perform_later).with(csv_string, 'lead_management.csv', user)
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
                                                 current_user: user,
@@ -48,6 +65,7 @@ RSpec.describe Mutations::User::Import do
       variables = {
         csvString: "Name,Email primary,Phone number primary,Phone number secondary 1,Phone number secondary 2,User type,Labels,State,Expiration date,Notes on client\nThomas Shalongolo,thomas@gmail.com,+234979063360,,,Prospective Client,Residency program Waitlist;Some other label,valid,,some notes here\nJide Babs,jide@gmail.com,+260979013360,,,Prospective Client,Residency program Waitlist;Some other label,pending,,some notes here",
         csvFileName: 'My File.csv',
+        importType: 'user',
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
@@ -61,6 +79,7 @@ RSpec.describe Mutations::User::Import do
       variables = {
         csvString: "Name,Email primary,Phone number primary,Phone number secondary 1,Phone number secondary 2,User type,Labels,State,Expiration date,Notes on client\nThomas Shalongolo,thomas@gmail.com,+234979063360,,,Prospective Client,Residency program Waitlist;Some other label,valid,,some notes here\nJide Babs,jide@gmail.com,+260979013360,,,Prospective Client,Residency program Waitlist;Some other label,pending,,some notes here",
         csvFileName: 'My File.csv',
+        importType: 'user',
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {

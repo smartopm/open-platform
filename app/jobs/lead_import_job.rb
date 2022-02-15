@@ -66,6 +66,11 @@ class LeadImportJob < ApplicationJob
         modified_by                   = row['Modified by']
         phone_list                    = [phone, secondary_phone].reject(&:blank?)
 
+        if name.blank?
+          errors[index + 1] = ['Name must be present']
+          next
+        end
+
         if phone_list.empty? && email.nil?
           errors[index + 1] = ['A contact info must be present']
           next
@@ -125,7 +130,7 @@ class LeadImportJob < ApplicationJob
           last_contact_date: last_contact_date,
           followup_at: followup_at,
           contact_details: {
-            "secondary_contact_1": {
+            "secondaryContact1": {
               "name": contact_1_name,
               "title": contact_1_title,
               "primary_email": contact_1_primary_email,
@@ -134,7 +139,7 @@ class LeadImportJob < ApplicationJob
               "secondary_phone_number": contact_1_secondary_phone,
               "linkedin_url": contact_1_linkedin,
             },
-            "secondary_contact_2": {
+            "secondaryContact2": {
               "name": contact_2_name,
               "title": contact_2_title,
               "primary_email": contact_2_primary_email,
@@ -178,12 +183,6 @@ class LeadImportJob < ApplicationJob
           Users::User.where(community: community).joins(:contact_infos).where(contact_infos:
           { contact_type: 'phone', info: phone_list }),
         ).first
-  end
-
-  def contact_details
-    {
-
-    }
   end
   # rubocop:enable Metrics/AbcSize
 end
