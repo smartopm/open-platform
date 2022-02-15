@@ -82,18 +82,23 @@ module Mutations
         end
       end
 
+      # rubocop: disable Metrics/AbcSize
       def update_secondary_info(user, contact_info)
         return if contact_info.nil?
 
         contact_info.each do |value|
           if value['id'].nil?
-            user.contact_infos.create(contact_type: value['contactType'], info: value['info'])
+            # prevent an error incase its an account update without sec info
+            next if value['info'].nil?
+
+            user.contact_infos.create!(contact_type: value['contactType'], info: value['info'])
           else
             contact = user.contact_infos.find(value['id'])
             contact.update(info: value['info']) unless contact.info.eql?(value['info'])
           end
         end
       end
+      # rubocop: enable Metrics/AbcSize
 
       def log_user_update(user)
         Logs::EventLog.create(acting_user_id: context[:current_user].id,

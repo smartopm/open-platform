@@ -196,9 +196,7 @@ export default function CompanyInformation({ leadFormData, handleChange }) {
               onChange={handleChange}
               name="levelOfInternationalization"
               fullWidth
-              input={
-                <OutlinedInput label={t('lead_management.level_of_internationalization')} />
-              }
+              input={<OutlinedInput label={t('lead_management.level_of_internationalization')} />}
               MenuProps={MenuProps}
             >
               <MenuItem value="" />
