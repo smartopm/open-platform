@@ -13,7 +13,7 @@ export default function CommentTextField({
   loading
 }) {
   return (
-    <Grid container>
+    <Grid container alignContent="space-between">
       <Grid item md={10} xs={8} style={{ paddingRight: '10px' }}>
         <TextField
           fullWidth

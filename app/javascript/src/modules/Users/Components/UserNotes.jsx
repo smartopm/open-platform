@@ -21,7 +21,7 @@ export default function UserNotes({ userId, tabValue }) {
   });
 
   useEffect(() => {
-    if (tabValue === 2) {
+    if (tabValue === 1) {
       loadNotes();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -42,7 +42,7 @@ export default function UserNotes({ userId, tabValue }) {
   if (error) return error.message;
 
   return (
-    <>
+    <div>
       <MessageAlert
         type={message.isError ? 'error' : 'success'}
         message={message.detail}
@@ -61,7 +61,7 @@ export default function UserNotes({ userId, tabValue }) {
       {data?.userNotes.map(note => (
         <NoteListItem key={note.id} note={note} />
       ))}
-    </>
+    </div>
   );
 }
 

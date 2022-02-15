@@ -66,7 +66,7 @@ export default function LeadManagementDetails({ userId }) {
           <TabPanel value={tabValue} index={0} data-testid="lead-management-details-tab">
             <LeadManagementForm userId={userId} />
           </TabPanel>
-          <TabPanel value={tabValue} index={2} data-testid="lead-management-note-tab">
+          <TabPanel value={tabValue} index={1} data-testid="lead-management-note-tab">
             <UserNotes userId={userId} tabValue={tabValue} />
           </TabPanel>
         </Item>
