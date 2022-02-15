@@ -95,6 +95,7 @@ export default function UserInformation({
         <FixedHeader>
           <UserDetailHeader
             data={data}
+            userType={userType}
           />
         </FixedHeader>
 

@@ -143,6 +143,6 @@ const styles = StyleSheet.create({
   avatarSemiSmall: {
     width: '56px',
     height: '56px',
-    borderRadius: '20px'
+    borderRadius: '40px'
   }
 });
