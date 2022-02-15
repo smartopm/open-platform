@@ -129,8 +129,8 @@ export default function CompanyInformation({ leadFormData, handleChange }) {
               input={<OutlinedInput label={t('lead_management.country')} />}
               MenuProps={MenuProps}
             >
-              {Object.entries(countries).map(([key, val]) => (
-                <MenuItem key={key} value={key}>
+              {countries.map(val => (
+                <MenuItem key={val} value={val}>
                   {val}
                 </MenuItem>
               ))}
@@ -152,8 +152,8 @@ export default function CompanyInformation({ leadFormData, handleChange }) {
               input={<OutlinedInput label={t('lead_management.industry_business_activity')} />}
               MenuProps={MenuProps}
             >
-              {Object.entries(industryBusinessActivityOptions).map(([key, val]) => (
-                <MenuItem key={key} value={key}>
+              {industryBusinessActivityOptions.map(val => (
+                <MenuItem key={val} value={val}>
                   {val}
                 </MenuItem>
               ))}
@@ -173,8 +173,8 @@ export default function CompanyInformation({ leadFormData, handleChange }) {
               input={<OutlinedInput label={t('lead_management.region')} />}
               MenuProps={MenuProps}
             >
-              {Object.entries(regionOptions).map(([key, val]) => (
-                <MenuItem key={key} value={key}>
+              {regionOptions.map(val => (
+                <MenuItem key={val} value={val}>
                   {val}
                 </MenuItem>
               ))}
@@ -193,13 +193,11 @@ export default function CompanyInformation({ leadFormData, handleChange }) {
               onChange={handleChange}
               name="levelOfInternationalization"
               fullWidth
-              input={
-                <OutlinedInput label={t('lead_management.level_of_internationalization')} />
-              }
+              input={<OutlinedInput label={t('lead_management.level_of_internationalization')} />}
               MenuProps={MenuProps}
             >
-              {Object.entries(internationalizationLevels).map(([key, val]) => (
-                <MenuItem key={key} value={key}>
+              {internationalizationLevels.map(val => (
+                <MenuItem key={val} value={val}>
                   {val}
                 </MenuItem>
               ))}
@@ -219,8 +217,8 @@ export default function CompanyInformation({ leadFormData, handleChange }) {
               input={<OutlinedInput label={t('lead_management.industry_sector')} />}
               MenuProps={MenuProps}
             >
-              {Object.entries(industryCategoryOptions).map(([key, val]) => (
-                <MenuItem key={key} value={key}>
+              {industryCategoryOptions.map(val => (
+                <MenuItem key={val} value={val}>
                   {val}
                 </MenuItem>
               ))}
@@ -260,8 +258,8 @@ export default function CompanyInformation({ leadFormData, handleChange }) {
               input={<OutlinedInput label={t('lead_management.industry_sub_sector')} />}
               MenuProps={MenuProps}
             >
-              {Object.entries(industrySubSectorOptions).map(([key, val]) => (
-                <MenuItem key={key} value={key}>
+              {industrySubSectorOptions.map(val => (
+                <MenuItem key={val} value={val}>
                   {val}
                 </MenuItem>
               ))}
