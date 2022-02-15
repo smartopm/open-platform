@@ -42,13 +42,14 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
             <InputLabel id="lead_temperature">{t('lead_management.lead_temperature')}</InputLabel>
             <Select
               id="leadTemperature"
-              value={leadFormData?.user?.leadTemperature}
+              value={leadFormData?.user?.leadTemperature || ""}
               onChange={handleChange}
               name="leadTemperature"
               fullWidth
               input={<OutlinedInput label={t('lead_management.lead_temperature')} />}
               MenuProps={MenuProps}
             >
+              <MenuItem value="" />
               {Object.entries(leadTemperatureOptions).map(([key, val]) => (
                 <MenuItem key={key} value={key}>
                   {val}
@@ -62,13 +63,15 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
             <InputLabel id="leadStatus">{t('lead_management.lead_status')}</InputLabel>
             <Select
               id="leadStatus"
-              value={leadFormData?.user?.leadStatus}
+              value={leadFormData?.user?.leadStatus || ''}
               onChange={handleChange}
               name="leadStatus"
               fullWidth
               input={<OutlinedInput label={t('lead_management.lead_status')} />}
               MenuProps={MenuProps}
             >
+              <MenuItem value="" />
+
               {Object.entries(leadStatusOptions).map(([key, val]) => (
                 <MenuItem key={key} value={key}>
                   {val}
@@ -83,13 +86,14 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
             <InputLabel id="lead_source">{t('lead_management.lead_source')}</InputLabel>
             <Select
               id="lead_source"
-              value={leadFormData?.user?.leadSource}
+              value={leadFormData?.user?.leadSource || ""}
               onChange={handleChange}
               name="leadSource"
               fullWidth
               input={<OutlinedInput label={t('lead_management.lead_source')} />}
               MenuProps={MenuProps}
             >
+              <MenuItem value="" />
               {Object.entries(leadSourceOptions).map(([key, val]) => (
                 <MenuItem key={key} value={key}>
                   {val}
@@ -105,7 +109,7 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
             label={t('lead_management.company_contacted')}
             style={{ width: '100%' }}
             onChange={handleChange}
-            value={leadFormData?.user?.companyContacted}
+            value={leadFormData?.user?.companyContacted || ""}
             variant="outlined"
             fullWidth
             InputProps={{
@@ -122,13 +126,14 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
             <InputLabel id="client_category">{t('lead_management.client_category')}</InputLabel>
             <Select
               id="client_category"
-              value={leadFormData?.user?.clientCategory}
+              value={leadFormData?.user?.clientCategory || ""}
               onChange={handleChange}
               name="clientCategory"
               fullWidth
               input={<OutlinedInput label={t('lead_management.client_category')} />}
               MenuProps={MenuProps}
             >
+              <MenuItem value="" />
               {Object.entries(clientCategories).map(([key, val]) => (
                 <MenuItem key={key} value={key}>
                   {val}
@@ -143,13 +148,14 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
             <InputLabel id="lead_type">{t('lead_management.lead_type')}</InputLabel>
             <Select
               id="lead_type"
-              value={leadFormData?.user?.leadType}
+              value={leadFormData?.user?.leadType || ""}
               onChange={handleChange}
               name="leadType"
               fullWidth
               input={<OutlinedInput label={t('lead_management.lead_type')} />}
               MenuProps={MenuProps}
             >
+              <MenuItem value="" />
               {Object.entries(leadTypeOptions).map(([key, val]) => (
                 <MenuItem key={key} value={key}>
                   {val}
@@ -166,7 +172,7 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
         label={t('lead_management.next_steps')}
         style={{ width: '100%' }}
         onChange={handleChange}
-        value={leadFormData?.user?.nextSteps}
+        value={leadFormData?.user?.nextSteps || ""}
         variant="outlined"
         fullWidth
         rows={2}
@@ -194,7 +200,7 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
             label={t('lead_management.lead_owner')}
             style={{ width: '100%' }}
             onChange={handleChange}
-            value={leadFormData?.user?.leadOwner}
+            value={leadFormData?.user?.leadOwner || ""}
             variant="outlined"
             fullWidth
             size="small"
@@ -224,7 +230,7 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
             label={t('lead_management.created_by')}
             style={{ width: '100%' }}
             onChange={handleChange}
-            value={leadFormData?.user?.createdBy}
+            value={leadFormData?.user?.createdBy || ""}
             variant="outlined"
             multiline
             size="small"
@@ -254,7 +260,7 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
             label={t('lead_management.modified_by')}
             style={{ width: '100%' }}
             onChange={handleChange}
-            value={leadFormData?.user?.modifiedBy}
+            value={leadFormData?.user?.modifiedBy || ""}
             variant="outlined"
             fullWidth
             size="small"
