@@ -73,7 +73,8 @@ describe('TaskUpdate Component', () => {
               parentNote: {
                 id: 'fghs9',
                 body: '',
-                formUserId: '12345'
+                formUserId: '12345',
+                assignees: [{ id: '34567' }]
               }
             }
           }
