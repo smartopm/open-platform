@@ -34,43 +34,43 @@ export default function LeadManagementDetails({ userId }) {
       <Grid item md={6} xs={10} data-testid="lead-management-container-header">
         <Item>
           <Typography variant="h5">{t('lead_management.main_header')}</Typography>
-
-          <StyledTabs
-            value={tabValue}
-            onChange={handleTabValueChange}
-            aria-label="lead-management-tabs"
-            data-testid="lead-management-tabs"
-            variant="standard"
-            style={{ borderBottom: 'solid 1px #ececea' }}
-          >
-            <StyledTab
-              label={t('lead_management.detail_header')}
-              style={
-                tabValue === objectAccessor(TAB_VALUES, 'details')
-                  ? { fontSize: '10px', textAlign: 'left', borderBottom: 'solid 1px' }
-                  : { fontSize: '10px', textAlign: 'left' }
-              }
-              {...a11yProps(0)}
-            />
-            <StyledTab
-              label={t('lead_management.task_header')}
-              style={
-                tabValue === objectAccessor(TAB_VALUES, 'task')
-                  ? { fontSize: '10px', borderBottom: 'solid 1px' }
-                  : { fontSize: '10px' }
-              }
-              {...a11yProps(1)}
-            />
-            <StyledTab
-              label={t('lead_management.note_header')}
-              style={
-                tabValue === objectAccessor(TAB_VALUES, 'notes')
-                  ? { fontSize: '10px', borderBottom: 'solid 1px' }
-                  : { fontSize: '10px' }
-              }
-              {...a11yProps(2)}
-            />
-          </StyledTabs>
+          <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+            <StyledTabs
+              value={tabValue}
+              onChange={handleTabValueChange}
+              aria-label="lead-management-tabs"
+              data-testid="lead-management-tabs"
+              variant="standard"
+            >
+              <StyledTab
+                label={t('lead_management.detail_header')}
+                style={
+                  tabValue === objectAccessor(TAB_VALUES, 'details')
+                    ? { fontSize: '10px', textAlign: 'left', borderBottom: 'solid 1px' }
+                    : { fontSize: '10px', textAlign: 'left' }
+                }
+                {...a11yProps(0)}
+              />
+              <StyledTab
+                label={t('lead_management.task_header')}
+                style={
+                  tabValue === objectAccessor(TAB_VALUES, 'task')
+                    ? { fontSize: '10px', borderBottom: 'solid 1px' }
+                    : { fontSize: '10px' }
+                }
+                {...a11yProps(1)}
+              />
+              <StyledTab
+                label={t('lead_management.note_header')}
+                style={
+                  tabValue === objectAccessor(TAB_VALUES, 'notes')
+                    ? { fontSize: '10px', borderBottom: 'solid 1px' }
+                    : { fontSize: '10px' }
+                }
+                {...a11yProps(2)}
+              />
+            </StyledTabs>
+          </Box>
 
           <TabPanel value={tabValue} index={0} data-testid="lead-management-details-tab">
             <LeadManagementForm userId={userId} />
