@@ -28,14 +28,13 @@ import moment from 'moment-timezone';
 import { useMutation } from 'react-apollo';
 import DatePickerDialog from '../../../components/DatePickerDialog';
 import { UserChip } from './UserChip';
-import { formatError } from '../../../utils/helpers';
+import { formatError, removeNewLines, sanitizeText } from '../../../utils/helpers';
 import UserAutoResult from '../../../shared/UserAutoResult';
 import { dateToString } from '../../../components/DateContainer';
 import AutoSaveField from '../../../shared/AutoSaveField';
 import { UpdateNote } from '../../../graphql/mutations';
 import MessageAlert from '../../../components/MessageAlert';
 import MenuList from '../../../shared/MenuList';
-import TaskTitle from './TaskTitle';
 
 export default function TaskInfoTop({
   currentUser,
@@ -188,7 +187,13 @@ export default function TaskInfoTop({
             }}
             onMouseOver={canUpdateNote ? () => setEditingBody(true) : null}
           >
-            <TaskTitle task={data} />
+            <span
+              data-testid='task-title'
+              // eslint-disable-next-line react/no-danger
+              dangerouslySetInnerHTML={{
+                __html: sanitizeText(removeNewLines(data.body))
+              }}
+            />
           </Typography>
           )}
           {editingBody && (
@@ -264,7 +269,13 @@ export default function TaskInfoTop({
                 onClick={isUnAuthorizedDeveloper() ? () => {} : (event) => { openParentLink(event, data.parentNote) }}
                 className={isUnAuthorizedDeveloper() ? classes.parentTaskDisabled : classes.parentTask}
               >
-                <TaskTitle task={data.parentNote} />
+                <span
+                  data-testid='task-title'
+                  // eslint-disable-next-line react/no-danger
+                  dangerouslySetInnerHTML={{
+                    __html: sanitizeText(removeNewLines(data.parentNote.body))
+                  }}
+                />
               </Typography>
             </Grid>
           </Grid>

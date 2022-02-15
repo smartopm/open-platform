@@ -4,10 +4,10 @@ import { useHistory } from 'react-router-dom'
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import Divider from '@mui/material/Divider';
+import { removeNewLines, sanitizeText } from '../../../../utils/helpers';
 import { TaskContext } from "../../Context";
 import ProjectSteps from './Steps';
 import ProjectItem from './ProjectItem';
-import TaskTitle from '../../Components/TaskTitle';
 
 export default function ClientPilotViewItem({project, refetch}) {
     const taskId  = project?.id
@@ -23,7 +23,13 @@ export default function ClientPilotViewItem({project, refetch}) {
       <Grid container spacing={2}>
         <Grid item md={12} xs={12}>
           <Typography variant="h6">
-            <TaskTitle task={project} />
+            <span
+              data-testid='task-title'
+              // eslint-disable-next-line react/no-danger
+              dangerouslySetInnerHTML={{
+                  __html: sanitizeText(removeNewLines(project.body))
+              }}
+            />
           </Typography>
         </Grid>
         <Grid item md={12} xs={12} data-testid="project-container">
