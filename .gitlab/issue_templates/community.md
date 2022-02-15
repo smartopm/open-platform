@@ -2,7 +2,7 @@
 Create a new community in DoubleGDP
 
 
-### Requirements (checklist preferred)
+### Requirements for ticket to be completed
 
 Name:
 Domain name:
@@ -13,7 +13,7 @@ Primary theme color:
 Secondary theme color:
 List of required features:
 
-Engineering Checklist
+### Engineering Checklist
 <!-- This is to make sure nothing is forgotten -->
 <!-- TODO:  This list should further be moved to the handbook -->
 
@@ -28,6 +28,7 @@ Engineering Checklist
 - [ ] Added the logo to the community
 - [ ] Added wordpress link to the community
 - [ ] Added list of required features to the community
+- [ ] Added url to the AWS S3 permission list
 - [ ] Made the necessary code changes to reflect new community
 <!-- until we move to a full automated way of creating a community, we need to update here -->
     - https://gitlab.com/doublegdp/app/-/blob/master/app/controllers/concerns/authorizable.rb#L23
