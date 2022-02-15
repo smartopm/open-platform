@@ -9,8 +9,8 @@ import { useTranslation } from 'react-i18next';
 import { TaskContext } from '../../Context';
 import ProjectSteps from './Steps';
 import { UserFormPropertiesQuery } from '../../../Forms/graphql/forms_queries';
-import Loading from '../../../../shared/Loading';
-import ErrorPage from '../../../../components/Error';
+import { Spinner } from '../../../../shared/Loading';
+import { formatError } from '../../../../utils/helpers';
 import MessageAlert from '../../../../components/MessageAlert';
 import CenteredContent from '../../../../shared/CenteredContent';
 
@@ -27,7 +27,9 @@ export default function ProjectOverview({ data }) {
     'Submission Date'
   ];
 
-  const [loadFormData, { data: formData, formDataError, formDataLoading }] = useLazyQuery(
+  const [loadFormData,
+    { data: formData, error: formDataError, loading: formDataLoading }
+  ] = useLazyQuery(
     UserFormPropertiesQuery,
     {
       variables: { userId: authState.user.id, formUserId: data?.formUserId },
@@ -50,8 +52,10 @@ export default function ProjectOverview({ data }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data?.formUserId]);
 
-  if (formDataLoading) return <Loading />;
-  if (formDataError) return <ErrorPage title={formDataError.message} />;
+  if (formDataLoading) return <Spinner />;
+  if (formDataError) return(
+    <CenteredContent>{formatError(formDataError.message)}</CenteredContent>
+  );
 
   return (
     <>
@@ -62,7 +66,7 @@ export default function ProjectOverview({ data }) {
         handleClose={handleMessageAlertClose}
       />
       <Grid container style={{ marginLeft: '-20px' }} data-testid="project-information">
-        {formEntriesData?.length ? (
+        {formEntriesData?.length > 0 ? (
           formEntriesData.map(d => (
             <Grid
               container
@@ -83,7 +87,7 @@ export default function ProjectOverview({ data }) {
             </Grid>
           ))
         ) : (
-          <CenteredContent data-testid="no-project-info">No Project Information</CenteredContent>
+          <CenteredContent data-testid="no-project-info">{t('processes.no_form_data')}</CenteredContent>
         )}
         { data?.formUser?.user && (
           <>

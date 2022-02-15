@@ -107,6 +107,21 @@ describe('Top part of the task form component', () => {
     expect(props.handleTaskComplete).toHaveBeenCalled();
   });
 
+  it('renders form user data', () => {
+    render(
+      <MockedProvider>
+        <Context.Provider value={authState}>
+          <BrowserRouter>
+            <TaskInfoTop {...props} />
+          </BrowserRouter>
+        </Context.Provider>
+      </MockedProvider>
+    );
+
+    expect(screen.getByTestId('submitted_form_title')).toBeInTheDocument();
+    expect(screen.getByTestId('submitted_form_button')).toBeInTheDocument();
+  });
+
   it('shows the description', async () => {
     const newProps = {
       ...props,

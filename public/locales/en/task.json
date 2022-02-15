@@ -106,7 +106,8 @@
     "no_steps_assigned": "There are no Steps currently assigned to this process.",
     "submitted_by": "Submitted By",
     "submitted_form": "Submitted Form",
-    "open_submitted_form": "Open Form"
+    "open_submitted_form": "Open Form",
+    "no_form_data": "Project submission information not found"
   },
   "misc": {
     "confirm": "Confirm"

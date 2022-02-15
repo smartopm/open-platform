@@ -11,6 +11,13 @@ export default {
   subTasksCount: 4,
   taskCommentsCount: 4,
   formUserId: "0358e014-1440-46ee-988d-d5338f019ba3",
+  formUser: {
+    id: "0358e014-1440-46ee-988d-d5338f019ba3",
+    user: {
+      id: "c8b16e54-095e-4b92-bf51-b197f6b916a6",
+      name: "Test User"
+    }
+  },
   progress: {
     complete: 0,
     total: 0,

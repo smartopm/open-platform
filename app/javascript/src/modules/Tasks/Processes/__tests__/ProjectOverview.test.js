@@ -30,7 +30,12 @@ describe('Project Processes Split View', () => {
             formProperty: {
               fieldName: 'Project Developer',
               fieldType: 'text',
-              fieldValue: null,
+              fieldValue: [
+                {
+                  value: "",
+                  label: ""
+                }
+              ],
               id: '3145c47e-1279-47b0-9dac-dc4a7e30562e',
               groupingId: '3145c47e-1279-47b0-9dac',
               adminUse: false,
@@ -42,7 +47,7 @@ describe('Project Processes Split View', () => {
             fileName: 'img.jpg',
             createdAt: "2020-10-07T09:37:03Z",
             user: {
-              name: 'John Doe'
+              name: authState.user.name
             }
           },
         ]
@@ -72,7 +77,7 @@ describe('Project Processes Split View', () => {
       </Context.Provider>
     );
 
-    expect(await screen.findByTestId("project-information")).toBeInTheDocument();
+    expect(screen.getByTestId("project-information")).toBeInTheDocument();
   });
 
   it('should render No Project Information', async () => {
@@ -96,6 +101,6 @@ describe('Project Processes Split View', () => {
      </Context.Provider>
     );
 
-    expect(await screen.findByText('No Project Information')).toBeInTheDocument();
+    expect(screen.getByText('processes.no_form_data')).toBeInTheDocument();
   });
 });

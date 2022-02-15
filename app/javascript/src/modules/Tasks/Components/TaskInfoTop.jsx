@@ -411,7 +411,7 @@ export default function TaskInfoTop({
       {data?.formUser?.user && (
         <Grid container className={classes.submittedFormSection}>
           <Grid item xs={4} md={3}>
-            <Typography variant="caption" color="textSecondary">
+            <Typography variant="caption" color="textSecondary" data-testid="submitted_form_title">
               {t('processes.submitted_form')}
             </Typography>
           </Grid>
@@ -421,6 +421,7 @@ export default function TaskInfoTop({
               variant="outlined"
               color="primary"
               className={classes.button}
+              data-testid="submitted_form_button"
             >
               {t('processes.open_submitted_form')}
             </Button>
