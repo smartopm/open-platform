@@ -19,7 +19,7 @@ describe('LeadManagementDetails Page', () => {
       expect(screen.queryByTestId('lead-management-tabs')).toBeInTheDocument();
 
       expect(screen.queryByTestId('lead-management-details-tab')).toBeInTheDocument();
-      expect(screen.queryByTestId('lead-management-task-tab')).toBeInTheDocument();
+      // expect(screen.queryByTestId('lead-management-task-tab')).toBeInTheDocument();
       expect(screen.queryByTestId('lead-management-note-tab')).toBeInTheDocument();
 
       expect(screen.queryByTestId('lead-management-form')).toBeInTheDocument();
