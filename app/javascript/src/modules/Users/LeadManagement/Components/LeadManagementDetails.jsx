@@ -14,8 +14,7 @@ export default function LeadManagementDetails({ userId }) {
 
   const TAB_VALUES = {
     details: 0,
-    task: 1,
-    notes: 2
+    notes: 1
   };
   function handleTabValueChange(_event, newValue) {
     setTabValue(Number(newValue));
@@ -51,7 +50,7 @@ export default function LeadManagementDetails({ userId }) {
                 }
                 {...a11yProps(0)}
               />
-              <StyledTab
+              {/* <StyledTab
                 label={t('lead_management.task_header')}
                 style={
                   tabValue === objectAccessor(TAB_VALUES, 'task')
@@ -59,7 +58,7 @@ export default function LeadManagementDetails({ userId }) {
                     : { fontSize: '10px' }
                 }
                 {...a11yProps(1)}
-              />
+              /> */}
               <StyledTab
                 label={t('lead_management.note_header')}
                 style={
@@ -67,7 +66,7 @@ export default function LeadManagementDetails({ userId }) {
                     ? { fontSize: '10px', borderBottom: 'solid 1px' }
                     : { fontSize: '10px' }
                 }
-                {...a11yProps(2)}
+                {...a11yProps(1)}
               />
             </StyledTabs>
           </Box>
@@ -75,10 +74,10 @@ export default function LeadManagementDetails({ userId }) {
           <TabPanel value={tabValue} index={0} data-testid="lead-management-details-tab">
             <LeadManagementForm userId={userId} />
           </TabPanel>
-          <TabPanel value={tabValue} index={1} data-testid="lead-management-task-tab">
-            <></>
-          </TabPanel>
-          <TabPanel value={tabValue} index={2} data-testid="lead-management-note-tab">
+          {/* <TabPanel value={tabValue} index={1} data-testid="lead-management-task-tab">
+            <></> */}
+          {/* </TabPanel> */}
+          <TabPanel value={tabValue} index={1} data-testid="lead-management-note-tab">
             <></>
           </TabPanel>
         </Item>
