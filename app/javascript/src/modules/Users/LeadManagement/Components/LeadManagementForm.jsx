@@ -110,7 +110,9 @@ export default function LeadManagementForm({ userId }) {
       { contactType: 'phone', info: formSecondaryPhoneNumber },
       { contactType: 'email', info: formSecondaryEmail }
     ];
+
     const cleanedSecondaryInfo = secondaryInfo.filter(obj => obj.info !== undefined);
+
     leadDataUpdate({
       variables: {
         ...leadFormData?.user,
@@ -184,7 +186,6 @@ export default function LeadManagementForm({ userId }) {
           </Grid>
           <br />
           <CompanyInformation leadFormData={leadFormData} handleChange={handleChange} />
-          <br />
           <br />
           <Grid item md={12} xs={12} style={{ marginBottom: '2px' }}>
             <Divider />

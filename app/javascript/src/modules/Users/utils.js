@@ -51,15 +51,6 @@ export const initialLeadFormData = {
 
     // contact details object for easier update
     contactDetails: {
-      primaryContact: {
-        name: '',
-        title: '',
-        primaryEmail: '',
-        secondaryEmail: '',
-        primaryPhoneNumber: '',
-        secondaryPhoneNumber: '',
-        linkedinUrl: ''
-      },
       secondaryContact1: {
         name: '',
         title: '',
@@ -154,3 +145,13 @@ export const secondaryInfoUserObject = PropTypes.shape({
     })
   })
 }).isRequired;
+
+const ITEM_HEIGHT = 50;
+const ITEM_PADDING_TOP = 8;
+export const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP
+    }
+  }
+};
