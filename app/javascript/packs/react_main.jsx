@@ -72,6 +72,7 @@ import EmailBuilderDialog
   from '../src/modules/Emails/components/EmailBuilderDialog';
 import { PRIMARY_DOMAINS } from '../src/utils/constants';
 import TaskProcessDetail from '../src/modules/Tasks/Processes/Components/TaskProcessDetail';
+import LeadManagementUserImport from '../src/modules/Users/LeadManagement/Containers/LeadManagementUserImport';
 
 
 
@@ -415,6 +416,10 @@ const App = () => {
                                   <Route
                                     path="/users/import"
                                     component={UsersImport}
+                                  />
+                                  <Route
+                                    path="/users/leads/import"
+                                    component={LeadManagementUserImport}
                                   />
                                   <Route
                                     path="/showroom_logs"

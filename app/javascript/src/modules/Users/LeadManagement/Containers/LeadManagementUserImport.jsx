@@ -4,11 +4,11 @@ import { useMutation } from 'react-apollo';
 import { StyleSheet, css } from 'aphrodite';
 import { useHistory } from 'react-router-dom';
 import { Button, Grid } from '@material-ui/core';
-import { ImportCreate } from '../../../graphql/mutations';
-import CenteredContent from '../../../components/CenteredContent';
-import Loading from '../../../shared/Loading';
-import { Context } from '../../../containers/Provider/AuthStateProvider';
-import MessageAlert from '../../../components/MessageAlert';
+import { ImportCreate } from '../../../../graphql/mutations';
+import CenteredContent from '../../../../components/CenteredContent';
+import Loading from '../../../../shared/Loading';
+import { Context } from '../../../../containers/Provider/AuthStateProvider';
+import MessageAlert from '../../../../components/MessageAlert';
 
 export default function LeadManagementUserImport() {
   const [importCreate] = useMutation(ImportCreate);
@@ -24,7 +24,7 @@ export default function LeadManagementUserImport() {
   function createImport() {
     setIsLoading(true);
     importCreate({
-      variables: { csvString, csvFileName, importType: 'user' }
+      variables: { csvString, csvFileName, importType: 'lead' }
     })
       .then(() => {
         setIsLoading(false);
@@ -80,22 +80,65 @@ export default function LeadManagementUserImport() {
       />
       <Grid container style={{ margin: '5px auto', width: '95%' }}>
         <Grid item md={6}>
-          You can upload a .csv file with users. The following are the expected fields with
-          examples, and the column headers should be specified accordingly:
+          You can upload a .csv file with users. Below is a list of the expected column headers with examples(: i.e..).
+          Download the sample CSV file to confirm column mapping and see the allowed values for the selectors.
+          <br />
+          Note: If the column mapping does not match or the values are not recognized, the system will leave the input blank. Please review the uploaded users for import accuracy.
           <ol>
-            <li> Name: i.e John Doe </li>
-            <li> Email primary: i.e john@gmail.com </li>
-            <li> Phone number primary: i.e 260666050378 </li>
-            <li> Phone number secondary 1: i.e 260999050378 </li>
-            <li> Phone number secondary 2: i.e +260777050378 </li>
-            <li> User type: i.e client, prospective client, visitor, admin, etc. </li>
-            <li> Labels: i.e import, facebook </li>
-            <li> State: i.e valid, pending, banned, expired </li>
-            <li> Expiration date: i.e 25-09-2020, 25/09/2020, 2020-09-25, 2020/09/25 </li>
-            <li> Notes on client: i.e Here&apos;s a new note </li>
+            <li> Primary Contact Name: i.e John Doe </li>
+            <li> Primary Contact Title </li>
+            <li> Primary Contact Primary Email: i.e john@gmail.com </li>
+            <li> Primary Contact Secondary Email: i.e john@gmail.com </li>
+            <li> Primary Contact Primary Phone/Mobile: i.e 2609988776655 </li>
+            <li> Primary Contact Secondary Phone/Mobile: i.e 2609988776655 </li>
+            <li> Primary Contact Linkedin: </li>
+            <li> Secondary Contact 1 Name: i.e John Doe </li>
+            <li> Secondary Contact 1 Title: </li>
+            <li> Secondary Contact 1 Primary Email: i.e john@gmail.com </li>
+            <li> Secondary Contact 1 Secondary Email: i.e john@gmail.com </li>
+            <li> Secondary Contact 1 Primary Phone/Mobile: i.e 2609988776655 </li>
+            <li> Secondary Contact 1 Secondary Phone/Mobile: i.e 2609988776655 </li>
+            <li> Secondary Contact 1 Linkedin: i.e </li>
+            <li> Secondary Contact 2 Name: i.e John Doe </li>
+            <li> Secondary Contact 2 Title: </li>
+            <li> Secondary Contact 2 Primary Email: i.e john@gmail.com </li>
+            <li> Secondary Contact 2 Secondary Email: i.e john@gmail.com </li>
+            <li> Secondary Contact 2 Primary Phone/Mobile: i.e 2609988776655 </li>
+            <li> Secondary Contact 2 Secondary Phone/Mobile: i.e 2609988776655 </li>
+            <li> Secondary Contact 2 Linkedin: i.e </li>
+            <li>Company Name</li>
+            <li>Company Description</li>
+            <li>Company Linkedin</li>
+            <li>Company Website</li>
+            <li>Relevant Link/News</li>
+            <li>Country</li>
+            <li>Region</li>
+            <li>Industry Sector</li>
+            <li>Industry Sub Sector</li>
+            <li>Industry Business Activity</li>
+            <li>Level of Internationlalization</li>
+            <li>Number of Employees</li>
+            <li>Annual Revenue</li>
+            <li>African Presence</li>
+            <li>Lead Temperature</li>
+            <li>Lead Status</li>
+            <li>Lead Type</li>
+            <li>Lead Source</li>
+            <li>Client Category</li>
+            <li>Company Contacted</li>
+            <li>Next Steps</li>
+            <li>Lead Owner: i.e. John Doe </li>
+            <li>Created By: i.e. John Doe </li>
+            <li>Modified By: i.e. John Doe </li>
+            <li>First Contact Date: i.e. 25-09-2020, 25/09/2020, 2020-09-25, 2020/09/25 </li>
+            <li>Last Contact Date: i.e. 25-09-2020, 25/09/2020, 2020-09-25, 2020/09/25 </li>
+            <li>Date Follow Up: i.e. 25-09-2020, 25/09/2020, 2020-09-25, 2020/09/25 </li>
           </ol>
           You can click
-          <a href={`/csv_import_sample/download?token=${token}`}>here</a> to download a sample csv
+          {' '}
+          <a href={`/csv_import_sample/lead_download?token=${token}`}>here</a>
+          {' '}
+          to download a sample csv
           file.
         </Grid>
         <Grid item md={6} style={{ margin: '5px auto' }}>
