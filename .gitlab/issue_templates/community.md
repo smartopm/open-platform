@@ -17,6 +17,7 @@ Engineering Checklist
 <!-- This is to make sure nothing is forgotten -->
 <!-- TODO:  This list should further be moved to the handbook -->
 
+- [ ] Create community with provided community name in the db.  
 - [ ] Updated cloudflare with new domain @nicolas128
 - [ ] Added the community to auth providers
 - [ ] Added google analytics to the community
