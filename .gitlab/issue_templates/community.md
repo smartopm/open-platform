@@ -4,14 +4,15 @@ Create a new community in DoubleGDP
 
 ### Requirements for ticket to be completed
 
-Name:
-Domain name:
-Logo:
-Timezone:
-Currency:
-Primary theme color:
-Secondary theme color:
-List of required features:
+Name:   
+Domain name:   
+Logo:   
+Timezone:   
+Currency:   
+Primary theme color:   
+Secondary theme color:   
+List of required features:  
+Required community assets: @vanessa43    
 
 ### Engineering Checklist
 <!-- This is to make sure nothing is forgotten -->
