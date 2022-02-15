@@ -24,7 +24,7 @@ export default function UsersImport() {
   function createImport() {
     setIsLoading(true);
     importCreate({
-      variables: { csvString, csvFileName, importType: 'user' }
+      variables: { csvString, csvFileName }
     })
       .then(() => {
         setIsLoading(false);
