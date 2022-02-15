@@ -49,6 +49,9 @@ export const TaskQuery = gql`
         id
         body
         formUserId
+        assignees {
+          id
+        }
       }
       attachments
       formUserId

@@ -31,6 +31,8 @@ module Authorizable
                        'tilisi.doublegdp.com' => 'Tilisi',
                        'greenpark.doublegdp.com' => 'Greenpark',
                        'greenpark-staging.doublegdp.com' => 'Greenpark',
+                       'enyimba.doublegdp.com' => 'Enyimba',
+                       'enyimba-staging.doublegdp.com' => 'Enyimba',
                        'dev.dgdp.site' => 'DoubleGDP',
                        'double-gdp-dev.herokuapp.com' => 'DAST' }
     if ['dgdp.site', 'rails'].include?(request.domain) && request.subdomain != 'dev'

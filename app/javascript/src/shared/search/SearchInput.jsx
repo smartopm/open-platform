@@ -9,14 +9,24 @@ import {
 import SearchIcon from '@mui/icons-material/Search';
 import ClearOutlined from '@mui/icons-material/ClearOutlined';
 import FilterListOutlined from '@mui/icons-material/FilterListOutlined';
-import PropTypes from 'prop-types'
+import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 
-export default function SearchInput({ title, searchValue, filterRequired, handleSearch, handleFilter, handleClear }) {
-  const { t } = useTranslation('search')
+export default function SearchInput({
+  title,
+  searchValue,
+  filterRequired,
+  handleSearch,
+  handleFilter,
+  handleClear,
+  handleClick
+}) {
+  const { t } = useTranslation('search');
   return (
     <FormControl fullWidth variant="outlined">
-      <InputLabel htmlFor="outlined-adornment-filter">{t('search.search_for', { title })}</InputLabel>
+      <InputLabel htmlFor="outlined-adornment-filter">
+        {t('search.search_for', { title })}
+      </InputLabel>
       <OutlinedInput
         id="outlined-adornment-filter"
         type="search"
@@ -24,22 +34,31 @@ export default function SearchInput({ title, searchValue, filterRequired, handle
         value={searchValue}
         onChange={handleSearch}
         placeholder={t('search.type_your_search')}
-        inputProps={{ "data-testid": "search" }}
+        inputProps={{ 'data-testid': 'search' }}
+        onClick={handleClick}
         startAdornment={<SearchIcon style={{ color: '#a1a1a1', marginRight: 8 }} />}
         endAdornment={(
           <InputAdornment position="end">
-            {
-              Boolean(searchValue.length) && handleClear &&(
-                <IconButton aria-label="clear search query" data-testid="clear_search" onClick={handleClear} edge="end">
-                  <ClearOutlined />
-                </IconButton>
-              )
-            }
+            {Boolean(searchValue.length) && handleClear && (
+              <IconButton
+                aria-label="clear search query"
+                data-testid="clear_search"
+                onClick={handleClear}
+                edge="end"
+              >
+                <ClearOutlined />
+              </IconButton>
+            )}
             {filterRequired && (
-            <IconButton aria-label="toggle filter visibility" onClick={handleFilter} edge="end" data-testid="filter">
-              <FilterListOutlined />
-            </IconButton>
-          )}
+              <IconButton
+                aria-label="toggle filter visibility"
+                onClick={(e) => handleFilter(e)}
+                edge="end"
+                data-testid="filter"
+              >
+                <FilterListOutlined />
+              </IconButton>
+            )}
           </InputAdornment>
         )}
         labelWidth={120}
@@ -51,14 +70,17 @@ export default function SearchInput({ title, searchValue, filterRequired, handle
 SearchInput.defaultProps = {
   handleClear: () => {},
   handleFilter: () => {},
-  filterRequired: true
-}
+  filterRequired: true,
+  handleSearch: undefined,
+  handleClick: undefined
+};
 
 SearchInput.propTypes = {
-    title: PropTypes.string.isRequired,
-    searchValue: PropTypes.string.isRequired,
-    filterRequired: PropTypes.bool,
-    handleSearch: PropTypes.func.isRequired,
-    handleFilter: PropTypes.func,
-    handleClear: PropTypes.func,
-}
+  title: PropTypes.string.isRequired,
+  searchValue: PropTypes.string.isRequired,
+  filterRequired: PropTypes.bool,
+  handleSearch: PropTypes.func,
+  handleFilter: PropTypes.func,
+  handleClear: PropTypes.func,
+  handleClick: PropTypes.func
+};

@@ -26,6 +26,8 @@ class ServiceWorkerController < ApplicationController
       return manifest_file(community_name, '#008C44', 'greenpark/')
     end
 
+    return manifest_file(community_name, '#008C44', 'enyimba/') if community_name.eql?('Enyimba')
+
     manifest_file(community_name)
   end
 

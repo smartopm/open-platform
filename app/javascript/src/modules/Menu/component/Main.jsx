@@ -22,7 +22,7 @@ import userProps from '../../../shared/types/user';
 import UserActionOptions from '../../Users/Components/UserActionOptions';
 import Loading from '../../../shared/Loading';
 import SOSModal from './SOSModal';
-import useGeoLocation from '../../../hooks/useGeoLocation'
+import useGeoLocation from '../../../hooks/useGeoLocation';
 import { filterQuickLinksByRole } from '../../Dashboard/utils';
 import { allUserTypes } from '../../../utils/constants';
 import BackArrow from './BackArrow';
@@ -66,12 +66,14 @@ export default function Main() {
 
 export function MainNav({ authState }) {
   const matchesSmall = useMediaQuery('(max-width:500px)');
-  const path = useLocation().pathname
+  const path = useLocation().pathname;
   const classes = useStyles();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [open, setOpen] = useState(false);
   const location = useGeoLocation();
-  const menuQuickLinks = authState?.user?.community?.menuItems?.filter((quickLink) => quickLink?.display_on?.includes('Menu'))
+  const menuQuickLinks = authState?.user?.community?.menuItems?.filter(quickLink =>
+    quickLink?.display_on?.includes('Menu')
+  );
   const quickLinks = filterQuickLinksByRole(menuQuickLinks, authState?.user?.userType);
 
   const dynamicMenu =
@@ -110,8 +112,10 @@ export function MainNav({ authState }) {
     }
   };
 
-  const communityHasEmergencyNumber = Boolean(authState.user?.community?.emergencyCallNumber)
-  const communityHasEmergencySMSNumber = Boolean(authState.user?.community?.smsPhoneNumbers?.filter(Boolean)?.length !== 0)
+  const communityHasEmergencyNumber = Boolean(authState.user?.community?.emergencyCallNumber);
+  const communityHasEmergencySMSNumber = Boolean(
+    authState.user?.community?.smsPhoneNumbers?.filter(Boolean)?.length !== 0
+  );
 
   if (!location.loaded) return <Loading />;
 
@@ -137,22 +141,27 @@ export function MainNav({ authState }) {
             )}
           </IconButton>
 
-          {canAccessSOS({authState})
-           && communityHasEmergencyNumber && communityHasEmergencySMSNumber
-           && <SvgIcon component={SOSIcon} viewBox="0 0 384 512" setOpen={setOpen} data-testid="sos-icon" />}
+          {canAccessSOS({ authState }) &&
+            communityHasEmergencyNumber &&
+            communityHasEmergencySMSNumber && (
+              <SvgIcon
+                component={SOSIcon}
+                viewBox="0 0 384 512"
+                setOpen={setOpen}
+                data-testid="sos-icon"
+              />
+            )}
 
           <BackArrow path={path} />
           <SOSModal open={open} setOpen={setOpen} location={location} {...{ authState }} />
 
-          {
-              matchesSmall
-              ? <CommunityName authState={authState} logoStyles={styles} />
-              : (
-                <CenteredContent>
-                  <CommunityName authState={authState} />
-                </CenteredContent>
-              )
-            }
+          {matchesSmall ? (
+            <CommunityName authState={authState} logoStyles={styles} />
+          ) : (
+            <CenteredContent>
+              <CommunityName authState={authState} />
+            </CenteredContent>
+          )}
           <NotificationBell user={authState.user} />
           <UserActionOptions />
         </Toolbar>
@@ -160,7 +169,7 @@ export function MainNav({ authState }) {
       {authState.loggedIn && (
         <nav className={classes.drawer} aria-label="mailbox folders" data-testid="nav-container">
           <Drawer
-            variant={window.screen.width <= 768 ? 'temporary' : 'persistent'}
+            variant={window.screen.width <= 1200 ? 'temporary' : 'persistent'}
             anchor="left"
             open={drawerOpen}
             onClose={handleDrawerToggle}
@@ -217,7 +226,6 @@ NewsNav.propTypes = {
   children: PropTypes.node.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   history: PropTypes.object.isRequired
-
 };
 
 const styles = StyleSheet.create({
@@ -234,14 +242,14 @@ const styles = StyleSheet.create({
       height: 25
     },
     '@media (min-width: 406px) and (max-width: 470px)': {
-      marginLeft: '3em',
+      marginLeft: '3em'
     },
     '@media (min-width: 470px) and (max-width: 500px)': {
       marginLeft: '5em'
     },
     '@media (min-width: 501px) and (max-width: 550px)': {
       marginLeft: '-3em'
-    },
+    }
   },
   topNav: {
     width: '100%',

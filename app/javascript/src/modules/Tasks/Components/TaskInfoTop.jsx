@@ -109,6 +109,13 @@ export default function TaskInfoTop({
       });
   }
 
+  function isUnAuthorizedDeveloper() {
+    return (
+      currentUser.userType === 'developer' &&
+      !data.parentNote.assignees.find(assignee => assignee.id === currentUser.id)
+    );
+  }
+
   return (
     <>
       <MessageAlert
@@ -250,10 +257,10 @@ export default function TaskInfoTop({
             <Grid item xs={7} md={6}>
               <Typography
                 variant="body2"
-                color="primary"
+                color={isUnAuthorizedDeveloper() ? "inherit" : "primary"}
                 data-testid="parent-note"
-                onClick={event => openParentLink(event, data.parentNote)}
-                className={classes.parentTask}
+                onClick={isUnAuthorizedDeveloper() ? () => {} : (event) => { openParentLink(event, data.parentNote) }}
+                className={isUnAuthorizedDeveloper() ? classes.parentTaskDisabled : classes.parentTask}
               >
                 <TaskTitle task={data.parentNote} />
               </Typography>
@@ -423,6 +430,13 @@ const useStyles = makeStyles({
       textDecoration: 'none'
     }
   },
+  parentTaskDisabled: {
+    pointerEvents: 'none',
+    opacity: '0.4',
+    '& a': {
+      color: '#000000'
+    }
+  },
   inlineContainer: {
     padding: '10px 0'
   },
@@ -477,7 +491,9 @@ TaskInfoTop.propTypes = {
           permissions: PropTypes.arrayOf(PropTypes.string)
         })
       })
-    )
+    ),
+    id: PropTypes.string.isRequired,
+    userType: PropTypes.string.isRequired
   }).isRequired,
   users: PropTypes.arrayOf(PropTypes.object),
   // eslint-disable-next-line react/forbid-prop-types
