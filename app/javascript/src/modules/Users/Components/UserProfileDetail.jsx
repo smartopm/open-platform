@@ -1,17 +1,15 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/core/styles';
 // import useMediaQuery from '@material-ui/core/useMediaQuery';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
-import { Context } from '../../../containers/Provider/AuthStateProvider';
 
-export default function UserDetail({ data, userType }) {
+export default function UserDetail({ data }) {
   const { t } = useTranslation('users');
   const classes = useStyles();
   // const matches = useMediaQuery('(max-width:600px)');
-  const authState = useContext(Context)
   return (
     <>
       <Grid contaner direction='column'>
@@ -41,7 +39,6 @@ const useStyles = makeStyles(() => ({
 
 UserDetail.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
-  data: PropTypes.object.isRequired,
-  userType: PropTypes.string.isRequired
+  data: PropTypes.object.isRequired
 };
 

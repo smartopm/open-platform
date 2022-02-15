@@ -96,8 +96,15 @@ export default function UserInformation({
           <UserDetailHeader
             data={data}
             userType={userType}
+            userId={userId}
+            setDrawerOpen={setDrawerOpen}
           />
         </FixedHeader>
+        <RightSideMenu
+          authState={authState}
+          handleDrawerToggle={() => setDrawerOpen(false)}
+          drawerOpen={isDrawerOpen}
+        />
 
         {/* <Grid container>
           <Grid item xs={3}>
@@ -130,12 +137,6 @@ export default function UserInformation({
                   style={{ transform: 'translate(-50%,-50%) rotate(180deg)' }}
                 />
               </IconButton>
-
-              <RightSideMenu
-                authState={authState}
-                handleDrawerToggle={() => setDrawerOpen(false)}
-                drawerOpen={isDrawerOpen}
-              />
             </>
           </Grid>
         </Grid> */}
