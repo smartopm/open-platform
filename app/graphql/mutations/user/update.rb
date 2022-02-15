@@ -82,6 +82,7 @@ module Mutations
         end
       end
 
+      # rubocop: disable Metrics/AbcSize
       def update_secondary_info(user, contact_info)
         return if contact_info.nil?
 
@@ -97,6 +98,7 @@ module Mutations
           end
         end
       end
+      # rubocop: enable Metrics/AbcSize
 
       def log_user_update(user)
         Logs::EventLog.create(acting_user_id: context[:current_user].id,
