@@ -1,12 +1,16 @@
 import React from 'react';
 import TextField from '@material-ui/core/TextField';
-import { MenuItem, Select, InputLabel, FormControl } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Typography } from '@mui/material';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
 import DatePickerDialog from '../../../../components/DatePickerDialog';
-import { userProps } from '../../utils';
+import { userProps, MenuProps } from '../../utils';
 import {
   clientCategories,
   leadTemperatureOptions,
@@ -18,17 +22,7 @@ import {
 export default function LeadInformation({ leadFormData, handleChange, handleTimeInputChange }) {
   const { t } = useTranslation('common');
 
-  const useStyles = makeStyles(theme => ({
-    formControl: {
-      margin: theme.spacing(1)
-    },
-    selectEmpty: {
-      marginTop: theme.spacing(2)
-    },
-    menuPaper: {
-      maxHeight: 400
-    },
-
+  const useStyles = makeStyles(() => ({
     input: {
       height: 40
     }
@@ -41,6 +35,7 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
       <Typography variant="h6" data-testid="lead-management-lead-information-header">
         {t('lead_management.lead_section_header')}
       </Typography>
+      <br />
       <Grid container spacing={2} data-testid="lead-management-lead-information-section">
         <Grid item md={6} xs={12}>
           <FormControl fullWidth size="small">
@@ -51,8 +46,8 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
               onChange={handleChange}
               name="leadTemperature"
               fullWidth
-              variant="outlined"
-              MenuProps={{ classes: { paper: classes.menuPaper } }}
+              input={<OutlinedInput label={t('lead_management.lead_temperature')} />}
+              MenuProps={MenuProps}
             >
               {Object.entries(leadTemperatureOptions).map(([key, val]) => (
                 <MenuItem key={key} value={key}>
@@ -71,8 +66,8 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
               onChange={handleChange}
               name="leadStatus"
               fullWidth
-              variant="outlined"
-              MenuProps={{ classes: { paper: classes.menuPaper } }}
+              input={<OutlinedInput label={t('lead_management.lead_status')} />}
+              MenuProps={MenuProps}
             >
               {Object.entries(leadStatusOptions).map(([key, val]) => (
                 <MenuItem key={key} value={key}>
@@ -84,7 +79,7 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
         </Grid>
 
         <Grid item md={6} xs={12}>
-          <FormControl variant="standard" fullWidth size="small">
+          <FormControl fullWidth size="small">
             <InputLabel id="lead_source">{t('lead_management.lead_source')}</InputLabel>
             <Select
               id="lead_source"
@@ -92,8 +87,8 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
               onChange={handleChange}
               name="leadSource"
               fullWidth
-              variant="outlined"
-              MenuProps={{ classes: { paper: classes.menuPaper } }}
+              input={<OutlinedInput label={t('lead_management.lead_source')} />}
+              MenuProps={MenuProps}
             >
               {Object.entries(leadSourceOptions).map(([key, val]) => (
                 <MenuItem key={key} value={key}>
@@ -131,8 +126,8 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
               onChange={handleChange}
               name="clientCategory"
               fullWidth
-              variant="outlined"
-              MenuProps={{ classes: { paper: classes.menuPaper } }}
+              input={<OutlinedInput label={t('lead_management.client_category')} />}
+              MenuProps={MenuProps}
             >
               {Object.entries(clientCategories).map(([key, val]) => (
                 <MenuItem key={key} value={key}>
@@ -152,8 +147,8 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
               onChange={handleChange}
               name="leadType"
               fullWidth
-              variant="outlined"
-              MenuProps={{ classes: { paper: classes.menuPaper } }}
+              input={<OutlinedInput label={t('lead_management.lead_type')} />}
+              MenuProps={MenuProps}
             >
               {Object.entries(leadTypeOptions).map(([key, val]) => (
                 <MenuItem key={key} value={key}>

@@ -3,9 +3,13 @@ import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Typography } from '@mui/material';
 import PropTypes from 'prop-types';
-import { MenuItem, Select, InputLabel, FormControl } from '@material-ui/core';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
 import { useTranslation } from 'react-i18next';
-import { userProps } from '../../utils';
+import { userProps, MenuProps } from '../../utils';
 import {
   internationalizationLevels,
   industrySubSectorOptions,
@@ -18,18 +22,7 @@ import {
 export default function CompanyInformation({ leadFormData, handleChange }) {
   const { t } = useTranslation('common');
 
-  const useStyles = makeStyles(theme => ({
-    formControl: {
-      margin: theme.spacing(1)
-    },
-    selectEmpty: {
-      marginTop: theme.spacing(2)
-    },
-    menuPaper: {
-      maxHeight: 400,
-      padding: 4
-    },
-
+  const useStyles = makeStyles(() => ({
     input: {
       height: 40
     }
@@ -123,19 +116,18 @@ export default function CompanyInformation({ leadFormData, handleChange }) {
 
       <br />
       <br />
-
       <Grid container spacing={2}>
         <Grid item md={6} xs={12}>
           <FormControl fullWidth size="small">
             <InputLabel id="country">{t('lead_management.country')}</InputLabel>
             <Select
+              labelId="demo-multiple-name-label"
               id="country"
+              name="country"
               value={leadFormData?.user?.country}
               onChange={handleChange}
-              name="country"
-              fullWidth
-              variant="outlined"
-              MenuProps={{ classes: { paper: classes.menuPaper } }}
+              input={<OutlinedInput label={t('lead_management.country')} />}
+              MenuProps={MenuProps}
             >
               {Object.entries(countries).map(([key, val]) => (
                 <MenuItem key={key} value={key}>
@@ -157,8 +149,8 @@ export default function CompanyInformation({ leadFormData, handleChange }) {
               onChange={handleChange}
               name="industryBusinessActivity"
               fullWidth
-              variant="outlined"
-              MenuProps={{ classes: { paper: classes.menuPaper } }}
+              input={<OutlinedInput label={t('lead_management.industry_business_activity')} />}
+              MenuProps={MenuProps}
             >
               {Object.entries(industryBusinessActivityOptions).map(([key, val]) => (
                 <MenuItem key={key} value={key}>
@@ -178,7 +170,8 @@ export default function CompanyInformation({ leadFormData, handleChange }) {
               onChange={handleChange}
               name="region"
               fullWidth
-              variant="outlined"
+              input={<OutlinedInput label={t('lead_management.region')} />}
+              MenuProps={MenuProps}
             >
               {Object.entries(regionOptions).map(([key, val]) => (
                 <MenuItem key={key} value={key}>
@@ -190,7 +183,7 @@ export default function CompanyInformation({ leadFormData, handleChange }) {
         </Grid>
 
         <Grid item md={6} xs={12}>
-          <FormControl variant="standard" fullWidth size="small">
+          <FormControl fullWidth size="small">
             <InputLabel id="level_of_internationalization">
               {t('lead_management.level_of_internationalization')}
             </InputLabel>
@@ -200,8 +193,10 @@ export default function CompanyInformation({ leadFormData, handleChange }) {
               onChange={handleChange}
               name="levelOfInternationalization"
               fullWidth
-              variant="outlined"
-              MenuProps={{ classes: { paper: classes.menuPaper } }}
+              input={
+                <OutlinedInput label={t('lead_management.level_of_internationalization')} />
+              }
+              MenuProps={MenuProps}
             >
               {Object.entries(internationalizationLevels).map(([key, val]) => (
                 <MenuItem key={key} value={key}>
@@ -213,7 +208,7 @@ export default function CompanyInformation({ leadFormData, handleChange }) {
         </Grid>
 
         <Grid item md={6} xs={12}>
-          <FormControl variant="standard" fullWidth size="small">
+          <FormControl fullWidth size="small">
             <InputLabel id="industry">{t('lead_management.industry_sector')}</InputLabel>
             <Select
               id="industry"
@@ -221,8 +216,8 @@ export default function CompanyInformation({ leadFormData, handleChange }) {
               onChange={handleChange}
               name="industry"
               fullWidth
-              variant="outlined"
-              MenuProps={{ classes: { paper: classes.menuPaper } }}
+              input={<OutlinedInput label={t('lead_management.industry_sector')} />}
+              MenuProps={MenuProps}
             >
               {Object.entries(industryCategoryOptions).map(([key, val]) => (
                 <MenuItem key={key} value={key}>
@@ -252,7 +247,7 @@ export default function CompanyInformation({ leadFormData, handleChange }) {
         </Grid>
 
         <Grid item md={6} xs={12}>
-          <FormControl variant="standard" fullWidth size="small">
+          <FormControl fullWidth size="small">
             <InputLabel id="industrySubSector">
               {t('lead_management.industry_sub_sector')}
             </InputLabel>
@@ -262,8 +257,8 @@ export default function CompanyInformation({ leadFormData, handleChange }) {
               onChange={handleChange}
               name="industrySubSector"
               fullWidth
-              variant="outlined"
-              MenuProps={{ classes: { paper: classes.menuPaper } }}
+              input={<OutlinedInput label={t('lead_management.industry_sub_sector')} />}
+              MenuProps={MenuProps}
             >
               {Object.entries(industrySubSectorOptions).map(([key, val]) => (
                 <MenuItem key={key} value={key}>
