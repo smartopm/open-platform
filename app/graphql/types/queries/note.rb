@@ -295,13 +295,9 @@ module Types::Queries::Note
 
     results = projects_query
 
-    if step
-      results = projects_query.where(current_step_body: step)
-    end
+    results = projects_query.where(current_step_body: step) if step
 
-    if quarter
-      results = projects_query.where(completed: true).by_quarter(quarter)
-    end
+    results = projects_query.where(completed: true).by_quarter(quarter) if quarter
 
     results.limit(limit).offset(offset)
   end
