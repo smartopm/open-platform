@@ -4,13 +4,15 @@ import { useMutation } from 'react-apollo';
 import { StyleSheet, css } from 'aphrodite';
 import { useHistory } from 'react-router-dom';
 import { Button, Grid } from '@material-ui/core';
+import CSVFileValidator from 'csv-file-validator';
 import { ImportCreate } from '../../../../graphql/mutations';
-import CenteredContent from '../../../../components/CenteredContent';
-import Loading from '../../../../shared/Loading';
+import CenteredContent from '../../../../shared/CenteredContent';
+import { Spinner } from '../../../../shared/Loading';
 import { Context } from '../../../../containers/Provider/AuthStateProvider';
 import MessageAlert from '../../../../components/MessageAlert';
+import configObject from './CSVFileValidatorConfig';
 
-export default function LeadManagementUserImport() {
+export default function UsersImport() {
   const [importCreate] = useMutation(ImportCreate);
   const [csvString, setCsvString] = useState('');
   const [csvFileName, setCsvFileName] = useState('');
@@ -20,6 +22,7 @@ export default function LeadManagementUserImport() {
   const { token } = useContext(Context);
   const [isSuccessAlert, setIsSuccessAlert] = useState(false);
   const [messageAlert, setMessageAlert] = useState('');
+  const [CSVFileUploadErrors, setCSVFileUploadErrors] = useState([]);
 
   function createImport() {
     setIsLoading(true);
@@ -53,6 +56,16 @@ export default function LeadManagementUserImport() {
 
   function processCsv(evt) {
     const file = evt.target.files[0];
+    CSVFileValidator(file, configObject).then(csvData => {
+      setCSVFileUploadErrors(csvData.inValidMessages);
+      if (csvData.inValidMessages.length > 0) {
+        csvData.inValidMessages.forEach(invalidMessage => {
+          document
+            .getElementById('invalidMessages')
+            .insertAdjacentHTML('beforeend', invalidMessage);
+        });
+      }
+    });
     if (errorMessage) setErrorMessage(null);
 
     if (!file) {
@@ -67,8 +80,9 @@ export default function LeadManagementUserImport() {
     };
     reader.readAsText(file);
   }
+  console.log('Mutuba errors', CSVFileUploadErrors);
 
-  const hasErrors = errorMessage;
+  const hasErrors = CSVFileUploadErrors;
 
   return (
     <>
@@ -78,12 +92,70 @@ export default function LeadManagementUserImport() {
         open={!!messageAlert}
         handleClose={handleMessageAlertClose}
       />
-      <Grid container style={{ margin: '5px auto', width: '95%' }}>
-        <Grid item md={6}>
-          You can upload a .csv file with users. Below is a list of the expected column headers with examples(: i.e..).
-          Download the sample CSV file to confirm column mapping and see the allowed values for the selectors.
+      <Grid
+        container
+        style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center' }}
+      >
+        <Grid item md={6} style={{ margin: '5px auto' }}>
+          {isLoading ? (
+            <Spinner />
+          ) : (
+            <div>
+              <Grid container justify="center" style={{ marginTop: '5px', marginBottom: '5px' }}>
+                <Grid item md={12} xs={12}>
+                  <input
+                    accept=".csv"
+                    className={css(styles.inputField)}
+                    id="contained-button-file"
+                    data-testid="csv-input"
+                    type="file"
+                    onChange={processCsv}
+                  />
+                  <br />
+                  <br />
+                </Grid>
+
+                {CSVFileUploadErrors.length > 0 && (
+                  <Grid item md={6} xs={6} style={{ maxWidth: '500px' }}>
+                    <div className={css(styles.errorSection)} id="invalidMessages" />
+                  </Grid>
+                )}
+              </Grid>
+              {csvString.length > 0 && hasErrors.length === 0 && (
+                <CenteredContent>
+                  <Button
+                    variant="contained"
+                    aria-label="business_cancel"
+                    color="secondary"
+                    className={css(styles.cancelBtn)}
+                    onClick={onCancel}
+                    data-testid="cancel-btn"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    variant="contained"
+                    type="submit"
+                    aria-label="business_submit"
+                    color="primary"
+                    onClick={createImport}
+                    className={css(styles.importBtn)}
+                  >
+                    Import
+                  </Button>
+                </CenteredContent>
+              )}
+            </div>
+          )}
+        </Grid>
+        <br />
+        <Grid item md={6} style={{ alignSelf: 'center' }}>
+          You can upload a .csv file with users. Below is a list of the expected column headers with
+          examples(: i.e..). Download the sample CSV file to confirm column mapping and see the
+          allowed values for the selectors.
           <br />
-          Note: If the column mapping does not match or the values are not recognized, the system will leave the input blank. Please review the uploaded users for import accuracy.
+          Note: If the column mapping does not match or the values are not recognized, the system
+          will leave the input blank. Please review the uploaded users for import accuracy.
           <ol>
             <li> Primary Contact Name: i.e John Doe </li>
             <li> Primary Contact Title </li>
@@ -134,55 +206,8 @@ export default function LeadManagementUserImport() {
             <li>Last Contact Date: i.e. 25-09-2020, 25/09/2020, 2020-09-25, 2020/09/25 </li>
             <li>Date Follow Up: i.e. 25-09-2020, 25/09/2020, 2020-09-25, 2020/09/25 </li>
           </ol>
-          You can click
-          {' '}
-          <a href={`/csv_import_sample/lead_download?token=${token}`}>here</a>
-          {' '}
-          to download a sample csv
-          file.
-        </Grid>
-        <Grid item md={6} style={{ margin: '5px auto' }}>
-          {isLoading ? (
-            <Loading />
-          ) : (
-            <div>
-              <Grid container justify="center" style={{ marginTop: '200px' }}>
-                <input
-                  accept=".csv"
-                  className={css(styles.inputField)}
-                  id="contained-button-file"
-                  data-testid="csv-input"
-                  type="file"
-                  onChange={processCsv}
-                />
-              </Grid>
-              <br />
-              {csvString.length > 0 && !hasErrors && (
-                <CenteredContent>
-                  <Button
-                    variant="contained"
-                    aria-label="business_cancel"
-                    color="secondary"
-                    className={css(styles.cancelBtn)}
-                    onClick={onCancel}
-                    data-testid="cancel-btn"
-                  >
-                    Cancel
-                  </Button>
-                  <Button
-                    variant="contained"
-                    type="submit"
-                    aria-label="business_submit"
-                    color="primary"
-                    onClick={createImport}
-                    className={css(styles.importBtn)}
-                  >
-                    Import
-                  </Button>
-                </CenteredContent>
-              )}
-            </div>
-          )}
+          You can click <a href={`/csv_import_sample/lead_download?token=${token}`}>here</a> to
+          download a sample csv file.
         </Grid>
       </Grid>
     </>
@@ -194,17 +219,20 @@ const styles = StyleSheet.create({
     width: '20%',
     marginRight: '8vw',
     height: 45,
-    marginTop: 50
+    marginTop: 30
   },
 
   importBtn: {
     width: '20%',
     height: 45,
-    marginTop: 50
+    marginTop: 30
   },
 
   inputField: {
     width: '201px',
     overflow: 'hidden'
+  },
+  errorSection: {
+    color: 'red'
   }
 });
