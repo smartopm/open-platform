@@ -48,7 +48,8 @@ class Community < ApplicationRecord
   has_many :time_sheets, class_name: 'Users::TimeSheet', dependent: :destroy
   has_many :entry_times, class_name: 'Logs::EntryTime', dependent: :destroy
 
-  VALID_CURRENCIES = %w[zambian_kwacha honduran_lempira kenyan_shilling costa_rican_colon].freeze
+  VALID_CURRENCIES = %w[zambian_kwacha honduran_lempira kenyan_shilling costa_rican_colon
+                        nigerian_naira].freeze
 
   validates :currency, inclusion: { in: VALID_CURRENCIES, allow_nil: false }
 
