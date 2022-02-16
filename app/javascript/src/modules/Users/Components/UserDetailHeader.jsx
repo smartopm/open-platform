@@ -25,7 +25,7 @@ export default function UserDetailHeader({ data, userType }) {
             </Grid>
           </Grid>
         </Grid>
-        <Grid item lg={2} md={2} />
+        <Grid item lg={3} md={3} />
         <Grid item lg={5} md={5}>
           {['admin'].includes(userType) && (
             <UserLabelTitle isLabelOpen={isLabelOpen} setIsLabelOpen={setIsLabelOpen} />
