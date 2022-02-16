@@ -178,6 +178,10 @@ module Users
       case_sensitive: true,
       allow_nil: true,
     }
+    validates :phone_number, uniqueness: {
+      scope: :community_id,
+      allow_nil: true,
+    }
     validate :phone_number_valid?
     after_update :update_associated_accounts_details, if: -> { saved_changes.key?('name') }
 

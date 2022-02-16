@@ -39,6 +39,7 @@
   },
   "guest_book": {
     "approved": "Aprobado",
+    "date_of_visit": "Fecha de Visita: {{date}}",
     "ends": "Termina: {{date}}",
     "ends_on_date": "Termina el ‪{{date}}‬",
     "ends_on_date_time": "Termina en ‪{{date}}‬,‪ ‪{{time}}‬",

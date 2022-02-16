@@ -256,8 +256,8 @@ RSpec.describe Mutations::User do
                           role: admin_role,
                           permissions: %w[can_update_user_details can_merge_users])
     end
-    let!(:admin) { create(:admin_user, role: admin_role) }
-    let!(:user) { create(:user_with_community) }
+    let!(:admin) { create(:admin_user, role: admin_role, phone_number: '9988776655') }
+    let!(:user) { create(:user, community: admin.community) }
     let!(:security_guard) do
       create(:security_guard, community_id: admin.community_id,
                               role: security_guard_role)
@@ -277,7 +277,7 @@ RSpec.describe Mutations::User do
             $id: ID!,
             $userType: String
             $vehicle: String
-            $name: String,
+            $name: String!,
             $subStatus: String
             $phoneNumber: String
           ) {
@@ -315,6 +315,7 @@ RSpec.describe Mutations::User do
     it 'should update the user' do
       variables = {
         id: pending_user.id,
+        name: 'Jane Doe',
         userType: 'security_guard',
         vehicle: 'Toyota Corolla',
       }
@@ -326,22 +327,6 @@ RSpec.describe Mutations::User do
       expect(result.dig('data', 'userUpdate', 'user', 'id')).not_to be_nil
       expect(result.dig('data', 'userUpdate', 'user', 'roleName')).to eql 'Security Guard'
       expect(result['errors']).to be_nil
-    end
-
-    it 'should not update the user with existing phone number' do
-      variables = {
-        id: client.id,
-        phoneNumber: '0909090909',
-      }
-      result = DoubleGdpSchema.execute(query, variables: variables,
-                                              context: {
-                                                current_user: admin,
-                                                site_community: admin.community,
-                                              }).as_json
-      expect(result.dig('data', 'userUpdate', 'user', 'id')).to be_nil
-      expect(result.dig('data', 'userUpdate', 'user', 'phoneNumber')).to be_nil
-      expect(result['errors']).not_to be_nil
-      expect(result.dig('errors', 0, 'message')).to include 'Duplicate phone'
     end
 
     it 'should not update with restricted field' do
@@ -402,6 +387,22 @@ RSpec.describe Mutations::User do
 
       expect(result.dig('data', 'userUpdate', 'user', 'userType')).to eql nil
       expect(result['errors']).to_not be nil
+    end
+
+    context 'when a user in community exists with same phone number' do
+      it 'is expected to raise error' do
+        variables = {
+          id: pending_user.id,
+          name: 'Jane Doe',
+          phoneNumber: '9988776655',
+        }
+        result = DoubleGdpSchema.execute(query, variables: variables,
+                                                context: {
+                                                  current_user: admin,
+                                                  site_community: admin.community,
+                                                }).as_json
+        expect(result.dig('errors', 0, 'message')).to eql 'Phone Number has already been taken'
+      end
     end
 
     it 'should merge the 2 given users' do
@@ -623,12 +624,14 @@ RSpec.describe Mutations::User do
       <<~GQL
         mutation UpdateUserMutation(
             $id: ID!,
+            $name: String!,
             $avatarBlobId: String,
             $phoneNumber: String!
             $userType: String!
           ) {
           userUpdate(
               id: $id,
+              name: $name,
               avatarBlobId: $avatarBlobId,
               phoneNumber: $phoneNumber
               userType: $userType
@@ -677,6 +680,7 @@ RSpec.describe Mutations::User do
       )
       variables = {
         id: pending_user.id,
+        name: 'Jane Doe',
         avatarBlobId: avatar_blob.signed_id,
         phoneNumber: '26923422232',
         userType: 'resident',
@@ -686,7 +690,6 @@ RSpec.describe Mutations::User do
                                                        current_user: admin,
                                                        site_community: admin.community,
                                                      }).as_json
-
       expect(result.dig('data', 'userUpdate', 'user', 'avatarUrl')).not_to be_nil
       expect(result['errors']).to be_nil
     end
