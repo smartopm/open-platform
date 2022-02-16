@@ -39,7 +39,7 @@ export default function UserDetailHeader({ data, userType, currentTab }) {
             )}
           </Grid>
           {isLabelOpen && (
-            <Grid item xs={12} sm={12}>
+            <Grid item xs={12} sm={12} className={classes.labels}>
               <UserLabels
                 userId={data.user.id}
                 isLabelOpen={isLabelOpen}
@@ -68,17 +68,17 @@ export default function UserDetailHeader({ data, userType, currentTab }) {
             </Grid>
           </Grid>
         </Grid>
-        <Grid item lg={2} md={2} sm={2} />
         <Hidden smDown>
-          <Grid item lg={6} md={6} sm={6}>
+          <Grid item lg={3} md={3} sm={3} />
+          <Grid item lg={5} md={5} sm={5}>
             {['admin'].includes(userType) && (
               <UserLabelTitle isLabelOpen={isLabelOpen} setIsLabelOpen={setIsLabelOpen} />
             )}
           </Grid>
           {isLabelOpen && (
             <Grid container className={classes.labels}>
-              <Grid item md={1} lg={1} sm={1} />
-              <Grid item md={11} lg={11} sm={11}>
+              <Grid item md={2} lg={2} sm={2} />
+              <Grid item md={10} lg={10} sm={10}>
                 <UserLabels
                   userId={data.user.id}
                   isLabelOpen={isLabelOpen}
@@ -115,6 +115,6 @@ const useStyles = makeStyles(() => ({
     textAlign: 'right'
   },
   labels: {
-    paddingRight: '20px'
+    textAlign: 'center'
   }
 }));
