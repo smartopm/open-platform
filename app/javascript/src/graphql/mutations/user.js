@@ -99,6 +99,9 @@ export const UpdateUserMutation = gql`
       africanPresence: $africanPresence
 
     ) {
+      user {
+        ...UserFields
+      }
     }
   }
   ${UserFragment.publicFields}

@@ -24,7 +24,7 @@ export default function UsersImport() {
   function createImport() {
     setIsLoading(true);
     importCreate({
-      variables: { csvString, csvFileName }
+      variables: { csvString, csvFileName, importType: 'lead' }
     })
       .then(() => {
         setIsLoading(false);
@@ -95,6 +95,7 @@ export default function UsersImport() {
             <li> Notes on client: i.e Here&apos;s a new note </li>
           </ol>
           You can click
+          {' '}
           <a href={`/csv_import_sample/download?token=${token}`}>here</a>
           {' '}
           to download a sample csv

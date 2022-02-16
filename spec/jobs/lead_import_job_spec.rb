@@ -24,11 +24,13 @@ RSpec.describe UserImportJob, type: :job do
 
     it 'should create new users' do
       prev_user_count = Users::User.count
+      prev_note_count = Notes::Note.count
       ActiveJob::Base.queue_adapter.perform_enqueued_jobs = true
 
       LeadImportJob.perform_later(csv_string, 'lead_management.csv', user)
 
       expect(Users::User.count).to eql(prev_user_count + 1)
+      expect(Notes::Note.count).to eql(prev_note_count + 1)
     end
 
     it 'should not create users if name is not present' do
