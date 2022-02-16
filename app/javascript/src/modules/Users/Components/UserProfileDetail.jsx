@@ -12,7 +12,7 @@ export default function UserDetail({ data }) {
   // const matches = useMediaQuery('(max-width:600px)');
   return (
     <>
-      <Grid contaner direction='column'>
+      <Grid container direction='column'>
         <Grid item>
           <Typography className={classes.name} variant='h6'>{data.user.name}</Typography>
         </Grid>

@@ -17,7 +17,7 @@ export default function UserDetailHeader({ data, userType, currentTab }) {
   return (
     <>
       <Grid container>
-        <Grid item lg={12} md={12} sm={8} xs={8} className={classes.breadCrumb}>
+        <Grid item lg={12} md={12} sm={8} xs={8} className={classes.breadCrumb} data-testid='breadcrumb'>
           <Breadcrumbs aria-label="user-breadcrumb">
             <Link color="primary" href="/users" className={classes.link}>
               <Typography variant="caption">Users</Typography>
@@ -55,7 +55,7 @@ export default function UserDetailHeader({ data, userType, currentTab }) {
           sm={12}
           xs={12}
         >
-          <Grid container>
+          <Grid container data-testid='user-detail'>
             <Grid item lg={3} md={3} sm={3} xs={3}>
               <Avatar
                 user={data.user}
