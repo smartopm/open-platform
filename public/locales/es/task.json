@@ -45,10 +45,13 @@
     "no_projects": "El proceso no tiene proyectos para mostrar",
     "no_ssigned_projects": "¡Aún no tiene ningún proyecto asignado!",
     "no_steps_assigned": "Actualmente no hay pasos asignados a este proceso.",
+    "open_submitted_form": "Formulario Abierto",
     "overview": "Descripción General",
     "process_steps": "Pasos del Proceso",
     "processes": "Procesos",
     "projects_by_stage": "Proyectos por Etapa",
+    "submitted_by": "Presentado Por",
+    "submitted_form": "Formulario Enviado",
     "your_tasks": "Tus Tareas"
   },
   "sub_task": {
@@ -59,6 +62,7 @@
   },
   "task": {
     "active_reminder": "Recordatorio",
+    "add_note": "Agregar una nota",
     "assigned_to": "Designados",
     "assigned_to_txt": "Asignado a:",
     "change_reminder_text": "Cambiar recordatorio",
