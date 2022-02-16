@@ -19,7 +19,10 @@ module Mutations
 
       field :campaign, Types::CampaignType, null: true
 
+      # rubocop:disable Metrics/AbcSize
+      # rubocop:disable Metrics/MethodLength
       def resolve(id:, **vals)
+        check_missing_args(vals) if vals[:status] == 'scheduled'
         campaign = context[:site_community].campaigns.find_by(id: id)
         return if campaign.nil?
 
@@ -82,6 +85,8 @@ module Mutations
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end
+      # rubocop:enable Metrics/AbcSize
+      # rubocop:enable Metrics/MethodLength
     end
   end
 end

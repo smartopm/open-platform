@@ -297,7 +297,7 @@ en:
     business:
       not_found: Business not found
     campaign:
-      missing_parameter: 'Missing Parameter: Please Supply %{attribute} parameter'
+      missing_parameter: 'Missing field: Please Supply %{attribute}'
       in_progress: 'The updates cannot be made as campaign is in progress.'
       campaign_completed: 'The updates cannot be made as campaign have been sent out to the users specified.'
       create_new_campaign: 'Please create a new campaign.'
