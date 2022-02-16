@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_01_26_113114) do
+ActiveRecord::Schema.define(version: 2022_02_09_065133) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -55,6 +55,7 @@ ActiveRecord::Schema.define(version: 2022_01_26_113114) do
     t.uuid "record_id", null: false
     t.uuid "blob_id", null: false
     t.datetime "created_at", null: false
+    t.integer "status", default: 0
     t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
     t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
   end
@@ -840,8 +841,11 @@ ActiveRecord::Schema.define(version: 2022_01_26_113114) do
     t.string "modified_by"
     t.string "relevant_link"
     t.jsonb "contact_details"
+    t.string "african_presence"
     t.string "region"
     t.index ["community_id", "email"], name: "index_users_on_community_id_and_email", unique: true
+    t.index ["latest_substatus_id"], name: "index_users_on_latest_substatus_id"
+    t.index ["role_id"], name: "index_users_on_role_id"
     t.index ["sub_status"], name: "index_users_on_sub_status"
     t.index ["uid", "provider", "community_id"], name: "index_users_on_uid_and_provider_and_community_id", unique: true
   end
