@@ -139,18 +139,6 @@ export default function UserInformation({
           </Grid>
         </Grid>
 
-        {/* <Grid container>
-          <Grid item xs={matches ? 3 : 1}>
-            {' '}
-          </Grid>
-          <Grid item xs={matches ? 6 : 10} style={{ textAlign: 'center', marginTop: '30px' }}>
-            <UserDetail data={data} userType={userType} />
-          </Grid>
-          <Grid item xs={matches ? 3 : 1}>
-            {' '}
-          </Grid>
-        </Grid> */}
-
         <br />
         <FeatureCheck features={authState.user.community.features} name="Time Card">
           {authState.user.userType === 'custodian' &&

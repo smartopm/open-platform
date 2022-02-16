@@ -1,7 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/core/styles';
-// import useMediaQuery from '@material-ui/core/useMediaQuery';
 import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
@@ -9,7 +8,6 @@ import Grid from '@material-ui/core/Grid';
 export default function UserDetail({ data }) {
   const { t } = useTranslation('users');
   const classes = useStyles();
-  // const matches = useMediaQuery('(max-width:600px)');
   return (
     <>
       <Grid container direction='column'>
