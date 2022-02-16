@@ -297,7 +297,7 @@ export const currencies = {
   honduran_lempira: 'HNL',
   kenyan_shilling: 'KES',
   costa_rican_colon: 'CRC',
-  nigerian_naira: 'NRA',
+  nigerian_naira: 'NGN',
 };
 export const locales = ['en-IN', 'en-NG', 'en-UK', 'en-US', 'en-ZM', 'es-HN', 'en-KE', 'es-CR'];
 export const languages = {
