@@ -12,7 +12,6 @@ class AddColumnsForLeadManagement < ActiveRecord::Migration[6.1]
     add_column :users, :company_contacted, :string
     add_column :users, :industry_sub_sector, :string
     add_column :users, :industry_business_activity, :string
-    add_column :users, :company_contacted, :string
     add_column :users, :industry, :string
     add_column :users, :level_of_internationalization, :string
     add_column :users, :lead_temperature, :string
