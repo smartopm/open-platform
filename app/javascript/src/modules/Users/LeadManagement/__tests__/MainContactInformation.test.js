@@ -61,7 +61,7 @@ describe('LeadManagementDetails Page', () => {
     expect(screen.queryAllByText('lead_management.title')[0]).toBeInTheDocument();
     expect(screen.queryAllByText('lead_management.primary_email')[0]).toBeInTheDocument();
     expect(screen.queryAllByText('lead_management.secondary_email')[0]).toBeInTheDocument();
-    expect(screen.queryAllByText('lead_management.primary_phone')[0]).toBeInTheDocument();
+    expect(screen.queryAllByText('form_fields.phone_number')[0]).toBeInTheDocument();
     expect(screen.queryAllByText('lead_management.secondary_phone')[0]).toBeInTheDocument();
     expect(screen.queryByLabelText('linkedin')).toBeInTheDocument();
 
