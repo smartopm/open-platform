@@ -39,7 +39,7 @@ module ActionFlows
           { 'Note' => note },
           'assignees_emails' => assignees_email,
           'url' => "https://#{HostEnv.base_url(eventlog.community)}/tasks/#{note.id}",
-          'updated_by' => Users::User.find(note_version.whodunnit).name,
+          'updated_by' => Users::User.find_by(id: note_version.whodunnit)&.name,
           'updated_field' => eventlog['data']['updated_field'],
           'updated_date' => eventlog.created_at.strftime('%Y-%m-%d'),
           'new_updated_value' => eventlog['data']['new_value'].to_s&.truncate_words(5),

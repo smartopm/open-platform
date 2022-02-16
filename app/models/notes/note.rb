@@ -131,6 +131,9 @@ module Notes
       update_changes = saved_changes.except('updated_at').first
       field = update_changes&.first
       value = update_changes&.last&.last
+
+      return unless %w[completed completed_at due_date description body].include?(field)
+
       user.generate_events('task_update', self, { updated_field: field, new_value: value })
     end
 
