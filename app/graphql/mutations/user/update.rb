@@ -6,7 +6,7 @@ module Mutations
     # rubocop: disable Metrics/ClassLength
     class Update < BaseMutation
       argument :id, ID, required: true
-      argument :name, String, required: false
+      argument :name, String, required: true
       argument :email, String, required: false
       argument :phone_number, String, required: false
       argument :address, String, required: false
@@ -20,22 +20,52 @@ module Mutations
       argument :sub_status, String, required: false
       argument :secondary_info, [GraphQL::Types::JSON], required: false
       argument :ext_ref_id, String, required: false
+      argument :title, String, required: false
+      argument :linkedin_url, String, required: false
+      argument :country, String, required: false
+      argument :company_name, String, required: false
+      argument :company_description, String, required: false
+      argument :company_linkedin, String, required: false
+      argument :company_website, String, required: false
+      argument :company_employees, String, required: false
+      argument :company_annual_revenue, String, required: false
+      argument :company_contacted, String, required: false
+      argument :industry, String, required: false
+      argument :industry_sub_sector, String, required: false
+      argument :industry_business_activity, String, required: false
+      argument :level_of_internationalization, String, required: false
+      argument :lead_temperature, String, required: false
+      argument :lead_status, String, required: false
+      argument :lead_source, String, required: false
+      argument :lead_owner, String, required: false
+      argument :lead_type, String, required: false
+      argument :client_category, String, required: false
+      argument :next_steps, String, required: false
+      argument :created_by, String, required: false
+      argument :modified_by, String, required: false
+      argument :relevant_link, String, required: false
+      argument :first_contact_date, String, required: false
+      argument :last_contact_date, String, required: false
+      argument :followup_at, String, required: false
+      argument :contact_details, GraphQL::Types::JSON, required: false
+      argument :african_presence, String, required: false
+      argument :region, String, required: false
 
       field :user, Types::UserType, null: true
 
       def resolve(vals)
-        raise_duplicate_number_error(vals[:phone_number])
+        ActiveRecord::Base.transaction do
+          user = context[:site_community].users.find_by(id: vals.delete(:id))
+          raise GraphQL::ExecutionError, I18n.t('errors.user.not_found') unless user
 
-        user = context[:site_community].users.find(vals.delete(:id))
-        raise GraphQL::ExecutionError, I18n.t('errors.user.not_found') unless user
+          attach_avatars(user, vals)
+          log_user_update(user)
+          update_secondary_info(user, vals.delete(:secondary_info))
 
-        attach_avatars(user, vals)
-        log_user_update(user)
-        update_secondary_info(user, vals.delete(:secondary_info))
-
-        user_with_substatus_log = update_sub_status_log(user, vals) if vals[:sub_status]
-        user_to_update = user_with_substatus_log || user
-        update_user(vals, user_to_update)
+          user_with_substatus_log = update_sub_status_log(user, vals) if vals[:sub_status]
+          user_to_update = user_with_substatus_log || user
+          update_user(vals, user_to_update)
+        end
       end
 
       def update_user(vals, user_to_update)
@@ -52,18 +82,23 @@ module Mutations
         end
       end
 
+      # rubocop: disable Metrics/AbcSize
       def update_secondary_info(user, contact_info)
         return if contact_info.nil?
 
         contact_info.each do |value|
           if value['id'].nil?
-            user.contact_infos.create(contact_type: value['contactType'], info: value['info'])
+            # prevent an error incase its an account update without sec info
+            next if value['info'].nil?
+
+            user.contact_infos.create!(contact_type: value['contactType'], info: value['info'])
           else
             contact = user.contact_infos.find(value['id'])
             contact.update(info: value['info']) unless contact.info.eql?(value['info'])
           end
         end
       end
+      # rubocop: enable Metrics/AbcSize
 
       def log_user_update(user)
         Logs::EventLog.create(acting_user_id: context[:current_user].id,

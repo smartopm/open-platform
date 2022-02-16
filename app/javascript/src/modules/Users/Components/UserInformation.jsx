@@ -29,6 +29,7 @@ import FeatureCheck from '../../Features';
 import PaymentPlans from '../../Payments/Components/UserTransactions/Plans';
 import ShiftButtons from '../../TimeCard/Components/ShiftButtons';
 import InviteHistoryList from '../../LogBook/GuestInvitation/Components/InviteHistoryList';
+import LeadManagementDetails from '../LeadManagement/Components/LeadManagementDetails';
 
 export default function UserInformation({
   data,
@@ -49,7 +50,7 @@ export default function UserInformation({
   const [tabValue, setValue] = useState(tab || 'Contacts');
   const [isDialogOpen, setDialogOpen] = useState(false);
   const [isDrawerOpen, setDrawerOpen] = useState(false);
-  const securityPersonnelList = ['security_guard' , 'security_supervisor']
+  const securityPersonnelList = ['security_guard', 'security_supervisor'];
 
   const [noteCreate, { loading: mutationLoading }] = useMutation(CreateNote);
   const { handleSubmit, register } = useForm();
@@ -166,9 +167,9 @@ export default function UserInformation({
         <br />
         <FeatureCheck features={authState.user.community.features} name="Time Card">
           {authState.user.userType === 'custodian' &&
-            ['security_guard', 'contractor', 'security_supervisor', 'developer'].includes(data.user.userType) && (
-              <ShiftButtons userId={userId} />
-            )}
+            ['security_guard', 'contractor', 'security_supervisor', 'developer'].includes(
+              data.user.userType
+            ) && <ShiftButtons userId={userId} />}
         </FeatureCheck>
 
         {['admin'].includes(userType) && (
@@ -215,6 +216,9 @@ export default function UserInformation({
                 <UserMessages />
               </TabPanel>
             </FeatureCheck>
+            <TabPanel value={tabValue} index="LeadManagement">
+              <LeadManagementDetails tabValue={tabValue} userId={data.user.id} />
+            </TabPanel>
           </>
         )}
         {!['security_guard', 'custodian', 'security_supervisor'].includes(userType) && (
@@ -258,7 +262,6 @@ export default function UserInformation({
           </FeatureCheck>
         )}
 
-
         <FeatureCheck features={authState.user.community.features} name="LogBook">
           <TabPanel value={tabValue} index="Invitations">
             <InviteHistoryList userId={userId} tab={tabValue} />
@@ -266,7 +269,8 @@ export default function UserInformation({
         </FeatureCheck>
 
         <div className="container d-flex justify-content-between">
-          {data.user.state === 'valid' && securityPersonnelList.includes(authState.user.userType) ? (
+          {data.user.state === 'valid' &&
+          securityPersonnelList.includes(authState.user.userType) ? (
             <Button id="log-entry" className="log-entry-btn" color="primary" onClick={onLogEntry}>
               {t('common:misc.log_entry')}
             </Button>
@@ -301,7 +305,7 @@ const User = PropTypes.shape({
     // eslint-disable-next-line react/forbid-prop-types
     features: PropTypes.object,
     securityManager: PropTypes.string
-  }),
+  })
 });
 UserInformation.propTypes = {
   data: PropTypes.shape({ user: User }).isRequired,
@@ -319,8 +323,7 @@ UserInformation.defaultProps = {
       accounts: []
     }
   }
-}
-
+};
 
 const styles = StyleSheet.create({
   linkItem: {
