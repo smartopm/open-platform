@@ -58,6 +58,7 @@ class Community < ApplicationRecord
     'Ciudad Morazán': ['doublegdp.com'],
     'Tilisi': ['doublegdp.com'],
     'Greenpark': ['doublegdp.com'],
+    'Enyimba': ['doublegdp.com'],
     'DAST': ['doublegdp.com'],
   }.freeze
 

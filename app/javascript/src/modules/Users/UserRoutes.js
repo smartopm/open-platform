@@ -84,11 +84,11 @@ const routes = [
     routeProps: {
       path: '/user/:id/lead_management',
       component: LeadManagementDetails,
-      exact: true,
+      exact: true
     },
     accessibleBy: [],
     name: 'lead_management',
-    moduleName: "user",
+    moduleName: 'user',
     featureName: 'Users'
   },
   {

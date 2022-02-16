@@ -4,13 +4,13 @@ import {
   Typography,
   ListItemAvatar,
   IconButton,
-  Grid,
   Dialog,
   DialogTitle,
   DialogContent,
   Hidden,
   Checkbox
 } from '@material-ui/core';
+import Grid from '@mui/material/Grid';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
@@ -97,7 +97,6 @@ export default function UserItem({
               name="includeReplyLink"
               data-testid="reply_link"
               color="primary"
-              // className={classes.checkBox}
             />
           </Grid>
           <Grid item md={1} sm={1} xs={2}>
@@ -180,7 +179,7 @@ export default function UserItem({
           </Grid>
 
           <Hidden smDown>
-            <Grid item md={1} sm={1}>
+            <Grid item md={1} sm={1} className={classes.iconButton}>
               <IconButton
                 className={classes.menuButton}
                 aria-label={`more-${user.name}`}
@@ -235,6 +234,9 @@ const useStyles = makeStyles(() => ({
     marginBottom: 10,
     backgroundColor: '#FFFFFF',
     cursor: 'pointer'
+  },
+  iconButton: {
+    textAlign: 'right'
   },
   menuButton: {
     float: 'right'

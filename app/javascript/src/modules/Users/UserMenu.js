@@ -15,7 +15,7 @@
  */
 import React from 'react';
 import { allUserTypes } from '../../utils/constants';
-import { checkAccessibilityForUserType as handler } from '../../utils/helpers'
+import { checkAccessibilityForUserType as handler } from '../../utils/helpers';
 
 const userMenus = [
   {
@@ -28,17 +28,6 @@ const userMenus = [
     moduleName: 'communication',
     accessibleBy: []
   },
-  {
-    routeProps: {
-      path: '/user/:id?tab=Invitations',
-      component: <span />
-    },
-    name: t => t('menu.invitations'),
-    featureName: 'LogBook',
-    moduleName: 'entry_request',
-    accessibleBy: []
-  },
-
   {
     routeProps: {
       path: '/user/:id?tab=LeadManagement',
@@ -56,7 +45,7 @@ const userMenus = [
     },
     name: t => t('menu.plot', { count: 0 }),
     featureName: 'Properties',
-    accessibleBy: ctx => handler({ userTypes: ['admin', 'client', 'resident'], ctx }),
+    accessibleBy: ctx => handler({ userTypes: ['admin', 'client', 'resident'], ctx })
   },
   {
     routeProps: {
@@ -66,7 +55,7 @@ const userMenus = [
     name: t => t('menu.form', { count: 0 }),
     featureName: 'Forms',
     moduleName: 'form',
-    accessibleBy: [],
+    accessibleBy: []
   },
   {
     routeProps: {
@@ -83,11 +72,11 @@ const userMenus = [
       component: <span />
     },
     styleProps: {
-      className: 'right-menu-payment-item',
+      className: 'right-menu-payment-item'
     },
     name: t => t('menu.payment', { count: 0 }),
     featureName: 'Payments',
-    accessibleBy: ctx => handler({ userTypes: ['admin', 'client', 'resident'], ctx }),
+    accessibleBy: ctx => handler({ userTypes: ['admin', 'client', 'resident'], ctx })
   },
   {
     routeProps: {
@@ -107,7 +96,7 @@ const userMenus = [
     name: t => t('menu.user_logs'),
     featureName: 'LogBook',
     moduleName: 'entry_request',
-    accessibleBy: [],
+    accessibleBy: []
   },
   {
     routeProps: {
@@ -159,4 +148,4 @@ const userMenus = [
   }
 ];
 
-export default userMenus
+export default userMenus;

@@ -76,14 +76,8 @@ describe('UserPage Component', () => {
     expect(container.getByTestId('loader')).toBeInTheDocument();
     await waitFor(() => {
       expect(container.getByTestId('menu-list')).toBeInTheDocument();
-      expect(container.getByTestId('search_user')).toBeInTheDocument();
+      expect(container.queryByTestId('search')).toBeInTheDocument();
       expect(container.getByTestId('download_csv_btn')).toBeInTheDocument();
-
-      // fireEvent.click(container.getByTestId('download-csv'))
-      // expect(container.getByTestId('loader')).toBeInTheDocument();
-
-      fireEvent.click(container.getByLabelText('search'))
-      expect(container.queryByText('Role')).toBeInTheDocument();
 
       fireEvent.click(container.getByTestId('menu-list'))
       expect(container.getByTestId('menu_list')).toBeInTheDocument();

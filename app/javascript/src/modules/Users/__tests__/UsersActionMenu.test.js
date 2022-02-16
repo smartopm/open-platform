@@ -12,24 +12,23 @@ const props = {
   setSelectAllOption: jest.fn(),
   selectedUsers: [],
   selectCheckBox: true,
-  userList: [],
   usersCountData: {
     usersCount: 25
   }
 }
 describe('UsersActionMenu component', () => {
-  it('should render "Select" and hide "Create Campaign" link', () => {
+  it('should render hide "Create Campaign" link', () => {
     const container = render(
       <MockedThemeProvider>
         <UsersActionMenu {...props} />
       </MockedThemeProvider>
     )
 
-    expect(container.queryByText('common:misc.select')).toBeInTheDocument()
-    expect(container.queryByText('common:form_actions.create_campaign')).toBeNull()
+    expect(container.queryByText('common:form_actions.assign_label')).toBeNull();
+    expect(container.queryByText('common:form_actions.create_campaign')).toBeNull();
   })
 
-  it('should render both "Select" and bulk action links', () => {
+  it('should render both bulk action links', () => {
     const newProps = {
       ...props,
       campaignCreateOption: 'all'
@@ -40,9 +39,8 @@ describe('UsersActionMenu component', () => {
       </MockedThemeProvider>
     )
 
-    expect(container.queryByText('common:misc.select')).toBeInTheDocument()
-    expect(container.queryByText('common:form_actions.create_campaign')).toBeInTheDocument()
-    expect(container.queryByText('common:form_actions.assign_label')).toBeInTheDocument()
+    expect(container.queryByText('common:form_actions.create_campaign')).toBeInTheDocument();
+    expect(container.queryByText('common:form_actions.assign_label')).toBeInTheDocument();
   })
 
   it('should render bulk action links if some users have been selected', () => {
@@ -56,7 +54,7 @@ describe('UsersActionMenu component', () => {
       </MockedThemeProvider>
     )
 
-    expect(container.queryByText('common:form_actions.create_campaign')).toBeInTheDocument()
-    expect(container.queryByText('common:form_actions.assign_label')).toBeInTheDocument()
+    expect(container.queryByText('common:form_actions.create_campaign')).toBeInTheDocument();
+    expect(container.queryByText('common:form_actions.assign_label')).toBeInTheDocument();
   })
 })

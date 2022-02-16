@@ -42,7 +42,7 @@ export default function UserNotes({ userId, tabValue }) {
   if (error) return error.message;
 
   return (
-    <div>
+    <div style={{ marginLeft: -23, marginRight: -24 }}>
       <MessageAlert
         type={message.isError ? 'error' : 'success'}
         message={message.detail}

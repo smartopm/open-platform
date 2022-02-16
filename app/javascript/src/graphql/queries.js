@@ -1,7 +1,11 @@
 /* eslint-disable */
-import gql from 'graphql-tag'
-import { UserFragment, EntryRequestFragment, NotesFragment, SubstatusDistributionReportFragment
-} from './fragments'
+import gql from 'graphql-tag';
+import {
+  UserFragment,
+  EntryRequestFragment,
+  NotesFragment,
+  SubstatusDistributionReportFragment
+} from './fragments';
 
 export const UserQuery = gql`
   query User($id: ID!) {
@@ -10,7 +14,7 @@ export const UserQuery = gql`
     }
   }
   ${UserFragment.publicFields}
-`
+`;
 
 export const UserAccountQuery = gql`
   query User($id: ID!) {
@@ -31,7 +35,7 @@ export const UserAccountQuery = gql`
       }
     }
   }
-`
+`;
 
 export const EntryRequestQuery = gql`
   query EntryRequest($id: ID!) {
@@ -44,7 +48,7 @@ export const EntryRequestQuery = gql`
     }
   }
   ${EntryRequestFragment.publicFields}
-`
+`;
 
 export const AllEntryRequestsQuery = gql`
   query AllEntryRequests {
@@ -57,7 +61,7 @@ export const AllEntryRequestsQuery = gql`
     }
   }
   ${EntryRequestFragment.publicFields}
-`
+`;
 
 export const AllEventLogsQuery = gql`
   query AllEventLogs(
@@ -111,15 +115,10 @@ export const AllEventLogsQuery = gql`
       }
     }
   }
-`
+`;
 
 export const AllEventLogsForUserQuery = gql`
-  query AllEventLogsForUser(
-    $subject: [String]
-    $userId: ID!
-    $offset: Int
-    $limit: Int
-  ) {
+  query AllEventLogsForUser($subject: [String], $userId: ID!, $offset: Int, $limit: Int) {
     result: allEventLogsForUser(
       subject: $subject
       userId: $userId
@@ -139,7 +138,7 @@ export const AllEventLogsForUserQuery = gql`
       }
     }
   }
-`
+`;
 
 export const SecurityGuards = gql`
   {
@@ -148,7 +147,7 @@ export const SecurityGuards = gql`
       id
     }
   }
-`
+`;
 
 export const allNotes = gql`
   query GetNotes($limit: Int, $offset: Int) {
@@ -167,7 +166,7 @@ export const allNotes = gql`
       }
     }
   }
-`
+`;
 
 /**
  * @deprecated
@@ -179,7 +178,7 @@ export const flaggedNotes = gql`
     }
   }
   ${NotesFragment.note}
-`
+`;
 
 export const allFeedback = gql`
   query getFeedback($limit: Int, $offset: Int) {
@@ -194,7 +193,7 @@ export const allFeedback = gql`
       review
     }
   }
-`
+`;
 
 export const UsersDetails = gql`
   query users($limit: Int, $offset: Int, $query: String) {
@@ -217,7 +216,7 @@ export const UsersDetails = gql`
       }
     }
   }
-`
+`;
 export const LeadDetailsQuery = gql`
   query User($id: ID!) {
     user(id: $id) {
@@ -270,14 +269,14 @@ export const LeadDetailsQuery = gql`
       africanPresence
       secondaryPhoneNumber
       secondaryEmail
-      contactInfos{
+      contactInfos {
         id
         info
         contactType
       }
     }
   }
-`
+`;
 
 export const UsersLiteQuery = gql`
   query usersLite($query: String!, $limit: Int) {
@@ -294,7 +293,7 @@ export const UsersLiteQuery = gql`
       }
     }
   }
-`
+`;
 
 export const UserSearchQuery = gql`
   query UserSearch($query: String, $limit: Int, $offset: Int) {
@@ -309,7 +308,7 @@ export const UserSearchQuery = gql`
       extRefId
     }
   }
-`
+`;
 
 export const ShowroomEntriesQuery = gql`
   {
@@ -325,21 +324,11 @@ export const ShowroomEntriesQuery = gql`
       homeAddress
     }
   }
-`
+`;
 
 export const MessagesQuery = gql`
-  query messages(
-    $searchTerm: String
-    $limit: Int
-    $offset: Int
-    $filter: String
-  ) {
-    messages(
-      query: $searchTerm
-      limit: $limit
-      offset: $offset
-      filter: $filter
-    ) {
+  query messages($searchTerm: String, $limit: Int, $offset: Int, $filter: String) {
+    messages(query: $searchTerm, limit: $limit, offset: $offset, filter: $filter) {
       id
       message
       category
@@ -353,7 +342,7 @@ export const MessagesQuery = gql`
       }
     }
   }
-`
+`;
 
 export const UserMessageQuery = gql`
   query userMessages($id: ID!, $limit: Int, $offset: Int) {
@@ -372,7 +361,7 @@ export const UserMessageQuery = gql`
       }
     }
   }
-`
+`;
 
 export const UserLandParcels = gql`
   query userLandParcels($userId: ID!) {
@@ -381,13 +370,13 @@ export const UserLandParcels = gql`
       parcelNumber
       parcelType
       objectType
-      accounts{
+      accounts {
         userId
         fullName
       }
     }
   }
-`
+`;
 
 export const UserLandParcelWithPlan = gql`
   query userLandParcelWithPlan($userId: ID!) {
@@ -401,7 +390,7 @@ export const UserLandParcelWithPlan = gql`
       }
     }
   }
-`
+`;
 
 export const allCampaigns = gql`
   query allCampaigns($limit: Int, $offset: Int, $query: String) {
@@ -428,7 +417,7 @@ export const allCampaigns = gql`
       }
     }
   }
-`
+`;
 export const Campaign = gql`
   query campaign($id: ID!) {
     campaign(id: $id) {
@@ -460,7 +449,7 @@ export const Campaign = gql`
       }
     }
   }
-`
+`;
 // Discussions and comments
 export const PostCommentsQuery = gql`
   query postComments($postId: String!, $limit: Int, $offset: Int) {
@@ -474,7 +463,7 @@ export const PostCommentsQuery = gql`
       }
     }
   }
-`
+`;
 
 export const DiscussionCommentsQuery = gql`
   query discussComments($id: ID!, $limit: Int, $offset: Int) {
@@ -491,7 +480,7 @@ export const DiscussionCommentsQuery = gql`
       }
     }
   }
-`
+`;
 
 export const DiscussionQuery = gql`
   query discussion($id: ID!) {
@@ -506,7 +495,7 @@ export const DiscussionQuery = gql`
       }
     }
   }
-`
+`;
 
 export const ParcelsQuery = gql`
   query LandParcel($query: String, $limit: Int, $offset: Int) {
@@ -536,17 +525,17 @@ export const ParcelsQuery = gql`
           name
         }
       }
-      paymentPlans{
+      paymentPlans {
         id
         userId
         startDate
         endDate
         planType
-        user{
+        user {
           id
           name
         }
-        planPayments{
+        planPayments {
           id
           status
           amount
@@ -554,7 +543,7 @@ export const ParcelsQuery = gql`
       }
     }
   }
-`
+`;
 export const HouseQuery = gql`
   query house($limit: Int, $offset: Int) {
     fetchHouse(limit: $limit, offset: $offset) {
@@ -583,17 +572,17 @@ export const HouseQuery = gql`
           name
         }
       }
-      paymentPlans{
+      paymentPlans {
         id
         userId
         startDate
         endDate
         planType
-        user{
+        user {
           id
           name
         }
-        planPayments{
+        planPayments {
           id
           status
           amount
@@ -601,7 +590,7 @@ export const HouseQuery = gql`
       }
     }
   }
-`
+`;
 export const LandParcelGeoData = gql`
   query landParcelGeoData {
     landParcelGeoData {
@@ -636,7 +625,7 @@ export const LandParcelGeoData = gql`
       }
     }
   }
-`
+`;
 
 export const CommentsPostQuery = gql`
   query comments($limit: Int, $offset: Int) {
@@ -654,7 +643,7 @@ export const CommentsPostQuery = gql`
       }
     }
   }
-`
+`;
 
 export const PostDiscussionQuery = gql`
   query postDiscussion($postId: String!) {
@@ -663,7 +652,7 @@ export const PostDiscussionQuery = gql`
       id
     }
   }
-`
+`;
 
 export const PostTagUser = gql`
   query userTags($tagName: String!) {
@@ -671,7 +660,7 @@ export const PostTagUser = gql`
       id
     }
   }
-`
+`;
 
 export const discussionUserQuery = gql`
   query discussionUser($disucssionId: String!) {
@@ -683,7 +672,7 @@ export const discussionUserQuery = gql`
       userId
     }
   }
-`
+`;
 
 export const invoiceQuery = gql`
   query invoiceQuery($id: ID!) {
@@ -696,7 +685,7 @@ export const invoiceQuery = gql`
       updatedAt
     }
   }
-`
+`;
 
 export const paymentQuery = gql`
   query paymentQuery($paymentId: ID!) {
@@ -709,7 +698,7 @@ export const paymentQuery = gql`
       updatedAt
     }
   }
-`
+`;
 
 export const depositQuery = gql`
   query depositQuery($depositId: ID!) {
@@ -722,7 +711,7 @@ export const depositQuery = gql`
       updatedAt
     }
   }
-`
+`;
 
 // add pagination here
 export const DiscussionsQuery = gql`
@@ -740,7 +729,7 @@ export const DiscussionsQuery = gql`
       }
     }
   }
-`
+`;
 // reduce the query to only get what's needed
 export const BusinessesQuery = gql`
   {
@@ -752,7 +741,7 @@ export const BusinessesQuery = gql`
       id
     }
   }
-`
+`;
 export const BusinessByIdQuery = gql`
   query businessById($id: ID!) {
     business(id: $id) {
@@ -772,7 +761,7 @@ export const BusinessByIdQuery = gql`
       links
     }
   }
-`
+`;
 
 export const UserLabelsQuery = gql`
   query userLabelsbyId($userId: ID!) {
@@ -782,7 +771,7 @@ export const UserLabelsQuery = gql`
       color
     }
   }
-`
+`;
 
 export const LabelsQuery = gql`
   query labels($limit: Int, $offset: Int) {
@@ -794,19 +783,19 @@ export const LabelsQuery = gql`
       color
     }
   }
-`
+`;
 
 export const MyTaskCountQuery = gql`
   {
     myTasksCount
   }
-`
+`;
 
 export const messageCountQuery = gql`
   {
     msgNotificationCount
   }
-`
+`;
 
 /**
  * @deprecated in favor of modules/tasks/graphql/task_queries.js
@@ -818,7 +807,7 @@ export const TaskQuery = gql`
     }
   }
   ${NotesFragment.note}
-`
+`;
 
 export const CommentQuery = gql`
   query commentDetail($taskId: ID!, $limit: Int, $offset: Int) {
@@ -833,7 +822,7 @@ export const CommentQuery = gql`
       }
     }
   }
-`
+`;
 
 export const HistoryQuery = gql`
   query historyDetail($taskId: ID!) {
@@ -852,7 +841,7 @@ export const HistoryQuery = gql`
       }
     }
   }
-`
+`;
 
 export const UserPointQuery = gql`
   query userActivityPoint {
@@ -865,7 +854,7 @@ export const UserPointQuery = gql`
       referral
     }
   }
-`
+`;
 
 export const UserNotesQuery = gql`
   query userNote($userId: ID!) {
@@ -876,19 +865,19 @@ export const UserNotesQuery = gql`
       id
     }
   }
-`
+`;
 
 export const Events = gql`
   query events {
     events
   }
-`
+`;
 
 export const Actions = gql`
   query actions {
     actions
   }
-`
+`;
 
 export const ActionFields = gql`
   query actionFields($action: String!) {
@@ -897,13 +886,13 @@ export const ActionFields = gql`
       type
     }
   }
-`
+`;
 
 export const RuleFields = gql`
   query ruleFields($eventType: String!) {
     ruleFields(eventType: $eventType)
   }
-`
+`;
 
 export const Flows = gql`
   query actionFlows($limit: Int, $offset: Int) {
@@ -919,13 +908,13 @@ export const Flows = gql`
       createdAt
     }
   }
-`
+`;
 
 export const UsersCount = gql`
   query usersCount($query: String) {
     usersCount(query: $query)
   }
-`
+`;
 
 export const UserInvoicesQuery = gql`
   query userInvoices($userId: ID!, $limit: Int, $offset: Int) {
@@ -949,7 +938,7 @@ export const UserInvoicesQuery = gql`
       }
     }
   }
-`
+`;
 
 export const InvoicesQuery = gql`
   query invoices($limit: Int, $offset: Int, $query: String) {
@@ -988,7 +977,7 @@ export const InvoicesQuery = gql`
       }
     }
   }
-`
+`;
 
 export const InvoiceStatsQuery = gql`
   query stats {
@@ -999,7 +988,7 @@ export const InvoiceStatsQuery = gql`
       cancelled
     }
   }
-`
+`;
 
 export const InvoicesStats = gql`
   query InvoicesStats {
@@ -1008,7 +997,7 @@ export const InvoicesStats = gql`
       noOfInvoices
     }
   }
-`
+`;
 
 export const PaymentStats = gql`
   query PaymentStats {
@@ -1021,7 +1010,7 @@ export const PaymentStats = gql`
       pos
     }
   }
-`
+`;
 
 export const InvoicesStatsDetails = gql`
   query InvoicesStatsDetails($query: String!) {
@@ -1045,7 +1034,7 @@ export const InvoicesStatsDetails = gql`
       }
     }
   }
-`
+`;
 // TODO: move to its rightful module
 export const PaymentStatsDetails = gql`
   query PaymentStatsDetails($query: String!) {
@@ -1076,7 +1065,7 @@ export const PaymentStatsDetails = gql`
       }
     }
   }
-  `
+`;
 
 export const LandParcel = gql`
   query landParcel($id: ID!) {
@@ -1109,46 +1098,46 @@ export const LandParcel = gql`
           avatarUrl
         }
       }
-      paymentPlans{
+      paymentPlans {
         id
         userId
         startDate
         endDate
         planType
-        user{
+        user {
           name
         }
-        planPayments{
+        planPayments {
           status
           amount
         }
       }
     }
   }
-`
+`;
 
 export const SubStatusQuery = gql`
-query subStatus {
-  substatusQuery {
-    plotsFullyPurchased
-    eligibleToStartConstruction
-    floorPlanPurchased
-    buildingPermitApproved
-    constructionInProgress
-    constructionCompleted
-    constructionInProgressSelfBuild
-    residentsCount
+  query subStatus {
+    substatusQuery {
+      plotsFullyPurchased
+      eligibleToStartConstruction
+      floorPlanPurchased
+      buildingPermitApproved
+      constructionInProgress
+      constructionCompleted
+      constructionInProgressSelfBuild
+      residentsCount
+    }
   }
-}
-`
+`;
 export const SubStatusDistributionReportQuery = gql`
-query substatusDistributionQuery {
-  substatusDistributionQuery {
-    ...SubstatusDistributionReportFields
+  query substatusDistributionQuery {
+    substatusDistributionQuery {
+      ...SubstatusDistributionReportFields
+    }
   }
-}
-${SubstatusDistributionReportFragment.publicFields}
-`
+  ${SubstatusDistributionReportFragment.publicFields}
+`;
 export const AllTransactionQuery = gql`
   query InvoicesWithTransactions($userId: ID!, $limit: Int, $offset: Int) {
     invoicesWithTransactions(userId: $userId, limit: $limit, offset: $offset) {
@@ -1283,7 +1272,6 @@ export const TransactionQuery = gql`
   }
 `;
 
-
 export const PendingInvoicesQuery = gql`
   query pendingInvoices($userId: ID!) {
     pendingInvoices(userId: $userId) {
@@ -1310,7 +1298,7 @@ export const PaidInvoicesByPlan = gql`
       }
     }
   }
-`
+`;
 
 export const TransactionsQuery = gql`
   query allTransactions($limit: Int, $offset: Int, $query: String) {
@@ -1337,24 +1325,24 @@ export const TransactionsQuery = gql`
       }
     }
   }
-`
+`;
 export const PaymentsQuery = gql`
-    query allPayments($limit: Int, $offset: Int, $query: String) {
-      payments(limit: $limit, offset: $offset, query: $query) {
+  query allPayments($limit: Int, $offset: Int, $query: String) {
+    payments(limit: $limit, offset: $offset, query: $query) {
+      id
+      amount
+      bankName
+      createdAt
+      paymentStatus
+      paymentType
+      chequeNumber
+      user {
         id
-        amount
-        bankName
-        createdAt
-        paymentStatus
-        paymentType
-        chequeNumber
-        user {
-          id
-          name
-        }
+        name
       }
     }
-`
+  }
+`;
 
 export const EmailTemplateVariables = gql`
   query emailTemplateVariables($templateId: ID!) {

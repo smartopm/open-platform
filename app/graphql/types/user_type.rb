@@ -88,9 +88,7 @@ module Types
     field :followup_at, GraphQL::Types::ISO8601DateTime, null: true
     field :company_employees, String, null: true
     field :secondary_email, String, null: true
-    field :secondary_phone_number, String, null: true
     field :contact_details, GraphQL::Types::JSON, null: true
-    field :secondary_email, String, null: true
     field :secondary_phone_number, String, null: true
     field :african_presence, String, null: true
     field :region, String, null: true
@@ -117,16 +115,16 @@ module Types
 
     # Field for lead secondary mail
     def secondary_email
-      secondary_details('email')&.info
+      secondary_details('email').first&.info
     end
 
     # Field for lead secondary phone number
     def secondary_phone_number
-      secondary_details('phone')&.info
+      secondary_details('phone').first&.info
     end
 
     def secondary_details(contact_type)
-      object.contact_infos.find { |info| info.contact_type.eql?(contact_type) }
+      object.contact_infos.select { |info| info.contact_type.eql?(contact_type) }
     end
   end
   # rubocop: enable Metrics/ClassLength
