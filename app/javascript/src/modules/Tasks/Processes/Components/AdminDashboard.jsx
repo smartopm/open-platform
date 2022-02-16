@@ -71,8 +71,8 @@ export default function AdminDashboard() {
     post_construction: 0,
   };
 
-  function routeToProjects(projectStep){
-    history.push(`/processes/drc/projects?current_step=${projectStep}`)
+  function routeToProjects(paramName, paramValue){
+    history.push(`/processes/drc/projects?${paramName}=${paramValue}`)
   }
 
   const filteredProjects = filterProjectAndStages(projectsData?.projects, projectStageLookup);
@@ -97,7 +97,7 @@ export default function AdminDashboard() {
           <Grid container spacing={2} className={classes.cards}>
             {cards.map((card, index) => (
               // eslint-disable-next-line react/no-array-index-key
-              <Grid key={index} item xs={6} sm={12} md={6}>
+              <Grid key={index} item xs={6} sm={12} md={6} onClick={() => routeToProjects('quarter', card.name)} style={{ cursor: 'pointer' }}>
                 <Card className={classes.card}>
                   <CardContent
                     className={`${card.primary ? classes.evenCardsBackground : classes.oddCardsBackground} ${classes.cardContent}`}
@@ -125,7 +125,7 @@ export default function AdminDashboard() {
             {Object.entries(stats).map(([stage, count]) => (
               <Fragment key={stage}>
                 <ListItem
-                  onClick={() => routeToProjects(snakeCaseToSentence(stage))}
+                  onClick={() => routeToProjects('current_step', snakeCaseToSentence(stage))}
                   className={classes.projectStageLink}
                 >
                   <Grid container>

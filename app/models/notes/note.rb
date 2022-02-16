@@ -2,6 +2,7 @@
 
 module Notes
   # Notes for the CRM portion of the app, attached to a user
+  # rubocop:disable Metrics/ClassLength
   class Note < ApplicationRecord
     include SearchCop
     include NoteHistoryRecordable
@@ -95,6 +96,31 @@ module Notes
       parent_note.update(current_step_body: check_current_process_step&.body)
     end
 
+    # rubocop:disable Layout/LineLength
+    # rubocop:disable Metrics/MethodLength
+    def self.by_quarter(quarter)
+      quarter_range = {
+        'Q1' => [1, 3],
+        'Q2' => [4, 6],
+        'Q3' => [7, 9],
+        'Q4' => [10, 12],
+      }
+
+      unless quarter_range.keys.include?(quarter)
+        raise 'Invalid argument. quarter should be either Q1, Q2, Q3 or Q4'
+      end
+
+      months = quarter_range[quarter]
+      where(
+        "date_part('year', completed_at) = ? AND date_part('month', completed_at) >= ? AND  date_part('month', completed_at) <= ?",
+        Date.current.year,
+        months[0],
+        months[1],
+      )
+    end
+    # rubocop:enable Metrics/MethodLength
+    # rubocop:enable Layout/LineLength
+
     private
 
     def log_create_event
@@ -112,4 +138,5 @@ module Notes
       self.completed_at = Time.current
     end
   end
+  # rubocop:enable Metrics/ClassLength
 end

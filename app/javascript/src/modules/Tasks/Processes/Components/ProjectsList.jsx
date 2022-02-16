@@ -18,6 +18,7 @@ export default function ProjectsList() {
   const offset = 0;
   const path = useParamsQuery()
   const currentStep = path.get('current_step')
+  const selectedQuarter = path.get('quarter')
   const classes = useStyles();
   const authState = React.useContext(AuthStateContext);
 
@@ -26,7 +27,8 @@ export default function ProjectsList() {
     variables: {
       offset,
       limit,
-      step: currentStep
+      step: currentStep,
+      quarter: selectedQuarter
     },
     fetchPolicy: 'cache-and-network'
   });

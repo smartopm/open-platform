@@ -184,8 +184,8 @@ RSpec.describe Types::Queries::Note do
 
     let(:projects_query) do
       <<~GQL
-        query GetProjects($offset: Int, $limit: Int) {
-          projects(offset: $offset, limit: $limit) {
+        query GetProjects($offset: Int, $limit: Int, $step: String, $quarter: String) {
+          projects(offset: $offset, limit: $limit, step: $step, quarter: $quarter) {
             #{task_fragment}
           }
         }
@@ -950,6 +950,43 @@ RSpec.describe Types::Queries::Note do
 
           expect(result['errors']).to be_nil
           expect(result.dig('data', 'projectComments').length).to eq 3
+        end
+      end
+
+      context 'when quarter is in the arguments' do
+        before do
+          form
+          another_form
+          form_user
+          another_form_user
+          first_note.update(form_user_id: form_user.id, completed: true)
+          first_note.update(completed_at: Time.zone.local(Date.current.year, '02', '02'))
+
+          second_note.update(form_user_id: another_form_user.id, completed: true)
+          second_note.update(completed_at: Time.zone.local(Date.current.year, '05', '05'))
+        end
+
+        it 'returns the projects in the quarter supplied' do
+          result = DoubleGdpSchema.execute(projects_query, context: {
+                                             current_user: site_worker,
+                                             site_community: site_worker.community,
+                                           }, variables: {
+                                             quarter: 'Q1',
+                                           }).as_json
+          expect(result['errors']).to be_nil
+          expect(result.dig('data', 'projects').length).to eql 1
+          expect(result.dig('data', 'projects', 0, 'id')).to eql(first_note.id)
+        end
+
+        it 'throws an error if invalid quarter is supplied' do
+          expect do
+            DoubleGdpSchema.execute(projects_query, context: {
+                                      current_user: site_worker,
+                                      site_community: site_worker.community,
+                                    }, variables: {
+                                      quarter: 'Q9',
+                                    }).as_json
+          end.to raise_error('Invalid argument. quarter should be either Q1, Q2, Q3 or Q4')
         end
       end
 
