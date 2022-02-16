@@ -1,7 +1,5 @@
 /* eslint-disable complexity */
 import React, { useEffect, useState } from 'react';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import { useTheme } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
 import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
@@ -15,6 +13,8 @@ import UserPlotInfo from './UserPlotInfo';
 import UserMerge from './UserMerge';
 import CenteredContent from '../../../components/CenteredContent';
 import UserDetail from './UserProfileDetail';
+import { CreateNote } from '../../../graphql/mutations';
+import UserNotes from './UserNote';
 import { TabPanel } from '../../../components/Tabs';
 import UserFilledForms from './UserFilledForms';
 import UserMessages from '../../../components/Messaging/UserMessages';
@@ -39,8 +39,6 @@ export default function UserInformation({
   accountData
 }) {
   const path = useParamsQuery();
-  const theme = useTheme();
-  const matches = useMediaQuery(theme.breakpoints.up('sm'));
   const tab = path.get('tab');
   const subtab = path.get('subtab');
   const type = path.get('type');
