@@ -80,7 +80,6 @@ export default function UsersImport() {
     };
     reader.readAsText(file);
   }
-  console.log('Mutuba errors', CSVFileUploadErrors);
 
   const hasErrors = CSVFileUploadErrors;
 

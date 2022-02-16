@@ -390,6 +390,12 @@ export default function UsersList() {
       handleClick: () => history.push('/users/import')
     },
     {
+      content: t('users.lead_management_upload'),
+      isVisible: true,
+      handleClick: () => history.push('users/leads/import')
+    },
+
+    {
       content: t('users.create_report'),
       isVisible: true,
       handleClick: () => handleReportDialog()
