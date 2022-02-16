@@ -217,7 +217,9 @@ es:
         user: Usuario
       users/user:
         community: Comunidad
+        email: Correo Electrónico
         name: Nombre
+        phone_number: Número de Teléfono
         state: Ciudad
         sub_status: Sub Estado
         user_type: Tipo de usuario
