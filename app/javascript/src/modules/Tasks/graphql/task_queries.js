@@ -55,6 +55,13 @@ export const TaskQuery = gql`
       }
       attachments
       formUserId
+      formUser {
+        id
+        user {
+          id
+          name
+        }
+      }
     }
   }
 `

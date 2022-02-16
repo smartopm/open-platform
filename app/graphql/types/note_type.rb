@@ -25,6 +25,7 @@ module Types
     field :documents, [GraphQL::Types::JSON], null: true
     field :attachments, [GraphQL::Types::JSON], null: true
     field :form_user_id, ID, null: true
+    field :form_user, Types::FormUsersType, null: true
     field :progress, GraphQL::Types::JSON, null: true
     field :sub_tasks_count, Integer, null: true
     field :task_comments_count, Integer, null: true

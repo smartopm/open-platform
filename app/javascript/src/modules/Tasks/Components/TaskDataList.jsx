@@ -20,12 +20,12 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import Box from '@mui/material/Box';
 import Tooltip from '@mui/material/Tooltip';
+import { removeNewLines, sanitizeText } from '../../../utils/helpers';
 import { dateToString } from '../../../components/DateContainer';
 import Card from '../../../shared/Card';
 import CustomProgressBar from '../../../shared/CustomProgressBar';
 import { CommentQuery } from '../../../graphql/queries';
 import { LinkToUserAvatar } from './RenderTaskData';
-import TaskTitle from './TaskTitle';
 
 export default function TaskDataList({
   task,
@@ -76,7 +76,7 @@ export default function TaskDataList({
             <Grid item md={8} xs={10}>
               {
                 task.body.length > 35 ?
-                ( 
+                (
                   <Tooltip
                     title={task.body}
                     arrow
@@ -98,17 +98,29 @@ export default function TaskDataList({
                       component="p"
                       className={matches ? classes.taskBodyMobile : classes.taskBody}
                     >
-                      <TaskTitle task={task} />
+                      <span
+                        data-testid='task-title'
+                        // eslint-disable-next-line react/no-danger
+                        dangerouslySetInnerHTML={{
+                           __html: sanitizeText(removeNewLines(task.body))
+                        }}
+                      />
                     </Typography>
                   </Tooltip>
-                ): (       
+                ): (
                   <Typography
                     variant="body2"
                     data-testid="task_body"
                     component="p"
                     className={matches ? classes.taskBodyMobile : classes.taskBody}
                   >
-                    <TaskTitle task={task} />
+                    <span
+                      data-testid='task-title'
+                      // eslint-disable-next-line react/no-danger
+                      dangerouslySetInnerHTML={{
+                        __html: sanitizeText(removeNewLines(task.body))
+                      }}
+                    />
                   </Typography>
                 )
               }

@@ -1,8 +1,10 @@
+/* eslint-disable max-lines */
 /* eslint-disable complexity */
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import TextField from '@material-ui/core/TextField';
 import {
+  Button,
   Grid,
   Chip,
   Typography,
@@ -26,14 +28,13 @@ import moment from 'moment-timezone';
 import { useMutation } from 'react-apollo';
 import DatePickerDialog from '../../../components/DatePickerDialog';
 import { UserChip } from './UserChip';
-import { formatError } from '../../../utils/helpers';
+import { formatError, removeNewLines, sanitizeText } from '../../../utils/helpers';
 import UserAutoResult from '../../../shared/UserAutoResult';
 import { dateToString } from '../../../components/DateContainer';
 import AutoSaveField from '../../../shared/AutoSaveField';
 import { UpdateNote } from '../../../graphql/mutations';
 import MessageAlert from '../../../components/MessageAlert';
 import MenuList from '../../../shared/MenuList';
-import TaskTitle from './TaskTitle';
 
 export default function TaskInfoTop({
   currentUser,
@@ -186,7 +187,13 @@ export default function TaskInfoTop({
             }}
             onMouseOver={canUpdateNote ? () => setEditingBody(true) : null}
           >
-            <TaskTitle task={data} />
+            <span
+              data-testid='task-title'
+              // eslint-disable-next-line react/no-danger
+              dangerouslySetInnerHTML={{
+                __html: sanitizeText(removeNewLines(data.body))
+              }}
+            />
           </Typography>
           )}
           {editingBody && (
@@ -195,7 +202,7 @@ export default function TaskInfoTop({
               mutationAction={(value) => updateTask('body', value)}
               stateAction={(value) => setEditingBody(value)}
             />
-)}
+          )}
         </Grid>
         {!matches && (
           <Grid item md={2}>
@@ -262,7 +269,13 @@ export default function TaskInfoTop({
                 onClick={isUnAuthorizedDeveloper() ? () => {} : (event) => { openParentLink(event, data.parentNote) }}
                 className={isUnAuthorizedDeveloper() ? classes.parentTaskDisabled : classes.parentTask}
               >
-                <TaskTitle task={data.parentNote} />
+                <span
+                  data-testid='task-title'
+                  // eslint-disable-next-line react/no-danger
+                  dangerouslySetInnerHTML={{
+                    __html: sanitizeText(removeNewLines(data.parentNote.body))
+                  }}
+                />
               </Typography>
             </Grid>
           </Grid>
@@ -336,8 +349,8 @@ export default function TaskInfoTop({
           <Grid
             item
             xs={4}
-            md={2}
-            style={matches ? { marginRight: '9px', paddingTop: '5px' } : { marginRight: '41px' }}
+            md={3}
+            style={matches ? { marginRight: '9px', paddingTop: '5px' } : { marginRight: '0' }}
           >
             <Typography variant="caption" color="textSecondary">
               {t('task.assigned_to_txt')}
@@ -406,6 +419,26 @@ export default function TaskInfoTop({
           </Grid>
         </Grid>
       </Grid>
+      {data?.formUser?.user && (
+        <Grid container className={classes.submittedFormSection}>
+          <Grid item xs={4} md={3}>
+            <Typography variant="caption" color="textSecondary" data-testid="submitted_form_title">
+              {t('processes.submitted_form')}
+            </Typography>
+          </Grid>
+          <Grid item xs={12} md={9}>
+            <Button
+              href={`/user_form/${data.formUser.user.id}/${data.formUser.id}/task`}
+              variant="outlined"
+              color="primary"
+              className={classes.button}
+              data-testid="submitted_form_button"
+            >
+              {t('processes.open_submitted_form')}
+            </Button>
+          </Grid>
+        </Grid>
+      )}
       <Grid container className={classes.descriptionSection}>
         <Grid item xs={12} md={12}>
           <Typography variant="caption" color='textSecondary'>
@@ -459,6 +492,9 @@ const useStyles = makeStyles({
   parentTaskSection: {
     alignItems: 'center',
     marginBottom: '8px'
+  },
+  submittedFormSection: {
+    marginTop: '8px'
   },
   descriptionSection: {
     marginTop: '8px'

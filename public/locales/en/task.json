@@ -98,13 +98,16 @@
     },
     "activity_summary": "Activity Summary",
     "no_activity_summary": "This project has no activity yet. Add a comment to start the activity.",
-    "no_ssigned_projects": "You do not have any assigned projects yet!",
     "no_assigned_projects": "You do not have any assigned projects yet!",
     "no_projects": "Process does not have projects to display",
     "your_tasks": "Your Tasks",
     "no_open_tasks": "Project does not have open tasks",
     "process_steps": "Process Steps",
-    "no_steps_assigned": "There are no Steps currently assigned to this process."
+    "no_steps_assigned": "There are no Steps currently assigned to this process.",
+    "submitted_by": "Submitted By",
+    "submitted_form": "Submitted Form",
+    "open_submitted_form": "Open Form",
+    "no_form_data": "Project submission information not found"
   },
   "misc": {
     "confirm": "Confirm"
