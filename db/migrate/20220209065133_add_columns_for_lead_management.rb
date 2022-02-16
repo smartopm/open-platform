@@ -23,6 +23,8 @@ class AddColumnsForLeadManagement < ActiveRecord::Migration[6.1]
     add_column :users, :next_steps, :text
     add_column :users, :last_contact_date, :datetime
     add_column :users, :modified_by, :string
+    add_column :users, :first_contact_date, :datetime
+    add_column :users, :created_by, :string
     add_column :users, :relevant_link, :string
     add_column :users, :contact_details, :jsonb
     add_column :users, :african_presence, :string
