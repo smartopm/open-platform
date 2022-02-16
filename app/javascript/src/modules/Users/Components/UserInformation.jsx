@@ -92,31 +92,28 @@ export default function UserInformation({
             <UserMerge close={handleMergeDialog} userId={userId} />
           </DialogContent>
         </Dialog>
-        <FixedHeader>
-          <UserDetailHeader
-            data={data}
-            userType={userType}
-            userId={userId}
-            setDrawerOpen={setDrawerOpen}
-          />
-        </FixedHeader>
+        <div style={{marginBottom: '100px'}}>
+          <FixedHeader fullWidth>
+            <UserDetailHeader
+              data={data}
+              userType={userType}
+              userId={userId}
+              setDrawerOpen={setDrawerOpen}
+              currentTab={tabValue}
+            />
+          </FixedHeader>
+        </div>
         <RightSideMenu
           authState={authState}
           handleDrawerToggle={() => setDrawerOpen(false)}
           drawerOpen={isDrawerOpen}
         />
 
-        {/* <Grid container>
+        <Grid container>
           <Grid item xs={3}>
             {' '}
           </Grid>
-          <Grid item xs={6} style={{ textAlign: 'center' }} data-testid="user_avatar">
-            <Avatar
-              user={data.user}
-              // eslint-disable-next-line react/style-prop-object
-              style="big"
-            />
-          </Grid>
+          <Grid item xs={6} style={{ textAlign: 'center' }} data-testid="user_avatar" />
 
           <Grid item xs={3}>
             <>
@@ -128,8 +125,11 @@ export default function UserInformation({
                 className="right-menu-drawer"
                 data-testid="right_menu_drawer"
                 style={{
-                  float: 'right',
-                  marginRight: -23
+                  right: 5,
+                  top: 80,
+                  marginRight: -24,
+                  zIndex: 1000,
+                  position: 'fixed'
                 }}
               >
                 <DoubleArrowOutlinedIcon
@@ -139,7 +139,7 @@ export default function UserInformation({
               </IconButton>
             </>
           </Grid>
-        </Grid> */}
+        </Grid>
 
         {/* <Grid container>
           <Grid item xs={matches ? 3 : 1}>
