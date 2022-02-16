@@ -110,8 +110,8 @@ export default function MainContactInformation({ leadFormData, handleChange, dis
           />
 
           <TextField
-            name="primaryPhoneNumber"
-            label={t('lead_management.primary_phone')}
+            name="phoneNumber"
+            label={t('lead_management.phone_number')}
             style={{ width: '100%' }}
             onChange={handleChange}
             value={leadFormData?.user?.phoneNumber || ""}
