@@ -76,7 +76,7 @@ export default function UserDetailHeader({ data, userType, currentTab }) {
             )}
           </Grid>
           {isLabelOpen && (
-            <Grid container>
+            <Grid container className={classes.labels}>
               <Grid item md={1} lg={1} sm={1} />
               <Grid item md={11} lg={11} sm={11}>
                 <UserLabels
@@ -114,4 +114,7 @@ const useStyles = makeStyles(() => ({
     paddingTop: '10px',
     textAlign: 'right'
   },
+  labels: {
+    paddingRight: '20px'
+  }
 }));

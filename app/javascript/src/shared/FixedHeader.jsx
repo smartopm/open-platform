@@ -51,7 +51,7 @@ const useStyles = makeStyles(() => ({
     }
   },
   divider: {
-    margin: '20px -200px 0 -200px'
+    margin: '20px -1000px 0 -1000px'
   },
   fullWidthContainer: {
     position: 'fixed',
@@ -60,7 +60,14 @@ const useStyles = makeStyles(() => ({
     padding: '20px',
     borderBottom: '1px solid #DDDDDD',
     background: '#FFFFFF',
-    marginTop: '-30px'
+    marginTop: '-30px',
+    paddingRight: '25%',
+    '@media (max-width: 600px)': {
+      paddingRight: '5%'
+    },
+    '@media (min-width: 601px) and (max-width: 1400px)': {
+      paddingRight: '20%'
+    }
   }
 }));
 
