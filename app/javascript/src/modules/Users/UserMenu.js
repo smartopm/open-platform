@@ -40,16 +40,6 @@ const userMenus = [
   },
   {
     routeProps: {
-      path: '/user/:id?tab=Notes',
-      component: <span />
-    },
-    name: t => t('menu.note', { count: 0 }),
-    featureName: 'Tasks',
-    moduleName: 'note',
-    accessibleBy: []
-  },
-  {
-    routeProps: {
       path: '/user/:id?tab=Plots',
       component: <span />
     },

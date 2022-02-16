@@ -3,21 +3,17 @@ import React, { useEffect, useState } from 'react';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
-import { useForm } from 'react-hook-form';
 import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
 import DoubleArrowOutlinedIcon from '@material-ui/icons/DoubleArrowOutlined';
 import PhoneIcon from '@material-ui/icons/Phone';
-import { Dialog, DialogTitle, DialogContent, Grid, TextField } from '@material-ui/core';
+import { Dialog, DialogTitle, DialogContent, Grid } from '@material-ui/core';
 import { css, StyleSheet } from 'aphrodite';
-import { useMutation } from 'react-apollo';
 import PropTypes from 'prop-types';
-import { CreateNote } from '../../../graphql/mutations';
 import Avatar from '../../../components/Avatar';
 import UserPlotInfo from './UserPlotInfo';
 import UserMerge from './UserMerge';
 import CenteredContent from '../../../components/CenteredContent';
-import UserNotes from './UserNote';
 import UserDetail from './UserProfileDetail';
 import { TabPanel } from '../../../components/Tabs';
 import UserFilledForms from './UserFilledForms';
@@ -52,27 +48,11 @@ export default function UserInformation({
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const securityPersonnelList = ['security_guard', 'security_supervisor'];
 
-  const [noteCreate, { loading: mutationLoading }] = useMutation(CreateNote);
-  const { handleSubmit, register } = useForm();
-
-  const onSaveNote = ({ note }) => {
-    const form = document.getElementById('note-form');
-    noteCreate({
-      variables: { userId, body: note, flagged: false }
-    }).then(() => {
-      refetch();
-      form.reset();
-    });
-  };
-
   useEffect(() => {
     if (tab) {
       setValue(tab);
-    } else {
-      setValue('Contacts');
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [path, tab]);
+  }, [tab]);
 
   useEffect(() => {
     // open merge modal
@@ -174,43 +154,6 @@ export default function UserInformation({
 
         {['admin'].includes(userType) && (
           <>
-            <FeatureCheck features={authState.user.community.features} name="Tasks">
-              <TabPanel value={tabValue} index="Notes">
-                <div className="container">
-                  <form id="note-form">
-                    <div className="form-group">
-                      {t('common:misc.notes')}
-                      <br />
-                      <TextField
-                        className="form-control"
-                        placeholder={t('common:form_placeholders.add_note')}
-                        id="notes"
-                        rows="4"
-                        inputRef={register({ required: true })}
-                        name="note"
-                        multiline
-                        required
-                      />
-                    </div>
-                    <Button
-                      type="button"
-                      style={{ float: 'right' }}
-                      onClick={handleSubmit(onSaveNote)}
-                      disabled={mutationLoading}
-                      color="primary"
-                      variant="outlined"
-                    >
-                      {mutationLoading
-                        ? t('common:form_actions.saving')
-                        : t('common:form_actions.save')}
-                    </Button>
-                  </form>
-                  <br />
-                  <br />
-                  <UserNotes tabValue={tabValue} userId={data.user.id} />
-                </div>
-              </TabPanel>
-            </FeatureCheck>
             <FeatureCheck features={authState.user.community.features} name="Messages">
               <TabPanel value={tabValue} index="Communication">
                 <UserMessages />

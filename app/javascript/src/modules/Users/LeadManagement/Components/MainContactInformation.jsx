@@ -50,7 +50,7 @@ export default function MainContactInformation({ leadFormData, handleChange, dis
             label={t('lead_management.name')}
             style={{ width: '100%' }}
             onChange={handleChange}
-            value={leadFormData?.user?.name}
+            value={leadFormData?.user?.name || ""}
             data-testid="lead_management_main_section_name"
             variant="outlined"
             fullWidth
@@ -65,7 +65,7 @@ export default function MainContactInformation({ leadFormData, handleChange, dis
             label={t('lead_management.title')}
             style={{ width: '100%' }}
             onChange={handleChange}
-            value={leadFormData?.user?.title}
+            value={leadFormData?.user?.title || ""}
             variant="outlined"
             fullWidth
             rows={2}
@@ -82,7 +82,7 @@ export default function MainContactInformation({ leadFormData, handleChange, dis
             label={t('lead_management.primary_email')}
             style={{ width: '100%' }}
             onChange={handleChange}
-            value={leadFormData?.user?.email}
+            value={leadFormData?.user?.email || ""}
             variant="outlined"
             fullWidth
             rows={2}
@@ -98,7 +98,7 @@ export default function MainContactInformation({ leadFormData, handleChange, dis
             label={t('lead_management.secondary_email')}
             style={{ width: '100%' }}
             onChange={handleChange}
-            value={leadFormData?.user?.secondaryEmail}
+            value={leadFormData?.user?.secondaryEmail || ""}
             variant="outlined"
             fullWidth
             rows={2}
@@ -110,11 +110,11 @@ export default function MainContactInformation({ leadFormData, handleChange, dis
           />
 
           <TextField
-            name="primaryPhoneNumber"
-            label={t('lead_management.primary_phone')}
+            name="phoneNumber"
+            label={t('form_fields.phone_number')}
             style={{ width: '100%' }}
             onChange={handleChange}
-            value={leadFormData?.user?.phoneNumber}
+            value={leadFormData?.user?.phoneNumber || ""}
             variant="outlined"
             fullWidth
             rows={2}
@@ -130,7 +130,7 @@ export default function MainContactInformation({ leadFormData, handleChange, dis
             label={t('lead_management.secondary_phone')}
             style={{ width: '100%' }}
             onChange={handleChange}
-            value={leadFormData?.user?.secondaryPhoneNumber}
+            value={leadFormData?.user?.secondaryPhoneNumber || ""}
             variant="outlined"
             fullWidth
             rows={2}
@@ -146,7 +146,7 @@ export default function MainContactInformation({ leadFormData, handleChange, dis
             label={t('lead_management.linkedin_url')}
             style={{ width: '100%' }}
             onChange={handleChange}
-            value={leadFormData?.user?.linkedinUrl}
+            value={leadFormData?.user?.linkedinUrl || ""}
             variant="outlined"
             fullWidth
             rows={2}

@@ -7,6 +7,7 @@ import PropTypes from 'prop-types';
 import LeadManagementForm from './LeadManagementForm';
 import { objectAccessor } from '../../../../utils/helpers';
 import { StyledTabs, StyledTab, TabPanel, a11yProps } from '../../../../components/Tabs';
+import UserNotes from '../../Components/UserNotes';
 
 export default function LeadManagementDetails({ userId }) {
   const { t } = useTranslation('common');
@@ -50,15 +51,6 @@ export default function LeadManagementDetails({ userId }) {
                 }
                 {...a11yProps(0)}
               />
-              {/* <StyledTab
-                label={t('lead_management.task_header')}
-                style={
-                  tabValue === objectAccessor(TAB_VALUES, 'task')
-                    ? { fontSize: '10px', borderBottom: 'solid 1px' }
-                    : { fontSize: '10px' }
-                }
-                {...a11yProps(1)}
-              /> */}
               <StyledTab
                 label={t('lead_management.note_header')}
                 style={
@@ -74,11 +66,8 @@ export default function LeadManagementDetails({ userId }) {
           <TabPanel value={tabValue} index={0} data-testid="lead-management-details-tab">
             <LeadManagementForm userId={userId} />
           </TabPanel>
-          {/* <TabPanel value={tabValue} index={1} data-testid="lead-management-task-tab">
-            <></> */}
-          {/* </TabPanel> */}
           <TabPanel value={tabValue} index={1} data-testid="lead-management-note-tab">
-            <></>
+            <UserNotes userId={userId} tabValue={tabValue} />
           </TabPanel>
         </Item>
       </Grid>
