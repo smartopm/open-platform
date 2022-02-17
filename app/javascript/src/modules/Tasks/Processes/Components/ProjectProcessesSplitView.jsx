@@ -2,6 +2,7 @@ import React, { useContext } from 'react'
 import PropTypes from 'prop-types';
 import { useMediaQuery } from '@mui/material';
 import { makeStyles } from '@material-ui/styles';
+import { useHistory } from 'react-router';
 import { TaskContext } from "../../Context";
 import SplitScreen from '../../../../shared/SplitScreen';
 import TaskUpdate from '../../containers/TaskUpdate';
@@ -16,6 +17,17 @@ export default function ProjectProcessesSplitView({
   const classes = useStyles();
   const matches = useMediaQuery('(max-width:800px)');
   const { projectId, selectedStep, handleStepCompletion } = useContext(TaskContext);
+  const history = useHistory();
+
+  function handleSubTaskItemClick(task) {
+    setSplitScreenOpen(true);
+    history.push({
+      pathname: `/processes/drc/projects/${task.id}`,
+      search: `?tab=processes`,
+      state: { from: history.location.pathname,  search: history.location.search }
+    })
+    window.document.getElementById('anchor-section').scrollIntoView()
+  }
 
   return (
     <>
@@ -37,6 +49,8 @@ export default function ProjectProcessesSplitView({
         ) : (
           <TaskUpdate
             taskId={selectedStep?.id || projectId}
+            handleSplitScreenOpen={handleSubTaskItemClick}
+            handleSplitScreenClose={() => setSplitScreenOpen(false)}
             handleTaskCompletion={(id, completed) => handleStepCompletion(id, completed, refetch)}
             commentsRefetch={commentsRefetch}
             forProcess
