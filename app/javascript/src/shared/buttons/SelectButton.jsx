@@ -41,7 +41,7 @@ export default function SelectButton({
             <Paper>
               <ClickAwayListener onClickAway={handleClose}>
                 <MenuList id="split-button-menu" data-testid="select_option">
-                  {Object.entries(options).map(([key, val]) => (
+                  {/* {Object.entries(options).map(([key, val]) => (
                     <MenuItem
                       key={key}
                       selected={key === selectedKey}
@@ -50,6 +50,29 @@ export default function SelectButton({
                     >
                       {val}
                     </MenuItem>
+                  ))} */}
+                  {options.map((opt) => (
+                    <>
+                      <MenuItem
+                        key={opt.key}
+                        selected={opt.key === selectedKey}
+                        onClick={() => opt.handleMenuItemClick(opt.key, opt.menu)}
+                        value={opt.key}
+                      >
+                        {opt.menu}
+                      </MenuItem>
+                      {opt.subTasks && opt.subTasks.map(subtask => (
+                        <MenuItem
+                          style={{paddingLeft: '20px'}}
+                          key={subtask.key}
+                          selected={subtask.key === selectedKey}
+                          onClick={() => subtask.handleMenuItemClick(opt.key, opt.key)}
+                          value={opt.key}
+                        >
+                          {opt.menu}
+                        </MenuItem>
+                      ))}
+                    </>
                   ))}
                 </MenuList>
               </ClickAwayListener>

@@ -14,6 +14,73 @@ import UserLabelTitle from './UserLabelTitle';
 export default function UserDetailHeader({ data, userType, currentTab }) {
   const [isLabelOpen, setIsLabelOpen] = useState(false);
   const classes = useStyles();
+  const selectOptions = [
+    {
+      key: 'user_settings',
+      value: 'User Settings',
+      subMenu: [
+        {
+          key: 'edit_user',
+          value: 'Edit User'
+        },
+        {
+          key: 'invite_history',
+          value: 'Invite History'
+        },
+        {
+          key: 'print_id',
+          value: 'Print ID'
+        }
+      ]
+    },
+    {
+      key: 'communications',
+      value: 'Communications',
+      subMenu: [
+        {
+          key: 'communications',
+          value: 'Communications'
+        },
+        {
+          key: 'send_sms',
+          value: 'Send SMS'
+        },
+        {
+          key: 'send_otp',
+          value: 'Send OTP'
+        },
+        {
+          key: 'message_support',
+          value: 'Message Support'
+        }
+      ]
+    },
+    {
+      key: 'payments',
+      value: 'Payments'
+    },
+    {
+    
+      key: 'plots',
+      value: 'Plots'
+    },
+    {
+      key: 'notes',
+      value: 'Notes'
+    },
+    {
+      key: 'lead_management',
+      value: 'Lead Management'
+    },
+    {
+      key: 'user_logs',
+      value: 'User Logs'
+    },
+    {
+      key: 'merge_user',
+      value: 'Merge User'
+    }
+  ]
   return (
     <>
       <Grid container>
