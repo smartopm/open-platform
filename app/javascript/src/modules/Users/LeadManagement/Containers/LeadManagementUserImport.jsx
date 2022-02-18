@@ -80,7 +80,7 @@ export default function UsersImport() {
     };
     reader.readAsText(file);
   }
-  
+
   const hasErrors = CSVFileUploadErrors;
 
   return (
@@ -106,7 +106,7 @@ export default function UsersImport() {
                     accept=".csv"
                     className={css(styles.inputField)}
                     id="contained-button-file"
-                    data-testid="csv-input"
+                    data-testid="lead-csv-input"
                     type="file"
                     onChange={processCsv}
                   />
@@ -205,7 +205,11 @@ export default function UsersImport() {
             <li>Last Contact Date: i.e. 25-09-2020, 25/09/2020, 2020-09-25, 2020/09/25 </li>
             <li>Date Follow Up: i.e. 25-09-2020, 25/09/2020, 2020-09-25, 2020/09/25 </li>
           </ol>
-          You can click <a href={`/csv_import_sample/lead_download?token=${token}`}>here</a> to
+          You can click 
+          {' '}
+          <a href={`/csv_import_sample/lead_download?token=${token}`}>here</a>
+          {' '}
+          to
           download a sample csv file.
         </Grid>
       </Grid>
