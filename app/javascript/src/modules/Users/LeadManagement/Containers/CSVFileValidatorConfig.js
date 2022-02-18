@@ -20,13 +20,13 @@ const numberToOrdinal = n => (`${n}`.match(/1\d$/) ? `n + th` : addSuffix(n));
 const requiredError = (headerName, rowNumber, columnNumber) => {
   return ` <div>${headerName} is required in the ${numberToOrdinal(
     rowNumber
-  )} row / ${numberToOrdinal(columnNumber)} column  </div>`;
+  )} row ${numberToOrdinal(columnNumber)} column  </div>`;
 };
 
 const validateError = (headerName, rowNumber, columnNumber) => {
-  return ` <div> ${headerName} is not valid in the ${numberToOrdinal(
-    rowNumber
-  )} / ${numberToOrdinal(columnNumber)} column  </div>`;
+  return ` <div> ${headerName} is not valid in the ${numberToOrdinal(rowNumber)} ${numberToOrdinal(
+    columnNumber
+  )} column  </div>`;
 };
 
 const uniqueError = headerName => {
@@ -182,7 +182,7 @@ const configObject = {
       validateError: (headerName, rowNumber, columnNumber) => {
         return ` <div>${headerName} is not valid in the ${numberToOrdinal(
           rowNumber
-        )} row / ${columnNumber} column  </div>`;
+        )} row ${columnNumber} column  </div>`;
       }
     },
     {
@@ -194,7 +194,7 @@ const configObject = {
       validateError: (headerName, rowNumber, columnNumber) => {
         return `<div> ${headerName} is not valid in the ${numberToOrdinal(
           rowNumber
-        )} row / ${numberToOrdinal(columnNumber)} column  </div>`;
+        )} row ${numberToOrdinal(columnNumber)} column  </div>`;
       }
     },
     {
@@ -206,7 +206,7 @@ const configObject = {
       validateError: (headerName, rowNumber, columnNumber) => {
         return `<div> ${headerName} is not valid in the ${numberToOrdinal(
           rowNumber
-        )} row / ${numberToOrdinal(columnNumber)} column  </div>`;
+        )} row ${numberToOrdinal(columnNumber)} column  </div>`;
       }
     },
     {
@@ -218,7 +218,7 @@ const configObject = {
       validateError: (headerName, rowNumber, columnNumber) => {
         return `<div> ${headerName} is not valid in the ${numberToOrdinal(
           rowNumber
-        )} row / ${numberToOrdinal(columnNumber)} column`;
+        )} row ${numberToOrdinal(columnNumber)} column`;
       }
     },
     {
@@ -230,7 +230,7 @@ const configObject = {
       validateError: (headerName, rowNumber, columnNumber) => {
         return `<div> ${headerName} is not valid in the ${numberToOrdinal(
           rowNumber
-        )} row / ${numberToOrdinal(columnNumber)} column  </div>`;
+        )} row ${numberToOrdinal(columnNumber)} column  </div>`;
       }
     },
     {
@@ -242,7 +242,7 @@ const configObject = {
       validateError: (headerName, rowNumber, columnNumber) => {
         return `<div> ${headerName} is not valid in the ${numberToOrdinal(
           rowNumber
-        )} row / ${numberToOrdinal(columnNumber)} column  </div>`;
+        )} row ${numberToOrdinal(columnNumber)} column  </div>`;
       }
     },
     {
@@ -270,7 +270,7 @@ const configObject = {
       validateError: (headerName, rowNumber, columnNumber) => {
         return `<div> ${headerName} is not valid in the ${numberToOrdinal(
           rowNumber
-        )} row / ${numberToOrdinal(columnNumber)} column  </div>`;
+        )} row  ${numberToOrdinal(columnNumber)} column  </div>`;
       }
     },
     {
@@ -282,7 +282,7 @@ const configObject = {
       validateError: (headerName, rowNumber, columnNumber) => {
         return `<div> ${headerName} is not valid in the ${numberToOrdinal(
           rowNumber
-        )} row / ${numberToOrdinal(columnNumber)} column  </div>`;
+        )} row ${numberToOrdinal(columnNumber)} column  </div>`;
       }
     },
 
@@ -308,7 +308,7 @@ const configObject = {
       validateError: (headerName, rowNumber, columnNumber) => {
         return `<div>${headerName} is not valid in the ${numberToOrdinal(
           rowNumber
-        )} row / ${numberToOrdinal(columnNumber)} column </div>`;
+        )} row ${numberToOrdinal(columnNumber)} column </div>`;
       }
     },
     {
@@ -320,7 +320,7 @@ const configObject = {
       validateError: (headerName, rowNumber, columnNumber) => {
         return `<div> ${headerName} is not valid in the ${numberToOrdinal(
           rowNumber
-        )} row / ${numberToOrdinal(columnNumber)} column  </div>`;
+        )} row ${numberToOrdinal(columnNumber)} column  </div>`;
       }
     },
     {
