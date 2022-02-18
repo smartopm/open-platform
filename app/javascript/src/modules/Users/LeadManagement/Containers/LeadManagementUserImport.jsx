@@ -10,7 +10,7 @@ import CenteredContent from '../../../../shared/CenteredContent';
 import { Spinner } from '../../../../shared/Loading';
 import { Context } from '../../../../containers/Provider/AuthStateProvider';
 import MessageAlert from '../../../../components/MessageAlert';
-import configObject from './CSVFileValidatorConfig';
+import configObject from '../../utils';
 
 export default function UsersImport() {
   const [importCreate] = useMutation(ImportCreate);
@@ -150,12 +150,26 @@ export default function UsersImport() {
         </Grid>
         <br />
         <Grid item md={6} style={{ alignSelf: 'center' }}>
-          You can upload a .csv file with users. Below is a list of the expected column headers with
-          examples(: i.e..). Download the sample CSV file to confirm column mapping and see the
-          allowed values for the selectors.
+          You can upload a .csv file with multiple users. Below is a list of the expected column
+          headers with examples (: i.e...).
+          <br />
+          <br />
+          A sample CSV file can be
+          {' '}
+          <a href="https://docs.google.com/spreadsheets/d/1hNJU1lzeqUb5NGWRdUrAVqyDBwAIegwPgOb-HW2_8Ho/edit?usp=sharing">
+            viewed here
+          </a>
+          . Copy the file to edit. Columns shown in green link to selectors in our system and
+          require specific values. A list of these accepted values can be
+          {' '}
+          <a href="https://docs.google.com/spreadsheets/d/1OyBgj1QT3mpsiYElWfI_Cqtrwsw9h20YHVSVLELLpfY/edit?usp=sharing">
+            viewed here
+          </a>
+          .
           <br />
           Note: If the column mapping does not match or the values are not recognized, the system
           will leave the input blank. Please review the uploaded users for import accuracy.
+          <br />
           <ol>
             <li> Primary Contact Name: i.e John Doe </li>
             <li> Primary Contact Title </li>
@@ -183,12 +197,48 @@ export default function UsersImport() {
             <li>Company Linkedin</li>
             <li>Company Website</li>
             <li>Relevant Link/News</li>
-            <li>Country</li>
-            <li>Region</li>
-            <li>Industry Sector</li>
-            <li>Industry Sub Sector</li>
-            <li>Industry Business Activity</li>
-            <li>Level of Internationlalization</li>
+            <li>
+              Country
+              {' '}
+              <a href="https://docs.google.com/spreadsheets/d/1OyBgj1QT3mpsiYElWfI_Cqtrwsw9h20YHVSVLELLpfY/edit?usp=sharing">
+                accepted value list
+              </a>
+            </li>
+            <li>
+              Region
+              {' '}
+              <a href="https://docs.google.com/spreadsheets/d/1OyBgj1QT3mpsiYElWfI_Cqtrwsw9h20YHVSVLELLpfY/edit?usp=sharing">
+                accepted value list
+              </a>
+            </li>
+            <li>
+              Industry Sector
+              {' '}
+              <a href="https://docs.google.com/spreadsheets/d/1OyBgj1QT3mpsiYElWfI_Cqtrwsw9h20YHVSVLELLpfY/edit?usp=sharing">
+                accepted value list
+              </a>
+            </li>
+            <li>
+              Industry Sub Sector
+              {' '}
+              <a href="https://docs.google.com/spreadsheets/d/1OyBgj1QT3mpsiYElWfI_Cqtrwsw9h20YHVSVLELLpfY/edit?usp=sharing">
+                accepted value list
+              </a>
+            </li>
+            <li>
+              Industry Business Activity
+              {' '}
+              <a href="https://docs.google.com/spreadsheets/d/1OyBgj1QT3mpsiYElWfI_Cqtrwsw9h20YHVSVLELLpfY/edit?usp=sharing">
+                accepted value list
+              </a>
+            </li>
+            <li>
+              Level of Internationalization
+              {' '}
+              <a href="https://docs.google.com/spreadsheets/d/1OyBgj1QT3mpsiYElWfI_Cqtrwsw9h20YHVSVLELLpfY/edit?usp=sharing">
+                accepted value list
+              </a>
+            </li>
             <li>Number of Employees</li>
             <li>Annual Revenue</li>
             <li>African Presence</li>

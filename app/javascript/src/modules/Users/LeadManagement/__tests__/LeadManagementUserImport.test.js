@@ -80,13 +80,10 @@ describe('LeadManagementUserImport component', () => {
     expect(screen.queryByText(/You can upload a .csv file with users./)).toBeInTheDocument();
     const file = new Blob([rows.join('\n')], { type: 'csv' });
 
-
     await waitFor(() => {
       fireEvent.change(screen.queryByTestId('lead-csv-input'), { target: { files: [file] } });
       screen.debug(undefined, 30000);
-      // await waitFor(() => {
-        expect(screen.queryByTestId('lead-csv-input')).toBeInTheDocument();
-      // });
+      expect(screen.queryByTestId('lead-csv-input')).toBeInTheDocument();
     }, 10);
   });
 });
