@@ -309,10 +309,10 @@ es:
   email_template:
     welcome_email:
       action: INICIAR
-      body: Ciudad Morazán está construyendo un mejor lugar para vivir.<br/><br/>Esta
+      body: "%{community_name} está construyendo un mejor lugar para vivir.<br/><br/>Esta
         Aplicación nos ayudará a conectar con<br/>residentes, acelerar el crecimiento,
         y brindar<br/>servicios públicos efectivamente.<br/><br/>Su usuario ha sido
-        creado en nuestra Aplicación. Presione aquí para ver más.
+        creado en nuestra Aplicación. Presione aquí para ver más."
       subject: Bienvenido a %{community_name}
       title: Bienvenido</b><br/> a la comunidad en línea de %{community_name}
   emergency_sos:

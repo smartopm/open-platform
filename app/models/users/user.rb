@@ -603,10 +603,11 @@ module Users
 
       email_title = I18n.t('email_template.welcome_email.title', community_name: community.name)
       email_subject = I18n.t('email_template.welcome_email.subject', community_name: community.name)
+      email_body = I18n.t('email_template.welcome_email.body', community_name: community.name)
       template_data = [
         { key: '%action_url%', value: HostEnv.base_url(community) || '' },
         { key: '%action%', value: I18n.t('email_template.welcome_email.action') },
-        { key: '%body%', value: I18n.t('email_template.welcome_email.body') },
+        { key: '%body%', value: email_body },
         { key: '%title%', value: email_title },
       ]
       EmailMsg.send_mail_from_db(self[:email], template, template_data, email_subject)
