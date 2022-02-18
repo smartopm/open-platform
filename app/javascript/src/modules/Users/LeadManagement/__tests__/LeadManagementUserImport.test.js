@@ -4,9 +4,13 @@ import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom';
 import '@testing-library/jest-dom/extend-expect';
 import LeadManagementUserImport from '../Containers/LeadManagementUserImport';
-import configObject from '../Containers/CSVFileValidatorConfig';
 
 jest.mock('@rails/activestorage/src/file_checksum', async () => jest.fn());
+jest.mock('csv-file-validator', async () => ({
+  requiredError: () => '<div> Name is required in the 1st row  2nd column  </div>',
+  CSVFileValidator: () => '<div> Name is required in the 1st row  2nd column  </div>'
+}));
+
 describe('LeadManagementUserImport component', () => {
   it('renders file input', async () => {
     const container = render(
@@ -65,8 +69,6 @@ describe('LeadManagementUserImport component', () => {
 
   // validations for CSV file
   it('should return errors incase the CSV file name field is empty', async () => {
-    jest.mock('react-markdown', () => 'div');
-
     render(
       <MockedProvider mocks={[]}>
         <BrowserRouter>
@@ -76,19 +78,15 @@ describe('LeadManagementUserImport component', () => {
     );
     const rows = ['Name,email,title', ' ,njeri@gmail.com The BigBossLady'];
     expect(screen.queryByText(/You can upload a .csv file with users./)).toBeInTheDocument();
-    // const file = new Blob([rows.join('\n')], { type: 'csv' });
+    const file = new Blob([rows.join('\n')], { type: 'csv' });
 
-    jest.mock('csv-file-validator', () => ({
-      requiredError: () => '<div> Name is required in the 1st row  2nd column  </div>',
-      CSVFileValidator: () => '<div> Name is required in the 1st row  2nd column  </div>'
-    }));
 
-    // await waitFor(() => {
-    //   fireEvent.change(screen.queryByTestId('lead-csv-input'), { target: { files: [file] } });
-    //   screen.debug(undefined, 30000);
-    //   // await waitFor(() => {
-    //   //   expect(container.getByTestId('lead-csv-input')).toBeInTheDocument();
-    //   // });
-    // }, 10);
+    await waitFor(() => {
+      fireEvent.change(screen.queryByTestId('lead-csv-input'), { target: { files: [file] } });
+      screen.debug(undefined, 30000);
+      // await waitFor(() => {
+        expect(screen.queryByTestId('lead-csv-input')).toBeInTheDocument();
+      // });
+    }, 10);
   });
 });
