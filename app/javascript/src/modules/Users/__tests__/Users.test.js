@@ -6,7 +6,7 @@ import { MockedProvider } from '@apollo/react-testing';
 import Users from '../Containers/Users';
 import { UsersDetails, LabelsQuery } from '../../../graphql/queries';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
-import authState from '../../../__mocks__/authstate'
+import authState from '../../../__mocks__/authstate';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 
@@ -79,12 +79,12 @@ describe('UserPage Component', () => {
       expect(container.queryByTestId('search')).toBeInTheDocument();
       expect(container.getByTestId('download_csv_btn')).toBeInTheDocument();
 
-      fireEvent.click(container.getByTestId('menu-list'))
+      fireEvent.click(container.getByTestId('menu-list'));
       expect(container.getByTestId('menu_list')).toBeInTheDocument();
       expect(container.getAllByTestId('menu_item')[0]).toBeInTheDocument();
-      expect(container.getAllByTestId('menu_item')).toHaveLength(3);
+      expect(container.getAllByTestId('menu_item')).toHaveLength(4);
 
-      fireEvent.click(container.getAllByTestId('menu_item')[1])
+      fireEvent.click(container.getAllByTestId('menu_item')[1]);
       expect(container.queryByText('Customer Journey Stage')).toBeInTheDocument();
 
       expect(container.getByTestId('pagination_section')).toBeInTheDocument();
@@ -108,6 +108,6 @@ describe('UserPage Component', () => {
     );
     await waitFor(() => {
       expect(container.getByText('Home')).toBeInTheDocument();
-    })
-  })
+    });
+  });
 });

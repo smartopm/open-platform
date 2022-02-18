@@ -59,7 +59,9 @@ describe('LeadManagementUserImport component', () => {
       'Kamau,bah@gmail.com The BigBoss',
       'Njoroge,njeri@gmail.com The BigBossLady'
     ];
-    expect(container.queryByText(/You can upload a .csv file with users./)).toBeInTheDocument();
+    expect(
+      container.queryByText(/You can upload a .csv file with multiple users./)
+    ).toBeInTheDocument();
     const file = new Blob([rows.join('\n')], { type: 'csv' });
     fireEvent.change(container.queryByTestId('lead-csv-input'), { target: { files: [file] } });
     await waitFor(() => {
@@ -77,12 +79,13 @@ describe('LeadManagementUserImport component', () => {
       </MockedProvider>
     );
     const rows = ['Name,email,title', ' ,njeri@gmail.com The BigBossLady'];
-    expect(screen.queryByText(/You can upload a .csv file with users./)).toBeInTheDocument();
+    expect(
+      screen.queryByText(/You can upload a .csv file with multiple users./)
+    ).toBeInTheDocument();
     const file = new Blob([rows.join('\n')], { type: 'csv' });
 
     await waitFor(() => {
       fireEvent.change(screen.queryByTestId('lead-csv-input'), { target: { files: [file] } });
-      screen.debug(undefined, 30000);
       expect(screen.queryByTestId('lead-csv-input')).toBeInTheDocument();
     }, 10);
   });
