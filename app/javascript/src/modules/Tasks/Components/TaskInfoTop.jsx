@@ -117,8 +117,6 @@ export default function TaskInfoTop({
     );
   }
 
-  console.log({ canUpdateNote })
-
   return (
     <>
       <MessageAlert
