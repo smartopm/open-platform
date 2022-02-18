@@ -101,7 +101,7 @@ export default function UsersImport() {
           ) : (
             <div>
               <Grid container justify="center" style={{ marginTop: '5px', marginBottom: '5px' }}>
-                <Grid item md={12} xs={12}>
+                <Grid item md={12} xs={12} style={{ alignSelf: 'center' }}>
                   <input
                     accept=".csv"
                     className={css(styles.inputField)}
@@ -115,8 +115,9 @@ export default function UsersImport() {
                 </Grid>
 
                 {CSVFileUploadErrors.length > 0 && (
-                  <Grid item md={6} xs={6} style={{ maxWidth: '500px' }}>
+                  <Grid item md={12} xs={12}>
                     <div className={css(styles.errorSection)} id="invalidMessages" />
+                    <br />
                   </Grid>
                 )}
               </Grid>
@@ -205,11 +206,7 @@ export default function UsersImport() {
             <li>Last Contact Date: i.e. 25-09-2020, 25/09/2020, 2020-09-25, 2020/09/25 </li>
             <li>Date Follow Up: i.e. 25-09-2020, 25/09/2020, 2020-09-25, 2020/09/25 </li>
           </ol>
-          You can click 
-          {' '}
-          <a href={`/csv_import_sample/lead_download?token=${token}`}>here</a>
-          {' '}
-          to
+          You can click <a href={`/csv_import_sample/lead_download?token=${token}`}>here</a> to
           download a sample csv file.
         </Grid>
       </Grid>

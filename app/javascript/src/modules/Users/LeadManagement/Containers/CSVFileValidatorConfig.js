@@ -13,16 +13,24 @@ import {
   countries
 } from '../../../../utils/constants';
 
+const ordinalSuffix = ['st', 'nd', 'rd'];
+const addSuffix = n => n + (ordinalSuffix[(n - 1) % 10] || 'th');
+const numberToOrdinal = n => (`${n}`.match(/1\d$/) ? `n + th` : addSuffix(n));
+
 const requiredError = (headerName, rowNumber, columnNumber) => {
-  return `${headerName} is required in the ${rowNumber} row / ${columnNumber} column`;
+  return ` <div>${headerName} is required in the ${numberToOrdinal(
+    rowNumber
+  )} row / ${numberToOrdinal(columnNumber)} column  </div>`;
 };
 
 const validateError = (headerName, rowNumber, columnNumber) => {
-  return `${headerName} is not valid in the ${rowNumber} / ${columnNumber} column`;
+  return ` <div> ${headerName} is not valid in the ${numberToOrdinal(
+    rowNumber
+  )} / ${numberToOrdinal(columnNumber)} column  </div>`;
 };
 
 const uniqueError = headerName => {
-  return `${headerName} is not unique`;
+  return ` <div>${headerName} is not unique  </div>`;
 };
 
 const configObject = {
@@ -172,7 +180,9 @@ const configObject = {
         return countries.includes(country);
       },
       validateError: (headerName, rowNumber, columnNumber) => {
-        return `${headerName} is not valid in the ${rowNumber} row / ${columnNumber} column`;
+        return ` <div>${headerName} is not valid in the ${numberToOrdinal(
+          rowNumber
+        )} row / ${columnNumber} column  </div>`;
       }
     },
     {
@@ -182,7 +192,9 @@ const configObject = {
         return regionOptions.includes(region);
       },
       validateError: (headerName, rowNumber, columnNumber) => {
-        return `${headerName} is not valid in the ${rowNumber} row / ${columnNumber} column`;
+        return `<div> ${headerName} is not valid in the ${numberToOrdinal(
+          rowNumber
+        )} row / ${numberToOrdinal(columnNumber)} column  </div>`;
       }
     },
     {
@@ -192,7 +204,9 @@ const configObject = {
         return industryCategoryOptions.includes(industrySector);
       },
       validateError: (headerName, rowNumber, columnNumber) => {
-        return `${headerName} is not valid in the ${rowNumber} row / ${columnNumber} column`;
+        return `<div> ${headerName} is not valid in the ${numberToOrdinal(
+          rowNumber
+        )} row / ${numberToOrdinal(columnNumber)} column  </div>`;
       }
     },
     {
@@ -202,7 +216,9 @@ const configObject = {
         return industrySubSectorOptions.includes(industrySubSector);
       },
       validateError: (headerName, rowNumber, columnNumber) => {
-        return `${headerName} is not valid in the ${rowNumber} row / ${columnNumber} column`;
+        return `<div> ${headerName} is not valid in the ${numberToOrdinal(
+          rowNumber
+        )} row / ${numberToOrdinal(columnNumber)} column`;
       }
     },
     {
@@ -212,7 +228,9 @@ const configObject = {
         return industryBusinessActivityOptions.includes(industryBusinessActivity);
       },
       validateError: (headerName, rowNumber, columnNumber) => {
-        return `${headerName} is not valid in the ${rowNumber} row / ${columnNumber} column`;
+        return `<div> ${headerName} is not valid in the ${numberToOrdinal(
+          rowNumber
+        )} row / ${numberToOrdinal(columnNumber)} column  </div>`;
       }
     },
     {
@@ -222,7 +240,9 @@ const configObject = {
         return internationalizationLevels.includes(levelOfInternationalization);
       },
       validateError: (headerName, rowNumber, columnNumber) => {
-        return `${headerName} is not valid in the ${rowNumber} row / ${columnNumber} column`;
+        return `<div> ${headerName} is not valid in the ${numberToOrdinal(
+          rowNumber
+        )} row / ${numberToOrdinal(columnNumber)} column  </div>`;
       }
     },
     {
@@ -248,7 +268,9 @@ const configObject = {
         return leadTemperatureOptions.includes(leadTemperature);
       },
       validateError: (headerName, rowNumber, columnNumber) => {
-        return `${headerName} is not valid in the ${rowNumber} row / ${columnNumber} column`;
+        return `<div> ${headerName} is not valid in the ${numberToOrdinal(
+          rowNumber
+        )} row / ${numberToOrdinal(columnNumber)} column  </div>`;
       }
     },
     {
@@ -258,7 +280,9 @@ const configObject = {
         return leadStatusOptions.includes(leadStatus);
       },
       validateError: (headerName, rowNumber, columnNumber) => {
-        return `${headerName} is not valid in the ${rowNumber} row / ${columnNumber} column`;
+        return `<div> ${headerName} is not valid in the ${numberToOrdinal(
+          rowNumber
+        )} row / ${numberToOrdinal(columnNumber)} column  </div>`;
       }
     },
 
@@ -269,7 +293,9 @@ const configObject = {
         return leadTypeOptions.includes(leadType);
       },
       validateError: (headerName, rowNumber, columnNumber) => {
-        return `${headerName} is not valid in the ${rowNumber} row / ${columnNumber} column`;
+        return `<div> ${headerName} is not valid in the ${numberToOrdinal(
+          rowNumber
+        )} row / ${numberToOrdinal(columnNumber)} column  </div>`;
       }
     },
 
@@ -280,7 +306,9 @@ const configObject = {
         return leadSourceOptions.includes(leadSource);
       },
       validateError: (headerName, rowNumber, columnNumber) => {
-        return `${headerName} is not valid in the ${rowNumber} row / ${columnNumber} column`;
+        return `<div>${headerName} is not valid in the ${numberToOrdinal(
+          rowNumber
+        )} row / ${numberToOrdinal(columnNumber)} column </div>`;
       }
     },
     {
@@ -290,7 +318,9 @@ const configObject = {
         return clientCategories.includes(clientCategory);
       },
       validateError: (headerName, rowNumber, columnNumber) => {
-        return `${headerName} is not valid in the ${rowNumber} row / ${columnNumber} column`;
+        return `<div> ${headerName} is not valid in the ${numberToOrdinal(
+          rowNumber
+        )} row / ${numberToOrdinal(columnNumber)} column  </div>`;
       }
     },
     {
