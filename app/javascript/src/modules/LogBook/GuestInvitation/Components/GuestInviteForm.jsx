@@ -1,4 +1,3 @@
-/* eslint-disable max-statements */
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
@@ -7,6 +6,8 @@ import { useLazyQuery, useMutation } from 'react-apollo';
 import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useMediaQuery, useTheme } from '@mui/material';
+import Switch from '@mui/material/Switch';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import CenteredContent from '../../../../shared/CenteredContent';
 import GuestTime from '../../Components/GuestTime';
 import InvitationCreateMutation from '../graphql/mutations';
@@ -46,6 +47,12 @@ export default function GuestInviteForm() {
     fetchPolicy: 'network-only'
   });
   const matchesSmall = useMediaQuery(theme.breakpoints.down('md'));
+
+  const [isCompany, setIsCompany] = useState(false);
+
+  function handleIsCompany(event) {
+    setIsCompany(event.target.checked);
+  };
 
   useEffect(() => {
     if (searchValue) {
@@ -190,7 +197,19 @@ export default function GuestInviteForm() {
             handInviteGuest={addToGuests}
           />
         ))}
-      {noUserFound && (
+      <br />
+      <FormControlLabel
+        control={(
+          <Switch
+            checked={isCompany}
+            onChange={handleIsCompany}
+            inputProps={{ 'aria-label': 'Switch to company mode' }}
+          />
+      )}
+        label="Company"
+      />
+
+      {noUserFound || isCompany && (
         <>
           <Typography
             variant="body2"
@@ -201,6 +220,7 @@ export default function GuestInviteForm() {
             {t('common:errors.user_not_found_add_new')}
           </Typography>
           <InviteeForm
+            isCompany
             guestData={newGuest}
             handlePhoneNumber={number => setNewGuest({ ...newGuest, phoneNumber: number })}
             handleInputChange={({ target }) =>

@@ -19,6 +19,7 @@ export default function InviteeForm({
   handleInputChange,
   handleAction,
   guestCount,
+  isCompany,
   primary
 }) {
   const { t } = useTranslation(['common', 'logbook']);
@@ -41,7 +42,7 @@ export default function InviteeForm({
             variant="outlined"
             type="text"
             value={guestData.firstName}
-            label={t('form_fields.full_first_name')}
+            label={isCompany ? t('form_fields.company_name') : t('form_fields.full_first_name')}
             onChange={handleInputChange}
             name="firstName"
             inputProps={{ 'data-testid': 'guest_entry_first_name' }}
@@ -50,20 +51,24 @@ export default function InviteeForm({
             required
           />
         </Grid>
-        <Grid item xs={12} md={4} sm={6}>
-          <TextField
-            variant="outlined"
-            type="text"
-            value={guestData.lastName}
-            label={t('form_fields.full_last_name')}
-            onChange={handleInputChange}
-            name="lastName"
-            inputProps={{ 'data-testid': 'guest_entry_last_name' }}
-            margin="dense"
-            fullWidth
-            required
-          />
-        </Grid>
+        {
+          !isCompany && (
+          <Grid item xs={12} md={4} sm={6}>
+            <TextField
+              variant="outlined"
+              type="text"
+              value={guestData.lastName}
+              label={t('form_fields.full_last_name')}
+              onChange={handleInputChange}
+              name="lastName"
+              inputProps={{ 'data-testid': 'guest_entry_last_name' }}
+              margin="dense"
+              fullWidth
+              required
+            />
+          </Grid>
+          )
+        }
         <Grid item xs={12} md={3} sm={10}>
           <PhoneInput
             value={guestData.phoneNumber}
@@ -111,5 +116,6 @@ InviteeForm.propTypes = {
   handlePhoneNumber: PropTypes.func.isRequired,
   handleAction: PropTypes.func.isRequired,
   guestCount: PropTypes.number,
+  isCompany: PropTypes.bool.isRequired,
   primary: PropTypes.bool,
 }
