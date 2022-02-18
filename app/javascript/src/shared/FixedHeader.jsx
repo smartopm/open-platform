@@ -10,7 +10,7 @@ export default function FixedHeader({ children, fullWidth }) {
   return (
     <>
       {fullWidth ? (
-        <Grid container>
+        <Grid container data-testid='fullwidth-header'>
           <Grid
             item
             className={classes.fullWidthContainer}
@@ -19,7 +19,7 @@ export default function FixedHeader({ children, fullWidth }) {
           </Grid>
         </Grid>
     ) : (
-      <Container>
+      <Container data-testid='contained-header'>
         <Grid container>
           <Grid
             item
