@@ -12,10 +12,6 @@ export default function ProcessesPage() {
     permission.module === 'dashboard'
   ));
 
-  const allowedCommunities = ['Tilisi', 'DoubleGDP'];
-  const communityCanViewDashboard = allowedCommunities.includes(authState?.user?.community?.name);
-  if (!communityCanViewDashboard) history.push('/');
-
   const canAccessAdminProcessesDashboard = processesDashboardPermissions ? processesDashboardPermissions.permissions.includes('can_access_admin_processes_dashboard') : false
   const canAccessClientProcessesDashboard = processesDashboardPermissions ? processesDashboardPermissions.permissions.includes('can_access_client_processes_dashboard') : false
 

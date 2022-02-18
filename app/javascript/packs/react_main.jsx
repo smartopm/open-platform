@@ -403,11 +403,6 @@ const App = () => {
                               />
                               <Route
                                 exact
-                                path="/processes"
-                                component={ProcessesPage}
-                              />
-                              <Route
-                                exact
                                 path="/entry_logs"
                                 render={() => (
                                   <Redirect
