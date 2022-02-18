@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'task_create'
+require 'user_validator'
 
 # Execute user bulk import
 # rubocop: disable Metrics/ClassLength
@@ -58,14 +59,14 @@ class LeadImportJob < ApplicationJob
         lead_status                   = row['Lead Status']&.strip
         lead_source                   = row['Lead Source']&.strip
         lead_type                     = row['Lead Type']&.strip
-        lead_owner                    = row['Lead Owner']
+        lead_owner                    = row['Lead Owner']&.strip
         client_category               = row['Client Category']&.strip
         next_steps                    = row['Next Steps']&.strip
         first_contact_date            = row['First Contact Date']&.strip
         last_contact_date             = row['Last Contact Date']&.strip
-        followup_at                   = row['Date Follow Up']
-        created_by                    = row['Created By']
-        modified_by                   = row['Modified by']
+        followup_at                   = row['Date Follow Up']&.strip
+        created_by                    = row['Created By']&.strip
+        modified_by                   = row['Modified by']&.strip
         phone_list                    = [phone, secondary_phone].reject(&:blank?)
 
         if name.blank?
@@ -78,7 +79,7 @@ class LeadImportJob < ApplicationJob
           next
         end
 
-        dup_user = duplicate_user(email, phone_list, current_user.community)
+        dup_user = UserValidator.duplicate_user(email, phone_list, current_user.community)
         if dup_user.present?
           errors[index + 1] = ['Contact info already exists']
           next
@@ -175,18 +176,6 @@ class LeadImportJob < ApplicationJob
   # rubocop:enable Metrics/PerceivedComplexity
 
   private
-
-  def duplicate_user(email, phone_list, community)
-    users = Users::User.arel_table
-    Users::User.where.not(email: nil).where(community: community).where(
-      email.present? ? users[:email].matches("#{email}%") : '1 <> 1',
-    ).or(Users::User.where(phone_number: phone_list, community: community)).first ||
-      Users::User.where(community: community).joins(:contact_infos).where(contact_infos:
-        { contact_type: 'email', info: email }).or(
-          Users::User.where(community: community).joins(:contact_infos).where(contact_infos:
-          { contact_type: 'phone', info: phone_list }),
-        ).first
-  end
 
   def create_task(user, current_user)
     task_params = {
