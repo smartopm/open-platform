@@ -115,12 +115,13 @@ export default function GuestInviteForm() {
     createInvitation({
       variables: {
         userIds,
+        isCompany,
         guests: filterEmptyObjectByKey(invitees, 'firstName'),
         visitationDate: guestData.visitationDate,
         startsAt: guestData.startsAt,
         endsAt: guestData.endsAt,
         occursOn: guestData.occursOn,
-        visitEndDate: guestData.visitEndDate
+        visitEndDate: guestData.visitEndDate,
       }
     })
       .then(() => {
@@ -209,28 +210,31 @@ export default function GuestInviteForm() {
         label="Company"
       />
 
-      {noUserFound || isCompany && (
-        <>
-          <Typography
-            variant="body2"
-            gutterBottom
-            style={{ marginTop: 16 }}
-            data-testid="user_not_found_add_new"
-          >
-            {t('common:errors.user_not_found_add_new')}
-          </Typography>
-          <InviteeForm
-            isCompany
-            guestData={newGuest}
-            handlePhoneNumber={number => setNewGuest({ ...newGuest, phoneNumber: number })}
-            handleInputChange={({ target }) =>
+      {noUserFound && (
+      <Typography
+        variant="body2"
+        gutterBottom
+        style={{ marginTop: 16 }}
+        data-testid="user_not_found_add_new"
+      >
+        {t('common:errors.user_not_found_add_new')}
+      </Typography>
+      )}
+
+      {
+       noUserFound ||  isCompany && (
+       <InviteeForm
+         isCompany
+         guestData={newGuest}
+         handlePhoneNumber={number => setNewGuest({ ...newGuest, phoneNumber: number })}
+         handleInputChange={({ target }) =>
               setNewGuest({ ...newGuest, [target.name]: target.value })
             }
-            handleAction={() => handleAddInvitee()}
-            primary
-          />
-        </>
-      )}
+         handleAction={() => handleAddInvitee()}
+         primary
+       />
+       )
+      }
       <div>
         <br />
         {Boolean(guestUsers.length) && (

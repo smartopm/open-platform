@@ -9,6 +9,7 @@ const InvitationCreateMutation = gql`
     $visitEndDate: String
     $guests: [JSON!]
     $userIds: [String!]
+    $isCompany: Boolean
   ) {
     invitationCreate(
       visitationDate: $visitationDate
@@ -18,6 +19,7 @@ const InvitationCreateMutation = gql`
       visitEndDate: $visitEndDate
       guests: $guests
       userIds: $userIds
+      isCompany: $isCompany
     ) {
       success
     }
