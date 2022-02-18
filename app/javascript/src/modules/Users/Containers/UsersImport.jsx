@@ -24,7 +24,7 @@ export default function UsersImport() {
   function createImport() {
     setIsLoading(true);
     importCreate({
-      variables: { csvString, csvFileName, importType: 'user' }
+      variables: { csvString, csvFileName }
     })
       .then(() => {
         setIsLoading(false);
@@ -94,12 +94,9 @@ export default function UsersImport() {
             <li> Expiration date: i.e 25-09-2020, 25/09/2020, 2020-09-25, 2020/09/25 </li>
             <li> Notes on client: i.e Here&apos;s a new note </li>
           </ol>
-          You can click 
-          {' '}
-          <a href={`/csv_import_sample/download?token=${token}`}>here</a>
-          {' '}
-          to download
-          a sample csv file.
+          You can click
+          <a href={`/csv_import_sample/download?token=${token}`}>here</a> to download a sample csv
+          file.
         </Grid>
         <Grid item md={6} style={{ margin: '5px auto' }}>
           {isLoading ? (
