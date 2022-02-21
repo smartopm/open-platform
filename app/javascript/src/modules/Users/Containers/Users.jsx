@@ -392,7 +392,7 @@ export default function UsersList() {
     {
       content: t('users.lead_management_upload'),
       isVisible: true,
-      handleClick: () => history.push('users/leads/import')
+      handleClick: () => history.push('/users/leads/import')
     },
 
     {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { fireEvent, render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
-import { BrowserRouter } from 'react-router-dom/';
+import routeData, { MemoryRouter } from 'react-router';
 import { MockedProvider } from '@apollo/react-testing';
 import Users from '../Containers/Users';
 import { UsersDetails, LabelsQuery } from '../../../graphql/queries';
@@ -11,6 +11,12 @@ import authState from '../../../__mocks__/authstate';
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 
 describe('UserPage Component', () => {
+  const mockHistory = {
+    push: jest.fn()
+  };
+  beforeEach(() => {
+    jest.spyOn(routeData, 'useHistory').mockReturnValue(mockHistory);
+  });
   const usersQueryMock = {
     request: {
       query: UsersDetails,
@@ -66,9 +72,9 @@ describe('UserPage Component', () => {
     const container = render(
       <Context.Provider value={authState}>
         <MockedProvider mocks={[usersQueryMock, labelsQueryMock]} addTypename={false}>
-          <BrowserRouter>
+          <MemoryRouter>
             <Users />
-          </BrowserRouter>
+          </MemoryRouter>
         </MockedProvider>
       </Context.Provider>
     );
@@ -84,9 +90,15 @@ describe('UserPage Component', () => {
       expect(container.getAllByTestId('menu_item')[0]).toBeInTheDocument();
       expect(container.getAllByTestId('menu_item')).toHaveLength(4);
 
-      // fireEvent.click(container.getAllByTestId('menu_item')[3]);
-      // expect(container.queryByText('Customer Journey Stage')).toBeInTheDocument();
+      fireEvent.click(container.getAllByTestId('menu_item')[0]);
+      expect(mockHistory.push).toBeCalled();
+      expect(mockHistory.push).toBeCalledWith('/users/import');
 
+      fireEvent.click(container.getAllByTestId('menu_item')[1]);
+      expect(mockHistory.push).toBeCalledWith('/users/leads/import');
+
+      fireEvent.click(container.getAllByTestId('menu_item')[3]);
+      expect(mockHistory.push).toBeCalledWith('/users/stats');
       expect(container.getByTestId('pagination_section')).toBeInTheDocument();
       expect(container.getByTestId('user_item')).toBeInTheDocument();
       expect(container.getByTestId('user_name')).toBeInTheDocument();
@@ -100,9 +112,9 @@ describe('UserPage Component', () => {
     const container = render(
       <Context.Provider value={authState}>
         <MockedProvider mocks={[usersQueryMock]} addTypename={false}>
-          <BrowserRouter>
+          <MemoryRouter>
             <Users />
-          </BrowserRouter>
+          </MemoryRouter>
         </MockedProvider>
       </Context.Provider>
     );
