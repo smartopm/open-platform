@@ -10,6 +10,7 @@ RSpec.describe Logs::Invite, type: :model do
     it { is_expected.to have_db_column(:host_id).of_type(:uuid) }
     it { is_expected.to have_db_column(:guest_id).of_type(:uuid) }
     it { is_expected.to have_db_column(:entry_request_id).of_type(:uuid) }
+    it { is_expected.to have_db_column(:status).of_type(:integer).with_options(default: :active) }
   end
 
   describe 'associations' do

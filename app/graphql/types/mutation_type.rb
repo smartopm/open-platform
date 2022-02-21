@@ -23,6 +23,7 @@ module Types
     field :invitation_create, mutation: Mutations::EntryRequest::InvitationCreate
     field :send_guest_qr_code, mutation: Mutations::EntryRequest::SendQrCode
     field :guest_entry_request_revoke, mutation: Mutations::EntryRequest::GuestEntryRequestRevoke
+    field :invitation_update, mutation: Mutations::EntryRequest::InvitationUpdate
 
     # User login
     field :login_phone_start, mutation: Mutations::Login::LoginPhoneStart
