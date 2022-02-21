@@ -33,7 +33,7 @@ export default function InvitedGuests() {
   const { timezone } = authState.user.community;
   const theme = useTheme();
   const [anchorEl, setAnchorEl] = useState(null);
-  const [currentInviteId, setCurrentInviteId] = useState('');
+  const [currentInvite, setCurrentInvite] = useState({ id: '', loading: false });
   const open = Boolean(anchorEl);
 
   const menuList = [
@@ -48,22 +48,24 @@ export default function InvitedGuests() {
   function handleMenu(event, inviteId) {
     event.stopPropagation();
     setAnchorEl(event.currentTarget);
-    setCurrentInviteId(inviteId)
+    setCurrentInvite({...currentInvite,  id: inviteId})
   }
 
   function handleMenuClose() {
     setAnchorEl(null);
-    setCurrentInviteId(null)
   }
 
   function cancelInvitation() {
-    console.log(currentInviteId)
+    setCurrentInvite({...currentInvite,  loading: true})
     handleMenuClose()
     inviteUpdate({
-      variables: { inviteId:  currentInviteId}
+      variables: { inviteId:  currentInvite.id}
     })
     .then(() => console.log('done'))
-    .catch(err => console.log(err))
+    .catch(err => {
+      console.log(err)
+      setCurrentInvite({...currentInvite,  loading: false})
+    })
   }
 
   
@@ -120,6 +122,7 @@ export default function InvitedGuests() {
           tz={timezone}
           styles={{ classes, theme }}
           handleInviteMenu={handleMenu}
+          currentInvite={currentInvite}
         />
       )) : !loading && <CenteredContent>{t('logbook.no_invited_guests')}</CenteredContent>}
     </Container>

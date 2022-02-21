@@ -10,8 +10,16 @@ import { dateToString, dateTimeToString } from '../../../../components/DateConta
 import Text from '../../../../shared/Text';
 import { checkRequests } from '../../utils';
 import useLogbookStyles from '../../styles';
+import { Spinner } from '../../../../shared/Loading';
 
-export default function GuestListCard({ invite, translate, tz, styles, handleInviteMenu }) {
+export default function GuestListCard({
+  invite,
+  translate,
+  tz,
+  styles,
+  handleInviteMenu,
+  currentInvite
+}) {
   const history = useHistory();
   const classes = useLogbookStyles();
   function handleViewGuest() {
@@ -39,16 +47,16 @@ export default function GuestListCard({ invite, translate, tz, styles, handleInv
                     className={classes.avatar}
                     data-testid="video_preview"
                   />
-            ) : (
-              <Avatar
-                alt={invite.guest?.request?.name}
-                className={classes.avatar}
-                variant="square"
-                data-testid="request_avatar"
-              >
-                {invite.guest?.request?.name?.charAt(0)}
-              </Avatar>
-            )}
+                ) : (
+                  <Avatar
+                    alt={invite.guest?.request?.name}
+                    className={classes.avatar}
+                    variant="square"
+                    data-testid="request_avatar"
+                  >
+                    {invite.guest?.request?.name?.charAt(0)}
+                  </Avatar>
+                )}
               </Grid>
               <Grid item xs={7} data-testid="guest_name">
                 <Text content={invite.guest?.request?.name} className={styles.classes?.text} />
@@ -116,16 +124,20 @@ export default function GuestListCard({ invite, translate, tz, styles, handleInv
                 />
               </Grid>
               <Grid item xs={4} sm={2} lg={1} data-testid="more_options">
-                <IconButton
-                  aria-controls="guest_invite_menu"
-                  aria-haspopup="true"
-                  data-testid="guest_invite_menu"
-                  dataid={invite.id}
-                  onClick={event => handleInviteMenu(event, invite.id)}
-                  color="primary"
-                >
-                  <MoreVert />
-                </IconButton>
+                {currentInvite.loading && currentInvite.id === invite.id ? (
+                  <Spinner />
+                ) : (
+                  <IconButton
+                    aria-controls="guest_invite_menu"
+                    aria-haspopup="true"
+                    data-testid="guest_invite_menu"
+                    dataid={invite.id}
+                    onClick={event => handleInviteMenu(event, invite.id)}
+                    color="primary"
+                  >
+                    <MoreVert />
+                  </IconButton>
+                )}
               </Grid>
             </Grid>
           </Grid>
@@ -156,7 +168,7 @@ GuestListCard.propTypes = {
         name: PropTypes.string
       }),
       imageUrl: PropTypes.string,
-      name: PropTypes.string,
+      name: PropTypes.string
     }),
     id: PropTypes.string,
     thumbnailUrl: PropTypes.string
@@ -164,6 +176,10 @@ GuestListCard.propTypes = {
   translate: PropTypes.func.isRequired,
   handleInviteMenu: PropTypes.func.isRequired,
   tz: PropTypes.string.isRequired,
+  currentInvite: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    loading: PropTypes.bool.isRequired,
+  }).isRequired,
   styles: PropTypes.shape({
     theme: PropTypes.shape({
       palette: PropTypes.shape({
