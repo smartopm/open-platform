@@ -102,7 +102,6 @@ describe('Should check if the buttons are functional on userinformation', () => 
       expect(wrapper.queryByText('common:user_types.admin')).toBeInTheDocument();
       expect(wrapper.queryByText('x JM J')).toBeInTheDocument();
       expect(wrapper.queryByText('260971500909090')).toBeInTheDocument();
-      expect(wrapper.queryByText('x@doublegdp.com')).toBeInTheDocument();
     }, 10);
   });
 });
