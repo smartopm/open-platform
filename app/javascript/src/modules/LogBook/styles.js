@@ -7,6 +7,9 @@ const useLogbookStyles = makeStyles((theme) => ({
       width: 90,
       height: 90
     },
+    chipAlign: {
+      paddingTop: 12
+    }
   }));
 
   export default useLogbookStyles
