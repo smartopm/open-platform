@@ -61,10 +61,10 @@ const useStyles = makeStyles(() => ({
     position: 'fixed',
     zIndex: 10,
     width: '100%',
-    padding: '20px',
+    padding: '30px 20px 20px 20px',
     borderBottom: '1px solid #DDDDDD',
     background: '#FFFFFF',
-    marginTop: '-30px',
+    marginTop: '-50px',
     paddingRight: '25%',
     '@media (max-width: 600px)': {
       paddingRight: '5%'
