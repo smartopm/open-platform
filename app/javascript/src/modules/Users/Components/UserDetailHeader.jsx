@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import Grid from '@mui/material/Grid';
 import PropTypes from 'prop-types';
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
@@ -10,14 +10,32 @@ import Avatar from '../../../components/Avatar';
 import UserDetail from './UserProfileDetail';
 import UserLabels from './UserLabels';
 import UserLabelTitle from './UserLabelTitle';
+import SelectButton from '../../../shared/buttons/SelectButton';
 
 export default function UserDetailHeader({ data, userType, currentTab }) {
   const [isLabelOpen, setIsLabelOpen] = useState(false);
+  const [open, setOpen] = useState(false);
   const classes = useStyles();
+  const anchorRef = useRef(null);
+  const [selectedKey, setSelectKey] = useState('');
+
+  const handleClose = event => {
+    if (anchorRef.current && anchorRef.current.contains(event.target)) {
+      return;
+    }
+
+    setOpen(false);
+  };
+
+  function handleMenuItemClick(key) {
+    setSelectKey(key)
+  }
+
   const selectOptions = [
     {
       key: 'user_settings',
       value: 'User Settings',
+      handleMenuItemClick,
       subMenu: [
         {
           key: 'edit_user',
@@ -34,8 +52,9 @@ export default function UserDetailHeader({ data, userType, currentTab }) {
       ]
     },
     {
-      key: 'communications',
+      key: 'communication',
       value: 'Communications',
+      handleMenuItemClick,
       subMenu: [
         {
           key: 'communications',
@@ -57,28 +76,33 @@ export default function UserDetailHeader({ data, userType, currentTab }) {
     },
     {
       key: 'payments',
-      value: 'Payments'
+      value: 'Payments',
+      handleMenuItemClick
     },
     {
-    
       key: 'plots',
-      value: 'Plots'
+      value: 'Plots',
+      handleMenuItemClick
     },
     {
       key: 'notes',
-      value: 'Notes'
+      value: 'Notes',
+      handleMenuItemClick
     },
     {
       key: 'lead_management',
-      value: 'Lead Management'
+      value: 'Lead Management',
+      handleMenuItemClick
     },
     {
       key: 'user_logs',
-      value: 'User Logs'
+      value: 'User Logs',
+      handleMenuItemClick
     },
     {
       key: 'merge_user',
-      value: 'Merge User'
+      value: 'Merge User',
+      handleMenuItemClick
     }
   ]
   return (
@@ -136,7 +160,18 @@ export default function UserDetailHeader({ data, userType, currentTab }) {
           </Grid>
         </Grid>
         <Hidden smDown>
-          <Grid item lg={3} md={3} sm={3} />
+          <Grid item lg={3} md={3} sm={3}>
+            <SelectButton 
+              options={selectOptions}
+              open={open}
+              anchorEl={anchorRef.current}
+              anchorRef={anchorRef}
+              handleClose={handleClose}
+              handleClick={() => setOpen(!open)}
+              selectedKey={selectedKey}
+              buttonText={currentTab}
+            />
+          </Grid>
           <Grid item lg={5} md={5} sm={5}>
             {['admin'].includes(userType) && (
               <UserLabelTitle isLabelOpen={isLabelOpen} setIsLabelOpen={setIsLabelOpen} />
