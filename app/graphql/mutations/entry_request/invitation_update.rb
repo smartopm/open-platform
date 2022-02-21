@@ -5,7 +5,7 @@ module Mutations
     # Update entry time for invite
     class InvitationUpdate < BaseMutation
       argument :invite_id, ID, required: true
-      argument :visitation_date, String, required: true
+      argument :visitation_date, String, required: false
       argument :starts_at, String, required: false
       argument :ends_at, String, required: false
       argument :occurs_on, [String], required: false

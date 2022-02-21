@@ -1,7 +1,7 @@
 import { Container, Grid, Typography } from '@material-ui/core';
 import { useTheme } from '@material-ui/styles';
 import React, { useContext, useState } from 'react';
-import { useQuery } from 'react-apollo';
+import { useQuery, useMutation } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { Context } from '../../../../containers/Provider/AuthStateProvider';
@@ -13,6 +13,7 @@ import SearchInput from '../../../../shared/search/SearchInput';
 import useDebounce from '../../../../utils/useDebounce';
 import { accessibleMenus } from '../../utils';
 import { MyInvitedGuestsQuery } from '../graphql/queries';
+import { InvitationUpdateMutation } from '../graphql/mutations';
 import { useStyles } from '../styles';
 import GuestListCard from './GuestListCard';
 
@@ -24,6 +25,8 @@ export default function InvitedGuests() {
     variables: { query: debouncedValue },
     fetchPolicy: 'network-only'
   });
+  const [inviteUpdate] = useMutation(InvitationUpdateMutation)
+  
   const { t } = useTranslation(['logbook', 'common']);
   const classes = useStyles();
   const authState = useContext(Context);
@@ -48,14 +51,19 @@ export default function InvitedGuests() {
     setCurrentInviteId(inviteId)
   }
 
-  function handleMenuClose(event) {
-    event.stopPropagation();
+  function handleMenuClose() {
     setAnchorEl(null);
     setCurrentInviteId(null)
   }
 
-  function cancelInvitation(){
+  function cancelInvitation() {
     console.log(currentInviteId)
+    handleMenuClose()
+    inviteUpdate({
+      variables: { inviteId:  currentInviteId}
+    })
+    .then(() => console.log('done'))
+    .catch(err => console.log(err))
   }
 
   
