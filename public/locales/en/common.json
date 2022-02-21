@@ -528,6 +528,12 @@
     "number_of_employees": "Number of Employees",
     "industry_sub_sector": "Industry Sub Sector",
     "annual_revenue": "Annual Revenue",
-    "african_presence": "African Presences"
+    "african_presence": "African Presences",
+    "import_form_status_actions": {
+      "import": "Import",
+      "cancel": "Cancel",
+      "upload_file": "UPLOAD FILE",
+      "choose_file": "No file chosen..."
+    }
   }
 }

@@ -53,7 +53,7 @@ describe('LeadManagementUserImport component', () => {
     expect(
       container.queryByText(/You can upload a .csv file with multiple users./)
     ).toBeInTheDocument();
-    const file = File(['(⌐□_□)'], '../../../../../../../public/lead_import_sample.csv', {
+    const file = File([''], '../../../../../../../public/lead_import_sample.csv', {
       type: 'csv'
     });
     userEvent.upload(container.queryByTestId('lead-csv-input'), file);

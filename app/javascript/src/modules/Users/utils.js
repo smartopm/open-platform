@@ -392,7 +392,7 @@ const configObject = {
       validateError: (headerName, rowNumber, columnNumber) => {
         return ` <div>${headerName} is not valid in the ${numberToOrdinal(
           rowNumber
-        )} row ${columnNumber} column.  </div>`;
+        )} row ${numberToOrdinal(columnNumber)} column.  </div>`;
       }
     },
     {

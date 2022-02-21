@@ -2,6 +2,7 @@
 import React, { useState, useContext } from 'react';
 import { useMutation } from 'react-apollo';
 import { StyleSheet, css } from 'aphrodite';
+import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { Button, Grid } from '@material-ui/core';
 import CSVFileValidator from 'csv-file-validator';
@@ -23,6 +24,7 @@ export default function UsersImport() {
   const [isSuccessAlert, setIsSuccessAlert] = useState(false);
   const [messageAlert, setMessageAlert] = useState('');
   const [CSVFileUploadErrors, setCSVFileUploadErrors] = useState([]);
+  const { t } = useTranslation('common');
 
   function createImport() {
     setIsLoading(true);
@@ -119,10 +121,10 @@ export default function UsersImport() {
                       component="span"
                       style={{ display: 'inline-block' }}
                     >
-                      UPLOAD FILE
+                      {t('lead_management.import_form_status_actions.upload_file')}
                     </Button>
                     <div style={{ display: 'inline-block', padding: '10px' }} id="file-select-name">
-                      No file chosen...
+                      {t('lead_management.import_form_status_actions.choose_file')}
                     </div>
                   </label>
                   <br />
@@ -145,7 +147,7 @@ export default function UsersImport() {
                     onClick={onCancel}
                     data-testid="cancel-btn"
                   >
-                    Cancel
+                    {t('lead_management.import_form_status_actions.cancel')}
                   </Button>
                   <Button
                     variant="contained"
@@ -155,7 +157,7 @@ export default function UsersImport() {
                     onClick={createImport}
                     className={css(styles.importBtn)}
                   >
-                    Import
+                    {t('lead_management.import_form_status_actions.import')}
                   </Button>
                 </CenteredContent>
               )}
