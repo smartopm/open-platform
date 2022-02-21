@@ -170,6 +170,11 @@ export default function UsersImport() {
           headers with examples (: i.e...).
           <br />
           <br />
+          {/* eslint-disable-next-line react/jsx-one-expression-per-line */}
+          You can click <a href={`/csv_import_sample/lead_download?token=${token}`}>here</a> to
+          download a sample csv file.
+          <br />
+          <br />
           A sample CSV file can be
           {' '}
           <a href="https://docs.google.com/spreadsheets/d/1hNJU1lzeqUb5NGWRdUrAVqyDBwAIegwPgOb-HW2_8Ho/edit?usp=sharing">
@@ -185,6 +190,7 @@ export default function UsersImport() {
           <br />
           Note: If the column mapping does not match or the values are not recognized, the system
           will leave the input blank. Please review the uploaded users for import accuracy.
+          <br />
           <br />
           <ol>
             <li> Primary Contact Name: i.e John Doe </li>
@@ -307,9 +313,6 @@ export default function UsersImport() {
             <li>Last Contact Date: i.e. 25-09-2020, 25/09/2020, 2020-09-25, 2020/09/25 </li>
             <li>Date Follow Up: i.e. 25-09-2020, 25/09/2020, 2020-09-25, 2020/09/25 </li>
           </ol>
-          {/* eslint-disable-next-line react/jsx-one-expression-per-line */}
-          You can click <a href={`/csv_import_sample/lead_download?token=${token}`}>here</a> to
-          download a sample csv file.
         </Grid>
       </Grid>
     </>
