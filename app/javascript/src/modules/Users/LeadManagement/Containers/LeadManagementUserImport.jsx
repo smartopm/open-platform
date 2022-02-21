@@ -1,4 +1,4 @@
-/* eslint-disable no-use-before-define */
+/* eslint-disable max-lines */
 import React, { useState, useContext } from 'react';
 import { useMutation } from 'react-apollo';
 import { StyleSheet, css } from 'aphrodite';
@@ -55,7 +55,9 @@ export default function UsersImport() {
   }
 
   function processCsv(evt) {
+    setCSVFileUploadErrors([]); // clear the errors to start with fresh state
     const file = evt.target.files[0];
+    document.getElementById('file-select-name').innerText = file.name; // set the name of the selected file
     CSVFileValidator(file, configObject).then(csvData => {
       setCSVFileUploadErrors(csvData.inValidMessages);
       if (csvData.inValidMessages.length > 0) {
@@ -102,21 +104,33 @@ export default function UsersImport() {
             <div>
               <Grid container justify="center" style={{ marginTop: '5px', marginBottom: '5px' }}>
                 <Grid item md={12} xs={12} style={{ alignSelf: 'center' }}>
-                  <input
-                    accept=".csv"
-                    className={css(styles.inputField)}
-                    id="contained-button-file"
-                    data-testid="lead-csv-input"
-                    type="file"
-                    onChange={processCsv}
-                  />
-                  <br />
+                  <label htmlFor="lead-csv-input">
+                    <input
+                      accept=".csv"
+                      type="file"
+                      id="lead-csv-input"
+                      data-testid="lead-csv-input"
+                      style={{ display: 'none' }}
+                      onChange={processCsv}
+                    />
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      component="span"
+                      style={{ display: 'inline-block' }}
+                    >
+                      UPLOAD FILE
+                    </Button>
+                    <div style={{ display: 'inline-block', padding: '10px' }} id="file-select-name">
+                      No file chosen...
+                    </div>
+                  </label>
                   <br />
                 </Grid>
 
                 {CSVFileUploadErrors.length > 0 && (
                   <Grid item md={12} xs={12}>
-                    <div className={css(styles.errorSection)} id="invalidMessages" />
+                    <div style={{ color: 'red' }} id="invalidMessages" />
                     <br />
                   </Grid>
                 )}
@@ -242,11 +256,46 @@ export default function UsersImport() {
             <li>Number of Employees</li>
             <li>Annual Revenue</li>
             <li>African Presence</li>
-            <li>Lead Temperature</li>
-            <li>Lead Status</li>
-            <li>Lead Type</li>
-            <li>Lead Source</li>
-            <li>Client Category</li>
+            <li>
+              Lead Temperature
+              {' '}
+              <a href="https://docs.google.com/spreadsheets/d/1OyBgj1QT3mpsiYElWfI_Cqtrwsw9h20YHVSVLELLpfY/edit?usp=sharing">
+                accepted value list
+                {' '}
+              </a>
+            </li>
+            <li>
+              Lead Status
+              {' '}
+              <a href="https://docs.google.com/spreadsheets/d/1OyBgj1QT3mpsiYElWfI_Cqtrwsw9h20YHVSVLELLpfY/edit?usp=sharing">
+                accepted value list
+                {' '}
+              </a>
+            </li>
+            <li>
+              Lead Type
+              {' '}
+              <a href="https://docs.google.com/spreadsheets/d/1OyBgj1QT3mpsiYElWfI_Cqtrwsw9h20YHVSVLELLpfY/edit?usp=sharing">
+                accepted value list
+                {' '}
+              </a>
+            </li>
+            <li>
+              Lead Source
+              {' '}
+              <a href="https://docs.google.com/spreadsheets/d/1OyBgj1QT3mpsiYElWfI_Cqtrwsw9h20YHVSVLELLpfY/edit?usp=sharing">
+                accepted value list
+                {' '}
+              </a>
+            </li>
+            <li>
+              Client Category
+              {' '}
+              <a href="https://docs.google.com/spreadsheets/d/1OyBgj1QT3mpsiYElWfI_Cqtrwsw9h20YHVSVLELLpfY/edit?usp=sharing">
+                accepted value list
+                {' '}
+              </a>
+            </li>
             <li>Company Contacted</li>
             <li>Next Steps</li>
             <li>Lead Owner: i.e. John Doe </li>
@@ -270,20 +319,13 @@ const styles = StyleSheet.create({
     width: '20%',
     marginRight: '8vw',
     height: 45,
-    marginTop: 30
+    marginTop: 30,
+    marginBottom: 5
   },
-
   importBtn: {
     width: '20%',
     height: 45,
-    marginTop: 30
-  },
-
-  inputField: {
-    width: '201px',
-    overflow: 'hidden'
-  },
-  errorSection: {
-    color: 'red'
+    marginTop: 30,
+    marginBottom: 5
   }
 });
