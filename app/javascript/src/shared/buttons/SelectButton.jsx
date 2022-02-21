@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 /* eslint-disable react/forbid-prop-types */
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
@@ -26,10 +27,10 @@ export default function SelectButton({
   handleMenuItemClick,
   handleClick
 }) {
-  const [openSubMenu, setOpenSubMenu] = useState(false);
+  const [openSubMenu, setOpenSubMenu] = useState({ isOpen: false, name: ''});
   function handleSubMenuClick(opt) {
     opt.handleMenuItemClick(opt.key, opt.value);
-    setOpenSubMenu(!openSubMenu);
+    setOpenSubMenu({isOpen: !openSubMenu.isOpen, name: opt.key});
   }
   return (
     <>
@@ -74,10 +75,13 @@ export default function SelectButton({
                         value={opt.key}
                       >
                         <ListItemText primary={opt.value} />
-                        {opt.subMenu && (openSubMenu ? <ExpandMore /> : <ExpandLess />)}
+                        {opt.subMenu &&
+                          (openSubMenu.isOpen && openSubMenu.name === opt.key  ? (
+                            <ExpandMore />
+                          ) : <ExpandLess />)}
                       </MenuItem>
                       {selectedKey === opt.key &&
-                        openSubMenu &&
+                        openSubMenu.isOpen &&
                         opt.subMenu &&
                         opt.subMenu.map(submenu => (
                           <MenuItem
