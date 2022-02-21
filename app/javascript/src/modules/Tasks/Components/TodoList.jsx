@@ -386,6 +386,7 @@ export default function TodoList({
   }
 
   function handleTodoItemClick(task, pro, tab ) {
+    console.log({ task });
     setSelectedTask(task);
     setSplitScreenOpen(true);
     history.push({

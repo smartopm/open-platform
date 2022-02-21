@@ -176,6 +176,7 @@ export default function TaskSubTask({
                     <IconButton
                       aria-controls="task-subtasks-icon"
                       data-testid="task_subtasks_count"
+                      onClick={() => handleSplitScreenOpen(task)}
                     >
                       <AccountTreeIcon
                         fontSize="small"
@@ -193,7 +194,11 @@ export default function TaskSubTask({
                     <span>{task?.subTasksCount || 0}</span>
                   </Grid>
                   <Grid item md={2} xs={2}>
-                    <IconButton aria-controls="task-comment-icon" data-testid="task_comments_count">
+                    <IconButton
+                      aria-controls="task-comment-icon"
+                      data-testid="task_comments_count"
+                      onClick={() => handleSplitScreenOpen(task)}
+                    >
                       <QuestionAnswerIcon fontSize="small" color="disabled" />
                     </IconButton>
                   </Grid>
@@ -207,7 +212,10 @@ export default function TaskSubTask({
                     <span>0</span>
                   </Grid>
                   <Grid item md={2} xs={2}>
-                    <IconButton aria-controls="task-attach-file-icon">
+                    <IconButton
+                      aria-controls="task-attach-file-icon"
+                      onClick={() => handleSplitScreenOpen(task)}
+                    >
                       <AttachFileIcon
                         fontSize="small"
                         color={task?.attachments?.length ? 'primary' : 'disabled'}
@@ -221,7 +229,7 @@ export default function TaskSubTask({
                     className={classes.iconItem}
                     style={{ paddingLeft: '5px' }}
                   >
-                    <span data-testid="file_attachments_total">{task.attachments?.length}</span>
+                    <span data-testid="file_attachments_total">{task.attachments?.length || 0}</span>
                   </Grid>
                 </Grid>
               </Grid>
