@@ -73,6 +73,7 @@ admin:
       - can_revoke_entry_request
       - can_invite_guest
       - can_go_through_guest_verification
+      - can_update_invitation
   gate_access:
     permissions:
       - can_see_menu_item
@@ -159,6 +160,7 @@ admin:
       - can_create_user
       - can_view_guests
       - can_view_hosts
+      - can_update_invitation
   profile:
     permissions:
       - can_see_menu_item
@@ -316,6 +318,7 @@ custodian:
       - can_revoke_entry_request
       - can_invite_guest
       - can_go_through_guest_verification
+      - can_update_invitation
   guest_list:
     permissions:
       - can_see_menu_item
@@ -506,6 +509,7 @@ resident:
       - can_view_entry_request
       - can_invite_guest
       - can_go_through_guest_verification
+      - can_update_invitation
   guest_list:
     permissions:
       - can_see_menu_item
@@ -586,6 +590,7 @@ client:
       - can_revoke_entry_request
       - can_invite_guest
       - can_go_through_guest_verification
+      - can_update_invitation
   guest_list:
     permissions:
       - can_see_menu_item
@@ -636,6 +641,7 @@ site_manager:
       - can_view_entry_request
       - can_invite_guest
       - can_go_through_guest_verification
+      - can_update_invitation
   guest_list:
     permissions:
       - can_see_menu_item
