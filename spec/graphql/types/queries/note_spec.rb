@@ -24,7 +24,9 @@ RSpec.describe Types::Queries::Note do
                                           can_get_task_count can_get_task_stats can_get_own_tasks])
     end
     let(:site_worker) { create(:site_worker, role: site_worker_role) }
-    let!(:admin) { create(:admin_user, role: admin_role, community: site_worker.community) }
+    let!(:admin) do
+      create(:admin_user, role: admin_role, community: site_worker.community, name: 'John Doe')
+    end
     let(:searchable_user) { create(:user, name: 'Henry Tim', community_id: admin.community_id) }
 
     let!(:first_note) do
@@ -232,6 +234,10 @@ RSpec.describe Types::Queries::Note do
           id
         }
         documents
+        submittedBy {
+          id
+          name
+        }
       GQL
     end
 
@@ -902,6 +908,7 @@ RSpec.describe Types::Queries::Note do
                                            }).as_json
           expect(result['errors']).to be_nil
           expect(result.dig('data', 'projects').length).to eql 2
+          expect(result.dig('data', 'projects', 0, 'submittedBy', 'id')).to eql admin.id
         end
 
         it 'retrieves project comments' do
