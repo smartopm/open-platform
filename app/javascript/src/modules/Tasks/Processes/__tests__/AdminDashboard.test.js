@@ -3,7 +3,7 @@ import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min';
 import '@testing-library/jest-dom/extend-expect';
 import { render, screen, waitFor } from '@testing-library/react';
-import { ProjectStagesQuery } from '../graphql/process_queries';
+import { ProjectStagesQuery, TaskQuarterySummaryQuery } from '../graphql/process_queries';
 import AdminDashboard from '../Components/AdminDashboard'
 
 describe('Admin processes dashboard', () => {
@@ -23,6 +23,21 @@ describe('Admin processes dashboard', () => {
               "Scheme Design Review",
               1
             ]
+          ]
+        }
+      }
+    },
+    {
+      request: {
+        query: TaskQuarterySummaryQuery,
+      },
+      result: {
+        data: {
+          completedByQuarter: [
+            [2022, 1, 160] ,
+            [2022, 2, 300],
+            [2022, 3, 119],
+            [2022, 4, 10],
           ]
         }
       }
@@ -49,6 +64,10 @@ describe('Admin processes dashboard', () => {
       expect(screen.queryByText('Q2 completed')).toBeInTheDocument()
       expect(screen.queryByText('Q3 completed')).toBeInTheDocument()
       expect(screen.queryByText('Q4 completed')).toBeInTheDocument()
+      expect(screen.queryByText('160')).toBeInTheDocument();
+      expect(screen.queryByText('300')).toBeInTheDocument();
+      expect(screen.queryByText('119')).toBeInTheDocument();
+      expect(screen.queryByText('10')).toBeInTheDocument();
     })
   });
 
