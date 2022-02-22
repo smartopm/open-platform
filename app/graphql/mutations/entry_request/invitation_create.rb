@@ -88,8 +88,9 @@ module Mutations
         raise_duplicate_number_error(user[:phone_number])
 
         enrolled_user = context[:current_user].enroll_user(
-          name: user['companyName'].blank? ? "#{user['firstName']} #{user['lastName']}" : user['companyName'] , phone_number: user['phoneNumber'],
-          user_type: 'visitor'
+          name: user['companyName'].presence || "#{user['firstName']} #{user['lastName']}",
+          phone_number: user['phoneNumber'],
+          user_type: 'visitor',
         )
         return enrolled_user if enrolled_user.persisted?
 
