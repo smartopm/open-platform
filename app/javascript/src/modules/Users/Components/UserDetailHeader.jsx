@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
 import Grid from '@mui/material/Grid';
+import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 import Typography from '@material-ui/core/Typography';
@@ -13,6 +14,7 @@ import UserLabelTitle from './UserLabelTitle';
 import SelectButton from '../../../shared/buttons/SelectButton';
 
 export default function UserDetailHeader({ data, userType, currentTab }) {
+  const history = useHistory();
   const [isLabelOpen, setIsLabelOpen] = useState(false);
   const [open, setOpen] = useState(false);
   const classes = useStyles();
@@ -27,19 +29,22 @@ export default function UserDetailHeader({ data, userType, currentTab }) {
     setOpen(false);
   };
 
-  function handleMenuItemClick(key) {
-    setSelectKey(key)
+  function handleMenuItemClick(key, val) {
+    setSelectKey(key);
+    history.push(`/user/${data.user.id}?tab=${val}`);
+    setOpen(false);
   }
 
   const selectOptions = [
     {
       key: 'user_settings',
       value: 'User Settings',
-      handleMenuItemClick,
+      handleMenuItemClick: (key) => setSelectKey(key),
       subMenu: [
         {
           key: 'edit_user',
-          value: 'Edit User'
+          value: 'Edit User',
+          handleMenuItemClick: () => history.push(`/user/${data.user.id}/edit`)
         },
         {
           key: 'invite_history',
@@ -47,36 +52,41 @@ export default function UserDetailHeader({ data, userType, currentTab }) {
         },
         {
           key: 'print_id',
-          value: 'Print ID'
+          value: 'Print ID',
+          handleMenuItemClick: () => history.push(`/print/${data.user.id}`)
         }
       ]
     },
     {
       key: 'communication',
       value: 'Communications',
-      handleMenuItemClick,
+      handleMenuItemClick: (key) => setSelectKey(key),
       subMenu: [
         {
           key: 'communications',
-          value: 'Communications'
+          value: 'Communication',
+          handleMenuItemClick
         },
         {
           key: 'send_sms',
-          value: 'Send SMS'
+          value: 'Send SMS',
+          handleMenuItemClick: () => history.push(`/message/${data.user.id}`)
         },
         {
           key: 'send_otp',
-          value: 'Send OTP'
+          value: 'Send OTP',
+          handleMenuItemClick: () => history.push(`/user/${data.user.id}/otp`)
         },
         {
           key: 'message_support',
-          value: 'Message Support'
+          value: 'Message Support',
+          handleMenuItemClick: () => history.push(`/message/${data.user.id}`)
         }
       ]
     },
     {
       key: 'payments',
-      value: 'Payments',
+      value: 'Plans',
       handleMenuItemClick
     },
     {
@@ -85,24 +95,19 @@ export default function UserDetailHeader({ data, userType, currentTab }) {
       handleMenuItemClick
     },
     {
-      key: 'notes',
-      value: 'Notes',
-      handleMenuItemClick
-    },
-    {
       key: 'lead_management',
-      value: 'Lead Management',
+      value: 'LeadManagement',
       handleMenuItemClick
     },
     {
       key: 'user_logs',
       value: 'User Logs',
-      handleMenuItemClick
+      handleMenuItemClick: () => history.push(`/user/${data.user.id}/logs`)
     },
     {
       key: 'merge_user',
       value: 'Merge User',
-      handleMenuItemClick
+      handleMenuItemClick: () => history.push(`/user/${data.user.id}?type='MergeUser'`)
     }
   ]
   return (

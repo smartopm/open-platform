@@ -12,7 +12,6 @@ import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import MenuList from '@material-ui/core/MenuList';
 import MenuItem from '@material-ui/core/MenuItem';
 import ListItemText from '@material-ui/core/ListItemText';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 
@@ -24,13 +23,12 @@ export default function SelectButton({
   handleClose,
   options,
   selectedKey,
-  handleMenuItemClick,
   handleClick
 }) {
-  const [openSubMenu, setOpenSubMenu] = useState({ isOpen: false, name: ''});
+  const [openSubMenu, setOpenSubMenu] = useState({ isOpen: false, name: '' });
   function handleSubMenuClick(opt) {
     opt.handleMenuItemClick(opt.key, opt.value);
-    setOpenSubMenu({isOpen: !openSubMenu.isOpen, name: opt.key});
+    setOpenSubMenu({ isOpen: !openSubMenu.isOpen, name: opt.key });
   }
   return (
     <>
@@ -76,9 +74,11 @@ export default function SelectButton({
                       >
                         <ListItemText primary={opt.value} />
                         {opt.subMenu &&
-                          (openSubMenu.isOpen && openSubMenu.name === opt.key  ? (
+                          (openSubMenu.isOpen && openSubMenu.name === opt.key ? (
+                            <ExpandLess />
+                          ) : (
                             <ExpandMore />
-                          ) : <ExpandLess />)}
+                          ))}
                       </MenuItem>
                       {selectedKey === opt.key &&
                         openSubMenu.isOpen &&
