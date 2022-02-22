@@ -33,7 +33,7 @@
     "max-len": 1,
     "max-nested-callbacks": 1,
     "max-params": 1,
-    "complexity": [1, 15],
+    "complexity": [1, 20],
     "max-statements": [1, 30],
     "jest/no-disabled-tests": 1,
     "jest/no-focused-tests": 2,

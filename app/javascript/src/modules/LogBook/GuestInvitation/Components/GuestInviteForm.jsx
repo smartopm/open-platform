@@ -18,10 +18,10 @@ import { SearchGuestsQuery } from '../graphql/queries';
 import useDebounce from '../../../../utils/useDebounce';
 import GuestSearchCard from './GuestSearchCard';
 import { UserChip } from '../../../Tasks/Components/UserChip';
-import { filterEmptyObjectByKey, validateGuest } from '../helpers';
+import {  validateGuest } from '../helpers';
 
 export default function GuestInviteForm() {
-  const initialData = { firstName: '', lastName: '', phoneNumber: null, isAdded: false };
+  const initialData = { firstName: '', lastName: '', companyName: '', phoneNumber: null, isAdded: false };
   const history = useHistory();
   const [guestData, setGuestData] = useState({
     visitationDate: null,
@@ -107,7 +107,7 @@ export default function GuestInviteForm() {
     createInvitation({
       variables: {
         userIds,
-        guests: filterEmptyObjectByKey(invitees, 'firstName'),
+        guests: invitees,
         visitationDate: guestData.visitationDate,
         startsAt: guestData.startsAt,
         endsAt: guestData.endsAt,
@@ -126,7 +126,12 @@ export default function GuestInviteForm() {
       });
   }
 
-  function handleAddInvitee() {
+  function handleAddInvitee(guest) {
+    if(!guest.firstName && !guest.companyName) {
+      // TODO: Translate this 
+      setDetails({ ...details, message: 'Guest Name or Company Name is required', isError: true });
+      return
+    }
     setInvitees([...invitees, newGuest]);
     setNewGuest(initialData);
   }
@@ -210,7 +215,7 @@ export default function GuestInviteForm() {
          handleInputChange={({ target }) =>
               setNewGuest({ ...newGuest, [target.name]: target.value })
             }
-         handleAction={() => handleAddInvitee()}
+         handleAction={guest => handleAddInvitee(guest)}
          primary
        />
        )

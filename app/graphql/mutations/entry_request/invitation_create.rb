@@ -9,7 +9,6 @@ module Mutations
       argument :ends_at, String, required: false
       argument :occurs_on, [String], required: false
       argument :visit_end_date, String, required: false
-      argument :is_company, Boolean, required: false
       argument :user_ids, [String], required: false
       argument :guests, [GraphQL::Types::JSON], required: false
 
@@ -75,10 +74,12 @@ module Mutations
 
         req = context[:site_community].entry_requests.find_by(guest_id: guest.id)
         return req unless req.nil?
-
+       
         context[:current_user].entry_requests.create!(
           guest_id: guest.id,
           name: guest.name,
+          company_name: guest.name,
+          phone_number: guest.phone_number,
           **vals.except(:user_ids, :guests),
         )
       end
@@ -87,7 +88,7 @@ module Mutations
         raise_duplicate_number_error(user[:phone_number])
 
         enrolled_user = context[:current_user].enroll_user(
-          name: "#{user['firstName']} #{user['lastName']}", phone_number: user['phoneNumber'],
+          name: user['companyName'] || "#{user['firstName']} #{user['lastName']}", phone_number: user['phoneNumber'],
           user_type: 'visitor'
         )
         return enrolled_user if enrolled_user.persisted?
