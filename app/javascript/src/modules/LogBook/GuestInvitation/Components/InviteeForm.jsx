@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import Grid from '@mui/material/Grid';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
@@ -29,7 +29,12 @@ export default function InviteeForm({
   const classes = useStyles();
   const matchesSmall = useMediaQuery(theme.breakpoints.down('sm'));
   const largerScreens = useMediaQuery(theme.breakpoints.up('md'));
-  const isCompany = !primary && (!guestData.firstName || !guestData.lastName)
+  const [isCompany, setIsCompany] = useState(false);
+
+  function handleIsCompany(event) {
+    setIsCompany(event.target.checked);
+  };
+
   return (
     <div className={guestData && classes.inviteForm}>
       {!primary ? (
@@ -43,64 +48,69 @@ export default function InviteeForm({
 
       <Grid container spacing={matchesSmall ? 0 : 1} alignItems="center">
         {
-        !isCompany && (
-          <Grid item xs={12} md={4} sm={6}>
-            <TextField
-              variant="outlined"
-              type="text"
-              value={guestData.firstName}
-              label={t('form_fields.full_first_name')}
-              onChange={handleInputChange}
-              name="firstName"
-              inputProps={{ 'data-testid': 'guest_entry_first_name' }}
-              margin="dense"
-              fullWidth
-              required
-            />
-          </Grid>
+        (!isCompany && !guestData.companyName) && (
+          <>
+            <Grid item xs={12} md={4} sm={6}>
+              <TextField
+                variant="outlined"
+                type="text"
+                value={guestData.firstName}
+                label={t('form_fields.full_first_name')}
+                onChange={handleInputChange}
+                name="firstName"
+                inputProps={{ 'data-testid': 'guest_entry_first_name' }}
+                margin="dense"
+                fullWidth
+                required
+              />
+            </Grid>
+            <Grid 
+              item
+              xs={12}
+              md={4}
+              sm={6}
+              order={{ xs: 2, sm: 2, md: 2 , lg: 2  }}
+            >
+              <TextField
+                variant="outlined"
+                type="text"
+                value={guestData.lastName}
+                label={t('form_fields.full_last_name')}
+                onChange={handleInputChange}
+                name="lastName"
+                inputProps={{ 'data-testid': 'guest_entry_last_name' }}
+                margin="dense"
+                fullWidth
+                required
+              />
+            </Grid>
+          </>
         )
       }
         {
-          primary && !guestData.firstName && !guestData.lastName && (
-          <Grid item xs={12} md={4} sm={6} order={{ xs: 3, sm: 3, md: 2, lg: 2 }}>
-            <Divider>
-              <FormControlLabel control={<Switch defaultChecked />} label={t('logbook:guest.add_company')} />
-            </Divider>
+          primary &&  (
+          <Grid item xs={12} order={{ xs: 5, sm: 5, md: 5, lg: 5 }}>
+            <FormControlLabel
+              control={(
+                <Switch
+                  checked={isCompany}
+                  onChange={handleIsCompany}
+                  inputProps={{ 'aria-label': 'Switch to company mode' }}
+                />
+                )}
+              label={t('logbook:guest.add_company')}
+            />
           </Grid>
           )
         }
         {
-         (
-           <Grid 
-             item
-             xs={12}
-             md={4}
-             sm={6}
-             order={{ xs: 2, sm: 2, md: 5 , lg: 5  }}
-           >
-             <TextField
-               variant="outlined"
-               type="text"
-               value={guestData.lastName}
-               label={t('form_fields.full_last_name')}
-               onChange={handleInputChange}
-               name="lastName"
-               inputProps={{ 'data-testid': 'guest_entry_last_name' }}
-               margin="dense"
-               fullWidth
-               required
-             />
-           </Grid>
-          )
-        }
-        {
-          !guestData.firstName && !guestData.lastName && (
+          (isCompany || guestData.companyName) && (
             <Grid
               item
               xs={12}
               md={4}
-              sm={6} 
-              order={{ xs: 4, sm: 4, md: primary ? 6 : 3, lg: primary ? 6 : 3 }}
+              sm={12} 
+              order={{ xs: 1, sm: 1, md: 1, lg: 1 }}
             >
               <TextField
                 variant="outlined"
@@ -122,7 +132,7 @@ export default function InviteeForm({
           xs={12}
           md={3}
           sm={10} 
-          order={{ xs: 5, sm: 5, md: primary ? 3 : 5, lg: primary ? 3 : 5 }}
+          order={{ xs: 3, sm: 3, md: 3, lg: 3 }}
         >
           <PhoneInput
             value={guestData.phoneNumber}
@@ -140,8 +150,8 @@ export default function InviteeForm({
           xs={12}
           md={1}
           sm={2}
-          style={{ marginTop: matchesSmall && 10 }}
-          order={{ xs: 6, sm: 6, md: primary ? 4 : 6, lg: primary ? 4 : 6 }}
+          order={{ xs: 6, sm: 6, md: 6, lg: 6 }}
+          style={{ marginTop: matchesSmall && !primary ? 10 : 0 }}
         >
           <Button
             variant="outlined"

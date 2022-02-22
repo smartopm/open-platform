@@ -74,7 +74,7 @@ module Mutations
 
         req = context[:site_community].entry_requests.find_by(guest_id: guest.id)
         return req unless req.nil?
-       
+
         context[:current_user].entry_requests.create!(
           guest_id: guest.id,
           name: guest.name,
@@ -88,7 +88,7 @@ module Mutations
         raise_duplicate_number_error(user[:phone_number])
 
         enrolled_user = context[:current_user].enroll_user(
-          name: user['companyName'] || "#{user['firstName']} #{user['lastName']}", phone_number: user['phoneNumber'],
+          name: user['companyName'].blank? ? "#{user['firstName']} #{user['lastName']}" : user['companyName'] , phone_number: user['phoneNumber'],
           user_type: 'visitor'
         )
         return enrolled_user if enrolled_user.persisted?
