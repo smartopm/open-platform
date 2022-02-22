@@ -1,3 +1,4 @@
+/* eslint-disable max-statements */
 /* eslint-disable max-lines */
 /* eslint-disable complexity */
 import React, { useState } from 'react';
@@ -35,6 +36,7 @@ import AutoSaveField from '../../../shared/AutoSaveField';
 import { UpdateNote } from '../../../graphql/mutations';
 import MessageAlert from '../../../components/MessageAlert';
 import MenuList from '../../../shared/MenuList';
+import ButtonGroupSelect from '../../../shared/select/ButtonGroupSelect';
 
 export default function TaskInfoTop({
   currentUser,
@@ -64,10 +66,17 @@ export default function TaskInfoTop({
   const [taskUpdate] = useMutation(UpdateNote);
   const [editingBody, setEditingBody] = useState(false);
   const [editingDueDate, setEditingDueDate] = useState(false);
+  const [taskStatus, setTaskStatus] = useState(null)
   const [updateDetails, setUpdateDetails] = useState({
     isError: false,
     message: ''
   });
+  const taskStatuses = {
+    in_progress: 'In Progress',
+    needs_attention: 'Needs Attention',
+    at_risk: 'At Risk',
+    complete: 'Complete'
+  }
 
   const allowedAssignees = [
     'admin',
@@ -115,6 +124,11 @@ export default function TaskInfoTop({
       currentUser.userType === 'developer' &&
       !data.parentNote.assignees.find(assignee => assignee.id === currentUser.id)
     );
+  }
+
+  function handleSelectTaskStatus(key) {
+    console.log('Task status set to ', key)
+    // Handle update mutation
   }
 
   return (
@@ -178,6 +192,14 @@ export default function TaskInfoTop({
             </Grid>
           </Grid>
         )}
+        <Grid item xs={12}>
+          <ButtonGroupSelect
+            options={taskStatuses}
+            selectedOption={taskStatus}
+            setSelectedOption={setTaskStatus}
+            handleSelectOption={handleSelectTaskStatus}
+          />
+        </Grid>
         <Grid item md={10} xs={12}>
           {!editingBody && (
           <Typography
