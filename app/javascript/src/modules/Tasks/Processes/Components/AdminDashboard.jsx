@@ -36,34 +36,40 @@ export default function AdminDashboard() {
     fetchPolicy: 'cache-and-network'
   });
 
-  function completedPerQuarter(processStats, quarter) {
+  function tasksPerQuarter(processStats, quarter) {
     const quarterStats = processStats?.find(stats => stats[1] === quarter);
     return quarterStats?.[2];
   }
 
   const currentYear = new Date().getFullYear();
-  const results = summaryData?.completedByQuarter || [];
-  const currentYearStats = results.filter(result => result[0] === currentYear);
+  const completedResults = summaryData?.tasksByQuarter.completed || [];
+  const submittedResults = summaryData?.tasksByQuarter.submitted || [];
+  const currentYearCompletedStats = completedResults.filter(result => result[0] === currentYear);
+  const currentYearSubmittedStats = submittedResults.filter(result => result[0] === currentYear);
 
   const cards = [
     {
       name: 'Q1',
-      completed: completedPerQuarter(currentYearStats, 1) || 0,
+      completed: tasksPerQuarter(currentYearCompletedStats, 1) || 0,
+      submitted: tasksPerQuarter(currentYearSubmittedStats, 1) || 0,
       primary: false
     },
     {
       name: 'Q2',
-      completed: completedPerQuarter(currentYearStats, 2) || 0,
+      completed: tasksPerQuarter(currentYearCompletedStats, 2) || 0,
+      submitted: tasksPerQuarter(currentYearSubmittedStats, 2) || 0,
       primary: true
     },
     {
       name: 'Q3',
-      completed: completedPerQuarter(currentYearStats, 3) || 0,
+      completed: tasksPerQuarter(currentYearCompletedStats, 3) || 0,
+      submitted: tasksPerQuarter(currentYearSubmittedStats, 3) || 0,
       primary: true
     },
     {
       name: 'Q4',
-      completed: completedPerQuarter(currentYearStats, 4) || 0,
+      completed: tasksPerQuarter(currentYearCompletedStats, 4) || 0,
+      submitted: tasksPerQuarter(currentYearSubmittedStats, 4) || 0,
       primary: false
     }
   ];
@@ -94,25 +100,58 @@ export default function AdminDashboard() {
       <Grid container justifyContent="space-between" spacing={4}>
 
         <Grid item xs={12} sm={6}>
-          <Typography className={classes.quarterSection} variant="body1">{t('processes.completed_by_quarter')}</Typography>
+          <Typography className={classes.quarterSection} variant="body1">{t('processes.projects_by_quarter')}</Typography>
           {
             summaryLoading && <Spinner />
           }
           {
             summaryError && <CenteredContent>{formatError(summaryError.message)}</CenteredContent>
           }
-          <Grid container spacing={2} className={classes.cards}>
+          <Grid container spacing={1} className={classes.cards}>
+            <Grid item xs={3} />
             {cards.map((card, index) => (
               // eslint-disable-next-line react/no-array-index-key
-              <Grid key={index} item xs={6} sm={12} md={6} onClick={() => routeToProjects('quarter', card.name)} style={{ cursor: 'pointer' }}>
-                <Card className={classes.card}>
+              <Grid key={index} item xs={2} container justifyContent="center" alignItems="center">
+                <Typography variant="body2">{card.name}</Typography>
+              </Grid>
+              ))}
+          </Grid>
+
+          <Grid container spacing={1} style={{marginBottom: "12px"}}>
+            <Grid item container justifyContent="center" alignItems="center" xs={3} style={{background: '#FAFAFA'}}>
+              <Typography variant="body2" color="secondary">{t('processes.submitted')}</Typography>
+            </Grid>
+            {cards.map((card, index) => (
+              // eslint-disable-next-line react/no-array-index-key
+              <Grid key={index} item xs={2}>
+                <Card className={classes.card} onClick={() => routeToProjects('submitted_per_quarter', card.name)} style={{ cursor: 'pointer' }}>
                   <CardContent
-                    className={`${card.primary ? classes.evenCardsBackground : classes.oddCardsBackground} ${classes.cardContent}`}
+                    className={`${classes.oddCardsBackground} ${classes.cardContent}`}
+                    style={{paddingTop: '8px', paddingBottom: '8px'}}
                   >
-                    <Grid container justifyContent="center" alignItems="center" direction="column">
-                      <Typography variant="body2">Total completed</Typography>
-                      <Typography variant="body2">{`${card.name} completed`}</Typography>
-                      <Typography variant="body1" style={{fontSize: '2rem'}}>{card.completed}</Typography>
+                    <Grid container justifyContent="center" alignItems="center">
+                      <Typography variant="body1" style={{fontSize: '1.2rem'}}>{card.submitted}</Typography>
+                    </Grid>
+                  </CardContent>
+                </Card>
+              </Grid>
+              ))}
+          </Grid>
+
+          <Grid container spacing={1} className={classes.cards}>
+            <Grid item container justifyContent="center" alignItems="center" xs={3} style={{background: '#FAFAFA'}}>
+              <Typography variant="body2" color="secondary">{t('processes.completed')}</Typography>
+            </Grid>
+            {cards.map((card, index) => (
+              // eslint-disable-next-line react/no-array-index-key
+              <Grid key={index} item xs={2}>
+                <Card className={classes.card} onClick={() => routeToProjects('completed_per_quarter', card.name)} style={{ cursor: 'pointer' }}>
+                  <CardContent
+                    className={`${classes.oddCardsBackground} ${classes.cardContent}`}
+                    style={{paddingTop: '8px', paddingBottom: '8px'}}
+                  >
+                    <Grid container justifyContent="center" alignItems="center">
+                      <Typography variant="body1" style={{fontSize: '1.2rem'}}>{card.completed}</Typography>
                     </Grid>
                   </CardContent>
                 </Card>
