@@ -584,10 +584,12 @@ export function ifNotTest(){
 
 
 export function secureFileDownload(path) {
-  const element = document.createElement('a');
-  element.setAttribute('href', path);
-  element.setAttribute('download', '');
-  document.body.appendChild(element);
-  element.click();
-  document.body.removeChild(element);
+  const link = document.createElement('a');
+  link.setAttribute('href', path);
+  link.setAttribute('download', '');
+  link.setAttribute('target', '_blank');
+  link.onclick = function(e) { e.preventDefault(); window.open(path, '_blank'); link.click(); };
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
 }
