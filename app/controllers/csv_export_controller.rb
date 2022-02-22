@@ -26,6 +26,10 @@ class CsvExportController < ApplicationController
     send_file 'public/bulk_import_sample.csv', filename: 'bulk_import_sample.csv'
   end
 
+  def download_lead_sample_csv
+    send_file 'public/lead_import_sample.csv', filename: 'lead_import_sample.csv'
+  end
+
   private
 
   def get_event_logs(_params)
