@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_02_09_065133) do
+ActiveRecord::Schema.define(version: 2022_02_22_081713) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -546,6 +546,7 @@ ActiveRecord::Schema.define(version: 2022_02_09_065133) do
     t.datetime "completed_at"
     t.uuid "current_step"
     t.string "current_step_body"
+    t.integer "status"
     t.index ["form_user_id"], name: "index_notes_on_form_user_id"
     t.index ["parent_note_id"], name: "index_notes_on_parent_note_id"
   end

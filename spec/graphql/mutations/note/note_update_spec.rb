@@ -24,6 +24,7 @@ RSpec.describe Mutations::Note::NoteUpdate do
           $dueDate: String
           $parentNoteId: ID
           $documentBlobId: String
+          $status: String
         ) {
           noteUpdate(
             id: $id
@@ -33,12 +34,14 @@ RSpec.describe Mutations::Note::NoteUpdate do
             dueDate: $dueDate
             parentNoteId: $parentNoteId
             documentBlobId: $documentBlobId
+            status: $status
           ) {
             note {
               flagged
               body
               id
               dueDate
+              status
               parentNote {
                 id
               }
@@ -55,6 +58,7 @@ RSpec.describe Mutations::Note::NoteUpdate do
         user_id: user.id,
         community_id: user.community_id,
         author_id: admin.id,
+        status: 'in_progress',
       )
     end
 
@@ -62,6 +66,7 @@ RSpec.describe Mutations::Note::NoteUpdate do
       variable_updates = {
         id: note.id,
         body: 'A modified note about the user',
+        status: 'completed',
       }
 
       result = DoubleGdpSchema.execute(update_query, variables: variable_updates,
@@ -70,9 +75,11 @@ RSpec.describe Mutations::Note::NoteUpdate do
                                                        site_community: user.community,
                                                      }).as_json
 
-      expect(result.dig('data', 'noteUpdate', 'note', 'id')).not_to be_nil
-      expect(result.dig('data', 'noteUpdate', 'note', 'body')).to include 'modified'
-      expect(Notes::NoteHistory.count).to eql 1
+      note_result = result.dig('data', 'noteUpdate', 'note')
+      expect(note_result['id']).not_to be_nil
+      expect(note_result['body']).to include 'modified'
+      expect(note_result['status']).to include 'completed'
+      expect(Notes::NoteHistory.count).to eql 2
       expect(result['errors']).to be_nil
 
       result = DoubleGdpSchema.execute(update_query, variables: variable_updates,
@@ -80,10 +87,9 @@ RSpec.describe Mutations::Note::NoteUpdate do
                                                        current_user: user,
                                                        site_community: user.community,
                                                      }).as_json
-
-      expect(result.dig('data', 'noteUpdate', 'note', 'id')).to be_nil
-      expect(Notes::NoteHistory.count).to eql 1
       expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
+      expect(result.dig('data', 'noteUpdate', 'note', 'id')).to be_nil
+      expect(Notes::NoteHistory.count).to eql 2
     end
 
     it 'updates parent_note_id' do

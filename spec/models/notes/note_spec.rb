@@ -44,6 +44,7 @@ RSpec.describe Notes::Note, type: :model do
     it { is_expected.to have_db_column(:completed).of_type(:boolean) }
     it { is_expected.to have_db_column(:due_date).of_type(:datetime) }
     it { is_expected.to have_db_column(:parent_note_id).of_type(:uuid) }
+    it { is_expected.to have_db_column(:status).of_type(:integer) }
   end
 
   describe 'associations' do
@@ -61,6 +62,13 @@ RSpec.describe Notes::Note, type: :model do
     end
     it { is_expected.to have_many(:note_histories).dependent(:destroy) }
     it { is_expected.to have_many(:sub_notes).class_name('Notes::Note').dependent(:destroy) }
+  end
+
+  describe 'enums' do
+    it do
+      is_expected.to define_enum_for(:status)
+        .with_values(in_progress: 0, needs_attention: 1, at_risk: 2, completed: 3)
+    end
   end
 
   describe 'sub_notes' do
