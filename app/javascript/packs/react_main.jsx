@@ -5,22 +5,16 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 
-import React, {useContext, useEffect, Suspense} from 'react';
+import React, { useContext, useEffect, Suspense } from 'react';
 import ReactDOM from 'react-dom';
-import {
-  BrowserRouter as Router,
-  Switch,
-  Redirect,
-  Route,
-  useHistory,
-} from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Redirect, Route, useHistory } from 'react-router-dom';
 import ReactGA from 'react-ga';
-import {makeStyles} from '@material-ui/core/styles';
-import {MuiThemeProvider} from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
+import { MuiThemeProvider } from '@material-ui/core';
 import ApolloProvider from '../src/containers/Provider/ApolloProvider';
 import AuthStateProvider, {
   Consumer,
-  Context as AuthStateContext,
+  Context as AuthStateContext
 } from '../src/containers/Provider/AuthStateProvider';
 import UserShow from '../src/modules/Users/Containers/UserShow';
 import IDCard from '../src/containers/IdCard';
@@ -35,11 +29,10 @@ import MobileMoney from '../src/components/MobileMoney';
 import GuardHome from '../src/modules/Dashboard/Components/GuardHome';
 import ErrorPage from '../src/components/Error';
 import MainAuthCallback from '../src/components/AuthScreens/MainAuthCallback';
-import {AUTH_TOKEN_KEY} from '../src/utils/apollo';
+import { AUTH_TOKEN_KEY } from '../src/utils/apollo';
 import Feedback from '../src/containers/Activity/Feedback';
 import FeedbackSuccess from '../src/containers/Activity/FeedbackSuccess';
 import AllNotes from '../src/containers/Activity/AllNotes';
-import ProcessesPage from '../src/modules/Tasks/Processes/Components/ProcessesPage';
 import ProjectsList from '../src/modules/Tasks/Processes/Components/ProjectsList';
 import FeedbackPage from '../src/containers/Activity/AllFeedback';
 import ShowroomLogs from '../src/containers/showroom/ShowroomLogs';
@@ -51,34 +44,30 @@ import CampaignUpdate from '../src/modules/Campaigns/containers/Campaigns';
 import DiscussonPage from '../src/containers/Discussions/DiscussionPage';
 import GeoMap from '../src/containers/GeoMap';
 import Notifications from '../src/modules/Preferences/Components/Notifications';
-import {theme} from '../src/themes/nkwashi/theme';
+import { theme } from '../src/themes/nkwashi/theme';
 import FormPage from '../src/modules/Forms/containers/FormPage';
 import FormEntriesPage from '../src/modules/Forms/containers/FormEntriesPage';
 import FormBuilderPage from '../src/modules/Forms/containers/FormBuilderPage';
 import CommentsPage from '../src/containers/Comments/CommentPage';
-import {MainMenu} from '../src/modules/Menu';
+import { MainMenu } from '../src/modules/Menu';
 import modules from '../src/modules';
 import UserRoutes from '../src/modules/Users/UserRoutes';
 import I18Initializer from '../src/modules/i18n/Components/I18Initializer';
 import PostPage from '../src/modules/News/Components/PostPage';
 import Posts from '../src/modules/News/Components/Posts';
 import UsersImport from '../src/modules/Users/Containers/UsersImport';
-import {checkAllowedCommunityFeatures} from '../src/utils/helpers';
-import BusinessProfile
-  from '../src/modules/Business/Components/BusinessProfilePage';
-import EmployeeTimeSheetLog
-  from '../src/modules/TimeCard/Components/EmployeeLogs';
-import EmailBuilderDialog
-  from '../src/modules/Emails/components/EmailBuilderDialog';
+import { checkAllowedCommunityFeatures } from '../src/utils/helpers';
+import BusinessProfile from '../src/modules/Business/Components/BusinessProfilePage';
+import EmployeeTimeSheetLog from '../src/modules/TimeCard/Components/EmployeeLogs';
+import EmailBuilderDialog from '../src/modules/Emails/components/EmailBuilderDialog';
 import { PRIMARY_DOMAINS } from '../src/utils/constants';
 import TaskProcessDetail from '../src/modules/Tasks/Processes/Components/TaskProcessDetail';
-
-
+import LeadManagementUserImport from '../src/modules/Users/LeadManagement/Containers/LeadManagementUserImport';
 
 // The routes defined here are carefully arranged, be mindful when changing them
 
 const LoggedInOnly = props => {
-  const authState = useContext (AuthStateContext);
+  const authState = useContext(AuthStateContext);
   if (authState.loggedIn) {
     return props.children;
   }
@@ -86,7 +75,7 @@ const LoggedInOnly = props => {
     <Redirect
       to={{
         pathname: '/login',
-        state: {from: props.location},
+        state: { from: props.location }
       }}
     />
   );
@@ -97,7 +86,7 @@ const LoggedInOnly = props => {
  *
  */
 const AdminRoutes = props => {
-  const authState = useContext (AuthStateContext);
+  const authState = useContext(AuthStateContext);
   if (authState.user.userType === 'admin') {
     return props.children;
   }
@@ -105,69 +94,59 @@ const AdminRoutes = props => {
 };
 
 const Logout = () => {
-  localStorage.removeItem (AUTH_TOKEN_KEY);
-  const authState = useContext (AuthStateContext);
-  authState.setToken ({action: 'delete'});
+  localStorage.removeItem(AUTH_TOKEN_KEY);
+  const authState = useContext(AuthStateContext);
+  authState.setToken({ action: 'delete' });
   return <Redirect to="/login" />;
 };
 // page tracking
 
 const Analytics = props => {
-  const {gtag} = window;
+  const { gtag } = window;
   const liveAnalytics = (host => {
-    return PRIMARY_DOMAINS.includes (host);
-  }) (window.location.host);
+    return PRIMARY_DOMAINS.includes(host);
+  })(window.location.host);
 
   const authState = useContext(AuthStateContext);
   const history = useHistory();
 
-  useEffect (
-    () => {
-      const {user} = authState;
+  useEffect(() => {
+    const { user } = authState;
 
-      if (user) {
-        if (liveAnalytics) {
-          console.debug (
-            'GA PRODUCTION MODE: UserData:',
-            user.id,
-            user.userType
-          );
-          gtag('set', {user_id: user.id});
-          gtag('set', 'user_properties', {Role: user.userType});
-          ReactGA.event ({
-            category: 'LoggedInUserType',
-            action: user.userType,
-            eventLabel: user.id,
-            nonInteraction: true,
-          });
-        } else {
-          console.log ('GA DEVELOPMENT MODE: log user', user);
-        }
+    if (user) {
+      if (liveAnalytics) {
+        console.debug('GA PRODUCTION MODE: UserData:', user.id, user.userType);
+        gtag('set', { user_id: user.id });
+        gtag('set', 'user_properties', { Role: user.userType });
+        ReactGA.event({
+          category: 'LoggedInUserType',
+          action: user.userType,
+          eventLabel: user.id,
+          nonInteraction: true
+        });
+      } else {
+        console.log('GA DEVELOPMENT MODE: log user', user);
       }
-      return history.listen (location => {
-        if (
-          location.pathname.includes ('/id') ||
-          location.pathname.includes ('/user')
-        ) {
-          const [, rootURL, , userPage] = location.pathname.split ('/');
+    }
+    return history.listen(location => {
+      if (location.pathname.includes('/id') || location.pathname.includes('/user')) {
+        const [, rootURL, , userPage] = location.pathname.split('/');
 
-          const pageHit = `/${rootURL}/${userPage}`;
-          ReactGA.pageview (pageHit);
-        } else {
-          ReactGA.set ({page: location.pathname});
-          ReactGA.pageview (location.pathname);
-        }
-      });
-      // /* eslint-disable */-next-line react-hooks/exhaustive-deps
-    },
-    [authState.user, history]
-  );
+        const pageHit = `/${rootURL}/${userPage}`;
+        ReactGA.pageview(pageHit);
+      } else {
+        ReactGA.set({ page: location.pathname });
+        ReactGA.pageview(location.pathname);
+      }
+    });
+    // /* eslint-disable */-next-line react-hooks/exhaustive-deps
+  }, [authState.user, history]);
 
   return props.children;
 };
 
 const App = () => {
-  const classes = useStyles ();
+  const classes = useStyles();
   return (
     <Suspense
       fallback={() => {
@@ -195,15 +174,10 @@ const App = () => {
                 <LoggedInOnly>
                   <Switch>
                     <Consumer>
-                      {({user}) => (
-                        <MuiThemeProvider
-                          theme={theme (user.community.themeColors)}
-                        >
+                      {({ user }) => (
+                        <MuiThemeProvider theme={theme(user.community.themeColors)}>
                           <MainMenu />
-                          <div
-                            className={classes.appContainer}
-                            id="app-container"
-                          >
+                          <div className={classes.appContainer} id="app-container">
                             <Switch>
                               {/* these are redirects for pages we don't have yet, they can only be placed here */}
                               {/* build individual modules for these once we have pages that directly route there */}
@@ -211,106 +185,75 @@ const App = () => {
                               <Route
                                 exact
                                 path="/plots"
-                                render={() => (
-                                  <Redirect to={`/user/${user.id}?tab=Plots`} />
-                                )}
+                                render={() => <Redirect to={`/user/${user.id}?tab=Plots`} />}
                               />
                               <Route
                                 exact
                                 path="/communication"
-                                render={() => (
-                                  <Redirect to={`/message/${user.id}`} />
-                                )}
+                                render={() => <Redirect to={`/message/${user.id}`} />}
                               />
                               <Route
                                 exact
                                 path="/user_journey"
                                 render={() => (
-                                  <Redirect
-                                    to={`/user/${user.id}?tab=CustomerJourney`}
-                                  />
+                                  <Redirect to={`/user/${user.id}?tab=CustomerJourney`} />
                                 )}
                               />
                               <Route
                                 exact
                                 path="/myforms"
-                                render={() => (
-                                  <Redirect to={`/user/${user.id}?tab=Forms`} />
-                                )}
+                                render={() => <Redirect to={`/user/${user.id}?tab=Forms`} />}
                               />
                               <Route
                                 exact
                                 path="/mypayments"
-                                render={() => (
-                                  <Redirect
-                                    to={`/user/${user.id}?tab=Payments`}
-                                  />
-                                )}
+                                render={() => <Redirect to={`/user/${user.id}?tab=Payments`} />}
                               />
                               <Route
                                 exact
                                 path="/mymessages"
-                                render={() => (
-                                  <Redirect to={`/message/${user.id}`} />
-                                )}
+                                render={() => <Redirect to={`/message/${user.id}`} />}
                               />
                               <Route
                                 exact
                                 path="/myprofile"
-                                render={() => (
-                                  <Redirect to={`/user/${user.id}`} />
-                                )}
+                                render={() => <Redirect to={`/user/${user.id}`} />}
                               />
                               {/* end of redirects */}
-                              {[...modules, ...UserRoutes].map (module => {
+                              {[...modules, ...UserRoutes].map(module => {
                                 if (module.subMenu) {
-                                  return module.subMenu.map (sub => {
+                                  return module.subMenu.map(sub => {
                                     let routes = [];
 
                                     if (
                                       sub.subRoutes &&
-                                      checkAllowedCommunityFeatures (
+                                      checkAllowedCommunityFeatures(
                                         user.community.features,
                                         sub.featureName
                                       )
                                     ) {
-                                      routes = sub.subRoutes.map (subRoute => (
-                                        <Route
-                                          {...subRoute.routeProps}
-                                          key={subRoute.name}
-                                        />
+                                      routes = sub.subRoutes.map(subRoute => (
+                                        <Route {...subRoute.routeProps} key={subRoute.name} />
                                       ));
                                     }
-                                    checkAllowedCommunityFeatures (
+                                    checkAllowedCommunityFeatures(
                                       user.community.features,
                                       sub.featureName
-                                    ) &&
-                                      routes.push (
-                                        <Route
-                                          {...sub.routeProps}
-                                          key={sub.name}
-                                        />
-                                      );
+                                    ) && routes.push(<Route {...sub.routeProps} key={sub.name} />);
                                     return routes;
                                   });
                                 }
                                 // module.accessibleBy.includes(user.userType)
                                 // to be deprecated and permissions checked at module level
                                 if (
-                                  checkAllowedCommunityFeatures (
+                                  checkAllowedCommunityFeatures(
                                     user.community.features,
                                     module.featureName
-                                  ) && (module.moduleName !== undefined ||
-                                      module.accessibleBy.includes (user.userType)
-                                  )
+                                  ) &&
+                                  (module.moduleName !== undefined ||
+                                    module.accessibleBy.includes(user.userType))
                                 ) {
-                                  return (
-                                    <Route
-                                      exact
-                                      {...module.routeProps}
-                                      key={module.name}
-                                    />
-                                  );
+                                  return <Route exact {...module.routeProps} key={module.name} />;
                                 }
                               })}
 
@@ -318,73 +261,32 @@ const App = () => {
                               <Route path="/id/:id" component={IDCard} />
                               <Route path="/map" component={Map} />
                               <Route path="/myplot" component={GeoMap} />
-                              <Route
-                                path="/mobile_money"
-                                component={MobileMoney}
-                              />
-                              <Route
-                                path="/settings"
-                                component={Notifications}
-                              />
-                              <Route
-                                path="/myaccount/:id"
-                                component={UserShow}
-                              />
+                              <Route path="/mobile_money" component={MobileMoney} />
+                              <Route path="/settings" component={Notifications} />
+                              <Route path="/myaccount/:id" component={UserShow} />
                               {/* requests */}
                               {/* Guard home is somehow kinda special leaving it now */}
                               <Route path="/guard_home" component={GuardHome} />
                               {/* Guard home ends */}
                               <Route path="/feedback" component={Feedback} />
-                              <Route
-                                path="/feedback_success"
-                                component={FeedbackSuccess}
-                              />
-                              <Route
-                                path="/campaign-create"
-                                component={CampaignCreate}
-                              />
-                              <Route
-                                path="/campaign/:id"
-                                component={CampaignUpdate}
-                              />
-                              <Route
-                                path="/timesheet/:id"
-                                exact
-                                component={EmployeeTimeSheetLog}
-                              />
+                              <Route path="/feedback_success" component={FeedbackSuccess} />
+                              <Route path="/campaign-create" component={CampaignCreate} />
+                              <Route path="/campaign/:id" component={CampaignUpdate} />
+                              <Route path="/timesheet/:id" exact component={EmployeeTimeSheetLog} />
                               <Route
                                 path="/client_request_from"
                                 exact
                                 component={ClientRequestForm}
                               />
-                              <Route
-                                path="/news/slug"
-                                exact
-                                component={Posts}
-                              />
-                              <Route
-                                path="/discussions/:id"
-                                exact
-                                component={DiscussonPage}
-                              />
-                              <Route
-                                path="/business/:id"
-                                exact
-                                component={BusinessProfile}
-                              />
-                              <Route
-                                path="/form/:formId?/:formName?"
-                                exact
-                                component={FormPage}
-                              />
+                              <Route path="/news/slug" exact component={Posts} />
+                              <Route path="/discussions/:id" exact component={DiscussonPage} />
+                              <Route path="/business/:id" exact component={BusinessProfile} />
+                              <Route path="/form/:formId?/:formName?" exact component={FormPage} />
                               <Route
                                 path="/form/:formId?/:formName?/entries"
                                 component={FormEntriesPage}
                               />
-                              <Route
-                                path="/edit_form/:formId"
-                                component={FormBuilderPage}
-                              />
+                              <Route path="/edit_form/:formId" component={FormBuilderPage} />
                               <Route
                                 path="/mail_templates/:emailId"
                                 component={EmailBuilderDialog}
@@ -397,42 +299,26 @@ const App = () => {
                                 path="/processes/:type/projects/:id"
                                 component={TaskProcessDetail}
                               />
-                               <Route
-                                path="/processes/:type/projects"
-                                component={ProjectsList}
-                              />
-                              <Route
-                                exact
-                                path="/processes"
-                                component={ProcessesPage}
-                              />
+                              <Route path="/processes/:type/projects" component={ProjectsList} />
                               <Route
                                 exact
                                 path="/entry_logs"
-                                render={() => (
-                                  <Redirect
-                                    to='/logbook'
-                                  />
-                                )}
+                                render={() => <Redirect to="/logbook" />}
                               />
                               <AdminRoutes>
                                 <Switch>
+                                  <Route path="/users/import" component={UsersImport} />
                                   <Route
-                                    path="/users/import"
-                                    component={UsersImport}
+                                    path="/users/leads/import"
+                                    component={LeadManagementUserImport}
                                   />
-                                  <Route
-                                    path="/showroom_logs"
-                                    component={ShowroomLogs}
-                                  />
+                                  <Route path="/showroom_logs" component={ShowroomLogs} />
                                   <Route path="/notes" component={AllNotes} />
                                   <Route
                                     exact
                                     path="/todo/:taskId"
-                                    render={({match}) => (
-                                      <Redirect
-                                        to={`/tasks/${match.params.taskId}`}
-                                      />
+                                    render={({ match }) => (
+                                      <Redirect to={`/tasks/${match.params.taskId}`} />
                                     )}
                                   />
                                   <Route
@@ -468,14 +354,14 @@ const App = () => {
   );
 };
 
-const useStyles = makeStyles (() => ({
+const useStyles = makeStyles(() => ({
   appContainer: {
     '@supports ( -moz-appearance:none )': {
-      paddingTop: '75px',
-    },
-  },
+      paddingTop: '75px'
+    }
+  }
 }));
 
-document.addEventListener ('DOMContentLoaded', () => {
-  ReactDOM.render (<App />, document.getElementById ('root'));
+document.addEventListener('DOMContentLoaded', () => {
+  ReactDOM.render(<App />, document.getElementById('root'));
 });

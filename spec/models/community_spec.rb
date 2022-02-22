@@ -116,6 +116,7 @@ RSpec.describe Community, type: :model do
       new_community = create(:community)
       expect(new_community.features).to_not be_nil
       expect(new_community.features['Dashboard']).to_not be_nil
+      expect(new_community.features['Processes']).to_not be_nil
     end
   end
 end

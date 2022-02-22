@@ -31,32 +31,39 @@ export default function AdminDashboard() {
   } = useQuery(TaskQuarterySummaryQuery);
 
   const { loading: projectsLoading, error: projectsError, data: projectsData, }
-  = useQuery(ProjectsQuery, {
-  variables: { offset: 0, limit: 50 },
-  fetchPolicy: 'cache-and-network'
-});
+    = useQuery(ProjectsQuery, {
+    variables: { offset: 0, limit: 50 },
+    fetchPolicy: 'cache-and-network'
+  });
 
-  const results = summaryData?.completedByQuarter[0] || []
+  function completedPerQuarter(processStats, quarter) {
+    const quarterStats = processStats?.find(stats => stats[1] === quarter);
+    return quarterStats?.[2];
+  }
+
+  const currentYear = new Date().getFullYear();
+  const results = summaryData?.completedByQuarter || [];
+  const currentYearStats = results.filter(result => result[0] === currentYear);
 
   const cards = [
     {
       name: 'Q1',
-      completed: results[2] || 0,
+      completed: completedPerQuarter(currentYearStats, 1) || 0,
       primary: false
     },
     {
       name: 'Q2',
-      completed: 0,
+      completed: completedPerQuarter(currentYearStats, 2) || 0,
       primary: true
     },
     {
       name: 'Q3',
-      completed: 0,
+      completed: completedPerQuarter(currentYearStats, 3) || 0,
       primary: true
     },
     {
       name: 'Q4',
-      completed: 0,
+      completed: completedPerQuarter(currentYearStats, 4) || 0,
       primary: false
     }
   ];

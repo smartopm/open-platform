@@ -1,3 +1,5 @@
+/* eslint-disable max-statements */
+/* eslint-disable complexity */
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import AddIcon from '@material-ui/icons/Add';
@@ -6,10 +8,8 @@ import { useQuery, useMutation } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { TextField, IconButton, Chip, Container, useTheme, useMediaQuery } from '@material-ui/core';
-import { Tooltip, Typography } from '@mui/material';
+import { Tooltip } from '@mui/material';
 import { makeStyles } from '@material-ui/styles';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { UserLabelsQuery, LabelsQuery } from '../../../graphql/queries';
 import { LabelCreate, UserLabelCreate, UserLabelUpdate } from '../../../graphql/mutations';
 import useDebounce from '../../../utils/useDebounce';
@@ -18,7 +18,7 @@ import { formatError, truncateString } from '../../../utils/helpers';
 import MessageAlert from '../../../components/MessageAlert';
 import ErrorPage from '../../../components/Error';
 
-export default function UserLabels({ userId }) {
+export default function UserLabels({ userId, isLabelOpen }) {
   const [showAddTextBox, setshowAddTextBox] = useState(false);
   const [label, setLabel] = useState('');
   const newUserLabel = useDebounce(label, 500);
@@ -27,7 +27,6 @@ export default function UserLabels({ userId }) {
   const [userLabelUpdate] = useMutation(UserLabelUpdate);
   const [messageAlert, setMessageAlert] = useState('');
   const [isSuccessAlert, setIsSuccessAlert] = useState(false);
-  const [isLabelOpen, setIsLabelOpen] = useState(false);
   const { t } = useTranslation(['common', 'label']);
   const classes = useStyles();
   const theme = useTheme()
@@ -90,30 +89,13 @@ export default function UserLabels({ userId }) {
     return <ErrorPage title={error.message || _error.message} />;
   }
   return (
-    <div className="">
+    <div className={classes.labelContainer}>
       <MessageAlert
         type={isSuccessAlert ? 'success' : 'error'}
         message={messageAlert}
         open={!!messageAlert}
         handleClose={handleMessageAlertClose}
       />
-      <br />
-      <Typography
-        variant="subtitle1"
-        className={classes.wrapIcon}
-        onClick={() => setIsLabelOpen(!isLabelOpen)}
-        data-testid="label_toggler"
-      >
-        {t('label:label.labels')}
-        {' '}
-        {'  '}
-        {isLabelOpen ? (
-          <KeyboardArrowUpIcon className={classes.linkIcon} data-testid="labels_open_icon" />
-        ) : (
-          <KeyboardArrowDownIcon className={classes.linkIcon} data-testid="labels_closed_icon" />
-        )}
-      </Typography>
-      <br />
       {isLabelOpen && (
         <Container maxWidth="xl">
           {userData.userLabels.length ? (
@@ -199,16 +181,12 @@ export default function UserLabels({ userId }) {
 }
 
 UserLabels.propTypes = {
-  userId: PropTypes.string.isRequired
+  userId: PropTypes.string.isRequired,
+  isLabelOpen: PropTypes.bool.isRequired
 };
 
 const useStyles = makeStyles(() => ({
-  wrapIcon: {
-    verticalAlign: 'middle',
-    display: 'inline-flex'
-  },
-  linkIcon: {
-    marginTop: 3,
-    marginLeft: 6
+  labelContainer: {
+    marginTop: '10px'
   }
 }));
