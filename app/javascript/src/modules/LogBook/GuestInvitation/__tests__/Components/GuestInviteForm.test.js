@@ -85,7 +85,6 @@ describe('Guest Invitation Form', () => {
     fireEvent.change(getByTestId('search'), { target: { value: '090909090' } })
 
     fireEvent.click(getByTestId('invite_button'));
-
     await waitFor(() => {
         expect(getAllByText('guest.guest_invited')[0]).toBeInTheDocument();
         expect(mockHistory.push).toBeCalled();
