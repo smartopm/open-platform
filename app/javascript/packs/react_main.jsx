@@ -33,7 +33,6 @@ import { AUTH_TOKEN_KEY } from '../src/utils/apollo';
 import Feedback from '../src/containers/Activity/Feedback';
 import FeedbackSuccess from '../src/containers/Activity/FeedbackSuccess';
 import AllNotes from '../src/containers/Activity/AllNotes';
-import ProcessesPage from '../src/modules/Tasks/Processes/Components/ProcessesPage';
 import ProjectsList from '../src/modules/Tasks/Processes/Components/ProjectsList';
 import FeedbackPage from '../src/containers/Activity/AllFeedback';
 import ShowroomLogs from '../src/containers/showroom/ShowroomLogs';
@@ -301,8 +300,6 @@ const App = () => {
                                 component={TaskProcessDetail}
                               />
                               <Route path="/processes/:type/projects" component={ProjectsList} />
-                              <Route path="/processes/:type/projects" component={ProjectsList} />
-                              <Route exact path="/processes" component={ProcessesPage} />
                               <Route
                                 exact
                                 path="/entry_logs"
