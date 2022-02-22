@@ -6,6 +6,8 @@ import Button from '@mui/material/Button';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import Divider from '@mui/material/Divider';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Switch from '@mui/material/Switch';
 import PropTypes from 'prop-types';
 import PhoneInput from 'react-phone-input-2';
 import { useTranslation } from 'react-i18next';
@@ -61,26 +63,34 @@ export default function InviteeForm({
         {
           primary && !guestData.firstName && !guestData.lastName && (
           <Grid item xs={12} md={4} sm={6} order={{ xs: 3, sm: 3, md: 2, lg: 2 }}>
-            <Divider>Or add a Company</Divider>
+            <Divider>
+              <FormControlLabel control={<Switch defaultChecked />} label={t('logbook:guest.add_company')} />
+            </Divider>
           </Grid>
           )
         }
         {
-          !isCompany && (
-          <Grid item xs={12} md={4} sm={6} order={{ xs: 2, sm: 2, md: 5, lg: 5 }}>
-            <TextField
-              variant="outlined"
-              type="text"
-              value={guestData.lastName}
-              label={t('form_fields.full_last_name')}
-              onChange={handleInputChange}
-              name="lastName"
-              inputProps={{ 'data-testid': 'guest_entry_last_name' }}
-              margin="dense"
-              fullWidth
-              required
-            />
-          </Grid>
+         (
+           <Grid 
+             item
+             xs={12}
+             md={4}
+             sm={6}
+             order={{ xs: 2, sm: 2, md: 5 , lg: 5  }}
+           >
+             <TextField
+               variant="outlined"
+               type="text"
+               value={guestData.lastName}
+               label={t('form_fields.full_last_name')}
+               onChange={handleInputChange}
+               name="lastName"
+               inputProps={{ 'data-testid': 'guest_entry_last_name' }}
+               margin="dense"
+               fullWidth
+               required
+             />
+           </Grid>
           )
         }
         {
@@ -116,7 +126,6 @@ export default function InviteeForm({
         >
           <PhoneInput
             value={guestData.phoneNumber}
-            // eslint-disable-next-line no-nested-ternary
             containerStyle={{ marginTop: largerScreens ? 8 : matchesSmall ? 9 : 0 }}
             inputStyle={{ height: '3.96em', width: '100%' }}
             country={extractCountry(authState.user.community?.locale)}

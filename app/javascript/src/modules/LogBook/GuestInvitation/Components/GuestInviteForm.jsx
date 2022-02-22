@@ -128,8 +128,7 @@ export default function GuestInviteForm() {
 
   function handleAddInvitee(guest) {
     if(!guest.firstName && !guest.companyName) {
-      // TODO: Translate this 
-      setDetails({ ...details, message: 'Guest Name or Company Name is required', isError: true });
+      setDetails({ ...details, message: t('guest.guest_name_required'), isError: true });
       return
     }
     setInvitees([...invitees, newGuest]);

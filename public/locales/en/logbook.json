@@ -171,7 +171,9 @@
     "invite_guest": "Invite Guest",
     "invite_new_guest": "Invite new guest",
     "guest_invited": "Successfully invited a guest",
-    "guests": "Guests"
+    "guests": "Guests",
+    "guest_name_required": "Guest Name or Company Name is required",
+    "add_company": "Or add a Company"
     },
   "video_recording": {
     "add_video_text": "Add a Video with your phone",
