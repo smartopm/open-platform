@@ -109,7 +109,7 @@ export default function AdminDashboard() {
             {cards.map((card, index) => (
               // eslint-disable-next-line react/no-array-index-key
               <Grid key={index} item xs={2} container justifyContent="center" alignItems="center">
-                <Typography variant="body2">{card.name}</Typography>
+                <Typography variant="caption">{card.name}</Typography>
               </Grid>
             ))}
           </Grid>
@@ -121,9 +121,14 @@ export default function AdminDashboard() {
               justifyContent="center"
               alignItems="center"
               xs={3}
-              style={{ background: '#FAFAFA' }}
+              style={{
+                background: '#F5F5F4',
+                borderRadius: '4px',
+                height: '47px',
+                marginTop: '7px'
+              }}
             >
-              <Typography variant="body2" color="secondary">
+              <Typography variant="caption" color="secondary">
                 {t('processes.submitted')}
               </Typography>
             </Grid>
@@ -157,9 +162,14 @@ export default function AdminDashboard() {
               justifyContent="center"
               alignItems="center"
               xs={3}
-              style={{ background: '#FAFAFA' }}
+              style={{
+                background: '#F5F5F4',
+                borderRadius: '4px',
+                height: '47px',
+                marginTop: '7px'
+              }}
             >
-              <Typography variant="body2" color="secondary">
+              <Typography variant="caption" color="secondary">
                 {t('processes.completed')}
               </Typography>
             </Grid>
