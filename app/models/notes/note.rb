@@ -127,7 +127,7 @@ module Notes
 
       months = quarter_range[quarter]
       query = "date_part('year', completed_at) = ? AND date_part('month', completed_at) >= ? AND  date_part('month', completed_at) <= ? AND completed=true"
-      query = "date_part('year', created_at) = ? AND date_part('month', created_at) >= ? AND  date_part('month', created_at) <= ?" if task_category == :submitted
+      query = "date_part('year', notes.created_at) = ? AND date_part('month', notes.created_at) >= ? AND  date_part('month', notes.created_at) <= ?" if task_category == :submitted
       where(
         query,
         Date.current.year,
