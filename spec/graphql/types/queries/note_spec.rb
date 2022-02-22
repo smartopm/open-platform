@@ -192,6 +192,14 @@ RSpec.describe Types::Queries::Note do
       GQL
     end
 
+    let(:projects_summary_query) do
+      <<~GQL
+        query tasksByQuarter {
+          tasksByQuarter
+        }
+      GQL
+    end
+
     let(:task_fragment) do
       <<~GQL
         body
@@ -1026,6 +1034,32 @@ RSpec.describe Types::Queries::Note do
                                       submittedPerQuarter: 'Q9',
                                     }).as_json
           end.to raise_error('Invalid argument. quarter should be either Q1, Q2, Q3 or Q4')
+        end
+      end
+
+      context 'tasks_by_quarter' do
+        before do
+          form
+          another_form
+          form_user
+          another_form_user
+          first_note.update(form_user_id: form_user.id)
+          first_note.update(created_at: Time.zone.local(Date.current.year, '02', '02'))
+
+          second_note.update(form_user_id: another_form_user.id, completed: true)
+          second_note.update(created_at: Time.zone.local(Date.current.year, '05', '05'))
+        end
+
+        it 'returns counts of the completed tasks per quarter' do
+          result = DoubleGdpSchema.execute(projects_summary_query, context: {
+                                             current_user: site_worker,
+                                             site_community: site_worker.community,
+                                           }).as_json
+
+          expect(result['errors']).to be_nil
+          expect(result.dig('data', 'tasksByQuarter', 'completed', 0)).to eql [2022.0, 1.0, 1]
+          expect(result.dig('data', 'tasksByQuarter', 'submitted', 0)).to eql [2022.0, 1.0, 1]
+          expect(result.dig('data', 'tasksByQuarter', 'submitted', 1)).to eql [2022.0, 2.0, 1]
         end
       end
 

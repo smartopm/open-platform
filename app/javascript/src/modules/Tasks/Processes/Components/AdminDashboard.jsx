@@ -125,7 +125,8 @@ export default function AdminDashboard() {
                 background: '#F5F5F4',
                 borderRadius: '4px',
                 height: '47px',
-                marginTop: '7px'
+                marginTop: '7px',
+                paddingTop: 0
               }}
             >
               <Typography variant="caption" color="secondary">
@@ -166,7 +167,8 @@ export default function AdminDashboard() {
                 background: '#F5F5F4',
                 borderRadius: '4px',
                 height: '47px',
-                marginTop: '7px'
+                marginTop: '7px',
+                paddingTop: 0
               }}
             >
               <Typography variant="caption" color="secondary">
