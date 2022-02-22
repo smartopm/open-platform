@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react';
 import { Divider, Link, List, ListItem, ListItemText, Typography } from '@material-ui/core';
 import { useQuery } from 'react-apollo';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/styles';
 import { Card, CardContent, Container, Grid } from '@mui/material';
@@ -18,6 +19,7 @@ import {
 export default function AdminDashboard() {
   const { t } = useTranslation('task');
   const classes = useStyles();
+  const matches = useMediaQuery('(max-width:800px)');
   const history = useHistory();
 
   const { loading: summaryLoading, error: summaryError, data: summaryData } = useQuery(
@@ -106,6 +108,7 @@ export default function AdminDashboard() {
           {summaryError && <CenteredContent>{formatError(summaryError.message)}</CenteredContent>}
           <Grid container spacing={1} className={classes.cards}>
             <Grid item xs={3} />
+            {matches && <Grid item xs={1} />}
             {cards.map((card, index) => (
               // eslint-disable-next-line react/no-array-index-key
               <Grid key={index} item xs={2} container justifyContent="center" alignItems="center">
@@ -114,7 +117,7 @@ export default function AdminDashboard() {
             ))}
           </Grid>
 
-          <Grid container spacing={1} style={{ marginBottom: '12px' }}>
+          <Grid container spacing={1} style={{ marginBottom: '12px', paddingLeft: '7px' }}>
             <Grid
               item
               container
@@ -133,6 +136,7 @@ export default function AdminDashboard() {
                 {t('processes.submitted')}
               </Typography>
             </Grid>
+            {matches && <Grid item xs={1} />}
             {cards.map((card, index) => (
               // eslint-disable-next-line react/no-array-index-key
               <Grid key={index} item xs={2}>
@@ -156,7 +160,7 @@ export default function AdminDashboard() {
             ))}
           </Grid>
 
-          <Grid container spacing={1} className={classes.cards}>
+          <Grid container spacing={1} style={{ paddingLeft: '7px' }}>
             <Grid
               item
               container
@@ -175,6 +179,7 @@ export default function AdminDashboard() {
                 {t('processes.completed')}
               </Typography>
             </Grid>
+            {matches && <Grid item xs={1} />}
             {cards.map((card, index) => (
               // eslint-disable-next-line react/no-array-index-key
               <Grid key={index} item xs={2}>
