@@ -173,7 +173,8 @@
     "guest_invited": "Successfully invited a guest",
     "guests": "Guests",
     "guest_name_required": "Guest Name or Company Name is required",
-    "add_company": "Or add a Company"
+    "add_company": "Or add a Company",
+    "guest_type": "Guest Type "
     },
   "video_recording": {
     "add_video_text": "Add a Video with your phone",

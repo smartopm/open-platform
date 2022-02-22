@@ -39,14 +39,14 @@ export default function InviteeForm({
       {
         primary && (
           <div className={classes.guestType}>
-            <Typography variant="caption">Guest Type </Typography> 
+            <Typography variant="caption">{t('logbook:guest.guest_type')}</Typography> 
             {"  "}
             <ButtonGroup color="primary" aria-label="Switch to company mode">
               <Button onClick={() => handleIsCompany(false)}>
-                Person
+                {t('misc.person')}
               </Button>
               <Button onClick={() => handleIsCompany(true)}>
-                Company
+                {t('misc.company')}
               </Button>
             </ButtonGroup>
             <br />
