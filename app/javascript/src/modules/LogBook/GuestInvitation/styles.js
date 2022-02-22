@@ -21,4 +21,8 @@ export const useStyles = makeStyles({
   inviteForm: {
     marginTop: 5
   },
+  guestType: {
+    marginTop: 4,
+    marginBottom: 6
+  }
 });

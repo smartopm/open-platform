@@ -6,11 +6,10 @@ import Button from '@mui/material/Button';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import Divider from '@mui/material/Divider';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Switch from '@mui/material/Switch';
 import PropTypes from 'prop-types';
 import PhoneInput from 'react-phone-input-2';
 import { useTranslation } from 'react-i18next';
+import { ButtonGroup } from '@mui/material';
 import { extractCountry } from '../../../../utils/helpers';
 import { useStyles } from '../styles';
 import { Context } from '../../../../containers/Provider/AuthStateProvider';
@@ -31,12 +30,29 @@ export default function InviteeForm({
   const largerScreens = useMediaQuery(theme.breakpoints.up('md'));
   const [isCompany, setIsCompany] = useState(false);
 
-  function handleIsCompany(event) {
-    setIsCompany(event.target.checked);
+  function handleIsCompany(type) {
+    setIsCompany(type);
   };
 
   return (
     <div className={guestData && classes.inviteForm}>
+      {
+        primary && (
+          <div className={classes.guestType}>
+            <Typography variant="caption">Guest Type </Typography> 
+            {"  "}
+            <ButtonGroup color="primary" aria-label="Switch to company mode">
+              <Button onClick={() => handleIsCompany(false)}>
+                Person
+              </Button>
+              <Button onClick={() => handleIsCompany(true)}>
+                Company
+              </Button>
+            </ButtonGroup>
+            <br />
+          </div>
+        )
+      }
       {!primary ? (
         <Typography variant="caption">
           {`${t('logbook:guest_book.new_guest', {
@@ -45,6 +61,7 @@ export default function InviteeForm({
 
         </Typography>
       ) : null}
+
 
       <Grid container spacing={matchesSmall ? 0 : 1} alignItems="center">
         {
@@ -87,22 +104,6 @@ export default function InviteeForm({
           </>
         )
       }
-        {
-          primary &&  (
-          <Grid item xs={12} order={{ xs: 5, sm: 5, md: 5, lg: 5 }}>
-            <FormControlLabel
-              control={(
-                <Switch
-                  checked={isCompany}
-                  onChange={handleIsCompany}
-                  inputProps={{ 'aria-label': 'Switch to company mode' }}
-                />
-                )}
-              label={t('logbook:guest.add_company')}
-            />
-          </Grid>
-          )
-        }
         {
           (isCompany || guestData.companyName) && (
             <Grid
@@ -150,8 +151,8 @@ export default function InviteeForm({
           xs={12}
           md={1}
           sm={2}
-          order={{ xs: 6, sm: 6, md: 6, lg: 6 }}
-          style={{ marginTop: matchesSmall && !primary ? 10 : 0 }}
+          order={{ xs: 5, sm: 5, md: 5, lg: 5 }}
+          style={{ marginTop: matchesSmall ? 10 : 0 }}
         >
           <Button
             variant="outlined"
