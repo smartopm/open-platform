@@ -179,7 +179,7 @@ export default function TaskSubTask({
                     >
                       <AccountTreeIcon
                         fontSize="small"
-                        color={task?.subTasks?.length ? 'primary' : 'disabled'}
+                        color={task?.subTasksCount ? 'primary' : 'disabled'}
                       />
                     </IconButton>
                   </Grid>
@@ -190,7 +190,7 @@ export default function TaskSubTask({
                     className={classes.iconItem}
                     style={{ paddingLeft: '8px' }}
                   >
-                    <span>{task?.subTasks?.length || 0}</span>
+                    <span>{task?.subTasksCount || 0}</span>
                   </Grid>
                   <Grid item md={2} xs={2}>
                     <IconButton aria-controls="task-comment-icon" data-testid="task_comments_count">
