@@ -120,6 +120,7 @@
     "invalid_now": "Invalid now",
     "invalid_today": "Invalid today",
     "expired": "Expired",
+    "canceled": "Canceled",
     "ends_on_date": "Ends on {{date}}",
     "start_of_visit": "Starts on {{date}}",
     "ends_on_date_time": "Ends on {{date}}, {{time}}",

@@ -22,6 +22,7 @@ export default function GuestListCard({
 }) {
   const history = useHistory();
   const classes = useLogbookStyles();
+
   function handleViewGuest() {
     history.push(`/request/${invite.guest.request.id}?type=view`);
   }
@@ -36,9 +37,9 @@ export default function GuestListCard({
     >
       <CardContent>
         <Grid container direction="row" alignItems="center">
-          <Grid item xs={12} sm={8} md={4} lg={4}>
-            <Grid container justifyContent="flex-start" alignItems="center" spacing={3}>
-              <Grid item xs={3} data-testid="guest_info">
+          <Grid item xs={12} sm={12} lg={6} className={classes.avatarTimeSection}>
+            <Grid container alignItems="center">
+              <Grid item xs={3} sm={3} lg={2} data-testid="guest_info">
                 {invite.thumbnailUrl ? (
                   <Avatar
                     alt={invite.guest?.request?.name}
@@ -58,55 +59,60 @@ export default function GuestListCard({
                   </Avatar>
                 )}
               </Grid>
-              <Grid item xs={7} data-testid="guest_name">
-                <Text content={invite.guest?.request?.name} className={styles.classes?.text} />
+              <Grid item xs={9} sm={9} lg={4} data-testid="start_of_visit" className={classes.timeDetails}>
+                <Text
+                  content={translate('guest_book.start_of_visit', {
+                    date: dateToString(invite.entryTime.visitationDate)
+                  })}
+                  className={styles.classes?.text}
+                />
+                <br />
+                <Text
+                  content={
+                    invite.entryTime.visitEndDate
+                      ? translate('guest_book.ends_on_date', {
+                          date: dateToString(invite.entryTime.visitEndDate)
+                        })
+                      : translate('guest_book.ends_on_date', {
+                          date: dateToString(invite.entryTime.visitationDate)
+                        })
+                  }
+                  className={styles.classes?.text}
+                />
+                <br />
+                <br />
+                <Text
+                  content={translate('guest_book.visit_time', {
+                    startTime: dateTimeToString(invite.entryTime.startsAt),
+                    endTime: dateTimeToString(invite.entryTime.endsAt)
+                  })}
+                  className={styles.classes?.text} 
+                  data-testid="visit_time"
+                />
               </Grid>
             </Grid>
           </Grid>
-          <Grid item xs={6} sm={4} md={4} lg={2} data-testid="start_of_visit">
-            <Text
-              content={translate('guest_book.start_of_visit', {
-                date: dateToString(invite.entryTime.visitationDate)
-              })}
-              className={styles.classes?.text}
-            />
-            <br />
-            <Text
-              content={
-                invite.entryTime.visitEndDate
-                  ? translate('guest_book.ends_on_date', {
-                      date: dateToString(invite.entryTime.visitEndDate)
-                    })
-                  : translate('guest_book.ends_on_date', {
-                      date: dateToString(invite.entryTime.visitationDate)
-                    })
-              }
-              className={styles.classes?.text}
+          <Grid item xs={12} sm={12} lg={2} data-testid="guest_name">
+            <Text 
+              color="primary"
+              content={invite.guest?.request?.name} 
+              className={`${styles.classes?.text} ${classes.guestName}`}
             />
           </Grid>
-          <Grid item xs={6} sm={6} md={4} lg={2} data-testid="visit_time">
-            <Text
-              content={translate('guest_book.visit_time', {
-                startTime: dateTimeToString(invite.entryTime.startsAt),
-                endTime: dateTimeToString(invite.entryTime.endsAt)
-              })}
-              className={styles.classes?.text}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={4} lg={4}>
-            <Grid container direction="row" justifyContent="space-between">
-              <Grid item xs={4} sm={2} lg={1} data-testid="status" className={classes.chipAlign}>
+          <Grid item xs={12} sm={12} lg={4}>
+            <Grid container direction="row" justifyContent="flex-end">
+              <Grid item xs data-testid="status" className={classes.chipAlign}>
                 <Chip
                   label={
                     invite.guest.request.status === 'approved'
                       ? translate('guest_book.approved')
                       : translate('guest_book.pending')
                   }
-                  color={invite.guest.request.status === 'approved' ? 'primary' : 'secondary'}
+                  color={invite.guest?.request?.status === 'approved' ? 'primary' : 'secondary'}
                   size="small"
                 />
               </Grid>
-              <Grid item xs={4} sm={2} lg={1} data-testid="validity" className={classes.chipAlign}>
+              <Grid item xs data-testid="validity" className={classes.chipAlign}>
                 <Chip
                   label={
                     checkRequests(invite.entryTime, translate, tz).valid
@@ -123,7 +129,22 @@ export default function GuestListCard({
                   size="small"
                 />
               </Grid>
-              <Grid item xs={4} sm={2} lg={1} data-testid="more_options">
+              {
+                invite.status === 'canceled' && (
+                  <Grid item xs data-testid="invite_status" className={classes.chipAlign}>
+                    <Chip
+                      label={invite.status && translate('guest_book.canceled')}
+                      style={{
+                        background: styles.theme.palette.error?.main,
+                        color: 'white'
+                      }}
+                      data-testid="invite_status"
+                      size="small"
+                    />
+                  </Grid>
+                )
+              }
+              <Grid item xs data-testid="more_options">
                 {currentInvite.loading && currentInvite.id === invite.id ? (
                   <Spinner />
                 ) : (
@@ -133,6 +154,7 @@ export default function GuestListCard({
                     data-testid="guest_invite_menu"
                     dataid={invite.id}
                     onClick={event => handleInviteMenu(event, invite.id)}
+                    className={classes.moreOptionButton}
                     color="primary"
                   >
                     <MoreVert />
@@ -171,6 +193,7 @@ GuestListCard.propTypes = {
       name: PropTypes.string
     }),
     id: PropTypes.string,
+    status: PropTypes.string.isRequired,
     thumbnailUrl: PropTypes.string
   }).isRequired,
   translate: PropTypes.func.isRequired,
