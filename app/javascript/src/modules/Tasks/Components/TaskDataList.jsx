@@ -26,7 +26,6 @@ import Card from '../../../shared/Card';
 import CustomProgressBar from '../../../shared/CustomProgressBar';
 import { CommentQuery } from '../../../graphql/queries';
 
-
 export default function TaskDataList({
   task,
   menuData,
@@ -47,13 +46,25 @@ export default function TaskDataList({
     errorPolicy: 'all'
   });
 
+  function taskStatusCharacter() {
+    const status = task?.status;
+    switch (status) {
+      case 'not_assigned': return 'N';
+      case 'at_risk': return 'R';
+      case 'needs_attention': return 'A';
+      case 'in_progress': return 'P';
+      case 'complete': return 'C';
+      default: return 'N'
+    }
+  }
+
   return (
     <Card styles={styles} contentStyles={{ padding: '4px' }}>
       <Grid container>
         <Grid
           item
           md={3}
-          xs={10}
+          xs={8}
           style={{ display: 'flex', alignItems: 'center' }}
           data-testid="task_body_section"
         >
@@ -146,6 +157,22 @@ export default function TaskDataList({
               </Hidden>
             )}
           </Grid>
+        </Grid>
+        <Grid
+          item
+          xs={2}
+          style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}
+          data-testid="task_status_mobile"
+        >
+          <Hidden mdUp>
+            <Chip
+              data-testid="task_status_chip_mobile"
+              label={taskStatusCharacter()}
+              className={task?.status ? classes[task.status] : classes.not_started}
+              style={{ color: 'white'}}
+              size="small"
+            />
+          </Hidden>
         </Grid>
         {!clientView && (
           <Hidden mdUp>
