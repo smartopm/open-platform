@@ -158,22 +158,24 @@ export default function TaskDataList({
             )}
           </Grid>
         </Grid>
-        <Grid
-          item
-          xs={2}
-          style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}
-          data-testid="task_status_mobile"
-        >
-          <Hidden mdUp>
-            <Chip
-              data-testid="task_status_chip_mobile"
-              label={taskStatusCharacter()}
-              className={task?.status ? classes[task.status] : classes.not_started}
-              style={{ color: 'white'}}
-              size="small"
-            />
-          </Hidden>
-        </Grid>
+        {matches && (
+          <Grid
+            item
+            xs={2}
+            style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}
+            data-testid="task_status_mobile"
+          >
+            <Hidden mdUp>
+              <Chip
+                data-testid="task_status_chip_mobile"
+                label={taskStatusCharacter()}
+                className={task?.status ? classes[task.status] : classes.not_started}
+                style={{ color: 'white'}}
+                size="small"
+              />
+            </Hidden>
+          </Grid>
+        )}
         {!clientView && (
           <Hidden mdUp>
             <Grid item md={1} xs={1} style={{ display: 'flex', alignItems: 'center' }}>
