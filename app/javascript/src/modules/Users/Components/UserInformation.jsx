@@ -94,6 +94,7 @@ export default function UserInformation({
               userId={userId}
               setDrawerOpen={setDrawerOpen}
               currentTab={tabValue}
+              authState={authState}
             />
           </FixedHeader>
         </div>

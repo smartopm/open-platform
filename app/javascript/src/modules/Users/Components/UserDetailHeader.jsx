@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import React, { useState, useRef } from 'react';
 import Grid from '@mui/material/Grid';
 import { useHistory } from 'react-router-dom';
@@ -13,7 +14,7 @@ import UserLabels from './UserLabels';
 import UserLabelTitle from './UserLabelTitle';
 import SelectButton from '../../../shared/buttons/SelectButton';
 
-export default function UserDetailHeader({ data, userType, currentTab }) {
+export default function UserDetailHeader({ data, userType, currentTab, authState }) {
   const history = useHistory();
   const [isLabelOpen, setIsLabelOpen] = useState(false);
   const [open, setOpen] = useState(false);
@@ -35,85 +36,130 @@ export default function UserDetailHeader({ data, userType, currentTab }) {
     setOpen(false);
   }
 
+  function checkModule(moduleName) {
+    const userPermissionsModule = authState.user?.permissions.find(
+      permissionObject => permissionObject.module === moduleName
+    );
+    return userPermissionsModule?.permissions.includes('can_see_menu_item') || false;
+  }
+  // return menuItem.accessibleBy.includes(userType)
+
+  function checkCommunityFeatures(featureName) {
+    return Object.keys(authState.user?.community.features || []).includes(featureName)
+  }
+
+  function handleMergeUserItemClick() {
+    history.push(`/user/${data.user.id}?type=MergeUser`);
+    setOpen(false);
+  }
+
   const selectOptions = [
     {
       key: 'user_settings',
       value: 'User Settings',
-      handleMenuItemClick: (key) => setSelectKey(key),
+      handleMenuItemClick: key => setSelectKey(key),
+      show: checkModule('user') &&  checkCommunityFeatures('Users'),
       subMenu: [
         {
           key: 'edit_user',
           value: 'Edit User',
-          handleMenuItemClick: () => history.push(`/user/${data.user.id}/edit`)
-        },
-        {
-          key: 'invite_history',
-          value: 'Invite History'
+          handleMenuItemClick: () => history.push(`/user/${data.user.id}/edit`),
+          show: checkModule('user') && checkCommunityFeatures('Users')
         },
         {
           key: 'print_id',
           value: 'Print ID',
-          handleMenuItemClick: () => history.push(`/print/${data.user.id}`)
+          handleMenuItemClick: () => history.push(`/print/${data.user.id}`),
+          show: checkModule('user') &&  checkCommunityFeatures('Users')
         }
       ]
     },
     {
       key: 'communication',
       value: 'Communications',
-      handleMenuItemClick: (key) => setSelectKey(key),
+      handleMenuItemClick: key => setSelectKey(key),
       subMenu: [
         {
           key: 'communications',
           value: 'Communication',
-          handleMenuItemClick
+          handleMenuItemClick,
+          show: checkModule('communication') && checkCommunityFeatures('Messages')
         },
         {
           key: 'send_sms',
           value: 'Send SMS',
-          handleMenuItemClick: () => history.push(`/message/${data.user.id}`)
+          handleMenuItemClick: () => history.push(`/message/${data.user.id}`),
+          show: checkCommunityFeatures('Messages'),
         },
         {
           key: 'send_otp',
           value: 'Send OTP',
-          handleMenuItemClick: () => history.push(`/user/${data.user.id}/otp`)
+          handleMenuItemClick: () => history.push(`/user/${data.user.id}/otp`),
+          show: checkModule('user') && checkCommunityFeatures('Messages')
         },
         {
           key: 'message_support',
           value: 'Message Support',
-          handleMenuItemClick: () => history.push(`/message/${data.user.id}`)
+          handleMenuItemClick: () => history.push(`/message/${data.user.id}`),
+          show: checkCommunityFeatures('Messages')
         }
       ]
     },
     {
       key: 'payments',
       value: 'Plans',
-      handleMenuItemClick
+      handleMenuItemClick,
+      show: checkCommunityFeatures('Payments')
     },
     {
       key: 'plots',
       value: 'Plots',
-      handleMenuItemClick
+      handleMenuItemClick,
+      show: checkCommunityFeatures('Properties')
     },
     {
       key: 'lead_management',
       value: 'LeadManagement',
-      handleMenuItemClick
+      handleMenuItemClick,
+      show: checkModule('user') && checkCommunityFeatures('Users')
+    },
+    {
+      key: 'forms',
+      value: 'Forms',
+      handleMenuItemClick,
+      show: checkModule('form') && checkCommunityFeatures('Forms')
+    },
+    {
+      key: 'customer_journey',
+      value: 'CustomerJourney',
+      handleMenuItemClick,
+      show: checkCommunityFeatures('Customer Journey')
     },
     {
       key: 'user_logs',
       value: 'User Logs',
-      handleMenuItemClick: () => history.push(`/user/${data.user.id}/logs`)
+      handleMenuItemClick: () => history.push(`/user/${data.user.id}/logs`),
+      show: checkModule('entry_request') && checkCommunityFeatures('LogBook')
     },
     {
       key: 'merge_user',
       value: 'Merge User',
-      handleMenuItemClick: () => history.push(`/user/${data.user.id}?type='MergeUser'`)
+      handleMenuItemClick: () => handleMergeUserItemClick,
+      show: checkModule('user') && checkCommunityFeatures('Users')
     }
-  ]
+  ];
   return (
     <>
       <Grid container>
-        <Grid item lg={12} md={12} sm={8} xs={8} className={classes.breadCrumb} data-testid='breadcrumb'>
+        <Grid
+          item
+          lg={12}
+          md={12}
+          sm={8}
+          xs={8}
+          className={classes.breadCrumb}
+          data-testid="breadcrumb"
+        >
           <Breadcrumbs aria-label="user-breadcrumb">
             <Link color="primary" href="/users" className={classes.link}>
               <Typography variant="caption">Users</Typography>
@@ -144,14 +190,8 @@ export default function UserDetailHeader({ data, userType, currentTab }) {
             </Grid>
           )}
         </Hidden>
-        <Grid
-          item
-          lg={4}
-          md={4}
-          sm={12}
-          xs={12}
-        >
-          <Grid container data-testid='user-detail'>
+        <Grid item lg={4} md={4} sm={12} xs={12}>
+          <Grid container data-testid="user-detail">
             <Grid item lg={3} md={3} sm={3} xs={3}>
               <Avatar
                 user={data.user}
@@ -166,7 +206,7 @@ export default function UserDetailHeader({ data, userType, currentTab }) {
         </Grid>
         <Hidden smDown>
           <Grid item lg={3} md={3} sm={3}>
-            <SelectButton 
+            <SelectButton
               options={selectOptions}
               open={open}
               anchorEl={anchorRef.current}
