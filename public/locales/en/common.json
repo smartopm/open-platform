@@ -258,7 +258,9 @@
     "remove": "Remove",
     "add": "Add",
     "open": "Open",
-    "user": "User"
+    "user": "User",
+    "person": "Person",
+    "company": "Company"
   },
   "menu": {
     "invoice": "Invoice",
