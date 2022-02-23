@@ -72,6 +72,7 @@ export default function TaskInfoTop({
     message: ''
   });
   const taskStatuses = {
+    not_started: t('task.not_started'),
     in_progress: t('task.in_progress'),
     needs_attention: t('task.needs_attention'),
     at_risk: t('task.at_risk'),
@@ -194,12 +195,14 @@ export default function TaskInfoTop({
         <Grid item xs={12}>
           <Grid container>
             <Grid item md={9}>
-              <ButtonGroupSelect
-                options={taskStatuses}
-                selectedOption={taskStatus}
-                setSelectedOption={setTaskStatus}
-                handleSelectOption={handleSelectTaskStatus}
-              />
+              {canUpdateNote && (
+                <ButtonGroupSelect
+                  options={taskStatuses}
+                  selectedOption={taskStatus}
+                  setSelectedOption={setTaskStatus}
+                  handleSelectOption={handleSelectTaskStatus}
+                />
+              )}
             </Grid>
             {!matches && (
             <Grid item md={3} style={{ justifyContent: 'right' }}>
