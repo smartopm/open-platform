@@ -96,5 +96,7 @@ describe('User Detail Header Component', () => {
     fireEvent.click(container.queryByText('Communication'));
     expect(container.queryByText('Send SMS')).not.toBeInTheDocument();
     expect(container.queryByText('Send OTP')).not.toBeInTheDocument();
+    fireEvent.click(container.queryByTestId('arrow-icon'));
+    expect(container.queryByText('Edit User')).not.toBeInTheDocument();
   });
 });
