@@ -51,5 +51,9 @@ describe('User Detail Header Component', () => {
 
     fireEvent.click(container.queryByTestId('arrow-icon'));
     expect(container.queryByText('User Settings')).toBeInTheDocument();
+
+    fireEvent.click(container.queryByText('User Settings'))
+    expect(container.queryByText('Edit User')).toBeInTheDocument();
+    fireEvent.click(container.queryByTestId('user-detail'))
   });
 });
