@@ -163,6 +163,20 @@ export default function UserDetailHeader({ data, userType, currentTab, authState
             </Grid>
           )}
         </Hidden>
+        <Hidden mdUp>
+          <Grid item sm={12} xs={12} className={classes.selectMobile}>
+            <SelectButton
+              options={options}
+              open={open}
+              anchorEl={anchorRef.current}
+              anchorRef={anchorRef}
+              handleClose={handleClose}
+              handleClick={() => setOpen(!open)}
+              selectedKey={selectedKey}
+              buttonText={currentTab}
+            />
+          </Grid>
+        </Hidden>
       </Grid>
     </>
   );
@@ -192,5 +206,8 @@ const useStyles = makeStyles(() => ({
   },
   labels: {
     textAlign: 'center'
+  },
+  selectMobile: {
+    paddingTop: '20px'
   }
 }));

@@ -39,7 +39,7 @@ export default function SelectButton({
         data-testid="button"
       >
         <Button>{buttonText}</Button>
-        <Button onClick={handleClick}>
+        <Button onClick={handleClick} data-testid='arrow-icon'>
           <ArrowDropDownIcon />
         </Button>
       </ButtonGroup>
@@ -63,9 +63,8 @@ export default function SelectButton({
                   {options
                     .filter(opt => opt.show)
                     .map(opt => (
-                      <>
+                      <div key={opt.key}>
                         <MenuItem
-                          key={opt.key}
                           selected={opt.key === selectedKey}
                           onClick={
                             opt.subMenu
@@ -100,7 +99,7 @@ export default function SelectButton({
                                 {submenu.value}
                               </MenuItem>
                             ))}
-                      </>
+                      </div>
                     ))}
                 </MenuList>
               </ClickAwayListener>
@@ -137,6 +136,5 @@ SelectButton.propTypes = {
     }))
   })).isRequired,
   selectedKey: PropTypes.string,
-  handleMenuItemClick: PropTypes.func.isRequired,
   handleClick: PropTypes.func.isRequired
 };

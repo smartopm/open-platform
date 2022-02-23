@@ -700,7 +700,6 @@ export function createMenuContext(type, data, userType, authState){
     }
   }
 
-  // context for Payments & Payment Plans
   if(['Payments'].includes(type)){
     return {
       userType,
