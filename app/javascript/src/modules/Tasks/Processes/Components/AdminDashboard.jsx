@@ -129,7 +129,8 @@ export default function AdminDashboard() {
                 borderRadius: '4px',
                 height: '47px',
                 marginTop: '7px',
-                paddingTop: 0
+                paddingTop: 0,
+                paddingRight: '8px'
               }}
             >
               <Typography variant="caption" color="secondary">
@@ -143,7 +144,7 @@ export default function AdminDashboard() {
                 <Card
                   className={classes.card}
                   onClick={() => routeToProjects('submitted_per_quarter', card.name)}
-                  style={{ cursor: 'pointer' }}
+                  style={{ cursor: 'pointer', boxShadow: 'none' }}
                 >
                   <CardContent
                     className={`${classes.oddCardsBackground} ${classes.cardContent}`}
@@ -172,7 +173,8 @@ export default function AdminDashboard() {
                 borderRadius: '4px',
                 height: '47px',
                 marginTop: '7px',
-                paddingTop: 0
+                paddingTop: 0,
+                paddingRight: '8px'
               }}
             >
               <Typography variant="caption" color="secondary">
@@ -186,7 +188,7 @@ export default function AdminDashboard() {
                 <Card
                   className={classes.card}
                   onClick={() => routeToProjects('completed_per_quarter', card.name)}
-                  style={{ cursor: 'pointer' }}
+                  style={{ cursor: 'pointer', boxShadow: 'none' }}
                 >
                   <CardContent
                     className={`${classes.oddCardsBackground} ${classes.cardContent}`}
