@@ -53,7 +53,10 @@
     "incomplete": "Incomplete",
     "delete_confirmation_text": "Are you sure you want to delete your comment?",
     "task_completed": "Task completed",
-    "add_note": "Add a note"
+    "add_note": "Add a note",
+    "in_progress": "In Progress",
+    "needs_attention": "Needs Attention",
+    "at_risk": "At Risk"
   },
   "document": {
     "uploaded_at": "Uploaded at",

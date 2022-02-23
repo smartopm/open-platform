@@ -66,16 +66,16 @@ export default function TaskInfoTop({
   const [taskUpdate] = useMutation(UpdateNote);
   const [editingBody, setEditingBody] = useState(false);
   const [editingDueDate, setEditingDueDate] = useState(false);
-  const [taskStatus, setTaskStatus] = useState(null)
+  const [taskStatus, setTaskStatus] = useState(data?.status)
   const [updateDetails, setUpdateDetails] = useState({
     isError: false,
     message: ''
   });
   const taskStatuses = {
-    in_progress: 'In Progress',
-    needs_attention: 'Needs Attention',
-    at_risk: 'At Risk',
-    complete: 'Complete'
+    in_progress: t('task.in_progress'),
+    needs_attention: t('task.needs_attention'),
+    at_risk: t('task.at_risk'),
+    complete: t('task.complete')
   }
 
   const allowedAssignees = [
