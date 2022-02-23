@@ -67,7 +67,7 @@ RSpec.describe Notes::Note, type: :model do
   describe 'enums' do
     it do
       is_expected.to define_enum_for(:status)
-        .with_values(in_progress: 0, needs_attention: 1, at_risk: 2, completed: 3)
+        .with_values(not_started: 0, in_progress: 1, needs_attention: 2, at_risk: 3, completed: 4)
     end
   end
 
