@@ -172,6 +172,7 @@
     "invite_guest": "Invite Guest",
     "invite_new_guest": "Invite new guest",
     "guest_invited": "Successfully invited a guest",
+    "invite_canceled": "Successfully canceled an invitation",
     "guests": "Guests",
     "guest_name_required": "Guest Name or Company Name is required",
     "add_company": "Or add a Company",

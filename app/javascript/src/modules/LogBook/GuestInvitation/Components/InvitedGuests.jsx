@@ -16,6 +16,8 @@ import { MyInvitedGuestsQuery } from '../graphql/queries';
 import { InvitationUpdateMutation } from '../graphql/mutations';
 import { useStyles } from '../styles';
 import GuestListCard from './GuestListCard';
+import MessageAlert from '../../../../components/MessageAlert';
+import { formatError } from '../../../../utils/helpers';
 
 export default function InvitedGuests() {
   const history = useHistory();
@@ -35,6 +37,7 @@ export default function InvitedGuests() {
   const [anchorEl, setAnchorEl] = useState(null);
   const [currentInvite, setCurrentInvite] = useState({ id: '', loading: false });
   const open = Boolean(anchorEl);
+  const [details, setDetails] = useState({ message: '', isError: false });
 
   const menuList = [
     {
@@ -61,10 +64,10 @@ export default function InvitedGuests() {
     inviteUpdate({
       variables: { inviteId:  currentInvite.id}
     })
-    .then(() => console.log('done'))
+    .then(() => setDetails({ ...details, isError: false, message: t('guest.invite_canceled') }))
     .catch(err => {
-      console.log(err)
       setCurrentInvite({...currentInvite,  loading: false})
+      setDetails({ ...details, isError: true, message: formatError(err.message) });
     })
   }
 
@@ -79,6 +82,13 @@ export default function InvitedGuests() {
   };
   return (
     <Container maxWidth="xl">
+
+      <MessageAlert
+        type={!details.isError ? 'success' : 'error'}
+        message={details.message}
+        open={!!details.message}
+        handleClose={() => setDetails({ ...details, message: '' })}
+      />
       <Grid container>
         <Grid item xs={6} sm={11}>
           <Typography variant="h4">{t('common:menu.guest_list')}</Typography>
