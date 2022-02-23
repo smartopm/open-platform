@@ -33,7 +33,8 @@ describe('Side Nav component', () => {
     Labels: { features: [] },
     News: { features: [] },
     Tasks: { features: []},
-    'Email Templates': { features: [] }
+    'Email Templates': { features: [] },
+    Processes: { features: [] }
   }
 
   it('should render proper the sidenav menu', async () => {
@@ -66,8 +67,9 @@ describe('Side Nav component', () => {
     expect(container.queryByText('misc.properties')).toBeInTheDocument();
     expect(container.queryByText('menu.dashboard')).toBeInTheDocument();
     expect(container.queryByText('menu.payment')).toBeInTheDocument();
+    expect(container.queryByText('menu.processes')).toBeInTheDocument();
 
-    expect(container.queryByText('misc.news')).not.toBeInTheDocument() // should not be initially visible 
+    expect(container.queryByText('misc.news')).not.toBeInTheDocument() // should not be initially visible
 
 
     // toggle the menu and make sure new menus will show
@@ -95,7 +97,7 @@ describe('Side Nav component', () => {
           smsPhoneNumbers: ["+254724821901", "+154724582391"],
           emergencyCallNumber: "254724821901",
         },
-        permissions: [          
+        permissions: [
             {
               module: "community",
               permissions: ['can_see_menu_item']

@@ -1,4 +1,5 @@
 import React from 'react';
+import SettingsSuggestIcon from '@mui/icons-material/SettingsSuggest';
 import AccessCheck from '../../Permissions/Components/AccessCheck';
 import ProcessesPage from './Components/ProcessesPage';
 
@@ -25,7 +26,7 @@ export default {
     component: RenderProcesses
   },
   styleProps: {
-    icon: null,
+    icon: <SettingsSuggestIcon />,
   },
   name: (t) => t('menu.processes'),
   moduleName: currentModule,

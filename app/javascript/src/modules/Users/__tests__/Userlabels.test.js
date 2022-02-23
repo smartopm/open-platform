@@ -49,21 +49,12 @@ describe('It should test the user label component', () => {
     };
     const container = render(
       <MockedProvider mocks={[...mockData, labelsMockData]} addTypename={false}>
-        <UserLabels userId="59927651-9bb4-4e47-8afe-0989d03d210d" />
+        <UserLabels userId="59927651-9bb4-4e47-8afe-0989d03d210d" isLabelOpen />
       </MockedProvider>
     );
     await waitFor(() => {
-      expect(container.queryByTestId('chip-label')).not.toBeInTheDocument();
-      expect(container.queryByTestId('labels_closed_icon')).toBeInTheDocument();
-      // click to show list of labels
-      fireEvent.click(container.queryByTestId('label_toggler'));
       expect(container.queryByTestId('chip-label')).toBeInTheDocument();
-      expect(container.queryByTestId('labels_open_icon')).toBeInTheDocument();
-
-      expect(container.queryByTestId('add_label_closed')).toBeInTheDocument();
-      // click to add new label
       fireEvent.click(container.queryByTestId('add_label'));
-      expect(container.queryByTestId('add_label_open')).toBeInTheDocument();
       expect(container.queryByTestId('userLabel-autoCreate')).toBeInTheDocument();
     }, 10);
   });
@@ -93,11 +84,10 @@ describe('It should test the user label component', () => {
     };
     const container = render(
       <MockedProvider mocks={[mockData, labelsMockData]} addTypename={false}>
-        <UserLabels userId="59927651-9bb4-4e47-8afe-0989d03d210d" />
+        <UserLabels userId="59927651-9bb4-4e47-8afe-0989d03d210d" isLabelOpen />
       </MockedProvider>
     );
     await waitFor(() => {
-      fireEvent.click(container.queryByTestId('label_toggler'));
       expect(container.queryByTestId('no_labels')).toBeInTheDocument();
       expect(container.queryByText('label:label.no_user_labels')).toBeInTheDocument();
     }, 10)

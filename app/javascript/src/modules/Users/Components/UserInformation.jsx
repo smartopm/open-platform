@@ -1,7 +1,5 @@
 /* eslint-disable complexity */
 import React, { useEffect, useState } from 'react';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import { useTheme } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
 import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
@@ -10,11 +8,9 @@ import PhoneIcon from '@material-ui/icons/Phone';
 import { Dialog, DialogTitle, DialogContent, Grid } from '@material-ui/core';
 import { css, StyleSheet } from 'aphrodite';
 import PropTypes from 'prop-types';
-import Avatar from '../../../components/Avatar';
 import UserPlotInfo from './UserPlotInfo';
 import UserMerge from './UserMerge';
 import CenteredContent from '../../../components/CenteredContent';
-import UserDetail from './UserProfileDetail';
 import { TabPanel } from '../../../components/Tabs';
 import UserFilledForms from './UserFilledForms';
 import UserMessages from '../../../components/Messaging/UserMessages';
@@ -26,6 +22,8 @@ import PaymentPlans from '../../Payments/Components/UserTransactions/Plans';
 import ShiftButtons from '../../TimeCard/Components/ShiftButtons';
 import InviteHistoryList from '../../LogBook/GuestInvitation/Components/InviteHistoryList';
 import LeadManagementDetails from '../LeadManagement/Components/LeadManagementDetails';
+import UserDetailHeader from './UserDetailHeader'
+import FixedHeader from '../../../shared/FixedHeader'
 
 export default function UserInformation({
   data,
@@ -37,8 +35,6 @@ export default function UserInformation({
   accountData
 }) {
   const path = useParamsQuery();
-  const theme = useTheme();
-  const matches = useMediaQuery(theme.breakpoints.up('sm'));
   const tab = path.get('tab');
   const subtab = path.get('subtab');
   const type = path.get('type');
@@ -90,18 +86,28 @@ export default function UserInformation({
             <UserMerge close={handleMergeDialog} userId={userId} />
           </DialogContent>
         </Dialog>
+        <div style={{marginBottom: '100px'}}>
+          <FixedHeader fullWidth>
+            <UserDetailHeader
+              data={data}
+              userType={userType}
+              userId={userId}
+              setDrawerOpen={setDrawerOpen}
+              currentTab={tabValue}
+            />
+          </FixedHeader>
+        </div>
+        <RightSideMenu
+          authState={authState}
+          handleDrawerToggle={() => setDrawerOpen(false)}
+          drawerOpen={isDrawerOpen}
+        />
 
         <Grid container>
           <Grid item xs={3}>
             {' '}
           </Grid>
-          <Grid item xs={6} style={{ textAlign: 'center' }} data-testid="user_avatar">
-            <Avatar
-              user={data.user}
-              // eslint-disable-next-line react/style-prop-object
-              style="big"
-            />
-          </Grid>
+          <Grid item xs={6} style={{ textAlign: 'center' }} data-testid="user_avatar" />
 
           <Grid item xs={3}>
             <>
@@ -113,8 +119,11 @@ export default function UserInformation({
                 className="right-menu-drawer"
                 data-testid="right_menu_drawer"
                 style={{
-                  float: 'right',
-                  marginRight: -23
+                  right: 5,
+                  top: 80,
+                  marginRight: -24,
+                  zIndex: 1000,
+                  position: 'fixed'
                 }}
               >
                 <DoubleArrowOutlinedIcon
@@ -122,25 +131,7 @@ export default function UserInformation({
                   style={{ transform: 'translate(-50%,-50%) rotate(180deg)' }}
                 />
               </IconButton>
-
-              <RightSideMenu
-                authState={authState}
-                handleDrawerToggle={() => setDrawerOpen(false)}
-                drawerOpen={isDrawerOpen}
-              />
             </>
-          </Grid>
-        </Grid>
-
-        <Grid container>
-          <Grid item xs={matches ? 3 : 1}>
-            {' '}
-          </Grid>
-          <Grid item xs={matches ? 6 : 10} style={{ textAlign: 'center', marginTop: '30px' }}>
-            <UserDetail data={data} userType={userType} />
-          </Grid>
-          <Grid item xs={matches ? 3 : 1}>
-            {' '}
           </Grid>
         </Grid>
 

@@ -24,9 +24,8 @@ export default function GuestListCard({
   const classes = useLogbookStyles();
 
   function handleViewGuest() {
-    history.push(`/request/${invite.guest.request.id}?type=view`);
+    history.push(`/request/${invite.guest?.request?.id}?type=view`);
   }
-
   return (
     <Card
       variant="outlined"
@@ -104,7 +103,7 @@ export default function GuestListCard({
               <Grid item xs data-testid="status" className={classes.chipAlign}>
                 <Chip
                   label={
-                    invite.guest.request.status === 'approved'
+                    invite.guest?.request?.status === 'approved'
                       ? translate('guest_book.approved')
                       : translate('guest_book.pending')
                   }

@@ -1,9 +1,8 @@
-/* eslint-disable max-statements */
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import React, { useEffect, useState } from 'react';
-import { useLazyQuery, useMutation } from 'react-apollo';
+import React, { useState } from 'react';
+import { useMutation } from 'react-apollo';
 import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useMediaQuery, useTheme } from '@mui/material';
@@ -15,14 +14,13 @@ import MessageAlert from '../../../../components/MessageAlert';
 import { formatError, ifNotTest, setObjectValue } from '../../../../utils/helpers';
 import InviteeForm from './InviteeForm';
 import SearchInput from '../../../../shared/search/SearchInput';
-import { SearchGuestsQuery } from '../graphql/queries';
-import useDebounce from '../../../../utils/useDebounce';
 import GuestSearchCard from './GuestSearchCard';
 import { UserChip } from '../../../Tasks/Components/UserChip';
-import { filterEmptyObjectByKey, validateGuest } from '../helpers';
+import {  validateGuest } from '../helpers';
+import useGuests from '../hooks/useGuests';
 
 export default function GuestInviteForm() {
-  const initialData = { firstName: '', lastName: '', phoneNumber: null, isAdded: false };
+  const initialData = { firstName: '', lastName: '', companyName: '', phoneNumber: null, isAdded: false };
   const history = useHistory();
   const [guestData, setGuestData] = useState({
     visitationDate: null,
@@ -40,18 +38,8 @@ export default function GuestInviteForm() {
   const [searchValue, setSearchValue] = useState('');
   const [guestUsers, setGuestUsers] = useState([]);
   const theme = useTheme();
-  const debouncedValue = useDebounce(searchValue, 500);
-  const [searchGuests, { data, loading, error }] = useLazyQuery(SearchGuestsQuery, {
-    variables: { query: debouncedValue.trim() },
-    fetchPolicy: 'network-only'
-  });
+  const { data, loading, error } = useGuests(searchValue)
   const matchesSmall = useMediaQuery(theme.breakpoints.down('md'));
-
-  useEffect(() => {
-    if (searchValue) {
-      searchGuests();
-    }
-  }, [debouncedValue]);
 
   function handleInputChange(event, index) {
     const { name, value } = event.target;
@@ -108,12 +96,12 @@ export default function GuestInviteForm() {
     createInvitation({
       variables: {
         userIds,
-        guests: filterEmptyObjectByKey(invitees, 'firstName'),
+        guests: invitees,
         visitationDate: guestData.visitationDate,
         startsAt: guestData.startsAt,
         endsAt: guestData.endsAt,
         occursOn: guestData.occursOn,
-        visitEndDate: guestData.visitEndDate
+        visitEndDate: guestData.visitEndDate,
       }
     })
       .then(() => {
@@ -127,7 +115,11 @@ export default function GuestInviteForm() {
       });
   }
 
-  function handleAddInvitee() {
+  function handleAddInvitee(guest) {
+    if(!guest.firstName && !guest.companyName) {
+      setDetails({ ...details, message: t('guest.guest_name_required'), isError: true });
+      return
+    }
     setInvitees([...invitees, newGuest]);
     setNewGuest(initialData);
   }
@@ -190,27 +182,32 @@ export default function GuestInviteForm() {
             handInviteGuest={addToGuests}
           />
         ))}
+      <br />
+
       {noUserFound && (
-        <>
-          <Typography
-            variant="body2"
-            gutterBottom
-            style={{ marginTop: 16 }}
-            data-testid="user_not_found_add_new"
-          >
-            {t('common:errors.user_not_found_add_new')}
-          </Typography>
-          <InviteeForm
-            guestData={newGuest}
-            handlePhoneNumber={number => setNewGuest({ ...newGuest, phoneNumber: number })}
-            handleInputChange={({ target }) =>
+      <Typography
+        variant="body2"
+        gutterBottom
+        style={{ marginTop: 16 }}
+        data-testid="user_not_found_add_new"
+      >
+        {t('common:errors.user_not_found_add_new')}
+      </Typography>
+      )}
+
+      {
+       noUserFound && (
+       <InviteeForm
+         guestData={newGuest}
+         handlePhoneNumber={number => setNewGuest({ ...newGuest, phoneNumber: number })}
+         handleInputChange={({ target }) =>
               setNewGuest({ ...newGuest, [target.name]: target.value })
             }
-            handleAction={() => handleAddInvitee()}
-            primary
-          />
-        </>
-      )}
+         handleAction={guest => handleAddInvitee(guest)}
+         primary
+       />
+       )
+      }
       <div>
         <br />
         {Boolean(guestUsers.length) && (

@@ -30,6 +30,7 @@ describe('Invited Guests Component', () => {
           myGuests: [
             {
               id: '4af00f39-7fcd-47d2-89bf-e93827d34666',
+              status: 'canceled',
               guest: {
                 id: '1388d45c-5279-4e90-9815-8ab33c49d382',
                 name: 'Test two',

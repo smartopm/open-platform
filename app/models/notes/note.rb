@@ -78,15 +78,30 @@ module Notes
       end
     end
 
-    def self.tasks_by_quarter(community_id)
-      sql = sanitize_sql_for_conditions(["
-      SELECT DATE_PART('year', completed_at) as yr, DATE_PART('quarter', completed_at) as qtr, \
-      count(*) FROM notes WHERE completed = true AND community_id=?
-      AND parent_note_id IS NULL GROUP BY yr, qtr;
-    ", community_id])
+    # rubocop:disable Metrics/MethodLength
+    def self.tasks_by_quarter(community_id, task_category: :completed)
+      community = Community.find_by(id: community_id)
+      return unless community
 
+      drc_form_users = community.drc_form_users.pluck(:id)
+      query = "
+        SELECT DATE_PART('year', completed_at) as yr, DATE_PART('quarter', completed_at) as qtr, \
+        count(*) FROM notes WHERE completed = true AND community_id=?
+        AND parent_note_id IS NULL AND form_user_id IN (?) GROUP BY yr, qtr;
+      "
+
+      if task_category == :submitted
+        query = "
+          SELECT DATE_PART('year', created_at) as yr, DATE_PART('quarter', created_at) as qtr, \
+          count(*) FROM notes WHERE community_id=?
+          AND parent_note_id IS NULL AND form_user_id IN (?) GROUP BY yr, qtr;
+        "
+      end
+
+      sql = sanitize_sql_for_conditions([query, community_id, drc_form_users])
       ActiveRecord::Base.connection.exec_query(sql).rows
     end
+    # rubocop:enable Metrics/MethodLength
 
     def check_current_process_step
       parent_note.sub_notes&.where(completed: false)&.first
@@ -98,7 +113,7 @@ module Notes
 
     # rubocop:disable Layout/LineLength
     # rubocop:disable Metrics/MethodLength
-    def self.by_quarter(quarter)
+    def self.by_quarter(quarter, task_category: :completed)
       quarter_range = {
         'Q1' => [1, 3],
         'Q2' => [4, 6],
@@ -111,8 +126,10 @@ module Notes
       end
 
       months = quarter_range[quarter]
+      query = "date_part('year', completed_at) = ? AND date_part('month', completed_at) >= ? AND  date_part('month', completed_at) <= ? AND completed=true"
+      query = "date_part('year', notes.created_at) = ? AND date_part('month', notes.created_at) >= ? AND  date_part('month', notes.created_at) <= ?" if task_category == :submitted
       where(
-        "date_part('year', completed_at) = ? AND date_part('month', completed_at) >= ? AND  date_part('month', completed_at) <= ?",
+        query,
         Date.current.year,
         months[0],
         months[1],

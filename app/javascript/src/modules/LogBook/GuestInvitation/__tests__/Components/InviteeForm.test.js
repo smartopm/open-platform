@@ -54,7 +54,7 @@ describe('Guest Invitation Form', () => {
   });
 
   it('should render the primary form to add other guests', () => {
-    const { getByTestId } = render(
+    const { getByTestId, queryByTestId } = render(
       <MemoryRouter>
         <Context.Provider value={userMock}>
           <InviteeForm
@@ -73,10 +73,24 @@ describe('Guest Invitation Form', () => {
     });
     expect(getByTestId('guest_entry_first_name').value).toBe('Some random firstName');
 
+    fireEvent.change(getByTestId('guest_entry_last_name'), {
+      target: { value: 'Some random Last Name' }
+    });
+    expect(getByTestId('guest_entry_last_name').value).toBe('Some random Last Name');
+
     expect(getByTestId('add_remove_guest_btn')).toBeInTheDocument();
     expect(getByTestId('add_remove_guest_btn').textContent).toContain('misc.add');
-
+    
     fireEvent.click(getByTestId('add_remove_guest_btn'));
     expect(handleAction).toBeCalled();
+    
+    expect(getByTestId('guest_type').textContent).toContain('logbook:guest.guest_type');
+    expect(getByTestId('person_mode').textContent).toContain('misc.person');
+    expect(getByTestId('company_mode').textContent).toContain('misc.company');
+    // company name should not be available before we switch
+    expect(queryByTestId('company_name')).not.toBeInTheDocument();
+    
+    fireEvent.click(getByTestId('company_mode'));
+    expect(getByTestId('company_name')).toBeInTheDocument();
   });
 });

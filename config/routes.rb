@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   post "/graphql", to: "graphql#execute"
   get "/csv_export/event_logs", to: "csv_export#event_logs"
   get "/csv_import_sample/download", to: "csv_export#download_sample_csv"
+  get "/csv_import_sample/lead_download", to: "csv_export#download_lead_sample_csv"
   post "/sendgrid/webhook/:token", to: "sendgrid#webhook"
 
   # Oauth routes
