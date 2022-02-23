@@ -50,7 +50,7 @@ export default function TaskActionMenu({
               style={{ padding: '0px', marginRight: '15px' }}
             />
           </Grid>
-          <Typography>  
+          <Typography>
             {' '}
             {t('misc.select')}
             {' '}
@@ -96,7 +96,7 @@ export default function TaskActionMenu({
   );
 }
 
-export function TaskQuickAction({ 
+export function TaskQuickAction({
   checkedOptions,
   handleCheckOptions,
  }){
@@ -180,7 +180,7 @@ export function TaskQuickAction({
   )
 }
 
-export function TaskBulkUpdateAction({ 
+export function TaskBulkUpdateAction({
   checkedOptions,
   bulkUpdating,
   handleBulkUpdate,
@@ -239,4 +239,3 @@ TaskBulkUpdateAction.propTypes = {
   bulkUpdating: PropTypes.bool.isRequired,
   handleBulkUpdate: PropTypes.func.isRequired
 }
-

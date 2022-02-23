@@ -44,7 +44,6 @@ export default function ButtonGroupSelect({
     setOpen(false);
   };
 
-
   return (
     <>
       <ButtonGroup color="primary" ref={anchorRef} aria-label="outlined primary button group split button">
@@ -63,7 +62,7 @@ export default function ButtonGroupSelect({
           <ArrowDropDownIcon />
         </Button>
       </ButtonGroup>
-      <Popper open={true} anchorEl={anchorRef.current} transition>
+      <Popper open anchorEl={anchorRef.current} transition>
         {({ TransitionProps, placement }) => (
           <Grow
             {...TransitionProps}

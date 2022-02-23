@@ -127,8 +127,7 @@ export default function TaskInfoTop({
   }
 
   function handleSelectTaskStatus(key) {
-    console.log('Task status set to ', key)
-    // Handle update mutation
+    updateTask('status', key);
   }
 
   return (
