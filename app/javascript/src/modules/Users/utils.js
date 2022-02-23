@@ -1,4 +1,6 @@
 /* eslint-disable max-lines */
+/* eslint-disable complexity */
+/* eslint-disable max-params */
 import PropTypes from 'prop-types';
 import {
   clientCategories,
@@ -581,3 +583,131 @@ const configObject = {
 };
 
 export default configObject;
+export function selectOptions(
+  setSelectKey,
+  checkModule,
+  checkCommunityFeatures,
+  history,
+  data,
+  handleMenuItemClick,
+  handleMergeUserItemClick,
+  checkRole
+) {
+  return [
+    {
+      key: 'user_settings',
+      value: 'User Settings',
+      handleMenuItemClick: key => setSelectKey(key),
+      show: checkCommunityFeatures('Users') && checkModule('user'),
+      subMenu: [
+        {
+          key: 'edit_user',
+          value: 'Edit User',
+          handleMenuItemClick: () => history.push(`/user/${data.user.id}/edit`),
+          show: checkCommunityFeatures('Users') && checkModule('user')
+        },
+        {
+          key: 'print_id',
+          value: 'Print ID',
+          handleMenuItemClick: () => history.push(`/print/${data.user.id}`),
+          show: checkCommunityFeatures('Users') && checkModule('user')
+        }
+      ]
+    },
+    {
+      key: 'communication',
+      value: 'Communications',
+      handleMenuItemClick: key => setSelectKey(key),
+      show: true,
+      subMenu: [
+        {
+          key: 'communications',
+          value: 'Communication',
+          handleMenuItemClick,
+          show: checkCommunityFeatures('Messages') && checkModule('communication')
+        },
+        {
+          key: 'send_sms',
+          value: 'Send SMS',
+          handleMenuItemClick: () => history.push(`/message/${data.user.id}`),
+          show: checkCommunityFeatures('Messages') && checkRole(['admin'], 'Messages')
+        },
+        {
+          key: 'send_otp',
+          value: 'Send OTP',
+          handleMenuItemClick: () => history.push(`/user/${data.user.id}/otp`),
+          show: checkCommunityFeatures('Messages') && checkModule('user')
+        },
+        {
+          key: 'message_support',
+          value: 'Message Support',
+          handleMenuItemClick: () => history.push(`/message/${data.user.id}`),
+          show: checkCommunityFeatures('Messages')
+        }
+      ]
+    },
+    {
+      key: 'payments',
+      value: 'Plans',
+      handleMenuItemClick,
+      show: checkCommunityFeatures('Payments') && checkRole(['admin', 'client', 'resident'], 'Payments')
+    },
+    {
+      key: 'plots',
+      value: 'Plots',
+      handleMenuItemClick,
+      show: checkCommunityFeatures('Properties') && checkRole(['admin', 'client', 'resident'], 'Properties')
+    },
+    {
+      key: 'lead_management',
+      value: 'LeadManagement',
+      handleMenuItemClick,
+      show: checkCommunityFeatures('Users') && checkModule('user')
+    },
+    {
+      key: 'forms',
+      value: 'Forms',
+      handleMenuItemClick,
+      show: checkCommunityFeatures('Forms') && checkModule('forms') 
+    },
+    {
+      key: 'customer_journey',
+      value: 'CustomerJourney',
+      handleMenuItemClick,
+      show: checkCommunityFeatures('Customer Journey') && checkRole(['admin'], 'Customer Journey')
+    },
+    {
+      key: 'user_logs',
+      value: 'User Logs',
+      handleMenuItemClick: () => history.push(`/user/${data.user.id}/logs`),
+      show: checkCommunityFeatures('LogBook') && checkModule('entry_request')
+    },
+    {
+      key: 'merge_user',
+      value: 'Merge User',
+      handleMenuItemClick: () => handleMergeUserItemClick(),
+      show: checkCommunityFeatures('Users') && checkModule('user')
+    }
+  ];
+}
+
+export function createMenuContext(type, data, userType, authState){
+  if(['LogBook', 'Users', 'Properties'].includes(type)){
+    return {
+      userId: data.user.id,
+      userType,
+      loggedInUserId: authState.user.id,
+    }
+  }
+
+  // context for Payments & Payment Plans
+  if(['Payments'].includes(type)){
+    return {
+      userType,
+      paymentCheck: true,
+      loggedInUserPaymentPlan: authState.user?.paymentPlan,
+    }
+  }
+
+  return undefined;
+}

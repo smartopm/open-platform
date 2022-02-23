@@ -13,6 +13,8 @@ import UserDetail from './UserProfileDetail';
 import UserLabels from './UserLabels';
 import UserLabelTitle from './UserLabelTitle';
 import SelectButton from '../../../shared/buttons/SelectButton';
+import { selectOptions, createMenuContext } from '../utils';
+import { checkAccessibilityForUserType as handler } from '../../../utils/helpers';
 
 export default function UserDetailHeader({ data, userType, currentTab, authState }) {
   const history = useHistory();
@@ -21,6 +23,16 @@ export default function UserDetailHeader({ data, userType, currentTab, authState
   const classes = useStyles();
   const anchorRef = useRef(null);
   const [selectedKey, setSelectKey] = useState('');
+  const options = selectOptions(
+    setSelectKey,
+    checkModule,
+    checkCommunityFeatures,
+    history,
+    data,
+    handleMenuItemClick,
+    handleMergeUserItemClick,
+    checkRole
+  );
 
   const handleClose = event => {
     if (anchorRef.current && anchorRef.current.contains(event.target)) {
@@ -42,10 +54,21 @@ export default function UserDetailHeader({ data, userType, currentTab, authState
     );
     return userPermissionsModule?.permissions.includes('can_see_menu_item') || false;
   }
-  // return menuItem.accessibleBy.includes(userType)
+
+  function checkOtherRoles(featureName, roles) {
+    const ctx = createMenuContext(featureName, data, userType, authState)
+    return handler({ userTypes: roles, ctx }).includes(userType)
+  }
+
+  function checkRole(roles, featureName) {
+    if(['Properties', 'Users', 'Payments', 'LogBook'].includes(featureName)) {
+      checkOtherRoles(featureName, roles)
+    }
+    return roles.includes(userType)
+  }
 
   function checkCommunityFeatures(featureName) {
-    return Object.keys(authState.user?.community.features || []).includes(featureName)
+    return Object.keys(authState.user?.community.features || []).includes(featureName);
   }
 
   function handleMergeUserItemClick() {
@@ -53,101 +76,6 @@ export default function UserDetailHeader({ data, userType, currentTab, authState
     setOpen(false);
   }
 
-  const selectOptions = [
-    {
-      key: 'user_settings',
-      value: 'User Settings',
-      handleMenuItemClick: key => setSelectKey(key),
-      show: checkModule('user') &&  checkCommunityFeatures('Users'),
-      subMenu: [
-        {
-          key: 'edit_user',
-          value: 'Edit User',
-          handleMenuItemClick: () => history.push(`/user/${data.user.id}/edit`),
-          show: checkModule('user') && checkCommunityFeatures('Users')
-        },
-        {
-          key: 'print_id',
-          value: 'Print ID',
-          handleMenuItemClick: () => history.push(`/print/${data.user.id}`),
-          show: checkModule('user') &&  checkCommunityFeatures('Users')
-        }
-      ]
-    },
-    {
-      key: 'communication',
-      value: 'Communications',
-      handleMenuItemClick: key => setSelectKey(key),
-      subMenu: [
-        {
-          key: 'communications',
-          value: 'Communication',
-          handleMenuItemClick,
-          show: checkModule('communication') && checkCommunityFeatures('Messages')
-        },
-        {
-          key: 'send_sms',
-          value: 'Send SMS',
-          handleMenuItemClick: () => history.push(`/message/${data.user.id}`),
-          show: checkCommunityFeatures('Messages'),
-        },
-        {
-          key: 'send_otp',
-          value: 'Send OTP',
-          handleMenuItemClick: () => history.push(`/user/${data.user.id}/otp`),
-          show: checkModule('user') && checkCommunityFeatures('Messages')
-        },
-        {
-          key: 'message_support',
-          value: 'Message Support',
-          handleMenuItemClick: () => history.push(`/message/${data.user.id}`),
-          show: checkCommunityFeatures('Messages')
-        }
-      ]
-    },
-    {
-      key: 'payments',
-      value: 'Plans',
-      handleMenuItemClick,
-      show: checkCommunityFeatures('Payments')
-    },
-    {
-      key: 'plots',
-      value: 'Plots',
-      handleMenuItemClick,
-      show: checkCommunityFeatures('Properties')
-    },
-    {
-      key: 'lead_management',
-      value: 'LeadManagement',
-      handleMenuItemClick,
-      show: checkModule('user') && checkCommunityFeatures('Users')
-    },
-    {
-      key: 'forms',
-      value: 'Forms',
-      handleMenuItemClick,
-      show: checkModule('form') && checkCommunityFeatures('Forms')
-    },
-    {
-      key: 'customer_journey',
-      value: 'CustomerJourney',
-      handleMenuItemClick,
-      show: checkCommunityFeatures('Customer Journey')
-    },
-    {
-      key: 'user_logs',
-      value: 'User Logs',
-      handleMenuItemClick: () => history.push(`/user/${data.user.id}/logs`),
-      show: checkModule('entry_request') && checkCommunityFeatures('LogBook')
-    },
-    {
-      key: 'merge_user',
-      value: 'Merge User',
-      handleMenuItemClick: () => handleMergeUserItemClick,
-      show: checkModule('user') && checkCommunityFeatures('Users')
-    }
-  ];
   return (
     <>
       <Grid container>
@@ -207,7 +135,7 @@ export default function UserDetailHeader({ data, userType, currentTab, authState
         <Hidden smDown>
           <Grid item lg={3} md={3} sm={3}>
             <SelectButton
-              options={selectOptions}
+              options={options}
               open={open}
               anchorEl={anchorRef.current}
               anchorRef={anchorRef}
@@ -247,7 +175,8 @@ UserDetailHeader.propTypes = {
     })
   }).isRequired,
   userType: PropTypes.string.isRequired,
-  currentTab: PropTypes.string.isRequired
+  currentTab: PropTypes.string.isRequired,
+  authState: PropTypes.shape().isRequired
 };
 
 const useStyles = makeStyles(() => ({

@@ -60,42 +60,48 @@ export default function SelectButton({
             <Paper>
               <ClickAwayListener onClickAway={handleClose}>
                 <MenuList id="split-button-menu" data-testid="select_option">
-                  {options.map(opt => (
-                    <>
-                      <MenuItem
-                        key={opt.key}
-                        selected={opt.key === selectedKey}
-                        onClick={
+                  {options
+                    .filter(opt => opt.show)
+                    .map(opt => (
+                      <>
+                        <MenuItem
+                          key={opt.key}
+                          selected={opt.key === selectedKey}
+                          onClick={
+                            opt.subMenu
+                              ? () => handleSubMenuClick(opt)
+                              : () => opt.handleMenuItemClick(opt.key, opt.value)
+                          }
+                          value={opt.key}
+                        >
+                          <ListItemText primary={opt.value} />
+                          {opt.subMenu &&
+                            (openSubMenu.isOpen && openSubMenu.name === opt.key ? (
+                              <ExpandLess />
+                            ) : (
+                              <ExpandMore />
+                            ))}
+                        </MenuItem>
+                        {selectedKey === opt.key &&
+                          openSubMenu.isOpen &&
+                          opt.subMenu &&
                           opt.subMenu
-                            ? () => handleSubMenuClick(opt)
-                            : () => opt.handleMenuItemClick(opt.key, opt.value)
-                        }
-                        value={opt.key}
-                      >
-                        <ListItemText primary={opt.value} />
-                        {opt.subMenu &&
-                          (openSubMenu.isOpen && openSubMenu.name === opt.key ? (
-                            <ExpandLess />
-                          ) : (
-                            <ExpandMore />
-                          ))}
-                      </MenuItem>
-                      {selectedKey === opt.key &&
-                        openSubMenu.isOpen &&
-                        opt.subMenu &&
-                        opt.subMenu.map(submenu => (
-                          <MenuItem
-                            style={{ paddingLeft: '30px' }}
-                            key={submenu.key}
-                            selected={submenu.key === selectedKey}
-                            onClick={() => submenu.handleMenuItemClick(submenu.key, submenu.value)}
-                            value={opt.key}
-                          >
-                            {submenu.value}
-                          </MenuItem>
-                        ))}
-                    </>
-                  ))}
+                            .filter(submenu => submenu.show)
+                            .map(submenu => (
+                              <MenuItem
+                                style={{ paddingLeft: '30px' }}
+                                key={submenu.key}
+                                selected={submenu.key === selectedKey}
+                                onClick={() =>
+                                  submenu.handleMenuItemClick(submenu.key, submenu.value)
+                                }
+                                value={opt.key}
+                              >
+                                {submenu.value}
+                              </MenuItem>
+                            ))}
+                      </>
+                    ))}
                 </MenuList>
               </ClickAwayListener>
             </Paper>
@@ -118,7 +124,18 @@ SelectButton.propTypes = {
   anchorEl: PropTypes.object,
   anchorRef: PropTypes.object,
   handleClose: PropTypes.func.isRequired,
-  options: PropTypes.object.isRequired,
+  options: PropTypes.arrayOf(PropTypes.shape({
+    key: PropTypes.string,
+    value: PropTypes.string,
+    handleMenuItemClick: PropTypes.func,
+    show: PropTypes.bool,
+    subMenu: PropTypes.arrayOf(PropTypes.shape({
+      key: PropTypes.string,
+      value: PropTypes.string,
+      handleMenuItemClick: PropTypes.func,
+      show: PropTypes.bool
+    }))
+  })).isRequired,
   selectedKey: PropTypes.string,
   handleMenuItemClick: PropTypes.func.isRequired,
   handleClick: PropTypes.func.isRequired
