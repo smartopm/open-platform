@@ -10,7 +10,8 @@ import {
   Chip,
   Typography,
   IconButton,
-  useMediaQuery
+  useMediaQuery,
+  MenuItem,
 } from '@material-ui/core';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import AccessAlarmIcon from '@mui/icons-material/AccessAlarm';
@@ -36,7 +37,6 @@ import AutoSaveField from '../../../shared/AutoSaveField';
 import { UpdateNote } from '../../../graphql/mutations';
 import MessageAlert from '../../../components/MessageAlert';
 import MenuList from '../../../shared/MenuList';
-import ButtonGroupSelect from '../../../shared/select/ButtonGroupSelect';
 
 export default function TaskInfoTop({
   currentUser,
@@ -76,7 +76,7 @@ export default function TaskInfoTop({
     in_progress: t('task.in_progress'),
     needs_attention: t('task.needs_attention'),
     at_risk: t('task.at_risk'),
-    complete: t('task.complete')
+    completed: t('task.complete')
   }
 
   const allowedAssignees = [
@@ -127,7 +127,8 @@ export default function TaskInfoTop({
     );
   }
 
-  function handleSelectTaskStatus(key) {
+  function handleSelectTaskStatus(_event, key) {
+    setTaskStatus(key)
     updateTask('status', key);
   }
 
@@ -194,15 +195,28 @@ export default function TaskInfoTop({
         )}
         <Grid item xs={12}>
           <Grid container>
-            <Grid item md={9}>
-              {canUpdateNote && (
-                <ButtonGroupSelect
-                  options={taskStatuses}
-                  selectedOption={taskStatus}
-                  setSelectedOption={setTaskStatus}
-                  handleSelectOption={handleSelectTaskStatus}
-                />
-              )}
+            <Grid item md={9} xs={12}>
+              <TextField
+                select
+                margin="normal"
+                labelId="select-task-status"
+                id="select-task-status"
+                data-testid="select-task-status"
+                value={taskStatus}
+                label={t('common:misc.select')}
+                fullWidth
+              >
+                {Object.entries(taskStatuses).map(([key, val]) => (
+                  <MenuItem
+                    key={key}
+                    selected={key === taskStatus}
+                    onClick={(event) => handleSelectTaskStatus(event, key)}
+                    value={key}
+                  >
+                    {val}
+                  </MenuItem>
+                  ))}
+              </TextField>
             </Grid>
             {!matches && (
             <Grid item md={3} style={{ justifyContent: 'right' }}>
