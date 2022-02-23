@@ -171,60 +171,6 @@ export const MenuProps = {
     }
   }
 };
-
-export const selectOptions = [
-  {
-    menu: {
-      user_settings: 'User Settings'
-    },
-    subMenu: {
-      edit_user: 'Edit User',
-      invite_history: 'Invite History',
-      print_id: 'Print ID'
-    }
-  },
-  {
-    menu: {
-      communications: 'Communications'
-    },
-    subMenu: {
-      communications: 'Communications',
-      send_sms: 'Send SMS',
-      send_otp: 'Send OTP',
-      message_support: 'Message Support'
-    }
-  },
-  {
-    menu: {
-      payments: 'Payments'
-    }
-  },
-  {
-    menu: {
-      plots: 'Plots'
-    }
-  },
-  {
-    menu: {
-      notes: 'Notes'
-    }
-  },
-  {
-    menu: {
-      lead_management: 'Lead Management'
-    }
-  },
-  {
-    menu: {
-      user_logs: 'User Logs'
-    }
-  },
-  {
-    menu: {
-      merge_user: 'Merge User'
-    }
-  }
-];
 const ordinalSuffix = ['st', 'nd', 'rd'];
 const addSuffix = n => n + (ordinalSuffix[(n - 1) % 10] || 'th');
 const numberToOrdinal = n => (`${n}`.match(/1\d$/) ? `n + th` : addSuffix(n));
