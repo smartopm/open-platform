@@ -33,12 +33,20 @@ describe('Admin processes dashboard', () => {
       },
       result: {
         data: {
-          completedByQuarter: [
-            [2022, 1, 160] ,
-            [2022, 2, 300],
-            [2022, 3, 119],
-            [2022, 4, 10],
-          ]
+          tasksByQuarter: {
+            completed: [
+              [2022, 1, 160] ,
+              [2022, 2, 300],
+              [2022, 3, 119],
+              [2022, 4, 10],
+            ],
+            submitted: [
+              [2022, 1, 200] ,
+              [2022, 2, 400],
+              [2022, 3, 219],
+              [2022, 4, 20],
+            ]
+          }
         }
       }
     }
@@ -57,17 +65,21 @@ describe('Admin processes dashboard', () => {
     await waitFor(() => {
       expect(screen.queryByText('processes.processes')).toBeInTheDocument()
       expect(screen.queryByText('processes.drc_process')).toBeInTheDocument()
-      expect(screen.queryByText('processes.completed_by_quarter')).toBeInTheDocument()
-      expect(screen.queryAllByText('Total completed')[0]).toBeInTheDocument()
-      expect(screen.queryAllByText('Total completed')).toHaveLength(4)
-      expect(screen.queryByText('Q1 completed')).toBeInTheDocument()
-      expect(screen.queryByText('Q2 completed')).toBeInTheDocument()
-      expect(screen.queryByText('Q3 completed')).toBeInTheDocument()
-      expect(screen.queryByText('Q4 completed')).toBeInTheDocument()
+      expect(screen.queryByText('processes.projects_by_quarter')).toBeInTheDocument()
+      expect(screen.queryByText('processes.submitted')).toBeInTheDocument()
+      expect(screen.queryByText('processes.completed')).toBeInTheDocument()
+      expect(screen.queryByText('Q1')).toBeInTheDocument()
+      expect(screen.queryByText('Q2')).toBeInTheDocument()
+      expect(screen.queryByText('Q3')).toBeInTheDocument()
+      expect(screen.queryByText('Q4')).toBeInTheDocument()
       expect(screen.queryByText('160')).toBeInTheDocument();
       expect(screen.queryByText('300')).toBeInTheDocument();
       expect(screen.queryByText('119')).toBeInTheDocument();
       expect(screen.queryByText('10')).toBeInTheDocument();
+      expect(screen.queryByText('200')).toBeInTheDocument();
+      expect(screen.queryByText('400')).toBeInTheDocument();
+      expect(screen.queryByText('219')).toBeInTheDocument();
+      expect(screen.queryByText('20')).toBeInTheDocument();
     })
   });
 
