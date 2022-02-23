@@ -25,7 +25,7 @@ module Notes
       attributes :current_step_body
     end
 
-    enum status: { in_progress: 0, needs_attention: 1, at_risk: 2, completed: 3 }
+    enum status: { not_started: 0, in_progress: 1, needs_attention: 2, at_risk: 3, completed: 4 }
 
     belongs_to :community
     belongs_to :user, class_name: 'Users::User'
