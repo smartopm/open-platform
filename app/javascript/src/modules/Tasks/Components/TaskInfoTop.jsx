@@ -146,7 +146,7 @@ export default function TaskInfoTop({
       />
       <Grid container>
         {matches && (
-          <Grid item xs={12} style={{ marginBottom: '32px' }}>
+          <Grid item xs={12} style={{ marginBottom: '10px' }}>
             <Grid container>
               <Grid item xs={9} style={{ display: 'flex', alignItems: 'center' }}>
                 <Breadcrumbs aria-label="breadcrumb">
@@ -192,19 +192,72 @@ export default function TaskInfoTop({
           </Grid>
         )}
         <Grid item xs={12}>
-          <ButtonGroupSelect
-            options={taskStatuses}
-            selectedOption={taskStatus}
-            setSelectedOption={setTaskStatus}
-            handleSelectOption={handleSelectTaskStatus}
-          />
+          <Grid container>
+            <Grid item md={9}>
+              <ButtonGroupSelect
+                options={taskStatuses}
+                selectedOption={taskStatus}
+                setSelectedOption={setTaskStatus}
+                handleSelectOption={handleSelectTaskStatus}
+              />
+            </Grid>
+            {!matches && (
+            <Grid item md={3} style={{ justifyContent: 'right' }}>
+              <Grid container style={{ justifyContent: 'right' }}>
+                <Grid item md={4} xs={1} style={{ textAlign: 'right' }}>
+                  {canUpdateNote && (
+                  <IconButton
+                    edge="end"
+                    onClick={handleTaskComplete}
+                    data-testid="task-info-menu"
+                    color="primary"
+                    style={{backgroundColor: 'transparent'}}
+                  >
+                    {data.completed ? (
+                      <CheckCircleIcon htmlColor="#4caf50" />
+                    ) : (
+                      <CheckCircleOutlineIcon />
+                    )}
+                  </IconButton>
+                )}
+                </Grid>
+
+                {isAssignee() && (
+                <Grid item md={4} xs={1} style={{ textAlign: 'right' }}>
+                  <IconButton
+                    edge="end"
+                    onClick={event => menuData.handleTaskInfoMenu(event)}
+                    data-testid="task-info-menu"
+                    color="primary"
+                  >
+                    <AccessAlarmIcon />
+                  </IconButton>
+                </Grid>
+              )}
+                {urlParams?.type !== 'drc' && (
+                <Grid item md={4} xs={1} style={{ textAlign: 'right' }}>
+                  <IconButton
+                    edge="end"
+                    onClick={handleSplitScreenClose}
+                    data-testid="task-info-menu"
+                    color="primary"
+                  >
+                    <KeyboardTabIcon />
+                  </IconButton>
+                </Grid>
+              )}
+              </Grid>
+            </Grid>
+          )}
+          </Grid>
         </Grid>
         <Grid item md={10} xs={12}>
           {!editingBody && (
           <Typography
+            variant="h6"
             style={{
               color: '#575757',
-              padding: '15px'
+              paddingTop: '15px'
             }}
             onMouseOver={canUpdateNote ? () => setEditingBody(true) : null}
           >
@@ -225,54 +278,6 @@ export default function TaskInfoTop({
             />
           )}
         </Grid>
-        {!matches && (
-          <Grid item md={2}>
-            <Grid container style={{ justifyContent: 'right' }}>
-              <Grid item md={4} xs={1} style={{ textAlign: 'right' }}>
-                {canUpdateNote && (
-                  <IconButton
-                    edge="end"
-                    onClick={handleTaskComplete}
-                    data-testid="task-info-menu"
-                    color="primary"
-                    style={{backgroundColor: 'transparent'}}
-                  >
-                    {data.completed ? (
-                      <CheckCircleIcon htmlColor="#4caf50" />
-                    ) : (
-                      <CheckCircleOutlineIcon />
-                    )}
-                  </IconButton>
-                )}
-              </Grid>
-
-              {isAssignee() && (
-                <Grid item md={4} xs={1} style={{ textAlign: 'right' }}>
-                  <IconButton
-                    edge="end"
-                    onClick={event => menuData.handleTaskInfoMenu(event)}
-                    data-testid="task-info-menu"
-                    color="primary"
-                  >
-                    <AccessAlarmIcon />
-                  </IconButton>
-                </Grid>
-              )}
-              {urlParams?.type !== 'drc' && (
-                <Grid item md={4} xs={1} style={{ textAlign: 'right' }}>
-                  <IconButton
-                    edge="end"
-                    onClick={handleSplitScreenClose}
-                    data-testid="task-info-menu"
-                    color="primary"
-                  >
-                    <KeyboardTabIcon />
-                  </IconButton>
-                </Grid>
-              )}
-            </Grid>
-          </Grid>
-        )}
       </Grid>
       <Grid item md={12} style={{ marginTop: '24px'}}>
         {data.parentNote && (
