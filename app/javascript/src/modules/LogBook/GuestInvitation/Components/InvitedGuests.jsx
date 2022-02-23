@@ -23,7 +23,7 @@ export default function InvitedGuests() {
   const history = useHistory();
   const [searchValue, setSearchValue] = useState('');
   const debouncedValue = useDebounce(searchValue, 500);
-  const { data, loading } = useQuery(MyInvitedGuestsQuery, {
+  const { data, loading, refetch } = useQuery(MyInvitedGuestsQuery, {
     variables: { query: debouncedValue },
     fetchPolicy: 'network-only'
   });
@@ -62,9 +62,14 @@ export default function InvitedGuests() {
     setCurrentInvite({...currentInvite,  loading: true})
     handleMenuClose()
     inviteUpdate({
-      variables: { inviteId:  currentInvite.id}
+      variables: { inviteId:  currentInvite.id, status: 'cancelled'}
     })
-    .then(() => setDetails({ ...details, isError: false, message: t('guest.invite_canceled') }))
+    .then(() => {
+      setDetails({ ...details, isError: false, message: t('guest.invite_canceled') })
+      setCurrentInvite({...currentInvite,  loading: false})
+      refetch()  
+    }
+    )
     .catch(err => {
       setCurrentInvite({...currentInvite,  loading: false})
       setDetails({ ...details, isError: true, message: formatError(err.message) });

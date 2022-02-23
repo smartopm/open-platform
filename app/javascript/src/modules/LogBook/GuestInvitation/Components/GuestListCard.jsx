@@ -99,7 +99,7 @@ export default function GuestListCard({
             />
           </Grid>
           <Grid item xs={12} sm={12} lg={4}>
-            <Grid container direction="row" justifyContent="flex-end">
+            <Grid container direction="row" justifyContent="center">
               <Grid item xs data-testid="status" className={classes.chipAlign}>
                 <Chip
                   label={
@@ -129,7 +129,7 @@ export default function GuestListCard({
                 />
               </Grid>
               {
-                invite.status === 'canceled' && (
+                invite.status === 'cancelled' && (
                   <Grid item xs data-testid="invite_status" className={classes.chipAlign}>
                     <Chip
                       label={invite.status && translate('guest_book.canceled')}

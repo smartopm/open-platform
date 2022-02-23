@@ -21,11 +21,10 @@ module Mutations
 
         entry_time = invite.entry_time
         if entry_time.present?
-          update_entry_time(entry_time, vals.except(:invite_id))
+          update_entry_time(entry_time, vals.except(:invite_id, :status))
         else
           create_entry_time(vals, invite)
         end
-
         { success: true }
       end
 
