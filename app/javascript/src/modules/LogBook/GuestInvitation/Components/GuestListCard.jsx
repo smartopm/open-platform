@@ -14,7 +14,7 @@ export default function GuestListCard({ invite, translate, tz, styles }) {
   const history = useHistory();
   const classes = useLogbookStyles();
   function handleViewGuest() {
-    history.push(`/request/${invite.guest.request.id}?type=view`);
+    history.push(`/request/${invite.guest?.request?.id}?type=view`);
   }
 
   return (
@@ -84,11 +84,11 @@ export default function GuestListCard({ invite, translate, tz, styles }) {
           <Grid item xs={6} sm={4} lg={1} data-testid="status">
             <Chip
               label={
-                invite.guest.request.status === 'approved'
+                invite.guest?.request?.status === 'approved'
                   ? translate('guest_book.approved')
                   : translate('guest_book.pending')
               }
-              color={invite.guest.request.status === 'approved' ? 'primary' : 'secondary'}
+              color={invite.guest?.request?.status === 'approved' ? 'primary' : 'secondary'}
               size="small"
             />
           </Grid>
