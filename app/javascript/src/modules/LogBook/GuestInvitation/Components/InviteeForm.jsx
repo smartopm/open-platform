@@ -39,13 +39,30 @@ export default function InviteeForm({
       {
         primary && (
           <div className={classes.guestType}>
-            <Typography variant="caption" data-testid="guest_type">{t('logbook:guest.guest_type')}</Typography> 
+            <Typography 
+              variant="caption"
+              data-testid="guest_type"
+            >
+              {t('logbook:guest.guest_type')}
+            </Typography> 
             {"  "}
-            <ButtonGroup color="primary" aria-label="Switch to company mode">
-              <Button onClick={() => handleIsCompany(false)} data-testid="person_mode">
+            <ButtonGroup 
+              className={classes.guestTypeToggleButtons}
+              color="primary"
+              aria-label="Switch to company mode"
+            >
+              <Button 
+                variant={!isCompany ? 'contained' : 'outlined'}
+                onClick={() => handleIsCompany(false)}
+                data-testid="person_mode"
+              >
                 {t('misc.person')}
               </Button>
-              <Button onClick={() => handleIsCompany(true)} data-testid="company_mode">
+              <Button 
+                variant={isCompany ? 'contained' : 'outlined'}
+                onClick={() => handleIsCompany(true)}
+                data-testid="company_mode"
+              >
                 {t('misc.company')}
               </Button>
             </ButtonGroup>

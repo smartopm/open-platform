@@ -22,7 +22,10 @@ export const useStyles = makeStyles({
     marginTop: 5
   },
   guestType: {
-    marginTop: 4,
-    marginBottom: 6
+    marginTop: 10,
+    marginBottom: 8
+  },
+  guestTypeToggleButtons: {
+    marginLeft: 12
   }
 });
