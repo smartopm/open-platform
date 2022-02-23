@@ -212,6 +212,7 @@ export default function TaskInfoTop({
                     selected={key === taskStatus}
                     onClick={(event) => handleSelectTaskStatus(event, key)}
                     value={key}
+                    data-testid="task-status-option"
                   >
                     {val}
                   </MenuItem>

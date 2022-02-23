@@ -248,6 +248,7 @@ describe('Task Data components', () => {
       expect(container.queryByTestId('task-comment')).toBeInTheDocument();
       expect(container.getByTestId("progress_bar_small_screen")).toBeInTheDocument()
       expect(container.queryByTestId('task_completion_toggle_button')).toBeInTheDocument();
+      expect(container.queryByTestId('task_status')).toBeInTheDocument();
       fireEvent.click(container.queryByTestId('task_completion_toggle_button'));
 
       expect(container.queryByTestId('task_attach_file')).toBeInTheDocument();

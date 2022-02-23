@@ -88,6 +88,7 @@ describe('Top part of the task form component', () => {
       </MockedProvider>
     );
 
+    expect(container.queryByTestId('select-task-status')).toBeInTheDocument();
     expect(container.queryByText('task.due_date_text')).toBeInTheDocument();
     expect(props.isAssignee).toHaveBeenCalled();
     expect(container.getByTestId('active-reminder')).toBeInTheDocument();
@@ -120,6 +121,20 @@ describe('Top part of the task form component', () => {
 
     expect(screen.getByTestId('submitted_form_title')).toBeInTheDocument();
     expect(screen.getByTestId('submitted_form_button')).toBeInTheDocument();
+  });
+
+  it('renders current task status in select box', () => {
+    render(
+      <MockedProvider>
+        <Context.Provider value={authState}>
+          <BrowserRouter>
+            <TaskInfoTop {...props} />
+          </BrowserRouter>
+        </Context.Provider>
+      </MockedProvider>
+    );
+
+    expect(screen.getByText('task.in_progress')).toBeInTheDocument();
   });
 
   it('shows the description', async () => {
