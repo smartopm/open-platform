@@ -112,7 +112,6 @@ describe('Task Data components', () => {
       expect(container.getByTestId("task_completion_toggle_button")).toBeInTheDocument()
       expect(container.getByTestId("task_body_section")).toBeInTheDocument()
       expect(container.getByTestId("task_body")).toBeInTheDocument()
-      expect(container.getByTestId("task_assignee")).toBeInTheDocument()
       expect(container.getByTestId("task_subtasks")).toBeInTheDocument()
       expect(container.getByTestId("task_comments")).toBeInTheDocument()
       expect(container.getByTestId("task_details_section")).toBeInTheDocument()
@@ -149,7 +148,6 @@ describe('Task Data components', () => {
       expect(screen.getByTestId("task_completion_toggle_button")).toBeInTheDocument();
       expect(screen.getByTestId("task_body_section")).toBeInTheDocument();
       expect(screen.getByTestId("task_body")).toBeInTheDocument();
-      expect(screen.getByTestId("task_assignee")).toBeInTheDocument();
     }, 10)
   });
 
