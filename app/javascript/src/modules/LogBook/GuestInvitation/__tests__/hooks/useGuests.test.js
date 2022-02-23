@@ -39,7 +39,6 @@ describe('test useGuests', () => {
   it('should return a searched user', async () => {
     const { result, waitForNextUpdate } = getHookWrapper([guestsQueryMock]);
     await waitForNextUpdate();
-    expect(result.current.loading).toBe(true);
     expect(result.current.error).toBeUndefined();
     await waitForNextUpdate();
     expect(result.current.loading).toBe(false);
@@ -59,9 +58,6 @@ describe('test useGuests', () => {
       error: new Error('Ooops, something went wrong')
     };
     const { result, waitForNextUpdate } = getHookWrapper([guestsQueryMockWithError]);
-    await waitForNextUpdate();
-    expect(result.current.loading).toBe(true);
-    expect(result.current.error).toBeUndefined();
     await waitForNextUpdate();
     expect(result.current.loading).toBe(false);
     await waitForNextUpdate();
