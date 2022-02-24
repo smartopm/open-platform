@@ -25,6 +25,8 @@ module Notes
       attributes :current_step_body
     end
 
+    enum status: { not_started: 0, in_progress: 1, needs_attention: 2, at_risk: 3, completed: 4 }
+
     belongs_to :community
     belongs_to :user, class_name: 'Users::User'
     belongs_to :author, class_name: 'Users::User'
@@ -41,7 +43,7 @@ module Notes
     has_many_attached :documents, dependent: :destroy
     has_paper_trail
 
-    before_save :log_completed_at, if: -> { completed_changed? && completed.eql?(true) }
+    before_save :log_completed_at, if: -> { completed_changed? }
     after_create :log_create_event
     after_update :log_update_event
     after_update :update_parent_current_step, if: -> { parent_note_id.present? }
@@ -155,6 +157,11 @@ module Notes
     end
 
     def log_completed_at
+      return self.status = :not_started if !completed && status == 'completed'
+
+      return status unless completed
+
+      self.status = :completed
       self.completed_at = Time.current
     end
   end

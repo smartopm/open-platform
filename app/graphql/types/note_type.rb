@@ -29,6 +29,7 @@ module Types
     field :progress, GraphQL::Types::JSON, null: true
     field :sub_tasks_count, Integer, null: true
     field :task_comments_count, Integer, null: true
+    field :status, String, null: true
 
     # move this in a shareable place
     def host_url(type)

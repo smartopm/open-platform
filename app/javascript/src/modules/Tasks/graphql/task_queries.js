@@ -29,6 +29,7 @@ export const TaskQuery = gql`
       category
       description
       dueDate
+      status
       user {
         id
         name

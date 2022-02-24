@@ -172,6 +172,7 @@ export const TasksFragment = {
       subTasksCount
       taskCommentsCount
       completed
+      status
       attachments
       formUserId
       assignees {

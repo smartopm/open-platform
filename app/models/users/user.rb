@@ -363,6 +363,7 @@ module Users
         due_date: vals[:due_date],
         form_user_id: vals[:form_user_id],
         parent_note_id: vals[:parent_note_id],
+        status: vals[:status],
       )
       note.documents.attach(vals[:attached_documents]) if vals[:attached_documents]
       note

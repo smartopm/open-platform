@@ -50,6 +50,7 @@ describe('TaskUpdate Component', () => {
               dueDate: '',
               attachments: '',
               formUserId: '',
+              status: 'in_progress',
               formUser: {
                 id: 'some-id',
                 user: {

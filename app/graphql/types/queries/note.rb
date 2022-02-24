@@ -296,9 +296,10 @@ module Types::Queries::Note
             I18n.t('errors.unauthorized')
     end
 
-    results = projects_query
+    # TODO(Nurudeen): Make completed field defaults to false and not NIL
+    results = projects_query.where(completed: [false, nil])
 
-    results = projects_query.where(current_step_body: step) if step
+    results = results.where(current_step_body: step) if step
 
     results = projects_query.by_quarter(completed_per_quarter) if completed_per_quarter
 

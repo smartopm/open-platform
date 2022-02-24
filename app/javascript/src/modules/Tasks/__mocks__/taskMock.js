@@ -10,6 +10,7 @@ export default {
   dueDate: '2022-01-22T21:00:00Z',
   subTasksCount: 4,
   taskCommentsCount: 4,
+  status: 'in_progress',
   formUserId: "0358e014-1440-46ee-988d-d5338f019ba3",
   formUser: {
     id: "0358e014-1440-46ee-988d-d5338f019ba3",
