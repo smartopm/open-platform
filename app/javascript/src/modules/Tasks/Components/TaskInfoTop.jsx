@@ -195,7 +195,7 @@ export default function TaskInfoTop({
         )}
         <Grid item xs={12}>
           <Grid container>
-            <Grid item md={9} xs={12} style={{ marginBottom: '24px' }}>
+            <Grid item md={9} xs={8} style={{ marginBottom: '24px' }}>
               <TextField
                 select
                 fullWidth
@@ -223,9 +223,10 @@ export default function TaskInfoTop({
               </TextField>
             </Grid>
             {!matches && (
-            <Grid item md={3} style={{ justifyContent: 'right' }}>
+            <Grid item md={3} xs={4} style={{ justifyContent: 'right' }}>
               <Grid container style={{ justifyContent: 'right' }}>
-                <Grid item md={4} xs={1} style={{ textAlign: 'right' }}>
+                {/* TODO: Commenting this out for now: Victor & Bonny to sync with Vanessa and compare check-icon vs select field*/}
+                {/* <Grid item md={4} xs={2} style={{ textAlign: 'right' }}>
                   {canUpdateNote && (
                   <IconButton
                     edge="end"
@@ -241,10 +242,10 @@ export default function TaskInfoTop({
                     )}
                   </IconButton>
                 )}
-                </Grid>
+                </Grid> */}
 
                 {isAssignee() && (
-                <Grid item md={4} xs={1} style={{ textAlign: 'right' }}>
+                <Grid item md={4} xs={2} style={{ textAlign: 'right' }}>
                   <IconButton
                     edge="end"
                     onClick={event => menuData.handleTaskInfoMenu(event)}
