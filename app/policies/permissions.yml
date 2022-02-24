@@ -155,7 +155,6 @@ admin:
       - can_get_users_lite
       - can_search_guests
       - can_see_menu_item
-      - can_invite_guest
       - can_create_user
       - can_view_guests
       - can_view_hosts
@@ -644,6 +643,7 @@ site_manager:
       - can_view_own_profile
       - can_edit_own_profile
       - can_view_guests
+      - can_search_guests
   discussion:
     permissions:
       - can_access_all_discussions
