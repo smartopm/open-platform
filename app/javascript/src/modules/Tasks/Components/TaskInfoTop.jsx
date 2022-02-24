@@ -195,7 +195,7 @@ export default function TaskInfoTop({
         )}
         <Grid item xs={12}>
           <Grid container>
-            <Grid item md={9} xs={12}>
+            <Grid item md={9} xs={12} style={{ marginBottom: '24px' }}>
               <TextField
                 select
                 fullWidth
