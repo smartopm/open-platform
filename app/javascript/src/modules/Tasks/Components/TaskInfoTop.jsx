@@ -76,7 +76,8 @@ export default function TaskInfoTop({
     'contractor',
     'site_worker',
     'consultant',
-    'developer'
+    'developer',
+    'lead'
   ];
 
   const taskPermissions = currentUser?.permissions?.find(
