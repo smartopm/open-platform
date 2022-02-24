@@ -303,8 +303,8 @@ ActiveRecord::Schema.define(version: 2022_02_22_081713) do
     t.integer "entry_request_state", default: 0
     t.uuid "revoker_id"
     t.datetime "revoked_at"
-    t.uuid "guest_id"
     t.integer "status", default: 0
+    t.uuid "guest_id"
     t.datetime "exited_at"
   end
 
@@ -546,7 +546,7 @@ ActiveRecord::Schema.define(version: 2022_02_22_081713) do
     t.datetime "completed_at"
     t.uuid "current_step"
     t.string "current_step_body"
-    t.integer "status"
+    t.integer "status", default: 0
     t.index ["form_user_id"], name: "index_notes_on_form_user_id"
     t.index ["parent_note_id"], name: "index_notes_on_parent_note_id"
   end
@@ -836,10 +836,10 @@ ActiveRecord::Schema.define(version: 2022_02_22_081713) do
     t.string "lead_type"
     t.string "client_category"
     t.text "next_steps"
-    t.datetime "first_contact_date"
     t.datetime "last_contact_date"
-    t.string "created_by"
     t.string "modified_by"
+    t.datetime "first_contact_date"
+    t.string "created_by"
     t.string "relevant_link"
     t.jsonb "contact_details"
     t.string "african_presence"
