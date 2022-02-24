@@ -225,7 +225,7 @@ export default function TaskInfoTop({
             {!matches && (
             <Grid item md={3} xs={4} style={{ justifyContent: 'right' }}>
               <Grid container style={{ justifyContent: 'right' }}>
-                {/* TODO: Commenting this out for now: Victor & Bonny to sync with Vanessa and compare check-icon vs select field*/}
+                {/* TODO: Commenting this out for now: Victor & Bonny to sync with Vanessa and compare check-icon vs select field */}
                 {/* <Grid item md={4} xs={2} style={{ textAlign: 'right' }}>
                   {canUpdateNote && (
                   <IconButton

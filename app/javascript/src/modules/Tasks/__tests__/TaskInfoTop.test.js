@@ -101,11 +101,16 @@ describe('Top part of the task form component', () => {
     expect(container.queryByText('task.chip_close')).not.toBeInTheDocument();
     expect(container.queryByText('task.task_assignee_label')).not.toBeInTheDocument();
 
-    const taskInfoMenu = container.getAllByTestId('task-info-menu')[0]
+    const taskInfoMenu = container.getAllByTestId('task-info-menu')[1]
     expect(taskInfoMenu).toBeInTheDocument();
 
-    fireEvent.click(taskInfoMenu);
-    expect(props.handleTaskComplete).toHaveBeenCalled();
+    const taskStatusSelectField = container.getByTestId('select-task-status')
+    expect(taskStatusSelectField).toBeInTheDocument();
+    
+    // TODO: Victor & Bonny Remove test after we decide to remove check mark icon
+    // const taskInfoMenu = container.getAllByTestId('task-info-menu')[0]
+    // fireEvent.click(taskInfoMenu);
+    // expect(props.handleTaskComplete).toHaveBeenCalled();
   });
 
   it('renders form user data', () => {
