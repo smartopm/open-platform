@@ -90,6 +90,7 @@ Ciudad Morazán:
         - can_view_own_profile
         - can_edit_own_profile
         - can_view_guests
+        - can_search_guests
     discussion:
       permissions:
         - can_access_all_discussions
@@ -302,6 +303,7 @@ DoubleGDP:
         - can_view_own_profile
         - can_edit_own_profile
         - can_view_guests
+        - can_search_guests
     discussion:
       permissions:
         - can_access_all_discussions
