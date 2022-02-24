@@ -43,7 +43,7 @@ export default function InvitedGuests() {
     {
       content:
         currentInvite.status === 'cancelled'
-          ? t('common:misc.activate')
+          ? t('common:misc.re_activate')
           : t('common:form_actions.cancel'),
       isVisible: true,
       isAdmin: false,
