@@ -579,6 +579,15 @@ RSpec.describe Users::User, type: :model do
         user.send_email_msg
       end
     end
+
+    context 'when user type is lead' do
+      before { user.update(user_type: 'lead') }
+
+      it 'does not send welcome mail' do
+        expect(EmailMsg).not_to receive(:send_mail_from_db)
+        user.send_email_msg
+      end
+    end
   end
 
   describe '#invite_guest' do

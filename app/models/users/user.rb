@@ -89,6 +89,7 @@ module Users
     scope :by_labels, lambda { |label|
                         joins(:labels).where(labels: { short_desc: label&.split(',') })
                       }
+    scope :excluding_leads, -> { where.not(user_type: :lead) }
 
     belongs_to :community
     belongs_to :role
@@ -155,7 +156,7 @@ module Users
 
     VALID_USER_TYPES = %w[security_guard admin resident contractor
                           prospective_client client visitor developer consultant
-                          custodian site_worker site_manager security_supervisor].freeze
+                          custodian site_worker site_manager security_supervisor lead].freeze
     VALID_STATES = %w[valid pending banned expired].freeze
     DEFAULT_PREFERENCE = %w[com_news_sms com_news_email weekly_point_reminder_email].freeze
 
@@ -596,7 +597,7 @@ module Users
     end
 
     def send_email_msg
-      return if self[:email].nil?
+      return if user_type.eql?('lead') || self[:email].nil?
 
       template = community.email_templates.find_by(name: 'Generic Template')
       return unless template
