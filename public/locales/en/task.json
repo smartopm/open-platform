@@ -57,7 +57,8 @@
     "not_started": "Not Started",
     "in_progress": "In Progress",
     "needs_attention": "Needs Attention",
-    "at_risk": "At Risk"
+    "at_risk": "At Risk",
+    "completed": "Complete"
   },
   "document": {
     "uploaded_at": "Uploaded at",

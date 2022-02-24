@@ -79,7 +79,7 @@ RSpec.describe Mutations::Note::NoteUpdate do
       expect(note_result['id']).not_to be_nil
       expect(note_result['body']).to include 'modified'
       expect(note_result['status']).to include 'completed'
-      expect(Notes::NoteHistory.count).to eql 2
+      expect(Notes::NoteHistory.count).to eql 3 # Log event for completed task is created
       expect(result['errors']).to be_nil
 
       result = DoubleGdpSchema.execute(update_query, variables: variable_updates,
@@ -89,7 +89,51 @@ RSpec.describe Mutations::Note::NoteUpdate do
                                                      }).as_json
       expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
       expect(result.dig('data', 'noteUpdate', 'note', 'id')).to be_nil
-      expect(Notes::NoteHistory.count).to eql 2
+      expect(Notes::NoteHistory.count).to eql 3
+    end
+
+    it 'marks task as completed when status is set to complete' do
+      variable_updates = {
+        id: note.id,
+        body: 'A task marked as complete from select',
+        status: 'completed',
+      }
+
+      result = DoubleGdpSchema.execute(update_query, variables: variable_updates,
+                                                     context: {
+                                                       current_user: admin,
+                                                       site_community: user.community,
+                                                     }).as_json
+
+      note_result = result.dig('data', 'noteUpdate', 'note')
+      expect(note_result['status']).to eql('completed')
+      note = user.community.notes.find_by(id: note_result['id'])
+
+      expect(note).not_to be_nil
+      expect(note.completed).to be true
+      expect(note.completed_at).not_to be_nil
+    end
+
+    it 'marks task as not completed when status is set to a non complete state' do
+      note.update(completed: true)
+      variable_updates = {
+        id: note.id,
+        body: 'A completed task to be changed with status select',
+        status: 'in_progress',
+      }
+
+      result = DoubleGdpSchema.execute(update_query, variables: variable_updates,
+                                                     context: {
+                                                       current_user: admin,
+                                                       site_community: user.community,
+                                                     }).as_json
+
+      note_result = result.dig('data', 'noteUpdate', 'note')
+      expect(note_result['status']).to eql('in_progress')
+      note = user.community.notes.find_by(id: note_result['id'])
+
+      expect(note).not_to be_nil
+      expect(note.completed).to be false
     end
 
     it 'updates parent_note_id' do

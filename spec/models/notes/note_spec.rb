@@ -135,6 +135,10 @@ RSpec.describe Notes::Note, type: :model do
         it 'stores the datetime for the task when it was completed' do
           expect(admin_note.completed_at).to_not be_nil
         end
+
+        it 'updates the note status to `completed`' do
+          expect(admin_note.status).to eql('completed')
+        end
       end
 
       context 'when any other attribute is updated' do
@@ -142,6 +146,10 @@ RSpec.describe Notes::Note, type: :model do
 
         it 'does not populate the completed_at' do
           expect(admin_note.completed_at).to be_nil
+        end
+
+        it 'does not update the note status' do
+          expect { admin_note.update(completed: false) }.not_to(change { admin_note.status })
         end
       end
     end
