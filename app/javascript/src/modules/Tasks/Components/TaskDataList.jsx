@@ -3,6 +3,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { Link } from 'react-router-dom';
 import { useQuery } from 'react-apollo';
 import { Chip, Grid, IconButton, Typography } from '@material-ui/core';
 import { grey } from '@mui/material/colors';
@@ -136,6 +137,19 @@ export default function TaskDataList({
                   </Typography>
                 )
               }
+              {task.submittedBy && (
+                <Hidden smDown>
+                  <Typography variant='caption'>
+                    Submitted by
+                  </Typography>
+                  {' '}
+                  <Link to={`/user/${task.submittedBy?.id}`}>
+                    <Typography variant='caption'>
+                      {task.submittedBy?.name}
+                    </Typography>
+                  </Link>
+                </Hidden>
+              )}
             </Grid>
             <Grid item md={1} xl={1}>
               <Hidden smDown>
@@ -154,6 +168,21 @@ export default function TaskDataList({
             {!clientView && (
               <Hidden smDown>
                 <Divider orientation="vertical" flexItem sx={{ margin: '-20px 10px' }} />
+              </Hidden>
+            )}
+            {task.submittedBy && (
+              <Hidden mdUp>
+                <Grid item sm={12} md={12} lg={12} xs={12} className={classes.submitedBy}>
+                  <Typography variant='caption'>
+                    Submitted by
+                  </Typography>
+                  {' '}
+                  <Link to={`/user/${task.submittedBy.id}`}>
+                    <Typography variant='caption'>
+                      {task.submittedBy?.name}
+                    </Typography>
+                  </Link>
+                </Grid>
               </Hidden>
             )}
           </Grid>
@@ -454,6 +483,9 @@ const useStyles = makeStyles(() => ({
     whiteSpace: 'nowrap',
     textOverflow: 'ellipsis',
     paddingLeft: '3px'
+  },
+  submitedBy: {
+    paddingLeft: '20px'
   },
   icons: {
     display: 'flex',

@@ -175,6 +175,10 @@ export const TasksFragment = {
       status
       attachments
       formUserId
+      submittedBy {
+        id
+        name
+      }
       assignees {
         id
         name
