@@ -63,12 +63,13 @@ export default function GuestListCard({
                   </Avatar>
                 )}
               </Grid>
-              <Grid item xs={9} sm={9} lg={4} data-testid="start_of_visit" className={classes.timeDetails}>
+              <Grid item xs={9} sm={9} lg={4} className={classes.timeDetails}>
                 <Text
                   content={translate('guest_book.start_of_visit', {
                     date: dateToString(invite.entryTime.visitationDate)
                   })}
                   className={styles.classes?.text}
+                  data-testid="start_of_visit"
                 />
                 <br />
                 <Text
@@ -82,6 +83,7 @@ export default function GuestListCard({
                         })
                   }
                   className={styles.classes?.text}
+                  data-testid="ends_on_date"
                 />
                 <br />
                 <br />
