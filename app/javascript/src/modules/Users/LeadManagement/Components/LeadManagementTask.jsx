@@ -19,6 +19,10 @@ export default function LeadManagementTask({ taskId }) {
   );
 }
 
+LeadManagementTask.defaultProps = {
+  taskId: null
+};
+
 LeadManagementTask.propTypes = {
-  taskId: PropTypes.string.isRequired
+  taskId: PropTypes.string
 };

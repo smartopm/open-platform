@@ -25,9 +25,10 @@ describe('LeadManagementForm', () => {
             completed: false,
             category: '',
             description: '',
-            dueDate: new Date(),
+            dueDate: '',
             attachments: '',
             formUserId: '',
+            status: 'in_progress',
             formUser: {
               id: 'some-id',
               user: {
@@ -94,6 +95,23 @@ describe('LeadManagementForm', () => {
       expect(screen.queryByText('Comments')).toBeInTheDocument();
       expect(screen.queryByText('Documents')).toBeInTheDocument();
       expect(screen.queryByText('Updates')).toBeInTheDocument();
+    }, 20);
+  });
+
+  it('LeadManagementTask component with no tasks text', async () => {
+    render(
+      <Context.Provider value={authState}>
+        <MockedProvider mocks={taskDataMock} addTypename={false}>
+          <BrowserRouter>
+            <LeadManagementTask taskId={null} />
+          </BrowserRouter>
+        </MockedProvider>
+      </Context.Provider>
+    );
+
+    await waitFor(() => {
+      screen.debug(undefined, 30000);
+      expect(screen.queryByText('task.no_tasks')).toBeInTheDocument();
     }, 20);
   });
 });

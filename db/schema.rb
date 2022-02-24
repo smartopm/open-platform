@@ -303,8 +303,8 @@ ActiveRecord::Schema.define(version: 2022_02_24_055248) do
     t.integer "entry_request_state", default: 0
     t.uuid "revoker_id"
     t.datetime "revoked_at"
-    t.integer "status", default: 0
     t.uuid "guest_id"
+    t.integer "status", default: 0
     t.datetime "exited_at"
   end
 
