@@ -12,6 +12,7 @@
     "from": "de",
     "journey_start": "Fecha de inicio del viaje del cliente",
     "label_message": "Está a punto de asignar etiquetas a más de 2000 usuarios. Recomendamos utilizar una lista más pequeña. ¿Aún quieres continuar?",
+    "lead_management_upload": "Cargar Usuario Clientes Potenciales",
     "logout_subtext": "Cierre sesión en su cuenta de DoubleGDP",
     "make_payment": "Registrar Nuevo Pago",
     "merge_user": "Unir Usuarios",
