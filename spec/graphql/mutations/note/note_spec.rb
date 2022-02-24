@@ -40,6 +40,7 @@ RSpec.describe Mutations::Note do
         $parentNoteId: ID,
         $flagged: Boolean,
         $attachedDocuments: JSON,
+        $status: String
         ) {
         result:  noteCreate(
           userId: $userId,
@@ -48,11 +49,13 @@ RSpec.describe Mutations::Note do
           flagged: $flagged,
           parentNoteId: $parentNoteId,
           attachedDocuments: $attachedDocuments,
+          status: $status
           ){
           note {
               id
               body
               category
+              status
           }
         }
       }
@@ -75,14 +78,18 @@ RSpec.describe Mutations::Note do
         userId: user.id,
         body: 'A note about the user',
         category: 'email',
+        status: 'in_progress',
       }
       result = DoubleGdpSchema.execute(create_query, variables: variables,
                                                      context: {
                                                        current_user: admin,
                                                        site_community: user.community,
                                                      }).as_json
-      expect(result.dig('data', 'result', 'note', 'id')).not_to be_nil
-      expect(result.dig('data', 'result', 'note', 'category')).to eql 'email'
+
+      note_result = result.dig('data', 'result', 'note')
+      expect(note_result['id']).not_to be_nil
+      expect(note_result['category']).to eql 'email'
+      expect(note_result['status']).to eql 'in_progress'
       expect(result['errors']).to be_nil
     end
 

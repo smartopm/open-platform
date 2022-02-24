@@ -1,3 +1,4 @@
+/* eslint-disable max-statements */
 /* eslint-disable max-lines */
 /* eslint-disable complexity */
 import React, { useState } from 'react';
@@ -9,7 +10,8 @@ import {
   Chip,
   Typography,
   IconButton,
-  useMediaQuery
+  useMediaQuery,
+  MenuItem,
 } from '@material-ui/core';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import AccessAlarmIcon from '@mui/icons-material/AccessAlarm';
@@ -64,10 +66,18 @@ export default function TaskInfoTop({
   const [taskUpdate] = useMutation(UpdateNote);
   const [editingBody, setEditingBody] = useState(false);
   const [editingDueDate, setEditingDueDate] = useState(false);
+  const [taskStatus, setTaskStatus] = useState(data?.status)
   const [updateDetails, setUpdateDetails] = useState({
     isError: false,
     message: ''
   });
+  const taskStatuses = {
+    not_started: t('task.not_started'),
+    in_progress: t('task.in_progress'),
+    needs_attention: t('task.needs_attention'),
+    at_risk: t('task.at_risk'),
+    completed: t('task.complete')
+  }
 
   const allowedAssignees = [
     'admin',
@@ -117,6 +127,11 @@ export default function TaskInfoTop({
     );
   }
 
+  function handleSelectTaskStatus(_event, key) {
+    setTaskStatus(key)
+    updateTask('status', key);
+  }
+
   return (
     <>
       <MessageAlert
@@ -133,7 +148,7 @@ export default function TaskInfoTop({
       />
       <Grid container>
         {matches && (
-          <Grid item xs={12} style={{ marginBottom: '32px' }}>
+          <Grid item xs={12} style={{ marginBottom: '10px' }}>
             <Grid container>
               <Grid item xs={9} style={{ display: 'flex', alignItems: 'center' }}>
                 <Breadcrumbs aria-label="breadcrumb">
@@ -178,12 +193,93 @@ export default function TaskInfoTop({
             </Grid>
           </Grid>
         )}
+        <Grid item xs={12}>
+          <Grid container>
+            <Grid item md={9} xs={8} style={{ marginBottom: '24px' }}>
+              <TextField
+                select
+                fullWidth
+                disabled={!canUpdateNote}
+                margin="normal"
+                variant="outlined"
+                className={classes.selectLabel}
+                labelId="select-task-status"
+                id="select-task-status"
+                data-testid="select-task-status"
+                value={taskStatus}
+                label={t('common:misc.select')}
+              >
+                {Object.entries(taskStatuses).map(([key, val]) => (
+                  <MenuItem
+                    key={key}
+                    selected={key === taskStatus}
+                    onClick={(event) => handleSelectTaskStatus(event, key)}
+                    value={key}
+                    data-testid="task-status-option"
+                  >
+                    {val}
+                  </MenuItem>
+                  ))}
+              </TextField>
+            </Grid>
+            {!matches && (
+            <Grid item md={3} xs={4} style={{ justifyContent: 'right' }}>
+              <Grid container style={{ justifyContent: 'right' }}>
+                {/* TODO: Commenting this out for now: Victor & Bonny to sync with Vanessa and compare check-icon vs select field */}
+                {/* <Grid item md={4} xs={2} style={{ textAlign: 'right' }}>
+                  {canUpdateNote && (
+                  <IconButton
+                    edge="end"
+                    onClick={handleTaskComplete}
+                    data-testid="task-info-menu"
+                    color="primary"
+                    style={{backgroundColor: 'transparent'}}
+                  >
+                    {data.completed ? (
+                      <CheckCircleIcon htmlColor="#4caf50" />
+                    ) : (
+                      <CheckCircleOutlineIcon />
+                    )}
+                  </IconButton>
+                )}
+                </Grid> */}
+
+                {isAssignee() && (
+                <Grid item md={4} xs={2} style={{ textAlign: 'right' }}>
+                  <IconButton
+                    edge="end"
+                    onClick={event => menuData.handleTaskInfoMenu(event)}
+                    data-testid="task-info-menu"
+                    color="primary"
+                  >
+                    <AccessAlarmIcon />
+                  </IconButton>
+                </Grid>
+              )}
+                {urlParams?.type !== 'drc' && (
+                <Grid item md={4} xs={1} style={{ textAlign: 'right' }}>
+                  <IconButton
+                    edge="end"
+                    onClick={handleSplitScreenClose}
+                    data-testid="task-info-menu"
+                    color="primary"
+                  >
+                    <KeyboardTabIcon />
+                  </IconButton>
+                </Grid>
+              )}
+              </Grid>
+            </Grid>
+          )}
+          </Grid>
+        </Grid>
         <Grid item md={10} xs={12}>
           {!editingBody && (
           <Typography
+            variant="h6"
             style={{
               color: '#575757',
-              padding: '15px'
+              paddingTop: '15px'
             }}
             onMouseOver={canUpdateNote ? () => setEditingBody(true) : null}
           >
@@ -204,54 +300,6 @@ export default function TaskInfoTop({
             />
           )}
         </Grid>
-        {!matches && (
-          <Grid item md={2}>
-            <Grid container style={{ justifyContent: 'right' }}>
-              <Grid item md={4} xs={1} style={{ textAlign: 'right' }}>
-                {canUpdateNote && (
-                  <IconButton
-                    edge="end"
-                    onClick={handleTaskComplete}
-                    data-testid="task-info-menu"
-                    color="primary"
-                    style={{backgroundColor: 'transparent'}}
-                  >
-                    {data.completed ? (
-                      <CheckCircleIcon htmlColor="#4caf50" />
-                    ) : (
-                      <CheckCircleOutlineIcon />
-                    )}
-                  </IconButton>
-                )}
-              </Grid>
-
-              {isAssignee() && (
-                <Grid item md={4} xs={1} style={{ textAlign: 'right' }}>
-                  <IconButton
-                    edge="end"
-                    onClick={event => menuData.handleTaskInfoMenu(event)}
-                    data-testid="task-info-menu"
-                    color="primary"
-                  >
-                    <AccessAlarmIcon />
-                  </IconButton>
-                </Grid>
-              )}
-              {urlParams?.type !== 'drc' && (
-                <Grid item md={4} xs={1} style={{ textAlign: 'right' }}>
-                  <IconButton
-                    edge="end"
-                    onClick={handleSplitScreenClose}
-                    data-testid="task-info-menu"
-                    color="primary"
-                  >
-                    <KeyboardTabIcon />
-                  </IconButton>
-                </Grid>
-              )}
-            </Grid>
-          </Grid>
-        )}
       </Grid>
       <Grid item md={12} style={{ marginTop: '24px'}}>
         {data.parentNote && (
@@ -462,7 +510,7 @@ export default function TaskInfoTop({
   );
 }
 
-const useStyles = makeStyles({
+const useStyles =makeStyles(theme => ({
   parentTask: {
     cursor: 'pointer',
     '& a': {
@@ -512,8 +560,11 @@ const useStyles = makeStyles({
   },
   dueDateDisabled: {
     padding: '0 5px 0 0',
+  },
+  selectLabel: {
+    color: theme.palette?.primary?.main
   }
-});
+}));
 
 TaskInfoTop.defaultProps = {
   users: [],

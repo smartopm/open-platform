@@ -20,13 +20,13 @@ export const ProcessesQuery = gql`
 export const ProjectsQuery = gql`
   query GetProjects($offset: Int, $limit: Int, $step: String, $completedPerQuarter: String, $submittedPerQuarter: String) {
     projects(offset: $offset, limit: $limit, step: $step, completedPerQuarter: $completedPerQuarter, submittedPerQuarter: $submittedPerQuarter) {
-      ...NoteFields
+      ...TaskFields
       subTasks {
-        ...NoteFields
+        ...TaskFields
       }
     }
   }
-  ${NotesFragment.note}
+  ${TasksFragment.task}
 `
 
 export const ClientAssignedProjectsQuery = gql`

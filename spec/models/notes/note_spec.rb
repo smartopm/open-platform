@@ -44,6 +44,7 @@ RSpec.describe Notes::Note, type: :model do
     it { is_expected.to have_db_column(:completed).of_type(:boolean) }
     it { is_expected.to have_db_column(:due_date).of_type(:datetime) }
     it { is_expected.to have_db_column(:parent_note_id).of_type(:uuid) }
+    it { is_expected.to have_db_column(:status).of_type(:integer) }
   end
 
   describe 'associations' do
@@ -61,6 +62,13 @@ RSpec.describe Notes::Note, type: :model do
     end
     it { is_expected.to have_many(:note_histories).dependent(:destroy) }
     it { is_expected.to have_many(:sub_notes).class_name('Notes::Note').dependent(:destroy) }
+  end
+
+  describe 'enums' do
+    it do
+      is_expected.to define_enum_for(:status)
+        .with_values(not_started: 0, in_progress: 1, needs_attention: 2, at_risk: 3, completed: 4)
+    end
   end
 
   describe 'sub_notes' do
@@ -127,6 +135,10 @@ RSpec.describe Notes::Note, type: :model do
         it 'stores the datetime for the task when it was completed' do
           expect(admin_note.completed_at).to_not be_nil
         end
+
+        it 'updates the note status to `completed`' do
+          expect(admin_note.status).to eql('completed')
+        end
       end
 
       context 'when any other attribute is updated' do
@@ -134,6 +146,10 @@ RSpec.describe Notes::Note, type: :model do
 
         it 'does not populate the completed_at' do
           expect(admin_note.completed_at).to be_nil
+        end
+
+        it 'does not update the note status' do
+          expect { admin_note.update(completed: false) }.not_to(change { admin_note.status })
         end
       end
     end

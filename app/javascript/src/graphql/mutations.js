@@ -523,6 +523,7 @@ export const UpdateNote = gql`
     $dueDate: String
     $parentNoteId: ID
     $documentBlobId: String
+    $status: String
   ) {
     noteUpdate(
       id: $id
@@ -535,12 +536,14 @@ export const UpdateNote = gql`
       dueDate: $dueDate
       parentNoteId: $parentNoteId
       documentBlobId: $documentBlobId
+      status: $status
     ) {
       note {
         flagged
         body
         id
         dueDate
+        status
         parentNote {
           id
         }

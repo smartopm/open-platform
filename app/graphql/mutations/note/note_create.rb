@@ -13,6 +13,7 @@ module Mutations
       argument :due_date, String, required: false
       argument :parent_note_id, ID, required: false
       argument :attached_documents, GraphQL::Types::JSON, required: false
+      argument :status, String, required: false
 
       field :note, Types::NoteType, null: true
 

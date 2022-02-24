@@ -4,10 +4,10 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useQuery } from 'react-apollo';
-import { Grid, IconButton, Typography } from '@material-ui/core';
+import { Chip, Grid, IconButton, Typography } from '@material-ui/core';
+import { grey } from '@mui/material/colors';
 import Divider from '@mui/material/Divider';
 import Hidden from '@material-ui/core/Hidden';
-import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import AccountTreeIcon from '@material-ui/icons/AccountTree';
 import QuestionAnswerIcon from '@material-ui/icons/QuestionAnswer';
@@ -25,7 +25,6 @@ import { dateToString } from '../../../components/DateContainer';
 import Card from '../../../shared/Card';
 import CustomProgressBar from '../../../shared/CustomProgressBar';
 import { CommentQuery } from '../../../graphql/queries';
-import { LinkToUserAvatar } from './RenderTaskData';
 
 export default function TaskDataList({
   task,
@@ -46,13 +45,26 @@ export default function TaskDataList({
     fetchPolicy: 'cache-and-network',
     errorPolicy: 'all'
   });
+
+  function taskStatusCharacter() {
+    const status = task?.status;
+    switch (status) {
+      case 'not_assigned': return 'N';
+      case 'at_risk': return 'R';
+      case 'needs_attention': return 'A';
+      case 'in_progress': return 'P';
+      case 'complete': return 'C';
+      default: return 'N'
+    }
+  }
+
   return (
     <Card styles={styles} contentStyles={{ padding: '4px' }}>
       <Grid container>
         <Grid
           item
-          md={4}
-          xs={10}
+          md={3}
+          xs={8}
           style={{ display: 'flex', alignItems: 'center' }}
           data-testid="task_body_section"
         >
@@ -146,6 +158,22 @@ export default function TaskDataList({
             )}
           </Grid>
         </Grid>
+        <Hidden mdUp>
+          <Grid
+            item
+            xs={2}
+            style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}
+            data-testid="task_status_mobile"
+          >
+            <Chip
+              data-testid="task_status_chip_mobile"
+              label={taskStatusCharacter()}
+              className={task?.status ? classes[task.status] : classes.not_started}
+              style={{ color: 'white'}}
+              size="small"
+            />
+          </Grid>
+        </Hidden>
         {!clientView && (
           <Hidden mdUp>
             <Grid item md={1} xs={1} style={{ display: 'flex', alignItems: 'center' }}>
@@ -178,7 +206,8 @@ export default function TaskDataList({
             </Typography>
           </Grid>
         </Hidden>
-        <Grid
+        {/* This will be changed to use a tooltip. Commenting out for now for reference */}
+        {/* <Grid
           item
           md={1}
           xs={4}
@@ -214,7 +243,7 @@ export default function TaskDataList({
               </Grid>
             )}
           </Hidden>
-        </Grid>
+        </Grid> */}
         <Grid
           item
           data-testid="task_details_section"
@@ -316,19 +345,35 @@ export default function TaskDataList({
             </Grid>
           </Grid>
         </Grid>
-        {!clientView && task?.subTasksCount > 0 && (
-          <Grid
-            item
-            md={1}
-            style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}
-            data-testid="progress_bar_large_screen"
-          >
+        <Grid
+          item
+          md={1}
+          style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}
+          data-testid="progress_bar_large_screen"
+        >
+          {!clientView && task?.subTasksCount > 0 && (
             <Hidden smDown>
               <CustomProgressBar task={task} smDown={false} />
             </Hidden>
-          </Grid>
-        )}
-
+          )}
+        </Grid>
+        <Grid item md={1} />
+        <Grid
+          item
+          md={1}
+          style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}
+          data-testid="task_status"
+        >
+          <Hidden smDown>
+            <Chip
+              data-testid="task_status_chip"
+              label={task?.status ? t(`task.${task.status}`) : t('task.not_started')}
+              className={task?.status ? classes[task.status] : classes.not_started}
+              style={{ color: 'white'}}
+              size="small"
+            />
+          </Hidden>
+        </Grid>
         <Grid
           item
           md={1}
@@ -415,6 +460,21 @@ const useStyles = makeStyles(() => ({
     alignItems: 'center',
     width: '45%',
     justifyContent: 'space-evenly'
+  },
+  not_started: {
+    background: grey[500]
+  },
+  at_risk: {
+    background: '#C5261B'
+  },
+  in_progress: {
+    background: '#2E72B2'
+  },
+  needs_attention: {
+    background: '#F0C62D'
+  },
+  complete: {
+    background: '#40A06A'
   },
   detailsContainer: {
     '@media (min-device-width: 768px) and (max-device-height: 1024px) and (orientation: portrait)': {

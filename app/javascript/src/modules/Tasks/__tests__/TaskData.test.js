@@ -112,7 +112,6 @@ describe('Task Data components', () => {
       expect(container.getByTestId("task_completion_toggle_button")).toBeInTheDocument()
       expect(container.getByTestId("task_body_section")).toBeInTheDocument()
       expect(container.getByTestId("task_body")).toBeInTheDocument()
-      expect(container.getByTestId("task_assignee")).toBeInTheDocument()
       expect(container.getByTestId("task_subtasks")).toBeInTheDocument()
       expect(container.getByTestId("task_comments")).toBeInTheDocument()
       expect(container.getByTestId("task_details_section")).toBeInTheDocument()
@@ -149,7 +148,6 @@ describe('Task Data components', () => {
       expect(screen.getByTestId("task_completion_toggle_button")).toBeInTheDocument();
       expect(screen.getByTestId("task_body_section")).toBeInTheDocument();
       expect(screen.getByTestId("task_body")).toBeInTheDocument();
-      expect(screen.getByTestId("task_assignee")).toBeInTheDocument();
     }, 10)
   });
 
@@ -250,6 +248,7 @@ describe('Task Data components', () => {
       expect(container.queryByTestId('task-comment')).toBeInTheDocument();
       expect(container.getByTestId("progress_bar_small_screen")).toBeInTheDocument()
       expect(container.queryByTestId('task_completion_toggle_button')).toBeInTheDocument();
+      expect(container.queryByTestId('task_status')).toBeInTheDocument();
       fireEvent.click(container.queryByTestId('task_completion_toggle_button'));
 
       expect(container.queryByTestId('task_attach_file')).toBeInTheDocument();
