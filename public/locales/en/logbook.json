@@ -37,7 +37,7 @@
     "registered_guest_updated": "Success: Registered Guest successfully updated",
     "registered_guest_created": "Success: Registered Guest successfully created",
     "guest_entry_created_successful": "Success: Guest added to guest list successfully",
-    "guest_entry_updated_successful": "Success: Guest list entry updated to successfully",
+    "invite_updated_successful": "Invite updated successfully",
     "granted": "granted",
     "revoked": "revoked",
     "denied": "denied",

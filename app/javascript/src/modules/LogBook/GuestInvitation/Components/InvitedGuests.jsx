@@ -27,31 +27,34 @@ export default function InvitedGuests() {
     variables: { query: debouncedValue },
     fetchPolicy: 'network-only'
   });
-  const [inviteUpdate] = useMutation(InvitationUpdateMutation)
-  
+  const [inviteUpdate] = useMutation(InvitationUpdateMutation);
+
   const { t } = useTranslation(['logbook', 'common']);
   const classes = useStyles();
   const authState = useContext(Context);
   const { timezone } = authState.user.community;
   const theme = useTheme();
   const [anchorEl, setAnchorEl] = useState(null);
-  const [currentInvite, setCurrentInvite] = useState({ id: '', loading: false });
+  const [currentInvite, setCurrentInvite] = useState({ id: '', loading: false, status: null });
   const open = Boolean(anchorEl);
   const [details, setDetails] = useState({ message: '', isError: false });
 
   const menuList = [
     {
-      content: 'Cancel',
+      content:
+        currentInvite.status === 'cancelled'
+          ? t('common:misc.activate')
+          : t('common:form_actions.cancel'),
       isVisible: true,
       isAdmin: false,
       handleClick: () => cancelInvitation()
-    },
+    }
   ];
 
-  function handleMenu(event, inviteId) {
+  function handleMenu(event, invite) {
     event.stopPropagation();
     setAnchorEl(event.currentTarget);
-    setCurrentInvite({...currentInvite,  id: inviteId})
+    setCurrentInvite({ ...currentInvite, id: invite.id, status: invite.status });
   }
 
   function handleMenuClose() {
@@ -59,24 +62,25 @@ export default function InvitedGuests() {
   }
 
   function cancelInvitation() {
-    setCurrentInvite({...currentInvite,  loading: true})
-    handleMenuClose()
+    setCurrentInvite({ ...currentInvite, loading: true });
+    handleMenuClose();
     inviteUpdate({
-      variables: { inviteId:  currentInvite.id, status: 'cancelled'}
+      variables: {
+        inviteId: currentInvite.id,
+        status: currentInvite.status === 'cancelled' ? 'active' : 'cancelled'
+      }
     })
-    .then(() => {
-      setDetails({ ...details, isError: false, message: t('guest.invite_canceled') })
-      setCurrentInvite({...currentInvite,  loading: false})
-      refetch()  
-    }
-    )
-    .catch(err => {
-      setCurrentInvite({...currentInvite,  loading: false})
-      setDetails({ ...details, isError: true, message: formatError(err.message) });
-    })
+      .then(() => {
+        setDetails({ ...details, isError: false, message: t('logbook.invite_updated_successful') });
+        setCurrentInvite({ ...currentInvite, loading: false });
+        refetch();
+      })
+      .catch(err => {
+        setCurrentInvite({ ...currentInvite, loading: false });
+        setDetails({ ...details, isError: true, message: formatError(err.message) });
+      });
   }
 
-  
   const menuData = {
     menuList,
     handleMenu,
@@ -87,7 +91,6 @@ export default function InvitedGuests() {
   };
   return (
     <Container maxWidth="xl">
-
       <MessageAlert
         type={!details.isError ? 'success' : 'error'}
         message={details.message}
@@ -129,17 +132,19 @@ export default function InvitedGuests() {
       <br />
       {loading && <Spinner />}
 
-      {data?.myGuests.length ? data?.myGuests?.map(invite => (
-        <GuestListCard
-          key={invite.id}
-          invite={invite}
-          translate={t}
-          tz={timezone}
-          styles={{ classes, theme }}
-          handleInviteMenu={handleMenu}
-          currentInvite={currentInvite}
-        />
-      )) : !loading && <CenteredContent>{t('logbook.no_invited_guests')}</CenteredContent>}
+      {data?.myGuests.length
+        ? data?.myGuests?.map(invite => (
+          <GuestListCard
+            key={invite.id}
+            invite={invite}
+            translate={t}
+            tz={timezone}
+            styles={{ classes, theme }}
+            handleInviteMenu={handleMenu}
+            currentInvite={currentInvite}
+          />
+          ))
+        : !loading && <CenteredContent>{t('logbook.no_invited_guests')}</CenteredContent>}
     </Container>
   );
 }

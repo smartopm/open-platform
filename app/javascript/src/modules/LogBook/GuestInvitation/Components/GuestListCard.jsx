@@ -132,7 +132,7 @@ export default function GuestListCard({
                   className={classes.chipAlign}
                 />
               </Grid>
-              <Grid item data-testid="invite_status" className={classes.chipRootAlign}>
+              <Grid item className={classes.chipRootAlign}>
                 <Chip
                   label={isCancelled ? translate('guest_book.cancelled') : translate('guest_book.active')}
                   color={isCancelled ? 'error' : 'success'}
@@ -150,7 +150,7 @@ export default function GuestListCard({
                     aria-haspopup="true"
                     data-testid="guest_invite_menu"
                     dataid={invite.id}
-                    onClick={event => handleInviteMenu(event, invite.id)}
+                    onClick={event => handleInviteMenu(event, invite)}
                     color="primary"
                   >
                     <MoreVert />

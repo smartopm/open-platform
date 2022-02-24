@@ -7,7 +7,8 @@ import '@testing-library/jest-dom/extend-expect';
 import InvitedGuests from '../../Components/InvitedGuests';
 import { MyInvitedGuestsQuery } from '../../graphql/queries';
 import { Context } from '../../../../../containers/Provider/AuthStateProvider';
-import userMock from '../../../../../__mocks__/userMock';
+import userMock from '../../../../../__mocks__/authstate';
+import { InvitationUpdateMutation } from '../../graphql/mutations';
 
 describe('Invited Guests Component', () => {
   const mockHistory = {
@@ -55,10 +56,26 @@ describe('Invited Guests Component', () => {
         }
       }
     };
-    const { getByTestId, queryByText, queryAllByText } = render(
+    const cancelInviteMutationMock = {
+      request: {
+        query: InvitationUpdateMutation,
+        variables: { 
+          inviteId: invitedGuests.result.data.myGuests[0].id,
+          status: 'active'
+         }
+      },
+      result: {
+        data: {
+          invitationUpdate: {
+            success: true
+          }
+        }
+      }
+    }
+    const { getByTestId, queryByText, queryAllByText, queryByTestId } = render(
       <Context.Provider value={userMock}>
         <MemoryRouter>
-          <MockedProvider mocks={[invitedGuests]} addTypename={false}>
+          <MockedProvider mocks={[invitedGuests, cancelInviteMutationMock]} addTypename={false}>
             <MockedThemeProvider>
               <InvitedGuests />
             </MockedThemeProvider>
@@ -71,10 +88,10 @@ describe('Invited Guests Component', () => {
 
     expect(search).toBeInTheDocument();
 
-
     expect(queryByText('common:menu.guest_list')).toBeInTheDocument();
     expect(getByTestId('speed_dial_add_guest')).toBeInTheDocument();
-
+    expect(getByTestId('menu_list')).toBeInTheDocument();
+    
     await waitFor(() => {
       expect(queryAllByText('Test two')[0]).toBeInTheDocument();
       expect(queryAllByText('Test two')[0]).toBeInTheDocument();
@@ -82,7 +99,17 @@ describe('Invited Guests Component', () => {
       expect(getByTestId('status')).toBeInTheDocument();
       expect(getByTestId('speed_dial_add_guest')).toBeInTheDocument();
       expect(queryAllByText('guest_book.start_of_visit')[0]).toBeInTheDocument();
+
     }, 20);
+    
+    fireEvent.click(getByTestId('guest_invite_menu'))
+    expect(getByTestId('menu_item')).toBeInTheDocument();
+    expect(getByTestId('menu_item').textContent).toContain('common:form_actions.cancel');
+    fireEvent.click(getByTestId('menu_item'))
+
+    await waitFor(() => {
+      expect(queryByTestId('loader')).toBeInTheDocument();
+    }, 10)
 
     fireEvent.click(getByTestId('speed_dial_btn'))
     expect(mockHistory.push).toBeCalled()

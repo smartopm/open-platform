@@ -38,7 +38,7 @@ describe('Render Guest List Card Component', () => {
     thumbnailUrl: 'https://some-video.com'
   };
   it('should render Guest List Card component', async () => {
-    const t = jest.fn(() => 'translated');
+    const t = jest.fn(() => 'guest_book.cancelled');
     const handleInviteMenu = jest.fn()
     const currentInvite = { id: guest.id, loading: false }
     const container = render(
@@ -69,6 +69,8 @@ describe('Render Guest List Card Component', () => {
     expect(container.getByTestId('video_preview')).toBeInTheDocument();
     expect(container.getByTestId('visit_time')).toBeInTheDocument();
     expect(container.getByTestId('status')).toBeInTheDocument();
+    expect(container.getByTestId('invite_status')).toBeInTheDocument();
+    expect(container.getByTestId('invite_status').textContent).toContain('guest_book.cancelled');
     expect(container.getByTestId('validity')).toBeInTheDocument();
     expect(container.getByTestId('guest_card')).toBeInTheDocument();
     expect(container.getByTestId('guest_invite_menu')).toBeInTheDocument();
@@ -78,14 +80,15 @@ describe('Render Guest List Card Component', () => {
   });
 
   it('should render spinner', async () => {
-    const t = jest.fn(() => 'translated');
+    const t = jest.fn(() => 'guest_book.active');
     const handleInviteMenu = jest.fn()
-    const currentInvite = { id: guest.id, loading: true }
+    const invite = { ...guest, thumbnailUrl: null, status: 'active' }
+    const currentInvite = { id: invite.id, loading: true }
     const container = render(
       <MemoryRouter>
         <MockedThemeProvider>
           <GuestListCard
-            invite={guest}
+            invite={invite}
             translate={t}
             styles={{
             theme: {
@@ -106,9 +109,11 @@ describe('Render Guest List Card Component', () => {
     expect(container.getByTestId('guest_info')).toBeInTheDocument();
     expect(container.getByTestId('start_of_visit')).toBeInTheDocument();
     expect(container.getByTestId('ends_on_date')).toBeInTheDocument();
-    expect(container.getByTestId('video_preview')).toBeInTheDocument();
+    expect(container.getByTestId('request_avatar')).toBeInTheDocument();
     expect(container.getByTestId('visit_time')).toBeInTheDocument();
     expect(container.getByTestId('status')).toBeInTheDocument();
+    expect(container.getByTestId('invite_status')).toBeInTheDocument();
+    expect(container.getByTestId('invite_status').textContent).toContain('guest_book.active');
     expect(container.getByTestId('validity')).toBeInTheDocument();
     expect(container.getByTestId('guest_card')).toBeInTheDocument();
     expect(container.queryByTestId('guest_invite_menu')).not.toBeInTheDocument();
