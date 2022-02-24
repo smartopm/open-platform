@@ -99,8 +99,8 @@ export default function GuestListCard({
             />
           </Grid>
           <Grid item xs={12} sm={12} lg={4}>
-            <Grid container direction="row" justifyContent="center">
-              <Grid item xs data-testid="status" className={classes.chipAlign}>
+            <Grid container direction="row" justifyContent="flex-start">
+              <Grid item xs={3} data-testid="status" className={classes.chipAlign}>
                 <Chip
                   label={
                     invite.guest?.request?.status === 'approved'
@@ -111,7 +111,7 @@ export default function GuestListCard({
                   size="small"
                 />
               </Grid>
-              <Grid item xs data-testid="validity" className={classes.chipAlign}>
+              <Grid item xs={4} data-testid="validity" className={classes.chipAlign}>
                 <Chip
                   label={
                     checkRequests(invite.entryTime, translate, tz).valid
@@ -130,12 +130,13 @@ export default function GuestListCard({
               </Grid>
               {
                 invite.status === 'cancelled' && (
-                  <Grid item xs data-testid="invite_status" className={classes.chipAlign}>
+                  <Grid item xs={4} data-testid="invite_status" className={classes.chipAlign}>
                     <Chip
                       label={invite.status && translate('guest_book.canceled')}
                       style={{
                         background: styles.theme.palette.error?.main,
-                        color: 'white'
+                        color: 'white',
+                        marginLeft: '-4%'
                       }}
                       data-testid="invite_status"
                       size="small"
@@ -143,7 +144,7 @@ export default function GuestListCard({
                   </Grid>
                 )
               }
-              <Grid item xs data-testid="more_options">
+              <Grid item xs={1} data-testid="more_options">
                 {currentInvite.loading && currentInvite.id === invite.id ? (
                   <Spinner />
                 ) : (
@@ -153,7 +154,6 @@ export default function GuestListCard({
                     data-testid="guest_invite_menu"
                     dataid={invite.id}
                     onClick={event => handleInviteMenu(event, invite.id)}
-                    className={classes.moreOptionButton}
                     color="primary"
                   >
                     <MoreVert />
