@@ -23,7 +23,10 @@ export default function AdminDashboard() {
   const history = useHistory();
 
   const { loading: summaryLoading, error: summaryError, data: summaryData } = useQuery(
-    TaskQuarterySummaryQuery
+    TaskQuarterySummaryQuery,
+    {
+      fetchPolicy: 'cache-and-network'
+    }
   );
 
   const { loading: projectsLoading, error: projectsError, data: projectsData } = useQuery(
