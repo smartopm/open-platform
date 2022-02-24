@@ -61,12 +61,13 @@ RSpec.describe Mutations::EntryRequest::InvitationCreate do
 
     describe '#resolve' do
       context 'when invite does not have entry time' do
-        it 'creates entry time' do
+        it 'creates entry time and update status' do
           variables = {
             inviteId: invite.id,
             visitationDate: Time.zone.now.to_s,
             startsAt: Time.zone.now.to_s,
             endsAt: (Time.zone.now + 5.hours).to_s,
+            status: 'cancelled',
           }
 
           expect(community.entry_times.count).to eql 0
@@ -81,6 +82,7 @@ RSpec.describe Mutations::EntryRequest::InvitationCreate do
           expect(result.dig('errors', 0, 'message')).to be_nil
           expect(result.dig('data', 'invitationUpdate', 'success')).to eql true
           expect(community.entry_times.count).to eql 1
+          expect(invite.reload.status).to eql 'cancelled'
         end
       end
 
