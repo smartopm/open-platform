@@ -198,6 +198,8 @@ export default function TaskInfoTop({
             <Grid item md={9} xs={12}>
               <TextField
                 select
+                fullWidth
+                disabled={!canUpdateNote}
                 margin="normal"
                 variant="outlined"
                 className={classes.selectLabel}
@@ -206,7 +208,6 @@ export default function TaskInfoTop({
                 data-testid="select-task-status"
                 value={taskStatus}
                 label={t('common:misc.select')}
-                fullWidth
               >
                 {Object.entries(taskStatuses).map(([key, val]) => (
                   <MenuItem
