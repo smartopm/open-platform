@@ -157,7 +157,6 @@ class LeadImportJob < ApplicationJob
 
         if user.save
           task = create_task(user, current_user)
-          puts "Mutuba #{task}"
           user.task_id = task.id # assign user this task
           user.save!
         else
