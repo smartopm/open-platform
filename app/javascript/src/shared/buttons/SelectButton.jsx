@@ -14,8 +14,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
-import Collapse from '@material-ui/core/Collapse';
-import { splitCamelCase } from '../../utils/helpers'
+import { splitCamelCase } from '../../utils/helpers';
 
 export default function SelectButton({
   buttonText,
@@ -30,7 +29,10 @@ export default function SelectButton({
   const [openSubMenu, setOpenSubMenu] = useState({ isOpen: false, name: '' });
   function handleSubMenuClick(opt) {
     opt.handleMenuItemClick(opt.key, opt.value);
-    setOpenSubMenu({ isOpen: !openSubMenu.isOpen, name: opt.key });
+    if (openSubMenu.name !== opt.key && openSubMenu.name !== '' && openSubMenu.isOpen === true) {
+      return setOpenSubMenu({ ...openSubMenu, name: opt.key });
+    }
+    return setOpenSubMenu({ isOpen: !openSubMenu.isOpen, name: opt.key });
   }
   return (
     <>
@@ -83,28 +85,24 @@ export default function SelectButton({
                               <ExpandMore />
                             ))}
                         </MenuItem>
-                        <Collapse
-                          in={openSubMenu.name === opt.key && openSubMenu.isOpen}
-                          timeout="auto"
-                          unmountOnExit
-                        >
-                          {opt.subMenu &&
-                            opt.subMenu
-                              .filter(submenu => submenu.show)
-                              .map(submenu => (
-                                <MenuItem
-                                  style={{ paddingLeft: '30px' }}
-                                  key={submenu.key}
-                                  selected={submenu.key === selectedKey}
-                                  onClick={() =>
-                                    submenu.handleMenuItemClick(submenu.key, submenu.value)
-                                  }
-                                  value={opt.key}
-                                >
-                                  {submenu.value}
-                                </MenuItem>
-                              ))}
-                        </Collapse>
+                        {openSubMenu.name === opt.key &&
+                          openSubMenu.isOpen &&
+                          opt.subMenu &&
+                          opt.subMenu
+                            .filter(submenu => submenu.show)
+                            .map(submenu => (
+                              <MenuItem
+                                style={{ paddingLeft: '30px' }}
+                                key={submenu.key}
+                                selected={submenu.key === selectedKey}
+                                onClick={() =>
+                                  submenu.handleMenuItemClick(submenu.key, submenu.value)
+                                }
+                                value={opt.key}
+                              >
+                                {submenu.value}
+                              </MenuItem>
+                            ))}
                       </div>
                     ))}
                 </MenuList>
