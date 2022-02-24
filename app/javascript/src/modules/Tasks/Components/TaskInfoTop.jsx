@@ -199,6 +199,8 @@ export default function TaskInfoTop({
               <TextField
                 select
                 margin="normal"
+                variant="outlined"
+                className={classes.selectLabel}
                 labelId="select-task-status"
                 id="select-task-status"
                 data-testid="select-task-status"
@@ -506,7 +508,7 @@ export default function TaskInfoTop({
   );
 }
 
-const useStyles = makeStyles({
+const useStyles =makeStyles(theme => ({
   parentTask: {
     cursor: 'pointer',
     '& a': {
@@ -556,8 +558,11 @@ const useStyles = makeStyles({
   },
   dueDateDisabled: {
     padding: '0 5px 0 0',
+  },
+  selectLabel: {
+    color: theme.palette?.primary?.main
   }
-});
+}));
 
 TaskInfoTop.defaultProps = {
   users: [],
