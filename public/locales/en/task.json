@@ -90,7 +90,9 @@
     "processes": "Processes",
     "documents": "Documents",
     "drc_process": "DRC Process",
-    "completed_by_quarter": "Completed by Quarter",
+    "projects_by_quarter": "Projects by Quarter",
+    "completed": "Completed",
+    "submitted": "Submitted",
     "projects_by_stage": "Projects by Stage",
     "no_data": "No data to display",
     "drc_stages": {

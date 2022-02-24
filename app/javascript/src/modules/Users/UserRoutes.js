@@ -80,17 +80,7 @@ const routes = [
     moduleName: 'user',
     featureName: 'Users'
   },
-  {
-    routeProps: {
-      path: '/user/:id/lead_management',
-      component: LeadManagementDetails,
-      exact: true
-    },
-    accessibleBy: [],
-    name: 'lead_management',
-    moduleName: 'user',
-    featureName: 'Users'
-  },
+
   {
     routeProps: {
       path: '/new/user',

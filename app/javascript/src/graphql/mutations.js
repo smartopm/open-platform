@@ -972,8 +972,8 @@ mutation updateComment($commentId: ID!, $discussionId: ID!, $status: String!){
 `
 
 export const ImportCreate = gql`
-  mutation usersImport($csvString: String!, $csvFileName: String!) {
-    usersImport(csvString: $csvString, csvFileName: $csvFileName) {
+  mutation usersImport($csvString: String!, $csvFileName: String!, $importType: String!) {
+    usersImport(csvString: $csvString, csvFileName: $csvFileName, importType: $importType) {
       success
     }
   }

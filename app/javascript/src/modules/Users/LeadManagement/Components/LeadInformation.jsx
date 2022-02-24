@@ -35,7 +35,6 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
       <Typography variant="h6" data-testid="lead-management-lead-information-header">
         {t('lead_management.lead_section_header')}
       </Typography>
-      <br />
       <Grid container spacing={2} data-testid="lead-management-lead-information-section">
         <Grid item md={6} xs={12}>
           <FormControl fullWidth size="small">

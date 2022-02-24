@@ -32,6 +32,7 @@ export default function TodoItem({
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedTask, setSelectedTask] = useState(null);
+  const [selectedSubSubTask, setSelectedSubSubTask] = useState(null);
   const [tasksOpen, setTasksOpen] = useState({});
   const [isUpdating, setIsUpdating] = useState(false)
   const anchorElOpen = Boolean(anchorEl);
@@ -51,6 +52,14 @@ export default function TodoItem({
     errorPolicy: 'all'
   });
 
+  const [
+    loadSubSubTasks,
+    { data: subSubTasksData, loading: isLoadingSubSubTasks }
+  ] = useLazyQuery(SubTasksQuery, {
+    variables: { taskId: selectedSubSubTask?.id, limit: selectedSubSubTask?.subTasksCount },
+    fetchPolicy: 'cache-and-network',
+    errorPolicy: 'all'
+  });
 
   let menuList = [
     {
@@ -141,11 +150,22 @@ export default function TodoItem({
 
   function handleParentTaskClick(e){
     e.stopPropagation();
-    if(task && !(data?.taskSubTasks?.length > 0)){
+    if(task && !(data?.subTasksCount > 0)){
        loadSubTasks();
     }
 
     toggleTask(task)
+  }
+
+  function handleSubTaskClick(e, taskItem){
+    e.stopPropagation();
+    setSelectedSubSubTask(taskItem);
+    
+    if(taskItem && taskItem?.subTasksCount > 0){
+      loadSubSubTasks()
+    }
+
+    toggleTask(taskItem)
   }
 
   function handleTodoItemClick(taskItem, tab) {
@@ -196,18 +216,18 @@ export default function TodoItem({
               menuData={menuData}
               styles={{backgroundColor: '#F5F5F4'}}
               openSubTask={objectAccessor(tasksOpen, firstLevelSubTask.id)}
-              handleOpenSubTasksClick={() => toggleTask(firstLevelSubTask)}
+              handleOpenSubTasksClick={(e) => handleSubTaskClick(e, firstLevelSubTask)}
               clickable
               handleClick={() => handleTodoItemClick(firstLevelSubTask)}
               handleTaskCompletion={handleTaskCompletion}
               clientView={clientView}
             />
-
+            {(isLoadingSubSubTasks && objectAccessor(tasksOpen, firstLevelSubTask?.id)) && <LinearSpinner />}
           </div>
-          {firstLevelSubTask?.subTasks?.length > 0 &&
+          {subSubTasksData?.taskSubTasks?.length > 0 &&
             objectAccessor(tasksOpen, firstLevelSubTask?.id) && (
               <>
-                {firstLevelSubTask?.subTasks?.map(secondLevelSubTask => (
+                {subSubTasksData?.taskSubTasks?.map(secondLevelSubTask => (
                   <div className={classes.levelTwo} key={secondLevelSubTask.id}>
                     <TaskDataList
                       key={secondLevelSubTask.id}

@@ -3,12 +3,10 @@ import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/styles';
 import { Grid } from '@material-ui/core';
 import PropTypes from 'prop-types';
-import useDebounce from '../utils/useDebounce';
 
 export default function AutoSaveField({ value, mutationAction, stateAction }) {
   const [isEditMode, setIsEditMode] = useState(false);
   const [input, setInput] = useState(value || '')
-  const debouncedValue = useDebounce(input, 500)
 
   function handleMouseLeave() {
     setIsEditMode(false);
@@ -22,8 +20,8 @@ export default function AutoSaveField({ value, mutationAction, stateAction }) {
 
   function handleAutoSave(){
     const previous = value;
-    if (debouncedValue !== previous){
-      mutationAction(debouncedValue)
+    if (input && input !== previous){
+      mutationAction(input)
     }
   }
 

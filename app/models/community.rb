@@ -156,5 +156,16 @@ class Community < ApplicationRecord
       Sms.send(sms_phone_number, message)
     end
   end
+
+  # rubocop:disable Rails/FindBy
+  def drc_form_users
+    form_name = 'DRC Project Review Process'
+    drc_form = forms.where('name ILIKE ?', "#{form_name}%").first
+    return unless drc_form
+
+    drc_ids = forms.where(grouping_id: drc_form.grouping_id).pluck(:id)
+    Forms::FormUser.where(form_id: drc_ids)
+  end
+  # rubocop:enable Rails/FindBy
   # rubocop:enable Metrics/ClassLength
 end

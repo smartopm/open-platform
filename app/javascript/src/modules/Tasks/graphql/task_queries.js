@@ -70,9 +70,6 @@ export const SubTasksQuery = gql`
   query subTasks($taskId: ID!, $offset: Int, $limit: Int) {
     taskSubTasks(taskId: $taskId, offset: $offset, limit: $limit) {
       ...TaskFields
-      subTasks {
-        ...TaskFields
-      }
     }
   }
   ${TasksFragment.task}
