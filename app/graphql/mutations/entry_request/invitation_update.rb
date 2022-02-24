@@ -19,6 +19,7 @@ module Mutations
         invite = context[:current_user].invitees.find_by(id: vals[:invite_id])
         return if invite.nil?
 
+        update_invite(invite, vals[:status])
         entry_time = invite.entry_time
         if entry_time.present?
           update_entry_time(entry_time, vals.except(:invite_id, :status))
@@ -26,6 +27,12 @@ module Mutations
           create_entry_time(vals, invite)
         end
         { success: true }
+      end
+
+      def update_invite(invite, status)
+        return if invite.update(status: status)
+
+        raise GraphQL::ExecutionError, invite.errors.full_message
       end
 
       def update_entry_time(entry_time, vals)
