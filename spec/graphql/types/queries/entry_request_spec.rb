@@ -232,7 +232,8 @@ RSpec.describe Types::Queries::EntryRequest do
         reason: 'Visiting', name: 'Visitor John', nrc: '012345',
         visitation_date: Time.zone.now, end_time: '2021-09-23 14:00', guest_id: admin.id
       )
-
+      admin.invites.create!(guest_id: visitor.id, host_id: current_user.id,
+                            entry_request_id: current_user.entry_requests.first.id)
       result = DoubleGdpSchema.execute(
         scheduledRequests_query,
         variables: variables,
@@ -261,6 +262,10 @@ RSpec.describe Types::Queries::EntryRequest do
         visitation_date: Time.zone.now, end_time: '2021-09-23 18:52', guest_id: admin.id
       )
 
+      current_user.invites.create!(guest_id: admin.id, host_id: current_user.id,
+                                   entry_request_id: current_user.entry_requests.first.id)
+      current_user.invites.create!(guest_id: visitor.id, host_id: admin.id,
+                                   entry_request_id: current_user.entry_requests.first.id)
       result = DoubleGdpSchema.execute(
         scheduledRequests_query,
         variables: variables,
@@ -270,7 +275,7 @@ RSpec.describe Types::Queries::EntryRequest do
         },
       ).as_json
 
-      expect(result.dig('data', 'scheduledRequests').length).to eq 2
+      expect(result.dig('data', 'scheduledRequests').length).to eq 1
       expect(result.dig('data', 'scheduledRequests')
         .find { |visitor| visitor['name'] == 'Visitor John' }).to be_nil
     end
@@ -289,6 +294,11 @@ RSpec.describe Types::Queries::EntryRequest do
         reason: 'Visiting', name: 'Visitor John', nrc: '012345', guest_id: admin.id,
         visitation_date: Time.zone.now, ends_at: '2021-09-30T11:00:19+02:00'
       )
+
+      current_user.invites.create!(guest_id: admin.id, host_id: current_user.id,
+                                   entry_request_id: current_user.entry_requests.first.id)
+      current_user.invites.create!(guest_id: visitor.id, host_id: admin.id,
+                                   entry_request_id: current_user.entry_requests.second.id)
 
       result = DoubleGdpSchema.execute(
         scheduledRequests_query,
