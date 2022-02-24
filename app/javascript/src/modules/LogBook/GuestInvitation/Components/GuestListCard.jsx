@@ -1,11 +1,13 @@
 import React from 'react';
 import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
+import Chip from '@mui/material/Chip';
 import PropTypes from 'prop-types';
 import CardContent from '@material-ui/core/CardContent';
 import { useHistory } from 'react-router';
-import { Chip, Avatar, IconButton } from '@material-ui/core';
+import { Avatar, IconButton, Chip as LegacyChip } from '@material-ui/core';
 import MoreVert from '@material-ui/icons/MoreVert';
+import { useMediaQuery, useTheme } from '@mui/material';
 import { dateToString, dateTimeToString } from '../../../../components/DateContainer';
 import Text from '../../../../shared/Text';
 import { checkRequests } from '../../utils';
@@ -22,6 +24,9 @@ export default function GuestListCard({
 }) {
   const history = useHistory();
   const classes = useLogbookStyles();
+  const isCancelled = invite.status === 'cancelled'
+  const theme = useTheme();
+  const matchesSmall = useMediaQuery(theme.breakpoints.down('md'));
 
   function handleViewGuest() {
     history.push(`/request/${invite.guest?.request?.id}?type=view`);
@@ -99,9 +104,9 @@ export default function GuestListCard({
             />
           </Grid>
           <Grid item xs={12} sm={12} lg={4}>
-            <Grid container direction="row" justifyContent="flex-start">
-              <Grid item xs={3} data-testid="status" className={classes.chipAlign}>
-                <Chip
+            <Grid container direction="row" justifyContent="flex-end" spacing={!matchesSmall ? 2 : 0}>
+              <Grid item data-testid="status" className={classes.chipRootAlign}>
+                <LegacyChip
                   label={
                     invite.guest?.request?.status === 'approved'
                       ? translate('guest_book.approved')
@@ -109,42 +114,32 @@ export default function GuestListCard({
                   }
                   color={invite.guest?.request?.status === 'approved' ? 'primary' : 'secondary'}
                   size="small"
+                  className={classes.chipAlign}
                 />
               </Grid>
-              <Grid item xs={4} data-testid="validity" className={classes.chipAlign}>
+              <Grid item data-testid="validity" className={classes.chipRootAlign}>
                 <Chip
                   label={
                     checkRequests(invite.entryTime, translate, tz).valid
                       ? translate('guest_book.valid')
                       : translate('guest_book.invalid_now')
                   }
-                  style={{
-                    background: checkRequests(invite.entryTime, translate, tz).valid
-                      ? styles.theme.palette.success?.main
-                      : styles.theme.palette.error?.main,
-                    color: 'white'
-                  }}
+                  color={checkRequests(invite.entryTime, translate, tz).valid ? 'success' : 'error'}
                   data-testid="guest_validity"
                   size="small"
+                  className={classes.chipAlign}
                 />
               </Grid>
-              {
-                invite.status === 'cancelled' && (
-                  <Grid item xs={4} data-testid="invite_status" className={classes.chipAlign}>
-                    <Chip
-                      label={invite.status && translate('guest_book.canceled')}
-                      style={{
-                        background: styles.theme.palette.error?.main,
-                        color: 'white',
-                        marginLeft: '-4%'
-                      }}
-                      data-testid="invite_status"
-                      size="small"
-                    />
-                  </Grid>
-                )
-              }
-              <Grid item xs={1} data-testid="more_options">
+              <Grid item data-testid="invite_status" className={classes.chipRootAlign}>
+                <Chip
+                  label={isCancelled ? translate('guest_book.cancelled') : translate('guest_book.active')}
+                  color={isCancelled ? 'error' : 'success'}
+                  data-testid="invite_status"
+                  size="small"
+                  className={classes.chipAlign}
+                />
+              </Grid>
+              <Grid item data-testid="more_options">
                 {currentInvite.loading && currentInvite.id === invite.id ? (
                   <Spinner />
                 ) : (

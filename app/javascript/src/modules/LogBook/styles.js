@@ -8,10 +8,15 @@ const useLogbookStyles = makeStyles(theme => ({
     height: 90
   },
   chipAlign: {
-    paddingTop: 12
+    marginTop: 11,
+  },
+  chipRootAlign: {    
+    '@media (max-width: 899px)': {
+      marginLeft: '1.5% !important'
+    }
   },
   moreOptionButton: {
-    marginLeft: '38%'
+    marginLeft: '30%'
   },
   timeDetails: {
     '@media (max-width: 390px)': {
@@ -22,7 +27,7 @@ const useLogbookStyles = makeStyles(theme => ({
     marginLeft: -14,
   },
   avatarTimeSection: {
-    '@media (max-width: 390px)': {
+    '@media (max-width: 1199px)': {
       marginBottom: '8px !important'
     }
   }
