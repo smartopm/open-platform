@@ -1,3 +1,4 @@
+/* eslint-disable max-statements */
 import React from 'react';
 import { fireEvent, render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
@@ -7,6 +8,7 @@ import Users from '../Containers/Users';
 import { UsersDetails, LabelsQuery } from '../../../graphql/queries';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import authState from '../../../__mocks__/authstate';
+import MockedThemeProvider from '../../__mocks__/mock_theme';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 
@@ -73,7 +75,9 @@ describe('UserPage Component', () => {
       <Context.Provider value={authState}>
         <MockedProvider mocks={[usersQueryMock, labelsQueryMock]} addTypename={false}>
           <MemoryRouter>
-            <Users />
+            <MockedThemeProvider>
+              <Users />
+            </MockedThemeProvider>
           </MemoryRouter>
         </MockedProvider>
       </Context.Provider>
@@ -84,7 +88,6 @@ describe('UserPage Component', () => {
       expect(container.getByTestId('menu-list')).toBeInTheDocument();
       expect(container.queryByTestId('search')).toBeInTheDocument();
       expect(container.getByTestId('download_csv_btn')).toBeInTheDocument();
-
       fireEvent.click(container.getByTestId('menu-list'));
       expect(container.getByTestId('menu_list')).toBeInTheDocument();
       expect(container.getAllByTestId('menu_item')[0]).toBeInTheDocument();
@@ -97,8 +100,16 @@ describe('UserPage Component', () => {
       fireEvent.click(container.getAllByTestId('menu_item')[1]);
       expect(mockHistory.push).toBeCalledWith('/users/leads/import');
 
+      fireEvent.click(container.getAllByTestId('menu_item')[2]);
+      expect(container.queryByText('Customer Journey Stage')).toBeInTheDocument();
+
       fireEvent.click(container.getAllByTestId('menu_item')[3]);
       expect(mockHistory.push).toBeCalledWith('/users/stats');
+
+      fireEvent.click(container.queryByTestId('download_csv_btn'));
+      expect(container.queryByTestId('button')).toBeInTheDocument();
+      expect(container.queryByTestId('arrow-icon')).toBeInTheDocument();
+
       expect(container.getByTestId('pagination_section')).toBeInTheDocument();
       expect(container.getByTestId('user_item')).toBeInTheDocument();
       expect(container.getByTestId('user_name')).toBeInTheDocument();
