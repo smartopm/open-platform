@@ -5,8 +5,9 @@ import { Container } from '@material-ui/core';
 import { useHistory } from 'react-router';
 import { UsersLiteQuery, HistoryQuery } from '../../../graphql/queries';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
-import Loading from '../../../shared/Loading';
-import ErrorPage from '../../../components/Error';
+import { Spinner } from '../../../shared/Loading';
+import CenteredContent from '../../../shared/CenteredContent';
+import { formatError } from '../../../utils/helpers';
 import TaskDetail from '../Components/TaskDetail';
 import { AssignUser } from '../../../graphql/mutations';
 import { TaskQuery } from '../graphql/task_queries';
@@ -57,10 +58,10 @@ export default function TaskUpdate({
       return null;
     }
 
-    return <ErrorPage title={error.message} />;
+    return <CenteredContent>{formatError(error.message)}</CenteredContent>;
   }
 
-  if (loading) return <Loading />;
+  if (loading) return <Spinner />;
   if (error) return showTaskNotFoundError();
 
   return (
