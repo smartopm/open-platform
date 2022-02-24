@@ -14,6 +14,8 @@ import MenuItem from '@material-ui/core/MenuItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
+import Collapse from '@material-ui/core/Collapse';
+import { splitCamelCase } from '../../utils/helpers'
 
 export default function SelectButton({
   buttonText,
@@ -39,7 +41,7 @@ export default function SelectButton({
         data-testid="button"
       >
         <Button>{buttonText}</Button>
-        <Button onClick={handleClick} data-testid='arrow-icon'>
+        <Button onClick={handleClick} data-testid="arrow-icon">
           <ArrowDropDownIcon />
         </Button>
       </ButtonGroup>
@@ -73,7 +75,7 @@ export default function SelectButton({
                           }
                           value={opt.key}
                         >
-                          <ListItemText primary={opt.value} />
+                          <ListItemText primary={splitCamelCase(opt.value)} />
                           {opt.subMenu &&
                             (openSubMenu.isOpen && openSubMenu.name === opt.key ? (
                               <ExpandLess />
@@ -81,24 +83,28 @@ export default function SelectButton({
                               <ExpandMore />
                             ))}
                         </MenuItem>
-                        {selectedKey === opt.key &&
-                          openSubMenu.isOpen &&
-                          opt.subMenu &&
-                          opt.subMenu
-                            .filter(submenu => submenu.show)
-                            .map(submenu => (
-                              <MenuItem
-                                style={{ paddingLeft: '30px' }}
-                                key={submenu.key}
-                                selected={submenu.key === selectedKey}
-                                onClick={() =>
-                                  submenu.handleMenuItemClick(submenu.key, submenu.value)
-                                }
-                                value={opt.key}
-                              >
-                                {submenu.value}
-                              </MenuItem>
-                            ))}
+                        <Collapse
+                          in={openSubMenu.name === opt.key && openSubMenu.isOpen}
+                          timeout="auto"
+                          unmountOnExit
+                        >
+                          {opt.subMenu &&
+                            opt.subMenu
+                              .filter(submenu => submenu.show)
+                              .map(submenu => (
+                                <MenuItem
+                                  style={{ paddingLeft: '30px' }}
+                                  key={submenu.key}
+                                  selected={submenu.key === selectedKey}
+                                  onClick={() =>
+                                    submenu.handleMenuItemClick(submenu.key, submenu.value)
+                                  }
+                                  value={opt.key}
+                                >
+                                  {submenu.value}
+                                </MenuItem>
+                              ))}
+                        </Collapse>
                       </div>
                     ))}
                 </MenuList>
@@ -123,18 +129,22 @@ SelectButton.propTypes = {
   anchorEl: PropTypes.object,
   anchorRef: PropTypes.object,
   handleClose: PropTypes.func.isRequired,
-  options: PropTypes.arrayOf(PropTypes.shape({
-    key: PropTypes.string,
-    value: PropTypes.string,
-    handleMenuItemClick: PropTypes.func,
-    show: PropTypes.bool,
-    subMenu: PropTypes.arrayOf(PropTypes.shape({
+  options: PropTypes.arrayOf(
+    PropTypes.shape({
       key: PropTypes.string,
       value: PropTypes.string,
       handleMenuItemClick: PropTypes.func,
-      show: PropTypes.bool
-    }))
-  })).isRequired,
+      show: PropTypes.bool,
+      subMenu: PropTypes.arrayOf(
+        PropTypes.shape({
+          key: PropTypes.string,
+          value: PropTypes.string,
+          handleMenuItemClick: PropTypes.func,
+          show: PropTypes.bool
+        })
+      )
+    })
+  ).isRequired,
   selectedKey: PropTypes.string,
   handleClick: PropTypes.func.isRequired
 };

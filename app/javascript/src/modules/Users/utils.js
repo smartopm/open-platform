@@ -557,6 +557,18 @@ export function selectOptions(
           value: 'Print ID',
           handleMenuItemClick: () => history.push(`/print/${data.user.id}`),
           show: checkCommunityFeatures('Users') && checkModule('user')
+        },
+        {
+          key: 'merge_user',
+          value: 'Merge User',
+          handleMenuItemClick: () => handleMergeUserItemClick(),
+          show: checkCommunityFeatures('Users') && checkModule('user')
+        },
+        {
+          key: 'user_logs',
+          value: 'User Logs',
+          handleMenuItemClick: () => history.push(`/user/${data.user.id}/logs`),
+          show: checkCommunityFeatures('LogBook') && checkModule('entry_request')
         }
       ]
     },
@@ -621,18 +633,6 @@ export function selectOptions(
       value: 'CustomerJourney',
       handleMenuItemClick,
       show: checkCommunityFeatures('Customer Journey') && checkRole(['admin'], 'Customer Journey')
-    },
-    {
-      key: 'user_logs',
-      value: 'User Logs',
-      handleMenuItemClick: () => history.push(`/user/${data.user.id}/logs`),
-      show: checkCommunityFeatures('LogBook') && checkModule('entry_request')
-    },
-    {
-      key: 'merge_user',
-      value: 'Merge User',
-      handleMenuItemClick: () => handleMergeUserItemClick(),
-      show: checkCommunityFeatures('Users') && checkModule('user')
     }
   ];
 }

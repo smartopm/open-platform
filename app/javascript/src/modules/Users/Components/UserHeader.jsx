@@ -164,7 +164,7 @@ export default function UserHeader({
               anchorEl={anchorRef.current}
               anchorRef={anchorRef}
               handleClose={handleClose}
-              options={options}
+              options={selectOptions}
               selectedKey={selectedKey}
               handleMenuItemClick={handleMenuItemClick}
               handleClick={() => setOpen(!open)}
