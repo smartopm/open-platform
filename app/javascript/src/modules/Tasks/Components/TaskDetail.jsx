@@ -254,7 +254,7 @@ export default function TaskDetail({
               title="Sub Tasks"
               styles={{ background: '#FAFAFA' }}
               openDetails={tab === 'subtasks'}
-              component={
+              component={(
                 <TaskSubTask
                   taskId={taskId}
                   users={users}
@@ -263,7 +263,7 @@ export default function TaskDetail({
                   handleSplitScreenOpen={handleSplitScreenOpen}
                   handleTaskCompletion={handleTaskCompletion}
                 />
-              }
+              )}
             />
           </div>
           <div className={classes.section} data-testid="task-comments-section">
