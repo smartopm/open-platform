@@ -14,7 +14,7 @@ export default function CommentTextField({
 }) {
   return (
     <Grid container alignContent="space-between">
-      <Grid item md={11} xs={9} style={{ paddingRight: '10px' }}>
+      <Grid item md={10} xs={8} style={{ paddingRight: '10px' }}>
         <TextField
           fullWidth
           id="standard-full-width"
@@ -32,7 +32,7 @@ export default function CommentTextField({
           inputProps={{ 'data-testid': 'body_input' }}
         />
       </Grid>
-      <Grid item md={1} xs={3}>
+      <Grid item md={2} xs={2}>
         <Button
           variant="outlined"
           color="primary"
