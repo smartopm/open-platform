@@ -54,7 +54,7 @@ export default function TaskDataList({
       case 'at_risk': return 'R';
       case 'needs_attention': return 'A';
       case 'in_progress': return 'P';
-      case 'complete': return 'C';
+      case 'completed': return 'C';
       default: return 'N'
     }
   }
