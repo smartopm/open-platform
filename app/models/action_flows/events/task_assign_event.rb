@@ -36,13 +36,14 @@ module ActionFlows
         user_type = note_assign.user.user_type
         author_id = note_assign.note.author_id
         body = note_assign.note.body
+        user_email = note_assign.user.user_type.eql?('lead') ? '' : note_assign.user.email
         note_assign_version = note_assign.versions.find_by(event: 'create')
         load_data(
           { 'TaskAssign' => note_assign },
           'user_type' => user_type,
           'author_id' => author_id,
           'body' => body,
-          'user_email' => note_assign.user.email,
+          'user_email' => user_email,
           'updated_by' => Users::User.find(note_assign_version.whodunnit).name,
           'updated_date' => eventlog.created_at.strftime('%Y-%m-%d'),
           'due_at' => (note_assign.note.due_date&.strftime('%Y-%m-%d') || 'Never'),
