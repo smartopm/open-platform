@@ -48,7 +48,6 @@
     "bootstrap": "^4.3.1",
     "browser-image-compression": "^1.0.16",
     "core-js": "^3.19.1",
-    "csv-file-validator": "^1.13.1",
     "date-fns": "^2.11.1",
     "dompurify": "^2.0.12",
     "enzyme": "^3.10.0",
@@ -100,10 +99,6 @@
   "version": "0.1.0",
   "devDependencies": {
     "@babel/core": "^7.12.3",
-    "@storybook/addon-actions": "6.5.0-alpha.13",
-    "@storybook/addon-essentials": "6.5.0-alpha.13",
-    "@storybook/addon-links": "6.5.0-alpha.13",
-    "@storybook/react": "6.5.0-alpha.13",
     "@testing-library/dom": "^8.2.0",
     "@testing-library/jest-dom": "^5.5.0",
     "@testing-library/react": "^10.0.3",
@@ -126,7 +121,6 @@
     "lint-staged": ">=10",
     "prettier": "^1.19.1",
     "react-is": "^17.0.1",
-    "storybook-addon-designs": "^6.2.1",
     "webpack-bundle-analyzer": "^3.5.1"
   },
   "resolutions": {
