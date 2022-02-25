@@ -2,7 +2,7 @@
 
 - Ticket #
 - Description:
-- Loom: 
+- Loom:
 
 **2. Verification:**
 - [ ] Merge Request does not include breaking changes.
@@ -21,12 +21,14 @@
 - [ ] The source and name of any newly added gem or node_module package has been added.
 <!-- If Yes add a link here -->
 
+<!--
+
 **5. Components Management: (optional)**
 
 - [ ] New components have been added to Storybook
 - [ ] Updated components have been updated on Storybook
 - [ ] Documentation has been added or updated
-
+ -->
 
 **5. CHANGELOG/Release Notes: (optional)**
 
@@ -34,5 +36,5 @@
 Thanks for your MR, you're awesome! :+1:
 
 <!-- If it is a user related changes, you can append @vanessa43 to the list below  -->
-/assign_reviewer @nurudeen1 @saurabh44 @tolulope3 @DMutuba @victor369 @bonny2 @olivierjmm 
+/assign_reviewer @nurudeen1 @saurabh44 @tolulope3 @DMutuba @victor369 @bonny2 @olivierjmm
 

@@ -8,9 +8,7 @@
     "lint": "eslint app/javascript/src --ext .js --ext .jsx app/javascript/packs/react_main.jsx",
     "test": "NODE_ENV=test jest",
     "build": "webpack --config ./webpack.config.js",
-    "format": "prettier --no-semi --single-quote --write app/javascript/src/**/*.jsx",
-    "storybook": "start-storybook -p 6006 --ci --no-dll --quiet",
-    "build-storybook": "build-storybook --no-dll"
+    "format": "prettier --no-semi --single-quote --write app/javascript/src/**/*.jsx"
   },
   "dependencies": {
     "@apollo/react-hooks": "^3.1.1",

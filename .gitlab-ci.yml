@@ -50,24 +50,6 @@ semgrep-sast:
     - export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
     - yarn install
 
-pages:
-    stage: staging
-    extends: .base_db
-    allow_failure: true
-    when: always
-    # Export storybook as a static site (to public)
-    script:
-      # - npm install
-      - yarn build-storybook -o public
-    # Required artifact for GitLab Pages
-    artifacts:
-        paths:
-          - public
-    only:
-      - master
-    except:
-      - schedules
-
 test:rspec:
   extends: .base_db
   coverage: '/LOC\s\(\d+\.\d+%\)\scovered/'
