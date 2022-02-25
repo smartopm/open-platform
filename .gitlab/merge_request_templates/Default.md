@@ -21,14 +21,6 @@
 - [ ] The source and name of any newly added gem or node_module package has been added.
 <!-- If Yes add a link here -->
 
-<!--
-
-**5. Components Management: (optional)**
-
-- [ ] New components have been added to Storybook
-- [ ] Updated components have been updated on Storybook
-- [ ] Documentation has been added or updated
- -->
 
 **5. CHANGELOG/Release Notes: (optional)**
 
