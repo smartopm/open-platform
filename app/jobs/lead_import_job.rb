@@ -32,14 +32,14 @@ class LeadImportJob < ApplicationJob
         contact_1_secondary_email     = row['Contact 1 Secondary Email']&.strip
         contact_1_primary_phone       = row['Contact 1 Primary Phone']&.strip
         contact_1_secondary_phone     = row['Contact 1 Secondary Phone']&.strip
-        contact_1_linkedin            = row['Contact 1 Linkedin']&.strip
+        contact_1_linkedin            = row['Contact 1 LinkedIn']&.strip
         contact_2_name                = row['Contact 2 Name']&.strip
         contact_2_title               = row['Contact 2 Title']&.strip
         contact_2_primary_email       = row['Contact 2 Primary Email']&.strip
         contact_2_secondary_email     = row['Contact 2 Secondary Email']&.strip
         contact_2_primary_phone       = row['Contact 2 Primary Phone']&.strip
         contact_2_secondary_phone     = row['Contact 2 Secondary Phone']&.strip
-        contact_2_linkedin            = row['Contact 2 Linkedin']&.strip
+        contact_2_linkedin            = row['Contact 2 LinkedIn']&.strip
         country                       = row['Country']&.strip
         region                        = row['Region']&.strip
         company_name                  = row['Company Name']&.strip
