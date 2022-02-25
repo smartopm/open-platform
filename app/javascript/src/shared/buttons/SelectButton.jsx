@@ -41,7 +41,7 @@ export default function SelectButton({
         aria-label="outlined select button"
         data-testid="button"
       >
-        <Button>{buttonText}</Button>
+        <Button>{splitCamelCase(buttonText)}</Button>
         <Button onClick={handleClick} data-testid="arrow-icon">
           <ArrowDropDownIcon />
         </Button>

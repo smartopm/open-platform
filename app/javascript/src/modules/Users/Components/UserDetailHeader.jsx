@@ -13,7 +13,7 @@ import UserLabels from './UserLabels';
 import UserLabelTitle from './UserLabelTitle';
 import SelectButton from '../../../shared/buttons/SelectButton';
 import { selectOptions, createMenuContext } from '../utils';
-import { checkAccessibilityForUserType as handler } from '../../../utils/helpers';
+import { checkAccessibilityForUserType as handler, splitCamelCase } from '../../../utils/helpers';
 
 export default function UserDetailHeader({ data, userType, currentTab, authState }) {
   const history = useHistory();
@@ -97,7 +97,7 @@ export default function UserDetailHeader({ data, userType, currentTab, authState
               </Link>
             )}
             <Typography color="textSecondary" variant="caption">
-              {currentTab}
+              {splitCamelCase(currentTab)}
             </Typography>
           </Breadcrumbs>
         </Grid>
