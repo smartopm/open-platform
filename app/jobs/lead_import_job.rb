@@ -87,7 +87,7 @@ class LeadImportJob < ApplicationJob
 
         user = current_user.enroll_user(name: name, email: email,
                                         phone_number: phone,
-                                        user_type: 'prospective_client',
+                                        user_type: 'lead',
                                         secondary_info: {})
         if secondary_email.present?
           user.contact_infos.build(

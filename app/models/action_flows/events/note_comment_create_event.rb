@@ -27,7 +27,7 @@ module ActionFlows
       # rubocop:disable Metrics/MethodLength
       def preload_data(eventlog)
         note_comment = eventlog.ref_type.constantize.unscoped.find eventlog.ref_id
-        assignees_email = note_comment.note.assignees.map(&:email).join(',')
+        assignees_email = note_comment.note.assignees.excluding_leads.map(&:email).join(',')
         load_data(
           { 'NoteComment' => note_comment },
           'assignees_emails' => assignees_email,

@@ -6,6 +6,7 @@ require 'rails_helper'
 RSpec.describe UserImportJob, type: :job do
   let!(:non_admin) { create(:user_with_community) }
   let!(:prospective_client_role) { create(:role, name: 'prospective_client') }
+  let!(:lead_role) { create(:role, name: 'lead') }
   let!(:user) { create(:admin_user, community_id: non_admin.community_id) }
   csv_string = "Name,Title,Email,Secondary Email,Secondary Phone\nThomas Shalongolo,CFO,thomas@gmail.com,'thomas_s@gmail.com,'9988776655"
 

@@ -146,6 +146,12 @@
     "date_follow_up": "Seguimiento de Fecha",
     "detail_header": "DETALLES",
     "first_contact_date": "Fecha de Primer Contacto",
+    "import_form_status_actions": {
+      "cancel": "Cancelar",
+      "choose_file": "Ningún archivo elegido...",
+      "import": "Importar",
+      "upload_file": "SUBIR ARCHIVO "
+    },
     "industry_business_activity": "Actividad Comercial de la Industria",
     "industry_sector": "Sector de la Industria",
     "industry_sub_sector": "Sub-sector de la Industria",
@@ -301,6 +307,7 @@
     "comment_plural": "Comentarios",
     "comments": "Comentarios",
     "communication": "Comunicación",
+    "company": "Empresa",
     "contact": "Contacto",
     "copied": "Copiado al portapapeles!",
     "count": "Numero de Caracteres {{numb}}",
@@ -368,6 +375,7 @@
     "option_with_count": "Opción {{id}}",
     "or": "O",
     "payments": "Pagos",
+    "person": "Persona",
     "phone": "Número de teléfono",
     "plan_frequency": "Frecuencia del Plan",
     "plan_transferred_successfully": "Su plan se ha transferido con éxito a {{paymentPlanName}}",
