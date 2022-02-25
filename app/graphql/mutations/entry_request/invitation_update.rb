@@ -20,31 +20,22 @@ module Mutations
         return if invite.nil?
 
         ActiveRecord::Base.transaction do
-          update_invite(invite, vals[:status])
+          invite.update!(status: vals[:status])
           entry_time = invite.entry_time
+
           if entry_time.present?
-            update_entry_time(entry_time, vals.except(:invite_id, :status))
+            entry_time.update!(vals.except(:invite_id, :status))
           else
             create_entry_time(vals, invite)
           end
           { success: true }
         end
-      end
-
-      def update_invite(invite, status)
-        return if invite.update!(status: status)
-
-        raise GraphQL::ExecutionError, invite.errors.full_message
-      end
-
-      def update_entry_time(entry_time, vals)
-        return if entry_time.update!(vals)
-
-        raise GraphQL::ExecutionError, entry_time.errors.full_message
+      rescue StandardError => e
+        raise GraphQL::ExecutionError, e.message
       end
 
       def create_entry_time(vals, invite)
-        entry_time = context[:site_community].entry_times.create!(
+        context[:site_community].entry_times.create!(
           visitation_date: vals[:visitation_date],
           starts_at: vals[:starts_at],
           ends_at: vals[:ends_at],
@@ -53,10 +44,6 @@ module Mutations
           visitable_id: invite.id,
           visitable_type: 'Logs::Invite',
         )
-
-        return if entry_time.persisted?
-
-        raise GraphQL::ExecutionError, entry_time.errors.full_message
       end
 
       # rubocop:enable Metrics/MethodLength

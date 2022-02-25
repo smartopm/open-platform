@@ -19,4 +19,11 @@ RSpec.describe Logs::Invite, type: :model do
     it { is_expected.to have_one(:entry_time).dependent(:destroy) }
     it { is_expected.to belong_to(:entry_request) }
   end
+
+  describe 'enums' do
+    it do
+      is_expected.to define_enum_for(:status)
+        .with_values(active: 0, cancelled: 1)
+    end
+  end
 end
