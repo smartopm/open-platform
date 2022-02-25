@@ -71,7 +71,7 @@ describe('LeadManagementForm', () => {
   it('LeadManagementTask component', async () => {
     render(
       <Context.Provider value={authState}>
-        <MockedProvider mocks={taskDataMock} addTypename={false}>
+        <MockedProvider mocks={taskDataMock} addTypename={false} fromLeadPage>
           <BrowserRouter>
             <LeadManagementTask taskId="6a7e722a-9bd5-48d4-aaf7-f3285ccff4a3" />
           </BrowserRouter>
@@ -81,7 +81,6 @@ describe('LeadManagementForm', () => {
 
     await waitFor(() => {
       expect(screen.queryAllByTestId('task-title')).toHaveLength(2);
-      expect(screen.queryAllByTestId('task-info-menu')[0]).toBeInTheDocument();
       expect(screen.queryByText('task.parent_task')).toBeInTheDocument();
       expect(screen.queryByText('task.due_date_text')).toBeInTheDocument();
       expect(screen.queryByText('task.date_created')).toBeInTheDocument();
