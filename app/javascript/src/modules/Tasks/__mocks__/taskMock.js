@@ -12,6 +12,11 @@ export default {
   taskCommentsCount: 4,
   status: 'in_progress',
   formUserId: "0358e014-1440-46ee-988d-d5338f019ba3",
+  submittedBy: {
+    id: '0358e014-1440-46ee-988d-d5338f019b',
+    name: 'some name',
+    __typename: 'SubmittedBy'
+  },
   formUser: {
     id: "0358e014-1440-46ee-988d-d5338f019ba3",
     user: {

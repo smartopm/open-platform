@@ -30,6 +30,7 @@ module Types
     field :sub_tasks_count, Integer, null: true
     field :task_comments_count, Integer, null: true
     field :status, String, null: true
+    field :submitted_by, Types::UserType, null: true
 
     # move this in a shareable place
     def host_url(type)
@@ -77,6 +78,10 @@ module Types
       end
       progress_percentage = complete.fdiv(total).round(2) * 100
       { 'complete': complete, 'total': total, 'progress_percentage': progress_percentage }
+    end
+
+    def submitted_by
+      object.form_user&.user
     end
   end
 end
