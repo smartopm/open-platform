@@ -25,7 +25,7 @@ class LeadImportJob < ApplicationJob
         phone                         = row['Primary Phone']&.strip
         secondary_phone               = row['Secondary Phone']&.strip
         title                         = row['Title']&.strip
-        linkedin_url                  = row['Linkedin']&.strip
+        linkedin_url                  = row['LinkedIn']&.strip
         contact_1_name                = row['Contact 1 Name']&.strip
         contact_1_title               = row['Contact 1 Title']&.strip
         contact_1_primary_email       = row['Contact 1 Primary Email']&.strip
@@ -43,7 +43,7 @@ class LeadImportJob < ApplicationJob
         country                       = row['Country']&.strip
         region                        = row['Region']&.strip
         company_name                  = row['Company Name']&.strip
-        company_linkedin              = row['Company Linkedin']&.strip
+        company_linkedin              = row['Company LinkedIn']&.strip
         company_description           = row['Company Description']&.strip
         company_website               = row['Company Website']&.strip
         company_employees             = row['Number of Employees']&.strip
