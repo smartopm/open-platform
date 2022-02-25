@@ -19,30 +19,32 @@ module Mutations
         invite = context[:current_user].invitees.find_by(id: vals[:invite_id])
         return if invite.nil?
 
-        update_invite(invite, vals[:status])
-        entry_time = invite.entry_time
-        if entry_time.present?
-          update_entry_time(entry_time, vals.except(:invite_id, :status))
-        else
-          create_entry_time(vals, invite)
+        ActiveRecord::Base.transaction do
+          update_invite(invite, vals[:status])
+          entry_time = invite.entry_time
+          if entry_time.present?
+            update_entry_time(entry_time, vals.except(:invite_id, :status))
+          else
+            create_entry_time(vals, invite)
+          end
+          { success: true }
         end
-        { success: true }
       end
 
       def update_invite(invite, status)
-        return if invite.update(status: status)
+        return if invite.update!(status: status)
 
         raise GraphQL::ExecutionError, invite.errors.full_message
       end
 
       def update_entry_time(entry_time, vals)
-        return if entry_time.update(vals)
+        return if entry_time.update!(vals)
 
         raise GraphQL::ExecutionError, entry_time.errors.full_message
       end
 
       def create_entry_time(vals, invite)
-        entry_time = context[:site_community].entry_times.create(
+        entry_time = context[:site_community].entry_times.create!(
           visitation_date: vals[:visitation_date],
           starts_at: vals[:starts_at],
           ends_at: vals[:ends_at],
