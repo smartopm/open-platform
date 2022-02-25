@@ -43,6 +43,7 @@ Ciudad Morazán:
         - can_revoke_entry_request
         - can_invite_guest
         - can_go_through_guest_verification
+        - can_update_invitation
     user:
       permissions:
         - can_view_own_profile
@@ -82,6 +83,7 @@ Ciudad Morazán:
         - can_view_entry_request
         - can_invite_guest
         - can_go_through_guest_verification
+        - can_update_invitation
     guest_list:
       permissions:
         - can_see_menu_item
@@ -256,6 +258,7 @@ DoubleGDP:
         - can_revoke_entry_request
         - can_invite_guest
         - can_go_through_guest_verification
+        - can_update_invitation
     user:
       permissions:
         - can_view_own_profile
@@ -295,6 +298,7 @@ DoubleGDP:
         - can_view_entry_request
         - can_invite_guest
         - can_go_through_guest_verification
+        - can_update_invitation
     guest_list:
       permissions:
         - can_see_menu_item

@@ -16,7 +16,8 @@ const authState = {
         Properties: { features: []},
         LogBook: { features: []},
       },
-      imageUrl: 'http://image.jpg'
+      imageUrl: 'http://image.jpg',
+      timezone: 'Africa/Maputo'
     },
     email: 'user@community.co',
     expiresAt: null,

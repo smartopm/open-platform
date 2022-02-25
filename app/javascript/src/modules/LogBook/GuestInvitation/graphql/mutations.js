@@ -23,4 +23,29 @@ const InvitationCreateMutation = gql`
     }
   }
 `;
+
+export const InvitationUpdateMutation = gql`
+mutation invitationUpdate(
+  $inviteId: ID!
+  $status: String
+  $endsAt: String
+  $startsAt: String
+  $occursOn: [String!]
+  $visitEndDate: String
+) {
+  invitationUpdate(
+    inviteId: $inviteId
+    startsAt: $startsAt
+    endsAt: $endsAt
+    occursOn: $occursOn
+    visitEndDate: $visitEndDate
+    status: $status
+  ) {
+    success
+  }
+}
+
+`
+
+
 export default InvitationCreateMutation;

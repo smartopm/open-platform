@@ -410,6 +410,7 @@ ActiveRecord::Schema.define(version: 2022_02_22_081713) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.uuid "entry_request_id"
+    t.integer "status", default: 0
     t.index ["entry_request_id"], name: "index_invites_on_entry_request_id"
     t.index ["host_id", "guest_id"], name: "index_invites_on_host_id_and_guest_id", unique: true
   end

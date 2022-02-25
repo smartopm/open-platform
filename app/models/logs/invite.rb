@@ -11,6 +11,8 @@ module Logs
     belongs_to :guest, class_name: 'Users::User'
     belongs_to :entry_request
 
+    enum status: { active: 0, cancelled: 1 }
+
     # rubocop:disable Style/RedundantInterpolation
     search_scope :search do
       attributes guest: ['guest.phone_number', 'guest.email', 'guest.name']

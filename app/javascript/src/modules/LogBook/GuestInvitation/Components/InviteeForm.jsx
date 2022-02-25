@@ -55,6 +55,7 @@ export default function InviteeForm({
                 variant={!isCompany ? 'contained' : 'outlined'}
                 onClick={() => handleIsCompany(false)}
                 data-testid="person_mode"
+                disableElevation
               >
                 {t('misc.person')}
               </Button>
@@ -62,6 +63,7 @@ export default function InviteeForm({
                 variant={isCompany ? 'contained' : 'outlined'}
                 onClick={() => handleIsCompany(true)}
                 data-testid="company_mode"
+                disableElevation
               >
                 {t('misc.company')}
               </Button>
@@ -176,6 +178,7 @@ export default function InviteeForm({
             color="primary"
             onClick={() => handleAction(guestData)}
             data-testid="add_remove_guest_btn"
+            disableElevation
           >
             {primary ? t('misc.add') : t('misc.remove')}
           </Button>

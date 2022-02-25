@@ -13,6 +13,7 @@ module Types
     field :guest, Types::UserType, null: true
     field :host, Types::UserType, null: true
     field :thumbnail_url, String, null: true
+    field :status, String, null: true
 
     def thumbnail_url
       video = object&.guest&.request&.video
