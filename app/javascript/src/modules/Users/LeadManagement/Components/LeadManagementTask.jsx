@@ -10,7 +10,7 @@ export default function LeadManagementTask({ taskId }) {
   return (
     <div style={{ margin: '0 -45px 0 -45px' }}>
       {taskId !== null ? (
-        <TaskUpdate taskId={taskId} />
+        <TaskUpdate taskId={taskId} fromLeadPage />
       ) : (
         <CenteredContent>{t('task.no_tasks')}</CenteredContent>
       )}

@@ -19,7 +19,8 @@ export default function TaskUpdate({
   handleTaskCompletion,
   handleTaskNotFoundError,
   commentsRefetch,
-  forProcess
+  forProcess,
+  fromLeadPage
 }) {
   const authState = useContext(AuthStateContext);
   const history = useHistory();
@@ -80,6 +81,7 @@ export default function TaskUpdate({
         handleTaskCompletion={handleTaskCompletion}
         commentsRefetch={commentsRefetch}
         forProcess={forProcess}
+        fromLeadPage={fromLeadPage}
       />
     </Container>
   );
@@ -91,7 +93,8 @@ TaskUpdate.defaultProps = {
   handleTaskNotFoundError: () => {},
   handleTaskCompletion: () => {},
   commentsRefetch: () => {},
-  forProcess: false
+  forProcess: false,
+  fromLeadPage: false
 };
 
 TaskUpdate.propTypes = {
@@ -101,5 +104,6 @@ TaskUpdate.propTypes = {
   handleTaskCompletion: PropTypes.func,
   handleTaskNotFoundError: PropTypes.func,
   commentsRefetch: PropTypes.func,
-  forProcess: PropTypes.bool
+  forProcess: PropTypes.bool,
+  fromLeadPage: PropTypes.bool
 };

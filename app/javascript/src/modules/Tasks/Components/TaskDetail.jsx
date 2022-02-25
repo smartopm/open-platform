@@ -40,7 +40,8 @@ export default function TaskDetail({
   handleSplitScreenClose,
   handleTaskCompletion,
   commentsRefetch,
-  forProcess
+  forProcess,
+  fromLeadPage
 }) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -246,6 +247,7 @@ export default function TaskDetail({
               refetch={refetch}
               handleTaskComplete={handleTaskComplete}
               forProcess={forProcess}
+              fromLeadPage={fromLeadPage}
             />
           </div>
           <div className={classes.section} data-testid="task-subtasks-section" id="anchor-section">
@@ -312,7 +314,8 @@ TaskDetail.defaultProps = {
   handleSplitScreenOpen: () => {},
   handleSplitScreenClose: () => {},
   commentsRefetch: () => {},
-  forProcess: false
+  forProcess: false,
+  fromLeadPage: false
 };
 TaskDetail.propTypes = {
   users: PropTypes.arrayOf(PropTypes.object),
@@ -333,5 +336,6 @@ TaskDetail.propTypes = {
   handleSplitScreenClose: PropTypes.func,
   handleTaskCompletion: PropTypes.func.isRequired,
   commentsRefetch: PropTypes.func,
-  forProcess: PropTypes.bool
+  forProcess: PropTypes.bool,
+  fromLeadPage: PropTypes.bool,
 };
