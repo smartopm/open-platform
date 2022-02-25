@@ -89,8 +89,14 @@ export default function TaskProcessDetail() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [path, tab]);
 
-  function handleProjectStepClick() {
+  function handleProjectStepClick(task, currentTab='processes', detailTab='subtasks') {
     setSplitScreenOpen(true);
+    history.push({
+      pathname: `/processes/drc/projects/${task?.id}`,
+      search: `?tab=${currentTab}&detailTab=${detailTab}`,
+      state: { from: history.location.pathname,  search: history.location.search }
+    })
+    window.document.getElementById('anchor-section').scrollIntoView()
   }
 
   if (projectDataLoading || subStepsLoading) return <Loading />;
