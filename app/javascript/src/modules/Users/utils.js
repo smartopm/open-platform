@@ -1,6 +1,3 @@
-/* eslint-disable max-lines */
-/* eslint-disable complexity */
-/* eslint-disable max-params */
 import PropTypes from 'prop-types';
 import {
   clientCategories,

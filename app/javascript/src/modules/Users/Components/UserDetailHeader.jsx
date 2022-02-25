@@ -1,4 +1,3 @@
-/* eslint-disable complexity */
 import React, { useState, useRef } from 'react';
 import Grid from '@mui/material/Grid';
 import { useHistory } from 'react-router-dom';

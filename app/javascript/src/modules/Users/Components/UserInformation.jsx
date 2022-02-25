@@ -82,7 +82,7 @@ export default function UserInformation({
             <UserMerge close={handleMergeDialog} userId={userId} />
           </DialogContent>
         </Dialog>
-        <div style={{marginBottom: '140px'}}>
+        <div style={{marginBottom: '160px'}}>
           <FixedHeader fullWidth>
             <UserDetailHeader
               data={data}
