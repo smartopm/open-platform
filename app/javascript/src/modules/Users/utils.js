@@ -249,6 +249,7 @@ const configObject = {
       name: 'Name',
       inputName: 'firstName',
       required: true,
+      unique: true, // ensures column values are unique
       requiredError,
       uniqueError,
       validateError
@@ -262,6 +263,7 @@ const configObject = {
     {
       name: 'Email',
       inputName: 'email',
+      unique: true, // ensures column values are unique
       uniqueError,
       validateError
     },
