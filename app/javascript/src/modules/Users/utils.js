@@ -387,7 +387,7 @@ const configObject = {
       name: 'Country',
       inputName: 'country',
       validate: country => {
-        return countries.includes(country);
+        return countries.includes(country.replace(/^\s+|\s+$/gm, ''));
       },
       validateError: (headerName, rowNumber, columnNumber) => {
         return ` <div>${headerName} is not valid in the ${numberToOrdinal(
@@ -399,7 +399,7 @@ const configObject = {
       name: 'Region',
       inputName: 'region',
       validate: region => {
-        return regionOptions.includes(region);
+        return regionOptions.includes(region.replace(/^\s+|\s+$/gm, ''));
       },
       validateError: (headerName, rowNumber, columnNumber) => {
         return `<div> ${headerName} is not valid in the ${numberToOrdinal(
@@ -411,7 +411,7 @@ const configObject = {
       name: 'Industry Sector',
       inputName: 'industrySector',
       validate: industrySector => {
-        return industryCategoryOptions.includes(industrySector);
+        return industryCategoryOptions.includes(industrySector.replace(/^\s+|\s+$/gm, ''));
       },
       validateError: (headerName, rowNumber, columnNumber) => {
         return `<div> ${headerName} is not valid in the ${numberToOrdinal(
@@ -423,7 +423,7 @@ const configObject = {
       name: 'Industry Sub Sector',
       inputName: 'industrySubSector',
       validate: industrySubSector => {
-        return industrySubSectorOptions.includes(industrySubSector);
+        return industrySubSectorOptions.includes(industrySubSector.replace(/^\s+|\s+$/gm, ''));
       },
       validateError: (headerName, rowNumber, columnNumber) => {
         return `<div> ${headerName} is not valid in the ${numberToOrdinal(
@@ -435,7 +435,9 @@ const configObject = {
       name: 'Industry Business Activity',
       inputName: 'industryBusinessActivity',
       validate: industryBusinessActivity => {
-        return industryBusinessActivityOptions.includes(industryBusinessActivity);
+        return industryBusinessActivityOptions.includes(
+          industryBusinessActivity.replace(/^\s+|\s+$/gm, '')
+        );
       },
       validateError: (headerName, rowNumber, columnNumber) => {
         return `<div> ${headerName} is not valid in the ${numberToOrdinal(
@@ -447,7 +449,9 @@ const configObject = {
       name: 'Level of internationalization',
       inputName: 'levelOfInternationalization',
       validate: levelOfInternationalization => {
-        return internationalizationLevels.includes(levelOfInternationalization);
+        return internationalizationLevels.includes(
+          levelOfInternationalization.replace(/^\s+|\s+$/gm, '')
+        );
       },
       validateError: (headerName, rowNumber, columnNumber) => {
         return `<div> ${headerName} is not valid in the ${numberToOrdinal(
@@ -475,7 +479,7 @@ const configObject = {
       name: 'Lead Temperature',
       inputName: 'leadTemperature',
       validate: leadTemperature => {
-        return leadTemperatureOptions.includes(leadTemperature);
+        return leadTemperatureOptions.includes(leadTemperature.replace(/^\s+|\s+$/gm, ''));
       },
       validateError: (headerName, rowNumber, columnNumber) => {
         return `<div> ${headerName} is not valid in the ${numberToOrdinal(
@@ -487,7 +491,7 @@ const configObject = {
       name: 'Lead Status',
       inputName: 'leadStatus',
       validate: leadStatus => {
-        return leadStatusOptions.includes(leadStatus);
+        return leadStatusOptions.includes(leadStatus.replace(/^\s+|\s+$/gm, ''));
       },
       validateError: (headerName, rowNumber, columnNumber) => {
         return `<div> ${headerName} is not valid in the ${numberToOrdinal(
@@ -500,7 +504,7 @@ const configObject = {
       name: 'Lead Type',
       inputName: 'leadType',
       validate: leadType => {
-        return leadTypeOptions.includes(leadType);
+        return leadTypeOptions.includes(leadType.replace(/^\s+|\s+$/gm, ''));
       },
       validateError: (headerName, rowNumber, columnNumber) => {
         return `<div> ${headerName} is not valid in the ${numberToOrdinal(
@@ -525,7 +529,7 @@ const configObject = {
       name: 'Client Category',
       inputName: 'clientCategory',
       validate: clientCategory => {
-        return clientCategories.includes(clientCategory);
+        return clientCategories.includes(clientCategory.replace(/^\s+|\s+$/gm, ''));
       },
       validateError: (headerName, rowNumber, columnNumber) => {
         return `<div> ${headerName} is not valid in the ${numberToOrdinal(
