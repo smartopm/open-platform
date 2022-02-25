@@ -228,12 +228,12 @@ RSpec.describe Types::Queries::EntryRequest do
         reason: 'Visiting', name: 'Visitor Jane', nrc: '012345',
         visitation_date: Time.zone.now, ends_at: '2021-09-23T16:00:00+02:00'
       )
-      current_user.entry_requests.create(
+      request = current_user.entry_requests.create(
         reason: 'Visiting', name: 'Visitor John', nrc: '012345',
         visitation_date: Time.zone.now, end_time: '2021-09-23 14:00', guest_id: admin.id
       )
       admin.invites.create!(guest_id: visitor.id, host_id: current_user.id,
-                            entry_request_id: current_user.entry_requests.first.id)
+                            entry_request_id: request.id)
       result = DoubleGdpSchema.execute(
         scheduledRequests_query,
         variables: variables,
@@ -248,7 +248,7 @@ RSpec.describe Types::Queries::EntryRequest do
 
     it 'searches by ends_at not equal to date' do
       variables = { query: "ends_at != '2021-09-23 18:52'" }
-      current_user.entry_requests.create(
+      request = current_user.entry_requests.create(
         reason: 'Visiting', name: 'Visitor Jane', nrc: '012345', guest_id: admin.id,
         visitation_date: Time.zone.now, ends_at: '2021-09-28T20:52:00+02:00'
       )
@@ -263,9 +263,9 @@ RSpec.describe Types::Queries::EntryRequest do
       )
 
       current_user.invites.create!(guest_id: admin.id, host_id: current_user.id,
-                                   entry_request_id: current_user.entry_requests.first.id)
+                                   entry_request_id: request.id)
       current_user.invites.create!(guest_id: visitor.id, host_id: admin.id,
-                                   entry_request_id: current_user.entry_requests.first.id)
+                                   entry_request_id: request.id)
       result = DoubleGdpSchema.execute(
         scheduledRequests_query,
         variables: variables,
@@ -282,11 +282,11 @@ RSpec.describe Types::Queries::EntryRequest do
 
     it 'searches by ends_at date range' do
       variables = { query: "ends_at >= '2021-09-25 00:45' AND ends_at <= '2021-09-29 12:00'" }
-      current_user.entry_requests.create(
+      request1 = current_user.entry_requests.create(
         reason: 'Visiting', name: 'Visitor Jane', nrc: '012345', guest_id: admin.id,
         visitation_date: Time.zone.now, ends_at: '2021-09-25T11:00:19+02:00'
       )
-      current_user.entry_requests.create(
+      request2 = current_user.entry_requests.create(
         reason: 'Visiting', name: 'Visitor Mary', nrc: '012345', guest_id: admin.id,
         visitation_date: Time.zone.now, ends_at: '2021-09-29T09:00:19+02:00'
       )
@@ -296,9 +296,9 @@ RSpec.describe Types::Queries::EntryRequest do
       )
 
       current_user.invites.create!(guest_id: admin.id, host_id: current_user.id,
-                                   entry_request_id: current_user.entry_requests.first.id)
+                                   entry_request_id: request1.id)
       current_user.invites.create!(guest_id: visitor.id, host_id: admin.id,
-                                   entry_request_id: current_user.entry_requests.second.id)
+                                   entry_request_id: request2.id)
 
       result = DoubleGdpSchema.execute(
         scheduledRequests_query,

@@ -37,7 +37,7 @@ RSpec.describe Mutations::EntryRequest::InvitationCreate do
       <<~GQL
         mutation invitationUpdate(
             $inviteId: ID!
-            $visitationDate: String!
+            $visitationDate: String
             $startsAt: String
             $endsAt: String
             $occursOn: [String!]
@@ -106,6 +106,24 @@ RSpec.describe Mutations::EntryRequest::InvitationCreate do
                                            }).as_json
           expect(result.dig('errors', 0, 'message')).to be_nil
           expect(result.dig('data', 'invitationUpdate', 'success')).to eql true
+        end
+      end
+
+      context 'when invalid status is passed' do
+        it 'raises error' do
+          variables = {
+            inviteId: invite.id,
+            status: 'wrong',
+          }
+
+          result = DoubleGdpSchema.execute(invitation_update_mutation,
+                                           variables: variables,
+                                           context: {
+                                             current_user: admin,
+                                             site_community: community,
+                                             user_role: admin.role,
+                                           }).as_json
+          expect(result.dig('errors', 0, 'message')).to eql "'wrong' is not a valid status"
         end
       end
     end

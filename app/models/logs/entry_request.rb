@@ -40,7 +40,7 @@ module Logs
 
     scope :order_by_recent_invites, lambda {
       includes(:entry_times, :invites)
-        .where(invites: { status: 0 })
+        .where(invites: { status: :active })
         .order('entry_times.updated_at DESC')
     }
 
