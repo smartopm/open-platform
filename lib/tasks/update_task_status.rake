@@ -15,7 +15,9 @@ namespace :backfill do
 
     drc_form_users = community.drc_form_users
     drc_tasks = community.notes.where(form_user_id: drc_form_users)
-    non_drc_tasks = community.notes.where.not(id: drc_tasks.pluck(:id))
+    non_drc_tasks = community.notes
+                             .where.not(id: drc_tasks.pluck(:id))
+                             .where.not(category: 'template')
 
     puts "Updating DRC tasks#{'.' * 20}"
     drc_tasks.find_each do |task|

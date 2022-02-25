@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
 desc 'Update DRC tasks body'
-# rubocop:disable Metrics/BlockLength
 task :update_drc_tasks_body, %i[community_name] => :environment do |_t, args|
   abort('Community Name required') unless args.community_name
 
@@ -48,4 +47,3 @@ task :update_drc_tasks_body, %i[community_name] => :environment do |_t, args|
   puts 'Done updating form tasks....................'
   puts "Skipped tasks: #{skipped.size} \n#{skipped}"
 end
-# rubocop:enable Metrics/BlockLength

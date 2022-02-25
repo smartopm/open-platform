@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/BlockLength
 namespace :db do
   desc 'Add labels to users'
   task add_labels_to_users: :environment do
@@ -32,4 +31,3 @@ namespace :db do
     puts e.message.to_s
   end
 end
-# rubocop:enable Metrics/BlockLength
