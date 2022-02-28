@@ -13,7 +13,7 @@ import ErrorPage from '../../../components/Error';
 export default function MergeLabel({ open, handleClose, mergeData, refetch }) {
   const [labelValue, setLabelValue] = useState('');
   const [err, setErr] = useState(null);
-  const [getLabels, { data, error, loading }] = useLazyQuery(LabelsQuery);
+  const [getLabels, { data, error }] = useLazyQuery(LabelsQuery);
   const [mergeLabel] = useMutation(LabelMerge);
   const { t } = useTranslation(['label', 'common']);
 

@@ -53,7 +53,7 @@ export default function TaskDashboard({ taskData, filterTasks, currentTile }) {
 
 TaskDashboard.propTypes = {
   taskData: PropTypes.shape({
-    loading: PropTypes.string,
+    loading: PropTypes.boolean,
     error: PropTypes.string,
     data: PropTypes.shape({
       taskStats: PropTypes.shape({

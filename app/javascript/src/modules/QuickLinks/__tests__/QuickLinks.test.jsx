@@ -38,7 +38,7 @@ describe('Quick Links', () => {
   });
 
   it('does not render when menuItems is not defined', () => {
-    render(<QuickLinks menuItems={null} translate={translate} />);
+    render(<QuickLinks menuItems={[]} translate={translate} />);
     const link = screen.queryByTestId('link-button');
 
     expect(link).not.toBeInTheDocument();
