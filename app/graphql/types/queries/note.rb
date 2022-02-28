@@ -376,10 +376,12 @@ module Types::Queries::Note
         projects_assigned << task
       end
     end
+
+    drc_form_users = context[:site_community].drc_form_users.pluck(:id)
     context[:site_community]
       .notes
       .includes(:sub_notes, :assignees, :assignee_notes, :documents_attachments)
-      .where(id: projects_assigned.pluck(:id))
+      .where(id: projects_assigned.pluck(:id), form_user_id: drc_form_users)
       .offset(offset).limit(limit)
   end
   # rubocop:enable Metrics/MethodLength
