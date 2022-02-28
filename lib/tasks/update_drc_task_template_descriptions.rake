@@ -4,13 +4,13 @@
 # rubocop:disable Layout/LineLength:
 desc 'Update Existing DRC Task Template Descriptions'
 task :update_drc_task_template_descriptions, %i[community_name] => :environment do |_t, args|
-  abort('Provide a valid Community Name') if args.author_email.blank?
+  abort('Provide a valid Community Name') if args.community_name.blank?
 
   # Migrate per community basis
   community = Community.find_by(name: args.community_name)
   abort('Community is undefined') if community.blank?
 
-  # NB: We don't have field `order` on tasks table. This is just a visual pointe for a follow up, incase we need to update existing task in DB create from templates.
+  # NB: We don't have field `order` on tasks table. This is just a visual pointer for a follow up, incase we need to update existing task in DB create from templates.
   updated_templates = [
     {
       order: 1,
