@@ -90,6 +90,9 @@ gem 'awesome_print'
 # For better http request handling
 gem 'httparty'
 
+# For CSV delimiters detection
+gem 'acsv'
+
 group :development, :test do
   gem 'bullet'
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

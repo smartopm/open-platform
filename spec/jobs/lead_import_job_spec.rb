@@ -9,6 +9,7 @@ RSpec.describe UserImportJob, type: :job do
   let!(:lead_role) { create(:role, name: 'lead') }
   let!(:user) { create(:admin_user, community_id: non_admin.community_id) }
   csv_string = "Name,Title,Email,Secondary Email,Secondary Phone\nThomas Shalongolo,CFO,thomas@gmail.com,'thomas_s@gmail.com,'9988776655"
+  semicolon_csv_string = "Name;Title;Email;Secondary Email;Secondary Phone\nJohn Doe;CFO;thomas@gmail.com;'thomas_s@gmail.com;'9988776655"
 
   describe '#perform_later' do
     before do
@@ -52,6 +53,19 @@ RSpec.describe UserImportJob, type: :job do
       LeadImportJob.perform_later(csv_string, 'lead_management.csv', user)
 
       expect(Users::User.count).to eql(prev_user_count)
+    end
+
+    context 'when CSV string is semicolon separated' do
+      it 'is expected to create new users' do
+        prev_user_count = Users::User.count
+        prev_note_count = Notes::Note.count
+        ActiveJob::Base.queue_adapter.perform_enqueued_jobs = true
+
+        LeadImportJob.perform_later(semicolon_csv_string, 'A File.csv', user)
+
+        expect(Users::User.count).to eql(prev_user_count + 1)
+        expect(Notes::Note.count).to eql(prev_note_count + 1)
+      end
     end
   end
 end
