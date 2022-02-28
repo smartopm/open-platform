@@ -88,9 +88,11 @@ export default function UserDetailHeader({ data, userType, currentTab, authState
           data-testid="breadcrumb"
         >
           <Breadcrumbs aria-label="user-breadcrumb">
-            <Link color="primary" href="/users" className={classes.link}>
-              <Typography variant="caption">Users</Typography>
-            </Link>
+            {userType === 'admin' && (
+              <Link color="primary" href="/users" className={classes.link} data-testid='breadcrumbuser'>
+                <Typography variant="caption">Users</Typography>
+              </Link>
+            )}
             {currentTab !== 'Contacts' && (
               <Link color="primary" href={`/user/${data.user.id}`} className={classes.link}>
                 <Typography variant="caption">User Detail</Typography>

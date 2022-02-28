@@ -99,5 +99,6 @@ describe('User Detail Header Component', () => {
     expect(container.queryByText('Send OTP')).not.toBeInTheDocument();
     fireEvent.click(container.queryByTestId('arrow-icon'));
     expect(container.queryByText('Edit User')).not.toBeInTheDocument();
+    expect(container.queryByTestId('breadcrumbuser')).not.toBeInTheDocument();
   });
 });
