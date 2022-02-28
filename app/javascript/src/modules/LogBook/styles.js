@@ -15,18 +15,26 @@ const useLogbookStyles = makeStyles(theme => ({
       marginLeft: '1.5% !important'
     }
   },
+  actionSection: {
+    '@media (max-width: 388px)': {
+      marginRight: '-16px !important'
+    }
+  },
   moreOptionButton: {
-    marginLeft: '30%'
+    '@media (max-width: 388px)': {
+      marginRight: '-23px !important'
+    }
   },
   timeDetails: {
     '@media (max-width: 390px)': {
-      paddingLeft: '29px !important'
+      paddingLeft: '5% !important'
     }
   },
   guestName: {
     marginLeft: -14,
   },
   avatarTimeSection: {
+    whiteSpace: 'nowrap',
     '@media (max-width: 1199px)': {
       marginBottom: '8px !important'
     }

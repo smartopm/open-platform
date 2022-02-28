@@ -41,9 +41,9 @@ export default function GuestListCard({
     >
       <CardContent>
         <Grid container direction="row" alignItems="center">
-          <Grid item xs={12} sm={12} lg={6} className={classes.avatarTimeSection}>
+          <Grid item xs={12} sm={12} md={6} lg={6} className={classes.avatarTimeSection}>
             <Grid container alignItems="center">
-              <Grid item xs={3} sm={3} lg={2} data-testid="guest_info">
+              <Grid item xs={3} sm={4} lg={2} data-testid="guest_info">
                 {invite.thumbnailUrl ? (
                   <Avatar
                     alt={invite.guest?.request?.name}
@@ -63,7 +63,7 @@ export default function GuestListCard({
                   </Avatar>
                 )}
               </Grid>
-              <Grid item xs={9} sm={9} lg={4} className={classes.timeDetails}>
+              <Grid item xs={9} sm={8} lg={4} className={classes.timeDetails}>
                 <Text
                   content={translate('guest_book.start_of_visit', {
                     date: dateToString(invite.entryTime.visitationDate)
@@ -92,21 +92,35 @@ export default function GuestListCard({
                     startTime: dateTimeToString(invite.entryTime.startsAt),
                     endTime: dateTimeToString(invite.entryTime.endsAt)
                   })}
-                  className={styles.classes?.text} 
+                  className={styles.classes?.text}
                   data-testid="visit_time"
                 />
               </Grid>
             </Grid>
           </Grid>
-          <Grid item xs={12} sm={12} lg={2} data-testid="guest_name">
-            <Text 
+          <Grid
+            item
+            xs={12}
+            sm={12}
+            md={6}
+            lg={2}
+            data-testid="guest_name"
+            order={{ xs: 2, sm: 2, md: 3, lg: 2 }}
+          >
+            <Text
               color="primary"
-              content={invite.guest?.request?.name} 
+              content={invite.guest?.request?.name}
               className={`${styles.classes?.text} ${classes.guestName}`}
             />
           </Grid>
-          <Grid item xs={12} sm={12} lg={4}>
-            <Grid container direction="row" justifyContent="flex-end" spacing={!matchesSmall ? 2 : 0}>
+          <Grid item xs={12} sm={12} md={6} lg={4} order={{ xs: 3, sm: 3, md: 2, lg: 3 }}>
+            <Grid
+              container
+              direction="row"
+              justifyContent="flex-end"
+              spacing={!matchesSmall ? 2 : 0}
+              className={classes.actionSection}
+            >
               <Grid item data-testid="status" className={classes.chipRootAlign}>
                 <LegacyChip
                   label={
@@ -134,7 +148,9 @@ export default function GuestListCard({
               </Grid>
               <Grid item className={classes.chipRootAlign}>
                 <Chip
-                  label={isCancelled ? translate('guest_book.cancelled') : translate('guest_book.active')}
+                  label={
+                    isCancelled ? translate('guest_book.cancelled') : translate('guest_book.active')
+                  }
                   color={isCancelled ? 'error' : 'success'}
                   data-testid="invite_status"
                   size="small"
@@ -152,6 +168,7 @@ export default function GuestListCard({
                     dataid={invite.id}
                     onClick={event => handleInviteMenu(event, invite)}
                     color="primary"
+                    className={classes.moreOptionButton}
                   >
                     <MoreVert />
                   </IconButton>
