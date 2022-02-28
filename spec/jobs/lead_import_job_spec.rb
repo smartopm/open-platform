@@ -33,6 +33,8 @@ RSpec.describe UserImportJob, type: :job do
 
       expect(Users::User.count).to eql(prev_user_count + 1)
       expect(Notes::Note.count).to eql(prev_note_count + 1)
+      # assert the user has a task id
+      expect(Users::User.find_by(name: 'Thomas Shalongolo').task_id).not_to be_nil
     end
 
     it 'should not create users if name is not present' do

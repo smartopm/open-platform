@@ -40,7 +40,8 @@ export default function TaskDetail({
   handleSplitScreenClose,
   handleTaskCompletion,
   commentsRefetch,
-  forProcess
+  forProcess,
+  fromLeadPage
 }) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -200,7 +201,7 @@ export default function TaskDetail({
   }
 
   function isCurrentUserAnAssignee() {
-    return data.assignees.find(assignee => assignee.id === currentUser.id);
+    return data?.assignees.find(assignee => assignee.id === currentUser.id);
   }
 
   function setDueDate(date) {
@@ -246,11 +247,18 @@ export default function TaskDetail({
               refetch={refetch}
               handleTaskComplete={handleTaskComplete}
               forProcess={forProcess}
+              fromLeadPage={fromLeadPage}
             />
           </div>
           <div className={classes.section} data-testid="task-subtasks-section" id="anchor-section">
             <TaskDetailAccordion
-              icon={<AccountTreeIcon fontSize='large' color="primary" />}
+              icon={(
+                <AccountTreeIcon
+                  fontSize="large"
+                  color="primary"
+                  data-testid="sub-task-accordion-icon"
+                />
+              )}
               title="Sub Tasks"
               styles={{ background: '#FAFAFA' }}
               openDetails={tab === 'subtasks'}
@@ -268,7 +276,7 @@ export default function TaskDetail({
           </div>
           <div className={classes.section} data-testid="task-comments-section">
             <TaskDetailAccordion
-              icon={<QuestionAnswerIcon fontSize='large' color="primary" />}
+              icon={<QuestionAnswerIcon fontSize="large" color="primary" />}
               title="Comments"
               styles={{ background: '#FAFAFA', padding: 0 }}
               component={<TaskComment taskId={taskId} commentsRefetch={commentsRefetch} />}
@@ -277,7 +285,7 @@ export default function TaskDetail({
           </div>
           <div className={classes.section} data-testid="task-documents-section">
             <TaskDetailAccordion
-              icon={<AttachFileIcon fontSize='large' color="primary" />}
+              icon={<AttachFileIcon fontSize="large" color="primary" />}
               title="Documents"
               styles={{ background: '#FAFAFA' }}
               component={<TaskDocuments taskId={taskId} />}
@@ -286,7 +294,7 @@ export default function TaskDetail({
           </div>
           <div className={classes.section} data-testid="task-updates-section">
             <TaskDetailAccordion
-              icon={<EventNoteIcon fontSize='large' color="primary" />}
+              icon={<EventNoteIcon fontSize="large" color="primary" />}
               title="Updates"
               styles={{ background: '#FAFAFA' }}
               component={<TaskUpdateList data={historyData} />}
@@ -312,7 +320,8 @@ TaskDetail.defaultProps = {
   handleSplitScreenOpen: () => {},
   handleSplitScreenClose: () => {},
   commentsRefetch: () => {},
-  forProcess: false
+  forProcess: false,
+  fromLeadPage: false
 };
 TaskDetail.propTypes = {
   users: PropTypes.arrayOf(PropTypes.object),
@@ -333,5 +342,6 @@ TaskDetail.propTypes = {
   handleSplitScreenClose: PropTypes.func,
   handleTaskCompletion: PropTypes.func.isRequired,
   commentsRefetch: PropTypes.func,
-  forProcess: PropTypes.bool
+  forProcess: PropTypes.bool,
+  fromLeadPage: PropTypes.bool
 };

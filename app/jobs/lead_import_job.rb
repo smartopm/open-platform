@@ -156,7 +156,9 @@ class LeadImportJob < ApplicationJob
         )
 
         if user.save
-          create_task(user, current_user)
+          task = create_task(user, current_user)
+          user.task_id = task.id # assign user this task
+          user.save!
         else
           errors[index + 1] = user.errors.full_messages
         end

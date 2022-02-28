@@ -1,24 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { Grid } from '@mui/material';
-import { useLazyQuery, useMutation } from 'react-apollo';
+import { useMutation } from 'react-apollo';
 import { Divider } from '@material-ui/core';
 import PropTypes from 'prop-types';
-import { LeadDetailsQuery } from '../../../../graphql/queries';
 import { UpdateUserMutation } from '../../../../graphql/mutations/user';
 import { Spinner } from '../../../../shared/Loading';
 import CenteredContent from '../../../../shared/CenteredContent';
 import { formatError } from '../../../../utils/helpers';
-import { initialLeadFormData } from '../../utils';
+import { initialLeadFormData, secondaryInfoUserObject } from '../../utils';
 import LeadInformation from './LeadInformation';
 import CompanyInformation from './CompanyInformation';
 import MainContactInformation from './MainContactInformation';
 import SecondaryContactInformation from './SecondaryContactInformation';
 
-export default function LeadManagementForm({ userId }) {
+export default function LeadManagementForm({ data }) {
   const [leadFormData, setLeadFormData] = useState(initialLeadFormData);
   const [loadingStatus, setLoadingStatus] = useState(false);
 
   const [errors, setErr] = useState('');
+  const userId = data?.user?.id;
 
   const [disabled, setDisabled] = useState(true);
 
@@ -74,11 +74,6 @@ export default function LeadManagementForm({ userId }) {
   }
 
   const [leadDataUpdate] = useMutation(UpdateUserMutation);
-
-  const [loadLeadData, { loading, error, data }] = useLazyQuery(LeadDetailsQuery, {
-    variables: { id: userId },
-    fetchPolicy: 'cache-and-network'
-  });
 
   function handleSubmit(event) {
     event.preventDefault();
@@ -136,7 +131,6 @@ export default function LeadManagementForm({ userId }) {
   }
 
   useEffect(() => {
-    loadLeadData();
     if (data?.user) {
       setLeadFormData({
         user: {
@@ -153,11 +147,9 @@ export default function LeadManagementForm({ userId }) {
         }
       });
     }
-  }, [data, loadLeadData]);
+  }, [data]);
 
-  if (loading || loadingStatus) return <Spinner />;
-  if (error) return <CenteredContent>{formatError(error.message)}</CenteredContent>;
-  // TODO: This error should be an alert instead of blocking the whole UI.
+  if (loadingStatus) return <Spinner />;
   if (errors) return <CenteredContent>{formatError(errors.message)}</CenteredContent>;
 
   return (
@@ -205,5 +197,5 @@ export default function LeadManagementForm({ userId }) {
 }
 
 LeadManagementForm.propTypes = {
-  userId: PropTypes.string.isRequired
+  data: PropTypes.shape({ user: secondaryInfoUserObject }).isRequired
 };
