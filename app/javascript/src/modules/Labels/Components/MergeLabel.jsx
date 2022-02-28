@@ -13,7 +13,7 @@ import ErrorPage from '../../../components/Error';
 export default function MergeLabel({ open, handleClose, mergeData, refetch }) {
   const [labelValue, setLabelValue] = useState('');
   const [err, setErr] = useState(null);
-  const [getLabels, { data, error }] = useLazyQuery(LabelsQuery);
+  const [getLabels, { data, error, loading }] = useLazyQuery(LabelsQuery);
   const [mergeLabel] = useMutation(LabelMerge);
   const { t } = useTranslation(['label', 'common']);
 
@@ -36,7 +36,7 @@ export default function MergeLabel({ open, handleClose, mergeData, refetch }) {
   useEffect(() => {
     getLabels();
   }, []);
-
+  
   if (error) {
     return <ErrorPage title={error.message} />;
   }
@@ -61,7 +61,7 @@ export default function MergeLabel({ open, handleClose, mergeData, refetch }) {
             value={labelValue}
             required
             onChange={textFieldOnChange}
-            select
+            select={!!data?.labels}
           >
             {data?.labels
               .filter(lab => lab.id !== mergeData.id)

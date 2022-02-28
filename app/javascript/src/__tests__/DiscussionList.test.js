@@ -6,10 +6,11 @@ import { MockedProvider } from '@apollo/react-testing'
 import DiscussionList from '../components/Discussion/DiscussionList'
 
 describe('Discussion List page', () => {
+  const fetchMock = jest.fn()
     it('renders no topics when none provided', () => {
         const container = render(
           <MockedProvider>
-            <DiscussionList data={[]} />
+            <DiscussionList refetch={fetchMock} isAdmin data={[]} />
           </MockedProvider>
         )
         expect(container.queryByText('headers.no_discussions')).toBeInTheDocument()
@@ -30,7 +31,7 @@ describe('Discussion List page', () => {
                 id: '4567sd3874jssdf'
             }
         ]
-        const fetchMock = jest.fn()
+        
         const isAdmin = true
         const container = render(
           <MockedProvider mocks={[]}>

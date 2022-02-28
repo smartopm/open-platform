@@ -11,6 +11,10 @@ import { Context } from '../../../../containers/Provider/AuthStateProvider';
 
 describe('OpenTaskDataList Component', () => {
 
+  const tasks = new Array(12).fill(1).map(() => ({
+    ...taskMock,
+    id: Math.random().toString(16).substring(2)
+  }));
   const openTaskMock = [
     {
       request: {
@@ -19,7 +23,7 @@ describe('OpenTaskDataList Component', () => {
       },
       result: {
         data: {
-          projectOpenTasks: new Array(12).fill(taskMock)
+          projectOpenTasks: tasks
         }
       }
     }

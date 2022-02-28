@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom/';
 import { MockedProvider } from '@apollo/react-testing';
@@ -40,14 +40,17 @@ describe('UserLogs', () => {
     }
   };
 
-  it('should render the component', () => {
+  it('should render the component', async () => {
     render(
-      <MockedProvider>
+      <MockedProvider mocks={[logsMock]} addTypename={false}>
         <BrowserRouter>
           <UserLogs />
         </BrowserRouter>
       </MockedProvider>
     );
+    await waitFor(() => {
+      expect(screen.getByText('2020-09-10')).toBeInTheDocument()
+    },20)
   });
   it('should render the component with the right data', async () => {
     const { getByText } = render(

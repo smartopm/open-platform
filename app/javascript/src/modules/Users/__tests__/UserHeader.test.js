@@ -36,7 +36,7 @@ describe('User Detail Component', () => {
     campaignCreateOption: 'none',
     handleCampaignCreate: jest.fn(),
     handleLabelSelect: jest.fn(),
-    usersCountData: {},
+    usersCountData: {usersCount: 2},
     selectedUsers: [],
     labelsData: {},
     labelsRefetch: jest.fn(),

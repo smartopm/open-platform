@@ -10,10 +10,14 @@ const props = {
   handleCampaignCreate: jest.fn(),
   handleLabelSelect: jest.fn(),
   setSelectAllOption: jest.fn(),
+  labelsRefetch: jest.fn(),
   selectedUsers: [],
   selectCheckBox: true,
   usersCountData: {
     usersCount: 25
+  },
+  labelsData: {
+    labels: []
   }
 }
 describe('UsersActionMenu component', () => {

@@ -23,6 +23,8 @@ describe('Substatus component', () => {
             buildingPermitApproved: 0,
             constructionInProgress: 0,
             constructionCompleted: 0,
+            constructionInProgressSelfBuild: 0,
+            residentsCount: 0,
           }
         }
       }
@@ -30,7 +32,7 @@ describe('Substatus component', () => {
     let container;
     await act(async () => {
       container = render(
-        <MockedProvider mocks={[statusMock]}>
+        <MockedProvider mocks={[statusMock]} addTypename={false}>
           <SubStatusReportDialog open handleClose={jest.fn()} handleFilter={jest.fn()} />
         </MockedProvider>
       );
