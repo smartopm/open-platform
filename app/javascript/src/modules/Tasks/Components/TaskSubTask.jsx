@@ -199,7 +199,10 @@ export default function TaskSubTask({
                       data-testid="task_comments_count"
                       onClick={() => handleSplitScreenOpen(task)}
                     >
-                      <QuestionAnswerIcon fontSize="small" color="disabled" />
+                      <QuestionAnswerIcon
+                        fontSize="small"
+                        color={task?.taskComments?.length ? 'primary' : 'disabled'}
+                      />
                     </IconButton>
                   </Grid>
                   <Grid
@@ -209,7 +212,7 @@ export default function TaskSubTask({
                     className={classes.iconItem}
                     style={{ paddingLeft: '8px' }}
                   >
-                    <span>0</span>
+                    <span>{task?.taskComments?.length || 0}</span>
                   </Grid>
                   <Grid item md={2} xs={2}>
                     <IconButton
