@@ -42,6 +42,7 @@
     "apollo-link": "^1.2.13",
     "apollo-link-error": "^1.1.12",
     "apollo-link-http": "^1.5.16",
+    "assert": "^2.0.0",
     "babel-plugin-macros": "^2.8.0",
     "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
     "babel-runtime": "^6.26.0",
