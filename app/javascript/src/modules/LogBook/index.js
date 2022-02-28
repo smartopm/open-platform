@@ -16,7 +16,7 @@ function GateAccessIcon() {
     <AccessCheck module={currentModule} allowedPermissions={gateAccessPermissions}>
       <LogBook />
     </AccessCheck>
-)
+  )
 }
 
 function RenderLogBook() {
@@ -24,7 +24,7 @@ function RenderLogBook() {
     <AccessCheck module={currentModule} allowedPermissions={logBookPermissions}>
       <LogBook />
     </AccessCheck>
-)
+  )
 }
 
 const LogBooks = {

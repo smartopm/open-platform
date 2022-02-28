@@ -12,7 +12,7 @@ function RenderGuestValidate() {
     <AccessCheck module={currentModule} allowedPermissions={guestValidatePermissions}>
       <GuestValidate />
     </AccessCheck>
-)
+  )
 }
 
 function RenderGuestCreate() {
@@ -20,7 +20,7 @@ function RenderGuestCreate() {
     <AccessCheck module={currentModule} allowedPermissions={guestCreatePermissions}>
       <GuestValidate />
     </AccessCheck>
-)
+  )
 }
 
 const GuestsValidatorRoutes = [

@@ -13,7 +13,7 @@ function RenderLandParcels() {
     <AccessCheck module={currentModule} allowedPermissions={landParcelPermissions}>
       <LandParcelPage />
     </AccessCheck>
-)
+  )
 }
 
 export default {

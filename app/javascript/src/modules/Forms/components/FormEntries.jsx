@@ -93,7 +93,7 @@ export default function FormEntries({ formId }) {
         />
       </CenteredContent>
     </div>
-    )
+  )
 }
 
 export function renderFormEntry(formUser) {

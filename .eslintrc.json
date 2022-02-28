@@ -41,7 +41,10 @@
     "jest/prefer-to-have-length": 1,
     "jest/valid-expect": 2,
     "jest/no-mocks-import": 0,
-    "no-nested-ternary": 0
+    "no-nested-ternary": 0,
+    "react/jsx-no-bind": 1,
+    "react/forbid-prop-types": 1,
+    "react/jsx-indent": 1
   },
   "env": {
     "browser": true,

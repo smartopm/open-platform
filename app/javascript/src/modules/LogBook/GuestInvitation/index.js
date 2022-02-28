@@ -11,7 +11,7 @@ function RenderGuestList() {
     <AccessCheck module={currentModule} allowedPermissions={guestListPermissions}>
       <InvitedGuests />
     </AccessCheck>
-)
+  )
 }
 
 function RenderGuestSearch() {
@@ -19,7 +19,7 @@ function RenderGuestSearch() {
     <AccessCheck module={currentModule} allowedPermissions={guestListPermissions}>
       <GuestSearch />
     </AccessCheck>
-)
+  )
 }
 
 const GuestInvitationRoutes = {
