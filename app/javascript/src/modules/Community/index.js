@@ -24,7 +24,7 @@ function renderCommunitySettings() {
     <AccessCheck module={communityModule} allowedPermissions={communitySettingPermissions}>
       <CommunitySettings />
     </AccessCheck>
-)
+  )
 }
 
 // we can discuss on changing this to preferences instead of settings

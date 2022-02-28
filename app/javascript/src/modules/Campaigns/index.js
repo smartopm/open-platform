@@ -11,7 +11,7 @@ function RenderCampaign() {
     <AccessCheck module={campaign.module} allowedPermissions={campaignPermissions}>
       <Campaigns />
     </AccessCheck>
-)
+  )
 }
 
 export default {

@@ -752,7 +752,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
         </form>
       </div>
     </>
- );
+  );
 }
 
 

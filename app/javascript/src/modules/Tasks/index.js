@@ -14,7 +14,7 @@ function RenderTaskUpdate() {
     <AccessCheck module={currentModule} allowedPermissions={tasksPermissions}>
       <TaskPageRedirect />
     </AccessCheck>
-)
+  )
 }
 
 function RenderTasks() {
@@ -22,7 +22,7 @@ function RenderTasks() {
     <AccessCheck module={currentModule} allowedPermissions={tasksPermissions}>
       <Tasks />
     </AccessCheck>
-)
+  )
 }
 
 
