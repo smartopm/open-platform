@@ -12,19 +12,19 @@ const userPermissions = ['can_access_all_users'];
 const profilePermissions = ['can_view_own_profile'];
 
 function RenderUsers() {
-  return (
-    <AccessCheck module={user.module} allowedPermissions={userPermissions}>
-      <Users />
-    </AccessCheck>
-)
+    return (
+      <AccessCheck module={user.module} allowedPermissions={userPermissions}>
+        <Users />
+      </AccessCheck>
+    )
 }
 
 function RenderUserProfile() {
-  return (
-    <AccessCheck module={user.module} allowedPermissions={profilePermissions}>
-      <UserShow />
-    </AccessCheck>
-)
+    return (
+      <AccessCheck module={user.module} allowedPermissions={profilePermissions}>
+        <UserShow />
+      </AccessCheck>
+    )
 }
 
 // for nested links, I think these will likely be on the user
