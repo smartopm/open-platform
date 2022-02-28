@@ -252,7 +252,13 @@ export default function TaskDetail({
           </div>
           <div className={classes.section} data-testid="task-subtasks-section" id="anchor-section">
             <TaskDetailAccordion
-              icon={<AccountTreeIcon fontSize="large" color="primary" />}
+              icon={(
+                <AccountTreeIcon
+                  fontSize="large"
+                  color="primary"
+                  data-testid="sub-task-accordion-icon"
+                />
+              )}
               title="Sub Tasks"
               styles={{ background: '#FAFAFA' }}
               openDetails={tab === 'subtasks'}
@@ -337,5 +343,5 @@ TaskDetail.propTypes = {
   handleTaskCompletion: PropTypes.func.isRequired,
   commentsRefetch: PropTypes.func,
   forProcess: PropTypes.bool,
-  fromLeadPage: PropTypes.bool,
+  fromLeadPage: PropTypes.bool
 };

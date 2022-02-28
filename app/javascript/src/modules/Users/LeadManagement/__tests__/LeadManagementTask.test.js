@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min';
 import '@testing-library/jest-dom/extend-expect';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { MockedProvider } from '@apollo/react-testing';
 import { Context } from '../../../../containers/Provider/AuthStateProvider';
 import authState from '../../../../__mocks__/authstate';
@@ -10,6 +10,7 @@ import LeadManagementTask from '../Components/LeadManagementTask';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 describe('LeadManagementForm', () => {
+  const onChange = jest.fn();
   const taskDataMock = [
     {
       request: {
@@ -73,13 +74,17 @@ describe('LeadManagementForm', () => {
       <Context.Provider value={authState}>
         <MockedProvider mocks={taskDataMock} addTypename={false} fromLeadPage>
           <BrowserRouter>
-            <LeadManagementTask taskId="6a7e722a-9bd5-48d4-aaf7-f3285ccff4a3" />
+            <LeadManagementTask
+              taskId="6a7e722a-9bd5-48d4-aaf7-f3285ccff4a3"
+              handleSplitScreenOpen={onChange}
+            />
           </BrowserRouter>
         </MockedProvider>
       </Context.Provider>
     );
 
     await waitFor(() => {
+      screen.debug(undefined, 30000);
       expect(screen.queryAllByTestId('task-title')).toHaveLength(2);
       expect(screen.queryByText('task.parent_task')).toBeInTheDocument();
       expect(screen.queryByText('task.due_date_text')).toBeInTheDocument();
@@ -94,6 +99,15 @@ describe('LeadManagementForm', () => {
       expect(screen.queryByText('Comments')).toBeInTheDocument();
       expect(screen.queryByText('Documents')).toBeInTheDocument();
       expect(screen.queryByText('Updates')).toBeInTheDocument();
+
+      // simulate user intaraction
+      const taskAccordionIcon = screen.queryByTestId('sub-task-accordion-icon');
+      expect(taskAccordionIcon).toBeInTheDocument();
+
+      fireEvent.click(taskAccordionIcon);
+      const subTaskMenuIcon = screen.queryAllByTestId('menu_item')[0];
+      expect(subTaskMenuIcon).toBeInTheDocument();
+      fireEvent.click(subTaskMenuIcon);
     }, 20);
   });
 
@@ -102,14 +116,13 @@ describe('LeadManagementForm', () => {
       <Context.Provider value={authState}>
         <MockedProvider mocks={taskDataMock} addTypename={false}>
           <BrowserRouter>
-            <LeadManagementTask taskId={null} />
+            <LeadManagementTask taskId={null} handleSplitScreenOpen={onChange} />
           </BrowserRouter>
         </MockedProvider>
       </Context.Provider>
     );
 
     await waitFor(() => {
-      screen.debug(undefined, 30000);
       expect(screen.queryByText('task.no_tasks')).toBeInTheDocument();
     }, 20);
   });
