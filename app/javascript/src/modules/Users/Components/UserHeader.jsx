@@ -51,6 +51,27 @@ export default function UserHeader({
     none: 'none'
   };
 
+  const selectOptions = [
+    {
+      key: 'all',
+      value: 'All',
+      handleMenuItemClick,
+      show: true 
+    },
+    {
+      key: 'all_on_the_page',
+      value: 'All on this page',
+      handleMenuItemClick,
+      show: true
+    },
+    {
+      key: 'none',
+      value: 'none',
+      handleMenuItemClick,
+      show: true
+    }
+  ]
+
   const selectedOptions =
     selectedKey === 'none' || selectedKey === '' ? 'select' : objectAccessor(options, selectedKey);
 
@@ -87,7 +108,7 @@ export default function UserHeader({
               anchorEl={anchorRef.current}
               anchorRef={anchorRef}
               handleClose={handleClose}
-              options={options}
+              options={selectOptions}
               selectedKey={selectedKey}
               handleMenuItemClick={handleMenuItemClick}
               handleClick={() => setOpen(!open)}
@@ -143,7 +164,7 @@ export default function UserHeader({
               anchorEl={anchorRef.current}
               anchorRef={anchorRef}
               handleClose={handleClose}
-              options={options}
+              options={selectOptions}
               selectedKey={selectedKey}
               handleMenuItemClick={handleMenuItemClick}
               handleClick={() => setOpen(!open)}
