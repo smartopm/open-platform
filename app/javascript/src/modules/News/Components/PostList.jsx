@@ -2,13 +2,14 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import React, { useState } from 'react'
 import { Typography, Box, Divider, Grid } from '@material-ui/core'
-import { useLocation } from 'react-router-dom'
+import { useLocation , useHistory } from 'react-router-dom'
 import { Pagination } from '@material-ui/lab'
 import PropTypes from 'prop-types'
 import { useTranslation } from 'react-i18next'
 import PostItem from './PostItem'
 import { dateToString } from '../../../components/DateContainer'
 import { useFetch } from '../../../utils/customHooks'
+
 import Categories from './Categories'
 import { ShareButton } from '../../../components/ShareButton'
 import { Spinner } from '../../../shared/Loading'
@@ -23,10 +24,11 @@ export default function PostsList({ wordpressEndpoint, communityName }) {
     const slug = pathname.split('/')[2]
     const { response, error } = useFetch(`${wordpressEndpoint}/posts/?number=${limit}&page=${page}&category=${slug || ''}`)
     const currentUrl = window.location.href
+    const history = useHistory();
 
     function loadPostPage(postId) {
-        window.location.href = `/news/post/${postId}`
-      }
+      history.push(`/news/post/${postId}`);
+    }
 
     function handlePageChange(_event, value){
       setPageNumber(value)

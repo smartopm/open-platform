@@ -201,7 +201,7 @@ export function NewsNav({ children, history }) {
   return (
     <nav className={css(styles.topNav)} style={{ minHeight: '50px' }}>
       <div className={css(styles.topNav)}>
-        <Button onClick={() => history.push('/')} data-testid="take_me_back_icon">
+        <Button onClick={() => history.push('/news')} data-testid="take_me_back_icon">
           <i className={`material-icons ${css(styles.icon)}`}>arrow_back</i>
         </Button>
         <ul

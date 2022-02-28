@@ -7,7 +7,8 @@ import { Button, Typography } from '@material-ui/core';
 import PropTypes from 'prop-types'
 import { useLazyQuery, useMutation } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
-import { useFetch } from '../../../utils/customHooks'
+import { useHistory } from 'react-router-dom';
+import { useFetch } from '../../../utils/customHooks';
 import PostItem from './PostItem'
 import { dateToString } from '../../../components/DateContainer'
 import Tag from './Tag';
@@ -27,6 +28,7 @@ export default function TagPosts({ open, handleClose, tagName, wordpressEndpoint
   const [loadUserTags, {  called, loading, data, error: lazyError, refetch } ] = useLazyQuery(PostTagUser)
   const [followTag] = useMutation(FollowPostTag)
   const { t } = useTranslation('news')
+  const history = useHistory();
 
   useEffect(() => {
       if (open && tagName) {
@@ -40,7 +42,7 @@ export default function TagPosts({ open, handleClose, tagName, wordpressEndpoint
   }
 
   function loadPostPage(postId) {
-    window.location.href = `/news/post/${postId}`
+    history.push(`/news/post/${postId}`);
   }
 
   function handleFollowTag(){
