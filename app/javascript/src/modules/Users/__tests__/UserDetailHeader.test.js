@@ -99,6 +99,17 @@ describe('User Detail Header Component', () => {
     expect(container.queryByText('Send OTP')).not.toBeInTheDocument();
     fireEvent.click(container.queryByTestId('arrow-icon'));
     expect(container.queryByText('Edit User')).not.toBeInTheDocument();
+  });
+
+  it('should not render the user breadcrumb when user is not an admin', () => {
+    const container = render(
+      <MockedProvider>
+        <BrowserRouter>
+          <UserDetailHeader data={data} userType='client' currentTab='Contacts' authState={authState} />
+        </BrowserRouter>
+      </MockedProvider>
+    );
+
     expect(container.queryByTestId('breadcrumbuser')).not.toBeInTheDocument();
   });
 });
