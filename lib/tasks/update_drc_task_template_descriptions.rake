@@ -2,6 +2,7 @@
 
 # rubocop:disable Metrics/BlockLength
 # rubocop:disable Layout/LineLength:
+# rubocop:disable Rails/SkipsModelValidations
 desc 'Update Existing DRC Task Template Descriptions'
 task :update_drc_task_template_descriptions, %i[community_name] => :environment do |_t, args|
   abort('Provide a valid Community Name') if args.community_name.blank?
@@ -196,35 +197,33 @@ task :update_drc_task_template_descriptions, %i[community_name] => :environment 
   ]
 
   ActiveRecord::Base.transaction do
-    updated_templates.each do |t|
+    updated_templates.each_with_index do |t, i|
       template = community.notes
                           .find_by(
                             body: t[:parent],
                             category: 'template',
                             parent_note_id: nil,
                           )
-                          .includes(:sub_notes)
 
-      template.update!(
-        body: t[:body],
-        description: t[:description],
-      )
+      # return subtasks_ordered
+      ordered_sub_tasks = community.notes.unscoped
+                                   .where(parent_note_id: template[:id])
+                                   .order(created_at: :asc)
 
-      ordered_sub_tasks = template.sub_tasks.order(created_at: :asc)
+      ordered_sub_tasks.each_with_index do |sub_t, index|
+        body_to_update = updated_templates[i][:sub_tasks][index][:body]
+        description_to_update = updated_templates[i][:sub_tasks][index][:description]
+        body_already_exists = ordered_sub_tasks.find_by(body: body_to_update)
 
-      # assume the sub tasks are orderd asceding
-      t[:sub_tasks].each do |s_t|
-        found_sub_task = ordered_sub_tasks.find_by(body: s_t[:body])
+        sub_t.update_column(:body, body_to_update) if body_already_exists.blank?
 
-        found_sub_task.update!(
-          body: s_t[:body],
-          description: s_t[:description],
-        )
+        sub_t.update_column(:description, description_to_update)
       end
     end
 
     puts 'Tasks updated successfully'
   end
 end
+# rubocop:enable Rails/SkipsModelValidations
 # rubocop:enable Layout/LineLength:
 # rubocop:enable Metrics/BlockLength
