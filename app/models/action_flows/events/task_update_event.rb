@@ -33,7 +33,7 @@ module ActionFlows
       # rubocop:disable Metrics/MethodLength
       def preload_data(eventlog)
         note = eventlog.ref_type.constantize.find eventlog.ref_id
-        assignees_email = note.assignees.excluding_lead.map(&:email).join(',')
+        assignees_email = note.assignees.excluding_leads.map(&:email).join(',')
         note_version = note.versions.order(:created_at).where(event: 'update').last
         load_data(
           { 'Note' => note },

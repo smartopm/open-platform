@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/BlockLength
 desc 'update community with specific features'
 task update_community_features: :environment do
   puts 'updating community ....'
@@ -39,4 +38,3 @@ task update_community_features: :environment do
     puts 'Done'
   end
 end
-# rubocop:enable Metrics/BlockLength

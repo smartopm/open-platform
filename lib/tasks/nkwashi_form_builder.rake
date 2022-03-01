@@ -4,7 +4,6 @@
 # add form_properties
 
 desc 'create a nkwashi business registration form'
-# rubocop:disable Metrics/BlockLength
 task create_business_form: :environment do
   puts 'create a form ...'
   form = Community.find_by(name: 'Nkwashi').forms.create(
@@ -185,4 +184,3 @@ task create_business_form: :environment do
     puts 'Successfully create a form with its properties'
   end
 end
-# rubocop:enable Metrics/BlockLength

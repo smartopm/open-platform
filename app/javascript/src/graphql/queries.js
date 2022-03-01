@@ -274,6 +274,7 @@ export const LeadDetailsQuery = gql`
         info
         contactType
       }
+      taskId
     }
   }
 `;

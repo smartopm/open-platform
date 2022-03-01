@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'yaml'
-# rubocop:disable Metrics/BlockLength
+
 namespace :db do
   desc 'Add permissions to role based on community_permissions.yml file'
   task add_permissions_to_community_roles: :environment do
@@ -57,4 +57,3 @@ namespace :db do
     puts e.message.to_s
   end
 end
-# rubocop:enable Metrics/BlockLength

@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/BlockLength
 # rubocop:disable Layout/LineLength
 namespace :import do
   desc 'Migrate Points of Interest'
@@ -46,4 +45,3 @@ namespace :import do
   end
 end
 # rubocop:enable Layout/LineLength
-# rubocop:enable Metrics/BlockLength

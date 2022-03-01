@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/BlockLength
 # rubocop:disable Layout/LineLength
 namespace :migrate_deposits do
   desc 'Reset payment plan pending balance and migrate deposit entry in transactions table'
@@ -75,5 +74,4 @@ namespace :migrate_deposits do
     puts 'Records successfully migrated' if errors.empty?
   end
 end
-# rubocop:enable Metrics/BlockLength
 # rubocop:enable Layout/LineLength

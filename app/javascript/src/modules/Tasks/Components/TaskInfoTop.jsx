@@ -11,7 +11,7 @@ import {
   Typography,
   IconButton,
   useMediaQuery,
-  MenuItem,
+  MenuItem
 } from '@material-ui/core';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import AccessAlarmIcon from '@mui/icons-material/AccessAlarm';
@@ -56,7 +56,8 @@ export default function TaskInfoTop({
   handleSplitScreenClose,
   refetch,
   handleTaskComplete,
-  forProcess
+  forProcess,
+  fromLeadPage
 }) {
   const { t } = useTranslation(['task', 'common']);
   const classes = useStyles();
@@ -66,7 +67,7 @@ export default function TaskInfoTop({
   const [taskUpdate] = useMutation(UpdateNote);
   const [editingBody, setEditingBody] = useState(false);
   const [editingDueDate, setEditingDueDate] = useState(false);
-  const [taskStatus, setTaskStatus] = useState(data?.status)
+  const [taskStatus, setTaskStatus] = useState(data?.status);
   const [updateDetails, setUpdateDetails] = useState({
     isError: false,
     message: ''
@@ -77,7 +78,7 @@ export default function TaskInfoTop({
     needs_attention: t('task.needs_attention'),
     at_risk: t('task.at_risk'),
     completed: t('task.complete')
-  }
+  };
 
   const allowedAssignees = [
     'admin',
@@ -99,9 +100,9 @@ export default function TaskInfoTop({
 
   function openParentLink(event, parent) {
     event.preventDefault();
-    if(forProcess){
+    if (forProcess) {
       history.push(`/processes/drc/projects/${parent.id}/tab=processes`);
-    }else{
+    } else {
       history.push(`/tasks/${parent.id}`);
     }
   }
@@ -113,8 +114,8 @@ export default function TaskInfoTop({
       .then(() => {
         setUpdateDetails({ isError: false, message: t('task.update_successful') });
         setTimeout(() => {
-          refetch()
-        }, 500)
+          refetch();
+        }, 500);
       })
       .catch(err => {
         setUpdateDetails({ isError: true, message: formatError(err?.message) });
@@ -129,7 +130,7 @@ export default function TaskInfoTop({
   }
 
   function handleSelectTaskStatus(_event, key) {
-    setTaskStatus(key)
+    setTaskStatus(key);
     updateTask('status', key);
   }
 
@@ -158,10 +159,14 @@ export default function TaskInfoTop({
                     style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}
                     onClick={handleSplitScreenClose}
                   >
-                    <KeyboardBackspaceIcon style={{ marginRight: '4px' }} />
-                    {urlParams.type === 'drc' ? t('task:bread_crumps.summary') : t('task:bread_crumps.my_tasks')}
+                    {!fromLeadPage && <KeyboardBackspaceIcon style={{ marginRight: '4px' }} />}
+                    {urlParams.type === 'drc'
+                      ? t('task:bread_crumps.summary')
+                      : !fromLeadPage
+                      ? t('task:bread_crumps.my_tasks')
+                      : null}
                   </Typography>
-                  <Typography>{t('task:bread_crumps.task_details')}</Typography>
+                  {!fromLeadPage && <Typography>{t('task:bread_crumps.task_details')}</Typography>}
                 </Breadcrumbs>
               </Grid>
               <Grid item xs={3} style={{ display: 'flex' }}>
@@ -171,13 +176,13 @@ export default function TaskInfoTop({
                     onClick={handleTaskComplete}
                     data-testid="task-info-menu"
                     color="primary"
-                    style={{backgroundColor: 'transparent'}}
+                    style={{ backgroundColor: 'transparent' }}
                   >
                     {data.completed ? (
-                      <CheckCircleIcon htmlColor="#4caf50" style={{fontSize: '20px'}} />
+                      <CheckCircleIcon htmlColor="#4caf50" style={{ fontSize: '20px' }} />
                     ) : (
                       <CheckCircleOutlineIcon onClick={handleTaskComplete} />
-                  )}
+                    )}
                   </IconButton>
                 )}
                 {isAssignee() && (
@@ -214,20 +219,20 @@ export default function TaskInfoTop({
                   <MenuItem
                     key={key}
                     selected={key === taskStatus}
-                    onClick={(event) => handleSelectTaskStatus(event, key)}
+                    onClick={event => handleSelectTaskStatus(event, key)}
                     value={key}
                     data-testid="task-status-option"
                   >
                     {val}
                   </MenuItem>
-                  ))}
+                ))}
               </TextField>
             </Grid>
             {!matches && (
-            <Grid item md={3} xs={4} style={{ justifyContent: 'right' }}>
-              <Grid container style={{ justifyContent: 'right' }}>
-                {/* TODO: Commenting this out for now: Victor & Bonny to sync with Vanessa and compare check-icon vs select field */}
-                {/* <Grid item md={4} xs={2} style={{ textAlign: 'right' }}>
+              <Grid item md={3} xs={4} style={{ justifyContent: 'right' }}>
+                <Grid container style={{ justifyContent: 'right' }}>
+                  {/* TODO: Commenting this out for now: Victor & Bonny to sync with Vanessa and compare check-icon vs select field */}
+                  {/* <Grid item md={4} xs={2} style={{ textAlign: 'right' }}>
                   {canUpdateNote && (
                   <IconButton
                     edge="end"
@@ -245,64 +250,64 @@ export default function TaskInfoTop({
                 )}
                 </Grid> */}
 
-                {isAssignee() && (
-                <Grid item md={4} xs={2} style={{ textAlign: 'right' }}>
-                  <IconButton
-                    edge="end"
-                    onClick={event => menuData.handleTaskInfoMenu(event)}
-                    data-testid="task-info-menu"
-                    color="primary"
-                  >
-                    <AccessAlarmIcon />
-                  </IconButton>
+                  {isAssignee() && (
+                    <Grid item md={4} xs={2} style={{ textAlign: 'right' }}>
+                      <IconButton
+                        edge="end"
+                        onClick={event => menuData.handleTaskInfoMenu(event)}
+                        data-testid="task-info-menu"
+                        color="primary"
+                      >
+                        <AccessAlarmIcon />
+                      </IconButton>
+                    </Grid>
+                  )}
+                  {!fromLeadPage && urlParams?.type !== 'drc' && (
+                    <Grid item md={4} xs={1} style={{ textAlign: 'right' }}>
+                      <IconButton
+                        edge="end"
+                        onClick={handleSplitScreenClose}
+                        data-testid="task-info-menu"
+                        color="primary"
+                      >
+                        <KeyboardTabIcon />
+                      </IconButton>
+                    </Grid>
+                  )}
                 </Grid>
-              )}
-                {urlParams?.type !== 'drc' && (
-                <Grid item md={4} xs={1} style={{ textAlign: 'right' }}>
-                  <IconButton
-                    edge="end"
-                    onClick={handleSplitScreenClose}
-                    data-testid="task-info-menu"
-                    color="primary"
-                  >
-                    <KeyboardTabIcon />
-                  </IconButton>
-                </Grid>
-              )}
               </Grid>
-            </Grid>
-          )}
+            )}
           </Grid>
         </Grid>
         <Grid item md={10} xs={12}>
           {!editingBody && (
-          <Typography
-            variant="h6"
-            style={{
-              color: '#575757',
-              paddingTop: '15px'
-            }}
-            onMouseOver={canUpdateNote ? () => setEditingBody(true) : null}
-          >
-            <span
-              data-testid='task-title'
-              // eslint-disable-next-line react/no-danger
-              dangerouslySetInnerHTML={{
-                __html: sanitizeText(removeNewLines(data.body))
+            <Typography
+              variant="h6"
+              style={{
+                color: '#575757',
+                paddingTop: '15px'
               }}
-            />
-          </Typography>
+              onMouseOver={canUpdateNote ? () => setEditingBody(true) : null}
+            >
+              <span
+                data-testid="task-title"
+                // eslint-disable-next-line react/no-danger
+                dangerouslySetInnerHTML={{
+                  __html: sanitizeText(removeNewLines(data.body))
+                }}
+              />
+            </Typography>
           )}
           {editingBody && (
             <AutoSaveField
               value={data.body}
-              mutationAction={(value) => updateTask('body', value)}
-              stateAction={(value) => setEditingBody(value)}
+              mutationAction={value => updateTask('body', value)}
+              stateAction={value => setEditingBody(value)}
             />
           )}
         </Grid>
       </Grid>
-      <Grid item md={12} style={{ marginTop: '24px'}}>
+      <Grid item md={12} style={{ marginTop: '24px' }}>
         {data.parentNote && (
           <Grid container className={classes.parentTaskSection}>
             <Grid item xs={5} md={3}>
@@ -313,13 +318,21 @@ export default function TaskInfoTop({
             <Grid item xs={7} md={6}>
               <Typography
                 variant="body2"
-                color={isUnAuthorizedDeveloper() ? "inherit" : "primary"}
+                color={isUnAuthorizedDeveloper() ? 'inherit' : 'primary'}
                 data-testid="parent-note"
-                onClick={isUnAuthorizedDeveloper() ? () => {} : (event) => { openParentLink(event, data.parentNote) }}
-                className={isUnAuthorizedDeveloper() ? classes.parentTaskDisabled : classes.parentTask}
+                onClick={
+                  isUnAuthorizedDeveloper()
+                    ? () => {}
+                    : event => {
+                        openParentLink(event, data.parentNote);
+                      }
+                }
+                className={
+                  isUnAuthorizedDeveloper() ? classes.parentTaskDisabled : classes.parentTask
+                }
               >
                 <span
-                  data-testid='task-title'
+                  data-testid="task-title"
                   // eslint-disable-next-line react/no-danger
                   dangerouslySetInnerHTML={{
                     __html: sanitizeText(removeNewLines(data.parentNote.body))
@@ -343,7 +356,7 @@ export default function TaskInfoTop({
             onMouseOver={() => setEditingDueDate(true)}
             onMouseLeave={() => setEditingDueDate(false)}
           >
-            {canUpdateNote ?             (
+            {canUpdateNote ? (
               <DatePickerDialog
                 handleDateChange={date => setDate(date)}
                 selectedDate={selectedDate}
@@ -393,7 +406,7 @@ export default function TaskInfoTop({
         <Grid
           container
           className={matches ? classes.assigneesSectionMobile : classes.assigneesSection}
-          style={autoCompleteOpen ? {marginTop: '-40px'} : undefined}
+          style={autoCompleteOpen ? { marginTop: '-40px' } : undefined}
         >
           <Grid
             item
@@ -406,7 +419,7 @@ export default function TaskInfoTop({
             </Typography>
           </Grid>
           <Grid item xs={8} md={9}>
-            <Grid container spacing={1} style={{ alignItems: 'center' }} data-testid='user-chip'>
+            <Grid container spacing={1} style={{ alignItems: 'center' }} data-testid="user-chip">
               {data.assignees.length > 0 && (
                 <Grid item>
                   {data.assignees.map(user => (
@@ -415,20 +428,20 @@ export default function TaskInfoTop({
                       user={user}
                       size="medium"
                       onDelete={() => {
-                        if(!canUpdateNote) {
+                        if (!canUpdateNote) {
                           return;
                         }
 
-                        assignUser(data.id, user.id)
+                        assignUser(data.id, user.id);
                       }}
                     />
                   ))}
                 </Grid>
               )}
-              <Grid item sm={6} xs={12} data-testid='add-assignee'>
+              <Grid item sm={6} xs={12} data-testid="add-assignee">
                 {canUpdateNote && (
                   <Chip
-                    style={autoCompleteOpen ? {marginTop: '50px'} : undefined}
+                    style={autoCompleteOpen ? { marginTop: '50px' } : undefined}
                     key={data.id}
                     variant="outlined"
                     label={autoCompleteOpen ? t('task.chip_close') : t('task.chip_add_assignee')}
@@ -496,14 +509,14 @@ export default function TaskInfoTop({
       )}
       <Grid container className={classes.descriptionSection}>
         <Grid item xs={12} md={12}>
-          <Typography variant="caption" color='textSecondary'>
+          <Typography variant="caption" color="textSecondary">
             {t('common:form_fields.description')}
           </Typography>
         </Grid>
         <Grid item xs={12} md={12}>
           <AutoSaveField
             value={data.description}
-            mutationAction={(value) => updateTask('description', value)}
+            mutationAction={value => updateTask('description', value)}
           />
         </Grid>
       </Grid>
@@ -511,7 +524,7 @@ export default function TaskInfoTop({
   );
 }
 
-const useStyles =makeStyles(theme => ({
+const useStyles = makeStyles(theme => ({
   parentTask: {
     cursor: 'pointer',
     '& a': {
@@ -560,7 +573,7 @@ const useStyles =makeStyles(theme => ({
     borderRadius: '4px'
   },
   dueDateDisabled: {
-    padding: '0 5px 0 0',
+    padding: '0 5px 0 0'
   },
   selectLabel: {
     color: theme.palette?.primary?.main
@@ -575,7 +588,8 @@ TaskInfoTop.defaultProps = {
   activeReminder: null,
   handleSplitScreenClose: () => {},
   handleTaskComplete: () => {},
-  forProcess: false
+  forProcess: false,
+  fromLeadPage: false
 };
 
 TaskInfoTop.propTypes = {
@@ -622,5 +636,6 @@ TaskInfoTop.propTypes = {
   handleSplitScreenClose: PropTypes.func,
   refetch: PropTypes.func.isRequired,
   handleTaskComplete: PropTypes.func, 
-  forProcess: PropTypes.bool
+  forProcess: PropTypes.bool,
+  fromLeadPage: PropTypes.bool
 };

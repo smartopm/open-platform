@@ -17,6 +17,7 @@ class TaskCreate
     ActiveRecord::Base.transaction do
       note = create_task(community, data)
       assign_users_to_task(note, data[:assignees])
+      note
     rescue StandardError => e
       Rails.logger.warn e.full_message
     end

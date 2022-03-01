@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_02_22_081713) do
+ActiveRecord::Schema.define(version: 2022_02_24_055248) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -303,8 +303,8 @@ ActiveRecord::Schema.define(version: 2022_02_22_081713) do
     t.integer "entry_request_state", default: 0
     t.uuid "revoker_id"
     t.datetime "revoked_at"
-    t.integer "status", default: 0
     t.uuid "guest_id"
+    t.integer "status", default: 0
     t.datetime "exited_at"
   end
 
@@ -816,6 +816,7 @@ ActiveRecord::Schema.define(version: 2022_02_22_081713) do
     t.uuid "latest_substatus_id"
     t.string "ext_ref_id"
     t.uuid "role_id", null: false
+    t.string "region"
     t.string "title"
     t.string "linkedin_url"
     t.string "company_name"
@@ -844,7 +845,7 @@ ActiveRecord::Schema.define(version: 2022_02_22_081713) do
     t.string "relevant_link"
     t.jsonb "contact_details"
     t.string "african_presence"
-    t.string "region"
+    t.string "task_id"
     t.index ["community_id", "email"], name: "index_users_on_community_id_and_email", unique: true
     t.index ["latest_substatus_id"], name: "index_users_on_latest_substatus_id"
     t.index ["role_id"], name: "index_users_on_role_id"
