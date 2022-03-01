@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/react-testing';
@@ -47,7 +47,7 @@ describe('General Plan List Component', () => {
   const currentUser = {
     userType: 'admin'
   }
-  it('should render the general plan list component', () => {
+  it('should render the general plan list component', async () => {
     const container = render(
       <MockedProvider>
         <BrowserRouter>
@@ -84,8 +84,10 @@ describe('General Plan List Component', () => {
     fireEvent.click(container.queryByText('common:menu.allocate_funds'));
     expect(container.queryAllByText('common:menu.allocate_funds')[0]).toBeInTheDocument();
 
-    fireEvent.click(container.queryByTestId('pay-menu'));
-    expect(container.queryByText('common:menu.view_receipt')).toBeInTheDocument();
+    await waitFor(() => {
+      fireEvent.click(container.queryByTestId('pay-menu'));
+      expect(container.queryByText('common:menu.view_receipt')).toBeInTheDocument();
+    }, 10)
   });
 
   it('should check if renderpayments works as expected', () => {

@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/react-testing';
@@ -65,8 +65,8 @@ describe('Project Processes Split View', () => {
               <TaskContext.Provider
                 value={{
                   authState,
-                  updateStatus: {},
-                  handleMessageAlertClose: jest.fn
+                  updateStatus: {message: '', success: false },
+                  handleMessageAlertClose: jest.fn()
               }}
               >
                 <ProjectOverview data={taskMock} />
@@ -77,7 +77,9 @@ describe('Project Processes Split View', () => {
       </Context.Provider>
     );
 
-    expect(screen.getByTestId("project-information")).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByTestId("project-information")).toBeInTheDocument();
+    }, 5)
   });
 
   it('should render No Project Information', async () => {
@@ -89,8 +91,8 @@ describe('Project Processes Split View', () => {
              <TaskContext.Provider
                value={{
                   authState,
-                  updateStatus: {},
-                  handleMessageAlertClose: jest.fn
+                  updateStatus: {message: '', success: false },
+                  handleMessageAlertClose: jest.fn()
               }}
              >
                <ProjectOverview data={taskMock} />
@@ -101,6 +103,8 @@ describe('Project Processes Split View', () => {
      </Context.Provider>
     );
 
-    expect(screen.getByText('processes.no_form_data')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText('processes.no_form_data')).toBeInTheDocument();
+    }, 5)
   });
 });

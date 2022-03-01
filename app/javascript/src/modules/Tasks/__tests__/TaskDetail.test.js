@@ -32,7 +32,7 @@ const props = {
   assignUser: jest.fn(),
   refetch: jest.fn(),
   users: [],
-  currentUser: { name: 'tester', id: '6523gvhvg' },
+  currentUser: { name: 'tester', id: '6523gvhvg', userType: 'admin' },
   historyData: [
     { action: 'create', noteEntityType: 'Comments::NoteComment', user: { name: 'name' }, createdAt: new Date() }
   ],
@@ -64,7 +64,7 @@ describe('task form component', () => {
   it('should render the remind-me-later button if current user is an assignee', async () => {
     const newProps = {
       ...props,
-      currentUser: { name: 'tolulope 0.', id: '34543' }
+      currentUser: { name: 'tolulope 0.', id: '34543', userType: 'resident' }
     };
     let container;
     await act(async () => {

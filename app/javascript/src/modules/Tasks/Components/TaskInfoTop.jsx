@@ -204,12 +204,12 @@ export default function TaskInfoTop({
                 margin="normal"
                 variant="outlined"
                 className={classes.selectLabel}
-                labelId="select-task-status"
                 id="select-task-status"
                 data-testid="select-task-status"
-                value={taskStatus}
+                value={taskStatus || ""}
                 label={t('common:misc.select')}
               >
+                <MenuItem value="" />
                 {Object.entries(taskStatuses).map(([key, val]) => (
                   <MenuItem
                     key={key}
@@ -574,6 +574,7 @@ TaskInfoTop.defaultProps = {
   selectedDate: null,
   activeReminder: null,
   handleSplitScreenClose: () => {},
+  handleTaskComplete: () => {},
   forProcess: false
 };
 
@@ -620,6 +621,6 @@ TaskInfoTop.propTypes = {
   }).isRequired,
   handleSplitScreenClose: PropTypes.func,
   refetch: PropTypes.func.isRequired,
-  handleTaskComplete: PropTypes.func.isRequired,
+  handleTaskComplete: PropTypes.func, 
   forProcess: PropTypes.bool
 };

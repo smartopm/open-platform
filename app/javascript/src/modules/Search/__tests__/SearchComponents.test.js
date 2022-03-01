@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/react-testing';
@@ -60,7 +60,7 @@ describe('search result component', () => {
     expect(container.queryByText('search.create_request')).toBeInTheDocument();
   });
 
-  it('should display the returned results', () => {
+  it('should display the returned results', async () => {
     const props = {
       data: {
         userSearch: [
@@ -95,13 +95,15 @@ describe('search result component', () => {
         </BrowserRouter>
       </MockedProvider>
     );
-    expect(container.queryByText('Mocked John')).toBeInTheDocument();
-    expect(container.queryByText('Mocked Jane D')).toBeInTheDocument();
-    expect(container.queryByText('2020/1/230')).toBeInTheDocument();
-    expect(container.queryByText('2019/19/190')).toBeInTheDocument();
-    expect(container.getAllByTestId('link_search_user')).toHaveLength(2);
+    await waitFor(() => {
+      expect(container.queryByText('Mocked John')).toBeInTheDocument();
+      expect(container.queryByText('Mocked Jane D')).toBeInTheDocument();
+      expect(container.queryByText('2020/1/230')).toBeInTheDocument();
+      expect(container.queryByText('2019/19/190')).toBeInTheDocument();
+      expect(container.getAllByTestId('link_search_user')).toHaveLength(2);
+    }, 5)
   });
-  it('should render properly', () => {
+  it('should render properly', async () => {
     const location = { state: { from: '/somewhere' } };
     render(
       <MockedProvider>
@@ -110,5 +112,8 @@ describe('search result component', () => {
         </BrowserRouter>
       </MockedProvider>
     );
+    await waitFor(() => {
+        expect(screen.queryByTestId('loader')).not.toBeInTheDocument()
+    })
   });
 });
