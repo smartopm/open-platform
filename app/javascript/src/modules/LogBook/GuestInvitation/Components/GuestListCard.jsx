@@ -43,7 +43,7 @@ export default function GuestListCard({
         <Grid container direction="row" alignItems="center">
           <Grid item xs={12} sm={12} md={6} lg={6} className={classes.avatarTimeSection}>
             <Grid container alignItems="center">
-              <Grid item xs={3} sm={4} lg={2} data-testid="guest_info">
+              <Grid item xs={3} data-testid="guest_info">
                 {invite.thumbnailUrl ? (
                   <Avatar
                     alt={invite.guest?.request?.name}
@@ -63,7 +63,7 @@ export default function GuestListCard({
                   </Avatar>
                 )}
               </Grid>
-              <Grid item xs={9} sm={8} lg={4} className={classes.timeDetails}>
+              <Grid item xs={9} className={classes.timeDetails}>
                 <Text
                   content={translate('guest_book.start_of_visit', {
                     date: dateToString(invite.entryTime.visitationDate)
@@ -85,7 +85,6 @@ export default function GuestListCard({
                   className={styles.classes?.text}
                   data-testid="ends_on_date"
                 />
-                <br />
                 <br />
                 <Text
                   content={translate('guest_book.visit_time', {
