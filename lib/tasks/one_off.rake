@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/BlockLength
 # rubocop:disable Layout/LineLength
 namespace :import do
   desc 'Run one-off tasks'
@@ -237,10 +236,8 @@ namespace :import do
     )
   end
 end
-# rubocop:enable Metrics/BlockLength
 # rubocop:enable Layout/LineLength
 
-# rubocop:disable Metrics/BlockLength
 namespace :backfill do
   desc 'Move valuation amount to payment plan'
   task total_amount_on_payment_plan: :environment do
@@ -304,4 +301,3 @@ namespace :backfill do
     puts 'Done.'
   end
 end
-# rubocop:enable Metrics/BlockLength

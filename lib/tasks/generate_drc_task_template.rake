@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/BlockLength
 # rubocop:disable Layout/LineLength:
 desc 'Generate DRC Task Template and Form'
 task :generate_drc_task_template, %i[author_email] => :environment do |_t, args|
@@ -126,4 +125,3 @@ task :generate_drc_task_template, %i[author_email] => :environment do |_t, args|
   end
 end
 # rubocop:enable Layout/LineLength:
-# rubocop:enable Metrics/BlockLength
