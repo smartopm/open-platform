@@ -1,8 +1,7 @@
-/* eslint-disable */
 import React from 'react';
 import { shallow, mount } from 'enzyme';
-import CaptureTemp from '../components/CaptureTemp';
 import { MockedProvider } from '@apollo/react-testing';
+import CaptureTemp from '../components/CaptureTemp';
 import { TemperateRecord } from '../graphql/mutations';
 
 describe('temperature component', () => {
@@ -35,26 +34,26 @@ describe('temperature component', () => {
         <CaptureTemp {...screenProps} />
       </MockedProvider>
     );
-    expect(wrapper.find('.button'));
+    expect(wrapper.find('.button')).toBeTruthy();
   });
   const wrapper = shallow(
     <MockedProvider mock={[]} addTypename={false}>
       <CaptureTemp {...screenProps} />
     </MockedProvider>
   );
-  it('It should get the temperature value', () => {
+  it('should get the temperature value', () => {
     const { refId, refName } = wrapper.props();
     expect(refId).toBe(refId);
     expect(refName).toBe(refName);
   });
-  it('it should run mutation', async () => {
-    const wrapper = mount(
+  it('should run mutation', async () => {
+    const componentWrapper = mount(
       <MockedProvider mock={mock} addTypename={false}>
         <CaptureTemp {...screenProps} />
       </MockedProvider>
     );
-    await wrapper.find('button').simulate('click');
-    expect(wrapper.find('tempvalue')).toMatchObject({});
-    wrapper.update();
+    await componentWrapper.find('button').simulate('click');
+    expect(componentWrapper.find('tempvalue')).toMatchObject({});
+    componentWrapper.update();
   });
 });
