@@ -6,6 +6,7 @@ import { useQuery } from 'react-apollo';
 import { Grid, Typography } from '@mui/material';
 import IconButton from '@material-ui/core/IconButton';
 import ShareIcon from '@mui/icons-material/Share';
+import Edit from '@material-ui/icons/Edit';
 import { useTranslation } from 'react-i18next';
 import TaskContextProvider from '../../Context';
 import { StyledTabs, StyledTab, TabPanel, a11yProps } from '../../../../components/Tabs';
@@ -89,8 +90,14 @@ export default function TaskProcessDetail() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [path, tab]);
 
-  function handleProjectStepClick() {
+  function handleProjectStepClick(task, currentTab='processes', detailTab='subtasks') {
     setSplitScreenOpen(true);
+    history.push({
+      pathname: `/processes/drc/projects/${task?.id}`,
+      search: `?tab=${currentTab}&detailTab=${detailTab}`,
+      state: { from: history.location.pathname,  search: history.location.search }
+    })
+    window.document.getElementById('anchor-section').scrollIntoView()
   }
 
   if (projectDataLoading || subStepsLoading) return <Loading />;
@@ -123,6 +130,14 @@ export default function TaskProcessDetail() {
                 <IconButton color='primary' onClick={shareOnclick}>
                   <ShareIcon />
                 </IconButton>
+                {matches && (
+                  <IconButton
+                    color='primary'
+                    onClick={() => handleProjectStepClick(projectData?.task)}
+                  >
+                    <Edit />
+                  </IconButton>
+                )}
               </Grid>
             </Grid>
             <StyledTabs
