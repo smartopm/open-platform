@@ -200,7 +200,7 @@ export default function TaskDetail({
   }
 
   function isCurrentUserAnAssignee() {
-    return data.assignees.find(assignee => assignee.id === currentUser.id);
+    return data.assignees?.find(assignee => assignee.id === currentUser.id);
   }
 
   function setDueDate(date) {
