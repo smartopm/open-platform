@@ -11,7 +11,7 @@ function RenderBusinesses() {
     <AccessCheck module={business.module} allowedPermissions={businessPermissions}>
       <Businesses />
     </AccessCheck>
-)
+  )
 }
 export default {
   routeProps: {

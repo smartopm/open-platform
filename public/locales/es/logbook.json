@@ -38,7 +38,9 @@
     "required_field": "‪{{fieldName}}‬ es Requerido"
   },
   "guest_book": {
+    "active": "Activo",
     "approved": "Aprobado",
+    "cancelled": "Cancelado",
     "date_of_visit": "Fecha de Visita: {{date}}",
     "ends": "Termina: {{date}}",
     "ends_on_date": "Termina el ‪{{date}}‬",
@@ -83,6 +85,7 @@
     "guest_name_required": "El Nombre del Invitado o de la Empresa es Requerido",
     "guest_type": "Tipo de Invitado",
     "guests": "Invitados",
+    "invite_canceled": "Canceló con éxito una invitación",
     "invite_guest": "Crear Invitado",
     "invite_new_guest": "Crear Nuevo Invitado",
     "start_of_visit": "Inicio de Visita",
@@ -148,6 +151,7 @@
     "guest_entry_created_successful": "Exitoso: Invitado agregado a la lista de invitados exitosamente",
     "guest_entry_updated_successful": "Exitoso: registro de lista de Invitados actualizado exitosamente",
     "host": "Anfitrión: ",
+    "invite_updated_successful": "Invitación actualizada con éxito",
     "log": "Registro",
     "log_book": "Libro de Novedades",
     "log_exit": "Registrar Salida",

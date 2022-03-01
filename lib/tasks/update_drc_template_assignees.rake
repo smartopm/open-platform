@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/BlockLength
 # rubocop:disable Layout/LineLength:
 desc 'Update Assignees on DRC Task Template'
 task update_drc_template_assignees: :environment do
@@ -105,4 +104,3 @@ task update_drc_template_assignees: :environment do
   end
 end
 # rubocop:enable Layout/LineLength:
-# rubocop:enable Metrics/BlockLength

@@ -10,7 +10,7 @@ function RenderDashboard() {
     <AccessCheck module={currentModule} allowedPermissions={dashboardPermissions}>
       <Home />
     </AccessCheck>
-)
+  )
 }
 
 export default {

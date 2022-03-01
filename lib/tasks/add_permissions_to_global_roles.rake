@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/BlockLength
 require 'yaml'
 namespace :db do
   desc 'Add permissions to role based on yml file'
@@ -35,4 +34,3 @@ namespace :db do
     puts e.message.to_s
   end
 end
-# rubocop:enable Metrics/BlockLength

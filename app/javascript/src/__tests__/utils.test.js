@@ -19,7 +19,8 @@ import {
   extractCountry,
   checkAllowedCommunityFeatures,
   ifNotTest,
-  toTitleCase
+  toTitleCase,
+  splitCamelCase
 } from '../utils/helpers'
 
 const message =
@@ -264,3 +265,9 @@ describe('toTitleCase', () => {
     expect(toTitleCase('prospective_client')).toBe('Prospective Client');
   });
 });
+
+describe('slit camelCase', () => {
+  it('should return split words', () => {
+    expect(splitCamelCase('SampleCamel')).toBe('Sample Camel')
+  })
+})

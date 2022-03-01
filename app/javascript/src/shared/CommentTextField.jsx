@@ -14,7 +14,7 @@ export default function CommentTextField({
 }) {
   return (
     <Grid container alignContent="space-between">
-      <Grid item md={11} xs={10} style={{ paddingRight: '10px' }}>
+      <Grid item md={10} xs={8} style={{ paddingRight: '10px' }}>
         <TextField
           fullWidth
           id="standard-full-width"
@@ -23,7 +23,7 @@ export default function CommentTextField({
           value={value}
           onChange={e => setValue(e.target.value)}
           multiline
-          size="medium"
+          size="small"
           margin="normal"
           variant="outlined"
           InputLabelProps={{
@@ -32,16 +32,16 @@ export default function CommentTextField({
           inputProps={{ 'data-testid': 'body_input' }}
         />
       </Grid>
-      <Grid item md={1} xs={2}>
+      <Grid item md={2} xs={2}>
         <Button
           variant="outlined"
           color="primary"
           type="submit"
           disabled={!value.length || loading}
           data-testid="comment_btn"
-          style={{ height: '56px' }}
+          style={{ height: '40px', width: '80px', padding: '5px' }}
           onClick={handleSubmit}
-          size="medium"
+          size="small"
           fullWidth
         >
           {actionTitle}
@@ -52,7 +52,7 @@ export default function CommentTextField({
 }
 CommentTextField.defaultProps = {
   loading: false
-}
+};
 
 CommentTextField.propTypes = {
   value: PropTypes.string.isRequired,
@@ -60,5 +60,5 @@ CommentTextField.propTypes = {
   placeholder: PropTypes.string.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   setValue: PropTypes.func.isRequired,
-  loading: PropTypes.bool,
+  loading: PropTypes.bool
 };

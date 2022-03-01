@@ -15,8 +15,9 @@ class LeadImportJob < ApplicationJob
   # rubocop:disable Metrics/PerceivedComplexity
   def perform(csv_string, csv_file_name, current_user)
     errors = {}
+    separator = ACSV::Detect.separator(csv_string).presence || ','
+    csv = CSV.new(csv_string, headers: true, col_sep: separator)
 
-    csv = CSV.new(csv_string, headers: true)
     ActiveRecord::Base.transaction do
       csv.each_with_index do |row, index|
         name                          = row['Name']&.strip
@@ -155,7 +156,9 @@ class LeadImportJob < ApplicationJob
         )
 
         if user.save
-          create_task(user, current_user)
+          task = create_task(user, current_user)
+          user.task_id = task.id # assign user this task
+          user.save!
         else
           errors[index + 1] = user.errors.full_messages
         end

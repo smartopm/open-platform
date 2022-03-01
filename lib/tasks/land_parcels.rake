@@ -2,7 +2,6 @@
 
 require 'host_env'
 
-# rubocop:disable Metrics/BlockLength
 namespace :land_parcels do
   desc 'imports plot info'
   task :import_plot_info, %i[community_name csv_path] => :environment do |_t, args|
@@ -115,4 +114,3 @@ namespace :land_parcels do
     Users::User.set_callback(:create, :after, :send_email_msg)
   end
 end
-# rubocop:enable Metrics/BlockLength

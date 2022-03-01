@@ -593,3 +593,12 @@ export function secureFileDownload(path) {
   link.click();
   document.body.removeChild(link);
 }
+
+/**
+ * split camelCase words
+ * @param {String} camelCase word
+ * @returns split words
+ */
+ export function splitCamelCase(word){
+  return word.replace(/([a-z])([A-Z])/g, '$1 $2')
+}

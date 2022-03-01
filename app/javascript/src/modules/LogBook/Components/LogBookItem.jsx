@@ -375,7 +375,7 @@ export default function LogBookItem({
         )
       }
     </>
-);
+  );
 }
 
 const useStyles = makeStyles(() => ({

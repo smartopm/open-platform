@@ -1,11 +1,9 @@
 /* eslint-disable complexity */
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
-import DoubleArrowOutlinedIcon from '@material-ui/icons/DoubleArrowOutlined';
 import PhoneIcon from '@material-ui/icons/Phone';
-import { Dialog, DialogTitle, DialogContent, Grid } from '@material-ui/core';
+import { Dialog, DialogTitle, DialogContent } from '@material-ui/core';
 import { css, StyleSheet } from 'aphrodite';
 import PropTypes from 'prop-types';
 import UserPlotInfo from './UserPlotInfo';
@@ -16,7 +14,6 @@ import UserFilledForms from './UserFilledForms';
 import UserMessages from '../../../components/Messaging/UserMessages';
 import UserJourney from './UserJourney';
 import { useParamsQuery } from '../../../utils/helpers';
-import RightSideMenu from '../../Menu/component/RightSideMenu';
 import FeatureCheck from '../../Features';
 import PaymentPlans from '../../Payments/Components/UserTransactions/Plans';
 import ShiftButtons from '../../TimeCard/Components/ShiftButtons';
@@ -41,7 +38,6 @@ export default function UserInformation({
   const { t } = useTranslation('users');
   const [tabValue, setValue] = useState(tab || 'Contacts');
   const [isDialogOpen, setDialogOpen] = useState(false);
-  const [isDrawerOpen, setDrawerOpen] = useState(false);
   const securityPersonnelList = ['security_guard', 'security_supervisor'];
 
   useEffect(() => {
@@ -86,54 +82,17 @@ export default function UserInformation({
             <UserMerge close={handleMergeDialog} userId={userId} />
           </DialogContent>
         </Dialog>
-        <div style={{marginBottom: '100px'}}>
+        <div style={{marginBottom: '160px'}}>
           <FixedHeader fullWidth>
             <UserDetailHeader
               data={data}
               userType={userType}
               userId={userId}
-              setDrawerOpen={setDrawerOpen}
               currentTab={tabValue}
+              authState={authState}
             />
           </FixedHeader>
         </div>
-        <RightSideMenu
-          authState={authState}
-          handleDrawerToggle={() => setDrawerOpen(false)}
-          drawerOpen={isDrawerOpen}
-        />
-
-        <Grid container>
-          <Grid item xs={3}>
-            {' '}
-          </Grid>
-          <Grid item xs={6} style={{ textAlign: 'center' }} data-testid="user_avatar" />
-
-          <Grid item xs={3}>
-            <>
-              <IconButton
-                aria-label="more"
-                aria-controls="long-menu"
-                aria-haspopup="true"
-                onClick={() => setDrawerOpen(true)}
-                className="right-menu-drawer"
-                data-testid="right_menu_drawer"
-                style={{
-                  right: 5,
-                  top: 80,
-                  marginRight: -24,
-                  zIndex: 1000,
-                  position: 'fixed'
-                }}
-              >
-                <DoubleArrowOutlinedIcon
-                  // this is hacky, it should be replaced with a proper icon
-                  style={{ transform: 'translate(-50%,-50%) rotate(180deg)' }}
-                />
-              </IconButton>
-            </>
-          </Grid>
-        </Grid>
 
         <br />
         <FeatureCheck features={authState.user.community.features} name="Time Card">

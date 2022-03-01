@@ -97,8 +97,6 @@ describe('Should check if the buttons are functional on userinformation', () => 
     await waitFor(() => {
       expect(wrapper.queryByText('common:misc.log_entry')).toBeInTheDocument();
       expect(wrapper.queryAllByTestId('user_avatar')[0]).toBeInTheDocument();
-      expect(wrapper.queryByTestId('right_menu_drawer')).toBeInTheDocument();
-      expect(wrapper.queryByTestId('call_manager')).toBeInTheDocument();
       expect(wrapper.queryByText('common:user_types.admin')).toBeInTheDocument();
       expect(wrapper.queryByText('x JM J')).toBeInTheDocument();
       expect(wrapper.queryByText('260971500909090')).toBeInTheDocument();

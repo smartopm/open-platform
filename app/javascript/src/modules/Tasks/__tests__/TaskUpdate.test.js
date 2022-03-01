@@ -4,7 +4,7 @@ import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom/';
 import { MockedProvider } from '@apollo/react-testing';
 import TaskUpdate from '../containers/TaskUpdate';
-import { TaskQuery } from "../graphql/task_queries";
+import { TaskQuery } from '../graphql/task_queries';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import authState from '../../../__mocks__/authstate';
 
@@ -127,7 +127,7 @@ describe('TaskUpdate Component', () => {
     );
 
     await waitFor(() => {
-      expect(container.queryByText('Network error: An error occurred')).toBeInTheDocument();
+      expect(container.queryByText('An error occurred')).toBeInTheDocument();
     }, 10);
   });
 });

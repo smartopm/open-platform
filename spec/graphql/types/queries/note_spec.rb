@@ -490,6 +490,12 @@ RSpec.describe Types::Queries::Note do
                               permissions: %w[can_fetch_flagged_notes])
         end
 
+        let(:form) do
+          create(:form, name: 'DRC Project Review Process V3', community: admin.community)
+        end
+
+        let(:form_user) { create(:form_user, form: form, user: admin, status_updated_by: admin) }
+
         it 'retrieves tasks by role for non admins and custodians' do
           result = DoubleGdpSchema.execute(flagged_notes_query, context: {
                                              current_user: developer,
@@ -541,10 +547,11 @@ RSpec.describe Types::Queries::Note do
             community_id: site_worker.community_id,
             author_id: site_worker.id,
             completed: false,
+            form_user_id: form_user.id,
           )
 
           fourth_note.update(parent_note_id: level1_parent.id)
-
+          third_note.update(form_user_id: form_user.id)
           developer.tasks.create!(
             body: 'Developer assigned task',
             user_id: developer.id,

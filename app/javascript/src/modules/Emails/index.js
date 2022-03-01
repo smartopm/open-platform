@@ -12,7 +12,7 @@ function renderMailTemplateList() {
     <AccessCheck module={currentModule} allowedPermissions={MailTemplateListPermissions}>
       <MailTemplateList />
     </AccessCheck>
-)
+  )
 }
 
 function renderEmailBuilderDialog() {
@@ -20,7 +20,7 @@ function renderEmailBuilderDialog() {
     <AccessCheck module={currentModule} allowedPermissions={MailTemplateListPermissions}>
       <EmailBuilderDialog />
     </AccessCheck>
-)
+  )
 }
 
 
