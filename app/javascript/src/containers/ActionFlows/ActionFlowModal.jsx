@@ -474,7 +474,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
                   >
                     {assigneesLiteData?.usersLite.map(user => (
                       <MenuItem key={user.id} value={user} style={{ padding: 0 }}>
-                        <UserAutoResult user={user} />
+                        <UserAutoResult user={user} t={t} />
                       </MenuItem>
                     ))}
                   </Select>

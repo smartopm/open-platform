@@ -24,6 +24,7 @@
     "task_description_label": "Task Description",
     "task_type_label": "Task Type",
     "task_assignee_label": "Assign this task to users",
+    "search_users": "Search Users",
     "task_search_placeholder": "Search Assignee",
     "task_user_label": "Task user",
     "task_reminder_in_1_hr": "Remind Me in 1 hour",

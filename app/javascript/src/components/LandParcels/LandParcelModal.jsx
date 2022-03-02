@@ -531,7 +531,7 @@ export default function LandParcelModal({
                   onChange={(_event, newValue) => handleOwnershipChange(newValue, index)}
                   classes={{ option: classes.autocompleteOption, listbox: classes.autocompleteOption }}
                   renderOption={(option) => (
-                    <UserAutoResult user={option} />
+                    <UserAutoResult user={option} t={t} />
                   )}
                   renderInput={params => (
                     <TextField

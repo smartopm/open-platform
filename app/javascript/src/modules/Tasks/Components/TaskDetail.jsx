@@ -79,6 +79,12 @@ export default function TaskDetail({
     fetchPolicy: 'no-cache'
   });
 
+  const propsForProcessesComments = {
+    setSearchUser,
+    searchUser,
+    userData: liteData
+  }
+
   const menuData = {
     menuList: getMenuList(),
     anchorEl,
@@ -279,7 +285,7 @@ export default function TaskDetail({
               icon={<QuestionAnswerIcon fontSize="large" color="primary" />}
               title="Comments"
               styles={{ background: '#FAFAFA', padding: 0 }}
-              component={<TaskComment taskId={taskId} commentsRefetch={commentsRefetch} />}
+              component={<TaskComment taskId={taskId} commentsRefetch={commentsRefetch} forProcess={forProcess} processesProps={propsForProcessesComments} />}
               openDetails={tab === 'comments'}
             />
           </div>

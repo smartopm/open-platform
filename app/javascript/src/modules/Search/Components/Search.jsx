@@ -41,7 +41,7 @@ export function Results({ data, loading, called, authState }) {
             data-testid="link_search_user"
             className={`${css(styles.linkStyles)} user-search-result`}
           >
-            <UserAutoResult user={user} />
+            <UserAutoResult user={user} t={t} />
           </Link>
         ))}
         <br />

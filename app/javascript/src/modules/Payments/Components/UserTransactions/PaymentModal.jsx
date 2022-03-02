@@ -346,7 +346,7 @@ export default function PaymentModal({
                       option: classes.AutocompleteOption,
                       listbox: classes.AutocompleteOption
                     }}
-                    renderOption={option => <UserAutoResult user={option} />}
+                    renderOption={option => <UserAutoResult user={option} t={t} />}
                     renderInput={params => (
                       <TextField
                         {...params}

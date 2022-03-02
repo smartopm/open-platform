@@ -6,7 +6,7 @@ import CommentCard from './CommentCard';
 import { TaskComment } from '../../../graphql/mutations';
 import CommentTextField from '../../../shared/CommentTextField';
 
-export default function CommentField({ data, refetch, taskId, commentsRefetch }) {
+export default function CommentField({ data, refetch, taskId, commentsRefetch, forProcess, processesProps }) {
   const [commentCreate] = useMutation(TaskComment);
   const [body, setBody] = useState('');
   const [error, setErrorMessage] = useState('');
@@ -37,6 +37,8 @@ export default function CommentField({ data, refetch, taskId, commentsRefetch })
         handleSubmit={handleSubmit}
         actionTitle={t('misc.comment')}
         placeholder={t('misc.type_comment')}
+        forProcess={forProcess}
+        processesProps={processesProps}
       />
       <CommentCard
         comments={data.taskComments}
@@ -51,7 +53,9 @@ export default function CommentField({ data, refetch, taskId, commentsRefetch })
 CommentField.defaultProps = {
   data: {},
   taskId: '',
-  commentsRefetch: () => {}
+  commentsRefetch: () => {},
+  forProcess: false,
+  processesProps: null
 };
 CommentField.propTypes = {
   data: PropTypes.shape({
@@ -59,5 +63,13 @@ CommentField.propTypes = {
   }),
   refetch: PropTypes.func.isRequired,
   taskId: PropTypes.string,
-  commentsRefetch: PropTypes.func
+  commentsRefetch: PropTypes.func,
+  forProcess: PropTypes.bool,
+  processesProps: PropTypes.shape({
+    searchUser: PropTypes.func.isRequired,
+    setSearchUser: PropTypes.func.isRequired,
+    userData: PropTypes.shape({
+      usersLite: PropTypes.array
+    })
+  })
 };
