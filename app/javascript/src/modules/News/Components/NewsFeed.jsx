@@ -8,6 +8,7 @@ import GridListTileBar from '@material-ui/core/GridListTileBar';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { Typography } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
+import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { useFetch } from '../../../utils/customHooks';
 import { Spinner } from '../../../shared/Loading';
@@ -40,9 +41,10 @@ export function PostItemGrid({ data }) {
   const classes = useStyles();
   const { t } = useTranslation('common');
   const matches = useMediaQuery('(max-width:600px)');
+  const history = useHistory()
 
   function routeToPost(postId) {
-    window.location.href = `/news/post/${postId}`;
+    history.push(`/news/post/${postId}`);
   }
   return (
     <div>
