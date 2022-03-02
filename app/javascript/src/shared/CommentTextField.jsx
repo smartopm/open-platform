@@ -97,6 +97,7 @@ export default function CommentTextField({
             ) : (
               autoCompleteOpen && (
                 <Autocomplete
+                  data-testid="users_autocomplete"
                   style={{ width: '100%' }}
                   id="reply-user"
                   options={processesProps.userData?.usersLite || []}

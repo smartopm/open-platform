@@ -4,15 +4,15 @@ import '@testing-library/jest-dom/extend-expect';
 import CommentTextField from '../CommentTextField';
 
 describe('CommentText Field component', () => {
-  it('should properly render the text field', () => {
-    const props = {
-      handleSubmit: jest.fn(),
-      value: 'some description',
-      setValue: jest.fn(),
-      actionTitle: 'misc.comment',
-      placeholder: 'comment',
-    };
+  const props = {
+    handleSubmit: jest.fn(),
+    value: 'some description',
+    setValue: jest.fn(),
+    actionTitle: 'misc.comment',
+    placeholder: 'comment',
+  };
 
+  it('should properly render the text field', () => {
     const wrapper = render(<CommentTextField {...props} />);
     expect(wrapper.queryByTestId('body_input')).toBeInTheDocument();
     expect(wrapper.queryByTestId('comment_btn')).toBeInTheDocument();
@@ -20,5 +20,26 @@ describe('CommentText Field component', () => {
 
     fireEvent.click(wrapper.queryByTestId('comment_btn'))
     expect(props.handleSubmit).toBeCalled()
+  });
+
+  it('should properly render "require a reply" section', () => {
+    const fullProps = {
+      ...props,
+      forProcess: true,
+      processesProps: {
+        userData: {
+          usersLite: [{ name: 'John Doe', id: '123' }]
+        },
+        searchUser: () => {},
+        setSearchUser: () => {}
+      }
+    };
+
+    const wrapper = render(<CommentTextField {...fullProps} />);
+    expect(wrapper.queryByTestId('require_reply')).toBeInTheDocument();
+    expect(wrapper.queryByTestId('users_autocomplete')).not.toBeInTheDocument();
+
+    fireEvent.click(wrapper.queryByTestId('require_reply'))
+    expect(wrapper.queryByTestId('users_autocomplete')).toBeInTheDocument();
   });
 });
