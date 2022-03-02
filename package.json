@@ -125,8 +125,7 @@
   },
   "resolutions": {
     "lodash": "4.17.21",
-    "elliptic": "6.5.4",
-    "url-parse": "1.5.0"
+    "elliptic": "6.5.4"
   },
   "husky": {
     "hooks": {
