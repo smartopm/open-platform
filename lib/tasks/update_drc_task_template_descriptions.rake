@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/BlockLength
 # rubocop:disable Layout/LineLength:
 # rubocop:disable Rails/SkipsModelValidations
 desc 'Update Existing DRC Task Template Descriptions'
@@ -226,4 +225,3 @@ task :update_drc_task_template_descriptions, %i[community_name] => :environment 
 end
 # rubocop:enable Rails/SkipsModelValidations
 # rubocop:enable Layout/LineLength:
-# rubocop:enable Metrics/BlockLength
