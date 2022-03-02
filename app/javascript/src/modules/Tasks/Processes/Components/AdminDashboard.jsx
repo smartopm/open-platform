@@ -42,6 +42,14 @@ export default function AdminDashboard() {
     return quarterStats?.[2];
   }
 
+  function tasksPerYear(processStats) {
+    const initialValue = 0;
+    const yearStats = processStats.reduce(
+      (previousValue, currentValue) => previousValue + currentValue[2],
+    initialValue);
+    return yearStats;
+  }
+
   const currentYear = new Date().getFullYear();
   const completedResults = summaryData?.tasksByQuarter.completed || [];
   const submittedResults = summaryData?.tasksByQuarter.submitted || [];
@@ -71,6 +79,12 @@ export default function AdminDashboard() {
       name: 'Q4',
       completed: tasksPerQuarter(currentYearCompletedStats, 4) || 0,
       submitted: tasksPerQuarter(currentYearSubmittedStats, 4) || 0,
+      primary: false
+    },
+    {
+      name: t('processes.year_to_date'),
+      completed: tasksPerYear(currentYearCompletedStats) || 0,
+      submitted: tasksPerYear(currentYearSubmittedStats) || 0,
       primary: false
     }
   ];
@@ -110,11 +124,11 @@ export default function AdminDashboard() {
           {summaryLoading && <Spinner />}
           {summaryError && <CenteredContent>{formatError(summaryError.message)}</CenteredContent>}
           <Grid container spacing={1} className={classes.cards}>
-            <Grid item xs={3} />
+            <Grid item xs={2} />
             {matches && <Grid item xs={1} />}
             {cards.map((card, index) => (
               // eslint-disable-next-line react/no-array-index-key
-              <Grid key={index} item xs={2} container justifyContent="center" alignItems="center">
+              <Grid key={index} item xs={1.5} container justifyContent="center" alignItems="center">
                 <Typography variant="caption">{card.name}</Typography>
               </Grid>
             ))}
@@ -126,7 +140,7 @@ export default function AdminDashboard() {
               container
               justifyContent="center"
               alignItems="center"
-              xs={3}
+              xs={2}
               style={{
                 background: '#F5F5F4',
                 borderRadius: '4px',
@@ -143,14 +157,14 @@ export default function AdminDashboard() {
             {matches && <Grid item xs={1} />}
             {cards.map((card, index) => (
               // eslint-disable-next-line react/no-array-index-key
-              <Grid key={index} item xs={2}>
+              <Grid key={index} item xs={1.5}>
                 <Card
                   className={classes.card}
                   onClick={() => routeToProjects('submitted_per_quarter', card.name)}
                   style={{ cursor: 'pointer', boxShadow: 'none' }}
                 >
                   <CardContent
-                    className={`${classes.oddCardsBackground} ${classes.cardContent}`}
+                    className={`${index === 4 ? classes.evenCardsBackground: classes.oddCardsBackground} ${classes.cardContent}`}
                     style={{ paddingTop: '8px', paddingBottom: '8px' }}
                   >
                     <Grid container justifyContent="center" alignItems="center">
@@ -170,7 +184,7 @@ export default function AdminDashboard() {
               container
               justifyContent="center"
               alignItems="center"
-              xs={3}
+              xs={2}
               style={{
                 background: '#F5F5F4',
                 borderRadius: '4px',
@@ -187,14 +201,14 @@ export default function AdminDashboard() {
             {matches && <Grid item xs={1} />}
             {cards.map((card, index) => (
               // eslint-disable-next-line react/no-array-index-key
-              <Grid key={index} item xs={2}>
+              <Grid key={index} item xs={1.5}>
                 <Card
                   className={classes.card}
                   onClick={() => routeToProjects('completed_per_quarter', card.name)}
                   style={{ cursor: 'pointer', boxShadow: 'none' }}
                 >
                   <CardContent
-                    className={`${classes.oddCardsBackground} ${classes.cardContent}`}
+                    className={`${index === 4 ? classes.evenCardsBackground: classes.oddCardsBackground} ${classes.cardContent}`}
                     style={{ paddingTop: '8px', paddingBottom: '8px' }}
                   >
                     <Grid container justifyContent="center" alignItems="center">
