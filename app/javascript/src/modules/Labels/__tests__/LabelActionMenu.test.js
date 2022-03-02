@@ -35,7 +35,10 @@ describe('Label action menu component', () => {
           labels: [
             {
               id: '12345678890',
-              shortDesc: 'Client'
+              shortDesc: 'Client',
+              userCount: 23,
+              description: 'good client',
+              color: '#000fff'
             }
           ]
         }

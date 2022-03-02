@@ -31,7 +31,7 @@ describe('LeadManagementForm', () => {
             contactInfos: null,
             avatarUrl:
               'https://daniel.dgdp.site/rails/active_storage/blobs/redirect/eyRsa0xU-unsplash.jpg',
-            clientCategory: 'industryAssociation',
+            clientCategory: 'Industry Association',
             companyAnnualRevenue: '$112234442',
             companyContacted: '30',
             companyDescription: 'Real estate company',
@@ -39,28 +39,28 @@ describe('LeadManagementForm', () => {
             companyLinkedin: 'blah',
             companyName: 'Tatu City',
             companyWebsite: 'www.westernseedcompany.com',
-            country: 'bhutan',
+            country: 'Algeria',
             createdBy: 'Daniel Mutuba',
             email: 'daniel@doublegdp.com',
             firstContactDate: '2022-02-26T08:48:00Z',
             followupAt: '2022-02-09T21:00:00Z',
             id: 'c96f64bb-e3b4-42ff-b6a9-66889ec79e99',
-            industry: 'consumerProducts',
-            industryBusinessActivity: 'manufacturing',
-            industrySubSector: 'businessSupportServices',
+            industry: 'Communications',
+            industryBusinessActivity: 'Manufacturing',
+            industrySubSector: 'Freight/Distribution Services',
             lastContactDate: '2022-02-25T08:48:00Z',
             leadOwner: 'Daniel Mutuba',
-            leadSource: 'inboundInquiry',
-            leadStatus: 'investimentMotiveVerified',
-            leadTemperature: 'neutral',
-            leadType: 'investmentFund',
-            levelOfInternationalization: 'exportingToNigeria',
+            leadSource: 'Inbound inquiry',
+            leadStatus: 'Evaluation',
+            leadTemperature: 'Neutral',
+            leadType: 'Investment fund',
+            levelOfInternationalization: 'Exporting to West Africa',
             linkedinUrl: 'https://www.linkedin.com/in/daniel-mutuba-31748190/',
             modifiedBy: 'Daniel Mutuba',
             name: 'Daniel Mutuba',
             nextSteps: 'Move to South America',
             phoneNumber: '10234567876',
-            region: 'cWOfIndStates',
+            region: 'Baltics',
             relevantLink: 'today is hot',
             roleName: 'Admin',
             secondaryEmail: '',
@@ -72,11 +72,12 @@ describe('LeadManagementForm', () => {
   ];
 
   it('LeadManagementForm component', async () => {
+
     render(
       <Context.Provider value={authState}>
         <MockedProvider mocks={leadDataMock} addTypename={false}>
           <BrowserRouter>
-            <LeadManagementForm userId={authState?.user?.id} />
+            <LeadManagementForm data={leadDataMock[0].result.data} />
           </BrowserRouter>
         </MockedProvider>
       </Context.Provider>

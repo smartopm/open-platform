@@ -422,7 +422,7 @@ export default function TaskInfoTop({
             <Grid container spacing={1} style={{ alignItems: 'center' }} data-testid="user-chip">
               {data.assignees?.length > 0 && (
                 <Grid item>
-                  {data.assignees.map(user => (
+                  {data.assignees?.map(user => (
                     <UserChip
                       key={user.id}
                       user={user}

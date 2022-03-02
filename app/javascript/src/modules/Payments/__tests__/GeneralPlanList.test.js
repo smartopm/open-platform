@@ -5,6 +5,8 @@ import { BrowserRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/react-testing';
 import GeneralPlanList, { renderPayments} from '../Components/UserTransactions/GeneralPlanList';
 import currency from '../../../__mocks__/currency';
+import userMock from '../../../__mocks__/authstate';
+import { Context } from '../../../containers/Provider/AuthStateProvider';
 
 describe('General Plan List Component', () => {
   const data = {
@@ -49,19 +51,21 @@ describe('General Plan List Component', () => {
   }
   it('should render the general plan list component', async () => {
     const container = render(
-      <MockedProvider>
-        <BrowserRouter>
-          <GeneralPlanList
-            data={data}
-            currencyData={currency}
-            currentUser={currentUser}
-            userId='te12312378123'
-            balanceRefetch={jest.fn()}
-            genRefetch={jest.fn()}
-            paymentPlansRefetch={jest.fn()}
-          />
-        </BrowserRouter>
-      </MockedProvider>
+      <Context.Provider value={userMock}>
+        <MockedProvider>
+          <BrowserRouter>
+            <GeneralPlanList
+              data={data}
+              currencyData={currency}
+              currentUser={currentUser}
+              userId='te12312378123'
+              balanceRefetch={jest.fn()}
+              genRefetch={jest.fn()}
+              paymentPlansRefetch={jest.fn()}
+            />
+          </BrowserRouter>
+        </MockedProvider>
+      </Context.Provider>
     );
     expect(container.queryByTestId('card')).toBeInTheDocument();
     expect(container.queryByTestId('title')).toBeInTheDocument();

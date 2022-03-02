@@ -63,7 +63,7 @@ describe('TagPosts', () => {
         {
           ID: '123',
           title: 'Post on Architecture',
-          featured_image: '',
+          featured_image: 'https://image.irl',
           modified: new Date(),
           excerpt: ''
         }

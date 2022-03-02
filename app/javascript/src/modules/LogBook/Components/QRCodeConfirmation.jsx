@@ -114,6 +114,9 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+QRCodeConfirmation.defaultProps = {
+  guestEmail: ''
+}
 QRCodeConfirmation.propTypes = {
   open: PropTypes.bool.isRequired,
   emailHandler: PropTypes.shape({
@@ -122,7 +125,7 @@ QRCodeConfirmation.propTypes = {
   }).isRequired,
   closeModal: PropTypes.func.isRequired,
   sendQrCode: PropTypes.func.isRequired,
-  guestEmail: PropTypes.string.isRequired,
+  guestEmail: PropTypes.string,
   guestRequest: PropTypes.shape({
     id: PropTypes.string
   }).isRequired

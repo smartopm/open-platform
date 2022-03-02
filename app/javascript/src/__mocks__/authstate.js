@@ -18,7 +18,8 @@ const authState = {
         LogBook: { features: []},
       },
       imageUrl: 'http://image.jpg',
-      timezone: 'Africa/Maputo'
+      timezone: 'Africa/Maputo',
+      wpLink: "http://link.com",
     },
     email: 'user@community.co',
     expiresAt: null,
