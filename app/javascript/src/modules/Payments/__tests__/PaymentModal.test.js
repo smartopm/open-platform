@@ -46,6 +46,7 @@ describe('It should test the payment modal component', () => {
             open={open}
             handleModalClose={handleModalClose}
             currencyData={currency}
+            refetch={jest.fn()}
           />
         </MockedProvider>
       </BrowserRouter>
@@ -80,7 +81,7 @@ describe('Test Payment Details Screen', () => {
   }
   it('should render payment details', () => {
     const container = render(
-      <PaymentDetails inputValue={inputValue} totalAmount="200" currencyData={currency} />
+      <PaymentDetails inputValue={inputValue} totalAmount={200} currencyData={currency} />
     )
     expect(container.queryByTestId('amount')).toBeInTheDocument()
     expect(container.queryByTestId('type').textContent).toContain('table_headers.transaction_type: cash')

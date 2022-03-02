@@ -7,7 +7,7 @@ import { Spinner } from '../../../shared/Loading';
 import PaymentList, { renderPayment } from '../Components/PaymentList';
 import currency from '../../../__mocks__/currency';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
-import userMock from '../../../__mocks__/userMock';
+import userMock from '../../../__mocks__/authstate';
 import { PlansPaymentsQuery, SubscriptionPlansQuery } from '../graphql/payment_query';
 
 describe('Payment List Item Component', () => {
@@ -98,9 +98,7 @@ describe('Payment List Item Component', () => {
         expect(container.queryAllByTestId('receipt_number')).toHaveLength(1);
         expect(container.queryAllByTestId('simple-tab-0')).toHaveLength(1);
         expect(container.queryAllByTestId('simple-tab-1')).toHaveLength(1);
-      },
-      { timeout: 200 }
-    );
+      
 
     const filterClick = container.getAllByTestId('filter')[0];
     fireEvent.click(filterClick);
@@ -116,6 +114,7 @@ describe('Payment List Item Component', () => {
 
     fireEvent.click(container.getAllByTestId('filter')[1]);
     expect(container.queryByText('Amount Owed')).toBeInTheDocument();
+    });
   });
 
   it('should check if renderPayment works as expected', () => {

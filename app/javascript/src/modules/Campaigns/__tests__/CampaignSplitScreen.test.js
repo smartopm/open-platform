@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom/';
 import { MockedProvider } from '@apollo/react-testing';
 import '@testing-library/jest-dom/extend-expect';
@@ -40,7 +40,7 @@ describe('It should render the campaign split screen', () => {
     }
   };
 
-  it('should render CampaignSplitScreen', () => {
+  it('should render CampaignSplitScreen', async () => {
     const container = render(
       <MockedProvider mocks={[mocks]} addTypename={false}>
         <BrowserRouter>
@@ -55,7 +55,8 @@ describe('It should render the campaign split screen', () => {
         </BrowserRouter>
       </MockedProvider>
     );
-
-    expect(container.queryByTestId('container')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(container.queryByTestId('container')).toBeInTheDocument();
+    }, 10)
   });
 });

@@ -1,10 +1,12 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/react-testing';
 import GeneralPlanList, { renderPayments} from '../Components/UserTransactions/GeneralPlanList';
 import currency from '../../../__mocks__/currency';
+import userMock from '../../../__mocks__/authstate';
+import { Context } from '../../../containers/Provider/AuthStateProvider';
 
 describe('General Plan List Component', () => {
   const data = {
@@ -47,21 +49,23 @@ describe('General Plan List Component', () => {
   const currentUser = {
     userType: 'admin'
   }
-  it('should render the general plan list component', () => {
+  it('should render the general plan list component', async () => {
     const container = render(
-      <MockedProvider>
-        <BrowserRouter>
-          <GeneralPlanList
-            data={data}
-            currencyData={currency}
-            currentUser={currentUser}
-            userId='te12312378123'
-            balanceRefetch={jest.fn()}
-            genRefetch={jest.fn()}
-            paymentPlansRefetch={jest.fn()}
-          />
-        </BrowserRouter>
-      </MockedProvider>
+      <Context.Provider value={userMock}>
+        <MockedProvider>
+          <BrowserRouter>
+            <GeneralPlanList
+              data={data}
+              currencyData={currency}
+              currentUser={currentUser}
+              userId='te12312378123'
+              balanceRefetch={jest.fn()}
+              genRefetch={jest.fn()}
+              paymentPlansRefetch={jest.fn()}
+            />
+          </BrowserRouter>
+        </MockedProvider>
+      </Context.Provider>
     );
     expect(container.queryByTestId('card')).toBeInTheDocument();
     expect(container.queryByTestId('title')).toBeInTheDocument();
@@ -84,8 +88,10 @@ describe('General Plan List Component', () => {
     fireEvent.click(container.queryByText('common:menu.allocate_funds'));
     expect(container.queryAllByText('common:menu.allocate_funds')[0]).toBeInTheDocument();
 
-    fireEvent.click(container.queryByTestId('pay-menu'));
-    expect(container.queryByText('common:menu.view_receipt')).toBeInTheDocument();
+    await waitFor(() => {
+      fireEvent.click(container.queryByTestId('pay-menu'));
+      expect(container.queryByText('common:menu.view_receipt')).toBeInTheDocument();
+    }, 10)
   });
 
   it('should check if renderpayments works as expected', () => {

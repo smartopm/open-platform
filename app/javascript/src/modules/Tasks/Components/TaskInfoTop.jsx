@@ -209,12 +209,12 @@ export default function TaskInfoTop({
                 margin="normal"
                 variant="outlined"
                 className={classes.selectLabel}
-                labelId="select-task-status"
                 id="select-task-status"
                 data-testid="select-task-status"
-                value={taskStatus}
+                value={taskStatus || ""}
                 label={t('common:misc.select')}
               >
+                <MenuItem value="" />
                 {Object.entries(taskStatuses).map(([key, val]) => (
                   <MenuItem
                     key={key}
@@ -420,9 +420,9 @@ export default function TaskInfoTop({
           </Grid>
           <Grid item xs={8} md={9}>
             <Grid container spacing={1} style={{ alignItems: 'center' }} data-testid="user-chip">
-              {data.assignees.length > 0 && (
+              {data.assignees?.length > 0 && (
                 <Grid item>
-                  {data.assignees.map(user => (
+                  {data.assignees?.map(user => (
                     <UserChip
                       key={user.id}
                       user={user}
@@ -587,6 +587,7 @@ TaskInfoTop.defaultProps = {
   selectedDate: null,
   activeReminder: null,
   handleSplitScreenClose: () => {},
+  handleTaskComplete: () => {},
   forProcess: false,
   fromLeadPage: false
 };
@@ -634,7 +635,7 @@ TaskInfoTop.propTypes = {
   }).isRequired,
   handleSplitScreenClose: PropTypes.func,
   refetch: PropTypes.func.isRequired,
-  handleTaskComplete: PropTypes.func.isRequired,
+  handleTaskComplete: PropTypes.func, 
   forProcess: PropTypes.bool,
   fromLeadPage: PropTypes.bool
 };

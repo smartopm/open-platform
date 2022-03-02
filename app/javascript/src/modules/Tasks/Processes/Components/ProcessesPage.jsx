@@ -15,6 +15,7 @@ export default function ProcessesPage() {
   const canAccessAdminProcessesDashboard = processesDashboardPermissions ? processesDashboardPermissions.permissions.includes('can_access_admin_processes_dashboard') : false
   const canAccessClientProcessesDashboard = processesDashboardPermissions ? processesDashboardPermissions.permissions.includes('can_access_client_processes_dashboard') : false
 
+  // TODO: This should be re-written, a component should always be a component
   function renderDashboard() {
     if (canAccessAdminProcessesDashboard) return <AdminDashboard />;
     if (canAccessClientProcessesDashboard) return  <ClientPilotViewList />;

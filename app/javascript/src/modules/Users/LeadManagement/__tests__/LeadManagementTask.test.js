@@ -84,7 +84,6 @@ describe('LeadManagementForm', () => {
     );
 
     await waitFor(() => {
-      screen.debug(undefined, 30000);
       expect(screen.queryAllByTestId('task-title')).toHaveLength(2);
       expect(screen.queryByText('task.parent_task')).toBeInTheDocument();
       expect(screen.queryByText('task.due_date_text')).toBeInTheDocument();

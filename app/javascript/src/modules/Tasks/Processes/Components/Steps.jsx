@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import React, { useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { useLazyQuery } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
@@ -69,12 +69,11 @@ export default function ProjectSteps({
       handleStepCompletion(stepItemId, completed)
     }
   }
-
   return (
     <>
       {data?.length > 0
       ? (data?.map(firstLevelStep => (
-        <>
+        <Fragment key={firstLevelStep.id}>
           <div
             className={classes.levelOne}
             key={firstLevelStep.id}
@@ -109,7 +108,7 @@ export default function ProjectSteps({
                 ))}
               </>
             )}
-        </>
+        </Fragment>
       )))
     :(<Typography data-testid="no-steps">{t('processes.no_steps_assigned')}</Typography>)}
     </>

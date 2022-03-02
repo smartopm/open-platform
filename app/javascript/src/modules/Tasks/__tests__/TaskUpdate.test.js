@@ -19,7 +19,7 @@ const props = {
 };
 
 describe('TaskUpdate Component', () => {
-  it('redirects to / and do not render task', () => {
+  it('redirects to / and do not render task', async () => {
     const container = render(
       <MockedProvider>
         <BrowserRouter>
@@ -28,7 +28,9 @@ describe('TaskUpdate Component', () => {
       </MockedProvider>
     );
 
-    expect(container.queryByTestId('loader')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(container.queryByTestId('loader')).toBeInTheDocument();
+    }, 10)
   });
 
   it('renders task details', async () => {

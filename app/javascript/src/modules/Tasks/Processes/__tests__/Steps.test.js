@@ -16,6 +16,7 @@ describe('Project Steps', () => {
           data={data}
           clickable
           setSelectedStep={jest.fn()}
+          handleProjectStepClick={jest.fn()}
           handleStepCompletion={handleStepCompletion}
         />
       </BrowserRouter>
@@ -38,6 +39,7 @@ describe('Project Steps', () => {
           data={[]}
           clickable
           setSelectedStep={jest.fn()}
+          handleProjectStepClick={jest.fn()}
           handleStepCompletion={handleStepCompletion}
         />
       </BrowserRouter>

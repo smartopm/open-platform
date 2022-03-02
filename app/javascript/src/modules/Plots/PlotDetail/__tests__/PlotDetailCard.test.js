@@ -35,8 +35,16 @@ describe('Plot Detail Card', () => {
           frequency: 'monthly',
           status: 'paid',
           endDate: '2021-07-31',
+          renewDate: '2021-07-31',
+          coOwners: [],
+          paidPaymentsExists: null,
+          planPayments: null,
+          renewable: true,
           landParcel: {
-            parcelNumber: 'Basic-123'
+            id: '9283492834912',
+            parcelNumber: 'Basic-123',
+            parcelType: 'Basic-123',
+            objectType: 'Basic-123',
           }
         }]
       }

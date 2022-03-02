@@ -12,9 +12,9 @@ describe('User balance Component', () => {
   it('should render the user balance component', async () => {
     const userId = generateId()[1];
     const balanceData = {
-      balance: '200.0',
-      pendingBalance: '2000.0',
-      totalTransactions: '1000.0'
+      balance: 200.0,
+      pendingBalance: 2000.0,
+      totalTransactions: 1000.0
     }
 
     const user = {

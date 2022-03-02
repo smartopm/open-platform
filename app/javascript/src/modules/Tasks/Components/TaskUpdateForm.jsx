@@ -136,9 +136,9 @@ export default function TaskUpdateForm({
     setDescription(data.description);
     setDate(data.dueDate);
     setData({
-      user: data.user.name,
-      userId: data.user.id,
-      imageUrl: data.user.imageUrl
+      user: data.user?.name,
+      userId: data.user?.id,
+      imageUrl: data.user?.imageUrl
     });
   }
 

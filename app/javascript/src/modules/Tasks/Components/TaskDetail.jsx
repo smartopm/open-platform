@@ -149,9 +149,9 @@ export default function TaskDetail({
     setDescription(data.description);
     setDate(data.dueDate);
     setData({
-      user: data.user.name,
-      userId: data.user.id,
-      imageUrl: data.user.imageUrl
+      user: data.user?.name,
+      userId: data.user?.id,
+      imageUrl: data.user?.imageUrl
     });
   }
 
@@ -201,7 +201,7 @@ export default function TaskDetail({
   }
 
   function isCurrentUserAnAssignee() {
-    return data?.assignees.find(assignee => assignee.id === currentUser.id);
+    return data.assignees?.find(assignee => assignee.id === currentUser.id);
   }
 
   function setDueDate(date) {

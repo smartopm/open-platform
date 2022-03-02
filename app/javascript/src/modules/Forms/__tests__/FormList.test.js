@@ -78,7 +78,7 @@ describe('Form Dialog component', () => {
             formMutation={jest.fn}
             open
             setOpen={jest.fn}
-            message={{detail: '', isError: ''}}
+            message={{detail: '', isError: false}}
             setMessage={jest.fn}
             setAlertOpen={jest.fn}
             refetch={jest.fn}

@@ -22,7 +22,8 @@ describe('It should test the plan item list item component', () => {
       amount: 100.0,
       status: 'paid',
       createdAt: "2020-11-13T10:53:16Z",
-      receiptNumber: 'MI131'
+      receiptNumber: 'MI131',
+      id: 'MI131029',
     }]
   }
 
@@ -50,6 +51,7 @@ describe('It should test the plan item list item component', () => {
             currencyData={{ currency: 'ZMW', locale: 'en-ZM'}}
             data={data}
             menuData={menuData}
+            handlePlansSelect={jest.fn()}
           />
         </BrowserRouter>
       </MockedProvider> 
