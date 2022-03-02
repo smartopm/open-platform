@@ -166,6 +166,7 @@ describe('array methods', () => {
   it('should generate random string', () => {
     expect(generateId()).toBeTruthy()
     expect(generateId()).toBeInstanceOf(Array)
+    expect(generateId()).toHaveLength(10)
   })
 
   // property accessor

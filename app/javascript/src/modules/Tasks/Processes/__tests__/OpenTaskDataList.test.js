@@ -8,13 +8,15 @@ import taskMock from '../../__mocks__/taskMock';
 import { ProjectOpenTasksQuery } from '../../graphql/task_queries';
 import authState from '../../../../__mocks__/authstate';
 import { Context } from '../../../../containers/Provider/AuthStateProvider';
+import { generateId, objectAccessor } from '../../../../utils/helpers';
 
 describe('OpenTaskDataList Component', () => {
 
-  const tasks = new Array(12).fill(1).map(() => ({
+  const tasks = new Array(10).fill(1).map((_, i) => ({
     ...taskMock,
-    id: Math.random().toString(16).substring(2)
+    id: objectAccessor(generateId(), i)
   }));
+  
   const openTaskMock = [
     {
       request: {
