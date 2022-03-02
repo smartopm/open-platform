@@ -79,7 +79,7 @@ Cypress.Commands.add("visitUserProfile", (user) => {
 })
 
 Cypress.Commands.add("visitUserMenu", (menuItem) => {
-  cy.get('.right-menu-drawer').click();
+  cy.get('.option_menu_toggler').click();
   cy.wait(1000);
   cy.get(`${menuItem}`).click();
   cy.wait(1000);

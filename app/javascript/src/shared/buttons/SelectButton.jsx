@@ -42,7 +42,7 @@ export default function SelectButton({
         data-testid="button"
       >
         <Button>{splitCamelCase(buttonText)}</Button>
-        <Button onClick={handleClick} data-testid="arrow-icon">
+        <Button onClick={handleClick} data-testid="arrow-icon" className='option_menu_toggler'>
           <ArrowDropDownIcon />
         </Button>
       </ButtonGroup>
@@ -75,6 +75,7 @@ export default function SelectButton({
                               : () => opt.handleMenuItemClick(opt.key, opt.value)
                           }
                           value={opt.key}
+                          id={opt.key}
                         >
                           <ListItemText primary={splitCamelCase(opt.value)} />
                           {opt.subMenu &&
@@ -98,6 +99,7 @@ export default function SelectButton({
                                   submenu.handleMenuItemClick(submenu.key, submenu.value)
                                 }
                                 value={opt.key}
+                                id={opt.key}
                               >
                                 {submenu.value}
                               </MenuItem>
