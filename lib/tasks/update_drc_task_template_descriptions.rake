@@ -77,6 +77,11 @@ task :update_drc_task_template_descriptions, %i[community_name] => :environment 
           description: 'Details on site storm water attenuation measures',
           order: 6,
         },
+        {
+          body: 'Pedestrian and vehicular access and circulation',
+          description: 'Pedestrian and vehicular access and circulation',
+          order: 7,
+        },
       ],
     },
     {
