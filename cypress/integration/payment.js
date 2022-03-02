@@ -62,9 +62,9 @@ describe('Payment', () => {
 
     // Go to user's page
     cy.visitMainMenu('.my-profile-menu-item')
-    cy.get('.right-menu-drawer').click();
+    cy.get('.option_menu_toggler').click();
     cy.wait(1000);
-    cy.get('.right-menu-payment-item').click();
+    cy.get('#payments').click();
     cy.wait(1000);
 
     // The 'no plan available' text should be present initially
