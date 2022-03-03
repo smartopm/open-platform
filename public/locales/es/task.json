@@ -56,6 +56,7 @@
     "submitted": "Presentado",
     "submitted_by": "Presentado Por",
     "submitted_form": "Formulario Enviado",
+    "year_to_date": "Del año hasta la fecha",
     "your_tasks": "Tus Tareas"
   },
   "sub_task": {
@@ -90,6 +91,7 @@
     "incomplete": "Incompleto",
     "my_tasks": "Mis tareas",
     "needs_attention": "Necesita Atención",
+    "needs_reply_from": "NECESITA RESPUESTA de",
     "no_assignee": "Sin Designado",
     "no_tasks": "No hay tareas",
     "none": "Ninguno",
@@ -99,6 +101,8 @@
     "parent_task": "Tarea Principal",
     "quick_search": "Búsqueda Rápida",
     "reminder_text": "Recuérdame más tarde",
+    "require_a_reply": "Requerir una respuesta",
+    "search_users": "Buscar Usuarios",
     "selected_task_marked_as": "Las tareas seleccionadas han sido marcadas correctamente como",
     "task_assignee_label": "Asignar esta tarea a usuarios",
     "task_body_label": "Contenido de la tarea",
