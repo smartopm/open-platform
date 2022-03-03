@@ -16,19 +16,6 @@ global.File = () => {
   console.log('File called');
 };
 
-global.File = class MockFile {
-  constructor(
-    bits,
-    type = {
-      type: 'csv ',
-      name: ''
-    }
-  ) {
-    this.bits = bits;
-    this.type = type;
-  }
-};
-
 configure({ adapter: new Adapter() });
 
 const url = 'http://localhost';
