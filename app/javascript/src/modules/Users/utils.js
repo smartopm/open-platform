@@ -193,7 +193,7 @@ const uniqueError = headerName => {
   return ` <div>${headerName} is not unique.  </div>`;
 };
 
-const configObject = {
+export const configObject = {
   headers: [
     {
       name: 'Name',
@@ -667,4 +667,14 @@ export function createMenuContext(type, data, userType, authState){
 export const csvValidate = async file => {
   const csvErrors = await CSVFileValidator(file, configObject);
   return csvErrors.inValidMessages || [];
-};
+}
+
+export async function readFileAsText(file) {
+  return new Promise(resolve => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      resolve(e.target.result);
+    };
+    reader.readAsText(file);
+  });
+}

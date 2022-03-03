@@ -10,7 +10,7 @@ import CenteredContent from '../../../../shared/CenteredContent';
 import { Spinner } from '../../../../shared/Loading';
 import { Context } from '../../../../containers/Provider/AuthStateProvider';
 import MessageAlert from '../../../../components/MessageAlert';
-import { csvValidate } from '../../utils';
+import { csvValidate, readFileAsText } from '../../utils';
 
 export default function UsersImport() {
   const [importCreate] = useMutation(ImportCreate);
@@ -66,6 +66,7 @@ export default function UsersImport() {
   async function processCsv(evt) {
     setCSVFileUploadErrors([]); // clear the errors to start with fresh state
     const file = evt.target.files[0];
+
     const errorMessages = await csvValidate(file);
     if (errorMessages) {
       setCSVFileUploadErrors(errorMessages);
@@ -80,13 +81,10 @@ export default function UsersImport() {
       setCsvString('');
       return;
     }
-    const reader = new FileReader();
+
+    const result = await readFileAsText(file);
     setCsvFileName(file.name);
-    // eslint-disable-next-line func-names
-    reader.onload = function(e) {
-      setCsvString(e.target.result);
-    };
-    reader.readAsText(file);
+    setCsvString(result);
   }
 
   return (
@@ -161,6 +159,7 @@ export default function UsersImport() {
                     type="submit"
                     aria-label="business_submit"
                     color="primary"
+                    data-testid="import-btn"
                     onClick={createImport}
                     className={css(styles.importBtn)}
                   >
