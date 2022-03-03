@@ -1,7 +1,3 @@
-/* eslint-disable jest/valid-expect-in-promise */
-/* eslint-disable jest/expect-expect */
-/* eslint-disable no-undef */
-
 describe('Gate Access', () => {
   it('allows residents to invite guests', () => {
     cy.factory('community', { name: 'Nkwashi' }).then(community => {
@@ -14,7 +10,8 @@ describe('Gate Access', () => {
             'can_access_logbook',
             'can_see_menu_item',
             'can_invite_guest',
-            'can_access_guest_list'
+            'can_access_guest_list',
+            'can_update_invitation'
           ],
           role_id: residentRole.body.id
         });
@@ -104,9 +101,17 @@ describe('Gate Access', () => {
 
     cy.get('[data-testid=invite_button]').click()
     cy.wait(2000);
-
+    
     cy.contains('Mary dinna').should('exist');
     cy.contains('Joe doe').should('exist');
     cy.contains('General Traders co. Ltd').should('exist');
+    
+    
+    // Cancel an invitation
+    cy.get('[data-testid=guest_invite_menu]').eq(0).click()
+    cy.wait(200);
+    cy.get('[data-testid=menu_item]').eq(0).click()
+    cy.wait(2000);
+    cy.contains('Cancelled').should('exist');
   });
 });
