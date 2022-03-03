@@ -303,8 +303,8 @@ ActiveRecord::Schema.define(version: 2022_03_02_211443) do
     t.integer "entry_request_state", default: 0
     t.uuid "revoker_id"
     t.datetime "revoked_at"
-    t.integer "status", default: 0
     t.uuid "guest_id"
+    t.integer "status", default: 0
     t.datetime "exited_at"
   end
 
@@ -476,7 +476,7 @@ ActiveRecord::Schema.define(version: 2022_03_02_211443) do
     t.json "geom"
     t.integer "status", default: 0
     t.boolean "is_poi", default: false
-    t.string "object_type"
+    t.integer "object_type", default: 0
     t.uuid "house_land_parcel_id"
     t.index ["community_id"], name: "index_land_parcels_on_community_id"
     t.index ["parcel_number"], name: "index_land_parcels_on_parcel_number", unique: true
@@ -820,6 +820,7 @@ ActiveRecord::Schema.define(version: 2022_03_02_211443) do
     t.uuid "latest_substatus_id"
     t.string "ext_ref_id"
     t.uuid "role_id", null: false
+    t.string "region"
     t.string "title"
     t.string "linkedin_url"
     t.string "company_name"
@@ -848,7 +849,6 @@ ActiveRecord::Schema.define(version: 2022_03_02_211443) do
     t.string "relevant_link"
     t.jsonb "contact_details"
     t.string "african_presence"
-    t.string "region"
     t.string "task_id"
     t.index ["community_id", "email"], name: "index_users_on_community_id_and_email", unique: true
     t.index ["latest_substatus_id"], name: "index_users_on_latest_substatus_id"
