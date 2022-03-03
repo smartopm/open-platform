@@ -32,12 +32,12 @@ module Mutations
             request = generate_request(vals, user)
             invite = context[:current_user].invite_guest(user.id, request.id)
             generate_entry_time(vals.except(:guests, :user_ids), invite)
-            users_info << { phone_number: user.phone_number, request: request }
+            users_info << { user: user, request: request }
           end
 
           GuestQrCodeJob.perform_now(
             community: context[:site_community],
-            contact_infos: users_info,
+            request_data: users_info,
             type: 'verify',
           )
           return { success: true }
