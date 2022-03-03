@@ -5,7 +5,6 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import { StyleSheet, css } from 'aphrodite';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { Collapse } from '@material-ui/core';
 import ExpandLess from '@material-ui/icons/ExpandLess';
@@ -26,8 +25,8 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, direction, communityFeatu
   /**
    * @param {Event} event browser event from clicked icon
    * @param {object} item a menu object containing details about the menu and its sub menu
-   * @description check if the click menu has submenu, if yes open them if not route to the given link
-   * Here event is necessary because the toggleDrawe needs to know type of a click
+   * @description check if the click menu has submenu, if yes open them if not route to the given
+   * link Here event is necessary because the toggleDrawe needs to know type of a click
    * @returns void
    * @todo automatically open new menu when another is clicked while current is still open
    */
@@ -60,8 +59,9 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, direction, communityFeatu
 
    /**
    * @param {string} type
-   * @description dynamically create necessary context to determine menu accessibility based on Feature type.
-   * Context will be injected into the accessibility logic check handler on demand
+   * @description dynamically create necessary context to determine menu accessibility.
+   * based on Feature type, Context will be injected into the accessibility 
+   * logic check handler on demand
    * @returns {object} object || undefined
    */
   function createMenuContext(type){
@@ -86,22 +86,24 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, direction, communityFeatu
     return undefined;
   }
 
-  function checkMenuAccessibility(menuItem){
+  function checkMenuAccessibility(menuItem) {
     // no need for the check when all modules switch to using permissions
-    if(menuItem.moduleName !== undefined){
-      const userPermissionsModule = authState.user?.permissions.find(permissionObject => permissionObject.module === menuItem.moduleName)
-      if(userPermissionsModule === undefined ){
-        return false
-      } 
-      return userPermissionsModule?.permissions.includes('can_see_menu_item')
+    if (menuItem.moduleName !== undefined) {
+      const userPermissionsModule = authState.user?.permissions.find(
+        permissionObject => permissionObject.module === menuItem.moduleName
+      );
+      if (userPermissionsModule === undefined) {
+        return false;
+      }
+      return userPermissionsModule?.permissions.includes('can_see_menu_item');
     }
 
-    if(typeof menuItem.accessibleBy === 'function'){
-      const ctx = createMenuContext(menuItem.featureName)
-      return menuItem.accessibleBy(ctx).includes(userType)
+    if (typeof menuItem.accessibleBy === 'function') {
+      const ctx = createMenuContext(menuItem.featureName);
+      return menuItem.accessibleBy(ctx).includes(userType);
     }
 
-    return menuItem.accessibleBy.includes(userType)
+    return menuItem.accessibleBy.includes(userType);
   }
 
   return (
