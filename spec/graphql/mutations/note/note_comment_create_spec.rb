@@ -37,8 +37,8 @@ RSpec.describe Mutations::Note::NoteCommentCreate do
 
     let(:query) do
       <<~GQL
-        mutation noteCommentCreate($noteId: ID!, $body: String!) {
-          noteCommentCreate(noteId: $noteId, body: $body){
+        mutation noteCommentCreate($noteId: ID!, $body: String!, $replyRequired: Boolean, $replyFromId: ID, $groupingId: ID) {
+          noteCommentCreate(noteId: $noteId, body: $body, replyRequired: $replyRequired, replyFromId: $replyFromId, groupingId: $groupingId){
             noteComment {
               id
               body
@@ -59,6 +59,24 @@ RSpec.describe Mutations::Note::NoteCommentCreate do
                                               }).as_json
       expect(result.dig('data', 'noteCommentCreate', 'noteComment', 'id')).not_to be_nil
       expect(result.dig('data', 'noteCommentCreate', 'noteComment', 'body')).to eql 'Comment body'
+      expect(result['errors']).to be_nil
+    end
+
+    it 'creates a reply-required comment under note' do
+      variables = {
+        noteId: note.id,
+        body: 'A reply is required body',
+        replyRequired: true,
+        replyFrom: site_worker.id,
+      }
+      result = DoubleGdpSchema.execute(query, variables: variables,
+                                              context: {
+                                                current_user: another_user,
+                                              }).as_json
+      expect(result.dig('data', 'noteCommentCreate', 'noteComment', 'id')).not_to be_nil
+      expect(result.dig('data', 'noteCommentCreate', 'noteComment', 'body')).to eql(
+        'A reply is required body',
+      )
       expect(result['errors']).to be_nil
     end
 

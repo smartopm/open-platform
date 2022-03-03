@@ -134,7 +134,6 @@ module Users
     has_many :plan_ownerships, class_name: 'Properties::PlanOwnership', dependent: :destroy
     has_many :co_owned_plans, class_name: 'Properties::PaymentPlan', through: :plan_ownerships,
                               source: :payment_plan
-
     # TODO: find more about the inverse_of association and if we really need that
     # rubocop:disable Rails/InverseOf
     has_one :request, class_name: 'Logs::EntryRequest', foreign_key: :guest_id,
@@ -142,6 +141,8 @@ module Users
     has_many :invites, class_name: 'Logs::Invite', foreign_key: :guest_id,
                        dependent: :destroy
     has_many :invitees, class_name: 'Logs::Invite', foreign_key: :host_id,
+                        dependent: :destroy
+    has_many :reply_to, class_name: 'Comments::NoteComment', foreign_key: :reply_from_id,
                         dependent: :destroy
     # rubocop:enable Rails/InverseOf
     has_one_attached :avatar

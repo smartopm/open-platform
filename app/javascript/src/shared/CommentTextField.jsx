@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import Grid from '@mui/material/Grid';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
@@ -17,10 +17,12 @@ export default function CommentTextField({
   placeholder,
   loading,
   forProcess,
-  processesProps
+  processesProps,
+  selectedUser,
+  setSelectedUser,
+  autoCompleteOpen,
+  setAutoCompleteOpen
 }) {
-  const [autoCompleteOpen, setAutoCompleteOpen] = useState(false);
-  const [selectedUser, setSelectedUser] = useState(null);
   const { t } = useTranslation(['task', 'common']);
 
   useEffect(() => {
@@ -28,10 +30,6 @@ export default function CommentTextField({
       processesProps.setSearchUser('user_type:developer');
     }
   }, [processesProps]);
-
-  function handleAutocomplete(selected) {
-    setSelectedUser(selected);
-  }
 
   return (
     <Grid container alignContent="space-between">
@@ -71,60 +69,57 @@ export default function CommentTextField({
       <>
         <Grid item xs={4}>
           {forProcess && (
-          <FormControlLabel
-            control={(
-              <Checkbox
-                checked={autoCompleteOpen}
-                onChange={() => setAutoCompleteOpen(!autoCompleteOpen)}
-                name="require-reply"
-                data-testid="require_reply"
-                color="primary"
-              />
-                )}
-            label={<Typography variant="body2">Require a Reply</Typography>}
-          />
-            )}
+            <FormControlLabel
+              control={(
+                <Checkbox
+                  checked={autoCompleteOpen}
+                  onChange={() => setAutoCompleteOpen(!autoCompleteOpen)}
+                  name="require-reply"
+                  data-testid="require_reply"
+                  color="primary"
+                />
+              )}
+              label={<Typography variant="body2">Require a Reply</Typography>}
+            />
+          )}
         </Grid>
         <Grid item xs={8} style={{ marginBottom: '15px' }}>
-          {selectedUser ? (
+          {selectedUser && autoCompleteOpen && (
             <UserChip
               user={selectedUser}
               size="medium"
               onDelete={() => {
-                  setSelectedUser(null);
-                }}
+                setSelectedUser(null);
+              }}
             />
-            ) : (
-              autoCompleteOpen && (
-                <Autocomplete
-                  data-testid="users_autocomplete"
-                  style={{ width: '100%' }}
-                  id="reply-user"
-                  options={processesProps.userData?.usersLite || []}
-                  renderOption={option => <UserAutoResult user={option} t={t} />}
-                  name="reply-user"
-                  onChange={(_event, newValue) => handleAutocomplete(newValue)}
-                  getOptionLabel={option => option?.name}
-                  getOptionSelected={(option, optionValue) => option.name === optionValue.name}
-                  value={selectedUser}
-                  renderInput={params => (
-                    <TextField
-                      {...params}
-                      variant="outlined"
-                      label={t('task.search_users')}
-                      onChange={event =>
-                        processesProps.setSearchUser(
-                          `${event.target.value} AND user_type:developer`
-                        )
-                      }
-                      autoComplete="off"
-                      onKeyDown={() => processesProps.searchUser()}
-                      style={{ marginTop: '5px' }}
-                    />
-                  )}
+          )}
+          {autoCompleteOpen && !selectedUser && (
+            <Autocomplete
+              data-testid="users_autocomplete"
+              style={{ width: '100%' }}
+              id="reply-user"
+              options={processesProps.userData?.usersLite || []}
+              renderOption={option => <UserAutoResult user={option} t={t} />}
+              name="reply-user"
+              onChange={(_event, newValue) => setSelectedUser(newValue)}
+              getOptionLabel={option => option?.name}
+              getOptionSelected={(option, optionValue) => option.name === optionValue.name}
+              value={selectedUser}
+              renderInput={params => (
+                <TextField
+                  {...params}
+                  variant="outlined"
+                  label={t('task.search_users')}
+                  onChange={event =>
+                    processesProps.setSearchUser(`${event.target.value} AND user_type:developer`)
+                  }
+                  autoComplete="off"
+                  onKeyDown={() => processesProps.searchUser()}
+                  style={{ marginTop: '5px' }}
                 />
-              )
-            )}
+              )}
+            />
+          )}
         </Grid>
       </>
     </Grid>
@@ -133,7 +128,11 @@ export default function CommentTextField({
 CommentTextField.defaultProps = {
   loading: false,
   forProcess: false,
-  processesProps: null
+  processesProps: null,
+  selectedUser: null,
+  setSelectedUser: null,
+  autoCompleteOpen: false,
+  setAutoCompleteOpen: null
 };
 
 CommentTextField.propTypes = {
@@ -144,6 +143,10 @@ CommentTextField.propTypes = {
   setValue: PropTypes.func.isRequired,
   loading: PropTypes.bool,
   forProcess: PropTypes.bool,
+  selectedUser: PropTypes.object,
+  setSelectedUser: PropTypes.func,
+  autoCompleteOpen: PropTypes.bool,
+  setAutoCompleteOpen: PropTypes.func,
   processesProps: PropTypes.shape({
     searchUser: PropTypes.func.isRequired,
     setSearchUser: PropTypes.func.isRequired,

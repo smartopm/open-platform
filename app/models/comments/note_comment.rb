@@ -7,6 +7,7 @@ module Comments
 
     belongs_to :note, class_name: 'Notes::Note'
     belongs_to :user, class_name: 'Users::User'
+    belongs_to :reply_from, class_name: 'Users::User', optional: true
 
     after_create :log_create_event
     after_update :log_update_event
