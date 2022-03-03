@@ -1,8 +1,5 @@
-<<<<<<< HEAD
-=======
 /* eslint-disable max-lines */
 import CSVFileValidator from 'csv-file-validator';
->>>>>>> refactor lead management users import page and add tests
 import PropTypes from 'prop-types';
 import {
   clientCategories,
@@ -193,7 +190,7 @@ const uniqueError = headerName => {
   return ` <div>${headerName} is not unique.  </div>`;
 };
 
-export const configObject = {
+const configObject = {
   headers: [
     {
       name: 'Name',
@@ -615,13 +612,16 @@ export function selectOptions(
       key: 'payments',
       value: 'Plans',
       handleMenuItemClick,
-      show: checkCommunityFeatures('Payments') && checkRole(['admin', 'client', 'resident'], 'Payments')
+      show:
+        checkCommunityFeatures('Payments') && checkRole(['admin', 'client', 'resident'], 'Payments')
     },
     {
       key: 'plots',
       value: 'Plots',
       handleMenuItemClick,
-      show: checkCommunityFeatures('Properties') && checkRole(['admin', 'client', 'resident'], 'Properties')
+      show:
+        checkCommunityFeatures('Properties') &&
+        checkRole(['admin', 'client', 'resident'], 'Properties')
     },
     {
       key: 'lead_management',
@@ -633,7 +633,7 @@ export function selectOptions(
       key: 'forms',
       value: 'Forms',
       handleMenuItemClick,
-      show: checkCommunityFeatures('Forms') && checkModule('forms') 
+      show: checkCommunityFeatures('Forms') && checkModule('forms')
     },
     {
       key: 'customer_journey',
@@ -644,21 +644,21 @@ export function selectOptions(
   ];
 }
 
-export function createMenuContext(type, data, userType, authState){
-  if(['LogBook', 'Users', 'Properties'].includes(type)){
+export function createMenuContext(type, data, userType, authState) {
+  if (['LogBook', 'Users', 'Properties'].includes(type)) {
     return {
       userId: data.user.id,
       userType,
-      loggedInUserId: authState.user.id,
-    }
+      loggedInUserId: authState.user.id
+    };
   }
 
-  if(['Payments'].includes(type)){
+  if (['Payments'].includes(type)) {
     return {
       userType,
       paymentCheck: true,
-      loggedInUserPaymentPlan: authState.user?.paymentPlan,
-    }
+      loggedInUserPaymentPlan: authState.user?.paymentPlan
+    };
   }
 
   return undefined;
@@ -667,7 +667,7 @@ export function createMenuContext(type, data, userType, authState){
 export const csvValidate = async file => {
   const csvErrors = await CSVFileValidator(file, configObject);
   return csvErrors.inValidMessages || [];
-}
+};
 
 export async function readFileAsText(file) {
   return new Promise(resolve => {
