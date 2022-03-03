@@ -31,6 +31,8 @@ export default function TaskUpdate({
   });
   const [assignUserToNote] = useMutation(AssignUser);
 
+  // TODO (Nurudeen): Remove. This is a potential problem, we are literally fetching
+  // all community users
   const { data: liteData } = useQuery(UsersLiteQuery, {
     variables: {
       query:

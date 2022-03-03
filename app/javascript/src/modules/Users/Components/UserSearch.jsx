@@ -4,12 +4,14 @@ import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import { useLazyQuery } from 'react-apollo';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 import { UsersLiteQuery } from '../../../graphql/queries';
 import UserAutoResult from '../../../shared/UserAutoResult';
 import useDebounce from '../../../utils/useDebounce';
 
 // TODO: should be moved to shared directory
 export default function UserSearch({ userData, update, required }) {
+  const { t } = useTranslation('common')
   const debouncedValue = useDebounce(userData.user, 500);
   const classes = useStyles();
   const [searchUser, { data }] = useLazyQuery(UsersLiteQuery, {
@@ -32,7 +34,7 @@ export default function UserSearch({ userData, update, required }) {
         onChange={(_event, newValue) => update({ ...userData, userId: newValue.id })}
         classes={{ option: classes.autocompleteOption, listbox: classes.autocompleteOption }}
         renderOption={(option) => (
-          <UserAutoResult user={option} />
+          <UserAutoResult user={option} t={t} />
         )}
         renderInput={params => (
           <TextField

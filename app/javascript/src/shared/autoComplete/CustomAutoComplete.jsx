@@ -33,7 +33,7 @@ export default function CustomAutoComplete({users, onChange, isMultiple, label }
         id="custom-auto-complete"
         options={liteData?.usersLite || users}
         ListboxProps={{ style: { maxHeight: "20rem" }}}
-        renderOption={option => <UserAutoResult user={option} />}
+        renderOption={option => <UserAutoResult user={option} t={t} />}
         name="assignees"
         onChange={onChange}
         getOptionLabel={(option) => allowedAssignees.includes(option.userType) ? option.name : ''}

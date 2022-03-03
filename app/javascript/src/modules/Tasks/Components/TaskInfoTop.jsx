@@ -458,7 +458,7 @@ export default function TaskInfoTop({
                     id={data.id}
                     options={liteData?.usersLite || users}
                     ListboxProps={{ style: { maxHeight: '20rem' } }}
-                    renderOption={option => <UserAutoResult user={option} />}
+                    renderOption={option => <UserAutoResult user={option} t={t} />}
                     name="assignees"
                     onChange={(_evt, value) => {
                       if (!value) {
