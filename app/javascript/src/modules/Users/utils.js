@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+=======
+/* eslint-disable max-lines */
+import CSVFileValidator from 'csv-file-validator';
+>>>>>>> refactor lead management users import page and add tests
 import PropTypes from 'prop-types';
 import {
   clientCategories,
@@ -531,7 +536,6 @@ const configObject = {
   ]
 };
 
-export default configObject;
 export function selectOptions(
   setSelectKey,
   checkModule,
@@ -659,3 +663,8 @@ export function createMenuContext(type, data, userType, authState){
 
   return undefined;
 }
+
+export const csvValidate = async file => {
+  const csvErrors = await CSVFileValidator(file, configObject);
+  return csvErrors.inValidMessages || [];
+};

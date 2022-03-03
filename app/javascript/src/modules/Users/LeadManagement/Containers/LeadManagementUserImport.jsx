@@ -5,13 +5,12 @@ import { StyleSheet, css } from 'aphrodite';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { Button, Grid } from '@material-ui/core';
-import CSVFileValidator from 'csv-file-validator';
 import { ImportCreate } from '../../../../graphql/mutations';
 import CenteredContent from '../../../../shared/CenteredContent';
 import { Spinner } from '../../../../shared/Loading';
 import { Context } from '../../../../containers/Provider/AuthStateProvider';
 import MessageAlert from '../../../../components/MessageAlert';
-import configObject from '../../utils';
+import { csvValidate } from '../../utils';
 
 export default function UsersImport() {
   const [importCreate] = useMutation(ImportCreate);
@@ -56,20 +55,25 @@ export default function UsersImport() {
     setMessageAlert('');
   }
 
-  function processCsv(evt) {
+  function outputErrors(errorMessages) {
+    if (errorMessages.length > 0) {
+      errorMessages.forEach(invalidMessage => {
+        document.getElementById('invalidMessages').insertAdjacentHTML('beforeend', invalidMessage);
+      });
+    }
+  }
+
+  async function processCsv(evt) {
     setCSVFileUploadErrors([]); // clear the errors to start with fresh state
     const file = evt.target.files[0];
+    const errorMessages = await csvValidate(file);
+    if (errorMessages) {
+      setCSVFileUploadErrors(errorMessages);
+      outputErrors(errorMessages);
+    }
+
     document.getElementById('file-select-name').innerText = file.name; // set the name of the selected file
-    CSVFileValidator(file, configObject).then(csvData => {
-      setCSVFileUploadErrors(csvData.inValidMessages);
-      if (csvData.inValidMessages.length > 0) {
-        csvData.inValidMessages.forEach(invalidMessage => {
-          document
-            .getElementById('invalidMessages')
-            .insertAdjacentHTML('beforeend', invalidMessage);
-        });
-      }
-    });
+
     if (errorMessage) setErrorMessage(null);
 
     if (!file) {
@@ -84,8 +88,6 @@ export default function UsersImport() {
     };
     reader.readAsText(file);
   }
-
-  const hasErrors = CSVFileUploadErrors;
 
   return (
     <>
@@ -118,6 +120,7 @@ export default function UsersImport() {
                     <Button
                       variant="contained"
                       color="primary"
+                      data-testid="lead-csv-input-button"
                       component="span"
                       style={{ display: 'inline-block' }}
                     >
@@ -132,12 +135,16 @@ export default function UsersImport() {
 
                 {CSVFileUploadErrors.length > 0 && (
                   <Grid item md={12} xs={12}>
-                    <div style={{ color: 'red' }} id="invalidMessages" />
+                    <div
+                      style={{ color: 'red' }}
+                      id="invalidMessages"
+                      data-testid="lead-csv-errors"
+                    />
                     <br />
                   </Grid>
                 )}
               </Grid>
-              {csvString.length > 0 && hasErrors.length === 0 && (
+              {csvString.length > 0 && CSVFileUploadErrors.length === 0 && (
                 <CenteredContent>
                   <Button
                     variant="contained"
