@@ -115,7 +115,8 @@
     "submitted_by": "Submitted By",
     "submitted_form": "Submitted Form",
     "open_submitted_form": "Open Form",
-    "no_form_data": "Project submission information not found"
+    "no_form_data": "Project submission information not found",
+    "year_to_date": "Year to Date"
   },
   "misc": {
     "confirm": "Confirm"

@@ -7,6 +7,7 @@ import { ProjectStagesQuery, TaskQuarterySummaryQuery } from '../graphql/process
 import AdminDashboard from '../Components/AdminDashboard'
 
 describe('Admin processes dashboard', () => {
+  const currentYear = new Date().getFullYear();
   const mocks = [
     {
       request: {
@@ -35,16 +36,16 @@ describe('Admin processes dashboard', () => {
         data: {
           tasksByQuarter: {
             completed: [
-              [2022, 1, 160] ,
-              [2022, 2, 300],
-              [2022, 3, 119],
-              [2022, 4, 10],
+              [currentYear, 1, 160] ,
+              [currentYear, 2, 300],
+              [currentYear, 3, 119],
+              [currentYear, 4, 10],
             ],
             submitted: [
-              [2022, 1, 200] ,
-              [2022, 2, 400],
-              [2022, 3, 219],
-              [2022, 4, 20],
+              [currentYear, 1, 200] ,
+              [currentYear, 2, 400],
+              [currentYear, 3, 219],
+              [currentYear, 4, 20],
             ]
           }
         }
@@ -72,14 +73,17 @@ describe('Admin processes dashboard', () => {
       expect(screen.queryByText('Q2')).toBeInTheDocument()
       expect(screen.queryByText('Q3')).toBeInTheDocument()
       expect(screen.queryByText('Q4')).toBeInTheDocument()
+      expect(screen.queryByText('processes.year_to_date')).toBeInTheDocument();
       expect(screen.queryByText('160')).toBeInTheDocument();
       expect(screen.queryByText('300')).toBeInTheDocument();
       expect(screen.queryByText('119')).toBeInTheDocument();
       expect(screen.queryByText('10')).toBeInTheDocument();
+      expect(screen.queryByText('589')).toBeInTheDocument();
       expect(screen.queryByText('200')).toBeInTheDocument();
       expect(screen.queryByText('400')).toBeInTheDocument();
       expect(screen.queryByText('219')).toBeInTheDocument();
       expect(screen.queryByText('20')).toBeInTheDocument();
+      expect(screen.queryByText('839')).toBeInTheDocument();
     })
   });
 
