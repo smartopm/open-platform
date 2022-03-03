@@ -124,7 +124,7 @@ export default function AdminDashboard() {
           {summaryLoading && <Spinner />}
           {summaryError && <CenteredContent>{formatError(summaryError.message)}</CenteredContent>}
           <Grid container spacing={1} className={classes.cards}>
-            <Grid item xs={2} />
+            <Grid item xs={2.5} />
             {matches && <Grid item xs={1} />}
             {cards.map((card, index) => (
               // eslint-disable-next-line react/no-array-index-key
@@ -140,7 +140,7 @@ export default function AdminDashboard() {
               container
               justifyContent="center"
               alignItems="center"
-              xs={2}
+              xs={2.5}
               style={{
                 background: '#F5F5F4',
                 borderRadius: '4px',
@@ -184,7 +184,7 @@ export default function AdminDashboard() {
               container
               justifyContent="center"
               alignItems="center"
-              xs={2}
+              xs={2.5}
               style={{
                 background: '#F5F5F4',
                 borderRadius: '4px',
