@@ -42,6 +42,9 @@ RSpec.describe Mutations::Note::NoteCommentCreate do
             noteComment {
               id
               body
+              replyFrom {
+                name
+              }
             }
           }
         }
@@ -67,7 +70,7 @@ RSpec.describe Mutations::Note::NoteCommentCreate do
         noteId: note.id,
         body: 'A reply is required body',
         replyRequired: true,
-        replyFrom: site_worker.id,
+        replyFromId: site_worker.id,
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
@@ -76,6 +79,9 @@ RSpec.describe Mutations::Note::NoteCommentCreate do
       expect(result.dig('data', 'noteCommentCreate', 'noteComment', 'id')).not_to be_nil
       expect(result.dig('data', 'noteCommentCreate', 'noteComment', 'body')).to eql(
         'A reply is required body',
+      )
+      expect(result.dig('data', 'noteCommentCreate', 'noteComment', 'replyFrom', 'name')).to eql(
+        site_worker.name,
       )
       expect(result['errors']).to be_nil
     end

@@ -65,6 +65,11 @@ export const ProjectCommentsQuery = gql`
         name
         imageUrl
       }
+      repliedAt,
+      replyFrom {
+        name
+      }
+      replyRequired
     }
   }
 `

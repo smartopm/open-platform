@@ -79,7 +79,7 @@ export default function CommentTextField({
                   color="primary"
                 />
               )}
-              label={<Typography variant="body2">Require a Reply</Typography>}
+              label={<Typography variant="body2">{t('task.require_a_reply')}</Typography>}
             />
           )}
         </Grid>
