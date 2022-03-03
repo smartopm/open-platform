@@ -4,6 +4,7 @@
 desc 'Order Existing DRC Tasks'
 task :order_drc_tasks, %i[community_name category] => :environment do |_t, args|
   # rubocop:disable Metrics/MethodLength
+  # rubocop:disable Rails/SkipsModelValidations
   def update_drc_templates(community)
     puts 'Updating DRC Templates'
 
@@ -15,15 +16,32 @@ task :order_drc_tasks, %i[community_name category] => :environment do |_t, args|
                            )
 
       templates.each_with_index do |template, count|
-        puts "Updating #{template[:body]} => order: #{count + 1}"
+        puts "Parent Template: updating #{template[:body]} => order: #{count + 1}"
+        template.update_column(:order, count + 1)
+
+        template_steps = community.notes.unscoped
+                                  .where(
+                                    category: 'template',
+                                    parent_note_id: template[:id],
+                                  )
+                                  .order(created_at: :asc)
+
+        next unless template_steps.size.positive?
+
+        template_steps.each_with_index do |template_step, step_order|
+          puts "Template Sub Step: updating #{template_step[:body]} => order: #{step_order + 1}"
+          template_step.update_column(:order, step_order + 1)
+        end
       end
 
       puts 'Done!! DRC Templates Updated'
     end
   end
+  # rubocop:enable Rails/SkipsModelValidations
   # rubocop:enable Metrics/MethodLength
 
   # rubocop:disable Metrics/MethodLength
+  # rubocop:disable Rails/SkipsModelValidations
   def update_drc_tasks(community)
     puts 'Updating General DRC Tasks'
 
@@ -42,6 +60,7 @@ task :order_drc_tasks, %i[community_name category] => :environment do |_t, args|
         # order the first_level_steps
         first_level_steps.each_with_index do |first_step, index|
           puts "1st Level:: Updating #{first_step[:body]} -> order #{index + 1}"
+          first_step.update_column(:order, index + 1)
 
           next unless first_step.sub_tasks.size.positive?
 
@@ -51,6 +70,7 @@ task :order_drc_tasks, %i[community_name category] => :environment do |_t, args|
 
           second_level_steps.each_with_index do |second_step, count|
             puts "2nd Level:: Updating #{second_step[:body]} -> order: #{count + 1}"
+            second_step.update_column(:order, count + 1)
           end
         end
       end
@@ -58,6 +78,7 @@ task :order_drc_tasks, %i[community_name category] => :environment do |_t, args|
       puts 'DRC Tasks Updated'
     end
   end
+  # rubocop:enable Rails/SkipsModelValidations
   # rubocop:enable Metrics/MethodLength
 
   abort('Invalid Arguments') if args.community_name.blank? || args.category.blank?

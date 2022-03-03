@@ -171,7 +171,11 @@ export const TasksFragment = {
       progress
       subTasksCount
       taskCommentsCount
+<<<<<<< HEAD
       taskCommentReply
+=======
+      order
+>>>>>>> sort task by order
       completed
       status
       attachments
