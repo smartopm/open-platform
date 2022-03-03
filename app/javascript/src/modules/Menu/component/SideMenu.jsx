@@ -11,6 +11,7 @@ import { Collapse } from '@material-ui/core';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import { useTranslation } from 'react-i18next';
+import { makeStyles } from '@material-ui/core/styles';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider'; 
 import checkSubMenuAccessibility from '../utils';
 
@@ -21,7 +22,7 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, direction, communityFeatu
   const params = useParams();
   const { t } = useTranslation('common')
   const [currentMenu, setCurrentMenu] = useState({ isOpen: false, name: '' });
-
+  const classes = useStyles()
   /**
    * @param {Event} event browser event from clicked icon
    * @param {object} item a menu object containing details about the menu and its sub menu
@@ -40,8 +41,10 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, direction, communityFeatu
       toggleDrawer(event);
     }
     // check the direct and route differently
-    // check current pathname and direction of the drawer if it has id then use that as new path for all left side based routes
-    // this should also work for paths like /message/:id, but it has to be registered in the routes first(for now)
+    // check current pathname and direction of the drawer if it has id then use
+    //  that as new path for all left side based routes
+    // this should also work for paths like /message/:id, 
+    // but it has to be registered in the routes first(for now)
     if (direction === 'right') {
       history.push(item.routeProps.path.replace(':id', params.id));
       return;
@@ -105,7 +108,7 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, direction, communityFeatu
     <div
       role="button"
       tabIndex={0}
-      className={`${css(styles.sidenav)}`}
+      className={classes.sidenav}
       onKeyDown={toggleDrawer}
       data-testid="sidenav-container"
     >
@@ -120,11 +123,11 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, direction, communityFeatu
                className={menuItem.styleProps?.className}
              >
                {menuItem.styleProps?.icon && (
-               <ListItemIcon className={`${css(styles.listItemIcon)}`}>
+               <ListItemIcon className={classes.listItemIcon}>
                  {menuItem.styleProps.icon}
                </ListItemIcon>
                 )}
-               <ListItemText primary={menuItem.name(t)} />
+               <ListItemText primary={menuItem.name(t)} className={classes.menuItemText} />
                {currentMenu.name === menuItem.name(t) && currentMenu.isOpen ? (
                  <ExpandLess />
                 ) : // Avoid showing toggle icon on menus with no submenus
@@ -141,7 +144,8 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, direction, communityFeatu
                <List component="div" disablePadding>
                  { menuItem.subMenu &&
                     menuItem.subMenu.map(item =>
-                      communityFeatures.includes(item.featureName) && checkSubMenuAccessibility({authState, subMenuItem: item}) ? (
+                      communityFeatures.includes(item.featureName) && 
+                      checkSubMenuAccessibility({authState, subMenuItem: item}) ? (
                         <ListItem
                           button
                           key={item.name(t)}
@@ -152,6 +156,8 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, direction, communityFeatu
                           <ListItemText
                             primary={item.name(t)}
                             style={{ marginLeft: `${menuItem.styleProps?.icon ? '55px' : '17px'}` }}
+                            className={classes.menuItemText}
+                            color="pr"
                           />
                         </ListItem>
                       ) : (
@@ -199,21 +205,18 @@ SideMenu.propTypes = {
 
 };
 
-const styles = StyleSheet.create({
-  linkStyles: {
-    color: '#000',
-    textDecoration: 'none'
-  },
+const useStyles = makeStyles(theme => ({
   sidenav: {
     width: 260,
     marginBottom: '50px'
   },
-  userInfo: {
-    marginTop: 55
-  },
   listItemIcon: {
-    marginRight: '-15px'
+    marginRight: '-15px',
+    color: theme.palette.primary.main
+  },
+  menuItemText: {
+    color: theme.palette.primary.main
   }
-});
+}));
 
 export default SideMenu;
