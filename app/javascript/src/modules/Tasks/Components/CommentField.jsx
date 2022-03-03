@@ -9,21 +9,33 @@ import CommentTextField from '../../../shared/CommentTextField';
 export default function CommentField({ data, refetch, taskId, commentsRefetch, forProcess, processesProps }) {
   const [commentCreate] = useMutation(TaskComment);
   const [body, setBody] = useState('');
+  const [replyFrom, setReplyFrom] = useState(null);
+  const [autoCompleteOpen, setAutoCompleteOpen] = useState(false);
   const [error, setErrorMessage] = useState('');
   const { t } = useTranslation('common');
 
   function handleSubmit(event) {
     event.preventDefault();
-    commentCreate({
-      variables: {
-        noteId: taskId,
-        body
+    let variables = {
+      noteId: taskId,
+      body
+    }
+    if (replyFrom) {
+      variables = {
+        ...variables,
+        replyRequired: true,
+        replyFromId: replyFrom.id
       }
+    }
+    commentCreate({
+      variables
     })
       .then(() => {
         setBody('');
         refetch();
         commentsRefetch();
+        setReplyFrom(null);
+        setAutoCompleteOpen(false);
       })
       .catch(err => {
         setErrorMessage(err);
@@ -39,6 +51,10 @@ export default function CommentField({ data, refetch, taskId, commentsRefetch, f
         placeholder={t('misc.type_comment')}
         forProcess={forProcess}
         processesProps={processesProps}
+        selectedUser={replyFrom}
+        setSelectedUser={setReplyFrom}
+        autoCompleteOpen={autoCompleteOpen}
+        setAutoCompleteOpen={setAutoCompleteOpen}
       />
       <CommentCard
         comments={data.taskComments}

@@ -158,6 +158,7 @@ RSpec.describe Users::User, type: :model do
     it { is_expected.to have_one(:avatar_attachment) }
     it { is_expected.to have_many(:note_documents_attachments) }
     it { is_expected.to have_many(:plan_ownerships).class_name('Properties::PlanOwnership') }
+    it { is_expected.to have_many(:reply_to).class_name('Comments::NoteComment') }
   end
 
   describe 'validations' do

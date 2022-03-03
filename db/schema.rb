@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_02_24_055248) do
+ActiveRecord::Schema.define(version: 2022_03_02_211443) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -303,8 +303,8 @@ ActiveRecord::Schema.define(version: 2022_02_24_055248) do
     t.integer "entry_request_state", default: 0
     t.uuid "revoker_id"
     t.datetime "revoked_at"
-    t.uuid "guest_id"
     t.integer "status", default: 0
+    t.uuid "guest_id"
     t.datetime "exited_at"
   end
 
@@ -476,7 +476,7 @@ ActiveRecord::Schema.define(version: 2022_02_24_055248) do
     t.json "geom"
     t.integer "status", default: 0
     t.boolean "is_poi", default: false
-    t.integer "object_type", default: 0
+    t.string "object_type"
     t.uuid "house_land_parcel_id"
     t.index ["community_id"], name: "index_land_parcels_on_community_id"
     t.index ["parcel_number"], name: "index_land_parcels_on_parcel_number", unique: true
@@ -508,6 +508,10 @@ ActiveRecord::Schema.define(version: 2022_02_24_055248) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "status"
+    t.boolean "reply_required", default: false
+    t.datetime "replied_at"
+    t.uuid "grouping_id"
+    t.uuid "reply_from_id"
     t.index ["note_id"], name: "index_note_comments_on_note_id"
     t.index ["user_id"], name: "index_note_comments_on_user_id"
   end
@@ -816,7 +820,6 @@ ActiveRecord::Schema.define(version: 2022_02_24_055248) do
     t.uuid "latest_substatus_id"
     t.string "ext_ref_id"
     t.uuid "role_id", null: false
-    t.string "region"
     t.string "title"
     t.string "linkedin_url"
     t.string "company_name"
@@ -845,6 +848,7 @@ ActiveRecord::Schema.define(version: 2022_02_24_055248) do
     t.string "relevant_link"
     t.jsonb "contact_details"
     t.string "african_presence"
+    t.string "region"
     t.string "task_id"
     t.index ["community_id", "email"], name: "index_users_on_community_id_and_email", unique: true
     t.index ["latest_substatus_id"], name: "index_users_on_latest_substatus_id"

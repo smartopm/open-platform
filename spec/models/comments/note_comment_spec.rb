@@ -39,5 +39,6 @@ RSpec.describe Comments::NoteComment, type: :model do
   describe 'associations' do
     it { is_expected.to belong_to(:note).class_name('Notes::Note') }
     it { is_expected.to belong_to(:user).class_name('Users::User') }
+    it { is_expected.to belong_to(:reply_from).class_name('Users::User').optional }
   end
 end

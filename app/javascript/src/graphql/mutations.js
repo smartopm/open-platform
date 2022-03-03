@@ -354,10 +354,13 @@ export const CreateNote = gql`
 `
 
 export const TaskComment = gql`
-mutation noteCommentCreate($noteId: ID!, $body: String!) {
+mutation noteCommentCreate($noteId: ID!, $body: String!, $replyRequired: Boolean, $replyFromId: ID, $groupingId: ID) {
   noteCommentCreate(
-    noteId: $noteId,,
-    body:$body
+    noteId: $noteId
+    body: $body
+    replyRequired: $replyRequired
+    replyFromId: $replyFromId
+    groupingId: $groupingId
   ) {
     noteComment {
       body
