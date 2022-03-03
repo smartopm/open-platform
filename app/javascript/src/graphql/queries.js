@@ -821,6 +821,11 @@ export const CommentQuery = gql`
         name
         imageUrl
       }
+      repliedAt,
+      replyFrom {
+        name
+      }
+      replyRequired
     }
   }
 `;

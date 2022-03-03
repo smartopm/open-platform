@@ -32,10 +32,10 @@ export default function CommentCard({ comments, refetch, commentsRefetch }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const [currentComment, setCurrentComment] = useState('');
   const menuOpen = Boolean(anchorEl);
-  const authState = useContext (AuthStateContext);
+  const authState = useContext(AuthStateContext);
   const classes = useStyles();
 
-  const { t } = useTranslation('common');
+  const { t } = useTranslation(['task', 'common']);
 
   function handleClose() {
     setEdit(false);
@@ -73,10 +73,20 @@ export default function CommentCard({ comments, refetch, commentsRefetch }) {
           keepMounted={false}
           data-testid="more_details_menu"
         >
-          <MenuItem id="edit_button" data-testid="edit" key="edit" onClick={() => editClick(currentComment)}>
+          <MenuItem
+            id="edit_button"
+            data-testid="edit"
+            key="edit"
+            onClick={() => editClick(currentComment)}
+          >
             {t('common:menu.edit')}
           </MenuItem>
-          <MenuItem id="delete_button" data-testid="delete" key="delete" onClick={() => deleteClick(currentComment)}>
+          <MenuItem
+            id="delete_button"
+            data-testid="delete"
+            key="delete"
+            onClick={() => deleteClick(currentComment)}
+          >
             {t('common:menu.delete')}
           </MenuItem>
         </Menu>
@@ -94,20 +104,41 @@ export default function CommentCard({ comments, refetch, commentsRefetch }) {
                           alt="avatar-image"
                           style={{ margin: '-7px 10px 0 0' }}
                         />
-                        <Typography
-                          component="span"
-                          variant="body2"
-                          style={{ color: '#575757', overflowWrap: 'anywhere' }}
+                        <div
                           data-testid="comment-body"
+                          style={{
+                            color: '#575757',
+                            overflowWrap: 'anywhere',
+                            marginTop: '-20px',
+                            marginBottom: '20px'
+                          }}
                         >
-                          {dateToString(com.createdAt)}
-                          {' '}
-                          {com.body}
-                        </Typography>
+                          <Typography component="span" variant="body2" style={{ fontSize: '12px' }}>
+                            {dateToString(com.createdAt)}
+                          </Typography>
+                          {com.replyRequired && !com.repliedAt && (
+                            <Typography
+                              data-testid="needs_reply_text"
+                              component="span"
+                              variant="body2"
+                              style={{ marginLeft: '15px', fontSize: '12px', color: '#C5261B' }}
+                            >
+                              {`${t('task.needs_reply_from')} ${com.replyFrom.name}`}
+                            </Typography>
+                          )}
+                          <br />
+                          <Typography component="span" variant="body2">
+                            {com.user.name}
+                          </Typography>
+                          <br />
+                          <Typography component="span" variant="body2">
+                            {com.body}
+                          </Typography>
+                        </div>
                       </div>
                     )}
                   />
-                  {(authState.user.userType === 'admin' || (com.user.id === authState.user.id)) && (
+                  {(authState.user.userType === 'admin' || com.user.id === authState.user.id) && (
                     <ListItemSecondaryAction className={classes.kabab}>
                       <IconButton
                         edge="end"
@@ -123,7 +154,12 @@ export default function CommentCard({ comments, refetch, commentsRefetch }) {
                 </ListItem>
               )}
               {editId === com.id && (
-                <EditField handleClose={handleClose} data={com} refetch={refetch} commentsRefetch={commentsRefetch} />
+                <EditField
+                  handleClose={handleClose}
+                  data={com}
+                  refetch={refetch}
+                  commentsRefetch={commentsRefetch}
+                />
               )}
             </Fragment>
           ))}
@@ -160,6 +196,7 @@ const useStyles = makeStyles(() => ({
   kabab: {
     '@media (min-device-width: 375px) and (max-device-height: 900px)': {
       top: '40%'
-    }
+    },
+    marginTop: '-20px'
   }
 }));
