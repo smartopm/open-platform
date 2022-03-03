@@ -165,7 +165,7 @@ export default function UsersImport() {
           )}
         </Grid>
         <br />
-        <Grid item md={6} style={{ alignSelf: 'center' }}>
+        <Grid item md={6} style={{ alignSelf: 'center', marginLeft: '25px', marginRight: '25px' }}>
           You can upload a .csv file with multiple users. Below is a list of the expected column
           headers with examples (: i.e...).
           <br />
