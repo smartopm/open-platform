@@ -41,9 +41,9 @@ export function GuestQRCode({ data, requestId }) {
             style={{ marginBottom: '1em' }}
           >
             <div className="member_type">
-              <h3>
+              <h5>
                 {t('guest.qr_code')}
-              </h3>
+              </h5>
             </div>
           </div>
           <div className="d-flex justify-content-center">
