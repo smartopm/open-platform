@@ -25,11 +25,11 @@ export default function InviteListCard({ invitation }) {
 
   return (
     <Card key={invitation.id}>
-      <Grid container spacing={1}>
-        <Grid item sm={1} xs={2} className={classes.hostAvatar}>
+      <Grid container spacing={1} alignItems="center">
+        <Grid item sm={1} xs={2}>
           <Avatar imageUrl={invitation.host.imageUrl} user={invitation.host} alt="host_avatar" />
         </Grid>
-        <Grid item md={3} sm={5} xs={10} className={classes.hostDetailsAlign}>
+        <Grid item md={3} sm={5} xs={10}>
           <Typography variant="subtitle1" color="primary" data-testid="host_name">
             <Link style={{ textDecoration: 'none' }} to={`/user/${invitation.host.id}`}>{invitation.host.name}</Link>
           </Typography>
@@ -93,12 +93,6 @@ InviteListCard.propTypes = {
 
 
 const useStyles = makeStyles(() => ({
-  hostDetailsAlign: {
-    marginTop: 10
-  },
-  hostAvatar: {
-    marginTop: 4
-  },
   hostProfileLink: {
     textDecoration: 'none'
   },
