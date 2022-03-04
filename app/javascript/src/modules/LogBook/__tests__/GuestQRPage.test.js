@@ -1,15 +1,14 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom/';
 import { MockedProvider } from '@apollo/react-testing';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import authState from '../../../__mocks__/authstate';
 import GuestQRPage, { GuestQRCode } from '../Components/GuestQRPage';
-import { Spinner } from '../../../shared/Loading';
 
-describe('Guest QRPage Component', () => {
-  it('renders GuestQRPage component', () => {
+describe('Guest QRPage Component',  () => {
+  it('renders GuestQRPage component', async() => {
     render(
       <MockedProvider>
         <BrowserRouter>
@@ -21,9 +20,9 @@ describe('Guest QRPage Component', () => {
         </BrowserRouter>
       </MockedProvider>
     );
-    
-      const loader = render(<Spinner />);
-      expect(loader.queryAllByTestId('loader')[0]).toBeInTheDocument();
+      await waitFor(() => {
+        expect(screen.queryByTestId('loader')).toBeInTheDocument();
+      }, 10)
   });
 
   it('renders GuestQRCode component', () => {
