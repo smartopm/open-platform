@@ -2,7 +2,13 @@ import React, { useContext } from 'react';
 import { QRCode } from 'react-qr-svg';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
+import { useQuery } from 'react-apollo';
+import { Redirect } from "react-router-dom";
 import { Context } from '../../../containers/Provider/AuthStateProvider';
+import { EntryRequestQuery } from '../../../graphql/queries';
+import { Spinner } from '../../../shared/Loading';
+import CenteredContent from '../../../shared/CenteredContent';
+import { formatError } from '../../../utils/helpers';
 
 function qrCodeAddress(reqId) {
   return `${window.location.protocol}//${window.location.hostname}/request/${reqId}`
@@ -10,7 +16,15 @@ function qrCodeAddress(reqId) {
 
 export default function GuestQRPage({ match }){
   const { id } = match.params;
-  const authState = useContext(Context)
+  const authState = useContext(Context);
+  const { loading, error, data } = useQuery(EntryRequestQuery, {
+    variables: { id },
+    errorPolicy: 'all'
+  })
+  if (loading) return <Spinner />
+  if(error) return <CenteredContent>{formatError(error.message)}</CenteredContent>
+  if(data?.result?.guestId !== authState.user.id) return <Redirect push to="/" />;
+
   return (
     <GuestQRCode data={authState} requestId={id} />
   )
