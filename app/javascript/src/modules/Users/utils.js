@@ -626,6 +626,12 @@ export function selectOptions(
       show: checkCommunityFeatures('Users') && checkModule('user')
     },
     {
+      key: 'invitations',
+      value: 'Invitations',
+      handleMenuItemClick,
+      show: checkCommunityFeatures('LogBook') && checkModule('entry_request')
+    },
+    {
       key: 'forms',
       value: 'Forms',
       handleMenuItemClick,

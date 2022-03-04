@@ -37,6 +37,7 @@ export const MyHostsQuery = gql`
       myHosts(userId: $userId) {
         id
         createdAt
+        status
         host {
           id
           name
