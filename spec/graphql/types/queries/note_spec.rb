@@ -492,14 +492,6 @@ RSpec.describe Types::Queries::Note do
       end
 
       describe 'Get tasks by role' do
-        # let(:developer_role) { create(:role, name: 'developer', community: admin.community) }
-        # let(:developer) { create(:developer, role: developer_role, community: admin.community) }
-        # let!(:developer_permissions) do
-        #   create(:permission, module: 'note',
-        #                       role: developer_role,
-        #                       permissions: %w[can_fetch_flagged_notes])
-        # end
-
         let(:form) do
           create(:form, name: 'DRC Project Review Process V3', community: admin.community)
         end
