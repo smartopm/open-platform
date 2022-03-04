@@ -476,6 +476,7 @@ module Types::Queries::Note
           I18n.t('errors.unauthorized')
   end
 
+  # rubocop:disable Metrics/MethodLength
   def project_tagged_comments(parent_task, sub_task_ids)
     parent_task
       .note_comments
@@ -490,5 +491,6 @@ module Types::Queries::Note
         ),
       )
   end
+  # rubocop:enable Metrics/MethodLength
 end
 # rubocop:enable Metrics/ModuleLength

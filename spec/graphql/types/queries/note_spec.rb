@@ -35,7 +35,8 @@ RSpec.describe Types::Queries::Note do
     let!(:developer_permissions) do
       create(:permission, module: 'note',
                           role: developer_role,
-                          permissions: %w[can_fetch_flagged_notes can_fetch_tagged_comments])
+                          permissions: %w[can_fetch_flagged_notes can_fetch_task_comments
+                                          can_fetch_tagged_comments])
     end
 
     let!(:first_note) do
@@ -986,7 +987,7 @@ RSpec.describe Types::Queries::Note do
           expect(result.dig('data', 'projectComments').length).to eq 3
         end
 
-        it 'retrieves tagged comments for developers' do
+        it 'retrieves tagged comments for developers requested for reply' do
           create(
             :note_comment,
             note: third_note,
@@ -994,6 +995,7 @@ RSpec.describe Types::Queries::Note do
             user: developer,
             status: 'active',
             reply_required: true,
+            reply_from: developer,
           )
 
           subtask1 = admin.notes.create!(
@@ -1014,16 +1016,36 @@ RSpec.describe Types::Queries::Note do
             user: developer,
             status: 'active',
             reply_required: true,
+            reply_from: developer,
           )
 
-
           result = DoubleGdpSchema.execute(project_comments_query, context: {
-                                        current_user: developer,
-                                        site_community: developer.community,
-                                      }, variables: { taskId: third_note.id }).as_json
+                                             current_user: developer,
+                                             site_community: developer.community,
+                                           }, variables: { taskId: third_note.id }).as_json
 
           expect(result['errors']).to be_nil
           expect(result.dig('data', 'projectComments').length).to eq 2
+        end
+
+        it 'retrieves no tagged comments for developers requested for reply' do
+          create(
+            :note_comment,
+            note: third_note,
+            body: 'Comment needs reply from developer',
+            user: developer,
+            status: 'active',
+            reply_required: true,
+            reply_from: site_worker,
+          )
+
+          result = DoubleGdpSchema.execute(project_comments_query, context: {
+                                             current_user: developer,
+                                             site_community: developer.community,
+                                           }, variables: { taskId: third_note.id }).as_json
+
+          expect(result['errors']).to be_nil
+          expect(result.dig('data', 'projectComments').length).to eq 0
         end
       end
 
