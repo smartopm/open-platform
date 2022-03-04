@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom/';
 import { MockedProvider } from '@apollo/react-testing';
@@ -8,21 +8,16 @@ import authState from '../../../__mocks__/authstate';
 import GuestQRPage, { GuestQRCode } from '../Components/GuestQRPage';
 
 describe('Guest QRPage Component',  () => {
-  it('renders GuestQRPage component', async() => {
+  it('renders GuestQRPage component', () => {
     render(
-      <MockedProvider>
-        <BrowserRouter>
-          <Context.Provider value={authState}>
-            <GuestQRPage
-              match={{params: {id: 'd6765-b10e-4865-bee7'}}}
-            />
-          </Context.Provider>
-        </BrowserRouter>
-      </MockedProvider>
+      <Context.Provider value={authState}>
+        <GuestQRPage
+          match={{params: {id: 'd6765-b10e-4865-bee7'}}}
+        />
+      </Context.Provider>
     );
-      await waitFor(() => {
-        expect(screen.queryByTestId('loader')).toBeInTheDocument();
-      }, 10)
+    expect(screen.queryByText('guest.qr_code')).toBeInTheDocument();
+    expect(screen.queryByText('John Doctor')).toBeInTheDocument();
   });
 
   it('renders GuestQRCode component', () => {

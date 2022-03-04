@@ -1,31 +1,18 @@
-/* eslint-disable react/prop-types */
-/* eslint-disable camelcase */
 import React, { useContext } from 'react';
-import { useQuery } from 'react-apollo';
 import { QRCode } from 'react-qr-svg';
+import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import { UserQuery } from '../../../graphql/queries';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
-import { Spinner } from '../../../shared/Loading';
-import CenteredContent from '../../../shared/CenteredContent';
-import { formatError } from '../../../utils/helpers';
 
-function qrCodeAddress(id_card_token) {
-  return `${window.location.protocol}//${window.location.hostname}/request/${id_card_token}`
+function qrCodeAddress(reqId) {
+  return `${window.location.protocol}//${window.location.hostname}/request/${reqId}`
 }
 
 export default function GuestQRPage({ match }){
   const { id } = match.params;
   const authState = useContext(Context)
-  const { loading, error, data } = useQuery(UserQuery, {
-    variables: { id: authState.user?.id },
-    errorPolicy: 'all'
-  })
-  if (loading) return <Spinner />
-  if(error) return <CenteredContent>{formatError(error.message)}</CenteredContent>
-
   return (
-    <GuestQRCode data={data} requestId={id} />
+    <GuestQRCode data={authState} requestId={id} />
   )
 }
 
@@ -61,4 +48,18 @@ export function GuestQRCode({ data, requestId }) {
       </div>
     </div>
   )
+}
+
+
+GuestQRPage.propTypes = {
+  match: PropTypes.shape({
+    params: PropTypes.shape({ id: PropTypes.string })
+  }).isRequired
+}
+
+GuestQRCode.propTypes = {
+  data: PropTypes.shape({
+    user: PropTypes.shape({ name: PropTypes.string })
+  }).isRequired,
+  requestId: PropTypes.string.isRequired
 }
