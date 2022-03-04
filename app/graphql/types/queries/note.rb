@@ -179,10 +179,22 @@ module Types::Queries::Note
     sub_task_ids = parent_task.sub_tasks.pluck(:id)
     sub_sub_task_ids = Notes::Note.where(parent_note_id: sub_task_ids).pluck(:id)
 
+    if permitted?(module: :note, permission: :can_fetch_tagged_comments)
+      tagged_comments = project_tagged_comments(parent_task, sub_task_ids.concat(sub_sub_task_ids))
+      return tagged_comments.limit(limit).offset(offset)
+    end
+
     parent_task
       .note_comments
+      .where(reply_required: true, replied_at: nil)
       .eager_load(:user)
-      .or(Comments::NoteComment.where(note_id: sub_task_ids.concat(sub_sub_task_ids)))
+      .or(
+        Comments::NoteComment.where(
+          note_id: sub_task_ids.concat(sub_sub_task_ids),
+          reply_required: true,
+          replied_at: nil,
+        ),
+      )
       .limit(limit).offset(offset)
   end
   # rubocop:enable Metrics/AbcSize
@@ -462,6 +474,21 @@ module Types::Queries::Note
 
     raise GraphQL::ExecutionError,
           I18n.t('errors.unauthorized')
+  end
+
+  def project_tagged_comments(parent_task, sub_task_ids)
+    parent_task
+      .note_comments
+      .where(reply_required: true, replied_at: nil, reply_from: context[:current_user])
+      .eager_load(:user)
+      .or(
+        Comments::NoteComment.where(
+          reply_from: context[:current_user],
+          note_id: sub_task_ids,
+          reply_required: true,
+          replied_at: nil,
+        ),
+      )
   end
 end
 # rubocop:enable Metrics/ModuleLength

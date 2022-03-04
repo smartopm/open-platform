@@ -10,7 +10,7 @@ import CommentCard from '../../Components/CommentCard';
 import { formatError } from '../../../../utils/helpers';
 import { Spinner } from '../../../../shared/Loading';
 
-export default function ProjectActivitySummary({comments, commentsLoading, commentsError, commentsRefetch, commentsFetchMore}) {
+export default function ProjectActivitySummary({ comments, commentsLoading, commentsError, commentsRefetch, commentsFetchMore }) {
   const classes = useStyles();
   const { t } = useTranslation(['task']);
   const { id: taskId } = useParams();
@@ -38,6 +38,8 @@ export default function ProjectActivitySummary({comments, commentsLoading, comme
 
   if (commentsError) return <CenteredContent>{formatError(commentsError.message)}</CenteredContent>;
   if (commentsLoading) return <Spinner />;
+
+  console.log({ comments })
   return (
     <>
       <Typography

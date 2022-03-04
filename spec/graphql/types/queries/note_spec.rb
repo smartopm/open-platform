@@ -14,6 +14,7 @@ RSpec.describe Types::Queries::Note do
                             can_fetch_task_by_id can_fetch_task_histories
                             can_get_task_count can_get_task_stats can_get_own_tasks
                             can_fetch_all_notes can_fetch_user_notes
+                            can_fetch_tagged_comments
                           ])
     end
     let!(:site_worker_permission) do
@@ -28,6 +29,14 @@ RSpec.describe Types::Queries::Note do
       create(:admin_user, role: admin_role, community: site_worker.community, name: 'John Doe')
     end
     let(:searchable_user) { create(:user, name: 'Henry Tim', community_id: admin.community_id) }
+
+    let(:developer_role) { create(:role, name: 'developer', community: admin.community) }
+    let(:developer) { create(:developer, role: developer_role, community: admin.community) }
+    let!(:developer_permissions) do
+      create(:permission, module: 'note',
+                          role: developer_role,
+                          permissions: %w[can_fetch_flagged_notes can_fetch_tagged_comments])
+    end
 
     let!(:first_note) do
       admin.notes.create!(
@@ -482,13 +491,13 @@ RSpec.describe Types::Queries::Note do
       end
 
       describe 'Get tasks by role' do
-        let(:developer_role) { create(:role, name: 'developer', community: admin.community) }
-        let(:developer) { create(:developer, role: developer_role, community: admin.community) }
-        let!(:developer_permissions) do
-          create(:permission, module: 'note',
-                              role: developer_role,
-                              permissions: %w[can_fetch_flagged_notes])
-        end
+        # let(:developer_role) { create(:role, name: 'developer', community: admin.community) }
+        # let(:developer) { create(:developer, role: developer_role, community: admin.community) }
+        # let!(:developer_permissions) do
+        #   create(:permission, module: 'note',
+        #                       role: developer_role,
+        #                       permissions: %w[can_fetch_flagged_notes])
+        # end
 
         let(:form) do
           create(:form, name: 'DRC Project Review Process V3', community: admin.community)
@@ -925,6 +934,7 @@ RSpec.describe Types::Queries::Note do
             body: 'Step 1',
             user: site_worker,
             status: 'active',
+            reply_required: true,
           )
 
           subtask1 = admin.notes.create!(
@@ -944,6 +954,7 @@ RSpec.describe Types::Queries::Note do
             body: 'Step 1 subtask 1 comment',
             user: site_worker,
             status: 'active',
+            reply_required: true,
           )
 
           subtask2 = admin.notes.create!(
@@ -963,6 +974,7 @@ RSpec.describe Types::Queries::Note do
             body: 'Step 1 subtask 2 comment',
             user: site_worker,
             status: 'active',
+            reply_required: true,
           )
 
           result = DoubleGdpSchema.execute(project_comments_query, context: {
@@ -972,6 +984,46 @@ RSpec.describe Types::Queries::Note do
 
           expect(result['errors']).to be_nil
           expect(result.dig('data', 'projectComments').length).to eq 3
+        end
+
+        it 'retrieves tagged comments for developers' do
+          create(
+            :note_comment,
+            note: third_note,
+            body: 'Comment needs reply from developer',
+            user: developer,
+            status: 'active',
+            reply_required: true,
+          )
+
+          subtask1 = admin.notes.create!(
+            body: 'Step 1 subtask 1',
+            description: 'Step 1 subtask 1',
+            user_id: developer.id,
+            category: 'other',
+            flagged: true,
+            community_id: developer.community_id,
+            author_id: developer.id,
+            parent_note_id: third_note.id,
+          )
+
+          create(
+            :note_comment,
+            note: subtask1,
+            body: 'Step 1 subtask 1 comment needs reply from developer',
+            user: developer,
+            status: 'active',
+            reply_required: true,
+          )
+
+
+          result = DoubleGdpSchema.execute(project_comments_query, context: {
+                                        current_user: developer,
+                                        site_community: developer.community,
+                                      }, variables: { taskId: third_note.id }).as_json
+
+          expect(result['errors']).to be_nil
+          expect(result.dig('data', 'projectComments').length).to eq 2
         end
       end
 
