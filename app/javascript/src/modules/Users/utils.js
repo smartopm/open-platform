@@ -395,7 +395,7 @@ const configObject = {
       }
     },
     {
-      name: 'Level of internationalization',
+      name: 'Level of Internationalization',
       inputName: 'levelOfInternationalization',
       validate: levelOfInternationalization => {
         return internationalizationLevels.includes(
