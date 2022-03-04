@@ -16,7 +16,6 @@ export default function UsersImport() {
   const [importCreate] = useMutation(ImportCreate);
   const [csvString, setCsvString] = useState('');
   const [csvFileName, setCsvFileName] = useState('');
-  // const [errorMessage, setErrorMessage] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const history = useHistory();
   const { token } = useContext(Context);
@@ -74,8 +73,6 @@ export default function UsersImport() {
     }
 
     document.getElementById('file-select-name').innerText = file.name; // set the name of the selected file
-
-    // if (errorMessage) setErrorMessage(null);
 
     if (!file) {
       setCsvString('');
@@ -180,12 +177,15 @@ export default function UsersImport() {
           You can click <a href={`/csv_import_sample/lead_download?token=${token}`}>here</a> to
           download a sample csv file.
           <br />
-          <br />A sample CSV file can be{' '}
+          <br />
+          A sample CSV file can be
+          {' '}
           <a href="https://docs.google.com/spreadsheets/d/1hNJU1lzeqUb5NGWRdUrAVqyDBwAIegwPgOb-HW2_8Ho/edit?usp=sharing">
             viewed here
           </a>
           . Copy the file to edit. Columns shown in green link to selectors in our system and
-          require specific values. A list of these accepted values can be{' '}
+          require specific values. A list of these accepted values can be
+          {' '}
           <a href="https://docs.google.com/spreadsheets/d/1OyBgj1QT3mpsiYElWfI_Cqtrwsw9h20YHVSVLELLpfY/edit?usp=sharing">
             viewed here
           </a>
@@ -223,37 +223,43 @@ export default function UsersImport() {
             <li>Company Website</li>
             <li>Relevant Link/News</li>
             <li>
-              Country{' '}
+              Country
+              {' '}
               <a href="https://docs.google.com/spreadsheets/d/1OyBgj1QT3mpsiYElWfI_Cqtrwsw9h20YHVSVLELLpfY/edit?usp=sharing">
                 accepted value list
               </a>
             </li>
             <li>
-              Region{' '}
+              Region
+              {' '}
               <a href="https://docs.google.com/spreadsheets/d/1OyBgj1QT3mpsiYElWfI_Cqtrwsw9h20YHVSVLELLpfY/edit?usp=sharing">
                 accepted value list
               </a>
             </li>
             <li>
-              Industry Sector{' '}
+              Industry Sector
+              {' '}
               <a href="https://docs.google.com/spreadsheets/d/1OyBgj1QT3mpsiYElWfI_Cqtrwsw9h20YHVSVLELLpfY/edit?usp=sharing">
                 accepted value list
               </a>
             </li>
             <li>
-              Industry Sub Sector{' '}
+              Industry Sub Sector
+              {' '}
               <a href="https://docs.google.com/spreadsheets/d/1OyBgj1QT3mpsiYElWfI_Cqtrwsw9h20YHVSVLELLpfY/edit?usp=sharing">
                 accepted value list
               </a>
             </li>
             <li>
-              Industry Business Activity{' '}
+              Industry Business Activity
+              {' '}
               <a href="https://docs.google.com/spreadsheets/d/1OyBgj1QT3mpsiYElWfI_Cqtrwsw9h20YHVSVLELLpfY/edit?usp=sharing">
                 accepted value list
               </a>
             </li>
             <li>
-              Level of Internationalization{' '}
+              Level of Internationalization
+              {' '}
               <a href="https://docs.google.com/spreadsheets/d/1OyBgj1QT3mpsiYElWfI_Cqtrwsw9h20YHVSVLELLpfY/edit?usp=sharing">
                 accepted value list
               </a>
@@ -262,33 +268,43 @@ export default function UsersImport() {
             <li>Annual Revenue</li>
             <li>African Presence</li>
             <li>
-              Lead Temperature{' '}
+              Lead Temperature
+              {' '}
               <a href="https://docs.google.com/spreadsheets/d/1OyBgj1QT3mpsiYElWfI_Cqtrwsw9h20YHVSVLELLpfY/edit?usp=sharing">
-                accepted value list{' '}
+                accepted value list
+                {' '}
               </a>
             </li>
             <li>
-              Lead Status{' '}
+              Lead Status
+              {' '}
               <a href="https://docs.google.com/spreadsheets/d/1OyBgj1QT3mpsiYElWfI_Cqtrwsw9h20YHVSVLELLpfY/edit?usp=sharing">
-                accepted value list{' '}
+                accepted value list
+                {' '}
               </a>
             </li>
             <li>
-              Lead Type{' '}
+              Lead Type
+              {' '}
               <a href="https://docs.google.com/spreadsheets/d/1OyBgj1QT3mpsiYElWfI_Cqtrwsw9h20YHVSVLELLpfY/edit?usp=sharing">
-                accepted value list{' '}
+                accepted value list
+                {' '}
               </a>
             </li>
             <li>
-              Lead Source{' '}
+              Lead Source
+              {' '}
               <a href="https://docs.google.com/spreadsheets/d/1OyBgj1QT3mpsiYElWfI_Cqtrwsw9h20YHVSVLELLpfY/edit?usp=sharing">
-                accepted value list{' '}
+                accepted value list
+                {' '}
               </a>
             </li>
             <li>
-              Client Category{' '}
+              Client Category
+              {' '}
               <a href="https://docs.google.com/spreadsheets/d/1OyBgj1QT3mpsiYElWfI_Cqtrwsw9h20YHVSVLELLpfY/edit?usp=sharing">
-                accepted value list{' '}
+                accepted value list
+                {' '}
               </a>
             </li>
             <li>Company Contacted</li>
