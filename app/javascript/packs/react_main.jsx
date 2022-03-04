@@ -164,8 +164,7 @@ const App = () => {
                 <Route path="/welcome" component={WelcomePage} />
                 <Route path="/login" component={LoginScreen} />
                 <Route path="/code/:id" component={ConfirmCodeScreen} />
-                <Route path="/l/:id/:code/:type/:requestId" component={OneTimeLoginCode} />
-                <Route path="/l/:id/:code" component={OneTimeLoginCode} />
+                <Route path="/l/:id/:code/:type?/:requestId?" component={OneTimeLoginCode} />
                 <Route path="/logout" component={Logout} />
                 <Route path="/google/:token" component={MainAuthCallback} />
                 <Route path="/facebook/:token" component={MainAuthCallback} />
