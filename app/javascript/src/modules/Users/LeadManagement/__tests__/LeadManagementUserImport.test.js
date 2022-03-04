@@ -1,65 +1,122 @@
 import React from 'react';
-import { render, waitFor, fireEvent } from '@testing-library/react';
+import { render, waitFor, fireEvent, screen } from '@testing-library/react';
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom';
 import '@testing-library/jest-dom/extend-expect';
-import userEvent from '@testing-library/user-event';
 import LeadManagementUserImport from '../Containers/LeadManagementUserImport';
+import * as utils from '../../utils';
+import { ImportCreate } from '../../../../graphql/mutations';
 
 jest.mock('@rails/activestorage/src/file_checksum', async () => jest.fn());
 describe('LeadManagementUserImport component', () => {
-  it('renders file input', async () => {
-    const container = render(
-      <MockedProvider mocks={[]}>
-        <BrowserRouter>
-          <LeadManagementUserImport />
-        </BrowserRouter>
-      </MockedProvider>
-    );
-    await waitFor(() => expect(container.queryByTestId('lead-csv-input')).toBeInTheDocument(), {
-      timeout: 10
-    });
-  });
-
-  it('should initialize new FileReader on selecting a file', async () => {
-    const container = render(
-      <MockedProvider mocks={[]}>
-        <BrowserRouter>
-          <LeadManagementUserImport />
-        </BrowserRouter>
-      </MockedProvider>
-    );
+  it('should not upload  when csv file has errors', async () => {
     const rows = [
       'Name,email,title',
-      'Kamau,bah@gmail.com The BigBoss',
+      ',bah@gmail.com The BigBoss',
       'Njoroge,njeri@gmail.com The BigBossLady'
     ];
-    const file = new Blob([rows.join('\n')], { type: 'csv' });
-    const inputEl = container.queryByTestId('lead-csv-input');
-    Object.defineProperty(inputEl, 'files', { value: [file] });
-    fireEvent.drop(inputEl);
-    // eslint-disable-next-line jest/valid-expect
-    await waitFor(() => expect(FileReader).toHaveBeenCalled, { timeout: 10 });
-  });
+    const file = new Blob([rows.join('\n')], {
+      type: 'csv'
+    });
 
-  it('should render upload description', async () => {
+    jest
+      .spyOn(utils, 'csvValidate')
+      .mockImplementation(() => ['<div> Name is required in the 1st row 2nd column</div>']);
+    jest.spyOn(utils, 'readFileAsText').mockResolvedValue('image content123123');
+    const importCreateMutationMock = [
+      {
+        request: {
+          query: ImportCreate,
+          variables: {
+            csvString: 'image content123123',
+            csvFileName: 'sample_csv.csv',
+            importType: 'lead'
+          }
+        },
+        result: {
+          data: {
+            usersImport: {
+              success: true
+            }
+          }
+        }
+      }
+    ];
     const container = render(
-      <MockedProvider mocks={[]}>
+      <MockedProvider mocks={importCreateMutationMock} addTypename={false}>
         <BrowserRouter>
           <LeadManagementUserImport />
         </BrowserRouter>
       </MockedProvider>
     );
-    expect(
-      container.queryByText(/You can upload a .csv file with multiple users./)
-    ).toBeInTheDocument();
-    const file = File([''], '../../../../../../../public/lead_import_sample.csv', {
+
+    const uploadButton = container.queryByTestId('lead-csv-input-button');
+    fireEvent.click(uploadButton);
+    const inputElement = container.queryByTestId('lead-csv-input');
+    fireEvent.change(inputElement, { target: { files: [file] } });
+    await waitFor(() => {
+      // assert ui state
+      expect(container.queryByTestId('lead-csv-errors')).toBeInTheDocument();
+      expect(
+        container.queryByText(/Name is required in the 1st row 2nd column/i)
+      ).toBeInTheDocument();
+    });
+  });
+
+  // this is the second test, it should run clean
+  it('should upload  when csv file has no errors', async () => {
+    const rows = [
+      'Name,email,title',
+      'Waweru,bah@gmail.com The BigBoss',
+      'Njoroge,njeri@gmail.com The BigBossLady'
+    ];
+    const file = new Blob([rows.join('\n')], {
       type: 'csv'
     });
-    userEvent.upload(container.queryByTestId('lead-csv-input'), file);
+    file.name = 'sample_csv.csv';
+    jest.spyOn(utils, 'csvValidate').mockImplementation(() => []);
+    jest.spyOn(utils, 'readFileAsText').mockResolvedValue('image content123123');
+    const importCreateMutationMock = [
+      {
+        request: {
+          query: ImportCreate,
+          variables: {
+            csvString: 'image content123123',
+            csvFileName: 'sample_csv.csv',
+            importType: 'lead'
+          }
+        },
+        result: {
+          data: {
+            usersImport: {
+              success: true
+            }
+          }
+        }
+      }
+    ];
+    const container = render(
+      <MockedProvider mocks={importCreateMutationMock} addTypename={false}>
+        <BrowserRouter>
+          <LeadManagementUserImport />
+        </BrowserRouter>
+      </MockedProvider>
+    );
 
+    const uploadButton = container.queryByTestId('lead-csv-input-button');
+    fireEvent.click(uploadButton);
+    const inputElement = container.queryByTestId('lead-csv-input');
+    fireEvent.change(inputElement, { target: { files: [file] } });
     await waitFor(() => {
-      expect(container.getByTestId('lead-csv-input')).toBeInTheDocument();
-    });
+      // assert ui state
+      expect(container.queryByTestId('cancel-btn')).toBeInTheDocument();
+    }, 10);
+    expect(await screen.findByTestId('import-btn')).toBeInTheDocument();
+    fireEvent.click(await screen.findByTestId('import-btn'));
+    expect(
+      await screen.findByText(
+        "Your import is currently being processed. You'll receive a mail when it's done."
+      )
+    ).toBeInTheDocument();
   });
 });
