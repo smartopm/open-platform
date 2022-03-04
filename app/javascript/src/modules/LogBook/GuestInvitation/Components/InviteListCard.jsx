@@ -21,6 +21,7 @@ export default function InviteListCard({ invitation }) {
   const classes = useStyles()
   const timeZone = authState.user.community.timezone;
   const isValid = checkRequests(invitation.entryTime, t, timeZone).valid;
+  const isCancelled = invitation.status === 'cancelled'
 
   return (
     <Card key={invitation.id}>
@@ -58,6 +59,12 @@ export default function InviteListCard({ invitation }) {
             color={isValid ? 'success' : 'error'}
             size="small"
           />
+          <Chip
+            label={isCancelled ? t('guest_book.cancelled') : t('guest_book.active')}
+            color={isCancelled ? 'error': 'success'}
+            size="small"
+            className={classes.cancelledLabel}
+          />
         </Grid>
       </Grid>
     </Card>
@@ -80,6 +87,7 @@ InviteListCard.propTypes = {
     }),
     id: PropTypes.string,
     createdAt: PropTypes.string,
+    status: PropTypes.string,
   }).isRequired,
 };
 
@@ -93,5 +101,8 @@ const useStyles = makeStyles(() => ({
   },
   hostProfileLink: {
     textDecoration: 'none'
-  }
+  },
+  cancelledLabel: {
+    marginLeft: 5
+  },
 }))
