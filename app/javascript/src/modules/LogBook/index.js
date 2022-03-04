@@ -51,6 +51,7 @@ export default {
   },
   styleProps: {
     icon: <MenuBookIcon />,
+    className: 'logbook-menu-item'
   },
   name: (t) => t('misc.log_book'),
   featureName: 'LogBook',

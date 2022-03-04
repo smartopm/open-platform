@@ -29,6 +29,7 @@ const GuestInvitationRoutes = {
   },
   styleProps: {
     icon: null,
+    className: 'guest-list-sub-menu-item'
   },
   name: (t) => t('menu.guest_list'),
   featureName: 'Guest List',
