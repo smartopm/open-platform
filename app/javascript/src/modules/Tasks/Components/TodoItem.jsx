@@ -151,8 +151,6 @@ export default function TodoItem({
     handleTodoClick(taskItem, 'processes', tab);
   }
 
-  console.log({ task, subTasks: data?.taskSubTasks })
-
   return (
     <>
       <div style={{ marginBottom: '10px' }} key={task?.id}>
