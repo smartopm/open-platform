@@ -59,16 +59,15 @@ describe('LeadManagementUserImport component', () => {
     const file = new Blob([rows.join('\n')], {
       type: 'csv'
     });
-
+    file.name = 'sample_csv.csv';
     jest.spyOn(utils, 'csvValidate').mockImplementation(() => []);
     jest.spyOn(utils, 'readFileAsText').mockResolvedValue('image content123123');
-
     const importCreateMutationMock = [
       {
         request: {
           query: ImportCreate,
           variables: {
-            csvString: file,
+            csvString: 'image content123123',
             csvFileName: 'sample_csv.csv',
             importType: 'lead'
           }
@@ -84,7 +83,7 @@ describe('LeadManagementUserImport component', () => {
     ];
 
     const container = render(
-      <MockedProvider mocks={importCreateMutationMock}>
+      <MockedProvider mocks={importCreateMutationMock} addTypename={false}>
         <BrowserRouter>
           <LeadManagementUserImport />
         </BrowserRouter>
@@ -101,7 +100,7 @@ describe('LeadManagementUserImport component', () => {
       const importButton = container.queryByTestId('import-btn');
       expect(importButton).toBeInTheDocument();
       expect(container.queryByTestId('cancel-btn')).toBeInTheDocument();
-      fireEvent.click(importButton);
+      fireEvent.click(importButton); // this is the culprit
       expect(container.queryByTestId('loader')).toBeInTheDocument();
     });
   });
