@@ -40,6 +40,7 @@ export const TaskQuery = gql`
         name
         imageUrl
         avatarUrl
+        userType
       }
       assigneeNotes{
         id

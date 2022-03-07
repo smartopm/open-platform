@@ -47,7 +47,8 @@ describe('LeadManagementForm', () => {
                 id: '567age',
                 name: 'John',
                 imageUrl: '',
-                avatarUrl: ''
+                avatarUrl: '',
+                userType: 'admin'
               }
             ],
             assigneeNotes: [

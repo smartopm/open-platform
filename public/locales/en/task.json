@@ -27,6 +27,7 @@
     "search_users": "Search Users",
     "require_a_reply": "Require a reply",
     "needs_reply_from": "NEEDS REPLY from",
+    "replied": "replied",
     "task_search_placeholder": "Search Assignee",
     "task_user_label": "Task user",
     "task_reminder_in_1_hr": "Remind Me in 1 hour",

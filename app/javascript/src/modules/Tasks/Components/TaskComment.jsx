@@ -8,7 +8,7 @@ import CommentField from './CommentField';
 import { CommentQuery } from '../../../graphql/queries';
 import ErrorPage from '../../../components/Error';
 
-export default function TaskComment({ taskId, commentsRefetch, forProcess, processesProps }) {
+export default function TaskComment({ taskId, commentsRefetch, forProcess, taskAssignees }) {
   const { data: commentData, error, refetch } = useQuery(CommentQuery, {
     variables: { taskId },
     fetchPolicy: 'cache-and-network',
@@ -30,7 +30,7 @@ export default function TaskComment({ taskId, commentsRefetch, forProcess, proce
         taskId={taskId}
         commentsRefetch={commentsRefetch}
         forProcess={forProcess}
-        processesProps={processesProps}
+        taskAssignees={taskAssignees}
       />
     </div>
   );
@@ -40,17 +40,11 @@ TaskComment.defaultProps = {
   taskId: '',
   commentsRefetch: () => {},
   forProcess: false,
-  processesProps: null
+  taskAssignees: null
 };
 TaskComment.propTypes = {
   taskId: PropTypes.string,
   commentsRefetch: PropTypes.func,
   forProcess: PropTypes.bool,
-  processesProps: PropTypes.shape({
-    searchUser: PropTypes.func.isRequired,
-    setSearchUser: PropTypes.func.isRequired,
-    userData: PropTypes.shape({
-      usersLite: PropTypes.array
-    })
-  })
+  taskAssignees: PropTypes.array
 };

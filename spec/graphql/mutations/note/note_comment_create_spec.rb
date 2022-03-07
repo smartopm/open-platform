@@ -34,7 +34,16 @@ RSpec.describe Mutations::Note::NoteCommentCreate do
         author_id: admin.id,
       )
     end
-
+    let!(:comment) do
+      note.note_comments.create!(
+        user_id: admin.id,
+        status: 'active',
+        body: 'This is the first comment',
+        reply_required: true,
+        reply_from_id: another_user.id,
+        grouping_id: '9fafaba8-ad19-4a08-97e4-9b670d482cfa',
+      )
+    end
     let(:query) do
       <<~GQL
         mutation noteCommentCreate($noteId: ID!, $body: String!, $replyRequired: Boolean, $replyFromId: ID, $groupingId: ID) {
@@ -82,6 +91,30 @@ RSpec.describe Mutations::Note::NoteCommentCreate do
       )
       expect(result.dig('data', 'noteCommentCreate', 'noteComment', 'replyFrom', 'name')).to eql(
         site_worker.name,
+      )
+      expect(result['errors']).to be_nil
+    end
+
+    it 'creates a replied comment and update previous one as replied' do
+      another_user.update!(community_id: admin.community.id)
+
+      variables = {
+        noteId: note.id,
+        body: 'This is a reply to your comment',
+        replyRequired: true,
+        replyFromId: admin.id,
+        groupingId: '9fafaba8-ad19-4a08-97e4-9b670d482cfa',
+      }
+
+      result = DoubleGdpSchema.execute(query, variables: variables,
+                                              context: {
+                                                current_user: another_user,
+                                              }).as_json
+
+      expect(comment.reload.replied_at).not_to be_nil
+      expect(result.dig('data', 'noteCommentCreate', 'noteComment', 'id')).not_to be_nil
+      expect(result.dig('data', 'noteCommentCreate', 'noteComment', 'body')).to eql(
+        'This is a reply to your comment',
       )
       expect(result['errors']).to be_nil
     end

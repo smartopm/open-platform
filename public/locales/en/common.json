@@ -261,7 +261,9 @@
     "open": "Open",
     "user": "User",
     "person": "Person",
-    "company": "Company"
+    "company": "Company",
+    "reply": "Reply",
+    "add_reply": "Add a reply"
   },
   "menu": {
     "invoice": "Invoice",

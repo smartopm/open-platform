@@ -1,3 +1,5 @@
+/* eslint-disable security/detect-object-injection */
+/* eslint-disable no-param-reassign */
 import { toTitleCase } from "../../../utils/helpers";
 
 export function hrefsExtractor(link) {
@@ -58,4 +60,17 @@ export function snakeCaseToSentence(text){
   if (!text) return null;
   const plainText = text.replace(/_/g, ' ')
   return toTitleCase(plainText)
+}
+
+export function groupComments(comments){
+  return comments.reduce((result, comment) => {
+    const groupedId = comment.groupingId || 'no-group'
+    result[groupedId] = [...result[groupedId] || [], comment];
+    return result;
+  }, {});
+}
+
+export function lastRepliedComment(groupedComments, groupingId) {
+  const commentsInGroup = groupedComments[groupingId]
+  return commentsInGroup[commentsInGroup.length - 1]
 }

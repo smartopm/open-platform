@@ -13,19 +13,34 @@ module Mutations
       field :note_comment, Types::NoteCommentType, null: true
 
       # rubocop:disable Metrics/AbcSize
+      # rubocop:disable Metrics/MethodLength
       def resolve(vals)
-        comment = context[:current_user].note_comments.new(vals)
-        comment.status = 'active'
-        raise GraphQL::ExecutionError, note.errors.full_messages unless comment.save
+        ActiveRecord::Base.transaction do
+          update_previous_comment!(vals[:note_id], vals[:grouping_id])
 
-        if comment.grouping_id.nil? && comment.reply_required
-          comment.update!(grouping_id: comment.id)
+          comment = context[:current_user].note_comments.new(vals)
+          comment.status = 'active'
+          comment.save!
+
+          if comment.grouping_id.nil? && comment.reply_required
+            comment.update!(grouping_id: comment.id)
+          end
+
+          comment.record_note_history(context[:current_user])
+          { note_comment: comment }
         end
-
-        comment.record_note_history(context[:current_user])
-        { note_comment: comment }
       end
       # rubocop:enable Metrics/AbcSize
+      # rubocop:enable Metrics/MethodLength
+
+      def update_previous_comment!(note_id, grouping_id)
+        return unless grouping_id
+
+        note = Notes::Note.find(note_id)
+        note.note_comments.find_by(grouping_id: grouping_id, replied_at: nil).update!(
+          replied_at: Time.zone.now,
+        )
+      end
 
       def authorized?(_vals)
         return true if permitted?(module: :note, permission: :can_create_note_comment)
