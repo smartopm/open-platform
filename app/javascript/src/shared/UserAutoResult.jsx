@@ -10,7 +10,6 @@ import UserAvatar from '../modules/Users/Components/UserAvatar';
 export default function UserAutoResult({ user }) {
   const classes = useStyles();
   const matches = useMediaQuery('(max-width:800px)');
-
   const { t } = useTranslation(['search', 'common']);
 
   return (
