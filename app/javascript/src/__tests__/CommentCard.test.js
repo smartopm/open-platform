@@ -81,7 +81,39 @@ describe('Comment Card Component', () => {
         </MockedProvider>
       </Context.Provider>
     )
-
     expect(container.getByTestId('needs_reply_text')).toBeInTheDocument();
+  })
+
+  it('displays "Replied" label', () => {
+    const comments = [
+      {
+      id: 'jwhekw',
+      body: 'body',
+      createdAt: "2020-09-30T20:32:17Z",
+      user: {
+        imageUrl: '',
+        name: 'name'
+        },
+        repliedAt: "2020-09-30T20:32:17Z",
+        replyFrom: {
+          name: 'Nurudeen'
+        },
+        replyRequired: true
+      },
+    ];
+    const container = render(
+      <Context.Provider value={authState}>
+        <MockedProvider>
+          <BrowserRouter>
+            <CommentCard
+              comments={comments}
+              refetch={jest.fn}
+              forAccordionSection
+            />
+          </BrowserRouter>
+        </MockedProvider>
+      </Context.Provider>
+    )
+    expect(container.getByTestId('replied_text')).toBeInTheDocument();
   })
 })

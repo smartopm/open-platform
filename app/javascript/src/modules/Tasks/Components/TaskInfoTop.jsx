@@ -125,6 +125,7 @@ export default function TaskInfoTop({
   function isUnAuthorizedDeveloper() {
     return (
       currentUser.userType === 'developer' &&
+      
       !data.parentNote.assignees.find(assignee => assignee.id === currentUser.id)
     );
   }
@@ -635,7 +636,7 @@ TaskInfoTop.propTypes = {
   }).isRequired,
   handleSplitScreenClose: PropTypes.func,
   refetch: PropTypes.func.isRequired,
-  handleTaskComplete: PropTypes.func, 
+  handleTaskComplete: PropTypes.func,
   forProcess: PropTypes.bool,
   fromLeadPage: PropTypes.bool
 };

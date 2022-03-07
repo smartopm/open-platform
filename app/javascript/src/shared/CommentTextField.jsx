@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import Grid from '@mui/material/Grid';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
@@ -17,19 +17,13 @@ export default function CommentTextField({
   placeholder,
   loading,
   forProcess,
-  processesProps,
   selectedUser,
   setSelectedUser,
   autoCompleteOpen,
-  setAutoCompleteOpen
+  setAutoCompleteOpen,
+  taskAssignees
 }) {
   const { t } = useTranslation(['task', 'common']);
-
-  useEffect(() => {
-    if (processesProps) {
-      processesProps.setSearchUser('user_type:developer');
-    }
-  }, [processesProps]);
 
   return (
     <Grid container alignContent="space-between">
@@ -98,23 +92,20 @@ export default function CommentTextField({
               data-testid="users_autocomplete"
               style={{ width: '100%' }}
               id="reply-user"
-              options={processesProps.userData?.usersLite || []}
+              options={taskAssignees || []}
               renderOption={option => <UserAutoResult user={option} t={t} />}
               name="reply-user"
               onChange={(_event, newValue) => setSelectedUser(newValue)}
               getOptionLabel={option => option?.name}
               getOptionSelected={(option, optionValue) => option.name === optionValue.name}
               value={selectedUser}
+              noOptionsText="No valid assignees on this project"
               renderInput={params => (
                 <TextField
                   {...params}
                   variant="outlined"
                   label={t('task.search_users')}
-                  onChange={event =>
-                    processesProps.setSearchUser(`${event.target.value} AND user_type:developer`)
-                  }
                   autoComplete="off"
-                  onKeyDown={() => processesProps.searchUser()}
                   style={{ marginTop: '5px' }}
                 />
               )}
@@ -128,11 +119,11 @@ export default function CommentTextField({
 CommentTextField.defaultProps = {
   loading: false,
   forProcess: false,
-  processesProps: null,
   selectedUser: null,
   setSelectedUser: null,
   autoCompleteOpen: false,
-  setAutoCompleteOpen: null
+  setAutoCompleteOpen: null,
+  taskAssignees: null
 };
 
 CommentTextField.propTypes = {
@@ -147,11 +138,5 @@ CommentTextField.propTypes = {
   setSelectedUser: PropTypes.func,
   autoCompleteOpen: PropTypes.bool,
   setAutoCompleteOpen: PropTypes.func,
-  processesProps: PropTypes.shape({
-    searchUser: PropTypes.func.isRequired,
-    setSearchUser: PropTypes.func.isRequired,
-    userData: PropTypes.shape({
-      usersLite: PropTypes.array
-    })
-  })
+  taskAssignees: PropTypes.array
 };

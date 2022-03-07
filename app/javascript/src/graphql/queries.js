@@ -823,9 +823,11 @@ export const CommentQuery = gql`
       }
       repliedAt,
       replyFrom {
+        id
         name
       }
       replyRequired
+      groupingId
     }
   }
 `;
