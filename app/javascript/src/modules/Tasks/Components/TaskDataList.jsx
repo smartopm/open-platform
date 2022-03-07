@@ -13,8 +13,8 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import AccountTreeIcon from '@material-ui/icons/AccountTree';
 import QuestionAnswerIcon from '@material-ui/icons/QuestionAnswer';
 import AttachFileIcon from '@material-ui/icons/AttachFile';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
@@ -305,6 +305,7 @@ export default function TaskDataList({
                     aria-haspopup="true"
                     data-testid="task_subtasks"
                     onClick={() => handleClick('subtasks')}
+                    color='primary'
                   >
                     <AccountTreeIcon
                       fontSize="small"
@@ -319,6 +320,7 @@ export default function TaskDataList({
                   xs={1}
                   className={classes.iconItem}
                   style={{ marginLeft: '-20px' }}
+                  color='primary'
                 >
                   <span>{task?.subTasksCount}</span>
                 </Grid>
@@ -329,6 +331,7 @@ export default function TaskDataList({
                     aria-haspopup="true"
                     data-testid="task_comments"
                     onClick={() => handleClick('comments')}
+                    color='primary'
                   >
                     <QuestionAnswerIcon
                       fontSize="small"
@@ -354,6 +357,7 @@ export default function TaskDataList({
                     aria-haspopup="true"
                     data-testid="task_attach_file"
                     onClick={() => handleClick('documents')}
+                    color='primary'
                   >
                     <AttachFileIcon
                       fontSize="small"
@@ -416,6 +420,7 @@ export default function TaskDataList({
               aria-haspopup="true"
               data-testid="show_task_subtasks"
               onClick={e => handleOpenSubTasksClick(e)}
+              color='primary'
             >
               {openSubTask ? (
                 <KeyboardArrowUpIcon fontSize="small" color="primary" />
