@@ -119,7 +119,7 @@ function fetchMoreOpenTasks() {
               <Grid item md={3} xs={6} className={classes.dueDateAlign}>
                 <Typography variant="body2" component="span" data-testid="task_due_date">
                   {t('task:sub_task.due')}
-                  {task.dueDate ? dateToString(task.dueDate) : 'Never '}
+                  {task.dueDate ? dateToString(task.dueDate) : null}
                 </Typography>
 
               </Grid>
@@ -160,6 +160,7 @@ function fetchMoreOpenTasks() {
                     <IconButton
                       aria-controls="task-subtasks-icon"
                       data-testid="task_subtasks_count"
+                      onClick={() => handleTodoClick(task, 'processes', 'subtasks')}
                     >
                       <AccountTreeIcon
                         fontSize="small"
@@ -177,7 +178,7 @@ function fetchMoreOpenTasks() {
                     <span>{task?.subTasks?.length || 0}</span>
                   </Grid>
                   <Grid item md={2} xs={1}>
-                    <IconButton aria-controls="task-comment-icon" data-testid="task_comments_count">
+                    <IconButton aria-controls="task-comment-icon" data-testid="task_comments_count" onClick={() => handleTodoClick(task, 'processes', 'comments')}>
                       <QuestionAnswerIcon fontSize="small" color="disabled" />
                     </IconButton>
                   </Grid>
@@ -195,6 +196,7 @@ function fetchMoreOpenTasks() {
                       <AttachFileIcon
                         fontSize="small"
                         color={task?.attachments?.length ? 'primary' : 'disabled'}
+                        onClick={() => handleTodoClick(task, 'processes', 'documents')}
                       />
                     </IconButton>
                   </Grid>
