@@ -5,6 +5,7 @@ import { Grid, Typography } from '@mui/material';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import OutlinedInput from '@mui/material/OutlinedInput';
+import InputAdornment from '@mui/material/InputAdornment';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
@@ -35,7 +36,12 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
       <Typography variant="h6" data-testid="lead-management-lead-information-header">
         {t('lead_management.lead_section_header')}
       </Typography>
-      <Grid container spacing={2} data-testid="lead-management-lead-information-section">
+      <Grid
+        container
+        spacing={2}
+        style={{ alignItems: 'center' }}
+        data-testid="lead-management-lead-information-section"
+      >
         <Grid item md={6} xs={12}>
           <FormControl fullWidth size="small">
             <InputLabel id="lead_temperature">{t('lead_management.lead_temperature')}</InputLabel>
@@ -49,7 +55,7 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
               MenuProps={MenuProps}
             >
               <MenuItem value="" />
-              {leadTemperatureOptions.map((val) => (
+              {leadTemperatureOptions.map(val => (
                 <MenuItem key={val} value={val}>
                   {val}
                 </MenuItem>
@@ -71,7 +77,7 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
             >
               <MenuItem value="" />
 
-              {leadStatusOptions.map((val) => (
+              {leadStatusOptions.map(val => (
                 <MenuItem key={val} value={val}>
                   {val}
                 </MenuItem>
@@ -133,7 +139,7 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
               MenuProps={MenuProps}
             >
               <MenuItem value="" />
-              {clientCategories.map((val) => (
+              {clientCategories.map(val => (
                 <MenuItem key={val} value={val}>
                   {val}
                 </MenuItem>
@@ -155,7 +161,7 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
               MenuProps={MenuProps}
             >
               <MenuItem value="" />
-              {leadTypeOptions.map((val) => (
+              {leadTypeOptions.map(val => (
                 <MenuItem key={val} value={val}>
                   {val}
                 </MenuItem>
@@ -163,24 +169,26 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
             </Select>
           </FormControl>
         </Grid>
+
+        <Grid item md={12} xs={12}>
+          <TextField
+            name="nextSteps"
+            label={t('lead_management.next_steps')}
+            style={{ width: '100%' }}
+            onChange={handleChange}
+            value={leadFormData?.user?.nextSteps || ''}
+            variant="outlined"
+            fullWidth
+            rows={2}
+            size="small"
+            margin="normal"
+            inputProps={{
+              'aria-label': 'next_steps'
+            }}
+          />
+        </Grid>
       </Grid>
       <br />
-
-      <TextField
-        name="nextSteps"
-        label={t('lead_management.next_steps')}
-        style={{ width: '100%' }}
-        onChange={handleChange}
-        value={leadFormData?.user?.nextSteps || ''}
-        variant="outlined"
-        fullWidth
-        rows={2}
-        size="small"
-        margin="normal"
-        inputProps={{
-          'aria-label': 'next_steps'
-        }}
-      />
 
       <br />
       <Grid
@@ -231,7 +239,7 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
             onChange={handleChange}
             value={leadFormData?.user?.createdBy || ''}
             variant="outlined"
-            multiline
+            fullWidth
             size="small"
             margin="normal"
             inputProps={{
@@ -280,6 +288,128 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
             selectedDate={leadFormData?.user?.followupAt}
             inputVariant="outlined"
             size="small"
+          />
+        </Grid>
+
+        <Grid item md={6} xs={12}>
+          <TextField
+            name="capexAmount"
+            label={t('lead_management.capex_amount')}
+            style={{ width: '100%' }}
+            onChange={handleChange}
+            value={leadFormData?.user?.capexAmount || ''}
+            variant="outlined"
+            fullWidth
+            size="small"
+            margin="normal"
+            startAdornment={<InputAdornment position="start">$</InputAdornment>}
+            inputProps={{
+              'aria-label': 'capex'
+            }}
+          />
+        </Grid>
+
+        <Grid item md={6} xs={12}>
+          <DatePickerDialog
+            label={t('lead_management.kick_off_date')}
+            inputProps={{ 'data-testid': 'kick_off_date' }}
+            handleDateChange={date =>
+              handleTimeInputChange({ target: { name: 'kickOffDate', value: date } })
+            }
+            selectedDate={leadFormData?.user?.kickOffDate}
+            inputVariant="outlined"
+            size="small"
+          />
+        </Grid>
+
+        <Grid item md={6} xs={12}>
+          <Grid container spacing={2}>
+            <Grid item md={6} xs={6}>
+              <TextField
+                name="investmentSize"
+                label={t('lead_management.investment_size')}
+                style={{ width: '100%' }}
+                onChange={handleChange}
+                value={leadFormData?.user?.investmentSize || ''}
+                variant="outlined"
+                fullWidth
+                size="small"
+                margin="normal"
+                inputProps={{
+                  'aria-label': 'investmentSize'
+                }}
+              />
+            </Grid>
+            <Grid item md={6} xs={6}>
+              <TextField
+                name="investmentTimeline"
+                label={t('lead_management.investiment_timeline')}
+                style={{ width: '100%' }}
+                onChange={handleChange}
+                value={leadFormData?.user?.investmentTimeline || ''}
+                variant="outlined"
+                fullWidth
+                size="small"
+                margin="normal"
+                inputProps={{
+                  'aria-label': 'investment Timeline'
+                }}
+              />
+            </Grid>
+          </Grid>
+        </Grid>
+
+        <Grid item md={6} xs={12}>
+          <Grid container spacing={2}>
+            <Grid item md={6} xs={6}>
+              <TextField
+                name="jobsCreated"
+                label={t('lead_management.jobs_created')}
+                style={{ width: '100%' }}
+                onChange={handleChange}
+                value={leadFormData?.user?.jobsCreated || ''}
+                variant="outlined"
+                fullWidth
+                size="small"
+                margin="normal"
+                inputProps={{
+                  'aria-label': 'jobsCreated'
+                }}
+              />
+            </Grid>
+            <Grid item md={6} xs={6}>
+              <TextField
+                name="jobsTimeline"
+                label={t('lead_management.jobs_timeline')}
+                style={{ width: '100%' }}
+                onChange={handleChange}
+                value={leadFormData?.user?.jobsTimeline || ''}
+                variant="outlined"
+                fullWidth
+                size="small"
+                margin="normal"
+                inputProps={{
+                  'aria-label': 'jobsTimeline'
+                }}
+              />
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid item md={12} xs={12}>
+          <TextField
+            name="decisionTimeline"
+            label={t('lead_management.decision_making_timeline')}
+            style={{ width: '100%' }}
+            onChange={handleChange}
+            value={leadFormData?.user?.decisionTimeline || ''}
+            variant="outlined"
+            fullWidth
+            rows={2}
+            size="small"
+            margin="normal"
+            inputProps={{
+              'aria-label': 'decision_making_timeline'
+            }}
           />
         </Grid>
       </Grid>
