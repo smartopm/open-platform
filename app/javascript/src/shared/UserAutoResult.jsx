@@ -65,7 +65,11 @@ const useStyles = makeStyles(() => ({
   typeGridItem: {
     paddingTop: '7px',
     marginLeft: '5px',
-    marginRight: '5px'
+    marginRight: '5px',
+    width: '20%',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis'
   },
   refGridItem: {
     paddingTop: '7px',
