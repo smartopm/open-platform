@@ -8,6 +8,7 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import InputAdornment from '@mui/material/InputAdornment';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
+import Box from '@mui/material/Box';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import DatePickerDialog from '../../../../components/DatePickerDialog';
@@ -189,8 +190,6 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
         </Grid>
       </Grid>
       <br />
-
-      <br />
       <Grid
         container
         spacing={2}
@@ -340,6 +339,7 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
                 }}
               />
             </Grid>
+
             <Grid item md={6} xs={6}>
               <TextField
                 name="investmentTimeline"
