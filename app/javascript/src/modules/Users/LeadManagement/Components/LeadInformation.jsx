@@ -4,6 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Typography } from '@mui/material';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
+import { useMediaQuery } from '@material-ui/core';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import InputAdornment from '@mui/material/InputAdornment';
 import InputLabel from '@mui/material/InputLabel';
@@ -22,7 +23,7 @@ import {
 
 export default function LeadInformation({ leadFormData, handleChange, handleTimeInputChange }) {
   const { t } = useTranslation('common');
-
+  const matches = useMediaQuery('(max-width:800px)');
   const useStyles = makeStyles(() => ({
     input: {
       height: 40
@@ -334,12 +335,13 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
                 size="small"
                 margin="normal"
                 inputProps={{
-                  'aria-label': 'investmentSize'
+                  'aria-label': 'investmentSize',
+                  style: { fontSize: matches && '15px' }
                 }}
               />
             </Grid>
 
-            <Grid item md={6} xs={6}>
+            <Grid item md={6} xs={6} style={{ paddingRight: 0 }}>
               <TextField
                 name="investmentTimeline"
                 label={t('lead_management.investiment_timeline')}
@@ -351,7 +353,8 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
                 size="small"
                 margin="normal"
                 inputProps={{
-                  'aria-label': 'investment Timeline'
+                  'aria-label': 'investment Timeline',
+                  style: { fontSize: matches && '15px' }
                 }}
               />
             </Grid>
@@ -372,11 +375,13 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
                 size="small"
                 margin="normal"
                 inputProps={{
-                  'aria-label': 'jobsCreated'
+                  'aria-label': 'jobsCreated',
+                  style: { fontSize: matches && '15px' }
                 }}
+                InputLabelProps={{ style: { fontSize: matches && '12px' } }}
               />
             </Grid>
-            <Grid item md={6} xs={6}>
+            <Grid item md={6} xs={6} style={{ paddingRight: 0 }}>
               <TextField
                 name="jobsTimeline"
                 label={t('lead_management.jobs_timeline')}
@@ -388,7 +393,8 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
                 size="small"
                 margin="normal"
                 inputProps={{
-                  'aria-label': 'jobsTimeline'
+                  'aria-label': 'jobsTimeline',
+                  style: { fontSize: matches && '15px' }
                 }}
               />
             </Grid>
@@ -407,7 +413,8 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
             size="small"
             margin="normal"
             inputProps={{
-              'aria-label': 'decision_making_timeline'
+              'aria-label': 'decision_making_timeline',
+              style: { fontSize: matches && '15px' }
             }}
           />
         </Grid>
