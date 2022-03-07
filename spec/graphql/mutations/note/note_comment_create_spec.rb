@@ -41,7 +41,7 @@ RSpec.describe Mutations::Note::NoteCommentCreate do
         body: 'This is the first comment',
         reply_required: true,
         reply_from_id: another_user.id,
-        grouping_id: '9fafaba8-ad19-4a08-97e4-9b670d482cfa'
+        grouping_id: '9fafaba8-ad19-4a08-97e4-9b670d482cfa',
       )
     end
     let(:query) do
@@ -103,7 +103,7 @@ RSpec.describe Mutations::Note::NoteCommentCreate do
         body: 'This is a reply to your comment',
         replyRequired: true,
         replyFromId: admin.id,
-        groupingId: '9fafaba8-ad19-4a08-97e4-9b670d482cfa'
+        groupingId: '9fafaba8-ad19-4a08-97e4-9b670d482cfa',
       }
 
       result = DoubleGdpSchema.execute(query, variables: variables,

@@ -13,6 +13,7 @@ module Mutations
       field :note_comment, Types::NoteCommentType, null: true
 
       # rubocop:disable Metrics/AbcSize
+      # rubocop:disable Metrics/MethodLength
       def resolve(vals)
         ActiveRecord::Base.transaction do
           update_previous_comment!(vals[:note_id], vals[:grouping_id])
@@ -30,14 +31,15 @@ module Mutations
         end
       end
       # rubocop:enable Metrics/AbcSize
+      # rubocop:enable Metrics/MethodLength
 
       def update_previous_comment!(note_id, grouping_id)
-        if grouping_id
-          note = Notes::Note.find(note_id)
-          note.note_comments.find_by(grouping_id: grouping_id, replied_at: nil).update!(
-            replied_at: Time.now
-          )
-        end
+        return unless grouping_id
+
+        note = Notes::Note.find(note_id)
+        note.note_comments.find_by(grouping_id: grouping_id, replied_at: nil).update!(
+          replied_at: Time.zone.now,
+        )
       end
 
       def authorized?(_vals)
