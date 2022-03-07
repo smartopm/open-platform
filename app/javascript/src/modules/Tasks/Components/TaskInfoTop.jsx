@@ -221,7 +221,7 @@ export default function TaskInfoTop({
                 className={classes.selectLabel}
                 id="select-task-status"
                 data-testid="select-task-status"
-                value={taskStatus || ""}
+                value={taskStatus || ''}
                 label={t('common:misc.select')}
               >
                 <MenuItem value="" />
@@ -475,6 +475,10 @@ export default function TaskInfoTop({
                         return;
                       }
                       assignUser(data.id, value.id);
+                    }}
+                    style={{
+                      width: matches && 400,
+                      marginLeft: matches && 15
                     }}
                     getOptionLabel={option =>
                       allowedAssignees.includes(option.userType) ? option.name : ''
