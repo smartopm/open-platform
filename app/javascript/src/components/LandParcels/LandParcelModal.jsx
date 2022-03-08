@@ -509,7 +509,9 @@ export default function LandParcelModal({
               !['new', 'new_house'].includes(modalType) &&
               !(landParcel?.objectType === 'house') && (
                 <IconButton onClick={handleEditCoordinatesOpen} aria-label="edit-coordinate">
-                  <Room /> <Typography>{t('property:buttons.edit_coordinates')}</Typography>
+                  <Room /> 
+                  {' '}
+                  <Typography>{t('property:buttons.edit_coordinates')}</Typography>
                 </IconButton>
               )}
           </div>
@@ -627,16 +629,23 @@ export default function LandParcelModal({
                       </Grid>
                       <Grid item xs={8}>
                         <Typography>
-                          {t('property:misc.total_payments')} {currency}{' '}
+                          {t('property:misc.total_payments')} 
+                          {' '}
+                          {currency}
+                          {' '}
                           {totalPlanPayments(paymentPlan?.planPayments)}
                         </Typography>
                       </Grid>
                       <Grid item xs={4} className={classes.rightContent}>
-                        {t('property:misc.end_date')} {dateToString(paymentPlan?.endDate)}
+                        {t('property:misc.end_date')} 
+                        {' '}
+                        {dateToString(paymentPlan?.endDate)}
                       </Grid>
                       <Grid item xs={12}>
                         <Typography>
-                          {capitalize(paymentPlan?.planType)} {t('property:misc.plan')}
+                          {capitalize(paymentPlan?.planType)} 
+                          {' '}
+                          {t('property:misc.plan')}
                         </Typography>
                       </Grid>
                       <Grid item xs={6}>

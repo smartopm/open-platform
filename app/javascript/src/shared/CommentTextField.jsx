@@ -67,7 +67,7 @@ export default function CommentTextField({
         <Grid item xs={4}>
           {forProcess && authState?.user?.userType === 'admin' && (
             <FormControlLabel
-              control={
+              control={(
                 <Checkbox
                   checked={autoCompleteOpen}
                   onChange={() => setAutoCompleteOpen(!autoCompleteOpen)}
@@ -75,7 +75,7 @@ export default function CommentTextField({
                   data-testid="require_reply"
                   color="primary"
                 />
-              }
+              )}
               label={<Typography variant="body2">{t('task.require_a_reply')}</Typography>}
             />
           )}
