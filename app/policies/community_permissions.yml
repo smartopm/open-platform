@@ -170,6 +170,7 @@ Tilisi:
       permissions:
         - can_access_dashboard
         - can_see_menu_item
+        - can_access_admin_processes_dashboard
 
   developer:
     note:
@@ -366,6 +367,7 @@ DoubleGDP:
       permissions:
         - can_access_dashboard
         - can_see_menu_item
+        - can_access_admin_processes_dashboard
 
   developer:
     note:
