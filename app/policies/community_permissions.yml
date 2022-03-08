@@ -346,6 +346,7 @@ DoubleGDP:
       permissions:
         - can_see_menu_item
         - can_access_forms
+        - can_view_form_user
     user:
       permissions:
         - can_view_own_profile
