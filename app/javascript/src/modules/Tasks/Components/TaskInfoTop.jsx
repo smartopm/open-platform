@@ -448,10 +448,10 @@ export default function TaskInfoTop({
                   ))}
                 </Grid>
               )}
-              <Grid item sm={6} xs={12} data-testid="add-assignee">
+              <Grid item m={6} xs={12} data-testid="add-assignee">
                 {canUpdateNote && (
                   <Chip
-                    style={autoCompleteOpen ? { marginTop: '50px' } : undefined}
+                    style={autoCompleteOpen ? { marginTop: '50px', width: '100%' } : undefined}
                     key={data.id}
                     variant="outlined"
                     label={autoCompleteOpen ? t('task.chip_close') : t('task.chip_add_assignee')}
@@ -477,7 +477,7 @@ export default function TaskInfoTop({
                       assignUser(data.id, value.id);
                     }}
                     style={{
-                      width: matches && 300,
+                      width: matches ? 280 : '100%',
                       marginLeft: matches && 5
                     }}
                     getOptionLabel={option =>
@@ -486,7 +486,7 @@ export default function TaskInfoTop({
                     renderInput={params => (
                       <TextField
                         {...params}
-                        variant="standard"
+                        style={{ width: '100%' }}
                         label={t('task.task_assignee_label')}
                         placeholder={t('task.task_search_placeholder')}
                         onChange={event => setSearchUser(event.target.value)}
