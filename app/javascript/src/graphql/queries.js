@@ -45,7 +45,6 @@ export const EntryRequestQuery = gql`
         name
         id
       }
-      guestId
     }
   }
   ${EntryRequestFragment.publicFields}
