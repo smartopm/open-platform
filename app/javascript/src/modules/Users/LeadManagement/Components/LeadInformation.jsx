@@ -4,10 +4,10 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Grid, Typography } from '@mui/material';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
+import InputLabel from '@mui/material/InputLabel';
+import InputAdornment from '@mui/material/InputAdornment';
 import { useMediaQuery } from '@material-ui/core';
 import OutlinedInput from '@mui/material/OutlinedInput';
-import InputAdornment from '@mui/material/InputAdornment';
-import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
@@ -291,21 +291,20 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
         </Grid>
 
         <Grid item md={6} xs={12}>
-          <TextField
-            name="capexAmount"
-            label={t('lead_management.capex_amount')}
-            style={{ width: '100%' }}
-            onChange={handleChange}
-            value={leadFormData?.user?.capexAmount || ''}
-            variant="outlined"
-            fullWidth
-            size="small"
-            margin="normal"
-            startAdornment={<InputAdornment position="start">$</InputAdornment>}
-            inputProps={{
-              'aria-label': 'capex'
-            }}
-          />
+          <FormControl fullWidth sx={{ m: 1 }}>
+            <InputLabel htmlFor="outlined-adornment-amount">
+              {t('lead_management.capex_amount')}
+            </InputLabel>
+            <OutlinedInput
+              id="outlined-adornment-amount"
+              name="capexAmount"
+              onChange={handleChange}
+              value={leadFormData?.user?.capexAmount || ''}
+              startAdornment={<InputAdornment position="start">$</InputAdornment>}
+              label={t('lead_management.capex_amount')}
+              size="small"
+            />
+          </FormControl>
         </Grid>
 
         <Grid item md={6} xs={12}>
@@ -380,9 +379,9 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
                 margin="normal"
                 inputProps={{
                   'aria-label': 'jobsCreated',
-                  style: { fontSize: matches && '15px' }
+                  style: { fontSize: '15px' }
                 }}
-                InputLabelProps={{ style: { fontSize: matches && '12px' } }}
+                InputLabelProps={{ style: { fontSize: '12px' } }}
               />
             </Grid>
             <Grid item md={6} xs={6} style={{ paddingRight: 0 }}>
