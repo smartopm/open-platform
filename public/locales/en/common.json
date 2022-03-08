@@ -547,6 +547,8 @@
     "investiment_timeline": "Timeline",
     "jobs_timeline": "Timeline",
     "jobs_created": "Number of Jobs",
-    "decision_making_timeline": "Decision Making Timeline"
+    "decision_making_timeline": "Decision Making Timeline",
+    "investiment_created_over_time": "Opportunity/Investiment over time",
+    "jobs_created_over_time": "Number of jobs over time"
   }
 }
