@@ -113,7 +113,7 @@ describe('Top part of the task form component', () => {
     // expect(props.handleTaskComplete).toHaveBeenCalled();
   });
 
-  it('renders form user data', () => {
+  it('renders form user data for authorized user', () => {
     render(
       <MockedProvider>
         <Context.Provider value={authState}>
@@ -126,6 +126,33 @@ describe('Top part of the task form component', () => {
 
     expect(screen.getByTestId('submitted_form_title')).toBeInTheDocument();
     expect(screen.getByTestId('submitted_form_button')).toBeInTheDocument();
+  });
+
+  it('does not render open form user button for unauthorized user', () => {
+    const propsWithUnauthorizedCurrentUser = {
+      ...props,
+      currentUser: {
+        ...authState.user,
+        permissions: [
+          { module: 'forms',
+            permissions: []
+          },
+        ]
+      }
+    }
+
+    render(
+      <MockedProvider>
+        <Context.Provider value={authState}>
+          <BrowserRouter>
+            <TaskInfoTop {...propsWithUnauthorizedCurrentUser} />
+          </BrowserRouter>
+        </Context.Provider>
+      </MockedProvider>
+    );
+
+    expect(screen.queryByText('processes.submitted_form')).toBeNull();
+    expect(screen.queryByText('processes.open_submitted_form')).toBeNull();
   });
 
   it('renders current task status in select box', () => {
