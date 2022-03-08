@@ -1,7 +1,7 @@
 {
   "dashboard": {
     "call_manager": "Llamar a un Gerente",
-    "entry_logs": "Registro de ingresos",
+    "entry_logs": "Libro de Registros",
     "explore": "Explorar",
     "finance": "Finanzas",
     "identity": "Identificación\n",
@@ -11,7 +11,7 @@
       "overOneMonth": "Total de facturas vencidas con más de 1 mes",
       "today": "Total de facturas vencidas hoy"
     },
-    "log_entry": "Entrada Manual",
+    "log_entry": "Registro Manual",
     "make_new_payment": "Realizar un nuevo pago",
     "my_account": "Mi cuenta",
     "my_id_card": "Mi código",
