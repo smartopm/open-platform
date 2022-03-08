@@ -309,9 +309,9 @@ module Types::Queries::Note
     end
 
     # TODO(Nurudeen): Make completed field defaults to false and not NIL
-    results = projects_query.where(completed: [false, nil])
+    results = projects_query
 
-    results = results.where(current_step_body: step) if step
+    results = results.where(completed: [false, nil], current_step_body: step) if step
 
     results = projects_query.by_quarter(completed_per_quarter) if completed_per_quarter
 

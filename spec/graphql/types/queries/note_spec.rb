@@ -906,7 +906,7 @@ RSpec.describe Types::Queries::Note do
           another_form
           form_user
           another_form_user
-          first_note.update(form_user_id: form_user.id)
+          first_note.update(form_user_id: form_user.id, completed: true)
           second_note.update(form_user_id: another_form_user.id)
         end
 
