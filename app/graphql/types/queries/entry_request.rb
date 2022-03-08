@@ -46,6 +46,7 @@ module Types::Queries::EntryRequest
     end
 
     field :community_people_statistics, Types::PeopleStatisticType, null: true do
+      argument :duration, String, required: false
       description 'Get statistics about people who are in the community'
     end
   end
@@ -124,11 +125,11 @@ module Types::Queries::EntryRequest
   end
   # rubocop:enable Metrics/AbcSize
 
-  def community_people_statistics
+  def community_people_statistics(duration: nil)
     {
-      people_present: people_present(context[:site_community]),
-      people_entered: people_entered(context[:site_community]),
-      people_exited: people_exited(context[:site_community]),
+      people_present: people_present(context[:site_community], duration),
+      people_entered: people_entered(context[:site_community], duration),
+      people_exited: people_exited(context[:site_community], duration),
     }
   end
 
@@ -165,22 +166,34 @@ module Types::Queries::EntryRequest
   end
   # rubocop:enable Metrics/MethodLength,  Metrics/AbcSize
 
-  def people_present(community)
+  def people_present(community, duration)
+    start_time = duration_based_start_time(duration)
     community.entry_requests.where(exited_at: nil)
              .where('granted_at >= ? AND granted_at <= ?', start_time, end_time)
              .count
   end
 
-  def people_entered(community)
+  def people_entered(community, duration)
+    start_time = duration_based_start_time(duration)
     community.entry_requests.where('granted_at >= ? AND granted_at <= ?', start_time, end_time)
   end
 
-  def people_exited(community)
+  def people_exited(community, duration)
+    start_time = duration_based_start_time(duration)
     community.entry_requests.where('exited_at >= ? AND exited_at <= ?', start_time, end_time)
   end
 
-  def start_time
-    Time.zone.now.to_datetime.beginning_of_day.to_s
+  def duration_based_start_time(duration)
+    current_day_start = Time.zone.now.to_datetime.beginning_of_day
+
+    case duration
+    when 'past7Days'
+      (current_day_start - 7.days).to_s
+    when 'past30Days'
+      (current_day_start - 30.days).to_s
+    else
+      current_day_start.to_s
+    end
   end
 
   def end_time

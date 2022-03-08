@@ -151,8 +151,8 @@ RSpec.describe Types::Queries::EntryRequest do
 
     let(:community_people_statistics_query) do
       <<~GQL
-        query communityPeopleStatistics {
-          communityPeopleStatistics {
+        query communityPeopleStatistics($duration: String) {
+          communityPeopleStatistics(duration: $duration) {
             peoplePresent
             peopleEntered {
               id
@@ -227,11 +227,13 @@ RSpec.describe Types::Queries::EntryRequest do
     end
 
     it 'should retrieve list of registered guests' do
-      2.times do
-        current_user.entry_requests.create(reason: 'Visiting', name: 'Visitor Joe', nrc: '012345',
-                                           guest_id: admin.id)
-      end
+      request = current_user.entry_requests.create!(reason: 'Visiting', name: 'Visitor Joe',
+                                                    nrc: '012345', guest_id: admin.id,
+                                                    community: current_user.community,
+                                                    visitation_date: Time.zone.now)
 
+      current_user.invites.create!(guest_id: admin.id, host_id: current_user.id,
+                                   entry_request_id: request.id, status: :active)
       result = DoubleGdpSchema.execute(scheduledRequests_query, context: {
                                          current_user: admin,
                                          site_community: current_user.community,
@@ -345,6 +347,20 @@ RSpec.describe Types::Queries::EntryRequest do
       expect(result.dig('data', 'scheduledGuestList').length).to eql 3
     end
 
+    it 'should retrieve list of current guests' do
+      3.times do
+        admin.entry_requests.create(reason: 'Visiting', name: 'Visitor Joe', nrc: '012345',
+                                    visitation_date: Time.zone.now, granted_at: Time.zone.now,
+                                    granted_state: 1, guest_id: admin.id)
+      end
+
+      result = DoubleGdpSchema.execute(current_guest_list_query, context: {
+                                         current_user: admin,
+                                         site_community: current_user.community,
+                                       }).as_json
+      expect(result.dig('data', 'currentGuests').length).to eql 4
+    end
+
     context 'when guest are present with special characters' do
       before do
         guest
@@ -379,18 +395,6 @@ RSpec.describe Types::Queries::EntryRequest do
       expect(result.dig('data', 'scheduledGuestList')).to be_nil
     end
 
-    it 'should retrieve list of current guests' do
-      3.times do
-        admin.entry_requests.create(reason: 'Visiting', name: 'Visitor Joe', nrc: '012345',
-                                    visitation_date: Time.zone.now, granted_at: Time.zone.now,
-                                    granted_state: 1, guest_id: admin.id)
-      end
-      result = DoubleGdpSchema.execute(current_guest_list_query, context: {
-                                         current_user: admin,
-                                         site_community: current_user.community,
-                                       }).as_json
-      expect(result.dig('data', 'currentGuests').length).to eql 3
-    end
     it 'should return an error when not properly authenticated' do
       2.times do
         admin.entry_requests.create(reason: 'Visiting', name: 'Visitor Joe', nrc: '012345',
@@ -420,15 +424,59 @@ RSpec.describe Types::Queries::EntryRequest do
           guest
           another_guest
         end
-        it 'returns statistics for the community' do
-          result = DoubleGdpSchema.execute(community_people_statistics_query, context: {
-                                             current_user: admin,
-                                             site_community: current_user.community,
-                                           }).as_json
-          data = result.dig('data', 'communityPeopleStatistics')
-          expect(data['peoplePresent']).to eql 1
-          expect(data['peopleEntered'].count).to eql 2
-          expect(data['peopleExited'].count).to eql 1
+
+        context 'when duration is for present day' do
+          it 'returns statistics for the community' do
+            variables = { duration: 'today' }
+            result = DoubleGdpSchema.execute(community_people_statistics_query,
+                                             variables: variables,
+                                             context: {
+                                               current_user: admin,
+                                               site_community: current_user.community,
+                                             }).as_json
+            data = result.dig('data', 'communityPeopleStatistics')
+            expect(data['peoplePresent']).to eql 1
+            expect(data['peopleEntered'].count).to eql 2
+            expect(data['peopleExited'].count).to eql 1
+          end
+        end
+
+        context 'when duration is for past 7 days' do
+          before do
+            guest.update(granted_at: Time.zone.now - 5.days)
+          end
+          it 'returns statistics for the community' do
+            variables = { duration: 'past7Days' }
+            result = DoubleGdpSchema.execute(community_people_statistics_query,
+                                             variables: variables,
+                                             context: {
+                                               current_user: admin,
+                                               site_community: current_user.community,
+                                             }).as_json
+            data = result.dig('data', 'communityPeopleStatistics')
+            expect(data['peoplePresent']).to eql 1
+            expect(data['peopleEntered'].count).to eql 2
+            expect(data['peopleExited'].count).to eql 1
+          end
+        end
+
+        context 'when duration is for past 30 days' do
+          before do
+            guest.update(granted_at: Time.zone.now - 22.days)
+          end
+          it 'returns statistics for the community' do
+            variables = { duration: 'past30Days' }
+            result = DoubleGdpSchema.execute(community_people_statistics_query,
+                                             variables: variables,
+                                             context: {
+                                               current_user: admin,
+                                               site_community: current_user.community,
+                                             }).as_json
+            data = result.dig('data', 'communityPeopleStatistics')
+            expect(data['peoplePresent']).to eql 1
+            expect(data['peopleEntered'].count).to eql 2
+            expect(data['peopleExited'].count).to eql 1
+          end
         end
       end
     end
