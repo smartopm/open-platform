@@ -322,6 +322,7 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
         </Grid>
 
         <Grid item md={6} xs={12}>
+          <Typography variant="body1">Opportunity/Investiment over time</Typography>
           <Grid container spacing={2}>
             <Grid item md={6} xs={6}>
               <TextField
@@ -362,6 +363,7 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
         </Grid>
 
         <Grid item md={6} xs={12}>
+          <Typography variant="body1">Number of jobs over time</Typography>
           <Grid container spacing={2}>
             <Grid item md={6} xs={6}>
               <TextField

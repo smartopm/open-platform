@@ -543,6 +543,42 @@ const configObject = {
       name: 'Date Follow Up',
       inputName: 'dateFollowUp',
       validateError
+    },
+
+    {
+      name: 'Kick Off Date',
+      inputName: 'kickOffDate',
+      validateError
+    },
+    {
+      name: 'Capex Amount',
+      inputName: 'capexAmount',
+      validateError
+    },
+    {
+      name: 'Jobs',
+      inputName: 'jobsCreated',
+      validateError
+    },
+    {
+      name: 'Jobs Timeline',
+      inputName: 'jobsTimeline',
+      validateError
+    },
+    {
+      name: 'Investment Size',
+      inputName: 'investmentSize',
+      validateError
+    },
+    {
+      name: 'Investment Timeline',
+      inputName: 'investmentTimeline',
+      validateError
+    },
+    {
+      name: 'Decision Timeline',
+      inputName: 'decisionTimeline',
+      validateError
     }
   ]
 };
