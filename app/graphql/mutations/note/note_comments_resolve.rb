@@ -10,7 +10,9 @@ module Mutations
       field :success, Boolean, null: true
 
       def resolve(vals)
-        note = Notes::Note.find(vals[:note_id])
+        note = Notes::Note.find_by(id: vals[:note_id])
+        raise GraphQL::ExecutionError, I18n.t('errors.note.task_not_found') unless note
+
         comment_pending_reply = note.note_comments.find_by(
           grouping_id: vals[:grouping_id],
           replied_at: nil,
