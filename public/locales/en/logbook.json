@@ -177,8 +177,7 @@
     "guests": "Guests",
     "guest_name_required": "Guest Name or Company Name is required",
     "add_company": "Or add a Company",
-    "guest_type": "Guest Type ",
-    "qr_code": "QR Code for Gate Access"
+    "guest_type": "Guest Type "
     },
   "video_recording": {
     "add_video_text": "Add a Video with your phone",

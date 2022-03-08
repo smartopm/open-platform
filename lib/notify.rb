@@ -3,9 +3,9 @@
 # Service to notify user via email and sms
 class Notify
   class << self
-    def call(user, args = {})
-      send_email(user.email, args[:template], args[:template_data])
-      send_sms(user.phone_number, args[:sms_body])
+    def call(contact_info, args = {})
+      send_email(contact_info[:email], args[:template], args[:template_data])
+      send_sms(contact_info[:phone_number], args[:sms_body])
     end
 
     private
