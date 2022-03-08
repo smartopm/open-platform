@@ -52,3 +52,17 @@ export const UpdateNote = gql`
     }
   }
 `
+
+export const ResolveComments = gql`
+  mutation noteCommentsResolve(
+    $groupingId: ID!
+    $noteId: ID!
+  ) {
+    noteCommentsResolve(
+      groupingId: $groupingId
+      noteId: $noteId
+    ) {
+      success
+    }
+  }
+`

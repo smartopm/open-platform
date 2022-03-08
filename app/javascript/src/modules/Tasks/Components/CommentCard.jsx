@@ -19,14 +19,16 @@ import { useMutation } from 'react-apollo';
 import Typography from '@material-ui/core/Typography';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { useHistory, useParams } from 'react-router';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import TaskDelete from './TaskDelete';
 import EditField from './TaskCommentEdit';
 import { dateToString } from '../../../components/DateContainer';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
-import { groupComments, lastRepliedComment } from '../Processes/utils';
+import { groupComments, lastRepliedComment, isDiscussionResolved } from '../Processes/utils';
 import CommentTextField from '../../../shared/CommentTextField';
 import { useParamsQuery, objectAccessor } from '../../../utils/helpers';
 import { TaskComment } from '../../../graphql/mutations';
+import { ResolveComments } from "../graphql/task_mutation";
 
 export default function CommentCard({ comments, refetch, commentsRefetch, forAccordionSection }) {
   const [open, setOpen] = useState(false);
@@ -50,6 +52,7 @@ export default function CommentCard({ comments, refetch, commentsRefetch, forAcc
   const history = useHistory();
   const replyingDiscussion = path.get('replying_discussion');
   const [commentCreate] = useMutation(TaskComment);
+  const [resolveComments] = useMutation(ResolveComments);
 
   const { t } = useTranslation(['task', 'common']);
 
@@ -64,7 +67,6 @@ export default function CommentCard({ comments, refetch, commentsRefetch, forAcc
   useEffect(() => {
     let timeId;
     if (replyingDiscussion) {
-      setReplyingGroupingId(replyingDiscussion);
       setHighlightDiscussion(true);
       timeId = setTimeout(() => {
         scrollDiscussionIntoView(replyingDiscussion);
@@ -153,10 +155,25 @@ export default function CommentCard({ comments, refetch, commentsRefetch, forAcc
       );
     } else {
       // TODO(Nurudeen): scroll reply into view without reloading
-      window.location =
-        `${window.location.pathname 
-        }?tab=processes&detailTab=comments&replying_discussion=${groupingId}`;
+      window.location = `${window.location.pathname}?tab=processes&detailTab=comments&replying_discussion=${groupingId}`;
     }
+  }
+
+  function onResolveComments(groupingId) {
+    resolveComments({
+      variables: {
+        noteId: projectId,
+        groupingId
+      }
+    })
+      .then(() => {
+        setReplyValue('');
+        refetch();
+        commentsRefetch();
+      })
+      .catch(err => {
+        setErrorMessage(err);
+      });
   }
 
   return (
@@ -314,23 +331,71 @@ export default function CommentCard({ comments, refetch, commentsRefetch, forAcc
                   )}
                 </Fragment>
               ))}
-              {forAccordionSection &&
+              {forAccordionSection && isDiscussionResolved(groupedComments, groupingId) ? (
+                <div style={{ marginTop: '-22px', color: '#575757' }}>
+                  <IconButton
+                    aria-controls="resolve-icon"
+                    aria-haspopup="true"
+                    data-testid="resolve-icon"
+                    size="medium"
+                  >
+                    <CheckCircleIcon htmlColor="#4caf50" />
+                  </IconButton>
+                  <Typography
+                    component="span"
+                    variant="body2"
+                    data-testid="comments-resolved-text"
+                    style={{ fontSize: '13px', fontWeight: '500', marginLeft: '-5px' }}
+                  >
+                    {t('task.all_comments_resolved')}
+                  </Typography>
+                  <Typography
+                    component="span"
+                    variant="body2"
+                    style={{ fontSize: '12px', marginLeft: '20px' }}
+                  >
+                    {lastRepliedComment(groupedComments, groupingId)?.replyFrom.name}
+                  </Typography>
+                  <Typography
+                    component="span"
+                    variant="body2"
+                    style={{ fontSize: '12px', marginLeft: '10px' }}
+                  >
+                    {dateToString(lastRepliedComment(groupedComments, groupingId)?.repliedAt)}
+                  </Typography>
+                </div>
+              ) : (
+                forAccordionSection &&
                 groupingId !== 'no-group' &&
                 lastRepliedComment(groupedComments, groupingId).replyFrom.id ===
                   authState.user.id && (
                   <div style={{ marginTop: '-22px' }}>
                     {replyingGroupingId !== groupingId ? (
-                      <Button
-                        variant="outlined"
-                        color="primary"
-                        data-testid="reply_btn"
-                        style={{ width: '50px' }}
-                        onClick={() => openReplyInput(groupingId)}
-                        size="small"
-                        fullWidth
-                      >
-                        {t('common:misc.reply')}
-                      </Button>
+                      <>
+                        <Button
+                          variant="outlined"
+                          color="primary"
+                          data-testid="reply_btn"
+                          style={{ width: '50px' }}
+                          onClick={() => openReplyInput(groupingId)}
+                          size="small"
+                          fullWidth
+                        >
+                          {t('common:misc.reply')}
+                        </Button>
+                        {authState.user.userType === 'admin' && (
+                          <Button
+                            variant="outlined"
+                            color="primary"
+                            data-testid="resolve_btn"
+                            style={{ marginLeft: '25px' }}
+                            onClick={() => onResolveComments(groupingId)}
+                            size="small"
+                          >
+                            {t('common:misc.resolve_comments')}
+                          </Button>
+                        )}
+                      </>
                     ) : (
                       <CommentTextField
                         value={replyValue}
@@ -341,7 +406,8 @@ export default function CommentCard({ comments, refetch, commentsRefetch, forAcc
                       />
                     )}
                   </div>
-                )}
+                )
+              )}
               {forAccordionSection && <hr />}
             </div>
           ))}

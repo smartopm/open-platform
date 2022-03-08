@@ -263,7 +263,8 @@
     "person": "Person",
     "company": "Company",
     "reply": "Reply",
-    "add_reply": "Add a reply"
+    "add_reply": "Add a reply",
+    "resolve_comments": "Resolve Comments"
   },
   "menu": {
     "invoice": "Invoice",
