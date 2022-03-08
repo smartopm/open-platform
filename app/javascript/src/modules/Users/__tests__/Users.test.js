@@ -116,6 +116,10 @@ describe('UserPage Component', () => {
       expect(container.getByTestId('user_email').textContent).toContain('');
       expect(container.getByTestId('user_phone_number').textContent).toContain('3221038192389');
       expect(container.getByTestId('user_type').textContent).toContain('common:user_types.visitor');
+      fireEvent.click(container.queryByTestId('arrow-icon'));
+      fireEvent.click(container.queryByText('All'));
+      fireEvent.click(container.queryByTestId('copy-id'));
+      expect(container.queryByTestId('copy-id')).toBeInTheDocument();
     }, 20);
   });
   it('should render an error page when something wrong with the query', async () => {

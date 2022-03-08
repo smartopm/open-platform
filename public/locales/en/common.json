@@ -95,7 +95,8 @@
     "creating_plan": "Creating a Plan ...",
     "invite_guest": "Invite Guest",
     "new_guest": "New Guest",
-    "invite_another_guest": "Invite Another Guest"
+    "invite_another_guest": "Invite Another Guest",
+    "copy_id": "Copy User ID List"
   },
   "misc": {
     "or": "OR",

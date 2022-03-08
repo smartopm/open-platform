@@ -35,6 +35,7 @@
     "make_payment": "Record New Payment",
     "add_invoice": "Add an Invoice",
     "process_csv": "Process CSV Data",
-    "download_csv": "Download CSV"
+    "download_csv": "Download CSV",
+    "copy_id_message": "Id Lists Successfully Copied to Clipboard"
   }
 }
