@@ -72,7 +72,7 @@ export default function MainContactInformation({ leadFormData, handleChange, dis
             size="small"
             margin="normal"
             inputProps={{
-              'aria-label': 'title',
+              'aria-label': t('lead_management.title'),
               'data-testid': 'main-section-title-input'
             }}
           />
@@ -161,7 +161,6 @@ export default function MainContactInformation({ leadFormData, handleChange, dis
     </>
   );
 }
-
 MainContactInformation.propTypes = {
   leadFormData: PropTypes.shape({ user: userProps }).isRequired,
   handleChange: PropTypes.func.isRequired,

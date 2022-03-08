@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_03_02_211443) do
+ActiveRecord::Schema.define(version: 2022_03_07_062446) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -850,6 +850,13 @@ ActiveRecord::Schema.define(version: 2022_03_02_211443) do
     t.jsonb "contact_details"
     t.string "african_presence"
     t.string "task_id"
+    t.string "capex_amount"
+    t.string "jobs_created"
+    t.string "jobs_timeline"
+    t.datetime "kick_off_date"
+    t.string "investment_size"
+    t.string "investment_timeline"
+    t.string "decision_timeline"
     t.index ["community_id", "email"], name: "index_users_on_community_id_and_email", unique: true
     t.index ["latest_substatus_id"], name: "index_users_on_latest_substatus_id"
     t.index ["role_id"], name: "index_users_on_role_id"

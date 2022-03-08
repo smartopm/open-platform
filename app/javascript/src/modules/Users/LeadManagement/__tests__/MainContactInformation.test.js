@@ -1,6 +1,6 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import MainContactInformation from '../Components/MainContactInformation';
 
 describe('LeadManagementDetails Page', () => {
@@ -42,13 +42,15 @@ describe('LeadManagementDetails Page', () => {
       relevantLink: 'today is hot',
       roleName: 'Admin',
       secondaryEmail: '',
-      secondaryPhoneNumber: ''
+      secondaryPhoneNumber: '',
+      title: 'The Big Boss',
+      primaryEmail: '',
+      primaryPhoneNumber: ''
     }
   };
 
-  it('LeadManagementDetails component', () => {
-    const onChange = jest.fn();
-    render(<MainContactInformation leadFormData={data} handleChange={onChange} disabled />);
+  it('LeadManagementDetails component', async () => {
+    render(<MainContactInformation leadFormData={data} handleChange={jest.fn()} disabled />);
 
     expect(screen.queryByTestId('lead-management-main-contact-section')).toBeInTheDocument();
     expect(screen.queryByTestId('contact_info')).toBeInTheDocument();
@@ -66,8 +68,15 @@ describe('LeadManagementDetails Page', () => {
     expect(screen.queryByLabelText('linkedin')).toBeInTheDocument();
 
     // simulate input
-    const input = screen.queryByTestId('main-section-title-input');
-    fireEvent.change(input, { target: { value: 'Mr. Boss' } });
-    expect(input.value).toBe('Mr. Boss');
+    await waitFor(
+      () => {
+        const titleField = screen.queryByTestId('main-section-title-input');
+        fireEvent.change(titleField, { target: { value: 'The New Updated Boss' } });
+        expect(titleField.value).toBe('The New Updated Boss');
+        const button = screen.queryByTestId('main-section-title-input');
+        expect(button).toBeEnabled();
+      },
+      { timeout: 50 }
+    );
   });
 });

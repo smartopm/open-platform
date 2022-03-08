@@ -3,6 +3,79 @@
 require 'rails_helper'
 
 RSpec.describe Users::User, type: :model do
+  describe 'schema' do
+    it { is_expected.to have_db_column(:name).of_type(:string) }
+    it { is_expected.to have_db_column(:email).of_type(:string) }
+    it { is_expected.to have_db_column(:provider).of_type(:string) }
+    it { is_expected.to have_db_column(:uid).of_type(:string) }
+    it { is_expected.to have_db_column(:token).of_type(:string) }
+    it { is_expected.to have_db_column(:oauth_expires).of_type(:boolean) }
+    it { is_expected.to have_db_column(:oauth_expires_at).of_type(:datetime) }
+    it { is_expected.to have_db_column(:refresh_token).of_type(:string) }
+    it { is_expected.to have_db_column(:image_url).of_type(:string) }
+    it { is_expected.to have_db_column(:created_at).of_type(:datetime) }
+    it { is_expected.to have_db_column(:updated_at).of_type(:datetime) }
+    it { is_expected.to have_db_column(:phone_number).of_type(:string) }
+    it { is_expected.to have_db_column(:phone_token).of_type(:string) }
+    it { is_expected.to have_db_column(:phone_token_expires_at).of_type(:datetime) }
+    it { is_expected.to have_db_column(:user_type).of_type(:string) }
+    it { is_expected.to have_db_column(:request_reason).of_type(:string) }
+    it { is_expected.to have_db_column(:request_status).of_type(:string) }
+    it { is_expected.to have_db_column(:request_note).of_type(:text) }
+    it { is_expected.to have_db_column(:vehicle).of_type(:string) }
+    it { is_expected.to have_db_column(:community_id).of_type(:uuid) }
+    it { is_expected.to have_db_column(:last_activity_at).of_type(:datetime) }
+    it { is_expected.to have_db_column(:state).of_type(:string) }
+    it { is_expected.to have_db_column(:expires_at).of_type(:datetime) }
+    it { is_expected.to have_db_column(:source).of_type(:string) }
+    it { is_expected.to have_db_column(:stage).of_type(:string) }
+    it { is_expected.to have_db_column(:owner_id).of_type(:uuid) }
+    it { is_expected.to have_db_column(:id_number).of_type(:string) }
+    it { is_expected.to have_db_column(:followup_at).of_type(:datetime) }
+    it { is_expected.to have_db_column(:sub_status).of_type(:integer) }
+    it { is_expected.to have_db_column(:address).of_type(:string) }
+    it { is_expected.to have_db_column(:latest_substatus_id).of_type(:uuid) }
+    it { is_expected.to have_db_column(:ext_ref_id).of_type(:string) }
+    it { is_expected.to have_db_column(:role_id).of_type(:uuid).with_options(null: false) }
+    it { is_expected.to have_db_column(:region).of_type(:string) }
+    it { is_expected.to have_db_column(:title).of_type(:string) }
+    it { is_expected.to have_db_column(:linkedin_url).of_type(:string) }
+    it { is_expected.to have_db_column(:company_name).of_type(:string) }
+    it { is_expected.to have_db_column(:country).of_type(:string) }
+    it { is_expected.to have_db_column(:company_description).of_type(:string) }
+    it { is_expected.to have_db_column(:company_linkedin).of_type(:string) }
+    it { is_expected.to have_db_column(:company_website).of_type(:string) }
+    it { is_expected.to have_db_column(:company_employees).of_type(:string) }
+    it { is_expected.to have_db_column(:company_annual_revenue).of_type(:string) }
+    it { is_expected.to have_db_column(:company_contacted).of_type(:string) }
+    it { is_expected.to have_db_column(:industry_sub_sector).of_type(:string) }
+    it { is_expected.to have_db_column(:industry_business_activity).of_type(:string) }
+    it { is_expected.to have_db_column(:industry).of_type(:string) }
+    it { is_expected.to have_db_column(:level_of_internationalization).of_type(:string) }
+    it { is_expected.to have_db_column(:lead_temperature).of_type(:string) }
+    it { is_expected.to have_db_column(:lead_status).of_type(:string) }
+    it { is_expected.to have_db_column(:lead_source).of_type(:string) }
+    it { is_expected.to have_db_column(:lead_owner).of_type(:string) }
+    it { is_expected.to have_db_column(:lead_type).of_type(:string) }
+    it { is_expected.to have_db_column(:client_category).of_type(:string) }
+    it { is_expected.to have_db_column(:next_steps).of_type(:text) }
+    it { is_expected.to have_db_column(:last_contact_date).of_type(:datetime) }
+    it { is_expected.to have_db_column(:modified_by).of_type(:string) }
+    it { is_expected.to have_db_column(:first_contact_date).of_type(:datetime) }
+    it { is_expected.to have_db_column(:created_by).of_type(:string) }
+    it { is_expected.to have_db_column(:relevant_link).of_type(:string) }
+    it { is_expected.to have_db_column(:contact_details).of_type(:jsonb) }
+    it { is_expected.to have_db_column(:african_presence).of_type(:string) }
+    it { is_expected.to have_db_column(:task_id).of_type(:string) }
+    it { is_expected.to have_db_column(:capex_amount).of_type(:string) }
+    it { is_expected.to have_db_column(:jobs_created).of_type(:string) }
+    it { is_expected.to have_db_column(:jobs_timeline).of_type(:string) }
+    it { is_expected.to have_db_column(:kick_off_date).of_type(:datetime) }
+    it { is_expected.to have_db_column(:investment_size).of_type(:string) }
+    it { is_expected.to have_db_column(:investment_timeline).of_type(:string) }
+    it { is_expected.to have_db_column(:decision_timeline).of_type(:string) }
+  end
+
   describe 'associations' do
     it { is_expected.to belong_to(:community) }
     it do

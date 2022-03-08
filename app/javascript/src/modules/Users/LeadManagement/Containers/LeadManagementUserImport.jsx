@@ -315,6 +315,14 @@ export default function UsersImport() {
             <li>First Contact Date: i.e. 25-09-2020, 25/09/2020, 2020-09-25, 2020/09/25 </li>
             <li>Last Contact Date: i.e. 25-09-2020, 25/09/2020, 2020-09-25, 2020/09/25 </li>
             <li>Date Follow Up: i.e. 25-09-2020, 25/09/2020, 2020-09-25, 2020/09/25 </li>
+
+            <li>Kick Off Date: i.e. 25-09-2020, 25/09/2020, 2020-09-25, 2020/09/25 </li>
+            <li>Capex Amount: i.e. $45523455 </li>
+            <li>Jobs: i.e. 200000 </li>
+            <li>Jobs Timeline: i.e. 2 years </li>
+            <li>Investment Size: i.e. 20 billion US dollars </li>
+            <li>Investment Timeline: i.e. 5 years </li>
+            <li>Decision Timeline: i.e. 6 months </li>
           </ol>
         </Grid>
       </Grid>

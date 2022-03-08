@@ -54,6 +54,13 @@ export const initialLeadFormData = {
     ],
     industrySubSector: '',
     africanPresence: '',
+    capexAmount: '',
+    kickOffDate: new Date(),
+    jobsCreated: ' ',
+    jobsTimeline: ' ',
+    investmentSize: ' ',
+    investmentTimeline: ' ',
+    decisionTimeline: ' ',
 
     // Contact information to help pick values from form
     name: '',
@@ -111,12 +118,19 @@ export const userProps = PropTypes.shape({
   clientCategory: PropTypes.string,
   leadType: PropTypes.string,
   leadOwner: PropTypes.string,
+  capexAmount: PropTypes.string,
+  jobsCreated: PropTypes.string,
+  jobsTimeline: PropTypes.string,
+  investmentSize: PropTypes.string,
+  investmentTimeline: PropTypes.string,
+  decisionTimeline: PropTypes.string,
   modifiedBy: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.string]),
   createdBy: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.string]),
   nextSteps: PropTypes.string,
   firstContactDate: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.string]),
   lastContactDate: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.string]),
   followupAt: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.string]),
+  kickOffDate: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.string]),
   industrySubSector: PropTypes.string,
   africanPresence: PropTypes.string,
   name: PropTypes.string,
@@ -528,6 +542,42 @@ const configObject = {
     {
       name: 'Date Follow Up',
       inputName: 'dateFollowUp',
+      validateError
+    },
+
+    {
+      name: 'Kick Off Date',
+      inputName: 'kickOffDate',
+      validateError
+    },
+    {
+      name: 'Capex Amount',
+      inputName: 'capexAmount',
+      validateError
+    },
+    {
+      name: 'Jobs',
+      inputName: 'jobsCreated',
+      validateError
+    },
+    {
+      name: 'Jobs Timeline',
+      inputName: 'jobsTimeline',
+      validateError
+    },
+    {
+      name: 'Investment Size',
+      inputName: 'investmentSize',
+      validateError
+    },
+    {
+      name: 'Investment Timeline',
+      inputName: 'investmentTimeline',
+      validateError
+    },
+    {
+      name: 'Decision Timeline',
+      inputName: 'decisionTimeline',
       validateError
     }
   ]
