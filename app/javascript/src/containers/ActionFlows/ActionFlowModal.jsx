@@ -462,7 +462,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
                     id={`${actionField.name}-id-section`}
                     name={actionField.name}
                     value={assignees}
-                    style={{ width: matches && 250, marginLeft: matches && -18 }}
+                    style={{ width: matches && 300, marginLeft: matches && -18 }}
                     onChange={handleChooseAssignees}
                     fullWidth
                     multiple

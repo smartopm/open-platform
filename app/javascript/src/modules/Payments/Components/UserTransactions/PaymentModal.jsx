@@ -341,7 +341,7 @@ export default function PaymentModal({
               {!userId && (
                 <Grid container>
                   <Autocomplete
-                    style={{ width: matches ? 250 : '100%', marginLeft: matches && 5 }}
+                    style={{ width: matches ? 300 : '100%', marginLeft: matches && 2 }}
                     id="payment-user-input"
                     options={data?.usersLite || []}
                     getOptionLabel={option => option?.name}
@@ -514,20 +514,15 @@ export function PaymentDetails({ inputValue, totalAmount, currencyData }) {
   return (
     <div>
       <Typography variant="subtitle1" data-testid="amount" align="center" key="amount">
-        {t('table_headers.total_amount')}
-        :
-        <b>{formatMoney(currencyData, totalAmount)}</b>
+        {t('table_headers.total_amount')}:<b>{formatMoney(currencyData, totalAmount)}</b>
       </Typography>
       <Typography variant="subtitle1" data-testid="type" align="center" key="type">
-        {t('table_headers.transaction_type')}
-        :
-        <b>{` ${inputValue.transactionType}`}</b>
+        {t('table_headers.transaction_type')}:<b>{` ${inputValue.transactionType}`}</b>
       </Typography>
       <Typography variant="subtitle1" data-testid="transactionNumber" align="center" key="number">
         {inputValue.transactionNumber && (
           <>
-            {t('common:table_headers.transaction_number')}
-            :
+            {t('common:table_headers.transaction_number')}:
             <b>{` ${inputValue.transactionNumber}`}</b>
           </>
         )}
@@ -535,18 +530,14 @@ export function PaymentDetails({ inputValue, totalAmount, currencyData }) {
       <Typography variant="subtitle1" data-testid="bankName" align="center" key="bankName">
         {inputValue.bankName && (
           <>
-            {t('common:table_headers.bank_name')}
-            :
-            <b>{` ${inputValue.bankName}`}</b>
+            {t('common:table_headers.bank_name')}:<b>{` ${inputValue.bankName}`}</b>
           </>
         )}
       </Typography>
       <Typography variant="subtitle1" data-testid="chequeNumber" align="center" key="cheque">
         {inputValue.chequeNumber && (
           <>
-            {t('common:table_headers.cheque_number')}
-            :
-            <b>{` ${inputValue.chequeNumber}`}</b>
+            {t('common:table_headers.cheque_number')}:<b>{` ${inputValue.chequeNumber}`}</b>
           </>
         )}
       </Typography>
