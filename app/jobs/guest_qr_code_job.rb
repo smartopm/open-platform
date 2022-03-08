@@ -9,14 +9,17 @@ class GuestQrCodeJob < ApplicationJob
   queue_as :default
 
   # rubocop:disable Metrics/MethodLength
-  def perform(community:, contact_infos:, type:)
+  # rubocop:disable Metrics/AbcSize
+  def perform(community:, request_data:, type:)
     template = community.email_templates.find_by(name: 'Guest QR Code')
     base_url = HostEnv.base_url(community)
 
-    contact_infos.each do |user|
+    request_data.each do |data|
+      user = data[:user]
       qr_code_url = 'https://api.qrserver.com/v1/create-qr-code/' \
-                    "?data=#{CGI.escape("https://#{base_url}/request/#{user[:request].id}?type=#{type}")}&size=256x256"
-      request_url = "https://#{base_url}/request/#{user[:request].id}"
+                    "?data=#{CGI.escape("https://#{base_url}/request/#{data[:request].id}?type=#{type}")}&size=256x256"
+      token = user.create_new_phone_token
+      request_url = "https://#{base_url}/l/#{user.id}/#{token}/request/#{data[:request].id}"
 
       template_data = [
         { key: '%community_name%', value: community.name },
@@ -31,5 +34,6 @@ class GuestQrCodeJob < ApplicationJob
     end
   end
   # rubocop:enable Metrics/MethodLength
+  # rubocop:enable Metrics/AbcSize
 end
 # rubocop:enable Layout/LineLength

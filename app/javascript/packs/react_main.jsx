@@ -63,6 +63,7 @@ import EmailBuilderDialog from '../src/modules/Emails/components/EmailBuilderDia
 import { PRIMARY_DOMAINS } from '../src/utils/constants';
 import TaskProcessDetail from '../src/modules/Tasks/Processes/Components/TaskProcessDetail';
 import LeadManagementUserImport from '../src/modules/Users/LeadManagement/Containers/LeadManagementUserImport';
+import GuestQRPage from '../src/modules/LogBook/Components/GuestQRPage'
 
 // The routes defined here are carefully arranged, be mindful when changing them
 
@@ -163,7 +164,7 @@ const App = () => {
                 <Route path="/welcome" component={WelcomePage} />
                 <Route path="/login" component={LoginScreen} />
                 <Route path="/code/:id" component={ConfirmCodeScreen} />
-                <Route path="/l/:id/:code" component={OneTimeLoginCode} />
+                <Route path="/l/:id/:code/:type?/:requestId?" component={OneTimeLoginCode} />
                 <Route path="/logout" component={Logout} />
                 <Route path="/google/:token" component={MainAuthCallback} />
                 <Route path="/facebook/:token" component={MainAuthCallback} />
@@ -304,6 +305,11 @@ const App = () => {
                                 exact
                                 path="/entry_logs"
                                 render={() => <Redirect to="/logbook" />}
+                              />
+                              <Route
+                                exact
+                                path="/qr/invite/:id"
+                                component={GuestQRPage}
                               />
                               <AdminRoutes>
                                 <Switch>
