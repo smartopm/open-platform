@@ -30,6 +30,7 @@ describe('UsersActionMenu component', () => {
 
     expect(container.queryByText('common:form_actions.assign_label')).toBeNull();
     expect(container.queryByText('common:form_actions.create_campaign')).toBeNull();
+    expect(container.queryByText('common:form_actions.copy_id')).toBeNull();
   })
 
   it('should render both bulk action links', () => {
@@ -45,6 +46,7 @@ describe('UsersActionMenu component', () => {
 
     expect(container.queryByText('common:form_actions.create_campaign')).toBeInTheDocument();
     expect(container.queryByText('common:form_actions.assign_label')).toBeInTheDocument();
+    expect(container.queryByText('common:form_actions.copy_id')).toBeInTheDocument();
   })
 
   it('should render bulk action links if some users have been selected', () => {
@@ -60,5 +62,6 @@ describe('UsersActionMenu component', () => {
 
     expect(container.queryByText('common:form_actions.create_campaign')).toBeInTheDocument();
     expect(container.queryByText('common:form_actions.assign_label')).toBeInTheDocument();
+    expect(container.queryByText('common:form_actions.copy_id')).toBeInTheDocument();
   })
 })
