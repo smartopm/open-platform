@@ -291,7 +291,7 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
         </Grid>
 
         <Grid item md={6} xs={12}>
-          <FormControl fullWidth sx={{ m: 1 }}>
+          <FormControl fullWidth sx={{ m: 0}}>
             <InputLabel htmlFor="outlined-adornment-amount">
               {t('lead_management.capex_amount')}
             </InputLabel>
