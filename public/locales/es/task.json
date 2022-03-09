@@ -68,6 +68,7 @@
   "task": {
     "active_reminder": "Recordatorio",
     "add_note": "Agregar una nota",
+    "all_comments_resolved": "TODOS LOS COMENTARIOS RESUELTOS",
     "assigned_to": "Designados",
     "assigned_to_txt": "Asignado a:",
     "at_risk": "En Riesgo",
