@@ -74,3 +74,11 @@ export function lastRepliedComment(groupedComments, groupingId) {
   const commentsInGroup = groupedComments[groupingId]
   return commentsInGroup[commentsInGroup.length - 1]
 }
+
+export function isDiscussionResolved(groupedComments, groupingId) {
+  const comments = groupedComments[groupingId]
+  if (!comments.filter((com) => !com.repliedAt).length) {
+    return true
+  }
+  return false
+}

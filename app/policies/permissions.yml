@@ -24,6 +24,7 @@ admin:
       - can_access_tasks
       - can_access_processes
       - can_delete_note_document
+      - can_resolve_note_comments
   payment_plan:
     permissions:
       - can_cancel_payment_plan

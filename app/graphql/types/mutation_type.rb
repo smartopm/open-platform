@@ -41,6 +41,7 @@ module Types
     field :note_bulk_update, mutation: Mutations::Note::NoteBulkUpdate
     field :set_note_reminder, mutation: Mutations::Note::SetNoteReminder
     field :note_document_delete, mutation: Mutations::Note::NoteDocumentDelete
+    field :note_comments_resolve, mutation: Mutations::Note::NoteCommentsResolve
 
     # Feedback
     field :feedback_create, mutation: Mutations::Feedback::FeedbackCreate

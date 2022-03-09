@@ -4,7 +4,8 @@ import {
   snakeCaseToSentence,
   calculateOpenProjectsByStage,
   groupComments,
-  lastRepliedComment
+  lastRepliedComment,
+  isDiscussionResolved
 } from '../utils';
 
 describe('find hrefs in a string', () => {
@@ -82,5 +83,33 @@ describe('lastRepliedComment', () => {
     const lastComment = lastRepliedComment(groupedComments, '234');
 
     expect(lastComment.id).toEqual('456');
+  });
+});
+
+describe('isDiscussionResolved', () => {
+  it('returns true', () => {
+    const groupedComments = {
+      234: [
+        { id: '123', body: 'Comment 1', groupingId: '234', repliedAt: '2022-03-03' },
+        { id: '456', body: 'Comment 2', groupingId: '234', repliedAt: '2022-03-02' }
+      ],
+      'no-group': [{ id: '789', body: 'Comment 2', groupingId: null }]
+    };
+    const isResolved = isDiscussionResolved(groupedComments, '234');
+
+    expect(isResolved).toEqual(true);
+  });
+
+  it('returns false', () => {
+    const groupedComments = {
+      234: [
+        { id: '123', body: 'Comment 1', groupingId: '234', repliedAt: '2022-03-03' },
+        { id: '456', body: 'Comment 2', groupingId: '234', repliedAt: null }
+      ],
+      'no-group': [{ id: '789', body: 'Comment 2', groupingId: null }]
+    };
+    const isResolved = isDiscussionResolved(groupedComments, '234');
+
+    expect(isResolved).toEqual(false);
   });
 });

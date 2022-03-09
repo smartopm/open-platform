@@ -115,5 +115,43 @@ describe('Comment Card Component', () => {
       </Context.Provider>
     )
     expect(container.getByTestId('replied_text')).toBeInTheDocument();
+    expect(container.getByTestId('resolve-icon')).toBeInTheDocument();
+    expect(container.getByTestId('comments-resolved-text')).toBeInTheDocument();
+  })
+
+  it('displays reply and resolve-comments buttons', () => {
+    const comments = [
+      {
+      id: 'jwhekw',
+      body: 'body',
+      createdAt: "2020-09-30T20:32:17Z",
+      user: {
+        imageUrl: '',
+        name: 'name'
+        },
+        repliedAt: null,
+        replyFrom: {
+          id: authState.user.id,
+          name: 'Nurudeen'
+        },
+        replyRequired: true,
+        groupingId: 'jwhekw'
+      },
+    ];
+    const container = render(
+      <Context.Provider value={authState}>
+        <MockedProvider>
+          <BrowserRouter>
+            <CommentCard
+              comments={comments}
+              refetch={jest.fn}
+              forAccordionSection
+            />
+          </BrowserRouter>
+        </MockedProvider>
+      </Context.Provider>
+    )
+    expect(container.getByTestId('reply_btn')).toBeInTheDocument();
+    expect(container.getByTestId('resolve_btn')).toBeInTheDocument();
   })
 })
