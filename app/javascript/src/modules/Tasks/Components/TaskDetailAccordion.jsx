@@ -7,9 +7,8 @@ import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
-import Card from '../../../shared/Card';
 
-export default function TaskDetailAccordion({ icon, title, styles, component, openDetails }) {
+export default function TaskDetailAccordion({ title, styles, component, openDetails }) {
   const classes = useStyles();
   const [showComponent, setShowComponent] = useState(false);
 
@@ -21,47 +20,34 @@ export default function TaskDetailAccordion({ icon, title, styles, component, op
 
   return (
     <>
-      <Card primaryColor styles={styles} contentStyles={{padding: 0}}>
-        <Grid container className={classes.body} data-testid="body">
-          <Grid item sm={2} xs={2} data-testid="icon" className={classes.container}>
-            {icon}
-          </Grid>
-          <Grid item sm={9} xs={8}>
-            <Typography
-              data-testid="title"
-              color="primary"
-              variant="h6"
-              className={classes.typography}
-            >
-              {title}
-            </Typography>
-          </Grid>
-          <Grid item sm={1} xs={2} style={showComponent ? { backgroundColor: '#EEF6F9' } : undefined}>
-            <Grid container>
-              <Divider
-                orientation="vertical"
-                flexItem
-                className={classes.divider}
+      <Divider />
+      <Grid container className={classes.body} data-testid="body">
+        <Grid item sm={9} xs={8}>
+          <Typography
+            data-testid="title"
+            color="primary"
+            variant="h6"
+            className={classes.typography}
+          >
+            {title}
+          </Typography>
+        </Grid>
+        <Grid item sm={1} xs={2} style={showComponent ? { backgroundColor: '#EEF6F9' } : undefined}>
+          <Grid container>
+            <Divider orientation="vertical" flexItem className={classes.divider} color="primary" />
+            <Grid item sm={12} xs={12} className={classes.icon}>
+              <IconButton
                 color="primary"
-              />
-              <Grid
-                item
-                sm={12}
-                xs={12}
-                className={classes.icon}
+                onClick={() => setShowComponent(!showComponent)}
+                data-testid="toggle-icon"
               >
-                <IconButton
-                  color="primary"
-                  onClick={() => setShowComponent(!showComponent)}
-                  data-testid="toggle-icon"
-                >
-                  {showComponent ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-                </IconButton>
-              </Grid>
+                {showComponent ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+              </IconButton>
             </Grid>
           </Grid>
         </Grid>
-      </Card>
+      </Grid>
+      <Divider />
       {showComponent && <div data-testid="component">{component}</div>}
     </>
   );
