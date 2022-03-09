@@ -195,6 +195,7 @@ export default function TodoItem({
             handleClick={(tab) => handleTodoItemClick(task, tab)}
             handleTaskCompletion={handleTaskCompletion}
             clientView={clientView}
+            taskCommentHasReply={task?.taskCommentReply}
           />
          )}
 
@@ -221,6 +222,7 @@ export default function TodoItem({
               handleClick={() => handleTodoItemClick(firstLevelSubTask)}
               handleTaskCompletion={handleTaskCompletion}
               clientView={clientView}
+              taskCommentHasReply={false}
             />
             {(isLoadingSubSubTasks && objectAccessor(tasksOpen, firstLevelSubTask?.id)) && <LinearSpinner />}
           </div>
@@ -241,6 +243,7 @@ export default function TodoItem({
                       handleClick={() => handleTodoItemClick(secondLevelSubTask)}
                       handleTaskCompletion={handleTaskCompletion}
                       clientView={clientView}
+                      taskCommentHasReply={false}
                     />
                   </div>
                 ))}
