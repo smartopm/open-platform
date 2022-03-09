@@ -69,13 +69,13 @@ class LeadImportJob < ApplicationJob
         created_by                    = row['Created By']&.strip
         modified_by                   = row['Modified By']&.strip
         phone_list                    = [phone, secondary_phone].reject(&:blank?)
-        kick_off_date = row['Kick Off Date']&.strip
-        capex_amount = row['Capex Amount']&.strip
-        jobs_created = row['Jobs']&.strip
-        jobs_timeline = row['Jobs Timeline']&.strip
-        investment_size = row['Investment Size']&.strip
-        investment_timeline = row['Investment Timeline']&.strip
-        decision_timeline = row['Decision Timeline']&.strip
+        kick_off_date                 = row['Kick Off Date']&.strip
+        capex_amount                  = row['Capex Amount']&.strip
+        jobs_created                  = row['Jobs']&.strip
+        jobs_timeline                 = row['Jobs Timeline']&.strip
+        investment_size               = row['Investment Size']&.strip
+        investment_timeline           = row['Investment Timeline']&.strip
+        decision_timeline             = row['Decision Timeline']&.strip
 
         if name.blank?
           errors[index + 1] = ['Name must be present']
