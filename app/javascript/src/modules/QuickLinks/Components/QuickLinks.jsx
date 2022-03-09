@@ -104,7 +104,7 @@ const useStyles = makeStyles(theme => ({
   },
   quickLink: {
     '&:hover': {
-      textDecorationStyle: 'none',
+      textDecorationLine: 'none',
    },
   }
 }));
