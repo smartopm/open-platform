@@ -67,7 +67,7 @@ class LeadImportJob < ApplicationJob
         last_contact_date             = row['Last Contact Date']&.strip
         followup_at                   = row['Date Follow Up']&.strip
         created_by                    = row['Created By']&.strip
-        modified_by                   = row['Modified by']&.strip
+        modified_by                   = row['Modified By']&.strip
         phone_list                    = [phone, secondary_phone].reject(&:blank?)
         kick_off_date = row['Kick Off Date']&.strip
         capex_amount = row['Capex Amount']&.strip
