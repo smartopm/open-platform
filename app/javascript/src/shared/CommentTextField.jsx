@@ -94,7 +94,7 @@ export default function CommentTextField({
             <Autocomplete
               data-testid="users_autocomplete"
               style={{
-                width: matches ? 300 : '100%',
+                width: matches ? 320 : '100%',
                 marginLeft: matches && -100,
                 marginTop: matches && 50
               }}

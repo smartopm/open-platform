@@ -134,7 +134,6 @@ export default function TaskInfoTop({
   function isUnAuthorizedDeveloper() {
     return (
       currentUser.userType === 'developer' &&
-      
       !data.parentNote.assignees.find(assignee => assignee.id === currentUser.id)
     );
   }
@@ -413,6 +412,9 @@ export default function TaskInfoTop({
           </Grid>
         </Grid>
 
+        <br />
+        <br />
+
         <Grid
           container
           className={matches ? classes.assigneesSectionMobile : classes.assigneesSection}
@@ -451,7 +453,7 @@ export default function TaskInfoTop({
               <Grid item m={6} xs={12} data-testid="add-assignee">
                 {canUpdateNote && (
                   <Chip
-                    style={autoCompleteOpen ? { marginTop: '50px', width: '100%' } : undefined}
+                    style={autoCompleteOpen ? { marginTop: '50px' } : undefined}
                     key={data.id}
                     variant="outlined"
                     label={autoCompleteOpen ? t('task.chip_close') : t('task.chip_add_assignee')}
@@ -477,7 +479,7 @@ export default function TaskInfoTop({
                       assignUser(data.id, value.id);
                     }}
                     style={{
-                      width: matches ? 280 : '100%',
+                      width: matches ? 320 : '100%',
                       marginLeft: matches && 5
                     }}
                     getOptionLabel={option =>

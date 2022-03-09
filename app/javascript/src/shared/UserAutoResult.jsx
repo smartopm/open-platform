@@ -14,14 +14,14 @@ export default function UserAutoResult({ user }) {
 
   return (
     <Grid container className={classes.avatarContainer} style={{ display: 'flex' }}>
-      <Grid item md={1} sm={1} style={{ marginRight: '5px' }}>
+      <Grid item md={2} sm={1} style={{ marginRight: '5px' }}>
         <UserAvatar
           searchedUser={user}
           imageUrl={user.avatarUrl || user.imageUrl}
           customStyle={classes.userAvatar}
         />
       </Grid>
-      <Grid item md={4} sm={4} className={matches ? classes.nameGridItem : classes.gridItem}>
+      <Grid item md={3} sm={4} className={matches ? classes.nameGridItemXS : classes.nameGridItem}>
         {user.name}
       </Grid>
 
@@ -29,14 +29,14 @@ export default function UserAutoResult({ user }) {
         <Divider orientation="vertical" flexItem className={classes.verticalDivider} />
       </Grid>
 
-      <Grid item md={3} sm={4} className={matches ? classes.typeGridItem : classes.gridItem}>
+      <Grid item md={3} sm={4} className={matches ? classes.typeGridItemXS : classes.typeGridItem}>
         {t(`common:user_types.${user?.userType}`)}
       </Grid>
 
       <Grid item md={1} sm={1}>
         <Divider orientation="vertical" flexItem className={classes.verticalDivider} />
       </Grid>
-      <Grid item md={1} sm={2} className={matches ? classes.refGridItem : classes.gridItem}>
+      <Grid item md={1} sm={2} className={matches ? classes.refGridItemXS : classes.gridItem}>
         {user.extRefId || '-'}
       </Grid>
     </Grid>
@@ -54,7 +54,23 @@ const useStyles = makeStyles(() => ({
   gridItem: {
     paddingTop: '7px'
   },
+
   nameGridItem: {
+    paddingTop: '7px',
+    width: '40%',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis'
+  },
+  typeGridItem: {
+    paddingTop: '7px',
+    width: '40%',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis'
+  },
+
+  nameGridItemXS: {
     paddingTop: '7px',
     marginRight: '10px',
     width: '38%',
@@ -62,7 +78,7 @@ const useStyles = makeStyles(() => ({
     overflow: 'hidden',
     textOverflow: 'ellipsis'
   },
-  typeGridItem: {
+  typeGridItemXS: {
     paddingTop: '7px',
     marginLeft: '5px',
     marginRight: '5px',
@@ -71,7 +87,7 @@ const useStyles = makeStyles(() => ({
     overflow: 'hidden',
     textOverflow: 'ellipsis'
   },
-  refGridItem: {
+  refGridItemXS: {
     paddingTop: '7px',
     marginLeft: '15px'
   },
