@@ -92,14 +92,16 @@ export default function UsersActionMenu({
           >
             {t('common:form_actions.create_campaign')}
           </Button>
-          <Button
-            onClick={copyToClipBoard}
-            color="primary"
-            style={{ textTransform: 'none' }}
-            data-testid='copy-id'
-          >
-            {t('common:form_actions.copy_id')}
-          </Button>
+          {selectedUsers.length > 0 && (
+            <Button
+              onClick={copyToClipBoard}
+              color="primary"
+              style={{ textTransform: 'none' }}
+              data-testid='copy-id'
+            >
+              {t('common:form_actions.copy_id')}
+            </Button>
+          )}
         </Grid>
       )}
     </Grid>
