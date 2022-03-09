@@ -75,7 +75,7 @@ describe('Admin processes dashboard', () => {
       expect(screen.queryByText('Q2')).toBeInTheDocument()
       expect(screen.queryByText('Q3')).toBeInTheDocument()
       expect(screen.queryByText('Q4')).toBeInTheDocument()
-      expect(screen.queryByText('processes.year_to_date')).toBeInTheDocument();
+      expect(screen.queryByText('processes.total')).toBeInTheDocument();
       expect(screen.queryByText('160')).toBeInTheDocument();
       expect(screen.queryByText('300')).toBeInTheDocument();
       expect(screen.queryByText('119')).toBeInTheDocument();

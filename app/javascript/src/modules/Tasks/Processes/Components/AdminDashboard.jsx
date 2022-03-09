@@ -83,7 +83,7 @@ export default function AdminDashboard() {
       primary: false
     },
     {
-      name: t('processes.year_to_date'),
+      name: t('processes.total'),
       completed: tasksTillNow(completedResults) || 0,
       submitted: tasksTillNow(submittedResults) || 0,
       primary: false
