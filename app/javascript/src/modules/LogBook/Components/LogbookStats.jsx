@@ -8,21 +8,15 @@ import CenteredContent from '../../../shared/CenteredContent';
 import { LogbookStatsQuery } from '../graphql/guestbook_queries';
 import { Spinner } from '../../../shared/Loading';
 import CardComponent from '../../../shared/Card';
-import useLogbookStyles from '../styles'
+import useLogbookStyles from '../styles';
 
 
-/**
-people_present
-people_entered
-people_exited
- */
-
-export default function LogbookStats({ tabValue, shouldRefetch }) {
+export default function LogbookStats({ tabValue, shouldRefetch, isSmall }) {
   const { t } = useTranslation('logbook');
-  const [loadStats, { data, loading, error }] = useLazyQuery(LogbookStatsQuery, {
+  const [loadStats, { data, loading }] = useLazyQuery(LogbookStatsQuery, {
     fetchPolicy: 'cache-and-network'
   });
-  const classes = useLogbookStyles()
+  const classes = useLogbookStyles();
 
   useEffect(() => {
     if (tabValue === 2) {
@@ -30,57 +24,43 @@ export default function LogbookStats({ tabValue, shouldRefetch }) {
     }
   }, [tabValue, loadStats, shouldRefetch]);
 
-  if(loading) return <Spinner />
+  const statsData = [
+    {
+      title: t('logbook.total_entries'),
+      count: data?.communityPeopleStatistics.peopleEntered,
+      id: 'total_entries'
+    },
+    {
+      title: t('logbook.total_exits'),
+      count: data?.communityPeopleStatistics.peopleExited,
+      id: 'total_exits'
+    },
+    {
+      title: t('logbook.total_in_city'),
+      count: data?.communityPeopleStatistics.peoplePresent,
+      id: 'total_in_city'
+    }
+  ];
+
+  if (loading) return <Spinner />;
   return (
-    <Grid container spacing={1} alignItems="center" alignContent="center">
-      <Grid item xs={4}>
-        <CardComponent className={classes.statCard}>
-          <CenteredContent>
-            <Typography gutterBottom variant="caption" data-testid="stats_title">
-              {t('logbook.total_entries')}
-            </Typography>
-          </CenteredContent>
-          <CenteredContent>
-            <Typography variant="h3" component="div" gutterBottom data-testid="stats_count">
-              {error || !data?.communityPeopleStatistics.peopleEntered
-                ? 0
-                : data?.communityPeopleStatistics.peopleEntered}
-            </Typography>
-          </CenteredContent>
-        </CardComponent>
-      </Grid>
-      <Grid item xs={4}>
-        <CardComponent className={classes.statCard}>
-          <CenteredContent>
-            <Typography gutterBottom variant="caption" data-testid="stats_title">
-              {t('logbook.total_exits')}
-            </Typography>
-          </CenteredContent>
-          <CenteredContent>
-            <Typography variant="h3" component="div" gutterBottom data-testid="stats_count">
-              {error || !data?.communityPeopleStatistics.peopleExited
-                ? 0
-                : data?.communityPeopleStatistics.peopleExited}
-            </Typography>
-          </CenteredContent>
-        </CardComponent>
-      </Grid>
-      <Grid item xs={4}>
-        <CardComponent className={classes.statCard}>
-          <CenteredContent>
-            <Typography gutterBottom variant="caption" data-testid="stats_title">
-              {t('logbook.total_in_city')}
-            </Typography>
-          </CenteredContent>
-          <CenteredContent>
-            <Typography variant="h3" component="div" gutterBottom data-testid="stats_count">
-              {error || !data?.communityPeopleStatistics.peoplePresent
-                ? 0
-                : data?.communityPeopleStatistics.peoplePresent}
-            </Typography>
-          </CenteredContent>
-        </CardComponent>
-      </Grid>
+    <Grid container spacing={isSmall ? 1 : 4}>
+      {statsData.map(stat => (
+        <Grid item xs={4} key={stat.id}>
+          <CardComponent className={classes.statCard}>
+            <CenteredContent>
+              <Typography gutterBottom variant="caption" data-testid="stats_title">
+                {stat.title}
+              </Typography>
+            </CenteredContent>
+            <CenteredContent>
+              <Typography variant="h3" component="div" gutterBottom data-testid="stats_count">
+                {stat.count}
+              </Typography>
+            </CenteredContent>
+          </CardComponent>
+        </Grid>
+      ))}
     </Grid>
   );
 }

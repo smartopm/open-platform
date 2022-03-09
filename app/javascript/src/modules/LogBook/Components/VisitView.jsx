@@ -41,6 +41,7 @@ export default function VisitView({
   const [currentId, setCurrentId] = useState(null);
   const history = useHistory();
   const matches = useMediaQuery('(max-width:800px)');
+
   const classes = useLogbookStyles();
   const theme = useTheme();
 
@@ -81,7 +82,11 @@ export default function VisitView({
 
   return (
     <div style={{ marginTop: '20px' }}>
-      <LogbookStats tabValue={tabValue} shouldRefetch={observationDetails.refetch} />
+      <LogbookStats 
+        tabValue={tabValue}
+        shouldRefetch={observationDetails.refetch}
+        isSmall={matches}
+      />
       {error && <CenteredContent>{formatError(error.message)}</CenteredContent>}
       {guestsLoading ? (
         <Spinner />
