@@ -4,13 +4,11 @@ import Divider from '@material-ui/core/Divider';
 import PropTypes from 'prop-types';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { makeStyles } from '@material-ui/core/styles';
-import { useTranslation } from 'react-i18next';
 import UserAvatar from '../modules/Users/Components/UserAvatar';
 
-export default function UserAutoResult({ user }) {
+export default function UserAutoResult({ user, t }) {
   const classes = useStyles();
   const matches = useMediaQuery('(max-width:800px)');
-  const { t } = useTranslation(['search', 'common']);
 
   return (
     <Grid container className={classes.avatarContainer} style={{ display: 'flex' }}>
@@ -112,5 +110,6 @@ UserAutoResult.propTypes = {
     name: PropTypes.string,
     userType: PropTypes.string,
     extRefId: PropTypes.string
-  }).isRequired
+  }).isRequired,
+  t: PropTypes.func.isRequired
 };
