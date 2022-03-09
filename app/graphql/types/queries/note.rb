@@ -500,7 +500,6 @@ module Types::Queries::Note
                      .where(id: task_ids)
 
     Comments::NoteComment.where(
-      reply_from: context[:current_user],
       note_id: assigned_tasks.pluck(:id),
       reply_required: true,
       replied_at: nil,
