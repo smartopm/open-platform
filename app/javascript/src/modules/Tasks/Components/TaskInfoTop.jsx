@@ -94,8 +94,17 @@ export default function TaskInfoTop({
   const taskPermissions = currentUser?.permissions?.find(
     permissionObject => permissionObject.module === 'note'
   );
+
+  const formPermissions = currentUser?.permissions?.find(
+    permissionObject => permissionObject.module === 'forms'
+  );
+
   const canUpdateNote = taskPermissions
     ? taskPermissions.permissions.includes('can_update_note')
+    : false;
+
+  const canViewFormUser = formPermissions
+    ? formPermissions.permissions.includes('can_view_form_user')
     : false;
 
   function openParentLink(event, parent) {
@@ -488,7 +497,7 @@ export default function TaskInfoTop({
           </Grid>
         </Grid>
       </Grid>
-      {data?.formUser?.user && (
+      {canViewFormUser && data?.formUser?.user && (
         <Grid container className={classes.submittedFormSection}>
           <Grid item xs={4} md={3}>
             <Typography variant="caption" color="textSecondary" data-testid="submitted_form_title">
