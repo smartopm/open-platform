@@ -89,6 +89,8 @@ export const LogbookStatsQuery = gql`
 query stats {
   communityPeopleStatistics {
     peoplePresent
+    peopleEntered
+    peopleExited
   }
 }
 `

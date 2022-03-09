@@ -67,7 +67,9 @@
     "new_switch": "switch to new screen",
     "user_entry": "User Entry",
     "user_granted_access": "User Granted Access",
-    "total_in_city": "Total in City"
+    "total_in_city": "Total in City",
+    "total_entries": "Total Entries",
+    "total_exits": "Total Exits"
   },
   "log_title": {
     "visitor": "Visitor",

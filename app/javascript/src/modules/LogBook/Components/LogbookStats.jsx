@@ -10,6 +10,13 @@ import { Spinner } from '../../../shared/Loading';
 import CardComponent from '../../../shared/Card';
 import useLogbookStyles from '../styles'
 
+
+/**
+people_present
+people_entered
+people_exited
+ */
+
 export default function LogbookStats({ tabValue, shouldRefetch }) {
   const { t } = useTranslation('logbook');
   const [loadStats, { data, loading, error }] = useLazyQuery(LogbookStatsQuery, {
@@ -28,14 +35,16 @@ export default function LogbookStats({ tabValue, shouldRefetch }) {
     <Grid container spacing={1} alignItems="center" alignContent="center">
       <Grid item xs={4}>
         <CardComponent className={classes.statCard}>
-          <Typography gutterBottom variant="caption" data-testid="stats_title">
-            {t('logbook.total_in_city')}
-          </Typography>
+          <CenteredContent>
+            <Typography gutterBottom variant="caption" data-testid="stats_title">
+              {t('logbook.total_entries')}
+            </Typography>
+          </CenteredContent>
           <CenteredContent>
             <Typography variant="h3" component="div" gutterBottom data-testid="stats_count">
-              {error || !data?.communityPeopleStatistics.peoplePresent
+              {error || !data?.communityPeopleStatistics.peopleEntered
                 ? 0
-                : data?.communityPeopleStatistics.peoplePresent}
+                : data?.communityPeopleStatistics.peopleEntered}
             </Typography>
           </CenteredContent>
         </CardComponent>
@@ -44,14 +53,14 @@ export default function LogbookStats({ tabValue, shouldRefetch }) {
         <CardComponent className={classes.statCard}>
           <CenteredContent>
             <Typography gutterBottom variant="caption" data-testid="stats_title">
-              {t('logbook.total_in_city')}
+              {t('logbook.total_exits')}
             </Typography>
           </CenteredContent>
           <CenteredContent>
             <Typography variant="h3" component="div" gutterBottom data-testid="stats_count">
-              {error || !data?.communityPeopleStatistics.peoplePresent
+              {error || !data?.communityPeopleStatistics.peopleExited
                 ? 0
-                : data?.communityPeopleStatistics.peoplePresent}
+                : data?.communityPeopleStatistics.peopleExited}
             </Typography>
           </CenteredContent>
         </CardComponent>

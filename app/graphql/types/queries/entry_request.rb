@@ -175,12 +175,16 @@ module Types::Queries::EntryRequest
 
   def people_entered(community, duration)
     start_time = duration_based_start_time(duration)
-    community.entry_requests.where('granted_at >= ? AND granted_at <= ?', start_time, end_time)
+    community.entry_requests
+              .where('granted_at >= ? AND granted_at <= ?', start_time, end_time)
+              .count
   end
 
   def people_exited(community, duration)
     start_time = duration_based_start_time(duration)
-    community.entry_requests.where('exited_at >= ? AND exited_at <= ?', start_time, end_time)
+    community.entry_requests
+              .where('exited_at >= ? AND exited_at <= ?', start_time, end_time)
+              .count
   end
 
   def duration_based_start_time(duration)
