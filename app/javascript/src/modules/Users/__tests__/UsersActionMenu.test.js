@@ -11,6 +11,7 @@ const props = {
   handleLabelSelect: jest.fn(),
   setSelectAllOption: jest.fn(),
   labelsRefetch: jest.fn(),
+  copyToClipBoard: jest.fn(),
   selectedUsers: [],
   selectCheckBox: true,
   usersCountData: {
@@ -36,7 +37,8 @@ describe('UsersActionMenu component', () => {
   it('should render both bulk action links', () => {
     const newProps = {
       ...props,
-      campaignCreateOption: 'all'
+      campaignCreateOption: 'all_on_this_page',
+      selectedUsers: ['hgjhwewhjebwuwd']
     }
     const container = render(
       <MockedThemeProvider>
