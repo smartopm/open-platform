@@ -412,9 +412,6 @@ export default function TaskInfoTop({
           </Grid>
         </Grid>
 
-        <br />
-        <br />
-
         <Grid
           container
           className={matches ? classes.assigneesSectionMobile : classes.assigneesSection}
@@ -450,7 +447,7 @@ export default function TaskInfoTop({
                   ))}
                 </Grid>
               )}
-              <Grid item m={6} xs={12} data-testid="add-assignee">
+              <Grid item sm={6} xs={12} data-testid="add-assignee">
                 {canUpdateNote && (
                   <Chip
                     style={autoCompleteOpen ? { marginTop: '50px' } : undefined}
@@ -488,7 +485,7 @@ export default function TaskInfoTop({
                     renderInput={params => (
                       <TextField
                         {...params}
-                        style={{ width: '100%' }}
+                        variant="standard"
                         label={t('task.task_assignee_label')}
                         placeholder={t('task.task_search_placeholder')}
                         onChange={event => setSearchUser(event.target.value)}
