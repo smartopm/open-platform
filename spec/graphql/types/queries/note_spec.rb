@@ -38,6 +38,14 @@ RSpec.describe Types::Queries::Note do
                           permissions: %w[can_fetch_flagged_notes can_fetch_task_comments
                                           can_fetch_tagged_comments])
     end
+    let(:consultant_role) { create(:role, name: 'consultant', community: admin.community) }
+    let(:consultant) { create(:consultant, role: consultant_role, community: admin.community) }
+    let!(:consultant_permissions) do
+      create(:permission, module: 'note',
+                          role: consultant_role,
+                          permissions: %w[can_fetch_flagged_notes can_fetch_task_comments
+                                          can_fetch_comments_on_assigned_tasks])
+    end
 
     let!(:first_note) do
       admin.notes.create!(
@@ -1034,6 +1042,71 @@ RSpec.describe Types::Queries::Note do
           result = DoubleGdpSchema.execute(project_comments_query, context: {
                                              current_user: developer,
                                              site_community: developer.community,
+                                           }, variables: { taskId: third_note.id }).as_json
+
+          expect(result['errors']).to be_nil
+          expect(result.dig('data', 'projectComments').length).to eq 0
+        end
+
+        it 'retrieves tagged comments for consultant assigned task requested for reply' do
+          create(
+            :note_comment,
+            note: third_note,
+            body: 'Comment needs reply from consultant',
+            user: admin,
+            status: 'active',
+            reply_required: true,
+            reply_from: consultant,
+          )
+
+          subtask1 = admin.notes.create!(
+            body: 'Step 1 subtask 1',
+            description: 'Step 1 subtask 1',
+            user_id: admin.id,
+            category: 'other',
+            flagged: true,
+            community_id: consultant.community_id,
+            author_id: admin.id,
+            parent_note_id: third_note.id,
+          )
+
+          create(
+            :note_comment,
+            note: subtask1,
+            body: 'Step 1 subtask 1 comment needs reply from consultant',
+            user: admin,
+            status: 'active',
+            reply_required: true,
+            reply_from: consultant,
+          )
+
+          consultant.tasks << third_note << subtask1
+
+          result = DoubleGdpSchema.execute(project_comments_query, context: {
+                                             current_user: consultant,
+                                             site_community: consultant.community,
+                                           }, variables: { taskId: third_note.id }).as_json
+
+          expect(result['errors']).to be_nil
+          expect(result.dig('data', 'projectComments').length).to eq 2
+        end
+
+        it 'does not retrieve tagged comments for non consultant assigned task' do
+          create(
+            :note_comment,
+            note: third_note,
+            body: 'Comment needs reply from developer',
+            user: admin,
+            status: 'active',
+            reply_required: true,
+            reply_from: developer,
+          )
+
+          developer.tasks << third_note
+
+          result = DoubleGdpSchema.execute(project_comments_query, context: {
+                                             current_user: consultant,
+                                             site_community: consultant.community,
                                            }, variables: { taskId: third_note.id }).as_json
 
           expect(result['errors']).to be_nil
