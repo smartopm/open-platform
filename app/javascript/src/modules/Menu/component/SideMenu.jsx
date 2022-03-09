@@ -6,13 +6,14 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
-import { Collapse } from '@material-ui/core';
+import { Collapse , useTheme } from '@material-ui/core';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/core/styles';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider'; 
 import checkSubMenuAccessibility from '../utils';
+
 
 const SideMenu = ({ toggleDrawer, menuItems, userType, direction, communityFeatures }) => {
   const authState = useContext(AuthStateContext);
@@ -22,6 +23,7 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, direction, communityFeatu
   const { t } = useTranslation('common')
   const [currentMenu, setCurrentMenu] = useState({ isOpen: false, name: '' });
   const classes = useStyles()
+  const theme = useTheme()
   /**
    * @param {Event} event browser event from clicked icon
    * @param {object} item a menu object containing details about the menu and its sub menu
@@ -116,59 +118,76 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, direction, communityFeatu
     >
       <List>
         {menuItems.map(menuItem =>
-         communityFeatures.includes(menuItem.featureName) && checkMenuAccessibility(menuItem) ? (
-           <Fragment key={typeof menuItem.name === 'function' && menuItem.name(t)}>
-             <ListItem
-               button
-               onClick={event => routeTo(event, menuItem)}
-               selected={pathname === menuItem.routeProps.path}
-               className={`${menuItem.styleProps?.className} ${classes.menuItem}`}
-             >
-               {menuItem.styleProps?.icon && (
-               <ListItemIcon className={`${classes.listItemIcon} ${classes.child}`}>
-                 {menuItem.styleProps.icon}
-               </ListItemIcon>
+          communityFeatures.includes(menuItem.featureName) && checkMenuAccessibility(menuItem) ? (
+            <Fragment key={typeof menuItem.name === 'function' && menuItem.name(t)}>
+              <ListItem
+                button
+                onClick={event => routeTo(event, menuItem)}
+                selected={pathname === menuItem.routeProps.path}
+                className={`${menuItem.styleProps?.className} ${classes.menuItem}`}
+                style={{
+                  backgroundColor:
+                    pathname === menuItem.routeProps.path && theme.palette.primary.main,
+                }}
+              >
+                {menuItem.styleProps?.icon && (
+                  <ListItemIcon 
+                    className={`${classes.listItemIcon} ${classes.child}`}
+                    style={{ color: pathname === menuItem.routeProps.path && '#FFFFFF' }}
+                  >
+                    {menuItem.styleProps.icon}
+                  </ListItemIcon>
                 )}
-               <ListItemText primary={menuItem.name(t)} className={`${classes.menuItemText} ${classes.child}`} />
-               {currentMenu.name === menuItem.name(t) && currentMenu.isOpen ? (
-                 <ExpandLess />
+                <ListItemText
+                  primary={menuItem.name(t)}
+                  className={`${classes.menuItemText} ${classes.child}`}
+                  style={{ color: pathname === menuItem.routeProps.path && '#FFFFFF'}}
+                />
+                {currentMenu.name === menuItem.name(t) && currentMenu.isOpen ? (
+                  <ExpandLess />
                 ) : // Avoid showing toggle icon on menus with no submenus
                 menuItem.subMenu ? (
                   <ExpandMore />
                 ) : null}
-             </ListItem>
+              </ListItem>
 
-             <Collapse
-               in={currentMenu.name === menuItem.name(t) && currentMenu.isOpen}
-               timeout="auto"
-               unmountOnExit
-             >
-               <List component="div" disablePadding>
-                 { menuItem.subMenu &&
+              <Collapse
+                in={currentMenu.name === menuItem.name(t) && currentMenu.isOpen}
+                timeout="auto"
+                unmountOnExit
+              >
+                <List component="div" disablePadding>
+                  {menuItem.subMenu &&
                     menuItem.subMenu.map(item =>
-                      communityFeatures.includes(item.featureName) && 
-                      checkSubMenuAccessibility({authState, subMenuItem: item}) ? (
+                      communityFeatures.includes(item.featureName) &&
+                      checkSubMenuAccessibility({ authState, subMenuItem: item }) ? (
                         <ListItem
                           button
                           key={item.name(t)}
                           onClick={event => routeTo(event, item)}
                           selected={pathname === item.routeProps.path}
                           className={`${item.styleProps?.className} ${classes.menuItem}`}
+                          style={{
+                            backgroundColor:
+                              pathname === item.routeProps.path && theme.palette.primary.main,
+                          }}
                         >
                           <ListItemText
                             primary={item.name(t)}
-                            style={{ marginLeft: `${menuItem.styleProps?.icon ? '55px' : '17px'}` }}
-                            className={classes.menuItemText}
-                            color="pr"
+                            style={{ 
+                              marginLeft: `${menuItem.styleProps?.icon ? '55px' : '17px'}`,
+                              color: pathname === item.routeProps.path && '#FFFFFF'
+                              }}
+                            className={`${classes.menuItemText} ${classes.child}`}
                           />
                         </ListItem>
                       ) : (
                         <span key={item.name(t)} />
                       )
                     )}
-               </List>
-             </Collapse>
-           </Fragment>
+                </List>
+              </Collapse>
+            </Fragment>
           ) : (
             <span key={menuItem.name(t)} />
           )
@@ -231,7 +250,7 @@ const useStyles = makeStyles(theme => ({
     }
   },
   // This allow the menuItem to populate the hover state to the children
-  child: {}
+  child: {},
 }));
 
 export default SideMenu;

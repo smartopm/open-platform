@@ -2,10 +2,8 @@ import React from 'react';
 import { fireEvent, render } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom';
-import { ApolloProvider } from 'react-apollo';
 import { MockedProvider } from '@apollo/react-testing';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
-import { createClient } from '../../../utils/apollo';
 import { SideMenu } from '../index';
 import modules from '../..';
 import authState from '../../../__mocks__/authstate';
@@ -39,22 +37,20 @@ describe('Side Nav component', () => {
 
   it('should render proper the sidenav menu', async () => {
     const container = render(
-      <ApolloProvider client={createClient}>
-        <Context.Provider value={authState}>
-          <MockedProvider>
-            <BrowserRouter>
-              <SideMenu
-                toggleDrawer={handleDrawerToggle}
-                menuItems={modules}
-                userType={authState.user.userType}
-                communityFeatures={Object.keys(features)}
-                mobileOpen={false}
-                direction="left"
-              />
-            </BrowserRouter>
-          </MockedProvider>
-        </Context.Provider>
-      </ApolloProvider>
+      <Context.Provider value={authState}>
+        <MockedProvider>
+          <BrowserRouter>
+            <SideMenu
+              toggleDrawer={handleDrawerToggle}
+              menuItems={modules}
+              userType={authState.user.userType}
+              communityFeatures={Object.keys(features)}
+              mobileOpen={false}
+              direction="left"
+            />
+          </BrowserRouter>
+        </MockedProvider>
+      </Context.Provider>
     );
     expect(container.queryAllByTestId('sidenav-container')[0]).toBeInTheDocument();
     expect(container.queryAllByTestId('sidenav-container')).toHaveLength(1);
@@ -115,22 +111,20 @@ describe('Side Nav component', () => {
     };
 
     const container = render(
-      <ApolloProvider client={createClient}>
-        <Context.Provider value={data}>
-          <MockedProvider>
-            <BrowserRouter>
-              <SideMenu
-                toggleDrawer={handleDrawerToggle}
-                menuItems={modules}
-                userType={data.user.userType}
-                communityFeatures={Object.keys(features)}
-                mobileOpen={false}
-                direction="left"
-              />
-            </BrowserRouter>
-          </MockedProvider>
-        </Context.Provider>
-      </ApolloProvider>
+      <Context.Provider value={data}>
+        <MockedProvider>
+          <BrowserRouter>
+            <SideMenu
+              toggleDrawer={handleDrawerToggle}
+              menuItems={modules}
+              userType={data.user.userType}
+              communityFeatures={Object.keys(features)}
+              mobileOpen={false}
+              direction="left"
+            />
+          </BrowserRouter>
+        </MockedProvider>
+      </Context.Provider>
     );
     expect(container.queryAllByTestId('sidenav-container')[0]).toBeInTheDocument();
     expect(container.queryAllByTestId('sidenav-container')).toHaveLength(1)
