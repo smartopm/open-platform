@@ -122,14 +122,14 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, direction, communityFeatu
                button
                onClick={event => routeTo(event, menuItem)}
                selected={pathname === menuItem.routeProps.path}
-               className={menuItem.styleProps?.className}
+               className={`${menuItem.styleProps?.className} ${classes.menuItem}`}
              >
                {menuItem.styleProps?.icon && (
-               <ListItemIcon className={classes.listItemIcon}>
+               <ListItemIcon className={`${classes.listItemIcon} ${classes.child}`}>
                  {menuItem.styleProps.icon}
                </ListItemIcon>
                 )}
-               <ListItemText primary={menuItem.name(t)} className={classes.menuItemText} />
+               <ListItemText primary={menuItem.name(t)} className={`${classes.menuItemText} ${classes.child}`} />
                {currentMenu.name === menuItem.name(t) && currentMenu.isOpen ? (
                  <ExpandLess />
                 ) : // Avoid showing toggle icon on menus with no submenus
@@ -153,7 +153,7 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, direction, communityFeatu
                           key={item.name(t)}
                           onClick={event => routeTo(event, item)}
                           selected={pathname === item.routeProps.path}
-                          className={item.styleProps?.className}
+                          className={`${item.styleProps?.className} ${classes.menuItem}`}
                         >
                           <ListItemText
                             primary={item.name(t)}
@@ -217,8 +217,21 @@ const useStyles = makeStyles(theme => ({
     color: theme.palette.primary.main
   },
   menuItemText: {
-    color: theme.palette.primary.main
-  }
+    color: theme.palette.primary.main,
+    '&:hover': {
+      color: '#FFFFFF'
+    }
+  },
+  menuItem: {
+    '&:hover': {
+      backgroundColor: theme.palette.primary.main,
+      '& $child': {
+        color: '#FFFFFF'
+      }
+    }
+  },
+  // This allow the menuItem to populate the hover state to the children
+  child: {}
 }));
 
 export default SideMenu;
