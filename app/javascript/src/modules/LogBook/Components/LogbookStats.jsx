@@ -11,7 +11,7 @@ import CardComponent from '../../../shared/Card';
 import useLogbookStyles from '../styles';
 
 
-export default function LogbookStats({ tabValue, shouldRefetch, isSmall }) {
+export default function LogbookStats({ tabValue, shouldRefetch, isSmall, handleFilter }) {
   const { t } = useTranslation('logbook');
   const [loadStats, { data, loading }] = useLazyQuery(LogbookStatsQuery, {
     fetchPolicy: 'cache-and-network'
@@ -27,18 +27,21 @@ export default function LogbookStats({ tabValue, shouldRefetch, isSmall }) {
   const statsData = [
     {
       title: t('logbook.total_entries'),
-      count: data?.communityPeopleStatistics.peopleEntered,
-      id: 'total_entries'
+      count: data?.communityPeopleStatistics.peopleEntered?.length,
+      id: 'total_entries',
+      action: () => handleFilter(data?.communityPeopleStatistics.peopleEntered, 'peopleEntered')
     },
     {
       title: t('logbook.total_exits'),
-      count: data?.communityPeopleStatistics.peopleExited,
-      id: 'total_exits'
+      count: data?.communityPeopleStatistics.peopleExited?.length,
+      id: 'total_exits',
+      action: () => handleFilter(data?.communityPeopleStatistics.peopleExited, 'peopleExited')
     },
     {
       title: t('logbook.total_in_city'),
       count: data?.communityPeopleStatistics.peoplePresent,
-      id: 'total_in_city'
+      id: 'total_in_city',
+      action: () => handleFilter(data?.communityPeopleStatistics.peoplePresent, 'allVisits')
     }
   ];
 
@@ -47,7 +50,10 @@ export default function LogbookStats({ tabValue, shouldRefetch, isSmall }) {
     <Grid container spacing={isSmall ? 1 : 4}>
       {statsData.map(stat => (
         <Grid item xs={4} key={stat.id}>
-          <CardComponent className={classes.statCard}>
+          <CardComponent 
+            className={classes.statCard}
+            clickData={{ clickable: true, handleClick: stat.action }}
+          >
             <CenteredContent>
               <Typography gutterBottom variant="caption" data-testid="stats_title">
                 {stat.title}
@@ -67,5 +73,7 @@ export default function LogbookStats({ tabValue, shouldRefetch, isSmall }) {
 
 LogbookStats.propTypes = {
   tabValue: PropTypes.number.isRequired,
-  shouldRefetch: PropTypes.bool.isRequired
+  shouldRefetch: PropTypes.bool.isRequired,
+  isSmall: PropTypes.bool.isRequired,
+  handleFilter: PropTypes.func.isRequired,
 };

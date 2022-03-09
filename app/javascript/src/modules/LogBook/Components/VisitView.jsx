@@ -39,6 +39,7 @@ export default function VisitView({
   );
   const { t } = useTranslation('logbook');
   const [currentId, setCurrentId] = useState(null);
+  const [currentGuests, setCurrentGuests] = useState({entries: [], type: 'allVisits'});
   const history = useHistory();
   const matches = useMediaQuery('(max-width:800px)');
 
@@ -80,18 +81,25 @@ export default function VisitView({
     }
   }, [tabValue, loadGuests, query, offset]);
 
+
+  function handleFilterData(entries, type) {
+    setCurrentGuests({entries, type})
+  }
+
+  const allGuests = currentGuests.type === 'allVisits' ? data?.currentGuests : currentGuests.entries
   return (
     <div style={{ marginTop: '20px' }}>
       <LogbookStats 
         tabValue={tabValue}
         shouldRefetch={observationDetails.refetch}
         isSmall={matches}
+        handleFilter={handleFilterData}
       />
       {error && <CenteredContent>{formatError(error.message)}</CenteredContent>}
       {guestsLoading ? (
         <Spinner />
-      ) : data?.currentGuests.length > 0 ? (
-        data?.currentGuests.map(visit => (
+      ) : allGuests?.length > 0 ? (
+        allGuests?.map(visit => (
           <Card
             key={visit.id}
             clickData={{ clickable: true, handleClick: () => handleCardClick(visit) }}
