@@ -252,17 +252,17 @@ export default function TaskDetail({
           </div>
           <div className={classes.section} data-testid="task-subtasks-section" id="anchor-section">
             <TaskDetailAccordion
-              icon={
+              icon={(
                 <AccountTreeIcon
                   fontSize="large"
                   color="primary"
                   data-testid="sub-task-accordion-icon"
                 />
-              }
+              )}
               title="Sub Tasks"
               styles={{ background: '#FAFAFA' }}
               openDetails={tab === 'subtasks'}
-              component={
+              component={(
                 <TaskSubTask
                   taskId={taskId}
                   users={users}
@@ -271,7 +271,7 @@ export default function TaskDetail({
                   handleSplitScreenOpen={handleSplitScreenOpen}
                   handleTaskCompletion={handleTaskCompletion}
                 />
-              }
+              )}
             />
           </div>
           <div className={classes.section} data-testid="task-comments-section">
@@ -279,14 +279,14 @@ export default function TaskDetail({
               icon={<QuestionAnswerIcon fontSize="large" color="primary" />}
               title="Comments"
               styles={{ background: '#FAFAFA', padding: 0 }}
-              component={
+              component={(
                 <TaskComment
                   taskId={taskId}
                   commentsRefetch={commentsRefetch}
                   forProcess={forProcess}
                   taskAssignees={data.assignees}
                 />
-              }
+              )}
               openDetails={tab === 'comments'}
             />
           </div>
