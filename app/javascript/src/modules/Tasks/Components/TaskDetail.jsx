@@ -279,7 +279,14 @@ export default function TaskDetail({
               icon={<QuestionAnswerIcon fontSize="large" color="primary" />}
               title="Comments"
               styles={{ background: '#FAFAFA', padding: 0 }}
-              component={<TaskComment taskId={taskId} commentsRefetch={commentsRefetch} forProcess={forProcess} taskAssignees={data.assignees} />}
+              component={(
+                <TaskComment
+                  taskId={taskId}
+                  commentsRefetch={commentsRefetch}
+                  forProcess={forProcess}
+                  taskAssignees={data.assignees}
+                />
+              )}
               openDetails={tab === 'comments'}
             />
           </div>

@@ -3,7 +3,7 @@ import Grid from '@mui/material/Grid';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import PropTypes from 'prop-types';
-import { Checkbox, FormControlLabel, Typography } from '@material-ui/core';
+import { Checkbox, FormControlLabel, Typography, useMediaQuery } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { useTranslation } from 'react-i18next';
 import UserAutoResult from './UserAutoResult';
@@ -26,6 +26,7 @@ export default function CommentTextField({
 }) {
   const { t } = useTranslation(['task', 'common']);
   const authState = React.useContext(AuthStateContext);
+  const matches = useMediaQuery('(max-width:800px)');
 
   return (
     <Grid container alignContent="space-between">
@@ -92,7 +93,11 @@ export default function CommentTextField({
           {autoCompleteOpen && !selectedUser && (
             <Autocomplete
               data-testid="users_autocomplete"
-              style={{ width: '100%' }}
+              style={{
+                width: matches ? 320 : '100%',
+                marginLeft: matches && -100,
+                marginTop: matches && 50
+              }}
               id="reply-user"
               options={taskAssignees || []}
               renderOption={option => <UserAutoResult user={option} t={t} />}
