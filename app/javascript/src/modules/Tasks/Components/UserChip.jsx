@@ -14,7 +14,7 @@ export function UserChip({ user, ...props }) {
   const history = useHistory();
   return (
     <Chip
-      style={{ margin: 5 }}
+      style={{ margin: 5, marginLeft: 0 }}
       variant="outlined"
       label={user.name}
       data-testid="user_chip"
