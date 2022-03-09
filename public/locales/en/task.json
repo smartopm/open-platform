@@ -124,6 +124,7 @@
     "year_to_date": "Year to Date"
   },
   "misc": {
-    "confirm": "Confirm"
+    "confirm": "Confirm",
+    "reply": "Reply"
   }
 }

@@ -463,6 +463,7 @@ module Types::Queries::Note
         :assignees,
         :assignee_notes,
         :documents_attachments,
+        :note_comments,
       )
       .where(parent_note_id: nil, form_user_id: drc_form_users)
       .for_site_manager(current_user)

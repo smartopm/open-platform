@@ -172,6 +172,11 @@ export default function TodoItem({
     handleTodoClick(taskItem, 'processes', tab);
   }
 
+  function projectSubStepCommentHasReply(){
+
+    return (task?.subTasks?.some((subTask) => subTask?.taskCommentReply))
+  }
+
   return (
     <>
       <div style={{ marginBottom: '10px' }} key={task?.id}>
@@ -195,6 +200,7 @@ export default function TodoItem({
             handleClick={(tab) => handleTodoItemClick(task, tab)}
             handleTaskCompletion={handleTaskCompletion}
             clientView={clientView}
+            taskCommentHasReply={task?.taskCommentReply || projectSubStepCommentHasReply()}
           />
          )}
 
@@ -221,6 +227,7 @@ export default function TodoItem({
               handleClick={() => handleTodoItemClick(firstLevelSubTask)}
               handleTaskCompletion={handleTaskCompletion}
               clientView={clientView}
+              taskCommentHasReply={false}
             />
             {(isLoadingSubSubTasks && objectAccessor(tasksOpen, firstLevelSubTask?.id)) && <LinearSpinner />}
           </div>
@@ -241,6 +248,7 @@ export default function TodoItem({
                       handleClick={() => handleTodoItemClick(secondLevelSubTask)}
                       handleTaskCompletion={handleTaskCompletion}
                       clientView={clientView}
+                      taskCommentHasReply={false}
                     />
                   </div>
                 ))}
