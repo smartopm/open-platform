@@ -102,6 +102,23 @@ RSpec.describe Mutations::Note::NoteCommentCreate do
       expect(result['errors']).to be_nil
     end
 
+    it 'raises an error if not is not found' do
+      variables = {
+        noteId: '1234',
+        body: 'A reply is required body',
+        replyRequired: true,
+        replyFromId: site_worker.id,
+      }
+      result = DoubleGdpSchema.execute(query, variables: variables,
+                                              context: {
+                                                current_user: another_user,
+                                                site_community: another_user.community,
+                                              }).as_json
+      expect(
+        result.dig('errors', 0, 'message'),
+      ).to eql 'Validation failed: Note must exist'
+    end
+
     # rubocop:disable Layout/LineLength
     it 'creates a replied comment and update previous one as replied' do
       another_user.update!(community_id: admin.community.id)

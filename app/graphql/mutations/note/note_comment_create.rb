@@ -33,6 +33,8 @@ module Mutations
           comment.record_note_history(context[:current_user])
           { note_comment: comment }
         end
+      rescue StandardError => e
+        raise GraphQL::ExecutionError, e.message
       end
       # rubocop:enable Metrics/AbcSize
       # rubocop:enable Metrics/MethodLength
@@ -52,8 +54,8 @@ module Mutations
       def send_email_notification(comment)
         note = comment.note
         template = context[:site_community].email_templates.find_by(name: 'Generic Template')
-        return unless template
-        return unless comment.reply_from.email
+
+        return if comment.reply_from.email.nil? || template.nil?
 
         base_url = HostEnv.base_url(context[:site_community])
         path = "/processes/drc/projects/#{note.id}?tab=processes&detailTab=comments&replying_discussion=#{comment.grouping_id}"
