@@ -176,24 +176,24 @@ module Types::Queries::Note
     end
 
     parent_task = context[:site_community].notes.find(task_id)
-    sub_task_ids = parent_task.sub_tasks.pluck(:id)
-    sub_sub_task_ids = Notes::Note.where(parent_note_id: sub_task_ids).pluck(:id)
+    task_ids = project_task_ids(parent_task: parent_task)
 
     if permitted?(module: :note, permission: :can_fetch_tagged_comments)
-      tagged_comments = project_tagged_comments(parent_task, sub_task_ids.concat(sub_sub_task_ids))
+      tagged_comments = project_tagged_comments(task_ids)
       return tagged_comments.limit(limit).offset(offset)
     end
 
-    parent_task
-      .note_comments
-      .where(reply_required: true, replied_at: nil)
-      .eager_load(:user)
-      .or(
-        Comments::NoteComment.where(
-          note_id: sub_task_ids.concat(sub_sub_task_ids),
-          reply_required: true,
-          replied_at: nil,
-        ),
+    if permitted?(module: :note, permission: :can_fetch_comments_on_assigned_tasks)
+      tagged_comments = project_assigned_tasks_comments(task_ids)
+      return tagged_comments.limit(limit).offset(offset)
+    end
+
+    # Admins will see all comments in the project that require reply
+    Comments::NoteComment
+      .where(
+        note_id: task_ids,
+        reply_required: true,
+        replied_at: nil,
       )
       .limit(limit).offset(offset)
   end
@@ -477,21 +477,34 @@ module Types::Queries::Note
           I18n.t('errors.unauthorized')
   end
 
-  # rubocop:disable Metrics/MethodLength
-  def project_tagged_comments(parent_task, sub_task_ids)
-    parent_task
-      .note_comments
-      .where(reply_required: true, replied_at: nil, reply_from: context[:current_user])
-      .eager_load(:user)
-      .or(
-        Comments::NoteComment.where(
-          reply_from: context[:current_user],
-          note_id: sub_task_ids,
-          reply_required: true,
-          replied_at: nil,
-        ),
-      )
+  def project_task_ids(parent_task:)
+    sub_task_ids = parent_task.sub_tasks.pluck(:id)
+    sub_sub_task_ids = Notes::Note.where(parent_note_id: sub_task_ids).pluck(:id)
+
+    [parent_task.id].concat(sub_task_ids).concat(sub_sub_task_ids)
   end
-  # rubocop:enable Metrics/MethodLength
+
+  def project_tagged_comments(task_ids)
+    Comments::NoteComment.where(
+      reply_from: context[:current_user],
+      note_id: task_ids,
+      reply_required: true,
+      replied_at: nil,
+    )
+  end
+
+  def project_assigned_tasks_comments(task_ids)
+    # Assigned tasks in the project that require current user's reply
+    assigned_tasks = current_user
+                     .tasks
+                     .includes(:parent_note)
+                     .where(id: task_ids)
+
+    Comments::NoteComment.where(
+      note_id: assigned_tasks.pluck(:id),
+      reply_required: true,
+      replied_at: nil,
+    )
+  end
 end
 # rubocop:enable Metrics/ModuleLength
