@@ -67,8 +67,15 @@ class LeadImportJob < ApplicationJob
         last_contact_date             = row['Last Contact Date']&.strip
         followup_at                   = row['Date Follow Up']&.strip
         created_by                    = row['Created By']&.strip
-        modified_by                   = row['Modified by']&.strip
+        modified_by                   = row['Modified By']&.strip
         phone_list                    = [phone, secondary_phone].reject(&:blank?)
+        kick_off_date = row['Kick Off Date']&.strip
+        capex_amount = row['Capex Amount']&.strip
+        jobs_created = row['Jobs']&.strip
+        jobs_timeline = row['Jobs Timeline']&.strip
+        investment_size = row['Investment Size']&.strip
+        investment_timeline = row['Investment Timeline']&.strip
+        decision_timeline = row['Decision Timeline']&.strip
 
         if name.blank?
           errors[index + 1] = ['Name must be present']
@@ -153,6 +160,13 @@ class LeadImportJob < ApplicationJob
               "linkedinUrl": contact_2_linkedin,
             },
           },
+          capex_amount: capex_amount,
+          jobs_created: jobs_created,
+          jobs_timeline: jobs_timeline,
+          kick_off_date: kick_off_date,
+          investment_size: investment_size,
+          investment_timeline: investment_timeline,
+          decision_timeline: decision_timeline,
         )
 
         if user.save

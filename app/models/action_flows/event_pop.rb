@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require_relative './events/'
 module ActionFlows
   # Class to check for JSON rules for events and fire relevant action
   # rubocop:disable Metrics/ClassLength

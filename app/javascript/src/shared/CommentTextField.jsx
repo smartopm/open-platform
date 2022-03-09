@@ -8,6 +8,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import { useTranslation } from 'react-i18next';
 import UserAutoResult from './UserAutoResult';
 import { UserChip } from '../modules/Tasks/Components/UserChip';
+import { Context as AuthStateContext } from '../containers/Provider/AuthStateProvider';
 
 export default function CommentTextField({
   value,
@@ -24,6 +25,7 @@ export default function CommentTextField({
   taskAssignees
 }) {
   const { t } = useTranslation(['task', 'common']);
+  const authState = React.useContext(AuthStateContext);
 
   return (
     <Grid container alignContent="space-between">
@@ -62,7 +64,7 @@ export default function CommentTextField({
       </Grid>
       <>
         <Grid item xs={4}>
-          {forProcess && (
+          {forProcess && authState?.user?.userType === 'admin' && (
             <FormControlLabel
               control={(
                 <Checkbox

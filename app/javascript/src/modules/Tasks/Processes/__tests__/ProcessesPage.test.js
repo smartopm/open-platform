@@ -82,6 +82,36 @@ describe('Processes page', () => {
     });
   });
 
+  it('renders processes dashboard for consultants', async () => {
+    const newAuthState = {
+      ...mockAuthState,
+      user: {
+        ...mockAuthState.user,
+        userType: 'consultant',
+        permissions: [
+          {
+            module: 'dashboard',
+            permissions: ['can_access_admin_processes_dashboard']
+          }
+        ]
+      }
+    };
+
+    render(
+      <Context.Provider value={newAuthState}>
+        <MockedProvider>
+          <BrowserRouter>
+            <ProcessesPage />
+          </BrowserRouter>
+        </MockedProvider>
+      </Context.Provider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByTestId('processes-admin-dashboard')).toBeInTheDocument();
+    });
+  });
+
   it('renders processes dashboard for clients', async () => {
     const newAuthState = {
       ...mockAuthState,

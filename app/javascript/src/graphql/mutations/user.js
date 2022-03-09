@@ -50,6 +50,13 @@ export const UpdateUserMutation = gql`
     $companyName: String
     $contactDetails: JSON
     $africanPresence: String
+    $capexAmount: String
+    $kickOffDate: String
+    $jobsCreated: String
+    $jobsTimeline: String
+    $investmentSize: String
+    $investmentTimeline: String
+    $decisionTimeline: String
   ) {
     result: userUpdate(
       id: $id
@@ -97,6 +104,13 @@ export const UpdateUserMutation = gql`
       companyName: $companyName
       contactDetails: $contactDetails
       africanPresence: $africanPresence
+      capexAmount: $capexAmount
+      kickOffDate: $kickOffDate
+      jobsCreated: $jobsCreated
+      jobsTimeline: $jobsTimeline
+      investmentSize: $investmentSize
+      investmentTimeline: $investmentTimeline
+      decisionTimeline: $decisionTimeline
     ) {
       user {
         ...UserFields
