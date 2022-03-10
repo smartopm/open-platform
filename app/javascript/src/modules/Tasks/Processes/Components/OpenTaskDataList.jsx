@@ -179,7 +179,7 @@ function fetchMoreOpenTasks() {
                   </Grid>
                   <Grid item md={2} xs={1}>
                     <IconButton aria-controls="task-comment-icon" data-testid="task_comments_count" onClick={() => handleTodoClick(task, 'processes', 'comments')}>
-                      <QuestionAnswerIcon fontSize="small" color="disabled" />
+                      <QuestionAnswerIcon fontSize="small" color={task?.taskCommentsCount ? 'primary' : 'disabled'} />
                     </IconButton>
                   </Grid>
                   <Grid
@@ -189,7 +189,7 @@ function fetchMoreOpenTasks() {
                     className={classes.iconItem}
                     style={{ paddingLeft: '20px' }}
                   >
-                    <span>0</span>
+                    <span>{task?.taskCommentsCount || 0}</span>
                   </Grid>
                   <Grid item md={2} xs={1}>
                     <IconButton aria-controls="task-attach-file-icon">
@@ -207,7 +207,7 @@ function fetchMoreOpenTasks() {
                     className={classes.iconItem}
                     style={{ paddingLeft: '5px' }}
                   >
-                    <span data-testid="file_attachments_total">{task.attachments?.length}</span>
+                    <span data-testid="file_attachments_total">{task.attachments?.length || 0}</span>
                   </Grid>
                   <Grid item md={1} xs={1}>
                     <IconButton
