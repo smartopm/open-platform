@@ -76,11 +76,6 @@ export default function ClientPilotViewItem({ project, refetch }) {
                 </div>
               </Grid>
             </Grid>
-            {/* <Typography variant="subtitle1">{t('processes.your_tasks')}</Typography>
-            <br />
-            <div>
-              <ProjectItem taskId={taskId} clientView />
-            </div> */}
           </Grid>
           <Grid item md={6} xs={12} data-testid="project-step-information">
             <Typography variant="h6">{t('processes.process_steps')}</Typography>
