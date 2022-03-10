@@ -88,7 +88,7 @@ export default function VisitView({
 
   return (
     <div style={{ marginTop: '20px' }}>
-      <LogbookStats 
+      <LogbookStats
         tabValue={tabValue}
         shouldRefetch={observationDetails.refetch}
         isSmall={matches}
@@ -139,7 +139,11 @@ export default function VisitView({
                 </Typography>
                 <Text
                   color="secondary"
-                  content={visit.guestId && visit.grantedState === 1 ? visit.user.name : visit.grantor?.name}
+                  content={
+                    visit.guestId && visit.grantedState === 1
+                      ? visit.user.name
+                      : visit.grantor?.name
+                  }
                   data-testid="user_name"
                   onClick={event => handleViewUser(event, visit.user)}
                 />
@@ -248,7 +252,7 @@ export default function VisitView({
           offSet={offset}
           limit={limit}
           active={offset >= 1}
-          handlePageChange={(action) => paginate(action, history, tabValue, {offset, limit})}
+          handlePageChange={action => paginate(action, history, tabValue, { offset, limit })}
           count={data?.currentGuests?.length}
         />
       </CenteredContent>

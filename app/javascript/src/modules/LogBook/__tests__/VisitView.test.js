@@ -1,6 +1,6 @@
 /* eslint-disable max-statements */
 import React from 'react';
-import { render, waitFor, fireEvent, screen } from '@testing-library/react';
+import { render, waitFor, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import routeData, { MemoryRouter } from 'react-router';
 import { MockedProvider } from '@apollo/react-testing';
@@ -137,7 +137,7 @@ describe('Should render Visits View Component', () => {
     }
   };
   it('should render proper data', async () => {
-    const { getAllByTestId, getByText, findAllByTestId } = render(
+    const { getAllByTestId, getByText } = render(
       <Context.Provider value={authState}>
         <MockedProvider mocks={[mocks]} addTypename>
           <MemoryRouter>
@@ -158,7 +158,6 @@ describe('Should render Visits View Component', () => {
     // initially it should not contain any guests, this is because we lazily load this query
     expect(getByText('logbook.no_invited_guests')).toBeInTheDocument();
     await waitFor(() => {
-      screen.debug(undefined, 30000)
       expect(getByText('Test another')).toBeInTheDocument();
       expect(getByText('Js user x')).toBeInTheDocument();
       expect(getByText('logbook:logbook.host:')).toBeInTheDocument();
@@ -183,15 +182,16 @@ describe('Should render Visits View Component', () => {
       expect(getAllByTestId('log_exit')[0]).not.toBeDisabled();
       expect(getAllByTestId('prev-btn')[0]).toBeInTheDocument();
       expect(getAllByTestId('next-btn')[0]).toBeInTheDocument();
-
+      
       fireEvent.click(getAllByTestId('log_exit')[0]);
       expect(props.handleAddObservation).toBeCalled();
-
-      fireEvent.click(getAllByTestId('card')[0]);
-      expect(mockHistory.push).toBeCalled();
-
       
-      fireEvent.click(findAllByTestId('user_name')[0]);
+      fireEvent.click(getAllByTestId('card')[3]);
+      expect(mockHistory.push).toBeCalled();
+      expect(getAllByTestId('card')[0]).toBeInTheDocument();
+      
+      fireEvent.click(getAllByTestId('user_name')[0]);
+      expect(getAllByTestId('user_name')[0].textContent).toContain('Js user x');
       expect(mockHistory.push).toBeCalled();
       expect(mockHistory.push).toBeCalledWith('/user/162f7517'); // check if it routes to the user page
     }, 10);

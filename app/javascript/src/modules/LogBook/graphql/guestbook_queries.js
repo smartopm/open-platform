@@ -62,16 +62,11 @@ export const GuestEntryQuery = gql`
 
 
 export const LogbookStatsQuery = gql`
-query stats {
-  communityPeopleStatistics {
-    peoplePresent
-    peopleEntered {
-      ...CurrentGuestsField
-    }
-    peopleExited {
-      ...CurrentGuestsField
+  query stats {
+    communityPeopleStatistics {
+      peoplePresent
+      peopleEntered
+      peopleExited
     }
   }
-}
-${CurrentGuestFragment.guests}
 `

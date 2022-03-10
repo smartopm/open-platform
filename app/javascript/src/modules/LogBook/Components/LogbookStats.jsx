@@ -27,13 +27,13 @@ export default function LogbookStats({ tabValue, shouldRefetch, isSmall, handleF
   const statsData = [
     {
       title: t('logbook.total_entries'),
-      count: data?.communityPeopleStatistics.peopleEntered?.length,
+      count: data?.communityPeopleStatistics.peopleEntered,
       id: 'total_entries',
       action: () => handleFilter('peopleEntered')
     },
     {
       title: t('logbook.total_exits'),
-      count: data?.communityPeopleStatistics.peopleExited?.length,
+      count: data?.communityPeopleStatistics.peopleExited,
       id: 'total_exits',
       action: () => handleFilter('peopleExited')
     },
