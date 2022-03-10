@@ -47,15 +47,16 @@ RSpec.describe UserImportJob, type: :job do
       expect(Users::User.count).to eql(prev_user_count)
     end
 
-    it 'should not create users if no contact info is supplied' do
-      csv_string = "Name,Title,Email\nThomas Shalongolo,CFO,"
-      prev_user_count = Users::User.count
-      ActiveJob::Base.queue_adapter.perform_enqueued_jobs = true
+    # commenting this for now as we are allowing users to be created anyway
+    # it 'should not create users if no contact info is supplied' do
+    #   csv_string = "Name,Title,Email\nThomas Shalongolo,CFO,"
+    #   prev_user_count = Users::User.count
+    #   ActiveJob::Base.queue_adapter.perform_enqueued_jobs = true
 
-      LeadImportJob.perform_later(csv_string, 'lead_management.csv', user)
+    #   LeadImportJob.perform_later(csv_string, 'lead_management.csv', user)
 
-      expect(Users::User.count).to eql(prev_user_count)
-    end
+    #   expect(Users::User.count).to eql(prev_user_count)
+    # end
 
     context 'when CSV string is semicolon separated' do
       it 'is expected to create new users' do
