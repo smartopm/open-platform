@@ -309,7 +309,7 @@ es:
   email_template:
     comment_reply:
       action: IR A COMENTARIO
-      body: "<b>%{note_body}</b><br Vence: %{note_due_at}<br/><br/>%{user_name} requirió
+      body: "<b>%{note_body}</b><br/> Vence: %{note_due_at}<br/><br/>%{user_name} requirió
         una respuesta de comentario en %{comment_created_at}"
       subject: "%{user_name} Requirió una Respuesta"
       title: NOTIFICACIÓN

@@ -417,7 +417,7 @@ en:
       subject: Welcome To %{community_name}
     comment_reply:
       title: NOTIFICATION
-      body: '<b>%{note_body}</b><br /> Due Date: %{note_due_at} <br /> <br /> %{user_name} required a comment reply on %{comment_created_at}'
+      body: '<b>%{note_body}</b><br/> Due Date: %{note_due_at} <br/> <br/> %{user_name} required a comment reply on %{comment_created_at}'
       action: GO TO COMMENT
       subject: '%{user_name} Required a Reply'
   action_flow:
