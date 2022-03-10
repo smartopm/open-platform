@@ -19,7 +19,8 @@
     "updates": "Actualizaciones"
   },
   "misc": {
-    "confirm": "Confirmar"
+    "confirm": "Confirmar",
+    "reply": "Responder"
   },
   "process": {
     "processes": "Procesos"
@@ -56,6 +57,7 @@
     "submitted": "Presentado",
     "submitted_by": "Presentado Por",
     "submitted_form": "Formulario Enviado",
+    "total": "Total",
     "year_to_date": "Del año hasta la fecha",
     "your_tasks": "Tus Tareas"
   },
