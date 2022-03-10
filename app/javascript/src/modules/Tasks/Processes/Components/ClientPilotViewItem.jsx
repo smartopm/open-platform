@@ -42,11 +42,23 @@ export default function ClientPilotViewItem({ project, refetch }) {
       <Grid item md={12} xs={12} data-testid="project-container">
         <Grid container spacing={6} data-testid="project-open-tasks">
           <Grid item md={6} xs={12}>
-            <Typography variant="subtitle1">{t('processes.your_tasks')}</Typography>
+            <Grid container>
+              <Grid item md={12} xs={12}>
+                <p>Activity Summary</p>
+              </Grid>
+              <Grid item md={12} xs={12}>
+                  <Typography variant="subtitle1">{t('processes.your_tasks')}</Typography>
+                  <br />
+                  <div>
+                    <ProjectItem taskId={taskId} clientView />
+                  </div>
+              </Grid>
+            </Grid>
+            {/* <Typography variant="subtitle1">{t('processes.your_tasks')}</Typography>
             <br />
             <div>
               <ProjectItem taskId={taskId} clientView />
-            </div>
+            </div> */}
           </Grid>
           <Grid item md={6} xs={12} data-testid="project-step-information">
             <Typography variant="h6">{t('processes.process_steps')}</Typography>
