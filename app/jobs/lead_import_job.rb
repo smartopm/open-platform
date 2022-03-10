@@ -83,8 +83,9 @@ class LeadImportJob < ApplicationJob
         end
 
         # commenting this to allow creating contacts without contact info
-        # this can be uupdated from the leads details page if need be as this users will not be logging in 
-         
+        # this can be uupdated from the leads details page if need be as
+        # this users will not be logging in
+
         # if phone_list.empty? && email.nil?
         #   errors[index + 1] = ['A contact info must be present']
         #   next
