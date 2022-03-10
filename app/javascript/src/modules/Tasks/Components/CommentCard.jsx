@@ -28,7 +28,7 @@ import { groupComments, lastRepliedComment, isDiscussionResolved } from '../Proc
 import CommentTextField from '../../../shared/CommentTextField';
 import { useParamsQuery, objectAccessor } from '../../../utils/helpers';
 import { TaskComment } from '../../../graphql/mutations';
-import { ResolveComments } from "../graphql/task_mutation";
+import { ResolveComments } from '../graphql/task_mutation';
 
 export default function CommentCard({ comments, refetch, commentsRefetch, forAccordionSection }) {
   const [open, setOpen] = useState(false);
@@ -44,6 +44,7 @@ export default function CommentCard({ comments, refetch, commentsRefetch, forAcc
   const [replyValue, setReplyValue] = useState('');
   const [highlightDiscussion, setHighlightDiscussion] = useState(false);
   const [error, setErrorMessage] = useState('');
+  const [loading, setLoading] = useState(false);
   const menuOpen = Boolean(anchorEl);
   const authState = useContext(AuthStateContext);
   const classes = useStyles();
@@ -129,6 +130,7 @@ export default function CommentCard({ comments, refetch, commentsRefetch, forAcc
 
   function onReplySubmit(event, groupingId) {
     event.preventDefault();
+    setLoading(true);
     commentCreate({
       variables: {
         noteId: projectId,
@@ -142,9 +144,11 @@ export default function CommentCard({ comments, refetch, commentsRefetch, forAcc
         setReplyValue('');
         refetch();
         commentsRefetch();
+        setLoading(false);
       })
       .catch(err => {
         setErrorMessage(err);
+        setLoading(false);
       });
   }
 
@@ -403,6 +407,7 @@ export default function CommentCard({ comments, refetch, commentsRefetch, forAcc
                         handleSubmit={event => onReplySubmit(event, groupingId)}
                         actionTitle={t('common:misc.comment')}
                         placeholder={t('common:misc.add_reply')}
+                        loading={loading}
                       />
                     )}
                   </div>

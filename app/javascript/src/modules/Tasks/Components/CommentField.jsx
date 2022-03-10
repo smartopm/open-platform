@@ -6,12 +6,20 @@ import CommentCard from './CommentCard';
 import { TaskComment } from '../../../graphql/mutations';
 import CommentTextField from '../../../shared/CommentTextField';
 
-export default function CommentField({ data, refetch, taskId, commentsRefetch, forProcess, taskAssignees }) {
+export default function CommentField({
+  data,
+  refetch,
+  taskId,
+  commentsRefetch,
+  forProcess,
+  taskAssignees
+}) {
   const [commentCreate] = useMutation(TaskComment);
   const [body, setBody] = useState('');
   const [replyFrom, setReplyFrom] = useState(null);
   const [autoCompleteOpen, setAutoCompleteOpen] = useState(false);
   const [error, setErrorMessage] = useState('');
+  const [loading, setLoading] = useState(false);
   const { t } = useTranslation('common');
 
   function handleSubmit(event) {
@@ -19,14 +27,15 @@ export default function CommentField({ data, refetch, taskId, commentsRefetch, f
     let variables = {
       noteId: taskId,
       body
-    }
+    };
     if (replyFrom) {
       variables = {
         ...variables,
         replyRequired: true,
         replyFromId: replyFrom.id
-      }
+      };
     }
+    setLoading(true);
     commentCreate({
       variables
     })
@@ -36,9 +45,11 @@ export default function CommentField({ data, refetch, taskId, commentsRefetch, f
         commentsRefetch();
         setReplyFrom(null);
         setAutoCompleteOpen(false);
+        setLoading(false);
       })
       .catch(err => {
         setErrorMessage(err);
+        setLoading(false);
       });
   }
   return (
@@ -55,6 +66,7 @@ export default function CommentField({ data, refetch, taskId, commentsRefetch, f
         autoCompleteOpen={autoCompleteOpen}
         setAutoCompleteOpen={setAutoCompleteOpen}
         taskAssignees={taskAssignees}
+        loading={loading}
       />
       <CommentCard
         comments={data.taskComments}
@@ -62,7 +74,7 @@ export default function CommentField({ data, refetch, taskId, commentsRefetch, f
         commentsRefetch={commentsRefetch}
         forAccordionSection
       />
-      { Boolean(error.length) && (<p className="text-center">{error}</p>)}
+      {Boolean(error.length) && <p className="text-center">{error}</p>}
     </>
   );
 }
