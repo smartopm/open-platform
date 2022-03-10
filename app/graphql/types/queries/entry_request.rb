@@ -167,10 +167,6 @@ module Types::Queries::EntryRequest
                                { name: { matches: query&.strip } }])
   end
 
-  def duration_query?(query)
-    %w[today past7Days past30Days].include?(query)
-  end
-
   def filter_current_guests(entry_requests, type, query)
     duration = duration_query?(query) ? query : 'today'
     case type
@@ -191,6 +187,10 @@ module Types::Queries::EntryRequest
     entry_requests.search(or: [{ query: (query.presence || '.') }, { name: { matches: query } }])
   end
 
+  def duration_query?(query)
+    %w[today past7Days past30Days].include?(query)
+  end
+
   def people_present(entry_requests, duration = 'today')
     people_entered(entry_requests, duration).where(exited_at: nil)
   end
@@ -198,7 +198,7 @@ module Types::Queries::EntryRequest
   def people_entered(entry_requests, duration = 'today')
     start_time = duration_based_start_time(duration)
     entry_requests
-      .where('granted_at IS NOT NULL AND granted_at >= ? AND granted_at <= ?', start_time, end_time)
+      .where('granted_at >= ? AND granted_at <= ?', start_time, end_time)
   end
 
   def people_exited(entry_requests, duration = 'today')
