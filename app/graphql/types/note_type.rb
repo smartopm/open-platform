@@ -31,11 +31,8 @@ module Types
     field :task_comments_count, Integer, null: true
     field :status, String, null: true
     field :submitted_by, Types::UserType, null: true
-<<<<<<< HEAD
     field :task_comment_reply, Boolean, null: true
-=======
     field :order, Integer, null: true
->>>>>>> sort task by order
 
     # move this in a shareable place
     def host_url(type)
