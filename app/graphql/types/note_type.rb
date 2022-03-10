@@ -86,11 +86,16 @@ module Types
     end
 
     def task_comment_reply
-      object.note_comments.where(
+      sub_task_ids = object.sub_tasks.pluck(:id)
+      sub_sub_task_ids = Notes::Note.where(parent_note_id: sub_task_ids).pluck(:id)
+      task_ids = [object.id].concat(sub_task_ids).concat(sub_sub_task_ids)
+
+      Comments::NoteComment.where(
         reply_from: context[:current_user],
+        note_id: task_ids,
         reply_required: true,
         replied_at: nil,
-      )&.present?
+      ).present?
     end
   end
 end
