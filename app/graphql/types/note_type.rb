@@ -95,7 +95,7 @@ module Types
         note_id: task_ids,
         reply_required: true,
         replied_at: nil,
-      ).present?
+      ).exists?
     end
   end
 end
