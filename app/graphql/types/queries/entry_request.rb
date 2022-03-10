@@ -43,6 +43,7 @@ module Types::Queries::EntryRequest
       argument :offset, Integer, required: false
       argument :limit, Integer, required: false
       argument :query, String, required: false
+      argument :type, String, required: false
     end
 
     field :community_people_statistics, Types::PeopleStatisticType, null: true do
@@ -112,31 +113,32 @@ module Types::Queries::EntryRequest
       .with_attached_video
   end
 
-  def current_guests(offset: 0, limit: 50, query: nil)
+  def current_guests(offset: 0, limit: 50, query: nil, type: 'allVisits')
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless can_view_entry_requests?
 
-    context[:site_community]
-      .entry_requests
-      .where.not(granted_at: nil)
-      .includes(:user, :guest)
-      .search(or: [{ query: (query.presence || '.') }, { name: { matches: query } }])
-      .limit(limit).offset(offset)
-      .order(granted_at: :desc)
-  end
-  # rubocop:enable Metrics/AbcSize
+    entry_requests = context[:site_community]
+                     .entry_requests
+                     .where.not(granted_at: nil)
+                     .includes(:user, :guest)
+                     .limit(limit).offset(offset)
+                     .order(granted_at: :desc)
 
-  def community_people_statistics(duration: nil)
+    entry_requests = filter_current_guests(entry_requests, type, query)
+    search_current_guests(entry_requests, query)
+  end
+
+  def community_people_statistics(duration: 'today')
+    entry_requests = context[:site_community].entry_requests
     {
-      people_present: people_present(context[:site_community], duration),
-      people_entered: people_entered(context[:site_community], duration),
-      people_exited: people_exited(context[:site_community], duration),
+      people_present: people_present(entry_requests, duration).size,
+      people_entered: people_entered(entry_requests, duration).size,
+      people_exited: people_exited(entry_requests, duration).size,
     }
   end
 
   private
 
   # This is deprecated
-  # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/CyclomaticComplexity
   # rubocop:disable Metrics/PerceivedComplexity
   def handle_search(entry_requests, query)
@@ -164,25 +166,45 @@ module Types::Queries::EntryRequest
     entry_requests.search(or: [{ query: (query.presence&.strip || '.') },
                                { name: { matches: query&.strip } }])
   end
-  # rubocop:enable Metrics/MethodLength,  Metrics/AbcSize
 
-  def people_present(community, duration)
-    start_time = duration_based_start_time(duration)
-    community.entry_requests.where(exited_at: nil)
-             .where('granted_at >= ? AND granted_at <= ?', start_time, end_time)
-             .count
+  def duration_query?(query)
+    %w[today past7Days past30Days].include?(query)
   end
 
-  def people_entered(community, duration)
-    start_time = duration_based_start_time(duration)
-    community.entry_requests
-              .where('granted_at >= ? AND granted_at <= ?', start_time, end_time)
+  def filter_current_guests(entry_requests, type, query)
+    duration = duration_query?(query) ? query : 'today'
+    case type
+    when 'peopleEntered'
+      people_entered(entry_requests, duration)
+    when 'peopleExited'
+      people_exited(entry_requests, duration)
+    when 'peoplePresent'
+      people_present(entry_requests, duration)
+    else
+      entry_requests
+    end
   end
 
-  def people_exited(community, duration)
+  def search_current_guests(entry_requests, query)
+    return entry_requests if query.blank? || duration_query?(query)
+
+    entry_requests.search(or: [{ query: (query.presence || '.') }, { name: { matches: query } }])
+  end
+
+  def people_present(entry_requests, duration = 'today')
+    people_entered(entry_requests, duration).where(exited_at: nil)
+  end
+
+  def people_entered(entry_requests, duration = 'today')
     start_time = duration_based_start_time(duration)
-    community.entry_requests
-              .where('exited_at >= ? AND exited_at <= ?', start_time, end_time)
+    entry_requests
+      .where('granted_at >= ? AND granted_at <= ?', start_time, end_time)
+  end
+
+  def people_exited(entry_requests, duration = 'today')
+    start_time = duration_based_start_time(duration)
+    entry_requests
+      .where('exited_at IS NOT NULL AND exited_at >= ? AND exited_at <= ?', start_time, end_time)
   end
 
   def duration_based_start_time(duration)
@@ -209,5 +231,6 @@ module Types::Queries::EntryRequest
   def can_view_entry_requests?
     permitted?(module: :entry_request, permission: :can_view_entry_requests)
   end
+  # rubocop:enable Metrics/MethodLength,  Metrics/AbcSize
 end
 # rubocop:enable Metrics/ModuleLength:
