@@ -32,49 +32,40 @@ export default function UserDetailHeader({ data, userType, currentTab, authState
     handleMergeUserItemClick,
     checkRole
   );
-
   const handleClose = event => {
     if (anchorRef.current && anchorRef.current.contains(event.target)) {
       return;
     }
-
     setOpen(false);
   };
-
   function handleMenuItemClick(key, val) {
     setSelectKey(key);
     history.push(`/user/${data.user.id}?tab=${val}`);
     setOpen(false);
   }
-
   function checkModule(moduleName) {
     const userPermissionsModule = authState.user?.permissions.find(
       permissionObject => permissionObject.module === moduleName
     );
     return userPermissionsModule?.permissions.includes('can_see_menu_item') || false;
   }
-
   function checkOtherRoles(featureName, roles) {
-    const ctx = createMenuContext(featureName, data, userType, authState)
-    return handler({ userTypes: roles, ctx }).includes(userType)
+    const ctx = createMenuContext(featureName, data, userType, authState);
+    return handler({ userTypes: roles, ctx }).includes(userType);
   }
-
   function checkRole(roles, featureName) {
-    if(['Properties', 'Users', 'Payments', 'LogBook'].includes(featureName)) {
-      checkOtherRoles(featureName, roles)
+    if (['Properties', 'Users', 'Payments', 'LogBook'].includes(featureName)) {
+      checkOtherRoles(featureName, roles);
     }
-    return roles.includes(userType)
+    return roles.includes(userType);
   }
-
   function checkCommunityFeatures(featureName) {
     return Object.keys(authState.user?.community.features || []).includes(featureName);
   }
-
   function handleMergeUserItemClick() {
     history.push(`/user/${data.user.id}?type=MergeUser`);
     setOpen(false);
   }
-
   return (
     <>
       <Grid container>
@@ -82,14 +73,19 @@ export default function UserDetailHeader({ data, userType, currentTab, authState
           item
           lg={12}
           md={12}
-          sm={8}
-          xs={8}
+          sm={10}
+          xs={10}
           className={classes.breadCrumb}
           data-testid="breadcrumb"
         >
           <Breadcrumbs aria-label="user-breadcrumb">
             {userType === 'admin' && (
-              <Link color="primary" href="/users" className={classes.link} data-testid='breadcrumbuser'>
+              <Link
+                color="primary"
+                href="/users"
+                className={classes.link}
+                data-testid="breadcrumbuser"
+              >
                 <Typography variant="caption">Users</Typography>
               </Link>
             )}
@@ -104,7 +100,7 @@ export default function UserDetailHeader({ data, userType, currentTab, authState
           </Breadcrumbs>
         </Grid>
         <Hidden mdUp>
-          <Grid item sm={4} xs={4} className={classes.labelTitle}>
+          <Grid item md={12} sm={2} xs={2} className={classes.labelTitle}>
             {['admin'].includes(userType) && (
               <UserLabelTitle isLabelOpen={isLabelOpen} setIsLabelOpen={setIsLabelOpen} />
             )}
@@ -119,7 +115,7 @@ export default function UserDetailHeader({ data, userType, currentTab, authState
             </Grid>
           )}
         </Hidden>
-        <Grid item lg={4} md={4} sm={12} xs={12}>
+        <Grid item lg={5} md={5} sm={10} xs={10}>
           <Grid container data-testid="user-detail">
             <Grid item lg={3} md={3} sm={3} xs={3}>
               <Avatar
@@ -134,7 +130,7 @@ export default function UserDetailHeader({ data, userType, currentTab, authState
           </Grid>
         </Grid>
         <Hidden smDown>
-          <Grid item lg={3} md={3} sm={3}>
+          <Grid item lg={5} md={5} sm={3}>
             <SelectButton
               options={options}
               open={open}
@@ -146,7 +142,7 @@ export default function UserDetailHeader({ data, userType, currentTab, authState
               buttonText={currentTab}
             />
           </Grid>
-          <Grid item lg={5} md={5} sm={5}>
+          <Grid item lg={2} md={2} sm={2} xs={2}>
             {['admin'].includes(userType) && (
               <UserLabelTitle isLabelOpen={isLabelOpen} setIsLabelOpen={setIsLabelOpen} />
             )}
@@ -182,7 +178,6 @@ export default function UserDetailHeader({ data, userType, currentTab, authState
     </>
   );
 }
-
 UserDetailHeader.propTypes = {
   data: PropTypes.shape({
     user: PropTypes.shape({
@@ -193,7 +188,6 @@ UserDetailHeader.propTypes = {
   currentTab: PropTypes.string.isRequired,
   authState: PropTypes.shape().isRequired
 };
-
 const useStyles = makeStyles(() => ({
   breadCrumb: {
     padding: '10px 0'
