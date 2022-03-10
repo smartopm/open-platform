@@ -2,6 +2,8 @@ import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import CommentTextField from '../CommentTextField';
+import { Context } from '../../containers/Provider/AuthStateProvider';
+import authState from '../../__mocks__/authstate';
 
 describe('CommentText Field component', () => {
   const props = {
@@ -35,7 +37,11 @@ describe('CommentText Field component', () => {
       }
     };
 
-    const wrapper = render(<CommentTextField {...fullProps} />);
+    const wrapper = render(
+      <Context.Provider value={authState}>
+        <CommentTextField {...fullProps} />
+      </Context.Provider>
+    )
     expect(wrapper.queryByTestId('require_reply')).toBeInTheDocument();
     expect(wrapper.queryByTestId('users_autocomplete')).not.toBeInTheDocument();
   });

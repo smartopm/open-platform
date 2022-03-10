@@ -145,6 +145,7 @@ Tilisi:
         - can_access_tasks
         - can_access_processes
         - can_upload_documents
+        - can_fetch_comments_on_assigned_tasks
     forms:
       permissions:
         - can_see_menu_item
@@ -170,6 +171,7 @@ Tilisi:
       permissions:
         - can_access_dashboard
         - can_see_menu_item
+        - can_access_admin_processes_dashboard
 
   developer:
     note:
@@ -341,10 +343,12 @@ DoubleGDP:
         - can_access_tasks
         - can_access_processes
         - can_upload_documents
+        - can_fetch_comments_on_assigned_tasks
     forms:
       permissions:
         - can_see_menu_item
         - can_access_forms
+        - can_view_form_user
     user:
       permissions:
         - can_view_own_profile
@@ -366,6 +370,7 @@ DoubleGDP:
       permissions:
         - can_access_dashboard
         - can_see_menu_item
+        - can_access_admin_processes_dashboard
 
   developer:
     note:

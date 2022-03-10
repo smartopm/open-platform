@@ -21,6 +21,7 @@ export default function AdminDashboard() {
   const classes = useStyles();
   const matches = useMediaQuery('(max-width:800px)');
   const history = useHistory();
+  const quarters = ['Q1', 'Q2', 'Q3', 'Q4']
 
   const { loading: summaryLoading, error: summaryError, data: summaryData } = useQuery(
     TaskQuarterySummaryQuery,
@@ -42,12 +43,12 @@ export default function AdminDashboard() {
     return quarterStats?.[2];
   }
 
-  function tasksPerYear(processStats) {
+  function tasksTillNow(processStats) {
     const initialValue = 0;
-    const yearStats = processStats.reduce(
+    const overallStats = processStats.reduce(
       (previousValue, currentValue) => previousValue + currentValue[2],
     initialValue);
-    return yearStats;
+    return overallStats;
   }
 
   const currentYear = new Date().getFullYear();
@@ -82,9 +83,9 @@ export default function AdminDashboard() {
       primary: false
     },
     {
-      name: t('processes.year_to_date'),
-      completed: tasksPerYear(currentYearCompletedStats) || 0,
-      submitted: tasksPerYear(currentYearSubmittedStats) || 0,
+      name: t('processes.total'),
+      completed: tasksTillNow(completedResults) || 0,
+      submitted: tasksTillNow(submittedResults) || 0,
       primary: false
     }
   ];
@@ -98,6 +99,12 @@ export default function AdminDashboard() {
     inspections: 0,
     post_construction: 0
   };
+
+  function cardName(name){
+    if (quarters.includes(name)) return name;
+
+    return 'all';
+  }
 
   function routeToProjects(paramName, paramValue) {
     history.push(`/processes/drc/projects?${paramName}=${paramValue}`);
@@ -160,7 +167,7 @@ export default function AdminDashboard() {
               <Grid key={index} item xs={1.5}>
                 <Card
                   className={classes.card}
-                  onClick={() => routeToProjects('submitted_per_quarter', card.name)}
+                  onClick={() => routeToProjects('submitted_per_quarter', cardName(card.name))}
                   style={{ cursor: 'pointer', boxShadow: 'none' }}
                 >
                   <CardContent
@@ -204,7 +211,7 @@ export default function AdminDashboard() {
               <Grid key={index} item xs={1.5}>
                 <Card
                   className={classes.card}
-                  onClick={() => routeToProjects('completed_per_quarter', card.name)}
+                  onClick={() => routeToProjects('completed_per_quarter', cardName(card.name))}
                   style={{ cursor: 'pointer', boxShadow: 'none' }}
                 >
                   <CardContent

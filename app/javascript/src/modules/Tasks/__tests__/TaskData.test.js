@@ -70,7 +70,8 @@ describe('Task Data components', () => {
           blob_id: '21b8b3d1-40fa-4f9d-a7ac-721ce6e7f772',
           created_at: '2021-11-02T13:37:26.664+02:00'
         },
-      ]
+      ],
+      taskCommentReply: true,
     }
 
   it('should render proper the link to user component', () => {

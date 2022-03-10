@@ -3,7 +3,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useQuery } from 'react-apollo';
 import { Chip, Grid, IconButton, Typography } from '@material-ui/core';
 import { grey } from '@mui/material/colors';
@@ -13,14 +13,15 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import AccountTreeIcon from '@material-ui/icons/AccountTree';
 import QuestionAnswerIcon from '@material-ui/icons/QuestionAnswer';
 import AttachFileIcon from '@material-ui/icons/AttachFile';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/styles';
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import Box from '@mui/material/Box';
 import Tooltip from '@mui/material/Tooltip';
+import { Badge } from '@mui/material';
 import { removeNewLines, sanitizeText } from '../../../utils/helpers';
 import { dateToString } from '../../../components/DateContainer';
 import Card from '../../../shared/Card';
@@ -35,11 +36,13 @@ export default function TaskDataList({
   openSubTask,
   handleOpenSubTasksClick,
   handleTaskCompletion,
-  clientView
+  clientView,
+  taskCommentHasReply,
 }) {
   const classes = useStyles();
   const { t } = useTranslation('task');
   const matches = useMediaQuery('(max-width:800px)');
+  const urlParams = useParams();
 
   const { data } = useQuery(CommentQuery, {
     variables: { taskId: task.id },
@@ -299,36 +302,48 @@ export default function TaskDataList({
                 style={{ display: 'flex', justifyContent: 'space-between' }}
                 className={classes.detailsContainer}
               >
-                <Grid item md={2} xs={1}>
-                  <IconButton
-                    aria-controls="task-subtasks-icon"
-                    aria-haspopup="true"
-                    data-testid="task_subtasks"
-                    onClick={() => handleClick('subtasks')}
-                  >
-                    <AccountTreeIcon
-                      fontSize="small"
-                      color={task?.subTasksCount ? 'primary' : 'disabled'}
-                    />
-                  </IconButton>
-                </Grid>
-
-                <Grid
-                  item
-                  md={1}
-                  xs={1}
-                  className={classes.iconItem}
-                  style={{ marginLeft: '-20px' }}
-                >
-                  <span>{task?.subTasksCount}</span>
-                </Grid>
-
+                {(urlParams.type === 'drc') ?
+                (
+                  <Grid item md={2} xs={1} style={{ textAlign: 'right' }}>
+                    {taskCommentHasReply && <Badge color="warning" badgeContent={t('task:misc.reply')} /> }
+                  </Grid>
+                )
+                : (
+                  <>
+                    <Grid item md={2} xs={1}>
+                      <IconButton
+                        aria-controls="task-subtasks-icon"
+                        aria-haspopup="true"
+                        data-testid="task_subtasks"
+                        onClick={() => handleClick('subtasks')}
+                        color='primary'
+                      >
+                        <AccountTreeIcon
+                          fontSize="small"
+                          color={task?.subTasksCount ? 'primary' : 'disabled'}
+                        />
+                      </IconButton>
+                    </Grid>
+                    <Grid
+                      item
+                      md={1}
+                      xs={1}
+                      className={classes.iconItem}
+                      style={{ marginLeft: '-20px' }}
+                      color='primary'
+                    >
+                      <span>{task?.subTasksCount}</span>
+                    </Grid>
+                  </>
+                )}
+               
                 <Grid item md={2} xs={1}>
                   <IconButton
                     aria-controls="task-comment-icon"
                     aria-haspopup="true"
                     data-testid="task_comments"
                     onClick={() => handleClick('comments')}
+                    color='primary'
                   >
                     <QuestionAnswerIcon
                       fontSize="small"
@@ -354,6 +369,7 @@ export default function TaskDataList({
                     aria-haspopup="true"
                     data-testid="task_attach_file"
                     onClick={() => handleClick('documents')}
+                    color='primary'
                   >
                     <AttachFileIcon
                       fontSize="small"
@@ -416,6 +432,7 @@ export default function TaskDataList({
               aria-haspopup="true"
               data-testid="show_task_subtasks"
               onClick={e => handleOpenSubTasksClick(e)}
+              color='primary'
             >
               {openSubTask ? (
                 <KeyboardArrowUpIcon fontSize="small" color="primary" />
@@ -453,7 +470,8 @@ TaskDataList.defaultProps = {
   styles: {},
   openSubTask: false,
   handleOpenSubTasksClick: null,
-  clientView: false
+  clientView: false,
+  taskCommentHasReply: false,
 };
 TaskDataList.propTypes = {
   task: PropTypes.shape(Task).isRequired,
@@ -465,7 +483,8 @@ TaskDataList.propTypes = {
   openSubTask: PropTypes.bool,
   handleOpenSubTasksClick: PropTypes.func,
   handleTaskCompletion: PropTypes.func.isRequired,
-  clientView: PropTypes.bool
+  clientView: PropTypes.bool,
+  taskCommentHasReply: PropTypes.bool,
 };
 
 

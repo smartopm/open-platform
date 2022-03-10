@@ -180,7 +180,8 @@
     "guests": "Guests",
     "guest_name_required": "Guest Name or Company Name is required",
     "add_company": "Or add a Company",
-    "guest_type": "Guest Type "
+    "guest_type": "Guest Type ",
+    "qr_code": "QR Code for Gate Access"
     },
   "video_recording": {
     "add_video_text": "Add a Video with your phone",

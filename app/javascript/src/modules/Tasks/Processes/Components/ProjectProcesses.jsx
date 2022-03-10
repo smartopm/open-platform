@@ -72,15 +72,22 @@ const Step = {
   dueDate: PropTypes.string,
   formUserId: PropTypes.string
 }
-ProjectProcesses.defaultProps = {}
+ProjectProcesses.defaultProps = {
+  commentsError: null,
+  comments: null
+}
 
 ProjectProcesses.propTypes = {
   data: PropTypes.arrayOf(PropTypes.shape(Step)).isRequired,
   refetch: PropTypes.func.isRequired,
   handleProjectStepClick: PropTypes.func.isRequired,
-  comments: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  comments: PropTypes.shape({
+    projectComments: PropTypes.array
+  }),
   commentsLoading: PropTypes.bool.isRequired,
-  commentsError: PropTypes.string.isRequired,
+  commentsError: PropTypes.shape({
+    message: PropTypes.string
+  }),
   commentsRefetch: PropTypes.func.isRequired,
   commentsFetchMore: PropTypes.func.isRequired
 }

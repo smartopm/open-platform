@@ -45,6 +45,7 @@ export const EntryRequestQuery = gql`
         name
         id
       }
+      guestId
     }
   }
   ${EntryRequestFragment.publicFields}
@@ -262,6 +263,13 @@ export const LeadDetailsQuery = gql`
       firstContactDate
       lastContactDate
       followupAt
+      kickOffDate
+      capexAmount
+      jobsCreated
+      jobsTimeline
+      investmentSize
+      investmentTimeline
+      decisionTimeline
       contactDetails
       industry
       industrySubSector
@@ -821,11 +829,13 @@ export const CommentQuery = gql`
         name
         imageUrl
       }
-      repliedAt,
+      repliedAt
       replyFrom {
+        id
         name
       }
       replyRequired
+      groupingId
     }
   }
 `;

@@ -68,6 +68,7 @@
   "task": {
     "active_reminder": "Recordatorio",
     "add_note": "Agregar una nota",
+    "all_comments_resolved": "TODOS LOS COMENTARIOS RESUELTOS",
     "assigned_to": "Designados",
     "assigned_to_txt": "Asignado a:",
     "at_risk": "En Riesgo",
@@ -101,6 +102,7 @@
     "parent_task": "Tarea Principal",
     "quick_search": "Búsqueda Rápida",
     "reminder_text": "Recuérdame más tarde",
+    "replied": "respondió",
     "require_a_reply": "Requerir una respuesta",
     "search_users": "Buscar Usuarios",
     "selected_task_marked_as": "Las tareas seleccionadas han sido marcadas correctamente como",

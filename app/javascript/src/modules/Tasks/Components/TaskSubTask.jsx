@@ -201,7 +201,7 @@ export default function TaskSubTask({
                     >
                       <QuestionAnswerIcon
                         fontSize="small"
-                        color={task?.taskComments?.length ? 'primary' : 'disabled'}
+                        color={task?.taskCommentsCount ? 'primary' : 'disabled'}
                       />
                     </IconButton>
                   </Grid>
@@ -212,7 +212,7 @@ export default function TaskSubTask({
                     className={classes.iconItem}
                     style={{ paddingLeft: '8px' }}
                   >
-                    <span>{task?.taskComments?.length || 0}</span>
+                    <span>{task?.taskCommentsCount || 0}</span>
                   </Grid>
                   <Grid item md={2} xs={2}>
                     <IconButton

@@ -38,6 +38,14 @@ RSpec.describe Types::Queries::Note do
                           permissions: %w[can_fetch_flagged_notes can_fetch_task_comments
                                           can_fetch_tagged_comments])
     end
+    let(:consultant_role) { create(:role, name: 'consultant', community: admin.community) }
+    let(:consultant) { create(:consultant, role: consultant_role, community: admin.community) }
+    let!(:consultant_permissions) do
+      create(:permission, module: 'note',
+                          role: consultant_role,
+                          permissions: %w[can_fetch_flagged_notes can_fetch_task_comments
+                                          can_fetch_comments_on_assigned_tasks])
+    end
 
     let!(:first_note) do
       admin.notes.create!(
@@ -906,7 +914,7 @@ RSpec.describe Types::Queries::Note do
           another_form
           form_user
           another_form_user
-          first_note.update(form_user_id: form_user.id)
+          first_note.update(form_user_id: form_user.id, completed: true)
           second_note.update(form_user_id: another_form_user.id)
         end
 
@@ -1039,6 +1047,71 @@ RSpec.describe Types::Queries::Note do
           expect(result['errors']).to be_nil
           expect(result.dig('data', 'projectComments').length).to eq 0
         end
+
+        it 'retrieves tagged comments for consultant assigned task requested for reply' do
+          create(
+            :note_comment,
+            note: third_note,
+            body: 'Comment needs reply from consultant',
+            user: admin,
+            status: 'active',
+            reply_required: true,
+            reply_from: consultant,
+          )
+
+          subtask1 = admin.notes.create!(
+            body: 'Step 1 subtask 1',
+            description: 'Step 1 subtask 1',
+            user_id: admin.id,
+            category: 'other',
+            flagged: true,
+            community_id: consultant.community_id,
+            author_id: admin.id,
+            parent_note_id: third_note.id,
+          )
+
+          create(
+            :note_comment,
+            note: subtask1,
+            body: 'Step 1 subtask 1 comment needs reply from consultant',
+            user: admin,
+            status: 'active',
+            reply_required: true,
+            reply_from: consultant,
+          )
+
+          consultant.tasks << third_note << subtask1
+
+          result = DoubleGdpSchema.execute(project_comments_query, context: {
+                                             current_user: consultant,
+                                             site_community: consultant.community,
+                                           }, variables: { taskId: third_note.id }).as_json
+
+          expect(result['errors']).to be_nil
+          expect(result.dig('data', 'projectComments').length).to eq 2
+        end
+
+        it 'does not retrieve tagged comments for non consultant assigned task' do
+          create(
+            :note_comment,
+            note: third_note,
+            body: 'Comment needs reply from developer',
+            user: admin,
+            status: 'active',
+            reply_required: true,
+            reply_from: developer,
+          )
+
+          developer.tasks << third_note
+
+          result = DoubleGdpSchema.execute(project_comments_query, context: {
+                                             current_user: consultant,
+                                             site_community: consultant.community,
+                                           }, variables: { taskId: third_note.id }).as_json
+
+          expect(result['errors']).to be_nil
+          expect(result.dig('data', 'projectComments').length).to eq 0
+        end
       end
 
       context 'when completed_per_quarter is in the arguments' do
@@ -1052,6 +1125,22 @@ RSpec.describe Types::Queries::Note do
 
           second_note.update(form_user_id: another_form_user.id, completed: true)
           second_note.update(completed_at: Time.zone.local(Date.current.year, '05', '05'))
+        end
+
+        context 'when all is passed as an argument' do
+          before { second_note.update(completed_at: '2021-01-01') }
+
+          it 'returns the projects completed till now' do
+            result = DoubleGdpSchema.execute(projects_query, context: {
+                                               current_user: site_worker,
+                                               site_community: site_worker.community,
+                                             }, variables: {
+                                               completedPerQuarter: 'all',
+                                             }).as_json
+
+            expect(result['errors']).to be_nil
+            expect(result.dig('data', 'projects').length).to eql 2
+          end
         end
 
         it 'returns the projects in the quarter supplied' do
@@ -1090,6 +1179,22 @@ RSpec.describe Types::Queries::Note do
 
           second_note.update(form_user_id: another_form_user.id, completed: true)
           second_note.update(created_at: Time.zone.local(Date.current.year, '05', '05'))
+        end
+
+        context 'when all is passed as an argument' do
+          before { second_note.update(created_at: '2021-01-01') }
+
+          it 'returns the projects submitted till now' do
+            result = DoubleGdpSchema.execute(projects_query, context: {
+                                               current_user: site_worker,
+                                               site_community: site_worker.community,
+                                             }, variables: {
+                                               submittedPerQuarter: 'all',
+                                             }).as_json
+
+            expect(result['errors']).to be_nil
+            expect(result.dig('data', 'projects').length).to eql 2
+          end
         end
 
         it 'returns the projects in the quarter supplied' do

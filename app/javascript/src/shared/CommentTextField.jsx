@@ -1,13 +1,14 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import Grid from '@mui/material/Grid';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import PropTypes from 'prop-types';
-import { Checkbox, FormControlLabel, Typography } from '@material-ui/core';
+import { Checkbox, FormControlLabel, Typography, useMediaQuery } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { useTranslation } from 'react-i18next';
 import UserAutoResult from './UserAutoResult';
 import { UserChip } from '../modules/Tasks/Components/UserChip';
+import { Context as AuthStateContext } from '../containers/Provider/AuthStateProvider';
 
 export default function CommentTextField({
   value,
@@ -17,19 +18,15 @@ export default function CommentTextField({
   placeholder,
   loading,
   forProcess,
-  processesProps,
   selectedUser,
   setSelectedUser,
   autoCompleteOpen,
-  setAutoCompleteOpen
+  setAutoCompleteOpen,
+  taskAssignees
 }) {
   const { t } = useTranslation(['task', 'common']);
-
-  useEffect(() => {
-    if (processesProps) {
-      processesProps.setSearchUser('user_type:developer');
-    }
-  }, [processesProps]);
+  const authState = React.useContext(AuthStateContext);
+  const matches = useMediaQuery('(max-width:800px)');
 
   return (
     <Grid container alignContent="space-between">
@@ -68,7 +65,7 @@ export default function CommentTextField({
       </Grid>
       <>
         <Grid item xs={4}>
-          {forProcess && (
+          {forProcess && authState?.user?.userType === 'admin' && (
             <FormControlLabel
               control={(
                 <Checkbox
@@ -96,25 +93,26 @@ export default function CommentTextField({
           {autoCompleteOpen && !selectedUser && (
             <Autocomplete
               data-testid="users_autocomplete"
-              style={{ width: '100%' }}
+              style={{
+                width: matches ? 320 : '100%',
+                marginLeft: matches && -100,
+                marginTop: matches && 50
+              }}
               id="reply-user"
-              options={processesProps.userData?.usersLite || []}
+              options={taskAssignees || []}
               renderOption={option => <UserAutoResult user={option} t={t} />}
               name="reply-user"
               onChange={(_event, newValue) => setSelectedUser(newValue)}
               getOptionLabel={option => option?.name}
               getOptionSelected={(option, optionValue) => option.name === optionValue.name}
               value={selectedUser}
+              noOptionsText="No valid assignees on this project"
               renderInput={params => (
                 <TextField
                   {...params}
                   variant="outlined"
                   label={t('task.search_users')}
-                  onChange={event =>
-                    processesProps.setSearchUser(`${event.target.value} AND user_type:developer`)
-                  }
                   autoComplete="off"
-                  onKeyDown={() => processesProps.searchUser()}
                   style={{ marginTop: '5px' }}
                 />
               )}
@@ -128,11 +126,11 @@ export default function CommentTextField({
 CommentTextField.defaultProps = {
   loading: false,
   forProcess: false,
-  processesProps: null,
   selectedUser: null,
   setSelectedUser: null,
   autoCompleteOpen: false,
-  setAutoCompleteOpen: null
+  setAutoCompleteOpen: null,
+  taskAssignees: null
 };
 
 CommentTextField.propTypes = {
@@ -147,11 +145,5 @@ CommentTextField.propTypes = {
   setSelectedUser: PropTypes.func,
   autoCompleteOpen: PropTypes.bool,
   setAutoCompleteOpen: PropTypes.func,
-  processesProps: PropTypes.shape({
-    searchUser: PropTypes.func.isRequired,
-    setSearchUser: PropTypes.func.isRequired,
-    userData: PropTypes.shape({
-      usersLite: PropTypes.array
-    })
-  })
+  taskAssignees: PropTypes.array
 };

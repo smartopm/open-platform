@@ -94,8 +94,17 @@ export default function TaskInfoTop({
   const taskPermissions = currentUser?.permissions?.find(
     permissionObject => permissionObject.module === 'note'
   );
+
+  const formPermissions = currentUser?.permissions?.find(
+    permissionObject => permissionObject.module === 'forms'
+  );
+
   const canUpdateNote = taskPermissions
     ? taskPermissions.permissions.includes('can_update_note')
+    : false;
+
+  const canViewFormUser = formPermissions
+    ? formPermissions.permissions.includes('can_view_form_user')
     : false;
 
   function openParentLink(event, parent) {
@@ -211,7 +220,7 @@ export default function TaskInfoTop({
                 className={classes.selectLabel}
                 id="select-task-status"
                 data-testid="select-task-status"
-                value={taskStatus || ""}
+                value={taskStatus || ''}
                 label={t('common:misc.select')}
               >
                 <MenuItem value="" />
@@ -403,6 +412,8 @@ export default function TaskInfoTop({
           </Grid>
         </Grid>
 
+        <br />
+        <br />
         <Grid
           container
           className={matches ? classes.assigneesSectionMobile : classes.assigneesSection}
@@ -438,10 +449,9 @@ export default function TaskInfoTop({
                   ))}
                 </Grid>
               )}
-              <Grid item sm={6} xs={12} data-testid="add-assignee">
+              <Grid item xs={12} data-testid="add-assignee">
                 {canUpdateNote && (
                   <Chip
-                    style={autoCompleteOpen ? { marginTop: '50px' } : undefined}
                     key={data.id}
                     variant="outlined"
                     label={autoCompleteOpen ? t('task.chip_close') : t('task.chip_add_assignee')}
@@ -466,6 +476,10 @@ export default function TaskInfoTop({
                       }
                       assignUser(data.id, value.id);
                     }}
+                    style={{
+                      width: matches ? 320 : '100%',
+                      marginLeft: matches && 5
+                    }}
                     getOptionLabel={option =>
                       allowedAssignees.includes(option.userType) ? option.name : ''
                     }
@@ -487,7 +501,7 @@ export default function TaskInfoTop({
           </Grid>
         </Grid>
       </Grid>
-      {data?.formUser?.user && (
+      {canViewFormUser && data?.formUser?.user && (
         <Grid container className={classes.submittedFormSection}>
           <Grid item xs={4} md={3}>
             <Typography variant="caption" color="textSecondary" data-testid="submitted_form_title">
@@ -635,7 +649,7 @@ TaskInfoTop.propTypes = {
   }).isRequired,
   handleSplitScreenClose: PropTypes.func,
   refetch: PropTypes.func.isRequired,
-  handleTaskComplete: PropTypes.func, 
+  handleTaskComplete: PropTypes.func,
   forProcess: PropTypes.bool,
   fromLeadPage: PropTypes.bool
 };

@@ -40,6 +40,7 @@ export const TaskQuery = gql`
         name
         imageUrl
         avatarUrl
+        userType
       }
       assigneeNotes{
         id
@@ -78,12 +79,11 @@ export const SubTasksQuery = gql`
 export const ProjectOpenTasksQuery = gql`
   query projectOpenTasks($taskId: ID!, $offset: Int, $limit: Int) {
     projectOpenTasks(taskId: $taskId, offset: $offset, limit: $limit) {
-      ...NoteFields
+      ...TaskFields
     }
   }
-  ${NotesFragment.note}
+  ${TasksFragment.task}
 `
-
 
 /**
  * @deprecated

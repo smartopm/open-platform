@@ -15,6 +15,7 @@ import {
   TextField,
   Button,
   Select,
+  useMediaQuery,
   MenuItem,
   InputLabel,
   FormControl,
@@ -64,7 +65,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
   const [isError, setIsError] = useState(false);
   const theme = useTheme();
   const { t } = useTranslation(['actionflow', 'common']);
-
+  const matches = useMediaQuery('(max-width:800px)');
   const [loadLabelsLite, { data: labelsLiteData }] = useLazyQuery(LabelsQuery, {
     fetchPolicy: 'cache-and-network'
   });
@@ -95,7 +96,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
         actionFieldsValues = setObjectValue(
           actionFieldsValues,
           key,
-          val.type === "variable" ? titleize(val.value) : val.value
+          val.type === 'variable' ? titleize(val.value) : val.value
         );
       });
       setMetaData(actionFieldsValues);
@@ -288,7 +289,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
   }
 
   function confirmSubmission() {
-    if(!data.title || !data.eventType || !data.description){
+    if (!data.title || !data.eventType || !data.description) {
       setIsError(true);
       return;
     }
@@ -341,10 +342,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
         <FormControl fullWidth>
           {eventData.data && (
             <>
-              <InputLabel
-                id="select-event"
-                required
-              >
+              <InputLabel id="select-event" required>
                 {t('actionflow:form_fields.select_event')}
               </InputLabel>
               <Select
@@ -363,7 +361,11 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
                   </MenuItem>
                 ))}
               </Select>
-              {isError && !data.eventType && <FormHelperText error data-testid="error-msg">{t('misc.select_event_type')}</FormHelperText>}
+              {isError && !data.eventType && (
+                <FormHelperText error data-testid="error-msg">
+                  {t('misc.select_event_type')}
+                </FormHelperText>
+              )}
             </>
           )}
         </FormControl>
@@ -460,6 +462,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
                     id={`${actionField.name}-id-section`}
                     name={actionField.name}
                     value={assignees}
+                    style={{ width: matches && 300, marginLeft: matches && -18 }}
                     onChange={handleChooseAssignees}
                     fullWidth
                     multiple

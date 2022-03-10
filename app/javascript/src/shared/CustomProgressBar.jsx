@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { makeStyles } from '@material-ui/styles';
-import LinearProgress from '@mui/material/LinearProgress';
+import LinearProgress from '@material-ui/core/LinearProgress';
 import Box from '@mui/material/Box';
 import { Typography } from '@material-ui/core';
 import PropTypes from 'prop-types';
@@ -15,7 +15,7 @@ export default function CustomProgressBar({task, smDown}){
         {smDown ? (
           <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
             <Box className={classes.progressBar} data-testid="custom_progress_bar_mobile">
-              <LinearProgress variant="determinate" value={task?.progress?.progress_percentage} />
+              <LinearProgress color='secondary' variant="determinate" value={task?.progress?.progress_percentage} />
             </Box>
             <Box className={classes.progressBarText} data-testid="custom_progress_bar_text_mobile">
               <Typography variant="body2">
@@ -30,8 +30,8 @@ export default function CustomProgressBar({task, smDown}){
            ) : (
              <Box sx={{ width: '100%' }}>
                <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-                 <Box sx={{ width: '100%', ml: 4 }} data-testid="custom_progress_bar">
-                   <LinearProgress variant="determinate" value={task?.progress?.progress_percentage} />
+                 <Box sx={{ width: '100%', ml: 4, backgroundColor: 'black' }} data-testid="custom_progress_bar">
+                   <LinearProgress color='secondary' variant="determinate" value={task?.progress?.progress_percentage} />
                  </Box>
                  <Box sx={{ minWidth: 5, ml: 4 }} data-testid="custom_progress_bar_text">
                    <Typography variant="body2">
