@@ -34,15 +34,17 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
 
   return (
     <>
-      <Typography variant="h6" data-testid="lead-management-lead-information-header">
-        {t('lead_management.lead_section_header')}
-      </Typography>
       <Grid
         container
         spacing={2}
         style={{ alignItems: 'center' }}
         data-testid="lead-management-lead-information-section"
       >
+        <Grid item md={12} xs={12}>
+          <Typography variant="h6" data-testid="lead-management-lead-information-header">
+            {t('lead_management.lead_section_header')}
+          </Typography>
+        </Grid>
         <Grid item md={6} xs={12}>
           <FormControl fullWidth size="small">
             <InputLabel id="lead_temperature">{t('lead_management.lead_temperature')}</InputLabel>
@@ -64,7 +66,7 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
             </Select>
           </FormControl>
         </Grid>
-        <Grid item md={6} xs={12}>
+        <Grid item md={6} xs={12} style={{ paddingRight: 0 }}>
           <FormControl fullWidth size="small">
             <InputLabel id="leadStatus">{t('lead_management.lead_status')}</InputLabel>
             <Select
@@ -109,7 +111,7 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
           </FormControl>
         </Grid>
 
-        <Grid item md={6} xs={12}>
+        <Grid item md={6} xs={12} style={{ paddingRight: 0 }}>
           <TextField
             name="companyContacted"
             label={t('lead_management.company_contacted')}
@@ -128,170 +130,7 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
         </Grid>
 
         <Grid item md={6} xs={12}>
-          <FormControl fullWidth size="small">
-            <InputLabel id="client_category">{t('lead_management.client_category')}</InputLabel>
-            <Select
-              id="client_category"
-              value={leadFormData?.user?.clientCategory || ''}
-              onChange={handleChange}
-              name="clientCategory"
-              fullWidth
-              input={<OutlinedInput label={t('lead_management.client_category')} />}
-              MenuProps={MenuProps}
-            >
-              <MenuItem value="" />
-              {clientCategories.map(val => (
-                <MenuItem key={val} value={val}>
-                  {val}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Grid>
-
-        <Grid item md={6} xs={12}>
-          <FormControl fullWidth size="small">
-            <InputLabel id="lead_type">{t('lead_management.lead_type')}</InputLabel>
-            <Select
-              id="lead_type"
-              value={leadFormData?.user?.leadType || ''}
-              onChange={handleChange}
-              name="leadType"
-              fullWidth
-              input={<OutlinedInput label={t('lead_management.lead_type')} />}
-              MenuProps={MenuProps}
-            >
-              <MenuItem value="" />
-              {leadTypeOptions.map(val => (
-                <MenuItem key={val} value={val}>
-                  {val}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Grid>
-
-        <Grid item md={12} xs={12}>
-          <TextField
-            name="nextSteps"
-            label={t('lead_management.next_steps')}
-            style={{ width: '100%' }}
-            onChange={handleChange}
-            value={leadFormData?.user?.nextSteps || ''}
-            variant="outlined"
-            fullWidth
-            rows={2}
-            size="small"
-            margin="normal"
-            inputProps={{
-              'aria-label': 'next_steps'
-            }}
-          />
-        </Grid>
-      </Grid>
-      <br />
-      <Grid
-        container
-        spacing={2}
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          placeContent: 'center'
-        }}
-      >
-        <Grid item md={6} xs={12}>
-          <TextField
-            name="leadOwner"
-            label={t('lead_management.lead_owner')}
-            style={{ width: '100%' }}
-            onChange={handleChange}
-            value={leadFormData?.user?.leadOwner || ''}
-            variant="outlined"
-            fullWidth
-            size="small"
-            margin="normal"
-            inputProps={{
-              'aria-label': 'lead_owner'
-            }}
-          />
-        </Grid>
-
-        <Grid item md={6} xs={12}>
-          <DatePickerDialog
-            label={t('lead_management.first_contact_date')}
-            handleDateChange={date =>
-              handleTimeInputChange({ target: { name: 'firstContactDate', value: date } })
-            }
-            selectedDate={leadFormData?.user?.firstContactDate}
-            inputProps={{ 'data-testid': 'start_time_input' }}
-            inputVariant="outlined"
-            size="small"
-          />
-        </Grid>
-
-        <Grid item md={6} xs={12}>
-          <TextField
-            name="createdBy"
-            label={t('lead_management.created_by')}
-            style={{ width: '100%' }}
-            onChange={handleChange}
-            value={leadFormData?.user?.createdBy || ''}
-            variant="outlined"
-            fullWidth
-            size="small"
-            margin="normal"
-            inputProps={{
-              'aria-label': 'created_by'
-            }}
-          />
-        </Grid>
-
-        <Grid item md={6} xs={12}>
-          <DatePickerDialog
-            label={t('lead_management.last_contact_date')}
-            inputProps={{ 'data-testid': 'last_contact_date_input' }}
-            handleDateChange={date =>
-              handleTimeInputChange({ target: { name: 'lastContactDate', value: date } })
-            }
-            selectedDate={leadFormData?.user?.lastContactDate}
-            inputVariant="outlined"
-            size="small"
-          />
-        </Grid>
-
-        <Grid item md={6} xs={12}>
-          <TextField
-            name="modifiedBy"
-            label={t('lead_management.modified_by')}
-            style={{ width: '100%' }}
-            onChange={handleChange}
-            value={leadFormData?.user?.modifiedBy || ''}
-            variant="outlined"
-            fullWidth
-            size="small"
-            margin="normal"
-            inputProps={{
-              'aria-label': 'modified_by'
-            }}
-          />
-        </Grid>
-
-        <Grid item md={6} xs={12}>
-          <DatePickerDialog
-            label={t('lead_management.date_follow_up')}
-            inputProps={{ 'data-testid': 'date_follow_up_input' }}
-            handleDateChange={date =>
-              handleTimeInputChange({ target: { name: 'followupAt', value: date } })
-            }
-            selectedDate={leadFormData?.user?.followupAt}
-            inputVariant="outlined"
-            size="small"
-          />
-        </Grid>
-
-        <Grid item md={6} xs={12}>
-          <FormControl fullWidth sx={{ m: 0}}>
+          <FormControl fullWidth sx={{ m: 0 }}>
             <InputLabel htmlFor="outlined-adornment-amount">
               {t('lead_management.capex_amount')}
             </InputLabel>
@@ -307,7 +146,7 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
           </FormControl>
         </Grid>
 
-        <Grid item md={6} xs={12}>
+        <Grid item md={6} xs={12} style={{ paddingRight: 0 }}>
           <DatePickerDialog
             label={t('lead_management.kick_off_date')}
             inputProps={{ 'data-testid': 'kick_off_date' }}
@@ -363,7 +202,7 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
           </Grid>
         </Grid>
 
-        <Grid item md={6} xs={12}>
+        <Grid item md={6} xs={12} style={{ paddingRight: 0 }}>
           <Typography variant="body1">{t('lead_management.jobs_created_over_time')}</Typography>
           <Grid container spacing={2}>
             <Grid item md={6} xs={6}>
@@ -403,7 +242,7 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
             </Grid>
           </Grid>
         </Grid>
-        <Grid item md={12} xs={12}>
+        <Grid item md={12} xs={12} style={{ paddingRight: 0 }}>
           <TextField
             name="decisionTimeline"
             label={t('lead_management.decision_making_timeline')}
@@ -419,6 +258,162 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
               'aria-label': 'decision_making_timeline',
               style: { fontSize: matches && '15px' }
             }}
+          />
+        </Grid>
+
+        <Grid item md={6} xs={12}>
+          <FormControl fullWidth size="small">
+            <InputLabel id="client_category">{t('lead_management.client_category')}</InputLabel>
+            <Select
+              id="client_category"
+              value={leadFormData?.user?.clientCategory || ''}
+              onChange={handleChange}
+              name="clientCategory"
+              fullWidth
+              input={<OutlinedInput label={t('lead_management.client_category')} />}
+              MenuProps={MenuProps}
+            >
+              <MenuItem value="" />
+              {clientCategories.map(val => (
+                <MenuItem key={val} value={val}>
+                  {val}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Grid>
+
+        <Grid item md={6} xs={12} style={{ paddingRight: 0 }}>
+          <FormControl fullWidth size="small">
+            <InputLabel id="lead_type">{t('lead_management.lead_type')}</InputLabel>
+            <Select
+              id="lead_type"
+              value={leadFormData?.user?.leadType || ''}
+              onChange={handleChange}
+              name="leadType"
+              fullWidth
+              input={<OutlinedInput label={t('lead_management.lead_type')} />}
+              MenuProps={MenuProps}
+            >
+              <MenuItem value="" />
+              {leadTypeOptions.map(val => (
+                <MenuItem key={val} value={val}>
+                  {val}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Grid>
+
+        <Grid item md={12} xs={12} style={{ paddingRight: 0 }}>
+          <TextField
+            name="nextSteps"
+            label={t('lead_management.next_steps')}
+            style={{ width: '100%' }}
+            onChange={handleChange}
+            value={leadFormData?.user?.nextSteps || ''}
+            variant="outlined"
+            fullWidth
+            rows={2}
+            size="small"
+            margin="normal"
+            inputProps={{
+              'aria-label': 'next_steps'
+            }}
+          />
+        </Grid>
+      </Grid>
+      <br />
+      <Grid
+        container
+        spacing={2}
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          placeContent: 'center'
+        }}
+      >
+        <Grid item md={6} xs={12}>
+          <FormControl fullWidth sx={{ m: 0 }}>
+            <InputLabel htmlFor="outlined-lead-owner">{t('lead_management.lead_owner')}</InputLabel>
+            <OutlinedInput
+              id="outlined-adornment-amount"
+              name="leadOwner"
+              label={t('lead_management.lead_owner')}
+              onChange={handleChange}
+              value={leadFormData?.user?.leadOwner || ''}
+              size="small"
+            />
+          </FormControl>
+        </Grid>
+
+        <Grid item md={6} xs={12} style={{ paddingRight: 0 }}>
+          <DatePickerDialog
+            label={t('lead_management.first_contact_date')}
+            handleDateChange={date =>
+              handleTimeInputChange({ target: { name: 'firstContactDate', value: date } })
+            }
+            selectedDate={leadFormData?.user?.firstContactDate}
+            inputProps={{ 'data-testid': 'start_time_input' }}
+            inputVariant="outlined"
+            size="small"
+          />
+        </Grid>
+
+        <Grid item md={6} xs={12}>
+          <FormControl fullWidth sx={{ m: 0 }}>
+            <InputLabel htmlFor="outlined-created-by">{t('lead_management.created_by')}</InputLabel>
+            <OutlinedInput
+              id="outlined-adornment-amount"
+              name="createdBy"
+              label={t('lead_management.created_by')}
+              onChange={handleChange}
+              value={leadFormData?.user?.createdBy || ''}
+              size="small"
+            />
+          </FormControl>
+        </Grid>
+
+        <Grid item md={6} xs={12} style={{ paddingRight: 0 }}>
+          <DatePickerDialog
+            label={t('lead_management.last_contact_date')}
+            inputProps={{ 'data-testid': 'last_contact_date_input' }}
+            handleDateChange={date =>
+              handleTimeInputChange({ target: { name: 'lastContactDate', value: date } })
+            }
+            selectedDate={leadFormData?.user?.lastContactDate}
+            inputVariant="outlined"
+            size="small"
+          />
+        </Grid>
+
+        <Grid item md={6} xs={12}>
+          <FormControl fullWidth sx={{ m: 0 }}>
+            <InputLabel htmlFor="outlined-created-by">
+              {t('lead_management.modified_by')}
+            </InputLabel>
+            <OutlinedInput
+              id="outlined-adornment-amount"
+              name="modifiedBy"
+              label={t('lead_management.modified_by')}
+              onChange={handleChange}
+              value={leadFormData?.user?.modifiedBy || ''}
+              size="small"
+            />
+          </FormControl>
+        </Grid>
+
+        <Grid item md={6} xs={12} style={{ paddingRight: 0 }}>
+          <DatePickerDialog
+            label={t('lead_management.date_follow_up')}
+            inputProps={{ 'data-testid': 'date_follow_up_input' }}
+            handleDateChange={date =>
+              handleTimeInputChange({ target: { name: 'followupAt', value: date } })
+            }
+            selectedDate={leadFormData?.user?.followupAt}
+            inputVariant="outlined"
+            size="small"
           />
         </Grid>
       </Grid>
