@@ -21,9 +21,6 @@ export const ProjectsQuery = gql`
   query GetProjects($offset: Int, $limit: Int, $step: String, $completedPerQuarter: String, $submittedPerQuarter: String) {
     projects(offset: $offset, limit: $limit, step: $step, completedPerQuarter: $completedPerQuarter, submittedPerQuarter: $submittedPerQuarter) {
       ...TaskFields
-      subTasks {
-        ...TaskFields
-      }
     }
   }
   ${TasksFragment.task}
