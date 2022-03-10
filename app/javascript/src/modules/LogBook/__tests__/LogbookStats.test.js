@@ -66,7 +66,7 @@ describe('Logbook Stats', () => {
     }, 10);
   });
   it('should render 0 if something went wrong', async () => {
-    const { getByTestId } = render(
+    const { getAllByTestId } = render(
       <MockedProvider mocks={[errorMock]} addTypename={false}>
         <MockedThemeProvider>
           <LogbookStats {...props} />
@@ -74,8 +74,8 @@ describe('Logbook Stats', () => {
       </MockedProvider>
     );
     await waitFor(() => {
-      expect(getByTestId('stats_title').textContent).toContain('logbook.total_in_city');
-      expect(getByTestId('stats_count').textContent).toContain('0');
+      expect(getAllByTestId('stats_title')[0].textContent).toContain('logbook.total_entries');
+      expect(getAllByTestId('stats_count')[0].textContent).toContain('0');
     }, 10);
   });
 });

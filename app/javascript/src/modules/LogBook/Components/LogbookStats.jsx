@@ -27,19 +27,19 @@ export default function LogbookStats({ tabValue, shouldRefetch, isSmall, handleF
   const statsData = [
     {
       title: t('logbook.total_entries'),
-      count: data?.communityPeopleStatistics.peopleEntered,
+      count: data?.communityPeopleStatistics.peopleEntered || 0,
       id: 'total_entries',
       action: () => handleFilter('peopleEntered')
     },
     {
       title: t('logbook.total_exits'),
-      count: data?.communityPeopleStatistics.peopleExited,
+      count: data?.communityPeopleStatistics.peopleExited || 0,
       id: 'total_exits',
       action: () => handleFilter('peopleExited')
     },
     {
       title: t('logbook.total_in_city'),
-      count: data?.communityPeopleStatistics.peoplePresent,
+      count: data?.communityPeopleStatistics.peoplePresent || 0,
       id: 'total_in_city',
       action: () => handleFilter('allVisits')
     }
