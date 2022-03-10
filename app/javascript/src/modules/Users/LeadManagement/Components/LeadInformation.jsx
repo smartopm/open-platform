@@ -91,6 +91,50 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
 
         <Grid item md={6} xs={12}>
           <FormControl fullWidth size="small">
+            <InputLabel id="client_category">{t('lead_management.client_category')}</InputLabel>
+            <Select
+              id="client_category"
+              value={leadFormData?.user?.clientCategory || ''}
+              onChange={handleChange}
+              name="clientCategory"
+              fullWidth
+              input={<OutlinedInput label={t('lead_management.client_category')} />}
+              MenuProps={MenuProps}
+            >
+              <MenuItem value="" />
+              {clientCategories.map(val => (
+                <MenuItem key={val} value={val}>
+                  {val}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Grid>
+
+        <Grid item md={6} xs={12} style={{ paddingRight: 0 }}>
+          <FormControl fullWidth size="small">
+            <InputLabel id="lead_type">{t('lead_management.lead_type')}</InputLabel>
+            <Select
+              id="lead_type"
+              value={leadFormData?.user?.leadType || ''}
+              onChange={handleChange}
+              name="leadType"
+              fullWidth
+              input={<OutlinedInput label={t('lead_management.lead_type')} />}
+              MenuProps={MenuProps}
+            >
+              <MenuItem value="" />
+              {leadTypeOptions.map(val => (
+                <MenuItem key={val} value={val}>
+                  {val}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Grid>
+
+        <Grid item md={6} xs={12}>
+          <FormControl fullWidth size="small">
             <InputLabel id="lead_source">{t('lead_management.lead_source')}</InputLabel>
             <Select
               id="lead_source"
@@ -259,50 +303,6 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
               style: { fontSize: matches && '15px' }
             }}
           />
-        </Grid>
-
-        <Grid item md={6} xs={12}>
-          <FormControl fullWidth size="small">
-            <InputLabel id="client_category">{t('lead_management.client_category')}</InputLabel>
-            <Select
-              id="client_category"
-              value={leadFormData?.user?.clientCategory || ''}
-              onChange={handleChange}
-              name="clientCategory"
-              fullWidth
-              input={<OutlinedInput label={t('lead_management.client_category')} />}
-              MenuProps={MenuProps}
-            >
-              <MenuItem value="" />
-              {clientCategories.map(val => (
-                <MenuItem key={val} value={val}>
-                  {val}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Grid>
-
-        <Grid item md={6} xs={12} style={{ paddingRight: 0 }}>
-          <FormControl fullWidth size="small">
-            <InputLabel id="lead_type">{t('lead_management.lead_type')}</InputLabel>
-            <Select
-              id="lead_type"
-              value={leadFormData?.user?.leadType || ''}
-              onChange={handleChange}
-              name="leadType"
-              fullWidth
-              input={<OutlinedInput label={t('lead_management.lead_type')} />}
-              MenuProps={MenuProps}
-            >
-              <MenuItem value="" />
-              {leadTypeOptions.map(val => (
-                <MenuItem key={val} value={val}>
-                  {val}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
         </Grid>
 
         <Grid item md={12} xs={12} style={{ paddingRight: 0 }}>
