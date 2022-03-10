@@ -224,8 +224,6 @@ const configObject = {
     {
       name: 'Email',
       inputName: 'email',
-      unique: true, // ensures column values are unique
-      uniqueError,
       validateError
     },
     {
@@ -350,6 +348,9 @@ const configObject = {
       name: 'Country',
       inputName: 'country',
       validate: country => {
+        if (!country) {
+          return true;
+        }
         return countries.includes(country.replace(/^\s+|\s+$/gm, ''));
       },
       validateError: (headerName, rowNumber, columnNumber) => {
@@ -362,6 +363,9 @@ const configObject = {
       name: 'Region',
       inputName: 'region',
       validate: region => {
+        if (!region) {
+          return true;
+        }
         return regionOptions.includes(region.replace(/^\s+|\s+$/gm, ''));
       },
       validateError: (headerName, rowNumber, columnNumber) => {
@@ -374,6 +378,9 @@ const configObject = {
       name: 'Industry Sector',
       inputName: 'industrySector',
       validate: industrySector => {
+        if (!industrySector) {
+          return true;
+        }
         return industryCategoryOptions.includes(industrySector.replace(/^\s+|\s+$/gm, ''));
       },
       validateError: (headerName, rowNumber, columnNumber) => {
@@ -386,6 +393,9 @@ const configObject = {
       name: 'Industry Sub Sector',
       inputName: 'industrySubSector',
       validate: industrySubSector => {
+        if (!industrySubSector) {
+          return true;
+        }
         return industrySubSectorOptions.includes(industrySubSector.replace(/^\s+|\s+$/gm, ''));
       },
       validateError: (headerName, rowNumber, columnNumber) => {
@@ -398,6 +408,9 @@ const configObject = {
       name: 'Industry Business Activity',
       inputName: 'industryBusinessActivity',
       validate: industryBusinessActivity => {
+        if (!industryBusinessActivity) {
+          return true;
+        }
         return industryBusinessActivityOptions.includes(
           industryBusinessActivity.replace(/^\s+|\s+$/gm, '')
         );
@@ -412,6 +425,9 @@ const configObject = {
       name: 'Level of Internationalization',
       inputName: 'levelOfInternationalization',
       validate: levelOfInternationalization => {
+        if (!levelOfInternationalization) {
+          return true;
+        }
         return internationalizationLevels.includes(
           levelOfInternationalization.replace(/^\s+|\s+$/gm, '')
         );
@@ -442,6 +458,9 @@ const configObject = {
       name: 'Lead Temperature',
       inputName: 'leadTemperature',
       validate: leadTemperature => {
+        if (!leadTemperature) {
+          return true;
+        }
         return leadTemperatureOptions.includes(leadTemperature.replace(/^\s+|\s+$/gm, ''));
       },
       validateError: (headerName, rowNumber, columnNumber) => {
@@ -454,6 +473,9 @@ const configObject = {
       name: 'Lead Status',
       inputName: 'leadStatus',
       validate: leadStatus => {
+        if (!leadStatus) {
+          return true;
+        }
         return leadStatusOptions.includes(leadStatus.replace(/^\s+|\s+$/gm, ''));
       },
       validateError: (headerName, rowNumber, columnNumber) => {
@@ -467,6 +489,9 @@ const configObject = {
       name: 'Lead Type',
       inputName: 'leadType',
       validate: leadType => {
+        if (!leadType) {
+          return true;
+        }
         return leadTypeOptions.includes(leadType.replace(/^\s+|\s+$/gm, ''));
       },
       validateError: (headerName, rowNumber, columnNumber) => {
@@ -480,6 +505,9 @@ const configObject = {
       name: 'Lead Source',
       inputName: 'leadSource',
       validate: leadSource => {
+        if (!leadSource) {
+          return true;
+        }
         return leadSourceOptions.includes(leadSource);
       },
       validateError: (headerName, rowNumber, columnNumber) => {
@@ -492,6 +520,9 @@ const configObject = {
       name: 'Client Category',
       inputName: 'clientCategory',
       validate: clientCategory => {
+        if (!clientCategory) {
+          return true;
+        }
         return clientCategories.includes(clientCategory.replace(/^\s+|\s+$/gm, ''));
       },
       validateError: (headerName, rowNumber, columnNumber) => {

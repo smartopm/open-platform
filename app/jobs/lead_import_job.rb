@@ -82,10 +82,14 @@ class LeadImportJob < ApplicationJob
           next
         end
 
-        if phone_list.empty? && email.nil?
-          errors[index + 1] = ['A contact info must be present']
-          next
-        end
+        # commenting this to allow creating contacts without contact info
+        # this can be uupdated from the leads details page if need be as
+        # this users will not be logging in
+
+        # if phone_list.empty? && email.nil?
+        #   errors[index + 1] = ['A contact info must be present']
+        #   next
+        # end
 
         dup_user = UserValidator.duplicate_user(email, phone_list, current_user.community)
         if dup_user.present?
