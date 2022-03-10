@@ -121,7 +121,8 @@
     "submitted_form": "Submitted Form",
     "open_submitted_form": "Open Form",
     "no_form_data": "Project submission information not found",
-    "year_to_date": "Year to Date"
+    "year_to_date": "Year to Date",
+    "total": "Total"
   },
   "misc": {
     "confirm": "Confirm",

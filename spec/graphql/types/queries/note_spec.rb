@@ -1127,6 +1127,22 @@ RSpec.describe Types::Queries::Note do
           second_note.update(completed_at: Time.zone.local(Date.current.year, '05', '05'))
         end
 
+        context 'when all is passed as an argument' do
+          before { second_note.update(completed_at: '2021-01-01') }
+
+          it 'returns the projects completed till now' do
+            result = DoubleGdpSchema.execute(projects_query, context: {
+                                               current_user: site_worker,
+                                               site_community: site_worker.community,
+                                             }, variables: {
+                                               completedPerQuarter: 'all',
+                                             }).as_json
+
+            expect(result['errors']).to be_nil
+            expect(result.dig('data', 'projects').length).to eql 2
+          end
+        end
+
         it 'returns the projects in the quarter supplied' do
           result = DoubleGdpSchema.execute(projects_query, context: {
                                              current_user: site_worker,
@@ -1163,6 +1179,22 @@ RSpec.describe Types::Queries::Note do
 
           second_note.update(form_user_id: another_form_user.id, completed: true)
           second_note.update(created_at: Time.zone.local(Date.current.year, '05', '05'))
+        end
+
+        context 'when all is passed as an argument' do
+          before { second_note.update(created_at: '2021-01-01') }
+
+          it 'returns the projects submitted till now' do
+            result = DoubleGdpSchema.execute(projects_query, context: {
+                                               current_user: site_worker,
+                                               site_community: site_worker.community,
+                                             }, variables: {
+                                               submittedPerQuarter: 'all',
+                                             }).as_json
+
+            expect(result['errors']).to be_nil
+            expect(result.dig('data', 'projects').length).to eql 2
+          end
         end
 
         it 'returns the projects in the quarter supplied' do
