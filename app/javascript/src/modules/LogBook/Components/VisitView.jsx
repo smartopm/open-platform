@@ -30,16 +30,16 @@ export default function VisitView({
   handleAddObservation,
   observationDetails
 }) {
+  const [statsType, setStatType] = useState('allVisits');
   const [loadGuests, { data, loading: guestsLoading, refetch, error }] = useLazyQuery(
     CurrentGuestEntriesQuery,
     {
-      variables: { offset: query.length ? 0 : offset, limit, query: query.trim() },
+      variables: { offset: query.length ? 0 : offset, limit, query: query.trim(), type: statsType },
       fetchPolicy: 'cache-and-network'
     }
   );
   const { t } = useTranslation('logbook');
   const [currentId, setCurrentId] = useState(null);
-  const [currentGuests, setCurrentGuests] = useState({entries: [], type: 'allVisits'});
   const history = useHistory();
   const matches = useMediaQuery('(max-width:800px)');
 
@@ -82,11 +82,10 @@ export default function VisitView({
   }, [tabValue, loadGuests, query, offset]);
 
 
-  function handleFilterData(entries, type) {
-    setCurrentGuests({entries, type})
+  function handleFilterData(type) {
+    setStatType(type)
   }
 
-  const allGuests = currentGuests.type === 'allVisits' ? data?.currentGuests : currentGuests.entries
   return (
     <div style={{ marginTop: '20px' }}>
       <LogbookStats 
@@ -98,8 +97,8 @@ export default function VisitView({
       {error && <CenteredContent>{formatError(error.message)}</CenteredContent>}
       {guestsLoading ? (
         <Spinner />
-      ) : allGuests?.length > 0 ? (
-        allGuests?.map(visit => (
+      ) : data?.currentGuests?.length > 0 ? (
+        data?.currentGuests.map(visit => (
           <Card
             key={visit.id}
             clickData={{ clickable: true, handleClick: () => handleCardClick(visit) }}

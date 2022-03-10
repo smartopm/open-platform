@@ -41,8 +41,8 @@ export const GuestEntriesQuery = gql`
 `;
 
 export const CurrentGuestEntriesQuery = gql`
-  query CurrentGuests($offset: Int, $limit: Int, $query: String) {
-    currentGuests(offset: $offset, limit: $limit, query: $query) {
+  query CurrentGuests($offset: Int, $limit: Int, $query: String, $type: String) {
+    currentGuests(offset: $offset, limit: $limit, query: $query, type: $type) {
       ...CurrentGuestsField
     }
   }
