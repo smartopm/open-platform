@@ -139,7 +139,7 @@ export default function CompanyInformation({ leadFormData, handleChange }) {
           </FormControl>
         </Grid>
 
-        <Grid item md={6} xs={12}>
+        <Grid item md={6} xs={12} style={{ paddingRight: 0 }}>
           <FormControl fullWidth size="small">
             <InputLabel id="industryBusinessActivity">
               {t('lead_management.industry_business_activity')}
@@ -185,7 +185,7 @@ export default function CompanyInformation({ leadFormData, handleChange }) {
           </FormControl>
         </Grid>
 
-        <Grid item md={6} xs={12}>
+        <Grid item md={6} xs={12} style={{ paddingRight: 0 }}>
           <FormControl fullWidth size="small">
             <InputLabel id="level_of_internationalization">
               {t('lead_management.level_of_internationalization')}
@@ -231,7 +231,7 @@ export default function CompanyInformation({ leadFormData, handleChange }) {
           </FormControl>
         </Grid>
 
-        <Grid item md={6} xs={12}>
+        <Grid item md={6} xs={12} style={{ paddingRight: 0 }}>
           <TextField
             name="companyEmployees"
             label={t('lead_management.number_of_employees')}
@@ -273,7 +273,7 @@ export default function CompanyInformation({ leadFormData, handleChange }) {
           </FormControl>
         </Grid>
 
-        <Grid item md={6} xs={12}>
+        <Grid item md={6} xs={12} style={{ paddingRight: 0 }}>
           <TextField
             name="companyAnnualRevenue"
             label={t('lead_management.annual_revenue')}
@@ -291,7 +291,7 @@ export default function CompanyInformation({ leadFormData, handleChange }) {
           />
         </Grid>
 
-        <Grid item md={12} xs={12}>
+        <Grid item md={12} xs={12} style={{ paddingRight: 0 }}>
           <TextField
             name="africanPresence"
             label={t('lead_management.african_presence')}
