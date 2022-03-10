@@ -2,6 +2,7 @@
 import React, { useContext } from 'react';
 import { Grid, Typography } from '@mui/material';
 import { useHistory } from 'react-router-dom';
+import { useQuery } from 'react-apollo';
 import { makeStyles } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
@@ -10,13 +11,28 @@ import { removeNewLines, sanitizeText } from '../../../../utils/helpers';
 import { TaskContext } from '../../Context';
 import ProjectSteps from './Steps';
 import ProjectItem from './ProjectItem';
+import { ProjectCommentsQuery } from '../graphql/process_queries';
+import ProjectActivitySummary from './ProjectActivitySummary';
 
 export default function ClientPilotViewItem({ project, refetch }) {
   const taskId = project?.id;
   const history = useHistory();
+  const limit = 3;
   const classes = useStyles();
   const { t } = useTranslation('task');
   const { handleStepCompletion } = useContext(TaskContext);
+
+  const {
+    data: comments,
+    loading: commentsLoading,
+    error: commentsError,
+    refetch: commentsRefetch,
+    fetchMore: commentsFetchMore
+  } = useQuery(ProjectCommentsQuery, {
+    variables: { taskId, limit },
+    fetchPolicy: 'cache-and-network',
+    errorPolicy: 'all'
+  });
 
   function handleProjectStepClick(tab = 'processes') {
     return history.push(`/processes/drc/projects/${taskId}?tab=${tab}`);
@@ -43,15 +59,21 @@ export default function ClientPilotViewItem({ project, refetch }) {
         <Grid container spacing={6} data-testid="project-open-tasks">
           <Grid item md={6} xs={12}>
             <Grid container>
-              <Grid item md={12} xs={12}>
-                <p>Activity Summary</p>
+              <Grid item md={12} xs={12} className={classes.activitySummary}>
+                <ProjectActivitySummary
+                  comments={comments}
+                  commentsLoading={commentsLoading}
+                  commentsError={commentsError}
+                  commentsRefetch={commentsRefetch}
+                  commentsFetchMore={commentsFetchMore}
+                />
               </Grid>
               <Grid item md={12} xs={12}>
-                  <Typography variant="subtitle1">{t('processes.your_tasks')}</Typography>
-                  <br />
-                  <div>
-                    <ProjectItem taskId={taskId} clientView />
-                  </div>
+                <Typography variant="subtitle1">{t('processes.your_tasks')}</Typography>
+                <br />
+                <div>
+                  <ProjectItem taskId={taskId} clientView />
+                </div>
               </Grid>
             </Grid>
             {/* <Typography variant="subtitle1">{t('processes.your_tasks')}</Typography>
@@ -83,7 +105,10 @@ export default function ClientPilotViewItem({ project, refetch }) {
 const useStyles = makeStyles(() => ({
   projectTitle: {
     cursor: 'pointer'
-  }
+  },
+  activitySummary: {
+    marginBottom: '32px !important',
+  },
 }));
 
 const Task = {
