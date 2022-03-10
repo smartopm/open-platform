@@ -134,19 +134,21 @@ RSpec.describe Types::Queries::EntryRequest do
         })
     end
     let(:current_guest_list_query) do
-      %(query {
-        currentGuests {
-          id
-          name
-          guest {
+      <<~GQL
+        query currentGuests($type: String){
+          currentGuests(type: $type) {
             id
             name
+            guest {
+              id
+              name
+            }
+            user {
+              id
+            }
           }
-          user {
-            id
           }
-        }
-        })
+      GQL
     end
 
     let(:community_people_statistics_query) do
@@ -154,12 +156,8 @@ RSpec.describe Types::Queries::EntryRequest do
         query communityPeopleStatistics($duration: String) {
           communityPeopleStatistics(duration: $duration) {
             peoplePresent
-            peopleEntered {
-              id
-            }
-            peopleExited {
-              id
-            }
+            peopleEntered
+            peopleExited
           }
         }
       GQL
@@ -418,6 +416,53 @@ RSpec.describe Types::Queries::EntryRequest do
       expect(result.dig('data', 'scheduledRequests')).to be_nil
     end
 
+    context 'when type is used to filter current guests' do
+      # let(:another_guest) is being used here to test all 3 it blocks
+      context 'when type is for people present' do
+        before { guest }
+
+        it 'returns the list of people present in the community' do
+          variables = { type: 'peoplePresent' }
+          result = DoubleGdpSchema.execute(current_guest_list_query,
+                                           variables: variables,
+                                           context: {
+                                             current_user: admin,
+                                             site_community: current_user.community,
+                                           }).as_json
+          expect(result['errors']).to be_nil
+          expect(result.dig('data', 'currentGuests').size).to eql 1
+        end
+      end
+
+      context 'when type is for people entered' do
+        it 'returns the list of people entered in the community' do
+          variables = { type: 'peopleEntered' }
+          result = DoubleGdpSchema.execute(current_guest_list_query,
+                                           variables: variables,
+                                           context: {
+                                             current_user: admin,
+                                             site_community: current_user.community,
+                                           }).as_json
+          expect(result['errors']).to be_nil
+          expect(result.dig('data', 'currentGuests').size).to eql 1
+        end
+      end
+
+      context 'when type is for people exited' do
+        it 'returns the list of people exited from the community' do
+          variables = { type: 'peopleExited' }
+          result = DoubleGdpSchema.execute(current_guest_list_query,
+                                           variables: variables,
+                                           context: {
+                                             current_user: admin,
+                                             site_community: current_user.community,
+                                           }).as_json
+          expect(result['errors']).to be_nil
+          expect(result.dig('data', 'currentGuests').size).to eql 1
+        end
+      end
+    end
+
     describe '#community_people_statistics' do
       context 'when current user is verified' do
         before do
@@ -436,8 +481,8 @@ RSpec.describe Types::Queries::EntryRequest do
                                              }).as_json
             data = result.dig('data', 'communityPeopleStatistics')
             expect(data['peoplePresent']).to eql 1
-            expect(data['peopleEntered'].count).to eql 2
-            expect(data['peopleExited'].count).to eql 1
+            expect(data['peopleEntered']).to eql 2
+            expect(data['peopleExited']).to eql 1
           end
         end
 
@@ -455,8 +500,8 @@ RSpec.describe Types::Queries::EntryRequest do
                                              }).as_json
             data = result.dig('data', 'communityPeopleStatistics')
             expect(data['peoplePresent']).to eql 1
-            expect(data['peopleEntered'].count).to eql 2
-            expect(data['peopleExited'].count).to eql 1
+            expect(data['peopleEntered']).to eql 2
+            expect(data['peopleExited']).to eql 1
           end
         end
 
@@ -474,8 +519,8 @@ RSpec.describe Types::Queries::EntryRequest do
                                              }).as_json
             data = result.dig('data', 'communityPeopleStatistics')
             expect(data['peoplePresent']).to eql 1
-            expect(data['peopleEntered'].count).to eql 2
-            expect(data['peopleExited'].count).to eql 1
+            expect(data['peopleEntered']).to eql 2
+            expect(data['peopleExited']).to eql 1
           end
         end
       end

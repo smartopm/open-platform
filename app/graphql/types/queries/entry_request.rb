@@ -198,7 +198,7 @@ module Types::Queries::EntryRequest
   def people_entered(entry_requests, duration = 'today')
     start_time = duration_based_start_time(duration)
     entry_requests
-      .where('granted_at IS NOT NULL AND granted_at >= ? AND granted_at <= ?', start_time, end_time)
+      .where('granted_at >= ? AND granted_at <= ?', start_time, end_time)
   end
 
   def people_exited(entry_requests, duration = 'today')
