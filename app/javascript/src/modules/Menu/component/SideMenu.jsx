@@ -144,10 +144,10 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, direction, communityFeatu
                   style={{ color: pathname === menuItem.routeProps.path && '#FFFFFF'}}
                 />
                 {currentMenu.name === menuItem.name(t) && currentMenu.isOpen ? (
-                  <ExpandLess />
+                  <ExpandLess color="primary" className={classes.child} />
                 ) : // Avoid showing toggle icon on menus with no submenus
                 menuItem.subMenu ? (
-                  <ExpandMore />
+                  <ExpandMore color="primary" className={classes.child} />
                 ) : null}
               </ListItem>
 
