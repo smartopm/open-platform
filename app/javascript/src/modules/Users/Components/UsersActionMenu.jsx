@@ -19,6 +19,7 @@ export default function UsersActionMenu({
   selectedUsers,
   labelsData,
   labelsRefetch,
+  copyToClipBoard
 }) {
   const [labelSelectModalOpen, setLabelSelectModalOpen] = useState(false);
   const [labelAssignWarningOpen, setLabelAssignWarningOpen] = useState(false);
@@ -91,6 +92,16 @@ export default function UsersActionMenu({
           >
             {t('common:form_actions.create_campaign')}
           </Button>
+          {selectedUsers.length > 0 && (
+            <Button
+              onClick={copyToClipBoard}
+              color="primary"
+              style={{ textTransform: 'none' }}
+              data-testid='copy-id'
+            >
+              {t('common:form_actions.copy_id')}
+            </Button>
+          )}
         </Grid>
       )}
     </Grid>
@@ -119,5 +130,6 @@ UsersActionMenu.propTypes = {
       })
     )
   }).isRequired,
-  labelsRefetch: PropTypes.func.isRequired
+  labelsRefetch: PropTypes.func.isRequired,
+  copyToClipBoard: PropTypes.func.isRequired
 };

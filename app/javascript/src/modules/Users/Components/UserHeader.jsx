@@ -19,6 +19,7 @@ import { dateToString } from '../../../utils/dateutil';
 import { Spinner } from '../../../shared/Loading';
 import MenuList from '../../../shared/MenuList';
 import UsersActionMenu from './UsersActionMenu';
+import MessageAlert from '../../../components/MessageAlert';
 
 const csvHeaders = [
   { label: 'Name', key: 'name' },
@@ -43,6 +44,8 @@ export default function UserHeader({
   const [selectedKey, setSelectedKey] = useState('');
   const matches = useMediaQuery('(max-width:959px)');
   const { t } = useTranslation(['users', 'common']);
+  const [messageAlert, setMessageAlert] = useState('');
+  const [isSuccessAlert, setIsSuccessAlert] = useState(false);
   const anchorRef = useRef(null);
   const classes = useStyles();
   const options = {
@@ -56,7 +59,7 @@ export default function UserHeader({
       key: 'all',
       value: 'All',
       handleMenuItemClick,
-      show: true 
+      show: true
     },
     {
       key: 'all_on_the_page',
@@ -70,7 +73,7 @@ export default function UserHeader({
       handleMenuItemClick,
       show: true
     }
-  ]
+  ];
 
   const selectedOptions =
     selectedKey === 'none' || selectedKey === '' ? 'select' : objectAccessor(options, selectedKey);
@@ -94,8 +97,21 @@ export default function UserHeader({
     filterObject.toggleFilterMenu();
   }
 
+  function copyToClipBoard() {
+    navigator.clipboard.writeText(actionObject.selectedUsers.toString());
+    setMessageAlert(t('users.copy_id_message'));
+    setIsSuccessAlert(true);
+  }
+
   return (
     <Grid container>
+      <MessageAlert
+        type={isSuccessAlert ? 'success' : 'error'}
+        message={messageAlert}
+        open={!!messageAlert}
+        handleClose={() => setMessageAlert('')}
+        style={{ marginTop: '40px' }}
+      />
       <Grid item lg={12} md={12} sm={12} xs={12} data-testid="title">
         <Typography variant="h4">Users</Typography>
       </Grid>
@@ -181,6 +197,7 @@ export default function UserHeader({
               labelsRefetch={actionObject.labelsRefetch}
               viewFilteredUserCount={actionObject.viewFilteredUserCount}
               userList={actionObject.userList}
+              copyToClipBoard={copyToClipBoard}
             />
           </Grid>
         </Hidden>
@@ -251,6 +268,7 @@ export default function UserHeader({
             usersCountData={actionObject.usersCountData}
             labelsData={actionObject.labelsData}
             labelsRefetch={actionObject.labelsRefetch}
+            copyToClipBoard={copyToClipBoard}
           />
         </Grid>
       </Hidden>
