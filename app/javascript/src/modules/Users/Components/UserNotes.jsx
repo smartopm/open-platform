@@ -21,7 +21,7 @@ export default function UserNotes({ userId, tabValue }) {
   });
 
   useEffect(() => {
-    if (tabValue === 2) {
+    if (tabValue === 2 || tabValue === 'Notes') {
       loadNotes();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -66,6 +66,6 @@ export default function UserNotes({ userId, tabValue }) {
 }
 
 UserNotes.propTypes = {
-  tabValue: PropTypes.number.isRequired,
+  tabValue: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   userId: PropTypes.string.isRequired
 };
