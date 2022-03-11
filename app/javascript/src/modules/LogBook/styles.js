@@ -7,6 +7,11 @@ const useLogbookStyles = makeStyles(theme => ({
     width: 90,
     height: 90
   },
+  statCard: {
+    backgroundColor: theme.palette.secondary.main,
+    color: '#FFFFFF',
+    height: '80%'
+  },
   chipAlign: {
     marginTop: 11,
   },
