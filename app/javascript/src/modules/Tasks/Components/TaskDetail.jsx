@@ -226,6 +226,27 @@ export default function TaskDetail({
           message={t('task.update_successful')}
         />
 
+        {/* <Dialog
+          fullScreen
+          open={open}
+          fullWidth
+          maxWidth="lg"
+          onClose={() => setModalOpen(!open)}
+          aria-labelledby="task_modal"
+        >
+          <DialogTitle id="task_modal">
+            <CenteredContent>{t('task.task_modal_create_text')}</CenteredContent>
+          </DialogTitle>
+          <DialogContent>
+            <TaskAddForm
+              refetch={refetch}
+              close={() => setModalOpen(!open)}
+              assignUser={assignUser}
+              users={users}
+              parentTaskId={taskId}
+            />
+          </DialogContent>
+        </Dialog> */}
         <Grid>
           <div className={classes.section} data-testid="task-info-section">
             <TaskInfoTop

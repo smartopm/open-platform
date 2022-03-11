@@ -8,7 +8,7 @@ import Divider from '@material-ui/core/Divider';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 
-export default function TaskDetailAccordion({ title, styles, component, openDetails }) {
+export default function TaskDetailAccordion({ title, component, openDetails }) {
   const classes = useStyles();
   const [showComponent, setShowComponent] = useState(false);
 
@@ -22,25 +22,28 @@ export default function TaskDetailAccordion({ title, styles, component, openDeta
     <>
       <Divider />
       <Grid container className={classes.body} data-testid="body">
-        <Grid item sm={10} xs={8}>
+        <Grid item sm={11} xs={10}>
           <Typography
             data-testid="title"
-            color="primary"
-            variant="h6"
+            variant="subtitle2"
             className={classes.typography}
           >
             {title}
           </Typography>
         </Grid>
-        <Divider orientation="vertical" flexItem className={classes.divider} color="primary" />
-        <Grid item sm={1} xs={2} style={showComponent ? { backgroundColor: '#EEF6F9' } : undefined}>
-          <IconButton
-            color="primary"
-            onClick={() => setShowComponent(!showComponent)}
-            data-testid="toggle-icon"
-          >
-            {showComponent ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-          </IconButton>
+        
+        <Grid item sm={1} xs={2} style={showComponent ? { backgroundColor: '#EEF6F9' } : undefined} className={classes.icon}>
+          <Grid container>
+            <Divider orientation="vertical" flexItem />
+            <Grid item sm={11}>
+              <IconButton
+                onClick={() => setShowComponent(!showComponent)}
+                data-testid="toggle-icon"
+              >
+                {showComponent ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+              </IconButton>
+            </Grid>
+          </Grid>
         </Grid>
       </Grid>
       <Divider />
@@ -49,17 +52,12 @@ export default function TaskDetailAccordion({ title, styles, component, openDeta
   );
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles(() => ({
   typography: {
     fontWeight: 400
   },
-  divider: {
-    // margin: '-1rem 0',
-    backgroundColor: theme.palette.primary.main
-  },
   icon: {
-    textAlign: 'right',
-    padding: '10px 0'
+    textAlign: 'center'
   },
   body: {
     alignItems: 'center',
@@ -71,15 +69,12 @@ const useStyles = makeStyles(theme => ({
 }));
 
 TaskDetailAccordion.defaultProps = {
-  styles: {},
   openDetails: false
 };
 
 TaskDetailAccordion.propTypes = {
-  icon: PropTypes.node.isRequired,
   title: PropTypes.string.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
-  styles: PropTypes.object,
   component: PropTypes.node.isRequired,
   openDetails: PropTypes.bool
 };
