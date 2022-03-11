@@ -13,10 +13,9 @@ import MenuItem from '@material-ui/core/MenuItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
-import { splitCamelCase } from '../../utils/helpers';
 
 export default function SelectButton({
-  buttonText,
+  defaultButtonText,
   open,
   anchorEl,
   anchorRef,
@@ -26,13 +25,31 @@ export default function SelectButton({
   handleClick
 }) {
   const [openSubMenu, setOpenSubMenu] = useState({ isOpen: false, name: '' });
+  const [buttonText, setButtonText] = useState(null);
+
+  function handleOpenSubMenuClick(opt) {
+    setOpenSubMenu({ isOpen: !openSubMenu.isOpen, name: opt.key });
+    setButtonText(opt.name);
+  }
+
+  function handleMenuClick(opt) {
+    setOpenSubMenu({ ...openSubMenu, name: opt.key });
+    setButtonText(opt.name);
+  }
+
+  function handleMenuItemClick(opt) {
+    opt.handleMenuItemClick(opt.key, opt.value)
+    setButtonText(opt.name);
+  }
+
   function handleSubMenuClick(opt) {
     opt.handleMenuItemClick(opt.key, opt.value);
     if (openSubMenu.name !== opt.key && openSubMenu.name !== '' && openSubMenu.isOpen === true) {
-      return setOpenSubMenu({ ...openSubMenu, name: opt.key });
+      return handleMenuClick(opt);
     }
-    return setOpenSubMenu({ isOpen: !openSubMenu.isOpen, name: opt.key });
+    return handleOpenSubMenuClick(opt);
   }
+
   return (
     <>
       <ButtonGroup
@@ -41,8 +58,8 @@ export default function SelectButton({
         aria-label="outlined select button"
         data-testid="button"
       >
-        <Button>{splitCamelCase(buttonText)}</Button>
-        <Button onClick={handleClick} data-testid="arrow-icon" className='option_menu_toggler'>
+        <Button>{buttonText || defaultButtonText}</Button>
+        <Button onClick={handleClick} data-testid="arrow-icon" className="option_menu_toggler">
           <ArrowDropDownIcon />
         </Button>
       </ButtonGroup>
@@ -72,12 +89,12 @@ export default function SelectButton({
                           onClick={
                             opt.subMenu
                               ? () => handleSubMenuClick(opt)
-                              : () => opt.handleMenuItemClick(opt.key, opt.value)
+                              : () => handleMenuItemClick(opt)
                           }
                           value={opt.key}
                           id={opt.key}
                         >
-                          <ListItemText primary={splitCamelCase(opt.value)} />
+                          <ListItemText primary={opt.name} />
                           {opt.subMenu &&
                             (openSubMenu.isOpen && openSubMenu.name === opt.key ? (
                               <ExpandLess />
@@ -101,7 +118,7 @@ export default function SelectButton({
                                 value={opt.key}
                                 id={opt.key}
                               >
-                                {submenu.value}
+                                {submenu.name}
                               </MenuItem>
                             ))}
                       </div>
@@ -127,6 +144,7 @@ SelectButton.propTypes = {
   open: PropTypes.bool.isRequired,
   anchorEl: PropTypes.object,
   anchorRef: PropTypes.object,
+  defaultButtonText: PropTypes.string.isRequired,
   handleClose: PropTypes.func.isRequired,
   options: PropTypes.arrayOf(
     PropTypes.shape({

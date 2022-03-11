@@ -13,11 +13,13 @@ describe('should render Select Button component', () => {
         key: 'sample_key',
         value: 'Sample Value',
         handleMenuItemClick: jest.fn(),
+        name: 'Sample Name',
         show: true, 
         subMenu: [
           {
             key: 'sample_key_sub_menu',
             value: 'Sample Value Sub Menu',
+            name: 'Sample Name Sub Menu',
             handleMenuItemClick: jest.fn(),
             show: true
           }
@@ -26,7 +28,7 @@ describe('should render Select Button component', () => {
     ];
     const container = render(
       <SelectButon
-        buttonText="some text"
+        defaultButtonText="some text"
         open
         handleClose={jest.fn()}
         options={options}
@@ -41,11 +43,11 @@ describe('should render Select Button component', () => {
 
     fireEvent.click(container.queryByTestId('arrow-icon'))
     expect(handleClick).toHaveBeenCalled();
-    expect(container.queryByText('Sample Value')).toBeInTheDocument();
+    expect(container.queryByText('Sample Name')).toBeInTheDocument();
     
-    fireEvent.click(container.queryByText('Sample Value'))
-    expect(container.queryByText('Sample Value Sub Menu')).toBeInTheDocument();
-    fireEvent.click(container.queryByText('Sample Value Sub Menu'))
+    fireEvent.click(container.queryByText('Sample Name'))
+    expect(container.queryByText('Sample Name Sub Menu')).toBeInTheDocument();
+    fireEvent.click(container.queryByText('Sample Name Sub Menu'))
   });
 
   it('should render select menu item without submenu list', () => {
@@ -54,6 +56,7 @@ describe('should render Select Button component', () => {
       {
         key: 'sample_key',
         value: 'Sample Value',
+        name: 'Sample Name',
         handleMenuItemClick,
         show: true, 
       }
@@ -70,9 +73,9 @@ describe('should render Select Button component', () => {
       />
     );
 
-    expect(container.queryByText('Sample Value')).toBeInTheDocument();
+    expect(container.queryByText('Sample Name')).toBeInTheDocument();
     
-    fireEvent.click(container.queryByText('Sample Value'))
+    fireEvent.click(container.queryByText('Sample Name'))
     expect(handleMenuItemClick).toHaveBeenCalled();
   });
 });

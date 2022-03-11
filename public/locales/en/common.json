@@ -265,7 +265,8 @@
     "company": "Company",
     "reply": "Reply",
     "add_reply": "Add a reply",
-    "resolve_comments": "Resolve Comments"
+    "resolve_comments": "Resolve Comments",
+    "user_detail": "User Detail"
   },
   "menu": {
     "invoice": "Invoice",
@@ -552,5 +553,9 @@
     "decision_making_timeline": "Decision Making Timeline",
     "investiment_created_over_time": "Opportunity/Investiment over time",
     "jobs_created_over_time": "Number of jobs over time"
+  },
+  "right_menu": {
+    "edit_user": "Edit User",
+    "communications": "Communications"
   }
 }

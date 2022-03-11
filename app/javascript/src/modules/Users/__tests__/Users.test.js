@@ -117,7 +117,7 @@ describe('UserPage Component', () => {
       expect(container.getByTestId('user_phone_number').textContent).toContain('3221038192389');
       expect(container.getByTestId('user_type').textContent).toContain('common:user_types.visitor');
       fireEvent.click(container.queryByTestId('arrow-icon'));
-      fireEvent.click(container.queryByText('All on this page'));
+      fireEvent.click(container.queryByText('common:misc.all_this_page'));
       fireEvent.click(container.queryByTestId('copy-id'));
       expect(container.queryByTestId('copy-id')).toBeInTheDocument();
     }, 20);
