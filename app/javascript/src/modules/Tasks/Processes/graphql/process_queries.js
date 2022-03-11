@@ -21,11 +21,6 @@ export const ProjectsQuery = gql`
   query GetProjects($offset: Int, $limit: Int, $step: String, $completedPerQuarter: String, $submittedPerQuarter: String) {
     projects(offset: $offset, limit: $limit, step: $step, completedPerQuarter: $completedPerQuarter, submittedPerQuarter: $submittedPerQuarter) {
       ...TaskFields
-      subTasks {
-        id
-        body
-        completed
-      }
     }
   }
   ${TasksFragment.task}
@@ -78,3 +73,17 @@ export const ProjectCommentsQuery = gql`
     }
   }
 `
+
+export const ProjectsStatsQuery = gql`
+  query GetProjectsStatsQuery($offset: Int, $limit: Int, $step: String, $completedPerQuarter: String, $submittedPerQuarter: String) {
+    projects(offset: $offset, limit: $limit, step: $step, completedPerQuarter: $completedPerQuarter, submittedPerQuarter: $submittedPerQuarter) {
+      ...TaskFields
+      subTasks {
+        id
+        body
+        completed
+      }
+    }
+  }
+  ${TasksFragment.task}
+`;
