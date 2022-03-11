@@ -65,6 +65,7 @@ export default {
       description: 'Consultant sub-task',
       dueDate: '2022-01-22T21:00:00Z',
       subTasksCount: 4,
+      order: 1,
       formUserId: "65b665e0-959c-4c08-aaef-3f4b70e85495",
       progress: {
         complete: 1,
