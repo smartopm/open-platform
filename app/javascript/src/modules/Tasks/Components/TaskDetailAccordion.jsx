@@ -15,6 +15,8 @@ export default function TaskDetailAccordion({ title, component, openDetails }) {
   useEffect(() => {
     if (openDetails) {
       setShowComponent(true);
+    } else {
+      setShowComponent(false);
     }
   }, [openDetails]);
 

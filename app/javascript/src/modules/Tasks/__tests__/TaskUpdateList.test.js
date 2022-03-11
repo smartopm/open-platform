@@ -28,8 +28,6 @@ describe('Comment Card Component', () => {
       </MockedProvider>
     )
 
-    expect(container.queryByTestId('history_title')).toBeInTheDocument()
-    expect(container.queryByText('history.updates')).toBeInTheDocument()
     expect(container.queryByText('John')).toBeInTheDocument()
     expect(container.queryByText(/task.history_create_new_note_comment/)).toBeInTheDocument()
     expect(container.queryByText(/Today at/)).toBeInTheDocument()
