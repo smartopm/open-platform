@@ -22,7 +22,7 @@ export default function TaskDetailAccordion({ title, styles, component, openDeta
     <>
       <Divider />
       <Grid container className={classes.body} data-testid="body">
-        <Grid item sm={9} xs={8}>
+        <Grid item sm={10} xs={8}>
           <Typography
             data-testid="title"
             color="primary"
@@ -32,19 +32,15 @@ export default function TaskDetailAccordion({ title, styles, component, openDeta
             {title}
           </Typography>
         </Grid>
+        <Divider orientation="vertical" flexItem className={classes.divider} color="primary" />
         <Grid item sm={1} xs={2} style={showComponent ? { backgroundColor: '#EEF6F9' } : undefined}>
-          <Grid container>
-            <Divider orientation="vertical" flexItem className={classes.divider} color="primary" />
-            <Grid item sm={12} xs={12} className={classes.icon}>
-              <IconButton
-                color="primary"
-                onClick={() => setShowComponent(!showComponent)}
-                data-testid="toggle-icon"
-              >
-                {showComponent ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-              </IconButton>
-            </Grid>
-          </Grid>
+          <IconButton
+            color="primary"
+            onClick={() => setShowComponent(!showComponent)}
+            data-testid="toggle-icon"
+          >
+            {showComponent ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+          </IconButton>
         </Grid>
       </Grid>
       <Divider />
@@ -58,7 +54,7 @@ const useStyles = makeStyles(theme => ({
     fontWeight: 400
   },
   divider: {
-    margin: '-4.25rem 0',
+    // margin: '-1rem 0',
     backgroundColor: theme.palette.primary.main
   },
   icon: {
