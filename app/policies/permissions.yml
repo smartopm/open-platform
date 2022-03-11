@@ -239,6 +239,9 @@ admin:
       - can_get_action_flow_events
       - can_get_action_flow_actions
       - can_get_action_flow_action_fields
+  event_log:
+    permissions:
+      - can_fetch_logbook_events
 contractor:
   note:
     permissions:
@@ -661,3 +664,6 @@ site_manager:
   logout:
     permissions:
       - can_see_menu_item
+  event_log:
+    permissions:
+      - can_fetch_logbook_events
