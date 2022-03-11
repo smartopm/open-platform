@@ -28,7 +28,7 @@ describe('user notes component', () => {
 
     const container = render(
       <MockedProvider mocks={[notesMock]} addTypename={false}>
-        <UserNotes userId="some29384293812" tabValue={1} />
+        <UserNotes userId="some29384293812" tabValue={2} />
       </MockedProvider>
     );
     await waitFor(() => {
