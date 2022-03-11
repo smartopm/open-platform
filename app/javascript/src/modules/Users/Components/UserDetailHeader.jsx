@@ -161,7 +161,7 @@ export default function UserDetailHeader({ data, userType, currentTab, authState
           )}
         </Hidden>
         <Hidden mdUp>
-          <Grid item sm={12} xs={12} className={classes.selectMobile}>
+          <Grid item md={4} sm={12} xs={12} className={classes.selectMobile}>
             <SelectButton
               options={options}
               open={open}
