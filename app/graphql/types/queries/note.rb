@@ -456,13 +456,11 @@ module Types::Queries::Note
     context[:site_community]
       .notes
       .includes(
-        :parent_note,
-        :user,
-        :author,
         :sub_notes,
-        :assignees,
+        { assignees: %i[avatar_attachment community] },
         :assignee_notes,
         :documents_attachments,
+        { form_user: %i[user] },
       )
       .where(parent_note_id: nil, form_user_id: drc_form_users)
       .for_site_manager(current_user)
