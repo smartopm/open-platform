@@ -12,7 +12,6 @@ import IconButton from '@material-ui/core/IconButton';
 import MoreVertOutlined from '@material-ui/icons/MoreVertOutlined';
 import { CSVLink } from 'react-csv';
 import SelectButton from '../../../shared/buttons/SelectButton';
-import { objectAccessor } from '../../../utils/helpers';
 import SearchInput from '../../../shared/search/SearchInput';
 import QueryBuilder from '../../../components/QueryBuilder';
 import { dateToString } from '../../../utils/dateutil';
@@ -48,35 +47,30 @@ export default function UserHeader({
   const [isSuccessAlert, setIsSuccessAlert] = useState(false);
   const anchorRef = useRef(null);
   const classes = useStyles();
-  const options = {
-    all: 'All',
-    all_on_the_page: 'All on this page',
-    none: 'none'
-  };
 
   const selectOptions = [
     {
       key: 'all',
       value: 'All',
+      name:  t("common:misc.all"),
       handleMenuItemClick,
       show: true
     },
     {
       key: 'all_on_the_page',
       value: 'All on this page',
+      name:  t("common:misc.all_this_page"),
       handleMenuItemClick,
       show: true
     },
     {
       key: 'none',
       value: 'none',
+      name:  t("common:misc.select"),
       handleMenuItemClick,
       show: true
     }
   ];
-
-  const selectedOptions =
-    selectedKey === 'none' || selectedKey === '' ? 'select' : objectAccessor(options, selectedKey);
 
   const handleClose = event => {
     if (anchorRef.current && anchorRef.current.contains(event.target)) {
@@ -119,7 +113,7 @@ export default function UserHeader({
         <Hidden smDown>
           <Grid item lg={3} md={3} sm={6} xs={6}>
             <SelectButton
-              buttonText={selectedOptions}
+              defaultButtonText={t("common:misc.select")}
               open={open}
               anchorEl={anchorRef.current}
               anchorRef={anchorRef}
@@ -175,7 +169,7 @@ export default function UserHeader({
         <Hidden mdUp>
           <Grid item lg={3} md={3} sm={6} xs={6}>
             <SelectButton
-              buttonText={selectedOptions}
+              defaultButtonText={t("common:misc.select")}
               open={open}
               anchorEl={anchorRef.current}
               anchorRef={anchorRef}
