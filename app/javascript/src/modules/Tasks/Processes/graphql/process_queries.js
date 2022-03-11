@@ -22,7 +22,9 @@ export const ProjectsQuery = gql`
     projects(offset: $offset, limit: $limit, step: $step, completedPerQuarter: $completedPerQuarter, submittedPerQuarter: $submittedPerQuarter) {
       ...TaskFields
       subTasks {
-        ...TaskFields
+        id
+        body
+        completed
       }
     }
   }
