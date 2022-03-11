@@ -9,7 +9,7 @@ import { useHistory } from 'react-router-dom';
 import { formatError } from '../../../../utils/helpers';
 import CenteredContent from '../../../../shared/CenteredContent';
 import { Spinner } from '../../../../shared/Loading';
-import { TaskQuarterySummaryQuery, ProjectsQuery } from '../graphql/process_queries';
+import { TaskQuarterySummaryQuery, ProjectsStatsQuery } from '../graphql/process_queries';
 import {
   filterProjectAndStages,
   calculateOpenProjectsByStage,
@@ -31,7 +31,7 @@ export default function AdminDashboard() {
   );
 
   const { loading: projectsLoading, error: projectsError, data: projectsData } = useQuery(
-    ProjectsQuery,
+    ProjectsStatsQuery,
     {
       variables: { offset: 0, limit: 50 },
       fetchPolicy: 'cache-and-network'

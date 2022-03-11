@@ -3,28 +3,20 @@ import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min';
 import '@testing-library/jest-dom/extend-expect';
 import { render, screen, waitFor } from '@testing-library/react';
-import { ProjectStagesQuery, TaskQuarterySummaryQuery } from '../graphql/process_queries';
+import { ProjectsStatsQuery, TaskQuarterySummaryQuery } from '../graphql/process_queries';
 import AdminDashboard from '../Components/AdminDashboard'
+import taskMock from '../../__mocks__/taskMock'
 
 describe('Admin processes dashboard', () => {
   const currentYear = new Date().getFullYear();
   const mocks = [
     {
       request: {
-        query: ProjectStagesQuery,
+        query: ProjectsStatsQuery,
       },
       result: {
         data: {
-          projectStages: [
-            [
-              "Concept Design Review",
-              2
-            ] ,
-            [
-              "Scheme Design Review",
-              1
-            ]
-          ]
+          projects: [taskMock]
         }
       }
     },
