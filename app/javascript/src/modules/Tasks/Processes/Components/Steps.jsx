@@ -58,7 +58,7 @@ export default function ProjectSteps({
         <Fragment key={firstLevelStep.id}>
           <div
             className={classes.levelOne}
-            // key={firstLevelStep.id}
+            key={firstLevelStep.id}
           >
             <StepItem
               key={firstLevelStep.id}
