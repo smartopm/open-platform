@@ -59,7 +59,7 @@ export default function ClientPilotViewItem({ project, refetch }) {
         <Grid container spacing={6} data-testid="project-open-tasks">
           <Grid item md={6} xs={12}>
             <Grid container>
-              <Grid item md={12} xs={12} className={classes.activitySummary}>
+              <Grid item md={12} xs={12} className={classes.activitySummary} data-testid="activity-summary-section">
                 <ProjectActivitySummary
                   comments={comments}
                   commentsLoading={commentsLoading}
@@ -69,7 +69,7 @@ export default function ClientPilotViewItem({ project, refetch }) {
                 />
               </Grid>
               <Grid item md={12} xs={12}>
-                <Typography variant="subtitle1">{t('processes.your_tasks')}</Typography>
+                <Typography data-testid="assigned-task-title-header" variant="subtitle1">{t('processes.your_tasks')}</Typography>
                 <br />
                 <div>
                   <ProjectItem taskId={taskId} clientView />
