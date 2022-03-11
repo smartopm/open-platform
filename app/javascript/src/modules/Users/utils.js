@@ -717,6 +717,12 @@ export function selectOptions(
       show: checkCommunityFeatures('LogBook') && checkModule('entry_request')
     },
     {
+      key: 'notes',
+      value: 'Notes',
+      handleMenuItemClick,
+      show: checkCommunityFeatures('Tasks') && checkModule('note')
+    },
+    {
       key: 'forms',
       value: 'Forms',
       handleMenuItemClick,
