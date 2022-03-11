@@ -2,14 +2,12 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { Fragment, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
-import { useLazyQuery } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
 import StepItem from './StepItem';
-import { objectAccessor } from '../../../../utils/helpers';
-import { SubTasksQuery } from '../../graphql/task_queries';
+import { objectAccessor, sortTaskOrder } from '../../../../utils/helpers';
 
 export default function ProjectSteps({
   data,
@@ -23,18 +21,7 @@ export default function ProjectSteps({
   const classes = useStyles();
   const { id } = useParams();
   const [stepsOpen, setStepsOpen] = useState({});
-  const [selectedSubStep, setSelectedSubStep] = useState(null);
   const { t } = useTranslation('task');
-
-  const [
-    loadSubSubSteps,
-    { data: subSubStepsData }
-  ] = useLazyQuery(SubTasksQuery, {
-    variables: { taskId: selectedSubStep?.id, limit: selectedSubStep?.subTasksCount },
-    fetchPolicy: 'cache-and-network',
-    errorPolicy: 'all'
-  });
-
 
   function toggleStep(stepItem){
     setStepsOpen({
@@ -54,11 +41,6 @@ export default function ProjectSteps({
 
   function handleOpenSubStepsClick(e, stepItem){
     e.stopPropagation();
-    setSelectedSubStep(stepItem)
-
-    if(stepItem && stepItem?.subTasksCount > 0){
-      loadSubSubSteps()
-    }
 
     toggleStep(stepItem);
   }
@@ -90,10 +72,10 @@ export default function ProjectSteps({
               clientView={clientView}
             />
           </div>
-          {subSubStepsData?.taskSubTasks?.length > 0 &&
+          {firstLevelStep?.subTasksCount > 0 &&
             objectAccessor(stepsOpen, firstLevelStep.id) && (
               <>
-                {subSubStepsData?.taskSubTasks?.map(secondLevelStep => (
+                {firstLevelStep?.subTasks?.sort(sortTaskOrder)?.map(secondLevelStep => (
                   <div className={classes.levelTwo} key={secondLevelStep.id}>
                     <StepItem
                       key={secondLevelStep.id}

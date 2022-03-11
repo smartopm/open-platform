@@ -332,7 +332,7 @@ export default function TaskDataList({
                       style={{ marginLeft: '-20px' }}
                       color='primary'
                     >
-                      <span>{task?.subTasksCount}</span>
+                      <span data-testid="task-subtasks-count">{task?.subTasksCount}</span>
                     </Grid>
                   </>
                 )}

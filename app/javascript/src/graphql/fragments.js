@@ -172,6 +172,7 @@ export const TasksFragment = {
       subTasksCount
       taskCommentsCount
       taskCommentReply
+      order
       completed
       status
       attachments

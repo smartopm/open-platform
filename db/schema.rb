@@ -552,6 +552,7 @@ ActiveRecord::Schema.define(version: 2022_03_07_062446) do
     t.uuid "current_step"
     t.string "current_step_body"
     t.integer "status", default: 0
+    t.integer "order", default: 1
     t.index ["form_user_id"], name: "index_notes_on_form_user_id"
     t.index ["parent_note_id"], name: "index_notes_on_parent_note_id"
   end

@@ -602,3 +602,11 @@ export function secureFileDownload(path) {
  export function splitCamelCase(word){
   return word.replace(/([a-z])([A-Z])/g, '$1 $2')
 }
+
+export function sortTaskOrder(taskItem1, taskItem2){
+  if(!taskItem1 || !taskItem2) return;
+
+  return (
+    Number(taskItem1.order) - Number(taskItem2.order)
+  );
+}

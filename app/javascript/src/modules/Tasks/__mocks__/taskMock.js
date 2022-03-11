@@ -11,6 +11,7 @@ export default {
   subTasksCount: 4,
   taskCommentsCount: 4,
   taskCommentReply: true,
+  order: 1,
   status: 'in_progress',
   formUserId: "0358e014-1440-46ee-988d-d5338f019ba3",
   submittedBy: {
@@ -64,6 +65,7 @@ export default {
       description: 'Consultant sub-task',
       dueDate: '2022-01-22T21:00:00Z',
       subTasksCount: 4,
+      order: 1,
       formUserId: "65b665e0-959c-4c08-aaef-3f4b70e85495",
       progress: {
         complete: 1,
