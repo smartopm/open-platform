@@ -106,11 +106,7 @@ export default function TaskSubTask({
         </DialogContent>
       </Dialog>
       <Grid container className={classes.header}>
-        <Grid item md={9} xs={11}>
-          <Typography variant="subtitle2" data-testid="sub_tasks_header">
-            {t('task:sub_task.sub_tasks')}
-          </Typography>
-        </Grid>
+        <Grid item md={9} xs={11} />  
         <Grid item md={3} xs={1} className={classes.addSubTask}>
           <AccessCheck module="note" allowedPermissions={['can_view_create_sub_task_button']}>
             <IconButton

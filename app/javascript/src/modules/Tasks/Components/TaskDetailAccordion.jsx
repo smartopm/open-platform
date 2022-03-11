@@ -20,34 +20,35 @@ export default function TaskDetailAccordion({ title, component, openDetails }) {
 
   return (
     <>
-      <Divider />
-      <Grid container className={classes.body} data-testid="body">
-        <Grid item sm={11} xs={10}>
-          <Typography
-            data-testid="title"
-            variant="subtitle2"
-            className={classes.typography}
-          >
-            {title}
-          </Typography>
-        </Grid>
+      <Grid onClick={() => setShowComponent(!showComponent)} className={classes.container}>
+        <Divider />
+        <Grid container className={classes.body} data-testid="body">
+          <Grid item sm={11} xs={10}>
+            <Typography
+              data-testid="title"
+              variant="subtitle2"
+              className={classes.typography}
+            >
+              {title}
+            </Typography>
+          </Grid>
         
-        <Grid item sm={1} xs={2} style={showComponent ? { backgroundColor: '#EEF6F9' } : undefined} className={classes.icon}>
-          <Grid container>
-            <Divider orientation="vertical" flexItem />
-            <Grid item sm={11}>
-              <IconButton
-                onClick={() => setShowComponent(!showComponent)}
-                data-testid="toggle-icon"
-              >
-                {showComponent ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-              </IconButton>
+          <Grid item sm={1} xs={2} style={showComponent ? { backgroundColor: '#EEF6F9' } : undefined} className={classes.icon}>
+            <Grid container>
+              <Divider orientation="vertical" flexItem />
+              <Grid item sm={11}>
+                <IconButton
+                  data-testid="toggle-icon"
+                >
+                  {showComponent ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+                </IconButton>
+              </Grid>
             </Grid>
           </Grid>
         </Grid>
+        <Divider />
       </Grid>
-      <Divider />
-      {showComponent && <div data-testid="component">{component}</div>}
+      {showComponent && <div data-testid="component" className={classes.component}>{component}</div>}
     </>
   );
 }
@@ -64,7 +65,10 @@ const useStyles = makeStyles(() => ({
     justifyContent: 'center'
   },
   container: {
-    padding: '10px'
+    cursor: 'pointer'
+  },
+  component: {
+    marginTop: '10px'
   }
 }));
 

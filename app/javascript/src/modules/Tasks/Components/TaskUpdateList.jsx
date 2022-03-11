@@ -23,13 +23,6 @@ export default function TaskUpdateList({ data }) {
 
   return (
     <>
-      <Grid container className={classes.header}>
-        <Grid item md={11} xs={11}>
-          <Typography variant="subtitle2" data-testid="history_title">
-            {t('history.updates')}
-          </Typography>
-        </Grid>
-      </Grid>
       <Grid container>
         <Grid item md={11} xs={11}>
           {data?.length ? (
