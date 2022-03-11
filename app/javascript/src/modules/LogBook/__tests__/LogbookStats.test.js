@@ -62,7 +62,7 @@ describe('Logbook Stats', () => {
       fireEvent.click(getAllByTestId('card')[1]);
       expect(props.handleFilter).toBeCalledWith('peopleExited');
       fireEvent.click(getAllByTestId('card')[2]);
-      expect(props.handleFilter).toBeCalledWith('peopleExited');
+      expect(props.handleFilter).toBeCalledWith('allVisits');
     }, 10);
   });
   it('should render 0 if something went wrong', async () => {
