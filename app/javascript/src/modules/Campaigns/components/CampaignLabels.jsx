@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { TextField, Chip } from '@material-ui/core';
 import { useQuery } from 'react-apollo';
@@ -6,13 +6,9 @@ import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import { LabelsQuery } from '../../../graphql/queries';
 
-export default function CampaignLabels({ handleLabelSelect, handleDelete }) {
+export default function CampaignLabels({ handleLabelSelect }) {
   const { data } = useQuery(LabelsQuery);
-  const [chipData, setChipData] = useState([]);
   const { t } = useTranslation('campaign');
-  function handleChipDelete(chipId) {
-    setChipData(chipData.filter(e => e.id !== chipId));
-  }
 
   return (
     <div>
@@ -29,18 +25,14 @@ export default function CampaignLabels({ handleLabelSelect, handleDelete }) {
             onChange={(_event, newValue) => {
               return handleLabelSelect(newValue.shortDesc || newValue);
             }}
-            renderTags={(value, getTagProps) => {
-              return chipData.map((option, index) => (
+            renderTags={(values, getTagProps) => {
+              return values.map((option, index) => (
                 <Chip
                   // eslint-disable-next-line react/no-array-index-key
                   key={index}
                   variant="outlined"
                   label={option.shortDesc || option}
                   {...getTagProps({ index })}
-                  onDelete={() => {
-                    handleDelete(option.id);
-                    handleChipDelete(option.id);
-                  }}
                 />
               ));
             }}
