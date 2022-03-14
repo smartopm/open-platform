@@ -13,19 +13,21 @@ import MenuItem from '@material-ui/core/MenuItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
+import { makeStyles } from '@material-ui/core/styles';
 
 export default function SelectButton({
   defaultButtonText,
   open,
   anchorEl,
-  anchorRef,
   handleClose,
   options,
   selectedKey,
-  handleClick
+  handleClick,
+  style
 }) {
   const [openSubMenu, setOpenSubMenu] = useState({ isOpen: false, name: '' });
   const [buttonText, setButtonText] = useState(null);
+  const classes = useStyles();
 
   function handleOpenSubMenuClick(opt) {
     setOpenSubMenu({ isOpen: !openSubMenu.isOpen, name: opt.key });
@@ -54,12 +56,11 @@ export default function SelectButton({
     <>
       <ButtonGroup
         color="primary"
-        ref={anchorRef}
         aria-label="outlined select button"
         data-testid="button"
       >
         <Button>{buttonText || defaultButtonText}</Button>
-        <Button onClick={handleClick} data-testid="arrow-icon" className="option_menu_toggler">
+        <Button onClick={(e) => handleClick(e)} data-testid="arrow-icon" className="option_menu_toggler">
           <ArrowDropDownIcon />
         </Button>
       </ButtonGroup>
@@ -67,7 +68,8 @@ export default function SelectButton({
         open={open}
         anchorEl={anchorEl}
         transition
-        style={{ zIndex: 2000 }}
+        style={style}
+        className={classes.poper}
         data-testid="list"
       >
         {({ TransitionProps, placement }) => (
@@ -133,10 +135,17 @@ export default function SelectButton({
   );
 }
 
+const useStyles = makeStyles(() => ({
+  poper: {
+    zIndex: 2000
+  }
+ }))
+
 SelectButton.defaultProps = {
   selectedKey: '',
   anchorEl: {},
-  anchorRef: {}
+  anchorRef: {},
+  style: {}
 };
 
 SelectButton.propTypes = {
@@ -163,5 +172,6 @@ SelectButton.propTypes = {
     })
   ).isRequired,
   selectedKey: PropTypes.string,
-  handleClick: PropTypes.func.isRequired
+  handleClick: PropTypes.func.isRequired,
+  style:  PropTypes.shape({})
 };

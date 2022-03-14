@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import Grid from '@mui/material/Grid';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
@@ -22,8 +22,8 @@ export default function UserDetailHeader({ data, userType, currentTab, authState
   const [isLabelOpen, setIsLabelOpen] = useState(false);
   const [open, setOpen] = useState(false);
   const classes = useStyles();
-  const anchorRef = useRef(null);
   const [selectedKey, setSelectKey] = useState('');
+  const [anchorEl, setAnchorEl] = useState(null);
   const options = selectOptions(
     setSelectKey,
     checkModule,
@@ -35,40 +35,51 @@ export default function UserDetailHeader({ data, userType, currentTab, authState
     checkRole,
     t
   );
-  const handleClose = event => {
-    if (anchorRef.current && anchorRef.current.contains(event.target)) {
-      return;
-    }
+
+  function handleClose() {
+    setAnchorEl(null);
     setOpen(false);
-  };
+  }
+
   function handleMenuItemClick(key, val) {
     setSelectKey(key);
     history.push(`/user/${data.user.id}?tab=${val}`);
     setOpen(false);
   }
+
   function checkModule(moduleName) {
     const userPermissionsModule = authState.user?.permissions.find(
       permissionObject => permissionObject.module === moduleName
     );
     return userPermissionsModule?.permissions.includes('can_see_menu_item') || false;
   }
+
   function checkOtherRoles(featureName, roles) {
     const ctx = createMenuContext(featureName, data, userType, authState);
     return handler({ userTypes: roles, ctx }).includes(userType);
   }
+
   function checkRole(roles, featureName) {
     if (['Properties', 'Users', 'Payments', 'LogBook'].includes(featureName)) {
       checkOtherRoles(featureName, roles);
     }
     return roles.includes(userType);
   }
+
   function checkCommunityFeatures(featureName) {
     return Object.keys(authState.user?.community.features || []).includes(featureName);
   }
+
   function handleMergeUserItemClick() {
     history.push(`/user/${data.user.id}?type=MergeUser`);
     setOpen(false);
   }
+
+  function handleSelectButtonClick(e) {
+    setOpen(!open);
+    setAnchorEl(e.currentTarget);
+  }
+
   return (
     <>
       <Grid container>
@@ -83,13 +94,18 @@ export default function UserDetailHeader({ data, userType, currentTab, authState
         >
           <Breadcrumbs aria-label="user-breadcrumb">
             {userType === 'admin' && (
-              <Link color="primary" href="/users" className={classes.link} data-testid='breadcrumbuser'>
-                <Typography variant="caption">{t("common:misc.users")}</Typography>
+              <Link
+                color="primary"
+                href="/users"
+                className={classes.link}
+                data-testid="breadcrumbuser"
+              >
+                <Typography variant="caption">{t('common:misc.users')}</Typography>
               </Link>
             )}
             {currentTab !== 'Contacts' && (
               <Link color="primary" href={`/user/${data.user.id}`} className={classes.link}>
-                <Typography variant="caption">{t("common:misc.user_detail")}</Typography>
+                <Typography variant="caption">{t('common:misc.user_detail')}</Typography>
               </Link>
             )}
             <Typography color="textSecondary" variant="caption">
@@ -132,12 +148,12 @@ export default function UserDetailHeader({ data, userType, currentTab, authState
             <SelectButton
               options={options}
               open={open}
-              anchorEl={anchorRef.current}
-              anchorRef={anchorRef}
+              anchorEl={anchorEl}
               handleClose={handleClose}
-              handleClick={() => setOpen(!open)}
+              handleClick={handleSelectButtonClick}
               selectedKey={selectedKey}
-              defaultButtonText={t("common:menu.contact")}
+              defaultButtonText={t('common:menu.contact')}
+              style={{marginLeft: '-6rem'}}
             />
           </Grid>
           <Grid item lg={2} md={2} sm={2} xs={2}>
@@ -163,12 +179,12 @@ export default function UserDetailHeader({ data, userType, currentTab, authState
             <SelectButton
               options={options}
               open={open}
-              anchorEl={anchorRef.current}
-              anchorRef={anchorRef}
+              anchorEl={anchorEl}
               handleClose={handleClose}
-              handleClick={() => setOpen(!open)}
+              handleClick={handleSelectButtonClick}
               selectedKey={selectedKey}
-              defaultButtonText={t("common:menu.contact")}
+              defaultButtonText={t('common:menu.contact')}
+              style={{marginLeft: '-6rem'}}
             />
           </Grid>
         </Hidden>
