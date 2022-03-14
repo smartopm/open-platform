@@ -60,7 +60,7 @@ export default function GateFlowReport() {
       isSmall={isSmall}
     >
       {!called && (
-        <Button variant="outlined" color="primary" onClick={loadData}>
+        <Button variant="outlined" color="primary" onClick={loadData} disabled={!reportingDates.startDate || !reportingDates.endDate}>
           {loading ? <Spinner /> : isSmall ? <Download color="primary" /> : t('misc.export_data')}
         </Button>
       )}
