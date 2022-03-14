@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 Cypress.Commands.add("resetDatabase", () => {
   cy.request('DELETE', '/cypress/cleanup').as('cleanup')
 })
@@ -38,7 +37,7 @@ Cypress.Commands.add("addFormProperty", (fieldName, fieldType, isRequired, optio
   cy.get('.form-property-field-name-txt-input').type(fieldName);
   cy.get('.form-property-field-type-select-input').click();
   cy.get(`[data-value=${fieldType}]`).click();
-  
+
   if(['radio', 'checkbox', 'dropdown'].includes(fieldType) && options.length){
     options.forEach((option, index) => {
       cy.get(`.form-property-field-type-option-txt-input-${index}`).type(option);
@@ -53,7 +52,7 @@ Cypress.Commands.add("addFormProperty", (fieldName, fieldType, isRequired, optio
   if(isRequired) {
     cy.get('.form-property-required-field-switch-btn').click();
   }
-  
+
   cy.get('[data-testid=form_property_action_btn]').click();
   cy.wait(2000);
 })
