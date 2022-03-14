@@ -1,17 +1,9 @@
-import { Button, Grid, Typography } from '@mui/material';
-import React, { useRef } from 'react';
+import { Grid, Typography } from '@mui/material';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
-import { CSVLink } from 'react-csv';
-import { useTheme } from '@material-ui/core';
 import DatePickerDialog from '../../../components/DatePickerDialog';
 
-const csvHeaders = [
-  { label: 'Type', key: 'subject' },
-  { label: 'Guard Name', key: 'actingUser.name' },
-  { label: 'Date', key: 'createdAt' },
-  { label: 'Guest', key: 'user.name' }
-];
 
 export default function LogsReportView({ startDate, endDate, handleChange, children }) {
   const { t } = useTranslation(['logbook', 'common']);
