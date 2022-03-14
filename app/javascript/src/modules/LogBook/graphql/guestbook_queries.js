@@ -72,49 +72,26 @@ export const LogbookStatsQuery = gql`
 `
 
 
-// TODO: Reduce the weight of this query
 export const logbookEventLogsQuery = gql`
-  query eventLogsQuery(
-    $startDate: String!
-    $endDate: String!
-  ) {
-    logbookEventLogs(
-      startDate: $startDate
-      endDate: $endDate
-    ) {
+  query eventLogsQuery($startDate: String!, $endDate: String!) {
+    logbookEventLogs(startDate: $startDate, endDate: $endDate) {
       id
       createdAt
-      refId
-      refType
       subject
-      sentence
       data
-      imageUrls
       actingUser {
         name
         id
       }
       entryRequest {
-        reason
         id
-        grantedState
-        grantedAt
         name
-        startsAt
-        endsAt
-        visitationDate
-        visitEndDate
-        guestId
-        grantor {
-          name
-          id
-        }
+        reason
       }
       user {
         id
         name
-        userType
       }
     }
   }
-`
+`;

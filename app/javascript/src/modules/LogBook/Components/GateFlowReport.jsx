@@ -8,7 +8,9 @@ import { Spinner } from '../../../shared/Loading';
 import { logbookEventLogsQuery } from '../graphql/guestbook_queries';
 import LogsReportView from './LogsReportView';
 import { dateToString } from '../../../components/DateContainer';
-import { objectAccessor } from '../../../utils/helpers';
+import { formatCsvData } from '../utils';
+import MessageAlert from '../../../components/MessageAlert';
+import { formatError } from '../../../utils/helpers';
 
 const csvHeaders = [
   { label: 'Date', key: 'logDate' },
@@ -22,12 +24,16 @@ const csvHeaders = [
 export default function GateFlowReport() {
   const [reportingDates, setReportingDates] = useState({ startDate: null, endDate: null });
   const theme = useTheme();
-  const { t } = useTranslation('common');
+  const { t } = useTranslation(['common', 'logbook']);
   const isSmall = useMediaQuery(theme.breakpoints.down('sm'));
+  const [message, setMessage] = useState({ isError: false, detail: '' });
 
   const [loadData, { loading, data, called }] = useLazyQuery(logbookEventLogsQuery, {
     variables: { ...reportingDates },
-    fetchPolicy: 'cache-and-network'
+    fetchPolicy: 'cache-and-network',
+    errorPolicy: 'all',
+    onCompleted: () =>  setMessage({ ...message, detail: t('logbook:guest_book.export_data_successfully'), isError: false }),
+    onError: error => setMessage({ ...message, detail: formatError(error.message), isError: true })
   });
 
   function handleChangeReportingDates(event) {
@@ -41,42 +47,46 @@ export default function GateFlowReport() {
     observation_log: 'Observation'
   };
 
-  function formatCsvData(csvData) {
-    return csvData.map(val => ({
-      ...val,
-      logDate: dateToString(val.createdAt, 'MM-DD-YYYY HH:mm'),
-      guest: val.entryRequest?.name || val.data.ref_name || val.data.visitor_name || val.data.name,
-      type: objectAccessor(subjects, val.subject),
-      extraNote: val.data.note || '-',
-      reason: val.entryRequest?.reason
-    }));
-  }
-
   return (
-    <LogsReportView
-      startDate={reportingDates.startDate}
-      endDate={reportingDates.endDate}
-      handleChange={handleChangeReportingDates}
-      isSmall={isSmall}
-    >
-      {!called && (
-        <Button variant="outlined" color="primary" onClick={loadData} disabled={!reportingDates.startDate || !reportingDates.endDate}>
-          {loading ? <Spinner /> : isSmall ? <Download color="primary" /> : t('misc.export_data')}
-        </Button>
+    <>
+      <MessageAlert
+        type={message.isError ? 'error' : 'success'}
+        message={message.detail}
+        open={!!message.detail}
+        handleClose={() => setMessage({ ...message, detail: '' })}
+      />
+      <LogsReportView
+        startDate={reportingDates.startDate}
+        endDate={reportingDates.endDate}
+        handleChange={handleChangeReportingDates}
+        isSmall={isSmall}
+      >
+        {!called && (
+          <Button
+            variant="outlined"
+            color="primary" 
+            onClick={loadData}
+            data-testid="export_data"
+            disabled={!reportingDates.startDate || !reportingDates.endDate}
+          >
+            {loading ? <Spinner /> : isSmall ? <Download color="primary" /> : t('misc.export_data')}
+          </Button>
       )}
 
-      {data?.logbookEventLogs.length > 0 && (
-        <CSVLink
-          data={formatCsvData(data?.logbookEventLogs || [])}
-          style={{ color: theme.palette.primary.main, textDecoration: 'none' }}
-          headers={csvHeaders}
-          filename={`logbook_events-data-${dateToString(new Date(), 'MM-DD-YYYY-HH:mm')}.csv`}
-        >
-          <Button variant="outlined" color="primary">
-            {isSmall ? <Download color="primary" /> : t('misc.download')}
-          </Button>
-        </CSVLink>
+        {data?.logbookEventLogs.length > 0 && (
+          <CSVLink
+            data={formatCsvData(data?.logbookEventLogs || [], subjects)}
+            style={{ color: theme.palette.primary.main, textDecoration: 'none' }}
+            headers={csvHeaders}
+            filename={`logbook_events-data-${dateToString(new Date(), 'MM-DD-YYYY-HH:mm')}.csv`}
+          >
+            <Button variant="outlined" color="primary">
+              {isSmall ? <Download color="primary" /> : t('misc.download')}
+            </Button>
+          </CSVLink>
       )}
-    </LogsReportView>
+      </LogsReportView>
+    </>
+
   );
 }

@@ -159,7 +159,10 @@
     "no_hosts": "There are no invitations for this user.",
     "start_date": "Start Date",
     "end_date": "End Date",
-    "gate_flow_report": "Gate Flow Report"
+    "from": "From",
+    "to": "To",
+    "gate_flow_report": "Gate Flow Report",
+    "export_data_successfully": "Data successfully exported, click the download button to save"
   },
   "date_picker": {
     "ok_label": "Ok",

@@ -21,7 +21,7 @@ export default function LogsReportView({ startDate, endDate, handleChange, isSma
           <DatePickerDialog
             selectedDate={startDate}
             handleDateChange={date => handleChange({ target: { name: 'startDate', value: date } })}
-            label={!isSmall ? t('guest_book.start_date') : 'From'}
+            label={!isSmall ? t('guest_book.start_date') : t('guest_book.from')}
             inputProps={{ 'data-testid': 'start_date' }}
             inputVariant="outlined"
             size="small"
@@ -31,7 +31,7 @@ export default function LogsReportView({ startDate, endDate, handleChange, isSma
           <DatePickerDialog
             selectedDate={endDate}
             handleDateChange={date => handleChange({ target: { name: 'endDate', value: date } })}
-            label={!isSmall ? t('guest_book.end_date') : 'To'}
+            label={!isSmall ? t('guest_book.end_date') : t('guest_book.to')}
             inputProps={{ 'data-testid': 'end_date' }}
             inputVariant="outlined"
             size="small"
