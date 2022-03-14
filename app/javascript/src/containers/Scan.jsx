@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { FormControlLabel, Switch } from '@material-ui/core'
 import { Footer } from '../components/Footer'
 import { Context } from './Provider/AuthStateProvider.js'
+import { extractHostname } from '../utils/helpers'
 
 /* istanbul ignore next */
 export default function QRScan() {
@@ -65,6 +66,10 @@ export default function QRScan() {
 
   const handleScan = data => {
     if (data) {
+      if (window.location.hostname !== extractHostname(data)) {
+        setError(t('common:errors.invalid_qr_data'))
+        return
+      }
       setScanned(true)
       window.location = data
     }
