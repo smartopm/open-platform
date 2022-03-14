@@ -3,6 +3,43 @@
 require 'rails_helper'
 
 RSpec.describe Community, type: :model do
+  describe 'schema' do
+    it { is_expected.to have_db_column(:name).of_type(:string) }
+    it { is_expected.to have_db_column(:google_domain).of_type(:string) }
+    it { is_expected.to have_db_column(:created_at).of_type(:datetime) }
+    it { is_expected.to have_db_column(:updated_at).of_type(:datetime) }
+    it { is_expected.to have_db_column(:slug).of_type(:string) }
+    it { is_expected.to have_db_column(:logo_url).of_type(:string) }
+    it { is_expected.to have_db_column(:slack_webhook_url).of_type(:string) }
+    it { is_expected.to have_db_column(:timezone).of_type(:string) }
+    it { is_expected.to have_db_column(:default_users).of_type(:string) }
+    it { is_expected.to have_db_column(:templates).of_type(:json) }
+    it { is_expected.to have_db_column(:hostname).of_type(:string) }
+    it { is_expected.to have_db_column(:support_number).of_type(:json) }
+    it { is_expected.to have_db_column(:support_email).of_type(:json) }
+    it { is_expected.to have_db_column(:support_whatsapp).of_type(:json) }
+    it { is_expected.to have_db_column(:currency).of_type(:string) }
+    it { is_expected.to have_db_column(:locale).of_type(:string) }
+    it { is_expected.to have_db_column(:tagline).of_type(:string) }
+    it { is_expected.to have_db_column(:language).of_type(:string) }
+    it { is_expected.to have_db_column(:wp_link).of_type(:string) }
+    it { is_expected.to have_db_column(:features).of_type(:json) }
+    it { is_expected.to have_db_column(:theme_colors).of_type(:json) }
+    it { is_expected.to have_db_column(:security_manager).of_type(:string) }
+    it { is_expected.to have_db_column(:social_links).of_type(:json) }
+    it { is_expected.to have_db_column(:banking_details).of_type(:json) }
+    it { is_expected.to have_db_column(:community_required_fields).of_type(:json) }
+    it { is_expected.to have_db_column(:menu_items).of_type(:json) }
+    it { is_expected.to have_db_column(:sub_administrator_id).of_type(:uuid) }
+    it { is_expected.to have_db_column(:sms_phone_numbers).of_type(:string) }
+    it { is_expected.to have_db_column(:emergency_call_number).of_type(:string) }
+    it { is_expected.to have_db_column(:ga_id).of_type(:string) }
+    it do
+      is_expected.to have_db_column(:domains).of_type(:string)
+                                             .with_options(default: [], array: true)
+    end
+  end
+
   describe 'associations' do
     it { is_expected.to have_many(:users).class_name('Users::User').dependent(:destroy) }
     # Refer todo in model.
