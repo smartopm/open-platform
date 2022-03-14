@@ -11,6 +11,7 @@
     "empty_text": "El mensaje debe contener algo de texto",
     "flashlight_not_supported": "Este navegador no es compatible con la linterna ",
     "invalid_color_code": "El código de color del tema no es válido",
+    "invalid_qr_data": "Datos de Código QR inválidos",
     "invalid_time": "La hora de la invitación no es válida",
     "no_changes": "No se realizaron cambios",
     "no_guests_to_invite": "No ha seleccionado invitados",
