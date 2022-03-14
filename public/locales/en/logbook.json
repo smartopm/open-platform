@@ -156,7 +156,9 @@
     "date_of_visit": "Date of Visit: {{date}}",
     "multiple": "Multiple",
     "invite_history": "Invite History",
-    "no_hosts": "There are no invitations for this user."
+    "no_hosts": "There are no invitations for this user.",
+    "start_date": "Start Date",
+    "end_date": "End Date"
   },
   "date_picker": {
     "ok_label": "Ok",
