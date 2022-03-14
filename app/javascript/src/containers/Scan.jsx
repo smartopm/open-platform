@@ -89,6 +89,7 @@ export default function QRScan() {
         <h1 className="text-center">{t('misc.decoding')}</h1>
       ) : (
           <>
+            {error && <p className="text-center text-danger">{error}</p>}
             <video
               style={{
                 display: 'none'
@@ -101,7 +102,6 @@ export default function QRScan() {
               onScan={handleScan}
               style={{ width: '100%' }}
             />
-            {error && <p className="text-center text-danger">{error}</p>}
 
             <div
               className="row justify-content-center align-items-center "
