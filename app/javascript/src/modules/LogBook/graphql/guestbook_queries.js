@@ -2,6 +2,7 @@
 // this is only for guest queries
 
 import gql from 'graphql-tag';
+import CurrentGuestFragment from './guest_fragment';
 
 export const GuestEntriesQuery = gql`
   query schedledGuestEntries($offset: Int, $limit: Int, $query: String) {
@@ -40,37 +41,12 @@ export const GuestEntriesQuery = gql`
 `;
 
 export const CurrentGuestEntriesQuery = gql`
-  query CurrentGuests($offset: Int, $limit: Int, $query: String) {
-    currentGuests(offset: $offset, limit: $limit, query: $query) {
-      id
-      name
-      user {
-        id
-        name
-      }
-      guest {
-        id
-        name
-      }
-      grantor {
-        id
-        name
-      }
-      closestEntryTime {
-        occursOn
-        visitEndDate
-        visitationDate
-        endsAt
-        startsAt
-      }
-      exitedAt
-      grantedAt
-      grantedState
-      status
-      guestId
-      thumbnailUrl
+  query CurrentGuests($offset: Int, $limit: Int, $query: String, $type: String) {
+    currentGuests(offset: $offset, limit: $limit, query: $query, type: $type) {
+      ...CurrentGuestsField
     }
   }
+  ${CurrentGuestFragment.guests}
 `;
 
 export const GuestEntryQuery = gql`
@@ -83,3 +59,14 @@ export const GuestEntryQuery = gql`
     }
   }
 `;
+
+
+export const LogbookStatsQuery = gql`
+  query stats {
+    communityPeopleStatistics {
+      peoplePresent
+      peopleEntered
+      peopleExited
+    }
+  }
+`

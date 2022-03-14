@@ -622,36 +622,42 @@ export function selectOptions(
   data,
   handleMenuItemClick,
   handleMergeUserItemClick,
-  checkRole
+  checkRole,
+  t
 ) {
   return [
     {
       key: 'user_settings',
       value: 'User Settings',
+      name: t("common:menu.user_settings"),
       handleMenuItemClick: key => setSelectKey(key),
       show: checkCommunityFeatures('Users') && checkModule('user'),
       subMenu: [
         {
           key: 'edit_user',
           value: 'Edit User',
+          name: t("common:right_menu.edit_user"),
           handleMenuItemClick: () => history.push(`/user/${data.user.id}/edit`),
           show: checkCommunityFeatures('Users') && checkModule('user')
         },
         {
           key: 'print_id',
           value: 'Print ID',
+          name: t("common:menu.print_id"),
           handleMenuItemClick: () => history.push(`/print/${data.user.id}`),
           show: checkCommunityFeatures('Users') && checkModule('user')
         },
         {
           key: 'merge_user',
           value: 'Merge User',
+          name: t("common:menu.merge_user"),
           handleMenuItemClick: () => handleMergeUserItemClick(),
           show: checkCommunityFeatures('Users') && checkModule('user')
         },
         {
           key: 'user_logs',
           value: 'User Logs',
+          name: t("common:menu.user_logs"),
           handleMenuItemClick: () => history.push(`/user/${data.user.id}/logs`),
           show: checkCommunityFeatures('LogBook') && checkModule('entry_request')
         }
@@ -660,30 +666,35 @@ export function selectOptions(
     {
       key: 'communication',
       value: 'Communications',
+      name: t("common:misc.communication"),
       handleMenuItemClick: key => setSelectKey(key),
       show: true,
       subMenu: [
         {
           key: 'communications',
           value: 'Communication',
+          name: t("common:right_menu.communications"),
           handleMenuItemClick,
           show: checkCommunityFeatures('Messages') && checkModule('communication')
         },
         {
           key: 'send_sms',
           value: 'Send SMS',
+          name: t("common:menu.send_sms"),
           handleMenuItemClick: () => history.push(`/message/${data.user.id}`),
           show: checkCommunityFeatures('Messages') && checkRole(['admin'], 'Messages')
         },
         {
           key: 'send_otp',
           value: 'Send OTP',
+          name: t("common:menu.send_otp"),
           handleMenuItemClick: () => history.push(`/user/${data.user.id}/otp`),
           show: checkCommunityFeatures('Messages') && checkModule('user')
         },
         {
           key: 'message_support',
           value: 'Message Support',
+          name: t("common:menu.message_support"),
           handleMenuItemClick: () => history.push(`/message/${data.user.id}`),
           show: checkCommunityFeatures('Messages')
         }
@@ -692,6 +703,7 @@ export function selectOptions(
     {
       key: 'payments',
       value: 'Plans',
+      name: t("common:misc.payments"),
       handleMenuItemClick,
       show:
         checkCommunityFeatures('Payments') && checkRole(['admin', 'client', 'resident'], 'Payments')
@@ -699,6 +711,7 @@ export function selectOptions(
     {
       key: 'plots',
       value: 'Plots',
+      name: t("common:misc.plots"),
       handleMenuItemClick,
       show:
         checkCommunityFeatures('Properties') &&
@@ -707,24 +720,35 @@ export function selectOptions(
     {
       key: 'lead_management',
       value: 'LeadManagement',
+      name: t("common:menu.lead_management"),
       handleMenuItemClick,
       show: checkCommunityFeatures('Users') && checkModule('user')
     },
     {
       key: 'invitations',
       value: 'Invitations',
+      name: t("common:menu.invitations"),
       handleMenuItemClick,
       show: checkCommunityFeatures('LogBook') && checkModule('entry_request')
     },
     {
+      key: 'notes',
+      value: 'Notes',
+      name: t("common:misc.notes"),
+      handleMenuItemClick,
+      show: checkCommunityFeatures('Tasks') && checkModule('note')
+    },
+    {
       key: 'forms',
       value: 'Forms',
+      name: t("common:misc.forms"),
       handleMenuItemClick,
       show: checkCommunityFeatures('Forms') && checkModule('forms')
     },
     {
       key: 'customer_journey',
       value: 'CustomerJourney',
+      name: t("common:menu.customer_journey"),
       handleMenuItemClick,
       show: checkCommunityFeatures('Customer Journey') && checkRole(['admin'], 'Customer Journey')
     }
@@ -764,4 +788,17 @@ export async function readFileAsText(file) {
     };
     reader.readAsText(file);
   });
+}
+
+export function userTabList(t) {
+  return {
+    Contacts: t("common:menu.contact"),
+    Communication: t("common:right_menu.communications"),
+    Plans: t("common:misc.payments"),
+    Plots: t("common:misc.plots"),
+    LeadManagement: t("common:menu.lead_management"),
+    Invitations: t("common:menu.invitations"),
+    Forms: t("common:misc.forms"),
+    CustomerJourney: t("common:menu.customer_journey")
+  }
 }

@@ -19,6 +19,7 @@ import CenteredContent from '../../../shared/CenteredContent';
 import { formatError } from '../../../utils/helpers';
 import useLogbookStyles from '../styles';
 import Paginate from '../../../components/Paginate';
+import LogbookStats from './LogbookStats';
 
 export default function VisitView({
   tabValue,
@@ -29,10 +30,11 @@ export default function VisitView({
   handleAddObservation,
   observationDetails
 }) {
+  const [statsType, setStatType] = useState('allVisits');
   const [loadGuests, { data, loading: guestsLoading, refetch, error }] = useLazyQuery(
     CurrentGuestEntriesQuery,
     {
-      variables: { offset: query.length ? 0 : offset, limit, query: query.trim() },
+      variables: { offset: query.length ? 0 : offset, limit, query: query.trim(), type: statsType },
       fetchPolicy: 'cache-and-network'
     }
   );
@@ -40,6 +42,7 @@ export default function VisitView({
   const [currentId, setCurrentId] = useState(null);
   const history = useHistory();
   const matches = useMediaQuery('(max-width:800px)');
+
   const classes = useLogbookStyles();
   const theme = useTheme();
 
@@ -78,12 +81,23 @@ export default function VisitView({
     }
   }, [tabValue, loadGuests, query, offset]);
 
+
+  function handleFilterData(type) {
+    setStatType(type)
+  }
+
   return (
     <div style={{ marginTop: '20px' }}>
+      <LogbookStats
+        tabValue={tabValue}
+        shouldRefetch={observationDetails.refetch}
+        isSmall={matches}
+        handleFilter={handleFilterData}
+      />
       {error && <CenteredContent>{formatError(error.message)}</CenteredContent>}
       {guestsLoading ? (
         <Spinner />
-      ) : data?.currentGuests.length > 0 ? (
+      ) : data?.currentGuests?.length > 0 ? (
         data?.currentGuests.map(visit => (
           <Card
             key={visit.id}
@@ -125,7 +139,11 @@ export default function VisitView({
                 </Typography>
                 <Text
                   color="secondary"
-                  content={visit.guestId && visit.grantedState === 1 ? visit.user.name : visit.grantor?.name}
+                  content={
+                    visit.guestId && visit.grantedState === 1
+                      ? visit.user.name
+                      : visit.grantor?.name
+                  }
                   data-testid="user_name"
                   onClick={event => handleViewUser(event, visit.user)}
                 />
@@ -234,7 +252,7 @@ export default function VisitView({
           offSet={offset}
           limit={limit}
           active={offset >= 1}
-          handlePageChange={(action) => paginate(action, history, tabValue, {offset, limit})}
+          handlePageChange={action => paginate(action, history, tabValue, { offset, limit })}
           count={data?.currentGuests?.length}
         />
       </CenteredContent>

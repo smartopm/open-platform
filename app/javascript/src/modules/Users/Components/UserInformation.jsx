@@ -6,6 +6,7 @@ import PhoneIcon from '@material-ui/icons/Phone';
 import { Dialog, DialogTitle, DialogContent } from '@material-ui/core';
 import { css, StyleSheet } from 'aphrodite';
 import PropTypes from 'prop-types';
+import { Container } from '@mui/material';
 import UserPlotInfo from './UserPlotInfo';
 import UserMerge from './UserMerge';
 import CenteredContent from '../../../components/CenteredContent';
@@ -21,6 +22,7 @@ import InviteHistoryList from '../../LogBook/GuestInvitation/Components/InviteHi
 import LeadManagementDetails from '../LeadManagement/Components/LeadManagementDetails';
 import UserDetailHeader from './UserDetailHeader'
 import FixedHeader from '../../../shared/FixedHeader'
+import UserNotes from './UserNotes';
 
 export default function UserInformation({
   data,
@@ -158,6 +160,14 @@ export default function UserInformation({
         <FeatureCheck features={authState.user.community.features} name="LogBook">
           <TabPanel value={tabValue} index="Invitations">
             <InviteHistoryList userId={userId} tab={tabValue} />
+          </TabPanel>
+        </FeatureCheck>
+
+        <FeatureCheck features={authState.user.community.features} name="Tasks">
+          <TabPanel value={tabValue} index="Notes">
+            <Container maxWidth="md">
+              <UserNotes userId={userId} tabValue={tabValue} />
+            </Container>
           </TabPanel>
         </FeatureCheck>
 

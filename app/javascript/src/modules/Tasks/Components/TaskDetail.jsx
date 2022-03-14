@@ -3,12 +3,9 @@ import React, { useState, useEffect } from 'react';
 import { Grid, Snackbar } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { useMutation, useLazyQuery } from 'react-apollo';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import AccountTreeIcon from '@material-ui/icons/AccountTree';
-import QuestionAnswerIcon from '@material-ui/icons/QuestionAnswer';
-import AttachFileIcon from '@material-ui/icons/AttachFile';
-import EventNoteIcon from '@material-ui/icons/EventNote';
 import { UpdateNote } from '../../../graphql/mutations';
 import { TaskReminderMutation } from '../graphql/task_reminder_mutation';
 import TaskUpdateList from './TaskUpdateList';
@@ -59,6 +56,7 @@ export default function TaskDetail({
   const classes = useStyles();
   const path = useParamsQuery();
   const tab = path.get('detailTab');
+  const matches = useMediaQuery('(max-width:600px)');
 
   const [anchorEl, setAnchorEl] = useState(null);
   const anchorElOpen = Boolean(anchorEl);
@@ -225,8 +223,7 @@ export default function TaskDetail({
           anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
           message={t('task.update_successful')}
         />
-
-        <Grid>
+        <Grid style={{paddingBottom: '20px'}}>
           <div className={classes.section} data-testid="task-info-section">
             <TaskInfoTop
               currentUser={currentUser}
@@ -252,16 +249,9 @@ export default function TaskDetail({
           </div>
           <div className={classes.section} data-testid="task-subtasks-section" id="anchor-section">
             <TaskDetailAccordion
-              icon={(
-                <AccountTreeIcon
-                  fontSize="large"
-                  color="primary"
-                  data-testid="sub-task-accordion-icon"
-                />
-              )}
               title="Sub Tasks"
               styles={{ background: '#FAFAFA' }}
-              openDetails={tab === 'subtasks'}
+              openDetails={!matches ? true : tab === 'subtasks'}
               component={(
                 <TaskSubTask
                   taskId={taskId}
@@ -276,7 +266,6 @@ export default function TaskDetail({
           </div>
           <div className={classes.section} data-testid="task-comments-section">
             <TaskDetailAccordion
-              icon={<QuestionAnswerIcon fontSize="large" color="primary" />}
               title="Comments"
               styles={{ background: '#FAFAFA', padding: 0 }}
               component={(
@@ -287,24 +276,23 @@ export default function TaskDetail({
                   taskAssignees={data.assignees}
                 />
               )}
-              openDetails={tab === 'comments'}
+              openDetails={!matches ? true : tab === 'comments'}
             />
           </div>
           <div className={classes.section} data-testid="task-documents-section">
             <TaskDetailAccordion
-              icon={<AttachFileIcon fontSize="large" color="primary" />}
               title="Documents"
               styles={{ background: '#FAFAFA' }}
               component={<TaskDocuments taskId={taskId} />}
-              openDetails={tab === 'documents'}
+              openDetails={!matches ? true : tab === 'documents'}
             />
           </div>
           <div className={classes.section} data-testid="task-updates-section">
             <TaskDetailAccordion
-              icon={<EventNoteIcon fontSize="large" color="primary" />}
               title="Updates"
               styles={{ background: '#FAFAFA' }}
               component={<TaskUpdateList data={historyData} />}
+              openDetails={!matches}
             />
           </div>
         </Grid>

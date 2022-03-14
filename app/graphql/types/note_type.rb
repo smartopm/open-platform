@@ -32,6 +32,7 @@ module Types
     field :status, String, null: true
     field :submitted_by, Types::UserType, null: true
     field :task_comment_reply, Boolean, null: true
+    field :order, Integer, null: true
 
     # move this in a shareable place
     def host_url(type)

@@ -10,7 +10,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { useLocation } from 'react-router'
 import TaskDataList from './TaskDataList';
 import FileUploader from './FileUploader';
-import { objectAccessor } from '../../../utils/helpers';
+import { objectAccessor, sortTaskOrder } from '../../../utils/helpers';
 import MenuList from '../../../shared/MenuList';
 import { SubTasksQuery } from '../graphql/task_queries';
 import { LinearSpinner } from '../../../shared/Loading';
@@ -32,7 +32,6 @@ export default function TodoItem({
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedTask, setSelectedTask] = useState(null);
-  const [selectedSubSubTask, setSelectedSubSubTask] = useState(null);
   const [tasksOpen, setTasksOpen] = useState({});
   const [isUpdating, setIsUpdating] = useState(false)
   const anchorElOpen = Boolean(anchorEl);
@@ -48,15 +47,6 @@ export default function TodoItem({
     { data, loading: isLoadingSubTasks }
   ] = useLazyQuery(SubTasksQuery, {
     variables: { taskId: task?.id, limit: task?.subTasksCount },
-    fetchPolicy: 'cache-and-network',
-    errorPolicy: 'all'
-  });
-
-  const [
-    loadSubSubTasks,
-    { data: subSubTasksData, loading: isLoadingSubSubTasks }
-  ] = useLazyQuery(SubTasksQuery, {
-    variables: { taskId: selectedSubSubTask?.id, limit: selectedSubSubTask?.subTasksCount },
     fetchPolicy: 'cache-and-network',
     errorPolicy: 'all'
   });
@@ -157,17 +147,6 @@ export default function TodoItem({
     toggleTask(task)
   }
 
-  function handleSubTaskClick(e, taskItem){
-    e.stopPropagation();
-    setSelectedSubSubTask(taskItem);
-    
-    if(taskItem && taskItem?.subTasksCount > 0){
-      loadSubSubTasks()
-    }
-
-    toggleTask(taskItem)
-  }
-
   function handleTodoItemClick(taskItem, tab) {
     handleTodoClick(taskItem, 'processes', tab);
   }
@@ -217,19 +196,18 @@ export default function TodoItem({
               menuData={menuData}
               styles={{backgroundColor: '#F5F5F4'}}
               openSubTask={objectAccessor(tasksOpen, firstLevelSubTask.id)}
-              handleOpenSubTasksClick={(e) => handleSubTaskClick(e, firstLevelSubTask)}
+              handleOpenSubTasksClick={() => toggleTask(firstLevelSubTask)}
               clickable
               handleClick={() => handleTodoItemClick(firstLevelSubTask)}
               handleTaskCompletion={handleTaskCompletion}
               clientView={clientView}
               taskCommentHasReply={false}
             />
-            {(isLoadingSubSubTasks && objectAccessor(tasksOpen, firstLevelSubTask?.id)) && <LinearSpinner />}
           </div>
-          {subSubTasksData?.taskSubTasks?.length > 0 &&
+          {firstLevelSubTask?.subTasksCount > 0 &&
             objectAccessor(tasksOpen, firstLevelSubTask?.id) && (
               <>
-                {subSubTasksData?.taskSubTasks?.map(secondLevelSubTask => (
+                {firstLevelSubTask?.subTasks?.sort(sortTaskOrder)?.map(secondLevelSubTask => (
                   <div className={classes.levelTwo} key={secondLevelSubTask.id}>
                     <TaskDataList
                       key={secondLevelSubTask.id}

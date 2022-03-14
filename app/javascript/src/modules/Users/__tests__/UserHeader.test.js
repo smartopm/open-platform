@@ -68,8 +68,8 @@ describe('User Detail Component', () => {
     expect(container.queryByTestId('button')).toBeInTheDocument();
     expect(container.queryByTestId('arrow-icon')).toBeInTheDocument();
     fireEvent.click(container.queryByTestId('arrow-icon'));
-    expect(container.queryByText('All')).toBeInTheDocument();
-    fireEvent.click(container.queryByText('All'));
+    expect(container.queryByText('common:misc.all')).toBeInTheDocument();
+    fireEvent.click(container.queryByText('common:misc.all'));
     expect(container.queryByTestId('button')).toBeInTheDocument();
   });
 });

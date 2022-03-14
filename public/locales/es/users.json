@@ -7,6 +7,7 @@
     "and": "y {{date}}",
     "between": "Entre",
     "change": "estado cambiado",
+    "copy_id_message": "Listas de ID copiadas correctamente",
     "create_report": "Crear reporte",
     "download_csv": "Descargar CSV",
     "from": "de",

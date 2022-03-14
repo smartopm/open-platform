@@ -21,7 +21,7 @@ describe('Should render Visits View Component', () => {
   const mocks = {
     request: {
       query: CurrentGuestEntriesQuery,
-      variables: { offset: 0, limit: 50, query: '' }
+      variables: { offset: 0, limit: 50, query: '', type: 'allVisits' }
     },
     result: {
       data: {
@@ -31,45 +31,53 @@ describe('Should render Visits View Component', () => {
             name: 'Test another',
             user: {
               id: '162f7517',
-              name: 'Js user x'
+              name: 'Js user x',
+              __typename: 'User'
             },
             guest: {
               id: '162f7517',
-              name: 'Js user x'
+              name: 'Js user x',
+              __typename: 'User'
             },
             grantor: {
               id: '8877hiolp',
-              name: 'New Guard'
+              name: 'New Guard',
+              __typename: 'User'
             },
             closestEntryTime: {
               visitEndDate: null,
               visitationDate: '2021-08-20T10:51:00+02:00',
               endsAt: '2021-10-31 22:51',
               startsAt: '2021-10-31 02:51',
-              occursOn: []
+              occursOn: [],
+              __typename: 'EntryTime'
             },
             grantedAt: '2021-10-31 02:51',
             status: 'pending',
             exitedAt: null,
             guestId: "92839182",
             grantedState: 1,
-            thumbnailUrl: 'https://some-videourl.com'
+            thumbnailUrl: 'https://some-videourl.com',
+            __typename: 'EntryRequest'
           },
           {
             id: 'a91dbad4-293849dasda',
             name: 'User',
             user: {
               id: '23easd',
-              name: 'user x'
+              name: 'user x',
+              __typename: 'User'
             },
             guest: {
               id: '162f7517',
               name: 'Js user x',
-              imageUrl: 'https://lh3.googleusercontent.com'
+              imageUrl: 'https://lh3.googleusercontent.com',
+              __typename: 'User'
             },
             grantor: {
               id: '8877hiolp',
-              name: 'New Guard'
+              name: 'New Guard',
+              __typename: 'User'
             },
             closestEntryTime: null,
             grantedAt: '2021-10-31 02:51',
@@ -77,18 +85,21 @@ describe('Should render Visits View Component', () => {
             exitedAt: '2021-10-31 03:51',
             guestId: "162f7517",
             grantedState: 3,
-            thumbnailUrl: null
+            thumbnailUrl: null,
+            __typename: 'EntryRequest'
           },
           {
             id: '92384932edas-293849dasda',
             name: 'Some User',
             user: {
               id: 'some some',
-              name: 'user x'
+              name: 'user x',
+               __typename: 'User'
             },
             grantor: {
               id: '8877hiolp',
-              name: 'New Guard'
+              name: 'New Guard',
+               __typename: 'User'
             },
             guest: null,
             closestEntryTime: null,
@@ -97,7 +108,8 @@ describe('Should render Visits View Component', () => {
             exitedAt: null,
             guestId: null,
             grantedState: 1,
-            thumbnailUrl: null
+            thumbnailUrl: null,
+            __typename: 'EntryRequest'
           },
         ]
       }
@@ -107,7 +119,7 @@ describe('Should render Visits View Component', () => {
   const errorMock = {
     request: {
       query: CurrentGuestEntriesQuery,
-      variables: { offset: 0, limit: 50, query: '' }
+      variables: { offset: 0, limit: 50, query: '', type: 'allVisits' }
     },
     result: {
       data: {
@@ -127,7 +139,7 @@ describe('Should render Visits View Component', () => {
   it('should render proper data', async () => {
     const { getAllByTestId, getByText } = render(
       <Context.Provider value={authState}>
-        <MockedProvider mocks={[mocks]} addTypename={false}>
+        <MockedProvider mocks={[mocks]} addTypename>
           <MemoryRouter>
             <MockedThemeProvider>
               <VisitView
@@ -145,7 +157,6 @@ describe('Should render Visits View Component', () => {
     );
     // initially it should not contain any guests, this is because we lazily load this query
     expect(getByText('logbook.no_invited_guests')).toBeInTheDocument();
-
     await waitFor(() => {
       expect(getByText('Test another')).toBeInTheDocument();
       expect(getByText('Js user x')).toBeInTheDocument();
@@ -171,14 +182,16 @@ describe('Should render Visits View Component', () => {
       expect(getAllByTestId('log_exit')[0]).not.toBeDisabled();
       expect(getAllByTestId('prev-btn')[0]).toBeInTheDocument();
       expect(getAllByTestId('next-btn')[0]).toBeInTheDocument();
-
+      
       fireEvent.click(getAllByTestId('log_exit')[0]);
       expect(props.handleAddObservation).toBeCalled();
-
-      fireEvent.click(getAllByTestId('card')[0]);
+      
+      fireEvent.click(getAllByTestId('card')[3]);
       expect(mockHistory.push).toBeCalled();
-
+      expect(getAllByTestId('card')[0]).toBeInTheDocument();
+      
       fireEvent.click(getAllByTestId('user_name')[0]);
+      expect(getAllByTestId('user_name')[0].textContent).toContain('Js user x');
       expect(mockHistory.push).toBeCalled();
       expect(mockHistory.push).toBeCalledWith('/user/162f7517'); // check if it routes to the user page
     }, 10);
@@ -188,7 +201,7 @@ describe('Should render Visits View Component', () => {
     const { getByText } = render(
       <Context.Provider value={authState}>
         <MemoryRouter>
-          <MockedProvider mocks={[errorMock]} addTypename={false}>
+          <MockedProvider mocks={[errorMock]} addTypename>
             <MockedThemeProvider>
               <VisitView
                 tabValue={2}

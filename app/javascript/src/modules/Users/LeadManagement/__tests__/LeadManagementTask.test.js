@@ -100,11 +100,6 @@ describe('LeadManagementForm', () => {
       expect(screen.queryByText('Documents')).toBeInTheDocument();
       expect(screen.queryByText('Updates')).toBeInTheDocument();
 
-      // simulate user intaraction
-      const taskAccordionIcon = screen.queryByTestId('sub-task-accordion-icon');
-      expect(taskAccordionIcon).toBeInTheDocument();
-
-      fireEvent.click(taskAccordionIcon);
       const subTaskMenuIcon = screen.queryAllByTestId('menu_item')[0];
       expect(subTaskMenuIcon).toBeInTheDocument();
       fireEvent.click(subTaskMenuIcon);
