@@ -242,6 +242,7 @@ admin:
   event_log:
     permissions:
       - can_fetch_logbook_events
+      - can_download_logbook_events
 contractor:
   note:
     permissions:
@@ -429,6 +430,9 @@ security_guard:
   logout:
     permissions:
       - can_see_menu_item
+  event_log:
+    permissions:
+      - can_fetch_logbook_events
 site_worker:
   note:
     permissions:

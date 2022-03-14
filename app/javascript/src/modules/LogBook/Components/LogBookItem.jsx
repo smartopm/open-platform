@@ -34,6 +34,7 @@ import MessageAlert from '../../../components/MessageAlert';
 import CenteredContent from '../../../shared/CenteredContent';
 import { accessibleMenus, paginate } from '../utils'
 import GateFlowReport from './GateFlowReport';
+import AccessCheck from '../../Permissions/Components/AccessCheck';
 
 
 const limit = 20;
@@ -316,7 +317,9 @@ export default function LogBookItem({
             </Grid>
           </Grid>
           <TabPanel pad value={tabValue} index={0}>
-            <GateFlowReport />
+            <AccessCheck module="event_log" allowedPermissions={['can_download_logbook_events']}>
+              <GateFlowReport />
+            </AccessCheck>
             <LogEvents
               data={data}
               loading={loading}

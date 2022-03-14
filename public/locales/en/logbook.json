@@ -158,7 +158,8 @@
     "invite_history": "Invite History",
     "no_hosts": "There are no invitations for this user.",
     "start_date": "Start Date",
-    "end_date": "End Date"
+    "end_date": "End Date",
+    "gate_flow_report": "Gate Flow Report"
   },
   "date_picker": {
     "ok_label": "Ok",
