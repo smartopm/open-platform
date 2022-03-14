@@ -495,7 +495,6 @@ const useStyles = makeStyles(() => ({
   },
   button: {
     color: 'white',
-    // backgroundColor: '#DCDCDC',
     fontWeight: 300
   },
   buttonGrid: {
