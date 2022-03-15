@@ -247,6 +247,6 @@ describe('logbook utils', () => {
     expect(formatCsvData(data, subjects)).toHaveLength(3)
     expect(formatCsvData(data, subjects)[0]).toHaveProperty('guest', 'someName')
     expect(formatCsvData(data, subjects)[0]).toHaveProperty('extraNote', '-')
-    expect(formatCsvData(data, subjects)[1]).toHaveProperty('logDate', '2022-03-14 23:15')
+    expect(formatCsvData(data, subjects)[0]).toHaveProperty('logDate', '2022-03-14 21:11')
   });
 });
