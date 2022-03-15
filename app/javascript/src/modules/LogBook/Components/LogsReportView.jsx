@@ -24,6 +24,7 @@ export default function LogsReportView({ startDate, endDate, handleChange, child
             label={t('guest_book.start_date')}
             inputProps={{ 'data-testid': 'start_date' }}
             inputVariant="outlined"
+            maxDate={new Date()}
             size="small"
           />
         </Grid>
@@ -34,6 +35,7 @@ export default function LogsReportView({ startDate, endDate, handleChange, child
             label={t('guest_book.end_date')}
             inputProps={{ 'data-testid': 'end_date' }}
             inputVariant="outlined"
+            maxDate={new Date()}
             size="small"
           />
         </Grid>

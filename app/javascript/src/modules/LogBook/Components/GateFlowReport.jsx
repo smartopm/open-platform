@@ -12,8 +12,6 @@ import { formatCsvData } from '../utils';
 import MessageAlert from '../../../components/MessageAlert';
 import { formatError } from '../../../utils/helpers';
 
-
-
 export default function GateFlowReport() {
   const [reportingDates, setReportingDates] = useState({ startDate: null, endDate: null });
   const theme = useTheme();
@@ -49,7 +47,6 @@ export default function GateFlowReport() {
     observation_log: t('logbook:csv.user_entry')
   };
 
-  console.log(called)
   return (
     <>
       <MessageAlert
@@ -70,12 +67,13 @@ export default function GateFlowReport() {
             onClick={loadData}
             data-testid="export_data"
             disabled={!reportingDates.startDate || !reportingDates.endDate}
+            startIcon={loading && <Spinner />}
           >
-            {loading ? <Spinner /> : isSmall ? <Download color="primary" /> : t('misc.export_data')}
+            {isSmall ? <Download color="primary" /> : t('misc.export_data')}
           </Button>
       )}
 
-        {data?.logbookEventLogs.length > 0 && (
+        {called && data?.logbookEventLogs.length > 0 && (
           <CSVLink
             data={formatCsvData(data?.logbookEventLogs || [], subjects)}
             style={{ color: theme.palette.primary.main, textDecoration: 'none' }}
