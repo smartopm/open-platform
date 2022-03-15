@@ -610,3 +610,9 @@ export function sortTaskOrder(taskItem1, taskItem2){
     Number(taskItem1.order) - Number(taskItem2.order)
   );
 }
+
+export function extractHostname(urlString) {
+  if (!urlString) return;
+
+  return urlString.split('/')[2]
+}

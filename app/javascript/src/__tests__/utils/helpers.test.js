@@ -4,7 +4,7 @@ import { paymentFilterFields } from '../../utils/constants'
 import { sentencizeAction, titleize, pluralizeCount,
 capitalize, validateEmail, invertArray,findLinkAndReplace,
 forceLinkHttps, titleCase, truncateString, removeNewLines, checkForHtmlTags, sanitizeText,
-getJustLabels, checkValidGeoJSON, getHexColor, getDrawPluginOptions, handleQueryOnChange, checkAccessibilityForUserType
+getJustLabels, checkValidGeoJSON, getHexColor, getDrawPluginOptions, handleQueryOnChange, checkAccessibilityForUserType, extractHostname
 } from '../../utils/helpers'
 
 jest.mock('dompurify')
@@ -236,5 +236,15 @@ describe('handleQueryOnChange', () => {
     const result = handleQueryOnChange(selectedOptions, paymentFilterFields)
 
     expect(result).toEqual("user : 'John Test'");
+  });
+});
+
+describe('#extractHostname', () => {
+  it('extracts hostname from string URL', () => {
+    expect(extractHostname('https://demo-staging.doublegdp.com/user/019234-c36a-41a7-beeb-12784')).toEqual('demo-staging.doublegdp.com');
+  });
+
+  it('does not explode if no arg is passed', () => {
+    expect(extractHostname()).toBeUndefined()
   });
 });

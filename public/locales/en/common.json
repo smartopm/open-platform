@@ -442,6 +442,7 @@
     "empty_text": "The message must contain some text",
     "flashlight_not_supported": "This browser does not support native flashlight",
     "camera_not_supported": "This browser does not support camera API",
+    "invalid_qr_data": "Invalid QRCode Data",
     "video_not_supported": "This browser does not support video",
     "empty_name": "Name cannot be empty",
     "date_error": "Date must be of this format YYYY-MM-DD",
