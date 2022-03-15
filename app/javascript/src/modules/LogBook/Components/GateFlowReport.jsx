@@ -12,14 +12,7 @@ import { formatCsvData } from '../utils';
 import MessageAlert from '../../../components/MessageAlert';
 import { formatError } from '../../../utils/helpers';
 
-const csvHeaders = [
-  { label: 'Date', key: 'logDate' },
-  { label: 'Type', key: 'type' },
-  { label: 'Acting User', key: 'actingUser.name' },
-  { label: 'Guest', key: 'guest' },
-  { label: 'Extra Note', key: 'extraNote' },
-  { label: 'Reason', key: 'reason' }
-];
+
 
 export default function GateFlowReport() {
   const [reportingDates, setReportingDates] = useState({ startDate: null, endDate: null });
@@ -41,10 +34,19 @@ export default function GateFlowReport() {
     setReportingDates({ ...reportingDates, [name]: value });
   }
 
+  const csvHeaders = [
+    { label: t('logbook:csv.date'), key: 'logDate' },
+    { label: t('logbook:csv.type'), key: 'type' },
+    { label: t('logbook:csv.acting_user'), key: 'actingUser.name' },
+    { label: t('logbook:csv.guest'), key: 'guest' },
+    { label: t('logbook:csv.extra_note'), key: 'extraNote' },
+    { label: t('logbook:csv.reason'), key: 'reason' }
+  ];
+
   const subjects = {
-    user_entry: 'Scanned Entry',
-    visitor_entry: 'Granted Access',
-    observation_log: 'Observation'
+    user_entry: t('logbook:csv.user_entry'),
+    visitor_entry: t('logbook:csv.visitor_entry'),
+    observation_log: t('logbook:csv.user_entry')
   };
 
   return (

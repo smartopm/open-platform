@@ -237,5 +237,16 @@
     "no_image": "No Images Attached",
     "add": "Add",
     "no_video": "No Video Attached"
+  },
+  "csv": {
+    "date": "Date",
+    "type": "Type",
+    "acting_user": "Acting User",
+    "guest": "Guest",
+    "extra_note": "Extra Note",
+    "reason": "Reason",
+    "visitor_entry": "Granted Access",
+    "observation_log": "Observation",
+    "user_entry": "Scanned Entry"
   }
 }
