@@ -4,7 +4,6 @@ import { BrowserRouter } from 'react-router-dom/';
 import { MockedProvider } from '@apollo/react-testing';
 import '@testing-library/jest-dom/extend-expect';
 import CampaignSplitScreenContent from '../components/CampaignSplitScreenContent';
-// import { Campaign } from '../../../graphql/queries';
 import MockedThemeProvider from '../../__mocks__/mock_theme';
 
 describe('It should render the campaign split screen content', () => {
@@ -30,7 +29,6 @@ describe('It should render the campaign split screen content', () => {
     includeReplyLink: false
   };
 
-  // todo: inprove this test @tolu
   it('should render CampaignSplitScreen', () => {
     const container = render(
       <MockedProvider>
@@ -60,5 +58,105 @@ describe('It should render the campaign split screen content', () => {
 
     fireEvent.click(container.queryByTestId('email'));
     expect(container.queryByTestId('email-template')).toBeInTheDocument();
+  });
+
+  it('should render error when name not present', () => {
+    const newCampaign = {...campaign, name: ''}
+    const container = render(
+      <MockedProvider>
+        <BrowserRouter>
+          <MockedThemeProvider>
+            <CampaignSplitScreenContent
+              refetch={jest.fn()}
+              handleClose={jest.fn}
+              campaign={newCampaign}
+            />
+          </MockedThemeProvider>
+        </BrowserRouter>
+      </MockedProvider>
+    );
+
+    fireEvent.click(container.queryByTestId('save-campaign'));
+    expect(container.queryByText('message.include_name')).toBeInTheDocument();
+  });
+
+  it('should render error when batch time not present', () => {
+    const newCampaign = {...campaign, batchTime: ''}
+    const container = render(
+      <MockedProvider>
+        <BrowserRouter>
+          <MockedThemeProvider>
+            <CampaignSplitScreenContent
+              refetch={jest.fn()}
+              handleClose={jest.fn}
+              campaign={newCampaign}
+            />
+          </MockedThemeProvider>
+        </BrowserRouter>
+      </MockedProvider>
+    );
+
+    fireEvent.click(container.queryByTestId('save-campaign'));
+    expect(container.queryByText('message.include_batch_time')).toBeInTheDocument();
+  });
+
+  it('should render error when status is scheduled and message not present', () => {
+    const newCampaign = {...campaign, status: 'scheduled'}
+    const container = render(
+      <MockedProvider>
+        <BrowserRouter>
+          <MockedThemeProvider>
+            <CampaignSplitScreenContent
+              refetch={jest.fn()}
+              handleClose={jest.fn}
+              campaign={newCampaign}
+            />
+          </MockedThemeProvider>
+        </BrowserRouter>
+      </MockedProvider>
+    );
+
+    fireEvent.click(container.queryByTestId('save-campaign'));
+    expect(container.queryByText('message.include_message')).toBeInTheDocument();
+  });
+
+  it('should render error when status is scheduled and userIdList not present', () => {
+    const newCampaign = {...campaign, message: 'sample message', status: 'scheduled'}
+    const container = render(
+      <MockedProvider>
+        <BrowserRouter>
+          <MockedThemeProvider>
+            <CampaignSplitScreenContent
+              refetch={jest.fn()}
+              handleClose={jest.fn}
+              campaign={newCampaign}
+            />
+          </MockedThemeProvider>
+        </BrowserRouter>
+      </MockedProvider>
+    );
+
+    fireEvent.click(container.queryByTestId('save-campaign'));
+    expect(container.queryByText('message.include_user_list')).toBeInTheDocument();
+  });
+
+  it('should render error when campaign type is email and email template is not present', () => {
+    const newCampaign = {...campaign, campaignType: 'email'}
+    const container = render(
+      <MockedProvider>
+        <BrowserRouter>
+          <MockedThemeProvider>
+            <CampaignSplitScreenContent
+              refetch={jest.fn()}
+              handleClose={jest.fn}
+              campaign={newCampaign}
+            />
+          </MockedThemeProvider>
+        </BrowserRouter>
+      </MockedProvider>
+    );
+
+    fireEvent.click(container.queryByTestId('save-campaign'));
+    expect(container.queryByText('message.include_email_template')).toBeInTheDocument();
   });
 });

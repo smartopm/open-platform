@@ -149,6 +149,44 @@ export default function CampaignSplitScreenContent({ refetch, campaign, handleCl
     }
   }
 
+  function validateCampaignForm() {
+    if (!formData.name) {
+      setIsSuccessAlert(false);
+      setMessageAlert(t('message.include_name'));
+      setLoading(false);
+      return false
+    }
+    if (!formData.batchTime) {
+      setIsSuccessAlert(false);
+      setMessageAlert(t('message.include_batch_time'));
+      setLoading(false);
+      return false
+    }
+    if (formData.status === 'scheduled') {
+      if (!formData.message) {
+        setIsSuccessAlert(false);
+        setMessageAlert(t('message.include_message'));
+        setLoading(false);
+        return false
+      }
+      if (!formData.userIdList) {
+        setIsSuccessAlert(false);
+        setMessageAlert(t('message.include_user_list'));
+        setLoading(false);
+        return false
+      }
+    }
+    if (formData.campaignType === 'email') {
+      if (!formData.emailTemplatesId) {
+        setIsSuccessAlert(false);
+        setMessageAlert(t('message.include_email_template'));
+        setLoading(false);
+        return false
+      }
+    }
+    return true
+  }
+
   function handleTemplateValue(event) {
     setFormData({
       ...formData,
@@ -173,6 +211,10 @@ export default function CampaignSplitScreenContent({ refetch, campaign, handleCl
       labels: labels.toString(),
       includeReplyLink: formData.includeReplyLink
     };
+    if (!validateCampaignForm()) {
+      return false
+    }
+
     if (campaign) {
       return campaignUpdateOnSubmit(campaignData);
     }
@@ -183,11 +225,11 @@ export default function CampaignSplitScreenContent({ refetch, campaign, handleCl
     if (campaign) {
       setFormData(campaign);
     }
-    if (state?.from === '/users') {
+    if (state?.from === '/users' || formData.status === 'scheduled') {
       setMailListType('idlist');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [campaign]);
+  }, [campaign, formData.status]);
   return (
     <Grid
       container
@@ -232,6 +274,7 @@ export default function CampaignSplitScreenContent({ refetch, campaign, handleCl
             className={classes.button}
             variant="contained"
             data-testid="save-campaign"
+            color='primary'
             onClick={e => handleSubmit(e)}
           >
             {t('common:form_actions.save_changes')}
@@ -451,8 +494,7 @@ const useStyles = makeStyles(() => ({
     fontWeight: 400
   },
   button: {
-    color: '#A3A3A3',
-    backgroundColor: '#DCDCDC',
+    color: 'white',
     fontWeight: 300
   },
   buttonGrid: {
