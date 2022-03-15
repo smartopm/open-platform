@@ -57,7 +57,8 @@ export const userType = {
   client: 'Client',
   visitor: 'Visitor',
   custodian: 'Store Custodian',
-  site_worker: 'Site Worker'
+  site_worker: 'Site Worker',
+  lead: 'Lead'
 };
 
 export const colorPallete = [
