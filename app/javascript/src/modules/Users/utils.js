@@ -720,7 +720,7 @@ export function selectOptions(
     {
       key: 'lead_management',
       value: 'LeadManagement',
-      name: t('common:menu.lead_management'),
+      name: t("common:misc.lead_details"),
       handleMenuItemClick,
       show: checkCommunityFeatures('Users') && checkModule('user')
     },
@@ -792,13 +792,14 @@ export async function readFileAsText(file) {
 
 export function userTabList(t) {
   return {
-    Contacts: t('common:menu.contact'),
-    Communication: t('common:right_menu.communications'),
-    Plans: t('common:misc.payments'),
-    Plots: t('common:misc.plots'),
-    LeadManagement: t('common:menu.lead_management'),
-    Invitations: t('common:menu.invitations'),
-    Forms: t('common:misc.forms'),
-    CustomerJourney: t('common:menu.customer_journey')
-  };
+    Contacts: t("common:menu.contact"),
+    Communication: t("common:right_menu.communications"),
+    Plans: t("common:misc.payments"),
+    Plots: t("common:misc.plots"),
+    LeadManagement: t("common:misc.lead_details"),
+    Invitations: t("common:menu.invitations"),
+    Forms: t("common:misc.forms"),
+    CustomerJourney: t("common:menu.customer_journey"),
+    Notes: t('common:misc.notes')
+  }
 }

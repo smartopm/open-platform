@@ -266,7 +266,8 @@
     "reply": "Reply",
     "add_reply": "Add a reply",
     "resolve_comments": "Resolve Comments",
-    "user_detail": "User Detail"
+    "user_detail": "User Detail",
+    "lead_details": "Lead Details"
   },
   "menu": {
     "invoice": "Invoice",
