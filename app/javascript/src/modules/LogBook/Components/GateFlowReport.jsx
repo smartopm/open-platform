@@ -26,7 +26,7 @@ export default function GateFlowReport() {
     fetchPolicy: 'cache-and-network',
     errorPolicy: 'all',
     onCompleted: () =>  setMessage({ ...message, detail: t('logbook:guest_book.export_data_successfully'), isError: false }),
-    onError: error => setMessage({ ...message, detail: formatError(error.message), isError: true })
+    onError: error => setMessage({ ...message, detail: formatError(error.message), isError: true }),
   });
 
   function handleChangeReportingDates(event) {
@@ -49,6 +49,7 @@ export default function GateFlowReport() {
     observation_log: t('logbook:csv.user_entry')
   };
 
+  console.log(called)
   return (
     <>
       <MessageAlert
@@ -61,7 +62,6 @@ export default function GateFlowReport() {
         startDate={reportingDates.startDate}
         endDate={reportingDates.endDate}
         handleChange={handleChangeReportingDates}
-        isSmall={isSmall}
       >
         {!called && (
           <Button
@@ -83,7 +83,7 @@ export default function GateFlowReport() {
             filename={`logbook_events-data-${dateToString(new Date(), 'MM-DD-YYYY-HH:mm')}.csv`}
           >
             <Button variant="outlined" color="primary">
-              {isSmall ? <Download color="primary" /> : t('misc.download')}
+              {t('misc.download')}
             </Button>
           </CSVLink>
       )}
