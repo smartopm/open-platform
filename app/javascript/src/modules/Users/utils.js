@@ -799,6 +799,7 @@ export function userTabList(t) {
     LeadManagement: t("common:misc.lead_details"),
     Invitations: t("common:menu.invitations"),
     Forms: t("common:misc.forms"),
-    CustomerJourney: t("common:menu.customer_journey")
+    CustomerJourney: t("common:menu.customer_journey"),
+    Notes: t('common:misc.notes')
   }
 }
