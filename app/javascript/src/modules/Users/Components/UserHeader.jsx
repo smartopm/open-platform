@@ -1,5 +1,5 @@
 /* eslint-disable react/forbid-prop-types */
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import Typography from '@material-ui/core/Typography';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
@@ -45,7 +45,7 @@ export default function UserHeader({
   const { t } = useTranslation(['users', 'common']);
   const [messageAlert, setMessageAlert] = useState('');
   const [isSuccessAlert, setIsSuccessAlert] = useState(false);
-  const anchorRef = useRef(null);
+  const [anchorEl, setAnchorEl] = useState(null);
   const classes = useStyles();
 
   const selectOptions = [
@@ -66,19 +66,16 @@ export default function UserHeader({
     {
       key: 'none',
       value: 'none',
-      name:  t("common:misc.select"),
+      name:  t("common:misc.none"),
       handleMenuItemClick,
       show: true
     }
   ];
 
-  const handleClose = event => {
-    if (anchorRef.current && anchorRef.current.contains(event.target)) {
-      return;
-    }
-
+  function handleClose() {
+    setAnchorEl(null);
     setOpen(false);
-  };
+  }
 
   function handleMenuItemClick(key) {
     setCampaignOption(key);
@@ -95,6 +92,11 @@ export default function UserHeader({
     navigator.clipboard.writeText(actionObject.selectedUsers.toString());
     setMessageAlert(t('users.copy_id_message'));
     setIsSuccessAlert(true);
+  }
+
+  function handleSelectButtonClick(e) {
+    setOpen(!open);
+    setAnchorEl(e.currentTarget);
   }
 
   return (
@@ -115,13 +117,13 @@ export default function UserHeader({
             <SelectButton
               defaultButtonText={t("common:misc.select")}
               open={open}
-              anchorEl={anchorRef.current}
-              anchorRef={anchorRef}
+              anchorEl={anchorEl}
               handleClose={handleClose}
               options={selectOptions}
               selectedKey={selectedKey}
               handleMenuItemClick={handleMenuItemClick}
-              handleClick={() => setOpen(!open)}
+              handleClick={handleSelectButtonClick}
+              style={{marginLeft: '-4rem'}}
             />
           </Grid>
         </Hidden>
@@ -171,13 +173,13 @@ export default function UserHeader({
             <SelectButton
               defaultButtonText={t("common:misc.select")}
               open={open}
-              anchorEl={anchorRef.current}
-              anchorRef={anchorRef}
+              anchorEl={anchorEl}
               handleClose={handleClose}
               options={selectOptions}
               selectedKey={selectedKey}
               handleMenuItemClick={handleMenuItemClick}
-              handleClick={() => setOpen(!open)}
+              handleClick={handleSelectButtonClick}
+              style={{marginLeft: '-4rem'}}
             />
           </Grid>
           <Grid item lg={12} md={12} sm={6} xs={6}>

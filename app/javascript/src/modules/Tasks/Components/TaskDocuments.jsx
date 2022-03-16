@@ -29,6 +29,7 @@ import { Spinner } from '../../../shared/Loading';
 import { formatError, secureFileDownload } from '../../../utils/helpers';
 import { UpdateNote , DeleteNoteDocument } from '../../../graphql/mutations';
 import { ActionDialog } from '../../../components/Dialog';
+import ProgressBar from '../../../shared/ProgressBar';
 
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider'
 
@@ -128,9 +129,11 @@ export default function TaskDocuments({ taskId }) {
         handleClose={handleCloseDialog}
         handleOnSave={handleDeleteDocument}
       />
-      <Grid container alignItems="center">
-        <Grid item xs={11} md={11} />
-        <Grid item xs={1} md={1} className={classes.addIcon}>
+      <Grid container alignItems="center" spacing={2}>
+        <Grid item xs={8} md={10}>
+          <ProgressBar status={status} />
+        </Grid>
+        <Grid item xs={4} md={2} className={classes.addIcon}>
           <IconButton
             edge="end"
             aria-label="add_document"

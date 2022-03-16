@@ -49,7 +49,12 @@
     "select_campaign": "Select a campaign to edit or create a new one.",
     "add_a_campaign": "Add a Campaign Title",
     "add_a_message": "Add a message",
-    "paste_userid_list": "Paste User ID list from User's page here to build a mailing list"
+    "paste_userid_list": "Paste User ID list from User's page here to build a mailing list",
+    "include_name": "Please include a name",
+    "include_batch_time": "Please include a batch time",
+    "include_message": "Please include a message",
+    "include_user_list": "Please include userIdList",
+    "include_email_template": "Please include email template"
   },
   "misc": {
     "yes": "Yes",

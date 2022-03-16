@@ -86,7 +86,7 @@ describe('User Detail Header Component', () => {
     expect(container.queryByText('common:menu.user_logs')).not.toBeInTheDocument();
     fireEvent.click(container.queryByText('common:misc.payments'));
     fireEvent.click(container.queryByText('common:misc.plots'));
-    fireEvent.click(container.queryByText('common:menu.lead_management'));
+    fireEvent.click(container.queryByText('common:misc.lead_details'));
     fireEvent.click(container.queryByText('common:misc.forms'));
     fireEvent.click(container.queryByText('common:menu.customer_journey'));
     fireEvent.click(container.queryByText('common:misc.communication'));
