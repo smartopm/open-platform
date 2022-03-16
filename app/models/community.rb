@@ -12,7 +12,7 @@ class Community < ApplicationRecord
     'Invoices', 'Transactions', 'Forms', 'Customer Journey', 'UserStats', 'Users',
     'Properties', 'News', 'Discussions', 'Campaigns', 'Labels', 'Tasks', 'Business',
     'Forms', 'Email Templates', 'Community', 'Contact', 'Referral', 'My Thebe Portal',
-    'Action Flows', 'Time Card', 'Logout', 'Showroom', 'DynamicMenu', 'Guest List'
+    'Action Flows', 'Time Card', 'Logout', 'Showroom', 'DynamicMenu', 'Guest List', 'Processes'
   ].freeze
 
   after_initialize :add_default_community_features
@@ -48,7 +48,8 @@ class Community < ApplicationRecord
   has_many :time_sheets, class_name: 'Users::TimeSheet', dependent: :destroy
   has_many :entry_times, class_name: 'Logs::EntryTime', dependent: :destroy
 
-  VALID_CURRENCIES = %w[zambian_kwacha honduran_lempira kenyan_shilling costa_rican_colon].freeze
+  VALID_CURRENCIES = %w[zambian_kwacha honduran_lempira kenyan_shilling costa_rican_colon
+                        nigerian_naira].freeze
 
   validates :currency, inclusion: { in: VALID_CURRENCIES, allow_nil: false }
 
@@ -155,5 +156,16 @@ class Community < ApplicationRecord
       Sms.send(sms_phone_number, message)
     end
   end
+
+  # rubocop:disable Rails/FindBy
+  def drc_form_users
+    form_name = 'DRC Project Review Process'
+    drc_form = forms.where('name ILIKE ?', "#{form_name}%").first
+    return unless drc_form
+
+    drc_ids = forms.where(grouping_id: drc_form.grouping_id).pluck(:id)
+    Forms::FormUser.where(form_id: drc_ids)
+  end
+  # rubocop:enable Rails/FindBy
   # rubocop:enable Metrics/ClassLength
 end

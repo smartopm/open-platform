@@ -14,19 +14,24 @@ module Mutations
       argument :due_date, String, required: false
       argument :parent_note_id, ID, required: false
       argument :document_blob_id, String, required: false
+      argument :status, String, required: false
 
       field :note, Types::NoteType, null: true
 
       # rubocop:disable Metrics/AbcSize
       # rubocop:disable Metrics/MethodLength
       def resolve(id:, **attributes)
-        note = context[:site_community].notes.find(id)
+        note = context[:site_community].notes.find_by(id: id)
         raise_note_not_found_error(note)
 
-        update_attributes = attributes.except(:document_blob_id)
+        filtered_attributes = attributes.except(:document_blob_id)
+        task_completion_attributes = task_completion_status(note, attributes[:status])
+
+        update_attributes = filtered_attributes.merge(task_completion_attributes)
+
         old_note = note.attributes.with_indifferent_access
 
-        unless note.update!(update_attributes)
+        unless note.update(update_attributes)
           raise GraphQL::ExecutionError, note.errors.full_messages
         end
 
@@ -70,6 +75,16 @@ module Mutations
       end
 
       private
+
+      def task_completion_status(note, status)
+        if status == 'completed'
+          { completed: true }
+        elsif note.completed && status != 'completed'
+          { completed: false }
+        else
+          {}
+        end
+      end
 
       # Raises GraphQL execution error if note does not exist.
       #

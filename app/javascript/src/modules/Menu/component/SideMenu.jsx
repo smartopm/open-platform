@@ -5,14 +5,15 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import { StyleSheet, css } from 'aphrodite';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
-import { Collapse } from '@material-ui/core';
+import { Collapse , useTheme } from '@material-ui/core';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import { useTranslation } from 'react-i18next';
+import { makeStyles } from '@material-ui/core/styles';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider'; 
 import checkSubMenuAccessibility from '../utils';
+
 
 const SideMenu = ({ toggleDrawer, menuItems, userType, direction, communityFeatures }) => {
   const authState = useContext(AuthStateContext);
@@ -21,12 +22,13 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, direction, communityFeatu
   const params = useParams();
   const { t } = useTranslation('common')
   const [currentMenu, setCurrentMenu] = useState({ isOpen: false, name: '' });
-
+  const classes = useStyles()
+  const theme = useTheme()
   /**
    * @param {Event} event browser event from clicked icon
    * @param {object} item a menu object containing details about the menu and its sub menu
-   * @description check if the click menu has submenu, if yes open them if not route to the given link
-   * Here event is necessary because the toggleDrawe needs to know type of a click
+   * @description check if the click menu has submenu, if yes open them if not route to the given
+   * link Here event is necessary because the toggleDrawe needs to know type of a click
    * @returns void
    * @todo automatically open new menu when another is clicked while current is still open
    */
@@ -40,8 +42,10 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, direction, communityFeatu
       toggleDrawer(event);
     }
     // check the direct and route differently
-    // check current pathname and direction of the drawer if it has id then use that as new path for all left side based routes
-    // this should also work for paths like /message/:id, but it has to be registered in the routes first(for now)
+    // check current pathname and direction of the drawer if it has id then use
+    //  that as new path for all left side based routes
+    // this should also work for paths like /message/:id, 
+    // but it has to be registered in the routes first(for now)
     if (direction === 'right') {
       history.push(item.routeProps.path.replace(':id', params.id));
       return;
@@ -57,8 +61,9 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, direction, communityFeatu
 
    /**
    * @param {string} type
-   * @description dynamically create necessary context to determine menu accessibility based on Feature type.
-   * Context will be injected into the accessibility logic check handler on demand
+   * @description dynamically create necessary context to determine menu accessibility.
+   * based on Feature type, Context will be injected into the accessibility 
+   * logic check handler on demand
    * @returns {object} object || undefined
    */
   function createMenuContext(type){
@@ -83,84 +88,106 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, direction, communityFeatu
     return undefined;
   }
 
-  function checkMenuAccessibility(menuItem){
+  function checkMenuAccessibility(menuItem) {
     // no need for the check when all modules switch to using permissions
-    if(menuItem.moduleName !== undefined){
-      const userPermissionsModule = authState.user?.permissions.find(permissionObject => permissionObject.module === menuItem.moduleName)
-      if(userPermissionsModule === undefined ){
-        return false
-      } 
-      return userPermissionsModule?.permissions.includes('can_see_menu_item')
+    if (menuItem.moduleName !== undefined) {
+      const userPermissionsModule = authState.user?.permissions.find(
+        permissionObject => permissionObject.module === menuItem.moduleName
+      );
+      if (userPermissionsModule === undefined) {
+        return false;
+      }
+      return userPermissionsModule?.permissions.includes('can_see_menu_item');
     }
 
-    if(typeof menuItem.accessibleBy === 'function'){
-      const ctx = createMenuContext(menuItem.featureName)
-      return menuItem.accessibleBy(ctx).includes(userType)
+    if (typeof menuItem.accessibleBy === 'function') {
+      const ctx = createMenuContext(menuItem.featureName);
+      return menuItem.accessibleBy(ctx).includes(userType);
     }
 
-    return menuItem.accessibleBy.includes(userType)
+    return menuItem.accessibleBy.includes(userType);
   }
 
   return (
     <div
       role="button"
       tabIndex={0}
-      className={`${css(styles.sidenav)}`}
+      className={classes.sidenav}
       onKeyDown={toggleDrawer}
       data-testid="sidenav-container"
     >
       <List>
         {menuItems.map(menuItem =>
-         communityFeatures.includes(menuItem.featureName) && checkMenuAccessibility(menuItem) ? (
-           <Fragment key={typeof menuItem.name === 'function' && menuItem.name(t)}>
-             <ListItem
-               button
-               onClick={event => routeTo(event, menuItem)}
-               selected={pathname === menuItem.routeProps.path}
-               className={menuItem.styleProps?.className}
-             >
-               {menuItem.styleProps?.icon && (
-               <ListItemIcon className={`${css(styles.listItemIcon)}`}>
-                 {menuItem.styleProps.icon}
-               </ListItemIcon>
+          communityFeatures.includes(menuItem.featureName) && checkMenuAccessibility(menuItem) ? (
+            <Fragment key={typeof menuItem.name === 'function' && menuItem.name(t)}>
+              <ListItem
+                button
+                onClick={event => routeTo(event, menuItem)}
+                selected={pathname === menuItem.routeProps.path}
+                className={`${menuItem.styleProps?.className} ${classes.menuItem}`}
+                style={{
+                  backgroundColor:
+                    pathname === menuItem.routeProps.path && theme.palette.primary.main,
+                }}
+              >
+                {menuItem.styleProps?.icon && (
+                  <ListItemIcon 
+                    className={`${classes.listItemIcon} ${classes.child}`}
+                    style={{ color: pathname === menuItem.routeProps.path && '#FFFFFF' }}
+                  >
+                    {menuItem.styleProps.icon}
+                  </ListItemIcon>
                 )}
-               <ListItemText primary={menuItem.name(t)} />
-               {currentMenu.name === menuItem.name(t) && currentMenu.isOpen ? (
-                 <ExpandLess />
+                <ListItemText
+                  primary={menuItem.name(t)}
+                  className={`${classes.menuItemText} ${classes.child}`}
+                  style={{ color: pathname === menuItem.routeProps.path && '#FFFFFF'}}
+                />
+                {currentMenu.name === menuItem.name(t) && currentMenu.isOpen ? (
+                  <ExpandLess color="primary" className={classes.child} />
                 ) : // Avoid showing toggle icon on menus with no submenus
                 menuItem.subMenu ? (
-                  <ExpandMore />
+                  <ExpandMore color="primary" className={classes.child} />
                 ) : null}
-             </ListItem>
+              </ListItem>
 
-             <Collapse
-               in={currentMenu.name === menuItem.name(t) && currentMenu.isOpen}
-               timeout="auto"
-               unmountOnExit
-             >
-               <List component="div" disablePadding>
-                 { menuItem.subMenu &&
+              <Collapse
+                in={currentMenu.name === menuItem.name(t) && currentMenu.isOpen}
+                timeout="auto"
+                unmountOnExit
+              >
+                <List component="div" disablePadding>
+                  {menuItem.subMenu &&
                     menuItem.subMenu.map(item =>
-                      communityFeatures.includes(item.featureName) && checkSubMenuAccessibility({authState, subMenuItem: item}) ? (
+                      communityFeatures.includes(item.featureName) &&
+                      checkSubMenuAccessibility({ authState, subMenuItem: item }) ? (
                         <ListItem
                           button
                           key={item.name(t)}
                           onClick={event => routeTo(event, item)}
                           selected={pathname === item.routeProps.path}
-                          className={item.styleProps?.className}
+                          className={`${item.styleProps?.className} ${classes.menuItem}`}
+                          style={{
+                            backgroundColor:
+                              pathname === item.routeProps.path && theme.palette.primary.main,
+                          }}
                         >
                           <ListItemText
                             primary={item.name(t)}
-                            style={{ marginLeft: `${menuItem.styleProps?.icon ? '55px' : '17px'}` }}
+                            style={{ 
+                              marginLeft: `${menuItem.styleProps?.icon ? '55px' : '17px'}`,
+                              color: pathname === item.routeProps.path && '#FFFFFF'
+                              }}
+                            className={`${classes.menuItemText} ${classes.child}`}
                           />
                         </ListItem>
                       ) : (
                         <span key={item.name(t)} />
                       )
                     )}
-               </List>
-             </Collapse>
-           </Fragment>
+                </List>
+              </Collapse>
+            </Fragment>
           ) : (
             <span key={menuItem.name(t)} />
           )
@@ -199,21 +226,31 @@ SideMenu.propTypes = {
 
 };
 
-const styles = StyleSheet.create({
-  linkStyles: {
-    color: '#000',
-    textDecoration: 'none'
-  },
+const useStyles = makeStyles(theme => ({
   sidenav: {
     width: 260,
     marginBottom: '50px'
   },
-  userInfo: {
-    marginTop: 55
-  },
   listItemIcon: {
-    marginRight: '-15px'
-  }
-});
+    marginRight: '-15px',
+    color: theme.palette.primary.main
+  },
+  menuItemText: {
+    color: theme.palette.primary.main,
+    '&:hover': {
+      color: '#FFFFFF'
+    }
+  },
+  menuItem: {
+    '&:hover': {
+      backgroundColor: theme.palette.primary.main,
+      '& $child': {
+        color: '#FFFFFF'
+      }
+    }
+  },
+  // This allow the menuItem to populate the hover state to the children
+  child: {},
+}));
 
 export default SideMenu;

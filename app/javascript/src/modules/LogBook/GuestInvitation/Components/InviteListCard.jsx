@@ -21,14 +21,15 @@ export default function InviteListCard({ invitation }) {
   const classes = useStyles()
   const timeZone = authState.user.community.timezone;
   const isValid = checkRequests(invitation.entryTime, t, timeZone).valid;
+  const isCancelled = invitation.status === 'cancelled'
 
   return (
     <Card key={invitation.id}>
-      <Grid container spacing={1}>
-        <Grid item sm={1} xs={2} className={classes.hostAvatar}>
+      <Grid container spacing={1} alignItems="center">
+        <Grid item sm={1} xs={2}>
           <Avatar imageUrl={invitation.host.imageUrl} user={invitation.host} alt="host_avatar" />
         </Grid>
-        <Grid item md={3} sm={5} xs={10} className={classes.hostDetailsAlign}>
+        <Grid item md={3} sm={5} xs={10}>
           <Typography variant="subtitle1" color="primary" data-testid="host_name">
             <Link style={{ textDecoration: 'none' }} to={`/user/${invitation.host.id}`}>{invitation.host.name}</Link>
           </Typography>
@@ -58,6 +59,12 @@ export default function InviteListCard({ invitation }) {
             color={isValid ? 'success' : 'error'}
             size="small"
           />
+          <Chip
+            label={isCancelled ? t('guest_book.cancelled') : t('guest_book.active')}
+            color={isCancelled ? 'error': 'success'}
+            size="small"
+            className={classes.cancelledLabel}
+          />
         </Grid>
       </Grid>
     </Card>
@@ -80,18 +87,16 @@ InviteListCard.propTypes = {
     }),
     id: PropTypes.string,
     createdAt: PropTypes.string,
+    status: PropTypes.string,
   }).isRequired,
 };
 
 
 const useStyles = makeStyles(() => ({
-  hostDetailsAlign: {
-    marginTop: 10
-  },
-  hostAvatar: {
-    marginTop: 4
-  },
   hostProfileLink: {
     textDecoration: 'none'
-  }
+  },
+  cancelledLabel: {
+    marginLeft: 5
+  },
 }))

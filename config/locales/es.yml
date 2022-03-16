@@ -217,7 +217,9 @@ es:
         user: Usuario
       users/user:
         community: Comunidad
+        email: Correo Electrónico
         name: Nombre
+        phone_number: Número de Teléfono
         state: Ciudad
         sub_status: Sub Estado
         user_type: Tipo de usuario
@@ -305,6 +307,12 @@ es:
       message: Mensaje de campaña predeterminado
       name: Mensaje de campaña predeterminado
   email_template:
+    comment_reply:
+      action: IR A COMENTARIO
+      body: "<b>%{note_body}</b><br Vence: %{note_due_at}<br/><br/>%{user_name} requirió
+        una respuesta de comentario en %{comment_created_at}"
+      subject: "%{user_name} Requirió una Respuesta"
+      title: NOTIFICACIÓN
     welcome_email:
       action: INICIAR
       body: Ciudad Morazán está construyendo un mejor lugar para vivir.<br/><br/>Esta

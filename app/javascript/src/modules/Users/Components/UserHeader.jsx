@@ -1,5 +1,5 @@
 /* eslint-disable react/forbid-prop-types */
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import Typography from '@material-ui/core/Typography';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
@@ -12,13 +12,13 @@ import IconButton from '@material-ui/core/IconButton';
 import MoreVertOutlined from '@material-ui/icons/MoreVertOutlined';
 import { CSVLink } from 'react-csv';
 import SelectButton from '../../../shared/buttons/SelectButton';
-import { objectAccessor } from '../../../utils/helpers';
 import SearchInput from '../../../shared/search/SearchInput';
 import QueryBuilder from '../../../components/QueryBuilder';
 import { dateToString } from '../../../utils/dateutil';
 import { Spinner } from '../../../shared/Loading';
 import MenuList from '../../../shared/MenuList';
 import UsersActionMenu from './UsersActionMenu';
+import MessageAlert from '../../../components/MessageAlert';
 
 const csvHeaders = [
   { label: 'Name', key: 'name' },
@@ -43,24 +43,39 @@ export default function UserHeader({
   const [selectedKey, setSelectedKey] = useState('');
   const matches = useMediaQuery('(max-width:959px)');
   const { t } = useTranslation(['users', 'common']);
-  const anchorRef = useRef(null);
+  const [messageAlert, setMessageAlert] = useState('');
+  const [isSuccessAlert, setIsSuccessAlert] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
   const classes = useStyles();
-  const options = {
-    all: 'All',
-    all_on_the_page: 'All on this page',
-    none: 'none'
-  };
 
-  const selectedOptions =
-    selectedKey === 'none' || selectedKey === '' ? 'select' : objectAccessor(options, selectedKey);
-
-  const handleClose = event => {
-    if (anchorRef.current && anchorRef.current.contains(event.target)) {
-      return;
+  const selectOptions = [
+    {
+      key: 'all',
+      value: 'All',
+      name:  t("common:misc.all"),
+      handleMenuItemClick,
+      show: true
+    },
+    {
+      key: 'all_on_the_page',
+      value: 'All on this page',
+      name:  t("common:misc.all_this_page"),
+      handleMenuItemClick,
+      show: true
+    },
+    {
+      key: 'none',
+      value: 'none',
+      name:  t("common:misc.none"),
+      handleMenuItemClick,
+      show: true
     }
+  ];
 
+  function handleClose() {
+    setAnchorEl(null);
     setOpen(false);
-  };
+  }
 
   function handleMenuItemClick(key) {
     setCampaignOption(key);
@@ -73,8 +88,26 @@ export default function UserHeader({
     filterObject.toggleFilterMenu();
   }
 
+  function copyToClipBoard() {
+    navigator.clipboard.writeText(actionObject.selectedUsers.toString());
+    setMessageAlert(t('users.copy_id_message'));
+    setIsSuccessAlert(true);
+  }
+
+  function handleSelectButtonClick(e) {
+    setOpen(!open);
+    setAnchorEl(e.currentTarget);
+  }
+
   return (
     <Grid container>
+      <MessageAlert
+        type={isSuccessAlert ? 'success' : 'error'}
+        message={messageAlert}
+        open={!!messageAlert}
+        handleClose={() => setMessageAlert('')}
+        style={{ marginTop: '40px' }}
+      />
       <Grid item lg={12} md={12} sm={12} xs={12} data-testid="title">
         <Typography variant="h4">Users</Typography>
       </Grid>
@@ -82,15 +115,15 @@ export default function UserHeader({
         <Hidden smDown>
           <Grid item lg={3} md={3} sm={6} xs={6}>
             <SelectButton
-              buttonText={selectedOptions}
+              defaultButtonText={t("common:misc.select")}
               open={open}
-              anchorEl={anchorRef.current}
-              anchorRef={anchorRef}
+              anchorEl={anchorEl}
               handleClose={handleClose}
-              options={options}
+              options={selectOptions}
               selectedKey={selectedKey}
               handleMenuItemClick={handleMenuItemClick}
-              handleClick={() => setOpen(!open)}
+              handleClick={handleSelectButtonClick}
+              style={{marginLeft: '-4rem'}}
             />
           </Grid>
         </Hidden>
@@ -138,15 +171,15 @@ export default function UserHeader({
         <Hidden mdUp>
           <Grid item lg={3} md={3} sm={6} xs={6}>
             <SelectButton
-              buttonText={selectedOptions}
+              defaultButtonText={t("common:misc.select")}
               open={open}
-              anchorEl={anchorRef.current}
-              anchorRef={anchorRef}
+              anchorEl={anchorEl}
               handleClose={handleClose}
-              options={options}
+              options={selectOptions}
               selectedKey={selectedKey}
               handleMenuItemClick={handleMenuItemClick}
-              handleClick={() => setOpen(!open)}
+              handleClick={handleSelectButtonClick}
+              style={{marginLeft: '-4rem'}}
             />
           </Grid>
           <Grid item lg={12} md={12} sm={6} xs={6}>
@@ -160,6 +193,7 @@ export default function UserHeader({
               labelsRefetch={actionObject.labelsRefetch}
               viewFilteredUserCount={actionObject.viewFilteredUserCount}
               userList={actionObject.userList}
+              copyToClipBoard={copyToClipBoard}
             />
           </Grid>
         </Hidden>
@@ -230,6 +264,7 @@ export default function UserHeader({
             usersCountData={actionObject.usersCountData}
             labelsData={actionObject.labelsData}
             labelsRefetch={actionObject.labelsRefetch}
+            copyToClipBoard={copyToClipBoard}
           />
         </Grid>
       </Hidden>

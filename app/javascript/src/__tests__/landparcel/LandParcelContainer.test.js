@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-no-undef */
 import React from 'react';
-import { render, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min';
 import { MockedProvider } from '@apollo/react-testing';
 import 'leaflet'
@@ -22,6 +22,9 @@ describe('Land Property Page', () => {
         </BrowserRouter>
       </MockedProvider>
     );
+    await waitFor(() => {
+    expect(screen.queryByText(('buttons.new_property'))).toBeInTheDocument()
+    }, 5)
   });
 
   it('should test for landparcel queries', async () => {

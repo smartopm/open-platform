@@ -23,7 +23,7 @@ export default function SecondaryCcntactInformation({
         label={t('lead_management.name')}
         style={{ width: '100%' }}
         onChange={handleSecondaryContact1Change}
-        value={leadFormData?.user?.contactDetails?.secondaryContact1?.name}
+        value={leadFormData?.user?.contactDetails?.secondaryContact1?.name || ""}
         variant="outlined"
         fullWidth
         rows={2}
@@ -39,7 +39,7 @@ export default function SecondaryCcntactInformation({
         label={t('lead_management.title')}
         style={{ width: '100%' }}
         onChange={handleSecondaryContact1Change}
-        value={leadFormData?.user?.contactDetails?.secondaryContact1?.title}
+        value={leadFormData?.user?.contactDetails?.secondaryContact1?.title || ""}
         variant="outlined"
         fullWidth
         rows={2}
@@ -54,7 +54,7 @@ export default function SecondaryCcntactInformation({
         label={t('lead_management.primary_email')}
         style={{ width: '100%' }}
         onChange={handleSecondaryContact1Change}
-        value={leadFormData?.user?.contactDetails?.secondaryContact1?.primaryEmail}
+        value={leadFormData?.user?.contactDetails?.secondaryContact1?.primaryEmail || ""}
         variant="outlined"
         fullWidth
         rows={2}
@@ -70,7 +70,7 @@ export default function SecondaryCcntactInformation({
         label={t('lead_management.secondary_email')}
         style={{ width: '100%' }}
         onChange={handleSecondaryContact1Change}
-        value={leadFormData?.user?.contactDetails?.secondaryContact1?.secondaryEmail}
+        value={leadFormData?.user?.contactDetails?.secondaryContact1?.secondaryEmail || ""}
         variant="outlined"
         fullWidth
         rows={2}
@@ -86,7 +86,7 @@ export default function SecondaryCcntactInformation({
         label={t('lead_management.primary_phone')}
         style={{ width: '100%' }}
         onChange={handleSecondaryContact1Change}
-        value={leadFormData?.user?.contactDetails?.secondaryContact1?.primaryPhoneNumber}
+        value={leadFormData?.user?.contactDetails?.secondaryContact1?.primaryPhoneNumber || ""}
         variant="outlined"
         fullWidth
         rows={2}
@@ -102,7 +102,7 @@ export default function SecondaryCcntactInformation({
         label={t('lead_management.secondary_phone')}
         style={{ width: '100%' }}
         onChange={handleSecondaryContact1Change}
-        value={leadFormData?.user?.contactDetails?.secondaryContact1?.secondaryPhoneNumber}
+        value={leadFormData?.user?.contactDetails?.secondaryContact1?.secondaryPhoneNumber || ""}
         variant="outlined"
         fullWidth
         rows={2}
@@ -118,7 +118,7 @@ export default function SecondaryCcntactInformation({
         label={t('lead_management.linkedin_url')}
         style={{ width: '100%' }}
         onChange={handleSecondaryContact1Change}
-        value={leadFormData?.user?.contactDetails.secondaryContact1?.linkedinUrl}
+        value={leadFormData?.user?.contactDetails.secondaryContact1?.linkedinUrl || ""}
         variant="outlined"
         fullWidth
         rows={2}
@@ -146,7 +146,7 @@ export default function SecondaryCcntactInformation({
         label={t('lead_management.name')}
         style={{ width: '100%' }}
         onChange={handleSecondaryContact2Change}
-        value={leadFormData?.user?.contactDetails?.secondaryContact2?.name}
+        value={leadFormData?.user?.contactDetails?.secondaryContact2?.name || ""}
         variant="outlined"
         fullWidth
         rows={2}
@@ -162,7 +162,7 @@ export default function SecondaryCcntactInformation({
         label={t('lead_management.title')}
         style={{ width: '100%' }}
         onChange={handleSecondaryContact2Change}
-        value={leadFormData?.user?.contactDetails?.secondaryContact2?.title}
+        value={leadFormData?.user?.contactDetails?.secondaryContact2?.title || ""}
         variant="outlined"
         fullWidth
         rows={2}
@@ -178,7 +178,7 @@ export default function SecondaryCcntactInformation({
         label={t('lead_management.primary_email')}
         style={{ width: '100%' }}
         onChange={handleSecondaryContact2Change}
-        value={leadFormData?.user?.contactDetails?.secondaryContact2?.primaryEmail}
+        value={leadFormData?.user?.contactDetails?.secondaryContact2?.primaryEmail || ""}
         variant="outlined"
         fullWidth
         rows={2}
@@ -194,7 +194,7 @@ export default function SecondaryCcntactInformation({
         label={t('lead_management.secondary_email')}
         style={{ width: '100%' }}
         onChange={handleSecondaryContact2Change}
-        value={leadFormData?.user?.contactDetails?.secondaryContact2?.secondaryEmail}
+        value={leadFormData?.user?.contactDetails?.secondaryContact2?.secondaryEmail || ""}
         variant="outlined"
         fullWidth
         rows={2}
@@ -210,7 +210,7 @@ export default function SecondaryCcntactInformation({
         label={t('lead_management.primary_phone')}
         style={{ width: '100%' }}
         onChange={handleSecondaryContact2Change}
-        value={leadFormData?.user?.contactDetails?.secondaryContact2?.primaryPhoneNumber}
+        value={leadFormData?.user?.contactDetails?.secondaryContact2?.primaryPhoneNumber || ""}
         variant="outlined"
         fullWidth
         rows={2}
@@ -226,7 +226,7 @@ export default function SecondaryCcntactInformation({
         label={t('lead_management.secondary_phone')}
         style={{ width: '100%' }}
         onChange={handleSecondaryContact2Change}
-        value={leadFormData?.user?.contactDetails?.secondaryContact2?.secondaryPhoneNumber}
+        value={leadFormData?.user?.contactDetails?.secondaryContact2?.secondaryPhoneNumber || ""}
         variant="outlined"
         fullWidth
         rows={2}
@@ -242,7 +242,7 @@ export default function SecondaryCcntactInformation({
         label={t('lead_management.linkedin_url')}
         style={{ width: '100%' }}
         onChange={handleSecondaryContact2Change}
-        value={leadFormData?.user?.contactDetails.secondaryContact2?.linkedinUrl}
+        value={leadFormData?.user?.contactDetails.secondaryContact2?.linkedinUrl || ""}
         variant="outlined"
         fullWidth
         rows={2}

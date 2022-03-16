@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/react-testing';
@@ -43,7 +43,12 @@ describe('Project Processes Split View', () => {
                   handleStepCompletion: jest.fn
               }}
               >
-                <ProjectProcessesSplitView refetch={jest.fn} />
+                <ProjectProcessesSplitView 
+                  refetch={jest.fn()} 
+                  setSplitScreenOpen={jest.fn()}
+                  handleProjectStepClick={jest.fn()}
+                  splitScreenOpen
+                />
               </TaskContext.Provider>
             </MockedThemeProvider>
           </BrowserRouter>
@@ -51,5 +56,8 @@ describe('Project Processes Split View', () => {
       </Context.Provider>
     );
 
+    await waitFor(() => {
+      expect(screen.queryByTestId('loader')).toBeInTheDocument()
+    }, 20)
   });
 });

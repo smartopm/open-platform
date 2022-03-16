@@ -18,15 +18,12 @@ export const ProcessesQuery = gql`
 `
 
 export const ProjectsQuery = gql`
-  query GetProjects($offset: Int, $limit: Int, $step: String) {
-    projects(offset: $offset, limit: $limit, step: $step) {
-      ...NoteFields
-      subTasks {
-        ...NoteFields
-      }
+  query GetProjects($offset: Int, $limit: Int, $step: String, $completedPerQuarter: String, $submittedPerQuarter: String) {
+    projects(offset: $offset, limit: $limit, step: $step, completedPerQuarter: $completedPerQuarter, submittedPerQuarter: $submittedPerQuarter) {
+      ...TaskFields
     }
   }
-  ${NotesFragment.note}
+  ${TasksFragment.task}
 `
 
 export const ClientAssignedProjectsQuery = gql`
@@ -49,8 +46,8 @@ export const ProjectStagesQuery = gql`
 
 // TODO: olivier sync with Bonny to verify if this matches accordingly
 export const TaskQuarterySummaryQuery = gql`
-    query completedByQuarter {
-      completedByQuarter
+    query tasksByQuarter {
+      tasksByQuarter
     }
 `;
 
@@ -65,6 +62,28 @@ export const ProjectCommentsQuery = gql`
         name
         imageUrl
       }
+      repliedAt
+      replyFrom {
+        id
+        name
+      }
+      replyRequired
+      groupingId
+      noteId
     }
   }
 `
+
+export const ProjectsStatsQuery = gql`
+  query GetProjectsStatsQuery($offset: Int, $limit: Int, $step: String, $completedPerQuarter: String, $submittedPerQuarter: String) {
+    projects(offset: $offset, limit: $limit, step: $step, completedPerQuarter: $completedPerQuarter, submittedPerQuarter: $submittedPerQuarter) {
+      ...TaskFields
+      subTasks {
+        id
+        body
+        completed
+      }
+    }
+  }
+  ${TasksFragment.task}
+`;

@@ -5,6 +5,8 @@ import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom/';
 import StatementPlan from '../Components/UserTransactions/PlanStatement';
 import currency from '../../../__mocks__/currency';
+import userMock from '../../../__mocks__/authstate';
+import { Context } from '../../../containers/Provider/AuthStateProvider';
 
 describe('It should test the plan statement modal component', () => {
   const data = {
@@ -60,16 +62,18 @@ describe('It should test the plan statement modal component', () => {
 
   it('should render plan statement modal', () => {
     const container = render(
-      <BrowserRouter>
-        <MockedProvider>
-          <StatementPlan
-            open={open}
-            data={data}
-            handleClose={handleModalClose}
-            currencyData={currency}
-          />
-        </MockedProvider>
-      </BrowserRouter>
+      <Context.Provider value={userMock}>
+        <BrowserRouter>
+          <MockedProvider>
+            <StatementPlan
+              open={open}
+              data={data}
+              handleClose={handleModalClose}
+              currencyData={currency}
+            />
+          </MockedProvider>
+        </BrowserRouter>
+      </Context.Provider>
     );
 
     expect(container.queryByText('misc.statement_for_plan')).toBeInTheDocument();

@@ -25,9 +25,14 @@ module Types
     field :documents, [GraphQL::Types::JSON], null: true
     field :attachments, [GraphQL::Types::JSON], null: true
     field :form_user_id, ID, null: true
+    field :form_user, Types::FormUsersType, null: true
     field :progress, GraphQL::Types::JSON, null: true
     field :sub_tasks_count, Integer, null: true
     field :task_comments_count, Integer, null: true
+    field :status, String, null: true
+    field :submitted_by, Types::UserType, null: true
+    field :task_comment_reply, Boolean, null: true
+    field :order, Integer, null: true
 
     # move this in a shareable place
     def host_url(type)
@@ -75,6 +80,21 @@ module Types
       end
       progress_percentage = complete.fdiv(total).round(2) * 100
       { 'complete': complete, 'total': total, 'progress_percentage': progress_percentage }
+    end
+
+    def submitted_by
+      object.form_user&.user
+    end
+
+    def task_comment_reply
+      sub_task_ids = object.sub_tasks.pluck(:id)
+      sub_sub_task_ids = Notes::Note.where(parent_note_id: sub_task_ids).pluck(:id)
+      task_ids = [object.id].concat(sub_task_ids).concat(sub_sub_task_ids)
+
+      Comments::NoteComment.exists?(reply_from: context[:current_user],
+                                    note_id: task_ids,
+                                    reply_required: true,
+                                    replied_at: nil)
     end
   end
 end

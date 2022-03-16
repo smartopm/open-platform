@@ -88,6 +88,7 @@ describe('Top part of the task form component', () => {
       </MockedProvider>
     );
 
+    expect(container.queryByTestId('select-task-status')).toBeInTheDocument();
     expect(container.queryByText('task.due_date_text')).toBeInTheDocument();
     expect(props.isAssignee).toHaveBeenCalled();
     expect(container.getByTestId('active-reminder')).toBeInTheDocument();
@@ -100,11 +101,72 @@ describe('Top part of the task form component', () => {
     expect(container.queryByText('task.chip_close')).not.toBeInTheDocument();
     expect(container.queryByText('task.task_assignee_label')).not.toBeInTheDocument();
 
-    const taskInfoMenu = container.getAllByTestId('task-info-menu')[0]
+    const taskInfoMenu = container.getAllByTestId('task-info-menu')[1]
     expect(taskInfoMenu).toBeInTheDocument();
 
-    fireEvent.click(taskInfoMenu);
-    expect(props.handleTaskComplete).toHaveBeenCalled();
+    const taskStatusSelectField = container.getByTestId('select-task-status')
+    expect(taskStatusSelectField).toBeInTheDocument();
+    
+    // TODO: Victor & Bonny Remove test after we decide to remove check mark icon
+    // const taskInfoMenu = container.getAllByTestId('task-info-menu')[0]
+    // fireEvent.click(taskInfoMenu);
+    // expect(props.handleTaskComplete).toHaveBeenCalled();
+  });
+
+  it('renders form user data for authorized user', () => {
+    render(
+      <MockedProvider>
+        <Context.Provider value={authState}>
+          <BrowserRouter>
+            <TaskInfoTop {...props} />
+          </BrowserRouter>
+        </Context.Provider>
+      </MockedProvider>
+    );
+
+    expect(screen.getByTestId('submitted_form_title')).toBeInTheDocument();
+    expect(screen.getByTestId('submitted_form_button')).toBeInTheDocument();
+  });
+
+  it('does not render open form user button for unauthorized user', () => {
+    const propsWithUnauthorizedCurrentUser = {
+      ...props,
+      currentUser: {
+        ...authState.user,
+        permissions: [
+          { module: 'forms',
+            permissions: []
+          },
+        ]
+      }
+    }
+
+    render(
+      <MockedProvider>
+        <Context.Provider value={authState}>
+          <BrowserRouter>
+            <TaskInfoTop {...propsWithUnauthorizedCurrentUser} />
+          </BrowserRouter>
+        </Context.Provider>
+      </MockedProvider>
+    );
+
+    expect(screen.queryByText('processes.submitted_form')).toBeNull();
+    expect(screen.queryByText('processes.open_submitted_form')).toBeNull();
+  });
+
+  it('renders current task status in select box', () => {
+    render(
+      <MockedProvider>
+        <Context.Provider value={authState}>
+          <BrowserRouter>
+            <TaskInfoTop {...props} />
+          </BrowserRouter>
+        </Context.Provider>
+      </MockedProvider>
+    );
+
+    expect(screen.getByText('task.in_progress')).toBeInTheDocument();
   });
 
   it('shows the description', async () => {

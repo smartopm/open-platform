@@ -21,7 +21,7 @@ describe('component that with styled tabs', () => {
   ];
   it('should render correct tabs when user is admin', async () => {
     const props = {
-      tabValue: 'note',
+      tabValue: 'Notes',
       handleChange: jest.fn(),
       user: {
         userType: 'admin',
@@ -58,7 +58,7 @@ describe('component that with styled tabs', () => {
 
   it('should not show communication and note tabs when user is not admin', async () => {
     const props = {
-      tabValue: 'note',
+      tabValue: 'Contacts',
       handleChange: jest.fn(),
       user: {
         userType: 'client',
@@ -99,7 +99,7 @@ describe('component that with styled tabs', () => {
         }
       ];
       const props = {
-        tabValue: 'note',
+        tabValue: 'Notes',
         handleChange: jest.fn(),
         user: {
           userType: 'admin',

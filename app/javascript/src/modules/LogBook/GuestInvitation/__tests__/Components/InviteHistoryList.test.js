@@ -14,6 +14,7 @@ describe('Invitation History list Component', () => {
     const invitation = {
       id: '4af00f39-7fcd-47d2-89bf-e93827d34666',
       createdAt: '2021-11-01T09:15:29Z',
+      status: 'active',
       host: {
         id: '1388d45c-5279-4e90-9815-8ab33c49d382',
         name: 'Test two',

@@ -161,8 +161,7 @@ RSpec.describe Mutations::Campaign do
                                                   site_community: community,
                                                 }).as_json
         expect(result.dig('data', 'campaignCreate')).to be_nil
-        expect(result.dig('errors', 0, 'message')).to eql 'Missing Parameter: Please Supply' \
-                ' batch_time parameter'
+        expect(result.dig('errors', 0, 'message')).to eql 'Missing field: Please Supply Batch Time'
       end
     end
 
@@ -287,6 +286,9 @@ RSpec.describe Mutations::Campaign do
           $message: String!
           $labels: String!
           $status: String
+          $campaignType: String
+          $batchTime: String
+          $userIdList: String
         ) {
           campaignUpdate(
             id: $id
@@ -294,6 +296,9 @@ RSpec.describe Mutations::Campaign do
             message: $message
             labels: $labels
             status: $status
+            campaignType: $campaignType
+            batchTime: $batchTime
+            userIdList: $userIdList
           ) {
             campaign {
               id
@@ -328,6 +333,9 @@ RSpec.describe Mutations::Campaign do
         message: 'Visiting Update',
         labels: 'label 3',
         status: 'scheduled',
+        batchTime: '17/06/2022 03:49',
+        campaignType: 'sms',
+        userIdList: '23fsafsafa1147,2609adf61sfsdfs871fd147',
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
@@ -393,6 +401,26 @@ RSpec.describe Mutations::Campaign do
                                                 }).as_json
         expect(result.dig('errors', 0, 'message')).to eql 'The updates cannot be made as campaign' \
         ' is in progress. Please create a new campaign.'
+      end
+    end
+
+    context 'when campaign status is updated to scheduled and all required fields are
+            not present' do
+      it 'raises missing parameter error' do
+        variables = {
+          id: campaign.id,
+          name: 'This is a Campaign Update',
+          message: 'Visiting Update',
+          labels: 'label 3',
+          status: 'scheduled',
+        }
+        result = DoubleGdpSchema.execute(query, variables: variables,
+                                                context: {
+                                                  current_user: current_user,
+                                                  site_community: community,
+                                                }).as_json
+        expect(result.dig('errors', 0, 'message')).to eql 'Missing field: Please Supply Campaign '\
+                                                          'Type'
       end
     end
   end

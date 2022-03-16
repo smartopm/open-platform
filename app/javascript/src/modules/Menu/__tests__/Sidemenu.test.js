@@ -2,10 +2,8 @@ import React from 'react';
 import { fireEvent, render } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom';
-import { ApolloProvider } from 'react-apollo';
 import { MockedProvider } from '@apollo/react-testing';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
-import { createClient } from '../../../utils/apollo';
 import { SideMenu } from '../index';
 import modules from '../..';
 import authState from '../../../__mocks__/authstate';
@@ -33,27 +31,26 @@ describe('Side Nav component', () => {
     Labels: { features: [] },
     News: { features: [] },
     Tasks: { features: []},
-    'Email Templates': { features: [] }
+    'Email Templates': { features: [] },
+    Processes: { features: [] }
   }
 
   it('should render proper the sidenav menu', async () => {
     const container = render(
-      <ApolloProvider client={createClient}>
-        <Context.Provider value={authState}>
-          <MockedProvider>
-            <BrowserRouter>
-              <SideMenu
-                toggleDrawer={handleDrawerToggle}
-                menuItems={modules}
-                userType={authState.user.userType}
-                communityFeatures={Object.keys(features)}
-                mobileOpen={false}
-                direction="left"
-              />
-            </BrowserRouter>
-          </MockedProvider>
-        </Context.Provider>
-      </ApolloProvider>
+      <Context.Provider value={authState}>
+        <MockedProvider>
+          <BrowserRouter>
+            <SideMenu
+              toggleDrawer={handleDrawerToggle}
+              menuItems={modules}
+              userType={authState.user.userType}
+              communityFeatures={Object.keys(features)}
+              mobileOpen={false}
+              direction="left"
+            />
+          </BrowserRouter>
+        </MockedProvider>
+      </Context.Provider>
     );
     expect(container.queryAllByTestId('sidenav-container')[0]).toBeInTheDocument();
     expect(container.queryAllByTestId('sidenav-container')).toHaveLength(1);
@@ -66,8 +63,9 @@ describe('Side Nav component', () => {
     expect(container.queryByText('misc.properties')).toBeInTheDocument();
     expect(container.queryByText('menu.dashboard')).toBeInTheDocument();
     expect(container.queryByText('menu.payment')).toBeInTheDocument();
+    expect(container.queryByText('menu.processes')).toBeInTheDocument();
 
-    expect(container.queryByText('misc.news')).not.toBeInTheDocument() // should not be initially visible 
+    expect(container.queryByText('misc.news')).not.toBeInTheDocument() // should not be initially visible
 
 
     // toggle the menu and make sure new menus will show
@@ -95,7 +93,7 @@ describe('Side Nav component', () => {
           smsPhoneNumbers: ["+254724821901", "+154724582391"],
           emergencyCallNumber: "254724821901",
         },
-        permissions: [          
+        permissions: [
             {
               module: "community",
               permissions: ['can_see_menu_item']
@@ -113,22 +111,20 @@ describe('Side Nav component', () => {
     };
 
     const container = render(
-      <ApolloProvider client={createClient}>
-        <Context.Provider value={data}>
-          <MockedProvider>
-            <BrowserRouter>
-              <SideMenu
-                toggleDrawer={handleDrawerToggle}
-                menuItems={modules}
-                userType={data.user.userType}
-                communityFeatures={Object.keys(features)}
-                mobileOpen={false}
-                direction="left"
-              />
-            </BrowserRouter>
-          </MockedProvider>
-        </Context.Provider>
-      </ApolloProvider>
+      <Context.Provider value={data}>
+        <MockedProvider>
+          <BrowserRouter>
+            <SideMenu
+              toggleDrawer={handleDrawerToggle}
+              menuItems={modules}
+              userType={data.user.userType}
+              communityFeatures={Object.keys(features)}
+              mobileOpen={false}
+              direction="left"
+            />
+          </BrowserRouter>
+        </MockedProvider>
+      </Context.Provider>
     );
     expect(container.queryAllByTestId('sidenav-container')[0]).toBeInTheDocument();
     expect(container.queryAllByTestId('sidenav-container')).toHaveLength(1)

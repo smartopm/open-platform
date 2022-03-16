@@ -32,7 +32,6 @@ describe('user detail component', () => {
       </MockedProvider>
     )
     expect(container.queryByText('User Name')).toBeInTheDocument()
-    expect(container.queryByText('user@dgdp.com')).toBeInTheDocument()
     expect(container.queryByText('34342')).toBeInTheDocument()
   })
 })

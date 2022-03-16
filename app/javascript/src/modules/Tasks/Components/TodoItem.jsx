@@ -10,7 +10,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { useLocation } from 'react-router'
 import TaskDataList from './TaskDataList';
 import FileUploader from './FileUploader';
-import { objectAccessor } from '../../../utils/helpers';
+import { objectAccessor, sortTaskOrder } from '../../../utils/helpers';
 import MenuList from '../../../shared/MenuList';
 import { SubTasksQuery } from '../graphql/task_queries';
 import { LinearSpinner } from '../../../shared/Loading';
@@ -50,7 +50,6 @@ export default function TodoItem({
     fetchPolicy: 'cache-and-network',
     errorPolicy: 'all'
   });
-
 
   let menuList = [
     {
@@ -141,7 +140,7 @@ export default function TodoItem({
 
   function handleParentTaskClick(e){
     e.stopPropagation();
-    if(task && !(data?.taskSubTasks?.length > 0)){
+    if(task && !(data?.subTasksCount > 0)){
        loadSubTasks();
     }
 
@@ -175,6 +174,7 @@ export default function TodoItem({
             handleClick={(tab) => handleTodoItemClick(task, tab)}
             handleTaskCompletion={handleTaskCompletion}
             clientView={clientView}
+            taskCommentHasReply={task?.taskCommentReply}
           />
          )}
 
@@ -201,13 +201,13 @@ export default function TodoItem({
               handleClick={() => handleTodoItemClick(firstLevelSubTask)}
               handleTaskCompletion={handleTaskCompletion}
               clientView={clientView}
+              taskCommentHasReply={false}
             />
-
           </div>
-          {firstLevelSubTask?.subTasks?.length > 0 &&
+          {firstLevelSubTask?.subTasksCount > 0 &&
             objectAccessor(tasksOpen, firstLevelSubTask?.id) && (
               <>
-                {firstLevelSubTask?.subTasks?.map(secondLevelSubTask => (
+                {firstLevelSubTask?.subTasks?.sort(sortTaskOrder)?.map(secondLevelSubTask => (
                   <div className={classes.levelTwo} key={secondLevelSubTask.id}>
                     <TaskDataList
                       key={secondLevelSubTask.id}
@@ -221,6 +221,7 @@ export default function TodoItem({
                       handleClick={() => handleTodoItemClick(secondLevelSubTask)}
                       handleTaskCompletion={handleTaskCompletion}
                       clientView={clientView}
+                      taskCommentHasReply={false}
                     />
                   </div>
                 ))}

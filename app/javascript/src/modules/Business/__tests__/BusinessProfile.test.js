@@ -5,6 +5,8 @@ import { BrowserRouter } from 'react-router-dom/';
 import { MockedProvider } from '@apollo/react-testing';
 import { act } from 'react-dom/test-utils';
 import Profile from '../Components/BusinessProfile';
+import { Context } from '../../../containers/Provider/AuthStateProvider';
+import userMock from '../../../__mocks__/authstate';
 
 describe('It tests the business profile page', () => {
   const props = {
@@ -27,11 +29,13 @@ describe('It tests the business profile page', () => {
     let container;
     act(() => {
       container = render(
-        <MockedProvider>
-          <BrowserRouter>
-            <Profile {...props} />
-          </BrowserRouter>
-        </MockedProvider>
+        <Context.Provider value={userMock}>
+          <MockedProvider>
+            <BrowserRouter>
+              <Profile {...props} />
+            </BrowserRouter>
+          </MockedProvider>
+        </Context.Provider>
       )
     })
     expect(container.queryByTestId('details-holder').children).toHaveLength(6);
@@ -67,11 +71,13 @@ describe('It tests the business profile page', () => {
 
     act(() => {
       container = render(
-        <MockedProvider>
-          <BrowserRouter>
-            <Profile {...otherProps} />
-          </BrowserRouter>
-        </MockedProvider>
+        <Context.Provider value={userMock}>
+          <MockedProvider>
+            <BrowserRouter>
+              <Profile {...otherProps} />
+            </BrowserRouter>
+          </MockedProvider>
+        </Context.Provider>
       )
     })
 

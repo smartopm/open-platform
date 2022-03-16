@@ -89,6 +89,7 @@ module Users
     scope :by_labels, lambda { |label|
                         joins(:labels).where(labels: { short_desc: label&.split(',') })
                       }
+    scope :excluding_leads, -> { where.not(user_type: :lead) }
 
     belongs_to :community
     belongs_to :role
@@ -133,7 +134,6 @@ module Users
     has_many :plan_ownerships, class_name: 'Properties::PlanOwnership', dependent: :destroy
     has_many :co_owned_plans, class_name: 'Properties::PaymentPlan', through: :plan_ownerships,
                               source: :payment_plan
-
     # TODO: find more about the inverse_of association and if we really need that
     # rubocop:disable Rails/InverseOf
     has_one :request, class_name: 'Logs::EntryRequest', foreign_key: :guest_id,
@@ -141,6 +141,8 @@ module Users
     has_many :invites, class_name: 'Logs::Invite', foreign_key: :guest_id,
                        dependent: :destroy
     has_many :invitees, class_name: 'Logs::Invite', foreign_key: :host_id,
+                        dependent: :destroy
+    has_many :reply_to, class_name: 'Comments::NoteComment', foreign_key: :reply_from_id,
                         dependent: :destroy
     # rubocop:enable Rails/InverseOf
     has_one_attached :avatar
@@ -155,7 +157,7 @@ module Users
 
     VALID_USER_TYPES = %w[security_guard admin resident contractor
                           prospective_client client visitor developer consultant
-                          custodian site_worker site_manager security_supervisor].freeze
+                          custodian site_worker site_manager security_supervisor lead].freeze
     VALID_STATES = %w[valid pending banned expired].freeze
     DEFAULT_PREFERENCE = %w[com_news_sms com_news_email weekly_point_reminder_email].freeze
 
@@ -363,6 +365,7 @@ module Users
         due_date: vals[:due_date],
         form_user_id: vals[:form_user_id],
         parent_note_id: vals[:parent_note_id],
+        status: vals[:status],
       )
       note.documents.attach(vals[:attached_documents]) if vals[:attached_documents]
       note
@@ -596,17 +599,18 @@ module Users
     end
 
     def send_email_msg
-      return if self[:email].nil?
+      return if user_type.eql?('lead') || self[:email].nil?
 
       template = community.email_templates.find_by(name: 'Generic Template')
       return unless template
 
       email_title = I18n.t('email_template.welcome_email.title', community_name: community.name)
       email_subject = I18n.t('email_template.welcome_email.subject', community_name: community.name)
+      email_body = I18n.t('email_template.welcome_email.body', community_name: community.name)
       template_data = [
         { key: '%action_url%', value: HostEnv.base_url(community) || '' },
         { key: '%action%', value: I18n.t('email_template.welcome_email.action') },
-        { key: '%body%', value: I18n.t('email_template.welcome_email.body') },
+        { key: '%body%', value: email_body },
         { key: '%title%', value: email_title },
       ]
       EmailMsg.send_mail_from_db(self[:email], template, template_data, email_subject)

@@ -8,6 +8,7 @@ import { Redirect, useLocation, useHistory } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Grid from '@material-ui/core/Grid';
+import { Container } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import MaterialConfig from 'react-awesome-query-builder/lib/config/material';
 import Loading from '../../../shared/Loading';
@@ -389,6 +390,12 @@ export default function UsersList() {
       handleClick: () => history.push('/users/import')
     },
     {
+      content: t('users.lead_management_upload'),
+      isVisible: true,
+      handleClick: () => history.push('/users/leads/import')
+    },
+
+    {
       content: t('users.create_report'),
       isVisible: true,
       handleClick: () => handleReportDialog()
@@ -453,7 +460,7 @@ export default function UsersList() {
         <Loading />
       ) : (
         <>
-          <div className="container">
+          <Container>
             <ActionDialog
               open={openCampaignWarning}
               handleClose={() => setOpenCampaignWarning(false)}
@@ -490,7 +497,7 @@ export default function UsersList() {
                 limit={limit}
               />
             </Grid>
-          </div>
+          </Container>
         </>
       )}
     </>
@@ -499,9 +506,9 @@ export default function UsersList() {
 
 export const useStyles = makeStyles(() => ({
   userCard: {
-    marginTop: '120px'
+    marginTop: '160px'
   },
   userCardMobile: {
-    marginTop: '200px'
+    marginTop: '260px'
   }
 }));

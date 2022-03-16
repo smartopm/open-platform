@@ -14,6 +14,7 @@ RSpec.describe Types::Queries::Note do
                             can_fetch_task_by_id can_fetch_task_histories
                             can_get_task_count can_get_task_stats can_get_own_tasks
                             can_fetch_all_notes can_fetch_user_notes
+                            can_fetch_tagged_comments
                           ])
     end
     let!(:site_worker_permission) do
@@ -24,8 +25,27 @@ RSpec.describe Types::Queries::Note do
                                           can_get_task_count can_get_task_stats can_get_own_tasks])
     end
     let(:site_worker) { create(:site_worker, role: site_worker_role) }
-    let!(:admin) { create(:admin_user, role: admin_role, community: site_worker.community) }
+    let!(:admin) do
+      create(:admin_user, role: admin_role, community: site_worker.community, name: 'John Doe')
+    end
     let(:searchable_user) { create(:user, name: 'Henry Tim', community_id: admin.community_id) }
+
+    let(:developer_role) { create(:role, name: 'developer', community: admin.community) }
+    let(:developer) { create(:developer, role: developer_role, community: admin.community) }
+    let!(:developer_permissions) do
+      create(:permission, module: 'note',
+                          role: developer_role,
+                          permissions: %w[can_fetch_flagged_notes can_fetch_task_comments
+                                          can_fetch_tagged_comments])
+    end
+    let(:consultant_role) { create(:role, name: 'consultant', community: admin.community) }
+    let(:consultant) { create(:consultant, role: consultant_role, community: admin.community) }
+    let!(:consultant_permissions) do
+      create(:permission, module: 'note',
+                          role: consultant_role,
+                          permissions: %w[can_fetch_flagged_notes can_fetch_task_comments
+                                          can_fetch_comments_on_assigned_tasks])
+    end
 
     let!(:first_note) do
       admin.notes.create!(
@@ -184,10 +204,18 @@ RSpec.describe Types::Queries::Note do
 
     let(:projects_query) do
       <<~GQL
-        query GetProjects($offset: Int, $limit: Int) {
-          projects(offset: $offset, limit: $limit) {
+        query GetProjects($offset: Int, $limit: Int, $step: String, $completedPerQuarter: String, $submittedPerQuarter: String) {
+          projects(offset: $offset, limit: $limit, step: $step, completedPerQuarter: $completedPerQuarter, submittedPerQuarter: $submittedPerQuarter) {
             #{task_fragment}
           }
+        }
+      GQL
+    end
+
+    let(:projects_summary_query) do
+      <<~GQL
+        query tasksByQuarter {
+          tasksByQuarter
         }
       GQL
     end
@@ -224,6 +252,10 @@ RSpec.describe Types::Queries::Note do
           id
         }
         documents
+        submittedBy {
+          id
+          name
+        }
       GQL
     end
 
@@ -468,13 +500,11 @@ RSpec.describe Types::Queries::Note do
       end
 
       describe 'Get tasks by role' do
-        let(:developer_role) { create(:role, name: 'developer', community: admin.community) }
-        let(:developer) { create(:developer, role: developer_role, community: admin.community) }
-        let!(:developer_permissions) do
-          create(:permission, module: 'note',
-                              role: developer_role,
-                              permissions: %w[can_fetch_flagged_notes])
+        let(:form) do
+          create(:form, name: 'DRC Project Review Process V3', community: admin.community)
         end
+
+        let(:form_user) { create(:form_user, form: form, user: admin, status_updated_by: admin) }
 
         it 'retrieves tasks by role for non admins and custodians' do
           result = DoubleGdpSchema.execute(flagged_notes_query, context: {
@@ -527,10 +557,11 @@ RSpec.describe Types::Queries::Note do
             community_id: site_worker.community_id,
             author_id: site_worker.id,
             completed: false,
+            form_user_id: form_user.id,
           )
 
           fourth_note.update(parent_note_id: level1_parent.id)
-
+          third_note.update(form_user_id: form_user.id)
           developer.tasks.create!(
             body: 'Developer assigned task',
             user_id: developer.id,
@@ -883,7 +914,7 @@ RSpec.describe Types::Queries::Note do
           another_form
           form_user
           another_form_user
-          first_note.update(form_user_id: form_user.id)
+          first_note.update(form_user_id: form_user.id, completed: true)
           second_note.update(form_user_id: another_form_user.id)
         end
 
@@ -894,6 +925,7 @@ RSpec.describe Types::Queries::Note do
                                            }).as_json
           expect(result['errors']).to be_nil
           expect(result.dig('data', 'projects').length).to eql 2
+          expect(result.dig('data', 'projects', 0, 'submittedBy', 'id')).to eql admin.id
         end
 
         it 'retrieves project comments' do
@@ -903,6 +935,7 @@ RSpec.describe Types::Queries::Note do
             body: 'Step 1',
             user: site_worker,
             status: 'active',
+            reply_required: true,
           )
 
           subtask1 = admin.notes.create!(
@@ -922,6 +955,7 @@ RSpec.describe Types::Queries::Note do
             body: 'Step 1 subtask 1 comment',
             user: site_worker,
             status: 'active',
+            reply_required: true,
           )
 
           subtask2 = admin.notes.create!(
@@ -941,6 +975,7 @@ RSpec.describe Types::Queries::Note do
             body: 'Step 1 subtask 2 comment',
             user: site_worker,
             status: 'active',
+            reply_required: true,
           )
 
           result = DoubleGdpSchema.execute(project_comments_query, context: {
@@ -950,6 +985,266 @@ RSpec.describe Types::Queries::Note do
 
           expect(result['errors']).to be_nil
           expect(result.dig('data', 'projectComments').length).to eq 3
+        end
+
+        it 'retrieves tagged comments for developers requested for reply' do
+          create(
+            :note_comment,
+            note: third_note,
+            body: 'Comment needs reply from developer',
+            user: developer,
+            status: 'active',
+            reply_required: true,
+            reply_from: developer,
+          )
+
+          subtask1 = admin.notes.create!(
+            body: 'Step 1 subtask 1',
+            description: 'Step 1 subtask 1',
+            user_id: developer.id,
+            category: 'other',
+            flagged: true,
+            community_id: developer.community_id,
+            author_id: developer.id,
+            parent_note_id: third_note.id,
+          )
+
+          create(
+            :note_comment,
+            note: subtask1,
+            body: 'Step 1 subtask 1 comment needs reply from developer',
+            user: developer,
+            status: 'active',
+            reply_required: true,
+            reply_from: developer,
+          )
+
+          result = DoubleGdpSchema.execute(project_comments_query, context: {
+                                             current_user: developer,
+                                             site_community: developer.community,
+                                           }, variables: { taskId: third_note.id }).as_json
+
+          expect(result['errors']).to be_nil
+          expect(result.dig('data', 'projectComments').length).to eq 2
+        end
+
+        it 'retrieves no tagged comments for developers requested for reply' do
+          create(
+            :note_comment,
+            note: third_note,
+            body: 'Comment needs reply from developer',
+            user: developer,
+            status: 'active',
+            reply_required: true,
+            reply_from: site_worker,
+          )
+
+          result = DoubleGdpSchema.execute(project_comments_query, context: {
+                                             current_user: developer,
+                                             site_community: developer.community,
+                                           }, variables: { taskId: third_note.id }).as_json
+
+          expect(result['errors']).to be_nil
+          expect(result.dig('data', 'projectComments').length).to eq 0
+        end
+
+        it 'retrieves tagged comments for consultant assigned task requested for reply' do
+          create(
+            :note_comment,
+            note: third_note,
+            body: 'Comment needs reply from consultant',
+            user: admin,
+            status: 'active',
+            reply_required: true,
+            reply_from: consultant,
+          )
+
+          subtask1 = admin.notes.create!(
+            body: 'Step 1 subtask 1',
+            description: 'Step 1 subtask 1',
+            user_id: admin.id,
+            category: 'other',
+            flagged: true,
+            community_id: consultant.community_id,
+            author_id: admin.id,
+            parent_note_id: third_note.id,
+          )
+
+          create(
+            :note_comment,
+            note: subtask1,
+            body: 'Step 1 subtask 1 comment needs reply from consultant',
+            user: admin,
+            status: 'active',
+            reply_required: true,
+            reply_from: consultant,
+          )
+
+          consultant.tasks << third_note << subtask1
+
+          result = DoubleGdpSchema.execute(project_comments_query, context: {
+                                             current_user: consultant,
+                                             site_community: consultant.community,
+                                           }, variables: { taskId: third_note.id }).as_json
+
+          expect(result['errors']).to be_nil
+          expect(result.dig('data', 'projectComments').length).to eq 2
+        end
+
+        it 'does not retrieve tagged comments for non consultant assigned task' do
+          create(
+            :note_comment,
+            note: third_note,
+            body: 'Comment needs reply from developer',
+            user: admin,
+            status: 'active',
+            reply_required: true,
+            reply_from: developer,
+          )
+
+          developer.tasks << third_note
+
+          result = DoubleGdpSchema.execute(project_comments_query, context: {
+                                             current_user: consultant,
+                                             site_community: consultant.community,
+                                           }, variables: { taskId: third_note.id }).as_json
+
+          expect(result['errors']).to be_nil
+          expect(result.dig('data', 'projectComments').length).to eq 0
+        end
+      end
+
+      context 'when completed_per_quarter is in the arguments' do
+        before do
+          form
+          another_form
+          form_user
+          another_form_user
+          first_note.update(form_user_id: form_user.id, completed: true)
+          first_note.update(completed_at: Time.zone.local(Date.current.year, '02', '02'))
+
+          second_note.update(form_user_id: another_form_user.id, completed: true)
+          second_note.update(completed_at: Time.zone.local(Date.current.year, '05', '05'))
+        end
+
+        context 'when all is passed as an argument' do
+          before { second_note.update(completed_at: '2021-01-01') }
+
+          it 'returns the projects completed till now' do
+            result = DoubleGdpSchema.execute(projects_query, context: {
+                                               current_user: site_worker,
+                                               site_community: site_worker.community,
+                                             }, variables: {
+                                               completedPerQuarter: 'all',
+                                             }).as_json
+
+            expect(result['errors']).to be_nil
+            expect(result.dig('data', 'projects').length).to eql 2
+          end
+        end
+
+        it 'returns the projects in the quarter supplied' do
+          result = DoubleGdpSchema.execute(projects_query, context: {
+                                             current_user: site_worker,
+                                             site_community: site_worker.community,
+                                           }, variables: {
+                                             completedPerQuarter: 'Q1',
+                                           }).as_json
+
+          expect(result['errors']).to be_nil
+          expect(result.dig('data', 'projects').length).to eql 1
+          expect(result.dig('data', 'projects', 0, 'id')).to eql(first_note.id)
+        end
+
+        it 'throws an error if invalid quarter is supplied' do
+          expect do
+            DoubleGdpSchema.execute(projects_query, context: {
+                                      current_user: site_worker,
+                                      site_community: site_worker.community,
+                                    }, variables: {
+                                      completedPerQuarter: 'Q9',
+                                    }).as_json
+          end.to raise_error('Invalid argument. quarter should be either Q1, Q2, Q3 or Q4')
+        end
+      end
+
+      context 'when submitted_per_quarter is in the arguments' do
+        before do
+          form
+          another_form
+          form_user
+          another_form_user
+          first_note.update(form_user_id: form_user.id)
+          first_note.update(created_at: Time.zone.local(Date.current.year, '02', '02'))
+
+          second_note.update(form_user_id: another_form_user.id, completed: true)
+          second_note.update(created_at: Time.zone.local(Date.current.year, '05', '05'))
+        end
+
+        context 'when all is passed as an argument' do
+          before { second_note.update(created_at: '2021-01-01') }
+
+          it 'returns the projects submitted till now' do
+            result = DoubleGdpSchema.execute(projects_query, context: {
+                                               current_user: site_worker,
+                                               site_community: site_worker.community,
+                                             }, variables: {
+                                               submittedPerQuarter: 'all',
+                                             }).as_json
+
+            expect(result['errors']).to be_nil
+            expect(result.dig('data', 'projects').length).to eql 2
+          end
+        end
+
+        it 'returns the projects in the quarter supplied' do
+          result = DoubleGdpSchema.execute(projects_query, context: {
+                                             current_user: site_worker,
+                                             site_community: site_worker.community,
+                                           }, variables: {
+                                             submittedPerQuarter: 'Q1',
+                                           }).as_json
+
+          expect(result['errors']).to be_nil
+          expect(result.dig('data', 'projects').length).to eql 1
+          expect(result.dig('data', 'projects', 0, 'id')).to eql(first_note.id)
+        end
+
+        it 'throws an error if invalid quarter is supplied' do
+          expect do
+            DoubleGdpSchema.execute(projects_query, context: {
+                                      current_user: site_worker,
+                                      site_community: site_worker.community,
+                                    }, variables: {
+                                      submittedPerQuarter: 'Q9',
+                                    }).as_json
+          end.to raise_error('Invalid argument. quarter should be either Q1, Q2, Q3 or Q4')
+        end
+      end
+
+      context 'tasks_by_quarter' do
+        before do
+          form
+          another_form
+          form_user
+          another_form_user
+          first_note.update(form_user_id: form_user.id)
+          first_note.update(created_at: Time.zone.local(Date.current.year, '02', '02'))
+
+          second_note.update(form_user_id: another_form_user.id, completed: true)
+          second_note.update(created_at: Time.zone.local(Date.current.year, '05', '05'))
+        end
+
+        it 'returns counts of the completed tasks per quarter' do
+          result = DoubleGdpSchema.execute(projects_summary_query, context: {
+                                             current_user: site_worker,
+                                             site_community: site_worker.community,
+                                           }).as_json
+
+          expect(result['errors']).to be_nil
+          expect(result.dig('data', 'tasksByQuarter', 'completed', 0)).to eql [2022.0, 1.0, 1]
+          expect(result.dig('data', 'tasksByQuarter', 'submitted', 0)).to eql [2022.0, 1.0, 1]
+          expect(result.dig('data', 'tasksByQuarter', 'submitted', 1)).to eql [2022.0, 2.0, 1]
         end
       end
 

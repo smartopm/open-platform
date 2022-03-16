@@ -33,13 +33,13 @@ module ActionFlows
       # rubocop:disable Metrics/MethodLength
       def preload_data(eventlog)
         note = eventlog.ref_type.constantize.find eventlog.ref_id
-        assignees_email = note.assignees.map(&:email).join(',')
+        assignees_email = note.assignees.excluding_leads.map(&:email).join(',')
         note_version = note.versions.order(:created_at).where(event: 'update').last
         load_data(
           { 'Note' => note },
           'assignees_emails' => assignees_email,
           'url' => "https://#{HostEnv.base_url(eventlog.community)}/tasks/#{note.id}",
-          'updated_by' => Users::User.find(note_version.whodunnit).name,
+          'updated_by' => Users::User.find_by(id: note_version.whodunnit)&.name || 'System',
           'updated_field' => eventlog['data']['updated_field'],
           'updated_date' => eventlog.created_at.strftime('%Y-%m-%d'),
           'new_updated_value' => eventlog['data']['new_value'].to_s&.truncate_words(5),

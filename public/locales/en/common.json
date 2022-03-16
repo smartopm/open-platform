@@ -95,7 +95,8 @@
     "creating_plan": "Creating a Plan ...",
     "invite_guest": "Invite Guest",
     "new_guest": "New Guest",
-    "invite_another_guest": "Invite Another Guest"
+    "invite_another_guest": "Invite Another Guest",
+    "copy_id": "Copy User ID List"
   },
   "misc": {
     "or": "OR",
@@ -240,6 +241,7 @@
     "image_uploaded": "Image uploaded",
     "new_plan": "New Plan",
     "activate": "Activate",
+    "re_activate": "Re-Activate",
     "web": "Web",
     "phone": "Phone",
     "signature": "Signature",
@@ -258,7 +260,14 @@
     "remove": "Remove",
     "add": "Add",
     "open": "Open",
-    "user": "User"
+    "user": "User",
+    "person": "Person",
+    "company": "Company",
+    "reply": "Reply",
+    "add_reply": "Add a reply",
+    "resolve_comments": "Resolve Comments",
+    "user_detail": "User Detail",
+    "lead_details": "Lead Details"
   },
   "menu": {
     "invoice": "Invoice",
@@ -307,6 +316,7 @@
     "revoke_access": "Revoke Access",
     "more_details": "More Details",
     "logout": "Logout",
+    "processes": "Processes",
     "user_journey_stats": "User Journey Stats",
     "edit": "Edit",
     "delete": "Delete",
@@ -360,7 +370,8 @@
     "site_manager": "Site Manager",
     "security_supervisor": "Security Supervisor",
     "consultant": "Consultant",
-    "developer": "Developer"
+    "developer": "Developer",
+    "lead": "Lead"
   },
   "table_headers": {
     "date_created": "Date Created",
@@ -431,6 +442,7 @@
     "empty_text": "The message must contain some text",
     "flashlight_not_supported": "This browser does not support native flashlight",
     "camera_not_supported": "This browser does not support camera API",
+    "invalid_qr_data": "Invalid QRCode Data",
     "video_not_supported": "This browser does not support video",
     "empty_name": "Name cannot be empty",
     "date_error": "Date must be of this format YYYY-MM-DD",
@@ -528,6 +540,25 @@
     "number_of_employees": "Number of Employees",
     "industry_sub_sector": "Industry Sub Sector",
     "annual_revenue": "Annual Revenue",
-    "african_presence": "African Presences"
+    "african_presence": "African Presences",
+    "import_form_status_actions": {
+      "import": "Import",
+      "cancel": "Cancel",
+      "upload_file": "UPLOAD FILE",
+      "choose_file": "No file chosen..."
+    },
+    "capex_amount": "CAPEX",
+    "kick_off_date": "Kick Off Date",
+    "investment_size": "Size",
+    "investiment_timeline": "Timeline",
+    "jobs_timeline": "Timeline",
+    "jobs_created": "Number of Jobs",
+    "decision_making_timeline": "Decision Making Timeline",
+    "investiment_created_over_time": "Opportunity/Investiment over time",
+    "jobs_created_over_time": "Number of jobs over time"
+  },
+  "right_menu": {
+    "edit_user": "Edit User",
+    "communications": "Communications"
   }
 }

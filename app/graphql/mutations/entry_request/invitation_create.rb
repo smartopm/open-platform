@@ -32,12 +32,12 @@ module Mutations
             request = generate_request(vals, user)
             invite = context[:current_user].invite_guest(user.id, request.id)
             generate_entry_time(vals.except(:guests, :user_ids), invite)
-            users_info << { phone_number: user.phone_number, request: request }
+            users_info << { user: user, request: request }
           end
 
           GuestQrCodeJob.perform_now(
             community: context[:site_community],
-            contact_infos: users_info,
+            request_data: users_info,
             type: 'verify',
           )
           return { success: true }
@@ -78,6 +78,8 @@ module Mutations
         context[:current_user].entry_requests.create!(
           guest_id: guest.id,
           name: guest.name,
+          company_name: guest.name,
+          phone_number: guest.phone_number,
           **vals.except(:user_ids, :guests),
         )
       end
@@ -86,8 +88,9 @@ module Mutations
         raise_duplicate_number_error(user[:phone_number])
 
         enrolled_user = context[:current_user].enroll_user(
-          name: "#{user['firstName']} #{user['lastName']}", phone_number: user['phoneNumber'],
-          user_type: 'visitor'
+          name: user['companyName'].presence || "#{user['firstName']} #{user['lastName']}",
+          phone_number: user['phoneNumber'],
+          user_type: 'visitor',
         )
         return enrolled_user if enrolled_user.persisted?
 

@@ -1,35 +1,102 @@
 import { Container, Grid, Typography } from '@material-ui/core';
 import { useTheme } from '@material-ui/styles';
 import React, { useContext, useState } from 'react';
-import { useQuery } from 'react-apollo';
+import { useQuery, useMutation } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import CenteredContent from '../../../../components/CenteredContent';
 import { Context } from '../../../../containers/Provider/AuthStateProvider';
 import CustomSpeedDial from '../../../../shared/buttons/SpeedDial';
+import CenteredContent from '../../../../shared/CenteredContent';
 import { Spinner } from '../../../../shared/Loading';
+import MenuList from '../../../../shared/MenuList';
 import SearchInput from '../../../../shared/search/SearchInput';
 import useDebounce from '../../../../utils/useDebounce';
+import { accessibleMenus } from '../../utils';
 import { MyInvitedGuestsQuery } from '../graphql/queries';
+import { InvitationUpdateMutation } from '../graphql/mutations';
 import { useStyles } from '../styles';
 import GuestListCard from './GuestListCard';
+import MessageAlert from '../../../../components/MessageAlert';
+import { formatError } from '../../../../utils/helpers';
 
 export default function InvitedGuests() {
   const history = useHistory();
   const [searchValue, setSearchValue] = useState('');
   const debouncedValue = useDebounce(searchValue, 500);
-  const { data, loading } = useQuery(MyInvitedGuestsQuery, {
+  const { data, loading, refetch } = useQuery(MyInvitedGuestsQuery, {
     variables: { query: debouncedValue },
     fetchPolicy: 'network-only'
   });
+  const [inviteUpdate] = useMutation(InvitationUpdateMutation);
+
   const { t } = useTranslation(['logbook', 'common']);
   const classes = useStyles();
   const authState = useContext(Context);
   const { timezone } = authState.user.community;
   const theme = useTheme();
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [currentInvite, setCurrentInvite] = useState({ id: '', loading: false, status: null });
+  const open = Boolean(anchorEl);
+  const [details, setDetails] = useState({ message: '', isError: false });
 
+  const menuList = [
+    {
+      content:
+        currentInvite.status === 'cancelled'
+          ? t('common:misc.re_activate')
+          : t('common:form_actions.cancel'),
+      isVisible: true,
+      isAdmin: false,
+      handleClick: () => cancelInvitation()
+    }
+  ];
+
+  function handleMenu(event, invite) {
+    event.stopPropagation();
+    setAnchorEl(event.currentTarget);
+    setCurrentInvite({ ...currentInvite, id: invite.id, status: invite.status });
+  }
+
+  function handleMenuClose() {
+    setAnchorEl(null);
+  }
+
+  function cancelInvitation() {
+    setCurrentInvite({ ...currentInvite, loading: true });
+    handleMenuClose();
+    inviteUpdate({
+      variables: {
+        inviteId: currentInvite.id,
+        status: currentInvite.status === 'cancelled' ? 'active' : 'cancelled'
+      }
+    })
+      .then(() => {
+        setDetails({ ...details, isError: false, message: t('logbook.invite_updated_successful') });
+        setCurrentInvite({ ...currentInvite, loading: false });
+        refetch();
+      })
+      .catch(err => {
+        setCurrentInvite({ ...currentInvite, loading: false });
+        setDetails({ ...details, isError: true, message: formatError(err.message) });
+      });
+  }
+
+  const menuData = {
+    menuList,
+    handleMenu,
+    anchorEl,
+    open,
+    userType: authState.user.userType,
+    handleClose: event => handleMenuClose(event)
+  };
   return (
     <Container maxWidth="xl">
+      <MessageAlert
+        type={!details.isError ? 'success' : 'error'}
+        message={details.message}
+        open={!!details.message}
+        handleClose={() => setDetails({ ...details, message: '' })}
+      />
       <Grid container>
         <Grid item xs={6} sm={11}>
           <Typography variant="h4">{t('common:menu.guest_list')}</Typography>
@@ -38,6 +105,14 @@ export default function InvitedGuests() {
           <CustomSpeedDial handleAction={() => history.push('/logbook/guests/invite')} />
         </Grid>
       </Grid>
+
+      <MenuList
+        open={menuData.open}
+        anchorEl={menuData?.anchorEl}
+        userType={menuData?.userType}
+        handleClose={menuData?.handleClose}
+        list={accessibleMenus(menuData?.menuList)}
+      />
 
       <br />
       <br />
@@ -57,15 +132,19 @@ export default function InvitedGuests() {
       <br />
       {loading && <Spinner />}
 
-      {data?.myGuests.length ? data?.myGuests?.map(invite => (
-        <GuestListCard
-          key={invite.id}
-          invite={invite}
-          translate={t}
-          tz={timezone}
-          styles={{ classes, theme }}
-        />
-      )) : !loading && <CenteredContent>{t('logbook.no_invited_guests')}</CenteredContent>}
+      {data?.myGuests.length
+        ? data?.myGuests?.map(invite => (
+          <GuestListCard
+            key={invite.id}
+            invite={invite}
+            translate={t}
+            tz={timezone}
+            styles={{ classes, theme }}
+            handleInviteMenu={handleMenu}
+            currentInvite={currentInvite}
+          />
+          ))
+        : !loading && <CenteredContent>{t('logbook.no_invited_guests')}</CenteredContent>}
     </Container>
   );
 }

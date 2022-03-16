@@ -4,7 +4,7 @@ import '@testing-library/jest-dom/extend-expect'
 import { MockedProvider } from '@apollo/react-testing'
 import { BrowserRouter } from 'react-router-dom/'
 import PaymentPlanModal, {CoOwners} from '../Components/UserTransactions/PaymentPlanModal';
-import userMock from '../../../__mocks__/userMock';
+import userMock from '../../../__mocks__/authstate';
 import { PaymentPlanCreateMutation } from '../../../graphql/mutations/land_parcel';
 import { Spinner } from '../../../shared/Loading';
 
@@ -36,7 +36,11 @@ describe('It should test the payment plan modal component', () => {
             open
             handleModalClose={jest.fn()}
             userData={userMock.user}
+            userId={userMock.user.id}
+            currency="kd"
             balanceRefetch={jest.fn()}
+            setMessage={jest.fn()}
+            openAlertMessage={jest.fn()}
           />
         </MockedProvider>
       </BrowserRouter>

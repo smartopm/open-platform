@@ -10,7 +10,22 @@ export default {
   dueDate: '2022-01-22T21:00:00Z',
   subTasksCount: 4,
   taskCommentsCount: 4,
+  taskCommentReply: true,
+  order: 1,
+  status: 'in_progress',
   formUserId: "0358e014-1440-46ee-988d-d5338f019ba3",
+  submittedBy: {
+    id: '0358e014-1440-46ee-988d-d5338f019b',
+    name: 'some name',
+    __typename: 'SubmittedBy'
+  },
+  formUser: {
+    id: "0358e014-1440-46ee-988d-d5338f019ba3",
+    user: {
+      id: "c8b16e54-095e-4b92-bf51-b197f6b916a6",
+      name: "Test User"
+    }
+  },
   progress: {
     complete: 0,
     total: 0,
@@ -50,6 +65,7 @@ export default {
       description: 'Consultant sub-task',
       dueDate: '2022-01-22T21:00:00Z',
       subTasksCount: 4,
+      order: 1,
       formUserId: "65b665e0-959c-4c08-aaef-3f4b70e85495",
       progress: {
         complete: 1,

@@ -1,25 +1,137 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
 import { render, screen, waitFor } from '@testing-library/react';
+import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min';
 import { MockedProvider } from '@apollo/react-testing';
 import authState from '../../../../__mocks__/authstate';
+import { Context } from '../../../../containers/Provider/AuthStateProvider';
 import LeadManagementDetails from '../Components/LeadManagementDetails';
+import { LeadDetailsQuery } from '../../../../graphql/queries';
+
+jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 
 describe('LeadManagementDetails Page', () => {
+  const dataMock = [
+    {
+      request: {
+        query: LeadDetailsQuery,
+        variables: { id: 'c96f64bb-e3b4-42ff-b6a9-66889ec79e99' }
+      },
+      result: {
+        data: {
+          user: {
+            africanPresence: 'Everywhere',
+            avatarUrl:
+              'https://daniel.dgdp.site/rails/active_storage/blobs/redirect/eyRsa0xU-unsplash.jpg',
+            clientCategory: 'industryAssociation',
+            companyAnnualRevenue: '$112234442',
+            companyContacted: '30',
+            companyDescription: 'Real estate company',
+            companyEmployees: '50000',
+            companyLinkedin: 'blah',
+            companyName: 'Tatu City',
+            companyWebsite: 'www.westernseedcompany.com',
+            country: 'bhutan',
+            createdBy: 'Daniel Mutuba',
+            email: 'daniel@doublegdp.com',
+            firstContactDate: '2022-02-26T08:48:00Z',
+            followupAt: '2022-02-09T21:00:00Z',
+            id: 'c96f64bb-e3b4-42ff-b6a9-66889ec79e99',
+            industry: 'consumerProducts',
+            industryBusinessActivity: 'manufacturing',
+            industrySubSector: 'businessSupportServices',
+            lastContactDate: '2022-02-25T08:48:00Z',
+            leadOwner: 'Daniel Mutuba',
+            leadSource: 'inboundInquiry',
+            leadStatus: 'investimentMotiveVerified',
+            leadTemperature: 'neutral',
+            leadType: 'investmentFund',
+            levelOfInternationalization: 'exportingToNigeria',
+            linkedinUrl: 'https://www.linkedin.com/in/daniel-mutuba-31748190/',
+            modifiedBy: 'Daniel Mutuba',
+            name: 'Daniel Mutuba',
+            title: 'The Boss',
+            userType: 'admin',
+            imageUrl: "https://www.linkedin.com/in/daniel-mutuba-31748190/'",
+            extRefId: '',
+            subStatus: '',
+            nextSteps: 'Move to South America',
+            phoneNumber: '10234567876',
+            region: 'cWOfIndStates',
+            relevantLink: 'today is hot',
+            roleName: 'Admin',
+            secondaryEmail: '',
+            expiresAt: new Date(),
+            state: '',
+            kickOffDate: '',
+            capexAmount: '',
+            jobsCreated: '',
+            jobsTimeline: '',
+            investmentSize: '',
+            investmentTimeline: '',
+            decisionTimeline: '',
+            secondaryPhoneNumber: '',
+            taskId: '6a7e722a-9bd5-48d4-aaf7-f3285ccff4a3',
+            labels: [],
+            contactInfos: [],
+            contactDetails: {
+              primaryContact: {
+                name: '',
+                title: '',
+                primaryEmail: '',
+                secondaryEmail: '',
+                primaryPhoneNumber: '',
+                secondaryPhoneNumber: '',
+                linkedinUrl: ''
+              },
+              secondaryContact1: {
+                name: '',
+                title: '',
+                primaryEmail: '',
+                secondaryEmail: '',
+                primaryPhoneNumber: '',
+                secondaryPhoneNumber: '',
+                linkedinUrl: ''
+              },
+              secondaryContact2: {
+                name: '',
+                title: '',
+                primaryEmail: '',
+                secondaryEmail: '',
+                primaryPhoneNumber: '',
+                secondaryPhoneNumber: '',
+                linkedinUrl: ''
+              }
+            }
+          }
+        }
+      }
+    }
+  ];
+
   it('LeadManagementDetails component', async () => {
     render(
-      <MockedProvider>
-        <LeadManagementDetails userId={authState?.user?.id} />
-      </MockedProvider>
+      <Context.Provider value={authState}>
+        <MockedProvider mocks={dataMock} addTypename={false}>
+          <BrowserRouter>
+            <LeadManagementDetails userId="c96f64bb-e3b4-42ff-b6a9-66889ec79e99" />
+          </BrowserRouter>
+        </MockedProvider>
+      </Context.Provider>
     );
 
     await waitFor(() => {
       expect(screen.queryByTestId('lead-management-container-header')).toBeInTheDocument();
       expect(screen.queryByText('lead_management.main_header')).toBeInTheDocument();
+      // assert tab headers are present
+      expect(screen.queryByText('lead_management.detail_header')).toBeInTheDocument();
+      expect(screen.queryByText('lead_management.task_header')).toBeInTheDocument();
+      expect(screen.queryByText('lead_management.note_header')).toBeInTheDocument();
+
       expect(screen.queryByTestId('lead-management-tabs')).toBeInTheDocument();
 
       expect(screen.queryByTestId('lead-management-details-tab')).toBeInTheDocument();
-      // expect(screen.queryByTestId('lead-management-task-tab')).toBeInTheDocument();
+      expect(screen.queryByTestId('lead-management-task-tab')).toBeInTheDocument();
       expect(screen.queryByTestId('lead-management-note-tab')).toBeInTheDocument();
 
       expect(screen.queryByTestId('lead-management-form')).toBeInTheDocument();
@@ -32,5 +144,16 @@ describe('LeadManagementDetails Page', () => {
 
       expect(screen.queryByTestId('lead-management-company-section')).toBeInTheDocument();
     }, 10);
+
+    // assert the details tab, loads and is visible in the dom
+
+    expect(screen.queryByTestId('contact_info')).toBeInTheDocument();
+
+    expect(screen.queryByText('lead_management.save_updates')).toBeInTheDocument();
+    expect(screen.queryAllByText('lead_management.name')[0]).toBeInTheDocument();
+
+    expect(screen.queryAllByText('lead_management.linkedin_url')[0]).toBeInTheDocument();
+
+    expect(screen.queryAllByText('lead_management.primary_email')[0]).toBeInTheDocument();
   });
 });

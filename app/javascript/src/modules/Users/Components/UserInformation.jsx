@@ -1,35 +1,28 @@
 /* eslint-disable complexity */
 import React, { useEffect, useState } from 'react';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import { useTheme } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
-import { useForm } from 'react-hook-form';
-import IconButton from '@material-ui/core/IconButton';
 import Button from '@material-ui/core/Button';
-import DoubleArrowOutlinedIcon from '@material-ui/icons/DoubleArrowOutlined';
 import PhoneIcon from '@material-ui/icons/Phone';
-import { Dialog, DialogTitle, DialogContent, Grid, TextField } from '@material-ui/core';
+import { Dialog, DialogTitle, DialogContent } from '@material-ui/core';
 import { css, StyleSheet } from 'aphrodite';
-import { useMutation } from 'react-apollo';
 import PropTypes from 'prop-types';
-import { CreateNote } from '../../../graphql/mutations';
-import Avatar from '../../../components/Avatar';
+import { Container } from '@mui/material';
 import UserPlotInfo from './UserPlotInfo';
 import UserMerge from './UserMerge';
 import CenteredContent from '../../../components/CenteredContent';
-import UserNotes from './UserNote';
-import UserDetail from './UserProfileDetail';
 import { TabPanel } from '../../../components/Tabs';
 import UserFilledForms from './UserFilledForms';
 import UserMessages from '../../../components/Messaging/UserMessages';
 import UserJourney from './UserJourney';
 import { useParamsQuery } from '../../../utils/helpers';
-import RightSideMenu from '../../Menu/component/RightSideMenu';
 import FeatureCheck from '../../Features';
 import PaymentPlans from '../../Payments/Components/UserTransactions/Plans';
 import ShiftButtons from '../../TimeCard/Components/ShiftButtons';
 import InviteHistoryList from '../../LogBook/GuestInvitation/Components/InviteHistoryList';
 import LeadManagementDetails from '../LeadManagement/Components/LeadManagementDetails';
+import UserDetailHeader from './UserDetailHeader'
+import FixedHeader from '../../../shared/FixedHeader'
+import UserNotes from './UserNotes';
 
 export default function UserInformation({
   data,
@@ -41,38 +34,19 @@ export default function UserInformation({
   accountData
 }) {
   const path = useParamsQuery();
-  const theme = useTheme();
-  const matches = useMediaQuery(theme.breakpoints.up('sm'));
   const tab = path.get('tab');
   const subtab = path.get('subtab');
   const type = path.get('type');
   const { t } = useTranslation('users');
   const [tabValue, setValue] = useState(tab || 'Contacts');
   const [isDialogOpen, setDialogOpen] = useState(false);
-  const [isDrawerOpen, setDrawerOpen] = useState(false);
   const securityPersonnelList = ['security_guard', 'security_supervisor'];
-
-  const [noteCreate, { loading: mutationLoading }] = useMutation(CreateNote);
-  const { handleSubmit, register } = useForm();
-
-  const onSaveNote = ({ note }) => {
-    const form = document.getElementById('note-form');
-    noteCreate({
-      variables: { userId, body: note, flagged: false }
-    }).then(() => {
-      refetch();
-      form.reset();
-    });
-  };
 
   useEffect(() => {
     if (tab) {
       setValue(tab);
-    } else {
-      setValue('Contacts');
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [path, tab]);
+  }, [tab]);
 
   useEffect(() => {
     // open merge modal
@@ -110,59 +84,17 @@ export default function UserInformation({
             <UserMerge close={handleMergeDialog} userId={userId} />
           </DialogContent>
         </Dialog>
-
-        <Grid container>
-          <Grid item xs={3}>
-            {' '}
-          </Grid>
-          <Grid item xs={6} style={{ textAlign: 'center' }} data-testid="user_avatar">
-            <Avatar
-              user={data.user}
-              // eslint-disable-next-line react/style-prop-object
-              style="big"
+        <div style={{marginBottom: '160px'}}>
+          <FixedHeader fullWidth>
+            <UserDetailHeader
+              data={data}
+              userType={userType}
+              userId={userId}
+              currentTab={tabValue}
+              authState={authState}
             />
-          </Grid>
-
-          <Grid item xs={3}>
-            <>
-              <IconButton
-                aria-label="more"
-                aria-controls="long-menu"
-                aria-haspopup="true"
-                onClick={() => setDrawerOpen(true)}
-                className="right-menu-drawer"
-                data-testid="right_menu_drawer"
-                style={{
-                  float: 'right',
-                  marginRight: -23
-                }}
-              >
-                <DoubleArrowOutlinedIcon
-                  // this is hacky, it should be replaced with a proper icon
-                  style={{ transform: 'translate(-50%,-50%) rotate(180deg)' }}
-                />
-              </IconButton>
-
-              <RightSideMenu
-                authState={authState}
-                handleDrawerToggle={() => setDrawerOpen(false)}
-                drawerOpen={isDrawerOpen}
-              />
-            </>
-          </Grid>
-        </Grid>
-
-        <Grid container>
-          <Grid item xs={matches ? 3 : 1}>
-            {' '}
-          </Grid>
-          <Grid item xs={matches ? 6 : 10} style={{ textAlign: 'center', marginTop: '30px' }}>
-            <UserDetail data={data} userType={userType} />
-          </Grid>
-          <Grid item xs={matches ? 3 : 1}>
-            {' '}
-          </Grid>
-        </Grid>
+          </FixedHeader>
+        </div>
 
         <br />
         <FeatureCheck features={authState.user.community.features} name="Time Card">
@@ -174,43 +106,6 @@ export default function UserInformation({
 
         {['admin'].includes(userType) && (
           <>
-            <FeatureCheck features={authState.user.community.features} name="Tasks">
-              <TabPanel value={tabValue} index="Notes">
-                <div className="container">
-                  <form id="note-form">
-                    <div className="form-group">
-                      {t('common:misc.notes')}
-                      <br />
-                      <TextField
-                        className="form-control"
-                        placeholder={t('common:form_placeholders.add_note')}
-                        id="notes"
-                        rows="4"
-                        inputRef={register({ required: true })}
-                        name="note"
-                        multiline
-                        required
-                      />
-                    </div>
-                    <Button
-                      type="button"
-                      style={{ float: 'right' }}
-                      onClick={handleSubmit(onSaveNote)}
-                      disabled={mutationLoading}
-                      color="primary"
-                      variant="outlined"
-                    >
-                      {mutationLoading
-                        ? t('common:form_actions.saving')
-                        : t('common:form_actions.save')}
-                    </Button>
-                  </form>
-                  <br />
-                  <br />
-                  <UserNotes tabValue={tabValue} userId={data.user.id} />
-                </div>
-              </TabPanel>
-            </FeatureCheck>
             <FeatureCheck features={authState.user.community.features} name="Messages">
               <TabPanel value={tabValue} index="Communication">
                 <UserMessages />
@@ -265,6 +160,14 @@ export default function UserInformation({
         <FeatureCheck features={authState.user.community.features} name="LogBook">
           <TabPanel value={tabValue} index="Invitations">
             <InviteHistoryList userId={userId} tab={tabValue} />
+          </TabPanel>
+        </FeatureCheck>
+
+        <FeatureCheck features={authState.user.community.features} name="Tasks">
+          <TabPanel value={tabValue} index="Notes">
+            <Container maxWidth="md">
+              <UserNotes userId={userId} tabValue={tabValue} />
+            </Container>
           </TabPanel>
         </FeatureCheck>
 

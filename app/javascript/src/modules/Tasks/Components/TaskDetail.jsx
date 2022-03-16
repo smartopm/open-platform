@@ -3,12 +3,9 @@ import React, { useState, useEffect } from 'react';
 import { Grid, Snackbar } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { useMutation, useLazyQuery } from 'react-apollo';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import AccountTreeIcon from '@material-ui/icons/AccountTree';
-import QuestionAnswerIcon from '@material-ui/icons/QuestionAnswer';
-import AttachFileIcon from '@material-ui/icons/AttachFile';
-import EventNoteIcon from '@material-ui/icons/EventNote';
 import { UpdateNote } from '../../../graphql/mutations';
 import { TaskReminderMutation } from '../graphql/task_reminder_mutation';
 import TaskUpdateList from './TaskUpdateList';
@@ -40,7 +37,8 @@ export default function TaskDetail({
   handleSplitScreenClose,
   handleTaskCompletion,
   commentsRefetch,
-  forProcess
+  forProcess,
+  fromLeadPage
 }) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
@@ -58,6 +56,7 @@ export default function TaskDetail({
   const classes = useStyles();
   const path = useParamsQuery();
   const tab = path.get('detailTab');
+  const matches = useMediaQuery('(max-width:600px)');
 
   const [anchorEl, setAnchorEl] = useState(null);
   const anchorElOpen = Boolean(anchorEl);
@@ -148,9 +147,9 @@ export default function TaskDetail({
     setDescription(data.description);
     setDate(data.dueDate);
     setData({
-      user: data.user.name,
-      userId: data.user.id,
-      imageUrl: data.user.imageUrl
+      user: data.user?.name,
+      userId: data.user?.id,
+      imageUrl: data.user?.imageUrl
     });
   }
 
@@ -200,7 +199,7 @@ export default function TaskDetail({
   }
 
   function isCurrentUserAnAssignee() {
-    return data.assignees.find(assignee => assignee.id === currentUser.id);
+    return data.assignees?.find(assignee => assignee.id === currentUser.id);
   }
 
   function setDueDate(date) {
@@ -224,8 +223,7 @@ export default function TaskDetail({
           anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
           message={t('task.update_successful')}
         />
-
-        <Grid>
+        <Grid style={{paddingBottom: '20px'}}>
           <div className={classes.section} data-testid="task-info-section">
             <TaskInfoTop
               currentUser={currentUser}
@@ -246,14 +244,14 @@ export default function TaskDetail({
               refetch={refetch}
               handleTaskComplete={handleTaskComplete}
               forProcess={forProcess}
+              fromLeadPage={fromLeadPage}
             />
           </div>
           <div className={classes.section} data-testid="task-subtasks-section" id="anchor-section">
             <TaskDetailAccordion
-              icon={<AccountTreeIcon fontSize='large' color="primary" />}
               title="Sub Tasks"
               styles={{ background: '#FAFAFA' }}
-              openDetails={tab === 'subtasks'}
+              openDetails={!matches ? true : tab === 'subtasks'}
               component={(
                 <TaskSubTask
                   taskId={taskId}
@@ -268,28 +266,33 @@ export default function TaskDetail({
           </div>
           <div className={classes.section} data-testid="task-comments-section">
             <TaskDetailAccordion
-              icon={<QuestionAnswerIcon fontSize='large' color="primary" />}
               title="Comments"
               styles={{ background: '#FAFAFA', padding: 0 }}
-              component={<TaskComment taskId={taskId} commentsRefetch={commentsRefetch} />}
-              openDetails={tab === 'comments'}
+              component={(
+                <TaskComment
+                  taskId={taskId}
+                  commentsRefetch={commentsRefetch}
+                  forProcess={forProcess}
+                  taskAssignees={data.assignees}
+                />
+              )}
+              openDetails={!matches ? true : tab === 'comments'}
             />
           </div>
           <div className={classes.section} data-testid="task-documents-section">
             <TaskDetailAccordion
-              icon={<AttachFileIcon fontSize='large' color="primary" />}
               title="Documents"
               styles={{ background: '#FAFAFA' }}
               component={<TaskDocuments taskId={taskId} />}
-              openDetails={tab === 'documents'}
+              openDetails={!matches ? true : tab === 'documents'}
             />
           </div>
           <div className={classes.section} data-testid="task-updates-section">
             <TaskDetailAccordion
-              icon={<EventNoteIcon fontSize='large' color="primary" />}
               title="Updates"
               styles={{ background: '#FAFAFA' }}
               component={<TaskUpdateList data={historyData} />}
+              openDetails={!matches}
             />
           </div>
         </Grid>
@@ -312,7 +315,8 @@ TaskDetail.defaultProps = {
   handleSplitScreenOpen: () => {},
   handleSplitScreenClose: () => {},
   commentsRefetch: () => {},
-  forProcess: false
+  forProcess: false,
+  fromLeadPage: false
 };
 TaskDetail.propTypes = {
   users: PropTypes.arrayOf(PropTypes.object),
@@ -333,5 +337,6 @@ TaskDetail.propTypes = {
   handleSplitScreenClose: PropTypes.func,
   handleTaskCompletion: PropTypes.func.isRequired,
   commentsRefetch: PropTypes.func,
-  forProcess: PropTypes.bool
+  forProcess: PropTypes.bool,
+  fromLeadPage: PropTypes.bool
 };

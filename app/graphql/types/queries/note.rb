@@ -95,13 +95,15 @@ module Types::Queries::Note
       argument :offset, Integer, required: false
       argument :limit, Integer, required: false
       argument :step, String, required: false
+      argument :completed_per_quarter, String, required: false
+      argument :submitted_per_quarter, String, required: false
     end
 
     field :project_stages, [GraphQL::Types::JSON], null: false do
       description 'Returns an aggregated list of projects'
     end
 
-    field :completed_by_quarter, [GraphQL::Types::JSON], null: false do
+    field :tasks_by_quarter, GraphQL::Types::JSON, null: false do
       description 'Completed tasks by quarter'
     end
   end
@@ -174,13 +176,25 @@ module Types::Queries::Note
     end
 
     parent_task = context[:site_community].notes.find(task_id)
-    sub_task_ids = parent_task.sub_tasks.pluck(:id)
-    sub_sub_task_ids = Notes::Note.where(parent_note_id: sub_task_ids).pluck(:id)
+    task_ids = project_task_ids(parent_task: parent_task)
 
-    parent_task
-      .note_comments
-      .eager_load(:user)
-      .or(Comments::NoteComment.where(note_id: sub_task_ids.concat(sub_sub_task_ids)))
+    if permitted?(module: :note, permission: :can_fetch_tagged_comments)
+      tagged_comments = project_tagged_comments(task_ids)
+      return tagged_comments.limit(limit).offset(offset)
+    end
+
+    if permitted?(module: :note, permission: :can_fetch_comments_on_assigned_tasks)
+      tagged_comments = project_assigned_tasks_comments(task_ids)
+      return tagged_comments.limit(limit).offset(offset)
+    end
+
+    # Admins will see all comments in the project that require reply
+    Comments::NoteComment
+      .where(
+        note_id: task_ids,
+        reply_required: true,
+        replied_at: nil,
+      )
       .limit(limit).offset(offset)
   end
   # rubocop:enable Metrics/AbcSize
@@ -282,7 +296,9 @@ module Types::Queries::Note
       .limit(limit).offset(offset)
   end
 
-  def projects(offset: 0, limit: 50, step: nil)
+  # rubocop:disable Metrics/MethodLength
+  # rubocop:disable Layout/LineLength
+  def projects(offset: 0, limit: 50, step: nil, completed_per_quarter: nil, submitted_per_quarter: nil)
     # This query only shows projects under the DRC process for now
     # Our notes does not allow us to categorise processes by type
     # This should be implemented in the future to allow us to fetch...
@@ -292,12 +308,21 @@ module Types::Queries::Note
             I18n.t('errors.unauthorized')
     end
 
-    if step.nil?
-      projects_query.limit(limit).offset(offset)
-    else
-      projects_query.where(current_step_body: step).limit(limit).offset(offset)
+    # TODO(Nurudeen): Make completed field defaults to false and not NIL
+    results = projects_query
+
+    results = results.where(completed: [false, nil], current_step_body: step) if step
+
+    results = projects_query.by_quarter(completed_per_quarter) if completed_per_quarter
+
+    if submitted_per_quarter
+      results = projects_query.by_quarter(submitted_per_quarter, task_category: :submitted)
     end
+
+    results.limit(limit).offset(offset)
   end
+  # rubocop:enable Layout/LineLength
+  # rubocop:enable Metrics/MethodLength
 
   def project_stages
     # This will get the total project steps for each DRC process
@@ -363,18 +388,24 @@ module Types::Queries::Note
         projects_assigned << task
       end
     end
+
+    drc_form_users = context[:site_community].drc_form_users.pluck(:id)
     context[:site_community]
       .notes
       .includes(:sub_notes, :assignees, :assignee_notes, :documents_attachments)
-      .where(id: projects_assigned.pluck(:id))
+      .where(id: projects_assigned.pluck(:id), form_user_id: drc_form_users)
       .offset(offset).limit(limit)
   end
   # rubocop:enable Metrics/MethodLength
   # rubocop:enable Metrics/AbcSize
 
-  def completed_by_quarter
+  def tasks_by_quarter
     community_id = context[:site_community].id
-    Notes::Note.tasks_by_quarter(community_id)
+
+    {
+      completed: Notes::Note.tasks_by_quarter(community_id),
+      submitted: Notes::Note.tasks_by_quarter(community_id, task_category: :submitted),
+    }
   end
 
   private
@@ -398,6 +429,7 @@ module Types::Queries::Note
         :assignees,
         :assignee_notes,
         :note_comments,
+        :form_user,
         { user: %i[avatar_attachment] },
       )
       .where(flagged: true, parent_note_id: nil) # Return only parent tasks
@@ -417,31 +449,22 @@ module Types::Queries::Note
     end
   end
 
-  # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/MethodLength
   def projects_query
-    form_name = 'DRC Project Review Process'
-    drc_form = context[:site_community].forms.where('name ILIKE ?', "#{form_name}%").first
-    return unless drc_form
-
-    drc_ids = context[:site_community].forms.where(grouping_id: drc_form.grouping_id).pluck(:id)
-    drc_form_users = Forms::FormUser.where(form_id: drc_ids).pluck(:id)
+    drc_form_users = context[:site_community].drc_form_users.pluck(:id)
 
     context[:site_community]
       .notes
       .includes(
-        :parent_note,
-        :user,
-        :author,
         :sub_notes,
-        :assignees,
+        { assignees: %i[avatar_attachment community] },
         :assignee_notes,
         :documents_attachments,
+        { form_user: %i[user] },
       )
       .where(parent_note_id: nil, form_user_id: drc_form_users)
       .for_site_manager(current_user)
   end
-  # rubocop:enable Metrics/AbcSize
   # rubocop:enable Metrics/MethodLength
 
   def authorize
@@ -449,6 +472,36 @@ module Types::Queries::Note
 
     raise GraphQL::ExecutionError,
           I18n.t('errors.unauthorized')
+  end
+
+  def project_task_ids(parent_task:)
+    sub_task_ids = parent_task.sub_tasks.pluck(:id)
+    sub_sub_task_ids = Notes::Note.where(parent_note_id: sub_task_ids).pluck(:id)
+
+    [parent_task.id].concat(sub_task_ids).concat(sub_sub_task_ids)
+  end
+
+  def project_tagged_comments(task_ids)
+    Comments::NoteComment.where(
+      reply_from: context[:current_user],
+      note_id: task_ids,
+      reply_required: true,
+      replied_at: nil,
+    )
+  end
+
+  def project_assigned_tasks_comments(task_ids)
+    # Assigned tasks in the project that require current user's reply
+    assigned_tasks = current_user
+                     .tasks
+                     .includes(:parent_note)
+                     .where(id: task_ids)
+
+    Comments::NoteComment.where(
+      note_id: assigned_tasks.pluck(:id),
+      reply_required: true,
+      replied_at: nil,
+    )
   end
 end
 # rubocop:enable Metrics/ModuleLength

@@ -57,7 +57,8 @@ export const userType = {
   client: 'Client',
   visitor: 'Visitor',
   custodian: 'Store Custodian',
-  site_worker: 'Site Worker'
+  site_worker: 'Site Worker',
+  lead: 'Lead'
 };
 
 export const colorPallete = [
@@ -296,7 +297,8 @@ export const currencies = {
   zambian_kwacha: 'ZMW',
   honduran_lempira: 'HNL',
   kenyan_shilling: 'KES',
-  costa_rican_colon: 'CRC'
+  costa_rican_colon: 'CRC',
+  nigerian_naira: 'NGN'
 };
 export const locales = ['en-IN', 'en-NG', 'en-UK', 'en-US', 'en-ZM', 'es-HN', 'en-KE', 'es-CR'];
 export const languages = {
@@ -873,9 +875,11 @@ export const industryCategoryOptions = [
   'Real Estate',
   'Chemicals',
   'Food & Tobacco',
+  'Coal, Oil and Natural Gas',
   'Metals',
   'Electronic Components',
   'Plastics',
+  'Consumer Products',
   'Consumer Products',
   'Hotels & Tourism',
   'Alternative/Renewable energy',

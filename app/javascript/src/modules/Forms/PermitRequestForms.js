@@ -15,7 +15,7 @@ function RenderCommunityForms() {
     <AccessCheck module={currentModule} allowedPermissions={CommunityFormsPermissions}>
       <CommunityForms />
     </AccessCheck>
-)
+  )
 }
 
 export default {

@@ -43,6 +43,7 @@ Ciudad Morazán:
         - can_revoke_entry_request
         - can_invite_guest
         - can_go_through_guest_verification
+        - can_update_invitation
     user:
       permissions:
         - can_view_own_profile
@@ -82,6 +83,7 @@ Ciudad Morazán:
         - can_view_entry_request
         - can_invite_guest
         - can_go_through_guest_verification
+        - can_update_invitation
     guest_list:
       permissions:
         - can_see_menu_item
@@ -90,6 +92,7 @@ Ciudad Morazán:
         - can_view_own_profile
         - can_edit_own_profile
         - can_view_guests
+        - can_search_guests
     discussion:
       permissions:
         - can_access_all_discussions
@@ -142,6 +145,7 @@ Tilisi:
         - can_access_tasks
         - can_access_processes
         - can_upload_documents
+        - can_fetch_comments_on_assigned_tasks
     forms:
       permissions:
         - can_see_menu_item
@@ -167,6 +171,7 @@ Tilisi:
       permissions:
         - can_access_dashboard
         - can_see_menu_item
+        - can_access_admin_processes_dashboard
 
   developer:
     note:
@@ -185,6 +190,7 @@ Tilisi:
         - can_access_tasks
         - can_access_processes
         - can_upload_documents
+        - can_fetch_tagged_comments
     forms:
       permissions:
         - can_see_menu_item
@@ -255,6 +261,7 @@ DoubleGDP:
         - can_revoke_entry_request
         - can_invite_guest
         - can_go_through_guest_verification
+        - can_update_invitation
     user:
       permissions:
         - can_view_own_profile
@@ -294,6 +301,7 @@ DoubleGDP:
         - can_view_entry_request
         - can_invite_guest
         - can_go_through_guest_verification
+        - can_update_invitation
     guest_list:
       permissions:
         - can_see_menu_item
@@ -302,6 +310,7 @@ DoubleGDP:
         - can_view_own_profile
         - can_edit_own_profile
         - can_view_guests
+        - can_search_guests
     discussion:
       permissions:
         - can_access_all_discussions
@@ -334,10 +343,12 @@ DoubleGDP:
         - can_access_tasks
         - can_access_processes
         - can_upload_documents
+        - can_fetch_comments_on_assigned_tasks
     forms:
       permissions:
         - can_see_menu_item
         - can_access_forms
+        - can_view_form_user
     user:
       permissions:
         - can_view_own_profile
@@ -359,6 +370,7 @@ DoubleGDP:
       permissions:
         - can_access_dashboard
         - can_see_menu_item
+        - can_access_admin_processes_dashboard
 
   developer:
     note:
@@ -377,6 +389,7 @@ DoubleGDP:
         - can_access_tasks
         - can_access_processes
         - can_upload_documents
+        - can_fetch_tagged_comments
     forms:
       permissions:
         - can_see_menu_item

@@ -92,6 +92,14 @@ module Types
     field :secondary_phone_number, String, null: true
     field :african_presence, String, null: true
     field :region, String, null: true
+    field :task_id, String, null: true
+    field :capex_amount, String, null: true
+    field :jobs_created, String, null: true
+    field :jobs_timeline, String, null: true
+    field :kick_off_date, GraphQL::Types::ISO8601DateTime, null: true
+    field :investment_size, String, null: true
+    field :investment_timeline, String, null: true
+    field :decision_timeline, String, null: true
 
     def avatar_url
       return nil unless object.avatar.attached?

@@ -65,6 +65,5 @@ CardComponent.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   contentStyles: PropTypes.object,
   primaryColor: PropTypes.bool,
-  // eslint-disable-next-line react/forbid-prop-types
-  className: PropTypes.object
+  className: PropTypes.oneOfType([PropTypes.object, PropTypes.string])
 };

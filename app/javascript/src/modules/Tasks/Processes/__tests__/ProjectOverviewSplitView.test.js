@@ -11,7 +11,7 @@ import taskMock from '../../__mocks__/taskMock'
 import { ProjectOverviewSplitView } from '../Components/ProjectOverview';
 
 
-jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
+jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn()());
 describe('Project Processes Tab', () => {
   const data = [{ ...taskMock }]
 
@@ -23,11 +23,15 @@ describe('Project Processes Tab', () => {
             <MockedThemeProvider>
               <TaskContext.Provider
                 value={{
-                  setSelectedStep: jest.fn,
-                  handleStepCompletion: jest.fn
+                  setSelectedStep: jest.fn(),
+                  handleStepCompletion: jest.fn()()
               }}
               >
-                <ProjectOverviewSplitView data={data} refetch={jest.fn} />
+                <ProjectOverviewSplitView 
+                  data={data}
+                  refetch={jest.fn()}
+                  handleProjectStepClick={jest.fn()}
+                />
               </TaskContext.Provider>
             </MockedThemeProvider>
           </BrowserRouter>
@@ -49,11 +53,15 @@ describe('Project Processes Tab', () => {
             <MockedThemeProvider>
               <TaskContext.Provider
                 value={{
-                  setSelectedStep: jest.fn,
-                  handleStepCompletion: jest.fn
+                  setSelectedStep: jest.fn(),
+                  handleStepCompletion: jest.fn()
               }}
               >
-                <ProjectOverviewSplitView data={[]} refetch={jest.fn} />
+                <ProjectOverviewSplitView
+                  data={[]}
+                  refetch={jest.fn()}
+                  handleProjectStepClick={jest.fn()()}
+                />
               </TaskContext.Provider>
             </MockedThemeProvider>
           </BrowserRouter>

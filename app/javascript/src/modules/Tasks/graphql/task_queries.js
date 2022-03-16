@@ -29,6 +29,7 @@ export const TaskQuery = gql`
       category
       description
       dueDate
+      status
       user {
         id
         name
@@ -39,6 +40,7 @@ export const TaskQuery = gql`
         name
         imageUrl
         avatarUrl
+        userType
       }
       assigneeNotes{
         id
@@ -55,6 +57,13 @@ export const TaskQuery = gql`
       }
       attachments
       formUserId
+      formUser {
+        id
+        user {
+          id
+          name
+        }
+      }
     }
   }
 `
@@ -73,12 +82,11 @@ export const SubTasksQuery = gql`
 export const ProjectOpenTasksQuery = gql`
   query projectOpenTasks($taskId: ID!, $offset: Int, $limit: Int) {
     projectOpenTasks(taskId: $taskId, offset: $offset, limit: $limit) {
-      ...NoteFields
+      ...TaskFields
     }
   }
-  ${NotesFragment.note}
+  ${TasksFragment.task}
 `
-
 
 /**
  * @deprecated

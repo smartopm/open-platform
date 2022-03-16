@@ -7,6 +7,7 @@ export const MyInvitedGuestsQuery = gql`
     query guests($query: String){
       myGuests(query: $query) {
         id
+        status
         guest {
           id
           name
@@ -36,6 +37,7 @@ export const MyHostsQuery = gql`
       myHosts(userId: $userId) {
         id
         createdAt
+        status
         host {
           id
           name

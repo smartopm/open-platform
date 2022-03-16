@@ -1,13 +1,13 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import React, { useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import { Typography } from '@material-ui/core';
 import StepItem from './StepItem';
-import { objectAccessor } from '../../../../utils/helpers';
+import { objectAccessor, sortTaskOrder } from '../../../../utils/helpers';
 
 export default function ProjectSteps({
   data,
@@ -41,6 +41,7 @@ export default function ProjectSteps({
 
   function handleOpenSubStepsClick(e, stepItem){
     e.stopPropagation();
+
     toggleStep(stepItem);
   }
 
@@ -50,12 +51,11 @@ export default function ProjectSteps({
       handleStepCompletion(stepItemId, completed)
     }
   }
-
   return (
     <>
       {data?.length > 0
       ? (data?.map(firstLevelStep => (
-        <>
+        <Fragment key={firstLevelStep.id}>
           <div
             className={classes.levelOne}
             key={firstLevelStep.id}
@@ -72,10 +72,10 @@ export default function ProjectSteps({
               clientView={clientView}
             />
           </div>
-          {firstLevelStep?.subTasks?.length > 0 &&
+          {firstLevelStep?.subTasksCount > 0 &&
             objectAccessor(stepsOpen, firstLevelStep.id) && (
               <>
-                {firstLevelStep?.subTasks?.map(secondLevelStep => (
+                {firstLevelStep?.subTasks?.sort(sortTaskOrder)?.map(secondLevelStep => (
                   <div className={classes.levelTwo} key={secondLevelStep.id}>
                     <StepItem
                       key={secondLevelStep.id}
@@ -90,7 +90,7 @@ export default function ProjectSteps({
                 ))}
               </>
             )}
-        </>
+        </Fragment>
       )))
     :(<Typography data-testid="no-steps">{t('processes.no_steps_assigned')}</Typography>)}
     </>

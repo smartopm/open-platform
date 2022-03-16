@@ -1,9 +1,10 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom';
 import UserHeader from '../Components/UserHeader';
+import MockedThemeProvider from '../../__mocks__/mock_theme';
 
 describe('User Detail Component', () => {
   const filterObject = {
@@ -36,7 +37,7 @@ describe('User Detail Component', () => {
     campaignCreateOption: 'none',
     handleCampaignCreate: jest.fn(),
     handleLabelSelect: jest.fn(),
-    usersCountData: {},
+    usersCountData: {usersCount: 2},
     selectedUsers: [],
     labelsData: {},
     labelsRefetch: jest.fn(),
@@ -48,19 +49,27 @@ describe('User Detail Component', () => {
     const container = render(
       <MockedProvider>
         <BrowserRouter>
-          <UserHeader
-            setCampaignOption={jest.fn()}
-            handleSearchClick={jest.fn()}
-            filterObject={filterObject}
-            csvObject={csvObject}
-            menuObject={menuObject}
-            actionObject={actionObject}
-          />
+          <MockedThemeProvider>
+            <UserHeader
+              setCampaignOption={jest.fn()}
+              handleSearchClick={jest.fn()}
+              filterObject={filterObject}
+              csvObject={csvObject}
+              menuObject={menuObject}
+              actionObject={actionObject}
+            />
+          </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>
     );
 
     expect(container.queryByTestId('title')).toBeInTheDocument();
     expect(container.queryByTestId('select')).toBeInTheDocument();
+    expect(container.queryByTestId('button')).toBeInTheDocument();
+    expect(container.queryByTestId('arrow-icon')).toBeInTheDocument();
+    fireEvent.click(container.queryByTestId('arrow-icon'));
+    expect(container.queryByText('common:misc.all')).toBeInTheDocument();
+    fireEvent.click(container.queryByText('common:misc.all'));
+    expect(container.queryByTestId('button')).toBeInTheDocument();
   });
 });

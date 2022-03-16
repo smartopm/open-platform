@@ -23,6 +23,7 @@ module Types
     field :invitation_create, mutation: Mutations::EntryRequest::InvitationCreate
     field :send_guest_qr_code, mutation: Mutations::EntryRequest::SendQrCode
     field :guest_entry_request_revoke, mutation: Mutations::EntryRequest::GuestEntryRequestRevoke
+    field :invitation_update, mutation: Mutations::EntryRequest::InvitationUpdate
 
     # User login
     field :login_phone_start, mutation: Mutations::Login::LoginPhoneStart
@@ -40,6 +41,7 @@ module Types
     field :note_bulk_update, mutation: Mutations::Note::NoteBulkUpdate
     field :set_note_reminder, mutation: Mutations::Note::SetNoteReminder
     field :note_document_delete, mutation: Mutations::Note::NoteDocumentDelete
+    field :note_comments_resolve, mutation: Mutations::Note::NoteCommentsResolve
 
     # Feedback
     field :feedback_create, mutation: Mutations::Feedback::FeedbackCreate

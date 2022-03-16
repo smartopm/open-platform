@@ -1,13 +1,7 @@
 import React, { Fragment } from 'react';
-import {
-  Divider,
-  Link,
-  List,
-  ListItem,
-  ListItemText,
-  Typography
-} from '@material-ui/core';
+import { Divider, Link, List, ListItem, ListItemText, Typography } from '@material-ui/core';
 import { useQuery } from 'react-apollo';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/styles';
 import { Card, CardContent, Container, Grid } from '@mui/material';
@@ -15,48 +9,83 @@ import { useHistory } from 'react-router-dom';
 import { formatError } from '../../../../utils/helpers';
 import CenteredContent from '../../../../shared/CenteredContent';
 import { Spinner } from '../../../../shared/Loading';
-import { TaskQuarterySummaryQuery, ProjectsQuery } from '../graphql/process_queries';
-import { filterProjectAndStages, calculateOpenProjectsByStage, snakeCaseToSentence } from '../utils';
-
+import { TaskQuarterySummaryQuery, ProjectsStatsQuery } from '../graphql/process_queries';
+import {
+  filterProjectAndStages,
+  calculateOpenProjectsByStage,
+  snakeCaseToSentence
+} from '../utils';
 
 export default function AdminDashboard() {
   const { t } = useTranslation('task');
   const classes = useStyles();
-  const history = useHistory()
+  const matches = useMediaQuery('(max-width:800px)');
+  const history = useHistory();
+  const quarters = ['Q1', 'Q2', 'Q3', 'Q4']
 
-  const {
-    loading: summaryLoading,
-    error: summaryError,
-    data: summaryData
-  } = useQuery(TaskQuarterySummaryQuery);
+  const { loading: summaryLoading, error: summaryError, data: summaryData } = useQuery(
+    TaskQuarterySummaryQuery,
+    {
+      fetchPolicy: 'cache-and-network'
+    }
+  );
 
-  const { loading: projectsLoading, error: projectsError, data: projectsData, }
-  = useQuery(ProjectsQuery, {
-  variables: { offset: 0, limit: 50 },
-  fetchPolicy: 'cache-and-network'
-});
+  const { loading: projectsLoading, error: projectsError, data: projectsData } = useQuery(
+    ProjectsStatsQuery,
+    {
+      variables: { offset: 0, limit: 50 },
+      fetchPolicy: 'cache-and-network'
+    }
+  );
 
-  const results = summaryData?.completedByQuarter[0] || []
+  function tasksPerQuarter(processStats, quarter) {
+    const quarterStats = processStats?.find(stats => stats[1] === quarter);
+    return quarterStats?.[2];
+  }
+
+  function tasksTillNow(processStats) {
+    const initialValue = 0;
+    const overallStats = processStats.reduce(
+      (previousValue, currentValue) => previousValue + currentValue[2],
+    initialValue);
+    return overallStats;
+  }
+
+  const currentYear = new Date().getFullYear();
+  const completedResults = summaryData?.tasksByQuarter.completed || [];
+  const submittedResults = summaryData?.tasksByQuarter.submitted || [];
+  const currentYearCompletedStats = completedResults.filter(result => result[0] === currentYear);
+  const currentYearSubmittedStats = submittedResults.filter(result => result[0] === currentYear);
 
   const cards = [
     {
       name: 'Q1',
-      completed: results[2] || 0,
+      completed: tasksPerQuarter(currentYearCompletedStats, 1) || 0,
+      submitted: tasksPerQuarter(currentYearSubmittedStats, 1) || 0,
       primary: false
     },
     {
       name: 'Q2',
-      completed: 0,
+      completed: tasksPerQuarter(currentYearCompletedStats, 2) || 0,
+      submitted: tasksPerQuarter(currentYearSubmittedStats, 2) || 0,
       primary: true
     },
     {
       name: 'Q3',
-      completed: 0,
+      completed: tasksPerQuarter(currentYearCompletedStats, 3) || 0,
+      submitted: tasksPerQuarter(currentYearSubmittedStats, 3) || 0,
       primary: true
     },
     {
       name: 'Q4',
-      completed: 0,
+      completed: tasksPerQuarter(currentYearCompletedStats, 4) || 0,
+      submitted: tasksPerQuarter(currentYearSubmittedStats, 4) || 0,
+      primary: false
+    },
+    {
+      name: t('processes.total'),
+      completed: tasksTillNow(completedResults) || 0,
+      submitted: tasksTillNow(submittedResults) || 0,
       primary: false
     }
   ];
@@ -68,75 +97,162 @@ export default function AdminDashboard() {
     kiambu_county_submission: 0,
     construction_starts: 0,
     inspections: 0,
-    post_construction: 0,
+    post_construction: 0
   };
 
-  function routeToProjects(projectStep){
-    history.push(`/processes/drc/projects?current_step=${projectStep}`)
+  function cardName(name){
+    if (quarters.includes(name)) return name;
+
+    return 'all';
+  }
+
+  function routeToProjects(paramName, paramValue) {
+    history.push(`/processes/drc/projects?${paramName}=${paramValue}`);
   }
 
   const filteredProjects = filterProjectAndStages(projectsData?.projects, projectStageLookup);
-  const stats = calculateOpenProjectsByStage(filteredProjects, projectStageLookup)
+  const stats = calculateOpenProjectsByStage(filteredProjects, projectStageLookup);
 
-  return(
-    <Container maxWidth="xl" data-testid='processes-admin-dashboard'>
-      <Typography variant="h4" className={classes.title}>{t('processes.processes')}</Typography>
+  return (
+    <Container maxWidth="xl" data-testid="processes-admin-dashboard">
+      <Typography variant="h4" className={classes.title}>
+        {t('processes.processes')}
+      </Typography>
       <Link href="/processes/drc/projects">
-        <Typography className={classes.processTitle} color='primary' variant="h5">{t('processes.drc_process')}</Typography>
+        <Typography className={classes.processTitle} color="primary" variant="h5">
+          {t('processes.drc_process')}
+        </Typography>
       </Link>
       <Grid container justifyContent="space-between" spacing={4}>
-
         <Grid item xs={12} sm={6}>
-          <Typography className={classes.quarterSection} variant="body1">{t('processes.completed_by_quarter')}</Typography>
-          {
-            summaryLoading && <Spinner />
-          }
-          {
-            summaryError && <CenteredContent>{formatError(summaryError.message)}</CenteredContent>
-          }
-          <Grid container spacing={2} className={classes.cards}>
+          <Typography className={classes.quarterSection} variant="body1">
+            {t('processes.projects_by_quarter')}
+          </Typography>
+          {summaryLoading && <Spinner />}
+          {summaryError && <CenteredContent>{formatError(summaryError.message)}</CenteredContent>}
+          <Grid container spacing={1} className={classes.cards}>
+            <Grid item xs={2.5} />
+            {matches && <Grid item xs={1} />}
             {cards.map((card, index) => (
               // eslint-disable-next-line react/no-array-index-key
-              <Grid key={index} item xs={6} sm={12} md={6}>
-                <Card className={classes.card}>
+              <Grid key={index} item xs={1.5} container justifyContent="center" alignItems="center">
+                <Typography variant="caption">{card.name}</Typography>
+              </Grid>
+            ))}
+          </Grid>
+
+          <Grid container spacing={1} style={{ marginBottom: '12px', paddingLeft: '7px' }}>
+            <Grid
+              item
+              container
+              justifyContent="center"
+              alignItems="center"
+              xs={2.5}
+              style={{
+                background: '#F5F5F4',
+                borderRadius: '4px',
+                height: '47px',
+                marginTop: '7px',
+                paddingTop: 0,
+                paddingRight: '8px'
+              }}
+            >
+              <Typography variant="caption" color="secondary">
+                {t('processes.submitted')}
+              </Typography>
+            </Grid>
+            {matches && <Grid item xs={1} />}
+            {cards.map((card, index) => (
+              // eslint-disable-next-line react/no-array-index-key
+              <Grid key={index} item xs={1.5}>
+                <Card
+                  className={classes.card}
+                  onClick={() => routeToProjects('submitted_per_quarter', cardName(card.name))}
+                  style={{ cursor: 'pointer', boxShadow: 'none' }}
+                >
                   <CardContent
-                    className={`${card.primary ? classes.evenCardsBackground : classes.oddCardsBackground} ${classes.cardContent}`}
+                    className={`${index === 4 ? classes.evenCardsBackground: classes.oddCardsBackground} ${classes.cardContent}`}
+                    style={{ paddingTop: '8px', paddingBottom: '8px' }}
                   >
-                    <Grid container justifyContent="center" alignItems="center" direction="column">
-                      <Typography variant="body2">Total completed</Typography>
-                      <Typography variant="body2">{`${card.name} completed`}</Typography>
-                      <Typography variant="body1" style={{fontSize: '2rem'}}>{card.completed}</Typography>
+                    <Grid container justifyContent="center" alignItems="center">
+                      <Typography variant="body1" style={{ fontSize: '1.2rem' }}>
+                        {card.submitted}
+                      </Typography>
                     </Grid>
                   </CardContent>
                 </Card>
               </Grid>
-              ))}
+            ))}
+          </Grid>
+
+          <Grid container spacing={1} style={{ paddingLeft: '7px' }}>
+            <Grid
+              item
+              container
+              justifyContent="center"
+              alignItems="center"
+              xs={2.5}
+              style={{
+                background: '#F5F5F4',
+                borderRadius: '4px',
+                height: '47px',
+                marginTop: '7px',
+                paddingTop: 0,
+                paddingRight: '8px'
+              }}
+            >
+              <Typography variant="caption" color="secondary">
+                {t('processes.completed')}
+              </Typography>
+            </Grid>
+            {matches && <Grid item xs={1} />}
+            {cards.map((card, index) => (
+              // eslint-disable-next-line react/no-array-index-key
+              <Grid key={index} item xs={1.5}>
+                <Card
+                  className={classes.card}
+                  onClick={() => routeToProjects('completed_per_quarter', cardName(card.name))}
+                  style={{ cursor: 'pointer', boxShadow: 'none' }}
+                >
+                  <CardContent
+                    className={`${index === 4 ? classes.evenCardsBackground: classes.oddCardsBackground} ${classes.cardContent}`}
+                    style={{ paddingTop: '8px', paddingBottom: '8px' }}
+                  >
+                    <Grid container justifyContent="center" alignItems="center">
+                      <Typography variant="body1" style={{ fontSize: '1.2rem' }}>
+                        {card.completed}
+                      </Typography>
+                    </Grid>
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))}
           </Grid>
         </Grid>
         <Grid item xs={12} sm={6}>
           <Typography variant="body1">{t('processes.projects_by_stage')}</Typography>
-          {
-            projectsLoading && <Spinner />
-          }
-          {
-            projectsError && <CenteredContent>{formatError(projectsError.message)}</CenteredContent>
-          }
+          {projectsLoading && <Spinner />}
+          {projectsError && <CenteredContent>{formatError(projectsError.message)}</CenteredContent>}
           <List data-testid="project-stages">
             {Object.entries(stats).map(([stage, count]) => (
               <Fragment key={stage}>
                 <ListItem
-                  onClick={() => routeToProjects(snakeCaseToSentence(stage))}
+                  onClick={() => routeToProjects('current_step', snakeCaseToSentence(stage))}
                   className={classes.projectStageLink}
                 >
                   <Grid container>
                     <Grid item xs={11}>
                       <ListItemText>
-                        <Typography variant="body2">{t(`processes.drc_stages.${stage}`)}</Typography>
+                        <Typography variant="body2">
+                          {t(`processes.drc_stages.${stage}`)}
+                        </Typography>
                       </ListItemText>
                     </Grid>
                     <Grid item xs={1}>
                       <ListItemText>
-                        <Typography color='primary' className={classes.projectStageCount}>{count}</Typography>
+                        <Typography color="primary" className={classes.projectStageCount}>
+                          {count}
+                        </Typography>
                       </ListItemText>
                     </Grid>
                   </Grid>
@@ -148,7 +264,7 @@ export default function AdminDashboard() {
         </Grid>
       </Grid>
     </Container>
-  )
+  );
 }
 
 const useStyles = makeStyles(theme => ({

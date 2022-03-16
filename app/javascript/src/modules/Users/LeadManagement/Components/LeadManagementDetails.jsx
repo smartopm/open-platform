@@ -2,19 +2,30 @@ import React, { useState } from 'react';
 import { Grid, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useTranslation } from 'react-i18next';
+import { useQuery } from 'react-apollo';
 import Box from '@mui/material/Box';
 import PropTypes from 'prop-types';
+import { LeadDetailsQuery } from '../../../../graphql/queries';
+import { Spinner } from '../../../../shared/Loading';
+import CenteredContent from '../../../../shared/CenteredContent';
 import LeadManagementForm from './LeadManagementForm';
-import { objectAccessor } from '../../../../utils/helpers';
+import { objectAccessor, formatError } from '../../../../utils/helpers';
 import { StyledTabs, StyledTab, TabPanel, a11yProps } from '../../../../components/Tabs';
+import UserNotes from '../../Components/UserNotes';
+import LeadManagementTask from './LeadManagementTask';
 
 export default function LeadManagementDetails({ userId }) {
   const { t } = useTranslation('common');
   const [tabValue, setTabValue] = useState(0);
+  const { loading, error, data } = useQuery(LeadDetailsQuery, {
+    variables: { id: userId },
+    fetchPolicy: 'cache-and-network'
+  });
 
   const TAB_VALUES = {
     details: 0,
-    notes: 1
+    tasks: 1,
+    notes: 2
   };
   function handleTabValueChange(_event, newValue) {
     setTabValue(Number(newValue));
@@ -23,6 +34,9 @@ export default function LeadManagementDetails({ userId }) {
   const Item = styled(Box)(({ theme }) => ({
     padding: theme.spacing(1)
   }));
+
+  if (loading) return <Spinner />;
+  if (error) return <CenteredContent>{formatError(error.message)}</CenteredContent>;
 
   return (
     <Grid
@@ -50,15 +64,16 @@ export default function LeadManagementDetails({ userId }) {
                 }
                 {...a11yProps(0)}
               />
-              {/* <StyledTab
+              <StyledTab
                 label={t('lead_management.task_header')}
                 style={
-                  tabValue === objectAccessor(TAB_VALUES, 'task')
-                    ? { fontSize: '10px', borderBottom: 'solid 1px' }
-                    : { fontSize: '10px' }
+                  tabValue === objectAccessor(TAB_VALUES, 'details')
+                    ? { fontSize: '10px', textAlign: 'left', borderBottom: 'solid 1px' }
+                    : { fontSize: '10px', textAlign: 'left' }
                 }
                 {...a11yProps(1)}
-              /> */}
+              />
+
               <StyledTab
                 label={t('lead_management.note_header')}
                 style={
@@ -72,13 +87,14 @@ export default function LeadManagementDetails({ userId }) {
           </Box>
 
           <TabPanel value={tabValue} index={0} data-testid="lead-management-details-tab">
-            <LeadManagementForm userId={userId} />
+            {data && <LeadManagementForm data={data} />}
           </TabPanel>
-          {/* <TabPanel value={tabValue} index={1} data-testid="lead-management-task-tab">
-            <></> */}
-          {/* </TabPanel> */}
-          <TabPanel value={tabValue} index={1} data-testid="lead-management-note-tab">
-            <></>
+          <TabPanel value={tabValue} index={1} data-testid="lead-management-task-tab">
+            <LeadManagementTask taskId={data?.user?.taskId} tabValue={tabValue} />
+          </TabPanel>
+
+          <TabPanel value={tabValue} index={2} data-testid="lead-management-note-tab">
+            <UserNotes userId={userId} tabValue={tabValue} />
           </TabPanel>
         </Item>
       </Grid>

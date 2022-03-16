@@ -293,7 +293,7 @@ export const InvoiceType = {
 
 export function generateId() {
   if (!window.crypto) {
-    return ['233b1634-bf08-4ece-a213-b3f120a1e008', 'sdfsdfsdfsdfwerfwe']
+    return ['233b1634', 'bf08', '4ece', 'a213', 'b3f120a', '1e008', 'sdfsdfsdfsdfwerfwe', 1, 23, 4]
   }
   const array = new Uint32Array(10)
   return window.crypto.getRandomValues(array)
@@ -585,10 +585,35 @@ export function ifNotTest(){
 
 
 export function secureFileDownload(path) {
-  const element = document.createElement('a');
-  element.setAttribute('href', path);
-  element.setAttribute('download', '');
-  document.body.appendChild(element);
-  element.click();
-  document.body.removeChild(element);
+  const link = document.createElement('a');
+  link.setAttribute('href', path);
+  link.setAttribute('download', '');
+  link.setAttribute('target', '_blank');
+  link.onclick = function(e) { e.preventDefault(); window.open(path, '_blank'); link.click(); };
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+/**
+ * split camelCase words
+ * @param {String} camelCase word
+ * @returns split words
+ */
+ export function splitCamelCase(word){
+  return word.replace(/([a-z])([A-Z])/g, '$1 $2')
+}
+
+export function sortTaskOrder(taskItem1, taskItem2){
+  if(!taskItem1 || !taskItem2) return;
+
+  return (
+    Number(taskItem1.order) - Number(taskItem2.order)
+  );
+}
+
+export function extractHostname(urlString) {
+  if (!urlString) return;
+
+  return urlString.split('/')[2]
 }

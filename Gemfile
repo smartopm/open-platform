@@ -4,7 +4,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby '>=2.6.2'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '6.1.4.1'
+gem 'rails', '6.1.4.6'
 # Use sqlite3 as the database for Active Record
 gem 'pg', '~> 1.1.4'
 # Use Puma as the app server
@@ -45,7 +45,7 @@ gem 'repost'
 gem "omniauth-google-oauth2", "~> 0.8.0"
 gem 'omniauth-rails_csrf_protection'
 # https://github.com/heartcombo/devise/pull/5327
-gem "devise", github: "heartcombo/devise", branch: "master"
+gem "devise", github: "heartcombo/devise", branch: "main"
 gem 'jwt'
 gem "omniauth-facebook", "~> 8.0.0"
 
@@ -89,6 +89,9 @@ gem 'awesome_print'
 
 # For better http request handling
 gem 'httparty'
+
+# For CSV delimiters detection
+gem 'acsv'
 
 group :development, :test do
   gem 'bullet'

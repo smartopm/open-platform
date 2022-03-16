@@ -24,6 +24,11 @@
     "task_description_label": "Task Description",
     "task_type_label": "Task Type",
     "task_assignee_label": "Assign this task to users",
+    "search_users": "Search Users",
+    "require_a_reply": "Require a reply",
+    "needs_reply_from": "NEEDS REPLY from",
+    "all_comments_resolved": "ALL COMMENTS RESOLVED",
+    "replied": "replied",
     "task_search_placeholder": "Search Assignee",
     "task_user_label": "Task user",
     "task_reminder_in_1_hr": "Remind Me in 1 hour",
@@ -52,7 +57,13 @@
     "selected_task_marked_as": "Selected Tasks have been successfully marked as",
     "incomplete": "Incomplete",
     "delete_confirmation_text": "Are you sure you want to delete your comment?",
-    "task_completed": "Task completed"
+    "task_completed": "Task completed",
+    "add_note": "Add a note",
+    "not_started": "Not Started",
+    "in_progress": "In Progress",
+    "needs_attention": "Needs Attention",
+    "at_risk": "At Risk",
+    "completed": "Complete"
   },
   "document": {
     "uploaded_at": "Uploaded at",
@@ -84,7 +95,9 @@
     "processes": "Processes",
     "documents": "Documents",
     "drc_process": "DRC Process",
-    "completed_by_quarter": "Completed by Quarter",
+    "projects_by_quarter": "Projects by Quarter",
+    "completed": "Completed",
+    "submitted": "Submitted",
     "projects_by_stage": "Projects by Stage",
     "no_data": "No data to display",
     "drc_stages": {
@@ -96,17 +109,23 @@
       "inspections": "Inspections",
       "post_construction": "Post Constructions"
     },
-    "activity_summary": "Activity Summary",
-    "no_activity_summary": "This project has no activity yet. Add a comment to start the activity.",
-    "no_ssigned_projects": "You do not have any assigned projects yet!",
+    "activity_summary": "Reply Requested",
+    "no_activity_summary": "You’re all caught up. No comments require a reply.",
     "no_assigned_projects": "You do not have any assigned projects yet!",
     "no_projects": "Process does not have projects to display",
     "your_tasks": "Your Tasks",
     "no_open_tasks": "Project does not have open tasks",
     "process_steps": "Process Steps",
-    "no_steps_assigned": "There are no Steps currently assigned to this process."
+    "no_steps_assigned": "There are no Steps currently assigned to this process.",
+    "submitted_by": "Submitted By",
+    "submitted_form": "Submitted Form",
+    "open_submitted_form": "Open Form",
+    "no_form_data": "Project submission information not found",
+    "year_to_date": "Year to Date",
+    "total": "Total"
   },
   "misc": {
-    "confirm": "Confirm"
+    "confirm": "Confirm",
+    "reply": "Reply"
   }
 }

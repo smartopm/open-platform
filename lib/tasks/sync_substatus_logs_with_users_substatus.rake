@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/BlockLength
 desc "Create substatus logs as per with user's substatus"
 task sync_substatus_logs_with_users_substatus: :environment do
   # Returns the most recent date when a substatus was updated for a user
@@ -55,4 +54,3 @@ task sync_substatus_logs_with_users_substatus: :environment do
     end
   end
 end
-# rubocop:enable Metrics/BlockLength

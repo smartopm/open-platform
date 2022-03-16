@@ -357,12 +357,6 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
     history.push(`/logbook?tab=${state.tabValue}&offset=${state.offset}`)
   }
 
-  function disableEdit() {
-    if(authState?.user?.userType !== 'admin' && isGuestRequest && formData?.user &&
-        authState?.user?.id !== formData.user.id)
-      return true;
-    return false;
-  }
   return (
     <>
       <ReasonInputModal
@@ -483,7 +477,6 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
               requiredFields.includes('name') &&
               !formData.name &&
               t('logbook:errors.required_field', { fieldName: 'Name' })}
-              disabled={disableEdit()}
             />
           </div>
           <div className="form-group">
@@ -497,7 +490,6 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
               onChange={handleInputChange}
               value={formData.email}
               inputProps={{ 'data-testid': 'email' }}
-              disabled={disableEdit()}
               error={emailError}
               helperText={emailError && !isEmailValid() && t('discussion:helper_text.invalid_email')}
             />
@@ -520,7 +512,6 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
               requiredFields.includes('nrc') &&
               !formData.nrc &&
               t('logbook:errors.required_field', { fieldName: 'ID' })}
-              disabled={disableEdit()}
             />
           </div>
           <div className="form-group">
@@ -541,7 +532,6 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
               requiredFields.includes('phoneNumber') &&
               !formData.phoneNumber &&
               t('logbook:errors.required_field', { fieldName: 'Phone Number' })}
-              disabled={disableEdit()}
             />
           </div>
           <div className="form-group">
@@ -562,7 +552,6 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
               requiredFields.includes('vehiclePlate') &&
               !formData.vehiclePlate &&
               t('logbook:errors.required_field', { fieldName: 'Vehicle Plate Number' })}
-              disabled={disableEdit()}
             />
           </div>
           <div className="form-group">
@@ -583,7 +572,6 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
                   requiredFields.includes('companyName') &&
                   !formData.companyName &&
                   t('logbook:errors.required_field', { fieldName: 'Company Name' })}
-              disabled={disableEdit()}
             />
           </div>
           <div className="form-group">
@@ -603,7 +591,6 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
               requiredFields.includes('reason') &&
               !formData.reason ?
               t('logbook:errors.required_field', { fieldName: 'Reason' }) : formData.business}
-              disabled={disableEdit()}
             >
               {
               Object.keys(defaultBusinessReasons).map(_reason => (
@@ -752,7 +739,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
         </form>
       </div>
     </>
- );
+  );
 }
 
 

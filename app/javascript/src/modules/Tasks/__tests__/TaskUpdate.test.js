@@ -4,7 +4,7 @@ import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom/';
 import { MockedProvider } from '@apollo/react-testing';
 import TaskUpdate from '../containers/TaskUpdate';
-import { TaskQuery } from "../graphql/task_queries";
+import { TaskQuery } from '../graphql/task_queries';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import authState from '../../../__mocks__/authstate';
 
@@ -19,7 +19,7 @@ const props = {
 };
 
 describe('TaskUpdate Component', () => {
-  it('redirects to / and do not render task', () => {
+  it('redirects to / and do not render task', async () => {
     const container = render(
       <MockedProvider>
         <BrowserRouter>
@@ -28,7 +28,9 @@ describe('TaskUpdate Component', () => {
       </MockedProvider>
     );
 
-    expect(container.queryByTestId('loader')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(container.queryByTestId('loader')).toBeInTheDocument();
+    }, 10)
   });
 
   it('renders task details', async () => {
@@ -50,6 +52,14 @@ describe('TaskUpdate Component', () => {
               dueDate: '',
               attachments: '',
               formUserId: '',
+              status: 'in_progress',
+              formUser: {
+                id: 'some-id',
+                user: {
+                  id: 'user-id',
+                  name: 'Form User Name'
+                }
+              },
               user: {
                 id: '5678fgd',
                 name: 'Joe',
@@ -119,7 +129,7 @@ describe('TaskUpdate Component', () => {
     );
 
     await waitFor(() => {
-      expect(container.queryByText('Network error: An error occurred')).toBeInTheDocument();
+      expect(container.queryByText('An error occurred')).toBeInTheDocument();
     }, 10);
   });
 });

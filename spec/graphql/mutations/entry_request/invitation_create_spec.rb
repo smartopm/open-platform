@@ -169,6 +169,44 @@ RSpec.describe Mutations::EntryRequest::InvitationCreate do
           expect(community.users.find_by(name: 'some other').user_type).to eql 'visitor'
           expect(result.dig('data', 'invitationCreate', 'success')).to eql true
         end
+
+        it 'it should create invitations with company names' do
+          guests = [
+            {
+              firstName: '',
+              companyName: 'some Xs',
+              phoneNumber: '9232422312',
+            },
+            {
+              companyName: 'some',
+              lastName: '',
+              phoneNumber: '43423323213',
+            },
+            {
+              companyName: 'other',
+              phoneNumber: '4342323213',
+            },
+          ]
+          variables = {
+            guests: guests,
+            visitationDate: '2021-10-10',
+            userIds: [],
+          }
+
+          expect(admin.invitees.count).to eql 0
+          result = DoubleGdpSchema.execute(invitation_create_mutation,
+                                           variables: variables,
+                                           context: {
+                                             current_user: admin,
+                                             site_community: community,
+                                           }).as_json
+          expect(result.dig('errors', 0, 'message')).to be_nil
+          expect(admin.invitees.count).to eql 3
+          expect(community.entry_requests.find_by(company_name: 'some Xs')).not_to be_nil
+          expect(community.entry_requests.find_by(company_name: 'other')).not_to be_nil
+          expect(community.users.find_by(name: 'some').user_type).to eql 'visitor'
+          expect(result.dig('data', 'invitationCreate', 'success')).to eql true
+        end
       end
     end
 

@@ -88,12 +88,19 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
+ProjectActivitySummary.defaultProps = {
+  commentsError: null,
+  comments: null
+};
+
 ProjectActivitySummary.propTypes = {
   comments: PropTypes.shape({
     projectComments: PropTypes.arrayOf(PropTypes.shape())
-  }).isRequired,
+  }),
   commentsLoading: PropTypes.bool.isRequired,
-  commentsError: PropTypes.string.isRequired,
+  commentsError: PropTypes.shape({
+    message: PropTypes.string
+  }),
   commentsRefetch: PropTypes.func.isRequired,
   commentsFetchMore: PropTypes.func.isRequired
 }

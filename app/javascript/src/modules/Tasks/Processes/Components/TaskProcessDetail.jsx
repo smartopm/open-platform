@@ -1,3 +1,4 @@
+/* eslint-disable max-statements */
 import React, { useState, useEffect } from 'react';
 import { useHistory, useParams } from 'react-router';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
@@ -5,11 +6,17 @@ import { useQuery } from 'react-apollo';
 import { Grid, Typography } from '@mui/material';
 import IconButton from '@material-ui/core/IconButton';
 import ShareIcon from '@mui/icons-material/Share';
+import Edit from '@material-ui/icons/Edit';
 import { useTranslation } from 'react-i18next';
 import TaskContextProvider from '../../Context';
 import { StyledTabs, StyledTab, TabPanel, a11yProps } from '../../../../components/Tabs';
 import ProjectOverview, { ProjectOverviewSplitView } from './ProjectOverview';
-import { objectAccessor, useParamsQuery } from '../../../../utils/helpers';
+import {
+  objectAccessor,
+  useParamsQuery,
+  removeNewLines,
+  sanitizeText
+} from '../../../../utils/helpers';
 import ProjectProcesses from './ProjectProcesses';
 import ProjectProcessesSplitView from './ProjectProcessesSplitView';
 import ErrorPage from '../../../../components/Error';
@@ -18,7 +25,6 @@ import { SubTasksQuery, TaskQuery } from '../../graphql/task_queries';
 import { hrefsExtractor } from '../utils';
 import MessageAlert from '../../../../components/MessageAlert';
 import { ProjectCommentsQuery } from '../graphql/process_queries';
-import TaskTitle from '../../Components/TaskTitle';
 
 export default function TaskProcessDetail() {
   const limit = 20;
@@ -84,8 +90,14 @@ export default function TaskProcessDetail() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [path, tab]);
 
-  function handleProjectStepClick() {
+  function handleProjectStepClick(task, currentTab='processes', detailTab='subtasks') {
     setSplitScreenOpen(true);
+    history.push({
+      pathname: `/processes/drc/projects/${task?.id}`,
+      search: `?tab=${currentTab}&detailTab=${detailTab}`,
+      state: { from: history.location.pathname,  search: history.location.search }
+    })
+    window.document.getElementById('anchor-section').scrollIntoView()
   }
 
   if (projectDataLoading || subStepsLoading) return <Loading />;
@@ -105,13 +117,27 @@ export default function TaskProcessDetail() {
             <Grid container>
               <Grid item md={11} xs={10} data-testid="project-title" style={{paddingTop: '20px'}}>
                 <Typography variant="h4">
-                  <TaskTitle task={projectData?.task} />
+                  <span
+                    data-testid='task-title'
+                    // eslint-disable-next-line react/no-danger
+                    dangerouslySetInnerHTML={{
+                      __html: sanitizeText(removeNewLines(projectData?.task.body))
+                    }}
+                  />
                 </Typography>
               </Grid>
               <Grid item md={1} xs={2} style={{textAlign: 'right', marginTop: '20px'}}>
                 <IconButton color='primary' onClick={shareOnclick}>
                   <ShareIcon />
                 </IconButton>
+                {matches && (
+                  <IconButton
+                    color='primary'
+                    onClick={() => handleProjectStepClick(projectData?.task)}
+                  >
+                    <Edit />
+                  </IconButton>
+                )}
               </Grid>
             </Grid>
             <StyledTabs

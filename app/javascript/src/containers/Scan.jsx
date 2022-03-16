@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next'
 import { FormControlLabel, Switch } from '@material-ui/core'
 import { Footer } from '../components/Footer'
 import { Context } from './Provider/AuthStateProvider.js'
+import { extractHostname } from '../utils/helpers'
 
 /* istanbul ignore next */
 export default function QRScan() {
@@ -65,6 +66,10 @@ export default function QRScan() {
 
   const handleScan = data => {
     if (data) {
+      if (window.location.hostname !== extractHostname(data)) {
+        setError(t('common:errors.invalid_qr_data'))
+        return
+      }
       setScanned(true)
       window.location = data
     }
@@ -84,6 +89,7 @@ export default function QRScan() {
         <h1 className="text-center">{t('misc.decoding')}</h1>
       ) : (
           <>
+            {error && <p className="text-center text-danger">{error}</p>}
             <video
               style={{
                 display: 'none'
@@ -96,7 +102,6 @@ export default function QRScan() {
               onScan={handleScan}
               style={{ width: '100%' }}
             />
-            {error && <p className="text-center text-danger">{error}</p>}
 
             <div
               className="row justify-content-center align-items-center "

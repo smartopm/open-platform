@@ -354,10 +354,13 @@ export const CreateNote = gql`
 `
 
 export const TaskComment = gql`
-mutation noteCommentCreate($noteId: ID!, $body: String!) {
+mutation noteCommentCreate($noteId: ID!, $body: String!, $replyRequired: Boolean, $replyFromId: ID, $groupingId: ID) {
   noteCommentCreate(
-    noteId: $noteId,,
-    body:$body
+    noteId: $noteId
+    body: $body
+    replyRequired: $replyRequired
+    replyFromId: $replyFromId
+    groupingId: $groupingId
   ) {
     noteComment {
       body
@@ -523,6 +526,7 @@ export const UpdateNote = gql`
     $dueDate: String
     $parentNoteId: ID
     $documentBlobId: String
+    $status: String
   ) {
     noteUpdate(
       id: $id
@@ -535,12 +539,14 @@ export const UpdateNote = gql`
       dueDate: $dueDate
       parentNoteId: $parentNoteId
       documentBlobId: $documentBlobId
+      status: $status
     ) {
       note {
         flagged
         body
         id
         dueDate
+        status
         parentNote {
           id
         }
@@ -969,8 +975,8 @@ mutation updateComment($commentId: ID!, $discussionId: ID!, $status: String!){
 `
 
 export const ImportCreate = gql`
-  mutation usersImport($csvString: String!, $csvFileName: String!) {
-    usersImport(csvString: $csvString, csvFileName: $csvFileName) {
+  mutation usersImport($csvString: String!, $csvFileName: String!, $importType: String!) {
+    usersImport(csvString: $csvString, csvFileName: $csvFileName, importType: $importType) {
       success
     }
   }

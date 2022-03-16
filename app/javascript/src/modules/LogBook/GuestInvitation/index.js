@@ -11,7 +11,7 @@ function RenderGuestList() {
     <AccessCheck module={currentModule} allowedPermissions={guestListPermissions}>
       <InvitedGuests />
     </AccessCheck>
-)
+  )
 }
 
 function RenderGuestSearch() {
@@ -19,7 +19,7 @@ function RenderGuestSearch() {
     <AccessCheck module={currentModule} allowedPermissions={guestListPermissions}>
       <GuestSearch />
     </AccessCheck>
-)
+  )
 }
 
 const GuestInvitationRoutes = {
@@ -29,6 +29,7 @@ const GuestInvitationRoutes = {
   },
   styleProps: {
     icon: null,
+    className: 'guest-list-sub-menu-item'
   },
   name: (t) => t('menu.guest_list'),
   featureName: 'Guest List',

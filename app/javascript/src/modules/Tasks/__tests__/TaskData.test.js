@@ -10,6 +10,7 @@ import MockedThemeProvider from '../../__mocks__/mock_theme'
 import t from '../../__mocks__/t'
 import { Context } from '../../../containers/Provider/AuthStateProvider'
 import authState from '../../../__mocks__/authstate';
+import { SubTasksQuery } from '../graphql/task_queries'
 
 describe('Task Data components', () => {
   const taskHeader = [
@@ -70,7 +71,9 @@ describe('Task Data components', () => {
           blob_id: '21b8b3d1-40fa-4f9d-a7ac-721ce6e7f772',
           created_at: '2021-11-02T13:37:26.664+02:00'
         },
-      ]
+      ],
+      taskCommentReply: true,
+      order: 1,
     }
 
   it('should render proper the link to user component', () => {
@@ -112,7 +115,6 @@ describe('Task Data components', () => {
       expect(container.getByTestId("task_completion_toggle_button")).toBeInTheDocument()
       expect(container.getByTestId("task_body_section")).toBeInTheDocument()
       expect(container.getByTestId("task_body")).toBeInTheDocument()
-      expect(container.getByTestId("task_assignee")).toBeInTheDocument()
       expect(container.getByTestId("task_subtasks")).toBeInTheDocument()
       expect(container.getByTestId("task_comments")).toBeInTheDocument()
       expect(container.getByTestId("task_details_section")).toBeInTheDocument()
@@ -149,7 +151,6 @@ describe('Task Data components', () => {
       expect(screen.getByTestId("task_completion_toggle_button")).toBeInTheDocument();
       expect(screen.getByTestId("task_body_section")).toBeInTheDocument();
       expect(screen.getByTestId("task_body")).toBeInTheDocument();
-      expect(screen.getByTestId("task_assignee")).toBeInTheDocument();
     }, 10)
   });
 
@@ -250,10 +251,79 @@ describe('Task Data components', () => {
       expect(container.queryByTestId('task-comment')).toBeInTheDocument();
       expect(container.getByTestId("progress_bar_small_screen")).toBeInTheDocument()
       expect(container.queryByTestId('task_completion_toggle_button')).toBeInTheDocument();
+      expect(container.queryByTestId('task_status')).toBeInTheDocument();
       fireEvent.click(container.queryByTestId('task_completion_toggle_button'));
 
       expect(container.queryByTestId('task_attach_file')).toBeInTheDocument();
       fireEvent.click(container.queryByTestId('task_attach_file'));
     })
+  });
+
+  it('should toggle sub tasks in order', async () => {
+    const taskWithOrderedSubTasks = {
+      ...task,
+      subTasksCount: 3,
+      subTasks: [
+        { body: 'Sub Step 1', order: 1, ...task },
+        { body: 'Sub Step 2', order: 2, ...task },
+        { body: 'Sub Step 3', order: 3, ...task },
+      ]
+    }
+
+    const subTaskMock = [
+      {
+        request: {
+          query: SubTasksQuery,
+          variables: { taskId: task.id }
+        },
+        result: {
+          data: {
+            taskSubTasks: [
+              { body: 'Sub Step 1', order: 1 },
+              { body: 'Sub Step 2', order: 2 },
+              { body: 'Sub Step 3', order: 3 },
+            ]
+          }
+        }
+      }
+    ];  
+
+    const container = render(
+      <BrowserRouter>
+        <MockedProvider mocks={subTaskMock} addTypename={false}>
+          <Context.Provider value={authState}>
+            <MockedThemeProvider>
+              <TodoItem
+                task={taskWithOrderedSubTasks}
+                handleChange={() => {}}
+                selectedTasks={[]}
+                isSelected={false}
+                handleTaskDetails={() => {}}
+                handleCompleteNote={() => {}}
+                handleAddSubTask={jest.fn()}
+                handleTodoClick={jest.fn}
+                handleTaskCompletion={jest.fn}
+                handleUploadDocument={jest.fn}
+              />
+            </MockedThemeProvider>
+          </Context.Provider>
+        </MockedProvider>
+      </BrowserRouter>
+    )
+
+    await waitFor(async () => {
+      
+      expect(container.getByTestId("task_details_section")).toBeInTheDocument()
+      expect(container.getByTestId("task_status_chip_mobile")).toBeInTheDocument()
+      expect(container.getByTestId("task-title")).toBeInTheDocument()
+      expect(container.getByTestId("custom_progress_bar_text_mobile")).toBeInTheDocument()
+      expect(container.getByTestId("task-subtasks-count")).toBeInTheDocument()
+      expect(container.getByTestId("task-comment")).toBeInTheDocument()
+      expect(container.getByTestId("file_attachments_total")).toBeInTheDocument()
+      expect(container.getByTestId("show_task_subtasks")).toBeInTheDocument()
+      
+      
+      fireEvent.click(container.queryByTestId('show_task_subtasks'));
+    }, 10)
   });
 });

@@ -1,5 +1,5 @@
 import React from 'react'
-import { render, fireEvent } from '@testing-library/react'
+import { render, fireEvent, waitFor } from '@testing-library/react'
 import { BrowserRouter } from 'react-router-dom/'
 import { MockedProvider } from '@apollo/react-testing'
 import ReactTestUtils from "react-dom/test-utils";
@@ -41,14 +41,17 @@ describe('Comment Edit Field Component', () => {
       </MockedProvider>
     )
 
-    const body = container.queryByTestId('body_input')
-    const commentButton = container.queryByTestId('button')
-    expect(body).toBeInTheDocument();
-    expect(commentButton).toBeInTheDocument();
-  
-    ReactTestUtils.Simulate.change(body, { target: { value: "new body" } });
-    expect(body.value).toBe('new body')
-    fireEvent.click(commentButton)
+    await waitFor(() => {
+      const body = container.queryByTestId('body_input')
+      const commentButton = container.queryByTestId('button')
+      expect(body).toBeInTheDocument();
+      expect(commentButton).toBeInTheDocument();
+    
+      ReactTestUtils.Simulate.change(body, { target: { value: "new body" } });
+      expect(body.value).toBe('new body')
+      fireEvent.click(commentButton)
+    }, 10)
+
   })
 
   it('render with error', async () => {
@@ -73,13 +76,15 @@ describe('Comment Edit Field Component', () => {
       </MockedProvider>
     )
 
-    const body = container.queryByTestId('body_input')
-    const commentButton = container.queryByTestId('button')
-    expect(body).toBeInTheDocument();
-    expect(commentButton).toBeInTheDocument();
-  
-    ReactTestUtils.Simulate.change(body, { target: { value: "new body" } });
-    expect(body.value).toBe('new body')
-    fireEvent.click(commentButton)
+    await waitFor(() => {
+      const body = container.queryByTestId('body_input')
+      const commentButton = container.queryByTestId('button')
+      expect(body).toBeInTheDocument();
+      expect(commentButton).toBeInTheDocument();
+    
+      ReactTestUtils.Simulate.change(body, { target: { value: "new body" } });
+      expect(body.value).toBe('new body')
+      fireEvent.click(commentButton)
+    }, 10)
   })
 })

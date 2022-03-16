@@ -37,6 +37,8 @@ export default function ProjectProcessesSplitView({
         ) : (
           <TaskUpdate
             taskId={selectedStep?.id || projectId}
+            handleSplitScreenOpen={handleProjectStepClick}
+            handleSplitScreenClose={() => setSplitScreenOpen(false)}
             handleTaskCompletion={(id, completed) => handleStepCompletion(id, completed, refetch)}
             commentsRefetch={commentsRefetch}
             forProcess

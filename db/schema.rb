@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_02_09_065133) do
+ActiveRecord::Schema.define(version: 2022_03_14_083310) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -223,6 +223,7 @@ ActiveRecord::Schema.define(version: 2022_02_09_065133) do
     t.string "sms_phone_numbers", default: [], array: true
     t.string "emergency_call_number"
     t.string "ga_id"
+    t.string "domains", default: [], array: true
     t.index ["slug"], name: "index_communities_on_slug", unique: true
   end
 
@@ -410,6 +411,7 @@ ActiveRecord::Schema.define(version: 2022_02_09_065133) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.uuid "entry_request_id"
+    t.integer "status", default: 0
     t.index ["entry_request_id"], name: "index_invites_on_entry_request_id"
     t.index ["host_id", "guest_id"], name: "index_invites_on_host_id_and_guest_id", unique: true
   end
@@ -507,6 +509,10 @@ ActiveRecord::Schema.define(version: 2022_02_09_065133) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "status"
+    t.boolean "reply_required", default: false
+    t.datetime "replied_at"
+    t.uuid "grouping_id"
+    t.uuid "reply_from_id"
     t.index ["note_id"], name: "index_note_comments_on_note_id"
     t.index ["user_id"], name: "index_note_comments_on_user_id"
   end
@@ -546,6 +552,8 @@ ActiveRecord::Schema.define(version: 2022_02_09_065133) do
     t.datetime "completed_at"
     t.uuid "current_step"
     t.string "current_step_body"
+    t.integer "status", default: 0
+    t.integer "order", default: 1
     t.index ["form_user_id"], name: "index_notes_on_form_user_id"
     t.index ["parent_note_id"], name: "index_notes_on_parent_note_id"
   end
@@ -814,6 +822,7 @@ ActiveRecord::Schema.define(version: 2022_02_09_065133) do
     t.uuid "latest_substatus_id"
     t.string "ext_ref_id"
     t.uuid "role_id", null: false
+    t.string "region"
     t.string "title"
     t.string "linkedin_url"
     t.string "company_name"
@@ -835,14 +844,21 @@ ActiveRecord::Schema.define(version: 2022_02_09_065133) do
     t.string "lead_type"
     t.string "client_category"
     t.text "next_steps"
-    t.datetime "first_contact_date"
     t.datetime "last_contact_date"
-    t.string "created_by"
     t.string "modified_by"
+    t.datetime "first_contact_date"
+    t.string "created_by"
     t.string "relevant_link"
     t.jsonb "contact_details"
     t.string "african_presence"
-    t.string "region"
+    t.string "task_id"
+    t.string "capex_amount"
+    t.string "jobs_created"
+    t.string "jobs_timeline"
+    t.datetime "kick_off_date"
+    t.string "investment_size"
+    t.string "investment_timeline"
+    t.string "decision_timeline"
     t.index ["community_id", "email"], name: "index_users_on_community_id_and_email", unique: true
     t.index ["latest_substatus_id"], name: "index_users_on_latest_substatus_id"
     t.index ["role_id"], name: "index_users_on_role_id"

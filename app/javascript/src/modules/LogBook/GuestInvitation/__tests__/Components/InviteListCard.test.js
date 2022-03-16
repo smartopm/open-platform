@@ -11,6 +11,7 @@ describe('Invitation Card Component', () => {
   it('should render Invitation List Card component', () => {
     const invitation = {
       id: '4af00f39-7fcd-47d2-89bf-e93827d34666',
+      status: 'active',
       host: {
         id: '1388d45c-5279-4e90-9815-8ab33c49d382',
         name: 'Test two',
@@ -49,6 +50,7 @@ describe('Invitation Card Component', () => {
     expect(container.getByTestId('validity').textContent).toContain('guest_book.invalid_now');
     expect(container.getByTestId('host_name')).toBeInTheDocument();
     expect(container.getByTestId('host_name').textContent).toContain('Test two');
+    expect(container.getByText('guest_book.active')).toBeInTheDocument();
     expect(container.getByAltText('host_avatar')).toBeInTheDocument();
   });
 });

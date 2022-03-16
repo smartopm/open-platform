@@ -1,5 +1,5 @@
 import React from 'react'
-import { render, screen } from '@testing-library/react'
+import { render } from '@testing-library/react'
 import { BrowserRouter } from 'react-router-dom/'
 import { MockedProvider } from '@apollo/react-testing'
 import TaskUpdateList from '../Components/TaskUpdateList'
@@ -28,9 +28,6 @@ describe('Comment Card Component', () => {
       </MockedProvider>
     )
 
-    screen.debug()
-    expect(container.queryByTestId('history_title')).toBeInTheDocument()
-    expect(container.queryByText('history.updates')).toBeInTheDocument()
     expect(container.queryByText('John')).toBeInTheDocument()
     expect(container.queryByText(/task.history_create_new_note_comment/)).toBeInTheDocument()
     expect(container.queryByText(/Today at/)).toBeInTheDocument()

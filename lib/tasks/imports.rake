@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/BlockLength
 namespace :imports do
   desc 'imports payment plans'
   task :payment_plans, %i[community_name csv_path] => :environment do |_t, args|
@@ -285,4 +284,3 @@ namespace :imports do
     puts 'Records successfully imported' if errors.empty?
   end
 end
-# rubocop:enable Metrics/BlockLength

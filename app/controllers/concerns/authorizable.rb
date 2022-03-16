@@ -19,31 +19,15 @@ module Authorizable
     request.host
   end
 
-  # rubocop:disable Metrics/MethodLength
   def current_community
-    community_list = { 'app.doublegdp.com' => 'Nkwashi',
-                       'double-gdp-staging.herokuapp.com' => 'Nkwashi',
-                       'demo.doublegdp.com' => 'DoubleGDP',
-                       'demo-staging.doublegdp.com' => 'DoubleGDP',
-                       'morazancity.doublegdp.com' => 'Ciudad Morazán',
-                       'morazancity-staging.doublegdp.com' => 'Ciudad Morazán',
-                       'tilisi-staging.doublegdp.com' => 'Tilisi',
-                       'tilisi.doublegdp.com' => 'Tilisi',
-                       'greenpark.doublegdp.com' => 'Greenpark',
-                       'greenpark-staging.doublegdp.com' => 'Greenpark',
-                       'enyimba.doublegdp.com' => 'Enyimba',
-                       'enyimba-staging.doublegdp.com' => 'Enyimba',
-                       'dev.dgdp.site' => 'DoubleGDP',
-                       'double-gdp-dev.herokuapp.com' => 'DAST' }
     if ['dgdp.site', 'rails'].include?(request.domain) && request.subdomain != 'dev'
       @site_community = Community.find_by(name: 'Nkwashi')
     else
       dom = "#{request.subdomain}.#{request.domain}"
-      @site_community = Community.find_by(name: community_list[dom])
+      @site_community = Community.where('? = ANY(domains)', dom).first
     end
     @site_community
   end
-  # rubocop:enable Metrics/MethodLength
 
   # For now we can assume that each user is just a member of one community
   def authenticate_member!

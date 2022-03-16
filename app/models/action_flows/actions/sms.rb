@@ -22,6 +22,8 @@ module ActionFlows
 
       def self.execute_action(data, field_config)
         assign_user = Users::User.find(data[:task_assign_user_id])
+        return if assign_user.user_type.eql?('lead')
+
         author_msg = generate_message(data, assign_user)
         assignee_msg = generate_assignee_msg(data, assign_user)
 

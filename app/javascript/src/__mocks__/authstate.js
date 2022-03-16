@@ -8,6 +8,7 @@ const authState = {
       logoUrl: 'http://image.jpg',
       menuItems: [{ menu_link: 'https://some-link', menu_name: 'Custom Menu', display_on: ['Dashboard'], roles: ['admin', 'client'] }],
       smsPhoneNumbers: ["+254724821901", "+154724582391"],
+      supportNumber: ["+254724821901", "+154724582391"],
       emergencyCallNumber: "254724821901",
       features: {
         Tasks: { features: [] },
@@ -16,7 +17,9 @@ const authState = {
         Properties: { features: []},
         LogBook: { features: []},
       },
-      imageUrl: 'http://image.jpg'
+      imageUrl: 'http://image.jpg',
+      timezone: 'Africa/Maputo',
+      wpLink: "http://link.com",
     },
     email: 'user@community.co',
     expiresAt: null,
@@ -89,6 +92,9 @@ const authState = {
       },
       { module: 'dashboard',
         permissions: ['can_access_dashboard', 'can_see_menu_item']
+      },
+      { module: 'forms',
+        permissions: ['can_view_form_user']
       },
     ]
 

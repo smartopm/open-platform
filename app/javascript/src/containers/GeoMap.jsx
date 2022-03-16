@@ -359,7 +359,7 @@ export default function GeoMap() {
          </Map>
        </div>
      </>
-  )
+   )
 }
 
 export function MapLayers({ children }){

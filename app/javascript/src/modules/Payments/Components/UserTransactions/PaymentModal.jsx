@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { useLazyQuery, useMutation } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import subDays from 'date-fns/subDays';
+import { useMediaQuery } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import Typography from '@material-ui/core/Typography';
@@ -16,7 +17,12 @@ import { CustomizedDialogs } from '../../../../components/Dialog';
 import PaymentCreate from '../../graphql/payment_mutations';
 import { UserLandParcelWithPlan, UsersLiteQuery } from '../../../../graphql/queries';
 import MessageAlert from '../../../../components/MessageAlert';
-import { extractCurrency, formatError, formatMoney, objectAccessor } from '../../../../utils/helpers';
+import {
+  extractCurrency,
+  formatError,
+  formatMoney,
+  objectAccessor
+} from '../../../../utils/helpers';
 import ReceiptModal from './ReceiptModal';
 import { Spinner } from '../../../../shared/Loading';
 import DatePickerDialog from '../../../../components/DatePickerDialog';
@@ -68,7 +74,7 @@ export default function PaymentModal({
   const [paymentUserId, setPaymentUserId] = useState(userId);
   const [mutationLoading, setMutationStatus] = useState(false);
   const { t } = useTranslation(['payment', 'common']);
-
+  const matches = useMediaQuery('(max-width:800px)');
   function confirm(event) {
     event.preventDefault();
 
@@ -157,11 +163,11 @@ export default function PaymentModal({
   }
 
   function checkInputValues(id) {
-    const res = plotInputValue.find(ele => ele.paymentPlanId === id)
+    const res = plotInputValue.find(ele => ele.paymentPlanId === id);
     return {
       amount: res?.amount || '',
       receiptNumber: res?.receiptNumber || ''
-    }
+    };
   }
 
   function validatePlotInput(input) {
@@ -183,7 +189,7 @@ export default function PaymentModal({
     if (objectAccessor(fields, index)) {
       fields[Number(index)] = {
         ...objectAccessor(fields, index),
-        [name]: (name === 'amount' && value !== '') ? parseFloat(value) : value
+        [name]: name === 'amount' && value !== '' ? parseFloat(value) : value
       };
     } else {
       fields.push({ [name]: name === 'amount' ? parseFloat(value) : value, paymentPlanId });
@@ -201,8 +207,8 @@ export default function PaymentModal({
 
   function handlePaymentData(payments) {
     /* It filters out the payments made for plan and excludes the payment made for general fund */
-    const planPayments = payments.filter(payment => payment.paymentPlan)
-    setPaymentData({planPayments});
+    const planPayments = payments.filter(payment => payment.paymentPlan);
+    setPaymentData({ planPayments });
   }
 
   function handleSubmit(event) {
@@ -246,19 +252,18 @@ export default function PaymentModal({
       });
   }
 
-  function validateAmount(plan){
-    const index = plotInputValue.findIndex((obj) => obj.paymentPlanId === plan.id);
-    if(index === -1 || plotInputValue[index].amount <= plan.pendingBalance){
+  function validateAmount(plan) {
+    const index = plotInputValue.findIndex(obj => obj.paymentPlanId === plan.id);
+    if (index === -1 || plotInputValue[index].amount <= plan.pendingBalance) {
       return 0;
     }
-      return plotInputValue[index].amount - plan.pendingBalance;
-
+    return plotInputValue[index].amount - plan.pendingBalance;
   }
 
   function amountHelperText(plan) {
     if (isError && totalAmount() === 0) return t('errors.amount_required');
-      const extraAmount = validateAmount(plan);
-    if (extraAmount > 0){
+    const extraAmount = validateAmount(plan);
+    if (extraAmount > 0) {
       return t('misc.payment_split_message', { amount: formatMoney(currencyData, extraAmount) });
     }
     return '';
@@ -336,7 +341,7 @@ export default function PaymentModal({
               {!userId && (
                 <Grid container>
                   <Autocomplete
-                    style={{ width: '100%' }}
+                    style={{ width: matches ? 300 : '100%', marginLeft: matches && 2 }}
                     id="payment-user-input"
                     options={data?.usersLite || []}
                     getOptionLabel={option => option?.name}
@@ -346,7 +351,7 @@ export default function PaymentModal({
                       option: classes.AutocompleteOption,
                       listbox: classes.AutocompleteOption
                     }}
-                    renderOption={option => <UserAutoResult user={option} />}
+                    renderOption={option => <UserAutoResult user={option} t={t} />}
                     renderInput={params => (
                       <TextField
                         {...params}
@@ -368,7 +373,10 @@ export default function PaymentModal({
                 <TextField
                   margin="normal"
                   id="transaction-type"
-                  inputProps={{ 'data-testid': 'transaction-type', className: 'transaction-type-select-input' }}
+                  inputProps={{
+                    'data-testid': 'transaction-type',
+                    className: 'transaction-type-select-input'
+                  }}
                   label={t('table_headers.transaction_type')}
                   value={inputValue.transactionType}
                   onChange={event =>
@@ -399,7 +407,7 @@ export default function PaymentModal({
                   onChange={event =>
                     setInputValue({ ...inputValue, transactionNumber: event.target.value })
                   }
-                  className='transaction-number-input'
+                  className="transaction-number-input"
                 />
               </div>
 
@@ -478,7 +486,7 @@ export default function PaymentModal({
                       'data-testid': 'amount',
                       step: 0.01
                     }}
-                    className='transaction-amount-input'
+                    className="transaction-amount-input"
                     required
                     error={isError && submitting && totalAmount() === 0}
                     helperText={amountHelperText(plan)}

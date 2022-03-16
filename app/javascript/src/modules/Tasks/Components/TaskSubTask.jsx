@@ -106,11 +106,7 @@ export default function TaskSubTask({
         </DialogContent>
       </Dialog>
       <Grid container className={classes.header}>
-        <Grid item md={9} xs={11}>
-          <Typography variant="subtitle2" data-testid="sub_tasks_header">
-            {t('task:sub_task.sub_tasks')}
-          </Typography>
-        </Grid>
+        <Grid item md={9} xs={11} />  
         <Grid item md={3} xs={1} className={classes.addSubTask}>
           <AccessCheck module="note" allowedPermissions={['can_view_create_sub_task_button']}>
             <IconButton
@@ -176,10 +172,11 @@ export default function TaskSubTask({
                     <IconButton
                       aria-controls="task-subtasks-icon"
                       data-testid="task_subtasks_count"
+                      onClick={() => handleSplitScreenOpen(task)}
                     >
                       <AccountTreeIcon
                         fontSize="small"
-                        color={task?.subTasks?.length ? 'primary' : 'disabled'}
+                        color={task?.subTasksCount ? 'primary' : 'disabled'}
                       />
                     </IconButton>
                   </Grid>
@@ -190,11 +187,18 @@ export default function TaskSubTask({
                     className={classes.iconItem}
                     style={{ paddingLeft: '8px' }}
                   >
-                    <span>{task?.subTasks?.length || 0}</span>
+                    <span>{task?.subTasksCount || 0}</span>
                   </Grid>
                   <Grid item md={2} xs={2}>
-                    <IconButton aria-controls="task-comment-icon" data-testid="task_comments_count">
-                      <QuestionAnswerIcon fontSize="small" color="disabled" />
+                    <IconButton
+                      aria-controls="task-comment-icon"
+                      data-testid="task_comments_count"
+                      onClick={() => handleSplitScreenOpen(task)}
+                    >
+                      <QuestionAnswerIcon
+                        fontSize="small"
+                        color={task?.taskCommentsCount ? 'primary' : 'disabled'}
+                      />
                     </IconButton>
                   </Grid>
                   <Grid
@@ -204,10 +208,13 @@ export default function TaskSubTask({
                     className={classes.iconItem}
                     style={{ paddingLeft: '8px' }}
                   >
-                    <span>0</span>
+                    <span>{task?.taskCommentsCount || 0}</span>
                   </Grid>
                   <Grid item md={2} xs={2}>
-                    <IconButton aria-controls="task-attach-file-icon">
+                    <IconButton
+                      aria-controls="task-attach-file-icon"
+                      onClick={() => handleSplitScreenOpen(task)}
+                    >
                       <AttachFileIcon
                         fontSize="small"
                         color={task?.attachments?.length ? 'primary' : 'disabled'}
@@ -221,7 +228,7 @@ export default function TaskSubTask({
                     className={classes.iconItem}
                     style={{ paddingLeft: '5px' }}
                   >
-                    <span data-testid="file_attachments_total">{task.attachments?.length}</span>
+                    <span data-testid="file_attachments_total">{task.attachments?.length || 0}</span>
                   </Grid>
                 </Grid>
               </Grid>
