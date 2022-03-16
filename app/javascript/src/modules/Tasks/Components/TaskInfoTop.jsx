@@ -183,7 +183,7 @@ export default function TaskInfoTop({
                   <IconButton
                     edge="end"
                     onClick={handleTaskComplete}
-                    data-testid="task-info-menu"
+                    data-testid="task-complete-toggle-button"
                     color="primary"
                     style={{ backgroundColor: 'transparent' }}
                   >
@@ -264,7 +264,7 @@ export default function TaskInfoTop({
                       <IconButton
                         edge="end"
                         onClick={event => menuData.handleTaskInfoMenu(event)}
-                        data-testid="task-info-menu"
+                        data-testid="set-reminder-button"
                         color="primary"
                       >
                         <AccessAlarmIcon />
@@ -276,7 +276,7 @@ export default function TaskInfoTop({
                       <IconButton
                         edge="end"
                         onClick={handleSplitScreenClose}
-                        data-testid="task-info-menu"
+                        data-testid="close-drawer-button"
                         color="primary"
                       >
                         <KeyboardTabIcon />

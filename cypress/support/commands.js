@@ -1,3 +1,5 @@
+import 'cypress-file-upload';
+
 Cypress.Commands.add("resetDatabase", () => {
   cy.request('DELETE', '/cypress/cleanup').as('cleanup')
 })

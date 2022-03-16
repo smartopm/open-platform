@@ -82,12 +82,67 @@ describe('Tasks page', () => {
       // Submit
       cy.get('[data-testid=task-submit-button]').click();
 
-      // Go to my tasks
+      // Filter by 'My Tasks'
       cy.visit('/tasks');
       cy.contains('Cypress test task');
 
-      // Go to open tasks
+      // Filter by open tasks
       cy.visit('/tasks?filter=tasksOpen');
+      cy.contains('Cypress test task');
+
+      // Open task details split view
+      cy.get('[data-testid=task-item-menu]').click();
+      cy.contains('Open Task Details').click();
+      cy.get('[data-testid=drawer]').should('be.visible');
+
+      // Close task details split view
+      cy.get('[data-testid=close-drawer-button]').click();
+      cy.get('[data-testid=task-info-section]').should('not.be.visible');
+
+      // Add Sub Task
+      cy.visit('/tasks');
+      cy.get('[data-testid=task-item-menu]').click();
+      cy.contains('Add Sub Task').click();
+      cy.contains('Create a task');
+
+      cy.get('[data-testid=task-body]').type('Cypress test sub task');
+      cy.get('[data-testid=task-description]').type('Cypress test sub task description');
+      cy.get('[data-testid=task-type]').type('To-Do{enter}');
+      cy.get('[data-testid=task-submit-button]').click();
+
+      cy.visit('/tasks');
+      cy.contains('Cypress test task');
+      cy.get('[data-testid=task-subtasks-count]').contains('1');
+      cy.get('[data-testid=show_task_subtasks]').click();
+      cy.contains('Cypress test sub task');
+
+      // Upload a document
+      cy.visit('/tasks');
+      cy.contains('Cypress test task');
+      cy.get('[data-testid=task-item-menu]').click();
+      cy.get('input[type="file"]').attachFile('test_image.png');
+
+      // Leave a comment
+      cy.visit('/tasks');
+      cy.contains('Cypress test task');
+      cy.get('[data-testid=task-item-menu]').click();
+      cy.contains('Leave a comment').click();
+      cy.get('[data-testid=body_input]').type('This is a test comment');
+      cy.get('[data-testid=comment_btn]').click();
+      cy.get('[data-testid=comment-body]').contains('This is a test comment');
+
+      // Set reminder
+      cy.get('[data-testid=set-reminder-button]').click();
+      cy.contains('Remind Me in 1 hour').click();
+      cy.wait(1000);
+      cy.get('[data-testid=task-info-section]').contains('None').should('not.exist');
+
+      // Mark as complete
+      cy.visit('/tasks');
+      cy.contains('Cypress test task');
+      cy.get('[data-testid=task_completion_toggle_button]').click();
+      cy.contains('Cypress test task').should('not.exist');
+      cy.visit('tasks?filter=completedTasks');
       cy.contains('Cypress test task');
     });
   });
