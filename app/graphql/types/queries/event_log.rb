@@ -22,6 +22,12 @@ module Types::Queries::EventLog
       argument :subject, [String, { null: true }], required: false
       argument :user_id, GraphQL::Types::ID, required: true
     end
+
+    field :logbook_event_logs, [Types::EventLogType], null: true do
+      description 'Get event logs for logbook'
+      argument :start_date, String, required: true
+      argument :end_date, String, required: true
+    end
   end
   # rubocop:disable Metrics/ParameterLists
 
@@ -56,6 +62,17 @@ module Types::Queries::EventLog
     query_user_logs(user, subject, limit, offset)
   end
 
+  def logbook_event_logs(start_date:, end_date:)
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless can_fetch_logbook_logs?
+
+    window = start_date.to_datetime.beginning_of_day..end_date.to_datetime.end_of_day
+    context[:site_community].event_logs.includes(:ref)
+                            .where(
+                              subject: %w[user_entry visitor_entry observation_log],
+                              created_at: window,
+                            )
+  end
+
   def build_event_log_query(user, subject, ref_id, ref_type)
     query = { community_id: user.community_id }
     query[:subject] = subject if subject
@@ -83,5 +100,9 @@ module Types::Queries::EventLog
                             .where("data->>'ref_name' ILIKE ? OR data->>'note' ILIKE ?",
                                    "%#{name}%", "%#{name}%")
                             .limit(limit).offset(offset)
+  end
+
+  def can_fetch_logbook_logs?
+    permitted?(module: :event_log, permission: :can_fetch_logbook_events)
   end
 end

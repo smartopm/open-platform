@@ -70,3 +70,28 @@ export const LogbookStatsQuery = gql`
     }
   }
 `
+
+
+export const logbookEventLogsQuery = gql`
+  query eventLogsQuery($startDate: String!, $endDate: String!) {
+    logbookEventLogs(startDate: $startDate, endDate: $endDate) {
+      id
+      createdAt
+      subject
+      data
+      actingUser {
+        name
+        id
+      }
+      entryRequest {
+        id
+        name
+        reason
+      }
+      user {
+        id
+        name
+      }
+    }
+  }
+`;

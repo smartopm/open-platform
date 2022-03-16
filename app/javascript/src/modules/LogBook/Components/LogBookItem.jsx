@@ -33,6 +33,8 @@ import VisitView from './VisitView';
 import MessageAlert from '../../../components/MessageAlert';
 import CenteredContent from '../../../shared/CenteredContent';
 import { accessibleMenus, paginate } from '../utils'
+import GateFlowReport from './GateFlowReport';
+import AccessCheck from '../../Permissions/Components/AccessCheck';
 
 
 const limit = 20;
@@ -94,6 +96,7 @@ export default function LogBookItem({
       isVisible: permissions.has('can_add_entry_request_note')
     }
   ];
+
 
   function routeToAction(eventLog) {
     if (eventLog.refType === 'Logs::EntryRequest') {
@@ -314,6 +317,9 @@ export default function LogBookItem({
             </Grid>
           </Grid>
           <TabPanel pad value={tabValue} index={0}>
+            <AccessCheck module="event_log" allowedPermissions={['can_download_logbook_events']}>
+              <GateFlowReport />
+            </AccessCheck>
             <LogEvents
               data={data}
               loading={loading}

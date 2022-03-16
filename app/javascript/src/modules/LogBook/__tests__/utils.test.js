@@ -6,7 +6,8 @@ import {
   isNotValidCheck,
   accessibleMenus,
   checkVisitorsName,
-  paginate
+  paginate,
+  formatCsvData
 } from '../utils';
 
 describe('logbook utils', () => {
@@ -217,4 +218,35 @@ describe('logbook utils', () => {
     paginate('prev', history, 1, { offset: 2, limit: 5 })
     expect(history.push).not.toBeCalled()
   })
+  it('should properly format csv data', () => {
+    const data = [
+      {
+        createdAt: '2022-03-14T21:11:07',
+        entryRequest: { name: 'someName' },
+        data: { ref_name: null, name: 'name', subject: 'user_entry' }
+      },
+      {
+        createdAt: new Date(),
+        entryRequest: { name: 'another name' },
+        data: { ref_name: null, name: 'name', subject: 'visitor_entry' }
+      },
+      {
+        createdAt: new Date(),
+        entryRequest: { name: 'thirdname' },
+        data: { ref_name: null, name: 'name', subject: 'observation_log' }
+      },
+    ];
+
+    const subjects = {
+      user_entry: 'Scanned Entry',
+      visitor_entry: 'Granted Access',
+      observation_log: 'Observation'
+    };
+
+    expect(formatCsvData(data, subjects)).toBeInstanceOf(Array)
+    expect(formatCsvData(data, subjects)).toHaveLength(3)
+    expect(formatCsvData(data, subjects)[0]).toHaveProperty('guest', 'someName')
+    expect(formatCsvData(data, subjects)[0]).toHaveProperty('extraNote', '-')
+    expect(formatCsvData(data, subjects)[0]).toHaveProperty('logDate', '2022-03-14 21:11')
+  });
 });
