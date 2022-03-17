@@ -1,9 +1,9 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import React, { useState } from 'react'
-import { Typography, Box, Divider, Grid } from '@material-ui/core'
+import { Typography, Box, Divider, Grid , Pagination } from '@mui/material'
 import { useLocation , useHistory } from 'react-router-dom'
-import { Pagination } from '@material-ui/lab'
+
 import PropTypes from 'prop-types'
 import { useTranslation } from 'react-i18next'
 import PostItem from './PostItem'
@@ -54,7 +54,7 @@ export default function PostsList({ wordpressEndpoint, communityName }) {
           <br />
           <Divider light variant="middle" />
           <br />
-          <Grid container direction="row" justify="center">
+          <Grid container direction="row" justifyContent="center">
             {totalPosts ? publicPosts.map(post => (
               <Grid item key={post.ID}>
                 <Box style={{ display: 'flex', justifyContent: 'flex-start' }}>
@@ -72,24 +72,24 @@ export default function PostsList({ wordpressEndpoint, communityName }) {
                   </div>
                 </Box>
               </Grid>
-                    )) : <p>{t('news.no_post')}</p>}
+                  )) : <p>{t('news.no_post')}</p>}
           </Grid>
           {
-            totalPosts > limit && (
-              <CenteredContent>
-                <Pagination
-                  count={Math.round(totalPosts / limit)}
-                  page={page}
-                  onChange={handlePageChange}
-                  color="primary"
-                />
-              </CenteredContent>
-            )
-          }
+          totalPosts > limit && (
+            <CenteredContent>
+              <Pagination
+                count={Math.round(totalPosts / limit)}
+                page={page}
+                onChange={handlePageChange}
+                color="primary"
+              />
+            </CenteredContent>
+          )
+        }
         </div>
         <ShareButton url={currentUrl} communityName={communityName} />
       </>
-    )
+);
 }
 
 PostsList.propTypes = {

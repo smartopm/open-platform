@@ -1,13 +1,13 @@
 
 import React, { useState } from 'react';
-import Typography from '@material-ui/core/Typography';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
+import Typography from '@mui/material/Typography';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTranslation } from 'react-i18next';
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 import PropTypes from 'prop-types';
-import { Divider, Grid, Button, Menu, MenuItem } from '@material-ui/core';
-import EditIcon from '@material-ui/icons/Edit';
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import { Divider, Grid, Button, Menu, MenuItem } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { CustomizedDialogs } from '../../../../components/Dialog';
 import { dateToString } from '../../../../components/DateContainer';
 import { formatMoney, formatError, titleize , objectAccessor } from '../../../../utils/helpers';

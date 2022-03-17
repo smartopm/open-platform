@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react'
 import { useMutation, useQuery } from 'react-apollo'
-import { Snackbar } from '@material-ui/core'
+import { Snackbar } from '@mui/material'
 import NotificationPage from './NotificationPage'
 import { NotificationPreference } from '../graphql/preferences_mutation'
 import { UserLabelsQuery } from '../graphql/preferences_query'

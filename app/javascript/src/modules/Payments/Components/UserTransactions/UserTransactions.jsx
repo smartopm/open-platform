@@ -2,12 +2,12 @@
 /* eslint-disable no-underscore-dangle */
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import Grid from '@material-ui/core/Grid';
+import Grid from '@mui/material/Grid';
 import { useMutation } from 'react-apollo';
 import PropTypes from 'prop-types';
-import { MoreHorizOutlined } from '@material-ui/icons';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import IconButton from '@material-ui/core/IconButton';
+import { MoreHorizOutlined } from '@mui/icons-material';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import IconButton from '@mui/material/IconButton';
 import DataList from '../../../../shared/list/DataList';
 import Text, { GridText } from '../../../../shared/Text';
 import { dateToString } from '../../../../components/DateContainer';
@@ -205,6 +205,7 @@ export function renderTransactions(transaction, currencyData, menuData) {
             aria-haspopup="true"
             data-testid="menu"
             onClick={event => menuData.handleTransactionMenu(event)}
+            size="large"
           >
             <MoreHorizOutlined />
           </IconButton>

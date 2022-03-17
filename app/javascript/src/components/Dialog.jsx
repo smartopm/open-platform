@@ -1,7 +1,7 @@
 /* eslint-disable no-use-before-define */
 import React from 'react'
-import CloseIcon from '@material-ui/icons/Close';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
+import CloseIcon from '@mui/icons-material/Close';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import {
   DialogContent,
   DialogActions,
@@ -13,9 +13,9 @@ import {
   AppBar,
   Toolbar,
   IconButton,
-} from '@material-ui/core'
+} from '@mui/material'
 import PropTypes from 'prop-types'
-import { makeStyles } from '@material-ui/core/styles'
+import makeStyles from '@mui/styles/makeStyles';
 import { useTranslation } from 'react-i18next';
 import { titleize } from '../utils/helpers'
 import {Spinner} from '../shared/Loading'
@@ -185,7 +185,7 @@ export function DetailsDialog({ handleClose, open, title, children, noActionButt
 export function FullScreenDialog({ handleClose, open, children, actionText, handleSubmit }){
   const classes = useStyles()
   const matches = useMediaQuery('(max-width:600px)');
-  return(
+  return (
     <Dialog
       onClose={handleClose}
       open={open}
@@ -193,7 +193,13 @@ export function FullScreenDialog({ handleClose, open, children, actionText, hand
     >
       <AppBar className={classes.appBar}>
         <Toolbar>
-          <IconButton edge="start" onClick={handleClose} aria-label="close" className="close-receipt-details">
+          <IconButton
+            edge="start"
+            onClick={handleClose}
+            aria-label="close"
+            className="close-receipt-details"
+            size="large"
+          >
             <CloseIcon style={{color: 'white'}} />
           </IconButton>
           <div className={matches ? classes.printMobile : classes.print}>
@@ -206,12 +212,12 @@ export function FullScreenDialog({ handleClose, open, children, actionText, hand
       </AppBar>
       {children}
     </Dialog>
-  )
+  );
 }
 
 export function MapEditorFullScreenDialog({ handleClose, open, children }){
   const classes = useStyles()
-  return(
+  return (
     <Dialog
       onClose={handleClose}
       open={open}
@@ -219,14 +225,14 @@ export function MapEditorFullScreenDialog({ handleClose, open, children }){
     >
       <AppBar className={classes.appBar}>
         <Toolbar>
-          <IconButton edge="start" onClick={handleClose} aria-label="close">
+          <IconButton edge="start" onClick={handleClose} aria-label="close" size="large">
             <CloseIcon style={{color: 'white'}} />
           </IconButton>
         </Toolbar>
       </AppBar>
       {children}
     </Dialog>
-  )
+  );
 }
 export function ActionDialog({ handleClose, open, handleOnSave, message, type, disableActionBtn}) {
   const { t } = useTranslation('common')

@@ -1,4 +1,4 @@
-/* eslint-disable react/forbid-prop-types */
+/* eslint-disable */
 import React, { useContext, useState } from 'react'
 import { Query, Builder, Utils as QbUtils } from 'react-awesome-query-builder'
 import PropTypes from 'prop-types'
@@ -44,7 +44,7 @@ export default function QueryBuilder({
       between: {
         ...builderConfig.operators.between,
         label: 'Between'
-      }, 
+      },
       less: {
         ...builderConfig.operators.less,
         label: 'Less Than'
@@ -84,12 +84,12 @@ export default function QueryBuilder({
 
   return (
     <div style={{ outline: 'none' }}>
-      <Query
+      {/* <Query
         {...config}
         value={treeConfig.tree}
         onChange={onChange}
         renderBuilder={renderBuilder}
-      />
+      /> */}
     </div>
   )
 }

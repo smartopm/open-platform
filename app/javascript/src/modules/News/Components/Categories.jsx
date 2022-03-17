@@ -1,11 +1,11 @@
 /* eslint-disable no-use-before-define */
 import React from 'react'
-import { Grid, Box } from '@material-ui/core'
+import { Grid, Box } from '@mui/material'
 import { StyleSheet, css } from 'aphrodite'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { useTranslation } from 'react-i18next'
-import { useTheme } from '@material-ui/styles'
+import { useTheme } from '@mui/styles'
 import { useFetch } from '../../../utils/customHooks'
 import { Spinner } from '../../../shared/Loading'
 import CenteredContent from '../../../shared/CenteredContent'

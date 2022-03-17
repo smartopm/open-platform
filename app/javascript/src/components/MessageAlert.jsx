@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Snackbar } from '@material-ui/core'
-import MuiAlert from '@material-ui/lab/Alert'
+import { Snackbar } from '@mui/material'
+import MuiAlert from '@mui/material/Alert'
 
 export default function MessageAlert({ type, message, open, handleClose, style }) {
   function Alert(props) {

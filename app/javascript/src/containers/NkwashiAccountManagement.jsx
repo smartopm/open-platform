@@ -4,7 +4,7 @@ import { useWindowDimensions } from '../utils/customHooks';
 import IframeContainer from '../components/IframeContainer';
 import { useLocation } from 'react-router-dom';
 import { ModalDialog } from '../components/Dialog';
-import { TextField } from '@material-ui/core';
+import { TextField } from '@mui/material';
 
 export default function NkwashiAccountManagement() {
   const { width, height } = useWindowDimensions();

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Divider, Grid, Typography } from '@material-ui/core';
-import { makeStyles } from '@material-ui/styles';
+import { Divider, Grid, Typography } from '@mui/material';
+import { makeStyles } from '@mui/styles';
 import { useTranslation } from 'react-i18next';
 import formatCellData, { checkExtraShifts, countExtraHours, formatShifts } from '../utils';
 import CenteredContent from '../../../components/CenteredContent';

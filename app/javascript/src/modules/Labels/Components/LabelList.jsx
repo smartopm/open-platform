@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useQuery } from 'react-apollo';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import { Container } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { Container } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { LabelsQuery } from '../../../graphql/queries';

@@ -1,8 +1,8 @@
 import React, { useState, useContext } from 'react'
 import PropTypes from 'prop-types'
 import { useMutation, useApolloClient, useLazyQuery } from 'react-apollo';
-import { Button, Grid, Divider } from '@material-ui/core';
-import AddPhotoAlternateIcon from '@material-ui/icons/AddPhotoAlternate';
+import { Button, Grid, Divider } from '@mui/material';
+import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import { Map, FeatureGroup, GeoJSON, LayersControl, TileLayer } from 'react-leaflet'
 import { useTranslation } from 'react-i18next';
 import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider';
@@ -234,15 +234,15 @@ export default function LandParcelMap({ handlePlotClick, geoData }){
         onClose={handleCloseDrawer}
         selectedPoi={selectedPoi}
         imageData={{
-            urls: parcelData?.landParcel?.imageUrls,
-            loading: parcelDataLoading,
-          }}
+          urls: parcelData?.landParcel?.imageUrls,
+          loading: parcelDataLoading,
+        }}
       >
         <Divider />
         <Grid
           container
           direction="row"
-          justify="space-around"
+          justifyContent="space-around"
           alignItems="flex-start"
         >
           <Grid item>
@@ -267,43 +267,43 @@ export default function LandParcelMap({ handlePlotClick, geoData }){
             </label>
           </Grid>
           {uploadStatus === 'DONE' && (
-            <Grid item>
-              <span style={{ marginTop: 5, marginRight: 35 }}>
-                {t('common:misc.image_uploaded')}
-              </span>
-              <Button variant="contained" color="secondary" onClick={handleSaveUploadedPhoto}>
-                {t('common:form_actions.save_changes')}
-              </Button>
-            </Grid>
-          )}
+          <Grid item>
+            <span style={{ marginTop: 5, marginRight: 35 }}>
+              {t('common:misc.image_uploaded')}
+            </span>
+            <Button variant="contained" color="secondary" onClick={handleSaveUploadedPhoto}>
+              {t('common:form_actions.save_changes')}
+            </Button>
+          </Grid>
+        )}
         </Grid>
       </PointOfInterestDrawerDialog>
       <div data-testid="leaflet-map-container">
         <style
-            // eslint-disable-next-line react/no-danger
+          // eslint-disable-next-line react/no-danger
           dangerouslySetInnerHTML={{
-              __html: `
-          .leaflet-tooltip-top:before,
-          .leaflet-tooltip-bottom:before,
-          .leaflet-tooltip-left:before,
-          .leaflet-tooltip-right:before {
-            border: none !important;
-          }
-          .text-label {
-            font-size: 1.75em;
-            background-color: none;
-            border-color: none;
-            background: none;
-            border: none;
-            box-shadow: none;
-          }
-          .leaflet-container {
-            height: 800px;
-            width: 100%;
-            margin: 0 auto;
-          }
-          `
-            }}
+            __html: `
+        .leaflet-tooltip-top:before,
+        .leaflet-tooltip-bottom:before,
+        .leaflet-tooltip-left:before,
+        .leaflet-tooltip-right:before {
+          border: none !important;
+        }
+        .text-label {
+          font-size: 1.75em;
+          background-color: none;
+          border-color: none;
+          background: none;
+          border: none;
+          box-shadow: none;
+        }
+        .leaflet-container {
+          height: 800px;
+          width: 100%;
+          margin: 0 auto;
+        }
+        `
+          }}
         />
         {/* istanbul ignore next */}
         <Map
@@ -326,98 +326,98 @@ export default function LandParcelMap({ handlePlotClick, geoData }){
               />
             </LayersControl.BaseLayer>
             {Array.isArray(properties) && properties?.length && (
-              <LayersControl.Overlay checked name="Land Parcels">
-                <FeatureGroup>
-                  {properties?.map(({ id, longX, latY, geom, parcelNumber, parcelType, plotSold, accounts, valuations, status, objectType, ...rest }) => {
-                    if(checkValidGeoJSON(geom)){
-                      const feature = JSON.parse(geom)
-                      feature.properties.id = id
-                      feature.properties.parcel_no = parcelNumber
-                      feature.properties.parcel_type = parcelType
-                      feature.properties.plot_sold = plotSold
-                      feature.properties.long_x = longX
-                      feature.properties.lat_y = latY
-                      feature.properties.accounts = accounts
-                      feature.properties.valuations = valuations
-                      feature.properties.status = status
-                      feature.properties.object_type = objectType
-                      feature.properties.others = rest
-                      return featureCollection.features.push(feature)
-                    }
-                    return featureCollection.features.push(JSON.parse(emptyPolygonFeature))
-                    })}
-                  <GeoJSON
-                    key={Math.random()}
-                    data={featureCollection}
-                    style={geoJSONPlotStyle}
-                    onEachFeature={onEachLandParcelFeature}
-                  />
-                </FeatureGroup>
-              </LayersControl.Overlay>
-            )}
+            <LayersControl.Overlay checked name="Land Parcels">
+              <FeatureGroup>
+                {properties?.map(({ id, longX, latY, geom, parcelNumber, parcelType, plotSold, accounts, valuations, status, objectType, ...rest }) => {
+                  if(checkValidGeoJSON(geom)){
+                    const feature = JSON.parse(geom)
+                    feature.properties.id = id
+                    feature.properties.parcel_no = parcelNumber
+                    feature.properties.parcel_type = parcelType
+                    feature.properties.plot_sold = plotSold
+                    feature.properties.long_x = longX
+                    feature.properties.lat_y = latY
+                    feature.properties.accounts = accounts
+                    feature.properties.valuations = valuations
+                    feature.properties.status = status
+                    feature.properties.object_type = objectType
+                    feature.properties.others = rest
+                    return featureCollection.features.push(feature)
+                  }
+                  return featureCollection.features.push(JSON.parse(emptyPolygonFeature))
+                  })}
+                <GeoJSON
+                  key={Math.random()}
+                  data={featureCollection}
+                  style={geoJSONPlotStyle}
+                  onEachFeature={onEachLandParcelFeature}
+                />
+              </FeatureGroup>
+            </LayersControl.Overlay>
+          )}
             {Array.isArray(poiData) && poiData?.length && (
-              <LayersControl.Overlay name="Points of Interest">
-                <FeatureGroup>
-                  {poiData?.map(({ id, geom, parcelNumber, parcelType }) => {
-                          if(checkValidGeoJSON(geom)){
-                            const feature = JSON.parse(geom)
-                            const markerProps = {
-                              geoLatY: feature.properties.lat_y || 0,
-                              geoLongX: feature.properties.long_x || 0,
-                              iconUrl: feature.properties.icon || '',
-                              poiName: feature.properties.poi_name || t('property:misc.point_of_interest'),
-                              geomType: feature.geometry.type || t('property:misc.polygon')
-                          }
-                          feature.properties.id = id
-                          feature.properties.parcel_no = parcelNumber
-                          feature.properties.parcel_type = parcelType
-                          poiFeatureCollection.features.push(feature)
-                          return (<PointsOfInterestMarker key={id} markerProps={markerProps} />)
+            <LayersControl.Overlay name="Points of Interest">
+              <FeatureGroup>
+                {poiData?.map(({ id, geom, parcelNumber, parcelType }) => {
+                        if(checkValidGeoJSON(geom)){
+                          const feature = JSON.parse(geom)
+                          const markerProps = {
+                            geoLatY: feature.properties.lat_y || 0,
+                            geoLongX: feature.properties.long_x || 0,
+                            iconUrl: feature.properties.icon || '',
+                            poiName: feature.properties.poi_name || t('property:misc.point_of_interest'),
+                            geomType: feature.geometry.type || t('property:misc.polygon')
                         }
-                        return poiFeatureCollection.features.push(JSON.parse(emptyPolygonFeature))
-                      })}
-                  <GeoJSON
-                    key={Math.random()}
-                    data={poiFeatureCollection}
-                    style={geoJSONPoiStyle}
-                    onEachFeature={onEachPoiLayerFeature}
-                  />
-                </FeatureGroup>
-              </LayersControl.Overlay>
-            )}
-            {Array.isArray(houseData) && houseData?.length && (
-              <LayersControl.Overlay name="Houses">
-                <FeatureGroup>
-                  {houseData?.map(({ id, longX, latY, geom, parcelNumber, parcelType, status, objectType }) => {
-                    if(checkValidGeoJSON(geom)){
-                      const feature = JSON.parse(geom)
-                      feature.properties.id = id
-                      feature.properties.parcel_no = parcelNumber
-                      feature.properties.parcel_type = parcelType
-                      feature.properties.long_x = longX
-                      feature.properties.lat_y = latY
-                      feature.properties.status = status
-                      feature.properties.object_type = objectType
-                      return houseFeatureCollection.features.push(feature)
-                    }
-                    return houseFeatureCollection.features.push(JSON.parse(emptyPolygonFeature))
+                        feature.properties.id = id
+                        feature.properties.parcel_no = parcelNumber
+                        feature.properties.parcel_type = parcelType
+                        poiFeatureCollection.features.push(feature)
+                        return (<PointsOfInterestMarker key={id} markerProps={markerProps} />)
+                      }
+                      return poiFeatureCollection.features.push(JSON.parse(emptyPolygonFeature))
                     })}
-                  <GeoJSON
-                    key={Math.random()}
-                    data={houseFeatureCollection}
-                    style={geoJSONHouseStyle}
-                    onEachFeature={onEachHouseFeature}
-                  />
-                </FeatureGroup>
-              </LayersControl.Overlay>
-            )}
+                <GeoJSON
+                  key={Math.random()}
+                  data={poiFeatureCollection}
+                  style={geoJSONPoiStyle}
+                  onEachFeature={onEachPoiLayerFeature}
+                />
+              </FeatureGroup>
+            </LayersControl.Overlay>
+          )}
+            {Array.isArray(houseData) && houseData?.length && (
+            <LayersControl.Overlay name="Houses">
+              <FeatureGroup>
+                {houseData?.map(({ id, longX, latY, geom, parcelNumber, parcelType, status, objectType }) => {
+                  if(checkValidGeoJSON(geom)){
+                    const feature = JSON.parse(geom)
+                    feature.properties.id = id
+                    feature.properties.parcel_no = parcelNumber
+                    feature.properties.parcel_type = parcelType
+                    feature.properties.long_x = longX
+                    feature.properties.lat_y = latY
+                    feature.properties.status = status
+                    feature.properties.object_type = objectType
+                    return houseFeatureCollection.features.push(feature)
+                  }
+                  return houseFeatureCollection.features.push(JSON.parse(emptyPolygonFeature))
+                  })}
+                <GeoJSON
+                  key={Math.random()}
+                  data={houseFeatureCollection}
+                  style={geoJSONHouseStyle}
+                  onEachFeature={onEachHouseFeature}
+                />
+              </FeatureGroup>
+            </LayersControl.Overlay>
+          )}
             {subUrbanData && (
-              <LayersControl.Overlay name="Sub-urban Areas">
-                <FeatureGroup>
-                  <SubUrbanLayer data={subUrbanData} />
-                </FeatureGroup>
-              </LayersControl.Overlay>
-            )}
+            <LayersControl.Overlay name="Sub-urban Areas">
+              <FeatureGroup>
+                <SubUrbanLayer data={subUrbanData} />
+              </FeatureGroup>
+            </LayersControl.Overlay>
+          )}
           </LayersControl>
         </Map>
       </div>
@@ -428,7 +428,7 @@ export default function LandParcelMap({ handlePlotClick, geoData }){
         handleClose={handleMessageAlertClose}
       />
     </>
-  )
+);
 }
 
 LandParcelMap.defaultProps = {

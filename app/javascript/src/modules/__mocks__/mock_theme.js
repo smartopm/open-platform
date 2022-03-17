@@ -1,12 +1,16 @@
 import React from 'react';
-import { createMuiTheme, ThemeProvider } from '@material-ui/core';
+import { createTheme, ThemeProvider, StyledEngineProvider, adaptV4Theme } from '@mui/material';
 import PropTypes from 'prop-types'
 
 function MockedThemeProvider({ children }) {
-  const theme = createMuiTheme({
+  const theme = createTheme(adaptV4Theme({
     props: { MuiWithWidth: { initialWidth: "sm" } },
-  });
-  return <ThemeProvider theme={theme}>{children}</ThemeProvider>;
+  }));
+  return (
+    <StyledEngineProvider injectFirst>
+      <ThemeProvider theme={theme}>{children}</ThemeProvider>
+    </StyledEngineProvider>
+  );
 }
 
 MockedThemeProvider.propTypes = {

@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/styles';
-import Button from '@material-ui/core/Button';
+import Typography from '@mui/material/Typography';
+import { makeStyles } from '@mui/styles';
+import Button from '@mui/material/Button';
 import CenteredContent from '../../../shared/CenteredContent';
 
 export default function CampaignInfo({ title, buttonText, handleClick }) {

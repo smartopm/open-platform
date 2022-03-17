@@ -1,9 +1,9 @@
 import React, { useContext, useState } from 'react'
 import { useHistory } from 'react-router';
 import { useTranslation } from 'react-i18next'
-import { makeStyles } from '@material-ui/core/styles';
-import Popover from '@material-ui/core/Popover';
-import Typography from '@material-ui/core/Typography';
+import makeStyles from '@mui/styles/makeStyles';
+import Popover from '@mui/material/Popover';
+import Typography from '@mui/material/Typography';
 import UserAvatar from "./UserAvatar";
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
 

@@ -1,12 +1,12 @@
 import React, { useContext } from 'react';
-import Grid from '@material-ui/core/Grid';
+import Grid from '@mui/material/Grid';
 import { useTranslation } from 'react-i18next';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 import { StyleSheet } from 'aphrodite';
-import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
+import Typography from '@mui/material/Typography';
+import Divider from '@mui/material/Divider';
 import { formatMoney, capitalize } from '../../../../utils/helpers';
 import { dateToString } from '../../../../components/DateContainer';
 import { FullScreenDialog } from '../../../../components/Dialog';

@@ -3,11 +3,11 @@ import Grid from '@mui/material/Grid';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import Breadcrumbs from '@material-ui/core/Breadcrumbs';
-import Typography from '@material-ui/core/Typography';
-import Hidden from '@material-ui/core/Hidden';
-import Link from '@material-ui/core/Link';
-import { makeStyles } from '@material-ui/core/styles';
+import Breadcrumbs from '@mui/material/Breadcrumbs';
+import Typography from '@mui/material/Typography';
+import Hidden from '@mui/material/Hidden';
+import Link from '@mui/material/Link';
+import makeStyles from '@mui/styles/makeStyles';
 import Avatar from '../../../components/Avatar';
 import UserDetail from './UserProfileDetail';
 import UserLabels from './UserLabels';
@@ -94,20 +94,20 @@ export default function UserDetailHeader({ data, userType, currentTab, authState
         >
           <Breadcrumbs aria-label="user-breadcrumb">
             {userType === 'admin' && (
-              <Link
-                color="primary"
-                href="/users"
-                className={classes.link}
-                data-testid="breadcrumbuser"
-              >
-                <Typography variant="caption">{t('common:misc.users')}</Typography>
-              </Link>
-            )}
+            <Link
+              color="primary"
+              href="/users"
+              className={classes.link}
+              data-testid="breadcrumbuser"
+            >
+              <Typography variant="caption">{t('common:misc.users')}</Typography>
+            </Link>
+          )}
             {currentTab !== 'Contacts' && (
-              <Link color="primary" href={`/user/${data.user.id}`} className={classes.link}>
-                <Typography variant="caption">{t('common:misc.user_detail')}</Typography>
-              </Link>
-            )}
+            <Link color="primary" href={`/user/${data.user.id}`} className={classes.link}>
+              <Typography variant="caption">{t('common:misc.user_detail')}</Typography>
+            </Link>
+          )}
             <Typography color="textSecondary" variant="caption">
               {objectAccessor(userTabList(t), currentTab)}
             </Typography>
@@ -116,25 +116,25 @@ export default function UserDetailHeader({ data, userType, currentTab, authState
         <Hidden mdUp>
           <Grid item md={12} sm={2} xs={2} className={classes.labelTitle}>
             {['admin'].includes(userType) && (
-              <UserLabelTitle isLabelOpen={isLabelOpen} setIsLabelOpen={setIsLabelOpen} />
-            )}
+            <UserLabelTitle isLabelOpen={isLabelOpen} setIsLabelOpen={setIsLabelOpen} />
+          )}
           </Grid>
           {isLabelOpen && (
-            <Grid item xs={12} sm={12} className={classes.labels}>
-              <UserLabels
-                userId={data.user.id}
-                isLabelOpen={isLabelOpen}
-                setIsLabelOpen={setIsLabelOpen}
-              />
-            </Grid>
-          )}
+          <Grid item xs={12} sm={12} className={classes.labels}>
+            <UserLabels
+              userId={data.user.id}
+              isLabelOpen={isLabelOpen}
+              setIsLabelOpen={setIsLabelOpen}
+            />
+          </Grid>
+        )}
         </Hidden>
         <Grid item lg={5} md={5} sm={10} xs={10}>
           <Grid container data-testid="user-detail">
             <Grid item lg={3} md={3} sm={3} xs={3}>
               <Avatar
                 user={data.user}
-                // eslint-disable-next-line react/style-prop-object
+              // eslint-disable-next-line react/style-prop-object
                 style="semiSmall"
               />
             </Grid>
@@ -143,7 +143,7 @@ export default function UserDetailHeader({ data, userType, currentTab, authState
             </Grid>
           </Grid>
         </Grid>
-        <Hidden smDown>
+        <Hidden mdDown>
           <Grid item lg={5} md={5} sm={3}>
             <SelectButton
               options={options}
@@ -158,21 +158,21 @@ export default function UserDetailHeader({ data, userType, currentTab, authState
           </Grid>
           <Grid item lg={2} md={2} sm={2} xs={2}>
             {['admin'].includes(userType) && (
-              <UserLabelTitle isLabelOpen={isLabelOpen} setIsLabelOpen={setIsLabelOpen} />
-            )}
+            <UserLabelTitle isLabelOpen={isLabelOpen} setIsLabelOpen={setIsLabelOpen} />
+          )}
           </Grid>
           {isLabelOpen && (
-            <Grid container className={classes.labels}>
-              <Grid item md={2} lg={2} sm={2} />
-              <Grid item md={10} lg={10} sm={10}>
-                <UserLabels
-                  userId={data.user.id}
-                  isLabelOpen={isLabelOpen}
-                  setIsLabelOpen={setIsLabelOpen}
-                />
-              </Grid>
+          <Grid container className={classes.labels}>
+            <Grid item md={2} lg={2} sm={2} />
+            <Grid item md={10} lg={10} sm={10}>
+              <UserLabels
+                userId={data.user.id}
+                isLabelOpen={isLabelOpen}
+                setIsLabelOpen={setIsLabelOpen}
+              />
             </Grid>
-          )}
+          </Grid>
+        )}
         </Hidden>
         <Hidden mdUp>
           <Grid item md={4} sm={12} xs={12} className={classes.selectMobile}>
@@ -190,7 +190,7 @@ export default function UserDetailHeader({ data, userType, currentTab, authState
         </Hidden>
       </Grid>
     </>
-  );
+);
 }
 UserDetailHeader.propTypes = {
   data: PropTypes.shape({

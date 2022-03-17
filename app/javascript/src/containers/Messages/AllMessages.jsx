@@ -2,11 +2,11 @@
 import React, { useState, useEffect } from 'react'
 import { useQuery } from 'react-apollo'
 import { useTranslation } from 'react-i18next';
-import IconButton from '@material-ui/core/IconButton';
-import OutlinedInput from '@material-ui/core/OutlinedInput'
-import SearchIcon from '@material-ui/icons/Search'
-import InputAdornment from '@material-ui/core/InputAdornment'
-import { MenuItem, FormControl, Select, InputLabel } from '@material-ui/core';
+import IconButton from '@mui/material/IconButton';
+import OutlinedInput from '@mui/material/OutlinedInput'
+import SearchIcon from '@mui/icons-material/Search'
+import InputAdornment from '@mui/material/InputAdornment'
+import { MenuItem, FormControl, Select, InputLabel } from '@mui/material';
 import useDebounce from '../../utils/useDebounce'
 import { useWindowDimensions } from '../../utils/customHooks'
 import { useStyles } from '../../modules/Users/Containers/Users';
@@ -82,11 +82,12 @@ export default function AllMessages() {
                   aria-label="toggle password visibility"
                   onClick={handleSearch}
                   onMouseDown={handleSearch}
+                  size="large"
                 >
                   <SearchIcon />
                 </IconButton>
               </InputAdornment>
-                      )}
+                    )}
             aria-describedby="search messages input"
             inputProps={{ 'aria-label': 'search'}}
             fullWidth
@@ -104,48 +105,48 @@ export default function AllMessages() {
               onChange={handleFilter}
             >
               {
-                messageFilters.map(filter => (
-                  <MenuItem key={filter.value} value={filter.value}>{filter.title}</MenuItem>
-                ))
-              }
+              messageFilters.map(filter => (
+                <MenuItem key={filter.value} value={filter.value}>{filter.title}</MenuItem>
+              ))
+            }
             </Select>
           </FormControl>
         </CenteredContent>
 
         {
-        // eslint-disable-next-line no-nested-ternary
-        loading ? (
-          <CenteredContent> 
-            {' '}
-            <Spinner />
-            {' '}
-          </CenteredContent>
-            ) : 
-            data && data.messages ? (
-              <div>
-                <MessageList messages={data.messages} />
-                <div className="d-flex justify-content-center">
-                  <nav aria-label="center Page navigation">
-                    <ul className="pagination">
-                      <li className={`page-item ${offset < limit && 'disabled'}`}>
-                        <a className="page-link" onClick={handlePreviousPage} href="#">
-                          {t('common:misc.previous')}
-                        </a>
-                      </li>
-                      <li className={`page-item ${data.messages.length < limit &&
-                                        'disabled'}`}
-                      >
-                        <a className="page-link" onClick={handleNextPage} href="#">
-                          {t('common:misc.next')}
-                        </a>
-                      </li>
-                    </ul>
-                  </nav>
-                </div>
+      // eslint-disable-next-line no-nested-ternary
+      loading ? (
+        <CenteredContent> 
+          {' '}
+          <Spinner />
+          {' '}
+        </CenteredContent>
+          ) : 
+          data && data.messages ? (
+            <div>
+              <MessageList messages={data.messages} />
+              <div className="d-flex justify-content-center">
+                <nav aria-label="center Page navigation">
+                  <ul className="pagination">
+                    <li className={`page-item ${offset < limit && 'disabled'}`}>
+                      <a className="page-link" onClick={handlePreviousPage} href="#">
+                        {t('common:misc.previous')}
+                      </a>
+                    </li>
+                    <li className={`page-item ${data.messages.length < limit &&
+                                      'disabled'}`}
+                    >
+                      <a className="page-link" onClick={handleNextPage} href="#">
+                        {t('common:misc.next')}
+                      </a>
+                    </li>
+                  </ul>
+                </nav>
               </div>
+            </div>
 
-            ) : null 
+          ) : null 
 }
       </>
-    )
+);
 }

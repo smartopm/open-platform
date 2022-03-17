@@ -1,7 +1,7 @@
 import React from 'react';
-import Stepper from '@material-ui/core/Stepper';
-import Step from '@material-ui/core/Step';
-import StepButton from '@material-ui/core/StepButton';
+import Stepper from '@mui/material/Stepper';
+import Step from '@mui/material/Step';
+import StepButton from '@mui/material/StepButton';
 import PropTypes from 'prop-types';
 
 export default function CustomStepper({ activeStep, steps, handleStep, children }) {

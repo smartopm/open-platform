@@ -3,15 +3,15 @@
 import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Typography from '@mui/material/Typography';
-import Button from '@material-ui/core/Button';
+import Button from '@mui/material/Button';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useApolloClient, useMutation } from 'react-apollo';
-import Hidden from '@material-ui/core/Hidden';
+import Hidden from '@mui/material/Hidden';
 import { useTranslation } from 'react-i18next';
-import makeStyles from '@material-ui/core/styles/makeStyles';
+import makeStyles from '@mui/styles/makeStyles';
 import PersonIcon from '@mui/icons-material/Person';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import Grid from '@material-ui/core/Grid';
+import Grid from '@mui/material/Grid';
 import { StyledTabs, StyledTab, TabPanel, a11yProps } from '../../../components/Tabs';
 import LogEvents from './LogEvents';
 import SpeedDial from '../../../shared/buttons/SpeedDial';
@@ -24,7 +24,7 @@ import { Context as AuthStateContext } from '../../../containers/Provider/AuthSt
 import QueryBuilder from '../../../components/QueryBuilder';
 import {
   entryLogsQueryBuilderConfig,
-  entryLogsQueryBuilderInitialValue,
+  entryLogsQueryBuilderInitialValue
 } from '../../../utils/constants';
 import Paginate from '../../../components/Paginate';
 import { objectAccessor } from '../../../utils/helpers';
@@ -60,7 +60,7 @@ export default function LogBookItem({
   const authState = useContext(AuthStateContext);
   const allUserPermissions = authState.user?.permissions || [];
   const modulePerms = allUserPermissions.find(mod => mod.module === 'entry_request')?.permissions;
-  const permissions = new Set(modulePerms)
+  const permissions = new Set(modulePerms);
   const { t } = useTranslation(['logbook', 'common', 'dashboard']);
   const [open, setOpen] = useState(false);
   const [isObservationOpen, setIsObservationOpen] = useState(false);
@@ -75,8 +75,8 @@ export default function LogBookItem({
   const [addObservationNote] = useMutation(AddObservationNoteMutation);
   const matches = useMediaQuery('(max-width:1000px)');
   const classes = useStyles();
-  const [imageUrls, setImageUrls] = useState([])
-  const [blobIds, setBlobIds] = useState([])
+  const [imageUrls, setImageUrls] = useState([]);
+  const [blobIds, setBlobIds] = useState([]);
 
   const { onChange, signedBlobId, url, status } = useFileUpload({
     client: useApolloClient()
@@ -136,21 +136,21 @@ export default function LogBookItem({
   }
 
   function handleCloseButton(imgUrl) {
-    const images = [...imageUrls]
-    const filteredImages = images.filter((img) => img !== imgUrl)
-    setImageUrls(filteredImages)
+    const images = [...imageUrls];
+    const filteredImages = images.filter(img => img !== imgUrl);
+    setImageUrls(filteredImages);
   }
 
   // eslint-disable-next-line consistent-return
   function handleSaveObservation(log = clickedEvent, type) {
     const exitNote = 'Exited';
-    if(type !== 'exit' && !observationNote) {
+    if (type !== 'exit' && !observationNote) {
       setIsObservationOpen(false);
-      return
+      return;
     }
     setDetails({ ...observationDetails, loading: true });
 
-     addObservationNote({
+    addObservationNote({
       variables: {
         note: type === 'exit' ? exitNote : observationNote,
         id: log.refId,
@@ -174,7 +174,7 @@ export default function LogBookItem({
         setClickedEvent({ refId: '', refType: '' });
         refetch();
         setIsObservationOpen(false);
-        resetImageData()
+        resetImageData();
       })
       .catch(err => {
         setDetails({
@@ -186,16 +186,16 @@ export default function LogBookItem({
         // reset state in case it errs and user chooses a different log
         setObservationNote('');
         setClickedEvent({ refId: '', refType: '' });
-        resetImageData()
+        resetImageData();
       });
   }
 
   useEffect(() => {
     if (status === 'DONE') {
-      setImageUrls([...imageUrls, url])
-      setBlobIds([...blobIds, signedBlobId])
+      setImageUrls([...imageUrls, url]);
+      setBlobIds([...blobIds, signedBlobId]);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
 
   const filteredEvents =
@@ -207,12 +207,12 @@ export default function LogBookItem({
 
   function handleCancelClose() {
     setIsObservationOpen(false);
-    resetImageData()
+    resetImageData();
   }
 
-  function handleCloseAlert(){
+  function handleCloseAlert() {
     // clear and allow visit view to properly refetch
-    setDetails({ ...observationDetails, message: '', refetch: false })
+    setDetails({ ...observationDetails, message: '', refetch: false });
   }
 
   return (
@@ -227,46 +227,48 @@ export default function LogBookItem({
         open={isObservationOpen}
         handleDialogStatus={() => handleCancelClose()}
         observationHandler={{
-        value: observationNote,
-        handleChange: val => setObservationNote(val)
-      }}
+          value: observationNote,
+          handleChange: val => setObservationNote(val)
+        }}
         imageOnchange={img => onChange(img)}
         imageUrls={imageUrls}
         status={status}
         closeButtonData={{
-        closeButton: true,
-        handleCloseButton
-      }}
+          closeButton: true,
+          handleCloseButton
+        }}
       >
         {observationDetails.loading ? (
           <Spinner />
-      ) : (
-        <>
-          <Button
-            onClick={() => handleCancelClose()}
-            color="secondary"
-            variant="outlined"
-            data-testid="cancel"
-          >
-            {t('common:form_actions.cancel')}
-          </Button>
-          <Button
-            onClick={() => handleSaveObservation()}
-            color="primary"
-            variant="contained"
-            data-testid="save"
-            style={{ color: 'white' }}
-            autoFocus
-          >
-            {t('common:form_actions.save')}
-          </Button>
-        </>
-      )}
+        ) : (
+          <>
+            <Button
+              onClick={() => handleCancelClose()}
+              color="secondary"
+              variant="outlined"
+              data-testid="cancel"
+            >
+              {t('common:form_actions.cancel')}
+            </Button>
+            <Button
+              onClick={() => handleSaveObservation()}
+              color="primary"
+              variant="contained"
+              data-testid="save"
+              style={{ color: 'white' }}
+              autoFocus
+            >
+              {t('common:form_actions.save')}
+            </Button>
+          </>
+        )}
       </EntryNoteDialog>
-      <Grid container className={matches ?  classes.containerMobile : classes.container}>
+      <Grid container className={matches ? classes.containerMobile : classes.container}>
         <Grid item md={11} xs={11}>
           <Grid container spacing={1}>
-            <Grid item md={9} xs={10}><Typography variant="h4">{t('logbook.log_book')}</Typography></Grid>
+            <Grid item md={9} xs={10}>
+              <Typography variant="h4">{t('logbook.log_book')}</Typography>
+            </Grid>
             <Hidden smUp>
               <Grid item md={1} xs={2}>
                 <SpeedDial
@@ -289,7 +291,7 @@ export default function LogBookItem({
                 <StyledTab label={t('logbook.visit_view')} {...a11yProps(2)} />
               </StyledTabs>
             </Grid>
-            <Grid item xs={10} md={5} lg={6} style={matches ? {marginTop: '20px'} : {}}>
+            <Grid item xs={10} md={5} lg={6} style={matches ? { marginTop: '20px' } : {}}>
               <SearchInput
                 title={objectAccessor(searchPlaceholder, tabValue)}
                 searchValue={searchTerm}
@@ -301,11 +303,11 @@ export default function LogBookItem({
               />
               <Grid
                 container
-                justify="flex-end"
+                justifyContent="flex-end"
                 className={classes.filter}
                 style={{
-                display: displayBuilder
-              }}
+                  display: displayBuilder
+                }}
               >
                 <QueryBuilder
                   handleOnChange={queryOnChange}
@@ -355,7 +357,7 @@ export default function LogBookItem({
             />
           </TabPanel>
         </Grid>
-        <Hidden xsDown>
+        <Hidden smDown>
           <Grid item md={1} xs={1}>
             <SpeedDial
               open={open}
@@ -367,19 +369,17 @@ export default function LogBookItem({
           </Grid>
         </Hidden>
       </Grid>
-      {
-        Boolean(tabValue === 0) && (
-          <CenteredContent>
-            <Paginate
-              offSet={offset}
-              limit={limit}
-              active={offset >= 1}
-              handlePageChange={(action) => paginate(action, router, tabValue, {offset, limit})}
-              count={filteredEvents?.length}
-            />
-          </CenteredContent>
-        )
-      }
+      {Boolean(tabValue === 0) && (
+        <CenteredContent>
+          <Paginate
+            offSet={offset}
+            limit={limit}
+            active={offset >= 1}
+            handlePageChange={action => paginate(action, router, tabValue, { offset, limit })}
+            count={filteredEvents?.length}
+          />
+        </CenteredContent>
+      )}
     </>
   );
 }
@@ -401,8 +401,9 @@ LogBookItem.defaultProps = {
 LogBookItem.propTypes = {
   data: PropTypes.arrayOf(
     PropTypes.shape({
-    id: PropTypes.string
-  })),
+      id: PropTypes.string
+    })
+  ),
   router: PropTypes.shape({
     push: PropTypes.func
   }).isRequired,

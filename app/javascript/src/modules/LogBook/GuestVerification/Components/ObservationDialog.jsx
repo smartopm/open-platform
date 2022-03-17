@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Button } from '@material-ui/core';
+import { Button } from '@mui/material';
 import { useHistory } from 'react-router-dom';
 import { css, StyleSheet } from 'aphrodite';
 import { useApolloClient, useMutation } from 'react-apollo';

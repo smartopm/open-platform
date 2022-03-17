@@ -1,6 +1,6 @@
 /* eslint-disable react/forbid-prop-types */
 import React, { Fragment } from 'react';
-import { ListItemText, ListItemSecondaryAction, ListItem, List } from '@material-ui/core';
+import { ListItemText, ListItemSecondaryAction, ListItem, List } from '@mui/material';
 import { string, number, func, object } from 'prop-types';
 import { objectAccessor, toCamelCase } from '../utils/helpers';
 

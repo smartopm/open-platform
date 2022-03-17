@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/interactive-supports-focus */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useEffect, useState } from 'react';
-import Typography from '@material-ui/core/Typography';
+import Typography from '@mui/material/Typography';
 import {
   Button,
   TextField,
@@ -11,10 +11,10 @@ import {
   IconButton,
   FormControlLabel,
   Checkbox
-} from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
-import { DeleteOutline } from '@material-ui/icons';
-import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
+} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import { DeleteOutline } from '@mui/icons-material';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 
@@ -595,6 +595,7 @@ export default function CommunitySettings({ data, refetch }) {
                 style={{ marginTop: 13 }}
                 onClick={() => handleMenuItemRemoveRow(i)}
                 aria-label="remove"
+                size="large"
               >
                 <DeleteOutline />
               </IconButton>

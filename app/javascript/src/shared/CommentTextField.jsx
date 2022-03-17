@@ -1,10 +1,10 @@
 import React from 'react';
 import Grid from '@mui/material/Grid';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
 import PropTypes from 'prop-types';
-import { Checkbox, FormControlLabel, Typography, useMediaQuery } from '@material-ui/core';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import { Checkbox, FormControlLabel, Typography, useMediaQuery } from '@mui/material';
+import Autocomplete from '@mui/material/Autocomplete';
 import { useTranslation } from 'react-i18next';
 import UserAutoResult from './UserAutoResult';
 import { UserChip } from '../modules/Tasks/Components/UserChip';
@@ -104,7 +104,7 @@ export default function CommentTextField({
               name="reply-user"
               onChange={(_event, newValue) => setSelectedUser(newValue)}
               getOptionLabel={option => option?.name}
-              getOptionSelected={(option, optionValue) => option.name === optionValue.name}
+              isOptionEqualToValue={(option, optionValue) => option.name === optionValue.name}
               value={selectedUser}
               noOptionsText="No valid assignees on this project"
               renderInput={params => (

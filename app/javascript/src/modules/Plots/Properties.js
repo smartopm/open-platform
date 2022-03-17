@@ -1,5 +1,5 @@
 import React from 'react';
-import HomeWorkIcon from '@material-ui/icons/HomeWork';
+import HomeWorkIcon from '@mui/icons-material/HomeWork';
 import LandParcelPage from '../../containers/LandParcels/LandParcel';
 import AccessCheck from '../Permissions/Components/AccessCheck';
 // This is a concept of a module that has different types like forms, we have admin page and client

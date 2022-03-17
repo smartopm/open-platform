@@ -20,9 +20,9 @@ import {
   InputLabel,
   FormControl,
   FormHelperText
-} from '@material-ui/core';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import { useTheme } from '@material-ui/styles';
+} from '@mui/material';
+import Autocomplete from '@mui/material/Autocomplete';
+import { useTheme } from '@mui/styles';
 import { useTranslation } from 'react-i18next';
 import PhoneInput from 'react-phone-input-2';
 import DatePickerDialog from '../../components/DatePickerDialog';

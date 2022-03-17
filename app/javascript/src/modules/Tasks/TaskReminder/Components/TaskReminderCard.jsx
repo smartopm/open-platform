@@ -1,15 +1,15 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React from 'react'
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 import { useQuery } from 'react-apollo';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import TrendingFlatIcon from '@material-ui/icons/TrendingFlat';
-import GridList from '@material-ui/core/GridList';
-import GridListTile from '@material-ui/core/GridListTile';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import TrendingFlatIcon from '@mui/icons-material/TrendingFlat';
+import ImageList from '@mui/material/ImageList';
+import ImageListItem from '@mui/material/ImageListItem';
 import { useHistory } from 'react-router-dom';
-import EventNoteIcon from '@material-ui/icons/EventNote';
-import Typography from '@material-ui/core/Typography';
+import EventNoteIcon from '@mui/icons-material/EventNote';
+import Typography from '@mui/material/Typography';
 import PropTypes from 'prop-types';
 import { AssignedTaskQuery } from '../graphql/task_reminder_query'
 import { Spinner } from '../../../../shared/Loading';
@@ -48,9 +48,9 @@ export default function TaskReminderCard({ translate }) {
           <div>
             {data?.userTasks.length > 0 ? (
               <div className={classes.root} style={matches ? {marginLeft: '20px'} : {marginLeft: '79px'}}>
-                <GridList className={classes.gridList} cols={matches ? 1 : 3.5}>
+                <ImageList className={classes.gridList} cols={matches ? 1 : 3.5}>
                   {data?.userTasks.map((tile) => (
-                    <GridListTile key={tile.id}>
+                    <ImageListItem key={tile.id}>
                       <div className={classes.gridTile} onClick={() => history.push(`/tasks/${tile.id}`)}>
                         <div className={classes.date} style={checkDate(tile.dueDate) ? {color: 'red'} : null}>
                           <EventNoteIcon style={{marginRight: '10px', heigth: '11.68px', width: '16.3px', verticalAlign: 'middle'}} />
@@ -70,9 +70,9 @@ export default function TaskReminderCard({ translate }) {
                           />
                         </Typography>
                       </div>
-                    </GridListTile>
+                    </ImageListItem>
                 ))}
-                </GridList>
+                </ImageList>
               </div>
             ) : (
               <EmptyCard title={translate('dashboard.no_pending_tasks')} subtitle={translate('dashboard.pending_tasks_text')} />

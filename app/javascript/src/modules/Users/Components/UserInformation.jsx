@@ -1,12 +1,12 @@
 /* eslint-disable complexity */
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import Button from '@material-ui/core/Button';
-import PhoneIcon from '@material-ui/icons/Phone';
-import { Dialog, DialogTitle, DialogContent } from '@material-ui/core';
+import Button from '@mui/material/Button';
+import PhoneIcon from '@mui/icons-material/Phone';
+import { Dialog, DialogTitle, DialogContent , Container } from '@mui/material';
 import { css, StyleSheet } from 'aphrodite';
 import PropTypes from 'prop-types';
-import { Container } from '@mui/material';
+
 import UserPlotInfo from './UserPlotInfo';
 import UserMerge from './UserMerge';
 import CenteredContent from '../../../components/CenteredContent';

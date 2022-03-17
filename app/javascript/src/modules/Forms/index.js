@@ -1,5 +1,5 @@
 import React from 'react'
-import DescriptionIcon from '@material-ui/icons/Description';
+import DescriptionIcon from '@mui/icons-material/Description';
 
 // There are 2 different types of forms
 // forms for the user and forms where admin manages and creates form

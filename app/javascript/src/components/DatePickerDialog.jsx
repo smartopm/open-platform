@@ -8,7 +8,7 @@ import {
   KeyboardDateTimePicker,
   TimePicker
 } from '@material-ui/pickers'
-import FormHelperText from '@material-ui/core/FormHelperText';
+import FormHelperText from '@mui/material/FormHelperText';
 import { useTranslation } from 'react-i18next';
 import { es, enUS } from "date-fns/locale";
 import { checkPastDate } from "../utils/dateutil"

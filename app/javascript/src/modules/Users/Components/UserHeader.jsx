@@ -1,15 +1,15 @@
 /* eslint-disable react/forbid-prop-types */
 import React, { useState } from 'react';
-import Typography from '@material-ui/core/Typography';
+import Typography from '@mui/material/Typography';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
+import makeStyles from '@mui/styles/makeStyles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTranslation } from 'react-i18next';
-import Grid from '@material-ui/core/Grid';
-import Hidden from '@material-ui/core/Hidden';
-import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import MoreVertOutlined from '@material-ui/icons/MoreVertOutlined';
+import Grid from '@mui/material/Grid';
+import Hidden from '@mui/material/Hidden';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import MoreVertOutlined from '@mui/icons-material/MoreVertOutlined';
 import { CSVLink } from 'react-csv';
 import SelectButton from '../../../shared/buttons/SelectButton';
 import SearchInput from '../../../shared/search/SearchInput';
@@ -112,7 +112,7 @@ export default function UserHeader({
         <Typography variant="h4">Users</Typography>
       </Grid>
       <Grid container className={classes.container} data-testid="select">
-        <Hidden smDown>
+        <Hidden mdDown>
           <Grid item lg={3} md={3} sm={6} xs={6}>
             <SelectButton
               defaultButtonText={t("common:misc.select")}
@@ -242,6 +242,7 @@ export default function UserHeader({
             onClick={menuObject.handleMenu}
             data-testid="menu-list"
             className={classes.reportBtn}
+            size="large"
           >
             <MoreVertOutlined />
           </IconButton>
@@ -254,7 +255,7 @@ export default function UserHeader({
           />
         </Grid>
       </Grid>
-      <Hidden smDown>
+      <Hidden mdDown>
         <Grid item lg={12} md={12} sm={6} xs={6}>
           <UsersActionMenu
             campaignCreateOption={actionObject.campaignCreateOption}

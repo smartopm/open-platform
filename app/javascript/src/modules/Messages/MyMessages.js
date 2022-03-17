@@ -1,5 +1,5 @@
 import React from 'react';
-import MessageIcon from '@material-ui/icons/Message';
+import MessageIcon from '@mui/icons-material/Message';
 import { allUserTypes } from '../../utils/constants';
 
 export default {

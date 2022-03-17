@@ -1,7 +1,7 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/styles';
-import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
-import { Typography } from '@material-ui/core';
+import { makeStyles } from '@mui/styles';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import { Typography } from '@mui/material';
 import PropTypes from 'prop-types';
 
 export default function AddMoreButton({ handleAdd, title }) {

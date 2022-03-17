@@ -1,12 +1,12 @@
 /* eslint-disable max-statements */
 import React, { useState, useEffect } from 'react';
 import { useHistory, useParams } from 'react-router';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { useQuery } from 'react-apollo';
 import { Grid, Typography } from '@mui/material';
-import IconButton from '@material-ui/core/IconButton';
+import IconButton from '@mui/material/IconButton';
 import ShareIcon from '@mui/icons-material/Share';
-import Edit from '@material-ui/icons/Edit';
+import Edit from '@mui/icons-material/Edit';
 import { useTranslation } from 'react-i18next';
 import TaskContextProvider from '../../Context';
 import { StyledTabs, StyledTab, TabPanel, a11yProps } from '../../../../components/Tabs';
@@ -154,13 +154,14 @@ export default function TaskProcessDetail() {
                 </Typography>
               </Grid>
               <Grid item md={1} xs={2} style={{textAlign: 'right', marginTop: '20px'}}>
-                <IconButton color='primary' onClick={shareOnclick}>
+                <IconButton color='primary' onClick={shareOnclick} size="large">
                   <ShareIcon />
                 </IconButton>
                 {matches && (
                   <IconButton
                     color='primary'
                     onClick={() => handleProjectStepClick(projectData?.task)}
+                    size="large"
                   >
                     <Edit />
                   </IconButton>

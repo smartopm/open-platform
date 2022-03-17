@@ -1,8 +1,9 @@
 // This component will house the customer journey dashboard
 import React from 'react';
-import { makeStyles, useTheme } from '@material-ui/core';
+import { useTheme } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import { useQuery } from 'react-apollo';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { useHistory } from 'react-router-dom';
 import { SubStatusQuery, SubStatusDistributionReportQuery } from '../../../graphql/queries';
 import { Spinner } from '../../../shared/Loading';

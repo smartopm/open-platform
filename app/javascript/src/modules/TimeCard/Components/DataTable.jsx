@@ -1,6 +1,7 @@
 import React from 'react';
-import { Table, TableBody, TableCell, TableHead, TableRow } from '@material-ui/core';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
+import { Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
+import withStyles from '@mui/styles/withStyles';
 import PropTypes from 'prop-types';
 
 const useStyles = makeStyles(theme => ({

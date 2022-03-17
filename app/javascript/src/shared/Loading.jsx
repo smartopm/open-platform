@@ -1,8 +1,8 @@
 import React from 'react';
 import { StyleSheet, css } from 'aphrodite';
 import LinearProgress from '@mui/material/LinearProgress';
-import { withStyles } from '@material-ui/styles';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import { withStyles } from '@mui/styles';
+import CircularProgress from '@mui/material/CircularProgress';
 import CenteredContent from './CenteredContent';
 /**
  *

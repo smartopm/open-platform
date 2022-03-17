@@ -1,5 +1,5 @@
 import React from 'react'
-import HourglassFullIcon from '@material-ui/icons/HourglassFull';
+import HourglassFullIcon from '@mui/icons-material/HourglassFull';
 import CustodianLogs from './Components/CustodianLogs';
 import AccessCheck from '../Permissions/Components/AccessCheck';
 

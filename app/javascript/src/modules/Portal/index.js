@@ -1,5 +1,5 @@
 import React from 'react'
-import ComputerIcon from '@material-ui/icons/Computer';
+import ComputerIcon from '@mui/icons-material/Computer';
 import NkwashiAccountManagement from '../../containers/NkwashiAccountManagement';
 
 export default {

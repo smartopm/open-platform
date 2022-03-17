@@ -2,26 +2,26 @@
 /* eslint-disable complexity */
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { Link, useParams } from 'react-router-dom';
 import { useQuery } from 'react-apollo';
-import { Chip, Grid, IconButton, Typography } from '@material-ui/core';
+import { Chip, Grid, IconButton, Typography , Badge } from '@mui/material';
 import { grey } from '@mui/material/colors';
 import Divider from '@mui/material/Divider';
-import Hidden from '@material-ui/core/Hidden';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import AccountTreeIcon from '@material-ui/icons/AccountTree';
-import QuestionAnswerIcon from '@material-ui/icons/QuestionAnswer';
-import AttachFileIcon from '@material-ui/icons/AttachFile';
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
+import Hidden from '@mui/material/Hidden';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import AccountTreeIcon from '@mui/icons-material/AccountTree';
+import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
+import AttachFileIcon from '@mui/icons-material/AttachFile';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/styles';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
+import { makeStyles } from '@mui/styles';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import Box from '@mui/material/Box';
 import Tooltip from '@mui/material/Tooltip';
-import { Badge } from '@mui/material';
+
 import { removeNewLines, sanitizeText } from '../../../utils/helpers';
 import { dateToString } from '../../../components/DateContainer';
 import Card from '../../../shared/Card';
@@ -141,7 +141,7 @@ export default function TaskDataList({
                 )
               }
               {task.submittedBy && (
-                <Hidden smDown>
+                <Hidden mdDown>
                   <Typography variant='caption'>
                     Submitted by
                   </Typography>
@@ -155,7 +155,7 @@ export default function TaskDataList({
               )}
             </Grid>
             <Grid item md={1} xl={1}>
-              <Hidden smDown>
+              <Hidden mdDown>
                 <IconButton
                   aria-controls="simple-menu"
                   aria-haspopup="true"
@@ -163,13 +163,14 @@ export default function TaskDataList({
                   dataid={task.id}
                   onClick={event => menuData.handleTodoMenu(event, task)}
                   color="primary"
+                  size="large"
                 >
                   <MoreVertIcon />
                 </IconButton>
               </Hidden>
             </Grid>
             {!clientView && (
-              <Hidden smDown>
+              <Hidden mdDown>
                 <Divider orientation="vertical" flexItem sx={{ margin: '-20px 10px' }} />
               </Hidden>
             )}
@@ -217,6 +218,7 @@ export default function TaskDataList({
                   dataid={task.id}
                   onClick={event => menuData.handleTodoMenu(event, task)}
                   color="primary"
+                  size="large"
                 >
                   <MoreVertIcon />
                 </IconButton>
@@ -224,7 +226,7 @@ export default function TaskDataList({
             </Grid>
           </Hidden>
         )}
-        <Hidden smDown>
+        <Hidden mdDown>
           <Grid
             item
             data-testid="task_due_date"
@@ -317,6 +319,7 @@ export default function TaskDataList({
                         data-testid="task_subtasks"
                         onClick={() => handleClick('subtasks')}
                         color='primary'
+                        size="large"
                       >
                         <AccountTreeIcon
                           fontSize="small"
@@ -344,6 +347,7 @@ export default function TaskDataList({
                     data-testid="task_comments"
                     onClick={() => handleClick('comments')}
                     color='primary'
+                    size="large"
                   >
                     <QuestionAnswerIcon
                       fontSize="small"
@@ -370,6 +374,7 @@ export default function TaskDataList({
                     data-testid="task_attach_file"
                     onClick={() => handleClick('documents')}
                     color='primary'
+                    size="large"
                   >
                     <AttachFileIcon
                       fontSize="small"
@@ -397,7 +402,7 @@ export default function TaskDataList({
           data-testid="progress_bar_large_screen"
         >
           {!clientView && task?.subTasksCount > 0 && (
-            <Hidden smDown>
+            <Hidden mdDown>
               <CustomProgressBar task={task} smDown={false} />
             </Hidden>
           )}
@@ -409,7 +414,7 @@ export default function TaskDataList({
           style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}
           data-testid="task_status"
         >
-          <Hidden smDown>
+          <Hidden mdDown>
             <Chip
               data-testid="task_status_chip"
               label={task?.status ? t(`task.${task.status}`) : t('task.not_started')}
@@ -433,6 +438,7 @@ export default function TaskDataList({
               data-testid="show_task_subtasks"
               onClick={e => handleOpenSubTasksClick(e)}
               color='primary'
+              size="large"
             >
               {openSubTask ? (
                 <KeyboardArrowUpIcon fontSize="small" color="primary" />

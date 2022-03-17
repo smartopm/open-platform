@@ -1,7 +1,7 @@
 import React from 'react'
 import { render, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/react-testing'
-import { createMuiTheme, ThemeProvider } from '@material-ui/core'
+import { createTheme, ThemeProvider, StyledEngineProvider } from '@mui/material';
 import { BrowserRouter } from 'react-router-dom'
 import '@testing-library/jest-dom/extend-expect'
 import Loading from '../../../shared/Loading'
@@ -37,13 +37,15 @@ describe('Form List Component', () => {
       }
     }
     // needs a theme provider to use theme related functions like theme.breakpoints
-    const theme = createMuiTheme()
+    const theme = createTheme()
     const container = render(
       <MockedProvider mocks={[mocks]} addTypename={false}>
         <BrowserRouter>
-          <ThemeProvider theme={theme}>
-            <FormLinkList userType="admin" community={userMock.user.community.name} />
-          </ThemeProvider>
+          <StyledEngineProvider injectFirst>
+            <ThemeProvider theme={theme}>
+              <FormLinkList userType="admin" community={userMock.user.community.name} />
+            </ThemeProvider>
+          </StyledEngineProvider>
         </BrowserRouter>
       </MockedProvider>
     )
@@ -68,22 +70,24 @@ describe('Form List Component', () => {
 
 describe('Form Dialog component', () => {
   it('should render form dialog without error', async () => {
-    const theme = createMuiTheme();
+    const theme = createTheme();
     const container = render(
       <BrowserRouter>
-        <ThemeProvider theme={theme}>
-          <FormDialog
-            actionType='create'
-            form={null}
-            formMutation={jest.fn}
-            open
-            setOpen={jest.fn}
-            message={{detail: '', isError: false}}
-            setMessage={jest.fn}
-            setAlertOpen={jest.fn}
-            refetch={jest.fn}
-          />
-        </ThemeProvider>
+        <StyledEngineProvider injectFirst>
+          <ThemeProvider theme={theme}>
+            <FormDialog
+              actionType='create'
+              form={null}
+              formMutation={jest.fn}
+              open
+              setOpen={jest.fn}
+              message={{detail: '', isError: false}}
+              setMessage={jest.fn}
+              setAlertOpen={jest.fn}
+              refetch={jest.fn}
+            />
+          </ThemeProvider>
+        </StyledEngineProvider>
       </BrowserRouter>
     );
 

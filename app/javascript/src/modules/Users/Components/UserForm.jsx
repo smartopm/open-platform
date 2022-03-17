@@ -1,11 +1,11 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React from 'react';
-import MenuItem from '@material-ui/core/MenuItem';
-import TextField from '@material-ui/core/TextField';
+import MenuItem from '@mui/material/MenuItem';
+import TextField from '@mui/material/TextField';
 import { StyleSheet, css } from 'aphrodite';
-import PhotoCameraIcon from '@material-ui/icons/PhotoCamera';
+import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
 import { useHistory, useParams } from 'react-router-dom';
-import { Button, Typography } from '@material-ui/core';
+import { Button, Typography } from '@mui/material';
 import { useApolloClient, useLazyQuery, useMutation } from 'react-apollo';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';

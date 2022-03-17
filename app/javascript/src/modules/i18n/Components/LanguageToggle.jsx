@@ -1,8 +1,8 @@
 import React, { useState, useContext } from 'react';
-import { FormControl, Select, MenuItem } from '@material-ui/core';
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+import { FormControl, Select, MenuItem } from '@mui/material';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { useTranslation } from 'react-i18next';
-import GTranslateIcon from '@material-ui/icons/GTranslate';
+import GTranslateIcon from '@mui/icons-material/GTranslate';
 import { BootstrapInput } from '../../Dashboard/Components/GuardHome';
 import { languages } from '../../../utils/constants';
 import { Context } from '../../../containers/Provider/AuthStateProvider';

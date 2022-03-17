@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import React from "react";
 import { css, StyleSheet } from "aphrodite";
-import { Button } from "@material-ui/core";
+import { Button } from "@mui/material";
 import logo from "../../../../assets/images/logo_nkwashi.svg";
 import { Footer } from "../../components/Footer";
 

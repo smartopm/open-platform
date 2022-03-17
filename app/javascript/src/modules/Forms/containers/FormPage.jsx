@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import { useLocation, useParams } from 'react-router'
-import { Container } from '@material-ui/core'
+import { Container } from '@mui/material'
 import FormUpdate from '../components/FormUpdate'
 import { Context } from '../../../containers/Provider/AuthStateProvider'
 import FormContextProvider from '../Context'

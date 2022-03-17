@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import { Grid, IconButton } from '@material-ui/core'
-import { MoreHorizOutlined } from '@material-ui/icons';
+import { Grid, IconButton } from '@mui/material'
+import { MoreHorizOutlined } from '@mui/icons-material';
 import PropTypes from 'prop-types'
 import DataList from '../../shared/list/DataList';
 import Text from '../../shared/Text';
@@ -104,6 +104,7 @@ export default function ParcelItem({ parcel, onParcelClick, onAddHouseClick }) {
             aria-haspopup="true"
             data-testid="edit_property_menu"
             onClick={(event) => menuData.handlePropertyMenu(event)}
+            size="large"
           >
             <MoreHorizOutlined />
           </IconButton>

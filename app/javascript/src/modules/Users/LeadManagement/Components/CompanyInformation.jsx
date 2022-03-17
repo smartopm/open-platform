@@ -1,6 +1,6 @@
 import React from 'react';
-import TextField from '@material-ui/core/TextField';
-import { makeStyles } from '@material-ui/core/styles';
+import TextField from '@mui/material/TextField';
+import makeStyles from '@mui/styles/makeStyles';
 import { Grid, Typography } from '@mui/material';
 import PropTypes from 'prop-types';
 import OutlinedInput from '@mui/material/OutlinedInput';
