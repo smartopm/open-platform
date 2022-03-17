@@ -3,45 +3,54 @@
 describe('Properties & Co-ownership Payment Plan', () => {
   it('creates a co-owned property and a payment plan', () => {
     // Create 2 users
-    cy.factory('community', { name: 'Nkwashi' }).then((commRes) => {
+    cy.factory('community', { name: 'DoubleGDP' }).then(commRes => {
       cy.factory('role', {
-        name: 'admin',
-      }).then(roleRes =>{
+        name: 'admin'
+      }).then(roleRes => {
         cy.factory('permission', {
           module: 'land_parcel',
-          permissions: ['can_see_menu_item', 'can_fetch_land_parcels',
-                        'can_view_all_land_parcels', 'can_create_land_parcel',
-                        'can_fetch_house', 'can_update_land_parcel'],
-          role_id: roleRes.body.id,
-        })
+          permissions: [
+            'can_see_menu_item',
+            'can_fetch_land_parcels',
+            'can_view_all_land_parcels',
+            'can_create_land_parcel',
+            'can_fetch_house',
+            'can_update_land_parcel'
+          ],
+          role_id: roleRes.body.id
+        });
         cy.factory('permission', {
           module: 'payment_plan',
           permissions: ['can_view_menu_list', 'can_create_payment_plan'],
-          role_id: roleRes.body.id,
-        })
+          role_id: roleRes.body.id
+        });
         cy.factory('permission', {
           module: 'user',
-          permissions: ['can_get_users_lite', 'can_see_menu_item',,
-                        'can_get_users', 'can_view_admin_users',
-                        'can_access_all_users'],
-          role_id: roleRes.body.id,
-        })
+          permissions: [
+            'can_get_users_lite',
+            'can_see_menu_item',
+            ,
+            'can_get_users',
+            'can_view_admin_users',
+            'can_access_all_users'
+          ],
+          role_id: roleRes.body.id
+        });
         cy.factory('permission', {
           module: 'transaction',
-          permissions: ['can_fetch_transaction_summary',
-                        'can_fetch_user_transactions'],
-          role_id: roleRes.body.id,
-        })
+          permissions: ['can_fetch_transaction_summary', 'can_fetch_user_transactions'],
+          role_id: roleRes.body.id
+        });
         cy.factory('permission', {
           module: 'label',
           permissions: ['can_fetch_all_labels'],
-          role_id: roleRes.body.id,
-        })
+          role_id: roleRes.body.id
+        });
         cy.factory('permission', {
           module: 'profile',
           permissions: ['can_see_menu_item'],
-          role_id: roleRes.body.id,
-        })
+          role_id: roleRes.body.id
+        });
         cy.factory('admin_user', {
           name: 'Larry Bird',
           phone_number: '2348167740149',
@@ -49,7 +58,7 @@ describe('Properties & Co-ownership Payment Plan', () => {
           state: 'valid',
           community_id: commRes.body.id,
           role_id: roleRes.body.id
-        })
+        });
 
         cy.factory('admin_user', {
           name: 'John Doe',
@@ -58,18 +67,17 @@ describe('Properties & Co-ownership Payment Plan', () => {
           state: 'valid',
           community_id: commRes.body.id,
           role_id: roleRes.body.id
-        })
-      }
-      )
-    })
+        });
+      });
+    });
 
     // Login in as User 1
-    cy.login('2348167740149')
+    cy.login('2348167740149');
 
     // Go to Properties page
-    cy.visitMainMenu('.properties-menu-item')
+    cy.visitMainMenu('.properties-menu-item');
 
-     // Property List should not contain our proposed property initially
+    // Property List should not contain our proposed property initially
     cy.contains('Co-owned Plot').should('not.exist');
 
     // Create New Property
@@ -127,7 +135,7 @@ describe('Properties & Co-ownership Payment Plan', () => {
     cy.get('[data-testid=no-plan-available]').click();
 
     // Add Payment plan under Primary Owner (User 1)
-    cy.myProfile()
+    cy.myProfile();
     cy.visitUserMenu('#payments');
     cy.addNewPaymentPlanFromUserProfile({
       duration: 12,
@@ -135,7 +143,7 @@ describe('Properties & Co-ownership Payment Plan', () => {
       type: 'basic',
       plot: 'Land: Co-owned Plot',
       coOwner: 'John Doe'
-    })
+    });
 
     // Verify Pending Balance & Payment plan is updated for Primary Owner  (User 1)
     cy.get('[data-testid=no-plan-available]').should('not.exist');
@@ -160,6 +168,5 @@ describe('Properties & Co-ownership Payment Plan', () => {
     cy.get('.plan-detail-co-owner').click();
     cy.get('.plan-detail-co-owner').should('contain', 'John Doe');
     cy.wait(2000);
-
   });
 });

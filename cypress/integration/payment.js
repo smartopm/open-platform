@@ -2,66 +2,70 @@
 
 describe('Payment', () => {
   it('records a new payment successfully', () => {
-    cy.factory('community', { name: 'Nkwashi' }).then(commRes => {
+    cy.factory('community', { name: 'DoubleGDP' }).then(commRes => {
       cy.factory('role', {
-        name: 'admin',
-      }).then(roleRes =>{
+        name: 'admin'
+      }).then(roleRes => {
         cy.factory('permission', {
           module: 'profile',
           permissions: ['can_see_menu_item'],
-          role_id: roleRes.body.id,
-        })
+          role_id: roleRes.body.id
+        });
         cy.factory('permission', {
           module: 'payment_plan',
           permissions: ['can_view_menu_list', 'can_create_payment_plan'],
-          role_id: roleRes.body.id,
-        })
+          role_id: roleRes.body.id
+        });
         cy.factory('permission', {
           module: 'plan_payment',
-          permissions: ['can_see_menu_item', 'can_access_all_payments',
-                        'can_create_plan_payment', 'can_fetch_payments_list'],
-          role_id: roleRes.body.id,
-        })
+          permissions: [
+            'can_see_menu_item',
+            'can_access_all_payments',
+            'can_create_plan_payment',
+            'can_fetch_payments_list'
+          ],
+          role_id: roleRes.body.id
+        });
         cy.factory('permission', {
           module: 'transaction',
           permissions: ['can_create_transaction', 'can_fetch_user_transactions'],
-          role_id: roleRes.body.id,
-        })
+          role_id: roleRes.body.id
+        });
         cy.factory('permission', {
           module: 'land_parcel',
           permissions: ['can_fetch_land_parcels_with_plans'],
-          role_id: roleRes.body.id,
-        })
+          role_id: roleRes.body.id
+        });
 
-      cy.factory('admin_user', {
-        name: 'An Admin User',
-        phone_number: '2348167740149',
-        email: 'adminuser@gmail.com',
-        state: 'valid',
-        role_id: roleRes.body.id,
-        community_id: commRes.body.id
-      }).then(userRes => {
-        cy.factory('account', { user_id: userRes.body.id, community_id: commRes.body.id }).then(
-          accountRes => {
-            cy.factory('land_parcel', {
-              parcel_number: '1000001',
-              community_id: commRes.body.id
-            }).then(parcelRes => {
-              cy.factory('land_parcel_account', {
-                land_parcel_id: parcelRes.body.id,
-                account_id: accountRes.body.id
+        cy.factory('admin_user', {
+          name: 'An Admin User',
+          phone_number: '2348167740149',
+          email: 'adminuser@gmail.com',
+          state: 'valid',
+          role_id: roleRes.body.id,
+          community_id: commRes.body.id
+        }).then(userRes => {
+          cy.factory('account', { user_id: userRes.body.id, community_id: commRes.body.id }).then(
+            accountRes => {
+              cy.factory('land_parcel', {
+                parcel_number: '1000001',
+                community_id: commRes.body.id
+              }).then(parcelRes => {
+                cy.factory('land_parcel_account', {
+                  land_parcel_id: parcelRes.body.id,
+                  account_id: accountRes.body.id
+                });
               });
-            });
-          }
-        );
+            }
+          );
+        });
       });
-    });
     });
     // Login: Admin
     cy.login('2348167740149');
 
     // Go to user's page
-    cy.visitMainMenu('.my-profile-menu-item')
+    cy.visitMainMenu('.my-profile-menu-item');
     cy.get('.option_menu_toggler').click();
     cy.wait(1000);
     cy.get('#payments').click();

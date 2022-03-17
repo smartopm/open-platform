@@ -9,7 +9,7 @@ RSpec.describe GraphqlController, type: :controller do
            phone_number: '14048675309', role: visitor_role)
   end
   before do
-    user.community.update(name: 'Nkwashi')
+    user.community.update(name: 'DoubleGDP')
     authenticate user
     @request.host = 'test.dgdp.site'
   end
