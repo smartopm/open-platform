@@ -151,6 +151,7 @@ module Users
     before_validation :add_default_state_type_and_role
     after_create :send_email_msg
     after_create :add_notification_preference
+    after_create :send_welcome_sms
 
     # Track changes to the User
     has_paper_trail
@@ -617,6 +618,15 @@ module Users
     end
     # rubocop:enable Metrics/MethodLength
     # rubocop:enable Metrics/AbcSize
+
+    def send_welcome_sms
+      return if community.name.eql?('Enyimba') || phone_number.blank?
+
+      url = "https://#{HostEnv.base_url(community)}"
+      Sms.send(phone_number, I18n.t('welcome_sms',
+                                    community: community.name,
+                                    url: url))
+    end
 
     # catch exceptions in here to be caught in the mutation
     def merge_user(dup_id)

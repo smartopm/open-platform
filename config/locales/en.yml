@@ -422,3 +422,4 @@ en:
       subject: '%{user_name} Required a Reply'
   action_flow:
     never: Never
+  welcome_sms: "Welcome to the %{community} online community. Please access the app using %{url}"
