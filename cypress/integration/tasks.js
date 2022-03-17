@@ -1,7 +1,7 @@
 describe('Tasks page', () => {
   describe('Admin role', () => {
     before(() => {
-      cy.factory('community', { name: 'Nkwashi' }).then((commRes) => {
+      cy.factory('community', { name: 'DoubleGDP' }).then((commRes) => {
         cy.factory('role', {
           name: 'admin',
         }).then((adminRes) => {
