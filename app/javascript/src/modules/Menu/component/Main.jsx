@@ -17,7 +17,7 @@ import SideMenu from './SideMenu';
 import NotificationBell from '../../../components/NotificationBell';
 import modules from '../..';
 import CommunityName from '../../../shared/CommunityName';
-import CenteredContent from '../../../components/CenteredContent';
+import CenteredContent from '../../../shared/CenteredContent';
 import userProps from '../../../shared/types/user';
 import UserActionOptions from '../../Users/Components/UserActionOptions';
 import Loading from '../../../shared/Loading';

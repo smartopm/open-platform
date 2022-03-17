@@ -280,7 +280,7 @@ export default function CommunitySettings({ data, refetch }) {
           'load',
           // eslint-disable-next-line consistent-return
           () => {
-            if (image.height > 40 || image.width > 150) {
+            if (image.height > 160 || image.width > 600) {
               setMessage({ isError: true, detail: t('community.upload_error') });
               setAlertOpen(true);
               return false;
