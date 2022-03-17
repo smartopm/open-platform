@@ -88,6 +88,12 @@ module Types::Queries::User
       argument :user_id, GraphQL::Types::ID, required: true
       description 'Get a list of hosts who invited me'
     end
+
+    field :search_user_ids, [Types::UserType], null: true do
+      argument :query, String, required: false
+      argument :user_ids, [String], required: false
+      description 'Get searched users from userids'
+    end
   end
   # rubocop:enable Metrics/BlockLength
 
@@ -281,6 +287,22 @@ module Types::Queries::User
                           .search(or: [{ query: (query.presence || '.') },
                                        { guest: { matches: query } }])
                           .order(created_at: :desc)
+  end
+
+  def search_user_ids(query: nil, user_ids: [])
+    unless permitted?(module: :user, permission: :can_search_user_ids)
+      raise GraphQL::ExecutionError,
+            I18n.t('errors.unauthorized')
+    end
+
+    users = Users::User.allowed_users(context[:current_user])
+               .search_lite(or: [{ query: (query.presence || '.') }, { name: { matches: query } }])
+               .order(name: :asc)
+               .with_attached_avatar
+
+    users.filter do |user|
+      user_ids.includes? user.id
+    end    
   end
 
   def my_hosts(user_id:)

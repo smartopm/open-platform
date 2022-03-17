@@ -161,6 +161,7 @@ admin:
       - can_view_guests
       - can_view_hosts
       - can_update_invitation
+      - can_search_user_ids
   profile:
     permissions:
       - can_see_menu_item

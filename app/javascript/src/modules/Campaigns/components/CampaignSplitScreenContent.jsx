@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
-import { useMutation } from 'react-apollo';
+import { useMutation, useQuery } from 'react-apollo';
 import { makeStyles, useTheme } from '@material-ui/styles';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -29,6 +29,9 @@ import {
 import MessageAlert from '../../../components/MessageAlert';
 import CampaignStatCard from './CampaignStatCard';
 import TemplateList from '../../Emails/components/TemplateList';
+import SearchInput from '../../../shared/search/SearchInput';
+import useDebounce from '../../../utils/useDebounce';
+import SearchUserID from '../graphql/campaign_query';
 
 const initData = {
   id: '',
@@ -61,6 +64,12 @@ export default function CampaignSplitScreenContent({ refetch, campaign, handleCl
   const [campaignUpdate] = useMutation(CampaignUpdateMutation);
   const { t } = useTranslation(['campaign', 'common']);
   const { state } = useLocation();
+  const [searchText, setSearchText] = useState('');
+  const debouncedSearchText = useDebounce(searchText, 500);
+  const { data, error, loading, refetch: searchRefetch } = useQuery(SearchUserID, {
+    variables: { query: debouncedSearchText,  user_ids: formData.userIdList.split(',')},
+    fetchPolicy: 'cache-and-network'
+  });
 
   function handleLabelDelete(labelId) {
     campaignLabelRemove({
@@ -463,19 +472,32 @@ export default function CampaignSplitScreenContent({ refetch, campaign, handleCl
           </Grid>
         )}
         {mailListType === 'idlist' && (
-          <Grid item sm={12} xs={12} className={classes.liveEvent}>
-            <TextFieldLiveEdit
-              placeHolderText={t('message.paste_userid_list')}
-              textVariant="body2"
-              textFieldVariant="outlined"
-              fullWidth
-              multiline
-              text={formData.userIdList}
-              handleChange={handleInputChange}
-              name="userIdList"
-              styles={{ margin: '0 -12px' }}
-            />
-          </Grid>
+          <>
+            <Grid item sm={12} xs={12} className={classes.liveEvent}>
+              <TextFieldLiveEdit
+                placeHolderText={t('message.paste_userid_list')}
+                textVariant="body2"
+                textFieldVariant="outlined"
+                fullWidth
+                multiline
+                text={formData.userIdList}
+                handleChange={handleInputChange}
+                name="userIdList"
+                styles={{ margin: '0 -12px' }}
+                rows={!formData.userIdList ? undefined : 5}
+              />
+            </Grid>
+            <Grid item sm={8}>
+              <SearchInput
+                filterRequired={false}
+                title={t('common:misc.users')}
+                searchValue={searchText}
+                handleSearch={(e) => setSearchText(e.target.value)}
+                handleClear={() => setSearchText('')}
+                data-testid="search_input"
+              />
+            </Grid>
+          </>
         )}
       </Grid>
     </Grid>
