@@ -192,11 +192,10 @@ function fetchMoreOpenTasks() {
                     <span>{task?.taskCommentsCount || 0}</span>
                   </Grid>
                   <Grid item md={2} xs={1}>
-                    <IconButton aria-controls="task-attach-file-icon">
+                    <IconButton aria-controls="task-attach-file-icon" onClick={() => handleTodoClick(task, 'processes', 'documents')}>
                       <AttachFileIcon
                         fontSize="small"
                         color={task?.attachments?.length ? 'primary' : 'disabled'}
-                        onClick={() => handleTodoClick(task, 'processes', 'documents')}
                       />
                     </IconButton>
                   </Grid>

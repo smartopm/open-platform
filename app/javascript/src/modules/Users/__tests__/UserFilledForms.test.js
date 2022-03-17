@@ -16,7 +16,7 @@ describe('UserFilledForms component', () => {
       }
     ];
     const rendered = render(
-      <UserFilledForms userFormsFilled={userFormsFilled} userId="3954jefsdfs" />
+      <UserFilledForms userFormsFilled={userFormsFilled} userId="3954jefsdfs" currentUser="9238492318921"  />
     );
     expect(rendered.queryByText('Form One')).toBeInTheDocument();
     expect(rendered.queryByText('pending')).toBeInTheDocument();
@@ -26,7 +26,7 @@ describe('UserFilledForms component', () => {
     expect(item).toBeInTheDocument();
   });
   it('shouldnt contain form list when list is empty', () => {
-    const rendered = render(<UserFilledForms userFormsFilled={[]} userId="3954jefsdfs" />);
+    const rendered = render(<UserFilledForms userFormsFilled={[]} userId="3954jefsdfs" currentUser="9238492318921" />);
     expect(rendered.queryByText('misc.no_forms')).toBeInTheDocument();
     expect(rendered.queryByTestId('form_item')).not.toBeInTheDocument();
   });
@@ -43,7 +43,7 @@ describe('UserFilledForms component', () => {
         createdAt: '2020-10-10'
       }
     ];
-    const rendered = render(<UserFilledForms userFormsFilled={userForms} userId="3954jefsdfs" />);
+    const rendered = render(<UserFilledForms userFormsFilled={userForms} userId="3954jefsdfs" currentUser="9238492318921" />);
     expect(rendered.queryByText('Form One')).not.toBeInTheDocument();
   });
 

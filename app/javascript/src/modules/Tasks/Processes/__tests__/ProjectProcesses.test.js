@@ -23,11 +23,18 @@ describe('Project Processes Tab', () => {
             <MockedThemeProvider>
               <TaskContext.Provider
                 value={{
-                  setSelectedStep: jest.fn,
-                  handleStepCompletion: jest.fn
+                  setSelectedStep: jest.fn(),
+                  handleStepCompletion: jest.fn()
               }}
               >
-                <ProjectProcesses data={data} refetch={jest.fn} />
+                <ProjectProcesses 
+                  data={data}
+                  refetch={jest.fn()}
+                  handleProjectStepClick={jest.fn()}
+                  commentsLoading={false}
+                  commentsRefetch={jest.fn()}
+                  commentsFetchMore={jest.fn()}
+                />
               </TaskContext.Provider>
             </MockedThemeProvider>
           </BrowserRouter>
@@ -49,11 +56,18 @@ describe('Project Processes Tab', () => {
             <MockedThemeProvider>
               <TaskContext.Provider
                 value={{
-                  setSelectedStep: jest.fn,
-                  handleStepCompletion: jest.fn
+                  setSelectedStep: jest.fn(),
+                  handleStepCompletion: jest.fn()
               }}
               >
-                <ProjectProcesses data={[]} refetch={jest.fn} />
+                <ProjectProcesses 
+                  data={[]}
+                  refetch={jest.fn()}
+                  handleProjectStepClick={jest.fn()}
+                  commentsLoading={false}
+                  commentsRefetch={jest.fn()}
+                  commentsFetchMore={jest.fn()}
+                />
               </TaskContext.Provider>
             </MockedThemeProvider>
           </BrowserRouter>
