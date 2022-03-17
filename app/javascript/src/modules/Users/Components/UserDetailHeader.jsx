@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Grid from '@mui/material/Grid';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import PropTypes from 'prop-types';
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 import Typography from '@material-ui/core/Typography';
@@ -19,6 +20,7 @@ import { checkAccessibilityForUserType as handler, objectAccessor } from '../../
 export default function UserDetailHeader({ data, userType, currentTab, authState }) {
   const history = useHistory();
   const { t } = useTranslation('common');
+  const matches = useMediaQuery('(max-width:600px)');
   const [isLabelOpen, setIsLabelOpen] = useState(false);
   const [open, setOpen] = useState(false);
   const classes = useStyles();
@@ -143,19 +145,26 @@ export default function UserDetailHeader({ data, userType, currentTab, authState
             </Grid>
           </Grid>
         </Grid>
+        <Grid
+          item
+          lg={5}
+          md={5}
+          sm={3}
+          xs={12}
+          className={matches ? classes.selectMobile : undefined}
+        >
+          <SelectButton
+            options={options}
+            open={open}
+            anchorEl={anchorEl}
+            handleClose={handleClose}
+            handleClick={handleSelectButtonClick}
+            selectedKey={selectedKey}
+            defaultButtonText={t('common:menu.contact')}
+            style={{ marginLeft: '-6rem' }}
+          />
+        </Grid>
         <Hidden smDown>
-          <Grid item lg={5} md={5} sm={3}>
-            <SelectButton
-              options={options}
-              open={open}
-              anchorEl={anchorEl}
-              handleClose={handleClose}
-              handleClick={handleSelectButtonClick}
-              selectedKey={selectedKey}
-              defaultButtonText={t('common:menu.contact')}
-              style={{marginLeft: '-6rem'}}
-            />
-          </Grid>
           <Grid item lg={2} md={2} sm={2} xs={2}>
             {['admin'].includes(userType) && (
               <UserLabelTitle isLabelOpen={isLabelOpen} setIsLabelOpen={setIsLabelOpen} />
@@ -173,20 +182,6 @@ export default function UserDetailHeader({ data, userType, currentTab, authState
               </Grid>
             </Grid>
           )}
-        </Hidden>
-        <Hidden mdUp>
-          <Grid item md={4} sm={12} xs={12} className={classes.selectMobile}>
-            <SelectButton
-              options={options}
-              open={open}
-              anchorEl={anchorEl}
-              handleClose={handleClose}
-              handleClick={handleSelectButtonClick}
-              selectedKey={selectedKey}
-              defaultButtonText={t('common:menu.contact')}
-              style={{marginLeft: '-6rem'}}
-            />
-          </Grid>
         </Hidden>
       </Grid>
     </>
