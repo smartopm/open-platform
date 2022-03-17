@@ -127,7 +127,7 @@ describe('Tasks page', () => {
       cy.contains('Cypress test task');
       cy.get('[data-testid=task-item-menu]').click();
       cy.contains('Leave a comment').click();
-      cy.get('[data-testid=body_input]').type('This is a test comment');
+      cy.get('[data-testid=body_input]').type('This is a test comment', {force: true});
       cy.get('[data-testid=comment_btn]').click();
       cy.get('[data-testid=comment-body]').contains('This is a test comment');
 
