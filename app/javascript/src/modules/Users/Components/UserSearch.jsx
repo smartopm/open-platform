@@ -25,6 +25,7 @@ export default function UserSearch({ userData, update, required }) {
       <Autocomplete
         style={{ width: "100%" }}
         id="user-input"
+        data-testid="user-input"
         inputProps={{
           'data-testid': 'search-user'
         }}

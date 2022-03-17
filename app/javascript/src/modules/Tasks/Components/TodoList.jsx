@@ -412,7 +412,6 @@ export default function TodoList({
     setTaskUpdateStatus({ ...taskUpdateStatus, message: formatError(error.message)})
     history.push('/tasks')
   }
-
   if (tasksError) return <ErrorPage error={tasksError.message} />;
 
   return (

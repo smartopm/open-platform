@@ -1,5 +1,3 @@
-/* eslint-disable no-undef */
-
 describe('Payment', () => {
   it('records a new payment successfully', () => {
     cy.factory('community', { name: 'DoubleGDP' }).then(commRes => {

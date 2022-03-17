@@ -1,5 +1,3 @@
-/* eslint-disable no-undef */
-
 describe('Custom Forms', () => {
   it('should submit a custom form', () => {
     cy.factory('community', { name: 'DoubleGDP' }).then(commRes => {
