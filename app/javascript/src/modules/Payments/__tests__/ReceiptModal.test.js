@@ -9,7 +9,7 @@ import currency from '../../../__mocks__/currency';
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 describe('It should test the payment receipt modal component', () => {
   const paymentData = {
-    amount: '1000',
+    amount: 1000,
     source: 'cash',
     currentWalletBalance: 100,
     user: {

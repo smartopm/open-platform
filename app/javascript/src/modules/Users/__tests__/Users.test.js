@@ -15,6 +15,13 @@ describe('UserPage Component', () => {
   const mockHistory = {
     push: jest.fn()
   };
+
+  Object.defineProperty(navigator, "clipboard", {
+    value: {
+      writeText: () => {},
+    },
+  });
+  
   beforeEach(() => {
     jest.spyOn(routeData, 'useHistory').mockReturnValue(mockHistory);
   });

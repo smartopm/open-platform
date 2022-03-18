@@ -72,7 +72,7 @@ export default function ClientPilotViewItem({ project, refetch }) {
                 <Typography data-testid="assigned-task-title-header" variant="subtitle1">{t('processes.your_tasks')}</Typography>
                 <br />
                 <div>
-                  <ProjectItem taskId={taskId} clientView />
+                  <ProjectItem taskId={taskId} refetch={refetch} clientView  />
                 </div>
               </Grid>
             </Grid>

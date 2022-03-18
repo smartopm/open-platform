@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom';
 import { ApolloProvider } from 'react-apollo';
@@ -23,7 +23,7 @@ describe('Map page', () => {
       }
     }
   };
-  it('renders Map correctly', () => {
+  it('renders Map correctly', async () => {
     render(
       <ApolloProvider client={createClient}>
         <Context.Provider value={data}>
@@ -35,5 +35,7 @@ describe('Map page', () => {
         </Context.Provider>
       </ApolloProvider>
     );
+
+    await waitFor(() => expect(screen.queryByTestId('loader')).toBeInTheDocument())
   });
 });

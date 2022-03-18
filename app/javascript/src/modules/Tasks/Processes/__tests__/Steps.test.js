@@ -38,9 +38,9 @@ describe('Project Steps', () => {
       ...taskMock,
       subTasksCount: 3,
       subTasks: [
-        { body: 'Sub Step 1', order: 1 },
-        { body: 'Sub Step 2', order: 2 },
-        { body: 'Sub Step 3', order: 3 },
+        { body: 'Sub Step 1', order: 1, id: '111' },
+        { body: 'Sub Step 2', order: 2, id: '123' },
+        { body: 'Sub Step 3', order: 3, id: '134' },
       ],
     }]
 

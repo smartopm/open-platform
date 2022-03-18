@@ -44,32 +44,32 @@ describe('Render Payment Plan Item', () => {
     userType: 'admin'
   };
 
-  it('should render the payment plan item component', async () => {
-    const requestMock = {
-      request: {
-        query: PaymentPlanUpdateMutation,
-        variables: { planId: plan.id, paymentDay: 2 }
-      },
-      result: { data: { paymentPlanUpdate: { paymentPlan: { id: plan.id } } } }
-    };
-    const refetch = jest.fn();
-    const currentUser =  {
-      userType: 'admin',
-      permissions: [
-          {
-            module: 'payment_plan',
-            permissions: [
-            'can_update_payment_day',
-            'can_view_menu_list']
-          },
-          {
-          module: 'plan_payment',
+  const requestMock = {
+    request: {
+      query: PaymentPlanUpdateMutation,
+      variables: { planId: plan.id, paymentDay: 2 }
+    },
+    result: { data: { paymentPlanUpdate: { paymentPlan: { id: plan.id } } } }
+  };
+  const refetch = jest.fn();
+  const currentUser =  {
+    userType: 'admin',
+    permissions: [
+        {
+          module: 'payment_plan',
           permissions: [
-          'can_view_menu_list'
-          ]
-          }
-      ]
-    };
+          'can_update_payment_day',
+          'can_view_menu_list']
+        },
+        {
+        module: 'plan_payment',
+        permissions: [
+        'can_view_menu_list'
+        ]
+        }
+    ]
+  };
+  it('should render the payment plan item component', async () => {
     const container = render(
       <Context.Provider value={authState}>
         <MockedProvider mocks={[requestMock]} addTypename={false}>
@@ -116,7 +116,7 @@ describe('Render Payment Plan Item', () => {
     await waitFor(() => {
       expect(container.queryByText('misc.pay_day_updated')).toBeInTheDocument();
       expect(refetch).toBeCalled();
-    }, 200);
+    
 
     expect(container.getAllByTestId('pay-menu')[0]).toBeInTheDocument();
     fireEvent.click(container.getAllByTestId('pay-menu')[0]);
@@ -134,6 +134,7 @@ describe('Render Payment Plan Item', () => {
     fireEvent.click(container.getByText(t('common:menu.view_details')));
     expect(container.getByText(t('common:menu.transfer_payment_plan'))).toBeInTheDocument();
     fireEvent.click(container.getByText(t('common:menu.transfer_payment_plan')));
+  }, 20);
   });
 
   it('should check if renderPlan works as expected', () => {

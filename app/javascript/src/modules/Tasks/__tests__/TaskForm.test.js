@@ -8,6 +8,8 @@ describe('task form component', () => {
     it('should render and have editable fields', () => {
         const props = {
             refetch: jest.fn(),
+            close: jest.fn(),
+            assignUser: jest.fn(),
             data: {},
             users: []
         }

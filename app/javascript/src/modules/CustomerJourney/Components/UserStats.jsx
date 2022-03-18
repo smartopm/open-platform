@@ -25,7 +25,7 @@ export default function UserStats() {
 
   return (
     <>
-      <div className={matches && classes.statusSection}>
+      <div className={matches ? classes.statusSection : undefined}>
         <div className={classes.titleSection}>
           <h5 className={classes.title}>Customer Journey Stage</h5>
         </div>

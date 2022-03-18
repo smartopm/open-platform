@@ -3,12 +3,13 @@ import { mount } from 'enzyme'
 import { MockedProvider } from '@apollo/react-testing'
 import { act } from 'react-dom/test-utils'
 import { MemoryRouter } from 'react-router-dom'
+import { waitFor } from '@testing-library/react'
 import UserShow from '../Containers/UserShow'
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
 describe('Renders UserShow and edit button', () => {
   let wrapper
-  it('should render component', () => {
+  it('should render component', async () => {
     act(() => {
       wrapper = mount(
         <MemoryRouter>
@@ -19,6 +20,6 @@ describe('Renders UserShow and edit button', () => {
       )
     })
     const button = wrapper.find('.edit_button')
-    expect(button).toBeTruthy()
+    await waitFor(() => expect(button).toBeTruthy())
   })
 })

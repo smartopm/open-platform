@@ -60,7 +60,7 @@ describe('Project Processes Tab', () => {
                 <ProjectOverviewSplitView
                   data={[]}
                   refetch={jest.fn()}
-                  handleProjectStepClick={jest.fn()()}
+                  handleProjectStepClick={jest.fn()}
                 />
               </TaskContext.Provider>
             </MockedThemeProvider>

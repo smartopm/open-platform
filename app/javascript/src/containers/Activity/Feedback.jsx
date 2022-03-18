@@ -12,6 +12,7 @@ import { useMutation } from 'react-apollo';
 import { Button, CircularProgress, TextField } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
 import { createFeedback } from '../../graphql/mutations';
+import { ifNotTest } from '../../utils/helpers';
 
 const redLike = 'rgb(299, 63, 69)';
 const greenLike = 'rgb(37, 192, 176)';
@@ -125,7 +126,7 @@ export function Feedback(props) {
                 multiline
                 name="feedback"
                 value={feedback}
-                autoFocus
+                autoFocus={ifNotTest()}
                 onChange={event => setFeedback(event.target.value)}
               />
             </div>

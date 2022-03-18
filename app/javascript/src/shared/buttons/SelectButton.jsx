@@ -149,7 +149,6 @@ SelectButton.defaultProps = {
 };
 
 SelectButton.propTypes = {
-  buttonText: PropTypes.string.isRequired,
   open: PropTypes.bool.isRequired,
   anchorEl: PropTypes.object,
   anchorRef: PropTypes.object,

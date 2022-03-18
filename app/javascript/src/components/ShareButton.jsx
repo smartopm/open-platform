@@ -144,7 +144,9 @@ ShareButton.defaultProps = {
     bottom: 24,
     right: 57
   },
-  doOnShare: () => {}
+  doOnShare: () => {},
+  url: '',
+  communityName: '',
 };
 ShareButton.propTypes = {
   styles: PropTypes.shape({
@@ -152,9 +154,9 @@ ShareButton.propTypes = {
     bottom: PropTypes.number,
     right: PropTypes.number
   }),
-  url: PropTypes.string.isRequired,
+  url: PropTypes.string,
   doOnShare: PropTypes.func,
-  communityName: PropTypes.string.isRequired
+  communityName: PropTypes.string,
 };
 
 export const styles = StyleSheet.create({
