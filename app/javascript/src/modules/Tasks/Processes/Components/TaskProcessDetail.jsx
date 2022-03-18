@@ -176,6 +176,7 @@ export default function TaskProcessDetail() {
                 commentsError={commentsError}
                 commentsRefetch={commentsRefetch}
                 commentsFetchMore={commentsFetchMore}
+                showCommentsMobile={() => setSplitScreenOpen(true)}
               />
             </TabPanel>
           </Grid>
