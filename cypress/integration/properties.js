@@ -1,5 +1,3 @@
-/* eslint-disable no-undef */
-
 describe('Properties & Co-ownership Payment Plan', () => {
   it('creates a co-owned property and a payment plan', () => {
     // Create 2 users
@@ -29,7 +27,6 @@ describe('Properties & Co-ownership Payment Plan', () => {
           permissions: [
             'can_get_users_lite',
             'can_see_menu_item',
-            ,
             'can_get_users',
             'can_view_admin_users',
             'can_access_all_users'

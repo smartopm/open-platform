@@ -1,5 +1,3 @@
-/* eslint-disable no-undef */
-
 describe('Time Sheet', () => {
   it('allows custodian to record time shift', () => {
     cy.factory('community', { name: 'DoubleGDP' }).then(commRes => {

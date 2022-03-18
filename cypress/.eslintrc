@@ -1,0 +1,9 @@
+{
+  "rules": {
+    "jest/expect-expect": 0,
+    "max-statements": 0,
+    "jest/valid-expect-in-promise": 0,
+    "no-undef": 0,
+    "import/no-extraneous-dependencies": ["error", { "devDependencies": true }]
+  }
+}

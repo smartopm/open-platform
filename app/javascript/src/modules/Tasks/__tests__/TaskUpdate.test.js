@@ -103,7 +103,7 @@ describe('TaskUpdate Component', () => {
     );
 
     await waitFor(() => {
-      expect(container.queryAllByTestId('task-info-menu')[0]).toBeInTheDocument();
+      expect(container.getByTestId('task-info-section')).toBeInTheDocument();
     }, 10);
   });
 

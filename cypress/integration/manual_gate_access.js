@@ -1,5 +1,3 @@
-/* eslint-disable no-undef */
-
 describe('Manual Gate Access', () => {
   it('allows security guards to record manual entries', () => {
     cy.factory('community', { name: 'DoubleGDP' }).then(commRes => {

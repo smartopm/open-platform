@@ -79,10 +79,10 @@ describe('task form component', () => {
       );
     });
 
-    const taskInfoMenu = container.queryAllByTestId('task-info-menu')[0];
-    expect(taskInfoMenu).toBeInTheDocument();
+    const remindMeLaterButton = container.getByTestId('set-reminder-button');
+    expect(remindMeLaterButton).toBeInTheDocument();
 
-    fireEvent.click(taskInfoMenu);
+    fireEvent.click(remindMeLaterButton);
 
     expect(container.queryByText('task:task.task_reminder_in_1_hr')).toBeInTheDocument();
     expect(container.queryByText('task:task.task_reminder_in_24_hr')).toBeInTheDocument();
