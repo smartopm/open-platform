@@ -1,92 +1,141 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
-import PropTypes from 'prop-types'
-import DateFnsUtils from '@date-io/date-fns'
+import PropTypes from 'prop-types';
+import TextField from '@mui/material/TextField';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
 import {
-  KeyboardDatePicker,
-  MuiPickersUtilsProvider,
-  KeyboardDateTimePicker,
-  TimePicker
-} from '@material-ui/pickers'
+  MobileDatePicker,
+  MobileDateTimePicker,
+  MobileTimePicker,
+  LocalizationProvider
+} from '@mui/lab';
+import enUS from 'date-fns/locale/en-US';
+import es from 'date-fns/locale/es';
 import FormHelperText from '@mui/material/FormHelperText';
 import { useTranslation } from 'react-i18next';
-import { es, enUS } from "date-fns/locale";
-import { checkPastDate } from "../utils/dateutil"
+import { checkPastDate } from '../utils/dateutil';
 import { getCurrentLng } from '../modules/i18n/util';
 
-export default function DatePickerDialog({ selectedDate, handleDateChange, label, width, required, inputProps, disablePastDate, inputVariant, styles, inputValidation, disabled, ...others }) {
-  const { t } = useTranslation(['logbook', 'form'])
-    return (
-      <MuiPickersUtilsProvider utils={DateFnsUtils} locale={getCurrentLng().includes('es') ? es : enUS}>
-        <KeyboardDatePicker
-          okLabel={t('date_picker.ok_label')}
-          clearLabel={t('date_picker.clear')}
-          cancelLabel={t('date_picker.cancel')}
-          data-testid='date-picker'
-          style={{ width: `${width || '100%'}`, ...styles }}
-          clearable
-          id={`date-picker-dialog-${label}`}
-          label={label}
-          format="yyyy-MM-dd"
-          placeholder="YYYY-MM-DD"
-          inputVariant={inputVariant ? 'outlined' : 'standard'}
-          value={selectedDate}
-          name={label}
-          required={required}
-          onChange={date => handleDateChange(date)}
-          inputProps={inputProps}
-          disablePast={disablePastDate}
-          KeyboardButtonProps={{
-                        'aria-label': 'change date'
-                    }}
-          helperText={inputValidation.error && t('form:errors.required_field', { fieldName: inputValidation.fieldName })}
-          {...others}
-          disabled={disabled}
-        />
-      </MuiPickersUtilsProvider>
-    );
-}
-
-export function DateAndTimePickers({ selectedDateTime, handleDateChange, label, pastDate, inputValidation }) {
-  const { t } = useTranslation(['logbook', 'form'])
+export default function DatePickerDialog({
+  selectedDate,
+  handleDateChange,
+  label,
+  width,
+  required,
+  inputProps,
+  disablePastDate,
+  inputVariant,
+  styles,
+  inputValidation,
+  disabled,
+  ...others
+}) {
+  const { t } = useTranslation(['logbook', 'form']);
   return (
-    <MuiPickersUtilsProvider utils={DateFnsUtils} locale={getCurrentLng().includes('es') ? es : enUS}>
-      <KeyboardDateTimePicker
-        okLabel={t('date_picker.ok_label')}
-        clearLabel={t('date_picker.clear')}
-        cancelLabel={t('date_picker.cancel')}
-        data-testid='datetime-picker'
-        label={label}
-        style={{ width: '100%' }}
-        value={selectedDateTime}
-        format="yyyy/MM/dd hh:mm"
-        placeholder="YYYY-MM-DD hh:mm a"
-        onChange={handleDateChange}
+    <LocalizationProvider
+      dateAdapter={AdapterDateFns}
+      locale={getCurrentLng().includes('es') ? es : enUS}
+    >
+      <MobileDatePicker
+        renderInput={params => (
+          <TextField
+            {...params}
+            helperText={
+              inputValidation.error &&
+              t('form:errors.required_field', { fieldName: inputValidation.fieldName })
+            }
+            placeholder="YYYY-MM-DD"
+            variant={inputVariant ? 'outlined' : 'standard'}
+          />
+        )}
+        okText={t('date_picker.ok_label')}
+        clearText={t('date_picker.clear')}
+        cancelText={t('date_picker.cancel')}
+        data-testid="date-picker"
+        style={{ width: `${width || '100%'}`, ...styles }}
         clearable
-        disablePast={pastDate || false}
-        minutesStep={1}
-        error={pastDate ? checkPastDate(selectedDateTime) : inputValidation.error}
-        /* eslint-disable no-nested-ternary */
-        helperText={pastDate
-          ? t('form:errors.date_time_in_the_future')
-          : inputValidation.error
-            ? t('form:errors.required_field', { fieldName: inputValidation.fieldName })
-            : ''}
+        id={`date-picker-dialog-${label}`}
+        label={label}
+        inputFormat="yyyy-MM-dd"
+        inputProps={inputProps}
+        value={selectedDate}
+        required={required}
+        onChange={date => handleDateChange(date)}
+        minDate={new Date()}
+        {...others}
+        disabled={disabled}
       />
-    </MuiPickersUtilsProvider>
+    </LocalizationProvider>
   );
 }
 
+export function DateAndTimePickers({
+  selectedDateTime,
+  handleDateChange,
+  label,
+  pastDate,
+  inputValidation
+}) {
+  const { t } = useTranslation(['logbook', 'form']);
+  return (
+    <LocalizationProvider
+      dateAdapter={AdapterDateFns}
+      locale={getCurrentLng().includes('es') ? es : enUS}
+    >
+      <MobileDateTimePicker
+        renderInput={params => (
+          <TextField
+            {...params}
+            /* eslint-disable no-nested-ternary */
+            helperText={
+              pastDate
+                ? t('form:errors.date_time_in_the_future')
+                : inputValidation.error
+                ? t('form:errors.required_field', { fieldName: inputValidation.fieldName })
+                : ''
+            }
+            placeholder="YYYY-MM-DD hh:mm a"
+            error={pastDate ? checkPastDate(selectedDateTime) : inputValidation.error}
+            variant="standard"
+          />
+        )}
+        okText={t('date_picker.ok_label')}
+        clearText={t('date_picker.clear')}
+        cancelText={t('date_picker.cancel')}
+        data-testid="datetime-picker"
+        label={label}
+        style={{ width: '100%' }}
+        value={selectedDateTime}
+        inputFormat="yyyy/MM/dd hh:mm"
+        onChange={handleDateChange}
+        clearable
+        minDate={pastDate && new Date()}
+        minutesStep={1}
+      />
+    </LocalizationProvider>
+  );
+}
 
-export function ThemedTimePicker({ handleTimeChange, time, label, inputValidation, disabled, ...otherProps }){
-  const { t } = useTranslation(['logbook', 'form'])
+export function ThemedTimePicker({
+  handleTimeChange,
+  time,
+  label,
+  inputValidation,
+  disabled,
+  ...otherProps
+}) {
+  const { t } = useTranslation(['logbook', 'form']);
   return (
     <>
-      <MuiPickersUtilsProvider utils={DateFnsUtils} locale={getCurrentLng().includes('es') ? es : enUS}>
-        <TimePicker
-          okLabel={t('date_picker.ok_label')}
-          clearLabel={t('date_picker.clear')}
-          cancelLabel={t('date_picker.cancel')}
+      <LocalizationProvider
+        dateAdapter={AdapterDateFns}
+        locale={getCurrentLng().includes('es') ? es : enUS}
+      >
+        <MobileTimePicker
+          renderInput={params => <TextField {...params} variant="outlined" />}
+          okText={t('date_picker.ok_label')}
+          clearText={t('date_picker.clear')}
+          cancelText={t('date_picker.cancel')}
           data-testid="time_picker"
           clearable
           label={label}
@@ -94,55 +143,59 @@ export function ThemedTimePicker({ handleTimeChange, time, label, inputValidatio
           onChange={handleTimeChange}
           {...otherProps}
         />
-      </MuiPickersUtilsProvider>
+      </LocalizationProvider>
       {/* Moved the validation error outside to silence the MUI error */}
-      {inputValidation.error && <FormHelperText error>{t('form:errors.required_field', { fieldName: inputValidation.fieldName })}</FormHelperText>}
+      {inputValidation.error && (
+        <FormHelperText error>
+          {t('form:errors.required_field', { fieldName: inputValidation.fieldName })}
+        </FormHelperText>
+      )}
     </>
-  )
+  );
 }
 
 DatePickerDialog.defaultProps = {
   inputValidation: {
     error: false,
-    fieldName: '',
+    fieldName: ''
   },
   disabled: false
-}
+};
 
 DateAndTimePickers.defaultProps = {
   inputValidation: {
     error: false,
-    fieldName: '',
+    fieldName: ''
   }
-}
+};
 
 ThemedTimePicker.defaultProps = {
   inputValidation: {
     error: false,
-    fieldName: '',
+    fieldName: ''
   },
   disabled: false
-}
+};
 
 DatePickerDialog.propTypes = {
   inputValidation: PropTypes.shape({
     error: PropTypes.bool,
-    fieldName: PropTypes.string,
+    fieldName: PropTypes.string
   }),
   disabled: PropTypes.bool
-}
+};
 
 DateAndTimePickers.propTypes = {
   inputValidation: PropTypes.shape({
     error: PropTypes.bool,
-    fieldName: PropTypes.string,
+    fieldName: PropTypes.string
   })
-}
+};
 
 ThemedTimePicker.propTypes = {
   inputValidation: PropTypes.shape({
     error: PropTypes.bool,
-    fieldName: PropTypes.string,
+    fieldName: PropTypes.string
   }),
   disabled: PropTypes.bool
-}
+};
