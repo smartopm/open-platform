@@ -9,7 +9,7 @@ import { TransferPaymentPlanMutation } from '../graphql/payment_plan_mutations'
 describe('It should test the plan transfer confirm modal component', () => {
   const PaymentData = {
     totalPayment: 2,
-    parcelNumber: '1000'
+    parcelNumber: 1000
   }
 
   const transferPaymentPlan = { 
@@ -41,13 +41,13 @@ describe('It should test the plan transfer confirm modal component', () => {
         <MockedProvider mocks={mock} addTypename={false}>
           <PlanTransferConfirmModal
             open
-            handleClose={jest.fn}
+            handleClose={jest.fn()}
             paymentsSummary={PaymentData}
             paymentPlanId='12345'
             destinationPlanId='67890'
-            refetch={jest.fn}
-            balanceRefetch={jest.fn}
-            handleModal={jest.fn}
+            refetch={jest.fn()}
+            balanceRefetch={jest.fn()}
+            handleModal={jest.fn()}
             paymentId='dssdok74123'
             transferType='plan'
           />
@@ -56,8 +56,8 @@ describe('It should test the plan transfer confirm modal component', () => {
     )
 
     await waitFor(() => {
-      expect(container.getByTestId('content')).toBeInTheDocument();
-      fireEvent.click(container.getByTestId("custom-dialog-button"))
+      expect(container.queryByTestId('content')).toBeInTheDocument();
+      fireEvent.click(container.queryByTestId("custom-dialog-button"))
     }, 10)
   });
 });

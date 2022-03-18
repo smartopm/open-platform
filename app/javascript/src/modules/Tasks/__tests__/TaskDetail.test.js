@@ -34,7 +34,7 @@ const props = {
   users: [],
   currentUser: { name: 'tester', id: '6523gvhvg', userType: 'admin' },
   historyData: [
-    { action: 'create', noteEntityType: 'Comments::NoteComment', user: { name: 'name' }, createdAt: new Date() }
+    { id: "543rfsdf34-543rfsdf34-543rfsdf34", action: 'create', noteEntityType: 'Comments::NoteComment', user: { name: 'name' }, createdAt: new Date() }
   ],
   historyRefetch: jest.fn(),
   authState: {},

@@ -93,9 +93,8 @@ describe('Activity Summary', () => {
           <ProjectActivitySummary
             comments={comments}
             commentsLoading
-            commentsError=""
-            commentsRefetch={jest.fn}
-            commentsFetchMore={jest.fn}
+            commentsRefetch={jest.fn()}
+            commentsFetchMore={jest.fn()}
           />
         </BrowserRouter>
       </Context.Provider>
@@ -112,7 +111,6 @@ describe('Activity Summary', () => {
             <ProjectActivitySummary
               comments={emptyComments}
               commentsLoading={false}
-              commentsError=""
               commentsRefetch={jest.fn}
               commentsFetchMore={jest.fn}
             />
@@ -135,7 +133,6 @@ describe('Activity Summary', () => {
             <ProjectActivitySummary
               comments={comments}
               commentsLoading={false}
-              commentsError=""
               commentsRefetch={jest.fn}
               commentsFetchMore={jest.fn}
             />
