@@ -16,8 +16,7 @@ describe('Comment Delete Component', () => {
       result: { data: { noteCommentDelete: { commentDelete: true } } },
     },
   ];
-  const handleClose = jest.fn
-  const open = jest.fn
+  const handleClose = jest.fn()
   const data = {
     id: 'jwhekw',
     body: 'whgeukhw',
@@ -34,9 +33,9 @@ describe('Comment Delete Component', () => {
             body={data.body}
             imageUrl={data.imageUrl}
             name={data.name}
-            open={open}
+            open
             handleClose={handleClose}
-            refetch={jest.fn}
+            refetch={jest.fn()}
           />
         </BrowserRouter>
       </MockedProvider>

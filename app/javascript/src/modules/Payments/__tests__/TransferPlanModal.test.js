@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom/';
@@ -14,7 +14,7 @@ describe('It should test the transfer plan modal component', () => {
     status: 'paid'
   };
 
-  it('should render transfer plan modal', () => {
+  it('should render transfer plan modal', async () => {
     const container = render(
       <BrowserRouter>
         <MockedProvider>
@@ -34,7 +34,9 @@ describe('It should test the transfer plan modal component', () => {
         </MockedProvider>
       </BrowserRouter>
     );
-    expect(container.getByTestId('title')).toBeInTheDocument();
-    expect(container.getByTestId('plots')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(container.getByTestId('title')).toBeInTheDocument();
+      expect(container.getByTestId('plots')).toBeInTheDocument();
+    }, 5)
   });
 });

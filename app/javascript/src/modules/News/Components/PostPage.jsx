@@ -138,7 +138,9 @@ export default function PostPage() {
           width={width}
           height={height}
         />
-        <CenteredContent>{error}</CenteredContent>
+        <CenteredContent>
+          <span>{error}</span>
+        </CenteredContent>
         <TagsComponent
           tags={response?.tags}
           wordpressEndpoint={communityQuery.data?.currentCommunity.wpLink}

@@ -52,7 +52,7 @@ describe('Payment Summary Component', () => {
   }
 
   it('should render the Payment Summary component', async () => {
-    const translate = jest.fn()
+    const translate = jest.fn(() => 'Some Title')
     const container = render(
       <MockedProvider mocks={[mock, secondMock]} addTypename={false}>
         <BrowserRouter>

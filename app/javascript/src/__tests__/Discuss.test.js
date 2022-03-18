@@ -9,7 +9,7 @@ import { MockedProvider } from '@apollo/react-testing'
 
 describe('Discuss form component', () => {
     it('should render with wrong props', () => {
-        const container = render(<MockedProvider><Discuss /></MockedProvider>)
+        const container = render(<MockedProvider><Discuss update={jest.fn()} /></MockedProvider>)
         expect(container.queryByText('form_actions.submit')).toBeInTheDocument()
 
         const title = container.queryByLabelText('discuss_title')

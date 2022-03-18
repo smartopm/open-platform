@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom';
@@ -33,7 +33,7 @@ describe('Payment List Item Component', () => {
     }
   }
 ];
-  it('should render the payment item component', () => {
+  it('should render the payment item component', async () => {
     const container = render(
       <MockedProvider mocks={mocks} addTypename={false}>
         <BrowserRouter>
@@ -41,8 +41,6 @@ describe('Payment List Item Component', () => {
         </BrowserRouter>
       </MockedProvider>
     );
-
-    expect(container.getByTestId('loader')).toBeInTheDocument();
-
+    await waitFor(() => expect(container.getByTestId('loader')).toBeInTheDocument())
   });
 });

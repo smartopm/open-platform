@@ -44,12 +44,12 @@ describe('Create Label Component', () => {
     const container = render(
       <MockedProvider mocks={[anotherLabelCreateMock]} addTypename={false}>
         <CreateLabel
-          handleLabelSelect={jest.fn}
+          handleLabelSelect={jest.fn()}
           loading={false}
-          setLoading={jest.fn}
-          setMessage={jest.fn}
+          setLoading={jest.fn()}
+          setMessage={jest.fn()}
           data={data}
-          refetch={jest.fn}
+          refetch={jest.fn()}
         />
       </MockedProvider>
     );

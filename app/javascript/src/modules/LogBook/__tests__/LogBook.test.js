@@ -10,8 +10,11 @@ import MockedThemeProvider from '../../__mocks__/mock_theme';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 describe('LogBook Component', () => {
-
+  afterAll(() => {
+    jest.clearAllMocks();
+  });
   it('renders loader when loading record', async () => {
+    window.scrollTo = jest.fn()
     const container = render(
       <MockedProvider>
         <MockedThemeProvider>
