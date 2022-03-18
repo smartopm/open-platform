@@ -11,7 +11,6 @@ import {
   MenuItem,
   Button
 } from '@material-ui/core';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { makeStyles } from '@material-ui/styles';
 import Avatar from '@material-ui/core/Avatar';
 import PropTypes from 'prop-types';
@@ -31,7 +30,7 @@ import { useParamsQuery, objectAccessor } from '../../../utils/helpers';
 import { TaskComment } from '../../../graphql/mutations';
 import { ResolveComments } from '../graphql/task_mutation';
 
-export default function CommentCard({ comments, refetch, commentsRefetch, forAccordionSection, showCommentsMobile }) {
+export default function CommentCard({ comments, refetch, commentsRefetch, forAccordionSection }) {
   const [open, setOpen] = useState(false);
   const [editId, setEditId] = useState(null);
   const [edit, setEdit] = useState(false);
@@ -50,7 +49,6 @@ export default function CommentCard({ comments, refetch, commentsRefetch, forAcc
   const authState = useContext(AuthStateContext);
   const classes = useStyles();
   const path = useParamsQuery();
-  const matches = useMediaQuery('(max-width:600px)');
   const { id: projectId } = useParams();
   const history = useHistory();
   const replyingDiscussion = path.get('replying_discussion');
@@ -155,8 +153,6 @@ export default function CommentCard({ comments, refetch, commentsRefetch, forAcc
   }
 
   function goToReplyComment(groupingId, taskId) {
-    if(matches) showCommentsMobile();
-
     if (projectId !== taskId) {
       history.push(
         `/processes/drc/projects/${taskId}?tab=processes&detailTab=comments&replying_discussion=${groupingId}`
@@ -442,7 +438,6 @@ CommentCard.defaultProps = {
   comments: [],
   commentsRefetch: () => {},
   forAccordionSection: null,
-  showCommentsMobile: () => {},
 };
 CommentCard.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
@@ -450,7 +445,6 @@ CommentCard.propTypes = {
   refetch: PropTypes.func.isRequired,
   commentsRefetch: PropTypes.func,
   forAccordionSection: PropTypes.bool,
-  showCommentsMobile: PropTypes.func,
 };
 
 const useStyles = makeStyles(() => ({

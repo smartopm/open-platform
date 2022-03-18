@@ -10,7 +10,7 @@ import CommentCard from '../../Components/CommentCard';
 import { formatError } from '../../../../utils/helpers';
 import { Spinner } from '../../../../shared/Loading';
 
-export default function ProjectActivitySummary({comments, commentsLoading, commentsError, commentsRefetch, commentsFetchMore, showCommentsMobile}) {
+export default function ProjectActivitySummary({comments, commentsLoading, commentsError, commentsRefetch, commentsFetchMore}) {
   const classes = useStyles();
   const { t } = useTranslation(['task']);
   const { id: taskId } = useParams();
@@ -51,7 +51,6 @@ export default function ProjectActivitySummary({comments, commentsLoading, comme
         <CommentCard
           comments={comments.projectComments}
           refetch={commentsRefetch}
-          showCommentsMobile={showCommentsMobile}
         />
       )
         : (
@@ -92,7 +91,6 @@ const useStyles = makeStyles(() => ({
 ProjectActivitySummary.defaultProps = {
   commentsError: null,
   comments: null,
-  showCommentsMobile: () => {}
 };
 
 ProjectActivitySummary.propTypes = {
@@ -105,5 +103,4 @@ ProjectActivitySummary.propTypes = {
   }),
   commentsRefetch: PropTypes.func.isRequired,
   commentsFetchMore: PropTypes.func.isRequired,
-  showCommentsMobile: PropTypes.func
 }

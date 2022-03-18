@@ -33,6 +33,8 @@ export default function TaskProcessDetail() {
   const history = useHistory();
   const path = useParamsQuery();
   const tab = path.get('tab');
+  const detailTabValue = path.get('detailTab');
+  const replyingDiscussion = path.get('replying_discussion');
   const [tabValue, setTabValue] = useState(0);
   const [messageAlert, setMessageAlert] = useState('');
   const matches = useMediaQuery('(max-width:600px)');
@@ -71,6 +73,12 @@ export default function TaskProcessDetail() {
     documents: 2
   };
 
+
+  const DETAIL_TAB_VALUES = {
+    subtasks: 'subtasks',
+    comments: 'comments',
+  };
+
   function handleTabValueChange(_event, newValue) {
     history.push(
       `?tab=${Object.keys(TAB_VALUES).find(key => objectAccessor(TAB_VALUES, key) === newValue)}`
@@ -89,6 +97,13 @@ export default function TaskProcessDetail() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [path, tab]);
+
+  useEffect(() => {
+    if (replyingDiscussion && detailTabValue === DETAIL_TAB_VALUES.comments && matches) {
+      setSplitScreenOpen(true);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [path, replyingDiscussion]);
 
   function handleProjectStepClick(task, currentTab='processes', detailTab='subtasks') {
     setSplitScreenOpen(true);
@@ -176,7 +191,7 @@ export default function TaskProcessDetail() {
                 commentsError={commentsError}
                 commentsRefetch={commentsRefetch}
                 commentsFetchMore={commentsFetchMore}
-                showCommentsMobile={() => setSplitScreenOpen(true)}
+                // showCommentsMobile={() => setSplitScreenOpen(true)}
               />
             </TabPanel>
           </Grid>

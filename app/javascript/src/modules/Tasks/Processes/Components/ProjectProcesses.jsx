@@ -16,7 +16,6 @@ export default function ProjectProcesses({
   commentsError,
   commentsRefetch,
   commentsFetchMore,
-  showCommentsMobile,
  }){
   const classes = useStyles();
   const { setSelectedStep, handleStepCompletion } = useContext(TaskContext);
@@ -32,7 +31,7 @@ export default function ProjectProcesses({
             commentsError={commentsError}
             commentsRefetch={commentsRefetch}
             commentsFetchMore={commentsFetchMore}
-            showCommentsMobile={showCommentsMobile}
+            // showCommentsMobile={showCommentsMobile}
           />
         </Grid>
       </Grid>
@@ -77,7 +76,6 @@ const Step = {
 ProjectProcesses.defaultProps = {
   commentsError: null,
   comments: null,
-  showCommentsMobile: () => {},
 }
 
 ProjectProcesses.propTypes = {
@@ -93,7 +91,6 @@ ProjectProcesses.propTypes = {
   }),
   commentsRefetch: PropTypes.func.isRequired,
   commentsFetchMore: PropTypes.func.isRequired,
-  showCommentsMobile: PropTypes.func
 }
 
 const useStyles = makeStyles(() => ({
