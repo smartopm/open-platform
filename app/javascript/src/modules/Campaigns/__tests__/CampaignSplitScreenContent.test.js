@@ -3,8 +3,10 @@ import { render, fireEvent, waitFor } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom/';
 import { MockedProvider } from '@apollo/react-testing';
 import '@testing-library/jest-dom/extend-expect';
+import userEvent from '@testing-library/user-event'
 import CampaignSplitScreenContent from '../components/CampaignSplitScreenContent';
 import MockedThemeProvider from '../../__mocks__/mock_theme';
+import SearchID from '../graphql/campaign_query';
 
 describe('It should render the campaign split screen content', () => {
   const campaign = {
@@ -170,5 +172,51 @@ describe('It should render the campaign split screen content', () => {
       fireEvent.click(container.queryByTestId('save-campaign'));
       expect(container.queryByText('message.include_email_template')).toBeInTheDocument();
     }, 5)
+  });
+
+  it('should render search bar', async () => {
+    const mockData = {
+      request: {
+        query: SearchID
+      },
+      result: {
+        data: {
+          searchUserIds: [
+            {
+              id: '12345678890',
+              name: 'sample-name1',
+              imageUrl: 'image.jpg',
+              avatarUrl: 'avatar.jpg'
+            }
+          ]
+        }
+      }
+    };
+    const newCampaign = {
+      ...campaign,
+      userIdList: '78usdfuir,78ursdir,78ugfuir,78dfruir',
+      mailListType: 'idlist'
+    };
+    const container = render(
+      <MockedProvider>
+        <BrowserRouter mock={[mockData]} addTypename={false}>
+          <MockedThemeProvider>
+            <CampaignSplitScreenContent
+              refetch={jest.fn()}
+              handleClose={jest.fn}
+              campaign={newCampaign}
+            />
+          </MockedThemeProvider>
+        </BrowserRouter>
+      </MockedProvider>
+    );
+
+    fireEvent.click(container.queryByText('actions.use_id_lists'));
+    expect(container.queryByTestId('search')).toBeInTheDocument();
+    expect(container.queryByTestId('search-result')).not.toBeInTheDocument();
+    userEvent.type(container.queryByTestId('search'), 'sa')
+    await waitFor(() => {
+      expect(container.queryByTestId('search-result')).toBeInTheDocument();
+  }, 10)
   });
 });
