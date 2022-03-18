@@ -437,14 +437,14 @@ export default function CommentCard({ comments, refetch, commentsRefetch, forAcc
 CommentCard.defaultProps = {
   comments: [],
   commentsRefetch: () => {},
-  forAccordionSection: null,
+  forAccordionSection: null
 };
 CommentCard.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   comments: PropTypes.array,
   refetch: PropTypes.func.isRequired,
   commentsRefetch: PropTypes.func,
-  forAccordionSection: PropTypes.bool,
+  forAccordionSection: PropTypes.bool
 };
 
 const useStyles = makeStyles(() => ({

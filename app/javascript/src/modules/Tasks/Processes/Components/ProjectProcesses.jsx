@@ -31,7 +31,6 @@ export default function ProjectProcesses({
             commentsError={commentsError}
             commentsRefetch={commentsRefetch}
             commentsFetchMore={commentsFetchMore}
-            // showCommentsMobile={showCommentsMobile}
           />
         </Grid>
       </Grid>
@@ -75,7 +74,7 @@ const Step = {
 }
 ProjectProcesses.defaultProps = {
   commentsError: null,
-  comments: null,
+  comments: null
 }
 
 ProjectProcesses.propTypes = {
@@ -90,7 +89,7 @@ ProjectProcesses.propTypes = {
     message: PropTypes.string
   }),
   commentsRefetch: PropTypes.func.isRequired,
-  commentsFetchMore: PropTypes.func.isRequired,
+  commentsFetchMore: PropTypes.func.isRequired
 }
 
 const useStyles = makeStyles(() => ({
