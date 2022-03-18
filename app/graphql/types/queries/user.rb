@@ -289,7 +289,7 @@ module Types::Queries::User
                           .order(created_at: :desc)
   end
 
-  def selcted_search_users(users, user_ids)
+  def selected_search_users(users, user_ids)
     users.select do |user|
       user_ids.include? user.id
     end
@@ -307,7 +307,7 @@ module Types::Queries::User
                        .order(name: :asc)
                        .with_attached_avatar
 
-    selcted_search_users(users, user_ids)
+    selected_search_users(users, user_ids)
   end
 
   def my_hosts(user_id:)
