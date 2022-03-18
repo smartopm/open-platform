@@ -15,7 +15,7 @@ export default function ProjectProcesses({
   commentsLoading,
   commentsError,
   commentsRefetch,
-  commentsFetchMore,
+  commentsFetchMore
  }){
   const classes = useStyles();
   const { setSelectedStep, handleStepCompletion } = useContext(TaskContext);
