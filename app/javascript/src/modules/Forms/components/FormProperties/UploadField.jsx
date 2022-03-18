@@ -26,7 +26,7 @@ export default function UploadField({
         </FormHelperText>
         <input
           type="file"
-          accept=".jpg, .jpeg, .gif, .pdf, .dwg, .shp, .shf, .dbf"
+          accept="image/*, .pdf, .dwg, .shp, .shf, .dbf, .zip"
           name={`image-${detail.label}`}
           id={`button-${detail.id}`}
           aria-label={`upload_field_${detail.label}`}

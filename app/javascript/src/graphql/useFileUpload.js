@@ -1,10 +1,10 @@
 /* eslint-disable */
-import { useReducer, useEffect } from 'react'
-import { FileChecksum } from '@rails/activestorage/src/file_checksum'
+import { useReducer, useEffect } from 'react';
+import { FileChecksum } from '@rails/activestorage/src/file_checksum';
 import imageCompression from 'browser-image-compression';
 
-import { CreateUpload } from './mutations'
-import ImageResize from '../utils/imageResizer'
+import { CreateUpload } from './mutations';
+import ImageResize from '../utils/imageResizer';
 
 // FileUploader
 // Steps:
@@ -19,13 +19,13 @@ const getFileData = file => {
   return new Promise((resolve, reject) => {
     FileChecksum.create(file, (error, checksum) => {
       if (error) {
-        reject(error)
-        return
+        reject(error);
+        return;
       }
-      resolve(checksum)
-    })
-  })
-}
+      resolve(checksum);
+    });
+  });
+};
 
 const uploadFileMetaToRails = (state, apolloClient) => {
   return apolloClient.mutate({
@@ -36,16 +36,16 @@ const uploadFileMetaToRails = (state, apolloClient) => {
       contentType: state.contentType,
       byteSize: state.byteSize
     }
-  })
-}
+  });
+};
 
 const uploadFileToRails = state => {
   return fetch(state.uploadUrl, {
     method: 'PUT',
     headers: JSON.parse(state.headers),
     body: state.file
-  })
-}
+  });
+};
 
 // Constants
 const STATE = {
@@ -56,12 +56,14 @@ const STATE = {
   FILE_UPLOAD: 'FILE_UPLOAD',
   DONE: 'DONE',
   ERROR: 'ERROR'
-}
+};
+
+const fileTypes = ['.pdf', '.dwg', '.shp', '.shf', '.dbf', '.zip'];
 
 const initialState = {
   file: null,
   uploading: false,
-
+  error: null,
   checksum: null,
   byteSize: null,
   contentType: null,
@@ -72,7 +74,7 @@ const initialState = {
   url: null,
   headers: null,
   status: STATE.INIT
-}
+};
 
 const reducer = (state, action) => {
   switch (action.current) {
@@ -82,9 +84,9 @@ const reducer = (state, action) => {
         file: action.file,
         filename: action.filename,
         status: action.next
-      }
+      };
     case STATE.FILE_CHECKSUM:
-      return { ...state, checksum: action.checksum, status: action.next }
+      return { ...state, checksum: action.checksum, status: action.next };
     case STATE.FILE_RESIZE:
       return {
         ...state,
@@ -92,7 +94,7 @@ const reducer = (state, action) => {
         byteSize: action.byteSize,
         contentType: action.contentType,
         status: action.next
-      }
+      };
     case STATE.FILE_META_UPLOAD:
       return {
         ...state,
@@ -102,22 +104,28 @@ const reducer = (state, action) => {
         url: action.url,
         uploadUrl: action.uploadUrl,
         status: action.next
-      }
+      };
     case STATE.FILE_UPLOAD:
-      return { ...state, status: action.next }
+      return { ...state, status: action.next };
     case STATE.ERROR:
-      return { ...state, status: STATE.ERROR }
+      console.log('In state object', action);
+      return { ...state, status: STATE.ERROR, error: action.error };
     default:
-      return state
+      return state;
   }
-}
+};
 
 const useFileUpload = ({ client: apolloClient, maxSize }) => {
-  const [state, dispatch] = useReducer(reducer, initialState)
-  maxSize = maxSize || 500
+  const [state, dispatch] = useReducer(reducer, initialState);
+  maxSize = maxSize || 500;
 
-  const onChange = async (file, compressImage=true) => {
-    const checkFileType = file['type'].split('/')[0] === 'image'
+  const onChange = async (file, compressImage = true) => {
+    // verifyFileType(file); // make a call here
+
+    if (file) {
+      return verifyFileType(file);
+    }
+    const checkFileType = file['type'].split('/')[0] === 'image';
     if (!checkFileType || !compressImage) {
       return startUpload(file);
     }
@@ -126,37 +134,47 @@ const useFileUpload = ({ client: apolloClient, maxSize }) => {
       const options = {
         maxSizeMB: 0.1,
         useWebWorker: true
-      }
+      };
       const compressedFile = await imageCompression(file, options);
-      startUpload(compressedFile)
+      startUpload(compressedFile);
     } catch (error) {
       // tolu: look for a better way to handle this error apart from dispatch
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
 
   const startUpload = file => {
     dispatch({
       next: STATE.FILE_RESIZE,
       current: STATE.FILE_INIT,
       file: file,
-      filename: file.name || "unknown.webm"
-    })
-  }
+      filename: file.name || 'unknown.webm'
+    });
+  };
+
+  const verifyFileType = file => {
+    console.log('Testing verifyFileType', file);
+    // if (file['type'].split('/')[0] !== 'image' || !fileTypes.includes(file.type))
+    dispatch({
+      ...state,
+      current: STATE.ERROR,
+      error: 'Wrong file type'
+    });
+  };
 
   // Upload the 'placeholder' for the object and get back blob details
   useEffect(() => {
     if (state.status == STATE.FILE_RESIZE) {
       // check the file type before resizing
       // ImageResize({ file: state.file, maxSize }).then(resizedImage => {
-        dispatch({
-          file: state.file,
-          contentType: state.file.type,
-          byteSize: state.file.size,
+      dispatch({
+        file: state.file,
+        contentType: state.file.type,
+        byteSize: state.file.size,
 
-          current: STATE.FILE_RESIZE,
-          next: STATE.FILE_CHECKSUM
-        })
+        current: STATE.FILE_RESIZE,
+        next: STATE.FILE_CHECKSUM
+      });
       // })
     }
     if (state.status == STATE.FILE_CHECKSUM) {
@@ -166,14 +184,14 @@ const useFileUpload = ({ client: apolloClient, maxSize }) => {
 
           current: STATE.FILE_CHECKSUM,
           next: STATE.FILE_META_UPLOAD
-        })
-      })
+        });
+      });
     }
     if (state.status == STATE.FILE_META_UPLOAD) {
       // Upload file meta data
       // Then set state and ready for file upload
       uploadFileMetaToRails(state, apolloClient).then(result => {
-        const attachment = result.data.createUpload.attachment
+        const attachment = result.data.createUpload.attachment;
         dispatch({
           signedBlobId: attachment.signedBlobId,
           blobId: attachment.blobId,
@@ -183,24 +201,25 @@ const useFileUpload = ({ client: apolloClient, maxSize }) => {
 
           current: STATE.FILE_META_UPLOAD,
           next: STATE.FILE_UPLOAD
-        })
-      })
+        });
+      });
     }
 
     if (state.status == STATE.FILE_UPLOAD) {
       // Upload file meta data
       // Then set state and ready for file upload
       uploadFileToRails(state).then(() => {
-        dispatch({ current: STATE.FILE_UPLOAD, next: STATE.DONE })
-      })
+        dispatch({ current: STATE.FILE_UPLOAD, next: STATE.DONE });
+      });
     }
-  })
+  });
 
   return {
     ...state,
     onChange,
-    startUpload
-  }
-}
+    startUpload,
+    verifyFileType
+  };
+};
 
-export { useFileUpload }
+export { useFileUpload };

@@ -21,7 +21,7 @@ module Authorizable
 
   def current_community
     if ['dgdp.site', 'rails'].include?(request.domain) && request.subdomain != 'dev'
-      @site_community = Community.find_by(name: 'DoubleGDP')
+      @site_community = Community.find_by(name: 'Tilisi')
     else
       dom = "#{request.subdomain}.#{request.domain}"
       @site_community = Community.where('? = ANY(domains)', dom).first

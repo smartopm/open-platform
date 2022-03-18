@@ -34,6 +34,7 @@ export default function FormContextProvider({ children }) {
   const [createFormUser] = useMutation(FormUserCreateMutation);
   const { t } = useTranslation('form');
   const signature = useFileUpload({ client: useApolloClient() });
+  console.log('Testing Mutuba', signature);
 
   useEffect(() => {
     if (
@@ -41,8 +42,7 @@ export default function FormContextProvider({ children }) {
       formState.currentPropId &&
       !uploadedImages.find(im => im.propertyId === formState.currentPropId)
     ) {
-
-        setFormState({
+      setFormState({
         ...formState,
         isUploading: false
       });
@@ -62,13 +62,13 @@ export default function FormContextProvider({ children }) {
    */
   function saveFormData(formData, formId, userId, categories, formStatus = null) {
     setFormState({
-        ...formState,
-        isSubmitting: true
-    })
+      ...formState,
+      isSubmitting: true
+    });
 
     // eslint-disable-next-line no-unreachable
     const fileSignType = formData.filter(item => item.fieldType === 'signature')[0];
-    const filledInProperties = extractValidFormPropertyValue(formProperties, 'submit')
+    const filledInProperties = extractValidFormPropertyValue(formProperties, 'submit');
 
     // get signedBlobId as value and attach it to the form_property_id
     if (formState.signed && signature.signedBlobId) {
@@ -101,8 +101,8 @@ export default function FormContextProvider({ children }) {
         alertOpen: false,
         isSubmitting: false,
         filledInProperties,
-        categories,
-      })
+        categories
+      });
       return;
     }
 
@@ -123,29 +123,29 @@ export default function FormContextProvider({ children }) {
             info: data.formUserCreate.error,
             alertOpen: true,
             isSubmitting: false
-          })
+          });
           return;
         }
 
         setFormState({
-            ...formState,
-            error: false,
-            info: (formStatus === 'draft' ? t('misc.saved_as_draft') : t('misc.form_submitted')),
-            alertOpen: true,
-            isSubmitting: false,
-            previewable: false,
-            successfulSubmit: true,
-            isDraft: formStatus === 'draft'
-          })
+          ...formState,
+          error: false,
+          info: formStatus === 'draft' ? t('misc.saved_as_draft') : t('misc.form_submitted'),
+          alertOpen: true,
+          isSubmitting: false,
+          previewable: false,
+          successfulSubmit: true,
+          isDraft: formStatus === 'draft'
+        });
       })
       .catch(err => {
         setFormState({
-            ...formState,
-            error: true,
-            info: err.message.replace(/GraphQL error:/, ''),
-            alertOpen: true,
-            isSubmitting: false
-          })
+          ...formState,
+          error: true,
+          info: err.message.replace(/GraphQL error:/, ''),
+          alertOpen: true,
+          isSubmitting: false
+        });
       });
   }
   return (
