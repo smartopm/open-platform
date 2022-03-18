@@ -515,7 +515,7 @@ export default function CampaignSplitScreenContent({ refetch, campaign, handleCl
                     <Spinner />
                   ) : (
                     searchText && (
-                      <Grid container spacing={2} data-testid='search-result'>
+                      <Grid container spacing={2} data-testid='search-result' style={{paddingTop: '10px'}}>
                         {data?.searchUserIds.map(user => (
                           <Grid item sm={4} key={user.id}>
                             <UserNameAvatar user={user} style={{ padding: '10px 0' }} />
