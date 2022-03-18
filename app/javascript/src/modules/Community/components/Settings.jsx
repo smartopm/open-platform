@@ -2,16 +2,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useEffect, useState } from 'react';
 import Typography from '@mui/material/Typography';
-import {
-  Button,
-  TextField,
-  MenuItem,
-  Container,
-  Grid,
-  IconButton,
-  FormControlLabel,
-  Checkbox
-} from '@mui/material';
+import { Button, TextField, MenuItem, Container, Grid, IconButton, Checkbox } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import { DeleteOutline } from '@mui/icons-material';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
@@ -446,7 +437,7 @@ export default function CommunitySettings({ data, refetch }) {
                 hidden
                 onChange={event => onInputChange(event.target.files[0])}
                 accept="image/*"
-                data-testid='logo-input'
+                data-testid="logo-input"
               />
             </Button>
           </div>
@@ -846,18 +837,14 @@ export default function CommunitySettings({ data, refetch }) {
           <Typography>{t('community.hide_deny_gate_access_button')}</Typography>
         </Grid>
         <Grid item xs={12} sm={9}>
-          <FormControlLabel
-            control={(
-              <Checkbox
-                checked={objectAccessor(communityFeatures, String('LogBook'))?.features.includes(
-                  CommunityFeaturesWhiteList.denyGateAccessButton
-                )}
-                onChange={e => handleModuleFeatures(e, 'LogBook', 'denyGateAccessButton')}
-                name="disable-deny-gate-access"
-                data-testid="disable_deny_gate_access"
-                color="primary"
-              />
+          <Checkbox
+            checked={objectAccessor(communityFeatures, String('LogBook'))?.features.includes(
+              CommunityFeaturesWhiteList.denyGateAccessButton
             )}
+            onChange={e => handleModuleFeatures(e, 'LogBook', 'denyGateAccessButton')}
+            name="disable-deny-gate-access"
+            data-testid="disable_deny_gate_access"
+            color="primary"
           />
         </Grid>
       </Grid>
@@ -866,18 +853,14 @@ export default function CommunitySettings({ data, refetch }) {
           <Typography>{t('community.guest_verification')}</Typography>
         </Grid>
         <Grid item xs={12} sm={9}>
-          <FormControlLabel
-            control={(
-              <Checkbox
-                checked={objectAccessor(communityFeatures, String('LogBook'))?.features.includes(
-                  CommunityFeaturesWhiteList.guestVerification
-                )}
-                onChange={e => handleModuleFeatures(e, 'LogBook', 'guestVerification')}
-                name="disable-deny-gate-access"
-                data-testid="guest_verification"
-                color="primary"
-              />
+          <Checkbox
+            checked={objectAccessor(communityFeatures, String('LogBook'))?.features.includes(
+              CommunityFeaturesWhiteList.guestVerification
             )}
+            onChange={e => handleModuleFeatures(e, 'LogBook', 'guestVerification')}
+            name="disable-deny-gate-access"
+            data-testid="guest_verification"
+            color="primary"
           />
         </Grid>
       </Grid>
@@ -889,18 +872,14 @@ export default function CommunitySettings({ data, refetch }) {
           <Typography>{t('community.enable_auomated_reminders')}</Typography>
         </Grid>
         <Grid item xs={12} sm={9}>
-          <FormControlLabel
-            control={(
-              <Checkbox
-                checked={objectAccessor(communityFeatures, String('Tasks'))?.features.includes(
-                  CommunityFeaturesWhiteList.automatedTaskReminders
-                )}
-                onChange={e => handleModuleFeatures(e, 'Tasks', 'automatedTaskReminders')}
-                name="enable_automated_task_reminders"
-                data-testid="enable_automated_task_reminders"
-                color="primary"
-              />
+          <Checkbox
+            checked={objectAccessor(communityFeatures, String('Tasks'))?.features.includes(
+              CommunityFeaturesWhiteList.automatedTaskReminders
             )}
+            onChange={e => handleModuleFeatures(e, 'Tasks', 'automatedTaskReminders')}
+            name="enable_automated_task_reminders"
+            data-testid="enable_automated_task_reminders"
+            color="primary"
           />
         </Grid>
       </Grid>

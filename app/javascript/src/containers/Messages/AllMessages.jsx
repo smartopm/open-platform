@@ -57,7 +57,7 @@ export default function AllMessages() {
 
     function handleFilter(event){
         setCategory(event.target.value)
-        // refetch after changing filter 
+        // refetch after changing filter
     }
 
     function handleSearch() {
@@ -72,28 +72,30 @@ export default function AllMessages() {
     return (
       <>
         <div className={width > 1000 ? 'container' : 'container-fluid'}>
-
-          <OutlinedInput
-            value={searchTermCurrent}
-            onChange={handleChange}
-            endAdornment={(
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label="toggle password visibility"
-                  onClick={handleSearch}
-                  onMouseDown={handleSearch}
-                  size="large"
-                >
-                  <SearchIcon />
-                </IconButton>
-              </InputAdornment>
+          <FormControl fullWidth>
+            <InputLabel htmlFor="search-messages">{t('common:form_placeholders.message_search')}</InputLabel>
+            <OutlinedInput
+              value={searchTermCurrent}
+              id="search-messages"
+              onChange={handleChange}
+              endAdornment={(
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={handleSearch}
+                    onMouseDown={handleSearch}
+                    size="large"
+                  >
+                    <SearchIcon />
+                  </IconButton>
+                </InputAdornment>
                     )}
-            aria-describedby="search messages input"
-            inputProps={{ 'aria-label': 'search'}}
-            fullWidth
-            labelWidth={0}
-            placeholder={t('common:form_placeholders.message_search')}
-          />
+              aria-describedby="search messages input"
+              inputProps={{ 'aria-label': 'search'}}
+              fullWidth
+              label={t('common:form_placeholders.message_search')}
+            />
+          </FormControl>
         </div>
         <CenteredContent>
           <FormControl className={classes.formControl}>
@@ -116,12 +118,12 @@ export default function AllMessages() {
         {
       // eslint-disable-next-line no-nested-ternary
       loading ? (
-        <CenteredContent> 
+        <CenteredContent>
           {' '}
           <Spinner />
           {' '}
         </CenteredContent>
-          ) : 
+          ) :
           data && data.messages ? (
             <div>
               <MessageList messages={data.messages} />
@@ -145,7 +147,7 @@ export default function AllMessages() {
               </div>
             </div>
 
-          ) : null 
+          ) : null
 }
       </>
 );
