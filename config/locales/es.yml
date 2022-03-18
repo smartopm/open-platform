@@ -474,3 +474,5 @@ es:
     success: Exito
     update_failed: 'Actualizar Falló '
     updated: Actualizado
+  welcome_sms: Bienvenido a la comunidad en línea de %{community}. Por favor acceda
+    a la aplicación usando %{url}
