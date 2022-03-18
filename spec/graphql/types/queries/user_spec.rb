@@ -16,7 +16,8 @@ RSpec.describe Types::Queries::User do
     let!(:permission) do
       create(:permission, module: 'user',
                           role: admin_role,
-                          permissions: %w[can_view_admin_users can_get_users_lite can_get_users])
+                          permissions: %w[can_view_admin_users can_get_users_lite can_get_users
+                                          can_search_user_ids])
     end
     let!(:current_user) { create(:user_with_community, user_type: 'client', role: client_role) }
     let!(:secondary_number) do
@@ -238,7 +239,7 @@ RSpec.describe Types::Queries::User do
         query: current_user.name, userIds: [current_user.id]
       }
       result = DoubleGdpSchema.execute(search_ids_query, variables: variables,
-                                                     context: { current_user: admin }).as_json
+                                                         context: { current_user: admin }).as_json
 
       expect(result.dig('data', 'searchUserIds', 0, 'id')).to_not be_nil
       expect(result.dig('data', 'searchUserIds', 0, 'name')).to_not be_nil

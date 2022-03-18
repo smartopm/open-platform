@@ -496,7 +496,7 @@ export default function CampaignSplitScreenContent({ refetch, campaign, handleCl
             </Grid>
             {formData.userIdList && (
               <>
-                <Grid item sm={8}>
+                <Grid item sm={8} xs={12}>
                   <SearchInput
                     filterRequired={false}
                     title={t('common:misc.users')}
@@ -505,7 +505,7 @@ export default function CampaignSplitScreenContent({ refetch, campaign, handleCl
                     handleClear={() => setSearchText('')}
                   />
                 </Grid>
-                <Grid item sm={12}>
+                <Grid item sm={12} xs={12}>
                   {error && (
                     <CenteredContent>
                       <p>{error.message}</p>
@@ -517,7 +517,7 @@ export default function CampaignSplitScreenContent({ refetch, campaign, handleCl
                     searchText && (
                       <Grid container spacing={2} data-testid='search-result' style={{paddingTop: '10px'}}>
                         {data?.searchUserIds.map(user => (
-                          <Grid item sm={4} key={user.id}>
+                          <Grid item sm={4} xs={8} key={user.id}>
                             <UserNameAvatar user={user} style={{ padding: '10px 0' }} />
                           </Grid>
                         ))}

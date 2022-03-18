@@ -289,20 +289,25 @@ module Types::Queries::User
                           .order(created_at: :desc)
   end
 
-  def search_user_ids(query: nil, user_ids: [])
-    # unless permitted?(module: :user, permission: :can_search_user_ids)
-    #   raise GraphQL::ExecutionError,
-    #         I18n.t('errors.unauthorized')
-    # end
-
-    users = Users::User.allowed_users(context[:current_user])
-               .search_lite(or: [{ query: (query.presence || '.') }, { name: { matches: query } }])
-               .order(name: :asc)
-               .with_attached_avatar
-
+  def selcted_search_users(users, user_ids)
     users.select do |user|
       user_ids.include? user.id
-    end 
+    end
+  end
+
+  def search_user_ids(query: nil, user_ids: [])
+    unless permitted?(module: :user, permission: :can_search_user_ids)
+      raise GraphQL::ExecutionError,
+            I18n.t('errors.unauthorized')
+    end
+
+    users = Users::User.allowed_users(context[:current_user])
+                       .search_lite(or: [{ query: (query.presence || '.') },
+                                         { name: { matches: query } }])
+                       .order(name: :asc)
+                       .with_attached_avatar
+
+    selcted_search_users(users, user_ids)
   end
 
   def my_hosts(user_id:)
