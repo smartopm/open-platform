@@ -10,7 +10,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import Grid from '@mui/material/Grid';
 import { Container } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import MaterialConfig from 'react-awesome-query-builder/lib/config/material';
+import MuiConfig from 'react-awesome-query-builder/lib/config/mui';
 import Loading from '../../../shared/Loading';
 import ErrorPage from '../../../components/Error';
 import { UsersDetails, LabelsQuery, UsersCount } from '../../../graphql/queries';
@@ -301,7 +301,7 @@ export default function UsersList() {
     );
   }
 
-  const InitialConfig = MaterialConfig;
+  const InitialConfig = MuiConfig;
   const queryBuilderConfig = {
     ...InitialConfig,
     fields: {

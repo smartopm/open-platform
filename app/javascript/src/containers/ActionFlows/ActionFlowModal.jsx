@@ -6,7 +6,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useQuery, useLazyQuery } from 'react-apollo';
-import MaterialConfig from 'react-awesome-query-builder/lib/config/material';
+import MuiConfig from 'react-awesome-query-builder/lib/config/mui';
 import {
   Dialog,
   DialogTitle,
@@ -158,7 +158,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
     });
   }
 
-  const InitialConfig = MaterialConfig;
+  const InitialConfig = MuiConfig;
   const queryBuilderConfig = {
     ...InitialConfig,
     fields: ruleFieldsConfig,

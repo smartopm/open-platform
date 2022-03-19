@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React, { useContext, useState } from 'react'
 import { Query, Builder, Utils as QbUtils } from 'react-awesome-query-builder'
 import PropTypes from 'prop-types'
@@ -21,7 +20,7 @@ export default function QueryBuilder({
       groupActionsPosition: 'bottomLeft',
       canReorder: false,
       theme: {
-        material: theme(authState.user?.community?.themeColors)
+        mui: theme(authState.user?.community?.themeColors)
       }
     },
     operators: {
@@ -84,12 +83,12 @@ export default function QueryBuilder({
 
   return (
     <div style={{ outline: 'none' }}>
-      {/* <Query
+      <Query
         {...config}
         value={treeConfig.tree}
         onChange={onChange}
         renderBuilder={renderBuilder}
-      /> */}
+      />
     </div>
   )
 }
