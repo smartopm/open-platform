@@ -17,13 +17,15 @@ import CenteredContent from '../../../components/CenteredContent';
 const NUMBER_OF_POSTS_TO_DISPLAY = 5;
 const useStyles = makeStyles(theme => ({
   root: {
+    display: 'flex',
     flexWrap: 'wrap',
     justifyContent: 'space-around',
     overflow: 'hidden',
     backgroundColor: theme.palette.background.paper
   },
   gridList: {
-    flexWrap: 'nowrap'
+    flexWrap: 'nowrap',
+    transform: 'translateZ(0)'
   },
   title: {
     color: theme.palette.primary.light
@@ -41,7 +43,7 @@ export function PostItemGrid({ data }) {
   const classes = useStyles();
   const { t } = useTranslation('common');
   const matches = useMediaQuery('(max-width:600px)');
-  const history = useHistory()
+  const history = useHistory();
 
   function routeToPost(postId) {
     history.push(`/news/post/${postId}`);
@@ -63,7 +65,16 @@ export function PostItemGrid({ data }) {
         className={classes.root}
         style={matches ? { margin: '0 20px' } : { margin: '0 79px 26px 79px' }}
       >
-        <ImageList className={classes.gridList} cols={matches ? 2 : 3.2} spacing={5}>
+        <ImageList
+          className={classes.gridList}
+          cols={matches ? 2 : 3.2}
+          spacing={5}
+          sx={{
+            gridAutoFlow: 'column',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(250px,1fr)) !important',
+            gridAutoColumns: 'minmax(200px, 1fr)'
+          }}
+        >
           {data.length &&
             data.map(tile => (
               <ImageListItem
