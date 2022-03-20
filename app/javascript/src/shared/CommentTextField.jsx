@@ -100,7 +100,11 @@ export default function CommentTextField({
               }}
               id="reply-user"
               options={taskAssignees || []}
-              renderOption={option => <UserAutoResult user={option} t={t} />}
+              renderOption={(props, option) => (
+                <li {...props}>
+                  <UserAutoResult user={option} t={t} />
+                </li>
+              )}
               name="reply-user"
               onChange={(_event, newValue) => setSelectedUser(newValue)}
               getOptionLabel={option => option?.name}
