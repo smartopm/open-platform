@@ -35,7 +35,7 @@ export default function CommentTextField({
           fullWidth
           id="standard-full-width"
           style={{ margin: 0 }}
-          placeholder={placeholder}
+          label={placeholder}
           value={value}
           onChange={e => setValue(e.target.value)}
           multiline

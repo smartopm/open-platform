@@ -6,22 +6,22 @@ import PropTypes from 'prop-types';
 
 export default function AutoSaveField({ value, mutationAction, stateAction }) {
   const [isEditMode, setIsEditMode] = useState(false);
-  const [input, setInput] = useState(value || '')
+  const [input, setInput] = useState(value || '');
 
   function handleMouseLeave() {
     setIsEditMode(false);
-    stateAction(false)
-    handleAutoSave()
+    stateAction(false);
+    handleAutoSave();
   }
 
   function handleMouseOver() {
     setIsEditMode(true);
   }
 
-  function handleAutoSave(){
+  function handleAutoSave() {
     const previous = value;
-    if (input && input !== previous){
-      mutationAction(input)
+    if (input && input !== previous) {
+      mutationAction(input);
     }
   }
 
@@ -40,11 +40,11 @@ export default function AutoSaveField({ value, mutationAction, stateAction }) {
           name="live-text-field"
           value={input}
           fullWidth
-          onChange={(e) => setInput(e.target.value)}
+          onChange={e => setInput(e.target.value)}
           className={classes.liveTextField}
           disabled={!isEditMode}
           multiline
-          variant="outlined"
+          variant="standard"
           inputProps={{ 'data-testid': 'live-text-field' }}
         />
       </Grid>
@@ -53,12 +53,12 @@ export default function AutoSaveField({ value, mutationAction, stateAction }) {
 }
 AutoSaveField.defaultProps = {
   stateAction: () => {}
-}
+};
 
 AutoSaveField.propTypes = {
   value: PropTypes.string.isRequired,
   mutationAction: PropTypes.func.isRequired,
-  stateAction: PropTypes.func,
+  stateAction: PropTypes.func
 };
 
 const useStyles = makeStyles(() => ({
@@ -67,7 +67,7 @@ const useStyles = makeStyles(() => ({
     letterSpacing: 0,
     lineHeight: '3em',
     fontSize: '1rem',
-    fontWeight: '0',
+    fontWeight: '0'
   },
   disabled: {
     borderBottom: 0,
