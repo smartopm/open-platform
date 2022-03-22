@@ -9,8 +9,9 @@ export default function SearchFilterList({ filters, handleClearFilters }) {
   return (
     <Grid container spacing={2} alignItems="center">
       <Grid item>
-        <Typography display="inline-block" variant='subtitle2'>{`${t('search.search_results')}:  `}</Typography>
-        <Typography display="inline-block" variant='caption'>{filters}</Typography>
+        <Typography display="inline-block" variant='subtitle2'>{`${t('search.search_results')}:  `}</Typography> 
+        {"  "}
+        <Typography display="inline-block" variant='caption'>{filters.filter(Boolean).map(filter => `${filter}`).join(', ')}</Typography>
       </Grid>
       <Grid item>
         <Button variant="outlined" color="primary" onClick={handleClearFilters}>

@@ -39,11 +39,13 @@ export default function VisitView({
         offset: query.length ? 0 : offset,
         limit,
         query: query.trim(),
-        type: statsTypeFilter.type
+        type: statsTypeFilter.type,
+        duration: statsTypeFilter.duration
       },
       fetchPolicy: 'cache-and-network'
     }
   );
+
   const { t } = useTranslation('logbook');
   const [currentId, setCurrentId] = useState(null);
   const history = useHistory();
@@ -101,6 +103,15 @@ export default function VisitView({
     setStatType(initialFilter)
   }
 
+  const filterTypes = {
+    peopleEntered: t('logbook.total_entries'),
+    peopleExited: t('logbook.total_exits'),
+    peoplePresent: t('logbook.total_in_city'),
+    today:  t('logbook.today'),
+    past7Days:  t('logbook.last_7_days'),
+    past30Days:  t('logbook.last_30_days'),
+  }
+
   return (
     <div style={{ marginTop: '20px' }}>
       <LogbookStats
@@ -111,7 +122,7 @@ export default function VisitView({
         duration={statsTypeFilter.duration}
       />
       <SearchFilterList 
-        filters={[statsTypeFilter.type, statsTypeFilter.duration]}
+        filters={[filterTypes[statsTypeFilter.type], filterTypes[statsTypeFilter.duration], query]}
         handleClearFilters={handleFilters}
       />
       <br />
