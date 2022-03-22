@@ -20,6 +20,7 @@ import { formatError } from '../../../utils/helpers';
 import useLogbookStyles from '../styles';
 import Paginate from '../../../components/Paginate';
 import LogbookStats from './LogbookStats';
+import SearchFilterList from '../../../shared/SearchFilterList';
 
 export default function VisitView({
   tabValue,
@@ -86,6 +87,10 @@ export default function VisitView({
     setStatType(type)
   }
 
+  function handleFilters(){
+    setStatType("")
+  }
+
   return (
     <div style={{ marginTop: '20px' }}>
       <LogbookStats
@@ -94,6 +99,11 @@ export default function VisitView({
         isSmall={matches}
         handleFilter={handleFilterData}
       />
+      <SearchFilterList 
+        filters={[statsType]}
+        handleClearFilters={handleFilters}
+      />
+      <br />
       {error && <CenteredContent>{formatError(error.message)}</CenteredContent>}
       {guestsLoading ? (
         <Spinner />
