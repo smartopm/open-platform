@@ -908,6 +908,17 @@ RSpec.describe Types::Queries::Note do
         })
       end
 
+      let(:project_query) do
+        <<~GQL
+          query Project($formUserId: ID!) {
+            project(formUserId: $formUserId) {
+              id
+              body
+            }
+          }
+        GQL
+      end
+
       context 'when projects are fetched' do
         before do
           form
@@ -926,6 +937,35 @@ RSpec.describe Types::Queries::Note do
           expect(result['errors']).to be_nil
           expect(result.dig('data', 'projects').length).to eql 2
           expect(result.dig('data', 'projects', 0, 'submittedBy', 'id')).to eql admin.id
+        end
+
+        it 'gets a project by form_user_id' do
+          third_note.update(form_user_id: form_user.id)
+          result = DoubleGdpSchema.execute(project_query,
+                                           context: {
+                                             current_user: site_worker,
+                                             site_community: site_worker.community,
+                                           },
+                                           variables: {
+                                             formUserId: third_note.form_user_id,
+                                           }).as_json
+
+          expect(result['errors']).to be_nil
+          expect(result.dig('data', 'project', 'body')).to eq(third_note.body)
+        end
+
+        it 'raises an error if project is not found' do
+          result = DoubleGdpSchema.execute(project_query,
+                                           context: {
+                                             current_user: site_worker,
+                                             site_community: site_worker.community,
+                                           },
+                                           variables: {
+                                             formUserId: second_note.form_user_id,
+                                           }).as_json
+
+          expect(result['errors']).not_to be_nil
+          expect(result['errors'][0]['message']).to match('not found')
         end
 
         it 'retrieves project comments' do

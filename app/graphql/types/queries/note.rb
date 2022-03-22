@@ -419,9 +419,13 @@ module Types::Queries::Note
             I18n.t('errors.unauthorized')
     end
 
-    context[:site_community]
-      .notes.includes(:sub_notes)
-      .find_by(form_user_id: form_user_id, category: 'form')
+    project = context[:site_community]
+              .notes
+              .find_by(form_user_id: form_user_id, category: 'form')
+
+    raise ActiveRecord::RecordNotFound if project.blank?
+
+    project
   end
 
   private
