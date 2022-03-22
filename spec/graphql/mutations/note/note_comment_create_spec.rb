@@ -141,15 +141,15 @@ RSpec.describe Mutations::Note::NoteCommentCreate do
       email_subject = I18n.t('email_template.comment_reply.subject', user_name: another_user.name)
 
       expect(EmailMsg).to receive(:send_mail_from_db).with(
-        admin.email,
-        email_template,
-        [
+        email: admin.email,
+        template: email_template,
+        template_data: [
           { key: '%action_url%', value: action_url },
           { key: '%action%', value: I18n.t('email_template.comment_reply.action') },
           { key: '%body%', value:  email_body },
           { key: '%title%', value: I18n.t('email_template.comment_reply.title') },
         ],
-        email_subject,
+        email_subject: email_subject,
       )
 
       result = DoubleGdpSchema.execute(query, variables: variables,

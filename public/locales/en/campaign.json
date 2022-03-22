@@ -13,7 +13,8 @@
     "communicate": "Communicate with the community.",
     "campaign": "Campaign",
     "campaign_detail": "Campaign Detail",
-    "click_rate": "Click Rate"
+    "click_rate": "Click Rate",
+    "open_rate": "Open Rate"
   },
   "form_fields": {
     "campaign_type": "Campaign Type",

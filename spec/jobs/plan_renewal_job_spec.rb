@@ -38,7 +38,9 @@ RSpec.describe PlanRenewalJob, type: :job do
     it 'creates a new payment plan and invokes EmailMsg' do
       expect(Properties::PaymentPlan.count).to eql 1
       expect(EmailMsg).to receive(:send_mail_from_db).with(
-        user.email, email_template, template_data
+        email: user.email,
+        template: email_template,
+        template_data: template_data,
       )
 
       perform_enqueued_jobs { described_class.perform_later(false) }
@@ -56,7 +58,9 @@ RSpec.describe PlanRenewalJob, type: :job do
       it 'does not invokes EmailMsg' do
         expect(Properties::PaymentPlan.count).to eql 1
         expect(EmailMsg).not_to receive(:send_mail_from_db).with(
-          user.email, email_template, template_data
+          email: user.email,
+          template: email_template,
+          template_data: template_data,
         )
 
         perform_enqueued_jobs { described_class.perform_later(false) }

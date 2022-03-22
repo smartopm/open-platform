@@ -55,7 +55,9 @@ RSpec.describe TaskReminderJob, type: :job do
       ]
 
       expect(EmailMsg).to receive(:send_mail_from_db).with(
-        admin.email, template, template_data
+        email: admin.email,
+        template: template,
+        template_data: template_data,
       )
       perform_enqueued_jobs { described_class.perform_later('manual', assignee_note) }
     end
@@ -76,7 +78,9 @@ RSpec.describe TaskReminderJob, type: :job do
       due_date = note.due_date.to_date.to_s
 
       expect(EmailMsg).to receive(:send_mail_from_db).with(
-        admin.email, template, template_data
+        email: admin.email,
+        template: template,
+        template_data: template_data,
       )
       expect(Sms).to receive(:send).with(
         admin.phone_number, I18n.t('general.task_reminder', due_date: due_date,

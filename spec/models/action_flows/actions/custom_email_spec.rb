@@ -27,7 +27,11 @@ RSpec.describe ActionFlows::Actions::CustomEmail do
 
     event = flow.event_object.new
     event.preload_data(event_log)
-    expect(EmailMsg).to receive(:send_mail_from_db).with('email@gmail.com', template, [])
+    expect(EmailMsg).to receive(:send_mail_from_db).with(
+      email: 'email@gmail.com',
+      template: template,
+      template_data: [],
+    )
     described_class.execute_action(event.data_set, flow.action_fields)
   end
 end

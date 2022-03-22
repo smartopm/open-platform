@@ -129,9 +129,11 @@ RSpec.describe Campaign, type: :model do
         ]
 
         expect(EmailMsg).to receive(:send_mail_from_db).with(
-          user.email,
-          template,
-          template_data,
+          email: user.email,
+          template: template,
+          template_data: template_data,
+          custom_key: 'campaign_id',
+          custom_value: campaign.id,
         )
         allow(EmailMsg).to receive(:send_mail_from_db).and_return(
           OpenStruct.new(status_code: '202'),
@@ -151,9 +153,11 @@ RSpec.describe Campaign, type: :model do
         ]
 
         expect(EmailMsg).to receive(:send_mail_from_db).with(
-          user.email,
-          template,
-          template_data,
+          email: user.email,
+          template: template,
+          template_data: template_data,
+          custom_key: 'campaign_id',
+          custom_value: campaign.id,
         )
         allow(EmailMsg).to receive(:send_mail_from_db).and_return(
           OpenStruct.new(status_code: '400'),

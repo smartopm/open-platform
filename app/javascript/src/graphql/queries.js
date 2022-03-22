@@ -451,6 +451,7 @@ export const Campaign = gql`
         totalScheduled
         totalSent
         totalClicked
+        totalOpened
       }
       labels {
         id

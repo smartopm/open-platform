@@ -13,7 +13,11 @@ class Notify
     def send_email(email, template, template_data)
       return if email.blank? || template.blank?
 
-      EmailMsg.send_mail_from_db(email, template, template_data)
+      EmailMsg.send_mail_from_db(
+        email: email,
+        template: template,
+        template_data: template_data,
+      )
     end
 
     def send_sms(phone_number, sms_body)

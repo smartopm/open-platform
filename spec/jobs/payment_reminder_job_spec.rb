@@ -59,7 +59,9 @@ RSpec.describe PaymentReminderJob, type: :job do
         ]
 
         expect(EmailMsg).to receive(:send_mail_from_db).with(
-          user.email, template, template_data
+          email: user.email,
+          template: template,
+          template_data: template_data,
         )
         perform_enqueued_jobs { described_class.perform_later(community, payment_reminder_fields) }
       end

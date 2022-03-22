@@ -11,7 +11,7 @@ export default function CampaignStatCard({ data }) {
   const { t } = useTranslation('campaign');
   return (
     <Grid container className={classes.container}>
-      <Grid item lg={4} md={4} sm={4} xs={4} className={classes.card} data-testid="total-scheduled">
+      <Grid item lg={3} md={3} sm={3} xs={3} className={classes.card} data-testid="total-scheduled">
         <Card
           styles={{ padding: '20px 0', borderRadius: '5px', color: 'white', height: '150px' }}
           contentStyles={{
@@ -27,7 +27,7 @@ export default function CampaignStatCard({ data }) {
           <Typography variant="h4">{data.totalScheduled}</Typography>
         </Card>
       </Grid>
-      <Grid item lg={4} md={4} sm={4} xs={4} className={classes.card} data-testid="total-sent">
+      <Grid item lg={3} md={3} sm={3} xs={3} className={classes.card} data-testid="total-sent">
         <Card
           styles={{ padding: '20px 0', borderRadius: '5px', color: 'white', height: '150px' }}
           contentStyles={{
@@ -42,7 +42,7 @@ export default function CampaignStatCard({ data }) {
           <Typography variant="h4">{data.totalSent}</Typography>
         </Card>
       </Grid>
-      <Grid item lg={4} md={4} sm={4} xs={4} data-testid="click-rate">
+      <Grid item lg={3} md={3} sm={3} xs={3} className={classes.card} data-testid="open-rate">
         <Card
           styles={{ padding: '20px 0', borderRadius: '5px', color: 'white', height: '150px' }}
           contentStyles={{
@@ -52,6 +52,21 @@ export default function CampaignStatCard({ data }) {
             flexDirection: 'column'
           }}
           className={classes.cardBackgroundPrimary}
+        >
+          <Typography variant="body2">{t('campaign.open_rate')}</Typography>
+          <Typography variant="h4">{data.totalOpened}</Typography>
+        </Card>
+      </Grid>
+      <Grid item lg={3} md={3} sm={3} xs={3} data-testid="click-rate">
+        <Card
+          styles={{ padding: '20px 0', borderRadius: '5px', color: 'white', height: '150px' }}
+          contentStyles={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexDirection: 'column'
+          }}
+          className={classes.cardBackgroundSecondary}
         >
           <Typography variant="body2">{t('campaign.click_rate')}</Typography>
           <Typography variant="h4">{data.totalClicked}</Typography>
@@ -80,6 +95,7 @@ CampaignStatCard.propTypes = {
   data: PropTypes.shape({
     totalScheduled: PropTypes.number,
     totalSent: PropTypes.number,
-    totalClicked: PropTypes.number
+    totalClicked: PropTypes.number,
+    totalOpened: PropTypes.number
   }).isRequired
 };

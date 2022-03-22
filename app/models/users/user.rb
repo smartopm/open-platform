@@ -532,7 +532,11 @@ module Users
 
       template_data = [{ key: '%one_time_login%', value: msg }]
       Rails.logger.info "Sending '#{msg}' to #{self[:email]}"
-      EmailMsg.send_mail_from_db(self[:email], template, template_data)
+      EmailMsg.send_mail_from_db(
+        email: self[:email],
+        template: template,
+        template_data: template_data,
+      )
       url
     end
     # rubocop:enable Metrics/AbcSize
@@ -614,7 +618,12 @@ module Users
         { key: '%body%', value: email_body },
         { key: '%title%', value: email_title },
       ]
-      EmailMsg.send_mail_from_db(self[:email], template, template_data, email_subject)
+      EmailMsg.send_mail_from_db(
+        email: self[:email],
+        template: template,
+        template_data: template_data,
+        email_subject: email_subject,
+      )
     end
     # rubocop:enable Metrics/MethodLength
     # rubocop:enable Metrics/AbcSize
