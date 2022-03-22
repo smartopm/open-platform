@@ -350,7 +350,6 @@ custodian:
     permissions:
       - can_search_guests
       - can_get_users_lite
-      - can_get_user_count
   community:
     permissions:
       - can_see_menu_item
