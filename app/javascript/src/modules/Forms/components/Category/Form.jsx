@@ -107,7 +107,7 @@ export default function Form({ editMode, formId }) {
         handleClose={handleCategoryClose}
         open={categoryFormOpen}
         title={t('form:misc.category')}
-        color="default"
+        color="primary"
       >
         <Container>
           <CategoryForm
@@ -123,7 +123,7 @@ export default function Form({ editMode, formId }) {
         handleClose={handleCancelPreview}
         open={formState.previewable}
         title={t('form:misc.contract_preview')}
-        color="default"
+        color="primary"
         scroll="paper"
       >
         <DialogContent dividers>

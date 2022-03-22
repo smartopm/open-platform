@@ -7,6 +7,7 @@ import SubStatusReportDialog from '../Components/SubStatusReport';
 import { SubStatusQuery } from '../../../graphql/queries';
 import { Spinner } from '../../../shared/Loading';
 import StatusCount from '../../../shared/Status';
+import MockedThemeProvider from '../../__mocks__/mock_theme';
 
 describe('Substatus component', () => {
   it('should render the substatus modal', async () => {
@@ -24,7 +25,7 @@ describe('Substatus component', () => {
             constructionInProgress: 0,
             constructionCompleted: 0,
             constructionInProgressSelfBuild: 0,
-            residentsCount: 0,
+            residentsCount: 0
           }
         }
       }
@@ -33,7 +34,9 @@ describe('Substatus component', () => {
     await act(async () => {
       container = render(
         <MockedProvider mocks={[statusMock]} addTypename={false}>
-          <SubStatusReportDialog open handleClose={jest.fn()} handleFilter={jest.fn()} />
+          <MockedThemeProvider>
+            <SubStatusReportDialog open handleClose={jest.fn()} handleFilter={jest.fn()} />
+          </MockedThemeProvider>
         </MockedProvider>
       );
     });
@@ -54,7 +57,9 @@ describe('Substatus component', () => {
 
 describe('StatusCount component', () => {
   it('should render status count', () => {
-    const container = render(<StatusCount title="Plots Fully Purchased" count={1} handleFilter={jest.fn()} />);
+    const container = render(
+      <StatusCount title="Plots Fully Purchased" count={1} handleFilter={jest.fn()} />
+    );
     expect(container.queryAllByText('Plots Fully Purchased')[0]).toBeInTheDocument();
     expect(container.queryAllByText('1')[0]).toBeInTheDocument();
   });

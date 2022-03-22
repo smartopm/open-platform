@@ -34,16 +34,16 @@ export default function UserStats() {
         {loading ? (
           <Spinner />
         ) : (
-          <StatusList 
-            data={data?.substatusQuery} 
+          <StatusList
+            data={data?.substatusQuery}
             statuses={subStatus}
-            handleFilter={handleFilter} 
+            handleFilter={handleFilter}
           />
         )}
       </div>
       {subStatusDistributionData && (
-        <SubStatusTimeDistributionReport 
-          userSubStatus={userSubStatus} 
+        <SubStatusTimeDistributionReport
+          userSubStatus={userSubStatus}
           subStatusDistributionData={subStatusDistributionData}
         />
       )}

@@ -54,7 +54,7 @@ export const StyledTableRow = withStyles(theme => ({
 export default function DataTable({ columns, children }) {
   const classes = useStyles();
   return (
-    <div className="container">
+    <div className="container" data-testid='data_table_container'>
       <>
         <Table className={(classes.table, 'tableClass')}>
           <TableHead>

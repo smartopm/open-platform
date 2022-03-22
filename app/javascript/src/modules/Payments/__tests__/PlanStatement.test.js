@@ -7,6 +7,7 @@ import StatementPlan from '../Components/UserTransactions/PlanStatement';
 import currency from '../../../__mocks__/currency';
 import userMock from '../../../__mocks__/authstate';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
+import MockedThemeProvider from '../../__mocks__/mock_theme';
 
 describe('It should test the plan statement modal component', () => {
   const data = {
@@ -38,22 +39,24 @@ describe('It should test the plan statement modal component', () => {
             country: 'Zambia',
             taxIdNo: 'tax1234'
           },
-          socialLinks: [{ category: 'website', social_link: 'www.web.com'}],
-          supportEmail: [{ category: 'bank', email: 'payment@support.com'}],
-          supportNumber: [{ category: 'bank', phone_number: '+260 1234'}],
+          socialLinks: [{ category: 'website', social_link: 'www.web.com' }],
+          supportEmail: [{ category: 'bank', email: 'payment@support.com' }],
+          supportNumber: [{ category: 'bank', phone_number: '+260 1234' }]
         }
       }
     },
-    statements: [{
-      receiptNumber: '26289',
-      paymentDate: '2020-12-28', 
-      amountPaid: 300,
-      installmentAmount: 400,
-      settledInstallments: 2,
-      debitAmount: 4000,
-      unallocatedAmount: 300,
-      id: "385u943-ujdf"
-    }]
+    statements: [
+      {
+        receiptNumber: '26289',
+        paymentDate: '2020-12-28',
+        amountPaid: 300,
+        installmentAmount: 400,
+        settledInstallments: 2,
+        debitAmount: 4000,
+        unallocatedAmount: 300,
+        id: '385u943-ujdf'
+      }
+    ]
   };
 
   const open = true;
@@ -65,12 +68,14 @@ describe('It should test the plan statement modal component', () => {
       <Context.Provider value={userMock}>
         <BrowserRouter>
           <MockedProvider>
-            <StatementPlan
-              open={open}
-              data={data}
-              handleClose={handleModalClose}
-              currencyData={currency}
-            />
+            <MockedThemeProvider>
+              <StatementPlan
+                open={open}
+                data={data}
+                handleClose={handleModalClose}
+                currencyData={currency}
+              />
+            </MockedThemeProvider>
           </MockedProvider>
         </BrowserRouter>
       </Context.Provider>

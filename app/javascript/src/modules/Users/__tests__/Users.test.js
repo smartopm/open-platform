@@ -113,8 +113,8 @@ describe('UserPage Component', () => {
       expect(mockHistory.push).toBeCalledWith('/users/stats');
 
       fireEvent.click(container.queryByTestId('download_csv_btn'));
-      expect(container.queryByTestId('button')).toBeInTheDocument();
-      expect(container.queryByTestId('arrow-icon')).toBeInTheDocument();
+      expect(container.queryAllByTestId('button')[0]).toBeInTheDocument();
+      expect(container.queryAllByTestId('arrow-icon')[0]).toBeInTheDocument();
 
       expect(container.getByTestId('pagination_section')).toBeInTheDocument();
       expect(container.getByTestId('user_item')).toBeInTheDocument();
@@ -123,10 +123,10 @@ describe('UserPage Component', () => {
       expect(container.getByTestId('user_email').textContent).toContain('');
       expect(container.getByTestId('user_phone_number').textContent).toContain('3221038192389');
       expect(container.getByTestId('user_type').textContent).toContain('common:user_types.visitor');
-      fireEvent.click(container.queryByTestId('arrow-icon'));
-      fireEvent.click(container.queryByText('common:misc.all_this_page'));
-      fireEvent.click(container.queryByTestId('copy-id'));
-      expect(container.queryByTestId('copy-id')).toBeInTheDocument();
+      fireEvent.click(container.queryAllByTestId('arrow-icon')[0]);
+      fireEvent.click(container.queryAllByText('common:misc.all_this_page')[0]);
+      fireEvent.click(container.queryAllByTestId('copy-id')[0]);
+      expect(container.queryAllByTestId('copy-id')[0]).toBeInTheDocument();
     }, 20);
   });
   it('should render an error page when something wrong with the query', async () => {

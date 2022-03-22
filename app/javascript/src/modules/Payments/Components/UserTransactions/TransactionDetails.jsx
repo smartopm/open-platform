@@ -24,7 +24,7 @@ export default function TransactionDetails({ open, handleModalClose, data, curre
         open={open}
         handleClose={handleModalClose}
         title="Transaction Details"
-        color="default"
+        color="primary"
       >
         <div className={!matches ? classes.body : classes.bodyMobile}>
           <Typography className={classes.title} data-testid="title">

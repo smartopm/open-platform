@@ -1,9 +1,10 @@
-import React from 'react'
-import { render } from '@testing-library/react'
-import { MockedProvider } from '@apollo/react-testing'
-import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min'
-import ActionCard from '../components/ActionCard'
-import '@testing-library/jest-dom/extend-expect'
+import React from 'react';
+import { render } from '@testing-library/react';
+import { MockedProvider } from '@apollo/react-testing';
+import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min';
+import ActionCard from '../components/ActionCard';
+import '@testing-library/jest-dom/extend-expect';
+import MockedThemeProvider from '../modules/__mocks__/mock_theme';
 
 const props = {
   openFlowModal: jest.fn(),
@@ -14,25 +15,27 @@ const props = {
     description: 'Some description',
     title: 'A workflow',
     active: true,
-    createdAt: "2021-01-01"
+    createdAt: '2021-01-01'
   }
-}
+};
 
 describe('ActionCard', () => {
   it('renders action-flow information', () => {
     const container = render(
       <MockedProvider mocks={[]} addTypename={false}>
         <BrowserRouter>
-          <ActionCard {...props} />
+          <MockedThemeProvider>
+            <ActionCard {...props} />
+          </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>
-    )
+    );
 
-    expect(container.queryByText('A workflow')).toBeInTheDocument()
-    expect(container.queryByText('Some description')).toBeInTheDocument()
+    expect(container.queryByText('A workflow')).toBeInTheDocument();
+    expect(container.queryByText('Some description')).toBeInTheDocument();
     expect(
-      container.queryByText('actionflow:misc.event_type', {eventType: props.actionFlow.eventType})
-    ).toBeInTheDocument()
-    expect(container.queryByText('actionflow:misc.active')).toBeInTheDocument()
-  })
-})
+      container.queryByText('actionflow:misc.event_type', { eventType: props.actionFlow.eventType })
+    ).toBeInTheDocument();
+    expect(container.queryByText('actionflow:misc.active')).toBeInTheDocument();
+  });
+});

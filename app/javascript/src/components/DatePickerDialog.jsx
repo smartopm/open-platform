@@ -46,6 +46,7 @@ export default function DatePickerDialog({
             }
             placeholder="YYYY-MM-DD"
             variant={inputVariant ? 'outlined' : 'standard'}
+            data-testid='date-picker'
           />
         )}
         okText={t('date_picker.ok_label')}
@@ -97,6 +98,7 @@ export function DateAndTimePickers({
             placeholder="YYYY-MM-DD hh:mm a"
             error={pastDate ? checkPastDate(selectedDateTime) : inputValidation.error}
             variant="standard"
+            data-testid='datetime-picker'
           />
         )}
         okText={t('date_picker.ok_label')}
@@ -132,7 +134,7 @@ export function ThemedTimePicker({
         locale={getCurrentLng().includes('es') ? es : enUS}
       >
         <MobileTimePicker
-          renderInput={params => <TextField {...params} variant="outlined" />}
+          renderInput={params => <TextField {...params} variant="outlined" data-testid='time_picker' />}
           okText={t('date_picker.ok_label')}
           clearText={t('date_picker.clear')}
           cancelText={t('date_picker.cancel')}

@@ -82,7 +82,7 @@ export default function Report() {
         handleClose={handleCloseReport}
         open={rangerPickerOpen}
         title={t('misc.pick_reporting_range')}
-        color="default"
+        color="primary"
       >
         <Container>
           <Grid container direction="row" spacing={4}>

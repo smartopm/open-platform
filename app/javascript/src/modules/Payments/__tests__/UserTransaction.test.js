@@ -3,10 +3,13 @@ import { render, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom';
-import currency from '../../../__mocks__/currency'
-import UserTransactionsList, { renderTransactions } from "../Components/UserTransactions/UserTransactions";
+import currency from '../../../__mocks__/currency';
+import UserTransactionsList, {
+  renderTransactions
+} from '../Components/UserTransactions/UserTransactions';
 import { AllEventLogsQuery } from '../../../graphql/queries';
 import { TransactionRevert } from '../graphql/payment_mutations';
+import MockedThemeProvider from '../../__mocks__/mock_theme';
 
 describe('Render Transaction', () => {
   const transaction = {
@@ -29,17 +32,17 @@ describe('Render Transaction', () => {
   };
 
   const menuData = {
-    menuList: [{ content: 'Example', isAdmin: true, color: '', handleClick: jest.fn()}],
+    menuList: [{ content: 'Example', isAdmin: true, color: '', handleClick: jest.fn() }],
     handleTransactionMenu: jest.fn(),
     anchorEl: null,
     open: true,
     userType: 'admin',
     handleClose: jest.fn()
-  }
+  };
 
   const userData = {
     name: 'test-name'
-  }
+  };
 
   it('should render the Transaction item component', async () => {
     const mock = [
@@ -49,13 +52,13 @@ describe('Render Transaction', () => {
           variables: {
             subject: ['payment_update'],
             refId: transaction.id,
-            refType: 'Payments::WalletTransaction',
+            refType: 'Payments::WalletTransaction'
           }
         },
         result: {
           data: {
-            result : {
-              id: "385u9432n384ujdf",
+            result: {
+              id: '385u9432n384ujdf',
               createdAt: '2021-03-03T12:40:38Z',
               refId: transaction.id,
               refType: 'Payments::WalletTransaction',
@@ -75,14 +78,14 @@ describe('Render Transaction', () => {
         request: {
           query: TransactionRevert,
           variables: {
-            id: transaction.id,
+            id: transaction.id
           }
         },
         result: {
           data: {
             transactionRevert: {
               transaction: {
-                id: "385u9432n384ujdf",
+                id: '385u9432n384ujdf',
                 status: 'paid'
               }
             }
@@ -93,7 +96,16 @@ describe('Render Transaction', () => {
     const container = render(
       <MockedProvider mocks={mock} addTypename={false}>
         <BrowserRouter>
-          <UserTransactionsList transaction={transaction} currencyData={currency} userType='admin' userData={userData} refetch={() => {}} balanceRefetch={() => {}} />
+          <MockedThemeProvider>
+            <UserTransactionsList
+              transaction={transaction}
+              currencyData={currency}
+              userType="admin"
+              userData={userData}
+              refetch={() => {}}
+              balanceRefetch={() => {}}
+            />
+          </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>
     );
@@ -102,10 +114,10 @@ describe('Render Transaction', () => {
       expect(container.queryByTestId('date')).toBeInTheDocument();
       expect(container.queryByTestId('recorded')).toBeInTheDocument();
       expect(container.queryByTestId('description')).toBeInTheDocument();
-  
+
       fireEvent.click(container.queryAllByTestId('menu')[0])
       expect(container.queryByText("common:menu.revert_transaction")).toBeInTheDocument();
-  
+
       fireEvent.click(container.queryByText("common:menu.revert_transaction"))
       expect(container.queryByText("dialogs.dialog_action")).toBeInTheDocument();
     }, 10)
@@ -115,7 +127,16 @@ describe('Render Transaction', () => {
     const container = render(
       <MockedProvider>
         <BrowserRouter>
-          <UserTransactionsList transaction={{}} currencyData={currency} userType='admin' userData={userData} refetch={() => {}} balanceRefetch={() => {}} />
+          <MockedThemeProvider>
+            <UserTransactionsList
+              transaction={{}}
+              currencyData={currency}
+              userType="admin"
+              userData={userData}
+              refetch={() => {}}
+              balanceRefetch={() => {}}
+            />
+          </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>
     );
@@ -124,14 +145,14 @@ describe('Render Transaction', () => {
   });
 
   it('should check if renderTransaction works as expected', () => {
-      const results = renderTransactions(transaction, currency, menuData)
-      expect(results).toBeInstanceOf(Object);
-      expect(results).toHaveProperty('Date');
-      expect(results).toHaveProperty('Recorded by');
-      expect(results).toHaveProperty('Payment Type');
-      expect(results).toHaveProperty('Amount Paid');
+    const results = renderTransactions(transaction, currency, menuData);
+    expect(results).toBeInstanceOf(Object);
+    expect(results).toHaveProperty('Date');
+    expect(results).toHaveProperty('Recorded by');
+    expect(results).toHaveProperty('Payment Type');
+    expect(results).toHaveProperty('Amount Paid');
 
-      const statusContainer = render(results.Date)
-      expect(statusContainer.queryByTestId('date').textContent).toContain('2021-03-01')
+    const statusContainer = render(results.Date);
+    expect(statusContainer.queryByTestId('date').textContent).toContain('2021-03-01');
   });
 });

@@ -1,12 +1,17 @@
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react';
-import CustomSpeedDial from "../../buttons/SpeedDial";
+import CustomSpeedDial from '../../buttons/SpeedDial';
 import '@testing-library/jest-dom/extend-expect';
+import MockedThemeProvider from '../../../modules/__mocks__/mock_theme';
 
 describe('Speed dial component', () => {
   it('should render the speed dial button when no actions provided', () => {
     const mock = jest.fn();
-    const btn = render(<CustomSpeedDial actions={[]} handleAction={mock} />);
+    const btn = render(
+      <MockedThemeProvider>
+        <CustomSpeedDial actions={[]} handleAction={mock} />
+      </MockedThemeProvider>
+    );
     expect(btn.queryByTestId('add_icon')).toBeInTheDocument();
 
     fireEvent.click(btn.queryByTestId('speed_dial_btn'));
@@ -21,7 +26,11 @@ describe('Speed dial component', () => {
         name: 'First Icon'
       }
     ];
-    const btn = render(<CustomSpeedDial actions={actions} handleAction={mock} />);
+    const btn = render(
+      <MockedThemeProvider>
+        <CustomSpeedDial actions={actions} handleAction={mock} />
+      </MockedThemeProvider>
+    );
     expect(btn.queryByTestId('add_icon')).not.toBeInTheDocument();
     expect(btn.queryAllByTestId('speed_dial_action')[0]).toBeInTheDocument();
     expect(btn.queryByTestId('close_icon')).toBeInTheDocument();

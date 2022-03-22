@@ -66,7 +66,7 @@ export default function FormPropertyAction({ propertyId, editMode, formId, refet
         handleClose={handleModal}
         open={modal.isOpen}
         title={t('actions.update_form_property')}
-        color="default"
+        color="primary"
       >
         <Container>
           <FormPropertyCreateForm

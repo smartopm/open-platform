@@ -48,9 +48,9 @@ describe('QueryBuilder component', () => {
 
     const rendered = render(
       <Context.Provider value={userMock}>
-        <QueryBuilder {...props} addRuleLabel="somemock" />
+        <QueryBuilder {...props} addRuleLabel="Add Filter" />
       </Context.Provider>
     );
-    expect(rendered.queryByText('Role')).toBeInTheDocument();
+    expect(rendered.queryByText('Add Filter')).toBeInTheDocument();
   });
 });
