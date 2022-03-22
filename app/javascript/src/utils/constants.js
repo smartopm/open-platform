@@ -58,7 +58,8 @@ export const userType = {
   visitor: 'Visitor',
   custodian: 'Store Custodian',
   site_worker: 'Site Worker',
-  lead: 'Lead'
+  lead: 'Lead',
+  marketing_manager: 'Marketing Manager'
 };
 
 export const colorPallete = [
@@ -759,7 +760,8 @@ export const allUserTypes = [
   'site_manager',
   'security_supervisor',
   'consultant',
-  'developer'
+  'developer',
+  'marketing_manager'
 ];
 
 export const siteManagers = [

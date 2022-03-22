@@ -372,7 +372,8 @@
     "security_supervisor": "Security Supervisor",
     "consultant": "Consultant",
     "developer": "Developer",
-    "lead": "Lead"
+    "lead": "Lead",
+    "marketing_manager": "Marketing Manager"
   },
   "table_headers": {
     "date_created": "Date Created",

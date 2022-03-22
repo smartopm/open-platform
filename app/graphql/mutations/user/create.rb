@@ -39,7 +39,7 @@ module Mutations
         security_supervisor: { except: %i[state user_type phone_number email] },
         consultant: { except: %i[state user_type phone_number email] },
         developer: { except: %i[state user_type phone_number email] },
-
+        marketing_manager: { except: %i[state user_type phone_number email] },
       }.freeze
 
       def resolve(vals)

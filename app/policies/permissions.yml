@@ -671,3 +671,84 @@ site_manager:
   event_log:
     permissions:
       - can_fetch_logbook_events
+
+marketing_manager:
+  forms:
+    permissions:
+      - can_see_menu_item
+      - can_create_category
+      - can_update_category
+      - can_delete_category
+      - can_create_form
+      - can_update_form
+      - can_create_form_properties
+      - can_update_form_properties
+      - can_delete_form_properties
+      - can_create_form_user
+      - can_update_form_user
+      - can_update_form_user_status
+      - can_create_user_form_properties
+      - can_update_user_form_properties
+      - can_view_form_entries
+      - can_view_form_form_submissions
+      - can_view_form_user_properties
+      - can_fill_a_form
+      - can_edit_a_form
+      - can_view_own_forms
+      - can_access_forms
+      - can_view_form_user
+  email_template:
+    permissions:
+      - can_see_menu_item
+      - can_access_email_template
+      - can_create_email_template
+      - can_update_email_template
+      - can_view_email_template_variables
+      - can_view_email_templates
+      - can_view_email_template
+  user:
+    permissions:
+      - can_get_users_lite
+  profile:
+    permissions:
+      - can_see_menu_item
+  logout:
+    permissions:
+      - can_see_menu_item
+  communication:
+    permissions:
+      - can_see_menu_item
+  community:
+    permissions:
+      - can_see_menu_item
+  discussion:
+    permissions:
+      - can_create_discussion
+      - can_update_discussion
+      - can_access_all_discussions
+      - can_see_menu_item
+  comment:
+    permissions:
+      - can_fetch_all_comments
+  business:
+    permissions:
+      - can_see_menu_item
+      - can_access_business
+      - can_create_business
+      - can_delete_business
+      - can_update_business
+  campaign:
+    permissions:
+      - can_see_menu_item
+      - can_access_campaign
+      - can_create_campaign
+      - can_delete_campaign
+      - can_create_campaign_through_users
+      - can_remove_campaign_label
+      - can_update_campaign
+      - can_list_campaigns
+      - can_get_campaign_details
+  dashboard:
+    permissions:
+      - can_access_dashboard
+      - can_see_menu_item
