@@ -8,20 +8,20 @@ module Types
   class UserType < Types::BaseObject
     field :id, ID, null: false
     field :community, Types::CommunityType, null: false
-    field :email, String, null: true, visible: { roles: %i[admin security_guard
+    field :email, String, null: true, visible: { roles: %i[admin security_guard custodian
                                                            security_supervisor], user: :id }
     field :name, String, null: false
     field :address, String, null: true
     field :image_url, String, null: true
     field :user_type, String, null: true
-    field :vehicle, String, null: true, visible: { roles: %i[admin security_guard
+    field :vehicle, String, null: true, visible: { roles: %i[admin security_guard custodian
                                                              security_supervisor], user: :id }
     field :request_reason, String, null: true,
-                                   visible: { roles: %i[admin security_guard security_supervisor],
+                                   visible: { roles: %i[admin security_guard security_supervisor custodian],
                                               user: :id }
-    field :phone_number, String, null: true, visible: { roles: %i[admin security_guard client
+    field :phone_number, String, null: true, visible: { roles: %i[admin security_guard client custodian
                                                                   security_supervisor], user: :id }
-    field :request_note, String, null: true, visible: { roles: %i[admin security_guard
+    field :request_note, String, null: true, visible: { roles: %i[admin security_guard custodian
                                                                   security_supervisor], user: :id }
     field :role_name, String, null: true, visible: { roles: %i[admin security_guard custodian
                                                                security_supervisor], user: :id }
@@ -54,7 +54,7 @@ module Types
                                                                   user: :id }
     field :substatus_logs, [Types::SubstatusLogType], null: true, visible: { roles: %i[admin],
                                                                              user: :id }
-    field :ext_ref_id, String, null: true, visible: { roles: %i[admin], user: :id }
+    field :ext_ref_id, String, null: true, visible: { roles: %i[admin custodian], user: :id }
     field :payment_plan, Boolean, null: false
     field :permissions, [Types::PermissionType], null: false
     field :invites, [Types::InviteType], null: true, visible: { roles: %i[admin], user: :id }
