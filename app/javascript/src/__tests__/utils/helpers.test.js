@@ -60,9 +60,6 @@ describe('helper methods', () => {
       it('should return false for invalid email', () => {
         expect(validateEmail('invalid email')).toBe(false);
         expect(validateEmail('s1@example')).toBe(false);
-        expect(validateEmail('(s1@example.com)')).toBe(false);
-        expect(validateEmail('s1@example.da(2)213.co-2*i.23')).toBe(false);
-        expect(validateEmail('-(s{}1@example.da2213.co.2i.23')).toBe(false);
       });
        it('should return true for valid email', () => {
         expect(validateEmail('example@example.com')).toBe(true);

@@ -1,4 +1,3 @@
-/* eslint-disable max-statements */
 import React from 'react';
 import { fireEvent, render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
@@ -39,21 +38,20 @@ describe('UserForm Component', () => {
       expect(container.queryByTestId('primary_phone').value).toContain('090909090909');
 
       fireEvent.change(container.queryByTestId('email'), {
-        target: { value: 'abc@def.jkl.232' }
+        target: { value: 'abc@def.jkl' }
       });
 
-    expect(container.queryByTestId('email').value).toContain('abc@def.jkl.232');
+      expect(container.queryByTestId('email').value).toContain('abc@def.jkl');
 
       fireEvent.change(container.queryByTestId('address'), {
         target: { value: '24th street, west' }
       });
 
-    expect(container.queryByTestId('address').value).toContain('24th street, west');
-    // when we hit submit button, it should get disabled
-    fireEvent.submit(container.queryByTestId('submit-form'));
-    expect(container.queryByTestId('submit_btn')).not.toBeDisabled();
-    expect(container.queryByText('common:errors.invalid_email')).toBeInTheDocument();
-  });
+      expect(container.queryByTestId('address').value).toContain('24th street, west');
+      // when we hit submit button, it should get disabled
+      fireEvent.submit(container.queryByTestId('submit-form'));
+      expect(container.queryByTestId('submit_btn')).toBeDisabled();
+    });
   });
   it('should contain referral form when referring', async () => {
     const props = { isEditing: false, isFromRef: true };
@@ -95,5 +93,5 @@ describe('UserForm Component', () => {
         info: '0233082'
       });
     });
-  })
+  });
 });
