@@ -17,9 +17,11 @@ module Types
     field :vehicle, String, null: true, visible: { roles: %i[admin security_guard custodian
                                                              security_supervisor], user: :id }
     field :request_reason, String, null: true,
-                                   visible: { roles: %i[admin security_guard security_supervisor custodian],
+                                   visible: { roles: %i[admin security_guard
+                                                        security_supervisor custodian],
                                               user: :id }
-    field :phone_number, String, null: true, visible: { roles: %i[admin security_guard client custodian
+    field :phone_number, String, null: true, visible: { roles: %i[admin security_guard
+                                                                  client custodian
                                                                   security_supervisor], user: :id }
     field :request_note, String, null: true, visible: { roles: %i[admin security_guard custodian
                                                                   security_supervisor], user: :id }

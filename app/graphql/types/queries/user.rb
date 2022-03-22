@@ -207,7 +207,7 @@ module Types::Queries::User
           I18n.t('errors.user.not_found')
   end
 
-  def user_activity_point 
+  def user_activity_point
     user = context[:current_user]
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless user
 
@@ -219,6 +219,7 @@ module Types::Queries::User
     unless user_permissions_check?('can_get_user_count')
       raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
     end
+
     allowed_users = Users::User.allowed_users(context[:current_user])
     if query.present? && query.include?('date_filter')
       allowed_users.heavy_search(query).size

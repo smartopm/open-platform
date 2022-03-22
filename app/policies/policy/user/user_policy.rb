@@ -17,7 +17,8 @@ module Policy
           'prospective_client' => { 'ability_list' => ['admin@can_see?'], 'can_see_self' => true },
           'client' => { 'ability_list' => ['admin@can_see?'], 'can_see_self' => true },
           'custodian' => {
-            'ability_list' => ['contractor@can_see?', 'security_guard@can_see?', 'custodian@can_see?', 'site_worker@can_see?'],
+            'ability_list' => ['contractor@can_see?', 'security_guard@can_see?',
+                               'custodian@can_see?', 'site_worker@can_see?'],
             'can_see_self' => true,
           },
           'security_guard' => { 'ability_list' => ['*@*'], 'can_see_self' => true },
