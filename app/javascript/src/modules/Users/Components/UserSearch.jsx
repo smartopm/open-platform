@@ -25,9 +25,7 @@ export default function UserSearch({ userData, update, required }) {
       <Autocomplete
         style={{ width: "100%" }}
         id="user-input"
-        inputProps={{
-          'data-testid': 'search-user'
-        }}
+        data-testid="user-input"
         options={data?.usersLite || []}
         getOptionLabel={option => option?.name}
         getOptionSelected={(option, value) => option.name === value.name}

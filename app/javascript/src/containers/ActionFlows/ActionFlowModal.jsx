@@ -43,7 +43,8 @@ import {
   capitalize,
   sentencizeAction,
   objectAccessor,
-  setObjectValue
+  setObjectValue,
+  ifNotTest
 } from '../../utils/helpers';
 import { dateWidget, NotesCategories, defaultBusinessReasons } from '../../utils/constants';
 import UserAutoResult from '../../shared/UserAutoResult';
@@ -312,7 +313,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
       </DialogTitle>
       <DialogContent>
         <TextField
-          autoFocus
+          autoFocus={ifNotTest()}
           margin="dense"
           id="title"
           label={t('common:form_fields.title')}

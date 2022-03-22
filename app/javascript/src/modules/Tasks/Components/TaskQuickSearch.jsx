@@ -56,7 +56,7 @@ export default function TaskQuickSearch({ filterTasks, currentTile }){
 
 
   return (
-    <>
+    <div data-testid='task-quick-search'>
       <ButtonGroup color="primary" ref={anchorRef} aria-label="outlined primary button group split button">
         <Button onClick={handleClick} disabled={!currentTile} style={matches ? {fontSize: '9px'} : {}}>{!currentTile ?  t('task.quick_search') : objectAccessor(tiles, currentTile)}</Button>
         <Button
@@ -98,7 +98,7 @@ export default function TaskQuickSearch({ filterTasks, currentTile }){
           </Grow>
           )}
       </Popper>
-    </>
+    </div>
   )
 }
 

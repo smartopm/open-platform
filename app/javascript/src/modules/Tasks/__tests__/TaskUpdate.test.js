@@ -70,7 +70,8 @@ describe('TaskUpdate Component', () => {
                   id: '567age',
                   name: 'John',
                   imageUrl: '',
-                  avatarUrl: ''
+                  avatarUrl: '',
+                  userType: 'admin'
                 }
               ],
               assigneeNotes: [
@@ -103,7 +104,7 @@ describe('TaskUpdate Component', () => {
     );
 
     await waitFor(() => {
-      expect(container.queryAllByTestId('task-info-menu')[0]).toBeInTheDocument();
+      expect(container.getByTestId('task-info-section')).toBeInTheDocument();
     }, 10);
   });
 

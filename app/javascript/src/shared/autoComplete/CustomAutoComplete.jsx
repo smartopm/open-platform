@@ -40,12 +40,13 @@ export default function CustomAutoComplete({users, onChange, isMultiple, label }
         renderInput={(params) => (
           <TextField
             {...params}
+            fullWidth
             variant="outlined"
             label={label}
             placeholder={t('form_placeholders.search_user')}
             onChange={event => setSearchUser(event.target.value)}
             onKeyDown={() => searchUser()}
-            fullWidth
+            data-testid="auto-complete-input"
           />
         )}
       />
@@ -63,5 +64,3 @@ CustomAutoComplete.propTypes = {
   label: PropTypes.string.isRequired
   // placeholder: PropTypes.string,
 }
-
-

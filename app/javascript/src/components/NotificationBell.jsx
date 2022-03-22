@@ -52,7 +52,7 @@ export default function NotificationBell({ user }) {
         )}`}
         onClick={e => updateNotification(e)}
       >
-        <NotificationsIcon color="primary" />
+        <NotificationsIcon color="primary" data-testid="notification_icon" />
       </Badge>
       <Popover open={open} anchorEl={anchorEl} onClose={handlePopClose}>
         <Typography align="center" className={`${css(styles.popup)}`}>

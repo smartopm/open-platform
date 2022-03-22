@@ -365,7 +365,7 @@ export default function UsersList() {
       '98a8a9ba-0123-4456-b89a-b16e721c8cd0': {
         type: 'rule',
         properties: {
-          field: 'role',
+          field: 'Role',
           operator: 'select_equals',
           value: [''],
           valueSrc: ['value'],

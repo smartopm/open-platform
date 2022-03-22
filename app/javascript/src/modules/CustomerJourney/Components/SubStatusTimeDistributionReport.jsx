@@ -16,7 +16,7 @@ export default function SubStatusTimeDistributionReport({ userSubStatus, subStat
     <>
       {data && Object.entries(userSubStatus).map(([userSubStatusKey, subStatus]) => (
         <Fragment key={userSubStatusKey}>
-          <div className={matches && classes.statusSection}>
+          <div className={matches ? classes.statusSection : ''}>
             <div className={classes.titleSection}>
               <h5 className={classes.title}>{subStatus}</h5>
             </div>

@@ -8,7 +8,7 @@ namespace :db do
       permissions = YAML.load_file("#{::Rails.root}/app/policies/permissions.yml")
       permission_list = permissions.deep_transform_keys!(&:to_sym)
       valid_modules = %w[gate_access user dashboard profile guest_list
-                         discussion entry_request logout note].freeze
+                         discussion entry_request logout note event_log].freeze
       Role.where(community_id: nil).find_each do |role|
         puts "Adding/updating permissions for #{role.name}"
         valid_modules.each do |valid_module|

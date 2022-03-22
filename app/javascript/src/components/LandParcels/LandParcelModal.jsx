@@ -28,7 +28,7 @@ import LandParcelMergeModal from './LandParcelMergeModal';
 import useDebounce from '../../utils/useDebounce';
 import UserAutoResult from '../../shared/UserAutoResult';
 import { dateToString } from '../DateContainer';
-import { capitalize, titleize, objectAccessor } from '../../utils/helpers';
+import { capitalize, titleize, objectAccessor, ifNotTest } from '../../utils/helpers';
 
 export default function LandParcelModal({
   open,
@@ -372,7 +372,7 @@ export default function LandParcelModal({
         <TabPanel value={tabValue} index="Details">
           <div className={classes.parcelForm}>
             <TextField
-              autoFocus
+              autoFocus={ifNotTest()}
               margin="dense"
               id="parcel-number"
               inputProps={{

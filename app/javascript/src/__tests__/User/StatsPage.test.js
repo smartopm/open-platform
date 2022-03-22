@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/react-testing';
@@ -9,11 +9,15 @@ jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 describe('Stat Page component', () => {
   it('should render correctly', async () => {
     render(
-      <MockedProvider>
+      <MockedProvider mocks={[]}>
         <BrowserRouter>
           <StatsPage />
         </BrowserRouter>
       </MockedProvider>
     );
+    await waitFor(() => {
+      expect(screen.queryByText('Customer Journey Stage')).toBeInTheDocument()
+      expect(screen.queryByTestId('loader')).toBeInTheDocument()
+    })
   });
 });

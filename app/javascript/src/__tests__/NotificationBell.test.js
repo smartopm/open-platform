@@ -1,5 +1,5 @@
 import React from 'react'
-import { render } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import { BrowserRouter } from 'react-router-dom/'
 import { MockedProvider } from '@apollo/react-testing'
 import NotificationBell from '../components/NotificationBell'
@@ -7,21 +7,21 @@ import '@testing-library/jest-dom/extend-expect'
 
 describe('The Notification bell component', () => {
   const data = {
-    myTasksCount: '1'
+    myTasksCount: 1
   }
 
   const messageCount = {
-    msgNotificationCount: '1'
+    msgNotificationCount: 1
   }
   const history = {
-    push: jest.fn
+    push: jest.fn()
   }
   const user = {
       userTyepe: 'admin',
       id: 'jehfie'
   }
 
-  it('render without error', () => {
+  it('render without error', async () => {
     render(
       <MockedProvider>
         <BrowserRouter>
@@ -34,5 +34,6 @@ describe('The Notification bell component', () => {
         </BrowserRouter>
       </MockedProvider>
     )
+    await waitFor(() => expect(screen.queryByTestId('notification_icon')).toBeInTheDocument())
   })
 })

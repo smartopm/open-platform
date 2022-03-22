@@ -1,6 +1,6 @@
 describe('Gate Access', () => {
   it('allows residents to invite guests', () => {
-    cy.factory('community', { name: 'Nkwashi' }).then(community => {
+    cy.factory('community', { name: 'DoubleGDP' }).then(community => {
       cy.factory('role', {
         name: 'resident'
       }).then(residentRole => {
@@ -46,7 +46,6 @@ describe('Gate Access', () => {
       });
     });
 
-    
     // Login: as a resident
     cy.login('2347065834175');
 
@@ -65,7 +64,7 @@ describe('Gate Access', () => {
     // using element's coordinates to pick the time, seems like the only possible way to pick time
     cy.get('.MuiPickersClock-squareMask').click(250, 120);
     cy.get('.MuiPickersClock-squareMask').click(250, 60);
-    cy.get('.MuiPickersClock-squareMask').type('{enter}')  
+    cy.get('.MuiPickersClock-squareMask').type('{enter}');
     cy.wait(1000);
 
     cy.get('[data-testid=time_picker]')
@@ -73,44 +72,55 @@ describe('Gate Access', () => {
       .click();
     cy.get('.MuiPickersClock-squareMask').click(250, 180);
     cy.get('.MuiPickersClock-squareMask').click(250, 80);
-    cy.get('.MuiPickersClock-squareMask').type('{enter}') 
+    cy.get('.MuiPickersClock-squareMask').type('{enter}');
     cy.wait(500);
 
     // Find an existing visitor
-    cy.get('[data-testid=search]').type('Joe doe').type("{enter}")
+    cy.get('[data-testid=search]')
+      .type('Joe doe')
+      .type('{enter}');
     cy.wait(2000);
     cy.contains('Joe doe').should('exist');
-    cy.get('[data-testid=invite_guest_btn]').click()
-    
+    cy.get('[data-testid=invite_guest_btn]').click();
+
     // Add a new visitor who doesn't exist yet
-    cy.get('[data-testid=search]').type('Mary dinna').type("{enter}")
+    cy.get('[data-testid=search]')
+      .type('Mary dinna')
+      .type('{enter}');
     cy.wait(2000);
     cy.contains('User Not Found - Please Add New Guest').should('exist');
-    cy.get('[data-testid=guest_entry_first_name]').type('Mary')
+    cy.get('[data-testid=guest_entry_first_name]').type('Mary');
     cy.wait(500);
-    cy.get('[data-testid=guest_entry_last_name]').type('dinna')
+    cy.get('[data-testid=guest_entry_last_name]').type('dinna');
     cy.wait(500);
-    cy.get('[data-testid=guest_entry_phone_number]').type('010203040506')
-    cy.get('[data-testid=add_remove_guest_btn]').click()
-    
-    // invite a company
-    cy.get('[data-testid=company_mode]').click()
-    cy.get('[data-testid=company_name]').type('General Traders co. Ltd')
-    cy.get('[data-testid=guest_entry_phone_number]').eq(0).type('00103040606')
-    cy.get('[data-testid=add_remove_guest_btn]').eq(0).click()
+    cy.get('[data-testid=guest_entry_phone_number]').type('010203040506');
+    cy.get('[data-testid=add_remove_guest_btn]').click();
 
-    cy.get('[data-testid=invite_button]').click()
+    // invite a company
+    cy.get('[data-testid=company_mode]').click();
+    cy.get('[data-testid=company_name]').type('General Traders co. Ltd');
+    cy.get('[data-testid=guest_entry_phone_number]')
+      .eq(0)
+      .type('00103040606');
+    cy.get('[data-testid=add_remove_guest_btn]')
+      .eq(0)
+      .click();
+
+    cy.get('[data-testid=invite_button]').click();
     cy.wait(2000);
-    
+
     cy.contains('Mary dinna').should('exist');
     cy.contains('Joe doe').should('exist');
     cy.contains('General Traders co. Ltd').should('exist');
-    
-    
+
     // Cancel an invitation
-    cy.get('[data-testid=guest_invite_menu]').eq(0).click()
+    cy.get('[data-testid=guest_invite_menu]')
+      .eq(0)
+      .click();
     cy.wait(200);
-    cy.get('[data-testid=menu_item]').eq(0).click()
+    cy.get('[data-testid=menu_item]')
+      .eq(0)
+      .click();
     cy.wait(2000);
     cy.contains('Cancelled').should('exist');
   });

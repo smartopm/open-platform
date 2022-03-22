@@ -18,7 +18,7 @@ import DatePickerDialog from '../../../../components/DatePickerDialog';
 import { paymentPlanStatus, paymentPlanFrequency, subscriptionPlanType } from '../../../../utils/constants';
 import { PaymentPlanCreateMutation } from '../../../../graphql/mutations/land_parcel';
 import { dateToString } from '../../../../components/DateContainer';
-import { capitalize, formatError, titleize } from '../../../../utils/helpers';
+import { capitalize, formatError, ifNotTest, titleize } from '../../../../utils/helpers';
 import SwitchInput from '../../../Forms/components/FormProperties/SwitchInput';
 
 const initialPlanState = {
@@ -212,7 +212,7 @@ export default function PaymentPlanModal({
         />
         <div>
           <TextField
-            autoFocus
+            autoFocus={ifNotTest()}
             margin="normal"
             id="frequency"
             aria-label="frequency"
@@ -279,7 +279,7 @@ export default function PaymentPlanModal({
           </Typography>
         )}
         <TextField
-          autoFocus
+          autoFocus={ifNotTest()}
           margin="normal"
           id="status"
           aria-label="status"
@@ -300,7 +300,7 @@ export default function PaymentPlanModal({
           ))}
         </TextField>
         <TextField
-          autoFocus
+          autoFocus={ifNotTest()}
           margin="normal"
           id="purchase_plan"
           aria-label="purchase_plan"
@@ -332,7 +332,7 @@ export default function PaymentPlanModal({
           />
         </div>
         <TextField
-          autoFocus
+          autoFocus={ifNotTest()}
           margin="normal"
           id="plot"
           aria-label="plot"

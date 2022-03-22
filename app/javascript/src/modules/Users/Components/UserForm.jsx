@@ -412,6 +412,7 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
                     inputProps={{ 'aria-label': 'requestReason' }}
                     className={`${css(styles.selectInput)}`}
                   >
+                    <MenuItem value="" />
                     {Object.keys(reasons).map(key => (
                       <MenuItem key={key} value={key}>
                         {t(`user_reasons.${key}`)}
@@ -432,8 +433,6 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
                     required
                     className={`${css(styles.selectInput)}`}
                   >
-
-
                     {
                     communityRoles ?
                       communityRoles.map(key => (
@@ -460,6 +459,7 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
                     inputProps={{ 'aria-label': 'state' }}
                     className={`${css(styles.selectInput)}`}
                   >
+                    <MenuItem value="" />
                     {Object.keys(userState).map(key => (
                       <MenuItem key={key} value={key}>
                         {t(`user_states.${key}`)}

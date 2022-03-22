@@ -7,7 +7,7 @@ import Paper from '@material-ui/core/Paper';
 import { useMutation } from 'react-apollo';
 import { LabelEdit, LabelCreate } from '../../../graphql/mutations';
 import { colorPallete } from '../../../utils/constants';
-import { formatError } from '../../../utils/helpers';
+import { formatError, ifNotTest } from '../../../utils/helpers';
 import { CustomizedDialogs } from '../../../components/Dialog';
 import MessageAlert from '../../../components/MessageAlert';
 
@@ -124,7 +124,7 @@ export default function EditModal({ open, handleClose, data, refetch, type }) {
               style={{ height: '40px', width: '40px', margin: '5px', backgroundColor: `${color}` }}
             />
             <TextField
-              autoFocus
+              autoFocus={ifNotTest()}
               margin="dense"
               id="color"
               type="text"

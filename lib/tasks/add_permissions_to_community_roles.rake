@@ -20,7 +20,8 @@ namespace :db do
                          entry_request feedback forms invoice label land_parcel login
                          message settings showroom subscription_plan substatus_log
                          temparature timesheet transaction upload user gate_access dashboard
-                         guest_list profile logout communication community_settings sos].freeze
+                         guest_list profile logout communication community_settings sos
+                         event_log].freeze
       communities = permission_list.keys
       communities.each do |community_name|
         next unless valid_community_names.include? community_name

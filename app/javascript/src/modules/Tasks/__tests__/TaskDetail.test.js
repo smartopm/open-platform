@@ -34,7 +34,7 @@ const props = {
   users: [],
   currentUser: { name: 'tester', id: '6523gvhvg', userType: 'admin' },
   historyData: [
-    { action: 'create', noteEntityType: 'Comments::NoteComment', user: { name: 'name' }, createdAt: new Date() }
+    { id: "543rfsdf34-543rfsdf34-543rfsdf34", action: 'create', noteEntityType: 'Comments::NoteComment', user: { name: 'name' }, createdAt: new Date() }
   ],
   historyRefetch: jest.fn(),
   authState: {},
@@ -79,10 +79,10 @@ describe('task form component', () => {
       );
     });
 
-    const taskInfoMenu = container.queryAllByTestId('task-info-menu')[0];
-    expect(taskInfoMenu).toBeInTheDocument();
+    const remindMeLaterButton = container.getByTestId('set-reminder-button');
+    expect(remindMeLaterButton).toBeInTheDocument();
 
-    fireEvent.click(taskInfoMenu);
+    fireEvent.click(remindMeLaterButton);
 
     expect(container.queryByText('task:task.task_reminder_in_1_hr')).toBeInTheDocument();
     expect(container.queryByText('task:task.task_reminder_in_24_hr')).toBeInTheDocument();

@@ -72,6 +72,7 @@ export default function TaskForm({ close, refetch, users, assignUser, parentTask
         fullWidth
         rows={2}
         margin="normal"
+        data-testid="task-body"
         inputProps={{
           'aria-label': 'task_body'
         }}
@@ -91,6 +92,7 @@ export default function TaskForm({ close, refetch, users, assignUser, parentTask
         fullWidth
         rows={2}
         margin="normal"
+        data-testid="task-description"
         inputProps={{
           'aria-label': 'task_description'
         }}
@@ -106,6 +108,7 @@ export default function TaskForm({ close, refetch, users, assignUser, parentTask
           value={taskType}
           onChange={event => setTaskType(event.target.value)}
           name="taskType"
+          data-testid="task-type"
           fullWidth
         >
           {Object.entries(NotesCategories).map(([key, val]) => (
@@ -146,6 +149,7 @@ export default function TaskForm({ close, refetch, users, assignUser, parentTask
           aria-label="task_cancel"
           color="secondary"
           onClick={close}
+          data-testid="task-cancel-button"
           className={`${css(discussStyles.cancelBtn)}`}
         >
           {t('common:form_actions.cancel')}
@@ -156,6 +160,7 @@ export default function TaskForm({ close, refetch, users, assignUser, parentTask
           color="primary"
           disabled={loading}
           aria-label="task_submit"
+          data-testid="task-submit-button"
           className={`${css(discussStyles.submitBtn)}`}
         >
           {loading ? t('common:form_actions.creating_task') : t('common:form_actions.create_task')}

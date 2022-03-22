@@ -121,6 +121,9 @@ Ciudad Morazán:
     logout:
       permissions:
         - can_see_menu_item
+    event_log:
+      permissions:
+        - can_fetch_logbook_events
 
 Tilisi:
   consultant:
@@ -321,6 +324,9 @@ DoubleGDP:
     logout:
       permissions:
         - can_see_menu_item
+    event_log:
+      permissions:
+        - can_fetch_logbook_events
   consultant:
     note:
       permissions:

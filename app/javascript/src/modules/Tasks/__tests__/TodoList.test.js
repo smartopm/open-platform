@@ -27,7 +27,7 @@ const props = {
   currentUser: authState.user,
   handleModal: mck,
   saveDate: mck,
-  selectedDate: new Date(Date.now()).toISOString(),
+  selectedDate: new Date(),
   handleDateChange: mck,
   location: 'tasks'
 };
@@ -53,7 +53,7 @@ const mocks = [
 ]
 
 describe('Test the Todo page', () => {
-  it('renders loader', () => {
+  it('renders loader', async () => {
     render(
       <Context.Provider value={authState}>
         <MockedProvider mocks={mocks} addTypename>
@@ -63,11 +63,10 @@ describe('Test the Todo page', () => {
         </MockedProvider>
       </Context.Provider>
     );
-
-    expect(screen.getByTestId('loader')).toBeInTheDocument();
+    await waitFor(() =>  expect(screen.getByTestId('loader')).toBeInTheDocument())
   });
 
-  it('mounts the TodoList component', () => {
+  it('mounts the TodoList component', async () => {
     render(
       <Context.Provider value={authState}>
         <MockedProvider mocks={mocks} addTypename>
@@ -78,10 +77,12 @@ describe('Test the Todo page', () => {
       </Context.Provider>
     )
 
-    expect(screen.queryByTestId('create_task_btn')).toBeTruthy()
-    expect(screen.queryByTestId('todo-container')).toBeTruthy()
-    expect(screen.queryByTestId('search')).toBeTruthy()
-    expect(screen.queryByTestId('filter_container')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.queryByTestId('create_task_btn')).toBeTruthy()
+      expect(screen.queryByTestId('todo-container')).toBeTruthy()
+      expect(screen.queryByTestId('search')).toBeTruthy()
+      expect(screen.queryByTestId('filter_container')).toBeInTheDocument();
+    })
   });
 
   it('renders todo list section', async () => {

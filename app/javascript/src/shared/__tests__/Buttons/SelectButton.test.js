@@ -63,7 +63,7 @@ describe('should render Select Button component', () => {
     ];
     const container = render(
       <SelectButon
-        buttonText="some text"
+        defaultButtonText="some text"
         open
         handleClose={jest.fn()}
         options={options}

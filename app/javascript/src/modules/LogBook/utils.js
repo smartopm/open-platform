@@ -1,8 +1,9 @@
 /* eslint-disable max-statements */
 /* eslint-disable import/prefer-default-export */
 import moment from 'moment-timezone'
-import { updateDateWithTime } from '../../components/DateContainer';
+import { dateToString, updateDateWithTime } from '../../components/DateContainer';
 import { getWeekDay } from '../../utils/dateutil';
+import { objectAccessor } from '../../utils/helpers';
 
 export function checkInValidRequiredFields(formData, requiredFields) {
   const values = requiredFields.map(field => formData[String(field)]);
@@ -139,4 +140,22 @@ export function paginate(type, history, tabValue, value) {
   } else if (type === 'next') {
     history.push(`/logbook?tab=${tabValue}&offset=${value.offset + value.limit}`);
   }
+}
+
+
+/**
+ * Formats and structures the date to be downloaded in csv
+ * @param {[object]} csvData 
+ * @param {object} subjects 
+ * @returns {[object]}
+ */
+ export function formatCsvData(csvData, subjects) {
+  return csvData.map(val => ({
+    ...val,
+    logDate: dateToString(val.createdAt, 'YYYY-MM-DD HH:mm'),
+    guest: val.entryRequest?.name || val.data.ref_name || val.data.visitor_name || val.data.name,
+    type: objectAccessor(subjects, val.subject),
+    extraNote: val.data.note || '-',
+    reason: val.entryRequest?.reason
+  }));
 }

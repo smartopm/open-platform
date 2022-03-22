@@ -156,7 +156,13 @@
     "date_of_visit": "Date of Visit: {{date}}",
     "multiple": "Multiple",
     "invite_history": "Invite History",
-    "no_hosts": "There are no invitations for this user."
+    "no_hosts": "There are no invitations for this user.",
+    "start_date": "Start Date",
+    "end_date": "End Date",
+    "from": "From",
+    "to": "To",
+    "gate_flow_report": "Gate Flow Report",
+    "export_data_successfully": "Data successfully exported, click the download button to save"
   },
   "date_picker": {
     "ok_label": "Ok",
@@ -231,5 +237,16 @@
     "no_image": "No Images Attached",
     "add": "Add",
     "no_video": "No Video Attached"
+  },
+  "csv": {
+    "date": "Date",
+    "type": "Type",
+    "acting_user": "Acting User",
+    "guest": "Guest",
+    "extra_note": "Extra Note",
+    "reason": "Reason",
+    "visitor_entry": "Granted Access",
+    "observation_log": "Observation",
+    "user_entry": "Scanned Entry"
   }
 }

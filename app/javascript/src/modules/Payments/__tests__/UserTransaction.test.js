@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom';
@@ -98,17 +98,17 @@ describe('Render Transaction', () => {
       </MockedProvider>
     );
 
-    expect(container.queryByTestId('date')).toBeInTheDocument();
-    expect(container.queryByTestId('recorded')).toBeInTheDocument();
-    expect(container.queryByTestId('description')).toBeInTheDocument();
-
-    fireEvent.click(container.queryAllByTestId('menu')[0])
-    expect(container.queryByText("common:menu.revert_transaction")).toBeInTheDocument();
-
-    fireEvent.click(container.queryByText("common:menu.revert_transaction"))
-    expect(container.queryByText("dialogs.dialog_action")).toBeInTheDocument();
-
-    fireEvent.click(container.queryByTestId("confirm_action"))
+    await waitFor(() => {
+      expect(container.queryByTestId('date')).toBeInTheDocument();
+      expect(container.queryByTestId('recorded')).toBeInTheDocument();
+      expect(container.queryByTestId('description')).toBeInTheDocument();
+  
+      fireEvent.click(container.queryAllByTestId('menu')[0])
+      expect(container.queryByText("common:menu.revert_transaction")).toBeInTheDocument();
+  
+      fireEvent.click(container.queryByText("common:menu.revert_transaction"))
+      expect(container.queryByText("dialogs.dialog_action")).toBeInTheDocument();
+    }, 10)
   });
 
   it('should render the Transaction item component without transactions', async () => {

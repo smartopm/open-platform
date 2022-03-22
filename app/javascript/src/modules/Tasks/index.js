@@ -37,6 +37,9 @@ export default {
   // To be deprecated in favour of wrapping in AccessCheck component that checks user permissions
   accessibleBy: [],
   moduleName: currentModule,
+  styleProps: {
+    className: 'tasks-menu-item'
+  },
   subRoutes: [
     {
       routeProps: {

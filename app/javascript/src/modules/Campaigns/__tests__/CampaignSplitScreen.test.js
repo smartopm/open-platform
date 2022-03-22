@@ -49,7 +49,7 @@ describe('It should render the campaign split screen', () => {
               campaignId="23692382"
               campaignLength={10}
               refetch={jest.fn()}
-              setShow={jest.fn}
+              setShow={jest.fn()}
             />
           </MockedThemeProvider>
         </BrowserRouter>

@@ -16,7 +16,7 @@ import { Context as AuthStateContext } from '../../containers/Provider/AuthState
 import useTimer from '../../utils/customHooks'
 import { CurrentCommunityQuery } from '../../modules/Community/graphql/community_query'
 import { Spinner } from '../../shared/Loading'
-import { objectAccessor } from '../../utils/helpers';
+import { ifNotTest, objectAccessor } from '../../utils/helpers';
 
 const randomCodeData = [1, 2, 3, 4, 5, 6, 7]
 
@@ -131,7 +131,7 @@ export default function ConfirmCodeScreen({ match }) {
               maxLength="1"
               type="tel"
               // eslint-disable-next-line jsx-a11y/no-autofocus
-              autoFocus
+              autoFocus={ifNotTest()}
               // eslint-disable-next-line security/detect-object-injection
               ref={objectAccessor(elementsRef.current, item)}
               className={`${css(styles.newInput)} code-input-${index}`}

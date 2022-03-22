@@ -27,7 +27,7 @@ export default function CampaignStatCard({ data }) {
           <Typography variant="h4">{data.totalScheduled}</Typography>
         </Card>
       </Grid>
-      <Grid lg={4} md={4} sm={4} xs={4} className={classes.card} data-testid="total-sent">
+      <Grid item lg={4} md={4} sm={4} xs={4} className={classes.card} data-testid="total-sent">
         <Card
           styles={{ padding: '20px 0', borderRadius: '5px', color: 'white', height: '150px' }}
           contentStyles={{
@@ -42,7 +42,7 @@ export default function CampaignStatCard({ data }) {
           <Typography variant="h4">{data.totalSent}</Typography>
         </Card>
       </Grid>
-      <Grid lg={4} md={4} sm={4} xs={4} data-testid="click-rate">
+      <Grid item lg={4} md={4} sm={4} xs={4} data-testid="click-rate">
         <Card
           styles={{ padding: '20px 0', borderRadius: '5px', color: 'white', height: '150px' }}
           contentStyles={{
