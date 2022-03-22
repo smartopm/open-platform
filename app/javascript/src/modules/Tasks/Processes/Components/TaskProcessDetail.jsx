@@ -15,11 +15,12 @@ import {
   objectAccessor,
   useParamsQuery,
   removeNewLines,
-  sanitizeText
+  sanitizeText,
+  formatError
 } from '../../../../utils/helpers';
 import ProjectProcesses from './ProjectProcesses';
 import ProjectProcessesSplitView from './ProjectProcessesSplitView';
-import ErrorPage from '../../../../components/Error';
+import CenteredContent from '../../../../shared/CenteredContent';
 import { Spinner } from '../../../../shared/Loading';
 import { SubTasksQuery, TaskQuery } from '../../graphql/task_queries';
 import { hrefsExtractor } from '../utils';
@@ -47,9 +48,11 @@ export default function TaskProcessDetail() {
     }
   );
 
-  const { data: projectItem, error: projectError, loading: projectLoading } = useQuery(
+  const formUserId = projectData?.task?.formUserId;
+  const { data: projectItem } = useQuery(
     ProjectQuery, {
-      variables: { formUserId: projectData?.task?.formUserId },
+      skip: !formUserId,
+      variables: { formUserId },
       fetchPolicy: 'cache-and-network'
     }
   );
@@ -108,7 +111,9 @@ export default function TaskProcessDetail() {
   }
 
   if (projectDataLoading || subStepsLoading) return <Spinner />;
-  if (projectDataError) return <ErrorPage title={projectDataError.message} />;
+  if (projectDataError) {
+    return <CenteredContent>{formatError(projectDataError.message)}</CenteredContent>
+  };
 
   return (
     <div>
