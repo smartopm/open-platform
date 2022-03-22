@@ -26,6 +26,7 @@ import { SubTasksQuery, TaskQuery } from '../../graphql/task_queries';
 import { hrefsExtractor } from '../utils';
 import MessageAlert from '../../../../components/MessageAlert';
 import { ProjectQuery, ProjectCommentsQuery } from '../graphql/process_queries';
+import ProjectDocument from './ProjectDocument'
 
 export default function TaskProcessDetail() {
   const limit = 20;
@@ -140,7 +141,7 @@ export default function TaskProcessDetail() {
       />
       <TaskContextProvider>
         <Grid container data-testid="process-detail-section" style={!matches ? {padding: '0 56px'} : {padding: '0 10px'}}>
-          <Grid item md={5} xs={12}>
+          <Grid item md={tabValue === 2 ? 12 : 5} xs={12}>
             <Grid container>
               <Grid item md={11} xs={10} data-testid="project-title" style={{paddingTop: '20px'}}>
                 <Typography variant="h4">
@@ -189,6 +190,13 @@ export default function TaskProcessDetail() {
                   : { fontSize: '12px' }}
                 {...a11yProps(1)}
               />
+              <StyledTab
+                label={t('task:processes.documents')}
+                style={tabValue ===  objectAccessor(TAB_VALUES, 'documents') ?
+                  { fontSize: '12px', borderBottom: 'solid 1px' }
+                  : { fontSize: '12px' }}
+                {...a11yProps(1)}
+              />
             </StyledTabs>
 
             <TabPanel value={tabValue} index={0}>
@@ -205,6 +213,9 @@ export default function TaskProcessDetail() {
                 commentsRefetch={commentsRefetch}
                 commentsFetchMore={commentsFetchMore}
               />
+            </TabPanel>
+            <TabPanel value={tabValue} index={2}>
+              <ProjectDocument taskId={taskId} />
             </TabPanel>
           </Grid>
           <Grid item md={7} xs={12}>
