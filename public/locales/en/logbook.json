@@ -69,7 +69,9 @@
     "user_granted_access": "User Granted Access",
     "total_in_city": "Total in City",
     "total_entries": "Total Entries",
-    "total_exits": "Total Exits"
+    "total_exits": "Total Exits",
+    "last_7_days": "Last 7 days",
+    "last_30_days": "Last 30 days"
   },
   "log_title": {
     "visitor": "Visitor",

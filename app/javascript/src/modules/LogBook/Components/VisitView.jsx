@@ -1,4 +1,3 @@
-/* eslint-disable complexity */
 /* eslint-disable no-nested-ternary */
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
@@ -31,11 +30,17 @@ export default function VisitView({
   handleAddObservation,
   observationDetails
 }) {
-  const [statsType, setStatType] = useState('allVisits');
+  const initialFilter = {type: 'allVisits', duration: 'today'}
+  const [statsTypeFilter, setStatType] = useState({...initialFilter});
   const [loadGuests, { data, loading: guestsLoading, refetch, error }] = useLazyQuery(
     CurrentGuestEntriesQuery,
     {
-      variables: { offset: query.length ? 0 : offset, limit, query: query.trim(), type: statsType },
+      variables: {
+        offset: query.length ? 0 : offset,
+        limit,
+        query: query.trim(),
+        type: statsTypeFilter.type
+      },
       fetchPolicy: 'cache-and-network'
     }
   );
@@ -83,12 +88,17 @@ export default function VisitView({
   }, [tabValue, loadGuests, query, offset]);
 
 
-  function handleFilterData(type) {
-    setStatType(type)
+  function handleFilterData(filter, filterType = 'entryType') {
+    const isDuration = filterType === 'duration';
+    setStatType(current => ({
+      ...statsTypeFilter,
+      type: isDuration ? current.type : filter,
+      duration: isDuration ? filter : current.duration
+    }));
   }
 
   function handleFilters(){
-    setStatType("")
+    setStatType(initialFilter)
   }
 
   return (
@@ -98,9 +108,10 @@ export default function VisitView({
         shouldRefetch={observationDetails.refetch}
         isSmall={matches}
         handleFilter={handleFilterData}
+        duration={statsTypeFilter.duration}
       />
       <SearchFilterList 
-        filters={[statsType]}
+        filters={[statsTypeFilter.type, statsTypeFilter.duration]}
         handleClearFilters={handleFilters}
       />
       <br />

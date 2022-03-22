@@ -62,8 +62,8 @@ export const GuestEntryQuery = gql`
 
 
 export const LogbookStatsQuery = gql`
-  query stats {
-    communityPeopleStatistics {
+  query stats($duration: String) {
+    communityPeopleStatistics(duration: $duration) {
       peoplePresent
       peopleEntered
       peopleExited

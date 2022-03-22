@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import Typography from '@mui/material/Typography';
 import { useLazyQuery } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
+import { MenuItem, TextField } from '@mui/material';
 import CenteredContent from '../../../shared/CenteredContent';
 import { LogbookStatsQuery } from '../graphql/guestbook_queries';
 import { Spinner } from '../../../shared/Loading';
@@ -11,9 +12,10 @@ import CardComponent from '../../../shared/Card';
 import useLogbookStyles from '../styles';
 
 
-export default function LogbookStats({ tabValue, shouldRefetch, isSmall, handleFilter }) {
+export default function LogbookStats({ tabValue, shouldRefetch, isSmall, handleFilter, duration }) {
   const { t } = useTranslation('logbook');
   const [loadStats, { data, loading }] = useLazyQuery(LogbookStatsQuery, {
+    variables: { duration },
     fetchPolicy: 'cache-and-network'
   });
   const classes = useLogbookStyles();
@@ -23,6 +25,10 @@ export default function LogbookStats({ tabValue, shouldRefetch, isSmall, handleF
       loadStats();
     }
   }, [tabValue, loadStats, shouldRefetch]);
+
+  function handleDurationFilter(event){
+    handleFilter(event.target.value, 'duration')
+  }
 
   const statsData = [
     {
@@ -45,9 +51,39 @@ export default function LogbookStats({ tabValue, shouldRefetch, isSmall, handleF
     }
   ];
 
+  const filterOptions = [
+    {
+      title: t('logbook.today'),
+      value: 'today'
+    },
+    {
+      title: t('logbook.last_7_days'),
+      value: 'past7Days'
+    },
+    {
+      title: t('logbook.last_30_days'),
+      value: 'past30Days'
+    },
+  ]
+
   if (loading) return <Spinner />;
   return (
     <Grid container spacing={isSmall ? 1 : 4}>
+      <Grid item xs={12}>
+        <TextField
+          id="choose_logbook_stat_duration"
+          select
+          label="Timeframe"
+          value={duration}
+          onChange={handleDurationFilter}
+        >
+          {filterOptions.map((option) => (
+            <MenuItem key={option.value} value={option.value}>
+              {option.title}
+            </MenuItem>
+          ))}
+        </TextField>
+      </Grid>
       {statsData.map(stat => (
         <Grid item xs={4} key={stat.id}>
           <CardComponent 
@@ -76,4 +112,5 @@ LogbookStats.propTypes = {
   shouldRefetch: PropTypes.bool.isRequired,
   isSmall: PropTypes.bool.isRequired,
   handleFilter: PropTypes.func.isRequired,
+  duration: PropTypes.string.isRequired,
 };
