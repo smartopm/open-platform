@@ -53,3 +53,10 @@ global.document.createRange = () => ({
     ownerDocument: document
   }
 });
+global.File = class MockFile {
+  constructor(parts, filename, type) {
+    this.parts = parts;
+    this.name = filename;
+    this.type = type;
+  }
+};

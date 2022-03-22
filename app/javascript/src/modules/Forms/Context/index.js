@@ -34,7 +34,6 @@ export default function FormContextProvider({ children }) {
   const [createFormUser] = useMutation(FormUserCreateMutation);
   const { t } = useTranslation('form');
   const signature = useFileUpload({ client: useApolloClient() });
-  console.log('Testing Mutuba', signature);
 
   useEffect(() => {
     if (

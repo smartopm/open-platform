@@ -58,12 +58,10 @@ const STATE = {
   ERROR: 'ERROR'
 };
 
-const fileTypes = ['.pdf', '.dwg', '.shp', '.shf', '.dbf', '.zip'];
-
 const initialState = {
   file: null,
   uploading: false,
-  error: null,
+
   checksum: null,
   byteSize: null,
   contentType: null,
@@ -108,8 +106,7 @@ const reducer = (state, action) => {
     case STATE.FILE_UPLOAD:
       return { ...state, status: action.next };
     case STATE.ERROR:
-      console.log('In state object', action);
-      return { ...state, status: STATE.ERROR, error: action.error };
+      return { ...state, status: STATE.ERROR };
     default:
       return state;
   }
@@ -120,11 +117,6 @@ const useFileUpload = ({ client: apolloClient, maxSize }) => {
   maxSize = maxSize || 500;
 
   const onChange = async (file, compressImage = true) => {
-    // verifyFileType(file); // make a call here
-
-    if (file) {
-      return verifyFileType(file);
-    }
     const checkFileType = file['type'].split('/')[0] === 'image';
     if (!checkFileType || !compressImage) {
       return startUpload(file);
@@ -149,16 +141,6 @@ const useFileUpload = ({ client: apolloClient, maxSize }) => {
       current: STATE.FILE_INIT,
       file: file,
       filename: file.name || 'unknown.webm'
-    });
-  };
-
-  const verifyFileType = file => {
-    console.log('Testing verifyFileType', file);
-    // if (file['type'].split('/')[0] !== 'image' || !fileTypes.includes(file.type))
-    dispatch({
-      ...state,
-      current: STATE.ERROR,
-      error: 'Wrong file type'
     });
   };
 
@@ -217,8 +199,7 @@ const useFileUpload = ({ client: apolloClient, maxSize }) => {
   return {
     ...state,
     onChange,
-    startUpload,
-    verifyFileType
+    startUpload
   };
 };
 

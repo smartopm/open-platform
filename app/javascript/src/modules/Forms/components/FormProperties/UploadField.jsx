@@ -29,6 +29,7 @@ export default function UploadField({
           accept="image/*, .pdf, .dwg, .shp, .shf, .dbf, .zip"
           name={`image-${detail.label}`}
           id={`button-${detail.id}`}
+          data-testid="form-file-input"
           aria-label={`upload_field_${detail.label}`}
           capture
           onChange={upload}
@@ -37,6 +38,7 @@ export default function UploadField({
         />
         <Button
           variant="text"
+          data-testid="form-file-upload-btn"
           component="span"
           aria-label={`upload_button_${detail.label}`}
           disabled={editable}
