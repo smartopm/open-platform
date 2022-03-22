@@ -26,6 +26,15 @@ export const ProjectsQuery = gql`
   ${TasksFragment.task}
 `
 
+export const ProjectQuery = gql`
+query Project($formUserId: ID!) {
+  project(formUserId: $formUserId) {
+    id
+    body
+  }
+}
+`
+
 export const ClientAssignedProjectsQuery = gql`
   query GetClientAssignedProjects($offset: Int, $limit: Int) {
     clientAssignedProjects(offset: $offset, limit: $limit) {

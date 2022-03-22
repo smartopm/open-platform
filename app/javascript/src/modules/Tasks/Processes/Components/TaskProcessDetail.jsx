@@ -20,11 +20,11 @@ import {
 import ProjectProcesses from './ProjectProcesses';
 import ProjectProcessesSplitView from './ProjectProcessesSplitView';
 import ErrorPage from '../../../../components/Error';
-import Loading from '../../../../shared/Loading';
+import { Spinner } from '../../../../shared/Loading';
 import { SubTasksQuery, TaskQuery } from '../../graphql/task_queries';
 import { hrefsExtractor } from '../utils';
 import MessageAlert from '../../../../components/MessageAlert';
-import { ProjectCommentsQuery } from '../graphql/process_queries';
+import { ProjectQuery, ProjectCommentsQuery } from '../graphql/process_queries';
 
 export default function TaskProcessDetail() {
   const limit = 20;
@@ -44,6 +44,13 @@ export default function TaskProcessDetail() {
       variables: { taskId },
       fetchPolicy: 'cache-and-network',
       errorPolicy: 'all'
+    }
+  );
+
+  const { data: projectItem, error: projectError, loading: projectLoading } = useQuery(
+    ProjectQuery, {
+      variables: { formUserId: projectData?.task?.formUserId },
+      fetchPolicy: 'cache-and-network'
     }
   );
 
@@ -100,7 +107,7 @@ export default function TaskProcessDetail() {
     window.document.getElementById('anchor-section').scrollIntoView()
   }
 
-  if (projectDataLoading || subStepsLoading) return <Loading />;
+  if (projectDataLoading || subStepsLoading) return <Spinner />;
   if (projectDataError) return <ErrorPage title={projectDataError.message} />;
 
   return (
@@ -121,7 +128,7 @@ export default function TaskProcessDetail() {
                     data-testid='task-title'
                     // eslint-disable-next-line react/no-danger
                     dangerouslySetInnerHTML={{
-                      __html: sanitizeText(removeNewLines(projectData?.task.body))
+                      __html: sanitizeText(removeNewLines(projectItem?.project?.body))
                     }}
                   />
                 </Typography>
