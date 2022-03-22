@@ -55,7 +55,6 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
       }
     });
   }
-  // console.log('Testing', formPropertiesData);
   function handleMessageAlertClose(_event, reason) {
     if (reason === 'clickaway') {
       return;
