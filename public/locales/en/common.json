@@ -270,7 +270,8 @@
     "export_data": "Export Data",
     "lead_details": "Lead Details",
     "show": "Show",
-    "statistics": "Statistics"
+    "statistics": "Statistics",
+    "timeframe": "Timeframe"
   },
   "menu": {
     "invoice": "Invoice",

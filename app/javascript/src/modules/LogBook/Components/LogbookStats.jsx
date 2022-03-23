@@ -79,13 +79,13 @@ export default function LogbookStats({ tabValue, shouldRefetch, isSmall, handleF
           <TextField
             id="choose_logbook_stat_duration"
             select
-            label="Timeframe"
+            label={t('common:misc.timeframe')}
             value={!duration ?  'All' : duration}
             size="small"
             onChange={handleDurationFilter}
           >
-            {filterOptions.map((option) => (
-              <MenuItem key={option.value} value={option.value}>
+            {filterOptions.map((option, i) => (
+              <MenuItem data-testid={`${i}-${option.title}`} key={option.value} value={option.value}>
                 {
                  `${t('common:misc.show')} ${option.title}`
                 }
