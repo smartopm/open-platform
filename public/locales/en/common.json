@@ -269,7 +269,8 @@
     "user_detail": "User Detail",
     "export_data": "Export Data",
     "lead_details": "Lead Details",
-    "show": "Show"
+    "show": "Show",
+    "statistics": "Statistics"
   },
   "menu": {
     "invoice": "Invoice",

@@ -30,8 +30,8 @@ export default function VisitView({
   handleAddObservation,
   observationDetails
 }) {
-  const initialFilter = {type: 'allVisits', duration: 'today'}
-  const [statsTypeFilter, setStatType] = useState({...initialFilter});
+  const initialFilter = { type: 'allVisits', duration: 'today' };
+  const [statsTypeFilter, setStatType] = useState({ ...initialFilter });
   const [loadGuests, { data, loading: guestsLoading, refetch, error }] = useLazyQuery(
     CurrentGuestEntriesQuery,
     {
@@ -89,7 +89,6 @@ export default function VisitView({
     }
   }, [tabValue, loadGuests, query, offset]);
 
-
   function handleFilterData(filter, filterType = 'entryType') {
     const isDuration = filterType === 'duration';
     setStatType(current => ({
@@ -99,18 +98,20 @@ export default function VisitView({
     }));
   }
 
-  function handleFilters(){
-    setStatType(initialFilter)
+  function handleFilters() {
+    setStatType(initialFilter);
   }
 
   const filterTypes = {
     peopleEntered: t('logbook.total_entries'),
     peopleExited: t('logbook.total_exits'),
     peoplePresent: t('logbook.total_in_city'),
-    today:  t('logbook.today'),
-    past7Days:  t('logbook.last_7_days'),
-    past30Days:  t('logbook.last_30_days'),
-  }
+    today: t('logbook.today'),
+    past7Days: t('logbook.last_7_days'),
+    past30Days: t('logbook.last_30_days')
+  };
+
+  const filters = [filterTypes[statsTypeFilter.type], filterTypes[statsTypeFilter.duration], query]
 
   return (
     <div style={{ marginTop: '20px' }}>
@@ -121,8 +122,9 @@ export default function VisitView({
         handleFilter={handleFilterData}
         duration={statsTypeFilter.duration}
       />
-      <SearchFilterList 
-        filters={[filterTypes[statsTypeFilter.type], filterTypes[statsTypeFilter.duration], query]}
+
+      <SearchFilterList
+        filters={filters}
         handleClearFilters={handleFilters}
       />
       <br />

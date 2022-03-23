@@ -69,20 +69,24 @@ export default function LogbookStats({ tabValue, shouldRefetch, isSmall, handleF
   if (loading) return <Spinner />;
   return (
     <Grid container spacing={isSmall ? 1 : 4}>
-      <Grid item xs={12}>
-        <TextField
-          id="choose_logbook_stat_duration"
-          select
-          label="Timeframe"
-          value={duration}
-          onChange={handleDurationFilter}
-        >
-          {filterOptions.map((option) => (
-            <MenuItem key={option.value} value={option.value}>
-              {`${t('common:misc.show')} ${option.title}`}
-            </MenuItem>
+      <Grid container alignItems='center' spacing={2}>
+        <Grid item>{t('common:misc.statistics')}</Grid>
+        <Grid item>
+          <TextField
+            id="choose_logbook_stat_duration"
+            select
+            label="Timeframe"
+            value={duration}
+            size="small"
+            onChange={handleDurationFilter}
+          >
+            {filterOptions.map((option) => (
+              <MenuItem key={option.value} value={option.value}>
+                {`${t('common:misc.show')} ${option.title}`}
+              </MenuItem>
           ))}
-        </TextField>
+          </TextField>
+        </Grid>
       </Grid>
       {statsData.map(stat => (
         <Grid item xs={4} key={stat.id}>
