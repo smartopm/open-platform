@@ -6,7 +6,10 @@ import PropTypes from 'prop-types'
 
 export default function SearchFilterList({ filters, handleClearFilters }) {
   const { t } = useTranslation('search');
-  // if(!filters.length || filters.)
+  const hasFilters = filters.every(filter => Boolean(filter))
+  console.log(hasFilters)
+  console.log(filters)
+  if(!filters?.length) return null
   return (
     <Grid container spacing={2} alignItems="center">
       <Grid item>
