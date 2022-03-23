@@ -6,6 +6,8 @@ import { BrowserRouter } from 'react-router-dom';
 import routeData from 'react-router';
 import { SubTasksQuery, TaskQuery } from '../../graphql/task_queries';
 import taskMock from '../../__mocks__/taskMock';
+import { Context } from '../../../../containers/Provider/AuthStateProvider';
+import authState from '../../../../__mocks__/authstate';
 import TaskProcessDetail from '../Components/TaskProcessDetail';
 import { ProjectQuery } from '../graphql/process_queries';
 
@@ -58,11 +60,13 @@ describe('TaskProcessDetail Component', () => {
 
   it('renders loader', async () => {
     render(
-      <MockedProvider mocks={mocks} addTypename={false}>
-        <BrowserRouter>
-          <TaskProcessDetail />
-        </BrowserRouter>
-      </MockedProvider>
+      <Context.Provider value={authState}>
+        <MockedProvider mocks={mocks} addTypename={false}>
+          <BrowserRouter>
+            <TaskProcessDetail />
+          </BrowserRouter>
+        </MockedProvider>
+      </Context.Provider>
     );
     await waitFor(() => expect(screen.getByTestId('loader')).toBeInTheDocument());
   });
