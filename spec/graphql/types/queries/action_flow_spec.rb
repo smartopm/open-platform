@@ -117,7 +117,6 @@ RSpec.describe Types::Queries::ActionFlow do
                                            current_user: admin,
                                            site_community: admin.community,
                                          }).as_json
-        expect(result.dig('data', 'actions')).to include('Email')
         expect(result.dig('data', 'actions')).to include('Notification')
         expect(result.dig('data', 'actions')).to include('Task')
       end
