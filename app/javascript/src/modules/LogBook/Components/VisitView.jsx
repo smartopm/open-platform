@@ -122,12 +122,10 @@ export default function VisitView({
         handleFilter={handleFilterData}
         duration={statsTypeFilter.duration}
       />
-
       <SearchFilterList
         filters={filters}
         handleClearFilters={handleFilters}
       />
-      <br />
       {error && <CenteredContent>{formatError(error.message)}</CenteredContent>}
       {guestsLoading ? (
         <Spinner />
