@@ -26,7 +26,7 @@ import Loading from '../../../shared/Loading';
 import FormOptionInput, {
   FormOptionWithOwnActions
 } from '../../Forms/components/FormOptionInput';
-import { saniteError, validateEmail } from '../../../utils/helpers';
+import { saniteError } from '../../../utils/helpers';
 import { ModalDialog } from '../../../components/Dialog';
 import CenteredContent from '../../../components/CenteredContent';
 import { UpdateUserMutation } from '../../../graphql/mutations/user';
@@ -64,7 +64,6 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
   const [isModalOpen, setDenyModal] = React.useState(false);
   const [modalAction, setModalAction] = React.useState('grant');
   const [msg, setMsg] = React.useState('');
-  const [emailError, setEmailValidationError] = React.useState(null);
   const [selectedDate, handleDateChange] = React.useState(null);
   const [showResults, setShowResults] = React.useState(false);
   const [submitting, setSubmitting] = React.useState(false);
@@ -79,8 +78,6 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
   });
   const [userImage, setUserImage] = React.useState(null);
 
-
-  // TODO: Refactor this
   const communityRoles = authState?.user?.community?.name === "Tilisi" ?  authState?.user?.community?.roles.filter(e => e !== 'client') : authState?.user?.community?.roles
 
   function uploadUserImage(image) {
@@ -90,12 +87,7 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
 
   function handleSubmit(event) {
     event.preventDefault();
-
-    if(!validateEmail(data.email)){
-      setEmailValidationError(t('common:errors.invalid_email'));
-      return
-    }
-
+    setSubmitting(true);
     const secondaryInfo = {
       phone: phoneNumbers,
       email: emails,
@@ -126,7 +118,6 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
       }, 3000);
     }
 
-    setSubmitting(true);
     createOrUpdate(values)
       // eslint-disable-next-line no-shadow
       .then(({ data }) => {
@@ -335,12 +326,11 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
             className="form-control"
             label={t('common:form_fields.primary_email')}
             name="email"
+            type="email"
             onChange={handleInputChange}
             value={data.email || ''}
             inputProps={{ 'data-testid': 'email' }}
             disabled={!isFromRef && !isAdmin}
-            error={!!emailError}
-            helperText={emailError}
           />
         </div>
 
@@ -433,16 +423,13 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
                     required
                     className={`${css(styles.selectInput)}`}
                   >
-                    {
-                    communityRoles ?
-                      communityRoles.map(key => (
-                        <MenuItem key={key} value={key}>
-                          {t(`user_types.${key}`)}
-                        </MenuItem>
-                      ))
-                      // Fix test errors
-                      : <MenuItem />
-                  }
+                    <MenuItem value="" />
+                    {communityRoles &&
+                   communityRoles.map(key => (
+                     <MenuItem key={key} value={key}>
+                       {t(`user_types.${key}`)}
+                     </MenuItem>
+                    ))}
 
                   </TextField>
                 </div>

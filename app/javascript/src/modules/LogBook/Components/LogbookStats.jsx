@@ -13,7 +13,7 @@ import useLogbookStyles from '../styles';
 
 
 export default function LogbookStats({ tabValue, shouldRefetch, isSmall, handleFilter, duration }) {
-  const { t } = useTranslation('logbook');
+  const { t } = useTranslation(['logbook', 'common']);
   const [loadStats, { data, loading }] = useLazyQuery(LogbookStatsQuery, {
     variables: { duration },
     fetchPolicy: 'cache-and-network'
@@ -47,7 +47,7 @@ export default function LogbookStats({ tabValue, shouldRefetch, isSmall, handleF
       title: t('logbook.total_in_city'),
       count: data?.communityPeopleStatistics.peoplePresent || 0,
       id: 'total_in_city',
-      action: () => handleFilter('allVisits')
+      action: () => handleFilter('peoplePresent')
     }
   ];
 
@@ -79,7 +79,7 @@ export default function LogbookStats({ tabValue, shouldRefetch, isSmall, handleF
         >
           {filterOptions.map((option) => (
             <MenuItem key={option.value} value={option.value}>
-              {option.title}
+              {`${t('common:misc.show')} ${option.title}`}
             </MenuItem>
           ))}
         </TextField>

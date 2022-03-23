@@ -112,7 +112,6 @@ export function saniteError(requiredFields, errorMessage) {
     return `${cleanFields.join(" or ")} value is required`;
   }
   // if we don't know the error
-  // TODO: Return the original error of what went wrong
   if (!errorMessage.includes("GraphQL error")) {
     return "Unexpected error happened, Please try again";
   }
@@ -190,7 +189,7 @@ export function getJustLabels(labels) {
  * @returns {boolean} true or false
  */
 export function validateEmail(email) {
-  const re = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+  const re = /\S+@\S+\.\S+/;
   return re.test(String(email).toLowerCase());
 }
 
