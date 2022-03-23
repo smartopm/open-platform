@@ -118,7 +118,6 @@ export default function VisitView({
       <LogbookStats
         tabValue={tabValue}
         shouldRefetch={observationDetails.refetch}
-        isSmall={matches}
         handleFilter={handleFilterData}
         duration={statsTypeFilter.duration}
       />

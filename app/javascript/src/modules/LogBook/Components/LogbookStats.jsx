@@ -12,7 +12,7 @@ import CardComponent from '../../../shared/Card';
 import useLogbookStyles from '../styles';
 
 
-export default function LogbookStats({ tabValue, shouldRefetch, isSmall, handleFilter, duration }) {
+export default function LogbookStats({ tabValue, shouldRefetch, handleFilter, duration, isSmall }) {
   const { t } = useTranslation(['logbook', 'common']);
   const [loadStats, { data, loading }] = useLazyQuery(LogbookStatsQuery, {
     variables: { duration },
@@ -94,6 +94,7 @@ export default function LogbookStats({ tabValue, shouldRefetch, isSmall, handleF
           </TextField>
         </Grid>
       </Grid>
+      <br />
       {statsData.map(stat => (
         <Grid item xs={4} key={stat.id}>
           <CardComponent 
