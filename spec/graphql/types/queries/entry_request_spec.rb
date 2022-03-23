@@ -135,8 +135,8 @@ RSpec.describe Types::Queries::EntryRequest do
     end
     let(:current_guest_list_query) do
       <<~GQL
-        query currentGuests($type: String){
-          currentGuests(type: $type) {
+        query currentGuests($type: String, $duration: String){
+          currentGuests(type: $type, duration: $duration) {
             id
             name
             guest {
@@ -451,6 +451,20 @@ RSpec.describe Types::Queries::EntryRequest do
       context 'when type is for people exited' do
         it 'returns the list of people exited from the community' do
           variables = { type: 'peopleExited' }
+          result = DoubleGdpSchema.execute(current_guest_list_query,
+                                           variables: variables,
+                                           context: {
+                                             current_user: admin,
+                                             site_community: current_user.community,
+                                           }).as_json
+          expect(result['errors']).to be_nil
+          expect(result.dig('data', 'currentGuests').size).to eql 1
+        end
+      end
+
+      context 'when no type is provided but duration is provided' do
+        it 'returns list of entry requests created in the given duration' do
+          variables = { duration: 'past7Days' }
           result = DoubleGdpSchema.execute(current_guest_list_query,
                                            variables: variables,
                                            context: {
