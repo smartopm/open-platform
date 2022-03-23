@@ -30,7 +30,7 @@ export default function VisitView({
   handleAddObservation,
   observationDetails
 }) {
-  const initialFilter = { type: 'allVisits', duration: 'today' };
+  const initialFilter = { type: 'allVisits', duration: 'All' };
   const [statsTypeFilter, setStatType] = useState({ ...initialFilter });
   const [loadGuests, { data, loading: guestsLoading, refetch, error }] = useLazyQuery(
     CurrentGuestEntriesQuery,

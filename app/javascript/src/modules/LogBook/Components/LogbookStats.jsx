@@ -53,6 +53,10 @@ export default function LogbookStats({ tabValue, shouldRefetch, isSmall, handleF
 
   const filterOptions = [
     {
+      title: t('common:misc.all'),
+      value: 'All'
+    },
+    {
       title: t('logbook.today'),
       value: 'today'
     },
