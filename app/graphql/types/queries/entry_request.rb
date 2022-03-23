@@ -44,6 +44,7 @@ module Types::Queries::EntryRequest
       argument :limit, Integer, required: false
       argument :query, String, required: false
       argument :type, String, required: false
+      argument :duration, String, required: false
     end
 
     field :community_people_statistics, Types::PeopleStatisticType, null: true do
@@ -113,7 +114,7 @@ module Types::Queries::EntryRequest
       .with_attached_video
   end
 
-  def current_guests(offset: 0, limit: 50, query: nil, type: 'allVisits')
+  def current_guests(offset: 0, limit: 50, query: nil, type: 'allVisits', duration: nil)
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless can_view_entry_requests?
 
     entry_requests = context[:site_community]
@@ -123,7 +124,7 @@ module Types::Queries::EntryRequest
                      .limit(limit).offset(offset)
                      .order(granted_at: :desc)
 
-    entry_requests = filter_current_guests(entry_requests, type, query)
+    entry_requests = filter_current_guests(entry_requests, type, duration)
     search_current_guests(entry_requests, query)
   end
 
@@ -167,8 +168,8 @@ module Types::Queries::EntryRequest
                                { name: { matches: query&.strip } }])
   end
 
-  def filter_current_guests(entry_requests, type, query)
-    duration = duration_query?(query) ? query : 'today'
+  def filter_current_guests(entry_requests, type, duration)
+    duration = 'today' if duration.blank? && valid_type?(type)
     case type
     when 'peopleEntered'
       people_entered(entry_requests, duration)
@@ -177,34 +178,42 @@ module Types::Queries::EntryRequest
     when 'peoplePresent'
       people_present(entry_requests, duration)
     else
-      entry_requests
+      all_people(entry_requests, duration)
     end
   end
 
   def search_current_guests(entry_requests, query)
-    return entry_requests if query.blank? || duration_query?(query)
+    return entry_requests if query.blank?
 
     entry_requests.search(or: [{ query: (query.presence || '.') }, { name: { matches: query } }])
   end
 
-  def duration_query?(query)
-    %w[today past7Days past30Days].include?(query)
+  def valid_type?(type)
+    %w[peopleEntered peopleExited peoplePresent].include?(type)
   end
 
-  def people_present(entry_requests, duration = 'today')
+  def people_present(entry_requests, duration)
     people_entered(entry_requests, duration).where(exited_at: nil)
   end
 
-  def people_entered(entry_requests, duration = 'today')
+  def people_entered(entry_requests, duration)
     start_time = duration_based_start_time(duration)
     entry_requests
       .where('granted_at >= ? AND granted_at <= ?', start_time, end_time)
   end
 
-  def people_exited(entry_requests, duration = 'today')
+  def people_exited(entry_requests, duration)
     start_time = duration_based_start_time(duration)
     entry_requests
       .where('exited_at IS NOT NULL AND exited_at >= ? AND exited_at <= ?', start_time, end_time)
+  end
+
+  def all_people(entry_requests, duration)
+    return entry_requests if duration.blank?
+
+    start_time = duration_based_start_time(duration)
+    entry_requests
+      .where('created_at >= ? AND created_at <= ?', start_time, end_time)
   end
 
   def duration_based_start_time(duration)

@@ -268,7 +268,10 @@
     "resolve_comments": "Resolve Comments",
     "user_detail": "User Detail",
     "export_data": "Export Data",
-    "lead_details": "Lead Details"
+    "lead_details": "Lead Details",
+    "show": "Show",
+    "statistics": "Statistics",
+    "timeframe": "Timeframe"
   },
   "menu": {
     "invoice": "Invoice",

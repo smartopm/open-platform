@@ -1,4 +1,3 @@
-/* eslint-disable complexity */
 /* eslint-disable no-nested-ternary */
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
@@ -20,6 +19,7 @@ import { formatError } from '../../../utils/helpers';
 import useLogbookStyles from '../styles';
 import Paginate from '../../../components/Paginate';
 import LogbookStats from './LogbookStats';
+import SearchFilterList from '../../../shared/SearchFilterList';
 
 export default function VisitView({
   tabValue,
@@ -30,14 +30,22 @@ export default function VisitView({
   handleAddObservation,
   observationDetails
 }) {
-  const [statsType, setStatType] = useState('allVisits');
+  const initialFilter = { type: 'allVisits', duration: null };
+  const [statsTypeFilter, setStatType] = useState({ ...initialFilter });
   const [loadGuests, { data, loading: guestsLoading, refetch, error }] = useLazyQuery(
     CurrentGuestEntriesQuery,
     {
-      variables: { offset: query.length ? 0 : offset, limit, query: query.trim(), type: statsType },
+      variables: {
+        offset: query.length ? 0 : offset,
+        limit,
+        query: query.trim(),
+        type: statsTypeFilter.type,
+        duration: statsTypeFilter.duration
+      },
       fetchPolicy: 'cache-and-network'
     }
   );
+
   const { t } = useTranslation('logbook');
   const [currentId, setCurrentId] = useState(null);
   const history = useHistory();
@@ -81,18 +89,41 @@ export default function VisitView({
     }
   }, [tabValue, loadGuests, query, offset]);
 
-
-  function handleFilterData(type) {
-    setStatType(type)
+  function handleFilterData(filter, filterType = 'entryType') {
+    const isDuration = filterType === 'duration';
+    setStatType(current => ({
+      ...statsTypeFilter,
+      type: isDuration ? current.type : filter,
+      duration: isDuration ? filter : current.duration
+    }));
   }
+
+  function handleFilters() {
+    setStatType(initialFilter);
+  }
+
+  const filterTypes = {
+    peopleEntered: t('logbook.total_entries'),
+    peopleExited: t('logbook.total_exits'),
+    peoplePresent: t('logbook.total_in_city'),
+    today: t('logbook.today'),
+    past7Days: t('logbook.last_7_days'),
+    past30Days: t('logbook.last_30_days')
+  };
+
+  const filters = [filterTypes[statsTypeFilter.type], filterTypes[statsTypeFilter.duration], query]
 
   return (
     <div style={{ marginTop: '20px' }}>
       <LogbookStats
         tabValue={tabValue}
         shouldRefetch={observationDetails.refetch}
-        isSmall={matches}
         handleFilter={handleFilterData}
+        duration={statsTypeFilter.duration}
+      />
+      <SearchFilterList
+        filters={filters}
+        handleClearFilters={handleFilters}
       />
       {error && <CenteredContent>{formatError(error.message)}</CenteredContent>}
       {guestsLoading ? (
