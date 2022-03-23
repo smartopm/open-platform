@@ -21,7 +21,7 @@ describe('Should render Visits View Component', () => {
   const mocks = {
     request: {
       query: CurrentGuestEntriesQuery,
-      variables: { offset: 0, limit: 50, query: '', type: 'allVisits' }
+      variables: { offset: 0, limit: 50, query: '', type: 'allVisits', duration: null }
     },
     result: {
       data: {
@@ -119,7 +119,7 @@ describe('Should render Visits View Component', () => {
   const errorMock = {
     request: {
       query: CurrentGuestEntriesQuery,
-      variables: { offset: 0, limit: 50, query: '', type: 'allVisits' }
+      variables: { offset: 0, limit: 50, query: '', type: 'allVisits', duration: null }
     },
     result: {
       data: {
