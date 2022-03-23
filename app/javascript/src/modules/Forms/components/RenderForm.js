@@ -4,6 +4,7 @@ import React, { Fragment, useRef, useContext, useState } from 'react';
 import { Grid } from '@material-ui/core';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { makeStyles } from '@material-ui/core/styles';
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
@@ -42,6 +43,7 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
   } = useContext(FormContext);
 
   const fileTypes = ['pdf', 'zip'];
+  const { t } = useTranslation('form');
   const [messageAlert, setMessageAlert] = useState('');
   const [isSuccessAlert, setIsSuccessAlert] = useState(false);
   function handleCheckboxSelect(event, property) {
