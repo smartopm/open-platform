@@ -21,9 +21,9 @@ describe('UserForm Component', () => {
       expect(container.queryByLabelText('common:misc.take_photo')).toBeInTheDocument();
       expect(container.queryByText('common:form_fields.full_name')).toBeInTheDocument();
       expect(container.queryByText('common:form_fields.primary_number')).toBeInTheDocument();
-      expect(container.queryByText('common:form_fields.primary_email')).toBeInTheDocument();
-      expect(container.queryByText('common:form_fields.external_reference')).toBeInTheDocument();
-      expect(container.queryByText('common:form_fields.primary_address')).toBeInTheDocument();
+      expect(container.queryAllByText('common:form_fields.primary_email')[0]).toBeInTheDocument();
+      expect(container.queryAllByText('common:form_fields.external_reference')[0]).toBeInTheDocument();
+      expect(container.queryAllByText('common:form_fields.primary_address')[0]).toBeInTheDocument();
       expect(container.queryByText('common:form_fields.user_type')).toBeInTheDocument();
       expect(container.queryByLabelText('common:form_fields.reason')).toBeInTheDocument();
       expect(container.queryByLabelText('common:form_fields.state')).toBeInTheDocument();
