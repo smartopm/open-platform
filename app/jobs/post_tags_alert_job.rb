@@ -9,6 +9,7 @@ require 'host_env'
 # alert user if there is new posts related to the the tag a user is subscribed to
 class PostTagsAlertJob < ApplicationJob
   queue_as :default
+  # rubocop:disable Metrics/MethodLength
   def perform(comm_name)
     return unless Rails.env.production?
 
@@ -71,6 +72,11 @@ class PostTagsAlertJob < ApplicationJob
       { key: '%community%', value: community&.name.to_s },
       { key: '%post_url%', value: "https://#{HostEnv.base_url(community)}/news/post/#{post_id}" },
     ]
-    EmailMsg.send_mail_from_db(email, template, template_data)
+    EmailMsg.send_mail_from_db(
+      email: email,
+      template: template,
+      template_data: template_data,
+    )
   end
+  # rubocop:enable Metrics/MethodLength
 end

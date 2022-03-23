@@ -53,10 +53,6 @@ class PlanRenewalJob < ApplicationJob
       end
     end
   end
-  # rubocop:enable Metrics/MethodLength
-  # rubocop:enable Metrics/AbcSize
-  # rubocop:enable Metrics/BlockLength
-  # rubocop:enable Style/OptionalBooleanParameter
 
   def send_plan_renewal_email(payment_plan)
     user = payment_plan.user
@@ -68,6 +64,14 @@ class PlanRenewalJob < ApplicationJob
     template_data = [
       { key: '%end_date%', value: payment_plan.end_date },
     ]
-    EmailMsg.send_mail_from_db(user.email, email_template, template_data)
+    EmailMsg.send_mail_from_db(
+      email: user.email,
+      template: email_template,
+      template_data: template_data,
+    )
   end
+  # rubocop:enable Metrics/MethodLength
+  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/BlockLength
+  # rubocop:enable Style/OptionalBooleanParameter
 end

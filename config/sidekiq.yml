@@ -25,3 +25,7 @@
     class: PlanRenewalJob
     args: [false]
     description: "Create new payment plans based on subscription plans"
+  update_campaign_stats:
+    cron: '00 7,19 * * * Africa/Lusaka'
+    class: CampaignMetricsJob
+    description: "Updates Campaigns total opened and clicked count"

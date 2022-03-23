@@ -22,6 +22,8 @@ class Campaign < ApplicationRecord
 
   scope :still_pending, -> { where(status: %i[in_progress scheduled]) }
 
+  scope :email_campaigns, -> { where(campaign_type: :email) }
+
   default_scope { order(created_at: :desc) }
 
   search_scope :search do
@@ -67,6 +69,7 @@ class Campaign < ApplicationRecord
   end
 
   # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/MethodLength
   def send_email(user)
     template = community.email_templates.find_by(id: email_templates_id)
     return if template.nil? || user.email.blank?
@@ -78,10 +81,15 @@ class Campaign < ApplicationRecord
       { key: '%logo_url%', value: community.logo_url.to_s },
       { key: '%message%', value: message },
     ]
-    response = EmailMsg.send_mail_from_db(user.email, template, template_data)
+    response = EmailMsg.send_mail_from_db(
+      email: user.email,
+      template: template,
+      template_data: template_data,
+      custom_key: 'campaign_id',
+      custom_value: id,
+    )
     message_log.save if response&.status_code.eql?('202')
   end
-  # rubocop:enable Metrics/AbcSize
 
   def run_campaign
     update(start_time: Time.current, status: 'in_progress')
@@ -107,7 +115,8 @@ class Campaign < ApplicationRecord
       end_time: end_time,
       total_scheduled: user_id_list.split(',').count,
       total_sent: message_count,
-      total_clicked: total_clicked || 0,
+      total_clicked: total_clicked,
+      total_opened: total_opened,
     }
   end
 
@@ -137,5 +146,8 @@ class Campaign < ApplicationRecord
                           .perform_later(id)
     end
   end
+
+  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/MethodLength
   # rubocop: enable Metrics/ClassLength
 end

@@ -630,15 +630,15 @@ RSpec.describe Users::User, type: :model do
         email_subject = I18n.t('email_template.welcome_email.subject',
                                community_name: user.community.name)
         expect(EmailMsg).to receive(:send_mail_from_db).with(
-          user.email,
-          email_template,
-          [
+          email: user.email,
+          template: email_template,
+          template_data: [
             { key: '%action_url%', value: HostEnv.base_url(user.community) || '' },
             { key: '%action%', value: I18n.t('email_template.welcome_email.action') },
             { key: '%body%', value: I18n.t('email_template.welcome_email.body') },
             { key: '%title%', value: email_title },
           ],
-          email_subject,
+          email_subject: email_subject,
         )
         user.send_email_msg
       end

@@ -39,7 +39,11 @@ class PaymentReminderJob < ApplicationJob
       { key: '%upcoming_installment_due_date%',
         value: payment_plan.upcoming_installment_due_date.to_date.to_s },
     ]
-    EmailMsg.send_mail_from_db(user.email, email_template, template_data)
+    EmailMsg.send_mail_from_db(
+      email: user.email,
+      template: email_template,
+      template_data: template_data,
+    )
   end
   # rubocop:enable Metrics/MethodLength
 end

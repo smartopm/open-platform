@@ -48,7 +48,11 @@ class TaskReminderJob < ApplicationJob
       { key: '%community%', value: user.community&.name.to_s },
       { key: '%url%', value: "#{HostEnv.base_url(user.community)}/tasks/#{note_id}" },
     ]
-    EmailMsg.send_mail_from_db(user.email, template, template_data)
+    EmailMsg.send_mail_from_db(
+      email: user.email,
+      template: template,
+      template_data: template_data,
+    )
   end
 
   def send_sms_reminder(note_assignee)

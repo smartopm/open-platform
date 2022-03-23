@@ -72,7 +72,12 @@ module Mutations
           { key: '%body%', value: email_body },
           { key: '%title%', value: I18n.t('email_template.comment_reply.title') },
         ]
-        EmailMsg.send_mail_from_db(comment.reply_from.email, template, template_data, email_subject)
+        EmailMsg.send_mail_from_db(
+          email: comment.reply_from.email,
+          template: template,
+          template_data: template_data,
+          email_subject: email_subject,
+        )
       end
       # rubocop:enable Layout/LineLength
       # rubocop:enable Metrics/MethodLength
