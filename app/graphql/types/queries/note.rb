@@ -106,6 +106,11 @@ module Types::Queries::Note
     field :tasks_by_quarter, GraphQL::Types::JSON, null: false do
       description 'Completed tasks by quarter'
     end
+
+    field :project, Types::NoteType, null: false do
+      description 'return details for one project'
+      argument :form_user_id, GraphQL::Types::ID, required: true
+    end
   end
   # rubocop:enable Metrics/BlockLength
 
@@ -406,6 +411,21 @@ module Types::Queries::Note
       completed: Notes::Note.tasks_by_quarter(community_id),
       submitted: Notes::Note.tasks_by_quarter(community_id, task_category: :submitted),
     }
+  end
+
+  def project(form_user_id:)
+    unless permitted?(module: :note, permission: :can_fetch_task_by_id)
+      raise GraphQL::ExecutionError,
+            I18n.t('errors.unauthorized')
+    end
+
+    project = context[:site_community]
+              .notes
+              .find_by(form_user_id: form_user_id, category: 'form')
+
+    raise ActiveRecord::RecordNotFound if project.blank?
+
+    project
   end
 
   private

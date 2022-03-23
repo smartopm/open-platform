@@ -15,16 +15,17 @@ import {
   objectAccessor,
   useParamsQuery,
   removeNewLines,
-  sanitizeText
+  sanitizeText,
+  formatError
 } from '../../../../utils/helpers';
 import ProjectProcesses from './ProjectProcesses';
 import ProjectProcessesSplitView from './ProjectProcessesSplitView';
-import ErrorPage from '../../../../components/Error';
-import Loading from '../../../../shared/Loading';
+import CenteredContent from '../../../../shared/CenteredContent';
+import { Spinner } from '../../../../shared/Loading';
 import { SubTasksQuery, TaskQuery } from '../../graphql/task_queries';
 import { hrefsExtractor } from '../utils';
 import MessageAlert from '../../../../components/MessageAlert';
-import { ProjectCommentsQuery } from '../graphql/process_queries';
+import { ProjectQuery, ProjectCommentsQuery } from '../graphql/process_queries';
 
 export default function TaskProcessDetail() {
   const limit = 20;
@@ -46,6 +47,15 @@ export default function TaskProcessDetail() {
       variables: { taskId },
       fetchPolicy: 'cache-and-network',
       errorPolicy: 'all'
+    }
+  );
+
+  const formUserId = projectData?.task?.formUserId;
+  const { data: projectItem } = useQuery(
+    ProjectQuery, {
+      skip: !formUserId,
+      variables: { formUserId },
+      fetchPolicy: 'cache-and-network'
     }
   );
 
@@ -115,8 +125,10 @@ export default function TaskProcessDetail() {
     window.document.getElementById('anchor-section').scrollIntoView()
   }
 
-  if (projectDataLoading || subStepsLoading) return <Loading />;
-  if (projectDataError) return <ErrorPage title={projectDataError.message} />;
+  if (projectDataLoading || subStepsLoading) return <Spinner />;
+  if (projectDataError) {
+    return <CenteredContent>{formatError(projectDataError.message)}</CenteredContent>
+  };
 
   return (
     <div>
@@ -136,7 +148,7 @@ export default function TaskProcessDetail() {
                     data-testid='task-title'
                     // eslint-disable-next-line react/no-danger
                     dangerouslySetInnerHTML={{
-                      __html: sanitizeText(removeNewLines(projectData?.task.body))
+                      __html: sanitizeText(removeNewLines(projectItem?.project?.body))
                     }}
                   />
                 </Typography>
