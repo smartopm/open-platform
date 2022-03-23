@@ -53,6 +53,7 @@ module Types
           filename: doc.blob.filename,
           url: host_url(doc),
           created_at: doc.created_at,
+          task_id: doc.record_id,
           uploaded_by: ActiveStorage::Attachment.find_by(
             blob_id: doc.blob_id, record_type: 'Users::User',
           )&.record&.name,

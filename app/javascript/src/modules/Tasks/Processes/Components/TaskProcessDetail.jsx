@@ -1,4 +1,3 @@
-/* eslint-disable max-statements */
 import React, { useState, useEffect } from 'react';
 import { useHistory, useParams } from 'react-router';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -21,12 +20,14 @@ import {
 import ProjectProcesses from './ProjectProcesses';
 import ProjectProcessesSplitView from './ProjectProcessesSplitView';
 import CenteredContent from '../../../../shared/CenteredContent';
-import { Spinner } from '../../../../shared/Loading';
-import { SubTasksQuery, TaskQuery } from '../../graphql/task_queries';
+import { Spinner }  from '../../../../shared/Loading';
 import { hrefsExtractor } from '../utils';
 import MessageAlert from '../../../../components/MessageAlert';
 import { ProjectQuery, ProjectCommentsQuery } from '../graphql/process_queries';
 import ProjectDocument from './ProjectDocument'
+import { SubTasksQuery, TaskQuery, TaskDocumentsQuery } from '../../graphql/task_queries';
+import SearchInput from '../../../../shared/search/SearchInput';
+import useDebounce from '../../../../utils/useDebounce';
 
 export default function TaskProcessDetail() {
   const limit = 20;
@@ -38,8 +39,11 @@ export default function TaskProcessDetail() {
   const detailTabValue = path.get('detailTab');
   const replyingDiscussion = path.get('replying_discussion');
   const [tabValue, setTabValue] = useState(0);
+  const [searchText, setSearchText] = useState('');
   const [messageAlert, setMessageAlert] = useState('');
+  const debouncedSearchText = useDebounce(searchText, 300);
   const matches = useMediaQuery('(max-width:600px)');
+  const mobileMatches = useMediaQuery('(max-width:900px)');
   const [splitScreenOpen, setSplitScreenOpen] = useState(false);
 
   const { data: projectData, error: projectDataError, loading: projectDataLoading } = useQuery(
@@ -64,6 +68,11 @@ export default function TaskProcessDetail() {
     variables: { taskId, limit: projectData?.subTasks?.length || limit },
     fetchPolicy: 'cache-and-network',
     errorPolicy: 'all'
+  });
+
+  const { data, loading, error, refetch: docRefetch } = useQuery(TaskDocumentsQuery, {
+    variables: { taskId },
+    fetchPolicy: 'cache-and-network'
   });
 
   const {
@@ -97,9 +106,13 @@ export default function TaskProcessDetail() {
     setTabValue(Number(newValue));
   }
 
+  const filterDocuments = data?.task?.attachments.filter(document =>
+    document.filename.toLowerCase().includes(debouncedSearchText.toLowerCase())
+  );
+
   async function shareOnclick() {
-    await navigator.clipboard.writeText(hrefsExtractor(projectData?.task?.body)[1])
-    setMessageAlert('Link copied to clipboard')
+    await navigator.clipboard.writeText(hrefsExtractor(projectData?.task?.body)[1]);
+    setMessageAlert('Link copied to clipboard');
   }
 
   useEffect(() => {
@@ -116,14 +129,14 @@ export default function TaskProcessDetail() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [path, replyingDiscussion]);
 
-  function handleProjectStepClick(task, currentTab='processes', detailTab='subtasks') {
+  function handleProjectStepClick(task, currentTab = 'processes', detailTab = 'subtasks') {
     setSplitScreenOpen(true);
     history.push({
       pathname: `/processes/drc/projects/${task?.id}`,
       search: `?tab=${currentTab}&detailTab=${detailTab}`,
-      state: { from: history.location.pathname,  search: history.location.search }
-    })
-    window.document.getElementById('anchor-section').scrollIntoView()
+      state: { from: history.location.pathname, search: history.location.search }
+    });
+    window.document.getElementById('anchor-section').scrollIntoView();
   }
 
   if (projectDataLoading || subStepsLoading) return <Spinner />;
@@ -134,19 +147,23 @@ export default function TaskProcessDetail() {
   return (
     <div>
       <MessageAlert
-        type='success'
+        type="success"
         message={messageAlert}
         open={!!messageAlert}
         handleClose={() => setMessageAlert('')}
       />
       <TaskContextProvider>
-        <Grid container data-testid="process-detail-section" style={!matches ? {padding: '0 56px'} : {padding: '0 10px'}}>
-          <Grid item md={tabValue === 2 ? 12 : 5} xs={12}>
+        <Grid
+          container
+          data-testid="process-detail-section"
+          style={!matches ? { padding: '0 56px' } : { padding: '0 10px' }}
+        >
+          <Grid item md={5} xs={12}>
             <Grid container>
-              <Grid item md={11} xs={10} data-testid="project-title" style={{paddingTop: '20px'}}>
+              <Grid item md={11} xs={10} data-testid="project-title" style={{ paddingTop: '20px' }}>
                 <Typography variant="h4">
                   <span
-                    data-testid='task-title'
+                    data-testid="task-title"
                     // eslint-disable-next-line react/no-danger
                     dangerouslySetInnerHTML={{
                       __html: sanitizeText(removeNewLines(projectItem?.project?.body))
@@ -160,7 +177,7 @@ export default function TaskProcessDetail() {
                 </IconButton>
                 {matches && (
                   <IconButton
-                    color='primary'
+                    color="primary"
                     onClick={() => handleProjectStepClick(projectData?.task)}
                     size="large"
                   >
@@ -178,23 +195,29 @@ export default function TaskProcessDetail() {
             >
               <StyledTab
                 label={t('task:processes.overview')}
-                style={tabValue === objectAccessor(TAB_VALUES, 'overview')
-                  ? { fontSize: '12px', textAlign: 'left', borderBottom: 'solid 1px' }
-                  : { fontSize: '12px', textAlign: 'left' }}
+                style={
+                  tabValue === objectAccessor(TAB_VALUES, 'overview')
+                    ? { fontSize: '12px', textAlign: 'left', borderBottom: 'solid 1px' }
+                    : { fontSize: '12px', textAlign: 'left' }
+                }
                 {...a11yProps(0)}
               />
               <StyledTab
                 label={t('task:processes.processes')}
-                style={tabValue ===  objectAccessor(TAB_VALUES, 'processes') ?
-                  { fontSize: '12px', borderBottom: 'solid 1px' }
-                  : { fontSize: '12px' }}
+                style={
+                  tabValue === objectAccessor(TAB_VALUES, 'processes')
+                    ? { fontSize: '12px', borderBottom: 'solid 1px' }
+                    : { fontSize: '12px' }
+                }
                 {...a11yProps(1)}
               />
               <StyledTab
                 label={t('task:processes.documents')}
-                style={tabValue ===  objectAccessor(TAB_VALUES, 'documents') ?
-                  { fontSize: '12px', borderBottom: 'solid 1px' }
-                  : { fontSize: '12px' }}
+                style={
+                  tabValue === objectAccessor(TAB_VALUES, 'documents')
+                    ? { fontSize: '12px', borderBottom: 'solid 1px' }
+                    : { fontSize: '12px' }
+                }
                 {...a11yProps(1)}
               />
             </StyledTabs>
@@ -214,11 +237,41 @@ export default function TaskProcessDetail() {
                 commentsFetchMore={commentsFetchMore}
               />
             </TabPanel>
-            <TabPanel value={tabValue} index={2}>
-              <ProjectDocument taskId={taskId} />
-            </TabPanel>
           </Grid>
-          <Grid item md={7} xs={12}>
+          {tabValue === 2 && (
+            <>
+              {mobileMatches && data?.task?.attachments.length > 0 && (
+                <Grid item xs={12}>
+                  <Typography
+                    variant="body2"
+                    style={{ padding: '20px 0 0 0' }}
+                    color="textSecondary"
+                  >
+                    {t('processes.documents')}
+                  </Typography>
+                </Grid>
+              )}
+              <Grid item md={2} xs={12} />
+              {data?.task?.attachments.length > 0 && (
+                <Grid
+                  item
+                  md={5}
+                  xs={12}
+                  style={mobileMatches ? { margin: '20px 0' } : { marginTop: '55px' }}
+                >
+                  <SearchInput
+                    filterRequired={false}
+                    title={t('processes.documents')}
+                    searchValue={searchText}
+                    handleSearch={e => setSearchText(e.target.value)}
+                    handleClear={() => setSearchText('')}
+                    data-testid="search_input"
+                  />
+                </Grid>
+              )}
+            </>
+          )}
+          <Grid item md={tabValue === 2 ? 12 : 7} xs={12}>
             <TabPanel value={tabValue} index={0}>
               <ProjectOverviewSplitView
                 data={stepsData?.taskSubTasks}
@@ -233,6 +286,14 @@ export default function TaskProcessDetail() {
                 handleProjectStepClick={handleProjectStepClick}
                 refetch={refetch}
                 commentsRefetch={commentsRefetch}
+              />
+            </TabPanel>
+            <TabPanel value={tabValue} index={2} pad>
+              <ProjectDocument
+                attachments={searchText !== '' ? filterDocuments : data?.task?.attachments}
+                loading={loading}
+                refetch={docRefetch}
+                error={error}
               />
             </TabPanel>
           </Grid>
