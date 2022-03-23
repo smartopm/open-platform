@@ -30,7 +30,7 @@ class CampaignMetricsJob < ApplicationJob
   #
   # @return [Boolean]
   def metrics_changed?(campaign, total_clicked, total_opened)
-    total_opened > (campaign.total_opened || 0) ||
-      total_clicked > (campaign.total_clicked || 0)
+    total_opened > campaign.total_opened ||
+      total_clicked > campaign.total_clicked || 0
   end
 end
