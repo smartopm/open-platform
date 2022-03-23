@@ -80,7 +80,7 @@ export default function LogbookStats({ tabValue, shouldRefetch, isSmall, handleF
             id="choose_logbook_stat_duration"
             select
             label="Timeframe"
-            value={!duration ?  t('common:misc.all') : duration}
+            value={!duration ?  'All' : duration}
             size="small"
             onChange={handleDurationFilter}
           >
@@ -117,10 +117,14 @@ export default function LogbookStats({ tabValue, shouldRefetch, isSmall, handleF
   );
 }
 
+LogbookStats.defaultProps = {
+  duration: null
+}
+
 LogbookStats.propTypes = {
   tabValue: PropTypes.number.isRequired,
   shouldRefetch: PropTypes.bool.isRequired,
   isSmall: PropTypes.bool.isRequired,
   handleFilter: PropTypes.func.isRequired,
-  duration: PropTypes.string.isRequired,
+  duration: PropTypes.string,
 };
