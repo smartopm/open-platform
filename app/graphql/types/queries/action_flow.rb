@@ -55,7 +55,7 @@ module Types::Queries::ActionFlow
       ActionFlows::Actions.const_get(c).is_a?(Class)
     end
 
-    actions.map { |ac| ac.to_s.titleize }
+    actions.map { |ac| ac.to_s.titleize }.filter { |ac| ac != 'Email' }
   end
 
   def action_fields(action:)
