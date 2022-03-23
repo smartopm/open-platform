@@ -72,8 +72,8 @@ export default function LogbookStats({ tabValue, shouldRefetch, isSmall, handleF
 
   if (loading) return <Spinner />;
   return (
-    <Grid container spacing={isSmall ? 1 : 4}>
-      <Grid container alignItems='center' spacing={2}>
+    <Grid container spacing={3}>
+      <Grid container alignItems='center' spacing={2} style={{ marginLeft: 7 }}>
         <Grid item>{t('common:misc.statistics')}</Grid>
         <Grid item>
           <TextField
@@ -94,6 +94,7 @@ export default function LogbookStats({ tabValue, shouldRefetch, isSmall, handleF
           </TextField>
         </Grid>
       </Grid>
+      <br />
       {statsData.map(stat => (
         <Grid item xs={4} key={stat.id}>
           <CardComponent 

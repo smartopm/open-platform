@@ -9,7 +9,7 @@ export default function SearchFilterList({ filters, handleClearFilters }) {
   const validFilters = filters.filter(Boolean);
   if (!validFilters?.length) return null;
   return (
-    <Grid container spacing={2} alignItems="center">
+    <Grid container spacing={1} alignItems="center" style={{ marginTop: -30 }}>
       <Grid item>
         <Typography display="inline-block" variant="subtitle2" data-testid="search_results">
           {`${t(
