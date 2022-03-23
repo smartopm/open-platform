@@ -12,7 +12,7 @@ import CardComponent from '../../../shared/Card';
 import useLogbookStyles from '../styles';
 
 
-export default function LogbookStats({ tabValue, shouldRefetch, isSmall, handleFilter, duration }) {
+export default function LogbookStats({ tabValue, shouldRefetch, handleFilter, duration }) {
   const { t } = useTranslation(['logbook', 'common']);
   const [loadStats, { data, loading }] = useLazyQuery(LogbookStatsQuery, {
     variables: { duration },
@@ -125,7 +125,6 @@ LogbookStats.defaultProps = {
 LogbookStats.propTypes = {
   tabValue: PropTypes.number.isRequired,
   shouldRefetch: PropTypes.bool.isRequired,
-  isSmall: PropTypes.bool.isRequired,
   handleFilter: PropTypes.func.isRequired,
   duration: PropTypes.string,
 };
