@@ -98,6 +98,7 @@
     "projects_by_quarter": "Projects by Quarter",
     "completed": "Completed",
     "submitted": "Submitted",
+    "outstanding": "Outstanding",
     "projects_by_stage": "Projects by Stage",
     "no_data": "No data to display",
     "drc_stages": {
@@ -122,7 +123,8 @@
     "open_submitted_form": "Open Form",
     "no_form_data": "Project submission information not found",
     "year_to_date": "Year to Date",
-    "total": "Total"
+    "total": "Total",
+    "lifetime_totals": "Lifetime Totals"
   },
   "misc": {
     "confirm": "Confirm",

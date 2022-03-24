@@ -51,6 +51,14 @@ export default function AdminDashboard() {
     return overallStats;
   }
 
+  function tasksPerYear(processStats) {
+    const initialValue = 0;
+    const yearStats = processStats.reduce(
+      (previousValue, currentValue) => previousValue + currentValue[2],
+    initialValue);
+    return yearStats;
+  }
+
   const currentYear = new Date().getFullYear();
   const completedResults = summaryData?.tasksByQuarter.completed || [];
   const submittedResults = summaryData?.tasksByQuarter.submitted || [];
@@ -83,11 +91,32 @@ export default function AdminDashboard() {
       primary: false
     },
     {
-      name: t('processes.total'),
-      completed: tasksTillNow(completedResults) || 0,
-      submitted: tasksTillNow(submittedResults) || 0,
+      name: t('processes.year_to_date'),
+      completed: tasksPerYear(currentYearCompletedStats) || 0,
+      submitted: tasksPerYear(currentYearSubmittedStats) || 0,
       primary: false
     }
+  ];
+
+  const lifeTimeCards = [
+    {
+      name:  t('processes.submitted'),
+      category: 'submitted',
+      count: tasksTillNow(submittedResults) || 0,
+      primary: true
+    },
+    {
+      name: t('processes.completed'),
+      category: 'completed',
+      count: tasksTillNow(completedResults) || 0,
+      primary: true
+    },
+    {
+      name: t('processes.outstanding'),
+      category: 'outstanding',
+      count: (tasksTillNow(submittedResults) || 0) - (tasksTillNow(completedResults) || 0),
+      primary: false
+    },
   ];
 
   const projectStageLookup = {
@@ -103,7 +132,7 @@ export default function AdminDashboard() {
   function cardName(name){
     if (quarters.includes(name)) return name;
 
-    return 'all';
+    return 'ytd';
   }
 
   function routeToProjects(paramName, paramValue) {
@@ -185,7 +214,7 @@ export default function AdminDashboard() {
             ))}
           </Grid>
 
-          <Grid container spacing={1} style={{ paddingLeft: '7px' }}>
+          <Grid container spacing={1} style={{ marginBottom: '15px', paddingLeft: '7px' }}>
             <Grid
               item
               container
@@ -228,6 +257,61 @@ export default function AdminDashboard() {
               </Grid>
             ))}
           </Grid>
+          <Divider variant="inset" className={matches ? classes.mobileStatsDivider : classes.statsDivider} />
+          <Grid container spacing={1} className={classes.cards}>
+            <Grid item xs={4} />
+            {matches && <Grid item xs={1} />}
+            {lifeTimeCards.map((card, index) => (
+              // eslint-disable-next-line react/no-array-index-key
+              <Grid key={index} item xs={2} container justifyContent="center" alignItems="center">
+                <Typography variant="caption" style={{ fontSize: '0.6rem' }}>{card.name}</Typography>
+              </Grid>
+            ))}
+          </Grid>
+          <Grid container spacing={1} style={{ paddingLeft: '7px' }}>
+            <Grid
+              item
+              container
+              justifyContent="center"
+              alignItems="center"
+              xs={4}
+              style={{
+                background: '#F5F5F4',
+                borderRadius: '4px',
+                height: '47px',
+                marginTop: '7px',
+                paddingTop: 0,
+                paddingRight: '8px'
+              }}
+            >
+              <Typography variant="caption" color="secondary">
+                {t('processes.lifetime_totals')}
+              </Typography>
+            </Grid>
+            {matches && <Grid item xs={1} />}
+            {lifeTimeCards.map((card, index) => (
+              // eslint-disable-next-line react/no-array-index-key
+              <Grid key={index} item xs={2}>
+                <Card
+                  className={classes.card}
+                  onClick={() => routeToProjects('life_time_totals', card.category)}
+                  style={{ cursor: 'pointer', boxShadow: 'none' }}
+                >
+                  <CardContent
+                    className={`${index === 2 ? classes.evenCardsBackground: classes.oddCardsBackground} ${classes.cardContent}`}
+                    style={{ paddingTop: '8px', paddingBottom: '8px' }}
+                  >
+                    <Grid container justifyContent="center" alignItems="center">
+                      <Typography variant="body1" style={{ fontSize: '1.2rem' }}>
+                        {card.count}
+                      </Typography>
+                    </Grid>
+                  </CardContent>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
+
         </Grid>
         <Grid item xs={12} sm={6}>
           <Typography variant="body1">{t('processes.projects_by_stage')}</Typography>
@@ -284,6 +368,16 @@ const useStyles = makeStyles(theme => ({
   divider: {
     marginLeft: '15px',
     marginRight: '15px'
+  },
+  statsDivider: {
+    marginLeft: '-2px',
+    marginRight: '120px',
+    marginBottom: '30px'
+  },
+  mobileStatsDivider: {
+    marginLeft: '-2px',
+    marginRight: '23px',
+    marginBottom: '30px'
   },
   oddCardsBackground: {
     backgroundColor: theme.palette?.primary?.main
