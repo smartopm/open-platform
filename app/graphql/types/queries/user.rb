@@ -289,12 +289,6 @@ module Types::Queries::User
                           .order(created_at: :desc)
   end
 
-  def selected_search_users(users, user_ids)
-    users.select do |user|
-      user_ids.include? user.id
-    end
-  end
-
   def search_user_ids(query: nil, user_ids: [])
     unless permitted?(module: :user, permission: :can_search_user_ids)
       raise GraphQL::ExecutionError,
