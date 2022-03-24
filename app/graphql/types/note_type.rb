@@ -54,6 +54,7 @@ module Types
           url: host_url(doc),
           created_at: doc.created_at,
           task_id: doc.record_id,
+          task_name: Notes::Note.find_by(id: doc.record_id)&.body,
           uploaded_by: ActiveStorage::Attachment.find_by(
             blob_id: doc.blob_id, record_type: 'Users::User',
           )&.record&.name,

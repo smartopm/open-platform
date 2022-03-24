@@ -76,7 +76,6 @@ export default function ProjectDocument({ attachments, loading, refetch, error }
   }
   return (
     <>
-      {console.log(attachments)}
       {error && (
         <CenteredContent>
           <p>{formatError(error)}</p>
@@ -100,15 +99,15 @@ export default function ProjectDocument({ attachments, loading, refetch, error }
       ) : Boolean(attachments) && attachments.length > 0 ? (
         <>
           {!matches && (
-            <Typography variant="body2" className={classes.documents} color="textSecondary">
+            <Typography variant="body2" className={classes.documents} color="textSecondary" data-testid='documents'>
               {t('processes.documents')}
             </Typography>
           )}
           {attachments.map(att => (
             <Grid key={att.id} className={classes.children}>
-              <Grid container justifyContent="center" alignItems="center" sx={{ padding: 0 }}>
-                <Grid item md={5} xs={11} style={{ textAlign: 'left' }}>
-                  <Grid container direction="column" style={matches ? { marginLeft: '-18px' } : {}}>
+              <Grid container justifyContent={!matches ? "center" : undefined} alignItems={!matches ? "center" : undefined}>
+                <Grid item md={6} xs={11} style={{ textAlign: 'left' }}>
+                  <Grid container direction="column">
                     <Grid item md={12} xs={12}>
                       <Typography variant="body2" className={classes.fileName}>
                         {att.filename}
@@ -118,18 +117,16 @@ export default function ProjectDocument({ attachments, loading, refetch, error }
                       <Link
                         href={`/processes/drc/projects/${att.task_id}?tab=processes`}
                         color="primary"
-                        style={{ marginTop: '-50px' }}
                       >
-                        <Typography variant="caption">Task name link</Typography>
+                        <Typography variant="caption">{att.task_name}</Typography>
                       </Link>
                     </Grid>
                   </Grid>
                 </Grid>
-                <Grid item md={3} xs={11}>
+                <Grid item md={2} xs={11}>
                   <Typography
                     variant="caption"
                     color="textSecondary"
-                    style={matches ? { marginLeft: '-18px' } : {}}
                   >
                     {t('document.uploaded_at')}
                     :
@@ -145,7 +142,7 @@ export default function ProjectDocument({ attachments, loading, refetch, error }
                     {att.uploaded_by}
                   </Typography>
                 </Grid>
-                <Grid item md={1} xs={1} style={matches ? { textAlign: 'right', marginTop: '-100px'} : { textAlign: 'right' }}>
+                <Grid item md={1} xs={1} style={matches ? { textAlign: 'right', marginTop: '-80px'} : { textAlign: 'right' }}>
                   <IconButton
                     edge="end"
                     aria-label="more_details"
@@ -199,7 +196,8 @@ export default function ProjectDocument({ attachments, loading, refetch, error }
 ProjectDocument.defaultProps = {
   loading: false,
   refetch: () => {},
-  setSelectedStep: ()=> {}
+  error: null,
+  attachments: []
 };
 
 ProjectDocument.propTypes = {
@@ -207,19 +205,18 @@ ProjectDocument.propTypes = {
     id: PropTypes.string,
     task_id: PropTypes.string,
     created_at: PropTypes.string,
-    uploaded_by: PropTypes.string
-  })).isRequired,
+    uploaded_by: PropTypes.string,
+    task_name: PropTypes.string
+  })),
   loading: PropTypes.bool,
   refetch: PropTypes.func,
-handleStepCompletion: PropTypes.func.isRequired,
-redirect: PropTypes.bool,
-clientView: PropTypes.bool,
+  error: PropTypes.string
 };
 
 const useStyles = makeStyles(() => ({
   children: {
     padding: '10px 0',
-    borderTop: '1px solid #F7F8F7'
+    borderTop: '2px solid #F7F8F7'
   },
   fileName: {
     fontWeight: 600

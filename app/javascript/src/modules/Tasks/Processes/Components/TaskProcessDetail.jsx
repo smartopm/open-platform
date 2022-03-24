@@ -288,12 +288,12 @@ export default function TaskProcessDetail() {
                 commentsRefetch={commentsRefetch}
               />
             </TabPanel>
-            <TabPanel value={tabValue} index={2} pad>
+            <TabPanel value={tabValue} index={2}>
               <ProjectDocument
                 attachments={searchText !== '' ? filterDocuments : data?.task?.attachments}
                 loading={loading}
                 refetch={docRefetch}
-                error={error}
+                error={error?.message}
               />
             </TabPanel>
           </Grid>
