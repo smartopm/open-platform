@@ -2,7 +2,7 @@ import React from 'react'
 import {
   Grid,
   Typography,
-} from '@mui/material'
+} from '@material-ui/core'
 import PropTypes from 'prop-types'
 import { useTranslation } from 'react-i18next';
 import TaskStatCard from './TaskStatCard'

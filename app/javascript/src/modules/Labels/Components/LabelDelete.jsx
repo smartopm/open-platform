@@ -1,16 +1,16 @@
 /* eslint-disable import/no-cycle */
 /* eslint-disable no-use-before-define */
 import React, { useState } from 'react';
-import Dialog from '@mui/material/Dialog';
+import Dialog from '@material-ui/core/Dialog';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
-import Divider from '@mui/material/Divider';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Divider from '@material-ui/core/Divider';
 import { useMutation } from 'react-apollo';
-import Button from '@mui/material/Button';
-import makeStyles from '@mui/styles/makeStyles';
+import Button from '@material-ui/core/Button';
+import { makeStyles } from '@material-ui/core/styles';
 import { DeleteLabel } from '../../../graphql/mutations';
 
 export default function TaskDelete({ open, handleClose, refetch, data }) {

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useLazyQuery } from 'react-apollo';
-import { Typography } from '@mui/material';
+import { Typography } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
 import { MyHostsQuery } from '../graphql/queries';
 import CenteredContent from '../../../../shared/CenteredContent';

@@ -2,18 +2,18 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useContext } from 'react'
-import makeStyles from '@mui/styles/makeStyles';
-import useMediaQuery from '@mui/material/useMediaQuery';
+import { makeStyles } from '@material-ui/core/styles';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTranslation } from 'react-i18next'
 import { useHistory } from 'react-router';
-import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
+import Typography from '@material-ui/core/Typography';
+import IconButton from '@material-ui/core/IconButton';
 import PropTypes from 'prop-types';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import Divider from '@mui/material/Divider';
-import SettingsIcon from '@mui/icons-material/Settings';
-import HeadsetMicIcon from '@mui/icons-material/HeadsetMic';
-import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import Divider from '@material-ui/core/Divider';
+import SettingsIcon from '@material-ui/icons/Settings';
+import HeadsetMicIcon from '@material-ui/icons/HeadsetMic';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider'
 import Avatar from '../../../components/Avatar';
 
@@ -70,7 +70,6 @@ export function UserOptions({ icon, primaryText, secondaryText, handleClick}){
         edge="start"
         className={classes.menuButton}
         data-testid="icons"
-        size="large"
       >
         {icon}
       </IconButton>
@@ -79,7 +78,7 @@ export function UserOptions({ icon, primaryText, secondaryText, handleClick}){
         <Typography data-testid="caption" className={classes.secondaryText}>{secondaryText}</Typography>
       </div>
     </div>
-  );
+  )
 }
 
 const useStyles = makeStyles(() => ({

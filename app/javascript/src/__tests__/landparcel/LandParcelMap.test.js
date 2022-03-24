@@ -1,37 +1,37 @@
 /* eslint-disable */
-import React from 'react';
-import { MockedProvider } from '@apollo/react-testing';
-import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min';
-import { act, render } from '@testing-library/react';
+import React from 'react'
+import { MockedProvider } from '@apollo/react-testing'
+import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min'
+import { act, render } from '@testing-library/react'
 import { AuthStateProvider } from '../../containers/Provider/AuthStateProvider';
-import LandParcelMap from '../../components/LandParcels/LandParcelMap';
-import PointOfInterestDrawerDialog from '../../components/Map/PointOfInterestDrawerDialog';
-import MockedThemeProvider from '../../modules/__mocks__/mock_theme';
+import LandParcelMap from '../../components/LandParcels/LandParcelMap'
+import PointOfInterestDrawerDialog from '../../components/Map/PointOfInterestDrawerDialog'
 
-jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
-jest.mock('react-leaflet');
+jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
+jest.mock('react-leaflet')
 describe('LandParcelMap', () => {
   it('should mount component correctly', async () => {
     const props = {
       handlePlotClick: jest.fn(),
-      geoData: []
-    };
+      geoData:[],
+    }
 
     let container;
-
+    
     await act(async () => {
       container = render(
         <MockedProvider>
-          <BrowserRouter>
-            <MockedThemeProvider>
-              <LandParcelMap handlePlotClick={props.handlePlotClick} geoData={props.geoData} />
-            </MockedThemeProvider>
-          </BrowserRouter>
-        </MockedProvider>
-      );
-    });
+        <BrowserRouter>
+          <LandParcelMap 
+            handlePlotClick={props.handlePlotClick} 
+            geoData={props.geoData}
+          />
+        </BrowserRouter>
+      </MockedProvider>
+      )
+    })
 
-    expect(container.queryByTestId('leaflet-map-container')).toBeTruthy();
+    expect(container.queryByTestId('leaflet-map-container')).toBeTruthy()
   });
 
   it('should mount drawer component correctly', async () => {
@@ -45,29 +45,29 @@ describe('LandParcelMap', () => {
         parcelNumber: 'poi-123',
         parcelType: 'poi',
         longX: 28.123,
-        latY: -15.123
+        latY: -15.123,
       }
-    };
+    }
 
     let container;
-
+    
     await act(async () => {
       container = render(
         <MockedProvider>
           <AuthStateProvider>
             <BrowserRouter>
-              <MockedThemeProvider>
-                <PointOfInterestDrawerDialog {...props} />
-              </MockedThemeProvider>
+              <PointOfInterestDrawerDialog
+                {...props}
+              />
             </BrowserRouter>
           </AuthStateProvider>
         </MockedProvider>
-      );
-    });
+      )
+    })
 
-    expect(container.queryByText('poi-123')).toBeTruthy();
-    expect(container.getByText('Hotel')).toBeTruthy();
-    expect(container.getByText('-15.123')).toBeTruthy();
-    expect(container.getByText('28.123')).toBeTruthy();
+    expect(container.queryByText('poi-123')).toBeTruthy()
+    expect(container.getByText('Hotel')).toBeTruthy()
+    expect(container.getByText('-15.123')).toBeTruthy()
+    expect(container.getByText('28.123')).toBeTruthy()
   });
 });

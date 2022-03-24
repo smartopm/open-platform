@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import TextField from '@mui/material/TextField';
-import Edit from '@mui/icons-material/Edit';
-import IconButton from '@mui/material/IconButton';
-import InputAdornment from '@mui/material/InputAdornment';
-import { makeStyles } from '@mui/styles';
-import { Grid } from '@mui/material';
+import TextField from '@material-ui/core/TextField';
+import Edit from '@material-ui/icons/Edit';
+import IconButton from '@material-ui/core/IconButton';
+import InputAdornment from '@material-ui/core/InputAdornment';
+import { makeStyles } from '@material-ui/styles';
+import { Grid } from '@material-ui/core';
 import PropTypes from 'prop-types';
 
 export default function EditableField({ value, setValue, action, customStyles, canUpdateNote }) {
@@ -44,13 +44,7 @@ export default function EditableField({ value, setValue, action, customStyles, c
             'data-testid': 'editable_description',
             endAdornment: (
               <InputAdornment position="end">
-                <IconButton
-                  onClick={handleClick}
-                  data-testid="edit_icon"
-                  color="primary"
-                  disabled={!canUpdateNote}
-                  size="large"
-                >
+                <IconButton onClick={handleClick} data-testid="edit_icon" color="primary" disabled={!canUpdateNote}>
                   <Edit />
                 </IconButton>
               </InputAdornment>

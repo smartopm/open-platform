@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Typography from '@mui/material/Typography';
+import Typography from '@material-ui/core/Typography';
 import { useTranslation } from 'react-i18next';
-import makeStyles from '@mui/styles/makeStyles';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import Grid from '@mui/material/Grid';
+import { makeStyles } from '@material-ui/core/styles';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import Grid from '@material-ui/core/Grid';
 import { DetailsDialog } from '../../../../components/Dialog';
 import { dateToString } from '../../../../components/DateContainer';
 import { formatMoney } from '../../../../utils/helpers';
@@ -24,7 +24,7 @@ export default function TransactionDetails({ open, handleModalClose, data, curre
         open={open}
         handleClose={handleModalClose}
         title="Transaction Details"
-        color="primary"
+        color="default"
       >
         <div className={!matches ? classes.body : classes.bodyMobile}>
           <Typography className={classes.title} data-testid="title">
@@ -57,13 +57,13 @@ export default function TransactionDetails({ open, handleModalClose, data, curre
             </Grid>
           </Grid>
           {data?.planPayments ? data?.planPayments.map((trans) => (
-            <TransactionDetailsCard
+            <TransactionDetailsCard 
               key={trans.id}
               data={trans}
               currencyData={currencyData}
             />
           )) : (
-            <TransactionDetailsCard
+            <TransactionDetailsCard 
               data={data}
               currencyData={currencyData}
             />

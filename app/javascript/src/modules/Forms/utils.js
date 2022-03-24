@@ -140,10 +140,10 @@ export function parseRenderedText(categories, data) {
     .map((word) => {
       const wordToReplace = word.split('_').join(' ')
       const formProperty = properties.find((prop) => {
-        return prop.fieldName?.toLowerCase().trim() === wordToReplace.replace(/\n|#/gi, '').replace(/[,.]/, '').toLowerCase();
+        return prop.fieldName?.toLowerCase().trim() === wordToReplace.replace(/\n|#/gi, '').replace(/[,.]/, '').toLowerCase()
       });
       if (formProperty) {
-        return word.replace(/#(\w+)/i, formProperty.value);
+        return word.replace(/#(\w+)/i, formProperty.value)
       }
       return word;
     })

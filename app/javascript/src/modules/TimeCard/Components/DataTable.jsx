@@ -1,7 +1,6 @@
 import React from 'react';
-import { Table, TableBody, TableCell, TableHead, TableRow } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
-import withStyles from '@mui/styles/withStyles';
+import { Table, TableBody, TableCell, TableHead, TableRow } from '@material-ui/core';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
 
 const useStyles = makeStyles(theme => ({
@@ -54,7 +53,7 @@ export const StyledTableRow = withStyles(theme => ({
 export default function DataTable({ columns, children }) {
   const classes = useStyles();
   return (
-    <div className="container" data-testid='data_table_container'>
+    <div className="container">
       <>
         <Table className={(classes.table, 'tableClass')}>
           <TableHead>

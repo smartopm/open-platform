@@ -1,15 +1,14 @@
 /* eslint-disable import/prefer-default-export */
-import React from 'react';
-import { MockedProvider } from '@apollo/react-testing';
-import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min';
+import React from 'react'
+import { MockedProvider } from '@apollo/react-testing'
+import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min'
 import '@testing-library/jest-dom/extend-expect';
-import { render, fireEvent, screen, waitFor } from '@testing-library/react';
-import TodoList from '../Components/TodoList';
-import { Context } from '../../../containers/Provider/AuthStateProvider';
-import authState from '../../../__mocks__/authstate';
+import { render, fireEvent, screen, waitFor } from '@testing-library/react'
+import TodoList from '../Components/TodoList'
+import { Context } from '../../../containers/Provider/AuthStateProvider'
+import authState from '../../../__mocks__/authstate'
 import taskMock from '../__mocks__/taskMock';
 import { TasksLiteQuery } from '../graphql/task_queries';
-import MockedThemeProvider from '../../__mocks__/mock_theme';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 jest.mock('react-router', () => ({
@@ -17,12 +16,12 @@ jest.mock('react-router', () => ({
   useLocation: () => ({
     pathname: '/tasks',
     search: '?taskId=23',
-    state: { from: '/', search: '/' }
+    state: { from: '/',  search: '/' }
   }),
   useParams: () => ({ id: '23' })
 }));
 
-const mck = jest.fn();
+const mck = jest.fn()
 const props = {
   isDialogOpen: false,
   currentUser: authState.user,
@@ -40,16 +39,18 @@ const mocks = [
       variables: {
         offset: 0,
         limit: 50,
-        query: 'assignees: John Doctor AND completed: false '
+        query: "assignees: John Doctor AND completed: false "
       }
     },
     result: {
       data: {
-        flaggedNotes: [taskMock]
+        flaggedNotes: [
+          taskMock
+        ]
       }
     }
   }
-];
+]
 
 describe('Test the Todo page', () => {
   it('renders loader', async () => {
@@ -57,9 +58,7 @@ describe('Test the Todo page', () => {
       <Context.Provider value={authState}>
         <MockedProvider mocks={mocks} addTypename>
           <BrowserRouter>
-            <MockedThemeProvider>
-              <TodoList {...props} />
-            </MockedThemeProvider>
+            <TodoList {...props} />
           </BrowserRouter>
         </MockedProvider>
       </Context.Provider>
@@ -72,13 +71,11 @@ describe('Test the Todo page', () => {
       <Context.Provider value={authState}>
         <MockedProvider mocks={mocks} addTypename>
           <BrowserRouter>
-            <MockedThemeProvider>
-              <TodoList {...props} />
-            </MockedThemeProvider>
+            <TodoList {...props} />
           </BrowserRouter>
         </MockedProvider>
       </Context.Provider>
-    );
+    )
 
     await waitFor(() => {
       expect(screen.queryByTestId('create_task_btn')).toBeTruthy()
@@ -93,9 +90,7 @@ describe('Test the Todo page', () => {
       <Context.Provider value={authState}>
         <MockedProvider mocks={mocks} addTypename>
           <BrowserRouter>
-            <MockedThemeProvider>
-              <TodoList {...props} />
-            </MockedThemeProvider>
+            <TodoList {...props} />
           </BrowserRouter>
         </MockedProvider>
       </Context.Provider>
@@ -112,9 +107,7 @@ describe('Test the Todo page', () => {
       <Context.Provider value={authState}>
         <MockedProvider mocks={mocks} addTypename>
           <BrowserRouter>
-            <MockedThemeProvider>
-              <TodoList {...props} />
-            </MockedThemeProvider>
+            <TodoList {...props} />
           </BrowserRouter>
         </MockedProvider>
       </Context.Provider>
@@ -125,7 +118,7 @@ describe('Test the Todo page', () => {
 
     await waitFor(() => {
       expect(screen.queryByText('task.task_body_label')).toBeInTheDocument();
-      expect(screen.queryAllByText('task.task_description_label')[0]).toBeInTheDocument();
+      expect(screen.queryByText('task.task_description_label')).toBeInTheDocument();
       expect(screen.queryByText('task.task_type_label')).toBeInTheDocument();
       expect(screen.queryByText('common:form_placeholders.note_due_date')).toBeInTheDocument();
     });
@@ -137,9 +130,7 @@ describe('Test the Todo page', () => {
         <Context.Provider value={authState}>
           <MockedProvider mocks={mocks} addTypename>
             <BrowserRouter>
-              <MockedThemeProvider>
-                <TodoList {...props} />
-              </MockedThemeProvider>
+              <TodoList {...props} />
             </BrowserRouter>
           </MockedProvider>
         </Context.Provider>
@@ -155,9 +146,7 @@ describe('Test the Todo page', () => {
         <Context.Provider value={authState}>
           <MockedProvider mocks={mocks} addTypename>
             <BrowserRouter>
-              <MockedThemeProvider>
-                <TodoList {...props} />
-              </MockedThemeProvider>
+              <TodoList {...props} />
             </BrowserRouter>
           </MockedProvider>
         </Context.Provider>
@@ -173,4 +162,4 @@ describe('Test the Todo page', () => {
       });
     });
   });
-});
+})

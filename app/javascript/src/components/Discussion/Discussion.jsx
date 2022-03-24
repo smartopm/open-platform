@@ -4,7 +4,7 @@ import {
   Typography,
   Button,
   Grid
-} from '@mui/material'
+} from '@material-ui/core'
 import { useQuery } from 'react-apollo'
 import PropTypes from 'prop-types'
 import { useTranslation } from 'react-i18next'

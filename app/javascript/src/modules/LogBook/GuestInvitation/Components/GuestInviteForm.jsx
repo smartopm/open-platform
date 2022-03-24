@@ -39,7 +39,7 @@ export default function GuestInviteForm() {
   const [guestUsers, setGuestUsers] = useState([]);
   const theme = useTheme();
   const { data, loading, error } = useGuests(searchValue)
-  const matchesSmall = useMediaQuery(theme.breakpoints.down('lg'));
+  const matchesSmall = useMediaQuery(theme.breakpoints.down('md'));
 
   function handleInputChange(event, index) {
     const { name, value } = event.target;

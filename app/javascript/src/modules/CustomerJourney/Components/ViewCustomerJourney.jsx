@@ -1,10 +1,10 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React from 'react'
-import makeStyles from '@mui/styles/makeStyles';
-import TimelineIcon from '@mui/icons-material/Timeline';
-import useMediaQuery from '@mui/material/useMediaQuery'
-import Typography from '@mui/material/Typography';
+import { makeStyles } from '@material-ui/core/styles';
+import TimelineIcon from '@material-ui/icons/Timeline';
+import useMediaQuery from '@material-ui/core/useMediaQuery'
+import Typography from '@material-ui/core/Typography';
 import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 

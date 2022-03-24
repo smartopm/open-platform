@@ -3,7 +3,7 @@
 // One Time Passcode Screen
 import React, { Fragment, useEffect, useState } from 'react';
 import { StyleSheet, css } from 'aphrodite';
-import Tooltip from '@mui/material/Tooltip';
+import Tooltip from '@material-ui/core/Tooltip';
 import { useParams } from 'react-router-dom';
 import { useMutation } from 'react-apollo';
 import { SendOneTimePasscode } from '../graphql/mutations';

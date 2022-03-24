@@ -7,7 +7,6 @@ import FormSubmissionsQuery from '../graphql/report_queries';
 import Report from '../components/Report';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import userMock from '../../../__mocks__/userMock';
-import MockedThemeProvider from '../../__mocks__/mock_theme';
 
 describe('Report Component', () => {
   it('should mount component correctly', () => {
@@ -40,15 +39,13 @@ describe('Report Component', () => {
       <BrowserRouter>
         <Context.Provider value={userMock}>
           <MockedProvider mocks={mock}>
-            <MockedThemeProvider>
-              <Report />
-            </MockedThemeProvider>
+            <Report />
           </MockedProvider>
         </Context.Provider>
       </BrowserRouter>
     );
-    expect(container.queryByText('misc.generate_report')).toBeInTheDocument();
-    expect(container.queryByText('misc.pick_start_date')).toBeInTheDocument();
-    expect(container.queryByText('misc.pick_end_date')).toBeInTheDocument();
+    expect(container.queryByText('misc.generate_report')).toBeInTheDocument()
+    expect(container.queryByText('misc.pick_start_date')).toBeInTheDocument()
+    expect(container.queryByText('misc.pick_end_date')).toBeInTheDocument()
   });
 });

@@ -7,11 +7,11 @@ import {
   DialogTitle,
   Divider,
   IconButton
-} from '@mui/material'
-import WarningIcon from '@mui/icons-material/Warning';
-import CloseIcon from '@mui/icons-material/Close';
+} from '@material-ui/core'
+import WarningIcon from '@material-ui/icons/Warning';
+import CloseIcon from '@material-ui/icons/Close';
 import PropTypes from 'prop-types'
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
 import {Spinner} from '../Loading'
 
@@ -39,11 +39,7 @@ export default function DeleteDialogueBox({
         <DialogTitle id="alert-dialog-title" className={classes.title} data-testid="delete_dialog">
           <WarningIcon style={{paddingTop: '10px'}} />
           <span style={{fontSize: '14px', margin: '0 30px 0 7px'}}>{t('dialogs.dialog_action', { action, title })}</span>
-          <IconButton
-            style={{paddingTop: '5px', color: '#dc402b'}}
-            onClick={handleClose}
-            size="large"
-          >
+          <IconButton style={{paddingTop: '5px', color: '#dc402b'}} onClick={handleClose}>
             <CloseIcon />
           </IconButton>
         </DialogTitle>
@@ -64,11 +60,11 @@ export default function DeleteDialogueBox({
                 {action}
               </Button>
             </>
-        )}
+          )}
         </DialogActions>
       </Dialog>
     </>
-);
+  )
 }
 
 DeleteDialogueBox.defaultProps = {

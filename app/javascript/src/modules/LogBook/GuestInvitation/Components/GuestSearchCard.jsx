@@ -1,9 +1,9 @@
 import React from 'react';
-import Grid from '@mui/material/Grid';
-import Card from '@mui/material/Card';
-import Button from '@mui/material/Button';
+import Grid from '@material-ui/core/Grid';
+import Card from '@material-ui/core/Card';
+import Button from '@material-ui/core/Button';
 import PropTypes from 'prop-types';
-import CardContent from '@mui/material/CardContent';
+import CardContent from '@material-ui/core/CardContent';
 import { Link } from 'react-router-dom';
 import Text from '../../../../shared/Text';
 import Avatar from '../../../../components/Avatar';
@@ -13,7 +13,7 @@ export default function GuestSearchCard({ guest, translate, handInviteGuest }) {
   return (
     <Card elevation={0}>
       <CardContent>
-        <Grid container direction="row" justifyContent="flex-start" alignItems="center" spacing={2}>
+        <Grid container direction="row" justify="flex-start" alignItems="center" spacing={2}>
           <Grid item xs={4} sm={2} data-testid="guest_avatar">
             <Avatar imageUrl={guest.imageUrl} user={guest} alt="avatar-image" />
           </Grid>

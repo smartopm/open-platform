@@ -85,11 +85,11 @@ describe('LogBook Component', () => {
 
       fireEvent.change(container.queryByLabelText('simple tabs example'))
 
-      fireEvent.change(container.queryAllByTestId('menu-list')[0])
-      expect(container.queryAllByText('logbook.view_details')[0]).toBeInTheDocument();
-      expect(container.queryAllByText('logbook.add_observation')[0]).toBeInTheDocument();
+      fireEvent.change(container.queryByTestId('menu-list'))
+      expect(container.queryByText('logbook.view_details')).toBeInTheDocument();
+      expect(container.queryByText('logbook.add_observation')).toBeInTheDocument();
 
-      fireEvent.click(container.queryAllByText('logbook.add_observation')[0])
+      fireEvent.click(container.queryByText('logbook.add_observation'))
       expect(container.queryByText('observations.add_your_observation')).toBeInTheDocument();
 
       fireEvent.change(container.queryByTestId('entry-dialog-field'), {

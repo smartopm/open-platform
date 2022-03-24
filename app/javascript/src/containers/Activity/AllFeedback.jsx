@@ -2,8 +2,8 @@
 import React, { Fragment, useState } from 'react'
 import { useQuery } from 'react-apollo'
 import { formatISO9075 } from 'date-fns'
-import ThumbDownIcon from '@mui/icons-material/ThumbDown'
-import ThumbUpIcon from '@mui/icons-material/ThumbUp'
+import ThumbDownIcon from '@material-ui/icons/ThumbDown'
+import ThumbUpIcon from '@material-ui/icons/ThumbUp'
 import { useTranslation } from 'react-i18next';
 import { allFeedback } from '../../graphql/queries'
 import Loading from '../../shared/Loading'

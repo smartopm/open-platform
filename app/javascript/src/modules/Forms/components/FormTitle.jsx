@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Typography } from '@mui/material';
+import { Typography } from '@material-ui/core';
 import CenteredContent from '../../../components/CenteredContent';
 
 export default function FormTitle({ name, description }) {

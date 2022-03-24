@@ -1,8 +1,8 @@
 import React, { useContext, useState } from 'react';
-import makeStyles from '@mui/styles/makeStyles';
-import useMediaQuery from '@mui/material/useMediaQuery';
+import { makeStyles } from '@material-ui/core/styles';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import PropTypes from 'prop-types';
-import { Typography, Fab } from '@mui/material';
+import { Typography, Fab } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
 import { formatMoney } from '../../../../utils/helpers';
 import { currencies } from '../../../../utils/constants';

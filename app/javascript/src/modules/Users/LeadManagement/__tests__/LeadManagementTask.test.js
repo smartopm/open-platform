@@ -7,7 +7,6 @@ import { Context } from '../../../../containers/Provider/AuthStateProvider';
 import authState from '../../../../__mocks__/authstate';
 import { TaskQuery } from '../../../Tasks/graphql/task_queries';
 import LeadManagementTask from '../Components/LeadManagementTask';
-import MockedThemeProvider from '../../../__mocks__/mock_theme';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 describe('LeadManagementForm', () => {
@@ -76,12 +75,10 @@ describe('LeadManagementForm', () => {
       <Context.Provider value={authState}>
         <MockedProvider mocks={taskDataMock} addTypename={false} fromLeadPage>
           <BrowserRouter>
-            <MockedThemeProvider>
-              <LeadManagementTask
-                taskId="6a7e722a-9bd5-48d4-aaf7-f3285ccff4a3"
-                handleSplitScreenOpen={onChange}
-              />
-            </MockedThemeProvider>
+            <LeadManagementTask
+              taskId="6a7e722a-9bd5-48d4-aaf7-f3285ccff4a3"
+              handleSplitScreenOpen={onChange}
+            />
           </BrowserRouter>
         </MockedProvider>
       </Context.Provider>
@@ -114,9 +111,7 @@ describe('LeadManagementForm', () => {
       <Context.Provider value={authState}>
         <MockedProvider mocks={taskDataMock} addTypename={false}>
           <BrowserRouter>
-            <MockedThemeProvider>
-              <LeadManagementTask taskId={null} handleSplitScreenOpen={onChange} />
-            </MockedThemeProvider>
+            <LeadManagementTask taskId={null} handleSplitScreenOpen={onChange} />
           </BrowserRouter>
         </MockedProvider>
       </Context.Provider>

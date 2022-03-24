@@ -1,15 +1,14 @@
 import React from 'react';
 import { render, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import userEvent from '@testing-library/user-event'
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/react-testing';
 import { Spinner } from '../../../shared/Loading';
-import { PlansList, SubscriptionPlans, renderSubscriptionPlans } from '../Components/PlansList';
+import { PlansList, SubscriptionPlans, renderSubscriptionPlans} from '../Components/PlansList';
 import { CommunityPlansQuery } from '../graphql/payment_query';
 import currency from '../../../__mocks__/currency';
 import { PaymentReminderMutation } from '../graphql/payment_plan_mutations';
-import MockedThemeProvider from '../../__mocks__/mock_theme';
 
 describe('Plans List Item Component', () => {
   const subscriptionPlansData = {
@@ -40,7 +39,7 @@ describe('Plans List Item Component', () => {
       planValue: 5000,
       planStatus: 'on_track',
       installmentAmount: '2000',
-      upcomingInstallmentDueDate: '2021-11-13T10:53:16Z',
+      upcomingInstallmentDueDate: "2021-11-13T10:53:16Z",
       user: {
         id: '5d0d8051-2510-567a-886a-48bbfa9f6423',
         name: 'John Doe',
@@ -53,25 +52,23 @@ describe('Plans List Item Component', () => {
         parcelNumber: 'Plot01',
         parcelType: 'basic'
       },
-      planPayments: [
-        {
-          id: '5d0d8051-2510-567a-886a-89945dasd4',
-          amount: 100.0,
-          status: 'paid',
-          createdAt: '2020-11-13T10:53:16Z',
-          receiptNumber: 'MI131'
-        }
-      ]
+      planPayments: [{
+        id: '5d0d8051-2510-567a-886a-89945dasd4',
+        amount: 100.0,
+        status: 'paid',
+        createdAt: "2020-11-13T10:53:16Z",
+        receiptNumber: 'MI131'
+      }]
     }
-  ];
+  ]
 
   const mocks = [
     {
       request: {
         query: PaymentReminderMutation,
         variables: {
-          userId: 'xsxnkjasnxkn-31',
-          paymentPlanId: 'kjkjsadas-87'
+          userId: "xsxnkjasnxkn-31",
+          paymentPlanId: "kjkjsadas-87"
         }
       },
       result: {
@@ -84,7 +81,7 @@ describe('Plans List Item Component', () => {
       request: {
         query: CommunityPlansQuery,
         variables: {
-          query: ''
+          query: ""
         }
       },
       result: {
@@ -93,20 +90,18 @@ describe('Plans List Item Component', () => {
         }
       }
     }
-  ];
+  ]
   it('should render the plans list component', async () => {
     const container = render(
       <MockedProvider mocks={mocks} addTypename={false}>
         <BrowserRouter>
-          <MockedThemeProvider>
-            <PlansList
-              currencyData={currency}
-              matches={false}
-              setDisplaySubscriptionPlans={jest.fn()}
-              setMessage={jest.fn()}
-              setAlertOpen={jest.fn()}
-            />
-          </MockedThemeProvider>
+          <PlansList
+            currencyData={currency}
+            matches={false}
+            setDisplaySubscriptionPlans={jest.fn()}
+            setMessage={jest.fn()}
+            setAlertOpen={jest.fn()}
+          />
         </BrowserRouter>
       </MockedProvider>
     );
@@ -133,18 +128,16 @@ describe('Plans List Item Component', () => {
   it('should render the subscription plans component', async () => {
     render(
       <BrowserRouter>
-        <MockedThemeProvider>
-          <SubscriptionPlans
-            currencyData={currency}
-            matches={false}
-            setMessage={jest.fn}
-            setAlertOpen={jest.fn}
-            subscriptionPlansLoading={false}
-            subscriptionPlansData={subscriptionPlansData}
-            subscriptionPlansRefetch={jest.fn}
-            setDisplaySubscriptionPlans={jest.fn}
-          />
-        </MockedThemeProvider>
+        <SubscriptionPlans
+          currencyData={currency}
+          matches={false}
+          setMessage={jest.fn}
+          setAlertOpen={jest.fn}
+          subscriptionPlansLoading={false}
+          subscriptionPlansData={subscriptionPlansData}
+          subscriptionPlansRefetch={jest.fn}
+          setDisplaySubscriptionPlans={jest.fn}
+        />
       </BrowserRouter>
     );
 
@@ -155,20 +148,14 @@ describe('Plans List Item Component', () => {
 
   it('should check if renderSubscriptionPlans works as expected', () => {
     const menuData = {
-      menuList: [
-        { content: 'Edit subscription plan', isAdmin: true, color: '', handleClick: jest.fn() }
-      ],
+      menuList: [{ content: 'Edit subscription plan', isAdmin: true, color: '', handleClick: jest.fn()}],
       handleTransactionMenu: jest.fn(),
       anchorEl: null,
       open: true,
       userType: 'admin',
       handleClose: jest.fn()
-    };
-    const results = renderSubscriptionPlans(
-      subscriptionPlansData.subscriptionPlans[0],
-      currency,
-      menuData
-    );
+    }
+    const results = renderSubscriptionPlans(subscriptionPlansData.subscriptionPlans[0], currency, menuData);
     expect(results).toBeInstanceOf(Array);
     expect(results[0]).toHaveProperty('Plan Type');
     expect(results[0]).toHaveProperty('Start Date');

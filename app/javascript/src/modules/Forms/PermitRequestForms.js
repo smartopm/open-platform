@@ -1,5 +1,5 @@
 import React from 'react';
-import DescriptionIcon from '@mui/icons-material/Description';
+import DescriptionIcon from '@material-ui/icons/Description';
 import CommunityForms from './containers/FormLinks';
 import AccessCheck from '../Permissions/Components/AccessCheck';
 

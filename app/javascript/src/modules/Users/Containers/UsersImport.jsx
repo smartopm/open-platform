@@ -3,7 +3,7 @@ import React, { useState, useContext } from 'react';
 import { useMutation } from 'react-apollo';
 import { StyleSheet, css } from 'aphrodite';
 import { useHistory } from 'react-router-dom';
-import { Button, Grid } from '@mui/material';
+import { Button, Grid } from '@material-ui/core';
 import { ImportCreate } from '../../../graphql/mutations';
 import CenteredContent from '../../../components/CenteredContent';
 import Loading from '../../../shared/Loading';
@@ -102,49 +102,49 @@ export default function UsersImport() {
         <Grid item md={6} style={{ margin: '5px auto' }}>
           {isLoading ? (
             <Loading />
-        ) : (
-          <div>
-            <Grid container justifyContent="center" style={{ marginTop: '200px' }}>
-              <input
-                accept=".csv"
-                className={css(styles.inputField)}
-                id="contained-button-file"
-                data-testid="csv-input"
-                type="file"
-                onChange={processCsv}
-              />
-            </Grid>
-            <br />
-            {csvString.length > 0 && !hasErrors && (
-              <CenteredContent>
-                <Button
-                  variant="contained"
-                  aria-label="business_cancel"
-                  color="secondary"
-                  className={css(styles.cancelBtn)}
-                  onClick={onCancel}
-                  data-testid="cancel-btn"
-                >
-                  Cancel
-                </Button>
-                <Button
-                  variant="contained"
-                  type="submit"
-                  aria-label="business_submit"
-                  color="primary"
-                  onClick={createImport}
-                  className={css(styles.importBtn)}
-                >
-                  Import
-                </Button>
-              </CenteredContent>
-            )}
-          </div>
-        )}
+          ) : (
+            <div>
+              <Grid container justify="center" style={{ marginTop: '200px' }}>
+                <input
+                  accept=".csv"
+                  className={css(styles.inputField)}
+                  id="contained-button-file"
+                  data-testid="csv-input"
+                  type="file"
+                  onChange={processCsv}
+                />
+              </Grid>
+              <br />
+              {csvString.length > 0 && !hasErrors && (
+                <CenteredContent>
+                  <Button
+                    variant="contained"
+                    aria-label="business_cancel"
+                    color="secondary"
+                    className={css(styles.cancelBtn)}
+                    onClick={onCancel}
+                    data-testid="cancel-btn"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    variant="contained"
+                    type="submit"
+                    aria-label="business_submit"
+                    color="primary"
+                    onClick={createImport}
+                    className={css(styles.importBtn)}
+                  >
+                    Import
+                  </Button>
+                </CenteredContent>
+              )}
+            </div>
+          )}
         </Grid>
       </Grid>
     </>
-);
+  );
 }
 
 const styles = StyleSheet.create({

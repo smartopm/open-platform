@@ -2,11 +2,11 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useEffect, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
-import Fab from '@mui/material/Fab';
+import Fab from '@material-ui/core/Fab';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@mui/styles';
-import Typography from '@mui/material/Typography';
+import { makeStyles } from '@material-ui/styles';
+import Typography from '@material-ui/core/Typography';
 import { dateToString } from '../../../components/DateContainer';
 import UserPlotMap from './UserPlotMap';
 import { objectAccessor } from '../../../utils/helpers';

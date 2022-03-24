@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React from 'react'
-import { Menu, MenuItem } from '@mui/material'
+import { Menu, MenuItem } from '@material-ui/core'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 

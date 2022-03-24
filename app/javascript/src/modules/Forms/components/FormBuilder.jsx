@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { Button, Container } from '@mui/material'
+import { Button, Container } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
 import { useMutation, useQuery } from 'react-apollo'
 import CenteredContent from '../../../components/CenteredContent'

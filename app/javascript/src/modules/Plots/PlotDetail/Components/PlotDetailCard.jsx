@@ -1,13 +1,13 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React from 'react';
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from '@material-ui/core/styles';
 import { useQuery } from 'react-apollo';
 import PropTypes from 'prop-types';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import ImageList from '@mui/material/ImageList';
-import ImageListItem from '@mui/material/ImageListItem';
-import Typography from '@mui/material/Typography';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import GridList from '@material-ui/core/GridList';
+import GridListTile from '@material-ui/core/GridListTile';
+import Typography from '@material-ui/core/Typography';
 import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Spinner } from '../../../../shared/Loading';
@@ -69,9 +69,9 @@ export default function PlotDetailCard({ authState }) {
                   matches ? { marginLeft: '20px' } : { marginLeft: '79px', marginBottom: '40px' }
                 }
               >
-                <ImageList className={classes.gridList} cols={matches ? 1 : 3.5}>
+                <GridList className={classes.gridList} cols={matches ? 1 : 3.5}>
                   {data?.userPlansWithPayments?.filter(plan => plan.status !== 'general')?.map(plan => (
-                    <ImageListItem key={plan.id}>
+                    <GridListTile key={plan.id}>
                       <div
                         className={matches ? classes.gridTileMobile : classes.gridTile}
                         onClick={() => history.push(`/user/${authState.id}?tab=Plans`)}
@@ -94,9 +94,9 @@ export default function PlotDetailCard({ authState }) {
                           </Typography>
                         </div>
                       </div>
-                    </ImageListItem>
+                    </GridListTile>
                   ))}
-                </ImageList>
+                </GridList>
               </div>
             ) : (
               <EmptyCard

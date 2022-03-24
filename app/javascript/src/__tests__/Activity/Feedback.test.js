@@ -5,16 +5,13 @@ import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom/';
 import { MockedProvider } from '@apollo/react-testing';
 import Feedback from '../../containers/Activity/Feedback';
-import MockedThemeProvider from '../../modules/__mocks__/mock_theme';
 
 describe('Feedback Component', () => {
   it('renders necessary elements', () => {
     const container = render(
       <MockedProvider>
         <BrowserRouter>
-          <MockedThemeProvider>
-            <Feedback />
-          </MockedThemeProvider>
+          <Feedback />
         </BrowserRouter>
       </MockedProvider>
     );

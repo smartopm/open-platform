@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Menu, MenuItem } from '@mui/material'
+import { Menu, MenuItem } from '@material-ui/core'
 import PropTypes from 'prop-types'
 import { useTranslation } from 'react-i18next';
 import ActionFLowDelete from './ActionFlows/ActionFlowDelete'

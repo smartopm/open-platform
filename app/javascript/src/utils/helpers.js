@@ -352,7 +352,7 @@ export function setObjectValue(object, key, value) {
  * @example snake_name ==> snakeName
  */
 export function toCamelCase(str){
-  return str.replace(/([-_]\w)/g, word => word[1].toUpperCase());
+  return str.replace(/([-_]\w)/g, word => word[1].toUpperCase())
 }
 
 /**
@@ -600,7 +600,7 @@ export function secureFileDownload(path) {
  * @returns split words
  */
  export function splitCamelCase(word){
-  return word.replace(/([a-z])([A-Z])/g, '$1 $2');
+  return word.replace(/([a-z])([A-Z])/g, '$1 $2')
 }
 
 export function sortTaskOrder(taskItem1, taskItem2){

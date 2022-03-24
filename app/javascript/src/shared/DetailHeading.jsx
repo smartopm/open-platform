@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import Typography from '@mui/material/Typography';
+import Typography from '@material-ui/core/Typography';
 
 export default function DetailHeading({ title }){
   return (

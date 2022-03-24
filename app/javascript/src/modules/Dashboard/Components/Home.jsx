@@ -1,6 +1,6 @@
 /* eslint-disable no-use-before-define */
 import React, { useContext } from 'react';
-import Divider from '@mui/material/Divider';
+import Divider from '@material-ui/core/Divider';
 import { useTranslation } from 'react-i18next';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
 import Loading from '../../../shared/Loading';

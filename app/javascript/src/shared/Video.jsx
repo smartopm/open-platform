@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
-import { useMediaQuery } from '@mui/material';
+import { useMediaQuery } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
 import { Context } from '../containers/Provider/AuthStateProvider';
 import { useFetchMedia } from '../utils/customHooks';

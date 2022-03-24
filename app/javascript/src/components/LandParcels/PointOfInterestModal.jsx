@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import makeStyles from '@mui/styles/makeStyles';
-import { TextField, FormControl, Select, InputLabel, MenuItem } from '@mui/material';
+import { makeStyles } from '@material-ui/core/styles';
+import { TextField, FormControl, Select, InputLabel, MenuItem } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
 import { CustomizedDialogs } from '../Dialog';
 import {pointOfInterestIconSet} from '../../utils/constants'

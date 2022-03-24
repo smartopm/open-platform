@@ -1,7 +1,7 @@
 /* eslint-disable react/no-array-index-key */
 import React from 'react';
 import PropTypes from 'prop-types'
-import { Menu, MenuItem } from '@mui/material';
+import { Menu, MenuItem } from '@material-ui/core';
 
 export default function MenuList({
   list,

@@ -1,9 +1,9 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable no-use-before-define */
 import React, { useEffect, useState } from 'react';
-import makeStyles from '@mui/styles/makeStyles';
-import SwipeableDrawer from '@mui/material/SwipeableDrawer';
-import { Button, Typography } from '@mui/material';
+import { makeStyles } from '@material-ui/core/styles';
+import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
+import { Button, Typography } from '@material-ui/core';
 import PropTypes from 'prop-types'
 import { useLazyQuery, useMutation } from 'react-apollo';
 import { useTranslation } from 'react-i18next';

@@ -1,5 +1,6 @@
 import React from 'react';
-import { Grid, Typography, Button } from '@mui/material';
+import { Button } from '@material-ui/core';
+import { Grid, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 

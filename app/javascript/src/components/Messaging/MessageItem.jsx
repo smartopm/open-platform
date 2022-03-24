@@ -1,11 +1,11 @@
 /* eslint-disable react/require-default-props */
 import React from 'react'
 import PropTypes from 'prop-types'
-import ListItem from '@mui/material/ListItem'
+import ListItem from '@material-ui/core/ListItem'
 import { useTranslation } from 'react-i18next';
-import Badge from "@mui/material/Badge";
-import ListItemText from '@mui/material/ListItemText'
-import ListItemAvatar from '@mui/material/ListItemAvatar'
+import Badge from "@material-ui/core/Badge";
+import ListItemText from '@material-ui/core/ListItemText'
+import ListItemAvatar from '@material-ui/core/ListItemAvatar'
 import { useHistory, useLocation , Link } from 'react-router-dom'
 import { css, StyleSheet } from 'aphrodite'
 import Avatar from '../Avatar'

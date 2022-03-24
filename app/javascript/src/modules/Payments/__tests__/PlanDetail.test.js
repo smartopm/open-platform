@@ -1,12 +1,11 @@
-import React from 'react';
-import { render } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
-import { MockedProvider } from '@apollo/react-testing';
-import { BrowserRouter } from 'react-router-dom/';
-import PlanDetail from '../Components/UserTransactions/PlanDetail';
-import MockedThemeProvider from '../../__mocks__/mock_theme';
+import React from 'react'
+import { render } from '@testing-library/react'
+import '@testing-library/jest-dom/extend-expect'
+import { MockedProvider } from '@apollo/react-testing'
+import { BrowserRouter } from 'react-router-dom/'
+import PlanDetail from '../Components/UserTransactions/PlanDetail'
 
-jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
+jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
 describe('It should test the plan detail modal component', () => {
   const planData = {
     id: '84h3ui7ehf',
@@ -23,34 +22,32 @@ describe('It should test the plan detail modal component', () => {
     landParcel: {
       parcelNumber: 'test123'
     }
-  };
+  }
 
   it('should render plan detail modal', () => {
     const container = render(
       <MockedProvider>
         <BrowserRouter>
-          <MockedThemeProvider>
-            <PlanDetail
-              open
-              handleModalClose={jest.fn}
-              currencyData={{ currency: 'ZMW', locale: 'en-ZM' }}
-              planData={planData}
-              updatePaymentPlan={jest.fn}
-              setIsSuccessAlert={jest.fn}
-              setMessageAlert={jest.fn}
-              plansRefetch={jest.fn}
-            />
-          </MockedThemeProvider>
+          <PlanDetail 
+            open
+            handleModalClose={jest.fn}
+            currencyData={{ currency: 'ZMW', locale: 'en-ZM'}}
+            planData={planData}
+            updatePaymentPlan={jest.fn}
+            setIsSuccessAlert={jest.fn}
+            setMessageAlert={jest.fn}
+            plansRefetch={jest.fn}
+          />
         </BrowserRouter>
-      </MockedProvider>
-    );
+      </MockedProvider> 
+    )
 
-    expect(container.getByTestId('detail')).toBeInTheDocument();
-    expect(container.getByTestId('status')).toBeInTheDocument();
-    expect(container.getByTestId('start-date')).toBeInTheDocument();
-    expect(container.getByTestId('end-date')).toBeInTheDocument();
-    expect(container.getByTestId('payment-day')).toBeInTheDocument();
-    expect(container.getByTestId('renewable-slider')).toBeInTheDocument();
-    expect(container.getByTestId('renewable-text')).toBeInTheDocument();
+    expect(container.getByTestId("detail")).toBeInTheDocument();
+    expect(container.getByTestId("status")).toBeInTheDocument();
+    expect(container.getByTestId("start-date")).toBeInTheDocument();
+    expect(container.getByTestId("end-date")).toBeInTheDocument();
+    expect(container.getByTestId("payment-day")).toBeInTheDocument();
+    expect(container.getByTestId("renewable-slider")).toBeInTheDocument();
+    expect(container.getByTestId("renewable-text")).toBeInTheDocument();
   });
 });

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { StyleSheet, css } from 'aphrodite'
 import { useMutation, useQuery } from 'react-apollo'
 import { useHistory } from 'react-router-dom'
-import { Button } from '@mui/material'
+import { Button } from '@material-ui/core'
 import { useTranslation } from 'react-i18next';
 import { CreateActionFlow, UpdateActionFlow } from '../../graphql/mutations'
 import MessageAlert from '../../components/MessageAlert'
@@ -77,7 +77,7 @@ export default function ActionFlows() {
   }
 
   function metaDataVariableValue(value) {
-    return value.replace(/ /g, '_').toLowerCase();
+    return value.replace(/ /g, '_').toLowerCase()
   }
 
   // eslint-disable-next-line no-shadow

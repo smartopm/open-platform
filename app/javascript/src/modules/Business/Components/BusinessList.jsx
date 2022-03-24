@@ -14,8 +14,8 @@ import {
   Dialog,
   DialogTitle,
   DialogContent
-} from '@mui/material'
-import MoreVertIcon from '@mui/icons-material/MoreVert'
+} from '@material-ui/core'
+import MoreVertIcon from '@material-ui/icons/MoreVert'
 import { useTranslation } from 'react-i18next'
 import Avatar from '../../../components/Avatar'
 import BusinessActionMenu from './BusinessActionMenu'
@@ -125,7 +125,6 @@ export default function BusinessList({ businessData, authState, refetch }) {
                 onClick={handleOpenMenu}
                 dataid={business.id}
                 data-testid='open_menu'
-                size="large"
               >
                 <MoreVertIcon />
               </IconButton>
@@ -157,7 +156,7 @@ export default function BusinessList({ businessData, authState, refetch }) {
         </Fab>
       )}
     </div>
-  );
+  )
 }
 
 const styles = StyleSheet.create({

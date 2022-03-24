@@ -9,7 +9,7 @@ import {
   FormControl,
   FormGroup,
   FormControlLabel
-} from '@mui/material'
+} from '@material-ui/core'
 import PropTypes from 'prop-types'
 import CenteredContent from '../../../components/CenteredContent'
 
@@ -36,7 +36,7 @@ export default function NotificationPage({
       </Box>
       <Divider />
       <br />
-      <Grid container alignItems="center" justifyContent="center" spacing={3}>
+      <Grid container alignItems="center" justify="center" spacing={3}>
         <Grid item xs={12} sm={6}>
           <Typography variant="body1" data-testid="notification-description">
             News and Updates: Receive the latest news and updates on Nkwashi and
@@ -119,7 +119,7 @@ export default function NotificationPage({
         </Button>
       </CenteredContent>
     </Box>
-  );
+  )
 }
 
 NotificationPage.propTypes = {

@@ -1,6 +1,6 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { Button, Container, DialogContent, DialogContentText } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
+import { Button, Container, DialogContent, DialogContentText } from '@material-ui/core';
+import AddIcon from '@material-ui/icons/Add';
 import { useMutation, useQuery } from 'react-apollo';
 import { useHistory } from 'react-router';
 import PropTypes from 'prop-types';
@@ -107,7 +107,7 @@ export default function Form({ editMode, formId }) {
         handleClose={handleCategoryClose}
         open={categoryFormOpen}
         title={t('form:misc.category')}
-        color="primary"
+        color="default"
       >
         <Container>
           <CategoryForm
@@ -123,7 +123,7 @@ export default function Form({ editMode, formId }) {
         handleClose={handleCancelPreview}
         open={formState.previewable}
         title={t('form:misc.contract_preview')}
-        color="primary"
+        color="default"
         scroll="paper"
       >
         <DialogContent dividers>
@@ -131,13 +131,13 @@ export default function Form({ editMode, formId }) {
             <FormPreview
               loading={formState.isSubmitting}
               handleFormSubmit={() =>
-              saveFormData(
-                formData,
-                formId,
-                authState.user.id,
-                categoriesData.data?.formCategories
-              )
-            }
+                saveFormData(
+                  formData,
+                  formId,
+                  authState.user.id,
+                  categoriesData.data?.formCategories
+                )
+              }
               categoriesData={categoriesData}
             />
           </DialogContentText>
@@ -148,11 +148,11 @@ export default function Form({ editMode, formId }) {
       {loading && <Spinner />}
 
       {!loading && formDetailData && (
-      <FormTitle
-        name={formDetailData.form?.name}
-        description={formDetailData.form?.description}
-      />
-    )}
+        <FormTitle
+          name={formDetailData.form?.name}
+          description={formDetailData.form?.description}
+        />
+      )}
       <div
         data-testid="category-list-container"
         style={formState.isSubmitting ? { opacity: '0.3', pointerEvents: 'none' } : {}}
@@ -169,48 +169,49 @@ export default function Form({ editMode, formId }) {
       </div>
       <br />
       {editMode && (
-      <Button
-        variant="outlined"
-        startIcon={<AddIcon color="primary" />}
-        style={{ float: 'right' }}
-        onClick={handleAddCategory}
-        data-testid="add_category"
-      >
-        {t('form:actions.add_category')}
-      </Button>
-    )}
+        <Button
+          variant="outlined"
+          color="default"
+          startIcon={<AddIcon color="primary" />}
+          style={{ float: 'right' }}
+          onClick={handleAddCategory}
+          data-testid="add_category"
+        >
+          {t('form:actions.add_category')}
+        </Button>
+      )}
       {!editMode && (
-      <CenteredContent>
-        <Button
-          variant="outlined"
-          type="submit"
-          color="secondary"
-          aria-label="form_draft"
-          style={{ margin: '25px 25px 0 0' }}
-          onClick={() => formSubmit(formData, 'draft')}
-          disabled={formState.isSubmitting}
-          data-testid="save_as_draft"
-        >
-          {t('common:form_actions.save_as_draft')}
-        </Button>
-        <Button
-          variant="outlined"
-          type="submit"
-          color="primary"
-          aria-label="form_submit"
-          style={{ marginTop: '25px' }}
-          onClick={() => formSubmit(formData)}
-          disabled={formState.isSubmitting}
-          data-testid="submit_form_btn"
-        >
-          {!formState.isSubmitting
-            ? t('common:form_actions.submit')
-            : t('common:form_actions.submitting')}
-        </Button>
-      </CenteredContent>
-    )}
+        <CenteredContent>
+          <Button
+            variant="outlined"
+            type="submit"
+            color="secondary"
+            aria-label="form_draft"
+            style={{ margin: '25px 25px 0 0' }}
+            onClick={() => formSubmit(formData, 'draft')}
+            disabled={formState.isSubmitting}
+            data-testid="save_as_draft"
+          >
+            {t('common:form_actions.save_as_draft')}
+          </Button>
+          <Button
+            variant="outlined"
+            type="submit"
+            color="primary"
+            aria-label="form_submit"
+            style={{ marginTop: '25px' }}
+            onClick={() => formSubmit(formData)}
+            disabled={formState.isSubmitting}
+            data-testid="submit_form_btn"
+          >
+            {!formState.isSubmitting
+              ? t('common:form_actions.submit')
+              : t('common:form_actions.submitting')}
+          </Button>
+        </CenteredContent>
+      )}
     </>
-);
+  );
 }
 
 Form.propTypes = {

@@ -1,5 +1,5 @@
 import React from 'react';
-import PaymentIcon from '@mui/icons-material/Payment';
+import PaymentIcon from '@material-ui/icons/Payment';
 
 export default {
   routeProps: {

@@ -10,7 +10,7 @@ import { Context } from '../../../../containers/Provider/AuthStateProvider';
 import authState from '../../../../__mocks__/authstate';
 import TaskProcessDetail from '../Components/TaskProcessDetail';
 import { ProjectQuery } from '../graphql/process_queries';
-import MockedThemeProvider from "../../../__mocks__/mock_theme";
+
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 
@@ -34,7 +34,7 @@ describe('TaskProcessDetail Component', () => {
     {
       request: {
         query: SubTasksQuery,
-        variables: { taskId: taskMock.id, limit: taskMock.subTasks.length }
+        variables: { taskId:taskMock.id, limit: taskMock.subTasks.length }
       },
       result: {
         data: {
@@ -50,8 +50,8 @@ describe('TaskProcessDetail Component', () => {
       result: {
         data: {
           project: {
-            id: 'f51a0723-59b7-416b-9280-9c2fee73ee66',
-            body: 'DoubleGDP'
+            id: "f51a0723-59b7-416b-9280-9c2fee73ee66",
+            body: "DoubleGDP"
           }
         }
       }
@@ -63,9 +63,7 @@ describe('TaskProcessDetail Component', () => {
       <Context.Provider value={authState}>
         <MockedProvider mocks={mocks} addTypename={false}>
           <BrowserRouter>
-            <MockedThemeProvider>
-              <TaskProcessDetail />
-            </MockedThemeProvider>
+            <TaskProcessDetail />
           </BrowserRouter>
         </MockedProvider>
       </Context.Provider>

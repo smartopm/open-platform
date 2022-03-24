@@ -7,7 +7,6 @@ import { act } from 'react-dom/test-utils';
 import Profile from '../Components/BusinessProfile';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import userMock from '../../../__mocks__/authstate';
-import MockedThemeProvider from '../../__mocks__/mock_theme';
 
 describe('It tests the business profile page', () => {
   const props = {
@@ -33,14 +32,12 @@ describe('It tests the business profile page', () => {
         <Context.Provider value={userMock}>
           <MockedProvider>
             <BrowserRouter>
-              <MockedThemeProvider>
-                <Profile {...props} />
-              </MockedThemeProvider>
+              <Profile {...props} />
             </BrowserRouter>
           </MockedProvider>
         </Context.Provider>
-      );
-    });
+      )
+    })
     expect(container.queryByTestId('details-holder').children).toHaveLength(6);
     expect(container.queryByTestId('pf-number').textContent).toContain('23627378');
     expect(container.queryByText(/a@b.com/).textContent).toContain('a@b.com');
@@ -48,30 +45,27 @@ describe('It tests the business profile page', () => {
     expect(container.queryByText('description').textContent).toContain('description');
     expect(container.queryAllByText('verified')[0].textContent).toContain('verified');
     expect(container.queryByText('https://google.com').textContent).toContain('https://google.com');
-    expect(container.queryByTestId('inquire_btn').textContent).toContain(
-      'business.ask_about_business'
-    );
-
+    expect(container.queryByTestId('inquire_btn').textContent).toContain('business.ask_about_business');
+    
     fireEvent.click(container.queryByTestId('inquire_btn'));
     fireEvent.click(container.queryByTestId('home_url'));
     fireEvent.keyPress(container.queryByTestId('home_url'));
-
+    
     expect(window.open).toBeCalledWith('https://google.com', '_blank');
+    
+    fireEvent.change(container.queryByTestId('business_tabs'), { value: 'Relevant Posts'})
+    
+    expect(container.queryByTestId('operating_hrs').textContent).toContain('form_fields.operating_hours');
 
-    fireEvent.change(container.queryByTestId('business_tabs'), { value: 'Relevant Posts' });
-
-    expect(container.queryByTestId('operating_hrs').textContent).toContain(
-      'form_fields.operating_hours'
-    );
   });
   it('should check for other props', () => {
     const otherProps = {
       profileData: {
         ...props.profileData,
         homeUrl: 'www.google.fr',
-        description: null
+        description: null,
       }
-    };
+    }
     window.open = jest.fn();
     let container;
 
@@ -80,17 +74,15 @@ describe('It tests the business profile page', () => {
         <Context.Provider value={userMock}>
           <MockedProvider>
             <BrowserRouter>
-              <MockedThemeProvider>
-                <Profile {...otherProps} />
-              </MockedThemeProvider>
+              <Profile {...otherProps} />
             </BrowserRouter>
           </MockedProvider>
         </Context.Provider>
-      );
-    });
+      )
+    })
 
     fireEvent.click(container.queryByTestId('home_url'));
     expect(window.open).toBeCalledWith('http://www.google.fr', '_blank');
-    expect(container.queryByTestId('pf-description').textContent).toContain('misc.no_description');
-  });
+    expect(container.queryByTestId('pf-description').textContent).toContain('misc.no_description')
+  })
 });

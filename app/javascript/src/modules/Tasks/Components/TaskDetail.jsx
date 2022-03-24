@@ -1,9 +1,9 @@
 /* eslint-disable max-statements */
 import React, { useState, useEffect } from 'react';
-import { Grid, Snackbar } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
+import { Grid, Snackbar } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 import { useMutation, useLazyQuery } from 'react-apollo';
-import useMediaQuery from '@mui/material/useMediaQuery';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { UpdateNote } from '../../../graphql/mutations';

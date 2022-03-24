@@ -1,5 +1,5 @@
 import React from 'react'
-import ForumIcon from '@mui/icons-material/Forum';
+import ForumIcon from '@material-ui/icons/Forum';
 
 // This is currently redirecting to /message/userId
 // Keep this hidden until fully agreed

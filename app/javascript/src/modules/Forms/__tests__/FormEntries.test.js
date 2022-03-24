@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, waitFor } from '@testing-library/react';
 import { MockedProvider } from '@apollo/react-testing';
-import { createTheme, ThemeProvider, StyledEngineProvider } from '@mui/material';
+import { createMuiTheme, ThemeProvider } from '@material-ui/core';
 import { BrowserRouter } from 'react-router-dom';
 import '@testing-library/jest-dom/extend-expect';
 import Loading from '../../../shared/Loading';
@@ -47,15 +47,13 @@ describe('Form Entries Component', () => {
       }
     }
 
-    const theme = createTheme()
+    const theme = createMuiTheme()
     const container = render(
       <MockedProvider mocks={[mocks]} addTypename={false}>
         <BrowserRouter>
-          <StyledEngineProvider injectFirst>
-            <ThemeProvider theme={theme}>
-              <FormEntries formId="410ec828efgs" />
-            </ThemeProvider>
-          </StyledEngineProvider>
+          <ThemeProvider theme={theme}>
+            <FormEntries formId="410ec828efgs" />
+          </ThemeProvider>
         </BrowserRouter>
       </MockedProvider>
     )

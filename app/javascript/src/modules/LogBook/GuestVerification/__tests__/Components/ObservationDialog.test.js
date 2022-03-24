@@ -6,7 +6,6 @@ import { MockedProvider } from '@apollo/react-testing';
 import { EntryRequestContext } from '../../Context';
 import ObservationDialog from '../../Components/ObservationDialog';
 import AddObservationNoteMutation from '../../../graphql/logbook_mutations';
-import MockedThemeProvider from '../../../../__mocks__/mock_theme';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 describe('Observation Dialog component', () => {
@@ -47,9 +46,7 @@ describe('Observation Dialog component', () => {
               updateRequest: jest.fn()
             }}
           >
-            <MockedThemeProvider>
-              <ObservationDialog />
-            </MockedThemeProvider>
+            <ObservationDialog />
           </EntryRequestContext.Provider>
         </MockedProvider>
       </MemoryRouter>

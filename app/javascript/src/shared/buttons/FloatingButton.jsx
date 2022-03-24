@@ -1,8 +1,8 @@
 import React from 'react';
-import { Fab } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
+import { Fab } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import AddIcon from '@mui/icons-material/Add'
+import AddIcon from '@material-ui/icons/Add'
 
 export default function FloatingButton({ variant, color, handleClick, size, ...otherProps}) {
   const classes = useStyles();

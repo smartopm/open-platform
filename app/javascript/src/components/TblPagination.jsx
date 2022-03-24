@@ -1,9 +1,9 @@
 /* eslint-disable */
 import React from "react";
-import makeStyles from '@mui/styles/makeStyles';
-import NavigateBeforeIcon from "@mui/icons-material/NavigateBefore";
-import NavigateNextIcon from "@mui/icons-material/NavigateNext";;
-import { IconButton, Typography, Grid } from '@mui/material';
+import { makeStyles } from "@material-ui/core/styles";
+import NavigateBeforeIcon from "@material-ui/icons/NavigateBefore";
+import NavigateNextIcon from "@material-ui/icons/NavigateNext";;
+import { IconButton, Typography, Grid } from '@material-ui/core';
 import PropTypes from 'prop-types'
 
 const useStyles = makeStyles(theme => ({
@@ -33,7 +33,7 @@ export default function TblPagination({ limit, handlePreviousPage, handleChangeP
       <Grid
         container
         direction="row"
-        justifyContent="flex-end"
+        justify="flex-end"
         alignItems="flex-end"
         spacing={2}
 
@@ -44,17 +44,13 @@ export default function TblPagination({ limit, handlePreviousPage, handleChangeP
           </Typography>
         </Grid>
         <Grid item xs={false}>
-          <IconButton
-            disabled={offset < limit }
-            onClick={handlePreviousPage}
-            className={classes.button}
-            size="large">
+          <IconButton disabled={offset < limit } onClick={handlePreviousPage} className={classes.button}>
             <NavigateBeforeIcon />
 
           </IconButton>
         </Grid>
         <Grid item xs={false}>
-          <IconButton disabled={length < limit } onClick={handleChangePage} size="large">
+          <IconButton disabled={length < limit } onClick={handleChangePage}>
             <NavigateNextIcon />
           </IconButton>
         </Grid>

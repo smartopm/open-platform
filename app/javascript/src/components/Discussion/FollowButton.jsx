@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react'
 import {
   Chip
-} from '@mui/material'
+} from '@material-ui/core'
 import { discussionUserQuery } from '../../graphql/queries'
 import { useQuery, useMutation } from 'react-apollo'
 import { DiscussionSubscription } from '../../graphql/mutations'
