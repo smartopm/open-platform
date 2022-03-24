@@ -109,31 +109,35 @@ export default function FormOptionInput({ options, setOptions, label }) {
   );
 }
 
-export function FormOptionWithOwnActions({ actions, value, id }) {
+export function FormOptionWithOwnActions({ actions, options }) {
   const { t } = useTranslation('common');
-  return (
-    <div>
+  return options.map((option, index) => (
+    <div key={option.id}>
       <TextField
-        label={t('misc.option_with_count', { id })}
+        key={option.id}
+        label={t('misc.option_with_count', { id: index + 1})}
         variant="outlined"
         size="small"
-        defaultValue={value}
-        onChange={actions.handleOptionChange}
+        defaultValue={option.info}
+        onChange={(e) => actions.handleOptionChange(e, index)}
         margin="normal"
         autoFocus={process.env.NODE_ENV !== 'test'}
         required
         style={{ width: 300 }}
+        data-testid="option-text-field"
       />
       <IconButton
+        key={option.id}
         style={{ marginTop: 13 }}
-        onClick={actions.handleRemoveOption}
+        onClick={() => actions.handleRemoveOption(index)}
         aria-label="remove"
         size="large"
+        data-testid="remove-option-btn"
       >
         <DeleteOutline />
       </IconButton>
     </div>
-  );
+  ));
 }
 
 FormOptionInput.propTypes = {
@@ -157,6 +161,5 @@ FormOptionWithOwnActions.propTypes = {
     handleRemoveOption: PropTypes.func,
     handleOptionChange: PropTypes.func,
   }).isRequired,
-  value: PropTypes.string.isRequired,
-  id: PropTypes.number.isRequired,
+  options: PropTypes.arrayOf(PropTypes.object)
 };

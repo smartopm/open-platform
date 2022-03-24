@@ -27,20 +27,29 @@ describe('Form Option Input component', () => {
 })
 
 describe('Form with its own actions', () => {
-  it('should accept actions', () => {
+  it('should render correctly', () => {
     const removeMock = jest.fn()
     const updateMock = jest.fn()
+    const options = [
+      { id: '123', info: 'xyz@gmail.com', contactType: 'email' },
+      { id: '456', info: '123 Address Estate', contactType: 'address' },
+    ]
     const actions = {
       handleRemoveOption: removeMock,
       handleOptionChange: updateMock
     }
     const container = render(
-      <FormOptionWithOwnActions actions={actions} value="option 1" id={3} />
+      <FormOptionWithOwnActions actions={actions} options={options} />
     )
-    expect(container.queryByText('misc.option_with_count')).toBeInTheDocument()
-    expect(container.queryByLabelText('remove')).not.toBeDisabled()
 
-    fireEvent.click(container.queryByLabelText('remove'))
+    expect(container.queryAllByText('misc.option_with_count')).toHaveLength(2)
+    expect(container.queryAllByTestId('option-text-field')).toHaveLength(2)
+    expect(container.queryAllByTestId('remove-option-btn')).toHaveLength(2)
+
+    expect(container.queryAllByLabelText('remove')[0]).not.toBeDisabled()
+    expect(container.queryAllByLabelText('remove')[1]).not.toBeDisabled()
+
+    fireEvent.click(container.queryAllByTestId('remove-option-btn')[0])
     expect(removeMock).toBeCalled()
   })
 })
