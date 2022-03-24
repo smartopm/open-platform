@@ -8,11 +8,11 @@ gem 'rails', '6.1.4.6'
 # Use sqlite3 as the database for Active Record
 gem 'pg', '~> 1.1.4'
 # Use Puma as the app server
-gem 'puma', '~> 5'
+gem 'puma', '~> 5.6.2'
 # Use SCSS for stylesheets
 gem 'sass-rails', '>= 5'
 # Transpile app-like JavaScript. Read more: https://github.com/rails/webpacker
-gem 'jsbundling-rails'
+gem 'jsbundling-rails', '~> 1.0.1'
 # Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
 gem 'turbolinks', '~> 5'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
@@ -35,10 +35,10 @@ gem 'dotenv'
 gem 'tzinfo-data', '~> 1.2021', '>= 1.2021.2', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem "nexmo", "~> 5.9"
-gem 'sendgrid-ruby'
+gem 'sendgrid-ruby', "~> 6.6.1"
 
 # For S3 file uploads in ActiveStorage
-gem "aws-sdk-s3", require: false
+gem "aws-sdk-s3", '~> 1.113.0', require: false
 
 gem 'repost'
 # Auth stuff
@@ -53,26 +53,26 @@ gem "omniauth-facebook", "~> 8.0.0"
 gem 'rqrcode'
 
 # Sidekiq for jobs
-gem 'sidekiq'
+gem 'sidekiq', "~> 6.4.1"
 gem "sidekiq-scheduler", "~> 3.0"
 
 
 # GraphQL
 gem 'graphql', "1.11.6"
 gem 'graphiql-rails', group: :development
-gem 'graphql-guard'
+gem 'graphql-guard', '~> 2.0.0'
 
 # PaperTrail for auditing and tracking changes
-gem 'paper_trail'
+gem 'paper_trail', '~> 12.2.0'
 
 # Rollbar for error logging
-gem 'rollbar'
+gem 'rollbar', '~> 3.3.0'
 
 # full text searching on models
-gem 'search_cop'
+gem 'search_cop', '~> 1.2.0'
 
 # dynamic logic using json
-gem 'json_logic'
+gem 'json_logic', '~> 0.4.7'
 
 # for reading and xls and xlsx files
 gem "roo", "~> 2.8.0"
@@ -112,7 +112,7 @@ group :development do
   gem 'listen', '>= 3.0.5', '< 3.2'
   gem 'rack-mini-profiler'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
-  gem 'spring'
+  gem 'spring', '~> 2.1.1'
   gem 'spring-watcher-listen', '~> 2.0.0'
 end
 
