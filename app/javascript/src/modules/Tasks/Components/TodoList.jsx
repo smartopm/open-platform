@@ -2,13 +2,8 @@
 /* eslint-disable max-statements */
 /* eslint-disable complexity */
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types'
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  Grid,
-} from '@material-ui/core';
+import PropTypes from 'prop-types';
+import { Dialog, DialogTitle, DialogContent, Grid } from '@material-ui/core';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { makeStyles } from '@material-ui/core/styles';
 import { useMutation, useLazyQuery, useApolloClient } from 'react-apollo';
@@ -16,7 +11,7 @@ import { useParams, useHistory } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { UsersLiteQuery } from '../../../graphql/queries';
 import { AssignUser, UpdateNote } from '../../../graphql/mutations';
-import { useFileUpload } from '../../../graphql/useFileUpload';
+import useFileUpload from '../../../graphql/useFileUpload';
 import TaskForm from './TaskForm';
 import ErrorPage from '../../../components/Error';
 import Paginate from '../../../components/Paginate';
@@ -37,7 +32,11 @@ import { TaskBulkUpdateAction, TaskQuickAction } from './TaskActionMenu';
 import TodoItem from './TodoItem';
 import FloatingButton from '../../../shared/buttons/FloatingButton';
 import SplitScreen from '../../../shared/SplitScreen';
-import { tasksQueryBuilderInitialValue, tasksQueryBuilderConfig, tasksFilterFields } from '../../../utils/constants';
+import {
+  tasksQueryBuilderInitialValue,
+  tasksQueryBuilderConfig,
+  tasksFilterFields
+} from '../../../utils/constants';
 import AccessCheck from '../../Permissions/Components/AccessCheck';
 import { TasksLiteQuery } from '../graphql/task_queries';
 
@@ -67,12 +66,16 @@ export default function TodoList({
   const [searchText, setSearchText] = useState('');
   const debouncedSearchText = useDebounce(searchText, 500);
   const debouncedFilterInputText = useDebounce(userNameSearchTerm, 500);
-  const [taskUpdateStatus, setTaskUpdateStatus] = useState({ message: '', success: false })
-  const [checkedOptions, setCheckOptions] = useState('none')
+  const [taskUpdateStatus, setTaskUpdateStatus] = useState({ message: '', success: false });
+  const [checkedOptions, setCheckOptions] = useState('none');
   const taskQuery = {
     completedTasks: 'completed: true',
-    tasksDueIn10Days: `due_date >= '${dateToString(new Date())}' AND due_date <= '${futureDateAndTimeToString(10)}' AND completed: false`,
-    tasksDueIn30Days: `due_date >= '${dateToString(new Date())}' AND due_date <= '${futureDateAndTimeToString(30)}' AND completed: false`,
+    tasksDueIn10Days: `due_date >= '${dateToString(
+      new Date()
+    )}' AND due_date <= '${futureDateAndTimeToString(10)}' AND completed: false`,
+    tasksDueIn30Days: `due_date >= '${dateToString(
+      new Date()
+    )}' AND due_date <= '${futureDateAndTimeToString(30)}' AND completed: false`,
     tasksOpen: 'completed: false',
     tasksOpenAndOverdue: `due_date <= '${futureDateAndTimeToString(0)}' AND completed: false`,
     tasksWithNoDueDate: 'due_date:nil',
@@ -85,9 +88,9 @@ export default function TodoList({
   const [bulkUpdating, setBulkUpdating] = useState(false);
   const [splitScreenOpen, setSplitScreenOpen] = useState(false);
   const matches = useMediaQuery('(max-width:800px)');
-  const { t } = useTranslation(['task', 'common'])
+  const { t } = useTranslation(['task', 'common']);
 
-  const path = useParamsQuery()
+  const path = useParamsQuery();
   const taskURLFilter = path.get('filter');
   const redirectedTaskId = path.get('taskId');
 
@@ -105,21 +108,25 @@ export default function TodoList({
   }
 
   const [loadAssignees, { data: liteData }] = useLazyQuery(UsersLiteQuery, {
-    variables: { query: 'user_type:admin OR user_type:custodian OR user_type:security_guard OR user_type:contractor OR user_type:site_worker OR user_type:consultant OR user_type:developer'},
+    variables: {
+      query:
+        'user_type:admin OR user_type:custodian OR user_type:security_guard OR user_type:contractor OR user_type:site_worker OR user_type:consultant OR user_type:developer'
+    },
     errorPolicy: 'all'
   });
 
   // eslint-disable-next-line no-nested-ternary
-  const qr = query && query.length
-    ? query
-    : location === 'my_tasks'
-    ? `assignees: '${currentUser.name}'`
-    : '';
+  const qr =
+    query && query.length
+      ? query
+      : location === 'my_tasks'
+      ? `assignees: '${currentUser.name}'`
+      : '';
 
-   const joinedTaskQuery =  `${qr} ${
+  const joinedTaskQuery = `${qr} ${
     // eslint-disable-next-line no-nested-ternary
     filterQuery ? `AND ${filterQuery}` : searchText ? `AND ${searchText}` : ''
-  }`
+  }`;
 
   const [
     loadTasks,
@@ -134,9 +141,9 @@ export default function TodoList({
   });
 
   const [assignUserToNote] = useMutation(AssignUser);
-  const [taskUpdate] = useMutation(UpdateNote)
-  const [bulkUpdate] = useMutation(TaskBulkUpdateMutation)
-  const taskListIds = data?.flaggedNotes.map(task => task.id)
+  const [taskUpdate] = useMutation(UpdateNote);
+  const [bulkUpdate] = useMutation(TaskBulkUpdateMutation);
+  const taskListIds = data?.flaggedNotes.map(task => task.id);
   function openModal() {
     setModalOpen(!open);
   }
@@ -166,8 +173,8 @@ export default function TodoList({
     }
 
     // TODO: Remove this quick fix after we move a modularized dashboard for each logged in user
-    if(taskURLFilter) {
-      if(taskURLFilter in taskQuery){
+    if (taskURLFilter) {
+      if (taskURLFilter in taskQuery) {
         setCurrentTile(taskURLFilter);
         setQuery(objectAccessor(taskQuery, taskURLFilter));
         loadTasks();
@@ -179,7 +186,7 @@ export default function TodoList({
       setQuery(objectAccessor(taskQuery, 'myOpenTasks'));
       loadTasks();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedFilterInputText, debouncedSearchText, loadTasks]);
 
   function handleRefetch() {
@@ -187,43 +194,45 @@ export default function TodoList({
   }
 
   useEffect(() => {
-    if(status === 'DONE') {
-      taskUpdate({variables: {  id: selectedTask.id, documentBlobId: signedBlobId}})
-      .then(() => {
-        refetch();
-      })
-      .catch((error) => {
-        setTaskUpdateStatus({
-          ...taskUpdateStatus,
-          success: false,
-          message: formatError(error.message),
+    if (status === 'DONE') {
+      taskUpdate({ variables: { id: selectedTask.id, documentBlobId: signedBlobId } })
+        .then(() => {
+          refetch();
         })
-      });
+        .catch(error => {
+          setTaskUpdateStatus({
+            ...taskUpdateStatus,
+            success: false,
+            message: formatError(error.message)
+          });
+        });
     }
-  }, [status, selectedTask,signedBlobId, taskUpdate, refetch]);
+  }, [status, selectedTask, signedBlobId, taskUpdate, refetch]);
 
   useEffect(() => {
-    if(redirectedTaskId) {
+    if (redirectedTaskId) {
       setSplitScreenOpen(true);
     }
-  }, [redirectedTaskId])
+  }, [redirectedTaskId]);
 
   function handleTaskCompletion(selectedTaskId, completed) {
-    taskUpdate({variables: {  id: selectedTaskId, completed }})
+    taskUpdate({ variables: { id: selectedTaskId, completed } })
       .then(() => {
         refetch();
         setTaskUpdateStatus({
           ...taskUpdateStatus,
           success: true,
-          message: `${t('task.task_marked_as')} ${completed ? t('task.complete') : t('task.incomplete')}`
-        })
+          message: `${t('task.task_marked_as')} ${
+            completed ? t('task.complete') : t('task.incomplete')
+          }`
+        });
       })
-      .catch((error) => {
+      .catch(error => {
         setTaskUpdateStatus({
           ...taskUpdateStatus,
           success: false,
-          message: formatError(error.message),
-        })
+          message: formatError(error.message)
+        });
       });
   }
 
@@ -234,7 +243,9 @@ export default function TodoList({
           refetch();
         }
       })
-      .catch(err => setTaskUpdateStatus({...taskUpdateStatus, success: false, message: err.message}));
+      .catch(err =>
+        setTaskUpdateStatus({ ...taskUpdateStatus, success: false, message: err.message })
+      );
   }
 
   function handleAddSubTask({ id }) {
@@ -263,7 +274,7 @@ export default function TodoList({
     setQuery(objectAccessor(taskQuery, key));
     // show tasks when a filter has been applied, we might have to move this to useEffect
     loadTasks();
-    history.push(`/tasks?filter=${key}`)
+    history.push(`/tasks?filter=${key}`);
   }
 
   function inputToSearch(e) {
@@ -293,8 +304,8 @@ export default function TodoList({
         }
       },
       userName: {
-        ...tasksQueryBuilderConfig.fields.userName,
-      },
+        ...tasksQueryBuilderConfig.fields.userName
+      }
     }
   };
 
@@ -341,76 +352,80 @@ export default function TodoList({
     }
     setTaskUpdateStatus({
       ...taskUpdateStatus,
-      message: '',
-    })
+      message: ''
+    });
   }
 
-  function handleCheckOptions(option){
-    setCheckOptions(option)
+  function handleCheckOptions(option) {
+    setCheckOptions(option);
     switch (option) {
       case 'all':
-       return setSelected([])
+        return setSelected([]);
       case 'all_on_the_page':
-       return setSelected(taskListIds)
+        return setSelected(taskListIds);
       default:
-        return setSelected([])
+        return setSelected([]);
     }
   }
 
-  function handleBulkUpdate(){
+  function handleBulkUpdate() {
     // handle update here
-    setBulkUpdating(true)
-    bulkUpdate({ variables: {
-      ids: selectedTasks,
-      completed: currentTile !== 'completedTasks',
-      query: joinedTaskQuery
-    }})
-    .then(() => {
-      handleRefetch()
-      setBulkUpdating(false)
-      setSelected([])
-      setTaskUpdateStatus({
-        ...taskUpdateStatus,
-        success: true,
-        message: `${t('task.selected_task_marked_as')} ${currentTile === 'completedTasks' ? t('task.incomplete') : t('task.complete')}`
-      })
-     })
-    .catch(err => {
-      setBulkUpdating(false)
-      setTaskUpdateStatus({
-        ...taskUpdateStatus,
-        success: false,
-        message: formatError(err.message),
-      })
+    setBulkUpdating(true);
+    bulkUpdate({
+      variables: {
+        ids: selectedTasks,
+        completed: currentTile !== 'completedTasks',
+        query: joinedTaskQuery
+      }
     })
+      .then(() => {
+        handleRefetch();
+        setBulkUpdating(false);
+        setSelected([]);
+        setTaskUpdateStatus({
+          ...taskUpdateStatus,
+          success: true,
+          message: `${t('task.selected_task_marked_as')} ${
+            currentTile === 'completedTasks' ? t('task.incomplete') : t('task.complete')
+          }`
+        });
+      })
+      .catch(err => {
+        setBulkUpdating(false);
+        setTaskUpdateStatus({
+          ...taskUpdateStatus,
+          success: false,
+          message: formatError(err.message)
+        });
+      });
   }
 
-  function handleTodoItemClick(task, pro, tab ) {
+  function handleTodoItemClick(task, pro, tab) {
     setSelectedTask(task);
     setSplitScreenOpen(true);
     history.push({
       pathname: '/tasks',
       search: `?taskId=${task?.id}&detailTab=${tab}`,
-      state: { from: history.location.pathname,  search: history.location.search }
-    })
-    window.document.getElementById('anchor-section').scrollIntoView()
+      state: { from: history.location.pathname, search: history.location.search }
+    });
+    window.document.getElementById('anchor-section').scrollIntoView();
   }
 
-  function handleSplitScreenClose(){
-    setSplitScreenOpen(false)
-    if(history.location.state?.search?.includes('filter')) {
+  function handleSplitScreenClose() {
+    setSplitScreenOpen(false);
+    if (history.location.state?.search?.includes('filter')) {
       return history.push({
         pathname: '/tasks',
-        search: history.location.state.search,
-      })
+        search: history.location.state.search
+      });
     }
-    return history.push('/tasks')
+    return history.push('/tasks');
   }
 
-  function handleTaskNotFoundError(error){
-    setSplitScreenOpen(false)
-    setTaskUpdateStatus({ ...taskUpdateStatus, message: formatError(error.message)})
-    history.push('/tasks')
+  function handleTaskNotFoundError(error) {
+    setSplitScreenOpen(false);
+    setTaskUpdateStatus({ ...taskUpdateStatus, message: formatError(error.message) });
+    history.push('/tasks');
   }
   if (tasksError) return <ErrorPage error={tasksError.message} />;
 
@@ -447,7 +462,9 @@ export default function TodoList({
           {/* show task details when on task page load */}
           <DialogTitle id="task_modal">
             <CenteredContent>
-              <span>{taskId ? t('task.task_modal_detail_text') : t('task.task_modal_create_text')}</span>
+              <span>
+                {taskId ? t('task.task_modal_detail_text') : t('task.task_modal_create_text')}
+              </span>
             </CenteredContent>
           </DialogTitle>
           <DialogContent>
@@ -463,7 +480,7 @@ export default function TodoList({
         <Grid container spacing={1}>
           <Grid item md={7} xs={12} style={{ display: 'flex', alignItems: 'center' }}>
             <Grid container>
-              <Grid item md={4} xs={6} style={{ display: 'flex', alignItems: 'center'}}>
+              <Grid item md={4} xs={6} style={{ display: 'flex', alignItems: 'center' }}>
                 <TaskQuickAction
                   checkedOptions={checkedOptions}
                   handleCheckOptions={handleCheckOptions}
@@ -474,7 +491,12 @@ export default function TodoList({
               </Grid>
             </Grid>
           </Grid>
-          <Grid item md={4} xs={8} style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
+          <Grid
+            item
+            md={4}
+            xs={8}
+            style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}
+          >
             <SearchInput
               filterRequired
               title={t('common:form_placeholders.search_tasks')}
@@ -571,7 +593,7 @@ export default function TodoList({
             </CenteredContent>
           </div>
         )}
-        <AccessCheck module='note' allowedPermissions={['can_view_create_task_button']}>
+        <AccessCheck module="note" allowedPermissions={['can_view_create_task_button']}>
           <FloatingButton
             variant="extended"
             handleClick={openModal}
@@ -591,34 +613,32 @@ const useStyles = makeStyles(() => ({
     alignItems: 'right',
     justifyContent: 'space-between',
     width: '100%',
-    overflowX: 'auto',
+    overflowX: 'auto'
   },
   formControl: {
     minWidth: 160,
     maxWidth: 300
   },
-  iconButton: {
-  },
+  iconButton: {},
   divider: {
     height: 28,
     margin: 4
   },
-  input: {
-  },
+  input: {},
   drawerPaper: {
     width: '50%',
     marginTop: '51px',
     padding: '30px 10px',
     opacity: '1',
-    backgroundColor: "#FAFAFA !important"
+    backgroundColor: '#FAFAFA !important'
   },
   drawerPaperMobile: {
     width: '100%',
     marginTop: '51px',
     opacity: '1',
-    backgroundColor: "#FFFFFF !important",
+    backgroundColor: '#FFFFFF !important',
     padding: '20px'
-  },
+  }
 }));
 
 TodoList.propTypes = {
@@ -630,5 +650,5 @@ TodoList.propTypes = {
   location: PropTypes.string.isRequired,
   currentUser: PropTypes.shape({
     name: PropTypes.string
-  }).isRequired,
-}
+  }).isRequired
+};

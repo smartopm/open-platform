@@ -21,17 +21,17 @@ import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useMutation, useApolloClient } from 'react-apollo';
 import { dateToString } from '../../../components/DateContainer';
-import { useFileUpload } from '../../../graphql/useFileUpload';
+import useFileUpload from '../../../graphql/useFileUpload';
 import CenteredContent from '../../../shared/CenteredContent';
 import MessageAlert from '../../../components/MessageAlert';
 import { TaskDocumentsQuery } from '../graphql/task_queries';
 import { Spinner } from '../../../shared/Loading';
 import { formatError, secureFileDownload } from '../../../utils/helpers';
-import { UpdateNote , DeleteNoteDocument } from '../../../graphql/mutations';
+import { UpdateNote, DeleteNoteDocument } from '../../../graphql/mutations';
 import { ActionDialog } from '../../../components/Dialog';
 import ProgressBar from '../../../shared/ProgressBar';
 
-import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider'
+import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
 
 export default function TaskDocuments({ taskId }) {
   const [anchorEl, setAnchorEl] = useState(null);
@@ -50,8 +50,12 @@ export default function TaskDocuments({ taskId }) {
   const { onChange, signedBlobId, status } = useFileUpload({
     client: useApolloClient()
   });
-  const userTaskPermissions = authState.user?.permissions.find(permissionObject => permissionObject.module === 'note');
-  const canDeleteDocument = userTaskPermissions ? userTaskPermissions.permissions.includes('can_delete_note_document'): false
+  const userTaskPermissions = authState.user?.permissions.find(
+    permissionObject => permissionObject.module === 'note'
+  );
+  const canDeleteDocument = userTaskPermissions
+    ? userTaskPermissions.permissions.includes('can_delete_note_document')
+    : false;
 
   useEffect(() => {
     if (status === 'ERROR') {
@@ -95,20 +99,20 @@ export default function TaskDocuments({ taskId }) {
 
   function downloadFile(event, path) {
     event.preventDefault();
-    secureFileDownload(path)
+    secureFileDownload(path);
   }
 
   function handleDeleteDocument() {
     taskDocumentDelete({ variables: { documentId: currentDoc?.id } })
-    .then(() => {
-      setMessageDetails({ isError: false, message: t('document.document_deleted') });
-      handleCloseDialog();
-      refetch();
-    })
-    .catch(err => {
-      setMessageDetails({ isError: true, message: err.message });
-      handleCloseDialog();
-    })
+      .then(() => {
+        setMessageDetails({ isError: false, message: t('document.document_deleted') });
+        handleCloseDialog();
+        refetch();
+      })
+      .catch(err => {
+        setMessageDetails({ isError: true, message: err.message });
+        handleCloseDialog();
+      });
   }
 
   if (loading) return <Spinner />;
@@ -140,7 +144,7 @@ export default function TaskDocuments({ taskId }) {
             data-testid="add_document"
             component="label"
             color="primary"
-            style={{backgroundColor: 'transparent'}}
+            style={{ backgroundColor: 'transparent' }}
           >
             <input
               hidden
@@ -149,16 +153,16 @@ export default function TaskDocuments({ taskId }) {
               id="task-attach-file"
               data-testid="add_document_input"
             />
-            <div style={{display: 'flex'}}>
+            <div style={{ display: 'flex' }}>
               <AddCircleIcon />
-              <Typography style={{padding: '2px 0 0 5px'}} variant="caption">Add Document</Typography>
+              <Typography style={{ padding: '2px 0 0 5px' }} variant="caption">
+                Add Document
+              </Typography>
             </div>
           </IconButton>
         </Grid>
       </Grid>
-      {documents?.length > 0 && (
-        <Divider variant="fullWidth" data-testid="opening_divider" />
-      )}
+      {documents?.length > 0 && <Divider variant="fullWidth" data-testid="opening_divider" />}
       {documents?.length > 0 && (
         <List>
           {documents.map(doc => (
@@ -227,7 +231,7 @@ export default function TaskDocuments({ taskId }) {
       >
         <MenuItem id="download_button" key="download" onClick={() => handleCloseMenu()}>
           <a
-            onClick={(event) => downloadFile(event, currentDoc?.url)}
+            onClick={event => downloadFile(event, currentDoc?.url)}
             style={{ textDecoration: 'none', color: '#000000' }}
           >
             {t('document.download')}
@@ -238,7 +242,7 @@ export default function TaskDocuments({ taskId }) {
             id="delete_button"
             key="delete"
             onClick={() => setOpen(true)}
-            data-testid='delete_button'
+            data-testid="delete_button"
           >
             {t('document.delete')}
           </MenuItem>

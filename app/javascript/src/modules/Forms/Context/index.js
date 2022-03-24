@@ -2,7 +2,7 @@ import React, { createContext, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useApolloClient, useMutation } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
-import { useFileUpload } from '../../../graphql/useFileUpload';
+import useFileUpload from '../../../graphql/useFileUpload';
 import { FormUserCreateMutation } from '../graphql/forms_mutation';
 import { addPropWithValue, extractValidFormPropertyValue, requiredFieldIsEmpty } from '../utils';
 

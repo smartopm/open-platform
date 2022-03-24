@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import CenteredContent from '../../../../components/CenteredContent';
 import EntryNoteDialog from '../../../../shared/dialogs/EntryNoteDialog';
 import { Spinner } from '../../../../shared/Loading';
-import { useFileUpload } from '../../../../graphql/useFileUpload';
+import useFileUpload from '../../../../graphql/useFileUpload';
 import { EntryRequestContext } from '../Context';
 import MessageAlert from '../../../../components/MessageAlert';
 import AddObservationNoteMutation from '../../graphql/logbook_mutations';
@@ -77,10 +77,10 @@ export default function ObservationDialog() {
       });
   }
 
-  function handleCloseButton(imgUrl){
-    const images = [...imageUrls]
-    const filteredImages = images.filter((img) => img !== imgUrl)
-    setImageUrls(filteredImages)
+  function handleCloseButton(imgUrl) {
+    const images = [...imageUrls];
+    const filteredImages = images.filter(img => img !== imgUrl);
+    setImageUrls(filteredImages);
   }
 
   return (
