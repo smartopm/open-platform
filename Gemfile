@@ -35,7 +35,7 @@ gem 'dotenv'
 gem 'tzinfo-data', '~> 1.2021', '>= 1.2021.2', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem "nexmo", "~> 5.9"
-gem 'sendgrid-ruby'
+gem 'sendgrid-ruby', "~> 6.6.1"
 
 # For S3 file uploads in ActiveStorage
 gem "aws-sdk-s3", '~> 1.113.0', require: false
@@ -60,7 +60,7 @@ gem "sidekiq-scheduler", "~> 3.0"
 # GraphQL
 gem 'graphql', "1.11.6"
 gem 'graphiql-rails', group: :development
-gem 'graphql-guard'
+gem 'graphql-guard', '~> 2.0.0'
 
 # PaperTrail for auditing and tracking changes
 gem 'paper_trail', '~> 12.2.0'
