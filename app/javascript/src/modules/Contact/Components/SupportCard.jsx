@@ -1,9 +1,9 @@
 import React from 'react';
-import makeStyles from '@mui/styles/makeStyles';
-import { Typography, Button, Grid } from '@mui/material';
-import MailOutlineIcon from '@mui/icons-material/MailOutline';
-import WhatsAppIcon from '@mui/icons-material/WhatsApp';
-import PhoneIcon from '@mui/icons-material/Phone';
+import { makeStyles } from '@material-ui/core/styles';
+import { Typography, Button, Grid } from '@material-ui/core';
+import MailOutlineIcon from '@material-ui/icons/MailOutline';
+import WhatsAppIcon from '@material-ui/icons/WhatsApp';
+import PhoneIcon from '@material-ui/icons/Phone';
 import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';

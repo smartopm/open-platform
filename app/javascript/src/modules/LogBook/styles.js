@@ -1,4 +1,4 @@
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from '@material-ui/styles';
 
 const useLogbookStyles = makeStyles(theme => ({
   avatar: {

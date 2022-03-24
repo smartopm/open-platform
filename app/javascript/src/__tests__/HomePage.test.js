@@ -4,7 +4,6 @@ import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom/';
 import { MockedProvider } from '@apollo/react-testing';
 import Homepage from '../components/HomePage';
-import MockedThemeProvider from '../modules/__mocks__/mock_theme';
 
 describe('HomePage component', () => {
   const adminAuthState = {
@@ -27,9 +26,7 @@ describe('HomePage component', () => {
     const container = render(
       <MockedProvider>
         <BrowserRouter>
-          <MockedThemeProvider>
-            <Homepage authState={adminAuthState} />
-          </MockedThemeProvider>
+          <Homepage authState={adminAuthState} />
         </BrowserRouter>
       </MockedProvider>
     );
@@ -62,9 +59,7 @@ describe('HomePage component', () => {
     const container = render(
       <MockedProvider>
         <BrowserRouter>
-          <MockedThemeProvider>
-            <Homepage authState={custodianAuthState} />
-          </MockedThemeProvider>
+          <Homepage authState={custodianAuthState} />
         </BrowserRouter>
       </MockedProvider>
     );
@@ -97,9 +92,7 @@ describe('HomePage component', () => {
     const container = render(
       <MockedProvider>
         <BrowserRouter>
-          <MockedThemeProvider>
-            <Homepage authState={clientAuthState} />
-          </MockedThemeProvider>
+          <Homepage authState={clientAuthState} />
         </BrowserRouter>
       </MockedProvider>
     );
@@ -134,9 +127,7 @@ describe('HomePage component', () => {
     const container = render(
       <MockedProvider>
         <BrowserRouter>
-          <MockedThemeProvider>
-            <Homepage authState={prospectAuthState} />
-          </MockedThemeProvider>
+          <Homepage authState={prospectAuthState} />
         </BrowserRouter>
       </MockedProvider>
     );
@@ -172,9 +163,7 @@ describe('HomePage component', () => {
     const container = render(
       <MockedProvider>
         <BrowserRouter>
-          <MockedThemeProvider>
-            <Homepage authState={guardAuthState} />
-          </MockedThemeProvider>
+          <Homepage authState={guardAuthState} />
         </BrowserRouter>
       </MockedProvider>
     );
@@ -193,14 +182,7 @@ describe('HomePage component', () => {
         avatarUrl: null,
         community: {
           name: 'Nkwashi',
-          menuItems: [
-            {
-              menu_link: 'https://some-link',
-              menu_name: 'Custom Menu',
-              display_on: ['Dashboard'],
-              roles: ['resident']
-            }
-          ]
+          menuItems: [{ menu_link: 'https://some-link', menu_name: 'Custom Menu', display_on: ['Dashboard'], roles: ['resident'] }],
         },
         email: '9753942',
         expiresAt: null,
@@ -215,16 +197,11 @@ describe('HomePage component', () => {
       render(
         <MockedProvider>
           <BrowserRouter>
-            <MockedThemeProvider>
-              <Homepage
-                authState={clientAuthState}
-                quickLinks={clientAuthState.user.community.menuItems}
-              />
-            </MockedThemeProvider>
+            <Homepage authState={clientAuthState} quickLinks={clientAuthState.user.community.menuItems} />
           </BrowserRouter>
         </MockedProvider>
       );
-      const quickLinks = screen.queryAllByTestId('link-name');
+      const quickLinks = screen.queryAllByTestId('link-name')
 
       expect(quickLinks[0]).toBeInTheDocument();
     });

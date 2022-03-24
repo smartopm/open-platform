@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { Drawer, List, ListItem, ListItemText, ImageList, ImageListItem, ListSubheader } from '@mui/material';
+import { Drawer, List, ListItem, ListItemText, GridList, GridListTile, ListSubheader } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
 import ImageAuth from '../../shared/ImageAuth'
 import { CustomizedDialogs } from '../Dialog'
@@ -21,22 +21,22 @@ export default function PointOfInterestDrawerDialog({ anchor, children, open, on
         handleBatchFilter={handleImageDialogClose}
         actionable={false}
       >
-        <ImageList cols={1}>
+        <GridList cols={1}>
           {(!imageData.urls?.length) && (
-            <ImageListItem key="Subheader" cols={1}>
+            <GridListTile key="Subheader" cols={1}>
               <ListSubheader component="div">No Photos</ListSubheader>
-            </ImageListItem>
+            </GridListTile>
           )}
           {imageData.urls?.map((url) =>(
-            <ImageListItem key={url} cols={1} style={{ height: 'auto'}}>
+            <GridListTile key={url} cols={1} style={{ height: 'auto'}}>
               <ImageAuth
                 key={url}
                 imageLink={url}
                 className="img-responsive img-thumbnail"
               />
-            </ImageListItem>
+            </GridListTile>
           ))}
-        </ImageList>
+        </GridList>
       </CustomizedDialogs>
       <div style={{ width: '300px' }}>
         <Drawer anchor={anchor} open={open} onClose={onClose}>

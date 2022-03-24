@@ -1,9 +1,9 @@
 import React from 'react';
-import Grid from '@mui/material/Grid';
-import Divider from '@mui/material/Divider';
+import Grid from '@material-ui/core/Grid';
+import Divider from '@material-ui/core/Divider';
 import PropTypes from 'prop-types';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from '@material-ui/core/styles';
 import UserAvatar from '../modules/Users/Components/UserAvatar';
 
 export default function UserAutoResult({ user, t }) {

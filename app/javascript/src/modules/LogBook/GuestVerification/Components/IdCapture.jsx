@@ -1,10 +1,9 @@
 /* eslint-disable complexity */
 import React, { useState, useEffect, useContext } from 'react';
 import { useApolloClient, useMutation } from 'react-apollo';
-import useMediaQuery from '@mui/material/useMediaQuery';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTranslation } from 'react-i18next';
-import { Button, Grid, Typography } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
+import { Button, Grid, Typography, makeStyles } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import ImageArea from '../../../../shared/imageUpload/ImageArea';
 import { useFileUpload } from '../../../../graphql/useFileUpload';
@@ -127,7 +126,7 @@ export default function IDCapture({ handleNext }) {
         <Grid
           container
           alignItems="center"
-          justifyContent="center"
+          justify="center"
           direction="row"
           data-testid="upload_area"
         >
@@ -155,28 +154,28 @@ export default function IDCapture({ handleNext }) {
               startIcon={loading && <Spinner />}
             >
               {requestContext.request.isEdit
-              ? t('image_capture.update')
-              : t('image_capture.next_step')}
+                ? t('image_capture.update')
+                : t('image_capture.next_step')}
             </Button>
           </AccessCheck>
           {!requestContext.isGuestRequest && !requestContext.request.isEdit && (
-          <AccessCheck module="entry_request" allowedPermissions={['can_grant_entry']}>
-            <Button
-              className={classes.skipToNextBtn}
-              onClick={requestContext.grantAccess}
-              disabled={!requestContext.request.id}
-              color="primary"
-              data-testid="skip_next"
-              startIcon={requestContext.request.isLoading && <Spinner />}
-            >
-              {t('logbook.grant')}
-            </Button>
-          </AccessCheck>
-        )}
+            <AccessCheck module="entry_request" allowedPermissions={['can_grant_entry']}>
+              <Button
+                className={classes.skipToNextBtn}
+                onClick={requestContext.grantAccess}
+                disabled={!requestContext.request.id}
+                color="primary"
+                data-testid="skip_next"
+                startIcon={requestContext.request.isLoading && <Spinner />}
+              >
+                {t('logbook.grant')}
+              </Button>
+            </AccessCheck>
+          )}
         </CenteredContent>
       </Grid>
     </>
-);
+  );
 }
 
 const useStyles = makeStyles(() => ({

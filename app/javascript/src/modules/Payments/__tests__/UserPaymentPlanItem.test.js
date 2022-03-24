@@ -9,7 +9,6 @@ import currency from '../../../__mocks__/currency';
 import PaymentPlanUpdateMutation from '../graphql/payment_plan_mutations';
 import authState from '../../../__mocks__/authstate';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
-import MockedThemeProvider from '../../__mocks__/mock_theme';
 
 describe('Render Payment Plan Item', () => {
   const { t } = useTranslation('common');
@@ -23,18 +22,16 @@ describe('Render Payment Plan Item', () => {
     pendingBalance: 200,
     id: 'f280159d-ac71-4c22-997a-07fd07344c94',
     status: 'active',
-    planPayments: [
-      {
+    planPayments: [{
+      id: 'f280159d-ac71-4c22-997a-07fd07344c94',
+      createdAt: '2021-01-26',
+      amount: 200,
+      status: 'paid',
+      userTransaction: {
         id: 'f280159d-ac71-4c22-997a-07fd07344c94',
-        createdAt: '2021-01-26',
-        amount: 200,
-        status: 'paid',
-        userTransaction: {
-          id: 'f280159d-ac71-4c22-997a-07fd07344c94',
-          source: 'cash'
-        }
+        source: 'cash'
       }
-    ],
+    }],
     landParcel: {
       id: '233b1634-bf08-4ece-a213-b3f120a1e009',
       parcelNumber: 'Plot-1343'
@@ -47,42 +44,44 @@ describe('Render Payment Plan Item', () => {
     userType: 'admin'
   };
 
-  it('should render the payment plan item component', async () => {
-    const requestMock = {
-      request: {
-        query: PaymentPlanUpdateMutation,
-        variables: { planId: plan.id, paymentDay: 2 }
-      },
-      result: { data: { paymentPlanUpdate: { paymentPlan: { id: plan.id } } } }
-    };
-    const refetch = jest.fn();
-    const currentUser = {
-      userType: 'admin',
-      permissions: [
+  const requestMock = {
+    request: {
+      query: PaymentPlanUpdateMutation,
+      variables: { planId: plan.id, paymentDay: 2 }
+    },
+    result: { data: { paymentPlanUpdate: { paymentPlan: { id: plan.id } } } }
+  };
+  const refetch = jest.fn();
+  const currentUser =  {
+    userType: 'admin',
+    permissions: [
         {
           module: 'payment_plan',
-          permissions: ['can_update_payment_day', 'can_view_menu_list']
+          permissions: [
+          'can_update_payment_day',
+          'can_view_menu_list']
         },
         {
-          module: 'plan_payment',
-          permissions: ['can_view_menu_list']
+        module: 'plan_payment',
+        permissions: [
+        'can_view_menu_list'
+        ]
         }
-      ]
-    };
+    ]
+  };
+  it('should render the payment plan item component', async () => {
     const container = render(
       <Context.Provider value={authState}>
         <MockedProvider mocks={[requestMock]} addTypename={false}>
           <BrowserRouter>
-            <MockedThemeProvider>
-              <PaymentPlan
-                plans={plans}
-                currencyData={currency}
-                userId={user.userId}
-                currentUser={currentUser}
-                refetch={refetch}
-                balanceRefetch={() => {}}
-              />
-            </MockedThemeProvider>
+            <PaymentPlan
+              plans={plans}
+              currencyData={currency}
+              userId={user.userId}
+              currentUser={currentUser}
+              refetch={refetch}
+              balanceRefetch={() => {}}
+            />
           </BrowserRouter>
         </MockedProvider>
       </Context.Provider>
@@ -113,10 +112,11 @@ describe('Render Payment Plan Item', () => {
 
     expect(container.queryAllByTestId('loader')[0]).toBeInTheDocument();
 
+
     await waitFor(() => {
       expect(container.queryByText('misc.pay_day_updated')).toBeInTheDocument();
       expect(refetch).toBeCalled();
-
+    
 
     expect(container.getAllByTestId('pay-menu')[0]).toBeInTheDocument();
     fireEvent.click(container.getAllByTestId('pay-menu')[0]);

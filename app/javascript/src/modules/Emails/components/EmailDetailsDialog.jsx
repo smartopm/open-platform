@@ -6,7 +6,7 @@ import {
   DialogContent,
   DialogTitle,
   TextField
-} from '@mui/material'
+} from '@material-ui/core'
 import PropTypes from 'prop-types'
 import { useTranslation } from 'react-i18next'
 

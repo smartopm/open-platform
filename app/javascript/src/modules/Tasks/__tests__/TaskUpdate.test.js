@@ -7,7 +7,6 @@ import TaskUpdate from '../containers/TaskUpdate';
 import { TaskQuery } from '../graphql/task_queries';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import authState from '../../../__mocks__/authstate';
-import MockedThemeProvider from '../../__mocks__/mock_theme';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 
@@ -24,16 +23,14 @@ describe('TaskUpdate Component', () => {
     const container = render(
       <MockedProvider>
         <BrowserRouter>
-          <MockedThemeProvider>
-            <TaskUpdate {...props} />
-          </MockedThemeProvider>
+          <TaskUpdate {...props} />
         </BrowserRouter>
       </MockedProvider>
     );
 
     await waitFor(() => {
       expect(container.queryByTestId('loader')).toBeInTheDocument();
-    }, 10);
+    }, 10)
   });
 
   it('renders task details', async () => {
@@ -100,9 +97,7 @@ describe('TaskUpdate Component', () => {
       <Context.Provider value={authState}>
         <MockedProvider mocks={mocks} addTypename={false}>
           <BrowserRouter>
-            <MockedThemeProvider>
-              <TaskUpdate {...props} />
-            </MockedThemeProvider>
+            <TaskUpdate {...props} />
           </BrowserRouter>
         </MockedProvider>
       </Context.Provider>
@@ -128,9 +123,7 @@ describe('TaskUpdate Component', () => {
       <Context.Provider value={authState}>
         <MockedProvider mocks={mocks} addTypename={false}>
           <BrowserRouter>
-            <MockedThemeProvider>
-              <TaskUpdate {...props} />
-            </MockedThemeProvider>
+            <TaskUpdate {...props} />
           </BrowserRouter>
         </MockedProvider>
       </Context.Provider>

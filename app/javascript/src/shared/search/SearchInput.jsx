@@ -5,7 +5,7 @@ import {
   InputAdornment,
   InputLabel,
   OutlinedInput
-} from '@mui/material';
+} from '@material-ui/core';
 import SearchIcon from '@mui/icons-material/Search';
 import ClearOutlined from '@mui/icons-material/ClearOutlined';
 import FilterListOutlined from '@mui/icons-material/FilterListOutlined';
@@ -45,7 +45,6 @@ export default function SearchInput({
                 data-testid="clear_search"
                 onClick={handleClear}
                 edge="end"
-                size="large"
               >
                 <ClearOutlined />
               </IconButton>
@@ -56,13 +55,13 @@ export default function SearchInput({
                 onClick={(e) => handleFilter(e)}
                 edge="end"
                 data-testid="filter"
-                size="large"
               >
                 <FilterListOutlined />
               </IconButton>
             )}
           </InputAdornment>
         )}
+        labelWidth={120}
       />
     </FormControl>
   );

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, IconButton } from '@mui/material';
+import { Button, IconButton } from '@material-ui/core';
 import PropTypes from 'prop-types';
 
 export default function ImageUploader({ handleChange, buttonText, style, icon, useDefaultIcon }) {
@@ -7,7 +7,10 @@ export default function ImageUploader({ handleChange, buttonText, style, icon, u
     <>
       {!useDefaultIcon ? (
         <>
-          <IconButton component="label" data-testid="upload_button_icon" size="large">
+          <IconButton
+            component="label"
+            data-testid="upload_button_icon"
+          >
             {icon}
             <input
               type="file"
@@ -17,23 +20,23 @@ export default function ImageUploader({ handleChange, buttonText, style, icon, u
             />
           </IconButton>
         </>
-    ) : (
-      <Button
-        data-testid="upload_button"
-        style={style}
-        component="label"
-      >
-        {buttonText}
-        <input
-          type="file"
-          hidden
-          onChange={event => handleChange(event.target.files[0])}
-          accept="image/*"
-        />
-      </Button>
-    )}
+      ) : (
+        <Button
+          data-testid="upload_button"
+          style={style}
+          component="label"
+        >
+          {buttonText}
+          <input
+            type="file"
+            hidden
+            onChange={event => handleChange(event.target.files[0])}
+            accept="image/*"
+          />
+        </Button>
+      )}
     </>
-);
+  )
 }
 
 ImageUploader.defaultProps = {

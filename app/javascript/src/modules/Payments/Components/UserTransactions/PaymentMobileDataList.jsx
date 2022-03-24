@@ -1,8 +1,8 @@
 import React from 'react';
-import { Grid, Typography } from '@mui/material';
+import { Grid, Typography } from '@material-ui/core';
 import PropTypes from 'prop-types';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import makeStyles from '@mui/styles/makeStyles';
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import { makeStyles } from '@material-ui/core/styles';
 import { objectAccessor } from '../../../../utils/helpers';
 
 export default function PlanMobileDataList({ keys, data }) {

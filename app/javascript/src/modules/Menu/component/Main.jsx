@@ -1,16 +1,16 @@
 /* eslint-disable complexity */
 import React, { useContext, useState } from 'react';
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import useMediaQuery from '@mui/material/useMediaQuery';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useLocation } from 'react-router-dom';
-import Drawer from '@mui/material/Drawer';
-import MenuIcon from '@mui/icons-material/Menu';
+import Drawer from '@material-ui/core/Drawer';
+import MenuIcon from '@material-ui/icons/Menu';
 import { StyleSheet, css } from 'aphrodite';
-import { Button, IconButton, SvgIcon } from '@mui/material';
-import { makeStyles } from '@mui/styles';
+import { Button, IconButton, SvgIcon } from '@material-ui/core';
+import { makeStyles } from '@material-ui/styles';
 import PropTypes from 'prop-types';
-import DoubleArrowOutlinedIcon from '@mui/icons-material/DoubleArrowOutlined';
+import DoubleArrowOutlinedIcon from '@material-ui/icons/DoubleArrowOutlined';
 import SOSIcon from './SOSIcon';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
 import SideMenu from './SideMenu';
@@ -131,7 +131,6 @@ export function MainNav({ authState }) {
             className={`${classes.menuButton} left-menu-collapsible`}
             style={{ paddingTop: drawerOpen ? '20px' : '0px' }}
             data-testid="drawer"
-            size="large"
           >
             {drawerOpen ? (
               <DoubleArrowOutlinedIcon

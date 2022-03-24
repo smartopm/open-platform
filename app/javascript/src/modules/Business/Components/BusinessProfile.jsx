@@ -3,8 +3,9 @@
 /* eslint-disable react/prop-types */
 import React, { useState, useContext } from 'react'
 import { useHistory } from 'react-router-dom'
-import { Typography, Tab, Button, Box, ListItem, List } from '@mui/material';
-import withStyles from '@mui/styles/withStyles';
+import {
+  Typography, withStyles, Tab, Button, Box, ListItem, List
+} from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
 import { StyledTabs, TabPanel } from '../../../components/Tabs'
 import Status from '../../../components/StatusBadge'

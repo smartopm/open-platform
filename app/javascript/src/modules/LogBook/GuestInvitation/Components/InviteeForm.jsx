@@ -26,7 +26,7 @@ export default function InviteeForm({
   const authState = useContext(Context);
   const theme = useTheme();
   const classes = useStyles();
-  const matchesSmall = useMediaQuery(theme.breakpoints.down('md'));
+  const matchesSmall = useMediaQuery(theme.breakpoints.down('sm'));
   const largerScreens = useMediaQuery(theme.breakpoints.up('md'));
   const [isCompany, setIsCompany] = useState(false);
 

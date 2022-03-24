@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { useQuery } from 'react-apollo';
 import { StyleSheet, css } from 'aphrodite';
 import { useTranslation } from 'react-i18next';
-import { Button } from '@mui/material';
+import { Button } from '@material-ui/core';
 import Loading from '../../../shared/Loading';
 import ScanIcon from '../../../../../assets/images/shape.svg';
 import ErrorPage from '../../../components/Error';

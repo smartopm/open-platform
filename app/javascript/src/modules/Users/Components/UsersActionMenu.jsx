@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import Grid from '@mui/material/Grid';
-import Button from '@mui/material/Button';
+import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
 import PropTypes from 'prop-types';
-import LabelIcon from '@mui/icons-material/Label';
+import LabelIcon from '@material-ui/icons/Label';
 import { useTranslation } from 'react-i18next';
-import { useTheme } from '@mui/styles';
+import { useTheme } from '@material-ui/styles';
 import { CustomizedDialogs, ActionDialog } from '../../../components/Dialog';
 import CreateLabel from '../../Labels/Components/CreateLabel';
 import CampaignIcon from '../../Campaigns/components/CampaignIcon';

@@ -1,5 +1,5 @@
 import React from 'react';
-import MenuBookIcon from '@mui/icons-material/MenuBook';
+import MenuBookIcon from '@material-ui/icons/MenuBook';
 import LogBook from './Components/LogBook';
 import GuestsValidateRoutes from './GuestVerification';
 import AccessCheck from '../Permissions/Components/AccessCheck';

@@ -4,12 +4,12 @@
 import React, { useState } from 'react';
 import {
   TextField, Container, Button, Typography, FormControl, InputLabel, Select, MenuItem, Grid, IconButton
-} from '@mui/material';
+} from '@material-ui/core';
 import { css } from 'aphrodite';
 import { useMutation } from 'react-apollo';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import EditIcon from '@mui/icons-material/Edit';
+import EditIcon from '@material-ui/icons/Edit';
 import CenteredContent from '../../../shared/CenteredContent';
 import { discussStyles } from '../../../components/Discussion/Discuss';
 import { BusinessCreateMutation, BusinessUpdateMutation } from '../graphql/business_mutations';
@@ -110,7 +110,7 @@ export default function BusinessForm({ close, businessData, action }) {
                 />
               </Grid>
               <Grid item sm={1} xs={1} style={{textAlign: 'right'}}>
-                <IconButton color='primary' style={{ marginTop: '20px'}} size="large">
+                <IconButton color='primary' style={{ marginTop: '20px'}}>
                   <EditIcon fontSize="small" onClick={() => setEditingUser(true)} />
                 </IconButton>
               </Grid>
@@ -169,7 +169,7 @@ export default function BusinessForm({ close, businessData, action }) {
           aria-label="business_description"
           inputProps={{ 'data-testid': 'business_description' }}
           multiline
-          maxRows={4}
+          rowsMax={4}
           margin="normal"
         />
         <TextField

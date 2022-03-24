@@ -4,8 +4,8 @@ import React, { Fragment, useState } from 'react';
 import { useHistory, useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
-import makeStyles from '@mui/styles/makeStyles';
-import { Typography } from '@mui/material';
+import { makeStyles } from '@material-ui/core/styles';
+import { Typography } from '@material-ui/core';
 import StepItem from './StepItem';
 import { objectAccessor, sortTaskOrder } from '../../../../utils/helpers';
 

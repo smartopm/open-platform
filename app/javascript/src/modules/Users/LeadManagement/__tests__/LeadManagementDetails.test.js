@@ -7,7 +7,6 @@ import authState from '../../../../__mocks__/authstate';
 import { Context } from '../../../../containers/Provider/AuthStateProvider';
 import LeadManagementDetails from '../Components/LeadManagementDetails';
 import { LeadDetailsQuery } from '../../../../graphql/queries';
-import MockedThemeProvider from '../../../__mocks__/mock_theme';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 
@@ -115,9 +114,7 @@ describe('LeadManagementDetails Page', () => {
       <Context.Provider value={authState}>
         <MockedProvider mocks={dataMock} addTypename={false}>
           <BrowserRouter>
-            <MockedThemeProvider>
-              <LeadManagementDetails userId="c96f64bb-e3b4-42ff-b6a9-66889ec79e99" />
-            </MockedThemeProvider>
+            <LeadManagementDetails userId="c96f64bb-e3b4-42ff-b6a9-66889ec79e99" />
           </BrowserRouter>
         </MockedProvider>
       </Context.Provider>

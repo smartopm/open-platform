@@ -9,9 +9,9 @@ import {
   Typography,
   Slide,
   Avatar
-} from '@mui/material'
+} from '@material-ui/core'
 import { css } from 'aphrodite'
-import CloseIcon from '@mui/icons-material/Close';
+import CloseIcon from '@material-ui/icons/Close';
 import { useTranslation } from 'react-i18next'
 import { useWindowDimensions } from '../../../utils/customHooks'
 import { ShareButton, styles } from '../../../components/ShareButton'
@@ -149,10 +149,10 @@ export default function PostPage() {
           url={currentUrl}
           communityName={communityQuery.data?.currentCommunity.name}
           styles={{
-          position: 'fixed',
-          bottom: 80,
-          right: 57
-        }}
+            position: 'fixed',
+            bottom: 80,
+            right: 57
+          }}
         />
 
         <Fab
@@ -171,13 +171,7 @@ export default function PostPage() {
         <Dialog fullScreen open={open} onClose={handleCommentsView} TransitionComponent={Transition}>
           <AppBar className={css(styles.appBar)}>
             <Toolbar>
-              <IconButton
-                edge="start"
-                color="primary"
-                onClick={handleCommentsView}
-                aria-label="close"
-                size="large"
-              >
+              <IconButton edge="start" color="primary" onClick={handleCommentsView} aria-label="close">
                 <CloseIcon />
               </IconButton>
               <Typography variant="h6">
@@ -203,40 +197,40 @@ export default function PostPage() {
                 discussionId={queryResponse.data.postDiscussion.id}
               />
               {
-              data?.postComments.length >= limit && (
-                <CenteredContent>
-                  <Button
-                    variant="outlined"
-                    color="primary"
-                    onClick={fetchMoreComments}
-                  >
-                    {isLoading ? <Spinner /> : t('news.load_more_comments')}
-                  </Button>
-                </CenteredContent>
-              )
-            }
-            </>
-      ) : (
-        <CenteredContent>
-          <br />
-          {
-                authState.loggedIn && authState.user.userType === 'admin' ? (
-                  <Button
-                    variant="outlined"
-                    color="primary"
-                    onClick={() => createDiscussion(response?.title, response?.ID)}
-                    disabled={isLoading}
-                  >
-                    {t('news.create_discussion')}
-                  </Button>
-                ) : t('news.discussion_disabled')
+                data?.postComments.length >= limit && (
+                  <CenteredContent>
+                    <Button
+                      variant="outlined"
+                      color="primary"
+                      onClick={fetchMoreComments}
+                    >
+                      {isLoading ? <Spinner /> : t('news.load_more_comments')}
+                    </Button>
+                  </CenteredContent>
+                )
               }
-        </CenteredContent>
-      )}
+            </>
+        ) : (
+          <CenteredContent>
+            <br />
+            {
+                  authState.loggedIn && authState.user.userType === 'admin' ? (
+                    <Button
+                      variant="outlined"
+                      color="primary"
+                      onClick={() => createDiscussion(response?.title, response?.ID)}
+                      disabled={isLoading}
+                    >
+                      {t('news.create_discussion')}
+                    </Button>
+                  ) : t('news.discussion_disabled')
+                }
+          </CenteredContent>
+        )}
         </Dialog>
       </div>
     </>
-);
+  )
 }
 
 

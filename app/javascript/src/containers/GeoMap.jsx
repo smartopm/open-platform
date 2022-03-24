@@ -1,7 +1,7 @@
 import React, { useState, useEffect} from 'react'
 import PropTypes from 'prop-types'
 import { useQuery, useLazyQuery } from 'react-apollo'
-import { Typography } from '@mui/material';
+import { Typography } from '@material-ui/core';
 import { renderToString } from 'react-dom/server'
 import L from 'leaflet'
 import { Map, FeatureGroup, GeoJSON, LayersControl, TileLayer, Popup } from 'react-leaflet'

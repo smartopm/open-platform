@@ -1,16 +1,16 @@
 import React from 'react';
-import TextField from '@mui/material/TextField';
-import Dialog from '@mui/material/Dialog';
-import makeStyles from '@mui/styles/makeStyles';
-import Grid from '@mui/material/Grid';
-import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
-import DialogTitle from '@mui/material/DialogTitle';
+import TextField from '@material-ui/core/TextField';
+import Dialog from '@material-ui/core/Dialog';
+import { makeStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogTitle from '@material-ui/core/DialogTitle';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import Typography from '@mui/material/Typography';
-import { Box, IconButton } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
+import Typography from '@material-ui/core/Typography';
+import { Box, IconButton } from '@material-ui/core';
+import CloseIcon from '@material-ui/icons/Close';
 import useDialogStyles from './dialogStyles';
 import ImageUploader from '../imageUpload/ImageUploader';
 import ImageUploadPreview from '../imageUpload/ImageUploadPreview';
@@ -46,11 +46,7 @@ export default function EntryNoteDialog({
           <Box display="flex" alignItems="center">
             <Box flexGrow={1}>{t('observations.observation_title')}</Box>
             <Box>
-              <IconButton
-                data-testid="entry-dialog-close-icon"
-                onClick={handleDialogStatus}
-                size="large"
-              >
+              <IconButton data-testid="entry-dialog-close-icon" onClick={handleDialogStatus}>
                 <CloseIcon />
               </IconButton>
             </Box>
@@ -65,8 +61,8 @@ export default function EntryNoteDialog({
             value={observationHandler.value}
             onChange={event => observationHandler.handleChange(event.target.value)}
             inputProps={{
-            'data-testid': 'entry-dialog-field'
-          }}
+              'data-testid': 'entry-dialog-field'
+            }}
             multiline
             fullWidth
           />
@@ -81,22 +77,22 @@ export default function EntryNoteDialog({
               />
             </Grid>
             {imageUrls.length > 0 && (
-            <ImageUploadPreview
-              imageUrls={imageUrls}
-              sm={6}
-              xs={12}
-              style={{padding: '10px'}}
-              imgHeight='300px'
-              closeButtonData={closeButtonData}
-            />
-          )}
+              <ImageUploadPreview
+                imageUrls={imageUrls}
+                sm={6}
+                xs={12}
+                style={{padding: '10px'}}
+                imgHeight='300px'
+                closeButtonData={closeButtonData}
+              />
+            )}
             {status !== 'INIT' && status !== 'DONE' && <Spinner />}
           </Grid>
         </DialogContent>
         <DialogActions>{children}</DialogActions>
       </Dialog>
     </>
-);
+  );
 }
 
 const useStyles = makeStyles(() => ({

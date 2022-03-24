@@ -2,8 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-apollo'
-import { Tab } from '@mui/material';
-import withStyles from '@mui/styles/withStyles';
+import { withStyles, Tab } from '@material-ui/core'
 import { StyledTabs } from "../../../components/Tabs"
 import { UserActivePlanQuery } from '../../../graphql/queries/user'
 import { Spinner } from '../../../shared/Loading'

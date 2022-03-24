@@ -2,14 +2,14 @@
 /* eslint-disable max-len */
 /* eslint-disable max-lines */
 import React from 'react';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import { Grid, IconButton, Typography } from '@mui/material';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { Grid, IconButton, Typography } from '@material-ui/core';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@mui/styles';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import { makeStyles } from '@material-ui/styles';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import Card from '../../../../shared/Card';
 import { removeNewLines, sanitizeText } from '../../../../utils/helpers';
 import CustomProgressBar from '../../../../shared/CustomProgressBar';
@@ -46,7 +46,6 @@ export default function StepItem({
                 data-testid="process-check-box"
                 onClick={(e) => handleStepCompletion(e, step.id, !step.completed)}
                 style={{backgroundColor: 'transparent', cursor: clientView ? 'not-allowed' : 'pointer' }}
-                size="large"
               >
                 { step.completed ? (
                   <CheckCircleIcon htmlColor="#4caf50" />
@@ -88,7 +87,6 @@ export default function StepItem({
                 aria-haspopup="true"
                 onClick={(e) => handleOpenSubStepsClick(e)}
                 data-testid="show-step-sub-steps-click-btn"
-                size="large"
               >
                 {openSubSteps
                   ? <KeyboardArrowUpIcon fontSize="small" color="primary" />

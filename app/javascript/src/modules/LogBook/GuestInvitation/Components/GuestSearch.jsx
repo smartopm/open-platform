@@ -1,4 +1,4 @@
-import { Container } from '@mui/material';
+import { Container } from '@material-ui/core';
 import React from 'react';
 import GuestInviteForm from './GuestInviteForm';
 

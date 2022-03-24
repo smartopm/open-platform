@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Grid , Divider } from '@mui/material';
+import { Grid } from '@mui/material';
 import { useMutation } from 'react-apollo';
-
+import { Divider } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { UpdateUserMutation } from '../../../../graphql/mutations/user';
 import { Spinner } from '../../../../shared/Loading';

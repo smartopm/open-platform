@@ -1,12 +1,12 @@
 /* eslint-disable no-nested-ternary */
 import React, { useContext, useState, useEffect } from 'react';
-import Dialog from '@mui/material/Dialog';
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import CloseIcon from '@mui/icons-material/Close';
-import Slide from '@mui/material/Slide';
-import Button from '@mui/material/Button';
+import Dialog from '@material-ui/core/Dialog';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+import Slide from '@material-ui/core/Slide';
+import Button from '@material-ui/core/Button';
 import { useMutation, useQuery } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router';
@@ -130,9 +130,9 @@ export default function EmailBuilderDialog() {
         loading={message.loading}
         dialogHeader={emailId ? t('email.subject_update_header') : t('email.template_create_header')}
         initialData={{
-        name: templateData?.emailTemplate?.name || '',
-        subject: emailSubject || templateData?.emailTemplate?.subject || ''
-      }}
+          name: templateData?.emailTemplate?.name || '',
+          subject: emailSubject || templateData?.emailTemplate?.subject || ''
+        }}
         action={emailId ? 'update' : 'create'}
       />
       <MessageAlert
@@ -144,13 +144,7 @@ export default function EmailBuilderDialog() {
       <Dialog fullScreen open onClose={handleClose} TransitionComponent={Transition} data-testid="fullscreen_dialog">
         <AppBar position="relative">
           <Toolbar>
-            <IconButton
-              edge="start"
-              data-testid="close_btn"
-              onClick={handleClose}
-              aria-label="close"
-              size="large"
-            >
+            <IconButton edge="start" data-testid="close_btn" onClick={handleClose} aria-label="close">
               <CloseIcon />
             </IconButton>
             <div style={{ marginLeft: '80vw' }}>
@@ -162,7 +156,7 @@ export default function EmailBuilderDialog() {
               >
                 {t('email.edit_subject')}
               </Button>
-          )}
+            )}
               <Button
                 autoFocus
                 onClick={emailId ?  updateTemplate : handleDetailsDialog}
@@ -177,5 +171,5 @@ export default function EmailBuilderDialog() {
         <div id="email-editor-container" style={{ minHeight: '700px', minWidth: '1024px'}} />
       </Dialog>
     </>
-);
+  );
 }

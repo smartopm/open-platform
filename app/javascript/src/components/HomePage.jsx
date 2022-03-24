@@ -1,35 +1,35 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react/no-array-index-key */
 /* eslint-disable no-use-before-define */
-import React from 'react'
-import { Redirect } from 'react-router-dom'
-import { StyleSheet, css } from 'aphrodite'
-import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck'
-import HelpIcon from '@mui/icons-material/Help'
-import PersonIcon from '@mui/icons-material/Person'
-import LabelIcon from '@mui/icons-material/Label'
-import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty'
-import LogIcon from '@mui/icons-material/Assignment'
-import MessageIcon from '@mui/icons-material/Message'
-import NotesIcon from '@mui/icons-material/Notes'
-import SettingsIcon from '@mui/icons-material/Settings';
-import ForumIcon from '@mui/icons-material/Forum'
-import CallIcon from '@mui/icons-material/Call'
-import AccountCircleIcon from '@mui/icons-material/AccountCircle'
-import CommentIcon from '@mui/icons-material/Comment'
-import LocalMallIcon from '@mui/icons-material/LocalMall'
-import ListAltIcon from '@mui/icons-material/ListAlt'
-import RecentActorsIcon from '@mui/icons-material/RecentActors'
-import PeopleIcon from '@mui/icons-material/People'
-import TelegramIcon from '@mui/icons-material/Telegram'
-import LandscapeIcon from '@mui/icons-material/Landscape';
-import PaymentIcon from '@mui/icons-material/Payment';
-import MailOutline from '@mui/icons-material/MailOutline';
-import SelectAll from '@mui/icons-material/SelectAll'
-import HomeWorkIcon from '@mui/icons-material/HomeWork';
-import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
-import { useTranslation } from 'react-i18next'
-import Card from './Card'
+import React from 'react';
+import { Redirect } from 'react-router-dom';
+import { StyleSheet, css } from 'aphrodite';
+import PlaylistAddCheckIcon from '@material-ui/icons/PlaylistAddCheck';
+import HelpIcon from '@material-ui/icons/Help';
+import PersonIcon from '@material-ui/icons/Person';
+import LabelIcon from '@material-ui/icons/Label';
+import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
+import LogIcon from '@material-ui/icons/Assignment';
+import MessageIcon from '@material-ui/icons/Message';
+import NotesIcon from '@material-ui/icons/Notes';
+import SettingsIcon from '@material-ui/icons/Settings';
+import ForumIcon from '@material-ui/icons/Forum';
+import CallIcon from '@material-ui/icons/Call';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import CommentIcon from '@material-ui/icons/Comment';
+import LocalMallIcon from '@material-ui/icons/LocalMall';
+import ListAltIcon from '@material-ui/icons/ListAlt';
+import RecentActorsIcon from '@material-ui/icons/RecentActors';
+import PeopleIcon from '@material-ui/icons/People';
+import TelegramIcon from '@material-ui/icons/Telegram';
+import LandscapeIcon from '@material-ui/icons/Landscape';
+import PaymentIcon from '@material-ui/icons/Payment';
+import MailOutline from '@material-ui/icons/MailOutline';
+import SelectAll from '@material-ui/icons/SelectAll';
+import HomeWorkIcon from '@material-ui/icons/HomeWork';
+import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
+import { useTranslation } from 'react-i18next';
+import Card from './Card';
 import QuickLinks from '../modules/QuickLinks/Components/QuickLinks';
 import SocialMediaLinks from './SocialMediaLinks';
 import { Footer } from './Footer';

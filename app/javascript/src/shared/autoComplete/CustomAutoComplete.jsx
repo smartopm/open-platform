@@ -3,9 +3,9 @@
 import React, { useState } from 'react'
 import { useLazyQuery } from 'react-apollo'
 import PropTypes from 'prop-types'
-import TextField from '@mui/material/TextField'
+import TextField from '@material-ui/core/TextField'
 import { useTranslation } from 'react-i18next';
-import Autocomplete from '@mui/material/Autocomplete'
+import Autocomplete from '@material-ui/lab/Autocomplete'
 import { UsersLiteQuery } from '../../graphql/queries';
 import useDebounce from '../../utils/useDebounce';
 import UserAutoResult from '../UserAutoResult';

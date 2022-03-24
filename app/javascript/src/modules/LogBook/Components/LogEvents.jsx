@@ -3,15 +3,16 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import IconButton from '@mui/material/IconButton';
-import Chip from '@mui/material/Chip';
-import Grid from '@mui/material/Grid';
-import useMediaQuery from '@mui/material/useMediaQuery';
+import IconButton from '@material-ui/core/IconButton';
+import Chip from '@material-ui/core/Chip';
+import Grid from '@material-ui/core/Grid';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import Hidden from '@material-ui/core/Hidden';
 import { Link } from 'react-router-dom';
-import Typography from '@mui/material/Typography';
-import MoreVertOutlined from '@mui/icons-material/MoreVertOutlined';
-import PhotoIcon from '@mui/icons-material/Photo';
-import { Tooltip } from '@mui/material';
+import Typography from '@material-ui/core/Typography';
+import MoreVertOutlined from '@material-ui/icons/MoreVertOutlined';
+import PhotoIcon from '@material-ui/icons/Photo';
+import { Tooltip } from '@material-ui/core';
 import { Spinner } from '../../../shared/Loading';
 import { dateTimeToString, dateToString } from '../../../components/DateContainer';
 import { toTitleCase, objectAccessor, truncateString } from '../../../utils/helpers';
@@ -40,8 +41,6 @@ export default function LogEvents({
   const [eventData, setEventData] = useState({});
   const open = Boolean(anchorEl);
   const matches = useMediaQuery('(max-width:800px)');
-  const mdUpHidden = useMediaQuery(theme => theme.breakpoints.up('md'));
-  const mdDownHidden = useMediaQuery(theme => theme.breakpoints.down('md'));
   const { t } = useTranslation('logbook');
 
   function handleClick(logId) {
@@ -160,8 +159,7 @@ export default function LogEvents({
                 </>
               </Grid>
               {(Boolean(entry.entryRequest) || entry.subject === 'user_temp') && (
-                !mdUpHidden && (
-
+                <Hidden mdUp>
                   <Grid item md={1} xs={4} style={{ textAlign: 'right' }}>
                     <IconButton
                       aria-controls="sub-menu"
@@ -169,7 +167,6 @@ export default function LogEvents({
                       dataid={entry.id}
                       onClick={event => menuData.handleMenu(event, entry)}
                       data-testid="menu-list"
-                      size="large"
                     >
                       <MoreVertOutlined />
                     </IconButton>
@@ -183,7 +180,7 @@ export default function LogEvents({
                       list={accessibleMenus(menuData?.menuList)}
                     />
                   </Grid>
-                )
+                </Hidden>
               )}
               <Grid item md={7} xs={12} style={!matches ? { paddingTop: '7px' } : {}}>
                 <Grid container spacing={1}>
@@ -257,7 +254,7 @@ export default function LogEvents({
                       )}
                       {entry.imageUrls && (
                         <Grid item sm={1} md={1} data-testid="image-area" style={{marginTop: '-10px'}}>
-                          <IconButton color="primary" onClick={() => handleClick(entry.id)} size="large">
+                          <IconButton color="primary" onClick={() => handleClick(entry.id)}>
                             <PhotoIcon />
                           </IconButton>
                         </Grid>
@@ -267,7 +264,7 @@ export default function LogEvents({
                 </Grid>
               </Grid>
               {(Boolean(entry.entryRequest) || entry.subject === 'user_temp') && (
-                !mdDownHidden && (
+                <Hidden smDown>
                   <Grid item md={1} style={{ textAlign: 'right' }}>
                     <IconButton
                       aria-controls="sub-menu"
@@ -275,7 +272,6 @@ export default function LogEvents({
                       dataid={entry.id}
                       onClick={event => menuData.handleMenu(event, entry)}
                       data-testid="menu-list"
-                      size="large"
                     >
                       <MoreVertOutlined />
                     </IconButton>
@@ -289,7 +285,7 @@ export default function LogEvents({
                       list={accessibleMenus(menuData?.menuList)}
                     />
                   </Grid>
-                )
+                </Hidden>
               )}
             </Grid>
             {imageOpen && (

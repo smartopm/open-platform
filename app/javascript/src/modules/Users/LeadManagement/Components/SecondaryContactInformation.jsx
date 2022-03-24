@@ -1,7 +1,7 @@
 import React from 'react';
-import TextField from '@mui/material/TextField';
-import { Divider , Grid, Typography } from '@mui/material';
-
+import TextField from '@material-ui/core/TextField';
+import { Divider } from '@material-ui/core';
+import { Grid, Typography } from '@mui/material';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { secondaryInfoUserObject } from '../../utils';

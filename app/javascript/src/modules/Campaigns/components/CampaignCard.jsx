@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
-import { makeStyles } from '@mui/styles';
-import { IconButton } from '@mui/material';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import useMediaQuery from '@mui/material/useMediaQuery';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import { makeStyles } from '@material-ui/styles';
+import { IconButton } from '@material-ui/core';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Card from '../../../shared/Card';
 import { dateToString } from '../../../components/DateContainer';
 
@@ -44,7 +44,6 @@ export default function CampaignCard({ camp, menuData, handleClick }) {
               dataid={camp.id}
               onClick={event => menuData.handleMenu(event, camp)}
               color="primary"
-              size="large"
             >
               <MoreVertIcon />
             </IconButton>
@@ -52,7 +51,7 @@ export default function CampaignCard({ camp, menuData, handleClick }) {
         </Grid>
       </Card>
     </>
-);
+  );
 }
 
 const useStyles = makeStyles(() => ({

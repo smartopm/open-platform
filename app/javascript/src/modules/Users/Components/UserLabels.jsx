@@ -2,14 +2,14 @@
 /* eslint-disable complexity */
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import AddIcon from '@mui/icons-material/Add';
-import CloseIcon from '@mui/icons-material/Close';
+import AddIcon from '@material-ui/icons/Add';
+import CloseIcon from '@material-ui/icons/Close';
 import { useQuery, useMutation } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
-import Autocomplete from '@mui/material/Autocomplete';
-import { TextField, IconButton, Chip, Container, useTheme, useMediaQuery , Tooltip } from '@mui/material';
-
-import { makeStyles } from '@mui/styles';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import { TextField, IconButton, Chip, Container, useTheme, useMediaQuery } from '@material-ui/core';
+import { Tooltip } from '@mui/material';
+import { makeStyles } from '@material-ui/styles';
 import { UserLabelsQuery, LabelsQuery } from '../../../graphql/queries';
 import { LabelCreate, UserLabelCreate, UserLabelUpdate } from '../../../graphql/mutations';
 import useDebounce from '../../../utils/useDebounce';
@@ -121,7 +121,6 @@ export default function UserLabels({ userId, isLabelOpen }) {
             aria-label="add-label"
             onClick={() => setshowAddTextBox(!showAddTextBox)}
             data-testid="add_label"
-            size="large"
           >
             {!showAddTextBox ? (
               <AddIcon data-testid="add_label_closed" />

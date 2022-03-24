@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Menu, MenuItem } from '@mui/material';
+import { Menu, MenuItem } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
 import EditModal from './EditModal';
 import DeleteModal from './LabelDelete';

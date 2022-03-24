@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { List } from '@mui/material'
+import { List } from '@material-ui/core'
 import UserItem from './UserItem'
 
 export default function UserListCard({

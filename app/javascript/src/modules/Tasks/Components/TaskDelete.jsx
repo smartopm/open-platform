@@ -1,19 +1,19 @@
 /* eslint-disable import/no-cycle */
 /* eslint-disable no-use-before-define */
 import React from 'react'
-import Dialog from '@mui/material/Dialog';
+import Dialog from '@material-ui/core/Dialog';
 import PropTypes from 'prop-types'
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
-import Divider from '@mui/material/Divider';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Divider from '@material-ui/core/Divider';
 import { useMutation } from 'react-apollo'
-import Card from '@mui/material/Card';
-import Avatar from '@mui/material/Avatar';
-import CardContent from '@mui/material/CardContent';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import makeStyles from '@mui/styles/makeStyles';
+import Card from '@material-ui/core/Card';
+import Avatar from '@material-ui/core/Avatar';
+import CardContent from '@material-ui/core/CardContent';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
+import { makeStyles } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
 import { DeleteNoteComment } from '../../../graphql/mutations';
 

@@ -1,9 +1,9 @@
 /* eslint-disable no-use-before-define */
 import React from 'react';
 import PropTypes from 'prop-types';
-import ListItem from '@mui/material/ListItem';
-import Badge from '@mui/material/Badge';
-import ListItemText from '@mui/material/ListItemText';
+import ListItem from '@material-ui/core/ListItem';
+import Badge from '@material-ui/core/Badge';
+import ListItemText from '@material-ui/core/ListItemText';
 import { css, StyleSheet } from 'aphrodite';
 import { useHistory } from 'react-router';
 import { useTranslation } from 'react-i18next';

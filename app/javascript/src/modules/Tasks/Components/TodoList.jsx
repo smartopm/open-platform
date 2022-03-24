@@ -8,9 +8,9 @@ import {
   DialogTitle,
   DialogContent,
   Grid,
-} from '@mui/material';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import makeStyles from '@mui/styles/makeStyles';
+} from '@material-ui/core';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { makeStyles } from '@material-ui/core/styles';
 import { useMutation, useLazyQuery, useApolloClient } from 'react-apollo';
 import { useParams, useHistory } from 'react-router';
 import { useTranslation } from 'react-i18next';
@@ -488,22 +488,22 @@ export default function TodoList({
         </Grid>
         <div
           style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          position: 'relative'
-        }}
+            display: 'flex',
+            justifyContent: 'space-between',
+            position: 'relative'
+          }}
           data-testid="filter_container"
         >
           <Grid
             container
-            justifyContent="flex-end"
+            justify="flex-end"
             style={{
-            width: '100.5%',
-            position: 'absolute',
-            zIndex: 1,
-            marginTop: '-2px',
-            display: displayBuilder
-          }}
+              width: '100.5%',
+              position: 'absolute',
+              zIndex: 1,
+              marginTop: '-2px',
+              display: displayBuilder
+            }}
           >
             <QueryBuilder
               handleOnChange={handleQueryOnChange}
@@ -516,61 +516,61 @@ export default function TodoList({
         <br />
         {isLoading ? (
           <Spinner />
-      ) : (
-        <div data-testid="todo-list-container">
-          <TaskBulkUpdateAction
-            checkedOptions={checkedOptions}
-            bulkUpdating={bulkUpdating}
-            handleBulkUpdate={handleBulkUpdate}
-            selectedTasks={selectedTasks}
-            currentTile={currentTile}
-          />
-          {Boolean(data?.flaggedNotes.length) && (
-            <SplitScreen
-              open={splitScreenOpen}
-              onClose={() => setSplitScreenOpen(false)}
-              classes={{ paper: matches ? classes.drawerPaperMobile : classes.drawerPaper }}
-            >
-              <TaskUpdate
-                taskId={redirectedTaskId || data?.flaggedNotes[0].id}
-                handleSplitScreenOpen={handleTodoItemClick}
-                handleSplitScreenClose={handleSplitScreenClose}
-                handleTaskCompletion={handleTaskCompletion}
-                handleTaskNotFoundError={handleTaskNotFoundError}
-              />
-            </SplitScreen>
-          )}
-          {data?.flaggedNotes.length ? (
-            <div>
-              {data?.flaggedNotes.map(task => (
-                <TodoItem
-                  key={task.id}
-                  task={task}
-                  handleChange={handleChange}
-                  selectedTasks={selectedTasks}
-                  isSelected={checkedOptions === 'all'}
-                  handleAddSubTask={handleAddSubTask}
-                  handleUploadDocument={handleUploadDocument}
-                  handleTodoClick={handleTodoItemClick}
-                  handleTaskCompletion={handleTaskCompletion}
-                />
-              ))}
-            </div>
-          ) : (
-            <CenteredContent>{t('task.no_tasks')}</CenteredContent>
-          )}
-          <br />
-          <CenteredContent>
-            <Paginate
-              count={data?.flaggedNotes?.length}
-              offSet={offset}
-              limit={limit}
-              active={offset >= 1}
-              handlePageChange={paginate}
+        ) : (
+          <div data-testid="todo-list-container">
+            <TaskBulkUpdateAction
+              checkedOptions={checkedOptions}
+              bulkUpdating={bulkUpdating}
+              handleBulkUpdate={handleBulkUpdate}
+              selectedTasks={selectedTasks}
+              currentTile={currentTile}
             />
-          </CenteredContent>
-        </div>
-      )}
+            {Boolean(data?.flaggedNotes.length) && (
+              <SplitScreen
+                open={splitScreenOpen}
+                onClose={() => setSplitScreenOpen(false)}
+                classes={{ paper: matches ? classes.drawerPaperMobile : classes.drawerPaper }}
+              >
+                <TaskUpdate
+                  taskId={redirectedTaskId || data?.flaggedNotes[0].id}
+                  handleSplitScreenOpen={handleTodoItemClick}
+                  handleSplitScreenClose={handleSplitScreenClose}
+                  handleTaskCompletion={handleTaskCompletion}
+                  handleTaskNotFoundError={handleTaskNotFoundError}
+                />
+              </SplitScreen>
+            )}
+            {data?.flaggedNotes.length ? (
+              <div>
+                {data?.flaggedNotes.map(task => (
+                  <TodoItem
+                    key={task.id}
+                    task={task}
+                    handleChange={handleChange}
+                    selectedTasks={selectedTasks}
+                    isSelected={checkedOptions === 'all'}
+                    handleAddSubTask={handleAddSubTask}
+                    handleUploadDocument={handleUploadDocument}
+                    handleTodoClick={handleTodoItemClick}
+                    handleTaskCompletion={handleTaskCompletion}
+                  />
+                ))}
+              </div>
+            ) : (
+              <CenteredContent>{t('task.no_tasks')}</CenteredContent>
+            )}
+            <br />
+            <CenteredContent>
+              <Paginate
+                count={data?.flaggedNotes?.length}
+                offSet={offset}
+                limit={limit}
+                active={offset >= 1}
+                handlePageChange={paginate}
+              />
+            </CenteredContent>
+          </div>
+        )}
         <AccessCheck module='note' allowedPermissions={['can_view_create_task_button']}>
           <FloatingButton
             variant="extended"
@@ -581,7 +581,7 @@ export default function TodoList({
         </AccessCheck>
       </div>
     </>
-);
+  );
 }
 
 const useStyles = makeStyles(() => ({

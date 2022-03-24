@@ -1,14 +1,13 @@
 import React, { Fragment } from 'react'
 import { useQuery } from 'react-apollo'
-import makeStyles from '@mui/styles/makeStyles';
-import withStyles from '@mui/styles/withStyles';
+import { makeStyles, withStyles } from '@material-ui/core/styles'
 import {
     Table,
     TableBody,
     TableCell,
     TableHead,
     TableRow
-} from '@mui/material'
+} from '@material-ui/core'
 import { ShowroomEntriesQuery } from '../../graphql/queries'
 import Loading from '../../shared/Loading'
 import ErrorPage from '../../components/Error'

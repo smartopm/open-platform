@@ -1,9 +1,8 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import Grid from '@mui/material/Grid';
-import { useMediaQuery, useTheme } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
+import Grid from '@material-ui/core/Grid';
+import { makeStyles, useMediaQuery, useTheme } from '@material-ui/core';
 import Chip from '@mui/material/Chip';
 import Typography from '@mui/material/Typography';
 import { useTranslation } from 'react-i18next';

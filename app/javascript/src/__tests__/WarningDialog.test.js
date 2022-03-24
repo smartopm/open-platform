@@ -2,7 +2,6 @@ import React from 'react'
 import { render } from '@testing-library/react'
 import { ActionDialog } from '../components/Dialog'
 import '@testing-library/jest-dom/extend-expect'
-import MockedThemeProvider from '../modules/__mocks__/mock_theme';
 
 const props = {
   open: true,
@@ -12,7 +11,7 @@ const props = {
 }
 describe('ActionDialog component', () => {
   it('should render necessary elements', () => {
-    const container = render(<MockedThemeProvider><ActionDialog {...props} /></MockedThemeProvider>)
+    const container = render(<ActionDialog {...props} />)
 
     expect(
       container.queryByText('Wait what are you doing!??')

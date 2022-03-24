@@ -6,7 +6,7 @@ import ListItemSecondaryAction from '@mui/material/ListItemSecondaryAction';
 import ListItemText from '@mui/material/ListItemText';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from '@material-ui/styles';
 import { dateToString } from '../components/DateContainer';
 
 export default function NoteListItem({ hasActions, note, handleOpenMenu }) {
@@ -39,7 +39,6 @@ export default function NoteListItem({ hasActions, note, handleOpenMenu }) {
             data-testid="more_details"
             onClick={event => handleOpenMenu(event, note)}
             color="primary"
-            size="large"
           >
             <MoreVertIcon />
           </IconButton>

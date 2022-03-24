@@ -1,10 +1,10 @@
 import React from 'react';
 import Grid from '@mui/material/Grid';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
 import PropTypes from 'prop-types';
-import { Checkbox, FormControlLabel, Typography, useMediaQuery } from '@mui/material';
-import Autocomplete from '@mui/material/Autocomplete';
+import { Checkbox, FormControlLabel, Typography, useMediaQuery } from '@material-ui/core';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 import { useTranslation } from 'react-i18next';
 import UserAutoResult from './UserAutoResult';
 import { UserChip } from '../modules/Tasks/Components/UserChip';
@@ -35,7 +35,7 @@ export default function CommentTextField({
           fullWidth
           id="standard-full-width"
           style={{ margin: 0 }}
-          label={placeholder}
+          placeholder={placeholder}
           value={value}
           onChange={e => setValue(e.target.value)}
           multiline
@@ -100,15 +100,11 @@ export default function CommentTextField({
               }}
               id="reply-user"
               options={taskAssignees || []}
-              renderOption={(props, option) => (
-                <li {...props}>
-                  <UserAutoResult user={option} t={t} />
-                </li>
-              )}
+              renderOption={option => <UserAutoResult user={option} t={t} />}
               name="reply-user"
               onChange={(_event, newValue) => setSelectedUser(newValue)}
               getOptionLabel={option => option?.name}
-              isOptionEqualToValue={(option, optionValue) => option.name === optionValue.name}
+              getOptionSelected={(option, optionValue) => option.name === optionValue.name}
               value={selectedUser}
               noOptionsText="No valid assignees on this project"
               renderInput={params => (

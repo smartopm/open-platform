@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import Grid from '@mui/material/Grid';
+import Grid from '@material-ui/core/Grid';
 import PropTypes from 'prop-types';
-import makeStyles from '@mui/styles/makeStyles';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import { makeStyles } from '@material-ui/core/styles';
+import IconButton from '@material-ui/core/IconButton';
+import Typography from '@material-ui/core/Typography';
+import Divider from '@material-ui/core/Divider';
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 
 export default function TaskDetailAccordion({ title, component, openDetails }) {
   const classes = useStyles();
@@ -34,12 +34,14 @@ export default function TaskDetailAccordion({ title, component, openDetails }) {
               {title}
             </Typography>
           </Grid>
-      
+        
           <Grid item sm={1} xs={2} style={showComponent ? { backgroundColor: '#EEF6F9' } : undefined} className={classes.icon}>
             <Grid container>
               <Divider orientation="vertical" flexItem />
               <Grid item sm={11}>
-                <IconButton data-testid="toggle-icon" size="large">
+                <IconButton
+                  data-testid="toggle-icon"
+                >
                   {showComponent ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                 </IconButton>
               </Grid>
@@ -50,7 +52,7 @@ export default function TaskDetailAccordion({ title, component, openDetails }) {
       </Grid>
       {showComponent && <div data-testid="component" className={classes.component}>{component}</div>}
     </>
-);
+  );
 }
 
 const useStyles = makeStyles(() => ({

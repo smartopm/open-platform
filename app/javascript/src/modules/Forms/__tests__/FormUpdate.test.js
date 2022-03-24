@@ -6,7 +6,6 @@ import { BrowserRouter } from 'react-router-dom'
 import Loading from '../../../shared/Loading'
 import { UserFormPropertiesQuery, FormUserQuery } from '../graphql/forms_queries'
 import FormUpdate from '../components/FormUpdate'
-import MockedThemeProvider from '../../__mocks__/mock_theme';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
 
@@ -198,14 +197,11 @@ describe('Form Component', () => {
     const container = render(
       <MockedProvider mocks={[mocks, formUserMocks]} addTypename={false}>
         <BrowserRouter>
-          <MockedThemeProvider>
-
-            <FormUpdate
-              formUserId="caea7b44-ee95-42a6-a42f-3e530432172e"
-              userId="162f7517-7cc8-42f9-b2d0-a83a16d59569"
-              authState={authState}
-            />
-          </MockedThemeProvider>
+          <FormUpdate
+            formUserId="caea7b44-ee95-42a6-a42f-3e530432172e"
+            userId="162f7517-7cc8-42f9-b2d0-a83a16d59569"
+            authState={authState}
+          />
         </BrowserRouter>
       </MockedProvider>
     );
@@ -284,14 +280,11 @@ describe('Form Component', () => {
     render(
       <MockedProvider mocks={[mocks, formUserMocks]} addTypename={false}>
         <BrowserRouter>
-          <MockedThemeProvider>
-
-            <FormUpdate
-              formUserId="caea7b44-ee95-42a6-a42f-3e530432172e"
-              userId="162f7517-7cc8-42f9-b2d0-a83a16d59569"
-              authState={authState}
-            />
-          </MockedThemeProvider>
+          <FormUpdate
+            formUserId="caea7b44-ee95-42a6-a42f-3e530432172e"
+            userId="162f7517-7cc8-42f9-b2d0-a83a16d59569"
+            authState={authState}
+          />
         </BrowserRouter>
       </MockedProvider>
     );

@@ -5,7 +5,6 @@ import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom/';
 import ReceiptModal from '../Components/UserTransactions/ReceiptModal';
 import currency from '../../../__mocks__/currency';
-import MockedThemeProvider from '../../__mocks__/mock_theme';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 describe('It should test the payment receipt modal component', () => {
@@ -31,15 +30,13 @@ describe('It should test the payment receipt modal component', () => {
     const container = render(
       <BrowserRouter>
         <MockedProvider>
-          <MockedThemeProvider>
-            <ReceiptModal
-              open={open}
-              paymentData={paymentData}
-              userData={userData}
-              handleClose={handleModalClose}
-              currencyData={currency}
-            />
-          </MockedThemeProvider>
+          <ReceiptModal
+            open={open}
+            paymentData={paymentData}
+            userData={userData}
+            handleClose={handleModalClose}
+            currencyData={currency}
+          />
         </MockedProvider>
       </BrowserRouter>
     );

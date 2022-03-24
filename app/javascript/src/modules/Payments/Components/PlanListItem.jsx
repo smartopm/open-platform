@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
-import Grid from '@mui/material/Grid';
+import Grid from '@material-ui/core/Grid';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
-import Typography from '@mui/material/Typography';
-import useMediaQuery from '@mui/material/useMediaQuery';
+import Typography from '@material-ui/core/Typography';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { Link } from 'react-router-dom';
-import Hidden from '@mui/material/Hidden';
-import Avatar from '@mui/material/Avatar';
-import makeStyles from '@mui/styles/makeStyles';
-import { Checkbox, IconButton } from '@mui/material';
-import { MoreHorizOutlined } from '@mui/icons-material';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
+import Hidden from '@material-ui/core/Hidden';
+import Avatar from '@material-ui/core/Avatar';
+import { makeStyles } from '@material-ui/core/styles';
+import { Checkbox, IconButton } from '@material-ui/core';
+import { MoreHorizOutlined } from '@material-ui/icons';
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 import PaymentSlider from './PaymentSlider';
 import Label from '../../../shared/label/Label';
 import { toTitleCase, objectAccessor, formatMoney } from '../../../utils/helpers';
@@ -21,16 +21,10 @@ import { dateToString } from '../../../components/DateContainer';
 import PaymentItem from './PaymentItem';
 import CenteredContent from '../../../shared/CenteredContent';
 
-export default function PlanListItem({
-  data,
-  currencyData,
-  menuData,
-  selectedPlans,
-  handlePlansSelect
-}) {
+export default function PlanListItem({ data, currencyData, menuData, selectedPlans, handlePlansSelect }) {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
-  const { t } = useTranslation(['payment', 'common']);
+  const { t } = useTranslation(['payment','common']);
   const matches = useMediaQuery('(max-width:600px)');
 
   const colors = {
@@ -47,16 +41,12 @@ export default function PlanListItem({
           <Grid container spacing={2}>
             <Grid item sm={2}>
               <Checkbox
-                checked={Boolean(
-                  selectedPlans?.find(
-                    obj => obj.paymentPlanId === data?.id && obj.userId === data?.user?.id
-                  )
-                )}
+                checked={Boolean(selectedPlans?.find(obj => obj.paymentPlanId === data?.id && obj.userId === data?.user?.id))}
                 onChange={() => handlePlansSelect(data.id, data.user.id)}
                 name="includeReplyLink"
                 data-testid="reply_link"
                 color="primary"
-                style={{ padding: '0px', marginRight: '15px' }}
+                style={{padding: '0px', marginRight: '15px'}}
               />
             </Grid>
             <Grid item sm={10}>
@@ -87,7 +77,6 @@ export default function PlanListItem({
                 data-testid="plan-menu"
                 dataid={data.id}
                 onClick={event => menuData?.handleMenuClick(event, data)}
-                size="large"
               >
                 <MoreHorizOutlined />
               </IconButton>
@@ -104,13 +93,10 @@ export default function PlanListItem({
         <Grid item xs={12} sm={7} data-testid="payment-slider">
           <PaymentSlider data={data} currencyData={currencyData} />
         </Grid>
-        <Grid item xs={12} sm={2} data-testid="label">
-          <Label
-            title={toTitleCase(data.planStatus || '')}
-            color={objectAccessor(colors, data.planStatus)}
-          />
+        <Grid item xs={12} sm={2} data-testid='label'>
+          <Label title={toTitleCase(data.planStatus || '')} color={objectAccessor(colors, data.planStatus)} />
         </Grid>
-        <Hidden smDown>
+        <Hidden xsDown>
           <Grid item xs={12} sm={1} data-testid="menu">
             {(data?.planStatus === 'behind' || data?.planStatus === 'on_track') && (
               <IconButton
@@ -119,7 +105,6 @@ export default function PlanListItem({
                 data-testid="plan-menu"
                 dataid={data.id}
                 onClick={event => menuData?.handleMenuClick(event, data)}
-                size="large"
               >
                 <MoreHorizOutlined />
               </IconButton>
@@ -143,7 +128,7 @@ export default function PlanListItem({
           <Grid
             className={!matches ? classes.view : classes.viewMobile}
             onClick={() => setOpen(!open)}
-            data-testid="view-history"
+            data-testid='view-history'
           >
             <Typography className={!matches ? classes.typography : classes.typoMobile}>
               {t('actions.view_history')}
@@ -154,17 +139,18 @@ export default function PlanListItem({
           </Grid>
         </Grid>
         {data?.planStatus === 'on_track' && (
-          <Grid item xs={6} sm={7} data-testid="due-date">
+          <Grid
+            item
+            xs={6}
+            sm={7}
+            data-testid="due-date"
+          >
             <CenteredContent>
-              <Typography variant="caption">
-                {t('misc.payment_due_date', {
-                  date: dateToString(data?.upcomingInstallmentDueDate)
-                })}
+              <Typography variant='caption'>
+                {t('misc.payment_due_date', {date: dateToString(data?.upcomingInstallmentDueDate)})}
               </Typography>
-              <Typography variant="caption" style={!matches ? { marginLeft: '10px' } : {}}>
-                {t('misc.installment_amount', {
-                  amount: formatMoney(currencyData, data?.installmentAmount)
-                })}
+              <Typography variant='caption' style={!matches ? {marginLeft: '10px'} : {}}>
+                {t('misc.installment_amount', {amount: formatMoney(currencyData, data?.installmentAmount)})}
               </Typography>
             </CenteredContent>
           </Grid>
@@ -215,12 +201,7 @@ export default function PlanListItem({
               </Grid>
               <Grid item xs={12} md={3} data-testid="start-date">
                 {!matches ? (
-                  <Text
-                    content={`${t('misc.plan_values')}: ${formatMoney(
-                      currencyData,
-                      data?.planValue
-                    )}`}
-                  />
+                  <Text content={`${t('misc.plan_values')}: ${formatMoney(currencyData, data?.planValue)}`} />
                 ) : (
                   <Grid container>
                     <Grid item xs={6}>
@@ -233,18 +214,17 @@ export default function PlanListItem({
                 )}
               </Grid>
             </Grid>
-            {data?.planPayments?.length > 0 ? (
-              data?.planPayments
-                ?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-                .map(payment => (
-                  <PaymentItem
-                    key={payment.id}
-                    payment={payment}
-                    matches={matches}
-                    currencyData={currencyData}
-                    t={t}
-                  />
-                ))
+            {(data?.planPayments?.length > 0) ? (
+              data?.planPayments?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+              .map(payment => (
+                <PaymentItem
+                  key={payment.id}
+                  payment={payment}
+                  matches={matches}
+                  currencyData={currencyData}
+                  t={t}
+                />
+              ))
             ) : (
               <Grid container className={classes.details}>
                 <Text content={t('misc.no_payments_made')} />
@@ -306,7 +286,7 @@ const useStyles = makeStyles(() => ({
 
 PlanListItem.defaultProps = {
   selectedPlans: []
-};
+}
 
 PlanListItem.propTypes = {
   selectedPlans: PropTypes.arrayOf(PropTypes.object),
@@ -329,14 +309,12 @@ PlanListItem.propTypes = {
       parcelNumber: PropTypes.string,
       parcelType: PropTypes.string
     }),
-    planPayments: PropTypes.arrayOf(
-      PropTypes.shape({
-        amount: PropTypes.number,
-        receiptNumber: PropTypes.string,
-        createdAt: PropTypes.string,
-        status: PropTypes.string
-      })
-    )
+    planPayments: PropTypes.arrayOf(PropTypes.shape({
+      amount: PropTypes.number,
+      receiptNumber: PropTypes.string,
+      createdAt: PropTypes.string,
+      status: PropTypes.string
+    }))
   }).isRequired,
   currencyData: PropTypes.shape({
     currency: PropTypes.string,

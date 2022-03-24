@@ -1,5 +1,5 @@
 /* eslint-disable import/prefer-default-export */
-import { makeStyles } from '@mui/styles';
+import { makeStyles } from '@material-ui/styles';
 
 export const useStyles = makeStyles({
   text: {

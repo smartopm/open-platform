@@ -8,10 +8,10 @@ import {
   Popper,
   MenuItem,
   MenuList,
-} from '@mui/material'
+} from '@material-ui/core'
 import PropTypes from 'prop-types'
-import useMediaQuery from '@mui/material/useMediaQuery';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import { useTranslation } from 'react-i18next';
 import { objectAccessor } from '../../../utils/helpers'
 

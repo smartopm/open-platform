@@ -1,9 +1,9 @@
 import React from 'react'
-import { IconButton, MenuItem, TextField } from '@mui/material'
-import { DeleteOutline } from '@mui/icons-material'
+import { IconButton, MenuItem, TextField } from '@material-ui/core'
+import { DeleteOutline } from '@material-ui/icons'
 import PropTypes from 'prop-types'
 import { useTranslation } from 'react-i18next'
-import { makeStyles } from '@mui/styles'
+import { makeStyles } from '@material-ui/styles'
 import { objectAccessor } from '../../../utils/helpers'
 
 export default function DynamicContactFields({
@@ -64,12 +64,11 @@ export default function DynamicContactFields({
         style={{ marginTop: 13 }}
         onClick={() => handleRemoveRow(i)}
         aria-label="remove"
-        size="large"
       >
         <DeleteOutline />
       </IconButton>
     </div>
-  ));
+  ))
 }
 
 DynamicContactFields.defaultProps ={

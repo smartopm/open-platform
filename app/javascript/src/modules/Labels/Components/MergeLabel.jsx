@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import TextField from '@mui/material/TextField';
-import MenuItem from '@mui/material/MenuItem';
+import TextField from '@material-ui/core/TextField';
+import MenuItem from '@material-ui/core/MenuItem';
 import { useMutation, useLazyQuery } from 'react-apollo';
-import Typography from '@mui/material/Typography';
+import Typography from '@material-ui/core/Typography';
 import { CustomizedDialogs } from '../../../components/Dialog';
 import { LabelsQuery } from '../../../graphql/queries';
 import { LabelMerge } from '../../../graphql/mutations';

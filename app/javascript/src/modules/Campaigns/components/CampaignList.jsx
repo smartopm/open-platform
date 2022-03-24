@@ -3,15 +3,15 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { Fragment, useState, useEffect } from 'react';
 import { useQuery, useMutation } from 'react-apollo';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import AddCircleIcon from '@mui/icons-material/AddCircle';
-import Grid from '@mui/material/Grid';
-import IconButton from '@mui/material/IconButton';
-import Tooltip from '@mui/material/Tooltip';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import AddCircleIcon from '@material-ui/icons/AddCircle';
+import Grid from '@material-ui/core/Grid';
+import IconButton from '@material-ui/core/IconButton';
+import Tooltip from '@material-ui/core/Tooltip';
 import { useHistory, useParams, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { makeStyles, useTheme } from '@mui/styles';
-import { Typography } from '@mui/material';
+import { makeStyles, useTheme } from '@material-ui/styles';
+import { Typography } from '@material-ui/core';
 import { allCampaigns } from '../../../graphql/queries';
 import { Spinner } from '../../../shared/Loading';
 import ErrorPage from '../../../components/Error';
@@ -183,7 +183,6 @@ export default function CampaignList() {
                       color="primary"
                       data-testid='new-campaign'
                       onClick={() => handleCreateCampaign()}
-                      size="large"
                     >
                       <AddCircleIcon />
                     </IconButton>

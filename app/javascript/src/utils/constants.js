@@ -1,6 +1,6 @@
 /* eslint-disable max-lines */
 // values that can be reused across the codebase
-import MuiConfig from 'react-awesome-query-builder/lib/config/mui';
+import MaterialConfig from 'react-awesome-query-builder/lib/config/material';
 import { toTitleCase } from './helpers';
 
 // Prevent Google Analytics reporting from staging and dev domains
@@ -365,7 +365,7 @@ export const plotStatusColorPallete = {
   built: '#00ff00'
 };
 
-const InitialConfig = MuiConfig;
+const InitialConfig = MaterialConfig;
 export const dateWidget = {
   ...InitialConfig.widgets,
   date: {

@@ -3,11 +3,11 @@ import Grid from '@mui/material/Grid';
 import Card from '@mui/material/Card';
 import Chip from '@mui/material/Chip';
 import PropTypes from 'prop-types';
-import CardContent from '@mui/material/CardContent';
+import CardContent from '@material-ui/core/CardContent';
 import { useHistory } from 'react-router';
-import { Avatar, IconButton, Chip as LegacyChip , useMediaQuery, useTheme } from '@mui/material';
-import MoreVert from '@mui/icons-material/MoreVert';
-
+import { Avatar, IconButton, Chip as LegacyChip } from '@material-ui/core';
+import MoreVert from '@material-ui/icons/MoreVert';
+import { useMediaQuery, useTheme } from '@mui/material';
 import { dateToString, dateTimeToString } from '../../../../components/DateContainer';
 import Text from '../../../../shared/Text';
 import { checkRequests } from '../../utils';
@@ -26,7 +26,7 @@ export default function GuestListCard({
   const classes = useLogbookStyles();
   const isCancelled = invite.status === 'cancelled'
   const theme = useTheme();
-  const matchesSmall = useMediaQuery(theme.breakpoints.down('lg'));
+  const matchesSmall = useMediaQuery(theme.breakpoints.down('md'));
 
   function handleViewGuest() {
     history.push(`/request/${invite.guest?.request?.id}?type=view`);
@@ -168,7 +168,6 @@ export default function GuestListCard({
                     onClick={event => handleInviteMenu(event, invite)}
                     color="primary"
                     className={classes.moreOptionButton}
-                    size="large"
                   >
                     <MoreVert />
                   </IconButton>

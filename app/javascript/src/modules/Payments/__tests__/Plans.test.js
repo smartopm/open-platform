@@ -10,7 +10,6 @@ import { Spinner } from '../../../shared/Loading';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import { generateId } from '../../../utils/helpers';
 import authState from '../../../__mocks__/authstate';
-import MockedThemeProvider from '../../__mocks__/mock_theme';
 
 describe('Plan List Component', () => {
   it('should render the Plans list component', async () => {
@@ -197,9 +196,7 @@ describe('Plan List Component', () => {
       >
         <Context.Provider value={authState}>
           <BrowserRouter>
-            <MockedThemeProvider>
-              <UserPlan userId={userId} user={authState.user} userData={userData} tab="Plans" />
-            </MockedThemeProvider>
+            <UserPlan userId={userId} user={authState.user} userData={userData} tab='Plans' />
           </BrowserRouter>
         </Context.Provider>
       </MockedProvider>

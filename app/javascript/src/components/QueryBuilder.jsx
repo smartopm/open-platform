@@ -1,3 +1,4 @@
+/* eslint-disable react/forbid-prop-types */
 import React, { useContext, useState } from 'react'
 import { Query, Builder, Utils as QbUtils } from 'react-awesome-query-builder'
 import PropTypes from 'prop-types'
@@ -20,7 +21,7 @@ export default function QueryBuilder({
       groupActionsPosition: 'bottomLeft',
       canReorder: false,
       theme: {
-        mui: theme(authState.user?.community?.themeColors)
+        material: theme(authState.user?.community?.themeColors)
       }
     },
     operators: {
@@ -43,7 +44,7 @@ export default function QueryBuilder({
       between: {
         ...builderConfig.operators.between,
         label: 'Between'
-      },
+      }, 
       less: {
         ...builderConfig.operators.less,
         label: 'Less Than'

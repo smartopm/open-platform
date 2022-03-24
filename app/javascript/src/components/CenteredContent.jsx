@@ -1,6 +1,6 @@
 /* eslint-disable */
 import React from 'react'
-import Grid from '@mui/material/Grid'
+import Grid from '@material-ui/core/Grid'
 import PropTypes from 'prop-types'
 
 /**
@@ -8,10 +8,10 @@ import PropTypes from 'prop-types'
  */
 export default function CenteredContent({children}) {
     return (
-      <Grid container direction="row" justifyContent="center" alignItems="center">
+      <Grid container direction="row" justify="center" alignItems="center">
         {children}
       </Grid>
-    );
+    )
 }
 
 CenteredContent.propTypes = {

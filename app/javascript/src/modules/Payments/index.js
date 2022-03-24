@@ -1,5 +1,5 @@
 import React from 'react'
-import CreditCardIcon from '@mui/icons-material/CreditCard';
+import CreditCardIcon from '@material-ui/icons/CreditCard';
 import PaymentSummary from './PaymentSummary'
 import Payments from "./Components/Payments";
 import AccessCheck from '../Permissions/Components/AccessCheck';

@@ -1,5 +1,5 @@
-import { Container, Grid, Typography } from '@mui/material';
-import { useTheme } from '@mui/styles';
+import { Container, Grid, Typography } from '@material-ui/core';
+import { useTheme } from '@material-ui/styles';
 import React, { useContext, useState } from 'react';
 import { useQuery, useMutation } from 'react-apollo';
 import { useTranslation } from 'react-i18next';

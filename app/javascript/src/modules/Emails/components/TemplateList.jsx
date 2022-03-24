@@ -1,7 +1,7 @@
 import React from 'react';
 import { useQuery } from 'react-apollo';
 import PropTypes from 'prop-types';
-import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import { FormControl, InputLabel, MenuItem, Select } from '@material-ui/core';
 import { EmailTemplatesQuery } from '../graphql/email_queries';
 import { Spinner } from '../../../shared/Loading';
 import CenteredContent from '../../../components/CenteredContent';

@@ -1,10 +1,10 @@
 import React, { Fragment } from 'react';
-import { Divider, Link, List, ListItem, ListItemText, Typography , Card, CardContent, Container, Grid } from '@mui/material';
+import { Divider, Link, List, ListItem, ListItemText, Typography } from '@material-ui/core';
 import { useQuery } from 'react-apollo';
-import useMediaQuery from '@mui/material/useMediaQuery';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTranslation } from 'react-i18next';
-import { makeStyles } from '@mui/styles';
-
+import { makeStyles } from '@material-ui/styles';
+import { Card, CardContent, Container, Grid } from '@mui/material';
 import { useHistory } from 'react-router-dom';
 import { formatError } from '../../../../utils/helpers';
 import CenteredContent from '../../../../shared/CenteredContent';

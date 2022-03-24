@@ -9,8 +9,8 @@ import {
   ListItemText,
   Select,
   Input
-} from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
+} from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 
 export default function MultiSelect({
   labelName,

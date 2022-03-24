@@ -1,16 +1,15 @@
 /* eslint-disable react/forbid-prop-types */
 /* eslint-disable no-nested-ternary */
 import React, { useState, useEffect } from 'react';
-import { Typography } from '@mui/material';
+import { Typography } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useLazyQuery } from 'react-apollo';
-import TextField from '@mui/material/TextField';
-import MenuItem from '@mui/material/MenuItem';
+import TextField from '@material-ui/core/TextField';
+import MenuItem from '@material-ui/core/MenuItem';
 import PropTypes from 'prop-types';
-import { useTheme } from '@mui/material/styles';
-import makeStyles from '@mui/styles/makeStyles';
-import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme, makeStyles } from '@material-ui/core/styles';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import CenteredContent from '../../../../components/CenteredContent';
 import Paginate from '../../../../components/Paginate';
 import { currencies } from '../../../../utils/constants';
@@ -110,7 +109,7 @@ export default function TransactionsList({
             </Typography>
             <ButtonComponent
               variant={matches ? 'outlined' : 'text'}
-              color="primary"
+              color="default"
               buttonText={t('actions.view_all_plans')}
               handleClick={() => history.push('?tab=Plans')}
               size="small"

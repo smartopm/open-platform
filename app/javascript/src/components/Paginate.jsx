@@ -1,6 +1,6 @@
 /* eslint-disable react/prop-types */
 import React from 'react'
-import { Button } from '@mui/material'
+import { Button } from '@material-ui/core'
 import { useTranslation } from 'react-i18next'
 
 export default function Paginate({

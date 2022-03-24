@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import Grid from '@mui/material/Grid';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import PropTypes from 'prop-types';
-import Breadcrumbs from '@mui/material/Breadcrumbs';
-import Typography from '@mui/material/Typography';
-import Link from '@mui/material/Link';
-import makeStyles from '@mui/styles/makeStyles';
+import Breadcrumbs from '@material-ui/core/Breadcrumbs';
+import Typography from '@material-ui/core/Typography';
+import Hidden from '@material-ui/core/Hidden';
+import Link from '@material-ui/core/Link';
+import { makeStyles } from '@material-ui/core/styles';
 import Avatar from '../../../components/Avatar';
 import UserDetail from './UserProfileDetail';
 import UserLabels from './UserLabels';
@@ -24,8 +24,6 @@ export default function UserDetailHeader({ data, userType, currentTab, authState
   const classes = useStyles();
   const [selectedKey, setSelectKey] = useState('');
   const [anchorEl, setAnchorEl] = useState(null);
-  const mdUpHidden = useMediaQuery(theme => theme.breakpoints.up('md'));
-  const mdDownHidden = useMediaQuery(theme => theme.breakpoints.down('md'));
   const options = selectOptions(
     setSelectKey,
     checkModule,
@@ -115,24 +113,22 @@ export default function UserDetailHeader({ data, userType, currentTab, authState
             </Typography>
           </Breadcrumbs>
         </Grid>
-        {!mdUpHidden && (
-          <>
-            <Grid item md={12} sm={2} xs={2} className={classes.labelTitle}>
-              {['admin'].includes(userType) && (
-                <UserLabelTitle isLabelOpen={isLabelOpen} setIsLabelOpen={setIsLabelOpen} />
-              )}
-            </Grid>
-            {isLabelOpen && (
-              <Grid item xs={12} sm={12} className={classes.labels}>
-                <UserLabels
-                  userId={data.user.id}
-                  isLabelOpen={isLabelOpen}
-                  setIsLabelOpen={setIsLabelOpen}
-                />
-              </Grid>
+        <Hidden mdUp>
+          <Grid item md={12} sm={2} xs={2} className={classes.labelTitle}>
+            {['admin'].includes(userType) && (
+              <UserLabelTitle isLabelOpen={isLabelOpen} setIsLabelOpen={setIsLabelOpen} />
             )}
-          </>
-        )}
+          </Grid>
+          {isLabelOpen && (
+            <Grid item xs={12} sm={12} className={classes.labels}>
+              <UserLabels
+                userId={data.user.id}
+                isLabelOpen={isLabelOpen}
+                setIsLabelOpen={setIsLabelOpen}
+              />
+            </Grid>
+          )}
+        </Hidden>
         <Grid item lg={5} md={5} sm={10} xs={10}>
           <Grid container data-testid="user-detail">
             <Grid item lg={3} md={3} sm={3} xs={3}>
@@ -147,40 +143,38 @@ export default function UserDetailHeader({ data, userType, currentTab, authState
             </Grid>
           </Grid>
         </Grid>
-        {!mdDownHidden && (
-          <>
-            <Grid item lg={5} md={5} sm={3}>
-              <SelectButton
-                options={options}
-                open={open}
-                anchorEl={anchorEl}
-                handleClose={handleClose}
-                handleClick={handleSelectButtonClick}
-                selectedKey={selectedKey}
-                defaultButtonText={t('common:menu.contact')}
-                style={{ marginLeft: '-6rem' }}
-              />
-            </Grid>
-            <Grid item lg={2} md={2} sm={2} xs={2}>
-              {['admin'].includes(userType) && (
-                <UserLabelTitle isLabelOpen={isLabelOpen} setIsLabelOpen={setIsLabelOpen} />
-              )}
-            </Grid>
-            {isLabelOpen && (
-              <Grid container className={classes.labels}>
-                <Grid item md={2} lg={2} sm={2} />
-                <Grid item md={10} lg={10} sm={10}>
-                  <UserLabels
-                    userId={data.user.id}
-                    isLabelOpen={isLabelOpen}
-                    setIsLabelOpen={setIsLabelOpen}
-                  />
-                </Grid>
-              </Grid>
+        <Hidden smDown>
+          <Grid item lg={5} md={5} sm={3}>
+            <SelectButton
+              options={options}
+              open={open}
+              anchorEl={anchorEl}
+              handleClose={handleClose}
+              handleClick={handleSelectButtonClick}
+              selectedKey={selectedKey}
+              defaultButtonText={t('common:menu.contact')}
+              style={{marginLeft: '-6rem'}}
+            />
+          </Grid>
+          <Grid item lg={2} md={2} sm={2} xs={2}>
+            {['admin'].includes(userType) && (
+              <UserLabelTitle isLabelOpen={isLabelOpen} setIsLabelOpen={setIsLabelOpen} />
             )}
-          </>
-        )}
-        {!mdUpHidden && (
+          </Grid>
+          {isLabelOpen && (
+            <Grid container className={classes.labels}>
+              <Grid item md={2} lg={2} sm={2} />
+              <Grid item md={10} lg={10} sm={10}>
+                <UserLabels
+                  userId={data.user.id}
+                  isLabelOpen={isLabelOpen}
+                  setIsLabelOpen={setIsLabelOpen}
+                />
+              </Grid>
+            </Grid>
+          )}
+        </Hidden>
+        <Hidden mdUp>
           <Grid item md={4} sm={12} xs={12} className={classes.selectMobile}>
             <SelectButton
               options={options}
@@ -190,10 +184,10 @@ export default function UserDetailHeader({ data, userType, currentTab, authState
               handleClick={handleSelectButtonClick}
               selectedKey={selectedKey}
               defaultButtonText={t('common:menu.contact')}
-              style={{ marginLeft: '-6rem' }}
+              style={{marginLeft: '-6rem'}}
             />
           </Grid>
-        )}
+        </Hidden>
       </Grid>
     </>
   );

@@ -10,9 +10,9 @@ import {
   Checkbox,
   FormControlLabel,
   FormLabel
-} from '@mui/material';
-import ToggleButton from '@mui/material/ToggleButton';
-import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+} from '@material-ui/core';
+import ToggleButton from '@material-ui/lab/ToggleButton';
+import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
 import { CustomizedDialogs } from '../../../../components/Dialog';
 import DatePickerDialog from '../../../../components/DatePickerDialog';
 import { paymentPlanStatus, paymentPlanFrequency, subscriptionPlanType } from '../../../../utils/constants';

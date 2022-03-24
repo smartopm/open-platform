@@ -5,10 +5,10 @@ import { useTranslation } from 'react-i18next';
 // eslint-disable-next-line import/no-unresolved
 import { useLongPress } from 'use-long-press';
 import PropTypes from 'prop-types'
-import makeStyles from '@mui/styles/makeStyles';
-import Modal from "@mui/material/Modal";
-import CloseIcon from "@mui/icons-material/Close";
-import Button from '@mui/material/Button';
+import { makeStyles } from "@material-ui/core/styles";
+import Modal from "@material-ui/core/Modal";
+import CloseIcon from "@material-ui/icons/Close";
+import Button from '@material-ui/core/Button';
 import PanicButtonSVG from './PanicButtonSVG';
 import MessageAlert from '../../../components/MessageAlert';
 import { formatError } from '../../../utils/helpers';

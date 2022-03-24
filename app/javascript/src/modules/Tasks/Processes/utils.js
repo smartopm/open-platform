@@ -65,7 +65,7 @@ export function snakeCaseToSentence(text){
 export function groupComments(comments){
   return comments.reduce((result, comment) => {
     const groupedId = comment.groupingId || 'no-group'
-    result[groupedId] = [...(result[groupedId] || []), comment];
+    result[groupedId] = [...result[groupedId] || [], comment];
     return result;
   }, {});
 }

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import TextField from '@mui/material/TextField';
+import TextField from '@material-ui/core/TextField';
 
 export default function DetailsField({ title, value, editable, handleChange, options }) {
   return (

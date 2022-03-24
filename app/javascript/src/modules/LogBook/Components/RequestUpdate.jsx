@@ -6,12 +6,12 @@
 /* eslint-disable no-use-before-define */
 import React, { useState, useEffect, useContext } from 'react';
 import { useMutation } from 'react-apollo';
-import { TextField, MenuItem, Button, Grid } from '@mui/material';
+import { TextField, MenuItem, Button, Grid } from '@material-ui/core';
 import { StyleSheet, css } from 'aphrodite';
 import { useHistory, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
-import CallIcon from '@mui/icons-material/Call';
+import CallIcon from '@material-ui/icons/Call';
 import {
   EntryRequestGrant,
   EntryRequestDeny,
@@ -401,13 +401,13 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
         <div>
           <p>
             {t('logbook:logbook.today_is', {
-            day: getWeekDay(date),
-            time: dateTimeToString(date)
-          })}
+              day: getWeekDay(date),
+              time: dateTimeToString(date)
+            })}
           </p>
           <p>{t('logbook:logbook.beyond_time')}</p>
         </div>
-    )}
+      )}
       </ModalDialog>
 
       <div className="container">
@@ -421,18 +421,18 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
               className="form-control"
               type="text"
               value={
-              formData.grantor
-                ? `${dateToString(formData.createdAt)} at ${dateTimeToString(
-                    formData.createdAt
-                  )}`
-                : ''
-            }
+                formData.grantor
+                  ? `${dateToString(formData.createdAt)} at ${dateTimeToString(
+                      formData.createdAt
+                    )}`
+                  : ''
+              }
               disabled
               name="date"
               required
             />
           </div>
-      )}
+        )}
           {formData.grantor && (
           <div className="form-group">
             <label className="bmd-label-static" htmlFor="_name">
@@ -446,7 +446,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
               name="name"
             />
           </div>
-      )}
+        )}
           {isGuestRequest && formData.user && (
           <div className="form-group">
             <label className="bmd-label-static" htmlFor="_name">
@@ -460,7 +460,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
               name="name"
             />
           </div>
-      )}
+        )}
           <div className="form-group">
             <label className="bmd-label-static" htmlFor="_name">
               {t('form_fields.full_name')}
@@ -474,9 +474,9 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
               inputProps={{ 'data-testid': 'entry_user_name' }}
               error={inputValidationMsg.isError && requiredFields.includes('name') && !formData.name}
               helperText={inputValidationMsg.isError &&
-            requiredFields.includes('name') &&
-            !formData.name &&
-            t('logbook:errors.required_field', { fieldName: 'Name' })}
+              requiredFields.includes('name') &&
+              !formData.name &&
+              t('logbook:errors.required_field', { fieldName: 'Name' })}
             />
           </div>
           <div className="form-group">
@@ -506,12 +506,12 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
               name="nrc"
               inputProps={{ 'data-testid': 'entry_user_nrc' }}
               error={inputValidationMsg.isError &&
-            requiredFields.includes('nrc') &&
-            !formData.nrc}
+              requiredFields.includes('nrc') &&
+              !formData.nrc}
               helperText={inputValidationMsg.isError &&
-            requiredFields.includes('nrc') &&
-            !formData.nrc &&
-            t('logbook:errors.required_field', { fieldName: 'ID' })}
+              requiredFields.includes('nrc') &&
+              !formData.nrc &&
+              t('logbook:errors.required_field', { fieldName: 'ID' })}
             />
           </div>
           <div className="form-group">
@@ -526,12 +526,12 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
               name="phoneNumber"
               inputProps={{ 'data-testid': 'entry_user_phone' }}
               error={inputValidationMsg.isError &&
-            requiredFields.includes('phoneNumber') &&
-            !formData.phoneNumber}
+              requiredFields.includes('phoneNumber') &&
+              !formData.phoneNumber}
               helperText={inputValidationMsg.isError &&
-            requiredFields.includes('phoneNumber') &&
-            !formData.phoneNumber &&
-            t('logbook:errors.required_field', { fieldName: 'Phone Number' })}
+              requiredFields.includes('phoneNumber') &&
+              !formData.phoneNumber &&
+              t('logbook:errors.required_field', { fieldName: 'Phone Number' })}
             />
           </div>
           <div className="form-group">
@@ -546,12 +546,12 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
               name="vehiclePlate"
               inputProps={{ 'data-testid': 'entry_user_vehicle' }}
               error={inputValidationMsg.isError &&
-            requiredFields.includes('vehiclePlate') &&
-            !formData.vehiclePlate}
+              requiredFields.includes('vehiclePlate') &&
+              !formData.vehiclePlate}
               helperText={inputValidationMsg.isError &&
-            requiredFields.includes('vehiclePlate') &&
-            !formData.vehiclePlate &&
-            t('logbook:errors.required_field', { fieldName: 'Vehicle Plate Number' })}
+              requiredFields.includes('vehiclePlate') &&
+              !formData.vehiclePlate &&
+              t('logbook:errors.required_field', { fieldName: 'Vehicle Plate Number' })}
             />
           </div>
           <div className="form-group">
@@ -566,12 +566,12 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
               onChange={handleInputChange}
               inputProps={{ 'data-testid': 'companyName' }}
               error={inputValidationMsg.isError &&
-                requiredFields.includes('companyName') &&
-                !formData.companyName}
+                  requiredFields.includes('companyName') &&
+                  !formData.companyName}
               helperText={inputValidationMsg.isError &&
-                requiredFields.includes('companyName') &&
-                !formData.companyName &&
-                t('logbook:errors.required_field', { fieldName: 'Company Name' })}
+                  requiredFields.includes('companyName') &&
+                  !formData.companyName &&
+                  t('logbook:errors.required_field', { fieldName: 'Company Name' })}
             />
           </div>
           <div className="form-group">
@@ -585,161 +585,161 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
               className={`${css(styles.selectInput)} visiting_reason`}
               inputProps={{ 'data-testid': 'entry_user_visit' }}
               error={inputValidationMsg.isError &&
-            requiredFields.includes('reason') &&
-            (!formData.reason)}
+              requiredFields.includes('reason') &&
+              (!formData.reason)}
               helperText={inputValidationMsg.isError &&
-            requiredFields.includes('reason') &&
-            !formData.reason ?
-            t('logbook:errors.required_field', { fieldName: 'Reason' }) : formData.business}
+              requiredFields.includes('reason') &&
+              !formData.reason ?
+              t('logbook:errors.required_field', { fieldName: 'Reason' }) : formData.business}
             >
               {
-            Object.keys(defaultBusinessReasons).map(_reason => (
-              <MenuItem key={_reason} value={_reason}>
-                {t(`logbook:business_reasons.${_reason}`) || objectAccessor(defaultBusinessReasons, _reason)}
-              </MenuItem>
-              ))
-          }
+              Object.keys(defaultBusinessReasons).map(_reason => (
+                <MenuItem key={_reason} value={_reason}>
+                  {t(`logbook:business_reasons.${_reason}`) || objectAccessor(defaultBusinessReasons, _reason)}
+                </MenuItem>
+                ))
+            }
             </TextField>
           </div>
 
           {
-        // TODO: Find better ways to disable specific small feature per community
-        !reqId && authState.user.community.name !== 'Ciudad Morazán' && !isGuestRequest && (
-          <div className="form-group">
-            <TextField
-              className="form-control"
-              type="text"
-              label="Temperature(°C)"
-              value={formData.temperature}
-              onChange={handleInputChange}
-              name="temperature"
-              inputProps={{ 'data-testid': 'temperature' }}
-              style={{ width: 200 }}
-            />
-          </div>
-        )
-      }
+          // TODO: Find better ways to disable specific small feature per community
+          !reqId && authState.user.community.name !== 'Ciudad Morazán' && !isGuestRequest && (
+            <div className="form-group">
+              <TextField
+                className="form-control"
+                type="text"
+                label="Temperature(°C)"
+                value={formData.temperature}
+                onChange={handleInputChange}
+                name="temperature"
+                inputProps={{ 'data-testid': 'temperature' }}
+                style={{ width: 200 }}
+              />
+            </div>
+          )
+        }
 
           {/* TODO: as we are slowly deprecating these actions, we should arrange them properly */}
           <div className=" d-flex row justify-content-center ">
             {
-          showCancelBtn && !Number(tabValue) &&
-          (
-            <Button
-              variant="contained"
-              aria-label="guest_cancel"
-              color="secondary"
-              onClick={() => closeForm({id})}
-              className={`${css(styles.cancelGuestButton)}`}
-              data-testid="cancel_update_guest_btn"
-            >
-              {t('common:form_actions.cancel')}
-            </Button>
-          )
-        }
+            showCancelBtn && !Number(tabValue) &&
+            (
+              <Button
+                variant="contained"
+                aria-label="guest_cancel"
+                color="secondary"
+                onClick={() => closeForm({id})}
+                className={`${css(styles.cancelGuestButton)}`}
+                data-testid="cancel_update_guest_btn"
+              >
+                {t('common:form_actions.cancel')}
+              </Button>
+            )
+          }
             {
-         !/logs/.test(previousRoute) && tabValue !== 2 ? (
-           <>
-             <Grid container justifyContent="center" spacing={4} className={css(styles.grantSection)}>
-               {
-              Boolean(id || requestContext.request.id ) && (
-                <AccessCheck module="entry_request" allowedPermissions={['can_update_entry_request']}>
-                  <Grid item>
-                    <Button
-                      onClick={event => handleModal(event, 'update')}
-                      data-testid="entry_user_update"
-                      startIcon={isLoading && <Spinner />}
-                      color="primary"
-                      variant="contained"
-                    >
-                      {
-                        t('logbook:image_capture.update')
-                      }
-                    </Button>
-                  </Grid>
-                </AccessCheck>
-                    )
-              }
-               <AccessCheck module="entry_request" allowedPermissions={['can_grant_entry']}>
-                 <Grid item>
-                   <Button
-                     onClick={event => handleModal(event, 'grant')}
-                     data-testid="entry_user_grant"
-                     startIcon={isLoading && <Spinner />}
-                     color="primary"
-                     variant="contained"
-                   >
-                     {
-                    t('logbook:logbook.grant')
-                  }
-                   </Button>
-                 </Grid>
-               </AccessCheck>
+           !/logs/.test(previousRoute) && tabValue !== 2 ? (
+             <>
+               <Grid container justify="center" spacing={4} className={css(styles.grantSection)}>
+                 {
+                Boolean(id || requestContext.request.id ) && (
+                  <AccessCheck module="entry_request" allowedPermissions={['can_update_entry_request']}>
+                    <Grid item>
+                      <Button
+                        onClick={event => handleModal(event, 'update')}
+                        data-testid="entry_user_update"
+                        startIcon={isLoading && <Spinner />}
+                        color="primary"
+                        variant="contained"
+                      >
+                        {
+                          t('logbook:image_capture.update')
+                        }
+                      </Button>
+                    </Grid>
+                  </AccessCheck>
+                      )
+                }
+                 <AccessCheck module="entry_request" allowedPermissions={['can_grant_entry']}>
+                   <Grid item>
+                     <Button
+                       onClick={event => handleModal(event, 'grant')}
+                       data-testid="entry_user_grant"
+                       startIcon={isLoading && <Spinner />}
+                       color="primary"
+                       variant="contained"
+                     >
+                       {
+                      t('logbook:logbook.grant')
+                    }
+                     </Button>
+                   </Grid>
+                 </AccessCheck>
 
 
-               <br />
-               <FeatureCheck features={authState?.user?.community?.features} name="LogBook" subFeature={CommunityFeaturesWhiteList.denyGateAccessButton}>
-                 <>
-                   {!requestContext.request.isEdit && (
-                   <AccessCheck module="entry_request" allowedPermissions={['can_grant_entry']}>
+                 <br />
+                 <FeatureCheck features={authState?.user?.community?.features} name="LogBook" subFeature={CommunityFeaturesWhiteList.denyGateAccessButton}>
+                   <>
+                     {!requestContext.request.isEdit && (
+                     <AccessCheck module="entry_request" allowedPermissions={['can_grant_entry']}>
+                       <Grid item>
+                         <Button
+                           variant="contained"
+                           onClick={handleDenyRequest}
+                           className={css(styles.denyButton)}
+                           disabled={isLoading}
+                           data-testid="entry_user_deny"
+                           startIcon={isLoading && <Spinner />}
+                         >
+                           {
+                      t('logbook:logbook.deny')
+                    }
+                         </Button>
+                       </Grid>
+                     </AccessCheck>
+                )}
+                     <AccessCheck module="entry_request" allowedPermissions={['can_grant_entry']}>
+                       <Grid item>
+                         <a
+                           href={`tel:${authState.user.community.securityManager}`}
+                           className={css(styles.callButton)}
+                           data-testid="entry_user_call_mgr"
+                         >
+                           <CallIcon className={css(styles.callIcon)} />
+                           <span>{t('logbook:logbook.call_manager')}</span>
+                         </a>
+                       </Grid>
+                     </AccessCheck>
+                   </>
+                 </FeatureCheck>
+                 <AccessCheck module="entry_request" allowedPermissions={['can_update_entry_request']}>
+                   <FeatureCheck features={authState?.user?.community?.features} name="LogBook" subFeature={CommunityFeaturesWhiteList.guestVerification}>
                      <Grid item>
                        <Button
-                         variant="contained"
-                         onClick={handleDenyRequest}
-                         className={css(styles.denyButton)}
+                         onClick={event => handleModal(event, 'create')}
+                         color="primary"
                          disabled={isLoading}
-                         data-testid="entry_user_deny"
+                         data-testid="entry_user_next"
                          startIcon={isLoading && <Spinner />}
                        >
                          {
-                    t('logbook:logbook.deny')
-                  }
+                          t('logbook:logbook.next_step')
+                        }
                        </Button>
                      </Grid>
-                   </AccessCheck>
-              )}
-                   <AccessCheck module="entry_request" allowedPermissions={['can_grant_entry']}>
-                     <Grid item>
-                       <a
-                         href={`tel:${authState.user.community.securityManager}`}
-                         className={css(styles.callButton)}
-                         data-testid="entry_user_call_mgr"
-                       >
-                         <CallIcon className={css(styles.callIcon)} />
-                         <span>{t('logbook:logbook.call_manager')}</span>
-                       </a>
-                     </Grid>
-                   </AccessCheck>
-                 </>
-               </FeatureCheck>
-               <AccessCheck module="entry_request" allowedPermissions={['can_update_entry_request']}>
-                 <FeatureCheck features={authState?.user?.community?.features} name="LogBook" subFeature={CommunityFeaturesWhiteList.guestVerification}>
-                   <Grid item>
-                     <Button
-                       onClick={event => handleModal(event, 'create')}
-                       color="primary"
-                       disabled={isLoading}
-                       data-testid="entry_user_next"
-                       startIcon={isLoading && <Spinner />}
-                     >
-                       {
-                        t('logbook:logbook.next_step')
-                      }
-                     </Button>
-                   </Grid>
-                 </FeatureCheck>
-               </AccessCheck>
-             </Grid>
-             <br />
-           </>
-      ) : (
-        <span />
-      )}
+                   </FeatureCheck>
+                 </AccessCheck>
+               </Grid>
+               <br />
+             </>
+        ) : (
+          <span />
+        )}
           </div>
         </form>
       </div>
     </>
-);
+  );
 }
 
 

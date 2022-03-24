@@ -14,11 +14,11 @@ import {
   Paper,
   Popper,
   MenuList,
-} from '@mui/material';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+} from '@material-ui/core';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next'
 import { Spinner } from '../../../shared/Loading';

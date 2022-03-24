@@ -1,11 +1,11 @@
 import React from 'react';
-import Dialog from '@mui/material/Dialog';
-import DialogContent from '@mui/material/DialogContent';
-import DialogActions from '@mui/material/DialogActions';
-import DialogTitle from '@mui/material/DialogTitle';
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogTitle from '@material-ui/core/DialogTitle';
 import PropTypes from 'prop-types';
-import { Box, IconButton } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
+import { Box, IconButton } from '@material-ui/core';
+import CloseIcon from '@material-ui/icons/Close';
 
 export default function CustomDialog({ open, handleDialogStatus, children, actions, title }) {
   return (
@@ -25,11 +25,7 @@ export default function CustomDialog({ open, handleDialogStatus, children, actio
           <Box display="flex" alignItems="center">
             <Box flexGrow={1}>{title}</Box>
             <Box>
-              <IconButton
-                data-testid="custom-dialog-close-icon"
-                onClick={handleDialogStatus}
-                size="large"
-              >
+              <IconButton data-testid="custom-dialog-close-icon" onClick={handleDialogStatus}>
                 <CloseIcon />
               </IconButton>
             </Box>
@@ -39,7 +35,7 @@ export default function CustomDialog({ open, handleDialogStatus, children, actio
         <DialogActions>{actions}</DialogActions>
       </Dialog>
     </>
-);
+  );
 }
 
 CustomDialog.defaultProps = {

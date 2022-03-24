@@ -4,7 +4,6 @@ import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/react-testing';
 import StatsPage from '../../modules/CustomerJourney/Components/UserStats';
-import MockedThemeProvider from '../../modules/__mocks__/mock_theme';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 describe('Stat Page component', () => {
@@ -12,9 +11,7 @@ describe('Stat Page component', () => {
     render(
       <MockedProvider mocks={[]}>
         <BrowserRouter>
-          <MockedThemeProvider>
-            <StatsPage />
-          </MockedThemeProvider>
+          <StatsPage />
         </BrowserRouter>
       </MockedProvider>
     );

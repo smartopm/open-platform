@@ -2,7 +2,7 @@
 import React, { useContext, useState, useRef, useCallback } from 'react';
 import { useQuery } from 'react-apollo';
 import { QRCode } from 'react-qr-svg';
-import { Button, Typography } from '@mui/material';
+import { Button, Typography } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
 import { toPng } from 'html-to-image';
 import Loading, { Spinner } from '../shared/Loading';

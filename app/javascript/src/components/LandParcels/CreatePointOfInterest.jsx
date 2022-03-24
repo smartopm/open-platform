@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import Button from '@mui/material/Button';
+import Button from '@material-ui/core/Button';
 import PropTypes from 'prop-types'
 import { useMutation } from 'react-apollo';
 import { useHistory } from 'react-router-dom'
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles } from "@material-ui/core/styles"
 import { useTranslation } from 'react-i18next';
 import { PointOfInterestCreate } from '../../graphql/mutations/land_parcel';
 import MessageAlert from "../MessageAlert"

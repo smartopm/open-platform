@@ -1,5 +1,5 @@
 import React from 'react'
-import { SearchOutlined } from '@mui/icons-material';
+import { SearchOutlined } from '@material-ui/icons';
 import SearchContainer from './Components/Search';
 
 export default {

@@ -1,13 +1,13 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Snackbar } from '@mui/material';
-import MuiAlert from '@mui/material/Alert';
-
-const Alert = React.forwardRef(function Alert(props, ref) {
-  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-});
+import React from 'react'
+import PropTypes from 'prop-types'
+import { Snackbar } from '@material-ui/core'
+import MuiAlert from '@material-ui/lab/Alert'
 
 export default function MessageAlert({ type, message, open, handleClose, style }) {
+  function Alert(props) {
+    return <MuiAlert elevation={6} {...props} />
+  }
+
   return (
     <Snackbar
       open={open}
@@ -20,12 +20,12 @@ export default function MessageAlert({ type, message, open, handleClose, style }
         {message}
       </Alert>
     </Snackbar>
-  );
+  )
 }
 
 MessageAlert.defaultProps = {
   style: {}
-};
+}
 
 MessageAlert.propTypes = {
   type: PropTypes.string.isRequired,
@@ -34,4 +34,4 @@ MessageAlert.propTypes = {
   handleClose: PropTypes.func.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   style: PropTypes.object
-};
+}

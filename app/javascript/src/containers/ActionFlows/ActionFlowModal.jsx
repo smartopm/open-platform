@@ -6,7 +6,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useQuery, useLazyQuery } from 'react-apollo';
-import MuiConfig from 'react-awesome-query-builder/lib/config/mui';
+import MaterialConfig from 'react-awesome-query-builder/lib/config/material';
 import {
   Dialog,
   DialogTitle,
@@ -20,9 +20,9 @@ import {
   InputLabel,
   FormControl,
   FormHelperText
-} from '@mui/material';
-import Autocomplete from '@mui/material/Autocomplete';
-import { useTheme } from '@mui/styles';
+} from '@material-ui/core';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import { useTheme } from '@material-ui/styles';
 import { useTranslation } from 'react-i18next';
 import PhoneInput from 'react-phone-input-2';
 import DatePickerDialog from '../../components/DatePickerDialog';
@@ -158,7 +158,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
     });
   }
 
-  const InitialConfig = MuiConfig;
+  const InitialConfig = MaterialConfig;
   const queryBuilderConfig = {
     ...InitialConfig,
     fields: ruleFieldsConfig,

@@ -9,7 +9,6 @@ import currency from '../../../__mocks__/currency';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import userMock from '../../../__mocks__/authstate';
 import { PlansPaymentsQuery, SubscriptionPlansQuery } from '../graphql/payment_query';
-import MockedThemeProvider from '../../__mocks__/mock_theme';
 
 describe('Payment List Item Component', () => {
   const transactions = [
@@ -55,35 +54,33 @@ describe('Payment List Item Component', () => {
 
   const mocks = [
     {
-      request: {
-        query: PlansPaymentsQuery,
-        variables: { limit: 50, offset: 0, query: '' }
-      },
-      result: {
-        data: {
-          paymentsList: transactions
-        }
-      }
+    request: {
+      query: PlansPaymentsQuery,
+      variables: { limit: 50, offset: 0, query: '' }
     },
-    {
-      request: {
-        query: SubscriptionPlansQuery
-      },
-      result: {
-        data: {
-          subscriptionPlans
-        }
+    result: {
+      data: {
+        paymentsList: transactions
       }
     }
-  ];
+  },
+  {
+    request: {
+      query: SubscriptionPlansQuery
+    },
+    result: {
+      data: {
+        subscriptionPlans
+      }
+    }
+  }
+];
   it('should render the payment item component', async () => {
     const container = render(
       <Context.Provider value={userMock}>
         <MockedProvider mocks={mocks} addTypename={false}>
           <BrowserRouter>
-            <MockedThemeProvider>
-              <PaymentList currencyData={currency} />
-            </MockedThemeProvider>
+            <PaymentList currencyData={currency} />
           </BrowserRouter>
         </MockedProvider>
       </Context.Provider>
@@ -93,28 +90,30 @@ describe('Payment List Item Component', () => {
 
     expect(loader.queryAllByTestId('loader')[0]).toBeInTheDocument();
 
-    await waitFor(() => {
-      expect(container.queryAllByTestId('created_by')[0].textContent).toContain('JM');
-      expect(container.queryAllByTestId('payment_info')[0].textContent).toContain('Cash Deposit');
-      expect(container.queryAllByTestId('payment_info')).toHaveLength(1);
-      expect(container.queryAllByTestId('receipt_number')).toHaveLength(1);
-      expect(container.queryAllByTestId('simple-tab-0')).toHaveLength(1);
-      expect(container.queryAllByTestId('simple-tab-1')).toHaveLength(1);
+    await waitFor(
+      () => {
+        expect(container.queryAllByTestId('created_by')[0].textContent).toContain('JM');
+        expect(container.queryAllByTestId('payment_info')[0].textContent).toContain('Cash Deposit');
+        expect(container.queryAllByTestId('payment_info')).toHaveLength(1);
+        expect(container.queryAllByTestId('receipt_number')).toHaveLength(1);
+        expect(container.queryAllByTestId('simple-tab-0')).toHaveLength(1);
+        expect(container.queryAllByTestId('simple-tab-1')).toHaveLength(1);
+      
 
-      const filterClick = container.getAllByTestId('filter')[0];
-      fireEvent.click(filterClick);
-      expect(container.getByDisplayValue('Client Name')).toBeInTheDocument();
+    const filterClick = container.getAllByTestId('filter')[0];
+    fireEvent.click(filterClick);
+    expect(container.queryByText('Client Name')).toBeInTheDocument();
 
-      const searchInput = container.queryAllByTestId('search')[0];
-      fireEvent.change(searchInput, { target: { value: 'text' } });
-      expect(searchInput.value).toBe('text');
+    const searchInput = container.queryAllByTestId('search')[0];
+    fireEvent.change(searchInput, { target: { value: 'text' } });
+    expect(searchInput.value).toBe('text');
 
-      const planTabClick = container.getByTestId('simple-tab-1');
-      fireEvent.click(planTabClick);
-      expect(loader.queryAllByTestId('loader')[0]).toBeInTheDocument();
+    const planTabClick = container.getByTestId('simple-tab-1');
+    fireEvent.click(planTabClick);
+    expect(loader.queryAllByTestId('loader')[0]).toBeInTheDocument();
 
-      fireEvent.click(container.getAllByTestId('filter')[1]);
-      expect(container.getByDisplayValue('Amount Owed')).toBeInTheDocument();
+    fireEvent.click(container.getAllByTestId('filter')[1]);
+    expect(container.queryByText('Amount Owed')).toBeInTheDocument();
     });
   });
 

@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
-import Avatar from '@mui/material/Avatar';
+import Avatar from '@material-ui/core/Avatar';
 import { useFetchMedia, useWindowDimensions } from '../utils/customHooks';
 import { Spinner } from './Loading';
 import { Context } from '../containers/Provider/AuthStateProvider';

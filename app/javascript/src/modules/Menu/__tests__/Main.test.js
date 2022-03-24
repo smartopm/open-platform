@@ -1,7 +1,7 @@
 import React from 'react';
 import { fireEvent, render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
-import { createTheme, ThemeProvider, StyledEngineProvider } from '@mui/material';
+import { createMuiTheme, ThemeProvider } from '@material-ui/core';
 import { BrowserRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/react-testing';
 import Main, { MainNav, NewsNav } from '../component/Main';
@@ -10,7 +10,7 @@ import { Context } from '../../../containers/Provider/AuthStateProvider';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 describe('Main Nav component', () => {
-  const theme = createTheme();
+  const theme = createMuiTheme();
   const mockGeolocation = {
     getCurrentPosition: jest.fn()
       .mockImplementationOnce((success) => Promise.resolve(success({
@@ -25,15 +25,13 @@ describe('Main Nav component', () => {
 
   it('should render proper the main nav', async () => {
     const container = render(
-      <StyledEngineProvider injectFirst>
-        <ThemeProvider theme={theme}>
-          <MockedProvider>
-            <BrowserRouter>
-              <MainNav authState={authState} />
-            </BrowserRouter>
-          </MockedProvider>
-        </ThemeProvider>
-      </StyledEngineProvider>
+      <ThemeProvider theme={theme}>
+        <MockedProvider>
+          <BrowserRouter>
+            <MainNav authState={authState} />
+          </BrowserRouter>
+        </MockedProvider>
+      </ThemeProvider>
     );
 
     await waitFor(() => {
@@ -48,17 +46,15 @@ describe('Main Nav component', () => {
   });
   it('should render the main', async () => {
     const wrapper =  render(
-      <StyledEngineProvider injectFirst>
-        <ThemeProvider theme={theme}>
-          <MockedProvider>
-            <Context.Provider value={authState}>
-              <BrowserRouter>
-                <Main />
-              </BrowserRouter>
-            </Context.Provider>
-          </MockedProvider>
-        </ThemeProvider>
-      </StyledEngineProvider>
+      <ThemeProvider theme={theme}>
+        <MockedProvider>
+          <Context.Provider value={authState}>
+            <BrowserRouter>
+              <Main />
+            </BrowserRouter>
+          </Context.Provider>
+        </MockedProvider>
+      </ThemeProvider>
     );
 
     await waitFor(() => {

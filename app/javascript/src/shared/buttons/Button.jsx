@@ -1,5 +1,5 @@
 import React from 'react';
-import Button from '@mui/material/Button';
+import Button from '@material-ui/core/Button';
 import PropTypes from 'prop-types';
 
 export default function ButtonComponent({ variant, color, buttonText, handleClick, size, ...otherProps}) {
