@@ -5,14 +5,15 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CSVLink } from 'react-csv';
-import { Button, Container, Grid, List, Typography, Hidden } from '@material-ui/core';
-import Avatar from '@material-ui/core/Avatar';
-import Fab from '@material-ui/core/Fab';
+import { Button, Container, Grid, List, Typography, Hidden } from '@mui/material';
+import Avatar from '@mui/material/Avatar';
+import Fab from '@mui/material/Fab';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { useQuery, useLazyQuery } from 'react-apollo';
-import { useTheme, makeStyles } from '@material-ui/core/styles';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
+import makeStyles from '@mui/styles/makeStyles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { useHistory } from 'react-router';
 import { PaymentStatsDetails } from '../../../graphql/queries';
 import DataList from '../../../shared/list/DataList';
@@ -325,7 +326,7 @@ export default function PaymentList({ currencyData }) {
           </Container>
           <Grid
             container
-            justify="flex-end"
+            justifyContent="flex-end"
             style={{
               width: '100.5%',
               position: 'absolute',
@@ -445,7 +446,7 @@ export function renderPayment(payment, currencyData, theme, matches) {
               <Avatar src={payment.user.imageUrl} alt="avatar-image" />
               <Typography style={{ margin: '7px', fontSize: '12px' }}>
                 <Text color={matches ? 'primary' : 'inherit'} content={payment.user.name} />
-                <Hidden smDown>
+                <Hidden mdDown>
                   <br />
                   <Text
                     content={`${payment.paymentPlan?.landParcel.parcelType || ''} ${

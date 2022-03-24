@@ -1,6 +1,8 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
-import { withStyles, Box, Tabs, Tab, Typography } from '@material-ui/core';
+import { Box, Tabs, Tab, Typography } from '@mui/material';
+
+import withStyles from '@mui/styles/withStyles';
 
 export function TabPanel(props) {
   const { children, value, index, pad, ...other } = props;

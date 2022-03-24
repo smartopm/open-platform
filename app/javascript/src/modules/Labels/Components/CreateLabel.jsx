@@ -1,7 +1,7 @@
 /* eslint-disable consistent-return */
 import React, { Fragment, useRef } from 'react';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import { TextField, Chip } from '@material-ui/core';
+import Autocomplete from '@mui/material/Autocomplete';
+import { TextField, Chip } from '@mui/material';
 import { useMutation } from 'react-apollo';
 import PropTypes from 'prop-types';
 import { LabelCreate } from '../../../graphql/mutations';

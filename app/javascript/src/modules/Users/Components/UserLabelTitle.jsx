@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/styles';
-import Typography from '@material-ui/core/Typography';
-// import useMediaQuery from '@material-ui/core/useMediaQuery'
+import { makeStyles } from '@mui/styles';
+import Typography from '@mui/material/Typography';
+// import useMediaQuery from '@mui/material/useMediaQuery'
 import { useTranslation } from 'react-i18next';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';

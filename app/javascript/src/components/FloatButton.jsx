@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Fab } from '@material-ui/core'
+import { Fab } from '@mui/material'
 import { css, StyleSheet } from 'aphrodite'
 
 export default function FloatButton({ title, handleClick, extraStyles, otherClassNames }) {

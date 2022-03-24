@@ -1,12 +1,12 @@
 /* eslint-disable complexity */
 import React, { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import Typography from '@material-ui/core/Typography';
+import Typography from '@mui/material/Typography';
 import PropTypes from 'prop-types';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { useMutation } from 'react-apollo';
-import Button from '@material-ui/core/Button';
-import Grid from '@material-ui/core/Grid';
+import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid';
 import Video from '../../../../shared/Video';
 import { EntryRequestContext } from '../Context';
 import CenteredContent from '../../../../components/CenteredContent';

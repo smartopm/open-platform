@@ -2,7 +2,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { useTranslation } from 'react-i18next';
-import MaterialList from '@material-ui/core/List'
+import MaterialList from '@mui/material/List'
 import UserMessageItem from './MessageItem'
 import { useWindowDimensions } from '../../utils/customHooks'
 

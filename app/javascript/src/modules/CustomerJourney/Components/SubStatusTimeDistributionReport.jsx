@@ -1,8 +1,9 @@
 // This component will house the customer journey dashboard
 import React,  { Fragment } from 'react';
 import PropTypes from 'prop-types'
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import { ListItemText, ListItemSecondaryAction, ListItem, List, makeStyles, useTheme } from '@material-ui/core';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { ListItemText, ListItemSecondaryAction, ListItem, List, useTheme } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import { userSubStatusDurationLookup } from '../../../utils/constants';
 import { toCamelCase, objectAccessor } from '../../../utils/helpers';
 

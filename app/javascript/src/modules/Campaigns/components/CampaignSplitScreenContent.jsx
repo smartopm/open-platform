@@ -2,21 +2,21 @@
 /* eslint-disable max-statements */
 /* eslint-disable max-lines */
 import React, { useState, useEffect } from 'react';
-import Grid from '@material-ui/core/Grid';
+import Grid from '@mui/material/Grid';
 import PropTypes from 'prop-types';
 import { useLocation, useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import Breadcrumbs from '@material-ui/core/Breadcrumbs';
-import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import Breadcrumbs from '@mui/material/Breadcrumbs';
+import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import { useMutation } from 'react-apollo';
-import { makeStyles, useTheme } from '@material-ui/styles';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import Chip from '@material-ui/core/Chip';
-import Button from '@material-ui/core/Button';
-import ButtonGroup from '@material-ui/core/ButtonGroup';
-import Typography from '@material-ui/core/Typography';
+import { makeStyles, useTheme } from '@mui/styles';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import Chip from '@mui/material/Chip';
+import Button from '@mui/material/Button';
+import ButtonGroup from '@mui/material/ButtonGroup';
+import Typography from '@mui/material/Typography';
 import TextFieldLiveEdit from '../../../shared/TextFieldLiveEdit';
 import { DateAndTimePickers } from '../../../components/DatePickerDialog';
 import CampaignLabels from './CampaignLabels';

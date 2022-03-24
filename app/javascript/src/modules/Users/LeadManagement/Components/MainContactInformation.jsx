@@ -1,10 +1,10 @@
 import React from 'react';
-import TextField from '@material-ui/core/TextField';
-import { Button } from '@material-ui/core';
-import { Grid, Typography } from '@mui/material';
+import TextField from '@mui/material/TextField';
+import { Button , Grid, Typography } from '@mui/material';
+
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { userProps } from '../../utils';
 
 export default function MainContactInformation({ leadFormData, handleChange, disabled }) {

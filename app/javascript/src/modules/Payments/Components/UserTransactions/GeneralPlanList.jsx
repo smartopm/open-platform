@@ -1,12 +1,13 @@
 /* eslint-disable max-statements */
 import React, { useState } from 'react';
-import Grid from '@material-ui/core/Grid';
+import Grid from '@mui/material/Grid';
 import PropTypes from 'prop-types';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { useTheme } from '@mui/material/styles';
+import makeStyles from '@mui/styles/makeStyles';
 import { useTranslation } from 'react-i18next';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import IconButton from '@material-ui/core/IconButton';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import IconButton from '@mui/material/IconButton';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { useHistory } from 'react-router-dom';
 import Card from '../../../../shared/Card';
 import { formatMoney, objectAccessor, InvoiceStatusColor } from '../../../../utils/helpers';
@@ -170,6 +171,7 @@ export default function GeneralPlanList({
               data-testid="plan-menu"
               onClick={event => handlePlanMenu(event, data)}
               color="primary"
+              size="large"
             >
               <MoreVertIcon />
             </IconButton>
@@ -185,35 +187,35 @@ export default function GeneralPlanList({
       </Card>
       <div style={{ marginBottom: '20px' }}>
         {matches && paymentOpen && (
-          <div className={classes.paymentList}>
-            <ListHeader headers={paymentHeader} color />
-          </div>
-        )}
+        <div className={classes.paymentList}>
+          <ListHeader headers={paymentHeader} color />
+        </div>
+      )}
         {paymentOpen &&
-          data.planPayments
-            ?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-            .map(
-              pay =>
-                (currentUser.userType === 'admin' || pay?.status !== 'cancelled') && (
-                  <div key={pay.id}>
-                    {matches ? (
-                      <div className={classes.paymentList}>
-                        <DataList
-                          keys={paymentHeader}
-                          data={[renderPayments(pay, currencyData, menuData)]}
-                          hasHeader={false}
-                          color
-                        />
-                      </div>
-                    ) : (
-                      <PaymentMobileDataList
+        data.planPayments
+          ?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+          .map(
+            pay =>
+              (currentUser.userType === 'admin' || pay?.status !== 'cancelled') && (
+                <div key={pay.id}>
+                  {matches ? (
+                    <div className={classes.paymentList}>
+                      <DataList
                         keys={paymentHeader}
                         data={[renderPayments(pay, currencyData, menuData)]}
+                        hasHeader={false}
+                        color
                       />
-                    )}
-                  </div>
-                )
-            )}
+                    </div>
+                  ) : (
+                    <PaymentMobileDataList
+                      keys={paymentHeader}
+                      data={[renderPayments(pay, currencyData, menuData)]}
+                    />
+                  )}
+                </div>
+              )
+          )}
       </div>
       <PaymentReceipt
         paymentData={paymentData}
@@ -236,7 +238,7 @@ export default function GeneralPlanList({
         paymentPlansRefetch={paymentPlansRefetch}
       />
     </>
-  );
+);
 }
 
 export function renderPayments(pay, currencyData, menuData) {
@@ -274,6 +276,7 @@ export function renderPayments(pay, currencyData, menuData) {
             dataid={pay.id}
             onClick={event => menuData.handleTransactionMenu(event, pay)}
             color="primary"
+            size="large"
           >
             <MoreVertIcon />
           </IconButton>

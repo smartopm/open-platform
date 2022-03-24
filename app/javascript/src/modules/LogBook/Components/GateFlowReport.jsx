@@ -1,5 +1,6 @@
-import { Button, useMediaQuery, useTheme } from '@material-ui/core';
 import React, { useState } from 'react';
+import { Button, useMediaQuery } from '@mui/material';
+import { useTheme } from '@mui/styles';
 import { useLazyQuery } from 'react-apollo';
 import { CSVLink } from 'react-csv';
 import { useTranslation } from 'react-i18next';
@@ -63,7 +64,7 @@ export default function GateFlowReport() {
         {!called && (
           <Button
             variant="outlined"
-            color="primary" 
+            color="primary"
             onClick={loadData}
             data-testid="export_data"
             disabled={!reportingDates.startDate || !reportingDates.endDate}

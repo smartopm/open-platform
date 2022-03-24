@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import { Grid, IconButton } from '@material-ui/core'
-import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
+import { Grid, IconButton } from '@mui/material'
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types'
 import DataList from '../../../shared/list/DataList';
@@ -82,6 +82,7 @@ export default function MailTemplateItem({email, onTemplateClick, onTemplateDupl
             aria-haspopup="true"
             data-testid="email-template-menu"
             onClick={(event) => menuData.handleTemplateMenu(event)}
+            size="large"
           >
             <MoreHorizIcon />
           </IconButton>

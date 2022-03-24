@@ -2,15 +2,15 @@
 import React, { useContext, useState } from 'react'
 import {
   ListItem, ListItemAvatar, ListItemText, Button, TextField, List, Grid, IconButton, Typography
-} from '@material-ui/core'
+} from '@mui/material'
 import { useMutation, useApolloClient } from 'react-apollo'
 import { useParams, useLocation } from 'react-router'
 import PropTypes from 'prop-types'
 import { StyleSheet, css } from 'aphrodite'
 import { Link } from 'react-router-dom'
-import DeleteIcon from '@material-ui/icons/Delete'
+import DeleteIcon from '@mui/icons-material/Delete'
 import { useTranslation } from 'react-i18next'
-import AddPhotoAlternateIcon from '@material-ui/icons/AddPhotoAlternate';
+import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import { Context } from '../../containers/Provider/AuthStateProvider'
 import { CommentMutation, UpdateCommentMutation } from '../../graphql/mutations'
 import { useFileUpload } from '../../graphql/useFileUpload'
@@ -169,6 +169,7 @@ export function CommentSection({ data, handleDeleteComment }) {
                   aria-label="delete"
                   className={css(styles.deleteBtn)}
                   color="primary"
+                  size="large"
                 >
                   <DeleteIcon />
                 </IconButton>
@@ -205,15 +206,15 @@ export function CommentBox({
           variant="outlined"
           inputProps={{ 'data-testid': 'comment_content' }}
           InputLabelProps={{
-            shrink: true
-          }}
+          shrink: true
+        }}
         />
       </ListItem>
       <br />
       <Grid
         container
         direction="row"
-        justify="flex-end"
+        justifyContent="flex-end"
         alignItems="flex-start"
         className={css(styles.actionBtns)}
       >
@@ -224,7 +225,7 @@ export function CommentBox({
             {t('messages.image_uploaded')}
           </p>
         </Grid>
-        )}
+      )}
         <Grid item>
           {location.pathname.includes('discussion') && (
           <label style={{ marginTop: 5 }} htmlFor="image">
@@ -241,7 +242,7 @@ export function CommentBox({
               className={css(styles.uploadIcon)}
             />
           </label>
-          )}
+        )}
         </Grid>
         <Grid item>
           <Button
@@ -255,7 +256,7 @@ export function CommentBox({
         </Grid>
       </Grid>
     </>
-  )
+);
 }
 
 Comments.propTypes = {

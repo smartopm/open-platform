@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Grid, Hidden, IconButton, makeStyles, MenuItem, TextField, Typography } from '@material-ui/core';
+import { Button, Grid, Hidden, IconButton, MenuItem, TextField, Typography } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from 'react-apollo';
 import { useHistory, useParams } from 'react-router';
-import DeleteOutline from '@material-ui/icons/DeleteOutline';
+import DeleteOutline from '@mui/icons-material/DeleteOutline';
 import SwitchInput from '../FormProperties/SwitchInput';
 import CenteredContent from '../../../../components/CenteredContent';
 import {
@@ -187,7 +188,7 @@ export default function CategoryForm({ data, close, formData, refetchCategories 
                 <MenuItem key={property.id} value={property.id}>
                   {property.fieldName}
                 </MenuItem>
-              ))}
+            ))}
             </TextField>
           </Grid>
           <Grid item xs={12} sm={4}>
@@ -207,7 +208,7 @@ export default function CategoryForm({ data, close, formData, refetchCategories 
                 <MenuItem key={key} value={key}>
                   {value}
                 </MenuItem>
-              ))}
+            ))}
             </TextField>
           </Grid>
           <Grid item xs={12} sm={3}>
@@ -224,8 +225,12 @@ export default function CategoryForm({ data, close, formData, refetchCategories 
             />
           </Grid>
           <Grid item sm={1} xs={6} data-testid="clear_condition">
-            <Hidden xsDown>
-              <IconButton onClick={clearDisplayCondition} className={classes.clearIcon}>
+            <Hidden smDown>
+              <IconButton
+                onClick={clearDisplayCondition}
+                className={classes.clearIcon}
+                size="large"
+              >
                 <DeleteOutline color="primary" />
               </IconButton>
             </Hidden>
@@ -293,7 +298,7 @@ export default function CategoryForm({ data, close, formData, refetchCategories 
         </CenteredContent>
       </form>
     </>
-  );
+);
 }
 const useStyles = makeStyles({
   // keeping pixels for height measurements

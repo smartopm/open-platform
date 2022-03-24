@@ -10,13 +10,13 @@ import {
   Checkbox,
   Select,
   MenuItem
-} from '@material-ui/core';
-import { MoreHorizOutlined } from '@material-ui/icons';
+} from '@mui/material';
+import { MoreHorizOutlined } from '@mui/icons-material';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 import { useMutation, useQuery } from 'react-apollo';
 import { CSVLink } from 'react-csv';
-import EmailIcon from '@material-ui/icons/Email';
+import EmailIcon from '@mui/icons-material/Email';
 import DataList from '../../../shared/list/DataList';
 import useDebounce from '../../../utils/useDebounce';
 import {
@@ -271,7 +271,7 @@ export function PlansList({
       />
       <Grid
         container
-        justify="flex-end"
+        justifyContent="flex-end"
         style={{
           width: '100.5%',
           position: 'absolute',
@@ -325,7 +325,7 @@ export function PlansList({
                 >
                   <div>
                     <ButtonComponent
-                      color="default"
+                      color="primary"
                       variant="outlined"
                       buttonText={t('actions.view_all_subscription_plans')}
                       handleClick={() => setDisplaySubscriptionPlans(true)}
@@ -543,7 +543,7 @@ export function SubscriptionPlans({
                   </div>
                   <div>
                     <ButtonComponent
-                      color="default"
+                      color="primary"
                       variant="outlined"
                       buttonText={t('actions.view_all_plans')}
                       handleClick={() => setDisplaySubscriptionPlans(false)}
@@ -619,6 +619,7 @@ export function renderSubscriptionPlans(subscription, currencyData, menuData) {
             data-testid="subscription-plan-menu"
             dataid={subscription.id}
             onClick={event => menuData.handleSubscriptionMenu(event, subscription)}
+            size="large"
           >
             <MoreHorizOutlined />
           </IconButton>

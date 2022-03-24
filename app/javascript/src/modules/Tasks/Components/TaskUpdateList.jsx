@@ -1,19 +1,19 @@
 /* eslint-disable complexity */
 /* eslint-disable no-use-before-define */
 import React from 'react'
-import { Typography, Grid} from '@material-ui/core';
-import EventNoteOutlinedIcon from '@material-ui/icons/EventNoteOutlined';
+import { Typography, Grid} from '@mui/material';
+import EventNoteOutlinedIcon from '@mui/icons-material/EventNoteOutlined';
 import PropTypes from 'prop-types'
 import { useTranslation } from 'react-i18next';
-import AddBoxOutlinedIcon from '@material-ui/icons/AddBoxOutlined';
-import { makeStyles } from '@material-ui/core/styles';
-import CreateOutlinedIcon from '@material-ui/icons/CreateOutlined';
-import ClassOutlinedIcon from '@material-ui/icons/ClassOutlined';
-import DescriptionOutlinedIcon from '@material-ui/icons/DescriptionOutlined';
-import AssignmentTurnedInOutlinedIcon from '@material-ui/icons/AssignmentTurnedInOutlined';
-import FlagOutlinedIcon from '@material-ui/icons/FlagOutlined';
-import PersonOutlinedIcon from '@material-ui/icons/PersonOutlined';
-import PeopleAltOutlinedIcon from '@material-ui/icons/PeopleAltOutlined';
+import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
+import makeStyles from '@mui/styles/makeStyles';
+import CreateOutlinedIcon from '@mui/icons-material/CreateOutlined';
+import ClassOutlinedIcon from '@mui/icons-material/ClassOutlined';
+import DescriptionOutlinedIcon from '@mui/icons-material/DescriptionOutlined';
+import AssignmentTurnedInOutlinedIcon from '@mui/icons-material/AssignmentTurnedInOutlined';
+import FlagOutlinedIcon from '@mui/icons-material/FlagOutlined';
+import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
+import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined';
 import TaskUpdateItem from './TaskUpdateItem'
 import { dateToString, dateFormatter } from "../../../components/DateContainer"
 

@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import PropTypes from 'prop-types';
 import { useMediaQuery } from '@mui/material';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 import { TaskContext } from "../../Context";
 import SplitScreen from '../../../../shared/SplitScreen';
 import TaskUpdate from '../../containers/TaskUpdate';

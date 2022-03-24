@@ -6,7 +6,7 @@ import React, {
   useEffect,
   createRef
 } from 'react'
-import { Button, CircularProgress } from '@material-ui/core'
+import { Button, CircularProgress } from '@mui/material'
 import { StyleSheet, css } from 'aphrodite'
 import { Link, useLocation, Redirect } from 'react-router-dom'
 import { useMutation, useQuery } from 'react-apollo'

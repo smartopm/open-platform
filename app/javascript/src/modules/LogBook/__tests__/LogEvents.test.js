@@ -100,19 +100,19 @@ describe('Log Events Component', () => {
     expect(container.queryByTestId('name')).toBeInTheDocument();
     expect(container.queryByTestId('created-at')).toBeInTheDocument();
     expect(container.queryByTestId('image-area')).toBeInTheDocument();
-    expect(container.queryByTestId('menu-list')).toBeInTheDocument();
+    expect(container.queryAllByTestId('menu-list')[0]).toBeInTheDocument();
     expect(container.queryByTestId('acting_guard_title')).toBeInTheDocument();
     expect(container.queryByTestId('acting_user_name')).toBeInTheDocument();
     expect(container.queryByTestId('observation_note')).toBeInTheDocument();
 
-    fireEvent.click(container.queryByTestId('menu-list'));
-    expect(container.queryByText('logbook.view_details')).toBeInTheDocument();
-    expect(container.queryByText('logbook.exit_log')).toBeInTheDocument();
+    fireEvent.click(container.queryAllByTestId('menu-list')[0]);
+    expect(container.queryAllByText('logbook.view_details')[0]).toBeInTheDocument();
+    expect(container.queryAllByText('logbook.exit_log')[0]).toBeInTheDocument();
 
-    fireEvent.click(container.queryByText('logbook.view_details'));
+    fireEvent.click(container.queryAllByText('logbook.view_details')[0]);
     expect(actions).toBeCalled();
 
-    fireEvent.click(container.queryByText('logbook.exit_log'));
+    fireEvent.click(container.queryAllByText('logbook.exit_log')[0]);
     expect(logExit).toBeCalled();
   });
 

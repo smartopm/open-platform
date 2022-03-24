@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
-import TextField from '@material-ui/core/TextField';
-import { makeStyles } from '@material-ui/styles';
+import TextField from '@mui/material/TextField';
+import { makeStyles } from '@mui/styles';
 import PropTypes from 'prop-types';
 import useClickAwayHook from '../utils/useClickAwayHook';
 

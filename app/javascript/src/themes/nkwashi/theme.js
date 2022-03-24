@@ -1,4 +1,4 @@
-import { createMuiTheme } from '@material-ui/core';
+import { createTheme } from '@mui/material';
 
 // eslint-disable-next-line import/prefer-default-export
 export function theme(communityThemeColor) {
@@ -9,7 +9,7 @@ export function theme(communityThemeColor) {
 
   const themeColor = communityThemeColor || defaultColors;
 
-  return createMuiTheme({
+  return createTheme({
     palette: {
       primary: {
         main: themeColor.primaryColor,
@@ -29,6 +29,18 @@ export function theme(communityThemeColor) {
       },
       info: {
         main: '#598EC1'
+      },
+      default: {
+        main: '#FDFDFD'
+      }
+    },
+    breakpoints: {
+      values: {
+        xs: 0,
+        sm: 600,
+        md: 960,
+        lg: 1280,
+        xl: 1920,
       },
     },
     overrides: {

@@ -8,10 +8,10 @@ import {
   Typography,
   ListItemAvatar,
   IconButton
-} from '@material-ui/core'
+} from '@mui/material'
 import { useHistory } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import DeleteIcon from '@material-ui/icons/Delete'
+import DeleteIcon from '@mui/icons-material/Delete'
 import { css, StyleSheet } from 'aphrodite'
 import PropTypes from 'prop-types'
 import { useMutation } from 'react-apollo'
@@ -87,6 +87,7 @@ const { t } = useTranslation('discussion')
                              edge="end"
                              aria-label="delete"
                              className={css(styles.deleteBtn)}
+                             size="large"
                            >
                              <DeleteIcon />
                            </IconButton>
@@ -110,7 +111,7 @@ const { t } = useTranslation('discussion')
         />
       </List>
     </div>
-  )
+  );
 }
 
 DiscussionList.propTypes = {

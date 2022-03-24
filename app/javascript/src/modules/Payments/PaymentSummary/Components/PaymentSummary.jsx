@@ -3,11 +3,12 @@
 import React from 'react'
 import { useQuery } from 'react-apollo';
 import PropTypes, { shape } from 'prop-types';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import TrendingFlatIcon from '@material-ui/icons/TrendingFlat';
+import { useTheme } from '@mui/material/styles';
+import makeStyles from '@mui/styles/makeStyles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import TrendingFlatIcon from '@mui/icons-material/TrendingFlat';
 import { Link, useHistory } from 'react-router-dom'
-import { Grid, Typography } from '@material-ui/core'
+import { Grid, Typography } from '@mui/material'
 import { PaymentSummaryQuery } from '../graphql/payment_summary_query'
 import { Spinner } from '../../../../shared/Loading';
 import PaymentSummaryCard from './PaymentSummaryCard'

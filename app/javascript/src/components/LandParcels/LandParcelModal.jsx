@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 import { useLocation, Link } from 'react-router-dom';
 import { useLazyQuery } from 'react-apollo';
 import {
@@ -13,9 +13,9 @@ import {
   useMediaQuery,
   MenuItem,
   InputLabel
-} from '@material-ui/core';
-import { DeleteOutline, Room } from '@material-ui/icons';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+} from '@mui/material';
+import { DeleteOutline, Room } from '@mui/icons-material';
+import Autocomplete from '@mui/material/Autocomplete';
 import { useTranslation } from 'react-i18next';
 import { CustomizedDialogs, ActionDialog } from '../Dialog';
 import { StyledTabs, StyledTab, TabPanel } from '../Tabs';
@@ -508,7 +508,11 @@ export default function LandParcelModal({
             {!landParcel?.geom &&
               !['new', 'new_house'].includes(modalType) &&
               !(landParcel?.objectType === 'house') && (
-                <IconButton onClick={handleEditCoordinatesOpen} aria-label="edit-coordinate">
+                <IconButton
+                  onClick={handleEditCoordinatesOpen}
+                  aria-label="edit-coordinate"
+                  size="large"
+                >
                   <Room /> 
                   {' '}
                   <Typography>{t('property:buttons.edit_coordinates')}</Typography>
@@ -559,7 +563,7 @@ export default function LandParcelModal({
                   id="address-input"
                   options={filteredOwnerList(data?.usersLite)}
                   getOptionLabel={option => option?.name}
-                  getOptionSelected={(option, value) => option.name === value.name}
+                  isOptionEqualToValue={(option, value) => option.name === value.name}
                   value={objectAccessor(ownershipFields, index)}
                   onChange={(_event, newValue) => handleOwnershipChange(newValue, index)}
                   classes={{
@@ -598,6 +602,7 @@ export default function LandParcelModal({
                   style={{ marginTop: 13 }}
                   onClick={() => removeOwnership(index)}
                   aria-label="remove"
+                  size="large"
                 >
                   <DeleteOutline />
                 </IconButton>

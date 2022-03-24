@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import Divider from '@material-ui/core/Divider';
+import makeStyles from '@mui/styles/makeStyles';
+import Grid from '@mui/material/Grid';
+import Divider from '@mui/material/Divider';
 import { Container } from '@mui/material';
 
 export default function FixedHeader({ children, fullWidth }) {

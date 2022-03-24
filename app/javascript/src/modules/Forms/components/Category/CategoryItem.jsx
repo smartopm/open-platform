@@ -1,11 +1,11 @@
 import React, { useContext } from 'react';
-import { Container, Grid, IconButton, Typography } from '@material-ui/core';
+import { Container, Grid, IconButton, Typography } from '@mui/material';
 import PropTypes from 'prop-types';
-import CreateIcon from '@material-ui/icons/Create';
-import AddIcon from '@material-ui/icons/Add';
-import CloseIcon from '@material-ui/icons/Close';
-import { makeStyles } from '@material-ui/styles';
-import { DeleteOutline } from '@material-ui/icons';
+import CreateIcon from '@mui/icons-material/Create';
+import AddIcon from '@mui/icons-material/Add';
+import CloseIcon from '@mui/icons-material/Close';
+import { makeStyles } from '@mui/styles';
+import { DeleteOutline } from '@mui/icons-material';
 import { Spinner } from '../../../../shared/Loading';
 import { checkCondition , extractValidFormPropertyValue } from '../../utils';
 import { FormContext } from '../../Context';
@@ -37,38 +37,47 @@ export default function CategoryItem({
           </Grid>
           <Grid item xs={2} sm={1}>
             {editMode && (
-              <IconButton aria-label="delete this category" onClick={handleDeleteCategory}>
-                {loading && currentId === category.id ? (
-                  <Spinner />
-                ) : (
-                  <DeleteOutline color="primary" />
-                )}
-              </IconButton>
-            )}
+            <IconButton
+              aria-label="delete this category"
+              onClick={handleDeleteCategory}
+              size="large"
+            >
+              {loading && currentId === category.id ? (
+                <Spinner />
+              ) : (
+                <DeleteOutline color="primary" />
+              )}
+            </IconButton>
+          )}
           </Grid>
           <Grid item xs={2} sm={1}>
             {editMode && (
-              <IconButton aria-label="edit this category" onClick={handleEditCategory}>
-                <CreateIcon color="primary" />
-              </IconButton>
-            )}
+            <IconButton aria-label="edit this category" onClick={handleEditCategory} size="large">
+              <CreateIcon color="primary" />
+            </IconButton>
+          )}
           </Grid>
           <Grid item xs={2} sm={1}>
             {editMode && (
-              <IconButton aria-label="add questions to this category" onClick={handleAddField} className="form-category-add-field-btn">
-                {collapsed ? (
-                  <CloseIcon color="primary" />
-                ) : (
-                  <AddIcon color="primary" data-testid="add-icon" />
-                )}
-              </IconButton>
-            )}
+            <IconButton
+              aria-label="add questions to this category"
+              onClick={handleAddField}
+              className="form-category-add-field-btn"
+              size="large"
+            >
+              {collapsed ? (
+                <CloseIcon color="primary" />
+              ) : (
+                <AddIcon color="primary" data-testid="add-icon" />
+              )}
+            </IconButton>
+          )}
           </Grid>
         </Grid>
-      )}
+    )}
       <Container>{children}</Container>
     </>
-  );
+);
 }
 
 CategoryItem.propTypes = {

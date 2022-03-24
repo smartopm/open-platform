@@ -5,19 +5,22 @@ import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom/';
 import { MockedProvider } from '@apollo/react-testing';
 import FeedbackSuccess from '../../containers/Activity/FeedbackSuccess';
-
-
+import MockedThemeProvider from '../../modules/__mocks__/mock_theme';
 
 describe('Feedback Component', () => {
   it('renders loader when loading notes', () => {
     const container = render(
       <MockedProvider>
         <BrowserRouter>
-          <FeedbackSuccess />
+          <MockedThemeProvider>
+            <FeedbackSuccess />
+          </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>
     );
 
-    expect(container.queryByTestId('feedback-txt').textContent).toContain('feedback.thankyou_for_feedback');
+    expect(container.queryByTestId('feedback-txt').textContent).toContain(
+      'feedback.thankyou_for_feedback'
+    );
   });
 });

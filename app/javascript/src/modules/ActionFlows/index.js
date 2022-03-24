@@ -1,5 +1,5 @@
 import React from 'react'
-import ForumIcon from '@material-ui/icons/Forum';
+import ForumIcon from '@mui/icons-material/Forum';
 import ActionFlows from '../../containers/ActionFlows/ActionFlows';
 
 export default {

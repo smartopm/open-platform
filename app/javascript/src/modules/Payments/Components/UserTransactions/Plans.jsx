@@ -4,9 +4,10 @@ import { useLazyQuery } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { useTheme, makeStyles } from '@material-ui/core/styles';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import { Typography } from '@material-ui/core';
+import { useTheme } from '@mui/material/styles';
+import makeStyles from '@mui/styles/makeStyles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { Typography } from '@mui/material';
 import UserPaymentPlanItem from './UserPaymentPlanItem';
 import Balance from './UserBalance';
 import { UserLandParcels, UserBalance } from '../../../../graphql/queries';
@@ -219,7 +220,7 @@ export default function PaymentPlans({ userId, user, userData }) {
                   {canFetchUserTransactions && (
                     <div>
                       <ButtonComponent
-                        color="default"
+                        color="primary"
                         variant="outlined"
                         buttonText={t('actions.view_all_transactions')}
                         handleClick={() => handleButtonClick()}
