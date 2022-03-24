@@ -1,5 +1,4 @@
 import React, { Fragment, useState } from 'react';
-import { useQuery } from 'react-apollo';
 import {
   Divider,
   IconButton,
@@ -8,12 +7,8 @@ import {
   Typography,
   Grid,
   Button,
-  useMediaQuery,
-  Dialog,
-  DialogTitle,
-  DialogContent
+  useMediaQuery
 } from '@mui/material';
-import AddCircleIcon from '@mui/icons-material/AddCircle';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@mui/styles';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
@@ -25,34 +20,25 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { useTranslation } from 'react-i18next';
 import { dateToString } from '../../../components/DateContainer';
-import CenteredContent from '../../../shared/CenteredContent';
-import { SubTasksQuery } from '../graphql/task_queries';
 import { Spinner } from '../../../shared/Loading';
-import TaskAddForm from './TaskForm';
-import AccessCheck from '../../Permissions/Components/AccessCheck';
 
 export default function TaskSubTask({
   taskId,
-  users,
-  assignUser,
   handleSplitScreenOpen,
-  handleTaskCompletion
+  handleTaskCompletion,
+  loading,
+  data,
+  fetchMore
+  
 }) {
   const classes = useStyles();
-  const matches = useMediaQuery('(max-width:800px)');
   const limit = 3;
+  const matches = useMediaQuery('(max-width:800px)');
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedSubTask, setSelectedSubTask] = useState(null);
-  const [open, setModalOpen] = useState(false);
   const { t } = useTranslation(['task', 'common']);
 
   const menuOpen = Boolean(anchorEl);
-
-  const { loading, data, refetch, fetchMore } = useQuery(SubTasksQuery, {
-    variables: { taskId, limit },
-    fetchPolicy: 'cache-and-network',
-    errorPolicy: 'all'
-  });
 
   function handleOpenMenu(event, task) {
     event.stopPropagation();
@@ -78,55 +64,8 @@ export default function TaskSubTask({
     }
   }
 
-  function handleAddSubTask() {
-    setModalOpen(true);
-  }
-
   return (
     <>
-      <Dialog
-        fullScreen
-        open={open}
-        fullWidth
-        maxWidth="lg"
-        onClose={() => setModalOpen(!open)}
-        aria-labelledby="task_modal"
-      >
-        <DialogTitle id="task_modal">
-          <CenteredContent>{t('task.task_modal_create_text')}</CenteredContent>
-        </DialogTitle>
-        <DialogContent>
-          <TaskAddForm
-            refetch={refetch}
-            close={() => setModalOpen(!open)}
-            assignUser={assignUser}
-            users={users}
-            parentTaskId={taskId}
-          />
-        </DialogContent>
-      </Dialog>
-      <Grid container className={classes.header}>
-        <Grid item md={9} xs={11} />
-        <Grid item md={3} xs={1} className={classes.addSubTask}>
-          <AccessCheck module="note" allowedPermissions={['can_view_create_sub_task_button']}>
-            <IconButton
-              edge="end"
-              onClick={handleAddSubTask}
-              data-testid="add_sub_task_icon"
-              color="primary"
-              style={{ backgroundColor: 'transparent' }}
-              size="large"
-            >
-              <div style={{ display: 'flex' }}>
-                <AddCircleIcon />
-                <Typography color="primary" style={{ padding: '2px 0 0 5px' }} variant="caption">
-                  Add Task
-                </Typography>
-              </div>
-            </IconButton>
-          </AccessCheck>
-        </Grid>
-      </Grid>
       {data?.taskSubTasks?.length ? (
         <Grid container>
           <Grid item md={12} xs={12} style={{ marginBottom: '2px' }}>
@@ -294,12 +233,21 @@ export default function TaskSubTask({
   );
 }
 
+TaskSubTask.defaultProps = {
+  loading: null,
+  fetchMore: () => {},
+  data: {}
+}
+
 TaskSubTask.propTypes = {
   taskId: PropTypes.string.isRequired,
-  users: PropTypes.arrayOf(PropTypes.object).isRequired,
-  assignUser: PropTypes.func.isRequired,
   handleSplitScreenOpen: PropTypes.func.isRequired,
-  handleTaskCompletion: PropTypes.func.isRequired
+  handleTaskCompletion: PropTypes.func.isRequired,
+  loading: PropTypes.bool,
+  fetchMore: PropTypes.func,
+  data: PropTypes.shape({
+    taskSubTasks: PropTypes.arrayOf(PropTypes.shape())
+  })
 };
 
 const useStyles = makeStyles(() => ({

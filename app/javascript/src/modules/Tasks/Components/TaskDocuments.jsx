@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { Fragment, useState, useEffect, useContext } from 'react';
+import React, { Fragment, useState, useContext } from 'react';
 import {
   Divider,
   Grid,
@@ -14,66 +14,37 @@ import {
   MenuItem,
   Typography
 } from '@mui/material';
-import AddCircleIcon from '@mui/icons-material/AddCircle';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { makeStyles } from '@mui/styles';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import { useQuery, useMutation, useApolloClient } from 'react-apollo';
+import { useMutation } from 'react-apollo';
 import { dateToString } from '../../../components/DateContainer';
-import useFileUpload from '../../../graphql/useFileUpload';
 import CenteredContent from '../../../shared/CenteredContent';
 import MessageAlert from '../../../components/MessageAlert';
-import { TaskDocumentsQuery } from '../graphql/task_queries';
 import { Spinner } from '../../../shared/Loading';
 import { formatError, secureFileDownload } from '../../../utils/helpers';
-import { UpdateNote, DeleteNoteDocument } from '../../../graphql/mutations';
+import { DeleteNoteDocument } from '../../../graphql/mutations';
 import { ActionDialog } from '../../../components/Dialog';
 import ProgressBar from '../../../shared/ProgressBar';
 
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
 
-export default function TaskDocuments({ taskId }) {
+export default function TaskDocuments({ data, loading, error, refetch, status }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const [currentDoc, setCurrentDoc] = useState('');
   const [open, setOpen] = useState(false);
-  const [taskUpdate] = useMutation(UpdateNote);
   const [taskDocumentDelete] = useMutation(DeleteNoteDocument);
   const authState = useContext(AuthStateContext);
   const [messageDetails, setMessageDetails] = useState({ isError: false, message: '' });
   const classes = useStyles();
-  const { data, loading, error, refetch } = useQuery(TaskDocumentsQuery, {
-    variables: { taskId },
-    fetchPolicy: 'cache-and-network'
-  });
   const { t } = useTranslation('task');
-  const { onChange, signedBlobId, status } = useFileUpload({
-    client: useApolloClient()
-  });
   const userTaskPermissions = authState.user?.permissions.find(
     permissionObject => permissionObject.module === 'note'
   );
   const canDeleteDocument = userTaskPermissions
     ? userTaskPermissions.permissions.includes('can_delete_note_document')
     : false;
-
-  useEffect(() => {
-    if (status === 'ERROR') {
-      setMessageDetails({ isError: true, message: t('document.upload_error') });
-      return;
-    }
-
-    if (status === 'DONE') {
-      taskUpdate({ variables: { id: taskId, documentBlobId: signedBlobId } })
-        .then(() => {
-          refetch();
-        })
-        .catch(err => {
-          setMessageDetails({ isError: true, message: err.message });
-        });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [status, taskId, signedBlobId, taskUpdate, refetch]);
 
   const menuOpen = Boolean(anchorEl);
 
@@ -91,10 +62,6 @@ export default function TaskDocuments({ taskId }) {
   function handleCloseMenu() {
     setAnchorEl(null);
     setCurrentDoc(null);
-  }
-
-  function handleUploadDocument(event) {
-    onChange(event.target.files[0]);
   }
 
   function downloadFile(event, path) {
@@ -116,7 +83,7 @@ export default function TaskDocuments({ taskId }) {
   }
 
   if (loading) return <Spinner />;
-  if (error) return <CenteredContent>{formatError(error.message)}</CenteredContent>;
+  if (error) return <CenteredContent>{formatError(error)}</CenteredContent>;
   const documents = data.task?.attachments;
   return (
     <div className={classes.documentsSection}>
@@ -134,33 +101,8 @@ export default function TaskDocuments({ taskId }) {
         handleOnSave={handleDeleteDocument}
       />
       <Grid container alignItems="center" spacing={2}>
-        <Grid item xs={8} md={10}>
+        <Grid item xs={8} md={12}>
           <ProgressBar status={status} />
-        </Grid>
-        <Grid item xs={4} md={2} className={classes.addIcon}>
-          <IconButton
-            edge="end"
-            aria-label="add_document"
-            data-testid="add_document"
-            component="label"
-            color="primary"
-            style={{backgroundColor: 'transparent'}}
-            size="large"
-          >
-            <input
-              hidden
-              type="file"
-              onChange={event => handleUploadDocument(event)}
-              id="task-attach-file"
-              data-testid="add_document_input"
-            />
-            <div style={{ display: 'flex' }}>
-              <AddCircleIcon />
-              <Typography style={{ padding: '2px 0 0 5px' }} variant="caption">
-                Add Document
-              </Typography>
-            </div>
-          </IconButton>
         </Grid>
       </Grid>
       {documents?.length > 0 && <Divider variant="fullWidth" data-testid="opening_divider" />}
@@ -270,6 +212,28 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
+TaskDocuments.defaultProps = {
+  error: null,
+  refetch: () => {},
+  status: null,
+  data: {}
+}
+
 TaskDocuments.propTypes = {
-  taskId: PropTypes.string.isRequired
+  data: PropTypes.shape({
+    task: PropTypes.shape({
+      attachments: PropTypes.arrayOf(
+        PropTypes.shape({
+          id: PropTypes.string,
+          filename: PropTypes.string,
+          uploaded_by: PropTypes.string,
+          created_at: PropTypes.string
+        })
+      )
+    })
+  }),
+  loading: PropTypes.bool.isRequired,
+  error: PropTypes.string,
+  refetch: PropTypes.func,
+  status: PropTypes.string
 };

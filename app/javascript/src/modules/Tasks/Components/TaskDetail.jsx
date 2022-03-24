@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Grid, Snackbar } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
-import { useMutation, useLazyQuery } from 'react-apollo';
+import { useMutation, useLazyQuery, useApolloClient, useQuery } from 'react-apollo';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
@@ -18,6 +18,10 @@ import TaskInfoTop from './TaskInfoTop';
 import TaskSubTask from './TaskSubTask';
 import TaskDetailAccordion from './TaskDetailAccordion';
 import { useParamsQuery } from '../../../utils/helpers';
+import { SubTasksQuery, TaskDocumentsQuery } from '../graphql/task_queries';
+import AddSubTask from './AddSubTask';
+import useFileUpload from '../../../graphql/useFileUpload';
+import AddDocument from './AddDocument';
 
 const initialData = {
   user: '',
@@ -41,6 +45,7 @@ export default function TaskDetail({
   fromLeadPage
 }) {
   const [title, setTitle] = useState('');
+  const limit = 3;
   const [description, setDescription] = useState('');
   const [, setErrorMessage] = useState('');
   const [taskType, setTaskType] = useState('');
@@ -76,6 +81,27 @@ export default function TaskDetail({
     errorPolicy: 'all',
     fetchPolicy: 'no-cache'
   });
+
+  const { loading, data: subTaskData, refetch: subTaskRefetch, fetchMore } = useQuery(
+    SubTasksQuery,
+    {
+      variables: { taskId, limit },
+      fetchPolicy: 'cache-and-network',
+      errorPolicy: 'all'
+    }
+  );
+
+  const { onChange, signedBlobId, status } = useFileUpload({
+    client: useApolloClient()
+  });
+
+  const { data: docData, loading: docLoading, error: docError, refetch: docRefetch } = useQuery(
+    TaskDocumentsQuery,
+    {
+      variables: { taskId },
+      fetchPolicy: 'cache-and-network'
+    }
+  );
 
   const menuData = {
     menuList: getMenuList(),
@@ -223,7 +249,7 @@ export default function TaskDetail({
           anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
           message={t('task.update_successful')}
         />
-        <Grid style={{paddingBottom: '20px'}}>
+        <Grid style={{ paddingBottom: '20px' }}>
           <div className={classes.section} data-testid="task-info-section">
             <TaskInfoTop
               currentUser={currentUser}
@@ -252,14 +278,22 @@ export default function TaskDetail({
               title="Sub Tasks"
               styles={{ background: '#FAFAFA' }}
               openDetails={!matches ? true : tab === 'subtasks'}
+              addButton={(
+                <AddSubTask
+                  refetch={subTaskRefetch}
+                  assignUser={assignUser}
+                  users={users}
+                  taskId={taskId}
+                />
+              )}
               component={(
                 <TaskSubTask
                   taskId={taskId}
-                  users={users}
-                  assignUser={assignUser}
-                  refetch={refetch}
                   handleSplitScreenOpen={handleSplitScreenOpen}
                   handleTaskCompletion={handleTaskCompletion}
+                  loading={loading}
+                  data={subTaskData}
+                  fetchMore={fetchMore}
                 />
               )}
             />
@@ -283,7 +317,24 @@ export default function TaskDetail({
             <TaskDetailAccordion
               title="Documents"
               styles={{ background: '#FAFAFA' }}
-              component={<TaskDocuments taskId={taskId} />}
+              addButton={(
+                <AddDocument
+                  onChange={onChange}
+                  status={status}
+                  signedBlobId={signedBlobId}
+                  taskId={taskId}
+                  refetch={refetch}
+                />
+              )}
+              component={(
+                <TaskDocuments
+                  data={docData}
+                  loading={docLoading}
+                  error={docError}
+                  refetch={docRefetch}
+                  status={status}
+                />
+              )}
               openDetails={!matches ? true : tab === 'documents'}
             />
           </div>

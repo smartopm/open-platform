@@ -8,7 +8,7 @@ import Divider from '@mui/material/Divider';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
-export default function TaskDetailAccordion({ title, component, openDetails }) {
+export default function TaskDetailAccordion({ title, component, openDetails, addButton }) {
   const classes = useStyles();
   const [showComponent, setShowComponent] = useState(false);
 
@@ -25,7 +25,7 @@ export default function TaskDetailAccordion({ title, component, openDetails }) {
       <Grid onClick={() => setShowComponent(!showComponent)} className={classes.container}>
         <Divider />
         <Grid container className={classes.body} data-testid="body">
-          <Grid item sm={11} xs={10}>
+          <Grid item md={addButton ? 8 : 11} sm={addButton ? 5 : 10} xs={addButton ? 5 : 10}>
             <Typography
               data-testid="title"
               variant="subtitle2"
@@ -34,8 +34,12 @@ export default function TaskDetailAccordion({ title, component, openDetails }) {
               {title}
             </Typography>
           </Grid>
-      
-          <Grid item sm={1} xs={2} style={showComponent ? { backgroundColor: '#EEF6F9' } : undefined} className={classes.icon}>
+          {addButton && (
+            <Grid item md={3} sm={5} xs={5} style={{textAlign: 'right', paddingRight: '10px'}}>
+              {addButton}
+            </Grid>
+          )}
+          <Grid item md={1} sm={1} xs={2} style={showComponent ? { backgroundColor: '#EEF6F9' } : undefined} className={classes.icon}>
             <Grid container>
               <Divider orientation="vertical" flexItem />
               <Grid item sm={11}>
@@ -73,12 +77,14 @@ const useStyles = makeStyles(() => ({
 }));
 
 TaskDetailAccordion.defaultProps = {
-  openDetails: false
+  openDetails: false,
+  addButton: null
 };
 
 TaskDetailAccordion.propTypes = {
   title: PropTypes.string.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   component: PropTypes.node.isRequired,
-  openDetails: PropTypes.bool
+  openDetails: PropTypes.bool,
+  addButton: PropTypes.node
 };
