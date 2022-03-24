@@ -82,7 +82,7 @@ ProjectProcesses.propTypes = {
   refetch: PropTypes.func.isRequired,
   handleProjectStepClick: PropTypes.func.isRequired,
   comments: PropTypes.shape({
-    projectComments: PropTypes.array
+    projectComments: PropTypes.arrayOf(String)
   }),
   commentsLoading: PropTypes.bool.isRequired,
   commentsError: PropTypes.shape({
