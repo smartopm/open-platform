@@ -256,6 +256,7 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
             upload={evt => onImageSelect(evt, formPropertiesData.id)}
             editable={editable}
             uploaded={!!uploadedFile}
+            btnColor="primary"
             inputValidation={{
               error: checkRequiredFormPropertyIsFilled(formPropertiesData, formState),
               fieldName: formPropertiesData.fieldName
