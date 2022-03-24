@@ -301,13 +301,12 @@ module Types::Queries::User
             I18n.t('errors.unauthorized')
     end
 
-    users = Users::User.allowed_users(context[:current_user])
-                       .search_lite(or: [{ query: (query.presence || '.') },
-                                         { name: { matches: query } }])
-                       .order(name: :asc)
-                       .with_attached_avatar
-
-    selected_search_users(users, user_ids)
+    Users::User.allowed_users(context[:current_user])
+               .where(id: user_ids)
+               .search_lite(or: [{ query: (query.presence || '.') },
+                                 { name: { matches: query } }])
+               .order(name: :asc)
+               .with_attached_avatar
   end
 
   def my_hosts(user_id:)
