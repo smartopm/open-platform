@@ -7,8 +7,13 @@ namespace :db do
     ActiveRecord::Base.transaction do
       permissions = YAML.load_file("#{::Rails.root}/app/policies/permissions.yml")
       permission_list = permissions.deep_transform_keys!(&:to_sym)
-      valid_modules = %w[gate_access user dashboard profile guest_list
-                         discussion entry_request logout note event_log].freeze
+      valid_modules = %w[user note plan_payment payment_plan post action_flow activity_log business
+                         campaign comment community contact_info discussion email_template
+                         entry_request feedback forms invoice label land_parcel login
+                         message settings showroom subscription_plan substatus_log
+                         temparature timesheet transaction upload user gate_access dashboard
+                         guest_list profile logout communication community_settings sos
+                         event_log].freeze
       Role.where(community_id: nil).find_each do |role|
         puts "Adding/updating permissions for #{role.name}"
         valid_modules.each do |valid_module|

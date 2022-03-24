@@ -1,48 +1,48 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react/no-array-index-key */
 /* eslint-disable no-use-before-define */
-import React from 'react'
-import { Redirect } from 'react-router-dom'
-import { StyleSheet, css } from 'aphrodite'
-import PlaylistAddCheckIcon from '@material-ui/icons/PlaylistAddCheck'
-import HelpIcon from '@material-ui/icons/Help'
-import PersonIcon from '@material-ui/icons/Person'
-import LabelIcon from '@material-ui/icons/Label'
-import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty'
-import LogIcon from '@material-ui/icons/Assignment'
-import MessageIcon from '@material-ui/icons/Message'
-import NotesIcon from '@material-ui/icons/Notes'
+import React from 'react';
+import { Redirect } from 'react-router-dom';
+import { StyleSheet, css } from 'aphrodite';
+import PlaylistAddCheckIcon from '@material-ui/icons/PlaylistAddCheck';
+import HelpIcon from '@material-ui/icons/Help';
+import PersonIcon from '@material-ui/icons/Person';
+import LabelIcon from '@material-ui/icons/Label';
+import HourglassEmptyIcon from '@material-ui/icons/HourglassEmpty';
+import LogIcon from '@material-ui/icons/Assignment';
+import MessageIcon from '@material-ui/icons/Message';
+import NotesIcon from '@material-ui/icons/Notes';
 import SettingsIcon from '@material-ui/icons/Settings';
-import ForumIcon from '@material-ui/icons/Forum'
-import CallIcon from '@material-ui/icons/Call'
-import AccountCircleIcon from '@material-ui/icons/AccountCircle'
-import CommentIcon from '@material-ui/icons/Comment'
-import LocalMallIcon from '@material-ui/icons/LocalMall'
-import ListAltIcon from '@material-ui/icons/ListAlt'
-import RecentActorsIcon from '@material-ui/icons/RecentActors'
-import PeopleIcon from '@material-ui/icons/People'
-import TelegramIcon from '@material-ui/icons/Telegram'
+import ForumIcon from '@material-ui/icons/Forum';
+import CallIcon from '@material-ui/icons/Call';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import CommentIcon from '@material-ui/icons/Comment';
+import LocalMallIcon from '@material-ui/icons/LocalMall';
+import ListAltIcon from '@material-ui/icons/ListAlt';
+import RecentActorsIcon from '@material-ui/icons/RecentActors';
+import PeopleIcon from '@material-ui/icons/People';
+import TelegramIcon from '@material-ui/icons/Telegram';
 import LandscapeIcon from '@material-ui/icons/Landscape';
 import PaymentIcon from '@material-ui/icons/Payment';
 import MailOutline from '@material-ui/icons/MailOutline';
-import SelectAll from '@material-ui/icons/SelectAll'
+import SelectAll from '@material-ui/icons/SelectAll';
 import HomeWorkIcon from '@material-ui/icons/HomeWork';
 import LibraryBooksIcon from '@material-ui/icons/LibraryBooks';
-import { useTranslation } from 'react-i18next'
-import Card from './Card'
+import { useTranslation } from 'react-i18next';
+import Card from './Card';
 import QuickLinks from '../modules/QuickLinks/Components/QuickLinks';
-import SocialMediaLinks from './SocialMediaLinks'
-import { Footer } from './Footer'
+import SocialMediaLinks from './SocialMediaLinks';
+import { Footer } from './Footer';
 
 // This should be deprecated in favour of the new dashboard
 export default function Homepage({ authState, quickLinks }) {
-  const guardPageUsers  = ['security_guard', 'security_supervisor']
-  const { t } = useTranslation('dashboard')
-  if (guardPageUsers.includes(authState.user.userType) ) {
-    return <Redirect push to="/guard_home" />
+  const guardPageUsers = ['security_guard', 'security_supervisor'];
+  const { t } = useTranslation('dashboard');
+  if (guardPageUsers.includes(authState.user.userType)) {
+    return <Redirect push to="/guard_home" />;
   }
 
-const cards = [
+  const cards = [
     {
       card_id: 1,
       title: t('dashboard.scan'),
@@ -70,7 +70,8 @@ const cards = [
         'site_manager',
         'security_supervisor',
         'consultant',
-        'developer'
+        'developer',
+        'marketing_manager'
       ]
     },
     {
@@ -104,16 +105,14 @@ const cards = [
         'resident',
         'visitor',
         'security_supervisor',
-        'developer'
+        'developer',
+        'marketing_manager'
       ]
     },
     {
       card_id: 6,
       title: t('dashboard.my_messages'),
-      path:
-        authState.user.userType === 'admin'
-          ? '/messages'
-          : `/message/${authState.user.id}`,
+      path: authState.user.userType === 'admin' ? '/messages' : `/message/${authState.user.id}`,
       clientName: authState.user.name,
       clientNumber: authState.user.phoneNumber,
       from: 'home',
@@ -127,7 +126,8 @@ const cards = [
         'resident',
         'visitor',
         'security_supervisor',
-        'developer'
+        'developer',
+        'marketing_manager'
       ]
     },
     {
@@ -163,7 +163,7 @@ const cards = [
       from: 'home',
       icon: <HomeWorkIcon color="primary" fontSize="large" />,
       access: ['admin', 'resident', 'client'],
-      communityName: authState.user,
+      communityName: authState.user
     },
     {
       card_id: 11,
@@ -235,7 +235,8 @@ const cards = [
         'site_worker',
         'site_manager',
         'security_supervisor',
-        'developer'
+        'developer',
+        'marketing_manager'
       ]
     },
 
@@ -245,7 +246,7 @@ const cards = [
       path: '/businesses',
       titleStyle: css(styles.CardtextImg),
       icon: <LocalMallIcon color="primary" fontSize="large" />,
-      access: ['admin', 'client', 'prospective_client', 'resident', 'visitor']
+      access: ['admin', 'client', 'prospective_client', 'resident', 'visitor', 'marketing_manager']
     },
     {
       title: `${authState.user.community.name} ${t('common:misc.support')}`,
@@ -260,7 +261,8 @@ const cards = [
         'contractor',
         'resident',
         'visitor',
-        'developer'
+        'developer',
+        'marketing_manager'
       ]
     },
     {
@@ -299,17 +301,15 @@ const cards = [
       icon: <SettingsIcon color="primary" fontSize="large" />,
       access: ['admin']
     }
-  ]
+  ];
 
   return (
     <div>
       <div className="container">
         <div className={css(styles.QuickLinks)}>
-          {
-            authState.user.userType === 'resident' && (
-              <QuickLinks menuItems={quickLinks} translate={t} />
-            )
-          }
+          {authState.user.userType === 'resident' && (
+            <QuickLinks menuItems={quickLinks} translate={t} />
+          )}
         </div>
         <div className="row justify-content-center">
           <div className="col-4-lg col-12-sm index-cards">
@@ -338,7 +338,7 @@ const cards = [
         <SocialMediaLinks />
       </div>
     </div>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
@@ -355,4 +355,4 @@ const styles = StyleSheet.create({
   QuickLinks: {
     marginLeft: '2em'
   }
-})
+});

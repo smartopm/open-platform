@@ -6,7 +6,7 @@ namespace :db do
     ActiveRecord::Base.transaction do
       global_roles = %w[security_guard admin resident
                         contractor prospective_client
-                        client visitor custodian site_worker site_manager lead]
+                        client visitor custodian site_worker site_manager lead marketing_manager ]
       global_roles.each do |name|
         role = Role.where(name: name, community_id: nil).first_or_initialize
         next if role.persisted?
