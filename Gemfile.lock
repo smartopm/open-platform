@@ -476,7 +476,7 @@ PLATFORMS
 DEPENDENCIES
   acsv
   awesome_print
-  aws-sdk-s3
+  aws-sdk-s3 (~> 1.113.0)
   barnes
   bootsnap (>= 1.4.2)
   bullet
@@ -490,8 +490,8 @@ DEPENDENCIES
   graphql-guard
   httparty
   jbuilder (~> 2.7)
-  jsbundling-rails
-  json_logic
+  jsbundling-rails (~> 1.0.1)
+  json_logic (~> 0.4.7)
   jwt
   listen (>= 3.0.5, < 3.2)
   newrelic_rpm
@@ -500,31 +500,31 @@ DEPENDENCIES
   omniauth-facebook (~> 8.0.0)
   omniauth-google-oauth2 (~> 0.8.0)
   omniauth-rails_csrf_protection
-  paper_trail
+  paper_trail (~> 12.2.0)
   pg (~> 1.1.4)
   pronto (~> 0.11.0)
-  puma (~> 5)
+  puma (~> 5.6.2)
   rack-mini-profiler
   rails (= 6.1.4.6)
   rails-controller-testing
   repost
   request_store (~> 1.4)
-  rollbar
+  rollbar (~> 3.3.0)
   roo (~> 2.8.0)
   rqrcode
   rspec-rails (~> 5.0.0)
   rubocop (~> 0.77)
   rubocop-rails (~> 2.3)
   sass-rails (>= 5)
-  search_cop
+  search_cop (~> 1.2.0)
   selenium-webdriver
   sendgrid-ruby
   shoulda-callback-matchers (~> 1.1.1)
   shoulda-matchers
-  sidekiq
+  sidekiq (~> 6.4.1)
   sidekiq-scheduler (~> 3.0)
   simplecov
-  spring
+  spring (~> 2.1.1)
   spring-watcher-listen (~> 2.0.0)
   turbolinks (~> 5)
   tzinfo-data (~> 1.2021, >= 1.2021.2)
