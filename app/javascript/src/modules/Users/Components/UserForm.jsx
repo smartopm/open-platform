@@ -199,13 +199,14 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
     values.splice(index, 1);
     setData({
       ...data,
-      contactInfos: values
+      contactInfos: [...values]
     });
   }
 
   if (isFromRef) {
     data.userType = 'prospective_client';
   }
+
   return (
     <div className="container">
       <ModalDialog
@@ -343,6 +344,7 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
               <FormOptionWithOwnActions
                 // eslint-disable-next-line react/no-array-index-key
                 key={i}
+                // key={contact.id}
                 id={i + 1}
                 value={contact.info}
                 actions={{
