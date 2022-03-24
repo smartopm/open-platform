@@ -16,7 +16,8 @@ RSpec.describe Types::Queries::User do
     let!(:permission) do
       create(:permission, module: 'user',
                           role: admin_role,
-                          permissions: %w[can_view_admin_users can_get_users_lite can_get_users])
+                          permissions: %w[can_view_admin_users can_get_users_lite can_get_users
+                                          can_search_user_ids])
     end
     let!(:current_user) { create(:user_with_community, user_type: 'client', role: client_role) }
     let!(:secondary_number) do
@@ -162,6 +163,18 @@ RSpec.describe Types::Queries::User do
       )
     end
 
+    let(:search_ids_query) do
+      %(
+        query SearchUserId($query: String, $userIds: [String!]){
+          searchUserIds(query: $query, userIds: $userIds) {
+            id
+            name
+            imageUrl
+            avatarUrl
+          }
+      })
+    end
+
     it 'returns all items' do
       current_user.notes.create(author_id: admin.id, body: 'test')
       result = DoubleGdpSchema.execute(query, context: { current_user: current_user }).as_json
@@ -219,6 +232,19 @@ RSpec.describe Types::Queries::User do
       expect(result.dig('data', 'usersLite', 0, 'id')).to_not be_nil
       expect(result.dig('data', 'usersLite', 0, 'name')).to_not be_nil
       expect(result.dig('data', 'usersLite').length).to eql 1 # only one admin
+    end
+
+    it 'returns searched users from userids' do
+      variables = {
+        query: current_user.name, userIds: [current_user.id]
+      }
+      result = DoubleGdpSchema.execute(search_ids_query, variables: variables,
+                                                         context: { current_user: admin }).as_json
+
+      expect(result.dig('data', 'searchUserIds', 0, 'id')).to_not be_nil
+      expect(result.dig('data', 'searchUserIds', 0, 'name')).to_not be_nil
+      expect(result.dig('data', 'searchUserIds', 0, 'id')).to eql current_user.id
+      expect(result.dig('data', 'searchUserIds', 0, 'name')).to eql current_user.name
     end
 
     it 'checking individual permissions' do

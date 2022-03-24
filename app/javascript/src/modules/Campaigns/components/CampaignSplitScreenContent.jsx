@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
-import { useMutation } from 'react-apollo';
+import { useMutation, useQuery } from 'react-apollo';
 import { makeStyles, useTheme } from '@material-ui/styles';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
@@ -29,6 +29,12 @@ import {
 import MessageAlert from '../../../components/MessageAlert';
 import CampaignStatCard from './CampaignStatCard';
 import TemplateList from '../../Emails/components/TemplateList';
+import SearchInput from '../../../shared/search/SearchInput';
+import useDebounce from '../../../utils/useDebounce';
+import SearchID from '../graphql/campaign_query';
+import { Spinner } from '../../../shared/Loading';
+import CenteredContent from '../../../shared/CenteredContent';
+import UserNameAvatar from '../../../shared/UserNameAvatar';
 
 const initData = {
   id: '',
@@ -61,6 +67,12 @@ export default function CampaignSplitScreenContent({ refetch, campaign, handleCl
   const [campaignUpdate] = useMutation(CampaignUpdateMutation);
   const { t } = useTranslation(['campaign', 'common']);
   const { state } = useLocation();
+  const [searchText, setSearchText] = useState('');
+  const debouncedSearchText = useDebounce(searchText, 500);
+  const { data, error, loading } = useQuery(SearchID, {
+    variables: { query: debouncedSearchText, userIds: formData.userIdList.split(',') },
+    fetchPolicy: 'cache-and-network'
+  });
 
   function handleLabelDelete(labelId) {
     campaignLabelRemove({
@@ -154,26 +166,26 @@ export default function CampaignSplitScreenContent({ refetch, campaign, handleCl
       setIsSuccessAlert(false);
       setMessageAlert(t('message.include_name'));
       setLoading(false);
-      return false
+      return false;
     }
     if (!formData.batchTime) {
       setIsSuccessAlert(false);
       setMessageAlert(t('message.include_batch_time'));
       setLoading(false);
-      return false
+      return false;
     }
     if (formData.status === 'scheduled') {
       if (!formData.message) {
         setIsSuccessAlert(false);
         setMessageAlert(t('message.include_message'));
         setLoading(false);
-        return false
+        return false;
       }
       if (!formData.userIdList) {
         setIsSuccessAlert(false);
         setMessageAlert(t('message.include_user_list'));
         setLoading(false);
-        return false
+        return false;
       }
     }
     if (formData.campaignType === 'email') {
@@ -181,10 +193,10 @@ export default function CampaignSplitScreenContent({ refetch, campaign, handleCl
         setIsSuccessAlert(false);
         setMessageAlert(t('message.include_email_template'));
         setLoading(false);
-        return false
+        return false;
       }
     }
-    return true
+    return true;
   }
 
   function handleTemplateValue(event) {
@@ -212,7 +224,7 @@ export default function CampaignSplitScreenContent({ refetch, campaign, handleCl
       includeReplyLink: formData.includeReplyLink
     };
     if (!validateCampaignForm()) {
-      return false
+      return false;
     }
 
     if (campaign) {
@@ -274,7 +286,7 @@ export default function CampaignSplitScreenContent({ refetch, campaign, handleCl
             className={classes.button}
             variant="contained"
             data-testid="save-campaign"
-            color='primary'
+            color="primary"
             onClick={e => handleSubmit(e)}
           >
             {t('common:form_actions.save_changes')}
@@ -346,7 +358,11 @@ export default function CampaignSplitScreenContent({ refetch, campaign, handleCl
               <Button style={buttonStyle('sms')} onClick={() => handleTypeButtonClick('sms')}>
                 <Typography variant="body2">SMS</Typography>
               </Button>
-              <Button style={buttonStyle('email')} onClick={() => handleTypeButtonClick('email')} data-testid='email'>
+              <Button
+                style={buttonStyle('email')}
+                onClick={() => handleTypeButtonClick('email')}
+                data-testid="email"
+              >
                 <Typography variant="body2">{t('common:form_fields.email')}</Typography>
               </Button>
             </ButtonGroup>
@@ -463,18 +479,54 @@ export default function CampaignSplitScreenContent({ refetch, campaign, handleCl
           </Grid>
         )}
         {mailListType === 'idlist' && (
-          <Grid item sm={12} xs={12} className={classes.liveEvent}>
-            <TextFieldLiveEdit
-              placeHolderText={t('message.paste_userid_list')}
-              textVariant="body2"
-              textFieldVariant="outlined"
-              fullWidth
-              multiline
-              text={formData.userIdList}
-              handleChange={handleInputChange}
-              name="userIdList"
-              styles={{ margin: '0 -12px' }}
-            />
+          <Grid container style={{ paddingBottom: '50px' }}>
+            <Grid item sm={12} xs={12} className={classes.liveEvent}>
+              <TextFieldLiveEdit
+                placeHolderText={t('message.paste_userid_list')}
+                textVariant="body2"
+                textFieldVariant="outlined"
+                fullWidth
+                multiline
+                text={formData.userIdList}
+                handleChange={handleInputChange}
+                name="userIdList"
+                styles={{ margin: '0 -12px' }}
+                rows={!formData.userIdList ? undefined : 5}
+              />
+            </Grid>
+            {formData.userIdList && (
+              <>
+                <Grid item sm={8} xs={12}>
+                  <SearchInput
+                    filterRequired={false}
+                    title={t('common:misc.users')}
+                    searchValue={searchText}
+                    handleSearch={e => setSearchText(e.target.value)}
+                    handleClear={() => setSearchText('')}
+                  />
+                </Grid>
+                <Grid item sm={12} xs={12}>
+                  {error && (
+                    <CenteredContent>
+                      <p>{error.message}</p>
+                    </CenteredContent>
+                  )}
+                  {loading ? (
+                    <Spinner />
+                  ) : (
+                    searchText && (
+                      <Grid container spacing={2} data-testid='search-result' style={{paddingTop: '10px'}}>
+                        {data?.searchUserIds.map(user => (
+                          <Grid item sm={4} xs={8} key={user.id}>
+                            <UserNameAvatar user={user} style={{ padding: '10px 0' }} />
+                          </Grid>
+                        ))}
+                      </Grid>
+                    )
+                  )}
+                </Grid>
+              </>
+            )}
           </Grid>
         )}
       </Grid>

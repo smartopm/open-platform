@@ -32,6 +32,7 @@ export default function CampaignList() {
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('md'));
   const matches0 = useMediaQuery(theme.breakpoints.only('sm'));
+  const matches3 = useMediaQuery(theme.breakpoints.only('xs'));
   const matches1 = useMediaQuery(theme.breakpoints.only('md'));
   const matches2 = useMediaQuery(theme.breakpoints.only('lg'));
   const { id } = useParams();
@@ -149,6 +150,9 @@ export default function CampaignList() {
     }
     if (matches2) {
       return classes.drawerPaper
+    }
+    if (matches3) {
+      return classes.drawerPaperMobile
     }
 
     return classes.drawerPaper
