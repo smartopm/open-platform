@@ -179,66 +179,54 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
   const emailContactInfos = data?.contactInfos?.filter(c => c.contactType === 'email')
   const addressContactInfos = data?.contactInfos?.filter(c => c.contactType === 'address')
 
+  function changeOptionAndUpdate(index, value, optionsToUpdate, rest ){
+    const newValue = [...optionsToUpdate];
+    newValue[Number(index)].info = value;
+    setData({
+      ...data,
+      contactInfos: [...newValue, ...rest ]
+    });
+  }
+
   function handleOptionChange(event, index, type) {
     const {value} = event.target;
 
     if(type === 'phone'){
-      phoneContactInfos[Number(index)].info = value;
-      setData({
-        ...data,
-        contactInfos: [...phoneContactInfos, ...emailContactInfos, ...addressContactInfos]
-      });
-
+      changeOptionAndUpdate(index, value, phoneContactInfos, [...emailContactInfos, ...addressContactInfos])
       return;
     }
 
     if(type === 'email'){
-      emailContactInfos[Number(index)].info = value;
-      setData({
-        ...data,
-        contactInfos: [...phoneContactInfos, ...emailContactInfos, ...addressContactInfos]
-      });
-
+      changeOptionAndUpdate(index, value, emailContactInfos, [...phoneContactInfos, ...addressContactInfos]);
       return;
     }
 
     if(type === 'address'){
-      addressContactInfos[Number(index)].info = value;
-      setData({
-        ...data,
-        contactInfos: [...phoneContactInfos, ...emailContactInfos, ...addressContactInfos]
-      });
-
-      
+      changeOptionAndUpdate(index, value, addressContactInfos, [...phoneContactInfos, ...emailContactInfos]);
     }
+  }
+
+  function removeOptionAndUpdate(index, optionsToUpdate, rest){
+    optionsToUpdate.splice(index, 1);
+    setData({
+      ...data,
+      contactInfos: [ ...optionsToUpdate, ...rest ]
+    })
   }
 
   function handleRemoveOption(index, type) {
     if(type === 'phone') {
-      phoneContactInfos.splice(index, 1)
-      setData({
-        ...data,
-        contactInfos: [...phoneContactInfos, ...emailContactInfos, ...addressContactInfos]
-      });
+      removeOptionAndUpdate(index, phoneContactInfos, [...emailContactInfos, ...addressContactInfos])
       return;
     }
 
     if(type === 'email') {
-      emailContactInfos.splice(index, 1)
-      setData({
-        ...data,
-        contactInfos: [...phoneContactInfos, ...emailContactInfos, ...addressContactInfos]
-      });
+      removeOptionAndUpdate(index, emailContactInfos, [...phoneContactInfos, ...addressContactInfos])
       return;
     }
-
-    if(type === 'address') {
-      addressContactInfos.splice(index, 1)
-      setData({
-        ...data,
-        contactInfos: [...phoneContactInfos, ...emailContactInfos, ...addressContactInfos]
-      });
       
+    if(type === 'address') {
+      removeOptionAndUpdate(index, addressContactInfos, [...phoneContactInfos, ...emailContactInfos])
     }
   }
 
