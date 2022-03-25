@@ -217,7 +217,7 @@ module Types::Queries::EntryRequest
   end
 
   def duration_based_start_time(duration)
-    current_day_start = Time.zone.now.to_datetime.beginning_of_day
+    current_day_start = Time.zone.now.to_datetime.beginning_of_day - timezone_offset
 
     case duration
     when 'past7Days'
@@ -230,7 +230,11 @@ module Types::Queries::EntryRequest
   end
 
   def end_time
-    Time.zone.now.to_datetime.end_of_day.to_s
+    (Time.zone.now.to_datetime.end_of_day - timezone_offset).to_s
+  end
+
+  def timezone_offset
+    (Time.zone.now.utc_offset / 3600).hours
   end
 
   def can_view_entry_request?
