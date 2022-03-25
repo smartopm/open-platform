@@ -8,7 +8,6 @@ import { Context } from '../../../containers/Provider/AuthStateProvider';
 import authState from '../../../__mocks__/authstate';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
-
 const data = {
   id: '6v2y3etyu2g3eu2',
   body: 'a task smsd',
