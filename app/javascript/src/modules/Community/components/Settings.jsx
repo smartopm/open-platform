@@ -22,7 +22,7 @@ import { useMutation, useApolloClient, useQuery } from 'react-apollo';
 import { CommunityUpdateMutation } from '../graphql/community_mutations';
 import DynamicContactFields from './DynamicContactFields';
 import MessageAlert from '../../../components/MessageAlert';
-import { useFileUpload } from '../../../graphql/useFileUpload';
+import useFileUpload from '../../../graphql/useFileUpload';
 import {
   currencies,
   locales,
@@ -446,7 +446,7 @@ export default function CommunitySettings({ data, refetch }) {
                 hidden
                 onChange={event => onInputChange(event.target.files[0])}
                 accept="image/*"
-                data-testid='logo-input'
+                data-testid="logo-input"
               />
             </Button>
           </div>

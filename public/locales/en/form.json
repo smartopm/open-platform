@@ -58,7 +58,8 @@
     "required_field": "{{fieldName}} is Required",
     "admins_only": "For Admins Only",
     "required_field_for_admins_only": "{{fieldName}} is Required. For Admins only",
-    "date_time_in_the_future": "Please select a date and time in the future"
+    "date_time_in_the_future": "Please select a date and time in the future",
+    "wrong_file_type": "Wrong file type."
   },
   "form_status": {
     "rejected": "Rejected",

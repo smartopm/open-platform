@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { Button, Grid, Typography, makeStyles } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import ImageArea from '../../../../shared/imageUpload/ImageArea';
-import { useFileUpload } from '../../../../graphql/useFileUpload';
+import useFileUpload from '../../../../graphql/useFileUpload';
 import { EntryRequestUpdateMutation } from '../../graphql/logbook_mutations';
 import { EntryRequestContext } from '../Context';
 import MessageAlert from '../../../../components/MessageAlert';

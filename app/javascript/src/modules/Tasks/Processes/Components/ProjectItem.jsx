@@ -5,7 +5,7 @@ import { useMutation, useApolloClient } from 'react-apollo';
 import { useHistory } from 'react-router';
 import { formatError } from '../../../../utils/helpers';
 import { UpdateNote } from '../../../../graphql/mutations';
-import { useFileUpload } from '../../../../graphql/useFileUpload';
+import useFileUpload from '../../../../graphql/useFileUpload';
 import TodoItem from '../../Components/TodoItem';
 
 export default function ProjectItem({ task, taskId, refetch, clientView }) {
@@ -20,21 +20,21 @@ export default function ProjectItem({ task, taskId, refetch, clientView }) {
   const history = useHistory();
 
   useEffect(() => {
-    if(status === 'DONE') {
-      taskUpdate({variables: {  id: selectedTask.id, documentBlobId: signedBlobId}})
-      .then(() => {
-        refetch();
-      })
-      .catch((error) => {
-        setTaskUpdateStatus({
-          ...taskUpdateStatus,
-          success: false,
-          message: formatError(error.message),
+    if (status === 'DONE') {
+      taskUpdate({ variables: { id: selectedTask.id, documentBlobId: signedBlobId } })
+        .then(() => {
+          refetch();
         })
-      });
+        .catch(error => {
+          setTaskUpdateStatus({
+            ...taskUpdateStatus,
+            success: false,
+            message: formatError(error.message)
+          });
+        });
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [status, selectedTask,signedBlobId, taskUpdate, refetch]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [status, selectedTask, signedBlobId, taskUpdate, refetch]);
 
   function handleChange(selectedId) {
     if (selectedTasks.includes(selectedId)) {
@@ -49,26 +49,28 @@ export default function ProjectItem({ task, taskId, refetch, clientView }) {
     redirectToOverviewPage(id);
   }
 
-  function handleTodoItemClick(taskItem, tab='processes', detailTab) {
+  function handleTodoItemClick(taskItem, tab = 'processes', detailTab) {
     redirectToOverviewPage(taskItem.id, tab, detailTab);
   }
 
   function handleTaskCompletion(selectedTaskId, completed) {
-    taskUpdate({variables: {  id: selectedTaskId, completed }})
+    taskUpdate({ variables: { id: selectedTaskId, completed } })
       .then(() => {
         refetch();
         setTaskUpdateStatus({
           ...taskUpdateStatus,
           success: true,
-          message: `${t('task.task_marked_as')} ${completed ? t('task.complete') : t('task.incomplete')}`
-        })
+          message: `${t('task.task_marked_as')} ${
+            completed ? t('task.complete') : t('task.incomplete')
+          }`
+        });
       })
-      .catch((err) => {
+      .catch(err => {
         setTaskUpdateStatus({
           ...taskUpdateStatus,
           success: false,
-          message: formatError(err.message),
-        })
+          message: formatError(err.message)
+        });
       });
   }
 
@@ -77,11 +79,11 @@ export default function ProjectItem({ task, taskId, refetch, clientView }) {
     setSelectedTask(todoItem);
   }
 
-  function redirectToOverviewPage(id, tab='processes', detailTab) {
-    history.push(`/processes/drc/projects/${id}?tab=${tab}&detailTab=${detailTab}`)
+  function redirectToOverviewPage(id, tab = 'processes', detailTab) {
+    history.push(`/processes/drc/projects/${id}?tab=${tab}&detailTab=${detailTab}`);
   }
 
-  return(
+  return (
     <TodoItem
       key={task?.id}
       task={task}
@@ -95,17 +97,17 @@ export default function ProjectItem({ task, taskId, refetch, clientView }) {
       handleTaskCompletion={handleTaskCompletion}
       clientView={clientView}
     />
-  )
+  );
 }
 
-ProjectItem.defaultProps ={
+ProjectItem.defaultProps = {
   clientView: false,
   taskId: null,
   task: null
-}
+};
 ProjectItem.propTypes = {
   task: PropTypes.shape({ id: PropTypes.string }),
   refetch: PropTypes.func.isRequired,
   clientView: PropTypes.bool,
   taskId: PropTypes.string
-}
+};

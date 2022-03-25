@@ -1,35 +1,37 @@
-import React, { useState, useContext } from 'react'
-import PropTypes from 'prop-types'
+import React, { useState, useContext } from 'react';
+import PropTypes from 'prop-types';
 import { useMutation, useApolloClient, useLazyQuery } from 'react-apollo';
 import { Button, Grid, Divider } from '@material-ui/core';
 import AddPhotoAlternateIcon from '@material-ui/icons/AddPhotoAlternate';
-import { Map, FeatureGroup, GeoJSON, LayersControl, TileLayer } from 'react-leaflet'
+import { Map, FeatureGroup, GeoJSON, LayersControl, TileLayer } from 'react-leaflet';
 import { useTranslation } from 'react-i18next';
 import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider';
-import NkwashiSuburbBoundaryData from '../../data/nkwashi_suburb_boundary.json'
+import NkwashiSuburbBoundaryData from '../../data/nkwashi_suburb_boundary.json';
 import { LandParcel } from '../../graphql/queries';
-import { PointOfInterestDelete, PointOfInterestImageCreate } from '../../graphql/mutations/land_parcel';
-import { useFileUpload } from '../../graphql/useFileUpload'
-import { checkValidGeoJSON, formatError, objectAccessor } from '../../utils/helpers'
-import { emptyPolygonFeature, mapTiles, plotStatusColorPallete } from '../../utils/constants'
-import PointsOfInterestMarker from '../Map/PointsOfInterestMarker'
-import { ActionDialog } from '../Dialog'
-import MessageAlert from "../MessageAlert"
-import PointOfInterestDrawerDialog from '../Map/PointOfInterestDrawerDialog'
-import SubUrbanLayer from '../Map/SubUrbanLayer'
+import {
+  PointOfInterestDelete,
+  PointOfInterestImageCreate
+} from '../../graphql/mutations/land_parcel';
+import useFileUpload from '../../graphql/useFileUpload';
+import { checkValidGeoJSON, formatError, objectAccessor } from '../../utils/helpers';
+import { emptyPolygonFeature, mapTiles, plotStatusColorPallete } from '../../utils/constants';
+import PointsOfInterestMarker from '../Map/PointsOfInterestMarker';
+import { ActionDialog } from '../Dialog';
+import MessageAlert from '../MessageAlert';
+import PointOfInterestDrawerDialog from '../Map/PointOfInterestDrawerDialog';
+import SubUrbanLayer from '../Map/SubUrbanLayer';
 
-const { attribution, openStreetMap, centerPoint } = mapTiles
+const { attribution, openStreetMap, centerPoint } = mapTiles;
 
 /* istanbul ignore next */
-function getColor(plotSold){
-  return (plotSold ? plotStatusColorPallete.sold : plotStatusColorPallete.unknown)
+function getColor(plotSold) {
+  return plotSold ? plotStatusColorPallete.sold : plotStatusColorPallete.unknown;
 }
 
 /* istanbul ignore next */
-function getHouseColor(status){
-  return objectAccessor(plotStatusColorPallete, status)
+function getHouseColor(status) {
+  return objectAccessor(plotStatusColorPallete, status);
 }
-
 
 /* istanbul ignore next */
 function geoJSONPlotStyle(feature) {
@@ -38,7 +40,7 @@ function geoJSONPlotStyle(feature) {
     weight: 1,
     fillOpacity: 0.7,
     fillColor: getColor(feature && feature.properties.plot_sold)
-  }
+  };
 }
 
 /* istanbul ignore next */
@@ -48,59 +50,77 @@ function geoJSONHouseStyle(feature) {
     weight: 1,
     fillOpacity: 0.7,
     fillColor: getHouseColor(feature && feature.properties.status)
-  }
+  };
 }
 
 /* istanbul ignore next */
 function geoJSONPoiStyle(feature) {
   return {
-    color: feature.properties.stroke || "#f2eeee",
+    color: feature.properties.stroke || '#f2eeee',
     weight: feature.properties['stroke-width'] || 1,
     fillOpacity: feature.properties['fill-opacity'] || 0.5,
-    fillColor: feature.properties.fill || "#10c647"
-  }
+    fillColor: feature.properties.fill || '#10c647'
+  };
 }
 
-  /* istanbul ignore next */
-  function getSubUrbanData(communityName){
-    if(communityName === 'Nkwashi'){
-      return NkwashiSuburbBoundaryData
-    }
-
-    return undefined;
+/* istanbul ignore next */
+function getSubUrbanData(communityName) {
+  if (communityName === 'Nkwashi') {
+    return NkwashiSuburbBoundaryData;
   }
 
+  return undefined;
+}
+
 /* istanbul ignore next */
-export default function LandParcelMap({ handlePlotClick, geoData }){
+export default function LandParcelMap({ handlePlotClick, geoData }) {
   const authState = useContext(AuthStateContext);
   const [deletePointOfInterest] = useMutation(PointOfInterestDelete);
   const [uploadPoiImage] = useMutation(PointOfInterestImageCreate);
-  const [selectedPoi, setSelectedPoi] = useState(null)
-  const [isSuccessAlert, setIsSuccessAlert] = useState(false)
-  const [messageAlert, setMessageAlert] = useState('')
-  const [confirmDeletePoi, setConfirmDeletePoi] = useState(false)
+  const [selectedPoi, setSelectedPoi] = useState(null);
+  const [isSuccessAlert, setIsSuccessAlert] = useState(false);
+  const [messageAlert, setMessageAlert] = useState('');
+  const [confirmDeletePoi, setConfirmDeletePoi] = useState(false);
 
-  const communityName = authState.user?.community?.name
-  const properties = geoData?.filter(({ geom, objectType, parcelType }) => geom && objectType === 'land' && parcelType !== 'poi') || null
-  const poiData = geoData?.filter(({ geom, parcelType }) => geom && parcelType === 'poi') || null
-  const houseData = geoData?.filter(({ geom, objectType }) => geom && objectType === 'house') || null
-  const featureCollection = { type: 'FeatureCollection',  features: [] }
-  const poiFeatureCollection = { type: 'FeatureCollection',  features: [] }
-  const houseFeatureCollection = { type: 'FeatureCollection',  features: [] }
-  const subUrbanData = getSubUrbanData(communityName)
-  const { t } = useTranslation(['common', 'property'])
-  const [ loadParcel, { data: parcelData, loading: parcelDataLoading } ] = useLazyQuery(LandParcel, {
+  const communityName = authState.user?.community?.name;
+  const properties =
+    geoData?.filter(
+      ({ geom, objectType, parcelType }) => geom && objectType === 'land' && parcelType !== 'poi'
+    ) || null;
+  const poiData = geoData?.filter(({ geom, parcelType }) => geom && parcelType === 'poi') || null;
+  const houseData =
+    geoData?.filter(({ geom, objectType }) => geom && objectType === 'house') || null;
+  const featureCollection = { type: 'FeatureCollection', features: [] };
+  const poiFeatureCollection = { type: 'FeatureCollection', features: [] };
+  const houseFeatureCollection = { type: 'FeatureCollection', features: [] };
+  const subUrbanData = getSubUrbanData(communityName);
+  const { t } = useTranslation(['common', 'property']);
+  const [loadParcel, { data: parcelData, loading: parcelDataLoading }] = useLazyQuery(LandParcel, {
     fetchPolicy: 'cache-and-network'
   });
 
-  const { onChange: handleFileUpload, status: uploadStatus, signedBlobId } = useFileUpload({ client: useApolloClient() })
+  const { onChange: handleFileUpload, status: uploadStatus, signedBlobId } = useFileUpload({
+    client: useApolloClient()
+  });
 
   /* istanbul ignore next */
-  function handleOnPlotClick({ target }){
-   const {
-     properties: { id, parcel_no: parcelNumber, parcel_type: parcelType, long_x: longX, lat_y: latY, accounts, valuations, status, object_type: objectType, others }
-    } = target.feature
-    return (target.feature &&
+  function handleOnPlotClick({ target }) {
+    const {
+      properties: {
+        id,
+        parcel_no: parcelNumber,
+        parcel_type: parcelType,
+        long_x: longX,
+        lat_y: latY,
+        accounts,
+        valuations,
+        status,
+        object_type: objectType,
+        others
+      }
+    } = target.feature;
+    return (
+      target.feature &&
       handlePlotClick({
         id,
         parcelNumber,
@@ -114,13 +134,22 @@ export default function LandParcelMap({ handlePlotClick, geoData }){
         objectType,
         ...others
       })
-    )
+    );
   }
 
   /* istanbul ignore next */
-  function handlePoiLayerClick({ target }){
-    const { properties: { id, icon, poi_name: poiName, parcel_no: parcelNumber, parcel_type: parcelType, long_x: longX, lat_y: latY }
-  } = target.feature
+  function handlePoiLayerClick({ target }) {
+    const {
+      properties: {
+        id,
+        icon,
+        poi_name: poiName,
+        parcel_no: parcelNumber,
+        parcel_type: parcelType,
+        long_x: longX,
+        lat_y: latY
+      }
+    } = target.feature;
 
     setSelectedPoi({
       id,
@@ -129,94 +158,97 @@ export default function LandParcelMap({ handlePlotClick, geoData }){
       parcelNumber,
       parcelType,
       longX,
-      latY,
-    })
+      latY
+    });
 
     loadParcel({ variables: { id } });
   }
 
   /* istanbul ignore next */
-  function handleCloseDrawer(){
-    setSelectedPoi(null)
-    setConfirmDeletePoi(false)
+  function handleCloseDrawer() {
+    setSelectedPoi(null);
+    setConfirmDeletePoi(false);
   }
 
   /* istanbul ignore next */
-  function handleClickDelete(){
+  function handleClickDelete() {
     deletePointOfInterest({
       variables: { id: selectedPoi.id }
-    }).then(() => {
-      setMessageAlert(t('property:messages.poi_removed'))
-      setIsSuccessAlert(true)
-      handleCloseDrawer()
-    }).catch((err) => {
-      setMessageAlert(formatError(err.message))
-      setIsSuccessAlert(false)
-      handleCloseDrawer()
     })
+      .then(() => {
+        setMessageAlert(t('property:messages.poi_removed'));
+        setIsSuccessAlert(true);
+        handleCloseDrawer();
+      })
+      .catch(err => {
+        setMessageAlert(formatError(err.message));
+        setIsSuccessAlert(false);
+        handleCloseDrawer();
+      });
   }
 
   /* istanbul ignore next */
   function handleMessageAlertClose(_event, reason) {
     if (reason === 'clickaway') {
-      return
+      return;
     }
-    setMessageAlert('')
+    setMessageAlert('');
   }
 
-   /* istanbul ignore next */
-  function handleSaveUploadedPhoto(){
+  /* istanbul ignore next */
+  function handleSaveUploadedPhoto() {
     uploadPoiImage({
       variables: { id: selectedPoi.id, imageBlobId: signedBlobId }
-    }).then(() => {
-      setMessageAlert(t('property:messages.image_uploaded'))
-      setIsSuccessAlert(true)
-      handleCloseDrawer()
-    }).catch((err) => {
-      setMessageAlert(formatError(err.message))
-      setIsSuccessAlert(false)
-      handleCloseDrawer()
     })
+      .then(() => {
+        setMessageAlert(t('property:messages.image_uploaded'));
+        setIsSuccessAlert(true);
+        handleCloseDrawer();
+      })
+      .catch(err => {
+        setMessageAlert(formatError(err.message));
+        setIsSuccessAlert(false);
+        handleCloseDrawer();
+      });
   }
 
-   /* istanbul ignore next */
+  /* istanbul ignore next */
   /* eslint-disable consistent-return */
-  function onEachLandParcelFeature(feature, layer){
-    if(feature.properties.parcel_no && feature.properties.parcel_type){
+  function onEachLandParcelFeature(feature, layer) {
+    if (feature.properties.parcel_no && feature.properties.parcel_type) {
       layer.on({
-        click: handleOnPlotClick,
-      })
-    }
-  }
-
-     /* istanbul ignore next */
-  /* eslint-disable consistent-return */
-  function onEachHouseFeature(feature, layer){
-    if(feature.properties.parcel_no && feature.properties.object_type){
-      layer.on({
-        click: handleOnPlotClick,
-      })
+        click: handleOnPlotClick
+      });
     }
   }
 
   /* istanbul ignore next */
   /* eslint-disable consistent-return */
-  function onEachPoiLayerFeature(feature, layer){
-    if(feature.properties.parcel_no && feature.properties.parcel_type === 'poi'){
+  function onEachHouseFeature(feature, layer) {
+    if (feature.properties.parcel_no && feature.properties.object_type) {
       layer.on({
-        click: handlePoiLayerClick,
-      })
+        click: handleOnPlotClick
+      });
     }
   }
 
-  function getMapCenterPoint(){
-    if(!communityName) {
+  /* istanbul ignore next */
+  /* eslint-disable consistent-return */
+  function onEachPoiLayerFeature(feature, layer) {
+    if (feature.properties.parcel_no && feature.properties.parcel_type === 'poi') {
+      layer.on({
+        click: handlePoiLayerClick
+      });
+    }
+  }
+
+  function getMapCenterPoint() {
+    if (!communityName) {
       return [0, 0];
     }
 
-    return objectAccessor(centerPoint, communityName.toLowerCase())
+    return objectAccessor(centerPoint, communityName.toLowerCase());
   }
-
 
   return (
     <>
@@ -234,17 +266,12 @@ export default function LandParcelMap({ handlePlotClick, geoData }){
         onClose={handleCloseDrawer}
         selectedPoi={selectedPoi}
         imageData={{
-            urls: parcelData?.landParcel?.imageUrls,
-            loading: parcelDataLoading,
-          }}
+          urls: parcelData?.landParcel?.imageUrls,
+          loading: parcelDataLoading
+        }}
       >
         <Divider />
-        <Grid
-          container
-          direction="row"
-          justify="space-around"
-          alignItems="flex-start"
-        >
+        <Grid container direction="row" justify="space-around" alignItems="flex-start">
           <Grid item>
             <Button variant="contained" color="secondary" onClick={() => setConfirmDeletePoi(true)}>
               Delete
@@ -260,10 +287,7 @@ export default function LandParcelMap({ handlePlotClick, geoData }){
                 onChange={e => handleFileUpload(e.target.files[0])}
                 style={{ display: 'none' }}
               />
-              <AddPhotoAlternateIcon
-                color="primary"
-                style={{ cursor: 'pointer' }}
-              />
+              <AddPhotoAlternateIcon color="primary" style={{ cursor: 'pointer' }} />
             </label>
           </Grid>
           {uploadStatus === 'DONE' && (
@@ -280,9 +304,9 @@ export default function LandParcelMap({ handlePlotClick, geoData }){
       </PointOfInterestDrawerDialog>
       <div data-testid="leaflet-map-container">
         <style
-            // eslint-disable-next-line react/no-danger
+          // eslint-disable-next-line react/no-danger
           dangerouslySetInnerHTML={{
-              __html: `
+            __html: `
           .leaflet-tooltip-top:before,
           .leaflet-tooltip-bottom:before,
           .leaflet-tooltip-left:before,
@@ -303,7 +327,7 @@ export default function LandParcelMap({ handlePlotClick, geoData }){
             margin: 0 auto;
           }
           `
-            }}
+          }}
         />
         {/* istanbul ignore next */}
         <Map
@@ -320,32 +344,44 @@ export default function LandParcelMap({ handlePlotClick, geoData }){
         >
           <LayersControl position="topleft">
             <LayersControl.BaseLayer checked name="OSM">
-              <TileLayer
-                attribution={attribution}
-                url={openStreetMap}
-              />
+              <TileLayer attribution={attribution} url={openStreetMap} />
             </LayersControl.BaseLayer>
             {Array.isArray(properties) && properties?.length && (
               <LayersControl.Overlay checked name="Land Parcels">
                 <FeatureGroup>
-                  {properties?.map(({ id, longX, latY, geom, parcelNumber, parcelType, plotSold, accounts, valuations, status, objectType, ...rest }) => {
-                    if(checkValidGeoJSON(geom)){
-                      const feature = JSON.parse(geom)
-                      feature.properties.id = id
-                      feature.properties.parcel_no = parcelNumber
-                      feature.properties.parcel_type = parcelType
-                      feature.properties.plot_sold = plotSold
-                      feature.properties.long_x = longX
-                      feature.properties.lat_y = latY
-                      feature.properties.accounts = accounts
-                      feature.properties.valuations = valuations
-                      feature.properties.status = status
-                      feature.properties.object_type = objectType
-                      feature.properties.others = rest
-                      return featureCollection.features.push(feature)
+                  {properties?.map(
+                    ({
+                      id,
+                      longX,
+                      latY,
+                      geom,
+                      parcelNumber,
+                      parcelType,
+                      plotSold,
+                      accounts,
+                      valuations,
+                      status,
+                      objectType,
+                      ...rest
+                    }) => {
+                      if (checkValidGeoJSON(geom)) {
+                        const feature = JSON.parse(geom);
+                        feature.properties.id = id;
+                        feature.properties.parcel_no = parcelNumber;
+                        feature.properties.parcel_type = parcelType;
+                        feature.properties.plot_sold = plotSold;
+                        feature.properties.long_x = longX;
+                        feature.properties.lat_y = latY;
+                        feature.properties.accounts = accounts;
+                        feature.properties.valuations = valuations;
+                        feature.properties.status = status;
+                        feature.properties.object_type = objectType;
+                        feature.properties.others = rest;
+                        return featureCollection.features.push(feature);
+                      }
+                      return featureCollection.features.push(JSON.parse(emptyPolygonFeature));
                     }
-                    return featureCollection.features.push(JSON.parse(emptyPolygonFeature))
-                    })}
+                  )}
                   <GeoJSON
                     key={Math.random()}
                     data={featureCollection}
@@ -359,23 +395,24 @@ export default function LandParcelMap({ handlePlotClick, geoData }){
               <LayersControl.Overlay name="Points of Interest">
                 <FeatureGroup>
                   {poiData?.map(({ id, geom, parcelNumber, parcelType }) => {
-                          if(checkValidGeoJSON(geom)){
-                            const feature = JSON.parse(geom)
-                            const markerProps = {
-                              geoLatY: feature.properties.lat_y || 0,
-                              geoLongX: feature.properties.long_x || 0,
-                              iconUrl: feature.properties.icon || '',
-                              poiName: feature.properties.poi_name || t('property:misc.point_of_interest'),
-                              geomType: feature.geometry.type || t('property:misc.polygon')
-                          }
-                          feature.properties.id = id
-                          feature.properties.parcel_no = parcelNumber
-                          feature.properties.parcel_type = parcelType
-                          poiFeatureCollection.features.push(feature)
-                          return (<PointsOfInterestMarker key={id} markerProps={markerProps} />)
-                        }
-                        return poiFeatureCollection.features.push(JSON.parse(emptyPolygonFeature))
-                      })}
+                    if (checkValidGeoJSON(geom)) {
+                      const feature = JSON.parse(geom);
+                      const markerProps = {
+                        geoLatY: feature.properties.lat_y || 0,
+                        geoLongX: feature.properties.long_x || 0,
+                        iconUrl: feature.properties.icon || '',
+                        poiName:
+                          feature.properties.poi_name || t('property:misc.point_of_interest'),
+                        geomType: feature.geometry.type || t('property:misc.polygon')
+                      };
+                      feature.properties.id = id;
+                      feature.properties.parcel_no = parcelNumber;
+                      feature.properties.parcel_type = parcelType;
+                      poiFeatureCollection.features.push(feature);
+                      return <PointsOfInterestMarker key={id} markerProps={markerProps} />;
+                    }
+                    return poiFeatureCollection.features.push(JSON.parse(emptyPolygonFeature));
+                  })}
                   <GeoJSON
                     key={Math.random()}
                     data={poiFeatureCollection}
@@ -388,20 +425,22 @@ export default function LandParcelMap({ handlePlotClick, geoData }){
             {Array.isArray(houseData) && houseData?.length && (
               <LayersControl.Overlay name="Houses">
                 <FeatureGroup>
-                  {houseData?.map(({ id, longX, latY, geom, parcelNumber, parcelType, status, objectType }) => {
-                    if(checkValidGeoJSON(geom)){
-                      const feature = JSON.parse(geom)
-                      feature.properties.id = id
-                      feature.properties.parcel_no = parcelNumber
-                      feature.properties.parcel_type = parcelType
-                      feature.properties.long_x = longX
-                      feature.properties.lat_y = latY
-                      feature.properties.status = status
-                      feature.properties.object_type = objectType
-                      return houseFeatureCollection.features.push(feature)
+                  {houseData?.map(
+                    ({ id, longX, latY, geom, parcelNumber, parcelType, status, objectType }) => {
+                      if (checkValidGeoJSON(geom)) {
+                        const feature = JSON.parse(geom);
+                        feature.properties.id = id;
+                        feature.properties.parcel_no = parcelNumber;
+                        feature.properties.parcel_type = parcelType;
+                        feature.properties.long_x = longX;
+                        feature.properties.lat_y = latY;
+                        feature.properties.status = status;
+                        feature.properties.object_type = objectType;
+                        return houseFeatureCollection.features.push(feature);
+                      }
+                      return houseFeatureCollection.features.push(JSON.parse(emptyPolygonFeature));
                     }
-                    return houseFeatureCollection.features.push(JSON.parse(emptyPolygonFeature))
-                    })}
+                  )}
                   <GeoJSON
                     key={Math.random()}
                     data={houseFeatureCollection}
@@ -428,12 +467,12 @@ export default function LandParcelMap({ handlePlotClick, geoData }){
         handleClose={handleMessageAlertClose}
       />
     </>
-  )
+  );
 }
 
 LandParcelMap.defaultProps = {
   geoData: []
-}
+};
 LandParcelMap.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   geoData: PropTypes.arrayOf(
@@ -444,8 +483,8 @@ LandParcelMap.propTypes = {
       latY: PropTypes.number,
       longX: PropTypes.number,
       geom: PropTypes.string,
-      plotSold: PropTypes.bool,
-  })
+      plotSold: PropTypes.bool
+    })
   ),
   handlePlotClick: PropTypes.func.isRequired
-}
+};

@@ -9,23 +9,16 @@ import { Button, Typography } from '@material-ui/core';
 import { useApolloClient, useLazyQuery, useMutation } from 'react-apollo';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import PhoneInput from 'react-phone-input-2'
-import {
-  reasons,
-  requiredFields,
-  userState,
-  userSubStatus
-} from '../../../utils/constants';
+import PhoneInput from 'react-phone-input-2';
+import { reasons, requiredFields, userState, userSubStatus } from '../../../utils/constants';
 import DatePickerDialog from '../../../components/DatePickerDialog';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
 import { UserQuery } from '../../../graphql/queries';
 import { CreateUserMutation, NonAdminUpdateMutation } from '../../../graphql/mutations';
-import { useFileUpload } from '../../../graphql/useFileUpload';
+import useFileUpload from '../../../graphql/useFileUpload';
 import crudHandler from '../../../graphql/crud_handler';
 import Loading from '../../../shared/Loading';
-import FormOptionInput, {
-  FormOptionWithOwnActions
-} from '../../Forms/components/FormOptionInput';
+import FormOptionInput, { FormOptionWithOwnActions } from '../../Forms/components/FormOptionInput';
 import { saniteError } from '../../../utils/helpers';
 import { ModalDialog } from '../../../components/Dialog';
 import CenteredContent from '../../../components/CenteredContent';
@@ -78,7 +71,10 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
   });
   const [userImage, setUserImage] = React.useState(null);
 
-  const communityRoles = authState?.user?.community?.name === "Tilisi" ?  authState?.user?.community?.roles.filter(e => e !== 'client') : authState?.user?.community?.roles
+  const communityRoles =
+    authState?.user?.community?.name === 'Tilisi'
+      ? authState?.user?.community?.roles.filter(e => e !== 'client')
+      : authState?.user?.community?.roles;
 
   function uploadUserImage(image) {
     setUserImage(URL.createObjectURL(image));
@@ -219,7 +215,7 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
         action={modalAction}
         name={data.name}
       />
-      <form onSubmit={handleSubmit} data-testid='submit-form'>
+      <form onSubmit={handleSubmit} data-testid="submit-form">
         {!isFromRef && (
           <div className="form-group">
             <div style={{ width: 200, height: 'auto' }}>
@@ -239,9 +235,7 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
             <div>
               <br />
               <Typography color="primary">
-                {
-                 status !== 'INIT' && t(`common:upload_state.${status}`)
-                }
+                {status !== 'INIT' && t(`common:upload_state.${status}`)}
               </Typography>
               <br />
             </div>
@@ -252,9 +246,7 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
                 <span>
                   <PhotoCameraIcon className={css(styles.uploadIcon)} />
                   <br />
-                  <span>
-                    {t('common:misc.take_photo')}
-                  </span>
+                  <span>{t('common:misc.take_photo')}</span>
                 </span>
                 <input
                   type="file"
@@ -309,7 +301,7 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
           </label>
           <PhoneInput
             value={data.phoneNumber || ''}
-            inputStyle={{ width: "100%" }}
+            inputStyle={{ width: '100%' }}
             enableSearch
             inputProps={{
               name: 'phoneNumber',
@@ -317,7 +309,7 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
               'data-testid': 'primary_phone'
             }}
             placeholder={t('common:form_placeholders.phone_number')}
-            onChange={value => setData({...data, phoneNumber: value})}
+            onChange={value => setData({ ...data, phoneNumber: value })}
             preferredCountries={['hn', 'zm', 'ng', 'in', 'us']}
           />
         </div>
@@ -425,12 +417,11 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
                   >
                     <MenuItem value="" />
                     {communityRoles &&
-                   communityRoles.map(key => (
-                     <MenuItem key={key} value={key}>
-                       {t(`user_types.${key}`)}
-                     </MenuItem>
-                    ))}
-
+                      communityRoles.map(key => (
+                        <MenuItem key={key} value={key}>
+                          {t(`user_types.${key}`)}
+                        </MenuItem>
+                      ))}
                   </TextField>
                 </div>
 
@@ -541,8 +532,7 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
           Boolean(msg.length) && (
             <p className="text-danger text-center">{saniteError(requiredFields, msg)}</p>
           )
-        ) : null
-}
+        ) : null}
       </form>
     </div>
   );
@@ -569,7 +559,7 @@ const styles = StyleSheet.create({
     color: '#bdbdbd',
     outline: 'none',
     transition: 'border .24s ease-in-out',
-    cursor: 'pointer',
+    cursor: 'pointer'
   },
   fileInput: {
     width: '40%',
@@ -577,7 +567,7 @@ const styles = StyleSheet.create({
     opacity: 0,
     overflow: 'hidden',
     position: 'absolute',
-    zIndex: -1,
+    zIndex: -1
   },
   uploadedImage: {
     width: '35%',
@@ -586,7 +576,7 @@ const styles = StyleSheet.create({
   uploadIcon: {
     marginTop: 3,
     marginLeft: '40%'
-  },
+  }
 });
 
 UserForm.propTypes = {

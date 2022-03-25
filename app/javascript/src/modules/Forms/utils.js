@@ -54,8 +54,10 @@ export function checkCondition(category, properties, editMode) {
   if (!category.displayCondition?.groupingId) {
     return true;
   }
-  const property = properties.find(prop => prop.form_property_id === category.displayCondition.groupingId);
-  const value = typeof property?.value === 'object' ? property?.value?.checked : property?.value
+  const property = properties.find(
+    prop => prop.form_property_id === category.displayCondition.groupingId
+  );
+  const value = typeof property?.value === 'object' ? property?.value?.checked : property?.value;
   const processedValue = value?.trim().toLowerCase();
   const processedConditionValue = category?.displayCondition?.value.trim().toLowerCase();
   if (
@@ -77,28 +79,28 @@ export function checkCondition(category, properties, editMode) {
  * @param {object} item
  * @returns {boolean}
  */
-export function nonNullValues(item){
-  return item.value && item.value?.checked !== null && item.form_property_id !== null
+export function nonNullValues(item) {
+  return item.value && item.value?.checked !== null && item.form_property_id !== null;
 }
 
 /**
  *
  * @param {object} formProperties
- * @param {String} type This is the type of action we are trying, whether just extracting or submitting 
+ * @param {String} type This is the type of action we are trying, whether just extracting or submitting
  * @description removes the field name from a property so focus on groupingId and value
  * @returns {[object]}
  */
-export function extractValidFormPropertyValue(formProperties, type="extract") {
-  if(!Object.keys(formProperties).length) return []
+export function extractValidFormPropertyValue(formProperties, type = 'extract') {
+  if (!Object.keys(formProperties).length) return [];
   return Object.entries(formProperties)
     .map(([, prop]) => {
-      if(prop.type === 'checkbox') {
+      if (prop.type === 'checkbox') {
         return {
           value: type === 'extract' ? Object.keys(prop.value).join(', ') : prop.value,
-          form_property_id: prop.form_property_id,
-        }
+          form_property_id: prop.form_property_id
+        };
       }
-      return prop
+      return prop;
     })
     .filter(nonNullValues);
 }
@@ -109,20 +111,22 @@ export function extractValidFormPropertyValue(formProperties, type="extract") {
  * @returns [{object}]
  */
 export function extractValidFormPropertyFieldNames(formProperties) {
-  if(!Object.keys(formProperties).length) return []
+  if (!Object.keys(formProperties).length) return [];
   return Object.entries(formProperties)
     .map(([key, prop]) => {
-      if(prop.type === 'checkbox') {
+      if (prop.type === 'checkbox') {
         return {
-          value: Object.entries(prop.value).map(([k, val]) => val ? k : null).filter(Boolean).join(', '),
-          fieldName: key,
-        }
+          value: Object.entries(prop.value)
+            .map(([k, val]) => (val ? k : null))
+            .filter(Boolean)
+            .join(', '),
+          fieldName: key
+        };
       }
-      return {fieldName: key, value: prop.value?.checked || prop.value}
+      return { fieldName: key, value: prop.value?.checked || prop.value };
     })
     .filter(nonNullValues);
 }
-
 
 /**
  * gets a markdown text and a list of formproperties with their values and finds variables that matches
@@ -132,37 +136,44 @@ export function extractValidFormPropertyFieldNames(formProperties) {
  * @returns {string}
  */
 export function parseRenderedText(categories, data) {
-  if(!categories) return ''
-  const properties = extractValidFormPropertyFieldNames(data)
-  const renderedText = extractRenderedTextFromCategory(data, categories)
+  if (!categories) return '';
+  const properties = extractValidFormPropertyFieldNames(data);
+  const renderedText = extractRenderedTextFromCategory(data, categories);
   const words = renderedText.split(' ');
   return words
-    .map((word) => {
-      const wordToReplace = word.split('_').join(' ')
-      const formProperty = properties.find((prop) => {
-        return prop.fieldName?.toLowerCase().trim() === wordToReplace.replace(/\n|#/gi, '').replace(/[,.]/, '').toLowerCase()
+    .map(word => {
+      const wordToReplace = word.split('_').join(' ');
+      const formProperty = properties.find(prop => {
+        return (
+          prop.fieldName?.toLowerCase().trim() ===
+          wordToReplace
+            .replace(/\n|#/gi, '')
+            .replace(/[,.]/, '')
+            .toLowerCase()
+        );
       });
       if (formProperty) {
-        return word.replace(/#(\w+)/i, formProperty.value)
+        return word.replace(/#(\w+)/i, formProperty.value);
       }
       return word;
     })
     .join(' ');
 }
 
-
 /**
  * Ensure we only show contract preview for currently enabled categories in this form
- * @param {[object]} formProperties 
- * @param {[object]} categoriesData 
+ * @param {[object]} formProperties
+ * @param {[object]} categoriesData
  * @returns {string}
  */
-export function extractRenderedTextFromCategory(formProperties, categoriesData){
-  if(!categoriesData) return ''
-  const properties = extractValidFormPropertyValue(formProperties)
-  const validCategories = categoriesData.filter(category => checkCondition(category, properties, false))
+export function extractRenderedTextFromCategory(formProperties, categoriesData) {
+  if (!categoriesData) return '';
+  const properties = extractValidFormPropertyValue(formProperties);
+  const validCategories = categoriesData.filter(category =>
+    checkCondition(category, properties, false)
+  );
   const text = validCategories.map(category => `${category.renderedText}  `).join('');
-  return text
+  return text;
 }
 
 /**
@@ -172,21 +183,24 @@ export function extractRenderedTextFromCategory(formProperties, categoriesData){
  * @returns {Boolean}
  */
 export function requiredFieldIsEmpty(filledInProperties, formData) {
-  let result = false
-  const valid = formData.filter(category => checkCondition(category, filledInProperties, false))
+  let result = false;
+  const valid = formData.filter(category => checkCondition(category, filledInProperties, false));
 
   // TODO: This could use some optimization
   // eslint-disable-next-line no-restricted-syntax
   for (const category of valid) {
     // eslint-disable-next-line no-restricted-syntax
     for (const form of category.formProperties) {
-      if (form.required && !filledInProperties.find(filled => form.id === filled.form_property_id)?.value) {
+      if (
+        form.required &&
+        !filledInProperties.find(filled => form.id === filled.form_property_id)?.value
+      ) {
         result = true;
         break;
       }
     }
   }
-  return result
+  return result;
 }
 
 /**
@@ -195,38 +209,44 @@ export function requiredFieldIsEmpty(filledInProperties, formData) {
  * @param {[object]} formData
  * @returns {Boolean}
  */
-export function checkRequiredFormPropertyIsFilled(property, formData){
-  if(property
-    && Array.isArray(formData?.categories)
-    && formData?.categories.length > 0
-    && Array.isArray(formData?.filledInProperties)
-    && formData?.filledInProperties.length > 0
-    ){
-    const activeCategories = formData?.categories?.filter(category => checkCondition(category, formData?.filledInProperties, false))
-    const propertyBelongsToActiveCategory = activeCategories.some(category => category.formProperties.some(prop => prop.id === property.id))
-    
+export function checkRequiredFormPropertyIsFilled(property, formData) {
+  if (
+    property &&
+    Array.isArray(formData?.categories) &&
+    formData?.categories.length > 0 &&
+    Array.isArray(formData?.filledInProperties) &&
+    formData?.filledInProperties.length > 0
+  ) {
+    const activeCategories = formData?.categories?.filter(category =>
+      checkCondition(category, formData?.filledInProperties, false)
+    );
+    const propertyBelongsToActiveCategory = activeCategories.some(category =>
+      category.formProperties.some(prop => prop.id === property.id)
+    );
+
     // Validate properties from active categories only
-    if(propertyBelongsToActiveCategory){
-      if(formData.error && property.required) {
-        if(property.fieldType === 'checkbox') {
-          const fieldValues = formData?.filledInProperties.find(filledProp => property.id === filledProp.form_property_id)?.value
-          return(
-            !fieldValues || Object.values(fieldValues).some(val => !val)
-          )
+    if (propertyBelongsToActiveCategory) {
+      if (formData.error && property.required) {
+        if (property.fieldType === 'checkbox') {
+          const fieldValues = formData?.filledInProperties.find(
+            filledProp => property.id === filledProp.form_property_id
+          )?.value;
+          return !fieldValues || Object.values(fieldValues).some(val => !val);
         }
 
-        if(['date', 'time', 'datetime'].includes(property.fieldType)){
-          const fieldValue = formData?.filledInProperties.find(filledProp => property.id === filledProp.form_property_id)?.value
-          return (!fieldValue || Number.isNaN(Date.parse(fieldValue)))
+        if (['date', 'time', 'datetime'].includes(property.fieldType)) {
+          const fieldValue = formData?.filledInProperties.find(
+            filledProp => property.id === filledProp.form_property_id
+          )?.value;
+          return !fieldValue || Number.isNaN(Date.parse(fieldValue));
         }
 
-        return (
-          !(formData?.filledInProperties
-            .find(filledProp => property.id === filledProp.form_property_id)?.value)
-        )
+        return !formData?.filledInProperties.find(
+          filledProp => property.id === filledProp.form_property_id
+        )?.value;
       }
     }
   }
 
- return false
+  return false;
 }

@@ -1,9 +1,10 @@
 /* eslint-disable max-lines */
 /* eslint-disable complexity */
-import React, { Fragment, useRef, useContext } from 'react';
+import React, { Fragment, useRef, useContext, useState } from 'react';
 import { Grid } from '@material-ui/core';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { makeStyles } from '@material-ui/core/styles';
+import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
@@ -23,6 +24,7 @@ import FormPropertyAction from './FormPropertyAction';
 import { FormContext } from '../Context';
 import { convertBase64ToFile, objectAccessor } from '../../../utils/helpers';
 import { checkRequiredFormPropertyIsFilled } from '../utils';
+import MessageAlert from '../../../components/MessageAlert';
 
 export default function RenderForm({ formPropertiesData, formId, refetch, editMode, categoryId }) {
   const classes = useStyles();
@@ -40,6 +42,10 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
     signature
   } = useContext(FormContext);
 
+  const fileTypes = ['pdf', 'zip'];
+  const { t } = useTranslation('form');
+  const [messageAlert, setMessageAlert] = useState('');
+  const [isSuccessAlert, setIsSuccessAlert] = useState(false);
   function handleCheckboxSelect(event, property) {
     const { name, checked } = event.target;
     setFormProperties({
@@ -50,6 +56,12 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
         type: 'checkbox'
       }
     });
+  }
+  function handleMessageAlertClose(_event, reason) {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setMessageAlert('');
   }
 
   function handleValueChange(event, property) {
@@ -82,6 +94,14 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
   }
 
   function onImageSelect(event, currentProperty) {
+    const file = event.target.files[0];
+    const validType =
+      fileTypes.includes(file.type.split('/')[1]) || file.type.split('/')[0] === 'image';
+    if (!validType) {
+      setMessageAlert(t('form:errors.wrong_file_type'));
+      setIsSuccessAlert(false);
+      return;
+    }
     setFormState({
       ...formState,
       currentPropId: currentProperty,
@@ -207,6 +227,13 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
     ),
     file_upload: (
       <Grid container spacing={3} key={formPropertiesData.id}>
+        <MessageAlert
+          type={isSuccessAlert ? 'success' : 'error'}
+          message={messageAlert}
+          open={!!messageAlert}
+          handleClose={handleMessageAlertClose}
+        />
+
         <FormPropertyAction
           formId={formId}
           editMode={editMode}
@@ -214,7 +241,11 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
           refetch={refetch}
           categoryId={categoryId}
         />
-        <Grid item xs={editMode ? 10 : 12} style={formState.isUploading ? { opacity: 0.3, pointerEvents: 'none' } : {}}>
+        <Grid
+          item
+          xs={editMode ? 10 : 12}
+          style={formState.isUploading ? { opacity: 0.3, pointerEvents: 'none' } : {}}
+        >
           <UploadField
             detail={{
               type: 'file',
@@ -225,9 +256,10 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
             upload={evt => onImageSelect(evt, formPropertiesData.id)}
             editable={editable}
             uploaded={!!uploadedFile}
+            btnColor="primary"
             inputValidation={{
               error: checkRequiredFormPropertyIsFilled(formPropertiesData, formState),
-              fieldName: formPropertiesData.fieldName,
+              fieldName: formPropertiesData.fieldName
             }}
           />
         </Grid>

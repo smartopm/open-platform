@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import LeftArrow from '../../../../../../assets/images/left-arrow.svg';
 import RightArrow from '../../../../../../assets/images/right-arrow.svg';
 import Person from '../../../../../../assets/images/default_avatar.svg';
-import { useFileUpload } from '../../../../graphql/useFileUpload';
+import useFileUpload from '../../../../graphql/useFileUpload';
 import { EntryRequestUpdateMutation } from '../../graphql/logbook_mutations';
 import MessageAlert from '../../../../components/MessageAlert';
 import { EntryRequestContext } from '../Context';
@@ -74,8 +74,8 @@ export default function VideoCapture() {
   }, [counter, recordingBegin]);
 
   function onContinue() {
-    if(!signedBlobId) {
-      return
+    if (!signedBlobId) {
+      return;
     }
     updateRequest({ variables: { id: requestContext.request.id, videoBlobId: signedBlobId } })
       .then(() => {
@@ -84,7 +84,7 @@ export default function VideoCapture() {
           message: t('logbook:video_recording.video_recorded'),
           isError: false
         });
-        requestContext.updateRequest({ ...requestContext.request, videoBlobId:  signedBlobId})
+        requestContext.updateRequest({ ...requestContext.request, videoBlobId: signedBlobId });
       })
       .catch(error => {
         setDetails({ ...errorDetails, isError: true, message: error.message });
@@ -104,17 +104,17 @@ export default function VideoCapture() {
         {t('logbook:video_recording.create_video_text')}
       </Typography>
       <div className={classes.greyText} data-testid="well-lit-txt">
-        1.
+        1. 
         {' '}
         {t('logbook:video_recording.well_lit_area')}
       </div>
       <div className={classes.greyText} data-testid="listen-to-counter-txt">
-        2.
+        2. 
         {' '}
         {t('logbook:video_recording.listen_to_counter')}
       </div>
       <div className={classes.greyText} data-testid="direction-txt">
-        3.
+        3. 
         {' '}
         {t('logbook:video_recording.instruction_on_direction')}
       </div>
@@ -125,50 +125,45 @@ export default function VideoCapture() {
         </Typography>
         {recordingInstruction}
       </div>
-      {
-        requestContext.request?.videoUrl && !retakeVideo
-        ? <Video src={requestContext.request?.videoUrl} />
-        : (
-          <div className={classes.videoArea} data-testid="video_recorder">
-            <VideoRecorder
-              onRecordingComplete={onVideoComplete}
-              onStartRecording={() => setRecordingBegin(true)}
-              onStopReplaying={onStartAgain}
-              timeLimit={6000}
-              mimeType="video/webm"
-              showReplayControls
-              countdownTime={0}
-              isReplayVideoMuted
-              replayVideoAutoplayAndLoopOff
-            />
-          </div>
-        )
-      }
+      {requestContext.request?.videoUrl && !retakeVideo ? (
+        <Video src={requestContext.request?.videoUrl} />
+      ) : (
+        <div className={classes.videoArea} data-testid="video_recorder">
+          <VideoRecorder
+            onRecordingComplete={onVideoComplete}
+            onStartRecording={() => setRecordingBegin(true)}
+            onStopReplaying={onStartAgain}
+            timeLimit={6000}
+            mimeType="video/webm"
+            showReplayControls
+            countdownTime={0}
+            isReplayVideoMuted
+            replayVideoAutoplayAndLoopOff
+          />
+        </div>
+      )}
 
       <div className={classes.continueButton}>
         {status === 'FILE_UPLOAD' && <Spinner />}
         <CenteredContent>
-
           {recordingCompleted && status === 'DONE' && (
-          <Button onClick={onContinue} color="primary" data-testid="continue-btn">
-            {t('logbook:video_recording.save_video')}
-          </Button>
-        )}
-          {
-            !requestContext.isGuestRequest && !requestContext.request.isEdit && (
-              <AccessCheck module="entry_request" allowedPermissions={['can_grant_entry']}>
-                <Button
-                  onClick={requestContext.grantAccess}
-                  color="primary"
-                  data-testid="grant_btn"
-                  disabled={!requestContext.request.id}
-                  startIcon={requestContext.request.isLoading && <Spinner />}
-                >
-                  {t('logbook:logbook.grant')}
-                </Button>
-              </AccessCheck>
-            )
-          }
+            <Button onClick={onContinue} color="primary" data-testid="continue-btn">
+              {t('logbook:video_recording.save_video')}
+            </Button>
+          )}
+          {!requestContext.isGuestRequest && !requestContext.request.isEdit && (
+            <AccessCheck module="entry_request" allowedPermissions={['can_grant_entry']}>
+              <Button
+                onClick={requestContext.grantAccess}
+                color="primary"
+                data-testid="grant_btn"
+                disabled={!requestContext.request.id}
+                startIcon={requestContext.request.isLoading && <Spinner />}
+              >
+                {t('logbook:logbook.grant')}
+              </Button>
+            </AccessCheck>
+          )}
           {requestContext.request.isEdit && (
             <AccessCheck module="entry_request" allowedPermissions={['can_update_entry_request']}>
               <Button

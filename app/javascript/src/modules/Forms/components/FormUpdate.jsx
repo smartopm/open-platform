@@ -44,7 +44,7 @@ import {
 import DialogueBox from '../../../shared/dialogs/DeleteDialogue';
 import UploadField from './FormProperties/UploadField';
 import SignaturePad from './FormProperties/SignaturePad';
-import { useFileUpload } from '../../../graphql/useFileUpload';
+import useFileUpload from '../../../graphql/useFileUpload';
 import { dateFormatter, dateToString } from '../../../components/DateContainer';
 import { formStatus as updatedFormStatus } from '../../../utils/constants';
 import RadioInput from './FormProperties/RadioInput';
@@ -453,8 +453,8 @@ export default function FormUpdate({ formUserId, userId, authState }) {
                                   data-testid="download-icon"
                                   variant="outlined"
                                   onClick={event =>
-                                      downloadFile(event, formPropertiesData.imageUrl)
-                                    }
+                                    downloadFile(event, formPropertiesData.imageUrl)
+                                  }
                                 >
                                   {t('common:misc.open')}
                                 </Button>
@@ -591,7 +591,7 @@ export default function FormUpdate({ formUserId, userId, authState }) {
           {data?.formUserProperties.sort(sortPropertyOrder).map(renderForm)}
           <br />
           <br />
-          <Grid container justify="space-between" direction='row' spacing={2}>
+          <Grid container justify="space-between" direction="row" spacing={2}>
             <Grid item xs={4}>
               <Button
                 type="submit"
