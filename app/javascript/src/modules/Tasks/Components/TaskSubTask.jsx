@@ -29,7 +29,6 @@ export default function TaskSubTask({
   loading,
   data,
   fetchMore
-  
 }) {
   const classes = useStyles();
   const limit = 3;
@@ -73,7 +72,7 @@ export default function TaskSubTask({
           </Grid>
           {data.taskSubTasks.map(task => (
             <Fragment key={task.id}>
-              <Grid container spacing={1} item md={4} xs={6} className={classes.bodyAlign}>
+              <Grid container spacing={1} item md={4} xs={6} className={classes.bodyAlign} data-testid='body'>
                 <Grid item md={2}>
                   <IconButton
                     aria-controls="task-completion-toggle-button"
@@ -84,13 +83,13 @@ export default function TaskSubTask({
                     size="large"
                   >
                     {task.completed ? (
-                      <CheckCircleIcon htmlColor="#4caf50" />
+                      <CheckCircleIcon htmlColor="#4caf50" data-testid='check-icon' />
                     ) : (
                       <CheckCircleOutlineIcon htmlColor="#acacac" />
                     )}
                   </IconButton>
                 </Grid>
-                <Grid item md={10}>
+                <Grid item md={10} data-testid='task-body'>
                   <Typography
                     variant="body2"
                     data-testid="task_body"
@@ -101,7 +100,7 @@ export default function TaskSubTask({
                   </Typography>
                 </Grid>
               </Grid>
-              <Grid item md={3} xs={6} className={classes.bodyAlign} style={{ textAlign: 'right' }}>
+              <Grid item md={3} xs={6} className={classes.bodyAlign} style={{ textAlign: 'right' }} data-testid='due-date'>
                 <Typography variant="body2" component="span">
                   {t('task:sub_task.due')}
                   {task.dueDate ? dateToString(task.dueDate) : 'Never '}
@@ -109,7 +108,7 @@ export default function TaskSubTask({
               </Grid>
               <Grid item md={3} xs={7}>
                 <Grid container style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                  <Grid item md={2} xs={2}>
+                  <Grid item md={2} xs={2} data-testid='subtask-count'>
                     <IconButton
                       aria-controls="task-subtasks-icon"
                       data-testid="task_subtasks_count"
@@ -131,7 +130,7 @@ export default function TaskSubTask({
                   >
                     <span>{task?.subTasksCount || 0}</span>
                   </Grid>
-                  <Grid item md={2} xs={2}>
+                  <Grid item md={2} xs={2} data-testid='comment-count'>
                     <IconButton
                       aria-controls="task-comment-icon"
                       data-testid="task_comments_count"
@@ -153,7 +152,7 @@ export default function TaskSubTask({
                   >
                     <span>{task?.taskCommentsCount || 0}</span>
                   </Grid>
-                  <Grid item md={2} xs={2}>
+                  <Grid item md={2} xs={2} data-testid='attachment-count'>
                     <IconButton
                       aria-controls="task-attach-file-icon"
                       onClick={() => handleSplitScreenOpen(task)}
@@ -237,7 +236,7 @@ TaskSubTask.defaultProps = {
   loading: null,
   fetchMore: () => {},
   data: {}
-}
+};
 
 TaskSubTask.propTypes = {
   taskId: PropTypes.string.isRequired,

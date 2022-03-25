@@ -330,7 +330,7 @@ export default function TaskDetail({
                 <TaskDocuments
                   data={docData}
                   loading={docLoading}
-                  error={docError}
+                  error={docError?.message}
                   refetch={docRefetch}
                   status={status}
                 />

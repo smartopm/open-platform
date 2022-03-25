@@ -101,7 +101,7 @@ export default function TaskDocuments({ data, loading, error, refetch, status })
         handleOnSave={handleDeleteDocument}
       />
       <Grid container alignItems="center" spacing={2}>
-        <Grid item xs={8} md={12}>
+        <Grid item xs={8} md={12} data-testid='progress-bar'>
           <ProgressBar status={status} />
         </Grid>
       </Grid>
