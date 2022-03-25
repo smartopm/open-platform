@@ -170,6 +170,8 @@
     "guest_entry_updated_successful": "Exitoso: registro de lista de Invitados actualizado exitosamente",
     "host": "Anfitrión: ",
     "invite_updated_successful": "Invitación actualizada con éxito",
+    "last_30_days": "Últimos 30 días",
+    "last_7_days": "Últimos 7 días",
     "log": "Registro",
     "log_book": "Libro de Novedades",
     "log_exit": "Registrar Salida",
