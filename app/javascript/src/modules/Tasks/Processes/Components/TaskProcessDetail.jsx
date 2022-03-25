@@ -70,7 +70,7 @@ export default function TaskProcessDetail() {
     errorPolicy: 'all'
   });
 
-  const { data, loading, error, refetch: docRefetch } = useQuery(TaskDocumentsQuery, {
+  const { data: docData, loading, error, refetch: docRefetch } = useQuery(TaskDocumentsQuery, {
     variables: { taskId },
     fetchPolicy: 'cache-and-network'
   });
@@ -106,7 +106,7 @@ export default function TaskProcessDetail() {
     setTabValue(Number(newValue));
   }
 
-  const filterDocuments = data?.task?.attachments.filter(document =>
+  const filterDocuments = docData?.task?.attachments.filter(document =>
     document.filename.toLowerCase().includes(debouncedSearchText.toLowerCase())
   );
 
@@ -136,7 +136,7 @@ export default function TaskProcessDetail() {
       search: `?tab=${currentTab}&detailTab=${detailTab}`,
       state: { from: history.location.pathname, search: history.location.search }
     });
-    window.document.getElementById('anchor-section').scrollIntoView();
+    window.document.getElementById('anchor-section')?.scrollIntoView();
   }
 
   if (projectDataLoading || subStepsLoading) return <Spinner />;
@@ -240,7 +240,7 @@ export default function TaskProcessDetail() {
           </Grid>
           {tabValue === 2 && (
             <>
-              {mobileMatches && data?.task?.attachments.length > 0 && (
+              {mobileMatches && docData?.task?.attachments.length > 0 && (
                 <Grid item xs={12}>
                   <Typography
                     variant="body2"
@@ -252,7 +252,7 @@ export default function TaskProcessDetail() {
                 </Grid>
               )}
               <Grid item md={2} xs={12} />
-              {data?.task?.attachments.length > 0 && (
+              {docData?.task?.attachments.length > 0 && (
                 <Grid
                   item
                   md={5}
@@ -290,7 +290,7 @@ export default function TaskProcessDetail() {
             </TabPanel>
             <TabPanel value={tabValue} index={2}>
               <ProjectDocument
-                attachments={searchText !== '' ? filterDocuments : data?.task?.attachments}
+                attachments={searchText !== '' ? filterDocuments : docData?.task?.attachments}
                 loading={loading}
                 refetch={docRefetch}
                 error={error?.message}

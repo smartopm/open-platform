@@ -78,7 +78,9 @@ export default function ProjectDocument({ attachments, loading, refetch, error }
     <>
       {error && (
         <CenteredContent>
-          <p>{formatError(error)}</p>
+          <p>
+            <Typography>{formatError(error)}</Typography>
+          </p>
         </CenteredContent>
       )}
       <ActionDialog
@@ -99,13 +101,22 @@ export default function ProjectDocument({ attachments, loading, refetch, error }
       ) : Boolean(attachments) && attachments.length > 0 ? (
         <>
           {!matches && (
-            <Typography variant="body2" className={classes.documents} color="textSecondary" data-testid='documents'>
+            <Typography
+              variant="body2"
+              className={classes.documents}
+              color="textSecondary"
+              data-testid="documents"
+            >
               {t('processes.documents')}
             </Typography>
           )}
           {attachments.map(att => (
             <Grid key={att.id} className={classes.children}>
-              <Grid container justifyContent={!matches ? "center" : undefined} alignItems={!matches ? "center" : undefined}>
+              <Grid
+                container
+                justifyContent={!matches ? 'center' : undefined}
+                alignItems={!matches ? 'center' : undefined}
+              >
                 <Grid item md={6} xs={11} style={{ textAlign: 'left' }}>
                   <Grid container direction="column">
                     <Grid item md={12} xs={12}>
@@ -124,10 +135,7 @@ export default function ProjectDocument({ attachments, loading, refetch, error }
                   </Grid>
                 </Grid>
                 <Grid item md={2} xs={11}>
-                  <Typography
-                    variant="caption"
-                    color="textSecondary"
-                  >
+                  <Typography variant="caption" color="textSecondary">
                     {t('document.uploaded_at')}
                     :
                     {' '}
@@ -142,7 +150,14 @@ export default function ProjectDocument({ attachments, loading, refetch, error }
                     {att.uploaded_by}
                   </Typography>
                 </Grid>
-                <Grid item md={1} xs={1} style={matches ? { textAlign: 'right', marginTop: '-80px'} : { textAlign: 'right' }}>
+                <Grid
+                  item
+                  md={1}
+                  xs={1}
+                  style={
+                    matches ? { textAlign: 'right', marginTop: '-80px' } : { textAlign: 'right' }
+                  }
+                >
                   <IconButton
                     edge="end"
                     aria-label="more_details"
@@ -201,13 +216,15 @@ ProjectDocument.defaultProps = {
 };
 
 ProjectDocument.propTypes = {
-  attachments: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.string,
-    task_id: PropTypes.string,
-    created_at: PropTypes.string,
-    uploaded_by: PropTypes.string,
-    task_name: PropTypes.string
-  })),
+  attachments: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string,
+      task_id: PropTypes.string,
+      created_at: PropTypes.string,
+      uploaded_by: PropTypes.string,
+      task_name: PropTypes.string
+    })
+  ),
   loading: PropTypes.bool,
   refetch: PropTypes.func,
   error: PropTypes.string
