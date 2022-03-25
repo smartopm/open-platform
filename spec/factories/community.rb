@@ -15,6 +15,6 @@ FactoryBot.define do
       }
     end
     timezone { 'Africa/Lusaka' }
-    hotjar { 239042 }
+    hotjar { 239_042 }
   end
 end
