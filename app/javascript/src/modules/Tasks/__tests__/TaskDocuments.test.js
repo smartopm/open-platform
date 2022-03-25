@@ -37,7 +37,6 @@ describe('Task Documents', () => {
 
     await waitFor(() => {
       expect(screen.queryByTestId('progress-bar')).toBeInTheDocument();
-      expect(screen.queryByTestId('opening_divider')).toBeInTheDocument();
       expect(screen.queryByTestId('filename')).toBeInTheDocument();
       expect(screen.queryByTestId('filename').textContent).toContain('picture.png');
       expect(screen.queryByTestId('uploaded_at')).toBeInTheDocument();
@@ -45,7 +44,6 @@ describe('Task Documents', () => {
       expect(screen.queryByTestId('uploaded_by')).toBeInTheDocument();
       expect(screen.queryByTestId('uploaded_by').textContent).toContain('John Doe');
       expect(screen.queryByTestId('more_details')).toBeInTheDocument();
-      expect(screen.queryByTestId('closing_divider')).toBeInTheDocument();
 
       fireEvent.click(screen.queryByTestId('more_details'));
       expect(screen.queryByText('document.download')).toBeInTheDocument();

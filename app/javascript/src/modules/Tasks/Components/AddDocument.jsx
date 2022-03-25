@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import IconButton from '@mui/material/IconButton';
+import IconButton from '@material-ui/core/IconButton';
 import PropTypes from 'prop-types';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import Typography from '@mui/material/Typography';

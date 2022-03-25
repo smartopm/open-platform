@@ -25,7 +25,7 @@ export default function TaskDetailAccordion({ title, component, openDetails, add
       <Grid onClick={() => setShowComponent(!showComponent)} className={classes.container}>
         <Divider />
         <Grid container className={classes.body} data-testid="body">
-          <Grid item md={addButton ? 8 : 11} sm={addButton ? 5 : 10} xs={addButton ? 5 : 10}>
+          <Grid item md={addButton ? 8 : 11} sm={addButton ? 7 : 11} xs={addButton ? 5 : 10}>
             <Typography
               data-testid="title"
               variant="subtitle2"
@@ -35,14 +35,14 @@ export default function TaskDetailAccordion({ title, component, openDetails, add
             </Typography>
           </Grid>
           {addButton && (
-            <Grid item md={3} sm={5} xs={5} style={{textAlign: 'right', paddingRight: '10px'}}>
+            <Grid item md={3} sm={4} xs={5} style={{textAlign: 'right', paddingRight: '20px'}}>
               {addButton}
             </Grid>
           )}
-          <Grid item md={1} sm={1} xs={2} style={showComponent ? { backgroundColor: '#EEF6F9' } : undefined} className={classes.icon}>
-            <Grid container>
+          <Grid item md={1} sm={1} xs={2}>
+            <Grid container alignItems='center' justifyContent='center'>
               <Divider orientation="vertical" flexItem />
-              <Grid item sm={11}>
+              <Grid item md={11} xs={8} sm={8}>
                 <IconButton data-testid="toggle-icon" size="large">
                   {showComponent ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                 </IconButton>

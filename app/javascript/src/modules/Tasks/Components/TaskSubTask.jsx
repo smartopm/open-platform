@@ -1,6 +1,5 @@
 import React, { Fragment, useState } from 'react';
 import {
-  Divider,
   IconButton,
   Menu,
   MenuItem,
@@ -63,16 +62,29 @@ export default function TaskSubTask({
     }
   }
 
+  function checkLastSubTask(index) {
+    return index === data?.taskSubTasks?.length - 1;
+  }
+
   return (
     <>
       {data?.taskSubTasks?.length ? (
         <Grid container>
-          <Grid item md={12} xs={12} style={{ marginBottom: '2px' }}>
-            <Divider />
-          </Grid>
-          {data.taskSubTasks.map(task => (
-            <Fragment key={task.id}>
-              <Grid container spacing={1} item md={4} xs={6} className={classes.bodyAlign} data-testid='body'>
+          {data.taskSubTasks.map((task, index) => (
+            <Grid
+              container
+              key={task.id}
+              style={!checkLastSubTask(index) ? { borderBottom: '1px solid #EDEDED' } : {}}
+            >
+              <Grid
+                container
+                spacing={1}
+                item
+                md={4}
+                xs={6}
+                className={classes.bodyAlign}
+                data-testid="body"
+              >
                 <Grid item md={2}>
                   <IconButton
                     aria-controls="task-completion-toggle-button"
@@ -83,13 +95,13 @@ export default function TaskSubTask({
                     size="large"
                   >
                     {task.completed ? (
-                      <CheckCircleIcon htmlColor="#4caf50" data-testid='check-icon' />
+                      <CheckCircleIcon htmlColor="#4caf50" data-testid="check-icon" />
                     ) : (
                       <CheckCircleOutlineIcon htmlColor="#acacac" />
                     )}
                   </IconButton>
                 </Grid>
-                <Grid item md={10} data-testid='task-body'>
+                <Grid item md={10} data-testid="task-body">
                   <Typography
                     variant="body2"
                     data-testid="task_body"
@@ -100,7 +112,14 @@ export default function TaskSubTask({
                   </Typography>
                 </Grid>
               </Grid>
-              <Grid item md={3} xs={6} className={classes.bodyAlign} style={{ textAlign: 'right' }} data-testid='due-date'>
+              <Grid
+                item
+                md={3}
+                xs={6}
+                className={classes.bodyAlign}
+                style={{ textAlign: 'right' }}
+                data-testid="due-date"
+              >
                 <Typography variant="body2" component="span">
                   {t('task:sub_task.due')}
                   {task.dueDate ? dateToString(task.dueDate) : 'Never '}
@@ -108,7 +127,7 @@ export default function TaskSubTask({
               </Grid>
               <Grid item md={3} xs={7}>
                 <Grid container style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                  <Grid item md={2} xs={2} data-testid='subtask-count'>
+                  <Grid item md={2} xs={2} data-testid="subtask-count">
                     <IconButton
                       aria-controls="task-subtasks-icon"
                       data-testid="task_subtasks_count"
@@ -130,7 +149,7 @@ export default function TaskSubTask({
                   >
                     <span>{task?.subTasksCount || 0}</span>
                   </Grid>
-                  <Grid item md={2} xs={2} data-testid='comment-count'>
+                  <Grid item md={2} xs={2} data-testid="comment-count">
                     <IconButton
                       aria-controls="task-comment-icon"
                       data-testid="task_comments_count"
@@ -152,7 +171,7 @@ export default function TaskSubTask({
                   >
                     <span>{task?.taskCommentsCount || 0}</span>
                   </Grid>
-                  <Grid item md={2} xs={2} data-testid='attachment-count'>
+                  <Grid item md={2} xs={2} data-testid="attachment-count">
                     <IconButton
                       aria-controls="task-attach-file-icon"
                       onClick={() => handleSplitScreenOpen(task)}
@@ -183,14 +202,12 @@ export default function TaskSubTask({
                   color="primary"
                   style={{ marginTop: '-10px' }}
                   size="large"
+                  data-testid="subtask-options"
                 >
                   <MoreVertIcon />
                 </IconButton>
               </Grid>
-              <Grid item md={12} xs={12} style={{ marginTop: '2px', marginBottom: '2px' }}>
-                <Divider data-testid="closing_divider" />
-              </Grid>
-            </Fragment>
+            </Grid>
           ))}
           <Grid item md={12} xs={12}>
             {data.taskSubTasks.length >= limit && (

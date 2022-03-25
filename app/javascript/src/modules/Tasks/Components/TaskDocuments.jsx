@@ -3,7 +3,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { Fragment, useState, useContext } from 'react';
 import {
-  Divider,
   Grid,
   IconButton,
   List,
@@ -69,6 +68,10 @@ export default function TaskDocuments({ data, loading, error, refetch, status })
     secureFileDownload(path);
   }
 
+  function checkLastDocument(index) {
+    return index === documents.length - 1;
+  }
+
   function handleDeleteDocument() {
     taskDocumentDelete({ variables: { documentId: currentDoc?.id } })
       .then(() => {
@@ -101,15 +104,18 @@ export default function TaskDocuments({ data, loading, error, refetch, status })
         handleOnSave={handleDeleteDocument}
       />
       <Grid container alignItems="center" spacing={2}>
-        <Grid item xs={8} md={12} data-testid='progress-bar'>
+        <Grid item xs={8} md={12} data-testid="progress-bar">
           <ProgressBar status={status} />
         </Grid>
       </Grid>
-      {documents?.length > 0 && <Divider variant="fullWidth" data-testid="opening_divider" />}
       {documents?.length > 0 && (
         <List>
-          {documents.map(doc => (
-            <Fragment key={doc.id}>
+          {documents.map((doc, index) => (
+            <Grid
+              container
+              key={doc.id}
+              style={!checkLastDocument(index) ? { borderBottom: '1px solid #EDEDED' } : {}}
+            >
               <ListItem>
                 <Grid container>
                   <Grid item xs={11}>
@@ -160,8 +166,7 @@ export default function TaskDocuments({ data, loading, error, refetch, status })
                   </Grid>
                 </Grid>
               </ListItem>
-              <Divider variant="fullWidth" data-testid="closing_divider" />
-            </Fragment>
+            </Grid>
           ))}
         </List>
       )}
@@ -217,7 +222,7 @@ TaskDocuments.defaultProps = {
   refetch: () => {},
   status: null,
   data: {}
-}
+};
 
 TaskDocuments.propTypes = {
   data: PropTypes.shape({
