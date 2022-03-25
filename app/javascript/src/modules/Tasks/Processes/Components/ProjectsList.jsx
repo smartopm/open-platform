@@ -1,5 +1,5 @@
 /* eslint-disable max-statements */
-import React from 'react';
+import React, { useState } from 'react';
 import { useQuery } from 'react-apollo';
 import { Grid, Typography, Breadcrumbs } from '@material-ui/core';
 import { Link } from 'react-router-dom'
@@ -11,11 +11,12 @@ import CenteredContent from '../../../../shared/CenteredContent';
 import { ProjectsQuery } from '../graphql/process_queries';
 import ProjectItem from './ProjectItem';
 import { Context as AuthStateContext } from '../../../../containers/Provider/AuthStateProvider';
+import Paginate from '../../../../components/Paginate';
 
 export default function ProjectsList() {
   const { t } = useTranslation('task');
   const limit = 50;
-  const offset = 0;
+  const [offset, setOffset] = useState(0);
   const path = useParamsQuery()
   const currentStep = path.get('current_step')
   const completedPerQuarter = path.get('completed_per_quarter')
@@ -34,6 +35,17 @@ export default function ProjectsList() {
     },
     fetchPolicy: 'cache-and-network'
   });
+
+  function paginate(action) {
+    if (action === 'prev') {
+      if (offset < limit) {
+        return;
+      }
+      setOffset(offset - limit);
+    } else if (action === 'next') {
+      setOffset(offset + limit);
+    }
+  }
 
   if (error) return <CenteredContent>{formatError(error.message)}</CenteredContent>;
   if (loading) return <Spinner />;
@@ -72,6 +84,16 @@ export default function ProjectsList() {
         )
         : (<CenteredContent>{t('processes.no_projects')}</CenteredContent>)
       }
+      <br />
+      <CenteredContent>
+        <Paginate
+          count={data?.projects?.length}
+          offSet={offset}
+          limit={limit}
+          active={offset >= 1}
+          handlePageChange={paginate}
+        />
+      </CenteredContent>
     </div>
   )
 }

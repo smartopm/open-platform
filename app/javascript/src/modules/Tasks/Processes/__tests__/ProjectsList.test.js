@@ -5,42 +5,46 @@ import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min';
 import '@testing-library/jest-dom/extend-expect';
 import { render, screen, waitFor } from '@testing-library/react';
 import ProjectsList from '../Components/ProjectsList';
-import { ProcessesQuery } from '../graphql/process_queries';
+import { Context } from '../../../../containers/Provider/AuthStateProvider'
+import { ProjectsQuery } from '../graphql/process_queries';
 import taskMock from "../../__mocks__/taskMock";
+import authState from '../../../../__mocks__/authstate'
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
-const mocks = [
-  {
-    request: {
-      query: ProcessesQuery,
-      variables: {
-        offset: 0,
-        limit: 50
-      }
-    },
-    result: {
-      data: {
-        processes: [taskMock]
-      }
-    }
-  }
-];
-
 describe('Projects List', () => {
   it('renders necessary elements', async () => {
+    const mocks = [
+      {
+        request: {
+          query: ProjectsQuery,
+          variables: {
+            offset: 0,
+            limit: 50
+          }
+        },
+        result: {
+          data: {
+            projects: [taskMock]
+          }
+        }
+      }
+    ];
+
+    const adminUser = { userType: 'admin', ...authState }
     render(
       <MockedProvider mocks={mocks} addTypename={false}>
-        <BrowserRouter>
-          <ProjectsList />
-        </BrowserRouter>
+        <Context.Provider value={adminUser}>
+          <BrowserRouter>
+            <ProjectsList />
+          </BrowserRouter>
+        </Context.Provider>
       </MockedProvider>
     );
 
-    expect(screen.queryByTestId('loader')).toBeInTheDocument();
-
+    
     await waitFor(() => {
-      // Nothing is working here. Help ME!
-      // expect(screen.queryByTestId('processes-txt')).toBeInTheDocument();
-    });
+      screen.debug()
+      expect(screen.queryByTestId('loader')).toBeInTheDocument();
+    }, 10);
   });
 });
