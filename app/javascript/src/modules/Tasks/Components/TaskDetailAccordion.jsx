@@ -58,9 +58,6 @@ export default function TaskDetailAccordion({ title, component, openDetails, add
 }
 
 const useStyles = makeStyles(() => ({
-  typography: {
-    fontWeight: 400
-  },
   icon: {
     textAlign: 'center'
   },
