@@ -117,7 +117,6 @@ RSpec.describe Types::Queries::ActionFlow do
                                            current_user: admin,
                                            site_community: admin.community,
                                          }).as_json
-        expect(result.dig('data', 'actions')).to include('Email')
         expect(result.dig('data', 'actions')).to include('Notification')
         expect(result.dig('data', 'actions')).to include('Task')
       end
@@ -142,15 +141,6 @@ RSpec.describe Types::Queries::ActionFlow do
     end
 
     describe('action fields') do
-      it 'retrieves fields for email action when user is admin' do
-        result = DoubleGdpSchema.execute(email_action_fields_query, context: {
-                                           current_user: admin,
-                                           site_community: admin.community,
-                                         }).as_json
-        available_fields = result.dig('data', 'actionFields').map { |f| f['name'] }
-        expect(available_fields).to include('email', 'template')
-      end
-
       it 'retrieves fields for notification action when user is admin' do
         result = DoubleGdpSchema.execute(notification_action_fields_query, context: {
                                            current_user: admin,
