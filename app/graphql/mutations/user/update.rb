@@ -168,12 +168,14 @@ module Mutations
       end
 
       def remove_secondary_info_with_no_update(user, contact_info)
+        return unless user.contact_infos.exists?
+
         contact_infos_to_update = contact_info.filter do |c|
           c['id'] unless c['info'].nil?
         end
         ids_to_update = contact_infos_to_update.map { |c| c['id'] }
-        contacts = user.contact_infos.where.not(id: ids_to_update) unless ids_to_update.empty?
-        contacts&.destroy_all unless contacts.empty?
+        contacts = user.contact_infos.where.not(id: ids_to_update)
+        contacts&.destroy_all unless contacts&.empty?
       end
 
       def authorized?(vals)
