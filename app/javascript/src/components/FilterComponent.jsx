@@ -8,7 +8,7 @@ import {
   MenuItem,
   Button,
   Chip
-} from '@material-ui/core'
+} from '@mui/material'
 import PropTypes from 'prop-types'
 
 /**

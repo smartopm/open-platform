@@ -1,7 +1,7 @@
 /* eslint-disable no-use-before-define */
 import React, { useState } from 'react'
 import { StyleSheet, css } from 'aphrodite'
-import { Button, TextField, Snackbar } from '@material-ui/core'
+import { Button, TextField, Snackbar } from '@mui/material'
 import { useMutation } from 'react-apollo'
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types'

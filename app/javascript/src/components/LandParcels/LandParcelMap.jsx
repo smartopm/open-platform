@@ -1,9 +1,9 @@
 import React, { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { useMutation, useApolloClient, useLazyQuery } from 'react-apollo';
-import { Button, Grid, Divider } from '@material-ui/core';
-import AddPhotoAlternateIcon from '@material-ui/icons/AddPhotoAlternate';
-import { Map, FeatureGroup, GeoJSON, LayersControl, TileLayer } from 'react-leaflet';
+import { Button, Grid, Divider } from '@mui/material';
+import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
+import { Map, FeatureGroup, GeoJSON, LayersControl, TileLayer } from 'react-leaflet'
 import { useTranslation } from 'react-i18next';
 import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider';
 import NkwashiSuburbBoundaryData from '../../data/nkwashi_suburb_boundary.json';
@@ -291,15 +291,15 @@ export default function LandParcelMap({ handlePlotClick, geoData }) {
             </label>
           </Grid>
           {uploadStatus === 'DONE' && (
-            <Grid item>
-              <span style={{ marginTop: 5, marginRight: 35 }}>
-                {t('common:misc.image_uploaded')}
-              </span>
-              <Button variant="contained" color="secondary" onClick={handleSaveUploadedPhoto}>
-                {t('common:form_actions.save_changes')}
-              </Button>
-            </Grid>
-          )}
+          <Grid item>
+            <span style={{ marginTop: 5, marginRight: 35 }}>
+              {t('common:misc.image_uploaded')}
+            </span>
+            <Button variant="contained" color="secondary" onClick={handleSaveUploadedPhoto}>
+              {t('common:form_actions.save_changes')}
+            </Button>
+          </Grid>
+        )}
         </Grid>
       </PointOfInterestDrawerDialog>
       <div data-testid="leaflet-map-container">
@@ -451,12 +451,12 @@ export default function LandParcelMap({ handlePlotClick, geoData }) {
               </LayersControl.Overlay>
             )}
             {subUrbanData && (
-              <LayersControl.Overlay name="Sub-urban Areas">
-                <FeatureGroup>
-                  <SubUrbanLayer data={subUrbanData} />
-                </FeatureGroup>
-              </LayersControl.Overlay>
-            )}
+            <LayersControl.Overlay name="Sub-urban Areas">
+              <FeatureGroup>
+                <SubUrbanLayer data={subUrbanData} />
+              </FeatureGroup>
+            </LayersControl.Overlay>
+          )}
           </LayersControl>
         </Map>
       </div>

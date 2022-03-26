@@ -1,12 +1,12 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable no-use-before-define */
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import GridList from '@material-ui/core/GridList';
-import GridListTile from '@material-ui/core/GridListTile';
-import GridListTileBar from '@material-ui/core/GridListTileBar';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import { Typography } from '@material-ui/core';
+import makeStyles from '@mui/styles/makeStyles';
+import ImageList from '@mui/material/ImageList';
+import ImageListItem from '@mui/material/ImageListItem';
+import ImageListItemBar from '@mui/material/ImageListItemBar';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
@@ -17,13 +17,15 @@ import CenteredContent from '../../../components/CenteredContent';
 const NUMBER_OF_POSTS_TO_DISPLAY = 5;
 const useStyles = makeStyles(theme => ({
   root: {
+    display: 'flex',
     flexWrap: 'wrap',
     justifyContent: 'space-around',
     overflow: 'hidden',
     backgroundColor: theme.palette.background.paper
   },
   gridList: {
-    flexWrap: 'nowrap'
+    flexWrap: 'nowrap',
+    transform: 'translateZ(0)'
   },
   title: {
     color: theme.palette.primary.light
@@ -41,7 +43,7 @@ export function PostItemGrid({ data }) {
   const classes = useStyles();
   const { t } = useTranslation('common');
   const matches = useMediaQuery('(max-width:600px)');
-  const history = useHistory()
+  const history = useHistory();
 
   function routeToPost(postId) {
     history.push(`/news/post/${postId}`);
@@ -63,10 +65,19 @@ export function PostItemGrid({ data }) {
         className={classes.root}
         style={matches ? { margin: '0 20px' } : { margin: '0 79px 26px 79px' }}
       >
-        <GridList className={classes.gridList} cols={matches ? 2 : 3.2} spacing={5}>
+        <ImageList
+          className={classes.gridList}
+          cols={matches ? 2 : 3.2}
+          spacing={5}
+          sx={{
+            gridAutoFlow: 'column',
+            gridTemplateColumns: 'repeat(auto-fill, minmax(250px,1fr)) !important',
+            gridAutoColumns: 'minmax(200px, 1fr)'
+          }}
+        >
           {data.length &&
             data.map(tile => (
-              <GridListTile
+              <ImageListItem
                 key={tile.ID}
                 onClick={() => routeToPost(tile.ID)}
                 style={{ cursor: 'pointer' }}
@@ -78,10 +89,10 @@ export function PostItemGrid({ data }) {
                   alt={tile.title}
                   className={classes.image}
                 />
-                <GridListTileBar title={tile.title} />
-              </GridListTile>
+                <ImageListItemBar title={tile.title} />
+              </ImageListItem>
             ))}
-        </GridList>
+        </ImageList>
       </div>
     </div>
   );

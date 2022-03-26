@@ -13,10 +13,10 @@ import {
   Menu,
   MenuItem,
   Typography
-} from '@material-ui/core';
+} from '@mui/material';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import { makeStyles } from '@material-ui/styles';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { makeStyles } from '@mui/styles';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { useQuery, useMutation, useApolloClient } from 'react-apollo';
@@ -144,7 +144,8 @@ export default function TaskDocuments({ taskId }) {
             data-testid="add_document"
             component="label"
             color="primary"
-            style={{ backgroundColor: 'transparent' }}
+            style={{backgroundColor: 'transparent'}}
+            size="large"
           >
             <input
               hidden
@@ -209,6 +210,7 @@ export default function TaskDocuments({ taskId }) {
                         data-testid="more_details"
                         onClick={event => handleOpenMenu(event, doc)}
                         color="primary"
+                        size="large"
                       >
                         <MoreVertIcon />
                       </IconButton>

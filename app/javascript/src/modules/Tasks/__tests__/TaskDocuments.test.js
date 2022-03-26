@@ -1,12 +1,13 @@
 import React from 'react';
-import { fireEvent, render, screen , waitFor} from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min';
 import { MockedProvider } from '@apollo/react-testing';
 import TaskDocuments from '../Components/TaskDocuments';
 import { TaskDocumentsQuery } from '../graphql/task_queries';
-import authState from "../../../__mocks__/authstate";
-import { Context } from '../../../containers/Provider/AuthStateProvider'
+import authState from '../../../__mocks__/authstate';
+import { Context } from '../../../containers/Provider/AuthStateProvider';
+import MockedThemeProvider from '../../__mocks__/mock_theme';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 
@@ -17,8 +18,8 @@ describe('Task Documents', () => {
       id: '92348129',
       filename: 'picture.png',
       url: 'https://picture.png',
-      created_at: "2020-10-01",
-      uploaded_by: "John Doe"
+      created_at: '2020-10-01',
+      uploaded_by: 'John Doe'
     }
   ];
 
@@ -32,7 +33,7 @@ describe('Task Documents', () => {
         data: {
           task: {
             attachments,
-            id: '302df8c3-27bb-4175-adc1-43857e972eb4',
+            id: '302df8c3-27bb-4175-adc1-43857e972eb4'
           }
         }
       }
@@ -40,14 +41,16 @@ describe('Task Documents', () => {
   ];
 
   it('renders properly when there are documents', async () => {
-         render(
-           <Context.Provider value={authState}>
-             <MockedProvider mocks={DocumentsMock} addTypename={false}>
-               <BrowserRouter>
-                 <TaskDocuments taskId='302df8c3-27bb-4175-adc1-43857e972eb4' />
-               </BrowserRouter>
-             </MockedProvider>
-           </Context.Provider>
+    render(
+      <Context.Provider value={authState}>
+        <MockedProvider mocks={DocumentsMock} addTypename={false}>
+          <BrowserRouter>
+            <MockedThemeProvider>
+              <TaskDocuments taskId="302df8c3-27bb-4175-adc1-43857e972eb4" />
+            </MockedThemeProvider>
+          </BrowserRouter>
+        </MockedProvider>
+      </Context.Provider>
     );
 
     await waitFor(() => {

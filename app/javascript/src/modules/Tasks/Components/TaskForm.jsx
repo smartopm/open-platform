@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import TextField from '@material-ui/core/TextField'
+import TextField from '@mui/material/TextField'
 import {
   Button,
   FormHelperText,
@@ -7,7 +7,7 @@ import {
   Select,
   InputLabel,
   FormControl,
-} from '@material-ui/core'
+} from '@mui/material'
 import { css } from 'aphrodite'
 import { useMutation } from 'react-apollo'
 import PropTypes from 'prop-types'

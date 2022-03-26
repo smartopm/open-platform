@@ -2,7 +2,7 @@ import React from 'react';
 import { render } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom/';
-import ForumIcon from '@material-ui/icons/Forum';
+import ForumIcon from '@mui/icons-material/Forum';
 import { MockedProvider } from '@apollo/react-testing';
 import Card from '../components/Card';
 

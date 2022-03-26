@@ -1,8 +1,8 @@
 import React from 'react';
-import Card from '@material-ui/core/Card';
+import Card from '@mui/material/Card';
 import PropTypes from 'prop-types';
-import CardContent from '@material-ui/core/CardContent';
-import { makeStyles } from '@material-ui/core/styles';
+import CardContent from '@mui/material/CardContent';
+import makeStyles from '@mui/styles/makeStyles';
 
 // TODO: match file name with the component name
 export default function CardComponent({

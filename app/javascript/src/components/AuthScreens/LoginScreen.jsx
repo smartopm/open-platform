@@ -10,17 +10,17 @@ import {
   MenuItem,
   InputLabel,
   Grid
-} from '@material-ui/core'
+} from '@mui/material'
 import { StyleSheet, css } from 'aphrodite'
 import { useHistory, useLocation, Link } from 'react-router-dom'
 import { useMutation, useQuery } from 'react-apollo'
 import ReactGA from 'react-ga'
 import { useTranslation } from 'react-i18next'
-import FacebookIcon from '@material-ui/icons/Facebook'
-import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
-import EmailIcon from '@material-ui/icons/Email';
-import IconButton from "@material-ui/core/IconButton";
-import InputAdornment from "@material-ui/core/InputAdornment";
+import FacebookIcon from '@mui/icons-material/Facebook'
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import EmailIcon from '@mui/icons-material/Email';
+import IconButton from "@mui/material/IconButton";
+import InputAdornment from "@mui/material/InputAdornment";
 import PhoneInput from 'react-phone-input-2'
 import { getAuthToken } from '../../utils/apollo'
 import { ModalDialog } from '../Dialog'
@@ -241,7 +241,7 @@ export default function LoginScreen() {
                 InputProps={{
                         startAdornment: (
                           <InputAdornment position="start">
-                            <IconButton>
+                            <IconButton size="large">
                               <EmailIcon />
                             </IconButton>
                           </InputAdornment>
@@ -428,7 +428,7 @@ export default function LoginScreen() {
         </FormControl>
       </ModalDialog>
     </div>
-  )
+  );
 }
 
 const styles = StyleSheet.create({

@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { StyleSheet, css } from 'aphrodite';
-import { Typography } from '@material-ui/core';
+import { Typography } from '@mui/material';
 import ImageAuth from './ImageAuth';
 import userProps from './types/user';
 

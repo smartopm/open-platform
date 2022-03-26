@@ -7,6 +7,7 @@ import PaymentReceipt from '../Components/UserTransactions/PaymentReceipt';
 import currency from '../../../__mocks__/currency';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import authState from '../../../__mocks__/authstate';
+import MockedThemeProvider from '../../__mocks__/mock_theme';
 
 jest.mock('react-signature-canvas');
 describe('It should test the payment receipt modal component', () => {
@@ -53,9 +54,9 @@ describe('It should test the payment receipt modal component', () => {
         country: 'Zambia',
         taxIdNo: 'tax1234'
       },
-      socialLinks: [{ category: 'website', social_link: 'www.web.com'}],
-      supportEmail: [{ category: 'bank', email: 'payment@support.com'}],
-      supportNumber: [{ category: 'bank', phone_number: '+260 1234'}],
+      socialLinks: [{ category: 'website', social_link: 'www.web.com' }],
+      supportEmail: [{ category: 'bank', email: 'payment@support.com' }],
+      supportNumber: [{ category: 'bank', phone_number: '+260 1234' }]
     }
   };
 
@@ -68,12 +69,14 @@ describe('It should test the payment receipt modal component', () => {
       <BrowserRouter>
         <Context.Provider value={authState}>
           <MockedProvider>
-            <PaymentReceipt
-              open={open}
-              paymentData={paymentData}
-              handleClose={handleModalClose}
-              currencyData={currency}
-            />
+            <MockedThemeProvider>
+              <PaymentReceipt
+                open={open}
+                paymentData={paymentData}
+                handleClose={handleModalClose}
+                currencyData={currency}
+              />
+            </MockedThemeProvider>
           </MockedProvider>
         </Context.Provider>
       </BrowserRouter>
@@ -90,8 +93,10 @@ describe('It should test the payment receipt modal component', () => {
     expect(container.queryByTestId('client-name')).toHaveTextContent('some name');
     expect(container.queryByTestId('nrc')).toHaveTextContent('234');
 
-    expect(container.queryByTestId('plot-no')).toHaveTextContent(('misc.plot_plan_no'));
-    expect(container.queryByTestId('pay-type')).toHaveTextContent('common:table_headers.payment_type');
+    expect(container.queryByTestId('plot-no')).toHaveTextContent('misc.plot_plan_no');
+    expect(container.queryByTestId('pay-type')).toHaveTextContent(
+      'common:table_headers.payment_type'
+    );
     expect(container.queryByTestId('amount')).toHaveTextContent('table_headers.amount_paid');
 
     expect(container.queryByTestId('account-name')).toHaveTextContent('Thebe');

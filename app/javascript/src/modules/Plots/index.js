@@ -1,6 +1,6 @@
 import React from 'react'
-import MapIcon from '@material-ui/icons/Map';
-import ExploreIcon from '@material-ui/icons/Explore';
+import MapIcon from '@mui/icons-material/Map';
+import ExploreIcon from '@mui/icons-material/Explore';
 import PlotDetail from './PlotDetail'
 import Map from '../../containers/Map'
 import { allUserTypes } from '../../utils/constants';

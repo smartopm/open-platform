@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { useQuery, useMutation } from 'react-apollo';
-import { Container } from '@material-ui/core';
+import { Container } from '@mui/material';
 import { useHistory } from 'react-router';
 import { UsersLiteQuery, HistoryQuery } from '../../../graphql/queries';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';

@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import Grid from '@material-ui/core/Grid'
+import Grid from '@mui/material/Grid'
 import { useQuery } from 'react-apollo'
 import { useParams } from 'react-router'
 import EmployeeTimeSheetLogs from './EmployeeTimeSheetLog'
@@ -47,22 +47,22 @@ export default function EmployeeLogs() {
       <EmployeeTimeSheetLogs
         data={data}
         name={
-          Boolean(data.userTimeSheetLogs.length) &&
-          data.userTimeSheetLogs[0].user.name
-        }
+        Boolean(data.userTimeSheetLogs.length) &&
+        data.userTimeSheetLogs[0].user.name
+      }
         lastDay={dateToString(lastDay)}
         firstDay={dateToString(firstDay)}
       />
 
-      <Grid container direction="row" justify="center" alignItems="center">
+      <Grid container direction="row" justifyContent="center" alignItems="center">
         <Paginate
           count={data.userTimeSheetLogs.length}
-          // This does not matter. It's there to make pagination links active
+        // This does not matter. It's there to make pagination links active
           limit={-1}
           active
           handlePageChange={paginate}
         />
       </Grid>
     </>
-  )
+);
 }

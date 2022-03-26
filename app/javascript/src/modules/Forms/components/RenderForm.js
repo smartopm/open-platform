@@ -1,13 +1,13 @@
 /* eslint-disable max-lines */
 /* eslint-disable complexity */
 import React, { Fragment, useRef, useContext, useState } from 'react';
-import { Grid } from '@material-ui/core';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import { makeStyles } from '@material-ui/core/styles';
+import { Grid } from '@mui/material';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import makeStyles from '@mui/styles/makeStyles';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
+import IconButton from '@mui/material/IconButton';
+import CloseIcon from '@mui/icons-material/Close';
 import DatePickerDialog, {
   DateAndTimePickers,
   ThemedTimePicker
@@ -272,6 +272,7 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
                 className={classes.iconButton}
                 onClick={() => onImageRemove(formPropertiesData.id)}
                 data-testid="image_close"
+                size="large"
               >
                 <CloseIcon className={classes.closeButton} />
               </IconButton>

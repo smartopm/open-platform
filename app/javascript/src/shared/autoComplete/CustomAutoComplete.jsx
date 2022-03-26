@@ -3,9 +3,9 @@
 import React, { useState } from 'react'
 import { useLazyQuery } from 'react-apollo'
 import PropTypes from 'prop-types'
-import TextField from '@material-ui/core/TextField'
+import TextField from '@mui/material/TextField'
 import { useTranslation } from 'react-i18next';
-import Autocomplete from '@material-ui/lab/Autocomplete'
+import Autocomplete from '@mui/material/Autocomplete'
 import { UsersLiteQuery } from '../../graphql/queries';
 import useDebounce from '../../utils/useDebounce';
 import UserAutoResult from '../UserAutoResult';
@@ -33,7 +33,11 @@ export default function CustomAutoComplete({users, onChange, isMultiple, label }
         id="custom-auto-complete"
         options={liteData?.usersLite || users}
         ListboxProps={{ style: { maxHeight: "20rem" }}}
-        renderOption={option => <UserAutoResult user={option} t={t} />}
+        renderOption={(props, option) => (
+          <li {...props}>
+            <UserAutoResult user={option} t={t} />
+          </li>
+        )}
         name="assignees"
         onChange={onChange}
         getOptionLabel={(option) => allowedAssignees.includes(option.userType) ? option.name : ''}

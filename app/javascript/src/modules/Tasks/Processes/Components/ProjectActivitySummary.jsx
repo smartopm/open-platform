@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router';
 import { Button, Typography } from '@mui/material';
-import { makeStyles } from '@material-ui/styles';
+import { makeStyles } from '@mui/styles';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
@@ -76,7 +76,6 @@ export default function ProjectActivitySummary({comments, commentsLoading, comme
 const useStyles = makeStyles(() => ({
   activitySummaryHeader: {
     marginBottom: '10px !important',
-    fontWeight: 200,
     fontSize: '1rem'
 
   },

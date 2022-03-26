@@ -1,5 +1,5 @@
 import React from 'react';
-import HomeIcon from '@material-ui/icons/Home';
+import HomeIcon from '@mui/icons-material/Home';
 import Home from './Components/Home';
 import AccessCheck from '../Permissions/Components/AccessCheck';
 

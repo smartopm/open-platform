@@ -1,6 +1,6 @@
 import React from 'react'
-import { Card, CardContent, Typography } from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles';
+import { Card, CardContent, Typography } from '@mui/material'
+import makeStyles from '@mui/styles/makeStyles';
 import PropTypes from 'prop-types';
 import colors from '../../../../themes/nkwashi/colors'
 import { formatMoney } from '../../../../utils/helpers';

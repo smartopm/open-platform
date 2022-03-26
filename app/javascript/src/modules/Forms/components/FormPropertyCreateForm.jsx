@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useLazyQuery, useMutation, useQuery } from 'react-apollo';
 import PropTypes from 'prop-types';
-import { Button, FormControl, InputLabel, MenuItem, Select, TextField } from '@material-ui/core';
+import { Button, FormControl, InputLabel, MenuItem, Select, TextField } from '@mui/material';
 import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { FormPropertyCreateMutation, FormPropertyUpdateMutation } from '../graphql/forms_mutation';

@@ -2,7 +2,7 @@ import React from 'react';
 import { act } from "react-dom/test-utils";
 import { render, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
-import { createMuiTheme, ThemeProvider } from '@material-ui/core';
+import { createTheme, ThemeProvider, StyledEngineProvider } from '@mui/material';
 import { BrowserRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/react-testing';
 import SOSModal from '../component/SOSModal';
@@ -13,7 +13,7 @@ describe('SOSModal component', () => {
   jest.useFakeTimers();
   const bind = jest.fn()
   const setOpen = jest.fn()
-  const theme = createMuiTheme();
+  const theme = createTheme();
   const mockGeolocation = {
     getCurrentPosition: jest.fn()
       .mockImplementationOnce((success) => Promise.resolve(success({
@@ -28,13 +28,15 @@ describe('SOSModal component', () => {
 
   it('should render properly the sos modal', async() => {
     const container = render(
-      <ThemeProvider theme={theme}>
-        <MockedProvider>
-          <BrowserRouter>
-            <SOSModal open setOpen={setOpen} bind={bind} location={mockGeolocation} {...{ authState }} />
-          </BrowserRouter>
-        </MockedProvider>
-      </ThemeProvider>
+      <StyledEngineProvider injectFirst>
+        <ThemeProvider theme={theme}>
+          <MockedProvider>
+            <BrowserRouter>
+              <SOSModal open setOpen={setOpen} bind={bind} location={mockGeolocation} {...{ authState }} />
+            </BrowserRouter>
+          </MockedProvider>
+        </ThemeProvider>
+      </StyledEngineProvider>
     );
 
     await waitFor(() => {
@@ -54,13 +56,15 @@ describe('SOSModal component', () => {
 
   it('should render properly the sos modal and transition after 3 sec long press', async() => {
     const container = render(
-      <ThemeProvider theme={theme}>
-        <MockedProvider>
-          <BrowserRouter>
-            <SOSModal open setOpen={setOpen} location={mockGeolocation} {...{ authState }} />
-          </BrowserRouter>
-        </MockedProvider>
-      </ThemeProvider>
+      <StyledEngineProvider injectFirst>
+        <ThemeProvider theme={theme}>
+          <MockedProvider>
+            <BrowserRouter>
+              <SOSModal open setOpen={setOpen} location={mockGeolocation} {...{ authState }} />
+            </BrowserRouter>
+          </MockedProvider>
+        </ThemeProvider>
+      </StyledEngineProvider>
     );
     expect(container.queryByTestId('sos-modal').textContent).toContain('panic_alerts.for_3_seconds');
     expect(container.queryByTestId('sos-modal-panic-button')).toBeInTheDocument();
@@ -93,13 +97,15 @@ describe('SOSModal component', () => {
       },
     ]
     const container = render(
-      <ThemeProvider theme={theme}>
-        <MockedProvider mocks={mocks} addTypename={false}>
-          <BrowserRouter>
-            <SOSModal open setOpen={setOpen} location={mockGeolocation} {...{ authState }} />
-          </BrowserRouter>
-        </MockedProvider>
-      </ThemeProvider>
+      <StyledEngineProvider injectFirst>
+        <ThemeProvider theme={theme}>
+          <MockedProvider mocks={mocks} addTypename={false}>
+            <BrowserRouter>
+              <SOSModal open setOpen={setOpen} location={mockGeolocation} {...{ authState }} />
+            </BrowserRouter>
+          </MockedProvider>
+        </ThemeProvider>
+      </StyledEngineProvider>
     );
     expect(container.queryByTestId('sos-modal').textContent).toContain('panic_alerts.for_3_seconds');
     expect(container.queryByTestId('sos-modal-panic-button')).toBeInTheDocument();

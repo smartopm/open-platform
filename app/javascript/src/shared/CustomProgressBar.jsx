@@ -1,10 +1,10 @@
 
 
 import React from 'react';
-import { makeStyles } from '@material-ui/styles';
-import LinearProgress from '@material-ui/core/LinearProgress';
+import { makeStyles } from '@mui/styles';
+import LinearProgress from '@mui/material/LinearProgress';
 import Box from '@mui/material/Box';
-import { Typography } from '@material-ui/core';
+import { Typography } from '@mui/material';
 import PropTypes from 'prop-types';
 
 export default function CustomProgressBar({task, smDown}){

@@ -118,9 +118,10 @@ describe('Custom Forms', () => {
     cy.get('[type="checkbox"]')
       .first()
       .check();
-    cy.get('[data-testid=date-picker]')
-      .click()
-      .type(Cypress.moment().format('YYYY, MM DD'));
+    cy.get('[data-testid=date-picker]').click()
+    cy.get('.MuiPickersDay-today').click()
+    cy.contains('Ok').click();
+
     cy.get('[data-testid=time_picker]').click();
     cy.contains('Ok').click();
     cy.wait(1000);

@@ -1,12 +1,12 @@
 /* eslint-disable no-use-before-define */
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { Typography } from '@material-ui/core'
-import { makeStyles } from '@material-ui/core/styles';
-import EmojiObjectsIcon from '@material-ui/icons/EmojiObjects';
-import Card from '@material-ui/core/Card';
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
-import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
+import { Typography } from '@mui/material'
+import makeStyles from '@mui/styles/makeStyles';
+import EmojiObjectsIcon from '@mui/icons-material/EmojiObjects';
+import Card from '@mui/material/Card';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 
 
 export default function Disclaimer({ body }) {

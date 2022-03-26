@@ -9,13 +9,13 @@ import {
   DialogContent,
   Hidden,
   Checkbox
-} from '@material-ui/core';
+} from '@mui/material';
 import Grid from '@mui/material/Grid';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 import { useTranslation } from 'react-i18next';
 import { Link, useHistory } from 'react-router-dom';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Avatar from '../../../components/Avatar';
 import UserActionMenu from './UserActionMenu';
 import UserMerge from './UserMerge';
@@ -133,6 +133,7 @@ export default function UserItem({
                 aria-haspopup="true"
                 onClick={handleOpenMenu}
                 dataid={user.id}
+                size="large"
               >
                 <MoreVertIcon />
               </IconButton>
@@ -167,18 +168,18 @@ export default function UserItem({
               {t(`common:user_types.${user?.userType}`)}
             </Typography>
             {user.subStatus && (
-              <Typography
-                variant="body2"
-                data-testid="user-substatus"
-                gutterBottom
-                className={classes.alignDetailsToAvatarForXs}
-              >
-                {userSubStatus[user.subStatus]}
-              </Typography>
-            )}
+            <Typography
+              variant="body2"
+              data-testid="user-substatus"
+              gutterBottom
+              className={classes.alignDetailsToAvatarForXs}
+            >
+              {userSubStatus[user.subStatus]}
+            </Typography>
+          )}
           </Grid>
 
-          <Hidden smDown>
+          <Hidden mdDown>
             <Grid item md={1} sm={1} className={classes.iconButton}>
               <IconButton
                 className={classes.menuButton}
@@ -187,6 +188,7 @@ export default function UserItem({
                 aria-haspopup="true"
                 onClick={handleOpenMenu}
                 dataid={user.id}
+                size="large"
               >
                 <MoreVertIcon />
               </IconButton>
@@ -206,7 +208,7 @@ export default function UserItem({
         </Grid>
       </ListItem>
     </>
-  );
+);
 }
 
 UserItem.propTypes = {

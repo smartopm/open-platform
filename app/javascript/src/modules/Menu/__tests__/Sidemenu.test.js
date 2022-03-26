@@ -7,6 +7,7 @@ import { Context } from '../../../containers/Provider/AuthStateProvider';
 import { SideMenu } from '../index';
 import modules from '../..';
 import authState from '../../../__mocks__/authstate';
+import MockedThemeProvider from '../../__mocks__/mock_theme';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 describe('Side Nav component', () => {
@@ -40,14 +41,17 @@ describe('Side Nav component', () => {
       <Context.Provider value={authState}>
         <MockedProvider>
           <BrowserRouter>
-            <SideMenu
-              toggleDrawer={handleDrawerToggle}
-              menuItems={modules}
-              userType={authState.user.userType}
-              communityFeatures={Object.keys(features)}
-              mobileOpen={false}
-              direction="left"
-            />
+            <MockedThemeProvider>
+
+              <SideMenu
+                toggleDrawer={handleDrawerToggle}
+                menuItems={modules}
+                userType={authState.user.userType}
+                communityFeatures={Object.keys(features)}
+                mobileOpen={false}
+                direction="left"
+              />
+            </MockedThemeProvider>
           </BrowserRouter>
         </MockedProvider>
       </Context.Provider>
@@ -114,14 +118,18 @@ describe('Side Nav component', () => {
       <Context.Provider value={data}>
         <MockedProvider>
           <BrowserRouter>
-            <SideMenu
-              toggleDrawer={handleDrawerToggle}
-              menuItems={modules}
-              userType={data.user.userType}
-              communityFeatures={Object.keys(features)}
-              mobileOpen={false}
-              direction="left"
-            />
+            <MockedThemeProvider>
+
+              <SideMenu
+                toggleDrawer={handleDrawerToggle}
+                menuItems={modules}
+                userType={data.user.userType}
+                communityFeatures={Object.keys(features)}
+                mobileOpen={false}
+                direction="left"
+              />
+
+            </MockedThemeProvider>
           </BrowserRouter>
         </MockedProvider>
       </Context.Provider>

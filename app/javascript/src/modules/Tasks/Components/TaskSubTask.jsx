@@ -12,17 +12,17 @@ import {
   Dialog,
   DialogTitle,
   DialogContent
-} from '@material-ui/core';
+} from '@mui/material';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/styles';
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import AttachFileIcon from '@material-ui/icons/AttachFile';
-import AccountTreeIcon from '@material-ui/icons/AccountTree';
-import QuestionAnswerIcon from '@material-ui/icons/QuestionAnswer';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
+import { makeStyles } from '@mui/styles';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import AttachFileIcon from '@mui/icons-material/AttachFile';
+import AccountTreeIcon from '@mui/icons-material/AccountTree';
+import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { useTranslation } from 'react-i18next';
 import { dateToString } from '../../../components/DateContainer';
 import CenteredContent from '../../../shared/CenteredContent';
@@ -106,7 +106,7 @@ export default function TaskSubTask({
         </DialogContent>
       </Dialog>
       <Grid container className={classes.header}>
-        <Grid item md={9} xs={11} />  
+        <Grid item md={9} xs={11} />
         <Grid item md={3} xs={1} className={classes.addSubTask}>
           <AccessCheck module="note" allowedPermissions={['can_view_create_sub_task_button']}>
             <IconButton
@@ -115,6 +115,7 @@ export default function TaskSubTask({
               data-testid="add_sub_task_icon"
               color="primary"
               style={{ backgroundColor: 'transparent' }}
+              size="large"
             >
               <div style={{ display: 'flex' }}>
                 <AddCircleIcon />
@@ -141,6 +142,7 @@ export default function TaskSubTask({
                     data-testid="task_completion_toggle_button"
                     onClick={() => handleTaskCompletion(task.id, !task.completed)}
                     style={{ backgroundColor: 'transparent', margin: '-10px 0 0 -10px' }}
+                    size="large"
                   >
                     {task.completed ? (
                       <CheckCircleIcon htmlColor="#4caf50" />
@@ -173,6 +175,7 @@ export default function TaskSubTask({
                       aria-controls="task-subtasks-icon"
                       data-testid="task_subtasks_count"
                       onClick={() => handleSplitScreenOpen(task)}
+                      size="large"
                     >
                       <AccountTreeIcon
                         fontSize="small"
@@ -194,6 +197,7 @@ export default function TaskSubTask({
                       aria-controls="task-comment-icon"
                       data-testid="task_comments_count"
                       onClick={() => handleSplitScreenOpen(task)}
+                      size="large"
                     >
                       <QuestionAnswerIcon
                         fontSize="small"
@@ -214,6 +218,7 @@ export default function TaskSubTask({
                     <IconButton
                       aria-controls="task-attach-file-icon"
                       onClick={() => handleSplitScreenOpen(task)}
+                      size="large"
                     >
                       <AttachFileIcon
                         fontSize="small"
@@ -228,7 +233,9 @@ export default function TaskSubTask({
                     className={classes.iconItem}
                     style={{ paddingLeft: '5px' }}
                   >
-                    <span data-testid="file_attachments_total">{task.attachments?.length || 0}</span>
+                    <span data-testid="file_attachments_total">
+                      {task.attachments?.length || 0}
+                    </span>
                   </Grid>
                 </Grid>
               </Grid>
@@ -237,6 +244,7 @@ export default function TaskSubTask({
                   onClick={event => handleOpenMenu(event, task)}
                   color="primary"
                   style={{ marginTop: '-10px' }}
+                  size="large"
                 >
                   <MoreVertIcon />
                 </IconButton>
@@ -262,7 +270,9 @@ export default function TaskSubTask({
           </Grid>
         </Grid>
       ) : (
-        <Typography data-testid="no_subtasks" variant='caption'>{t('task:sub_task.no_sub_tasks')}</Typography>
+        <Typography data-testid="no_subtasks" variant="caption">
+          {t('task:sub_task.no_sub_tasks')}
+        </Typography>
       )}
       <Menu
         id={`kabab-menu-${selectedSubTask?.id}`}

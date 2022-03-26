@@ -3,8 +3,8 @@
 import React, { useContext } from 'react'
 import { useQuery } from 'react-apollo'
 import { QRCode } from 'react-qr-svg'
-import { Typography } from '@material-ui/core'
-import EmojiObjectsOutlinedIcon from '@material-ui/icons/EmojiObjectsOutlined'
+import { Typography } from '@mui/material'
+import EmojiObjectsOutlinedIcon from '@mui/icons-material/EmojiObjectsOutlined'
 import { useTranslation } from 'react-i18next';
 import Loading from '../shared/Loading'
 import DateUtil from '../utils/dateutil'

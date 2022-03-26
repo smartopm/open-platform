@@ -5,9 +5,9 @@ import {
   DialogTitle,
   DialogContent,
   Button
-} from '@material-ui/core'
+} from '@mui/material'
 import { useMutation, useQuery } from 'react-apollo'
-import { useTheme } from '@material-ui/core/styles'
+import { useTheme } from '@mui/material/styles'
 import { useTranslation } from 'react-i18next'
 import DiscussionList from '../../components/Discussion/DiscussionList'
 import { DiscussionsQuery } from '../../graphql/queries'
@@ -32,7 +32,7 @@ export default function Discussions() {
   const [isLoading, setLoading] = useState(false)
   const [message, setMessage] = useState('')
   const theme = useTheme()
-  const fullScreen = useMediaQuery(theme.breakpoints.down('xs'))
+  const fullScreen = useMediaQuery(theme.breakpoints.down('sm'))
   const authState = useContext(AuthStateContext)
   const { t } = useTranslation('discussion')
   function openModal() {

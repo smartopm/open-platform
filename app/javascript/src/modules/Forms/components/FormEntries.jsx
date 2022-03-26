@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Grid,Typography, Avatar } from '@material-ui/core';
+import { Grid,Typography, Avatar } from '@mui/material';
 import { useQuery } from 'react-apollo';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';

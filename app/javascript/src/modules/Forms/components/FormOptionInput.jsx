@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { IconButton, TextField, Typography } from '@material-ui/core';
-import { AddCircleOutline, DeleteOutline } from '@material-ui/icons';
+import { IconButton, TextField, Typography } from '@mui/material';
+import { AddCircleOutline, DeleteOutline } from '@mui/icons-material';
 import PhoneInput from 'react-phone-input-2';
 import { useTranslation } from 'react-i18next';
 import { objectAccessor } from '../../../utils/helpers';
@@ -83,12 +83,23 @@ export default function FormOptionInput({ options, setOptions, label }) {
             />
           )}
 
-          <IconButton style={{ marginTop: 13 }} onClick={() => handleRemoveOption(i)} aria-label="remove">
+          <IconButton
+            style={{ marginTop: 13 }}
+            onClick={() => handleRemoveOption(i)}
+            aria-label="remove"
+            size="large"
+          >
             <DeleteOutline />
           </IconButton>
         </div>
       ))}
-      <IconButton onClick={handleAddOption} aria-label="add" style={{ marginLeft: -15 }} className="form-property-field-type-option-add-btn">
+      <IconButton
+        onClick={handleAddOption}
+        aria-label="add"
+        style={{ marginLeft: -15 }}
+        className="form-property-field-type-option-add-btn"
+        size="large"
+      >
         <AddCircleOutline />
         <Typography color="primary" style={{ marginLeft: 10 }} data-testid="add_type">
           {t('form_actions.add_type', { label })}
@@ -117,6 +128,7 @@ export function FormOptionWithOwnActions({ actions, value, id }) {
         style={{ marginTop: 13 }}
         onClick={actions.handleRemoveOption}
         aria-label="remove"
+        size="large"
       >
         <DeleteOutline />
       </IconButton>

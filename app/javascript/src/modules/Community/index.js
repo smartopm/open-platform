@@ -1,5 +1,5 @@
 import React from 'react';
-import GroupIcon from '@material-ui/icons/Group';
+import GroupIcon from '@mui/icons-material/Group';
 import News from '../News'
 import Message from '../Messages'
 import Discussions from '../Discussions';

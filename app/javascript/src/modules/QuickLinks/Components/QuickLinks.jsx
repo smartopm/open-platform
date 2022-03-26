@@ -1,16 +1,16 @@
 import React from 'react';
-import { Card, CardContent, Grid, Typography } from '@material-ui/core'
-import Link from '@material-ui/core/Link';
+import { Card, CardContent, Grid, Typography } from '@mui/material'
+import Link from '@mui/material/Link';
 import PropTypes from 'prop-types';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import { makeStyles } from '@material-ui/core/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import makeStyles from '@mui/styles/makeStyles';
 
 export default function QuickLinks({ menuItems, translate }) {
   const matches = useMediaQuery('(max-width:600px)');
   const classes = useStyles();
   /*
     When menu items are deleted in community settings,
-    we we still have the community.menu_items field populated like 
+    we we still have the community.menu_items field populated like
     so: [{"menu_link"=>"", "menu_name"=>""}].
     We need to fix this in future so that we have a truly empty array
   */

@@ -4,12 +4,12 @@
 /* eslint-disable no-console */
 import React, { useState } from 'react';
 import { StyleSheet, css } from 'aphrodite';
-import { withStyles } from '@material-ui/core/styles';
-import ThumbDownIcon from '@material-ui/icons/ThumbDown';
-import ThumbUpIcon from '@material-ui/icons/ThumbUp';
-import IconButton from '@material-ui/core/IconButton';
+import withStyles from '@mui/styles/withStyles';
+import ThumbDownIcon from '@mui/icons-material/ThumbDown';
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import IconButton from '@mui/material/IconButton';
 import { useMutation } from 'react-apollo';
-import { Button, CircularProgress, TextField } from '@material-ui/core';
+import { Button, CircularProgress, TextField } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { createFeedback } from '../../graphql/mutations';
 import { ifNotTest } from '../../utils/helpers';
@@ -92,6 +92,7 @@ export function Feedback(props) {
               className={classes.thumbDownButton}
               aria-label="Thumb Down"
               data-testid="thumbdown-icon"
+              size="large"
             >
               <ThumbDownIcon className={classes.largeIcon} />
             </IconButton>
@@ -102,6 +103,7 @@ export function Feedback(props) {
               className={classes.thumbUpButton}
               aria-label="Thumb Up"
               data-testid="thumbup-icon"
+              size="large"
             >
               {isSubmitting ? (
                 <CircularProgress size={70} />

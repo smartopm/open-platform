@@ -1,7 +1,7 @@
 /* eslint-disable */
 import React from "react";
 import { css, StyleSheet } from "aphrodite";
-import { Button } from "@material-ui/core";
+import { Button } from "@mui/material";
 import { Redirect } from "react-router-dom";
 import { Footer } from "../../components/Footer";
 import useTimer from "../../utils/customHooks";

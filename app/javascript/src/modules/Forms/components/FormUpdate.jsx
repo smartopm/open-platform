@@ -17,15 +17,15 @@ import {
   Typography,
   ListItem,
   ListItemText
-} from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import { useApolloClient, useMutation, useQuery } from 'react-apollo';
 import { useHistory } from 'react-router';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import CloseIcon from '@material-ui/icons/Close';
-import IconButton from '@material-ui/core/IconButton';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
+import CloseIcon from '@mui/icons-material/Close';
+import IconButton from '@mui/material/IconButton';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import DatePickerDialog, {
   DateAndTimePickers,
   ThemedTimePicker
@@ -393,6 +393,7 @@ export default function FormUpdate({ formUserId, userId, authState }) {
                     className={classes.iconButton}
                     onClick={() => onImageRemove(formPropertiesData.formProperty.id)}
                     data-testid="image_close"
+                    size="large"
                   >
                     <CloseIcon className={classes.closeButton} />
                   </IconButton>
@@ -562,36 +563,36 @@ export default function FormUpdate({ formUserId, userId, authState }) {
         />
         <form onSubmit={event => handleActionClick(event, 'update')}>
           {authState.user.userType === 'admin' && userId && (
-            <>
-              <TextField
-                label={t('form_fields.form_status')}
-                value={`${objectAccessor(
-                  updatedFormStatus,
-                  formUserData.data?.formUser.status
-                )} - ${dateFormatter(formUserData.data?.formUser.updatedAt)}`}
-                disabled
-                margin="dense"
-                InputLabelProps={{
-                  shrink: true
-                }}
-                style={{ width: '100%' }}
-              />
-              <TextField
-                label={t('form_fields.form_status_updated_by')}
-                value={formUserData.data.formUser.statusUpdatedBy.name}
-                disabled
-                margin="dense"
-                InputLabelProps={{
-                  shrink: true
-                }}
-                style={{ width: '100%' }}
-              />
-            </>
-          )}
+          <>
+            <TextField
+              label={t('form_fields.form_status')}
+              value={`${objectAccessor(
+                updatedFormStatus,
+                formUserData.data?.formUser.status
+              )} - ${dateFormatter(formUserData.data?.formUser.updatedAt)}`}
+              disabled
+              margin="dense"
+              InputLabelProps={{
+                shrink: true
+              }}
+              style={{ width: '100%' }}
+            />
+            <TextField
+              label={t('form_fields.form_status_updated_by')}
+              value={formUserData.data.formUser.statusUpdatedBy.name}
+              disabled
+              margin="dense"
+              InputLabelProps={{
+                shrink: true
+              }}
+              style={{ width: '100%' }}
+            />
+          </>
+        )}
           {data?.formUserProperties.sort(sortPropertyOrder).map(renderForm)}
           <br />
           <br />
-          <Grid container justify="space-between" direction="row" spacing={2}>
+          <Grid container justifyContent="space-between" direction='row' spacing={2}>
             <Grid item xs={4}>
               <Button
                 type="submit"
@@ -606,43 +607,43 @@ export default function FormUpdate({ formUserId, userId, authState }) {
               </Button>
             </Grid>
             {authState.user.userType === 'admin' && (
-              <>
-                <Grid item xs={4}>
-                  <Button
-                    variant="contained"
-                    onClick={event => handleActionClick(event, 'approve')}
-                    color="primary"
-                    aria-label="form_approve"
-                    disabled={isLoading}
-                    size="small"
-                    fullWidth={matches}
-                  >
-                    {t('form_status_actions.approved')}
-                  </Button>
-                </Grid>
-                <Grid item xs={4}>
-                  <Button
-                    variant="contained"
-                    onClick={event => handleActionClick(event, 'reject')}
-                    aria-label="form_reject"
-                    style={{ backgroundColor: '#DC004E', color: '#FFFFFF' }}
-                    disabled={isLoading}
-                    size="small"
-                    fullWidth={matches}
-                  >
-                    {t('form_status_actions.rejected')}
-                  </Button>
-                </Grid>
-              </>
-            )}
+            <>
+              <Grid item xs={4}>
+                <Button
+                  variant="contained"
+                  onClick={event => handleActionClick(event, 'approve')}
+                  color="primary"
+                  aria-label="form_approve"
+                  disabled={isLoading}
+                  size="small"
+                  fullWidth={matches}
+                >
+                  {t('form_status_actions.approved')}
+                </Button>
+              </Grid>
+              <Grid item xs={4}>
+                <Button
+                  variant="contained"
+                  onClick={event => handleActionClick(event, 'reject')}
+                  aria-label="form_reject"
+                  style={{ backgroundColor: '#DC004E', color: '#FFFFFF' }}
+                  disabled={isLoading}
+                  size="small"
+                  fullWidth={matches}
+                >
+                  {t('form_status_actions.rejected')}
+                </Button>
+              </Grid>
+            </>
+          )}
           </Grid>
           <br />
           <CenteredContent>
             {Boolean(message.info.length) && (
-              <Typography variant="subtitle1" color={message.err ? 'error' : 'primary'}>
-                {message.info}
-              </Typography>
-            )}
+            <Typography variant="subtitle1" color={message.err ? 'error' : 'primary'}>
+              {message.info}
+            </Typography>
+          )}
           </CenteredContent>
         </form>
       </Container>
@@ -656,7 +657,7 @@ export default function FormUpdate({ formUserId, userId, authState }) {
         action={formAction}
       />
     </>
-  );
+);
 }
 
 const useStyles = makeStyles(() => ({

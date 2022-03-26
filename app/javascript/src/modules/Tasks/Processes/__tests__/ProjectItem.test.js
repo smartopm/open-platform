@@ -8,6 +8,7 @@ import ProjectItem from '../Components/ProjectItem';
 import taskMock from '../../__mocks__/taskMock';
 import authState from '../../../../__mocks__/authstate';
 import { Context } from '../../../../containers/Provider/AuthStateProvider';
+import MockedThemeProvider from '../../../__mocks__/mock_theme';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 const props = {
@@ -21,7 +22,9 @@ describe('Process Item', () => {
       <MockedProvider mocks={[]} addTypename={false}>
         <Context.Provider value={authState}>
           <BrowserRouter>
-            <ProjectItem {...props} />
+            <MockedThemeProvider>
+              <ProjectItem {...props} />
+            </MockedThemeProvider>
           </BrowserRouter>
         </Context.Provider>
       </MockedProvider>

@@ -5,12 +5,12 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useQuery, useMutation, useLazyQuery } from 'react-apollo';
 import { Redirect, useLocation, useHistory } from 'react-router-dom';
-import { makeStyles } from '@material-ui/core/styles';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import Grid from '@material-ui/core/Grid';
+import makeStyles from '@mui/styles/makeStyles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import Grid from '@mui/material/Grid';
 import { Container } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import MaterialConfig from 'react-awesome-query-builder/lib/config/material';
+import MuiConfig from 'react-awesome-query-builder/lib/config/mui';
 import Loading from '../../../shared/Loading';
 import ErrorPage from '../../../components/Error';
 import { UsersDetails, LabelsQuery, UsersCount } from '../../../graphql/queries';
@@ -301,7 +301,7 @@ export default function UsersList() {
     );
   }
 
-  const InitialConfig = MaterialConfig;
+  const InitialConfig = MuiConfig;
   const queryBuilderConfig = {
     ...InitialConfig,
     fields: {
@@ -365,7 +365,7 @@ export default function UsersList() {
       '98a8a9ba-0123-4456-b89a-b16e721c8cd0': {
         type: 'rule',
         properties: {
-          field: 'Role',
+          field: 'role',
           operator: 'select_equals',
           value: [''],
           valueSrc: ['value'],
@@ -458,50 +458,50 @@ export default function UsersList() {
       </FixedHeader>
       {loading || labelsLoading || fetchingUsersCount ? (
         <Loading />
-      ) : (
-        <>
-          <Container>
-            <ActionDialog
-              open={openCampaignWarning}
-              handleClose={() => setOpenCampaignWarning(false)}
-              handleOnSave={createCampaign}
-              message={t('users.message_campaign')}
+    ) : (
+      <>
+        <Container>
+          <ActionDialog
+            open={openCampaignWarning}
+            handleClose={() => setOpenCampaignWarning(false)}
+            handleOnSave={createCampaign}
+            message={t('users.message_campaign')}
+          />
+          <SubStatusReportDialog
+            open={substatusReportOpen}
+            handleClose={handleReportDialog}
+            handleFilter={handleFilterUserBySubstatus}
+          />
+          <div className={matches ? classes.userCardMobile : classes.userCard}>
+            <UserListCard
+              userData={data}
+              currentUserType={authState.user.userType}
+              handleUserSelect={handleUserSelect}
+              selectedUsers={selectedUsers}
+              offset={offset}
+              selectCheckBox={selectCheckBox}
             />
-            <SubStatusReportDialog
-              open={substatusReportOpen}
-              handleClose={handleReportDialog}
-              handleFilter={handleFilterUserBySubstatus}
+          </div>
+          <Grid
+            container
+            direction="row"
+            justifyContent="center"
+            alignItems="center"
+            data-testid="pagination_section"
+          >
+            <Paginate
+              count={data.users.length}
+              active={offset >= 1}
+              offset={offset}
+              handlePageChange={paginate}
+              limit={limit}
             />
-            <div className={matches ? classes.userCardMobile : classes.userCard}>
-              <UserListCard
-                userData={data}
-                currentUserType={authState.user.userType}
-                handleUserSelect={handleUserSelect}
-                selectedUsers={selectedUsers}
-                offset={offset}
-                selectCheckBox={selectCheckBox}
-              />
-            </div>
-            <Grid
-              container
-              direction="row"
-              justify="center"
-              alignItems="center"
-              data-testid="pagination_section"
-            >
-              <Paginate
-                count={data.users.length}
-                active={offset >= 1}
-                offset={offset}
-                handlePageChange={paginate}
-                limit={limit}
-              />
-            </Grid>
-          </Container>
-        </>
-      )}
+          </Grid>
+        </Container>
+      </>
+    )}
     </>
-  );
+);
 }
 
 export const useStyles = makeStyles(() => ({

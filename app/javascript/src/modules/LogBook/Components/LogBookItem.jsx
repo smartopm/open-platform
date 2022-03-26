@@ -3,15 +3,15 @@
 import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Typography from '@mui/material/Typography';
-import Button from '@material-ui/core/Button';
+import Button from '@mui/material/Button';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useApolloClient, useMutation } from 'react-apollo';
-import Hidden from '@material-ui/core/Hidden';
+import Hidden from '@mui/material/Hidden';
 import { useTranslation } from 'react-i18next';
-import makeStyles from '@material-ui/core/styles/makeStyles';
+import makeStyles from '@mui/styles/makeStyles';
 import PersonIcon from '@mui/icons-material/Person';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import Grid from '@material-ui/core/Grid';
+import Grid from '@mui/material/Grid';
 import { StyledTabs, StyledTab, TabPanel, a11yProps } from '../../../components/Tabs';
 import LogEvents from './LogEvents';
 import SpeedDial from '../../../shared/buttons/SpeedDial';
@@ -301,7 +301,7 @@ export default function LogBookItem({
               />
               <Grid
                 container
-                justify="flex-end"
+                justifyContent="flex-end"
                 className={classes.filter}
                 style={{
                   display: displayBuilder
@@ -355,7 +355,7 @@ export default function LogBookItem({
             />
           </TabPanel>
         </Grid>
-        <Hidden xsDown>
+        <Hidden smDown>
           <Grid item md={1} xs={1}>
             <SpeedDial
               open={open}
