@@ -62,6 +62,7 @@ export default function EntryNoteDialog({
             id="outlined-multiline-static"
             rows={6}
             variant="outlined"
+            label={t('logbook.add_observation')}
             value={observationHandler.value}
             onChange={event => observationHandler.handleChange(event.target.value)}
             inputProps={{

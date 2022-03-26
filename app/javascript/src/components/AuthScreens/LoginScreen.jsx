@@ -237,6 +237,7 @@ export default function LoginScreen() {
                 data-testid="email_text_input"
                 className={`${css(styles.emailLoginTextField )}`}
                 placeholder={t('login.login_email')}
+                label={t('login.login_email')}
                 onChange={event => setUserLogin({email: event.target.value, phone: '' })}
                 InputProps={{
                         startAdornment: (

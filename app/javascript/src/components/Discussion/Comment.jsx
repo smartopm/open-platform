@@ -192,6 +192,7 @@ export function CommentBox({ authState, sendComment, data, handleCommentChange, 
           id="standard-full-width"
           style={{ width: '95vw', margin: 15, marginTop: 7 }}
           placeholder={t('common:misc.type_comment')}
+          label={t('common:misc.type_comment')}
           value={data.message}
           onChange={handleCommentChange}
           multiline

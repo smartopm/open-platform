@@ -50,6 +50,7 @@ export default function EditField({ handleClose, data, refetch, commentsRefetch 
               value={body}
               id="outlined-size-small"
               variant="outlined"
+              label={t('form_actions.comment_edit')}
               size="small"
               onChange={e => setBody(e.target.value)}
               inputProps={{ 'data-testid': 'body_input' }}

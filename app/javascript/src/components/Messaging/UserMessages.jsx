@@ -73,7 +73,7 @@ export default function UserMessages() {
       <div className={css(styles.messageSection)}>
         <List>
           { loading ? (
-            <CenteredContent> 
+            <CenteredContent>
               {' '}
               <Spinner />
               {' '}
@@ -123,7 +123,7 @@ export default function UserMessages() {
         </ListItemAvatar>
         <TextField
           id="standard-full-width"
-          // label="Type message here"
+          label={t("common:form_placeholders.message")}
           style={{ width: '95vw', margin: 26, marginTop: 7 }}
           placeholder={t("common:form_placeholders.message")}
           value={message}
