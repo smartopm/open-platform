@@ -630,7 +630,7 @@ module Users
     # rubocop:enable Metrics/AbcSize
 
     def send_welcome_sms
-      return if community.name.eql?('Enyimba') || phone_number.blank?
+      return if user_type.eql?('lead') || community.name.eql?('Enyimba') || phone_number.blank?
 
       url = "https://#{HostEnv.base_url(community)}"
       Sms.send(phone_number, I18n.t('welcome_sms',
