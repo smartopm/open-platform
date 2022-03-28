@@ -73,7 +73,7 @@ export default function LogbookStats({ tabValue, shouldRefetch, handleFilter, du
   if (loading) return <Spinner />;
   return (
     <Grid container spacing={isSmall ? 1 : 4}>
-      <Grid container alignItems='center' spacing={2} style={{marginBottom: isSmall && 4, marginLeft: 6}}>
+      <Grid container alignItems='center' spacing={2} style={{marginBottom: isSmall && 4, marginLeft: 14, marginTop: 2}}>
         <Grid item>{t('common:misc.statistics')}</Grid>
         <Grid item>
           <TextField
@@ -97,7 +97,7 @@ export default function LogbookStats({ tabValue, shouldRefetch, handleFilter, du
       <br />
       {statsData.map(stat => (
         <Grid item xs={4} key={stat.id}>
-          <CardComponent 
+          <CardComponent
             className={classes.statCard}
             clickData={{ clickable: true, handleClick: stat.action }}
           >

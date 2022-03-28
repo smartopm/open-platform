@@ -414,11 +414,9 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
         <form>
           {isFromLogs && (
           <div className="form-group">
-            <label className="bmd-label-static" htmlFor="date" data-testid="submitted_date">
-              {t('logbook:logbook.date_time_submitted')}
-            </label>
             <TextField
-              className="form-control"
+              label={t('logbook:logbook.date_time_submitted')}
+              fullWidth
               type="text"
               value={
               formData.grantor
@@ -435,11 +433,9 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
       )}
           {formData.grantor && (
           <div className="form-group">
-            <label className="bmd-label-static" htmlFor="_name">
-              {t('logbook:log_title.guard')}
-            </label>
             <TextField
-              className="form-control"
+              label={t('logbook:log_title.guard')}
+              fullWidth
               type="text"
               value={formData.grantor?.name}
               disabled
@@ -449,11 +445,9 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
       )}
           {isGuestRequest && formData.user && (
           <div className="form-group">
-            <label className="bmd-label-static" htmlFor="_name">
-              {t('logbook:log_title.host')}
-            </label>
             <TextField
-              className="form-control"
+              label={t('logbook:log_title.host')}
+              fullWidth
               type="text"
               value={formData.user?.name}
               disabled
@@ -462,11 +456,9 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
           </div>
       )}
           <div className="form-group">
-            <label className="bmd-label-static" htmlFor="_name">
-              {t('form_fields.full_name')}
-            </label>
             <TextField
-              className="form-control"
+              label={t('form_fields.full_name')}
+              fullWidth
               type="text"
               value={formData.name}
               onChange={handleInputChange}
@@ -480,11 +472,9 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
             />
           </div>
           <div className="form-group">
-            <label className="bmd-label-static" htmlFor="_name">
-              {t('form_fields.email')}
-            </label>
             <TextField
-              className="form-control"
+              label={t('form_fields.email')}
+              fullWidth
               name="email"
               type="email"
               onChange={handleInputChange}
@@ -495,11 +485,9 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
             />
           </div>
           <div className="form-group">
-            <label className="bmd-label-static" htmlFor="nrc">
-              {t('form_fields.nrc')}
-            </label>
             <TextField
-              className="form-control"
+              label={t('form_fields.nrc')}
+              fullWidth
               type="text"
               value={formData.nrc || ''}
               onChange={handleInputChange}
@@ -515,11 +503,9 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
             />
           </div>
           <div className="form-group">
-            <label className="bmd-label-static" htmlFor="phoneNumber">
-              {t('form_fields.phone_number')}
-            </label>
             <TextField
-              className="form-control"
+              label={t('form_fields.phone_number')}
+              fullWidth
               type="text"
               value={formData.phoneNumber || ''}
               onChange={handleInputChange}
@@ -535,16 +521,14 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
             />
           </div>
           <div className="form-group">
-            <label className="bmd-label-static" htmlFor="vehicle">
-              {t('form_fields.vehicle_plate_number')}
-            </label>
             <TextField
-              className="form-control"
               type="text"
+              label={t('form_fields.vehicle_plate_number')}
               onChange={handleInputChange}
               value={formData.vehiclePlate || ''}
               name="vehiclePlate"
               inputProps={{ 'data-testid': 'entry_user_vehicle' }}
+              fullWidth
               error={inputValidationMsg.isError &&
             requiredFields.includes('vehiclePlate') &&
             !formData.vehiclePlate}
@@ -555,16 +539,14 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
             />
           </div>
           <div className="form-group">
-            <label className="bmd-label-static" htmlFor="companyName">
-              {t('form_fields.company_name')}
-            </label>
             <TextField
-              className="form-control"
+              label={t('logbook:logbook.visiting_reason')}
               type="text"
               name="companyName"
               value={formData.companyName || ''}
               onChange={handleInputChange}
               inputProps={{ 'data-testid': 'companyName' }}
+              fullWidth
               error={inputValidationMsg.isError &&
                 requiredFields.includes('companyName') &&
                 !formData.companyName}
@@ -607,7 +589,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
         !reqId && authState.user.community.name !== 'Ciudad Morazán' && !isGuestRequest && (
           <div className="form-group">
             <TextField
-              className="form-control"
+              fullWidth
               type="text"
               label="Temperature(°C)"
               value={formData.temperature}
