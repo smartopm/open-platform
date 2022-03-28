@@ -135,7 +135,7 @@ export function ThemedTimePicker({
         locale={getCurrentLng().includes('es') ? es : enUS}
       >
         <MobileTimePicker
-          renderInput={params => <TextField {...params} variant="outlined" data-testid='time_picker' style={{ width: '100%' }} />}
+          renderInput={params => <TextField {...params} variant="outlined" data-testid='time_picker' style={otherProps.fullWidth ? { width: '100%' } : {}} />}
           okText={t('date_picker.ok_label')}
           clearText={t('date_picker.clear')}
           cancelText={t('date_picker.cancel')}
