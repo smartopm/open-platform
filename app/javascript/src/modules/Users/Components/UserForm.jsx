@@ -278,7 +278,7 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
         )}
         <div className="form-group">
           <TextField
-            className="form-control"
+            fullWidth
             label={t('common:form_fields.full_name')}
             type="text"
             onChange={handleInputChange}
@@ -315,7 +315,7 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
         </div>
         <div className="form-group">
           <TextField
-            className="form-control"
+            fullWidth
             label={t('common:form_fields.primary_email')}
             name="email"
             type="email"
@@ -330,7 +330,7 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
           <>
             <div className="form-group">
               <TextField
-                className="form-control"
+                fullWidth
                 label={t('common:form_fields.external_reference')}
                 name="extRefId"
                 type="text"
@@ -365,7 +365,7 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
 
             <div className="form-group">
               <TextField
-                className="form-control"
+                fullWidth
                 label={t('common:form_fields.primary_address')}
                 name="primaryAddress"
                 type="text"
