@@ -116,8 +116,7 @@
     "jest": "^27.2.4",
     "lint-staged": ">=10",
     "prettier": "^1.19.1",
-    "react-is": "^17.0.1",
-    "webpack-bundle-analyzer": "^3.5.1"
+    "react-is": "^17.0.1"
   },
   "resolutions": {
     "lodash": "4.17.21",
