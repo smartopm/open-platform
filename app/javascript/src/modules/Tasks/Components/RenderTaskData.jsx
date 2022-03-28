@@ -1,8 +1,8 @@
 import React from 'react';
-import { Typography } from '@material-ui/core';
+import { Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import { useTheme } from '@material-ui/styles';
+import { useTheme } from '@mui/styles';
 import UserAvatar from '../../Users/Components/UserAvatar';
 
 // TODO: Put in a more shareable directory

@@ -8,6 +8,7 @@ import 'leaflet-draw';
 import CreateLandParcel from '../components/LandParcels/CreateLandParcel';
 import { AddNewProperty } from '../graphql/mutations';
 import { Spinner } from '../shared/Loading';
+import MockedThemeProvider from '../modules/__mocks__/mock_theme';
 
 jest.mock('leaflet-draw');
 describe('Land Property Component', () => {
@@ -40,12 +41,14 @@ describe('Land Property Component', () => {
     const container = render(
       <MockedProvider mocks={[mocks]} addTypename={false}>
         <BrowserRouter>
-          <CreateLandParcel
-            refetch={refetch}
-            newHouse={false}
-            refetchHouseData={refetchHouseData}
-            selectedLandParcel={selectedLandParcel}
-          />
+          <MockedThemeProvider>
+            <CreateLandParcel
+              refetch={refetch}
+              newHouse={false}
+              refetchHouseData={refetchHouseData}
+              selectedLandParcel={selectedLandParcel}
+            />
+          </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>
     );
@@ -125,18 +128,19 @@ describe('Land Property Component', () => {
     const container = render(
       <MockedProvider mocks={[errorMocks]} addTypename={false}>
         <BrowserRouter>
-          <CreateLandParcel
-            refetch={refetch}
-            newHouse={false}
-            refetchHouseData={refetchHouseData}
-            selectedLandParcel={selectedLandParcel}
-          />
+          <MockedThemeProvider>
+            <CreateLandParcel
+              refetch={refetch}
+              newHouse={false}
+              refetchHouseData={refetchHouseData}
+              selectedLandParcel={selectedLandParcel}
+            />
+          </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>
     );
 
     await waitFor(() => {
-
       const parcelButton = container.queryByTestId('parcel-button');
       fireEvent.click(parcelButton);
 
@@ -176,6 +180,6 @@ describe('Land Property Component', () => {
       expect(container.queryByTestId('custom-dialog-button')).toBeInTheDocument();
 
       fireEvent.click(container.queryByTestId('custom-dialog-button'));
-    }, 10)
+    }, 10);
   });
 });

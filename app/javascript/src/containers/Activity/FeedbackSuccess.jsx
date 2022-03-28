@@ -1,9 +1,9 @@
 /* eslint-disable react/prop-types */
 import React from 'react'
 import { StyleSheet, css } from 'aphrodite'
-import { withStyles } from "@material-ui/core/styles";
-import CheckIcon from '@material-ui/icons/Check';
-import IconButton from "@material-ui/core/IconButton";
+import withStyles from '@mui/styles/withStyles';
+import CheckIcon from '@mui/icons-material/Check';
+import IconButton from "@mui/material/IconButton";
 import { Redirect } from "react-router-dom";
 import { useTranslation } from 'react-i18next';
 import useTimer from '../../utils/customHooks';
@@ -35,14 +35,14 @@ export function FeedbackSuccess(props) {
         <p className='text-center' data-testid='feedback-txt'>{t('feedback.thankyou_for_feedback')}</p>
         <div className="row justify-content-around">
           <div className="">
-            <IconButton className={classes.checkedIcon} aria-label="Check Icon">
+            <IconButton className={classes.checkedIcon} aria-label="Check Icon" size="large">
               <CheckIcon className={classes.largeIcon} />
             </IconButton>
           </div>
         </div>
 
       </div>
-    )
+    );
 }
 export default withStyles(styles)(FeedbackSuccess);
 

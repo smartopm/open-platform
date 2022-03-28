@@ -1,8 +1,9 @@
 import React from 'react';
-import { Grid, makeStyles, Paper } from '@material-ui/core';
+import { Grid, Paper } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import PropTypes from 'prop-types';
-import Skeleton from '@material-ui/lab/Skeleton';
-import AddIcon from '@material-ui/icons/Add';
+import Skeleton from '@mui/material/Skeleton';
+import AddIcon from '@mui/icons-material/Add';
 import ImageUploadPreview from './ImageUploadPreview';
 import ImageUploader from './ImageUploader';
 import CenteredContent from '../../components/CenteredContent';
@@ -12,7 +13,7 @@ export default function ImageArea({ handleClick, handleChange, imageUrl, type })
   return (
     <Grid item xs={12} sm={6} className={classes.imageGrid} data-testid="image_area">
       <Paper elevation={0} className={classes.imageArea} style={{ height: '300px' }}>
-        <Grid container alignItems="center" justify="center" direction="row">
+        <Grid container alignItems="center" justifyContent="center" direction="row">
           {imageUrl && (
             <ImageUploadPreview
               imageUrls={[imageUrl]}
@@ -28,7 +29,7 @@ export default function ImageArea({ handleClick, handleChange, imageUrl, type })
               {!imageUrl && (
                 <Grid item xs={12} style={{ textAlign: 'right', paddingTop: '8px' }} data-testid="skeleton_section">
                   <CenteredContent>
-                    <Skeleton animation={false} variant="rect" width={320} height={200} />
+                    <Skeleton animation={false} variant="rectangular" width={320} height={200} />
                   </CenteredContent>
                 </Grid>
               )}

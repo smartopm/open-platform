@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Button } from '@material-ui/core'
-import { makeStyles } from '@material-ui/styles'
+import { Button } from '@mui/material'
+import { makeStyles } from '@mui/styles'
 
 export default function Tag({ tag, handleTagOpen }){
     const classes = useStyles()

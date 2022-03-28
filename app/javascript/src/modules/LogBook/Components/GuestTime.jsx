@@ -1,5 +1,5 @@
 import React from 'react';
-import { IconButton, Avatar, Typography, Grid } from '@material-ui/core';
+import { IconButton, Avatar, Typography, Grid } from '@mui/material';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import DatePickerDialog, { ThemedTimePicker } from '../../../components/DatePickerDialog';

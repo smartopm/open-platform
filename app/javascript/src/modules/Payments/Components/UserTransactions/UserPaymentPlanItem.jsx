@@ -2,10 +2,11 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useLazyQuery } from 'react-apollo';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
+import { useTheme } from '@mui/material/styles';
+import makeStyles from '@mui/styles/makeStyles';
 import { useHistory } from 'react-router-dom';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import {
   Grid,
   Typography,
@@ -16,9 +17,9 @@ import {
   Menu,
   MenuItem,
   IconButton
-} from '@material-ui/core';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import EditIcon from '@material-ui/icons/Edit';
+} from '@mui/material';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import EditIcon from '@mui/icons-material/Edit';
 import DataList from '../../../../shared/list/DataList';
 import { dateToString } from '../../../../components/DateContainer';
 import {
@@ -656,6 +657,7 @@ export function renderPlan(
               dataid={plan.id}
               onClick={event => menuData.handlePlanMenu(event, plan)}
               color='primary'
+              size="large"
             >
               <MoreVertIcon />
             </IconButton>
@@ -708,6 +710,7 @@ export function renderPayments(pay, currencyData, currentUser, menuData) {
             dataid={pay.id}
             onClick={event => menuData.handleTransactionMenu(event, pay)}
             color='primary'
+            size="large"
           >
             <MoreVertIcon />
           </IconButton>

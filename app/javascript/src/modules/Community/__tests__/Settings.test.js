@@ -9,6 +9,7 @@ import { EmailTemplatesQuery } from '../../Emails/graphql/email_queries';
 
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
+jest.setTimeout(10000)
 describe('Community settings page', () => {
   it('should have input field and a remove button', async () => {
     const data = {
@@ -168,10 +169,10 @@ describe('Community settings page', () => {
     expect(container.queryAllByLabelText('common:form_fields.email')).toHaveLength(2);
     expect(container.queryByLabelText('common:form_fields.phone_number')).toBeInTheDocument();
     expect(container.queryByLabelText('WhatsApp')).toBeInTheDocument();
-    expect(container.queryByText('community.sms_phone_numbers')).not.toBeDisabled();
-    expect(container.queryByText('community.emergency_call_number')).not.toBeDisabled();
+    expect(container.queryAllByText('community.sms_phone_numbers')[0]).not.toBeDisabled();
+    expect(container.queryAllByText('community.emergency_call_number')[0]).not.toBeDisabled();
     expect(container.queryByText('community.sms_phone_numbers_header')).toBeInTheDocument();
-    expect(container.queryByText('community.google_analytics_id')).toBeInTheDocument();
+    expect(container.queryAllByText('community.google_analytics_id')[0]).toBeInTheDocument();
 
     expect(container.queryAllByLabelText('remove')).toHaveLength(6);
 

@@ -1,9 +1,9 @@
-import React from 'react';
-import { AddCircleOutline } from '@material-ui/icons';
-import DoneIcon from '@material-ui/icons/Done';
-import { Button, FormHelperText } from '@material-ui/core';
-import PropTypes from 'prop-types';
-import { useTranslation } from 'react-i18next';
+import React from 'react'
+import { AddCircleOutline } from '@mui/icons-material'
+import DoneIcon from '@mui/icons-material/Done'
+import { Button, FormHelperText } from '@mui/material'
+import PropTypes from 'prop-types'
+import { useTranslation } from 'react-i18next'
 
 export default function UploadField({
   detail,

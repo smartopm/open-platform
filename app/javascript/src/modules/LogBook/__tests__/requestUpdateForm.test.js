@@ -125,7 +125,7 @@ describe('RequestUpdate Component', () => {
         expect(container.queryByTestId('entry_user_call_mgr').textContent).toContain(
           'logbook:logbook.call_manager'
         );
-        expect(container.queryByText('form_fields.full_name')).toBeInTheDocument();
+        expect(container.queryAllByText('form_fields.full_name')[0]).toBeInTheDocument();
 
         fireEvent.click(container.queryByTestId('entry_user_grant'));
       },
@@ -198,7 +198,7 @@ describe('RequestUpdate Component', () => {
       </MockedProvider>
     );
     await waitFor(() => {
-      expect(container.queryByText('form_fields.full_name')).toBeInTheDocument();
+      expect(container.queryAllByText('form_fields.full_name')[0]).toBeInTheDocument();
       expect(container.queryByTestId('entry_user_call_mgr')).toBeInTheDocument();
       expect(container.queryByTestId('entry_user_grant')).toBeInTheDocument();
     }, 50);

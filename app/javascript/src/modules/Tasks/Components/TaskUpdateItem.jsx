@@ -1,8 +1,8 @@
 /* eslint-disable no-use-before-define */
 import React from 'react'
 import PropTypes from 'prop-types'
-import Divider from '@material-ui/core/Divider';
-import { Typography } from '@material-ui/core';
+import Divider from '@mui/material/Divider';
+import { Typography } from '@mui/material';
 
 export default function TaskUpdateItem({ user, content, icon, date }) {
 

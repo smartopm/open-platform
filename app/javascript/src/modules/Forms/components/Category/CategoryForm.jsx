@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Grid, Hidden, IconButton, makeStyles, MenuItem, TextField, Typography } from '@material-ui/core';
+import { Button, Grid, IconButton, MenuItem, TextField, Typography } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from 'react-apollo';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { useHistory, useParams } from 'react-router';
-import DeleteOutline from '@material-ui/icons/DeleteOutline';
+import DeleteOutline from '@mui/icons-material/DeleteOutline';
 import SwitchInput from '../FormProperties/SwitchInput';
 import CenteredContent from '../../../../components/CenteredContent';
 import {
@@ -27,7 +29,7 @@ export default function CategoryForm({ data, close, formData, refetchCategories 
     groupingId: '',
     value: '' // value for the condition
   };
-  
+
   const { t } = useTranslation('form');
   const [categoryData, setCategoryData] = useState(initialData);
   const [info, setInfo] = useState({ error: false, message: '' });
@@ -37,7 +39,8 @@ export default function CategoryForm({ data, close, formData, refetchCategories 
   );
   const { formId } = useParams();
   const history = useHistory();
-  const classes = useStyles()
+  const classes = useStyles();
+  const smDownHidden = useMediaQuery(theme => theme.breakpoints.down('sm'));
 
   useEffect(() => {
     if (data.id) {
@@ -52,18 +55,19 @@ export default function CategoryForm({ data, close, formData, refetchCategories 
 
   function handleSaveCategory(event) {
     event.preventDefault();
-    const { condition, groupingId, value, ...catData } = categoryData
-    createCategory({ 
-      variables: { 
-        ...catData, 
+    const { condition, groupingId, value, ...catData } = categoryData;
+    createCategory({
+      variables: {
+        ...catData,
         displayCondition: {
           condition,
           groupingId,
           value
         },
-        order: Number(categoryData.order), 
-        formId 
-      } })
+        order: Number(categoryData.order),
+        formId
+      }
+    })
       .then(() => {
         refetchCategories();
         close();
@@ -76,17 +80,17 @@ export default function CategoryForm({ data, close, formData, refetchCategories 
 
   function handleUpdateCategory(event) {
     event.preventDefault();
-    const { condition, groupingId, value, ...catData } = categoryData
+    const { condition, groupingId, value, ...catData } = categoryData;
     updateCategory({
-      variables: { 
+      variables: {
         ...catData,
         displayCondition: {
           condition,
           groupingId,
           value
         },
-        order: Number(categoryData.order), 
-        categoryId: data.id 
+        order: Number(categoryData.order),
+        categoryId: data.id
       }
     })
       .then(res => {
@@ -122,9 +126,9 @@ export default function CategoryForm({ data, close, formData, refetchCategories 
   function clearDisplayCondition() {
     setCategoryData({
       ...categoryData,
-        condition: '',
-        groupingId: '',
-        value: ''
+      condition: '',
+      groupingId: '',
+      value: ''
     });
   }
 
@@ -224,16 +228,20 @@ export default function CategoryForm({ data, close, formData, refetchCategories 
             />
           </Grid>
           <Grid item sm={1} xs={6} data-testid="clear_condition">
-            <Hidden xsDown>
-              <IconButton onClick={clearDisplayCondition} className={classes.clearIcon}>
+            {!smDownHidden && (
+              <IconButton
+                onClick={clearDisplayCondition}
+                className={classes.clearIcon}
+                size="large"
+              >
                 <DeleteOutline color="primary" />
               </IconButton>
-            </Hidden>
-            <Hidden only={['sm', 'lg', 'md', 'xl']}>
+            )}
+            {smDownHidden && (
               <Button color="primary" onClick={clearDisplayCondition} className={classes.clearTex}>
                 {t('actions.clear_condition')}
               </Button>
-            </Hidden>
+            )}
           </Grid>
         </Grid>
         <TextField
@@ -302,8 +310,8 @@ const useStyles = makeStyles({
   },
   clearTex: {
     marginTop: -17
-  },
-})
+  }
+});
 
 CategoryForm.propTypes = {
   data: PropTypes.shape({
@@ -312,7 +320,7 @@ CategoryForm.propTypes = {
     displayCondition: PropTypes.shape({
       condition: PropTypes.string,
       groupingId: PropTypes.string,
-      value: PropTypes.string,
+      value: PropTypes.string
     }),
     order: PropTypes.number,
     description: PropTypes.string,

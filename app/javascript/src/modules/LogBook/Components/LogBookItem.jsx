@@ -3,15 +3,14 @@
 import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Typography from '@mui/material/Typography';
-import Button from '@material-ui/core/Button';
+import Button from '@mui/material/Button';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useApolloClient, useMutation } from 'react-apollo';
-import Hidden from '@material-ui/core/Hidden';
 import { useTranslation } from 'react-i18next';
-import makeStyles from '@material-ui/core/styles/makeStyles';
+import makeStyles from '@mui/styles/makeStyles';
 import PersonIcon from '@mui/icons-material/Person';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import Grid from '@material-ui/core/Grid';
+import Grid from '@mui/material/Grid';
 import { StyledTabs, StyledTab, TabPanel, a11yProps } from '../../../components/Tabs';
 import LogEvents from './LogEvents';
 import SpeedDial from '../../../shared/buttons/SpeedDial';
@@ -72,6 +71,8 @@ export default function LogBookItem({
     refetch: false
   });
   const [addObservationNote] = useMutation(AddObservationNoteMutation);
+  const smDownHidden = useMediaQuery(theme => theme.breakpoints.down('sm'));
+  const smUpHidden = useMediaQuery(theme => theme.breakpoints.up('sm'));
   const matches = useMediaQuery('(max-width:1000px)');
   const classes = useStyles();
   const [imageUrls, setImageUrls] = useState([]);
@@ -267,7 +268,7 @@ export default function LogBookItem({
             <Grid item md={9} xs={10}>
               <Typography variant="h4">{t('logbook.log_book')}</Typography>
             </Grid>
-            <Hidden smUp>
+            {!smUpHidden && (
               <Grid item md={1} xs={2}>
                 <SpeedDial
                   open={open}
@@ -277,7 +278,7 @@ export default function LogBookItem({
                   actions={accessibleMenus(actions)}
                 />
               </Grid>
-            </Hidden>
+            )}
             <Grid item xs={12} md={7} lg={6}>
               <StyledTabs
                 value={tabValue}
@@ -301,7 +302,7 @@ export default function LogBookItem({
               />
               <Grid
                 container
-                justify="flex-end"
+                justifyContent="flex-end"
                 className={classes.filter}
                 style={{
                   display: displayBuilder
@@ -355,7 +356,7 @@ export default function LogBookItem({
             />
           </TabPanel>
         </Grid>
-        <Hidden xsDown>
+        {!smDownHidden && (
           <Grid item md={1} xs={1}>
             <SpeedDial
               open={open}
@@ -365,7 +366,7 @@ export default function LogBookItem({
               actions={accessibleMenus(actions)}
             />
           </Grid>
-        </Hidden>
+        )}
       </Grid>
       {Boolean(tabValue === 0) && (
         <CenteredContent>

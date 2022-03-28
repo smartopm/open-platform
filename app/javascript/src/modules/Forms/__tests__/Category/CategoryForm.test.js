@@ -5,6 +5,7 @@ import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom';
 import CategoryForm from '../../components/Category/CategoryForm';
 import { FormCategoryUpdateMutation } from '../../graphql/form_category_mutations';
+import MockedThemeProvider from '../../../__mocks__/mock_theme';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => []);
 describe('CategoryForm Component', () => {
@@ -55,7 +56,9 @@ describe('CategoryForm Component', () => {
   const formWrapper = render(
     <MockedProvider mocks={[updateCategoryMock]} addTypename={false}>
       <BrowserRouter>
-        <CategoryForm {...props} />
+        <MockedThemeProvider>
+          <CategoryForm {...props} />
+        </MockedThemeProvider>
       </BrowserRouter>
     </MockedProvider>
   );
@@ -70,7 +73,7 @@ describe('CategoryForm Component', () => {
     expect(formWrapper.queryByTestId('category_action_btn').textContent).toContain(
       'actions.update_category'
     );
-    expect(formWrapper.queryByTestId('clear_condition')).toBeInTheDocument()
+    expect(formWrapper.queryByTestId('clear_condition')).toBeInTheDocument();
     expect(formWrapper.queryByTestId('category_action_btn')).not.toBeDisabled();
 
     fireEvent.change(formWrapper.queryByTestId('name'), {

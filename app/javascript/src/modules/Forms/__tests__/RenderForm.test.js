@@ -6,6 +6,7 @@ import RenderForm from '../components/RenderForm';
 import FormContextProvider from '../Context';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import userMock from '../../../__mocks__/userMock';
+import MockedThemeProvider from '../../__mocks__/mock_theme';
 
 jest.fn('@rails/activestorage/src/file_checksum', () => ({ create: jest.fn() }));
 describe('Render Form Component', () => {
@@ -27,7 +28,9 @@ describe('Render Form Component', () => {
       <MockedProvider>
         <Context.Provider value={userMock}>
           <FormContextProvider>
-            <RenderForm {...props} />
+            <MockedThemeProvider>
+              <RenderForm {...props} />
+            </MockedThemeProvider>
           </FormContextProvider>
         </Context.Provider>
       </MockedProvider>
@@ -55,7 +58,9 @@ it('should contain proper form properies with upload field and returns no errors
     <MockedProvider>
       <Context.Provider value={userMock}>
         <FormContextProvider>
-          <RenderForm {...props} />
+          <MockedThemeProvider>
+            <RenderForm {...props} />
+          </MockedThemeProvider>
         </FormContextProvider>
       </Context.Provider>
     </MockedProvider>
@@ -88,7 +93,9 @@ it('should contain proper form properies with upload field and returns errors fo
     <MockedProvider>
       <Context.Provider value={userMock}>
         <FormContextProvider>
-          <RenderForm {...props} />
+          <MockedThemeProvider>
+            <RenderForm {...props} />
+          </MockedThemeProvider>
         </FormContextProvider>
       </Context.Provider>
     </MockedProvider>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { Button, Typography } from '@material-ui/core';
+import { Button, Typography } from '@mui/material';
 import VideoRecorder from 'react-video-recorder';
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 import { useApolloClient, useMutation } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import LeftArrow from '../../../../../../assets/images/left-arrow.svg';

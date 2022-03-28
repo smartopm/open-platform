@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { IconButton, Grid } from '@material-ui/core';
+import { IconButton, Grid } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
-import { MoreHorizOutlined } from '@material-ui/icons';
+import makeStyles from '@mui/styles/makeStyles';
+import { MoreHorizOutlined } from '@mui/icons-material';
 import LabelActionMenu from './LabelActionMenu';
 import Label from '../../../shared/label/Label';
 import DataList from '../../../shared/list/DataList';
@@ -77,6 +77,7 @@ export function renderLabels(label, menuData, userType) {
                 data-testid="label-menu"
                 dataid={label.id}
                 onClick={event => menuData.handleClick(event)}
+                size="large"
               >
                 <MoreHorizOutlined />
               </IconButton>

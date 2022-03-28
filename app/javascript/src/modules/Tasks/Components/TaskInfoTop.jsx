@@ -3,29 +3,21 @@
 /* eslint-disable complexity */
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import TextField from '@material-ui/core/TextField';
-import {
-  Button,
-  Grid,
-  Chip,
-  Typography,
-  IconButton,
-  useMediaQuery,
-  MenuItem
-} from '@material-ui/core';
+import TextField from '@mui/material/TextField';
+import { Button, Grid, Chip, Typography, IconButton, useMediaQuery, MenuItem } from '@mui/material';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import AccessAlarmIcon from '@mui/icons-material/AccessAlarm';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 import { useHistory } from 'react-router';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import AddCircleIcon from '@material-ui/icons/AddCircle';
-import CancelIcon from '@material-ui/icons/Cancel';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import CancelIcon from '@mui/icons-material/Cancel';
 import KeyboardTabIcon from '@mui/icons-material/KeyboardTab';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import Autocomplete from '@mui/material/Autocomplete';
 import moment from 'moment-timezone';
 import { useMutation } from 'react-apollo';
 import DatePickerDialog from '../../../components/DatePickerDialog';
@@ -186,6 +178,7 @@ export default function TaskInfoTop({
                     data-testid="task-complete-toggle-button"
                     color="primary"
                     style={{ backgroundColor: 'transparent' }}
+                    size="large"
                   >
                     {data.completed ? (
                       <CheckCircleIcon htmlColor="#4caf50" style={{ fontSize: '20px' }} />
@@ -200,6 +193,7 @@ export default function TaskInfoTop({
                     onClick={event => menuData.handleTaskInfoMenu(event)}
                     data-testid="alarm"
                     color="primary"
+                    size="large"
                   >
                     <AccessAlarmIcon />
                   </IconButton>
@@ -242,22 +236,22 @@ export default function TaskInfoTop({
                 <Grid container style={{ justifyContent: 'right' }}>
                   {/* TODO: Commenting this out for now: Victor & Bonny to sync with Vanessa and compare check-icon vs select field */}
                   {/* <Grid item md={4} xs={2} style={{ textAlign: 'right' }}>
-                  {canUpdateNote && (
-                  <IconButton
-                    edge="end"
-                    onClick={handleTaskComplete}
-                    data-testid="task-info-menu"
-                    color="primary"
-                    style={{backgroundColor: 'transparent'}}
-                  >
-                    {data.completed ? (
-                      <CheckCircleIcon htmlColor="#4caf50" />
-                    ) : (
-                      <CheckCircleOutlineIcon />
-                    )}
-                  </IconButton>
-                )}
-                </Grid> */}
+                {canUpdateNote && (
+                <IconButton
+                  edge="end"
+                  onClick={handleTaskComplete}
+                  data-testid="task-info-menu"
+                  color="primary"
+                  style={{backgroundColor: 'transparent'}}
+                >
+                  {data.completed ? (
+                    <CheckCircleIcon htmlColor="#4caf50" />
+                  ) : (
+                    <CheckCircleOutlineIcon />
+                  )}
+                </IconButton>
+              )}
+              </Grid> */}
 
                   {isAssignee() && (
                     <Grid item md={4} xs={2} style={{ textAlign: 'right' }}>
@@ -266,6 +260,7 @@ export default function TaskInfoTop({
                         onClick={event => menuData.handleTaskInfoMenu(event)}
                         data-testid="set-reminder-button"
                         color="primary"
+                        size="large"
                       >
                         <AccessAlarmIcon />
                       </IconButton>
@@ -278,6 +273,7 @@ export default function TaskInfoTop({
                         onClick={handleSplitScreenClose}
                         data-testid="close-drawer-button"
                         color="primary"
+                        size="large"
                       >
                         <KeyboardTabIcon />
                       </IconButton>
@@ -468,7 +464,11 @@ export default function TaskInfoTop({
                     id={data.id}
                     options={liteData?.usersLite || users}
                     ListboxProps={{ style: { maxHeight: '20rem' } }}
-                    renderOption={option => <UserAutoResult user={option} t={t} />}
+                    renderOption={(props, option) => (
+                      <li {...props}>
+                        <UserAutoResult user={option} t={t} />
+                      </li>
+                    )}
                     name="assignees"
                     onChange={(_evt, value) => {
                       if (!value) {

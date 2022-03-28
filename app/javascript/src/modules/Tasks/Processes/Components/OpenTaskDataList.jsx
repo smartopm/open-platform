@@ -3,20 +3,20 @@
 /* eslint-disable max-lines */
 import React, { Fragment, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { useQuery } from 'react-apollo';
 import { Grid, IconButton, Typography, Button,
-   Divider, Menu, MenuItem } from '@material-ui/core';
-import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
-import AccountTreeIcon from '@material-ui/icons/AccountTree';
-import QuestionAnswerIcon from '@material-ui/icons/QuestionAnswer';
-import AttachFileIcon from '@material-ui/icons/AttachFile';
+   Divider, Menu, MenuItem } from '@mui/material';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
+import AccountTreeIcon from '@mui/icons-material/AccountTree';
+import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
+import AttachFileIcon from '@mui/icons-material/AttachFile';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/styles';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
+import { makeStyles } from '@mui/styles';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { LinkToUserAvatar } from '../../Components/RenderTaskData';
 import { dateToString } from '../../../../components/DateContainer';
 import { Spinner } from '../../../../shared/Loading'

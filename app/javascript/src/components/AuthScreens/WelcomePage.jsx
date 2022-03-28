@@ -1,14 +1,14 @@
 import React, { useContext } from 'react';
-import { Button, AppBar, Toolbar, Typography, Grid, Divider, Link } from '@material-ui/core';
+import { Button, AppBar, Toolbar, Typography, Grid, Divider, Link } from '@mui/material';
 import { StyleSheet, css } from 'aphrodite';
 import ReactGA from 'react-ga';
 import { useQuery } from 'react-apollo';
 import { Redirect, useHistory } from 'react-router-dom';
-import LocationOnIcon from '@material-ui/icons/LocationOn';
-import CallIcon from '@material-ui/icons/Call';
-import MailIcon from '@material-ui/icons/Mail';
-import FacebookIcon from '@material-ui/icons/Facebook';
-import LinkedInIcon from '@material-ui/icons/LinkedIn';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import CallIcon from '@mui/icons-material/Call';
+import MailIcon from '@mui/icons-material/Mail';
+import FacebookIcon from '@mui/icons-material/Facebook';
+import LinkedInIcon from '@mui/icons-material/LinkedIn';
 import PropTypes from 'prop-types';
 import logo from '../../../../assets/images/logo.png';
 import nkwashiLogoUrl from '../../../../assets/images/logo-footer.png';
@@ -97,17 +97,17 @@ export default function WelcomePage() {
           </Grid>
           <Grid item xs={12} md={4} sm={6}>
             <CallIcon color="primary" />
-            <Link href="tel:+260966194383" data-testid="contact">
+            <Link href="tel:+260966194383" data-testid="contact" underline="hover">
               +260 966 194383
             </Link>
             ,
             {' '}
-            <Link href="tel:+260760635024">+260 760 635024</Link>
+            <Link href="tel:+260760635024" underline="hover">+260 760 635024</Link>
           </Grid>
           <Grid item xs={12} md={4} sm={12}>
             <MailIcon color="primary" />
             <Typography component="p" data-testid="contact-email">
-              <Link href="mailto:hello@thebe-im.com">hello@thebe-im.com</Link>
+              <Link href="mailto:hello@thebe-im.com" underline="hover">hello@thebe-im.com</Link>
             </Typography>
           </Grid>
         </Grid>

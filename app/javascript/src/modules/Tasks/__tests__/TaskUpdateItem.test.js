@@ -2,7 +2,7 @@ import React from 'react'
 import { act, render } from '@testing-library/react'
 import { BrowserRouter } from 'react-router-dom/'
 import { MockedProvider } from '@apollo/react-testing'
-import AddBoxOutlinedIcon from '@material-ui/icons/AddBoxOutlined'
+import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined'
 import TaskUpdateItem from '../Components/TaskUpdateItem'
 import '@testing-library/jest-dom/extend-expect'
 

@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Grid from '@mui/material/Grid';
-import Link from '@material-ui/core/Link';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
+import Link from '@mui/material/Link';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import UserAvatar from '../modules/Users/Components/UserAvatar';
 
 export default function UserNameAvatar({ user, style }) {

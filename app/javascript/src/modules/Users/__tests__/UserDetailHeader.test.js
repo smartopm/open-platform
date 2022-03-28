@@ -38,12 +38,14 @@ describe('User Detail Header Component', () => {
     const container = render(
       <MockedProvider>
         <BrowserRouter>
-          <UserDetailHeader
-            data={data}
-            userType="admin"
-            currentTab="Contacts"
-            authState={authState}
-          />
+          <MockedThemeProvider>
+            <UserDetailHeader
+              data={data}
+              userType="admin"
+              currentTab="Contacts"
+              authState={authState}
+            />
+          </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>
     );
@@ -68,12 +70,12 @@ describe('User Detail Header Component', () => {
       </MockedProvider>
     );
 
-    expect(container.queryByTestId('button')).toBeInTheDocument();
+    expect(container.queryAllByTestId('button')[0]).toBeInTheDocument();
 
-    fireEvent.click(container.queryByTestId('arrow-icon'));
-    expect(container.queryByText('common:menu.user_settings')).toBeInTheDocument();
+    fireEvent.click(container.queryAllByTestId('arrow-icon')[0]);
+    expect(container.queryAllByText('common:menu.user_settings')[0]).toBeInTheDocument();
 
-    fireEvent.click(container.queryByText('common:menu.user_settings'));
+    fireEvent.click(container.queryAllByText('common:menu.user_settings')[0]);
     expect(container.queryByText('common:right_menu.edit_user')).toBeInTheDocument();
     fireEvent.click(container.queryByText('common:right_menu.edit_user'));
     fireEvent.click(container.queryByText('common:menu.print_id'));
@@ -84,12 +86,12 @@ describe('User Detail Header Component', () => {
     expect(container.queryByText('common:menu.print_id')).not.toBeInTheDocument();
     expect(container.queryByText('common:menu.merge_user')).not.toBeInTheDocument();
     expect(container.queryByText('common:menu.user_logs')).not.toBeInTheDocument();
-    fireEvent.click(container.queryByText('common:misc.payments'));
-    fireEvent.click(container.queryByText('common:misc.plots'));
-    fireEvent.click(container.queryByText('common:misc.lead_details'));
-    fireEvent.click(container.queryByText('common:misc.forms'));
-    fireEvent.click(container.queryByText('common:menu.customer_journey'));
-    fireEvent.click(container.queryByText('common:misc.communication'));
+    fireEvent.click(container.queryAllByText('common:misc.payments')[0]);
+    fireEvent.click(container.queryAllByText('common:misc.plots')[0]);
+    fireEvent.click(container.queryAllByText('common:misc.lead_details')[0]);
+    fireEvent.click(container.queryAllByText('common:misc.forms')[0]);
+    fireEvent.click(container.queryAllByText('common:menu.customer_journey')[0]);
+    fireEvent.click(container.queryAllByText('common:misc.communication')[0]);
     expect(container.queryByText('common:right_menu.communications')).toBeInTheDocument();
     fireEvent.click(container.queryByText('common:menu.send_sms'));
     fireEvent.click(container.queryByText('common:menu.send_otp'));
@@ -97,7 +99,7 @@ describe('User Detail Header Component', () => {
     fireEvent.click(container.queryAllByText('common:misc.communication')[1]);
     expect(container.queryByText('common:menu.send_sms')).not.toBeInTheDocument();
     expect(container.queryByText('common:menu.send_otp')).not.toBeInTheDocument();
-    fireEvent.click(container.queryByTestId('arrow-icon'));
+    fireEvent.click(container.queryAllByTestId('arrow-icon')[0]);
     expect(container.queryByText('common:right_menu.edit_user')).not.toBeInTheDocument();
   });
 
@@ -105,7 +107,14 @@ describe('User Detail Header Component', () => {
     const container = render(
       <MockedProvider>
         <BrowserRouter>
-          <UserDetailHeader data={data} userType='client' currentTab='Contacts' authState={authState} />
+          <MockedThemeProvider>
+            <UserDetailHeader
+              data={data}
+              userType="client"
+              currentTab="Contacts"
+              authState={authState}
+            />
+          </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>
     );

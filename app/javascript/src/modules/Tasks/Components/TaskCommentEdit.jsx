@@ -3,10 +3,10 @@ import React, { useState, useEffect } from 'react';
 import { useMutation } from 'react-apollo';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import Avatar from '@material-ui/core/Avatar';
-import Button from '@material-ui/core/Button';
-import { makeStyles } from '@material-ui/core/styles';
-import TextField from '@material-ui/core/TextField';
+import Avatar from '@mui/material/Avatar';
+import Button from '@mui/material/Button';
+import makeStyles from '@mui/styles/makeStyles';
+import TextField from '@mui/material/TextField';
 import { TaskCommentUpdate } from '../../../graphql/mutations';
 
 export default function EditField({ handleClose, data, refetch, commentsRefetch }) {
@@ -50,6 +50,7 @@ export default function EditField({ handleClose, data, refetch, commentsRefetch 
               value={body}
               id="outlined-size-small"
               variant="outlined"
+              label={t('form_actions.comment_edit')}
               size="small"
               onChange={e => setBody(e.target.value)}
               inputProps={{ 'data-testid': 'body_input' }}

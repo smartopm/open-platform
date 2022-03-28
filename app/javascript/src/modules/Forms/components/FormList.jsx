@@ -18,11 +18,11 @@ import {
   Select,
   FormControl,
   InputLabel
-} from '@material-ui/core'
-import MoreVertIcon from '@material-ui/icons/MoreVert'
-import AssignmentIcon from '@material-ui/icons/Assignment'
+} from '@mui/material'
+import MoreVertIcon from '@mui/icons-material/MoreVert'
+import AssignmentIcon from '@mui/icons-material/Assignment'
 import { useMutation, useQuery } from 'react-apollo'
-import { useTheme } from '@material-ui/styles'
+import { useTheme } from '@mui/styles'
 import { StyleSheet, css } from 'aphrodite'
 import PropTypes from 'prop-types'
 import { useHistory } from 'react-router'
@@ -121,6 +121,7 @@ export default function FormLinkList({ userType, community }) {
                       aria-haspopup="true"
                       onClick={event => handleOpenMenu(event, form.id)}
                       dataid={form.id}
+                      size="large"
                     >
                       <MoreVertIcon />
                     </IconButton>
@@ -160,7 +161,7 @@ export default function FormLinkList({ userType, community }) {
         />
       )} 
     </div>
-  )
+  );
 }
 
 // TODO: This should be its own separate file
@@ -276,7 +277,7 @@ export function FormMenu({ formId, formName, anchorEl, handleClose, open, refetc
 // TODO: This should be its own separate file
 export function FormDialog({actionType, form, formMutation, open, setOpen, message, setMessage, setAlertOpen, refetch}){
   const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down('xs'));
+  const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const { t } = useTranslation('form')
   const [expiresAt, setExpiresAtDate] = useState(form?.expiresAt || null)
   const [isLoading, setLoading] = useState(false);

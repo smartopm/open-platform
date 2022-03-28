@@ -53,26 +53,19 @@ describe('Gate Access', () => {
     cy.get('[aria-label=SpeedDial]').click();
     cy.wait(1000);
 
-    cy.get('[data-testid=date-picker]')
-      .eq(0)
-      .type('2021-10-10');
+    cy.get('[data-testid=date-picker]').eq(0).click()
+    cy.get('.MuiPickersDay-today').click()
+    cy.contains('Ok').click();
     cy.wait(1000);
 
-    cy.get('[data-testid=time_picker]')
-      .eq(0)
-      .click();
-    // using element's coordinates to pick the time, seems like the only possible way to pick time
-    cy.get('.MuiPickersClock-squareMask').click(250, 120);
-    cy.get('.MuiPickersClock-squareMask').click(250, 60);
-    cy.get('.MuiPickersClock-squareMask').type('{enter}');
+    cy.get('[data-testid=time_picker]').eq(0).click();
+    cy.contains('Ok').click();
     cy.wait(1000);
 
     cy.get('[data-testid=time_picker]')
       .eq(1)
       .click();
-    cy.get('.MuiPickersClock-squareMask').click(250, 180);
-    cy.get('.MuiPickersClock-squareMask').click(250, 80);
-    cy.get('.MuiPickersClock-squareMask').type('{enter}');
+    cy.contains('Ok').click();
     cy.wait(500);
 
     // Find an existing visitor

@@ -6,7 +6,7 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useLazyQuery } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 import { useLocation } from 'react-router'
 import TaskDataList from './TaskDataList';
 import FileUploader from './FileUploader';

@@ -4,7 +4,7 @@ import { useMutation } from 'react-apollo';
 import { StyleSheet, css } from 'aphrodite';
 import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
-import { Button, Grid } from '@material-ui/core';
+import { Button, Grid } from '@mui/material';
 import { ImportCreate } from '../../../../graphql/mutations';
 import CenteredContent from '../../../../shared/CenteredContent';
 import { Spinner } from '../../../../shared/Loading';
@@ -99,73 +99,73 @@ export default function UsersImport() {
         <Grid item md={6} style={{ margin: '5px auto' }}>
           {isLoading ? (
             <Spinner />
-          ) : (
-            <div>
-              <Grid container justify="center" style={{ marginTop: '5px', marginBottom: '5px' }}>
-                <Grid item md={12} xs={12} style={{ alignSelf: 'center' }}>
-                  <label htmlFor="lead-csv-input">
-                    <input
-                      accept=".csv"
-                      type="file"
-                      id="lead-csv-input"
-                      data-testid="lead-csv-input"
-                      style={{ display: 'none' }}
-                      onChange={processCsv}
-                    />
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      data-testid="lead-csv-input-button"
-                      component="span"
-                      style={{ display: 'inline-block' }}
-                    >
-                      {t('lead_management.import_form_status_actions.upload_file')}
-                    </Button>
-                    <div style={{ display: 'inline-block', padding: '10px' }} id="file-select-name">
-                      {t('lead_management.import_form_status_actions.choose_file')}
-                    </div>
-                  </label>
+        ) : (
+          <div>
+            <Grid container justifyContent="center" style={{ marginTop: '5px', marginBottom: '5px' }}>
+              <Grid item md={12} xs={12} style={{ alignSelf: 'center' }}>
+                <label htmlFor="lead-csv-input">
+                  <input
+                    accept=".csv"
+                    type="file"
+                    id="lead-csv-input"
+                    data-testid="lead-csv-input"
+                    style={{ display: 'none' }}
+                    onChange={processCsv}
+                  />
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    data-testid="lead-csv-input-button"
+                    component="span"
+                    style={{ display: 'inline-block' }}
+                  >
+                    {t('lead_management.import_form_status_actions.upload_file')}
+                  </Button>
+                  <div style={{ display: 'inline-block', padding: '10px' }} id="file-select-name">
+                    {t('lead_management.import_form_status_actions.choose_file')}
+                  </div>
+                </label>
+                <br />
+              </Grid>
+
+              {CSVFileUploadErrors.length > 0 && (
+                <Grid item md={12} xs={12}>
+                  <div
+                    style={{ color: 'red' }}
+                    id="invalidMessages"
+                    data-testid="lead-csv-errors"
+                  />
                   <br />
                 </Grid>
-
-                {CSVFileUploadErrors.length > 0 && (
-                  <Grid item md={12} xs={12}>
-                    <div
-                      style={{ color: 'red' }}
-                      id="invalidMessages"
-                      data-testid="lead-csv-errors"
-                    />
-                    <br />
-                  </Grid>
-                )}
-              </Grid>
-              {csvString.length > 0 && CSVFileUploadErrors.length === 0 && (
-                <CenteredContent>
-                  <Button
-                    variant="contained"
-                    aria-label="business_cancel"
-                    color="secondary"
-                    className={css(styles.cancelBtn)}
-                    onClick={onCancel}
-                    data-testid="cancel-btn"
-                  >
-                    {t('lead_management.import_form_status_actions.cancel')}
-                  </Button>
-                  <Button
-                    variant="contained"
-                    type="submit"
-                    aria-label="business_submit"
-                    color="primary"
-                    data-testid="import-btn"
-                    onClick={createImport}
-                    className={css(styles.importBtn)}
-                  >
-                    {t('lead_management.import_form_status_actions.import')}
-                  </Button>
-                </CenteredContent>
               )}
-            </div>
-          )}
+            </Grid>
+            {csvString.length > 0 && CSVFileUploadErrors.length === 0 && (
+              <CenteredContent>
+                <Button
+                  variant="contained"
+                  aria-label="business_cancel"
+                  color="secondary"
+                  className={css(styles.cancelBtn)}
+                  onClick={onCancel}
+                  data-testid="cancel-btn"
+                >
+                  {t('lead_management.import_form_status_actions.cancel')}
+                </Button>
+                <Button
+                  variant="contained"
+                  type="submit"
+                  aria-label="business_submit"
+                  color="primary"
+                  data-testid="import-btn"
+                  onClick={createImport}
+                  className={css(styles.importBtn)}
+                >
+                  {t('lead_management.import_form_status_actions.import')}
+                </Button>
+              </CenteredContent>
+            )}
+          </div>
+        )}
         </Grid>
         <br />
         <Grid item md={6} style={{ alignSelf: 'center', marginLeft: '25px', marginRight: '25px' }}>
@@ -327,7 +327,7 @@ export default function UsersImport() {
         </Grid>
       </Grid>
     </>
-  );
+);
 }
 
 const styles = StyleSheet.create({

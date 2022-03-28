@@ -6,6 +6,7 @@ import { BrowserRouter } from 'react-router-dom';
 import FormContextProvider from '../../Context';
 import Form from '../../components/Category/Form';
 import { FormQuery } from '../../graphql/forms_queries';
+import MockedThemeProvider from '../../../__mocks__/mock_theme';
 
 jest.mock('react-markdown', () => <div />);
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
@@ -35,7 +36,9 @@ describe('Form Component', () => {
       <MockedProvider mocks={[formMock]} addTypename={false}>
         <BrowserRouter>
           <FormContextProvider>
-            <Form editMode formId="7d05e98e-e6bb-43cb-838e-e6d76005e326" />
+            <MockedThemeProvider>
+              <Form editMode formId="7d05e98e-e6bb-43cb-838e-e6d76005e326" />
+            </MockedThemeProvider>
           </FormContextProvider>
         </BrowserRouter>
       </MockedProvider>
@@ -63,7 +66,9 @@ describe('Form Component', () => {
       <MockedProvider mocks={[formMock]} addTypename={false}>
         <BrowserRouter>
           <FormContextProvider>
-            <Form formId="7d05e98e-e6bb-43cb-838e-e6d76005e326" editMode={false} />
+            <MockedThemeProvider>
+              <Form formId="7d05e98e-e6bb-43cb-838e-e6d76005e326" editMode={false} />
+            </MockedThemeProvider>
           </FormContextProvider>
         </BrowserRouter>
       </MockedProvider>

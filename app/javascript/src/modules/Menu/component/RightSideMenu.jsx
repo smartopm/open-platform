@@ -1,5 +1,5 @@
 import React from 'react';
-import Drawer from '@material-ui/core/Drawer';
+import Drawer from '@mui/material/Drawer';
 import PropTypes from 'prop-types';
 import SideMenu from './SideMenu';
 // these will only be the admin specific menus

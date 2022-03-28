@@ -1,10 +1,10 @@
 import React, { Fragment } from 'react';
-import { Divider, Link, List, ListItem, ListItemText, Typography } from '@material-ui/core';
+import { Divider, Link, List, ListItem, ListItemText, Typography , Card, CardContent, Container, Grid } from '@mui/material';
 import { useQuery } from 'react-apollo';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTranslation } from 'react-i18next';
-import { makeStyles } from '@material-ui/styles';
-import { Card, CardContent, Container, Grid } from '@mui/material';
+import { makeStyles } from '@mui/styles';
+
 import { useHistory } from 'react-router-dom';
 import { formatError } from '../../../../utils/helpers';
 import CenteredContent from '../../../../shared/CenteredContent';
@@ -147,7 +147,7 @@ export default function AdminDashboard() {
       <Typography variant="h4" className={classes.title}>
         {t('processes.processes')}
       </Typography>
-      <Link href="/processes/drc/projects">
+      <Link href="/processes/drc/projects" underline="hover">
         <Typography className={classes.processTitle} color="primary" variant="h5">
           {t('processes.drc_process')}
         </Typography>

@@ -1,8 +1,8 @@
 import React, { useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Grid, Typography } from '@mui/material';
-import { Button } from '@material-ui/core';
-import { makeStyles } from '@material-ui/styles';
+import { Grid, Typography , Button } from '@mui/material';
+
+import { makeStyles } from '@mui/styles';
 import { Link } from 'react-router-dom';
 import { useLazyQuery } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
@@ -91,7 +91,7 @@ export default function ProjectOverview({ data }) {
         )}
         { data?.formUser?.user && (
           <>
-            <Grid container spacing={10} className={classes.overViewItem}>
+            <Grid container spacing={2} className={classes.overViewItem}>
               <Grid item xs={5} md={5}>
                 <Typography variant="caption" color="textSecondary">
                   {t('processes.submitted_by')}
@@ -102,8 +102,6 @@ export default function ProjectOverview({ data }) {
                   {data.formUser.user?.name}
                 </Typography>
               </Grid>
-            </Grid>
-            <Grid container spacing={10} className={classes.overViewItem}>
               <Grid item xs={5} md={5}>
                 <Typography variant="caption" color="textSecondary">
                   {t('processes.submitted_form')}

@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import Button from '@material-ui/core/Button'
-import Grid from '@material-ui/core/Grid'
+import Button from '@mui/material/Button'
+import Grid from '@mui/material/Grid'
 import { StyleSheet, css } from 'aphrodite'
 import { useMutation, useQuery } from 'react-apollo'
 import { PropTypes } from 'prop-types'
-import  Typography from '@material-ui/core/Typography'
-import PlayArrowIcon from '@material-ui/icons/PlayArrow';
-import StopIcon from '@material-ui/icons/Stop';
+import  Typography from '@mui/material/Typography'
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import StopIcon from '@mui/icons-material/Stop';
 import { useTranslation } from 'react-i18next'
 import { Spinner } from '../../../shared/Loading'
 import { useWindowDimensions } from '../../../utils/customHooks'
@@ -80,10 +80,10 @@ export default function ShiftButtons({ userId }) {
       container
       spacing={1}
       direction="row"
-      justify="space-around"
+      justifyContent="space-around"
       alignItems="center"
     >
-      <Grid item xs={6} container justify="flex-end">
+      <Grid item xs={6} container justifyContent="flex-end">
         <Button onClick={handleStartShift} className={`${css(styles.startBtn)} start-shift-btn`} disabled={isInProgress}>
           {
             // eslint-disable-next-line no-nested-ternary
@@ -102,7 +102,7 @@ export default function ShiftButtons({ userId }) {
           }
       </Grid>
     </Grid>
-  )
+  );
 }
 
 const styles = StyleSheet.create({

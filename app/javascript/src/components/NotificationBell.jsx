@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import { Badge } from '@material-ui/core';
-import NotificationsIcon from '@material-ui/icons/Notifications';
+import { Badge } from '@mui/material';
+import NotificationsIcon from '@mui/icons-material/Notifications';
 import PropTypes from 'prop-types';
 import { StyleSheet, css } from 'aphrodite';
-import Popover from '@material-ui/core/Popover';
+import Popover from '@mui/material/Popover';
 import { useHistory } from 'react-router-dom';
 import { useMutation, useQuery } from 'react-apollo';
-import Typography from '@material-ui/core/Typography';
-import PanToolIcon from '@material-ui/icons/PanTool';
+import Typography from '@mui/material/Typography';
+import PanToolIcon from '@mui/icons-material/PanTool';
 import { MsgNotificationUpdate } from '../graphql/mutations';
 import { MyTaskCountQuery, messageCountQuery } from '../graphql/queries';
 

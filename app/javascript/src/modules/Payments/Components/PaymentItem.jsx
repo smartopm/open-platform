@@ -1,7 +1,7 @@
 import React from 'react';
-import Grid from '@material-ui/core/Grid';
+import Grid from '@mui/material/Grid';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 import Label from '../../../shared/label/Label';
 import { toTitleCase, objectAccessor, formatMoney, InvoiceStatusColor } from '../../../utils/helpers';
 import Text from '../../../shared/Text';

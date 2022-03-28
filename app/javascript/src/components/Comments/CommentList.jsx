@@ -2,8 +2,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types'
-import { makeStyles } from '@material-ui/core/styles';
-import { Typography } from '@material-ui/core';
+import makeStyles from '@mui/styles/makeStyles';
+import { Typography } from '@mui/material';
 import DateContainer from '../DateContainer'
 import CenteredContent from '../CenteredContent'
 
@@ -26,13 +26,13 @@ export default function CommentList({ data }) {
                   :
                 </Link>
                 )
-           : <Link to={`/discussions/${comment.discussion.id}`}>discussion:</Link>}  
+           : <Link to={`/discussions/${comment.discussion.id}`}>discussion:</Link>}
             </Typography>
             <blockquote className={classes.blockQuote}>
               <i>{comment.content}</i>
             </blockquote>
           </div>
-          <span 
+          <span
             data-testid="delete_icon"
             className={classes.itemAction}
           >
@@ -59,7 +59,7 @@ const useStyles = makeStyles({
   itemAction: {
     marginLeft: 'auto',
     order: 2
-  }, 
+  },
   blockQuote: {
     marginLeft: '15px'
   }

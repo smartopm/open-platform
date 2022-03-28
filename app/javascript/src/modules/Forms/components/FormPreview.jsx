@@ -1,4 +1,4 @@
-import { Button, Container } from '@material-ui/core';
+import { Button, Container } from '@mui/material';
 import React, { useContext } from 'react';
 import ReactMarkDown from 'react-markdown';
 import PropTypes from 'prop-types';

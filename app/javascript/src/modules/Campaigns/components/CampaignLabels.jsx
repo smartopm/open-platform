@@ -1,6 +1,6 @@
 import React from 'react';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import { TextField, Chip } from '@material-ui/core';
+import Autocomplete from '@mui/material/Autocomplete';
+import { TextField, Chip } from '@mui/material';
 import { useQuery } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
