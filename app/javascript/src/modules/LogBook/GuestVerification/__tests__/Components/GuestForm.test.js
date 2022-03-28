@@ -37,7 +37,7 @@ describe('Guest Form component', () => {
         </MockedProvider>
       </Context.Provider>
     );
-    expect(container.queryByText('form_fields.full_name')).toBeInTheDocument();
+    expect(container.queryAllByText('form_fields.full_name')[0]).toBeInTheDocument();
     expect(container.queryByTestId('entry_user_grant')).toBeInTheDocument();
 
     fireEvent.click(container.queryByTestId('entry_user_grant')) // no access to validation errors
