@@ -125,6 +125,7 @@ export default function EditModal({ open, handleClose, data, refetch, type }) {
             />
             <TextField
               autoFocus={ifNotTest()}
+              variant="standard"
               margin="dense"
               id="color"
               type="text"

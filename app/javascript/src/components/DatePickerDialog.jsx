@@ -63,7 +63,6 @@ export default function DatePickerDialog({
         value={selectedDate}
         required={required}
         onChange={date => handleDateChange(date)}
-        minDate={new Date()}
         {...others}
         disabled={disabled}
       />

@@ -98,10 +98,11 @@ export default function AllMessages() {
           </FormControl>
         </div>
         <CenteredContent>
-          <FormControl className={classes.formControl}>
+          <FormControl className={classes.formControl} style={{width: '175px'}} data-testId='category-filter'>
             <InputLabel id="category-filter">{t('common:misc.filter_message_by_category')}</InputLabel>
             <Select
               labelId="category-filter"
+              label={t('common:misc.filter_message_by_category')}
               id="demo-controlled-open-select"
               value={category}
               onChange={handleFilter}

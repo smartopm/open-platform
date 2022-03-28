@@ -14,6 +14,6 @@ describe('AllMessages Component', () => {
         </BrowserRouter>
       </MockedProvider>
     );
-    await waitFor(() =>  expect(container.queryByText('common:misc.filter_message_by_category')).toBeInTheDocument());
+    await waitFor(() =>  expect(container.queryByTestId('category-filter')).toBeInTheDocument());
   });
 });

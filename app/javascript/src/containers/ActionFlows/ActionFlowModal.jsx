@@ -348,6 +348,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
               </InputLabel>
               <Select
                 labelId="select-event"
+                label={t('actionflow:form_fields.select_event')}
                 id="select-event"
                 data-testid="select-event-type"
                 name="eventType"

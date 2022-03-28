@@ -126,7 +126,7 @@ describe('Test the Todo page', () => {
     await waitFor(() => {
       expect(screen.queryByText('task.task_body_label')).toBeInTheDocument();
       expect(screen.queryAllByText('task.task_description_label')[0]).toBeInTheDocument();
-      expect(screen.queryByText('task.task_type_label')).toBeInTheDocument();
+      expect(screen.queryAllByText('task.task_type_label')[0]).toBeInTheDocument();
       expect(screen.queryByText('common:form_placeholders.note_due_date')).toBeInTheDocument();
     });
   });

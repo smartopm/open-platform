@@ -105,6 +105,7 @@ export default function TaskForm({ close, refetch, users, assignUser, parentTask
         <InputLabel id="taskType">{t('task.task_type_label')}</InputLabel>
         <Select
           id="taskType"
+          label={t('task.task_type_label')}
           value={taskType}
           onChange={event => setTaskType(event.target.value)}
           name="taskType"
@@ -118,6 +119,7 @@ export default function TaskForm({ close, refetch, users, assignUser, parentTask
             ))}
         </Select>
       </FormControl>
+      <br />
       <br />
       <CustomAutoComplete
         users={users}

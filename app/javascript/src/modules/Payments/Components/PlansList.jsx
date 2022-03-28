@@ -367,6 +367,7 @@ export function PlansList({
                     <Grid>
                       <Select
                         labelId="user-action-select"
+                        variant="standard"
                         id="user-action-select"
                         value={selectDropdown}
                         onChange={handleSelectOptionAndCheckBox}
