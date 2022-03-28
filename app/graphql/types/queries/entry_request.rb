@@ -3,6 +3,7 @@
 # Queries module for breaking out queries
 # rubocop:disable Metrics/ModuleLength
 module Types::Queries::EntryRequest
+  include Types::Queries::Helpers::EntryRequest
   extend ActiveSupport::Concern
 
   # rubocop:disable Metrics/BlockLength
@@ -188,10 +189,6 @@ module Types::Queries::EntryRequest
     entry_requests.search(or: [{ query: (query.presence || '.') }, { name: { matches: query } }])
   end
 
-  def valid_type?(type)
-    %w[peopleEntered peopleExited peoplePresent].include?(type)
-  end
-
   def people_present(entry_requests, duration)
     people_entered(entry_requests, duration).where(exited_at: nil)
   end
@@ -214,31 +211,6 @@ module Types::Queries::EntryRequest
     start_time = duration_based_start_time(duration)
     entry_requests
       .where('created_at >= ? AND created_at <= ?', start_time, end_time)
-  end
-
-  def duration_based_start_time(duration)
-    current_day_start = Time.zone.now.to_datetime.beginning_of_day
-
-    case duration
-    when 'past7Days'
-      (current_day_start - 7.days).to_s
-    when 'past30Days'
-      (current_day_start - 30.days).to_s
-    else
-      current_day_start.to_s
-    end
-  end
-
-  def end_time
-    Time.zone.now.to_datetime.end_of_day.to_s
-  end
-
-  def can_view_entry_request?
-    permitted?(module: :entry_request, permission: :can_view_entry_request)
-  end
-
-  def can_view_entry_requests?
-    permitted?(module: :entry_request, permission: :can_view_entry_requests)
   end
   # rubocop:enable Metrics/MethodLength,  Metrics/AbcSize
 end
