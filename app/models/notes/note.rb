@@ -116,13 +116,12 @@ module Notes
     # rubocop:disable Layout/LineLength
     # rubocop:disable Metrics/MethodLength
     def self.by_quarter(quarter, task_category: :completed)
-      return projects_by_task_category(task_category) if quarter.eql?('all')
-
       quarter_range = {
         'Q1' => [1, 3],
         'Q2' => [4, 6],
         'Q3' => [7, 9],
         'Q4' => [10, 12],
+        'ytd' => [1, 12],
       }
 
       unless quarter_range.keys.include?(quarter)
@@ -142,10 +141,12 @@ module Notes
     # rubocop:enable Metrics/MethodLength
     # rubocop:enable Layout/LineLength
 
-    def self.projects_by_task_category(task_category)
-      return where('notes.created_at <= ?', Time.zone.now) if task_category.eql?(:submitted)
+    def self.by_life_time_totals(task_category: completed)
+      results = where('notes.created_at <= ?', Time.zone.now) if task_category.eql?(:submitted)
+      results = where(completed: [false, nil]) if task_category.eql?(:outstanding)
+      results = where(completed: true) if task_category.eql?(:completed)
 
-      where(completed: true)
+      results
     end
 
     private

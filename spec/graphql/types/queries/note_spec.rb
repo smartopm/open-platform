@@ -204,11 +204,25 @@ RSpec.describe Types::Queries::Note do
 
     let(:projects_query) do
       <<~GQL
-        query GetProjects($offset: Int, $limit: Int, $step: String, $completedPerQuarter: String, $submittedPerQuarter: String) {
-          projects(offset: $offset, limit: $limit, step: $step, completedPerQuarter: $completedPerQuarter, submittedPerQuarter: $submittedPerQuarter) {
-            #{task_fragment}
+        query GetProjects(
+          $offset: Int,
+          $limit: Int,
+          $step: String,
+          $completedPerQuarter: String,
+          $submittedPerQuarter: String,
+          $lifeTimeCategory: String
+        ) {
+          projects(
+            offset: $offset,
+            limit: $limit,
+            step: $step,
+            completedPerQuarter: $completedPerQuarter,
+            submittedPerQuarter: $submittedPerQuarter,
+            lifeTimeCategory: $lifeTimeCategory
+          ){
+              #{task_fragment}
+            }
           }
-        }
       GQL
     end
 
@@ -933,7 +947,7 @@ RSpec.describe Types::Queries::Note do
           result = DoubleGdpSchema.execute(projects_query, context: {
                                              current_user: site_worker,
                                              site_community: site_worker.community,
-                                           }).as_json
+                                           }, variables: {}).as_json
           expect(result['errors']).to be_nil
           expect(result.dig('data', 'projects').length).to eql 2
           expect(result.dig('data', 'projects', 0, 'submittedBy', 'id')).to eql admin.id
@@ -1167,15 +1181,13 @@ RSpec.describe Types::Queries::Note do
           second_note.update(completed_at: Time.zone.local(Date.current.year, '05', '05'))
         end
 
-        context 'when all is passed as an argument' do
-          before { second_note.update(completed_at: '2021-01-01') }
-
+        context 'when ytd is passed as an argument' do
           it 'returns the projects completed till now' do
             result = DoubleGdpSchema.execute(projects_query, context: {
                                                current_user: site_worker,
                                                site_community: site_worker.community,
                                              }, variables: {
-                                               completedPerQuarter: 'all',
+                                               completedPerQuarter: 'ytd',
                                              }).as_json
 
             expect(result['errors']).to be_nil
@@ -1221,15 +1233,13 @@ RSpec.describe Types::Queries::Note do
           second_note.update(created_at: Time.zone.local(Date.current.year, '05', '05'))
         end
 
-        context 'when all is passed as an argument' do
-          before { second_note.update(created_at: '2021-01-01') }
-
+        context 'when ytd is passed as an argument' do
           it 'returns the projects submitted till now' do
             result = DoubleGdpSchema.execute(projects_query, context: {
                                                current_user: site_worker,
                                                site_community: site_worker.community,
                                              }, variables: {
-                                               submittedPerQuarter: 'all',
+                                               submittedPerQuarter: 'ytd',
                                              }).as_json
 
             expect(result['errors']).to be_nil
@@ -1259,6 +1269,64 @@ RSpec.describe Types::Queries::Note do
                                       submittedPerQuarter: 'Q9',
                                     }).as_json
           end.to raise_error('Invalid argument. quarter should be either Q1, Q2, Q3 or Q4')
+        end
+      end
+
+      context 'when life_time_category is passed in argument' do
+        before do
+          form
+          another_form
+          form_user
+          another_form_user
+          first_note.update(form_user_id: form_user.id)
+          first_note.update(created_at: Time.zone.local(Date.current.year - 1, '02', '02'))
+
+          second_note.update(form_user_id: another_form_user.id, completed: true)
+          second_note.update(created_at: Time.zone.local(Date.current.year - 2, '05', '05'))
+        end
+
+        context 'when life time category is for submitted projects' do
+          it 'returns lists of projects submitted till now' do
+            result = DoubleGdpSchema.execute(projects_query, context: {
+                                               current_user: site_worker,
+                                               site_community: site_worker.community,
+                                             }, variables: {
+                                               lifeTimeCategory: 'submitted',
+                                             }).as_json
+
+            expect(result['errors']).to be_nil
+            expect(result.dig('data', 'projects').length).to eql 2
+          end
+        end
+
+        context 'when life time category is for completed projects' do
+          it 'returns lists of projects completed till now' do
+            result = DoubleGdpSchema.execute(projects_query, context: {
+                                               current_user: site_worker,
+                                               site_community: site_worker.community,
+                                             }, variables: {
+                                               lifeTimeCategory: 'completed',
+                                             }).as_json
+
+            expect(result['errors']).to be_nil
+            expect(result.dig('data', 'projects').length).to eql 1
+            expect(result.dig('data', 'projects', 0, 'id')).to eql second_note.id
+          end
+        end
+
+        context 'when life time category is for outstanding projects' do
+          it 'returns lists of projects outstanding till now' do
+            result = DoubleGdpSchema.execute(projects_query, context: {
+                                               current_user: site_worker,
+                                               site_community: site_worker.community,
+                                             }, variables: {
+                                               lifeTimeCategory: 'outstanding',
+                                             }).as_json
+
+            expect(result['errors']).to be_nil
+            expect(result.dig('data', 'projects').length).to eql 1
+            expect(result.dig('data', 'projects', 0, 'id')).to eql first_note.id
+          end
         end
       end
 

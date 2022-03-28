@@ -97,6 +97,7 @@ module Types::Queries::Note
       argument :step, String, required: false
       argument :completed_per_quarter, String, required: false
       argument :submitted_per_quarter, String, required: false
+      argument :life_time_category, String, required: false
     end
 
     field :project_stages, [GraphQL::Types::JSON], null: false do
@@ -302,8 +303,8 @@ module Types::Queries::Note
   end
 
   # rubocop:disable Metrics/MethodLength
-  # rubocop:disable Layout/LineLength
-  def projects(offset: 0, limit: 50, step: nil, completed_per_quarter: nil, submitted_per_quarter: nil)
+  # rubocop:disable Metrics/AbcSize
+  def projects(**vals)
     # This query only shows projects under the DRC process for now
     # Our notes does not allow us to categorise processes by type
     # This should be implemented in the future to allow us to fetch...
@@ -312,11 +313,13 @@ module Types::Queries::Note
       raise GraphQL::ExecutionError,
             I18n.t('errors.unauthorized')
     end
-
+    completed_per_quarter = vals[:completed_per_quarter]
+    submitted_per_quarter = vals[:submitted_per_quarter]
+    life_time_category = vals[:life_time_category]
     # TODO(Nurudeen): Make completed field defaults to false and not NIL
     results = projects_query
 
-    results = results.where(completed: [false, nil], current_step_body: step) if step
+    results = results.where(completed: [false, nil], current_step_body: vals[:step]) if vals[:step]
 
     results = projects_query.by_quarter(completed_per_quarter) if completed_per_quarter
 
@@ -324,9 +327,12 @@ module Types::Queries::Note
       results = projects_query.by_quarter(submitted_per_quarter, task_category: :submitted)
     end
 
-    results.limit(limit).offset(offset)
+    if valid_life_time_category?(life_time_category)
+      results = projects_query.by_life_time_totals(task_category: life_time_category.to_sym)
+    end
+
+    results.limit(vals[:limit]).offset(vals[:offset])
   end
-  # rubocop:enable Layout/LineLength
   # rubocop:enable Metrics/MethodLength
 
   def project_stages
@@ -341,7 +347,6 @@ module Types::Queries::Note
       .group(:body).count
   end
 
-  # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/MethodLength
   def project_open_tasks(task_id:, limit: 3, offset: 0)
     authorize
@@ -522,6 +527,10 @@ module Types::Queries::Note
       reply_required: true,
       replied_at: nil,
     )
+  end
+
+  def valid_life_time_category?(category)
+    %w[completed submitted outstanding].include?(category)
   end
 end
 # rubocop:enable Metrics/ModuleLength

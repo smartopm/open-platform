@@ -18,8 +18,22 @@ export const ProcessesQuery = gql`
 `
 
 export const ProjectsQuery = gql`
-  query GetProjects($offset: Int, $limit: Int, $step: String, $completedPerQuarter: String, $submittedPerQuarter: String) {
-    projects(offset: $offset, limit: $limit, step: $step, completedPerQuarter: $completedPerQuarter, submittedPerQuarter: $submittedPerQuarter) {
+  query GetProjects(
+    $offset: Int,
+    $limit: Int,
+    $step: String,
+    $completedPerQuarter: String,
+    $submittedPerQuarter: String,
+    $lifeTimeCategory: String
+  ) {
+    projects(
+      offset: $offset,
+      limit: $limit,
+      step: $step,
+      completedPerQuarter: $completedPerQuarter,
+      submittedPerQuarter: $submittedPerQuarter,
+      lifeTimeCategory: $lifeTimeCategory
+    ) {
       ...TaskFields
     }
   }
