@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 import Typography from '@mui/material/Typography';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { Link } from 'react-router-dom';
-import Hidden from '@mui/material/Hidden';
 import Avatar from '@mui/material/Avatar';
 import makeStyles from '@mui/styles/makeStyles';
 import { Checkbox, IconButton } from '@mui/material';
@@ -32,6 +31,8 @@ export default function PlanListItem({
   const [open, setOpen] = useState(false);
   const { t } = useTranslation(['payment', 'common']);
   const matches = useMediaQuery('(max-width:600px)');
+  const smDownHidden = useMediaQuery(theme => theme.breakpoints.down('sm'));
+  const smUpHidden = useMediaQuery(theme => theme.breakpoints.up('sm'));
 
   const colors = {
     cancelled: '#e74540',
@@ -72,15 +73,16 @@ export default function PlanListItem({
             </Grid>
           </Grid>
         </Grid>
-        <Hidden smUp>
-          <Grid
-            item
-            xs={4}
-            sm={1}
-            data-testid="menu"
-            style={{ textAlign: 'right', marginTop: '-10px' }}
-          >
-            {(data?.planStatus === 'behind' || data?.planStatus === 'on_track') && (
+        {
+          !smUpHidden && (
+            <Grid
+              item
+              xs={4}
+              sm={1}
+              data-testid="menu"
+              style={{ textAlign: 'right', marginTop: '-10px' }}
+            >
+              {(data?.planStatus === 'behind' || data?.planStatus === 'on_track') && (
               <IconButton
                 aria-controls="simple-menu"
                 aria-haspopup="true"
@@ -92,15 +94,16 @@ export default function PlanListItem({
                 <MoreHorizOutlined />
               </IconButton>
             )}
-            <MenuList
-              open={menuData?.open && menuData?.anchorEl?.getAttribute('dataid') === data.id}
-              anchorEl={menuData?.anchorEl}
-              userType={menuData?.userType}
-              handleClose={menuData?.handleClose}
-              list={menuData?.menuList}
-            />
-          </Grid>
-        </Hidden>
+              <MenuList
+                open={menuData?.open && menuData?.anchorEl?.getAttribute('dataid') === data.id}
+                anchorEl={menuData?.anchorEl}
+                userType={menuData?.userType}
+                handleClose={menuData?.handleClose}
+                list={menuData?.menuList}
+              />
+            </Grid>
+          )
+        }
         <Grid item xs={12} sm={7} data-testid="payment-slider">
           <PaymentSlider data={data} currencyData={currencyData} />
         </Grid>
@@ -110,9 +113,10 @@ export default function PlanListItem({
             color={objectAccessor(colors, data.planStatus)}
           />
         </Grid>
-        <Hidden smDown>
-          <Grid item xs={12} sm={1} data-testid="menu">
-            {(data?.planStatus === 'behind' || data?.planStatus === 'on_track') && (
+        {
+          !smDownHidden && (
+            <Grid item xs={12} sm={1} data-testid="menu">
+              {(data?.planStatus === 'behind' || data?.planStatus === 'on_track') && (
               <IconButton
                 aria-controls="simple-menu"
                 aria-haspopup="true"
@@ -124,15 +128,16 @@ export default function PlanListItem({
                 <MoreHorizOutlined />
               </IconButton>
             )}
-            <MenuList
-              open={menuData?.open && menuData?.anchorEl?.getAttribute('dataid') === data.id}
-              anchorEl={menuData?.anchorEl}
-              userType={menuData?.userType}
-              handleClose={menuData?.handleClose}
-              list={menuData?.menuList}
-            />
-          </Grid>
-        </Hidden>
+              <MenuList
+                open={menuData?.open && menuData?.anchorEl?.getAttribute('dataid') === data.id}
+                anchorEl={menuData?.anchorEl}
+                userType={menuData?.userType}
+                handleClose={menuData?.handleClose}
+                list={menuData?.menuList}
+              />
+            </Grid>
+          )
+        }
         <Grid
           item
           xs={6}

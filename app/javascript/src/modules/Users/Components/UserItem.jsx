@@ -7,12 +7,12 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
-  Hidden,
   Checkbox
 } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import PropTypes from 'prop-types';
 import makeStyles from '@mui/styles/makeStyles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTranslation } from 'react-i18next';
 import { Link, useHistory } from 'react-router-dom';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
@@ -35,6 +35,8 @@ export default function UserItem({
   const open = Boolean(anchorEl);
   const history = useHistory();
   const { t } = useTranslation('common');
+  const mdDownHidden = useMediaQuery(theme => theme.breakpoints.down('md'));
+  const mdUpHidden = useMediaQuery(theme => theme.breakpoints.up('md'));
   /**
    * @deprecated prefer getting this contact from the community
    */
@@ -116,7 +118,7 @@ export default function UserItem({
                 data-testid="user_name"
                 className={classes.userName}
               >
-                <strong>
+                <strong> 
                   {' '}
                   {user.name}
                   {' '}
@@ -124,7 +126,7 @@ export default function UserItem({
               </Typography>
             </Link>
           </Grid>
-          <Hidden mdUp>
+          {!mdUpHidden && (
             <Grid item md={1} sm={1} xs={1}>
               <IconButton
                 className={classes.menuButton}
@@ -138,7 +140,7 @@ export default function UserItem({
                 <MoreVertIcon />
               </IconButton>
             </Grid>
-          </Hidden>
+          )}
           <Grid item md={3} sm={6} xs={12}>
             <Typography
               variant="body2"
@@ -168,18 +170,17 @@ export default function UserItem({
               {t(`common:user_types.${user?.userType}`)}
             </Typography>
             {user.subStatus && (
-            <Typography
-              variant="body2"
-              data-testid="user-substatus"
-              gutterBottom
-              className={classes.alignDetailsToAvatarForXs}
-            >
-              {userSubStatus[user.subStatus]}
-            </Typography>
-          )}
+              <Typography
+                variant="body2"
+                data-testid="user-substatus"
+                gutterBottom
+                className={classes.alignDetailsToAvatarForXs}
+              >
+                {userSubStatus[user.subStatus]}
+              </Typography>
+            )}
           </Grid>
-
-          <Hidden mdDown>
+          {!mdDownHidden && (
             <Grid item md={1} sm={1} className={classes.iconButton}>
               <IconButton
                 className={classes.menuButton}
@@ -193,7 +194,7 @@ export default function UserItem({
                 <MoreVertIcon />
               </IconButton>
             </Grid>
-          </Hidden>
+          )}
           <UserActionMenu
             data={{ user }}
             router={history}
@@ -208,7 +209,7 @@ export default function UserItem({
         </Grid>
       </ListItem>
     </>
-);
+  );
 }
 
 UserItem.propTypes = {
@@ -298,7 +299,7 @@ const useStyles = makeStyles(() => ({
     },
     alignDetailsToAvatarFromSm: {
       marginLeft: '11%'
-    },
+    }
   },
   '@media (max-width: 430px)': {
     alignDetailsToAvatarForXs: {
@@ -307,5 +308,5 @@ const useStyles = makeStyles(() => ({
     alignDetailsToAvatarFromSm: {
       marginLeft: '18%'
     }
-  },
+  }
 }));

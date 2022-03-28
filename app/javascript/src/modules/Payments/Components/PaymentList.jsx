@@ -5,7 +5,7 @@
 import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { CSVLink } from 'react-csv';
-import { Button, Container, Grid, List, Typography, Hidden } from '@mui/material';
+import { Button, Container, Grid, List, Typography } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 import Fab from '@mui/material/Fab';
 import PropTypes from 'prop-types';
@@ -159,7 +159,7 @@ export default function PaymentList({ currencyData }) {
   }
 
   function csvData(csv) {
-    return csv.map(val => ({ ...val, formattedDate: dateToString(val.createdAt, 'MM-DD-YYYY')}))
+    return csv.map(val => ({ ...val, formattedDate: dateToString(val.createdAt, 'MM-DD-YYYY') }));
   }
 
   function setGraphQuery(qu) {
@@ -241,7 +241,7 @@ export default function PaymentList({ currencyData }) {
   function handleTabValueChange(_event, newValue) {
     history.push(`?tab=${Object.keys(TAB_VALUES).find(key => TAB_VALUES[key] === newValue)}`);
     setTabValue(newValue);
-    if (newValue === 1){
+    if (newValue === 1) {
       loadSubscriptionPlans();
     }
   }
@@ -310,7 +310,11 @@ export default function PaymentList({ currencyData }) {
                         </span>
                       ) : (
                         <CSVLink
-                          data={plansData?.paymentsList.length > 0 ? csvData(plansData?.paymentsList) : []}
+                          data={
+                            plansData?.paymentsList.length > 0
+                              ? csvData(plansData?.paymentsList)
+                              : []
+                          }
                           style={{ color: theme.palette.primary.main, textDecoration: 'none' }}
                           headers={csvHeaders}
                           filename={`payment-data-${dateToString(new Date())}.csv`}
@@ -433,7 +437,7 @@ export default function PaymentList({ currencyData }) {
   );
 }
 
-export function renderPayment(payment, currencyData, theme, matches) {
+export function renderPayment(payment, currencyData, theme, matches, mdDownHidden) {
   return [
     {
       [`${matches ? 'Client Info' : 'Client Name'}`]: (
@@ -446,14 +450,16 @@ export function renderPayment(payment, currencyData, theme, matches) {
               <Avatar src={payment.user.imageUrl} alt="avatar-image" />
               <Typography style={{ margin: '7px', fontSize: '12px' }}>
                 <Text color={matches ? 'primary' : 'inherit'} content={payment.user.name} />
-                <Hidden mdDown>
-                  <br />
-                  <Text
-                    content={`${payment.paymentPlan?.landParcel.parcelType || ''} ${
-                      payment.paymentPlan?.landParcel?.parcelType ? ' - ' : ''
-                    } ${payment.paymentPlan?.landParcel.parcelNumber}`}
-                  />
-                </Hidden>
+                {!mdDownHidden && (
+                  <>
+                    <br />
+                    <Text
+                      content={`${payment.paymentPlan?.landParcel.parcelType || ''} ${
+                        payment.paymentPlan?.landParcel?.parcelType ? ' - ' : ''
+                      } ${payment.paymentPlan?.landParcel.parcelNumber}`}
+                    />
+                  </>
+                )}
               </Typography>
             </div>
           </Link>
@@ -516,11 +522,11 @@ export function renderPayment(payment, currencyData, theme, matches) {
   ];
 }
 
-
 export function TransactionItem({ transaction, currencyData }) {
   const { t } = useTranslation(['payment', 'common']);
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
+  const mdDownHidden = useMediaQuery(theme.breakpoints.down('md'));
   const paymentHeaders = [
     {
       title: `${matches ? 'Client Info' : 'Client Name'}`,
@@ -552,7 +558,7 @@ export function TransactionItem({ transaction, currencyData }) {
     <div style={{ padding: '0 20px' }}>
       <DataList
         keys={paymentHeaders}
-        data={renderPayment(transaction, currencyData, theme, matches)}
+        data={renderPayment(transaction, currencyData, theme, matches, mdDownHidden)}
         hasHeader={false}
       />
     </div>

@@ -1,8 +1,9 @@
-import React from 'react'
-import { MockedProvider } from '@apollo/react-testing'
-import { render } from '@testing-library/react'
-import { BrowserRouter } from 'react-router-dom/'
-import UserListCard from '../Components/UserListCard'
+import React from 'react';
+import { MockedProvider } from '@apollo/react-testing';
+import { render } from '@testing-library/react';
+import { BrowserRouter } from 'react-router-dom/';
+import UserListCard from '../Components/UserListCard';
+import MockedThemeProvider from '../../__mocks__/mock_theme';
 
 describe('It displays the user list and interactions', () => {
   const props = {
@@ -33,26 +34,22 @@ describe('It displays the user list and interactions', () => {
     selectedUsers: ['uuid123-4'],
     offset: 0,
     selectCheckBox: false
-  }
+  };
   it('mounts component without error', () => {
     const container = render(
       <MockedProvider mocks={[]}>
         <BrowserRouter>
-          <UserListCard {...props} />
+          <MockedThemeProvider>
+            <UserListCard {...props} />
+          </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>
-    )
-    expect(container.queryByText(/Test Referral 2/).textContent).toContain(
-      'Test Referral 2'
-    )
-    expect(container.queryByText(/0987654123/).textContent).toContain(
-      '0987654123'
-    )
-    expect(container.queryByText(/domain@email.com/).textContent).toContain(
-      'domain@email.com'
-    )
+    );
+    expect(container.queryByText(/Test Referral 2/).textContent).toContain('Test Referral 2');
+    expect(container.queryByText(/0987654123/).textContent).toContain('0987654123');
+    expect(container.queryByText(/domain@email.com/).textContent).toContain('domain@email.com');
     expect(container.queryByTestId('user-substatus').textContent).toContain(
       'Building Permit Approved'
-    )
-  })
-})
+    );
+  });
+});

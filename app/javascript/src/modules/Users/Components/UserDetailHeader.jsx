@@ -148,18 +148,25 @@ export default function UserDetailHeader({ data, userType, currentTab, authState
             </Grid>
           </Grid>
         </Grid>
-        <Grid item lg={5} md={5} sm={3} xs={12} className={matches ? classes.selectMobile : undefined}>
-              <SelectButton
-                options={options}
-                open={open}
-                anchorEl={anchorEl}
-                handleClose={handleClose}
-                handleClick={handleSelectButtonClick}
-                selectedKey={selectedKey}
-                defaultButtonText={t('common:menu.contact')}
-                style={{ marginLeft: '-6rem' }}
-              />
-            </Grid>
+        <Grid
+          item
+          lg={5}
+          md={5}
+          sm={3}
+          xs={12}
+          className={matches ? classes.selectMobile : undefined}
+        >
+          <SelectButton
+            options={options}
+            open={open}
+            anchorEl={anchorEl}
+            handleClose={handleClose}
+            handleClick={handleSelectButtonClick}
+            selectedKey={selectedKey}
+            defaultButtonText={t('common:menu.contact')}
+            style={{ marginLeft: '-6rem' }}
+          />
+        </Grid>
         {!smDownHidden && (
           <>
             <Grid item lg={2} md={2} sm={2} xs={2}>
