@@ -63,9 +63,9 @@ export default function ProjectSteps({
             <StepItem
               key={firstLevelStep.id}
               step={firstLevelStep}
-              clickable
+              clickable={!clientView}
               handleClick={(e) => handleStepItemClick(e, firstLevelStep)}
-              styles={{backgroundColor: '#F5F5F4'}}
+              styles={{backgroundColor: '#F5F5F4', cursor: clientView ? 'not-allowed' : 'pointer'}}
               openSubSteps={objectAccessor(stepsOpen, firstLevelStep.id)}
               handleOpenSubStepsClick={(e) => handleOpenSubStepsClick(e, firstLevelStep)}
               handleStepCompletion={handleStepComplete}
@@ -80,8 +80,8 @@ export default function ProjectSteps({
                     <StepItem
                       key={secondLevelStep.id}
                       step={secondLevelStep}
-                      styles={{backgroundColor: '#ECECEA'}}
-                      clickable
+                      styles={{backgroundColor: '#ECECEA', cursor: clientView ? 'not-allowed' : 'pointer'}}
+                      clickable={!clientView}
                       handleClick={(e) => handleStepItemClick(e, secondLevelStep)}
                       handleStepCompletion={handleStepComplete}
                       clientView={clientView}
