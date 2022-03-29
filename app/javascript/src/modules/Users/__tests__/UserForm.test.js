@@ -177,7 +177,6 @@ describe('UserForm Component', () => {
     
     await act(async () => {
       fireEvent.click(screen.queryAllByTestId('add_type')[2]);
-      screen.debug(undefined, 12000);
     });
   });
 });
