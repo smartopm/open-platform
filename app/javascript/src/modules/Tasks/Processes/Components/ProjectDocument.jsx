@@ -74,6 +74,10 @@ export default function ProjectDocument({ attachments, loading, refetch, error }
         handleCloseDialog();
       });
   }
+
+  function checkLastDoc(index) {
+    return index === attachments.length - 1;
+  }
   return (
     <>
       {error && (
@@ -102,7 +106,7 @@ export default function ProjectDocument({ attachments, loading, refetch, error }
         <>
           {!matches && (
             <Typography
-              variant="body2"
+              variant="h6"
               className={classes.documents}
               color="textSecondary"
               data-testid="documents"
@@ -110,8 +114,12 @@ export default function ProjectDocument({ attachments, loading, refetch, error }
               {t('processes.documents')}
             </Typography>
           )}
-          {attachments.map(att => (
-            <Grid key={att.id} className={classes.children}>
+          {attachments.map((att, index) => (
+            <Grid
+              key={att.id}
+              className={classes.children}
+              style={checkLastDoc(index) ? { borderBottom: '2px solid #F7F8F7' } : {}}
+            >
               <Grid
                 container
                 justifyContent={!matches ? 'center' : undefined}
@@ -128,7 +136,7 @@ export default function ProjectDocument({ attachments, loading, refetch, error }
                       <Link
                         href={`/processes/drc/projects/${att.task_id}?tab=processes`}
                         color="primary"
-                        underline='hover'
+                        underline="hover"
                       >
                         <Typography variant="caption">{att.task_name}</Typography>
                       </Link>
