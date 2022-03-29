@@ -75,7 +75,8 @@ export function DateAndTimePickers({
   handleDateChange,
   label,
   pastDate,
-  inputValidation
+  inputValidation,
+  inputVariant
 }) {
   const { t } = useTranslation(['logbook', 'form']);
   return (
@@ -97,7 +98,7 @@ export function DateAndTimePickers({
             }
             placeholder="YYYY-MM-DD hh:mm a"
             error={pastDate ? checkPastDate(selectedDateTime) : inputValidation.error}
-            variant="standard"
+            variant={inputVariant}
             data-testid='datetime-picker'
             style={{ width: '100%' }}
           />
@@ -167,9 +168,10 @@ DatePickerDialog.defaultProps = {
 DateAndTimePickers.defaultProps = {
   inputValidation: {
     error: false,
-    fieldName: ''
-  }
-};
+    fieldName: '',
+  },
+  inputVariant: 'standard'
+}
 
 ThemedTimePicker.defaultProps = {
   inputValidation: {
@@ -190,9 +192,10 @@ DatePickerDialog.propTypes = {
 DateAndTimePickers.propTypes = {
   inputValidation: PropTypes.shape({
     error: PropTypes.bool,
-    fieldName: PropTypes.string
-  })
-};
+    fieldName: PropTypes.string,
+  }),
+  inputVariant: PropTypes.string
+}
 
 ThemedTimePicker.propTypes = {
   inputValidation: PropTypes.shape({

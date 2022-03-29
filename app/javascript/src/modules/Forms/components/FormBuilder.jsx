@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { Button, Container } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 import { useMutation, useQuery } from 'react-apollo'
+import { useHistory } from 'react-router';
 import CenteredContent from '../../../components/CenteredContent'
 import { AllEventLogsQuery } from '../../../graphql/queries'
 import { FormPropertiesQuery, FormQuery } from '../graphql/forms_queries'
@@ -26,6 +27,7 @@ import ErrorPage from '../../../components/Error';
  */
 export default function FormBuilder({ formId }) {
   const [open, setOpen] = useState(false);
+  const history = useHistory();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [isPublishing, setIsPublishing] = useState(false);
   const [alertOpen, setAlertOpen] = useState(false);
@@ -87,7 +89,7 @@ export default function FormBuilder({ formId }) {
 
   return (
     <>
-      <FormDialog
+      {/* <FormDialog
         actionType="update"
         form={formData.data.form}
         formMutation={updateForm}
@@ -96,7 +98,7 @@ export default function FormBuilder({ formId }) {
         open={dialogOpen}
         setOpen={setDialogOpen}
         setAlertOpen={setAlertOpen}
-      />
+      /> */}
       <FormContextProvider>
         <Container maxWidth="md">
           <ActionDialog
@@ -133,7 +135,7 @@ export default function FormBuilder({ formId }) {
                 <Button
                   variant="outlined"
                   color="primary"
-                  onClick={() => setDialogOpen(true)}
+                  onClick={() => history.push(`/form/${formId}/edit`)}
                 >
                   {t('actions.edit_form')}
                 </Button>

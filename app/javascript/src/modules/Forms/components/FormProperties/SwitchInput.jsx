@@ -15,7 +15,6 @@ export default function SwitchInput({ name, label, value, required, handleChange
   return (
     <FormControlLabel
       labelPlacement={labelPlacement}
-      style={{ float: 'left' }}
       control={(
         <Switch
           checked={value}
