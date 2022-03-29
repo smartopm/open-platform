@@ -92,7 +92,6 @@ export default function ClientPilotViewItem({ project, refetch }) {
             <br />
             {subStepsLoading ? <Spinner /> : (
               <ProjectSteps
-                clientView
                 data={stepsData?.taskSubTasks}
                 handleProjectStepClick={handleProjectStepClick}
                 handleStepCompletion={

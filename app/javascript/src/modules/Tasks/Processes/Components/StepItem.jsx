@@ -55,9 +55,9 @@ export default function StepItem({
                 size="large"
               >
                 { step.completed ? (
-                  <CheckCircleIcon htmlColor="#4caf50" />
+                  <CheckCircleIcon htmlColor="#4caf50" data-testid="task-completed-icon" />
                   ) : (
-                    <CheckCircleOutlineIcon htmlColor="#9A9A9A" />
+                    <CheckCircleOutlineIcon htmlColor="#9A9A9A" data-testid="task-not-completed-icon" />
                   )}
               </IconButton>
             </Grid>
