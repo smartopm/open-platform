@@ -92,8 +92,8 @@ export default function TodoList({
   const [selectedTask, setSelectedTask] = useState(null);
   const [bulkUpdating, setBulkUpdating] = useState(false);
   const [splitScreenOpen, setSplitScreenOpen] = useState(false);
-  const matches = useMediaQuery('(max-width:800px)');
-  const { t } = useTranslation(['task', 'common']);
+  const matches = useMediaQuery('(max-width:900px)');
+  const { t } = useTranslation(['task', 'common'])
 
   const path = useParamsQuery();
   const taskURLFilter = path.get('filter');
@@ -212,6 +212,7 @@ export default function TodoList({
           });
         });
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, selectedTask, signedBlobId, taskUpdate, refetch]);
 
   useEffect(() => {

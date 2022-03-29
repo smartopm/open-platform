@@ -1,19 +1,13 @@
-import React, { Fragment, useState } from 'react';
-import { useQuery } from 'react-apollo';
+import React, { useState } from 'react';
 import {
-  Divider,
   IconButton,
   Menu,
   MenuItem,
   Typography,
   Grid,
   Button,
-  useMediaQuery,
-  Dialog,
-  DialogTitle,
-  DialogContent
+  useMediaQuery
 } from '@mui/material';
-import AddCircleIcon from '@mui/icons-material/AddCircle';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@mui/styles';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
@@ -25,34 +19,24 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import { useTranslation } from 'react-i18next';
 import { dateToString } from '../../../components/DateContainer';
-import CenteredContent from '../../../shared/CenteredContent';
-import { SubTasksQuery } from '../graphql/task_queries';
 import { Spinner } from '../../../shared/Loading';
-import TaskAddForm from './TaskForm';
-import AccessCheck from '../../Permissions/Components/AccessCheck';
 
 export default function TaskSubTask({
   taskId,
-  users,
-  assignUser,
   handleSplitScreenOpen,
-  handleTaskCompletion
+  handleTaskCompletion,
+  loading,
+  data,
+  fetchMore
 }) {
   const classes = useStyles();
-  const matches = useMediaQuery('(max-width:800px)');
   const limit = 3;
+  const matches = useMediaQuery('(max-width:800px)');
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedSubTask, setSelectedSubTask] = useState(null);
-  const [open, setModalOpen] = useState(false);
   const { t } = useTranslation(['task', 'common']);
 
   const menuOpen = Boolean(anchorEl);
-
-  const { loading, data, refetch, fetchMore } = useQuery(SubTasksQuery, {
-    variables: { taskId, limit },
-    fetchPolicy: 'cache-and-network',
-    errorPolicy: 'all'
-  });
 
   function handleOpenMenu(event, task) {
     event.stopPropagation();
@@ -78,63 +62,29 @@ export default function TaskSubTask({
     }
   }
 
-  function handleAddSubTask() {
-    setModalOpen(true);
+  function checkLastSubTask(index) {
+    return index === data?.taskSubTasks?.length - 1;
   }
 
   return (
     <>
-      <Dialog
-        fullScreen
-        open={open}
-        fullWidth
-        maxWidth="lg"
-        onClose={() => setModalOpen(!open)}
-        aria-labelledby="task_modal"
-      >
-        <DialogTitle id="task_modal">
-          <CenteredContent>{t('task.task_modal_create_text')}</CenteredContent>
-        </DialogTitle>
-        <DialogContent>
-          <TaskAddForm
-            refetch={refetch}
-            close={() => setModalOpen(!open)}
-            assignUser={assignUser}
-            users={users}
-            parentTaskId={taskId}
-          />
-        </DialogContent>
-      </Dialog>
-      <Grid container className={classes.header}>
-        <Grid item md={9} xs={11} />
-        <Grid item md={3} xs={1} className={classes.addSubTask}>
-          <AccessCheck module="note" allowedPermissions={['can_view_create_sub_task_button']}>
-            <IconButton
-              edge="end"
-              onClick={handleAddSubTask}
-              data-testid="add_sub_task_icon"
-              color="primary"
-              style={{ backgroundColor: 'transparent' }}
-              size="large"
-            >
-              <div style={{ display: 'flex' }}>
-                <AddCircleIcon />
-                <Typography color="primary" style={{ padding: '2px 0 0 5px' }} variant="caption">
-                  Add Task
-                </Typography>
-              </div>
-            </IconButton>
-          </AccessCheck>
-        </Grid>
-      </Grid>
       {data?.taskSubTasks?.length ? (
         <Grid container>
-          <Grid item md={12} xs={12} style={{ marginBottom: '2px' }}>
-            <Divider />
-          </Grid>
-          {data.taskSubTasks.map(task => (
-            <Fragment key={task.id}>
-              <Grid container spacing={1} item md={4} xs={6} className={classes.bodyAlign}>
+          {data.taskSubTasks.map((task, index) => (
+            <Grid
+              container
+              key={task.id}
+              style={!checkLastSubTask(index) ? { borderBottom: '1px solid #EDEDED' } : {}}
+            >
+              <Grid
+                container
+                spacing={1}
+                item
+                md={4}
+                xs={6}
+                className={classes.bodyAlign}
+                data-testid="body"
+              >
                 <Grid item md={2}>
                   <IconButton
                     aria-controls="task-completion-toggle-button"
@@ -145,13 +95,13 @@ export default function TaskSubTask({
                     size="large"
                   >
                     {task.completed ? (
-                      <CheckCircleIcon htmlColor="#4caf50" />
+                      <CheckCircleIcon htmlColor="#4caf50" data-testid="check-icon" />
                     ) : (
                       <CheckCircleOutlineIcon htmlColor="#acacac" />
                     )}
                   </IconButton>
                 </Grid>
-                <Grid item md={10}>
+                <Grid item md={10} data-testid="task-body">
                   <Typography
                     variant="body2"
                     data-testid="task_body"
@@ -162,7 +112,14 @@ export default function TaskSubTask({
                   </Typography>
                 </Grid>
               </Grid>
-              <Grid item md={3} xs={6} className={classes.bodyAlign} style={{ textAlign: 'right' }}>
+              <Grid
+                item
+                md={3}
+                xs={6}
+                className={classes.bodyAlign}
+                style={{ textAlign: 'right' }}
+                data-testid="due-date"
+              >
                 <Typography variant="body2" component="span">
                   {t('task:sub_task.due')}
                   {task.dueDate ? dateToString(task.dueDate) : 'Never '}
@@ -170,7 +127,7 @@ export default function TaskSubTask({
               </Grid>
               <Grid item md={3} xs={7}>
                 <Grid container style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                  <Grid item md={2} xs={2}>
+                  <Grid item md={2} xs={2} data-testid="subtask-count">
                     <IconButton
                       aria-controls="task-subtasks-icon"
                       data-testid="task_subtasks_count"
@@ -192,7 +149,7 @@ export default function TaskSubTask({
                   >
                     <span>{task?.subTasksCount || 0}</span>
                   </Grid>
-                  <Grid item md={2} xs={2}>
+                  <Grid item md={2} xs={2} data-testid="comment-count">
                     <IconButton
                       aria-controls="task-comment-icon"
                       data-testid="task_comments_count"
@@ -214,7 +171,7 @@ export default function TaskSubTask({
                   >
                     <span>{task?.taskCommentsCount || 0}</span>
                   </Grid>
-                  <Grid item md={2} xs={2}>
+                  <Grid item md={2} xs={2} data-testid="attachment-count">
                     <IconButton
                       aria-controls="task-attach-file-icon"
                       onClick={() => handleSplitScreenOpen(task)}
@@ -233,7 +190,7 @@ export default function TaskSubTask({
                     className={classes.iconItem}
                     style={{ paddingLeft: '5px' }}
                   >
-                    <span data-testid="file_attachments_total">
+                    <span data-testid="file-attachments-total">
                       {task.attachments?.length || 0}
                     </span>
                   </Grid>
@@ -245,14 +202,12 @@ export default function TaskSubTask({
                   color="primary"
                   style={{ marginTop: '-10px' }}
                   size="large"
+                  data-testid="subtask-options"
                 >
                   <MoreVertIcon />
                 </IconButton>
               </Grid>
-              <Grid item md={12} xs={12} style={{ marginTop: '2px', marginBottom: '2px' }}>
-                <Divider data-testid="closing_divider" />
-              </Grid>
-            </Fragment>
+            </Grid>
           ))}
           <Grid item md={12} xs={12}>
             {data.taskSubTasks.length >= limit && (
@@ -294,12 +249,21 @@ export default function TaskSubTask({
   );
 }
 
+TaskSubTask.defaultProps = {
+  loading: null,
+  fetchMore: () => {},
+  data: {}
+};
+
 TaskSubTask.propTypes = {
   taskId: PropTypes.string.isRequired,
-  users: PropTypes.arrayOf(PropTypes.object).isRequired,
-  assignUser: PropTypes.func.isRequired,
   handleSplitScreenOpen: PropTypes.func.isRequired,
-  handleTaskCompletion: PropTypes.func.isRequired
+  handleTaskCompletion: PropTypes.func.isRequired,
+  loading: PropTypes.bool,
+  fetchMore: PropTypes.func,
+  data: PropTypes.shape({
+    taskSubTasks: PropTypes.arrayOf(PropTypes.shape())
+  })
 };
 
 const useStyles = makeStyles(() => ({
