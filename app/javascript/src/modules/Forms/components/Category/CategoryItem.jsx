@@ -68,7 +68,7 @@ export default function CategoryItem({
                 {collapsed ? (
                   <CloseIcon color="primary" />
                 ) : (
-                  <AddIcon color="primary" data-testid="add-icon" />
+                  <AddCircleIcon color="primary" data-testid="add-icon" />
                 )}
               </IconButton>
             )}
