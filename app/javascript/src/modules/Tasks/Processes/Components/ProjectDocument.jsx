@@ -22,6 +22,7 @@ import { ActionDialog } from '../../../../components/Dialog';
 import { DeleteNoteDocument } from '../../../../graphql/mutations';
 import MessageAlert from '../../../../components/MessageAlert';
 import CenteredContent from '../../../../shared/CenteredContent';
+import { checkLastItem } from '../utils'
 
 export default function ProjectDocument({ attachments, loading, refetch, error }) {
   const classes = useStyles();
@@ -74,6 +75,7 @@ export default function ProjectDocument({ attachments, loading, refetch, error }
         handleCloseDialog();
       });
   }
+
   return (
     <>
       {error && (
@@ -102,7 +104,7 @@ export default function ProjectDocument({ attachments, loading, refetch, error }
         <>
           {!matches && (
             <Typography
-              variant="body2"
+              variant="subtitle1"
               className={classes.documents}
               color="textSecondary"
               data-testid="documents"
@@ -110,8 +112,12 @@ export default function ProjectDocument({ attachments, loading, refetch, error }
               {t('processes.documents')}
             </Typography>
           )}
-          {attachments.map(att => (
-            <Grid key={att.id} className={classes.children}>
+          {attachments.map((att, index) => (
+            <Grid
+              key={att.id}
+              className={classes.children}
+              style={checkLastItem(index, attachments) ? { borderBottom: '2px solid #F7F8F7' } : {}}
+            >
               <Grid
                 container
                 justifyContent={!matches ? 'center' : undefined}
@@ -128,7 +134,7 @@ export default function ProjectDocument({ attachments, loading, refetch, error }
                       <Link
                         href={`/processes/drc/projects/${att.task_id}?tab=processes`}
                         color="primary"
-                        underline='hover'
+                        underline="hover"
                       >
                         <Typography variant="caption">{att.task_name}</Typography>
                       </Link>

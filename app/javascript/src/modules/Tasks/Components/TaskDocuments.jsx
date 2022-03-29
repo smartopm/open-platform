@@ -109,14 +109,14 @@ export default function TaskDocuments({ data, loading, error, refetch, status })
         </Grid>
       </Grid>
       {documents?.length > 0 && (
-        <List>
+        <List sx={{padding: 0}}>
           {documents.map((doc, index) => (
             <Grid
               container
               key={doc.id}
               style={!checkLastDocument(index) ? { borderBottom: '1px solid #EDEDED' } : {}}
             >
-              <ListItem>
+              <ListItem sx={{padding: 0}}>
                 <Grid container>
                   <Grid item xs={11}>
                     <ListItemText
@@ -124,7 +124,6 @@ export default function TaskDocuments({ data, loading, error, refetch, status })
                       primary={(
                         <Typography
                           variant="body1"
-                          color="primary"
                           style={{ fontWeight: 700 }}
                           data-testid="filename"
                         >
@@ -202,9 +201,6 @@ export default function TaskDocuments({ data, loading, error, refetch, status })
 }
 
 const useStyles = makeStyles(() => ({
-  documentsSection: {
-    marginTop: '-8px'
-  },
   addIcon: {
     display: 'flex',
     justifyContent: 'end'

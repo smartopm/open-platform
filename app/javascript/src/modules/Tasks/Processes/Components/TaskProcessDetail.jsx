@@ -156,7 +156,7 @@ export default function TaskProcessDetail() {
         <Grid
           container
           data-testid="process-detail-section"
-          style={!matches ? { padding: '0 56px' } : { padding: '0 10px' }}
+          style={!matches ? { padding: '0 56px' } : { padding: '0 20px' }}
         >
           <Grid item md={5} xs={12}>
             <Grid container>
@@ -279,7 +279,7 @@ export default function TaskProcessDetail() {
                 handleProjectStepClick={handleProjectStepClick}
               />
             </TabPanel>
-            <TabPanel value={tabValue} index={1}>
+            <TabPanel value={tabValue} index={1} pad>
               <ProjectProcessesSplitView
                 splitScreenOpen={splitScreenOpen}
                 setSplitScreenOpen={setSplitScreenOpen}
@@ -288,7 +288,7 @@ export default function TaskProcessDetail() {
                 commentsRefetch={commentsRefetch}
               />
             </TabPanel>
-            <TabPanel value={tabValue} index={2}>
+            <TabPanel value={tabValue} index={2} pad>
               <ProjectDocument
                 attachments={searchText !== '' ? filterDocuments : docData?.task?.attachments}
                 loading={loading}

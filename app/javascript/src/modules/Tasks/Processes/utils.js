@@ -82,3 +82,7 @@ export function isDiscussionResolved(groupedComments, groupingId) {
   }
   return false
 }
+
+export function checkLastItem(index, arr) {
+  return index === arr.length - 1;
+}

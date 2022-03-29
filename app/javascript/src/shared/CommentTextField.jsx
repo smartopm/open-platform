@@ -80,7 +80,7 @@ export default function CommentTextField({
             />
           )}
         </Grid>
-        <Grid item xs={8} style={{ marginBottom: '15px' }}>
+        <Grid item xs={8} style={autoCompleteOpen ? { marginBottom: '15px' } : {}}>
           {selectedUser && autoCompleteOpen && (
             <UserChip
               user={selectedUser}

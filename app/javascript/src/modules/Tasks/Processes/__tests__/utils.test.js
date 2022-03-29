@@ -5,7 +5,8 @@ import {
   calculateOpenProjectsByStage,
   groupComments,
   lastRepliedComment,
-  isDiscussionResolved
+  isDiscussionResolved,
+  checkLastItem
 } from '../utils';
 
 describe('find hrefs in a string', () => {
@@ -111,5 +112,16 @@ describe('isDiscussionResolved', () => {
     const isResolved = isDiscussionResolved(groupedComments, '234');
 
     expect(isResolved).toEqual(false);
+  });
+});
+
+describe('checkLastItem', () => {
+  it('returns true for last Item', () => {
+    
+    const arr = checkLastItem(1, ['sample1', 'sample2']);
+    expect(arr).toBe(true);
+    
+    const arr2 = checkLastItem(0, ['sample1', 'sample2']);
+    expect(arr2).toBe(false);
   });
 });
