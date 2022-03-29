@@ -10,6 +10,7 @@
     "document_deleted": "Documento eliminado con éxito",
     "documents": "Documentos",
     "download": "Descargar",
+    "no_document": "No hay documentos disponibles",
     "no_documents": "Agregar un documento",
     "upload_error": "No se pudo cargar el documento",
     "uploaded_at": "Subido en",
