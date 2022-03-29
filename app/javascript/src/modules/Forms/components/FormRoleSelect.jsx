@@ -1,8 +1,8 @@
 import React from 'react';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import Autocomplete from '@mui/material/Autocomplete'
 import { useTranslation } from 'react-i18next';
-import TextField from '@material-ui/core/TextField';
-import Chip from '@material-ui/core/Chip';
+import TextField from '@mui/material/TextField';
+import Chip from '@mui/material/Chip';
 
 export default function FormRoleSelect({ data, handleChange, inputLabel, roles }) {
   const { t } = useTranslation('form');
