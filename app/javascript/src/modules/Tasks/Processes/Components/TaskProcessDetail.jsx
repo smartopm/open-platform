@@ -106,7 +106,7 @@ export default function TaskProcessDetail() {
     setTabValue(Number(newValue));
   }
 
-  const filterDocuments = docData?.task?.attachments.filter(document =>
+  const filterDocuments = docData?.task?.attachments?.filter(document =>
     document.filename.toLowerCase().includes(debouncedSearchText.toLowerCase())
   );
 
@@ -240,7 +240,7 @@ export default function TaskProcessDetail() {
           </Grid>
           {tabValue === 2 && (
             <>
-              {mobileMatches && docData?.task?.attachments.length > 0 && (
+              {mobileMatches && docData?.task?.attachments?.length > 0 && (
                 <Grid item xs={12}>
                   <Typography
                     variant="body2"
@@ -252,7 +252,7 @@ export default function TaskProcessDetail() {
                 </Grid>
               )}
               <Grid item md={2} xs={12} />
-              {docData?.task?.attachments.length > 0 && (
+              {docData?.task?.attachments?.length > 0 && (
                 <Grid
                   item
                   md={5}
