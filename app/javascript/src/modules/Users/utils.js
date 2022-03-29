@@ -678,6 +678,13 @@ export function selectOptions(
           show: checkCommunityFeatures('Messages') && checkModule('communication')
         },
         {
+          key: 'contact',
+          value: 'Contacts',
+          name: t('common:right_menu.contact_info'),
+          handleMenuItemClick,
+          show: true
+        },
+        {
           key: 'send_sms',
           value: 'Send SMS',
           name: t('common:menu.send_sms'),

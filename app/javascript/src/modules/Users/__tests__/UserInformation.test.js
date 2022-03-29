@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, waitFor } from '@testing-library/react';
+import { getByLabelText, render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom/';
 import { MockedProvider } from '@apollo/react-testing';
@@ -74,6 +74,7 @@ describe('User information component loads', () => {
       () => {
         expect(getByText('Yoram')).toBeInTheDocument();
         expect(getByText('common:user_types.admin')).toBeInTheDocument();
+        expect(getByText('common:form_fields.full_name')).toBeInTheDocument();
       },
       { timeout: 50 }
     );
