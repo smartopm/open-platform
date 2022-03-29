@@ -18,7 +18,7 @@ import { Spinner } from '../../../shared/Loading'
 import { FormQuery } from '../graphql/forms_queries';
 
 export default function FormCreate({ formMutation, refetch, formId, actionType }) {
-  const [formDataQuery, { data: form, error: formError, loading: formLoading }] = useLazyQuery(
+  const [formDataQuery, { data: form, error: formError, loading: formLoading, called }] = useLazyQuery(
     FormQuery,
     {
       variables: { id: formId }
@@ -83,12 +83,19 @@ export default function FormCreate({ formMutation, refetch, formId, actionType }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formId, form]);
+
+  useEffect(() => {
+    if (called && form) {
+      setTitle(form.name)
+    }
+  }, [form, called])
+
   return (
     formLoading ? (
       <Spinner />
     ) : (
       <Container>
-        {console.log(form)}
+        {/* {console.log(form)} */}
         <Container>
           <MessageAlert
             type={message.isError ? 'error' : 'success'}

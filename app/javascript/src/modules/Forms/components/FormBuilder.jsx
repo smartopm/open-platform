@@ -1,23 +1,23 @@
-import React, { useState } from 'react'
-import PropTypes from 'prop-types'
-import { Button, Container } from '@mui/material'
-import { useTranslation } from 'react-i18next'
-import { useMutation, useQuery } from 'react-apollo'
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
+import { Button, Container } from '@mui/material';
+import { useTranslation } from 'react-i18next';
+import { useMutation, useQuery } from 'react-apollo';
 import { useHistory } from 'react-router';
-import CenteredContent from '../../../components/CenteredContent'
-import { AllEventLogsQuery } from '../../../graphql/queries'
-import { FormPropertiesQuery, FormQuery } from '../graphql/forms_queries'
-import { Spinner } from '../../../shared/Loading'
-import { FormUpdateMutation } from '../graphql/forms_mutation'
-import { formStatus } from '../../../utils/constants'
-import Toggler from '../../Campaigns/components/ToggleButton'
-import FormTimeline from '../../../shared/TimeLine'
-import { ActionDialog } from '../../../components/Dialog'
-import { formatError } from '../../../utils/helpers'
-import MessageAlert from '../../../components/MessageAlert'
-import Form from './Category/Form'
-import FormContextProvider from '../Context'
-import { FormDialog } from './FormList'
+import CenteredContent from '../../../components/CenteredContent';
+import { AllEventLogsQuery } from '../../../graphql/queries';
+import { FormPropertiesQuery, FormQuery } from '../graphql/forms_queries';
+import { Spinner } from '../../../shared/Loading';
+import { FormUpdateMutation } from '../graphql/forms_mutation';
+import { formStatus } from '../../../utils/constants';
+import Toggler from '../../Campaigns/components/ToggleButton';
+import FormTimeline from '../../../shared/TimeLine';
+import { ActionDialog } from '../../../components/Dialog';
+import { formatError } from '../../../utils/helpers';
+import MessageAlert from '../../../components/MessageAlert';
+import Form from './Category/Form';
+import FormContextProvider from '../Context';
+import { FormDialog } from './FormList';
 import ErrorPage from '../../../components/Error';
 
 /**
@@ -45,27 +45,27 @@ export default function FormBuilder({ formId }) {
       subject: null
     }
   });
-  const [updateForm] = useMutation(FormUpdateMutation)
+  const [updateForm] = useMutation(FormUpdateMutation);
   const formData = useQuery(FormQuery, {
     variables: { id: formId }
-  })
+  });
 
   function handleType(_event, value) {
-    setType(value)
-    formLogs.refetch()
+    setType(value);
+    formLogs.refetch();
   }
 
   function handleConfirmPublish() {
-    setOpen(!open)
+    setOpen(!open);
   }
 
   function handleAlertClose() {
-    setAlertOpen(false)
+    setAlertOpen(false);
   }
 
   function publishForm() {
-    setIsPublishing(true)
-    setOpen(!open)
+    setIsPublishing(true);
+    setOpen(!open);
     updateForm({
       variables: { id: formId, status: formStatus.publish }
     })
@@ -73,19 +73,20 @@ export default function FormBuilder({ formId }) {
         setMessage({
           isError: false,
           detail: t('misc.published_form')
-        })
-        setIsPublishing(false)
-        setAlertOpen(true)
+        });
+        setIsPublishing(false);
+        setAlertOpen(true);
       })
       .catch(err => {
-        setMessage({ isError: true, detail: formatError(err.message) })
-        setIsPublishing(false)
-        setAlertOpen(true)
-      })
+        setMessage({ isError: true, detail: formatError(err.message) });
+        setIsPublishing(false);
+        setAlertOpen(true);
+      });
   }
 
-  if (loading || formLogs.loading || formData.loading) return <Spinner />
-  if (error || formLogs.error || formData.error) return  <ErrorPage title={error?.message || formLogs?.error?.message} />
+  if (loading || formLogs.loading || formData.loading) return <Spinner />;
+  if (error || formLogs.error || formData.error)
+    return <ErrorPage title={error?.message || formLogs?.error?.message} />;
 
   return (
     <>
@@ -121,9 +122,9 @@ export default function FormBuilder({ formId }) {
             type={type}
             handleType={handleType}
             data={{
-          type: t('misc.form'),
-          antiType: t('misc.updates')
-        }}
+              type: t('misc.form'),
+              antiType: t('misc.updates')
+            }}
           />
           <br />
           {type !== t('misc.updates') ? (
@@ -143,27 +144,27 @@ export default function FormBuilder({ formId }) {
               <br />
               <CenteredContent>
                 {Boolean(data.formProperties.length) && (
-                <Button
-                  variant="outlined"
-                  color="primary"
-                  onClick={handleConfirmPublish}
-                  disabled={isPublishing}
-                  startIcon={isPublishing && <Spinner />}
-                >
-                  {isPublishing ? t('misc.publishing_form') : t('actions.publish_form')}
-                </Button>
-              )}
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    onClick={handleConfirmPublish}
+                    disabled={isPublishing}
+                    startIcon={isPublishing && <Spinner />}
+                  >
+                    {isPublishing ? t('misc.publishing_form') : t('actions.publish_form')}
+                  </Button>
+                )}
               </CenteredContent>
             </>
-      ) : (
-        <FormTimeline data={formLogs.data?.result} />
-      )}
+          ) : (
+            <FormTimeline data={formLogs.data?.result} />
+          )}
         </Container>
       </FormContextProvider>
     </>
-  )
+  );
 }
 
 FormBuilder.propTypes = {
   formId: PropTypes.string.isRequired
-}
+};
