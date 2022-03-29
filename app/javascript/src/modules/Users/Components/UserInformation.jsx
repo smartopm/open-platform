@@ -9,7 +9,6 @@ import PropTypes from 'prop-types';
 
 import UserPlotInfo from './UserPlotInfo';
 import UserMerge from './UserMerge';
-import CenteredContent from '../../../components/CenteredContent';
 import { TabPanel } from '../../../components/Tabs';
 import UserFilledForms from './UserFilledForms';
 import UserMessages from '../../../components/Messaging/UserMessages';
@@ -24,6 +23,7 @@ import UserDetailHeader from './UserDetailHeader';
 import FixedHeader from '../../../shared/FixedHeader';
 import UserNotes from './UserNotes';
 import UserInfo from './UserInfo';
+import CenteredContent from '../../../shared/CenteredContent';
 
 export default function UserInformation({
   data,
