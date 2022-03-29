@@ -4,7 +4,7 @@ import { useLazyQuery } from 'react-apollo';
 import TextField from '@mui/material/TextField';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
-import { makeStyles } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import { useTranslation } from 'react-i18next';
@@ -27,8 +27,8 @@ export default function FormCreate({ formMutation, refetch, formId, actionType }
   const { t } = useTranslation(['form', 'common']);
   const classes = useStyles();
   const history = useHistory();
-  const [title, setTitle] = useState(form?.name || '');
-  const [description, setDescription] = useState(form.description || '');
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState(form?.description || '');
   const [roles, setRoles] = useState(form?.roles || []);
   const [isLoading, setLoading] = useState(false);
   const [alertOpen, setAlertOpen] = useState(false);
@@ -78,11 +78,11 @@ export default function FormCreate({ formMutation, refetch, formId, actionType }
     if (formId) {
       formDataQuery();
     }
-    // if (form) {
-    //   setRoles(form.roles)
-    // }
+    if (form) {
+      setTitle(form.name)
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [formId]);
+  }, [formId, form]);
   return (
     formLoading ? (
       <Spinner />
@@ -118,7 +118,7 @@ export default function FormCreate({ formMutation, refetch, formId, actionType }
                 multiline
                 maxRows={5}
                 fullWidth
-                value={title}
+                value={description}
                 onChange={e => setDescription(e.target.value)}
                 required
               />
