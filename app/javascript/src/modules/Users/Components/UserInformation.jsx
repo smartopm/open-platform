@@ -23,6 +23,7 @@ import LeadManagementDetails from '../LeadManagement/Components/LeadManagementDe
 import UserDetailHeader from './UserDetailHeader';
 import FixedHeader from '../../../shared/FixedHeader';
 import UserNotes from './UserNotes';
+import UserInfo from './UserInfo';
 
 export default function UserInformation({
   data,
@@ -104,6 +105,9 @@ export default function UserInformation({
             ) && <ShiftButtons userId={userId} />}
         </FeatureCheck>
 
+        <TabPanel value={tabValue} index="Contacts">
+          <UserInfo user={data.user} userType={userType} />
+        </TabPanel>
         {['admin', 'marketing_manager'].includes(userType) && (
           <>
             <FeatureCheck features={authState.user.community.features} name="Messages">
