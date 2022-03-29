@@ -190,7 +190,7 @@ export default function TaskSubTask({
                     className={classes.iconItem}
                     style={{ paddingLeft: '5px' }}
                   >
-                    <span data-testid="file_attachments_total">
+                    <span data-testid="file-attachments-total">
                       {task.attachments?.length || 0}
                     </span>
                   </Grid>

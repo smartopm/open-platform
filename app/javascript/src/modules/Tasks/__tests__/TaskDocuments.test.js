@@ -6,6 +6,7 @@ import { MockedProvider } from '@apollo/react-testing';
 import TaskDocuments from '../Components/TaskDocuments';
 import authState from '../../../__mocks__/authstate';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
+import MockedThemeProvider from '../../__mocks__/mock_theme'
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 
@@ -27,11 +28,13 @@ describe('Task Documents', () => {
   it('renders properly when there are documents', async () => {
     render(
       <Context.Provider value={authState}>
-        <MockedProvider>
-          <BrowserRouter>
-            <TaskDocuments loading={false} refetch={jest.fn()} status="FILE_RESIZE" data={data} />
-          </BrowserRouter>
-        </MockedProvider>
+        <MockedThemeProvider>
+          <MockedProvider>
+            <BrowserRouter>
+              <TaskDocuments loading={false} refetch={jest.fn()} status="FILE_RESIZE" data={data} />
+            </BrowserRouter>
+          </MockedProvider>
+        </MockedThemeProvider>
       </Context.Provider>
     );
 
