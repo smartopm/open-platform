@@ -9,7 +9,6 @@ import PropTypes from 'prop-types';
 
 import UserPlotInfo from './UserPlotInfo';
 import UserMerge from './UserMerge';
-import CenteredContent from '../../../components/CenteredContent';
 import { TabPanel } from '../../../components/Tabs';
 import UserFilledForms from './UserFilledForms';
 import UserMessages from '../../../components/Messaging/UserMessages';
@@ -23,6 +22,8 @@ import LeadManagementDetails from '../LeadManagement/Components/LeadManagementDe
 import UserDetailHeader from './UserDetailHeader';
 import FixedHeader from '../../../shared/FixedHeader';
 import UserNotes from './UserNotes';
+import UserInfo from './UserInfo';
+import CenteredContent from '../../../shared/CenteredContent';
 
 export default function UserInformation({
   data,
@@ -104,6 +105,9 @@ export default function UserInformation({
             ) && <ShiftButtons userId={userId} />}
         </FeatureCheck>
 
+        <TabPanel value={tabValue} index="Contacts">
+          <UserInfo user={data.user} userType={userType} />
+        </TabPanel>
         {['admin', 'marketing_manager'].includes(userType) && (
           <>
             <FeatureCheck features={authState.user.community.features} name="Messages">

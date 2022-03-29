@@ -614,6 +614,19 @@ const configObject = {
   ]
 };
 
+/**
+ * 
+ * @param {String} setSelectKey 
+ * @param {Function} checkModule 
+ * @param {Function} checkCommunityFeatures 
+ * @param {{push: Function}} history 
+ * @param {Object} data 
+ * @param {Function} handleMenuItemClick 
+ * @param {Function} handleMergeUserItemClick 
+ * @param {Function} checkRole 
+ * @param {Function} t 
+ * @returns 
+ */
 export function selectOptions(
   setSelectKey,
   checkModule,
@@ -676,6 +689,13 @@ export function selectOptions(
           name: t('common:right_menu.communications'),
           handleMenuItemClick,
           show: checkCommunityFeatures('Messages') && checkModule('communication')
+        },
+        {
+          key: 'contact',
+          value: 'Contacts',
+          name: t('common:right_menu.contact_info'),
+          handleMenuItemClick,
+          show: true
         },
         {
           key: 'send_sms',

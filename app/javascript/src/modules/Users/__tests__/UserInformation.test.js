@@ -74,8 +74,13 @@ describe('User information component loads', () => {
       () => {
         expect(getByText('Yoram')).toBeInTheDocument();
         expect(getByText('common:user_types.admin')).toBeInTheDocument();
+        expect(getByText('common:form_fields.full_name')).toBeInTheDocument();
+        expect(getByText('common:form_fields.accounts')).toBeInTheDocument();
+        expect(getByText('common:form_fields.primary_number')).toBeInTheDocument();
+        expect(getByText('common:form_fields.primary_email')).toBeInTheDocument();
+        expect(getByText('common:form_fields.primary_address')).toBeInTheDocument();
       },
-      { timeout: 50 }
+      { timeout: 5 }
     );
   });
 });

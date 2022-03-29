@@ -564,6 +564,7 @@
   },
   "right_menu": {
     "edit_user": "Edit User",
-    "communications": "Communications"
+    "communications": "Communications",
+    "contact_info": "Contact Info"
   }
 }

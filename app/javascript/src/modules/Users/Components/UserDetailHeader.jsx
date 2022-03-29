@@ -163,7 +163,7 @@ export default function UserDetailHeader({ data, userType, currentTab, authState
             handleClose={handleClose}
             handleClick={handleSelectButtonClick}
             selectedKey={selectedKey}
-            defaultButtonText={t('common:menu.contact')}
+            defaultButtonText={t('common:right_menu.contact_info')}
             style={{ marginLeft: '-6rem' }}
           />
         </Grid>
