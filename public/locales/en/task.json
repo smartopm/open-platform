@@ -74,7 +74,8 @@
     "upload_error": "Document could not be uploaded",
     "delete": "Delete",
     "delete_confirmation_message": "Are you sure you want to delete the document?",
-    "document_deleted": "Document deleted successfully"
+    "document_deleted": "Document deleted successfully",
+    "no_document": "No documents available"
   },
   "history": {
     "updates": "Updates"
@@ -127,7 +128,7 @@
     "lifetime_totals": "Lifetime Totals"
   },
   "misc": {
-    "confirm": "Confirm",
+    "confirm": "confirm",
     "reply": "Reply"
   }
 }
