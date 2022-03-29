@@ -3,16 +3,16 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useState, useContext } from 'react';
 import { useMutation } from 'react-apollo';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import Grid from '@mui/material/Grid';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 import PropTypes from 'prop-types';
-import IconButton from '@material-ui/core/IconButton';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
+import IconButton from '@mui/material/IconButton';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { useTranslation } from 'react-i18next';
-import { makeStyles } from '@material-ui/core/styles';
-import Link from '@material-ui/core/Link';
+import { makeStyles } from '@mui/styles';
+import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import { Spinner } from '../../../../shared/Loading';
 import { dateToString } from '../../../../components/DateContainer';
@@ -128,6 +128,7 @@ export default function ProjectDocument({ attachments, loading, refetch, error }
                       <Link
                         href={`/processes/drc/projects/${att.task_id}?tab=processes`}
                         color="primary"
+                        underline='hover'
                       >
                         <Typography variant="caption">{att.task_name}</Typography>
                       </Link>
