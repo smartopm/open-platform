@@ -106,7 +106,7 @@ export default function ProjectDocument({ attachments, loading, refetch, error }
         <>
           {!matches && (
             <Typography
-              variant="h6"
+              variant="subtitle1"
               className={classes.documents}
               color="textSecondary"
               data-testid="documents"

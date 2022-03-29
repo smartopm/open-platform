@@ -202,9 +202,6 @@ export default function TaskDocuments({ data, loading, error, refetch, status })
 }
 
 const useStyles = makeStyles(() => ({
-  documentsSection: {
-    // marginTop: '-50px'
-  },
   addIcon: {
     display: 'flex',
     justifyContent: 'end'
