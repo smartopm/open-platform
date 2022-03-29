@@ -174,38 +174,66 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
         history.push('/pending');
       });
   }
-  function handleOptionChange(event, contactId, index) {
-    const info = event.target.value;
-    const emailRegex = /\S+@\S+\.\S+/;
-    const type = emailRegex.test(info);
-    const newValue = {
-      id: contactId,
-      info,
-      contactType: type ? 'email' : 'phone'
-    };
-    const opts = data.contactInfos;
+
+  const phoneContactInfos = data?.contactInfos?.filter(c => c.contactType === 'phone')
+  const emailContactInfos = data?.contactInfos?.filter(c => c.contactType === 'email')
+  const addressContactInfos = data?.contactInfos?.filter(c => c.contactType === 'address')
+
+  function changeOptionAndUpdate(index, value, optionsToUpdate, rest ){
+    const newValue = [...optionsToUpdate];
+    newValue[Number(index)].info = value;
     setData({
       ...data,
-      contactInfos: [
-        ...opts.slice(0, index),
-        { ...opts[parseInt(index, 10)], ...newValue },
-        ...opts.slice(index + 1)
-      ]
+      contactInfos: [...newValue, ...rest ]
     });
   }
 
-  function handleRemoveOption(index) {
-    const values = data.contactInfos;
-    values.splice(index, 1);
+  function handleOptionChange(event, index, type) {
+    const {value} = event.target;
+
+    if(type === 'phone'){
+      changeOptionAndUpdate(index, value, phoneContactInfos, [...emailContactInfos, ...addressContactInfos])
+      return;
+    }
+
+    if(type === 'email'){
+      changeOptionAndUpdate(index, value, emailContactInfos, [...phoneContactInfos, ...addressContactInfos]);
+      return;
+    }
+
+    if(type === 'address'){
+      changeOptionAndUpdate(index, value, addressContactInfos, [...phoneContactInfos, ...emailContactInfos]);
+    }
+  }
+
+  function removeOptionAndUpdate(index, optionsToUpdate, rest){
+    optionsToUpdate.splice(index, 1);
     setData({
       ...data,
-      contactInfos: values
-    });
+      contactInfos: [ ...optionsToUpdate, ...rest ]
+    })
+  }
+
+  function handleRemoveOption(index, type) {
+    if(type === 'phone') {
+      removeOptionAndUpdate(index, phoneContactInfos, [...emailContactInfos, ...addressContactInfos])
+      return;
+    }
+
+    if(type === 'email') {
+      removeOptionAndUpdate(index, emailContactInfos, [...phoneContactInfos, ...addressContactInfos])
+      return;
+    }
+      
+    if(type === 'address') {
+      removeOptionAndUpdate(index, addressContactInfos, [...phoneContactInfos, ...emailContactInfos])
+    }
   }
 
   if (isFromRef) {
     data.userType = 'prospective_client';
   }
+
   return (
     <div className="container">
       <ModalDialog
@@ -339,23 +367,37 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
                 inputProps={{ 'data-testid': 'ext-ref-id' }}
               />
             </div>
-            {data.contactInfos.map((contact, i) => (
+
+            {phoneContactInfos.length > 0 && (
+            <div>
+              <Typography align="center" variant="caption">{t('common:form_fields.secondary_number')}</Typography>
               <FormOptionWithOwnActions
-                // eslint-disable-next-line react/no-array-index-key
-                key={i}
-                id={i + 1}
-                value={contact.info}
+                options={phoneContactInfos}
                 actions={{
-                  handleRemoveOption: () => handleRemoveOption(i),
-                  handleOptionChange: event => handleOptionChange(event, contact.id, i)
-                }}
+                        handleRemoveOption: (i) => handleRemoveOption(i, 'phone'),
+                        handleOptionChange: (event, index) => handleOptionChange(event, index, 'phone')
+                      }}
               />
-            ))}
+            </div>
+)}
+           
             <FormOptionInput
               label={t('common:form_fields.secondary_number')}
               options={phoneNumbers}
               setOptions={setPhoneNumbers}
             />
+            {emailContactInfos.length > 0 && (
+            <div>
+              <Typography align="center" variant="caption">{t('common:form_fields.secondary_email')}</Typography>
+              <FormOptionWithOwnActions
+                options={emailContactInfos}
+                actions={{
+                      handleRemoveOption: (i) => handleRemoveOption(i, 'email'),
+                      handleOptionChange: (event, index) => handleOptionChange(event, index, 'email')
+                    }}
+              />
+            </div>
+)}
 
             <FormOptionInput
               label={t('common:form_fields.secondary_email')}
@@ -374,6 +416,19 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
                 inputProps={{ 'data-testid': 'address' }}
               />
             </div>
+
+            {addressContactInfos.length > 0 && (
+              <div>
+                <Typography align="center" variant="caption">{t('common:form_fields.secondary_address')}</Typography>
+                <FormOptionWithOwnActions
+                  options={addressContactInfos}
+                  actions={{
+                        handleRemoveOption: (i) => handleRemoveOption(i, 'address'),
+                        handleOptionChange: (event, index) => handleOptionChange(event, index, 'address')
+                      }}
+                />
+              </div>
+)}
 
             <FormOptionInput
               label={t('common:form_fields.secondary_address')}

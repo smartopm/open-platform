@@ -302,6 +302,44 @@ RSpec.describe Mutations::User do
       GQL
     end
 
+    let(:update_secondary_details_query) do
+      <<~GQL
+        mutation UpdateUserMutation(
+            $id: ID!,
+            $userType: String
+            $vehicle: String
+            $name: String!,
+            $subStatus: String
+            $phoneNumber: String
+            $secondaryInfo: [JSON!]
+          ) {
+          userUpdate(
+              id: $id,
+              userType: $userType,
+              vehicle: $vehicle,
+              name: $name,
+              subStatus: $subStatus
+              phoneNumber: $phoneNumber
+              secondaryInfo: $secondaryInfo
+            ) {
+            user {
+              id
+              userType
+              roleName
+              vehicle
+              name
+              phoneNumber
+              contactInfos {
+                id
+                info
+                contactType
+              }
+            }
+          }
+        }
+      GQL
+    end
+
     let(:user_merge_query) do
       <<~GQL
         mutation mergeUsers($id: ID!, $duplicateId: ID!){
@@ -387,6 +425,78 @@ RSpec.describe Mutations::User do
 
       expect(result.dig('data', 'userUpdate', 'user', 'userType')).to eql nil
       expect(result['errors']).to_not be nil
+    end
+
+    it 'should create user secondary information if not exists' do
+      variables = {
+        id: admin.id,
+        name: 'Jane Doe',
+        secondaryInfo: [
+          { info: '123 Zoo Estate', contactType: 'address' },
+          { info: '234980000000', contactType: 'phone' },
+          { info: 'jane@doe.com', contactType: 'email' },
+        ],
+      }
+      result = DoubleGdpSchema.execute(update_secondary_details_query,
+                                       variables: variables,
+                                       context: {
+                                         current_user: admin,
+                                         site_community: admin.community,
+                                       }).as_json
+      expect(result.dig('data', 'userUpdate', 'user', 'id')).not_to be_nil
+      expect(result['errors']).to be_nil
+
+      user_contact_infos = result.dig('data', 'userUpdate', 'user', 'contactInfos')
+      expect(user_contact_infos.size).to eq(3)
+      expect(user_contact_infos.first['info']).to eq('123 Zoo Estate')
+      expect(user_contact_infos.second['info']).to eq('234980000000')
+      expect(user_contact_infos.last['info']).to eq('jane@doe.com')
+    end
+
+    it 'should update and delete contact infos correctly' do
+      variables = {
+        id: admin.id,
+        name: 'Jane Doe',
+        secondaryInfo: [
+          { info: '123 Zoo Estate', contactType: 'address' },
+          { info: '234980000000', contactType: 'phone' },
+          { info: 'jane@doe.com', contactType: 'email' },
+        ],
+      }
+      before_update = DoubleGdpSchema.execute(update_secondary_details_query,
+                                              variables: variables,
+                                              context: {
+                                                current_user: admin,
+                                                site_community: admin.community,
+                                              }).as_json
+      expect(before_update.dig('data', 'userUpdate', 'user', 'id')).not_to be_nil
+      expect(before_update['errors']).to be_nil
+
+      user_contact_infos = before_update.dig('data', 'userUpdate', 'user', 'contactInfos')
+      expect(user_contact_infos.size).to eq(3)
+
+      # Update / Delete Contact Infos
+      user_contact_infos.first['id']
+      variables_to_update = {
+        id: admin.id,
+        name: 'Jane Doe',
+        secondaryInfo: [
+          { info: '456 Ziks Estate', contactType: 'address', id: user_contact_infos.first['id'] },
+          { info: 'admin@doe.com', contactType: 'email', id: user_contact_infos.last['id'] },
+        ],
+      }
+
+      after_update = DoubleGdpSchema.execute(update_secondary_details_query,
+                                             variables: variables_to_update,
+                                             context: {
+                                               current_user: admin,
+                                               site_community: admin.community,
+                                             }).as_json
+
+      contact_infos_after_update = after_update.dig('data', 'userUpdate', 'user', 'contactInfos')
+      expect(contact_infos_after_update.size).to eq(2)
+      expect(contact_infos_after_update.first['info']).to eq('456 Ziks Estate')
+      expect(contact_infos_after_update.last['info']).to eq('admin@doe.com')
     end
 
     context 'when a user in community exists with same phone number' do

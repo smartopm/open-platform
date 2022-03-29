@@ -89,10 +89,12 @@ module Mutations
         end
       end
 
+      # rubocop: disable Metrics/MethodLength
       # rubocop: disable Metrics/AbcSize
       def update_secondary_info(user, contact_info)
         return if contact_info.nil?
 
+        remove_secondary_info_with_no_update(user, contact_info)
         contact_info.each do |value|
           if value['id'].nil?
             # prevent an error incase its an account update without sec info
@@ -106,6 +108,7 @@ module Mutations
         end
       end
       # rubocop: enable Metrics/AbcSize
+      # rubocop: enable Metrics/MethodLength
 
       def log_user_update(user)
         Logs::EventLog.create(acting_user_id: context[:current_user].id,
@@ -162,6 +165,17 @@ module Mutations
 
         start_date = user.current_time_in_timezone
         user_logs.previous_log(user_logs.first.created_at).update(stop_date: start_date)
+      end
+
+      def remove_secondary_info_with_no_update(user, contact_info)
+        return unless user.contact_infos.exists?
+
+        contact_infos_to_update = contact_info.filter do |c|
+          c['id'] unless c['info'].nil?
+        end
+        ids_to_update = contact_infos_to_update.map { |c| c['id'] }
+        contacts = user.contact_infos.where.not(id: ids_to_update)
+        contacts&.destroy_all unless contacts&.empty?
       end
 
       def authorized?(vals)
