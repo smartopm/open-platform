@@ -40,6 +40,7 @@
       "post_construction": "Post Construcciones",
       "scheme_design_review": "Revisión del Esquema de Diseño"
     },
+    "lifetime_totals": "Totales de por vida",
     "no_activity_summary": "Sin Resumen de Actividad",
     "no_assigned_projects": "¡Aún no tiene ningún proyecto asignado!",
     "no_data": "No hay información que mostrar",
@@ -49,6 +50,7 @@
     "no_ssigned_projects": "¡Aún no tiene ningún proyecto asignado!",
     "no_steps_assigned": "Actualmente no hay pasos asignados a este proceso.",
     "open_submitted_form": "Formulario Abierto",
+    "outstanding": "Sobresaliente",
     "overview": "Descripción General",
     "process_steps": "Pasos del Proceso",
     "processes": "Procesos",
