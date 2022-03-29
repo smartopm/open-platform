@@ -8,20 +8,19 @@ export default function FormRoleSelect({ data, handleChange, inputLabel, roles }
   const { t } = useTranslation('form');
   return (
     <>
-    {console.log(roles)}
-    <Autocomplete
-      data-testid="campaignLabel-creator"
-      style={{ width: '100%' }}
-      multiple
-      freeSolo
-      id="tags-filled"
-      options={data}
-      getOptionLabel={role => role}
-      value={roles || []}
-      onChange={(_event, newValue) => {
+      <Autocomplete
+        data-testid="campaignLabel-creator"
+        style={{ width: '100%' }}
+        multiple
+        freeSolo
+        id="tags-filled"
+        options={data}
+        getOptionLabel={role => role}
+        value={roles || []}
+        onChange={(_event, newValue) => {
         return handleChange(newValue);
       }}
-      renderTags={(values, getTagProps) => {
+        renderTags={(values, getTagProps) => {
         return values.map((role, index) => (
           <Chip
             key={role}
@@ -31,10 +30,10 @@ export default function FormRoleSelect({ data, handleChange, inputLabel, roles }
           />
         ));
       }}
-      renderInput={params => (
-        <TextField {...params} label={inputLabel} style={{ width: '100%' }} variant="outlined" />
+        renderInput={params => (
+          <TextField {...params} label={inputLabel} style={{ width: '100%' }} variant="outlined" />
       )}
-    />
+      />
     </>
   );
 }

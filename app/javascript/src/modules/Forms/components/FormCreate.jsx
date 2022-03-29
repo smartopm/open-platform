@@ -17,6 +17,8 @@ import MessageAlert from '../../../components/MessageAlert';
 import { Spinner } from '../../../shared/Loading'
 import { FormQuery } from '../graphql/forms_queries';
 
+// Update the proptypes
+// handle error when fetching
 export default function FormCreate({ formMutation, refetch, formId, actionType }) {
   const [formDataQuery, { data: form, error: formError, loading: formLoading, called }] = useLazyQuery(
     FormQuery,
@@ -28,16 +30,16 @@ export default function FormCreate({ formMutation, refetch, formId, actionType }
   const classes = useStyles();
   const history = useHistory();
   const [title, setTitle] = useState('');
-  const [description, setDescription] = useState(form?.description || '');
-  const [roles, setRoles] = useState(form?.roles || []);
+  const [description, setDescription] = useState(formData?.form?.description || '');
+  const [roles, setRoles] = useState(formData?.form?.roles || []);
   const [isLoading, setLoading] = useState(false);
   const [alertOpen, setAlertOpen] = useState(false);
   const [message, setMessage] = useState({ isError: false, detail: '' });
-  const [expiresAt, setExpiresAtDate] = useState(form?.expiresAt || null);
+  const [expiresAt, setExpiresAtDate] = useState(formData?.form?.expiresAt || null);
   const [multipleSubmissionsAllowed, setMultipleSubmissionsAllowed] = useState(
-    form ? form.multipleSubmissionsAllowed : true
+    formData?.form ? formData?.form.multipleSubmissionsAllowed : true
   );
-  const [preview, setPreview] = useState(form ? form.preview : false);
+  const [preview, setPreview] = useState(formData?.form ? formData?.form.preview : false);
   const authState = useContext(AuthStateContext);
   const communityRoles = authState?.user?.community?.roles;
 
@@ -51,7 +53,7 @@ export default function FormCreate({ formMutation, refetch, formId, actionType }
       roles
     };
     if (actionType === 'update') {
-      variables.id = form?.id;
+      variables.id = formData?.form?.id;
     }
     setLoading(true);
     formMutation({
@@ -78,24 +80,21 @@ export default function FormCreate({ formMutation, refetch, formId, actionType }
     if (formId) {
       formDataQuery();
     }
-    if (form) {
-      setTitle(form.name)
+    // Refactor this to make it cleaner
+    // Issue was that we were getting name from a wrong object
+    if (formData?.form) {
+      setTitle(formData?.form?.name)
+      setDescription(formData?.form?.description)
+      setRoles(formData?.form?.roles)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [formId, form]);
+  }, [formId, formData, formDataQuery]);
 
-  useEffect(() => {
-    if (called && form) {
-      setTitle(form.name)
-    }
-  }, [form, called])
 
   return (
     formLoading ? (
       <Spinner />
     ) : (
       <Container>
-        {/* {console.log(form)} */}
         <Container>
           <MessageAlert
             type={message.isError ? 'error' : 'success'}
