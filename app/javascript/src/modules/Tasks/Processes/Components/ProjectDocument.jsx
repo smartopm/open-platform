@@ -22,6 +22,7 @@ import { ActionDialog } from '../../../../components/Dialog';
 import { DeleteNoteDocument } from '../../../../graphql/mutations';
 import MessageAlert from '../../../../components/MessageAlert';
 import CenteredContent from '../../../../shared/CenteredContent';
+import { checkLastItem } from '../utils'
 
 export default function ProjectDocument({ attachments, loading, refetch, error }) {
   const classes = useStyles();
@@ -75,9 +76,6 @@ export default function ProjectDocument({ attachments, loading, refetch, error }
       });
   }
 
-  function checkLastDoc(index) {
-    return index === attachments.length - 1;
-  }
   return (
     <>
       {error && (
@@ -118,7 +116,7 @@ export default function ProjectDocument({ attachments, loading, refetch, error }
             <Grid
               key={att.id}
               className={classes.children}
-              style={checkLastDoc(index) ? { borderBottom: '2px solid #F7F8F7' } : {}}
+              style={checkLastItem(index, attachments) ? { borderBottom: '2px solid #F7F8F7' } : {}}
             >
               <Grid
                 container

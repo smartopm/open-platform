@@ -124,7 +124,6 @@ export default function TaskDocuments({ data, loading, error, refetch, status })
                       primary={(
                         <Typography
                           variant="body1"
-                          color="primary"
                           style={{ fontWeight: 700 }}
                           data-testid="filename"
                         >
