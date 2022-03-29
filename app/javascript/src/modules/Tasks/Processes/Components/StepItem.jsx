@@ -10,6 +10,7 @@ import PropTypes from 'prop-types';
 import { makeStyles } from '@mui/styles';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import { Context as AuthStateContext } from '../../../../containers/Provider/AuthStateProvider';
 import Card from '../../../../shared/Card';
 import { removeNewLines, sanitizeText } from '../../../../utils/helpers';
 import CustomProgressBar from '../../../../shared/CustomProgressBar';
@@ -21,12 +22,17 @@ export default function StepItem({
   styles,
   openSubSteps,
   handleOpenSubStepsClick,
-  handleStepCompletion,
-  clientView
+  handleStepCompletion
 }) {
+  const authState = React.useContext(AuthStateContext);
   const classes = useStyles();
   const matches = useMediaQuery('(max-width:800px)');
 
+  const taskPermissions = authState?.user?.permissions?.find((permission) => (
+    permission.module === 'note'
+  ));
+
+  const canCompleteTask = taskPermissions.permissions.includes('can_mark_task_as_complete');
 
   return (
     <Card clickData={{clickable, handleClick}} styles={styles} contentStyles={{ padding: '4px' }}>
@@ -45,7 +51,7 @@ export default function StepItem({
                 aria-haspopup="true"
                 data-testid="process-check-box"
                 onClick={(e) => handleStepCompletion(e, step.id, !step.completed)}
-                style={{backgroundColor: 'transparent', cursor: clientView ? 'not-allowed' : 'pointer' }}
+                style={{backgroundColor: 'transparent', cursor: canCompleteTask ? 'pointer' : 'not-allowed' }}
                 size="large"
               >
                 { step.completed ? (
@@ -124,13 +130,11 @@ StepItem.defaultProps = {
   handleClick: null,
   styles: {},
   openSubSteps: false,
-  handleOpenSubStepsClick: null,
-  clientView: false
+  handleOpenSubStepsClick: null
 }
 StepItem.propTypes = {
   step: PropTypes.shape(Step).isRequired,
   clickable: PropTypes.bool,
-  clientView: PropTypes.bool,
   handleClick: PropTypes.func,
   // eslint-disable-next-line react/forbid-prop-types
   styles: PropTypes.object,
