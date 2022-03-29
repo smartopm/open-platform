@@ -30,7 +30,7 @@ describe('Test the selectOptions for menus', () => {
     expect(options[0].subMenu).toBeInstanceOf(Array)
     expect(options[0].subMenu).toHaveLength(4)
     expect(options[1].key).toBe('communication')
-    expect(options[0].subMenu).toHaveLength(5)
+    expect(options[0].subMenu).toHaveLength(4)
     expect(options[2].key).toBe('payments')
     expect(options[3].key).toBe('plots')
     expect(options[4].key).toBe('lead_management')
