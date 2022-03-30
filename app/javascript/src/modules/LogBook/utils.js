@@ -145,8 +145,8 @@ export function paginate(type, history, tabValue, value) {
 
 /**
  * Formats and structures the date to be downloaded in csv
- * @param {[object]} csvData 
- * @param {object} subjects 
+ * @param {[object]} csvData
+ * @param {object} subjects
  * @returns {[object]}
  */
  export function formatCsvData(csvData, subjects) {
@@ -154,6 +154,11 @@ export function paginate(type, history, tabValue, value) {
     ...val,
     logDate: dateToString(val.createdAt, 'YYYY-MM-DD HH:mm'),
     guest: val.entryRequest?.name || val.data.ref_name || val.data.visitor_name || val.data.name,
+    guard: val.entryRequest?.grantor?.name || val.actingUser.name,
+    host:
+      val.entryRequest?.guestId && val.entryRequest?.grantedState === 1
+        ? val.entryRequest?.user.name
+        : null,
     type: objectAccessor(subjects, val.subject),
     extraNote: val.data.note || '-',
     reason: val.entryRequest?.reason

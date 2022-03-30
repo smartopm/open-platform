@@ -36,7 +36,8 @@ export default function GateFlowReport() {
   const csvHeaders = [
     { label: t('logbook:csv.date'), key: 'logDate' },
     { label: t('logbook:csv.type'), key: 'type' },
-    { label: t('logbook:csv.acting_user'), key: 'actingUser.name' },
+    { label: t('logbook:log_title.guard'), key: 'guard' },
+    { label: t('logbook:log_title.host'), key: 'host' },
     { label: t('logbook:csv.guest'), key: 'guest' },
     { label: t('logbook:csv.extra_note'), key: 'extraNote' },
     { label: t('logbook:csv.reason'), key: 'reason' }
