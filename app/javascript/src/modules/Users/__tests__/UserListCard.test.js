@@ -19,6 +19,7 @@ describe('It displays the user list and interactions', () => {
           phoneNumber: '0987654123',
           roleName: 'Admin',
           subStatus: 'building_permit_approved',
+          status: 'active',
           labels: [
             {
               id: 'de2392ec-398f-40e2-a983-7caee40b2073',
