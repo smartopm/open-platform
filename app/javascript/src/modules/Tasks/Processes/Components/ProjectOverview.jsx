@@ -1,7 +1,6 @@
 import React, { useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Grid, Typography , Button } from '@mui/material';
-
 import { makeStyles } from '@mui/styles';
 import { Link } from 'react-router-dom';
 import { useLazyQuery } from 'react-apollo';
@@ -66,11 +65,12 @@ export default function ProjectOverview({ data }) {
         handleClose={handleMessageAlertClose}
       />
       <Grid container style={{ marginLeft: '-20px' }} data-testid="project-information">
-        {formEntriesData?.length > 0 ? (
+        <Grid item md={12} xs={12}>
+          {formEntriesData?.length > 0 ? (
           formEntriesData.map(d => (
             <Grid
               container
-              spacing={10}
+              spacing={2}
               key={d.formProperty.fieldName}
               className={classes.overViewItem}
             >
@@ -89,6 +89,7 @@ export default function ProjectOverview({ data }) {
         ) : (
           <CenteredContent data-testid="no-project-info">{t('processes.no_form_data')}</CenteredContent>
         )}
+        </Grid>
         { data?.formUser?.user && (
           <>
             <Grid container spacing={2} className={classes.overViewItem}>
@@ -102,6 +103,8 @@ export default function ProjectOverview({ data }) {
                   {data.formUser.user?.name}
                 </Typography>
               </Grid>
+            </Grid>
+            <Grid container spacing={2}>
               <Grid item xs={5} md={5}>
                 <Typography variant="caption" color="textSecondary">
                   {t('processes.submitted_form')}
@@ -185,6 +188,7 @@ const Step = {
   dueDate: PropTypes.string,
   formUserId: PropTypes.string
 };
+
 ProjectOverview.defaultProps = {};
 
 ProjectOverview.propTypes = {
@@ -205,6 +209,6 @@ const useStyles = makeStyles(theme => ({
     padding: '2px 10px'
   },
   overViewItem: {
-    marginBottom: '-30px'
+    marginBottom: '5px'
   }
-}));
+}))
