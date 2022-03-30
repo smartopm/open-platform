@@ -223,17 +223,26 @@ describe('logbook utils', () => {
       {
         createdAt: '2022-03-14T21:11:07',
         entryRequest: { name: 'someName' },
-        data: { ref_name: null, name: 'name', subject: 'user_entry' }
+        data: { ref_name: null, name: 'name', subject: 'user_entry' },
+        actingUser: {
+          name: "Some user"
+        }
       },
       {
         createdAt: new Date(),
-        entryRequest: { name: 'another name' },
-        data: { ref_name: null, name: 'name', subject: 'visitor_entry' }
+        entryRequest: { name: 'another name', guestId: "23908490239213", grantedState: 1, user: { name: "Host User" } },
+        data: { ref_name: null, name: 'name', subject: 'visitor_entry' },
+        actingUser: {
+          name: "Some user"
+        }
       },
       {
         createdAt: new Date(),
         entryRequest: { name: 'thirdname' },
-        data: { ref_name: null, name: 'name', subject: 'observation_log' }
+        data: { ref_name: null, name: 'name', subject: 'observation_log' },
+        actingUser: {
+          name: "Some user"
+        }
       },
     ];
 
@@ -248,5 +257,7 @@ describe('logbook utils', () => {
     expect(formatCsvData(data, subjects)[0]).toHaveProperty('guest', 'someName')
     expect(formatCsvData(data, subjects)[0]).toHaveProperty('extraNote', '-')
     expect(formatCsvData(data, subjects)[0]).toHaveProperty('logDate', '2022-03-14 21:11')
+    expect(formatCsvData(data, subjects)[0]).toHaveProperty('guard', 'Some user')
+    expect(formatCsvData(data, subjects)[1]).toHaveProperty('host', 'Host User')
   });
 });

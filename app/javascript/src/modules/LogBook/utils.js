@@ -157,7 +157,7 @@ export function paginate(type, history, tabValue, value) {
     guard: val.entryRequest?.grantor?.name || val.actingUser.name,
     host:
       val.entryRequest?.guestId && val.entryRequest?.grantedState === 1
-        ? val.entryRequest?.user.name
+        ? val.entryRequest?.user?.name
         : null,
     type: objectAccessor(subjects, val.subject),
     extraNote: val.data.note || '-',
