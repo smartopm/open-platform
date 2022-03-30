@@ -37,10 +37,9 @@ RSpec.describe Mutations::User do
 
     context 'when user is deactivated' do
       before { user.deactivated! }
+
       it 'raises cannot access the app error' do
-        variables = {
-          phoneNumber: '123456789',
-        }
+        variables = { phoneNumber: '123456789' }
         expect(Sms).not_to receive(:send)
         result = DoubleGdpSchema.execute(query, variables: variables,
                                                 context: {
@@ -52,9 +51,8 @@ RSpec.describe Mutations::User do
     end
 
     it 'checks the existence of the phone number' do
-      variables = {
-        phoneNumber: '123456789',
-      }
+      variables = { phoneNumber: '123456789' }
+
       expect(Sms).to receive(:send)
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
