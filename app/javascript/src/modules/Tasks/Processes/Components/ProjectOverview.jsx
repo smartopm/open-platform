@@ -1,7 +1,6 @@
 import React, { useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Grid, Typography , Button } from '@mui/material';
-
 import { makeStyles } from '@mui/styles';
 import { Link } from 'react-router-dom';
 import { useLazyQuery } from 'react-apollo';
@@ -66,13 +65,13 @@ export default function ProjectOverview({ data }) {
         handleClose={handleMessageAlertClose}
       />
       <Grid container style={{ marginLeft: '-20px' }} data-testid="project-information">
-        {formEntriesData?.length > 0 ? (
+        <Grid item md={12} xs={12}>
+          {formEntriesData?.length > 0 ? (
           formEntriesData.map(d => (
             <Grid
               container
-              spacing={10}
+              spacing={2}
               key={d.formProperty.fieldName}
-              className={classes.overViewItem}
             >
               <Grid item md={5} xs={5}>
                 <Typography variant="caption" color="textSecondary">
@@ -89,36 +88,35 @@ export default function ProjectOverview({ data }) {
         ) : (
           <CenteredContent data-testid="no-project-info">{t('processes.no_form_data')}</CenteredContent>
         )}
+        </Grid>
         { data?.formUser?.user && (
-          <>
-            <Grid container spacing={2} className={classes.overViewItem}>
-              <Grid item xs={5} md={5}>
-                <Typography variant="caption" color="textSecondary">
-                  {t('processes.submitted_by')}
-                </Typography>
-              </Grid>
-              <Grid item xs={7} md={7}>
-                <Typography className={classes.link} variant="subtitle2" style={{ fontWeight: 400 }}>
-                  {data.formUser.user?.name}
-                </Typography>
-              </Grid>
-              <Grid item xs={5} md={5}>
-                <Typography variant="caption" color="textSecondary">
-                  {t('processes.submitted_form')}
-                </Typography>
-              </Grid>
-              <Grid item md={7} xs={7}>
-                <Button
-                  href={`/user_form/${data.formUser.user.id}/${data.formUser.id}/task`}
-                  variant="outlined"
-                  color="primary"
-                  className={classes.button}
-                >
-                  {t('processes.open_submitted_form')}
-                </Button>
-              </Grid>
-            </Grid>
-          </>
+        <Grid container spacing={2} className={classes.overViewItem}>
+          <Grid item xs={5} md={5}>
+            <Typography variant="caption" color="textSecondary">
+              {t('processes.submitted_by')}
+            </Typography>
+          </Grid>
+          <Grid item xs={7} md={7}>
+            <Typography className={classes.link} variant="subtitle2" style={{ fontWeight: 400 }}>
+              {data.formUser.user?.name}
+            </Typography>
+          </Grid>
+          <Grid item xs={5} md={5}>
+            <Typography variant="caption" color="textSecondary">
+              {t('processes.submitted_form')}
+            </Typography>
+          </Grid>
+          <Grid item md={7} xs={7}>
+            <Button
+              href={`/user_form/${data.formUser.user.id}/${data.formUser.id}/task`}
+              variant="outlined"
+              color="primary"
+              className={classes.button}
+            >
+              {t('processes.open_submitted_form')}
+            </Button>
+          </Grid>
+        </Grid>
         )}
         {descriptionData && (
           <Grid container spacing={1} style={{ marginTop: '32px' }}>
@@ -185,6 +183,7 @@ const Step = {
   dueDate: PropTypes.string,
   formUserId: PropTypes.string
 };
+
 ProjectOverview.defaultProps = {};
 
 ProjectOverview.propTypes = {
@@ -207,4 +206,4 @@ const useStyles = makeStyles(theme => ({
   overViewItem: {
     marginBottom: '-30px'
   }
-}));
+}))
