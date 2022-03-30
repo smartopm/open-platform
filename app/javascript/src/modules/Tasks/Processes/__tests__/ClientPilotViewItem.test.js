@@ -27,14 +27,21 @@ const props = {
 
 const projectComments = [
   {
+    __typename: 'Comment',
     id: '50da896a-9217-43b9-a28f-03a13c7d401f',
     body: 'body',
     createdAt: '2020-12-28T22:00:00Z',
+    repliedAt: null,
+    replyFrom: null,
+    replyRequired: false,
+    groupingId: null,
     user: {
+      __typename: 'User',
       id: '50da896a-9217-43b9-a28f-03a13c7d401f',
       name: 'name',
       imageUrl: 'image.jpg'
-    }
+    },
+    noteId: taskMock.id
   },
 ];
 
@@ -59,13 +66,14 @@ const stepsDataMock = {
       data: {
         taskSubTasks: [
           {
+            __typename: 'Note',
             "id": "31e883da-a5af-4b56-8870-2db4876ef698",
             "body": "Concept Design Review",
             "dueDate": null,
             "progress": {
-                "complete": 0,
-                "total": 5,
-                "progress_percentage": 0.0
+              "complete": 0,
+              "total": 5,
+              "progress_percentage": 0.0
             },
             "subTasksCount": 5,
             "taskCommentsCount": 2,
@@ -76,17 +84,20 @@ const stepsDataMock = {
             "attachments": null,
             "formUserId": "ae4fb514-39eb-49ce-9891-9c5982c37af3",
             "submittedBy": {
-                "id": "c8b16e54-095e-4b92-bf51-b197f6b916a6",
-                "name": "Bonny Mwenda"
+              __typename: 'User',
+              "id": "c8b16e54-095e-4b92-bf51-b197f6b916a6",
+              "name": "Bonny Mwenda"
             },
             "assignees": [
-                {
-                    "id": "ccca5372-add6-4377-ba22-1521b5e90b99",
-                    "name": "Bonny Mwenda",
-                    "imageUrl": "https://lh3.googleusercontent.com/a-/AOh14GhcavbAGQ-Erhbjo2mQYN3beKduWFyoosNLED0X=s96-c",
-                    "avatarUrl": null
-                }
-            ]
+              {
+                __typename: 'Assignee',
+                "id": "ccca5372-add6-4377-ba22-1521b5e90b99",
+                "name": "Bonny Mwenda",
+                "imageUrl": "https://lh3.googleusercontent.com/a-/AOh14GhcavbAGQ-Erhbjo2mQYN3beKduWFyoosNLED0X=s96-c",
+                "avatarUrl": null
+              }
+            ],
+            "subTasks": []
           },
         ]
       }
@@ -97,7 +108,7 @@ describe('ClientPilotViewItem Item', () => {
   it('renders necessary elements', async () => {
     render(
       <Context.Provider value={authState}>
-        <MockedProvider mocks={[projectCommentsMock, stepsDataMock]} addTypename={false}>
+        <MockedProvider mocks={[projectCommentsMock, stepsDataMock]} addTypename>
           <BrowserRouter>
             <ClientPilotViewItem {...props} />
           </BrowserRouter>
@@ -119,6 +130,6 @@ describe('ClientPilotViewItem Item', () => {
       expect(screen.getByTestId('process-check-box')).toBeInTheDocument();
       expect(screen.getByTestId('step_body')).toBeInTheDocument();
       expect(screen.getByTestId('menu_list')).toBeInTheDocument();
-    }, 10)
+    }, 1000)
   });
 });
