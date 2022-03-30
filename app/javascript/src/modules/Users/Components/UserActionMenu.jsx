@@ -86,21 +86,12 @@ export default function UserActionMenu({
               >
                 {t('menu.view_plans')}
               </MenuItem>
-              {data.user.status === 'active' ? (
-                 <MenuItem
-                 key={'deactivate_user'}
+              <MenuItem
+                 key={'activation_menu'}
                  onClick={handleActivationDialog}
                >
-                 {t('menu.deactivate_user')}
+                 {data.user.status === 'active' ? t('menu.deactivate_user') : t('menu.activate_user')}
                </MenuItem>
-              ) : (
-                <MenuItem
-                key={'activate_user'}
-                onClick={handleActivationDialog}
-              >
-                {t('menu.activate_user')}
-              </MenuItem>
-              )}
             </>
           )}
           {['admin', 'client', 'resident'].includes(userType) && (
