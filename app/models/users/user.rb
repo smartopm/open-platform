@@ -494,7 +494,7 @@ module Users
     end
 
     def send_phone_token
-      return if status.eql?('deactivated')
+      return if deactivated?
 
       raise UserError, 'No phone number to send one time code to' unless self[:phone_number]
 
@@ -508,7 +508,7 @@ module Users
 
     # rubocop:disable Metrics/AbcSize
     def send_one_time_login
-      return if status.eql?('deactivated')
+      return if deactivated?
 
       raise UserError, 'No phone number to send one time code to' unless self[:phone_number]
 
@@ -524,7 +524,7 @@ module Users
 
     # rubocop:disable Metrics/MethodLength
     def send_one_time_login_email
-      return if status.eql?('deactivated')
+      return if deactivated?
 
       raise UserError, 'No Email to send one time code to' unless self[:email]
 

@@ -13,7 +13,7 @@ module Mutations
         raise_phone_number_blank_error(vals[:phone_number])
 
         user = context[:site_community].users.find_any_via_phone_number(vals[:phone_number])
-        raise_user_not_found_error(user)
+        raise_user_specific_error(user)
 
         user&.send_phone_token
 
@@ -36,10 +36,13 @@ module Mutations
       # Raises GraphQL execution error if user does not exist.
       #
       # @return [GraphQL::ExecutionError]
-      def raise_user_not_found_error(user)
-        return if user
+      def raise_user_specific_error(user)
+        message = I18n.t('errors.user.not_found') if user.nil?
+        message = I18n.t('errors.user.cannot_access_app') if user&.deactivated?
 
-        raise GraphQL::ExecutionError, I18n.t('errors.user.not_found')
+        return if message.blank?
+
+        raise GraphQL::ExecutionError, message
       end
     end
   end

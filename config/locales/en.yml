@@ -380,6 +380,7 @@ en:
       does_not_exist: User does not exists
       invalid_expired_token: Invalid or expired phone token
       token_generation_failed: Oops!! Login attempt could not be completed at this time. Try again!
+      cannot_access_app: You do not have access to the app
     user_form_property:
       not_found: User form property not found
     visibility: You do not have permission to access %{field}
