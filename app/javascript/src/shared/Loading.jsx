@@ -1,7 +1,6 @@
 import React from 'react';
 import { StyleSheet, css } from 'aphrodite';
 import LinearProgress from '@mui/material/LinearProgress';
-import { withStyles } from '@mui/styles';
 import CircularProgress from '@mui/material/CircularProgress';
 import CenteredContent from './CenteredContent';
 /**
@@ -21,16 +20,12 @@ export default function Loading() {
   );
 }
 
-const ColorCircularProgress = withStyles({
-  root: {
-    color: '#00695c'
-  }
-})(CircularProgress);
+
 
 export function Spinner() {
   return (
     <CenteredContent>
-      <ColorCircularProgress size={30} thickness={5} data-testid="loader" />
+      <CircularProgress size={30} thickness={5} data-testid="loader" color='primary' />
     </CenteredContent>
   );
 }
