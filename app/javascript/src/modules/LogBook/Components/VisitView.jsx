@@ -19,7 +19,8 @@ import { formatError } from '../../../utils/helpers';
 import useLogbookStyles from '../styles';
 import Paginate from '../../../components/Paginate';
 import LogbookStats from './LogbookStats';
-import SearchFilterList from '../../../shared/SearchFilterList';
+import SearchInput from '../../../shared/search/SearchInput';
+import useDebounce from '../../../utils/useDebounce';
 
 export default function VisitView({
   tabValue,
@@ -32,13 +33,15 @@ export default function VisitView({
 }) {
   const initialFilter = { type: 'allVisits', duration: null };
   const [statsTypeFilter, setStatType] = useState({ ...initialFilter });
+  const [searchTerm, setSearchTerm] = useState('');
+  const dbcSearchTerm = useDebounce(searchTerm, 500);
   const [loadGuests, { data, loading: guestsLoading, refetch, error }] = useLazyQuery(
     CurrentGuestEntriesQuery,
     {
       variables: {
-        offset: query.length ? 0 : offset,
+        offset: searchTerm.length ? 0 : offset,
         limit,
-        query: query.trim(),
+        query: searchTerm.trim(),
         type: statsTypeFilter.type,
         duration: statsTypeFilter.duration
       },
@@ -89,6 +92,11 @@ export default function VisitView({
     }
   }, [tabValue, loadGuests, query, offset]);
 
+  useEffect(() => {
+    setSearchTerm(dbcSearchTerm);
+
+  }, [dbcSearchTerm]);
+
   function handleFilterData(filter, filterType = 'entryType') {
     const isDuration = filterType === 'duration';
     setStatType(current => ({
@@ -100,6 +108,7 @@ export default function VisitView({
 
   function handleFilters() {
     setStatType(initialFilter);
+    setSearchTerm("")
   }
 
   const filterTypes = {
@@ -111,7 +120,11 @@ export default function VisitView({
     past30Days: t('logbook.last_30_days')
   };
 
-  const filters = [filterTypes[statsTypeFilter.type], filterTypes[statsTypeFilter.duration], query]
+  const filters = [
+    filterTypes[statsTypeFilter.type],
+    filterTypes[statsTypeFilter.duration],
+    searchTerm
+  ];
 
   return (
     <div style={{ marginTop: '20px' }}>
@@ -121,10 +134,16 @@ export default function VisitView({
         handleFilter={handleFilterData}
         duration={statsTypeFilter.duration}
       />
-      <SearchFilterList
+
+      <SearchInput
+        title={t('guest_book.visits')}
+        searchValue={searchTerm}
+        filterRequired={false}
+        handleSearch={event => setSearchTerm(event.target.value)}
+        handleClear={handleFilters}
         filters={filters}
-        handleClearFilters={handleFilters}
       />
+      <br />
       {error && <CenteredContent>{formatError(error.message)}</CenteredContent>}
       {guestsLoading ? (
         <Spinner />

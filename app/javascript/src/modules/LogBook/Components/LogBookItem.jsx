@@ -299,6 +299,7 @@ export default function LogBookItem({
                 handleSearch={handleSearch}
                 handleFilter={toggleFilterMenu}
                 handleClear={handleSearchClear}
+                filters={[searchTerm]}
               />
               <Grid
                 container

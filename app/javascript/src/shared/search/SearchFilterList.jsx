@@ -8,30 +8,27 @@ export default function SearchFilterList({ filters, handleClearFilters, isSmall 
   const validFilters = filters.filter(Boolean);
   if (!validFilters?.length) return null;
   return (
-    <>
-      <Grid container spacing={isSmall ? 1: 2} alignItems="center">
-        <Grid item>
-          <Typography display="inline-block" variant="subtitle2" data-testid="search_results">
-            {`${t(
+    <Grid container spacing={isSmall ? 1: 2} alignItems="center">
+      <Grid item xs="auto">
+        <Typography display="inline-block" variant="subtitle2" data-testid="search_results">
+          {`${t(
           'search.search_results'
         )}:  `}
-          </Typography>
-          {'  '}
-          <Typography display="inline-block" variant="caption" data-testid="filters_list">
-            {filters
+        </Typography>
+        {'  '}
+        <Typography display="inline-block" variant="caption" data-testid="filters_list">
+          {filters
             .filter(Boolean)
             .map(filter => `${filter}`)
             .join(', ')}
-          </Typography>
-        </Grid>
-        <Grid item>
-          <Button variant="outlined" color="primary" onClick={handleClearFilters} data-testid="clear_filters_btn">
-            {t('search.clear_filters')}
-          </Button>
-        </Grid>
+        </Typography>
       </Grid>
-      <br />
-    </>
+      <Grid item xs>
+        <Button variant="outlined" color="primary" onClick={handleClearFilters} data-testid="clear_filters_btn">
+          {t('search.clear_filters')}
+        </Button>
+      </Grid>
+    </Grid>
   );
 }
 
