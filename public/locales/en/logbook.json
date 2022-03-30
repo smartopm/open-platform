@@ -164,7 +164,8 @@
     "from": "From",
     "to": "To",
     "gate_flow_report": "Gate Flow Report",
-    "export_data_successfully": "Data successfully exported, click the download button to save"
+    "export_data_successfully": "Data successfully exported, click the download button to save",
+    "export_no_data": "There is no data for the selected dates"
   },
   "date_picker": {
     "ok_label": "Ok",

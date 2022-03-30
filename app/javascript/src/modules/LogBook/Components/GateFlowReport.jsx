@@ -24,8 +24,15 @@ export default function GateFlowReport() {
     variables: { ...reportingDates },
     fetchPolicy: 'cache-and-network',
     errorPolicy: 'all',
-    onCompleted: () =>  setMessage({ ...message, detail: t('logbook:guest_book.export_data_successfully'), isError: false }),
-    onError: error => setMessage({ ...message, detail: formatError(error.message), isError: true }),
+    onCompleted: () =>
+      setMessage({
+        ...message,
+        detail: data?.logbookEventLogs.length
+          ? t('logbook:guest_book.export_data_successfully')
+          : t('logbook:guest_book.export_no_data'),
+        isError: !data?.logbookEventLogs.length
+      }),
+    onError: error => setMessage({ ...message, detail: formatError(error.message), isError: true })
   });
 
   function handleChangeReportingDates(event) {
@@ -62,7 +69,7 @@ export default function GateFlowReport() {
         endDate={reportingDates.endDate}
         handleChange={handleChangeReportingDates}
       >
-        {!called && (
+        {!data?.logbookEventLogs.length > 0 && (
           <Button
             variant="outlined"
             color="primary"
