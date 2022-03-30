@@ -42,7 +42,8 @@
     "title": "Title",
     "misc_title": "{{type}} Title",
     "description": "Description",
-    "misc_description": "{{type}} Description"
+    "misc_description": "{{type}} Description",
+    "status": "Status"
   },
   "form_placeholders": {
     "phone_number": "Enter Phone Number",
@@ -360,7 +361,9 @@
     "allocating": "Allocating...",
     "allocate_plan": "Allocate Plan",
     "allocate": "Allocate",
-    "invitations": "Invitations"
+    "invitations": "Invitations",
+    "deactivate_user": "Deactivate User",
+    "activate_user": "Activate User"
   },
   "user_types": {
     "admin": "Admin",
@@ -497,8 +500,11 @@
     "construction_in_progress": "Construction in Progress",
     "construction_completed": "Construction Completed",
     "construction_in_progress_self_build": "Construction in Progress (Self Build)"
-  }
-  ,
+  },
+  "user_status": {
+    "active": "Active",
+    "deactivated": "Deactivated"
+  },
   "lead_management": {
     "task_header": "TASKS",
     "detail_header": "DETAILS",

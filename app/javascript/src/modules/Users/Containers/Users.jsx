@@ -480,6 +480,7 @@ export default function UsersList() {
               selectedUsers={selectedUsers}
               offset={offset}
               selectCheckBox={selectCheckBox}
+              refetch={refetch}
             />
           </div>
           <Grid

@@ -16,6 +16,7 @@ export const GuestEntriesQuery = gql`
       guest {
         id
         name
+        status
       }
       closestEntryTime {
         occursOn

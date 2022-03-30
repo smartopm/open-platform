@@ -27,19 +27,19 @@ module Mutations
 
       ALLOWED_PARAMS_FOR_ROLES = {
         admin: {}, # Everything
-        security_guard: { except: %i[state user_type] },
-        client: { except: %i[state user_type phone_number email] },
-        resident: { except: %i[state user_type phone_number email] },
-        contractor: { except: %i[state user_type phone_number email] },
-        site_worker: { except: %i[state user_type phone_number email] },
-        custodian: { except: %i[state user_type phone_number email] },
-        prospective_client: { except: %i[state user_type phone_number email] },
-        visitor: { except: %i[state user_type phone_number email] },
-        site_manager: { except: %i[state user_type phone_number email] },
-        security_supervisor: { except: %i[state user_type phone_number email] },
-        consultant: { except: %i[state user_type phone_number email] },
-        developer: { except: %i[state user_type phone_number email] },
-        marketing_manager: { except: %i[state user_type phone_number email] },
+        security_guard: { except: %i[state user_type status] },
+        client: { except: %i[state user_type phone_number email status] },
+        resident: { except: %i[state user_type phone_number email status] },
+        contractor: { except: %i[state user_type phone_number email status] },
+        site_worker: { except: %i[state user_type phone_number email status] },
+        custodian: { except: %i[state user_type phone_number email status] },
+        prospective_client: { except: %i[state user_type phone_number email status] },
+        visitor: { except: %i[state user_type phone_number email status] },
+        site_manager: { except: %i[state user_type phone_number email status] },
+        security_supervisor: { except: %i[state user_type phone_number email status] },
+        consultant: { except: %i[state user_type phone_number email status] },
+        developer: { except: %i[state user_type phone_number email status] },
+        marketing_manager: { except: %i[state user_type phone_number email status] },
       }.freeze
 
       def resolve(vals)

@@ -37,5 +37,13 @@
     "process_csv": "Process CSV Data",
     "download_csv": "Download CSV",
     "copy_id_message": "Id Lists Successfully Copied to Clipboard"
+  },
+  "messages": {
+    "activation_confirmation": "Are you sure you want to activate {{userName}}. By clicking the Activate User button, this user will have access to the app",
+    "deactivation_confirmation": "Are you sure you want to deactivate {{userName}}. By clicking the Deactivation User button, this user will no longer have access to the app"
+  },
+  "buttons": {
+    "activate_user": "Activate User",
+    "deactivate_user": "Deactivate User"
   }
 }

@@ -26,6 +26,7 @@ const QUERY = gql`
       email
       name
       userType
+      status
       phoneNumber
       expiresAt
       imageUrl

@@ -642,6 +642,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
                 </AccessCheck>
                     )
               }
+               { requestContext.request?.guest?.status === 'active' && (
                <AccessCheck module="entry_request" allowedPermissions={['can_grant_entry']}>
                  <Grid item>
                    <Button
@@ -657,7 +658,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
                    </Button>
                  </Grid>
                </AccessCheck>
-
+             )}
 
                <br />
                <FeatureCheck features={authState?.user?.community?.features} name="LogBook" subFeature={CommunityFeaturesWhiteList.denyGateAccessButton}>

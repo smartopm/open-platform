@@ -7,7 +7,8 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
-  Checkbox
+  Checkbox,
+  Chip
 } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import PropTypes from 'prop-types';
@@ -16,11 +17,15 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTranslation } from 'react-i18next';
 import { Link, useHistory } from 'react-router-dom';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { useMutation } from 'react-apollo';
 import Avatar from '../../../components/Avatar';
 import UserActionMenu from './UserActionMenu';
 import UserMerge from './UserMerge';
 import CenteredContent from '../../../shared/CenteredContent';
 import { userSubStatus } from '../../../utils/constants';
+import { ActionDialog } from '../../../components/Dialog';
+import { UpdateUserMutation } from '../../../graphql/mutations/user';
+import { capitalize } from '../../../utils/helpers';
 
 export default function UserItem({
   user,
@@ -28,13 +33,14 @@ export default function UserItem({
   handleUserSelect,
   selectedUsers,
   offset,
-  selectCheckBox
+  selectCheckBox,
+  refetch
 }) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const history = useHistory();
-  const { t } = useTranslation('common');
+  const { t } = useTranslation('common', 'user');
   const mdDownHidden = useMediaQuery(theme => theme.breakpoints.down('md'));
   const mdUpHidden = useMediaQuery(theme => theme.breakpoints.up('md'));
   /**
@@ -42,6 +48,9 @@ export default function UserItem({
    */
   const CSMNumber = '260974624243';
   const [isDialogOpen, setDialogOpen] = useState(false);
+  const [activationDialogOpen, setActivationDialogOpen] = useState(false);
+  const [updateUser] = useMutation(UpdateUserMutation);
+  const [loading, setLoading] = useState(false);
 
   function handleClose(event) {
     event.stopPropagation();
@@ -66,6 +75,32 @@ export default function UserItem({
     setDialogOpen(!isDialogOpen);
   }
 
+  function handleActivationDialog() {
+    setAnchorEl(null);
+    setActivationDialogOpen(!activationDialogOpen);
+  }
+
+  function handleActivation() {
+    setLoading(true);
+    updateUser({
+      variables: { id: user.id, name: user.name, status: activationStatus() }
+    })
+      .then(() => {
+        setLoading(false);
+        handleActivationDialog();
+        refetch();
+      })
+      .catch(() => {
+        setLoading(false);
+        handleActivationDialog();
+      });
+  }
+
+  function activationStatus() {
+    if (user.status === 'active') return 'deactivated';
+    return 'active';
+  }
+
   return (
     <>
       <Dialog
@@ -85,6 +120,15 @@ export default function UserItem({
           <UserMerge close={handleMergeDialog} userId={user.id} />
         </DialogContent>
       </Dialog>
+      <ActionDialog
+        open={activationDialogOpen}
+        handleClose={handleActivationDialog}
+        handleOnSave={handleActivation}
+        message={user.status === 'active' ? t('users:messages.deactivation_confirmation', { userName: user.name }) : t('users:messages.activation_confirmation', { userName: user.name })}
+        type="confirm"
+        proceedText={user.status === 'active' ? t('users:buttons:deactivate_user') : t('users:buttons:activate_user')}
+        disableActionBtn={loading}
+      />
       <ListItem
         key={user.id}
         className={classes.userItem}
@@ -160,7 +204,7 @@ export default function UserItem({
               {user.phoneNumber}
             </Typography>
           </Grid>
-          <Grid item md={3} sm={6} xs={12}>
+          <Grid item md={2} sm={6} xs={12}>
             <Typography
               variant="body2"
               data-testid="user_type"
@@ -180,6 +224,17 @@ export default function UserItem({
               </Typography>
             )}
           </Grid>
+          { 
+            <Grid item md={1} sm={6} xs={12}>
+              <Chip
+                data-testid="task_status_chip_mobile"
+                label={capitalize(user.status)}
+                className={classes.alignDetailsToAvatarFromSm}
+                style={{ color: 'black' }}
+                size="small"
+              />
+            </Grid>
+          }
           {!mdDownHidden && (
             <Grid item md={1} sm={1} className={classes.iconButton}>
               <IconButton
@@ -205,6 +260,7 @@ export default function UserItem({
             open={open}
             OpenMergeDialog={handleMergeDialog}
             linkStyles={classes.linkItem}
+            handleActivationDialog={handleActivationDialog}
           />
         </Grid>
       </ListItem>
@@ -220,6 +276,7 @@ UserItem.propTypes = {
     phoneNumber: PropTypes.string,
     userType: PropTypes.string,
     imageUrl: PropTypes.string,
+    status: PropTypes.string,
     subStatus: PropTypes.string,
     notes: PropTypes.arrayOf(PropTypes.object),
     labels: PropTypes.arrayOf(PropTypes.object)
@@ -228,7 +285,8 @@ UserItem.propTypes = {
   selectCheckBox: PropTypes.bool.isRequired,
   offset: PropTypes.number.isRequired,
   handleUserSelect: PropTypes.func.isRequired,
-  selectedUsers: PropTypes.arrayOf(PropTypes.string).isRequired
+  selectedUsers: PropTypes.arrayOf(PropTypes.string).isRequired,
+  refetch: PropTypes.func.isRequired,
 };
 
 const useStyles = makeStyles(() => ({
