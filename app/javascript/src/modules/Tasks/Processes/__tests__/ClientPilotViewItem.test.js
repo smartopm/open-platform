@@ -67,37 +67,37 @@ const stepsDataMock = {
         taskSubTasks: [
           {
             __typename: 'Note',
-            "id": "31e883da-a5af-4b56-8870-2db4876ef698",
-            "body": "Concept Design Review",
-            "dueDate": null,
-            "progress": {
-              "complete": 0,
-              "total": 5,
-              "progress_percentage": 0.0
+            id: '31e883da-a5af-4b56-8870-2db4876ef698',
+            body: 'Concept Design Review',
+            dueDate: null,
+            progress: {
+              complete: 0,
+              total: 5,
+              progress_percentage: 0.0
             },
-            "subTasksCount": 5,
-            "taskCommentsCount": 2,
-            "taskCommentReply": false,
-            "order": 1,
-            "completed": false,
-            "status": "needs_attention",
-            "attachments": null,
-            "formUserId": "ae4fb514-39eb-49ce-9891-9c5982c37af3",
-            "submittedBy": {
+            subTasksCount: 5,
+            taskCommentsCount: 2,
+            taskCommentReply: false,
+            order: 1,
+            completed: false,
+            status: 'needs_attention',
+            attachments: null,
+            formUserId: 'ae4fb514-39eb-49ce-9891-9c5982c37af3',
+            submittedBy: {
               __typename: 'User',
-              "id": "c8b16e54-095e-4b92-bf51-b197f6b916a6",
-              "name": "Bonny Mwenda"
+              id: 'c8b16e54-095e-4b92-bf51-b197f6b916a6',
+              name: 'Bonny Mwenda'
             },
-            "assignees": [
+            assignees: [
               {
                 __typename: 'Assignee',
-                "id": "ccca5372-add6-4377-ba22-1521b5e90b99",
-                "name": "Bonny Mwenda",
-                "imageUrl": "https://lh3.googleusercontent.com/a-/AOh14GhcavbAGQ-Erhbjo2mQYN3beKduWFyoosNLED0X=s96-c",
-                "avatarUrl": null
+                id: 'ccca5372-add6-4377-ba22-1521b5e90b99',
+                name: 'Bonny Mwenda',
+                imageUrl: 'https://lh3.googleusercontent.com/a-/AOh14GhcavbAGQ-Erhbjo2mQYN3beKduWFyoosNLED0X=s96-c',
+                avatarUrl: null
               }
             ],
-            "subTasks": []
+            subTasks: []
           },
         ]
       }
@@ -130,6 +130,6 @@ describe('ClientPilotViewItem Item', () => {
       expect(screen.getByTestId('process-check-box')).toBeInTheDocument();
       expect(screen.getByTestId('step_body')).toBeInTheDocument();
       expect(screen.getByTestId('menu_list')).toBeInTheDocument();
-    }, 1000)
+    }, 10)
   });
 });
