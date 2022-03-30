@@ -176,7 +176,7 @@ export default function UserInformation({
         </FeatureCheck>
 
         <div className="container d-flex justify-content-between">
-          {data.user.state === 'valid' && data.user.status === 'active' &&
+          { data.user.status === 'active' &&
           securityPersonnelList.includes(authState.user.userType) ? (
             <Button id="log-entry" className="log-entry-btn" color="primary" onClick={onLogEntry}>
               {t('common:misc.log_entry')}

@@ -224,17 +224,17 @@ export default function UserItem({
               </Typography>
             )}
           </Grid>
-          { 
-            <Grid item md={1} sm={6} xs={12}>
-              <Chip
-                data-testid="task_status_chip_mobile"
-                label={capitalize(user.status)}
-                className={classes.alignDetailsToAvatarFromSm}
-                style={{ color: 'black' }}
-                size="small"
-              />
-            </Grid>
-          }
+          <Grid item md={1} sm={6} xs={12}>
+            { user.status === 'deactivated' && (
+            <Chip
+              data-testid="user_status_chip"
+              label={capitalize(user.status)}
+              className={classes.alignDetailsToAvatarFromSm}
+              style={{ color: 'black' }}
+              size="small"
+            />
+            )}
+          </Grid>
           {!mdDownHidden && (
             <Grid item md={1} sm={1} className={classes.iconButton}>
               <IconButton

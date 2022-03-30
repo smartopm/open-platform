@@ -46,7 +46,7 @@ RSpec.describe Mutations::User do
                                                 context: {
                                                   site_community: user.community,
                                                 }).as_json
-  
+
         expect(result.dig('errors', 0, 'message')).to eql 'You do not have access to the app'
       end
     end
