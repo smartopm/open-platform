@@ -1,7 +1,7 @@
 /* eslint-disable max-lines */
 /* eslint-disable complexity */
 import React, { Fragment, useRef, useContext, useState } from 'react';
-import { Grid } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import makeStyles from '@mui/styles/makeStyles';
 import { useTranslation } from 'react-i18next';
@@ -26,7 +26,14 @@ import { convertBase64ToFile, objectAccessor } from '../../../utils/helpers';
 import { checkRequiredFormPropertyIsFilled } from '../utils';
 import MessageAlert from '../../../components/MessageAlert';
 
-export default function RenderForm({ formPropertiesData, formId, refetch, editMode, categoryId }) {
+export default function RenderForm({
+  formPropertiesData,
+  formId,
+  refetch,
+  editMode,
+  categoryId,
+  number
+}) {
   const classes = useStyles();
   const matches = useMediaQuery('(max-width:600px)');
   const signRef = useRef(null);
@@ -129,38 +136,56 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
   const uploadedFile = uploadedImages.find(im => im.propertyId === formPropertiesData.id);
   const fields = {
     text: (
-      <Grid container spacing={3} key={formPropertiesData.id}>
-        <FormPropertyAction
+      <Grid
+        container
+        spacing={3}
+        key={formPropertiesData.id}
+        alignItems="center"
+        justifyContent="center"
+      >
+        {/* <FormPropertyAction
           formId={formId}
           editMode={editMode}
           propertyId={formPropertiesData.id}
           refetch={refetch}
           categoryId={categoryId}
-        />
-        <Grid item xs={editMode ? 10 : 12}>
-          <TextInput
-            id={formPropertiesData.id}
-            properties={formPropertiesData}
-            value={formProperties.fieldName}
-            handleValue={event => handleValueChange(event, formPropertiesData)}
-            editable={editable}
-            inputValidation={{
+        /> */}
+        {editMode && (
+          <Grid item xs={1}>
+            <Typography color="textSecondary">{number}</Typography>
+          </Grid>
+        )}
+        <Grid item xs={editMode ? 11 : 12} style={{margin: '10px 0'}}>
+          <div style={{background: '#F5F5F4', padding: '10px 15px', borderRadius: '10px'}}>
+            <TextInput
+              id={formPropertiesData.id}
+              properties={formPropertiesData}
+              value={formProperties.fieldName}
+              handleValue={event => handleValueChange(event, formPropertiesData)}
+              editable={editable}
+              inputValidation={{
               error: checkRequiredFormPropertyIsFilled(formPropertiesData, formState)
             }}
-          />
+            />
+          </div>
         </Grid>
       </Grid>
     ),
     date: (
       <Grid container spacing={3} key={formPropertiesData.id}>
-        <FormPropertyAction
+        {/* <FormPropertyAction
           formId={formId}
           editMode={editMode}
           propertyId={formPropertiesData.id}
           refetch={refetch}
           categoryId={categoryId}
-        />
-        <Grid item xs={editMode ? 10 : 12}>
+        /> */}
+        {editMode && (
+          <Grid item xs={1}>
+            <Typography color="textSecondary">{number}</Typography>
+          </Grid>
+        )}
+        <Grid item xs={editMode ? 11 : 12}>
           <DatePickerDialog
             id={formPropertiesData.id}
             selectedDate={
@@ -178,14 +203,19 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
     ),
     time: (
       <Grid container spacing={3} key={formPropertiesData.id}>
-        <FormPropertyAction
+        {/* <FormPropertyAction
           formId={formId}
           editMode={editMode}
           propertyId={formPropertiesData.id}
           refetch={refetch}
           categoryId={categoryId}
-        />
-        <Grid item xs={editMode ? 10 : 12}>
+        /> */}
+        {editMode && (
+          <Grid item xs={1}>
+            <Typography color="textSecondary">{number}</Typography>
+          </Grid>
+        )}
+        <Grid item xs={editMode ? 11 : 12}>
           <ThemedTimePicker
             id={formPropertiesData.id}
             time={objectAccessor(formProperties, formPropertiesData.fieldName)?.value || null}
@@ -202,14 +232,19 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
     ),
     datetime: (
       <Grid container spacing={3} key={formPropertiesData.id}>
-        <FormPropertyAction
+        {/* <FormPropertyAction
           formId={formId}
           editMode={editMode}
           propertyId={formPropertiesData.id}
           refetch={refetch}
           categoryId={categoryId}
-        />
-        <Grid item xs={editMode ? 10 : 12}>
+        /> */}
+        {editMode && (
+          <Grid item xs={1}>
+            <Typography color="textSecondary">{number}</Typography>
+          </Grid>
+        )}
+        <Grid item xs={editMode ? 11 : 12}>
           <DateAndTimePickers
             id={formPropertiesData.id}
             selectedDateTime={
@@ -217,6 +252,8 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
             }
             handleDateChange={date => handleDateChange(date, formPropertiesData)}
             label={`${formPropertiesData.fieldName} ${formPropertiesData.required ? '*' : ''}`}
+            inputVariant='outlined'
+            textFieldStyle={{background: '#F5F5F4', padding: '10px 15px', borderRadius: '10px'}}
             inputValidation={{
               error: checkRequiredFormPropertyIsFilled(formPropertiesData, formState),
               fieldName: formPropertiesData.fieldName
@@ -234,16 +271,21 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
           handleClose={handleMessageAlertClose}
         />
 
-        <FormPropertyAction
+        {/* <FormPropertyAction
           formId={formId}
           editMode={editMode}
           propertyId={formPropertiesData.id}
           refetch={refetch}
           categoryId={categoryId}
-        />
+        /> */}
+        {editMode && (
+          <Grid item xs={1}>
+            <Typography color="textSecondary">{number}</Typography>
+          </Grid>
+        )}
         <Grid
           item
-          xs={editMode ? 10 : 12}
+          xs={editMode ? 11 : 12}
           style={formState.isUploading ? { opacity: 0.3, pointerEvents: 'none' } : {}}
         >
           <UploadField
@@ -287,14 +329,19 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
     ),
     signature: (
       <Grid container spacing={3} key={formPropertiesData.id}>
-        <FormPropertyAction
+        {/* <FormPropertyAction
           formId={formId}
           editMode={editMode}
           propertyId={formPropertiesData.id}
           refetch={refetch}
           categoryId={categoryId}
-        />
-        <Grid item xs={editMode ? 10 : 12}>
+        /> */}
+        {editMode && (
+          <Grid item xs={1}>
+            <Typography color="textSecondary">{number}</Typography>
+          </Grid>
+        )}
+        <Grid item xs={editMode ? 11 : 12}>
           <SignaturePad
             key={formPropertiesData.id}
             detail={{
@@ -310,14 +357,19 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
     ),
     radio: (
       <Grid container spacing={3} key={formPropertiesData.id}>
-        <FormPropertyAction
+        {/* <FormPropertyAction
           formId={formId}
           editMode={editMode}
           propertyId={formPropertiesData.id}
           refetch={refetch}
           categoryId={categoryId}
-        />
-        <Grid item xs={editMode ? 10 : 12}>
+        /> */}
+        {editMode && (
+          <Grid item xs={1}>
+            <Typography color="textSecondary">{number}</Typography>
+          </Grid>
+        )}
+        <Grid item xs={editMode ? 11 : 12}>
           <Fragment key={formPropertiesData.id}>
             <br />
             <RadioInput
@@ -335,14 +387,19 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
     ),
     checkbox: (
       <Grid container spacing={3} key={formPropertiesData.id}>
-        <FormPropertyAction
+        {/* <FormPropertyAction
           formId={formId}
           editMode={editMode}
           propertyId={formPropertiesData.id}
           refetch={refetch}
           categoryId={categoryId}
-        />
-        <Grid item xs={editMode ? 10 : 12}>
+        /> */}
+        {editMode && (
+          <Grid item xs={1}>
+            <Typography color="textSecondary">{number}</Typography>
+          </Grid>
+        )}
+        <Grid item xs={editMode ? 11 : 12}>
           <Fragment key={formPropertiesData.id}>
             <br />
             <CheckboxInput
@@ -360,14 +417,19 @@ export default function RenderForm({ formPropertiesData, formId, refetch, editMo
     ),
     dropdown: (
       <Grid container spacing={3} key={formPropertiesData.id}>
-        <FormPropertyAction
+        {/* <FormPropertyAction
           formId={formId}
           editMode={editMode}
           propertyId={formPropertiesData.id}
           refetch={refetch}
           categoryId={categoryId}
-        />
-        <Grid item xs={editMode ? 10 : 12}>
+        /> */}
+        {editMode && (
+          <Grid item xs={1}>
+            <Typography color="textSecondary">{number}</Typography>
+          </Grid>
+        )}
+        <Grid item xs={editMode ? 11 : 12}>
           <TextInput
             id={formPropertiesData.id}
             properties={formPropertiesData}

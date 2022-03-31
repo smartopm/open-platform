@@ -20,7 +20,7 @@ import { FormQuery } from '../graphql/forms_queries';
 // Update the proptypes
 // handle error when fetching
 export default function FormCreate({ formMutation, refetch, formId, actionType }) {
-  const [formDataQuery, { data: form, error: formError, loading: formLoading, called }] = useLazyQuery(
+  const [formDataQuery, { data: formData, error: formError, loading: formLoading }] = useLazyQuery(
     FormQuery,
     {
       variables: { id: formId }
@@ -54,6 +54,7 @@ export default function FormCreate({ formMutation, refetch, formId, actionType }
     };
     if (actionType === 'update') {
       variables.id = formData?.form?.id;
+      console.log(variables)
     }
     setLoading(true);
     formMutation({
@@ -86,6 +87,7 @@ export default function FormCreate({ formMutation, refetch, formId, actionType }
       setTitle(formData?.form?.name)
       setDescription(formData?.form?.description)
       setRoles(formData?.form?.roles)
+      setExpiresAtDate(formData?.form?.expiresAt)
     }
   }, [formId, formData, formDataQuery]);
 

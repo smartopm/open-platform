@@ -1,7 +1,9 @@
 import React, { useContext } from 'react';
 import { Container, Grid, IconButton, Typography } from '@mui/material';
 import PropTypes from 'prop-types';
-import AddCircleIcon from '@mui/icons-material/AddCircle';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import Tooltip from '@mui/material/Tooltip';
 import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
 import { makeStyles } from '@mui/styles';
@@ -30,12 +32,14 @@ export default function CategoryItem({
   }
   return (
     <>
-      {!category.headerVisible && !editMode ? null : (
-        <Grid container className={classes.categorySection}>
-          <Grid item xs={6} sm={9}>
-            <Typography className={classes.categoryName}>{category.fieldName}</Typography>
-          </Grid>
-          {/* <Grid item xs={2} sm={1}>
+      <Container>
+        <Container style={{padding: '0 120px'}}>
+          {!category.headerVisible && !editMode ? null : (
+            <Grid container className={classes.categorySection}>
+              <Grid item xs={6} sm={10}>
+                <Typography className={classes.categoryName}>{category.fieldName}</Typography>
+              </Grid>
+              {/* <Grid item xs={2} sm={1}>
             {editMode && (
               <IconButton
                 aria-label="delete this category"
@@ -50,32 +54,38 @@ export default function CategoryItem({
               </IconButton>
             )}
           </Grid> */}
-          <Grid item xs={2} sm={1}>
-            {editMode && (
-              <IconButton aria-label="edit this category" onClick={handleEditCategory} size="large">
-                <AddCircleIcon color="primary" />
-              </IconButton>
-            )}
-          </Grid>
-          <Grid item xs={2} sm={1}>
-            {editMode && (
-              <IconButton
-                aria-label="add questions to this category"
-                onClick={handleAddField}
-                className="form-category-add-field-btn"
-                size="large"
-              >
-                {collapsed ? (
-                  <CloseIcon color="primary" />
+              <Grid item xs={2} sm={1} className={classes.align}>
+                {editMode && (
+                <IconButton
+                  aria-label="add questions to this category"
+                  onClick={handleAddField}
+                  className="form-category-add-field-btn"
+                  size="large"
+                >
+                  {collapsed ? (
+                    <Tooltip title="Hide">
+                      <CloseIcon color="primary" />
+                    </Tooltip>
                 ) : (
-                  <AddCircleIcon color="primary" data-testid="add-icon" />
+                  <Tooltip title="Add a property">
+                    <AddCircleOutlineIcon color="primary" data-testid="add-icon" />
+                  </Tooltip>
                 )}
-              </IconButton>
+                </IconButton>
             )}
-          </Grid>
-        </Grid>
+              </Grid>
+              <Grid item xs={2} sm={1} className={classes.align}>
+                {editMode && (
+                <IconButton aria-label="edit this category" size="large">
+                  <MoreVertIcon color="primary" />
+                </IconButton>
+            )}
+              </Grid>
+            </Grid>
       )}
-      <Container>{children}</Container>
+        </Container>
+      </Container>
+      <Container><Container><Container style={{padding: '0 150px'}}>{children}</Container></Container></Container>
     </>
   );
 }
@@ -104,5 +114,8 @@ const useStyles = makeStyles({
   },
   categoryName: {
     padding: 13
+  },
+  align: {
+    textAlign: 'right'
   }
 });

@@ -46,8 +46,8 @@ export default function DatePickerDialog({
             }
             placeholder="YYYY-MM-DD"
             variant={inputVariant ? 'outlined' : 'standard'}
-            data-testid='date-picker'
-            style={{ width: `${width || '100%'}`}}
+            data-testid="date-picker"
+            style={{ width: `${width || '100%'}` }}
           />
         )}
         okText={t('date_picker.ok_label')}
@@ -76,7 +76,8 @@ export function DateAndTimePickers({
   label,
   pastDate,
   inputValidation,
-  inputVariant
+  inputVariant,
+  textFieldStyle
 }) {
   const { t } = useTranslation(['logbook', 'form']);
   return (
@@ -85,24 +86,46 @@ export function DateAndTimePickers({
       locale={getCurrentLng().includes('es') ? es : enUS}
     >
       <MobileDateTimePicker
-        renderInput={params => (
-          <TextField
-            {...params}
-            /* eslint-disable no-nested-ternary */
-            helperText={
-              pastDate
-                ? t('form:errors.date_time_in_the_future')
-                : inputValidation.error
-                ? t('form:errors.required_field', { fieldName: inputValidation.fieldName })
-                : ''
-            }
-            placeholder="YYYY-MM-DD hh:mm a"
-            error={pastDate ? checkPastDate(selectedDateTime) : inputValidation.error}
-            variant={inputVariant}
-            data-testid='datetime-picker'
-            style={{ width: '100%' }}
-          />
-        )}
+        renderInput={params =>
+          textFieldStyle ? (
+            <div style={textFieldStyle}>
+              <TextField
+                {...params}
+                /* eslint-disable no-nested-ternary */
+                helperText={
+                  pastDate
+                    ? t('form:errors.date_time_in_the_future')
+                    : inputValidation.error
+                    ? t('form:errors.required_field', { fieldName: inputValidation.fieldName })
+                    : ''
+                }
+                placeholder="YYYY-MM-DD hh:mm a"
+                error={pastDate ? checkPastDate(selectedDateTime) : inputValidation.error}
+                variant={inputVariant}
+                data-testid="datetime-picker"
+                fullWidth
+                style={{background: '#FFFFFF'}}
+              />
+            </div>
+          ) : (
+            <TextField
+              {...params}
+              /* eslint-disable no-nested-ternary */
+              helperText={
+                pastDate
+                  ? t('form:errors.date_time_in_the_future')
+                  : inputValidation.error
+                  ? t('form:errors.required_field', { fieldName: inputValidation.fieldName })
+                  : ''
+              }
+              placeholder="YYYY-MM-DD hh:mm a"
+              error={pastDate ? checkPastDate(selectedDateTime) : inputValidation.error}
+              variant={inputVariant}
+              data-testid="datetime-picker"
+              fullWidth
+            />
+          )
+        }
         okText={t('date_picker.ok_label')}
         clearText={t('date_picker.clear')}
         cancelText={t('date_picker.cancel')}
@@ -135,7 +158,14 @@ export function ThemedTimePicker({
         locale={getCurrentLng().includes('es') ? es : enUS}
       >
         <MobileTimePicker
-          renderInput={params => <TextField {...params} variant="outlined" data-testid='time_picker' style={otherProps.fullWidth ? { width: '100%' } : {}} />}
+          renderInput={params => (
+            <TextField
+              {...params}
+              variant="outlined"
+              data-testid="time_picker"
+              style={otherProps.fullWidth ? { width: '100%' } : {}}
+            />
+          )}
           okText={t('date_picker.ok_label')}
           clearText={t('date_picker.clear')}
           cancelText={t('date_picker.cancel')}
@@ -168,10 +198,11 @@ DatePickerDialog.defaultProps = {
 DateAndTimePickers.defaultProps = {
   inputValidation: {
     error: false,
-    fieldName: '',
+    fieldName: ''
   },
-  inputVariant: 'standard'
-}
+  inputVariant: 'standard',
+  textFieldStyle: null
+};
 
 ThemedTimePicker.defaultProps = {
   inputValidation: {
@@ -192,10 +223,11 @@ DatePickerDialog.propTypes = {
 DateAndTimePickers.propTypes = {
   inputValidation: PropTypes.shape({
     error: PropTypes.bool,
-    fieldName: PropTypes.string,
+    fieldName: PropTypes.string
   }),
-  inputVariant: PropTypes.string
-}
+  inputVariant: PropTypes.string,
+  textFieldStyle: PropTypes.shape({})
+};
 
 ThemedTimePicker.propTypes = {
   inputValidation: PropTypes.shape({

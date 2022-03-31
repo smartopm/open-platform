@@ -23,6 +23,7 @@ export default function SwitchInput({ name, label, value, required, handleChange
           color="primary"
           required={required}
           className={className}
+          size='small'
         />
       )}
       label={label}

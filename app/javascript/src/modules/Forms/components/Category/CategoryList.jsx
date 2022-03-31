@@ -41,7 +41,7 @@ export default function CategoryList({
             loading={loading}
             currentId={currentId}
           >
-            {category.formProperties.sort(sortPropertyOrder).map(formProperty => (
+            {category.formProperties.sort(sortPropertyOrder).map((formProperty, index) => (
               <RenderForm
                 key={formProperty.id}
                 formPropertiesData={formProperty}
@@ -49,6 +49,7 @@ export default function CategoryList({
                 refetch={categoriesData.refetch}
                 categoryId={category.id}
                 editMode={editMode}
+                number={index + 1}
               />
             ))}
             {propertyFormOpen && categoryId === category.id && editMode && (
