@@ -1,5 +1,3 @@
-/* eslint-disable no-nested-ternary */
-/* eslint-disable complexity */
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
@@ -26,10 +24,8 @@ import ActingUserName from './ActingUserName';
 import { accessibleMenus, checkVisitorsName } from '../utils';
 
 export default function LogEvents({
-  data,
-  loading,
-  error,
   userType,
+  eventsData,
   handleExitEvent,
   handleAddObservation,
   routeToAction,
@@ -43,6 +39,7 @@ export default function LogEvents({
   const mdUpHidden = useMediaQuery(theme => theme.breakpoints.up('md'));
   const mdDownHidden = useMediaQuery(theme => theme.breakpoints.down('md'));
   const { t } = useTranslation('logbook');
+
 
   function handleClick(logId) {
     setId(logId);
@@ -108,13 +105,15 @@ export default function LogEvents({
     userType,
     handleClose: event => handleMenuClose(event)
   };
+
   return (
     <div style={{ marginTop: '20px' }} data-testid="card">
-      {error && !data?.length && <CenteredContent>{error}</CenteredContent>}
-      {loading ? (
+      {eventsData.error && !eventsData.data?.length && <CenteredContent>{eventsData.error?.message}</CenteredContent>}
+      {eventsData.loading ? (
         <Spinner />
-      ) : data?.length > 0 ? (
-        data.map(entry => (
+      ) : eventsData.data?.result.length > 0 ? (
+        // eslint-disable-next-line complexity
+        eventsData.data?.result.map(entry => (
           <Card key={entry.id}>
             <Grid container spacing={1}>
               <Grid item md={4} xs={8}>
@@ -309,21 +308,10 @@ export default function LogEvents({
     </div>
   );
 }
-
-LogEvents.defaultProps = {
-  error: ''
-};
-
 LogEvents.propTypes = {
-  data: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string
-    })
-  ).isRequired,
-  loading: PropTypes.bool.isRequired,
+  eventsData: PropTypes.object.isRequired,
   userType: PropTypes.string.isRequired,
   handleAddObservation: PropTypes.func.isRequired,
   handleExitEvent: PropTypes.func.isRequired,
   routeToAction: PropTypes.func.isRequired,
-  error: PropTypes.string
 };

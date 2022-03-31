@@ -3,11 +3,12 @@ import useDebounce from '../../utils/useDebounce';
 
 export default function useDebouncedValue(delay = 500) {
   const [value, setSearchValue] = useState('');
-  const dbcSearchTerm = useDebounce(value, delay);
+  const dbcValue = useDebounce(value, delay);
 
   useEffect(() => {
-    setSearchValue(dbcSearchTerm);
-  }, [dbcSearchTerm]);
+    setSearchValue(dbcValue);
+  }, [dbcValue]);
 
-  return [value, setSearchValue];
+  console.log({ dbcValue, value });
+  return { value, dbcValue, setSearchValue };
 }

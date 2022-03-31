@@ -25,7 +25,6 @@ import useDebouncedValue from '../../../shared/hooks/useDebouncedValue';
 export default function VisitView({
   tabValue,
   limit,
-  query,
   offset,
   timeZone,
   handleAddObservation,
@@ -33,14 +32,14 @@ export default function VisitView({
 }) {
   const initialFilter = { type: 'allVisits', duration: null };
   const [statsTypeFilter, setStatType] = useState({ ...initialFilter });
-  const [searchTerm, setSearchTerm] = useDebouncedValue()  
+  const {value, dbcValue, setSearchValue} = useDebouncedValue()  
   const [loadGuests, { data, loading: guestsLoading, refetch, error }] = useLazyQuery(
     CurrentGuestEntriesQuery,
     {
       variables: {
-        offset: searchTerm.length ? 0 : offset,
+        offset: dbcValue.length ? 0 : offset,
         limit,
-        query: searchTerm.trim(),
+        query: dbcValue.trim(),
         type: statsTypeFilter.type,
         duration: statsTypeFilter.duration
       },
@@ -89,12 +88,8 @@ export default function VisitView({
     if (tabValue === 2) {
       loadGuests();
     }
-  }, [tabValue, loadGuests, query, offset]);
+  }, [tabValue, loadGuests, dbcValue, offset]);
 
-  // useEffect(() => {
-  //   setSearchTerm(dbcSearchTerm);
-
-  // }, [dbcSearchTerm]);
 
   function handleFilterData(filter, filterType = 'entryType') {
     const isDuration = filterType === 'duration';
@@ -107,7 +102,7 @@ export default function VisitView({
 
   function handleFilters() {
     setStatType(initialFilter);
-    setSearchTerm("")
+    setSearchValue("")
   }
 
   const filterTypes = {
@@ -122,11 +117,12 @@ export default function VisitView({
   const filters = [
     filterTypes[statsTypeFilter.type],
     filterTypes[statsTypeFilter.duration],
-    searchTerm
+    value
   ];
 
   return (
     <div style={{ marginTop: '20px' }}>
+      <br />
       <LogbookStats
         tabValue={tabValue}
         shouldRefetch={observationDetails.refetch}
@@ -138,9 +134,9 @@ export default function VisitView({
       <br />
       <SearchInput
         title={t('guest_book.visits')}
-        searchValue={searchTerm}
+        searchValue={value}
         filterRequired={false}
-        handleSearch={event => setSearchTerm(event.target.value)}
+        handleSearch={event => setSearchValue(event.target.value)}
         handleClear={handleFilters}
         filters={filters}
       />
@@ -315,7 +311,6 @@ VisitView.propTypes = {
   tabValue: PropTypes.number.isRequired,
   offset: PropTypes.number.isRequired,
   limit: PropTypes.number.isRequired,
-  query: PropTypes.string.isRequired,
   timeZone: PropTypes.string.isRequired,
   handleAddObservation: PropTypes.func.isRequired,
   observationDetails: PropTypes.shape({

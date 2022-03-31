@@ -1,32 +1,24 @@
-/* eslint-disable max-lines */
-/* eslint-disable max-statements */
 import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { useApolloClient, useMutation } from 'react-apollo';
+import { useApolloClient, useMutation, useQuery } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import makeStyles from '@mui/styles/makeStyles';
 import PersonIcon from '@mui/icons-material/Person';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import Grid from '@mui/material/Grid';
+import { Divider } from '@mui/material';
 import { StyledTabs, StyledTab, TabPanel, a11yProps } from '../../../components/Tabs';
 import LogEvents from './LogEvents';
 import SpeedDial from '../../../shared/buttons/SpeedDial';
-import SearchInput from '../../../shared/search/SearchInput';
 import EntryNoteDialog from '../../../shared/dialogs/EntryNoteDialog';
 import useFileUpload from '../../../graphql/useFileUpload';
 import { Spinner } from '../../../shared/Loading';
 import AddObservationNoteMutation from '../graphql/logbook_mutations';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
-import QueryBuilder from '../../../components/QueryBuilder';
-import {
-  entryLogsQueryBuilderConfig,
-  entryLogsQueryBuilderInitialValue
-} from '../../../utils/constants';
 import Paginate from '../../../components/Paginate';
-import { objectAccessor } from '../../../utils/helpers';
 import GuestsView from './GuestsView';
 import VisitView from './VisitView';
 import MessageAlert from '../../../components/MessageAlert';
@@ -34,26 +26,19 @@ import CenteredContent from '../../../shared/CenteredContent';
 import { accessibleMenus, paginate } from '../utils';
 import GateFlowReport from './GateFlowReport';
 import AccessCheck from '../../Permissions/Components/AccessCheck';
+import useDebouncedValue from '../../../shared/hooks/useDebouncedValue';
+import { AllEventLogsQuery } from '../../../graphql/queries';
+import { objectAccessor } from '../../../utils/helpers';
+import SearchInput from '../../../shared/search/SearchInput';
 
 const limit = 20;
 // TODO: reduce the amount of props passed down here, it is hard to keep track
+// eslint-disable-next-line max-statements
 export default function LogBookItem({
-  data,
   router,
   offset,
-  searchTerm,
-  scope,
-  searchQuery,
-  handleSearch,
-  toggleFilterMenu,
-  handleSearchClear,
-  displayBuilder,
-  queryOnChange,
   tabValue,
   handleTabValue,
-  loading,
-  refetch,
-  error
 }) {
   const authState = useContext(AuthStateContext);
   const allUserPermissions = authState.user?.permissions || [];
@@ -77,7 +62,20 @@ export default function LogBookItem({
   const classes = useStyles();
   const [imageUrls, setImageUrls] = useState([]);
   const [blobIds, setBlobIds] = useState([]);
-
+  const {value, dbcValue, setSearchValue}= useDebouncedValue()
+  const subjects = ['user_entry', 'visitor_entry', 'user_temp', 'observation_log'];
+  
+  const eventsData = useQuery(AllEventLogsQuery, {
+    variables: {
+      subject: subjects,
+      refId: null,
+      refType: null,
+      offset,
+      limit: 20,
+      name: dbcValue.trim()
+    },
+    fetchPolicy: 'cache-and-network'
+  });
   const { onChange, signedBlobId, url, status } = useFileUpload({
     client: useApolloClient()
   });
@@ -111,13 +109,6 @@ export default function LogBookItem({
       });
     }
   }
-
-  const searchPlaceholder = {
-    0: t('logbook.all_visits'),
-    1: t('guest.guests'),
-    2: t('guest_book.visits'),
-    3: t('logbook.observations')
-  };
 
   function handleExitEvent(eventLog, logType) {
     setClickedEvent(eventLog);
@@ -171,7 +162,7 @@ export default function LogBookItem({
         });
         setObservationNote('');
         setClickedEvent({ refId: '', refType: '' });
-        refetch();
+        eventsData.refetch();
         setIsObservationOpen(false);
         resetImageData();
       })
@@ -197,12 +188,7 @@ export default function LogBookItem({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
 
-  const filteredEvents =
-    data &&
-    data.filter(log => {
-      const visitorName = log.data.ref_name || log.data.visitor_name || log.data.name || '';
-      return visitorName.toLowerCase().includes(searchTerm.toLowerCase());
-    });
+
 
   function handleCancelClose() {
     setIsObservationOpen(false);
@@ -290,43 +276,25 @@ export default function LogBookItem({
                 <StyledTab label={t('logbook.visit_view')} {...a11yProps(2)} />
               </StyledTabs>
             </Grid>
-            <Grid item xs={10} md={5} lg={6} style={matches ? { marginTop: '20px' } : {}}>
-              <SearchInput
-                title={objectAccessor(searchPlaceholder, tabValue)}
-                searchValue={searchTerm}
-                // temporarily disabling filter until we have proper scope from entry_times table
-                filterRequired={false}
-                handleSearch={handleSearch}
-                handleFilter={toggleFilterMenu}
-                handleClear={handleSearchClear}
-                filters={[searchTerm]}
-              />
-              <Grid
-                container
-                justifyContent="flex-end"
-                className={classes.filter}
-                style={{
-                  display: displayBuilder
-                }}
-              >
-                <QueryBuilder
-                  handleOnChange={queryOnChange}
-                  builderConfig={entryLogsQueryBuilderConfig}
-                  initialQueryValue={entryLogsQueryBuilderInitialValue}
-                  addRuleLabel={t('common:misc.add_filter')}
-                />
-              </Grid>
-            </Grid>
           </Grid>
           <TabPanel pad value={tabValue} index={0}>
             <AccessCheck module="event_log" allowedPermissions={['can_download_logbook_events']}>
               <GateFlowReport />
             </AccessCheck>
+            <br />
+            <Divider />
+            <br />
+            <SearchInput
+              title={t('logbook.all_visits')}
+              searchValue={value}
+              filterRequired={false}
+              handleSearch={event => setSearchValue(event.target.value)}
+              handleClear={() => setSearchValue("")}
+              filters={[value]}
+            />
+            <br />
             <LogEvents
-              data={data}
-              loading={loading}
-              error={error}
-              refetch={refetch}
+              eventsData={eventsData}
               userType={authState.user.userType}
               handleExitEvent={handleExitEvent}
               handleAddObservation={handleAddObservation}
@@ -339,8 +307,6 @@ export default function LogBookItem({
               handleAddObservation={handleAddObservation}
               offset={offset}
               limit={limit}
-              query={!searchTerm.length ? '' : `${searchTerm} ${searchQuery}`}
-              scope={scope}
               timeZone={authState.user.community.timezone}
             />
           </TabPanel>
@@ -350,8 +316,6 @@ export default function LogBookItem({
               handleAddObservation={handleExitEvent}
               offset={offset}
               limit={limit}
-              query={!searchTerm.length ? '' : `${searchTerm} ${searchQuery}`}
-              scope={scope}
               timeZone={authState.user.community.timezone}
               observationDetails={observationDetails}
             />
@@ -376,7 +340,7 @@ export default function LogBookItem({
             limit={limit}
             active={offset >= 1}
             handlePageChange={action => paginate(action, router, tabValue, { offset, limit })}
-            count={filteredEvents?.length}
+            count={eventsData.data?.length}
           />
         </CenteredContent>
       )}
@@ -409,13 +373,6 @@ LogBookItem.propTypes = {
   }).isRequired,
   offset: PropTypes.number.isRequired,
   searchTerm: PropTypes.string.isRequired,
-  scope: PropTypes.number.isRequired,
-  searchQuery: PropTypes.string.isRequired,
-  handleSearch: PropTypes.func.isRequired,
-  toggleFilterMenu: PropTypes.func.isRequired,
-  handleSearchClear: PropTypes.func.isRequired,
-  displayBuilder: PropTypes.string.isRequired,
-  queryOnChange: PropTypes.func.isRequired,
   tabValue: PropTypes.number.isRequired,
   handleTabValue: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
