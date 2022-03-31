@@ -149,6 +149,8 @@ Tilisi:
         - can_access_processes
         - can_upload_documents
         - can_fetch_comments_on_assigned_tasks
+        - can_access_project_steps
+        - can_mark_task_as_complete
     forms:
       permissions:
         - can_see_menu_item
@@ -350,6 +352,8 @@ DoubleGDP:
         - can_access_processes
         - can_upload_documents
         - can_fetch_comments_on_assigned_tasks
+        - can_access_project_steps
+        - can_mark_task_as_complete
     forms:
       permissions:
         - can_see_menu_item

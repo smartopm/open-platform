@@ -8,11 +8,13 @@ import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import Divider from '@mui/material/Divider';
 import { removeNewLines, sanitizeText } from '../../../../utils/helpers';
+import { Spinner } from '../../../../shared/Loading';
 import { TaskContext } from '../../Context';
 import ProjectSteps from './Steps';
 import ProjectItem from './ProjectItem';
 import { ProjectCommentsQuery } from '../graphql/process_queries';
 import ProjectActivitySummary from './ProjectActivitySummary';
+import { SubTasksQuery } from '../../graphql/task_queries';
 
 export default function ClientPilotViewItem({ project, refetch }) {
   const taskId = project?.id;
@@ -32,6 +34,14 @@ export default function ClientPilotViewItem({ project, refetch }) {
     variables: { taskId, limit },
     fetchPolicy: 'cache-and-network',
     errorPolicy: 'all'
+  });
+
+  const { data: stepsData, loading: subStepsLoading, refetchSubTasks } = useQuery(SubTasksQuery, {
+    variables: {
+      taskId: project?.id,
+      limit: project?.subTasksCount || limit
+    },
+    fetchPolicy: 'cache-and-network',
   });
 
   function handleProjectStepClick(tab = 'processes') {
@@ -80,12 +90,15 @@ export default function ClientPilotViewItem({ project, refetch }) {
           <Grid item md={6} xs={12} data-testid="project-step-information">
             <Typography variant="h6">{t('processes.process_steps')}</Typography>
             <br />
-            <ProjectSteps
-              data={project?.subTasks}
-              handleProjectStepClick={handleProjectStepClick}
-              handleStepCompletion={(id, completed) => handleStepCompletion(id, completed, refetch)}
-              clientView
-            />
+            {subStepsLoading ? <Spinner /> : (
+              <ProjectSteps
+                data={stepsData?.taskSubTasks}
+                handleProjectStepClick={handleProjectStepClick}
+                handleStepCompletion={
+                (id, completed) => handleStepCompletion(id, completed, refetchSubTasks)
+              }
+              />
+            )}
           </Grid>
         </Grid>
       </Grid>

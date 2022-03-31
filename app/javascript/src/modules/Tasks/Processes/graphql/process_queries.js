@@ -45,6 +45,7 @@ query Project($formUserId: ID!) {
   project(formUserId: $formUserId) {
     id
     body
+    subTasksCount
   }
 }
 `

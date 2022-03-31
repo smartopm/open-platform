@@ -9,6 +9,7 @@ import taskMock from '../../__mocks__/taskMock';
 import authState from '../../../../__mocks__/authstate';
 import { Context } from '../../../../containers/Provider/AuthStateProvider';
 import { ProjectCommentsQuery } from '../graphql/process_queries';
+import { SubTasksQuery } from '../../graphql/task_queries';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 const props = {
@@ -26,19 +27,25 @@ const props = {
 
 const projectComments = [
   {
+    __typename: 'Comment',
     id: '50da896a-9217-43b9-a28f-03a13c7d401f',
     body: 'body',
     createdAt: '2020-12-28T22:00:00Z',
+    repliedAt: null,
+    replyFrom: null,
+    replyRequired: false,
+    groupingId: null,
     user: {
+      __typename: 'User',
       id: '50da896a-9217-43b9-a28f-03a13c7d401f',
       name: 'name',
       imageUrl: 'image.jpg'
-    }
+    },
+    noteId: taskMock.id
   },
 ];
 
-const projectCommentsMock = [
-  {
+const projectCommentsMock = {
     request: {
       query: ProjectCommentsQuery,
       variables: { taskId: taskMock.id, limit: 3 }
@@ -48,19 +55,65 @@ const projectCommentsMock = [
         projectComments
       }
     }
-  }
-];
+  };
+
+const stepsDataMock = {
+    request: {
+      query: SubTasksQuery,
+      variables: { taskId: taskMock.id, limit: taskMock.subTasksCount }
+    },
+    result: {
+      data: {
+        taskSubTasks: [
+          {
+            __typename: 'Note',
+            id: '31e883da-a5af-4b56-8870-2db4876ef698',
+            body: 'Concept Design Review',
+            dueDate: null,
+            progress: {
+              complete: 0,
+              total: 5,
+              progress_percentage: 0.0
+            },
+            subTasksCount: 5,
+            taskCommentsCount: 2,
+            taskCommentReply: false,
+            order: 1,
+            completed: false,
+            status: 'needs_attention',
+            attachments: null,
+            formUserId: 'ae4fb514-39eb-49ce-9891-9c5982c37af3',
+            submittedBy: {
+              __typename: 'User',
+              id: 'c8b16e54-095e-4b92-bf51-b197f6b916a6',
+              name: 'Bonny Mwenda'
+            },
+            assignees: [
+              {
+                __typename: 'Assignee',
+                id: 'ccca5372-add6-4377-ba22-1521b5e90b99',
+                name: 'Bonny Mwenda',
+                imageUrl: 'https://lh3.googleusercontent.com/a-/AOh14GhcavbAGQ-Erhbjo2mQYN3beKduWFyoosNLED0X=s96-c',
+                avatarUrl: null
+              }
+            ],
+            subTasks: []
+          },
+        ]
+      }
+    }
+  };
 
 describe('ClientPilotViewItem Item', () => {
   it('renders necessary elements', async () => {
     render(
-      <MockedProvider mocks={projectCommentsMock} addTypename={false}>
-        <Context.Provider value={authState}>
+      <Context.Provider value={authState}>
+        <MockedProvider mocks={[projectCommentsMock, stepsDataMock]} addTypename>
           <BrowserRouter>
             <ClientPilotViewItem {...props} />
           </BrowserRouter>
-        </Context.Provider>
-      </MockedProvider>
+        </MockedProvider>
+      </Context.Provider>
     );
 
     await waitFor(() => {
@@ -72,7 +125,7 @@ describe('ClientPilotViewItem Item', () => {
       expect(screen.queryByText('processes.your_tasks')).toBeInTheDocument();
       expect(screen.getByTestId('project-step-information')).toBeInTheDocument();
       expect(screen.queryByText('processes.process_steps')).toBeInTheDocument();
-      
+
       // other card elements
       expect(screen.getByTestId('process-check-box')).toBeInTheDocument();
       expect(screen.getByTestId('step_body')).toBeInTheDocument();
