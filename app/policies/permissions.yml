@@ -674,6 +674,10 @@ site_manager:
   event_log:
     permissions:
       - can_fetch_logbook_events
+  forms:
+    permissions:
+      - can_see_menu_item
+      - can_access_forms
 
 marketing_manager:
   forms:
