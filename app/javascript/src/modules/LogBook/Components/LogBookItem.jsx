@@ -28,11 +28,9 @@ import GateFlowReport from './GateFlowReport';
 import AccessCheck from '../../Permissions/Components/AccessCheck';
 import useDebouncedValue from '../../../shared/hooks/useDebouncedValue';
 import { AllEventLogsQuery } from '../../../graphql/queries';
-import { objectAccessor } from '../../../utils/helpers';
 import SearchInput from '../../../shared/search/SearchInput';
 
 const limit = 20;
-// TODO: reduce the amount of props passed down here, it is hard to keep track
 // eslint-disable-next-line max-statements
 export default function LogBookItem({
   router,

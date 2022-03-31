@@ -9,6 +9,5 @@ export default function useDebouncedValue(delay = 500) {
     setSearchValue(dbcValue);
   }, [dbcValue]);
 
-  console.log({ dbcValue, value });
   return { value, dbcValue, setSearchValue };
 }
