@@ -1,16 +1,16 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { Container, Grid, IconButton, Typography } from '@mui/material';
 import PropTypes from 'prop-types';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Tooltip from '@mui/material/Tooltip';
-import AddIcon from '@mui/icons-material/Add';
+import { useTranslation } from 'react-i18next';
 import CloseIcon from '@mui/icons-material/Close';
 import { makeStyles } from '@mui/styles';
-import { DeleteOutline } from '@mui/icons-material';
 import { Spinner } from '../../../../shared/Loading';
 import { checkCondition, extractValidFormPropertyValue } from '../../utils';
 import { FormContext } from '../../Context';
+import MenuList from '../../../../shared/MenuList';
 
 export default function CategoryItem({
   category,
@@ -26,6 +26,47 @@ export default function CategoryItem({
   const classes = useStyles();
   const { formProperties } = useContext(FormContext);
   const properties = extractValidFormPropertyValue(formProperties);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const { t } = useTranslation(['form', 'common']);
+  const anchorElOpen = Boolean(anchorEl);
+  const menuList = [
+    {
+      content: t('common:menu.edit'),
+      isAdmin: true,
+      color: '',
+      handleClick: e => {
+        handleEditCategory();
+        handleClose(e);
+      }
+    },
+    {
+      content: t('common:menu.delete'),
+      isAdmin: true,
+      color: '',
+      handleClick: e => {
+        handleDeleteCategory();
+        handleClose(e);
+      }
+    }
+  ];
+
+  function handleMenu(event) {
+    event.stopPropagation();
+    setAnchorEl(event.currentTarget);
+  }
+
+  function handleClose(event) {
+    event.stopPropagation();
+    setAnchorEl(null);
+  }
+
+  const menuData = {
+    menuList,
+    handleMenu,
+    anchorEl,
+    open: anchorElOpen,
+    handleClose
+  };
 
   if (!checkCondition(category, properties, editMode)) {
     return null;
@@ -33,59 +74,66 @@ export default function CategoryItem({
   return (
     <>
       <Container>
-        <Container style={{padding: '0 120px'}}>
+        <Container style={{ padding: '0 120px' }}>
           {!category.headerVisible && !editMode ? null : (
             <Grid container className={classes.categorySection}>
               <Grid item xs={6} sm={10}>
                 <Typography className={classes.categoryName}>{category.fieldName}</Typography>
               </Grid>
-              {/* <Grid item xs={2} sm={1}>
-            {editMode && (
-              <IconButton
-                aria-label="delete this category"
-                onClick={handleDeleteCategory}
-                size="large"
-              >
-                {loading && currentId === category.id ? (
-                  <Spinner />
-                ) : (
-                  <DeleteOutline color="primary" />
-                )}
-              </IconButton>
-            )}
-          </Grid> */}
               <Grid item xs={2} sm={1} className={classes.align}>
                 {editMode && (
-                <IconButton
-                  aria-label="add questions to this category"
-                  onClick={handleAddField}
-                  className="form-category-add-field-btn"
-                  size="large"
-                >
-                  {collapsed ? (
-                    <Tooltip title="Hide">
-                      <CloseIcon color="primary" />
-                    </Tooltip>
-                ) : (
-                  <Tooltip title="Add a property">
-                    <AddCircleOutlineIcon color="primary" data-testid="add-icon" />
-                  </Tooltip>
+                  <IconButton
+                    aria-label="add questions to this category"
+                    onClick={handleAddField}
+                    className="form-category-add-field-btn"
+                    size="large"
+                  >
+                    {collapsed ? (
+                      <Tooltip title="Hide">
+                        <CloseIcon color="primary" />
+                      </Tooltip>
+                    ) : (
+                      <Tooltip title="Add a property">
+                        <AddCircleOutlineIcon color="primary" data-testid="add-icon" />
+                      </Tooltip>
+                    )}
+                  </IconButton>
                 )}
-                </IconButton>
-            )}
               </Grid>
               <Grid item xs={2} sm={1} className={classes.align}>
                 {editMode && (
-                <IconButton aria-label="edit this category" size="large">
-                  <MoreVertIcon color="primary" />
-                </IconButton>
-            )}
+                  <>
+                    {loading && currentId === category.id ? (
+                      <Spinner />
+                    ) : (
+                      <>
+                        <IconButton
+                          aria-label="edit this category"
+                          size="large"
+                          onClick={event => menuData.handleMenu(event)}
+                        >
+                          <MoreVertIcon color="primary" />
+                        </IconButton>
+                        <MenuList
+                          open={menuData.open}
+                          anchorEl={menuData.anchorEl}
+                          handleClose={menuData.handleClose}
+                          list={menuData.menuList}
+                        />
+                      </>
+                    )}
+                  </>
+                )}
               </Grid>
             </Grid>
-      )}
+          )}
         </Container>
       </Container>
-      <Container><Container><Container style={{padding: '0 150px'}}>{children}</Container></Container></Container>
+      <Container>
+        <Container>
+          <Container style={{ padding: '0 150px' }}>{children}</Container>
+        </Container>
+      </Container>
     </>
   );
 }

@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { Button, Container, DialogContent, DialogContentText } from '@mui/material';
+import { Button, Container, DialogContent, DialogContentText, Grid, Divider } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { useMutation, useQuery } from 'react-apollo';
 import { useHistory } from 'react-router';
@@ -21,7 +21,13 @@ import MessageAlert from '../../../../components/MessageAlert';
 import { FormCategoryDeleteMutation } from '../../graphql/form_category_mutations';
 import { formatError } from '../../../../utils/helpers';
 
-export default function Form({ editMode, formId }) {
+export default function Form({
+  editMode,
+  formId,
+  property,
+  isPublishing,
+  handleConfirmPublish
+}) {
   const [categoryFormOpen, setCategoryFormOpen] = useState(false);
   const [propertyFormOpen, setPropertyFormOpen] = useState(false);
   const [data, setFormData] = useState({});
@@ -131,13 +137,13 @@ export default function Form({ editMode, formId }) {
             <FormPreview
               loading={formState.isSubmitting}
               handleFormSubmit={() =>
-              saveFormData(
-                formData,
-                formId,
-                authState.user.id,
-                categoriesData.data?.formCategories
-              )
-            }
+                saveFormData(
+                  formData,
+                  formId,
+                  authState.user.id,
+                  categoriesData.data?.formCategories
+                )
+              }
               categoriesData={categoriesData}
             />
           </DialogContentText>
@@ -148,11 +154,11 @@ export default function Form({ editMode, formId }) {
       {loading && <Spinner />}
 
       {!loading && formDetailData && (
-      <FormTitle
-        name={formDetailData.form?.name}
-        description={formDetailData.form?.description}
-      />
-    )}
+        <FormTitle
+          name={formDetailData.form?.name}
+          description={formDetailData.form?.description}
+        />
+      )}
       <div
         data-testid="category-list-container"
         style={formState.isSubmitting ? { opacity: '0.3', pointerEvents: 'none' } : {}}
@@ -169,48 +175,69 @@ export default function Form({ editMode, formId }) {
       </div>
       <br />
       {editMode && (
-      <Button
-        variant="outlined"
-        startIcon={<AddIcon color="primary" />}
-        style={{ float: 'right' }}
-        onClick={handleAddCategory}
-        data-testid="add_category"
-      >
-        {t('form:actions.add_category')}
-      </Button>
-    )}
+        <Grid container spacing={4} style={{padding: '0 150px 20px 150px'}}>
+          <Grid item md={12} style={{marginTop: '20px'}}>
+            <Divider />
+          </Grid>
+          <Grid item md={!property ? 12 : 6} style={!property ? {textAlign: 'right'} : {textAlign: 'left'}}>
+            <Button
+              variant="outlined"
+              startIcon={<AddIcon color="primary" />}
+              onClick={handleAddCategory}
+              data-testid="add_category"
+            >
+              {t('form:actions.add_category')}
+            </Button>
+          </Grid>
+
+          {Boolean(property) && (
+            <Grid item md={6} style={{textAlign: 'right'}}>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleConfirmPublish}
+                disabled={isPublishing}
+                startIcon={isPublishing && <Spinner />}
+                style={{color: 'white'}}
+              >
+                {isPublishing ? t('form:misc.publishing_form') : t('form:actions.publish_form')}
+              </Button>
+            </Grid>
+          )}
+        </Grid>
+      )}
       {!editMode && (
-      <CenteredContent>
-        <Button
-          variant="outlined"
-          type="submit"
-          color="secondary"
-          aria-label="form_draft"
-          style={{ margin: '25px 25px 0 0' }}
-          onClick={() => formSubmit(formData, 'draft')}
-          disabled={formState.isSubmitting}
-          data-testid="save_as_draft"
-        >
-          {t('common:form_actions.save_as_draft')}
-        </Button>
-        <Button
-          variant="outlined"
-          type="submit"
-          color="primary"
-          aria-label="form_submit"
-          style={{ marginTop: '25px' }}
-          onClick={() => formSubmit(formData)}
-          disabled={formState.isSubmitting}
-          data-testid="submit_form_btn"
-        >
-          {!formState.isSubmitting
-            ? t('common:form_actions.submit')
-            : t('common:form_actions.submitting')}
-        </Button>
-      </CenteredContent>
-    )}
+        <CenteredContent>
+          <Button
+            variant="outlined"
+            type="submit"
+            color="secondary"
+            aria-label="form_draft"
+            style={{ margin: '25px 25px 0 0' }}
+            onClick={() => formSubmit(formData, 'draft')}
+            disabled={formState.isSubmitting}
+            data-testid="save_as_draft"
+          >
+            {t('common:form_actions.save_as_draft')}
+          </Button>
+          <Button
+            variant="outlined"
+            type="submit"
+            color="primary"
+            aria-label="form_submit"
+            style={{ marginTop: '25px' }}
+            onClick={() => formSubmit(formData)}
+            disabled={formState.isSubmitting}
+            data-testid="submit_form_btn"
+          >
+            {!formState.isSubmitting
+              ? t('common:form_actions.submit')
+              : t('common:form_actions.submitting')}
+          </Button>
+        </CenteredContent>
+      )}
     </>
-);
+  );
 }
 
 Form.propTypes = {

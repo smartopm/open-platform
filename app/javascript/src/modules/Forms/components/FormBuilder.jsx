@@ -129,10 +129,17 @@ export default function FormBuilder({ formId }) {
           <br />
           {type !== t('misc.updates') ? (
             <>
-              <Form formId={formId} editMode />
-              <br />
-              <br />
-              <CenteredContent>
+              <Form
+                formId={formId}
+                editMode
+                property={Boolean(data.formProperties.length)}
+                publishForm={publishForm}
+                isPublishing={isPublishing}
+                handleConfirmPublish={handleConfirmPublish}
+              />
+              {/* <br />
+              <br /> */}
+              {/* <CenteredContent>
                 <Button
                   variant="outlined"
                   color="primary"
@@ -140,21 +147,9 @@ export default function FormBuilder({ formId }) {
                 >
                   {t('actions.edit_form')}
                 </Button>
-              </CenteredContent>
-              <br />
-              <CenteredContent>
-                {Boolean(data.formProperties.length) && (
-                  <Button
-                    variant="outlined"
-                    color="primary"
-                    onClick={handleConfirmPublish}
-                    disabled={isPublishing}
-                    startIcon={isPublishing && <Spinner />}
-                  >
-                    {isPublishing ? t('misc.publishing_form') : t('actions.publish_form')}
-                  </Button>
-                )}
-              </CenteredContent>
+              </CenteredContent> */}
+              {/* <br />
+              <CenteredContent></CenteredContent> */}
             </>
           ) : (
             <FormTimeline data={formLogs.data?.result} />

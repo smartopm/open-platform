@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Container, Grid, IconButton } from '@mui/material';
 import { useHistory } from 'react-router-dom';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import EditIcon from '@mui/icons-material/Edit';
 import PropTypes from 'prop-types';
@@ -14,6 +15,7 @@ import MessageAlert from '../../../components/MessageAlert';
 import { formatError } from '../../../utils/helpers';
 import FormPropertyCreateForm from './FormPropertyCreateForm';
 import { DetailsDialog } from '../../../components/Dialog';
+import MenuList from '../../../shared/MenuList';
 
 export default function FormPropertyAction({ propertyId, editMode, formId, refetch, categoryId }) {
   const [modal, setModal] = useState({ type: '', isOpen: false });
@@ -22,7 +24,47 @@ export default function FormPropertyAction({ propertyId, editMode, formId, refet
   const [deleteProperty] = useMutation(FormPropertyDeleteMutation);
   const history = useHistory();
   const [message, setMessage] = useState({ isError: false, detail: '' });
-  const { t } = useTranslation('form');
+  const { t } = useTranslation(['form', 'common']);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const anchorElOpen = Boolean(anchorEl);
+  const menuList = [
+    {
+      content: t('common:menu.edit'),
+      isAdmin: true,
+      color: '',
+      handleClick: e => {
+        handleModal();
+        handleClose(e);
+      }
+    },
+    {
+      content: t('common:menu.delete'),
+      isAdmin: true,
+      color: '',
+      handleClick: e => {
+        handleDeleteProperty(propertyId);
+        handleClose(e);
+      }
+    }
+  ];
+
+  const menuData = {
+    menuList,
+    handleMenu,
+    anchorEl,
+    open: anchorElOpen,
+    handleClose
+  };
+
+  function handleMenu(event) {
+    event.stopPropagation();
+    setAnchorEl(event.currentTarget);
+  }
+
+  function handleClose(event) {
+    event.stopPropagation();
+    setAnchorEl(null);
+  }
 
   function handleModal() {
     setModal({ isOpen: !modal.isOpen });
@@ -78,7 +120,7 @@ export default function FormPropertyAction({ propertyId, editMode, formId, refet
           />
         </Container>
       </DetailsDialog>
-      <Grid item xs={2}>
+      {/* <Grid item xs={2}>
         <Grid container direction="row">
           <Grid item xs>
             <IconButton
@@ -99,7 +141,26 @@ export default function FormPropertyAction({ propertyId, editMode, formId, refet
             </IconButton>
           </Grid>
         </Grid>
-      </Grid>
+      </Grid> */}
+      {isDeletingProperty && currentPropId === propertyId ? (
+        <Spinner />
+      ) : (
+        <>
+          <IconButton
+            aria-label="category-options"
+            size="large"
+            onClick={event => menuData.handleMenu(event)}
+          >
+            <MoreVertIcon color="primary" />
+          </IconButton>
+          <MenuList
+            open={menuData.open}
+            anchorEl={menuData.anchorEl}
+            handleClose={menuData.handleClose}
+            list={menuData.menuList}
+          />
+        </>
+      )}
     </>
 );
 }

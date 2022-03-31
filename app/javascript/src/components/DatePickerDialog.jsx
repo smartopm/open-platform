@@ -28,6 +28,7 @@ export default function DatePickerDialog({
   styles,
   inputValidation,
   disabled,
+  textFieldStyle,
   ...others
 }) {
   const { t } = useTranslation(['logbook', 'form']);
@@ -37,19 +38,35 @@ export default function DatePickerDialog({
       locale={getCurrentLng().includes('es') ? es : enUS}
     >
       <MobileDatePicker
-        renderInput={params => (
-          <TextField
-            {...params}
-            helperText={
-              inputValidation.error &&
-              t('form:errors.required_field', { fieldName: inputValidation.fieldName })
-            }
-            placeholder="YYYY-MM-DD"
-            variant={inputVariant ? 'outlined' : 'standard'}
-            data-testid="date-picker"
-            style={{ width: `${width || '100%'}` }}
-          />
-        )}
+        renderInput={params =>
+          textFieldStyle ? (
+            <div style={textFieldStyle}>
+              <TextField
+                {...params}
+                helperText={
+                  inputValidation.error &&
+                  t('form:errors.required_field', { fieldName: inputValidation.fieldName })
+                }
+                placeholder="YYYY-MM-DD"
+                variant={inputVariant}
+                data-testid="date-picker"
+                style={{ width: `${width || '100%'}`, background: '#FFFFFF' }}
+              />
+            </div>
+          ) : (
+            <TextField
+              {...params}
+              helperText={
+                inputValidation.error &&
+                t('form:errors.required_field', { fieldName: inputValidation.fieldName })
+              }
+              placeholder="YYYY-MM-DD"
+              variant={inputVariant ? 'outlined' : 'standard'}
+              data-testid="date-picker"
+              style={{ width: `${width || '100%'}` }}
+            />
+          )
+        }
         okText={t('date_picker.ok_label')}
         clearText={t('date_picker.clear')}
         cancelText={t('date_picker.cancel')}
@@ -104,7 +121,7 @@ export function DateAndTimePickers({
                 variant={inputVariant}
                 data-testid="datetime-picker"
                 fullWidth
-                style={{background: '#FFFFFF'}}
+                style={{ background: '#FFFFFF' }}
               />
             </div>
           ) : (
@@ -122,7 +139,6 @@ export function DateAndTimePickers({
               error={pastDate ? checkPastDate(selectedDateTime) : inputValidation.error}
               variant={inputVariant}
               data-testid="datetime-picker"
-              fullWidth
             />
           )
         }
@@ -148,6 +164,8 @@ export function ThemedTimePicker({
   label,
   inputValidation,
   disabled,
+  textFieldStyle,
+  inputVariant,
   ...otherProps
 }) {
   const { t } = useTranslation(['logbook', 'form']);
@@ -158,14 +176,26 @@ export function ThemedTimePicker({
         locale={getCurrentLng().includes('es') ? es : enUS}
       >
         <MobileTimePicker
-          renderInput={params => (
-            <TextField
-              {...params}
-              variant="outlined"
-              data-testid="time_picker"
-              style={otherProps.fullWidth ? { width: '100%' } : {}}
-            />
-          )}
+          renderInput={params =>
+            textFieldStyle ? (
+              <div style={textFieldStyle}>
+                <TextField
+                  {...params}
+                  data-testid="time_picker"
+                  fullWidth
+                  variant={inputVariant}
+                  style={{ background: '#FFFFFF' }}
+                />
+              </div>
+            ) : (
+              <TextField
+                {...params}
+                data-testid="time_picker"
+                style={otherProps.fullWidth ? { width: '100%' } : {}}
+                variant={inputVariant}
+              />
+            )
+          }
           okText={t('date_picker.ok_label')}
           clearText={t('date_picker.clear')}
           cancelText={t('date_picker.cancel')}
@@ -192,7 +222,9 @@ DatePickerDialog.defaultProps = {
     error: false,
     fieldName: ''
   },
-  disabled: false
+  disabled: false,
+  textFieldStyle: null,
+  inputVariant: 'standard'
 };
 
 DateAndTimePickers.defaultProps = {
@@ -209,7 +241,9 @@ ThemedTimePicker.defaultProps = {
     error: false,
     fieldName: ''
   },
-  disabled: false
+  disabled: false,
+  textFieldStyle: null,
+  inputVariant: 'standard'
 };
 
 DatePickerDialog.propTypes = {
@@ -217,7 +251,9 @@ DatePickerDialog.propTypes = {
     error: PropTypes.bool,
     fieldName: PropTypes.string
   }),
-  disabled: PropTypes.bool
+  disabled: PropTypes.bool,
+  textFieldStyle: PropTypes.shape({}),
+  inputVariant: PropTypes.string
 };
 
 DateAndTimePickers.propTypes = {
@@ -234,5 +270,7 @@ ThemedTimePicker.propTypes = {
     error: PropTypes.bool,
     fieldName: PropTypes.string
   }),
-  disabled: PropTypes.bool
+  disabled: PropTypes.bool,
+  textFieldStyle: PropTypes.shape({}),
+  inputVariant: PropTypes.string
 };
