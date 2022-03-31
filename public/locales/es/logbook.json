@@ -61,6 +61,7 @@
     "exited_at": "Salió a las ‪{{time}}‬",
     "expired": "Vencido",
     "export_data_successfully": "Datos exportados con éxito, haga clic en el botón de descarga para guardar",
+    "export_no_data": "No hay datos para las fechas seleccionadas",
     "from": "De",
     "gate_flow_report": "Reporte de Flujo de Acceso",
     "guest": "Invitado",
