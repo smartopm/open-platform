@@ -678,6 +678,9 @@ site_manager:
     permissions:
       - can_see_menu_item
       - can_access_forms
+  community:
+    permissions:
+      - can_see_menu_item
 
 marketing_manager:
   forms:
