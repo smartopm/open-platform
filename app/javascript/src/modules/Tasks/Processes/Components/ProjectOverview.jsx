@@ -1,6 +1,7 @@
 import React, { useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Grid, Typography , Button } from '@mui/material';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { makeStyles } from '@mui/styles';
 import { Link } from 'react-router-dom';
 import { useLazyQuery } from 'react-apollo';
@@ -142,10 +143,11 @@ export default function ProjectOverview({ data }) {
 
 export function ProjectOverviewSplitView({ data, refetch, handleProjectStepClick }) {
   const { setSelectedStep, handleStepCompletion } = useContext(TaskContext);
+  const matches = useMediaQuery('(max-width:600px)');
 
   return (
     <>
-      <Grid container>
+      <Grid container style={matches ? { marginLeft: '-20px' } : { marginLeft: 0 }}>
         <Grid item md={12} data-testid="requirements-section">
           <Typography variant="subtitle1" style={{fontWeight: 400}}>Requirements</Typography>
           <Typography variant="caption">Please read the required guideline. </Typography>
