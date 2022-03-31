@@ -22,6 +22,7 @@ import CenteredContent from '../../../shared/CenteredContent';
 import { formatError } from '../../../utils/helpers';
 import Paginate from '../../../components/Paginate';
 import useLogbookStyles from '../styles';
+import SearchInput from '../../../shared/search/SearchInput';
 
 export default function GuestsView({
   tabValue,
@@ -102,6 +103,17 @@ export default function GuestsView({
         open={!!message.detail}
         handleClose={() => setMessage({ ...message, detail: '' })}
       />
+
+      {/* <SearchInput
+        title={t('guest_book.visits')}
+        searchValue={searchTerm}
+        filterRequired={false}
+        handleSearch={event => setSearchTerm(event.target.value)}
+        handleClear={handleFilters}
+        filters={filters}
+      />
+      <br /> */}
+
       {guestsLoading ? (
         <Spinner />
       ) : data?.scheduledRequests.length > 0 ? (

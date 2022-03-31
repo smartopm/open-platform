@@ -7,7 +7,7 @@ import { useHistory } from 'react-router-dom';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import { Avatar, Button, Chip, useTheme } from '@mui/material';
+import { Avatar, Button, Chip, Divider, useTheme } from '@mui/material';
 import { CurrentGuestEntriesQuery } from '../graphql/guestbook_queries';
 import { Spinner } from '../../../shared/Loading';
 import Card from '../../../shared/Card';
@@ -20,7 +20,7 @@ import useLogbookStyles from '../styles';
 import Paginate from '../../../components/Paginate';
 import LogbookStats from './LogbookStats';
 import SearchInput from '../../../shared/search/SearchInput';
-import useDebounce from '../../../utils/useDebounce';
+import useDebouncedValue from '../../../shared/hooks/useDebouncedValue';
 
 export default function VisitView({
   tabValue,
@@ -33,8 +33,7 @@ export default function VisitView({
 }) {
   const initialFilter = { type: 'allVisits', duration: null };
   const [statsTypeFilter, setStatType] = useState({ ...initialFilter });
-  const [searchTerm, setSearchTerm] = useState('');
-  const dbcSearchTerm = useDebounce(searchTerm, 500);
+  const [searchTerm, setSearchTerm] = useDebouncedValue()  
   const [loadGuests, { data, loading: guestsLoading, refetch, error }] = useLazyQuery(
     CurrentGuestEntriesQuery,
     {
@@ -92,10 +91,10 @@ export default function VisitView({
     }
   }, [tabValue, loadGuests, query, offset]);
 
-  useEffect(() => {
-    setSearchTerm(dbcSearchTerm);
+  // useEffect(() => {
+  //   setSearchTerm(dbcSearchTerm);
 
-  }, [dbcSearchTerm]);
+  // }, [dbcSearchTerm]);
 
   function handleFilterData(filter, filterType = 'entryType') {
     const isDuration = filterType === 'duration';
@@ -135,6 +134,8 @@ export default function VisitView({
         duration={statsTypeFilter.duration}
       />
 
+      <Divider />
+      <br />
       <SearchInput
         title={t('guest_book.visits')}
         searchValue={searchTerm}
