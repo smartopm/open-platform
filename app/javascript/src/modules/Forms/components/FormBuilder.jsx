@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Button, Container } from '@mui/material';
+import { Button, Container, Typography, Breadcrumbs, Link, Grid } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery } from 'react-apollo';
 import { useHistory } from 'react-router';
@@ -13,12 +13,15 @@ import { formStatus } from '../../../utils/constants';
 import Toggler from '../../Campaigns/components/ToggleButton';
 import FormTimeline from '../../../shared/TimeLine';
 import { ActionDialog } from '../../../components/Dialog';
-import { formatError } from '../../../utils/helpers';
+import { formatError, objectAccessor } from '../../../utils/helpers';
 import MessageAlert from '../../../components/MessageAlert';
 import Form from './Category/Form';
 import FormContextProvider from '../Context';
 import { FormDialog } from './FormList';
 import ErrorPage from '../../../components/Error';
+import { StyledTabs, StyledTab, TabPanel, a11yProps } from '../../../components/Tabs';
+import FormTitle from './FormTitle';
+import FormCreate from './FormCreate'
 
 /**
  * @param {String} formId
@@ -28,15 +31,20 @@ import ErrorPage from '../../../components/Error';
 export default function FormBuilder({ formId }) {
   const [open, setOpen] = useState(false);
   const history = useHistory();
+  const [tabValue, setTabValue] = useState(0);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [isPublishing, setIsPublishing] = useState(false);
   const [alertOpen, setAlertOpen] = useState(false);
   const [message, setMessage] = useState({ isError: false, detail: '' });
   const { t } = useTranslation(['form', 'common']);
   const [type, setType] = useState(t('misc.form'));
+  const [updateForm] = useMutation(FormUpdateMutation);
   const { data, error, loading } = useQuery(FormPropertiesQuery, {
     variables: { formId },
     errorPolicy: 'all'
+  });
+  const { data: formDetailData, loading: formDetailLoading, refetch: formDetailRefetch } = useQuery(FormQuery, {
+    variables: { id: formId }
   });
   const formLogs = useQuery(AllEventLogsQuery, {
     variables: {
@@ -45,14 +53,26 @@ export default function FormBuilder({ formId }) {
       subject: null
     }
   });
-  const [updateForm] = useMutation(FormUpdateMutation);
   const formData = useQuery(FormQuery, {
     variables: { id: formId }
   });
 
-  function handleType(_event, value) {
-    setType(value);
-    formLogs.refetch();
+  const TAB_VALUES = {
+    form_builder: 0,
+    form_settings: 1,
+    update_history: 2
+  };
+
+  // function handleType(_event, value) {
+  //   setType(value);
+  //   formLogs.refetch();
+  // }
+
+  function handleTabValueChange(_event, newValue) {
+    history.push(
+      `?tab=${Object.keys(TAB_VALUES).find(key => objectAccessor(TAB_VALUES, key) === newValue)}`
+    );
+    setTabValue(Number(newValue));
   }
 
   function handleConfirmPublish() {
@@ -101,6 +121,21 @@ export default function FormBuilder({ formId }) {
         setAlertOpen={setAlertOpen}
       /> */}
       <FormContextProvider>
+        <Grid container style={{padding: '0 0 20px 100px'}}>
+          <Grid item md={12}>
+            <Breadcrumbs aria-label="breadcrumb">
+              <Typography color="primary" variant="caption">
+                <Link underline="hover" color="primary" href="/forms">
+                  {t('common:misc.forms')}
+                </Link>
+              </Typography>
+              <Typography color="text.primary" variant='caption'>{t('misc.configure_form')}</Typography>
+            </Breadcrumbs>
+          </Grid>
+          <Grid item md={12}>
+            <Typography variant="h4" color="textSecondary">{t('misc.configure_form')}</Typography>
+          </Grid>
+        </Grid>
         <Container maxWidth="md">
           <ActionDialog
             open={open}
@@ -116,19 +151,52 @@ export default function FormBuilder({ formId }) {
             open={alertOpen}
             handleClose={handleAlertClose}
           />
-
-          <br />
-          <Toggler
-            type={type}
-            handleType={handleType}
-            data={{
-              type: t('misc.form'),
-              antiType: t('misc.updates')
-            }}
-          />
-          <br />
-          {type !== t('misc.updates') ? (
-            <>
+          {loading && <Spinner />}
+          <Container style={{ padding: '0 150px' }}>
+            {!loading && formDetailData && (
+              <FormTitle
+                name={formDetailData.form?.name}
+                description={formDetailData.form?.description}
+              />
+            )}
+            <StyledTabs
+              value={tabValue}
+              onChange={handleTabValueChange}
+              aria-label="form_builder"
+              variant="standard"
+              style={{ borderBottom: 'solid 1px #ececea' }}
+            >
+              <StyledTab
+                label={t('misc.form_builder')}
+                style={
+                  tabValue === objectAccessor(TAB_VALUES, 'form_builder')
+                    ? { fontSize: '14px', textAlign: 'left', borderBottom: 'solid 1px' }
+                    : { fontSize: '14px', textAlign: 'left' }
+                }
+                {...a11yProps(0)}
+              />
+              <StyledTab
+                label={t('misc.form_settings')}
+                style={
+                  tabValue === objectAccessor(TAB_VALUES, 'form_settings')
+                    ? { fontSize: '14px', borderBottom: 'solid 1px' }
+                    : { fontSize: '14px' }
+                }
+                {...a11yProps(1)}
+              />
+              <StyledTab
+                label={t('misc.update_history')}
+                style={
+                  tabValue === objectAccessor(TAB_VALUES, 'update_history')
+                    ? { fontSize: '14px', borderBottom: 'solid 1px' }
+                    : { fontSize: '14px' }
+                }
+                {...a11yProps(1)}
+              />
+            </StyledTabs>
+          </Container>
+          <Grid style={{padding: '20px 150px'}}>
+            <TabPanel value={tabValue} index={0} pad>
               <Form
                 formId={formId}
                 editMode
@@ -137,23 +205,19 @@ export default function FormBuilder({ formId }) {
                 isPublishing={isPublishing}
                 handleConfirmPublish={handleConfirmPublish}
               />
-              {/* <br />
-              <br /> */}
-              {/* <CenteredContent>
-                <Button
-                  variant="outlined"
-                  color="primary"
-                  onClick={() => history.push(`/form/${formId}/edit`)}
-                >
-                  {t('actions.edit_form')}
-                </Button>
-              </CenteredContent> */}
-              {/* <br />
-              <CenteredContent></CenteredContent> */}
-            </>
-          ) : (
-            <FormTimeline data={formLogs.data?.result} />
-          )}
+            </TabPanel>
+            <TabPanel value={tabValue} index={1} pad>
+              <FormCreate 
+                formMutation={updateForm}
+                refetch={formDetailRefetch}
+                actionType='update'
+                formId={formId}
+              />
+            </TabPanel>
+            <TabPanel value={tabValue} index={2} pad>
+              <FormTimeline data={formLogs.data?.result} />
+            </TabPanel>
+          </Grid>
         </Container>
       </FormContextProvider>
     </>

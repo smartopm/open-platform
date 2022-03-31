@@ -9,7 +9,6 @@ import { DetailsDialog } from '../../../../components/Dialog';
 import CategoryForm from './CategoryForm';
 import { FormCategoriesQuery } from '../../graphql/form_category_queries';
 import { Spinner } from '../../../../shared/Loading';
-import FormTitle from '../FormTitle';
 import { FormQuery } from '../../graphql/forms_queries';
 import { FormContext } from '../../Context';
 import CenteredContent from '../../../../components/CenteredContent';
@@ -26,7 +25,8 @@ export default function Form({
   formId,
   property,
   isPublishing,
-  handleConfirmPublish
+  handleConfirmPublish,
+  formDetailData
 }) {
   const [categoryFormOpen, setCategoryFormOpen] = useState(false);
   const [propertyFormOpen, setPropertyFormOpen] = useState(false);
@@ -37,7 +37,6 @@ export default function Form({
     variables: { formId },
     fetchPolicy: 'no-cache'
   });
-  const { data: formDetailData, loading } = useQuery(FormQuery, { variables: { id: formId } });
   const { formState, saveFormData, setFormState } = useContext(FormContext);
   const authState = useContext(Context);
   const history = useHistory();
@@ -149,16 +148,6 @@ export default function Form({
           </DialogContentText>
         </DialogContent>
       </DetailsDialog>
-      <br />
-
-      {loading && <Spinner />}
-
-      {!loading && formDetailData && (
-        <FormTitle
-          name={formDetailData.form?.name}
-          description={formDetailData.form?.description}
-        />
-      )}
       <div
         data-testid="category-list-container"
         style={formState.isSubmitting ? { opacity: '0.3', pointerEvents: 'none' } : {}}
@@ -175,7 +164,7 @@ export default function Form({
       </div>
       <br />
       {editMode && (
-        <Grid container spacing={4} style={{padding: '0 150px 20px 150px'}}>
+        <Grid container spacing={4}>
           <Grid item md={12} style={{marginTop: '20px'}}>
             <Divider />
           </Grid>
