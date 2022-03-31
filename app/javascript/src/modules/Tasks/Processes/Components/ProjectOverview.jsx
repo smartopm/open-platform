@@ -1,13 +1,10 @@
 import React, { useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Grid, Typography , Button } from '@mui/material';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import { makeStyles } from '@mui/styles';
-import { Link } from 'react-router-dom';
 import { useLazyQuery } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import { TaskContext } from '../../Context';
-import ProjectSteps from './Steps';
 import { UserFormPropertiesQuery } from '../../../Forms/graphql/forms_queries';
 import { Spinner } from '../../../../shared/Loading';
 import { formatError } from '../../../../utils/helpers';
@@ -141,37 +138,6 @@ export default function ProjectOverview({ data }) {
   );
 }
 
-export function ProjectOverviewSplitView({ data, refetch, handleProjectStepClick }) {
-  const { setSelectedStep, handleStepCompletion } = useContext(TaskContext);
-  const matches = useMediaQuery('(max-width:600px)');
-
-  return (
-    <>
-      <Grid container style={matches ? { marginLeft: '-20px' } : { marginLeft: 0 }}>
-        <Grid item md={12} data-testid="requirements-section">
-          <Typography variant="subtitle1" style={{fontWeight: 400}}>Requirements</Typography>
-          <Typography variant="caption">Please read the required guideline. </Typography>
-          <Link to="/news/post/8">
-            <Typography variant="caption">Go to Guideline.</Typography>
-          </Link>
-        </Grid>
-        <Grid item md={12} xs={12}>
-          <br />
-          <br />
-          <br />
-          <ProjectSteps
-            data={data}
-            setSelectedStep={setSelectedStep}
-            handleProjectStepClick={handleProjectStepClick}
-            handleStepCompletion={(id, completed) => handleStepCompletion(id, completed, refetch)}
-            redirect
-          />
-        </Grid>
-      </Grid>
-    </>
-  );
-}
-
 const Step = {
   id: PropTypes.string,
   body: PropTypes.string,
@@ -195,12 +161,6 @@ ProjectOverview.defaultProps = {};
 
 ProjectOverview.propTypes = {
   data: PropTypes.shape(Step).isRequired
-};
-
-ProjectOverviewSplitView.propTypes = {
-  data: PropTypes.arrayOf(PropTypes.shape(Step)).isRequired,
-  refetch: PropTypes.func.isRequired,
-  handleProjectStepClick: PropTypes.func.isRequired
 };
 
 const useStyles = makeStyles(theme => ({

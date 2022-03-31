@@ -8,8 +8,7 @@ import authState from '../../../../__mocks__/authstate';
 import { TaskContext } from '../../Context';
 import MockedThemeProvider from '../../../__mocks__/mock_theme';
 import taskMock from '../../__mocks__/taskMock'
-import { ProjectOverviewSplitView } from '../Components/ProjectOverview';
-
+import ProjectOverviewSplitView from '../Components/ProjectOverviewSplitView';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn()());
 describe('Project Processes Tab', () => {
@@ -27,7 +26,7 @@ describe('Project Processes Tab', () => {
                   handleStepCompletion: jest.fn()()
               }}
               >
-                <ProjectOverviewSplitView 
+                <ProjectOverviewSplitView
                   data={data}
                   refetch={jest.fn()}
                   handleProjectStepClick={jest.fn()}
