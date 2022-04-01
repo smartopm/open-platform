@@ -113,7 +113,7 @@ export default function GuestsView({
         filterRequired={false}
         handleSearch={event => setSearchValue(event.target.value)}
         handleClear={() => setSearchValue("")}
-        filters={[value]}
+        filters={[dbcValue]}
         fullWidthOnMobile={!speedDialOpen}
         fullWidth={false}
       />

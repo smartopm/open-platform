@@ -14,6 +14,11 @@ import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import SearchFilterList from './SearchFilterList';
 
+/**
+ * SearchInput Component
+ * Prefer to use a debounced value on filters, to avoid showing each letter as the user is typing
+ * @returns 
+ */
 export default function SearchInput({
   title,
   searchValue,

@@ -117,7 +117,7 @@ export default function VisitView({
   const filters = [
     filterTypes[statsTypeFilter.type],
     filterTypes[statsTypeFilter.duration],
-    value
+    dbcValue
   ];
 
   return (

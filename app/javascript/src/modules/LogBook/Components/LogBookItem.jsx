@@ -286,7 +286,7 @@ export default function LogBookItem({
               filterRequired={false}
               handleSearch={event => setSearchValue(event.target.value)}
               handleClear={() => setSearchValue("")}
-              filters={[value]}
+              filters={[dbcValue]}
               fullWidthOnMobile={permissionsCheck(eventLogPermissions, ['can_download_logbook_events']) ? true : !open}
               fullWidth={false}
             />
