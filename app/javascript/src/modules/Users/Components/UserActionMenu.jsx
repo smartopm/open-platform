@@ -17,7 +17,8 @@ export default function UserActionMenu({
     CSMNumber,
     open,
     OpenMergeDialog,
-    linkStyles
+    linkStyles,
+    handleActivationDialog
   }) {
     const { t } = useTranslation('common')
 
@@ -85,6 +86,12 @@ export default function UserActionMenu({
               >
                 {t('menu.view_plans')}
               </MenuItem>
+              <MenuItem
+                 key={'activation_menu'}
+                 onClick={handleActivationDialog}
+               >
+                 {data.user.status === 'active' ? t('menu.deactivate_user') : t('menu.activate_user')}
+               </MenuItem>
             </>
           )}
           {['admin', 'client', 'resident'].includes(userType) && (

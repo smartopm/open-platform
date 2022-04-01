@@ -18,6 +18,7 @@ export const UserFragment = {
       subStatus
       address
       extRefId
+      status
       accounts {
         id
         updatedAt

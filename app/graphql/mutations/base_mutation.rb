@@ -50,5 +50,19 @@ module Mutations
 
       raise GraphQL::ExecutionError, I18n.t('errors.duplicate.email')
     end
+
+    # Raises GraphQL execution error
+    # * if user does not exist
+    # * if user is deactivated
+    #
+    # @return [GraphQL::ExecutionError]
+    def raise_user_login_specific_error(user)
+      message = I18n.t('errors.user.not_found') if user.nil?
+      message = I18n.t('errors.user.cannot_access_app') if user&.deactivated?
+
+      return if message.blank?
+
+      raise GraphQL::ExecutionError, message
+    end
   end
 end

@@ -45,6 +45,7 @@ describe('UserPage Component', () => {
             subStatus: null,
             extRefId: null,
             expiresAt: null,
+            status: 'active',
             state: 'pending',
             labels: [
               {

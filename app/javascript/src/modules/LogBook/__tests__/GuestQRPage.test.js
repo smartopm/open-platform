@@ -43,6 +43,11 @@ describe('Guest QRPage Component',  () => {
               name: 'John',
               __typename: 'User'
             },
+            guest: {
+              id: 'a54d6184-b10e-4865-bee7-456446423d',
+              status: 'active',
+              __typename: 'User'
+            },
             occursOn: ['monday'],
             visitEndDate: '2020-10-15T09:31:06Z',
             visitationDate: '2020-10-05T09:31:06Z',

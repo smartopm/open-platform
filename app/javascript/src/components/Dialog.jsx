@@ -234,7 +234,7 @@ export function MapEditorFullScreenDialog({ handleClose, open, children }){
     </Dialog>
   );
 }
-export function ActionDialog({ handleClose, open, handleOnSave, message, type, disableActionBtn}) {
+export function ActionDialog({ handleClose, open, handleOnSave, message, type, disableActionBtn, proceedText}) {
   const { t } = useTranslation('common')
   const classes = useStyles()
   return (
@@ -266,7 +266,7 @@ export function ActionDialog({ handleClose, open, handleOnSave, message, type, d
           disabled={disableActionBtn}
           data-testid="proceed_button"
         >
-          {t('menu.proceed')}
+          {proceedText || t('menu.proceed')}
         </Button>
       </DialogActions>
     </Dialog>
@@ -317,7 +317,8 @@ export const useStyles = makeStyles(theme => ({
 
 ActionDialog.defaultProps = {
   type: 'warning',
-  disableActionBtn: false
+  disableActionBtn: false,
+  proceedText: ''
 }
 
 ActionDialog.propTypes = {
@@ -326,7 +327,8 @@ ActionDialog.propTypes = {
   message: PropTypes.string.isRequired,
   type: PropTypes.oneOf(['warning', 'confirm', 'misc.confirm']), // To silence errors in tests due to i18n
   handleOnSave: PropTypes.func.isRequired,
-  disableActionBtn: PropTypes.bool
+  disableActionBtn: PropTypes.bool,
+  proceedText: PropTypes.string
 }
 
 FullScreenDialog.defaultProps = {

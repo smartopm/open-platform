@@ -234,11 +234,18 @@ RSpec.describe Users::User, type: :model do
     it { is_expected.to have_many(:reply_to).class_name('Comments::NoteComment') }
   end
 
-  describe 'validations' do
+  describe 'enums' do
     it {
       should define_enum_for(:sub_status)
         .with_values(Users::User.sub_statuses)
     }
+
+    it do
+      is_expected.to define_enum_for(:status)
+        .with_values(
+          active: 0, deactivated: 1,
+        )
+    end
   end
 
   describe 'scoped validations' do

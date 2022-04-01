@@ -102,7 +102,7 @@ export default function UserInformation({
           {authState.user.userType === 'custodian' &&
             ['security_guard', 'contractor', 'security_supervisor', 'developer'].includes(
               data.user.userType
-            ) && <ShiftButtons userId={userId} />}
+            ) && data.user.status === 'active' && <ShiftButtons userId={userId} />}
         </FeatureCheck>
 
         <TabPanel value={tabValue} index="Contacts">
@@ -176,7 +176,7 @@ export default function UserInformation({
         </FeatureCheck>
 
         <div className="container d-flex justify-content-between">
-          {data.user.state === 'valid' &&
+          { data.user.status === 'active' &&
           securityPersonnelList.includes(authState.user.userType) ? (
             <Button id="log-entry" className="log-entry-btn" color="primary" onClick={onLogEntry}>
               {t('common:misc.log_entry')}
@@ -206,6 +206,7 @@ const User = PropTypes.shape({
   name: PropTypes.string,
   userType: PropTypes.string,
   state: PropTypes.string,
+  status: PropTypes.string,
   accounts: PropTypes.arrayOf(PropTypes.object),
   formUsers: PropTypes.arrayOf(PropTypes.object),
   community: PropTypes.shape({

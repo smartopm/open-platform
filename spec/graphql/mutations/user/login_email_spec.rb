@@ -31,9 +31,8 @@ RSpec.describe Mutations::User do
 
     context 'when email is blank' do
       it 'raises email cannot be blank error' do
-        variables = {
-          email: '',
-        }
+        variables = { email: '' }
+
         result = DoubleGdpSchema.execute(query, variables: variables,
                                                 context: {
                                                   site_community: user.community,
@@ -44,10 +43,27 @@ RSpec.describe Mutations::User do
         ).to eql 'Email cannot be blank'
       end
     end
+
+    context 'when user is deactivated' do
+      before { user.deactivated! }
+
+      it 'raises cannot access the app error' do
+        variables = { email: 'user1@example.com' }
+
+        expect(EmailMsg).not_to receive(:send_mail_from_db)
+        result = DoubleGdpSchema.execute(query, variables: variables,
+                                                context: {
+                                                  site_community: user.community,
+                                                }).as_json
+
+        expect(result.dig('errors', 0, 'message')).to eql 'You do not have access to the app'
+      end
+    end
+
     it 'returns a user account with valid email' do
-      variables = {
-        email: 'user1@example.com',
-      }
+      variables = { email: 'user1@example.com' }
+
+      expect(EmailMsg).not_to receive(:send_mail_from_db)
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
                                                 site_community: user.community,
@@ -58,9 +74,7 @@ RSpec.describe Mutations::User do
     end
 
     it 'returns error when user account not found' do
-      variables = {
-        email: 'user2@example.com',
-      }
+      variables = { email: 'user2@example.com' }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
                                                 site_community: user.community,
@@ -73,9 +87,7 @@ RSpec.describe Mutations::User do
     end
 
     it 'checks user email not already authenticated via OAuth' do
-      variables = {
-        email: 'user3@example.com',
-      }
+      variables = { email: 'user3@example.com' }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
                                                 site_community: oauth_user.community,
@@ -88,9 +100,7 @@ RSpec.describe Mutations::User do
     end
 
     it 'checks the existence of the user account in a community' do
-      variables = {
-        email: 'user2@example.com',
-      }
+      variables = { email: 'user2@example.com' }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
                                                 site_community: another_user.community,

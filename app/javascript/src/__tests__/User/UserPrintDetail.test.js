@@ -71,6 +71,7 @@ describe('UserPrint Detail component', () => {
             phoneNumber: null,
             lastActivityAt: null,
             userType: "client",
+            status: 'active',
           }
         }
       }

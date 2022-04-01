@@ -13,7 +13,8 @@ describe('user action menu component', () => {
           name: 'User Name',
           email: 'user@dgdp.com',
           id: '34543543rfsf3',
-          expiresAt: new Date('03-03-2020')
+          expiresAt: new Date('03-03-2020'),
+          status: 'active'
         }
       },
       userType: 'admin'
@@ -38,5 +39,6 @@ describe('user action menu component', () => {
     expect(container.queryByText('menu.message_support')).toBeInTheDocument()
     expect(container.queryByText('menu.print_id')).toBeInTheDocument()
     expect(container.queryByText('menu.send_otp')).toBeInTheDocument()
+    expect(container.queryByText('menu.deactivate_user')).toBeInTheDocument()
   })
 })
