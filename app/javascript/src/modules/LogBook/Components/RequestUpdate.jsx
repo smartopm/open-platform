@@ -642,7 +642,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
                 </AccessCheck>
                     )
               }
-               { requestContext.request?.guest?.status === 'active' && (
+               { requestContext.request?.guest?.status !== 'deactivated' && (
                <AccessCheck module="entry_request" allowedPermissions={['can_grant_entry']}>
                  <Grid item>
                    <Button
