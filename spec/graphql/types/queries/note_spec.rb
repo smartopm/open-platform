@@ -1341,6 +1341,7 @@ RSpec.describe Types::Queries::Note do
 
           second_note.update(form_user_id: another_form_user.id, completed: true)
           second_note.update(created_at: Time.zone.local(Date.current.year, '05', '05'))
+          second_note.update(completed_at: Time.zone.local(Date.current.year, '01', '01'))
         end
 
         it 'returns counts of the completed tasks per quarter' do
