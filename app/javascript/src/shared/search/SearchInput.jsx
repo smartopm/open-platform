@@ -23,12 +23,13 @@ export default function SearchInput({
   handleClear,
   handleClick,
   filters,
-  fullWidthOnMobile
+  fullWidthOnMobile,
+  fullWidth
 }) {
   const { t } = useTranslation('search');
   return (
     <Grid container spacing={2} alignItems="center">
-      <Grid item xs={fullWidthOnMobile ? 12 : 10} md={4}>
+      <Grid item xs={fullWidthOnMobile ? 12 : 10} md={fullWidth ? 12 :5}>
         <FormControl fullWidth variant="outlined">
           <InputLabel htmlFor="outlined-adornment-filter">
             {t('search.search_for', { title })}
@@ -73,7 +74,7 @@ export default function SearchInput({
         </FormControl>
 
       </Grid>
-      <Grid item xs={12} md={8}>
+      <Grid item xs={12} md={7}>
         <SearchFilterList
           handleClearFilters={handleClear}
           filters={filters}
@@ -91,6 +92,7 @@ SearchInput.defaultProps = {
   handleSearch: undefined,
   handleClick: undefined,
   fullWidthOnMobile: false,
+  fullWidth: true,
   filters: [],
 };
 
@@ -102,6 +104,7 @@ SearchInput.propTypes = {
   handleFilter: PropTypes.func,
   handleClear: PropTypes.func,
   handleClick: PropTypes.func,
-  filters: PropTypes.func,
+  filters: PropTypes.arrayOf(PropTypes.string),
   fullWidthOnMobile: PropTypes.bool,
+  fullWidth: PropTypes.bool,
 };

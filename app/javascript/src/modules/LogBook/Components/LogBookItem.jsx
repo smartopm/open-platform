@@ -26,12 +26,14 @@ import CenteredContent from '../../../shared/CenteredContent';
 import { accessibleMenus, paginate } from '../utils';
 import GateFlowReport from './GateFlowReport';
 import AccessCheck from '../../Permissions/Components/AccessCheck';
+import permissionsCheck from '../../Permissions/utils';
 import useDebouncedValue from '../../../shared/hooks/useDebouncedValue';
 import { AllEventLogsQuery } from '../../../graphql/queries';
 import SearchInput from '../../../shared/search/SearchInput';
 
 const limit = 20;
-// eslint-disable-next-line max-statements
+const subjects = ['user_entry', 'visitor_entry', 'user_temp', 'observation_log'];
+
 export default function LogBookItem({
   router,
   offset,
@@ -41,6 +43,7 @@ export default function LogBookItem({
   const authState = useContext(AuthStateContext);
   const allUserPermissions = authState.user?.permissions || [];
   const modulePerms = allUserPermissions.find(mod => mod.module === 'entry_request')?.permissions;
+  const eventLogPermissions = allUserPermissions.find(mod => mod.module === 'event_log')?.permissions;
   const permissions = new Set(modulePerms);
   const { t } = useTranslation(['logbook', 'common', 'dashboard']);
   const [open, setOpen] = useState(false);
@@ -54,14 +57,11 @@ export default function LogBookItem({
     refetch: false
   });
   const [addObservationNote] = useMutation(AddObservationNoteMutation);
-  const smDownHidden = useMediaQuery(theme => theme.breakpoints.down('sm'));
-  const smUpHidden = useMediaQuery(theme => theme.breakpoints.up('sm'));
-  const matches = useMediaQuery('(max-width:1000px)');
+  const matches = useMediaQuery('(max-width:800px)');
   const classes = useStyles();
   const [imageUrls, setImageUrls] = useState([]);
   const [blobIds, setBlobIds] = useState([]);
   const {value, dbcValue, setSearchValue}= useDebouncedValue()
-  const subjects = ['user_entry', 'visitor_entry', 'user_temp', 'observation_log'];
 
   const eventsData = useQuery(AllEventLogsQuery, {
     variables: {
@@ -249,7 +249,7 @@ export default function LogBookItem({
       <Grid container className={matches ? classes.containerMobile : classes.container}>
         <Grid item md={11} xs={11}>
           <Grid container spacing={1}>
-            <Grid item md={9} xs={10}>
+            <Grid item md={11} xs={10}>
               <Typography variant="h4">{t('logbook.log_book')}</Typography>
             </Grid>
             <Grid item md={1} xs={2}>
@@ -285,7 +285,8 @@ export default function LogBookItem({
               handleSearch={event => setSearchValue(event.target.value)}
               handleClear={() => setSearchValue("")}
               filters={[value]}
-              fullWidthOnMobile={!open}
+              fullWidthOnMobile={permissionsCheck(eventLogPermissions, ['can_download_logbook_events']) ? true : !open}
+              fullWidth={false}
             />
             <LogEvents
               eventsData={eventsData}
@@ -316,17 +317,6 @@ export default function LogBookItem({
             />
           </TabPanel>
         </Grid>
-        {/* {!smDownHidden && (
-          <Grid item md={1} xs={1}>
-            <SpeedDial
-              open={open}
-              handleClose={() => setOpen(false)}
-              handleOpen={() => setOpen(true)}
-              direction="down"
-              actions={accessibleMenus(actions)}
-            />
-          </Grid>
-        )} */}
       </Grid>
       {Boolean(tabValue === 0) && (
         <CenteredContent>
@@ -352,25 +342,11 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-LogBookItem.defaultProps = {
-  error: '',
-  data: []
-};
-
 LogBookItem.propTypes = {
-  data: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string
-    })
-  ),
   router: PropTypes.shape({
     push: PropTypes.func
   }).isRequired,
   offset: PropTypes.number.isRequired,
-  searchTerm: PropTypes.string.isRequired,
   tabValue: PropTypes.number.isRequired,
   handleTabValue: PropTypes.func.isRequired,
-  loading: PropTypes.bool.isRequired,
-  refetch: PropTypes.func.isRequired,
-  error: PropTypes.string
 };

@@ -115,6 +115,7 @@ export default function GuestsView({
         handleClear={() => setSearchValue("")}
         filters={[value]}
         fullWidthOnMobile={!speedDialOpen}
+        fullWidth={false}
       />
       <br />
 

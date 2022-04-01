@@ -122,7 +122,6 @@ export default function VisitView({
 
   return (
     <div style={{ marginTop: '20px' }}>
-      <br />
       <LogbookStats
         tabValue={tabValue}
         shouldRefetch={observationDetails.refetch}
@@ -130,7 +129,6 @@ export default function VisitView({
         duration={statsTypeFilter.duration}
         isSmall={matches}
       />
-
       <Divider />
       <br />
       <SearchInput
@@ -140,6 +138,8 @@ export default function VisitView({
         handleSearch={event => setSearchValue(event.target.value)}
         handleClear={handleFilters}
         filters={filters}
+        fullWidthOnMobile
+        fullWidth={false}
       />
       <br />
       {error && <CenteredContent>{formatError(error.message)}</CenteredContent>}
