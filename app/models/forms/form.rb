@@ -50,7 +50,7 @@ module Forms
     end
 
     def report_an_issue?
-      ['Report an Issue', 'Informar de un problema'].include?(name)
+      name.match?(/^Report an Issue/i) || name.match?(/^Informar de un problema/i)
     end
 
     def drc_form?

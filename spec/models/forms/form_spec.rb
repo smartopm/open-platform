@@ -93,6 +93,18 @@ RSpec.describe Forms::Form, type: :model do
       expect(form.report_an_issue?).to eq(false)
       expect(report_form.report_an_issue?).to eq(true)
     end
+
+    context 'when versioning of form is done' do
+      before do
+        form.update(name: 'Informar de un problema V2')
+        report_form.update(name: 'Report an Issue V3')
+      end
+
+      it 'should identify report an issue form name' do
+        expect(form.report_an_issue?).to eq(true)
+        expect(report_form.report_an_issue?).to eq(true)
+      end
+    end
   end
 
   describe '#drc_form?' do
