@@ -9,7 +9,8 @@ import Edit from '@mui/icons-material/Edit';
 import { useTranslation } from 'react-i18next';
 import TaskContextProvider from '../../Context';
 import { StyledTabs, StyledTab, TabPanel, a11yProps } from '../../../../components/Tabs';
-import ProjectOverview, { ProjectOverviewSplitView } from './ProjectOverview';
+import ProjectOverview from './ProjectOverview';
+import ProjectOverviewSplitView from './ProjectOverviewSplitView';
 import {
   objectAccessor,
   useParamsQuery,
