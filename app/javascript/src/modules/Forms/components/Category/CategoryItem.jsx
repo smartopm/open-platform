@@ -68,65 +68,63 @@ export default function CategoryItem({
     handleClose
   };
 
-  if (!checkCondition(category, properties, editMode)) {
+  if (!checkCondition(category, properties)) {
     return null;
   }
   return (
     <>
-      <>
-        {!category.headerVisible && !editMode ? null : (
-          <Grid container className={classes.categorySection}>
-            <Grid item xs={6} sm={10}>
-              <Typography className={classes.categoryName}>{category.fieldName}</Typography>
-            </Grid>
-            <Grid item xs={2} sm={1} className={classes.align}>
-              {editMode && (
-                <IconButton
-                  aria-label="add questions to this category"
-                  onClick={handleAddField}
-                  className="form-category-add-field-btn"
-                  size="large"
-                >
-                  {collapsed ? (
-                    <Tooltip title="Hide">
-                      <CloseIcon color="primary" />
-                    </Tooltip>
-                  ) : (
-                    <Tooltip title="Add a property">
-                      <AddCircleOutlineIcon color="primary" data-testid="add-icon" />
-                    </Tooltip>
-                  )}
-                </IconButton>
-              )}
-            </Grid>
-            <Grid item xs={2} sm={1} className={classes.align}>
-              {editMode && (
-                <>
-                  {loading && currentId === category.id ? (
-                    <Spinner />
-                  ) : (
-                    <>
-                      <IconButton
-                        aria-label="edit this category"
-                        size="large"
-                        onClick={event => menuData.handleMenu(event)}
-                      >
-                        <MoreVertIcon color="primary" />
-                      </IconButton>
-                      <MenuList
-                        open={menuData.open}
-                        anchorEl={menuData.anchorEl}
-                        handleClose={menuData.handleClose}
-                        list={menuData.menuList}
-                      />
-                    </>
-                  )}
-                </>
-              )}
-            </Grid>
+      <Grid style={!editMode ? {padding: '0 100px'} : {}}>
+        <Grid container className={classes.categorySection}>
+          <Grid item xs={6} sm={10}>
+            <Typography className={classes.categoryName}>{category.fieldName}</Typography>
           </Grid>
-        )}
-      </>
+          <Grid item xs={2} sm={1} className={classes.align}>
+            {editMode && (
+              <IconButton
+                aria-label="add questions to this category"
+                onClick={handleAddField}
+                className="form-category-add-field-btn"
+                size="large"
+              >
+                {collapsed ? (
+                  <Tooltip title="Hide">
+                    <CloseIcon color="primary" />
+                  </Tooltip>
+                ) : (
+                  <Tooltip title="Add a property">
+                    <AddCircleOutlineIcon color="primary" data-testid="add-icon" />
+                  </Tooltip>
+                )}
+              </IconButton>
+            )}
+          </Grid>
+          <Grid item xs={2} sm={1} className={classes.align}>
+            {editMode && (
+              <>
+                {loading && currentId === category.id ? (
+                  <Spinner />
+                ) : (
+                  <>
+                    <IconButton
+                      aria-label="edit this category"
+                      size="large"
+                      onClick={event => menuData.handleMenu(event)}
+                    >
+                      <MoreVertIcon color="primary" />
+                    </IconButton>
+                    <MenuList
+                      open={menuData.open}
+                      anchorEl={menuData.anchorEl}
+                      handleClose={menuData.handleClose}
+                      list={menuData.menuList}
+                    />
+                  </>
+                )}
+              </>
+            )}
+          </Grid>
+        </Grid>
+      </Grid>
       <Container>{children}</Container>
     </>
   );

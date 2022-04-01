@@ -21,7 +21,8 @@ import { FormDialog } from './FormList';
 import ErrorPage from '../../../components/Error';
 import { StyledTabs, StyledTab, TabPanel, a11yProps } from '../../../components/Tabs';
 import FormTitle from './FormTitle';
-import FormCreate from './FormCreate'
+import FormCreate from './FormCreate';
+import FormHeader from './FormHeader';
 
 /**
  * @param {String} formId
@@ -43,9 +44,12 @@ export default function FormBuilder({ formId }) {
     variables: { formId },
     errorPolicy: 'all'
   });
-  const { data: formDetailData, loading: formDetailLoading, refetch: formDetailRefetch } = useQuery(FormQuery, {
-    variables: { id: formId }
-  });
+  const { data: formDetailData, loading: formDetailLoading, refetch: formDetailRefetch } = useQuery(
+    FormQuery,
+    {
+      variables: { id: formId }
+    }
+  );
   const formLogs = useQuery(AllEventLogsQuery, {
     variables: {
       refId: formId,
@@ -121,21 +125,12 @@ export default function FormBuilder({ formId }) {
         setAlertOpen={setAlertOpen}
       /> */}
       <FormContextProvider>
-        <Grid container style={{padding: '0 0 20px 100px'}}>
-          <Grid item md={12}>
-            <Breadcrumbs aria-label="breadcrumb">
-              <Typography color="primary" variant="caption">
-                <Link underline="hover" color="primary" href="/forms">
-                  {t('common:misc.forms')}
-                </Link>
-              </Typography>
-              <Typography color="text.primary" variant='caption'>{t('misc.configure_form')}</Typography>
-            </Breadcrumbs>
-          </Grid>
-          <Grid item md={12}>
-            <Typography variant="h4" color="textSecondary">{t('misc.configure_form')}</Typography>
-          </Grid>
-        </Grid>
+        <FormHeader
+          linkText={t('common:misc.forms')}
+          linkHref="/forms"
+          pageName={t('misc.configure_form')}
+          PageTitle={t('misc.configure_form')}
+        />
         <Container maxWidth="md">
           <ActionDialog
             open={open}
@@ -156,7 +151,6 @@ export default function FormBuilder({ formId }) {
             {!loading && formDetailData && (
               <FormTitle
                 name={formDetailData.form?.name}
-                description={formDetailData.form?.description}
               />
             )}
             <StyledTabs
@@ -195,7 +189,7 @@ export default function FormBuilder({ formId }) {
               />
             </StyledTabs>
           </Container>
-          <Grid style={{padding: '20px 150px'}}>
+          <Grid style={{ padding: '20px 150px' }}>
             <TabPanel value={tabValue} index={0} pad>
               <Form
                 formId={formId}
@@ -207,10 +201,10 @@ export default function FormBuilder({ formId }) {
               />
             </TabPanel>
             <TabPanel value={tabValue} index={1} pad>
-              <FormCreate 
+              <FormCreate
                 formMutation={updateForm}
                 refetch={formDetailRefetch}
-                actionType='update'
+                actionType="update"
                 formId={formId}
               />
             </TabPanel>

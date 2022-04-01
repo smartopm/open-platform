@@ -41,6 +41,13 @@ export default function CategoryList({
             loading={loading}
             currentId={currentId}
           >
+            {propertyFormOpen && categoryId === category.id && editMode && (
+              <FormPropertyCreateForm
+                formId={formId}
+                refetch={categoriesData.refetch}
+                categoryId={category.id}
+              />
+            )}
             {category.formProperties.sort(sortPropertyOrder).map((formProperty, index) => (
               <RenderForm
                 key={formProperty.id}
@@ -52,13 +59,6 @@ export default function CategoryList({
                 number={index + 1}
               />
             ))}
-            {propertyFormOpen && categoryId === category.id && editMode && (
-              <FormPropertyCreateForm
-                formId={formId}
-                refetch={categoriesData.refetch}
-                categoryId={category.id}
-              />
-            )}
           </CategoryItem>
         ))}
     </>
@@ -91,5 +91,5 @@ CategoryList.propTypes = {
     handleAddField: PropTypes.func,
     handleEditCategory: PropTypes.func,
     handleDeleteCategory: PropTypes.func
-  }).isRequired,
+  }).isRequired
 };

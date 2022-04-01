@@ -34,7 +34,6 @@ export default function FormCreate({
     }
   );
   const { t } = useTranslation(['form', 'common']);
-  const classes = useStyles();
   const history = useHistory();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState(formData?.form?.description || '');
@@ -107,14 +106,14 @@ export default function FormCreate({
   return formLoading ? (
     <Spinner />
   ) : (
-    <>
+    <Grid style={style}>
       <MessageAlert
         type={message.isError ? 'error' : 'success'}
         message={message.detail}
         open={alertOpen}
         handleClose={handleClose}
       />
-      <Grid container style={{ style }} spacing={4}>
+      <Grid container spacing={4}>
         <Grid item md={12}>
           <TextField
             name="title"
@@ -195,12 +194,6 @@ export default function FormCreate({
           </Button>
         </Grid>
       </Grid>
-    </>
+    </Grid>
   );
 }
-
-const useStyles = makeStyles(() => ({
-  container: {
-    padding: '100px 150px'
-  }
-}));

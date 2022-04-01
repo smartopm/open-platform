@@ -19,6 +19,7 @@ import FormPreview from '../FormPreview';
 import MessageAlert from '../../../../components/MessageAlert';
 import { FormCategoryDeleteMutation } from '../../graphql/form_category_mutations';
 import { formatError } from '../../../../utils/helpers';
+import FormHeader from '../FormHeader';
 
 export default function Form({
   editMode,
@@ -102,6 +103,14 @@ export default function Form({
 
   return (
     <>
+      {!editMode && (
+        <FormHeader
+          linkText={t('common:misc.forms')}
+          linkHref="/forms"
+          pageName={t('form:misc.submit_form')}
+          PageTitle={t('form:misc.submit_form')}
+        />
+      )}
       <MessageAlert
         type={formState.error || error ? 'error' : 'success'}
         message={formState.info || formatError(error?.message)}
@@ -165,10 +174,14 @@ export default function Form({
       <br />
       {editMode && (
         <Grid container spacing={4}>
-          <Grid item md={12} style={{marginTop: '20px'}}>
+          <Grid item md={12} style={{ marginTop: '20px' }}>
             <Divider />
           </Grid>
-          <Grid item md={!property ? 12 : 6} style={!property ? {textAlign: 'right'} : {textAlign: 'left'}}>
+          <Grid
+            item
+            md={!property ? 12 : 6}
+            style={!property ? { textAlign: 'right' } : { textAlign: 'left' }}
+          >
             <Button
               variant="outlined"
               startIcon={<AddIcon color="primary" />}
@@ -180,14 +193,14 @@ export default function Form({
           </Grid>
 
           {Boolean(property) && (
-            <Grid item md={6} style={{textAlign: 'right'}}>
+            <Grid item md={6} style={{ textAlign: 'right' }}>
               <Button
                 variant="contained"
                 color="primary"
                 onClick={handleConfirmPublish}
                 disabled={isPublishing}
                 startIcon={isPublishing && <Spinner />}
-                style={{color: 'white'}}
+                style={{ color: 'white' }}
               >
                 {isPublishing ? t('form:misc.publishing_form') : t('form:actions.publish_form')}
               </Button>
@@ -196,34 +209,41 @@ export default function Form({
         </Grid>
       )}
       {!editMode && (
-        <CenteredContent>
-          <Button
-            variant="outlined"
-            type="submit"
-            color="secondary"
-            aria-label="form_draft"
-            style={{ margin: '25px 25px 0 0' }}
-            onClick={() => formSubmit(formData, 'draft')}
-            disabled={formState.isSubmitting}
-            data-testid="save_as_draft"
-          >
-            {t('common:form_actions.save_as_draft')}
-          </Button>
-          <Button
-            variant="outlined"
-            type="submit"
-            color="primary"
-            aria-label="form_submit"
-            style={{ marginTop: '25px' }}
-            onClick={() => formSubmit(formData)}
-            disabled={formState.isSubmitting}
-            data-testid="submit_form_btn"
-          >
-            {!formState.isSubmitting
-              ? t('common:form_actions.submit')
-              : t('common:form_actions.submitting')}
-          </Button>
-        </CenteredContent>
+        <Grid container style={{ padding: '0 120px 20px 120px' }}>
+          <Grid item md={12} style={{ marginTop: '20px' }}>
+            <Divider />
+          </Grid>
+          <Grid item md={6} style={{ textAlign: 'left' }}>
+            <Button
+              variant="outlined"
+              type="submit"
+              color="primary"
+              aria-label="form_draft"
+              style={{ margin: '25px 25px 0 0' }}
+              onClick={() => formSubmit(formData, 'draft')}
+              disabled={formState.isSubmitting}
+              data-testid="save_as_draft"
+            >
+              {t('common:form_actions.save_as_draft')}
+            </Button>
+          </Grid>
+          <Grid item md={6} style={{ textAlign: 'right' }}>
+            <Button
+              variant="contained"
+              type="submit"
+              color="primary"
+              aria-label="form_submit"
+              style={{ marginTop: '25px' }}
+              onClick={() => formSubmit(formData)}
+              disabled={formState.isSubmitting}
+              data-testid="submit_form_btn"
+            >
+              {!formState.isSubmitting
+                ? t('common:form_actions.submit')
+                : t('common:form_actions.submitting')}
+            </Button>
+          </Grid>
+        </Grid>
       )}
     </>
   );

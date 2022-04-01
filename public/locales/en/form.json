@@ -40,7 +40,9 @@
     "form_builder": "Form Builder",
     "form_settings": "Form Settings",
     "update_history": "Update History",
-    "configure_form": "Configure Form"
+    "configure_form": "Configure Form",
+    "create_form": "Create a Form",
+    "submit_form": "Submit a Form"
   },
   "actions": {
     "create_a_form": "Create a form",

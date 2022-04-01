@@ -38,7 +38,6 @@ export function flattenFormProperties(categories) {
 }
 
 /**
- * We always want to show a category when we are editing the form
  * We always want to show a category when it has no display condition
  * We can only display a category when its groupingId in displayCondition matches the value in the matching property
  * Otherwise we just dont display a category
@@ -47,10 +46,7 @@ export function flattenFormProperties(categories) {
  * @param {boolean} editMode
  * @returns {boolean}
  */
-export function checkCondition(category, properties, editMode) {
-  if (editMode) {
-    return true;
-  }
+export function checkCondition(category, properties) {
   if (!category.displayCondition?.groupingId) {
     return true;
   }

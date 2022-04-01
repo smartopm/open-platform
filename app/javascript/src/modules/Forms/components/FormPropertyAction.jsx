@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
-import { Container, Grid, IconButton } from '@mui/material';
+import { Container, IconButton } from '@mui/material';
 import { useHistory } from 'react-router-dom';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import EditIcon from '@mui/icons-material/Edit';
 import PropTypes from 'prop-types';
 import { useMutation } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
@@ -120,28 +118,6 @@ export default function FormPropertyAction({ propertyId, editMode, formId, refet
           />
         </Container>
       </DetailsDialog>
-      {/* <Grid item xs={2}>
-        <Grid container direction="row">
-          <Grid item xs>
-            <IconButton
-              onClick={() => handleDeleteProperty(propertyId)}
-              data-testid="property_delete"
-              size="large"
-            >
-              {isDeletingProperty && currentPropId === propertyId ? (
-                <Spinner />
-            ) : (
-              <DeleteOutlineIcon />
-            )}
-            </IconButton>
-          </Grid>
-          <Grid item xs>
-            <IconButton onClick={handleModal} data-testid="property_edit" size="large">
-              <EditIcon />
-            </IconButton>
-          </Grid>
-        </Grid>
-      </Grid> */}
       {isDeletingProperty && currentPropId === propertyId ? (
         <Spinner />
       ) : (

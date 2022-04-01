@@ -18,31 +18,32 @@ import {
   Select,
   FormControl,
   InputLabel
-} from '@mui/material'
-import MoreVertIcon from '@mui/icons-material/MoreVert'
-import AssignmentIcon from '@mui/icons-material/Assignment'
-import { useMutation, useQuery } from 'react-apollo'
-import { useTheme } from '@mui/styles'
-import { StyleSheet, css } from 'aphrodite'
-import PropTypes from 'prop-types'
-import { useHistory, useLocation, useParams } from 'react-router'
-import { useTranslation } from 'react-i18next'
-import FormLinks, { useStyles } from './FormLinks'
-import { FormsQuery } from '../graphql/forms_queries'
-import Loading from '../../../shared/Loading'
-import ErrorPage from '../../../components/Error'
-import CenteredContent from '../../../components/CenteredContent'
-import TitleDescriptionForm from './TitleDescriptionForm'
-import { DateAndTimePickers } from '../../../components/DatePickerDialog'
-import { FormCreateMutation, FormUpdateMutation } from '../graphql/forms_mutation'
-import { formStatus } from '../../../utils/constants'
-import { ActionDialog } from '../../../components/Dialog'
-import MessageAlert from '../../../components/MessageAlert'
-import FloatButton from '../../../components/FloatButton'
-import { objectAccessor, formatError } from '../../../utils/helpers'
+} from '@mui/material';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import AssignmentIcon from '@mui/icons-material/Assignment';
+import { useMutation, useQuery } from 'react-apollo';
+import { useTheme } from '@mui/styles';
+import { StyleSheet, css } from 'aphrodite';
+import PropTypes from 'prop-types';
+import { useHistory, useLocation, useParams } from 'react-router';
+import { useTranslation } from 'react-i18next';
+import FormLinks, { useStyles } from './FormLinks';
+import { FormsQuery } from '../graphql/forms_queries';
+import Loading from '../../../shared/Loading';
+import ErrorPage from '../../../components/Error';
+import CenteredContent from '../../../components/CenteredContent';
+import TitleDescriptionForm from './TitleDescriptionForm';
+import { DateAndTimePickers } from '../../../components/DatePickerDialog';
+import { FormCreateMutation, FormUpdateMutation } from '../graphql/forms_mutation';
+import { formStatus } from '../../../utils/constants';
+import { ActionDialog } from '../../../components/Dialog';
+import MessageAlert from '../../../components/MessageAlert';
+import FloatButton from '../../../components/FloatButton';
+import { objectAccessor, formatError } from '../../../utils/helpers';
 import SwitchInput from './FormProperties/SwitchInput';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
 import FormCreate from './FormCreate';
+import FormHeader from './FormHeader';
 
 // here we get existing google forms and we mix them with our own created forms
 export default function FormLinkList({ userType, community }) {
@@ -90,12 +91,21 @@ export default function FormLinkList({ userType, community }) {
         refetch={refetch}
       /> */}
       {(path === '/forms/create' || id) && (
-        <FormCreate
-          formMutation={createForm}
-          refetch={refetch}
-          actionType={id ? 'update' : undefined}
-          formId={id}
-        />
+        <>
+          <FormHeader
+            linkText={t('common:misc.forms')}
+            linkHref="/forms"
+            pageName={t('misc.create_form')}
+            PageTitle={t('misc.create_form')}
+          />
+          <FormCreate
+            formMutation={createForm}
+            refetch={refetch}
+            actionType={id ? 'update' : undefined}
+            formId={id}
+            style={{ padding: '20px 120px' }}
+          />
+        </>
       )}
       {path === '/forms' && (
         <>
@@ -291,8 +301,8 @@ export function FormDialog({
 }) {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
-  const { t } = useTranslation('form')
-  const [expiresAt, setExpiresAtDate] = useState(form?.expiresAt || null)
+  const { t } = useTranslation('form');
+  const [expiresAt, setExpiresAtDate] = useState(form?.expiresAt || null);
   const [isLoading, setLoading] = useState(false);
   const [multipleSubmissionsAllowed, setMultipleSubmissionsAllowed] = useState(
     form ? form.multipleSubmissionsAllowed : true

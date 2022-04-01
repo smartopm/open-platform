@@ -547,7 +547,11 @@ export default function RenderForm({
       </Grid>
     )
   };
-  return <>{objectAccessor(fields, formPropertiesData.fieldType)}</>;
+  return (
+    <Grid style={!editMode ? { padding: '0 120px' } : {}}>
+      {objectAccessor(fields, formPropertiesData.fieldType)}
+    </Grid>
+  );
 }
 
 const useStyles = makeStyles(() => ({
