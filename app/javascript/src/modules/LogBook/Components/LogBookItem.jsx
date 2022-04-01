@@ -252,7 +252,6 @@ export default function LogBookItem({
             <Grid item md={9} xs={10}>
               <Typography variant="h4">{t('logbook.log_book')}</Typography>
             </Grid>
-            {/* {!smUpHidden && ( */}
             <Grid item md={1} xs={2}>
               <SpeedDial
                 open={open}
@@ -260,7 +259,6 @@ export default function LogBookItem({
                 actions={accessibleMenus(actions)}
               />
             </Grid>
-            {/* )} */}
             <Grid item xs={12} md={7} lg={6}>
               <StyledTabs
                 value={tabValue}

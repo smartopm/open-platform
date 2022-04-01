@@ -32,7 +32,7 @@ export default function VisitView({
 }) {
   const initialFilter = { type: 'allVisits', duration: null };
   const [statsTypeFilter, setStatType] = useState({ ...initialFilter });
-  const {value, dbcValue, setSearchValue} = useDebouncedValue()  
+  const {value, dbcValue, setSearchValue} = useDebouncedValue()
   const [loadGuests, { data, loading: guestsLoading, refetch, error }] = useLazyQuery(
     CurrentGuestEntriesQuery,
     {
@@ -128,6 +128,7 @@ export default function VisitView({
         shouldRefetch={observationDetails.refetch}
         handleFilter={handleFilterData}
         duration={statsTypeFilter.duration}
+        isSmall={matches}
       />
 
       <Divider />
