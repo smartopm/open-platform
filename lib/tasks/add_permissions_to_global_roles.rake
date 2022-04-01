@@ -19,7 +19,7 @@ namespace :db do
         valid_modules.each do |valid_module|
           role_permissions = permission_list.dig(role.name.to_sym,
                                                  valid_module.to_sym, :permissions)
-          next unless role_permissions
+          role_permissions = [] if role_permissions.blank?
 
           permission = Permission.find_by(role: role, module: valid_module)
           if permission

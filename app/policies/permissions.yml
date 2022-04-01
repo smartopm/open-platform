@@ -402,8 +402,6 @@ security_guard:
       - can_see_menu_item
   forms:
     permissions:
-      - can_see_menu_item
-      - can_access_forms
   timesheet:
     permissions:
       - can_fetch_user_time_sheet_logs
