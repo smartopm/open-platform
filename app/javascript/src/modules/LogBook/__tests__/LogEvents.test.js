@@ -13,65 +13,43 @@ describe('Log Events Component', () => {
   const endTime = new Date();
   endTime.setHours(endTime.getHours() + 1);
 
-  const data = [
-    {
-      id: '02b656be-00b3-4bc2-90a4-0d86d2b72d2a',
-      createdAt: '2021-09-22T13:57:55+02:00',
-      refId: 'eedf3caf-13a1-4d5b-ac9a-22dd99a64bb2',
-      refType: 'Logs::EntryRequest',
-      subject: 'visitor_entry',
-      sentence: 'Admin User granted Test Guest for entry.',
-      data: {
-        action: 'granted',
-        ref_name: 'Test Guest',
-        type: 'admin',
-        note: 'a note'
-      },
-      actingUser: {
-        name: 'Admin User',
-        id: 'bdf23d62-071c-4fdf-8ee5-7add18236090'
-      },
-      entryRequest: {
-        reason: 'client',
-        id: 'eedf3caf-13a1-4d5b-ac9a-22dd99a64bb2',
-        grantedState: 1,
-        grantedAt: '2021-09-22T13:57:55+02:00',
-        name: 'Test Guest',
-        startsAt: '2021-09-23T09:49:14+02:00',
-        endsAt: endTime,
-        visitationDate: '2021-09-23T09:50:00+02:00',
-        grantor: {
-          id: 'bdf23d62-071c-4fdf-8ee5-7add1823609'
-        }
-      },
-      imageUrls: ['sampleimg'],
-      user: null
-    }
-  ];
-
-  const otherData = [
-    {
-      id: '02b656be-00b3-4bc2-90a4-0d86d2b72d2a',
-      createdAt: '2021-09-22T13:57:55+02:00',
-      refId: 'eedf3caf-13a1-4d5b-ac9a-22dd99a64bb2',
-      refType: 'Users::User',
-      subject: 'user_entry',
-      sentence: 'Admin User granted Test Guest for entry.',
-      data: {
-        action: 'granted',
-        ref_name: 'Test Guest',
-        type: 'admin',
-        note: 'a note'
-      },
-      actingUser: {
-        name: 'Admin User',
-        id: 'bdf23d62-071c-4fdf-8ee5-7add18236090'
-      },
-      entryRequest: null,
-      imageUrls: ['sampleimg'],
-      user: null
-    }
-  ];
+  const log = {
+    result: [
+      {
+        id: 'cde66254-0538-478b-b672-d883b2fa7867',
+        createdAt: '2022-04-01T02:36:07-06:00',
+        refId: 'ee0d442c-6ec0-429d-bb78-b69bdd843163',
+        refType: 'Logs::EntryRequest',
+        subject: 'visit_entry',
+        sentence: 'XD UW  added an observation log to an entry request',
+        data: {
+          note: '23'
+        },
+        imageUrls: 'http:image.com',
+        actingUser: {
+          name: 'XD UW ',
+          id: '162f7517-7cc8-42f9-b2d0-a83a16d59569'
+        },
+        entryRequest: {
+          reason: 'client',
+          id: 'ee0d442c-6ec0-429d-bb78-b69bdd843163',
+          grantedState: 1,
+          grantedAt: '2021-10-28T00:11:09-06:00',
+          name: 'Test ',
+          startsAt: '2021-10-28T00:10:49-06:00',
+          endsAt: '2021-10-28T00:10:49-06:00',
+          visitationDate: null,
+          visitEndDate: null,
+          guestId: null,
+          grantor: {
+            name: 'XD UW ',
+            id: '162f7517-7cc8-42f9-b2d0-a83a16d59569'
+          }
+        },
+        user: null
+      }
+    ]
+  };
 
   const actions = jest.fn();
   const logExit = jest.fn();
@@ -83,8 +61,7 @@ describe('Log Events Component', () => {
           <BrowserRouter>
             <Context.Provider value={authState}>
               <LogEvents
-                data={data}
-                loading={false}
+                eventsData={{ data: log, error: null, loading: false, refetch: jest.fn() }}
                 userType="admin"
                 handleExitEvent={logExit}
                 handleAddObservation={jest.fn()}
@@ -123,8 +100,12 @@ describe('Log Events Component', () => {
           <BrowserRouter>
             <Context.Provider value={authState}>
               <LogEvents
-                data={[]}
-                loading={false}
+                eventsData={{
+                  data: { result: [] },
+                  error: null,
+                  loading: false,
+                  refetch: jest.fn()
+                }}
                 userType="admin"
                 handleExitEvent={jest.fn()}
                 handleAddObservation={jest.fn()}
@@ -137,30 +118,5 @@ describe('Log Events Component', () => {
     );
 
     expect(container.queryByText('logbook.no_logs')).toBeInTheDocument();
-  });
-
-  it('renders visitor name', () => {
-    const container = render(
-      <MockedProvider>
-        <MockedThemeProvider>
-          <BrowserRouter>
-            <Context.Provider value={authState}>
-              <LogEvents
-                data={otherData}
-                loading={false}
-                userType="admin"
-                handleExitEvent={logExit}
-                handleAddObservation={jest.fn()}
-                routeToAction={actions}
-              />
-            </Context.Provider>
-          </BrowserRouter>
-        </MockedThemeProvider>
-      </MockedProvider>
-    );
-
-    expect(container.queryByTestId('acting_guard_title')).toBeInTheDocument();
-    expect(container.queryByTestId('acting_user_name')).toBeInTheDocument();
-    expect(container.queryByTestId('visitor_name')).toBeInTheDocument();
   });
 });

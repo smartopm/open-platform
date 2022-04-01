@@ -1,5 +1,5 @@
 import React from 'react';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom/';
 import { MockedProvider } from '@apollo/react-testing';
@@ -7,6 +7,7 @@ import LogBookItem from '../Components/LogBookItem';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import userMock from '../../../__mocks__/authstate';
 import MockedThemeProvider from '../../__mocks__/mock_theme';
+import { AllEventLogsQuery } from '../../../graphql/queries';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 describe('LogBook Component', () => {
@@ -14,193 +15,116 @@ describe('LogBook Component', () => {
     router: {
       push: jest.fn()
     },
-    paginate: jest.fn(),
     offset: 0,
-    limit: 20,
-    searchTerm: '',
-    searchQuery: '',
-    handleSearch: jest.fn(),
-    queryOnChange: jest.fn(),
     tabValue: 0,
-    handleTabValue: jest.fn(),
-    loading: false,
-    refetch: jest.fn(),
-    toggleFilterMenu: jest.fn(),
-    handleSearchClear: jest.fn(),
-    displayBuilder: "none"
+    handleTabValue: jest.fn()
   };
 
   it('renders data successfully', async () => {
-    const dataMock = [{
-        id: 'aa796e02-88b4-4d31-a988-047e5b2e8193',
-        createdAt: '2021-07-04T19:03:30+02:00',
-        refId: 'faff8c88-982c-4f87-ba69-c43c06f6576e',
-        refType: 'Logs::EntryRequest',
-        subject: 'visitor_entry',
-        sentence: 'X User added an observation log to an entry request',
-        data: {
-          note: 'Exited',
-          ref_name: 'Test Entry'
-        },
-        actingUser: {
-          name: 'X User',
-          id: '162f7517-7cc8-42f9-b2d0-a83a16d59569'
-        },
-        entryRequest: {
-          reason: 'sales',
-          id: 'faff8c88-982c-4f87-ba69-c43c06f6576e',
-          grantedState: 1,
-          grantedAt: '2021-07-02T11:19:27+02:00',
-          name: 'HU',
-          startsAt: '2021-07-02T11:19:27+02:00',
-          visitationDate: '2021-07-02T11:19:27+02:00',
-          grantor: {
-            name: 'John Doe'
-          }
+    const eventLogMock = {
+      request: {
+        query: AllEventLogsQuery,
+        variables: {
+          limit: 20,
+          name: "",
+          offset: 0,
+          refId: null,
+          refType: null,
+          subject: ['user_entry', 'visitor_entry', 'user_temp', 'observation_log']
         }
-      }]
-
-    props.data = dataMock;
+      },
+      result: {
+        data: {
+          result: [
+            {
+              id: 'cde66254-0538-478b-b672-d883b2fa7867',
+              createdAt: '2022-04-01T02:36:07-06:00',
+              refId: 'ee0d442c-6ec0-429d-bb78-b69bdd843163',
+              refType: 'Logs::EntryRequest',
+              subject: 'observation_log',
+              sentence: 'XD UW  added an observation log to an entry request',
+              data: {
+                note: 'Exited'
+              },
+              imageUrls: null,
+              actingUser: {
+                name: 'XD UW ',
+                id: '162f7517-7cc8-42f9-b2d0-a83a16d59569'
+              },
+              entryRequest: {
+                reason: 'client',
+                id: 'ee0d442c-6ec0-429d-bb78-b69bdd843163',
+                grantedState: 1,
+                grantedAt: '2021-10-28T00:11:09-06:00',
+                name: 'Test ',
+                startsAt: '2021-10-28T00:10:49-06:00',
+                endsAt: '2021-10-28T00:10:49-06:00',
+                visitationDate: null,
+                visitEndDate: null,
+                guestId: null,
+                grantor: {
+                  name: 'XD UW ',
+                  id: '162f7517-7cc8-42f9-b2d0-a83a16d59569'
+                }
+              },
+              user: null
+            }
+          ]
+        }
+      }
+    };
 
     const container = render(
-      <MockedProvider>
-        <MockedThemeProvider>
-          <BrowserRouter>
-            <Context.Provider value={userMock}>
-              <LogBookItem {...props} scope={2} />
-            </Context.Provider>
-          </BrowserRouter>
-        </MockedThemeProvider>
-      </MockedProvider>
+      <Context.Provider value={userMock}>
+        <MockedProvider mocks={[eventLogMock]} addTypename={false}>
+          <MockedThemeProvider>
+            <BrowserRouter>
+              <LogBookItem {...props} />
+            </BrowserRouter>
+          </MockedThemeProvider>
+        </MockedProvider>
+      </Context.Provider>
     );
     await waitFor(() => {
       expect(container.queryAllByTestId('card')[0]).toBeInTheDocument();
       expect(container.queryByTestId('name')).toBeInTheDocument();
-      expect(container.queryByTestId('acting_guard_title')).toBeInTheDocument();
+      expect(container.queryByText('logbook.log_book')).toBeInTheDocument();
+      expect(container.queryByTestId('speed_dial_btn')).toBeInTheDocument();
+      expect(container.queryByTestId('add_icon')).toBeInTheDocument();
+      expect(container.queryByTestId('logbook_tabs')).toBeInTheDocument();
       expect(container.queryByTestId('observation_note')).toBeInTheDocument();
       expect(container.queryByTestId('created-at')).toBeInTheDocument();
       expect(container.queryAllByText('misc.previous')[0]).toBeInTheDocument();
       expect(container.queryAllByText('misc.next')[0]).toBeInTheDocument();
-      expect(container.queryByLabelText('simple tabs example')).toBeInTheDocument()
+      expect(container.queryByText('logbook.log_view')).toBeInTheDocument();
+      expect(container.queryByText('guest.guests')).toBeInTheDocument();
+      expect(container.queryByText('logbook.visit_view')).toBeInTheDocument();
+      expect(container.queryByText('common:misc.statistics')).toBeInTheDocument();
+      expect(container.queryByText('common:misc.show common:misc.all')).toBeInTheDocument();
+      expect(container.queryAllByText('common:misc.timeframe')[0]).toBeInTheDocument();
+      expect(container.queryByText('logbook.total_entries')).toBeInTheDocument();
+      expect(container.queryByText('logbook.total_exits')).toBeInTheDocument();
+      expect(container.queryByText('logbook.total_in_city')).toBeInTheDocument();
+      // This is because the query has not been triggered unless the tabValue matches
+      expect(container.queryAllByText('logbook.no_invited_guests')[0]).toBeInTheDocument();
+      expect(container.queryAllByText('search.search_for')[0]).toBeInTheDocument();
 
-      fireEvent.change(container.queryByLabelText('simple tabs example'))
+      fireEvent.change(container.queryByLabelText('simple tabs example'));
 
-      fireEvent.change(container.queryAllByTestId('menu-list')[0])
+      fireEvent.change(container.queryAllByTestId('menu-list')[0]);
       expect(container.queryAllByText('logbook.view_details')[0]).toBeInTheDocument();
       expect(container.queryAllByText('logbook.add_observation')[0]).toBeInTheDocument();
 
-      fireEvent.click(container.queryAllByText('logbook.add_observation')[0])
+      fireEvent.click(container.queryAllByText('logbook.add_observation')[0]);
       expect(container.queryByText('observations.add_your_observation')).toBeInTheDocument();
 
       fireEvent.change(container.queryByTestId('entry-dialog-field'), {
         target: { value: 'This is an observation' }
       });
       expect(container.queryByTestId('entry-dialog-field').value).toBe('This is an observation');
-      fireEvent.click(container.queryByTestId('save'))
+      fireEvent.click(container.queryByTestId('save'));
 
-      fireEvent.click(container.queryAllByTestId('next-btn')[0])
-    })
-  });
-
-  it('renders active visit logs', async () => {
-    const dataMock = [
-        {
-          "id": "02b656be-00b3-4bc2-90a4-0d86d2b72d2a",
-          "createdAt": "2021-09-22T13:57:55+02:00",
-          "refId": "eedf3caf-13a1-4d5b-ac9a-22dd99a64bb2",
-          "refType": "Logs::EntryRequest",
-          "subject": "visitor_entry",
-          "sentence": "Admin User granted Test Guest for entry.",
-          "data": {
-              "action": "granted",
-              "ref_name": "Test Guest",
-              "type": "admin"
-          },
-          "actingUser": {
-              "name": "Admin User",
-              "id": "bdf23d62-071c-4fdf-8ee5-7add18236090"
-          },
-          "entryRequest": {
-              "reason": "client",
-              "id": "eedf3caf-13a1-4d5b-ac9a-22dd99a64bb2",
-              "grantedState": 1,
-              "grantedAt": "2021-09-22T13:57:55+02:00",
-              "name": "Test Guest",
-              "startsAt": "2021-09-23T09:49:14+02:00",
-              "visitationDate": "2021-09-23T09:50:00+02:00"
-          },
-          "user": null
-        }
-      ]
-
-    props.data = dataMock;
-
-    render(
-      <MockedProvider>
-        <MockedThemeProvider>
-          <BrowserRouter>
-            <Context.Provider value={userMock}>
-              <LogBookItem {...props} scope={2} />
-            </Context.Provider>
-          </BrowserRouter>
-        </MockedThemeProvider>
-      </MockedProvider>
-    );
-    await waitFor(() => {
-      expect(screen.queryByTestId('name').textContent).toContain('Test Guest');
-    })
-  });
-
-  it('renders active visit logs by visitEndDate', async () => {
-    const visitEndDate = new Date();
-    visitEndDate.setDate(visitEndDate.getDate() + 5)
-
-    const dataMock = [
-      {
-        id: '02b656be-00b3-4bc2-90a4-0d86d2b72d2a',
-        createdAt: '2021-09-22T13:57:55+02:00',
-        refId: 'eedf3caf-13a1-4d5b-ac9a-22dd99a64bb2',
-        refType: 'Logs::EntryRequest',
-        subject: 'visitor_entry',
-        sentence: 'Admin User granted Test Guest for entry.',
-        data: {
-          action: 'granted',
-          ref_name: 'Test Guest',
-          type: 'admin'
-        },
-        actingUser: {
-          name: 'Admin User',
-          id: 'bdf23d62-071c-4fdf-8ee5-7add18236090'
-        },
-        entryRequest: {
-          reason: 'client',
-          id: 'eedf3caf-13a1-4d5b-ac9a-22dd99a64bb2',
-          grantedState: 1,
-          grantedAt: '2021-09-22T13:57:55+02:00',
-          name: 'Test Guest',
-          startsAt: '2021-09-23T09:49:14+02:00',
-          visitationDate: '2021-09-23T09:50:00+02:00',
-          visitEndDate
-        },
-        user: null
-      }
-    ];
-
-    props.data = dataMock;
-
-    render(
-      <MockedProvider>
-        <MockedThemeProvider>
-          <BrowserRouter>
-            <Context.Provider value={userMock}>
-              <LogBookItem {...props} scope={2} />
-            </Context.Provider>
-          </BrowserRouter>
-        </MockedThemeProvider>
-      </MockedProvider>
-    );
-    await waitFor(() => {
-      expect(screen.queryByTestId('name').textContent).toContain('Test Guest');
-    })
+      fireEvent.click(container.queryAllByTestId('next-btn')[0]);
+    }, 20);
   });
 });

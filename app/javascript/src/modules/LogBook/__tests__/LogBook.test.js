@@ -20,7 +20,7 @@ describe('LogBook Component', () => {
         <MockedThemeProvider>
           <BrowserRouter>
             <Context.Provider value={userMock}>
-              <LogBook match={{ params: { id: '123' } }} history={{ push: jest.fn() }} />
+              <LogBook />
             </Context.Provider>
           </BrowserRouter>
         </MockedThemeProvider>

@@ -74,6 +74,7 @@ export default function LogBookItem({
     },
     fetchPolicy: 'cache-and-network'
   });
+
   const { onChange, signedBlobId, url, status } = useFileUpload({
     client: useApolloClient()
   });
@@ -263,6 +264,7 @@ export default function LogBookItem({
               <StyledTabs
                 value={tabValue}
                 aria-label="simple tabs example"
+                data-testid="logbook_tabs"
                 onChange={handleTabValue}
               >
                 <StyledTab label={t('logbook.log_view')} {...a11yProps(0)} />
