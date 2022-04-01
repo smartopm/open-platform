@@ -1352,8 +1352,9 @@ RSpec.describe Types::Queries::Note do
 
           expect(result['errors']).to be_nil
           expect(result.dig('data', 'tasksByQuarter', 'completed', 0)).to eql [2022.0, 1.0, 1]
-          expect(result.dig('data', 'tasksByQuarter', 'submitted', 0)).to eql [2022.0, 1.0, 1]
-          expect(result.dig('data', 'tasksByQuarter', 'submitted', 1)).to eql [2022.0, 2.0, 1]
+          expect(
+            result.dig('data', 'tasksByQuarter', 'submitted'),
+          ).to include([2022.0, 1.0, 1], [2022.0, 2.0, 1])
         end
       end
 
