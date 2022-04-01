@@ -102,6 +102,7 @@ module Types
     field :investment_size, String, null: true
     field :investment_timeline, String, null: true
     field :decision_timeline, String, null: true
+    field :status, String, null: true
 
     def avatar_url
       return nil unless object.avatar.attached?

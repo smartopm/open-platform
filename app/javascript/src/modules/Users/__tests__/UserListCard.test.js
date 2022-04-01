@@ -19,6 +19,7 @@ describe('It displays the user list and interactions', () => {
           phoneNumber: '0987654123',
           roleName: 'Admin',
           subStatus: 'building_permit_approved',
+          status: 'deactivated',
           labels: [
             {
               id: 'de2392ec-398f-40e2-a983-7caee40b2073',
@@ -33,7 +34,8 @@ describe('It displays the user list and interactions', () => {
     currentUserType: 'Admin',
     selectedUsers: ['uuid123-4'],
     offset: 0,
-    selectCheckBox: false
+    selectCheckBox: false,
+    refetch: jest.fn
   };
   it('mounts component without error', () => {
     const container = render(
@@ -51,5 +53,6 @@ describe('It displays the user list and interactions', () => {
     expect(container.queryByTestId('user-substatus').textContent).toContain(
       'Building Permit Approved'
     );
+    expect(container.queryByText(/Deactivated/).textContent).toContain('Deactivated');
   });
 });

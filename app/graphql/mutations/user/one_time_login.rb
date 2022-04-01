@@ -11,8 +11,7 @@ module Mutations
 
       def resolve(vals)
         user = Users::User.find(vals[:user_id])
-        raise GraphQL::ExecutionError, I18n.t('errors.not_found') unless user
-
+        raise_user_specific_error(user)
         url = user.send_one_time_login
         {
           url: url,
@@ -24,6 +23,15 @@ module Mutations
         return true if permitted?(module: :user, permission: :can_send_one_time_login)
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+      end
+
+      def raise_user_specific_error(user)
+        message = I18n.t('errors.user.not_found') if user.nil?
+        message = I18n.t('errors.user.cannot_send_otp_link') if user&.deactivated?
+
+        return if message.blank?
+
+        raise GraphQL::ExecutionError, message
       end
     end
   end

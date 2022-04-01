@@ -13,7 +13,7 @@ module Mutations
         raise_email_blank_error(vals[:email])
 
         user = context[:site_community].users.find_any_via_email(vals[:email])
-        raise_user_not_found_error(user)
+        raise_user_login_specific_error(user)
 
         user&.send_one_time_login_email
 
@@ -31,15 +31,6 @@ module Mutations
         return if email.present?
 
         raise GraphQL::ExecutionError, I18n.t('errors.email.found_blank')
-      end
-
-      # Raises GraphQL execution error if user does not exist.
-      #
-      # @return [GraphQL::ExecutionError]
-      def raise_user_not_found_error(user)
-        return if user
-
-        raise GraphQL::ExecutionError, I18n.t('errors.user.not_found')
       end
     end
   end

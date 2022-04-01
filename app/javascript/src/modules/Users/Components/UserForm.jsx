@@ -10,7 +10,7 @@ import { useApolloClient, useLazyQuery, useMutation } from 'react-apollo';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import PhoneInput from 'react-phone-input-2';
-import { reasons, requiredFields, userState, userSubStatus } from '../../../utils/constants';
+import { reasons, requiredFields, userState, userSubStatus, userStatus } from '../../../utils/constants';
 import DatePickerDialog from '../../../components/DatePickerDialog';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
 import { UserQuery } from '../../../graphql/queries';
@@ -38,7 +38,8 @@ const initialValues = {
   primaryAddress: '',
   contactInfos: [],
   extRefId: '',
-  avatarUrl: ''
+  avatarUrl: '',
+  status: ''
 };
 
 export function formatContactType(value, type) {
@@ -496,6 +497,26 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
                     {Object.keys(userState).map(key => (
                       <MenuItem key={key} value={key}>
                         {t(`user_states.${key}`)}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                </div>
+                <div className="form-group">
+                  <TextField
+                    id="status"
+                    select
+                    label={t('common:form_fields.status')}
+                    value={data.status || ''}
+                    onChange={handleInputChange}
+                    margin="normal"
+                    name="status"
+                    inputProps={{ 'aria-label': 'status' }}
+                    className={`${css(styles.selectInput)}`}
+                  >
+                    <MenuItem value="" />
+                    {Object.keys(userStatus).map(key => (
+                      <MenuItem key={key} value={key}>
+                        {t(`user_status.${key}`)}
                       </MenuItem>
                     ))}
                   </TextField>

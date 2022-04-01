@@ -69,7 +69,7 @@ export default function LogEvents({
       isVisible:
         Boolean(eventData.entryRequest) &&
         Boolean(!eventData.entryRequest?.grantor) &&
-        eventData.data?.note !== 'Exited',
+        eventData.data?.note !== 'Exited' && eventData.data?.user?.status === 'active',
       handleClick: () => routeToAction(eventData)
     },
     {

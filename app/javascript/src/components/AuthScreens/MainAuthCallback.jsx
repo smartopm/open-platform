@@ -11,5 +11,8 @@ export default function MainAuthCallback({ match }) {
     authState.setToken({ type: "update", token });
     return <></>; // Wait for the Token update to hit and handle the redirect
   }
+  if(authState?.user?.status === 'deactivated'){
+    return <Redirect push to="/logout" />;
+  }
   return <Redirect push to="/" />;
 }

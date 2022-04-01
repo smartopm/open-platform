@@ -173,6 +173,8 @@ module Users
       construction_in_progress_self_build: 6,
     }
 
+    enum status: { active: 0, deactivated: 1 }
+
     validates :user_type, inclusion: { in: VALID_USER_TYPES, allow_nil: true }
     validates :state, inclusion: { in: VALID_STATES, allow_nil: true }
     validates :sub_status, inclusion: { in: sub_statuses.keys, allow_nil: true }
@@ -492,6 +494,8 @@ module Users
     end
 
     def send_phone_token
+      return if deactivated?
+
       raise UserError, 'No phone number to send one time code to' unless self[:phone_number]
 
       token = create_new_phone_token
@@ -502,7 +506,10 @@ module Users
       # Send number via Nexmo
     end
 
+    # rubocop:disable Metrics/AbcSize
     def send_one_time_login
+      return if deactivated?
+
       raise UserError, 'No phone number to send one time code to' unless self[:phone_number]
 
       token = create_new_phone_token
@@ -516,8 +523,9 @@ module Users
     end
 
     # rubocop:disable Metrics/MethodLength
-    # rubocop:disable Metrics/AbcSize
     def send_one_time_login_email
+      return if deactivated?
+
       raise UserError, 'No Email to send one time code to' unless self[:email]
 
       token = create_new_phone_token
@@ -525,7 +533,6 @@ module Users
 
       url = "https://#{HostEnv.base_url(community)}/l/#{self[:id]}/#{token}"
       msg = "Your login link for #{community.name} is #{url}"
-
       template = community.email_templates
       &.system_emails
       &.find_by(name: 'one_time_login_template')

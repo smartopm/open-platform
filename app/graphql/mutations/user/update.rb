@@ -57,6 +57,7 @@ module Mutations
       argument :investment_size, String, required: false
       argument :investment_timeline, String, required: false
       argument :decision_timeline, String, required: false
+      argument :status, String, required: false
 
       field :user, Types::UserType, null: true
 

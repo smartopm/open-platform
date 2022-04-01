@@ -29,9 +29,11 @@ describe('GateFlowReport', () => {
 
     await waitFor(() => {
       expect(wrapper.queryByText('misc.export_data')).toBeInTheDocument();
+      expect(wrapper.queryByText('misc.export_data')).toBeDisabled();
       expect(wrapper.queryByText('guest_book.gate_flow_report')).toBeInTheDocument();
       expect(wrapper.queryAllByText('guest_book.start_date')[0]).toBeInTheDocument();
       expect(wrapper.queryAllByText('guest_book.end_date')[0]).toBeInTheDocument();
+      expect(wrapper.queryAllByLabelText('Choose date')).toHaveLength(2);
     }, 10);
   });
 });

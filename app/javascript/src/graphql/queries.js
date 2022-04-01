@@ -45,6 +45,10 @@ export const EntryRequestQuery = gql`
         name
         id
       }
+      guest{
+        id
+        status
+      }
       guestId
     }
   }
@@ -211,6 +215,7 @@ export const UsersDetails = gql`
       extRefId
       expiresAt
       state
+      status
       labels {
         id
         shortDesc

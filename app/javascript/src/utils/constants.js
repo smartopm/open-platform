@@ -82,6 +82,11 @@ export const userState = {
   expired: 'Expired'
 };
 
+export const userStatus = {
+  active: 'Active',
+  deactivated: 'Deactivated'
+}
+
 export const userSubStatus = {
   plots_fully_purchased: 'Plots Fully Purchased',
   eligible_to_start_construction: 'Eligible to start Construction',

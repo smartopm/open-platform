@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_03_25_092451) do
+ActiveRecord::Schema.define(version: 2022_03_28_063055) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -861,6 +861,7 @@ ActiveRecord::Schema.define(version: 2022_03_25_092451) do
     t.string "investment_size"
     t.string "investment_timeline"
     t.string "decision_timeline"
+    t.integer "status", default: 0
     t.index ["community_id", "email"], name: "index_users_on_community_id_and_email", unique: true
     t.index ["latest_substatus_id"], name: "index_users_on_latest_substatus_id"
     t.index ["role_id"], name: "index_users_on_role_id"

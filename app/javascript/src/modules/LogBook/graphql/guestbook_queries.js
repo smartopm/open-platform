@@ -16,6 +16,7 @@ export const GuestEntriesQuery = gql`
       guest {
         id
         name
+        status
       }
       closestEntryTime {
         occursOn
@@ -87,10 +88,16 @@ export const logbookEventLogsQuery = gql`
         id
         name
         reason
-      }
-      user {
-        id
-        name
+        guestId
+        grantedState
+        grantor {
+          id
+          name
+        }
+        user {
+          id
+          name
+        }
       }
     }
   }

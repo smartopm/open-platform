@@ -65,7 +65,11 @@ export default function TaskProcessDetail() {
   );
 
   const { data: stepsData, loading: subStepsLoading, refetch } = useQuery(SubTasksQuery, {
-    variables: { taskId, limit: projectData?.subTasks?.length || limit },
+    skip: !projectItem,
+    variables: {
+      taskId: projectItem && projectItem?.project?.id,
+      limit: projectItem?.subTasksCount || limit
+    },
     fetchPolicy: 'cache-and-network',
     errorPolicy: 'all'
   });

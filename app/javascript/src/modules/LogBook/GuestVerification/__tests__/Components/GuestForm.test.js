@@ -21,7 +21,10 @@ describe('Guest Form component', () => {
             <MockedThemeProvider>
               <EntryRequestContext.Provider value={
                   {
-                    request: { id: 'someids',  },
+                    request: {
+                      id: 'someids',
+                      guest: { status: 'active' }
+                     },
                     observationDetails: {
                       isError: false,
                       message: 'granted'

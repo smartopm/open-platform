@@ -30,11 +30,13 @@ describe('Should render Guests View Component', () => {
             name: 'Test another',
             user: {
               id: '162f7517',
-              name: 'Js user x'
+              name: 'Js user x',
+              status: 'active'
             },
             guest: {
               id: '162f7517',
-              name: 'Js user a'
+              name: 'Js user a',
+              status: 'active'
             },
             closestEntryTime: {
               visitEndDate: null,
@@ -65,7 +67,8 @@ describe('Should render Guests View Component', () => {
             },
             guest: {
               id: '162f7517',
-              name: 'Js user x'
+              name: 'Js user x',
+              status: 'active'
             },
             closestEntryTime: {
               visitEndDate: null,

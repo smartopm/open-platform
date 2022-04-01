@@ -14,6 +14,7 @@ export default function OneTimeLoginCode({ match }) {
 
   // If logged in, redirect to dashboard
   if (authState.loggedIn) {
+    if (authState.user.status === 'deactivated') return <Redirect push to='/logout' />
     if(type === 'request') return <Redirect push to={`/qr/invite/${requestId}`} />;
 
     return <Redirect push to="/" />;

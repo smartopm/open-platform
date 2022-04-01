@@ -225,7 +225,8 @@ export default function GuestsView({
                 <Button
                   disabled={
                     !checkRequests(visit.closestEntryTime, t, timeZone).valid ||
-                    (loadingStatus.loading && Boolean(loadingStatus.currentId))
+                    (loadingStatus.loading && Boolean(loadingStatus.currentId)) ||
+                    visit.guest?.status === 'deactivated'
                   }
                   variant="outlined"
                   color="primary"

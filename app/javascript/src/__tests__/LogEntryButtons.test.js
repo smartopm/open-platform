@@ -38,6 +38,7 @@ describe('Should check if the buttons are functional on userinformation', () => 
           expiresAt: null,
           email: 'x@doublegdp.com',
           subStatus: null,
+          status: 'active',
           address: 'some place in the world',
           extRefId: null,
           accounts: null,

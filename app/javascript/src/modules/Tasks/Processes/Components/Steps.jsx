@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import makeStyles from '@mui/styles/makeStyles';
 import { Typography } from '@mui/material';
+import { Context as AuthStateContext } from '../../../../containers/Provider/AuthStateProvider';
 import StepItem from './StepItem';
 import { objectAccessor, sortTaskOrder } from '../../../../utils/helpers';
 
@@ -14,14 +15,21 @@ export default function ProjectSteps({
   setSelectedStep,
   handleStepCompletion,
   handleProjectStepClick,
-  redirect,
-  clientView
+  redirect
 }) {
+  const authState = React.useContext(AuthStateContext);
   const history = useHistory();
   const classes = useStyles();
   const { id } = useParams();
   const [stepsOpen, setStepsOpen] = useState({});
   const { t } = useTranslation('task');
+
+  const taskPermissions = authState?.user?.permissions?.find((permission) => (
+    permission.module === 'note'
+  ));
+
+  const canAccessProjectSteps = taskPermissions.permissions.includes('can_access_project_steps');
+  const canCompleteTask = taskPermissions.permissions.includes('can_mark_task_as_complete');
 
   function toggleStep(stepItem){
     setStepsOpen({
@@ -47,7 +55,7 @@ export default function ProjectSteps({
 
   function handleStepComplete(e, stepItemId, completed) {
     e.stopPropagation();
-    if(!clientView){
+    if(canCompleteTask){
       handleStepCompletion(stepItemId, completed)
     }
   }
@@ -63,13 +71,12 @@ export default function ProjectSteps({
             <StepItem
               key={firstLevelStep.id}
               step={firstLevelStep}
-              clickable
+              clickable={canAccessProjectSteps}
               handleClick={(e) => handleStepItemClick(e, firstLevelStep)}
-              styles={{backgroundColor: '#F5F5F4'}}
+              styles={{backgroundColor: '#F5F5F4', cursor: canAccessProjectSteps ? 'pointer' : 'not-allowed'}}
               openSubSteps={objectAccessor(stepsOpen, firstLevelStep.id)}
               handleOpenSubStepsClick={(e) => handleOpenSubStepsClick(e, firstLevelStep)}
               handleStepCompletion={handleStepComplete}
-              clientView={clientView}
             />
           </div>
           {firstLevelStep?.subTasksCount > 0 &&
@@ -80,11 +87,10 @@ export default function ProjectSteps({
                     <StepItem
                       key={secondLevelStep.id}
                       step={secondLevelStep}
-                      styles={{backgroundColor: '#ECECEA'}}
-                      clickable
+                      styles={{backgroundColor: '#ECECEA', cursor: canAccessProjectSteps ? 'pointer' : 'not-allowed'}}
+                      clickable={canAccessProjectSteps}
                       handleClick={(e) => handleStepItemClick(e, secondLevelStep)}
                       handleStepCompletion={handleStepComplete}
-                      clientView={clientView}
                     />
                   </div>
                 ))}
@@ -116,7 +122,6 @@ const Step = {
 
   ProjectSteps.defaultProps = {
     redirect: false,
-    clientView: false,
     setSelectedStep: ()=> {}
   };
 
@@ -126,7 +131,6 @@ const Step = {
   handleProjectStepClick: PropTypes.func.isRequired,
   handleStepCompletion: PropTypes.func.isRequired,
   redirect: PropTypes.bool,
-  clientView: PropTypes.bool,
 };
 
 const useStyles = makeStyles(() => ({

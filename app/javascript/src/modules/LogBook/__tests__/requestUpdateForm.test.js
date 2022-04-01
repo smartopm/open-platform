@@ -45,6 +45,11 @@ describe('RequestUpdate Component', () => {
             name: 'John',
             __typename: 'User'
           },
+          guest: {
+            id: '686khkhkhhkas',
+            status: 'active',
+            __typename: 'User'
+          },
           occursOn: ['monday'],
           visitEndDate: '2020-10-15T09:31:06Z',
           visitationDate: '2020-10-05T09:31:06Z',
@@ -70,7 +75,10 @@ describe('RequestUpdate Component', () => {
             <Context.Provider value={authState}>
               <EntryRequestContext.Provider
                 value={{
-                  request: { id: '3c2f8ee2-598b-437c-b217-3e4c0f86c761' },
+                  request: {
+                    id: '3c2f8ee2-598b-437c-b217-3e4c0f86c761',
+                    guest : { status: 'active' }
+                 },
                   grantAccess: jest.fn()
                 }}
               >
@@ -179,7 +187,8 @@ describe('RequestUpdate Component', () => {
                 value={{
                   request: {
                     id: '3c2f8ee2-598b-437c-b217-3e4c0f86c761',
-                    user: { id: 'a54d6184-b10e-4865-bee7-7957701d423d' }
+                    user: { id: 'a54d6184-b10e-4865-bee7-7957701d423d' },
+                    guest : { status: 'active' }
                   },
                   grantAccess: jest.fn()
                 }}
@@ -201,6 +210,78 @@ describe('RequestUpdate Component', () => {
       expect(container.queryAllByText('form_fields.full_name')[0]).toBeInTheDocument();
       expect(container.queryByTestId('entry_user_call_mgr')).toBeInTheDocument();
       expect(container.queryByTestId('entry_user_grant')).toBeInTheDocument();
+    }, 50);
+  });
+
+  it('should not display the grant access button for deactivated users', async () => {
+    const previousRoute = 'guests';
+    const isGuestRequest = true;
+    const isScannedRequest = false;
+    const updateMock = {
+      request: {
+        query: EntryRequestUpdateMutation,
+        variables: {
+          id: '3c2f8ee2-598b-437c-b217-3e4c0f86c761',
+          name: 'some name',
+          phoneNumber: '',
+          nrc: '',
+          vehiclePlate: '',
+          reason: '',
+          business: '',
+          state: '',
+          userType: '',
+          expiresAt: '',
+          email: '',
+          companyName: '',
+          temperature: '',
+          loaded: false,
+          occursOn: [],
+          visitEndDate: '',
+          visitationDate: '',
+          endsAt: '',
+          startsAt: ''
+        },
+        result: {
+          data: {
+            entryRequestUpdate: {
+              id: '3c2f8ee2-598b-437c-b217-3e4c0f86c761'
+            }
+          }
+        }
+      }
+    };
+    const container = render(
+      <MockedProvider mocks={[mocks, updateMock]} addTypename>
+        <BrowserRouter>
+          <MockedThemeProvider>
+            <Context.Provider value={authState}>
+              <EntryRequestContext.Provider
+                value={{
+                  request: {
+                    id: '3c2f8ee2-598b-437c-b217-3e4c0f86c761',
+                    user: { id: 'a54d6184-b10e-4865-bee7-7957701d423d' },
+                    guest : { status: 'deactivated' }
+                  },
+                  grantAccess: jest.fn()
+                }}
+              >
+                <RequestUpdate
+                  id="3c2f8ee2-598b-437c-b217-3e4c0f86c761"
+                  previousRoute={previousRoute}
+                  isGuestRequest={isGuestRequest}
+                  isScannedRequest={isScannedRequest}
+                  tabValue="2"
+                />
+              </EntryRequestContext.Provider>
+            </Context.Provider>
+          </MockedThemeProvider>
+        </BrowserRouter>
+      </MockedProvider>
+    );
+    await waitFor(() => {
+      expect(container.queryAllByText('form_fields.full_name')[0]).toBeInTheDocument();
+      expect(container.queryByTestId('entry_user_call_mgr')).toBeInTheDocument();
+      expect(container.queryByTestId('entry_user_grant')).not.toBeInTheDocument();
     }, 50);
   });
 });
