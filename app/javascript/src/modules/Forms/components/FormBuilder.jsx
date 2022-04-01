@@ -4,6 +4,7 @@ import { Button, Container, Typography, Breadcrumbs, Link, Grid } from '@mui/mat
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery } from 'react-apollo';
 import { useHistory } from 'react-router';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import CenteredContent from '../../../components/CenteredContent';
 import { AllEventLogsQuery } from '../../../graphql/queries';
 import { FormPropertiesQuery, FormQuery } from '../graphql/forms_queries';
@@ -40,6 +41,7 @@ export default function FormBuilder({ formId }) {
   const { t } = useTranslation(['form', 'common']);
   const [type, setType] = useState(t('misc.form'));
   const [updateForm] = useMutation(FormUpdateMutation);
+  const matches = useMediaQuery('(max-width:600px)');
   const { data, error, loading } = useQuery(FormPropertiesQuery, {
     variables: { formId },
     errorPolicy: 'all'
@@ -147,7 +149,7 @@ export default function FormBuilder({ formId }) {
             handleClose={handleAlertClose}
           />
           {loading && <Spinner />}
-          <Container style={{ padding: '0 150px' }}>
+          <Container style={matches ? {padding: '10px 20px'} : { padding: '0 150px' }}>
             {!loading && formDetailData && (
               <FormTitle
                 name={formDetailData.form?.name}
