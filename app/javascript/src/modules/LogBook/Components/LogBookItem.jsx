@@ -62,7 +62,7 @@ export default function LogBookItem({
   const [blobIds, setBlobIds] = useState([]);
   const {value, dbcValue, setSearchValue}= useDebouncedValue()
   const subjects = ['user_entry', 'visitor_entry', 'user_temp', 'observation_log'];
-  
+
   const eventsData = useQuery(AllEventLogsQuery, {
     variables: {
       subject: subjects,
@@ -252,17 +252,15 @@ export default function LogBookItem({
             <Grid item md={9} xs={10}>
               <Typography variant="h4">{t('logbook.log_book')}</Typography>
             </Grid>
-            {!smUpHidden && (
-              <Grid item md={1} xs={2}>
-                <SpeedDial
-                  open={open}
-                  handleClose={() => setOpen(false)}
-                  handleOpen={() => setOpen(true)}
-                  direction="down"
-                  actions={accessibleMenus(actions)}
-                />
-              </Grid>
-            )}
+            {/* {!smUpHidden && ( */}
+            <Grid item md={1} xs={2}>
+              <SpeedDial
+                open={open}
+                handleSpeedDial={() => setOpen(!open)}
+                actions={accessibleMenus(actions)}
+              />
+            </Grid>
+            {/* )} */}
             <Grid item xs={12} md={7} lg={6}>
               <StyledTabs
                 value={tabValue}
@@ -278,9 +276,9 @@ export default function LogBookItem({
           <TabPanel pad value={tabValue} index={0}>
             <AccessCheck module="event_log" allowedPermissions={['can_download_logbook_events']}>
               <GateFlowReport />
+              <br />
+              <Divider />
             </AccessCheck>
-            <br />
-            <Divider />
             <br />
             <SearchInput
               title={t('logbook.all_visits')}
@@ -289,8 +287,8 @@ export default function LogBookItem({
               handleSearch={event => setSearchValue(event.target.value)}
               handleClear={() => setSearchValue("")}
               filters={[value]}
+              fullWidthOnMobile={!open}
             />
-            <br />
             <LogEvents
               eventsData={eventsData}
               userType={authState.user.userType}
@@ -306,6 +304,7 @@ export default function LogBookItem({
               offset={offset}
               limit={limit}
               timeZone={authState.user.community.timezone}
+              speedDialOpen={open}
             />
           </TabPanel>
           <TabPanel pad value={tabValue} index={2}>
@@ -319,7 +318,7 @@ export default function LogBookItem({
             />
           </TabPanel>
         </Grid>
-        {!smDownHidden && (
+        {/* {!smDownHidden && (
           <Grid item md={1} xs={1}>
             <SpeedDial
               open={open}
@@ -329,7 +328,7 @@ export default function LogBookItem({
               actions={accessibleMenus(actions)}
             />
           </Grid>
-        )}
+        )} */}
       </Grid>
       {Boolean(tabValue === 0) && (
         <CenteredContent>

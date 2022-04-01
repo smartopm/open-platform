@@ -30,7 +30,8 @@ export default function GuestsView({
   handleAddObservation,
   offset,
   limit,
-  timeZone
+  timeZone,
+  speedDialOpen
 }) {
   const {value, dbcValue, setSearchValue} = useDebouncedValue()
   const [loadGuests, { data, loading: guestsLoading, error }] = useLazyQuery(GuestEntriesQuery, {
@@ -46,7 +47,7 @@ export default function GuestsView({
   const matches = useMediaQuery('(max-width:800px)');
   const classes = useLogbookStyles();
   const theme = useTheme();
-  
+
 
   useEffect(() => {
     if (tabValue === 1) {
@@ -113,6 +114,7 @@ export default function GuestsView({
         handleSearch={event => setSearchValue(event.target.value)}
         handleClear={() => setSearchValue("")}
         filters={[value]}
+        fullWidthOnMobile={!speedDialOpen}
       />
       <br />
 
@@ -260,6 +262,6 @@ GuestsView.propTypes = {
   offset: PropTypes.number.isRequired,
   limit: PropTypes.number.isRequired,
   handleAddObservation: PropTypes.func.isRequired,
-  // query: PropTypes.string.isRequired,
+  speedDialOpen: PropTypes.bool.isRequired,
   timeZone: PropTypes.string.isRequired
 };

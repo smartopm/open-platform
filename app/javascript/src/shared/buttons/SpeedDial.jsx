@@ -8,9 +8,11 @@ import CloseIcon from '@mui/icons-material/Close';
 import AddIcon from '@mui/icons-material/Add';
 
 export default function SpeedDialButton({
-  direction,
+  open,
   actions,
-  handleAction
+  direction,
+  handleAction,
+  handleSpeedDial
 }) {
   const classes = useStyles();
 
@@ -32,6 +34,9 @@ export default function SpeedDialButton({
         }
         onClick={actions.length === 0 ? handleAction : null}
         direction={direction}
+        onClose={handleSpeedDial}
+        onOpen={handleSpeedDial}
+        open={open}
       >
         {actions.map(action => (
           <SpeedDialAction
@@ -53,8 +58,8 @@ const useStyles = makeStyles(theme => ({
     transform: 'translateZ(0px)'
   },
   speedDial: {
-    // position: 'absolute',
-    zIndex: '1',
+    position: 'absolute',
+    zIndex: '1000',
     '&.MuiSpeedDial-directionUp, &.MuiSpeedDial-directionLeft': {
       bottom: theme.spacing(2),
       right: theme.spacing(2)
@@ -69,7 +74,9 @@ const useStyles = makeStyles(theme => ({
 SpeedDialButton.defaultProps = {
   actions: [],
   direction: 'down',
+  open: false,
   handleAction: () => {},
+  handleSpeedDial: () => {},
 };
 
 SpeedDialButton.propTypes = {
@@ -79,5 +86,7 @@ SpeedDialButton.propTypes = {
     })
   ),
   direction: PropTypes.string,
-  handleAction: PropTypes.func
+  open: PropTypes.bool,
+  handleAction: PropTypes.func,
+  handleSpeedDial: PropTypes.func,
 };
