@@ -12,10 +12,16 @@ describe('Search Input component', () => {
         searchValue=""
         handleSearch={onChange}
         handleFilter={() => {}}
+        filters={['some', 'some']}
+        filterRequired={false}
       />
     );
     expect(container.queryAllByText('search.search_for')[0]).toBeInTheDocument();
     expect(container.queryAllByText('search.search_for')).toHaveLength(2);
+    expect(container.queryByTestId('clear_filters_btn').textContent).toContain('search.clear_filters');
+    expect(container.queryByTestId('search_results').textContent).toContain('search.search_results');
+    expect(container.queryByTestId('filters_list').textContent).toContain('some');
+    expect(container.queryByTestId('filter')).not.toBeInTheDocument();
   });
   it('should include a clear search query icon', () => {
     const onChange = jest.fn();
@@ -30,5 +36,6 @@ describe('Search Input component', () => {
     );
     expect(searchContainer.queryByTestId('clear_search')).toBeInTheDocument();
     expect(searchContainer.queryByTestId('clear_search')).not.toBeDisabled();
+    expect(searchContainer.queryByTestId('filter')).toBeInTheDocument();
   })
 });
