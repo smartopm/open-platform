@@ -7,7 +7,7 @@ import { useHistory } from 'react-router-dom';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
-import { Avatar, Button, Chip, useTheme } from '@mui/material';
+import { Avatar, Button, Chip, Divider, useTheme } from '@mui/material';
 import { CurrentGuestEntriesQuery } from '../graphql/guestbook_queries';
 import { Spinner } from '../../../shared/Loading';
 import Card from '../../../shared/Card';
@@ -19,12 +19,12 @@ import { formatError } from '../../../utils/helpers';
 import useLogbookStyles from '../styles';
 import Paginate from '../../../components/Paginate';
 import LogbookStats from './LogbookStats';
-import SearchFilterList from '../../../shared/SearchFilterList';
+import SearchInput from '../../../shared/search/SearchInput';
+import useDebouncedValue from '../../../shared/hooks/useDebouncedValue';
 
 export default function VisitView({
   tabValue,
   limit,
-  query,
   offset,
   timeZone,
   handleAddObservation,
@@ -32,13 +32,14 @@ export default function VisitView({
 }) {
   const initialFilter = { type: 'allVisits', duration: null };
   const [statsTypeFilter, setStatType] = useState({ ...initialFilter });
+  const {value, dbcValue, setSearchValue} = useDebouncedValue()
   const [loadGuests, { data, loading: guestsLoading, refetch, error }] = useLazyQuery(
     CurrentGuestEntriesQuery,
     {
       variables: {
-        offset: query.length ? 0 : offset,
+        offset: dbcValue.length ? 0 : offset,
         limit,
-        query: query.trim(),
+        query: dbcValue.trim(),
         type: statsTypeFilter.type,
         duration: statsTypeFilter.duration
       },
@@ -87,7 +88,8 @@ export default function VisitView({
     if (tabValue === 2) {
       loadGuests();
     }
-  }, [tabValue, loadGuests, query, offset]);
+  }, [tabValue, loadGuests, dbcValue, offset]);
+
 
   function handleFilterData(filter, filterType = 'entryType') {
     const isDuration = filterType === 'duration';
@@ -100,6 +102,7 @@ export default function VisitView({
 
   function handleFilters() {
     setStatType(initialFilter);
+    setSearchValue("")
   }
 
   const filterTypes = {
@@ -111,7 +114,11 @@ export default function VisitView({
     past30Days: t('logbook.last_30_days')
   };
 
-  const filters = [filterTypes[statsTypeFilter.type], filterTypes[statsTypeFilter.duration], query]
+  const filters = [
+    filterTypes[statsTypeFilter.type],
+    filterTypes[statsTypeFilter.duration],
+    dbcValue
+  ];
 
   return (
     <div style={{ marginTop: '20px' }}>
@@ -120,11 +127,21 @@ export default function VisitView({
         shouldRefetch={observationDetails.refetch}
         handleFilter={handleFilterData}
         duration={statsTypeFilter.duration}
+        isSmall={matches}
       />
-      <SearchFilterList
+      <Divider />
+      <br />
+      <SearchInput
+        title={t('guest_book.visits')}
+        searchValue={value}
+        filterRequired={false}
+        handleSearch={event => setSearchValue(event.target.value)}
+        handleClear={handleFilters}
         filters={filters}
-        handleClearFilters={handleFilters}
+        fullWidthOnMobile
+        fullWidth={false}
       />
+      <br />
       {error && <CenteredContent>{formatError(error.message)}</CenteredContent>}
       {guestsLoading ? (
         <Spinner />
@@ -295,7 +312,6 @@ VisitView.propTypes = {
   tabValue: PropTypes.number.isRequired,
   offset: PropTypes.number.isRequired,
   limit: PropTypes.number.isRequired,
-  query: PropTypes.string.isRequired,
   timeZone: PropTypes.string.isRequired,
   handleAddObservation: PropTypes.func.isRequired,
   observationDetails: PropTypes.shape({

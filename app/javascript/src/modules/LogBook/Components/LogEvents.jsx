@@ -1,5 +1,3 @@
-/* eslint-disable no-nested-ternary */
-/* eslint-disable complexity */
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
@@ -25,11 +23,10 @@ import CenteredContent from '../../../shared/CenteredContent';
 import ActingUserName from './ActingUserName';
 import { accessibleMenus, checkVisitorsName } from '../utils';
 
+// TODO: Simplify this component
 export default function LogEvents({
-  data,
-  loading,
-  error,
   userType,
+  eventsData,
   handleExitEvent,
   handleAddObservation,
   routeToAction,
@@ -43,6 +40,7 @@ export default function LogEvents({
   const mdUpHidden = useMediaQuery(theme => theme.breakpoints.up('md'));
   const mdDownHidden = useMediaQuery(theme => theme.breakpoints.down('md'));
   const { t } = useTranslation('logbook');
+
 
   function handleClick(logId) {
     setId(logId);
@@ -108,19 +106,30 @@ export default function LogEvents({
     userType,
     handleClose: event => handleMenuClose(event)
   };
+
   return (
     <div style={{ marginTop: '20px' }} data-testid="card">
-      {error && !data?.length && <CenteredContent>{error}</CenteredContent>}
-      {loading ? (
+      {
+        eventsData.error && !eventsData.data?.length && (
+          <CenteredContent>{eventsData.error?.message}</CenteredContent>
+        )
+      }
+      {eventsData.loading ? (
         <Spinner />
-      ) : data?.length > 0 ? (
-        data.map(entry => (
+      ) : eventsData.data?.result.length > 0 ? (
+        // eslint-disable-next-line complexity
+        eventsData.data?.result.map(entry => (
           <Card key={entry.id}>
             <Grid container spacing={1}>
               <Grid item md={4} xs={8}>
                 {entry.entryRequest ? (
                   <>
-                    <Typography variant="caption" color="primary" data-testid="name" className="entry-log-visitor-name">
+                    <Typography
+                      variant="caption"
+                      color="primary"
+                      data-testid="name"
+                      className="entry-log-visitor-name"
+                    >
                       {entry.entryRequest?.name}
                     </Typography>
                     <br />
@@ -159,9 +168,8 @@ export default function LogEvents({
                   </Typography>
                 </>
               </Grid>
-              {(Boolean(entry.entryRequest) || entry.subject === 'user_temp') && (
+              {(Boolean(entry.entryRequest) || entry.subject === 'user_temp') &&
                 !mdUpHidden && (
-
                   <Grid item md={1} xs={4} style={{ textAlign: 'right' }}>
                     <IconButton
                       aria-controls="sub-menu"
@@ -183,8 +191,7 @@ export default function LogEvents({
                       list={accessibleMenus(menuData?.menuList)}
                     />
                   </Grid>
-                )
-              )}
+                )}
               <Grid item md={7} xs={12} style={!matches ? { paddingTop: '7px' } : {}}>
                 <Grid container spacing={1}>
                   <Grid item sm={2} md={3} style={!matches ? { paddingTop: '15px' } : {}}>
@@ -198,7 +205,7 @@ export default function LogEvents({
                     </Typography>
                   </Grid>
                   <Grid item md={7} xs={12}>
-                    <Grid container spacing={1} style={{paddingTop: '10px'}}>
+                    <Grid container spacing={1} style={{ paddingTop: '10px' }}>
                       {entry.subject === 'user_entry' && (
                         <Grid item>
                           <Chip
@@ -209,16 +216,18 @@ export default function LogEvents({
                           />
                         </Grid>
                       )}
-                      {entry.entryRequest?.grantor && entry.subject === 'visitor_entry' && entry.data.note !== 'Exited' && (
-                        <Grid item>
-                          <Chip
-                            data-testid="granted-access"
-                            label={t('logbook.granted_access')}
-                            style={{ background: '#77B08A', color: 'white', marginRight: '16px' }}
-                            size="small"
-                          />
-                        </Grid>
-                      )}
+                      {entry.entryRequest?.grantor &&
+                        entry.subject === 'visitor_entry' &&
+                        entry.data.note !== 'Exited' && (
+                          <Grid item>
+                            <Chip
+                              data-testid="granted-access"
+                              label={t('logbook.granted_access')}
+                              style={{ background: '#77B08A', color: 'white', marginRight: '16px' }}
+                              size="small"
+                            />
+                          </Grid>
+                        )}
                       {entry.data.note === 'Exited' && (
                         <Grid item>
                           <Chip
@@ -238,26 +247,38 @@ export default function LogEvents({
                           />
                         </Grid>
                       )}
-                      {entry.entryRequest?.reason && entry.subject === 'visitor_entry' && entry.data.note !== 'Exited' && (
-                        <Grid item>
-                          <Tooltip title={toTitleCase(entry.entryRequest?.reason)} arrow>
-                            <Chip
-                              label={truncateString(toTitleCase(entry.entryRequest?.reason), 20)}
-                              style={{
-                            background: objectAccessor(
-                              LogLabelColors,
-                              entry.entryRequest?.reason
-                            ),
-                            color: 'white'
-                          }}
-                              size="small"
-                            />
-                          </Tooltip>
-                        </Grid>
-                      )}
+                      {entry.entryRequest?.reason &&
+                        entry.subject === 'visitor_entry' &&
+                        entry.data.note !== 'Exited' && (
+                          <Grid item>
+                            <Tooltip title={toTitleCase(entry.entryRequest?.reason)} arrow>
+                              <Chip
+                                label={truncateString(toTitleCase(entry.entryRequest?.reason), 20)}
+                                style={{
+                                  background: objectAccessor(
+                                    LogLabelColors,
+                                    entry.entryRequest?.reason
+                                  ),
+                                  color: 'white'
+                                }}
+                                size="small"
+                              />
+                            </Tooltip>
+                          </Grid>
+                        )}
                       {entry.imageUrls && (
-                        <Grid item sm={1} md={1} data-testid="image-area" style={{marginTop: '-10px'}}>
-                          <IconButton color="primary" onClick={() => handleClick(entry.id)} size="large">
+                        <Grid
+                          item
+                          sm={1}
+                          md={1}
+                          data-testid="image-area"
+                          style={{ marginTop: '-10px' }}
+                        >
+                          <IconButton
+                            color="primary"
+                            onClick={() => handleClick(entry.id)}
+                            size="large"
+                          >
                             <PhotoIcon />
                           </IconButton>
                         </Grid>
@@ -266,7 +287,7 @@ export default function LogEvents({
                   </Grid>
                 </Grid>
               </Grid>
-              {(Boolean(entry.entryRequest) || entry.subject === 'user_temp') && (
+              {(Boolean(entry.entryRequest) || entry.subject === 'user_temp') &&
                 !mdDownHidden && (
                   <Grid item md={1} style={{ textAlign: 'right' }}>
                     <IconButton
@@ -289,8 +310,7 @@ export default function LogEvents({
                       list={accessibleMenus(menuData?.menuList)}
                     />
                   </Grid>
-                )
-              )}
+                )}
             </Grid>
             {imageOpen && (
               <DetailsDialog
@@ -309,21 +329,10 @@ export default function LogEvents({
     </div>
   );
 }
-
-LogEvents.defaultProps = {
-  error: ''
-};
-
 LogEvents.propTypes = {
-  data: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string
-    })
-  ).isRequired,
-  loading: PropTypes.bool.isRequired,
+  eventsData: PropTypes.object.isRequired,
   userType: PropTypes.string.isRequired,
   handleAddObservation: PropTypes.func.isRequired,
   handleExitEvent: PropTypes.func.isRequired,
   routeToAction: PropTypes.func.isRequired,
-  error: PropTypes.string
 };

@@ -72,8 +72,8 @@ export default function LogbookStats({ tabValue, shouldRefetch, handleFilter, du
 
   if (loading) return <Spinner />;
   return (
-    <Grid container spacing={isSmall ? 1 : 4}>
-      <Grid container alignItems='center' spacing={2} style={{marginBottom: isSmall && 4, marginLeft: 14, marginTop: 2}}>
+    <Grid container spacing={isSmall ? 0.5 : 4}>
+      <Grid container alignItems='center' spacing={2} style={{marginBottom: isSmall ? 14 : -10, marginLeft: 14, marginTop: isSmall ? -7 : 16}}>
         <Grid item>{t('common:misc.statistics')}</Grid>
         <Grid item>
           <TextField
