@@ -126,6 +126,13 @@ export default function FormDialog({
               handleChange={event => setPreview(event.target.checked)}
               className="form-previewbale-switch-btn"
             />
+            <SwitchInput
+              name="public"
+              label={t('misc.public')}
+              value={preview}
+              handleChange={event => setPreview(event.target.checked)}
+              className="form-previewbale-switch-btn"
+            />
           </div>
           <div>
             <FormControl style={{ minWidth: 250, maxWidth: 400 }}>

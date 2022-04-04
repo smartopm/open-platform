@@ -273,7 +273,8 @@
     "lead_details": "Lead Details",
     "show": "Show",
     "statistics": "Statistics",
-    "timeframe": "Timeframe"
+    "timeframe": "Timeframe",
+    "public": "Form is Public"
   },
   "menu": {
     "invoice": "Invoice",
