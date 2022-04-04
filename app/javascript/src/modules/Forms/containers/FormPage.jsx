@@ -26,7 +26,7 @@ export default function FormPage() {
         <FormUpdate userId={userId} formUserId={formUserId} authState={authState} />
       ) : (
         <FormContextProvider>
-          <div style={matches ? {marginTop: '-30px'} : {}}>
+          <div style={matches ? {marginTop: '-40px'} : {}}>
             <FormHeader
               linkText={t('common:misc.forms')}
               linkHref="/forms"
