@@ -123,6 +123,7 @@ export default function FormCreate({
             variant="outlined"
             onChange={e => setTitle(e.target.value)}
             value={title}
+            data-testid='title'
             fullWidth
             required
           />
@@ -133,6 +134,7 @@ export default function FormCreate({
             label="Form Description"
             variant="outlined"
             name="description"
+            data-testid='decription'
             multiline
             maxRows={5}
             fullWidth
@@ -149,7 +151,7 @@ export default function FormCreate({
             roles={roles}
           />
         </Grid>
-        <Grid item md={6} xs={12}>
+        <Grid item md={6} xs={12} data-testid='datepicker'>
           <DateAndTimePickers
             label={t('misc.form_expiry_date')}
             selectedDateTime={expiresAt}

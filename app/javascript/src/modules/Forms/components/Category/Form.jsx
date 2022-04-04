@@ -224,6 +224,7 @@ export default function Form({
                 disabled={isPublishing}
                 startIcon={isPublishing && <Spinner />}
                 style={{ color: 'white' }}
+                data-testid='publishing'
               >
                 {isPublishing ? t('form:misc.publishing_form') : t('form:actions.publish_form')}
               </Button>

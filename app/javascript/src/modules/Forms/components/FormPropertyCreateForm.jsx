@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useLazyQuery, useMutation, useQuery } from 'react-apollo';
 import PropTypes from 'prop-types';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import {
   Button,
   FormControl,
@@ -10,7 +9,8 @@ import {
   Select,
   TextField,
   Grid,
-  Typography
+  Typography,
+  useMediaQuery
 } from '@mui/material';
 import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';

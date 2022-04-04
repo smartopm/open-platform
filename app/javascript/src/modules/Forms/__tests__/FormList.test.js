@@ -10,32 +10,32 @@ import { FormsQuery } from '../graphql/forms_queries';
 import userMock from '../../../__mocks__/userMock';
 
 describe('Form List Component', () => {
-  it('should render form without error', async () => {
-    const mocks = {
-      request: {
-        query: FormsQuery
-      },
-      result: {
-        data: {
-          forms: [
-            {
-              id: 'caea7b44-ee95-42a6',
-              name: 'Lease Form',
-              expiresAt: '2020-12-31T23:59:59Z',
-              createdAt: '2020-10-07T09:37:03Z',
-              roles: ['client']
-            },
-            {
-              id: '3e530432172e',
-              name: 'Another Form',
-              expiresAt: '2020-12-31T23:59:59Z',
-              createdAt: '2020-10-07T09:37:03Z',
-              roles: ['admin', 'resident']
-            }
-          ]
-        }
+  const mocks = {
+    request: {
+      query: FormsQuery
+    },
+    result: {
+      data: {
+        forms: [
+          {
+            id: 'caea7b44-ee95-42a6',
+            name: 'Lease Form',
+            expiresAt: '2020-12-31T23:59:59Z',
+            createdAt: '2020-10-07T09:37:03Z',
+            roles: ['client']
+          },
+          {
+            id: '3e530432172e',
+            name: 'Another Form',
+            expiresAt: '2020-12-31T23:59:59Z',
+            createdAt: '2020-10-07T09:37:03Z',
+            roles: ['admin', 'resident']
+          }
+        ]
       }
-    };
+    }
+  };
+  it('should render form without error', async () => {
     // needs a theme provider to use theme related functions like theme.breakpoints
     const theme = createTheme();
     const container = render(
@@ -43,7 +43,11 @@ describe('Form List Component', () => {
         <BrowserRouter>
           <StyledEngineProvider injectFirst>
             <ThemeProvider theme={theme}>
-              <FormLinkList userType="admin" community={userMock.user.community.name} />
+              <FormLinkList
+                userType="admin"
+                community={userMock.user.community.name}
+                path="/forms"
+              />
             </ThemeProvider>
           </StyledEngineProvider>
         </BrowserRouter>
@@ -67,5 +71,31 @@ describe('Form List Component', () => {
       },
       { timeout: 500 }
     );
+  });
+
+  it('should render form without when id is present error', async () => {
+    const theme = createTheme();
+    const container = render(
+      <MockedProvider mocks={[mocks]} addTypename={false}>
+        <BrowserRouter>
+          <StyledEngineProvider injectFirst>
+            <ThemeProvider theme={theme}>
+              <FormLinkList
+                userType="admin"
+                community={userMock.user.community.name}
+                path="/forms/create"
+                id="qedhgwewwefwfwf"
+              />
+            </ThemeProvider>
+          </StyledEngineProvider>
+        </BrowserRouter>
+      </MockedProvider>
+    );
+
+    await waitFor(
+      () => {
+        expect(container.queryByText('common:misc.forms')).toBeInTheDocument();
+        expect(container.queryAllByText('misc.create_form')[0]).toBeInTheDocument();
+      });
   });
 });

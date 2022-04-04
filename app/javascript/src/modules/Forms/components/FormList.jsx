@@ -16,7 +16,7 @@ import AssignmentIcon from '@mui/icons-material/Assignment';
 import { useMutation, useQuery } from 'react-apollo';
 import { StyleSheet, css } from 'aphrodite';
 import PropTypes from 'prop-types';
-import { useHistory, useLocation, useParams } from 'react-router';
+import { useHistory } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import FormLinks, { useStyles } from './FormLinks';
 import { FormsQuery } from '../graphql/forms_queries';
@@ -30,15 +30,13 @@ import FormHeader from './FormHeader';
 import FormMenu from './FormMenu';
 
 // here we get existing google forms and we mix them with our own created forms
-export default function FormLinkList({ userType, community }) {
+export default function FormLinkList({ userType, community, path, id }) {
   const { data, error, loading, refetch } = useQuery(FormsQuery, {
     fetchPolicy: 'cache-and-network'
   });
-  const path = useLocation().pathname;
   const [createForm] = useMutation(FormCreateMutation);
   const matches = useMediaQuery('(max-width:900px)');
   const history = useHistory();
-  const { id } = useParams();
   const classes = useStyles();
   const { t } = useTranslation(['form', 'common']);
   const [anchorEl, setAnchorEl] = useState(null);
@@ -149,9 +147,15 @@ export default function FormLinkList({ userType, community }) {
   );
 }
 
+FormLinkList.defaultProps = {
+  id: null
+}
+
 FormLinkList.propTypes = {
   userType: PropTypes.string.isRequired,
-  community: PropTypes.string.isRequired
+  community: PropTypes.string.isRequired,
+  path: PropTypes.string.isRequired,
+  id: PropTypes.string
 };
 
 const styles = StyleSheet.create({
