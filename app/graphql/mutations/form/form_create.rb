@@ -8,6 +8,7 @@ module Mutations
       argument :expires_at, String, required: false
       argument :description, String, required: false
       argument :preview, Boolean, required: true
+      argument :is_public, Boolean, required: true
       argument :multiple_submissions_allowed, Boolean, required: true
       argument :roles, [String, { null: true }], required: false
 

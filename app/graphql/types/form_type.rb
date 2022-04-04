@@ -7,6 +7,7 @@ module Types
     field :name, String, null: false
     field :status, String, null: false
     field :preview, Boolean, null: true
+    field :is_public, Boolean, null: true
     field :description, String, null: false
     field :version_number, Integer, null: false
     field :community, Types::CommunityType, null: false

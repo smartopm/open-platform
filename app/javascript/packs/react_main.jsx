@@ -171,7 +171,8 @@ const App = () => {
 
                 {/* Spike page */}
                 <Route path="/news/post/:id" exact component={PostPage} />
-                <Route path="/form/:formId" exact component={FormPage} />
+                {/* Public form */}
+                <Route path="/form/:formId/public" exact component={FormPage} />
                 
                 <LoggedInOnly>
                   <Switch>
@@ -284,11 +285,21 @@ const App = () => {
                                 <Route path="/news/slug" exact component={Posts} />
                                 <Route path="/discussions/:id" exact component={DiscussonPage} />
                                 <Route path="/business/:id" exact component={BusinessProfile} />
+                                <Route path="/edit_form/:formId" exact component={FormBuilderPage} />
+                                <Route path="/form/:formId/private" exact component={FormPage} />
+                                {/* Handle backward compatibility with existing forms for logged in users */}
+                                <Route
+                                    exact
+                                    path="/form/:formId"
+                                    render={({ match }) => (
+                                      <Redirect to={`/form/${match.params.formId}/private`} />
+                                    )}
+                                  />
                                 <Route
                                   path="/form/:formId?/:formName?/entries"
                                   component={FormEntriesPage}
                                 />
-                                <Route path="/edit_form/:formId" component={FormBuilderPage} />
+                                
                                 <Route
                                   path="/mail_templates/:emailId"
                                   component={EmailBuilderDialog}

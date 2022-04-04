@@ -84,7 +84,7 @@ export default function FormLinkList({ userType, community }) {
             <ListItem
               key={form.id}
               data-testid="community_form"
-              onClick={() => history.push(`/form/${form.id}`)}
+              onClick={() => history.push(`/form/${form.id}/private`)}
             >
               <Grid container spacing={1} style={{ marginTop: '8px' }}>
                 <Grid item xs={1}>
