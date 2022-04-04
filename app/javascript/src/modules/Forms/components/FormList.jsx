@@ -35,7 +35,7 @@ export default function FormLinkList({ userType, community, path, id }) {
     fetchPolicy: 'cache-and-network'
   });
   const [createForm] = useMutation(FormCreateMutation);
-  const matches = useMediaQuery('(max-width:900px)');
+  const matches = useMediaQuery('(max-width:1000px)');
   const history = useHistory();
   const classes = useStyles();
   const { t } = useTranslation(['form', 'common']);
@@ -63,13 +63,14 @@ export default function FormLinkList({ userType, community, path, id }) {
             pageName={t('misc.create_form')}
             PageTitle={t('misc.create_form')}
           />
-          <FormCreate
-            formMutation={createForm}
-            refetch={refetch}
-            actionType={id ? 'update' : undefined}
-            formId={id}
-            style={matches ? { padding: '20px' } : { padding: '20px 120px' }}
-          />
+          <Grid style={matches ? {padding: '20px'} : { padding: '20px 300px' }}>
+            <FormCreate
+              formMutation={createForm}
+              refetch={refetch}
+              actionType={id ? 'update' : undefined}
+              formId={id}
+            />
+          </Grid>
         </>
       )}
       {path === '/forms' && (

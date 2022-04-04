@@ -131,6 +131,7 @@ export default function FormPropertyAction({
           <IconButton
             aria-label="category-options"
             size="large"
+            data-testid='action_options'
             onClick={event => menuData.handleMenu(event)}
           >
             <MoreVertIcon color="primary" />
@@ -147,11 +148,15 @@ export default function FormPropertyAction({
   );
 }
 
+FormPropertyAction.defaultProps = {
+  formDetailRefetch: () => {}
+}
+
 FormPropertyAction.propTypes = {
   propertyId: PropTypes.string.isRequired,
   categoryId: PropTypes.string.isRequired,
   formId: PropTypes.string.isRequired,
   editMode: PropTypes.bool.isRequired,
   refetch: PropTypes.func.isRequired,
-  formDetailRefetch: PropTypes.func.isRequired
+  formDetailRefetch: PropTypes.func
 };

@@ -10,12 +10,12 @@ export default function FormRoleSelect({ data, handleChange, inputLabel, roles }
   return (
     <>
       <Autocomplete
-        data-testid="campaignLabel-creator"
+        data-testid="roles-select"
         style={{ width: '100%' }}
         multiple
         freeSolo
         id="tags-filled"
-        options={data}
+        options={data || []}
         getOptionLabel={role => role}
         value={roles || []}
         onChange={(_event, newValue) => {
@@ -40,12 +40,13 @@ export default function FormRoleSelect({ data, handleChange, inputLabel, roles }
 }
 
 FormRoleSelect.defaultProps = {
-  roles: []
+  roles: [],
+  data: []
 }
 
 FormRoleSelect.propTypes = {
-  data: PropTypes.arrayOf(PropTypes.strings).isRequired,
+  data: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.object])),
   handleChange: PropTypes.func.isRequired,
   inputLabel: PropTypes.string.isRequired,
-  roles: PropTypes.arrayOf(PropTypes.strings)
+  roles: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.string, PropTypes.object]))
 };

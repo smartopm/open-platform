@@ -23,7 +23,6 @@ export default function FormCreate({
   refetch,
   formId,
   actionType,
-  style,
   routeBack
 }) {
   const [formDataQuery, { data: formData, error: formError, loading: formLoading }] = useLazyQuery(
@@ -104,7 +103,7 @@ export default function FormCreate({
   return formLoading ? (
     <Spinner />
   ) : (
-    <Grid style={style}>
+    <Grid>
       {formError && (
         <CenteredContent><p>{formError.message}</p></CenteredContent>
       )}
@@ -123,7 +122,9 @@ export default function FormCreate({
             variant="outlined"
             onChange={e => setTitle(e.target.value)}
             value={title}
-            data-testid='title'
+            inputProps={{
+              'data-testid': 'title'
+            }}
             fullWidth
             required
           />
@@ -134,7 +135,9 @@ export default function FormCreate({
             label="Form Description"
             variant="outlined"
             name="description"
-            data-testid='decription'
+            inputProps={{
+              'data-testid': 'description'
+            }}
             multiline
             maxRows={5}
             fullWidth
@@ -168,7 +171,7 @@ export default function FormCreate({
                 label={t('misc.limit_1_response')}
                 value={!multipleSubmissionsAllowed}
                 handleChange={event => setMultipleSubmissionsAllowed(!event.target.checked)}
-                labelPlacement="right"
+                labelPlacement="start"
               />
             </Grid>
             <Grid item md={12} xs={12}>
@@ -178,7 +181,7 @@ export default function FormCreate({
                 value={preview}
                 handleChange={event => setPreview(event.target.checked)}
                 className="form-previewbale-switch-btn"
-                labelPlacement="right"
+                labelPlacement="start"
               />
             </Grid>
           </Grid>
@@ -187,12 +190,12 @@ export default function FormCreate({
           <Divider />
         </Grid>
         <Grid item md={6} xs={6} style={matches ? {textAlign: 'center'} : { textAlign: 'right' }}>
-          <Button variant="outlined" disable={isLoading} onClick={() => history.push('/forms')}>
+          <Button variant="outlined" disabled={isLoading} onClick={() => history.push('/forms')}>
             Cancel
           </Button>
         </Grid>
         <Grid item md={6} xs={6} style={matches ? { textAlign: 'center'} : { textAlign: 'left' }}>
-          <Button variant="contained" disable={isLoading} onClick={submitForm}>
+          <Button variant="contained" disabled={isLoading} onClick={submitForm} data-testid='submit'>
             Submit
           </Button>
         </Grid>
@@ -202,15 +205,15 @@ export default function FormCreate({
 }
 
 FormCreate.defaultProps = {
-  style: {},
-  routeBack: false
+  routeBack: false,
+  actionType: null,
+  formId: null
 };
 
 FormCreate.propTypes = {
-  formId: PropTypes.string.isRequired,
+  formId: PropTypes.string,
   formMutation: PropTypes.func.isRequired,
-  actionType: PropTypes.string.isRequired,
-  style: PropTypes.shape({}),
+  actionType: PropTypes.string,
   refetch: PropTypes.func.isRequired,
   routeBack: PropTypes.bool
 };
