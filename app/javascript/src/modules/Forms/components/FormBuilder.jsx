@@ -16,8 +16,8 @@ import { formatError } from '../../../utils/helpers'
 import MessageAlert from '../../../components/MessageAlert'
 import Form from './Category/Form'
 import FormContextProvider from '../Context'
-import { FormDialog } from './FormList'
 import ErrorPage from '../../../components/Error';
+import FormDialog from './FormDialog'
 
 /**
  * @param {String} formId

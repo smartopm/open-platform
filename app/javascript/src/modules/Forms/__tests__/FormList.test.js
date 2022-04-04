@@ -5,9 +5,10 @@ import { createTheme, ThemeProvider, StyledEngineProvider } from '@mui/material'
 import { BrowserRouter } from 'react-router-dom'
 import '@testing-library/jest-dom/extend-expect'
 import Loading from '../../../shared/Loading'
-import FormLinkList, { FormDialog } from '../components/FormList'
+import FormLinkList from '../components/FormList'
 import { FormsQuery } from '../graphql/forms_queries'
 import userMock from '../../../__mocks__/userMock'
+import FormDialog from '../components/FormDialog';
 
 describe('Form List Component', () => {
   it('should render form without error', async () => {
