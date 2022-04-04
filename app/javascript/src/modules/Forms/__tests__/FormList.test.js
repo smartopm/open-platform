@@ -1,43 +1,43 @@
-import React from 'react'
-import { render, waitFor } from '@testing-library/react'
-import { MockedProvider } from '@apollo/react-testing'
+import React from 'react';
+import { render, waitFor } from '@testing-library/react';
+import { MockedProvider } from '@apollo/react-testing';
 import { createTheme, ThemeProvider, StyledEngineProvider } from '@mui/material';
-import { BrowserRouter } from 'react-router-dom'
-import '@testing-library/jest-dom/extend-expect'
-import Loading from '../../../shared/Loading'
-import FormLinkList, { FormDialog } from '../components/FormList'
-import { FormsQuery } from '../graphql/forms_queries'
-import userMock from '../../../__mocks__/userMock'
+import { BrowserRouter } from 'react-router-dom';
+import '@testing-library/jest-dom/extend-expect';
+import Loading from '../../../shared/Loading';
+import FormLinkList from '../components/FormList';
+import { FormsQuery } from '../graphql/forms_queries';
+import userMock from '../../../__mocks__/userMock';
 
 describe('Form List Component', () => {
   it('should render form without error', async () => {
     const mocks = {
       request: {
-        query: FormsQuery,
+        query: FormsQuery
       },
       result: {
         data: {
           forms: [
             {
-                id: "caea7b44-ee95-42a6",
-                name: "Lease Form",
-                expiresAt: "2020-12-31T23:59:59Z",
-                createdAt: "2020-10-07T09:37:03Z",
-                roles: ["client"]
+              id: 'caea7b44-ee95-42a6',
+              name: 'Lease Form',
+              expiresAt: '2020-12-31T23:59:59Z',
+              createdAt: '2020-10-07T09:37:03Z',
+              roles: ['client']
             },
             {
-                id: "3e530432172e",
-                name: "Another Form",
-                expiresAt: "2020-12-31T23:59:59Z",
-                createdAt: "2020-10-07T09:37:03Z",
-                roles: ['admin', 'resident']
-            },
+              id: '3e530432172e',
+              name: 'Another Form',
+              expiresAt: '2020-12-31T23:59:59Z',
+              createdAt: '2020-10-07T09:37:03Z',
+              roles: ['admin', 'resident']
+            }
           ]
         }
       }
-    }
+    };
     // needs a theme provider to use theme related functions like theme.breakpoints
-    const theme = createTheme()
+    const theme = createTheme();
     const container = render(
       <MockedProvider mocks={[mocks]} addTypename={false}>
         <BrowserRouter>
@@ -48,52 +48,24 @@ describe('Form List Component', () => {
           </StyledEngineProvider>
         </BrowserRouter>
       </MockedProvider>
-    )
-    const loader = render(<Loading />)
-
-    expect(loader.queryAllByTestId('loader')[0]).toBeInTheDocument()
-    await waitFor(() => {
-        expect(container.queryAllByTestId('community_form')).toHaveLength(2)
-        expect(container.queryAllByTestId('community_form_icon')).toHaveLength(2)
-      },
-      { timeout: 500 }
-    )
-    await waitFor(() => {
-        expect(container.queryAllByTestId('form_name')).toHaveLength(2)
-        expect(container.queryAllByTestId('form_name')[0]).toHaveTextContent('Lease Form')
-        expect(container.queryAllByTestId('form_name')[1]).toHaveTextContent('Another Form')
-      },
-      { timeout: 500 }
-    )
-  })
-})
-
-describe('Form Dialog component', () => {
-  it('should render form dialog without error', async () => {
-    const theme = createTheme();
-    const container = render(
-      <BrowserRouter>
-        <StyledEngineProvider injectFirst>
-          <ThemeProvider theme={theme}>
-            <FormDialog
-              actionType='create'
-              form={null}
-              formMutation={jest.fn}
-              open
-              setOpen={jest.fn}
-              message={{detail: '', isError: false}}
-              setMessage={jest.fn}
-              setAlertOpen={jest.fn}
-              refetch={jest.fn}
-            />
-          </ThemeProvider>
-        </StyledEngineProvider>
-      </BrowserRouter>
     );
+    const loader = render(<Loading />);
 
-    expect(container.queryByText('misc.limit_1_response')).toBeInTheDocument();
-    expect(container.queryByText('misc.previewable')).toBeInTheDocument();
-    expect(container.queryByText('misc.select_roles')).toBeInTheDocument();
-    expect(container.queryByText('misc.form_expiry_date')).toBeInTheDocument();
+    expect(loader.queryAllByTestId('loader')[0]).toBeInTheDocument();
+    await waitFor(
+      () => {
+        expect(container.queryAllByTestId('community_form')).toHaveLength(2);
+        expect(container.queryAllByTestId('community_form_icon')).toHaveLength(2);
+      },
+      { timeout: 500 }
+    );
+    await waitFor(
+      () => {
+        expect(container.queryAllByTestId('form_name')).toHaveLength(2);
+        expect(container.queryAllByTestId('form_name')[0]).toHaveTextContent('Lease Form');
+        expect(container.queryAllByTestId('form_name')[1]).toHaveTextContent('Another Form');
+      },
+      { timeout: 500 }
+    );
   });
 });

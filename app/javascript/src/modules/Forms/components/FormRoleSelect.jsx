@@ -1,6 +1,7 @@
 import React from 'react';
 import Autocomplete from '@mui/material/Autocomplete'
 import { useTranslation } from 'react-i18next';
+import PropTypes from 'prop-types';
 import TextField from '@mui/material/TextField';
 import Chip from '@mui/material/Chip';
 
@@ -37,3 +38,14 @@ export default function FormRoleSelect({ data, handleChange, inputLabel, roles }
     </>
   );
 }
+
+FormRoleSelect.defaultProps = {
+  roles: []
+}
+
+FormRoleSelect.propTypes = {
+  data: PropTypes.arrayOf(PropTypes.strings).isRequired,
+  handleChange: PropTypes.func.isRequired,
+  inputLabel: PropTypes.string.isRequired,
+  roles: PropTypes.arrayOf(PropTypes.strings)
+};
