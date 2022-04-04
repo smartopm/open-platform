@@ -100,7 +100,7 @@ export default function EmailBuilderDialog() {
     unlayer.init({
       id: 'email-editor-container',
       displayMode: 'web',
-      locale: defaultLanguage || authState.user?.community.locale 
+      locale: defaultLanguage || authState.user?.community.locale
     })
   }
 
@@ -153,12 +153,13 @@ export default function EmailBuilderDialog() {
             >
               <CloseIcon />
             </IconButton>
-            <div style={{ marginLeft: '80vw' }}>
+            <div style={{ marginLeft: '75vw' }}>
               {emailId && (
               <Button
                 onClick={handleDetailsDialog}
                 disabled={message.loading}
                 data-testid="edit_subject_btn"
+                style={{background: 'white'}}
               >
                 {t('email.edit_subject')}
               </Button>
@@ -168,6 +169,7 @@ export default function EmailBuilderDialog() {
                 onClick={emailId ?  updateTemplate : handleDetailsDialog}
                 disabled={message.loading}
                 data-testid="submit_btn"
+                style={{background: 'white', marginLeft: '5px'}}
               >
                 {`${message.loading ? t('common:form_actions.saving') : emailId ? t('common:form_actions.update') :  t('common:form_actions.save')}`}
               </Button>
