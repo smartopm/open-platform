@@ -29,7 +29,6 @@ import { ActionDialog } from '../../../components/Dialog'
 import MessageAlert from '../../../components/MessageAlert'
 import FloatButton from '../../../components/FloatButton'
 import { objectAccessor } from '../../../utils/helpers'
-import {Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
 import FormDialog from './FormDialog'
 import CenteredContent from '../../../shared/CenteredContent'
 
@@ -85,7 +84,7 @@ export default function FormLinkList({ userType, community }) {
             <ListItem
               key={form.id}
               data-testid="community_form"
-              onClick={() => history.push(`/form/${form.id}/${form.name}`)}
+              onClick={() => history.push(`/form/${form.id}`)}
             >
               <Grid container spacing={1} style={{ marginTop: '8px' }}>
                 <Grid item xs={1}>

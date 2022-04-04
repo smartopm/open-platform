@@ -283,11 +283,11 @@ export const useStyles = makeStyles(theme => ({
     borderBottom: '1px #f1a3a2 solid'
   },
   confirmDialogTitle: {
-    color: theme.palette.primary.main,
-    borderBottom: `1px ${theme.palette.primary.main} solid`
+    color: theme?.palette?.primary?.main,
+    borderBottom: `1px ${theme?.palette?.primary?.main} solid`
   },
   detailTitle: {
-    color: theme.palette.primary.main
+    color: theme?.palette?.primary?.main
   },
   close: {
     float: 'right',

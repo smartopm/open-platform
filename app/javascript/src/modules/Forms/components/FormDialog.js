@@ -39,6 +39,7 @@ export default function FormDialog({
     form ? form.multipleSubmissionsAllowed : true
   );
   const [preview, setPreview] = useState(form ? form.preview : false);
+  const [isPublic, setIsPublic] = useState(form ? form.isPublic : false);
   const authState = React.useContext(AuthStateContext);
   const [roles, setRoles] = useState(form?.roles || []);
   const communityRoles = authState?.user?.community?.roles;
@@ -54,6 +55,7 @@ export default function FormDialog({
       description,
       multipleSubmissionsAllowed,
       preview,
+      isPublic,
       roles
     };
     if (actionType === 'update') {
@@ -129,9 +131,9 @@ export default function FormDialog({
             <SwitchInput
               name="public"
               label={t('misc.public')}
-              value={preview}
-              handleChange={event => setPreview(event.target.checked)}
-              className="form-previewbale-switch-btn"
+              value={isPublic}
+              handleChange={event => setIsPublic(event.target.checked)}
+              className="form-public-switch-btn"
             />
           </div>
           <div>
@@ -186,6 +188,7 @@ FormDialog.propTypes = {
     id: PropTypes.string.isRequired,
     multipleSubmissionsAllowed: PropTypes.bool.isRequired,
     preview: PropTypes.bool.isRequired,
+    isPublic: PropTypes.bool.isRequired,
     expiresAt: PropTypes.string,
     name: PropTypes.string.isRequired,
     description: PropTypes.string.isRequired,

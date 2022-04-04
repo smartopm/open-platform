@@ -171,7 +171,8 @@ const App = () => {
 
                 {/* Spike page */}
                 <Route path="/news/post/:id" exact component={PostPage} />
-
+                <Route path="/form/:formId" exact component={FormPage} />
+                
                 <LoggedInOnly>
                   <Switch>
                     <Consumer>
@@ -283,7 +284,6 @@ const App = () => {
                                 <Route path="/news/slug" exact component={Posts} />
                                 <Route path="/discussions/:id" exact component={DiscussonPage} />
                                 <Route path="/business/:id" exact component={BusinessProfile} />
-                                <Route path="/form/:formId?/:formName?" exact component={FormPage} />
                                 <Route
                                   path="/form/:formId?/:formName?/entries"
                                   component={FormEntriesPage}

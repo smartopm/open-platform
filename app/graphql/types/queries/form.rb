@@ -76,19 +76,19 @@ module Types::Queries::Form
   end
 
   def form(id:)
-    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:current_user].blank?
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:site_community].blank?
 
     context[:site_community].forms.find(id)
   end
 
   def form_properties(form_id:)
-    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:current_user].blank?
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:site_community].blank?
 
     context[:site_community].forms.find(form_id).form_properties
   end
 
   def form_property(form_id:, form_property_id:)
-    if context[:current_user].blank?
+    if context[:site_community].blank?
       raise GraphQL::ExecutionError,
             I18n.t('errors.unauthorized')
     end
@@ -169,7 +169,7 @@ module Types::Queries::Form
   #
   # @return [Array<Forms::Category>]
   def form_categories(form_id:)
-    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:current_user].blank?
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:site_community].blank?
 
     form = Forms::Form.find_by(id: form_id)
     raise_form_not_found_error(form)

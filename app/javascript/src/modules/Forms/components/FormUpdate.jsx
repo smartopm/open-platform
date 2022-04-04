@@ -64,6 +64,7 @@ const initialData = {
   radio: { value: { label: '', checked: null } }
 };
 
+// Redirect to home if user is not logged in
 export default function FormUpdate({ formUserId, userId, authState }) {
   const [properties, setProperties] = useState(initialData);
   const [message, setMessage] = useState({ err: false, info: '', signed: false });

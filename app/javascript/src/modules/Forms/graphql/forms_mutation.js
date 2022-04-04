@@ -38,6 +38,7 @@ export const FormCreateMutation = gql`
     $description: String
     $multipleSubmissionsAllowed: Boolean!
     $preview: Boolean!
+    $isPublic: Boolean!
     $roles: [String]
   ) {
     formCreate(
@@ -46,6 +47,7 @@ export const FormCreateMutation = gql`
       description: $description
       multipleSubmissionsAllowed: $multipleSubmissionsAllowed
       preview: $preview
+      isPublic: $isPublic
       roles: $roles
     ) {
       form {
