@@ -278,7 +278,8 @@ export default function FormPropertyCreateForm({
 
 FormPropertyCreateForm.defaultProps = {
   propertyId: null,
-  close: () => {}
+  close: () => {},
+  formDetailRefetch: () => {}
 };
 
 FormPropertyCreateForm.propTypes = {
@@ -287,7 +288,7 @@ FormPropertyCreateForm.propTypes = {
   categoryId: PropTypes.string.isRequired,
   propertyId: PropTypes.string,
   close: PropTypes.func,
-  formDetailRefetch: PropTypes.func.isRequired
+  formDetailRefetch: PropTypes.func
 };
 
 const useStyles = makeStyles(() => ({

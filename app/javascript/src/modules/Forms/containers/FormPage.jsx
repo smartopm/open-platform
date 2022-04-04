@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import { useLocation, useParams } from 'react-router';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { Container } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-apollo';
@@ -13,6 +14,7 @@ import { FormQuery } from '../graphql/forms_queries';
 export default function FormPage() {
   const { userId, formUserId, formId } = useParams();
   const { pathname } = useLocation();
+  const matches = useMediaQuery('(max-width:900px)');
   const authState = useContext(Context);
   const { t } = useTranslation(['common', 'form']);
   const { data: formDetailData, loading } = useQuery(FormQuery, { variables: { id: formId } });
@@ -24,12 +26,14 @@ export default function FormPage() {
         <FormUpdate userId={userId} formUserId={formUserId} authState={authState} />
       ) : (
         <FormContextProvider>
-          <FormHeader
-            linkText={t('common:misc.forms')}
-            linkHref="/forms"
-            pageName={t('form:misc.submit_form')}
-            PageTitle={t('form:misc.submit_form')}
-          />
+          <div style={matches ? {marginTop: '-30px'} : {}}>
+            <FormHeader
+              linkText={t('common:misc.forms')}
+              linkHref="/forms"
+              pageName={t('form:misc.submit_form')}
+              PageTitle={t('form:misc.submit_form')}
+            />
+          </div>
           <Container maxWidth="md">
             <Form
               editMode={false}

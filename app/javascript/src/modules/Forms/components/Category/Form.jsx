@@ -82,7 +82,7 @@ export default function Form({
   }
 
   function formSubmit(propertiesData, status) {
-    if (formDetailData.form?.preview) {
+    if (formDetailData?.form?.preview) {
       setFormState({ ...formState, previewable: formDetailData.form?.preview });
       return;
     }
@@ -98,7 +98,7 @@ export default function Form({
   useEffect(() => {
     if (formState?.successfulSubmit && !formState?.isDraft) {
       // Reset Form
-      history.push(`/form/${formId}/${formDetailData.form?.name}`);
+      history.push(`/form/${formId}/${formDetailData?.form?.name}`);
       window.location.reload();
     }
   }, [formState.successfulSubmit]);
@@ -278,13 +278,14 @@ Form.defaultProps = {
   isPublishing: false,
   handleConfirmPublish: () => {},
   formDetailRefetch: () => {},
-  loading: false
+  loading: false,
+  formDetailData: null
 };
 
 Form.propTypes = {
   editMode: PropTypes.bool.isRequired,
   formId: PropTypes.string.isRequired,
-  property: PropTypes.shape({}),
+  property: PropTypes.bool,
   isPublishing: PropTypes.bool,
   handleConfirmPublish: PropTypes.func,
   formDetailData: PropTypes.shape({
@@ -292,7 +293,7 @@ Form.propTypes = {
       name: PropTypes.string,
       preview: PropTypes.bool
     })
-  }).isRequired,
+  }),
   formDetailRefetch: PropTypes.func,
   loading: PropTypes.bool
 };

@@ -164,7 +164,7 @@ export default function FormBuilder({ formId }) {
                     ? { fontSize: '14px', borderBottom: 'solid 1px' }
                     : { fontSize: '14px' }
                 }
-                {...a11yProps(1)}
+                {...a11yProps(2)}
               />
             </StyledTabs>
           </Container>

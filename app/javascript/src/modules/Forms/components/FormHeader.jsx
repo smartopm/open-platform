@@ -9,7 +9,7 @@ export default function FormHeader({ linkText, linkHref, pageName, PageTitle }) 
     <>
       <Grid
         container
-        style={matches ? { padding: '0 0 10px 20px' } : { padding: '0 0 20px 100px' }}
+        style={matches ? { padding: '0 0 10px 20px', marginTop: '-10px' } : { padding: '0 0 20px 100px' }}
       >
         <Grid item md={12} xs={12}>
           <Breadcrumbs aria-label="breadcrumb" data-testid='breadcrumb'>

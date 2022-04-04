@@ -1,17 +1,25 @@
-import { FormControlLabel, Switch } from '@mui/material'
-import React from 'react'
-import PropTypes from 'prop-types'
+import { FormControlLabel, Switch } from '@mui/material';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 /**
- * 
- * @param {String} name name to be used for capturing the state 
- * @param {String} label label  used to identify the field name 
+ *
+ * @param {String} name name to be used for capturing the state
+ * @param {String} label label  used to identify the field name
  * @param {String} value current state of the switch
- * @param {Function} handleChange this helps control the current state of the switch 
- * @description basic switch component 
+ * @param {Function} handleChange this helps control the current state of the switch
+ * @description basic switch component
  * @returns {Node}
  */
-export default function SwitchInput({ name, label, value, required, handleChange, labelPlacement, className }) {
+export default function SwitchInput({
+  name,
+  label,
+  value,
+  required,
+  handleChange,
+  labelPlacement,
+  className
+}) {
   return (
     <FormControlLabel
       labelPlacement={labelPlacement}
@@ -23,19 +31,19 @@ export default function SwitchInput({ name, label, value, required, handleChange
           color="primary"
           required={required}
           className={className}
-          size='small'
+          size="small"
         />
       )}
       label={label}
     />
-  )
+  );
 }
 
 SwitchInput.defaultProps = {
   labelPlacement: 'start',
   required: false,
   className: ''
-}
+};
 
 SwitchInput.propTypes = {
   label: PropTypes.string.isRequired,
@@ -44,5 +52,5 @@ SwitchInput.propTypes = {
   value: PropTypes.bool.isRequired,
   required: PropTypes.bool,
   handleChange: PropTypes.func.isRequired,
-  className: PropTypes.string,
-}
+  className: PropTypes.string
+};
