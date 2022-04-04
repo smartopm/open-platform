@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_03_28_063055) do
+ActiveRecord::Schema.define(version: 2022_04_04_115426) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -391,6 +391,7 @@ ActiveRecord::Schema.define(version: 2022_03_28_063055) do
     t.uuid "grouping_id"
     t.boolean "preview"
     t.string "roles", default: [], array: true
+    t.boolean "is_public"
     t.index ["community_id"], name: "index_forms_on_community_id"
   end
 
