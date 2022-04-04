@@ -12,7 +12,6 @@ import { Spinner } from '../../../../shared/Loading';
 import FormTitle from '../FormTitle';
 import { FormQuery } from '../../graphql/forms_queries';
 import { FormContext } from '../../Context';
-import CenteredContent from '../../../../components/CenteredContent';
 import { Context } from '../../../../containers/Provider/AuthStateProvider';
 import { flattenFormProperties } from '../../utils';
 import CategoryList from './CategoryList';
@@ -180,25 +179,26 @@ export default function Form({ editMode, formId }) {
       </Button>
     )}
       {!editMode && (
-      <CenteredContent>
+      <>
+        {
+        authState?.user?.id && (
+          <Button
+            variant="outlined"
+            type="submit"
+            aria-label="form_draft"
+            onClick={() => formSubmit(formData, 'draft')}
+            disabled={formState.isSubmitting}
+            data-testid="save_as_draft"
+          >
+            {t('common:form_actions.save_as_draft')}
+          </Button>
+        )
+      }
         <Button
-          variant="outlined"
+          variant="contained"
           type="submit"
-          color="secondary"
-          aria-label="form_draft"
-          style={{ margin: '25px 25px 0 0' }}
-          onClick={() => formSubmit(formData, 'draft')}
-          disabled={formState.isSubmitting}
-          data-testid="save_as_draft"
-        >
-          {t('common:form_actions.save_as_draft')}
-        </Button>
-        <Button
-          variant="outlined"
-          type="submit"
-          color="primary"
           aria-label="form_submit"
-          style={{ marginTop: '25px' }}
+          style={{ marginLeft: 20 }}
           onClick={() => formSubmit(formData)}
           disabled={formState.isSubmitting}
           data-testid="submit_form_btn"
@@ -207,10 +207,10 @@ export default function Form({ editMode, formId }) {
             ? t('common:form_actions.submit')
             : t('common:form_actions.submitting')}
         </Button>
-      </CenteredContent>
+      </>
     )}
     </>
-);
+  );
 }
 
 Form.propTypes = {
