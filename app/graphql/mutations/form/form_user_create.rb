@@ -5,7 +5,7 @@ module Mutations
     # For adding form users
     class FormUserCreate < BaseMutation
       argument :form_id, ID, required: true
-      argument :user_id, ID, required: true
+      argument :user_id, ID, required: false
       argument :prop_values, GraphQL::Types::JSON, required: true
       argument :status, String, required: false
 
@@ -58,6 +58,21 @@ module Mutations
       end
       # rubocop:enable Metrics/MethodLength
       # rubocop:enable Metrics/AbcSize
+
+
+      def create_form_anonymous_user(form, vals)
+        user = context[:site_community].users.find_by(name: 'anonymous')
+        vals[:user_id] = user.id
+        form_user = form.form_users.new(vals.except(:form_id, :prop_values)
+                                            .merge(status: (vals[:status] || 'pending')))
+
+        ActiveRecord::Base.transaction do
+          return add_user_form_properties(form_user, vals) if form_user.save
+
+          raise GraphQL::ExecutionError, form_user.errors.full_messages
+        end
+      end
+      
 
       def add_user_form_properties(form_user, vals)
         JSON.parse(vals[:prop_values])['user_form_properties'].each do |value|
