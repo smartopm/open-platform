@@ -7,6 +7,9 @@ module Forms
 
     belongs_to :community
 
+    # rubocop:disable Rails/HasManyOrHasOneDependent
+    has_one :process
+    # rubocop:enable Rails/HasManyOrHasOneDependent
     has_many :form_properties, dependent: :destroy
     has_many :form_users, dependent: :destroy
     has_many :categories, dependent: :destroy
