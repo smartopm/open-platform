@@ -1,24 +1,21 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Button, Container, Typography, Breadcrumbs, Link, Grid } from '@mui/material';
+import { Container, Grid } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery } from 'react-apollo';
 import { useHistory } from 'react-router';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import CenteredContent from '../../../components/CenteredContent';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { AllEventLogsQuery } from '../../../graphql/queries';
 import { FormPropertiesQuery, FormQuery } from '../graphql/forms_queries';
 import { Spinner } from '../../../shared/Loading';
 import { FormUpdateMutation } from '../graphql/forms_mutation';
 import { formStatus } from '../../../utils/constants';
-import Toggler from '../../Campaigns/components/ToggleButton';
 import FormTimeline from '../../../shared/TimeLine';
 import { ActionDialog } from '../../../components/Dialog';
 import { formatError, objectAccessor } from '../../../utils/helpers';
 import MessageAlert from '../../../components/MessageAlert';
 import Form from './Category/Form';
 import FormContextProvider from '../Context';
-import { FormDialog } from './FormList';
 import ErrorPage from '../../../components/Error';
 import { StyledTabs, StyledTab, TabPanel, a11yProps } from '../../../components/Tabs';
 import FormTitle from './FormTitle';
@@ -34,15 +31,13 @@ export default function FormBuilder({ formId }) {
   const [open, setOpen] = useState(false);
   const history = useHistory();
   const [tabValue, setTabValue] = useState(0);
-  const [dialogOpen, setDialogOpen] = useState(false);
   const [isPublishing, setIsPublishing] = useState(false);
   const [alertOpen, setAlertOpen] = useState(false);
   const [message, setMessage] = useState({ isError: false, detail: '' });
   const { t } = useTranslation(['form', 'common']);
-  const [type, setType] = useState(t('misc.form'));
   const [updateForm] = useMutation(FormUpdateMutation);
-  const matches = useMediaQuery('(max-width:600px)');
-  const { data, error, loading } = useQuery(FormPropertiesQuery, {
+  const matches = useMediaQuery('(max-width:900px)');
+  const { data, error, loading, refetch: dataRefetch } = useQuery(FormPropertiesQuery, {
     variables: { formId },
     errorPolicy: 'all'
   });
@@ -68,11 +63,6 @@ export default function FormBuilder({ formId }) {
     form_settings: 1,
     update_history: 2
   };
-
-  // function handleType(_event, value) {
-  //   setType(value);
-  //   formLogs.refetch();
-  // }
 
   function handleTabValueChange(_event, newValue) {
     history.push(
@@ -116,16 +106,7 @@ export default function FormBuilder({ formId }) {
 
   return (
     <>
-      {/* <FormDialog
-        actionType="update"
-        form={formData.data.form}
-        formMutation={updateForm}
-        message={message}
-        setMessage={setMessage}
-        open={dialogOpen}
-        setOpen={setDialogOpen}
-        setAlertOpen={setAlertOpen}
-      /> */}
+      {formDetailLoading && <Spinner />}
       <FormContextProvider>
         <FormHeader
           linkText={t('common:misc.forms')}
@@ -149,12 +130,8 @@ export default function FormBuilder({ formId }) {
             handleClose={handleAlertClose}
           />
           {loading && <Spinner />}
-          <Container style={matches ? {padding: '10px 20px'} : { padding: '0 150px' }}>
-            {!loading && formDetailData && (
-              <FormTitle
-                name={formDetailData.form?.name}
-              />
-            )}
+          <Container style={matches ? { padding: '0 0 10px 10px' } : { padding: '0 150px' }}>
+            {!loading && formDetailData && <FormTitle name={formDetailData.form?.name} />}
             <StyledTabs
               value={tabValue}
               onChange={handleTabValueChange}
@@ -191,7 +168,7 @@ export default function FormBuilder({ formId }) {
               />
             </StyledTabs>
           </Container>
-          <Grid style={{ padding: '20px 150px' }}>
+          <Grid style={matches ? { padding: '10px 10px' } : { padding: '20px 150px' }}>
             <TabPanel value={tabValue} index={0} pad>
               <Form
                 formId={formId}
@@ -200,6 +177,7 @@ export default function FormBuilder({ formId }) {
                 publishForm={publishForm}
                 isPublishing={isPublishing}
                 handleConfirmPublish={handleConfirmPublish}
+                formDetailRefetch={dataRefetch}
               />
             </TabPanel>
             <TabPanel value={tabValue} index={1} pad>

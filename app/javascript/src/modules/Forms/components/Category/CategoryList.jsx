@@ -13,7 +13,8 @@ export default function CategoryList({
   propertyFormOpen,
   categoryId,
   categoryItem,
-  loading
+  loading,
+  formDetailRefetch
 }) {
   // to only show a loader on category that is being deleted
   const [currentId, setCurrentId] = useState('');
@@ -40,12 +41,14 @@ export default function CategoryList({
             editMode={editMode}
             loading={loading}
             currentId={currentId}
+            formDetailRefetch={formDetailRefetch}
           >
             {propertyFormOpen && categoryId === category.id && editMode && (
               <FormPropertyCreateForm
                 formId={formId}
                 refetch={categoriesData.refetch}
                 categoryId={category.id}
+                formDetailRefetch={formDetailRefetch}
               />
             )}
             {category.formProperties.sort(sortPropertyOrder).map((formProperty, index) => (
@@ -57,6 +60,7 @@ export default function CategoryList({
                 categoryId={category.id}
                 editMode={editMode}
                 number={index + 1}
+                formDetailRefetch={formDetailRefetch}
               />
             ))}
           </CategoryItem>
@@ -66,7 +70,8 @@ export default function CategoryList({
 }
 
 CategoryList.defaultProps = {
-  propertyFormOpen: false
+  propertyFormOpen: false,
+  formDetailRefetch: () => {}
 };
 
 CategoryList.propTypes = {
@@ -91,5 +96,6 @@ CategoryList.propTypes = {
     handleAddField: PropTypes.func,
     handleEditCategory: PropTypes.func,
     handleDeleteCategory: PropTypes.func
-  }).isRequired
+  }).isRequired,
+  formDetailRefetch: PropTypes.func
 };

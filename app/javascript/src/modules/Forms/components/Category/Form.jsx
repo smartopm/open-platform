@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import React, { useState, useContext, useEffect } from 'react';
 import { Button, Container, DialogContent, DialogContentText, Grid, Divider } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
@@ -5,13 +6,12 @@ import { useMutation, useQuery } from 'react-apollo';
 import { useHistory } from 'react-router';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { DetailsDialog } from '../../../../components/Dialog';
 import CategoryForm from './CategoryForm';
 import { FormCategoriesQuery } from '../../graphql/form_category_queries';
 import { Spinner } from '../../../../shared/Loading';
-import { FormQuery } from '../../graphql/forms_queries';
 import { FormContext } from '../../Context';
-import CenteredContent from '../../../../components/CenteredContent';
 import { Context } from '../../../../containers/Provider/AuthStateProvider';
 import { flattenFormProperties } from '../../utils';
 import CategoryList from './CategoryList';
@@ -19,7 +19,7 @@ import FormPreview from '../FormPreview';
 import MessageAlert from '../../../../components/MessageAlert';
 import { FormCategoryDeleteMutation } from '../../graphql/form_category_mutations';
 import { formatError } from '../../../../utils/helpers';
-import FormHeader from '../FormHeader';
+import FormTitle from '../FormTitle';
 
 export default function Form({
   editMode,
@@ -27,13 +27,16 @@ export default function Form({
   property,
   isPublishing,
   handleConfirmPublish,
-  formDetailData
+  formDetailData,
+  formDetailRefetch,
+  loading
 }) {
   const [categoryFormOpen, setCategoryFormOpen] = useState(false);
   const [propertyFormOpen, setPropertyFormOpen] = useState(false);
   const [data, setFormData] = useState({});
   const { t } = useTranslation(['common', 'form']);
   const [categoryId, setCategoryId] = useState('');
+  const matches = useMediaQuery('(max-width:900px)');
   const categoriesData = useQuery(FormCategoriesQuery, {
     variables: { formId },
     fetchPolicy: 'no-cache'
@@ -61,6 +64,7 @@ export default function Form({
         history.push(`/edit_form/${formPropResponse.newFormVersion.id}`);
       }
       categoriesData.refetch();
+      formDetailRefetch();
     });
   }
 
@@ -103,14 +107,6 @@ export default function Form({
 
   return (
     <>
-      {!editMode && (
-        <FormHeader
-          linkText={t('common:misc.forms')}
-          linkHref="/forms"
-          pageName={t('form:misc.submit_form')}
-          PageTitle={t('form:misc.submit_form')}
-        />
-      )}
       <MessageAlert
         type={formState.error || error ? 'error' : 'success'}
         message={formState.info || formatError(error?.message)}
@@ -129,6 +125,7 @@ export default function Form({
             close={handleCategoryClose}
             formData={formData}
             refetchCategories={categoriesData.refetch}
+            formDetailRefetch={formDetailRefetch}
           />
         </Container>
       </DetailsDialog>
@@ -157,6 +154,12 @@ export default function Form({
           </DialogContentText>
         </DialogContent>
       </DetailsDialog>
+      {loading && <Spinner />}
+      {!editMode && !loading && formDetailData && (
+        <Grid style={matches ? {} : { padding: '0 0 0 100px' }}>
+          <FormTitle name={formDetailData.form?.name} />
+        </Grid>
+      )}
       <div
         data-testid="category-list-container"
         style={formState.isSubmitting ? { opacity: '0.3', pointerEvents: 'none' } : {}}
@@ -169,18 +172,33 @@ export default function Form({
           categoryId={categoryId}
           categoryItem={{ handleAddField, handleEditCategory, handleDeleteCategory }}
           loading={isDeleting}
+          formDetailRefetch={formDetailRefetch}
         />
       </div>
       <br />
       {editMode && (
         <Grid container spacing={4}>
-          <Grid item md={12} style={{ marginTop: '20px' }}>
-            <Divider />
-          </Grid>
+          {property && (
+            <Grid
+              item
+              md={12}
+              xs={12}
+              style={matches ? { marginTop: '10px' } : { marginTop: '20px' }}
+            >
+              <Divider />
+            </Grid>
+          )}
           <Grid
             item
             md={!property ? 12 : 6}
-            style={!property ? { textAlign: 'right' } : { textAlign: 'left' }}
+            xs={12}
+            style={
+              !property
+                ? { textAlign: 'right' }
+                : matches
+                ? { textAlign: 'center' }
+                : { textAlign: 'left' }
+            }
           >
             <Button
               variant="outlined"
@@ -193,7 +211,12 @@ export default function Form({
           </Grid>
 
           {Boolean(property) && (
-            <Grid item md={6} style={{ textAlign: 'right' }}>
+            <Grid
+              item
+              md={6}
+              xs={12}
+              style={matches ? { textAlign: 'center' } : { textAlign: 'right' }}
+            >
               <Button
                 variant="contained"
                 color="primary"
@@ -209,17 +232,17 @@ export default function Form({
         </Grid>
       )}
       {!editMode && (
-        <Grid container style={{ padding: '0 120px 20px 120px' }}>
-          <Grid item md={12} style={{ marginTop: '20px' }}>
+        <Grid container style={matches ? {} : { padding: '0 120px 20px 120px' }}>
+          <Grid item md={12} xs={12} style={{ marginTop: '20px' }}>
             <Divider />
           </Grid>
-          <Grid item md={6} style={{ textAlign: 'left' }}>
+          <Grid item md={6} xs={6} style={{ textAlign: 'left' }}>
             <Button
               variant="outlined"
               type="submit"
               color="primary"
               aria-label="form_draft"
-              style={{ margin: '25px 25px 0 0' }}
+              style={matches ? { marginTop: '20px' } : { margin: '25px 25px 0 0' }}
               onClick={() => formSubmit(formData, 'draft')}
               disabled={formState.isSubmitting}
               data-testid="save_as_draft"
@@ -227,13 +250,13 @@ export default function Form({
               {t('common:form_actions.save_as_draft')}
             </Button>
           </Grid>
-          <Grid item md={6} style={{ textAlign: 'right' }}>
+          <Grid item md={6} xs={6} style={{ textAlign: 'right' }}>
             <Button
               variant="contained"
               type="submit"
               color="primary"
               aria-label="form_submit"
-              style={{ marginTop: '25px' }}
+              style={matches ? { marginTop: '20px' } : { marginTop: '25px' }}
               onClick={() => formSubmit(formData)}
               disabled={formState.isSubmitting}
               data-testid="submit_form_btn"
@@ -249,7 +272,26 @@ export default function Form({
   );
 }
 
+Form.defaultProps = {
+  property: null,
+  isPublishing: false,
+  handleConfirmPublish: () => {},
+  formDetailRefetch: () => {},
+  loading: false
+};
+
 Form.propTypes = {
   editMode: PropTypes.bool.isRequired,
-  formId: PropTypes.string.isRequired
+  formId: PropTypes.string.isRequired,
+  property: PropTypes.shape({}),
+  isPublishing: PropTypes.bool,
+  handleConfirmPublish: PropTypes.func,
+  formDetailData: PropTypes.shape({
+    form: PropTypes.shape({
+      name: PropTypes.string,
+      preview: PropTypes.bool
+    })
+  }).isRequired,
+  formDetailRefetch: PropTypes.func,
+  loading: PropTypes.bool
 };

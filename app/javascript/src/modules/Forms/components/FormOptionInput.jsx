@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { IconButton, TextField, Typography, Grid, Button } from '@mui/material';
 import { AddCircleOutline, DeleteOutline } from '@mui/icons-material';
 import PhoneInput from 'react-phone-input-2';
@@ -14,6 +15,7 @@ import { objectAccessor } from '../../../utils/helpers';
  */
 export default function FormOptionInput({ options, setOptions, label }) {
   const { t } = useTranslation('common');
+  const matches = useMediaQuery('(max-width:900px)');
   function handleOptionChange(event, index) {
     const values = options;
     values[parseInt(index, 10)] = event.target.value;
@@ -30,12 +32,17 @@ export default function FormOptionInput({ options, setOptions, label }) {
     setOptions([...values]);
   }
   return (
-    <Grid container alignItems='center' justifyContent='center' style={{padding: '0 20px'}}>
-      <Grid md={8}>
+    <Grid
+      container
+      alignItems="center"
+      justifyContent="center"
+      style={matches ? { padding: '0 15px' } : { padding: '0 20px' }}
+    >
+      <Grid item md={8} xs={12}>
         {options.map((value, i) => (
           // eslint-disable-next-line react/no-array-index-key
-          <Grid container key={i} alignItems='center' justifyContent='center'>
-            <Grid item md={9}>
+          <Grid container key={i} alignItems="center" justifyContent="center">
+            <Grid item md={9} xs={8}>
               {label === t('form_fields.secondary_number') ? (
                 <>
                   <label
@@ -86,29 +93,30 @@ export default function FormOptionInput({ options, setOptions, label }) {
                 />
               )}
             </Grid>
-            <Grid item md={3}>
-              <IconButton
-                onClick={() => handleRemoveOption(i)}
-                aria-label="remove"
-                size="large"
-              >
+            <Grid item md={3} xs={4}>
+              <IconButton onClick={() => handleRemoveOption(i)} aria-label="remove" size="large">
                 <DeleteOutline />
               </IconButton>
             </Grid>
           </Grid>
         ))}
       </Grid>
-      <Grid item md={4}>
+      <Grid item md={4} xs={12}>
         <Button
           onClick={handleAddOption}
           aria-label="add"
           style={{ marginLeft: -15 }}
           className="form-property-field-type-option-add-btn"
           size="large"
-          color='primary'
+          color="primary"
         >
           <AddCircleOutline />
-          <Typography color="primary" variant='caption' style={{ marginLeft: 10 }} data-testid="add_type">
+          <Typography
+            color="primary"
+            variant="caption"
+            style={{ marginLeft: 10 }}
+            data-testid="add_type"
+          >
             {t('form_actions.add_type', { label })}
           </Typography>
         </Button>
@@ -123,11 +131,11 @@ export function FormOptionWithOwnActions({ actions, options }) {
     <div key={option.id}>
       <TextField
         key={option.id}
-        label={t('misc.option_with_count', { id: index + 1})}
+        label={t('misc.option_with_count', { id: index + 1 })}
         variant="outlined"
         size="small"
         defaultValue={option.info}
-        onChange={(e) => actions.handleOptionChange(e, index)}
+        onChange={e => actions.handleOptionChange(e, index)}
         margin="normal"
         autoFocus={process.env.NODE_ENV !== 'test'}
         required

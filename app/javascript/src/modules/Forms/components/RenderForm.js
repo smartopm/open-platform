@@ -1,6 +1,6 @@
 /* eslint-disable max-lines */
 /* eslint-disable complexity */
-import React, { Fragment, useRef, useContext, useState } from 'react';
+import React, { useRef, useContext, useState } from 'react';
 import { Grid, Typography } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import makeStyles from '@mui/styles/makeStyles';
@@ -33,10 +33,11 @@ export default function RenderForm({
   refetch,
   editMode,
   categoryId,
-  number
+  number,
+  formDetailRefetch
 }) {
   const classes = useStyles();
-  const matches = useMediaQuery('(max-width:600px)');
+  const matches = useMediaQuery('(max-width:900px)');
   const signRef = useRef(null);
   const authState = useContext(Context);
   const {
@@ -138,13 +139,7 @@ export default function RenderForm({
   const uploadedFile = uploadedImages.find(im => im.propertyId === formPropertiesData.id);
   const fields = {
     text: (
-      <Grid
-        container
-        spacing={3}
-        key={formPropertiesData.id}
-        alignItems="center"
-        justifyContent="center"
-      >
+      <Grid container key={formPropertiesData.id} alignItems="center" justifyContent="center">
         {editMode && (
           <Grid item xs={1}>
             <Typography color="textSecondary">{number}</Typography>
@@ -165,13 +160,14 @@ export default function RenderForm({
           </ListWrapper>
         </Grid>
         {editMode && (
-          <Grid item md={1}>
+          <Grid item xs={1}>
             <FormPropertyAction
               formId={formId}
               editMode={editMode}
               propertyId={formPropertiesData.id}
               refetch={refetch}
               categoryId={categoryId}
+              formDetailRefetch={formDetailRefetch}
             />
           </Grid>
         )}
@@ -207,7 +203,7 @@ export default function RenderForm({
           />
         </Grid>
         {editMode && (
-          <Grid item md={1}>
+          <Grid item xs={1}>
             <FormPropertyAction
               formId={formId}
               editMode={editMode}
@@ -248,7 +244,7 @@ export default function RenderForm({
           />
         </Grid>
         {editMode && (
-          <Grid item md={1}>
+          <Grid item xs={1}>
             <FormPropertyAction
               formId={formId}
               editMode={editMode}
@@ -290,7 +286,7 @@ export default function RenderForm({
           />
         </Grid>
         {editMode && (
-          <Grid item md={1}>
+          <Grid item xs={1}>
             <FormPropertyAction
               formId={formId}
               editMode={editMode}
@@ -347,7 +343,7 @@ export default function RenderForm({
           </ListWrapper>
         </Grid>
         {editMode && (
-          <Grid item md={1}>
+          <Grid item xs={1}>
             <FormPropertyAction
               formId={formId}
               editMode={editMode}
@@ -359,7 +355,7 @@ export default function RenderForm({
         )}
 
         {formState.isUploading && formState.currentPropId === formPropertiesData.id ? (
-          <Grid item md={12}>
+          <Grid item md={12} xs={12}>
             <Spinner />
           </Grid>
         ) : (
@@ -367,6 +363,7 @@ export default function RenderForm({
             <Grid
               item
               md={12}
+              xs={12}
               className={matches ? classes.filePreviewMobile : classes.filePreview}
             >
               <IconButton
@@ -414,7 +411,7 @@ export default function RenderForm({
           </ListWrapper>
         </Grid>
         {editMode && (
-          <Grid item md={1}>
+          <Grid item xs={1}>
             <FormPropertyAction
               formId={formId}
               editMode={editMode}
@@ -454,7 +451,7 @@ export default function RenderForm({
           </ListWrapper>
         </Grid>
         {editMode && (
-          <Grid item md={1}>
+          <Grid item xs={1}>
             <FormPropertyAction
               formId={formId}
               editMode={editMode}
@@ -494,7 +491,7 @@ export default function RenderForm({
           </ListWrapper>
         </Grid>
         {editMode && (
-          <Grid item md={1}>
+          <Grid item xs={1}>
             <FormPropertyAction
               formId={formId}
               editMode={editMode}
@@ -534,7 +531,7 @@ export default function RenderForm({
           </ListWrapper>
         </Grid>
         {editMode && (
-          <Grid item md={1}>
+          <Grid item xs={1}>
             <FormPropertyAction
               formId={formId}
               editMode={editMode}
@@ -548,7 +545,7 @@ export default function RenderForm({
     )
   };
   return (
-    <Grid style={!editMode ? { padding: '0 120px' } : {}}>
+    <Grid style={!editMode && !matches ? { padding: '0 120px' } : {}}>
       {objectAccessor(fields, formPropertiesData.fieldType)}
     </Grid>
   );
@@ -599,5 +596,7 @@ RenderForm.propTypes = {
     fieldName: PropTypes.string,
     adminUse: PropTypes.bool,
     required: PropTypes.bool
-  }).isRequired
+  }).isRequired,
+  number: PropTypes.number.isRequired,
+  formDetailRefetch: PropTypes.func.isRequired
 };

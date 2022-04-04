@@ -6,8 +6,6 @@ import PropTypes from 'prop-types';
 import { useMutation } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import { Spinner } from '../../../shared/Loading';
-// import FormPropertyCreateForm from './FormPropertyCreateForm';
-// import { DetailsDialog } from '../../../components/Dialog';
 import { FormPropertyDeleteMutation } from '../graphql/forms_mutation';
 import MessageAlert from '../../../components/MessageAlert';
 import { formatError } from '../../../utils/helpers';
@@ -15,7 +13,14 @@ import FormPropertyCreateForm from './FormPropertyCreateForm';
 import { DetailsDialog } from '../../../components/Dialog';
 import MenuList from '../../../shared/MenuList';
 
-export default function FormPropertyAction({ propertyId, editMode, formId, refetch, categoryId }) {
+export default function FormPropertyAction({
+  propertyId,
+  editMode,
+  formId,
+  refetch,
+  categoryId,
+  formDetailRefetch
+}) {
   const [modal, setModal] = useState({ type: '', isOpen: false });
   const [currentPropId, setCurrentPropertyId] = useState('');
   const [isDeletingProperty, setDeleteLoading] = useState(false);
@@ -74,15 +79,16 @@ export default function FormPropertyAction({ propertyId, editMode, formId, refet
     deleteProperty({
       variables: { formId, formPropertyId: propId }
     })
-      .then((res) => {
+      .then(res => {
         setDeleteLoading(false);
-        const formPropResponse = res.data.formPropertiesDelete
+        const formPropResponse = res.data.formPropertiesDelete;
         if (formPropResponse.message === 'New version created') {
-          history.push(`/edit_form/${formPropResponse.newFormVersion.id}`)
+          history.push(`/edit_form/${formPropResponse.newFormVersion.id}`);
         }
 
         setMessage({ ...message, isError: false, detail: t('misc.deleted_form_property') });
         refetch();
+        formDetailRefetch();
       })
       .catch(err => {
         setMessage({ ...message, isError: true, detail: formatError(err.message) });
@@ -138,7 +144,7 @@ export default function FormPropertyAction({ propertyId, editMode, formId, refet
         </>
       )}
     </>
-);
+  );
 }
 
 FormPropertyAction.propTypes = {
@@ -146,5 +152,6 @@ FormPropertyAction.propTypes = {
   categoryId: PropTypes.string.isRequired,
   formId: PropTypes.string.isRequired,
   editMode: PropTypes.bool.isRequired,
-  refetch: PropTypes.func.isRequired
+  refetch: PropTypes.func.isRequired,
+  formDetailRefetch: PropTypes.func.isRequired
 };

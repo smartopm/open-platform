@@ -41,7 +41,8 @@ describe('CategoryList Component', () => {
     loading: false,
     formId: '3423312312',
     categoryId: 'sdfadasdasdf',
-    propertyFormOpen: false
+    propertyFormOpen: false,
+    formDetailRefetch: jest.fn()
   };
 
   it('should render without crashing', () => {

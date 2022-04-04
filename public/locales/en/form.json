@@ -57,7 +57,9 @@
     "create_category": "Create Category",
     "add_category": "Add Category",
     "confirm": "Confirm",
-    "clear_condition": "Clear Condition"
+    "clear_condition": "Clear Condition",
+    "add_property": "Add a Property",
+    "hide": "Hide"
   },
   "errors": {
     "no_forms": "No Forms to submit",

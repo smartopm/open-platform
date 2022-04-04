@@ -1,12 +1,16 @@
 import React from 'react';
 import { Typography, Breadcrumbs, Link, Grid } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import PropTypes from 'prop-types';
 
-export default function FormHeader({ linkText, linkHref, pageName, PageTitle}) {
+export default function FormHeader({ linkText, linkHref, pageName, PageTitle }) {
   const matches = useMediaQuery('(max-width:900px)');
   return (
     <>
-      <Grid container style={matches ? { padding: '10px 20px'} : { padding: '0 0 20px 100px' }}>
+      <Grid
+        container
+        style={matches ? { padding: '0 0 10px 20px' } : { padding: '0 0 20px 100px' }}
+      >
         <Grid item md={12} xs={12}>
           <Breadcrumbs aria-label="breadcrumb">
             <Typography color="primary" variant="caption">
@@ -28,3 +32,10 @@ export default function FormHeader({ linkText, linkHref, pageName, PageTitle}) {
     </>
   );
 }
+
+FormHeader.propTypes = {
+  linkText: PropTypes.string.isRequired,
+  linkHref: PropTypes.string.isRequired,
+  pageName: PropTypes.string.isRequired,
+  PageTitle: PropTypes.string.isRequired
+};

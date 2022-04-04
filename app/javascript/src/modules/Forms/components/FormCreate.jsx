@@ -2,9 +2,9 @@ import React, { useState, useContext, useEffect } from 'react';
 import { useHistory } from 'react-router';
 import { useLazyQuery } from 'react-apollo';
 import TextField from '@mui/material/TextField';
-import Container from '@mui/material/Container';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import Grid from '@mui/material/Grid';
-import { makeStyles } from '@mui/styles';
+import PropTypes from 'prop-types';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import { useTranslation } from 'react-i18next';
@@ -16,9 +16,8 @@ import { formatError } from '../../../utils/helpers';
 import MessageAlert from '../../../components/MessageAlert';
 import { Spinner } from '../../../shared/Loading';
 import { FormQuery } from '../graphql/forms_queries';
+import CenteredContent from '../../../shared/CenteredContent'
 
-// Update the proptypes
-// handle error when fetching
 export default function FormCreate({
   formMutation,
   refetch,
@@ -35,17 +34,16 @@ export default function FormCreate({
   );
   const { t } = useTranslation(['form', 'common']);
   const history = useHistory();
+  const matches = useMediaQuery('(max-width:900px)');
   const [title, setTitle] = useState('');
-  const [description, setDescription] = useState(formData?.form?.description || '');
-  const [roles, setRoles] = useState(formData?.form?.roles || []);
+  const [description, setDescription] = useState('');
+  const [roles, setRoles] = useState([]);
   const [isLoading, setLoading] = useState(false);
   const [alertOpen, setAlertOpen] = useState(false);
   const [message, setMessage] = useState({ isError: false, detail: '' });
-  const [expiresAt, setExpiresAtDate] = useState(formData?.form?.expiresAt || null);
-  const [multipleSubmissionsAllowed, setMultipleSubmissionsAllowed] = useState(
-    formData?.form ? formData?.form.multipleSubmissionsAllowed : true
-  );
-  const [preview, setPreview] = useState(formData?.form ? formData?.form.preview : false);
+  const [expiresAt, setExpiresAtDate] = useState(null);
+  const [multipleSubmissionsAllowed, setMultipleSubmissionsAllowed] = useState(true);
+  const [preview, setPreview] = useState(false);
   const authState = useContext(AuthStateContext);
   const communityRoles = authState?.user?.community?.roles;
 
@@ -93,13 +91,13 @@ export default function FormCreate({
     if (formId) {
       formDataQuery();
     }
-    // Refactor this to make it cleaner
-    // Issue was that we were getting name from a wrong object
     if (formData?.form) {
       setTitle(formData?.form?.name);
       setDescription(formData?.form?.description);
       setRoles(formData?.form?.roles);
       setExpiresAtDate(formData?.form?.expiresAt);
+      setMultipleSubmissionsAllowed(formData?.form.multipleSubmissionsAllowed)
+      setPreview(formData?.form.preview)
     }
   }, [formId, formData, formDataQuery]);
 
@@ -107,6 +105,9 @@ export default function FormCreate({
     <Spinner />
   ) : (
     <Grid style={style}>
+      {formError && (
+        <CenteredContent><p>{formError.message}</p></CenteredContent>
+      )}
       <MessageAlert
         type={message.isError ? 'error' : 'success'}
         message={message.detail}
@@ -114,7 +115,7 @@ export default function FormCreate({
         handleClose={handleClose}
       />
       <Grid container spacing={4}>
-        <Grid item md={12}>
+        <Grid item md={12} xs={12}>
           <TextField
             name="title"
             id="outlined-basic"
@@ -126,7 +127,7 @@ export default function FormCreate({
             required
           />
         </Grid>
-        <Grid item md={12}>
+        <Grid item md={12} xs={12}>
           <TextField
             id="outlined-basic"
             label="Form Description"
@@ -140,7 +141,7 @@ export default function FormCreate({
             required
           />
         </Grid>
-        <Grid item md={12}>
+        <Grid item md={12} xs={12}>
           <FormRoleSelect
             data={communityRoles}
             inputLabel="Select Roles"
@@ -148,7 +149,7 @@ export default function FormCreate({
             roles={roles}
           />
         </Grid>
-        <Grid item md={6}>
+        <Grid item md={6} xs={12}>
           <DateAndTimePickers
             label={t('misc.form_expiry_date')}
             selectedDateTime={expiresAt}
@@ -157,9 +158,9 @@ export default function FormCreate({
             pastDate
           />
         </Grid>
-        <Grid item>
+        <Grid item xs={12}>
           <Grid container direction="column">
-            <Grid item md={12}>
+            <Grid item md={12} xs={12}>
               <SwitchInput
                 name="multipleSubmissionsAllowed"
                 label={t('misc.limit_1_response')}
@@ -168,7 +169,7 @@ export default function FormCreate({
                 labelPlacement="right"
               />
             </Grid>
-            <Grid item md={12}>
+            <Grid item md={12} xs={12}>
               <SwitchInput
                 name="previewable"
                 label={t('misc.previewable')}
@@ -180,15 +181,15 @@ export default function FormCreate({
             </Grid>
           </Grid>
         </Grid>
-        <Grid item md={12}>
+        <Grid item md={12} xs={12}>
           <Divider />
         </Grid>
-        <Grid item md={6} style={{ textAlign: 'right' }}>
+        <Grid item md={6} xs={6} style={matches ? {textAlign: 'center'} : { textAlign: 'right' }}>
           <Button variant="outlined" disable={isLoading} onClick={() => history.push('/forms')}>
             Cancel
           </Button>
         </Grid>
-        <Grid item md={6} style={{ textAlign: 'left' }}>
+        <Grid item md={6} xs={6} style={matches ? { textAlign: 'center'} : { textAlign: 'left' }}>
           <Button variant="contained" disable={isLoading} onClick={submitForm}>
             Submit
           </Button>
@@ -197,3 +198,17 @@ export default function FormCreate({
     </Grid>
   );
 }
+
+FormCreate.defaultProps = {
+  style: {},
+  routeBack: false
+};
+
+FormCreate.propTypes = {
+  formId: PropTypes.string.isRequired,
+  formMutation: PropTypes.func.isRequired,
+  actionType: PropTypes.string.isRequired,
+  style: PropTypes.shape({}),
+  refetch: PropTypes.func.isRequired,
+  routeBack: PropTypes.bool
+};

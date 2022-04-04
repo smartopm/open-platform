@@ -1,7 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { useLazyQuery, useMutation, useQuery } from 'react-apollo';
 import PropTypes from 'prop-types';
-import { Button, FormControl, InputLabel, MenuItem, Select, TextField, Grid, Typography } from '@mui/material';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import {
+  Button,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  TextField,
+  Grid,
+  Typography
+} from '@mui/material';
 import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@mui/styles';
@@ -28,7 +38,14 @@ const fieldTypes = {
   file_upload: 'File Upload'
 };
 
-export default function FormPropertyCreateForm({ formId, refetch, propertyId, categoryId, close }) {
+export default function FormPropertyCreateForm({
+  formId,
+  refetch,
+  propertyId,
+  categoryId,
+  close,
+  formDetailRefetch
+}) {
   const initData = {
     fieldName: '',
     fieldType: '',
@@ -47,6 +64,7 @@ export default function FormPropertyCreateForm({ formId, refetch, propertyId, ca
   const [formPropertyCreate] = useMutation(FormPropertyCreateMutation);
   const [formPropertyUpdate] = useMutation(FormPropertyUpdateMutation);
   const history = useHistory();
+  const matches = useMediaQuery('(max-width:900px)');
   const [loadFields, { data }] = useLazyQuery(FormPropertyQuery, {
     variables: { formId, formPropertyId: propertyId }
   });
@@ -97,6 +115,7 @@ export default function FormPropertyCreateForm({ formId, refetch, propertyId, ca
     })
       .then(() => {
         refetch();
+        formDetailRefetch();
         setMutationLoading(false);
         setMessage({ ...message, isError: false, detail: t('misc.created_form_property') });
         setProperty({
@@ -155,8 +174,8 @@ export default function FormPropertyCreateForm({ formId, refetch, propertyId, ca
         data-testid="form_property_submit"
         className={classes.container}
       >
-        <Grid container spacing={2} alignItems='center' justifyContent='center'>
-          <Grid item md={12}>
+        <Grid container spacing={2} alignItems="center" justifyContent="center">
+          <Grid item md={12} xs={12}>
             <TextField
               id="standard-basic"
               label={t('form_fields.field_name')}
@@ -172,7 +191,7 @@ export default function FormPropertyCreateForm({ formId, refetch, propertyId, ca
               required
             />
           </Grid>
-          <Grid item md={6}>
+          <Grid item md={6} xs={12}>
             <FormPropertySelector
               label={t('form_fields.field_type')}
               name="fieldType"
@@ -181,7 +200,7 @@ export default function FormPropertyCreateForm({ formId, refetch, propertyId, ca
               options={fieldTypes}
             />
           </Grid>
-          <Grid item md={6} style={{marginTop: '-8px'}}>
+          <Grid item md={6} xs={12} style={{ marginTop: '-8px' }}>
             <FormControl variant="outlined" style={{ width: '100%' }} margin="normal">
               <InputLabel>Category</InputLabel>
               <Select
@@ -201,33 +220,33 @@ export default function FormPropertyCreateForm({ formId, refetch, propertyId, ca
               </Select>
             </FormControl>
           </Grid>
-          <Grid md={12}>
+          <Grid md={12} xs={12}>
             {(propertyData.fieldType === 'radio' ||
               propertyData.fieldType === 'dropdown' ||
               propertyData.fieldType === 'checkbox') && (
               <FormOptionInput label="Option" options={options} setOptions={setOptions} />
             )}
           </Grid>
-          <Grid item md={4}>
+          <Grid item md={4} xs={6}>
             <SwitchInput
               name="required"
-              label={<Typography variant='caption'>{t('form_fields.required_field')}</Typography>}
+              label={<Typography variant="caption">{t('form_fields.required_field')}</Typography>}
               value={propertyData.required}
               handleChange={handleRadioChange}
               className="form-property-required-field-switch-btn"
-              labelPlacement='right'
+              labelPlacement="right"
             />
           </Grid>
-          <Grid item md={4}>
+          <Grid item md={4} xs={6}>
             <SwitchInput
               name="adminUse"
-              label={<Typography variant='caption'>{t('form_fields.admins_only')}</Typography>}
+              label={<Typography variant="caption">{t('form_fields.admins_only')}</Typography>}
               value={propertyData.adminUse}
               handleChange={handleRadioChange}
-              labelPlacement='right'
+              labelPlacement="right"
             />
           </Grid>
-          <Grid item md={4}>
+          <Grid item md={4} xs={12}>
             <TextField
               label={t('form_fields.order_number')}
               id="outlined-size-small"
@@ -239,7 +258,7 @@ export default function FormPropertyCreateForm({ formId, refetch, propertyId, ca
               style={{ marginLeft: 20 }}
             />
           </Grid>
-          <Grid item md={12}>
+          <Grid item md={12} xs={12} style={matches ? { textAlign: 'center' } : {}}>
             <Button
               variant="outlined"
               type="submit"
@@ -267,7 +286,8 @@ FormPropertyCreateForm.propTypes = {
   formId: PropTypes.string.isRequired,
   categoryId: PropTypes.string.isRequired,
   propertyId: PropTypes.string,
-  close: PropTypes.func
+  close: PropTypes.func,
+  formDetailRefetch: PropTypes.func.isRequired
 };
 
 const useStyles = makeStyles(() => ({
