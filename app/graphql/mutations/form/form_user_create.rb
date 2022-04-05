@@ -28,7 +28,7 @@ module Mutations
 
       def resolve(vals)
         form = context[:site_community].forms.find_by(id: vals[:form_id])
-        user = context[:site_community].users.find_by(name: 'anonymous')
+        user = context[:site_community].users.find_by(name: 'Public Submission')
         raise_form_not_found_error(form)
 
         vals = vals.merge(status_updated_by: context[:current_user] || user, user_id: context[:current_user]&.id || user&.id )
