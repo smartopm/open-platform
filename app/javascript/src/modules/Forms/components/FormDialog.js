@@ -7,17 +7,20 @@ import {
   MenuItem,
   Select,
   FormControl,
-  InputLabel
+  InputLabel,
+  Alert,
+  Button
 } from '@mui/material';
 import { useTheme } from '@mui/styles';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import TitleDescriptionForm from './TitleDescriptionForm';
 import { DateAndTimePickers } from '../../../components/DatePickerDialog';
-import { formatError } from '../../../utils/helpers';
+import { formatError, copyText } from '../../../utils/helpers';
 import SwitchInput from './FormProperties/SwitchInput';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
 import CenteredContent from '../../../shared/CenteredContent';
+import { generateIframeSnippet } from '../utils';
 
 export default function FormDialog({
   actionType,
@@ -40,12 +43,19 @@ export default function FormDialog({
   );
   const [preview, setPreview] = useState(form ? form.preview : false);
   const [isPublic, setIsPublic] = useState(form ? form.isPublic : false);
+  const [isCopied, setIsCopied] = useState(false);
   const authState = React.useContext(AuthStateContext);
   const [roles, setRoles] = useState(form?.roles || []);
   const communityRoles = authState?.user?.community?.roles;
+  const { hostname } = window.location
+
 
   function handleDateChange(date) {
     setExpiresAtDate(date);
+  }
+
+  function handleTextCopy(){ 
+    copyText(generateIframeSnippet(form, hostname )).then(() => setIsCopied(true))
   }
 
   function submitForm(title, description) {
@@ -170,6 +180,26 @@ export default function FormDialog({
             handleDateChange={handleDateChange}
             pastDate
           />
+          <br />
+          {
+            form?.id && isPublic && (
+            <Alert 
+              icon={false} 
+              severity="success"
+              action={(
+                <Button color="inherit" size="small" onClick={handleTextCopy}>
+                  {t('common:form_actions.copy')}
+                </Button>
+              )}
+            >
+              {
+                isCopied 
+                ? t('common:misc.copied')
+                : generateIframeSnippet(form, hostname )
+            }
+            </Alert>
+            )
+          }
         </TitleDescriptionForm>
       </DialogContent>
     </Dialog>

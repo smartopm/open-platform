@@ -250,3 +250,24 @@ export function checkRequiredFormPropertyIsFilled(property, formData) {
 
   return false;
 }
+
+
+/**
+ * Generate an iframe snippet that can be embedded elsewhere
+ * @param {{id: String, name: String}} form 
+ * @param {String} hostname 
+ * @returns 
+ */
+export function generateIframeSnippet(form, hostname) {
+  const url = `https://${hostname}/form/${form.id}/public`;
+
+  return `
+            <iframe
+                src=${url}
+                name=${form.name}
+                scrolling="auto"
+                width="100%"
+                height="500px"
+            />
+        `;
+}

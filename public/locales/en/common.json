@@ -98,7 +98,8 @@
     "new_guest": "New Guest",
     "invite_another_guest": "Invite Another Guest",
     "copy_id": "Copy User ID List",
-    "comment_edit": "Edit Comment"
+    "comment_edit": "Edit Comment",
+    "copy": "Copy"
   },
   "misc": {
     "or": "OR",
