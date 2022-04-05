@@ -71,6 +71,14 @@ export default function SelectButton({
         style={style}
         className={classes.poper}
         data-testid="list"
+        modifiers={[
+          {
+            name: 'offset',
+            options: {
+              offset: [-40, 0],
+            },
+          },
+        ]}
       >
         {({ TransitionProps, placement }) => (
           <Grow
@@ -137,8 +145,7 @@ export default function SelectButton({
 
 const useStyles = makeStyles(() => ({
   poper: {
-    zIndex: 2000,
-    marginLeft: '-41px !important'
+    zIndex: 2000
   }
  }))
 
