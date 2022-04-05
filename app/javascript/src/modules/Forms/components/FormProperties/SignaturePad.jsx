@@ -9,13 +9,16 @@ import CenteredContent from '../../../../components/CenteredContent';
 
 const useStyles = makeStyles({
   signatureContainer: {
-    width: "95%",
+    width: "100%",
     height: "100%",
-    margin: "0 auto",
-    backgroundColor: "#FFFFFF"
+    backgroundColor: "#FFFFFF",
+    marginTop: '10px',
+    marginBottom: '-20px',
+    borderRadius: '5px',
+    padding: '10px'
   },
   signaturePad: {
-    width: "95%",
+    width: "100%",
     height: "100%"
   }
 })

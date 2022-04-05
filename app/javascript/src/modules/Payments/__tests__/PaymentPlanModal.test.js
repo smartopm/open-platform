@@ -52,7 +52,7 @@ describe('It should test the payment plan modal component', () => {
 
     expect(loader.queryAllByTestId('loader')[0]).toBeInTheDocument();
     expect(container.queryAllByText('table_headers.owner')[0]).toBeInTheDocument();
-    expect(container.queryByText('common:table_headers.start_date')).toBeInTheDocument();
+    expect(container.queryAllByText('common:table_headers.start_date')[0]).toBeInTheDocument();
     expect(container.queryAllByText('common:misc.plan_frequency')[0]).toBeInTheDocument();
     expect(container.queryAllByText('table_headers.plan_duration')[0]).toBeInTheDocument();
     expect(container.queryByText('common:table_headers.amount')).toBeInTheDocument();
