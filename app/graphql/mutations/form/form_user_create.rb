@@ -26,17 +26,20 @@ module Mutations
       field :form_user, Types::FormUsersType, null: true
       field :error, String, null: true
 
+      # rubocop:disable Metrics/AbcSize
       def resolve(vals)
         form = context[:site_community].forms.find_by(id: vals[:form_id])
         user = context[:site_community].users.find_by(name: 'Public Submission')
         raise_form_not_found_error(form)
 
-        vals = vals.merge(status_updated_by: context[:current_user] || user, user_id: context[:current_user]&.id || user&.id )
+        vals = vals.merge(status_updated_by: context[:current_user] || user,
+                          user_id: context[:current_user]&.id || user&.id)
         u_form = create_form_user(form, vals)
 
         u_form[:form_user].create_form_task if u_form[:form_user].present?
         u_form
       end
+      # rubocop:enable Metrics/AbcSize
 
       # rubocop:disable Metrics/AbcSize
       # rubocop:disable Metrics/MethodLength
