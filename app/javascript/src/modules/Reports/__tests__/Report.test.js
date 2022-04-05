@@ -48,7 +48,7 @@ describe('Report Component', () => {
       </BrowserRouter>
     );
     expect(container.queryByText('misc.generate_report')).toBeInTheDocument();
-    expect(container.queryByText('misc.pick_start_date')).toBeInTheDocument();
-    expect(container.queryByText('misc.pick_end_date')).toBeInTheDocument();
+    expect(container.queryAllByText('misc.pick_start_date')[0]).toBeInTheDocument();
+    expect(container.queryAllByText('misc.pick_end_date')[0]).toBeInTheDocument();
   });
 });

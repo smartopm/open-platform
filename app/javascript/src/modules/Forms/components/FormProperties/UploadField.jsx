@@ -1,9 +1,9 @@
-import React from 'react'
-import { AddCircleOutline } from '@mui/icons-material'
-import DoneIcon from '@mui/icons-material/Done'
-import { Button, FormHelperText } from '@mui/material'
-import PropTypes from 'prop-types'
-import { useTranslation } from 'react-i18next'
+import React from 'react';
+import DoneIcon from '@mui/icons-material/Done';
+import { Button, FormHelperText } from '@mui/material';
+import PropTypes from 'prop-types';
+import FileUploadIcon from '@mui/icons-material/FileUpload';
+import { useTranslation } from 'react-i18next';
 
 export default function UploadField({
   detail,
@@ -16,10 +16,13 @@ export default function UploadField({
   const { t } = useTranslation(['common', 'form']);
   return (
     <>
-      <label htmlFor={`button-${detail.id}`}>
+      <label
+        htmlFor={`button-${detail.id}`}
+        style={{ width: '100%', borderRadius: '5px',}}
+      >
         <FormHelperText
           style={{
-            margin: '4px 4px -12px 0'
+            margin: '5px 0 5px 0'
           }}
         >
           {`${detail.label || ''} ${detail.required ? '*' : ''}`}
@@ -37,13 +40,14 @@ export default function UploadField({
           hidden
         />
         <Button
-          variant="text"
+          variant="outlined"
           data-testid="form-file-upload-btn"
           component="span"
           aria-label={`upload_button_${detail.label}`}
           disabled={editable}
-          startIcon={detail.type === 'file' && uploaded ? <DoneIcon /> : <AddCircleOutline />}
+          startIcon={detail.type === 'file' && uploaded ? <DoneIcon /> : <FileUploadIcon />}
           color={btnColor}
+          style={{background: '#FFFFFF'}}
         >
           {uploaded ? t('form:misc.file_uploaded') : t('form:misc.upload_file')}
         </Button>

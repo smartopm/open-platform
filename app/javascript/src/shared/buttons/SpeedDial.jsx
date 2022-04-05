@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import SpeedDial from '@mui/material/SpeedDial';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import makeStyles from '@mui/styles/makeStyles';
 import SpeedDialIcon from '@mui/material/SpeedDialIcon';
 import SpeedDialAction from '@mui/material/SpeedDialAction';
@@ -10,14 +9,12 @@ import AddIcon from '@mui/icons-material/Add';
 
 export default function SpeedDialButton({
   open,
-  handleClose,
-  handleOpen,
-  direction,
   actions,
-  handleAction
+  direction,
+  handleAction,
+  handleSpeedDial
 }) {
   const classes = useStyles();
-  const matches = useMediaQuery('(max-width:800px)');
 
   return (
     <div className={classes.wrapper} data-testid="speed-dial">
@@ -35,11 +32,11 @@ export default function SpeedDialButton({
             <AddIcon data-testid="add_icon" />
           )
         }
-        onClose={handleClose}
-        onOpen={handleOpen}
         onClick={actions.length === 0 ? handleAction : null}
-        open={matches || open}
         direction={direction}
+        onClose={handleSpeedDial}
+        onOpen={handleSpeedDial}
+        open={open}
       >
         {actions.map(action => (
           <SpeedDialAction
@@ -77,10 +74,9 @@ const useStyles = makeStyles(theme => ({
 SpeedDialButton.defaultProps = {
   actions: [],
   direction: 'down',
-  handleAction: () => {},
   open: false,
-  handleClose: () => {},
-  handleOpen: () => {},
+  handleAction: () => {},
+  handleSpeedDial: () => {},
 };
 
 SpeedDialButton.propTypes = {
@@ -89,9 +85,8 @@ SpeedDialButton.propTypes = {
       name: PropTypes.string
     })
   ),
-  open: PropTypes.bool,
-  handleClose: PropTypes.func,
-  handleOpen: PropTypes.func,
   direction: PropTypes.string,
-  handleAction: PropTypes.func
+  open: PropTypes.bool,
+  handleAction: PropTypes.func,
+  handleSpeedDial: PropTypes.func,
 };

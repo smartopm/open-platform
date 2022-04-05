@@ -42,7 +42,7 @@ RSpec.describe Mutations::Form::FormUserCreate do
 
     let(:mutation) do
       <<~GQL
-        mutation formUserCreate($formId: ID!, $userId: ID!, $propValues: JSON!, $status: String) {
+        mutation formUserCreate($formId: ID!, $userId: ID, $propValues: JSON!, $status: String) {
           formUserCreate(formId: $formId, userId: $userId, propValues: $propValues, status: $status){
             formUser {
               id

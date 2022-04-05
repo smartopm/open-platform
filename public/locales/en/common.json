@@ -382,7 +382,8 @@
     "consultant": "Consultant",
     "developer": "Developer",
     "lead": "Lead",
-    "marketing_manager": "Marketing Manager"
+    "marketing_manager": "Marketing Manager",
+    "code_scanner": "Code Scanner"
   },
   "table_headers": {
     "date_created": "Date Created",

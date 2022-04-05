@@ -11,6 +11,7 @@ import Preferences from '../Preferences/Components/Notifications';
 import { allUserTypes } from '../../utils/constants';
 import AccessCheck from '../Permissions/Components/AccessCheck';
 import LeadManagementDetails from './LeadManagement/Components/LeadManagementDetails';
+import EditForm from '../Forms/containers/FormLinks'
 // name in here is only used as key in routes, make sure it is unique
 
 const user = { module: 'user' };
@@ -24,6 +25,18 @@ const logBookPermissions = ['can_access_logbook'];
 const otpPermissions = ['can_send_one_time_login'];
 
 const leadManagementPermissions = ['can_update_user_details'];
+
+const CommunityFormsPermissions = ['can_access_forms'];
+
+const currentModule = 'forms'
+
+function RenderCommunityForms() {
+  return (
+    <AccessCheck module={currentModule} allowedPermissions={CommunityFormsPermissions}>
+      <EditForm />
+    </AccessCheck>
+  )
+}
 
 function RenderUserEdit() {
   return (
@@ -160,6 +173,16 @@ const routes = [
     accessibleBy: allUserTypes,
     name: 'Preferences',
     featureName: 'Preferences'
+  },
+  {
+    routeProps: {
+      path: '/form/:id/edit',
+      component: RenderCommunityForms,
+      exact: true
+    },
+    accessibleBy: allUserTypes,
+    name: 'edit_forms',
+    featureName: 'Forms'
   }
 ];
 

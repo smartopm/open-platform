@@ -22,17 +22,20 @@ import CenteredContent from '../../../shared/CenteredContent';
 import { formatError } from '../../../utils/helpers';
 import Paginate from '../../../components/Paginate';
 import useLogbookStyles from '../styles';
+import SearchInput from '../../../shared/search/SearchInput';
+import useDebouncedValue from '../../../shared/hooks/useDebouncedValue';
 
 export default function GuestsView({
   tabValue,
   handleAddObservation,
   offset,
   limit,
-  query,
-  timeZone
+  timeZone,
+  speedDialOpen
 }) {
+  const {value, dbcValue, setSearchValue} = useDebouncedValue()
   const [loadGuests, { data, loading: guestsLoading, error }] = useLazyQuery(GuestEntriesQuery, {
-    variables: { offset: query.length ? 0 : offset, limit, query: query.trim() },
+    variables: { offset: dbcValue.length ? 0 : offset, limit, query: dbcValue.trim() },
     fetchPolicy: 'cache-and-network'
   });
 
@@ -45,11 +48,12 @@ export default function GuestsView({
   const classes = useLogbookStyles();
   const theme = useTheme();
 
+
   useEffect(() => {
     if (tabValue === 1) {
       loadGuests();
     }
-  }, [tabValue, loadGuests, query, offset]);
+  }, [tabValue, loadGuests, dbcValue, offset]);
 
   function handleGrantAccess(event, user) {
     event.stopPropagation();
@@ -102,6 +106,19 @@ export default function GuestsView({
         open={!!message.detail}
         handleClose={() => setMessage({ ...message, detail: '' })}
       />
+
+      <SearchInput
+        title={t('guest.guests')}
+        searchValue={value}
+        filterRequired={false}
+        handleSearch={event => setSearchValue(event.target.value)}
+        handleClear={() => setSearchValue("")}
+        filters={[dbcValue]}
+        fullWidthOnMobile={!speedDialOpen}
+        fullWidth={false}
+      />
+      <br />
+
       {guestsLoading ? (
         <Spinner />
       ) : data?.scheduledRequests.length > 0 ? (
@@ -247,6 +264,6 @@ GuestsView.propTypes = {
   offset: PropTypes.number.isRequired,
   limit: PropTypes.number.isRequired,
   handleAddObservation: PropTypes.func.isRequired,
-  query: PropTypes.string.isRequired,
+  speedDialOpen: PropTypes.bool.isRequired,
   timeZone: PropTypes.string.isRequired
 };

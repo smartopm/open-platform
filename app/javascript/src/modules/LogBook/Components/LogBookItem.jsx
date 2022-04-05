@@ -1,32 +1,24 @@
-/* eslint-disable max-lines */
-/* eslint-disable max-statements */
 import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { useApolloClient, useMutation } from 'react-apollo';
+import { useApolloClient, useMutation, useQuery } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import makeStyles from '@mui/styles/makeStyles';
 import PersonIcon from '@mui/icons-material/Person';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import Grid from '@mui/material/Grid';
+import { Divider } from '@mui/material';
 import { StyledTabs, StyledTab, TabPanel, a11yProps } from '../../../components/Tabs';
 import LogEvents from './LogEvents';
 import SpeedDial from '../../../shared/buttons/SpeedDial';
-import SearchInput from '../../../shared/search/SearchInput';
 import EntryNoteDialog from '../../../shared/dialogs/EntryNoteDialog';
 import useFileUpload from '../../../graphql/useFileUpload';
 import { Spinner } from '../../../shared/Loading';
 import AddObservationNoteMutation from '../graphql/logbook_mutations';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
-import QueryBuilder from '../../../components/QueryBuilder';
-import {
-  entryLogsQueryBuilderConfig,
-  entryLogsQueryBuilderInitialValue
-} from '../../../utils/constants';
 import Paginate from '../../../components/Paginate';
-import { objectAccessor } from '../../../utils/helpers';
 import GuestsView from './GuestsView';
 import VisitView from './VisitView';
 import MessageAlert from '../../../components/MessageAlert';
@@ -34,30 +26,24 @@ import CenteredContent from '../../../shared/CenteredContent';
 import { accessibleMenus, paginate } from '../utils';
 import GateFlowReport from './GateFlowReport';
 import AccessCheck from '../../Permissions/Components/AccessCheck';
+import permissionsCheck from '../../Permissions/utils';
+import useDebouncedValue from '../../../shared/hooks/useDebouncedValue';
+import { AllEventLogsQuery } from '../../../graphql/queries';
+import SearchInput from '../../../shared/search/SearchInput';
 
 const limit = 20;
-// TODO: reduce the amount of props passed down here, it is hard to keep track
+const subjects = ['user_entry', 'visitor_entry', 'user_temp', 'observation_log'];
+
 export default function LogBookItem({
-  data,
   router,
   offset,
-  searchTerm,
-  scope,
-  searchQuery,
-  handleSearch,
-  toggleFilterMenu,
-  handleSearchClear,
-  displayBuilder,
-  queryOnChange,
   tabValue,
   handleTabValue,
-  loading,
-  refetch,
-  error
 }) {
   const authState = useContext(AuthStateContext);
   const allUserPermissions = authState.user?.permissions || [];
   const modulePerms = allUserPermissions.find(mod => mod.module === 'entry_request')?.permissions;
+  const eventLogPermissions = allUserPermissions.find(mod => mod.module === 'event_log')?.permissions;
   const permissions = new Set(modulePerms);
   const { t } = useTranslation(['logbook', 'common', 'dashboard']);
   const [open, setOpen] = useState(false);
@@ -71,12 +57,23 @@ export default function LogBookItem({
     refetch: false
   });
   const [addObservationNote] = useMutation(AddObservationNoteMutation);
-  const smDownHidden = useMediaQuery(theme => theme.breakpoints.down('sm'));
-  const smUpHidden = useMediaQuery(theme => theme.breakpoints.up('sm'));
-  const matches = useMediaQuery('(max-width:1000px)');
+  const matches = useMediaQuery('(max-width:800px)');
   const classes = useStyles();
   const [imageUrls, setImageUrls] = useState([]);
   const [blobIds, setBlobIds] = useState([]);
+  const {value, dbcValue, setSearchValue}= useDebouncedValue()
+
+  const eventsData = useQuery(AllEventLogsQuery, {
+    variables: {
+      subject: subjects,
+      refId: null,
+      refType: null,
+      offset,
+      limit: 20,
+      name: dbcValue.trim()
+    },
+    fetchPolicy: 'cache-and-network'
+  });
 
   const { onChange, signedBlobId, url, status } = useFileUpload({
     client: useApolloClient()
@@ -111,13 +108,6 @@ export default function LogBookItem({
       });
     }
   }
-
-  const searchPlaceholder = {
-    0: t('logbook.all_visits'),
-    1: t('guest.guests'),
-    2: t('guest_book.visits'),
-    3: t('logbook.observations')
-  };
 
   function handleExitEvent(eventLog, logType) {
     setClickedEvent(eventLog);
@@ -171,7 +161,7 @@ export default function LogBookItem({
         });
         setObservationNote('');
         setClickedEvent({ refId: '', refType: '' });
-        refetch();
+        eventsData.refetch();
         setIsObservationOpen(false);
         resetImageData();
       })
@@ -197,12 +187,7 @@ export default function LogBookItem({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
 
-  const filteredEvents =
-    data &&
-    data.filter(log => {
-      const visitorName = log.data.ref_name || log.data.visitor_name || log.data.name || '';
-      return visitorName.toLowerCase().includes(searchTerm.toLowerCase());
-    });
+
 
   function handleCancelClose() {
     setIsObservationOpen(false);
@@ -265,24 +250,21 @@ export default function LogBookItem({
       <Grid container className={matches ? classes.containerMobile : classes.container}>
         <Grid item md={11} xs={11}>
           <Grid container spacing={1}>
-            <Grid item md={9} xs={10}>
+            <Grid item md={11} xs={10}>
               <Typography variant="h4">{t('logbook.log_book')}</Typography>
             </Grid>
-            {!smUpHidden && (
-              <Grid item md={1} xs={2}>
-                <SpeedDial
-                  open={open}
-                  handleClose={() => setOpen(false)}
-                  handleOpen={() => setOpen(true)}
-                  direction="down"
-                  actions={accessibleMenus(actions)}
-                />
-              </Grid>
-            )}
+            <Grid item md={1} xs={2}>
+              <SpeedDial
+                open={open}
+                handleSpeedDial={() => setOpen(!open)}
+                actions={accessibleMenus(actions)}
+              />
+            </Grid>
             <Grid item xs={12} md={7} lg={6}>
               <StyledTabs
                 value={tabValue}
                 aria-label="simple tabs example"
+                data-testid="logbook_tabs"
                 onChange={handleTabValue}
               >
                 <StyledTab label={t('logbook.log_view')} {...a11yProps(0)} />
@@ -290,42 +272,26 @@ export default function LogBookItem({
                 <StyledTab label={t('logbook.visit_view')} {...a11yProps(2)} />
               </StyledTabs>
             </Grid>
-            <Grid item xs={10} md={5} lg={6} style={matches ? { marginTop: '20px' } : {}}>
-              <SearchInput
-                title={objectAccessor(searchPlaceholder, tabValue)}
-                searchValue={searchTerm}
-                // temporarily disabling filter until we have proper scope from entry_times table
-                filterRequired={false}
-                handleSearch={handleSearch}
-                handleFilter={toggleFilterMenu}
-                handleClear={handleSearchClear}
-              />
-              <Grid
-                container
-                justifyContent="flex-end"
-                className={classes.filter}
-                style={{
-                  display: displayBuilder
-                }}
-              >
-                <QueryBuilder
-                  handleOnChange={queryOnChange}
-                  builderConfig={entryLogsQueryBuilderConfig}
-                  initialQueryValue={entryLogsQueryBuilderInitialValue}
-                  addRuleLabel={t('common:misc.add_filter')}
-                />
-              </Grid>
-            </Grid>
           </Grid>
           <TabPanel pad value={tabValue} index={0}>
             <AccessCheck module="event_log" allowedPermissions={['can_download_logbook_events']}>
               <GateFlowReport />
+              <br />
+              <Divider />
             </AccessCheck>
+            <br />
+            <SearchInput
+              title={t('logbook.all_visits')}
+              searchValue={value}
+              filterRequired={false}
+              handleSearch={event => setSearchValue(event.target.value)}
+              handleClear={() => setSearchValue("")}
+              filters={[dbcValue]}
+              fullWidthOnMobile={permissionsCheck(eventLogPermissions, ['can_download_logbook_events']) ? true : !open}
+              fullWidth={false}
+            />
             <LogEvents
-              data={data}
-              loading={loading}
-              error={error}
-              refetch={refetch}
+              eventsData={eventsData}
               userType={authState.user.userType}
               handleExitEvent={handleExitEvent}
               handleAddObservation={handleAddObservation}
@@ -338,9 +304,8 @@ export default function LogBookItem({
               handleAddObservation={handleAddObservation}
               offset={offset}
               limit={limit}
-              query={!searchTerm.length ? '' : `${searchTerm} ${searchQuery}`}
-              scope={scope}
               timeZone={authState.user.community.timezone}
+              speedDialOpen={open}
             />
           </TabPanel>
           <TabPanel pad value={tabValue} index={2}>
@@ -349,24 +314,11 @@ export default function LogBookItem({
               handleAddObservation={handleExitEvent}
               offset={offset}
               limit={limit}
-              query={!searchTerm.length ? '' : `${searchTerm} ${searchQuery}`}
-              scope={scope}
               timeZone={authState.user.community.timezone}
               observationDetails={observationDetails}
             />
           </TabPanel>
         </Grid>
-        {!smDownHidden && (
-          <Grid item md={1} xs={1}>
-            <SpeedDial
-              open={open}
-              handleClose={() => setOpen(false)}
-              handleOpen={() => setOpen(true)}
-              direction="down"
-              actions={accessibleMenus(actions)}
-            />
-          </Grid>
-        )}
       </Grid>
       {Boolean(tabValue === 0) && (
         <CenteredContent>
@@ -375,7 +327,7 @@ export default function LogBookItem({
             limit={limit}
             active={offset >= 1}
             handlePageChange={action => paginate(action, router, tabValue, { offset, limit })}
-            count={filteredEvents?.length}
+            count={eventsData.data?.length}
           />
         </CenteredContent>
       )}
@@ -392,32 +344,11 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-LogBookItem.defaultProps = {
-  error: '',
-  data: []
-};
-
 LogBookItem.propTypes = {
-  data: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string
-    })
-  ),
   router: PropTypes.shape({
     push: PropTypes.func
   }).isRequired,
   offset: PropTypes.number.isRequired,
-  searchTerm: PropTypes.string.isRequired,
-  scope: PropTypes.number.isRequired,
-  searchQuery: PropTypes.string.isRequired,
-  handleSearch: PropTypes.func.isRequired,
-  toggleFilterMenu: PropTypes.func.isRequired,
-  handleSearchClear: PropTypes.func.isRequired,
-  displayBuilder: PropTypes.string.isRequired,
-  queryOnChange: PropTypes.func.isRequired,
   tabValue: PropTypes.number.isRequired,
   handleTabValue: PropTypes.func.isRequired,
-  loading: PropTypes.bool.isRequired,
-  refetch: PropTypes.func.isRequired,
-  error: PropTypes.string
 };

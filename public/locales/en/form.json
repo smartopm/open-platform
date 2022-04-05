@@ -37,7 +37,13 @@
     "download_file": "Download File",
     "file_uploaded": "File Uploaded",
     "select_roles": "Select roles",
-    "public": "Make Public"
+    "public": "Make Public",
+    "form_builder": "Builder",
+    "form_settings": "Settings",
+    "update_history": "History",
+    "configure_form": "Configure Form",
+    "create_form": "Create a Form",
+    "submit_form": "Submit a Form"
   },
   "actions": {
     "create_a_form": "Create a form",
@@ -52,7 +58,9 @@
     "create_category": "Create Category",
     "add_category": "Add Category",
     "confirm": "Confirm",
-    "clear_condition": "Clear Condition"
+    "clear_condition": "Clear Condition",
+    "add_property": "Add a Property",
+    "hide": "Hide"
   },
   "errors": {
     "no_forms": "No Forms to submit",

@@ -39,7 +39,7 @@ export default function LogsReportView({ startDate, endDate, handleChange, child
             size="small"
           />
         </Grid>
-        <Grid item xs={4} sm={2} md={2}>
+        <Grid item xs={4} sm={4} md={2}>
           {children}
         </Grid>
       </Grid>

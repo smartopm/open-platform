@@ -803,3 +803,10 @@ public_user:
       - can_fetch_form_properties
       - can_fetch_form_property
       - can_fetch_form_categories
+code_scanner:
+  dashboard:
+    permissions:
+      - can_access_dashboard
+  entry_request:
+    permissions:
+      - can_access_scan_screen
