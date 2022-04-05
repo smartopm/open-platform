@@ -76,21 +76,24 @@ module Types::Queries::Form
   end
 
   def form(id:)
-    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:site_community].blank?
+    unless permitted?(module: :forms, permission: :can_fetch_form)
+      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+    end
 
     context[:site_community].forms.find(id)
   end
 
   def form_properties(form_id:)
-    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:site_community].blank?
+    unless permitted?(module: :forms, permission: :can_fetch_form_properties)
+      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+    end
 
     context[:site_community].forms.find(form_id).form_properties
   end
 
   def form_property(form_id:, form_property_id:)
-    if context[:site_community].blank?
-      raise GraphQL::ExecutionError,
-            I18n.t('errors.unauthorized')
+    unless permitted?(module: :forms, permission: :can_fetch_form_property)
+      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
     end
 
     context[:site_community].forms.find(form_id).form_properties.find_by(id: form_property_id)
@@ -169,7 +172,9 @@ module Types::Queries::Form
   #
   # @return [Array<Forms::Category>]
   def form_categories(form_id:)
-    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:site_community].blank?
+    unless permitted?(module: :forms, permission: :can_fetch_form_categories)
+      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+    end
 
     form = Forms::Form.find_by(id: form_id)
     raise_form_not_found_error(form)
