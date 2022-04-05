@@ -760,3 +760,10 @@ marketing_manager:
     permissions:
       - can_access_dashboard
       - can_see_menu_item
+code_scanner:
+  dashboard:
+    permissions:
+      - can_access_dashboard
+  entry_request:
+    permissions:
+      - can_access_scan_screen
