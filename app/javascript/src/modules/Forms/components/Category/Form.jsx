@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { Button, Container, DialogContent, DialogContentText, Typography } from '@mui/material';
+import { Button, Container, DialogContent, DialogContentText } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { useMutation, useQuery } from 'react-apollo';
 import { useHistory } from 'react-router';
