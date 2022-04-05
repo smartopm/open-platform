@@ -31,8 +31,8 @@ module Mutations
         user = context[:site_community].users.find_by(name: 'anonymous')
         raise_form_not_found_error(form)
 
-        vals = vals.merge(status_updated_by: context[:current_user] || user)
-        u_form = create_form_anonymous_user(form, vals)
+        vals = vals.merge(status_updated_by: context[:current_user] || user, user_id: context[:current_user]&.id || user&.id )
+        u_form = create_form_user(form, vals)
 
         u_form[:form_user].create_form_task if u_form[:form_user].present?
         u_form
@@ -59,21 +59,6 @@ module Mutations
       end
       # rubocop:enable Metrics/MethodLength
       # rubocop:enable Metrics/AbcSize
-
-
-      def create_form_anonymous_user(form, vals)
-        user = context[:site_community].users.find_by(name: 'anonymous')
-        vals[:user_id] = user.id
-        form_user = form.form_users.new(vals.except(:form_id, :prop_values)
-                                            .merge(status: (vals[:status] || 'pending')))
-
-        ActiveRecord::Base.transaction do
-          return add_user_form_properties(form_user, vals) if form_user.save
-
-          raise GraphQL::ExecutionError, form_user.errors.full_messages
-        end
-      end
-      
 
       def add_user_form_properties(form_user, vals)
         JSON.parse(vals[:prop_values])['user_form_properties'].each do |value|

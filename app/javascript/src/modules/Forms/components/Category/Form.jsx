@@ -86,8 +86,8 @@ export default function Form({ editMode, formId }) {
 
   useEffect(() => {
     if (formState?.successfulSubmit && !formState?.isDraft) {
-      // Reset Form
-      history.push(`/form/${formId}/${formDetailData.form?.name}`);
+      // Reset Form to public routes to be safe
+      history.push(`/form/${formId}/public`);
       window.location.reload();
     }
   }, [formState.successfulSubmit]);
