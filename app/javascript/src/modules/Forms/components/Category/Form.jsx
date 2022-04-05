@@ -94,7 +94,7 @@ export default function Form({ editMode, formId }) {
 
 
   useEffect(() => {
-    if(!loading && formDetailData?.form?.isPublic && !editMode) {
+    if(!loading && formDetailData?.form?.isPublic && !editMode && !authState.user) {
       history.push(`/form/${formDetailData?.form?.id}/public`)
     }
   }, [formDetailData?.form?.id, formDetailData?.form?.isPublic, history, loading])

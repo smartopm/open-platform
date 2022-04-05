@@ -265,6 +265,7 @@ export function generateIframeSnippet(form, hostname) {
             <iframe
                 src=${url}
                 name=${form.name}
+                title=${form.name}
                 scrolling="auto"
                 width="100%"
                 height="500px"

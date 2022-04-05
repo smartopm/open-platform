@@ -796,3 +796,10 @@ marketing_manager:
     permissions:
       - can_access_dashboard
       - can_see_menu_item
+public_user:
+  forms:
+    permissions:
+      - can_fetch_form
+      - can_fetch_form_properties
+      - can_fetch_form_property
+      - can_fetch_form_categories
