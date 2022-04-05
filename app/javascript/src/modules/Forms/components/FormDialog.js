@@ -32,7 +32,7 @@ export default function FormDialog({
 }) {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
-  const { t } = useTranslation('form');
+  const { t } = useTranslation(['form', 'common']);
   const [expiresAt, setExpiresAtDate] = useState(form?.expiresAt || null);
   const [isLoading, setLoading] = useState(false);
   const [multipleSubmissionsAllowed, setMultipleSubmissionsAllowed] = useState(
