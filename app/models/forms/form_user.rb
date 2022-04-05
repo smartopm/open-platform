@@ -26,9 +26,10 @@ module Forms
     end
 
     def create_form_task
+      # TODO: Consider allowing other communities to engage processes
       allowed_community = %w[DoubleGDP Tilisi].include?(form.community.name)
-      if allowed_community && form.drc_form?
-        return TaskCreate.new_from_template(task_params, form.community)
+      if allowed_community && form.associated_process?
+        return TaskCreate.new_from_process(task_params, form.process)
       end
 
       TaskCreate.new_from_action(task_params)
@@ -44,7 +45,7 @@ module Forms
     end
 
     def body
-      if form.drc_form?
+      if form.process_type == 'drc'
         project_developer_field = form.form_properties.find_by(field_name: 'Project Developer')
         user_form_properties.find_by(form_property_id: project_developer_field&.id)&.value
       else
