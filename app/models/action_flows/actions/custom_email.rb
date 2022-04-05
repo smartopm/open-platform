@@ -17,6 +17,8 @@ module ActionFlows
         template = ActionFieldsFetchable.process_vars('template', data, field_config)
         template_obj = Notifications::EmailTemplate.find(template)
         emails.split(',').each do |user_email|
+          next if user_email.blank?
+
           vars = template_data(data, field_config, template_obj)
           EmailMsg.send_mail_from_db(
             email: user_email,
