@@ -45,6 +45,7 @@ class Community < ApplicationRecord
   has_many :feedbacks, class_name: 'Users::Feedback', dependent: :destroy
   has_many :subscription_plans, class_name: 'Payments::SubscriptionPlan', dependent: :destroy
   has_many :processes, class_name: 'Processes::Process', dependent: :destroy
+  has_many :note_lists, class_name: 'Notes::NoteList', dependent: :destroy
   belongs_to :sub_administrator, class_name: 'Users::User', optional: true
   has_many :time_sheets, class_name: 'Users::TimeSheet', dependent: :destroy
   has_many :entry_times, class_name: 'Logs::EntryTime', dependent: :destroy

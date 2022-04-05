@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_04_04_161732) do
+ActiveRecord::Schema.define(version: 2022_04_04_160134) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -696,10 +696,10 @@ ActiveRecord::Schema.define(version: 2022_04_04_161732) do
   end
 
   create_table "processes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "process_type"
+    t.string "name"
     t.uuid "community_id", null: false
     t.uuid "form_id"
-    t.string "name"
-    t.string "type"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["community_id"], name: "index_processes_on_community_id"
