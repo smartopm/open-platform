@@ -198,10 +198,10 @@ export default function FormCreate({
             <Grid item md={12} xs={12}>
               <SwitchInput
                 name="previewable"
-                label={t('misc.previewable')}
+                label={t('misc.public')}
                 value={isPublic}
                 handleChange={event => setIsPublic(event.target.checked)}
-                className="form-previewbale-switch-btn"
+                className="form-public-switch-btn"
                 labelPlacement="start"
               />
             </Grid>
