@@ -27,6 +27,7 @@ admin:
       - can_resolve_note_comments
       - can_access_project_steps
       - can_mark_task_as_complete
+      - can_view_task_lists
   payment_plan:
     permissions:
       - can_cancel_payment_plan

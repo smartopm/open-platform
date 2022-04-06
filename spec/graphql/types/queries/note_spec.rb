@@ -10,11 +10,17 @@ RSpec.describe Types::Queries::Note do
       create(:permission, module: 'note',
                           role: admin_role,
                           permissions: %w[
-                            can_fetch_task_comments can_fetch_flagged_notes
-                            can_fetch_task_by_id can_fetch_task_histories
-                            can_get_task_count can_get_task_stats can_get_own_tasks
-                            can_fetch_all_notes can_fetch_user_notes
+                            can_fetch_task_comments
+                            can_fetch_flagged_notes
+                            can_fetch_task_by_id
+                            can_fetch_task_histories
+                            can_get_task_count
+                            can_get_task_stats
+                            can_get_own_tasks
+                            can_fetch_all_notes
+                            can_fetch_user_notes
                             can_fetch_tagged_comments
+                            can_view_task_lists
                           ])
     end
     let!(:site_worker_permission) do
@@ -856,6 +862,53 @@ RSpec.describe Types::Queries::Note do
                                            }, variables: variables).as_json
           expect(result.dig('errors', 0, 'message'))
             .to include('Unauthorized')
+        end
+      end
+
+      describe 'Task Lists' do
+        let(:process) { create(:process, community: admin.community) }
+        let(:task_lists_query) do
+          <<~GQL
+            query TaskLists {
+              taskLists {
+                id
+                name
+                process {
+                  id
+                  name
+                }
+              }
+            }
+          GQL
+        end
+
+        it 'throws an error of user has no permissions' do
+          result = DoubleGdpSchema.execute(task_lists_query, context: {
+                                             current_user: developer,
+                                             site_community: developer.community,
+                                           }).as_json
+
+          expect(result.dig('errors', 0, 'message')).to include('Unauthorized')
+        end
+
+        it 'returns empty array if no task lists exist' do
+          result = DoubleGdpSchema.execute(task_lists_query, context: {
+                                             current_user: admin,
+                                             site_community: admin.community,
+                                           }).as_json
+
+          expect(result['errors']).to be_nil
+          expect(result.dig('data', 'taskLists').length).to eql 0
+        end
+
+        it 'retrieves task lists' do
+          create(:note_list, community: admin.community, process: process)
+          result = DoubleGdpSchema.execute(task_lists_query, context: {
+                                             current_user: admin,
+                                             site_community: admin.community,
+                                           }).as_json
+
+          expect(result.dig('data', 'taskLists').length).to eql 1
         end
       end
     end
