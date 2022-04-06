@@ -129,6 +129,7 @@ export default {
       imageUrl:
         'https://lh3.googleusercontent.com/a-/AOh14Ghj2JnWVlVC_cPrzJrAJ2YyV_UyVTXcEew8YKVp=s96-c',
       avatarUrl: null,
+      userType: 'admin',
       __typename: 'User'
     }
   ],

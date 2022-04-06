@@ -16,7 +16,7 @@ describe('User Detail Component', () => {
         label: 'Role',
         type: 'select',
         fieldSettings: {
-          listValues: []
+          listValues: [{ value: '', title: '' }]
         }
       }
     }
