@@ -711,15 +711,10 @@ export const tasksQueryBuilderConfig = {
   fields: {
     assignee: {
       label: 'Assignee',
-      type: 'select',
+      type: 'text',
       valueSources: ['value'],
-      fieldSettings: {
-        listValues: {
-          value: "User's name",
-          title: "User's name"
-        }
-      }
-    },
+      excludeOperators: ['not_equal']
+      },
     userName: {
       label: "User's Name",
       type: 'text',

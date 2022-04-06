@@ -167,12 +167,18 @@ export default function TodoList({
 
   useEffect(() => {
     if (debouncedFilterInputText) {
+      if(location !== 'my_tasks' && !taskURLFilter){
+        setQuery('completed: false');
+      }
       setFilterQuery(`${debouncedFilterInputText}`);
       loadTasks();
     }
 
     // for tasks searched using the top search bar input
     if (debouncedSearchText) {
+      if(location !== 'my_tasks' && !taskURLFilter){
+        setQuery('completed: false');
+      }
       setSearchText(debouncedSearchText);
       loadTasks();
     }
@@ -303,12 +309,7 @@ export default function TodoList({
     fields: {
       assignee: {
         ...tasksQueryBuilderConfig.fields.assignee,
-        fieldSettings: {
-          listValues: liteData?.usersLite.map(u => {
-            return { value: u.name, title: u.name };
-          })
-        }
-      },
+        },
       userName: {
         ...tasksQueryBuilderConfig.fields.userName
       }
@@ -332,22 +333,15 @@ export default function TodoList({
 
             property = tasksFilterFields[inputFilterProperty.var];
             value = inputFilterValue;
-            operator = property === 'assignees' ? '=' : ':';
+            operator = ':';
 
             return `${property}${operator} '${value}'`;
           })
           .join(` ${conjugate} `);
 
         // debounce only for user's Name
-        if (property === 'user') {
-          setUserNameSearchTerm(queryText);
-          setFilterCount(availableConjugate.length);
-        }
-
-        if (property === 'assignees' && value) {
-          setFilterQuery(queryText);
-          setFilterCount(availableConjugate.length);
-        }
+        setUserNameSearchTerm(queryText);
+        setFilterCount(availableConjugate.length);
       }
     }
   }
