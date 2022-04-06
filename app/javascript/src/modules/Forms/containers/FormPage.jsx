@@ -21,7 +21,7 @@ export default function FormPage() {
   const matches = useMediaQuery('(max-width:900px)');
   const authState = useContext(Context);
   const { t } = useTranslation(['common', 'form']);
-  const { data: formDetailData, loading, error } = useQuery(FormQuery, { variables: { id: formId } });
+  const { data: formDetailData, loading } = useQuery(FormQuery, { variables: { id: formId } });
   const [loginPublicUser] = useMutation(PublicUserMutation)
   const isFormFilled = pathname.includes('user_form');
   const [isError, setIsError] = useState()
