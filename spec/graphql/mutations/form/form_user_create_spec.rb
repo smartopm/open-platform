@@ -75,7 +75,7 @@ RSpec.describe Mutations::Form::FormUserCreate do
         expect(current_user.notes.count).to eql 0
         first_result = DoubleGdpSchema.execute(mutation, variables: variables,
                                                          context: {
-                                                           current_user: admin,
+                                                           current_user: current_user,
                                                            site_community: current_user.community,
                                                            user_role: admin.role,
                                                          }).as_json
@@ -87,7 +87,7 @@ RSpec.describe Mutations::Form::FormUserCreate do
 
         second_result = DoubleGdpSchema.execute(mutation, variables: variables,
                                                           context: {
-                                                            current_user: admin,
+                                                            current_user: current_user,
                                                             site_community: current_user.community,
                                                             user_role: admin.role,
                                                           }).as_json
@@ -117,7 +117,7 @@ RSpec.describe Mutations::Form::FormUserCreate do
         expect(current_user.notes.count).to eql 0
         first_result = DoubleGdpSchema.execute(mutation, variables: variables,
                                                          context: {
-                                                           current_user: admin,
+                                                           current_user: current_user,
                                                            site_community: current_user.community,
                                                            user_role: admin.role,
                                                          }).as_json
@@ -129,7 +129,7 @@ RSpec.describe Mutations::Form::FormUserCreate do
 
         second_result = DoubleGdpSchema.execute(mutation, variables: variables,
                                                           context: {
-                                                            current_user: admin,
+                                                            current_user: current_user,
                                                             site_community: current_user.community,
                                                             user_role: admin.role,
                                                           }).as_json
