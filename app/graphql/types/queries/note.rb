@@ -113,7 +113,7 @@ module Types::Queries::Note
       argument :form_user_id, GraphQL::Types::ID, required: true
     end
 
-    field :task_lists, [Types::NoteListType], null: false do
+    field :task_lists, [Types::NoteType], null: false do
       description 'Returns a list of task lists in a community'
       argument :offset, Integer, required: false
       argument :limit, Integer, required: false
@@ -421,7 +421,11 @@ module Types::Queries::Note
             I18n.t('errors.unauthorized')
     end
 
-    context[:site_community].note_lists.offset(offset).limit(limit)
+    context[:site_community]
+      .notes
+      .includes(:sub_notes, :assignees, :assignee_notes, :documents_attachments)
+      .where(category: 'task_list')
+      .offset(offset).limit(limit)
   end
 
   def tasks_by_quarter
@@ -473,7 +477,7 @@ module Types::Queries::Note
         { user: %i[avatar_attachment] },
       )
       .where(flagged: true, parent_note_id: nil) # Return only parent tasks
-      .where.not(category: 'template')
+      .where.not(category: %w[template task_list])
       .order(completed: :desc, created_at: :desc)
       .with_attached_documents
   end

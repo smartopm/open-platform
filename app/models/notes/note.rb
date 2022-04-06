@@ -63,7 +63,9 @@ module Notes
                                end
                              }
 
-    VALID_CATEGORY = %w[call email text message to_do form emergency template other].freeze
+    VALID_CATEGORY = %w[
+      call email text message to_do form emergency template task_list other
+    ].freeze
     validates :category, inclusion: { in: VALID_CATEGORY, allow_nil: true }
     validates :body, presence: true,
                      uniqueness: { scope: :community_id,

@@ -1,12 +1,13 @@
 import gql from 'graphql-tag';
+import { TasksFragment } from '../../../../graphql/fragments';
 
 const TaskListsQuery = gql`
   query TaskLists {
     taskLists {
-      id
-      name
+      ...TaskFields
     }
   }
+  ${TasksFragment.task}
 `
 
 export default TaskListsQuery;

@@ -92,6 +92,12 @@ export default function TodoItem({
       }]
   }
 
+  if (location.pathname === '/tasks/task_lists') {
+    menuList = [
+      // TODO: Implement edit task list and delete task list in their respective tickets
+    ]
+  }
+
   const menuData = {
     menuList,
     anchorEl,
@@ -261,18 +267,25 @@ const Task = {
   TodoItem.defaultProps = {
     clientView: false,
     taskId: null,
-    task: null
+    task: null,
+    handleChange: () => {},
+    selectedTasks: [],
+    isSelected: false,
+    handleAddSubTask: () => {},
+    handleUploadDocument: () => {},
+    handleTodoClick: () => {},
+    handleTaskCompletion: () => {},
   };
 
   TodoItem.propTypes = {
   task: PropTypes.shape(Task),
-  handleChange: PropTypes.func.isRequired,
-  selectedTasks: PropTypes.arrayOf(PropTypes.string).isRequired,
-  isSelected: PropTypes.bool.isRequired,
-  handleAddSubTask: PropTypes.func.isRequired,
-  handleUploadDocument: PropTypes.func.isRequired,
-  handleTodoClick: PropTypes.func.isRequired,
-  handleTaskCompletion: PropTypes.func.isRequired,
+  handleChange: PropTypes.func,
+  selectedTasks: PropTypes.arrayOf(PropTypes.string),
+  isSelected: PropTypes.bool,
+  handleAddSubTask: PropTypes.func,
+  handleUploadDocument: PropTypes.func,
+  handleTodoClick: PropTypes.func,
+  handleTaskCompletion: PropTypes.func,
   clientView: PropTypes.bool,
   taskId: PropTypes.string,
 };
