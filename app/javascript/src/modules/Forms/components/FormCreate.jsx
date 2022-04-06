@@ -117,9 +117,10 @@ export default function FormCreate({
         <Grid item md={12} xs={12}>
           <TextField
             name="title"
-            id="outlined-basic"
+            id="title"
             label="Form Title"
             variant="outlined"
+            className='form-title-txt-input'
             onChange={e => setTitle(e.target.value)}
             value={title}
             inputProps={{
@@ -131,7 +132,7 @@ export default function FormCreate({
         </Grid>
         <Grid item md={12} xs={12}>
           <TextField
-            id="outlined-basic"
+            id="description"
             label="Form Description"
             variant="outlined"
             name="description"
@@ -141,6 +142,7 @@ export default function FormCreate({
             multiline
             maxRows={5}
             fullWidth
+            className='form-description-txt-input'
             value={description}
             onChange={e => setDescription(e.target.value)}
             required
@@ -190,7 +192,7 @@ export default function FormCreate({
           <Divider />
         </Grid>
         <Grid item md={6} xs={6} style={matches ? {textAlign: 'center'} : { textAlign: 'right' }}>
-          <Button variant="outlined" disabled={isLoading} onClick={() => history.push('/forms')}>
+          <Button variant="outlined" disabled={isLoading} onClick={() => history.push('/forms')} data-testid='cancel'>
             Cancel
           </Button>
         </Grid>
