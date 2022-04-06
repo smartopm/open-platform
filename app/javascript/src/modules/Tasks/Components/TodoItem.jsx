@@ -181,30 +181,32 @@ export default function TodoItem({
         {(isLoadingSubTasks || (isUpdating && objectAccessor(tasksOpen, task?.id))) && <LinearSpinner />}
       </div>
 
-      {objectAccessor(tasksOpen, task?.id) && data?.taskSubTasks?.length > 0 && data?.taskSubTasks?.map(firstLevelSubTask => (
-        <>
-          <div
-            className={classes.levelOne}
-            key={firstLevelSubTask.id}
-          >
-            <TaskDataList
+      {objectAccessor(tasksOpen, task?.id) &&
+        data?.taskSubTasks?.length > 0 &&
+        data?.taskSubTasks.sort(sortTaskOrder)?.map(firstLevelSubTask => (
+          <>
+            <div
+              className={classes.levelOne}
               key={firstLevelSubTask.id}
-              task={firstLevelSubTask}
-              handleChange={handleChange}
-              selectedTasks={selectedTasks}
-              isSelected={isSelected}
-              menuData={menuData}
-              styles={{backgroundColor: '#F5F5F4'}}
-              openSubTask={objectAccessor(tasksOpen, firstLevelSubTask.id)}
-              handleOpenSubTasksClick={() => toggleTask(firstLevelSubTask)}
-              clickable
-              handleClick={() => handleTodoItemClick(firstLevelSubTask)}
-              handleTaskCompletion={handleTaskCompletion}
-              clientView={clientView}
-              taskCommentHasReply={false}
-            />
-          </div>
-          {firstLevelSubTask?.subTasksCount > 0 &&
+            >
+              <TaskDataList
+                key={firstLevelSubTask.id}
+                task={firstLevelSubTask}
+                handleChange={handleChange}
+                selectedTasks={selectedTasks}
+                isSelected={isSelected}
+                menuData={menuData}
+                styles={{backgroundColor: '#F5F5F4'}}
+                openSubTask={objectAccessor(tasksOpen, firstLevelSubTask.id)}
+                handleOpenSubTasksClick={() => toggleTask(firstLevelSubTask)}
+                clickable
+                handleClick={() => handleTodoItemClick(firstLevelSubTask)}
+                handleTaskCompletion={handleTaskCompletion}
+                clientView={clientView}
+                taskCommentHasReply={false}
+              />
+            </div>
+            {firstLevelSubTask?.subTasksCount > 0 &&
             objectAccessor(tasksOpen, firstLevelSubTask?.id) && (
               <>
                 {firstLevelSubTask?.subTasks?.sort(sortTaskOrder)?.map(secondLevelSubTask => (
@@ -227,7 +229,7 @@ export default function TodoItem({
                 ))}
               </>
             )}
-        </>
+          </>
       ))}
       <MenuList
         open={menuData.open}
