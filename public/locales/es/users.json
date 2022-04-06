@@ -1,4 +1,12 @@
 {
+  "buttons": {
+    "activate_user": "Activar Usuario",
+    "deactivate_user": "Desactivar Usuario"
+  },
+  "messages": {
+    "activation_confirmation": "¿Está seguro de que desea activar a {{userName}}. Al hacer clic en el botón de Activar Usuario, este usuario tendrá acceso a la aplicación.",
+    "deactivation_confirmation": "¿Está seguro de que desea desactivar a {{userName}}? Al hacer clic en el botón Desactivar Usuario, este usuario ya no tendrá acceso a la aplicación."
+  },
   "users": {
     "add_invoice": "Agregar una Factura",
     "add_note": "Agrega una nota",

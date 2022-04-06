@@ -41,6 +41,7 @@
       "post_construction": "Post Construcciones",
       "scheme_design_review": "Revisión del Esquema de Diseño"
     },
+    "go_to_guideline": "Ir a la Guía.",
     "lifetime_totals": "Totales de por vida",
     "no_activity_summary": "Sin Resumen de Actividad",
     "no_assigned_projects": "¡Aún no tiene ningún proyecto asignado!",
@@ -57,6 +58,8 @@
     "processes": "Procesos",
     "projects_by_quarter": "Proyectos por Trimestre",
     "projects_by_stage": "Proyectos por Etapa",
+    "requirements": "Requerimientos",
+    "requirements_guideline": "Por favor, lea la guía requerida.",
     "submitted": "Presentado",
     "submitted_by": "Presentado Por",
     "submitted_form": "Formulario Enviado",
