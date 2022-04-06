@@ -939,7 +939,6 @@ export default function CommunitySettings({ data, refetch }) {
             name="duration"
             style={{ width: '200px' }}
             InputProps={{
-              disableUnderline: true,
               'data-testid': 'plan_status_behind'
             }}
             disabled
@@ -977,7 +976,6 @@ export default function CommunitySettings({ data, refetch }) {
             name="duration"
             style={{ width: '200px' }}
             InputProps={{
-              disableUnderline: true,
               'data-testid': 'plan_status_upcoming'
             }}
             disabled
