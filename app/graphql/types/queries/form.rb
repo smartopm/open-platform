@@ -66,7 +66,7 @@ module Types::Queries::Form
 
   def forms
     user = context[:current_user]
-    if user.blank?
+    unless permitted?(module: :forms, permission: :can_access_forms)
       raise GraphQL::ExecutionError,
             I18n.t('errors.unauthorized')
     end

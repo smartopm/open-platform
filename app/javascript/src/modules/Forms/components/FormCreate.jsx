@@ -58,6 +58,7 @@ export default function FormCreate({
       description,
       multipleSubmissionsAllowed,
       preview,
+      isPublic,
       roles
     };
     if (actionType === 'update') {

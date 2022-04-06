@@ -104,11 +104,7 @@ export default function Form({
   }, [formState.isDraft, formState.successfulSubmit]);
 
 
-  // useEffect(() => {
-  //   if(!loading && formDetailData?.form?.isPublic && !editMode && !authState.user) {
-  //     history.push(`/form/${formDetailData?.form?.id}/public`)
-  //   }
-  // }, [formDetailData?.form?.id, formDetailData?.form?.isPublic, history, loading])
+
 
   const formData = flattenFormProperties(categoriesData.data?.formCategories);
 
