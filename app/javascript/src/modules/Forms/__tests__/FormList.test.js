@@ -1,13 +1,12 @@
 import React from 'react';
-import { render, waitFor } from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 import { MockedProvider } from '@apollo/react-testing';
 import { createTheme, ThemeProvider, StyledEngineProvider } from '@mui/material';
-import { BrowserRouter } from 'react-router-dom';
+import routeData, { MemoryRouter } from 'react-router';
 import '@testing-library/jest-dom/extend-expect';
-import Loading from '../../../shared/Loading';
 import FormLinkList from '../components/FormList';
 import { FormsQuery } from '../graphql/forms_queries';
-import userMock from '../../../__mocks__/userMock';
+import userMock from '../../../__mocks__/authstate';
 
 describe('Form List Component', () => {
   const mocks = {
@@ -35,12 +34,21 @@ describe('Form List Component', () => {
       }
     }
   };
+
+
+  const mockHistory = {
+    push: jest.fn(),
+  };
+  beforeEach(() => {
+    jest.spyOn(routeData, 'useHistory').mockReturnValue(mockHistory);
+  });
+
   it('should render form without error', async () => {
     // needs a theme provider to use theme related functions like theme.breakpoints
     const theme = createTheme();
     const container = render(
       <MockedProvider mocks={[mocks]} addTypename={false}>
-        <BrowserRouter>
+        <MemoryRouter>
           <StyledEngineProvider injectFirst>
             <ThemeProvider theme={theme}>
               <FormLinkList
@@ -50,26 +58,27 @@ describe('Form List Component', () => {
               />
             </ThemeProvider>
           </StyledEngineProvider>
-        </BrowserRouter>
+        </MemoryRouter>
       </MockedProvider>
     );
-    const loader = render(<Loading />);
 
-    expect(loader.queryAllByTestId('loader')[0]).toBeInTheDocument();
+    expect(container.queryAllByTestId('loader')[0]).toBeInTheDocument();
     await waitFor(
       () => {
         expect(container.queryAllByTestId('community_form')).toHaveLength(2);
         expect(container.queryAllByTestId('community_form_icon')).toHaveLength(2);
-      },
-      { timeout: 500 }
-    );
-    await waitFor(
-      () => {
+
+        fireEvent.click(container.queryAllByTestId('community_form')[0])
+        expect(mockHistory.push).toBeCalledWith('/form/caea7b44-ee95-42a6/private')
+        
         expect(container.queryAllByTestId('form_name')).toHaveLength(2);
         expect(container.queryAllByTestId('form_name')[0]).toHaveTextContent('Lease Form');
         expect(container.queryAllByTestId('form_name')[1]).toHaveTextContent('Another Form');
+
+        fireEvent.click(container.queryByText('actions.create_a_form'))
+        expect(mockHistory.push).toBeCalledWith('/forms/create')
       },
-      { timeout: 500 }
+      { timeout: 5 }
     );
   });
 
@@ -77,7 +86,7 @@ describe('Form List Component', () => {
     const theme = createTheme();
     const container = render(
       <MockedProvider mocks={[mocks]} addTypename={false}>
-        <BrowserRouter>
+        <MemoryRouter>
           <StyledEngineProvider injectFirst>
             <ThemeProvider theme={theme}>
               <FormLinkList
@@ -88,7 +97,7 @@ describe('Form List Component', () => {
               />
             </ThemeProvider>
           </StyledEngineProvider>
-        </BrowserRouter>
+        </MemoryRouter>
       </MockedProvider>
     );
 

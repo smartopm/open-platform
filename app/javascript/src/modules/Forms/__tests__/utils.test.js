@@ -9,7 +9,8 @@ import {
   propExists,
   requiredFieldIsEmpty,
   extractRenderedTextFromCategory,
-  checkRequiredFormPropertyIsFilled
+  checkRequiredFormPropertyIsFilled,
+  generateIframeSnippet
 } from '../utils';
 
 describe('Utilities', () => {
@@ -443,4 +444,10 @@ describe('Utilities', () => {
      undefined
     )).toBe(false)
   });
+  it('should generate an iframe snippet', () => {
+    const data = { id: '23223', name: 'Some form' }
+    const snippet = generateIframeSnippet(data, 'dev.dgdp.site')
+    expect(snippet).toBe('<iframe src=https://dev.dgdp.site/form/23223/public name=Some form title=Some form scrolling=\"auto\" width=\"100%\" height=\"500px\" />')
+  })
 });
+

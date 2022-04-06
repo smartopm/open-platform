@@ -91,8 +91,9 @@ export default function FormCreate({
     setAlertOpen(false);
   }
 
-  function handleTextCopy(){ 
-    copyText(generateIframeSnippet(formData.form, hostname )).then(() => setIsCopied(true))
+  async function handleTextCopy(){ 
+    await copyText(generateIframeSnippet(formData.form, hostname ))
+    setIsCopied(true)
   }
 
 
@@ -207,6 +208,7 @@ export default function FormCreate({
             </Grid>
           </Grid>
         </Grid>
+        {console.log(formData?.form)}
         <Grid item xs={12}>
           {
               formData?.form?.id && isPublic && (
@@ -214,7 +216,7 @@ export default function FormCreate({
                   icon={false} 
                   severity="success"
                   action={!isCopied && (
-                    <Button color="inherit" size="small" onClick={handleTextCopy}>
+                    <Button color="inherit" size="small" onClick={handleTextCopy} data-testid="copy_text">
                       {t('common:form_actions.copy')}
                     </Button>
                   )}

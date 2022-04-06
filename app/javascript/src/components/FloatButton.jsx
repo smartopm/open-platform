@@ -9,6 +9,7 @@ export default function FloatButton({ title, handleClick, extraStyles, otherClas
       variant="extended"
       onClick={handleClick}
       color="primary"
+      data-testid="float_icon"
       style={extraStyles}
       // eslint-disable-next-line no-use-before-define
       className={`${css(styles.formButton)} ${otherClassNames}`}

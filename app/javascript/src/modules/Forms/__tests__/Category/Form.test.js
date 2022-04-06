@@ -101,4 +101,24 @@ describe('Form Component', () => {
       expect(wrapper.queryByTestId('submit_form_btn')).toBeInTheDocument();
     });
   });
+  it('should not contain draft button if no user', async () => {
+    const wrapper = render(
+      <MockedProvider mocks={[formMock]} addTypename={false}>
+        <Context.Provider value={{}}>
+          <BrowserRouter>
+            <FormContextProvider>
+              <MockedThemeProvider>
+                <Form formId="7d05e98e-e6bb-43cb-838e-e6d76005e326" editMode={false} />
+              </MockedThemeProvider>
+            </FormContextProvider>
+          </BrowserRouter>
+        </Context.Provider>
+      </MockedProvider>
+    );
+
+    await waitFor(() => {
+      expect(wrapper.queryByTestId('save_as_draft')).not.toBeInTheDocument();
+      expect(wrapper.queryByTestId('submit_form_btn')).toBeInTheDocument();
+    });
+  });
 });
