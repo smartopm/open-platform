@@ -110,7 +110,7 @@ class TaskCreate
   # rubocop:enable Metrics/AbcSize
   # rubocop:enable Metrics/MethodLength
 
-  def note_list_steps(process)
+  def self.note_list_steps(process)
     process.note_list.notes.where(parent_note_id: nil)
   end
 
