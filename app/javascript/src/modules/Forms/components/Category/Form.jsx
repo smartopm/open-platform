@@ -20,6 +20,7 @@ import MessageAlert from '../../../../components/MessageAlert';
 import { FormCategoryDeleteMutation } from '../../graphql/form_category_mutations';
 import { formatError } from '../../../../utils/helpers';
 import FormTitle from '../FormTitle';
+import AccessCheck from '../../../Permissions/Components/AccessCheck';
 
 export default function Form({
   editMode,
@@ -98,18 +99,16 @@ export default function Form({
   useEffect(() => {
     if (formState?.successfulSubmit && !formState?.isDraft) {
       // Reset Form to public routes to be safe
-      // TODO: Fix
-      history.push(`/form/${formId}/public`);
       window.location.reload();
     }
-  }, [formState.successfulSubmit]);
+  }, [formState.isDraft, formState.successfulSubmit]);
 
 
-  useEffect(() => {
-    if(!loading && formDetailData?.form?.isPublic && !editMode && !authState.user) {
-      history.push(`/form/${formDetailData?.form?.id}/public`)
-    }
-  }, [formDetailData?.form?.id, formDetailData?.form?.isPublic, history, loading])
+  // useEffect(() => {
+  //   if(!loading && formDetailData?.form?.isPublic && !editMode && !authState.user) {
+  //     history.push(`/form/${formDetailData?.form?.id}/public`)
+  //   }
+  // }, [formDetailData?.form?.id, formDetailData?.form?.isPublic, history, loading])
 
   const formData = flattenFormProperties(categoriesData.data?.formCategories);
 
@@ -245,25 +244,23 @@ export default function Form({
           <Grid item md={12} xs={12} style={{ marginTop: '20px' }}>
             <Divider />
           </Grid>
-            {
-              authState?.user?.id && (
-                <Grid item md={6} xs={6} style={{ textAlign: 'left' }}>
-                  <Button
-                    variant="outlined"
-                    type="submit"
-                    color="primary"
-                    aria-label="form_draft"
-                    style={matches ? { marginTop: '20px' } : { margin: '25px 25px 0 0' }}
-                    onClick={() => formSubmit(formData, 'draft')}
-                    disabled={formState.isSubmitting}
-                    data-testid="save_as_draft"
-                  >
-                    {t('common:form_actions.save_as_draft')}
-                  </Button>
-                </Grid>
-              )
-            }
+          <AccessCheck module='forms' allowedPermissions={['can_save_draft_form']}>
+            <Grid item md={6} xs={6} style={{ textAlign: 'left' }}>
+              <Button
+                variant="outlined"
+                type="submit"
+                color="primary"
+                aria-label="form_draft"
+                style={matches ? { marginTop: '20px' } : { margin: '25px 25px 0 0' }}
+                onClick={() => formSubmit(formData, 'draft')}
+                disabled={formState.isSubmitting}
+                data-testid="save_as_draft"
+              >
+                {t('common:form_actions.save_as_draft')}
+              </Button>
+            </Grid>
 
+          </AccessCheck>
           <Grid item md={6} xs={6} style={{ textAlign: 'right' }}>
             <Button
               variant="contained"

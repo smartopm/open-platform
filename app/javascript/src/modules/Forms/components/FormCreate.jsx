@@ -208,7 +208,6 @@ export default function FormCreate({
             </Grid>
           </Grid>
         </Grid>
-        {console.log(formData?.form)}
         <Grid item xs={12}>
           {
               formData?.form?.id && isPublic && (

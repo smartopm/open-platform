@@ -141,25 +141,34 @@ mutation updateProps(
   $adminUse: Boolean!
   $order: String!
   $fieldValue: JSON
-) {
-  formPropertiesUpdate(
-    formPropertyId: $formPropertyId
-    categoryId: $categoryId
-    fieldName: $fieldName
-    order: $order
-    required: $required
-    adminUse: $adminUse
-    fieldType: $fieldType
-    fieldValue: $fieldValue
   ) {
-    formProperty {
-      id
-      fieldName
+    formPropertiesUpdate(
+      formPropertyId: $formPropertyId
+      categoryId: $categoryId
+      fieldName: $fieldName
+      order: $order
+      required: $required
+      adminUse: $adminUse
+      fieldType: $fieldType
+      fieldValue: $fieldValue
+      ) {
+        formProperty {
+          id
+          fieldName
+        }
+        newFormVersion {
+          id
+        }
+        message
+      }
     }
-    newFormVersion {
-      id
+    `;
+    
+    
+export const PublicUserMutation = gql`
+  mutation loginPublicUser {
+    loginPublicUser {
+        authToken
     }
-    message
   }
-}
 `;

@@ -111,6 +111,7 @@ admin:
       - can_fetch_form_properties
       - can_fetch_form_property
       - can_fetch_form_categories
+      - can_save_draft_form
   subscription_plan:
     permissions:
       - can_create_subscription_plan
@@ -280,6 +281,7 @@ contractor:
       - can_fetch_form_properties
       - can_fetch_form_property
       - can_fetch_form_categories
+      - can_save_draft_form
   profile:
     permissions:
       - can_see_menu_item
@@ -345,6 +347,7 @@ custodian:
       - can_fetch_form_properties
       - can_fetch_form_property
       - can_fetch_form_categories
+      - can_save_draft_form
   timesheet:
     permissions:
       - can_manage_shift
@@ -475,6 +478,7 @@ site_worker:
       - can_fetch_form_properties
       - can_fetch_form_property
       - can_fetch_form_categories
+      - can_save_draft_form
   profile:
     permissions:
       - can_see_menu_item
@@ -545,6 +549,7 @@ resident:
       - can_fetch_form_properties
       - can_fetch_form_property
       - can_fetch_form_categories
+      - can_save_draft_form
   user:
     permissions:
       - can_send_one_time_login
@@ -588,6 +593,7 @@ prospective_client:
       - can_fetch_form_properties
       - can_fetch_form_property
       - can_fetch_form_categories
+      - can_save_draft_form
   profile:
     permissions:
       - can_see_menu_item
@@ -634,6 +640,7 @@ client:
       - can_fetch_form_properties
       - can_fetch_form_property
       - can_fetch_form_categories
+      - can_save_draft_form
   user:
     permissions:
       - can_send_one_time_login
@@ -708,6 +715,7 @@ site_manager:
       - can_fetch_form_properties
       - can_fetch_form_property
       - can_fetch_form_categories
+      - can_save_draft_form
   community:
     permissions:
       - can_see_menu_item
@@ -741,6 +749,7 @@ marketing_manager:
       - can_fetch_form_properties
       - can_fetch_form_property
       - can_fetch_form_categories
+      - can_save_draft_form
   email_template:
     permissions:
       - can_see_menu_item
