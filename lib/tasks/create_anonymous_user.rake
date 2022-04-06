@@ -6,8 +6,7 @@ namespace :db do
     Community.find_each do |community|
       # create an anonymous user permission
       # make sure this anonymous user can submit forms
-      community.users.create!(name: 'Public Submission', user_type: 'public_user',
-                              role: Role.find_by(name: 'public_user'))
+      community.users.create!(name: 'Public Submission', user_type: 'public_user')
     end
   end
 end
