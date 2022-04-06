@@ -26,7 +26,6 @@ module Mutations
       field :form_user, Types::FormUsersType, null: true
       field :error, String, null: true
 
-      # rubocop:disable Metrics/AbcSize
       def resolve(vals)
         form = context[:site_community].forms.find_by(id: vals[:form_id])
         raise_form_not_found_error(form)
@@ -37,7 +36,6 @@ module Mutations
         u_form[:form_user].create_form_task if u_form[:form_user].present?
         u_form
       end
-      # rubocop:enable Metrics/AbcSize
 
       # rubocop:disable Metrics/AbcSize
       # rubocop:disable Metrics/MethodLength
