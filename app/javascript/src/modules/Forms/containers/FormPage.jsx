@@ -59,7 +59,9 @@ export default function FormPage() {
     <>
       <br />
       {isFormFilled ? (
-        <FormUpdate userId={userId} formUserId={formUserId} authState={authState} />
+        <Container maxWidth="md">
+          <FormUpdate userId={userId} formUserId={formUserId} authState={authState} />
+        </Container>
       ) : (
         <FormContextProvider>
           <div style={matches ? {marginTop: '-40px'} : {}}>
