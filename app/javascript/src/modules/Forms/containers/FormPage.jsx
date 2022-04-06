@@ -27,12 +27,16 @@ export default function FormPage() {
       ) : (
         <FormContextProvider>
           <div style={matches ? {marginTop: '-40px'} : {}}>
+            {
+            !!authState.user && (
             <FormHeader
               linkText={t('common:misc.forms')}
               linkHref="/forms"
               pageName={t('form:misc.submit_form')}
               PageTitle={t('form:misc.submit_form')}
             />
+            )
+          }
           </div>
           <Container maxWidth="md">
             <Form
