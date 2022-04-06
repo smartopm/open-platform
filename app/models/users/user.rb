@@ -189,6 +189,7 @@ module Users
       allow_nil: true,
     }
     validate :phone_number_valid?
+    validate :public_user?
     after_update :update_associated_accounts_details, if: -> { saved_changes.key?('name') }
 
     devise :omniauthable, omniauth_providers: %i[google_oauth2 facebook]
@@ -724,6 +725,11 @@ module Users
     end
 
     private
+
+    def public_user?
+      user = community.users.find_by(name: 'Public Submission')
+      errors.add(:name, :user_already_exists) unless user.nil?
+    end
 
     def phone_number_valid?
       return if self[:phone_number].blank?

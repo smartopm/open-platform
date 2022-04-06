@@ -226,6 +226,8 @@ en:
             phone_number:
               invalid_length: must be a valid length
               invalid_phone_number: can only contain 0-9, '-', '+' and space
+            name:
+              user_already_exists: Public Submission user already exists
         properties/payment_plan:
           attributes:
             user_id:
