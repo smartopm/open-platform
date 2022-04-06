@@ -225,8 +225,29 @@ const App = () => {
                                 {[...modules, ...UserRoutes].map(module => {
                                   if (module.subMenu) {
                                     return module.subMenu.map(sub => {
-                                      let routes = [];
+                                      if (sub.subMenu) {
+                                        return sub.subMenu.map(subSubMenu => {
+                                          let subSubMenuRoutes = [];
 
+                                          if (
+                                            subSubMenu.subRoutes &&
+                                            checkAllowedCommunityFeatures(
+                                              user.community.features,
+                                              subSubMenu.featureName
+                                            )
+                                          ) {
+                                            subSubMenuRoutes = subSubMenu.subRoutes.map(subRoute => (
+                                              <Route {...subRoute.routeProps} key={subRoute.name} />
+                                            ));
+                                          }
+                                          checkAllowedCommunityFeatures(
+                                            user.community.features,
+                                            subSubMenu.featureName
+                                          ) && subSubMenuRoutes.push(<Route {...subSubMenu.routeProps} key={subSubMenu.name} />);
+                                          return subSubMenuRoutes;
+                                        });
+                                      }
+                                      let routes = [];
                                       if (
                                         sub.subRoutes &&
                                         checkAllowedCommunityFeatures(

@@ -11,7 +11,7 @@ import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import { useTranslation } from 'react-i18next';
 import makeStyles from '@mui/styles/makeStyles';
-import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider'; 
+import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
 import checkSubMenuAccessibility from '../utils';
 
 
@@ -44,7 +44,7 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, direction, communityFeatu
     // check the direct and route differently
     // check current pathname and direction of the drawer if it has id then use
     //  that as new path for all left side based routes
-    // this should also work for paths like /message/:id, 
+    // this should also work for paths like /message/:id,
     // but it has to be registered in the routes first(for now)
     if (direction === 'right') {
       history.push(item.routeProps.path.replace(':id', params.id));
@@ -62,7 +62,7 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, direction, communityFeatu
    /**
    * @param {string} type
    * @description dynamically create necessary context to determine menu accessibility.
-   * based on Feature type, Context will be injected into the accessibility 
+   * based on Feature type, Context will be injected into the accessibility
    * logic check handler on demand
    * @returns {object} object || undefined
    */
@@ -131,7 +131,7 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, direction, communityFeatu
                 }}
               >
                 {menuItem.styleProps?.icon && (
-                  <ListItemIcon 
+                  <ListItemIcon
                     className={`${classes.listItemIcon} ${classes.child}`}
                     style={{ color: pathname === menuItem.routeProps.path && '#FFFFFF' }}
                   >
@@ -158,33 +158,93 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, direction, communityFeatu
               >
                 <List component="div" disablePadding>
                   {menuItem.subMenu &&
-                    menuItem.subMenu.map(item =>
-                      communityFeatures.includes(item.featureName) &&
-                      checkSubMenuAccessibility({ authState, subMenuItem: item }) ? (
-                        <ListItem
-                          button
-                          key={item.name(t)}
-                          onClick={event => routeTo(event, item)}
-                          selected={pathname === item.routeProps.path}
-                          className={`${item.styleProps?.className} ${classes.menuItem}`}
-                          style={{
-                            backgroundColor:
-                              pathname === item.routeProps.path && theme.palette.primary.main,
-                          }}
-                        >
-                          <ListItemText
-                            primary={item.name(t)}
-                            style={{ 
-                              marginLeft: `${menuItem.styleProps?.icon ? '55px' : '17px'}`,
-                              color: pathname === item.routeProps.path && '#FFFFFF'
+                    menuItem.subMenu.map(item => {
+                      return(
+                        communityFeatures.includes(item.featureName) &&
+                        checkSubMenuAccessibility({ authState, subMenuItem: item }) ? (
+                          item.subMenu && item.subMenu.length > 0 ? item.subMenu.map(subMenuItem => (
+                            <>
+                              <ListItem
+                                button
+                                key={item.name(t)}
+                                onClick={event => routeTo(event, item)}
+                                selected={pathname === item.routeProps.path}
+                                className={`${item.styleProps?.className} ${classes.menuItem}`}
+                                style={{
+                                backgroundColor:
+                                  pathname === item.routeProps.path && theme.palette.primary.main,
                               }}
-                            className={`${classes.menuItemText} ${classes.child}`}
-                          />
-                        </ListItem>
-                      ) : (
-                        <span key={item.name(t)} />
+                              >
+                                <ListItemText
+                                  primary={item.name(t)}
+                                  style={{
+                                  marginLeft: `${menuItem.styleProps?.icon ? '55px' : '17px'}`,
+                                  color: pathname === item.routeProps.path && '#FFFFFF'
+                                  }}
+                                  className={`${classes.menuItemText} ${classes.child}`}
+                                />
+                              </ListItem>
+
+                              <Collapse
+                                key={subMenuItem}
+                                in={currentMenu.name === subMenuItem.name(t) && currentMenu.isOpen}
+                                timeout="auto"
+                                unmountOnExit
+                              >
+                                <List component="div" disablePadding>
+                                  <ListItem
+                                    button
+                                    key={subMenuItem.name(t)}
+                                    onClick={event => routeTo(event, subMenuItem)}
+                                    selected={pathname === subMenuItem.routeProps.path}
+                                    className={`${subMenuItem.styleProps?.className} ${classes.menuItem}`}
+                                    style={{
+                                      backgroundColor:
+                                        pathname === subMenuItem.routeProps.path &&
+                                        theme.palette.primary.main,
+                                    }}
+                                  >
+                                    <ListItemText
+                                      primary={subMenuItem.name(t)}
+                                      style={{
+                                        marginLeft: `${subMenuItem.styleProps?.icon ? '55px' : '17px'}`,
+                                        color: pathname === subMenuItem.routeProps.path && '#FFFFFF'
+                                      }}
+                                      className={`${classes.menuItemText} ${classes.child}`}
+                                    />
+                                  </ListItem>
+                                </List>
+                              </Collapse>
+                            </>
+                          )) : (
+                            <ListItem
+                              button
+                              key={item.name(t)}
+                              onClick={event => routeTo(event, item)}
+                              selected={pathname === item.routeProps.path}
+                              className={`${item.styleProps?.className} ${classes.menuItem}`}
+                              style={{
+                              backgroundColor:
+                                pathname === item.routeProps.path && theme.palette.primary.main,
+                            }}
+                            >
+                              <ListItemText
+                                primary={item.name(t)}
+                                style={{
+                                marginLeft: `${menuItem.styleProps?.icon ? '55px' : '17px'}`,
+                                color: pathname === item.routeProps.path && '#FFFFFF'
+                                }}
+                                className={`${classes.menuItemText} ${classes.child}`}
+                              />
+                            </ListItem>
+                          )
+                        ) : (
+                          <span key={item.name(t)} />
+                        )
                       )
-                    )}
+                    }
+                    )
+                  }
                 </List>
               </Collapse>
             </Fragment>
