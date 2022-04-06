@@ -812,6 +812,7 @@ public_user:
       - can_fetch_form_properties
       - can_fetch_form_property
       - can_fetch_form_categories
+      - can_create_form_user
 code_scanner:
   dashboard:
     permissions:

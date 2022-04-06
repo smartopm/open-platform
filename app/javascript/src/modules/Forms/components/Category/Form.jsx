@@ -90,7 +90,7 @@ export default function Form({
     saveFormData(
       propertiesData,
       formId,
-      authState?.user?.id,
+      authState.user.id,
       categoriesData.data?.formCategories,
       status
     );
@@ -152,7 +152,7 @@ export default function Form({
               saveFormData(
                 formData,
                 formId,
-                authState?.user?.id,
+                authState.user.id,
                 categoriesData.data?.formCategories
               )
             }

@@ -5,7 +5,7 @@ module Mutations
     # For adding form users
     class FormUserCreate < BaseMutation
       argument :form_id, ID, required: true
-      argument :user_id, ID, required: false
+      argument :user_id, ID, required: true
       argument :prop_values, GraphQL::Types::JSON, required: true
       argument :status, String, required: false
 
@@ -29,11 +29,9 @@ module Mutations
       # rubocop:disable Metrics/AbcSize
       def resolve(vals)
         form = context[:site_community].forms.find_by(id: vals[:form_id])
-        user = context[:site_community].users.find_by(name: 'Public Submission')
         raise_form_not_found_error(form)
 
-        vals = vals.merge(status_updated_by: context[:current_user] || user,
-                          user_id: context[:current_user]&.id || user&.id)
+        vals = vals.merge(status_updated_by: context[:current_user])
         u_form = create_form_user(form, vals)
 
         u_form[:form_user].create_form_task if u_form[:form_user].present?
