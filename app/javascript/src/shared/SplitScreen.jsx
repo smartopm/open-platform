@@ -7,21 +7,21 @@ import { makeStyles, useTheme } from '@mui/styles';
 export default function SplitScreen({ children, open, onClose }) {
   const classes = useStyles();
   const theme = useTheme();
-  const matches0 = useMediaQuery(theme.breakpoints.only('sm'));
-  const matches3 = useMediaQuery(theme.breakpoints.only('xs'));
-  const matches1 = useMediaQuery(theme.breakpoints.only('md'));
-  const matches2 = useMediaQuery(theme.breakpoints.only('lg'));
+  const matchesSm = useMediaQuery(theme.breakpoints.only('sm'));
+  const matchesxs = useMediaQuery(theme.breakpoints.only('xs'));
+  const matchesMd = useMediaQuery(theme.breakpoints.only('md'));
+  const matchesLg = useMediaQuery(theme.breakpoints.only('lg'));
   function drawerStyles() {
-    if (matches0) {
+    if (matchesSm) {
       return classes.drawerPaperMobile
     }
-    if (matches1) {
+    if (matchesMd) {
       return classes.mdDrawerPaper
     }
-    if (matches2) {
+    if (matchesLg) {
       return classes.drawerPaper
     }
-    if (matches3) {
+    if (matchesxs) {
       return classes.drawerPaperMobile
     }
 
