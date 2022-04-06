@@ -15,7 +15,7 @@ describe('It should render the campaign split screen', () => {
     },
     result: {
       data: {
-        campaigns: {
+        campaign: {
           id: '54343432432',
           batchTime: '2020-06-24T11:58:22.573Z',
           status: 'draft',
