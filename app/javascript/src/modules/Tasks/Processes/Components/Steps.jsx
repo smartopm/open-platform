@@ -59,10 +59,11 @@ export default function ProjectSteps({
       handleStepCompletion(stepItemId, completed)
     }
   }
+
   return (
     <>
       {data?.length > 0
-      ? (data?.map(firstLevelStep => (
+      ? (data?.sort(sortTaskOrder)?.map(firstLevelStep => (
         <Fragment key={firstLevelStep.id}>
           <div
             className={classes.levelOne}
