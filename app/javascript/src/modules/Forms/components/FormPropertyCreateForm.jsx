@@ -234,7 +234,7 @@ export default function FormPropertyCreateForm({
               value={propertyData.required}
               handleChange={handleRadioChange}
               className="form-property-required-field-switch-btn"
-              labelPlacement="right"
+              labelPlacement="end"
             />
           </Grid>
           <Grid item md={4} xs={6}>
@@ -243,7 +243,7 @@ export default function FormPropertyCreateForm({
               label={<Typography variant="caption">{t('form_fields.admins_only')}</Typography>}
               value={propertyData.adminUse}
               handleChange={handleRadioChange}
-              labelPlacement="right"
+              labelPlacement="end"
             />
           </Grid>
           <Grid item md={4} xs={12}>
