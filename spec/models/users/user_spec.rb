@@ -77,8 +77,7 @@ RSpec.describe Users::User, type: :model do
   end
 
   describe 'associations' do
-    # TODO: Find out why this fails
-    # it { is_expected.to belong_to(:community) }
+    it { is_expected.to belong_to(:community).without_validating_presence }
     it do
       is_expected
         .to have_many(:entry_requests)
