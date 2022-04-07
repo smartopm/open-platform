@@ -237,11 +237,15 @@ export default function CampaignSplitScreenContent({ refetch, campaign, handleCl
     if (campaign) {
       setFormData(campaign);
     }
+    
+  }, [campaign]);
+
+  useEffect(() => {
     if (state?.from === '/users' || formData.status === 'scheduled') {
       setMailListType('idlist');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [campaign, formData.status]);
+  }, [formData.status]);
   return (
     <Grid
       container
