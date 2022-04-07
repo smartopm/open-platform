@@ -29,7 +29,7 @@ const menuList = [
 const menuData = {
   menuList,
   handleTaskInfoMenu: jest.fn(),
-  anchorEl: null,
+  anchorEl: document.createElement("button"),
   open: false,
   handleClose: jest.fn()
 }

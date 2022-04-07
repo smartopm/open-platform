@@ -12,7 +12,7 @@ describe('MenuList', () => {
         { content: 'Menu', isAdmin: true, color: '', handleClick: jest.fn() },
         { content: 'LastOne', isAdmin: true, color: '', handleClick: jest.fn() }
       ],
-      anchorEl: null,
+      anchorEl: document.createElement("button"),
       open: true,
       userType: 'admin',
       handleClose: jest.fn()

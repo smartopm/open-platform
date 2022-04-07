@@ -34,7 +34,7 @@ describe('Render Transaction', () => {
   const menuData = {
     menuList: [{ content: 'Example', isAdmin: true, color: '', handleClick: jest.fn() }],
     handleTransactionMenu: jest.fn(),
-    anchorEl: null,
+    anchorEl: document.createElement("button"),
     open: true,
     userType: 'admin',
     handleClose: jest.fn()
