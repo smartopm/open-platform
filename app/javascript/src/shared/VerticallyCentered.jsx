@@ -15,7 +15,7 @@ export default function VerticallyCentered({ children }) {
         style={{ backgroundColor: 'teal' }}
       >
         <Grid item>
-          <Container maxWidth="sm" style={{ backgroundColor: 'yellow' }}>
+          <Container maxWidth="sm">
             {children}
           </Container>
         </Grid>
