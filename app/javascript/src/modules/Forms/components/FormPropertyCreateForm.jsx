@@ -220,7 +220,7 @@ export default function FormPropertyCreateForm({
               </Select>
             </FormControl>
           </Grid>
-          <Grid md={12} xs={12}>
+          <Grid item md={12} xs={12}>
             {(propertyData.fieldType === 'radio' ||
               propertyData.fieldType === 'dropdown' ||
               propertyData.fieldType === 'checkbox') && (
