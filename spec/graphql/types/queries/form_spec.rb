@@ -70,6 +70,34 @@ RSpec.describe Types::Queries::Form do
     let!(:resident_role) { create(:role, name: 'resident') }
     let!(:client_role) { create(:role, name: 'client') }
 
+    let!(:resident_permission) do
+      create(:permission, module: 'forms',
+                          role: resident_role,
+                          permissions: %w[
+                            can_access_forms
+                            can_view_own_forms can_view_form_user
+                            can_view_form_user_properties
+                            can_fetch_form
+                            can_fetch_form_property
+                            can_fetch_form_properties
+                            can_fetch_form_categories
+                          ])
+    end
+
+    let!(:client_permission) do
+      create(:permission, module: 'forms',
+                          role: client_role,
+                          permissions: %w[
+                            can_access_forms
+                            can_view_own_forms can_view_form_user
+                            can_view_form_user_properties
+                            can_fetch_form
+                            can_fetch_form_property
+                            can_fetch_form_properties
+                            can_fetch_form_categories
+                          ])
+    end
+
     let(:forms_query) do
       <<~GQL
         query {
