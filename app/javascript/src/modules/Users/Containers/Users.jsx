@@ -167,10 +167,7 @@ export default function UsersList() {
           })
           .join(` ${conjugate} `);
         setSearchQuery(query);
-        history.push({
-          pathname: '/users',
-          search: query
-        });
+        history.push({ pathname: '/users', search: query });
         setFilterCount(availableConjugate.length);
       }
     }
