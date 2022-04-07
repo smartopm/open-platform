@@ -727,6 +727,9 @@ module Users
     private
 
     def public_user?
+      return if changes_to_save['name'].nil?
+      return unless changes_to_save['name'][1] == 'Public Submission'
+
       user = community.users.find_by(name: 'Public Submission')
       errors.add(:name, :user_already_exists) unless user.nil?
     end
