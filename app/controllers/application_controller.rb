@@ -11,6 +11,8 @@ class ApplicationController < ActionController::Base
   private
 
   def allow_iframe_on_forms
+    return unless request.fullpath.include?('/form')
+
     form_id = request.fullpath.split('/')[2]
     public_form = current_community&.forms&.find_by(id: form_id, is_public: true)
     # only allow iframes if the form exists
