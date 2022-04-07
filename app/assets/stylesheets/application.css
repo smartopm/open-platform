@@ -14,8 +14,16 @@
  *= require_self
  */
 
-/* Spinner for page loading */
-
+ 
+ html, body {
+   height: 100%;
+  }
+  
+  #root {
+    height: 100%;
+  }
+  
+  /* Spinner for page loading */
 .lds-ripple {
   display: inline-block;
   position: relative;
