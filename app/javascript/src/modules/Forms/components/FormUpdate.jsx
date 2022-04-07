@@ -32,7 +32,6 @@ import DatePickerDialog, {
 } from '../../../components/DatePickerDialog';
 import { FormUserQuery, UserFormPropertiesQuery } from '../graphql/forms_queries';
 import ErrorPage from '../../../components/Error';
-import CenteredContent from '../../../shared/CenteredContent';
 import { FormUserStatusUpdateMutation, FormUserUpdateMutation } from '../graphql/forms_mutation';
 import TextInput from './FormProperties/TextInput';
 import {
@@ -52,6 +51,7 @@ import FormTitle from './FormTitle';
 import CheckboxInput from './FormProperties/CheckboxInput';
 import ListWrapper from '../../../shared/ListWrapper';
 import CategoryItem from './Category/CategoryItem';
+import MessageAlert from "../../../components/MessageAlert"
 
 // date
 // text input (TextField or TextArea)
@@ -570,6 +570,12 @@ export default function FormUpdate({ formUserId, userId, authState, categoriesDa
   return (
     <>
       <Container>
+        <MessageAlert
+          type={message.error ? 'error' : 'success'}
+          message={message.info}
+          open={!!message.info}
+          handleClose={() => setMessage({...message, info: '', error: false})} 
+        />
         <Grid style={!matches ? { padding: '0  100px 0 100px' } : {}}>
           <FormTitle
             name={formUserData.data?.formUser.form.name}
@@ -644,13 +650,6 @@ export default function FormUpdate({ formUserId, userId, authState, categoriesDa
             </Grid>
           </Grid>
           <br />
-          <CenteredContent>
-            {Boolean(message.info.length) && (
-              <Typography variant="subtitle1" color={message.err ? 'error' : 'primary'}>
-                {message.info}
-              </Typography>
-            )}
-          </CenteredContent>
         </form>
       </Container>
 

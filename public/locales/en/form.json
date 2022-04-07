@@ -86,7 +86,7 @@
     "publish": "publish",
     "delete": "delete",
     "update": "Update",
-    "submit_form": "Submit Form"
+    "submit_form": "Submit"
   },
   "form_fields": {
     "field_name": "Field Name",
