@@ -73,6 +73,9 @@ export const UserFormPropertiesQuery = gql`
         order
         id
         adminUse
+        category {
+          id
+        }
       }
       value
       imageUrl

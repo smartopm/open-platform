@@ -13,7 +13,7 @@ import {
   Button,
   Container,
   Grid,
-  TextField,
+  Divider,
   Typography,
   ListItem,
   ListItemText
@@ -45,15 +45,13 @@ import DialogueBox from '../../../shared/dialogs/DeleteDialogue';
 import UploadField from './FormProperties/UploadField';
 import SignaturePad from './FormProperties/SignaturePad';
 import useFileUpload from '../../../graphql/useFileUpload';
-import { dateFormatter } from '../../../components/DateContainer';
-import { formStatus as updatedFormStatus } from '../../../utils/constants';
 import RadioInput from './FormProperties/RadioInput';
 import ImageAuth from '../../../shared/ImageAuth';
 import Loading, { Spinner } from '../../../shared/Loading';
-
 import FormTitle from './FormTitle';
 import CheckboxInput from './FormProperties/CheckboxInput';
 import ListWrapper from '../../../shared/ListWrapper';
+import CategoryItem from './Category/CategoryItem';
 
 // date
 // text input (TextField or TextArea)
@@ -65,8 +63,7 @@ const initialData = {
   radio: { value: { label: '', checked: null } }
 };
 
-// Redirect to home if user is not logged in
-export default function FormUpdate({ formUserId, userId, authState }) {
+export default function FormUpdate({ formUserId, userId, authState, categoriesData }) {
   const [properties, setProperties] = useState(initialData);
   const [message, setMessage] = useState({ err: false, info: '', signed: false });
   const [openModal, setOpenModal] = useState(false);
@@ -81,7 +78,7 @@ export default function FormUpdate({ formUserId, userId, authState }) {
   const [updateFormUserStatus] = useMutation(FormUserStatusUpdateMutation);
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [formState, setFormState] = useState({});
-  const matches = useMediaQuery('(max-width:600px)');
+  const matches = useMediaQuery('(max-width:900px)');
 
   const { data, error, loading } = useQuery(UserFormPropertiesQuery, {
     variables: { userId, formUserId },
@@ -326,7 +323,12 @@ export default function FormUpdate({ formUserId, userId, authState }) {
       date: (
         <DatePickerDialog
           key={formPropertiesData.formProperty.id}
-          textFieldStyle={{ background: '#F5F5F4', padding: '10px 15px', borderRadius: '10px', marginBottom: '20px' }}
+          textFieldStyle={{
+            background: '#F5F5F4',
+            padding: '10px 15px',
+            borderRadius: '10px',
+            marginBottom: '20px'
+          }}
           inputVariant="outlined"
           selectedDate={
             objectAccessor(properties, formPropertiesData.formProperty.fieldName)?.value ||
@@ -345,7 +347,12 @@ export default function FormUpdate({ formUserId, userId, authState }) {
       time: (
         <ThemedTimePicker
           key={formPropertiesData.formProperty.id}
-          textFieldStyle={{ background: '#F5F5F4', padding: '10px 15px', borderRadius: '10px', marginBottom: '20px' }}
+          textFieldStyle={{
+            background: '#F5F5F4',
+            padding: '10px 15px',
+            borderRadius: '10px',
+            marginBottom: '20px'
+          }}
           inputVariant="outlined"
           time={
             objectAccessor(properties, formPropertiesData.formProperty.fieldName)?.value ||
@@ -365,7 +372,12 @@ export default function FormUpdate({ formUserId, userId, authState }) {
       datetime: (
         <DateAndTimePickers
           key={formPropertiesData.formProperty.id}
-          textFieldStyle={{ background: '#F5F5F4', padding: '10px 15px', borderRadius: '10px', marginBottom: '20px' }}
+          textFieldStyle={{
+            background: '#F5F5F4',
+            padding: '10px 15px',
+            borderRadius: '10px',
+            marginBottom: '20px'
+          }}
           inputVariant="outlined"
           selectedDateTime={
             objectAccessor(properties, formPropertiesData.formProperty.fieldName)?.value ||
@@ -415,9 +427,9 @@ export default function FormUpdate({ formUserId, userId, authState }) {
                     {formPropertiesData.imageUrl && (
                       <>
                         <ListWrapper className={classes.space}>
-                          <ListItem style={{ paddingLeft: 0, marginBottom: '-20px' }}>
-                            <Grid container>
-                              <Grid item md={11} xs={12}>
+                          <ListItem style={{ paddingLeft: 0 }}>
+                            <Grid container alignItems="center" justifyContent="center">
+                              <Grid item md={11} xs={8}>
                                 <ListItemText
                                   disableTypography
                                   primary={(
@@ -441,7 +453,7 @@ export default function FormUpdate({ formUserId, userId, authState }) {
                                   )}
                                 />
                               </Grid>
-                              <Grid item md={1} xs={12} className="">
+                              <Grid item md={1} xs={4} className={classes.alignRight}>
                                 <Button
                                   aria-label="download-icon"
                                   data-testid="download-icon"
@@ -485,7 +497,7 @@ export default function FormUpdate({ formUserId, userId, authState }) {
         <div key={formPropertiesData.formProperty.id}>
           {formPropertiesData.imageUrl && (
             <>
-              <Typography variant='caption'>{t('misc.signature')}</Typography>
+              <Typography variant="caption">{t('misc.signature')}</Typography>
               <br />
               <ImageAuth imageLink={formPropertiesData.imageUrl} auth />
             </>
@@ -558,85 +570,78 @@ export default function FormUpdate({ formUserId, userId, authState }) {
   return (
     <>
       <Container>
-        <FormTitle
-          name={formUserData.data?.formUser.form.name}
-          description={formUserData.data?.formUser.form.description}
-        />
+        <Grid style={!matches ? { padding: '0  100px 0 100px' } : {}}>
+          <FormTitle
+            name={formUserData.data?.formUser.form.name}
+            description={formUserData.data?.formUser.form.description}
+          />
+        </Grid>
         <form onSubmit={event => handleActionClick(event, 'update')}>
-          {authState.user.userType === 'admin' && userId && (
-            <>
-              <TextField
-                label={t('form_fields.form_status')}
-                value={`${objectAccessor(
-                  updatedFormStatus,
-                  formUserData.data?.formUser.status
-                )} - ${dateFormatter(formUserData.data?.formUser.updatedAt)}`}
-                disabled
-                margin="dense"
-                InputLabelProps={{
-                  shrink: true
-                }}
-                style={{ width: '100%' }}
-              />
-              <TextField
-                label={t('form_fields.form_status_updated_by')}
-                value={formUserData.data.formUser.statusUpdatedBy.name}
-                disabled
-                margin="dense"
-                InputLabelProps={{
-                  shrink: true
-                }}
-                style={{ width: '100%' }}
-              />
-            </>
-          )}
-          {data?.formUserProperties.sort(sortPropertyOrder).map(renderForm)}
+          {Boolean(categoriesData) &&
+            categoriesData.map(category => (
+              <CategoryItem category={category} key={category.id} editMode={false}>
+                <Grid style={!matches ? { padding: ' 20px  120px 0 120px' } : { paddingTop: '20px' }}>
+                  {data?.formUserProperties
+                    .sort(sortPropertyOrder)
+                    .filter(prop => category.id === prop.formProperty.category.id)
+                    .map(renderForm)}
+                </Grid>
+              </CategoryItem>
+            ))}
           <br />
-          <br />
-          <Grid container justifyContent="space-between" direction="row" spacing={2}>
-            <Grid item xs={4}>
-              <Button
-                type="submit"
-                color="primary"
-                aria-label="form_update"
-                variant="outlined"
-                disabled={isLoading}
-                size="small"
-                fullWidth={matches}
-              >
-                {t('form_status_actions.update')}
-              </Button>
+          <Grid
+            container
+            justifyContent="space-between"
+            direction="row"
+            spacing={2}
+            style={!matches ? { padding: ' 20px  120px 0 120px' } : {}}
+          >
+            <Grid item xs={12} md={12} style={{ paddingBottom: '20px' }}>
+              <Divider />
             </Grid>
             {authState.user.userType === 'admin' && (
               <>
                 <Grid item xs={4}>
                   <Button
-                    variant="contained"
                     onClick={event => handleActionClick(event, 'approve')}
                     color="primary"
                     aria-label="form_approve"
                     disabled={isLoading}
                     size="small"
                     fullWidth={matches}
+                    variant='outlined'
                   >
                     {t('form_status_actions.approved')}
                   </Button>
                 </Grid>
-                <Grid item xs={4}>
+                <Grid item xs={4} style={{ textAlign: 'center' }}>
                   <Button
-                    variant="contained"
                     onClick={event => handleActionClick(event, 'reject')}
                     aria-label="form_reject"
                     style={{ backgroundColor: '#DC004E', color: '#FFFFFF' }}
                     disabled={isLoading}
                     size="small"
                     fullWidth={matches}
+                    variant='outlined'
                   >
                     {t('form_status_actions.rejected')}
                   </Button>
                 </Grid>
               </>
             )}
+            <Grid item xs={4} className={classes.alignRight}>
+              <Button
+                type="submit"
+                color="primary"
+                aria-label="form_update"
+                variant="contained"
+                disabled={isLoading}
+                size="small"
+                fullWidth={matches}
+              >
+                {t('form_status_actions.submit_form')}
+              </Button>
+            </Grid>
           </Grid>
           <br />
           <CenteredContent>
@@ -702,13 +707,21 @@ const useStyles = makeStyles(() => ({
   },
   buttonBg: {
     background: '#FFFFFF'
+  },
+  alignRight: {
+    textAlign: 'right'
   }
 }));
+
+FormUpdate.defaultProps = {
+  categoriesData: []
+}
 
 FormUpdate.propTypes = {
   userId: PropTypes.string.isRequired,
   formUserId: PropTypes.string.isRequired,
   authState: PropTypes.shape({
     user: PropTypes.shape({ userType: PropTypes.string })
-  }).isRequired
+  }).isRequired,
+  categoriesData: PropTypes.arrayOf({})
 };
