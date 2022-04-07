@@ -563,7 +563,6 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
                       name={actionField.name}
                       margin="normal"
                       variant="outlined"
-                      multiline
                     />
                   );
                 }}
@@ -596,7 +595,6 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
                       name={varName}
                       margin="normal"
                       variant="outlined"
-                      multiline
                     />
                   );
                 }}
