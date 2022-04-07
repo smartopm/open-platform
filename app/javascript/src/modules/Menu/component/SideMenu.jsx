@@ -14,14 +14,13 @@ import makeStyles from '@mui/styles/makeStyles';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
 import checkSubMenuAccessibility from '../utils';
 
-
 const SideMenu = ({ toggleDrawer, menuItems, userType, direction, communityFeatures }) => {
   const authState = useContext(AuthStateContext);
   const history = useHistory();
   const { pathname } = useLocation();
   const params = useParams();
   const { t } = useTranslation('common')
-  const [currentMenu, setCurrentMenu] = useState({ isOpen: false, name: '' });
+  const [currentMenu, setCurrentMenu] = useState({ parentName: '', parentIsOpen: false, isOpen: false, name: '' });
   const classes = useStyles()
   const theme = useTheme()
   /**
@@ -32,9 +31,17 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, direction, communityFeatu
    * @returns void
    * @todo automatically open new menu when another is clicked while current is still open
    */
-  function routeTo(event, item) {
+  // eslint-disable-next-line max-params
+  function routeTo(event, item, parentItem, isParent=false) {
     if (item.subMenu) {
-      setCurrentMenu({ isOpen: !currentMenu.isOpen, name: item.name(t) });
+      setCurrentMenu({
+        parentIsOpen: parentItem.name(t) === item.name(t) && isParent ?
+                      !currentMenu.parentIsOpen : true,
+        parentName: parentItem.name(t),
+        isOpen: parentItem.name(t) !== item.name(t) &&
+                currentMenu.parentIsOpen && !currentMenu.isOpen,
+        name: item.name(t)
+      });
       return;
     }
     // close the menu and route  only when it is open and it is on small screens
@@ -122,7 +129,7 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, direction, communityFeatu
             <Fragment key={typeof menuItem.name === 'function' && menuItem.name(t)}>
               <ListItem
                 button
-                onClick={event => routeTo(event, menuItem)}
+                onClick={event => routeTo(event, menuItem, menuItem, !!menuItem.subMenu)}
                 selected={pathname === menuItem.routeProps.path}
                 className={`${menuItem.styleProps?.className} ${classes.menuItem}`}
                 style={{
@@ -152,14 +159,13 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, direction, communityFeatu
               </ListItem>
 
               <Collapse
-                in={currentMenu.name === menuItem.name(t) && currentMenu.isOpen}
+                in={currentMenu.parentName === menuItem.name(t) && currentMenu.parentIsOpen}
                 timeout="auto"
                 unmountOnExit
               >
                 <List component="div" disablePadding>
                   {menuItem.subMenu &&
                     menuItem.subMenu.map(item => {
-                      console.log({ item })
                       return(
                         communityFeatures.includes(item.featureName) &&
                         checkSubMenuAccessibility({ authState, subMenuItem: item }) ? (
@@ -168,7 +174,7 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, direction, communityFeatu
                               <ListItem
                                 button
                                 key={item.name(t)}
-                                onClick={event => routeTo(event, item)}
+                                onClick={event => routeTo(event, item, menuItem)}
                                 selected={pathname === item.routeProps.path}
                                 className={`${item.styleProps?.className} ${classes.menuItem}`}
                                 style={{
@@ -184,8 +190,13 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, direction, communityFeatu
                                   }}
                                   className={`${classes.menuItemText} ${classes.child}`}
                                 />
+                                {currentMenu.name === item.name(t) && currentMenu.isOpen ? (
+                                  <ExpandLess color="primary" className={classes.child} />
+                                  ) : // Avoid showing toggle icon on menus with no submenus
+                                  item.subMenu ? (
+                                    <ExpandMore color="primary" className={classes.child} />
+                                  ) : null}
                               </ListItem>
-                                  {console.log({ currentMenu })}
                               <Collapse
                                 key={item}
                                 in={currentMenu.name === item.name(t) && currentMenu.isOpen}
@@ -209,7 +220,7 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, direction, communityFeatu
                                       <ListItemText
                                         primary={subMenuItem.name(t)}
                                         style={{
-                                          marginLeft: `${subMenuItem.styleProps?.icon ? '55px' : '17px'}`,
+                                          marginLeft: '73px',
                                           color: pathname === subMenuItem.routeProps.path && '#FFFFFF'
                                         }}
                                         className={`${classes.menuItemText} ${classes.child}`}
