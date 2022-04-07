@@ -49,7 +49,6 @@ export default function UsersList() {
   const history = useHistory();
   const location = useLocation();
   const { t } = useTranslation(['users', 'common']);
-
   function handleReportDialog() {
     setSubstatusReportOpen(!substatusReportOpen);
     setAnchorEl(null);
@@ -57,7 +56,7 @@ export default function UsersList() {
 
   const { loading, error, data, refetch } = useQuery(UsersDetails, {
     variables: {
-      query: searchQuery,
+      query: searchQuery ? decodeURIComponent(location.search).replace('?', '') : searchQuery,
       limit,
       offset
     },
@@ -70,7 +69,10 @@ export default function UsersList() {
     UsersDetails,
     {
       // TODO: have a separate query with no limits
-      variables: { limit: 2000, query: searchQuery },
+      variables: {
+        limit: 2000,
+        query: searchQuery
+      },
       errorPolicy: 'all'
     }
   );
@@ -162,6 +164,10 @@ export default function UsersList() {
           })
           .join(` ${conjugate} `);
         setSearchQuery(query);
+        history.push({
+          pathname: '/users',
+          search: query
+        });
         setFilterCount(availableConjugate.length);
       }
     }
@@ -458,51 +464,51 @@ export default function UsersList() {
       </FixedHeader>
       {loading || labelsLoading || fetchingUsersCount ? (
         <Loading />
-    ) : (
-      <>
-        <Container>
-          <ActionDialog
-            open={openCampaignWarning}
-            handleClose={() => setOpenCampaignWarning(false)}
-            handleOnSave={createCampaign}
-            message={t('users.message_campaign')}
-          />
-          <SubStatusReportDialog
-            open={substatusReportOpen}
-            handleClose={handleReportDialog}
-            handleFilter={handleFilterUserBySubstatus}
-          />
-          <div className={matches ? classes.userCardMobile : classes.userCard}>
-            <UserListCard
-              userData={data}
-              currentUserType={authState.user.userType}
-              handleUserSelect={handleUserSelect}
-              selectedUsers={selectedUsers}
-              offset={offset}
-              selectCheckBox={selectCheckBox}
-              refetch={refetch}
+      ) : (
+        <>
+          <Container>
+            <ActionDialog
+              open={openCampaignWarning}
+              handleClose={() => setOpenCampaignWarning(false)}
+              handleOnSave={createCampaign}
+              message={t('users.message_campaign')}
             />
-          </div>
-          <Grid
-            container
-            direction="row"
-            justifyContent="center"
-            alignItems="center"
-            data-testid="pagination_section"
-          >
-            <Paginate
-              count={data.users.length}
-              active={offset >= 1}
-              offset={offset}
-              handlePageChange={paginate}
-              limit={limit}
+            <SubStatusReportDialog
+              open={substatusReportOpen}
+              handleClose={handleReportDialog}
+              handleFilter={handleFilterUserBySubstatus}
             />
-          </Grid>
-        </Container>
-      </>
-    )}
+            <div className={matches ? classes.userCardMobile : classes.userCard}>
+              <UserListCard
+                userData={data}
+                currentUserType={authState.user.userType}
+                handleUserSelect={handleUserSelect}
+                selectedUsers={selectedUsers}
+                offset={offset}
+                selectCheckBox={selectCheckBox}
+                refetch={refetch}
+              />
+            </div>
+            <Grid
+              container
+              direction="row"
+              justifyContent="center"
+              alignItems="center"
+              data-testid="pagination_section"
+            >
+              <Paginate
+                count={data.users.length}
+                active={offset >= 1}
+                offset={offset}
+                handlePageChange={paginate}
+                limit={limit}
+              />
+            </Grid>
+          </Container>
+        </>
+      )}
     </>
-);
+  );
 }
 
 export const useStyles = makeStyles(() => ({
