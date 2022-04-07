@@ -5,6 +5,13 @@ require 'rails_helper'
 RSpec.describe Mutations::ActivityLog::Add do
   describe 'user' do
     let!(:user) { create(:user_with_community) }
+    let!(:visitor_role) { user.role }
+    let!(:deactivated_user) do
+      create(:user,
+             community: user.community,
+             role: visitor_role,
+             status: 'deactivated')
+    end
     let!(:reporting_user) { create(:user, community_id: user.community_id, role: user.role) }
     let!(:other_community_user) { create(:user_with_community, role: user.role) }
 
@@ -12,6 +19,7 @@ RSpec.describe Mutations::ActivityLog::Add do
       <<~GQL
         mutation AddActivityLogMutation($userId: ID!, $timestamp: String, $digital: Boolean, $note: String, $subject: String) {
           activityLogAdd(userId: $userId, timestamp: $timestamp, digital: $digital, note: $note, subject: $subject) {
+            status
             eventLog {
               actingUser {
                 id
@@ -61,7 +69,7 @@ RSpec.describe Mutations::ActivityLog::Add do
       expect(request.granted_state).to eql 3
     end
 
-    it 'should grant access to an entry_request if request already exist' do
+    it 'should grant access to an entry_request if user status is active' do
       variables = {
         userId: user.id,
       }
@@ -77,6 +85,7 @@ RSpec.describe Mutations::ActivityLog::Add do
                                                 user_role: user.role,
                                               }).as_json
       expect(result['errors']).to be_nil
+      expect(result.dig('data', 'activityLogAdd', 'status')).to eql 'success'
       # we should expect the same count of entry requests
       request = user.community.entry_requests.find_by(guest_id: user.id)
       expect(user.community.entry_requests.count).to eql 1
@@ -116,6 +125,21 @@ RSpec.describe Mutations::ActivityLog::Add do
       expect(result.dig('data', 'activityLogAdd', 'eventLog', 'actingUser', 'id')).to eql user.id
       expect(result.dig('data', 'activityLogAdd', 'eventLog', 'subject')).to eql 'user_referred'
       expect(result['errors']).to be_nil
+    end
+
+    context 'when user is deactivated' do
+      it 'should not grant access to the user' do
+        variables = { userId: deactivated_user.id }
+        result = DoubleGdpSchema.execute(query, variables: variables,
+                                                context: {
+                                                  current_user: deactivated_user,
+                                                  user_role: deactivated_user.role,
+                                                  site_community: deactivated_user.community,
+                                                }).as_json
+        expect(result['errors']).to be_nil
+        expect(result.dig('data', 'activityLogAdd', 'eventLog', 'id')).to be_nil
+        expect(result.dig('data', 'activityLogAdd', 'status')).to eql 'denied'
+      end
     end
   end
 end
