@@ -159,10 +159,11 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, direction, communityFeatu
                 <List component="div" disablePadding>
                   {menuItem.subMenu &&
                     menuItem.subMenu.map(item => {
+                      console.log({ item })
                       return(
                         communityFeatures.includes(item.featureName) &&
                         checkSubMenuAccessibility({ authState, subMenuItem: item }) ? (
-                          item.subMenu && item.subMenu.length > 0 ? item.subMenu.map(subMenuItem => (
+                          item.subMenu && item.subMenu.length > 0 ? (
                             <>
                               <ListItem
                                 button
@@ -184,39 +185,41 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, direction, communityFeatu
                                   className={`${classes.menuItemText} ${classes.child}`}
                                 />
                               </ListItem>
-
+                                  {console.log({ currentMenu })}
                               <Collapse
-                                key={subMenuItem}
-                                in={currentMenu.name === subMenuItem.name(t) && currentMenu.isOpen}
+                                key={item}
+                                in={currentMenu.name === item.name(t) && currentMenu.isOpen}
                                 timeout="auto"
                                 unmountOnExit
                               >
                                 <List component="div" disablePadding>
-                                  <ListItem
-                                    button
-                                    key={subMenuItem.name(t)}
-                                    onClick={event => routeTo(event, subMenuItem)}
-                                    selected={pathname === subMenuItem.routeProps.path}
-                                    className={`${subMenuItem.styleProps?.className} ${classes.menuItem}`}
-                                    style={{
-                                      backgroundColor:
-                                        pathname === subMenuItem.routeProps.path &&
-                                        theme.palette.primary.main,
-                                    }}
-                                  >
-                                    <ListItemText
-                                      primary={subMenuItem.name(t)}
+                                  {item.subMenu.map(subMenuItem => (
+                                    <ListItem
+                                      button
+                                      key={subMenuItem.name(t)}
+                                      onClick={event => routeTo(event, subMenuItem)}
+                                      selected={pathname === subMenuItem.routeProps.path}
+                                      className={`${subMenuItem.styleProps?.className} ${classes.menuItem}`}
                                       style={{
-                                        marginLeft: `${subMenuItem.styleProps?.icon ? '55px' : '17px'}`,
-                                        color: pathname === subMenuItem.routeProps.path && '#FFFFFF'
+                                        backgroundColor:
+                                          pathname === subMenuItem.routeProps.path &&
+                                          theme.palette.primary.main,
                                       }}
-                                      className={`${classes.menuItemText} ${classes.child}`}
-                                    />
-                                  </ListItem>
+                                    >
+                                      <ListItemText
+                                        primary={subMenuItem.name(t)}
+                                        style={{
+                                          marginLeft: `${subMenuItem.styleProps?.icon ? '55px' : '17px'}`,
+                                          color: pathname === subMenuItem.routeProps.path && '#FFFFFF'
+                                        }}
+                                        className={`${classes.menuItemText} ${classes.child}`}
+                                      />
+                                    </ListItem>
+                                  ))}
                                 </List>
                               </Collapse>
                             </>
-                          )) : (
+                          ) : (
                             <ListItem
                               button
                               key={item.name(t)}

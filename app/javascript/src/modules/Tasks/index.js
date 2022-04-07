@@ -63,7 +63,7 @@ const TasksMenu =  {
 
 export default {
   routeProps: {
-    path: '',
+    path: '/tasks',
     component: <span />,
   },
   styleProps: {
