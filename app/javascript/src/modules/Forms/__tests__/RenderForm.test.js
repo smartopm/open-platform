@@ -21,7 +21,9 @@ describe('Render Form Component', () => {
       formId: '2342342',
       refetch: jest.fn(),
       editMode: true,
-      categoryId: '232121'
+      categoryId: '232121',
+      number: 1,
+      formDetailRefetch: () => {}
     };
 
     const wrapper = render(
@@ -51,7 +53,9 @@ it('should contain proper form properies with upload field and returns no errors
     formId: '2342342',
     refetch: jest.fn(),
     editMode: true,
-    categoryId: '232121'
+    categoryId: '232121',
+    number: 1,
+    formDetailRefetch: () => {}
   };
 
   const wrapper = render(
@@ -86,7 +90,9 @@ it('should contain proper form properies with upload field and returns errors fo
     formId: '2342342',
     refetch: jest.fn(),
     editMode: true,
-    categoryId: '232121'
+    categoryId: '232121',
+    number: 1,
+    formDetailRefetch: () => {}
   };
 
   const wrapper = render(
