@@ -58,7 +58,10 @@ describe('Tasks page', () => {
       })
 
       cy.login('2348167740149');
-      cy.visitSubMenu('.community-menu-item', '.tasks-menu-item');
+      cy.get('.left-menu-collapsible').click();
+      cy.get('.community-menu-item').click();
+      cy.get('.tasks-menu-item').click();
+      cy.get('.tasks-sub-menu-item').click();
     });
 
     it('renders tasks page successfully', () => {
