@@ -363,7 +363,8 @@
     "allocate": "Allocate",
     "invitations": "Invitations",
     "deactivate_user": "Deactivate User",
-    "activate_user": "Activate User"
+    "activate_user": "Activate User",
+    "task_lists": "Task Lists"
   },
   "user_types": {
     "admin": "Admin",

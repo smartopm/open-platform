@@ -4,10 +4,10 @@ import TaskReminder from './TaskReminder';
 import {siteManagers} from '../../utils/constants';
 import AccessCheck from '../Permissions/Components/AccessCheck';
 import TaskPageRedirect from './Components/TaskPageRedirect';
+import TaskListsMenu from './TaskLists';
 
 const tasksPermissions = ['can_access_tasks'];
-const currentModule = 'note'
-
+const currentModule = 'note';
 
 function RenderTaskUpdate() {
   return (
@@ -25,8 +25,7 @@ function RenderTasks() {
   )
 }
 
-
-export default {
+const TasksMenu =  {
   routeProps: {
     path: '/tasks',
     exact: true,
@@ -59,7 +58,22 @@ export default {
       name: 'My Tasks',
       accessibleBy: siteManagers,
     },
-  ],
+  ]
+};
+
+export default {
+  routeProps: {
+    path: '/tasks',
+    component: <span />,
+  },
+  styleProps: {
+    className: 'tasks-menu'
+  },
+  name: (t) => t('misc.tasks'),
+  featureName: 'Tasks',
+  moduleName: 'note',
+  accessibleBy: [],
+  subMenu: [TasksMenu, TaskListsMenu],
 };
 
 export {TaskReminder};

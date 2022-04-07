@@ -92,6 +92,12 @@ export default function TodoItem({
       }]
   }
 
+  if (location.pathname === '/tasks/task_lists') {
+    menuList = [
+      // TODO: Implement edit task list and delete task list in their respective tickets
+    ]
+  }
+
   const menuData = {
     menuList,
     anchorEl,
@@ -181,30 +187,32 @@ export default function TodoItem({
         {(isLoadingSubTasks || (isUpdating && objectAccessor(tasksOpen, task?.id))) && <LinearSpinner />}
       </div>
 
-      {objectAccessor(tasksOpen, task?.id) && data?.taskSubTasks?.length > 0 && data?.taskSubTasks?.map(firstLevelSubTask => (
-        <>
-          <div
-            className={classes.levelOne}
-            key={firstLevelSubTask.id}
-          >
-            <TaskDataList
+      {objectAccessor(tasksOpen, task?.id) &&
+        data?.taskSubTasks?.length > 0 &&
+        data?.taskSubTasks.sort(sortTaskOrder)?.map(firstLevelSubTask => (
+          <>
+            <div
+              className={classes.levelOne}
               key={firstLevelSubTask.id}
-              task={firstLevelSubTask}
-              handleChange={handleChange}
-              selectedTasks={selectedTasks}
-              isSelected={isSelected}
-              menuData={menuData}
-              styles={{backgroundColor: '#F5F5F4'}}
-              openSubTask={objectAccessor(tasksOpen, firstLevelSubTask.id)}
-              handleOpenSubTasksClick={() => toggleTask(firstLevelSubTask)}
-              clickable
-              handleClick={() => handleTodoItemClick(firstLevelSubTask)}
-              handleTaskCompletion={handleTaskCompletion}
-              clientView={clientView}
-              taskCommentHasReply={false}
-            />
-          </div>
-          {firstLevelSubTask?.subTasksCount > 0 &&
+            >
+              <TaskDataList
+                key={firstLevelSubTask.id}
+                task={firstLevelSubTask}
+                handleChange={handleChange}
+                selectedTasks={selectedTasks}
+                isSelected={isSelected}
+                menuData={menuData}
+                styles={{backgroundColor: '#F5F5F4'}}
+                openSubTask={objectAccessor(tasksOpen, firstLevelSubTask.id)}
+                handleOpenSubTasksClick={() => toggleTask(firstLevelSubTask)}
+                clickable
+                handleClick={() => handleTodoItemClick(firstLevelSubTask)}
+                handleTaskCompletion={handleTaskCompletion}
+                clientView={clientView}
+                taskCommentHasReply={false}
+              />
+            </div>
+            {firstLevelSubTask?.subTasksCount > 0 &&
             objectAccessor(tasksOpen, firstLevelSubTask?.id) && (
               <>
                 {firstLevelSubTask?.subTasks?.sort(sortTaskOrder)?.map(secondLevelSubTask => (
@@ -227,7 +235,7 @@ export default function TodoItem({
                 ))}
               </>
             )}
-        </>
+          </>
       ))}
       <MenuList
         open={menuData.open}
@@ -259,18 +267,25 @@ const Task = {
   TodoItem.defaultProps = {
     clientView: false,
     taskId: null,
-    task: null
+    task: null,
+    handleChange: () => {},
+    selectedTasks: [],
+    isSelected: false,
+    handleAddSubTask: () => {},
+    handleUploadDocument: () => {},
+    handleTodoClick: () => {},
+    handleTaskCompletion: () => {},
   };
 
   TodoItem.propTypes = {
   task: PropTypes.shape(Task),
-  handleChange: PropTypes.func.isRequired,
-  selectedTasks: PropTypes.arrayOf(PropTypes.string).isRequired,
-  isSelected: PropTypes.bool.isRequired,
-  handleAddSubTask: PropTypes.func.isRequired,
-  handleUploadDocument: PropTypes.func.isRequired,
-  handleTodoClick: PropTypes.func.isRequired,
-  handleTaskCompletion: PropTypes.func.isRequired,
+  handleChange: PropTypes.func,
+  selectedTasks: PropTypes.arrayOf(PropTypes.string),
+  isSelected: PropTypes.bool,
+  handleAddSubTask: PropTypes.func,
+  handleUploadDocument: PropTypes.func,
+  handleTodoClick: PropTypes.func,
+  handleTaskCompletion: PropTypes.func,
   clientView: PropTypes.bool,
   taskId: PropTypes.string,
 };
