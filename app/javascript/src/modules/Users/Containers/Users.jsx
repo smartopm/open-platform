@@ -56,7 +56,10 @@ export default function UsersList() {
 
   const { loading, error, data, refetch } = useQuery(UsersDetails, {
     variables: {
-      query: searchQuery ? decodeURIComponent(location.search).replace('?', '') : searchQuery,
+      query:
+        searchQuery.length === 0
+          ? decodeURIComponent(location.search).replace('?', '')
+          : searchQuery,
       limit,
       offset
     },
