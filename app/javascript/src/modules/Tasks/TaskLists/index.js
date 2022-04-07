@@ -2,8 +2,7 @@ import React from 'react';
 import AccessCheck from '../../Permissions/Components/AccessCheck';
 import TaskLists from './Components/TaskLists';
 
-// TODO: Set the necessary permissions for task lists
-const taskListPermissions = ['can_access_tasks']
+const taskListPermissions = ['can_view_task_lists']
 const currentModule = 'note';
 
 function RenderTaskLists() {
