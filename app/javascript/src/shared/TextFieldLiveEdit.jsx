@@ -39,6 +39,7 @@ export default function TextFieldLiveEdit({
         onMouseOver={() => setEdit(true)}
         onMouseOut={() => handleClick()}
         onClick={() => setClick(true)}
+        label={edit ? placeHolderText : undefined}
         variant={textFieldVariant}
         fullWidth={fullWidth}
         multiline={multiline}
