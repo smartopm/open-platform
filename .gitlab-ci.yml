@@ -97,7 +97,7 @@ cypress:
     - docker:dind
   stage: staging
   before_script:
-    - apk --update add nodejs=12.22.10-r0 --repository="http://dl-cdn.alpinelinux.org/alpine/v3.12/main/"
+    - apk --update add nodejs~=12.22 --repository="http://dl-cdn.alpinelinux.org/alpine/v3.12/main/"
     - apk add yarn
     - export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
     - yarn install
