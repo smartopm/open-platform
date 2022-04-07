@@ -24,7 +24,7 @@ export default {
   accessibleBy: [],
   moduleName: currentModule,
   styleProps: {
-    className: 'task-lists-menu-item'
+    className: 'task-lists-sub-menu-item'
   },
   subRoutes: [ // TODO Add necessary sub routes
   ]

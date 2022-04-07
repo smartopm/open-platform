@@ -37,7 +37,7 @@ const TasksMenu =  {
   accessibleBy: [],
   moduleName: currentModule,
   styleProps: {
-    className: 'tasks-menu-item'
+    className: 'tasks-sub-menu-item'
   },
   subRoutes: [
     {
@@ -67,7 +67,7 @@ export default {
     component: <span />,
   },
   styleProps: {
-    className: 'tasks-menu'
+    className: 'tasks-menu-item'
   },
   name: (t) => t('misc.tasks'),
   featureName: 'Tasks',
