@@ -75,7 +75,7 @@ export default function TaskLists() {
           ))}
           </div>
         )
-        : (<CenteredContent>{t('task_lists.task_lists')}</CenteredContent>)
+        : (<CenteredContent>{t('task_lists.no_task_lists')}</CenteredContent>)
       }
       <CenteredContent>
         <Paginate
