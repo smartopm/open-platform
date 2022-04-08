@@ -1,0 +1,13 @@
+{
+  "templates": {
+    "template_list": "Process Template List",
+    "no_template_list": "No Process Templates",
+    "edit_form": "Edit Form",
+    "edit_task_list": "Edit Task List"
+  },
+  "breadcrumbs": {
+    "processes": "Processes",
+    "template_list": "Process Template List"
+  }
+  
+}
