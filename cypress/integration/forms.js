@@ -12,7 +12,11 @@ describe('Custom Forms', () => {
             'can_create_form_user',
             'can_see_menu_item',
             'can_create_form',
-            'can_create_form_properties'
+            'can_create_form_properties',
+            'can_fetch_form',
+            'can_fetch_form_properties',
+            'can_fetch_form_property',
+            'can_fetch_form_categories'
           ],
           role_id: roleRes.body.id
         });
