@@ -159,7 +159,7 @@ module Users
     VALID_USER_TYPES = %w[security_guard admin resident contractor
                           prospective_client client visitor developer consultant
                           custodian site_worker site_manager security_supervisor
-                          lead marketing_manager code_scanner].freeze
+                          lead marketing_manager public_user code_scanner].freeze
     VALID_STATES = %w[valid pending banned expired].freeze
     DEFAULT_PREFERENCE = %w[com_news_sms com_news_email weekly_point_reminder_email].freeze
 
@@ -189,6 +189,7 @@ module Users
       allow_nil: true,
     }
     validate :phone_number_valid?
+    validate :public_user?
     after_update :update_associated_accounts_details, if: -> { saved_changes.key?('name') }
 
     devise :omniauthable, omniauth_providers: %i[google_oauth2 facebook]
@@ -724,6 +725,14 @@ module Users
     end
 
     private
+
+    def public_user?
+      return if changes_to_save['name'].nil?
+      return unless changes_to_save['name'][1] == 'Public Submission'
+
+      user = community.users.find_by(name: 'Public Submission')
+      errors.add(:name, :user_already_exists) unless user.nil?
+    end
 
     def phone_number_valid?
       return if self[:phone_number].blank?

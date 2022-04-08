@@ -9,7 +9,7 @@ RSpec.describe Mutations::Form::FormCreate do
     let!(:permission) do
       create(:permission, module: 'forms',
                           role: admin_role,
-                          permissions: %w[can_create_form])
+                          permissions: %w[can_create_form can_fetch_form])
     end
 
     let!(:user) { create(:user_with_community, user_type: 'resident', role: resident_role) }
@@ -24,6 +24,7 @@ RSpec.describe Mutations::Form::FormCreate do
           $expiresAt: String!,
           $description: String,
           $preview: Boolean!,
+          $isPublic: Boolean!,
           $multipleSubmissionsAllowed: Boolean!
           $roles: [String]
         ){
@@ -32,6 +33,7 @@ RSpec.describe Mutations::Form::FormCreate do
             expiresAt: $expiresAt,
             description: $description,
             preview: $preview,
+            isPublic: $isPublic,
             multipleSubmissionsAllowed: $multipleSubmissionsAllowed
             roles: $roles
           ){
@@ -52,6 +54,7 @@ RSpec.describe Mutations::Form::FormCreate do
           name: 'Form Name',
           expiresAt: (rand * 10).to_i.day.from_now.to_s,
           preview: true,
+          isPublic: false,
           multipleSubmissionsAllowed: true,
           roles: %w[admin resident],
         }
@@ -81,6 +84,7 @@ RSpec.describe Mutations::Form::FormCreate do
           name: 'Form Name',
           expiresAt: (rand * 10).to_i.day.from_now.to_s,
           preview: true,
+          isPublic: true,
           multipleSubmissionsAllowed: true,
         }
         result = DoubleGdpSchema.execute(mutation, variables: variables,

@@ -54,6 +54,10 @@ Ciudad Morazán:
       permissions:
         - can_see_menu_item
         - can_access_forms
+        - can_fetch_form
+        - can_fetch_form_properties
+        - can_fetch_form_property
+        - can_fetch_form_categories
     community:
       permissions:
         - can_see_menu_item
@@ -125,6 +129,7 @@ Ciudad Morazán:
       permissions:
         - can_fetch_logbook_events
 
+
 Tilisi:
   consultant:
     note:
@@ -155,6 +160,10 @@ Tilisi:
       permissions:
         - can_see_menu_item
         - can_access_forms
+        - can_fetch_form
+        - can_fetch_form_properties
+        - can_fetch_form_property
+        - can_fetch_form_categories
     user:
       permissions:
         - can_view_own_profile
@@ -203,6 +212,10 @@ Tilisi:
         - can_fill_a_form
         - can_update_form
         - can_view_own_forms
+        - can_fetch_form
+        - can_fetch_form_properties
+        - can_fetch_form_property
+        - can_fetch_form_categories
     profile:
       permissions:
         - can_see_menu_item
@@ -277,6 +290,10 @@ DoubleGDP:
       permissions:
         - can_see_menu_item
         - can_access_forms
+        - can_fetch_form
+        - can_fetch_form_properties
+        - can_fetch_form_property
+        - can_fetch_form_categories
     community:
       permissions:
         - can_see_menu_item
@@ -359,6 +376,10 @@ DoubleGDP:
         - can_see_menu_item
         - can_access_forms
         - can_view_form_user
+        - can_fetch_form
+        - can_fetch_form_properties
+        - can_fetch_form_property
+        - can_fetch_form_categories
     user:
       permissions:
         - can_view_own_profile
@@ -407,6 +428,10 @@ DoubleGDP:
         - can_fill_a_form
         - can_update_form
         - can_view_own_forms
+        - can_fetch_form
+        - can_fetch_form_properties
+        - can_fetch_form_property
+        - can_fetch_form_categories
     profile:
       permissions:
         - can_see_menu_item
@@ -426,3 +451,5 @@ DoubleGDP:
     logout:
       permissions:
         - can_see_menu_item
+
+

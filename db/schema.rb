@@ -391,6 +391,7 @@ ActiveRecord::Schema.define(version: 2022_04_04_160134) do
     t.uuid "grouping_id"
     t.boolean "preview"
     t.string "roles", default: [], array: true
+    t.boolean "is_public"
     t.index ["community_id"], name: "index_forms_on_community_id"
   end
 

@@ -104,7 +104,7 @@ const authState = {
         permissions: ['can_access_dashboard', 'can_see_menu_item']
       },
       { module: 'forms',
-        permissions: ['can_view_form_user']
+        permissions: ['can_view_form_user', 'can_save_draft_form']
       },
     ]
 

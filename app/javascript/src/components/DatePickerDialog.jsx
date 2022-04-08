@@ -48,6 +48,7 @@ export default function DatePickerDialog({
               }
               placeholder="YYYY-MM-DD"
               variant={inputVariant}
+              margin="dense"
               data-testid="date-picker"
               style={
                 textFieldStyle
@@ -109,6 +110,7 @@ export function DateAndTimePickers({
               error={pastDate ? checkPastDate(selectedDateTime) : inputValidation.error}
               variant={inputVariant}
               data-testid="datetime-picker"
+              margin="dense"
               fullWidth
               style={textFieldStyle ? { background: '#FFFFFF' } : {}}
             />
@@ -155,6 +157,7 @@ export function ThemedTimePicker({
                   {...params}
                   data-testid="time_picker"
                   fullWidth
+                  margin="dense"
                   variant={inputVariant}
                   style={{ background: '#FFFFFF' }}
                 />

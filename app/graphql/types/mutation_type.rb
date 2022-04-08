@@ -30,6 +30,7 @@ module Types
     field :login_phone_complete, mutation: Mutations::Login::LoginPhoneComplete
     field :login_switch_user, mutation: Mutations::Login::LoginSwitchUser
     field :login_email, mutation: Mutations::Login::LoginEmail
+    field :login_public_user, mutation: Mutations::Login::LoginPublicUser
 
     # Notes
     field :note_create, mutation: Mutations::Note::NoteCreate

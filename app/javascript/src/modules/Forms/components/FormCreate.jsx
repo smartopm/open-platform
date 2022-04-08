@@ -8,15 +8,17 @@ import PropTypes from 'prop-types';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
 import { useTranslation } from 'react-i18next';
+import { Alert } from '@mui/material';
 import { DateAndTimePickers } from '../../../components/DatePickerDialog';
 import FormRoleSelect from './FormRoleSelect';
 import SwitchInput from './FormProperties/SwitchInput';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
-import { formatError } from '../../../utils/helpers';
+import { copyText, formatError } from '../../../utils/helpers';
 import MessageAlert from '../../../components/MessageAlert';
 import { Spinner } from '../../../shared/Loading';
 import { FormQuery } from '../graphql/forms_queries';
 import CenteredContent from '../../../shared/CenteredContent'
+import { generateIframeSnippet } from '../utils';
 
 export default function FormCreate({
   formMutation,
@@ -43,9 +45,12 @@ export default function FormCreate({
   const [expiresAt, setExpiresAtDate] = useState(null);
   const [multipleSubmissionsAllowed, setMultipleSubmissionsAllowed] = useState(true);
   const [preview, setPreview] = useState(false);
+  const [isPublic, setIsPublic] = useState(false);
   const authState = useContext(AuthStateContext);
   const communityRoles = authState?.user?.community?.roles;
-
+  const [isCopied, setIsCopied] = useState(false);
+  const { hostname } = window.location
+  
   function submitForm() {
     const variables = {
       name: title,
@@ -53,6 +58,7 @@ export default function FormCreate({
       description,
       multipleSubmissionsAllowed,
       preview,
+      isPublic,
       roles
     };
     if (actionType === 'update') {
@@ -86,6 +92,12 @@ export default function FormCreate({
     setAlertOpen(false);
   }
 
+  async function handleTextCopy(){ 
+    await copyText(generateIframeSnippet(formData.form, hostname ))
+    setIsCopied(true)
+  }
+
+
   useEffect(() => {
     if (formId) {
       formDataQuery();
@@ -97,6 +109,7 @@ export default function FormCreate({
       setExpiresAtDate(formData?.form?.expiresAt);
       setMultipleSubmissionsAllowed(formData?.form.multipleSubmissionsAllowed)
       setPreview(formData?.form.preview)
+      setIsPublic(formData?.form.isPublic)
     }
   }, [formId, formData, formDataQuery]);
 
@@ -186,7 +199,38 @@ export default function FormCreate({
                 labelPlacement="start"
               />
             </Grid>
+            <Grid item md={12} xs={12}>
+              <SwitchInput
+                name="previewable"
+                label={t('misc.public')}
+                value={isPublic}
+                handleChange={event => setIsPublic(event.target.checked)}
+                className="form-public-switch-btn"
+                labelPlacement="start"
+              />
+            </Grid>
           </Grid>
+        </Grid>
+        <Grid item xs={12}>
+          {
+              formData?.form?.id && isPublic && (
+                <Alert 
+                  icon={false} 
+                  severity="success"
+                  action={!isCopied && (
+                    <Button color="inherit" size="small" onClick={handleTextCopy} data-testid="copy_text">
+                      {t('common:form_actions.copy')}
+                    </Button>
+                  )}
+                >
+                  {
+                    isCopied 
+                    ? t('common:misc.copied')
+                    : generateIframeSnippet(formData.form, hostname )
+                  }
+                </Alert>
+                )
+              }
         </Grid>
         <Grid item md={12} xs={12}>
           <Divider />

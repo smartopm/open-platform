@@ -20,6 +20,7 @@ import MessageAlert from '../../../../components/MessageAlert';
 import { FormCategoryDeleteMutation } from '../../graphql/form_category_mutations';
 import { formatError } from '../../../../utils/helpers';
 import FormTitle from '../FormTitle';
+import AccessCheck from '../../../Permissions/Components/AccessCheck';
 
 export default function Form({
   editMode,
@@ -97,11 +98,13 @@ export default function Form({
 
   useEffect(() => {
     if (formState?.successfulSubmit && !formState?.isDraft) {
-      // Reset Form
-      history.push(`/form/${formId}/${formDetailData?.form?.name}`);
+      // Reset Form to public routes to be safe
       window.location.reload();
     }
-  }, [formState.successfulSubmit]);
+  }, [formState.isDraft, formState.successfulSubmit]);
+
+
+
 
   const formData = flattenFormProperties(categoriesData.data?.formCategories);
 
@@ -142,13 +145,13 @@ export default function Form({
             <FormPreview
               loading={formState.isSubmitting}
               handleFormSubmit={() =>
-                saveFormData(
-                  formData,
-                  formId,
-                  authState.user.id,
-                  categoriesData.data?.formCategories
-                )
-              }
+              saveFormData(
+                formData,
+                formId,
+                authState.user.id,
+                categoriesData.data?.formCategories
+              )
+            }
               categoriesData={categoriesData}
             />
           </DialogContentText>
@@ -237,20 +240,23 @@ export default function Form({
           <Grid item md={12} xs={12} style={{ marginTop: '20px' }}>
             <Divider />
           </Grid>
-          <Grid item md={6} xs={6} style={{ textAlign: 'left' }}>
-            <Button
-              variant="outlined"
-              type="submit"
-              color="primary"
-              aria-label="form_draft"
-              style={matches ? { marginTop: '20px' } : { margin: '25px 25px 0 0' }}
-              onClick={() => formSubmit(formData, 'draft')}
-              disabled={formState.isSubmitting}
-              data-testid="save_as_draft"
-            >
-              {t('common:form_actions.save_as_draft')}
-            </Button>
-          </Grid>
+          <AccessCheck module='forms' allowedPermissions={['can_save_draft_form']}>
+            <Grid item md={6} xs={6} style={{ textAlign: 'left' }}>
+              <Button
+                variant="outlined"
+                type="submit"
+                color="primary"
+                aria-label="form_draft"
+                style={matches ? { marginTop: '20px' } : { margin: '25px 25px 0 0' }}
+                onClick={() => formSubmit(formData, 'draft')}
+                disabled={formState.isSubmitting}
+                data-testid="save_as_draft"
+              >
+                {t('common:form_actions.save_as_draft')}
+              </Button>
+            </Grid>
+
+          </AccessCheck>
           <Grid item md={6} xs={6} style={{ textAlign: 'right' }}>
             <Button
               variant="contained"
@@ -290,8 +296,10 @@ Form.propTypes = {
   handleConfirmPublish: PropTypes.func,
   formDetailData: PropTypes.shape({
     form: PropTypes.shape({
+      id: PropTypes.string,
       name: PropTypes.string,
-      preview: PropTypes.bool
+      preview: PropTypes.bool,
+      isPublic: PropTypes.bool,
     })
   }),
   formDetailRefetch: PropTypes.func,
