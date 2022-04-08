@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_04_04_115426) do
+ActiveRecord::Schema.define(version: 2022_04_04_160134) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -306,8 +306,8 @@ ActiveRecord::Schema.define(version: 2022_04_04_115426) do
     t.integer "entry_request_state", default: 0
     t.uuid "revoker_id"
     t.datetime "revoked_at"
-    t.uuid "guest_id"
     t.integer "status", default: 0
+    t.uuid "guest_id"
     t.datetime "exited_at"
   end
 
@@ -536,6 +536,16 @@ ActiveRecord::Schema.define(version: 2022_04_04_115426) do
     t.index ["user_id"], name: "index_note_histories_on_user_id"
   end
 
+  create_table "note_lists", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name"
+    t.uuid "community_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.uuid "process_id"
+    t.index ["community_id"], name: "index_note_lists_on_community_id"
+    t.index ["process_id"], name: "index_note_lists_on_process_id"
+  end
+
   create_table "notes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "user_id"
     t.uuid "author_id"
@@ -557,7 +567,9 @@ ActiveRecord::Schema.define(version: 2022_04_04_115426) do
     t.string "current_step_body"
     t.integer "status", default: 0
     t.integer "order", default: 1
+    t.uuid "note_list_id"
     t.index ["form_user_id"], name: "index_notes_on_form_user_id"
+    t.index ["note_list_id"], name: "index_notes_on_note_list_id"
     t.index ["parent_note_id"], name: "index_notes_on_parent_note_id"
   end
 
@@ -682,6 +694,17 @@ ActiveRecord::Schema.define(version: 2022_04_04_115426) do
     t.uuid "community_id"
     t.index ["community_id"], name: "index_post_tags_on_community_id"
     t.index ["name"], name: "index_post_tags_on_name", unique: true
+  end
+
+  create_table "processes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "process_type"
+    t.string "name"
+    t.uuid "community_id", null: false
+    t.uuid "form_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["community_id"], name: "index_processes_on_community_id"
+    t.index ["form_id"], name: "index_processes_on_form_id"
   end
 
   create_table "roles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -825,7 +848,6 @@ ActiveRecord::Schema.define(version: 2022_04_04_115426) do
     t.uuid "latest_substatus_id"
     t.string "ext_ref_id"
     t.uuid "role_id", null: false
-    t.string "region"
     t.string "title"
     t.string "linkedin_url"
     t.string "company_name"
@@ -854,6 +876,7 @@ ActiveRecord::Schema.define(version: 2022_04_04_115426) do
     t.string "relevant_link"
     t.jsonb "contact_details"
     t.string "african_presence"
+    t.string "region"
     t.string "task_id"
     t.string "capex_amount"
     t.string "jobs_created"
@@ -971,7 +994,10 @@ ActiveRecord::Schema.define(version: 2022_04_04_115426) do
   add_foreign_key "note_comments", "users"
   add_foreign_key "note_histories", "notes"
   add_foreign_key "note_histories", "users"
+  add_foreign_key "note_lists", "communities"
+  add_foreign_key "note_lists", "processes"
   add_foreign_key "notes", "form_users"
+  add_foreign_key "notes", "note_lists"
   add_foreign_key "notes", "notes", column: "parent_note_id"
   add_foreign_key "notifications", "communities"
   add_foreign_key "notifications", "users"
@@ -993,6 +1019,8 @@ ActiveRecord::Schema.define(version: 2022_04_04_115426) do
   add_foreign_key "post_tag_users", "post_tags"
   add_foreign_key "post_tag_users", "users"
   add_foreign_key "post_tags", "communities"
+  add_foreign_key "processes", "communities"
+  add_foreign_key "processes", "forms"
   add_foreign_key "roles", "communities"
   add_foreign_key "subscription_plans", "communities"
   add_foreign_key "substatus_logs", "communities"

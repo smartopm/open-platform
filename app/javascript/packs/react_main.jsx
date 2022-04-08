@@ -34,6 +34,7 @@ import Feedback from '../src/containers/Activity/Feedback';
 import FeedbackSuccess from '../src/containers/Activity/FeedbackSuccess';
 import AllNotes from '../src/containers/Activity/AllNotes';
 import ProjectsList from '../src/modules/Tasks/Processes/Components/ProjectsList';
+import TaskLists from '../src/modules/Tasks/TaskLists/Components/TaskLists' // TODO: Remove after Task Lists menu is set up
 import FeedbackPage from '../src/containers/Activity/AllFeedback';
 import ShowroomLogs from '../src/containers/showroom/ShowroomLogs';
 import ClientRequestForm from '../src/containers/ClientRequestForm';
@@ -223,12 +224,34 @@ const App = () => {
                                   path="/myprofile"
                                   render={() => <Redirect to={`/user/${user.id}`} />}
                                 />
+                                <Route exact path="/tasks/task_lists" component={TaskLists} />
                                 {/* end of redirects */}
                                 {[...modules, ...UserRoutes].map(module => {
                                   if (module.subMenu) {
                                     return module.subMenu.map(sub => {
-                                      let routes = [];
+                                      if (sub.subMenu) {
+                                        return sub.subMenu.map(subSubMenu => {
+                                          let subSubMenuRoutes = [];
 
+                                          if (
+                                            subSubMenu.subRoutes &&
+                                            checkAllowedCommunityFeatures(
+                                              user.community.features,
+                                              subSubMenu.featureName
+                                            )
+                                          ) {
+                                            subSubMenuRoutes = subSubMenu.subRoutes.map(subRoute => (
+                                              <Route {...subRoute.routeProps} key={subRoute.name} />
+                                            ));
+                                          }
+                                          checkAllowedCommunityFeatures(
+                                            user.community.features,
+                                            subSubMenu.featureName
+                                          ) && subSubMenuRoutes.push(<Route {...subSubMenu.routeProps} key={subSubMenu.name} />);
+                                          return subSubMenuRoutes;
+                                        });
+                                      }
+                                      let routes = [];
                                       if (
                                         sub.subRoutes &&
                                         checkAllowedCommunityFeatures(

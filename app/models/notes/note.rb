@@ -32,6 +32,7 @@ module Notes
     belongs_to :author, class_name: 'Users::User'
     belongs_to :form_user, class_name: 'Forms::FormUser', optional: true
     belongs_to :parent_note, class_name: 'Notes::Note', optional: true
+    belongs_to :note_list, class_name: 'Notes::NoteList', optional: true
     has_many :assignee_notes, dependent: :destroy
     has_many :assignees, through: :assignee_notes, source: :user
     has_many :note_comments, class_name: 'Comments::NoteComment', dependent: :destroy
@@ -62,7 +63,9 @@ module Notes
                                end
                              }
 
-    VALID_CATEGORY = %w[call email text message to_do form emergency template other].freeze
+    VALID_CATEGORY = %w[
+      call email text message to_do form emergency template task_list other
+    ].freeze
     validates :category, inclusion: { in: VALID_CATEGORY, allow_nil: true }
     validates :body, presence: true,
                      uniqueness: { scope: :community_id,

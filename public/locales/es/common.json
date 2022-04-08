@@ -90,6 +90,7 @@
     "secondary_number": "Número de teléfono móvil",
     "social_link": "Red Social",
     "state": "Estado",
+    "status": "Estatus",
     "template_name": "Nombre de plantilla",
     "template_subject": "Asunto de la plantilla",
     "title": "Título",
@@ -197,6 +198,7 @@
     "title": "Título"
   },
   "menu": {
+    "activate_user": "Activar Usuario",
     "add_note": "Agrega tus notas aquí",
     "add_subtask": "Agregar Sub-tarea",
     "allocate": "Asignar",
@@ -215,6 +217,7 @@
     "create": "Crear",
     "customer_journey": "Etapa del Cliente",
     "dashboard": "Inicio",
+    "deactivate_user": "Desactivar Usuario",
     "delete": "Eliminar",
     "duplicate": "Duplicado",
     "edit": "Editar",
@@ -561,6 +564,10 @@
     "pending": "Pendiente",
     "valid": "Válido"
   },
+  "user_status": {
+    "active": "Activo",
+    "deactivated": "Desactivado"
+  },
   "user_sub_status": {
     "building_permit_approved": "Permiso de Construcción Aprobado",
     "construction_completed": "Construcción Completada",
@@ -573,6 +580,7 @@
   "user_types": {
     "admin": "Administrador",
     "client": "Cliente",
+    "code_scanner": "Escáner de Código",
     "consultant": "Consultor",
     "contractor": "Contratista",
     "custodian": "Custodio",

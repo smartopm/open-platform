@@ -52,7 +52,7 @@ Cypress.Commands.add("addFormProperty", (fieldName, fieldType, isRequired, optio
   }
 
   if(isRequired) {
-    cy.get('.form-property-required-field-switch-btn').click();
+    cy.get('.form-property-required-field-switch-btn').click({force: true});
   }
 
   cy.get('[data-testid=form_property_action_btn]').click();
