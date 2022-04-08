@@ -308,10 +308,9 @@ export default function FormUpdate({ formUserId, userId, authState, categoriesDa
     );
     const fields = {
       text: (
-        <ListWrapper className={classes.space}>
+        <ListWrapper className={classes.space} key={formPropertiesData.formProperty.id}>
           <TextInput
             id={formPropertiesData.formProperty.id}
-            key={formPropertiesData.formProperty.id}
             properties={formPropertiesData.formProperty}
             value={formPropertiesData.value}
             handleValue={event => handleValueChange(event, formPropertiesData.formProperty.id)}
@@ -476,7 +475,7 @@ export default function FormUpdate({ formUserId, userId, authState, categoriesDa
               )
             )}
           </Grid>
-          <ListWrapper className={classes.space}>
+          <ListWrapper className={classes.space} key={formPropertiesData.id}>
             <UploadField
               detail={{
                 type: 'file',
@@ -484,7 +483,6 @@ export default function FormUpdate({ formUserId, userId, authState, categoriesDa
                 id: formPropertiesData.formProperty.id,
                 label: formPropertiesData.formProperty.fieldName
               }}
-              key={formPropertiesData.id}
               upload={evt => onFileSelect(evt, formPropertiesData.formProperty.id)}
               editable={editable}
               style={{ flex: 1 }}
@@ -547,10 +545,9 @@ export default function FormUpdate({ formUserId, userId, authState, categoriesDa
         </ListWrapper>
       ),
       dropdown: (
-        <ListWrapper className={classes.space}>
+        <ListWrapper className={classes.space} key={formPropertiesData.formProperty.id}>
           <TextInput
             id={formPropertiesData.formProperty.id}
-            key={formPropertiesData.formProperty.id}
             properties={formPropertiesData.formProperty}
             value={formPropertiesData.value}
             handleValue={event => handleValueChange(event, formPropertiesData.formProperty.id)}
@@ -585,14 +582,16 @@ export default function FormUpdate({ formUserId, userId, authState, categoriesDa
         <form onSubmit={event => handleActionClick(event, 'update')}>
           {Boolean(categoriesData) &&
             categoriesData.map(category => (
-              <CategoryItem category={category} key={category.id} editMode={false}>
-                <div key={category.id} style={!matches ? { padding: ' 20px  120px 0 120px' } : { paddingTop: '20px' }}>
-                  {data?.formUserProperties
+              <div key={category.id}>
+                <CategoryItem category={category} editMode={false}>
+                  <div style={!matches ? { padding: ' 20px  120px 0 120px' } : { paddingTop: '20px' }}>
+                    {data?.formUserProperties
                     .sort(sortPropertyOrder)
                     .filter(prop => category.id === prop.formProperty.category.id)
                     .map(renderForm)}
-                </div>
-              </CategoryItem>
+                  </div>
+                </CategoryItem>
+              </div>
             ))}
           <br />
           <Grid
