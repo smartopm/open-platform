@@ -101,8 +101,17 @@ export default function TodoItem({
 
   if (location.pathname === '/tasks/task_lists') {
     menuList = [
-      // TODO: Implement edit task list and delete task list in their respective tickets
-    ];
+      {
+        content: t('menu.edit_task_list'),
+        isAdmin: true,
+        handleClick: () => {}
+      },
+      {
+        content: t('menu.delete_task_list'),
+        isAdmin: true,
+        handleClick: () => {}
+      }
+    ]
   }
 
   const menuData = {

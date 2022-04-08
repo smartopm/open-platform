@@ -171,7 +171,6 @@ export default function TaskDataList({
                   onClick={event => menuData.handleTodoMenu(event, task)}
                   color="primary"
                   size="large"
-                  disabled={location.pathname === '/tasks/task_lists'} // Temporary hack until task lists menu items are added
                 >
                   <MoreVertIcon />
                 </IconButton>

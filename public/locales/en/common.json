@@ -371,7 +371,9 @@
     "deactivate_user": "Deactivate User",
     "activate_user": "Activate User",
     "task_lists": "Task Lists",
-    "edit_process_template": "Edit Process Template"
+    "edit_process_template": "Edit Process Template",
+    "edit_task_list": "Edit Task List",
+    "delete_task_list": "Delete Task List"
   },
   "user_types": {
     "admin": "Admin",
