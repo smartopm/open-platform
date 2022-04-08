@@ -14,7 +14,7 @@ export default function ProcessItem({ process, menuData }) {
   return(
     <Card styles={{ marginBottom: 0 }} contentStyles={{ padding: '4px' }}>
       <Grid container>
-        <Grid item md={9} style={{ display: 'flex', alignItems: 'center' }}>
+        <Grid item md={9} xs={12} style={{ display: 'flex', alignItems: 'center' }}>
           <Typography
             variant="body2"
             data-testid="process_name"
@@ -24,9 +24,9 @@ export default function ProcessItem({ process, menuData }) {
             {process.name}
           </Typography>
         </Grid>
-        <Grid item md={3}>
+        <Grid item md={3} xs={12}>
           <Grid container>
-            <Grid item md={4} style={{ display: 'flex', alignItems: 'center' }}>
+            <Grid item md={4} xs={4} style={{ display: 'flex', alignItems: 'center' }}>
               <Link
                 to={`/form/${process.form.id}`}
                 color="primary"
@@ -35,7 +35,7 @@ export default function ProcessItem({ process, menuData }) {
                 {t('templates.edit_form')}
               </Link>
             </Grid>
-            <Grid item md={6} style={{ display: 'flex', alignItems: 'center' }}>
+            <Grid item md={6} xs={6} style={{ display: 'flex', alignItems: 'center' }}>
               <Link
                 to="/tasks/task_lists"
                 color="primary"
@@ -44,7 +44,7 @@ export default function ProcessItem({ process, menuData }) {
                 {t('templates.edit_task_list')}
               </Link>
             </Grid>
-            <Grid item md={2}>
+            <Grid item md={2} xs={1}>
               <IconButton
                 aria-controls="process-kabab-menu"
                 aria-haspopup="true"

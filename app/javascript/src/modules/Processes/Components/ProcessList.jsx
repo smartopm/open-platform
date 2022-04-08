@@ -19,7 +19,7 @@ export default function ProcessList() {
   const [anchorEl, setAnchorEl] = useState(null);
   const [offset, setOffset] = useState(0);
   const anchorElOpen = Boolean(anchorEl);
-  const canEditProcess = true;
+  const canEditProcess = true;  // TODO: Check the edit permission in the next ticket
 
   const { data, loading, error }
     = useQuery(ProcessTemplatesQuery, {

@@ -67,7 +67,7 @@ RSpec.describe Types::Queries::Process do
                                           roles: %w[])
         process = create(:process, community: admin.community, name: 'DRC', process_type: 'drc',
                                    form: form_with_process)
-         create(:note_list, community: admin.community, process: process)
+        create(:note_list, community: admin.community, process: process)
 
         result = DoubleGdpSchema.execute(process_templates_query, context: {
                                            current_user: admin,
