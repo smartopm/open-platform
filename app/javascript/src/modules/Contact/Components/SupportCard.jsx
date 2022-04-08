@@ -213,7 +213,8 @@ SupportContact.propTypes = {
     contact: PropTypes.string,
     type: PropTypes.string
   }).isRequired,
-  classes: PropTypes.objectOf(PropTypes.object).isRequired
+  // eslint-disable-next-line react/forbid-prop-types
+  classes: PropTypes.object.isRequired
 };
 SupportCard.propTypes = {
   user: PropTypes.shape({
