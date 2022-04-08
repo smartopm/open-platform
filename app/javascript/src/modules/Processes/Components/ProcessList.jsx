@@ -8,7 +8,7 @@ import { formatError } from '../../../utils/helpers';
 import CenteredContent from '../../../shared/CenteredContent';
 import Paginate from '../../../components/Paginate';
 import { Spinner } from '../../../shared/Loading';
-import { ProcessTemplatesQuery } from '../graphql/process_list_queries';
+import ProcessTemplatesQuery from '../graphql/process_list_queries';
 import ProcessItem from './ProcessItem';
 import MenuList from '../../../shared/MenuList';
 
@@ -41,9 +41,9 @@ export default function ProcessList() {
     }
   }
 
-  let menuList = [
+  const menuList = [
     {
-      content:  canEditProcess ? t('menu.edit_process_template'): null,
+      content:  canEditProcess ? t('common:menu.edit_process_template'): null,
       isAdmin: true,
       handleClick: () => {},
     },

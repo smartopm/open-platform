@@ -1,10 +1,11 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { Grid, IconButton, Typography } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
-import Card from '../../../shared/Card';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import Card from '../../../shared/Card';
 
 export default function ProcessItem({ process, menuData }) {
   const { t } = useTranslation('process');
@@ -13,14 +14,19 @@ export default function ProcessItem({ process, menuData }) {
   return(
     <Card styles={{ marginBottom: 0 }} contentStyles={{ padding: '4px' }}>
       <Grid container>
-        <Grid item md={8} style={{ display: 'flex', alignItems: 'center', border: 'solid 1px red'}}>
-            <Typography variant="body2" data-testid="process_name" component="p">
-              {process.name}
-            </Typography>
+        <Grid item md={9} style={{ display: 'flex', alignItems: 'center' }}>
+          <Typography
+            variant="body2"
+            data-testid="process_name"
+            component="p"
+            className={classes.processName}
+          >
+            {process.name}
+          </Typography>
         </Grid>
-        <Grid item={4}>
+        <Grid item md={3}>
           <Grid container>
-            <Grid item md={4} style={{ display: 'flex', alignItems: 'center', border: 'solid 1px blue'}}>
+            <Grid item md={4} style={{ display: 'flex', alignItems: 'center' }}>
               <Link
                 to={`/form/${process.form.id}`}
                 color="primary"
@@ -29,7 +35,7 @@ export default function ProcessItem({ process, menuData }) {
                 {t('templates.edit_form')}
               </Link>
             </Grid>
-            <Grid item md={5} style={{ display: 'flex', alignItems: 'center', border: 'solid 1px yellow'}}>
+            <Grid item md={6} style={{ display: 'flex', alignItems: 'center' }}>
               <Link
                 to="/tasks/task_lists"
                 color="primary"
@@ -38,7 +44,7 @@ export default function ProcessItem({ process, menuData }) {
                 {t('templates.edit_task_list')}
               </Link>
             </Grid>
-            <Grid item md={3} style={{ border: 'solid 1px green'}}>
+            <Grid item md={2}>
               <IconButton
                 aria-controls="process-kabab-menu"
                 aria-haspopup="true"
@@ -51,15 +57,49 @@ export default function ProcessItem({ process, menuData }) {
                 <MoreVertIcon />
               </IconButton>
             </Grid>
-            </Grid>
+          </Grid>
         </Grid>
       </Grid>
     </Card>
   )
 }
 
+
+const FormWithProcess = {
+  id: PropTypes.string,
+}
+
+const ProcessTaskList = {
+  id: PropTypes.string,
+}
+
+const Process = {
+  id: PropTypes.string,
+  name: PropTypes.string,
+  form: PropTypes.shape(FormWithProcess),
+  noteList: PropTypes.shape(ProcessTaskList),
+}
+ProcessItem.propTypes = {
+  process: PropTypes.shape(Process).isRequired,
+  menuData: PropTypes.shape({
+    handleMenu: PropTypes.func.isRequired,
+    open: PropTypes.bool,
+    anchorEl: PropTypes.shape({
+      getAttribute: PropTypes.func
+    }),
+    handleClose: PropTypes.func,
+    menuList: PropTypes.arrayOf(
+      PropTypes.shape({
+        content: PropTypes.string,
+        isAdmin: PropTypes.bool,
+        handleClick: PropTypes.func
+      })
+    )
+  }).isRequired,
+};
+
 const useStyles = makeStyles({
-  header: {
-    marginBottom: '10px'
+  processName: {
+    paddingLeft: '3px'
   },
 });
