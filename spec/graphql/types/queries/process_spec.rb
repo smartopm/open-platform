@@ -12,7 +12,7 @@ RSpec.describe Types::Queries::Process do
       create(:permission, module: 'process',
                           role: admin_role,
                           permissions: %w[
-                            can_view_task_process_templates
+                            can_view_process_templates
                           ])
     end
 
@@ -44,7 +44,7 @@ RSpec.describe Types::Queries::Process do
       end
 
       it 'throws an error of user has no permissions' do
-        result = DoubleGdpSchema.execute([process_templates_query], context: {
+        result = DoubleGdpSchema.execute(process_templates_query, context: {
                                            current_user: developer,
                                            site_community: developer.community,
                                          }).as_json
@@ -64,11 +64,11 @@ RSpec.describe Types::Queries::Process do
 
       it 'retrieves process templates' do
         form_with_process = create(:form, community: admin.community, status: :published,
-          roles: %w[])
+                                          roles: %w[])
         process = create(:process, community: admin.community, name: 'DRC', process_type: 'drc',
-          form: form_with_process)
-        note_list = create(:note_list, community: admin.community, process: process)
-        
+                                   form: form_with_process)
+         create(:note_list, community: admin.community, process: process)
+
         result = DoubleGdpSchema.execute(process_templates_query, context: {
                                            current_user: admin,
                                            site_community: admin.community,
@@ -82,11 +82,11 @@ RSpec.describe Types::Queries::Process do
 
       it 'retrieves process templates with necessary note list' do
         form_with_process = create(:form, community: admin.community, status: :published,
-          roles: %w[])
+                                          roles: %w[])
         process = create(:process, community: admin.community, name: 'DRC', process_type: 'drc',
-          form: form_with_process)
+                                   form: form_with_process)
         note_list = create(:note_list, community: admin.community, process: process)
-        
+
         result = DoubleGdpSchema.execute(process_templates_query, context: {
                                            current_user: admin,
                                            site_community: admin.community,
@@ -97,11 +97,11 @@ RSpec.describe Types::Queries::Process do
 
       it 'retrieves process templates with necassry form' do
         form_with_process = create(:form, community: admin.community, status: :published,
-          roles: %w[])
+                                          roles: %w[])
         process = create(:process, community: admin.community, name: 'DRC', process_type: 'drc',
-          form: form_with_process)
-        note_list = create(:note_list, community: admin.community, process: process)
-        
+                                   form: form_with_process)
+        create(:note_list, community: admin.community, process: process)
+
         result = DoubleGdpSchema.execute(process_templates_query, context: {
                                            current_user: admin,
                                            site_community: admin.community,
@@ -110,6 +110,5 @@ RSpec.describe Types::Queries::Process do
         expect(result.dig('data', 'processTemplates', 0, 'form', 'id')).to eql form_with_process.id
       end
     end
-
   end
 end
