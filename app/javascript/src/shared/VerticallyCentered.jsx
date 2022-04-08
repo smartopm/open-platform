@@ -9,8 +9,6 @@ export default function VerticallyCentered({ children }) {
       <Grid
         container
         spacing={0}
-        alignItems="center"
-        justifyContent="center"
         direction="column"
         style={{ backgroundColor: 'teal' }}
       >
