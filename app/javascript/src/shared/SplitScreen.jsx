@@ -52,7 +52,7 @@ const useStyles = makeStyles(() => ({
   },
   drawerPaperMobile: {
     width: '100%',
-    background: '#FAFAFA !important',
+    background: '#FFFFFF !important',
     marginTop: '50px'
   },
   mdDrawerPaper: {
