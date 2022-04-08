@@ -263,7 +263,7 @@ describe('Form Component', () => {
         );
         expect(container.queryByTestId('filename').textContent).toContain('img3.jpg');
       },
-      { timeout: 100 }
+      { timeout: 50 }
     );
   });
 
