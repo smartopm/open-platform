@@ -437,7 +437,7 @@ export default function FormUpdate({ formUserId, userId, authState, categoriesDa
                                       variant="body1"
                                       color="primary"
                                       style={{ fontWeight: 700 }}
-                                      data-testid="filename"
+                                      data-testid="attachment_name"
                                     >
                                       {formPropertiesData.formProperty.fieldName}
                                     </Typography>
@@ -446,7 +446,7 @@ export default function FormUpdate({ formUserId, userId, authState, categoriesDa
                                     <Typography
                                       component="span"
                                       variant="body2"
-                                      data-testid="uploaded_at"
+                                      data-testid="filename"
                                     >
                                       {formPropertiesData.fileName}
                                     </Typography>
@@ -586,12 +586,12 @@ export default function FormUpdate({ formUserId, userId, authState, categoriesDa
           {Boolean(categoriesData) &&
             categoriesData.map(category => (
               <CategoryItem category={category} key={category.id} editMode={false}>
-                <Grid style={!matches ? { padding: ' 20px  120px 0 120px' } : { paddingTop: '20px' }}>
+                <div key={category.id} style={!matches ? { padding: ' 20px  120px 0 120px' } : { paddingTop: '20px' }}>
                   {data?.formUserProperties
                     .sort(sortPropertyOrder)
                     .filter(prop => category.id === prop.formProperty.category.id)
                     .map(renderForm)}
-                </Grid>
+                </div>
               </CategoryItem>
             ))}
           <br />
@@ -722,5 +722,9 @@ FormUpdate.propTypes = {
   authState: PropTypes.shape({
     user: PropTypes.shape({ userType: PropTypes.string })
   }).isRequired,
-  categoriesData: PropTypes.arrayOf({})
+  categoriesData: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.string,
+    fieldName: PropTypes.string,
+    headerVisible: PropTypes.bool
+  }))
 };

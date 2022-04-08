@@ -20,9 +20,9 @@ const useStyles = makeStyles(() => ({
  }))
 
  ListWrapper.defaultProps = {
-  className: {}
+  className: ''
  }
 ListWrapper.propTypes = {
   children: PropTypes.node.isRequired,
-  className: PropTypes.shape({})
+  className: PropTypes.string
 }
