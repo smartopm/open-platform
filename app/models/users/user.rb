@@ -191,6 +191,7 @@ module Users
     validate :phone_number_valid?
     validate :public_user?
     after_update :update_associated_accounts_details, if: -> { saved_changes.key?('name') }
+    after_update :update_associated_request_details, if: -> { user_details_updated? }
 
     devise :omniauthable, omniauth_providers: %i[google_oauth2 facebook]
 
@@ -699,6 +700,21 @@ module Users
     # @return [Boolean]
     def update_associated_accounts_details
       accounts.where.not(accounts: { full_name: name }).update(full_name: name)
+    end
+
+    def user_details_updated?
+      saved_changes.key?('name') || saved_changes.key?('email') ||
+        saved_changes.key?('phone_number')
+    end
+
+    def update_associated_request_details
+      return if request.nil?
+
+      company_name = name if request.company_name.present?
+      request.update(name: name,
+                     email: email,
+                     phone_number: phone_number,
+                     company_name: company_name)
     end
 
     # Return general land parcel associated with user

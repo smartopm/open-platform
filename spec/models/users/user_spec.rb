@@ -288,6 +288,40 @@ RSpec.describe Users::User, type: :model do
     end
   end
 
+  describe 'callbacks' do
+    describe '#update_associated_request_details' do
+      let!(:user) do
+        create(:user_with_community,
+               name: 'Mark Test',
+               email: 'email@doublegdp.com',
+               phone_number: '1112223334')
+      end
+      let!(:admin) { create(:admin_user, community_id: user.community_id) }
+      let!(:entry_request) do
+        create(:entry_request,
+               user: admin,
+               guest_id: user.id,
+               name: 'test user',
+               company_name: 'test user')
+      end
+
+      context 'when user is updated' do
+        before do
+          user.update(name: 'John Doe',
+                      email: 'john_doe@doublegdp.com',
+                      phone_number: '1234567890')
+        end
+
+        it 'should update user details in associated entry' do
+          expect(entry_request.reload.name).to eql 'John Doe'
+          expect(entry_request.email).to eql 'john_doe@doublegdp.com'
+          expect(entry_request.phone_number).to eql '1234567890'
+          expect(entry_request.company_name).to eql 'John Doe'
+        end
+      end
+    end
+  end
+
   describe 'Creating a user from a oauth authentication callback' do
     let!(:community) { create(:community, name: 'Nkwashi') }
     let!(:role) { create(:role, name: 'visitor') }
