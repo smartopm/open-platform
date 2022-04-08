@@ -16,7 +16,7 @@ describe('User Detail Component', () => {
         label: 'Role',
         type: 'select',
         fieldSettings: {
-          listValues: []
+          listValues: [{ value: '', title: '' }]
         }
       }
     }
@@ -56,7 +56,7 @@ describe('User Detail Component', () => {
 
   const menuObject = {
     handleMenu: jest.fn(),
-    menuAnchorEl: null,
+    menuAnchorEl: document.createElement("button"),
     setAnchorEl: jest.fn(),
     menuData: [
       {

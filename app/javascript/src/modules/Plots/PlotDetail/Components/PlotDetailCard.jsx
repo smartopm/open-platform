@@ -69,7 +69,7 @@ export default function PlotDetailCard({ authState }) {
                   matches ? { marginLeft: '20px' } : { marginLeft: '79px', marginBottom: '40px' }
                 }
               >
-                <ImageList className={classes.gridList} cols={matches ? 1 : 3.5}>
+                <ImageList className={classes.gridList} cols={matches ? 1 : 3}>
                   {data?.userPlansWithPayments?.filter(plan => plan.status !== 'general')?.map(plan => (
                     <ImageListItem key={plan.id}>
                       <div
@@ -78,7 +78,7 @@ export default function PlotDetailCard({ authState }) {
                       >
                         <div>
                           <Typography className={matches ? classes.plotMobile : classes.plot}>
-                            {t('dashboard.plot')} 
+                            {t('dashboard.plot')}
                             {' '}
                             {plan.landParcel.parcelNumber}
                           </Typography>

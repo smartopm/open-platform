@@ -46,6 +46,9 @@ export default {
     id: '90ba44ef-4306-416b-945f-1d2ea4eb4c50',
     formUserId: "816864d4-4815-4043-a9a5-def5282c9e2a",
     body: "Parent task body",
+    assignees: [{
+      id: "9911784d4-4815-4043-a9a5-def5282fgat35"
+    }],
     __typename: 'Note'
   },
   author: {
@@ -98,6 +101,7 @@ export default {
           imageUrl:
             'https://lh3.googleusercontent.com/a-/AOh14Ghj2JnWVlVC_cPrzJrAJ2YyV_UyVTXcEew8YKVp=s96-c',
           avatarUrl: null,
+          userType: 'admin',
           __typename: 'User'
         }
       ],
@@ -125,6 +129,7 @@ export default {
       imageUrl:
         'https://lh3.googleusercontent.com/a-/AOh14Ghj2JnWVlVC_cPrzJrAJ2YyV_UyVTXcEew8YKVp=s96-c',
       avatarUrl: null,
+      userType: 'admin',
       __typename: 'User'
     }
   ],

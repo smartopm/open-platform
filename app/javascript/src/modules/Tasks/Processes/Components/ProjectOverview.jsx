@@ -157,10 +157,12 @@ const Step = {
   formUserId: PropTypes.string
 };
 
-ProjectOverview.defaultProps = {};
+ProjectOverview.defaultProps = {
+  data: {},
+};
 
 ProjectOverview.propTypes = {
-  data: PropTypes.shape(Step).isRequired
+  data: PropTypes.shape(Step)
 };
 
 const useStyles = makeStyles(theme => ({

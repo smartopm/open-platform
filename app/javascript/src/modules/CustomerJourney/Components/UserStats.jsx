@@ -35,7 +35,7 @@ export default function UserStats() {
           <Spinner />
         ) : (
           <StatusList
-            data={data?.substatusQuery}
+            data={data?.substatusQuery || {}}
             statuses={subStatus}
             handleFilter={handleFilter}
           />

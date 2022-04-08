@@ -15,7 +15,7 @@ describe('It should render the campaign split screen', () => {
     },
     result: {
       data: {
-        campaigns: {
+        campaign: {
           id: '54343432432',
           batchTime: '2020-06-24T11:58:22.573Z',
           status: 'draft',
@@ -27,14 +27,22 @@ describe('It should render the campaign split screen', () => {
           startTime: '2020-06-24T11:58:22.573Z',
           updatedAt: '2020-06-25T11:58:22.573Z',
           userIdList: 'bsufsbdf343, 53094549035, 09u4093',
+          campaignType: 'email',
+          includeReplyLink: false,
+          emailTemplatesId: '6718rtgh25dh',
           campaignMetrics: {
             batchTime: '2020-05-20T05:35:03Z',
             startTime: '2020-05-20T05:36:35Z',
             endTime: '2020-05-20T05:36:36Z',
             totalScheduled: '1',
             totalSent: '1',
-            totalClicked: '0'
-          }
+            totalClicked: '0',
+            totalOpened: '0'
+          },
+          labels: [{
+            id: 'fghj628188',
+            shortDesc: 'com_news_email'
+          }]
         }
       }
     }

@@ -33,9 +33,11 @@ describe('UserForm Component', () => {
 
     const container = render(
       <MockedProvider mocks={mocks}>
-        <BrowserRouter>
-          <UserForm isEditing={props.isEditing} isFromRef={props.isFromRef} isAdmin />
-        </BrowserRouter>
+        <Context.Provider value={authState}>
+          <BrowserRouter>
+            <UserForm isEditing={props.isEditing} isFromRef={props.isFromRef} isAdmin />
+          </BrowserRouter>
+        </Context.Provider>
       </MockedProvider>
     );
 
@@ -174,7 +176,7 @@ describe('UserForm Component', () => {
       expect(screen.queryAllByTestId('add_type')).toHaveLength(3);
       expect(screen.queryAllByText('form_actions.add_type')).toHaveLength(3);
     }, 10);
-    
+
     await act(async () => {
       fireEvent.click(screen.queryAllByTestId('add_type')[2]);
     });

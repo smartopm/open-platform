@@ -8,7 +8,7 @@ describe('SearchFilterList', () => {
     const filters = ['all', 'somethingelse'];
     const clearFilters = jest.fn();
     const container = render(
-      <SearchFilterList filters={filters} handleClearFilters={clearFilters} />
+      <SearchFilterList filters={filters} handleClearFilters={clearFilters} isSmall={false} />
     );
     expect(container.queryByTestId('clear_filters_btn').textContent).toContain('search.clear_filters');
     expect(container.queryByTestId('search_results').textContent).toContain('search.search_results');
@@ -22,7 +22,7 @@ describe('SearchFilterList', () => {
   it('should not render the filter list when no filters', () => {
     const clearFilters = jest.fn();
     const container = render(
-      <SearchFilterList filters={[]} handleClearFilters={clearFilters} />
+      <SearchFilterList filters={[]} handleClearFilters={clearFilters} isSmall={false} />
     );
     expect(container.queryByTestId('clear_filters_btn')).not.toBeInTheDocument()
   })

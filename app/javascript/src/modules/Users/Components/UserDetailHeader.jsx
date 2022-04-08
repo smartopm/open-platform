@@ -164,7 +164,6 @@ export default function UserDetailHeader({ data, userType, currentTab, authState
             handleClick={handleSelectButtonClick}
             selectedKey={selectedKey}
             defaultButtonText={t('common:right_menu.contact_info')}
-            style={{ marginLeft: '-6rem' }}
           />
         </Grid>
         {!smDownHidden && (

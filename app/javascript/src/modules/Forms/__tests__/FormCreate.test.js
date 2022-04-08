@@ -60,11 +60,11 @@ describe('FormCreate Component', () => {
 
       fireEvent.change(wrapper.queryByTestId('description'), { target: { value: 'This is a description' } });
       expect(wrapper.queryByTestId('description').value).toBe('This is a description');
-      
+
       expect(wrapper.queryByLabelText('misc.limit_1_response')).toBeInTheDocument();
       expect(wrapper.queryByLabelText('misc.previewable')).toBeInTheDocument();
       expect(wrapper.queryByLabelText('misc.public')).toBeInTheDocument();
-      
+
       fireEvent.change(wrapper.queryByLabelText('misc.public'), { target: { checked: true } })
       expect(wrapper.queryByLabelText('misc.public').checked).toBe(true);
 

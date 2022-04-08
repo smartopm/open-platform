@@ -40,7 +40,7 @@ describe('It should test the plan item list item component', () => {
   const menuData = {
     menuList,
     handleMenuClick: jest.fn,
-    anchorEl: null,
+    anchorEl: document.createElement("button"),
     open: false,
     userType: 'admin',
     handleClose: () => jest.fn

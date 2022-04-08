@@ -12,7 +12,7 @@ describe('remind me later menu menu component', () => {
       <MockedProvider>
         <BrowserRouter>
           <RemindMeLaterMenu
-            anchorEl={null}
+            anchorEl={document.createElement("button")}
             handleClose={jest.fn()}
             taskId="637861hjgdhj"
             setTaskReminder={remindMock}

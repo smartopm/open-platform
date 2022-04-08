@@ -10,6 +10,7 @@ import authState from '../../../__mocks__/authstate';
 import MockedThemeProvider from '../../__mocks__/mock_theme';
 
 jest.mock('react-signature-canvas');
+window.print = jest.fn();
 describe('It should test the payment receipt modal component', () => {
   const paymentData = {
     id: 'yy893rhkj3hiujhf4u3hr43u',

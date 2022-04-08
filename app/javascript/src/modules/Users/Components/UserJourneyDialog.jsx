@@ -82,8 +82,8 @@ UserJourneyDialog.propTypes = {
   log: PropTypes.shape({
     id: PropTypes.string,
     userId: PropTypes.string,
-    stopDate: PropTypes.string,
-    startDate: PropTypes.string,
+    stopDate: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
+    startDate: PropTypes.oneOfType([PropTypes.string, PropTypes.instanceOf(Date)]),
     previousStatus: PropTypes.string
   }).isRequired,
   refetch: PropTypes.func.isRequired

@@ -14,7 +14,7 @@ describe('should render Select Button component', () => {
         value: 'Sample Value',
         handleMenuItemClick: jest.fn(),
         name: 'Sample Name',
-        show: true, 
+        show: true,
         subMenu: [
           {
             key: 'sample_key_sub_menu',
@@ -35,6 +35,7 @@ describe('should render Select Button component', () => {
         selectedKey="sample_key"
         handleMenuItemClick={jest.fn()}
         handleClick={handleClick}
+        anchorEl={document.createElement("button")}
       />
     );
     expect(container.queryByTestId('button')).toBeInTheDocument();
@@ -44,21 +45,21 @@ describe('should render Select Button component', () => {
     fireEvent.click(container.queryByTestId('arrow-icon'))
     expect(handleClick).toHaveBeenCalled();
     expect(container.queryByText('Sample Name')).toBeInTheDocument();
-    
+
     fireEvent.click(container.queryByText('Sample Name'))
     expect(container.queryByText('Sample Name Sub Menu')).toBeInTheDocument();
     fireEvent.click(container.queryByText('Sample Name Sub Menu'))
   });
 
   it('should render select menu item without submenu list', () => {
-    const handleMenuItemClick = jest.fn() 
+    const handleMenuItemClick = jest.fn()
     const options = [
       {
         key: 'sample_key',
         value: 'Sample Value',
         name: 'Sample Name',
         handleMenuItemClick,
-        show: true, 
+        show: true,
       }
     ];
     const container = render(
@@ -70,11 +71,12 @@ describe('should render Select Button component', () => {
         selectedKey="sample_key"
         handleMenuItemClick={jest.fn()}
         handleClick={handleClick}
+        anchorEl={document.createElement("button")}
       />
     );
 
     expect(container.queryByText('Sample Name')).toBeInTheDocument();
-    
+
     fireEvent.click(container.queryByText('Sample Name'))
     expect(handleMenuItemClick).toHaveBeenCalled();
   });

@@ -74,11 +74,12 @@ const Step = {
 }
 ProjectProcesses.defaultProps = {
   commentsError: null,
-  comments: null
+  comments: null,
+  data: []
 }
 
 ProjectProcesses.propTypes = {
-  data: PropTypes.arrayOf(PropTypes.shape(Step)).isRequired,
+  data: PropTypes.arrayOf(PropTypes.shape(Step)),
   refetch: PropTypes.func.isRequired,
   handleProjectStepClick: PropTypes.func.isRequired,
   comments: PropTypes.shape({

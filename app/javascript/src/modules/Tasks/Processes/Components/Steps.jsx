@@ -123,11 +123,12 @@ const Step = {
 
   ProjectSteps.defaultProps = {
     redirect: false,
-    setSelectedStep: ()=> {}
+    setSelectedStep: ()=> {},
+    data: []
   };
 
   ProjectSteps.propTypes = {
-  data: PropTypes.arrayOf(PropTypes.shape(Step)).isRequired,
+  data: PropTypes.arrayOf(PropTypes.shape(Step)),
   setSelectedStep: PropTypes.func,
   handleProjectStepClick: PropTypes.func.isRequired,
   handleStepCompletion: PropTypes.func.isRequired,

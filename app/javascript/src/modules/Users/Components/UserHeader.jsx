@@ -124,7 +124,6 @@ export default function UserHeader({
               selectedKey={selectedKey}
               handleMenuItemClick={handleMenuItemClick}
               handleClick={handleSelectButtonClick}
-              style={{ marginLeft: '-4rem' }}
             />
           </Grid>
         )}
@@ -181,7 +180,6 @@ export default function UserHeader({
                 selectedKey={selectedKey}
                 handleMenuItemClick={handleMenuItemClick}
                 handleClick={handleSelectButtonClick}
-                style={{ marginLeft: '-4rem' }}
               />
             </Grid>
             <Grid item lg={12} md={12} sm={6} xs={6}>

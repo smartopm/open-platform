@@ -11,7 +11,7 @@ describe('TextInput component', () => {
     const props = {
       handleClose: jest.fn(),
       formId: 'sjhef3042432',
-      anchorEl: <p>some element to be triggered</p>,
+      anchorEl: document.createElement("button"),
       open: true,
       refetch: jest.fn(),
       formName: 'sexample'

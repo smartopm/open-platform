@@ -33,7 +33,7 @@ describe('business action menu component', () => {
         <BrowserRouter>
           <BusinessActionMenu
             data={props.data}
-            anchorEl={null}
+            anchorEl={document.createElement("button")}
             handleClose={handleClose}
             authState={authState}
             refetch={refetch}
@@ -49,10 +49,10 @@ describe('business action menu component', () => {
     fireEvent.click(container.queryByTestId('delete_button'))
     // check the appearance of delete modal
     expect(container.queryByText('dialogs.dialog_action')).toBeInTheDocument()
-    
+
     // find delete button and click
     fireEvent.click(container.queryByTestId('confirm_action'))
-    // after calling the mutation we close the modal and refetch remaining businesses 
+    // after calling the mutation we close the modal and refetch remaining businesses
     await waitFor(() => {
       expect(handleClose).toBeCalled()
       expect(refetch).toBeCalled()
