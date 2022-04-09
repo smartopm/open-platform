@@ -15,6 +15,7 @@ class ServiceWorkerController < ApplicationController
 
   private
 
+  # TODO: Refactor this method to get community_name, color and path from the community table
   def manifest_by_community
     community_name = current_community.name
 
@@ -24,6 +25,11 @@ class ServiceWorkerController < ApplicationController
 
     if community_name.eql?('Greenpark')
       return manifest_file(community_name, '#008C44', 'greenpark/')
+    end
+
+    if community_name.eql?('Metropolis')
+      # TODO: Fix color once ticket is updated
+      return manifest_file(community_name, '#008C44', 'metropolis/')
     end
 
     return manifest_file(community_name, '#008C44', 'enyimba/') if community_name.eql?('Enyimba')

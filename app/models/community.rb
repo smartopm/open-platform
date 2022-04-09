@@ -62,6 +62,7 @@ class Community < ApplicationRecord
     'Tilisi': ['doublegdp.com'],
     'Greenpark': ['doublegdp.com'],
     'Enyimba': ['doublegdp.com'],
+    'Metropolis': ['doublegdp.com'],
     'DAST': ['doublegdp.com'],
   }.freeze
 
