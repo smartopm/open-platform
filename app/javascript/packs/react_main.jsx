@@ -68,6 +68,7 @@ import GuestQRPage from '../src/modules/LogBook/Components/GuestQRPage'
 import Welcome from '../src/modules/LogBook/Kiosk/components/Welcome';
 import Accesspage from '../src/modules/LogBook/Kiosk/components/AccessPage';
 import ScanPage from '../src/modules/LogBook/Kiosk/components/Scan';
+import Errorpage from '../src/modules/LogBook/Kiosk/components/ErrorPage';
 
 // The routes defined here are carefully arranged, be mindful when changing them
 
@@ -181,7 +182,8 @@ const App = () => {
                 <LoggedInOnly>
                   <Switch>
                     <Route path="/logbook/kiosk" exact component={Welcome} />
-                    <Route path="/logbook/kiosk/access" exact component={Accesspage} />
+                    <Route path="/logbook/kiosk/success" exact component={Accesspage} />
+                    <Route path="/logbook/kiosk/error" exact component={Errorpage} />
                     <Route path="/logbook/kiosk/scan" exact component={ScanPage} />
                     <Consumer>
                       {({ user }) => (

@@ -9,6 +9,7 @@ import { Footer } from '../components/Footer'
 import { Context } from './Provider/AuthStateProvider'
 import { extractHostname } from '../utils/helpers'
 import { AddActivityLog } from '../graphql/mutations'
+import useTimer from '../utils/customHooks'
 
 /* istanbul ignore next */
 export default function QRScan({ isKiosk }) {
@@ -19,8 +20,14 @@ export default function QRScan({ isKiosk }) {
   const authState = useContext(Context)
   const history = useHistory()
   const [addLogEntry] = useMutation(AddActivityLog);
+  const time = useTimer(15)
 
-  // automatically grant access when using this from kiosk mode
+  const status = {
+    denied: 'error',
+    success: 'success',
+    error: 'error'
+  }
+
   useEffect(() => {
     const video = document.querySelector('video')
     if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
@@ -70,8 +77,16 @@ export default function QRScan({ isKiosk }) {
       })
   }, [isTorchOn])
 
-  const handleScan = data => {
 
+  // Reroute to error page if 15sec run out
+  useEffect(() => {
+    if(time === 0){
+      history.push(`/logbook/kiosk/error?status=timeout`) 
+    }
+  }, [time])
+
+  // automatically grant access when using this from kiosk mode
+  const handleScan = data => {
     if (data) {
       if (window.location.hostname !== extractHostname(data).hostname) {
         setError(t('common:errors.invalid_qr_data'))
@@ -80,23 +95,20 @@ export default function QRScan({ isKiosk }) {
       setScanned(true)
       if(isKiosk) {
         addLogEntry({ variables: { userId: extractHostname(data).userId } })
-        .then(({ data }) => {
-          console.log(data)
-          history.push(`/logbook/kiosk/access?status=${data.activityLogAdd.status}`)
-          // window.location = `/logbook/kiosk/access?status=${status}`
+        .then((response) => {
+          return history.push(`/logbook/kiosk/${status[response.data.activityLogAdd.status]}`)
         })
         .catch(() => {
-          history.push(`/logbook/kiosk/access?status=error`)
-          // window.location = `/logbook/kiosk/access?status=error`
+          return history.push(`/logbook/kiosk/error`)
         })
       } else {
-        window.location = data
+         window.location = data
       }
     }
   }
 
   const handleError = err => {
-    console.error(err)
+    setError(err)
   }
 
   // TODO: Replace this with permissions
@@ -111,17 +123,10 @@ export default function QRScan({ isKiosk }) {
       ) : (
         <>
           {error && <p className="text-center text-danger">{error}</p>}
-          <video
-            style={{
-                display: 'none'
-              }}
-          />
-
-          {/* <CenteredContent>
-              <Typography variant="h6" textAlign="center">
-                Please center you OR code on the
-              </Typography>
-            </CenteredContent> */}
+          {
+          // eslint-disable-next-line jsx-a11y/media-has-caption
+            <video style={{ display: 'none' }} />
+          }
           <QrReader
             delay={100}
             torch
@@ -133,24 +138,19 @@ export default function QRScan({ isKiosk }) {
           <div
             className="row justify-content-center align-items-center "
             style={{
-                marginTop: 60
-              }}
+              marginTop: 60
+            }}
           >
             <FormControlLabel
-              control={(
-                <Switch
-                  checked={isTorchOn}
-                  onChange={() => setToggleTorch(!isTorchOn)}
-                />
-                )}
+              control={<Switch checked={isTorchOn} onChange={() => setToggleTorch(!isTorchOn)} />}
               label={t('scan.torch')}
             />
           </div>
         </>
-        )}
+      )}
       <Footer position="5vh" />
     </div>
-  )
+  );
 }
 
 
