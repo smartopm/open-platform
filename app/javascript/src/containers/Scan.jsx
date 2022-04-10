@@ -1,13 +1,14 @@
-/* eslint-disable */
 import React, { useState, useEffect, useContext } from 'react'
 import QrReader from 'react-qr-reader'
-import { Redirect } from 'react-router-dom'
+import PropTypes from 'prop-types'
+import { Redirect, useHistory } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { FormControlLabel, Switch, Typography } from '@mui/material'
+import { FormControlLabel, Switch } from '@mui/material'
+import { useMutation } from 'react-apollo'
 import { Footer } from '../components/Footer'
-import { Context } from './Provider/AuthStateProvider.js'
+import { Context } from './Provider/AuthStateProvider'
 import { extractHostname } from '../utils/helpers'
-import CenteredContent from '../shared/CenteredContent'
+import { AddActivityLog } from '../graphql/mutations'
 
 /* istanbul ignore next */
 export default function QRScan({ isKiosk }) {
@@ -16,9 +17,10 @@ export default function QRScan({ isKiosk }) {
   const [isTorchOn, setToggleTorch] = useState(false)
   const { t } = useTranslation(['scan', 'common'])
   const authState = useContext(Context)
+  const history = useHistory()
+  const [addLogEntry] = useMutation(AddActivityLog);
 
   // automatically grant access when using this from kiosk mode
-
   useEffect(() => {
     const video = document.querySelector('video')
     if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
@@ -54,28 +56,42 @@ export default function QRScan({ isKiosk }) {
               })
               .catch(e => {
                 setError(JSON.stringify(e))
-                return
+                
               })
           } else {
            setError(isTorchOn && t('common:errors.flashlight_not_supported'))
-          return
+          
           }
         }
       })
       .catch(err => {
         setError(JSON.stringify(err))
-        return
+        
       })
   }, [isTorchOn])
 
   const handleScan = data => {
+
     if (data) {
-      if (window.location.hostname !== extractHostname(data)) {
+      if (window.location.hostname !== extractHostname(data).hostname) {
         setError(t('common:errors.invalid_qr_data'))
         return
       }
       setScanned(true)
-      window.location = data
+      if(isKiosk) {
+        addLogEntry({ variables: { userId: extractHostname(data).userId } })
+        .then(({ data }) => {
+          console.log(data)
+          history.push(`/logbook/kiosk/access?status=${data.activityLogAdd.status}`)
+          // window.location = `/logbook/kiosk/access?status=${status}`
+        })
+        .catch(() => {
+          history.push(`/logbook/kiosk/access?status=error`)
+          // window.location = `/logbook/kiosk/access?status=error`
+        })
+      } else {
+        window.location = data
+      }
     }
   }
 
@@ -93,46 +109,54 @@ export default function QRScan({ isKiosk }) {
       {scanned ? (
         <h1 className="text-center">{t('misc.decoding')}</h1>
       ) : (
-          <>
-            {error && <p className="text-center text-danger">{error}</p>}
-            <video
-              style={{
+        <>
+          {error && <p className="text-center text-danger">{error}</p>}
+          <video
+            style={{
                 display: 'none'
               }}
-            ></video>
+          />
 
-            {/* <CenteredContent>
+          {/* <CenteredContent>
               <Typography variant="h6" textAlign="center">
                 Please center you OR code on the
               </Typography>
             </CenteredContent> */}
-            <QrReader
-              delay={100}
-              torch={true}
-              onError={handleError}
-              onScan={handleScan}
-              style={{ width: '100%' }}
-            />
+          <QrReader
+            delay={100}
+            torch
+            onError={handleError}
+            onScan={handleScan}
+            style={{ width: '100%' }}
+          />
 
-            <div
-              className="row justify-content-center align-items-center "
-              style={{
+          <div
+            className="row justify-content-center align-items-center "
+            style={{
                 marginTop: 60
               }}
-            >
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={isTorchOn}
-                    onChange={() => setToggleTorch(!isTorchOn)}
-                  />
-                }
-                label={t('scan.torch')}
-              />
-            </div>
-          </>
+          >
+            <FormControlLabel
+              control={(
+                <Switch
+                  checked={isTorchOn}
+                  onChange={() => setToggleTorch(!isTorchOn)}
+                />
+                )}
+              label={t('scan.torch')}
+            />
+          </div>
+        </>
         )}
       <Footer position="5vh" />
     </div>
   )
+}
+
+
+QRScan.defaultProps = {
+  isKiosk: false
+}
+QRScan.propTypes = {
+  isKiosk: PropTypes.bool
 }

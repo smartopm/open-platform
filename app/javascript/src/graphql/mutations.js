@@ -207,6 +207,7 @@ export const AddActivityLog = gql`
       user {
         id
       }
+      status
     }
   }
 `

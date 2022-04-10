@@ -15,7 +15,7 @@ export default function Scan() {
         </Typography>
       </CenteredContent>
       <br />
-      <Scanner />
+      <Scanner isKiosk />
     </VerticallyCentered>
   );
 }
