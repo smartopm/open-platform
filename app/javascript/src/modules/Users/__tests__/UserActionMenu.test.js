@@ -22,11 +22,11 @@ describe('user action menu component', () => {
     const container = render(
       <BrowserRouter>
         <UserActionMenu
-          data={props.data} 
-          router={jest.fn()} 
-          anchorEl={null} 
-          handleClose={jest.fn()} 
-          userType={props.userType} 
+          data={props.data}
+          router={jest.fn()}
+          anchorEl={document.createElement("button")}
+          handleClose={jest.fn()}
+          userType={props.userType}
           CSMNumber="353453"
           open
           OpenMergeDialog={jest.fn()}

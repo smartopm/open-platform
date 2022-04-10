@@ -121,6 +121,7 @@ describe('Should render Guests View Component', () => {
                 limit={50}
                 query=""
                 timeZone="Africa/Maputo"
+                speedDialOpen={false}
               />
             </MockedThemeProvider>
           </MemoryRouter>
@@ -173,6 +174,7 @@ describe('Should render Guests View Component', () => {
                 limit={50}
                 query=""
                 timeZone="Africa/Maputo"
+                speedDialOpen={false}
               />
             </MockedThemeProvider>
           </MemoryRouter>

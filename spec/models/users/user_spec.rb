@@ -77,7 +77,7 @@ RSpec.describe Users::User, type: :model do
   end
 
   describe 'associations' do
-    it { is_expected.to belong_to(:community) }
+    it { is_expected.to belong_to(:community).without_validating_presence }
     it do
       is_expected
         .to have_many(:entry_requests)
@@ -249,13 +249,16 @@ RSpec.describe Users::User, type: :model do
   end
 
   describe 'scoped validations' do
+    let!(:community) { create(:community) }
     let!(:user) do
-      create(:user_with_community, email: 'john@doublegdp.com', phone_number: '9988776655')
+      create(:user, community_id: community.id, email: 'john@doublegdp.com',
+                    phone_number: '9988776655')
     end
+
     it 'checks for uniqueness of email per community' do
       expect do
-        user.community.users.create!(name: 'john doe', email: 'JOHN@DOUBLEGDP.COM',
-                                     role: user.role)
+        community.users.create!(name: 'john doe', email: 'JOHN@DOUBLEGDP.COM',
+                                role: user.role)
       end.to raise_error(
         ActiveRecord::RecordInvalid,
         'Validation failed: Email has already been taken',
@@ -264,12 +267,58 @@ RSpec.describe Users::User, type: :model do
 
     it 'checks for uniqueness of phone number per community' do
       expect do
-        user.community.users.create!(name: 'john doe', phone_number: '9988776655',
-                                     role: user.role)
+        community.users.create!(name: 'john doe', phone_number: '9988776655',
+                                role: user.role)
       end.to raise_error(
         ActiveRecord::RecordInvalid,
         'Validation failed: Phone Number has already been taken',
       )
+    end
+
+    it 'checks for uniqueness of public user name per community' do
+      expect do
+        community.users.create!(name: 'Public Submission', phone_number: '9908978909655',
+                                role: user.role)
+        community.users.create!(name: 'Public Submission', phone_number: '9905500000000',
+                                role: user.role)
+      end.to raise_error(
+        ActiveRecord::RecordInvalid,
+        'Validation failed: Name Public Submission user already exists',
+      )
+    end
+  end
+
+  describe 'callbacks' do
+    describe '#update_associated_request_details' do
+      let!(:user) do
+        create(:user_with_community,
+               name: 'Mark Test',
+               email: 'email@doublegdp.com',
+               phone_number: '1112223334')
+      end
+      let!(:admin) { create(:admin_user, community_id: user.community_id) }
+      let!(:entry_request) do
+        create(:entry_request,
+               user: admin,
+               guest_id: user.id,
+               name: 'test user',
+               company_name: 'test user')
+      end
+
+      context 'when user is updated' do
+        before do
+          user.update(name: 'John Doe',
+                      email: 'john_doe@doublegdp.com',
+                      phone_number: '1234567890')
+        end
+
+        it 'should update user details in associated entry' do
+          expect(entry_request.reload.name).to eql 'John Doe'
+          expect(entry_request.email).to eql 'john_doe@doublegdp.com'
+          expect(entry_request.phone_number).to eql '1234567890'
+          expect(entry_request.company_name).to eql 'John Doe'
+        end
+      end
     end
   end
 

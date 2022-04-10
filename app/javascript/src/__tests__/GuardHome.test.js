@@ -22,7 +22,7 @@ describe('Home Guard page', () => {
             securityGuards: [
                 {
                     name: "guard 1",
-                    id: "a54d6184-b10e-4865-bee7-7957701d423d"
+                    id: "11cdad78"
                 }
             ]
           }

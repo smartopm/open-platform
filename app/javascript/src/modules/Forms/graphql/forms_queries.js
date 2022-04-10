@@ -11,6 +11,7 @@ export const FormQuery = gql`
       expiresAt
       multipleSubmissionsAllowed
       preview
+      isPublic
       roles
     }
   }

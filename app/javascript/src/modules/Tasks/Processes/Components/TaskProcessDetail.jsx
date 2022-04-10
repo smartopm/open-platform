@@ -279,7 +279,7 @@ export default function TaskProcessDetail() {
           <Grid item md={tabValue === 2 ? 12 : 7} xs={12}>
             <TabPanel value={tabValue} index={0}>
               <ProjectOverviewSplitView
-                data={stepsData?.taskSubTasks}
+                data={stepsData?.taskSubTasks || []}
                 refetch={refetch}
                 handleProjectStepClick={handleProjectStepClick}
               />

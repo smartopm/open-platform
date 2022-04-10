@@ -67,7 +67,7 @@ export function PostItemGrid({ data }) {
       >
         <ImageList
           className={classes.gridList}
-          cols={matches ? 2 : 3.2}
+          cols={matches ? 2 : 3}
           spacing={5}
           sx={{
             gridAutoFlow: 'column',

@@ -732,11 +732,11 @@ export const tasksQueryBuilderInitialValue = {
     '98a8a9ba-0123-4456-b89a-b16e721c8cd0': {
       type: 'rule',
       properties: {
-        field: 'assignee',
-        operator: 'select_equals',
+        field: 'userName',
+        operator: 'equal',
         value: [''],
         valueSrc: ['value'],
-        valueType: ['select']
+        valueType: ['text']
       }
     }
   }

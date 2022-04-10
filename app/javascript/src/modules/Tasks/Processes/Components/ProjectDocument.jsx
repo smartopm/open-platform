@@ -80,9 +80,7 @@ export default function ProjectDocument({ attachments, loading, refetch, error }
     <>
       {error && (
         <CenteredContent>
-          <p>
-            <Typography>{formatError(error)}</Typography>
-          </p>
+          <Typography>{formatError(error)}</Typography>
         </CenteredContent>
       )}
       <ActionDialog

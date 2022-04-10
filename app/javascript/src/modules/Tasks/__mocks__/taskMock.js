@@ -1,6 +1,7 @@
 
 // This cleans up and avoids any jest warnings and errors
 export default {
+  __typename: 'Note',
   body: 'Consultant sub-task',
   createdAt: '2022-01-06T11:22:28Z',
   id: '4f5bfb50-0fe1-455a-bff5-ca76b3f3eb2c',
@@ -22,6 +23,7 @@ export default {
   formUser: {
     id: "0358e014-1440-46ee-988d-d5338f019ba3",
     user: {
+      __typename: 'User',
       id: "c8b16e54-095e-4b92-bf51-b197f6b916a6",
       name: "Test User"
     }
@@ -31,7 +33,6 @@ export default {
     total: 0,
     progress_percentage: null
   },
-  __typename: 'Note',
   user: {
     id: 'cfc7e3d3-d875-4d50-a7a4-994df8ab7f42',
     name: 'Daniel Mutuba',
@@ -45,6 +46,9 @@ export default {
     id: '90ba44ef-4306-416b-945f-1d2ea4eb4c50',
     formUserId: "816864d4-4815-4043-a9a5-def5282c9e2a",
     body: "Parent task body",
+    assignees: [{
+      id: "9911784d4-4815-4043-a9a5-def5282fgat35"
+    }],
     __typename: 'Note'
   },
   author: {
@@ -97,6 +101,7 @@ export default {
           imageUrl:
             'https://lh3.googleusercontent.com/a-/AOh14Ghj2JnWVlVC_cPrzJrAJ2YyV_UyVTXcEew8YKVp=s96-c',
           avatarUrl: null,
+          userType: 'admin',
           __typename: 'User'
         }
       ],
@@ -124,6 +129,7 @@ export default {
       imageUrl:
         'https://lh3.googleusercontent.com/a-/AOh14Ghj2JnWVlVC_cPrzJrAJ2YyV_UyVTXcEew8YKVp=s96-c',
       avatarUrl: null,
+      userType: 'admin',
       __typename: 'User'
     }
   ],

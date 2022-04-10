@@ -22,12 +22,12 @@ import FormLinks, { useStyles } from './FormLinks';
 import { FormsQuery } from '../graphql/forms_queries';
 import Loading from '../../../shared/Loading';
 import ErrorPage from '../../../components/Error';
-import CenteredContent from '../../../components/CenteredContent';
 import { FormCreateMutation } from '../graphql/forms_mutation';
 import FloatButton from '../../../components/FloatButton';
 import FormCreate from './FormCreate';
 import FormHeader from './FormHeader';
 import FormMenu from './FormMenu';
+import CenteredContent from '../../../shared/CenteredContent';
 
 // here we get existing google forms and we mix them with our own created forms
 export default function FormLinkList({ userType, community, path, id }) {
@@ -50,7 +50,7 @@ export default function FormLinkList({ userType, community, path, id }) {
     setFormId(Id);
   }
 
-  if (loading) return <Loading />;
+  if (loading) return <Loading />
   if (error) return <ErrorPage title={error.message} />;
 
   return (
@@ -83,7 +83,7 @@ export default function FormLinkList({ userType, community, path, id }) {
                   <ListItem
                     key={form.id}
                     data-testid="community_form"
-                    onClick={() => history.push(`/form/${form.id}/${form.name}`)}
+                    onClick={() => history.push(`/form/${form.id}/private`)}
                   >
                     <Grid container spacing={1} style={{ marginTop: '8px' }}>
                       <Grid item xs={1}>

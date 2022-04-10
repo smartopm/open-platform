@@ -3,7 +3,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, useLocation } from 'react-router-dom';
 import { useQuery } from 'react-apollo';
 import { Chip, Grid, IconButton, Typography, Badge } from '@mui/material';
 import { grey } from '@mui/material/colors';
@@ -44,6 +44,7 @@ export default function TaskDataList({
   const mdUpHidden = useMediaQuery(theme => theme.breakpoints.up('md'));
   const mdDownHidden = useMediaQuery(theme => theme.breakpoints.down('md'));
   const urlParams = useParams();
+  const location = useLocation();
 
   const { data } = useQuery(CommentQuery, {
     variables: { taskId: task.id },
@@ -165,6 +166,7 @@ export default function TaskDataList({
                   onClick={event => menuData.handleTodoMenu(event, task)}
                   color="primary"
                   size="large"
+                  disabled={location.pathname === '/tasks/task_lists'} // Temporary hack until task lists menu items are added
                 >
                   <MoreVertIcon />
                 </IconButton>
@@ -214,6 +216,7 @@ export default function TaskDataList({
                   onClick={event => menuData.handleTodoMenu(event, task)}
                   color="primary"
                   size="large"
+                  disabled={location.pathname === '/tasks/task_lists'} // Temporary hack until task lists menu items are added
                 >
                   <MoreVertIcon />
                 </IconButton>

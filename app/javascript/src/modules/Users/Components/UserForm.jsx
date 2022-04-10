@@ -225,7 +225,7 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
       removeOptionAndUpdate(index, emailContactInfos, [...phoneContactInfos, ...addressContactInfos])
       return;
     }
-      
+
     if(type === 'address') {
       removeOptionAndUpdate(index, addressContactInfos, [...phoneContactInfos, ...emailContactInfos])
     }
@@ -381,7 +381,7 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
               />
             </div>
 )}
-           
+
             <FormOptionInput
               label={t('common:form_fields.secondary_number')}
               options={phoneNumbers}
@@ -459,26 +459,30 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
                   </TextField>
                 </div>
                 <div className="form-group">
-                  <TextField
-                    id="userType"
-                    select
-                    label={t('common:form_fields.user_type')}
-                    value={data.userType || ''}
-                    onChange={handleInputChange}
-                    margin="normal"
-                    name="userType"
-                    inputProps={{ 'aria-label': 'User Type' }}
-                    required
-                    className={`${css(styles.selectInput)}`}
-                  >
-                    <MenuItem value="" />
-                    {communityRoles &&
+                  {
+                    communityRoles && (
+                    <TextField
+                      id="userType"
+                      select
+                      label={t('common:form_fields.user_type')}
+                      value={data.userType || ''}
+                      onChange={handleInputChange}
+                      margin="normal"
+                      name="userType"
+                      inputProps={{ 'aria-label': 'User Type' }}
+                      required
+                      className={`${css(styles.selectInput)}`}
+                    >
+                      <MenuItem value="" />
+                      {
                       communityRoles.map(key => (
                         <MenuItem key={key} value={key}>
                           {t(`user_types.${key}`)}
                         </MenuItem>
                       ))}
-                  </TextField>
+                    </TextField>
+                    )
+                  }
                 </div>
 
                 <div className="form-group">

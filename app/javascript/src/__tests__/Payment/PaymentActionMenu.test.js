@@ -10,7 +10,7 @@ describe('Payment Action Menu', () => {
     const container = render(
       <MockedProvider>
         <BrowserRouter>
-          <ActionMenu open handleClose={jest.fn()}>
+          <ActionMenu open handleClose={jest.fn()} anchorEl={document.createElement("button")}>
             <div>View</div>
           </ActionMenu>
         </BrowserRouter>

@@ -52,7 +52,7 @@ describe('Label action menu component', () => {
         <BrowserRouter>
           <LabelActionMenu
             data={props.data}
-            anchorEl={null}
+            anchorEl={document.createElement("button")}
             handleClose={handleClose}
             userType={props.userType}
             refetch={refetch}
@@ -61,13 +61,13 @@ describe('Label action menu component', () => {
         </BrowserRouter>
       </MockedProvider>
     )
-    
-    
+
+
     await waitFor(() => {
       expect(container.queryByText('menu.delete')).toBeInTheDocument()
       expect(container.queryByText('menu.merge')).toBeInTheDocument()
       expect(container.queryByText('menu.edit')).toBeInTheDocument()
-  
+
       fireEvent.click(container.queryByText('menu.delete'))
       fireEvent.click(container.queryByTestId('cancel'))
       expect(container.queryByText('label.delete_dialog_title')).toBeInTheDocument()

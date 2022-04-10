@@ -98,7 +98,8 @@
     "new_guest": "New Guest",
     "invite_another_guest": "Invite Another Guest",
     "copy_id": "Copy User ID List",
-    "comment_edit": "Edit Comment"
+    "comment_edit": "Edit Comment",
+    "copy": "Copy"
   },
   "misc": {
     "or": "OR",
@@ -274,6 +275,7 @@
     "show": "Show",
     "statistics": "Statistics",
     "timeframe": "Timeframe"
+    
   },
   "menu": {
     "invoice": "Invoice",
@@ -364,7 +366,8 @@
     "allocate": "Allocate",
     "invitations": "Invitations",
     "deactivate_user": "Deactivate User",
-    "activate_user": "Activate User"
+    "activate_user": "Activate User",
+    "task_lists": "Task Lists"
   },
   "user_types": {
     "admin": "Admin",
@@ -466,7 +469,8 @@
     "something_wrong_qr_code": "Something went wrong while downloading QR Code",
     "user_not_found_add_new": "User Not Found - Please Add New Guest",
     "no_guests_to_invite": "No selected guests to invite",
-    "invalid_time": "Invitation time is invalid"
+    "invalid_time": "Invitation time is invalid",
+    "something_went_wrong_forms": "Something went wrong while accessing this form"
   },
   "dialogs": {
     "dialog_action": "Are you sure you want to {{action}} this {{title}}?",

@@ -59,10 +59,11 @@ export default function ProjectSteps({
       handleStepCompletion(stepItemId, completed)
     }
   }
+
   return (
     <>
       {data?.length > 0
-      ? (data?.map(firstLevelStep => (
+      ? (data?.sort(sortTaskOrder)?.map(firstLevelStep => (
         <Fragment key={firstLevelStep.id}>
           <div
             className={classes.levelOne}
@@ -122,11 +123,12 @@ const Step = {
 
   ProjectSteps.defaultProps = {
     redirect: false,
-    setSelectedStep: ()=> {}
+    setSelectedStep: ()=> {},
+    data: []
   };
 
   ProjectSteps.propTypes = {
-  data: PropTypes.arrayOf(PropTypes.shape(Step)).isRequired,
+  data: PropTypes.arrayOf(PropTypes.shape(Step)),
   setSelectedStep: PropTypes.func,
   handleProjectStepClick: PropTypes.func.isRequired,
   handleStepCompletion: PropTypes.func.isRequired,

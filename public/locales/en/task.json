@@ -130,6 +130,10 @@
     "requirements_guideline": "Please read the required guideline.",
     "go_to_guideline": "Go to Guideline."
   },
+  "task_lists": {
+    "task_lists": "Task Lists",
+    "no_task_lists": "No Task Lists available"
+  },
   "misc": {
     "confirm": "confirm",
     "reply": "Reply"

@@ -237,11 +237,14 @@ export default function CampaignSplitScreenContent({ refetch, campaign, handleCl
     if (campaign) {
       setFormData(campaign);
     }
+  }, [campaign]);
+
+  useEffect(() => {
     if (state?.from === '/users' || formData.status === 'scheduled') {
       setMailListType('idlist');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [campaign, formData.status]);
+  }, [formData.status]);
   return (
     <Grid
       container
@@ -314,11 +317,18 @@ export default function CampaignSplitScreenContent({ refetch, campaign, handleCl
         </Grid>
         <Grid item sm={9} xs={12}>
           <ButtonGroup color="primary" aria-label="status button">
-            <Button onClick={() => handleStatusButtonClick('draft')} style={buttonStyle('draft')}>
+            <Button
+              onClick={
+                formData.status !== 'done' ? () => handleStatusButtonClick('draft') : undefined
+              }
+              style={buttonStyle('draft')}
+            >
               <Typography variant="body2">{t('form_fields.draft')}</Typography>
             </Button>
             <Button
-              onClick={() => handleStatusButtonClick('scheduled')}
+              onClick={
+                formData.status !== 'done' ? () => handleStatusButtonClick('scheduled') : undefined
+              }
               style={buttonStyle('scheduled')}
             >
               <Typography variant="body2">{t('form_fields.scheduled')}</Typography>
@@ -515,7 +525,12 @@ export default function CampaignSplitScreenContent({ refetch, campaign, handleCl
                     <Spinner />
                   ) : (
                     searchText && (
-                      <Grid container spacing={2} data-testid='search-result' style={{paddingTop: '10px'}}>
+                      <Grid
+                        container
+                        spacing={2}
+                        data-testid="search-result"
+                        style={{ paddingTop: '10px' }}
+                      >
                         {data?.searchUserIds.map(user => (
                           <Grid item sm={4} xs={8} key={user.id}>
                             <UserNameAvatar user={user} style={{ padding: '10px 0' }} />

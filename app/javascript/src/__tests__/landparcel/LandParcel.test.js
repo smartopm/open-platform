@@ -28,7 +28,7 @@ describe('It should test the comment component', () => {
   const menuData = {
     menuList: [{ content: 'Add House', isAdmin: true, color: '', handleClick: jest.fn()}],
     handlePropertyMenu: jest.fn(),
-    anchorEl: null,
+    anchorEl: document.createElement("button"),
     open: true,
     handleClose: jest.fn()
   }

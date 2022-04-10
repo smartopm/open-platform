@@ -34,6 +34,7 @@ import Feedback from '../src/containers/Activity/Feedback';
 import FeedbackSuccess from '../src/containers/Activity/FeedbackSuccess';
 import AllNotes from '../src/containers/Activity/AllNotes';
 import ProjectsList from '../src/modules/Tasks/Processes/Components/ProjectsList';
+import TaskLists from '../src/modules/Tasks/TaskLists/Components/TaskLists' // TODO: Remove after Task Lists menu is set up
 import FeedbackPage from '../src/containers/Activity/AllFeedback';
 import ShowroomLogs from '../src/containers/showroom/ShowroomLogs';
 import ClientRequestForm from '../src/containers/ClientRequestForm';
@@ -173,7 +174,9 @@ const App = () => {
 
                 {/* Spike page */}
                 <Route path="/news/post/:id" exact component={PostPage} />
-
+                {/* Public form */}
+                <Route path="/form/:formId/public" exact component={FormPage} />
+                
                 <LoggedInOnly>
                   <Switch>
                     <Route path="/logbook/kiosk" exact component={Welcome} />
@@ -226,12 +229,34 @@ const App = () => {
                                   path="/myprofile"
                                   render={() => <Redirect to={`/user/${user.id}`} />}
                                 />
+                                <Route exact path="/tasks/task_lists" component={TaskLists} />
                                 {/* end of redirects */}
                                 {[...modules, ...UserRoutes].map(module => {
                                   if (module.subMenu) {
                                     return module.subMenu.map(sub => {
-                                      let routes = [];
+                                      if (sub.subMenu) {
+                                        return sub.subMenu.map(subSubMenu => {
+                                          let subSubMenuRoutes = [];
 
+                                          if (
+                                            subSubMenu.subRoutes &&
+                                            checkAllowedCommunityFeatures(
+                                              user.community.features,
+                                              subSubMenu.featureName
+                                            )
+                                          ) {
+                                            subSubMenuRoutes = subSubMenu.subRoutes.map(subRoute => (
+                                              <Route {...subRoute.routeProps} key={subRoute.name} />
+                                            ));
+                                          }
+                                          checkAllowedCommunityFeatures(
+                                            user.community.features,
+                                            subSubMenu.featureName
+                                          ) && subSubMenuRoutes.push(<Route {...subSubMenu.routeProps} key={subSubMenu.name} />);
+                                          return subSubMenuRoutes;
+                                        });
+                                      }
+                                      let routes = [];
                                       if (
                                         sub.subRoutes &&
                                         checkAllowedCommunityFeatures(
@@ -288,12 +313,21 @@ const App = () => {
                                 <Route path="/news/slug" exact component={Posts} />
                                 <Route path="/discussions/:id" exact component={DiscussonPage} />
                                 <Route path="/business/:id" exact component={BusinessProfile} />
-                                <Route path="/form/:formId?/:formName?" exact component={FormPage} />
+                                <Route path="/edit_form/:formId" exact component={FormBuilderPage} />
+                                <Route path="/form/:formId/private" exact component={FormPage} />
+                                {/* Handle backward compatibility with existing forms for logged in users */}
+                                <Route
+                                    exact
+                                    path="/form/:formId"
+                                    render={({ match }) => (
+                                      <Redirect to={`/form/${match.params.formId}/private`} />
+                                    )}
+                                  />
                                 <Route
                                   path="/form/:formId?/:formName?/entries"
                                   component={FormEntriesPage}
                                 />
-                                <Route path="/edit_form/:formId" component={FormBuilderPage} />
+                                
                                 <Route
                                   path="/mail_templates/:emailId"
                                   component={EmailBuilderDialog}

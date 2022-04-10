@@ -82,6 +82,7 @@ RSpec.describe Forms::Form, type: :model do
     it { is_expected.to have_many(:form_properties) }
     it { is_expected.to have_many(:form_users) }
     it { is_expected.to have_many(:categories) }
+    it { is_expected.to have_one(:process).class_name('Processes::Process') }
   end
 
   describe '#report_an_issue?' do
@@ -125,6 +126,50 @@ RSpec.describe Forms::Form, type: :model do
     it 'returns false if a form is not a DRC form' do
       form = create(:form, community: user.community)
       expect(form.drc_form?).to eq(false)
+    end
+  end
+
+  describe '#associated_process?' do
+    let(:user) { create(:admin_user) }
+    let(:form) { create(:form, community: user.community, name: 'DRC Form') }
+
+    it 'returns false if there is no process' do
+      expect(form.associated_process?).to eq(false)
+    end
+
+    it 'returns false if there is no note list' do
+      form_with_process = create(:form, community: user.community, name: 'Form 2')
+      create(:process, form_id: form_with_process.id, process_type: 'drc', name: 'DRC')
+
+      expect(form_with_process.associated_process?).to eq(false)
+    end
+
+    it 'returns true if there is a note list & process' do
+      form_with_process_note_list = create(:form, community: user.community, name: 'Form 3')
+      process_with_note_list = create(:process,
+                                      community: user.community,
+                                      form: form_with_process_note_list,
+                                      process_type: 'drc',
+                                      name: 'DRC')
+      create(:note_list, community: user.community, process_id: process_with_note_list.id)
+
+      expect(form_with_process_note_list.associated_process?).to eq(true)
+    end
+  end
+
+  describe '#process_type' do
+    let(:user) { create(:admin_user) }
+    let(:form) { create(:form, community: user.community, name: 'DRC Form') }
+
+    it 'returns nil if there is no process' do
+      expect(form.process_type).to be_nil
+    end
+
+    it 'returns valid process type if process exists' do
+      form_with_process = create(:form, community: user.community, name: 'Form 2')
+      create(:process, form_id: form_with_process.id, process_type: 'drc', name: 'DRC')
+
+      expect(form_with_process.process_type).to eq('drc')
     end
   end
 end

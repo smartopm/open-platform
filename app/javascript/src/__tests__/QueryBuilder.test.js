@@ -14,7 +14,7 @@ const queryBuilderConfig = {
       label: 'Role',
       type: 'select',
       fieldSettings: {
-        listValues: []
+        listValues: [{ value: '', title: '' }]
       }
     }
   }

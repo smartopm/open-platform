@@ -12,7 +12,11 @@ describe('Custom Forms', () => {
             'can_create_form_user',
             'can_see_menu_item',
             'can_create_form',
-            'can_create_form_properties'
+            'can_create_form_properties',
+            'can_fetch_form',
+            'can_fetch_form_properties',
+            'can_fetch_form_property',
+            'can_fetch_form_categories'
           ],
           role_id: roleRes.body.id
         });
@@ -49,14 +53,15 @@ describe('Custom Forms', () => {
     // Create a new Form
     cy.get('.new-permit-request-form-btn').click();
     cy.wait(1000);
-    cy.get('.form-title-txt-input').type('Cypress Form');
-    cy.get('.form-description-txt-input').type('Simple Cypress Form');
+    cy.get('[data-testid=title]').type('Cypress Form');
+    cy.get('[data-testid=description]').type('Simple Cypress Form');
 
     // Enable Form Preview
     cy.get('.form-previewbale-switch-btn').click();
 
-    cy.get('.submit-form-btn').click();
+    cy.get('[data-testid=submit]').click();
     cy.wait(2000);
+    cy.get('[data-testid=cancel]').click();
 
     // The 'No Forms' text should disappear
     cy.get('[data-testid=no-form-available]').should('not.exist');

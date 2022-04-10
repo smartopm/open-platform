@@ -73,6 +73,10 @@
     "see_more": "Ver Más",
     "sub_tasks": "Sub Tareas"
   },
+  "task_lists": {
+    "no_task_lists": "No hay Listas de Tareas disponibles",
+    "task_lists": "Lista de Tareas"
+  },
   "task": {
     "active_reminder": "Recordatorio",
     "add_note": "Agregar una nota",

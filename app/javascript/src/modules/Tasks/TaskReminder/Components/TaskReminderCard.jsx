@@ -65,7 +65,7 @@ export default function TaskReminderCard({ translate }) {
               >
                 <ImageList
                   className={classes.gridList}
-                  cols={matches ? 1 : 3.5}
+                  cols={matches ? 1 : 3}
                   sx={{
                     gridAutoFlow: 'column',
                     gridTemplateColumns: 'repeat(auto-fill, minmax(250px,1fr)) !important',
@@ -91,7 +91,7 @@ export default function TaskReminderCard({ translate }) {
                             }}
                           />
                           <Typography className={classes.due} style={{ paddingBottom: '5px' }}>
-                            {translate('common:misc.due_text')} 
+                            {translate('common:misc.due_text')}
                             {' '}
                             {dateToString(tile.dueDate)}
                           </Typography>

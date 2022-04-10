@@ -130,7 +130,6 @@ export function FormOptionWithOwnActions({ actions, options }) {
   return options.map((option, index) => (
     <div key={option.id}>
       <TextField
-        key={option.id}
         label={t('misc.option_with_count', { id: index + 1 })}
         variant="outlined"
         size="small"
@@ -143,7 +142,6 @@ export function FormOptionWithOwnActions({ actions, options }) {
         data-testid="option-text-field"
       />
       <IconButton
-        key={option.id}
         style={{ marginTop: 13 }}
         onClick={() => actions.handleRemoveOption(index)}
         aria-label="remove"

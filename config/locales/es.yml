@@ -250,6 +250,8 @@ es:
               invalid_dates: debe ser mayor que la fecha de inicio
         users/user:
           attributes:
+            name:
+              user_already_exists: El usuario Envío Público ya existe
             phone_number:
               invalid_length: debe tener una longitud válida
               invalid_phone_number: sólo puede contener 0-9, '-', '+' y espacio
