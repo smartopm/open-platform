@@ -3,19 +3,21 @@ import React, { useState, useEffect, useContext } from 'react'
 import QrReader from 'react-qr-reader'
 import { Redirect } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { FormControlLabel, Switch } from '@mui/material'
+import { FormControlLabel, Switch, Typography } from '@mui/material'
 import { Footer } from '../components/Footer'
 import { Context } from './Provider/AuthStateProvider.js'
 import { extractHostname } from '../utils/helpers'
+import CenteredContent from '../shared/CenteredContent'
 
 /* istanbul ignore next */
-export default function QRScan() {
+export default function QRScan({ isKiosk }) {
   const [scanned, setScanned] = useState(false)
   const [error, setError] = useState(null)
   const [isTorchOn, setToggleTorch] = useState(false)
   const { t } = useTranslation(['scan', 'common'])
   const authState = useContext(Context)
 
+  // automatically grant access when using this from kiosk mode
 
   useEffect(() => {
     const video = document.querySelector('video')
@@ -36,10 +38,12 @@ export default function QRScan() {
         const track = stream.getVideoTracks()[0]
 
         video.addEventListener('loadedmetadata', () => {
-          window.setTimeout(
-            () => onCapabilitiesReady(track.getCapabilities()),
-            500
-          )
+          if(track.getCapabilities){
+            window.setTimeout(
+              () => onCapabilitiesReady(track.getCapabilities()),
+              500
+            )
+          }
         })
 
         function onCapabilitiesReady(capabilities) {
@@ -79,6 +83,7 @@ export default function QRScan() {
     console.error(err)
   }
 
+  // TODO: Replace this with permissions
   if (!['security_guard', 'admin', 'custodian', 'security_supervisor'].includes(authState.user.userType.toLowerCase())) {
     return <Redirect to='/' />
   }
@@ -95,6 +100,12 @@ export default function QRScan() {
                 display: 'none'
               }}
             ></video>
+
+            {/* <CenteredContent>
+              <Typography variant="h6" textAlign="center">
+                Please center you OR code on the
+              </Typography>
+            </CenteredContent> */}
             <QrReader
               delay={100}
               torch={true}
