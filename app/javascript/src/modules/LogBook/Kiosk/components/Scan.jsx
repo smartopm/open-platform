@@ -6,7 +6,7 @@ import Scanner from '../../../../containers/Scan';
 
 export default function Scan() {
   return (
-    <VerticallyCentered>
+    <VerticallyCentered backTo='/logbook/kiosk'>
       <br />
       <br />
       <CenteredContent>

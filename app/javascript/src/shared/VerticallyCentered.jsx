@@ -1,24 +1,25 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Grid from '@mui/material/Grid';
-import Container from '@mui/material/Container';
 
 export default function VerticallyCentered({ children, backgroundColor, isVerticallyCentered }) {
   return (
-    <div style={{ height: '100%', display: 'flex' }}>
+    <div
+      style={{
+        height: '100%',
+        display: 'flex',
+        backgroundColor,
+        color: backgroundColor && 'white'
+      }}
+    >
       <Grid
         container
         spacing={0}
         direction="column"
-        justifyContent={isVerticallyCentered && "center"}
-        alignItems={isVerticallyCentered && "center"}
-        style={{ backgroundColor, color: backgroundColor && 'white' }}
+        justifyContent={isVerticallyCentered && 'center'}
+        alignItems={isVerticallyCentered && 'center'}
       >
-        <Grid item>
-          <Container maxWidth="sm">
-            {children}
-          </Container>
-        </Grid>
+        <Grid item>{children}</Grid>
       </Grid>
     </div>
   );
@@ -26,11 +27,11 @@ export default function VerticallyCentered({ children, backgroundColor, isVertic
 
 VerticallyCentered.defaultProps = {
   backgroundColor: null,
-  isVerticallyCentered: true,
+  isVerticallyCentered: true
 };
 
 VerticallyCentered.propTypes = {
   children: PropTypes.node.isRequired,
   backgroundColor: PropTypes.string,
-  isVerticallyCentered: PropTypes.bool,
+  isVerticallyCentered: PropTypes.bool
 };

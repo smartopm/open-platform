@@ -18,7 +18,7 @@ export default function Accesspage() {
   return (
     <VerticallyCentered backgroundColor="#67B388">
       <CenteredContent>
-        <Typography variant="h1" textAlign="center">
+        <Typography variant="h2" textAlign="center">
           Accessed Granted
         </Typography>
       </CenteredContent>
@@ -27,7 +27,7 @@ export default function Accesspage() {
       <br />
       <br />
       <CenteredContent>
-        <Typography variant="h3" textAlign="center">
+        <Typography variant="h4" textAlign="center">
           Welcome to DoubleGDP
         </Typography>
       </CenteredContent>

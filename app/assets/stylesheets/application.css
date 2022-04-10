@@ -22,6 +22,10 @@
   #root {
     height: 100%;
   }
+
+  .profiler-results {
+    display: none;
+  }
   
   /* Spinner for page loading */
 .lds-ripple {
