@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { Container, Typography } from '@mui/material';
 import { useHistory } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import VerticallyCentered from '../../../../shared/VerticallyCentered';
 import CenteredContent from '../../../../shared/CenteredContent';
 import { useParamsQuery } from '../../../../utils/helpers';
@@ -12,6 +13,7 @@ export default function ErrorPage() {
   const status = path.get('status');
   const history = useHistory();
   const time = useTimer(10);
+  const { t } = useTranslation(['logbook', 'common'])
 
   useEffect(() => {
     if (time === 0) {
@@ -24,21 +26,21 @@ export default function ErrorPage() {
       <Container maxWidth="sm">
         <CenteredContent>
           <Typography variant="h2" textAlign="center" data-testid="error_title">
-            {status === 'timeout' ? 'Error' : 'Access Denied'}
+            {status === 'timeout' ? t('common:misc.error') : t('kiosk.access_denied')}
           </Typography>
         </CenteredContent>
         <br />
         <br />
         <CenteredContent>
           <Typography variant="h6" textAlign="center" data-testid="error_message">
-            {status === 'timeout' ? 'QR code not detected' : 'Speak to the guard on duty'}
+            {status === 'timeout' ? t('kiosk.qr_not_detected') : t('kiosk.speak_to_guard_on_duty')}
           </Typography>
         </CenteredContent>
         <br />
         <br />
         <CenteredContent>
           <BorderedButton 
-            title="Try Again" 
+            title={t('kiosk.try_again')} 
             color="error"
             data-testid="try_again_message"
             onClick={() => history.push('/logbook/kiosk/scan')}

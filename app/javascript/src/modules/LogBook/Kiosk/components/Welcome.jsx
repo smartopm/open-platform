@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { Typography, Button, Box, Container } from '@mui/material';
 import { useHistory } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import VerticallyCentered from '../../../../shared/VerticallyCentered';
 import CommunityName from '../../../../shared/CommunityName';
 import { Context } from '../../../../containers/Provider/AuthStateProvider';
@@ -9,7 +10,7 @@ import CenteredContent from '../../../../shared/CenteredContent';
 export default function Welcome() {
   const authState = useContext(Context);
   const history = useHistory();
-
+  const { t } = useTranslation('logbook')
   return (
     <VerticallyCentered isVerticallyCentered={false}>
       <Container maxWidth="sm">
@@ -20,14 +21,14 @@ export default function Welcome() {
         <br />
         <CenteredContent>
           <Typography variant="h2" textAlign="center" data-testid="welcome_to_kiosk">
-            Welcome
+            {t('kiosk.welcome')}
           </Typography>
         </CenteredContent>
         <br />
      
         <CenteredContent>
           <Typography variant="h4" textAlign="center">
-            Please press the button below to scan your QR code
+            {t('kiosk.press_btn_to_scan')}
           </Typography>
         </CenteredContent>
         <br />
@@ -41,9 +42,10 @@ export default function Welcome() {
             disableElevation
             style={{ width: '70%' }}
             size="large"
+            data-testid="start_scan_btn"
             onClick={() => history.push('/logbook/kiosk/scan')}
           >
-            Start Scan
+            {t('kiosk.start_scan')}
           </Button>
         </CenteredContent>
         <br />
@@ -51,8 +53,8 @@ export default function Welcome() {
         <br />
       
         <CenteredContent>
-          <Typography variant='subtitle1' textAlign="center">
-            If you do not have a QR code, please speak to the guard on duty
+          <Typography variant='subtitle1' textAlign="center" data-testid="no_qr_code_text">
+            {t('kiosk.no_qr_code_text')}
           </Typography>
         </CenteredContent>
       </Container>

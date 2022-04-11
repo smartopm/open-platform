@@ -2,11 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Grid from '@mui/material/Grid';
 
-export default function VerticallyCentered({
-  children,
-  backgroundColor,
-  isVerticallyCentered,
-}) {
+export default function VerticallyCentered({ children, backgroundColor, isVerticallyCentered }) {
   return (
     <div
       style={{
@@ -31,11 +27,11 @@ export default function VerticallyCentered({
 
 VerticallyCentered.defaultProps = {
   backgroundColor: null,
-  isVerticallyCentered: true,
+  isVerticallyCentered: true
 };
 
 VerticallyCentered.propTypes = {
   children: PropTypes.node.isRequired,
   backgroundColor: PropTypes.string,
-  isVerticallyCentered: PropTypes.bool,
+  isVerticallyCentered: PropTypes.bool
 };

@@ -1,14 +1,16 @@
-import React, { useEffect } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Container, Typography } from '@mui/material';
 import { useHistory } from 'react-router-dom';
 import VerticallyCentered from '../../../../shared/VerticallyCentered';
 import CenteredContent from '../../../../shared/CenteredContent';
 import useTimer from '../../../../utils/customHooks';
 import BorderedButton from '../../../../shared/buttons/BorderedButton';
+import { Context } from '../../../../containers/Provider/AuthStateProvider';
 
 export default function AccessPage() {
   const time = useTimer(5);
   const history = useHistory();
+  const authState = useContext(Context);
 
   useEffect(() => {
     if (time === 0) {
@@ -30,7 +32,7 @@ export default function AccessPage() {
         <br />
         <CenteredContent>
           <Typography variant="h4" textAlign="center" data-testid="welcome_to_community">
-            Welcome to DoubleGDP
+            {`Welcome to ${authState.user.community.name}`}
           </Typography>
         </CenteredContent>
         <br />

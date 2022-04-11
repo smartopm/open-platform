@@ -251,5 +251,18 @@
     "visitor_entry": "Granted Access",
     "observation_log": "Observation",
     "user_entry": "Scanned Entry"
+  },
+  "kiosk": {
+    "access_granted": "Access Granted",
+    "access_denied": "Access Denied",
+    "welcome_to_community": "Welcome to {{communityName}}",
+    "new_scan": "New Scan",
+    "qr_not_detected": "QR code not detected",
+    "speak_to_guard_on_duty": "Speak to the guard on duty",
+    "try_again": "Try Again",
+    "welcome": "Welcome",
+    "press_btn_to_scan": "Please press the button below to scan your QR code",
+    "start_scan": "Start Scan",
+    "no_qr_code_text": "If you do not have a QR code, please speak to the guard on duty"
   }
 }
