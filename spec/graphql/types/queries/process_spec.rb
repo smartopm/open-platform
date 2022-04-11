@@ -62,52 +62,54 @@ RSpec.describe Types::Queries::Process do
         expect(result.dig('data', 'processTemplates').length).to eql 0
       end
 
-      it 'retrieves process templates' do
-        form_with_process = create(:form, community: admin.community, status: :published,
-                                          roles: %w[])
-        process = create(:process, community: admin.community, name: 'DRC', process_type: 'drc',
-                                   form: form_with_process)
-        create(:note_list, community: admin.community, process: process)
+      describe 'process templates' do
+        let!(:form_with_process) do
+          create(:form, community: admin.community, status: :published,
+                        roles: %w[])
+        end
 
-        result = DoubleGdpSchema.execute(process_templates_query, context: {
-                                           current_user: admin,
-                                           site_community: admin.community,
-                                         }).as_json
+        let!(:process) do
+          create(:process, community: admin.community, name: 'DRC', process_type: 'drc',
+                           form: form_with_process)
+        end
 
-        expect(result.dig('data', 'processTemplates').length).to eql 1
-        expect(result.dig('data', 'processTemplates', 0, 'id')).to eql process.id
-        expect(result.dig('data', 'processTemplates', 0, 'name')).to eql 'DRC'
-        expect(result.dig('data', 'processTemplates', 0, 'processType')).to eql 'drc'
-      end
+        it 'retrieves process templates' do
+          create(:note_list, community: admin.community, process: process)
 
-      it 'retrieves process templates with necessary note list' do
-        form_with_process = create(:form, community: admin.community, status: :published,
-                                          roles: %w[])
-        process = create(:process, community: admin.community, name: 'DRC', process_type: 'drc',
-                                   form: form_with_process)
-        note_list = create(:note_list, community: admin.community, process: process)
+          result = DoubleGdpSchema.execute(process_templates_query, context: {
+                                             current_user: admin,
+                                             site_community: admin.community,
+                                           }).as_json
 
-        result = DoubleGdpSchema.execute(process_templates_query, context: {
-                                           current_user: admin,
-                                           site_community: admin.community,
-                                         }).as_json
+          expect(result.dig('data', 'processTemplates').length).to eql 1
+          expect(result.dig('data', 'processTemplates', 0, 'id')).to eql process.id
+          expect(result.dig('data', 'processTemplates', 0, 'name')).to eql 'DRC'
+          expect(result.dig('data', 'processTemplates', 0, 'processType')).to eql 'drc'
+        end
 
-        expect(result.dig('data', 'processTemplates', 0, 'noteList', 'id')).to eq note_list.id
-      end
+        it 'retrieves the necessary note list' do
+          note_list = create(:note_list, community: admin.community, process: process)
 
-      it 'retrieves process templates with necassry form' do
-        form_with_process = create(:form, community: admin.community, status: :published,
-                                          roles: %w[])
-        process = create(:process, community: admin.community, name: 'DRC', process_type: 'drc',
-                                   form: form_with_process)
-        create(:note_list, community: admin.community, process: process)
+          result = DoubleGdpSchema.execute(process_templates_query, context: {
+                                             current_user: admin,
+                                             site_community: admin.community,
+                                           }).as_json
 
-        result = DoubleGdpSchema.execute(process_templates_query, context: {
-                                           current_user: admin,
-                                           site_community: admin.community,
-                                         }).as_json
+          expect(result.dig('data', 'processTemplates', 0, 'noteList', 'id')).to eq note_list.id
+        end
 
-        expect(result.dig('data', 'processTemplates', 0, 'form', 'id')).to eql form_with_process.id
+        it 'retrieves the necessary form' do
+          create(:note_list, community: admin.community, process: process)
+
+          result = DoubleGdpSchema.execute(process_templates_query, context: {
+                                             current_user: admin,
+                                             site_community: admin.community,
+                                           }).as_json
+
+          expect(result.dig(
+                   'data', 'processTemplates', 0, 'form', 'id'
+                 )).to eql form_with_process.id
+        end
       end
     end
   end

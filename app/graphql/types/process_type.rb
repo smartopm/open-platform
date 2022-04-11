@@ -8,6 +8,5 @@ module Types
     field :process_type, String, null: false
     field :form, Types::FormType, null: true
     field :note_list, Types::NoteListType, null: false
-    # field :community, Types::CommunityType, null: false
   end
 end

@@ -11,6 +11,7 @@ module Types::Queries::Process
       argument :limit, Integer, required: false
     end
   end
+
   def process_templates(limit: 50, offset: 0)
     unless permitted?(module: :process, permission: :can_view_process_templates)
       raise GraphQL::ExecutionError,
