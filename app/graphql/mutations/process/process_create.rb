@@ -11,6 +11,8 @@ module Mutations
 
       field :success, GraphQL::Types::Boolean, null: false
 
+      # rubocop:disable Metrics/AbcSize
+      # rubocop:disable Metrics/MethodLength
       def resolve(vals)
         note_list = Notes::NoteList.find_by(id: vals[:note_list_id])
         form = Forms::Form.find_by(id: vals[:form_id])
@@ -27,6 +29,8 @@ module Mutations
       rescue StandardError => e
         raise GraphQL::ExecutionError, e.message
       end
+      # rubocop:enable Metrics/AbcSize
+      # rubocop:enable Metrics/MethodLength
 
       def authorized?(_vals)
         return true if permitted?(module: :process,
