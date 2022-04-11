@@ -3,6 +3,7 @@ import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min';
 import { MockedProvider } from '@apollo/react-testing';
 import '@testing-library/jest-dom/extend-expect';
 import { render, screen, waitFor } from '@testing-library/react';
+import MockedThemeProvider from '../../../__mocks__/mock_theme';
 import { Context } from '../../../../containers/Provider/AuthStateProvider';
 import authState from '../../../../__mocks__/authstate';
 import ProcessesPage from '../Components/ProcessesPage';
@@ -44,7 +45,9 @@ describe('Processes page', () => {
       <Context.Provider value={newAuthState}>
         <MockedProvider>
           <BrowserRouter>
-            <ProcessesPage />
+            <MockedThemeProvider>
+              <ProcessesPage />
+            </MockedThemeProvider>
           </BrowserRouter>
         </MockedProvider>
       </Context.Provider>
@@ -71,7 +74,9 @@ describe('Processes page', () => {
       <Context.Provider value={newAuthState}>
         <MockedProvider>
           <BrowserRouter>
-            <ProcessesPage />
+            <MockedThemeProvider>
+              <ProcessesPage />
+            </MockedThemeProvider>
           </BrowserRouter>
         </MockedProvider>
       </Context.Provider>
@@ -101,7 +106,9 @@ describe('Processes page', () => {
       <Context.Provider value={newAuthState}>
         <MockedProvider>
           <BrowserRouter>
-            <ProcessesPage />
+            <MockedThemeProvider>
+              <ProcessesPage />
+            </MockedThemeProvider>
           </BrowserRouter>
         </MockedProvider>
       </Context.Provider>
@@ -131,7 +138,9 @@ describe('Processes page', () => {
       <Context.Provider value={newAuthState}>
         <MockedProvider>
           <BrowserRouter>
-            <ProcessesPage />
+            <MockedThemeProvider>
+              <ProcessesPage />
+            </MockedThemeProvider>
           </BrowserRouter>
         </MockedProvider>
       </Context.Provider>

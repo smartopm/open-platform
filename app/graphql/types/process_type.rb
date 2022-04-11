@@ -7,6 +7,6 @@ module Types
     field :name, String, null: false
     field :process_type, String, null: false
     field :form, Types::FormType, null: true
-    field :community, Types::CommunityType, null: false
+    field :note_list, Types::NoteListType, null: false
   end
 end
