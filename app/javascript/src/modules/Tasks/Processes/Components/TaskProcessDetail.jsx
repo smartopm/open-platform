@@ -43,7 +43,7 @@ export default function TaskProcessDetail() {
   const [searchText, setSearchText] = useState('');
   const [messageAlert, setMessageAlert] = useState('');
   const debouncedSearchText = useDebounce(searchText, 300);
-  const matches = useMediaQuery('(max-width:600px)');
+  const matches = useMediaQuery('(max-width:1000px)');
   const mobileMatches = useMediaQuery('(max-width:900px)');
   const [splitScreenOpen, setSplitScreenOpen] = useState(false);
 
@@ -286,7 +286,7 @@ export default function TaskProcessDetail() {
             </TabPanel>
             <TabPanel value={tabValue} index={1} pad>
               <ProjectProcessesSplitView
-                splitScreenOpen={splitScreenOpen}
+                splitScreenOpen={!matches ? true : splitScreenOpen}
                 setSplitScreenOpen={setSplitScreenOpen}
                 handleProjectStepClick={handleProjectStepClick}
                 refetch={refetch}

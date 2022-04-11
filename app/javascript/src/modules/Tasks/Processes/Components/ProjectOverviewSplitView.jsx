@@ -58,8 +58,12 @@ const Step = {
   formUserId: PropTypes.string
 };
 
+ProjectOverviewSplitView.defaultProps = {
+  data: []
+}
+
 ProjectOverviewSplitView.propTypes = {
-  data: PropTypes.arrayOf(PropTypes.shape(Step)).isRequired,
+  data: PropTypes.arrayOf(PropTypes.shape(Step)),
   refetch: PropTypes.func.isRequired,
   handleProjectStepClick: PropTypes.func.isRequired
 };

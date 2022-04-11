@@ -52,11 +52,12 @@ export default function AutoSaveField({ value, mutationAction, stateAction }) {
   );
 }
 AutoSaveField.defaultProps = {
-  stateAction: () => {}
+  stateAction: () => {},
+  value: ''
 };
 
 AutoSaveField.propTypes = {
-  value: PropTypes.string.isRequired,
+  value: PropTypes.string,
   mutationAction: PropTypes.func.isRequired,
   stateAction: PropTypes.func
 };
