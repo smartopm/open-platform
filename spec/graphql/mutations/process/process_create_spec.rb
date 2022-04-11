@@ -23,13 +23,11 @@ RSpec.describe Mutations::Process::ProcessCreate do
       <<~GQL
         mutation processCreate(
           $name: String!,
-          $processType: String!,
           $formId: ID!,
           $noteListId: ID!
         ){
           processCreate(
             name: $name,
-            processType: $processType,
             formId: $formId,
             noteListId: $noteListId
           ){
@@ -43,7 +41,6 @@ RSpec.describe Mutations::Process::ProcessCreate do
       it 'creates a process' do
         variables = {
           name: 'Process Example',
-          processType: 'drc',
           formId: form.id,
           noteListId: note_list.id,
         }
@@ -56,13 +53,13 @@ RSpec.describe Mutations::Process::ProcessCreate do
                                                    }).as_json
 
         expect(Processes::Process.count).to eql(prev_process_count + 1)
+        expect(Processes::Process.order(:created_at).last.process_type).to eql('drc')
         expect(result['errors']).to be_nil
       end
 
       it 'raises an error if note-list is not found' do
         variables = {
           name: 'Process Example',
-          processType: 'drc',
           formId: form.id,
           noteListId: '1234567',
         }
@@ -79,7 +76,6 @@ RSpec.describe Mutations::Process::ProcessCreate do
       it 'raises an error if form is not found' do
         variables = {
           name: 'Process Example',
-          processType: 'drc',
           formId: '123456',
           noteListId: note_list.id,
         }
@@ -98,7 +94,6 @@ RSpec.describe Mutations::Process::ProcessCreate do
       it 'throws unauthorized error when user is not admin' do
         variables = {
           name: 'Process Example',
-          processType: 'drc',
           formId: form.id,
           noteListId: note_list.id,
         }

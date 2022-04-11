@@ -5,7 +5,6 @@ module Mutations
     # Create Process
     class ProcessCreate < BaseMutation
       argument :name, String, required: true
-      argument :process_type, String, required: true
       argument :form_id, ID, required: true
       argument :note_list_id, ID, required: true
 
@@ -21,7 +20,10 @@ module Mutations
         raise GraphQL::ExecutionError, I18n.t('errors.form.not_found') unless form
 
         ActiveRecord::Base.transaction do
-          process_template = context[:site_community].processes.create!(vals.except(:note_list_id))
+          process_template = context[:site_community].processes.create!(
+            vals.except(:note_list_id).merge(process_type: 'drc'),
+          )
+
           note_list.update!(process_id: process_template.id)
 
           { success: true }
