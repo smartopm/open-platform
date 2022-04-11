@@ -79,12 +79,12 @@ export default function QRScan({ isKiosk }) {
   }, [isTorchOn])
 
 
-  // Reroute to error page if 15sec run out
+  // Reroute to error page if 15sec run out and we are in kiosk mode
   useEffect(() => {
-    if(time === 0){
+    if(time === 0 && isKiosk){
       history.push(`/logbook/kiosk/error?status=timeout`) 
     }
-  }, [time])
+  }, [time, isKiosk])
 
   // automatically grant access when using this from kiosk mode
   const handleScan = data => {
