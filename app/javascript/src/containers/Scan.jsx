@@ -3,13 +3,14 @@ import QrReader from 'react-qr-reader'
 import PropTypes from 'prop-types'
 import { Redirect, useHistory } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { FormControlLabel, Switch } from '@mui/material'
+import { FormControlLabel, Switch, Typography } from '@mui/material'
 import { useMutation } from 'react-apollo'
 import { Footer } from '../components/Footer'
 import { Context } from './Provider/AuthStateProvider'
 import { extractHostname } from '../utils/helpers'
 import { AddActivityLog } from '../graphql/mutations'
 import useTimer from '../utils/customHooks'
+import CenteredContent from '../shared/CenteredContent'
 
 /* istanbul ignore next */
 export default function QRScan({ isKiosk }) {
@@ -127,6 +128,14 @@ export default function QRScan({ isKiosk }) {
           // eslint-disable-next-line jsx-a11y/media-has-caption
             <video style={{ display: 'none' }} />
           }
+
+          <CenteredContent>
+            <Typography variant="h6" textAlign="center">
+              Please center you QR code on the screen below
+            </Typography>
+          </CenteredContent>
+          <br />
+
           <QrReader
             delay={100}
             torch

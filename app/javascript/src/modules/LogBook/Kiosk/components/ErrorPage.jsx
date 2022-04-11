@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react';
-import { Button, Container, Typography } from '@mui/material';
+import { Container, Typography } from '@mui/material';
 import { useHistory } from 'react-router-dom';
 import VerticallyCentered from '../../../../shared/VerticallyCentered';
 import CenteredContent from '../../../../shared/CenteredContent';
 import { useParamsQuery } from '../../../../utils/helpers';
 import useTimer from '../../../../utils/customHooks';
+import BorderedButton from '../../../../shared/buttons/BorderedButton';
 
 export default function Errorpage() {
   const path = useParamsQuery();
@@ -36,15 +37,11 @@ export default function Errorpage() {
         <br />
         <br />
         <CenteredContent>
-          <Button
+          <BorderedButton 
+            title="Try Again" 
             color="error"
-            variant="outlined"
-            style={{ width: '70%', color: '#FFFFFF', border: '1px solid #FFFFFF' }}
-            size="large"
             onClick={() => history.push('/logbook/kiosk/scan')}
-          >
-            Try Again
-          </Button>
+          />
         </CenteredContent>
       </Container>
     </VerticallyCentered>

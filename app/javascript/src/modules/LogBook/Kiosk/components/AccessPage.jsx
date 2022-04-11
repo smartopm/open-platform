@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react';
-import { Button, Container, Typography } from '@mui/material';
+import { Container, Typography } from '@mui/material';
 import { useHistory } from 'react-router-dom';
 import VerticallyCentered from '../../../../shared/VerticallyCentered';
 import CenteredContent from '../../../../shared/CenteredContent';
 import useTimer from '../../../../utils/customHooks';
+import BorderedButton from '../../../../shared/buttons/BorderedButton';
 
 export default function Accesspage() {
   const time = useTimer(10);
@@ -35,15 +36,11 @@ export default function Accesspage() {
         <br />
         <br />
         <CenteredContent>
-          <Button
+          <BorderedButton 
+            title="New Scan" 
             color="success"
-            variant="outlined"
-            style={{ width: '70%', color: '#FFFFFF', border: '1px solid #FFFFFF' }}
-            size="large"
             onClick={() => history.push('/logbook/kiosk/scan')}
-          >
-            New Scan
-          </Button>
+          />
         </CenteredContent>
       </Container>
     </VerticallyCentered>
