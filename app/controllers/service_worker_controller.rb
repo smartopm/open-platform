@@ -21,7 +21,7 @@ class ServiceWorkerController < ApplicationController
       theme_color = current_community.theme_colors['primaryColor']
     end
     path = community_name.gsub(' ', '').downcase
-    icon_path = "#{path}/"
+    icon_path = "#{I18n.t("community_name.#{path}")}/"
 
     manifest_file(community_name, theme_color, icon_path)
   end

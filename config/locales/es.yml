@@ -478,3 +478,10 @@ es:
     updated: Actualizado
   welcome_sms: Bienvenido a la comunidad en línea de %{community}. Por favor acceda
     a la aplicación usando %{url}
+  community_name:
+    ciudadmorazán: ciudadmorazan
+    greenpark: greenpark
+    doublegdp: doublegdp
+    nkwashi: nkwashi
+    tilisi: tilisi
+    metropolis: metropolis
