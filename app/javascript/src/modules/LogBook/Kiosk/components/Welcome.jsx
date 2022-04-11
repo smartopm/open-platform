@@ -19,7 +19,7 @@ export default function Welcome() {
         <br />
         <br />
         <CenteredContent>
-          <Typography variant="h2" textAlign="center">
+          <Typography variant="h2" textAlign="center" data-testid="welcome_to_kiosk">
             Welcome
           </Typography>
         </CenteredContent>

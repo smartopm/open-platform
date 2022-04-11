@@ -6,8 +6,8 @@ import CenteredContent from '../../../../shared/CenteredContent';
 import useTimer from '../../../../utils/customHooks';
 import BorderedButton from '../../../../shared/buttons/BorderedButton';
 
-export default function Accesspage() {
-  const time = useTimer(10);
+export default function AccessPage() {
+  const time = useTimer(5);
   const history = useHistory();
 
   useEffect(() => {
@@ -20,7 +20,7 @@ export default function Accesspage() {
     <VerticallyCentered backgroundColor="#67B388" timer={15}>
       <Container maxWidth="sm">
         <CenteredContent>
-          <Typography variant="h2" textAlign="center">
+          <Typography variant="h2" textAlign="center" data-testid="access_granted">
             Access Granted
           </Typography>
         </CenteredContent>
@@ -29,7 +29,7 @@ export default function Accesspage() {
         <br />
         <br />
         <CenteredContent>
-          <Typography variant="h4" textAlign="center">
+          <Typography variant="h4" textAlign="center" data-testid="welcome_to_community">
             Welcome to DoubleGDP
           </Typography>
         </CenteredContent>
@@ -39,6 +39,7 @@ export default function Accesspage() {
           <BorderedButton 
             title="New Scan" 
             color="success"
+            data-testid="new_scan_btn"
             onClick={() => history.push('/logbook/kiosk/scan')}
           />
         </CenteredContent>

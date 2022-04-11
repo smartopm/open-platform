@@ -7,7 +7,7 @@ import { useParamsQuery } from '../../../../utils/helpers';
 import useTimer from '../../../../utils/customHooks';
 import BorderedButton from '../../../../shared/buttons/BorderedButton';
 
-export default function Errorpage() {
+export default function ErrorPage() {
   const path = useParamsQuery();
   const status = path.get('status');
   const history = useHistory();
@@ -23,14 +23,14 @@ export default function Errorpage() {
     <VerticallyCentered backgroundColor="#D15249">
       <Container maxWidth="sm">
         <CenteredContent>
-          <Typography variant="h2" textAlign="center">
+          <Typography variant="h2" textAlign="center" data-testid="error_title">
             {status === 'timeout' ? 'Error' : 'Access Denied'}
           </Typography>
         </CenteredContent>
         <br />
         <br />
         <CenteredContent>
-          <Typography variant="h6" textAlign="center">
+          <Typography variant="h6" textAlign="center" data-testid="error_message">
             {status === 'timeout' ? 'QR code not detected' : 'Speak to the guard on duty'}
           </Typography>
         </CenteredContent>
@@ -40,6 +40,7 @@ export default function Errorpage() {
           <BorderedButton 
             title="Try Again" 
             color="error"
+            data-testid="try_again_message"
             onClick={() => history.push('/logbook/kiosk/scan')}
           />
         </CenteredContent>
