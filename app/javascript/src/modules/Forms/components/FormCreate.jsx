@@ -116,7 +116,7 @@ export default function FormCreate({
   return formLoading ? (
     <Spinner />
   ) : (
-    <Grid>
+    <Grid style={{padding: '20px 0'}}>
       {formError && (
         <CenteredContent><p>{formError.message}</p></CenteredContent>
       )}
@@ -169,7 +169,7 @@ export default function FormCreate({
             roles={roles}
           />
         </Grid>
-        <Grid item md={6} xs={12} data-testid='datepicker'>
+        <Grid item md={12} xs={12} data-testid='datepicker'>
           <DateAndTimePickers
             label={t('misc.form_expiry_date')}
             selectedDateTime={expiresAt}
