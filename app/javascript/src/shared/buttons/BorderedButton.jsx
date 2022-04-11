@@ -2,12 +2,17 @@ import React from 'react';
 import { Button } from '@mui/material';
 import PropTypes from 'prop-types';
 
-export default function BorderedButton({ title, ...props }) {
+export default function BorderedButton({ title, borderColor, outlined, ...props }) {
   return (
     <Button
       variant="outlined"
-      style={{ width: '70%', color: '#FFFFFF', border: '1px solid #FFFFFF' }}
-      size="large"
+      style={{
+        width: '70%',
+        height: 55,
+        color: !outlined ? '#FFFFFF' : borderColor,
+        border: `1px solid ${borderColor}`,
+        backgroundColor: !outlined && borderColor
+      }}
       {...props}
     >
       {title}
@@ -15,6 +20,12 @@ export default function BorderedButton({ title, ...props }) {
   );
 }
 
+BorderedButton.defaultProps = {
+  outlined: false
+};
+
 BorderedButton.propTypes = {
-  title: PropTypes.string.isRequired
+  title: PropTypes.string.isRequired,
+  borderColor: PropTypes.string.isRequired,
+  outlined: PropTypes.bool
 };

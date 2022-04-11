@@ -7,6 +7,7 @@ import CenteredContent from '../../../../shared/CenteredContent';
 import { useParamsQuery } from '../../../../utils/helpers';
 import useTimer from '../../../../utils/customHooks';
 import BorderedButton from '../../../../shared/buttons/BorderedButton';
+import { defaultColors } from '../../../../themes/nkwashi/theme';
 
 export default function ErrorPage() {
   const path = useParamsQuery();
@@ -22,8 +23,8 @@ export default function ErrorPage() {
   }, [history, time]);
 
   return (
-    <VerticallyCentered backgroundColor="#D15249">
-      <Container maxWidth="sm">
+    <VerticallyCentered backgroundColor={defaultColors.error}>
+      <Container maxWidth="xs">
         <CenteredContent>
           <Typography variant="h2" textAlign="center" data-testid="error_title">
             {status === 'timeout' ? t('common:misc.error') : t('kiosk.access_denied')}
@@ -41,9 +42,10 @@ export default function ErrorPage() {
         <CenteredContent>
           <BorderedButton 
             title={t('kiosk.try_again')} 
-            color="error"
+            borderColor={defaultColors.white}
             data-testid="try_again_message"
             onClick={() => history.push('/logbook/kiosk/scan')}
+            outlined
           />
         </CenteredContent>
       </Container>

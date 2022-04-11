@@ -1,11 +1,13 @@
 import React, { useContext } from 'react';
-import { Typography, Button, Box, Container } from '@mui/material';
+import { Typography, Box, Container } from '@mui/material';
 import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import VerticallyCentered from '../../../../shared/VerticallyCentered';
 import CommunityName from '../../../../shared/CommunityName';
 import { Context } from '../../../../containers/Provider/AuthStateProvider';
 import CenteredContent from '../../../../shared/CenteredContent';
+import BorderedButton from '../../../../shared/buttons/BorderedButton';
+import { defaultColors } from '../../../../themes/nkwashi/theme';
 
 export default function Welcome() {
   const authState = useContext(Context);
@@ -13,7 +15,7 @@ export default function Welcome() {
   const { t } = useTranslation('logbook')
   return (
     <VerticallyCentered isVerticallyCentered={false}>
-      <Container maxWidth="sm">
+      <Container maxWidth="xs">
         <Box component="div" sx={{ marginTop: '130px', marginLeft: '30px' }}>
           <CommunityName authState={authState} />
         </Box>
@@ -36,17 +38,12 @@ export default function Welcome() {
         <br />
 
         <CenteredContent>
-          <Button
-            variant="contained"
-            color="primary"
-            disableElevation
-            style={{ width: '70%' }}
-            size="large"
+          <BorderedButton 
+            title={t('kiosk.start_scan')} 
             data-testid="start_scan_btn"
             onClick={() => history.push('/logbook/kiosk/scan')}
-          >
-            {t('kiosk.start_scan')}
-          </Button>
+            borderColor={defaultColors.info}
+          />
         </CenteredContent>
         <br />
         <br />

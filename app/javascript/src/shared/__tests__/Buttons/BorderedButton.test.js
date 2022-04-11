@@ -10,6 +10,7 @@ describe('Button with custom border', () => {
       <BorderedButton 
         data-testid="button_with_border" 
         title="This is a button" 
+        borderColor="#FFFFFF"
         onClick={mock}
       />
     );

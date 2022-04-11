@@ -117,6 +117,7 @@ export default function QRScan({ isKiosk }) {
     return <Redirect to='/' />
   }
 
+  // TODO: Update elements to MUI
   return (
     <div>
       {scanned ? (
@@ -136,6 +137,14 @@ export default function QRScan({ isKiosk }) {
           </CenteredContent>
           <br />
 
+          <CenteredContent>
+            <FormControlLabel
+              control={<Switch checked={isTorchOn} onChange={() => setToggleTorch(!isTorchOn)} />}
+              label={t('scan.torch')}
+            />
+          </CenteredContent>
+
+          <br />
           <QrReader
             delay={100}
             torch
@@ -143,18 +152,6 @@ export default function QRScan({ isKiosk }) {
             onScan={handleScan}
             style={{ width: '100%' }}
           />
-
-          <div
-            className="row justify-content-center align-items-center "
-            style={{
-              marginTop: 60
-            }}
-          >
-            <FormControlLabel
-              control={<Switch checked={isTorchOn} onChange={() => setToggleTorch(!isTorchOn)} />}
-              label={t('scan.torch')}
-            />
-          </div>
         </>
       )}
       {

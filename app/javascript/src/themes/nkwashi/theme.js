@@ -1,11 +1,15 @@
 import { createTheme } from '@mui/material';
 
+export const defaultColors = {
+  primaryColor: '#69ABA4',
+  secondaryColor: '#cf5628',
+  error: '#D15249',
+  info: '#598EC1',
+  success: '#67B388',
+  white: "#FFFFFF"
+};
 // eslint-disable-next-line import/prefer-default-export
 export function theme(communityThemeColor) {
-  const defaultColors = {
-    primaryColor: '#69ABA4',
-    secondaryColor: '#cf5628'
-  };
 
   const themeColor = communityThemeColor || defaultColors;
 
