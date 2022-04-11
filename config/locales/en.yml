@@ -298,6 +298,8 @@ en:
       not_found: Action flow not found
     business:
       not_found: Business not found
+    note_list:
+      not_found: NoteList not found
     campaign:
       missing_parameter: 'Missing field: Please Supply %{attribute}'
       in_progress: 'The updates cannot be made as campaign is in progress.'
