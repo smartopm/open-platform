@@ -159,6 +159,7 @@ export default function TaskInfoTop({
                     color="primary"
                     style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}
                     onClick={handleSplitScreenClose}
+                    data-testid='back-to-task'
                   >
                     {!fromLeadPage && <KeyboardBackspaceIcon style={{ marginRight: '4px' }} />}
                     {urlParams.type === 'drc'
