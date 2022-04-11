@@ -51,7 +51,7 @@ class Community < ApplicationRecord
   has_many :entry_times, class_name: 'Logs::EntryTime', dependent: :destroy
 
   VALID_CURRENCIES = %w[zambian_kwacha honduran_lempira kenyan_shilling costa_rican_colon
-                        nigerian_naira].freeze
+                        nigerian_naira american_dollar].freeze
 
   validates :currency, inclusion: { in: VALID_CURRENCIES, allow_nil: false }
 
@@ -62,6 +62,7 @@ class Community < ApplicationRecord
     'Tilisi': ['doublegdp.com'],
     'Greenpark': ['doublegdp.com'],
     'Enyimba': ['doublegdp.com'],
+    'Metropolis': ['doublegdp.com'],
     'DAST': ['doublegdp.com'],
   }.freeze
 
