@@ -6,6 +6,6 @@ module Types
     field :id, ID, null: false
     field :name, String, null: false
     field :process, Types::ProcessType, null: false
-    field :community, Types::CommentType, null: false
+    field :community, Types::CommunityType, null: false
   end
 end
