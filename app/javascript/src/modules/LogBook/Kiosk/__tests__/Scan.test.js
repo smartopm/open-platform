@@ -9,8 +9,8 @@ import Scan from '../components/Scan';
 
 jest.mock('react-qr-reader')
 
-// Note: This test add 1 err and 1 warning, both are coming from the mocked lib above
-// Possible Fix: Updating to newer version, currently still in better
+// Note: This test adds 1 err and 1 warning, both are coming from the mocked lib above
+// Possible Fix: Updating to newer version which uses hooks, currently still in beta v3.0.0.beta
 describe('Scan Page', () => {
   const mockHistory = {
     push: jest.fn()
