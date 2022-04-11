@@ -2,6 +2,7 @@ import React, { useContext } from 'react';
 import { Typography, Box, Container } from '@mui/material';
 import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { StyleSheet } from 'aphrodite';
 import VerticallyCentered from '../../../../shared/VerticallyCentered';
 import CommunityName from '../../../../shared/CommunityName';
 import { Context } from '../../../../containers/Provider/AuthStateProvider';
@@ -17,7 +18,7 @@ export default function Welcome() {
     <VerticallyCentered isVerticallyCentered={false}>
       <Container maxWidth="xs">
         <Box component="div" sx={{ marginTop: '130px', marginLeft: '30px' }}>
-          <CommunityName authState={authState} />
+          <CommunityName authState={authState} logoStyles={styles} />
         </Box>
         <br />
         <br />
@@ -58,3 +59,12 @@ export default function Welcome() {
     </VerticallyCentered>
   );
 }
+
+// I used aphrodite here because those are the styles the component is expecting
+const styles = StyleSheet.create({
+  logo: {
+    margin: '-10px 0 0 21%',
+    width: '51%',
+    height: '25%'
+  }
+});
