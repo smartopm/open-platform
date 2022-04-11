@@ -8,8 +8,7 @@ import {
   Typography,
   Box,
   Grid,
-  IconButton,
-  useMediaQuery
+  IconButton
 } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import AssignmentIcon from '@mui/icons-material/Assignment';
@@ -28,6 +27,7 @@ import FormCreate from './FormCreate';
 import FormHeader from './FormHeader';
 import FormMenu from './FormMenu';
 import CenteredContent from '../../../shared/CenteredContent';
+import PageWrapper from '../../../shared/PageWrapper';
 
 // here we get existing google forms and we mix them with our own created forms
 export default function FormLinkList({ userType, community, path, id }) {
@@ -35,7 +35,6 @@ export default function FormLinkList({ userType, community, path, id }) {
     fetchPolicy: 'cache-and-network'
   });
   const [createForm] = useMutation(FormCreateMutation);
-  const matches = useMediaQuery('(max-width:1000px)');
   const history = useHistory();
   const classes = useStyles();
   const { t } = useTranslation(['form', 'common']);
@@ -63,14 +62,14 @@ export default function FormLinkList({ userType, community, path, id }) {
             pageName={t('misc.create_form')}
             PageTitle={t('misc.create_form')}
           />
-          <Grid style={matches ? {padding: '20px'} : { padding: '20px 300px' }}>
+          <PageWrapper>
             <FormCreate
               formMutation={createForm}
               refetch={refetch}
               actionType={id ? 'update' : undefined}
               formId={id}
             />
-          </Grid>
+          </PageWrapper>
         </>
       )}
       {path === '/forms' && (

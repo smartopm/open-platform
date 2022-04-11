@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Container, Grid } from '@mui/material';
+import { Container } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery } from 'react-apollo';
 import { useHistory } from 'react-router';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import { AllEventLogsQuery } from '../../../graphql/queries';
 import { FormPropertiesQuery, FormQuery } from '../graphql/forms_queries';
 import { Spinner } from '../../../shared/Loading';
@@ -21,6 +20,7 @@ import { StyledTabs, StyledTab, TabPanel, a11yProps } from '../../../components/
 import FormTitle from './FormTitle';
 import FormCreate from './FormCreate';
 import FormHeader from './FormHeader';
+import PageWrapper from '../../../shared/PageWrapper';
 
 /**
  * @param {String} formId
@@ -36,7 +36,6 @@ export default function FormBuilder({ formId }) {
   const [message, setMessage] = useState({ isError: false, detail: '' });
   const { t } = useTranslation(['form', 'common']);
   const [updateForm] = useMutation(FormUpdateMutation);
-  const matches = useMediaQuery('(max-width:900px)');
   const { data, error, loading, refetch: dataRefetch } = useQuery(FormPropertiesQuery, {
     variables: { formId },
     errorPolicy: 'all'
@@ -114,7 +113,7 @@ export default function FormBuilder({ formId }) {
           pageName={t('misc.configure_form')}
           PageTitle={t('misc.configure_form')}
         />
-        <Container maxWidth="md">
+        <Container>
           <ActionDialog
             open={open}
             handleClose={handleConfirmPublish}
@@ -130,7 +129,7 @@ export default function FormBuilder({ formId }) {
             handleClose={handleAlertClose}
           />
           {loading && <Spinner />}
-          <Container style={matches ? { padding: '0 0 10px 10px' } : { padding: '0 150px' }}>
+          <PageWrapper>
             {!loading && formDetailData && <FormTitle name={formDetailData.form?.name} />}
             <StyledTabs
               value={tabValue}
@@ -167,8 +166,8 @@ export default function FormBuilder({ formId }) {
                 {...a11yProps(2)}
               />
             </StyledTabs>
-          </Container>
-          <Grid style={matches ? { padding: '10px 10px' } : { padding: '20px 150px' }}>
+          </PageWrapper>
+          <PageWrapper>
             <TabPanel value={tabValue} index={0} pad>
               <Form
                 formId={formId}
@@ -191,7 +190,7 @@ export default function FormBuilder({ formId }) {
             <TabPanel value={tabValue} index={2} pad>
               <FormTimeline data={formLogs.data?.result} />
             </TabPanel>
-          </Grid>
+          </PageWrapper>
         </Container>
       </FormContextProvider>
     </>
