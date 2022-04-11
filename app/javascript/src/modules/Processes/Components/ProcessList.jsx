@@ -106,7 +106,7 @@ export default function ProcessList() {
               data-testid="template-speed-dial"
               style={{ marginTop: '-20px' }}
             >
-              <SpeedDial handleAction={() => history.push('/processes/templates/new')} />
+              <SpeedDial handleAction={() => history.push('/processes/templates/create')} />
             </Grid>
           </Grid>
         </Grid>

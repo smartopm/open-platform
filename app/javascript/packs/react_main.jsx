@@ -66,6 +66,7 @@ import TaskProcessDetail from '../src/modules/Tasks/Processes/Components/TaskPro
 import LeadManagementUserImport from '../src/modules/Users/LeadManagement/Containers/LeadManagementUserImport';
 import GuestQRPage from '../src/modules/LogBook/Components/GuestQRPage'
 import ProcessList from '../src/modules/Processes/Components/ProcessList';
+import ProcessBuilderPage from '../src/modules/Processes/Components/ProcessBuilderPage';
 
 // The routes defined here are carefully arranged, be mindful when changing them
 
@@ -335,6 +336,10 @@ const App = () => {
                                  <Route
                                   path="/processes/templates"
                                   component={ProcessList}
+                                />
+                                 <Route
+                                  path="/processes/templates/create"
+                                  component={ProcessBuilderPage}
                                 />
                                 <Route
                                   path="/processes/:type/projects/:id"
