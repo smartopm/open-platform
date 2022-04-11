@@ -1,21 +1,23 @@
 import React from 'react';
-import { Typography } from '@mui/material';
+import { Container, Typography } from '@mui/material';
 import VerticallyCentered from '../../../../shared/VerticallyCentered';
 import CenteredContent from '../../../../shared/CenteredContent';
 import Scanner from '../../../../containers/Scan';
 
 export default function Scan() {
   return (
-    <VerticallyCentered backTo='/logbook/kiosk'>
+    <VerticallyCentered>
       <br />
       <br />
-      <CenteredContent>
-        <Typography variant="body" textAlign="center">
-          Please center you OR code on the
-        </Typography>
-      </CenteredContent>
-      <br />
-      <Scanner isKiosk />
+      <Container maxWidth="sm">
+        <CenteredContent>
+          <Typography variant="h6" textAlign="center">
+            Please center you QR code on the screen below
+          </Typography>
+        </CenteredContent>
+        <br />
+        <Scanner isKiosk />
+      </Container>
     </VerticallyCentered>
   );
 }

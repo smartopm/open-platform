@@ -13,7 +13,7 @@ export default function Welcome() {
   return (
     <VerticallyCentered isVerticallyCentered={false}>
       <Container maxWidth="sm">
-        <Box component="div" sx={{ marginTop: '200px', marginLeft: '30px' }}>
+        <Box component="div" sx={{ marginTop: '130px', marginLeft: '30px' }}>
           <CommunityName authState={authState} />
         </Box>
         <br />

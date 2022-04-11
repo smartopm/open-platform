@@ -148,7 +148,11 @@ export default function QRScan({ isKiosk }) {
           </div>
         </>
       )}
-      <Footer position="5vh" />
+      {
+        !isKiosk && (
+        <Footer position="5vh" />
+        )
+      }
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Button, Typography } from '@mui/material';
+import { Button, Container, Typography } from '@mui/material';
 import { useHistory } from 'react-router-dom';
 import VerticallyCentered from '../../../../shared/VerticallyCentered';
 import CenteredContent from '../../../../shared/CenteredContent';
@@ -16,34 +16,36 @@ export default function Accesspage() {
   }, [history, time]);
 
   return (
-    <VerticallyCentered backgroundColor="#67B388">
-      <CenteredContent>
-        <Typography variant="h2" textAlign="center">
-          Accessed Granted
-        </Typography>
-      </CenteredContent>
+    <VerticallyCentered backgroundColor="#67B388" timer={15}>
+      <Container maxWidth="sm">
+        <CenteredContent>
+          <Typography variant="h2" textAlign="center">
+            Access Granted
+          </Typography>
+        </CenteredContent>
 
-      <br />
-      <br />
-      <br />
-      <CenteredContent>
-        <Typography variant="h4" textAlign="center">
-          Welcome to DoubleGDP
-        </Typography>
-      </CenteredContent>
-      <br />
-      <br />
-      <CenteredContent>
-        <Button
-          color="success"
-          variant="outlined"
-          style={{ width: '70%', color: '#FFFFFF', border: '1px solid #FFFFFF' }}
-          size="large"
-          onClick={() => history.push('/logbook/kiosk/scan')}
-        >
-          New Scan
-        </Button>
-      </CenteredContent>
+        <br />
+        <br />
+        <br />
+        <CenteredContent>
+          <Typography variant="h4" textAlign="center">
+            Welcome to DoubleGDP
+          </Typography>
+        </CenteredContent>
+        <br />
+        <br />
+        <CenteredContent>
+          <Button
+            color="success"
+            variant="outlined"
+            style={{ width: '70%', color: '#FFFFFF', border: '1px solid #FFFFFF' }}
+            size="large"
+            onClick={() => history.push('/logbook/kiosk/scan')}
+          >
+            New Scan
+          </Button>
+        </CenteredContent>
+      </Container>
     </VerticallyCentered>
   );
 }
