@@ -471,7 +471,8 @@
     "user_not_found_add_new": "User Not Found - Please Add New Guest",
     "no_guests_to_invite": "No selected guests to invite",
     "invalid_time": "Invitation time is invalid",
-    "something_went_wrong_forms": "Something went wrong while accessing this form"
+    "something_went_wrong_forms": "Something went wrong while accessing this form",
+    "device_not_supported": "Device not supported or check the camera permissions"
   },
   "dialogs": {
     "dialog_action": "Are you sure you want to {{action}} this {{title}}?",

@@ -17,7 +17,7 @@ export default function QRScan({ isKiosk }) {
   const [scanned, setScanned] = useState(false)
   const [error, setError] = useState(null)
   const [isTorchOn, setToggleTorch] = useState(false)
-  const { t } = useTranslation(['scan', 'common'])
+  const { t } = useTranslation(['scan', 'common', 'logbook'])
   const authState = useContext(Context)
   const history = useHistory()
   const [addLogEntry] = useMutation(AddActivityLog);
@@ -126,12 +126,12 @@ export default function QRScan({ isKiosk }) {
           {error && <p className="text-center text-danger">{error}</p>}
           {
           // eslint-disable-next-line jsx-a11y/media-has-caption
-            <video style={{ display: 'none' }} />
+            <video data-testid="qr_wrapper" style={{ display: 'none' }} />
           }
 
           <CenteredContent>
             <Typography variant="h6" textAlign="center">
-              Please center you QR code on the screen below
+              {t('logbook:kiosk.center_your_qr_code')}
             </Typography>
           </CenteredContent>
           <br />

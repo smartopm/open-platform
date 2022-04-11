@@ -261,8 +261,10 @@
     "speak_to_guard_on_duty": "Speak to the guard on duty",
     "try_again": "Try Again",
     "welcome": "Welcome",
+    "go_back": "Go Back",
     "press_btn_to_scan": "Please press the button below to scan your QR code",
     "start_scan": "Start Scan",
-    "no_qr_code_text": "If you do not have a QR code, please speak to the guard on duty"
+    "no_qr_code_text": "If you do not have a QR code, please speak to the guard on duty",
+    "center_your_qr_code": "Please center your QR code on the screen below"
   }
 }

@@ -27,7 +27,7 @@ export default function Welcome() {
         <br />
      
         <CenteredContent>
-          <Typography variant="h4" textAlign="center">
+          <Typography variant="h6" textAlign="center">
             {t('kiosk.press_btn_to_scan')}
           </Typography>
         </CenteredContent>
