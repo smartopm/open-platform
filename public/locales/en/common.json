@@ -368,7 +368,8 @@
     "invitations": "Invitations",
     "deactivate_user": "Deactivate User",
     "activate_user": "Activate User",
-    "task_lists": "Task Lists"
+    "task_lists": "Task Lists",
+    "edit_process_template": "Edit Process Template"
   },
   "user_types": {
     "admin": "Admin",

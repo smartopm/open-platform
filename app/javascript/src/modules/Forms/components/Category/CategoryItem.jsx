@@ -74,7 +74,7 @@ export default function CategoryItem({
   }
   return (
     <>
-      {!category.headerVisible ? null : (
+      {(!editMode && !category.headerVisible) ? null : (
         <Grid style={!editMode && !matches ? { padding: '0 100px' } : {}}>
           <Grid container className={classes.categorySection}>
             <Grid item xs={8} sm={10}>

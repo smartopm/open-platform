@@ -9,8 +9,6 @@ import {
   DialogContent,
   Grid,
 } from '@mui/material';
-import useMediaQuery from '@mui/material/useMediaQuery';
-import makeStyles from '@mui/styles/makeStyles';
 import { useMutation, useLazyQuery, useApolloClient } from 'react-apollo';
 import { useParams, useHistory } from 'react-router';
 import { useTranslation } from 'react-i18next';
@@ -54,7 +52,6 @@ export default function TodoList({
   location,
   currentUser
 }) {
-  const classes = useStyles();
   const limit = 50;
   const [offset, setOffset] = useState(0);
   const [open, setModalOpen] = useState(false);
@@ -92,7 +89,6 @@ export default function TodoList({
   const [selectedTask, setSelectedTask] = useState(null);
   const [bulkUpdating, setBulkUpdating] = useState(false);
   const [splitScreenOpen, setSplitScreenOpen] = useState(false);
-  const matches = useMediaQuery('(max-width:900px)');
   const { t } = useTranslation(['task', 'common'])
 
   const path = useParamsQuery();
@@ -551,7 +547,6 @@ export default function TodoList({
             <SplitScreen
               open={splitScreenOpen}
               onClose={() => setSplitScreenOpen(false)}
-              classes={{ paper: matches ? classes.drawerPaperMobile : classes.drawerPaper }}
             >
               <TaskUpdate
                 taskId={redirectedTaskId || data?.flaggedNotes[0].id}
@@ -605,41 +600,6 @@ export default function TodoList({
     </>
 );
 }
-
-const useStyles = makeStyles(() => ({
-  root: {
-    padding: '2px 4px',
-    display: 'flex',
-    alignItems: 'right',
-    justifyContent: 'space-between',
-    width: '100%',
-    overflowX: 'auto'
-  },
-  formControl: {
-    minWidth: 160,
-    maxWidth: 300
-  },
-  iconButton: {},
-  divider: {
-    height: 28,
-    margin: 4
-  },
-  input: {},
-  drawerPaper: {
-    width: '50%',
-    marginTop: '51px',
-    padding: '30px 10px',
-    opacity: '1',
-    backgroundColor: '#FAFAFA !important'
-  },
-  drawerPaperMobile: {
-    width: '100%',
-    marginTop: '51px',
-    opacity: '1',
-    backgroundColor: '#FFFFFF !important',
-    padding: '20px'
-  }
-}));
 
 TodoList.propTypes = {
   isDialogOpen: PropTypes.bool.isRequired,

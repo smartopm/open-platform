@@ -31,10 +31,6 @@ export default function CampaignList() {
   const path = useLocation().pathname
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('md'));
-  const matches0 = useMediaQuery(theme.breakpoints.only('sm'));
-  const matches3 = useMediaQuery(theme.breakpoints.only('xs'));
-  const matches1 = useMediaQuery(theme.breakpoints.only('md'));
-  const matches2 = useMediaQuery(theme.breakpoints.only('lg'));
   const { id } = useParams();
   const history = useHistory();
   const limit = 50;
@@ -141,23 +137,6 @@ export default function CampaignList() {
     }
   }
 
-  function drawerStyles() {
-    if (matches0) {
-      return classes.drawerPaperMobile
-    }
-    if (matches1) {
-      return classes.mdDrawerPaper
-    }
-    if (matches2) {
-      return classes.drawerPaper
-    }
-    if (matches3) {
-      return classes.drawerPaperMobile
-    }
-
-    return classes.drawerPaper
-  }
-
   useEffect(() => {
     if((id || path === '/campaign-create') && !matches) {
       setShow(true);
@@ -256,7 +235,6 @@ export default function CampaignList() {
       <Grid item lg={6} md={12} sm={12} xs={12}>
         <SplitScreen
           open={matches ? true : show}
-          classes={{ paper: drawerStyles() }}
         >
           <CampaignSplitScreen
             campaignId={id}
@@ -271,23 +249,6 @@ export default function CampaignList() {
 }
 
 const useStyles = makeStyles(() => ({
-  drawerPaper: {
-    width: '48%',
-    marginTop: '50px',
-    background: '#FAFAFA !important',
-    border: '0px !important'
-  },
-  drawerPaperMobile: {
-    width: '100%',
-    background: '#FAFAFA !important',
-    marginTop: '50px'
-  },
-  mdDrawerPaper: {
-    width: '40%',
-    marginTop: '50px',
-    background: '#FAFAFA !important',
-    border: '0px !important'
-  },
   campaignList: {
     overflowX: 'hidden',
     overflowY: 'auto'

@@ -65,10 +65,14 @@ import { PRIMARY_DOMAINS } from '../src/utils/constants';
 import TaskProcessDetail from '../src/modules/Tasks/Processes/Components/TaskProcessDetail';
 import LeadManagementUserImport from '../src/modules/Users/LeadManagement/Containers/LeadManagementUserImport';
 import GuestQRPage from '../src/modules/LogBook/Components/GuestQRPage'
+<<<<<<< HEAD
 import Welcome from '../src/modules/LogBook/Kiosk/components/Welcome';
 import Accesspage from '../src/modules/LogBook/Kiosk/components/AccessPage';
 import ScanPage from '../src/modules/LogBook/Kiosk/components/Scan';
 import Errorpage from '../src/modules/LogBook/Kiosk/components/ErrorPage';
+=======
+import ProcessList from '../src/modules/Processes/Components/ProcessList';
+>>>>>>> 8c53fb24fa7fae51a25e1a2c97fcd5147c97d99b
 
 // The routes defined here are carefully arranged, be mindful when changing them
 
@@ -338,6 +342,10 @@ const App = () => {
                                 <Route
                                   path="/user_form/:userId?/:formUserId?/:type?"
                                   component={FormPage}
+                                />
+                                 <Route
+                                  path="/processes/templates"
+                                  component={ProcessList}
                                 />
                                 <Route
                                   path="/processes/:type/projects/:id"

@@ -43,7 +43,6 @@ describe('Projects List', () => {
 
     
     await waitFor(() => {
-      screen.debug()
       expect(screen.queryByTestId('loader')).toBeInTheDocument();
     }, 10);
   });

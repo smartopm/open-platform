@@ -1,27 +1,31 @@
-import React, { Fragment } from 'react';
+import React, { useState, Fragment } from 'react';
 import { Divider, Link, List, ListItem, ListItemText, Typography , Card, CardContent, Container, Grid } from '@mui/material';
 import { useQuery } from 'react-apollo';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@mui/styles';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 
 import { useHistory } from 'react-router-dom';
 import { formatError } from '../../../../utils/helpers';
 import CenteredContent from '../../../../shared/CenteredContent';
 import { Spinner } from '../../../../shared/Loading';
+import SpeedDial from '../../../../shared/buttons/SpeedDial';
 import { TaskQuarterySummaryQuery, ProjectsStatsQuery } from '../graphql/process_queries';
 import {
   filterProjectAndStages,
   calculateOpenProjectsByStage,
-  snakeCaseToSentence
+  snakeCaseToSentence,
+  accessibleMenus
 } from '../utils';
 
 export default function AdminDashboard() {
-  const { t } = useTranslation('task');
+  const { t } = useTranslation(['task', 'process']);
   const classes = useStyles();
   const matches = useMediaQuery('(max-width:800px)');
   const history = useHistory();
   const quarters = ['Q1', 'Q2', 'Q3', 'Q4']
+  const [openSpeedDial, setOpenSpeedDial] = useState(false);
 
   const { loading: summaryLoading, error: summaryError, data: summaryData } = useQuery(
     TaskQuarterySummaryQuery,
@@ -129,6 +133,15 @@ export default function AdminDashboard() {
     post_construction: 0
   };
 
+  const speedDialActions = [
+    {
+      icon: <VisibilityIcon />,
+      name: t('process:templates.process_templates'),
+      handleClick: () => history.push('/processes/templates'),
+      isVisible: true, // TODO: Use permission if needed
+    }
+  ];
+
   function cardName(name){
     if (quarters.includes(name)) return name;
 
@@ -144,14 +157,25 @@ export default function AdminDashboard() {
 
   return (
     <Container maxWidth="xl" data-testid="processes-admin-dashboard">
-      <Typography variant="h4" className={classes.title}>
-        {t('processes.processes')}
-      </Typography>
-      <Link href="/processes/drc/projects" underline="hover">
-        <Typography className={classes.processTitle} color="primary" variant="h5">
-          {t('processes.drc_process')}
-        </Typography>
-      </Link>
+      <Grid container>
+        <Grid item md={11} xs={10}>
+          <Typography variant="h4" className={classes.title}>
+            {t('processes.processes')}
+          </Typography>
+          <Link href="/processes/drc/projects" underline="hover">
+            <Typography className={classes.processTitle} color="primary" variant="h5">
+              {t('processes.drc_process')}
+            </Typography>
+          </Link>
+        </Grid>
+        <Grid item md={1} sx={2}>
+          <SpeedDial
+            open={openSpeedDial}
+            handleSpeedDial={() => setOpenSpeedDial(!openSpeedDial)}
+            actions={accessibleMenus(speedDialActions)}
+          />
+        </Grid>
+      </Grid>
       <Grid container justifyContent="space-between" spacing={4}>
         <Grid item xs={12} sm={6}>
           <Typography className={classes.quarterSection} variant="body1">

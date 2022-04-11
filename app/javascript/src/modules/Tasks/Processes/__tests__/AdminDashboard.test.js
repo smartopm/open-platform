@@ -3,6 +3,7 @@ import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min';
 import '@testing-library/jest-dom/extend-expect';
 import { render, screen, waitFor } from '@testing-library/react';
+import MockedThemeProvider from '../../../__mocks__/mock_theme';
 import { ProjectsStatsQuery, TaskQuarterySummaryQuery } from '../graphql/process_queries';
 import AdminDashboard from '../Components/AdminDashboard'
 import taskMock from '../../__mocks__/taskMock'
@@ -51,13 +52,16 @@ describe('Admin processes dashboard', () => {
     render(
       <MockedProvider mocks={mocks} addTypename={false}>
         <BrowserRouter>
-          <AdminDashboard />
+          <MockedThemeProvider>
+            <AdminDashboard />
+          </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>
     );
     expect(screen.queryAllByTestId('loader')[0]).toBeInTheDocument();
 
     await waitFor(() => {
+      expect(screen.queryAllByTestId('speed_dial_icon')[0]).toBeInTheDocument()
       expect(screen.queryByText('processes.processes')).toBeInTheDocument()
       expect(screen.queryByText('processes.drc_process')).toBeInTheDocument()
       expect(screen.queryByText('processes.projects_by_quarter')).toBeInTheDocument()
@@ -90,7 +94,9 @@ describe('Admin processes dashboard', () => {
     render(
       <MockedProvider mocks={mocks} addTypename={false}>
         <BrowserRouter>
-          <AdminDashboard />
+          <MockedThemeProvider>
+            <AdminDashboard />
+          </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>
     );

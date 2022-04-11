@@ -53,7 +53,7 @@ export default function TaskInfoTop({
 }) {
   const { t } = useTranslation(['task', 'common']);
   const classes = useStyles();
-  const matches = useMediaQuery('(max-width:800px)');
+  const matches = useMediaQuery('(max-width:1000px)');
   const history = useHistory();
   const urlParams = useParams();
   const [taskUpdate] = useMutation(UpdateNote);
@@ -159,6 +159,7 @@ export default function TaskInfoTop({
                     color="primary"
                     style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}
                     onClick={handleSplitScreenClose}
+                    data-testid='back-to-task'
                   >
                     {!fromLeadPage && <KeyboardBackspaceIcon style={{ marginRight: '4px' }} />}
                     {urlParams.type === 'drc'
@@ -183,7 +184,7 @@ export default function TaskInfoTop({
                     {data.completed ? (
                       <CheckCircleIcon htmlColor="#4caf50" style={{ fontSize: '20px' }} />
                     ) : (
-                      <CheckCircleOutlineIcon onClick={handleTaskComplete} />
+                      <CheckCircleOutlineIcon />
                     )}
                   </IconButton>
                 )}
