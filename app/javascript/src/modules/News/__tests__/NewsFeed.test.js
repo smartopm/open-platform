@@ -21,7 +21,7 @@ describe('Details page for news post content', () => {
   it('should include the post details', () => {
     const container = render(
       <MockedThemeProvider>
-        <PostItemGrid data={response} />
+        <PostItemGrid data={response} loading={false} />
       </MockedThemeProvider>
     );
     expect(container.queryByText('Test title')).toBeInTheDocument();
@@ -40,10 +40,10 @@ describe('Details page for news post content', () => {
   it('should not display anything when no data is available', () => {
     const container = render(
       <MockedThemeProvider>
-        <PostItemGrid data={[]} />
+        <PostItemGrid data={[]} loading />
       </MockedThemeProvider>
     );
-    expect(container.queryByText('Test title')).not.toBeInTheDocument();
+    expect(container.queryAllByTestId('skeleton')[0]).toBeInTheDocument();
     expect(container.queryByText('Test Another title')).not.toBeInTheDocument();
   });
 });

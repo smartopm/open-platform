@@ -111,11 +111,10 @@ describe('Render Guest List Card Component', () => {
     expect(container.getByTestId('ends_on_date')).toBeInTheDocument();
     expect(container.getByTestId('request_avatar')).toBeInTheDocument();
     expect(container.getByTestId('visit_time')).toBeInTheDocument();
-    expect(container.getByTestId('status')).toBeInTheDocument();
-    expect(container.getByTestId('invite_status')).toBeInTheDocument();
-    expect(container.getByTestId('invite_status').textContent).toContain('guest_book.active');
-    expect(container.getByTestId('validity')).toBeInTheDocument();
-    expect(container.getByTestId('guest_card')).toBeInTheDocument();
+    expect(container.queryByTestId('status')).not.toBeInTheDocument();
+    expect(container.queryByTestId('invite_status')).not.toBeInTheDocument();
+    expect(container.queryByTestId('validity')).not.toBeInTheDocument();
+    expect(container.queryByTestId('guest_card')).toBeInTheDocument();
     expect(container.queryByTestId('guest_invite_menu')).not.toBeInTheDocument();
     expect(container.queryByTestId('loader')).toBeInTheDocument();
     fireEvent.click(container.getByTestId('guest_card'));

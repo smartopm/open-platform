@@ -4,6 +4,7 @@ import React from 'react';
 import makeStyles from '@mui/styles/makeStyles';
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
+import Grid from '@mui/material/Grid';
 import ImageListItemBar from '@mui/material/ImageListItemBar';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { Typography } from '@mui/material';
@@ -11,8 +12,8 @@ import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { useFetch } from '../../../utils/customHooks';
-import { Spinner } from '../../../shared/Loading';
 import CenteredContent from '../../../components/CenteredContent';
+import CustomSkeleton from '../../../shared/CustomSkeleton';
 
 const NUMBER_OF_POSTS_TO_DISPLAY = 5;
 const useStyles = makeStyles(theme => ({
@@ -39,7 +40,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export function PostItemGrid({ data }) {
+export function PostItemGrid({ data, loading }) {
   const classes = useStyles();
   const { t } = useTranslation('common');
   const matches = useMediaQuery('(max-width:600px)');
@@ -75,23 +76,28 @@ export function PostItemGrid({ data }) {
             gridAutoColumns: 'minmax(200px, 1fr)'
           }}
         >
-          {data.length &&
-            data.map(tile => (
-              <ImageListItem
-                key={tile.ID}
-                onClick={() => routeToPost(tile.ID)}
-                style={{ cursor: 'pointer' }}
-                classes={{ tile: classes.tile }}
-              >
-                <img
-                  data-testid="tile_image"
-                  src={tile.featured_image}
-                  alt={tile.title}
-                  className={classes.image}
-                />
-                <ImageListItemBar title={tile.title} />
-              </ImageListItem>
-            ))}
+          {(loading ? Array.from(new Array(5)) : (data.length && data)).map((tile, index) => (
+            <ImageListItem
+              key={tile?.ID || index}
+              onClick={tile ? () => routeToPost(tile.ID) : undefined}
+              style={tile ? { cursor: 'pointer' } : undefined}
+              classes={{ tile: classes.tile }}
+            >
+              {tile ? (
+                <Grid>
+                  <img
+                    data-testid="tile_image"
+                    src={tile.featured_image}
+                    alt={tile.title}
+                    className={classes.image}
+                  />
+                  <ImageListItemBar title={tile.title} />
+                </Grid>
+                ) : (
+                  <CustomSkeleton variant="rectangular" width="100%" height="140px" />
+                )}
+            </ImageListItem>
+          ))}
         </ImageList>
       </div>
     </div>
@@ -111,15 +117,10 @@ export default function NewsFeed({ wordpressEndpoint }) {
       </CenteredContent>
     );
   }
-  if (!response || !response.posts) {
-    return (
-      <div style={{ margin: '95px 0' }}>
-        <Spinner />
-      </div>
-    );
-  }
 
-  return <PostItemGrid data={postsToDisplay(response.posts)} />;
+  return (
+    <PostItemGrid data={postsToDisplay(response.posts)} loading={!response || !response.posts} />
+  );
 }
 
 function postsToDisplay(posts) {

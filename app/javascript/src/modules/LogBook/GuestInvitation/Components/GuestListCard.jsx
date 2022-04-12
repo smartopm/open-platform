@@ -5,7 +5,7 @@ import Chip from '@mui/material/Chip';
 import PropTypes from 'prop-types';
 import CardContent from '@mui/material/CardContent';
 import { useHistory } from 'react-router';
-import { Avatar, IconButton, Chip as LegacyChip , useMediaQuery, useTheme } from '@mui/material';
+import { Avatar, IconButton, Chip as LegacyChip, useMediaQuery, useTheme } from '@mui/material';
 import MoreVert from '@mui/icons-material/MoreVert';
 
 import { dateToString, dateTimeToString } from '../../../../components/DateContainer';
@@ -24,7 +24,7 @@ export default function GuestListCard({
 }) {
   const history = useHistory();
   const classes = useLogbookStyles();
-  const isCancelled = invite.status === 'cancelled'
+  const isCancelled = invite.status === 'cancelled';
   const theme = useTheme();
   const matchesSmall = useMediaQuery(theme.breakpoints.down('lg'));
 
@@ -113,53 +113,57 @@ export default function GuestListCard({
             />
           </Grid>
           <Grid item xs={12} sm={12} md={6} lg={4} order={{ xs: 3, sm: 3, md: 2, lg: 3 }}>
-            <Grid
-              container
-              direction="row"
-              justifyContent="flex-end"
-              spacing={!matchesSmall ? 2 : 0}
-              className={classes.actionSection}
-            >
-              <Grid item data-testid="status" className={classes.chipRootAlign}>
-                <LegacyChip
-                  label={
-                    invite.guest?.request?.status === 'approved'
-                      ? translate('guest_book.approved')
-                      : translate('guest_book.pending')
-                  }
-                  color={invite.guest?.request?.status === 'approved' ? 'primary' : 'secondary'}
-                  size="small"
-                  className={classes.chipAlign}
-                />
-              </Grid>
-              <Grid item data-testid="validity" className={classes.chipRootAlign}>
-                <Chip
-                  label={
-                    checkRequests(invite.entryTime, translate, tz).valid
-                      ? translate('guest_book.valid')
-                      : translate('guest_book.invalid_now')
-                  }
-                  color={checkRequests(invite.entryTime, translate, tz).valid ? 'success' : 'error'}
-                  data-testid="guest_validity"
-                  size="small"
-                  className={classes.chipAlign}
-                />
-              </Grid>
-              <Grid item className={classes.chipRootAlign}>
-                <Chip
-                  label={
-                    isCancelled ? translate('guest_book.cancelled') : translate('guest_book.active')
-                  }
-                  color={isCancelled ? 'error' : 'success'}
-                  data-testid="invite_status"
-                  size="small"
-                  className={classes.chipAlign}
-                />
-              </Grid>
-              <Grid item data-testid="more_options">
-                {currentInvite.loading && currentInvite.id === invite.id ? (
-                  <Spinner />
-                ) : (
+            {currentInvite.loading && currentInvite.id === invite.id ? (
+              <Spinner />
+            ) : (
+              <Grid
+                container
+                direction="row"
+                justifyContent="flex-end"
+                spacing={!matchesSmall ? 2 : 0}
+                className={classes.actionSection}
+              >
+                <Grid item data-testid="status" className={classes.chipRootAlign}>
+                  <LegacyChip
+                    label={
+                      invite.guest?.request?.status === 'approved'
+                        ? translate('guest_book.approved')
+                        : translate('guest_book.pending')
+                    }
+                    color={invite.guest?.request?.status === 'approved' ? 'primary' : 'secondary'}
+                    size="small"
+                    className={classes.chipAlign}
+                  />
+                </Grid>
+                <Grid item data-testid="validity" className={classes.chipRootAlign}>
+                  <Chip
+                    label={
+                      checkRequests(invite.entryTime, translate, tz).valid
+                        ? translate('guest_book.valid')
+                        : translate('guest_book.invalid_now')
+                    }
+                    color={
+                      checkRequests(invite.entryTime, translate, tz).valid ? 'success' : 'error'
+                    }
+                    data-testid="guest_validity"
+                    size="small"
+                    className={classes.chipAlign}
+                  />
+                </Grid>
+                <Grid item className={classes.chipRootAlign}>
+                  <Chip
+                    label={
+                      isCancelled
+                        ? translate('guest_book.cancelled')
+                        : translate('guest_book.active')
+                    }
+                    color={isCancelled ? 'error' : 'success'}
+                    data-testid="invite_status"
+                    size="small"
+                    className={classes.chipAlign}
+                  />
+                </Grid>
+                <Grid item data-testid="more_options">
                   <IconButton
                     aria-controls="guest_invite_menu"
                     aria-haspopup="true"
@@ -172,9 +176,9 @@ export default function GuestListCard({
                   >
                     <MoreVert />
                   </IconButton>
-                )}
+                </Grid>
               </Grid>
-            </Grid>
+            )}
           </Grid>
         </Grid>
       </CardContent>
@@ -214,7 +218,7 @@ GuestListCard.propTypes = {
   tz: PropTypes.string.isRequired,
   currentInvite: PropTypes.shape({
     id: PropTypes.string.isRequired,
-    loading: PropTypes.bool.isRequired,
+    loading: PropTypes.bool.isRequired
   }).isRequired,
   styles: PropTypes.shape({
     theme: PropTypes.shape({

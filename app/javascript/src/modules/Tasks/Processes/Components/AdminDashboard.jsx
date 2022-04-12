@@ -1,5 +1,16 @@
-import React, { useState, Fragment } from 'react';
-import { Divider, Link, List, ListItem, ListItemText, Typography , Card, CardContent, Container, Grid } from '@mui/material';
+import React, { Fragment, useState } from 'react';
+import {
+  Divider,
+  Link,
+  List,
+  ListItem,
+  ListItemText,
+  Typography,
+  Card,
+  CardContent,
+  Container,
+  Grid
+} from '@mui/material';
 import { useQuery } from 'react-apollo';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTranslation } from 'react-i18next';
@@ -51,7 +62,8 @@ export default function AdminDashboard() {
     const initialValue = 0;
     const overallStats = processStats.reduce(
       (previousValue, currentValue) => previousValue + currentValue[2],
-    initialValue);
+      initialValue
+    );
     return overallStats;
   }
 
@@ -59,7 +71,8 @@ export default function AdminDashboard() {
     const initialValue = 0;
     const yearStats = processStats.reduce(
       (previousValue, currentValue) => previousValue + currentValue[2],
-    initialValue);
+      initialValue
+    );
     return yearStats;
   }
 
@@ -104,7 +117,7 @@ export default function AdminDashboard() {
 
   const lifeTimeCards = [
     {
-      name:  t('processes.submitted'),
+      name: t('processes.submitted'),
       category: 'submitted',
       count: tasksTillNow(submittedResults) || 0,
       primary: true
@@ -120,7 +133,7 @@ export default function AdminDashboard() {
       category: 'outstanding',
       count: (tasksTillNow(submittedResults) || 0) - (tasksTillNow(completedResults) || 0),
       primary: false
-    },
+    }
   ];
 
   const projectStageLookup = {
@@ -181,194 +194,228 @@ export default function AdminDashboard() {
           <Typography className={classes.quarterSection} variant="body1">
             {t('processes.projects_by_quarter')}
           </Typography>
-          {summaryLoading && <Spinner />}
           {summaryError && <CenteredContent>{formatError(summaryError.message)}</CenteredContent>}
-          <Grid container spacing={1} className={classes.cards}>
-            <Grid item xs={2.5} />
-            {matches && <Grid item xs={1} />}
-            {cards.map((card, index) => (
-              // eslint-disable-next-line react/no-array-index-key
-              <Grid key={index} item xs={1.5} container justifyContent="center" alignItems="center">
-                <Typography variant="caption">{card.name}</Typography>
-              </Grid>
-            ))}
-          </Grid>
-
-          <Grid container spacing={1} style={{ marginBottom: '12px', paddingLeft: '7px' }}>
-            <Grid
-              item
-              container
-              justifyContent="center"
-              alignItems="center"
-              xs={2.5}
-              style={{
-                background: '#F5F5F4',
-                borderRadius: '4px',
-                height: '47px',
-                marginTop: '7px',
-                paddingTop: 0,
-                paddingRight: '8px'
-              }}
-            >
-              <Typography variant="caption" color="secondary">
-                {t('processes.submitted')}
-              </Typography>
-            </Grid>
-            {matches && <Grid item xs={1} />}
-            {cards.map((card, index) => (
-              // eslint-disable-next-line react/no-array-index-key
-              <Grid key={index} item xs={1.5}>
-                <Card
-                  className={classes.card}
-                  onClick={() => routeToProjects('submitted_per_quarter', cardName(card.name))}
-                  style={{ cursor: 'pointer', boxShadow: 'none' }}
-                >
-                  <CardContent
-                    className={`${index === 4 ? classes.evenCardsBackground: classes.oddCardsBackground} ${classes.cardContent}`}
-                    style={{ paddingTop: '8px', paddingBottom: '8px' }}
+          {summaryLoading ? (
+            <Spinner />
+          ) : (
+            <>
+              <Grid container spacing={1} className={classes.cards}>
+                <Grid item xs={2.5} />
+                {matches && <Grid item xs={1} />}
+                {cards.map((card, index) => (
+                  <Grid
+                  // eslint-disable-next-line react/no-array-index-key
+                    key={index}
+                    item
+                    xs={1.5}
+                    container
+                    justifyContent="center"
+                    alignItems="center"
                   >
-                    <Grid container justifyContent="center" alignItems="center">
-                      <Typography variant="body1" style={{ fontSize: '1.2rem' }}>
-                        {card.submitted}
-                      </Typography>
-                    </Grid>
-                  </CardContent>
-                </Card>
+                    <Typography variant="caption">{card.name}</Typography>
+                  </Grid>
+                ))}
               </Grid>
-            ))}
-          </Grid>
 
-          <Grid container spacing={1} style={{ marginBottom: '15px', paddingLeft: '7px' }}>
-            <Grid
-              item
-              container
-              justifyContent="center"
-              alignItems="center"
-              xs={2.5}
-              style={{
-                background: '#F5F5F4',
-                borderRadius: '4px',
-                height: '47px',
-                marginTop: '7px',
-                paddingTop: 0,
-                paddingRight: '8px'
-              }}
-            >
-              <Typography variant="caption" color="secondary">
-                {t('processes.completed')}
-              </Typography>
-            </Grid>
-            {matches && <Grid item xs={1} />}
-            {cards.map((card, index) => (
-              // eslint-disable-next-line react/no-array-index-key
-              <Grid key={index} item xs={1.5}>
-                <Card
-                  className={classes.card}
-                  onClick={() => routeToProjects('completed_per_quarter', cardName(card.name))}
-                  style={{ cursor: 'pointer', boxShadow: 'none' }}
+              <Grid container spacing={1} style={{ marginBottom: '12px', paddingLeft: '7px' }}>
+                <Grid
+                  item
+                  container
+                  justifyContent="center"
+                  alignItems="center"
+                  xs={2.5}
+                  style={{
+                    background: '#F5F5F4',
+                    borderRadius: '4px',
+                    height: '47px',
+                    marginTop: '7px',
+                    paddingTop: 0,
+                    paddingRight: '8px'
+                  }}
                 >
-                  <CardContent
-                    className={`${index === 4 ? classes.evenCardsBackground: classes.oddCardsBackground} ${classes.cardContent}`}
-                    style={{ paddingTop: '8px', paddingBottom: '8px' }}
-                  >
-                    <Grid container justifyContent="center" alignItems="center">
-                      <Typography variant="body1" style={{ fontSize: '1.2rem' }}>
-                        {card.completed}
-                      </Typography>
-                    </Grid>
-                  </CardContent>
-                </Card>
+                  <Typography variant="caption" color="secondary">
+                    {t('processes.submitted')}
+                  </Typography>
+                </Grid>
+                {matches && <Grid item xs={1} />}
+                {cards.map((card, index) => (
+                  // eslint-disable-next-line react/no-array-index-key
+                  <Grid key={index} item xs={1.5}>
+                    <Card
+                      className={classes.card}
+                      onClick={() => routeToProjects('submitted_per_quarter', cardName(card.name))}
+                      style={{ cursor: 'pointer', boxShadow: 'none' }}
+                    >
+                      <CardContent
+                        className={`${
+                          index === 4 ? classes.evenCardsBackground : classes.oddCardsBackground
+                        } ${classes.cardContent}`}
+                        style={{ paddingTop: '8px', paddingBottom: '8px' }}
+                      >
+                        <Grid container justifyContent="center" alignItems="center">
+                          <Typography variant="body1" style={{ fontSize: '1.2rem' }}>
+                            {card.submitted}
+                          </Typography>
+                        </Grid>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                ))}
               </Grid>
-            ))}
-          </Grid>
-          <Divider variant="inset" className={matches ? classes.mobileStatsDivider : classes.statsDivider} />
-          <Grid container spacing={1} className={classes.cards}>
-            <Grid item xs={4} />
-            {matches && <Grid item xs={1} />}
-            {lifeTimeCards.map((card, index) => (
-              // eslint-disable-next-line react/no-array-index-key
-              <Grid key={index} item xs={2} container justifyContent="center" alignItems="center">
-                <Typography variant="caption" style={{ fontSize: '0.6rem' }}>{card.name}</Typography>
-              </Grid>
-            ))}
-          </Grid>
-          <Grid container spacing={1} style={{ paddingLeft: '7px' }}>
-            <Grid
-              item
-              container
-              justifyContent="center"
-              alignItems="center"
-              xs={4}
-              style={{
-                background: '#F5F5F4',
-                borderRadius: '4px',
-                height: '47px',
-                marginTop: '7px',
-                paddingTop: 0,
-                paddingRight: '8px'
-              }}
-            >
-              <Typography variant="caption" color="secondary">
-                {t('processes.lifetime_totals')}
-              </Typography>
-            </Grid>
-            {matches && <Grid item xs={1} />}
-            {lifeTimeCards.map((card, index) => (
-              // eslint-disable-next-line react/no-array-index-key
-              <Grid key={index} item xs={2}>
-                <Card
-                  className={classes.card}
-                  onClick={() => routeToProjects('life_time_totals', card.category)}
-                  style={{ cursor: 'pointer', boxShadow: 'none' }}
-                >
-                  <CardContent
-                    className={`${index === 2 ? classes.evenCardsBackground: classes.oddCardsBackground} ${classes.cardContent}`}
-                    style={{ paddingTop: '8px', paddingBottom: '8px' }}
-                  >
-                    <Grid container justifyContent="center" alignItems="center">
-                      <Typography variant="body1" style={{ fontSize: '1.2rem' }}>
-                        {card.count}
-                      </Typography>
-                    </Grid>
-                  </CardContent>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
 
+              <Grid container spacing={1} style={{ marginBottom: '15px', paddingLeft: '7px' }}>
+                <Grid
+                  item
+                  container
+                  justifyContent="center"
+                  alignItems="center"
+                  xs={2.5}
+                  style={{
+                    background: '#F5F5F4',
+                    borderRadius: '4px',
+                    height: '47px',
+                    marginTop: '7px',
+                    paddingTop: 0,
+                    paddingRight: '8px'
+                  }}
+                >
+                  <Typography variant="caption" color="secondary">
+                    {t('processes.completed')}
+                  </Typography>
+                </Grid>
+                {matches && <Grid item xs={1} />}
+                {cards.map((card, index) => (
+                  // eslint-disable-next-line react/no-array-index-key
+                  <Grid key={index} item xs={1.5}>
+                    <Card
+                      className={classes.card}
+                      onClick={() => routeToProjects('completed_per_quarter', cardName(card.name))}
+                      style={{ cursor: 'pointer', boxShadow: 'none' }}
+                    >
+                      <CardContent
+                        className={`${
+                          index === 4 ? classes.evenCardsBackground : classes.oddCardsBackground
+                        } ${classes.cardContent}`}
+                        style={{ paddingTop: '8px', paddingBottom: '8px' }}
+                      >
+                        <Grid container justifyContent="center" alignItems="center">
+                          <Typography variant="body1" style={{ fontSize: '1.2rem' }}>
+                            {card.completed}
+                          </Typography>
+                        </Grid>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                ))}
+              </Grid>
+              <Divider
+                variant="inset"
+                className={matches ? classes.mobileStatsDivider : classes.statsDivider}
+              />
+              <Grid container spacing={1} className={classes.cards}>
+                <Grid item xs={4} />
+                {matches && <Grid item xs={1} />}
+                {lifeTimeCards.map((card, index) => (
+                  <Grid
+                  // eslint-disable-next-line react/no-array-index-key
+                    key={index}
+                    item
+                    xs={2}
+                    container
+                    justifyContent="center"
+                    alignItems="center"
+                  >
+                    <Typography variant="caption" style={{ fontSize: '0.6rem' }}>
+                      {card.name}
+                    </Typography>
+                  </Grid>
+                ))}
+              </Grid>
+              <Grid container spacing={1} style={{ paddingLeft: '7px' }}>
+                <Grid
+                  item
+                  container
+                  justifyContent="center"
+                  alignItems="center"
+                  xs={4}
+                  style={{
+                    background: '#F5F5F4',
+                    borderRadius: '4px',
+                    height: '47px',
+                    marginTop: '7px',
+                    paddingTop: 0,
+                    paddingRight: '8px'
+                  }}
+                >
+                  <Typography variant="caption" color="secondary">
+                    {t('processes.lifetime_totals')}
+                  </Typography>
+                </Grid>
+                {matches && <Grid item xs={1} />}
+                {lifeTimeCards.map((card, index) => (
+                  // eslint-disable-next-line react/no-array-index-key
+                  <Grid key={index} item xs={2}>
+                    <Card
+                      className={classes.card}
+                      onClick={() => routeToProjects('life_time_totals', card.category)}
+                      style={{ cursor: 'pointer', boxShadow: 'none' }}
+                    >
+                      <CardContent
+                        className={`${
+                          index === 2 ? classes.evenCardsBackground : classes.oddCardsBackground
+                        } ${classes.cardContent}`}
+                        style={{ paddingTop: '8px', paddingBottom: '8px' }}
+                      >
+                        <Grid container justifyContent="center" alignItems="center">
+                          <Typography variant="body1" style={{ fontSize: '1.2rem' }}>
+                            {card.count}
+                          </Typography>
+                        </Grid>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                ))}
+              </Grid>
+            </>
+          )}
         </Grid>
         <Grid item xs={12} sm={6}>
           <Typography variant="body1">{t('processes.projects_by_stage')}</Typography>
-          {projectsLoading && <Spinner />}
           {projectsError && <CenteredContent>{formatError(projectsError.message)}</CenteredContent>}
-          <List data-testid="project-stages">
-            {Object.entries(stats).map(([stage, count]) => (
-              <Fragment key={stage}>
-                <ListItem
-                  onClick={() => routeToProjects('current_step', snakeCaseToSentence(stage))}
-                  className={classes.projectStageLink}
-                >
-                  <Grid container>
-                    <Grid item xs={11}>
-                      <ListItemText>
-                        <Typography variant="body2">
-                          {t(`processes.drc_stages.${stage}`)}
-                        </Typography>
-                      </ListItemText>
+          {projectsLoading ? (
+            <CenteredContent>
+              <Spinner />
+            </CenteredContent>
+          ) : (
+            <List data-testid="project-stages">
+              {Object.entries(stats).map(([stage, count]) => (
+                <Fragment key={stage}>
+                  <ListItem
+                    onClick={() => routeToProjects('current_step', snakeCaseToSentence(stage))}
+                    className={classes.projectStageLink}
+                  >
+                    <Grid container>
+                      <Grid item xs={11}>
+                        <ListItemText>
+                          <Typography variant="body2">
+                            {t(`processes.drc_stages.${stage}`)}
+                          </Typography>
+                        </ListItemText>
+                      </Grid>
+                      <Grid item xs={1}>
+                        <ListItemText>
+                          <Typography color="primary" className={classes.projectStageCount}>
+                            {count}
+                          </Typography>
+                        </ListItemText>
+                      </Grid>
                     </Grid>
-                    <Grid item xs={1}>
-                      <ListItemText>
-                        <Typography color="primary" className={classes.projectStageCount}>
-                          {count}
-                        </Typography>
-                      </ListItemText>
-                    </Grid>
-                  </Grid>
-                </ListItem>
-                <Divider variant="inset" className={classes.divider} />
-              </Fragment>
-            ))}
-          </List>
+                  </ListItem>
+                  <Divider variant="inset" className={classes.divider} />
+                </Fragment>
+              ))}
+            </List>
+          )}
         </Grid>
       </Grid>
     </Container>

@@ -149,7 +149,7 @@ export default function TaskInfoTop({
         handleClose={menuData.handleClose}
         list={menuData.menuList}
       />
-      <Grid container>
+      <Grid container style={!matches ? {paddingTop: '40px'} : {}}>
         {matches && (
           <Grid item xs={12} style={{ marginBottom: '10px' }}>
             <Grid container>
@@ -309,6 +309,7 @@ export default function TaskInfoTop({
               value={data.body}
               mutationAction={value => updateTask('body', value)}
               stateAction={value => setEditingBody(value)}
+              label={t('common:form_fields.title')}
             />
           )}
         </Grid>
@@ -528,10 +529,11 @@ export default function TaskInfoTop({
             {t('common:form_fields.description')}
           </Typography>
         </Grid>
-        <Grid item xs={12} md={12}>
+        <Grid item xs={12} md={12} style={{paddingTop: '10px'}}>
           <AutoSaveField
             value={data.description}
             mutationAction={value => updateTask('description', value)}
+            label={t('misc.add_description')}
           />
         </Grid>
       </Grid>
