@@ -100,6 +100,7 @@ describe('Process Template Lists', () => {
       expect(screen.queryByText('breadcrumbs.processes')).toBeInTheDocument();
       expect(screen.queryByText('breadcrumbs.template_list')).toBeInTheDocument();
       expect(screen.queryByText('templates.no_template_list')).toBeInTheDocument();
+      expect(screen.queryByTestId('template-speed-dial')).toBeInTheDocument();
     });
   });
 

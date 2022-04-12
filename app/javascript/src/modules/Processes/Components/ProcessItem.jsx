@@ -12,7 +12,7 @@ export default function ProcessItem({ process, menuData }) {
   const classes = useStyles();
 
   return(
-    <Card styles={{ marginBottom: 0 }} contentStyles={{ padding: '4px' }}>
+    <Card styles={{ marginBottom: 5 }} contentStyles={{ padding: '4px' }}>
       <Grid container>
         <Grid item md={9} xs={12} style={{ display: 'flex', alignItems: 'center' }}>
           <Typography

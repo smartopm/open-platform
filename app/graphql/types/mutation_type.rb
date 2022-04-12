@@ -167,6 +167,9 @@ module Types
 
     # substatus_logs
     field :substatus_log_update, mutation: Mutations::SubstatusLog::SubstatusLogUpdate
+
+    # process
+    field :process_create, mutation: Mutations::Process::ProcessCreate
   end
   # rubocop: enable Metrics/ClassLength
 end

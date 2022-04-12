@@ -70,6 +70,7 @@ import Accesspage from '../src/modules/LogBook/Kiosk/components/AccessPage';
 import ScanPage from '../src/modules/LogBook/Kiosk/components/Scan';
 import Errorpage from '../src/modules/LogBook/Kiosk/components/ErrorPage';
 import ProcessList from '../src/modules/Processes/Components/ProcessList';
+import ProcessBuilderPage from '../src/modules/Processes/Components/ProcessBuilderPage';
 
 // The routes defined here are carefully arranged, be mindful when changing them
 
@@ -341,8 +342,14 @@ const App = () => {
                                   component={FormPage}
                                 />
                                  <Route
+                                  exact
                                   path="/processes/templates"
                                   component={ProcessList}
+                                />
+                                 <Route
+                                  exact
+                                  path="/processes/templates/create"
+                                  component={ProcessBuilderPage}
                                 />
                                 <Route
                                   path="/processes/:type/projects/:id"

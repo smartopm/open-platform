@@ -15,4 +15,22 @@ query ProcessTemplates($offset: Int, $limit: Int) {
 }
 `
 
+export const ProcessFormsQuery = gql`
+  query ProcessFormsQuery {
+    forms {
+      id
+      name
+    }
+  }
+`
+
+export const ProcessTaskListsQuery = gql`
+  query ProcessTaskLists {
+    processTaskLists {
+      id
+      name
+    }
+  }
+`
+
 export default ProcessTemplatesQuery
