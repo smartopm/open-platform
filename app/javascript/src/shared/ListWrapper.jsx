@@ -1,14 +1,28 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import makeStyles from '@mui/styles/makeStyles';
 
-export default function ListWrapper({ children }) {
+export default function ListWrapper({ children, className }) {
+  const classes = useStyles();
   return (
-    <div style={{ background: '#F5F5F4', padding: '10px 15px', borderRadius: '10px' }}>
+    <div className={`${classes.container} ${className}`}>
       {children}
     </div>
   );
 }
 
+const useStyles = makeStyles(() => ({
+  container: {
+    background: '#F5F5F4', 
+    padding: '10px 15px', 
+    borderRadius: '10px'
+  }
+ }))
+
+ ListWrapper.defaultProps = {
+  className: ''
+ }
 ListWrapper.propTypes = {
-  children: PropTypes.node.isRequired
+  children: PropTypes.node.isRequired,
+  className: PropTypes.string
 }

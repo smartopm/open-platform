@@ -14,6 +14,8 @@ import { PublicUserMutation } from '../graphql/forms_mutation';
 import { AUTH_TOKEN_KEY } from '../../../utils/apollo';
 import CenteredContent from '../../../shared/CenteredContent';
 import AccessCheck from '../../Permissions/Components/AccessCheck';
+import { FormCategoriesQuery } from '../graphql/form_category_queries';
+import { useParamsQuery } from '../../../utils/helpers';
 
 export default function FormPage() {
   const { userId, formUserId, formId } = useParams();
@@ -21,8 +23,14 @@ export default function FormPage() {
   const matches = useMediaQuery('(max-width:900px)');
   const authState = useContext(Context);
   const { t } = useTranslation(['common', 'form']);
+  const path = useParamsQuery('');
+  const id = path.get('formId');
   const { data: formDetailData, loading } = useQuery(FormQuery, { variables: { id: formId } });
   const [loginPublicUser] = useMutation(PublicUserMutation)
+  const categoriesData = useQuery(FormCategoriesQuery, {
+    variables: { formId: id },
+    fetchPolicy: 'no-cache'
+  });
   const isFormFilled = pathname.includes('user_form');
   const [isError, setIsError] = useState()
 
@@ -59,7 +67,16 @@ export default function FormPage() {
     <>
       <br />
       {isFormFilled ? (
-        <FormUpdate userId={userId} formUserId={formUserId} authState={authState} />
+        <FormContextProvider>
+          <Container maxWidth="md">
+            <FormUpdate
+              userId={userId}
+              formUserId={formUserId}
+              authState={authState}
+              categoriesData={categoriesData?.data?.formCategories}
+            />
+          </Container>
+        </FormContextProvider>
       ) : (
         <FormContextProvider>
           <div style={matches ? {marginTop: '-40px'} : {}}>

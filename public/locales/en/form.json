@@ -85,7 +85,8 @@
     "draft": "Mark as as draft",
     "publish": "publish",
     "delete": "delete",
-    "update": "Update"
+    "update": "Update",
+    "submit_form": "Submit"
   },
   "form_fields": {
     "field_name": "Field Name",
