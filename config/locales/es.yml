@@ -308,6 +308,13 @@ es:
     default:
       message: Mensaje de campaña predeterminado
       name: Mensaje de campaña predeterminado
+  community_name:
+    ciudadmorazán: ciudadmorazan
+    doublegdp: doublegdp
+    greenpark: greenpark
+    metropolis: metropolis
+    nkwashi: nkwashi
+    tilisi: tilisi
   email_template:
     comment_reply:
       action: IR A COMENTARIO
@@ -480,10 +487,3 @@ es:
     updated: Actualizado
   welcome_sms: Bienvenido a la comunidad en línea de %{community}. Por favor acceda
     a la aplicación usando %{url}
-  community_name:
-    ciudadmorazán: ciudadmorazan
-    greenpark: greenpark
-    doublegdp: doublegdp
-    nkwashi: nkwashi
-    tilisi: tilisi
-    metropolis: metropolis
