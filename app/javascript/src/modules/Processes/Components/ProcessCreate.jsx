@@ -1,6 +1,7 @@
 import {
   Breadcrumbs,
   Button, 
+  Container, 
   FormControl,
   FormHelperText,
   Grid, 
@@ -108,7 +109,7 @@ const [processCreate] = useMutation(ProcessCreateMutation)
         open={alertOpen}
         handleClose={handleClose}
       />
-      <div className="container">
+      <Container>
         <Grid container spacing={1}>
           <Grid item md={12} xs={12} style={{ paddingLeft: '10px' }}>
             <div role="presentation">
@@ -219,7 +220,7 @@ const [processCreate] = useMutation(ProcessCreateMutation)
             </CenteredContent>
           </Grid>
         </Grid>
-      </div>
+      </Container>
     </>
   )
 }
