@@ -108,12 +108,13 @@ export default function QRScan({ isKiosk }) {
     }
   }
 
+  const allowedTypes = ['security_guard', 'admin', 'custodian', 'security_supervisor', 'code_scanner']
   const handleError = err => {
     setError(err)
   }
 
   // TODO: Replace this with permissions
-  if (!['security_guard', 'admin', 'custodian', 'security_supervisor'].includes(authState.user.userType.toLowerCase())) {
+  if (!allowedTypes.includes(authState.user.userType.toLowerCase())) {
     return <Redirect to='/' />
   }
 
