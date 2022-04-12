@@ -4,6 +4,7 @@ import React from 'react';
 import makeStyles from '@mui/styles/makeStyles';
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
+import Grid from '@mui/material/Grid';
 import ImageListItemBar from '@mui/material/ImageListItemBar';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { Typography } from '@mui/material';
@@ -83,7 +84,7 @@ export function PostItemGrid({ data, loading }) {
               classes={{ tile: classes.tile }}
             >
               {tile ? (
-                <>
+                <Grid>
                   <img
                     data-testid="tile_image"
                     src={tile.featured_image}
@@ -91,7 +92,7 @@ export function PostItemGrid({ data, loading }) {
                     className={classes.image}
                   />
                   <ImageListItemBar title={tile.title} />
-                </>
+                </Grid>
                 ) : (
                   <CustomSkeleton variant="rectangular" width="100%" height="140px" />
                 )}

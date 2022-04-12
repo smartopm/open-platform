@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 export default function CustomSkeleton({ variant, width, height}) {
   return (
-    <Skeleton variant={variant} width={width} height={height} />
+    <Skeleton variant={variant} width={width} height={height} data-testid='skeleton' />
   )
 }
 
