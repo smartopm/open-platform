@@ -12,7 +12,7 @@ RSpec.describe Types::Queries::Process do
       create(:permission, module: 'process',
                           role: admin_role,
                           permissions: %w[
-                            can_view_process_templates
+                            can_view_process_templates can_create_process_template
                           ])
     end
 
@@ -24,7 +24,7 @@ RSpec.describe Types::Queries::Process do
                           permissions: %w[])
     end
 
-    describe 'Process Templates' do
+    describe 'Process Queries' do
       let(:process_templates_query) do
         <<~GQL
           query ProcessTemplates {
@@ -38,6 +38,17 @@ RSpec.describe Types::Queries::Process do
              noteList {
                id
              }
+            }
+          }
+        GQL
+      end
+
+      let(:process_task_lists_query) do
+        <<~GQL
+          query ProcessTaskLists {
+            processTaskLists {
+             id
+             name
             }
           }
         GQL
@@ -109,6 +120,44 @@ RSpec.describe Types::Queries::Process do
           expect(result.dig(
                    'data', 'processTemplates', 0, 'form', 'id'
                  )).to eql form_with_process.id
+        end
+      end
+
+      describe 'process task lists' do
+        let!(:form_with_process) do
+          create(:form, community: admin.community, status: :published,
+                        roles: %w[])
+        end
+
+        let!(:process) do
+          create(:process, community: admin.community, name: 'DRC', process_type: 'drc',
+                           form: form_with_process)
+        end
+
+        it 'throws an error of user has no permissions' do
+          result = DoubleGdpSchema.execute(process_task_lists_query, context: {
+                                             current_user: developer,
+                                             site_community: developer.community,
+                                           }).as_json
+
+          expect(result.dig('errors', 0, 'message')).to include('Unauthorized')
+        end
+
+        it 'retrieves the necessary task list for a process' do
+          note_list = create(
+            :note_list,
+            name: 'Task List 1',
+            community: admin.community,
+            process: process,
+          )
+
+          result = DoubleGdpSchema.execute(process_task_lists_query, context: {
+                                             current_user: admin,
+                                             site_community: admin.community,
+                                           }).as_json
+
+          expect(result.dig('data', 'processTaskLists', 0, 'id')).to eq note_list.id
+          expect(result.dig('data', 'processTaskLists', 0, 'name')).to eq note_list.name
         end
       end
     end

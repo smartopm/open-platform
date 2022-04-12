@@ -31,7 +31,7 @@ module Types::Queries::Process
   end
 
   def process_task_lists(limit: 50, offset: 0)
-    unless permitted?(module: :note, permission: :can_view_task_lists)
+    unless permitted?(module: :process, permission: :can_create_process_template)
       raise GraphQL::ExecutionError,
             I18n.t('errors.unauthorized')
     end
