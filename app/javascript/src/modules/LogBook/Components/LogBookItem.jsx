@@ -8,8 +8,9 @@ import { useTranslation } from 'react-i18next';
 import makeStyles from '@mui/styles/makeStyles';
 import PersonIcon from '@mui/icons-material/Person';
 import VisibilityIcon from '@mui/icons-material/Visibility';
+import RefreshIcon from '@mui/icons-material/Refresh';
 import Grid from '@mui/material/Grid';
-import { Divider } from '@mui/material';
+import { Divider, IconButton } from '@mui/material';
 import { StyledTabs, StyledTab, TabPanel, a11yProps } from '../../../components/Tabs';
 import LogEvents from './LogEvents';
 import SpeedDial from '../../../shared/buttons/SpeedDial';
@@ -30,6 +31,7 @@ import permissionsCheck from '../../Permissions/utils';
 import useDebouncedValue from '../../../shared/hooks/useDebouncedValue';
 import { AllEventLogsQuery } from '../../../graphql/queries';
 import SearchInput from '../../../shared/search/SearchInput';
+
 
 const limit = 20;
 const subjects = ['user_entry', 'visitor_entry', 'user_temp', 'observation_log'];
@@ -251,7 +253,12 @@ export default function LogBookItem({
         <Grid item md={11} xs={11}>
           <Grid container spacing={1}>
             <Grid item md={11} xs={10}>
-              <Typography variant="h4">{t('logbook.log_book')}</Typography>
+              <div className={classes.logbookTitleContainer}>
+                <Typography variant="h4">{t('logbook.log_book')}</Typography> 
+                <IconButton className={classes.refreshBtn} onClick={() => eventsData.refetch()}>
+                  <RefreshIcon />
+                </IconButton>
+              </div>
             </Grid>
             <Grid item md={1} xs={2}>
               <SpeedDial
@@ -341,6 +348,12 @@ const useStyles = makeStyles(() => ({
   },
   containerMobile: {
     padding: '10px 0 10px 30px'
+  },
+  logbookTitleContainer: {
+    display: 'inline-flex'
+  },
+  refreshBtn: {
+    marginLeft: 16
   }
 }));
 
