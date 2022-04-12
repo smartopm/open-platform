@@ -70,7 +70,7 @@ RSpec.describe MergeUsers do
   let!(:timesheet) { create(:time_sheet, user: user, community: community) }
   let!(:wallet) { create(:wallet, user: user) }
   let!(:wallet_transaction) { create(:wallet_transaction, user: user, community: community) }
-  let!(:showroom) { create(:showroom, userId: user.id) }
+  let!(:showroom) { create(:showroom, user_id: user.id) }
   let!(:user_label) { create(:user_label, user: user) }
   let!(:activity_log) do
     create(:activity_log, reporting_user_id: user.id, community: community)
@@ -159,7 +159,7 @@ RSpec.describe MergeUsers do
     expect(user_label.reload.user_id).to eq(duplicate_user.id)
     expect(invoice.reload.user_id).to eq(duplicate_user.id)
     expect(payment_plan.reload.user_id).to eq(duplicate_user.id)
-    expect(showroom.reload.userId).to eq(duplicate_user.id)
+    expect(showroom.reload.user_id).to eq(duplicate_user.id)
     expect(activity_log.reload.reporting_user_id).to eq(duplicate_user.id)
     expect(plan_ownership.reload.user_id).to eq(duplicate_user.id)
     expect(Properties::PlanOwnership.count).to eql 1

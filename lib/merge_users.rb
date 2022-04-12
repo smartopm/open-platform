@@ -47,11 +47,11 @@ class MergeUsers
     merge_user_wallets(user_id, duplicate_id)
 
     # Update showroom User
-    showrooms = Showroom.where(userId: user_id)
+    showrooms = Showroom.where(user_id: user_id)
     showrooms.each do |showroom|
-      showroom.update(userId: duplicate_id)
+      showroom.update(user_id: duplicate_id)
     end
-    raise_update_failed_error if Showroom.where(userId: user_id).any?
+    raise_update_failed_error if Showroom.where(user_id: user_id).any?
 
     # Update author in Notes
     notes_auth = Notes::Note.where(author_id: user_id)
