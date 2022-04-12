@@ -613,6 +613,8 @@ export function sortTaskOrder(taskItem1, taskItem2){
 
 export function extractHostname(urlString) {
   if (!urlString) return;
-
-  return urlString.split('/')[2]
+  return {
+    hostname: urlString.split('/')[2],
+    userId: urlString.split('/')[4]
+  } 
 }

@@ -7,7 +7,7 @@ import { useState, useEffect } from 'react'
  * @description returns remaining time in seconds
  * @returns time in seconds
  */
-export default function useTimer(initialTime, delay) {
+export default function useTimer(initialTime, delay=1000) {
   const [time, setTime] = useState(initialTime)
   useEffect(() => {
     if (!time) return

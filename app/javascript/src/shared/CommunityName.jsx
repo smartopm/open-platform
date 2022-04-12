@@ -11,7 +11,7 @@ export default function CommunityName({ authState, logoStyles }) {
     const { community } = authState.user;
     if (community.imageUrl) {
       return (
-        <Link to="/" style={{ textDecoration: 'none' }}>
+        <Link to="/" style={{ textDecoration: 'none' }} data-testid="community_logo">
           <ImageAuth
             imageLink={community.imageUrl}
             className={logoStyles.logo ? css(logoStyles.logo) : css(styles.logo)}
@@ -21,7 +21,7 @@ export default function CommunityName({ authState, logoStyles }) {
       );
     }
     return (
-      <Link to="/" style={{ textDecoration: 'none' }}>
+      <Link to="/" style={{ textDecoration: 'none' }} data-testid="community_name">
         <Typography color="primary">{community.name}</Typography>
       </Link>
     );

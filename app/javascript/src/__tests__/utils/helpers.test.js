@@ -241,7 +241,10 @@ describe('handleQueryOnChange', () => {
 
 describe('#extractHostname', () => {
   it('extracts hostname from string URL', () => {
-    expect(extractHostname('https://demo-staging.doublegdp.com/user/019234-c36a-41a7-beeb-12784')).toEqual('demo-staging.doublegdp.com');
+    expect(extractHostname('https://demo-staging.doublegdp.com/user/019234-c36a-41a7-beeb-12784').hostname).toEqual('demo-staging.doublegdp.com');
+  });
+  it('extracts userid from string URL', () => {
+    expect(extractHostname('https://demo-staging.doublegdp.com/user/019234-c36a-41a7-beeb-12784').userId).toEqual('019234-c36a-41a7-beeb-12784');
   });
 
   it('does not explode if no arg is passed', () => {

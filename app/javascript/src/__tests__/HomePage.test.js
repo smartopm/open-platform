@@ -228,5 +228,36 @@ describe('HomePage component', () => {
 
       expect(quickLinks[0]).toBeInTheDocument();
     });
+    it('renders no task menu for code scanner', () => {
+      const scanner = {
+        user: {
+          userType: 'resident',
+          community: {
+            name: 'Nkwashi',
+            menuItems: [
+              {
+                menu_link: 'https://some-link',
+                menu_name: 'Custom Menu',
+                display_on: ['Dashboard'],
+                roles: ['resident']
+              }
+            ]
+          },
+        }
+      };
+      render(
+        <MockedProvider>
+          <BrowserRouter>
+            <MockedThemeProvider>
+              <Homepage
+                authState={scanner}
+                quickLinks={scanner.user.community.menuItems}
+              />
+            </MockedThemeProvider>
+          </BrowserRouter>
+        </MockedProvider>
+      );
+        expect(screen.queryByText('common:misc.tasks')).toBeNull();
+    });
   });
 });

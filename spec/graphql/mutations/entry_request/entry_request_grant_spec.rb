@@ -15,7 +15,7 @@ RSpec.describe Mutations::EntryRequest::EntryRequestGrant do
     let!(:user) { create(:user_with_community, role: visitor_role) }
     let!(:admin) { create(:admin_user, community_id: user.community_id, role: admin_role) }
     let!(:community) { user.community }
-    let!(:entry_request) { admin.entry_requests.create(name: 'John Doe', reason: 'Visiting') }
+    let!(:entry_request) { create(:entry_request, user: admin, guest_id: user.id) }
 
     let(:entry_request_grant_mutation) do
       <<~GQL
@@ -35,6 +35,7 @@ RSpec.describe Mutations::EntryRequest::EntryRequestGrant do
               updatedAt
               grantedAt
             }
+            status
           }
         }
       GQL
@@ -50,9 +51,9 @@ RSpec.describe Mutations::EntryRequest::EntryRequestGrant do
                                              current_user: admin,
                                              user_role: admin.role,
                                            }).as_json
-
           expect(result.dig('data', 'result', 'entryRequest', 'id')).not_to be_nil
           expect(result.dig('data', 'result', 'entryRequest', 'grantedState')).to eql 1
+          expect(result.dig('data', 'result', 'status')).to eql 'success'
           expect(result['errors']).to be_nil
         end
       end
@@ -68,6 +69,21 @@ RSpec.describe Mutations::EntryRequest::EntryRequestGrant do
                                            }).as_json
           expect(result.dig('data', 'result')).to be_nil
           expect(result.dig('errors', 0, 'message')).to eql 'EntryRequest not found'
+        end
+      end
+
+      context 'when guest is deactivated' do
+        before { user.deactivated! }
+
+        it 'should not grant entry to the guest' do
+          variables = { id: entry_request.id }
+          result = DoubleGdpSchema.execute(entry_request_grant_mutation,
+                                           variables: variables,
+                                           context: {
+                                             current_user: admin,
+                                             user_role: admin.role,
+                                           }).as_json
+          expect(result.dig('data', 'result', 'status')).to eql 'denied'
         end
       end
     end
