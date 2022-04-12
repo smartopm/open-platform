@@ -108,7 +108,9 @@ describe('LogBook Component', () => {
       // This is because the query has not been triggered unless the tabValue matches
       expect(container.queryAllByText('logbook.no_invited_guests')[0]).toBeInTheDocument();
       expect(container.queryAllByText('search.search_for')[0]).toBeInTheDocument();
-
+      expect(container.queryByTestId('refresh_btn')).toBeInTheDocument();
+      expect(container.queryByTestId('refresh_btn')).not.toBeDisabled()
+      
       fireEvent.change(container.queryByLabelText('simple tabs example'));
 
       fireEvent.change(container.queryAllByTestId('menu-list')[0]);
@@ -125,6 +127,7 @@ describe('LogBook Component', () => {
       fireEvent.click(container.queryByTestId('save'));
 
       fireEvent.click(container.queryAllByTestId('next-btn')[0]);
+
     }, 20);
   });
 });
