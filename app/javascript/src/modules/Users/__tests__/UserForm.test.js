@@ -75,7 +75,8 @@ describe('UserForm Component', () => {
       expect(container.queryByTestId('address').value).toContain('24th street, west');
       // when we hit submit button, it should get disabled
       fireEvent.submit(container.queryByTestId('submit-form'));
-      expect(container.queryByTestId('submit_btn')).toBeDisabled();
+      expect(container.queryByTestId('submit_btn')).not.toBeDisabled();
+      expect(container.queryByText('common:errors.invalid_email')).toBeInTheDocument();
     });
 
   it('should contain referral form when referring', async () => {
