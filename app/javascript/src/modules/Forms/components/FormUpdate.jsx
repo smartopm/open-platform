@@ -13,7 +13,7 @@ import {
   Button,
   Container,
   Grid,
-  TextField,
+  Divider,
   Typography,
   ListItem,
   ListItemText
@@ -32,7 +32,6 @@ import DatePickerDialog, {
 } from '../../../components/DatePickerDialog';
 import { FormUserQuery, UserFormPropertiesQuery } from '../graphql/forms_queries';
 import ErrorPage from '../../../components/Error';
-import CenteredContent from '../../../shared/CenteredContent';
 import { FormUserStatusUpdateMutation, FormUserUpdateMutation } from '../graphql/forms_mutation';
 import TextInput from './FormProperties/TextInput';
 import {
@@ -45,14 +44,14 @@ import DialogueBox from '../../../shared/dialogs/DeleteDialogue';
 import UploadField from './FormProperties/UploadField';
 import SignaturePad from './FormProperties/SignaturePad';
 import useFileUpload from '../../../graphql/useFileUpload';
-import { dateFormatter, dateToString } from '../../../components/DateContainer';
-import { formStatus as updatedFormStatus } from '../../../utils/constants';
 import RadioInput from './FormProperties/RadioInput';
 import ImageAuth from '../../../shared/ImageAuth';
 import Loading, { Spinner } from '../../../shared/Loading';
-
 import FormTitle from './FormTitle';
 import CheckboxInput from './FormProperties/CheckboxInput';
+import ListWrapper from '../../../shared/ListWrapper';
+import CategoryItem from './Category/CategoryItem';
+import MessageAlert from "../../../components/MessageAlert"
 
 // date
 // text input (TextField or TextArea)
@@ -64,8 +63,7 @@ const initialData = {
   radio: { value: { label: '', checked: null } }
 };
 
-// Redirect to home if user is not logged in
-export default function FormUpdate({ formUserId, userId, authState }) {
+export default function FormUpdate({ formUserId, userId, authState, categoriesData }) {
   const [properties, setProperties] = useState(initialData);
   const [message, setMessage] = useState({ err: false, info: '', signed: false });
   const [openModal, setOpenModal] = useState(false);
@@ -80,7 +78,7 @@ export default function FormUpdate({ formUserId, userId, authState }) {
   const [updateFormUserStatus] = useMutation(FormUserStatusUpdateMutation);
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const [formState, setFormState] = useState({});
-  const matches = useMediaQuery('(max-width:600px)');
+  const matches = useMediaQuery('(max-width:900px)');
 
   const { data, error, loading } = useQuery(UserFormPropertiesQuery, {
     variables: { userId, formUserId },
@@ -310,19 +308,27 @@ export default function FormUpdate({ formUserId, userId, authState }) {
     );
     const fields = {
       text: (
-        <TextInput
-          id={formPropertiesData.formProperty.id}
-          key={formPropertiesData.formProperty.id}
-          properties={formPropertiesData.formProperty}
-          value={formPropertiesData.value}
-          handleValue={event => handleValueChange(event, formPropertiesData.formProperty.id)}
-          editable={editable}
-          name={formPropertiesData.formProperty.fieldName}
-        />
+        <ListWrapper className={classes.space} key={formPropertiesData.formProperty.id}>
+          <TextInput
+            id={formPropertiesData.formProperty.id}
+            properties={formPropertiesData.formProperty}
+            value={formPropertiesData.value}
+            handleValue={event => handleValueChange(event, formPropertiesData.formProperty.id)}
+            editable={editable}
+            name={formPropertiesData.formProperty.fieldName}
+          />
+        </ListWrapper>
       ),
       date: (
         <DatePickerDialog
           key={formPropertiesData.formProperty.id}
+          textFieldStyle={{
+            background: '#F5F5F4',
+            padding: '10px 15px',
+            borderRadius: '10px',
+            marginBottom: '20px'
+          }}
+          inputVariant="outlined"
           selectedDate={
             objectAccessor(properties, formPropertiesData.formProperty.fieldName)?.value ||
             formPropertiesData.value
@@ -340,6 +346,13 @@ export default function FormUpdate({ formUserId, userId, authState }) {
       time: (
         <ThemedTimePicker
           key={formPropertiesData.formProperty.id}
+          textFieldStyle={{
+            background: '#F5F5F4',
+            padding: '10px 15px',
+            borderRadius: '10px',
+            marginBottom: '20px'
+          }}
+          inputVariant="outlined"
           time={
             objectAccessor(properties, formPropertiesData.formProperty.fieldName)?.value ||
             formPropertiesData.value
@@ -358,6 +371,13 @@ export default function FormUpdate({ formUserId, userId, authState }) {
       datetime: (
         <DateAndTimePickers
           key={formPropertiesData.formProperty.id}
+          textFieldStyle={{
+            background: '#F5F5F4',
+            padding: '10px 15px',
+            borderRadius: '10px',
+            marginBottom: '20px'
+          }}
+          inputVariant="outlined"
           selectedDateTime={
             objectAccessor(properties, formPropertiesData.formProperty.fieldName)?.value ||
             formPropertiesData.value
@@ -374,9 +394,6 @@ export default function FormUpdate({ formUserId, userId, authState }) {
       ),
       file_upload: (
         <div key={formPropertiesData.formProperty.id}>
-          <div data-testid="attachment-name" style={{ margin: '15px 0 -10px 0' }}>
-            {formPropertiesData.formProperty.fieldName}
-          </div>
           <Grid
             container
             direction="row"
@@ -404,14 +421,14 @@ export default function FormUpdate({ formUserId, userId, authState }) {
                   />
                 </div>
               )) || (
-                <Grid item md={6}>
+                <Grid item md={12} xs={12}>
                   <div>
                     {formPropertiesData.imageUrl && (
                       <>
-                        <div>
-                          <ListItem style={{ paddingLeft: 0, marginBottom: '-20px' }}>
-                            <Grid container>
-                              <Grid item md={11} xs={12}>
+                        <ListWrapper className={classes.space}>
+                          <ListItem style={{ paddingLeft: 0 }}>
+                            <Grid container alignItems="center" justifyContent="center">
+                              <Grid item md={11} xs={8}>
                                 <ListItemText
                                   disableTypography
                                   primary={(
@@ -419,41 +436,28 @@ export default function FormUpdate({ formUserId, userId, authState }) {
                                       variant="body1"
                                       color="primary"
                                       style={{ fontWeight: 700 }}
+                                      data-testid="attachment_name"
+                                    >
+                                      {formPropertiesData.formProperty.fieldName}
+                                    </Typography>
+                                  )}
+                                  secondary={(
+                                    <Typography
+                                      component="span"
+                                      variant="body2"
                                       data-testid="filename"
                                     >
                                       {formPropertiesData.fileName}
                                     </Typography>
                                   )}
-                                  secondary={(
-                                    <>
-                                      <Typography
-                                        component="span"
-                                        variant="body2"
-                                        data-testid="uploaded_at"
-                                      >
-                                        {`${t('common:misc.uploaded_at')}: ${dateToString(
-                                          formPropertiesData.createdAt
-                                        )}`}
-                                      </Typography>
-                                      <Typography
-                                        component="span"
-                                        variant="body2"
-                                        data-testid="uploaded_by"
-                                        style={{ marginLeft: '20px' }}
-                                      >
-                                        {`${t('common:misc.uploaded_by')}: ${
-                                          formPropertiesData.user.name
-                                        }`}
-                                      </Typography>
-                                    </>
-                                  )}
                                 />
                               </Grid>
-                              <Grid item md={1} xs={12} className="">
+                              <Grid item md={1} xs={4} className={classes.alignRight}>
                                 <Button
                                   aria-label="download-icon"
                                   data-testid="download-icon"
                                   variant="outlined"
+                                  className={classes.buttonBg}
                                   onClick={event =>
                                     downloadFile(event, formPropertiesData.imageUrl)
                                   }
@@ -463,7 +467,7 @@ export default function FormUpdate({ formUserId, userId, authState }) {
                               </Grid>
                             </Grid>
                           </ListItem>
-                        </div>
+                        </ListWrapper>
                       </>
                     )}
                   </div>
@@ -471,38 +475,43 @@ export default function FormUpdate({ formUserId, userId, authState }) {
               )
             )}
           </Grid>
-          <div>
+          <ListWrapper className={classes.space} key={formPropertiesData.id}>
             <UploadField
-              detail={{ type: 'file', status, id: formPropertiesData.formProperty.id }}
-              key={formPropertiesData.id}
+              detail={{
+                type: 'file',
+                status,
+                id: formPropertiesData.formProperty.id,
+                label: formPropertiesData.formProperty.fieldName
+              }}
               upload={evt => onFileSelect(evt, formPropertiesData.formProperty.id)}
               editable={editable}
               style={{ flex: 1 }}
               btnColor="primary"
             />
-          </div>
+          </ListWrapper>
         </div>
       ),
       signature: (
         <div key={formPropertiesData.formProperty.id}>
           {formPropertiesData.imageUrl && (
             <>
-              {t('misc.signature')}
+              <Typography variant="caption">{t('misc.signature')}</Typography>
               <br />
               <ImageAuth imageLink={formPropertiesData.imageUrl} auth />
             </>
           )}
-          <SignaturePad
-            key={formPropertiesData.id}
-            detail={{ type: 'signature', status: signatureStatus }}
-            signRef={signRef}
-            onEnd={() => handleSignatureUpload(formPropertiesData.id)}
-          />
+          <ListWrapper className={classes.space}>
+            <SignaturePad
+              key={formPropertiesData.id}
+              detail={{ type: 'signature', status: signatureStatus }}
+              signRef={signRef}
+              onEnd={() => handleSignatureUpload(formPropertiesData.id)}
+            />
+          </ListWrapper>
         </div>
       ),
       radio: (
-        <Fragment key={formPropertiesData.formProperty.id}>
-          <br />
+        <ListWrapper key={formPropertiesData.formProperty.id} className={classes.space}>
           <br />
           <RadioInput
             properties={formPropertiesData}
@@ -516,11 +525,10 @@ export default function FormUpdate({ formUserId, userId, authState }) {
             }
           />
           <br />
-        </Fragment>
+        </ListWrapper>
       ),
       checkbox: (
-        <Fragment key={formPropertiesData.formProperty.id}>
-          <br />
+        <ListWrapper key={formPropertiesData.formProperty.id} className={classes.space}>
           <br />
           <CheckboxInput
             properties={formPropertiesData}
@@ -534,18 +542,19 @@ export default function FormUpdate({ formUserId, userId, authState }) {
             }
           />
           <br />
-        </Fragment>
+        </ListWrapper>
       ),
       dropdown: (
-        <TextInput
-          id={formPropertiesData.formProperty.id}
-          key={formPropertiesData.formProperty.id}
-          properties={formPropertiesData.formProperty}
-          value={formPropertiesData.value}
-          handleValue={event => handleValueChange(event, formPropertiesData.formProperty.id)}
-          editable={editable}
-          name={formPropertiesData.formProperty.fieldName}
-        />
+        <ListWrapper className={classes.space} key={formPropertiesData.formProperty.id}>
+          <TextInput
+            id={formPropertiesData.formProperty.id}
+            properties={formPropertiesData.formProperty}
+            value={formPropertiesData.value}
+            handleValue={event => handleValueChange(event, formPropertiesData.formProperty.id)}
+            editable={editable}
+            name={formPropertiesData.formProperty.fieldName}
+          />
+        </ListWrapper>
       )
     };
     return objectAccessor(fields, formPropertiesData.formProperty.fieldType);
@@ -558,94 +567,88 @@ export default function FormUpdate({ formUserId, userId, authState }) {
   return (
     <>
       <Container>
-        <FormTitle
-          name={formUserData.data?.formUser.form.name}
-          description={formUserData.data?.formUser.form.description}
+        <MessageAlert
+          type={message.error ? 'error' : 'success'}
+          message={message.info}
+          open={!!message.info}
+          handleClose={() => setMessage({...message, info: '', error: false})} 
         />
+        <Grid style={!matches ? { padding: '0  100px 0 100px' } : {}}>
+          <FormTitle
+            name={formUserData.data?.formUser.form.name}
+            description={formUserData.data?.formUser.form.description}
+          />
+        </Grid>
         <form onSubmit={event => handleActionClick(event, 'update')}>
-          {authState.user.userType === 'admin' && userId && (
-          <>
-            <TextField
-              label={t('form_fields.form_status')}
-              value={`${objectAccessor(
-                updatedFormStatus,
-                formUserData.data?.formUser.status
-              )} - ${dateFormatter(formUserData.data?.formUser.updatedAt)}`}
-              disabled
-              margin="dense"
-              InputLabelProps={{
-                shrink: true
-              }}
-              style={{ width: '100%' }}
-            />
-            <TextField
-              label={t('form_fields.form_status_updated_by')}
-              value={formUserData.data.formUser.statusUpdatedBy.name}
-              disabled
-              margin="dense"
-              InputLabelProps={{
-                shrink: true
-              }}
-              style={{ width: '100%' }}
-            />
-          </>
-        )}
-          {data?.formUserProperties.sort(sortPropertyOrder).map(renderForm)}
+          {Boolean(categoriesData) &&
+            categoriesData.map(category => (
+              <div key={category.id}>
+                <CategoryItem category={category} editMode={false}>
+                  <div style={!matches ? { padding: ' 20px  120px 0 120px' } : { paddingTop: '20px' }}>
+                    {data?.formUserProperties
+                    .sort(sortPropertyOrder)
+                    .filter(prop => category.id === prop.formProperty.category.id)
+                    .map(renderForm)}
+                  </div>
+                </CategoryItem>
+              </div>
+            ))}
           <br />
-          <br />
-          <Grid container justifyContent="space-between" direction='row' spacing={2}>
-            <Grid item xs={4}>
+          <Grid
+            container
+            justifyContent="space-between"
+            direction="row"
+            spacing={2}
+            style={!matches ? { padding: ' 20px  120px 0 120px' } : {}}
+          >
+            <Grid item xs={12} md={12} style={{ paddingBottom: '20px' }}>
+              <Divider />
+            </Grid>
+            {authState.user.userType === 'admin' && (
+              <>
+                <Grid item xs={4}>
+                  <Button
+                    onClick={event => handleActionClick(event, 'approve')}
+                    color="primary"
+                    aria-label="form_approve"
+                    disabled={isLoading}
+                    size="small"
+                    fullWidth={matches}
+                    variant='outlined'
+                  >
+                    {t('form_status_actions.approved')}
+                  </Button>
+                </Grid>
+                <Grid item xs={4} style={{ textAlign: 'center' }}>
+                  <Button
+                    onClick={event => handleActionClick(event, 'reject')}
+                    aria-label="form_reject"
+                    style={{ backgroundColor: '#DC004E', color: '#FFFFFF' }}
+                    disabled={isLoading}
+                    size="small"
+                    fullWidth={matches}
+                    variant='outlined'
+                  >
+                    {t('form_status_actions.rejected')}
+                  </Button>
+                </Grid>
+              </>
+            )}
+            <Grid item xs={4} className={classes.alignRight}>
               <Button
                 type="submit"
                 color="primary"
                 aria-label="form_update"
-                variant="outlined"
+                variant="contained"
                 disabled={isLoading}
                 size="small"
                 fullWidth={matches}
               >
-                {t('form_status_actions.update')}
+                {t('form_status_actions.submit_form')}
               </Button>
             </Grid>
-            {authState.user.userType === 'admin' && (
-            <>
-              <Grid item xs={4}>
-                <Button
-                  variant="contained"
-                  onClick={event => handleActionClick(event, 'approve')}
-                  color="primary"
-                  aria-label="form_approve"
-                  disabled={isLoading}
-                  size="small"
-                  fullWidth={matches}
-                >
-                  {t('form_status_actions.approved')}
-                </Button>
-              </Grid>
-              <Grid item xs={4}>
-                <Button
-                  variant="contained"
-                  onClick={event => handleActionClick(event, 'reject')}
-                  aria-label="form_reject"
-                  style={{ backgroundColor: '#DC004E', color: '#FFFFFF' }}
-                  disabled={isLoading}
-                  size="small"
-                  fullWidth={matches}
-                >
-                  {t('form_status_actions.rejected')}
-                </Button>
-              </Grid>
-            </>
-          )}
           </Grid>
           <br />
-          <CenteredContent>
-            {Boolean(message.info.length) && (
-            <Typography variant="subtitle1" color={message.err ? 'error' : 'primary'}>
-              {message.info}
-            </Typography>
-          )}
-          </CenteredContent>
         </form>
       </Container>
 
@@ -658,7 +661,7 @@ export default function FormUpdate({ formUserId, userId, authState }) {
         action={formAction}
       />
     </>
-);
+  );
 }
 
 const useStyles = makeStyles(() => ({
@@ -696,13 +699,31 @@ const useStyles = makeStyles(() => ({
     '&:hover': {
       background: 'white'
     }
+  },
+  space: {
+    marginBottom: '20px'
+  },
+  buttonBg: {
+    background: '#FFFFFF'
+  },
+  alignRight: {
+    textAlign: 'right'
   }
 }));
+
+FormUpdate.defaultProps = {
+  categoriesData: []
+}
 
 FormUpdate.propTypes = {
   userId: PropTypes.string.isRequired,
   formUserId: PropTypes.string.isRequired,
   authState: PropTypes.shape({
     user: PropTypes.shape({ userType: PropTypes.string })
-  }).isRequired
+  }).isRequired,
+  categoriesData: PropTypes.arrayOf(PropTypes.shape({
+    id: PropTypes.string,
+    fieldName: PropTypes.string,
+    headerVisible: PropTypes.bool
+  }))
 };

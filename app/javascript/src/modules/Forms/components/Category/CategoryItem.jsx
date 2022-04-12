@@ -135,20 +135,29 @@ export default function CategoryItem({
   );
 }
 
+CategoryItem.defaultProps = {
+  handleAddField: () => {},
+  handleEditCategory: () => {},
+  handleDeleteCategory: () => {},
+  collapsed: undefined,
+  loading: undefined,
+  currentId: undefined
+}
+
 CategoryItem.propTypes = {
   category: PropTypes.shape({
     fieldName: PropTypes.string,
     headerVisible: PropTypes.bool,
     id: PropTypes.string
   }).isRequired,
-  handleAddField: PropTypes.func.isRequired,
-  handleEditCategory: PropTypes.func.isRequired,
-  handleDeleteCategory: PropTypes.func.isRequired,
+  handleAddField: PropTypes.func,
+  handleEditCategory: PropTypes.func,
+  handleDeleteCategory: PropTypes.func,
   children: PropTypes.node.isRequired,
-  collapsed: PropTypes.bool.isRequired,
+  collapsed: PropTypes.bool,
   editMode: PropTypes.bool.isRequired,
-  loading: PropTypes.bool.isRequired,
-  currentId: PropTypes.string.isRequired
+  loading: PropTypes.bool,
+  currentId: PropTypes.string
 };
 
 const useStyles = makeStyles({
