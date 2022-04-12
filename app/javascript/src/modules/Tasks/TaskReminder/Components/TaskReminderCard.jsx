@@ -12,11 +12,11 @@ import EventNoteIcon from '@mui/icons-material/EventNote';
 import Typography from '@mui/material/Typography';
 import PropTypes from 'prop-types';
 import { AssignedTaskQuery } from '../graphql/task_reminder_query';
-import { Spinner } from '../../../../shared/Loading';
 import { dateToString } from '../../../../utils/dateutil';
 import CenteredContent from '../../../../components/CenteredContent';
 import { formatError, removeNewLines, sanitizeText } from '../../../../utils/helpers';
 import EmptyCard from '../../../../shared/EmptyCard';
+import CustomSkeleton from '../../../../shared/CustomSkeleton';
 
 export default function TaskReminderCard({ translate }) {
   const matches = useMediaQuery('(max-width:600px)');
@@ -39,41 +39,39 @@ export default function TaskReminderCard({ translate }) {
   }
   return (
     <div>
-      {loading ? (
-        <Spinner />
-      ) : (
-        <div>
-          <div style={{ display: 'flex' }}>
-            <Typography className={matches ? classes.reminderMobile : classes.reminder}>
-              {translate('dashboard.task_reminders')}
-            </Typography>
-            {matches ? null : (
-              <TrendingFlatIcon
-                style={
-                  matches
-                    ? { marginLeft: 'auto', order: 2, marginTop: '20px', marginRight: '20px' }
-                    : { marginLeft: 'auto', order: 2, marginTop: '20px', marginRight: '80px' }
-                }
-              />
-            )}
-          </div>
-          <div>
-            {data?.userTasks.length > 0 ? (
-              <div
-                className={classes.root}
-                style={matches ? { marginLeft: '20px' } : { marginLeft: '79px' }}
-              >
-                <ImageList
-                  className={classes.gridList}
-                  cols={matches ? 1 : 3}
-                  sx={{
-                    gridAutoFlow: 'column',
-                    gridTemplateColumns: 'repeat(auto-fill, minmax(250px,1fr)) !important',
-                    gridAutoColumns: 'minmax(200px, 1fr)'
-                  }}
-                >
-                  {data?.userTasks.map(tile => (
-                    <ImageListItem key={tile.id}>
+      <div style={{ display: 'flex' }}>
+        <Typography className={matches ? classes.reminderMobile : classes.reminder}>
+          {translate('dashboard.task_reminders')}
+        </Typography>
+        {matches ? null : (
+          <TrendingFlatIcon
+            style={
+              matches
+                ? { marginLeft: 'auto', order: 2, marginTop: '20px', marginRight: '20px' }
+                : { marginLeft: 'auto', order: 2, marginTop: '20px', marginRight: '80px' }
+            }
+          />
+        )}
+      </div>
+      <div>
+        {(loading || data?.userTasks.length > 0) ? (
+          <div
+            className={classes.root}
+            style={matches ? { marginLeft: '20px' } : { marginLeft: '79px' }}
+          >
+            <ImageList
+              className={classes.gridList}
+              cols={matches ? 1 : 3}
+              sx={{
+                gridAutoFlow: 'column',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(250px,1fr)) !important',
+                gridAutoColumns: 'minmax(200px, 1fr)'
+              }}
+            >
+              {(loading ? Array.from(new Array(5)) : data?.userTasks).map((tile, index) => (
+                <div key={tile?.id || index}>
+                  {tile ? (
+                    <ImageListItem>
                       <div
                         className={classes.gridTile}
                         onClick={() => history.push(`/tasks/${tile.id}`)}
@@ -91,7 +89,7 @@ export default function TaskReminderCard({ translate }) {
                             }}
                           />
                           <Typography className={classes.due} style={{ paddingBottom: '5px' }}>
-                            {translate('common:misc.due_text')}
+                            {translate('common:misc.due_text')} 
                             {' '}
                             {dateToString(tile.dueDate)}
                           </Typography>
@@ -107,18 +105,23 @@ export default function TaskReminderCard({ translate }) {
                         </Typography>
                       </div>
                     </ImageListItem>
-                  ))}
-                </ImageList>
-              </div>
-            ) : (
-              <EmptyCard
-                title={translate('dashboard.no_pending_tasks')}
-                subtitle={translate('dashboard.pending_tasks_text')}
-              />
-            )}
+                  ) : (
+                    // eslint-disable-next-line react/no-array-index-key
+                    <div key={index}>
+                      <CustomSkeleton variant="rectangular" width="100%" height="140px" />
+                    </div>
+                  )}
+                </div>
+              ))}
+            </ImageList>
           </div>
-        </div>
-      )}
+        ) : (
+          <EmptyCard
+            title={translate('dashboard.no_pending_tasks')}
+            subtitle={translate('dashboard.pending_tasks_text')}
+          />
+        )}
+      </div>
     </div>
   );
 }

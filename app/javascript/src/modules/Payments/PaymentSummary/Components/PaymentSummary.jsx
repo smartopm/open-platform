@@ -87,8 +87,9 @@ export default function PaymentSummary({ authState, translate }) {
           spacing={2}
           style={matches ? { padding: '20px' } : { padding: '20px 57px 20px 79px', width: '99%' }}
         >
-          {Array.from(new Array(4)).map(arr => (
-            <Grid item xs={6} sm={3} key={arr}>
+          {Array.from(new Array(4)).map((_arr, index) => (
+            // eslint-disable-next-line react/no-array-index-key
+            <Grid item xs={6} sm={3} key={index}>
               <CustomSkeleton variant="rectangular" width="100%" height="140px" />
             </Grid>
           ))}
