@@ -54,8 +54,28 @@ describe('Create Process Form', () => {
     );
 
     await waitFor(() => {
-      // TODO: SOS- cannot find other elements
-      expect(screen.queryByTestId('loader')).toBeInTheDocument();
+      // Breadcrumbs
+      expect(screen.queryByText('breadcrumbs.processes')).toBeInTheDocument();
+      expect(screen.queryByText('breadcrumbs.create_process')).toBeInTheDocument();
+      expect(screen.queryByText('templates.create_process')).toBeInTheDocument();
+      
+      // Form Inputs
+      expect(screen.queryAllByText('templates.process_name_label')[0]).toBeInTheDocument();
+      expect(screen.queryByTestId('new-process-name')).toBeInTheDocument();
+      expect(screen.queryAllByText('templates.process_name_helper_text')[0]).toBeInTheDocument();
+      
+      expect(screen.queryAllByText('templates.process_form_label')[0]).toBeInTheDocument();
+      expect(screen.queryByTestId('process-form-dropdown')).toBeInTheDocument();
+      expect(screen.queryAllByText('templates.process_form_helper_text')[0]).toBeInTheDocument();
+      expect(screen.queryAllByText('templates.process_form_helper_text_link_text')[0]).toBeInTheDocument();
+
+      expect(screen.queryAllByText('templates.process_task_list_label')[0]).toBeInTheDocument();
+      expect(screen.queryByTestId('process-note-list-dropdown')).toBeInTheDocument();
+      expect(screen.queryAllByText('templates.process_task_list_helper_text')[0]).toBeInTheDocument();
+      expect(screen.queryAllByText('templates.process_task_list_helper_text_link_text')[0]).toBeInTheDocument();
+      
+      expect(screen.queryByTestId('process-submit-btn')).toBeInTheDocument();
+      expect(screen.queryAllByText('templates.save_process')[0]).toBeInTheDocument();
     });
   });
 });

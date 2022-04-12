@@ -26,7 +26,7 @@ describe('Create Process Form', () => {
     );
 
     await waitFor(() => {
-      expect(screen.queryByTestId('loader')).toBeInTheDocument();
+      expect(screen.queryByTestId('process-page-builder')).toBeInTheDocument();
     });
   });
 });

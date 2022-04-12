@@ -99,7 +99,7 @@ const [processCreate] = useMutation(ProcessCreateMutation)
     })
   }
 
-  if (formLoading || taskListLoading) return <Spinner />;
+  // if (formLoading || taskListLoading) return <Spinner />;
 
   return(
     <>
@@ -146,16 +146,14 @@ const [processCreate] = useMutation(ProcessCreateMutation)
               className='process-txt-input'
               onChange={handleInputChange}
               value={processData.name}
-              inputProps={{
-              'data-testid': 'new-process-name'
-            }}
+              data-testid="new-process-name"
               fullWidth
               required
             />
           </Grid>
           <Grid item md={12} xs={12}>
             <FormControl fullWidth>
-              <InputLabel id="noteListId">{t('templates.process_form_label')}</InputLabel>
+              <InputLabel id="processFormLabel">{t('templates.process_form_label')}</InputLabel>
               <Select
                 name="formId"
                 id="formId"
@@ -165,11 +163,13 @@ const [processCreate] = useMutation(ProcessCreateMutation)
                 data-testid="process-form-dropdown"
                 required
               >
-                {formData?.forms.map((form) => (
+                {formLoading 
+                ? (<Spinner />)
+                : (formData?.forms.map((form) => (
                   <MenuItem key={form.id} value={form.id}>
                     {form.name}
                   </MenuItem>
-                ))}
+                )))}
               </Select>
               <FormHelperText data-testid="process-form-helper-text">
                 {t('templates.process_form_helper_text')}
@@ -191,11 +191,13 @@ const [processCreate] = useMutation(ProcessCreateMutation)
                 data-testid="process-note-list-dropdown"
                 required
               >
-                {taskListData?.processTaskLists?.map((taskList) => (
+                {taskListLoading
+                ? (<Spinner />)
+                : (taskListData?.processTaskLists?.map((taskList) => (
                   <MenuItem key={taskList.id} value={taskList.id}>
                     {taskList.name}
                   </MenuItem>
-                ))}
+                )))}
               </Select>
               <FormHelperText data-testid="process-note-list-helper-text">
                 {t('templates.process_task_list_helper_text')}
