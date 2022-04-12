@@ -255,7 +255,7 @@ export default function LogBookItem({
             <Grid item md={11} xs={10}>
               <div className={classes.logbookTitleContainer}>
                 <Typography variant="h4">{t('logbook.log_book')}</Typography> 
-                <IconButton data-testid="refresh_btn" className={classes.refreshBtn} onClick={() => eventsData.refetch()}>
+                <IconButton color='primary' data-testid="refresh_btn" className={classes.refreshBtn} onClick={() => eventsData.refetch()}>
                   <RefreshIcon />
                 </IconButton>
               </div>
