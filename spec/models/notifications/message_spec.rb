@@ -6,14 +6,10 @@ RSpec.describe Notifications::Message, type: :model do
     it { is_expected.to belong_to(:user).class_name('Users::User') }
     it { is_expected.to belong_to(:sender).class_name('Users::User') }
     it { is_expected.to belong_to(:note).class_name('Notes::Note').optional }
-    # TODO: association is defined with note_entity.
-    # however column note_entity_id is not there in table.
-    # it { is_expected.to belong_to(:note_entity).optional }
+    it { is_expected.to belong_to(:campaign).optional }
     it { is_expected.to have_one(:notification).optional }
-    # TODO: This should be belongs_to association.
-    # because we do have column compaign_id in table messages.
-    # it { is_expected.to have_one(:campaign).dependent(:restrict_with_exception) }
   end
+
   describe 'Message creation' do
     let!(:community) { create(:community) }
     let!(:non_admin) { create(:user, community_id: community.id) }

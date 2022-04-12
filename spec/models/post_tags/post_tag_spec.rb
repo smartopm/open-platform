@@ -21,8 +21,6 @@ RSpec.describe PostTags::PostTag, type: :model do
 
   describe 'associations' do
     it { is_expected.to belong_to(:community) }
-    # TODO: association is defined with user, however column user_id is not there in table.
-    # it { is_expected.to belong_to(:user).class_name('Users::User').optional }
     it { is_expected.to have_many(:post_tag_users).dependent(:destroy) }
     it { is_expected.to have_many(:users).through(:post_tag_users) }
   end
