@@ -69,6 +69,7 @@
     "pending": "Marcar como pendiente",
     "publish": "Publicar",
     "rejected": "Rechazar",
+    "submit_form": "Enviar",
     "update": "Actualizar"
   },
   "form_status": {
