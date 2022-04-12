@@ -1,0 +1,7 @@
+{
+  "notification": {
+    "settings": " Notification Settings",
+    "news_and_updates": "News and Updates: Receive the latest news and updates on {{ communityName }} and your account. Types of content include newsletters, community interviews, construction progress, and account updates.",
+    "points_and_rewards": "Points and Rewards: Get weekly reminders to collect and view the points on your account. Points are a great way to engage with the community and are sometimes used to grant awards and rewards to our community members."
+  }
+}
