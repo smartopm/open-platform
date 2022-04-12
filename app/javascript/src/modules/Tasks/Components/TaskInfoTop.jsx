@@ -529,11 +529,11 @@ export default function TaskInfoTop({
             {t('common:form_fields.description')}
           </Typography>
         </Grid>
-        <Grid item xs={12} md={12}>
+        <Grid item xs={12} md={12} style={{paddingTop: '10px'}}>
           <AutoSaveField
             value={data.description}
             mutationAction={value => updateTask('description', value)}
-            label={t('common:form_fields.description')}
+            label={t('misc.add_description')}
           />
         </Grid>
       </Grid>

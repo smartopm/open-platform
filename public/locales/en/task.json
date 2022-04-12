@@ -136,6 +136,7 @@
   },
   "misc": {
     "confirm": "confirm",
-    "reply": "Reply"
+    "reply": "Reply",
+    "add_description": "Add a description"
   }
 }
