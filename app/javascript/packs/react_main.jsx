@@ -334,10 +334,12 @@ const App = () => {
                                   component={FormPage}
                                 />
                                  <Route
+                                  exact
                                   path="/processes/templates"
                                   component={ProcessList}
                                 />
                                  <Route
+                                  exact
                                   path="/processes/templates/create"
                                   component={ProcessBuilderPage}
                                 />

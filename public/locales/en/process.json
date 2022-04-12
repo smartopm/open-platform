@@ -4,10 +4,12 @@
     "no_template_list": "No Process Templates",
     "edit_form": "Edit Form",
     "edit_task_list": "Edit Task List",
-    "process_templates": "Process Templates"
+    "process_templates": "Process Templates",
+    "create_process": "Create a Process"
   },
   "breadcrumbs": {
     "processes": "Processes",
-    "template_list": "Process Template List"
+    "template_list": "Process Template List",
+    "create_process": "Create a Process"
   }
 }
