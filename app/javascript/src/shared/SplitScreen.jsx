@@ -48,7 +48,8 @@ const useStyles = makeStyles(() => ({
     width: '48%',
     marginTop: '50px',
     background: '#FAFAFA !important',
-    border: '0px !important'
+    border: '0px !important',
+    zIndex: 10
   },
   drawerPaperMobile: {
     width: '100%',

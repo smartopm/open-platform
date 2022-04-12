@@ -4,7 +4,7 @@ import { makeStyles } from '@mui/styles';
 import { Grid } from '@mui/material';
 import PropTypes from 'prop-types';
 
-export default function AutoSaveField({ value, mutationAction, stateAction }) {
+export default function AutoSaveField({ value, mutationAction, stateAction, label }) {
   const [isEditMode, setIsEditMode] = useState(false);
   const [input, setInput] = useState(value || '');
 
@@ -44,7 +44,8 @@ export default function AutoSaveField({ value, mutationAction, stateAction }) {
           className={classes.liveTextField}
           disabled={!isEditMode}
           multiline
-          variant="standard"
+          variant="outlined"
+          label={label}
           inputProps={{ 'data-testid': 'live-text-field' }}
         />
       </Grid>
@@ -53,13 +54,15 @@ export default function AutoSaveField({ value, mutationAction, stateAction }) {
 }
 AutoSaveField.defaultProps = {
   stateAction: () => {},
-  value: ''
+  value: '',
+  label: ''
 };
 
 AutoSaveField.propTypes = {
   value: PropTypes.string,
   mutationAction: PropTypes.func.isRequired,
-  stateAction: PropTypes.func
+  stateAction: PropTypes.func,
+  label: PropTypes.string
 };
 
 const useStyles = makeStyles(() => ({
