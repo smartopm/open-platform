@@ -1,5 +1,16 @@
-import React, { useState, Fragment } from 'react';
-import { Divider, Link, List, ListItem, ListItemText, Typography , Card, CardContent, Container, Grid } from '@mui/material';
+import React, { Fragment } from 'react';
+import {
+  Divider,
+  Link,
+  List,
+  ListItem,
+  ListItemText,
+  Typography,
+  Card,
+  CardContent,
+  Container,
+  Grid
+} from '@mui/material';
 import { useQuery } from 'react-apollo';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTranslation } from 'react-i18next';
@@ -51,7 +62,8 @@ export default function AdminDashboard() {
     const initialValue = 0;
     const overallStats = processStats.reduce(
       (previousValue, currentValue) => previousValue + currentValue[2],
-    initialValue);
+      initialValue
+    );
     return overallStats;
   }
 
@@ -59,7 +71,8 @@ export default function AdminDashboard() {
     const initialValue = 0;
     const yearStats = processStats.reduce(
       (previousValue, currentValue) => previousValue + currentValue[2],
-    initialValue);
+      initialValue
+    );
     return yearStats;
   }
 
@@ -104,7 +117,7 @@ export default function AdminDashboard() {
 
   const lifeTimeCards = [
     {
-      name:  t('processes.submitted'),
+      name: t('processes.submitted'),
       category: 'submitted',
       count: tasksTillNow(submittedResults) || 0,
       primary: true
@@ -120,7 +133,7 @@ export default function AdminDashboard() {
       category: 'outstanding',
       count: (tasksTillNow(submittedResults) || 0) - (tasksTillNow(completedResults) || 0),
       primary: false
-    },
+    }
   ];
 
   const projectStageLookup = {
@@ -224,7 +237,9 @@ export default function AdminDashboard() {
                   style={{ cursor: 'pointer', boxShadow: 'none' }}
                 >
                   <CardContent
-                    className={`${index === 4 ? classes.evenCardsBackground: classes.oddCardsBackground} ${classes.cardContent}`}
+                    className={`${
+                      index === 4 ? classes.evenCardsBackground : classes.oddCardsBackground
+                    } ${classes.cardContent}`}
                     style={{ paddingTop: '8px', paddingBottom: '8px' }}
                   >
                     <Grid container justifyContent="center" alignItems="center">
@@ -268,7 +283,9 @@ export default function AdminDashboard() {
                   style={{ cursor: 'pointer', boxShadow: 'none' }}
                 >
                   <CardContent
-                    className={`${index === 4 ? classes.evenCardsBackground: classes.oddCardsBackground} ${classes.cardContent}`}
+                    className={`${
+                      index === 4 ? classes.evenCardsBackground : classes.oddCardsBackground
+                    } ${classes.cardContent}`}
                     style={{ paddingTop: '8px', paddingBottom: '8px' }}
                   >
                     <Grid container justifyContent="center" alignItems="center">
@@ -281,14 +298,19 @@ export default function AdminDashboard() {
               </Grid>
             ))}
           </Grid>
-          <Divider variant="inset" className={matches ? classes.mobileStatsDivider : classes.statsDivider} />
+          <Divider
+            variant="inset"
+            className={matches ? classes.mobileStatsDivider : classes.statsDivider}
+          />
           <Grid container spacing={1} className={classes.cards}>
             <Grid item xs={4} />
             {matches && <Grid item xs={1} />}
             {lifeTimeCards.map((card, index) => (
               // eslint-disable-next-line react/no-array-index-key
               <Grid key={index} item xs={2} container justifyContent="center" alignItems="center">
-                <Typography variant="caption" style={{ fontSize: '0.6rem' }}>{card.name}</Typography>
+                <Typography variant="caption" style={{ fontSize: '0.6rem' }}>
+                  {card.name}
+                </Typography>
               </Grid>
             ))}
           </Grid>
@@ -322,7 +344,9 @@ export default function AdminDashboard() {
                   style={{ cursor: 'pointer', boxShadow: 'none' }}
                 >
                   <CardContent
-                    className={`${index === 2 ? classes.evenCardsBackground: classes.oddCardsBackground} ${classes.cardContent}`}
+                    className={`${
+                      index === 2 ? classes.evenCardsBackground : classes.oddCardsBackground
+                    } ${classes.cardContent}`}
                     style={{ paddingTop: '8px', paddingBottom: '8px' }}
                   >
                     <Grid container justifyContent="center" alignItems="center">
@@ -335,40 +359,44 @@ export default function AdminDashboard() {
               </Grid>
             ))}
           </Grid>
-
         </Grid>
         <Grid item xs={12} sm={6}>
           <Typography variant="body1">{t('processes.projects_by_stage')}</Typography>
-          {projectsLoading && <Spinner />}
           {projectsError && <CenteredContent>{formatError(projectsError.message)}</CenteredContent>}
-          <List data-testid="project-stages">
-            {Object.entries(stats).map(([stage, count]) => (
-              <Fragment key={stage}>
-                <ListItem
-                  onClick={() => routeToProjects('current_step', snakeCaseToSentence(stage))}
-                  className={classes.projectStageLink}
-                >
-                  <Grid container>
-                    <Grid item xs={11}>
-                      <ListItemText>
-                        <Typography variant="body2">
-                          {t(`processes.drc_stages.${stage}`)}
-                        </Typography>
-                      </ListItemText>
+          {projectsLoading ? (
+            <CenteredContent>
+              <Spinner />
+            </CenteredContent>
+          ) : (
+            <List data-testid="project-stages">
+              {Object.entries(stats).map(([stage, count]) => (
+                <Fragment key={stage}>
+                  <ListItem
+                    onClick={() => routeToProjects('current_step', snakeCaseToSentence(stage))}
+                    className={classes.projectStageLink}
+                  >
+                    <Grid container>
+                      <Grid item xs={11}>
+                        <ListItemText>
+                          <Typography variant="body2">
+                            {t(`processes.drc_stages.${stage}`)}
+                          </Typography>
+                        </ListItemText>
+                      </Grid>
+                      <Grid item xs={1}>
+                        <ListItemText>
+                          <Typography color="primary" className={classes.projectStageCount}>
+                            {count}
+                          </Typography>
+                        </ListItemText>
+                      </Grid>
                     </Grid>
-                    <Grid item xs={1}>
-                      <ListItemText>
-                        <Typography color="primary" className={classes.projectStageCount}>
-                          {count}
-                        </Typography>
-                      </ListItemText>
-                    </Grid>
-                  </Grid>
-                </ListItem>
-                <Divider variant="inset" className={classes.divider} />
-              </Fragment>
-            ))}
-          </List>
+                  </ListItem>
+                  <Divider variant="inset" className={classes.divider} />
+                </Fragment>
+              ))}
+            </List>
+          )}
         </Grid>
       </Grid>
     </Container>
