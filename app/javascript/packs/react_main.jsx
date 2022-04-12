@@ -34,7 +34,8 @@ import Feedback from '../src/containers/Activity/Feedback';
 import FeedbackSuccess from '../src/containers/Activity/FeedbackSuccess';
 import AllNotes from '../src/containers/Activity/AllNotes';
 import ProjectsList from '../src/modules/Tasks/Processes/Components/ProjectsList';
-import TaskLists from '../src/modules/Tasks/TaskLists/Components/TaskLists' // TODO: Remove after Task Lists menu is set up
+import TaskLists from '../src/modules/Tasks/TaskLists/Components/TaskLists'; // TODO: Remove after Task Lists menu is set up
+import TaskListCreate from '../src/modules/Tasks/TaskLists/Components/TaskListCreate';
 import FeedbackPage from '../src/containers/Activity/AllFeedback';
 import ShowroomLogs from '../src/containers/showroom/ShowroomLogs';
 import ClientRequestForm from '../src/containers/ClientRequestForm';
@@ -64,7 +65,7 @@ import EmailBuilderDialog from '../src/modules/Emails/components/EmailBuilderDia
 import { PRIMARY_DOMAINS } from '../src/utils/constants';
 import TaskProcessDetail from '../src/modules/Tasks/Processes/Components/TaskProcessDetail';
 import LeadManagementUserImport from '../src/modules/Users/LeadManagement/Containers/LeadManagementUserImport';
-import GuestQRPage from '../src/modules/LogBook/Components/GuestQRPage'
+import GuestQRPage from '../src/modules/LogBook/Components/GuestQRPage';
 import Welcome from '../src/modules/LogBook/Kiosk/components/Welcome';
 import Accesspage from '../src/modules/LogBook/Kiosk/components/AccessPage';
 import ScanPage from '../src/modules/LogBook/Kiosk/components/Scan';
@@ -180,7 +181,7 @@ const App = () => {
                 <Route path="/news/post/:id" exact component={PostPage} />
                 {/* Public form */}
                 <Route path="/form/:formId/public" exact component={FormPage} />
-                
+
                 <LoggedInOnly>
                   <Switch>
                     <Route path="/logbook/kiosk" exact component={Welcome} />
@@ -235,6 +236,11 @@ const App = () => {
                                   render={() => <Redirect to={`/user/${user.id}`} />}
                                 />
                                 <Route exact path="/tasks/task_lists" component={TaskLists} />
+                                <Route
+                                  exact
+                                  path="/tasks/task_lists/new"
+                                  component={TaskListCreate}
+                                />
                                 {/* end of redirects */}
                                 {[...modules, ...UserRoutes].map(module => {
                                   if (module.subMenu) {
@@ -250,14 +256,25 @@ const App = () => {
                                               subSubMenu.featureName
                                             )
                                           ) {
-                                            subSubMenuRoutes = subSubMenu.subRoutes.map(subRoute => (
-                                              <Route {...subRoute.routeProps} key={subRoute.name} />
-                                            ));
+                                            subSubMenuRoutes = subSubMenu.subRoutes.map(
+                                              subRoute => (
+                                                <Route
+                                                  {...subRoute.routeProps}
+                                                  key={subRoute.name}
+                                                />
+                                              )
+                                            );
                                           }
                                           checkAllowedCommunityFeatures(
                                             user.community.features,
                                             subSubMenu.featureName
-                                          ) && subSubMenuRoutes.push(<Route {...subSubMenu.routeProps} key={subSubMenu.name} />);
+                                          ) &&
+                                            subSubMenuRoutes.push(
+                                              <Route
+                                                {...subSubMenu.routeProps}
+                                                key={subSubMenu.name}
+                                              />
+                                            );
                                           return subSubMenuRoutes;
                                         });
                                       }
@@ -276,7 +293,8 @@ const App = () => {
                                       checkAllowedCommunityFeatures(
                                         user.community.features,
                                         sub.featureName
-                                      ) && routes.push(<Route {...sub.routeProps} key={sub.name} />);
+                                      ) &&
+                                        routes.push(<Route {...sub.routeProps} key={sub.name} />);
                                       return routes;
                                     });
                                   }
@@ -309,7 +327,11 @@ const App = () => {
                                 <Route path="/feedback_success" component={FeedbackSuccess} />
                                 <Route path="/campaign-create" component={CampaignCreate} />
                                 <Route path="/campaign/:id" component={CampaignUpdate} />
-                                <Route path="/timesheet/:id" exact component={EmployeeTimeSheetLog} />
+                                <Route
+                                  path="/timesheet/:id"
+                                  exact
+                                  component={EmployeeTimeSheetLog}
+                                />
                                 <Route
                                   path="/client_request_from"
                                   exact
@@ -318,21 +340,25 @@ const App = () => {
                                 <Route path="/news/slug" exact component={Posts} />
                                 <Route path="/discussions/:id" exact component={DiscussonPage} />
                                 <Route path="/business/:id" exact component={BusinessProfile} />
-                                <Route path="/edit_form/:formId" exact component={FormBuilderPage} />
+                                <Route
+                                  path="/edit_form/:formId"
+                                  exact
+                                  component={FormBuilderPage}
+                                />
                                 <Route path="/form/:formId/private" exact component={FormPage} />
                                 {/* Handle backward compatibility with existing forms for logged in users */}
                                 <Route
-                                    exact
-                                    path="/form/:formId"
-                                    render={({ match }) => (
-                                      <Redirect to={`/form/${match.params.formId}/private`} />
-                                    )}
-                                  />
+                                  exact
+                                  path="/form/:formId"
+                                  render={({ match }) => (
+                                    <Redirect to={`/form/${match.params.formId}/private`} />
+                                  )}
+                                />
                                 <Route
                                   path="/form/:formId?/:formName?/entries"
                                   component={FormEntriesPage}
                                 />
-                                
+
                                 <Route
                                   path="/mail_templates/:emailId"
                                   component={EmailBuilderDialog}
@@ -341,16 +367,13 @@ const App = () => {
                                   path="/user_form/:userId?/:formUserId?/:type?"
                                   component={FormPage}
                                 />
-                                 <Route
-                                  exact
-                                  path="/processes/templates"
-                                  component={ProcessList}
-                                />
-                                 <Route
+                                <Route exact path="/processes/templates" component={ProcessList} />
+                                <Route
                                   exact
                                   path="/processes/templates/create"
                                   component={ProcessBuilderPage}
                                 />
+                                <Route path="/processes/templates" component={ProcessList} />
                                 <Route
                                   path="/processes/:type/projects/:id"
                                   component={TaskProcessDetail}
@@ -361,11 +384,7 @@ const App = () => {
                                   path="/entry_logs"
                                   render={() => <Redirect to="/logbook" />}
                                 />
-                                <Route
-                                  exact
-                                  path="/qr/invite/:id"
-                                  component={GuestQRPage}
-                                />
+                                <Route exact path="/qr/invite/:id" component={GuestQRPage} />
                                 <AdminRoutes>
                                   <Switch>
                                     <Route path="/users/import" component={UsersImport} />

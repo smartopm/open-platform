@@ -2,13 +2,8 @@
 /* eslint-disable max-statements */
 /* eslint-disable complexity */
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types'
-import {
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  Grid,
-} from '@mui/material';
+import PropTypes from 'prop-types';
+import { Dialog, DialogTitle, DialogContent, Grid } from '@mui/material';
 import { useMutation, useLazyQuery, useApolloClient } from 'react-apollo';
 import { useParams, useHistory } from 'react-router';
 import { useTranslation } from 'react-i18next';
@@ -89,7 +84,7 @@ export default function TodoList({
   const [selectedTask, setSelectedTask] = useState(null);
   const [bulkUpdating, setBulkUpdating] = useState(false);
   const [splitScreenOpen, setSplitScreenOpen] = useState(false);
-  const { t } = useTranslation(['task', 'common'])
+  const { t } = useTranslation(['task', 'common']);
 
   const path = useParamsQuery();
   const taskURLFilter = path.get('filter');
@@ -163,7 +158,7 @@ export default function TodoList({
 
   useEffect(() => {
     if (debouncedFilterInputText) {
-      if(location !== 'my_tasks' && !taskURLFilter){
+      if (location !== 'my_tasks' && !taskURLFilter) {
         setQuery('completed: false');
       }
       setFilterQuery(`${debouncedFilterInputText}`);
@@ -172,7 +167,7 @@ export default function TodoList({
 
     // for tasks searched using the top search bar input
     if (debouncedSearchText) {
-      if(location !== 'my_tasks' && !taskURLFilter){
+      if (location !== 'my_tasks' && !taskURLFilter) {
         setQuery('completed: false');
       }
       setSearchText(debouncedSearchText);
@@ -214,7 +209,7 @@ export default function TodoList({
           });
         });
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status, selectedTask, signedBlobId, taskUpdate, refetch]);
 
   useEffect(() => {
@@ -304,8 +299,8 @@ export default function TodoList({
     ...tasksQueryBuilderConfig,
     fields: {
       assignee: {
-        ...tasksQueryBuilderConfig.fields.assignee,
-        },
+        ...tasksQueryBuilderConfig.fields.assignee
+      },
       userName: {
         ...tasksQueryBuilderConfig.fields.userName
       }
@@ -506,22 +501,22 @@ export default function TodoList({
         </Grid>
         <div
           style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          position: 'relative'
-        }}
+            display: 'flex',
+            justifyContent: 'space-between',
+            position: 'relative'
+          }}
           data-testid="filter_container"
         >
           <Grid
             container
             justifyContent="flex-end"
             style={{
-            width: '100.5%',
-            position: 'absolute',
-            zIndex: 1,
-            marginTop: '-2px',
-            display: displayBuilder
-          }}
+              width: '100.5%',
+              position: 'absolute',
+              zIndex: 1,
+              marginTop: '-2px',
+              display: displayBuilder
+            }}
           >
             <QueryBuilder
               handleOnChange={handleQueryOnChange}
@@ -534,61 +529,58 @@ export default function TodoList({
         <br />
         {isLoading ? (
           <Spinner />
-      ) : (
-        <div data-testid="todo-list-container">
-          <TaskBulkUpdateAction
-            checkedOptions={checkedOptions}
-            bulkUpdating={bulkUpdating}
-            handleBulkUpdate={handleBulkUpdate}
-            selectedTasks={selectedTasks}
-            currentTile={currentTile}
-          />
-          {Boolean(data?.flaggedNotes.length) && (
-            <SplitScreen
-              open={splitScreenOpen}
-              onClose={() => setSplitScreenOpen(false)}
-            >
-              <TaskUpdate
-                taskId={redirectedTaskId || data?.flaggedNotes[0].id}
-                handleSplitScreenOpen={handleTodoItemClick}
-                handleSplitScreenClose={handleSplitScreenClose}
-                handleTaskCompletion={handleTaskCompletion}
-                handleTaskNotFoundError={handleTaskNotFoundError}
-              />
-            </SplitScreen>
-          )}
-          {data?.flaggedNotes.length ? (
-            <div>
-              {data?.flaggedNotes.map(task => (
-                <TodoItem
-                  key={task.id}
-                  task={task}
-                  handleChange={handleChange}
-                  selectedTasks={selectedTasks}
-                  isSelected={checkedOptions === 'all'}
-                  handleAddSubTask={handleAddSubTask}
-                  handleUploadDocument={handleUploadDocument}
-                  handleTodoClick={handleTodoItemClick}
-                  handleTaskCompletion={handleTaskCompletion}
-                />
-              ))}
-            </div>
-          ) : (
-            <CenteredContent>{t('task.no_tasks')}</CenteredContent>
-          )}
-          <br />
-          <CenteredContent>
-            <Paginate
-              count={data?.flaggedNotes?.length}
-              offSet={offset}
-              limit={limit}
-              active={offset >= 1}
-              handlePageChange={paginate}
+        ) : (
+          <div data-testid="todo-list-container">
+            <TaskBulkUpdateAction
+              checkedOptions={checkedOptions}
+              bulkUpdating={bulkUpdating}
+              handleBulkUpdate={handleBulkUpdate}
+              selectedTasks={selectedTasks}
+              currentTile={currentTile}
             />
-          </CenteredContent>
-        </div>
-      )}
-        <AccessCheck module='note' allowedPermissions={['can_view_create_task_button']}>
+            {Boolean(data?.flaggedNotes.length) && (
+              <SplitScreen open={splitScreenOpen} onClose={() => setSplitScreenOpen(false)}>
+                <TaskUpdate
+                  taskId={redirectedTaskId || data?.flaggedNotes[0].id}
+                  handleSplitScreenOpen={handleTodoItemClick}
+                  handleSplitScreenClose={handleSplitScreenClose}
+                  handleTaskCompletion={handleTaskCompletion}
+                  handleTaskNotFoundError={handleTaskNotFoundError}
+                />
+              </SplitScreen>
+            )}
+            {data?.flaggedNotes.length ? (
+              <div>
+                {data?.flaggedNotes.map(task => (
+                  <TodoItem
+                    key={task.id}
+                    task={task}
+                    handleChange={handleChange}
+                    selectedTasks={selectedTasks}
+                    isSelected={checkedOptions === 'all'}
+                    handleAddSubTask={handleAddSubTask}
+                    handleUploadDocument={handleUploadDocument}
+                    handleTodoClick={handleTodoItemClick}
+                    handleTaskCompletion={handleTaskCompletion}
+                  />
+                ))}
+              </div>
+            ) : (
+              <CenteredContent>{t('task.no_tasks')}</CenteredContent>
+            )}
+            <br />
+            <CenteredContent>
+              <Paginate
+                count={data?.flaggedNotes?.length}
+                offSet={offset}
+                limit={limit}
+                active={offset >= 1}
+                handlePageChange={paginate}
+              />
+            </CenteredContent>
+          </div>
+        )}
+        <AccessCheck module="note" allowedPermissions={['can_view_create_task_button']}>
           <FloatingButton
             variant="extended"
             handleClick={openModal}
@@ -598,7 +590,7 @@ export default function TodoList({
         </AccessCheck>
       </div>
     </>
-);
+  );
 }
 
 TodoList.propTypes = {
