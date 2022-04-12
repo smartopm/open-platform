@@ -52,7 +52,12 @@ const [processCreate] = useMutation(ProcessCreateMutation)
   }
 
   function handleClose() {
-    setMessage({ isError: false, detail: '' });
+    setInfo({
+      ...info,
+      error: false,
+      message: '',
+    });
+
     setAlertOpen(false);
   }
 
@@ -81,7 +86,7 @@ const [processCreate] = useMutation(ProcessCreateMutation)
           loading: false,
         });
 
-      history.push('/processes/templates/create')
+      history.push('/processes/templates')
     })
     .catch(err =>{
       setInfo({ 
