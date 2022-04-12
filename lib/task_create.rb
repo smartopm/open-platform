@@ -111,7 +111,9 @@ class TaskCreate
   # rubocop:enable Metrics/MethodLength
 
   def self.note_list_steps(process)
-    process.note_list.notes.where(parent_note_id: nil)
+    # When creating a task list, we create a parent task and steps to it
+    # To get the steps, we need to get this parent's sub_tasks
+    process.note_list.notes.find_by(parent_note_id: nil, category: 'task_list').sub_tasks
   end
 
   # rubocop:disable Metrics/MethodLength
