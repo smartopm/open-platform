@@ -41,6 +41,10 @@ export default function Homepage({ authState, quickLinks }) {
   if (guardPageUsers.includes(authState.user.userType)) {
     return <Redirect push to="/guard_home" />;
   }
+  // TODO: Find a better way to handle this routing
+  if (authState.user.userType === 'code_scanner') {
+    return <Redirect push to="/logbook/kiosk" />;
+  }
 
   const cards = [
     {
