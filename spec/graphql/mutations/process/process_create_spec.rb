@@ -70,7 +70,7 @@ RSpec.describe Mutations::Process::ProcessCreate do
                                                      user_role: admin.role,
                                                    }).as_json
 
-        expect(result.dig('errors', 0, 'message')).to eql 'NoteList not found'
+        expect(result.dig('errors', 0, 'message')).to eql 'Task List not found'
       end
 
       it 'raises an error if form is not found' do

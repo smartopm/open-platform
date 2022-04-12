@@ -118,8 +118,8 @@ const [processCreate] = useMutation(ProcessCreateMutation)
           <TextField
             name="processName"
             id="process-name"
-            label="Enter Name for a new Process"
-            helperText="This is what your process will be called in the UI"
+            label={t('templates.process_name_label')}
+            helperText={t('templates.process_name_helper_text')}
             variant="outlined"
             className='process-txt-input'
             onChange={handleInputChange}
@@ -133,11 +133,11 @@ const [processCreate] = useMutation(ProcessCreateMutation)
         </Grid>
         <Grid item md={12} xs={12}>
           <FormControl fullWidth>
-            <InputLabel id="noteListId">Select Form</InputLabel>
+            <InputLabel id="noteListId">{t('templates.process_form_label')}</InputLabel>
             <Select
               name="formId"
               id="formId"
-              label="Select Form"
+              label={t('templates.process_form_label')}
               value={processData.formId}
               onChange={handleInputChange}
               data-testid="process-form-dropdown"
@@ -150,9 +150,9 @@ const [processCreate] = useMutation(ProcessCreateMutation)
               ))}
             </Select>
             <FormHelperText data-testid="process-form-helper-text">
-              This form will be used to create a project.
+              {t('templates.process_form_helper_text')}
               <Link to="/forms">
-                  You can configure Forms here
+                {t('templates.process_form_helper_text_link_text')}
               </Link>
             </FormHelperText>
           </FormControl>
@@ -160,11 +160,11 @@ const [processCreate] = useMutation(ProcessCreateMutation)
 
         <Grid item md={12} xs={12}>
           <FormControl fullWidth>
-            <InputLabel id="noteListId">Select Task List</InputLabel>
+            <InputLabel id="noteListId">{t('templates.process_task_list_label')}</InputLabel>
             <Select
               name="noteListId"
               id="noteListId"
-              label="Select Task List"
+              label={t('templates.process_task_list_label')}
               value={processData.noteListId}
               onChange={handleInputChange}
               data-testid="process-note-list-dropdown"
@@ -177,9 +177,9 @@ const [processCreate] = useMutation(ProcessCreateMutation)
               ))}
             </Select>
             <FormHelperText data-testid="process-note-list-helper-text">
-              This Task List will be used to create the steps in a project.
+              {t('templates.process_task_list_helper_text')}
               <Link to="/tasks/task_lists">
-                  You can configure Tasks Lists here
+                {t('templates.process_task_list_helper_text_link_text')}
               </Link>
             </FormHelperText>
           </FormControl>
@@ -195,7 +195,7 @@ const [processCreate] = useMutation(ProcessCreateMutation)
               data-testid="process-submit-btn"
               onClick={handleCreateProcess}
             >
-              {info.loading ? 'Saving Process' : 'Create Process'}
+              {info.loading ? t('templates.saving_process') : t('templates.save_process')}
             </Button>
           </CenteredContent>
         </Grid>
