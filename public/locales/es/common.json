@@ -6,6 +6,7 @@
   "errors": {
     "camera_not_supported": "Este navegador no es compatible con la API de la cámara.",
     "date_error": "La fecha debe tener este formato AAAA-MM-DD",
+    "device_not_supported": "Dispositivo no compatible o verifique los permisos de la cámara",
     "empty_input": "La entrada no puede estar vacía",
     "empty_name": "Ingrese Nombre ",
     "empty_text": "El mensaje debe contener algo de texto",
@@ -234,6 +235,7 @@
     "invitations": "Invitaciones",
     "invoice": "Factura",
     "invoice_plural": "Facturas",
+    "kiosk": "Quiosco",
     "lead_management": "Manejo Principal",
     "leave_a_comment": "Dejar un comentario",
     "logout": "Cerrar sesión",
@@ -346,6 +348,7 @@
     "edit_log": "Editar",
     "end_time": "Hora de finalización",
     "entry_logs": "Libro de Registros",
+    "error": "Error",
     "exp": "Expira",
     "expiration": "Fecha de vencimiento",
     "expiration_date": "Fecha de vencimiento",
