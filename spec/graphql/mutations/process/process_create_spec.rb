@@ -73,6 +73,28 @@ RSpec.describe Mutations::Process::ProcessCreate do
         expect(result.dig('errors', 0, 'message')).to eql 'Task List not found'
       end
 
+      it 'raises an error if note list has process' do
+        process = create(:process, community: admin.community)
+        note_list.update(process_id: process.id)
+        note_list.reload
+
+        variables = {
+          name: 'Process Example',
+          formId: form.id,
+          noteListId: note_list.id,
+        }
+        result = DoubleGdpSchema.execute(mutation, variables: variables,
+                                                   context: {
+                                                     current_user: admin,
+                                                     site_community: user.community,
+                                                     user_role: admin.role,
+                                                   }).as_json
+
+        expect(result.dig('errors', 0, 'message')).to eql(
+          'This Task List is already linked to a process',
+        )
+      end
+
       it 'raises an error if form is not found' do
         variables = {
           name: 'Process Example',
