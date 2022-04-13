@@ -1,6 +1,6 @@
 /* eslint-disable complexity */
 import React, { useState, useContext, useEffect } from 'react';
-import { Button, Container, DialogContent, DialogContentText, Grid, Divider } from '@mui/material';
+import { Button, DialogContent, DialogContentText, Grid, Divider } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { useMutation, useQuery } from 'react-apollo';
 import { useHistory } from 'react-router';
@@ -116,22 +116,32 @@ export default function Form({
         open={formState.alertOpen || !!error}
         handleClose={() => setFormState({ ...formState, alertOpen: false })}
       />
-      <DetailsDialog
-        handleClose={handleCategoryClose}
+      {/* <CustomizedDialogs
+        handleModal={handleCategoryClose}
         open={categoryFormOpen}
-        title={t('form:misc.category')}
-        color="primary"
+        dialogHeader={t('form:misc.category')}
+        actionable={false}
+        displaySaveButton
       >
-        <Container>
-          <CategoryForm
-            data={data}
-            close={handleCategoryClose}
-            formData={formData}
-            refetchCategories={categoriesData.refetch}
-            formDetailRefetch={formDetailRefetch}
-          />
-        </Container>
-      </DetailsDialog>
+        <CategoryForm
+          data={data}
+          close={handleCategoryClose}
+          formData={formData}
+          refetchCategories={categoriesData.refetch}
+          formDetailRefetch={formDetailRefetch}
+        />
+      </CustomizedDialogs> */}
+      {categoryFormOpen && (
+        <CategoryForm
+          data={data}
+          close={handleCategoryClose}
+          formData={formData}
+          refetchCategories={categoriesData.refetch}
+          formDetailRefetch={formDetailRefetch}
+          categoryFormOpen={categoryFormOpen}
+          handleCategoryClose={handleCategoryClose}
+        />
+      )}
 
       <DetailsDialog
         handleClose={handleCancelPreview}

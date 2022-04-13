@@ -47,7 +47,9 @@
     "create_form": "Create a Form",
     "submit_form": "Submit a Form",
     "confirm_uploads": "Confirm your uploads",
-    "click_upload_btn": "Click the Upload button next to the file you wish to attach to this form.."
+    "click_upload_btn": "Click the Upload button next to the file you wish to attach to this form..",
+    "add_category": "Add a Category",
+    "update_category": "Update a Category"
   },
   "actions": {
     "create_a_form": "Create a form",
