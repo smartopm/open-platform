@@ -51,7 +51,7 @@ export default function RenderForm({
     signature
   } = useContext(FormContext);
 
-  const fileTypes = ['pdf', 'zip'];
+  const fileTypes = ['pdf', 'zip', 'x-zip-compressed'];
   const { t } = useTranslation('form');
   const [messageAlert, setMessageAlert] = useState('');
   const [isSuccessAlert, setIsSuccessAlert] = useState(false);
