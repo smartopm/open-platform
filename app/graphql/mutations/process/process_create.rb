@@ -17,6 +17,7 @@ module Mutations
         form = Forms::Form.find_by(id: vals[:form_id])
 
         raise GraphQL::ExecutionError, I18n.t('errors.note_list.not_found') unless note_list
+        raise GraphQL::ExecutionError, I18n.t('errors.note_list.has_process') if note_list.process
         raise GraphQL::ExecutionError, I18n.t('errors.form.not_found') unless form
 
         ActiveRecord::Base.transaction do
