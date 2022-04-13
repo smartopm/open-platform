@@ -8,6 +8,5 @@ FactoryBot.define do
   factory :note_list, class: 'Notes::NoteList' do
     name { generate(:note_list_title) }
     community
-    process
   end
 end
