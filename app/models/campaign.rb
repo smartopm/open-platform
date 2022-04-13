@@ -70,7 +70,7 @@ class Campaign < ApplicationRecord
 
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/MethodLength
-  def send_email(user)
+  def send_email(user, batch)
     template = community.email_templates.find_by(id: email_templates_id)
     return if template.nil? || user.email.blank?
 
@@ -86,16 +86,16 @@ class Campaign < ApplicationRecord
       template: template,
       template_data: template_data,
       custom_key: 'campaign_id',
-      custom_value: id,
+      custom_value: "#{id}*#{batch}",
     )
     message_log.save if response&.status_code.eql?('202')
   end
 
   def run_campaign
     update(start_time: Time.current, status: 'in_progress')
-    target_list_users.each do |user|
+    target_list_users.each_with_index do |user, index|
       if campaign_type.eql?('email')
-        send_email(user)
+        send_email(user, index / 1000)
       elsif user.phone_number.present?
         send_messages(user)
       end
@@ -113,7 +113,7 @@ class Campaign < ApplicationRecord
       batch_time: batch_time,
       start_time: start_time,
       end_time: end_time,
-      total_scheduled: user_id_list.split(',').count,
+      total_scheduled: target_list.uniq.size,
       total_sent: message_count,
       total_clicked: total_clicked,
       total_opened: total_opened,
