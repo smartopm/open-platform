@@ -124,6 +124,21 @@
     "save_my_id": "Salvar mi ID",
     "update": "Actualizar"
   },
+  "kiosk": {
+    "access_denied": "Acceso Denegado",
+    "access_granted": "Acceso Permitido",
+    "center_your_qr_code": "Por favor centre su Código QR en la pantalla de abajo.",
+    "go_back": "Regresar",
+    "new_scan": "Nuevo Escaneo",
+    "no_qr_code_text": "Si no tiene un Código QR, por favor diríjase al Guardia de Seguridad en servicio.",
+    "press_btn_to_scan": "Por favor presione el botón de abajo para escanear su Código QR.",
+    "qr_not_detected": "Código QR no detectado.",
+    "speak_to_guard_on_duty": "Diríjase al Guardia de Seguridad en servicio. ",
+    "start_scan": "Escanear",
+    "try_again": "Intente de nuevo",
+    "welcome": "Bienvenido",
+    "welcome_to_community": "Bienvenido a {{communityName}}"
+  },
   "log_title": {
     "date": "Fecha",
     "description": "Descripción",
