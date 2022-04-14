@@ -58,6 +58,7 @@ Ciudad Morazán:
         - can_fetch_form_properties
         - can_fetch_form_property
         - can_fetch_form_categories
+        - can_save_draft_form
     community:
       permissions:
         - can_see_menu_item
@@ -164,6 +165,7 @@ Tilisi:
         - can_fetch_form_properties
         - can_fetch_form_property
         - can_fetch_form_categories
+        - can_save_draft_form
     user:
       permissions:
         - can_view_own_profile
@@ -216,6 +218,7 @@ Tilisi:
         - can_fetch_form_properties
         - can_fetch_form_property
         - can_fetch_form_categories
+        - can_save_draft_form
     profile:
       permissions:
         - can_see_menu_item
@@ -294,6 +297,7 @@ DoubleGDP:
         - can_fetch_form_properties
         - can_fetch_form_property
         - can_fetch_form_categories
+        - can_save_draft_form
     community:
       permissions:
         - can_see_menu_item
@@ -380,6 +384,7 @@ DoubleGDP:
         - can_fetch_form_properties
         - can_fetch_form_property
         - can_fetch_form_categories
+        - can_save_draft_form
     user:
       permissions:
         - can_view_own_profile
@@ -432,6 +437,7 @@ DoubleGDP:
         - can_fetch_form_properties
         - can_fetch_form_property
         - can_fetch_form_categories
+        - can_save_draft_form
     profile:
       permissions:
         - can_see_menu_item
