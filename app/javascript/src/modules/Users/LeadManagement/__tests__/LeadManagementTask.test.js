@@ -33,6 +33,7 @@ describe('LeadManagementForm', () => {
             status: 'in_progress',
             formUser: {
               id: 'some-id',
+              formId: 'wrf8934r343r',
               user: {
                 id: 'user-id',
                 name: 'Form User Name'
