@@ -16,7 +16,6 @@ import { useMutation, useQuery } from 'react-apollo';
 import { StyleSheet, css } from 'aphrodite';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router';
-import { useTranslation } from 'react-i18next';
 import FormLinks, { useStyles } from './FormLinks';
 import { FormsQuery } from '../graphql/forms_queries';
 import Loading from '../../../shared/Loading';
@@ -30,17 +29,15 @@ import CenteredContent from '../../../shared/CenteredContent';
 import PageWrapper from '../../../shared/PageWrapper';
 
 // here we get existing google forms and we mix them with our own created forms
-export default function FormLinkList({ userType, community, path, id }) {
+export default function FormLinkList({ userType, community, path, id, t }) {
   const { data, error, loading, refetch } = useQuery(FormsQuery, {
     fetchPolicy: 'cache-and-network'
   });
   const [createForm] = useMutation(FormCreateMutation);
   const history = useHistory();
   const classes = useStyles();
-  const { t } = useTranslation(['form', 'common']);
   const [anchorEl, setAnchorEl] = useState(null);
   const [formId, setFormId] = useState('');
-
   const menuOpen = Boolean(anchorEl);
 
   function handleOpenMenu(event, Id) {
@@ -68,6 +65,7 @@ export default function FormLinkList({ userType, community, path, id }) {
               refetch={refetch}
               actionType={id ? 'update' : undefined}
               formId={id}
+              t={t}
             />
           </PageWrapper>
         </>
@@ -75,7 +73,7 @@ export default function FormLinkList({ userType, community, path, id }) {
       {path === '/forms' && (
         <>
           <List data-testid="forms-link-holder" style={{ cursor: 'pointer' }}>
-            <FormLinks community={community} />
+            <FormLinks community={community} t={t} />
             {data.forms.length ? (
               data.forms.map(form => (
                 <Fragment key={form.id}>
@@ -123,6 +121,7 @@ export default function FormLinkList({ userType, community, path, id }) {
                       handleClose={() => setAnchorEl(null)}
                       open={menuOpen}
                       refetch={refetch}
+                      t={t}
                     />
                   )}
                   <Divider variant="middle" />
@@ -155,7 +154,9 @@ FormLinkList.propTypes = {
   userType: PropTypes.string.isRequired,
   community: PropTypes.string.isRequired,
   path: PropTypes.string.isRequired,
-  id: PropTypes.string
+  id: PropTypes.string,
+  // eslint-disable-next-line react/forbid-prop-types
+  t: PropTypes.object.isRequired
 };
 
 const styles = StyleSheet.create({
