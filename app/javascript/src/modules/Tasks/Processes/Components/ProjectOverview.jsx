@@ -56,6 +56,7 @@ export default function ProjectOverview({ data }) {
 
   return (
     <>
+      {console.log(data)}
       <MessageAlert
         type={updateStatus.success ? 'success' : 'error'}
         message={updateStatus.message}
@@ -110,7 +111,7 @@ export default function ProjectOverview({ data }) {
               </Grid>
               <Grid item md={7} xs={7}>
                 <Button
-                  href={`/user_form/${data.formUser.user.id}/${data.formUser.id}/task`}
+                  href={`/user_form/${data.formUser.user.id}/${data.formUser.id}/task?formId=${data.formUser.formId}`}
                   variant="outlined"
                   color="primary"
                   className={classes.button}

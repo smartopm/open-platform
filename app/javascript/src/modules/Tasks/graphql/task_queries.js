@@ -59,6 +59,7 @@ export const TaskQuery = gql`
       formUserId
       formUser {
         id
+        formId
         user {
           id
           name

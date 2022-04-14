@@ -69,6 +69,7 @@ export default function TaskUpdate({
 
   return (
     <Container maxWidth="xl">
+      {console.log(data?.task)}
       <TaskDetail
         data={data?.task}
         refetch={refetch}

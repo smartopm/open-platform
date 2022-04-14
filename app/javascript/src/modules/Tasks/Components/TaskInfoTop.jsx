@@ -512,7 +512,7 @@ export default function TaskInfoTop({
           </Grid>
           <Grid item xs={12} md={9}>
             <Button
-              href={`/user_form/${data.formUser.user.id}/${data.formUser.id}/task`}
+              href={`/user_form/${data.formUser.user.id}/${data.formUser.id}/task?formId=${data.formUser.formId}`}
               variant="outlined"
               color="primary"
               className={classes.button}
