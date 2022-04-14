@@ -56,7 +56,6 @@ export default function ProjectOverview({ data }) {
 
   return (
     <>
-      {console.log(data)}
       <MessageAlert
         type={updateStatus.success ? 'success' : 'error'}
         message={updateStatus.message}
