@@ -200,8 +200,8 @@ RSpec.describe Types::Queries::LandParcel do
 
     describe 'Fetch House' do
       let(:fetch_house_query) do
-        %(query house($limit: Int, $offset: Int) {
-          fetchHouse(limit: $limit, offset: $offset) {
+        %(query house($query: String, $limit: Int, $offset: Int) {
+          fetchHouse(query: $query, limit: $limit, offset: $offset) {
             id
             parcelNumber
             paymentPlans{
@@ -230,6 +230,21 @@ RSpec.describe Types::Queries::LandParcel do
 
         expect(result.dig('data', 'fetchHouse')).to eql []
         expect(result.dig('errors', 0, 'message')).to be_nil
+      end
+
+      context 'when house is searched' do
+        before { land_parcel.house! }
+
+        it 'should return houses which matches with the search query' do
+          variables = { query: 'basic' }
+          result = DoubleGdpSchema.execute(fetch_house_query, variables: variables,
+                                                              context: {
+                                                                current_user: admin_user,
+                                                                site_community: community,
+                                                              }).as_json
+          expect(result.dig('errors', 0, 'message')).to be_nil
+          expect(result.dig('data', 'fetchHouse', 0, 'parcelNumber')).to eql 'basic-123'
+        end
       end
     end
 

@@ -72,7 +72,7 @@ export default function LandParcelList() {
   });
 
   const { loading: loadingHouseData, data: houseData, refetch: refetchHouseData } = useQuery(HouseQuery, {
-    variables: { limit, offset }
+    variables: { query: debouncedValue || searchQuery, limit, offset }
   });
 
   const { data: geoData, refetch: refetchGeoData } = useQuery(LandParcelGeoData, {

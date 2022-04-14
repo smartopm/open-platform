@@ -560,8 +560,8 @@ export const ParcelsQuery = gql`
   }
 `;
 export const HouseQuery = gql`
-  query house($limit: Int, $offset: Int) {
-    fetchHouse(limit: $limit, offset: $offset) {
+  query house($query: String, $limit: Int, $offset: Int) {
+    fetchHouse(query: $query, limit: $limit, offset: $offset) {
       id
       parcelNumber
       address1
