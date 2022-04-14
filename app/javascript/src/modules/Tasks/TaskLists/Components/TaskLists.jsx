@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Breadcrumbs, Grid, Typography } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 import makeStyles from '@mui/styles/makeStyles';
 import { useQuery } from 'react-apollo';
 import { formatError } from '../../../../utils/helpers';
@@ -10,13 +10,15 @@ import Paginate from '../../../../components/Paginate';
 import { Spinner } from '../../../../shared/Loading';
 import { TaskListsQuery } from '../graphql/task_lists_queries';
 import TodoItem from '../../Components/TodoItem';
+import AccessCheck from '../../../Permissions/Components/AccessCheck';
+import FloatingButton from '../../../../shared/buttons/FloatingButton';
 
 export default function TaskLists() {
   const { t } = useTranslation('task');
   const classes = useStyles();
   const [offset, setOffset] = useState(0);
   const limit = 50;
-
+  const history = useHistory();
   const { data, loading, error } = useQuery(TaskListsQuery, {
     variables: {
       offset,
@@ -24,6 +26,9 @@ export default function TaskLists() {
     },
     fetchPolicy: 'cache-and-network'
   });
+  function redirectToTaskListCreatePage() {
+    history.push('/tasks/task_lists/new');
+  }
 
   function paginate(action) {
     if (action === 'prev') {
@@ -84,6 +89,14 @@ export default function TaskLists() {
           handlePageChange={paginate}
         />
       </CenteredContent>
+      <AccessCheck module="note" allowedPermissions={['can_view_create_task_button']}>
+        <FloatingButton
+          variant="extended"
+          handleClick={redirectToTaskListCreatePage}
+          color="primary"
+          data-testid="create_task_btn"
+        />
+      </AccessCheck>
     </div>
   );
 }

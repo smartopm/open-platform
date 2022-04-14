@@ -110,7 +110,7 @@ export default function TaskListCreate() {
                     item
                     md={12}
                     xs={12}
-                    style={{ marginLeft: isMobile ? 80 : 15, marginTop: !isMobile && 42 }}
+                    style={{ marginLeft: isMobile ? 80 : 8, marginTop: !isMobile && 41 }}
                   >
                     <Button
                       variant="contained"
