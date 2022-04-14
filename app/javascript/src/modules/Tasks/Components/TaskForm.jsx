@@ -1,44 +1,58 @@
-import React, { useState } from 'react'
-import TextField from '@mui/material/TextField'
+import React, { useState, useEffect } from 'react';
+import TextField from '@mui/material/TextField';
 import {
   Button,
   FormHelperText,
   MenuItem,
   Select,
   InputLabel,
-  FormControl,
-} from '@mui/material'
-import { css } from 'aphrodite'
-import { useMutation } from 'react-apollo'
-import PropTypes from 'prop-types'
+  Grid,
+  FormControl
+} from '@mui/material';
+import { css } from 'aphrodite';
+import { useMutation } from 'react-apollo';
+import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import { CreateNote } from '../../../graphql/mutations'
-import DatePickerDialog from '../../../components/DatePickerDialog'
-import { discussStyles } from '../../../components/Discussion/Discuss'
-import { NotesCategories } from '../../../utils/constants'
+import { CreateNote } from '../../../graphql/mutations';
+import DatePickerDialog from '../../../components/DatePickerDialog';
+import { discussStyles } from '../../../components/Discussion/Discuss';
+import { NotesCategories } from '../../../utils/constants';
 // TODO: This should be moved to the shared directory
-import UserSearch from '../../Users/Components/UserSearch'
+import UserSearch from '../../Users/Components/UserSearch';
 import CustomAutoComplete from '../../../shared/autoComplete/CustomAutoComplete';
 
 const initialData = {
   user: '',
   userId: ''
-}
-export default function TaskForm({ close, refetch, users, assignUser, parentTaskId }) {
-  const [title, setTitle] = useState('')
-  const [description, setDescription] = useState('')
-  const [error, setErrorMessage] = useState('')
-  const [assignees, setAssignees] = useState([])
-  const [taskType, setTaskType] = useState('')
-  const [selectedDate, setDate] = useState(new Date())
-  const [loading, setLoadingStatus] = useState(false)
-  const [createTask] = useMutation(CreateNote)
-  const [userData, setData] = useState(initialData)
-  const { t } = useTranslation(['task', 'common'])
+};
+export default function TaskForm({
+  close,
+  refetch,
+  users,
+  assignUser,
+  parentTaskId,
+  createTaskListSubTask
+}) {
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [error, setErrorMessage] = useState('');
+  const [assignees, setAssignees] = useState([]);
+  const [taskType, setTaskType] = useState('');
+  const [selectedDate, setDate] = useState(new Date());
+  const [loading, setLoadingStatus] = useState(false);
+  const [createTask] = useMutation(CreateNote);
+  const [userData, setData] = useState(initialData);
+  const { t } = useTranslation(['task', 'common']);
+
+  useEffect(() => {
+    if (createTaskListSubTask) {
+      setTaskType('task_list');
+    }
+  }, [createTaskListSubTask]);
 
   function handleSubmit(event) {
-    event.preventDefault()
-    setLoadingStatus(true)
+    event.preventDefault();
+    setLoadingStatus(true);
     createTask({
       variables: {
         body: title,
@@ -47,16 +61,16 @@ export default function TaskForm({ close, refetch, users, assignUser, parentTask
         category: taskType,
         flagged: true,
         userId: userData.userId,
-        parentNoteId: parentTaskId,
+        parentNoteId: parentTaskId
       }
     })
       .then(({ data }) => {
-        assignees.map(user => assignUser(data.noteCreate.note.id, user.id))
-        close()
-        refetch()
-        setLoadingStatus(false)
-    })
-    .catch(err => setErrorMessage(err.message))
+        assignees.map(user => assignUser(data.noteCreate.note.id, user.id));
+        close();
+        refetch();
+        setLoadingStatus(false);
+      })
+      .catch(err => setErrorMessage(err.message));
   }
 
   return (
@@ -111,12 +125,13 @@ export default function TaskForm({ close, refetch, users, assignUser, parentTask
           name="taskType"
           data-testid="task-type"
           fullWidth
+          disabled={createTaskListSubTask}
         >
           {Object.entries(NotesCategories).map(([key, val]) => (
             <MenuItem key={key} value={key}>
               {val}
             </MenuItem>
-            ))}
+          ))}
         </Select>
       </FormControl>
       <br />
@@ -125,11 +140,11 @@ export default function TaskForm({ close, refetch, users, assignUser, parentTask
         users={users}
         isMultiple
         onChange={(_evt, value) => {
-        if(!value) {
-          return
-        }
-        setAssignees(value)
-      }}
+          if (!value) {
+            return;
+          }
+          setAssignees(value);
+        }}
         label={t('task.task_search_placeholder')}
       />
 
@@ -137,53 +152,73 @@ export default function TaskForm({ close, refetch, users, assignUser, parentTask
       <UserSearch userData={userData} update={setData} />
       <br />
       <div>
-        <DatePickerDialog
-          handleDateChange={date => setDate(date)}
-          selectedDate={selectedDate}
-        />
+        <DatePickerDialog handleDateChange={date => setDate(date)} selectedDate={selectedDate} />
         <FormHelperText>{t('common:form_placeholders.note_due_date')}</FormHelperText>
       </div>
 
       <br />
-      <div className="d-flex row justify-content-center">
-        <Button
-          variant="contained"
-          aria-label="task_cancel"
-          color="secondary"
-          onClick={close}
-          data-testid="task-cancel-button"
-          className={`${css(discussStyles.cancelBtn)}`}
+      {/* <div className="d-flex row justify-content-center"> */}
+      <Grid
+        container
+        spacing={5}
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gridTemplateColumns: 'repeat(2, 1fr)'
+        }}
+      >
+        <Grid item md={6} xs={6}>
+          <Button
+            variant="contained"
+            aria-label="task_cancel"
+            color="secondary"
+            onClick={close}
+            data-testid="task-cancel-button"
+            className={`${css(discussStyles.cancelBtn)}`}
+          >
+            {t('common:form_actions.cancel')}
+          </Button>
+        </Grid>
+
+        <Grid
+          item
+          md={6}
+          xs={6}
+          style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end' }}
         >
-          {t('common:form_actions.cancel')}
-        </Button>
-        <Button
-          variant="contained"
-          type="submit"
-          color="primary"
-          disabled={loading}
-          aria-label="task_submit"
-          data-testid="task-submit-button"
-          className={`${css(discussStyles.submitBtn)}`}
-        >
-          {loading ? t('common:form_actions.creating_task') : t('common:form_actions.create_task')}
-        </Button>
-      </div>
-      <p className="text-center">
-        {Boolean(error.length) && error}
-      </p>
+          <Button
+            variant="contained"
+            type="submit"
+            color="primary"
+            disabled={loading}
+            aria-label="task_submit"
+            data-testid="task-submit-button"
+            className={`${css(discussStyles.submitBtn)}`}
+          >
+            {loading
+              ? t('common:form_actions.creating_task')
+              : t('common:form_actions.create_task')}
+          </Button>
+        </Grid>
+      </Grid>
+      {/* </div> */}
+      <p className="text-center">{Boolean(error.length) && error}</p>
     </form>
-  )
+  );
 }
 
 TaskForm.defaultProps = {
   users: [],
-  parentTaskId: ''
-}
+  parentTaskId: '',
+  createTaskListSubTask: false
+};
 
 TaskForm.propTypes = {
   users: PropTypes.arrayOf(PropTypes.shape),
   close: PropTypes.func.isRequired,
   refetch: PropTypes.func.isRequired,
   assignUser: PropTypes.func.isRequired,
-  parentTaskId: PropTypes.string
-}
+  parentTaskId: PropTypes.string,
+  createTaskListSubTask: PropTypes.bool
+};

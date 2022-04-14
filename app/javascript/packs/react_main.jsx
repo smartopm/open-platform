@@ -36,6 +36,7 @@ import AllNotes from '../src/containers/Activity/AllNotes';
 import ProjectsList from '../src/modules/Tasks/Processes/Components/ProjectsList';
 import TaskLists from '../src/modules/Tasks/TaskLists/Components/TaskLists'; // TODO: Remove after Task Lists menu is set up
 import TaskListCreate from '../src/modules/Tasks/TaskLists/Components/TaskListCreate';
+import AddSubTasks from '../src/modules/Tasks/TaskLists/Components/AddSubTasks';
 import FeedbackPage from '../src/containers/Activity/AllFeedback';
 import ShowroomLogs from '../src/containers/showroom/ShowroomLogs';
 import ClientRequestForm from '../src/containers/ClientRequestForm';
@@ -241,6 +242,8 @@ const App = () => {
                                   path="/tasks/task_lists/new"
                                   component={TaskListCreate}
                                 />
+                                <Route path="/tasks/task_lists/:taskId" component={AddSubTasks} />
+
                                 {/* end of redirects */}
                                 {[...modules, ...UserRoutes].map(module => {
                                   if (module.subMenu) {

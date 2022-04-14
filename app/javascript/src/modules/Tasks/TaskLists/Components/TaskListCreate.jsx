@@ -1,28 +1,26 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import TextField from '@mui/material/TextField';
+import { Link, useHistory } from 'react-router-dom';
 import { Breadcrumbs, Grid, Typography, Button, useMediaQuery } from '@mui/material';
 import { useMutation } from 'react-apollo';
-
-import { Link } from 'react-router-dom';
 import makeStyles from '@mui/styles/makeStyles';
 import { useTranslation } from 'react-i18next';
 import { CreateTaskList } from '../graphql/task_list_mutation';
 import CenteredContent from '../../../../shared/CenteredContent';
 import { formatError } from '../../../../utils/helpers';
 import { Spinner } from '../../../../shared/Loading';
-import TodoItem from '../../Components/TodoItem';
 
-export default function TaskLists() {
+export default function TaskListCreate() {
   const { t } = useTranslation('task');
   const classes = useStyles();
   const isMobile = useMediaQuery('(max-width:800px)');
   const [body, setBody] = useState('');
-
   const [loadingStatus, setLoadingStatus] = useState(false);
   const [errors, setErr] = useState('');
   const [disabled, setDisabled] = useState(true);
   const [createTaskList] = useMutation(CreateTaskList);
   const [parentTaskData, setParentTaskData] = useState(null);
+  const history = useHistory();
 
   function handleChange(event) {
     setDisabled(false);
@@ -40,6 +38,7 @@ export default function TaskLists() {
     })
       .then(data => {
         setParentTaskData(data?.data?.taskListCreate?.note);
+        history.push(`/tasks/task_lists/${data?.data?.taskListCreate?.note?.id}`);
         setLoadingStatus(false);
         setDisabled(true);
       })
@@ -48,7 +47,6 @@ export default function TaskLists() {
         setErr(err);
       });
   }
-  useEffect(() => {}, [parentTaskData]);
 
   if (loadingStatus) return <Spinner />;
   if (errors) return <CenteredContent>{formatError(errors.message)}</CenteredContent>;
@@ -134,24 +132,6 @@ export default function TaskLists() {
 
         <br />
         <br />
-        {parentTaskData !== null ? (
-          <div>
-            <Grid item md={12} xs={12}>
-              <Grid container spacing={2}>
-                <Grid item md={12} xs={12}>
-                  <Typography variant="body1">{t('task_lists.step_2')}</Typography>
-                </Grid>
-                <Grid item md={12} xs={12} style={{ marginBottom: 10 }}>
-                  <Typography variant="body2">{t('task_lists.step_2_sub_header')}</Typography>
-                </Grid>
-              </Grid>
-            </Grid>
-            <br />
-            <TodoItem key={parentTaskData?.id} task={parentTaskData} taskId={parentTaskData.id} />
-          </div>
-        ) : (
-          <CenteredContent>{t('task_lists.no_task_lists')}</CenteredContent>
-        )}
       </Grid>
     </div>
   );
