@@ -41,6 +41,7 @@ module Types::Queries::LandParcel
       description 'Get all land parcel entries'
       argument :offset, Integer, required: false
       argument :limit, Integer, required: false
+      argument :query, String, required: false
     end
 
     field :house_geo_data, [Types::LandParcelGeoDataType], null: true do
@@ -97,10 +98,11 @@ module Types::Queries::LandParcel
     properties.map { |p| geo_data(p, properties) }
   end
 
-  def fetch_house(offset: 0, limit: 100)
+  def fetch_house(query: nil, offset: 0, limit: 100)
     raise_unauthorized_error_for_land_parcels(:can_fetch_house)
 
     context[:site_community].land_parcels
+                            .search(query)
                             .where(object_type: 'house')
                             .includes(accounts: :user, payment_plans: %i[user plan_payments])
                             .with_attached_images
