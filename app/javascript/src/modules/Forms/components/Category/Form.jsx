@@ -116,21 +116,6 @@ export default function Form({
         open={formState.alertOpen || !!error}
         handleClose={() => setFormState({ ...formState, alertOpen: false })}
       />
-      {/* <CustomizedDialogs
-        handleModal={handleCategoryClose}
-        open={categoryFormOpen}
-        dialogHeader={t('form:misc.category')}
-        actionable={false}
-        displaySaveButton
-      >
-        <CategoryForm
-          data={data}
-          close={handleCategoryClose}
-          formData={formData}
-          refetchCategories={categoriesData.refetch}
-          formDetailRefetch={formDetailRefetch}
-        />
-      </CustomizedDialogs> */}
       {categoryFormOpen && (
         <CategoryForm
           data={data}

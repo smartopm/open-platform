@@ -169,15 +169,17 @@ export default function FormBuilder({ formId }) {
           </PageWrapper>
           <PageWrapper>
             <TabPanel value={tabValue} index={0} pad>
-              <Form
-                formId={formId}
-                editMode
-                property={Boolean(data.formProperties.length)}
-                publishForm={publishForm}
-                isPublishing={isPublishing}
-                handleConfirmPublish={handleConfirmPublish}
-                formDetailRefetch={dataRefetch}
-              />
+              <div style={{paddingBottom: '20px'}}>
+                <Form
+                  formId={formId}
+                  editMode
+                  property={Boolean(data.formProperties.length)}
+                  publishForm={publishForm}
+                  isPublishing={isPublishing}
+                  handleConfirmPublish={handleConfirmPublish}
+                  formDetailRefetch={dataRefetch}
+                />
+              </div>
             </TabPanel>
             <TabPanel value={tabValue} index={1} pad>
               <FormCreate
