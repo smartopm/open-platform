@@ -6,7 +6,8 @@ import {
   groupComments,
   lastRepliedComment,
   isDiscussionResolved,
-  checkLastItem
+  checkLastItem,
+  getFormUrl
 } from '../utils';
 
 describe('find hrefs in a string', () => {
@@ -16,6 +17,13 @@ describe('find hrefs in a string', () => {
     expect(hrefsExtractor(hrefsString)[1]).toBe('href2');
   });
 });
+
+describe('get form url in a string', () => {
+  const formId = '1234'
+  it('returns the form url', () => {
+    expect(getFormUrl(formId)).toEqual(`${window.location.origin}/form/${formId}/private`)
+  })
+})
 
 describe('sentenceToSnakeCase', () => {
   it('convertes text to snake_case', () => {

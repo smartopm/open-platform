@@ -13,6 +13,10 @@ export function hrefsExtractor(link) {
   return urls;
 }
 
+export function getFormUrl(formId) {
+  return `${window.location.origin}/form/${formId}/private`
+}
+
 export function filterProjectAndStages(projectData, projectStages){
   if (!projectData) return [];
 
