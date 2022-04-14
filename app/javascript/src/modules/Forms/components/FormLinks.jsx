@@ -89,6 +89,5 @@ export const useStyles = makeStyles({
 
 FormLinks.propTypes = {
   community: PropTypes.string.isRequired,
-  // eslint-disable-next-line react/forbid-prop-types
-  t: PropTypes.object.isRequired
+  t: PropTypes.func.isRequired
 }

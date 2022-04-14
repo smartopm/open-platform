@@ -155,8 +155,7 @@ FormLinkList.propTypes = {
   community: PropTypes.string.isRequired,
   path: PropTypes.string.isRequired,
   id: PropTypes.string,
-  // eslint-disable-next-line react/forbid-prop-types
-  t: PropTypes.object.isRequired
+  t: PropTypes.func.isRequired
 };
 
 const styles = StyleSheet.create({

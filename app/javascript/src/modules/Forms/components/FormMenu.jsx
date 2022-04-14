@@ -126,6 +126,5 @@ FormMenu.propTypes = {
   refetch: PropTypes.func.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   anchorEl: PropTypes.object,
-    // eslint-disable-next-line react/forbid-prop-types
-  t: PropTypes.object.isRequired
+  t: PropTypes.func.isRequired
 };

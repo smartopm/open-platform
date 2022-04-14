@@ -261,6 +261,5 @@ FormCreate.propTypes = {
   actionType: PropTypes.string,
   refetch: PropTypes.func.isRequired,
   routeBack: PropTypes.bool,
-  // eslint-disable-next-line react/forbid-prop-types
-  t: PropTypes.object.isRequired
+  t: PropTypes.func.isRequired
 };

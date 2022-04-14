@@ -4,11 +4,13 @@ import { MockedProvider } from '@apollo/react-testing';
 import { createTheme, ThemeProvider, StyledEngineProvider } from '@mui/material';
 import routeData, { MemoryRouter } from 'react-router';
 import '@testing-library/jest-dom/extend-expect';
+import { useTranslation } from 'react-i18next';
 import FormLinkList from '../components/FormList';
 import { FormsQuery } from '../graphql/forms_queries';
 import userMock from '../../../__mocks__/authstate';
 
 describe('Form List Component', () => {
+  const { t } = useTranslation(['common', 'form']);
   const mocks = {
     request: {
       query: FormsQuery
@@ -55,6 +57,7 @@ describe('Form List Component', () => {
                 userType="admin"
                 community={userMock.user.community.name}
                 path="/forms"
+                t={t}
               />
             </ThemeProvider>
           </StyledEngineProvider>
@@ -70,7 +73,7 @@ describe('Form List Component', () => {
 
         fireEvent.click(container.queryAllByTestId('community_form')[0])
         expect(mockHistory.push).toBeCalledWith('/form/caea7b44-ee95-42a6/private')
-        
+
         expect(container.queryAllByTestId('form_name')).toHaveLength(2);
         expect(container.queryAllByTestId('form_name')[0]).toHaveTextContent('Lease Form');
         expect(container.queryAllByTestId('form_name')[1]).toHaveTextContent('Another Form');
@@ -94,6 +97,7 @@ describe('Form List Component', () => {
                 community={userMock.user.community.name}
                 path="/forms/create"
                 id="qedhgwewwefwfwf"
+                t={t}
               />
             </ThemeProvider>
           </StyledEngineProvider>
