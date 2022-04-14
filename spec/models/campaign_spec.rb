@@ -133,12 +133,12 @@ RSpec.describe Campaign, type: :model do
           template: template,
           template_data: template_data,
           custom_key: 'campaign_id',
-          custom_value: campaign.id,
+          custom_value: "#{campaign.id}*0",
         )
         allow(EmailMsg).to receive(:send_mail_from_db).and_return(
           OpenStruct.new(status_code: '202'),
         )
-        campaign.send_email(user)
+        campaign.send_email(user, 0)
         expect(Notifications::Message.count).to eq(prev_message_count + 1)
       end
     end
@@ -157,12 +157,12 @@ RSpec.describe Campaign, type: :model do
           template: template,
           template_data: template_data,
           custom_key: 'campaign_id',
-          custom_value: campaign.id,
+          custom_value: "#{campaign.id}*0",
         )
         allow(EmailMsg).to receive(:send_mail_from_db).and_return(
           OpenStruct.new(status_code: '400'),
         )
-        campaign.send_email(user)
+        campaign.send_email(user, 0)
         expect(Notifications::Message.count).to eq prev_message_count
       end
     end
