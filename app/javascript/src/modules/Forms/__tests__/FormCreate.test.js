@@ -3,6 +3,7 @@ import { fireEvent, render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import FormContextProvider from '../Context';
 import FormCreate from '../components/FormCreate';
 import { FormQuery } from '../graphql/forms_queries';
@@ -12,6 +13,7 @@ jest.mock('react-markdown', () => <div />);
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 
 describe('FormCreate Component', () => {
+  const { t } = useTranslation(['common', 'form']);
   const formMock = {
     request: {
       query: FormQuery,
@@ -35,7 +37,8 @@ describe('FormCreate Component', () => {
 
   const props = {
     formMutation: jest.fn().mockImplementation(() => Promise.resolve()),
-    refetch: jest.fn()
+    refetch: jest.fn(),
+    t
   };
 
   it('should render without crashing', async () => {

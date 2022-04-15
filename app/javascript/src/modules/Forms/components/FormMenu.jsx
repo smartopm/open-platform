@@ -6,20 +6,18 @@ import {
 import { useMutation } from 'react-apollo';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router';
-import { useTranslation } from 'react-i18next';
 import { FormUpdateMutation } from '../graphql/forms_mutation';
 import { formStatus } from '../../../utils/constants';
 import { ActionDialog } from '../../../components/Dialog';
 import MessageAlert from '../../../components/MessageAlert';
 import { objectAccessor } from '../../../utils/helpers';
 
-export default function FormMenu({ formId, formName, anchorEl, handleClose, open, refetch }) {
+export default function FormMenu({ formId, formName, anchorEl, handleClose, open, refetch, t }) {
   const history = useHistory();
   const [isDialogOpen, setOpen] = useState(false);
   const [alertOpen, setAlertOpen] = useState(false);
   const [actionType, setActionType] = useState('');
   const [message, setMessage] = useState({ isError: false, detail: '' });
-  const { t } = useTranslation(['form', 'common']);
 
   const [publish] = useMutation(FormUpdateMutation);
 
@@ -127,5 +125,6 @@ FormMenu.propTypes = {
   handleClose: PropTypes.func.isRequired,
   refetch: PropTypes.func.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
-  anchorEl: PropTypes.object
+  anchorEl: PropTypes.object,
+  t: PropTypes.func.isRequired
 };

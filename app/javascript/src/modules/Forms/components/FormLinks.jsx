@@ -9,15 +9,13 @@ import {
 } from '@mui/material'
 import PropTypes from 'prop-types'
 import { makeStyles } from '@mui/styles'
-import { useTranslation } from 'react-i18next'
 import AssignmentIcon from '@mui/icons-material/Assignment'
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider'
 
 
 // this is for existing google forms
-export default function FormLinks({ community }) {
+export default function FormLinks({ community, t }) {
 const authState = useContext(AuthStateContext)
-const { t } = useTranslation('form')
 
 // eslint-disable-next-line no-use-before-define
 const classes = useStyles()
@@ -90,5 +88,6 @@ export const useStyles = makeStyles({
 })
 
 FormLinks.propTypes = {
-  community: PropTypes.string.isRequired
+  community: PropTypes.string.isRequired,
+  t: PropTypes.func.isRequired
 }

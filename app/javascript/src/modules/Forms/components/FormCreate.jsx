@@ -7,7 +7,6 @@ import Grid from '@mui/material/Grid';
 import PropTypes from 'prop-types';
 import Button from '@mui/material/Button';
 import Divider from '@mui/material/Divider';
-import { useTranslation } from 'react-i18next';
 import { Alert } from '@mui/material';
 import { DateAndTimePickers } from '../../../components/DatePickerDialog';
 import FormRoleSelect from './FormRoleSelect';
@@ -25,7 +24,8 @@ export default function FormCreate({
   refetch,
   formId,
   actionType,
-  routeBack
+  routeBack,
+  t
 }) {
   const [formDataQuery, { data: formData, error: formError, loading: formLoading }] = useLazyQuery(
     FormQuery,
@@ -33,7 +33,6 @@ export default function FormCreate({
       variables: { id: formId }
     }
   );
-  const { t } = useTranslation(['form', 'common']);
   const history = useHistory();
   const matches = useMediaQuery('(max-width:900px)');
   const [title, setTitle] = useState('');
@@ -50,7 +49,7 @@ export default function FormCreate({
   const communityRoles = authState?.user?.community?.roles;
   const [isCopied, setIsCopied] = useState(false);
   const { hostname } = window.location
-  
+
   function submitForm() {
     const variables = {
       name: title,
@@ -92,7 +91,7 @@ export default function FormCreate({
     setAlertOpen(false);
   }
 
-  async function handleTextCopy(){ 
+  async function handleTextCopy(){
     await copyText(generateIframeSnippet(formData.form, hostname ))
     setIsCopied(true)
   }
@@ -214,8 +213,8 @@ export default function FormCreate({
         <Grid item xs={12}>
           {
               formData?.form?.id && isPublic && (
-                <Alert 
-                  icon={false} 
+                <Alert
+                  icon={false}
                   severity="success"
                   action={!isCopied && (
                     <Button color="inherit" size="small" onClick={handleTextCopy} data-testid="copy_text">
@@ -224,7 +223,7 @@ export default function FormCreate({
                   )}
                 >
                   {
-                    isCopied 
+                    isCopied
                     ? t('common:misc.copied')
                     : generateIframeSnippet(formData.form, hostname )
                   }
@@ -261,5 +260,6 @@ FormCreate.propTypes = {
   formMutation: PropTypes.func.isRequired,
   actionType: PropTypes.string,
   refetch: PropTypes.func.isRequired,
-  routeBack: PropTypes.bool
+  routeBack: PropTypes.bool,
+  t: PropTypes.func.isRequired
 };
