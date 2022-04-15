@@ -185,6 +185,7 @@ export default function FormBuilder({ formId }) {
                 refetch={formDetailRefetch}
                 actionType="update"
                 formId={formId}
+                t={t}
               />
             </TabPanel>
             <TabPanel value={tabValue} index={2} pad>
