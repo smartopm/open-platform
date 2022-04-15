@@ -1,5 +1,6 @@
 import React from 'react';
 import { act, fireEvent, render, waitFor, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event'
 import '@testing-library/jest-dom/extend-expect';
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom';
@@ -62,11 +63,9 @@ describe('UserForm Component', () => {
 
       expect(container.queryByTestId('primary_phone').value).toContain('090909090909');
 
-      fireEvent.change(container.queryByTestId('email'), {
-        target: { value: 'abc@def.jkl' }
-      });
+      userEvent.type(container.queryByTestId('email'), 'abcdef.jkl')
 
-      expect(container.queryByTestId('email').value).toContain('abc@def.jkl');
+      expect(container.queryByTestId('email').value).toContain('abcdef.jkl');
 
       fireEvent.change(container.queryByTestId('address'), {
         target: { value: '24th street, west' }
@@ -75,7 +74,16 @@ describe('UserForm Component', () => {
       expect(container.queryByTestId('address').value).toContain('24th street, west');
       // when we hit submit button, it should get disabled
       fireEvent.submit(container.queryByTestId('submit-form'));
-      expect(container.queryByTestId('submit_btn')).toBeDisabled();
+      expect(container.queryByTestId('submit_btn')).not.toBeDisabled();
+      expect(container.queryByText('common:errors.invalid_email')).toBeInTheDocument();
+
+      // update with valid email and hit submit again
+      userEvent.type(container.queryByTestId('email'), 'nurudeen@gmail.com')
+      expect(container.queryByTestId('email').value).toContain('nurudeen@gmail.com');
+      fireEvent.submit(container.queryByTestId('submit-form'));
+      await waitFor(() => {
+        expect(container.queryByTestId('submit_btn')).toBeDisabled();
+      }, 10)
     });
 
   it('should contain referral form when referring', async () => {

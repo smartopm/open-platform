@@ -19,7 +19,7 @@ import useFileUpload from '../../../graphql/useFileUpload';
 import crudHandler from '../../../graphql/crud_handler';
 import Loading from '../../../shared/Loading';
 import FormOptionInput, { FormOptionWithOwnActions } from '../../Forms/components/FormOptionInput';
-import { saniteError } from '../../../utils/helpers';
+import { saniteError, validateEmail } from '../../../utils/helpers';
 import { ModalDialog } from '../../../components/Dialog';
 import CenteredContent from '../../../components/CenteredContent';
 import { UpdateUserMutation } from '../../../graphql/mutations/user';
@@ -56,6 +56,7 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
   const [emails, setEmails] = React.useState([]);
   const [address, setAddress] = React.useState([]);
   const [isModalOpen, setDenyModal] = React.useState(false);
+  const [emailError, setEmailValidationError] = React.useState(null);
   const [modalAction, setModalAction] = React.useState('grant');
   const [msg, setMsg] = React.useState('');
   const [selectedDate, handleDateChange] = React.useState(null);
@@ -84,6 +85,10 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
 
   function handleSubmit(event) {
     event.preventDefault();
+    if(!validateEmail(data.email)){
+      setEmailValidationError(t('common:errors.invalid_email'));
+      return
+    }
     setSubmitting(true);
     const secondaryInfo = {
       phone: phoneNumbers,
@@ -352,6 +357,9 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
             value={data.email || ''}
             inputProps={{ 'data-testid': 'email' }}
             disabled={!isFromRef && !isAdmin}
+            error={!!emailError}
+            helperText={emailError}
+
           />
         </div>
 
