@@ -30,23 +30,15 @@ export default function FormContextProvider({ children }) {
   const [formProperties, setFormProperties] = useState(initialData);
   const [formState, setFormState] = useState(state);
   const [uploadedImages, setUploadedImages] = useState([]);
-  const [filesToUpload, setFilesToUpload] = useState([]);
-  const { onChange, status, signedBlobId, contentType, url, startUpload, filename } = useFileUpload({
-    client: useApolloClient()
-  });
+  const { onChange, status, signedBlobId, contentType, url, startUpload, filename } = useFileUpload(
+    {
+      client: useApolloClient()
+    }
+  );
   const [createFormUser] = useMutation(FormUserCreateMutation);
   const { t } = useTranslation('form');
   const signature = useFileUpload({ client: useApolloClient() });
 
-
-  function removeBeforeUpload(file) {
-    const filteredImages = filesToUpload.filter(
-      item => !formState.currentFileNames.includes(item.name)
-    );
-    setFilesToUpload(filteredImages);
-  }
-
-  console.log(status)
   useEffect(() => {
     if (
       status === 'DONE' &&

@@ -48,7 +48,6 @@ export default function RenderForm({
     setUploadedImages,
     setFormProperties,
     setFormState,
-    onChange,
     startUpload,
     signature
   } = useContext(FormContext);
@@ -106,45 +105,32 @@ export default function RenderForm({
     });
   }
 
-console.log(uploadedImages)
-  async function handleFileUpload(file, propertyId){
-    await startUpload(file)
-    await setFormState({
-      ...formState,
-      currentPropId: propertyId,
-      isUploading: true,
-    });
-    // removeBeforeUpload(file)
+   function handleFileUpload(file, propertyId) {
+    const validType = fileTypes.includes(file.type.split('/')[1]) || file.type.split('/')[0] === 'image';
+      if (!validType) {
+        setMessageAlert(t('form:errors.wrong_file_type'));
+        setIsSuccessAlert(false);
+        return;
+      }
+       setFormState({
+        ...formState,
+        currentPropId: propertyId,
+        isUploading: true,
+        currentFileNames: [...formState.currentFileNames, file.name]
+      });
+     startUpload(file);
   }
 
-  function onImageSelect(event, currentProperty) {
-    // const file = event.target.files[0];
-    // const validType =
-    //   fileTypes.includes(file.type.split('/')[1]) || file.type.split('/')[0] === 'image';
-    // if (!validType) {
-    //   setMessageAlert(t('form:errors.wrong_file_type'));
-    //   setIsSuccessAlert(false);
-    //   return;
-    // }
-    // setFormState({
-    //   ...formState,
-    //   currentPropId: currentProperty,
-    //   isUploading: true
-    // });
-    setFilesToUpload([...event.target.files])
-    // onChange(event.target.files[0]);
-
-  }
-
-  function removeBeforeUpload(file) {
+  function removeBeforeUpload(file, isFileUploaded, formPropertyId) {
+    if (isFileUploaded) {
+      return onImageRemove(formPropertyId)
+    }
     const filteredImages = filesToUpload.filter(item => item.name !== file.name);
-    setFilesToUpload(filteredImages);
+    return setFilesToUpload(filteredImages);
   }
 
   function isUploaded(file) {
-    console.log(uploadedImages)
     const isIt = uploadedImages.some(uploaded => uploaded.filename === file.name )
-    console.log(isIt)
     return isIt
   }
 
@@ -152,8 +138,6 @@ console.log(uploadedImages)
     const filteredImages = uploadedImages.filter(im => im.propertyId !== imagePropertyId);
     setUploadedImages(filteredImages);
   }
-
-
 
   async function handleSignatureUpload() {
     setFormState({ ...formState, signed: true });
@@ -361,7 +345,7 @@ console.log(uploadedImages)
                 id: formPropertiesData.id,
                 required: formPropertiesData.required
               }}
-              upload={evt => onImageSelect(evt, formPropertiesData.id)}
+              upload={event => setFilesToUpload([...event.target.files])}
               editable={editable}
               uploaded={!!uploadedFile}
               btnColor="primary"
@@ -388,8 +372,9 @@ console.log(uploadedImages)
           filesToUpload.map(file => (
             <UploadFileItem
               file={file}
-              handleUpload={() => handleFileUpload(file, formPropertiesData.id)}
-              handleRemoveFile={() => removeBeforeUpload(file)}
+              formPropertyId={formPropertiesData.id}
+              handleUpload={handleFileUpload}
+              handleRemoveFile={removeBeforeUpload}
               formState={{...formState, uploaded: uploadedImages}}
               isUploaded={isUploaded(file)}
               key={`${file.size}-${file.name}`}
