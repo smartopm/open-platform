@@ -397,6 +397,9 @@ es:
       not_found: Parcela de tierra no encontrada
       poi_record_not_found: Registro de Poi no encontrado
     not_found: No encontrado
+    note_list:
+      has_process: Esta Lista de Tareas ya está vinculada a un proceso
+      not_found: Lista de Tareas no encontrada
     note:
       task_not_found: No se encontró ninguna tarea, pruebe con una consulta diferente
       unable_to_update_tasks: Algo salió mal al actualizar las tareas seleccionadas
