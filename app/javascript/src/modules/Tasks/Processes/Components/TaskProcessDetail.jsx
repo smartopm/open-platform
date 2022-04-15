@@ -22,7 +22,7 @@ import ProjectProcesses from './ProjectProcesses';
 import ProjectProcessesSplitView from './ProjectProcessesSplitView';
 import CenteredContent from '../../../../shared/CenteredContent';
 import { Spinner }  from '../../../../shared/Loading';
-import { hrefsExtractor } from '../utils';
+import { getFormUrl } from '../utils';
 import MessageAlert from '../../../../components/MessageAlert';
 import { ProjectQuery, ProjectCommentsQuery } from '../graphql/process_queries';
 import ProjectDocument from './ProjectDocument'
@@ -116,7 +116,7 @@ export default function TaskProcessDetail() {
   );
 
   async function shareOnclick() {
-    await navigator.clipboard.writeText(hrefsExtractor(projectData?.task?.body)[1]);
+    await navigator.clipboard.writeText(getFormUrl(projectData?.task?.formUser?.formId));
     setMessageAlert('Link copied to clipboard');
   }
 
