@@ -156,4 +156,26 @@ RSpec.describe Community, type: :model do
       expect(new_community.features['Processes']).to_not be_nil
     end
   end
+
+  describe '#process_form_users' do
+    let(:community) { create(:community) }
+    let!(:admin) do
+      create(:admin_user, community: community, name: 'John Doe')
+    end
+    let(:form) do
+      create(:form, name: 'DRC Project Review Process', community: community)
+    end
+    let(:process) do
+      create(:process,
+             process_type: 'drc',
+             name: 'DRC',
+             form_id: form.id,
+             community: community)
+    end
+    let!(:form_user) { create(:form_user, form: form, user: admin, status_updated_by: admin) }
+
+    it 'should return form users of drc process type' do
+      expect(community.process_form_users(process.process_type).first.form_id).to eql form.id
+    end
+  end
 end
