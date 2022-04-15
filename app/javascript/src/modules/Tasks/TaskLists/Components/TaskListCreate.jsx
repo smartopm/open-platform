@@ -37,6 +37,7 @@ export default function TaskListCreate() {
       }
     })
       .then(data => {
+        console.log('Testing data from backend', data);
         setParentTaskData(data?.data?.taskListCreate?.note);
         history.push(`/tasks/task_lists/${data?.data?.taskListCreate?.note?.id}`);
         setLoadingStatus(false);
@@ -96,7 +97,8 @@ export default function TaskListCreate() {
                       size="small"
                       margin="normal"
                       inputProps={{
-                        'aria-label': 'jobsCreated',
+                        'aria-label': t('task_lists.task_list_name'),
+                        'data-testid': 'task-list-name',
                         style: { fontSize: '15px' }
                       }}
                       InputLabelProps={{ style: { fontSize: '12px' } }}
@@ -118,7 +120,7 @@ export default function TaskListCreate() {
                       disabled={disabled}
                       color="primary"
                       aria-label="lead_management_button"
-                      data-testid="lead_management_button"
+                      data-testid="task-list-save-button"
                       onClick={handleSubmit}
                     >
                       {t('task_lists.save')}

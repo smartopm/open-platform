@@ -20,14 +20,14 @@ export default function TaskListDataList({
   handleOpenSubTasksClick,
   handleTodoClick,
   handleAddSubTask,
-  styles
+  styles,
+  openSubTask
 }) {
   const classes = useStyles();
   const isMobile = useMediaQuery('(max-width:800px)');
   const mdUpHidden = useMediaQuery(theme => theme.breakpoints.up('md'));
   const mdDownHidden = useMediaQuery(theme => theme.breakpoints.down('md'));
   const [anchorEl, setAnchorEl] = useState(null);
-  const [tasksOpen, setTasksOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
   const anchorElOpen = Boolean(anchorEl);
   const { t } = useTranslation('common');
@@ -80,11 +80,6 @@ export default function TaskListDataList({
   function handleCreateSubTask() {
     setAnchorEl(null);
     handleAddSubTask({ id: selectedTask.id });
-  }
-
-  function handleCaretIconClick(e) {
-    setTasksOpen(!!tasksOpen);
-    handleOpenSubTasksClick(e);
   }
 
   return (
@@ -192,11 +187,11 @@ export default function TaskListDataList({
               aria-controls="show-task-subtasks-icon"
               aria-haspopup="true"
               data-testid="show_task_subtasks"
-              onClick={e => handleCaretIconClick(e)}
+              onClick={e => handleOpenSubTasksClick(e)}
               color="primary"
               size="large"
             >
-              {tasksOpen ? (
+              {openSubTask ? (
                 <KeyboardArrowUpIcon fontSize="small" color="primary" />
               ) : (
                 <KeyboardArrowDownIcon fontSize="small" color="primary" />
@@ -238,6 +233,7 @@ TaskListDataList.defaultProps = {
   handleTodoClick: null,
   handleAddSubTask: null,
   styles: {},
+  openSubTask: false,
   handleOpenSubTasksClick: null
 };
 TaskListDataList.propTypes = {
@@ -247,7 +243,7 @@ TaskListDataList.propTypes = {
   handleAddSubTask: PropTypes.func,
   // eslint-disable-next-line react/forbid-prop-types
   styles: PropTypes.object,
-  //   openSubTask: PropTypes.bool,
+  openSubTask: PropTypes.bool,
   handleOpenSubTasksClick: PropTypes.func
 };
 
