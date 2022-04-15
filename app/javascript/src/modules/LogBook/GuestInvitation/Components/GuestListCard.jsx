@@ -151,17 +151,15 @@ export default function GuestListCard({
                   />
                 </Grid>
                 <Grid item className={classes.chipRootAlign}>
-                  <Chip
-                    label={
-                      isCancelled
-                        ? translate('guest_book.cancelled')
-                        : translate('guest_book.active')
-                    }
-                    color={isCancelled ? 'error' : 'success'}
-                    data-testid="invite_status"
-                    size="small"
-                    className={classes.chipAlign}
-                  />
+                  { isCancelled && (
+                    <Chip
+                      label={translate('guest_book.cancelled')}
+                      color="error"
+                      data-testid="invite_status"
+                      size="small"
+                      className={classes.chipAlign}
+                    />
+                  )}
                 </Grid>
                 <Grid item data-testid="more_options">
                   <IconButton
