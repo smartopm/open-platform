@@ -88,7 +88,7 @@ export default function FormContextProvider({ children }) {
       const newValue = {
         value: item.blobId,
         form_property_id: item.propertyId,
-        image_blob_id: item.blobId
+        image_blob_id: item.blobId,
       };
       filledInProperties.push(newValue);
     });

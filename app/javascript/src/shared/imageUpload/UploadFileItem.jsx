@@ -4,6 +4,7 @@ import FileUploadIcon from '@mui/icons-material/FileUpload';
 import CloseIcon from '@mui/icons-material/Close';
 import PropTypes from 'prop-types';
 import { Spinner } from '../Loading';
+import { convertUploadSize } from '../../modules/Forms/utils';
 
 
 // TODO: Clean up files and truncate them to manage space
@@ -16,12 +17,12 @@ export default function UploadFileItem({
   isUploaded
 }) {
   return (
-    <Grid container style={{ marginLeft: 31 }}>
+    <Grid container style={{ marginLeft: 31, height: 40 }}>
       <Grid item xs={4}>
         {file.name}
       </Grid>
       <Grid item xs={2}>
-        {file.size}
+        {convertUploadSize(file.size)}
       </Grid>
       <Grid item xs={2}>
         {file.type}
@@ -30,6 +31,7 @@ export default function UploadFileItem({
         <IconButton
           onClick={() => handleUpload(file, formPropertyId)}
           disabled={formState.isUploading}
+          size="small"
         >
           {formState.isUploading && formState.currentFileNames.includes(file.name) ? (
             <Spinner />

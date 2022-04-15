@@ -343,7 +343,8 @@ export default function RenderForm({
                 type: 'file',
                 label: formPropertiesData.fieldName,
                 id: formPropertiesData.id,
-                required: formPropertiesData.required
+                required: formPropertiesData.required,
+                fileCount: uploadedImages.length
               }}
               upload={event => setFilesToUpload([...event.target.files])}
               editable={editable}
@@ -367,7 +368,18 @@ export default function RenderForm({
             />
           </Grid>
         )}
-        
+        <Typography
+          style={{
+            marginRight: 15,
+            marginBottom: 15
+          }}
+        >
+          These are the files you have chosen, 
+          click to icon next to the filename to upload
+        </Typography>
+
+        <br />
+        <br />
         {
           filesToUpload.map(file => (
             <UploadFileItem

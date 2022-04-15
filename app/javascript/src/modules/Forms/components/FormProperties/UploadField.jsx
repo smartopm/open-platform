@@ -50,7 +50,7 @@ export default function UploadField({
           color={btnColor}
           style={{background: '#FFFFFF'}}
         >
-          {uploaded ? t('form:misc.file_uploaded') : t('form:misc.upload_file')}
+          {uploaded ? `${detail.fileCount} ${t('form:misc.file_uploaded')}` : t('form:misc.upload_file')}
         </Button>
         {inputValidation.error && (
           <FormHelperText error data-testid="error-msg">
@@ -76,7 +76,8 @@ UploadField.propTypes = {
     type: PropTypes.string,
     label: PropTypes.string,
     id: PropTypes.string,
-    required: PropTypes.bool
+    required: PropTypes.bool,
+    fileCount: PropTypes.number,
   }).isRequired,
   upload: PropTypes.func.isRequired,
   editable: PropTypes.bool.isRequired,

@@ -258,3 +258,22 @@ export function generateIframeSnippet(form, hostname) {
   const url = `https://${hostname}/form/${form.id}/public`;
   return `<iframe src=${url} name=${form.name} title=${form.name} scrolling="auto" width="100%" height="500px" />`;
 }
+
+
+/**
+ *
+ * @param {Number} bytes
+ * @returns the converted size of the file to upload
+ *
+ */
+ export function convertUploadSize(bytes) {
+  const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
+  if (bytes === 0) {
+    return "N/A";
+  }
+  const i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)), 10);
+  if (i === 0) {
+    return `${bytes} ${sizes[i]})`;
+  }
+  return `${(bytes / 1024 ** i).toFixed(1)} ${sizes[i]}`;
+}

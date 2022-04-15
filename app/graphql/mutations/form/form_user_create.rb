@@ -63,6 +63,9 @@ module Mutations
         JSON.parse(vals[:prop_values])['user_form_properties'].each do |value|
           value = value.merge(user_id: vals[:user_id])
           user_prop = form_user.user_form_properties.create!(value.except('image_blob_id'))
+          if value['attachments_blob_ids'].present?
+            user_prop.attachments.attach(value['attachments_blob_ids'])
+          end
           user_prop.attach_file(value) if value.key?('image_blob_id')
         end
 
