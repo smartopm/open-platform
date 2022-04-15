@@ -37,6 +37,7 @@ export default function UploadField({
           capture
           onChange={upload}
           readOnly={editable}
+          multiple
           hidden
         />
         <Button

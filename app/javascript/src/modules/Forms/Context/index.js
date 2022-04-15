@@ -17,7 +17,8 @@ export default function FormContextProvider({ children }) {
     error: false,
     info: '',
     signed: false,
-    previewable: false
+    previewable: false,
+    currentFileNames: []
   };
   const initialData = {
     fieldType: '',
@@ -28,18 +29,19 @@ export default function FormContextProvider({ children }) {
   const [formProperties, setFormProperties] = useState(initialData);
   const [formState, setFormState] = useState(state);
   const [uploadedImages, setUploadedImages] = useState([]);
-  const { onChange, status, signedBlobId, contentType, url } = useFileUpload({
+  const { onChange, status, signedBlobId, contentType, url, startUpload } = useFileUpload({
     client: useApolloClient()
   });
   const [createFormUser] = useMutation(FormUserCreateMutation);
   const { t } = useTranslation('form');
   const signature = useFileUpload({ client: useApolloClient() });
 
+  console.log(status)
   useEffect(() => {
     if (
       status === 'DONE' &&
-      formState.currentPropId &&
-      !uploadedImages.find(im => im.propertyId === formState.currentPropId)
+      formState.currentPropId 
+      // &&  !uploadedImages.find(im => im.propertyId === formState.currentPropId)
     ) {
       setFormState({
         ...formState,
@@ -50,7 +52,7 @@ export default function FormContextProvider({ children }) {
         { blobId: signedBlobId, propertyId: formState.currentPropId, contentType, url }
       ]);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
 
   /**
@@ -158,6 +160,7 @@ export default function FormContextProvider({ children }) {
         onChange,
         signature,
         uploadedImages,
+        startUpload,
         setUploadedImages
       }}
     >

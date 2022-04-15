@@ -26,6 +26,7 @@ import { convertBase64ToFile, objectAccessor } from '../../../utils/helpers';
 import { checkRequiredFormPropertyIsFilled } from '../utils';
 import MessageAlert from '../../../components/MessageAlert';
 import ListWrapper from '../../../shared/ListWrapper';
+import UploadFileItem from '../../../shared/imageUpload/UploadFileItem';
 
 export default function RenderForm({
   formPropertiesData,
@@ -48,6 +49,7 @@ export default function RenderForm({
     setFormProperties,
     setFormState,
     onChange,
+    startUpload,
     signature
   } = useContext(FormContext);
 
@@ -55,6 +57,7 @@ export default function RenderForm({
   const { t } = useTranslation('form');
   const [messageAlert, setMessageAlert] = useState('');
   const [isSuccessAlert, setIsSuccessAlert] = useState(false);
+  const [filesToUpload, setFilesToUpload] = useState([]);
   function handleCheckboxSelect(event, property) {
     const { name, checked } = event.target;
     setFormProperties({
@@ -103,21 +106,44 @@ export default function RenderForm({
     });
   }
 
-  function onImageSelect(event, currentProperty) {
-    const file = event.target.files[0];
-    const validType =
-      fileTypes.includes(file.type.split('/')[1]) || file.type.split('/')[0] === 'image';
-    if (!validType) {
-      setMessageAlert(t('form:errors.wrong_file_type'));
-      setIsSuccessAlert(false);
-      return;
-    }
-    setFormState({
+
+  async function handleFileUpload(file, propertyId){
+    await startUpload(file)
+    await setFormState({
       ...formState,
-      currentPropId: currentProperty,
-      isUploading: true
+      currentPropId: propertyId,
+      isUploading: true,
+      currentFileNames: [...formState.currentFileNames, file.name]
     });
-    onChange(event.target.files[0]);
+    removeBeforeUpload(file)
+  }
+  function onImageSelect(event, currentProperty) {
+    // const file = event.target.files[0];
+    // const validType =
+    //   fileTypes.includes(file.type.split('/')[1]) || file.type.split('/')[0] === 'image';
+    // if (!validType) {
+    //   setMessageAlert(t('form:errors.wrong_file_type'));
+    //   setIsSuccessAlert(false);
+    //   return;
+    // }
+    // setFormState({
+    //   ...formState,
+    //   currentPropId: currentProperty,
+    //   isUploading: true
+    // });
+    setFilesToUpload([...event.target.files])
+    // onChange(event.target.files[0]);
+
+  }
+
+  function removeBeforeUpload(file) {
+    // const filteredImages = filesToUpload.filter(
+    //   item => item.name !== formState.currentFileNames || item.name !== file.name
+    // );
+    const filteredImages = filesToUpload.filter(
+      item => !formState.currentFileNames.includes(item.name)
+    );
+    setFilesToUpload(filteredImages);
   }
 
   function onImageRemove(imagePropertyId) {
@@ -353,8 +379,20 @@ export default function RenderForm({
             />
           </Grid>
         )}
+        
+        {
+          filesToUpload.map(file => (
+            <UploadFileItem
+              file={file}
+              handleUpload={() => handleFileUpload(file, formPropertiesData.id)}
+              handleRemoveFile={() => removeBeforeUpload(file)}
+              formState={formState}
+              key={`${file.size}-${file.name}`}
+            />
+          ))
+        }
 
-        {formState.isUploading && formState.currentPropId === formPropertiesData.id ? (
+        {/* {formState.isUploading && formState.currentPropId === formPropertiesData.id ? (
           <Grid item md={12} xs={12}>
             <Spinner />
           </Grid>
@@ -380,7 +418,7 @@ export default function RenderForm({
               />
             </Grid>
           )
-        )}
+        )} */}
       </Grid>
     ),
     signature: (

@@ -114,23 +114,23 @@ const useFileUpload = ({ client: apolloClient }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const onChange = async (file, compressImage = true) => {
-    const checkFileType = file.type.split('/')[0] === 'image';
-    if (!checkFileType || !compressImage) {
-      return startUpload(file);
-    }
-
-    try {
-      const options = {
-        maxSizeMB: 0.1,
-        useWebWorker: true
-      };
-      const compressedFile = await imageCompression(file, options);
-      startUpload(compressedFile);
-    } catch (error) {
-      // tolu: look for a better way to handle this error apart from dispatch
-      console.log(error);
-    }
-    return null;
+      const checkFileType = file.type.split('/')[0] === 'image';
+      if (!checkFileType || !compressImage) {
+        return startUpload(file);
+      }
+  
+      try {
+        const options = {
+          maxSizeMB: 0.1,
+          useWebWorker: true
+        };
+        const compressedFile = await imageCompression(file, options);
+        startUpload(compressedFile);
+      } catch (error) {
+        // tolu: look for a better way to handle this error apart from dispatch
+        console.log(error);
+      }
+      return null;
   };
 
   const startUpload = file => {
