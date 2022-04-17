@@ -21,7 +21,8 @@ export default function UploadFileItem({
           <Button
             startIcon={
               formState.isUploading &&
-              formState.currentFileNames.includes(file.name) && (
+              formState.currentFileNames.includes(file.name) &&
+              formPropertyId === formState.currentPropId && (
                 <CircularProgress size={24} color="primary" />
               )
             }
@@ -69,6 +70,7 @@ UploadFileItem.propTypes = {
   }).isRequired,
   formState: PropTypes.shape({
     isUploading: PropTypes.bool,
+    currentPropId: PropTypes.string,
     currentFileNames: PropTypes.arrayOf(PropTypes.string)
   }).isRequired,
   handleUpload: PropTypes.func.isRequired,

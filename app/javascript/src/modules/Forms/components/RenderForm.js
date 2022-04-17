@@ -14,7 +14,6 @@ import DatePickerDialog, {
 } from '../../../components/DatePickerDialog';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import ImageAuth from '../../../shared/ImageAuth';
-import { Spinner } from '../../../shared/Loading';
 import RadioInput from './FormProperties/RadioInput';
 import CheckboxInput from './FormProperties/CheckboxInput';
 import TextInput from './FormProperties/TextInput';
@@ -129,9 +128,10 @@ export default function RenderForm({
     return setFilesToUpload(filteredImages);
   }
 
-  function isUploaded(file) {
-    const isIt = uploadedImages.some(uploaded => uploaded.filename === file.name )
-    return isIt
+  function isUploaded(file, propertyId) {
+    return uploadedImages.some(
+      uploaded => uploaded.filename === file.name && uploaded.propertyId === propertyId
+    );
   }
 
   function onImageRemove(imagePropertyId) {
@@ -398,19 +398,15 @@ export default function RenderForm({
               handleUpload={handleFileUpload}
               handleRemoveFile={removeBeforeUpload}
               formState={{...formState, uploaded: uploadedImages}}
-              isUploaded={isUploaded(file)}
+              isUploaded={isUploaded(file, formPropertiesData.id)}
               key={`${file.size}-${file.name}`}
             />
           ))
         }
 
-        {formState.isUploading && formState.currentPropId === formPropertiesData.id 
-        && Boolean(filesToUpload.length) ? (
-          <Grid item md={12} xs={12}>
-            <Spinner />
-          </Grid>
-        ) : (
-          !!uploadedFile &&  (
+        {
+          (
+          !!uploadedFile && filesToUpload.length === 1 &&  (
             <Grid
               item
               md={12}
