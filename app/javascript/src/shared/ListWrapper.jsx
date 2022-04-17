@@ -13,6 +13,7 @@ export default function ListWrapper({ children, className }) {
 
 const useStyles = makeStyles(() => ({
   container: {
+    // TODO: Add this color to the default theme as a neutral background color
     background: '#F5F5F4', 
     padding: '10px 15px', 
     borderRadius: '10px'

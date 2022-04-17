@@ -1,11 +1,9 @@
 import React from 'react';
-import { Grid, IconButton } from '@mui/material';
-import FileUploadIcon from '@mui/icons-material/FileUpload';
+import { Grid, IconButton, Button, CircularProgress } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import PropTypes from 'prop-types';
-import { Spinner } from '../Loading';
 import { convertUploadSize } from '../../modules/Forms/utils';
-
 
 // TODO: Clean up files and truncate them to manage space
 export default function UploadFileItem({
@@ -18,6 +16,27 @@ export default function UploadFileItem({
 }) {
   return (
     <Grid container style={{ marginLeft: 31, height: 40 }}>
+      <Grid item xs={2}>
+        {!isUploaded ? (
+          <Button
+            startIcon={
+              formState.isUploading &&
+              formState.currentFileNames.includes(file.name) && (
+                <CircularProgress size={24} color="primary" />
+              )
+            }
+            disabled={formState.isUploading}
+            onClick={() => handleUpload(file, formPropertyId)}
+            variant="outlined"
+            color="primary"
+            size="small"
+          >
+            Upload
+          </Button>
+        ) : (
+          <CheckCircleIcon color="primary" />
+        )}
+      </Grid>
       <Grid item xs={4}>
         {file.name}
       </Grid>
@@ -27,20 +46,7 @@ export default function UploadFileItem({
       <Grid item xs={2}>
         {file.type}
       </Grid>
-      <Grid item xs={2}>
-        <IconButton
-          onClick={() => handleUpload(file, formPropertyId)}
-          disabled={formState.isUploading}
-          size="small"
-        >
-          {formState.isUploading && formState.currentFileNames.includes(file.name) ? (
-            <Spinner />
-          ) : !isUploaded ? (
-            <FileUploadIcon />
-          ) : null}
-        </IconButton>
-      </Grid>
-      {/* disable removing files after uploaded for now */}
+      {/* disable removing files after uploading for now */}
       <Grid item xs={2}>
         {!isUploaded && (
           <IconButton

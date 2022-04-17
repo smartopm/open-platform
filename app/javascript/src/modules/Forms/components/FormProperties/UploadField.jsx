@@ -50,7 +50,7 @@ export default function UploadField({
           color={btnColor}
           style={{background: '#FFFFFF'}}
         >
-          {uploaded ? `${detail.fileCount} ${t('form:misc.file_uploaded')}` : t('form:misc.upload_file')}
+          {uploaded ? `${detail.fileCount} ${t('form:misc.file_uploaded')}` : t('form:misc.select_file')}
         </Button>
         {inputValidation.error && (
           <FormHelperText error data-testid="error-msg">

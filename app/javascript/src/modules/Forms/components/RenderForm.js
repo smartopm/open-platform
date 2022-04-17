@@ -331,6 +331,7 @@ export default function RenderForm({
             <Typography color="textSecondary">{number}</Typography>
           </Grid>
         )}
+
         <Grid
           item
           xs={editMode ? 10 : 12}
@@ -338,23 +339,42 @@ export default function RenderForm({
           style={formState.isUploading ? { opacity: 0.3, pointerEvents: 'none' } : {}}
         >
           <ListWrapper>
-            <UploadField
-              detail={{
+            {
+            !filesToUpload.length 
+            ? (
+              <UploadField
+                detail={{
                 type: 'file',
                 label: formPropertiesData.fieldName,
                 id: formPropertiesData.id,
                 required: formPropertiesData.required,
                 fileCount: uploadedImages.length
               }}
-              upload={event => setFilesToUpload([...event.target.files])}
-              editable={editable}
-              uploaded={!!uploadedFile}
-              btnColor="primary"
-              inputValidation={{
+                upload={event => setFilesToUpload([...event.target.files])}
+                editable={editable}
+                uploaded={!!uploadedFile}
+                btnColor="primary"
+                inputValidation={{
                 error: checkRequiredFormPropertyIsFilled(formPropertiesData, formState),
                 fieldName: formPropertiesData.fieldName
               }}
-            />
+              />
+            )
+            : (
+              <>
+                <Typography variant='h6'>
+                  Confirm your uploads -
+                  {' '}
+                  {formPropertiesData.fieldName}
+                </Typography>
+                <Typography variant="caption">
+                  Click the Upload button next to the file you wish to attach to this torm..
+                </Typography>
+              </>
+            )
+          }
+
+
           </ListWrapper>
         </Grid>
         {editMode && (
@@ -368,16 +388,6 @@ export default function RenderForm({
             />
           </Grid>
         )}
-        <Typography
-          style={{
-            marginRight: 15,
-            marginBottom: 15
-          }}
-        >
-          These are the files you have chosen, 
-          click to icon next to the filename to upload
-        </Typography>
-
         <br />
         <br />
         {
@@ -394,12 +404,13 @@ export default function RenderForm({
           ))
         }
 
-        {/* {formState.isUploading && formState.currentPropId === formPropertiesData.id ? (
+        {formState.isUploading && formState.currentPropId === formPropertiesData.id 
+        && Boolean(filesToUpload.length) ? (
           <Grid item md={12} xs={12}>
             <Spinner />
           </Grid>
         ) : (
-          !!uploadedFile && (
+          !!uploadedFile &&  (
             <Grid
               item
               md={12}
@@ -420,7 +431,7 @@ export default function RenderForm({
               />
             </Grid>
           )
-        )} */}
+        )}
       </Grid>
     ),
     signature: (
