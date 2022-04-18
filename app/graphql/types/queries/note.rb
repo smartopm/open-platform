@@ -98,6 +98,7 @@ module Types::Queries::Note
       argument :completed_per_quarter, String, required: false
       argument :submitted_per_quarter, String, required: false
       argument :life_time_category, String, required: false
+      argument :process_type, String, required: false
     end
 
     field :project_stages, [GraphQL::Types::JSON], null: false do
@@ -106,6 +107,7 @@ module Types::Queries::Note
 
     field :tasks_by_quarter, GraphQL::Types::JSON, null: false do
       description 'Completed tasks by quarter'
+      argument :process_type, String, required: false
     end
 
     field :project, Types::NoteType, null: false do
@@ -310,7 +312,7 @@ module Types::Queries::Note
 
   # rubocop:disable Metrics/MethodLength
   # rubocop:disable Metrics/AbcSize
-  def projects(**vals)
+  def projects(process_type: 'drc', **vals)
     # This query only shows projects under the DRC process for now
     # Our notes does not allow us to categorise processes by type
     # This should be implemented in the future to allow us to fetch...
@@ -323,18 +325,22 @@ module Types::Queries::Note
     submitted_per_quarter = vals[:submitted_per_quarter]
     life_time_category = vals[:life_time_category]
     # TODO(Nurudeen): Make completed field defaults to false and not NIL
-    results = projects_query
+    results = projects_query(process_type)
 
     results = results.where(completed: [false, nil], current_step_body: vals[:step]) if vals[:step]
 
-    results = projects_query.by_quarter(completed_per_quarter) if completed_per_quarter
+    if completed_per_quarter
+      results = projects_query(process_type).by_quarter(completed_per_quarter)
+    end
 
     if submitted_per_quarter
-      results = projects_query.by_quarter(submitted_per_quarter, task_category: :submitted)
+      results = projects_query(process_type).by_quarter(submitted_per_quarter,
+                                                        task_category: :submitted)
     end
 
     if valid_life_time_category?(life_time_category)
-      results = projects_query.by_life_time_totals(task_category: life_time_category.to_sym)
+      results = projects_query(process_type)
+                .by_life_time_totals(task_category: life_time_category.to_sym)
     end
 
     results.limit(vals[:limit]).offset(vals[:offset])
@@ -428,12 +434,13 @@ module Types::Queries::Note
       .offset(offset).limit(limit)
   end
 
-  def tasks_by_quarter
+  def tasks_by_quarter(process_type: 'drc')
     community_id = context[:site_community].id
 
     {
-      completed: Notes::Note.tasks_by_quarter(community_id),
-      submitted: Notes::Note.tasks_by_quarter(community_id, task_category: :submitted),
+      completed: Notes::Note.tasks_by_quarter(community_id, process_type),
+      submitted: Notes::Note.tasks_by_quarter(community_id, process_type,
+                                              task_category: :submitted),
     }
   end
 
@@ -494,8 +501,8 @@ module Types::Queries::Note
   end
 
   # rubocop:disable Metrics/MethodLength
-  def projects_query
-    drc_form_users = context[:site_community].drc_form_users.pluck(:id)
+  def projects_query(process_type)
+    process_form_users = context[:site_community].process_form_users(process_type)&.pluck(:id)
 
     context[:site_community]
       .notes
@@ -506,7 +513,7 @@ module Types::Queries::Note
         :documents_attachments,
         { form_user: %i[user] },
       )
-      .where(parent_note_id: nil, form_user_id: drc_form_users)
+      .where(parent_note_id: nil, form_user_id: process_form_users)
       .for_site_manager(current_user)
   end
   # rubocop:enable Metrics/MethodLength

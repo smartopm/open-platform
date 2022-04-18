@@ -31,21 +31,22 @@ RSpec.describe Types::Queries::Note do
                                           can_get_task_count can_get_task_stats can_get_own_tasks])
     end
     let(:site_worker) { create(:site_worker, role: site_worker_role) }
+    let(:community) { site_worker.community }
     let!(:admin) do
-      create(:admin_user, role: admin_role, community: site_worker.community, name: 'John Doe')
+      create(:admin_user, role: admin_role, community: community, name: 'John Doe')
     end
-    let(:searchable_user) { create(:user, name: 'Henry Tim', community_id: admin.community_id) }
+    let(:searchable_user) { create(:user, name: 'Henry Tim', community_id: community.id) }
 
-    let(:developer_role) { create(:role, name: 'developer', community: admin.community) }
-    let(:developer) { create(:developer, role: developer_role, community: admin.community) }
+    let(:developer_role) { create(:role, name: 'developer', community: community) }
+    let(:developer) { create(:developer, role: developer_role, community: community) }
     let!(:developer_permissions) do
       create(:permission, module: 'note',
                           role: developer_role,
                           permissions: %w[can_fetch_flagged_notes can_fetch_task_comments
                                           can_fetch_tagged_comments])
     end
-    let(:consultant_role) { create(:role, name: 'consultant', community: admin.community) }
-    let(:consultant) { create(:consultant, role: consultant_role, community: admin.community) }
+    let(:consultant_role) { create(:role, name: 'consultant', community: community) }
+    let(:consultant) { create(:consultant, role: consultant_role, community: community) }
     let!(:consultant_permissions) do
       create(:permission, module: 'note',
                           role: consultant_role,
@@ -59,7 +60,7 @@ RSpec.describe Types::Queries::Note do
         user_id: site_worker.id,
         description: 'Test task 1',
         category: 'emergency',
-        community_id: site_worker.community_id,
+        community_id: community.id,
         flagged: false,
         author_id: site_worker.id,
       )
@@ -72,7 +73,7 @@ RSpec.describe Types::Queries::Note do
         description: 'Test task 2',
         category: 'emergency',
         flagged: false,
-        community_id: site_worker.community_id,
+        community_id: community.id,
         author_id: site_worker.id,
       )
     end
@@ -84,7 +85,7 @@ RSpec.describe Types::Queries::Note do
         user_id: site_worker.id,
         category: 'form',
         flagged: true,
-        community_id: site_worker.community_id,
+        community_id: community.id,
         author_id: site_worker.id,
         completed: false,
       )
@@ -97,7 +98,7 @@ RSpec.describe Types::Queries::Note do
         user_id: site_worker.id,
         category: 'emergency',
         flagged: true,
-        community_id: site_worker.community_id,
+        community_id: community.id,
         author_id: site_worker.id,
         due_date: Time.zone.now.end_of_day,
         completed: false,
@@ -217,6 +218,7 @@ RSpec.describe Types::Queries::Note do
           $completedPerQuarter: String,
           $submittedPerQuarter: String,
           $lifeTimeCategory: String
+          $processType: String
         ) {
           projects(
             offset: $offset,
@@ -225,6 +227,7 @@ RSpec.describe Types::Queries::Note do
             completedPerQuarter: $completedPerQuarter,
             submittedPerQuarter: $submittedPerQuarter,
             lifeTimeCategory: $lifeTimeCategory
+            processType: $processType
           ){
               #{task_fragment}
             }
@@ -234,8 +237,8 @@ RSpec.describe Types::Queries::Note do
 
     let(:projects_summary_query) do
       <<~GQL
-        query tasksByQuarter {
-          tasksByQuarter
+        query tasksByQuarter($processType: String) {
+          tasksByQuarter(processType: $processType)
         }
       GQL
     end
@@ -365,7 +368,7 @@ RSpec.describe Types::Queries::Note do
       it 'should retrieve list of notes' do
         result = DoubleGdpSchema.execute(notes_query, context: {
                                            current_user: admin,
-                                           site_community: site_worker.community,
+                                           site_community: community,
                                          }).as_json
         expect(result.dig('data', 'allNotes').length).to eql 2
         expect(result.dig('data', 'allNotes', 0, 'user', 'id')).to eql admin.id
@@ -374,7 +377,7 @@ RSpec.describe Types::Queries::Note do
 
       it 'should raise an error when the current user is null' do
         result = DoubleGdpSchema.execute(notes_query, context: {
-                                           site_community: site_worker.community,
+                                           site_community: community,
                                          }).as_json
         expect(result.dig('errors', 0, 'message'))
           .to include('Unauthorized')
@@ -383,7 +386,7 @@ RSpec.describe Types::Queries::Note do
       it 'should retrieve note comments with site manager as current user' do
         result = DoubleGdpSchema.execute(note_comments_query, context: {
                                            current_user: site_worker,
-                                           site_community: site_worker.community,
+                                           site_community: community,
                                          }, variables: { taskId: first_note.id }).as_json
 
         expect(result.dig('data', 'taskComments')).not_to be_empty
@@ -392,7 +395,7 @@ RSpec.describe Types::Queries::Note do
       it 'should retrieve note by id with site worker as current user' do
         result = DoubleGdpSchema.execute(note_query, context: {
                                            current_user: site_worker,
-                                           site_community: site_worker.community,
+                                           site_community: community,
                                          }).as_json
         expect(result.dig('data', 'task')).not_to be_empty
       end
@@ -400,16 +403,16 @@ RSpec.describe Types::Queries::Note do
       it 'should retrieve list of flagged notes' do
         result = DoubleGdpSchema.execute(flagged_notes_query, context: {
                                            current_user: site_worker,
-                                           site_community: site_worker.community,
+                                           site_community: community,
                                          }).as_json
         expect(result.dig('data', 'flaggedNotes').length).to eql 2
       end
 
       it 'returns empty array if no flagged notes exits' do
-        site_worker.community.notes.where(flagged: true).destroy_all
+        community.notes.where(flagged: true).destroy_all
         result = DoubleGdpSchema.execute(flagged_notes_query, context: {
                                            current_user: site_worker,
-                                           site_community: site_worker.community,
+                                           site_community: community,
                                          }).as_json
 
         expect(result['errors']).to be_nil
@@ -424,7 +427,7 @@ RSpec.describe Types::Queries::Note do
           user_id: site_worker.id,
           author_id: admin.id,
           flagged: true,
-          community_id: admin.community_id,
+          community_id: community.id,
           due_date: 2.days.from_now,
           completed: false,
           category: 'to_do',
@@ -480,7 +483,7 @@ RSpec.describe Types::Queries::Note do
           user_id: searchable_user.id,
           author_id: admin.id,
           flagged: true,
-          community_id: admin.community_id,
+          community_id: community.id,
           due_date: 10.days.from_now,
           completed: false,
           category: 'call',
@@ -492,7 +495,7 @@ RSpec.describe Types::Queries::Note do
 
         result = DoubleGdpSchema.execute(flagged_notes_query, context: {
                                            current_user: admin,
-                                           site_community: admin.community,
+                                           site_community: community,
                                          }, variables: variables).as_json
 
         expect(result.dig('data', 'flaggedNotes')).not_to be_nil
@@ -509,7 +512,7 @@ RSpec.describe Types::Queries::Note do
 
         result = DoubleGdpSchema.execute(flagged_notes_query, context: {
                                            current_user: admin,
-                                           site_community: admin.community,
+                                           site_community: community,
                                          }, variables: variables).as_json
 
         filtered_note = result.dig('data', 'flaggedNotes').select { |n| n['id'] == admin_task.id }
@@ -520,7 +523,7 @@ RSpec.describe Types::Queries::Note do
       it 'should query notes for the user' do
         result = DoubleGdpSchema.execute(user_notes_query, context: {
                                            current_user: admin,
-                                           site_community: site_worker.community,
+                                           site_community: community,
                                          }, variables: { id: admin.id }).as_json
 
         expect(result.dig('data', 'userNotes')).not_to be_nil
@@ -529,7 +532,7 @@ RSpec.describe Types::Queries::Note do
 
       describe 'Get tasks by role' do
         let(:form) do
-          create(:form, name: 'DRC Project Review Process V3', community: admin.community)
+          create(:form, name: 'DRC Project Review Process V3', community: community)
         end
 
         let(:form_user) { create(:form_user, form: form, user: admin, status_updated_by: admin) }
@@ -582,7 +585,7 @@ RSpec.describe Types::Queries::Note do
             user_id: site_worker.id,
             category: 'form',
             flagged: true,
-            community_id: site_worker.community_id,
+            community_id: community.id,
             author_id: site_worker.id,
             completed: false,
             form_user_id: form_user.id,
@@ -631,7 +634,7 @@ RSpec.describe Types::Queries::Note do
           user_id: site_worker.id,
           category: 'to_do',
           flagged: true,
-          community_id: site_worker.community_id,
+          community_id: community.id,
           author_id: admin.id,
           due_date: 5.days.ago,
           completed: false,
@@ -643,7 +646,7 @@ RSpec.describe Types::Queries::Note do
           user_id: site_worker.id,
           category: 'to_do',
           flagged: true,
-          community_id: site_worker.community_id,
+          community_id: community.id,
           author_id: admin.id,
           due_date: 1.day.ago,
           completed: false,
@@ -651,7 +654,7 @@ RSpec.describe Types::Queries::Note do
 
         result = DoubleGdpSchema.execute(tasks_stats_query, context: {
                                            current_user: admin,
-                                           site_community: site_worker.community,
+                                           site_community: community,
                                          }).as_json
 
         expect(result.dig('data', 'taskStats')).not_to be_nil
@@ -675,7 +678,7 @@ RSpec.describe Types::Queries::Note do
 
         result = DoubleGdpSchema.execute(task_histories_query, context: {
                                            current_user: admin,
-                                           site_community: admin.community,
+                                           site_community: community,
                                          }).as_json
 
         expect(result['errors']).to be_nil
@@ -695,7 +698,7 @@ RSpec.describe Types::Queries::Note do
       it 'should query task comments' do
         result = DoubleGdpSchema.execute(note_comments_query, context: {
                                            current_user: site_worker,
-                                           site_community: site_worker.community,
+                                           site_community: community,
                                          }, variables: { taskId: first_note.id }).as_json
 
         expect(result['errors']).to be_nil
@@ -713,7 +716,7 @@ RSpec.describe Types::Queries::Note do
       it 'queries individual task' do
         result = DoubleGdpSchema.execute(note_query, context: {
                                            current_user: admin,
-                                           site_community: site_worker.community,
+                                           site_community: community,
                                          }).as_json
 
         expect(result['errors']).to be_nil
@@ -724,7 +727,7 @@ RSpec.describe Types::Queries::Note do
       it 'queries uncompleted tasks count' do
         result = DoubleGdpSchema.execute(task_count, context: {
                                            current_user: admin,
-                                           site_community: site_worker.community,
+                                           site_community: community,
                                          }).as_json
 
         expect(result['errors']).to be_nil
@@ -738,7 +741,7 @@ RSpec.describe Types::Queries::Note do
                                          variables: variables,
                                          context: {
                                            current_user: site_worker,
-                                           site_community: site_worker.community,
+                                           site_community: community,
                                          }).as_json
         expect(result.dig('errors', 0, 'message')).to be_nil
         expect(result.dig('data', 'flaggedNotes').length).to eql 1
@@ -747,7 +750,7 @@ RSpec.describe Types::Queries::Note do
       it 'should raise unauthorised error when current user is nil' do
         result = DoubleGdpSchema.execute(flagged_notes_query, context: {
                                            current_user: nil,
-                                           site_community: site_worker.community,
+                                           site_community: community,
                                          }).as_json
         expect(result.dig('errors', 0, 'message'))
           .to include('Unauthorized')
@@ -761,7 +764,7 @@ RSpec.describe Types::Queries::Note do
             user_id: site_worker.id,
             category: 'other',
             flagged: true,
-            community_id: site_worker.community_id,
+            community_id: community.id,
             author_id: site_worker.id,
             due_date: Time.zone.today,
             parent_note_id: third_note.id,
@@ -775,7 +778,7 @@ RSpec.describe Types::Queries::Note do
             user_id: site_worker.id,
             category: 'other',
             flagged: true,
-            community_id: site_worker.community_id,
+            community_id: community.id,
             author_id: site_worker.id,
             due_date: Time.zone.today,
             parent_note_id: fourth_note.id,
@@ -789,7 +792,7 @@ RSpec.describe Types::Queries::Note do
             user_id: site_worker.id,
             category: 'other',
             flagged: true,
-            community_id: site_worker.community_id,
+            community_id: community.id,
             author_id: site_worker.id,
             due_date: Time.zone.today,
             parent_note_id: first_sub_task.id,
@@ -803,7 +806,7 @@ RSpec.describe Types::Queries::Note do
             user_id: site_worker.id,
             category: 'other',
             flagged: true,
-            community_id: site_worker.community_id,
+            community_id: community.id,
             author_id: site_worker.id,
             due_date: Time.zone.today,
             parent_note_id: third_sub_task.id,
@@ -813,7 +816,7 @@ RSpec.describe Types::Queries::Note do
         it 'retrieves parent tasks' do
           result = DoubleGdpSchema.execute(flagged_notes_query, context: {
                                              current_user: site_worker,
-                                             site_community: site_worker.community,
+                                             site_community: community,
                                            }).as_json
 
           expect(result.dig('data', 'flaggedNotes').length).to eql 2
@@ -824,7 +827,7 @@ RSpec.describe Types::Queries::Note do
         it 'retrieves nested sub tasks up to 3 levels deep' do
           result = DoubleGdpSchema.execute(flagged_notes_query, context: {
                                              current_user: site_worker,
-                                             site_community: site_worker.community,
+                                             site_community: community,
                                            }).as_json
 
           parent_task = result.dig('data', 'flaggedNotes')
@@ -842,7 +845,7 @@ RSpec.describe Types::Queries::Note do
             user_id: site_worker.id,
             category: 'other',
             flagged: true,
-            community_id: site_worker.community_id,
+            community_id: community.id,
             author_id: site_worker.id,
             due_date: Time.zone.today,
             parent_note_id: third_note.id,
@@ -853,7 +856,7 @@ RSpec.describe Types::Queries::Note do
           }
           result = DoubleGdpSchema.execute(note_sub_tasks_query, context: {
                                              current_user: site_worker,
-                                             site_community: site_worker.community,
+                                             site_community: community,
                                            }, variables: variables).as_json
           expect(result.dig('data', 'taskSubTasks')).not_to be_empty
           expect(result.dig('data', 'taskSubTasks', 0, 'parentNote', 'id')).to eq third_note.id
@@ -866,7 +869,7 @@ RSpec.describe Types::Queries::Note do
           }
           result = DoubleGdpSchema.execute(note_sub_tasks_query, context: {
                                              current_user: nil,
-                                             site_community: site_worker.community,
+                                             site_community: community,
                                            }, variables: variables).as_json
           expect(result.dig('errors', 0, 'message'))
             .to include('Unauthorized')
@@ -874,7 +877,7 @@ RSpec.describe Types::Queries::Note do
       end
 
       describe 'Task Lists' do
-        let(:process) { create(:process, community: admin.community) }
+        let(:process) { create(:process, community: community) }
         let(:task_lists_query) do
           <<~GQL
             query TaskLists {
@@ -897,7 +900,7 @@ RSpec.describe Types::Queries::Note do
         it 'returns empty array if no task lists exist' do
           result = DoubleGdpSchema.execute(task_lists_query, context: {
                                              current_user: admin,
-                                             site_community: admin.community,
+                                             site_community: community,
                                            }).as_json
 
           expect(result['errors']).to be_nil
@@ -905,21 +908,21 @@ RSpec.describe Types::Queries::Note do
         end
 
         it 'retrieves task lists' do
-          note_list = create(:note_list, community: admin.community, process: process)
+          note_list = create(:note_list, community: community, process: process)
           parent_task_list = admin.notes.create!(
             body: 'Parent Note List',
             description: 'Test parent note list',
             user_id: admin.id,
             category: 'task_list',
             flagged: true,
-            community_id: admin.community_id,
+            community_id: community.id,
             note_list_id: note_list.id,
             author_id: admin.id,
             completed: false,
           )
           result = DoubleGdpSchema.execute(task_lists_query, context: {
                                              current_user: admin,
-                                             site_community: admin.community,
+                                             site_community: community,
                                            }).as_json
 
           expect(result.dig('data', 'taskLists').length).to eql 1
@@ -932,7 +935,7 @@ RSpec.describe Types::Queries::Note do
       it 'should retrieve list of processes' do
         result = DoubleGdpSchema.execute(processes_query, context: {
                                            current_user: site_worker,
-                                           site_community: site_worker.community,
+                                           site_community: community,
                                          }).as_json
         expect(result.dig('data', 'processes').length).to eql 1
       end
@@ -943,7 +946,7 @@ RSpec.describe Types::Queries::Note do
                                          variables: variables,
                                          context: {
                                            current_user: site_worker,
-                                           site_community: site_worker.community,
+                                           site_community: community,
                                          }).as_json
         expect(result.dig('errors', 0, 'message')).to be_nil
         expect(result.dig('data', 'processes').length).to eql 1
@@ -952,7 +955,7 @@ RSpec.describe Types::Queries::Note do
       it 'should raise unauthorised error when current user is nil' do
         result = DoubleGdpSchema.execute(processes_query, context: {
                                            current_user: nil,
-                                           site_community: site_worker.community,
+                                           site_community: community,
                                          }).as_json
         expect(result.dig('errors', 0, 'message'))
           .to include('Unauthorized')
@@ -961,17 +964,25 @@ RSpec.describe Types::Queries::Note do
 
     describe '#projects' do
       let(:form) do
-        create(:form, name: 'DRC Project Review Process V3', community: site_worker.community)
+        create(:form, name: 'DRC Project Review Process V3', community: community)
+      end
+
+      let(:process) do
+        create(:process,
+               process_type: 'drc',
+               name: 'DRC',
+               form_id: form.id,
+               community: community)
       end
 
       let(:another_form) do
-        create(:form, name: 'DRC Project Review Process V2', community: site_worker.community)
+        create(:form, name: 'DRC Project Review Process V2', community: community)
       end
 
       let(:form_user) { create(:form_user, form: form, user: admin, status_updated_by: admin) }
 
       let(:another_form_user) do
-        create(:form_user, form: another_form, user: admin, status_updated_by: admin)
+        create(:form_user, form: form, user: admin, status_updated_by: admin)
       end
 
       let(:project_comments_query) do
@@ -1004,6 +1015,7 @@ RSpec.describe Types::Queries::Note do
       context 'when projects are fetched' do
         before do
           form
+          process
           another_form
           form_user
           another_form_user
@@ -1012,10 +1024,12 @@ RSpec.describe Types::Queries::Note do
         end
 
         it 'returns the projects for DRC' do
-          result = DoubleGdpSchema.execute(projects_query, context: {
-                                             current_user: site_worker,
-                                             site_community: site_worker.community,
-                                           }, variables: {}).as_json
+          variables = { processType: 'drc' }
+          result = DoubleGdpSchema.execute(projects_query, variables: variables,
+                                                           context: {
+                                                             current_user: site_worker,
+                                                             site_community: community,
+                                                           }).as_json
           expect(result['errors']).to be_nil
           expect(result.dig('data', 'projects').length).to eql 2
           expect(result.dig('data', 'projects', 0, 'submittedBy', 'id')).to eql admin.id
@@ -1026,7 +1040,7 @@ RSpec.describe Types::Queries::Note do
           result = DoubleGdpSchema.execute(project_query,
                                            context: {
                                              current_user: site_worker,
-                                             site_community: site_worker.community,
+                                             site_community: community,
                                            },
                                            variables: {
                                              formUserId: third_note.form_user_id,
@@ -1040,7 +1054,7 @@ RSpec.describe Types::Queries::Note do
           result = DoubleGdpSchema.execute(project_query,
                                            context: {
                                              current_user: site_worker,
-                                             site_community: site_worker.community,
+                                             site_community: community,
                                            },
                                            variables: {
                                              formUserId: second_note.form_user_id,
@@ -1066,7 +1080,7 @@ RSpec.describe Types::Queries::Note do
             user_id: site_worker.id,
             category: 'other',
             flagged: true,
-            community_id: site_worker.community_id,
+            community_id: community.id,
             author_id: site_worker.id,
             parent_note_id: third_note.id,
           )
@@ -1086,7 +1100,7 @@ RSpec.describe Types::Queries::Note do
             user_id: site_worker.id,
             category: 'other',
             flagged: true,
-            community_id: site_worker.community_id,
+            community_id: community.id,
             author_id: site_worker.id,
             parent_note_id: subtask1.id,
           )
@@ -1102,7 +1116,7 @@ RSpec.describe Types::Queries::Note do
 
           result = DoubleGdpSchema.execute(project_comments_query, context: {
                                              current_user: site_worker,
-                                             site_community: site_worker.community,
+                                             site_community: community,
                                            }, variables: { taskId: third_note.id }).as_json
 
           expect(result['errors']).to be_nil
@@ -1240,6 +1254,7 @@ RSpec.describe Types::Queries::Note do
         before do
           form
           another_form
+          process
           form_user
           another_form_user
           first_note.update(form_user_id: form_user.id, completed: true)
@@ -1253,7 +1268,7 @@ RSpec.describe Types::Queries::Note do
           it 'returns the projects completed till now' do
             result = DoubleGdpSchema.execute(projects_query, context: {
                                                current_user: site_worker,
-                                               site_community: site_worker.community,
+                                               site_community: community,
                                              }, variables: {
                                                completedPerQuarter: 'ytd',
                                              }).as_json
@@ -1266,7 +1281,7 @@ RSpec.describe Types::Queries::Note do
         it 'returns the projects in the quarter supplied' do
           result = DoubleGdpSchema.execute(projects_query, context: {
                                              current_user: site_worker,
-                                             site_community: site_worker.community,
+                                             site_community: community,
                                            }, variables: {
                                              completedPerQuarter: 'Q1',
                                            }).as_json
@@ -1280,7 +1295,7 @@ RSpec.describe Types::Queries::Note do
           expect do
             DoubleGdpSchema.execute(projects_query, context: {
                                       current_user: site_worker,
-                                      site_community: site_worker.community,
+                                      site_community: community,
                                     }, variables: {
                                       completedPerQuarter: 'Q9',
                                     }).as_json
@@ -1292,6 +1307,7 @@ RSpec.describe Types::Queries::Note do
         before do
           form
           another_form
+          process
           form_user
           another_form_user
           first_note.update(form_user_id: form_user.id)
@@ -1305,7 +1321,7 @@ RSpec.describe Types::Queries::Note do
           it 'returns the projects submitted till now' do
             result = DoubleGdpSchema.execute(projects_query, context: {
                                                current_user: site_worker,
-                                               site_community: site_worker.community,
+                                               site_community: community,
                                              }, variables: {
                                                submittedPerQuarter: 'ytd',
                                              }).as_json
@@ -1318,7 +1334,7 @@ RSpec.describe Types::Queries::Note do
         it 'returns the projects in the quarter supplied' do
           result = DoubleGdpSchema.execute(projects_query, context: {
                                              current_user: site_worker,
-                                             site_community: site_worker.community,
+                                             site_community: community,
                                            }, variables: {
                                              submittedPerQuarter: 'Q1',
                                            }).as_json
@@ -1332,7 +1348,7 @@ RSpec.describe Types::Queries::Note do
           expect do
             DoubleGdpSchema.execute(projects_query, context: {
                                       current_user: site_worker,
-                                      site_community: site_worker.community,
+                                      site_community: community,
                                     }, variables: {
                                       submittedPerQuarter: 'Q9',
                                     }).as_json
@@ -1344,6 +1360,7 @@ RSpec.describe Types::Queries::Note do
         before do
           form
           another_form
+          process
           form_user
           another_form_user
           first_note.update(form_user_id: form_user.id)
@@ -1357,7 +1374,7 @@ RSpec.describe Types::Queries::Note do
           it 'returns lists of projects submitted till now' do
             result = DoubleGdpSchema.execute(projects_query, context: {
                                                current_user: site_worker,
-                                               site_community: site_worker.community,
+                                               site_community: community,
                                              }, variables: {
                                                lifeTimeCategory: 'submitted',
                                              }).as_json
@@ -1371,7 +1388,7 @@ RSpec.describe Types::Queries::Note do
           it 'returns lists of projects completed till now' do
             result = DoubleGdpSchema.execute(projects_query, context: {
                                                current_user: site_worker,
-                                               site_community: site_worker.community,
+                                               site_community: community,
                                              }, variables: {
                                                lifeTimeCategory: 'completed',
                                              }).as_json
@@ -1386,7 +1403,7 @@ RSpec.describe Types::Queries::Note do
           it 'returns lists of projects outstanding till now' do
             result = DoubleGdpSchema.execute(projects_query, context: {
                                                current_user: site_worker,
-                                               site_community: site_worker.community,
+                                               site_community: community,
                                              }, variables: {
                                                lifeTimeCategory: 'outstanding',
                                              }).as_json
@@ -1402,6 +1419,7 @@ RSpec.describe Types::Queries::Note do
         before do
           form
           another_form
+          process
           form_user
           another_form_user
           first_note.update(form_user_id: form_user.id)
@@ -1413,10 +1431,12 @@ RSpec.describe Types::Queries::Note do
         end
 
         it 'returns counts of the completed tasks per quarter' do
-          result = DoubleGdpSchema.execute(projects_summary_query, context: {
-                                             current_user: site_worker,
-                                             site_community: site_worker.community,
-                                           }).as_json
+          variables = { processType: 'drc' }
+          result = DoubleGdpSchema.execute(projects_summary_query, variables: variables,
+                                                                   context: {
+                                                                     current_user: site_worker,
+                                                                     site_community: community,
+                                                                   }).as_json
 
           expect(result['errors']).to be_nil
           expect(result.dig('data', 'tasksByQuarter', 'completed', 0)).to eql [2022.0, 1.0, 1]
@@ -1434,7 +1454,7 @@ RSpec.describe Types::Queries::Note do
           category: 'other',
           flagged: true,
           completed: false,
-          community_id: site_worker.community_id,
+          community_id: community.id,
           author_id: site_worker.id,
           due_date: Time.zone.today,
           parent_note_id: third_note.id,
@@ -1445,7 +1465,7 @@ RSpec.describe Types::Queries::Note do
         }
         result = DoubleGdpSchema.execute(project_open_tasks_query, context: {
                                            current_user: site_worker,
-                                           site_community: site_worker.community,
+                                           site_community: community,
                                          }, variables: variables).as_json
         expect(result.dig('data', 'projectOpenTasks')).not_to be_empty
         expect(result.dig('data', 'projectOpenTasks', 0, 'parentNote', 'id')).to eq third_note.id
@@ -1457,7 +1477,7 @@ RSpec.describe Types::Queries::Note do
                                          variables: variables,
                                          context: {
                                            current_user: site_worker,
-                                           site_community: site_worker.community,
+                                           site_community: community,
                                          }).as_json
         expect(result.dig('errors', 0, 'message')).to be_nil
         expect(result.dig('data', 'processes').length).to eql 1
