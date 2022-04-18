@@ -44,7 +44,9 @@
     "update_history": "History",
     "configure_form": "Configure Form",
     "create_form": "Create a Form",
-    "submit_form": "Submit a Form"
+    "submit_form": "Submit a Form",
+    "confirm_uploads": "Confirm your uploads",
+    "click_upload_btn": "Click the Upload button next to the file you wish to attach to this form.."
   },
   "actions": {
     "create_a_form": "Create a form",

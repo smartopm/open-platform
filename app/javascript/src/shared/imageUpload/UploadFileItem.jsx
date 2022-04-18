@@ -31,7 +31,7 @@ export default function UploadFileItem({
               formState.currentFileNames.includes(file.name) &&
               formPropertyId === formState.currentPropId ?  (
                 <CircularProgress size={24} color="primary" />
-              ) : 'Upload'
+              ) : translate('common:misc.upload')
             }
           </Button>
         ) : (

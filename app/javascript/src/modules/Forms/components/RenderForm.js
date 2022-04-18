@@ -361,10 +361,10 @@ export default function RenderForm({
             && (
               <>
                 <Typography variant='h6'>
-                  Confirm your uploads
+                  {t('misc.confirm_uploads')}
                 </Typography>
                 <Typography variant="caption">
-                  Click the Upload button next to the file you wish to attach to this form..
+                  {t('misc.click_upload_btn')}
                 </Typography>
               </>
             )
