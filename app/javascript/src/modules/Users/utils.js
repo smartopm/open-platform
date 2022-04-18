@@ -756,7 +756,7 @@ export function selectOptions(
       value: 'Notes',
       name: t('common:misc.notes'),
       handleMenuItemClick,
-      show: checkCommunityFeatures('Tasks') && checkModule('note')
+      show: checkCommunityFeatures('Tasks') && checkModule('note') && checkRole(['admin'], 'Notes')
     },
     {
       key: 'forms',
