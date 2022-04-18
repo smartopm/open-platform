@@ -1,6 +1,7 @@
 /* eslint-disable no-eval */
 /* eslint-disable security/detect-eval-with-expression */
 import dompurify from 'dompurify';
+import { objectAccessor, titleCase, truncateString } from '../../utils/helpers';
 
 /**
  *
@@ -271,9 +272,17 @@ export function generateIframeSnippet(form, hostname) {
   if (bytes === 0) {
     return "N/A";
   }
-  const i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)), 10);
-  if (i === 0) {
-    return `${bytes} ${sizes[i]})`;
+  const convertedBytes = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)), 10);
+  const size = objectAccessor(sizes, convertedBytes)
+  if (convertedBytes === 0) {
+    return `${bytes} ${size})`;
   }
-  return `${(bytes / 1024 ** i).toFixed(1)} ${sizes[i]}`;
+  return `${(bytes / 1024 ** convertedBytes).toFixed(0)} ${size}`;
+}
+
+
+export function cleanFileName(name){
+  if(!name) return ''
+  const filename =  name.split('.')[0]
+  return titleCase(truncateString(filename, 10))
 }

@@ -3,9 +3,21 @@ import { Grid, IconButton, Button, CircularProgress } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import PropTypes from 'prop-types';
-import { convertUploadSize } from '../../modules/Forms/utils';
+import { cleanFileName, convertUploadSize } from '../../modules/Forms/utils';
+import { objectAccessor } from '../../utils/helpers';
 
-// TODO: Clean up files and truncate them to manage space
+// TODO: Make these translatable
+const fileTypes = {
+  'image/jpeg': 'Image',
+  'image/jpg': 'Image',
+  'image/png': 'Image',
+  'image/gif': 'Image',
+  'video/mp4': 'Video',
+  'video/mpeg': 'Video',
+  'application/pdf': 'PDF',
+  'application/zip': 'Zipped file',
+}
+
 export default function UploadFileItem({
   file,
   formState,
@@ -15,48 +27,45 @@ export default function UploadFileItem({
   isUploaded
 }) {
   return (
-    <Grid container style={{ marginLeft: 31, height: 40 }}>
-      <Grid item xs={2}>
+    <Grid container style={{ marginLeft: 31}} spacing={2}>
+      <Grid item xs>
         {!isUploaded ? (
           <Button
-            startIcon={
-              formState.isUploading &&
-              formState.currentFileNames.includes(file.name) &&
-              formPropertyId === formState.currentPropId && (
-                <CircularProgress size={24} color="primary" />
-              )
-            }
             disabled={formState.isUploading}
             onClick={() => handleUpload(file, formPropertyId)}
             variant="outlined"
             color="primary"
             size="small"
           >
-            Upload
+            {
+              formState.isUploading &&
+              formState.currentFileNames.includes(file.name) &&
+              formPropertyId === formState.currentPropId ?  (
+                <CircularProgress size={24} color="primary" />
+              ) : 'Upload'
+            }
           </Button>
         ) : (
           <CheckCircleIcon color="primary" />
         )}
       </Grid>
-      <Grid item xs={4}>
-        {file.name}
+      <Grid item md={4} xs>
+        {cleanFileName(file.name).replace(/[^\w\s]/gi, '')}
       </Grid>
-      <Grid item xs={2}>
+      <Grid item md={2} sx={{ display: { xs: 'none', sm: 'block' } }}>
         {convertUploadSize(file.size)}
       </Grid>
-      <Grid item xs={2}>
-        {file.type}
+      <Grid item md={2} sx={{ display: { xs: 'none', sm: 'block' } }}>
+        {objectAccessor(fileTypes, file.type) || '-'}
       </Grid>
-      {/* disable removing files after uploading for now */}
-      <Grid item xs={2}>
-        {!isUploaded && (
-          <IconButton
-            onClick={() => handleRemoveFile(file, isUploaded, formPropertyId)}
-            disabled={formState.isUploading}
-          >
-            <CloseIcon />
-          </IconButton>
-        )}
+      <Grid item xs>
+        <IconButton
+          onClick={() => handleRemoveFile(file, isUploaded, formPropertyId)}
+          disabled={formState.isUploading}
+          style={{ marginTop: -7 }}
+        >
+          <CloseIcon />
+        </IconButton>
       </Grid>
     </Grid>
   );
