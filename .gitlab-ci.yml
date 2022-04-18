@@ -82,6 +82,7 @@ test:jest:
       --collectCoverageFrom='!app/javascript/src/components/Map/PointsOfInterestMarker.jsx'
       --collectCoverageFrom='!app/javascript/src/components/LandParcels/LandParcelEditCoordinate.jsx'
       --collectCoverageFrom='!app/javascript/src/components/Map/MapEditor.jsx'
+    - bundle exec rake jest_log:get_issue_count[$CI_JOB_ID,$GITLAB_TOKEN]
   artifacts:
     paths:
       - "coverage/"
