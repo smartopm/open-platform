@@ -4,7 +4,6 @@ import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min';
 import '@testing-library/jest-dom/extend-expect';
 import userEvent from '@testing-library/user-event';
-import { act } from 'react-dom/test-utils';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import MockedThemeProvider from '../../../__mocks__/mock_theme';
 import { Context } from '../../../../containers/Provider/AuthStateProvider';
@@ -53,7 +52,6 @@ describe('Task List Create', () => {
     const saveButton = screen.getByRole('button');
 
     expect(saveButton).toBeEnabled();
-
-    await waitFor(() => fireEvent.click(saveButton));
+    await waitFor(() => fireEvent.click(saveButton), 10);
   });
 });
