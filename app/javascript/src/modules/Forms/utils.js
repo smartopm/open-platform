@@ -286,3 +286,22 @@ export function cleanFileName(name){
   const filename =  name.split('.')[0]
   return titleCase(truncateString(filename, 10))
 }
+
+
+export function fileTypes(t) {
+  return {
+    'image/jpeg': t('common:file_types.image'),
+    'image/jpg': t('common:file_types.image'),
+    'image/png': t('common:file_types.image'),
+    'image/gif': t('common:file_types.image'),
+    'image/svg+xml': t('common:file_types.image'),
+    'wav': t('common:file_types.audio'),
+    'audio/mpeg': t('common:file_types.audio'),
+    'video/mp4': t('common:file_types.video'),
+    'video/mpeg': t('common:file_types.video'),
+    'application/pdf': t('common:file_types.pdf'),
+    'application/zip': t('common:file_types.compressed_file'),
+    'application/x-7z-compressed': t('common:file_types.compressed_file'),
+    'application/x-zip-compressed': t('common:file_types.compressed_file'),
+  }
+}

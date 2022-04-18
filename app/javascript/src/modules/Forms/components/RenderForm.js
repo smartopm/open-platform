@@ -52,7 +52,7 @@ export default function RenderForm({
   } = useContext(FormContext);
 
   const fileTypes = ['pdf', 'zip', 'x-zip-compressed'];
-  const { t } = useTranslation('form');
+  const { t } = useTranslation(['form', 'common']);
   const [messageAlert, setMessageAlert] = useState('');
   const [isSuccessAlert, setIsSuccessAlert] = useState(false);
   const [filesToUpload, setFilesToUpload] = useState([]);
@@ -339,42 +339,36 @@ export default function RenderForm({
           style={formState.isUploading ? { opacity: 0.3, pointerEvents: 'none' } : {}}
         >
           <ListWrapper>
-            {
-            !filesToUpload.length 
-            ? (
-              <UploadField
-                detail={{
+            <UploadField
+              detail={{
                 type: 'file',
                 label: formPropertiesData.fieldName,
                 id: formPropertiesData.id,
                 required: formPropertiesData.required,
                 fileCount: uploadedImages.length
               }}
-                upload={event => setFilesToUpload([...event.target.files])}
-                editable={editable}
-                uploaded={!!uploadedFile}
-                btnColor="primary"
-                inputValidation={{
+              upload={event => setFilesToUpload([...event.target.files])}
+              editable={editable}
+              uploaded={!!uploadedFile}
+              btnColor="primary"
+              inputValidation={{
                 error: checkRequiredFormPropertyIsFilled(formPropertiesData, formState),
                 fieldName: formPropertiesData.fieldName
               }}
-              />
-            )
-            : (
+            />
+            {
+            Boolean(filesToUpload.length) 
+            && (
               <>
                 <Typography variant='h6'>
-                  Confirm your uploads -
-                  {' '}
-                  {formPropertiesData.fieldName}
+                  Confirm your uploads
                 </Typography>
                 <Typography variant="caption">
-                  Click the Upload button next to the file you wish to attach to this torm..
+                  Click the Upload button next to the file you wish to attach to this form..
                 </Typography>
               </>
             )
           }
-
-
           </ListWrapper>
         </Grid>
         {editMode && (
@@ -400,6 +394,7 @@ export default function RenderForm({
               formState={{...formState, uploaded: uploadedImages}}
               isUploaded={isUploaded(file, formPropertiesData.id)}
               key={`${file.size}-${file.name}`}
+              translate={t}
             />
           ))
         }

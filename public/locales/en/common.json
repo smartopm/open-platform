@@ -582,5 +582,12 @@
     "edit_user": "Edit User",
     "communications": "Communications",
     "contact_info": "Contact Info"
+  },
+  "file_types": {
+    "image": "Image",
+    "audio": "Audio",
+    "video": "Video",
+    "pdf": "PDF",
+    "compressed_file": "Zipped file"
   }
 }

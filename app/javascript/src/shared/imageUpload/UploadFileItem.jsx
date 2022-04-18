@@ -3,20 +3,8 @@ import { Grid, IconButton, Button, CircularProgress } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import PropTypes from 'prop-types';
-import { cleanFileName, convertUploadSize } from '../../modules/Forms/utils';
+import { cleanFileName, convertUploadSize, fileTypes } from '../../modules/Forms/utils';
 import { objectAccessor } from '../../utils/helpers';
-
-// TODO: Make these translatable
-const fileTypes = {
-  'image/jpeg': 'Image',
-  'image/jpg': 'Image',
-  'image/png': 'Image',
-  'image/gif': 'Image',
-  'video/mp4': 'Video',
-  'video/mpeg': 'Video',
-  'application/pdf': 'PDF',
-  'application/zip': 'Zipped file',
-}
 
 export default function UploadFileItem({
   file,
@@ -24,7 +12,8 @@ export default function UploadFileItem({
   handleUpload,
   handleRemoveFile,
   formPropertyId,
-  isUploaded
+  isUploaded,
+  translate
 }) {
   return (
     <Grid container style={{ marginLeft: 31}} spacing={2}>
@@ -50,13 +39,13 @@ export default function UploadFileItem({
         )}
       </Grid>
       <Grid item md={4} xs>
-        {cleanFileName(file.name).replace(/[^\w\s]/gi, '')}
+        {cleanFileName(file.name)}
       </Grid>
       <Grid item md={2} sx={{ display: { xs: 'none', sm: 'block' } }}>
         {convertUploadSize(file.size)}
       </Grid>
       <Grid item md={2} sx={{ display: { xs: 'none', sm: 'block' } }}>
-        {objectAccessor(fileTypes, file.type) || '-'}
+        {objectAccessor(fileTypes(translate), file.type) || '-'}
       </Grid>
       <Grid item xs>
         <IconButton
@@ -85,5 +74,6 @@ UploadFileItem.propTypes = {
   handleUpload: PropTypes.func.isRequired,
   handleRemoveFile: PropTypes.func.isRequired,
   isUploaded: PropTypes.bool.isRequired,
-  formPropertyId: PropTypes.string.isRequired
+  formPropertyId: PropTypes.string.isRequired,
+  translate: PropTypes.func.isRequired,
 };
