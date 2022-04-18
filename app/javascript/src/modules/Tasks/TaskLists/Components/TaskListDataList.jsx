@@ -79,18 +79,18 @@ export default function TaskListDataList({
 
   function handleCreateSubTask() {
     setAnchorEl(null);
-    handleAddSubTask({ id: selectedTask.id });
+    handleAddSubTask({ id: selectedTask?.id });
   }
 
   return (
     <Card styles={styles} contentStyles={{ padding: '4px' }}>
       <Grid container>
-        <Grid item md={6} xs={12} data-testid="task_body_section">
+        <Grid item md={6} xs={12} data-testid="task_list_body_section">
           <Grid container style={{ display: 'flex', alignItems: 'center' }}>
             <Grid item md={8} xs={10}>
               {task.body.length > 35 ? (
                 <Tooltip
-                  title={task.body}
+                  title={task?.body}
                   arrow
                   placement="bottom"
                   componentsProps={{
@@ -106,7 +106,7 @@ export default function TaskListDataList({
                 >
                   <Typography
                     variant="body2"
-                    data-testid="task_body"
+                    data-testid="task_list_task_body"
                     component="p"
                     className={isMobile ? classes.taskBodyMobile : classes.taskBody}
                   >
@@ -114,7 +114,7 @@ export default function TaskListDataList({
                       data-testid="task-title"
                       // eslint-disable-next-line react/no-danger
                       dangerouslySetInnerHTML={{
-                        __html: sanitizeText(removeNewLines(task.body))
+                        __html: sanitizeText(removeNewLines(task?.body))
                       }}
                     />
                   </Typography>
@@ -130,7 +130,7 @@ export default function TaskListDataList({
                     data-testid="task-title"
                     // eslint-disable-next-line react/no-danger
                     dangerouslySetInnerHTML={{
-                      __html: sanitizeText(removeNewLines(task.body))
+                      __html: sanitizeText(removeNewLines(task?.body))
                     }}
                   />
                 </Typography>
@@ -186,7 +186,7 @@ export default function TaskListDataList({
             <IconButton
               aria-controls="show-task-subtasks-icon"
               aria-haspopup="true"
-              data-testid="show_task_subtasks"
+              data-testid="show_task_list_subtasks"
               onClick={e => handleOpenSubTasksClick(e)}
               color="primary"
               size="large"

@@ -3,7 +3,8 @@ import React from 'react';
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min';
 import '@testing-library/jest-dom/extend-expect';
-import { render, screen, fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import MockedThemeProvider from '../../../__mocks__/mock_theme';
 import { Context } from '../../../../containers/Provider/AuthStateProvider';
 import { CreateTaskList } from '../graphql/task_list_mutation';
@@ -33,8 +34,9 @@ describe('Task List Create', () => {
 
   it('renders TaskListCreate component', async () => {
     const adminUser = { userType: 'admin', ...authState };
-    const { queryByTestId } = render(
-      <MockedProvider mocks={taskListCreateMock} addTypename>
+    const user = userEvent.setup();
+    render(
+      <MockedProvider mocks={taskListCreateMock} addTypename={false}>
         <Context.Provider value={adminUser}>
           <BrowserRouter>
             <MockedThemeProvider>
@@ -46,12 +48,12 @@ describe('Task List Create', () => {
     );
     expect(screen.getByTestId('task-list-name')).toBeInTheDocument();
 
-    const nameField = queryByTestId('task-list-name');
-    fireEvent.change(nameField, { target: { value: 'Sample task list' } });
+    const nameField = screen.getByLabelText('task_lists.task_list_name');
+    await user.type(nameField, 'Sample task list');
+    const saveButton = screen.getByRole('button');
 
-    // const saveButton = queryByTestId('task-list-save-button');
-    // expect(saveButton).not.toHaveClass('Mui-disabled');
+    expect(saveButton).toBeEnabled();
 
-    // expect(screen.queryByTestId('loader')).toBeInTheDocument();
+    await waitFor(() => fireEvent.click(saveButton));
   });
 });

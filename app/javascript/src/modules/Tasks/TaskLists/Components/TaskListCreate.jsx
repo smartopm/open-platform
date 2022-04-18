@@ -17,13 +17,11 @@ export default function TaskListCreate() {
   const [body, setBody] = useState('');
   const [loadingStatus, setLoadingStatus] = useState(false);
   const [errors, setErr] = useState('');
-  const [disabled, setDisabled] = useState(true);
   const [createTaskList] = useMutation(CreateTaskList);
   const [parentTaskData, setParentTaskData] = useState(null);
   const history = useHistory();
 
   function handleChange(event) {
-    setDisabled(false);
     setBody(event.target.value);
   }
 
@@ -37,14 +35,11 @@ export default function TaskListCreate() {
       }
     })
       .then(data => {
-        console.log('Testing data from backend', data);
         setParentTaskData(data?.data?.taskListCreate?.note);
         history.push(`/tasks/task_lists/${data?.data?.taskListCreate?.note?.id}`);
         setLoadingStatus(false);
-        setDisabled(true);
       })
       .catch(err => {
-        setDisabled(true);
         setErr(err);
       });
   }
@@ -96,6 +91,7 @@ export default function TaskListCreate() {
                       fullWidth
                       size="small"
                       margin="normal"
+                      required
                       inputProps={{
                         'aria-label': t('task_lists.task_list_name'),
                         'data-testid': 'task-list-name',
@@ -117,9 +113,10 @@ export default function TaskListCreate() {
                     <Button
                       variant="contained"
                       type="submit"
-                      disabled={disabled}
+                      role="button"
+                      disabled={!body.length}
                       color="primary"
-                      aria-label="lead_management_button"
+                      aria-label={t('task_lists.save')}
                       data-testid="task-list-save-button"
                       onClick={handleSubmit}
                     >

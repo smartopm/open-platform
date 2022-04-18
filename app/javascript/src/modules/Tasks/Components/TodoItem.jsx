@@ -282,12 +282,14 @@ export default function TodoItem({
               )}
           </>
         ))}
-      <MenuList
-        open={menuData.open}
-        anchorEl={menuData.anchorEl}
-        handleClose={menuData.handleClose}
-        list={menuData.menuList.filter(menuItem => menuItem.content !== null)}
-      />
+      {!createTaskListSubTask && (
+        <MenuList
+          open={menuData.open}
+          anchorEl={menuData.anchorEl}
+          handleClose={menuData.handleClose}
+          list={menuData.menuList.filter(menuItem => menuItem.content !== null)}
+        />
+      )}
     </>
   );
 }

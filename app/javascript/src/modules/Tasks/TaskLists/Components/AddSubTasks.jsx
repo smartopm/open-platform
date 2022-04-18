@@ -32,11 +32,6 @@ export default function AddSubTasks() {
     errorPolicy: 'all'
   });
 
-  async function assignUnassignUser(noteId, userId) {
-    await assignUserToNote({ variables: { noteId, userId } });
-    refetch();
-  }
-
   const {
     data: taskListData,
     error: taskListDataError,
@@ -50,6 +45,11 @@ export default function AddSubTasks() {
 
   function handleTodoItemClick() {
     setSplitScreenOpen(true);
+  }
+
+  async function assignUnassignUser(noteId, userId) {
+    await assignUserToNote({ variables: { noteId, userId } });
+    refetch();
   }
 
   function handleSplitScreenClose() {
@@ -75,9 +75,7 @@ export default function AddSubTasks() {
         <Dialog open={open} onClose={openModal} aria-labelledby="task_modal">
           <DialogTitle id="task_modal">
             <CenteredContent>
-              <span>
-                {taskId ? t('task.task_modal_detail_text') : t('task.task_modal_create_text')}
-              </span>
+              <span>{t('task.task_modal_create_text')}</span>
             </CenteredContent>
           </DialogTitle>
           <DialogContent>
@@ -126,22 +124,19 @@ export default function AddSubTasks() {
         </Grid>
       </Grid>
 
-      {taskListData?.taskList !== null ? (
+      {taskListData?.taskList !== undefined && (
         <div>
           <br />
           <TodoItem
             key={taskListData?.taskList?.id}
             task={taskListData?.taskList}
             handleAddSubTask={handleAddSubTask}
-            taskId={taskListData?.taskList.id}
             handleTodoClick={handleTodoItemClick}
             createTaskListSubTask
           />
         </div>
-      ) : (
-        <CenteredContent>{t('task_lists.no_task_lists')}</CenteredContent>
       )}
-      {taskListData?.taskList !== null && (
+      {taskListData?.taskList?.id !== undefined && (
         <SplitScreen open={splitScreenOpen} onClose={() => setSplitScreenOpen(false)}>
           <TaskUpdate
             taskId={taskListData?.taskList?.id}
