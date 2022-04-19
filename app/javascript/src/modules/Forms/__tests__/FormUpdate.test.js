@@ -85,6 +85,9 @@ describe('Form Component', () => {
                   file_name: 'img.jpg',
                 }
               ],
+              imageUrl: 'https://image.com',
+              fileType: null,
+              fileName: 'img.jpg',
               value: '7th Street',
               createdAt: '2020-10-07T09:37:03Z',
               user: {
@@ -114,7 +117,9 @@ describe('Form Component', () => {
                 }
               ],
               value: null,
-
+              imageUrl: 'https://another_image.com',
+              fileType: 'null',
+              fileName: 'img2.jpg',
               createdAt: '2020-10-07T09:37:03Z',
               user: {
                 id: "some_ids",
@@ -142,6 +147,9 @@ describe('Form Component', () => {
                   file_name: 'img3.jpg',
                 }
               ],
+              imageUrl: 'https://another2_image.com',
+              fileType: 'image/jpg',
+              fileName: 'img3.jpg',
               value: 'some values',
               createdAt: '2020-10-07T09:37:03Z',
               user: {
@@ -163,6 +171,9 @@ describe('Form Component', () => {
                 }
               },
               attachments: null,
+              imageUrl: null,
+              fileType: null,
+              fileName: null,
               value: null,
               createdAt: '2020-10-07T09:37:03Z',
               user: {
@@ -193,6 +204,9 @@ describe('Form Component', () => {
                 }
               },
               attachments: null,
+              imageUrl: null,
+              fileType: null,
+              fileName: null,
               value: '{"checked"=>"Yes", "label"=>"Would you rather?"}',
               createdAt: '2020-10-07T09:37:03Z',
               user: {
@@ -227,6 +241,9 @@ describe('Form Component', () => {
                 }
               },
               attachments: null,
+              imageUrl: null,
+              fileType: null,
+              fileName: null,
               value: '{"Red"=>true, "Blue"=>true}',
               createdAt: '2020-10-07T09:37:03Z',
               user: {
@@ -309,6 +326,9 @@ describe('Form Component', () => {
                 }
               },
               attachments: null,
+              imageUrl: null,
+              fileType: null,
+              fileName: null,
               value: null,
               createdAt: '2020-10-07T09:37:03Z',
               user: {

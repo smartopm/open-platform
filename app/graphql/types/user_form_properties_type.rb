@@ -10,9 +10,26 @@ module Types
     field :form_user_id, Types::FormUsersType, null: false
     field :user, Types::UserType, null: false
     field :value, String, null: true
+    field :image_url, String, null: true
+    field :file_type, String, null: true
+    field :file_name, String, null: true
     field :attachments, GraphQL::Types::JSON, null: true
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
+
+    def image_url
+      return nil unless object.image.attached?
+
+      host_url(object.image)
+    end
+
+    def file_type
+      object.image.blob&.content_type
+    end
+
+    def file_name
+      object.image.blob&.filename
+    end
 
     def host_url(type)
       base_url = HostEnv.base_url(object.user.community)
