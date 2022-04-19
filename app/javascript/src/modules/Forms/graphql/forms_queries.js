@@ -78,11 +78,10 @@ export const UserFormPropertiesQuery = gql`
         }
       }
       value
-      imageUrl
-      fileType
-      fileName
+      attachments
       createdAt
       user {
+        id
         name
       }
     }

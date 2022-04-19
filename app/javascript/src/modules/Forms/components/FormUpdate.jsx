@@ -423,9 +423,10 @@ export default function FormUpdate({ formUserId, userId, authState, categoriesDa
               )) || (
                 <Grid item md={12} xs={12}>
                   <div>
-                    {formPropertiesData.imageUrl && (
-                      <>
-                        <ListWrapper className={classes.space}>
+                    {
+                      Boolean(formPropertiesData.attachments?.length) &&
+                      formPropertiesData.attachments.map(attachment => (
+                        <ListWrapper className={classes.space} key={attachment.id}>
                           <ListItem style={{ paddingLeft: 0 }}>
                             <Grid container alignItems="center" justifyContent="center">
                               <Grid item md={11} xs={8}>
@@ -438,7 +439,7 @@ export default function FormUpdate({ formUserId, userId, authState, categoriesDa
                                       style={{ fontWeight: 700 }}
                                       data-testid="attachment_name"
                                     >
-                                      {formPropertiesData.formProperty.fieldName}
+                                      {attachment.file_name}
                                     </Typography>
                                   )}
                                   secondary={(
@@ -447,7 +448,7 @@ export default function FormUpdate({ formUserId, userId, authState, categoriesDa
                                       variant="body2"
                                       data-testid="filename"
                                     >
-                                      {formPropertiesData.fileName}
+                                      {attachment.file_name}
                                     </Typography>
                                   )}
                                 />
@@ -459,7 +460,7 @@ export default function FormUpdate({ formUserId, userId, authState, categoriesDa
                                   variant="outlined"
                                   className={classes.buttonBg}
                                   onClick={event =>
-                                    downloadFile(event, formPropertiesData.imageUrl)
+                                    downloadFile(event, attachment.image_url)
                                   }
                                 >
                                   {t('common:misc.open')}
@@ -468,7 +469,7 @@ export default function FormUpdate({ formUserId, userId, authState, categoriesDa
                             </Grid>
                           </ListItem>
                         </ListWrapper>
-                      </>
+                      )
                     )}
                   </div>
                 </Grid>
