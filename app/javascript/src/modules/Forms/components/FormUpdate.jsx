@@ -708,7 +708,8 @@ const useStyles = makeStyles(() => ({
     marginBottom: '20px'
   },
   buttonBg: {
-    background: '#FFFFFF'
+    background: '#FFFFFF',
+    marginLeft: -10
   },
   alignRight: {
     textAlign: 'right'

@@ -16,7 +16,7 @@ export default function UploadFileItem({
   translate
 }) {
   return (
-    <Grid container style={{ marginLeft: 31}} spacing={2}>
+    <Grid container style={{ marginLeft: 31, marginBottom: 8}} spacing={2}>
       <Grid item xs>
         {!isUploaded ? (
           <Button
