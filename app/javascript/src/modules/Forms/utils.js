@@ -275,12 +275,17 @@ export function generateIframeSnippet(form, hostname) {
   const convertedBytes = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)), 10);
   const size = objectAccessor(sizes, convertedBytes)
   if (convertedBytes === 0) {
-    return `${bytes} ${size})`;
+    return `${bytes} ${size}`;
   }
   return `${(bytes / 1024 ** convertedBytes).toFixed(0)} ${size}`;
 }
 
 
+/**
+ * Remove extension from files and truncate them to save some space on mobile
+ * @param {String} name 
+ * @returns {String}
+ */
 export function cleanFileName(name){
   if(!name) return ''
   const filename =  name.split('.')[0]
@@ -288,6 +293,11 @@ export function cleanFileName(name){
 }
 
 
+/**
+ * Return translated versions of the known file types
+ * @param {Function} t 
+ * @returns
+ */
 export function fileTypes(t) {
   return {
     'image/jpeg': t('common:file_types.image'),
@@ -304,4 +314,18 @@ export function fileTypes(t) {
     'application/x-7z-compressed': t('common:file_types.compressed_file'),
     'application/x-zip-compressed': t('common:file_types.compressed_file'),
   }
+}
+
+
+/**
+ * 
+ * @param {[object]} uploads 
+ * @param {{name: String}} file 
+ * @param {String} propertyId 
+ * @returns 
+ */
+export function isUploaded(uploads, file, propertyId) {
+  return uploads.some(
+    upload => upload.filename === file.name && upload.propertyId === propertyId
+  );
 }

@@ -10,7 +10,10 @@ import {
   requiredFieldIsEmpty,
   extractRenderedTextFromCategory,
   checkRequiredFormPropertyIsFilled,
-  generateIframeSnippet
+  generateIframeSnippet,
+  convertUploadSize,
+  cleanFileName,
+  fileTypes
 } from '../utils';
 
 describe('Utilities', () => {
@@ -449,4 +452,28 @@ describe('Utilities', () => {
     const snippet = generateIframeSnippet(data, 'dev.dgdp.site')
     expect(snippet).toBe('<iframe src=https://dev.dgdp.site/form/23223/public name=Some form title=Some form scrolling="auto" width="100%" height="500px" />')
   })
+
+  // convertUploadSize
+  it('should convert different sizes to readable format', () => {
+    const size1 = 2000
+    const size2 = 20000
+    const size3 = 2000000
+    const size4 = 20000000000
+
+    expect(convertUploadSize(size1)).toBe('2 KB')
+    expect(convertUploadSize(size2)).toBe('20 KB')
+    expect(convertUploadSize(size3)).toBe('2 MB')
+    expect(convertUploadSize(size4)).toBe('19 GB')
+  });
+
+  it('should clean file names before uploading files', () => {
+    expect(cleanFileName()).toBe('')
+    expect(cleanFileName('someimage.jpg')).toBe('Someimage')
+    expect(cleanFileName('someimageanotherimageimage.jpg')).toBe('Someimagea...')
+  });
+
+  it('should return translatable files', () => {
+    const translate = jest.fn(() => 'Translated type')
+    expect(fileTypes(translate)['application/pdf']).toBe('Translated type')
+  });
 });
