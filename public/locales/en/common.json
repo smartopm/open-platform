@@ -586,6 +586,7 @@
   },
   "file_types": {
     "image": "Image",
+    "autocad": "Autocad",
     "audio": "Audio",
     "video": "Video",
     "pdf": "PDF",
