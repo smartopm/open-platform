@@ -116,7 +116,7 @@ Discuss.propTypes = {
 
 export const discussStyles = StyleSheet.create({
   submitBtn: {
-    width: '50%',
+    width: '60%',
     boxShadow: 'none',
     marginTop: 50,
     alignItems: 'center',

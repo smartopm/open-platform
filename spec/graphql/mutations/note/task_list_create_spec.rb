@@ -8,7 +8,7 @@ RSpec.describe Mutations::Note do
   let!(:permission) do
     create(:permission, module: 'note',
                         role: admin_role,
-                        permissions: %w[can_create_note])
+                        permissions: %w[can_create_task_lists])
   end
 
   let!(:user) { create(:user_with_community, role: resident_role, user_type: 'resident') }
