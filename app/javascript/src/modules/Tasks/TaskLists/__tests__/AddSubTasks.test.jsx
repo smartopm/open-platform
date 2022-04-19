@@ -171,7 +171,7 @@ describe('Test the AddSubTasks page', () => {
       expect(screen.queryByText('menu.open_task_details')).toBeInTheDocument();
       expect(screen.queryByText('menu.add_subtask')).toBeInTheDocument();
     });
-  }, 30000);
+  });
 
   it('renders task form modal', async () => {
     render(

@@ -9,7 +9,7 @@ import { CreateTaskList } from '../graphql/task_list_mutation';
 import CenteredContent from '../../../../shared/CenteredContent';
 import { formatError } from '../../../../utils/helpers';
 import { Spinner } from '../../../../shared/Loading';
-import useStateIfMounted from '../utils';
+import useStateIfMounted from '../../../../shared/hooks/useStateIfMounted';
 
 export default function TaskListCreate() {
   const { t } = useTranslation('task');
