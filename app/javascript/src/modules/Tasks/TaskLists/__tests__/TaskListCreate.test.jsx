@@ -49,9 +49,10 @@ describe('Task List Create', () => {
 
     const nameField = screen.getByLabelText('task_lists.task_list_name');
     userEvent.type(nameField, 'Sample task list');
+
     const saveButton = screen.getByRole('button');
 
     expect(saveButton).toBeEnabled();
-    await waitFor(() => fireEvent.click(saveButton), 10);
+    await waitFor(() => fireEvent.click(saveButton));
   });
 });

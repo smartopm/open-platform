@@ -9105,11 +9105,6 @@ use-long-press@^1.1.1:
   resolved "https://registry.yarnpkg.com/use-long-press/-/use-long-press-1.1.1.tgz#7a67b0bdf8d6f7a9183b6d662c5d57d164183574"
   integrity sha512-tqf6zDZ06g/Rt8rw+/jaekrdBTmrFXxjHHd2QgMlOhvs1fwOb9VA9d+DmkTPeNtL/byaJ8YeHTOwmluwxhXRLA==
 
-use-state-if-mounted@^1.0.4:
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/use-state-if-mounted/-/use-state-if-mounted-1.0.4.tgz#5ea9ba8702b88016a973b192a0617f4732cfcc4f"
-  integrity sha512-odkuB5IZxABvag46XZmUyY+FrienKt+6f2JAo52pvpU5C32K99EvADg1VxjIUaVbh5eHhOVQQ6q4wWm2WEZYyg==
-
 util@^0.12.0:
   version "0.12.4"
   resolved "https://registry.yarnpkg.com/util/-/util-0.12.4.tgz#66121a31420df8f01ca0c464be15dfa1d1850253"
