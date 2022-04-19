@@ -325,6 +325,9 @@ export function fileTypes(t) {
  * @returns 
  */
 export function isUploaded(uploads, file, propertyId) {
+  if (!uploads || !file || !propertyId) {
+    return false
+  }
   return uploads.some(
     upload => upload.filename === file.name && upload.propertyId === propertyId
   );

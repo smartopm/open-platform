@@ -13,7 +13,8 @@ import {
   generateIframeSnippet,
   convertUploadSize,
   cleanFileName,
-  fileTypes
+  fileTypes,
+  isUploaded
 } from '../utils';
 
 describe('Utilities', () => {
@@ -476,4 +477,24 @@ describe('Utilities', () => {
     const translate = jest.fn(() => 'Translated type')
     expect(fileTypes(translate)['application/pdf']).toBe('Translated type')
   });
+
+  it('should check if file is uploaded per specific form property', () => {
+    const uploads = [
+      {
+        filename: "Image.jpg",
+        propertyId: "02394203da0923"
+      },
+      {
+        filename: "another.png",
+        propertyId: "12345678790"
+      },
+    ]
+    const file = { name: "another.png" }
+    expect(isUploaded(uploads, file, '12345678790')).toBe(true)
+    expect(isUploaded(uploads, file, '02394203da0923')).toBe(false)
+    expect(isUploaded(uploads, file, '9238423421312')).toBe(false)
+    expect(isUploaded([], undefined, '9238423421312')).toBe(false)
+    expect(isUploaded()).toBe(false)
+  });
+
 });
