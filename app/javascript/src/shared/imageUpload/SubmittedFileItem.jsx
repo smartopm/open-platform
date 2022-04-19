@@ -9,6 +9,9 @@ export default function SubmittedFileItem({
   classes,
   legacyFile
 }) {
+  if (!attachment?.file_name && !legacyFile?.fileName) {
+    return null;
+  }
   return (
     <ListItem style={{ paddingLeft: 0 }}>
       <Grid container alignItems="center" justifyContent="center">
@@ -33,6 +36,9 @@ export default function SubmittedFileItem({
           />
         </Grid>
         <Grid item md={1} xs={4} className={classes.alignRight}>
+          {/* {
+            attachment?.file_name || legacyFile?.fileName 
+        } */}
           <Button
             aria-label="download-icon"
             data-testid="download-icon"
@@ -49,9 +55,9 @@ export default function SubmittedFileItem({
 }
 
 SubmittedFileItem.defaultProps = {
-    attachment: {},
-    legacyFile: {},
-}
+  attachment: {},
+  legacyFile: {}
+};
 
 SubmittedFileItem.propTypes = {
   attachment: PropTypes.shape({
@@ -62,7 +68,7 @@ SubmittedFileItem.propTypes = {
     fileName: PropTypes.string,
     imageUrl: PropTypes.string,
     formProperty: PropTypes.shape({
-        fieldName: PropTypes.string
+      fieldName: PropTypes.string
     })
   }),
   translate: PropTypes.func.isRequired,

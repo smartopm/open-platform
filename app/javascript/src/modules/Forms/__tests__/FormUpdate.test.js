@@ -282,7 +282,7 @@ describe('Form Component', () => {
         expect(container.queryAllByLabelText('text-input')).toHaveLength(1);
         expect(container.queryAllByLabelText('text-input')[0]).toHaveTextContent('Address');
         expect(container.queryAllByTestId('date-picker')[0]).toHaveTextContent('Dead Line');
-        expect(container.queryAllByTestId('attachment_name')[0]).toHaveTextContent('img3.jpg');
+        expect(container.queryAllByTestId('attachment_name')[0]).toHaveTextContent('Image 1');
         expect(container.queryByTestId('download-icon')).toBeInTheDocument();
         expect(container.queryByLabelText('Yes')).toBeInTheDocument();
         expect(container.queryByLabelText('No')).toBeInTheDocument();
