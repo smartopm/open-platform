@@ -157,7 +157,6 @@ export default function TaskForm({
       </div>
 
       <br />
-      {/* <div className="d-flex row justify-content-center"> */}
       <Grid
         container
         spacing={5}
@@ -202,7 +201,6 @@ export default function TaskForm({
           </Button>
         </Grid>
       </Grid>
-      {/* </div> */}
       <p className="text-center">{Boolean(error.length) && error}</p>
     </form>
   );

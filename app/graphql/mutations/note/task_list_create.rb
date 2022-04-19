@@ -30,7 +30,7 @@ module Mutations
       end
 
       def authorized?(_vals)
-        return true if permitted?(module: :note, permission: :can_create_note)
+        return true if permitted?(module: :note, permission: :can_create_task_lists)
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end

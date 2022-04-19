@@ -94,6 +94,7 @@ export default function TaskListCreate() {
                       onChange={handleChange}
                       value={body || ''}
                       variant="outlined"
+                      role="textbox"
                       fullWidth
                       size="small"
                       margin="normal"
