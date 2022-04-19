@@ -14,13 +14,13 @@ module Types
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
 
-
     def host_url(type)
       base_url = HostEnv.base_url(object.user.community)
       path = Rails.application.routes.url_helpers.rails_blob_path(type)
       "https://#{base_url}#{path}"
     end
 
+    # rubocop:disable Metrics/MethodLength
     def attachments
       return nil unless object.attachments.attached?
 
@@ -36,5 +36,6 @@ module Types
       end
       files
     end
+    # rubocop:enable Metrics/MethodLength
   end
 end

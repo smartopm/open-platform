@@ -64,7 +64,6 @@ module Mutations
           value = value.merge(user_id: vals[:user_id])
           # check if this property already exists
           user_prop = check_user_form_property(form_user, value)
-          # user_prop.attach_file(value) if value.key?('image_blob_id')
           if user_prop.nil?
             user_prop = form_user.user_form_properties.create!(value.except('image_blob_id'))
           end
@@ -75,10 +74,8 @@ module Mutations
       end
 
       def check_user_form_property(form_user, vals)
-        user_form_property = form_user.user_form_properties.find_by(form_property_id: vals['form_property_id'])
-        user_form_property
+        form_user.user_form_properties.find_by(form_property_id: vals['form_property_id'])
       end
-
 
       def authorized?(vals)
         return true if permissions_checks? ||
