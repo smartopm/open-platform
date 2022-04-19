@@ -5,7 +5,7 @@ import { MockedProvider } from '@apollo/react-testing';
 import RenderForm from '../components/RenderForm';
 import FormContextProvider from '../Context';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
-import userMock from '../../../__mocks__/userMock';
+import userMock from '../../../__mocks__/authstate';
 import MockedThemeProvider from '../../__mocks__/mock_theme';
 
 jest.fn('@rails/activestorage/src/file_checksum', () => ({ create: jest.fn() }));

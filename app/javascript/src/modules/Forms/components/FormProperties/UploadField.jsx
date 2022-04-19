@@ -46,7 +46,7 @@ export default function UploadField({
           component="span"
           aria-label={`upload_button_${detail.label}`}
           disabled={editable}
-          startIcon={detail.type === 'file' && uploaded ? <DoneIcon /> : <FileUploadIcon />}
+          startIcon={detail.type === 'file' && uploaded ? <DoneIcon data-testid="done_icon" /> : <FileUploadIcon data-testid="upload_icon"  />}
           color={btnColor}
           style={{background: '#FFFFFF'}}
         >
