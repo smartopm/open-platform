@@ -57,7 +57,6 @@ describe('Submitted form files', () => {
         classes={classes}
       />
     );
-    expect(container.queryByTestId('attachment_name')).not.toBeInTheDocument();
     expect(container.queryByTestId('download-icon')).not.toBeInTheDocument();
   });
 });

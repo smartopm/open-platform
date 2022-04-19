@@ -294,7 +294,7 @@ describe('Form Component', () => {
         expect(container.queryByTestId('checkbox_field_name').textContent).toContain(
           'Select your favorite colors'
         );
-        expect(container.queryByTestId('filename').textContent).toContain('img3.jpg');
+        expect(container.queryAllByTestId('filename')[0].textContent).toContain('img3.jpg');
       },
       { timeout: 50 }
     );

@@ -9,9 +9,6 @@ export default function SubmittedFileItem({
   classes,
   legacyFile
 }) {
-  if (!attachment?.file_name && !legacyFile?.fileName) {
-    return null;
-  }
   return (
     <ListItem style={{ paddingLeft: 0 }}>
       <Grid container alignItems="center" justifyContent="center">
@@ -25,7 +22,7 @@ export default function SubmittedFileItem({
                 style={{ fontWeight: 700 }}
                 data-testid="attachment_name"
               >
-                {legacyFile.formProperty.fieldName}
+                {legacyFile.formProperty?.fieldName}
               </Typography>
             )}
             secondary={(
@@ -36,18 +33,17 @@ export default function SubmittedFileItem({
           />
         </Grid>
         <Grid item md={1} xs={4} className={classes.alignRight}>
-          {/* {
-            attachment?.file_name || legacyFile?.fileName 
-        } */}
-          <Button
-            aria-label="download-icon"
-            data-testid="download-icon"
-            variant="outlined"
-            className={classes.buttonBg}
-            onClick={event => downloadFile(event, attachment.image_url || legacyFile.imageUrl)}
-          >
-            {translate('common:misc.open')}
-          </Button>
+          {(attachment?.file_name || legacyFile?.fileName) && (
+            <Button
+              aria-label="download-icon"
+              data-testid="download-icon"
+              variant="outlined"
+              className={classes.buttonBg}
+              onClick={event => downloadFile(event, attachment.image_url || legacyFile.imageUrl)}
+            >
+              {translate('common:misc.open')}
+            </Button>
+          )}
         </Grid>
       </Grid>
     </ListItem>
