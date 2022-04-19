@@ -461,6 +461,8 @@ describe('Utilities', () => {
     const size3 = 2000000
     const size4 = 20000000000
 
+    expect(convertUploadSize(0)).toBe('N/A')
+    expect(convertUploadSize(2)).toBe('2 Bytes')
     expect(convertUploadSize(size1)).toBe('2 KB')
     expect(convertUploadSize(size2)).toBe('20 KB')
     expect(convertUploadSize(size3)).toBe('2 MB')
