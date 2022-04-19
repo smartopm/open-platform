@@ -25,26 +25,27 @@ export default function UploadFileItem({
             variant="outlined"
             color="primary"
             size="small"
+            data-testid="upload_btn"
           >
             {
               formState.isUploading &&
               formState.currentFileNames.includes(file.name) &&
               formPropertyId === formState.currentPropId ?  (
-                <CircularProgress size={24} color="primary" />
+                <CircularProgress size={24} color="primary" data-testid="upload_loader" />
               ) : translate('common:misc.upload')
             }
           </Button>
         ) : (
-          <CheckCircleIcon color="primary" />
+          <CheckCircleIcon color="primary" data-testid="file_uploaded"  />
         )}
       </Grid>
-      <Grid item md={4} xs>
+      <Grid item md={4} xs data-testid="file_name">
         {cleanFileName(file.name)}
       </Grid>
-      <Grid item md={2} sx={{ display: { xs: 'none', sm: 'block' } }}>
+      <Grid item md={2} sx={{ display: { xs: 'none', sm: 'block' } }} data-testid="file_size">
         {convertUploadSize(file.size)}
       </Grid>
-      <Grid item md={2} sx={{ display: { xs: 'none', sm: 'block' } }}>
+      <Grid item md={2} sx={{ display: { xs: 'none', sm: 'block' } }} data-testid="file_type">
         {objectAccessor(fileTypes(translate), file.type) || '-'}
       </Grid>
       <Grid item xs>
@@ -52,8 +53,9 @@ export default function UploadFileItem({
           onClick={() => handleRemoveFile(file, isUploaded, formPropertyId)}
           disabled={formState.isUploading}
           style={{ marginTop: -7 }}
+          data-testid="remove_upload_btn"
         >
-          <CloseIcon />
+          <CloseIcon data-testid="remove_upload_icon" />
         </IconButton>
       </Grid>
     </Grid>
