@@ -10,7 +10,6 @@ class JestLog
                             })
     log_count = (response.body.scan(/console.error/).length +
                   response.body.scan(/console.warn/).length)
-
     flaky_issue_count = response.body.scan(/AllocatePlanModal/).length
 
     max_limit = flaky_issue_count > 2 ? 37 : 33
