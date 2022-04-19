@@ -144,6 +144,8 @@ module Users
                         dependent: :destroy
     has_many :reply_to, class_name: 'Comments::NoteComment', foreign_key: :reply_from_id,
                         dependent: :destroy
+    has_many :lead_logs, class_name: 'Logs::LeadLog', dependent: :destroy
+
     # rubocop:enable Rails/InverseOf
     has_one_attached :avatar
     has_many_attached :note_documents
