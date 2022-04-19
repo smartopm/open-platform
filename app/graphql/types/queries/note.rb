@@ -439,7 +439,6 @@ module Types::Queries::Note
       .offset(offset).limit(limit)
   end
 
-  
   def task_list(task_id:)
     unless permitted?(module: :note, permission: :can_view_task_lists)
       raise GraphQL::ExecutionError,
