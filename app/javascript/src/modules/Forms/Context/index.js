@@ -43,7 +43,6 @@ export default function FormContextProvider({ children }) {
     if (
       status === 'DONE' &&
       formState.currentPropId 
-      // &&  !uploadedImages.find(im => im.propertyId === formState.currentPropId)
     ) {
       setFormState({
         ...formState,

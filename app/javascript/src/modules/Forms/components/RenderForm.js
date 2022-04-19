@@ -22,7 +22,7 @@ import SignaturePad from './FormProperties/SignaturePad';
 import FormPropertyAction from './FormPropertyAction';
 import { FormContext } from '../Context';
 import { convertBase64ToFile, objectAccessor } from '../../../utils/helpers';
-import { checkRequiredFormPropertyIsFilled } from '../utils';
+import { checkRequiredFormPropertyIsFilled, isUploaded } from '../utils';
 import MessageAlert from '../../../components/MessageAlert';
 import ListWrapper from '../../../shared/ListWrapper';
 import UploadFileItem from '../../../shared/imageUpload/UploadFileItem';
@@ -126,12 +126,6 @@ export default function RenderForm({
     }
     const filteredImages = filesToUpload.filter(item => item.name !== file.name);
     return setFilesToUpload(filteredImages);
-  }
-
-  function isUploaded(file, propertyId) {
-    return uploadedImages.some(
-      uploaded => uploaded.filename === file.name && uploaded.propertyId === propertyId
-    );
   }
 
   function onImageRemove(imagePropertyId) {
@@ -345,7 +339,9 @@ export default function RenderForm({
                 label: formPropertiesData.fieldName,
                 id: formPropertiesData.id,
                 required: formPropertiesData.required,
-                fileCount: uploadedImages.length
+                fileCount: uploadedImages.filter(file => file.propertyId === formPropertiesData.id)
+                  .length,
+                currentPropId: formState.currentPropId
               }}
               upload={event => setFilesToUpload([...event.target.files])}
               editable={editable}
@@ -356,19 +352,12 @@ export default function RenderForm({
                 fieldName: formPropertiesData.fieldName
               }}
             />
-            {
-            Boolean(filesToUpload.length) 
-            && (
+            {Boolean(filesToUpload.length) && (
               <>
-                <Typography variant='h6'>
-                  {t('misc.confirm_uploads')}
-                </Typography>
-                <Typography variant="caption">
-                  {t('misc.click_upload_btn')}
-                </Typography>
+                <Typography variant="h6">{t('misc.confirm_uploads')}</Typography>
+                <Typography variant="caption">{t('misc.click_upload_btn')}</Typography>
               </>
-            )
-          }
+            )}
           </ListWrapper>
         </Grid>
         {editMode && (
@@ -384,44 +373,36 @@ export default function RenderForm({
         )}
         <br />
         <br />
-        {
-          filesToUpload.map(file => (
-            <UploadFileItem
-              file={file}
-              formPropertyId={formPropertiesData.id}
-              handleUpload={handleFileUpload}
-              handleRemoveFile={removeBeforeUpload}
-              formState={{...formState, uploaded: uploadedImages}}
-              isUploaded={isUploaded(file, formPropertiesData.id)}
-              key={`${file.size}-${file.name}`}
-              translate={t}
-            />
-          ))
-        }
+        {filesToUpload.map(file => (
+          <UploadFileItem
+            file={file}
+            formPropertyId={formPropertiesData.id}
+            handleUpload={handleFileUpload}
+            handleRemoveFile={removeBeforeUpload}
+            formState={{ ...formState, uploaded: uploadedImages }}
+            isUploaded={isUploaded(uploadedImages, file, formPropertiesData.id)}
+            key={`${file.size}-${file.name}`}
+            translate={t}
+          />
+        ))}
 
-        {
-          (
-          !!uploadedFile && filesToUpload.length === 1 &&  (
-            <Grid
-              item
-              md={12}
-              xs={12}
-              className={matches ? classes.filePreviewMobile : classes.filePreview}
+        {!!uploadedFile && filesToUpload.length === 1 && (
+          <Grid
+            item
+            md={12}
+            xs={12}
+            className={matches ? classes.filePreviewMobile : classes.filePreview}
+          >
+            <IconButton
+              className={classes.iconButton}
+              onClick={() => onImageRemove(formPropertiesData.id)}
+              data-testid="image_close"
+              size="large"
             >
-              <IconButton
-                className={classes.iconButton}
-                onClick={() => onImageRemove(formPropertiesData.id)}
-                data-testid="image_close"
-                size="large"
-              >
-                <CloseIcon className={classes.closeButton} />
-              </IconButton>
-              <ImageAuth
-                type={uploadedFile.contentType.split('/')[0]}
-                imageLink={uploadedFile.url}
-              />
-            </Grid>
-          )
+              <CloseIcon className={classes.closeButton} />
+            </IconButton>
+            <ImageAuth type={uploadedFile.contentType.split('/')[0]} imageLink={uploadedFile.url} />
+          </Grid>
         )}
       </Grid>
     ),

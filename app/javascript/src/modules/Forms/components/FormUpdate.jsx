@@ -476,6 +476,9 @@ export default function FormUpdate({ formUserId, userId, authState, categoriesDa
               )
             )}
           </Grid>
+          {
+            /* TODO: Disable file upload on submitted form */
+          }
           <ListWrapper className={classes.space} key={formPropertiesData.id}>
             <UploadField
               detail={{
