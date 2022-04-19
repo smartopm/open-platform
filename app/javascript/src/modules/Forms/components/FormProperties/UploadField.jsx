@@ -29,7 +29,7 @@ export default function UploadField({
         </FormHelperText>
         <input
           type="file"
-          accept="image/*, .pdf, .zip"
+          accept="image/*, .pdf"
           name={`image-${detail.label}`}
           id={`button-${detail.id}`}
           data-testid="form-file-input"
