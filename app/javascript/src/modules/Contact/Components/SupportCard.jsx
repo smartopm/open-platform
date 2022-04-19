@@ -148,7 +148,7 @@ export default function SupportCard({ handleSendMessage, user }) {
           </Button>
         </Grid>
 
-        {user.community && user.community.name && user.community.name !== 'Ciudad Morazán' && (
+        {user.community && user.community.name && user.community.name === 'Nkwashi' && (
           <Grid container direction="row" className={classes.root}>
             <Button
               data-testid="pwmm"
@@ -194,7 +194,7 @@ export default function SupportCard({ handleSendMessage, user }) {
             color="primary"
             onClick={() =>
               window.open(
-                'https://handbook.doublegdp.com/Product/#platform-policies',
+                'https://handbook.doublegdp.com/product/05-platform-policies/#terms-of-use',
                 '_blank'
               )}
             style={{ fontSize: 14 }}
