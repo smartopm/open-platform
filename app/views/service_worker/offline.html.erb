@@ -33,12 +33,12 @@
   </head>
   <body>
     <div>
-      <h1>Oops.</h1>
+      <h1><%= I18n.t('offline') %></h1>
       <br />
-      <p>Looks like your internet is off.</p>
+      <p><%= I18n.t('internet_off') %></p>
       <br />
       <br />
-      <button onclick="reloadPage()"> Reload Page </button>
+      <button onclick="reloadPage()"> <%= I18n.t('reload_page') %> </button>
     </div>
   </body>
   <script>
