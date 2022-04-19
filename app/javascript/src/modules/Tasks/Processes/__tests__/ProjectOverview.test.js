@@ -41,6 +41,8 @@ describe('Project Processes Split View', () => {
               adminUse: false,
               order: '1'
             },
+            // This didn't have much effect on this meaning there is something wrong with the test
+            attachments: null, 
             value: 'Development Co.',
             imageUrl: 'https://image.com',
             fileType: null,

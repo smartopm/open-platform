@@ -77,12 +77,18 @@ describe('Form Component', () => {
                   id: 'sfkjwfwefwef'
                 }
               },
+              attachments: [
+                {
+                  id: "290834032",
+                  image_url: 'https://image.com',
+                  file_type: null,
+                  file_name: 'img.jpg',
+                }
+              ],
               value: '7th Street',
-              imageUrl: 'https://image.com',
-              fileType: null,
-              fileName: 'img.jpg',
               createdAt: '2020-10-07T09:37:03Z',
               user: {
+                id: "some_ids",
                 name: 'John Does'
               }
             },
@@ -99,12 +105,19 @@ describe('Form Component', () => {
                   id: 'sfkjwfwefwef'
                 }
               },
+              attachments: [
+                {
+                  id: "290834032",
+                  image_url: 'https://another_image.com',
+                  file_type: 'null',
+                  file_name: 'img2.jpg',
+                }
+              ],
               value: null,
-              imageUrl: 'https://another_image.com',
-              fileType: 'null',
-              fileName: 'img2.jpg',
+
               createdAt: '2020-10-07T09:37:03Z',
               user: {
+                id: "some_ids",
                 name: 'John Doe'
               }
             },
@@ -121,12 +134,18 @@ describe('Form Component', () => {
                   id: 'sfkjwfwefwef'
                 }
               },
+              attachments: [
+                {
+                  id: "290834032",
+                  image_url: 'https://another2_image.com',
+                  file_type: 'image/jpg',
+                  file_name: 'img3.jpg',
+                }
+              ],
               value: 'some values',
-              imageUrl: 'https://another2_image.com',
-              fileType: 'image/jpg',
-              fileName: 'img3.jpg',
               createdAt: '2020-10-07T09:37:03Z',
               user: {
+                id: "some_ids",
                 name: 'John Doe'
               }
             },
@@ -143,12 +162,11 @@ describe('Form Component', () => {
                   id: 'sfkjwfwefwef'
                 }
               },
+              attachments: null,
               value: null,
-              imageUrl: null,
-              fileType: null,
-              fileName: null,
               createdAt: '2020-10-07T09:37:03Z',
               user: {
+                id: "some_ids",
                 name: 'John Doe'
               }
             },
@@ -174,12 +192,11 @@ describe('Form Component', () => {
                   id: 'sfkjwfwefwef'
                 }
               },
+              attachments: null,
               value: '{"checked"=>"Yes", "label"=>"Would you rather?"}',
-              imageUrl: null,
-              fileType: null,
-              fileName: null,
               createdAt: '2020-10-07T09:37:03Z',
               user: {
+                id: "some_ids",
                 name: 'John Doe'
               }
             },
@@ -209,12 +226,11 @@ describe('Form Component', () => {
                   id: 'sfkjwfwefwef'
                 }
               },
+              attachments: null,
               value: '{"Red"=>true, "Blue"=>true}',
-              imageUrl: null,
-              fileType: null,
-              fileName: null,
               createdAt: '2020-10-07T09:37:03Z',
               user: {
+                id: "some_ids",
                 name: 'John Doe'
               }
             }
@@ -249,7 +265,7 @@ describe('Form Component', () => {
         expect(container.queryAllByLabelText('text-input')).toHaveLength(1);
         expect(container.queryAllByLabelText('text-input')[0]).toHaveTextContent('Address');
         expect(container.queryAllByTestId('date-picker')[0]).toHaveTextContent('Dead Line');
-        expect(container.queryAllByTestId('attachment_name')[0]).toHaveTextContent('Image 1');
+        expect(container.queryAllByTestId('attachment_name')[0]).toHaveTextContent('img3.jpg');
         expect(container.queryByTestId('download-icon')).toBeInTheDocument();
         expect(container.queryByLabelText('Yes')).toBeInTheDocument();
         expect(container.queryByLabelText('No')).toBeInTheDocument();
@@ -292,12 +308,11 @@ describe('Form Component', () => {
                   id: 'sfkjwfwefwef'
                 }
               },
+              attachments: null,
               value: null,
-              imageUrl: null,
-              fileType: null,
-              fileName: null,
               createdAt: '2020-10-07T09:37:03Z',
               user: {
+                id: "somes",
                 name: 'John Doe'
               }
             }
@@ -324,7 +339,7 @@ describe('Form Component', () => {
     );
 
     await waitFor(() => {
-      expect(screen.queryAllByTestId('form-file-upload-btn')[0]).toHaveTextContent('form:misc.upload_file');
+      expect(screen.queryAllByTestId('form-file-upload-btn')[0]).toHaveTextContent('form:misc.select_file');
       expect(screen.queryByTestId('download-icon')).not.toBeInTheDocument();
     });
   });
