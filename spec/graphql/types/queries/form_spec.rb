@@ -178,9 +178,7 @@ RSpec.describe Types::Queries::Form do
         query userFormProperties($userId: ID!, $formUserId: ID!) {
           formUserProperties(userId: $userId, formUserId: $formUserId) {
             value
-            imageUrl
-            fileType
-            fileName
+            attachments
             user {
               name
             }
