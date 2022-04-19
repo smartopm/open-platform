@@ -11,8 +11,8 @@ class JestLog
     log_count = (response.body.scan(/console.error/).length +
                   response.body.scan(/console.warn/).length)
 
-    return unless log_count > 30
+    return unless log_count > 34
 
-    abort("Jest log count shouldn't be more than 30")
+    abort("Jest log count shouldn't be more than 34")
   end
 end
