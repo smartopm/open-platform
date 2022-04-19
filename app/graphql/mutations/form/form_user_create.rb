@@ -62,12 +62,23 @@ module Mutations
       def add_user_form_properties(form_user, vals)
         JSON.parse(vals[:prop_values])['user_form_properties'].each do |value|
           value = value.merge(user_id: vals[:user_id])
-          user_prop = form_user.user_form_properties.create!(value.except('image_blob_id'))
-          user_prop.attach_file(value) if value.key?('image_blob_id')
+          # check if this property already exists
+          user_prop = check_user_form_property(form_user, vals)
+          # user_prop.attach_file(value) if value.key?('image_blob_id')
+          if user_prop.nil?
+            user_prop = form_user.user_form_properties.create!(value.except('image_blob_id'))
+          end
+          user_prop.attachments.attach(value['image_blob_id'])
         end
 
         { form_user: form_user }
       end
+
+      def check_user_form_property(form_user, vals)
+        user_form_property = form_user.user_form_properties.find_by(form_property_id: vals['form_property_id'])
+        user_form_property
+      end
+
 
       def authorized?(vals)
         return true if permissions_checks? ||
