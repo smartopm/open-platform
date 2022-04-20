@@ -29,6 +29,11 @@ describe('Utilities', () => {
     // add null values to array
     addPropWithValue(values, '34f');
     expect(values).toHaveLength(3);
+
+    // add nothing to the array
+    addPropWithValue(values, '34f');
+    expect(values).toHaveLength(3);
+
     // this should pass this time
     expect(propExists(values, '34f')).toBe(true);
   });
@@ -128,6 +133,7 @@ describe('Utilities', () => {
       },
 
     ]);
+    expect(extractValidFormPropertyValue({})).toHaveLength(0)
 
     expect(extractValidFormPropertyFieldNames(formProperties)).toMatchObject([
       {
@@ -147,6 +153,7 @@ describe('Utilities', () => {
         value: 'first, third'
       },
     ]);
+    expect(extractValidFormPropertyFieldNames({})).toHaveLength(0)
   });
 
   it('only shows a category if it matches the given display condition', () => {
@@ -217,6 +224,8 @@ describe('Utilities', () => {
     expect(extractRenderedTextFromCategory(properties, [category, categoryWithPropertyId, categoryWithWrongCondition])).toEqual('Some category  ')
     expect(extractRenderedTextFromCategory(properties, [category, categoryWithMatchingCondition])).toEqual('Some category  and this also matches  ')
     expect(extractRenderedTextFromCategory(properties, [])).toEqual('')
+    expect(extractRenderedTextFromCategory(properties, [])).toEqual('')
+    expect(extractRenderedTextFromCategory(properties, null)).toEqual('')
   })
 
   it('should parse and then find and replace variables in a string', () => {
@@ -265,6 +274,7 @@ describe('Utilities', () => {
     expect(parseRenderedText([categories[0]], data)).toContain('This is a nice string with And yes it is true that has  Joe with  Joe, OR And yes it is true. end of line \nyes \n\nyes')
     expect(parseRenderedText(categories, data)).toContain(`And some other text riught here  with cook underscores test one three and another one here test one three or this \n\ntest one three ## Another nice tile \ntest one three`)
     expect(parseRenderedText([], data)).toBe('')
+    expect(parseRenderedText(null, data)).toBe('')
   })
 
   it('checks for null values', () => {
