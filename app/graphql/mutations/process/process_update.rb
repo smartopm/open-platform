@@ -11,7 +11,7 @@ module Mutations
       field :process, Types::ProcessType, null: true
 
       def resolve(vals)
-        process = Processes::Process.find_by(id: vals[:id])
+        process = context[:site_community].processes.find_by(id: vals[:id])
         raise_error(I18n.t('errors.process.not_found')) if process.nil?
 
         return { process: process } if process.update(vals.except(:id))
