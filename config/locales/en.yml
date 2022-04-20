@@ -430,6 +430,9 @@ en:
   action_flow:
     never: Never
   welcome_sms: "Welcome to the %{community} online community. Please access the app using %{url}"
+  offline: "Oops."
+  internet_off: "Looks like your internet is off."
+  reload_page: "Reload Page"
   community_name:
     ciudadmorazán: ciudadmorazan
     greenpark: greenpark
