@@ -11,6 +11,7 @@ module Mutations
 
       field :lead_log, Types::LeadLogType, null: true
 
+      # rubocop:disable Metrics/AbcSize
       def resolve(vals)
         return if signed_deal_present?(vals[:log_type], vals[:user_id])
 
@@ -21,6 +22,7 @@ module Mutations
 
         raise GraphQL::ExecutionError, lead_logs.errors.full_messages&.join(', ')
       end
+      # rubocop:enable Metrics/AbcSize
 
       def authorized?(_vals)
         return true if permitted?(module: :lead_log, permission: :can_create_lead_log)

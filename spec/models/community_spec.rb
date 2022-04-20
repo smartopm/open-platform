@@ -57,6 +57,7 @@ RSpec.describe Community, type: :model do
     it { is_expected.to have_many(:entry_requests).dependent(:destroy) }
     it { is_expected.to have_many(:notes).class_name('Notes::Note').dependent(:destroy) }
     it { is_expected.to have_many(:forms).class_name('Forms::Form').dependent(:destroy) }
+    it { is_expected.to have_many(:lead_logs).class_name('Logs::LeadLog').dependent(:destroy) }
     it do
       is_expected
         .to have_many(:land_parcels)

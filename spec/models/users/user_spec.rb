@@ -100,6 +100,7 @@ RSpec.describe Users::User, type: :model do
         .inverse_of(:user)
     end
     it { is_expected.to have_many(:notes).class_name('Notes::Note').dependent(:destroy) }
+    it { is_expected.to have_many(:lead_logs).class_name('Logs::LeadLog').dependent(:destroy) }
     it do
       is_expected
         .to have_many(:notifications)

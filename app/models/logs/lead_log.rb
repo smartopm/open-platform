@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module Logs
+  # Lead logs
   class LeadLog < ApplicationRecord
     belongs_to :community
     belongs_to :user, class_name: 'Users::User'

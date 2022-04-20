@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+# leadlog queries
 module Types::Queries::LeadLog
   extend ActiveSupport::Concern
 
@@ -43,7 +44,7 @@ module Types::Queries::LeadLog
   def signed_deal(user_id:)
     raise_unauthorized_error_for_lead_logs
 
-    context[:site_community].lead_logs.where(user_id: user_id).signed_deal.includes(:user)
+    context[:site_community].lead_logs.signed_deal.find_by(user_id: user_id)
   end
 
   def raise_unauthorized_error_for_lead_logs
