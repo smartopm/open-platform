@@ -133,7 +133,7 @@ export default function BusinessForm({ close, businessData, action }) {
               aria-label="business_name"
               inputProps={{ 'data-testid': 'business_name' }}
               required
-              margin="normal"
+              margin="dense"
               fullWidth
             />
           </Grid>
@@ -152,7 +152,7 @@ export default function BusinessForm({ close, businessData, action }) {
                     value={data?.user?.name}
                     aria-label="business_user"
                     inputProps={{ 'data-testid': 'business_user' }}
-                    margin="normal"
+                    margin="dense"
                     disabled
                     required
                     fullWidth
@@ -175,7 +175,7 @@ export default function BusinessForm({ close, businessData, action }) {
               onChange={handleInputChange}
               aria-label="business_email"
               inputProps={{ 'data-testid': 'business_email' }}
-              margin="normal"
+              margin="dense"
               required
               fullWidth
             />
@@ -191,7 +191,7 @@ export default function BusinessForm({ close, businessData, action }) {
               inputProps={{ 'data-testid': 'business_phone_number' }}
               required
               fullWidth
-              margin="normal"
+              margin="dense"
             />
           </Grid>
 
@@ -204,7 +204,7 @@ export default function BusinessForm({ close, businessData, action }) {
               aria-label="business_link"
               inputProps={{ 'data-testid': 'business_link' }}
               fullWidth
-              margin="normal"
+              margin="dense"
             />
           </Grid>
           <Grid item md={12} xs={12}>
@@ -216,7 +216,7 @@ export default function BusinessForm({ close, businessData, action }) {
               aria-label="business_link"
               inputProps={{ 'data-testid': 'business_image' }}
               fullWidth
-              margin="normal"
+              margin="dense"
             />
           </Grid>
 
@@ -231,7 +231,7 @@ export default function BusinessForm({ close, businessData, action }) {
               multiline
               maxRows={4}
               fullWidth
-              margin="normal"
+              margin="dense"
             />
           </Grid>
           <Grid item md={12} xs={12}>
@@ -243,7 +243,7 @@ export default function BusinessForm({ close, businessData, action }) {
               aria-label="business_address"
               inputProps={{ 'data-testid': 'business_address' }}
               fullWidth
-              margin="normal"
+              margin="dense"
             />
           </Grid>
 
@@ -258,7 +258,6 @@ export default function BusinessForm({ close, businessData, action }) {
                 inputProps={{ 'data-testid': 'business_status' }}
                 fullWidth
                 required
-                margin="normal"
                 label="status"
               >
                 {Object.entries(businessStatus).map(([key, val]) => (
@@ -280,7 +279,7 @@ export default function BusinessForm({ close, businessData, action }) {
                 name="category"
                 inputProps={{ 'data-testid': 'business_category' }}
                 fullWidth
-                margin="normal"
+                margin="dense"
                 label="category"
               >
                 {Object.entries(businessCategories).map(([key, val]) => (
@@ -300,7 +299,7 @@ export default function BusinessForm({ close, businessData, action }) {
               aria-label="business_operating_hours"
               inputProps={{ 'data-testid': 'business_operating_hours' }}
               fullWidth
-              margin="normal"
+              margin="dense"
             />
           </Grid>
           {error && (
