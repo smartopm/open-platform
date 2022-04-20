@@ -58,7 +58,10 @@ export default function TaskListCreate() {
       <Grid container spacing={1}>
         <Grid item md={12} xs={12} style={{ paddingleft: '10px' }}>
           <div role="presentation">
-            <Breadcrumbs aria-label="breadcrumb" style={{ paddingBottom: '10px' }}>
+            <Breadcrumbs
+              aria-label="breadcrumb"
+              style={{ paddingBottom: '10px', marginTop: '-45px' }}
+            >
               <Link to="/tasks/task_lists">
                 <Typography color="primary" style={{ marginLeft: '5px' }}>
                   {t('task_lists.task_lists')}
@@ -71,7 +74,10 @@ export default function TaskListCreate() {
         <Grid item md={12} xs={11} className={classes.header}>
           <Grid container spacing={1}>
             <Grid item md={9} xs={10}>
-              <Typography variant="h4" style={{ marginLeft: '5px', marginBottom: '24px' }}>
+              <Typography
+                variant="h4"
+                style={{ marginLeft: '5px', marginBottom: '10px', marginTop: '-10px' }}
+              >
                 {t('task_lists.configure_task_list')}
               </Typography>
             </Grid>
@@ -115,7 +121,7 @@ export default function TaskListCreate() {
                     item
                     md={12}
                     xs={12}
-                    style={{ marginLeft: isMobile ? 80 : 8, marginTop: !isMobile && 41 }}
+                    style={{ marginLeft: isMobile ? 0 : 8, marginTop: !isMobile && 41 }}
                   >
                     <Button
                       variant="contained"

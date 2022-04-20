@@ -1,14 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import TextField from '@mui/material/TextField';
-import {
-  Button,
-  FormHelperText,
-  MenuItem,
-  Select,
-  InputLabel,
-  Grid,
-  FormControl
-} from '@mui/material';
+import { Button, FormHelperText, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
 import { css } from 'aphrodite';
 import { useMutation } from 'react-apollo';
 import PropTypes from 'prop-types';
@@ -157,50 +149,30 @@ export default function TaskForm({
       </div>
 
       <br />
-      <Grid
-        container
-        spacing={5}
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          gridTemplateColumns: 'repeat(2, 1fr)'
-        }}
-      >
-        <Grid item md={6} xs={6}>
-          <Button
-            variant="contained"
-            aria-label="task_cancel"
-            color="secondary"
-            onClick={close}
-            data-testid="task-cancel-button"
-            className={`${css(discussStyles.cancelBtn)}`}
-          >
-            {t('common:form_actions.cancel')}
-          </Button>
-        </Grid>
-
-        <Grid
-          item
-          md={6}
-          xs={6}
-          style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'flex-end' }}
+      <div className="d-flex row justify-content-center">
+        <Button
+          variant="contained"
+          aria-label="task_cancel"
+          color="secondary"
+          onClick={close}
+          data-testid="task-cancel-button"
+          className={`${css(discussStyles.cancelBtn)}`}
         >
-          <Button
-            variant="contained"
-            type="submit"
-            color="primary"
-            disabled={loading}
-            aria-label="task_submit"
-            data-testid="task-submit-button"
-            className={`${css(discussStyles.submitBtn)}`}
-          >
-            {loading
-              ? t('common:form_actions.creating_task')
-              : t('common:form_actions.create_task')}
-          </Button>
-        </Grid>
-      </Grid>
+          {t('common:form_actions.cancel')}
+        </Button>
+        <Button
+          variant="contained"
+          type="submit"
+          color="primary"
+          disabled={loading}
+          aria-label="task_submit"
+          data-testid="task-submit-button"
+          className={`${css(discussStyles.submitBtn)}`}
+        >
+          {loading ? t('common:form_actions.creating_task') : t('common:form_actions.create_task')}
+        </Button>
+      </div>
+
       <p className="text-center">{Boolean(error.length) && error}</p>
     </form>
   );

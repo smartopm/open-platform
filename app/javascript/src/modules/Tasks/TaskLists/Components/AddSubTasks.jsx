@@ -72,7 +72,14 @@ export default function AddSubTasks() {
   return (
     <div className="container">
       <Grid container spacing={1}>
-        <Dialog open={open} onClose={openModal} aria-labelledby="task_modal">
+        <Dialog
+          open={open}
+          onClose={openModal}
+          fullScreen
+          fullWidth
+          maxWidth="lg"
+          aria-labelledby="task_modal"
+        >
           <DialogTitle id="task_modal">
             <CenteredContent>
               <span>{t('task.task_modal_create_text')}</span>
@@ -92,7 +99,10 @@ export default function AddSubTasks() {
 
         <Grid item md={12} xs={12} style={{ paddingleft: '10px' }}>
           <div role="presentation">
-            <Breadcrumbs aria-label="breadcrumb" style={{ paddingBottom: '10px' }}>
+            <Breadcrumbs
+              aria-label="breadcrumb"
+              style={{ paddingBottom: '10px', marginTop: '-45px' }}
+            >
               <Link to="/tasks/task_lists">
                 <Typography color="primary" style={{ marginLeft: '5px' }}>
                   {t('task_lists.task_lists')}
@@ -105,7 +115,10 @@ export default function AddSubTasks() {
         <Grid item md={12} xs={11} className={classes.header}>
           <Grid container spacing={1}>
             <Grid item md={9} xs={10}>
-              <Typography variant="h4" style={{ marginLeft: '5px', marginBottom: '24px' }}>
+              <Typography
+                variant="h4"
+                style={{ marginLeft: '5px', marginBottom: '10px', marginTop: '-10px' }}
+              >
                 {t('task_lists.configure_task_list')}
               </Typography>
             </Grid>
