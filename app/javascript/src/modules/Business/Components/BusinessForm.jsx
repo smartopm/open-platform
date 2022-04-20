@@ -155,6 +155,7 @@ export default function BusinessForm({ close, businessData, action }) {
                     margin="normal"
                     disabled
                     required
+                    fullWidth
                   />
                 </Grid>
                 <Grid item md={1} xs={1} style={{ textAlign: 'right' }}>
