@@ -5,14 +5,14 @@ module Types::Queries::LeadLog
   extend ActiveSupport::Concern
 
   included do
-    field :events, [Types::LeadLogType], null: true do
+    field :lead_events, [Types::LeadLogType], null: true do
       description 'Get lead specific events'
       argument :user_id, GraphQL::Types::ID, required: true
       argument :limit, Integer, required: false
       argument :offset, Integer, required: false
     end
 
-    field :meetings, [Types::LeadLogType], null: true do
+    field :lead_meetings, [Types::LeadLogType], null: true do
       description 'Get lead specific meetings'
       argument :user_id, GraphQL::Types::ID, required: true
       argument :limit, Integer, required: false
@@ -25,19 +25,19 @@ module Types::Queries::LeadLog
     end
   end
 
-  def events(user_id:, offset: 0, limit: 3)
+  def lead_events(user_id:, offset: 0, limit: 3)
     raise_unauthorized_error_for_lead_logs
 
     context[:site_community].lead_logs.where(user_id: user_id)
-                            .event.includes(:user)
+                            .event.includes(:acting_user)
                             .offset(offset).limit(limit)
   end
 
-  def meetings(user_id:, offset: 0, limit: 3)
+  def lead_meetings(user_id:, offset: 0, limit: 3)
     raise_unauthorized_error_for_lead_logs
 
     context[:site_community].lead_logs.where(user_id: user_id)
-                            .meeting.includes(:user)
+                            .meeting.includes(:acting_user)
                             .offset(offset).limit(limit)
   end
 

@@ -44,7 +44,7 @@ RSpec.describe Types::Queries::LeadLog do
     let(:events) do
       <<~GQL
         query fetchEvents($userId: ID!, $limit: Int, $offset: Int){
-          events(userId: $userId, limit: $limit, offset: $offset){
+          leadEvents(userId: $userId, limit: $limit, offset: $offset){
             id
             name
             logType
@@ -56,7 +56,7 @@ RSpec.describe Types::Queries::LeadLog do
     let(:meetings) do
       <<~GQL
         query fetchMeetings($userId: ID!, $limit: Int, $offset: Int){
-          meetings(userId: $userId, limit: $limit, offset: $offset){
+          leadMeetings(userId: $userId, limit: $limit, offset: $offset){
             id
             name
             logType
@@ -84,7 +84,7 @@ RSpec.describe Types::Queries::LeadLog do
                                                  context: { current_user: admin,
                                                             site_community: community }).as_json
         expect(result['errors']).to be nil
-        expect(result.dig('data', 'events').count).to eql 2
+        expect(result.dig('data', 'leadEvents').count).to eql 2
       end
     end
 
@@ -95,7 +95,7 @@ RSpec.describe Types::Queries::LeadLog do
                                                    context: { current_user: admin,
                                                               site_community: community }).as_json
         expect(result['errors']).to be nil
-        expect(result.dig('data', 'meetings').count).to eql 2
+        expect(result.dig('data', 'leadMeetings').count).to eql 2
       end
     end
 

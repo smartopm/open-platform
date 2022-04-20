@@ -16,6 +16,7 @@ RSpec.describe Logs::LeadLog, type: :model do
   describe 'associations' do
     it { is_expected.to belong_to(:community) }
     it { is_expected.to belong_to(:user).class_name('Users::User') }
+    it { is_expected.to belong_to(:acting_user).class_name('Users::User') }
   end
 
   describe '#enums' do
