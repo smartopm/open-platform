@@ -478,8 +478,11 @@ es:
       (%{due_date}). Revise su tarea en %{task_link}. Gracias, %{community_name}
     thanks_for_using_our_app: Gracias por usar nuestra aplicación, por favor use este
       enlace para darnos su opinión %{feedback_link}
+  internet_off: Parece que no hay conexión de internet.
+  offline: Huy.
   permission:
     bad_query: Consulta incorrecta, función o módulo no válido
+  reload_page: Volver a cargar página
   response:
     category_deleted: Categoría eliminada correctamente
     delete_failed: Eliminar Falló
