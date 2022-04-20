@@ -13,6 +13,7 @@ module Types
     field :image_url, String, null: true
     field :file_type, String, null: true
     field :file_name, String, null: true
+    field :attachments, GraphQL::Types::JSON, null: true
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
 
@@ -35,5 +36,23 @@ module Types
       path = Rails.application.routes.url_helpers.rails_blob_path(type)
       "https://#{base_url}#{path}"
     end
+
+    # rubocop:disable Metrics/MethodLength
+    def attachments
+      return nil unless object.attachments.attached?
+
+      files = []
+      object.attachments.each do |attachment|
+        file = {
+          id: attachment.id,
+          file_name: attachment.blob.filename,
+          file_type: attachment.blob.content_type,
+          image_url: host_url(attachment),
+        }
+        files << file
+      end
+      files
+    end
+    # rubocop:enable Metrics/MethodLength
   end
 end

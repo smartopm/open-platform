@@ -14,7 +14,6 @@ import DatePickerDialog, {
 } from '../../../components/DatePickerDialog';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import ImageAuth from '../../../shared/ImageAuth';
-import { Spinner } from '../../../shared/Loading';
 import RadioInput from './FormProperties/RadioInput';
 import CheckboxInput from './FormProperties/CheckboxInput';
 import TextInput from './FormProperties/TextInput';
@@ -23,9 +22,10 @@ import SignaturePad from './FormProperties/SignaturePad';
 import FormPropertyAction from './FormPropertyAction';
 import { FormContext } from '../Context';
 import { convertBase64ToFile, objectAccessor } from '../../../utils/helpers';
-import { checkRequiredFormPropertyIsFilled } from '../utils';
+import { checkRequiredFormPropertyIsFilled, isUploaded } from '../utils';
 import MessageAlert from '../../../components/MessageAlert';
 import ListWrapper from '../../../shared/ListWrapper';
+import UploadFileItem from '../../../shared/imageUpload/UploadFileItem';
 
 export default function RenderForm({
   formPropertiesData,
@@ -47,14 +47,16 @@ export default function RenderForm({
     setUploadedImages,
     setFormProperties,
     setFormState,
-    onChange,
+    startUpload,
     signature
   } = useContext(FormContext);
 
-  const fileTypes = ['pdf', 'zip', 'x-zip-compressed'];
-  const { t } = useTranslation('form');
+  // leaving this here in case we need to support more files
+  const fileTypes = ['pdf'];
+  const { t } = useTranslation(['form', 'common']);
   const [messageAlert, setMessageAlert] = useState('');
   const [isSuccessAlert, setIsSuccessAlert] = useState(false);
+  const [filesToUpload, setFilesToUpload] = useState([]);
   function handleCheckboxSelect(event, property) {
     const { name, checked } = event.target;
     setFormProperties({
@@ -103,21 +105,28 @@ export default function RenderForm({
     });
   }
 
-  function onImageSelect(event, currentProperty) {
-    const file = event.target.files[0];
-    const validType =
-      fileTypes.includes(file.type.split('/')[1]) || file.type.split('/')[0] === 'image';
-    if (!validType) {
-      setMessageAlert(t('form:errors.wrong_file_type'));
-      setIsSuccessAlert(false);
-      return;
+   function handleFileUpload(file, propertyId) {
+    const validType = fileTypes.includes(file.type.split('/')[1]) || file.type.split('/')[0] === 'image';
+      if (!validType) {
+        setMessageAlert(t('form:errors.wrong_file_type'));
+        setIsSuccessAlert(false);
+        return;
+      }
+       setFormState({
+        ...formState,
+        currentPropId: propertyId,
+        isUploading: true,
+        currentFileNames: [...formState.currentFileNames, file.name]
+      });
+     startUpload(file);
+  }
+
+  function removeBeforeUpload(file, isFileUploaded, formPropertyId) {
+    if (isFileUploaded) {
+      return onImageRemove(formPropertyId)
     }
-    setFormState({
-      ...formState,
-      currentPropId: currentProperty,
-      isUploading: true
-    });
-    onChange(event.target.files[0]);
+    const filteredImages = filesToUpload.filter(item => item.name !== file.name);
+    return setFilesToUpload(filteredImages);
   }
 
   function onImageRemove(imagePropertyId) {
@@ -317,6 +326,7 @@ export default function RenderForm({
             <Typography color="textSecondary">{number}</Typography>
           </Grid>
         )}
+
         <Grid
           item
           xs={editMode ? 10 : 12}
@@ -329,9 +339,12 @@ export default function RenderForm({
                 type: 'file',
                 label: formPropertiesData.fieldName,
                 id: formPropertiesData.id,
-                required: formPropertiesData.required
+                required: formPropertiesData.required,
+                fileCount: uploadedImages.filter(file => file.propertyId === formPropertiesData.id)
+                  .length,
+                currentPropId: formState.currentPropId
               }}
-              upload={evt => onImageSelect(evt, formPropertiesData.id)}
+              upload={event => setFilesToUpload([...event.target.files])}
               editable={editable}
               uploaded={!!uploadedFile}
               btnColor="primary"
@@ -340,6 +353,12 @@ export default function RenderForm({
                 fieldName: formPropertiesData.fieldName
               }}
             />
+            {Boolean(filesToUpload.length) && (
+              <>
+                <Typography variant="h6">{t('misc.confirm_uploads')}</Typography>
+                <Typography variant="caption">{t('misc.click_upload_btn')}</Typography>
+              </>
+            )}
           </ListWrapper>
         </Grid>
         {editMode && (
@@ -353,33 +372,38 @@ export default function RenderForm({
             />
           </Grid>
         )}
+        <br />
+        <br />
+        {filesToUpload.map(file => (
+          <UploadFileItem
+            file={file}
+            formPropertyId={formPropertiesData.id}
+            handleUpload={handleFileUpload}
+            handleRemoveFile={removeBeforeUpload}
+            formState={{ ...formState, uploaded: uploadedImages }}
+            isUploaded={isUploaded(uploadedImages, file, formPropertiesData.id)}
+            key={`${file.size}-${file.name}`}
+            translate={t}
+          />
+        ))}
 
-        {formState.isUploading && formState.currentPropId === formPropertiesData.id ? (
-          <Grid item md={12} xs={12}>
-            <Spinner />
-          </Grid>
-        ) : (
-          !!uploadedFile && (
-            <Grid
-              item
-              md={12}
-              xs={12}
-              className={matches ? classes.filePreviewMobile : classes.filePreview}
+        {!!uploadedFile && filesToUpload.length === 1 && (
+          <Grid
+            item
+            md={12}
+            xs={12}
+            className={matches ? classes.filePreviewMobile : classes.filePreview}
+          >
+            <IconButton
+              className={classes.iconButton}
+              onClick={() => onImageRemove(formPropertiesData.id)}
+              data-testid="image_close"
+              size="large"
             >
-              <IconButton
-                className={classes.iconButton}
-                onClick={() => onImageRemove(formPropertiesData.id)}
-                data-testid="image_close"
-                size="large"
-              >
-                <CloseIcon className={classes.closeButton} />
-              </IconButton>
-              <ImageAuth
-                type={uploadedFile.contentType.split('/')[0]}
-                imageLink={uploadedFile.url}
-              />
-            </Grid>
-          )
+              <CloseIcon className={classes.closeButton} />
+            </IconButton>
+            <ImageAuth type={uploadedFile.contentType.split('/')[0]} imageLink={uploadedFile.url} />
+          </Grid>
         )}
       </Grid>
     ),

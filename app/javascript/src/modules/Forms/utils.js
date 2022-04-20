@@ -1,6 +1,7 @@
 /* eslint-disable no-eval */
 /* eslint-disable security/detect-eval-with-expression */
 import dompurify from 'dompurify';
+import { objectAccessor, titleCase, truncateString } from '../../utils/helpers';
 
 /**
  *
@@ -257,4 +258,80 @@ export function checkRequiredFormPropertyIsFilled(property, formData) {
 export function generateIframeSnippet(form, hostname) {
   const url = `https://${hostname}/form/${form.id}/public`;
   return `<iframe src=${url} name=${form.name} title=${form.name} scrolling="auto" width="100%" height="500px" />`;
+}
+
+
+/**
+ *
+ * @param {Number} bytes
+ * @returns the converted size of the file to upload
+ *
+ */
+ export function convertUploadSize(bytes) {
+  const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
+  if (bytes === 0) {
+    return "N/A";
+  }
+  const convertedBytes = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)), 10);
+  const size = objectAccessor(sizes, convertedBytes)
+  if (convertedBytes === 0) {
+    return `${bytes} ${size}`;
+  }
+  return `${(bytes / 1024 ** convertedBytes).toFixed(0)} ${size}`;
+}
+
+
+/**
+ * Remove extension from files and truncate them to save some space on mobile
+ * @param {String} name 
+ * @returns {String}
+ */
+export function cleanFileName(name){
+  if(!name) return ''
+  const filename =  name.split('.')[0]
+  return titleCase(truncateString(filename, 10))
+}
+
+
+/**
+ * Return translated versions of the known file types
+ * @param {Function} t 
+ * @returns
+ */
+export function fileTypes(t) {
+  return {
+    'image/jpeg': t('common:file_types.image'),
+    'image/jpg': t('common:file_types.image'),
+    'image/png': t('common:file_types.image'),
+    'image/gif': t('common:file_types.image'),
+    'image/x-dwg': t('common:file_types.autocad'),
+    'image/x-dwf': t('common:file_types.autocad'),
+    'image/x-dxf': t('common:file_types.autocad'),
+    'image/svg+xml': t('common:file_types.image'),
+    'wav': t('common:file_types.audio'),
+    'audio/mpeg': t('common:file_types.audio'),
+    'video/mp4': t('common:file_types.video'),
+    'video/mpeg': t('common:file_types.video'),
+    'application/pdf': t('common:file_types.pdf'),
+    'application/zip': t('common:file_types.compressed_file'),
+    'application/x-7z-compressed': t('common:file_types.compressed_file'),
+    'application/x-zip-compressed': t('common:file_types.compressed_file'),
+  }
+}
+
+
+/**
+ * 
+ * @param {[object]} uploads 
+ * @param {{name: String}} file 
+ * @param {String} propertyId 
+ * @returns 
+ */
+export function isUploaded(uploads, file, propertyId) {
+  if (!uploads || !file || !propertyId) {
+    return false
+  }
+  return uploads.some(
+    upload => upload.filename === file.name && upload.propertyId === propertyId
+  );
 }

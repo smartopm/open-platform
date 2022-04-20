@@ -24,8 +24,10 @@ describe('Upload component', () => {
     expect(uploadBtn).not.toBeDisabled();
     fireEvent.change(uploadField);
     expect(handler).toHaveBeenCalled();
-    expect(container.queryByText('form:misc.upload_file')).toBeInTheDocument();
+    expect(container.queryByText('form:misc.select_file')).toBeInTheDocument();
     expect(container.queryByText('Image Label *')).toBeInTheDocument();
+    expect(container.queryByTestId('upload_icon')).toBeInTheDocument();
+
   });
 
   it('should show validation error message', () => {
@@ -43,5 +45,25 @@ describe('Upload component', () => {
       </MockedThemeProvider>
     );
     expect(rendered.queryByText('form:errors.required_field')).toBeInTheDocument();
+  });
+
+  it('should show file count when files are uploaded', () => {
+    const handler = jest.fn();
+    const props = {
+      upload: handler,
+      handleValue: jest.fn(),
+      detail: { status: '', type: 'file', label: 'Image Label', required: true, id: '123', fileCount: 20 },
+      editable: false,
+      btnColor: 'primary',
+      uploaded: true
+    };
+    const container = render(
+      <MockedThemeProvider>
+        <Upload {...props} inputValidation={{ error: true }} />
+      </MockedThemeProvider>
+    );
+    expect(container.queryByTestId('form-file-upload-btn')).toBeInTheDocument();
+    expect(container.queryByTestId('form-file-upload-btn').textContent).toContain('20 form:misc.file_uploaded');
+    expect(container.queryByTestId('done_icon')).toBeInTheDocument();
   });
 });

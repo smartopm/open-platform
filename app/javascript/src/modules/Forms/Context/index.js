@@ -17,7 +17,9 @@ export default function FormContextProvider({ children }) {
     error: false,
     info: '',
     signed: false,
-    previewable: false
+    previewable: false,
+    currentFileNames: [],
+    filename: null
   };
   const initialData = {
     fieldType: '',
@@ -28,9 +30,11 @@ export default function FormContextProvider({ children }) {
   const [formProperties, setFormProperties] = useState(initialData);
   const [formState, setFormState] = useState(state);
   const [uploadedImages, setUploadedImages] = useState([]);
-  const { onChange, status, signedBlobId, contentType, url } = useFileUpload({
-    client: useApolloClient()
-  });
+  const { onChange, status, signedBlobId, contentType, url, startUpload, filename } = useFileUpload(
+    {
+      client: useApolloClient()
+    }
+  );
   const [createFormUser] = useMutation(FormUserCreateMutation);
   const { t } = useTranslation('form');
   const signature = useFileUpload({ client: useApolloClient() });
@@ -38,19 +42,19 @@ export default function FormContextProvider({ children }) {
   useEffect(() => {
     if (
       status === 'DONE' &&
-      formState.currentPropId &&
-      !uploadedImages.find(im => im.propertyId === formState.currentPropId)
+      formState.currentPropId 
     ) {
       setFormState({
         ...formState,
-        isUploading: false
+        isUploading: false,
+        currentFileNames: [...formState.currentFileNames, filename]
       });
       setUploadedImages([
         ...uploadedImages,
-        { blobId: signedBlobId, propertyId: formState.currentPropId, contentType, url }
+        { blobId: signedBlobId, propertyId: formState.currentPropId, contentType, url, filename }
       ]);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
 
   /**
@@ -83,7 +87,7 @@ export default function FormContextProvider({ children }) {
       const newValue = {
         value: item.blobId,
         form_property_id: item.propertyId,
-        image_blob_id: item.blobId
+        image_blob_id: item.blobId,
       };
       filledInProperties.push(newValue);
     });
@@ -158,6 +162,7 @@ export default function FormContextProvider({ children }) {
         onChange,
         signature,
         uploadedImages,
+        startUpload,
         setUploadedImages
       }}
     >

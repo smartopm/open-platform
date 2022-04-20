@@ -10,7 +10,11 @@ import {
   requiredFieldIsEmpty,
   extractRenderedTextFromCategory,
   checkRequiredFormPropertyIsFilled,
-  generateIframeSnippet
+  generateIframeSnippet,
+  convertUploadSize,
+  cleanFileName,
+  fileTypes,
+  isUploaded
 } from '../utils';
 
 describe('Utilities', () => {
@@ -25,6 +29,11 @@ describe('Utilities', () => {
     // add null values to array
     addPropWithValue(values, '34f');
     expect(values).toHaveLength(3);
+
+    // add nothing to the array
+    addPropWithValue(values, '34f');
+    expect(values).toHaveLength(3);
+
     // this should pass this time
     expect(propExists(values, '34f')).toBe(true);
   });
@@ -124,6 +133,7 @@ describe('Utilities', () => {
       },
 
     ]);
+    expect(extractValidFormPropertyValue({})).toHaveLength(0)
 
     expect(extractValidFormPropertyFieldNames(formProperties)).toMatchObject([
       {
@@ -143,6 +153,7 @@ describe('Utilities', () => {
         value: 'first, third'
       },
     ]);
+    expect(extractValidFormPropertyFieldNames({})).toHaveLength(0)
   });
 
   it('only shows a category if it matches the given display condition', () => {
@@ -213,6 +224,8 @@ describe('Utilities', () => {
     expect(extractRenderedTextFromCategory(properties, [category, categoryWithPropertyId, categoryWithWrongCondition])).toEqual('Some category  ')
     expect(extractRenderedTextFromCategory(properties, [category, categoryWithMatchingCondition])).toEqual('Some category  and this also matches  ')
     expect(extractRenderedTextFromCategory(properties, [])).toEqual('')
+    expect(extractRenderedTextFromCategory(properties, [])).toEqual('')
+    expect(extractRenderedTextFromCategory(properties, null)).toEqual('')
   })
 
   it('should parse and then find and replace variables in a string', () => {
@@ -261,6 +274,7 @@ describe('Utilities', () => {
     expect(parseRenderedText([categories[0]], data)).toContain('This is a nice string with And yes it is true that has  Joe with  Joe, OR And yes it is true. end of line \nyes \n\nyes')
     expect(parseRenderedText(categories, data)).toContain(`And some other text riught here  with cook underscores test one three and another one here test one three or this \n\ntest one three ## Another nice tile \ntest one three`)
     expect(parseRenderedText([], data)).toBe('')
+    expect(parseRenderedText(null, data)).toBe('')
   })
 
   it('checks for null values', () => {
@@ -449,4 +463,50 @@ describe('Utilities', () => {
     const snippet = generateIframeSnippet(data, 'dev.dgdp.site')
     expect(snippet).toBe('<iframe src=https://dev.dgdp.site/form/23223/public name=Some form title=Some form scrolling="auto" width="100%" height="500px" />')
   })
+
+  // convertUploadSize
+  it('should convert different sizes to readable format', () => {
+    const size1 = 2000
+    const size2 = 20000
+    const size3 = 2000000
+    const size4 = 20000000000
+
+    expect(convertUploadSize(0)).toBe('N/A')
+    expect(convertUploadSize(2)).toBe('2 Bytes')
+    expect(convertUploadSize(size1)).toBe('2 KB')
+    expect(convertUploadSize(size2)).toBe('20 KB')
+    expect(convertUploadSize(size3)).toBe('2 MB')
+    expect(convertUploadSize(size4)).toBe('19 GB')
+  });
+
+  it('should clean file names before uploading files', () => {
+    expect(cleanFileName()).toBe('')
+    expect(cleanFileName('someimage.jpg')).toBe('Someimage')
+    expect(cleanFileName('someimageanotherimageimage.jpg')).toBe('Someimagea...')
+  });
+
+  it('should return translatable files', () => {
+    const translate = jest.fn(() => 'Translated type')
+    expect(fileTypes(translate)['application/pdf']).toBe('Translated type')
+  });
+
+  it('should check if file is uploaded per specific form property', () => {
+    const uploads = [
+      {
+        filename: "Image.jpg",
+        propertyId: "02394203da0923"
+      },
+      {
+        filename: "another.png",
+        propertyId: "12345678790"
+      },
+    ]
+    const file = { name: "another.png" }
+    expect(isUploaded(uploads, file, '12345678790')).toBe(true)
+    expect(isUploaded(uploads, file, '02394203da0923')).toBe(false)
+    expect(isUploaded(uploads, file, '9238423421312')).toBe(false)
+    expect(isUploaded([], undefined, '9238423421312')).toBe(false)
+    expect(isUploaded()).toBe(false)
+  });
+
 });

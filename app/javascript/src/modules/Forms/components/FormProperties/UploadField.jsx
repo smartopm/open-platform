@@ -29,7 +29,7 @@ export default function UploadField({
         </FormHelperText>
         <input
           type="file"
-          accept="image/*, .pdf, .zip"
+          accept="image/*, .pdf"
           name={`image-${detail.label}`}
           id={`button-${detail.id}`}
           data-testid="form-file-input"
@@ -37,6 +37,7 @@ export default function UploadField({
           capture
           onChange={upload}
           readOnly={editable}
+          multiple
           hidden
         />
         <Button
@@ -45,11 +46,11 @@ export default function UploadField({
           component="span"
           aria-label={`upload_button_${detail.label}`}
           disabled={editable}
-          startIcon={detail.type === 'file' && uploaded ? <DoneIcon /> : <FileUploadIcon />}
+          startIcon={detail.type === 'file' && uploaded ? <DoneIcon data-testid="done_icon" /> : <FileUploadIcon data-testid="upload_icon"  />}
           color={btnColor}
           style={{background: '#FFFFFF'}}
         >
-          {uploaded ? t('form:misc.file_uploaded') : t('form:misc.upload_file')}
+          {uploaded ? `${detail.fileCount} ${t('form:misc.file_uploaded', { count: detail.fileCount })}` : t('form:misc.select_file')}
         </Button>
         {inputValidation.error && (
           <FormHelperText error data-testid="error-msg">
@@ -75,7 +76,9 @@ UploadField.propTypes = {
     type: PropTypes.string,
     label: PropTypes.string,
     id: PropTypes.string,
-    required: PropTypes.bool
+    required: PropTypes.bool,
+    fileCount: PropTypes.number,
+    currentPropId: PropTypes.string,
   }).isRequired,
   upload: PropTypes.func.isRequired,
   editable: PropTypes.bool.isRequired,

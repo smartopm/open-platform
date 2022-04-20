@@ -15,8 +15,6 @@ import {
   Grid,
   Divider,
   Typography,
-  ListItem,
-  ListItemText
 } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import { useApolloClient, useMutation, useQuery } from 'react-apollo';
@@ -52,6 +50,7 @@ import CheckboxInput from './FormProperties/CheckboxInput';
 import ListWrapper from '../../../shared/ListWrapper';
 import CategoryItem from './Category/CategoryItem';
 import MessageAlert from "../../../components/MessageAlert"
+import SubmittedFileItem from '../../../shared/imageUpload/SubmittedFileItem';
 
 // date
 // text input (TextField or TextArea)
@@ -423,58 +422,37 @@ export default function FormUpdate({ formUserId, userId, authState, categoriesDa
               )) || (
                 <Grid item md={12} xs={12}>
                   <div>
-                    {formPropertiesData.imageUrl && (
-                      <>
-                        <ListWrapper className={classes.space}>
-                          <ListItem style={{ paddingLeft: 0 }}>
-                            <Grid container alignItems="center" justifyContent="center">
-                              <Grid item md={11} xs={8}>
-                                <ListItemText
-                                  disableTypography
-                                  primary={(
-                                    <Typography
-                                      variant="body1"
-                                      color="primary"
-                                      style={{ fontWeight: 700 }}
-                                      data-testid="attachment_name"
-                                    >
-                                      {formPropertiesData.formProperty.fieldName}
-                                    </Typography>
-                                  )}
-                                  secondary={(
-                                    <Typography
-                                      component="span"
-                                      variant="body2"
-                                      data-testid="filename"
-                                    >
-                                      {formPropertiesData.fileName}
-                                    </Typography>
-                                  )}
-                                />
-                              </Grid>
-                              <Grid item md={1} xs={4} className={classes.alignRight}>
-                                <Button
-                                  aria-label="download-icon"
-                                  data-testid="download-icon"
-                                  variant="outlined"
-                                  className={classes.buttonBg}
-                                  onClick={event =>
-                                    downloadFile(event, formPropertiesData.imageUrl)
-                                  }
-                                >
-                                  {t('common:misc.open')}
-                                </Button>
-                              </Grid>
-                            </Grid>
-                          </ListItem>
+                    {
+                      formPropertiesData.attachments?.length ?
+                      formPropertiesData.attachments.map(attachment => (
+                        <ListWrapper className={classes.space} key={attachment.id}>
+                          <SubmittedFileItem
+                            attachment={attachment}
+                            translate={t}
+                            downloadFile={downloadFile}
+                            classes={classes}
+                            legacyFile={formPropertiesData}
+                          />
                         </ListWrapper>
-                      </>
+                      ))
+                      : (
+                        <ListWrapper className={classes.space}>
+                          <SubmittedFileItem
+                            translate={t}
+                            downloadFile={downloadFile}
+                            classes={classes}
+                            legacyFile={formPropertiesData}
+                          />
+                        </ListWrapper>
                     )}
                   </div>
                 </Grid>
               )
             )}
           </Grid>
+          {
+            /* TODO: Disable file upload on submitted form */
+          }
           <ListWrapper className={classes.space} key={formPropertiesData.id}>
             <UploadField
               detail={{
@@ -704,7 +682,8 @@ const useStyles = makeStyles(() => ({
     marginBottom: '20px'
   },
   buttonBg: {
-    background: '#FFFFFF'
+    background: '#FFFFFF',
+    marginLeft: -10
   },
   alignRight: {
     textAlign: 'right'

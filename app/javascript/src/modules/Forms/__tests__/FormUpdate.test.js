@@ -77,12 +77,21 @@ describe('Form Component', () => {
                   id: 'sfkjwfwefwef'
                 }
               },
-              value: '7th Street',
+              attachments: [
+                {
+                  id: "290834032",
+                  image_url: 'https://image.com',
+                  file_type: null,
+                  file_name: 'img.jpg',
+                }
+              ],
               imageUrl: 'https://image.com',
               fileType: null,
               fileName: 'img.jpg',
+              value: '7th Street',
               createdAt: '2020-10-07T09:37:03Z',
               user: {
+                id: "some_ids",
                 name: 'John Does'
               }
             },
@@ -99,12 +108,21 @@ describe('Form Component', () => {
                   id: 'sfkjwfwefwef'
                 }
               },
+              attachments: [
+                {
+                  id: "290834032",
+                  image_url: 'https://another_image.com',
+                  file_type: 'null',
+                  file_name: 'img2.jpg',
+                }
+              ],
               value: null,
               imageUrl: 'https://another_image.com',
               fileType: 'null',
               fileName: 'img2.jpg',
               createdAt: '2020-10-07T09:37:03Z',
               user: {
+                id: "some_ids",
                 name: 'John Doe'
               }
             },
@@ -121,12 +139,21 @@ describe('Form Component', () => {
                   id: 'sfkjwfwefwef'
                 }
               },
-              value: 'some values',
+              attachments: [
+                {
+                  id: "290834032",
+                  image_url: 'https://another2_image.com',
+                  file_type: 'image/jpg',
+                  file_name: 'img3.jpg',
+                }
+              ],
               imageUrl: 'https://another2_image.com',
               fileType: 'image/jpg',
               fileName: 'img3.jpg',
+              value: 'some values',
               createdAt: '2020-10-07T09:37:03Z',
               user: {
+                id: "some_ids",
                 name: 'John Doe'
               }
             },
@@ -143,12 +170,14 @@ describe('Form Component', () => {
                   id: 'sfkjwfwefwef'
                 }
               },
-              value: null,
+              attachments: null,
               imageUrl: null,
               fileType: null,
               fileName: null,
+              value: null,
               createdAt: '2020-10-07T09:37:03Z',
               user: {
+                id: "some_ids",
                 name: 'John Doe'
               }
             },
@@ -174,12 +203,14 @@ describe('Form Component', () => {
                   id: 'sfkjwfwefwef'
                 }
               },
-              value: '{"checked"=>"Yes", "label"=>"Would you rather?"}',
+              attachments: null,
               imageUrl: null,
               fileType: null,
               fileName: null,
+              value: '{"checked"=>"Yes", "label"=>"Would you rather?"}',
               createdAt: '2020-10-07T09:37:03Z',
               user: {
+                id: "some_ids",
                 name: 'John Doe'
               }
             },
@@ -209,12 +240,14 @@ describe('Form Component', () => {
                   id: 'sfkjwfwefwef'
                 }
               },
-              value: '{"Red"=>true, "Blue"=>true}',
+              attachments: null,
               imageUrl: null,
               fileType: null,
               fileName: null,
+              value: '{"Red"=>true, "Blue"=>true}',
               createdAt: '2020-10-07T09:37:03Z',
               user: {
+                id: "some_ids",
                 name: 'John Doe'
               }
             }
@@ -261,7 +294,7 @@ describe('Form Component', () => {
         expect(container.queryByTestId('checkbox_field_name').textContent).toContain(
           'Select your favorite colors'
         );
-        expect(container.queryByTestId('filename').textContent).toContain('img3.jpg');
+        expect(container.queryAllByTestId('filename')[0].textContent).toContain('img3.jpg');
       },
       { timeout: 50 }
     );
@@ -292,12 +325,14 @@ describe('Form Component', () => {
                   id: 'sfkjwfwefwef'
                 }
               },
-              value: null,
+              attachments: null,
               imageUrl: null,
               fileType: null,
               fileName: null,
+              value: null,
               createdAt: '2020-10-07T09:37:03Z',
               user: {
+                id: "somes",
                 name: 'John Doe'
               }
             }
@@ -324,7 +359,7 @@ describe('Form Component', () => {
     );
 
     await waitFor(() => {
-      expect(screen.queryAllByTestId('form-file-upload-btn')[0]).toHaveTextContent('form:misc.upload_file');
+      expect(screen.queryAllByTestId('form-file-upload-btn')[0]).toHaveTextContent('form:misc.select_file');
       expect(screen.queryByTestId('download-icon')).not.toBeInTheDocument();
     });
   });

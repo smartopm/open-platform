@@ -64,6 +64,11 @@ RSpec.describe Types::Queries::Form do
       create(:user_form_property, form_property: form_property_text, form_user: form_user,
                                   user: current_user, value: 'name')
     end
+    let!(:blob) do
+      ActiveStorage::Blob.create(filename: 'doc.pdf', content_type: 'application/pdf',
+                                 byte_size: 2123, checksum: '9JiwSyvzZeqDSV')
+    end
+    let!(:attachment) { user_form_property.attachments.create(blob_id: blob.id) }
     let!(:another_form_user) do
       create(:form_user, form: form, user: admin, status: 'pending', status_updated_by: admin)
     end
@@ -178,9 +183,7 @@ RSpec.describe Types::Queries::Form do
         query userFormProperties($userId: ID!, $formUserId: ID!) {
           formUserProperties(userId: $userId, formUserId: $formUserId) {
             value
-            imageUrl
-            fileType
-            fileName
+            attachments
             user {
               name
             }

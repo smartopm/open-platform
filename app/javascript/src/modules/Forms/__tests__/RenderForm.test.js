@@ -5,7 +5,7 @@ import { MockedProvider } from '@apollo/react-testing';
 import RenderForm from '../components/RenderForm';
 import FormContextProvider from '../Context';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
-import userMock from '../../../__mocks__/userMock';
+import userMock from '../../../__mocks__/authstate';
 import MockedThemeProvider from '../../__mocks__/mock_theme';
 
 jest.fn('@rails/activestorage/src/file_checksum', () => ({ create: jest.fn() }));
@@ -73,7 +73,7 @@ it('should contain proper form properies with upload field and returns no errors
   const blob = new Blob([str]);
   const file = new File([blob], 'test_file.pdf', 'application/pdf');
   expect(wrapper.getByText('Resume')).toBeInTheDocument();
-  expect(wrapper.getByText('form:misc.upload_file')).toBeInTheDocument();
+  expect(wrapper.getByText('form:misc.select_file')).toBeInTheDocument();
   const inputElement = wrapper.queryByTestId('form-file-input');
   fireEvent.change(inputElement, { target: { files: [file] } });
   expect(wrapper.queryByText('form:errors.wrong_file_type')).not.toBeInTheDocument();
@@ -106,12 +106,7 @@ it('should contain proper form properies with upload field and returns errors fo
       </Context.Provider>
     </MockedProvider>
   );
-  const str = JSON.stringify('someRandomValues');
-  const blob = new Blob([str]);
-  const file = new File([blob], 'test_file.json', 'application/JSON');
+
   expect(wrapper.getByText('Resume')).toBeInTheDocument();
-  expect(wrapper.getByText('form:misc.upload_file')).toBeInTheDocument();
-  const inputElement = wrapper.queryByTestId('form-file-input');
-  fireEvent.change(inputElement, { target: { files: [file] } });
-  expect(wrapper.getByText('form:errors.wrong_file_type')).toBeInTheDocument();
+  expect(wrapper.getByText('form:misc.select_file')).toBeInTheDocument();
 });
