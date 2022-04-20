@@ -3,15 +3,22 @@
 
 import React, { useState } from 'react';
 import {
-  TextField, Container, Button, Typography, FormControl, InputLabel, Select, MenuItem, Grid, IconButton
+  TextField,
+  Container,
+  Button,
+  Typography,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Grid,
+  IconButton
 } from '@mui/material';
-import { css } from 'aphrodite';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { useMutation } from 'react-apollo';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import EditIcon from '@mui/icons-material/Edit';
-import CenteredContent from '../../../shared/CenteredContent';
-import { discussStyles } from '../../../components/Discussion/Discuss';
 import { BusinessCreateMutation, BusinessUpdateMutation } from '../graphql/business_mutations';
 import UserSearch from '../../Users/Components/UserSearch';
 import { businessCategories, businessStatus } from '../../../utils/constants';
@@ -35,8 +42,11 @@ const initialUserData = {
 };
 
 export default function BusinessForm({ close, businessData, action }) {
+  const matches = useMediaQuery('(max-width:900px)');
   const [data, setData] = useState(action === 'edit' ? businessData : initialData);
-  const [userData, setUserData] = useState(action === 'edit' ? { userId: businessData?.userId } : initialUserData);
+  const [userData, setUserData] = useState(
+    action === 'edit' ? { userId: businessData?.userId } : initialUserData
+  );
   const [error, setError] = useState(null);
   const [editingUser, setEditingUser] = useState(false);
   const { t } = useTranslation(['common']);
@@ -55,214 +65,287 @@ export default function BusinessForm({ close, businessData, action }) {
   function handleSubmit(event) {
     event.preventDefault();
     const {
-      name, email, phoneNumber, status, homeUrl, category, description, imageUrl, address, operationHours,
+      name,
+      email,
+      phoneNumber,
+      status,
+      homeUrl,
+      category,
+      description,
+      imageUrl,
+      address,
+      operationHours
     } = data;
 
-    if(action === 'edit'){
+    if (action === 'edit') {
       updateBusiness({
         variables: {
-          id: businessData.id, name, email, phoneNumber, status, homeUrl, category, description, imageUrl, address, operationHours, userId: userData.userId
+          id: businessData.id,
+          name,
+          email,
+          phoneNumber,
+          status,
+          homeUrl,
+          category,
+          description,
+          imageUrl,
+          address,
+          operationHours,
+          userId: userData.userId
         }
-      }).then(() => {
-        close()
-      }).catch((err) => setError(err.message));
-    }else{
+      })
+        .then(() => {
+          close();
+        })
+        .catch(err => setError(err.message));
+    } else {
       createBusiness({
         variables: {
-          name, email, phoneNumber, status, homeUrl, category, description, imageUrl, address, operationHours, userId: userData.userId
+          name,
+          email,
+          phoneNumber,
+          status,
+          homeUrl,
+          category,
+          description,
+          imageUrl,
+          address,
+          operationHours,
+          userId: userData.userId
         }
-      }).then(() => {
-        close();
-      }).catch((err) => setError(err.message));
+      })
+        .then(() => {
+          close();
+        })
+        .catch(err => setError(err.message));
     }
   }
   return (
     <Container maxWidth="md">
       <form onSubmit={handleSubmit}>
-        <TextField
-          label={t('form_fields.full_name')}
-          name="name"
-          className="form-control"
-          value={data.name}
-          onChange={handleInputChange}
-          aria-label="business_name"
-          inputProps={{ 'data-testid': 'business_name' }}
-          required
-          margin="normal"
-        />
-
-        <br />
-        {(editingUser || action === 'create') && <UserSearch userData={userData} update={setUserData} required={!editingUser} />}
-        {(!editingUser && data?.user) && (
-          <>
-            <Grid container>
-              <Grid item sm={11} xs={11}>
-                <TextField
-                  label={t('misc.user')}
-                  name="email"
-                  className="form-control"
-                  value={data?.user?.name}
-                  aria-label="business_user"
-                  inputProps={{ 'data-testid': 'business_user' }}
-                  margin="normal"
-                  disabled
-                  required
-                />
-              </Grid>
-              <Grid item sm={1} xs={1} style={{textAlign: 'right'}}>
-                <IconButton color='primary' style={{ marginTop: '20px'}} size="large">
-                  <EditIcon fontSize="small" onClick={() => setEditingUser(true)} />
-                </IconButton>
-              </Grid>
+        <Grid container>
+          <Grid item md={12} xs={12}>
+            <TextField
+              label={t('form_fields.full_name')}
+              name="name"
+              value={data.name}
+              onChange={handleInputChange}
+              aria-label="business_name"
+              inputProps={{ 'data-testid': 'business_name' }}
+              required
+              margin="dense"
+              fullWidth
+            />
+          </Grid>
+          {(editingUser || action === 'create') && (
+            <Grid item md={12} xs={12} style={{ padding: '20px 0 10px 0' }}>
+              <UserSearch userData={userData} update={setUserData} required={!editingUser} />
             </Grid>
-          </>
-        )}
+          )}
+          {!editingUser && data?.user && (
+            <>
+              <Grid container>
+                <Grid item md={11} xs={11}>
+                  <TextField
+                    label={t('misc.user')}
+                    name="email"
+                    value={data?.user?.name}
+                    aria-label="business_user"
+                    inputProps={{ 'data-testid': 'business_user' }}
+                    margin="dense"
+                    disabled
+                    required
+                    fullWidth
+                  />
+                </Grid>
+                <Grid item md={1} xs={1} style={{ textAlign: 'right' }}>
+                  <IconButton color="primary" style={{ marginTop: '20px' }} size="large">
+                    <EditIcon fontSize="small" onClick={() => setEditingUser(true)} />
+                  </IconButton>
+                </Grid>
+              </Grid>
+            </>
+          )}
 
-        <TextField
-          label={t('form_fields.email')}
-          name="email"
-          className="form-control"
-          value={data.email}
-          onChange={handleInputChange}
-          aria-label="business_email"
-          inputProps={{ 'data-testid': 'business_email' }}
-          margin="normal"
-          required
-        />
-        <TextField
-          label={t('form_fields.phone_number')}
-          name="phoneNumber"
-          className="form-control"
-          value={data.phoneNumber}
-          onChange={handleInputChange}
-          aria-label="business_phone_number"
-          inputProps={{ 'data-testid': 'business_phone_number' }}
-          required
-        />
-        <TextField
-          label={t('form_fields.home_url')}
-          name="homeUrl"
-          className="form-control"
-          value={data.homeUrl}
-          onChange={handleInputChange}
-          aria-label="business_link"
-          inputProps={{ 'data-testid': 'business_link' }}
-          margin="normal"
-        />
+          <Grid item md={12} xs={12}>
+            <TextField
+              label={t('form_fields.email')}
+              name="email"
+              value={data.email}
+              onChange={handleInputChange}
+              aria-label="business_email"
+              inputProps={{ 'data-testid': 'business_email' }}
+              margin="dense"
+              required
+              fullWidth
+            />
+          </Grid>
 
-        <TextField
-          label={t('form_fields.logo_url')}
-          name="imageUrl"
-          className="form-control"
-          value={data.imageUrl}
-          onChange={handleInputChange}
-          aria-label="business_link"
-          inputProps={{ 'data-testid': 'business_image' }}
-          margin="normal"
-        />
-        <TextField
-          label={t('table_headers.description')}
-          name="description"
-          className="form-control"
-          value={data.description}
-          onChange={handleInputChange}
-          aria-label="business_description"
-          inputProps={{ 'data-testid': 'business_description' }}
-          multiline
-          maxRows={4}
-          margin="normal"
-        />
-        <TextField
-          label={t('form_fields.primary_address')}
-          name="address"
-          className="form-control"
-          value={data.address}
-          onChange={handleInputChange}
-          aria-label="business_address"
-          inputProps={{ 'data-testid': 'business_address' }}
-          margin="normal"
-        />
+          <Grid item md={12} xs={12}>
+            <TextField
+              label={t('form_fields.phone_number')}
+              name="phoneNumber"
+              value={data.phoneNumber}
+              onChange={handleInputChange}
+              aria-label="business_phone_number"
+              inputProps={{ 'data-testid': 'business_phone_number' }}
+              required
+              fullWidth
+              margin="dense"
+            />
+          </Grid>
 
-        <FormControl fullWidth>
-          <InputLabel id="type">{t('table_headers.status')}</InputLabel>
-          <Select
-            id="type"
-            value={data.status}
-            onChange={handleInputChange}
-            name="status"
-            inputProps={{ 'data-testid': 'business_status' }}
-            fullWidth
-            required
-          >
-            {Object.entries(businessStatus).map(([key, val]) => (
-              <MenuItem key={key} value={key}>
-                {val}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+          <Grid item md={12} xs={12}>
+            <TextField
+              label={t('form_fields.home_url')}
+              name="homeUrl"
+              value={data.homeUrl}
+              onChange={handleInputChange}
+              aria-label="business_link"
+              inputProps={{ 'data-testid': 'business_link' }}
+              fullWidth
+              margin="dense"
+            />
+          </Grid>
+          <Grid item md={12} xs={12}>
+            <TextField
+              label={t('form_fields.logo_url')}
+              name="imageUrl"
+              value={data.imageUrl}
+              onChange={handleInputChange}
+              aria-label="business_link"
+              inputProps={{ 'data-testid': 'business_image' }}
+              fullWidth
+              margin="dense"
+            />
+          </Grid>
 
-        <FormControl fullWidth>
-          <InputLabel id="type">{t('misc.select_category')}</InputLabel>
-          <Select
-            id="type"
-            value={data.category}
-            onChange={handleInputChange}
-            name="category"
-            inputProps={{ 'data-testid': 'business_category' }}
-            fullWidth
-          >
-            {Object.entries(businessCategories).map(([key, val]) => (
-              <MenuItem key={key} value={key}>
-                {val}
-              </MenuItem>
-            ))}
-          </Select>
-        </FormControl>
+          <Grid item md={12} xs={12}>
+            <TextField
+              label={t('table_headers.description')}
+              name="description"
+              value={data.description}
+              onChange={handleInputChange}
+              aria-label="business_description"
+              inputProps={{ 'data-testid': 'business_description' }}
+              multiline
+              maxRows={4}
+              fullWidth
+              margin="dense"
+            />
+          </Grid>
+          <Grid item md={12} xs={12}>
+            <TextField
+              label={t('form_fields.primary_address')}
+              name="address"
+              value={data.address}
+              onChange={handleInputChange}
+              aria-label="business_address"
+              inputProps={{ 'data-testid': 'business_address' }}
+              fullWidth
+              margin="dense"
+            />
+          </Grid>
 
-        <TextField
-          label={t('form_fields.operating_hours')}
-          name="operationHours"
-          className="form-control"
-          value={data.operationHours}
-          onChange={handleInputChange}
-          aria-label="business_operating_hours"
-          inputProps={{ 'data-testid': 'business_operating_hours' }}
-          margin="normal"
-        />
-        <br />
-        {error && (
-          <Typography
-            align="center"
-            color="textSecondary"
-            gutterBottom
-            variant="h6"
+          <Grid item md={12} xs={12} style={{ padding: '20px 0' }}>
+            <FormControl fullWidth>
+              <InputLabel id="type">{t('table_headers.status')}</InputLabel>
+              <Select
+                id="type"
+                value={data.status}
+                onChange={handleInputChange}
+                name="status"
+                inputProps={{ 'data-testid': 'business_status' }}
+                fullWidth
+                required
+                label="status"
+              >
+                {Object.entries(businessStatus).map(([key, val]) => (
+                  <MenuItem key={key} value={key}>
+                    {val}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+
+          <Grid item md={12} xs={12} style={{ padding: '10px 0' }}>
+            <FormControl fullWidth>
+              <InputLabel id="type">{t('misc.select_category')}</InputLabel>
+              <Select
+                id="type"
+                value={data.category}
+                onChange={handleInputChange}
+                name="category"
+                inputProps={{ 'data-testid': 'business_category' }}
+                fullWidth
+                margin="dense"
+                label="category"
+              >
+                {Object.entries(businessCategories).map(([key, val]) => (
+                  <MenuItem key={key} value={key}>
+                    {val}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item md={12} xs={12}>
+            <TextField
+              label={t('form_fields.operating_hours')}
+              name="operationHours"
+              value={data.operationHours}
+              onChange={handleInputChange}
+              aria-label="business_operating_hours"
+              inputProps={{ 'data-testid': 'business_operating_hours' }}
+              fullWidth
+              margin="dense"
+            />
+          </Grid>
+          {error && (
+            <Typography align="center" color="textSecondary" gutterBottom variant="h6">
+              {error}
+            </Typography>
+          )}
+          <br />
+          <Grid
+            item
+            md={6}
+            xs={12}
+            style={matches ? { textAlign: 'center', paddingTop: '20px' } : { paddingTop: '20px' }}
           >
-            {error}
-          </Typography>
-        )}
-        <br />
-        <CenteredContent>
-          <Button
-            variant="contained"
-            aria-label="business_cancel"
-            color="secondary"
-            className={`${css(discussStyles.cancelBtn)}`}
-            onClick={close}
+            <Button
+              variant="contained"
+              aria-label="business_cancel"
+              color="secondary"
+              onClick={close}
+            >
+              {t('form_actions.cancel')}
+            </Button>
+          </Grid>
+          <Grid
+            item
+            md={6}
+            xs={12}
+            style={
+              matches
+                ? { textAlign: 'center', paddingTop: '20px' }
+                : { textAlign: 'right', paddingTop: '20px' }
+            }
           >
-            {t('form_actions.cancel')}
-          </Button>
-          <Button
-            variant="contained"
-            type="submit"
-            aria-label="business_submit"
-            color="primary"
-            className={`${css(discussStyles.submitBtn)}`}
-            data-testid='create_business'
-          >
-            {action === 'edit' ? t('form_actions.update_business') : t('form_actions.create_business')}
-          </Button>
-        </CenteredContent>
+            <Button
+              variant="contained"
+              type="submit"
+              aria-label="business_submit"
+              color="primary"
+              data-testid="create_business"
+            >
+              {action === 'edit'
+                ? t('form_actions.update_business')
+                : t('form_actions.create_business')}
+            </Button>
+          </Grid>
+        </Grid>
       </form>
     </Container>
   );
@@ -271,7 +354,7 @@ export default function BusinessForm({ close, businessData, action }) {
 BusinessForm.defaultProps = {
   businessData: {},
   action: 'create'
-}
+};
 
 BusinessForm.propTypes = {
   close: PropTypes.func.isRequired,
