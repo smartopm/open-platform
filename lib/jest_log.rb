@@ -11,8 +11,12 @@ class JestLog
     log_count = (response.body.scan(/console.error/).length +
                   response.body.scan(/console.warn/).length)
 
-    return unless log_count > 34
+    flaky_issue_count = response.body.scan(/AllocatePlanModal/).length
 
-    abort("Jest log count shouldn't be more than 34")
+    max_limit = flaky_issue_count > 2 ? 37 : 33
+
+    return unless log_count > max_limit
+
+    abort("#{log_count} Jest issues found. Jest log count shouldn't be more than #{max_limit}")
   end
 end
