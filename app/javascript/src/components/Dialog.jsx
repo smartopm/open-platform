@@ -128,9 +128,9 @@ export function CustomizedDialogs({
         actionable && (
           <DialogActions>
             {actionLoading ? (<Spinner />) : (
-              <Grid container style={{padding: '0 20px'}}>
+              <Grid container style={{padding: '0 20px 20px 20px'}}>
                 <Grid item md={6} xs={6}>
-                  <Button onClick={handleModal} variant="outlined" color="secondary" data-testid='dialog_cancel'>
+                  <Button onClick={handleModal} variant="outlined" color="primary" data-testid='dialog_cancel'>
                     {cancelAction || t('common:form_actions.cancel')}
                   </Button>
                 </Grid>

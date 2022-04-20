@@ -259,7 +259,7 @@ export default function CategoryForm({
             </Grid>
             <Grid item sm={1} xs={12} data-testid="clear_condition">
               {!smDownHidden && (
-                <IconButton onClick={clearDisplayCondition} color="primary">
+                <IconButton onClick={clearDisplayCondition}>
                   <CancelIcon />
                 </IconButton>
               )}
@@ -323,7 +323,7 @@ export default function CategoryForm({
               />
             </Grid>
           </Grid>
-          <Grid item xs={12} md={12} style={{ margin: '20px 0 -40px 0' }}>
+          <Grid item xs={12} md={12} style={{ paddingTop: '20px' }}>
             <Divider />
           </Grid>
         </Grid>
