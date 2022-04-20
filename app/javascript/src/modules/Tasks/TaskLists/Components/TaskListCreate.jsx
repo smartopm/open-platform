@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import { Link, useHistory } from 'react-router-dom';
 import { Breadcrumbs, Grid, Typography, Button, useMediaQuery } from '@mui/material';
@@ -44,11 +44,6 @@ export default function TaskListCreate() {
         setErr(err);
       });
   }
-  useEffect(() => {
-    const unMount = () => {};
-
-    return unMount;
-  }, []);
 
   if (loadingStatus) return <Spinner />;
   if (errors) return <CenteredContent>{formatError(errors.message)}</CenteredContent>;
