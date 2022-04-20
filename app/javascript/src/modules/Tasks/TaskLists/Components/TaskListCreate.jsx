@@ -128,6 +128,7 @@ export default function TaskListCreate() {
                       type="submit"
                       role="button"
                       disabled={!body.length}
+                      disableElevation
                       color="primary"
                       aria-label={t('task_lists.save')}
                       data-testid="task-list-save-button"
