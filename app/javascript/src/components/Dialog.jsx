@@ -142,6 +142,8 @@ export function CustomizedDialogs({
                     color="primary"
                     variant="contained"
                     disabled={disableActionBtn}
+                    style={{ color: '#FFFFFF' }}
+                    disableElevation
                   >
                     {saveAction || t('common:form_actions.save')}
                   </Button>
