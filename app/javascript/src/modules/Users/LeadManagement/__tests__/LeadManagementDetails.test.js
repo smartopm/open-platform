@@ -129,13 +129,13 @@ describe('LeadManagementDetails Page', () => {
       // assert tab headers are present
       expect(screen.queryByText('lead_management.detail_header')).toBeInTheDocument();
       expect(screen.queryByText('lead_management.task_header')).toBeInTheDocument();
-      expect(screen.queryByText('lead_management.note_header')).toBeInTheDocument();
+      expect(screen.queryByText('lead_management.event_header')).toBeInTheDocument();
 
       expect(screen.queryByTestId('lead-management-tabs')).toBeInTheDocument();
 
       expect(screen.queryByTestId('lead-management-details-tab')).toBeInTheDocument();
       expect(screen.queryByTestId('lead-management-task-tab')).toBeInTheDocument();
-      expect(screen.queryByTestId('lead-management-note-tab')).toBeInTheDocument();
+      expect(screen.queryByTestId('lead-management-event-tab')).toBeInTheDocument();
 
       expect(screen.queryByTestId('lead-management-form')).toBeInTheDocument();
       expect(screen.queryByTestId('lead-management-main-contact-section')).toBeInTheDocument();

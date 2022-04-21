@@ -7,53 +7,60 @@ import { dateToString } from '../../../../components/DateContainer';
 export default function LeadEvent({ leadEvent }) {
   const { t } = useTranslation('common');
   return (
-    <div key={leadEvent?.id}>
-      <Grid
-        container
-        spacing={1}
-        style={{
-          marginBottom: '20px'
-        }}
-      >
-        <Grid item md={12} xs={12}>
+    <div>
+      {leadEvent !== undefined && (
+        <>
           <Grid
             container
-            spacing={2}
+            spacing={1}
             style={{
-              display: 'flex',
-              alignItems: 'center'
+              marginBottom: '20px'
             }}
           >
-            <Grid item md={5} xs={12}>
-              <Typography variant="body2" data-testid="events">
-                {leadEvent?.name}
-              </Typography>
-            </Grid>
-            <Grid item md={3} xs={12}>
-              <Typography variant="body2" data-testid="events">
-                {dateToString(leadEvent?.createdAt)}
-              </Typography>
-            </Grid>
-            <Grid item md={4} xs={12}>
-              <Typography variant="body2" data-testid="events">
-                {`${t('lead_management.entered_by')}  ${leadEvent?.actingUser?.name}`}
-              </Typography>
+            <Grid item md={12} xs={12}>
+              <Grid
+                container
+                spacing={2}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center'
+                }}
+              >
+                <Grid item md={5} xs={12}>
+                  <Typography variant="body2" data-testid="events">
+                    {leadEvent?.name}
+                  </Typography>
+                </Grid>
+                <Grid item md={3} xs={12}>
+                  <Typography variant="body2" data-testid="events">
+                    {dateToString(leadEvent?.createdAt)}
+                  </Typography>
+                </Grid>
+                <Grid item md={4} xs={12}>
+                  <Typography variant="body2" data-testid="events">
+                    {`${t('lead_management.entered_by')}  ${leadEvent?.actingUser?.name}`}
+                  </Typography>
+                </Grid>
+              </Grid>
             </Grid>
           </Grid>
-        </Grid>
-      </Grid>
+        </>
+      )}
     </div>
   );
 }
 
-const event = PropTypes.shape({
+LeadEvent.defaultProps = {
+  leadEvent: {}
+};
+const event = {
   createdAt: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.string]),
   name: PropTypes.string,
   actingUser: PropTypes.shape({
     name: PropTypes.string
   })
-});
+};
 
 LeadEvent.propTypes = {
-  leadEvent: PropTypes.shape(event).isRequired
+  leadEvent: PropTypes.shape(event)
 };
