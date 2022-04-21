@@ -490,7 +490,6 @@ ActiveRecord::Schema.define(version: 2022_04_22_073717) do
   create_table "lead_logs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "name"
     t.integer "log_type"
-    t.boolean "signed_deal"
     t.uuid "acting_user_id"
     t.uuid "community_id", null: false
     t.uuid "user_id", null: false

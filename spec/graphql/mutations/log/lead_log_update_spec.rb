@@ -22,23 +22,13 @@ RSpec.describe Mutations::Log::LeadLogUpdate do
              name: 'New event')
     end
 
-    let(:signed_deal_log) do
-      create(:lead_log,
-             user: lead_user,
-             community: community,
-             acting_user_id: admin.id,
-             log_type: 'signed_deal',
-             signed_deal: true)
-    end
-
     let(:mutation) do
       <<~GQL
-        mutation LeadLogUpdate($name: String, $id: ID!, $signedDeal: Boolean){
-          leadLogUpdate(name: $name, id: $id, signedDeal: $signedDeal){
+        mutation LeadLogUpdate($name: String, $id: ID!){
+          leadLogUpdate(name: $name, id: $id){
             leadLog{
               logType
               name
-              signedDeal
             }
           }
         }     
@@ -58,22 +48,6 @@ RSpec.describe Mutations::Log::LeadLogUpdate do
                                                    }).as_json
         expect(result['errors']).to be nil
         expect(result.dig('data', 'leadLogUpdate', 'leadLog', 'name')).to eql 'Event updated'
-      end
-    end
-
-    context 'when signed deal is updated' do
-      it 'updates signed_deal log' do
-        variables = {
-          signedDeal: false,
-          id: signed_deal_log.id,
-        }
-        result = DoubleGdpSchema.execute(mutation, variables: variables,
-                                                   context: {
-                                                     current_user: admin,
-                                                     site_community: community,
-                                                   }).as_json
-        expect(result['errors']).to be nil
-        expect(result.dig('data', 'leadLogUpdate', 'leadLog', 'signedDeal')).to eql false
       end
     end
 

@@ -19,9 +19,11 @@ module Types::Queries::LeadLog
       argument :offset, Integer, required: false
     end
 
-    field :signed_deal, Types::LeadLogType, null: true do
+    field :signed_deals, [Types::LeadLogType], null: true do
       description 'Get signed deal for lead'
       argument :user_id, GraphQL::Types::ID, required: true
+      argument :limit, Integer, required: false
+      argument :offset, Integer, required: false
     end
   end
 
@@ -41,10 +43,12 @@ module Types::Queries::LeadLog
                             .offset(offset).limit(limit)
   end
 
-  def signed_deal(user_id:)
+  def signed_deals(user_id:, offset: 0, limit: 3)
     raise_unauthorized_error_for_lead_logs
 
-    context[:site_community].lead_logs.signed_deal.find_by(user_id: user_id)
+    context[:site_community].lead_logs.where(user_id: user_id)
+                            .signed_deal.includes(:acting_user)
+                            .offset(offset).limit(limit)
   end
 
   def raise_unauthorized_error_for_lead_logs

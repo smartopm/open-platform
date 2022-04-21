@@ -6,6 +6,5 @@ FactoryBot.define do
     community
     log_type { 'event' }
     name { 'Demo Event' }
-    signed_deal { false }
   end
 end

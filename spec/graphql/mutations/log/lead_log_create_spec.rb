@@ -16,12 +16,11 @@ RSpec.describe Mutations::Log::LeadLogCreate do
 
     let(:mutation) do
       <<~GQL
-        mutation LeadLogCreate($logType: String!, $name: String, $userId: ID! $signedDeal: Boolean){
-          leadLogCreate(name: $name, userId: $userId, logType:$logType, signedDeal: $signedDeal){
+        mutation LeadLogCreate($logType: String!, $name: String, $userId: ID!){
+          leadLogCreate(name: $name, userId: $userId, logType:$logType){
             leadLog{
               logType
               name
-              signedDeal
             }
           }
         }     
@@ -64,7 +63,7 @@ RSpec.describe Mutations::Log::LeadLogCreate do
 
     context 'when lead signs deal' do
       it 'creates signed_deal log' do
-        variables = { signedDeal: true,
+        variables = { name: 'Signed Deal',
                       logType: 'signed_deal',
                       userId: lead_user.id }
         result = DoubleGdpSchema.execute(mutation, variables: variables,
@@ -73,31 +72,7 @@ RSpec.describe Mutations::Log::LeadLogCreate do
                                                      site_community: community,
                                                    }).as_json
         expect(result['errors']).to be nil
-        expect(result.dig('data', 'leadLogCreate', 'leadLog', 'signedDeal')).to eql true
-      end
-    end
-
-    context 'when signed deal log already present' do
-      before do
-        create(:lead_log,
-               user: lead_user,
-               acting_user_id: admin.id,
-               signed_deal: true,
-               log_type: 'signed_deal',
-               community: community)
-      end
-
-      it 'does not creates new log' do
-        variables = { signedDeal: true,
-                      logType: 'signed_deal',
-                      userId: lead_user.id }
-        result = DoubleGdpSchema.execute(mutation, variables: variables,
-                                                   context: {
-                                                     current_user: admin,
-                                                     site_community: community,
-                                                   }).as_json
-        expect(result['errors']).to be nil
-        expect(result.dig('data', 'leadLogCreate')).to be nil
+        expect(result.dig('data', 'leadLogCreate', 'leadLog', 'name')).to eql 'Signed Deal'
       end
     end
 

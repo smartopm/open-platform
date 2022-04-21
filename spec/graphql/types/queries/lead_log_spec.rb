@@ -37,8 +37,7 @@ RSpec.describe Types::Queries::LeadLog do
              user: lead_user,
              community: community,
              acting_user_id: admin.id,
-             log_type: 'signed_deal',
-             signed_deal: true)
+             log_type: 'signed_deal')
     end
 
     let(:events) do
@@ -67,10 +66,9 @@ RSpec.describe Types::Queries::LeadLog do
 
     let(:signed_deal) do
       <<~GQL
-        query fetchSignedDeal($userId: ID!){
-          signedDeal(userId: $userId){
+        query fetchSignedDeals($userId: ID!){
+          signedDeals(userId: $userId){
             id
-            signedDeal
             logType
           }
         }
@@ -100,7 +98,7 @@ RSpec.describe Types::Queries::LeadLog do
     end
 
     context 'when signed deal for lead is fetched' do
-      it 'returns signed deal' do
+      it 'returns signed deals' do
         variables = { userId: lead_user.id }
         result = DoubleGdpSchema.execute(signed_deal, variables: variables,
                                                       context: {
@@ -108,7 +106,7 @@ RSpec.describe Types::Queries::LeadLog do
                                                         site_community: community,
                                                       }).as_json
         expect(result['errors']).to be nil
-        expect(result.dig('data', 'signedDeal', 'logType')).to eql 'signed_deal'
+        expect(result.dig('data', 'signedDeals').count).to eql 1
       end
     end
 

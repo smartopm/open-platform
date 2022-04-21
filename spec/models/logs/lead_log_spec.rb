@@ -10,7 +10,6 @@ RSpec.describe Logs::LeadLog, type: :model do
     it { is_expected.to have_db_column(:acting_user_id).of_type(:uuid) }
     it { is_expected.to have_db_column(:name).of_type(:string) }
     it { is_expected.to have_db_column(:log_type).of_type(:integer) }
-    it { is_expected.to have_db_column(:signed_deal).of_type(:boolean) }
   end
 
   describe 'associations' do

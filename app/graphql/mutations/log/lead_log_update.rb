@@ -5,7 +5,6 @@ module Mutations
     # Update lead log
     class LeadLogUpdate < BaseMutation
       argument :id, ID, required: true
-      argument :signed_deal, Boolean, required: false
       argument :name, String, required: false
 
       field :lead_log, Types::LeadLogType, null: true
