@@ -447,7 +447,6 @@ module Types::Queries::Note
 
     context[:site_community]
       .notes
-      .includes(:sub_notes, :assignees, :assignee_notes, :documents_attachments)
       .where(category: 'task_list')
       .find(task_id)
   end
