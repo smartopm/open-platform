@@ -6,6 +6,7 @@ import TextField from '@mui/material/TextField';
 import { Grid, Typography, Button, useMediaQuery } from '@mui/material';
 import CreateEvent from '../graphql/mutations';
 import { UserEventsQuery, UserMeetingsQuery, UserSignedDealQuery } from '../graphql/queries';
+import CenteredContent from '../../../../shared/CenteredContent';
 // import { Context as AuthStateContext } from '../../../../containers/Provider/AuthStateProvider'
 // import { UserNotesQuery } from '../../../graphql/queries';
 import { Spinner } from '../../../../shared/Loading';
@@ -13,6 +14,7 @@ import { Spinner } from '../../../../shared/Loading';
 // import NoteTextField from '../../../shared/CommentTextField';
 import MessageAlert from '../../../../components/MessageAlert';
 import { formatError } from '../../../../utils/helpers';
+import LeadEvent from './LeadEvent';
 
 export default function LeadEvents({ userId }) {
   const [eventName, setEventName] = useState('');
@@ -27,7 +29,7 @@ export default function LeadEvents({ userId }) {
     { data: eventsData, loading: eventsLoading, refetch: refetchEvents }
   ] = useLazyQuery(UserEventsQuery, {
     variables: { userId },
-    fetchPolicy: 'cache-and-network'
+    fetchPolicy: 'cache-first'
   });
 
   const [
@@ -35,7 +37,7 @@ export default function LeadEvents({ userId }) {
     { data: meetingsData, loading: meetingsLoading, refetch: refetchMeetings }
   ] = useLazyQuery(UserMeetingsQuery, {
     variables: { userId },
-    fetchPolicy: 'cache-and-network'
+    fetchPolicy: 'cache-first'
   });
 
   const [
@@ -43,7 +45,7 @@ export default function LeadEvents({ userId }) {
     { data: signedDealData, loading: signedDealLoading, refetch: refetchSignedDeal }
   ] = useLazyQuery(UserSignedDealQuery, {
     variables: { userId },
-    fetchPolicy: 'cache-and-network'
+    fetchPolicy: 'cache-first'
   });
 
   useEffect(() => {
@@ -52,6 +54,7 @@ export default function LeadEvents({ userId }) {
     loadSignedDeal();
   }, [loadEvents, loadMeetings, loadSignedDeal]);
 
+  console.log('Checking events query', eventsData?.leadEvents);
   function handleEventNameChange(event) {
     setEventName(event.target.value);
   }
@@ -68,7 +71,7 @@ export default function LeadEvents({ userId }) {
         setMessage({
           ...message,
           isError: false,
-          detail: t('common:misc.misc_successfully_created', { type: t('common:menu.note') })
+          detail: t('common:misc.misc_successfully_created', { type: t('common:menu.event') })
         });
       })
       .catch(err => {
@@ -154,81 +157,20 @@ export default function LeadEvents({ userId }) {
             </Grid>
           </Grid>
         </Grid>
-
-        {/* Second cotainer item */}
-
-        <Grid item md={12} xs={12}>
-          <Grid
-            container
-            spacing={2}
-            style={{
-              display: 'flex',
-              alignItems: 'center'
-            }}
-          >
-            <Grid item md={4} xs={12}>
-              <TextField
-                name="event_name"
-                label={t('lead_management.event_name')}
-                style={{ width: '100%' }}
-                variant="outlined"
-                role="textbox"
-                fullWidth
-                size="small"
-                margin="normal"
-                required
-                inputProps={{
-                  'aria-label': t('lead_management.event_name'),
-                  'data-testid': 'task-list-name',
-                  style: { fontSize: '15px' }
-                }}
-                InputLabelProps={{ style: { fontSize: '12px' } }}
-              />
-            </Grid>
-            <Grid item md={4} xs={12}>
-              <TextField
-                name="event_name"
-                label={t('lead_management.event_name')}
-                style={{ width: '100%' }}
-                variant="outlined"
-                role="textbox"
-                fullWidth
-                size="small"
-                margin="normal"
-                required
-                inputProps={{
-                  'aria-label': t('lead_management.event_name'),
-                  'data-testid': 'task-list-name',
-                  style: { fontSize: '15px' }
-                }}
-                InputLabelProps={{ style: { fontSize: '12px' } }}
-              />
-            </Grid>
-            <Grid item md={4} xs={12}>
-              <TextField
-                name="event_name"
-                label={t('lead_management.event_name')}
-                style={{ width: '100%' }}
-                variant="outlined"
-                role="textbox"
-                fullWidth
-                size="small"
-                margin="normal"
-                required
-                inputProps={{
-                  'aria-label': t('lead_management.event_name'),
-                  'data-testid': 'task-list-name',
-                  style: { fontSize: '15px' }
-                }}
-                InputLabelProps={{ style: { fontSize: '12px' } }}
-              />
-            </Grid>
-          </Grid>
-        </Grid>
-
-        <br />
-        <br />
       </Grid>
+      <br />
+      {/* Second cotainer item */}
+      {eventsData?.leadEvents.length > 0 ? (
+        <div>
+          {eventsData?.leadEvents.map(leadEvent => (
+            <div key={leadEvent.id}>
+              <LeadEvent key={leadEvent?.id} leadEvent={leadEvent} />
+            </div>
+          ))}
+        </div>
+      ) : (
+        <CenteredContent>{t('lead_management.no_lead_events')}</CenteredContent>
+      )}
     </div>
   );
 }

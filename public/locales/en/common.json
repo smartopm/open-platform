@@ -289,6 +289,7 @@
     "communication": "Communication",
     "lead_management": "Lead Management",
     "note": "Note",
+    "event": "Event",
     "note_plural": "Notes",
     "payment": "Payment",
     "payment_plural": "Payments",
@@ -577,7 +578,18 @@
     "jobs_created": "Number of Jobs",
     "decision_making_timeline": "Decision Making Timeline",
     "investiment_created_over_time": "Opportunity/Investiment over time",
-    "jobs_created_over_time": "Number of jobs over time"
+    "jobs_created_over_time": "Number of jobs over time",
+    "add": "ADD",
+    "event_name": "Event name",
+    "meeting_name": "Meeting name",
+    "entered_by": "entered by",
+    "events": "Events",
+    "events_header": "Events recorded here will be counted in the Event Attendance section of the scoreboard.",
+    "meetings": "Meetings",
+    "meetings_header": "Meetings recorded here will be counted in the Investor Meeting section of the scoreboard.",
+    "signed_deal": "Signed Deal",
+    "signed_deal_header": "Checking this box will be counted in the Signed Deal section of the scoreboard.",
+    "no_lead_events": "No lead events at the moment."
   },
   "right_menu": {
     "edit_user": "Edit User",
