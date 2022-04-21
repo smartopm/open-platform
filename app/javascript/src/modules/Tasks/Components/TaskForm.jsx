@@ -38,7 +38,7 @@ export default function TaskForm({
 
   useEffect(() => {
     if (createTaskListSubTask) {
-      setTaskType('task_list');
+      setTaskType('template');
     }
   }, [createTaskListSubTask]);
 
