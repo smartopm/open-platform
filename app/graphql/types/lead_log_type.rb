@@ -9,7 +9,6 @@ module Types
     field :name, String, null: true
     field :user, Types::UserType, null: false
     field :acting_user, Types::UserType, null: false
-    field :signed_deal, Boolean, null: true
     field :log_type, String, null: true
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
   end

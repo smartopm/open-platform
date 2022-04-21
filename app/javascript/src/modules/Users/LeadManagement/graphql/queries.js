@@ -5,7 +5,9 @@ export const UserEventsQuery = gql`
     leadEvents(userId: $userId) {
       id
       name
-      actingUserId
+      actingUser {
+        name
+      }
       createdAt
     }
   }
@@ -16,17 +18,22 @@ export const UserMeetingsQuery = gql`
     leadMeetings(userId: $userId) {
       id
       name
-      actingUserId
+      actingUser {
+        name
+      }
       createdAt
     }
   }
 `;
 
-export const UserSignedDealQuery = gql`
+export const UserSignedDealsQuery = gql`
   query signedDeals($userId: ID!) {
     signedDeals(userId: $userId) {
       id
-      actingUserId
+      name
+      actingUser {
+        name
+      }
       createdAt
     }
   }

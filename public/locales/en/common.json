@@ -582,14 +582,17 @@
     "add": "ADD",
     "event_name": "Event name",
     "meeting_name": "Meeting name",
+    "deal_name": "Deal name",
     "entered_by": "entered by",
     "events": "Events",
     "events_header": "Events recorded here will be counted in the Event Attendance section of the scoreboard.",
     "meetings": "Meetings",
     "meetings_header": "Meetings recorded here will be counted in the Investor Meeting section of the scoreboard.",
     "signed_deal": "Signed Deal",
-    "signed_deal_header": "Checking this box will be counted in the Signed Deal section of the scoreboard.",
-    "no_lead_events": "No lead events at the moment."
+    "signed_deal_header": "Signing here will be counted in the Signed Deal section of the scoreboard.",
+    "no_lead_events": "You are yet to add events.",
+    "no_lead_meetings": "You are yet to add meetings.",
+    "no_lead_deal": "You are yet to sign deals"
   },
   "right_menu": {
     "edit_user": "Edit User",

@@ -24,19 +24,19 @@ export default function LeadEvent({ leadEvent }) {
               alignItems: 'center'
             }}
           >
-            <Grid item md={6} xs={12}>
+            <Grid item md={5} xs={12}>
               <Typography variant="body2" data-testid="events">
                 {leadEvent?.name}
               </Typography>
             </Grid>
-            <Grid item md={2} xs={12}>
+            <Grid item md={3} xs={12}>
               <Typography variant="body2" data-testid="events">
                 {dateToString(leadEvent?.createdAt)}
               </Typography>
             </Grid>
             <Grid item md={4} xs={12}>
               <Typography variant="body2" data-testid="events">
-                {t('lead_management.entered_by')}
+                {`${t('lead_management.entered_by')}  ${leadEvent?.actingUser?.name}`}
               </Typography>
             </Grid>
           </Grid>
@@ -46,6 +46,14 @@ export default function LeadEvent({ leadEvent }) {
   );
 }
 
+const event = PropTypes.shape({
+  createdAt: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.string]),
+  name: PropTypes.string,
+  actingUser: PropTypes.shape({
+    name: PropTypes.string
+  })
+});
+
 LeadEvent.propTypes = {
-  leadEvent: PropTypes.string.isRequired
+  leadEvent: PropTypes.shape(event).isRequired
 };
