@@ -306,8 +306,8 @@ ActiveRecord::Schema.define(version: 2022_04_12_100133) do
     t.integer "entry_request_state", default: 0
     t.uuid "revoker_id"
     t.datetime "revoked_at"
-    t.uuid "guest_id"
     t.integer "status", default: 0
+    t.uuid "guest_id"
     t.datetime "exited_at"
   end
 
@@ -848,7 +848,6 @@ ActiveRecord::Schema.define(version: 2022_04_12_100133) do
     t.uuid "latest_substatus_id"
     t.string "ext_ref_id"
     t.uuid "role_id", null: false
-    t.string "region"
     t.string "title"
     t.string "linkedin_url"
     t.string "company_name"
@@ -877,6 +876,7 @@ ActiveRecord::Schema.define(version: 2022_04_12_100133) do
     t.string "relevant_link"
     t.jsonb "contact_details"
     t.string "african_presence"
+    t.string "region"
     t.string "task_id"
     t.string "capex_amount"
     t.string "jobs_created"
