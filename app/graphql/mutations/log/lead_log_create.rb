@@ -6,11 +6,11 @@ module Mutations
     class LeadLogCreate < BaseMutation
       argument :user_id, ID, required: true
       argument :name, String, required: false
-      argument :signed_deal, Boolean, required: false
+      argument :signed_deal, String, required: false
       argument :log_type, String, required: true
 
       field :lead_log, Types::LeadLogType, null: true
-
+      
       # rubocop:disable Metrics/AbcSize
       def resolve(vals)
         return if signed_deal_present?(vals[:log_type], vals[:user_id])
