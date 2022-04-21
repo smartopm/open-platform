@@ -10,10 +10,14 @@ module Mutations
 
       def resolve(vals)
         note_list = context[:site_community].note_lists
-                                            .create!(
+                                            .create(
                                               name: vals[:body],
                                             )
+        raise GraphQL::ExecutionError, note_list.errors.full_messages unless note_list.persisted?
+
         parent_task = build_parent_task(note_list)
+
+        raise GraphQL::ExecutionError, note.errors.full_messages unless parent_task.persisted?
 
         { note: parent_task }
       end
@@ -26,7 +30,7 @@ module Mutations
           completed: false, user_id: context[:current_user].id,
           author_id: context[:current_user].id
         }
-        context[:site_community].notes.create!(parent_task_params)
+        context[:site_community].notes.create(parent_task_params)
       end
 
       def authorized?(_vals)

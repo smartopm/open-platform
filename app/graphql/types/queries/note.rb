@@ -448,7 +448,7 @@ module Types::Queries::Note
     context[:site_community]
       .notes
       .where(category: 'task_list')
-      .find(task_id)
+      .find_by(id: task_id)
   end
 
   def tasks_by_quarter(process_type: 'drc')
