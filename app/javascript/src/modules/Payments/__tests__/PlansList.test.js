@@ -1,6 +1,5 @@
 import React from 'react';
-import { render, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
+import { render, waitFor, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/react-testing';
@@ -123,11 +122,13 @@ describe('Plans List Item Component', () => {
       { timeout: 100 }
     );
 
-    userEvent.click(container.queryByTestId('plan_check_box'));
-    expect(container.queryByTestId('send_payment_button')).toBeInTheDocument();
+    await waitFor(() => {
+      fireEvent.click(container.queryByTestId('plan_check_box'));
+      expect(container.queryByTestId('send_payment_button')).toBeInTheDocument();
 
-    userEvent.click(container.queryByTestId('send_payment_button'));
-    expect(container.queryByText('misc.plan_reminder_confirmation')).toBeInTheDocument();
+      fireEvent.click(container.queryByTestId('send_payment_button'));
+      expect(container.queryByText('misc.plan_reminder_confirmation')).toBeInTheDocument();
+    });
   });
 
   it('should render the subscription plans component', async () => {
@@ -159,7 +160,7 @@ describe('Plans List Item Component', () => {
         { content: 'Edit subscription plan', isAdmin: true, color: '', handleClick: jest.fn() }
       ],
       handleTransactionMenu: jest.fn(),
-      anchorEl: document.createElement("button"),
+      anchorEl: document.createElement('button'),
       open: true,
       userType: 'admin',
       handleClose: jest.fn()

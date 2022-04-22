@@ -22,7 +22,7 @@ export default function LeadEvents({ userId }) {
 
   const [
     loadEvents,
-    { data: eventsData, loading: eventsLoading, refetch: refetchEvents }
+    { data: eventsData, loading: eventsLoading, refetch: refetchEvents, error: eventsError }
   ] = useLazyQuery(UserEventsQuery, {
     variables: { userId },
     fetchPolicy: 'cache-first'
@@ -30,7 +30,7 @@ export default function LeadEvents({ userId }) {
 
   const [
     loadMeetings,
-    { data: meetingsData, loading: meetingsLoading, refetch: refetchMeetings }
+    { data: meetingsData, loading: meetingsLoading, refetch: refetchMeetings, error: meetingsError }
   ] = useLazyQuery(UserMeetingsQuery, {
     variables: { userId },
     fetchPolicy: 'cache-first'
@@ -38,7 +38,12 @@ export default function LeadEvents({ userId }) {
 
   const [
     loadSignedDeal,
-    { data: signedDealsData, loading: signedDealsLoading, refetch: refetchSignedDeals }
+    {
+      data: signedDealsData,
+      loading: signedDealsLoading,
+      refetch: refetchSignedDeals,
+      error: signedDealsError
+    }
   ] = useLazyQuery(UserSignedDealsQuery, {
     variables: { userId },
     fetchPolicy: 'cache-first'
@@ -96,7 +101,11 @@ export default function LeadEvents({ userId }) {
         setMessage({ ...message, isError: true, detail: formatError(err.message) });
       });
   }
-  //   if (eventsError || meetingsError || signedDealError) return error.message;
+
+  const err = eventsError || meetingsError || signedDealsError || null;
+
+  if (err) return err.message;
+
   if (isLoading || eventsLoading || signedDealsLoading || meetingsLoading) return <Spinner />;
 
   return (
@@ -114,7 +123,7 @@ export default function LeadEvents({ userId }) {
               {t('lead_management.events')}
             </Typography>
 
-            <Typography variant="body2" data-testid="events">
+            <Typography variant="body2" data-testid="events_header">
               {t('lead_management.events_header')}
             </Typography>
           </Grid>
@@ -161,6 +170,7 @@ export default function LeadEvents({ userId }) {
                   variant="contained"
                   type="submit"
                   role="button"
+                  disableElevation
                   disabled={!eventName.length}
                   color="primary"
                   aria-label={t('lead_management.add')}
@@ -250,6 +260,7 @@ export default function LeadEvents({ userId }) {
                   role="button"
                   disabled={!meetingName.length}
                   color="primary"
+                  disableElevation
                   aria-label={t('lead_management.add')}
                   data-testid="meeting-add-button"
                   onClick={handleSubmitMeeting}
@@ -332,6 +343,7 @@ export default function LeadEvents({ userId }) {
                   type="submit"
                   role="button"
                   disabled={!dealName.length}
+                  disableElevation
                   color="primary"
                   aria-label={t('lead_management.add')}
                   data-testid="meeting-add-button"
