@@ -25,6 +25,14 @@
     "user_not_found_add_new": "Usuario no encontrado - Por favor agregue Nuevo Invitado",
     "video_not_supported": "Este navegador no admite video"
   },
+  "file_types": {
+    "audio": "Audio",
+    "autocad": "Autocad",
+    "compressed_file": "Archivo Comprimido",
+    "image": "Imagen",
+    "pdf": "PDF",
+    "video": "Video"
+  },
   "form_actions": {
     "add_type": "Agregar {{label}}",
     "assign": "Asignar",
@@ -458,6 +466,7 @@
     "twitter": "Twitter",
     "type_comment": "Escriba un comentario aquí",
     "unallocated_funds": "Fondos no asignados",
+    "upload": "Subir",
     "uploaded": "Subido con éxito",
     "uploaded_at": "Subido el ",
     "uploaded_by": "Subido por ",
