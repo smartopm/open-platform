@@ -3,9 +3,9 @@
 /* eslint-disable complexity */
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Dialog, DialogTitle, DialogContent, Grid } from '@mui/material';
+import { Dialog, DialogContent, Grid } from '@mui/material';
 import { useMutation, useLazyQuery, useApolloClient } from 'react-apollo';
-import { useParams, useHistory } from 'react-router';
+import { useHistory } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { UsersLiteQuery } from '../../../graphql/queries';
 import { AssignUser, UpdateNote } from '../../../graphql/mutations';
@@ -56,7 +56,6 @@ export default function TodoList({
   const [displayBuilder, setDisplayBuilder] = useState('none');
   const [, setFilterCount] = useState(0);
   const [filterQuery, setFilterQuery] = useState('');
-  const { taskId } = useParams();
   const [parentTaskId, setParentTaskId] = useState('');
   const history = useHistory();
   const [userNameSearchTerm, setUserNameSearchTerm] = useState('');
@@ -450,14 +449,6 @@ export default function TodoList({
           onClose={openModal}
           aria-labelledby="task_modal"
         >
-          {/* show task details when on task page load */}
-          <DialogTitle id="task_modal">
-            <CenteredContent>
-              <span>
-                {taskId ? t('task.task_modal_detail_text') : t('task.task_modal_create_text')}
-              </span>
-            </CenteredContent>
-          </DialogTitle>
           <DialogContent>
             <TaskForm
               refetch={handleRefetch}

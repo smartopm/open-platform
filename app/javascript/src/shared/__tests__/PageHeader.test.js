@@ -3,10 +3,10 @@ import { render } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/react-testing';
-import FormHeader from '../components/FormHeader';
-import MockedThemeProvider from '../../__mocks__/mock_theme';
+import PageHeader from '../PageHeader';
+import MockedThemeProvider from '../../modules/__mocks__/mock_theme';
 
-describe('FormHeader component', () => {
+describe('PageHeader component', () => {
   it('should render without error', () => {
     const props = {
       linkText: 'sample Link Text',
@@ -18,7 +18,7 @@ describe('FormHeader component', () => {
       <BrowserRouter>
         <MockedProvider>
           <MockedThemeProvider>
-            <FormHeader {...props} />
+            <PageHeader {...props} />
           </MockedThemeProvider>
         </MockedProvider>
       </BrowserRouter>

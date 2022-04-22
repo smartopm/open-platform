@@ -1,5 +1,5 @@
 /* eslint-disable no-use-before-define */
-import React from 'react'
+import React from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import {
@@ -14,33 +14,20 @@ import {
   Toolbar,
   IconButton,
   Grid
-} from '@mui/material'
-import PropTypes from 'prop-types'
+} from '@mui/material';
+import PropTypes from 'prop-types';
 import makeStyles from '@mui/styles/makeStyles';
 import { useTranslation } from 'react-i18next';
-import { titleize } from '../utils/helpers'
-import {Spinner} from '../shared/Loading'
+import { titleize } from '../utils/helpers';
+import { Spinner } from '../shared/Loading';
 
-export function ModalDialog({
-  handleClose,
-  open,
-  handleConfirm,
-  action,
-  name,
-  children
-}) {
-  const { t } = useTranslation(['logbook', 'common'])
+export function ModalDialog({ handleClose, open, handleConfirm, action, name, children }) {
+  const { t } = useTranslation(['logbook', 'common']);
   return (
-    <Dialog
-      onClose={handleClose}
-      aria-labelledby="simple-dialog-title"
-      open={open}
-    >
+    <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open}>
       <DialogContent>
         {Boolean(name.length) && (
-          <p className="deny-msg">
-            {t('logbook.grant_deny_access', { action, name })}
-          </p>
+          <p className="deny-msg">{t('logbook.grant_deny_access', { action, name })}</p>
         )}
         <div>{children}</div>
       </DialogContent>
@@ -50,9 +37,7 @@ export function ModalDialog({
           onClick={handleConfirm}
           className="confirm_grant"
           color={
-            ['grant', 'acknowledge', 'save', 'proceed'].includes(action)
-              ? 'primary'
-              : 'secondary'
+            ['grant', 'acknowledge', 'save', 'proceed'].includes(action) ? 'primary' : 'secondary'
           }
         >
           {action}
@@ -62,11 +47,11 @@ export function ModalDialog({
         </Button>
       </DialogActions>
     </Dialog>
-  )
+  );
 }
 
 export function ReasonInputModal({ handleAddReason, handleClose, open, children }) {
-  const { t } = useTranslation(['logbook', 'common'])
+  const { t } = useTranslation(['logbook', 'common']);
   return (
     <Dialog
       onClose={handleClose}
@@ -89,7 +74,7 @@ export function ReasonInputModal({ handleAddReason, handleClose, open, children 
         </Button>
       </DialogActions>
     </Dialog>
-  )
+  );
 }
 
 export function CustomizedDialogs({
@@ -107,7 +92,7 @@ export function CustomizedDialogs({
   displaySaveButton,
   dividers
 }) {
-  const { t } = useTranslation(['logbook', 'common'])
+  const { t } = useTranslation(['logbook', 'common']);
   return (
     <Dialog
       onClose={handleModal}
@@ -124,18 +109,24 @@ export function CustomizedDialogs({
         {subHeader ? <DialogContentText>{subHeader}</DialogContentText> : null}
         {children}
       </DialogContent>
-      {
-        actionable && (
-          <DialogActions>
-            {actionLoading ? (<Spinner />) : (
-              <Grid container style={{padding: '0 20px 20px 20px'}}>
-                <Grid item md={6} xs={6}>
-                  <Button onClick={handleModal} variant="outlined" color="primary" data-testid='dialog_cancel'>
-                    {cancelAction || t('common:form_actions.cancel')}
-                  </Button>
-                </Grid>
-                {displaySaveButton && (
-                <Grid item md={6} xs={6} style={{textAlign: 'right'}}>
+      {actionable && (
+        <DialogActions>
+          {actionLoading ? (
+            <Spinner />
+          ) : (
+            <Grid container style={{ padding: '0 20px 20px 20px' }}>
+              <Grid item md={6} xs={6}>
+                <Button
+                  onClick={handleModal}
+                  variant="outlined"
+                  color="primary"
+                  data-testid="dialog_cancel"
+                >
+                  {cancelAction || t('common:form_actions.cancel')}
+                </Button>
+              </Grid>
+              {displaySaveButton && (
+                <Grid item md={6} xs={6} style={{ textAlign: 'right' }}>
                   <Button
                     data-testid="custom-dialog-button"
                     onClick={handleBatchFilter}
@@ -149,19 +140,26 @@ export function CustomizedDialogs({
                   </Button>
                 </Grid>
               )}
-              </Grid>
-            )}
-          </DialogActions>
-        )
-      }
+            </Grid>
+          )}
+        </DialogActions>
+      )}
     </Dialog>
-  )
+  );
 }
 
-export function DetailsDialog({ handleClose, open, title, children, noActionButton, color, ...otherProps }){
-  const classes = useStyles()
-  const { t } = useTranslation(['logbook', 'common'])
-  return(
+export function DetailsDialog({
+  handleClose,
+  open,
+  title,
+  children,
+  noActionButton,
+  color,
+  ...otherProps
+}) {
+  const classes = useStyles();
+  const { t } = useTranslation(['logbook', 'common']);
+  return (
     <Dialog
       onClose={handleClose}
       aria-labelledby="customized-dialog-title"
@@ -180,24 +178,20 @@ export function DetailsDialog({ handleClose, open, title, children, noActionButt
       <Divider />
       {!noActionButton && (
         <DialogActions style={{ margin: '10px' }}>
-          <Button onClick={handleClose} variant="outlined" color={color} data-testid='cancel'>
+          <Button onClick={handleClose} variant="outlined" color={color} data-testid="cancel">
             {t('common:form_actions.close')}
           </Button>
         </DialogActions>
       )}
     </Dialog>
-  )
+  );
 }
 
-export function FullScreenDialog({ handleClose, open, children, actionText, handleSubmit }){
-  const classes = useStyles()
+export function FullScreenDialog({ handleClose, open, children, actionText, handleSubmit }) {
+  const classes = useStyles();
   const matches = useMediaQuery('(max-width:600px)');
   return (
-    <Dialog
-      onClose={handleClose}
-      open={open}
-      fullScreen
-    >
+    <Dialog onClose={handleClose} open={open} fullScreen>
       <AppBar className={classes.appBar}>
         <Toolbar>
           <IconButton
@@ -207,12 +201,16 @@ export function FullScreenDialog({ handleClose, open, children, actionText, hand
             className="close-receipt-details"
             size="large"
           >
-            <CloseIcon style={{color: 'white'}} />
+            <CloseIcon style={{ color: 'white' }} />
           </IconButton>
-          <div className={matches ? classes.printMobile : classes.print}>
-            {' '}
-          </div>
-          <Button autoFocus onClick={handleSubmit} style={{background: 'none'}} className={classes.print} data-testid="action-button">
+          <div className={matches ? classes.printMobile : classes.print}> </div>
+          <Button
+            autoFocus
+            onClick={handleSubmit}
+            style={{ background: 'none' }}
+            className={classes.print}
+            data-testid="action-button"
+          >
             {actionText}
           </Button>
         </Toolbar>
@@ -222,18 +220,14 @@ export function FullScreenDialog({ handleClose, open, children, actionText, hand
   );
 }
 
-export function MapEditorFullScreenDialog({ handleClose, open, children }){
-  const classes = useStyles()
+export function MapEditorFullScreenDialog({ handleClose, open, children }) {
+  const classes = useStyles();
   return (
-    <Dialog
-      onClose={handleClose}
-      open={open}
-      fullScreen
-    >
+    <Dialog onClose={handleClose} open={open} fullScreen>
       <AppBar className={classes.appBar}>
         <Toolbar>
           <IconButton edge="start" onClick={handleClose} aria-label="close" size="large">
-            <CloseIcon style={{color: 'white'}} />
+            <CloseIcon style={{ color: 'white' }} />
           </IconButton>
         </Toolbar>
       </AppBar>
@@ -241,25 +235,27 @@ export function MapEditorFullScreenDialog({ handleClose, open, children }){
     </Dialog>
   );
 }
-export function ActionDialog({ handleClose, open, handleOnSave, message, type, disableActionBtn, proceedText}) {
-  const { t } = useTranslation('common')
-  const classes = useStyles()
+export function ActionDialog({
+  handleClose,
+  open,
+  handleOnSave,
+  message,
+  type,
+  disableActionBtn,
+  proceedText
+}) {
+  const { t } = useTranslation('common');
+  const classes = useStyles();
   return (
-    <Dialog
-      onClose={handleClose}
-      aria-labelledby="customized-dialog-title"
-      open={open}
-    >
+    <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
       <DialogTitle
         id="customized-dialog-title"
         onClose={handleClose}
-        className={type === 'warning' ? classes.ActionDialogTitle  : classes.confirmDialogTitle}
+        className={type === 'warning' ? classes.ActionDialogTitle : classes.confirmDialogTitle}
       >
-        { titleize(type) }
+        {titleize(type)}
       </DialogTitle>
-      <DialogContent style={{ margin: '15px', textAlign: 'center' }}>
-        {message}
-      </DialogContent>
+      <DialogContent style={{ margin: '15px', textAlign: 'center' }}>{message}</DialogContent>
       <Divider />
       <DialogActions style={{ margin: '10px' }}>
         <Button onClick={handleClose} variant="outlined" color="secondary">
@@ -277,7 +273,7 @@ export function ActionDialog({ handleClose, open, handleOnSave, message, type, d
         </Button>
       </DialogActions>
     </Dialog>
-  )
+  );
 }
 
 export const useStyles = makeStyles(theme => ({
@@ -304,7 +300,7 @@ export const useStyles = makeStyles(theme => ({
   },
   appBar: {
     position: 'relative',
-    color: '#FFFFFF',
+    color: '#FFFFFF'
   },
   print: {
     marginLeft: '500px',
@@ -318,15 +314,15 @@ export const useStyles = makeStyles(theme => ({
     color: '#FFFFFF'
   },
   drawer: {
-    width: '300px',
-  },
-}))
+    width: '300px'
+  }
+}));
 
 ActionDialog.defaultProps = {
   type: 'warning',
   disableActionBtn: false,
   proceedText: ''
-}
+};
 
 ActionDialog.propTypes = {
   handleClose: PropTypes.func.isRequired,
@@ -336,11 +332,11 @@ ActionDialog.propTypes = {
   handleOnSave: PropTypes.func.isRequired,
   disableActionBtn: PropTypes.bool,
   proceedText: PropTypes.string
-}
+};
 
 FullScreenDialog.defaultProps = {
   children: {}
-}
+};
 
 FullScreenDialog.propTypes = {
   handleClose: PropTypes.func.isRequired,
@@ -348,13 +344,13 @@ FullScreenDialog.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   actionText: PropTypes.string.isRequired,
   children: PropTypes.node
-}
+};
 
 DetailsDialog.defaultProps = {
   children: {},
   noActionButton: false,
   color: 'secondary'
-}
+};
 
 DetailsDialog.propTypes = {
   handleClose: PropTypes.func.isRequired,
@@ -363,7 +359,7 @@ DetailsDialog.propTypes = {
   children: PropTypes.node,
   noActionButton: PropTypes.bool,
   color: PropTypes.string
-}
+};
 
 ModalDialog.propTypes = {
   handleClose: PropTypes.func.isRequired,
@@ -372,7 +368,7 @@ ModalDialog.propTypes = {
   action: PropTypes.string,
   handleConfirm: PropTypes.func.isRequired,
   children: PropTypes.node
-}
+};
 
 CustomizedDialogs.defaultProps = {
   dialogHeader: '',
@@ -385,7 +381,7 @@ CustomizedDialogs.defaultProps = {
   actionLoading: false,
   displaySaveButton: true,
   dividers: true
-}
+};
 
 CustomizedDialogs.propTypes = {
   children: PropTypes.node,
@@ -401,23 +397,23 @@ CustomizedDialogs.propTypes = {
   actionLoading: PropTypes.bool,
   displaySaveButton: PropTypes.bool,
   dividers: PropTypes.bool
-}
+};
 
 ModalDialog.defaultProps = {
   name: '',
   action: 'Save',
   children: <span />
-}
+};
 
 ReasonInputModal.propTypes = {
   handleClose: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
   children: PropTypes.node.isRequired,
-  handleAddReason: PropTypes.func.isRequired,
-}
+  handleAddReason: PropTypes.func.isRequired
+};
 
 MapEditorFullScreenDialog.propTypes = {
   handleClose: PropTypes.func.isRequired,
   open: PropTypes.bool.isRequired,
   children: PropTypes.node.isRequired
-}
+};

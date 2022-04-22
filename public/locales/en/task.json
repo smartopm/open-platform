@@ -63,7 +63,11 @@
     "in_progress": "In Progress",
     "needs_attention": "Needs Attention",
     "at_risk": "At Risk",
-    "completed": "Complete"
+    "completed": "Complete",
+    "task_name": "Task Name",
+    "optional_description": "Description (Optional)",
+    "due_date_optional": "Due Date (Optional)",
+    "task_created": "Task Successfully Created"
   },
   "document": {
     "uploaded_at": "Uploaded at",

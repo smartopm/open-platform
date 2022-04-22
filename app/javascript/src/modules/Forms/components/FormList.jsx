@@ -23,7 +23,7 @@ import ErrorPage from '../../../components/Error';
 import { FormCreateMutation } from '../graphql/forms_mutation';
 import FloatButton from '../../../components/FloatButton';
 import FormCreate from './FormCreate';
-import FormHeader from './FormHeader';
+import FormHeader from '../../../shared/PageHeader';
 import FormMenu from './FormMenu';
 import CenteredContent from '../../../shared/CenteredContent';
 import PageWrapper from '../../../shared/PageWrapper';
