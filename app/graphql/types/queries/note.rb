@@ -277,12 +277,13 @@ module Types::Queries::Note
     context[:current_user].tasks.by_completion(false).count
   end
 
+  # rubocop:disable Metrics/MethodLength
   def reply_comment_stats(process_type: 'drc')
     unless permitted?(module: :note, permission: :can_get_comment_stats)
       raise GraphQL::ExecutionError,
             I18n.t('errors.unauthorized')
     end
-  
+
     task_ids = []
     projects_query(process_type).each do |project|
       task_ids.concat(project_task_ids(parent_task: project))
@@ -290,9 +291,10 @@ module Types::Queries::Note
 
     Comments::NoteComment.where(
       note_id: task_ids,
-      reply_required: true
+      reply_required: true,
     ).status_stats(context[:current_user])
   end
+  # rubocop:enable Metrics/MethodLength
 
   def user_tasks
     unless permitted?(module: :note, permission: :can_get_own_tasks)

@@ -1507,7 +1507,7 @@ RSpec.describe Types::Queries::Note do
             user: site_worker,
             status: 'active',
             reply_required: true,
-            grouping_id: '6d3f82c5-5d74-471d-a5a9-143f6e5ad3f1'
+            grouping_id: '6d3f82c5-5d74-471d-a5a9-143f6e5ad3f1',
           )
 
           subtask1 = admin.notes.create!(
@@ -1528,7 +1528,7 @@ RSpec.describe Types::Queries::Note do
             user: site_worker,
             status: 'active',
             reply_required: true,
-            grouping_id: '5d3f82c5-5d74-471d-a5a9-143f6e5ad3f1'
+            grouping_id: '5d3f82c5-5d74-471d-a5a9-143f6e5ad3f1',
           )
 
           subtask2 = admin.notes.create!(
@@ -1549,7 +1549,7 @@ RSpec.describe Types::Queries::Note do
             user: site_worker,
             status: 'active',
             reply_required: true,
-            grouping_id: '4d3f82c5-5d74-471d-a5a9-143f6e5ad3f1'
+            grouping_id: '4d3f82c5-5d74-471d-a5a9-143f6e5ad3f1',
           )
           create(
             :note_comment,
@@ -1558,7 +1558,7 @@ RSpec.describe Types::Queries::Note do
             user: admin,
             status: 'active',
             reply_required: true,
-            grouping_id: '4d3f82c5-5d74-471d-a5a9-143f6e5ad3f1'
+            grouping_id: '4d3f82c5-5d74-471d-a5a9-143f6e5ad3f1',
           )
 
           subtask3 = admin.notes.create!(
@@ -1580,7 +1580,7 @@ RSpec.describe Types::Queries::Note do
             status: 'active',
             reply_required: true,
             grouping_id: '1d3f82c5-5d74-471d-a5a9-143f6e5ad3f1',
-            replied_at: 2.days.ago
+            replied_at: 2.days.ago,
           )
           create(
             :note_comment,
@@ -1590,15 +1590,15 @@ RSpec.describe Types::Queries::Note do
             status: 'active',
             reply_required: true,
             grouping_id: '1d3f82c5-5d74-471d-a5a9-143f6e5ad3f1',
-            replied_at: 1.day.ago
+            replied_at: 1.day.ago,
           )
         end
 
         it 'retrieves process comments' do
           result = DoubleGdpSchema.execute(process_comments_stats_query, context: {
-                                            current_user: admin,
-                                            site_community: community,
-                                          }).as_json
+                                             current_user: admin,
+                                             site_community: community,
+                                           }).as_json
 
           expect(result['errors']).to be_nil
           expect(result.dig('data', 'replyCommentStats', 'sent')).to eq 1
@@ -1608,12 +1608,12 @@ RSpec.describe Types::Queries::Note do
 
         it 'raises unauthorized user if current-user does not have access' do
           result = DoubleGdpSchema.execute(process_comments_stats_query, context: {
-                                            current_user: site_worker,
-                                            site_community: community,
-                                          }).as_json
+                                             current_user: site_worker,
+                                             site_community: community,
+                                           }).as_json
 
           expect(result.dig('errors', 0, 'message'))
-          .to include('Unauthorized')
+            .to include('Unauthorized')
         end
       end
     end
