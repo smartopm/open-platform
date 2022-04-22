@@ -8,13 +8,13 @@ module Mutations
       argument :name, String, required: false
       argument :log_type, String, required: true
 
-      field :lead_log, Types::LeadLogType, null: true
+      field :success, Boolean, null: true
 
       def resolve(vals)
         lead_log = context[:site_community].lead_logs.create(
           vals.merge(acting_user_id: context[:current_user].id),
         )
-        return { lead_log: lead_log } if lead_log.persisted?
+        return { success: true } if lead_log.persisted?
 
         raise GraphQL::ExecutionError, lead_logs.errors.full_messages&.join(', ')
       end

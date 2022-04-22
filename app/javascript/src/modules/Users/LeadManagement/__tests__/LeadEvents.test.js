@@ -20,20 +20,16 @@ describe('LeadEvents Page', () => {
       request: {
         query: CreateEvent,
         variables: {
-          name: 'First Tilisi run',
-          logType: 'event',
-          userId: authState.user.id
+          userId: 'c96f64bb-e3b4-42ff-b6a9-66889ec79e99',
+          name: 'nFirst Tilisi run',
+          logType: 'event'
         }
       },
       result: {
         data: {
-          leadLog: {
-            createdAt: new Date(),
-            logType: 'event',
-            name: 'First Tilisi run',
-            __typename: 'LeadLog'
-          },
-          __typename: 'LeadLog'
+          leadLogCreate: {
+            success: true
+          }
         }
       }
     },
@@ -50,15 +46,15 @@ describe('LeadEvents Page', () => {
               name: 'Tilisi run',
               createdAt: new Date(),
               actingUser: {
-                name: 'Daniel Mutuba',
-                __typename: 'User'
-              },
-              __typename: 'LeadLog'
+                name: 'Daniel Mutuba'
+              }
             }
           ]
-        }
+        },
+        refetch: () => {}
       }
     },
+
     {
       request: {
         query: UserMeetingsQuery,
@@ -72,13 +68,12 @@ describe('LeadEvents Page', () => {
               name: 'Tilisi Stakeholders Meeting',
               createdAt: new Date(),
               actingUser: {
-                name: 'Daniel Mutuba',
-                __typename: 'User'
-              },
-              __typename: 'LeadLog'
+                name: 'Daniel Mutuba'
+              }
             }
           ]
-        }
+        },
+        refetch: () => {}
       }
     },
     {
@@ -94,28 +89,27 @@ describe('LeadEvents Page', () => {
               name: 'Tilisi First Deal Signed',
               createdAt: new Date(),
               actingUser: {
-                name: 'Daniel Mutuba',
-                __typename: 'User'
-              },
-              __typename: 'LeadLog'
+                name: 'Daniel Mutuba'
+              }
             }
           ]
-        }
+        },
+        refetch: () => {}
       }
     }
   ];
 
   it('LeadEvents component', async () => {
     render(
-      <Context.Provider value={authState}>
-        <MockedProvider mocks={dataMock}>
+      <MockedProvider mocks={dataMock} addTypename={false}>
+        <Context.Provider value={authState}>
           <BrowserRouter>
             <MockedThemeProvider>
               <LeadEvents userId="c96f64bb-e3b4-42ff-b6a9-66889ec79e99" />
             </MockedThemeProvider>
           </BrowserRouter>
-        </MockedProvider>
-      </Context.Provider>
+        </Context.Provider>
+      </MockedProvider>
     );
 
     await waitFor(() => {
@@ -124,7 +118,7 @@ describe('LeadEvents Page', () => {
       expect(screen.queryByText('lead_management.events')).toBeInTheDocument();
       expect(screen.queryByText('lead_management.events_header')).toBeInTheDocument();
       const eventTextField = screen.getByLabelText('lead_management.event_name');
-      userEvent.type(eventTextField, 'Tilisi run');
+      userEvent.type(eventTextField, 'First Tilisi run');
       const saveButton = screen.getAllByRole('button')[0];
 
       expect(saveButton).toBeEnabled();
@@ -132,7 +126,7 @@ describe('LeadEvents Page', () => {
       fireEvent.click(saveButton);
     });
 
-    screen.debug();
+    // screen.debug();
     // assert the details tab, loads and is visible in the dom
 
     // expect(screen.queryByTestId('contact_info')).toBeInTheDocument();

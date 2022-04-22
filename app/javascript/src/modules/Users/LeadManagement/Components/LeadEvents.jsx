@@ -93,8 +93,8 @@ export default function LeadEvents({ userId }) {
     setDealName('');
   }
 
-  function handleSubmit(name, eventType) {
-    eventCreate({ variables: { userId, name, logType: eventType } })
+  function handleSubmit(name, logType) {
+    eventCreate({ variables: { userId, name, logType } })
       .then(() => {
         setMessage({
           ...message,
