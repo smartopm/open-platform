@@ -56,7 +56,9 @@ export default function LeadEvents({ userId }) {
   }, [loadEvents, loadMeetings, loadSignedDeal]);
 
   function handleEventNameChange(event) {
-    setEventName(event.target.value);
+    const { value } = event.target;
+
+    setEventName(value);
   }
 
   function handleMeetingNameChange(event) {
@@ -71,18 +73,21 @@ export default function LeadEvents({ userId }) {
     e.preventDefault();
     const type = 'event';
     handleSubmit(eventName, type);
+    setEventName('');
   }
 
   function handleSubmitMeeting(e) {
     e.preventDefault();
     const type = 'meeting';
     handleSubmit(meetingName, type);
+    setMeetingName('');
   }
 
   function handleSubmitDeal(e) {
     e.preventDefault();
     const type = 'signed_deal';
     handleSubmit(dealName, type);
+    setDealName('');
   }
 
   function handleSubmit(name, eventType) {
@@ -171,7 +176,7 @@ export default function LeadEvents({ userId }) {
                   type="submit"
                   role="button"
                   disableElevation
-                  disabled={!eventName.length}
+                  disabled={!eventName.strip().length}
                   color="primary"
                   aria-label={t('lead_management.add')}
                   data-testid="event-add-button"
