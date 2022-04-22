@@ -13,6 +13,7 @@ import {
   AppBar,
   Toolbar,
   IconButton,
+  Grid
 } from '@mui/material'
 import PropTypes from 'prop-types'
 import makeStyles from '@mui/styles/makeStyles';
@@ -127,22 +128,28 @@ export function CustomizedDialogs({
         actionable && (
           <DialogActions>
             {actionLoading ? (<Spinner />) : (
-              <>
-                <Button onClick={handleModal} variant="outlined" color="secondary" data-testid='dialog_cancel'>
-                  {cancelAction || t('common:form_actions.cancel')}
-                </Button>
+              <Grid container style={{padding: '0 20px 20px 20px'}}>
+                <Grid item md={6} xs={6}>
+                  <Button onClick={handleModal} variant="outlined" color="primary" data-testid='dialog_cancel'>
+                    {cancelAction || t('common:form_actions.cancel')}
+                  </Button>
+                </Grid>
                 {displaySaveButton && (
-                <Button
-                  data-testid="custom-dialog-button"
-                  onClick={handleBatchFilter}
-                  color="primary"
-                  variant="contained"
-                  disabled={disableActionBtn}
-                >
-                  {saveAction || t('common:form_actions.save')}
-                </Button>
+                <Grid item md={6} xs={6} style={{textAlign: 'right'}}>
+                  <Button
+                    data-testid="custom-dialog-button"
+                    onClick={handleBatchFilter}
+                    color="primary"
+                    variant="contained"
+                    disabled={disableActionBtn}
+                    style={{ color: '#FFFFFF' }}
+                    disableElevation
+                  >
+                    {saveAction || t('common:form_actions.save')}
+                  </Button>
+                </Grid>
               )}
-              </>
+              </Grid>
             )}
           </DialogActions>
         )
