@@ -57,20 +57,19 @@ export default function LeadEvents({ userId }) {
 
   function handleEventNameChange(event) {
     const { value } = event.target;
-
-    setEventName(value.trim());
+    setEventName(value);
   }
 
   function handleMeetingNameChange(event) {
     const { value } = event.target;
 
-    setMeetingName(value.trim());
+    setMeetingName(value);
   }
 
   function handleDealNameChange(event) {
     const { value } = event.target;
 
-    setDealName(value.trim());
+    setDealName(value);
   }
 
   function handleSubmitEvent(e) {
@@ -180,7 +179,7 @@ export default function LeadEvents({ userId }) {
                   type="submit"
                   role="button"
                   disableElevation
-                  disabled={!eventName.length}
+                  disabled={!eventName.trim()}
                   color="primary"
                   aria-label={t('lead_management.add')}
                   data-testid="event-add-button"
@@ -267,7 +266,7 @@ export default function LeadEvents({ userId }) {
                   variant="contained"
                   type="submit"
                   role="button"
-                  disabled={!meetingName.length}
+                  disabled={!meetingName.trim()}
                   color="primary"
                   disableElevation
                   aria-label={t('lead_management.add')}
@@ -351,7 +350,7 @@ export default function LeadEvents({ userId }) {
                   variant="contained"
                   type="submit"
                   role="button"
-                  disabled={!dealName.length}
+                  disabled={!dealName.trim()}
                   disableElevation
                   color="primary"
                   aria-label={t('lead_management.add')}

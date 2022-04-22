@@ -1,12 +1,11 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min';
 import { MockedProvider } from '@apollo/react-testing';
 import userEvent from '@testing-library/user-event';
 import authState from '../../../../__mocks__/authstate';
 import { Context } from '../../../../containers/Provider/AuthStateProvider';
-import { act } from 'react-dom/test-utils';
 import LeadEvents from '../Components/LeadEvents';
 import { UserEventsQuery, UserMeetingsQuery, UserSignedDealsQuery } from '../graphql/queries';
 import createEvent from '../graphql/mutations';
@@ -121,6 +120,8 @@ describe('LeadEvents Page', () => {
       const saveButton = screen.getAllByRole('button')[0];
 
       expect(saveButton).toBeEnabled();
+      // submit user data
+      fireEvent.click(saveButton);
     });
 
     // assert the details tab, loads and is visible in the dom
