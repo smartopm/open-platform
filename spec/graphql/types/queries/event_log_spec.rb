@@ -56,8 +56,8 @@ RSpec.describe Types::Queries::EntryRequest do
           subject: nil, refId: nil, refType: nil
         },
       ).as_json
-      # we expect only 3 events since no event is created after an entry request
-      expect(result.dig('data', 'result').length).to eql 3
+      # we expect 5 events as 3 are of subject user_entry and 2 are of subject user_create
+      expect(result.dig('data', 'result').length).to eql 5
     end
 
     it 'returns select event logs' do
@@ -83,7 +83,7 @@ RSpec.describe Types::Queries::EntryRequest do
           subject: nil, refId: nil, refType: 'Users::User'
         },
       ).as_json
-      expect(result.dig('data', 'result').length).to eql 3
+      expect(result.dig('data', 'result').length).to eql 5
 
       result = DoubleGdpSchema.execute(
         @query,
@@ -95,7 +95,7 @@ RSpec.describe Types::Queries::EntryRequest do
           subject: nil, refId: user.id, refType: nil
         },
       ).as_json
-      expect(result.dig('data', 'result').length).to eql 3
+      expect(result.dig('data', 'result').length).to eql 4
     end
 
     it 'should fail if not logged in' do
@@ -153,7 +153,7 @@ RSpec.describe Types::Queries::EntryRequest do
           subject: nil, userId: user.id, refType: nil
         },
       ).as_json
-      expect(result.dig('data', 'result').length).to eql 3
+      expect(result.dig('data', 'result').length).to eql 4
     end
 
     it 'should fail if not logged in' do

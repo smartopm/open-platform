@@ -320,6 +320,25 @@ RSpec.describe Users::User, type: :model do
         end
       end
     end
+
+    describe '#log_user_create_event' do
+      let(:user) do
+        build(:user_with_community,
+              name: 'Mark Test',
+              email: 'email@doublegdp.com',
+              phone_number: '1112223334')
+      end
+      let(:event) { 'user_create' }
+
+      context 'when user is created' do
+        it 'should create event log' do
+          expect(ActionFlowJob).to receive(:perform_later)
+          user.save
+          expect(Logs::EventLog.count).to eql 1
+          expect(Logs::EventLog.first.subject).to eql 'user_create'
+        end
+      end
+    end
   end
 
   describe 'Creating a user from a oauth authentication callback' do
@@ -580,7 +599,7 @@ RSpec.describe Users::User, type: :model do
       rescue ActiveRecord::RecordNotUnique
         expect(nuser1).to be nil
       end
-      el = Logs::EventLog.where(acting_user_id: admin.id).last
+      el = Logs::EventLog.find_by(subject: 'user_enrolled')
       expect(nuser.id).to eq el.ref_id
       expect(admin.id).to eq el.acting_user_id
     end
@@ -670,53 +689,6 @@ RSpec.describe Users::User, type: :model do
       note.assign_or_unassign_user(user.id)
 
       expect(user.note_assigned?(note.id)).to eq(false)
-    end
-  end
-
-  describe '#send_email_msg' do
-    let!(:user) { create(:user_with_community) }
-    let!(:email_template) do
-      create(:email_template, community: user.community, name: 'Generic Template')
-    end
-
-    context 'when welcome template is available' do
-      it 'fires EmailMsg.send_mail_from_db' do
-        email_title = I18n.t('email_template.welcome_email.title',
-                             community_name: user.community.name)
-        email_subject = I18n.t('email_template.welcome_email.subject',
-                               community_name: user.community.name)
-        expect(EmailMsg).to receive(:send_mail_from_db).with(
-          email: user.email,
-          template: email_template,
-          template_data: [
-            { key: '%action_url%', value: HostEnv.base_url(user.community) || '' },
-            { key: '%action%', value: I18n.t('email_template.welcome_email.action') },
-            { key: '%body%', value: I18n.t('email_template.welcome_email.body') },
-            { key: '%title%', value: email_title },
-          ],
-          email_subject: email_subject,
-        )
-        user.send_email_msg
-      end
-    end
-
-    context 'when welcome template is not available' do
-      let!(:email_template) do
-        create(:email_template, community: user.community, name: 'no-name')
-      end
-      it 'does not fire' do
-        expect(EmailMsg).not_to receive(:send_mail_from_db)
-        user.send_email_msg
-      end
-    end
-
-    context 'when user type is lead' do
-      before { user.update(user_type: 'lead') }
-
-      it 'does not send welcome mail' do
-        expect(EmailMsg).not_to receive(:send_mail_from_db)
-        user.send_email_msg
-      end
     end
   end
 

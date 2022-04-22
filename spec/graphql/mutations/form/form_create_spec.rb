@@ -58,14 +58,14 @@ RSpec.describe Mutations::Form::FormCreate do
           multipleSubmissionsAllowed: true,
           roles: %w[admin resident],
         }
-        expect(Logs::EventLog.count).to eql 0
+        expect(Logs::EventLog.count).to eql 2
         result = DoubleGdpSchema.execute(mutation, variables: variables,
                                                    context: {
                                                      current_user: admin,
                                                      site_community: user.community,
                                                      user_role: admin.role,
                                                    }).as_json
-        expect(Logs::EventLog.count).to eql 1
+        expect(Logs::EventLog.count).to eql 3
         expect(Logs::EventLog.first.subject).to include 'form_create'
         form_details = result.dig('data', 'formCreate', 'form')
         expect(form_details['id']).not_to be_nil
