@@ -8,7 +8,7 @@ import authState from '../../../../__mocks__/authstate';
 import { Context } from '../../../../containers/Provider/AuthStateProvider';
 import LeadEvents from '../Components/LeadEvents';
 import { UserEventsQuery, UserMeetingsQuery, UserSignedDealsQuery } from '../graphql/queries';
-import createEvent from '../graphql/mutations';
+import CreateEvent from '../graphql/mutations';
 
 import MockedThemeProvider from '../../../__mocks__/mock_theme';
 
@@ -18,11 +18,11 @@ describe('LeadEvents Page', () => {
   const dataMock = [
     {
       request: {
-        query: createEvent,
+        query: CreateEvent,
         variables: {
           name: 'First Tilisi run',
           logType: 'event',
-          userId: 'c96f64bb-e3b4-42ff-b6a9-66889ec79e99'
+          userId: authState.user.id
         }
       },
       result: {
@@ -30,8 +30,10 @@ describe('LeadEvents Page', () => {
           leadLog: {
             createdAt: new Date(),
             logType: 'event',
-            name: 'First Tilisi run'
-          }
+            name: 'First Tilisi run',
+            __typename: 'LeadLog'
+          },
+          __typename: 'LeadLog'
         }
       }
     },
@@ -48,8 +50,10 @@ describe('LeadEvents Page', () => {
               name: 'Tilisi run',
               createdAt: new Date(),
               actingUser: {
-                name: 'Daniel Mutuba'
-              }
+                name: 'Daniel Mutuba',
+                __typename: 'User'
+              },
+              __typename: 'LeadLog'
             }
           ]
         }
@@ -68,8 +72,10 @@ describe('LeadEvents Page', () => {
               name: 'Tilisi Stakeholders Meeting',
               createdAt: new Date(),
               actingUser: {
-                name: 'Daniel Mutuba'
-              }
+                name: 'Daniel Mutuba',
+                __typename: 'User'
+              },
+              __typename: 'LeadLog'
             }
           ]
         }
@@ -88,8 +94,10 @@ describe('LeadEvents Page', () => {
               name: 'Tilisi First Deal Signed',
               createdAt: new Date(),
               actingUser: {
-                name: 'Daniel Mutuba'
-              }
+                name: 'Daniel Mutuba',
+                __typename: 'User'
+              },
+              __typename: 'LeadLog'
             }
           ]
         }
@@ -100,7 +108,7 @@ describe('LeadEvents Page', () => {
   it('LeadEvents component', async () => {
     render(
       <Context.Provider value={authState}>
-        <MockedProvider mocks={dataMock} addTypename={false}>
+        <MockedProvider mocks={dataMock}>
           <BrowserRouter>
             <MockedThemeProvider>
               <LeadEvents userId="c96f64bb-e3b4-42ff-b6a9-66889ec79e99" />
@@ -124,6 +132,7 @@ describe('LeadEvents Page', () => {
       fireEvent.click(saveButton);
     });
 
+    screen.debug();
     // assert the details tab, loads and is visible in the dom
 
     // expect(screen.queryByTestId('contact_info')).toBeInTheDocument();
