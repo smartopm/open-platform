@@ -81,6 +81,7 @@
     "rejected": "Rechazado"
   },
   "misc": {
+    "add_category": "Añadir una Categoría",
     "are_you_sure_to_publish": "¿Estás seguro de publicar este formulario?",
     "attachments": "Archivos adjuntos",
     "building_permit": "Permiso de construcción",
@@ -121,6 +122,7 @@
     "submission_date": "Fecha de envío",
     "submit_form": "Enviar un Formulario",
     "submitted_by": "Enviado por",
+    "update_category": "Actualizar una Categoría",
     "update_history": "Historial",
     "updated_form_category": "Actualizó con éxito una categoría",
     "updated_form_property": "Formulario de propiedad actualizada con éxito",
