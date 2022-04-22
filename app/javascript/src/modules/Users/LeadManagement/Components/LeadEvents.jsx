@@ -62,11 +62,15 @@ export default function LeadEvents({ userId }) {
   }
 
   function handleMeetingNameChange(event) {
-    setMeetingName(event.target.value);
+    const { value } = event.target;
+
+    setMeetingName(value.trim());
   }
 
   function handleDealNameChange(event) {
-    setDealName(event.target.value);
+    const { value } = event.target;
+
+    setDealName(value.trim());
   }
 
   function handleSubmitEvent(e) {
