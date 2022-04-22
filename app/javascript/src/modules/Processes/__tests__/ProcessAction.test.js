@@ -2,7 +2,7 @@ import React from 'react';
 import routeData, { BrowserRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/react-testing';
 import '@testing-library/jest-dom/extend-expect';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import MockedThemeProvider from '../../__mocks__/mock_theme';
 import { Context } from '../../../containers/Provider/AuthStateProvider'
 import authState from '../../../__mocks__/authstate'
@@ -77,6 +77,7 @@ describe('Create Process Form', () => {
       // Form Inputs
       expect(screen.queryAllByText('templates.new_process_name_label')[0]).toBeInTheDocument();
       expect(screen.queryByTestId('process-name')).toBeInTheDocument();
+      expect(screen.queryByTestId('process-name-input')).toBeInTheDocument();
       expect(screen.queryAllByText('templates.process_name_helper_text')[0]).toBeInTheDocument();
 
       expect(screen.queryAllByText('templates.process_form_label')[0]).toBeInTheDocument();
@@ -127,6 +128,7 @@ describe('Edit Process Form', () => {
       // Form Inputs
       expect(screen.queryAllByText('templates.edit_process_name_label')[0]).toBeInTheDocument();
       expect(screen.queryByTestId('process-name')).toBeInTheDocument();
+      expect(screen.queryByTestId('process-name-input')).toBeInTheDocument();
       expect(screen.queryAllByText('templates.process_name_helper_text')[0]).toBeInTheDocument();
 
       expect(screen.queryAllByText('templates.process_form_label')[0]).toBeInTheDocument();
@@ -141,6 +143,31 @@ describe('Edit Process Form', () => {
 
       expect(screen.queryByTestId('process-submit-btn')).toBeInTheDocument();
       expect(screen.queryAllByText('templates.edit_process')[0]).toBeInTheDocument();
+    });
+  });
+
+  it('updates process', async () => {
+    const adminUser = { userType: 'admin', ...authState }
+    render(
+      <Context.Provider value={adminUser}>
+        <MockedProvider mocks={mocks} addTypename={false}>
+          <BrowserRouter>
+            <MockedThemeProvider>
+              <ProcessAction />
+            </MockedThemeProvider>
+          </BrowserRouter>
+        </MockedProvider>
+      </Context.Provider>
+    );
+
+    const processNameField = screen.queryByTestId('process-name-input');
+    fireEvent.change(processNameField, { target: { value: 'New process name' } });
+    expect(processNameField.value).toBe('New process name');
+    const submitBtn = screen.getByTestId('process-submit-btn');
+    fireEvent.click(submitBtn);
+
+    await waitFor(() => {
+      expect(screen.queryByTestId('message-alert')).toBeInTheDocument();
     });
   });
 });

@@ -99,8 +99,6 @@ const [processUpdate] = useMutation(ProcessUpdateMutation);
       processUpdate({
         variables: {
           id,
-          // formId,
-          // noteListId,
           name: processName,
         }
       })
@@ -184,6 +182,8 @@ const [processUpdate] = useMutation(ProcessUpdateMutation);
         <Grid container spacing={3} style={matches ? { padding: '10px 10px' } : { padding: '20px 150px' }}>
           <Grid item md={12} xs={12}>
             <TextField
+              fullWidth
+              required
               name="processName"
               id="process-name"
               label={action === 'edit' ?  t('templates.edit_process_name_label') : t('templates.new_process_name_label')}
@@ -193,8 +193,7 @@ const [processUpdate] = useMutation(ProcessUpdateMutation);
               onChange={handleInputChange}
               value={processData.processName}
               data-testid="process-name"
-              fullWidth
-              required
+              inputProps={{ "data-testid": "process-name-input" }}
             />
           </Grid>
           <Grid item md={12} xs={12}>
