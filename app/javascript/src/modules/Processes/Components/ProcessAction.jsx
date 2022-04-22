@@ -37,17 +37,19 @@ export default function ProcessAction() {
   const [info, setInfo] = useState({ loading: false, error: false, message: '' });
 
   useEffect(() => {
-    if (location?.state) {
+    if (location.pathname === '/processes/templates/edit') {
       const { process } = location.state;
+      if (!process) return;
       setAction('edit');
       setProcessData({
-        id: process?.id,
-        processName: process?.name,
-        formId: process?.form?.id,
-        noteListId: process?.noteList?.id
+        id: process.id,
+        processName: process.name,
+        formId: process.form?.id,
+        noteListId: process.noteList?.id
       })
     }
-  }, [location.state]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.pathname]);
 
   const { data: formData, loading: formLoading } = useQuery(ProcessFormsQuery, {
     fetchPolicy: 'cache-and-network'
@@ -198,24 +200,25 @@ const [processUpdate] = useMutation(ProcessUpdateMutation);
           <Grid item md={12} xs={12}>
             <FormControl fullWidth>
               <InputLabel id="processFormLabel">{t('templates.process_form_label')}</InputLabel>
-              <Select
-                name="formId"
-                id="formId"
-                label={t('templates.process_form_label')}
-                defaultValue=""
-                value={processData.formId}
-                onChange={handleInputChange}
-                data-testid="process-form-dropdown"
-                required
-              >
-                {formLoading
-                ? (<Spinner />)
-                : (formData?.forms.map((form) => (
-                  <MenuItem key={form.id} value={form.id}>
-                    {form.name}
-                  </MenuItem>
-                )))}
-              </Select>
+              {
+                formLoading ? (<Spinner />) : (
+                  <Select
+                    name="formId"
+                    id="formId"
+                    label={t('templates.process_form_label')}
+                    value={processData.formId}
+                    onChange={handleInputChange}
+                    data-testid="process-form-dropdown"
+                    required
+                  >
+                    {formData?.forms.map((form) => (
+                      <MenuItem key={form.id} value={form.id}>
+                        {form.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                )
+              }
               <FormHelperText data-testid="process-form-helper-text">
                 {t('templates.process_form_helper_text')}
                 <Link to="/forms">
@@ -227,24 +230,26 @@ const [processUpdate] = useMutation(ProcessUpdateMutation);
           <Grid item md={12} xs={12}>
             <FormControl fullWidth>
               <InputLabel id="noteListId">{t('templates.process_task_list_label')}</InputLabel>
-              <Select
-                name="noteListId"
-                id="noteListId"
-                label={t('templates.process_task_list_label')}
-                defaultValue=""
-                value={processData.noteListId}
-                onChange={handleInputChange}
-                data-testid="process-note-list-dropdown"
-                required
-              >
-                {taskListLoading
-                ? (<Spinner />)
-                : (taskListData?.processTaskLists?.map((taskList) => (
-                  <MenuItem key={taskList.id} value={taskList.id}>
-                    {taskList.name}
-                  </MenuItem>
-                )))}
-              </Select>
+              {
+                taskListLoading ? (<Spinner />) : (
+                  <Select
+                    name="noteListId"
+                    id="noteListId"
+                    label={t('templates.process_task_list_label')}
+                    defaultValue=""
+                    value={processData.noteListId}
+                    onChange={handleInputChange}
+                    data-testid="process-note-list-dropdown"
+                    required
+                  >
+                    {taskListData?.processTaskLists?.map((taskList) => (
+                      <MenuItem key={taskList.id} value={taskList.id}>
+                        {taskList.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                )
+              }
               <FormHelperText data-testid="process-note-list-helper-text">
                 {t('templates.process_task_list_helper_text')}
                 <Link to="/tasks/task_lists">

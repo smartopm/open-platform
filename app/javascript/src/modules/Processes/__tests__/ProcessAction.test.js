@@ -1,6 +1,6 @@
 import React from 'react';
+import routeData, { BrowserRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/react-testing';
-import { MemoryRouter } from 'react-router-dom';
 import '@testing-library/jest-dom/extend-expect';
 import { render, screen, waitFor } from '@testing-library/react';
 import MockedThemeProvider from '../../__mocks__/mock_theme';
@@ -24,9 +24,6 @@ jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
   useHistory: () => ({
     push: jest.fn()
-  }),
-  useLocation: () => ({
-    state: { process: processMock }
   })
 }));
 
@@ -37,7 +34,7 @@ const mocks = [
     },
     result: {
       data: {
-        forms: [{ id: '123', name: 'Form 1' }]
+        forms: [{ id: processMock.form.id, name: 'Form 1' }]
       },
       loading: false,
     }
@@ -49,7 +46,7 @@ const mocks = [
     },
     result: {
       data: {
-        processTaskLists: [{ id: '456', name: 'TaskList 1'}]
+        processTaskLists: [{ id: processMock.noteList.id, name: 'TaskList 1'}]
       },
       loading: false,
     }
@@ -60,15 +57,15 @@ describe('Create Process Form', () => {
   it('renders form to create a process with necessary elements', async () => {
     const adminUser = { userType: 'admin', ...authState }
     render(
-      <MockedProvider mocks={mocks} addTypename={false}>
-        <Context.Provider value={adminUser}>
-          <MemoryRouter>
+      <Context.Provider value={adminUser}>
+        <MockedProvider mocks={mocks} addTypename={false}>
+          <BrowserRouter>
             <MockedThemeProvider>
               <ProcessAction />
             </MockedThemeProvider>
-          </MemoryRouter>
-        </Context.Provider>
-      </MockedProvider>
+          </BrowserRouter>
+        </MockedProvider>
+      </Context.Provider>
     );
 
     await waitFor(() => {
@@ -99,18 +96,26 @@ describe('Create Process Form', () => {
 });
 
 describe('Edit Process Form', () => {
+  beforeEach(() => {
+    const mockLocation = {
+      pathname: '/processes/templates/edit',
+      state: { process: processMock }
+    }
+    jest.spyOn(routeData, 'useLocation').mockReturnValue(mockLocation);
+  });
+
   it('renders form to edit a process with necessary elements', async () => {
     const adminUser = { userType: 'admin', ...authState }
     render(
-      <MockedProvider mocks={mocks} addTypename={false}>
-        <Context.Provider value={adminUser}>
-          <MemoryRouter>
+      <Context.Provider value={adminUser}>
+        <MockedProvider mocks={mocks} addTypename={false}>
+          <BrowserRouter>
             <MockedThemeProvider>
               <ProcessAction />
             </MockedThemeProvider>
-          </MemoryRouter>
-        </Context.Provider>
-      </MockedProvider>
+          </BrowserRouter>
+        </MockedProvider>
+      </Context.Provider>
     );
 
     await waitFor(() => {
