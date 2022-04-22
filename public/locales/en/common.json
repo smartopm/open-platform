@@ -521,6 +521,7 @@
     "task_header": "TASKS",
     "detail_header": "DETAILS",
     "note_header": "NOTE",
+    "event_header": "EVENTS",
     "main_header": "Lead Management",
     "contact_info": "Contact Info",
     "primary_info": "Primary Contact",

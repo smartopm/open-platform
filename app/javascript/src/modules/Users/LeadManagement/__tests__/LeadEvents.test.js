@@ -21,7 +21,7 @@ describe('LeadEvents Page', () => {
         query: CreateEvent,
         variables: {
           userId: 'c96f64bb-e3b4-42ff-b6a9-66889ec79e99',
-          name: 'nFirst Tilisi run',
+          name: 'First Tilisi run',
           logType: 'event'
         }
       },
@@ -50,8 +50,7 @@ describe('LeadEvents Page', () => {
               }
             }
           ]
-        },
-        refetch: () => {}
+        }
       }
     },
 
@@ -72,8 +71,7 @@ describe('LeadEvents Page', () => {
               }
             }
           ]
-        },
-        refetch: () => {}
+        }
       }
     },
     {
@@ -93,8 +91,7 @@ describe('LeadEvents Page', () => {
               }
             }
           ]
-        },
-        refetch: () => {}
+        }
       }
     }
   ];
@@ -120,22 +117,13 @@ describe('LeadEvents Page', () => {
       const eventTextField = screen.getByLabelText('lead_management.event_name');
       userEvent.type(eventTextField, 'First Tilisi run');
       const saveButton = screen.getAllByRole('button')[0];
-
+      // user input should set add button enabled
       expect(saveButton).toBeEnabled();
-      // submit user data
-      fireEvent.click(saveButton);
     });
 
-    // screen.debug();
-    // assert the details tab, loads and is visible in the dom
-
-    // expect(screen.queryByTestId('contact_info')).toBeInTheDocument();
-
-    // expect(screen.queryByText('lead_management.save_updates')).toBeInTheDocument();
-    // expect(screen.queryAllByText('lead_management.name')[0]).toBeInTheDocument();
-
-    // expect(screen.queryAllByText('lead_management.linkedin_url')[0]).toBeInTheDocument();
-
-    // expect(screen.queryAllByText('lead_management.primary_email')[0]).toBeInTheDocument();
+    // clicking on the add button should submit current data
+    await waitFor(() => {
+      fireEvent.click(screen.getAllByRole('button')[0]);
+    });
   });
 });

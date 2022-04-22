@@ -18,10 +18,7 @@ RSpec.describe Mutations::Log::LeadLogCreate do
       <<~GQL
         mutation LeadLogCreate($logType: String!, $name: String, $userId: ID!){
           leadLogCreate(name: $name, userId: $userId, logType:$logType){
-            leadLog{
-              logType
-              name
-            }
+          success
           }
         }     
       GQL
@@ -40,7 +37,7 @@ RSpec.describe Mutations::Log::LeadLogCreate do
                                                      site_community: community,
                                                    }).as_json
         expect(result['errors']).to be nil
-        expect(result.dig('data', 'leadLogCreate', 'leadLog', 'name')).to eql 'New event'
+        expect(result.dig('data', 'leadLogCreate', 'success')).to eql true
       end
     end
 
@@ -57,7 +54,7 @@ RSpec.describe Mutations::Log::LeadLogCreate do
                                                      site_community: community,
                                                    }).as_json
         expect(result['errors']).to be nil
-        expect(result.dig('data', 'leadLogCreate', 'leadLog', 'name')).to eql 'New meeting'
+        expect(result.dig('data', 'leadLogCreate', 'success')).to eql true
       end
     end
 
@@ -72,7 +69,7 @@ RSpec.describe Mutations::Log::LeadLogCreate do
                                                      site_community: community,
                                                    }).as_json
         expect(result['errors']).to be nil
-        expect(result.dig('data', 'leadLogCreate', 'leadLog', 'name')).to eql 'Signed Deal'
+        expect(result.dig('data', 'leadLogCreate', 'success')).to eql true
       end
     end
 

@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useMutation, useLazyQuery } from 'react-apollo';
+import React, { useState } from 'react';
+import { useMutation, useQuery } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import TextField from '@mui/material/TextField';
@@ -19,47 +19,40 @@ export default function LeadEvents({ userId }) {
   const [message, setMessage] = useState({ isError: false, detail: '' });
   const [eventCreate, { loading: isLoading }] = useMutation(CreateEvent);
   const { t } = useTranslation('common');
-
-  const [
-    loadEvents,
-    { data: eventsData, loading: eventsLoading, refetch: refetchEvents, error: eventsError }
-  ] = useLazyQuery(UserEventsQuery, {
+  const {
+    data: eventsData,
+    loading: eventsLoading,
+    refetch: refetchEvents,
+    error: eventsError
+  } = useQuery(UserEventsQuery, {
     variables: { userId },
-    fetchPolicy: 'cache-first'
+    fetchPolicy: 'cache-and-network'
   });
 
-  const [
-    loadMeetings,
-    { data: meetingsData, loading: meetingsLoading, refetch: refetchMeetings, error: meetingsError }
-  ] = useLazyQuery(UserMeetingsQuery, {
+  const {
+    data: meetingsData,
+    loading: meetingsLoading,
+    refetch: refetchMeetings,
+    error: meetingsError
+  } = useQuery(UserMeetingsQuery, {
     variables: { userId },
-    fetchPolicy: 'cache-first'
+    fetchPolicy: 'cache-and-network'
   });
 
-  const [
-    loadSignedDeal,
-    {
-      data: signedDealsData,
-      loading: signedDealsLoading,
-      refetch: refetchSignedDeals,
-      error: signedDealsError
-    }
-  ] = useLazyQuery(UserSignedDealsQuery, {
+  const {
+    data: signedDealsData,
+    loading: signedDealsLoading,
+    refetch: refetchSignedDeals,
+    error: signedDealsError
+  } = useQuery(UserSignedDealsQuery, {
     variables: { userId },
-    fetchPolicy: 'cache-first'
+    fetchPolicy: 'cache-and-network'
   });
-
-  useEffect(() => {
-    loadEvents();
-    loadMeetings();
-    loadSignedDeal();
-  }, [loadEvents, loadMeetings, loadSignedDeal]);
 
   function handleEventNameChange(event) {
     const { value } = event.target;
     setEventName(value);
   }
-
   function handleMeetingNameChange(event) {
     const { value } = event.target;
 
@@ -101,6 +94,7 @@ export default function LeadEvents({ userId }) {
           isError: false,
           detail: t('common:misc.misc_successfully_created', { type: t('common:menu.event') })
         });
+
         refetchEvents();
         refetchMeetings();
         refetchSignedDeals();
