@@ -81,7 +81,7 @@ describe('Custom Forms', () => {
       ' Previewing: TextField Value: #textfield, Checkbox Value: #checkbox'
     );
     cy.get('.form-category-header-visible-switch-btn').click();
-    cy.get('[data-testid=category_action_btn]').click();
+    cy.get('[data-testid=custom-dialog-button]').click();
     cy.wait(2000);
 
     // Add Form Properties to Category
