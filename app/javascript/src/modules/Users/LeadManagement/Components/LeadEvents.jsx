@@ -58,7 +58,7 @@ export default function LeadEvents({ userId }) {
   function handleEventNameChange(event) {
     const { value } = event.target;
 
-    setEventName(value);
+    setEventName(value.trim());
   }
 
   function handleMeetingNameChange(event) {
@@ -176,7 +176,7 @@ export default function LeadEvents({ userId }) {
                   type="submit"
                   role="button"
                   disableElevation
-                  disabled={!eventName.strip().length}
+                  disabled={!eventName.length}
                   color="primary"
                   aria-label={t('lead_management.add')}
                   data-testid="event-add-button"
