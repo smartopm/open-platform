@@ -24,7 +24,6 @@ export default function ProcessList() {
   const canEditProcess = true; // TODO: Check the edit permission in the next ticket
   const history = useHistory();
   const location = useLocation();
-  console.log('from: ', location?.state?.from)
   const [processItem, setProcessItem] = useState(null);
 
   const { data, loading, error, refetch } = useQuery(ProcessTemplatesQuery, {
@@ -39,7 +38,8 @@ export default function ProcessList() {
     if (location?.state?.from === '/processes/templates/edit') {
       refetch();
     }
-  }, [location.state.from, refetch])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location?.state?.from, refetch])
 
   function paginate(action) {
     if (action === 'prev') {

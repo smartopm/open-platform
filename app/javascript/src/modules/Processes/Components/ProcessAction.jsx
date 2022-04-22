@@ -172,7 +172,7 @@ const [processUpdate] = useMutation(ProcessUpdateMutation);
               <Grid container>
                 <Grid item md={9} xs={10}>
                   <Typography variant="h4" style={{ marginLeft: '5px', marginBottom: '24px' }}>
-                    {action === 'edit' ? t('breadcrumbs.edit_process') : t('breadcrumbs.create_process')}
+                    {action === 'edit' ? t('templates.edit_process') : t('templates.create_process')}
                   </Typography>
                 </Grid>
               </Grid>
@@ -184,13 +184,13 @@ const [processUpdate] = useMutation(ProcessUpdateMutation);
             <TextField
               name="processName"
               id="process-name"
-              label={t('templates.process_name_label')}
+              label={action === 'edit' ?  t('templates.edit_process_name_label') : t('templates.new_process_name_label')}
               helperText={t('templates.process_name_helper_text')}
               variant="outlined"
               className='process-txt-input'
               onChange={handleInputChange}
               value={processData.processName}
-              data-testid="new-process-name"
+              data-testid="process-name"
               fullWidth
               required
             />
@@ -202,6 +202,7 @@ const [processUpdate] = useMutation(ProcessUpdateMutation);
                 name="formId"
                 id="formId"
                 label={t('templates.process_form_label')}
+                defaultValue=""
                 value={processData.formId}
                 onChange={handleInputChange}
                 data-testid="process-form-dropdown"
@@ -230,6 +231,7 @@ const [processUpdate] = useMutation(ProcessUpdateMutation);
                 name="noteListId"
                 id="noteListId"
                 label={t('templates.process_task_list_label')}
+                defaultValue=""
                 value={processData.noteListId}
                 onChange={handleInputChange}
                 data-testid="process-note-list-dropdown"
