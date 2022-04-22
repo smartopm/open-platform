@@ -111,3 +111,13 @@ export const ProjectsStatsQuery = gql`
   }
   ${TasksFragment.task}
 `;
+
+export const ReplyCommentStatQuery = gql`
+  query replyCommentStats($processType: String) {
+    replyCommentStats(processType: $processType) {
+      sent
+      received
+      resolved
+    }
+  }
+`;

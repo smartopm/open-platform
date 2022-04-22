@@ -128,7 +128,8 @@
     "lifetime_totals": "Lifetime Totals",
     "requirements": "Requirements",
     "requirements_guideline": "Please read the required guideline.",
-    "go_to_guideline": "Go to Guideline."
+    "go_to_guideline": "Go to Guideline.",
+    "replies_requested": "Replies Requested:"
   },
   "task_lists": {
     "task_lists": "Task Lists",
@@ -144,6 +145,9 @@
   "misc": {
     "confirm": "confirm",
     "reply": "Reply",
-    "add_description": "Add a description"
+    "add_description": "Add a description",
+    "sent": "Sent {{count}}",
+    "received": "Received {{count}}",
+    "resolved": "Resolved {{count}}"
   }
 }

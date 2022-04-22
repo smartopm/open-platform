@@ -157,6 +157,7 @@ Tilisi:
         - can_fetch_comments_on_assigned_tasks
         - can_access_project_steps
         - can_mark_task_as_complete
+        - can_get_comment_stats
     forms:
       permissions:
         - can_see_menu_item

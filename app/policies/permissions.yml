@@ -29,6 +29,7 @@ admin:
       - can_mark_task_as_complete
       - can_view_task_lists
       - can_create_task_lists
+      - can_get_comment_stats
   process:
     permissions:
       - can_view_process_templates
