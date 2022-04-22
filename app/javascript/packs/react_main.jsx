@@ -378,6 +378,11 @@ const App = () => {
                                 />
                                 <Route path="/processes/templates" component={ProcessList} />
                                 <Route
+                                  exact
+                                  path="/processes/templates/edit"
+                                  component={ProcessBuilderPage}
+                                />
+                                <Route
                                   path="/processes/:type/projects/:id"
                                   component={TaskProcessDetail}
                                 />

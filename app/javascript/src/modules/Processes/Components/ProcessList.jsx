@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Breadcrumbs, Grid, Typography } from '@mui/material';
-import { Link , useHistory } from 'react-router-dom';
+import { Link , useHistory, useLocation } from 'react-router-dom';
 import makeStyles from '@mui/styles/makeStyles';
 import { useQuery } from 'react-apollo';
 import { formatError } from '../../../utils/helpers';
@@ -23,14 +23,23 @@ export default function ProcessList() {
   const anchorElOpen = Boolean(anchorEl);
   const canEditProcess = true; // TODO: Check the edit permission in the next ticket
   const history = useHistory();
+  const location = useLocation();
+  console.log('from: ', location?.state?.from)
+  const [processItem, setProcessItem] = useState(null);
 
-  const { data, loading, error } = useQuery(ProcessTemplatesQuery, {
+  const { data, loading, error, refetch } = useQuery(ProcessTemplatesQuery, {
     variables: {
       offset,
       limit
     },
     fetchPolicy: 'cache-and-network'
   });
+
+  useEffect(() => {
+    if (location?.state?.from === '/processes/templates/edit') {
+      refetch();
+    }
+  }, [location.state.from, refetch])
 
   function paginate(action) {
     if (action === 'prev') {
@@ -47,7 +56,7 @@ export default function ProcessList() {
     {
       content: canEditProcess ? t('common:menu.edit_process_template') : null,
       isAdmin: true,
-      handleClick: () => {}
+      handleClick: () => handleEditProcessTemplate()
     }
   ];
 
@@ -59,9 +68,17 @@ export default function ProcessList() {
     handleClose
   };
 
-  function handleMenu(event) {
+  function handleEditProcessTemplate() {
+    history.push({
+      pathname: '/processes/templates/edit',
+      state: { process: processItem }
+    });
+  }
+
+  function handleMenu(event, process) {
     event.stopPropagation();
     setAnchorEl(event.currentTarget);
+    setProcessItem(process);
   }
 
   function handleClose(event) {

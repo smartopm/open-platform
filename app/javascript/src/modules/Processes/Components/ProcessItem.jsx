@@ -50,7 +50,7 @@ export default function ProcessItem({ process, menuData }) {
                 aria-haspopup="true"
                 data-testid="process-item-menu"
                 dataid={process.id}
-                onClick={event => menuData.handleMenu(event)}
+                onClick={event => menuData.handleMenu(event, process)}
                 color="primary"
                 size="large"
               >

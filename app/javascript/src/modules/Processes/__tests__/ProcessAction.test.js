@@ -8,7 +8,7 @@ import MockedThemeProvider from '../../__mocks__/mock_theme';
 import { Context } from '../../../containers/Provider/AuthStateProvider'
 import authState from '../../../__mocks__/authstate'
 import { ProcessFormsQuery, ProcessTaskListsQuery } from '../graphql/process_list_queries';
-import ProcessCreate from '../Components/ProcessCreate';
+import ProcessAction from '../Components/ProcessAction';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 describe('Create Process Form', () => {
@@ -46,7 +46,7 @@ describe('Create Process Form', () => {
         <Context.Provider value={adminUser}>
           <BrowserRouter>
             <MockedThemeProvider>
-              <ProcessCreate />
+              <ProcessAction />
             </MockedThemeProvider>
           </BrowserRouter>
         </Context.Provider>
@@ -58,12 +58,12 @@ describe('Create Process Form', () => {
       expect(screen.queryByText('breadcrumbs.processes')).toBeInTheDocument();
       expect(screen.queryByText('breadcrumbs.create_process')).toBeInTheDocument();
       expect(screen.queryByText('templates.create_process')).toBeInTheDocument();
-      
+
       // Form Inputs
       expect(screen.queryAllByText('templates.process_name_label')[0]).toBeInTheDocument();
       expect(screen.queryByTestId('new-process-name')).toBeInTheDocument();
       expect(screen.queryAllByText('templates.process_name_helper_text')[0]).toBeInTheDocument();
-      
+
       expect(screen.queryAllByText('templates.process_form_label')[0]).toBeInTheDocument();
       expect(screen.queryByTestId('process-form-dropdown')).toBeInTheDocument();
       expect(screen.queryAllByText('templates.process_form_helper_text')[0]).toBeInTheDocument();
@@ -73,7 +73,7 @@ describe('Create Process Form', () => {
       expect(screen.queryByTestId('process-note-list-dropdown')).toBeInTheDocument();
       expect(screen.queryAllByText('templates.process_task_list_helper_text')[0]).toBeInTheDocument();
       expect(screen.queryAllByText('templates.process_task_list_helper_text_link_text')[0]).toBeInTheDocument();
-      
+
       expect(screen.queryByTestId('process-submit-btn')).toBeInTheDocument();
       expect(screen.queryAllByText('templates.save_process')[0]).toBeInTheDocument();
     });
