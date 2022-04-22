@@ -28,6 +28,7 @@ admin:
       - can_access_project_steps
       - can_mark_task_as_complete
       - can_view_task_lists
+      - can_create_task_lists
   process:
     permissions:
       - can_view_process_templates

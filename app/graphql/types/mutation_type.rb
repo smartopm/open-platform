@@ -34,6 +34,7 @@ module Types
 
     # Notes
     field :note_create, mutation: Mutations::Note::NoteCreate
+    field :task_list_create, mutation: Mutations::Note::TaskListCreate
     field :note_update, mutation: Mutations::Note::NoteUpdate
     field :note_assign, mutation: Mutations::Note::NoteAssign
     field :note_comment_create, mutation: Mutations::Note::NoteCommentCreate

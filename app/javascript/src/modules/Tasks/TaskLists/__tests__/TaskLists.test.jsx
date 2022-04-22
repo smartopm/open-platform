@@ -6,10 +6,10 @@ import '@testing-library/jest-dom/extend-expect';
 import { render, screen, waitFor } from '@testing-library/react';
 import MockedThemeProvider from '../../../__mocks__/mock_theme';
 import TaskLists from '../Components/TaskLists';
-import { Context } from '../../../../containers/Provider/AuthStateProvider'
-import TaskListsQuery from '../graphql/task_lists_queries';
-import taskMock from "../../__mocks__/taskMock";
-import authState from '../../../../__mocks__/authstate'
+import { Context } from '../../../../containers/Provider/AuthStateProvider';
+import { TaskListsQuery } from '../graphql/task_lists_queries';
+import taskMock from '../../__mocks__/taskMock';
+import authState from '../../../../__mocks__/authstate';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 describe('Task Lists', () => {
@@ -58,15 +58,13 @@ describe('Task Lists', () => {
       },
       result: {
         data: null,
-        errors: [
-          new Error('An error occured')
-        ]
+        errors: [new Error('An error occured')]
       }
     }
   ];
 
   it('renders loader', () => {
-    const adminUser = { userType: 'admin', ...authState }
+    const adminUser = { userType: 'admin', ...authState };
     render(
       <MockedProvider mocks={mocks} addTypename>
         <Context.Provider value={adminUser}>
@@ -83,7 +81,7 @@ describe('Task Lists', () => {
   });
 
   it('renders no task lists message', async () => {
-    const adminUser = { userType: 'admin', ...authState }
+    const adminUser = { userType: 'admin', ...authState };
     render(
       <MockedProvider mocks={emptyResponseMock} addTypename>
         <Context.Provider value={adminUser}>
@@ -102,7 +100,7 @@ describe('Task Lists', () => {
   });
 
   it('renders task list items', async () => {
-    const adminUser = { userType: 'admin', ...authState }
+    const adminUser = { userType: 'admin', ...authState };
     render(
       <MockedProvider mocks={mocks} addTypename>
         <Context.Provider value={adminUser}>
@@ -122,7 +120,7 @@ describe('Task Lists', () => {
   });
 
   it('renders error message', async () => {
-    const adminUser = { userType: 'admin', ...authState }
+    const adminUser = { userType: 'admin', ...authState };
     render(
       <MockedProvider mocks={errorMock} addTypename>
         <Context.Provider value={adminUser}>

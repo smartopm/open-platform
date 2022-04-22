@@ -120,6 +120,11 @@ module Types::Queries::Note
       argument :offset, Integer, required: false
       argument :limit, Integer, required: false
     end
+
+    field :task_list, Types::NoteType, null: false do
+      description 'return details for one task list'
+      argument :task_id, GraphQL::Types::ID, required: true
+    end
   end
   # rubocop:enable Metrics/BlockLength
 
@@ -432,6 +437,18 @@ module Types::Queries::Note
       .includes(:sub_notes, :assignees, :assignee_notes, :documents_attachments)
       .where(category: 'task_list')
       .offset(offset).limit(limit)
+  end
+
+  def task_list(task_id:)
+    unless permitted?(module: :note, permission: :can_view_task_lists)
+      raise GraphQL::ExecutionError,
+            I18n.t('errors.unauthorized')
+    end
+
+    context[:site_community]
+      .notes
+      .where(category: 'task_list')
+      .find_by(id: task_id)
   end
 
   def tasks_by_quarter(process_type: 'drc')

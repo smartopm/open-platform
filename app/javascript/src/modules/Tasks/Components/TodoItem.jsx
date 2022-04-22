@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import { useLazyQuery } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import makeStyles from '@mui/styles/makeStyles';
-import { useLocation } from 'react-router'
+import { useLocation } from 'react-router';
 import TaskDataList from './TaskDataList';
 import FileUploader from './FileUploader';
 import { objectAccessor, sortTaskOrder } from '../../../utils/helpers';
@@ -16,6 +16,7 @@ import { SubTasksQuery } from '../graphql/task_queries';
 import { LinearSpinner } from '../../../shared/Loading';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
 import OpenTaskDataList from '../Processes/Components/OpenTaskDataList';
+import TaskListDataList from '../TaskLists/Components/TaskListDataList';
 
 export default function TodoItem({
   task,
@@ -27,25 +28,28 @@ export default function TodoItem({
   handleUploadDocument,
   handleTodoClick,
   handleTaskCompletion,
-  clientView
+  clientView,
+  createTaskListSubTask
 }) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedTask, setSelectedTask] = useState(null);
   const [tasksOpen, setTasksOpen] = useState({});
-  const [isUpdating, setIsUpdating] = useState(false)
+  const [isUpdating, setIsUpdating] = useState(false);
   const anchorElOpen = Boolean(anchorEl);
   const { t } = useTranslation('common');
-  const location = useLocation()
+  const location = useLocation();
   const authState = React.useContext(AuthStateContext);
-  const taskPermissions = authState?.user?.permissions?.find(permissionObject => permissionObject.module === 'note')
-  const canCreateNote = taskPermissions? taskPermissions.permissions.includes('can_create_note'): false
-  const canUpdateNote = taskPermissions? taskPermissions.permissions.includes('can_update_note'): false
-
-  const [
-    loadSubTasks,
-    { data, loading: isLoadingSubTasks }
-  ] = useLazyQuery(SubTasksQuery, {
+  const taskPermissions = authState?.user?.permissions?.find(
+    permissionObject => permissionObject.module === 'note'
+  );
+  const canCreateNote = taskPermissions
+    ? taskPermissions.permissions.includes('can_create_note')
+    : false;
+  const canUpdateNote = taskPermissions
+    ? taskPermissions.permissions.includes('can_update_note')
+    : false;
+  const [loadSubTasks, { data, loading: isLoadingSubTasks }] = useLazyQuery(SubTasksQuery, {
     variables: { taskId: task?.id, limit: task?.subTasksCount },
     fetchPolicy: 'cache-and-network',
     errorPolicy: 'all'
@@ -58,7 +62,7 @@ export default function TodoItem({
       handleClick: () => handleTaskDetails()
     },
     {
-      content:  canCreateNote ? t('menu.add_subtask'): null,
+      content: canCreateNote ? t('menu.add_subtask') : null,
       isAdmin: true,
       handleClick: () => handleAddSubTask({ id: selectedTask.id })
     },
@@ -74,10 +78,12 @@ export default function TodoItem({
     },
     {
       content:
-      // eslint-disable-next-line no-nested-ternary
-        canUpdateNote ? selectedTask && selectedTask.completed
-          ? t('menu.mark_incomplete')
-          : t('menu.mark_complete'): null,
+        // eslint-disable-next-line no-nested-ternary
+        canUpdateNote
+          ? selectedTask && selectedTask.completed
+            ? t('menu.mark_incomplete')
+            : t('menu.mark_complete')
+          : null,
       isAdmin: true,
       handleClick: () => handleNoteComplete()
     }
@@ -89,13 +95,14 @@ export default function TodoItem({
         content: t('menu.open_project_details'),
         isAdmin: true,
         handleClick: () => handleTaskDetails()
-      }]
+      }
+    ];
   }
 
   if (location.pathname === '/tasks/task_lists') {
     menuList = [
       // TODO: Implement edit task list and delete task list in their respective tickets
-    ]
+    ];
   }
 
   const menuData = {
@@ -123,34 +130,34 @@ export default function TodoItem({
     setSelectedTask(null);
   }
 
-  function handleNoteComplete(){
-    setIsUpdating(true)
-    toggleTask(selectedTask)
-    handleTaskCompletion(selectedTask.id, !selectedTask.completed)
+  function handleNoteComplete() {
+    setIsUpdating(true);
+    toggleTask(selectedTask);
+    handleTaskCompletion(selectedTask.id, !selectedTask.completed);
   }
 
   function handleFileInputChange(event, taskToAttach = null) {
-    event.stopPropagation()
-    setIsUpdating(true)
-    toggleTask(selectedTask || taskToAttach)
+    event.stopPropagation();
+    setIsUpdating(true);
+    toggleTask(selectedTask || taskToAttach);
     handleUploadDocument(event, selectedTask || taskToAttach);
     handleClose(event);
   }
 
-  function toggleTask(taskItem){
+  function toggleTask(taskItem) {
     setTasksOpen({
       ...tasksOpen,
       [taskItem.id]: !objectAccessor(tasksOpen, taskItem.id)
     });
   }
 
-  function handleParentTaskClick(e){
+  function handleParentTaskClick(e) {
     e.stopPropagation();
-    if(task && !(data?.subTasksCount > 0)){
-       loadSubTasks();
+    if (task && !(data?.subTasksCount > 0)) {
+      loadSubTasks();
     }
 
-    toggleTask(task)
+    toggleTask(task);
   }
 
   function handleTodoItemClick(taskItem, tab) {
@@ -160,89 +167,129 @@ export default function TodoItem({
   return (
     <>
       <div style={{ marginBottom: '10px' }} key={task?.id}>
-        { clientView && taskId !== null ? (
+        {createTaskListSubTask && task && (
+          <TaskListDataList
+            task={task}
+            handleOpenSubTasksClick={handleParentTaskClick}
+            handleTodoClick={handleTodoClick}
+            handleAddSubTask={handleAddSubTask}
+            menuData={menuData}
+            styles={{ backgroundColor: '#F5F5F4' }}
+            openSubTask={objectAccessor(tasksOpen, task.id)}
+          />
+        )}
+
+        {clientView && taskId !== null ? (
           <OpenTaskDataList
             taskId={taskId}
             handleTaskCompletion={handleTaskCompletion}
             handleTodoClick={handleTodoClick}
           />
-        ) : task && (
-          <TaskDataList
-            key={task?.id}
-            task={task}
-            handleChange={handleChange}
-            selectedTasks={selectedTasks}
-            isSelected={isSelected}
-            menuData={menuData}
-            styles={{marginBottom: 0}}
-            openSubTask={objectAccessor(tasksOpen, task.id)}
-            handleOpenSubTasksClick={handleParentTaskClick}
-            handleClick={(tab) => handleTodoItemClick(task, tab)}
-            handleTaskCompletion={handleTaskCompletion}
-            clientView={clientView}
-            taskCommentHasReply={task?.taskCommentReply}
-          />
-         )}
+        ) : (
+          !createTaskListSubTask &&
+          task && (
+            <TaskDataList
+              key={task?.id}
+              task={task}
+              handleChange={handleChange}
+              selectedTasks={selectedTasks}
+              isSelected={isSelected}
+              menuData={menuData}
+              styles={{ marginBottom: 0 }}
+              openSubTask={objectAccessor(tasksOpen, task.id)}
+              handleOpenSubTasksClick={handleParentTaskClick}
+              handleClick={tab => handleTodoItemClick(task, tab)}
+              handleTaskCompletion={handleTaskCompletion}
+              clientView={clientView}
+              taskCommentHasReply={task?.taskCommentReply}
+            />
+          )
+        )}
 
-        {(isLoadingSubTasks || (isUpdating && objectAccessor(tasksOpen, task?.id))) && <LinearSpinner />}
+        {(isLoadingSubTasks || (isUpdating && objectAccessor(tasksOpen, task?.id))) && (
+          <LinearSpinner />
+        )}
       </div>
 
       {objectAccessor(tasksOpen, task?.id) &&
         data?.taskSubTasks?.length > 0 &&
         data?.taskSubTasks.sort(sortTaskOrder)?.map(firstLevelSubTask => (
           <>
-            <div
-              className={classes.levelOne}
-              key={firstLevelSubTask.id}
-            >
-              <TaskDataList
-                key={firstLevelSubTask.id}
-                task={firstLevelSubTask}
-                handleChange={handleChange}
-                selectedTasks={selectedTasks}
-                isSelected={isSelected}
-                menuData={menuData}
-                styles={{backgroundColor: '#F5F5F4'}}
-                openSubTask={objectAccessor(tasksOpen, firstLevelSubTask.id)}
-                handleOpenSubTasksClick={() => toggleTask(firstLevelSubTask)}
-                clickable
-                handleClick={() => handleTodoItemClick(firstLevelSubTask)}
-                handleTaskCompletion={handleTaskCompletion}
-                clientView={clientView}
-                taskCommentHasReply={false}
-              />
+            <div className={classes.levelOne} key={firstLevelSubTask.id}>
+              {!createTaskListSubTask ? (
+                <TaskDataList
+                  key={firstLevelSubTask.id}
+                  task={firstLevelSubTask}
+                  handleChange={handleChange}
+                  selectedTasks={selectedTasks}
+                  isSelected={isSelected}
+                  menuData={menuData}
+                  styles={{ backgroundColor: '#F5F5F4' }}
+                  openSubTask={objectAccessor(tasksOpen, firstLevelSubTask.id)}
+                  handleOpenSubTasksClick={() => toggleTask(firstLevelSubTask)}
+                  clickable
+                  handleClick={() => handleTodoItemClick(firstLevelSubTask)}
+                  handleTaskCompletion={handleTaskCompletion}
+                  clientView={clientView}
+                  taskCommentHasReply={false}
+                />
+              ) : (
+                <TaskListDataList
+                  task={firstLevelSubTask}
+                  handleOpenSubTasksClick={handleParentTaskClick}
+                  handleTodoClick={handleTodoClick}
+                  handleAddSubTask={handleAddSubTask}
+                  menuData={menuData}
+                  styles={{ backgroundColor: '#F5F5F4' }}
+                  openSubTask={objectAccessor(tasksOpen, firstLevelSubTask.id)}
+                />
+              )}
             </div>
             {firstLevelSubTask?.subTasksCount > 0 &&
-            objectAccessor(tasksOpen, firstLevelSubTask?.id) && (
-              <>
-                {firstLevelSubTask?.subTasks?.sort(sortTaskOrder)?.map(secondLevelSubTask => (
-                  <div className={classes.levelTwo} key={secondLevelSubTask.id}>
-                    <TaskDataList
-                      key={secondLevelSubTask.id}
-                      task={secondLevelSubTask}
-                      handleChange={handleChange}
-                      selectedTasks={selectedTasks}
-                      isSelected={isSelected}
-                      menuData={menuData}
-                      styles={{backgroundColor: '#ECECEA'}}
-                      clickable
-                      handleClick={() => handleTodoItemClick(secondLevelSubTask)}
-                      handleTaskCompletion={handleTaskCompletion}
-                      clientView={clientView}
-                      taskCommentHasReply={false}
-                    />
-                  </div>
-                ))}
-              </>
-            )}
+              objectAccessor(tasksOpen, firstLevelSubTask?.id) && (
+                <>
+                  {firstLevelSubTask?.subTasks?.sort(sortTaskOrder)?.map(secondLevelSubTask => (
+                    <div className={classes.levelTwo} key={secondLevelSubTask.id}>
+                      {!createTaskListSubTask ? (
+                        <TaskDataList
+                          key={secondLevelSubTask.id}
+                          task={secondLevelSubTask}
+                          handleChange={handleChange}
+                          selectedTasks={selectedTasks}
+                          isSelected={isSelected}
+                          menuData={menuData}
+                          styles={{ backgroundColor: '#ECECEA' }}
+                          clickable
+                          handleClick={() => handleTodoItemClick(secondLevelSubTask)}
+                          handleTaskCompletion={handleTaskCompletion}
+                          clientView={clientView}
+                          taskCommentHasReply={false}
+                        />
+                      ) : (
+                        <TaskListDataList
+                          task={secondLevelSubTask}
+                          handleOpenSubTasksClick={handleParentTaskClick}
+                          handleTodoClick={handleTodoClick}
+                          handleAddSubTask={handleAddSubTask}
+                          menuData={menuData}
+                          styles={{ backgroundColor: '#F5F5F4' }}
+                          openSubTask={objectAccessor(tasksOpen, secondLevelSubTask.id)}
+                        />
+                      )}
+                    </div>
+                  ))}
+                </>
+              )}
           </>
-      ))}
-      <MenuList
-        open={menuData.open}
-        anchorEl={menuData.anchorEl}
-        handleClose={menuData.handleClose}
-        list={menuData.menuList.filter(menuItem => menuItem.content !== null)}
-      />
+        ))}
+      {!createTaskListSubTask && (
+        <MenuList
+          open={menuData.open}
+          anchorEl={menuData.anchorEl}
+          handleClose={menuData.handleClose}
+          list={menuData.menuList.filter(menuItem => menuItem.content !== null)}
+        />
+      )}
     </>
   );
 }
@@ -260,24 +307,25 @@ const Task = {
       id: PropTypes.string,
       name: PropTypes.string
     })
-    ),
-    subTasks: PropTypes.arrayOf(PropTypes.object)
-  };
+  ),
+  subTasks: PropTypes.arrayOf(PropTypes.object)
+};
 
-  TodoItem.defaultProps = {
-    clientView: false,
-    taskId: null,
-    task: null,
-    handleChange: () => {},
-    selectedTasks: [],
-    isSelected: false,
-    handleAddSubTask: () => {},
-    handleUploadDocument: () => {},
-    handleTodoClick: () => {},
-    handleTaskCompletion: () => {},
-  };
+TodoItem.defaultProps = {
+  clientView: false,
+  createTaskListSubTask: false,
+  taskId: null,
+  task: null,
+  handleChange: () => {},
+  selectedTasks: [],
+  isSelected: false,
+  handleAddSubTask: () => {},
+  handleUploadDocument: () => {},
+  handleTodoClick: () => {},
+  handleTaskCompletion: () => {}
+};
 
-  TodoItem.propTypes = {
+TodoItem.propTypes = {
   task: PropTypes.shape(Task),
   handleChange: PropTypes.func,
   selectedTasks: PropTypes.arrayOf(PropTypes.string),
@@ -287,14 +335,15 @@ const Task = {
   handleTodoClick: PropTypes.func,
   handleTaskCompletion: PropTypes.func,
   clientView: PropTypes.bool,
-  taskId: PropTypes.string,
+  createTaskListSubTask: PropTypes.bool,
+  taskId: PropTypes.string
 };
 
 const useStyles = makeStyles(() => ({
   levelOne: {
     backgroundColor: '#f5f5f4',
     marginBottom: '8px',
-    marginLeft: '16px',
+    marginLeft: '16px'
   },
   levelTwo: {
     backgroundColor: '#ececea',

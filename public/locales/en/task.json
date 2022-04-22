@@ -132,7 +132,14 @@
   },
   "task_lists": {
     "task_lists": "Task Lists",
-    "no_task_lists": "No Task Lists available"
+    "no_task_lists": "No Task Lists available",
+    "configure_task_list": "Configure Task List",
+    "step_1": "Step 1: Add a name to your Task List.",
+    "step_2": "Step 2: Start building your list.",
+    "step_2_sub_header": "Add tasks and sub tasks using the kabab menus. Your work is autosaved.",
+    "save": "SAVE",
+    "task_list_name": "Task List Name"
+    
   },
   "misc": {
     "confirm": "confirm",

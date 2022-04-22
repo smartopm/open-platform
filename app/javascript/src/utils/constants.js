@@ -86,7 +86,7 @@ export const userState = {
 export const userStatus = {
   active: 'Active',
   deactivated: 'Deactivated'
-}
+};
 
 export const userSubStatus = {
   plots_fully_purchased: 'Plots Fully Purchased',
@@ -222,7 +222,8 @@ export const NotesCategories = {
   to_do: 'To-Do',
   form: 'Form',
   emergency: 'Emergency SOS',
-  template: 'DRC Process Template'
+  template: 'DRC Process Template',
+  task_list: 'Task List'
 };
 
 export const businessCategories = {
@@ -306,7 +307,7 @@ export const currencies = {
   kenyan_shilling: 'KES',
   costa_rican_colon: 'CRC',
   nigerian_naira: 'NGN',
-  american_dollar: 'USD',
+  american_dollar: 'USD'
 };
 export const locales = ['en-IN', 'en-NG', 'en-UK', 'en-US', 'en-ZM', 'es-HN', 'en-KE', 'es-CR'];
 export const languages = {
@@ -716,7 +717,7 @@ export const tasksQueryBuilderConfig = {
       type: 'text',
       valueSources: ['value'],
       excludeOperators: ['not_equal']
-      },
+    },
     userName: {
       label: "User's Name",
       type: 'text',
