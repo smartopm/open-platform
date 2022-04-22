@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_04_12_100133) do
+ActiveRecord::Schema.define(version: 2022_04_22_073717) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -306,8 +306,8 @@ ActiveRecord::Schema.define(version: 2022_04_12_100133) do
     t.integer "entry_request_state", default: 0
     t.uuid "revoker_id"
     t.datetime "revoked_at"
-    t.integer "status", default: 0
     t.uuid "guest_id"
+    t.integer "status", default: 0
     t.datetime "exited_at"
   end
 
@@ -487,6 +487,19 @@ ActiveRecord::Schema.define(version: 2022_04_12_100133) do
     t.index ["status"], name: "index_land_parcels_on_status"
   end
 
+  create_table "lead_logs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name"
+    t.integer "log_type"
+    t.boolean "signed_deal"
+    t.uuid "acting_user_id"
+    t.uuid "community_id", null: false
+    t.uuid "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["community_id"], name: "index_lead_logs_on_community_id"
+    t.index ["user_id"], name: "index_lead_logs_on_user_id"
+  end
+
   create_table "messages", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "receiver"
     t.text "message"
@@ -543,6 +556,7 @@ ActiveRecord::Schema.define(version: 2022_04_12_100133) do
     t.datetime "updated_at", precision: 6, null: false
     t.uuid "process_id"
     t.index ["community_id"], name: "index_note_lists_on_community_id"
+    t.index ["name", "community_id"], name: "index_note_lists_on_name_and_community_id", unique: true
     t.index ["process_id"], name: "index_note_lists_on_process_id"
   end
 
@@ -848,6 +862,7 @@ ActiveRecord::Schema.define(version: 2022_04_12_100133) do
     t.uuid "latest_substatus_id"
     t.string "ext_ref_id"
     t.uuid "role_id", null: false
+    t.string "region"
     t.string "title"
     t.string "linkedin_url"
     t.string "company_name"
@@ -876,7 +891,6 @@ ActiveRecord::Schema.define(version: 2022_04_12_100133) do
     t.string "relevant_link"
     t.jsonb "contact_details"
     t.string "african_presence"
-    t.string "region"
     t.string "task_id"
     t.string "capex_amount"
     t.string "jobs_created"
@@ -990,6 +1004,8 @@ ActiveRecord::Schema.define(version: 2022_04_12_100133) do
   add_foreign_key "land_parcel_accounts", "accounts"
   add_foreign_key "land_parcel_accounts", "land_parcels"
   add_foreign_key "land_parcels", "communities"
+  add_foreign_key "lead_logs", "communities"
+  add_foreign_key "lead_logs", "users"
   add_foreign_key "note_comments", "notes"
   add_foreign_key "note_comments", "users"
   add_foreign_key "note_histories", "notes"
