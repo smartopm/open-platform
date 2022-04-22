@@ -21,6 +21,7 @@ RSpec.describe Types::Queries::Note do
                             can_fetch_user_notes
                             can_fetch_tagged_comments
                             can_view_task_lists
+                            can_get_comment_stats
                           ])
     end
     let!(:site_worker_permission) do
@@ -1001,6 +1002,16 @@ RSpec.describe Types::Queries::Note do
         })
       end
 
+      let(:process_comments_stats_query) do
+        %(query($processType: String) {
+          replyCommentStats(processType: $processType) {
+            sent
+            received
+            resolved
+          }
+        })
+      end
+
       let(:project_query) do
         <<~GQL
           query Project($formUserId: ID!) {
@@ -1481,6 +1492,129 @@ RSpec.describe Types::Queries::Note do
                                          }).as_json
         expect(result.dig('errors', 0, 'message')).to be_nil
         expect(result.dig('data', 'processes').length).to eql 1
+      end
+
+      context 'when current-user has can_get_comment_stats permission' do
+        before do
+          community
+          site_worker
+          third_note
+
+          create(
+            :note_comment,
+            note: third_note,
+            body: 'Step 1',
+            user: site_worker,
+            status: 'active',
+            reply_required: true,
+            grouping_id: '6d3f82c5-5d74-471d-a5a9-143f6e5ad3f1'
+          )
+
+          subtask1 = admin.notes.create!(
+            body: 'Step 1 subtask 1',
+            description: 'Step 1 subtask 1',
+            user_id: site_worker.id,
+            category: 'other',
+            flagged: true,
+            community_id: community.id,
+            author_id: site_worker.id,
+            parent_note_id: third_note.id,
+          )
+
+          create(
+            :note_comment,
+            note: subtask1,
+            body: 'Step 1 subtask 1 comment',
+            user: site_worker,
+            status: 'active',
+            reply_required: true,
+            grouping_id: '5d3f82c5-5d74-471d-a5a9-143f6e5ad3f1'
+          )
+
+          subtask2 = admin.notes.create!(
+            body: 'Step 1 subtask 2',
+            description: 'Step 1 subtask 2',
+            user_id: site_worker.id,
+            category: 'other',
+            flagged: true,
+            community_id: community.id,
+            author_id: site_worker.id,
+            parent_note_id: subtask1.id,
+          )
+
+          create(
+            :note_comment,
+            note: subtask2,
+            body: 'Step 1 subtask 2 comment',
+            user: site_worker,
+            status: 'active',
+            reply_required: true,
+            grouping_id: '4d3f82c5-5d74-471d-a5a9-143f6e5ad3f1'
+          )
+          create(
+            :note_comment,
+            note: subtask2,
+            body: 'Admin reply to Step 1 subtask 2 comment',
+            user: admin,
+            status: 'active',
+            reply_required: true,
+            grouping_id: '4d3f82c5-5d74-471d-a5a9-143f6e5ad3f1'
+          )
+
+          subtask3 = admin.notes.create!(
+            body: 'Step 1 subtask 3',
+            description: 'Step 1 subtask 3',
+            user_id: site_worker.id,
+            category: 'other',
+            flagged: true,
+            community_id: community.id,
+            author_id: site_worker.id,
+            parent_note_id: third_note.id,
+          )
+
+          create(
+            :note_comment,
+            note: subtask3,
+            body: 'Step 1 subtask 3 comment',
+            user: site_worker,
+            status: 'active',
+            reply_required: true,
+            grouping_id: '1d3f82c5-5d74-471d-a5a9-143f6e5ad3f1',
+            replied_at: 2.days.ago
+          )
+          create(
+            :note_comment,
+            note: subtask3,
+            body: 'Step 1 subtask 3 comment',
+            user: admin,
+            status: 'active',
+            reply_required: true,
+            grouping_id: '1d3f82c5-5d74-471d-a5a9-143f6e5ad3f1',
+            replied_at: 1.day.ago
+          )
+        end
+
+        it 'retrieves process comments' do
+          result = DoubleGdpSchema.execute(process_comments_stats_query, context: {
+                                            current_user: admin,
+                                            site_community: community,
+                                          }).as_json
+
+          expect(result['errors']).to be_nil
+          expect(result.dig('data', 'replyCommentStats', 'sent')).to eq 1
+          expect(result.dig('data', 'replyCommentStats', 'received')).to eq 2
+          expect(result.dig('data', 'replyCommentStats', 'resolved')).to eq 1
+        end
+
+        it 'raises unauthorized user if current-user does not have access' do
+          result = DoubleGdpSchema.execute(process_comments_stats_query, context: {
+                                            current_user: site_worker,
+                                            site_community: community,
+                                          }).as_json
+
+          expect(result.dig('errors', 0, 'message'))
+          .to include('Unauthorized')
+        end
       end
     end
   end

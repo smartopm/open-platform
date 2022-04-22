@@ -4,7 +4,7 @@ import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min';
 import '@testing-library/jest-dom/extend-expect';
 import { render, screen, waitFor } from '@testing-library/react';
 import MockedThemeProvider from '../../../__mocks__/mock_theme';
-import { ProjectsStatsQuery, TaskQuarterySummaryQuery } from '../graphql/process_queries';
+import { ProjectsStatsQuery, TaskQuarterySummaryQuery, ReplyCommentStatQuery } from '../graphql/process_queries';
 import AdminDashboard from '../Components/AdminDashboard'
 import taskMock from '../../__mocks__/taskMock'
 
@@ -42,6 +42,20 @@ describe('Admin processes dashboard', () => {
               [currentYear, 4, 20],
               [2020, 1, 100]
             ]
+          }
+        }
+      }
+    },
+    {
+      request: {
+        query: ReplyCommentStatQuery
+      },
+      result: {
+        data: {
+          replyCommentStats: {
+            received: 24,
+            resolved: 22,
+            sent: 23,
           }
         }
       }
@@ -87,6 +101,10 @@ describe('Admin processes dashboard', () => {
       expect(screen.queryByText('939')).toBeInTheDocument();
       expect(screen.queryByText('689')).toBeInTheDocument();
       expect(screen.queryByText('250')).toBeInTheDocument();
+      expect(screen.queryByText('processes.replies_requested')).toBeInTheDocument();
+      expect(screen.queryByText('task:misc.received')).toBeInTheDocument();
+      expect(screen.queryByText('task:misc.sent')).toBeInTheDocument();
+      expect(screen.queryByText('task:misc.resolved')).toBeInTheDocument();
     })
   });
 
