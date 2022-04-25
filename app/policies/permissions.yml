@@ -33,6 +33,7 @@ admin:
     permissions:
       - can_view_process_templates
       - can_create_process_template
+      - can_update_process_template
   payment_plan:
     permissions:
       - can_cancel_payment_plan

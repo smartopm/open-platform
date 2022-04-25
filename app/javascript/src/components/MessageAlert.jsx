@@ -15,6 +15,7 @@ export default function MessageAlert({ type, message, open, handleClose, style }
       onClose={handleClose}
       anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
       style={style}
+      data-testid='message-alert'
     >
       <Alert onClose={handleClose} severity={type}>
         {message}

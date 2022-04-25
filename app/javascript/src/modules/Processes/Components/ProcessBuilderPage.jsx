@@ -1,10 +1,10 @@
 import React from 'react';
-import ProcessCreate from './ProcessCreate';
+import ProcessAction from './ProcessAction';
 
 export default function ProcessBuilderPage() {
   return(
     <div data-testid="process-page-builder">
-      <ProcessCreate />
+      <ProcessAction />
     </div>
   )
 }
