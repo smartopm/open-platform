@@ -5,11 +5,15 @@ import { useTranslation } from 'react-i18next';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { Link, useParams, useLocation } from 'react-router-dom';
 import { Chip, Grid, IconButton, Typography, Badge } from '@mui/material';
+import { useQuery } from 'react-apollo';
 import { grey } from '@mui/material/colors';
 import Divider from '@mui/material/Divider';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import WidgetsIcon from '@mui/icons-material/Widgets';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import AccountTreeIcon from '@mui/icons-material/AccountTree';
+import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
+import AttachFileIcon from '@mui/icons-material/AttachFile';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@mui/styles';
@@ -22,7 +26,8 @@ import { removeNewLines, sanitizeText } from '../../../utils/helpers';
 import { dateToString } from '../../../components/DateContainer';
 import Card from '../../../shared/Card';
 import CustomProgressBar from '../../../shared/CustomProgressBar';
-import DateUtils from '../../../utils/dateutil'
+import DateUtils from '../../../utils/dateutil';
+import { CommentQuery } from '../../../graphql/queries';
 
 export default function TaskDataList({
   task,
@@ -33,7 +38,8 @@ export default function TaskDataList({
   handleOpenSubTasksClick,
   handleTaskCompletion,
   clientView,
-  taskCommentHasReply
+  taskCommentHasReply,
+  subTaskCard
 }) {
   const classes = useStyles();
   const { t } = useTranslation('task');
@@ -45,12 +51,36 @@ export default function TaskDataList({
 
   const overDue = DateUtils.isExpired(task?.dueDate);
 
+  const { data } = useQuery(CommentQuery, {
+    variables: { taskId: task.id },
+    fetchPolicy: 'cache-and-network',
+    errorPolicy: 'all'
+  });
+
+  function taskStatusCharacter() {
+    const status = task?.status;
+    switch (status) {
+      case 'not_assigned':
+        return 'N';
+      case 'at_risk':
+        return 'R';
+      case 'needs_attention':
+        return 'A';
+      case 'in_progress':
+        return 'P';
+      case 'completed':
+        return 'C';
+      default:
+        return 'N';
+    }
+  }
+
   return (
     <Card styles={styles} contentStyles={{ padding: '4px' }} lateCard={mdDownHidden && overDue}>
       <Grid container>
         <Grid
           item
-          md={5}
+          md={subTaskCard ? 3 : 5}
           xs={8}
           style={{ display: 'flex', alignItems: 'center' }}
           data-testid="task_body_section"
@@ -160,7 +190,7 @@ export default function TaskDataList({
             )}
           </Grid>
         </Grid>
-        {!mdUpHidden && (
+        {!mdUpHidden && !subTaskCard && (
           <Grid item data-testid="open_details" xs={2}>
             <Grid
               container
@@ -169,7 +199,12 @@ export default function TaskDataList({
               justifyContent="center"
             >
               <Grid item xs={8} style={{ textAlign: 'right' }}>
-                <IconButton color="primary" size="large" onClick={() => handleClick()} data-testid='open_task_details'>
+                <IconButton
+                  color="primary"
+                  size="large"
+                  onClick={() => handleClick()}
+                  data-testid="open_task_details"
+                >
                   <WidgetsIcon />
                 </IconButton>
               </Grid>
@@ -179,6 +214,22 @@ export default function TaskDataList({
                 )}
               </Grid>
             </Grid>
+          </Grid>
+        )}
+        {!mdUpHidden && subTaskCard && (
+          <Grid
+            item
+            xs={2}
+            style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}
+            data-testid="task_status_mobile"
+          >
+            <Chip
+              data-testid="task_status_chip_mobile"
+              label={taskStatusCharacter()}
+              className={task?.status ? classes[task.status] : classes.not_started}
+              style={{ color: 'white' }}
+              size="small"
+            />
           </Grid>
         )}
         {!clientView && !mdUpHidden && (
@@ -214,50 +265,177 @@ export default function TaskDataList({
             </Typography>
           </Grid>
         )}
-        <Grid
-          item
-          md={1}
-          xs={4}
-          style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}
-          data-testid="progress_bar_large_screen"
-        >
-          {!clientView && task?.subTasksCount > 0 && (
-            <CustomProgressBar task={task} smDown={false} />
-          )}
-        </Grid>
-        <Grid item md={1} xs={1} />
-        <Grid
-          item
-          md={1}
-          xs={5}
-          style={{ display: 'flex', alignItems: 'center', justifyContent: 'right' }}
-          data-testid="task_status"
-        >
-          <Chip
-            data-testid="task_status_chip"
-            label={task?.status ? t(`task.${task.status}`) : t('task.not_started')}
-            className={task?.status ? classes[task.status] : classes.not_started}
-            style={{ color: 'white' }}
-            size="small" 
-          />
-        </Grid>
+        {(!mdDownHidden || (mdDownHidden && !subTaskCard)) && (
+          <>
+            <Grid
+              item
+              md={1}
+              xs={4}
+              style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}
+              data-testid="progress_bar_large_screen"
+            >
+              {!clientView && task?.subTasksCount > 0 && (
+                <CustomProgressBar task={task} smDown={false} />
+              )}
+            </Grid>
+            <Grid item md={1} xs={1} />
+            <Grid
+              item
+              md={1}
+              xs={5}
+              style={{ display: 'flex', alignItems: 'center', justifyContent: 'right' }}
+              data-testid="task_status"
+            >
+              <Chip
+                data-testid="task_status_chip"
+                label={task?.status ? t(`task.${task.status}`) : t('task.not_started')}
+                className={task?.status ? classes[task.status] : classes.not_started}
+                style={{ color: 'white' }}
+                size="small"
+              />
+            </Grid>
+          </>
+        )}
         {!mdDownHidden && (
-          <Grid item data-testid="open_details" md={1}>
+          <>
+            {!subTaskCard && (
+              <Grid item data-testid="open_details" md={1}>
+                <Grid
+                  container
+                  style={{ textAlign: 'right' }}
+                  alignItems="center"
+                  justifyContent="center"
+                >
+                  <Grid item md={11} style={{ textAlign: 'right' }}>
+                    <IconButton color="primary" size="large" onClick={() => handleClick()}>
+                      <WidgetsIcon />
+                    </IconButton>
+                  </Grid>
+                  <Grid item md={1}>
+                    {urlParams.type === 'drc' && taskCommentHasReply && (
+                      <Badge color="warning" badgeContent="R" style={{ color: 'white' }} />
+                    )}
+                  </Grid>
+                </Grid>
+              </Grid>
+            )}
+          </>
+        )}
+        {subTaskCard && (
+          <Grid
+            item
+            data-testid="task_details_section"
+            md={3}
+            xs={10}
+            className={classes.detailsSection}
+          >
             <Grid
               container
-              style={{ textAlign: 'right' }}
-              alignItems="center"
-              justifyContent="center"
+              data-testid="progress_bar_small_screen"
+              style={{ display: 'flex', justifyContent: 'flex-end' }}
             >
-              <Grid item md={11} style={{ textAlign: 'right' }}>
-                <IconButton color="primary" size="large" onClick={() => handleClick()}>
-                  <WidgetsIcon />
-                </IconButton>
-              </Grid>
-              <Grid item md={1}>
-                {urlParams.type === 'drc' && taskCommentHasReply && (
-                  <Badge color="warning" badgeContent="R" />
-                )}
+              {!clientView && task?.subTasksCount > 0 && (
+                <Grid item md={2} xs={4} className={classes.progressBar}>
+                  {!mdUpHidden && <CustomProgressBar task={task} smDown />}
+                </Grid>
+              )}
+
+              <Grid item md={10} xs={6}>
+                <Grid
+                  container
+                  style={{ display: 'flex', justifyContent: 'space-between' }}
+                  className={classes.detailsContainer}
+                >
+                  {urlParams.type === 'drc' ? (
+                    <Grid item md={2} xs={1} style={{ textAlign: 'right' }}>
+                      {taskCommentHasReply && (
+                        <Badge color="warning" badgeContent={t('task:misc.reply')} />
+                      )}
+                    </Grid>
+                  ) : (
+                    <>
+                      <Grid item md={2} xs={1}>
+                        <IconButton
+                          aria-controls="task-subtasks-icon"
+                          aria-haspopup="true"
+                          data-testid="task_subtasks"
+                          onClick={() => handleClick('subtasks')}
+                          color="primary"
+                          size="large"
+                        >
+                          <AccountTreeIcon
+                            fontSize="small"
+                            color={task?.subTasksCount ? 'primary' : 'disabled'}
+                          />
+                        </IconButton>
+                      </Grid>
+                      <Grid
+                        item
+                        md={1}
+                        xs={1}
+                        className={classes.iconItem}
+                        style={{ marginLeft: '-20px' }}
+                        color="primary"
+                      >
+                        <span data-testid="task-subtasks-count">{task?.subTasksCount}</span>
+                      </Grid>
+                    </>
+                  )}
+
+                  <Grid item md={2} xs={1}>
+                    <IconButton
+                      aria-controls="task-comment-icon"
+                      aria-haspopup="true"
+                      data-testid="task_comments"
+                      onClick={() => handleClick('comments')}
+                      color="primary"
+                      size="large"
+                    >
+                      <QuestionAnswerIcon
+                        fontSize="small"
+                        color={data?.taskComments.length ? 'primary' : 'disabled'}
+                      />
+                    </IconButton>
+                  </Grid>
+
+                  <Grid
+                    item
+                    md={1}
+                    xs={1}
+                    className={classes.iconItem}
+                    style={{ marginLeft: '-20px' }}
+                  >
+                    <span data-testid="task-comment">{data?.taskComments.length || 0}</span>
+                  </Grid>
+
+                  <Grid item md={2} xs={1}>
+                    <IconButton
+                      key={task.id}
+                      aria-controls="task-attach-file-icon"
+                      aria-haspopup="true"
+                      data-testid="task_attach_file"
+                      onClick={() => handleClick('documents')}
+                      color="primary"
+                      size="large"
+                    >
+                      <AttachFileIcon
+                        fontSize="small"
+                        color={task?.attachments?.length ? 'primary' : 'disabled'}
+                      />
+                    </IconButton>
+                  </Grid>
+                  <Grid
+                    item
+                    md={1}
+                    xs={1}
+                    className={classes.iconItem}
+                    style={{ marginLeft: '-25px' }}
+                  >
+                    <span data-testid="file_attachments_total">
+                      {task.attachments?.length || 0}
+                    </span>
+                  </Grid>
+                </Grid>
               </Grid>
             </Grid>
           </Grid>
@@ -315,7 +493,8 @@ TaskDataList.defaultProps = {
   openSubTask: false,
   handleOpenSubTasksClick: null,
   clientView: false,
-  taskCommentHasReply: false
+  taskCommentHasReply: false,
+  subTaskCard: false
 };
 TaskDataList.propTypes = {
   task: PropTypes.shape(Task).isRequired,
@@ -328,7 +507,8 @@ TaskDataList.propTypes = {
   handleOpenSubTasksClick: PropTypes.func,
   handleTaskCompletion: PropTypes.func.isRequired,
   clientView: PropTypes.bool,
-  taskCommentHasReply: PropTypes.bool
+  taskCommentHasReply: PropTypes.bool,
+  subTaskCard: PropTypes.bool
 };
 
 const useStyles = makeStyles(() => ({

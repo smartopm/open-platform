@@ -232,6 +232,7 @@ export default function TodoItem({
                   handleTaskCompletion={handleTaskCompletion}
                   clientView={clientView}
                   taskCommentHasReply={false}
+                  subTaskCard
                 />
               ) : (
                 <TaskListDataList
@@ -242,6 +243,7 @@ export default function TodoItem({
                   menuData={menuData}
                   styles={{ backgroundColor: '#F5F5F4' }}
                   openSubTask={objectAccessor(tasksOpen, firstLevelSubTask.id)}
+                  subTaskCard
                 />
               )}
             </div>
@@ -264,6 +266,7 @@ export default function TodoItem({
                           handleTaskCompletion={handleTaskCompletion}
                           clientView={clientView}
                           taskCommentHasReply={false}
+                          subTaskCard
                         />
                       ) : (
                         <TaskListDataList
@@ -274,6 +277,7 @@ export default function TodoItem({
                           menuData={menuData}
                           styles={{ backgroundColor: '#F5F5F4' }}
                           openSubTask={objectAccessor(tasksOpen, secondLevelSubTask.id)}
+                          subTaskCard
                         />
                       )}
                     </div>
