@@ -18,46 +18,8 @@ describe('LeadEvents Page', () => {
   afterEach(() => {
     jest.restoreAllMocks();
   });
-  const eventRequestDataMock = [
-    {
-      request: {
-        query: CreateEvent,
-        variables: {
-          userId: 'c96f64bb-e3b4-42ff-b6a9-66889ec79e99',
-          name: 'First Tilisi run',
-          logType: 'event'
-        }
-      },
-      result: {
-        data: {
-          leadLogCreate: {
-            success: true
-          }
-        }
-      }
-    }
-  ];
 
-  const meetingRequestDataMock = [
-    {
-      request: {
-        query: CreateEvent,
-        variables: {
-          userId: 'c96f64bb-e3b4-42ff-b6a9-66889ec79e99',
-          name: 'First Tilisi meeting',
-          logType: 'meeting'
-        }
-      },
-      result: {
-        data: {
-          leadLogCreate: {
-            success: true
-          }
-        }
-      }
-    }
-  ];
-  const queryRequestMock = [
+  const queriesMock = [
     {
       request: {
         query: UserEventsQuery,
@@ -121,9 +83,30 @@ describe('LeadEvents Page', () => {
     }
   ];
 
+  const eventRequestDataMock = [
+    ...queriesMock,
+    {
+      request: {
+        query: CreateEvent,
+        variables: {
+          userId: 'c96f64bb-e3b4-42ff-b6a9-66889ec79e99',
+          name: 'First Tilisi run',
+          logType: 'event'
+        }
+      },
+      result: {
+        data: {
+          leadLogCreate: {
+            success: true
+          }
+        }
+      }
+    }
+  ];
+
   it('Creates an event', async () => {
     render(
-      <MockedProvider mocks={(eventRequestDataMock, queryRequestMock)} addTypename={false}>
+      <MockedProvider mocks={eventRequestDataMock} addTypename={false}>
         <Context.Provider value={authState}>
           <BrowserRouter>
             <MockedThemeProvider>
@@ -142,7 +125,6 @@ describe('LeadEvents Page', () => {
       const eventTextField = screen.getByLabelText('lead_management.event_name');
       userEvent.type(eventTextField, 'First Tilisi run');
       const saveButton = screen.getAllByRole('button')[0];
-
       // user input should set add button enabled
       expect(saveButton).toBeEnabled();
     });

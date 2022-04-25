@@ -27,7 +27,7 @@ export default function LeadEvents({ userId }) {
     error: eventsError
   } = useQuery(UserEventsQuery, {
     variables: { userId },
-    fetchPolicy: 'cache-first'
+    fetchPolicy: 'cache-and-network'
   });
 
   const {
@@ -37,7 +37,7 @@ export default function LeadEvents({ userId }) {
     error: meetingsError
   } = useQuery(UserMeetingsQuery, {
     variables: { userId },
-    fetchPolicy: 'cache-first'
+    fetchPolicy: 'cache-and-network'
   });
 
   const {
@@ -47,23 +47,18 @@ export default function LeadEvents({ userId }) {
     error: signedDealsError
   } = useQuery(UserSignedDealsQuery, {
     variables: { userId },
-    fetchPolicy: 'cache-first'
+    fetchPolicy: 'cache-and-network'
   });
 
   function handleEventNameChange(event) {
-    const { value } = event.target;
-    setEventName(value);
+    setEventName(event.target.value);
   }
   function handleMeetingNameChange(event) {
-    const { value } = event.target;
-
-    setMeetingName(value);
+    setMeetingName(event.target.value);
   }
 
   function handleDealNameChange(event) {
-    const { value } = event.target;
-
-    setDealName(value);
+    setDealName(event.target.value);
   }
 
   function handleSubmitEvent(e) {
@@ -86,7 +81,7 @@ export default function LeadEvents({ userId }) {
     handleSubmit(dealName, type);
     setDealName('');
   }
-  
+
   function handleSubmit(name, logType) {
     eventCreate({ variables: { userId, name, logType } })
       .then(() => {
@@ -207,7 +202,7 @@ export default function LeadEvents({ userId }) {
               {t('lead_management.meetings')}
             </Typography>
 
-            <Typography variant="body2" data-testid="meetings">
+            <Typography variant="body2" data-testid="meetings_header">
               {t('lead_management.meetings_header')}
             </Typography>
           </Grid>
@@ -250,7 +245,6 @@ export default function LeadEvents({ userId }) {
               >
                 <ButtonComponent
                   variant="contained"
-                  data-testid="save-meeting-button"
                   color="primary"
                   buttonText={t('lead_management.add')}
                   handleClick={handleSubmitMeeting}
