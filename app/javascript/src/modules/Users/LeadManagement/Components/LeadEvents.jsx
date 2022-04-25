@@ -27,7 +27,7 @@ export default function LeadEvents({ userId }) {
     error: eventsError
   } = useQuery(UserEventsQuery, {
     variables: { userId },
-    fetchPolicy: 'cache-and-network'
+    fetchPolicy: 'cache-first'
   });
 
   const {
@@ -37,7 +37,7 @@ export default function LeadEvents({ userId }) {
     error: meetingsError
   } = useQuery(UserMeetingsQuery, {
     variables: { userId },
-    fetchPolicy: 'cache-and-network'
+    fetchPolicy: 'cache-first'
   });
 
   const {
@@ -47,7 +47,7 @@ export default function LeadEvents({ userId }) {
     error: signedDealsError
   } = useQuery(UserSignedDealsQuery, {
     variables: { userId },
-    fetchPolicy: 'cache-and-network'
+    fetchPolicy: 'cache-first'
   });
 
   function handleEventNameChange(event) {
@@ -86,7 +86,7 @@ export default function LeadEvents({ userId }) {
     handleSubmit(dealName, type);
     setDealName('');
   }
-
+  
   function handleSubmit(name, logType) {
     eventCreate({ variables: { userId, name, logType } })
       .then(() => {
