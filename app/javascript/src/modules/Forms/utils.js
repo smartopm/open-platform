@@ -47,7 +47,10 @@ export function flattenFormProperties(categories) {
  * @param {boolean} editMode
  * @returns {boolean}
  */
-export function checkCondition(category, properties) {
+export function checkCondition(category, properties, editMode) {
+  if (editMode) {
+    return true;
+  }
   if (!category.displayCondition?.groupingId) {
     return true;
   }

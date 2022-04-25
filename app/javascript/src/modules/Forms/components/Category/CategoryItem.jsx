@@ -69,7 +69,7 @@ export default function CategoryItem({
     handleClose
   };
 
-  if (!checkCondition(category, properties)) {
+  if (!checkCondition(category, properties, editMode)) {
     return null;
   }
   return (
