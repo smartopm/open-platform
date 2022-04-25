@@ -114,10 +114,8 @@ describe('Task Data components', () => {
       expect(container.getByTestId('task_completion_toggle_button')).toBeInTheDocument();
       expect(container.getByTestId('task_body_section')).toBeInTheDocument();
       expect(container.getByTestId('task_body')).toBeInTheDocument();
-      expect(container.getByTestId('task_subtasks')).toBeInTheDocument();
-      expect(container.getByTestId('task_comments')).toBeInTheDocument();
-      expect(container.getByTestId('task_details_section')).toBeInTheDocument();
-      expect(container.getByTestId('progress_bar_small_screen')).toBeInTheDocument();
+      expect(container.getByTestId('open_task_details')).toBeInTheDocument();
+      expect(container.getByTestId('progress_bar_large_screen')).toBeInTheDocument();
     }, 10);
   });
 
@@ -190,37 +188,6 @@ describe('Task Data components', () => {
     }, 10);
   });
 
-  it('renders attachment icon', async () => {
-    render(
-      <BrowserRouter>
-        <MockedProvider>
-          <Context.Provider value={authState}>
-            <MockedThemeProvider>
-              <TodoItem
-                task={task}
-                handleChange={() => {}}
-                selectedTasks={[]}
-                isSelected={false}
-                handleTaskDetails={() => {}}
-                handleCompleteNote={() => {}}
-                handleAddSubTask={jest.fn()}
-                taskHeader={taskHeader}
-                handleTodoClick={jest.fn}
-                handleTaskCompletion={jest.fn}
-                handleUploadDocument={jest.fn}
-              />
-            </MockedThemeProvider>
-          </Context.Provider>
-        </MockedProvider>
-      </BrowserRouter>
-    );
-
-    await waitFor(() => {
-      expect(screen.getByTestId('task_attach_file')).toBeInTheDocument();
-      expect(screen.getByTestId('file_attachments_total')).toHaveTextContent('1');
-    }, 10);
-  });
-
   it('should render TaskDataList', async () => {
     const container = render(
       <BrowserRouter>
@@ -247,14 +214,11 @@ describe('Task Data components', () => {
     );
 
     await waitFor(() => {
-      expect(container.queryByTestId('task-comment')).toBeInTheDocument();
-      expect(container.getByTestId('progress_bar_small_screen')).toBeInTheDocument();
+      expect(container.getByTestId('open_task_details')).toBeInTheDocument();
+      expect(container.getByTestId('progress_bar_large_screen')).toBeInTheDocument();
       expect(container.queryByTestId('task_completion_toggle_button')).toBeInTheDocument();
       expect(container.queryByTestId('task_status')).toBeInTheDocument();
       fireEvent.click(container.queryByTestId('task_completion_toggle_button'));
-
-      expect(container.queryByTestId('task_attach_file')).toBeInTheDocument();
-      fireEvent.click(container.queryByTestId('task_attach_file'));
     });
   });
 
@@ -311,13 +275,9 @@ describe('Task Data components', () => {
     );
 
     await waitFor(async () => {
-      expect(container.getByTestId('task_details_section')).toBeInTheDocument();
-      expect(container.getByTestId('task_status_chip_mobile')).toBeInTheDocument();
+      expect(container.getByTestId('open_task_details')).toBeInTheDocument();
       expect(container.getByTestId('task-title')).toBeInTheDocument();
-      expect(container.getByTestId('custom_progress_bar_text_mobile')).toBeInTheDocument();
-      expect(container.getByTestId('task-subtasks-count')).toBeInTheDocument();
-      expect(container.getByTestId('task-comment')).toBeInTheDocument();
-      expect(container.getByTestId('file_attachments_total')).toBeInTheDocument();
+      expect(container.getByTestId('progress_bar_large_screen')).toBeInTheDocument();
       expect(container.getByTestId('show_task_subtasks')).toBeInTheDocument();
 
       fireEvent.click(container.queryByTestId('show_task_subtasks'));

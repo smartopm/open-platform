@@ -169,7 +169,7 @@ export default function TaskDataList({
               justifyContent="center"
             >
               <Grid item xs={8} style={{ textAlign: 'right' }}>
-                <IconButton color="primary" size="large" onClick={() => handleClick()}>
+                <IconButton color="primary" size="large" onClick={() => handleClick()} data-testid='open_task_details'>
                   <WidgetsIcon />
                 </IconButton>
               </Grid>
