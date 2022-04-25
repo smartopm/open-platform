@@ -18,7 +18,6 @@ import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery } from 'react-apollo';
 import makeStyles from '@mui/styles/makeStyles';
 import { ProcessFormsQuery, ProcessTaskListsQuery } from '../graphql/process_list_queries';
-import { Spinner } from '../../../shared/Loading';
 import CenteredContent from '../../../shared/CenteredContent';
 import { ProcessCreateMutation, ProcessUpdateMutation } from '../graphql/process_list_mutation';
 import { formatError } from '../../../utils/helpers';
@@ -51,11 +50,11 @@ export default function ProcessAction() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);
 
-  const { data: formData, loading: formLoading } = useQuery(ProcessFormsQuery, {
+  const { data: formData } = useQuery(ProcessFormsQuery, {
     fetchPolicy: 'cache-and-network'
   });
 
-  const { data: taskListData, loading: taskListLoading } = useQuery(ProcessTaskListsQuery, {
+  const { data: taskListData } = useQuery(ProcessTaskListsQuery, {
     fetchPolicy: 'cache-and-network'
 });
 
@@ -81,6 +80,57 @@ const [processUpdate] = useMutation(ProcessUpdateMutation);
     setAlertOpen(false);
   }
 
+  function handleProcessCreate({ processName, formId, noteListId }) {
+    processCreate({
+      variables: {
+        name: processName,
+        formId,
+        noteListId,
+      }
+    })
+    .then(() => {
+      setInfo({
+        ...info,
+        loading: false,
+      });
+      history.push('/processes/templates');
+    })
+    .catch(err =>{
+      setInfo({
+        ...info,
+        error: true,
+        message: formatError(err.message),
+      });
+      setAlertOpen(true)
+    })
+  }
+
+  function handleProcessUpdate({ id, processName }) {
+    processUpdate({
+      variables: {
+        id,
+        name: processName,
+      }
+    })
+    .then(() => {
+      setInfo({
+        ...info,
+        message: t('templates.process_updated'),
+        loading: false,
+      });
+      setAlertOpen(true);
+      history.push('/processes/templates');
+    })
+    .catch(err => {
+      setInfo({
+        ...info,
+        error: true,
+        message: formatError(err.message),
+      });
+      setAlertOpen(true);
+    })
+  }
+
   function handleSubmit(e){
     e.stopPropagation();
     setInfo({
@@ -89,59 +139,16 @@ const [processUpdate] = useMutation(ProcessUpdateMutation);
     });
 
     const { processName, formId, noteListId } = processData;
-    if (!processName || !formId || !noteListId){
+    if (!processName || !formId || !noteListId) {
       return;
     }
 
     if (action === 'edit') {
       const { id } = processData;
       if (!id) return;
-      processUpdate({
-        variables: {
-          id,
-          name: processName,
-        }
-      })
-      .then(() => {
-        setInfo({
-          ...info,
-          message: t('templates.process_updated'),
-          loading: false,
-        });
-        setAlertOpen(true);
-        setTimeout(() => history.push('/processes/templates', { from: location.pathname }), 2000);
-      })
-      .catch(err => {
-        setInfo({
-          ...info,
-          error: true,
-          message: formatError(err.message),
-        });
-        setAlertOpen(true);
-      })
+      handleProcessUpdate({ id, processName });
     } else {
-      processCreate({
-        variables: {
-          name: processName,
-          formId,
-          noteListId,
-        }
-      })
-      .then(() => {
-        setInfo({
-          ...info,
-          loading: false,
-        });
-        history.push('/processes/templates');
-      })
-      .catch(err =>{
-        setInfo({
-          ...info,
-          error: true,
-          message: formatError(err.message),
-        });
-        setAlertOpen(true)
-      })
+      handleProcessCreate({ processName, formId, noteListId });
     }
   }
 
@@ -200,7 +207,7 @@ const [processUpdate] = useMutation(ProcessUpdateMutation);
             <FormControl fullWidth>
               <InputLabel id="processFormLabel">{t('templates.process_form_label')}</InputLabel>
               {
-                formLoading ? (<Spinner />) : (
+                formData?.forms?.length && (
                   <Select
                     name="formId"
                     id="formId"
@@ -230,7 +237,7 @@ const [processUpdate] = useMutation(ProcessUpdateMutation);
             <FormControl fullWidth>
               <InputLabel id="noteListId">{t('templates.process_task_list_label')}</InputLabel>
               {
-                taskListLoading ? (<Spinner />) : (
+                taskListData?.processTaskLists?.length && (
                   <Select
                     name="noteListId"
                     id="noteListId"

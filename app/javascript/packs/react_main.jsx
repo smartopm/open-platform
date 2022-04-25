@@ -370,18 +370,17 @@ const App = () => {
                                   path="/user_form/:userId?/:formUserId?/:type?"
                                   component={FormPage}
                                 />
-                                <Route exact path="/processes/templates" component={ProcessList} />
                                 <Route
                                   exact
                                   path="/processes/templates/create"
                                   component={ProcessBuilderPage}
                                 />
-                                <Route path="/processes/templates" component={ProcessList} />
                                 <Route
                                   exact
                                   path="/processes/templates/edit"
                                   component={ProcessBuilderPage}
                                 />
+                                <Route path="/processes/templates" component={ProcessList} />
                                 <Route
                                   path="/processes/:type/projects/:id"
                                   component={TaskProcessDetail}
