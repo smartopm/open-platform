@@ -198,7 +198,7 @@ export default function TaskDataList({
               alignItems="center"
               justifyContent="center"
             >
-              <Grid item xs={8} style={{ textAlign: 'right' }}>
+              <Grid item xs={11} style={{ textAlign: 'right' }}>
                 <IconButton
                   color="primary"
                   size="large"
@@ -208,9 +208,16 @@ export default function TaskDataList({
                   <WidgetsIcon />
                 </IconButton>
               </Grid>
-              <Grid item xs={4}>
+              <Grid item xs={1} style={{ marginLeft: '-5px' }}>
                 {urlParams.type === 'drc' && taskCommentHasReply && (
-                  <Badge color="warning" badgeContent="R" />
+                  <Badge
+                    color="warning"
+                    badgeContent={(
+                      <Typography variant="caption" style={{ color: 'white' }}>
+                        R
+                      </Typography>
+                    )}
+                  />
                 )}
               </Grid>
             </Grid>
@@ -233,7 +240,12 @@ export default function TaskDataList({
           </Grid>
         )}
         {!clientView && !mdUpHidden && (
-          <Grid item md={1} xs={1} style={{ display: 'flex', alignItems: 'center' }}>
+          <Grid
+            item
+            md={1}
+            xs={1}
+            style={{ display: 'flex', alignItems: 'center', textAlign: 'right' }}
+          >
             <Box className={classes.taskMenuIcon}>
               <IconButton
                 aria-controls="simple-menu"
@@ -311,9 +323,16 @@ export default function TaskDataList({
                       <WidgetsIcon />
                     </IconButton>
                   </Grid>
-                  <Grid item md={1}>
+                  <Grid item md={1} style={{ marginLeft: '-7px' }}>
                     {urlParams.type === 'drc' && taskCommentHasReply && (
-                      <Badge color="warning" badgeContent="R" style={{ color: 'white' }} />
+                      <Badge
+                        color="warning"
+                        badgeContent={(
+                          <Typography variant="caption" style={{ color: 'white' }}>
+                            R
+                          </Typography>
+                        )}
+                      />
                     )}
                   </Grid>
                 </Grid>
