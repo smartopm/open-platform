@@ -38,5 +38,7 @@ describe('task form component', () => {
     expect(cancelBtn.textContent).toContain('common:form_actions.cancel');
     expect(cancelBtn).not.toBeDisabled();
     expect(submitBtn).not.toBeDisabled();
+    fireEvent.click(submitBtn)
+    expect(submitBtn).not.toBeDisabled();
   });
 });
