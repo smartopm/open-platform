@@ -11,14 +11,15 @@ export default function CardComponent({
   styles,
   contentStyles,
   primaryColor,
-  className
+  className,
+  lateCard
 }) {
   const classes = useStyles(primaryColor)();
   return (
     <>
       <Card
         elevation={0}
-        className={`${clickData?.clickable ? classes.cardClickable : classes.card} ${className}`}
+        className={`${lateCard ? classes.lateCard : ''} ${clickData?.clickable ? classes.cardClickable : classes.card} ${className}`}
         onClick={clickData?.clickable ? e => clickData?.handleClick(e) : null}
         style={styles}
         variant="outlined"
@@ -40,6 +41,9 @@ const useStyles = primaryColor =>
       marginBottom: '10px',
       cursor: 'pointer',
       borderColor: primaryColor ? theme.palette.primary.main : undefined
+    },
+    lateCard: {
+      borderLeft: '5px solid #CD504A'
     }
   }));
 
@@ -51,7 +55,8 @@ CardComponent.defaultProps = {
   styles: {},
   contentStyles: { padding: '10px' },
   primaryColor: false,
-  className: {}
+  className: {},
+  lateCard: false
 };
 
 CardComponent.propTypes = {
@@ -65,5 +70,6 @@ CardComponent.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   contentStyles: PropTypes.object,
   primaryColor: PropTypes.bool,
-  className: PropTypes.oneOfType([PropTypes.object, PropTypes.string])
+  className: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
+  lateCard: PropTypes.bool
 };

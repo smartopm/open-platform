@@ -4,14 +4,11 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { Link, useParams, useLocation } from 'react-router-dom';
-import { useQuery } from 'react-apollo';
 import { Chip, Grid, IconButton, Typography, Badge } from '@mui/material';
 import { grey } from '@mui/material/colors';
 import Divider from '@mui/material/Divider';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import AccountTreeIcon from '@mui/icons-material/AccountTree';
-import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
-import AttachFileIcon from '@mui/icons-material/AttachFile';
+import WidgetsIcon from '@mui/icons-material/Widgets';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import PropTypes from 'prop-types';
@@ -25,7 +22,7 @@ import { removeNewLines, sanitizeText } from '../../../utils/helpers';
 import { dateToString } from '../../../components/DateContainer';
 import Card from '../../../shared/Card';
 import CustomProgressBar from '../../../shared/CustomProgressBar';
-import { CommentQuery } from '../../../graphql/queries';
+import DateUtils from '../../../utils/dateutil'
 
 export default function TaskDataList({
   task,
@@ -46,36 +43,14 @@ export default function TaskDataList({
   const urlParams = useParams();
   const location = useLocation();
 
-  const { data } = useQuery(CommentQuery, {
-    variables: { taskId: task.id },
-    fetchPolicy: 'cache-and-network',
-    errorPolicy: 'all'
-  });
-
-  function taskStatusCharacter() {
-    const status = task?.status;
-    switch (status) {
-      case 'not_assigned':
-        return 'N';
-      case 'at_risk':
-        return 'R';
-      case 'needs_attention':
-        return 'A';
-      case 'in_progress':
-        return 'P';
-      case 'completed':
-        return 'C';
-      default:
-        return 'N';
-    }
-  }
+  const overDue = DateUtils.isExpired(task?.dueDate);
 
   return (
-    <Card styles={styles} contentStyles={{ padding: '4px' }}>
+    <Card styles={styles} contentStyles={{ padding: '4px' }} lateCard={mdDownHidden && overDue}>
       <Grid container>
         <Grid
           item
-          md={3}
+          md={5}
           xs={8}
           style={{ display: 'flex', alignItems: 'center' }}
           data-testid="task_body_section"
@@ -145,16 +120,15 @@ export default function TaskDataList({
                   />
                 </Typography>
               )}
-              {task.submittedBy &&
-                !mdDownHidden && (
-                  <>
-                    <Typography variant="caption">Submitted by</Typography>
-                    {' '}
-                    <Link to={`/user/${task.submittedBy?.id}`}>
-                      <Typography variant="caption">{task.submittedBy?.name}</Typography>
-                    </Link>
-                  </>
-                )}
+              {task.submittedBy && !mdDownHidden && (
+                <>
+                  <Typography variant="caption">Submitted by</Typography>
+                  {' '}
+                  <Link to={`/user/${task.submittedBy?.id}`}>
+                    <Typography variant="caption">{task.submittedBy?.name}</Typography>
+                  </Link>
+                </>
+              )}
             </Grid>
             <Grid item md={1} xl={1}>
               {!mdDownHidden && (
@@ -172,57 +146,59 @@ export default function TaskDataList({
                 </IconButton>
               )}
             </Grid>
-            {!clientView &&
-              !mdDownHidden && (
-                <Divider orientation="vertical" flexItem sx={{ margin: '-20px 10px' }} />
-              )}
-            {task.submittedBy &&
-              !mdUpHidden && (
-                <Grid item sm={12} md={12} lg={12} xs={12} className={classes.submitedBy}>
-                  <Typography variant="caption">Submitted by</Typography>
-                  {' '}
-                  <Link to={`/user/${task.submittedBy.id}`}>
-                    <Typography variant="caption">{task.submittedBy?.name}</Typography>
-                  </Link>
-                </Grid>
-              )}
+            {!clientView && !mdDownHidden && (
+              <Divider orientation="vertical" flexItem sx={{ margin: '-20px 10px' }} />
+            )}
+            {task.submittedBy && !mdUpHidden && (
+              <Grid item sm={12} md={12} lg={12} xs={12} className={classes.submitedBy}>
+                <Typography variant="caption">Submitted by</Typography>
+                {' '}
+                <Link to={`/user/${task.submittedBy.id}`}>
+                  <Typography variant="caption">{task.submittedBy?.name}</Typography>
+                </Link>
+              </Grid>
+            )}
           </Grid>
         </Grid>
         {!mdUpHidden && (
-          <Grid
-            item
-            xs={2}
-            style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}
-            data-testid="task_status_mobile"
-          >
-            <Chip
-              data-testid="task_status_chip_mobile"
-              label={taskStatusCharacter()}
-              className={task?.status ? classes[task.status] : classes.not_started}
-              style={{ color: 'white' }}
-              size="small"
-            />
+          <Grid item data-testid="open_details" xs={2}>
+            <Grid
+              container
+              style={{ textAlign: 'right' }}
+              alignItems="center"
+              justifyContent="center"
+            >
+              <Grid item xs={8} style={{ textAlign: 'right' }}>
+                <IconButton color="primary" size="large" onClick={() => handleClick()}>
+                  <WidgetsIcon />
+                </IconButton>
+              </Grid>
+              <Grid item xs={4}>
+                {urlParams.type === 'drc' && taskCommentHasReply && (
+                  <Badge color="warning" badgeContent="R" />
+                )}
+              </Grid>
+            </Grid>
           </Grid>
         )}
-        {!clientView &&
-          !mdUpHidden && (
-            <Grid item md={1} xs={1} style={{ display: 'flex', alignItems: 'center' }}>
-              <Box className={classes.taskMenuIcon}>
-                <IconButton
-                  aria-controls="simple-menu"
-                  aria-haspopup="true"
-                  data-testid="task-item-menu"
-                  dataid={task.id}
-                  onClick={event => menuData.handleTodoMenu(event, task)}
-                  color="primary"
-                  size="large"
-                  disabled={location.pathname === '/tasks/task_lists'} // Temporary hack until task lists menu items are added
-                >
-                  <MoreVertIcon />
-                </IconButton>
-              </Box>
-            </Grid>
-          )}
+        {!clientView && !mdUpHidden && (
+          <Grid item md={1} xs={1} style={{ display: 'flex', alignItems: 'center' }}>
+            <Box className={classes.taskMenuIcon}>
+              <IconButton
+                aria-controls="simple-menu"
+                aria-haspopup="true"
+                data-testid="task-item-menu"
+                dataid={task.id}
+                onClick={event => menuData.handleTodoMenu(event, task)}
+                color="primary"
+                size="large"
+                disabled={location.pathname === '/tasks/task_lists'} // Temporary hack until task lists menu items are added
+              >
+                <MoreVertIcon />
+              </IconButton>
+            </Box>
+          </Grid>
+        )}
         {!mdDownHidden && (
           <Grid
             item
@@ -230,6 +206,7 @@ export default function TaskDataList({
             md={2}
             xs={12}
             style={{ display: 'flex', alignItems: 'center' }}
+            className={overDue ? classes.overDueColor : undefined}
           >
             <Typography variant="body2" component="span">
               {task.dueDate && t('task:sub_task.due')}
@@ -237,186 +214,54 @@ export default function TaskDataList({
             </Typography>
           </Grid>
         )}
-        {/* This will be changed to use a tooltip. Commenting out for now for reference */}
-        {/* <Grid
+        <Grid
           item
           md={1}
           xs={4}
-          data-testid="task_assignee"
-          style={{ display: 'flex', alignItems: 'center' }}
-        >
-          <Hidden smDown>
-            {task.assignees.length > 0 && (
-              <Grid container style={{ paddingLeft: '5px' }}>
-                {task.assignees.slice(0, 2).map(user => (
-                  <Grid item md={4} xs={2} key={user.id}>
-                    <LinkToUserAvatar key={user.id} user={user} />
-                  </Grid>
-                ))}
-                <Grid item md={2} xs={1}>
-                  {task.assignees.length > 2 && (
-                    <IconButton
-                      aria-controls="more-assignees"
-                      aria-haspopup="true"
-                      data-testid="more-assignees"
-                      style={{
-                        padding: 0,
-                        margin: 0,
-                        fontSize: '8px',
-                        color: '#000000',
-                        opacity: '0.2'
-                      }}
-                    >
-                      <MoreHorizIcon />
-                    </IconButton>
-                  )}
-                </Grid>
-              </Grid>
-            )}
-          </Hidden>
-        </Grid> */}
-        <Grid
-          item
-          data-testid="task_details_section"
-          md={3}
-          xs={10}
-          className={classes.detailsSection}
-        >
-          <Grid
-            container
-            data-testid="progress_bar_small_screen"
-            style={{ display: 'flex', justifyContent: 'flex-end' }}
-          >
-            {!clientView && task?.subTasksCount > 0 && (
-              <Grid item md={2} xs={4} className={classes.progressBar}>
-                {!mdUpHidden && <CustomProgressBar task={task} smDown />}
-              </Grid>
-            )}
-
-            <Grid item md={10} xs={6}>
-              <Grid
-                container
-                style={{ display: 'flex', justifyContent: 'space-between' }}
-                className={classes.detailsContainer}
-              >
-                {urlParams.type === 'drc' ? (
-                  <Grid item md={2} xs={1} style={{ textAlign: 'right' }}>
-                    {taskCommentHasReply && (
-                      <Badge color="warning" badgeContent={t('task:misc.reply')} />
-                    )}
-                  </Grid>
-                ) : (
-                  <>
-                    <Grid item md={2} xs={1}>
-                      <IconButton
-                        aria-controls="task-subtasks-icon"
-                        aria-haspopup="true"
-                        data-testid="task_subtasks"
-                        onClick={() => handleClick('subtasks')}
-                        color="primary"
-                        size="large"
-                      >
-                        <AccountTreeIcon
-                          fontSize="small"
-                          color={task?.subTasksCount ? 'primary' : 'disabled'}
-                        />
-                      </IconButton>
-                    </Grid>
-                    <Grid
-                      item
-                      md={1}
-                      xs={1}
-                      className={classes.iconItem}
-                      style={{ marginLeft: '-20px' }}
-                      color="primary"
-                    >
-                      <span data-testid="task-subtasks-count">{task?.subTasksCount}</span>
-                    </Grid>
-                  </>
-                )}
-
-                <Grid item md={2} xs={1}>
-                  <IconButton
-                    aria-controls="task-comment-icon"
-                    aria-haspopup="true"
-                    data-testid="task_comments"
-                    onClick={() => handleClick('comments')}
-                    color="primary"
-                    size="large"
-                  >
-                    <QuestionAnswerIcon
-                      fontSize="small"
-                      color={data?.taskComments.length ? 'primary' : 'disabled'}
-                    />
-                  </IconButton>
-                </Grid>
-
-                <Grid
-                  item
-                  md={1}
-                  xs={1}
-                  className={classes.iconItem}
-                  style={{ marginLeft: '-20px' }}
-                >
-                  <span data-testid="task-comment">{data?.taskComments.length || 0}</span>
-                </Grid>
-
-                <Grid item md={2} xs={1}>
-                  <IconButton
-                    key={task.id}
-                    aria-controls="task-attach-file-icon"
-                    aria-haspopup="true"
-                    data-testid="task_attach_file"
-                    onClick={() => handleClick('documents')}
-                    color="primary"
-                    size="large"
-                  >
-                    <AttachFileIcon
-                      fontSize="small"
-                      color={task?.attachments?.length ? 'primary' : 'disabled'}
-                    />
-                  </IconButton>
-                </Grid>
-                <Grid
-                  item
-                  md={1}
-                  xs={1}
-                  className={classes.iconItem}
-                  style={{ marginLeft: '-25px' }}
-                >
-                  <span data-testid="file_attachments_total">{task.attachments?.length || 0}</span>
-                </Grid>
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
-        <Grid
-          item
-          md={1}
           style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}
           data-testid="progress_bar_large_screen"
         >
-          {!clientView &&
-            task?.subTasksCount > 0 &&
-            !mdDownHidden && <CustomProgressBar task={task} smDown={false} />}
+          {!clientView && task?.subTasksCount > 0 && (
+            <CustomProgressBar task={task} smDown={false} />
+          )}
         </Grid>
-        <Grid item md={1} />
+        <Grid item md={1} xs={1} />
         <Grid
           item
           md={1}
-          style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}
+          xs={5}
+          style={{ display: 'flex', alignItems: 'center', justifyContent: 'right' }}
           data-testid="task_status"
         >
-          {!mdDownHidden && (
-            <Chip
-              data-testid="task_status_chip"
-              label={task?.status ? t(`task.${task.status}`) : t('task.not_started')}
-              className={task?.status ? classes[task.status] : classes.not_started}
-              style={{ color: 'white' }}
-              size="small"
-            />
-          )}
+          <Chip
+            data-testid="task_status_chip"
+            label={task?.status ? t(`task.${task.status}`) : t('task.not_started')}
+            className={task?.status ? classes[task.status] : classes.not_started}
+            style={{ color: 'white' }}
+            size="small" 
+          />
         </Grid>
+        {!mdDownHidden && (
+          <Grid item data-testid="open_details" md={1}>
+            <Grid
+              container
+              style={{ textAlign: 'right' }}
+              alignItems="center"
+              justifyContent="center"
+            >
+              <Grid item md={11} style={{ textAlign: 'right' }}>
+                <IconButton color="primary" size="large" onClick={() => handleClick()}>
+                  <WidgetsIcon />
+                </IconButton>
+              </Grid>
+              <Grid item md={1}>
+                {urlParams.type === 'drc' && taskCommentHasReply && (
+                  <Badge color="warning" badgeContent="R" />
+                )}
+              </Grid>
+            </Grid>
+          </Grid>
+        )}
         <Grid
           item
           md={1}
@@ -524,6 +369,9 @@ const useStyles = makeStyles(() => ({
   },
   complete: {
     background: '#40A06A'
+  },
+  overDueColor: {
+    color: '#C47275'
   },
   detailsContainer: {
     '@media (min-device-width: 768px) and (max-device-height: 1024px) and (orientation: portrait)': {
