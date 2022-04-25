@@ -12,7 +12,6 @@ export default function LeadEvent({ leadEvent }) {
         <>
           <Grid
             container
-            spacing={1}
             style={{
               marginBottom: '20px'
             }}
@@ -27,17 +26,17 @@ export default function LeadEvent({ leadEvent }) {
                 }}
               >
                 <Grid item md={5} xs={12}>
-                  <Typography variant="body2" data-testid="events">
+                  <Typography variant="body2" data-testid="event-name">
                     {leadEvent?.name}
                   </Typography>
                 </Grid>
                 <Grid item md={3} xs={12}>
-                  <Typography variant="body2" data-testid="events">
+                  <Typography variant="body2" data-testid="event-date">
                     {dateToString(leadEvent?.createdAt)}
                   </Typography>
                 </Grid>
                 <Grid item md={4} xs={12}>
-                  <Typography variant="body2" data-testid="events">
+                  <Typography variant="body2" data-testid="event-created-by">
                     {`${t('lead_management.entered_by')}  ${leadEvent?.actingUser?.name}`}
                   </Typography>
                 </Grid>

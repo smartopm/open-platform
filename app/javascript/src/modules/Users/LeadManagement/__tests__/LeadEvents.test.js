@@ -15,7 +15,10 @@ import MockedThemeProvider from '../../../__mocks__/mock_theme';
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 
 describe('LeadEvents Page', () => {
-  const dataMock = [
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+  const eventRequestDataMock = [
     {
       request: {
         query: CreateEvent,
@@ -32,7 +35,29 @@ describe('LeadEvents Page', () => {
           }
         }
       }
-    },
+    }
+  ];
+
+  const meetingRequestDataMock = [
+    {
+      request: {
+        query: CreateEvent,
+        variables: {
+          userId: 'c96f64bb-e3b4-42ff-b6a9-66889ec79e99',
+          name: 'First Tilisi meeting',
+          logType: 'meeting'
+        }
+      },
+      result: {
+        data: {
+          leadLogCreate: {
+            success: true
+          }
+        }
+      }
+    }
+  ];
+  const queryRequestMock = [
     {
       request: {
         query: UserEventsQuery,
@@ -96,9 +121,9 @@ describe('LeadEvents Page', () => {
     }
   ];
 
-  it('LeadEvents component', async () => {
+  it('Creates an event', async () => {
     render(
-      <MockedProvider mocks={dataMock} addTypename={false}>
+      <MockedProvider mocks={(eventRequestDataMock, queryRequestMock)} addTypename={false}>
         <Context.Provider value={authState}>
           <BrowserRouter>
             <MockedThemeProvider>
@@ -117,6 +142,7 @@ describe('LeadEvents Page', () => {
       const eventTextField = screen.getByLabelText('lead_management.event_name');
       userEvent.type(eventTextField, 'First Tilisi run');
       const saveButton = screen.getAllByRole('button')[0];
+
       // user input should set add button enabled
       expect(saveButton).toBeEnabled();
     });

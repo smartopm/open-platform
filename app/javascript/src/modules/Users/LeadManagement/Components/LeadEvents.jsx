@@ -3,7 +3,7 @@ import { useMutation, useQuery } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import TextField from '@mui/material/TextField';
-import { Grid, Typography, Button, Divider } from '@mui/material';
+import { Grid, Typography, Divider } from '@mui/material';
 import CreateEvent from '../graphql/mutations';
 import { UserEventsQuery, UserMeetingsQuery, UserSignedDealsQuery } from '../graphql/queries';
 import CenteredContent from '../../../../shared/CenteredContent';
@@ -11,6 +11,7 @@ import { Spinner } from '../../../../shared/Loading';
 import MessageAlert from '../../../../components/MessageAlert';
 import { formatError } from '../../../../utils/helpers';
 import LeadEvent from './LeadEvent';
+import ButtonComponent from '../../../../shared/buttons/Button';
 
 export default function LeadEvents({ userId }) {
   const [eventName, setEventName] = useState('');
@@ -118,7 +119,7 @@ export default function LeadEvents({ userId }) {
         open={!!message.detail}
         handleClose={() => setMessage({ ...message, detail: '' })}
       />
-      <Grid container spacing={1}>
+      <Grid container>
         <Grid item md={12} xs={12}>
           <Grid item md={12} xs={12}>
             <Typography variant="h6" data-testid="events">
@@ -146,14 +147,12 @@ export default function LeadEvents({ userId }) {
                   onChange={handleEventNameChange}
                   value={eventName || ''}
                   variant="outlined"
-                  role="textbox"
                   fullWidth
                   size="small"
                   margin="normal"
                   required
                   inputProps={{
                     'aria-label': t('lead_management.event_name'),
-                    'data-testid': 'lead-event-name',
                     style: { fontSize: '15px' }
                   }}
                   InputLabelProps={{ style: { fontSize: '12px' } }}
@@ -168,19 +167,14 @@ export default function LeadEvents({ userId }) {
                   paddingTop: '25px'
                 }}
               >
-                <Button
+                <ButtonComponent
                   variant="contained"
-                  type="submit"
-                  role="button"
-                  disableElevation
-                  disabled={!eventName.trim()}
                   color="primary"
-                  aria-label={t('lead_management.add')}
-                  data-testid="event-add-button"
-                  onClick={handleSubmitEvent}
-                >
-                  {t('lead_management.add')}
-                </Button>
+                  buttonText={t('lead_management.add')}
+                  handleClick={handleSubmitEvent}
+                  disabled={!eventName.trim()}
+                  disableElevation
+                />
               </Grid>
             </Grid>
           </Grid>
@@ -206,7 +200,7 @@ export default function LeadEvents({ userId }) {
 
       {/* Lead Meetings section */}
 
-      <Grid container spacing={1}>
+      <Grid container>
         <Grid item md={12} xs={12}>
           <Grid item md={12} xs={12}>
             <Typography variant="h6" data-testid="meetings">
@@ -234,14 +228,12 @@ export default function LeadEvents({ userId }) {
                   onChange={handleMeetingNameChange}
                   value={meetingName || ''}
                   variant="outlined"
-                  role="textbox"
                   fullWidth
                   size="small"
                   margin="normal"
                   required
                   inputProps={{
                     'aria-label': t('lead_management.meeting_name'),
-                    'data-testid': 'lead-meeting-name',
                     style: { fontSize: '15px' }
                   }}
                   InputLabelProps={{ style: { fontSize: '12px' } }}
@@ -256,19 +248,15 @@ export default function LeadEvents({ userId }) {
                   paddingTop: '25px'
                 }}
               >
-                <Button
+                <ButtonComponent
                   variant="contained"
-                  type="submit"
-                  role="button"
-                  disabled={!meetingName.trim()}
+                  data-testid="save-meeting-button"
                   color="primary"
+                  buttonText={t('lead_management.add')}
+                  handleClick={handleSubmitMeeting}
+                  disabled={!meetingName.trim()}
                   disableElevation
-                  aria-label={t('lead_management.add')}
-                  data-testid="meeting-add-button"
-                  onClick={handleSubmitMeeting}
-                >
-                  {t('lead_management.add')}
-                </Button>
+                />
               </Grid>
             </Grid>
           </Grid>
@@ -288,9 +276,13 @@ export default function LeadEvents({ userId }) {
         <CenteredContent>{t('lead_management.no_lead_meetings')}</CenteredContent>
       )}
 
+      <Grid item md={12} xs={12} style={{ marginBottom: '10px' }}>
+        <Divider />
+      </Grid>
+
       {/* Lead Deals section */}
 
-      <Grid container spacing={1}>
+      <Grid container>
         <Grid item md={12} xs={12}>
           <Grid item md={12} xs={12}>
             <Typography variant="h6" data-testid="deals">
@@ -318,14 +310,12 @@ export default function LeadEvents({ userId }) {
                   onChange={handleDealNameChange}
                   value={dealName || ''}
                   variant="outlined"
-                  role="textbox"
                   fullWidth
                   size="small"
                   margin="normal"
                   required
                   inputProps={{
                     'aria-label': t('lead_management.deal_name'),
-                    'data-testid': 'lead-deal-name',
                     style: { fontSize: '15px' }
                   }}
                   InputLabelProps={{ style: { fontSize: '12px' } }}
@@ -340,19 +330,14 @@ export default function LeadEvents({ userId }) {
                   paddingTop: '25px'
                 }}
               >
-                <Button
+                <ButtonComponent
                   variant="contained"
-                  type="submit"
-                  role="button"
+                  color="primary"
+                  buttonText={t('lead_management.add')}
+                  handleClick={handleSubmitDeal}
                   disabled={!dealName.trim()}
                   disableElevation
-                  color="primary"
-                  aria-label={t('lead_management.add')}
-                  data-testid="meeting-add-button"
-                  onClick={handleSubmitDeal}
-                >
-                  {t('lead_management.add')}
-                </Button>
+                />
               </Grid>
             </Grid>
           </Grid>
