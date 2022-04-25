@@ -16,6 +16,31 @@ module Comments
 
     belongs_to :note_entity, polymorphic: true, optional: true
 
+    class << self
+      def status_stats(current_user)
+        stats = { sent: 0, received: 0, resolved: 0 }
+
+        all.group_by(&:grouping_id).each do |_grouping_id, comments|
+          status = comment_status(comments, current_user)
+          stats[status.to_sym] += 1
+        end
+
+        stats
+      end
+
+      private
+
+      def comment_status(grouped_comments, current_user)
+        return 'resolved' if grouped_comments.all?(&:replied_at)
+
+        if grouped_comments.first.user_id == current_user.id
+          'sent'
+        else
+          'received'
+        end
+      end
+    end
+
     private
 
     def log_create_event

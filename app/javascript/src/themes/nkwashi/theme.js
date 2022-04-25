@@ -23,19 +23,24 @@ export function theme(communityThemeColor) {
         main: themeColor.secondaryColor
       },
       success: {
-        main: '#67B388'
+        main: '#67B388',
+        contrastText: '#fff',
       },
       warning: {
-        main: '#F3D158'
+        main: '#F3D158',
+        contrastText: '#fff',
       },
       error: {
-        main: '#D15249'
+        main: '#D15249',
+        contrastText: '#fff',
       },
       info: {
-        main: '#598EC1'
+        main: '#598EC1',
+        contrastText: '#fff',
       },
       default: {
-        main: '#FDFDFD'
+        main: '#FDFDFD',
+        contrastText: '#fff',
       }
     },
     breakpoints: {

@@ -1,7 +1,6 @@
 import React, { Fragment, useState } from 'react';
 import {
   Divider,
-  Link,
   List,
   ListItem,
   ListItemText,
@@ -9,7 +8,9 @@ import {
   Card,
   CardContent,
   Container,
-  Grid
+  Grid,
+  Chip,
+  Stack
 } from '@mui/material';
 import { useQuery } from 'react-apollo';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -17,12 +18,16 @@ import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@mui/styles';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 
-import { useHistory } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 import { formatError } from '../../../../utils/helpers';
 import CenteredContent from '../../../../shared/CenteredContent';
 import { Spinner } from '../../../../shared/Loading';
 import SpeedDial from '../../../../shared/buttons/SpeedDial';
-import { TaskQuarterySummaryQuery, ProjectsStatsQuery } from '../graphql/process_queries';
+import {
+  TaskQuarterySummaryQuery,
+  ProjectsStatsQuery,
+  ReplyCommentStatQuery
+} from '../graphql/process_queries';
 import {
   filterProjectAndStages,
   calculateOpenProjectsByStage,
@@ -35,7 +40,7 @@ export default function AdminDashboard() {
   const classes = useStyles();
   const matches = useMediaQuery('(max-width:800px)');
   const history = useHistory();
-  const quarters = ['Q1', 'Q2', 'Q3', 'Q4']
+  const quarters = ['Q1', 'Q2', 'Q3', 'Q4'];
   const [openSpeedDial, setOpenSpeedDial] = useState(false);
 
   const { loading: summaryLoading, error: summaryError, data: summaryData } = useQuery(
@@ -52,6 +57,10 @@ export default function AdminDashboard() {
       fetchPolicy: 'cache-and-network'
     }
   );
+
+  const { data: commentStatData } = useQuery(ReplyCommentStatQuery, {
+    fetchPolicy: 'cache-and-network'
+  });
 
   function tasksPerQuarter(processStats, quarter) {
     const quarterStats = processStats?.find(stats => stats[1] === quarter);
@@ -151,11 +160,11 @@ export default function AdminDashboard() {
       icon: <VisibilityIcon />,
       name: t('process:templates.process_templates'),
       handleClick: () => history.push('/processes/templates'),
-      isVisible: true, // TODO: Use permission if needed
+      isVisible: true // TODO: Use permission if needed
     }
   ];
 
-  function cardName(name){
+  function cardName(name) {
     if (quarters.includes(name)) return name;
 
     return 'ytd';
@@ -175,18 +184,54 @@ export default function AdminDashboard() {
           <Typography variant="h4" className={classes.title}>
             {t('processes.processes')}
           </Typography>
-          <Link href="/processes/drc/projects" underline="hover">
-            <Typography className={classes.processTitle} color="primary" variant="h5">
-              {t('processes.drc_process')}
-            </Typography>
-          </Link>
         </Grid>
-        <Grid item md={1} sx={2}>
+        <Grid item md={1} xs={2}>
           <SpeedDial
             open={openSpeedDial}
             handleSpeedDial={() => setOpenSpeedDial(!openSpeedDial)}
             actions={accessibleMenus(speedDialActions)}
           />
+        </Grid>
+      </Grid>
+      <Grid container style={{ marginTop: '10px' }}>
+        <Grid item md={7} xs={12}>
+          <Link to="/processes/drc/projects" underline="hover">
+            <Typography className={classes.processTitle} color="primary" variant="h5">
+              {t('processes.drc_process')}
+            </Typography>
+          </Link>
+        </Grid>
+        <Grid item md={5} xs={12}>
+          {commentStatData && (
+            <Stack direction="row" spacing={1} justifyContent="center" alignItems="center">
+              <Typography style={{ fontSize: '14px' }}>
+                {t('processes.replies_requested')}
+              </Typography>
+              <Chip
+                label={t('task:misc.sent', { count: commentStatData.replyCommentStats.sent })}
+                color="info"
+                size="small"
+                style={{ fontSize: '14px' }}
+                data-testid="sent-chip"
+              />
+              <Chip
+                label={t('task:misc.received', {
+                  count: commentStatData.replyCommentStats.received
+                })}
+                color="warning"
+                size="small"
+                style={{ fontSize: '14px' }}
+              />
+              <Chip
+                label={t('task:misc.resolved', {
+                  count: commentStatData.replyCommentStats.resolved
+                })}
+                color="success"
+                size="small"
+                style={{ fontSize: '14px' }}
+              />
+            </Stack>
+          )}
         </Grid>
       </Grid>
       <Grid container justifyContent="space-between" spacing={4}>
@@ -204,7 +249,7 @@ export default function AdminDashboard() {
                 {matches && <Grid item xs={1} />}
                 {cards.map((card, index) => (
                   <Grid
-                  // eslint-disable-next-line react/no-array-index-key
+                    // eslint-disable-next-line react/no-array-index-key
                     key={index}
                     item
                     xs={1.5}
@@ -317,7 +362,7 @@ export default function AdminDashboard() {
                 {matches && <Grid item xs={1} />}
                 {lifeTimeCards.map((card, index) => (
                   <Grid
-                  // eslint-disable-next-line react/no-array-index-key
+                    // eslint-disable-next-line react/no-array-index-key
                     key={index}
                     item
                     xs={2}
