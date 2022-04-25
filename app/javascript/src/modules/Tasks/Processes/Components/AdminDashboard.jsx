@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from 'react';
 import {
   Divider,
-  Link,
+  // Link,
   List,
   ListItem,
   ListItemText,
@@ -19,7 +19,7 @@ import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@mui/styles';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 
-import { useHistory } from 'react-router-dom';
+import { useHistory, Link } from 'react-router-dom';
 import { formatError } from '../../../../utils/helpers';
 import CenteredContent from '../../../../shared/CenteredContent';
 import { Spinner } from '../../../../shared/Loading';
@@ -186,7 +186,7 @@ export default function AdminDashboard() {
             {t('processes.processes')}
           </Typography>
         </Grid>
-        <Grid item md={1} sx={2}>
+        <Grid item md={1} xs={2}>
           <SpeedDial
             open={openSpeedDial}
             handleSpeedDial={() => setOpenSpeedDial(!openSpeedDial)}
@@ -196,7 +196,7 @@ export default function AdminDashboard() {
       </Grid>
       <Grid container style={{ marginTop: '10px' }}>
         <Grid item md={7} xs={12}>
-          <Link href="/processes/drc/projects" underline="hover">
+          <Link to="/processes/drc/projects" underline="hover">
             <Typography className={classes.processTitle} color="primary" variant="h5">
               {t('processes.drc_process')}
             </Typography>
