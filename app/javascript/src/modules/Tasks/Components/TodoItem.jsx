@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import { useLazyQuery } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import makeStyles from '@mui/styles/makeStyles';
-import { useLocation } from 'react-router';
+import { useLocation, useHistory } from 'react-router';
 import TaskDataList from './TaskDataList';
 import FileUploader from './FileUploader';
 import { objectAccessor, sortTaskOrder } from '../../../utils/helpers';
@@ -38,6 +38,7 @@ export default function TodoItem({
   const [isUpdating, setIsUpdating] = useState(false);
   const anchorElOpen = Boolean(anchorEl);
   const { t } = useTranslation('common');
+  const history = useHistory();
   const location = useLocation();
   const authState = React.useContext(AuthStateContext);
   const taskPermissions = authState?.user?.permissions?.find(
@@ -104,13 +105,17 @@ export default function TodoItem({
       {
         content: t('menu.edit_task_list'),
         isAdmin: true,
-        handleClick: () => {}
+        handleClick: () => history.push({
+          pathname: `/tasks/task_lists/edit/${task?.id}`,
+          state: { task: { id: task?.id, body: task?.body } }
+        })
       },
-      {
-        content: t('menu.delete_task_list'),
-        isAdmin: true,
-        handleClick: () => {}
-      }
+      // TODO: Implement in issue #2371 (deleting task list)
+      // {
+      //   content: t('menu.delete_task_list'),
+      //   isAdmin: true,
+      //   handleClick: () => {}
+      // }
     ]
   }
 

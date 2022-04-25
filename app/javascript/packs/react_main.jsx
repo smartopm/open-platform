@@ -242,6 +242,11 @@ const App = () => {
                                   path="/tasks/task_lists/new"
                                   component={TaskListCreate}
                                 />
+                                <Route
+                                  exact
+                                  path="/tasks/task_lists/edit/:taskId"
+                                  component={TaskListCreate}
+                                />
                                 <Route path="/tasks/task_lists/:taskId" component={AddSubTasks} />
 
                                 {/* end of redirects */}

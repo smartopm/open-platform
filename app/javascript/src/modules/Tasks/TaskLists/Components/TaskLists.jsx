@@ -26,6 +26,7 @@ export default function TaskLists() {
     },
     fetchPolicy: 'cache-and-network'
   });
+
   function redirectToTaskListCreatePage() {
     history.push('/tasks/task_lists/new');
   }

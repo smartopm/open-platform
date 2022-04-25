@@ -8,7 +8,7 @@ RSpec.describe Mutations::Note::NoteListUpdate do
     let!(:permission) do
       create(:permission, module: 'note',
                           role: admin_role,
-                          permissions: %w[can_update_note_list])
+                          permissions: %w[can_edit_task_list])
     end
     let(:user) { create(:user_with_community) }
     let(:community) { user.community }

@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import TextField from '@mui/material/TextField';
-import { Link, useHistory } from 'react-router-dom';
+import { Link, useHistory, useLocation } from 'react-router-dom';
 import { Breadcrumbs, Grid, Typography, Button, useMediaQuery } from '@mui/material';
 import { useMutation } from 'react-apollo';
 import makeStyles from '@mui/styles/makeStyles';
@@ -19,30 +19,57 @@ export default function TaskListCreate() {
   const [loadingStatus, setLoadingStatus] = useStateIfMounted(false);
   const [errors, setErr] = useState('');
   const [createTaskList] = useMutation(CreateTaskList);
-  const [parentTaskData, setParentTaskData] = useStateIfMounted(null);
+  const [parentTaskData, setParentTaskData] = useStateIfMounted({});
   const history = useHistory();
+  const location = useLocation();
+  const [action, setAction] = useState('create');
+
+  useEffect(() => {
+    if (location.pathname.match('/tasks/task_lists/edit')) { // TODO: Use stronger match
+      setParentTaskData(location?.state?.task);
+      setBody(location?.state?.task?.body);
+      setAction('edit');
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.pathname]);
 
   function handleChange(event) {
     setBody(event.target.value);
   }
 
-  function handleSubmit(event) {
-    event.preventDefault();
-    setLoadingStatus(true);
-
+  function handleCreate() {
     createTaskList({
       variables: {
         body
       }
     })
-      .then(data => {
-        setParentTaskData(data?.data?.taskListCreate?.note);
-        history.push(`/tasks/task_lists/${data?.data?.taskListCreate?.note?.id}`);
-        setLoadingStatus(false);
-      })
-      .catch(err => {
-        setErr(err);
-      });
+    .then(data => {
+      setParentTaskData(data?.data?.taskListCreate?.note);
+      history.push(`/tasks/task_lists/${data?.data?.taskListCreate?.note?.id}`);
+      setLoadingStatus(false);
+    })
+    .catch(err => {
+      setErr(err);
+    });
+  }
+
+  function handleUpdate() {
+    // TODO: Handle update
+    console.log('Updating body to ', body);
+    history.push({
+      pathname: `/tasks/task_lists/${parentTaskData?.id}`,
+      state: { task: parentTaskData }
+    })
+  }
+
+  function handleSubmit(event) {
+    event.preventDefault();
+    setLoadingStatus(true);
+    if (action === 'edit') {
+      handleUpdate();
+    } else {
+      handleCreate();
+    }
   }
 
   if (loadingStatus) return <Spinner />;
@@ -78,66 +105,62 @@ export default function TaskListCreate() {
             </Grid>
           </Grid>
         </Grid>
-
-        {parentTaskData === null && (
-          <Grid item md={12} xs={12}>
-            <Grid container spacing={2}>
-              <Grid item md={6} xs={12}>
-                <Grid container spacing={2}>
-                  <Grid item md={12} xs={12}>
-                    <Typography variant="body1">{t('task_lists.step_1')}</Typography>
-                  </Grid>
-                  <Grid item md={12} xs={12} style={{ paddingTop: 0 }}>
-                    <TextField
-                      name="body"
-                      label={t('task_lists.task_list_name')}
-                      style={{ width: '100%' }}
-                      onChange={handleChange}
-                      value={body || ''}
-                      variant="outlined"
-                      role="textbox"
-                      fullWidth
-                      size="small"
-                      margin="normal"
-                      required
-                      inputProps={{
-                        'aria-label': t('task_lists.task_list_name'),
-                        'data-testid': 'task-list-name',
-                        style: { fontSize: '15px' }
-                      }}
-                      InputLabelProps={{ style: { fontSize: '12px' } }}
-                    />
-                  </Grid>
+        <Grid item md={12} xs={12}>
+          <Grid container spacing={2}>
+            <Grid item md={6} xs={12}>
+              <Grid container spacing={2}>
+                <Grid item md={12} xs={12}>
+                  <Typography variant="body1">{t('task_lists.step_1')}</Typography>
+                </Grid>
+                <Grid item md={12} xs={12} style={{ paddingTop: 0 }}>
+                  <TextField
+                    name="body"
+                    label={t('task_lists.task_list_name')}
+                    style={{ width: '100%' }}
+                    onChange={handleChange}
+                    value={body || ''}
+                    variant="outlined"
+                    role="textbox"
+                    fullWidth
+                    size="small"
+                    margin="normal"
+                    required
+                    inputProps={{
+                      'aria-label': t('task_lists.task_list_name'),
+                      'data-testid': 'task-list-name',
+                      style: { fontSize: '15px' }
+                    }}
+                    InputLabelProps={{ style: { fontSize: '12px' } }}
+                  />
                 </Grid>
               </Grid>
-              <Grid item md={6} xs={12}>
-                <Grid container spacing={2}>
-                  <Grid
-                    item
-                    md={12}
-                    xs={12}
-                    style={{ marginLeft: isMobile ? 0 : 8, marginTop: !isMobile && 41 }}
+            </Grid>
+            <Grid item md={6} xs={12}>
+              <Grid container spacing={2}>
+                <Grid
+                  item
+                  md={12}
+                  xs={12}
+                  style={{ marginLeft: isMobile ? 0 : 8, marginTop: !isMobile && 41 }}
+                >
+                  <Button
+                    variant="contained"
+                    type="submit"
+                    role="button"
+                    disabled={!body.length}
+                    disableElevation
+                    color="primary"
+                    aria-label={t('task_lists.save')}
+                    data-testid="task-list-save-button"
+                    onClick={handleSubmit}
                   >
-                    <Button
-                      variant="contained"
-                      type="submit"
-                      role="button"
-                      disabled={!body.length}
-                      disableElevation
-                      color="primary"
-                      aria-label={t('task_lists.save')}
-                      data-testid="task-list-save-button"
-                      onClick={handleSubmit}
-                    >
-                      {t('task_lists.save')}
-                    </Button>
-                  </Grid>
+                    {t('task_lists.save')}
+                  </Button>
                 </Grid>
               </Grid>
             </Grid>
           </Grid>
-        )}
-
+        </Grid>
         <br />
         <br />
       </Grid>
