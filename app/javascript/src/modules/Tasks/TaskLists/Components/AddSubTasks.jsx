@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { Breadcrumbs, Grid, Typography, Dialog, DialogTitle, DialogContent } from '@mui/material';
+import { Breadcrumbs, Grid, Typography, Dialog, DialogContent } from '@mui/material';
 import { useQuery, useMutation } from 'react-apollo';
 import makeStyles from '@mui/styles/makeStyles';
 import { useTranslation } from 'react-i18next';
@@ -80,11 +80,6 @@ export default function AddSubTasks() {
           maxWidth="lg"
           aria-labelledby="task_modal"
         >
-          <DialogTitle id="task_modal">
-            <CenteredContent>
-              <span>{t('task.task_modal_create_text')}</span>
-            </CenteredContent>
-          </DialogTitle>
           <DialogContent>
             <TaskForm
               refetch={refetch}
