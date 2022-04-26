@@ -528,7 +528,7 @@ TaskDataList.propTypes = {
   alignStyles: PropTypes.object,
 };
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   taskBody: {
     maxWidth: '42ch',
     overflow: 'hidden',
@@ -568,7 +568,7 @@ const useStyles = makeStyles(() => ({
     background: '#40A06A'
   },
   overDueColor: {
-    color: '#C47275'
+    color: theme.palette.error.main
   },
   detailsContainer: {
     '@media (min-device-width: 768px) and (max-device-height: 1024px) and (orientation: portrait)': {

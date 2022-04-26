@@ -43,7 +43,7 @@ const useStyles = primaryColor =>
       borderColor: primaryColor ? theme.palette.primary.main : undefined
     },
     lateCard: {
-      borderLeft: '5px solid #CD504A'
+      borderLeft: `5px solid ${theme.palette.error.main}`
     }
   }));
 
