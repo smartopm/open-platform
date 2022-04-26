@@ -12,7 +12,7 @@ export default function StatusBadge({ label }) {
   switch (label.toLowerCase()) {
     case 'pending':
       return (
-        <p className={css(styles.badge, styles.statusBadgePending)} data-testid='pending_status'>{label}</p>
+        <p className={css(styles.badge, styles.statusBadgePending)}>{label}</p>
       )
     case 'valid':
       return (
@@ -23,17 +23,17 @@ export default function StatusBadge({ label }) {
       )
     case 'expired':
       return (
-        <p className={css(styles.badge, styles.statusBadgeInvalid)} data-testid='expired_status'>{label}</p>
+        <p className={css(styles.badge, styles.statusBadgeInvalid)}>{label}</p>
       )
     case 'banned':
       return (
-        <p className={css(styles.badge, styles.statusBadgeBanned)} data-testid='banned_status'>
+        <p className={css(styles.badge, styles.statusBadgeBanned)}>
           Not Allowed
         </p>
       )
     case 'verified': 
       return (
-        <p className={css(styles.badge, styles.statusBadgeValid)} data-testid='verified_status'>
+        <p className={css(styles.badge, styles.statusBadgeValid)}>
           <i className={`material-icons ${css(styles.icon)}`}>{label}</i>
           {label}
         </p>
