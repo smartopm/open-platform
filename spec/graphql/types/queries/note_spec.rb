@@ -218,8 +218,9 @@ RSpec.describe Types::Queries::Note do
           $step: String,
           $completedPerQuarter: String,
           $submittedPerQuarter: String,
-          $lifeTimeCategory: String
-          $processType: String
+          $lifeTimeCategory: String,
+          $processType: String,
+          $repliesRequestedStatus: String
         ) {
           projects(
             offset: $offset,
@@ -227,8 +228,9 @@ RSpec.describe Types::Queries::Note do
             step: $step,
             completedPerQuarter: $completedPerQuarter,
             submittedPerQuarter: $submittedPerQuarter,
-            lifeTimeCategory: $lifeTimeCategory
-            processType: $processType
+            lifeTimeCategory: $lifeTimeCategory,
+            processType: $processType,
+            repliesRequestedStatus: $repliesRequestedStatus
           ){
               #{task_fragment}
             }
@@ -1367,6 +1369,40 @@ RSpec.describe Types::Queries::Note do
         end
       end
 
+      context 'when replies_requested_status is in the arguments' do
+        before do
+          form
+          another_form
+          process
+          form_user
+          another_form_user
+          first_note.update(form_user_id: form_user.id)
+
+          second_note.update(form_user_id: another_form_user.id, completed: true)
+
+          create(
+            :note_comment,
+            note: first_note,
+            body: 'Note 1 comment',
+            user: site_worker,
+            status: 'active',
+            reply_required: true,
+            grouping_id: '5d3f82c5-5d74-471d-a5a9-143f6e5ad3f1',
+          )
+        end
+
+        it 'returns the projects with the status supplied' do
+          result = DoubleGdpSchema.execute(projects_query, context: {
+                                             current_user: site_worker,
+                                             site_community: community,
+                                           }, variables: {
+                                             repliesRequestedStatus: 'sent',
+                                           }).as_json
+
+          expect(result.dig('data', 'projects', 0, 'id')).to eql(first_note.id)
+        end
+      end
+
       context 'when life_time_category is passed in argument' do
         before do
           form
@@ -1507,6 +1543,7 @@ RSpec.describe Types::Queries::Note do
             user: site_worker,
             status: 'active',
             reply_required: true,
+            reply_from: admin,
             grouping_id: '6d3f82c5-5d74-471d-a5a9-143f6e5ad3f1',
           )
 
@@ -1528,6 +1565,7 @@ RSpec.describe Types::Queries::Note do
             user: site_worker,
             status: 'active',
             reply_required: true,
+            reply_from: admin,
             grouping_id: '5d3f82c5-5d74-471d-a5a9-143f6e5ad3f1',
           )
 
@@ -1549,6 +1587,7 @@ RSpec.describe Types::Queries::Note do
             user: site_worker,
             status: 'active',
             reply_required: true,
+            reply_from: admin,
             grouping_id: '4d3f82c5-5d74-471d-a5a9-143f6e5ad3f1',
           )
           create(
@@ -1558,6 +1597,7 @@ RSpec.describe Types::Queries::Note do
             user: admin,
             status: 'active',
             reply_required: true,
+            reply_from: site_worker,
             grouping_id: '4d3f82c5-5d74-471d-a5a9-143f6e5ad3f1',
           )
 
@@ -1579,6 +1619,7 @@ RSpec.describe Types::Queries::Note do
             user: site_worker,
             status: 'active',
             reply_required: true,
+            reply_from: admin,
             grouping_id: '1d3f82c5-5d74-471d-a5a9-143f6e5ad3f1',
             replied_at: 2.days.ago,
           )
@@ -1589,6 +1630,7 @@ RSpec.describe Types::Queries::Note do
             user: admin,
             status: 'active',
             reply_required: true,
+            reply_from: site_worker,
             grouping_id: '1d3f82c5-5d74-471d-a5a9-143f6e5ad3f1',
             replied_at: 1.day.ago,
           )
