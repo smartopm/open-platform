@@ -6,26 +6,6 @@ export const CreateTaskList = gql`
       note {
         id
         body
-        dueDate
-        progress
-        subTasksCount
-        taskCommentsCount
-        taskCommentReply
-        order
-        completed
-        status
-        attachments
-        formUserId
-        submittedBy {
-          id
-          name
-        }
-        assignees {
-          id
-          name
-          imageUrl
-          avatarUrl
-        }
       }
     }
   }

@@ -27,7 +27,7 @@ export default function TaskListConfigure() {
   const [updateTaskList] = useMutation(UpdateTaskList);
 
   useEffect(() => {
-    if (location.pathname.match('/tasks/task_lists/edit')) { // TODO: Use stronger match
+    if (location.pathname.match('/tasks/task_lists/edit')) {
       setParentTaskData(location?.state?.task);
       setNoteList(location?.state?.noteList);
       setBody(location?.state?.noteList?.name);
