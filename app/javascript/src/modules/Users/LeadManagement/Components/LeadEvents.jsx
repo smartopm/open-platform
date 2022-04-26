@@ -180,7 +180,12 @@ export default function LeadEvents({ userId }) {
       {eventsData?.leadEvents.length > 0 ? (
         <div>
           {eventsData?.leadEvents.map(leadEvent => (
-            <div key={leadEvent.id}>
+            <div
+              key={leadEvent.id}
+              style={{
+                marginBottom: '20px'
+              }}
+            >
               <LeadEvent key={leadEvent?.id} leadEvent={leadEvent} />
             </div>
           ))}
@@ -261,7 +266,12 @@ export default function LeadEvents({ userId }) {
       {meetingsData?.leadMeetings.length > 0 ? (
         <div>
           {meetingsData?.leadMeetings.map(leadMeeting => (
-            <div key={leadMeeting.id}>
+            <div
+              key={leadMeeting.id}
+              style={{
+                marginBottom: '20px'
+              }}
+            >
               <LeadEvent key={leadMeeting?.id} leadEvent={leadMeeting} />
             </div>
           ))}
@@ -342,7 +352,12 @@ export default function LeadEvents({ userId }) {
       {signedDealsData?.signedDeals.length > 0 ? (
         <div>
           {signedDealsData?.signedDeals.map(signedDeal => (
-            <div key={signedDeal.id}>
+            <div
+              key={signedDeal.id}
+              style={{
+                marginBottom: '20px'
+              }}
+            >
               <LeadEvent key={signedDeal?.id} leadEvent={signedDeal} />
             </div>
           ))}

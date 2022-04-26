@@ -10,16 +10,10 @@ export default function LeadEvent({ leadEvent }) {
     <div>
       {leadEvent !== undefined && (
         <>
-          <Grid
-            container
-            style={{
-              marginBottom: '20px'
-            }}
-          >
+          <Grid container>
             <Grid item md={12} xs={12}>
               <Grid
                 container
-                spacing={2}
                 style={{
                   display: 'flex',
                   alignItems: 'center'
