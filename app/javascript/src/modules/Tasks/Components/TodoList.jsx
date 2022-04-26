@@ -422,7 +422,7 @@ export default function TodoList({
 
   return (
     <>
-      <div className="container" data-testid="todo-container">
+      <div style={{padding: '0 8%'}} data-testid="todo-container">
         <MessageAlert
           type={taskUpdateStatus.success ? 'success' : 'error'}
           message={taskUpdateStatus.message}

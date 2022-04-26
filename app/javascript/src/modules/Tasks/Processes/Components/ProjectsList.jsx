@@ -52,7 +52,7 @@ export default function ProjectsList() {
   if (error) return <CenteredContent>{formatError(error.message)}</CenteredContent>;
   if (loading) return <Spinner />;
   return(
-    <div className='container'>
+    <div style={{padding: '0 8%'}}>
       <Grid container>
         {authState.user.userType === 'admin' && (
           <Grid item md={12} xs={12} style={{paddingleft: '10px'}}>

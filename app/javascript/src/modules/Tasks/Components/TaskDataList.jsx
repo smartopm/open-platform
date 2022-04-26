@@ -39,7 +39,8 @@ export default function TaskDataList({
   handleTaskCompletion,
   clientView,
   taskCommentHasReply,
-  subTaskCard
+  subTaskCard,
+  alignStyles
 }) {
   const classes = useStyles();
   const { t } = useTranslation('task');
@@ -80,7 +81,7 @@ export default function TaskDataList({
       <Grid container>
         <Grid
           item
-          md={subTaskCard ? 3 : 5}
+          md={4}
           xs={8}
           style={{ display: 'flex', alignItems: 'center' }}
           data-testid="task_body_section"
@@ -160,7 +161,7 @@ export default function TaskDataList({
                 </>
               )}
             </Grid>
-            <Grid item md={1} xl={1}>
+            <Grid item md={1} xl={1} style={alignStyles}>
               {!mdDownHidden && (
                 <IconButton
                   aria-controls="simple-menu"
@@ -311,7 +312,7 @@ export default function TaskDataList({
         {!mdDownHidden && (
           <>
             {!subTaskCard && (
-              <Grid item data-testid="open_details" md={1}>
+              <Grid item data-testid="open_details" md={2}>
                 <Grid
                   container
                   style={{ textAlign: 'right' }}
@@ -323,7 +324,7 @@ export default function TaskDataList({
                       <WidgetsIcon />
                     </IconButton>
                   </Grid>
-                  <Grid item md={1} style={{ marginLeft: '-7px' }}>
+                  <Grid item md={1} style={{ marginLeft: '-17px' }}>
                     {urlParams.type === 'drc' && taskCommentHasReply && (
                       <Badge
                         color="warning"
@@ -344,7 +345,7 @@ export default function TaskDataList({
           <Grid
             item
             data-testid="task_details_section"
-            md={3}
+            md={2}
             xs={10}
             className={classes.detailsSection}
           >
@@ -365,13 +366,7 @@ export default function TaskDataList({
                   style={{ display: 'flex', justifyContent: 'space-between' }}
                   className={classes.detailsContainer}
                 >
-                  {urlParams.type === 'drc' ? (
-                    <Grid item md={2} xs={1} style={{ textAlign: 'right' }}>
-                      {taskCommentHasReply && (
-                        <Badge color="warning" badgeContent={t('task:misc.reply')} />
-                      )}
-                    </Grid>
-                  ) : (
+                  {urlParams.type !== 'drc' && (
                     <>
                       <Grid item md={2} xs={1}>
                         <IconButton
@@ -393,7 +388,7 @@ export default function TaskDataList({
                         md={1}
                         xs={1}
                         className={classes.iconItem}
-                        style={{ marginLeft: '-20px' }}
+                        style={{ marginLeft: '-11px' }}
                         color="primary"
                       >
                         <span data-testid="task-subtasks-count">{task?.subTasksCount}</span>
@@ -422,7 +417,7 @@ export default function TaskDataList({
                     md={1}
                     xs={1}
                     className={classes.iconItem}
-                    style={{ marginLeft: '-20px' }}
+                    style={urlParams.type === 'drc' ? {marginLeft: '-53px'} : { marginLeft: '-11px' }}
                   >
                     <span data-testid="task-comment">{data?.taskComments.length || 0}</span>
                   </Grid>
@@ -448,8 +443,8 @@ export default function TaskDataList({
                     md={1}
                     xs={1}
                     className={classes.iconItem}
-                    style={{ marginLeft: '-25px' }}
-                  >
+                    style={urlParams.type === 'drc' ? { marginLeft: '-58px' } : { marginLeft: '-16px' }}
+                  > 
                     <span data-testid="file_attachments_total">
                       {task.attachments?.length || 0}
                     </span>
@@ -513,7 +508,8 @@ TaskDataList.defaultProps = {
   handleOpenSubTasksClick: null,
   clientView: false,
   taskCommentHasReply: false,
-  subTaskCard: false
+  subTaskCard: false,
+  alignStyles: {}
 };
 TaskDataList.propTypes = {
   task: PropTypes.shape(Task).isRequired,
@@ -527,7 +523,9 @@ TaskDataList.propTypes = {
   handleTaskCompletion: PropTypes.func.isRequired,
   clientView: PropTypes.bool,
   taskCommentHasReply: PropTypes.bool,
-  subTaskCard: PropTypes.bool
+  subTaskCard: PropTypes.bool,
+  // eslint-disable-next-line react/forbid-prop-types
+  alignStyles: PropTypes.object,
 };
 
 const useStyles = makeStyles(() => ({

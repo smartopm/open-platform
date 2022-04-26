@@ -283,4 +283,69 @@ describe('Task Data components', () => {
       fireEvent.click(container.queryByTestId('show_task_subtasks'));
     }, 10);
   });
+
+  it('renders task icons', async () => {
+    const container = render(
+      <BrowserRouter>
+        <MockedProvider>
+          <Context.Provider value={authState}>
+            <MockedThemeProvider>
+              <TaskDataList
+                task={task}
+                handleChange={jest.fn()}
+                handleFileInputChange={jest.fn()}
+                selectedTasks={[]}
+                isSelected={false}
+                menuData={{}}
+                clickable
+                handleClick={jest.fn()}
+                openSubTask
+                handleOpenSubTasksClick={jest.fn()}
+                handleTaskCompletion={jest.fn}
+                subTaskCard
+              />
+            </MockedThemeProvider>
+          </Context.Provider>
+        </MockedProvider>
+      </BrowserRouter>
+    );
+
+    await waitFor(() => {
+      expect(container.getByTestId('task_details_section')).toBeInTheDocument();
+      expect(container.getByTestId('task-comment')).toBeInTheDocument();
+      expect(container.getByTestId('task_attach_file')).toBeInTheDocument();
+    }, 10);
+  });
+
+  it('renders attachment icon', async () => {
+    render(
+      <BrowserRouter>
+        <MockedProvider>
+          <Context.Provider value={authState}>
+            <MockedThemeProvider>
+              <TaskDataList
+                task={task}
+                handleChange={jest.fn()}
+                handleFileInputChange={jest.fn()}
+                selectedTasks={[]}
+                isSelected={false}
+                menuData={{}}
+                clickable
+                handleClick={jest.fn()}
+                openSubTask
+                handleOpenSubTasksClick={jest.fn()}
+                handleTaskCompletion={jest.fn}
+                subTaskCard
+              />
+            </MockedThemeProvider>
+          </Context.Provider>
+        </MockedProvider>
+      </BrowserRouter>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByTestId('task_attach_file')).toBeInTheDocument();
+      expect(screen.getByTestId('file_attachments_total')).toHaveTextContent('1');
+    }, 10);
+  });
 });
