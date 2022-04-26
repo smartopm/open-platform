@@ -24,7 +24,8 @@ export const ProjectsQuery = gql`
     $step: String,
     $completedPerQuarter: String,
     $submittedPerQuarter: String,
-    $lifeTimeCategory: String
+    $lifeTimeCategory: String,
+    $repliesRequestedStatus: String
   ) {
     projects(
       offset: $offset,
@@ -32,7 +33,8 @@ export const ProjectsQuery = gql`
       step: $step,
       completedPerQuarter: $completedPerQuarter,
       submittedPerQuarter: $submittedPerQuarter,
-      lifeTimeCategory: $lifeTimeCategory
+      lifeTimeCategory: $lifeTimeCategory,
+      repliesRequestedStatus: $repliesRequestedStatus
     ) {
       ...TaskFields
     }

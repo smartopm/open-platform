@@ -22,6 +22,7 @@ export default function ProjectsList() {
   const completedPerQuarter = path.get('completed_per_quarter')
   const submittedPerQuarter = path.get('submitted_per_quarter')
   const lifeTimeCategory = path.get('life_time_totals')
+  const repliesRequestedStatus = path.get('replies_requested')
   const classes = useStyles();
   const authState = React.useContext(AuthStateContext);
 
@@ -33,7 +34,8 @@ export default function ProjectsList() {
       step: currentStep,
       completedPerQuarter,
       submittedPerQuarter,
-      lifeTimeCategory
+      lifeTimeCategory,
+      repliesRequestedStatus
     },
     fetchPolicy: 'cache-and-network'
   });
