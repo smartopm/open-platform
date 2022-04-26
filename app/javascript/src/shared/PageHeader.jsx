@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import PropTypes from 'prop-types';
 
-export default function FormHeader({ linkText, linkHref, pageName, PageTitle }) {
+export default function PageHeader({ linkText, linkHref, pageName, PageTitle }) {
   const matches = useMediaQuery('(max-width:900px)');
   const classes = useStyles();
   return (
@@ -44,7 +44,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-FormHeader.propTypes = {
+PageHeader.propTypes = {
   linkText: PropTypes.string.isRequired,
   linkHref: PropTypes.string.isRequired,
   pageName: PropTypes.string.isRequired,

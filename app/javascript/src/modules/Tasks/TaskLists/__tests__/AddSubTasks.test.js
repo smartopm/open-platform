@@ -176,7 +176,7 @@ describe('Test the AddSubTasks page', () => {
   it('renders task form modal', async () => {
     render(
       <Context.Provider value={authState}>
-        <MockedProvider mocks={taskDataMock} addTypename>
+        <MockedProvider mocks={taskDataMock} addTypename={false}>
           <BrowserRouter>
             <MockedThemeProvider>
               <AddSubTasks />
@@ -192,13 +192,14 @@ describe('Test the AddSubTasks page', () => {
       const addSubTaskMenuItem = screen.getByText('menu.add_subtask');
       fireEvent.click(addSubTaskMenuItem);
 
-      expect(screen.queryByText('task.task_body_label')).toBeInTheDocument();
-      expect(screen.queryAllByText('task.task_description_label')[0]).toBeInTheDocument();
-      expect(screen.queryAllByText('task.task_type_label')[0]).toBeInTheDocument();
-      expect(screen.queryByText('common:form_placeholders.note_due_date')).toBeInTheDocument();
-      // buttons should be visible
-      expect(screen.queryByText('common:form_actions.cancel')).toBeInTheDocument();
-      expect(screen.queryByText('common:form_actions.create_task')).toBeInTheDocument();
+      expect(screen.queryByLabelText('task_description')).toBeInTheDocument();
+      expect(screen.queryByLabelText('task_submit')).toBeInTheDocument();
+      expect(screen.queryByLabelText('task_cancel')).toBeInTheDocument();
+      expect(screen.queryByLabelText('task_description')).toBeInTheDocument();
+      expect(screen.queryByLabelText('task_submit').textContent).toContain('common:form_actions.create_task');
+      expect(screen.queryByLabelText('task_cancel').textContent).toContain('common:form_actions.cancel');
+      expect(screen.queryByLabelText('task_cancel')).not.toBeDisabled();
+      expect(screen.queryByLabelText('task_submit')).not.toBeDisabled();
     });
   });
 });
