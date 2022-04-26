@@ -5,29 +5,32 @@ import { Breadcrumbs, Grid, Typography, Button, useMediaQuery } from '@mui/mater
 import { useMutation } from 'react-apollo';
 import makeStyles from '@mui/styles/makeStyles';
 import { useTranslation } from 'react-i18next';
-import { CreateTaskList } from '../graphql/task_list_mutation';
+import { CreateTaskList, UpdateTaskList } from '../graphql/task_list_mutation';
 import CenteredContent from '../../../../shared/CenteredContent';
 import { formatError } from '../../../../utils/helpers';
 import { Spinner } from '../../../../shared/Loading';
 import useStateIfMounted from '../../../../shared/hooks/useStateIfMounted';
 
-export default function TaskListCreate() {
+export default function TaskListConfigure() {
   const { t } = useTranslation('task');
   const classes = useStyles();
   const isMobile = useMediaQuery('(max-width:800px)');
   const [body, setBody] = useState('');
   const [loadingStatus, setLoadingStatus] = useStateIfMounted(false);
   const [errors, setErr] = useState('');
-  const [createTaskList] = useMutation(CreateTaskList);
   const [parentTaskData, setParentTaskData] = useStateIfMounted({});
+  const [noteList, setNoteList] = useState({});
   const history = useHistory();
   const location = useLocation();
   const [action, setAction] = useState('create');
+  const [createTaskList] = useMutation(CreateTaskList);
+  const [updateTaskList] = useMutation(UpdateTaskList);
 
   useEffect(() => {
     if (location.pathname.match('/tasks/task_lists/edit')) { // TODO: Use stronger match
       setParentTaskData(location?.state?.task);
-      setBody(location?.state?.task?.body);
+      setNoteList(location?.state?.noteList);
+      setBody(location?.state?.noteList?.name);
       setAction('edit');
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -54,12 +57,21 @@ export default function TaskListCreate() {
   }
 
   function handleUpdate() {
-    // TODO: Handle update
-    console.log('Updating body to ', body);
-    history.push({
-      pathname: `/tasks/task_lists/${parentTaskData?.id}`,
-      state: { task: parentTaskData }
+    updateTaskList({
+      variables: {
+        id: noteList.id,
+        name: body
+      }
     })
+    .then(() => {
+      history.push({
+        pathname: `/tasks/task_lists/${parentTaskData?.id}`,
+        state: { task: parentTaskData }
+      })
+    })
+    .catch(err => {
+      setErr(err)
+    });
   }
 
   function handleSubmit(event) {

@@ -476,7 +476,7 @@ module Types::Queries::Note
       .where(id: projects_assigned.pluck(:id), form_user_id: drc_form_users)
       .offset(offset).limit(limit)
   end
-  # rubocop:enable Metrics/MethodLength
+  # rubocop:enable Metrics/MethodLengthactiveRecord
   # rubocop:enable Metrics/AbcSize
 
   def task_lists(limit: 50, offset: 0)
@@ -501,7 +501,7 @@ module Types::Queries::Note
     context[:site_community]
       .notes
       .where(category: 'task_list')
-      .find_by(id: task_id)
+      .find(task_id)
   end
 
   def tasks_by_quarter(process_type: 'drc')

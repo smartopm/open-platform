@@ -1,4 +1,3 @@
-/* eslint-disable */
 import gql from 'graphql-tag';
 
 export const CreateTaskList = gql`
@@ -31,3 +30,13 @@ export const CreateTaskList = gql`
     }
   }
 `;
+
+export const UpdateTaskList = gql`
+  mutation noteListUpdate($id: ID!, $name: String) {
+    noteListUpdate(id: $id, name: $name) {
+      noteList {
+        name
+      }
+    }
+  }
+`

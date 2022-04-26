@@ -101,13 +101,14 @@ export default function TodoItem({
   }
 
   if (location.pathname === '/tasks/task_lists') {
+    const { noteList } = task;
     menuList = [
       {
         content: t('menu.edit_task_list'),
         isAdmin: true,
         handleClick: () => history.push({
-          pathname: `/tasks/task_lists/edit/${task?.id}`,
-          state: { task: { id: task?.id, body: task?.body } }
+          pathname: `/tasks/task_lists/edit/${noteList?.id}`,
+          state: { noteList, task }
         })
       },
       // TODO: Implement in issue #2371 (deleting task list)

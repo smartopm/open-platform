@@ -35,7 +35,7 @@ import FeedbackSuccess from '../src/containers/Activity/FeedbackSuccess';
 import AllNotes from '../src/containers/Activity/AllNotes';
 import ProjectsList from '../src/modules/Tasks/Processes/Components/ProjectsList';
 import TaskLists from '../src/modules/Tasks/TaskLists/Components/TaskLists'; // TODO: Remove after Task Lists menu is set up
-import TaskListCreate from '../src/modules/Tasks/TaskLists/Components/TaskListCreate';
+import TaskListConfigure from '../src/modules/Tasks/TaskLists/Components/TaskListConfigure';
 import AddSubTasks from '../src/modules/Tasks/TaskLists/Components/AddSubTasks';
 import FeedbackPage from '../src/containers/Activity/AllFeedback';
 import ShowroomLogs from '../src/containers/showroom/ShowroomLogs';
@@ -240,12 +240,12 @@ const App = () => {
                                 <Route
                                   exact
                                   path="/tasks/task_lists/new"
-                                  component={TaskListCreate}
+                                  component={TaskListConfigure}
                                 />
                                 <Route
                                   exact
                                   path="/tasks/task_lists/edit/:taskId"
-                                  component={TaskListCreate}
+                                  component={TaskListConfigure}
                                 />
                                 <Route path="/tasks/task_lists/:taskId" component={AddSubTasks} />
 

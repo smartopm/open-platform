@@ -1,7 +1,7 @@
 import React from 'react';
 import AccessCheck from '../../Permissions/Components/AccessCheck';
 import TaskLists from './Components/TaskLists';
-import TaskListCreate from './Components/TaskListCreate';
+import TaskListConfigure from './Components/TaskListConfigure';
 import AddSubTasks from './Components/AddSubTasks';
 
 const taskListPermissions = ['can_view_task_lists'];
@@ -15,10 +15,10 @@ function RenderTaskLists() {
   );
 }
 
-function RenderTaskListCreate() {
+function RenderTaskListConfigure() {
   return (
     <AccessCheck module={currentModule} allowedPermissions={taskListPermissions}>
-      <TaskListCreate />
+      <TaskListConfigure />
     </AccessCheck>
   );
 }
@@ -49,7 +49,7 @@ export default {
       routeProps: {
         path: '/tasks/task_lists/new',
         exact: true,
-        component: RenderTaskListCreate
+        component: RenderTaskListConfigure
       },
       name: 'Task List Create ',
       accessibleBy: []

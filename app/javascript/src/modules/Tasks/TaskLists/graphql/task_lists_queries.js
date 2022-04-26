@@ -1,13 +1,16 @@
 import gql from 'graphql-tag';
-import { TasksFragment } from '../../../../graphql/fragments';
 
 export const TaskListsQuery = gql`
   query TaskLists {
     taskLists {
-      ...TaskFields
+      id
+      body
+      noteList {
+        id
+        name
+      }
     }
   }
-  ${TasksFragment.task}
 `;
 
 export const TaskListQuery = gql`
@@ -41,21 +44,7 @@ export const TaskListQuery = gql`
       parentNote {
         id
         body
-        formUserId
-        assignees {
-          id
-        }
-      }
-      attachments
-      formUserId
       subTasksCount
-      formUser {
-        id
-        user {
-          id
-          name
-        }
-      }
     }
   }
 `;
