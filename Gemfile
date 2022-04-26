@@ -82,7 +82,7 @@ gem "barnes"
 gem "newrelic_rpm"
 
 # web scrapping and parsing html files
-gem 'nokogiri'
+gem 'nokogiri', '~> 1.13.4'
 gem 'yard', '~> 0.9.26'
 gem 'awesome_print'
 # Point to yanked v0.3.5
