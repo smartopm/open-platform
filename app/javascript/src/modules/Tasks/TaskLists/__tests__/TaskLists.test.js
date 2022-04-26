@@ -1,4 +1,3 @@
-/* eslint-disable import/prefer-default-export */
 import React from 'react';
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min';
@@ -8,10 +7,19 @@ import MockedThemeProvider from '../../../__mocks__/mock_theme';
 import TaskLists from '../Components/TaskLists';
 import { Context } from '../../../../containers/Provider/AuthStateProvider';
 import { TaskListsQuery } from '../graphql/task_lists_queries';
-import taskMock from '../../__mocks__/taskMock';
 import authState from '../../../../__mocks__/authstate';
 
-jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
+const taskListMock = {
+  __typename: 'Note',
+  id: 'a349e612-f65f-4c66-82cb-3e9311ae39b2',
+  body: 'Sample task list',
+  noteList: {
+    __typename: 'NoteList',
+    id: '450e1fa8-b8aa-480b-8e3c-b6f1e8e78a25',
+    name: 'Sample task list'
+  }
+};
+
 describe('Task Lists', () => {
   const mocks = [
     {
@@ -24,7 +32,7 @@ describe('Task Lists', () => {
       },
       result: {
         data: {
-          taskLists: [taskMock]
+          taskLists: [taskListMock]
         }
       }
     }
