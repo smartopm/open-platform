@@ -1,7 +1,8 @@
-import React, { useState, useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useQuery, useLazyQuery } from 'react-apollo'
 import { Typography } from '@mui/material';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { renderToString } from 'react-dom/server'
 import L from 'leaflet'
 import { Map, FeatureGroup, GeoJSON, LayersControl, TileLayer, Popup } from 'react-leaflet'
@@ -82,6 +83,7 @@ function getSubUrbanData(communityName){
 }
 
 export default function GeoMap() {
+  const matches = useMediaQuery('(max-width:600px)');
   const [selectedPoi, setSelectedPoi] = useState(null)
   const [ loadGeoData, { data: geoData } ] = useLazyQuery(LandParcelGeoData, {
     fetchPolicy: 'cache-and-network'
@@ -204,7 +206,7 @@ export default function GeoMap() {
     setTimeout(()=> window.dispatchEvent(new Event('resize')), 1000);
   })
 
-  // if (loading || loadingCommunityData) return <Spinner />;
+
   if (loadingCommunityData) return <Spinner />;
 
    return (
@@ -244,6 +246,9 @@ export default function GeoMap() {
           width: 100%;
           margin: 0 auto;
         }
+        .leaflet-control-zoom {
+          display: ${matches ? 'none' : 'block'};
+        }
         `
           }}
          />
@@ -253,7 +258,7 @@ export default function GeoMap() {
            zoom={11}
            className={css(styles.mapContainer)}
            attributionControl
-           zoomControl
+           zoomControl={!matches}
            doubleClickZoom
            scrollWheelZoom
            dragging
