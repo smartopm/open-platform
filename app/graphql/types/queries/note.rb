@@ -278,7 +278,6 @@ module Types::Queries::Note
     context[:current_user].tasks.by_completion(false).count
   end
 
-  # rubocop:disable Metrics/MethodLength
   def reply_comment_stats(process_type: 'drc')
     unless permitted?(module: :note, permission: :can_get_comment_stats)
       raise GraphQL::ExecutionError,
@@ -293,7 +292,6 @@ module Types::Queries::Note
 
     user_replied_requested_comments(task_ids).status_stats(current_user)
   end
-  # rubocop:enable Metrics/MethodLength
 
   def user_tasks
     unless permitted?(module: :note, permission: :can_get_own_tasks)
@@ -342,16 +340,18 @@ module Types::Queries::Note
     Comments::NoteComment.where(
       note_id: task_ids,
       reply_required: true,
-      user_id: context[:current_user]
+      user_id: context[:current_user],
     ).or(Comments::NoteComment.where(
-      note_id: task_ids,
-      reply_required: true,
-      reply_from_id: context[:current_user]
-    ))
+           note_id: task_ids,
+           reply_required: true,
+           reply_from_id: context[:current_user],
+         ))
   end
 
   # rubocop:disable Metrics/MethodLength
   # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/CyclomaticComplexity
+  # rubocop:disable Metrics/PerceivedComplexity
   def projects(process_type: 'drc', **vals)
     # This query only shows projects under the DRC process for now
     # Our notes does not allow us to categorise processes by type
@@ -392,9 +392,7 @@ module Types::Queries::Note
 
         note_comments.group_by(&:grouping_id).each do |_grouping_id, comments|
           status = context[:current_user].comment_status(comments)
-          if status == replies_requested_status
-            results << project
-          end
+          results << project if status == replies_requested_status
         end
       end
 
@@ -404,6 +402,8 @@ module Types::Queries::Note
     results.limit(vals[:limit]).offset(vals[:offset])
   end
   # rubocop:enable Metrics/MethodLength
+  # rubocop:enable Metrics/CyclomaticComplexity
+  # rubocop:enable Metrics/PerceivedComplexity
 
   def project_stages
     # This will get the total project steps for each DRC process
