@@ -11,7 +11,6 @@ import CenteredContent from '../../../../shared/CenteredContent';
 import LeadManagementForm from './LeadManagementForm';
 import { objectAccessor, formatError } from '../../../../utils/helpers';
 import { StyledTabs, StyledTab, TabPanel, a11yProps } from '../../../../components/Tabs';
-// import UserNotes from '../../Components/UserNotes';
 import LeadEvents from './LeadEvents';
 import LeadManagementTask from './LeadManagementTask';
 
