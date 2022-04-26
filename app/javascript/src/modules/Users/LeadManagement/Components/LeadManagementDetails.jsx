@@ -11,7 +11,7 @@ import CenteredContent from '../../../../shared/CenteredContent';
 import LeadManagementForm from './LeadManagementForm';
 import { objectAccessor, formatError } from '../../../../utils/helpers';
 import { StyledTabs, StyledTab, TabPanel, a11yProps } from '../../../../components/Tabs';
-import UserNotes from '../../Components/UserNotes';
+import LeadEvents from './LeadEvents';
 import LeadManagementTask from './LeadManagementTask';
 
 export default function LeadManagementDetails({ userId }) {
@@ -25,7 +25,7 @@ export default function LeadManagementDetails({ userId }) {
   const TAB_VALUES = {
     details: 0,
     tasks: 1,
-    notes: 2
+    events: 2
   };
   function handleTabValueChange(_event, newValue) {
     setTabValue(Number(newValue));
@@ -75,9 +75,9 @@ export default function LeadManagementDetails({ userId }) {
               />
 
               <StyledTab
-                label={t('lead_management.note_header')}
+                label={t('lead_management.event_header')}
                 style={
-                  tabValue === objectAccessor(TAB_VALUES, 'notes')
+                  tabValue === objectAccessor(TAB_VALUES, 'events')
                     ? { fontSize: '10px', borderBottom: 'solid 1px' }
                     : { fontSize: '10px' }
                 }
@@ -93,8 +93,8 @@ export default function LeadManagementDetails({ userId }) {
             <LeadManagementTask taskId={data?.user?.taskId} tabValue={tabValue} />
           </TabPanel>
 
-          <TabPanel value={tabValue} index={2} data-testid="lead-management-note-tab">
-            <UserNotes userId={userId} tabValue={tabValue} />
+          <TabPanel value={tabValue} index={2} data-testid="lead-management-event-tab">
+            <LeadEvents userId={userId} tabValue={tabValue} />
           </TabPanel>
         </Item>
       </Grid>

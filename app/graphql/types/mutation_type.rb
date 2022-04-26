@@ -174,6 +174,10 @@ module Types
 
     # process
     field :process_create, mutation: Mutations::Process::ProcessCreate
+
+    # logs
+    field :lead_log_create, mutation: Mutations::Log::LeadLogCreate
+    field :lead_log_update, mutation: Mutations::Log::LeadLogUpdate
   end
   # rubocop: enable Metrics/ClassLength
 end
