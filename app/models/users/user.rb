@@ -149,7 +149,7 @@ module Users
     has_many_attached :note_documents
 
     before_validation :add_default_state_type_and_role
-    after_create :send_email_msg
+    after_create :log_user_create_event
     after_create :add_notification_preference
     after_create :send_welcome_sms
 
@@ -346,6 +346,10 @@ module Users
     def revoke!(entry_request_object)
       entry_request_object.revoke!(self)
       entry_request_object
+    end
+
+    def log_user_create_event
+      generate_events('user_create', self)
     end
 
     def generate_events(event_tag, target_obj, data = {})
@@ -611,29 +615,6 @@ module Users
             { contact_type: 'phone', info: phone_list }),
           )
       ).uniq
-    end
-
-    def send_email_msg
-      return if user_type.eql?('lead') || self[:email].nil?
-
-      template = community.email_templates.find_by(name: 'Generic Template')
-      return unless template
-
-      email_title = I18n.t('email_template.welcome_email.title', community_name: community.name)
-      email_subject = I18n.t('email_template.welcome_email.subject', community_name: community.name)
-      email_body = I18n.t('email_template.welcome_email.body', community_name: community.name)
-      template_data = [
-        { key: '%action_url%', value: HostEnv.base_url(community) || '' },
-        { key: '%action%', value: I18n.t('email_template.welcome_email.action') },
-        { key: '%body%', value: email_body },
-        { key: '%title%', value: email_title },
-      ]
-      EmailMsg.send_mail_from_db(
-        email: self[:email],
-        template: template,
-        template_data: template_data,
-        email_subject: email_subject,
-      )
     end
     # rubocop:enable Metrics/MethodLength
     # rubocop:enable Metrics/AbcSize
