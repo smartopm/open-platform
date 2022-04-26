@@ -722,6 +722,16 @@ module Users
 
       Logs::Invite.create!(host_id: id, guest_id: guest_id, entry_request_id: request_id)
     end
+  
+    def comment_status(grouped_ordered_comments)
+      return 'resolved' if grouped_ordered_comments.all?(&:replied_at)
+  
+      if grouped_ordered_comments.first.user_id == id
+        'sent'
+      else
+        'received'
+      end
+    end
 
     private
 
