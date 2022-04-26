@@ -45,7 +45,7 @@ export default function TaskLists() {
   if (loading) return <Spinner />;
 
   return (
-    <div className="container">
+    <div style={{padding: '3% 8%'}}>
       <Grid container spacing={1}>
         <Grid item md={12} xs={12} style={{ paddingleft: '10px' }}>
           <div role="presentation">
