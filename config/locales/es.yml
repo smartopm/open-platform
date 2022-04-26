@@ -396,6 +396,8 @@ es:
     land_parcel:
       not_found: Parcela de tierra no encontrada
       poi_record_not_found: Registro de Poi no encontrado
+    lead_log:
+      not_found: Registro de Clientes Potenciales no encontrado
     not_found: No encontrado
     note_list:
       has_process: Esta Lista de Tareas ya está vinculada a un proceso
