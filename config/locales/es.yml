@@ -432,6 +432,8 @@ es:
       not_found: Pago no encontrado
     post_tag:
       not_found: Etiqueta no encontrada
+    process:
+      not_found: Proceso no encontrado
     receipt_number:
       already_exists: El número de recibo ya existe
     record_not_found: Registro no encontrado

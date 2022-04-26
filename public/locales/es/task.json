@@ -22,7 +22,9 @@
   "misc": {
     "add_description": "Agregar una descripción",
     "confirm": "Confirmar",
-    "reply": "Responder"
+    "received": "Recibido {{count}}",
+    "reply": "Responder",
+    "sent": "Enviado"
   },
   "process": {
     "processes": "Procesos"
@@ -59,6 +61,7 @@
     "processes": "Procesos",
     "projects_by_quarter": "Proyectos por Trimestre",
     "projects_by_stage": "Proyectos por Etapa",
+    "replies_requested": "Respuestas Solicitadas:",
     "requirements": "Requerimientos",
     "requirements_guideline": "Por favor, lea la guía requerida.",
     "submitted": "Presentado",
