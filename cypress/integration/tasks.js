@@ -115,7 +115,6 @@ describe('Tasks page', () => {
 
       cy.visit('/tasks');
       cy.contains('Cypress test task');
-      cy.get('[data-testid=task-subtasks-count]').contains('1');
       cy.get('[data-testid=show_task_subtasks]').click();
       cy.contains('Cypress test sub task');
 
