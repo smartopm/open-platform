@@ -15,4 +15,8 @@ RSpec.describe Processes::Process, type: :model do
     it { is_expected.to belong_to(:form).class_name('Forms::Form').optional(true) }
     it { is_expected.to have_one(:note_list).class_name('Notes::NoteList').dependent(:destroy) }
   end
+
+  describe 'enums' do
+    it { is_expected.to define_enum_for(:status).with_values(active: 0, deleted: 1) }
+  end
 end

@@ -64,5 +64,9 @@ module Mutations
 
       raise GraphQL::ExecutionError, message
     end
+
+    def raise_error_message(message)
+      raise GraphQL::ExecutionError, message
+    end
   end
 end

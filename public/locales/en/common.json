@@ -373,7 +373,8 @@
     "task_lists": "Task Lists",
     "edit_process_template": "Edit Process Template",
     "edit_task_list": "Edit Task List",
-    "delete_task_list": "Delete Task List"
+    "delete_task_list": "Delete Task List",
+    "delete_process_template": "Delete Process Template"
   },
   "user_types": {
     "admin": "Admin",

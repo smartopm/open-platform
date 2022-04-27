@@ -64,6 +64,9 @@ const authState = {
       { module: 'discussion', permissions: ['can_see_menu_item'] },
       { module: 'community', permissions: ['can_see_menu_item'] },
       { module: 'community_settings', permissions: ['can_see_menu_item'] },
+      { module: 'process', permissions: ['can_update_process_template', 
+                                         'can_delete_process_template'
+                                        ]},
       {
         module: 'business',
         permissions: [
