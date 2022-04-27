@@ -21,23 +21,11 @@ module Comments
         stats = { sent: 0, received: 0, resolved: 0 }
 
         all.group_by(&:grouping_id).each do |_grouping_id, comments|
-          status = comment_status(comments, current_user)
+          status = current_user.comment_status(comments)
           stats[status.to_sym] += 1
         end
 
         stats
-      end
-
-      private
-
-      def comment_status(grouped_comments, current_user)
-        return 'resolved' if grouped_comments.all?(&:replied_at)
-
-        if grouped_comments.first.user_id == current_user.id
-          'sent'
-        else
-          'received'
-        end
       end
     end
 

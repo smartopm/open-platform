@@ -213,6 +213,7 @@ export default function AdminDashboard() {
                 size="small"
                 style={{ fontSize: '14px' }}
                 data-testid="sent-chip"
+                onClick={() => routeToProjects('replies_requested', 'sent')}
               />
               <Chip
                 label={t('task:misc.received', {
@@ -221,6 +222,7 @@ export default function AdminDashboard() {
                 color="warning"
                 size="small"
                 style={{ fontSize: '14px' }}
+                onClick={() => routeToProjects('replies_requested', 'received')}
               />
               <Chip
                 label={t('task:misc.resolved', {
@@ -229,6 +231,7 @@ export default function AdminDashboard() {
                 color="success"
                 size="small"
                 style={{ fontSize: '14px' }}
+                onClick={() => routeToProjects('replies_requested', 'resolved')}
               />
             </Stack>
           )}

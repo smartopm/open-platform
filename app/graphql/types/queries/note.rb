@@ -99,6 +99,7 @@ module Types::Queries::Note
       argument :submitted_per_quarter, String, required: false
       argument :life_time_category, String, required: false
       argument :process_type, String, required: false
+      argument :replies_requested_status, String, required: false
     end
 
     field :project_stages, [GraphQL::Types::JSON], null: false do
@@ -277,24 +278,20 @@ module Types::Queries::Note
     context[:current_user].tasks.by_completion(false).count
   end
 
-  # rubocop:disable Metrics/MethodLength
   def reply_comment_stats(process_type: 'drc')
     unless permitted?(module: :note, permission: :can_get_comment_stats)
       raise GraphQL::ExecutionError,
             I18n.t('errors.unauthorized')
     end
 
+    current_user = context[:current_user]
     task_ids = []
     projects_query(process_type).each do |project|
       task_ids.concat(project_task_ids(parent_task: project))
     end
 
-    Comments::NoteComment.where(
-      note_id: task_ids,
-      reply_required: true,
-    ).status_stats(context[:current_user])
+    user_replied_requested_comments(task_ids).status_stats(current_user)
   end
-  # rubocop:enable Metrics/MethodLength
 
   def user_tasks
     unless permitted?(module: :note, permission: :can_get_own_tasks)
@@ -339,8 +336,22 @@ module Types::Queries::Note
       .limit(limit).offset(offset)
   end
 
+  def user_replied_requested_comments(task_ids)
+    Comments::NoteComment.where(
+      note_id: task_ids,
+      reply_required: true,
+      user_id: context[:current_user],
+    ).or(Comments::NoteComment.where(
+           note_id: task_ids,
+           reply_required: true,
+           reply_from_id: context[:current_user],
+         ))
+  end
+
   # rubocop:disable Metrics/MethodLength
   # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/CyclomaticComplexity
+  # rubocop:disable Metrics/PerceivedComplexity
   def projects(process_type: 'drc', **vals)
     # This query only shows projects under the DRC process for now
     # Our notes does not allow us to categorise processes by type
@@ -353,6 +364,7 @@ module Types::Queries::Note
     completed_per_quarter = vals[:completed_per_quarter]
     submitted_per_quarter = vals[:submitted_per_quarter]
     life_time_category = vals[:life_time_category]
+    replies_requested_status = vals[:replies_requested_status]
     # TODO(Nurudeen): Make completed field defaults to false and not NIL
     results = projects_query(process_type)
 
@@ -372,9 +384,26 @@ module Types::Queries::Note
                 .by_life_time_totals(task_category: life_time_category.to_sym)
     end
 
+    if replies_requested_status
+      results = []
+      projects_query(process_type).each do |project|
+        task_ids = project_task_ids(parent_task: project)
+        note_comments = user_replied_requested_comments(task_ids)
+
+        note_comments.group_by(&:grouping_id).each do |_grouping_id, comments|
+          status = context[:current_user].comment_status(comments)
+          results << project if status == replies_requested_status
+        end
+      end
+
+      return results
+    end
+
     results.limit(vals[:limit]).offset(vals[:offset])
   end
   # rubocop:enable Metrics/MethodLength
+  # rubocop:enable Metrics/CyclomaticComplexity
+  # rubocop:enable Metrics/PerceivedComplexity
 
   def project_stages
     # This will get the total project steps for each DRC process
