@@ -131,9 +131,8 @@ staging:appdeploy:
   when: on_success
   script:
     - echo 'deploying to STAGING'
-    - curl https://cli-assets.heroku.com/install-ubuntu.sh | sh
-    - curl https://cli-assets.heroku.com/apt/release.key | apt-key add -
     - apt-get update -qy
+    - curl https://cli-assets.heroku.com/install.sh | sh
     - gem install dpl
     - gem install faraday -v 1.8.0
     - dpl --provider=heroku --app=double-gdp-staging --api-key=$HEROKU_STAGING_API_KEY
@@ -154,9 +153,8 @@ dev:deploy:
   when: on_success
   script:
     - echo 'deploying to DEV'
-    - curl https://cli-assets.heroku.com/install-ubuntu.sh | sh
-    - curl https://cli-assets.heroku.com/apt/release.key | apt-key add -
     - apt-get update -qy
+    - curl https://cli-assets.heroku.com/install.sh | sh
     - gem install dpl
     - gem install faraday -v 1.8.0
     - dpl --provider=heroku --app=double-gdp-dev --api-key=$HEROKU_DEV_API_KEY
