@@ -30,6 +30,7 @@ admin:
       - can_view_task_lists
       - can_create_task_lists
       - can_get_comment_stats
+      - can_edit_task_list
   process:
     permissions:
       - can_view_process_templates

@@ -44,6 +44,7 @@ module Types
     field :set_note_reminder, mutation: Mutations::Note::SetNoteReminder
     field :note_document_delete, mutation: Mutations::Note::NoteDocumentDelete
     field :note_comments_resolve, mutation: Mutations::Note::NoteCommentsResolve
+    field :note_list_update, mutation: Mutations::Note::NoteListUpdate
 
     # Process
     field :process_update, mutation: Mutations::Process::ProcessUpdate
