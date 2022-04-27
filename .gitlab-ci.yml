@@ -132,6 +132,7 @@ staging:appdeploy:
   script:
     - echo 'deploying to STAGING'
     - curl https://cli-assets.heroku.com/install-ubuntu.sh | sh
+    - curl https://cli-assets.heroku.com/apt/release.key | apt-key add -
     - apt-get update -qy
     - gem install dpl
     - gem install faraday -v 1.8.0
@@ -154,6 +155,7 @@ dev:deploy:
   script:
     - echo 'deploying to DEV'
     - curl https://cli-assets.heroku.com/install-ubuntu.sh | sh
+    - curl https://cli-assets.heroku.com/apt/release.key | apt-key add -
     - apt-get update -qy
     - gem install dpl
     - gem install faraday -v 1.8.0
