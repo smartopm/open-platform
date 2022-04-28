@@ -1796,7 +1796,6 @@ RSpec.describe Types::Queries::Note do
                                                site_community: community,
                                              }, variables: { taskId: third_note.id }).as_json
 
-
             expect(result['errors']).to be_nil
             expect(result.dig('data', 'repliesRequestedComments', 'sent', 0, 'body')).to eq(
               'Admin reply to Step 1 subtask 2 comment',

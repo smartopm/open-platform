@@ -428,7 +428,7 @@ module Types::Queries::Note
       others: Comments::NoteComment.where(
         note_id: task_ids,
         reply_required: false,
-      )
+      ),
     }
 
     note_comments.group_by(&:grouping_id).each do |_grouping_id, comments|
