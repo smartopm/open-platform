@@ -19,7 +19,7 @@ export default function TaskLists() {
   const [offset, setOffset] = useState(0);
   const limit = 50;
   const history = useHistory();
-  const { data, loading, error } = useQuery(TaskListsQuery, {
+  const { data, loading, refetch, error } = useQuery(TaskListsQuery, {
     variables: {
       offset,
       limit
@@ -80,7 +80,7 @@ export default function TaskLists() {
         <div>
           {data.taskLists.map(taskList => (
             <div key={taskList.id}>
-              <TodoItem key={taskList?.id} task={taskList} taskId={taskList.id} />
+              <TodoItem key={taskList?.id} task={taskList} taskId={taskList.id} refetch={refetch} />
             </div>
           ))}
         </div>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_04_26_105514) do
+ActiveRecord::Schema.define(version: 2022_04_27_133845) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -554,6 +554,7 @@ ActiveRecord::Schema.define(version: 2022_04_26_105514) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.uuid "process_id"
+    t.integer "status", default: 0
     t.index ["community_id"], name: "index_note_lists_on_community_id"
     t.index ["name", "community_id"], name: "index_note_lists_on_name_and_community_id", unique: true
     t.index ["process_id"], name: "index_note_lists_on_process_id"

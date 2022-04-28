@@ -20,3 +20,11 @@ export const UpdateTaskList = gql`
     }
   }
 `
+
+export const DeleteTaskList = gql`
+  mutation noteListDelete($id: ID!) {
+    noteListDelete(id: $id) {
+      success
+    }
+  }
+`;

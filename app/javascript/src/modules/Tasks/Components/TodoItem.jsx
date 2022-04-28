@@ -4,19 +4,22 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { useLazyQuery } from 'react-apollo';
+import { useLazyQuery, useMutation } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import makeStyles from '@mui/styles/makeStyles';
 import { useLocation, useHistory } from 'react-router-dom';
 import TaskDataList from './TaskDataList';
 import FileUploader from './FileUploader';
-import { objectAccessor, sortTaskOrder } from '../../../utils/helpers';
+import { objectAccessor, sortTaskOrder , formatError } from '../../../utils/helpers';
 import MenuList from '../../../shared/MenuList';
 import { SubTasksQuery } from '../graphql/task_queries';
 import { LinearSpinner } from '../../../shared/Loading';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
 import OpenTaskDataList from '../Processes/Components/OpenTaskDataList';
 import TaskListDataList from '../TaskLists/Components/TaskListDataList';
+import { ActionDialog } from '../../../components/Dialog';
+import MessageAlert from '../../../components/MessageAlert';
+import { DeleteTaskList } from '../TaskLists/graphql/task_list_mutation';
 
 export default function TodoItem({
   task,
@@ -29,7 +32,8 @@ export default function TodoItem({
   handleTodoClick,
   handleTaskCompletion,
   clientView,
-  createTaskListSubTask
+  createTaskListSubTask,
+  refetch
 }) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
@@ -55,7 +59,10 @@ export default function TodoItem({
     fetchPolicy: 'cache-and-network',
     errorPolicy: 'all'
   });
-
+  const [isDialogOpen, setOpen] = useState(false);
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [info, setInfo] = useState({ loading: false, error: false, message: '' });
+  const [taskListDelete] = useMutation(DeleteTaskList);
   let menuList = [
     {
       content: t('menu.open_task_details'),
@@ -111,12 +118,11 @@ export default function TodoItem({
           state: { noteList, task }
         })
       },
-      // TODO: Implement in issue #2371 (deleting task list)
-      // {
-      //   content: t('menu.delete_task_list'),
-      //   isAdmin: true,
-      //   handleClick: () => {}
-      // }
+      {
+        content: t('menu.delete_task_list'),
+        isAdmin: true,
+        handleClick: () => handleDeleteTaskList()
+      }
     ]
   }
 
@@ -127,6 +133,35 @@ export default function TodoItem({
     open: anchorElOpen,
     handleClose
   };
+
+  function handleDeleteTaskList() {
+    setOpen(!isDialogOpen);
+    setAnchorEl(null)
+  }
+
+  function handleTaskListDelete() {
+    taskListDelete({
+      variables: { id: task.noteList?.id } 
+    })
+    .then(() => {
+      setInfo({
+        ...info,
+        message: t('menu.task_list_deleted'),
+        loading: false,
+      });
+      setTimeout(refetch, 500);
+      setAlertOpen(true);
+      setOpen(!isDialogOpen);
+    })
+    .catch(err => {
+      setInfo({
+        ...info,
+        error: true,
+        message: formatError(err.message),
+      });
+      setAlertOpen(true);
+    })
+  }  
 
   function handleTodoMenu(event, taskItem) {
     event.stopPropagation();
@@ -182,6 +217,20 @@ export default function TodoItem({
   return (
     <>
       <div style={{ marginBottom: '10px' }} key={task?.id}>
+        <MessageAlert
+          type={info.error ? 'error' : 'success'}
+          message={info.message}
+          open={alertOpen}
+          handleClose={() => setAlertOpen(false)}
+        />
+
+        <ActionDialog
+          open={isDialogOpen}
+          handleClose={handleDeleteTaskList}
+          handleOnSave={handleTaskListDelete}
+          message={t('menu.task_list_delete_confirmation_message')}
+        />
+
         {createTaskListSubTask && task && (
           <TaskListDataList
             task={task}
@@ -345,7 +394,8 @@ TodoItem.defaultProps = {
   handleAddSubTask: () => {},
   handleUploadDocument: () => {},
   handleTodoClick: () => {},
-  handleTaskCompletion: () => {}
+  handleTaskCompletion: () => {},
+  refetch: () => {}
 };
 
 TodoItem.propTypes = {
@@ -359,7 +409,8 @@ TodoItem.propTypes = {
   handleTaskCompletion: PropTypes.func,
   clientView: PropTypes.bool,
   createTaskListSubTask: PropTypes.bool,
-  taskId: PropTypes.string
+  taskId: PropTypes.string,
+  refetch: PropTypes.func
 };
 
 const useStyles = makeStyles(() => ({
