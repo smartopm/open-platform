@@ -1,9 +1,10 @@
 import React from 'react';
-import DoneIcon from '@mui/icons-material/Done';
-import { Button, FormHelperText } from '@mui/material';
+import { Button, FormHelperText, Typography } from '@mui/material';
 import PropTypes from 'prop-types';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import { useTranslation } from 'react-i18next';
+import makeStyles from '@mui/styles/makeStyles';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 export default function UploadField({
   detail,
@@ -11,15 +12,14 @@ export default function UploadField({
   editable,
   uploaded,
   inputValidation,
-  btnColor
+  btnColor,
+  showDetails
 }) {
   const { t } = useTranslation(['common', 'form']);
+  const classes = useStyles();
   return (
     <>
-      <label
-        htmlFor={`button-${detail.id}`}
-        style={{ width: '100%', borderRadius: '5px',}}
-      >
+      <label htmlFor={`button-${detail.id}`} style={{ width: '100%', borderRadius: '5px' }}>
         <FormHelperText
           style={{
             margin: '5px 0 5px 0'
@@ -27,6 +27,11 @@ export default function UploadField({
         >
           {`${detail.label || ''} ${detail.required ? '*' : ''}`}
         </FormHelperText>
+        {showDetails && (
+          <FormHelperText style={{ padding: '5px 0 15px 0' }}>
+            <Typography variant="body2">{t('form:misc.upload_details')}</Typography>
+          </FormHelperText>
+        )}
         <input
           type="file"
           accept="image/*, .pdf"
@@ -46,12 +51,26 @@ export default function UploadField({
           component="span"
           aria-label={`upload_button_${detail.label}`}
           disabled={editable}
-          startIcon={detail.type === 'file' && uploaded ? <DoneIcon data-testid="done_icon" /> : <FileUploadIcon data-testid="upload_icon"  />}
+          startIcon={<FileUploadIcon data-testid="upload_icon" />}
           color={btnColor}
-          style={{background: '#FFFFFF'}}
+          style={{ background: '#FFFFFF' }}
         >
-          {uploaded ? `${detail.fileCount} ${t('form:misc.file_uploaded', { count: detail.fileCount })}` : t('form:misc.select_file')}
+          {t('form:misc.select_file')}
         </Button>
+        {showDetails && uploaded && (
+          <Button
+            variant="contained"
+            data-testid="form-file-upload-btn"
+            component="span"
+            aria-label={`upload_button_${detail.label}`}
+            disabled={editable}
+            className={classes.button}
+            startIcon={detail.type === 'file' && <CheckCircleIcon className={classes.iconColor} />}
+            style={{ marginLeft: '10px' }}
+          >
+            {`${detail.fileCount} ${t('form:misc.file_uploaded', { count: detail.fileCount })}`}
+          </Button>
+        )}
         {inputValidation.error && (
           <FormHelperText error data-testid="error-msg">
             {t('form:errors.required_field', { fieldName: inputValidation.fieldName })}
@@ -62,13 +81,24 @@ export default function UploadField({
   );
 }
 
+const useStyles = makeStyles(theme => ({
+  button: {
+    background: theme.palette.success.main,
+    color: '#FFFFFF'
+  },
+  iconColor: {
+    color: '#FFFFFF'
+  }
+}));
+
 UploadField.defaultProps = {
   uploaded: false,
   inputValidation: {
     error: false,
     fieldName: ''
   },
-  btnColor: 'default'
+  btnColor: 'default',
+  showDetails: false
 };
 
 UploadField.propTypes = {
@@ -78,7 +108,7 @@ UploadField.propTypes = {
     id: PropTypes.string,
     required: PropTypes.bool,
     fileCount: PropTypes.number,
-    currentPropId: PropTypes.string,
+    currentPropId: PropTypes.string
   }).isRequired,
   upload: PropTypes.func.isRequired,
   editable: PropTypes.bool.isRequired,
@@ -87,5 +117,6 @@ UploadField.propTypes = {
   inputValidation: PropTypes.shape({
     error: PropTypes.bool,
     fieldName: PropTypes.string
-  })
+  }),
+  showDetails: PropTypes.bool
 };

@@ -6,14 +6,11 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import makeStyles from '@mui/styles/makeStyles';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
-import IconButton from '@mui/material/IconButton';
-import CloseIcon from '@mui/icons-material/Close';
 import DatePickerDialog, {
   DateAndTimePickers,
   ThemedTimePicker
 } from '../../../components/DatePickerDialog';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
-import ImageAuth from '../../../shared/ImageAuth';
 import RadioInput from './FormProperties/RadioInput';
 import CheckboxInput from './FormProperties/CheckboxInput';
 import TextInput from './FormProperties/TextInput';
@@ -123,15 +120,20 @@ export default function RenderForm({
 
   function removeBeforeUpload(file, isFileUploaded, formPropertyId) {
     if (isFileUploaded) {
-      return onImageRemove(formPropertyId)
+      return onImageRemove(formPropertyId, file)
     }
-    const filteredImages = filesToUpload.filter(item => item.name !== file.name);
-    return setFilesToUpload(filteredImages);
+     return onNotUploadedImageRemove(file)
   }
 
-  function onImageRemove(imagePropertyId) {
+  function onNotUploadedImageRemove(file) {
+    const filteredImages = filesToUpload.filter(item => item.name !== file.name);
+    setFilesToUpload(filteredImages);
+  }
+
+  function onImageRemove(imagePropertyId, file) {
     const filteredImages = uploadedImages.filter(im => im.propertyId !== imagePropertyId);
     setUploadedImages(filteredImages);
+    onNotUploadedImageRemove(file)
   }
 
   async function handleSignatureUpload() {
@@ -344,21 +346,16 @@ export default function RenderForm({
                   .length,
                 currentPropId: formState.currentPropId
               }}
-              upload={event => setFilesToUpload([...event.target.files])}
+              upload={event => setFilesToUpload([...filesToUpload, ...event.target.files])}
               editable={editable}
               uploaded={!!uploadedFile}
+              showDetails
               btnColor="primary"
               inputValidation={{
                 error: checkRequiredFormPropertyIsFilled(formPropertiesData, formState),
                 fieldName: formPropertiesData.fieldName
               }}
             />
-            {Boolean(filesToUpload.length) && (
-              <>
-                <Typography variant="h6">{t('misc.confirm_uploads')}</Typography>
-                <Typography variant="caption">{t('misc.click_upload_btn')}</Typography>
-              </>
-            )}
           </ListWrapper>
         </Grid>
         {editMode && (
@@ -386,25 +383,6 @@ export default function RenderForm({
             translate={t}
           />
         ))}
-
-        {!!uploadedFile && filesToUpload.length === 1 && (
-          <Grid
-            item
-            md={12}
-            xs={12}
-            className={matches ? classes.filePreviewMobile : classes.filePreview}
-          >
-            <IconButton
-              className={classes.iconButton}
-              onClick={() => onImageRemove(formPropertiesData.id)}
-              data-testid="image_close"
-              size="large"
-            >
-              <CloseIcon className={classes.closeButton} />
-            </IconButton>
-            <ImageAuth type={uploadedFile.contentType.split('/')[0]} imageLink={uploadedFile.url} />
-          </Grid>
-        )}
       </Grid>
     ),
     signature: (

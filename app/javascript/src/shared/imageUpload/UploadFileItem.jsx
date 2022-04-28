@@ -3,6 +3,7 @@ import { Grid, IconButton, Button, CircularProgress } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import PropTypes from 'prop-types';
+import makeStyles from '@mui/styles/makeStyles';
 import { cleanFileName, convertUploadSize, fileTypes } from '../../modules/Forms/utils';
 import { objectAccessor } from '../../utils/helpers';
 
@@ -15,6 +16,7 @@ export default function UploadFileItem({
   isUploaded,
   translate
 }) {
+  const classes = useStyles();
   return (
     <Grid container style={{ marginLeft: 31, marginBottom: 8}} spacing={2}>
       <Grid item xs>
@@ -36,7 +38,7 @@ export default function UploadFileItem({
             }
           </Button>
         ) : (
-          <CheckCircleIcon color="primary" data-testid="file_uploaded"  />
+          <CheckCircleIcon className={classes.iconColor} data-testid="file_uploaded"  />
         )}
       </Grid>
       <Grid item md={4} xs data-testid="file_name">
@@ -61,6 +63,12 @@ export default function UploadFileItem({
     </Grid>
   );
 }
+
+const useStyles = makeStyles((theme) => ({
+  iconColor: {
+    color: theme.palette.success.main
+  }
+ }))
 
 UploadFileItem.propTypes = {
   file: PropTypes.shape({
