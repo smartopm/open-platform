@@ -58,7 +58,7 @@ export default function ProjectDetailsAccordion({ taskId }) {
         <Grid item md={12}>
           {sortedRepliesRequestedComments?.length ? (
             sortedRepliesRequestedComments?.map(comment => (
-              <>
+              <div key={comment.id}>
                 <Grid container>
                   <Grid item md={8} xs={12}>
                     <Grid item xs={12} style={{ display: 'flex' }}>
@@ -109,7 +109,7 @@ export default function ProjectDetailsAccordion({ taskId }) {
                   </Grid>
                 </Grid>
                 <hr />
-              </>
+              </div>
             ))
           ) : (
             <Spinner />
