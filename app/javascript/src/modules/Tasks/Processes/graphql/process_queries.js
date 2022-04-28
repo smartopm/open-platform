@@ -123,3 +123,59 @@ export const ReplyCommentStatQuery = gql`
     }
   }
 `;
+
+export const ProjectRepliesRequestedComments = gql`
+  query repliesRequestedComments($taskId: ID!) {
+    repliesRequestedComments(taskId: $taskId) {
+      sent {
+        id
+        body
+        createdAt
+        groupingId
+        user {
+          id
+          name
+          imageUrl
+        }
+        replyFrom {
+          id
+          name
+        }
+        note {
+          id
+          body
+        }
+      }
+      received {
+        id
+        body
+        createdAt
+        groupingId
+        user {
+          id
+          name
+          imageUrl
+        }
+        note {
+          id
+          body
+        }
+      }
+      resolved {
+        id
+        body
+        createdAt
+        groupingId
+        user {
+          id
+          name
+          imageUrl
+        }
+        note {
+          id
+          body
+        }
+      }
+    }
+  }
+`;
