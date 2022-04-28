@@ -12,7 +12,7 @@ import { Grid, Typography } from '@mui/material';
 import { PaymentSummaryQuery } from '../graphql/payment_summary_query';
 import PaymentSummaryCard from './PaymentSummaryCard';
 import { objectAccessor, formatError } from '../../../../utils/helpers';
-import CenteredContent from '../../../../components/CenteredContent';
+import CenteredContent from '../../../../shared/CenteredContent';
 import { currencies } from '../../../../utils/constants';
 import authStateProps from '../../../../shared/types/authState';
 import CustomSkeleton from '../../../../shared/CustomSkeleton';

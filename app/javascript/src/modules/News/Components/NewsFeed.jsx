@@ -76,7 +76,7 @@ export function PostItemGrid({ data, loading }) {
             gridAutoColumns: 'minmax(200px, 1fr)'
           }}
         >
-          {(loading ? Array.from(new Array(5)) : (data.length && data)).map((tile, index) => (
+          {(loading ? Array.from(new Array(5)) : data.length && data).map((tile, index) => (
             <ImageListItem
               key={tile?.ID || index}
               onClick={tile ? () => routeToPost(tile.ID) : undefined}
@@ -93,9 +93,9 @@ export function PostItemGrid({ data, loading }) {
                   />
                   <ImageListItemBar title={tile.title} />
                 </Grid>
-                ) : (
-                  <CustomSkeleton variant="rectangular" width="100%" height="140px" />
-                )}
+              ) : (
+                <CustomSkeleton variant="rectangular" width="100%" height="140px" />
+              )}
             </ImageListItem>
           ))}
         </ImageList>
