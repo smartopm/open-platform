@@ -89,7 +89,10 @@ export default function TaskReminderCard({ translate }) {
                             }}
                           />
                           <Typography className={classes.due} style={{ paddingBottom: '5px' }}>
-                            {translate('common:misc.due_text')} {dateToString(tile.dueDate)}
+
+                            {translate('common:misc.due_text')}  
+                            {' '}
+                            {dateToString(tile.dueDate)}
                           </Typography>
                         </div>
                         <Typography align="justify" className={classes.content} data-testid="body">
