@@ -45,7 +45,9 @@ export default function RenderForm({
     setFormProperties,
     setFormState,
     startUpload,
-    signature
+    signature,
+    filesToUpload,
+    setFilesToUpload
   } = useContext(FormContext);
 
   // leaving this here in case we need to support more files
@@ -53,7 +55,6 @@ export default function RenderForm({
   const { t } = useTranslation(['form', 'common']);
   const [messageAlert, setMessageAlert] = useState('');
   const [isSuccessAlert, setIsSuccessAlert] = useState(false);
-  const [filesToUpload, setFilesToUpload] = useState([]);
   function handleCheckboxSelect(event, property) {
     const { name, checked } = event.target;
     setFormProperties({

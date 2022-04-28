@@ -30,7 +30,10 @@ MessageAlert.defaultProps = {
 
 MessageAlert.propTypes = {
   type: PropTypes.string.isRequired,
-  message: PropTypes.string.isRequired,
+  message: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.node
+  ]).isRequired,
   open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
   // eslint-disable-next-line react/forbid-prop-types

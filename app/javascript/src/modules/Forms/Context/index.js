@@ -29,6 +29,8 @@ export default function FormContextProvider({ children }) {
   };
   const [formProperties, setFormProperties] = useState(initialData);
   const [formState, setFormState] = useState(state);
+  const [imgUploadError, setImgUploadError] = useState(false);
+  const [filesToUpload, setFilesToUpload] = useState([]);
   const [uploadedImages, setUploadedImages] = useState([]);
   const { onChange, status, signedBlobId, contentType, url, startUpload, filename } = useFileUpload(
     {
@@ -38,6 +40,12 @@ export default function FormContextProvider({ children }) {
   const [createFormUser] = useMutation(FormUserCreateMutation);
   const { t } = useTranslation('form');
   const signature = useFileUpload({ client: useApolloClient() });
+
+  // function checkNotUploadedFiles() {
+  //   if (filesToUpload.length !== uploadedImages.length) {
+  //     setImgUploadError(true);
+  //   }
+  // }
 
   useEffect(() => {
     if (
@@ -64,6 +72,9 @@ export default function FormContextProvider({ children }) {
    * @param {String} userId  the currently logged in user
    */
   function saveFormData(formData, formId, userId, categories, formStatus = null) {
+    if (filesToUpload.length !== uploadedImages.length) {
+      return setImgUploadError(true)
+    }
     setFormState({
       ...formState,
       isSubmitting: true
@@ -106,7 +117,7 @@ export default function FormContextProvider({ children }) {
         filledInProperties,
         categories
       });
-      return;
+      return false;
     }
 
     createFormUser({
@@ -150,6 +161,7 @@ export default function FormContextProvider({ children }) {
           isSubmitting: false
         });
       });
+    return false
   }
   return (
     <FormContext.Provider
@@ -163,7 +175,11 @@ export default function FormContextProvider({ children }) {
         signature,
         uploadedImages,
         startUpload,
-        setUploadedImages
+        setUploadedImages,
+        filesToUpload,
+        setFilesToUpload,
+        imgUploadError,
+        setImgUploadError
       }}
     >
       {children}

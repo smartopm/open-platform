@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, FormHelperText, Typography } from '@mui/material';
+import { Button, FormHelperText } from '@mui/material';
 import PropTypes from 'prop-types';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
 import { useTranslation } from 'react-i18next';
@@ -28,8 +28,8 @@ export default function UploadField({
           {`${detail.label || ''} ${detail.required ? '*' : ''}`}
         </FormHelperText>
         {showDetails && (
-          <FormHelperText style={{ padding: '5px 0 15px 0' }}>
-            <Typography variant="body2">{t('form:misc.upload_details')}</Typography>
+          <FormHelperText style={{ padding: '5px 0 15px 0', fontSize: '14px' }}>
+            {t('form:misc.upload_details')}
           </FormHelperText>
         )}
         <input
