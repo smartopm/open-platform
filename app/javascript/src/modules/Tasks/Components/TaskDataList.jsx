@@ -534,6 +534,8 @@ TaskDataList.propTypes = {
   subTaskCard: PropTypes.bool,
   // eslint-disable-next-line react/forbid-prop-types
   alignStyles: PropTypes.object,
+  handleOpenProjectClick: PropTypes.func,
+  openProject: PropTypes.bool
 };
 
 const useStyles = makeStyles((theme) => ({
