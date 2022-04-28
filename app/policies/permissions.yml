@@ -31,8 +31,7 @@ admin:
       - can_create_task_lists
       - can_get_comment_stats
       - can_edit_task_list
-      - can_delete_task_list
-      - can_get_replies_requested_comments
+      - can_fetch_process_comments
   process:
     permissions:
       - can_view_process_templates
