@@ -33,7 +33,7 @@ export default function ProjectDetailsAccordion({ taskId }) {
   });
 
   const sortedRepliesRequestedComments = sortRepliesRequestedComments(
-    sentComments?.concat(receivedComments, resolvedComments)
+    sentComments?.concat(receivedComments, resolvedComments, replyRequestedComments?.others)
   );
 
   const statusColors = {
@@ -62,17 +62,22 @@ export default function ProjectDetailsAccordion({ taskId }) {
                 <Grid container>
                   <Grid item md={8} xs={12}>
                     <Grid item xs={12} style={{ display: 'flex' }}>
-                      <Chip
-                        label={comment.status}
-                        color={statusColors[comment.status]}
-                        size="small"
-                        style={{ fontSize: '14px' }}
-                        data-testid="sent-chip"
-                      />
-                      <Typography variant="caption" style={{ margin: '0 15px 0 15px' }}>
+                      {comment.status && (
+                        <Chip
+                          label={comment.status}
+                          color={statusColors[comment.status]}
+                          size="small"
+                          style={{ fontSize: '14px' }}
+                          data-testid="sent-chip"
+                        />
+                      )}
+                      <Typography
+                        variant="caption"
+                        style={comment.status ? { margin: '0 15px' } : {}}
+                      >
                         {dateToString(comment.createdAt)}
                       </Typography>
-                      {comment.status !== 'Resolved' && (
+                      {comment.status && comment.status !== 'Resolved' && (
                         <Typography variant="caption" style={{ marginRight: '15px' }}>
                           {comment.status === 'Received'
                             ? t('task.reply_submitted')

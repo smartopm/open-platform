@@ -6,5 +6,6 @@ module Types
     field :sent, [Types::NoteCommentType], null: false
     field :received, [Types::NoteCommentType], null: false
     field :resolved, [Types::NoteCommentType], null: false
+    field :others, [Types::NoteCommentType], null: false
   end
 end

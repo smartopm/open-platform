@@ -176,6 +176,20 @@ export const ProjectRepliesRequestedComments = gql`
           body
         }
       }
+      others {
+        id
+        body
+        createdAt
+        user {
+          id
+          name
+          imageUrl
+        }
+        note {
+          id
+          body
+        }
+      }
     }
   }
 `;

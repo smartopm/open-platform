@@ -1030,6 +1030,10 @@ RSpec.describe Types::Queries::Note do
               id
               body
             }
+            others {
+              id
+              body
+            }
           }
         })
       end
@@ -1792,6 +1796,7 @@ RSpec.describe Types::Queries::Note do
                                                site_community: community,
                                              }, variables: { taskId: third_note.id }).as_json
 
+
             expect(result['errors']).to be_nil
             expect(result.dig('data', 'repliesRequestedComments', 'sent', 0, 'body')).to eq(
               'Admin reply to Step 1 subtask 2 comment',
@@ -1802,6 +1807,7 @@ RSpec.describe Types::Queries::Note do
             expect(result.dig('data', 'repliesRequestedComments', 'resolved', 0, 'body')).to eq(
               'Step 1 subtask 3 comment',
             )
+            expect(result.dig('data', 'repliesRequestedComments', 'others').length).to eq(0)
           end
         end
 

@@ -417,14 +417,19 @@ module Types::Queries::Note
             I18n.t('errors.unauthorized')
     end
 
+    parent_task = context[:site_community].notes.find(task_id)
+    task_ids = project_task_ids(parent_task: parent_task)
+    note_comments = user_replied_requested_comments(task_ids)
+
     results = {
       sent: [],
       received: [],
       resolved: [],
+      others: Comments::NoteComment.where(
+        note_id: task_ids,
+        reply_required: false,
+      )
     }
-    parent_task = context[:site_community].notes.find(task_id)
-    task_ids = project_task_ids(parent_task: parent_task)
-    note_comments = user_replied_requested_comments(task_ids)
 
     note_comments.group_by(&:grouping_id).each do |_grouping_id, comments|
       status = context[:current_user].comment_status(comments)
