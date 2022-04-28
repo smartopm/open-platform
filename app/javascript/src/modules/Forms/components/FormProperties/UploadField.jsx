@@ -5,6 +5,7 @@ import FileUploadIcon from '@mui/icons-material/FileUpload';
 import { useTranslation } from 'react-i18next';
 import makeStyles from '@mui/styles/makeStyles';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 export default function UploadField({
   detail,
@@ -16,6 +17,7 @@ export default function UploadField({
   showDetails
 }) {
   const { t } = useTranslation(['common', 'form']);
+  const matches = useMediaQuery('(max-width:900px)');
   const classes = useStyles();
   return (
     <>
@@ -66,7 +68,7 @@ export default function UploadField({
             disabled={editable}
             className={classes.button}
             startIcon={detail.type === 'file' && <CheckCircleIcon data-testid="done_icon" className={classes.iconColor} />}
-            style={{ marginLeft: '10px' }}
+            style={matches ? {marginTop: '10px'} : { marginLeft: '10px' }}
           >
             {`${detail.fileCount} ${t('form:misc.file_uploaded', { count: detail.fileCount })}`}
           </Button>
