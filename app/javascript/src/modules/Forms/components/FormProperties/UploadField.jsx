@@ -17,7 +17,7 @@ export default function UploadField({
   showDetails
 }) {
   const { t } = useTranslation(['common', 'form']);
-  const matches = useMediaQuery('(max-width:900px)');
+  const matches = useMediaQuery('(max-width:428px)');
   const classes = useStyles();
   return (
     <>
@@ -69,6 +69,7 @@ export default function UploadField({
             className={classes.button}
             startIcon={detail.type === 'file' && <CheckCircleIcon data-testid="done_icon" className={classes.iconColor} />}
             style={matches ? {marginTop: '10px'} : { marginLeft: '10px' }}
+            disableElevation
           >
             {`${detail.fileCount} ${t('form:misc.file_uploaded', { count: detail.fileCount })}`}
           </Button>
