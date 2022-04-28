@@ -28,7 +28,7 @@ export default function UploadField({
           {`${detail.label || ''} ${detail.required ? '*' : ''}`}
         </FormHelperText>
         {showDetails && (
-          <FormHelperText style={{ padding: '5px 0 15px 0', fontSize: '14px' }}>
+          <FormHelperText style={{ padding: '5px 0 15px 0', fontSize: '14px' }} data-testid='upload_details'>
             {t('form:misc.upload_details')}
           </FormHelperText>
         )}
@@ -60,12 +60,12 @@ export default function UploadField({
         {showDetails && uploaded && (
           <Button
             variant="contained"
-            data-testid="form-file-upload-btn"
+            data-testid="details_button"
             component="span"
             aria-label={`upload_button_${detail.label}`}
             disabled={editable}
             className={classes.button}
-            startIcon={detail.type === 'file' && <CheckCircleIcon className={classes.iconColor} />}
+            startIcon={detail.type === 'file' && <CheckCircleIcon data-testid="done_icon" className={classes.iconColor} />}
             style={{ marginLeft: '10px' }}
           >
             {`${detail.fileCount} ${t('form:misc.file_uploaded', { count: detail.fileCount })}`}

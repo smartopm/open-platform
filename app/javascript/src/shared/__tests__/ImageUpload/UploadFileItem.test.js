@@ -2,6 +2,7 @@ import React from 'react';
 import { fireEvent, render } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import UploadFileItem from '../../imageUpload/UploadFileItem';
+import MockedThemeProvider from '../../../modules/__mocks__/mock_theme';
 
 describe('Image Area component', () => {
   it('should render ImageArea component correctly', () => {
@@ -22,15 +23,17 @@ describe('Image Area component', () => {
     const isUploaded = false;
     const translate = jest.fn(() => 'Upload');
     const container = render(
-      <UploadFileItem
-        file={file}
-        formState={formState}
-        handleUpload={handleUpload}
-        handleRemoveFile={handleRemoveFile}
-        formPropertyId={formPropertyId}
-        isUploaded={isUploaded}
-        translate={translate}
-      />
+      <MockedThemeProvider>
+        <UploadFileItem
+          file={file}
+          formState={formState}
+          handleUpload={handleUpload}
+          handleRemoveFile={handleRemoveFile}
+          formPropertyId={formPropertyId}
+          isUploaded={isUploaded}
+          translate={translate}
+        />
+      </MockedThemeProvider>
     );
     expect(container.queryByTestId('file_uploaded')).not.toBeInTheDocument();
     expect(container.queryByTestId('upload_loader')).not.toBeInTheDocument();
@@ -46,33 +49,41 @@ describe('Image Area component', () => {
     expect(container.queryByTestId('remove_upload_btn')).toBeInTheDocument();
 
     // upload
-    fireEvent.click(container.queryByTestId('upload_btn'))
-    expect(handleUpload).toBeCalled()
-    expect(handleUpload).toBeCalledWith({"name": "nice_video.mp4", "size": 2000000, "type": "video/mp4"}, "0909")
+    fireEvent.click(container.queryByTestId('upload_btn'));
+    expect(handleUpload).toBeCalled();
+    expect(handleUpload).toBeCalledWith(
+      { name: 'nice_video.mp4', size: 2000000, type: 'video/mp4' },
+      '0909'
+    );
     // remove file
-    fireEvent.click(container.queryByTestId('remove_upload_btn'))
-    expect(handleRemoveFile).toBeCalled()
-    expect(handleRemoveFile).toBeCalledWith({"name": "nice_video.mp4", "size": 2000000, "type": "video/mp4"}, false, "0909")
+    fireEvent.click(container.queryByTestId('remove_upload_btn'));
+    expect(handleRemoveFile).toBeCalled();
+    expect(handleRemoveFile).toBeCalledWith(
+      { name: 'nice_video.mp4', size: 2000000, type: 'video/mp4' },
+      false,
+      '0909'
+    );
   });
 
   it('should show checked icon when file is uploaded', () => {
     const file = {
-        type: 'video/mp4',
-        name: 'nice_video.mp4',
-        size: 2000000
-      };
-      const formState = {
-        isUploading: false,
-        currentPropId: '0909',
-        currentFileNames: [file.name, 'another_video.mp4']
-      };
-  
-      const handleUpload = jest.fn();
-      const handleRemoveFile = jest.fn();
-      const formPropertyId = '0909';
-      const isUploaded = true;
-      const translate = jest.fn(() => 'Upload');
-      const container = render(
+      type: 'video/mp4',
+      name: 'nice_video.mp4',
+      size: 2000000
+    };
+    const formState = {
+      isUploading: false,
+      currentPropId: '0909',
+      currentFileNames: [file.name, 'another_video.mp4']
+    };
+
+    const handleUpload = jest.fn();
+    const handleRemoveFile = jest.fn();
+    const formPropertyId = '0909';
+    const isUploaded = true;
+    const translate = jest.fn(() => 'Upload');
+    const container = render(
+      <MockedThemeProvider>
         <UploadFileItem
           file={file}
           formState={formState}
@@ -82,27 +93,29 @@ describe('Image Area component', () => {
           isUploaded={isUploaded}
           translate={translate}
         />
-      );
-      expect(container.queryByTestId('file_uploaded')).toBeInTheDocument();
-  })
+      </MockedThemeProvider>
+    );
+    expect(container.queryByTestId('file_uploaded')).toBeInTheDocument();
+  });
   it('should show the loading spinner when file is being uploaded', () => {
     const file = {
-        type: 'video/mp4',
-        name: 'nice_video.mp4',
-        size: 2000000
-      };
-      const formState = {
-        isUploading: true,
-        currentPropId: '0909',
-        currentFileNames: [file.name, 'another_video.mp4']
-      };
-  
-      const handleUpload = jest.fn();
-      const handleRemoveFile = jest.fn();
-      const formPropertyId = '0909';
-      const isUploaded = false;
-      const translate = jest.fn(() => 'Upload');
-      const container = render(
+      type: 'video/mp4',
+      name: 'nice_video.mp4',
+      size: 2000000
+    };
+    const formState = {
+      isUploading: true,
+      currentPropId: '0909',
+      currentFileNames: [file.name, 'another_video.mp4']
+    };
+
+    const handleUpload = jest.fn();
+    const handleRemoveFile = jest.fn();
+    const formPropertyId = '0909';
+    const isUploaded = false;
+    const translate = jest.fn(() => 'Upload');
+    const container = render(
+      <MockedThemeProvider>
         <UploadFileItem
           file={file}
           formState={formState}
@@ -112,8 +125,9 @@ describe('Image Area component', () => {
           isUploaded={isUploaded}
           translate={translate}
         />
-      );
-      expect(container.queryByTestId('upload_loader')).toBeInTheDocument();
-      expect(container.queryByTestId('remove_upload_btn')).toBeDisabled();
-  })
+      </MockedThemeProvider>
+    );
+    expect(container.queryByTestId('upload_loader')).toBeInTheDocument();
+    expect(container.queryByTestId('remove_upload_btn')).toBeDisabled();
+  });
 });
