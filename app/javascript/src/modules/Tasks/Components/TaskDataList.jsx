@@ -40,7 +40,9 @@ export default function TaskDataList({
   clientView,
   taskCommentHasReply,
   subTaskCard,
-  alignStyles
+  alignStyles,
+  handleOpenProjectClick,
+  openProject,
 }) {
   const classes = useStyles();
   const { t } = useTranslation('task');
@@ -203,6 +205,7 @@ export default function TaskDataList({
                   size="large"
                   onClick={() => handleClick()}
                   data-testid="open_task_details"
+                  disabled={openSubTask}
                 >
                   <WidgetsIcon />
                 </IconButton>
@@ -317,7 +320,12 @@ export default function TaskDataList({
                   justifyContent="center"
                 >
                   <Grid item md={11} style={{ textAlign: 'right' }}>
-                    <IconButton color="primary" size="large" onClick={() => handleClick()}>
+                    <IconButton
+                      color="primary"
+                      size="large"
+                      onClick={handleOpenProjectClick}
+                      disabled={openSubTask}
+                    >
                       <WidgetsIcon />
                     </IconButton>
                   </Grid>
@@ -466,6 +474,7 @@ export default function TaskDataList({
               onClick={e => handleOpenSubTasksClick(e)}
               color="primary"
               size="large"
+              disabled={openProject}
             >
               {openSubTask ? (
                 <KeyboardArrowUpIcon fontSize="small" color="primary" />
@@ -506,7 +515,9 @@ TaskDataList.defaultProps = {
   clientView: false,
   taskCommentHasReply: false,
   subTaskCard: false,
-  alignStyles: {}
+  alignStyles: {},
+  handleOpenProjectClick: () => {},
+  openProject: false,
 };
 TaskDataList.propTypes = {
   task: PropTypes.shape(Task).isRequired,
