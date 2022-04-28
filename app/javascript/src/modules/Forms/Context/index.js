@@ -41,12 +41,6 @@ export default function FormContextProvider({ children }) {
   const { t } = useTranslation('form');
   const signature = useFileUpload({ client: useApolloClient() });
 
-  // function checkNotUploadedFiles() {
-  //   if (filesToUpload.length !== uploadedImages.length) {
-  //     setImgUploadError(true);
-  //   }
-  // }
-
   useEffect(() => {
     if (
       status === 'DONE' &&
