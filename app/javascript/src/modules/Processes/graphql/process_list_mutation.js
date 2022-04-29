@@ -22,3 +22,10 @@ export const ProcessUpdateMutation = gql`
     }
   }
 `
+export const ProcessDeleteMutation = gql`
+  mutation processDeleteMutation($id: ID!) {
+    processDelete(id: $id){
+      success
+    }
+  }
+`

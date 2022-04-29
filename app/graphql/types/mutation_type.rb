@@ -175,6 +175,7 @@ module Types
 
     # process
     field :process_create, mutation: Mutations::Process::ProcessCreate
+    field :process_delete, mutation: Mutations::Process::ProcessDelete
 
     # logs
     field :lead_log_create, mutation: Mutations::Log::LeadLogCreate
