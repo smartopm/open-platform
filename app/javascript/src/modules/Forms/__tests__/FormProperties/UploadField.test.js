@@ -55,15 +55,16 @@ describe('Upload component', () => {
       detail: { status: '', type: 'file', label: 'Image Label', required: true, id: '123', fileCount: 20 },
       editable: false,
       btnColor: 'primary',
-      uploaded: true
+      uploaded: true,
+      showDetails: true
     };
     const container = render(
       <MockedThemeProvider>
         <Upload {...props} inputValidation={{ error: true }} />
       </MockedThemeProvider>
     );
-    expect(container.queryByTestId('form-file-upload-btn')).toBeInTheDocument();
-    expect(container.queryByTestId('form-file-upload-btn').textContent).toContain('20 form:misc.file_uploaded');
+    expect(container.queryByTestId('upload_details')).toBeInTheDocument();
+    expect(container.queryByTestId('details_button').textContent).toContain('20 form:misc.file_uploaded');
     expect(container.queryByTestId('done_icon')).toBeInTheDocument();
   });
 });

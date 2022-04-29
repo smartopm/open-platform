@@ -1,6 +1,6 @@
 /* eslint-disable complexity */
 import React, { useState, useContext, useEffect } from 'react';
-import { Button, DialogContent, DialogContentText, Grid, Divider } from '@mui/material';
+import { Button, DialogContent, DialogContentText, Grid, Divider, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import { useMutation, useQuery } from 'react-apollo';
 import { useHistory } from 'react-router';
@@ -42,7 +42,9 @@ export default function Form({
     variables: { formId },
     fetchPolicy: 'no-cache'
   });
-  const { formState, saveFormData, setFormState } = useContext(FormContext);
+  const { formState, saveFormData, setFormState, imgUploadError, setImgUploadError } = useContext(
+    FormContext
+  );
   const authState = useContext(Context);
   const history = useHistory();
   const [categoryDelete, { loading: isDeleting, error }] = useMutation(FormCategoryDeleteMutation);
@@ -78,6 +80,13 @@ export default function Form({
     setCategoryFormOpen(false);
   }
 
+  function handleMessageAlertClose(err) {
+    if (err) {
+      return setImgUploadError(false);
+    }
+    return setFormState({ ...formState, alertOpen: false });
+  }
+
   function handleCancelPreview() {
     setFormState({ ...formState, previewable: false });
   }
@@ -103,18 +112,27 @@ export default function Form({
     }
   }, [formState.isDraft, formState.successfulSubmit]);
 
-
-
-
   const formData = flattenFormProperties(categoriesData.data?.formCategories);
 
   return (
     <>
       <MessageAlert
-        type={formState.error || error ? 'error' : 'success'}
-        message={formState.info || formatError(error?.message)}
-        open={formState.alertOpen || !!error}
-        handleClose={() => setFormState({ ...formState, alertOpen: false })}
+        type={formState.error || error || imgUploadError ? 'error' : 'success'}
+        message={
+          formState.info ||
+          formatError(error?.message) || (
+            <div>
+              <Typography variant="body1">{t('form:misc.upload_error')}</Typography>
+              {' '}
+              <Typography variant="body2">{t('form:misc.upload_error_content_one')}</Typography>
+              <Typography variant="body2">{t('form:misc.upload_error_content_two')}</Typography>
+              <Typography variant="body2">{t('form:misc.upload_error_content_three')}</Typography>
+              <Typography variant="body2">{t('form:misc.upload_error_content_four')}</Typography>
+            </div>
+          )
+        }
+        open={formState.alertOpen || !!error || imgUploadError}
+        handleClose={() => handleMessageAlertClose(imgUploadError)}
       />
       {categoryFormOpen && (
         <CategoryForm
@@ -140,13 +158,13 @@ export default function Form({
             <FormPreview
               loading={formState.isSubmitting}
               handleFormSubmit={() =>
-              saveFormData(
-                formData,
-                formId,
-                authState.user.id,
-                categoriesData.data?.formCategories
-              )
-            }
+                saveFormData(
+                  formData,
+                  formId,
+                  authState.user.id,
+                  categoriesData.data?.formCategories
+                )
+              }
               categoriesData={categoriesData}
             />
           </DialogContentText>
@@ -222,7 +240,7 @@ export default function Form({
                 disabled={isPublishing}
                 startIcon={isPublishing && <Spinner />}
                 style={{ color: 'white' }}
-                data-testid='publishing'
+                data-testid="publishing"
               >
                 {isPublishing ? t('form:misc.publishing_form') : t('form:actions.publish_form')}
               </Button>
@@ -235,7 +253,7 @@ export default function Form({
           <Grid item md={12} xs={12} style={{ marginTop: '20px' }}>
             <Divider />
           </Grid>
-          <AccessCheck module='forms' allowedPermissions={['can_save_draft_form']}>
+          <AccessCheck module="forms" allowedPermissions={['can_save_draft_form']}>
             <Grid item md={6} xs={6} style={{ textAlign: 'left' }}>
               <Button
                 variant="outlined"
@@ -250,7 +268,6 @@ export default function Form({
                 {t('common:form_actions.save_as_draft')}
               </Button>
             </Grid>
-
           </AccessCheck>
           <Grid item md={6} xs={6} style={{ textAlign: 'right' }}>
             <Button
@@ -294,7 +311,7 @@ Form.propTypes = {
       id: PropTypes.string,
       name: PropTypes.string,
       preview: PropTypes.bool,
-      isPublic: PropTypes.bool,
+      isPublic: PropTypes.bool
     })
   }),
   formDetailRefetch: PropTypes.func,
