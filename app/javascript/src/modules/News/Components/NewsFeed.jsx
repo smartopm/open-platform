@@ -12,8 +12,8 @@ import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { useFetch } from '../../../utils/customHooks';
-import CenteredContent from '../../../components/CenteredContent';
 import CustomSkeleton from '../../../shared/CustomSkeleton';
+import CenteredContent from '../../../shared/CenteredContent';
 
 const NUMBER_OF_POSTS_TO_DISPLAY = 5;
 const useStyles = makeStyles(theme => ({
@@ -76,7 +76,7 @@ export function PostItemGrid({ data, loading }) {
             gridAutoColumns: 'minmax(200px, 1fr)'
           }}
         >
-          {(loading ? Array.from(new Array(5)) : (data.length && data)).map((tile, index) => (
+          {(loading ? Array.from(new Array(5)) : data.length && data).map((tile, index) => (
             <ImageListItem
               key={tile?.ID || index}
               onClick={tile ? () => routeToPost(tile.ID) : undefined}
@@ -93,9 +93,9 @@ export function PostItemGrid({ data, loading }) {
                   />
                   <ImageListItemBar title={tile.title} />
                 </Grid>
-                ) : (
-                  <CustomSkeleton variant="rectangular" width="100%" height="140px" />
-                )}
+              ) : (
+                <CustomSkeleton variant="rectangular" width="100%" height="140px" />
+              )}
             </ImageListItem>
           ))}
         </ImageList>

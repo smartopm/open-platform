@@ -54,7 +54,7 @@ export default function TaskReminderCard({ translate }) {
         )}
       </div>
       <div>
-        {(loading || data?.userTasks.length > 0) ? (
+        {loading || data?.userTasks.length > 0 ? (
           <div
             className={classes.root}
             style={matches ? { marginLeft: '20px' } : { marginLeft: '79px' }}
@@ -89,7 +89,8 @@ export default function TaskReminderCard({ translate }) {
                             }}
                           />
                           <Typography className={classes.due} style={{ paddingBottom: '5px' }}>
-                            {translate('common:misc.due_text')} 
+
+                            {translate('common:misc.due_text')}  
                             {' '}
                             {dateToString(tile.dueDate)}
                           </Typography>
