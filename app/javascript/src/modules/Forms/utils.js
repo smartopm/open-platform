@@ -292,7 +292,7 @@ export function generateIframeSnippet(form, hostname) {
 export function cleanFileName(name){
   if(!name) return ''
   const filename =  name.split('.')[0]
-  return titleCase(truncateString(filename, 15))
+  return titleCase(truncateString(filename, 18))
 }
 
 
