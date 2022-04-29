@@ -14,7 +14,7 @@ import { removeNewLines, sanitizeText, formatError } from '../../../../utils/hel
 export default function ProjectDetailsAccordion({ taskId }) {
   const { t } = useTranslation(['task', 'common']);
 
-  const { data, error } = useQuery(ProjectRepliesRequestedComments, {
+  const { data, loading, error } = useQuery(ProjectRepliesRequestedComments, {
     variables: {
       taskId
     },
@@ -56,7 +56,10 @@ export default function ProjectDetailsAccordion({ taskId }) {
           <Typography variant="h6">{t('task.project_overview')}</Typography>
         </Grid>
         <Grid item md={12}>
-          {sortedRepliesRequestedComments?.length ? (
+          {loading && <Spinner />}
+          {sortedRepliesRequestedComments?.length === 0 ? (
+            <CenteredContent>{t('task.no_comments')}</CenteredContent>
+          ) : (
             sortedRepliesRequestedComments?.map(comment => (
               <div key={comment.id}>
                 <Grid container>
@@ -73,7 +76,7 @@ export default function ProjectDetailsAccordion({ taskId }) {
                       )}
                       <Typography
                         variant="caption"
-                        style={comment.status ? { margin: '0 15px' } : {}}
+                        style={comment.status ? { margin: '0 15px' } : { marginRight: '15px' }}
                       >
                         {dateToString(comment.createdAt)}
                       </Typography>
@@ -111,8 +114,6 @@ export default function ProjectDetailsAccordion({ taskId }) {
                 <hr />
               </div>
             ))
-          ) : (
-            <Spinner />
           )}
         </Grid>
       </Grid>

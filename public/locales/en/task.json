@@ -70,7 +70,8 @@
     "task_created": "Task Successfully Created",
     "project_overview": "Project Overview",
     "reply_submitted": "Reply Submitted",
-    "reply_sent_to": "Reply Requested Sent To"
+    "reply_sent_to": "Reply Requested Sent To",
+    "no_comments": "No comments available"
   },
   "document": {
     "uploaded_at": "Uploaded at",
