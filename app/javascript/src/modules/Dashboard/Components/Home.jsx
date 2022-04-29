@@ -37,7 +37,7 @@ const Home = () => {
         style={{ display: 'flex', justifyContent: 'center' }}
         columns={{ xs: 12, md: 12 }}
       >
-        <Grid md={12} xs={12}>
+        <Grid item md={12} xs={12}>
           <LanguageToggle />
           {['admin', 'developer', 'consultant'].includes(userType) && (
             <div>
