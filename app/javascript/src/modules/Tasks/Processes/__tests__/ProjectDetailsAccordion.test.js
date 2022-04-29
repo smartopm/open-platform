@@ -105,7 +105,7 @@ describe('Admin processes dashboard', () => {
         </BrowserRouter>
       </MockedProvider>
     );
-    expect(screen.queryAllByTestId('loader')[0]).toBeInTheDocument();
+    expect(screen.queryAllByTestId('skeleton')[0]).toBeInTheDocument();
 
     await waitFor(() => {
       expect(screen.queryByText('Sent User Name')).toBeInTheDocument()
