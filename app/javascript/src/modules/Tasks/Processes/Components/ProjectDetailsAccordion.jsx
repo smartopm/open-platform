@@ -4,15 +4,17 @@ import PropTypes from 'prop-types';
 import { Grid, Paper, Typography, Chip, Avatar } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { useQuery } from 'react-apollo';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { ProjectRepliesRequestedComments } from '../graphql/process_queries';
-import { Spinner } from '../../../../shared/Loading';
 import CenteredContent from '../../../../shared/CenteredContent';
 import { sortRepliesRequestedComments } from '../utils';
 import { dateToString } from '../../../../components/DateContainer';
 import { removeNewLines, sanitizeText, formatError } from '../../../../utils/helpers';
+import CustomSkeleton from '../../../../shared/CustomSkeleton';
 
 export default function ProjectDetailsAccordion({ taskId }) {
   const { t } = useTranslation(['task', 'common']);
+  const smDownHidden = useMediaQuery(theme => theme.breakpoints.down('sm'));
 
   const { data, loading, error } = useQuery(ProjectRepliesRequestedComments, {
     variables: {
@@ -45,7 +47,7 @@ export default function ProjectDetailsAccordion({ taskId }) {
   if (error) return <CenteredContent>{formatError(error.message)}</CenteredContent>;
 
   return (
-    <Paper style={{ boxShadow: '0px 0px 0px 1px #E0E0E0' }}>
+    <Paper style={{ boxShadow: '0px 0px 0px 1px #E0E0E0', maxHeight: '700px', overflowY: 'auto' }}>
       <Grid
         container
         spacing={1}
@@ -56,8 +58,9 @@ export default function ProjectDetailsAccordion({ taskId }) {
           <Typography variant="h6">{t('task.project_overview')}</Typography>
         </Grid>
         <Grid item md={12}>
-          {loading && <Spinner />}
-          {sortedRepliesRequestedComments?.length === 0 ? (
+          {loading ? (
+            <CustomSkeleton variant="rectangular" width="100%" height="300px" />
+          ) : sortedRepliesRequestedComments?.length === 0 ? (
             <CenteredContent>{t('task.no_comments')}</CenteredContent>
           ) : (
             sortedRepliesRequestedComments?.map(comment => (
@@ -87,16 +90,30 @@ export default function ProjectDetailsAccordion({ taskId }) {
                             : `${t('task.reply_sent_to')} ${comment.replyFrom.name}`}
                         </Typography>
                       )}
-                      <Avatar
-                        src={comment.user.imageUrl}
-                        alt="avatar-image"
-                        style={{ margin: '-7px 10px 0 0' }}
-                      />
-                      <Typography variant="caption">{comment.user.name}</Typography>
+                      {(!smDownHidden || !['Received', 'Sent'].includes(comment.status)) && (
+                        <>
+                          <Avatar
+                            src={comment.user.imageUrl}
+                            alt="avatar-image"
+                            style={{ margin: '-2px 10px 0 0', width: '25px', height: '25px' }}
+                          />
+                          <Typography variant="caption">{comment.user.name}</Typography>
+                        </>
+                      )}
                     </Grid>
+                    {smDownHidden && ['Received', 'Sent'].includes(comment.status) && (
+                      <div style={{ display: 'flex', marginTop: '13px' }}>
+                        <Avatar
+                          src={comment.user.imageUrl}
+                          alt="avatar-image"
+                          style={{ margin: '-2px 10px 0 0', width: '25px', height: '25px' }}
+                        />
+                        <Typography variant="caption">{comment.user.name}</Typography>
+                      </div>
+                    )}
                     <Typography variant="caption">{comment.body}</Typography>
                   </Grid>
-                  <Grid item md={4} xs={12} style={{ textAlign: 'right' }}>
+                  <Grid item md={4} xs={12} style={!smDownHidden ? { textAlign: 'right' } : {}}>
                     <Link
                       to={`/processes/drc/projects/${comment.note.id}?tab=processes&detailTab=comments&replying_discussion=${comment.groupingId}`}
                     >

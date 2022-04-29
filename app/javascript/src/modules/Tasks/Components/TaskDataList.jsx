@@ -42,7 +42,7 @@ export default function TaskDataList({
   subTaskCard,
   alignStyles,
   handleOpenProjectClick,
-  openProject,
+  openProject
 }) {
   const classes = useStyles();
   const { t } = useTranslation('task');
@@ -154,8 +154,7 @@ export default function TaskDataList({
               )}
               {task.submittedBy && !mdDownHidden && (
                 <>
-                  <Typography variant="caption">Submitted by</Typography>
-                  {' '}
+                  <Typography variant="caption">Submitted by</Typography>{' '}
                   <Link to={`/user/${task.submittedBy?.id}`}>
                     <Typography variant="caption">{task.submittedBy?.name}</Typography>
                   </Link>
@@ -182,8 +181,7 @@ export default function TaskDataList({
             )}
             {task.submittedBy && !mdUpHidden && (
               <Grid item sm={12} md={12} lg={12} xs={12} className={classes.submitedBy}>
-                <Typography variant="caption">Submitted by</Typography>
-                {' '}
+                <Typography variant="caption">Submitted by</Typography>{' '}
                 <Link to={`/user/${task.submittedBy.id}`}>
                   <Typography variant="caption">{task.submittedBy?.name}</Typography>
                 </Link>
@@ -203,7 +201,7 @@ export default function TaskDataList({
                 <IconButton
                   color="primary"
                   size="large"
-                  onClick={() => handleClick()}
+                  onClick={handleOpenProjectClick}
                   data-testid="open_task_details"
                   disabled={openSubTask}
                 >
@@ -214,11 +212,11 @@ export default function TaskDataList({
                 {urlParams.type === 'drc' && taskCommentHasReply && (
                   <Badge
                     color="warning"
-                    badgeContent={(
+                    badgeContent={
                       <Typography variant="caption" style={{ color: 'white' }}>
                         R
                       </Typography>
-                    )}
+                    }
                   />
                 )}
               </Grid>
@@ -333,11 +331,11 @@ export default function TaskDataList({
                     {urlParams.type === 'drc' && taskCommentHasReply && (
                       <Badge
                         color="warning"
-                        badgeContent={(
+                        badgeContent={
                           <Typography variant="caption" style={{ color: 'white' }}>
                             R
                           </Typography>
-                        )}
+                        }
                       />
                     )}
                   </Grid>
@@ -422,7 +420,9 @@ export default function TaskDataList({
                     md={1}
                     xs={1}
                     className={classes.iconItem}
-                    style={urlParams.type === 'drc' ? {marginLeft: '-53px'} : { marginLeft: '-11px' }}
+                    style={
+                      urlParams.type === 'drc' ? { marginLeft: '-53px' } : { marginLeft: '-11px' }
+                    }
                   >
                     <span data-testid="task-comment">{data?.taskComments.length || 0}</span>
                   </Grid>
@@ -448,7 +448,9 @@ export default function TaskDataList({
                     md={1}
                     xs={1}
                     className={classes.iconItem}
-                    style={urlParams.type === 'drc' ? { marginLeft: '-58px' } : { marginLeft: '-16px' }}
+                    style={
+                      urlParams.type === 'drc' ? { marginLeft: '-58px' } : { marginLeft: '-16px' }
+                    }
                   >
                     <span data-testid="file_attachments_total">
                       {task.attachments?.length || 0}
@@ -517,7 +519,7 @@ TaskDataList.defaultProps = {
   subTaskCard: false,
   alignStyles: {},
   handleOpenProjectClick: () => {},
-  openProject: false,
+  openProject: false
 };
 TaskDataList.propTypes = {
   task: PropTypes.shape(Task).isRequired,
@@ -538,7 +540,7 @@ TaskDataList.propTypes = {
   openProject: PropTypes.bool
 };
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   taskBody: {
     maxWidth: '42ch',
     overflow: 'hidden',
