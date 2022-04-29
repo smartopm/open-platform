@@ -47,7 +47,7 @@ export default function ProjectDetailsAccordion({ taskId }) {
   if (error) return <CenteredContent>{formatError(error.message)}</CenteredContent>;
 
   return (
-    <Paper style={{ boxShadow: '0px 0px 0px 1px #E0E0E0', maxHeight: '700px', overflowY: 'auto' }}>
+    <Paper style={{ boxShadow: '0px 0px 0px 1px #E0E0E0', maxHeight: '500px', overflowY: 'auto' }}>
       <Grid
         container
         spacing={1}
@@ -95,7 +95,7 @@ export default function ProjectDetailsAccordion({ taskId }) {
                           <Avatar
                             src={comment.user.imageUrl}
                             alt="avatar-image"
-                            style={{ margin: '-2px 10px 0 0', width: '25px', height: '25px' }}
+                            style={{ margin: '-2px 10px 0 0', width: '24px', height: '24px' }}
                           />
                           <Typography variant="caption">{comment.user.name}</Typography>
                         </>
@@ -106,7 +106,7 @@ export default function ProjectDetailsAccordion({ taskId }) {
                         <Avatar
                           src={comment.user.imageUrl}
                           alt="avatar-image"
-                          style={{ margin: '-2px 10px 0 0', width: '25px', height: '25px' }}
+                          style={{ margin: '-2px 10px 0 0', width: '24px', height: '24px' }}
                         />
                         <Typography variant="caption">{comment.user.name}</Typography>
                       </div>
