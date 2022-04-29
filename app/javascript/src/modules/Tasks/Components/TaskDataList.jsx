@@ -154,7 +154,8 @@ export default function TaskDataList({
               )}
               {task.submittedBy && !mdDownHidden && (
                 <>
-                  <Typography variant="caption">Submitted by</Typography>{' '}
+                  <Typography variant="caption">Submitted by</Typography>
+                  {' '}
                   <Link to={`/user/${task.submittedBy?.id}`}>
                     <Typography variant="caption">{task.submittedBy?.name}</Typography>
                   </Link>
@@ -181,7 +182,8 @@ export default function TaskDataList({
             )}
             {task.submittedBy && !mdUpHidden && (
               <Grid item sm={12} md={12} lg={12} xs={12} className={classes.submitedBy}>
-                <Typography variant="caption">Submitted by</Typography>{' '}
+                <Typography variant="caption">Submitted by</Typography>
+                {' '}
                 <Link to={`/user/${task.submittedBy.id}`}>
                   <Typography variant="caption">{task.submittedBy?.name}</Typography>
                 </Link>
@@ -212,11 +214,11 @@ export default function TaskDataList({
                 {urlParams.type === 'drc' && taskCommentHasReply && (
                   <Badge
                     color="warning"
-                    badgeContent={
+                    badgeContent={(
                       <Typography variant="caption" style={{ color: 'white' }}>
                         R
                       </Typography>
-                    }
+                    )}
                   />
                 )}
               </Grid>
@@ -331,11 +333,11 @@ export default function TaskDataList({
                     {urlParams.type === 'drc' && taskCommentHasReply && (
                       <Badge
                         color="warning"
-                        badgeContent={
+                        badgeContent={(
                           <Typography variant="caption" style={{ color: 'white' }}>
                             R
                           </Typography>
-                        }
+                        )}
                       />
                     )}
                   </Grid>
