@@ -1,38 +1,40 @@
 /* eslint-disable react/prop-types */
 /* eslint-disable react/no-array-index-key */
 /* eslint-disable no-use-before-define */
-import React from 'react'
-import { Redirect } from 'react-router-dom'
-import { StyleSheet, css } from 'aphrodite'
-import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck'
-import HelpIcon from '@mui/icons-material/Help'
-import PersonIcon from '@mui/icons-material/Person'
-import LabelIcon from '@mui/icons-material/Label'
-import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty'
-import LogIcon from '@mui/icons-material/Assignment'
-import MessageIcon from '@mui/icons-material/Message'
-import NotesIcon from '@mui/icons-material/Notes'
+import React from 'react';
+import { Redirect } from 'react-router-dom';
+import { StyleSheet, css } from 'aphrodite';
+import PlaylistAddCheckIcon from '@mui/icons-material/PlaylistAddCheck';
+import HelpIcon from '@mui/icons-material/Help';
+import PersonIcon from '@mui/icons-material/Person';
+import LabelIcon from '@mui/icons-material/Label';
+import HourglassEmptyIcon from '@mui/icons-material/HourglassEmpty';
+import LogIcon from '@mui/icons-material/Assignment';
+import MessageIcon from '@mui/icons-material/Message';
+import NotesIcon from '@mui/icons-material/Notes';
 import SettingsIcon from '@mui/icons-material/Settings';
-import ForumIcon from '@mui/icons-material/Forum'
-import CallIcon from '@mui/icons-material/Call'
-import AccountCircleIcon from '@mui/icons-material/AccountCircle'
-import CommentIcon from '@mui/icons-material/Comment'
-import LocalMallIcon from '@mui/icons-material/LocalMall'
-import ListAltIcon from '@mui/icons-material/ListAlt'
-import RecentActorsIcon from '@mui/icons-material/RecentActors'
-import PeopleIcon from '@mui/icons-material/People'
-import TelegramIcon from '@mui/icons-material/Telegram'
+import ForumIcon from '@mui/icons-material/Forum';
+import CallIcon from '@mui/icons-material/Call';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import CommentIcon from '@mui/icons-material/Comment';
+import LocalMallIcon from '@mui/icons-material/LocalMall';
+import ListAltIcon from '@mui/icons-material/ListAlt';
+import RecentActorsIcon from '@mui/icons-material/RecentActors';
+import PeopleIcon from '@mui/icons-material/People';
+import TelegramIcon from '@mui/icons-material/Telegram';
 import LandscapeIcon from '@mui/icons-material/Landscape';
 import PaymentIcon from '@mui/icons-material/Payment';
 import MailOutline from '@mui/icons-material/MailOutline';
-import SelectAll from '@mui/icons-material/SelectAll'
+import SelectAll from '@mui/icons-material/SelectAll';
 import HomeWorkIcon from '@mui/icons-material/HomeWork';
 import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
-import { useTranslation } from 'react-i18next'
-import Card from './Card'
+import { useTranslation } from 'react-i18next';
+import Card from './Card';
 import QuickLinks from '../modules/QuickLinks/Components/QuickLinks';
 import SocialMediaLinks from './SocialMediaLinks';
 import { Footer } from './Footer';
+import FeatureCheck from '../modules/Features';
+import NewsFeed from '../modules/News/Components/NewsFeed';
 
 // This should be deprecated in favour of the new dashboard
 export default function Homepage({ authState, quickLinks }) {
@@ -335,6 +337,9 @@ export default function Homepage({ authState, quickLinks }) {
                   {card.children}
                 </Card>
               ))}
+              <FeatureCheck features={authState.user.community.features} name="News">
+                <NewsFeed wordpressEndpoint={authState.user?.community.wpLink} />
+              </FeatureCheck>
             </div>
           </div>
         </div>

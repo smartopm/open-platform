@@ -96,9 +96,6 @@ const Home = () => {
           )}
           {!['admin', 'client', 'developer', 'consultant'].includes(userType) && (
             <div style={{ paddingTop: '50px' }}>
-              <FeatureCheck features={authState.user.community.features} name="News">
-                <NewsFeed wordpressEndpoint={authState.user?.community.wpLink} />
-              </FeatureCheck>
               <Homepage authState={authState} quickLinks={filteredQuickLinks} />
             </div>
           )}

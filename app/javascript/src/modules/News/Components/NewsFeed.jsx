@@ -12,8 +12,8 @@ import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { useFetch } from '../../../utils/customHooks';
-import CenteredContent from '../../../components/CenteredContent';
 import CustomSkeleton from '../../../shared/CustomSkeleton';
+import CenteredContent from '../../../shared/CenteredContent';
 
 const NUMBER_OF_POSTS_TO_DISPLAY = 5;
 const useStyles = makeStyles(theme => ({
