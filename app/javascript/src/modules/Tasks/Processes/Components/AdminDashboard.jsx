@@ -1,3 +1,5 @@
+/* eslint-disable max-lines */
+/* eslint-disable complexity */
 import React, { Fragment, useState } from 'react';
 import {
   Divider,
@@ -9,8 +11,7 @@ import {
   CardContent,
   Container,
   Grid,
-  Chip,
-  Stack
+  Button
 } from '@mui/material';
 import { useQuery } from 'react-apollo';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -194,46 +195,16 @@ export default function AdminDashboard() {
         </Grid>
       </Grid>
       <Grid container style={{ marginTop: '10px' }}>
-        <Grid item md={7} xs={12}>
+        <Grid item md={8} xs={12}>
           <Link to="/processes/drc/projects" underline="hover">
             <Typography className={classes.processTitle} color="primary" variant="h5">
               {t('processes.drc_process')}
             </Typography>
           </Link>
         </Grid>
-        <Grid item md={5} xs={12}>
+        <Grid item md={3} xs={12} style={{textAlign: 'right'}}>
           {commentStatData && (
-            <Stack direction="row" spacing={1} justifyContent="center" alignItems="center">
-              <Typography style={{ fontSize: '14px' }}>
-                {t('processes.replies_requested')}
-              </Typography>
-              <Chip
-                label={t('task:misc.sent', { count: commentStatData.replyCommentStats.sent })}
-                color="info"
-                size="small"
-                style={{ fontSize: '14px' }}
-                data-testid="sent-chip"
-                onClick={() => routeToProjects('replies_requested', 'sent')}
-              />
-              <Chip
-                label={t('task:misc.received', {
-                  count: commentStatData.replyCommentStats.received
-                })}
-                color="warning"
-                size="small"
-                style={{ fontSize: '14px' }}
-                onClick={() => routeToProjects('replies_requested', 'received')}
-              />
-              <Chip
-                label={t('task:misc.resolved', {
-                  count: commentStatData.replyCommentStats.resolved
-                })}
-                color="success"
-                size="small"
-                style={{ fontSize: '14px' }}
-                onClick={() => routeToProjects('replies_requested', 'resolved')}
-              />
-            </Stack>
+            <Button color='primary' variant='outlined' onClick={() => history.push('/processes/comments')}>{t('processes.open_comments')}</Button>
           )}
         </Grid>
       </Grid>
