@@ -8,6 +8,7 @@ import TaskLists from '../Components/TaskLists';
 import { Context } from '../../../../containers/Provider/AuthStateProvider';
 import { TaskListsQuery } from '../graphql/task_lists_queries';
 import authState from '../../../../__mocks__/authstate';
+import { DeleteTaskList } from '../graphql/task_list_mutation';
 
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
@@ -42,6 +43,13 @@ describe('Task Lists', () => {
           taskLists: [taskListMock]
         }
       }
+    },
+    {
+      request: {
+        query: DeleteTaskList,
+        variables: { id: taskListMock.id } 
+      },
+      result: { data: { deleteTaskList: { success: true } } },
     }
   ];
 
@@ -154,6 +162,13 @@ describe('Task Lists', () => {
       fireEvent.click(kebabButton);
       expect(screen.queryAllByTestId('menu_item')[0]).toBeInTheDocument();
       expect(screen.getByText('menu.edit_task_list')).toBeInTheDocument();
+      const deleteTaskList = screen.getByText('menu.delete_task_list');
+      expect(deleteTaskList).toBeInTheDocument();
+      fireEvent.click(deleteTaskList);
+      const proceedButton = screen.queryByTestId('proceed_button');
+      expect(proceedButton).toBeInTheDocument();
+      fireEvent.click(proceedButton);
+
     });
   });
 

@@ -15,6 +15,10 @@ RSpec.describe Notes::NoteList, type: :model do
     it { is_expected.to have_many(:notes).class_name('Notes::Note').dependent(:destroy) }
   end
 
+  describe 'enums' do
+    it { is_expected.to define_enum_for(:status).with_values(active: 0, deleted: 1) }
+  end
+
   describe 'callbacks' do
     let!(:user) { create(:user_with_community) }
     let(:community) { user.community }
