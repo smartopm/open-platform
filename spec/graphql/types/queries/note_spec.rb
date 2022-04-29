@@ -22,6 +22,7 @@ RSpec.describe Types::Queries::Note do
                             can_fetch_tagged_comments
                             can_view_task_lists
                             can_get_comment_stats
+                            can_get_replies_requested_comments
                           ])
     end
     let!(:site_worker_permission) do
@@ -1014,6 +1015,29 @@ RSpec.describe Types::Queries::Note do
         })
       end
 
+      let(:replies_requested_comments_query) do
+        %(query($taskId: ID!) {
+          repliesRequestedComments(taskId: $taskId) {
+            sent {
+              id
+              body
+            }
+            received {
+              id
+              body
+            }
+            resolved {
+              id
+              body
+            }
+            others {
+              id
+              body
+            }
+          }
+        })
+      end
+
       let(:project_query) do
         <<~GQL
           query Project($formUserId: ID!) {
@@ -1656,6 +1680,146 @@ RSpec.describe Types::Queries::Note do
 
           expect(result.dig('errors', 0, 'message'))
             .to include('Unauthorized')
+        end
+      end
+
+      describe 'replies_requested_comments' do
+        before do
+          community
+          site_worker
+          third_note
+
+          create(
+            :note_comment,
+            note: third_note,
+            body: 'Step 1',
+            user: site_worker,
+            status: 'active',
+            reply_required: true,
+            reply_from: admin,
+            grouping_id: '6d3f82c5-5d74-471d-a5a9-143f6e5ad3f1',
+          )
+
+          subtask1 = admin.notes.create!(
+            body: 'Step 1 subtask 1',
+            description: 'Step 1 subtask 1',
+            user_id: site_worker.id,
+            category: 'other',
+            flagged: true,
+            community_id: community.id,
+            author_id: site_worker.id,
+            parent_note_id: third_note.id,
+          )
+
+          create(
+            :note_comment,
+            note: subtask1,
+            body: 'Step 1 subtask 1 comment',
+            user: site_worker,
+            status: 'active',
+            reply_required: true,
+            reply_from: admin,
+            grouping_id: '5d3f82c5-5d74-471d-a5a9-143f6e5ad3f1',
+          )
+
+          subtask2 = admin.notes.create!(
+            body: 'Step 1 subtask 2',
+            description: 'Step 1 subtask 2',
+            user_id: site_worker.id,
+            category: 'other',
+            flagged: true,
+            community_id: community.id,
+            author_id: site_worker.id,
+            parent_note_id: subtask1.id,
+          )
+
+          create(
+            :note_comment,
+            note: subtask2,
+            body: 'Step 1 subtask 2 comment',
+            user: site_worker,
+            status: 'active',
+            reply_required: true,
+            reply_from: admin,
+            grouping_id: '4d3f82c5-5d74-471d-a5a9-143f6e5ad3f1',
+          )
+          create(
+            :note_comment,
+            note: subtask2,
+            body: 'Admin reply to Step 1 subtask 2 comment',
+            user: admin,
+            status: 'active',
+            reply_required: true,
+            reply_from: site_worker,
+            grouping_id: '4d3f82c5-5d74-471d-a5a9-143f6e5ad3f1',
+          )
+
+          subtask3 = admin.notes.create!(
+            body: 'Step 1 subtask 3',
+            description: 'Step 1 subtask 3',
+            user_id: site_worker.id,
+            category: 'other',
+            flagged: true,
+            community_id: community.id,
+            author_id: site_worker.id,
+            parent_note_id: third_note.id,
+          )
+
+          create(
+            :note_comment,
+            note: subtask3,
+            body: 'Step 1 subtask 3 comment',
+            user: site_worker,
+            status: 'active',
+            reply_required: true,
+            reply_from: admin,
+            grouping_id: '1d3f82c5-5d74-471d-a5a9-143f6e5ad3f1',
+            replied_at: 2.days.ago,
+          )
+          create(
+            :note_comment,
+            note: subtask3,
+            body: 'Step 1 subtask 3 comment',
+            user: admin,
+            status: 'active',
+            reply_required: true,
+            reply_from: site_worker,
+            grouping_id: '1d3f82c5-5d74-471d-a5a9-143f6e5ad3f1',
+            replied_at: 1.day.ago,
+          )
+        end
+
+        context 'when current-user has can_get_replies_requested_comments permission' do
+          it 'retrieves replies requested comments according to statuses' do
+            result = DoubleGdpSchema.execute(replies_requested_comments_query, context: {
+                                               current_user: admin,
+                                               site_community: community,
+                                             }, variables: { taskId: third_note.id }).as_json
+
+            expect(result['errors']).to be_nil
+            expect(result.dig('data', 'repliesRequestedComments', 'sent', 0, 'body')).to eq(
+              'Admin reply to Step 1 subtask 2 comment',
+            )
+            expect(result.dig('data', 'repliesRequestedComments', 'received', 0, 'body')).to eq(
+              'Step 1 subtask 1 comment',
+            )
+            expect(result.dig('data', 'repliesRequestedComments', 'resolved', 0, 'body')).to eq(
+              'Step 1 subtask 3 comment',
+            )
+            expect(result.dig('data', 'repliesRequestedComments', 'others').length).to eq(0)
+          end
+        end
+
+        context 'when current-user does not have permission' do
+          it 'raises unauthorized error' do
+            result = DoubleGdpSchema.execute(replies_requested_comments_query, context: {
+                                               current_user: site_worker,
+                                               site_community: community,
+                                             }, variables: { taskId: third_note.id }).as_json
+
+            expect(result.dig('errors', 0, 'message'))
+              .to include('Unauthorized')
+          end
         end
       end
     end

@@ -131,6 +131,11 @@ module Types::Queries::Note
       description 'Returns stats of reply-requested comments for a process'
       argument :process_type, String, required: false
     end
+
+    field :replies_requested_comments, Types::CommentsByStatusType, null: false do
+      description 'Returns comments for each status'
+      argument :task_id, GraphQL::Types::ID, required: true
+    end
   end
   # rubocop:enable Metrics/BlockLength
 
@@ -404,6 +409,36 @@ module Types::Queries::Note
   # rubocop:enable Metrics/MethodLength
   # rubocop:enable Metrics/CyclomaticComplexity
   # rubocop:enable Metrics/PerceivedComplexity
+
+  # rubocop:disable Metrics/MethodLength
+  def replies_requested_comments(task_id:)
+    unless permitted?(module: :note, permission: :can_get_replies_requested_comments)
+      raise GraphQL::ExecutionError,
+            I18n.t('errors.unauthorized')
+    end
+
+    parent_task = context[:site_community].notes.find(task_id)
+    task_ids = project_task_ids(parent_task: parent_task)
+    note_comments = user_replied_requested_comments(task_ids)
+
+    results = {
+      sent: [],
+      received: [],
+      resolved: [],
+      others: Comments::NoteComment.where(
+        note_id: task_ids,
+        reply_required: false,
+      ),
+    }
+
+    note_comments.group_by(&:grouping_id).each do |_grouping_id, comments|
+      status = context[:current_user].comment_status(comments)
+      results[status.to_sym] << comments.first
+    end
+
+    results
+  end
+  # rubocop:enable Metrics/MethodLength
 
   def project_stages
     # This will get the total project steps for each DRC process

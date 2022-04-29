@@ -100,3 +100,8 @@ export function checkLastItem(index, arr) {
   if(!menus || !menus.length) return []
   return menus.filter(menu => menu.isVisible)
 }
+
+export function sortRepliesRequestedComments(comments) {
+  if (!comments) return null;
+  return comments.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+}

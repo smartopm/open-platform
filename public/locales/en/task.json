@@ -67,7 +67,11 @@
     "task_name": "Task Name",
     "optional_description": "Description (Optional)",
     "due_date_optional": "Due Date (Optional)",
-    "task_created": "Task Successfully Created"
+    "task_created": "Task Successfully Created",
+    "project_overview": "Project Overview",
+    "reply_submitted": "Reply Submitted",
+    "reply_sent_to": "Reply Requested Sent To",
+    "no_comments": "No comments yet on this project"
   },
   "document": {
     "uploaded_at": "Uploaded at",

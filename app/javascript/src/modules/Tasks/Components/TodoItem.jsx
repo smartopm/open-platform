@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import { useLazyQuery, useMutation } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import makeStyles from '@mui/styles/makeStyles';
-import { useLocation, useHistory } from 'react-router-dom';
+import { useLocation, useHistory, useParams } from 'react-router-dom';
 import TaskDataList from './TaskDataList';
 import FileUploader from './FileUploader';
 import { objectAccessor, sortTaskOrder , formatError } from '../../../utils/helpers';
@@ -20,6 +20,7 @@ import TaskListDataList from '../TaskLists/Components/TaskListDataList';
 import { ActionDialog } from '../../../components/Dialog';
 import MessageAlert from '../../../components/MessageAlert';
 import { DeleteTaskList } from '../TaskLists/graphql/task_list_mutation';
+import ProjectDetailsAccordion from '../Processes/Components/ProjectDetailsAccordion';
 
 export default function TodoItem({
   task,
@@ -39,11 +40,13 @@ export default function TodoItem({
   const [anchorEl, setAnchorEl] = useState(null);
   const [selectedTask, setSelectedTask] = useState(null);
   const [tasksOpen, setTasksOpen] = useState({});
+  const [projectsAccordionOpen, setProjectsAccordionOpen] = useState({});
   const [isUpdating, setIsUpdating] = useState(false);
   const anchorElOpen = Boolean(anchorEl);
   const { t } = useTranslation('common');
   const history = useHistory();
   const location = useLocation();
+  const urlParams = useParams();
   const authState = React.useContext(AuthStateContext);
   const taskPermissions = authState?.user?.permissions?.find(
     permissionObject => permissionObject.module === 'note'
@@ -214,6 +217,13 @@ export default function TodoItem({
     handleTodoClick(taskItem, 'processes', tab);
   }
 
+  function handleToggleProjectAccordionOverview() {
+    setProjectsAccordionOpen({
+      ...projectsAccordionOpen,
+      [task.id]: !objectAccessor(projectsAccordionOpen, task.id)
+    });
+  }
+
   return (
     <>
       <div style={{ marginBottom: '10px' }} key={task?.id}>
@@ -266,6 +276,10 @@ export default function TodoItem({
               handleTaskCompletion={handleTaskCompletion}
               clientView={clientView}
               taskCommentHasReply={task?.taskCommentReply}
+              handleOpenProjectClick={handleToggleProjectAccordionOverview}
+              openProject={
+                urlParams.type === 'drc' && objectAccessor(projectsAccordionOpen, task?.id)
+              }
             />
           )
         )}
@@ -274,6 +288,15 @@ export default function TodoItem({
           <LinearSpinner />
         )}
       </div>
+
+      {urlParams.type === 'drc' && objectAccessor(projectsAccordionOpen, task?.id) && (
+        <div className={classes.levelOne}>
+          <ProjectDetailsAccordion
+            taskId={task?.id}
+            handleCloseAccordion={handleToggleProjectAccordionOverview}
+          />
+        </div>
+      )}
 
       {objectAccessor(tasksOpen, task?.id) &&
         data?.taskSubTasks?.length > 0 &&
@@ -297,7 +320,7 @@ export default function TodoItem({
                   clientView={clientView}
                   taskCommentHasReply={false}
                   subTaskCard
-                  alignStyles={{marginLeft: '-12px'}}
+                  alignStyles={{ marginLeft: '-12px' }}
                 />
               ) : (
                 <TaskListDataList
@@ -309,7 +332,7 @@ export default function TodoItem({
                   styles={{ backgroundColor: '#F5F5F4' }}
                   openSubTask={objectAccessor(tasksOpen, firstLevelSubTask.id)}
                   subTaskCard
-                  alignStyles={{marginLeft: '-12px'}}
+                  alignStyles={{ marginLeft: '-12px' }}
                 />
               )}
             </div>
@@ -333,7 +356,7 @@ export default function TodoItem({
                           clientView={clientView}
                           taskCommentHasReply={false}
                           subTaskCard
-                          alignStyles={{marginLeft: '-24px'}}
+                          alignStyles={{ marginLeft: '-24px' }}
                         />
                       ) : (
                         <TaskListDataList
@@ -345,7 +368,7 @@ export default function TodoItem({
                           styles={{ backgroundColor: '#F5F5F4' }}
                           openSubTask={objectAccessor(tasksOpen, secondLevelSubTask.id)}
                           subTaskCard
-                          alignStyles={{marginLeft: '-32px'}}
+                          alignStyles={{ marginLeft: '-32px' }}
                         />
                       )}
                     </div>

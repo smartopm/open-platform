@@ -40,7 +40,9 @@ export default function TaskDataList({
   clientView,
   taskCommentHasReply,
   subTaskCard,
-  alignStyles
+  alignStyles,
+  handleOpenProjectClick,
+  openProject
 }) {
   const classes = useStyles();
   const { t } = useTranslation('task');
@@ -201,8 +203,9 @@ export default function TaskDataList({
                 <IconButton
                   color="primary"
                   size="large"
-                  onClick={() => handleClick()}
+                  onClick={handleOpenProjectClick}
                   data-testid="open_task_details"
+                  disabled={openSubTask}
                 >
                   <WidgetsIcon />
                 </IconButton>
@@ -317,7 +320,12 @@ export default function TaskDataList({
                   justifyContent="center"
                 >
                   <Grid item md={11} style={{ textAlign: 'right' }}>
-                    <IconButton color="primary" size="large" onClick={() => handleClick()}>
+                    <IconButton
+                      color="primary"
+                      size="large"
+                      onClick={handleOpenProjectClick}
+                      disabled={openSubTask}
+                    >
                       <WidgetsIcon />
                     </IconButton>
                   </Grid>
@@ -414,7 +422,9 @@ export default function TaskDataList({
                     md={1}
                     xs={1}
                     className={classes.iconItem}
-                    style={urlParams.type === 'drc' ? {marginLeft: '-53px'} : { marginLeft: '-11px' }}
+                    style={
+                      urlParams.type === 'drc' ? { marginLeft: '-53px' } : { marginLeft: '-11px' }
+                    }
                   >
                     <span data-testid="task-comment">{data?.taskComments.length || 0}</span>
                   </Grid>
@@ -440,7 +450,9 @@ export default function TaskDataList({
                     md={1}
                     xs={1}
                     className={classes.iconItem}
-                    style={urlParams.type === 'drc' ? { marginLeft: '-58px' } : { marginLeft: '-16px' }}
+                    style={
+                      urlParams.type === 'drc' ? { marginLeft: '-58px' } : { marginLeft: '-16px' }
+                    }
                   >
                     <span data-testid="file_attachments_total">
                       {task.attachments?.length || 0}
@@ -466,6 +478,7 @@ export default function TaskDataList({
               onClick={e => handleOpenSubTasksClick(e)}
               color="primary"
               size="large"
+              disabled={openProject}
             >
               {openSubTask ? (
                 <KeyboardArrowUpIcon fontSize="small" color="primary" />
@@ -506,7 +519,9 @@ TaskDataList.defaultProps = {
   clientView: false,
   taskCommentHasReply: false,
   subTaskCard: false,
-  alignStyles: {}
+  alignStyles: {},
+  handleOpenProjectClick: () => {},
+  openProject: false
 };
 TaskDataList.propTypes = {
   task: PropTypes.shape(Task).isRequired,
@@ -523,9 +538,11 @@ TaskDataList.propTypes = {
   subTaskCard: PropTypes.bool,
   // eslint-disable-next-line react/forbid-prop-types
   alignStyles: PropTypes.object,
+  handleOpenProjectClick: PropTypes.func,
+  openProject: PropTypes.bool
 };
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   taskBody: {
     maxWidth: '42ch',
     overflow: 'hidden',
