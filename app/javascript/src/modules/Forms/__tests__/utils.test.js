@@ -482,7 +482,7 @@ describe('Utilities', () => {
   it('should clean file names before uploading files', () => {
     expect(cleanFileName()).toBe('')
     expect(cleanFileName('someimage.jpg')).toBe('Someimage')
-    expect(cleanFileName('someimageanotherimageimage.jpg')).toBe('Someimagea...')
+    expect(cleanFileName('someimageanotherimageimage.jpg')).toBe('Someimageanotherim...')
   });
 
   it('should return translatable files', () => {
