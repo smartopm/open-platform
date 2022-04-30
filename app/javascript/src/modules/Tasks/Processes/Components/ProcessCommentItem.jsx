@@ -18,8 +18,12 @@ export default function ProcessCommentItem({ commentdata, commentType }) {
   const { t } = useTranslation(['process', 'task']);
   return (
     <>
-      <Grid container spacing={2} style={{ marginBottom: '30px', borderBottom: '1px solid #F5F4F5', paddingBottom: '10px' }}>
-        <Grid item md={1}>
+      <Grid
+        container
+        spacing={1}
+        style={{ marginBottom: '30px', borderBottom: '1px solid #F5F4F5', paddingBottom: '15px' }}
+      >
+        <Grid item md={commentType === 'Sent' ? 1 : 2} xs={commentType === 'Sent' ? 3 : 5}>
           <Chip
             label={commentType}
             color={objectAccessor(statusColors, commentType)}
@@ -28,12 +32,13 @@ export default function ProcessCommentItem({ commentdata, commentType }) {
             data-testid="sent-chip"
           />
         </Grid>
-        <Grid item md={11}>
-          <Typography
-            variant="caption"
-          >
-            {dateToString(commentdata.createdAt)}
-          </Typography>
+        <Grid
+          item
+          md={commentType === 'Sent' ? 11 : 10}
+          xs={commentType === 'Sent' ? 9 : 7}
+          style={commentType === 'Sent' ? {} : { marginLeft: '-30px' }}
+        >
+          <Typography variant="caption">{dateToString(commentdata.createdAt)}</Typography>
           {commentType !== 'Resolved' && (
             <Typography variant="caption" style={{ marginLeft: '15px' }}>
               {commentType === 'Received'
