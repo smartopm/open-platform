@@ -202,7 +202,7 @@ export default function AdminDashboard() {
             </Typography>
           </Link>
         </Grid>
-        <Grid item md={3} xs={12} style={{textAlign: 'right'}}>
+        <Grid item md={3} xs={12} style={!matches ? {textAlign: 'right'} : { padding: '10px 0'}}>
           {commentStatData && (
             <Button color='primary' variant='outlined' onClick={() => history.push('/processes/comments')}>{t('processes.open_comments')}</Button>
           )}

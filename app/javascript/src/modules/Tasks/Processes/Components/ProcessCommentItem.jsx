@@ -3,6 +3,8 @@ import Grid from '@mui/material/Grid';
 import Avatar from '@mui/material/Avatar';
 import PropTypes from 'prop-types';
 import Chip from '@mui/material/Chip';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import makeStyles from '@mui/styles/makeStyles';
 import Typography from '@mui/material/Typography';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
@@ -15,7 +17,9 @@ export default function ProcessCommentItem({ commentdata, commentType }) {
     Received: 'warning',
     Resolved: 'success'
   };
+  const matches = useMediaQuery('(max-width:600px)');
   const { t } = useTranslation(['process', 'task']);
+  const classes = useStyles();
   return (
     <>
       <Grid
@@ -36,7 +40,8 @@ export default function ProcessCommentItem({ commentdata, commentType }) {
           item
           md={commentType === 'Sent' ? 11 : 10}
           xs={commentType === 'Sent' ? 9 : 7}
-          style={commentType === 'Sent' ? {} : { marginLeft: '-30px' }}
+          style={commentType === 'Sent' ? {} : { marginLeft: '-25px' }}
+          className={matches ? classes.card : undefined}
         >
           <Typography variant="caption">{dateToString(commentdata.createdAt)}</Typography>
           {commentType !== 'Resolved' && (
@@ -47,7 +52,7 @@ export default function ProcessCommentItem({ commentdata, commentType }) {
             </Typography>
           )}
         </Grid>
-        <Grid item md={12}>
+        <Grid item md={12} xs={12}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'left' }}>
             <Avatar
               src={commentdata.user.imageUrl || commentdata.user.avatarUrl}
@@ -59,12 +64,12 @@ export default function ProcessCommentItem({ commentdata, commentType }) {
             </Typography>
           </div>
         </Grid>
-        <Grid item md={12}>
+        <Grid item md={12} xs={12}>
           <Typography variant="caption" color="textSecondary">
             {commentdata.body}
           </Typography>
         </Grid>
-        <Grid item md={12}>
+        <Grid item md={12} xs={12}>
           <Link
             to={`/processes/drc/projects/${commentdata.note.id}?tab=processes&detailTab=comments&replying_discussion=${commentdata.groupingId}`}
           >
@@ -82,6 +87,12 @@ export default function ProcessCommentItem({ commentdata, commentType }) {
     </>
   );
 }
+
+const useStyles = makeStyles(() => ({ 
+  card: {
+    marginLeft: '-15px'
+  }
+}))
 
 ProcessCommentItem.propTypes = {
   commentdata: PropTypes.shape({
