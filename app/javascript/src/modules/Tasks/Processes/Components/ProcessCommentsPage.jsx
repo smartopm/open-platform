@@ -83,11 +83,37 @@ export default function ProcessCommentsPage() {
             />
           </StyledTabs>
           <TabPanel value={tabValue} index={0}>
-            {data.processReplyComments.sent.map(comment => (
-              <div key={comment.id}>
-                <ProcessCommentItem commentdata={comment} commentType="Sent" />
-              </div>
-            ))}
+            {data.processReplyComments.sent.length > 0 ? (
+              data.processReplyComments.sent.map(comment => (
+                <div key={comment.id}>
+                  <ProcessCommentItem commentdata={comment} commentType="Sent" />
+                </div>
+              ))
+            ) : (
+              <CenteredContent>{t('comments.no_comment')}</CenteredContent>
+            )}
+          </TabPanel>
+          <TabPanel value={tabValue} index={1}>
+            {data.processReplyComments.received.length > 0 ? (
+              data.processReplyComments.received.map(comment => (
+                <div key={comment.id}>
+                  <ProcessCommentItem commentdata={comment} commentType="Received" />
+                </div>
+              ))
+            ) : (
+              <CenteredContent>{t('comments.no_comment')}</CenteredContent>
+            )}
+          </TabPanel>
+          <TabPanel value={tabValue} index={2}>
+            {data.processReplyComments.resolved.length > 0 ? (
+              data.processReplyComments.resolved.map(comment => (
+                <div key={comment.id}>
+                  <ProcessCommentItem commentdata={comment} commentType="Resolved" />
+                </div>
+              ))
+            ) : (
+              <CenteredContent>{t('comments.no_comment')}</CenteredContent>
+            )}
           </TabPanel>
         </PageWrapper>
       )}

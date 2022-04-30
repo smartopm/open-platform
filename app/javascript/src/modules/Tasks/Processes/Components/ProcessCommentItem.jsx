@@ -1,57 +1,100 @@
-// import React from 'react';
-// import Grid from '@mui/material/Grid';
-// import Avatar from '@mui/material/Avatar';
-// import Chip from '@mui/material/Chip';
-// import Typography from '@mui/material/Typography';
-// import { useTranslation } from 'react-i18next';
-// import UserNameAvatar from '../../../../shared/UserNameAvatar';
-// import { objectAccessor } from '../../../../utils/helpers';
-// import { dateToString } from '../../../../components/DateContainer';
+import React from 'react';
+import Grid from '@mui/material/Grid';
+import Avatar from '@mui/material/Avatar';
+import PropTypes from 'prop-types';
+import Chip from '@mui/material/Chip';
+import Typography from '@mui/material/Typography';
+import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
+import { objectAccessor, sanitizeText, removeNewLines } from '../../../../utils/helpers';
+import { dateToString } from '../../../../components/DateContainer';
 
-// export default function ProcessCommentItem({ commentdata, commentType }) {
-//   const statusColors = {
-//     Sent: 'info',
-//     Received: 'warning',
-//     Resolved: 'success'
-//   };
-//   const { t } = useTranslation(['process', 'task']);
-//   return (
-//     <>
-//       <Grid container spacing={2}>
-//         <Grid item md={2}>
-//           <Chip
-//             label={commentType}
-//             color={objectAccessor(statusColors, commentType)}
-//             size="small"
-//             style={{ fontSize: '14px' }}
-//             data-testid="sent-chip"
-//           />
-//           <Typography
-//             variant="caption"
-//             // style={comment.status ? { margin: '0 15px' } : { marginRight: '15px' }}
-//           >
-//             {dateToString(commentdata.createdAt)}
-//           </Typography>
-//           {commentType !== 'Resolved' && (
-//             <Typography variant="caption" style={{ marginRight: '15px' }}>
-//               {commentType === 'Received'
-//                 ? t('task.reply_submitted')
-//                 : `${t('task.reply_sent_to')} ${commentdata.replyFrom.name}`}
-//             </Typography>
-//           )}
-//         </Grid>
-//         {/* <Grid item md={12}>
-//           <Avatar
-//             src={comment.user.imageUrl}
-//             alt="avatar-image"
-//             style={{ margin: '-2px 10px 0 0', width: '25px', height: '25px' }}
-//           />
-//           <Typography variant="caption">{comment.user.name}</Typography>
-//         </Grid> */}
-//         {/* <Grid item md={12}>
-//           {commentdata.body}
-//         </Grid> */}
-//       </Grid>
-//     </>
-//   );
-// }
+export default function ProcessCommentItem({ commentdata, commentType }) {
+  const statusColors = {
+    Sent: 'info',
+    Received: 'warning',
+    Resolved: 'success'
+  };
+  const { t } = useTranslation(['process', 'task']);
+  return (
+    <>
+      <Grid container spacing={2} style={{ marginBottom: '30px', borderBottom: '1px solid #F5F4F5', paddingBottom: '10px' }}>
+        <Grid item md={1}>
+          <Chip
+            label={commentType}
+            color={objectAccessor(statusColors, commentType)}
+            size="small"
+            style={{ fontSize: '14px' }}
+            data-testid="sent-chip"
+          />
+        </Grid>
+        <Grid item md={11}>
+          <Typography
+            variant="caption"
+          >
+            {dateToString(commentdata.createdAt)}
+          </Typography>
+          {commentType !== 'Resolved' && (
+            <Typography variant="caption" style={{ marginLeft: '15px' }}>
+              {commentType === 'Received'
+                ? t('task:task.reply_submitted')
+                : `${t('task:task.reply_sent_to')} ${commentdata.replyFrom.name}`}
+            </Typography>
+          )}
+        </Grid>
+        <Grid item md={12}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'left' }}>
+            <Avatar
+              src={commentdata.user.imageUrl || commentdata.user.avatarUrl}
+              alt="avatar-image"
+              style={{ width: '25px', height: '25px' }}
+            />
+            <Typography variant="caption" style={{ marginLeft: '10px' }}>
+              {commentdata.user.name}
+            </Typography>
+          </div>
+        </Grid>
+        <Grid item md={12}>
+          <Typography variant="caption" color="textSecondary">
+            {commentdata.body}
+          </Typography>
+        </Grid>
+        <Grid item md={12}>
+          <Link
+            to={`/processes/drc/projects/${commentdata.note.id}?tab=processes&detailTab=comments&replying_discussion=${commentdata.groupingId}`}
+          >
+            <Typography variant="caption">
+              <span
+                // eslint-disable-next-line react/no-danger
+                dangerouslySetInnerHTML={{
+                  __html: sanitizeText(removeNewLines(commentdata.note.body))
+                }}
+              />
+            </Typography>
+          </Link>
+        </Grid>
+      </Grid>
+    </>
+  );
+}
+
+ProcessCommentItem.propTypes = {
+  commentdata: PropTypes.shape({
+    createdAt: PropTypes.string,
+    groupingId: PropTypes.string,
+    body: PropTypes.string,
+    replyFrom: PropTypes.shape({
+      name: PropTypes.string
+    }),
+    user: PropTypes.shape({
+      imageUrl: PropTypes.string,
+      avatarUrl: PropTypes.string,
+      name: PropTypes.string
+    }),
+    note: PropTypes.shape({
+      id: PropTypes.string,
+      body: PropTypes.string
+    })
+  }).isRequired,
+  commentType: PropTypes.string.isRequired
+};

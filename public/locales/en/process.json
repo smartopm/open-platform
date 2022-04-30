@@ -34,6 +34,7 @@
     "sent": "Sent",
     "received": "Received",
     "resolved": "Resolved",
-    "reply_submitted": "Reply Submitted"
+    "reply_submitted": "Reply Submitted",
+    "no_comment": "No comments available"
   }
 }
