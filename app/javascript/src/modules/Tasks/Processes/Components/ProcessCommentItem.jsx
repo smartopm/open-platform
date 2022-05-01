@@ -20,6 +20,11 @@ export default function ProcessCommentItem({ commentdata, commentType }) {
   const matches = useMediaQuery('(max-width:600px)');
   const { t } = useTranslation(['process', 'task']);
   const classes = useStyles();
+  const statusLabel = {
+    Sent: t('comments.sent'),
+    Received: t('comments.received'),
+    Resolved: t('comments.resolved')
+  };
   return (
     <>
       <Grid
@@ -29,11 +34,11 @@ export default function ProcessCommentItem({ commentdata, commentType }) {
       >
         <Grid item md={commentType === 'Sent' ? 1 : 2} xs={commentType === 'Sent' ? 3 : 5}>
           <Chip
-            label={commentType}
+            label={objectAccessor(statusLabel, commentType)}
             color={objectAccessor(statusColors, commentType)}
             size="small"
             style={{ fontSize: '14px' }}
-            data-testid="sent-chip"
+            data-testid="chip"
           />
         </Grid>
         <Grid
@@ -42,6 +47,7 @@ export default function ProcessCommentItem({ commentdata, commentType }) {
           xs={commentType === 'Sent' ? 9 : 7}
           style={commentType === 'Sent' ? {} : { marginLeft: '-25px' }}
           className={matches ? classes.card : undefined}
+          data-testid='comment_date'
         >
           <Typography variant="caption">{dateToString(commentdata.createdAt)}</Typography>
           {commentType !== 'Resolved' && (
@@ -65,11 +71,11 @@ export default function ProcessCommentItem({ commentdata, commentType }) {
           </div>
         </Grid>
         <Grid item md={12} xs={12}>
-          <Typography variant="caption" color="textSecondary">
+          <Typography variant="caption" color="textSecondary" data-testid='body'>
             {commentdata.body}
           </Typography>
         </Grid>
-        <Grid item md={12} xs={12}>
+        <Grid item md={12} xs={12} data-testid='task_link'>
           <Link
             to={`/processes/drc/projects/${commentdata.note.id}?tab=processes&detailTab=comments&replying_discussion=${commentdata.groupingId}`}
           >

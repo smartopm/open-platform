@@ -213,15 +213,14 @@ export const ProcessReplyComments = gql`
         body
         createdAt
         groupingId
-        replyFrom {
-          id
-          name
-        }
         user {
           id
           name
           imageUrl
-          avatarUrl
+        }
+        replyFrom {
+          id
+          name
         }
         note {
           id
@@ -231,21 +230,27 @@ export const ProcessReplyComments = gql`
       received {
         id
         body
-        repliedAt
-      }
-      resolved {
-        id
-        body
+        createdAt
         groupingId
-        replyFrom {
-          id
-          name
-        }
         user {
           id
           name
           imageUrl
-          avatarUrl
+        }
+        note {
+          id
+          body
+        }
+      }
+      resolved {
+        id
+        body
+        createdAt
+        groupingId
+        user {
+          id
+          name
+          imageUrl
         }
         note {
           id

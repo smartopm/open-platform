@@ -204,7 +204,7 @@ export default function AdminDashboard() {
         </Grid>
         <Grid item md={3} xs={12} style={!matches ? {textAlign: 'right'} : { padding: '10px 0'}}>
           {commentStatData && (
-            <Button color='primary' variant='outlined' onClick={() => history.push('/processes/comments')}>{t('processes.open_comments')}</Button>
+            <Button color='primary' variant='outlined' data-testid='comments_button' onClick={() => history.push('/processes/comments')}>{t('processes.open_comments')}</Button>
           )}
         </Grid>
       </Grid>

@@ -38,7 +38,6 @@ export default function ProcessCommentsPage() {
   if (loading) return <Spinner />;
   return (
     <>
-      {console.log(data)}
       <PageHeader
         linkText={t('breadcrumbs.processes')}
         linkHref="/processes"
