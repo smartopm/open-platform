@@ -32,7 +32,7 @@ export default function ProcessCommentItem({ commentdata, commentType }) {
         spacing={1}
         style={{ marginBottom: '30px', borderBottom: '1px solid #F5F4F5', paddingBottom: '15px' }}
       >
-        <Grid item md={commentType === 'Sent' ? 1 : 2} xs={commentType === 'Sent' ? 3 : 5}>
+        <Grid item md={commentType === 'Sent' ? 1 : 2} xs={commentType === 'Sent' ? 3 : 5} sm={commentType === 'Sent' ? 1 : 2}>
           <Chip
             label={objectAccessor(statusLabel, commentType)}
             color={objectAccessor(statusColors, commentType)}
@@ -45,6 +45,7 @@ export default function ProcessCommentItem({ commentdata, commentType }) {
           item
           md={commentType === 'Sent' ? 11 : 10}
           xs={commentType === 'Sent' ? 9 : 7}
+          sm={commentType === 'Sent' ? 11 : 10}
           style={commentType === 'Sent' ? {} : { marginLeft: '-25px' }}
           className={matches ? classes.card : undefined}
           data-testid='comment_date'
