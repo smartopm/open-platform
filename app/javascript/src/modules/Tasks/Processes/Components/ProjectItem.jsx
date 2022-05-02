@@ -96,6 +96,7 @@ export default function ProjectItem({ task, taskId, refetch, clientView }) {
       handleTodoClick={handleTodoItemClick}
       handleTaskCompletion={handleTaskCompletion}
       clientView={clientView}
+      showWidgetsIcon
     />
   );
 }

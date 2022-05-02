@@ -42,7 +42,8 @@ export default function TaskDataList({
   subTaskCard,
   alignStyles,
   handleOpenProjectClick,
-  openProject
+  openProject,
+  showWidgetsIcon,
 }) {
   const classes = useStyles();
   const { t } = useTranslation('task');
@@ -200,15 +201,17 @@ export default function TaskDataList({
               justifyContent="center"
             >
               <Grid item xs={11} style={{ textAlign: 'right' }}>
-                <IconButton
-                  color="primary"
-                  size="large"
-                  onClick={handleOpenProjectClick}
-                  data-testid="open_task_details"
-                  disabled={openSubTask}
-                >
-                  <WidgetsIcon />
-                </IconButton>
+                {showWidgetsIcon && (
+                  <IconButton
+                    color="primary"
+                    size="large"
+                    onClick={handleOpenProjectClick}
+                    data-testid="open_task_details"
+                    disabled={openSubTask}
+                  >
+                    <WidgetsIcon />
+                  </IconButton>
+                )}
               </Grid>
               <Grid item xs={1} style={{ marginLeft: '-5px' }}>
                 {urlParams.type === 'drc' && taskCommentHasReply && (
@@ -320,14 +323,16 @@ export default function TaskDataList({
                   justifyContent="center"
                 >
                   <Grid item md={11} style={{ textAlign: 'right' }}>
-                    <IconButton
-                      color="primary"
-                      size="large"
-                      onClick={handleOpenProjectClick}
-                      disabled={openSubTask}
-                    >
-                      <WidgetsIcon />
-                    </IconButton>
+                    {showWidgetsIcon && (
+                      <IconButton
+                        color="primary"
+                        size="large"
+                        onClick={handleOpenProjectClick}
+                        disabled={openSubTask}
+                      >
+                        <WidgetsIcon />
+                      </IconButton>
+                    )}
                   </Grid>
                   <Grid item md={1} style={{ marginLeft: '-17px' }}>
                     {urlParams.type === 'drc' && taskCommentHasReply && (
@@ -521,7 +526,8 @@ TaskDataList.defaultProps = {
   subTaskCard: false,
   alignStyles: {},
   handleOpenProjectClick: () => {},
-  openProject: false
+  openProject: false,
+  showWidgetsIcon: false,
 };
 TaskDataList.propTypes = {
   task: PropTypes.shape(Task).isRequired,
@@ -539,7 +545,8 @@ TaskDataList.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   alignStyles: PropTypes.object,
   handleOpenProjectClick: PropTypes.func,
-  openProject: PropTypes.bool
+  openProject: PropTypes.bool,
+  showWidgetsIcon: PropTypes.bool,
 };
 
 const useStyles = makeStyles(theme => ({

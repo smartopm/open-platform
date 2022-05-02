@@ -103,6 +103,7 @@ describe('Task Data components', () => {
                 handleTodoClick={jest.fn}
                 handleTaskCompletion={jest.fn}
                 handleUploadDocument={jest.fn}
+                showWidgetsIcon
               />
             </MockedThemeProvider>
           </Context.Provider>
@@ -206,6 +207,7 @@ describe('Task Data components', () => {
                 openSubTask
                 handleOpenSubTasksClick={jest.fn()}
                 handleTaskCompletion={jest.fn}
+                showWidgetsIcon
               />
             </MockedThemeProvider>
           </Context.Provider>
@@ -267,6 +269,7 @@ describe('Task Data components', () => {
                 handleTodoClick={jest.fn}
                 handleTaskCompletion={jest.fn}
                 handleUploadDocument={jest.fn}
+                showWidgetsIcon
               />
             </MockedThemeProvider>
           </Context.Provider>

@@ -34,7 +34,8 @@ export default function TodoItem({
   handleTaskCompletion,
   clientView,
   createTaskListSubTask,
-  refetch
+  refetch,
+  showWidgetsIcon,
 }) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
@@ -280,6 +281,7 @@ export default function TodoItem({
               openProject={
                 urlParams.type === 'drc' && objectAccessor(projectsAccordionOpen, task?.id)
               }
+              showWidgetsIcon={showWidgetsIcon}
             />
           )
         )}
@@ -418,7 +420,8 @@ TodoItem.defaultProps = {
   handleUploadDocument: () => {},
   handleTodoClick: () => {},
   handleTaskCompletion: () => {},
-  refetch: () => {}
+  refetch: () => {},
+  showWidgetsIcon: false,
 };
 
 TodoItem.propTypes = {
@@ -433,7 +436,8 @@ TodoItem.propTypes = {
   clientView: PropTypes.bool,
   createTaskListSubTask: PropTypes.bool,
   taskId: PropTypes.string,
-  refetch: PropTypes.func
+  refetch: PropTypes.func,
+  showWidgetsIcon: PropTypes.bool,
 };
 
 const useStyles = makeStyles(() => ({
