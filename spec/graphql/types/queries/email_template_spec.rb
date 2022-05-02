@@ -103,7 +103,7 @@ RSpec.describe Types::Queries::EmailTemplate do
                                        }).as_json
 
       expect(result.dig('data', 'emailTemplate')).to be_nil
-      expect(result.dig('errors', 0, 'message')).to include 'Notifications::EmailTemplate not found'
+      expect(result.dig('errors', 0, 'message')).to include 'EmailTemplate not found'
     end
 
     it 'should raise unauthorized error if user is not an admin' do

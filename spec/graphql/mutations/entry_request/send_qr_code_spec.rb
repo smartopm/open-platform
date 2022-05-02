@@ -50,7 +50,7 @@ RSpec.describe Mutations::EntryRequest::SendQrCode do
                                              user_role: admin.role,
                                            }).as_json
           expect(result.dig('data', 'result')).to be_nil
-          expect(result.dig('errors', 0, 'message')).to eql 'Logs::EntryRequest not found'
+          expect(result.dig('errors', 0, 'message')).to eql 'EntryRequest not found'
         end
       end
     end

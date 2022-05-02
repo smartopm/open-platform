@@ -247,7 +247,7 @@ RSpec.describe Mutations::EntryRequest do
                                                 current_user: admin,
                                               }).as_json
       expect(result['errors']).not_to be_nil
-      expect(result.dig('errors', 0, 'message')).to include 'Logs::EntryRequest not found'
+      expect(result.dig('errors', 0, 'message')).to include 'EntryRequest not found'
     end
 
     it 'returns error when provided wrong inputs' do

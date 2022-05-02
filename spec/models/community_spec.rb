@@ -114,6 +114,7 @@ RSpec.describe Community, type: :model do
     it do
       is_expected.to have_many(:time_sheets).class_name('Users::TimeSheet').dependent(:destroy)
     end
+    it { is_expected.to have_many(:posts).class_name('Discussions::Post') }
   end
 
   it 'should be associated with users' do

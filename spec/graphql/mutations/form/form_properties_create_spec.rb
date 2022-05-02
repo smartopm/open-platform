@@ -95,7 +95,7 @@ RSpec.describe Mutations::Form::FormPropertiesCreate do
                                                      site_community: user.community,
                                                      user_role: admin.role,
                                                    }).as_json
-        expect(result.dig('errors', 0, 'message')).to eql 'Forms::Form not found'
+        expect(result.dig('errors', 0, 'message')).to eql 'Form not found'
       end
     end
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_04_27_133845) do
+ActiveRecord::Schema.define(version: 2022_04_29_063820) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -710,6 +710,19 @@ ActiveRecord::Schema.define(version: 2022_04_27_133845) do
     t.index ["name"], name: "index_post_tags_on_name", unique: true
   end
 
+  create_table "posts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.text "content"
+    t.uuid "discussion_id", null: false
+    t.uuid "user_id", null: false
+    t.uuid "community_id", null: false
+    t.integer "status", default: 0
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["community_id"], name: "index_posts_on_community_id"
+    t.index ["discussion_id"], name: "index_posts_on_discussion_id"
+    t.index ["user_id"], name: "index_posts_on_user_id"
+  end
+
   create_table "processes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "process_type"
     t.string "name"
@@ -1036,6 +1049,9 @@ ActiveRecord::Schema.define(version: 2022_04_27_133845) do
   add_foreign_key "post_tag_users", "post_tags"
   add_foreign_key "post_tag_users", "users"
   add_foreign_key "post_tags", "communities"
+  add_foreign_key "posts", "communities"
+  add_foreign_key "posts", "discussions"
+  add_foreign_key "posts", "users"
   add_foreign_key "processes", "communities"
   add_foreign_key "processes", "forms"
   add_foreign_key "roles", "communities"
