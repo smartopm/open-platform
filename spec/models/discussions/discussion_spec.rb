@@ -25,6 +25,7 @@ RSpec.describe Discussions::Discussion, type: :model do
     it { is_expected.to belong_to(:community) }
     it { is_expected.to have_many(:comments).class_name('Comments::Comment') }
     it { is_expected.to have_many(:discussion_users) }
+    it { is_expected.to have_many(:posts) }
     it { is_expected.to have_many(:users).through(:discussion_users) }
   end
 end

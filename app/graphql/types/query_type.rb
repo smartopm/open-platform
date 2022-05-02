@@ -32,6 +32,7 @@ module Types
     include Types::Queries::Campaign
     include Types::Queries::Process
     include Types::Queries::LeadLog
+    include Types::Queries::Post
 
     # Add root-level fields here.
     # They will be entry points for queries on your schema.

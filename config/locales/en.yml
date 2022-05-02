@@ -400,6 +400,8 @@ en:
     wallet_transaction:
       can_not_revert: Transaction Can not be reverted
       payment_not_found: Payment not found
+    post:
+      content_not_found: Content must exist.
   general:
     thanks_for_using_our_app: Thank you for using our app, kindly use this link to give us feedback %{feedback_link}
     task_reminder: REMINDER, Please complete your task before/by the due date (%{due_date}). Check out your task on %{task_link}. Thanks, %{community_name}
