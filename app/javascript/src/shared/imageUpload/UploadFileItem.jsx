@@ -23,6 +23,7 @@ export default function UploadFileItem({
       style={matches ? { marginBottom: 8 } : { marginLeft: 20, marginBottom: 8 }}
       spacing={2}
     >
+      {console.log(file)}
       <Grid item md={2} xs={3}>
         {!isUploaded ? (
           <Button

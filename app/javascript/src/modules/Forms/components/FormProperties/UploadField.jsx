@@ -64,8 +64,8 @@ export default function UploadField({
             variant="contained"
             data-testid="details_button"
             component="span"
-            aria-label={`upload_button_${detail.label}`}
             disabled={editable}
+            aria-label={`upload_button_${detail.label}`}
             className={classes.button}
             startIcon={detail.type === 'file' && <CheckCircleIcon data-testid="done_icon" className={classes.iconColor} />}
             style={matches ? {marginTop: '10px'} : { marginLeft: '10px' }}
