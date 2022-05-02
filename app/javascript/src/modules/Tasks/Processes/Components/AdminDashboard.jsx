@@ -158,10 +158,16 @@ export default function AdminDashboard() {
   const speedDialActions = [
     {
       icon: <VisibilityIcon />,
+      name: t('process:templates.create_a_process'),
+      handleClick: () => history.push('/processes/templates/create'),
+      isVisible: true // TODO: Use permission if needed
+    },
+    {
+      icon: <VisibilityIcon />,
       name: t('process:templates.process_templates'),
       handleClick: () => history.push('/processes/templates'),
       isVisible: true // TODO: Use permission if needed
-    }
+    },
   ];
 
   function cardName(name) {
@@ -237,7 +243,7 @@ export default function AdminDashboard() {
           )}
         </Grid>
       </Grid>
-      <Grid container justifyContent="space-between" spacing={4}>
+      <Grid container justifyContent="space-between" spacing={4} style={{ marginTop: '8px' }}>
         <Grid item xs={12} sm={6}>
           <Typography className={classes.quarterSection} variant="body1">
             {t('processes.projects_by_quarter')}

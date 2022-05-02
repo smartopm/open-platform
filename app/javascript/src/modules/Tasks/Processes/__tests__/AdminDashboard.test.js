@@ -76,6 +76,10 @@ describe('Admin processes dashboard', () => {
 
     await waitFor(() => {
       expect(screen.queryAllByTestId('speed_dial_icon')[0]).toBeInTheDocument()
+      expect(screen.queryAllByTestId('speed_dial_btn')[0]).toBeInTheDocument()
+      expect(screen.queryAllByTestId('AddIcon')[0]).toBeInTheDocument()
+      expect(screen.queryAllByTestId('VisibilityIcon')[0]).toBeInTheDocument()
+      expect(screen.queryAllByTestId('speed_dial_action')[0]).toBeInTheDocument()
       expect(screen.queryByText('processes.processes')).toBeInTheDocument()
       expect(screen.queryByText('processes.drc_process')).toBeInTheDocument()
       expect(screen.queryByText('processes.projects_by_quarter')).toBeInTheDocument()
