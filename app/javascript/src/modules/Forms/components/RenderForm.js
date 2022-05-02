@@ -394,7 +394,6 @@ export default function RenderForm({
         )}
         <br />
         <br />
-        {console.log(filesToUpload)}
         {filesToUpload
           .filter(file => file.propertyId === formPropertiesData.id)
           .map(file => (
