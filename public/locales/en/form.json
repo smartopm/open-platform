@@ -80,7 +80,8 @@
     "admins_only": "For Admins Only",
     "required_field_for_admins_only": "{{fieldName}} is Required. For Admins only",
     "date_time_in_the_future": "Please select a date and time in the future",
-    "wrong_file_type": "Wrong file type."
+    "wrong_file_type": "Wrong file type.",
+    "file_exists": "Oops. Looks like this file is already selected."
   },
   "form_status": {
     "rejected": "Rejected",

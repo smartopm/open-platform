@@ -14,7 +14,8 @@ import {
   convertUploadSize,
   cleanFileName,
   fileTypes,
-  isUploaded
+  isUploaded,
+  isFileNameSelect
 } from '../utils';
 
 describe('Utilities', () => {
@@ -507,6 +508,25 @@ describe('Utilities', () => {
     expect(isUploaded(uploads, file, '9238423421312')).toBe(false)
     expect(isUploaded([], undefined, '9238423421312')).toBe(false)
     expect(isUploaded()).toBe(false)
+  });
+
+  it('should check if file is included in filesnames', () => {
+    const filenames = [
+      {
+        name: "Image.jpg",
+        propertyId: "02394203da0923"
+      },
+      {
+        name: "another.png",
+        propertyId: "12345678790"
+      },
+    ]
+    const name  = 'another.png'
+    expect(isFileNameSelect(filenames, name, '12345678790')).toBe(true)
+    expect(isFileNameSelect(filenames, name, '02394203da0923')).toBe(false)
+    expect(isFileNameSelect(filenames, name, '9238423421312')).toBe(false)
+    expect(isFileNameSelect([], undefined, '9238423421312')).toBe(false)
+    expect(isFileNameSelect()).toBe(false)
   });
 
 });
