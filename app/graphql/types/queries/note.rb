@@ -136,6 +136,11 @@ module Types::Queries::Note
       description 'Returns comments for each status'
       argument :task_id, GraphQL::Types::ID, required: true
     end
+
+    field :process_reply_comments, Types::ProcessReplyCommentsType, null: false do
+      description 'Retuns all comments in a process grouped by comment status'
+      argument :process_type, String, required: false
+    end
   end
   # rubocop:enable Metrics/BlockLength
 
@@ -277,8 +282,6 @@ module Types::Queries::Note
     }
   end
 
-  # rubocop:enable Metrics/AbcSize
-  # rubocop:enable Metrics/MethodLength
   def my_task
     context[:current_user].tasks.by_completion(false).count
   end
@@ -297,6 +300,34 @@ module Types::Queries::Note
 
     user_replied_requested_comments(task_ids).status_stats(current_user)
   end
+
+  def process_reply_comments(process_type: 'drc')
+    unless permitted?(module: :note, permission: :can_fetch_process_comments)
+      raise GraphQL::ExecutionError,
+            I18n.t('errors.unauthorized')
+    end
+
+    process_task_ids = []
+    process_reply_comments = {
+      sent: [],
+      received: [],
+      resolved: [],
+    }
+
+    projects_query(process_type).each do |project|
+      process_task_ids.concat(project_task_ids(parent_task: project))
+    end
+
+    process_comments = user_replied_requested_comments(process_task_ids)
+
+    process_comments.group_by(&:grouping_id).each do |_grouping_id, comments|
+      status = context[:current_user].comment_status(comments)
+      process_reply_comments[status.to_sym] << comments.first
+    end
+    process_reply_comments
+  end
+  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/MethodLength
 
   def user_tasks
     unless permitted?(module: :note, permission: :can_get_own_tasks)

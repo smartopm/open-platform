@@ -137,7 +137,8 @@
     "requirements": "Requirements",
     "requirements_guideline": "Please read the required guideline.",
     "go_to_guideline": "Go to Guideline.",
-    "replies_requested": "Replies Requested:"
+    "replies_requested": "Replies Requested:",
+    "open_comments": "Open Comments"
   },
   "task_lists": {
     "task_lists": "Task Lists",

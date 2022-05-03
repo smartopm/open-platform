@@ -105,10 +105,7 @@ describe('Admin processes dashboard', () => {
       expect(screen.queryByText('939')).toBeInTheDocument();
       expect(screen.queryByText('689')).toBeInTheDocument();
       expect(screen.queryByText('250')).toBeInTheDocument();
-      expect(screen.queryByText('processes.replies_requested')).toBeInTheDocument();
-      expect(screen.queryByText('task:misc.received')).toBeInTheDocument();
-      expect(screen.queryByText('task:misc.sent')).toBeInTheDocument();
-      expect(screen.queryByText('task:misc.resolved')).toBeInTheDocument();
+      expect(screen.queryByTestId('comments_button')).toBeInTheDocument();
     })
   });
 

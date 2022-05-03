@@ -1,13 +1,12 @@
 import gql from 'graphql-tag';
-import { NotesFragment , TasksFragment } from '../../../../graphql/fragments';
-
+import { NotesFragment, TasksFragment } from '../../../../graphql/fragments';
 
 export const ProcessesQuery = gql`
   query GetProcesses($offset: Int, $limit: Int, $query: String) {
     processes(offset: $offset, limit: $limit, query: $query) {
       ...NoteFields
       subTasks {
-        ...NoteFields,
+        ...NoteFields
         subTasks {
           ...NoteFields
         }
@@ -15,66 +14,66 @@ export const ProcessesQuery = gql`
     }
   }
   ${NotesFragment.note}
-`
+`;
 
 export const ProjectsQuery = gql`
   query GetProjects(
-    $offset: Int,
-    $limit: Int,
-    $step: String,
-    $completedPerQuarter: String,
-    $submittedPerQuarter: String,
-    $lifeTimeCategory: String,
+    $offset: Int
+    $limit: Int
+    $step: String
+    $completedPerQuarter: String
+    $submittedPerQuarter: String
+    $lifeTimeCategory: String
     $repliesRequestedStatus: String
   ) {
     projects(
-      offset: $offset,
-      limit: $limit,
-      step: $step,
-      completedPerQuarter: $completedPerQuarter,
-      submittedPerQuarter: $submittedPerQuarter,
-      lifeTimeCategory: $lifeTimeCategory,
+      offset: $offset
+      limit: $limit
+      step: $step
+      completedPerQuarter: $completedPerQuarter
+      submittedPerQuarter: $submittedPerQuarter
+      lifeTimeCategory: $lifeTimeCategory
       repliesRequestedStatus: $repliesRequestedStatus
     ) {
       ...TaskFields
     }
   }
   ${TasksFragment.task}
-`
+`;
 
 export const ProjectQuery = gql`
-query Project($formUserId: ID!) {
-  project(formUserId: $formUserId) {
-    id
-    body
-    subTasksCount
+  query Project($formUserId: ID!) {
+    project(formUserId: $formUserId) {
+      id
+      body
+      subTasksCount
+    }
   }
-}
-`
+`;
 
 export const ClientAssignedProjectsQuery = gql`
   query GetClientAssignedProjects($offset: Int, $limit: Int) {
     clientAssignedProjects(offset: $offset, limit: $limit) {
       ...TaskFields
       subTasks {
-          ...TaskFields
+        ...TaskFields
       }
     }
   }
   ${TasksFragment.task}
-`
+`;
 
 export const ProjectStagesQuery = gql`
   query projectStages {
     projectStages
   }
-`
+`;
 
 // TODO: olivier sync with Bonny to verify if this matches accordingly
 export const TaskQuarterySummaryQuery = gql`
-    query tasksByQuarter {
-      tasksByQuarter
-    }
+  query tasksByQuarter {
+    tasksByQuarter
+  }
 `;
 
 export const ProjectCommentsQuery = gql`
@@ -98,11 +97,23 @@ export const ProjectCommentsQuery = gql`
       noteId
     }
   }
-`
+`;
 
 export const ProjectsStatsQuery = gql`
-  query GetProjectsStatsQuery($offset: Int, $limit: Int, $step: String, $completedPerQuarter: String, $submittedPerQuarter: String) {
-    projects(offset: $offset, limit: $limit, step: $step, completedPerQuarter: $completedPerQuarter, submittedPerQuarter: $submittedPerQuarter) {
+  query GetProjectsStatsQuery(
+    $offset: Int
+    $limit: Int
+    $step: String
+    $completedPerQuarter: String
+    $submittedPerQuarter: String
+  ) {
+    projects(
+      offset: $offset
+      limit: $limit
+      step: $step
+      completedPerQuarter: $completedPerQuarter
+      submittedPerQuarter: $submittedPerQuarter
+    ) {
       ...TaskFields
       subTasks {
         id
@@ -180,6 +191,62 @@ export const ProjectRepliesRequestedComments = gql`
         id
         body
         createdAt
+        user {
+          id
+          name
+          imageUrl
+        }
+        note {
+          id
+          body
+        }
+      }
+    }
+  }
+`;
+
+export const ProcessReplyComments = gql`
+  query processReplyComments($processType: String) {
+    processReplyComments(processType: $processType) {
+      sent {
+        id
+        body
+        createdAt
+        groupingId
+        user {
+          id
+          name
+          imageUrl
+        }
+        replyFrom {
+          id
+          name
+        }
+        note {
+          id
+          body
+        }
+      }
+      received {
+        id
+        body
+        createdAt
+        groupingId
+        user {
+          id
+          name
+          imageUrl
+        }
+        note {
+          id
+          body
+        }
+      }
+      resolved {
+        id
+        body
+        createdAt
+        groupingId
         user {
           id
           name
