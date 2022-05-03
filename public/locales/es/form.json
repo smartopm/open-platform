@@ -127,6 +127,12 @@
     "updated_form_category": "Actualizó con éxito una categoría",
     "updated_form_property": "Formulario de propiedad actualizada con éxito",
     "updates": "Novedades",
+    "upload_details": "Utilice el botón Seleccionar para elegir el archivo que desea cargar. Luego confírmelos haciendo clic en el botón Cargar. Use el ícono 'X' para eliminar cualquier archivo no deseado.",
+    "upload_error": "Archivos no subidos.",
+    "upload_error_content_four": "elimínelos. ",
+    "upload_error_content_one": "Ups, parece que algunos archivos",
+    "upload_error_content_three": "haga clic en el botón Cargar o",
+    "upload_error_content_two": "no se cargan. Por favor",
     "upload_file": "Subir archivo",
     "version_number": "Número de versión"
   }
