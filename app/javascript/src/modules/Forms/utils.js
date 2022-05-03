@@ -340,6 +340,9 @@ export function isUploaded(uploads, file, propertyId) {
 }
 
 export function isFileNameSelect(filenames, file, propertyId) {
+  if (!filenames || !file || !propertyId) {
+    return false
+  }
   return filenames.some(
     filename  => filename.name === file && filename.propertyId === propertyId
   )
