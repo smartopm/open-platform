@@ -85,8 +85,8 @@ export default function ProcessCommentsPage() {
           </StyledTabs>
           <TabPanel value={tabValue} index={0} pad={matches}>
             <div style={matches ? { paddingTop: '30px' } : {}}>
-              {data.processReplyComments.sent.length > 0 ? (
-                data.processReplyComments.sent.map(comment => (
+              {data?.processReplyComments?.sent?.length > 0 ? (
+                data?.processReplyComments?.sent?.map(comment => (
                   <div key={comment.id}>
                     <ProcessCommentItem commentdata={comment} commentType="Sent" />
                   </div>
@@ -98,8 +98,8 @@ export default function ProcessCommentsPage() {
           </TabPanel>
           <TabPanel value={tabValue} index={1} pad={matches}>
             <div style={matches ? { paddingTop: '30px' } : {}}>
-              {data.processReplyComments.received.length > 0 ? (
-                data.processReplyComments.received.map(comment => (
+              {data?.processReplyComments?.received?.length > 0 ? (
+                data?.processReplyComments?.received?.map(comment => (
                   <div key={comment.id}>
                     <ProcessCommentItem commentdata={comment} commentType="Received" />
                   </div>
@@ -111,8 +111,8 @@ export default function ProcessCommentsPage() {
           </TabPanel>
           <TabPanel value={tabValue} index={2} pad={matches}>
             <div style={matches ? { paddingTop: '30px' } : {}}>
-              {data.processReplyComments.resolved.length > 0 ? (
-                data.processReplyComments.resolved.map(comment => (
+              {data?.processReplyComments?.resolved?.length > 0 ? (
+                data?.processReplyComments?.resolved?.map(comment => (
                   <div key={comment.id}>
                     <ProcessCommentItem commentdata={comment} commentType="Resolved" />
                   </div>
