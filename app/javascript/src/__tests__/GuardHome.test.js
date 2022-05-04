@@ -4,7 +4,7 @@ import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/react-testing';
 import { SecurityGuards } from '../graphql/queries';
-import { HomeGuard as GuardHome } from '../modules/Dashboard/Components/GuardHome'
+import { HomeGuard as GuardHome } from '../modules/Dashboard/Components/GuardHome';
 import { Context } from '../containers/Provider/AuthStateProvider';
 import userMock from '../__mocks__/authstate';
 
@@ -20,10 +20,10 @@ describe('Home Guard page', () => {
         result: {
           data: {
             securityGuards: [
-                {
-                    name: "guard 1",
-                    id: "11cdad78"
-                }
+              {
+                name: 'guard 1',
+                id: '11cdad78'
+              }
             ]
           }
         }
@@ -46,30 +46,30 @@ describe('Home Guard page', () => {
 
   it('should check for errors occured when fetching', async () => {
     const mocks = [
-        {
-          request: {
-            query: SecurityGuards
-          },
-          error: new Error('Something happpened')
-        }
-      ];
+      {
+        request: {
+          query: SecurityGuards
+        },
+        error: new Error('Something happpened')
+      }
+    ];
 
-      const tMock = jest.fn();
-      let container;
-      await act(async () => {
-        container = render(
-          <Context.Provider value={userMock}>
-            <MockedProvider mocks={mocks} addTypename={false}>
-              <BrowserRouter>
-                <GuardHome translate={tMock} />
-              </BrowserRouter>
-            </MockedProvider>
-          </Context.Provider>
-        );
-      });
+    const tMock = jest.fn();
+    let container;
+    await act(async () => {
+      container = render(
+        <Context.Provider value={userMock}>
+          <MockedProvider mocks={mocks} addTypename={false}>
+            <BrowserRouter>
+              <GuardHome translate={tMock} />
+            </BrowserRouter>
+          </MockedProvider>
+        </Context.Provider>
+      );
+    });
 
-      await waitFor(() => {
-        expect(container.queryByText('Network error: Something happpened')).toBeInTheDocument();
-      }, 50);
-  })
+    await waitFor(() => {
+      expect(container.queryByText('Something happpened')).toBeInTheDocument();
+    }, 50);
+  });
 });
