@@ -8,8 +8,8 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import SelectAllIcon from '@mui/icons-material/SelectAll';
 import RecentActorsIcon from '@mui/icons-material/RecentActors';
 import CallIcon from '@mui/icons-material/Call';
-import PropTypes from 'prop-types'
-import { FormControl, Select, InputBase, MenuItem, Typography } from '@mui/material';
+import PropTypes from 'prop-types';
+import { FormControl, Grid, Select, InputBase, MenuItem, Typography } from '@mui/material';
 import PersonIcon from '@mui/icons-material/Person';
 import { useQuery, useMutation } from 'react-apollo';
 import withStyles from '@mui/styles/withStyles';
@@ -17,8 +17,9 @@ import ScanIcon from '../../../../../assets/images/shape.svg';
 import Avatar from '../../../components/Avatar';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import { SecurityGuards } from '../../../graphql/queries';
-import Loading from '../../../shared/Loading';
-import ErrorPage from '../../../components/Error';
+import { Spinner } from '../../../shared/Loading';
+import CenteredContent from '../../../shared/CenteredContent';
+import { formatError } from '../../../utils/helpers';
 import { AUTH_TOKEN_KEY } from '../../../utils/apollo';
 import { switchGuards } from '../../../graphql/mutations';
 import { Footer } from '../../../components/Footer';
@@ -80,8 +81,8 @@ export function HomeGuard({ translate }) {
       />
     );
   }
-  if (loading) return <Loading />;
-  if (error) return <ErrorPage title={error.message} />;
+  if (loading) return <Spinner />;
+  if (error) return <CenteredContent>{formatError(error.message)}</CenteredContent>;
   return (
     <div>
       <Grid
@@ -165,114 +166,100 @@ export function HomeGuard({ translate }) {
               </div>
             )}
           </div>
-        )}
 
-        <input
-          className={`form-control ${css(styles.input)}`}
-          onFocus={inputToSearch}
-          type="text"
-          placeholder="Search"
-        />
-        <i className={`material-icons ${css(styles.searchIcon)}`}>search</i>
-        <Link to="/scan">
-          <img src={ScanIcon} alt="scan icon" className={` ${css(styles.scanIcon)}`} />
-        </Link>
-      </div>
-      <div className="container">
-        <div className="row justify-content-center">
-          <div className="col-4-lg col-12-sm index-cards">
-            <div className="d-flex flex-row flex-wrap justify-content-center mb-3">
-              <div className={`${css(styles.cardSize)} card align-self-center text-center`}>
-                <Link to="/scan" className="card-link">
-                  <div className="card-body">
-                    <h5 className="card-title">
-                      <SelectAllIcon color="primary" fontSize="large" />
-                    </h5>
-                    <p>{translate('dashboard.scan')}</p>
+          <div className="container">
+            <div className="row justify-content-center">
+              <div className="col-4-lg col-12-sm index-cards">
+                <div className="d-flex flex-row flex-wrap justify-content-center mb-3">
+                  <div className={`${css(styles.cardSize)} card align-self-center text-center`}>
+                    <Link to="/scan" className="card-link">
+                      <div className="card-body">
+                        <h5 className="card-title">
+                          <SelectAllIcon color="primary" fontSize="large" />
+                        </h5>
+                        <p>{translate('dashboard.scan')}</p>
+                      </div>
+                    </Link>
                   </div>
-                </Link>
-              </div>
-              <div className={`${css(styles.cardSize)} card align-self-center text-center`}>
-                <Link to={`/id/${authState.user?.id}`} className="card-link">
-                  <div className="card-body">
-                    <h5 className="card-title">
-                      <PersonIcon color="primary" fontSize="large" />
-                    </h5>
-                    <p>{translate('dashboard.identity')}</p>
+                  <div className={`${css(styles.cardSize)} card align-self-center text-center`}>
+                    <Link to={`/id/${authState.user?.id}`} className="card-link">
+                      <div className="card-body">
+                        <h5 className="card-title">
+                          <PersonIcon color="primary" fontSize="large" />
+                        </h5>
+                        <p>{translate('dashboard.identity')}</p>
+                      </div>
+                    </Link>
                   </div>
-                </Link>
-              </div>
-              <div className={`${css(styles.cardSize)} card align-self-center text-center`}>
-                <Link to="/request" className="card-link">
-                  <div className="card-body">
-                    <h5 className="card-title">
-                      <RecentActorsIcon color="primary" fontSize="large" />
-                    </h5>
-                    <p>{translate('dashboard.log_entry')}</p>
+                  <div className={`${css(styles.cardSize)} card align-self-center text-center`}>
+                    <Link to="/request" className="card-link">
+                      <div className="card-body">
+                        <h5 className="card-title">
+                          <RecentActorsIcon color="primary" fontSize="large" />
+                        </h5>
+                        <p>{translate('dashboard.log_entry')}</p>
+                      </div>
+                    </Link>
                   </div>
-                </Link>
-              </div>
-              <div className={`${css(styles.cardSize)} card align-self-center text-center`}>
-                <Link to="/logbook" className="card-link">
-                  <div className="card-body">
-                    <h5 className="card-title">
-                      <LogEntryIcon color="primary" fontSize="large" />
-                    </h5>
-                    <p>{translate('dashboard.entry_logs')}</p>
+                  <div className={`${css(styles.cardSize)} card align-self-center text-center`}>
+                    <Link to="/logbook" className="card-link">
+                      <div className="card-body">
+                        <h5 className="card-title">
+                          <LogEntryIcon color="primary" fontSize="large" />
+                        </h5>
+                        <p>{translate('dashboard.entry_logs')}</p>
+                      </div>
+                    </Link>
                   </div>
-                </Link>
-              </div>
-              <FeatureCheck features={authState.user?.community.features} name="Time Card">
-                <div className={`${css(styles.cardSize)} card align-self-center text-center`}>
-                  <Link to={`/timesheet/${authState.user?.id}`} className="card-link">
-                    <div className="card-body">
-                      <h5 className="card-title">
-                        <LogEntryIcon fontSize="large" color="primary" />
-                      </h5>
-                      <p>Time Card</p>
+                  <FeatureCheck features={authState.user?.community.features} name="Time Card">
+                    <div className={`${css(styles.cardSize)} card align-self-center text-center`}>
+                      <Link to={`/timesheet/${authState.user?.id}`} className="card-link">
+                        <div className="card-body">
+                          <h5 className="card-title">
+                            <LogEntryIcon fontSize="large" color="primary" />
+                          </h5>
+                          <p>Time Card</p>
+                        </div>
+                      </Link>
                     </div>
-                  </Link>
-                </div>
-              </FeatureCheck>
-              <div className={`${css(styles.cardSize)} card align-self-center text-center`}>
-                <a href={`tel:${authState.user.community.securityManager}`}>
-                  <div className="card-body">
-                    <h5 className="card-title">
-                      <CallIcon color="primary" fontSize="large" />
-                    </h5>
-                    Call Manager
+                  </FeatureCheck>
+                  <div className={`${css(styles.cardSize)} card align-self-center text-center`}>
+                    <a href={`tel:${authState.user.community.securityManager}`}>
+                      <div className="card-body">
+                        <h5 className="card-title">
+                          <CallIcon color="primary" fontSize="large" />
+                        </h5>
+                        Call Manager
+                      </div>
+                    </a>
                   </div>
-                </a>
+                </div>
               </div>
             </div>
+            <Footer position="5vh" />
           </div>
-        </div>
-        <Footer position="5vh" />
-      </div>
+        </Grid>
+      </Grid>
     </div>
   );
 }
 
 HomeGuard.propTypes = {
   translate: PropTypes.func.isRequired
-}
-
+};
 
 const styles = StyleSheet.create({
   inputGroup: {
     position: 'relative'
   },
   input: {
-    // position: 'absolute',
     padding: '0.5em 1em 0.5em 2em',
     height: 50,
     color: '#222',
     marginLeft: 30,
     marginTop: 45,
     border: 'none',
-    // bottom: 1,
     borderRadius: '5px',
-    // left: 50,
     backgroundImage: 'none',
     backgroundColor: '#FFF',
     '::placeholder': {
@@ -282,17 +269,14 @@ const styles = StyleSheet.create({
   searchIcon: {
     color: '#999',
     position: 'absolute',
-    left: 4,
+    left: 55,
     bottom: 11,
     'z-index': 9
   },
   scanIcon: {
-    // position: 'absolute',
     marginTop: 45,
-    // right: 52,
     width: 20,
     marginLeft: 150
-    // bottom: 12
   },
   switchAccount: {
     textDecoration: 'none',
