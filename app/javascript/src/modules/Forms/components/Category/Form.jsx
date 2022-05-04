@@ -107,8 +107,10 @@ export default function Form({
 
   useEffect(() => {
     if (formState?.successfulSubmit && !formState?.isDraft) {
-      // Reset Form to public routes to be safe
-      window.location.reload();
+      // TODO: Enable form redirect on form creation
+      setTimeout(() => {
+        history.push('/');
+      }, 5000)
     }
   }, [formState.isDraft, formState.successfulSubmit]);
 
