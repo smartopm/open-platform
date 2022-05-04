@@ -15,7 +15,7 @@ module Types
     def image_urls
       return nil unless object.images.attached?
 
-      object.images.map do |image|
+      object.images.where.not(status: 1).map do |image|
         Rails.application.routes.url_helpers
              .rails_blob_url(image)
       end

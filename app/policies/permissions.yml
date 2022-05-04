@@ -223,6 +223,7 @@ admin:
       - can_see_menu_item
       - can_create_post
       - can_view_posts
+      - can_delete_post_image
   comment:
     permissions:
       - can_fetch_all_comments
