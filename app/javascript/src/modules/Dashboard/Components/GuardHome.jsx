@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import LogEntryIcon from '@mui/icons-material/Assignment';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import SearchIcon from '@mui/icons-material/Search';
 import SelectAllIcon from '@mui/icons-material/SelectAll';
 import RecentActorsIcon from '@mui/icons-material/RecentActors';
 import CallIcon from '@mui/icons-material/Call';
@@ -50,6 +51,7 @@ export function HomeGuard({ translate }) {
   const [loginSwitchUser] = useMutation(switchGuards);
   const [switchError, setSwitchError] = useState(null);
   const largerScreens = useMediaQuery('(min-width:1200px)');
+  const isMobile = useMediaQuery('(max-width:800px)');
 
   function inputToSearch() {
     setRedirect('/search');
@@ -110,15 +112,29 @@ export function HomeGuard({ translate }) {
                     paddingLeft: largerScreens ? '300px' : '30px'
                   }}
                 >
-                  <Grid item md={4} xs={4}>
-                    <input
-                      className={`form-control ${css(styles.input)}`}
-                      onFocus={inputToSearch}
-                      type="text"
-                      placeholder="Search"
-                    />
+                  <Grid item md={4} xs={12}>
+                    <Grid container style={{ display: 'flex', justifyContent: 'flex-start' }}>
+                      <Grid item md={6} xs={6}>
+                        <input
+                          className={`form-control ${css(styles.input)}`}
+                          onFocus={inputToSearch}
+                          type="text"
+                          placeholder="Search"
+                        />
+                      </Grid>
+                      <Grid item md={6} xs={6}>
+                        <SearchIcon
+                          style={{
+                            marginLeft: isMobile ? '-85' : largerScreens ? '-215' : '-55',
+                            marginTop: 60,
+                            zIndex: 9
+                          }}
+                          color="primary"
+                        />
+                      </Grid>
+                    </Grid>
                   </Grid>
-                  <Grid item md={4} xs={4}>
+                  <Grid item md={4} xs={12}>
                     <FormControl
                       variant="filled"
                       style={{
@@ -157,7 +173,7 @@ export function HomeGuard({ translate }) {
                     </FormControl>
                   </Grid>
 
-                  <Grid item md={4} xs={4} style={{ paddingRight: 0 }}>
+                  <Grid item md={4} xs={12} style={{ paddingRight: 0 }}>
                     <Link to="/scan">
                       <img src={ScanIcon} alt="scan icon" className={` ${css(styles.scanIcon)}`} />
                     </Link>
@@ -256,7 +272,7 @@ const styles = StyleSheet.create({
     padding: '0.5em 1em 0.5em 2em',
     height: 50,
     color: '#222',
-    marginLeft: 30,
+    marginLeft: -20,
     marginTop: 45,
     border: 'none',
     borderRadius: '5px',
@@ -265,13 +281,6 @@ const styles = StyleSheet.create({
     '::placeholder': {
       color: '#999'
     }
-  },
-  searchIcon: {
-    color: '#999',
-    position: 'absolute',
-    left: 55,
-    bottom: 11,
-    'z-index': 9
   },
   scanIcon: {
     marginTop: 45,
