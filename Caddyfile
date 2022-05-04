@@ -158,22 +158,6 @@ https://victor.dgdp.site {
   }
 }
 
-localhost:443 {
-  tls self_signed
-  log stdout
-  errors stdout
-  proxy /packs webpacker:3035 {
-    transparent
-  }
-  proxy /sockjs-node webpacker:3035 {
-    transparent
-    websocket
-  }
-  proxy / rails:3000 {
-    transparent
-  }
-}
-
 https://taofeek.dgdp.site {
   tls /root/certs/taofeek.dgdp.site/cert.pem /root/certs/taofeek.dgdp.site/privkey.pem
   log stdout
