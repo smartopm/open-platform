@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import { StyleSheet, css } from 'aphrodite';
 import { useTranslation } from 'react-i18next';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import LogEntryIcon from '@mui/icons-material/Assignment';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import SelectAllIcon from '@mui/icons-material/SelectAll';
@@ -46,7 +47,8 @@ export function HomeGuard({ translate }) {
   const [id, setId] = React.useState(authState.user?.id);
   const { data, loading, error } = useQuery(SecurityGuards);
   const [loginSwitchUser] = useMutation(switchGuards);
-  const [switchError, setSwitchError] = useState(null)
+  const [switchError, setSwitchError] = useState(null);
+  const largerScreens = useMediaQuery('(min-width:1200px)');
 
   function inputToSearch() {
     setRedirect('/search');
@@ -82,59 +84,86 @@ export function HomeGuard({ translate }) {
   if (error) return <ErrorPage title={error.message} />;
   return (
     <div>
-      <div className={css(styles.inputGroup)}>
-        <br />
-        {hideGuardSwitching ? null : (
-          <div>
-            <div className="d-flex flex-row flex-wrap justify-content-center mb-3">
-              <Avatar user={authState.user} />
-              <br />
-              <br />
-            </div>
-            <div className="d-flex flex-row flex-wrap justify-content-center mb-3">
-              <FormControl
-                variant="filled"
-                style={{
-                  minWidth: 120,
-                  color: '#FFFFFF'
-                }}
-              >
-                <span className={`${css(styles.switchAccount)}`}>Switch account</span>
-                <br />
-                <Select
-                  id="demo-simple-select-outlined"
-                  value={id}
-                  onChange={handleChange}
+      <Grid
+        container
+        style={{ display: 'flex', justifyContent: 'center' }}
+        columns={{ xs: 12, md: 12 }}
+      >
+        <Grid item md={8} xs={10}>
+          <div className={css(styles.inputGroup)}>
+            <br />
+            {hideGuardSwitching ? null : (
+              <div>
+                <div className="d-flex flex-row flex-wrap justify-content-center mb-3">
+                  <Avatar user={authState.user} />
+                  <br />
+                  <br />
+                </div>
+                <Grid
+                  container
+                  spacing={2}
                   style={{
-                    width: 180,
-                    backgroundColor: '#FFFFFF',
-                    color: '#000000'
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    paddingLeft: largerScreens ? '300px' : '30px'
                   }}
-                  variant="filled"
-                  input={<BootstrapInput />}
-                  IconComponent={() => (
-                    <ArrowDropDownIcon
-                      style={{
-                        marginLeft: -34
-                      }}
-                    />
-                  )}
                 >
-                  {data.securityGuards.map(guard => (
-                    <MenuItem
-                      style={{ color: '#000000' }}
-                      value={guard.id}
-                      key={guard.id}
+                  <Grid item md={4} xs={4}>
+                    <input
+                      className={`form-control ${css(styles.input)}`}
+                      onFocus={inputToSearch}
+                      type="text"
+                      placeholder="Search"
+                    />
+                  </Grid>
+                  <Grid item md={4} xs={4}>
+                    <FormControl
+                      variant="filled"
+                      style={{
+                        color: '#FFFFFF'
+                      }}
                     >
-                      {guard.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-                <Typography color="secondary">
-                  {switchError}
-                </Typography>
-              </FormControl>
-            </div>
+                      <span className={`${css(styles.switchAccount)}`}>Switch account</span>
+                      <br />
+
+                      <Select
+                        id="demo-simple-select-outlined"
+                        value={id}
+                        onChange={handleChange}
+                        style={{
+                          width: 180,
+                          backgroundColor: '#FFFFFF',
+                          color: '#000000'
+                        }}
+                        variant="filled"
+                        input={<BootstrapInput />}
+                        IconComponent={() => (
+                          <ArrowDropDownIcon
+                            style={{
+                              marginLeft: -34
+                            }}
+                          />
+                        )}
+                      >
+                        {data.securityGuards.map(guard => (
+                          <MenuItem style={{ color: '#000000' }} value={guard.id} key={guard.id}>
+                            {guard.name}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                      <Typography color="secondary">{switchError}</Typography>
+                    </FormControl>
+                  </Grid>
+
+                  <Grid item md={4} xs={4} style={{ paddingRight: 0 }}>
+                    <Link to="/scan">
+                      <img src={ScanIcon} alt="scan icon" className={` ${css(styles.scanIcon)}`} />
+                    </Link>
+                  </Grid>
+                </Grid>
+              </div>
+            )}
           </div>
         )}
 
@@ -234,12 +263,16 @@ const styles = StyleSheet.create({
     position: 'relative'
   },
   input: {
-    marginTop: '1em',
+    // position: 'absolute',
     padding: '0.5em 1em 0.5em 2em',
     height: 50,
     color: '#222',
+    marginLeft: 30,
+    marginTop: 45,
     border: 'none',
+    // bottom: 1,
     borderRadius: '5px',
+    // left: 50,
     backgroundImage: 'none',
     backgroundColor: '#FFF',
     '::placeholder': {
@@ -254,15 +287,16 @@ const styles = StyleSheet.create({
     'z-index': 9
   },
   scanIcon: {
-    position: 'absolute',
-    marginTop: 75,
-    right: 9,
+    // position: 'absolute',
+    marginTop: 45,
+    // right: 52,
     width: 20,
-    bottom: 12
+    marginLeft: 150
+    // bottom: 12
   },
   switchAccount: {
     textDecoration: 'none',
-    marginLeft: 25
+    marginLeft: 5
   },
   cardSize: {
     width: 200,
