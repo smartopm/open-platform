@@ -1,25 +1,33 @@
 /* eslint-disable no-use-before-define */
 import React, { useContext, useState } from 'react';
 import {
-  ListItem, ListItemAvatar, ListItemText, Button, TextField, List, Grid, IconButton, Typography
-} from '@mui/material'
-import { useMutation, useApolloClient } from 'react-apollo'
-import { useParams, useLocation } from 'react-router'
-import PropTypes from 'prop-types'
-import { StyleSheet, css } from 'aphrodite'
-import { Link } from 'react-router-dom'
-import DeleteIcon from '@mui/icons-material/Delete'
-import { useTranslation } from 'react-i18next'
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  Button,
+  TextField,
+  List,
+  Grid,
+  IconButton,
+  Typography
+} from '@mui/material';
+import { useMutation, useApolloClient } from 'react-apollo';
+import { useParams, useLocation } from 'react-router';
+import PropTypes from 'prop-types';
+import { StyleSheet, css } from 'aphrodite';
+import { Link } from 'react-router-dom';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { useTranslation } from 'react-i18next';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
-import { Context } from '../../containers/Provider/AuthStateProvider'
-import { CommentMutation, UpdateCommentMutation } from '../../graphql/mutations'
-import useFileUpload from '../../graphql/useFileUpload'
-import { findLinkAndReplace, sanitizeText } from '../../utils/helpers'
-import Avatar from '../Avatar'
-import DateContainer from '../DateContainer'
-import DeleteDialogueBox from '../../shared/dialogs/DeleteDialogue'
-import { commentStatusAction } from '../../utils/constants'
-import ImageAuth from '../../shared/ImageAuth'
+import { Context } from '../../containers/Provider/AuthStateProvider';
+import { PostCreateMutation, UpdateCommentMutation } from '../../graphql/mutations';
+import useFileUpload from '../../graphql/useFileUpload';
+import { findLinkAndReplace, sanitizeText } from '../../utils/helpers';
+import Avatar from '../Avatar';
+import DateContainer from '../DateContainer';
+import DeleteDialogueBox from '../../shared/dialogs/DeleteDialogue';
+import { commentStatusAction } from '../../utils/constants';
+import ImageAuth from '../../shared/ImageAuth';
 
 export default function Comments({ comments, refetch, discussionId }) {
   const init = {
@@ -33,7 +41,7 @@ export default function Comments({ comments, refetch, discussionId }) {
   const [openModal, setOpenModal] = useState(false);
   const [commentId, setCommentId] = useState('');
   const [error, setError] = useState(null);
-  const [createComment] = useMutation(CommentMutation);
+  const [createPost] = useMutation(PostCreateMutation);
   const [updateComment] = useMutation(UpdateCommentMutation);
   const { t } = useTranslation('common');
 
@@ -131,7 +139,7 @@ export function CommentSection({ data, handleDeleteComment }) {
         <Avatar user={data.user} />
       </ListItemAvatar>
       <ListItemText
-        primary={(
+        primary={
           <Link
             style={{ cursor: 'pointer', textDecoration: 'none' }}
             to={data.isAdmin ? `/user/${data.user.id}` : '#'}
@@ -140,8 +148,8 @@ export function CommentSection({ data, handleDeleteComment }) {
               {data.user.name}
             </Typography>
           </Link>
-        )}
-        secondary={(
+        }
+        secondary={
           <>
             <span data-testid="comment">
               <span
@@ -172,7 +180,7 @@ export function CommentSection({ data, handleDeleteComment }) {
               )}
             </span>
           </>
-        )}
+        }
       />
     </ListItem>
   );
@@ -201,8 +209,8 @@ export function CommentBox({ authState, sendComment, data, handleCommentChange, 
           variant="outlined"
           inputProps={{ 'data-testid': 'comment_content' }}
           InputLabelProps={{
-          shrink: true
-        }}
+            shrink: true
+          }}
         />
       </ListItem>
       <br />
