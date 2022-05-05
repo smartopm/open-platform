@@ -225,6 +225,7 @@ admin:
       - can_view_posts
       - can_delete_post_image
       - can_update_post
+      - can_delete_post
   comment:
     permissions:
       - can_fetch_all_comments
