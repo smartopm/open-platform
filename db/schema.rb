@@ -712,10 +712,10 @@ ActiveRecord::Schema.define(version: 2022_04_29_063820) do
 
   create_table "posts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.text "content"
+    t.integer "status", default: 0
     t.uuid "discussion_id", null: false
     t.uuid "user_id", null: false
     t.uuid "community_id", null: false
-    t.integer "status", default: 0
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["community_id"], name: "index_posts_on_community_id"
