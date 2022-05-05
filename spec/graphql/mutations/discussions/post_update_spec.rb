@@ -2,13 +2,14 @@
 
 require 'rails_helper'
 
-RSpec.describe Mutations::Discussion::PostCreate do
-  describe 'create a post for discussion' do
+RSpec.describe Mutations::Discussion::PostUpdate do
+  describe 'update post' do
     let(:admin_role) { create(:role, name: 'admin') }
+    let(:resident_role) { create(:role, name: 'resident') }
     let!(:permission) do
       create(:permission, module: 'discussion',
                           role: admin_role,
-                          permissions: %w[can_create_post])
+                          permissions: %w[can_update_post])
     end
 
     let(:user) { create(:user_with_community) }
@@ -16,39 +17,32 @@ RSpec.describe Mutations::Discussion::PostCreate do
     let!(:admin) do
       create(:admin_user, user_type: 'admin', community_id: community.id, role: admin_role)
     end
-    let(:discussion) { create(:discussion, community: community, user_id: admin.id) }
-
-    let(:image_blob) do
-      file = fixture_file_upload(Rails.root.join('public/apple-touch-icon.png'), 'image/png')
-      ActiveStorage::Blob.create_and_upload!(
-        io: file,
-        filename: 'test.jpg',
-        content_type: 'image/jpg',
-      )
+    let(:resident) do
+      create(:user,
+             user_type: 'resident',
+             community_id: community.id,
+             role: resident_role)
     end
+    let(:discussion) { create(:discussion, community: community, user_id: admin.id) }
+    let(:post) { create(:post, community: community, discussion: discussion, user: resident) }
 
     let(:mutation) do
       <<~GQL
-        mutation CreatePost($discussionId: ID!, $content: String, $imageBlobIds: [String!]) {
-          postCreate(content: $content, discussionId: $discussionId, imageBlobIds: $imageBlobIds){
+        mutation UpdatePost($id: ID!, $content: String) {
+          postUpdate(id: $id, content: $content){
             post {
               content
-              discussion {
-                title
-              }
-              imageUrls
             }
           }
         }
       GQL
     end
 
-    context 'when user is authorized and discussion is present' do
-      it 'creates new post' do
+    context 'when user is authorized and post is present' do
+      it 'updates post' do
         variables = {
-          content: 'New Post',
-          discussionId: discussion.id,
-          imageBlobIds: [image_blob.signed_id],
+          content: 'New Post is updated',
+          id: post.id,
         }
         result = DoubleGdpSchema.execute(mutation, variables: variables,
                                                    context: {
@@ -56,28 +50,31 @@ RSpec.describe Mutations::Discussion::PostCreate do
                                                      site_community: community,
                                                    }).as_json
         expect(result['errors']).to be_nil
-        expect(result.dig('data', 'postCreate', 'post', 'content')).to eql 'New Post'
+        expect(result.dig('data', 'postUpdate', 'post', 'content')).to eql 'New Post is updated'
       end
     end
 
-    context 'when content and image blob ids are empty' do
-      it 'raises content must exist error' do
-        variables = { discussionId: discussion.id }
+    context 'when post is of current user' do
+      it 'updates post' do
+        variables = {
+          content: 'New Post is updated',
+          id: post.id,
+        }
         result = DoubleGdpSchema.execute(mutation, variables: variables,
                                                    context: {
-                                                     current_user: admin,
+                                                     current_user: resident,
                                                      site_community: community,
                                                    }).as_json
-        expect(result['errors']).to_not be_nil
-        expect(result.dig('errors', 0, 'message')).to eql 'Content must exist.'
+        expect(result['errors']).to be_nil
+        expect(result.dig('data', 'postUpdate', 'post', 'content')).to eql 'New Post is updated'
       end
     end
 
-    context 'when discussion is not present' do
-      it 'raises discussion not found error' do
+    context 'when post is not present' do
+      it 'raises post not found error' do
         variables = {
-          content: 'New post',
-          discussionId: '1234',
+          content: 'New post is updated',
+          id: '1234',
         }
         result = DoubleGdpSchema.execute(mutation, variables: variables,
                                                    context: {
@@ -85,15 +82,15 @@ RSpec.describe Mutations::Discussion::PostCreate do
                                                      site_community: community,
                                                    }).as_json
         expect(result['errors']).to_not be_nil
-        expect(result.dig('errors', 0, 'message')).to eql 'Discussion not found'
+        expect(result.dig('errors', 0, 'message')).to eql 'Post not found'
       end
     end
 
     context 'when user is unauthorized' do
       it 'raises unauthorized error' do
         variables = {
-          content: 'New post',
-          discussionId: discussion.id,
+          content: 'New post is updated',
+          id: post.id,
         }
         result = DoubleGdpSchema.execute(mutation, variables: variables,
                                                    context: {
