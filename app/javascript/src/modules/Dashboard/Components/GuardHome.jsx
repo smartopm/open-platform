@@ -25,7 +25,7 @@ import { AUTH_TOKEN_KEY } from '../../../utils/apollo';
 import { switchGuards } from '../../../graphql/mutations';
 import { Footer } from '../../../components/Footer';
 import FeatureCheck from '../../Features';
-
+import ImageIcon from '@mui/icons-material/Image';
 export const BootstrapInput = withStyles(() => ({
   input: {
     borderRadius: 6,
@@ -129,12 +129,12 @@ export function HomeGuard({ translate }) {
                             marginTop: 60,
                             zIndex: 9
                           }}
-                          color="primary"
+                          color="#999"
                         />
                       </Grid>
                     </Grid>
                   </Grid>
-                  <Grid item md={4} xs={12}>
+                  <Grid item md={4} xs={6}>
                     <FormControl
                       variant="filled"
                       style={{
@@ -173,9 +173,16 @@ export function HomeGuard({ translate }) {
                     </FormControl>
                   </Grid>
 
-                  <Grid item md={4} xs={12} style={{ paddingRight: 0 }}>
+                  <Grid item md={4} xs={6}>
                     <Link to="/scan">
-                      <img src={ScanIcon} alt="scan icon" className={` ${css(styles.scanIcon)}`} />
+                      <img
+                        src={ScanIcon}
+                        alt="scan icon"
+                        className={` ${css(styles.scanIcon)}`}
+                        style={{
+                          marginLeft: isMobile ? 50 : 150
+                        }}
+                      />
                     </Link>
                   </Grid>
                 </Grid>
@@ -284,8 +291,7 @@ const styles = StyleSheet.create({
   },
   scanIcon: {
     marginTop: 45,
-    width: 20,
-    marginLeft: 150
+    width: 20
   },
   switchAccount: {
     textDecoration: 'none',
