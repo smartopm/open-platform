@@ -115,7 +115,7 @@ export default function RenderForm({
       ...formState,
       currentPropId: propertyId,
       isUploading: true,
-      currentFileNames: [...formState.currentFileNames, file.name]
+      currentFileNames: [...formState.currentFileNames, `${file.name}${file.propertyId}`]
     });
     startUpload(file);
   }
@@ -128,7 +128,7 @@ export default function RenderForm({
   }
 
   function onNotUploadedImageRemove(file) {
-    const filteredImages = filesToUpload.filter(item => item.name !== file.name);
+    const filteredImages = filesToUpload.filter(item => item.fileNameId !== file.fileNameId);
     setFilesToUpload(filteredImages);
   }
 
@@ -138,13 +138,13 @@ export default function RenderForm({
       im => im.propertyId === imagePropertyId && im.filename !== file.name
     );
     await setUploadedImages([...filteredImages, ...filtCurrentUploadedImg]);
-    const filterFileName = formState.currentFileNames.filter(im => im !== file.name);
+    const filterFileName = formState.currentFileNames.filter(im => im !== `${file.name}${file.propertyId}`);
     await setFormState({ ...formState, currentFileNames: filterFileName });
     onNotUploadedImageRemove(file);
   }
 
   async function handleFileSelect(event, propertyId) {
-    const checkSelectFile = Object.values(event.target.files).some(file =>
+    const checkSelectFile = await Object.values(event.target.files).some(file =>
       isFileNameSelect(filesToUpload, file.name, propertyId)
     );
 
@@ -153,10 +153,10 @@ export default function RenderForm({
       setIsSuccessAlert(false);
       return;
     }
-    const newFile = await Object.values(event.target.files).map(file =>
-      Object.assign(file, { propertyId })
-    );
-    await setFilesToUpload([...filesToUpload, ...newFile]);
+    const newFiles = await Object.values(event.target.files).map(file =>
+      Object.assign(file, { propertyId, fileNameId: `${file.name}${propertyId}` })
+    )
+    await setFilesToUpload([...filesToUpload, ...newFiles]);
   }
 
   async function handleSignatureUpload() {

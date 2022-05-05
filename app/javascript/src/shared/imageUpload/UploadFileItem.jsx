@@ -34,7 +34,7 @@ export default function UploadFileItem({
             data-testid="upload_btn"
           >
             {formState.isUploading &&
-            formState.currentFileNames.includes(file.name) &&
+            formState.currentFileNames.includes(`${file.name}${file.propertyId}`) &&
             formPropertyId === formState.currentPropId ? (
               <CircularProgress size={24} color="primary" data-testid="upload_loader" />
             ) : (
@@ -72,7 +72,8 @@ UploadFileItem.propTypes = {
   file: PropTypes.shape({
     type: PropTypes.string,
     name: PropTypes.string,
-    size: PropTypes.number
+    size: PropTypes.number,
+    propertyId: PropTypes.string
   }).isRequired,
   formState: PropTypes.shape({
     isUploading: PropTypes.bool,
