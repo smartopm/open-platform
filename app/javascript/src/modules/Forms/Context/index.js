@@ -44,7 +44,7 @@ export default function FormContextProvider({ children }) {
   useEffect(() => {
     if (
       status === 'DONE' &&
-      formState.currentPropId 
+      formState.currentPropId
     ) {
       setFormState({
         ...formState,
@@ -67,7 +67,7 @@ export default function FormContextProvider({ children }) {
    */
   function saveFormData(formData, formId, userId, categories, formStatus = null) {
     if (filesToUpload.length !== uploadedImages.length) {
-      return setImgUploadError(true)
+      return setImgUploadError(true);
     }
     setFormState({
       ...formState,

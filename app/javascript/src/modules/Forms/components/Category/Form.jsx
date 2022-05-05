@@ -42,7 +42,15 @@ export default function Form({
     variables: { formId },
     fetchPolicy: 'no-cache'
   });
-  const { formState, saveFormData, setFormState, imgUploadError, setImgUploadError } = useContext(
+  const {
+    formState,
+    saveFormData,
+    setFormState,
+    imgUploadError,
+    uploadedImages,
+    filesToUpload,
+    setImgUploadError
+  } = useContext(
     FormContext
   );
   const authState = useContext(Context);
@@ -92,10 +100,16 @@ export default function Form({
   }
 
   function formSubmit(propertiesData, status) {
+    if (filesToUpload.length !== uploadedImages.length) {
+      setImgUploadError(true);
+      return;
+    }
+
     if (formDetailData?.form?.preview) {
       setFormState({ ...formState, previewable: formDetailData.form?.preview });
       return;
     }
+
     saveFormData(
       propertiesData,
       formId,
@@ -150,7 +164,7 @@ export default function Form({
 
       <DetailsDialog
         handleClose={handleCancelPreview}
-        open={formState.previewable}
+        open={formState.previewable && !imgUploadError && !formState.error}
         title={t('form:misc.contract_preview')}
         color="primary"
         scroll="paper"
