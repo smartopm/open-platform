@@ -20,13 +20,13 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { useTranslation } from 'react-i18next';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import { Context } from '../../containers/Provider/AuthStateProvider';
-import { PostCreateMutation, UpdateCommentMutation } from '../../graphql/mutations';
+import { PostCreateMutation, PostDeleteMutation } from '../../graphql/mutations';
 import useFileUpload from '../../graphql/useFileUpload';
 import { findLinkAndReplace, sanitizeText } from '../../utils/helpers';
 import Avatar from '../Avatar';
 import DateContainer from '../DateContainer';
 import DeleteDialogueBox from '../../shared/dialogs/DeleteDialogue';
-import { commentStatusAction } from '../../utils/constants';
+// import { commentStatusAction } from '../../utils/constants';
 import ImageAuth from '../../shared/ImageAuth';
 
 export default function Comments({ comments, refetch, discussionId }) {
@@ -42,7 +42,7 @@ export default function Comments({ comments, refetch, discussionId }) {
   const [commentId, setCommentId] = useState('');
   const [error, setError] = useState(null);
   const [createPost] = useMutation(PostCreateMutation);
-  const [updateComment] = useMutation(UpdateCommentMutation);
+  const [deletePost] = useMutation(PostDeleteMutation);
   const { t } = useTranslation('common');
 
   function handleDeleteClick(cid = commentId) {
@@ -55,8 +55,8 @@ export default function Comments({ comments, refetch, discussionId }) {
   });
 
   function handleDeleteComment() {
-    updateComment({
-      variables: { commentId, discussionId, status: commentStatusAction.delete }
+    deletePost({
+      variables: { id: commentId }
     })
       .then(() => {
         refetch();
@@ -75,11 +75,11 @@ export default function Comments({ comments, refetch, discussionId }) {
       setData({ ..._data, error: t('common:errors.empty_text') });
       return;
     }
-    createComment({
+    createPost({
       variables: {
         content: _data.message,
         discussionId,
-        imageBlobId: signedBlobId
+        imageBlobIds: [signedBlobId]
       }
     })
       .then(() => {
@@ -113,7 +113,7 @@ export default function Comments({ comments, refetch, discussionId }) {
               isAdmin: authState.user.userType === 'admin',
               createdAt: comment.createdAt,
               comment: comment.content,
-              imageUrl: comment.imageUrl,
+              imageUrls: comment.imageUrls,
               user: comment.user
             }}
             handleDeleteComment={() => handleDeleteClick(comment.id)}
@@ -160,9 +160,12 @@ export function CommentSection({ data, handleDeleteComment }) {
               />
               <br />
               {// eslint-disable-next-line react/prop-types
-              data.imageUrl && (
-                <ImageAuth imageLink={data.imageUrl} className="img-responsive img-thumbnail" />
-              )}
+              data?.imageUrls?.length &&
+                data?.imageUrls.map(image => (
+                  <div key={image}>
+                    <ImageAuth imageLink={image} className="img-responsive img-thumbnail" />
+                  </div>
+                ))}
             </span>
             <span data-testid="delete_icon" className={css(styles.itemAction)}>
               <DateContainer date={data.createdAt} />
@@ -285,7 +288,7 @@ CommentSection.propTypes = {
     createdAt: PropTypes.string.isRequired,
     comment: PropTypes.string.isRequired,
     isAdmin: PropTypes.bool,
-    imageUrl: PropTypes.string.isRequired
+    imageUrls: PropTypes.arrayOf(PropTypes.string)
   }).isRequired,
   handleDeleteComment: PropTypes.func.isRequired
 };

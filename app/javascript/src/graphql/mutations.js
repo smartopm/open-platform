@@ -741,11 +741,19 @@ export const CommentMutation = gql`
 `;
 
 export const PostCreateMutation = gql`
-  mutation postCreate($discussionId: ID!, $content: String!, $imageBlobIds: [String]!) {
+  mutation postCreate($discussionId: ID!, $content: String, $imageBlobIds: [String!]) {
     postCreate(discussionId: $discussionId, content: $content, imageBlobIds: $imageBlobIds) {
       post {
         content
       }
+    }
+  }
+`;
+
+export const PostDeleteMutation = gql`
+  mutation postDelete($id: ID!) {
+    postDelete(id: $id) {
+      success
     }
   }
 `;

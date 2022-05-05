@@ -21,7 +21,7 @@ export default function Discussion({ discussionData }) {
   const authState = useContext(AuthStateContext);
   const [isLoading, setLoading] = useState(false);
   const { loading, error, data, refetch, fetchMore } = useQuery(DiscussionCommentsQuery, {
-    variables: { id, limit }
+    variables: { discussionId: id, limit }
   });
   const { t } = useTranslation('discussion');
 
@@ -32,17 +32,19 @@ export default function Discussion({ discussionData }) {
   function fetchMoreComments() {
     setLoading(true);
     fetchMore({
-      variables: { id, offset: data.discussComments.length },
+      variables: { id, offset: data.discussionPosts.length },
       updateQuery: (prev, { fetchMoreResult }) => {
         if (!fetchMoreResult) return prev;
         setLoading(false);
         return {
           ...prev,
-          discussComments: [...prev.discussComments, ...fetchMoreResult.discussComments]
+          discussionPosts: [...prev.discussionPosts, ...fetchMoreResult.discussionPosts]
         };
       }
     });
   }
+  console.log('Mutuba data in Discussion', data);
+  console.log('Mutuba data in Discussion', discussionData);
 
   if (loading) return <Spinner />;
   if (error) {
@@ -83,8 +85,8 @@ export default function Discussion({ discussionData }) {
             <Typography variant="subtitle1">{t('headers.comments')}</Typography>
           </Grid>
           <Grid item xs={12}>
-            <Comment comments={data?.discussComments} discussionId={id} refetch={refetch} />
-            {data?.discussComments.length >= limit && (
+            <Comment comments={data?.discussionPosts} discussionId={id} refetch={refetch} />
+            {data?.discussionPosts.length >= limit && (
               <CenteredContent>
                 <Button variant="outlined" onClick={fetchMoreComments}>
                   {isLoading ? <Spinner /> : t('form_actions.more_comments')}

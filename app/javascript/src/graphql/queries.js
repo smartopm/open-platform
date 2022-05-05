@@ -45,7 +45,7 @@ export const EntryRequestQuery = gql`
         name
         id
       }
-      guest{
+      guest {
         id
         status
       }
@@ -481,12 +481,12 @@ export const PostCommentsQuery = gql`
 `;
 
 export const DiscussionCommentsQuery = gql`
-  query discussComments($id: ID!, $limit: Int, $offset: Int) {
-    discussComments(id: $id, limit: $limit, offset: $offset) {
+  query discussionPosts($discussionId: ID!, $limit: Int, $offset: Int) {
+    discussionPosts(discussionId: $discussionId, limit: $limit, offset: $offset) {
       content
       createdAt
       id
-      imageUrl
+      imageUrls
       user {
         id
         name
