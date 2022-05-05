@@ -101,12 +101,13 @@ describe('Image Area component', () => {
     const file = {
       type: 'video/mp4',
       name: 'nice_video.mp4',
-      size: 2000000
+      size: 2000000,
+      propertyId: 'sdfwyewfefd'
     };
     const formState = {
       isUploading: true,
       currentPropId: '0909',
-      currentFileNames: [file.name, 'another_video.mp4']
+      currentFileNames: [`${file.name}${file.propertyId}`, 'another_video.mp4']
     };
 
     const handleUpload = jest.fn();
