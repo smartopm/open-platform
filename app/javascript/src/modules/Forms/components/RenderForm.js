@@ -404,7 +404,7 @@ export default function RenderForm({
               handleRemoveFile={removeBeforeUpload}
               formState={{ ...formState, uploaded: uploadedImages }}
               isUploaded={isUploaded(uploadedImages, file, formPropertiesData.id)}
-              key={`${file.size}-${file.name}`}
+              key={file.fileNameId}
               translate={t}
             />
           ))}
