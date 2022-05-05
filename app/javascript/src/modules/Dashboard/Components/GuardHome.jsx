@@ -25,7 +25,7 @@ import { AUTH_TOKEN_KEY } from '../../../utils/apollo';
 import { switchGuards } from '../../../graphql/mutations';
 import { Footer } from '../../../components/Footer';
 import FeatureCheck from '../../Features';
-import ImageIcon from '@mui/icons-material/Image';
+
 export const BootstrapInput = withStyles(() => ({
   input: {
     borderRadius: 6,
