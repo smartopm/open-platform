@@ -49,7 +49,7 @@ export default function FormContextProvider({ children }) {
       setFormState({
         ...formState,
         isUploading: false,
-        currentFileNames: [...formState.currentFileNames, filename]
+        currentFileNames: [...formState.currentFileNames, `${filename}${formState.currentPropId}`]
       });
       setUploadedImages([
         ...uploadedImages,
