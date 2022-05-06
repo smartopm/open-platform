@@ -4,7 +4,7 @@ import '@testing-library/jest-dom/extend-expect';
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom';
 import Discussion from '../../components/Discussion/Discussion';
-import { DiscussionCommentsQuery } from '../../graphql/queries';
+import { DiscussionPostsQuery } from '../../graphql/queries';
 import { Spinner } from '../../shared/Loading';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
@@ -23,15 +23,15 @@ describe('Discussion with comments', () => {
     const mocks = [
       {
         request: {
-          query: DiscussionCommentsQuery,
+          query: DiscussionPostsQuery,
           variables: {
-            id: data.id,
+            discussionId: data.id,
             limit: 20
           }
         },
         result: {
           data: {
-            discussComments: []
+            discussionPosts: []
           }
         }
       }
@@ -58,9 +58,9 @@ describe('Discussion with comments', () => {
       expect(container.queryByText(/Last discussion/)).toBeInTheDocument();
       expect(container.queryByText('A note about your activity')).toBeInTheDocument();
       expect(container.queryByText('follow')).toBeInTheDocument();
-      
-      fireEvent.click(container.queryByText('follow'))
-      
+
+      fireEvent.click(container.queryByText('follow'));
+
       expect(container.queryByText('discussion:headers.subscribe')).toBeInTheDocument();
     }, 50);
   });

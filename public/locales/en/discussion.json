@@ -1,6 +1,6 @@
 {
     "headers": {
-      "comments": "Comments",
+      "posts": "Posts",
       "no_discussions": "No Discussions Topics",
       "subscribe": "Subscribe to Discussion",
       "create_discussion":"Create a discussion topic",
@@ -10,7 +10,8 @@
       "more_discussions": "Load more discussions",
       "send": "Send",
       "agree": "Agree",
-      "disagree": "Disagree"
+      "disagree": "Disagree",
+      "more_posts": "Load more posts"
     },
     "form_fields": {
       "email_address": "Email Address"
@@ -42,8 +43,8 @@
       "invalid_email": "Invalid email."
     },
     "discussion_board_disclaimer":{
-      "first_line": "Comments and discussion boards are provided as a free service for logged in community members.",
-      "second_line": "Users must keep comments constructive, informative, positive, and free of profanity and obscenity.",
+      "first_line": "Posts and discussion boards are provided as a free service for logged in community members.",
+      "second_line": "Users must keep posts constructive, informative, positive, and free of profanity and obscenity.",
       "third_line": "We reserve the right to remove posts or boards that veer from these principles."
     }
   }

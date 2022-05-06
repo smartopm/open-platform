@@ -4,7 +4,7 @@ import { useQuery } from 'react-apollo';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import Comment from './Comment';
-import { DiscussionCommentsQuery } from '../../graphql/queries';
+import { DiscussionPostsQuery } from '../../graphql/queries';
 import DateContainer from '../DateContainer';
 import { Spinner } from '../../shared/Loading';
 import CenteredContent from '../../shared/CenteredContent';
@@ -20,7 +20,7 @@ export default function Discussion({ discussionData }) {
   const { id } = discussionData;
   const authState = useContext(AuthStateContext);
   const [isLoading, setLoading] = useState(false);
-  const { loading, error, data, refetch, fetchMore } = useQuery(DiscussionCommentsQuery, {
+  const { loading, error, data, refetch, fetchMore } = useQuery(DiscussionPostsQuery, {
     variables: { discussionId: id, limit }
   });
   const { t } = useTranslation('discussion');
@@ -43,8 +43,6 @@ export default function Discussion({ discussionData }) {
       }
     });
   }
-  console.log('Mutuba data in Discussion', data);
-  console.log('Mutuba data in Discussion', discussionData);
 
   if (loading) return <Spinner />;
   if (error) {
@@ -82,14 +80,14 @@ export default function Discussion({ discussionData }) {
             <Disclaimer body={discussionBoardDisclaimer} />
           </Grid>
           <Grid item xs={12}>
-            <Typography variant="subtitle1">{t('headers.comments')}</Typography>
+            <Typography variant="subtitle1">{t('headers.posts')}</Typography>
           </Grid>
           <Grid item xs={12}>
             <Comment comments={data?.discussionPosts} discussionId={id} refetch={refetch} />
             {data?.discussionPosts.length >= limit && (
               <CenteredContent>
                 <Button variant="outlined" onClick={fetchMoreComments}>
-                  {isLoading ? <Spinner /> : t('form_actions.more_comments')}
+                  {isLoading ? <Spinner /> : t('form_actions.more_posts')}
                 </Button>
               </CenteredContent>
             )}

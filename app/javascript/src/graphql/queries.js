@@ -480,7 +480,7 @@ export const PostCommentsQuery = gql`
   }
 `;
 
-export const DiscussionCommentsQuery = gql`
+export const DiscussionPostsQuery = gql`
   query discussionPosts($discussionId: ID!, $limit: Int, $offset: Int) {
     discussionPosts(discussionId: $discussionId, limit: $limit, offset: $offset) {
       content

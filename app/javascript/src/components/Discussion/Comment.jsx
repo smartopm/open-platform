@@ -120,13 +120,13 @@ export default function Comments({ comments, refetch, discussionId }) {
           />
         ))
       ) : (
-        <p className="text-center">{t('common:misc.first_to_comment')}</p>
+        <p className="text-center">{t('common:misc.first_to_post')}</p>
       )}
       <DeleteDialogueBox
         open={openModal}
         handleClose={handleDeleteClick}
         handleAction={handleDeleteComment}
-        title={t('common:misc.comment', { count: 1 })}
+        title={t('common:misc.post', { count: 1 })}
       />
     </List>
   );
@@ -139,7 +139,7 @@ export function CommentSection({ data, handleDeleteComment }) {
         <Avatar user={data.user} />
       </ListItemAvatar>
       <ListItemText
-        primary={
+        primary={(
           <Link
             style={{ cursor: 'pointer', textDecoration: 'none' }}
             to={data.isAdmin ? `/user/${data.user.id}` : '#'}
@@ -148,8 +148,8 @@ export function CommentSection({ data, handleDeleteComment }) {
               {data.user.name}
             </Typography>
           </Link>
-        }
-        secondary={
+        )}
+        secondary={(
           <>
             <span data-testid="comment">
               <span
@@ -160,8 +160,8 @@ export function CommentSection({ data, handleDeleteComment }) {
               />
               <br />
               {// eslint-disable-next-line react/prop-types
-              data?.imageUrls?.length &&
-                data?.imageUrls.map(image => (
+              data?.imageUrls?.length > 0 &&
+                data?.imageUrls?.map(image => (
                   <div key={image}>
                     <ImageAuth imageLink={image} className="img-responsive img-thumbnail" />
                   </div>
@@ -183,7 +183,7 @@ export function CommentSection({ data, handleDeleteComment }) {
               )}
             </span>
           </>
-        }
+        )}
       />
     </ListItem>
   );
@@ -202,15 +202,15 @@ export function CommentBox({ authState, sendComment, data, handleCommentChange, 
         <TextField
           id="standard-full-width"
           style={{ width: '95vw', margin: 15, marginTop: 7 }}
-          placeholder={t('common:misc.type_comment')}
-          label={t('common:misc.type_comment')}
+          placeholder={t('common:misc.type_post')}
+          label={t('common:misc.type_post')}
           value={data.message}
           onChange={handleCommentChange}
           multiline
           rows={3}
           margin="normal"
           variant="outlined"
-          inputProps={{ 'data-testid': 'comment_content' }}
+          inputProps={{ 'data-testid': 'post_content' }}
           InputLabelProps={{
             shrink: true
           }}
@@ -226,7 +226,7 @@ export function CommentBox({ authState, sendComment, data, handleCommentChange, 
       >
         {upload.status === 'DONE' && (
           <Grid item>
-            <p style={{ marginTop: 5, marginRight: 35 }}>{t('messages.image_uploaded')}</p>
+            <p style={{ marginTop: 5, marginRight: 35 }}>{t('common:misc.image_uploaded')}</p>
           </Grid>
         )}
         <Grid item>
@@ -253,7 +253,7 @@ export function CommentBox({ authState, sendComment, data, handleCommentChange, 
           >
             {location.pathname.includes('message')
               ? t('common:misc.send')
-              : t('common:misc.comment', { count: 1 })}
+              : t('common:misc.post', { count: 1 })}
           </Button>
         </Grid>
       </Grid>
