@@ -15,9 +15,11 @@ module Types
     def image_urls
       return nil unless object.images.attached?
 
+      base_url = HostEnv.base_url(object.community)
+
       object.images.where.not(status: 1).map do |image|
-        Rails.application.routes.url_helpers
-             .rails_blob_url(image)
+        path = Rails.application.routes.url_helpers.rails_blob_path(image)
+        "https://#{base_url}#{path}"
       end
     end
   end
