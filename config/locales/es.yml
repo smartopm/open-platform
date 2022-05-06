@@ -381,6 +381,8 @@ es:
     form_property:
       not_found: Formulario de Propiedad no encontrado
     form:
+      draft_exist: Envíe el formulario de borrador existente para hacer un nuevo envío
+        de borrador
       not_found: Formulario no encontrado
     general:
       model_not_found: "%{model} no encontrado"
@@ -435,6 +437,8 @@ es:
       not_found: Pago no encontrado
     post_tag:
       not_found: Etiqueta no encontrada
+    post:
+      content_not_found: El contenido debe existir.
     process:
       not_found: Proceso no encontrado
     receipt_number:
