@@ -324,6 +324,7 @@ en:
       not_found: Event log not found
     form:
       not_found: Form not found
+      draft_exist: Please submit the existing draft form to make a new draft submission
     form_property:
       not_found: Form Property not found
     invalid_argument_value: Invalid Argument Value

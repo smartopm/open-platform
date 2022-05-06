@@ -44,9 +44,8 @@ module Mutations
           raise_multiple_submissions_error(form, vals[:user_id])
         end
 
-        if vals[:status] == 'draft'
-          form.form_users.find_by(user_id: vals[:user_id], status: 'draft')&.destroy!
-        end
+        form_user = form.form_users.find_by(user_id: vals[:user_id], status: 'draft')
+        raise_error_message(I18n.t('errors.form.draft_exist')) if form_user.present?
 
         form_user = form.form_users.new(vals.except(:form_id, :prop_values)
                                             .merge(status: (vals[:status] || 'pending')))
