@@ -14,7 +14,8 @@ export default function UploadFileItem({
   handleRemoveFile,
   formPropertyId,
   isUploaded,
-  translate
+  translate,
+  removeUploadObject
 }) {
   const matches = useMediaQuery('(max-width:321px)');
   return (
@@ -56,7 +57,7 @@ export default function UploadFileItem({
       </Grid>
       <Grid item xs={2}>
         <IconButton
-          onClick={() => handleRemoveFile(file, isUploaded, formPropertyId)}
+          onClick={() => handleRemoveFile(file, isUploaded, formPropertyId, removeUploadObject())}
           disabled={formState.isUploading}
           style={{ marginTop: -7, marginRight: '-20px' }}
           data-testid="remove_upload_btn"
@@ -84,5 +85,6 @@ UploadFileItem.propTypes = {
   handleRemoveFile: PropTypes.func.isRequired,
   isUploaded: PropTypes.bool.isRequired,
   formPropertyId: PropTypes.string.isRequired,
-  translate: PropTypes.func.isRequired
+  translate: PropTypes.func.isRequired,
+  removeUploadObject: PropTypes.func.isRequired
 };
