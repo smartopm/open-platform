@@ -59,6 +59,22 @@ export default function FormContextProvider({ children }) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
 
+  function validateFormFields(filledInProperties, categories, formStatus) {
+    if (requiredFieldIsEmpty(filledInProperties, categories) && formStatus !== 'draft') {
+      setFormState({
+        ...formState,
+        error: true,
+        info: t('misc.required_fields_empty'),
+        alertOpen: true,
+        isSubmitting: false,
+        filledInProperties,
+        categories
+      });
+      return false;
+    }
+    return true;
+  }
+
   /**
    *
    * @param {object} formData all form properties for this form being submitted
@@ -101,18 +117,7 @@ export default function FormContextProvider({ children }) {
     formData.map(prop => addPropWithValue(filledInProperties, prop.id));
     const cleanFormData = JSON.stringify({ user_form_properties: filledInProperties });
 
-    if (requiredFieldIsEmpty(filledInProperties, categories) && formStatus !== 'draft') {
-      setFormState({
-        ...formState,
-        error: true,
-        info: t('misc.required_fields_empty'),
-        alertOpen: false,
-        isSubmitting: false,
-        filledInProperties,
-        categories
-      });
-      return false;
-    }
+    if (!validateFormFields(filledInProperties, categories, formStatus)) return false;
 
     createFormUser({
       variables: {
