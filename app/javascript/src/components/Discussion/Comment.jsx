@@ -139,7 +139,7 @@ export function CommentSection({ data, handleDeleteComment }) {
         <Avatar user={data.user} />
       </ListItemAvatar>
       <ListItemText
-        primary={(
+        primary={
           <Link
             style={{ cursor: 'pointer', textDecoration: 'none' }}
             to={data.isAdmin ? `/user/${data.user.id}` : '#'}
@@ -148,8 +148,8 @@ export function CommentSection({ data, handleDeleteComment }) {
               {data.user.name}
             </Typography>
           </Link>
-        )}
-        secondary={(
+        }
+        secondary={
           <>
             <span data-testid="comment">
               <span
@@ -160,12 +160,12 @@ export function CommentSection({ data, handleDeleteComment }) {
               />
               <br />
               {// eslint-disable-next-line react/prop-types
-              data?.imageUrls?.length > 0 &&
-                data?.imageUrls?.map(image => (
-                  <div key={image}>
-                    <ImageAuth imageLink={image} className="img-responsive img-thumbnail" />
-                  </div>
-                ))}
+              data?.imageUrls?.length >= 1 && (
+                <ImageAuth
+                  imageLink={data?.imageUrls[0]}
+                  className="img-responsive img-thumbnail"
+                />
+              )}
             </span>
             <span data-testid="delete_icon" className={css(styles.itemAction)}>
               <DateContainer date={data.createdAt} />
@@ -183,14 +183,15 @@ export function CommentSection({ data, handleDeleteComment }) {
               )}
             </span>
           </>
-        )}
+        }
       />
     </ListItem>
   );
 }
 
 export function CommentBox({ authState, sendComment, data, handleCommentChange, upload }) {
-  // in the future instead of using location, pass a prop called isUpload and show upload icon or don't
+  // in the future instead of using location,
+  // pass a prop called isUpload and show upload icon or don't
   const location = useLocation();
   const { t } = useTranslation(['common', 'discussion']);
   return (
