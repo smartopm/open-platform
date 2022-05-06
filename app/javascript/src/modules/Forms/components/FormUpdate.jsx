@@ -9,7 +9,7 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { Fragment, useRef, useState, useEffect } from 'react';
-import { Button, Container, Grid, Divider, Typography } from '@mui/material';
+import { Button, Grid, Divider, Typography } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import { useApolloClient, useMutation, useQuery } from 'react-apollo';
 import { useHistory } from 'react-router';
@@ -233,6 +233,7 @@ export default function FormUpdate({ formUserId, userId, authState, categoriesDa
       return;
     }
     setMessageAlert('');
+    setImgUploadError('');
   }
 
   function saveFormData() {
@@ -291,16 +292,17 @@ export default function FormUpdate({ formUserId, userId, authState, categoriesDa
 
   function handleActionClick(_event, action) {
     _event.preventDefault(); // especially on submission trigger
+    if (filesToUpload.length !== uploadedImages.length) {
+      return setImgUploadError(true);
+    }
     setFormAction(action);
     setOpenModal(!openModal);
+    return true
   }
 
   function handleAction() {
     // check which button was clicked, pattern matching couldn't work here
     setLoading(!isLoading);
-    if (filesToUpload.length !== uploadedImages.length) {
-      return setImgUploadError(true);
-    }
     switch (formAction) {
       case 'update':
         saveFormData();
@@ -599,7 +601,7 @@ export default function FormUpdate({ formUserId, userId, authState, categoriesDa
 
   return (
     <>
-      <Container>
+      <>
         <MessageAlert
           type={message.error ? 'error' : 'success'}
           message={message.info}
@@ -685,7 +687,7 @@ export default function FormUpdate({ formUserId, userId, authState, categoriesDa
           </Grid>
           <br />
         </form>
-      </Container>
+      </>
 
       {/* dialog */}
       <DialogueBox
