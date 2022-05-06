@@ -1,62 +1,52 @@
-import React, { useContext, useState } from 'react'
-import {
-  Divider,
-  Typography,
-  Button,
-  Grid
-} from '@mui/material'
-import { useQuery } from 'react-apollo'
-import PropTypes from 'prop-types'
-import { useTranslation } from 'react-i18next'
-import Comment from './Comment'
-import {
-  DiscussionCommentsQuery
-} from '../../graphql/queries'
-import DateContainer from '../DateContainer'
-import Loading, { Spinner } from '../../shared/Loading'
-import ErrorPage from "../Error"
-import CenteredContent from '../CenteredContent'
-import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider'
-import FollowButton from './FollowButton'
-import Disclaimer from '../Disclaimer'
-import userProps from '../../shared/types/user'
+import React, { useContext, useState } from 'react';
+import { Divider, Typography, Button, Grid } from '@mui/material';
+import { useQuery } from 'react-apollo';
+import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
+import Comment from './Comment';
+import { DiscussionPostsQuery } from '../../graphql/queries';
+import DateContainer from '../DateContainer';
+import { Spinner } from '../../shared/Loading';
+import CenteredContent from '../../shared/CenteredContent';
+import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider';
+import FollowButton from './FollowButton';
+
+import Disclaimer from '../Disclaimer';
+import userProps from '../../shared/types/user';
+import { formatError } from '../../utils/helpers';
 
 export default function Discussion({ discussionData }) {
-  const limit = 20
-  const { id } = discussionData
-  const authState = useContext(AuthStateContext)
-  const [isLoading, setLoading] = useState(false)
-  const { loading, error, data, refetch, fetchMore } = useQuery(
-    DiscussionCommentsQuery,
-    {
-      variables: { id, limit }
-    }
-  )
-  const { t } = useTranslation('discussion')
+  const limit = 20;
+  const { id } = discussionData;
+  const authState = useContext(AuthStateContext);
+  const [isLoading, setLoading] = useState(false);
+  const { loading, error, data, refetch, fetchMore } = useQuery(DiscussionPostsQuery, {
+    variables: { discussionId: id, limit }
+  });
+  const { t } = useTranslation('discussion');
 
-  const discussionBoardDisclaimer =
-    `${t('discussion_board_disclaimer.first_line')}
+  const discussionBoardDisclaimer = `${t('discussion_board_disclaimer.first_line')}
     ${t('discussion_board_disclaimer.second_line')}
-    ${t('discussion_board_disclaimer.third_line')}`
+    ${t('discussion_board_disclaimer.third_line')}`;
 
   function fetchMoreComments() {
-    setLoading(true)
+    setLoading(true);
     fetchMore({
-      variables: { id, offset: data.discussComments.length },
+      variables: { id, offset: data.discussionPosts.length },
       updateQuery: (prev, { fetchMoreResult }) => {
-        if (!fetchMoreResult) return prev
-        setLoading(false)
-        return { ...prev, discussComments: [
-            ...prev.discussComments,
-            ...fetchMoreResult.discussComments
-          ]}
+        if (!fetchMoreResult) return prev;
+        setLoading(false);
+        return {
+          ...prev,
+          discussionPosts: [...prev.discussionPosts, ...fetchMoreResult.discussionPosts]
+        };
       }
-    })
+    });
   }
 
-  if (loading) return <Loading />
+  if (loading) return <Spinner />;
   if (error) {
-    return <ErrorPage title={error.message || error} />
+    return <CenteredContent>{formatError(error.message)}</CenteredContent>;
   }
 
   return (
@@ -90,18 +80,14 @@ export default function Discussion({ discussionData }) {
             <Disclaimer body={discussionBoardDisclaimer} />
           </Grid>
           <Grid item xs={12}>
-            <Typography variant="subtitle1">{t('headers.comments')}</Typography>
+            <Typography variant="subtitle1">{t('headers.posts')}</Typography>
           </Grid>
           <Grid item xs={12}>
-            <Comment
-              comments={data?.discussComments}
-              discussionId={id}
-              refetch={refetch}
-            />
-            {data?.discussComments.length >= limit && (
+            <Comment comments={data?.discussionPosts} discussionId={id} refetch={refetch} />
+            {data?.discussionPosts.length >= limit && (
               <CenteredContent>
                 <Button variant="outlined" onClick={fetchMoreComments}>
-                  {isLoading ? <Spinner /> : t('form_actions.more_comments')}
+                  {isLoading ? <Spinner /> : t('form_actions.more_posts')}
                 </Button>
               </CenteredContent>
             )}
@@ -109,7 +95,7 @@ export default function Discussion({ discussionData }) {
         </Grid>
       </>
     </div>
-  )
+  );
 }
 
 Discussion.propTypes = {
@@ -119,5 +105,5 @@ Discussion.propTypes = {
     user: userProps,
     description: PropTypes.string,
     title: PropTypes.string.isRequired
-  }).isRequired,
-}
+  }).isRequired
+};

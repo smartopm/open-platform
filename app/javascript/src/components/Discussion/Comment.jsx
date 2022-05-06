@@ -1,25 +1,33 @@
 /* eslint-disable no-use-before-define */
 import React, { useContext, useState } from 'react';
 import {
-  ListItem, ListItemAvatar, ListItemText, Button, TextField, List, Grid, IconButton, Typography
-} from '@mui/material'
-import { useMutation, useApolloClient } from 'react-apollo'
-import { useParams, useLocation } from 'react-router'
-import PropTypes from 'prop-types'
-import { StyleSheet, css } from 'aphrodite'
-import { Link } from 'react-router-dom'
-import DeleteIcon from '@mui/icons-material/Delete'
-import { useTranslation } from 'react-i18next'
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  Button,
+  TextField,
+  List,
+  Grid,
+  IconButton,
+  Typography
+} from '@mui/material';
+import { useMutation, useApolloClient } from 'react-apollo';
+import { useParams, useLocation } from 'react-router';
+import PropTypes from 'prop-types';
+import { StyleSheet, css } from 'aphrodite';
+import { Link } from 'react-router-dom';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { useTranslation } from 'react-i18next';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
-import { Context } from '../../containers/Provider/AuthStateProvider'
-import { CommentMutation, UpdateCommentMutation } from '../../graphql/mutations'
-import useFileUpload from '../../graphql/useFileUpload'
-import { findLinkAndReplace, sanitizeText } from '../../utils/helpers'
-import Avatar from '../Avatar'
-import DateContainer from '../DateContainer'
-import DeleteDialogueBox from '../../shared/dialogs/DeleteDialogue'
-import { commentStatusAction } from '../../utils/constants'
-import ImageAuth from '../../shared/ImageAuth'
+import { Context } from '../../containers/Provider/AuthStateProvider';
+import { PostCreateMutation, PostDeleteMutation } from '../../graphql/mutations';
+import useFileUpload from '../../graphql/useFileUpload';
+import { findLinkAndReplace, sanitizeText } from '../../utils/helpers';
+import Avatar from '../Avatar';
+import DateContainer from '../DateContainer';
+import DeleteDialogueBox from '../../shared/dialogs/DeleteDialogue';
+// import { commentStatusAction } from '../../utils/constants';
+import ImageAuth from '../../shared/ImageAuth';
 
 export default function Comments({ comments, refetch, discussionId }) {
   const init = {
@@ -33,8 +41,8 @@ export default function Comments({ comments, refetch, discussionId }) {
   const [openModal, setOpenModal] = useState(false);
   const [commentId, setCommentId] = useState('');
   const [error, setError] = useState(null);
-  const [createComment] = useMutation(CommentMutation);
-  const [updateComment] = useMutation(UpdateCommentMutation);
+  const [createPost] = useMutation(PostCreateMutation);
+  const [deletePost] = useMutation(PostDeleteMutation);
   const { t } = useTranslation('common');
 
   function handleDeleteClick(cid = commentId) {
@@ -47,8 +55,8 @@ export default function Comments({ comments, refetch, discussionId }) {
   });
 
   function handleDeleteComment() {
-    updateComment({
-      variables: { commentId, discussionId, status: commentStatusAction.delete }
+    deletePost({
+      variables: { id: commentId }
     })
       .then(() => {
         refetch();
@@ -67,11 +75,11 @@ export default function Comments({ comments, refetch, discussionId }) {
       setData({ ..._data, error: t('common:errors.empty_text') });
       return;
     }
-    createComment({
+    createPost({
       variables: {
         content: _data.message,
         discussionId,
-        imageBlobId: signedBlobId
+        imageBlobIds: [signedBlobId]
       }
     })
       .then(() => {
@@ -105,20 +113,20 @@ export default function Comments({ comments, refetch, discussionId }) {
               isAdmin: authState.user.userType === 'admin',
               createdAt: comment.createdAt,
               comment: comment.content,
-              imageUrl: comment.imageUrl,
+              imageUrls: comment.imageUrls,
               user: comment.user
             }}
             handleDeleteComment={() => handleDeleteClick(comment.id)}
           />
         ))
       ) : (
-        <p className="text-center">{t('common:misc.first_to_comment')}</p>
+        <p className="text-center">{t('common:misc.first_to_post')}</p>
       )}
       <DeleteDialogueBox
         open={openModal}
         handleClose={handleDeleteClick}
         handleAction={handleDeleteComment}
-        title={t('common:misc.comment', { count: 1 })}
+        title={t('common:misc.post', { count: 1 })}
       />
     </List>
   );
@@ -152,8 +160,11 @@ export function CommentSection({ data, handleDeleteComment }) {
               />
               <br />
               {// eslint-disable-next-line react/prop-types
-              data.imageUrl && (
-                <ImageAuth imageLink={data.imageUrl} className="img-responsive img-thumbnail" />
+              data?.imageUrls?.length >= 1 && (
+                <ImageAuth
+                  imageLink={data?.imageUrls[0]}
+                  className="img-responsive img-thumbnail"
+                />
               )}
             </span>
             <span data-testid="delete_icon" className={css(styles.itemAction)}>
@@ -179,7 +190,8 @@ export function CommentSection({ data, handleDeleteComment }) {
 }
 
 export function CommentBox({ authState, sendComment, data, handleCommentChange, upload }) {
-  // in the future instead of using location, pass a prop called isUpload and show upload icon or don't
+  // in the future instead of using location,
+  // pass a prop called isUpload and show upload icon or don't
   const location = useLocation();
   const { t } = useTranslation(['common', 'discussion']);
   return (
@@ -191,18 +203,18 @@ export function CommentBox({ authState, sendComment, data, handleCommentChange, 
         <TextField
           id="standard-full-width"
           style={{ width: '95vw', margin: 15, marginTop: 7 }}
-          placeholder={t('common:misc.type_comment')}
-          label={t('common:misc.type_comment')}
+          placeholder={t('common:misc.type_post')}
+          label={t('common:misc.type_post')}
           value={data.message}
           onChange={handleCommentChange}
           multiline
           rows={3}
           margin="normal"
           variant="outlined"
-          inputProps={{ 'data-testid': 'comment_content' }}
+          inputProps={{ 'data-testid': 'post_content' }}
           InputLabelProps={{
-          shrink: true
-        }}
+            shrink: true
+          }}
         />
       </ListItem>
       <br />
@@ -215,7 +227,7 @@ export function CommentBox({ authState, sendComment, data, handleCommentChange, 
       >
         {upload.status === 'DONE' && (
           <Grid item>
-            <p style={{ marginTop: 5, marginRight: 35 }}>{t('messages.image_uploaded')}</p>
+            <p style={{ marginTop: 5, marginRight: 35 }}>{t('common:misc.image_uploaded')}</p>
           </Grid>
         )}
         <Grid item>
@@ -242,7 +254,7 @@ export function CommentBox({ authState, sendComment, data, handleCommentChange, 
           >
             {location.pathname.includes('message')
               ? t('common:misc.send')
-              : t('common:misc.comment', { count: 1 })}
+              : t('common:misc.post', { count: 1 })}
           </Button>
         </Grid>
       </Grid>
@@ -277,7 +289,7 @@ CommentSection.propTypes = {
     createdAt: PropTypes.string.isRequired,
     comment: PropTypes.string.isRequired,
     isAdmin: PropTypes.bool,
-    imageUrl: PropTypes.string.isRequired
+    imageUrls: PropTypes.arrayOf(PropTypes.string)
   }).isRequired,
   handleDeleteComment: PropTypes.func.isRequired
 };

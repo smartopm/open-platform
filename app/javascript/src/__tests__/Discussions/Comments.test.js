@@ -33,10 +33,10 @@ describe('CommentBox', () => {
       </MockedProvider>
     );
     // Todo: Use regex to match both Comment and Send to make sure it works well from message box
-    expect(container.queryByText('common:misc.comment')).toBeInTheDocument();
-    expect(container.queryByText('messages.image_uploaded')).toBeInTheDocument();
+    expect(container.queryByText('common:misc.post')).toBeInTheDocument();
+    expect(container.queryByText('common:misc.image_uploaded')).toBeInTheDocument();
 
-    const comment = container.queryByTestId('comment_content');
+    const comment = container.queryByTestId('post_content');
     fireEvent.change(comment, { target: { value: 'This is a good comment' } });
     expect(comment.value).toBe('This is a good comment');
   });

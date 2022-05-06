@@ -50,6 +50,7 @@ class Community < ApplicationRecord
   has_many :time_sheets, class_name: 'Users::TimeSheet', dependent: :destroy
   has_many :entry_times, class_name: 'Logs::EntryTime', dependent: :destroy
   has_many :lead_logs, class_name: 'Logs::LeadLog', dependent: :destroy
+  has_many :posts, class_name: 'Discussions::Post', dependent: :destroy
 
   VALID_CURRENCIES = %w[zambian_kwacha honduran_lempira kenyan_shilling costa_rican_colon
                         nigerian_naira american_dollar].freeze

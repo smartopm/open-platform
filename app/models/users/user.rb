@@ -149,6 +149,7 @@ module Users
     # rubocop:enable Rails/InverseOf
     has_one_attached :avatar
     has_many_attached :note_documents
+    has_many :posts, class_name: 'Discussions::Post', dependent: :destroy
 
     before_validation :add_default_state_type_and_role
     after_create :log_user_create_event

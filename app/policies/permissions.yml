@@ -221,6 +221,11 @@ admin:
       - can_update_discussion
       - can_access_all_discussions
       - can_see_menu_item
+      - can_create_post
+      - can_view_posts
+      - can_delete_post_image
+      - can_update_post
+      - can_delete_post
   comment:
     permissions:
       - can_fetch_all_comments
@@ -306,6 +311,8 @@ contractor:
   discussion:
     permissions:
       - can_access_all_discussions
+      - can_create_post
+      - can_view_posts
   business:
     permissions:
       - can_see_menu_item
@@ -506,6 +513,8 @@ site_worker:
   discussion:
     permissions:
       - can_access_all_discussions
+      - can_create_post
+      - can_view_posts
   dashboard:
     permissions:
       - can_access_dashboard
@@ -593,6 +602,8 @@ resident:
   discussion:
     permissions:
       - can_access_all_discussions
+      - can_create_post
+      - can_view_posts
   business:
     permissions:
       - can_see_menu_item
@@ -618,6 +629,8 @@ prospective_client:
   discussion:
     permissions:
       - can_access_all_discussions
+      - can_create_post
+      - can_view_posts
   business:
     permissions:
       - can_see_menu_item
@@ -675,6 +688,8 @@ client:
   discussion:
     permissions:
       - can_access_all_discussions
+      - can_create_post
+      - can_view_posts
   business:
     permissions:
       - can_see_menu_item
@@ -715,6 +730,8 @@ site_manager:
   discussion:
     permissions:
       - can_access_all_discussions
+      - can_create_post
+      - can_view_posts
   dashboard:
     permissions:
       - can_access_dashboard
@@ -798,6 +815,8 @@ marketing_manager:
       - can_update_discussion
       - can_access_all_discussions
       - can_see_menu_item
+      - can_create_post
+      - can_view_posts
   comment:
     permissions:
       - can_fetch_all_comments

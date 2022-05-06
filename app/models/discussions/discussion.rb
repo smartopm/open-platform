@@ -8,6 +8,8 @@ module Discussions
     has_many :comments, class_name: 'Comments::Comment', dependent: :destroy
     has_many :discussion_users, dependent: :destroy
     has_many :users, class_name: 'Users::User', through: :discussion_users
+    has_many :posts, dependent: :destroy
+
     default_scope { order(created_at: :desc).where.not(status: 'deleted') }
 
     scope :by_subscribers, lambda { |disc_ids|

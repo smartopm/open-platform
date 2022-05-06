@@ -28,6 +28,6 @@ class DoubleGdpSchema < GraphQL::Schema
   rescue_from(ActiveRecord::RecordNotFound) do |err|
     # Raise a graphql-friendly error with a custom message
     raise GraphQL::ExecutionError, I18n.t('errors.general.model_not_found',
-                                          model: err.model)
+                                          model: err.model&.split('::')&.last)
   end
 end
