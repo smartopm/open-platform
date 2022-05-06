@@ -5,7 +5,7 @@ namespace :db do
   task migrate_discussion_comments_to_posts: :environment do
     ActiveRecord::Base.transaction do
       Community.find_each do |community|
-        community.comments.unscoped.find_each do |comment|
+        community.comments.find_each do |comment|
           post = community.posts.new(comment.attributes.except('id', 'status'))
           post.status = 'deleted' unless comment.status.eql?('valid')
           post.save(validate: false)
