@@ -107,7 +107,7 @@ describe('Custom Forms', () => {
     cy.get('[data-testid=submit_form_btn]').click();
     cy.wait(1000);
     cy.get('[data-testid=confirm_contract]').click();
-    cy.contains('Close').click();
+    cy.contains('Close').click({force: true});
 
     // Fields Should be Required, Form submit terminated
     cy.contains('Required').should('exist');
