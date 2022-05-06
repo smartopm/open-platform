@@ -13,6 +13,9 @@ namespace :db do
           if comment.image.signed_id.present? && post.persisted?
             post.images.attach(comment.image.signed_id)
           end
+
+        rescue ActiveStorage::FileNotFoundError
+          next
         end
       end
       puts 'Migrated discussion comments to posts'
