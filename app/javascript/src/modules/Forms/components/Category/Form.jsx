@@ -88,11 +88,12 @@ export default function Form({
     setCategoryFormOpen(false);
   }
 
-  function handleMessageAlertClose(err) {
-    if (err) {
-      return setImgUploadError(false);
+  function handleMessageAlertClose(uploadError) {
+    if (uploadError) {
+      setImgUploadError(false);
+      return;
     }
-    return setFormState({ ...formState, alertOpen: false });
+    setFormState({ ...formState, error: false, previewable: false, alertOpen: false });
   }
 
   function handleCancelPreview() {
