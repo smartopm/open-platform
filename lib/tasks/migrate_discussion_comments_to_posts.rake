@@ -10,7 +10,7 @@ namespace :db do
           post.status = 'deleted' unless comment.status.eql?('valid')
           post.save(validate: false)
 
-          post.images.attach(comment.image.signed_id) if comment.image.present? && post.persisted?
+          post.images.attach(comment.image.signed_id) if comment.image.signed_id.present? && post.persisted?
         end
       end
       puts 'Migrated discussion comments to posts'
