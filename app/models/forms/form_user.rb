@@ -11,7 +11,7 @@ module Forms
     belongs_to :user, class_name: 'Users::User'
     belongs_to :status_updated_by, class_name: 'Users::User'
     has_many :user_form_properties, dependent: :destroy
-    has_one :note, class_name: 'Notes::Note', dependent: :destroy
+    has_many :note, class_name: 'Notes::Note', dependent: :destroy
 
     after_create :log_create_event
     after_update :log_update_event

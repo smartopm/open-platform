@@ -30,6 +30,17 @@ RSpec.describe Mutations::Form::FormUserCreate do
       create(:form, community_id: current_user.community_id,
                     multiple_submissions_allowed: false)
     end
+    let!(:new_form) do
+      create(:form, community_id: current_user.community_id,
+                    multiple_submissions_allowed: true)
+    end
+    let!(:form_user) do
+      create(:form_user,
+             form: new_form,
+             user: another_user,
+             status_updated_by: another_user,
+             status: 'draft')
+    end
     let!(:report_an_issue_form) do
       create(:form, community_id: current_user.community_id, name: 'Report an Issue',
                     multiple_submissions_allowed: false)
@@ -94,6 +105,32 @@ RSpec.describe Mutations::Form::FormUserCreate do
         expect(second_result.dig('errors', 0, 'message'))
           .to eql "You've already responded to this form. You can only fill out this form " \
                    'once. Please contact the support team if this is an error'
+      end
+    end
+
+    context 'when draft submission already exists' do
+      it 'raises error' do
+        values = {
+          user_form_properties: [
+            {
+              form_property_id: form_property.id,
+              value: 'something new',
+            },
+          ],
+        }
+        variables = {
+          formId: new_form.id,
+          userId: another_user.id,
+          propValues: values.to_json,
+        }
+        result = DoubleGdpSchema.execute(mutation, variables: variables,
+                                                   context: {
+                                                     current_user: another_user,
+                                                     site_community: another_user.community,
+                                                   }).as_json
+        error_message = 'Please submit the existing draft form to make a new draft submission'
+        expect(result['errors']).to_not be_nil
+        expect(result.dig('errors', 0, 'message')).to eql error_message
       end
     end
 
