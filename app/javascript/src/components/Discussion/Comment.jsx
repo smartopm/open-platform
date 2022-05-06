@@ -139,7 +139,7 @@ export function CommentSection({ data, handleDeleteComment }) {
         <Avatar user={data.user} />
       </ListItemAvatar>
       <ListItemText
-        primary={
+        primary={(
           <Link
             style={{ cursor: 'pointer', textDecoration: 'none' }}
             to={data.isAdmin ? `/user/${data.user.id}` : '#'}
@@ -148,8 +148,8 @@ export function CommentSection({ data, handleDeleteComment }) {
               {data.user.name}
             </Typography>
           </Link>
-        }
-        secondary={
+        )}
+        secondary={(
           <>
             <span data-testid="comment">
               <span
@@ -183,7 +183,7 @@ export function CommentSection({ data, handleDeleteComment }) {
               )}
             </span>
           </>
-        }
+        )}
       />
     </ListItem>
   );
