@@ -102,7 +102,6 @@ export default function PostPage() {
     setMessageAlert('');
   }
 
-  console.log('Mutuba data in PostPage', data);
   function fetchMoreComments() {
     setLoading(true);
     fetchMore({
@@ -159,8 +158,7 @@ export default function PostPage() {
           className={`${css(styles.getStartedButton)} `}
           color="primary"
         >
-          {t('common:misc.comment', { count: 0 })}
-          {' '}
+          {t('common:misc.comment', { count: 0 })}{' '}
           <Avatar>{data ? data.postComments.length : 0}</Avatar>
         </Fab>
       </div>
@@ -192,9 +190,7 @@ export default function PostPage() {
             <>
               <CenteredContent>
                 <h4>
-                  {queryResponse.data.postDiscussion.title} 
-                  {' '}
-                  {t('news.post_discussion')}
+                  {queryResponse.data.postDiscussion.title} {t('news.post_discussion')}
                 </h4>
               </CenteredContent>
               <Comments
