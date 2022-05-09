@@ -8,6 +8,7 @@ module Types
     field :user, Types::UserType, null: false
     field :content, String, null: false
     field :status, String, null: false
+    field :accessibility, String, null: true
     field :image_urls, [String], null: true
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false

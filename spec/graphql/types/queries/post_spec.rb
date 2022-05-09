@@ -5,19 +5,29 @@ require 'rails_helper'
 RSpec.describe Types::Queries::Post do
   describe 'get all posts related to discussion' do
     let(:admin_role) { create(:role, name: 'admin') }
-    let!(:permission) do
+    let(:resident_role) { create(:role, name: 'resident') }
+    let!(:admin_permission) do
       create(:permission, module: 'discussion',
                           role: admin_role,
                           permissions: %w[can_view_posts])
     end
-
+    let!(:resident_permission) do
+      create(:permission, module: 'discussion',
+                          role: resident_role,
+                          permissions: %w[can_view_posts])
+    end
     let(:user) { create(:user_with_community) }
     let(:community) { user.community }
     let!(:admin) do
       create(:admin_user, user_type: 'admin', community_id: community.id, role: admin_role)
     end
+    let(:resident) do
+      create(:user,
+             user_type: 'resident',
+             community_id: community.id,
+             role: resident_role)
+    end
     let(:discussion) { create(:discussion, community: community, user_id: admin.id) }
-    let!(:post) { create(:post, community: community, discussion: discussion, user: admin) }
     let(:community_news_discussion) do
       create(:discussion, community: community,
                           title: 'Community News', user_id: admin.id)
@@ -27,6 +37,19 @@ RSpec.describe Types::Queries::Post do
                     discussion: community_news_discussion, user: admin)
     end
 
+    let!(:admin_post) do
+      create(:post,
+             community: community,
+             discussion: discussion,
+             user: admin,
+             accessibility: 'admins')
+    end
+    let!(:resident_post) do
+      create(:post,
+             community: community,
+             discussion: discussion,
+             user: resident)
+    end
     let(:query) do
       <<~GQL
         query DisucssionPosts($discussionId: ID!) {
@@ -48,8 +71,8 @@ RSpec.describe Types::Queries::Post do
     end
 
     describe '#discussion_posts' do
-      context 'when user is authorized' do
-        it 'retrives list of posts' do
+      context 'when user is admin' do
+        it 'retrieves list of all posts' do
           variables = { discussionId: discussion.id }
           result = DoubleGdpSchema.execute(query, variables: variables,
                                                   context: {
@@ -58,6 +81,20 @@ RSpec.describe Types::Queries::Post do
                                                   }).as_json
           expect(result['errors']).to be nil
           expect(result.dig('data', 'discussionPosts', 0, 'content')).to eql 'New Post'
+          expect(result.dig('data', 'discussionPosts').length).to eql 2
+        end
+      end
+
+      context 'when user is resident' do
+        it 'retrieves posts that are accessible to everyone' do
+          variables = { discussionId: discussion.id }
+          result = DoubleGdpSchema.execute(query, variables: variables,
+                                                  context: {
+                                                    current_user: resident,
+                                                    site_community: community,
+                                                  }).as_json
+          expect(result['errors']).to be nil
+          expect(result.dig('data', 'discussionPosts').length).to eql 1
         end
       end
 

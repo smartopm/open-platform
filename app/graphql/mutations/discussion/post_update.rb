@@ -4,32 +4,26 @@ module Mutations
   module Discussion
     # Updates Post
     class PostUpdate < BaseMutation
+      include ::PostHelper
+
       argument :id, ID, required: true
       argument :content, String, required: false
+      argument :accessibility, String, required: false
 
       field :post, Types::PostType, null: false
 
-      def resolve(id:, content:)
-        post = context[:site_community].posts.find(id)
-        return { post: post } if post.update(content: content)
+      def resolve(vals)
+        post = context[:site_community].posts.find(vals[:id])
+        return { post: post } if post.update(vals.except(:id))
 
         raise_error_message(post.errors.full_messages&.join(', '))
       end
 
       def authorized?(vals)
-        return true if user_authorized?(vals[:id])
+        permitted = permitted?(module: :discussion, permission: :can_update_post)
+        return true if permitted || user_authorized?(vals)
 
         raise_error_message(I18n.t('errors.unauthorized'))
-      end
-
-      def user_authorized?(id)
-        permitted?(module: :discussion, permission: :can_update_post) ||
-          post_user_verified?(id)
-      end
-
-      def post_user_verified?(id)
-        post = context[:site_community].posts.find(id)
-        post.user_id == context[:current_user].id
       end
     end
   end

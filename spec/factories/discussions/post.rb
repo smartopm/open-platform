@@ -7,5 +7,6 @@ FactoryBot.define do
     discussion
     content { 'New Post' }
     status { 'active' }
+    accessibility { 'everyone' }
   end
 end
