@@ -2,58 +2,49 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React from 'react';
 import makeStyles from '@mui/styles/makeStyles';
-import { useQuery } from 'react-apollo';
+// import { useQuery } from 'react-apollo';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import TrendingFlatIcon from '@mui/icons-material/TrendingFlat';
-import ImageList from '@mui/material/ImageList';
-import ImageListItem from '@mui/material/ImageListItem';
-import { useHistory } from 'react-router-dom';
-import EventNoteIcon from '@mui/icons-material/EventNote';
+// import TrendingFlatIcon from '@mui/icons-material/TrendingFlat';
+// import ImageList from '@mui/material/ImageList';
+// import ImageListItem from '@mui/material/ImageListItem';
+// import { useHistory } from 'react-router-dom';
+// import EventNoteIcon from '@mui/icons-material/EventNote';
 import Typography from '@mui/material/Typography';
 import PropTypes from 'prop-types';
-import { AssignedTaskQuery } from '../graphql/task_reminder_query';
-import { dateToString } from '../../../../utils/dateutil';
-import CenteredContent from '../../../../components/CenteredContent';
-import { formatError, removeNewLines, sanitizeText } from '../../../../utils/helpers';
-import EmptyCard from '../../../../shared/EmptyCard';
-import CustomSkeleton from '../../../../shared/CustomSkeleton';
+// import { AssignedTaskQuery } from '../graphql/task_reminder_query';
+// import { dateToString } from '../../../../utils/dateutil';
+// import CenteredContent from '../../../../components/CenteredContent';
+// import { formatError, removeNewLines, sanitizeText } from '../../../../utils/helpers';
+// import EmptyCard from '../../../../shared/EmptyCard';
+// import CustomSkeleton from '../../../../shared/CustomSkeleton';
 
 export default function TaskReminderCard({ translate }) {
   const matches = useMediaQuery('(max-width:600px)');
-  const { loading, data, error } = useQuery(AssignedTaskQuery, {
-    fetchPolicy: 'cache-and-network',
-    errorPolicy: 'all'
-  });
-  const history = useHistory();
+  // const { loading, data, error } = useQuery(AssignedTaskQuery, {
+  //   fetchPolicy: 'cache-and-network',
+  //   errorPolicy: 'all'
+  // });
+  // const history = useHistory();
   const classes = useStyles();
 
-  function checkDate(date) {
-    if (new Date(date) < new Date().setHours(0, 0, 0, 0)) {
-      return true;
-    }
-    return false;
-  }
+  // function checkDate(date) {
+  //   if (new Date(date) < new Date().setHours(0, 0, 0, 0)) {
+  //     return true;
+  //   }
+  //   return false;
+  // }
 
-  if (error) {
-    return <CenteredContent>{formatError(error.message)}</CenteredContent>;
-  }
+  // if (error) {
+  //   return <CenteredContent>{formatError(error.message)}</CenteredContent>;
+  // }
   return (
-    <div>
+    <div className={classes.container}>
       <div style={{ display: 'flex' }}>
         <Typography className={matches ? classes.reminderMobile : classes.reminder}>
           {translate('dashboard.task_reminders')}
         </Typography>
-        {matches ? null : (
-          <TrendingFlatIcon
-            style={
-              matches
-                ? { marginLeft: 'auto', order: 2, marginTop: '20px', marginRight: '20px' }
-                : { marginLeft: 'auto', order: 2, marginTop: '20px', marginRight: '80px' }
-            }
-          />
-        )}
       </div>
-      <div>
+      {/* <div>
         {loading || data?.userTasks.length > 0 ? (
           <div
             className={classes.root}
@@ -122,57 +113,17 @@ export default function TaskReminderCard({ translate }) {
             subtitle={translate('dashboard.pending_tasks_text')}
           />
         )}
-      </div>
+      </div> */}
     </div>
   );
 }
 
-const useStyles = makeStyles(theme => ({
-  root: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    justifyContent: 'space-around',
-    overflow: 'hidden'
+const useStyles = makeStyles(() => ({
+  container: {
+    padding: '20px 10px',
+    border: '2px solid #CBD2E1',
+    borderRadius: '5px'
   },
-  gridList: {
-    flexWrap: 'nowrap',
-    width: '100%'
-  },
-  gridTile: {
-    border: '1px solid #EBEBEB',
-    padding: '20px',
-    backgroundColor: theme.palette.background.paper,
-    height: '140px',
-    cursor: 'pointer',
-    overflow: 'hidden',
-    borderRadius: '8px'
-  },
-  date: {
-    display: 'flex',
-    marginBottom: '8px'
-  },
-  content: {
-    fontSize: '12px',
-    fontWeight: 400,
-    color: '#141414'
-  },
-  due: {
-    fontSize: '12px',
-    fontWeight: 400,
-    marginTop: '3px'
-  },
-  reminder: {
-    margin: '20px 0 20px 79px',
-    fontSize: '22px',
-    fontWeight: 500,
-    color: '#141414'
-  },
-  reminderMobile: {
-    margin: '20px',
-    fontSize: '14px',
-    fontWeight: 500,
-    color: '#141414'
-  }
 }));
 
 TaskReminderCard.propTypes = {
