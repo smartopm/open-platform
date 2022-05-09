@@ -652,6 +652,7 @@ export default function FormUpdate({ formUserId, userId, authState, categoriesDa
                     size="small"
                     fullWidth={matches}
                     variant="outlined"
+                    data-testid='approved'
                   >
                     {t('form_status_actions.approved')}
                   </Button>
@@ -665,6 +666,7 @@ export default function FormUpdate({ formUserId, userId, authState, categoriesDa
                     size="small"
                     fullWidth={matches}
                     variant="outlined"
+                    data-testid='rejected'
                   >
                     {t('form_status_actions.rejected')}
                   </Button>
@@ -680,6 +682,7 @@ export default function FormUpdate({ formUserId, userId, authState, categoriesDa
                 disabled={isLoading}
                 size="small"
                 fullWidth={matches}
+                data-testid='submit'
               >
                 {t('form_status_actions.submit_form')}
               </Button>
