@@ -19,7 +19,13 @@ import SignaturePad from './FormProperties/SignaturePad';
 import FormPropertyAction from './FormPropertyAction';
 import { FormContext } from '../Context';
 import { convertBase64ToFile, objectAccessor } from '../../../utils/helpers';
-import { checkRequiredFormPropertyIsFilled, isUploaded, isFileNameSelect } from '../utils';
+import {
+  checkRequiredFormPropertyIsFilled,
+  isUploaded,
+  handleFileSelect,
+  handleFileUpload,
+  removeBeforeUpload
+} from '../utils';
 import MessageAlert from '../../../components/MessageAlert';
 import ListWrapper from '../../../shared/ListWrapper';
 import UploadFileItem from '../../../shared/imageUpload/UploadFileItem';
@@ -50,8 +56,6 @@ export default function RenderForm({
     setFilesToUpload
   } = useContext(FormContext);
 
-  // leaving this here in case we need to support more files
-  const fileTypes = ['pdf'];
   const { t } = useTranslation(['form', 'common']);
   const [messageAlert, setMessageAlert] = useState('');
   const [isSuccessAlert, setIsSuccessAlert] = useState(false);
@@ -103,60 +107,36 @@ export default function RenderForm({
     });
   }
 
-  function handleFileUpload(file, propertyId) {
-    const validType =
-      fileTypes.includes(file.type.split('/')[1]) || file.type.split('/')[0] === 'image';
-    if (!validType) {
-      setMessageAlert(t('form:errors.wrong_file_type'));
-      setIsSuccessAlert(false);
-      return;
-    }
-    setFormState({
-      ...formState,
-      currentPropId: propertyId,
-      isUploading: true,
-      currentFileNames: [...formState.currentFileNames, `${file.name}${file.propertyId}`]
-    });
-    startUpload(file);
+  function createPropertyObj(propertyId) {
+    return {
+      filesToUpload,
+      setFilesToUpload,
+      propertyId,
+      setMessageAlert,
+      setIsSuccessAlert
+    };
   }
 
-  function removeBeforeUpload(file, isFileUploaded, formPropertyId) {
-    if (isFileUploaded) {
-      return onImageRemove(formPropertyId, file);
-    }
-    return onNotUploadedImageRemove(file);
+  function handleSelectObject(propertyId) {
+    return {
+      setMessageAlert,
+      setIsSuccessAlert,
+      setFormState,
+      formState,
+      propertyId,
+      startUpload
+    };
   }
 
-  function onNotUploadedImageRemove(file) {
-    const filteredImages = filesToUpload.filter(item => item.fileNameId !== file.fileNameId);
-    setFilesToUpload(filteredImages);
-  }
-
-  async function onImageRemove(imagePropertyId, file) {
-    const filteredImages = uploadedImages.filter(im => im.propertyId !== imagePropertyId);
-    const filtCurrentUploadedImg = uploadedImages.filter(
-      im => im.propertyId === imagePropertyId && im.filename !== file.name
-    );
-    await setUploadedImages([...filteredImages, ...filtCurrentUploadedImg]);
-    const filterFileName = formState.currentFileNames.filter(im => im !== `${file.name}${file.propertyId}`);
-    await setFormState({ ...formState, currentFileNames: filterFileName });
-    onNotUploadedImageRemove(file);
-  }
-
-  async function handleFileSelect(event, propertyId) {
-    const checkSelectFile = await Object.values(event.target.files).some(file =>
-      isFileNameSelect(filesToUpload, file.name, propertyId)
-    );
-
-    if (checkSelectFile) {
-      setMessageAlert(t('form:errors.file_exists'));
-      setIsSuccessAlert(false);
-      return;
-    }
-    const newFiles = await Object.values(event.target.files).map(file =>
-      Object.assign(file, { propertyId, fileNameId: `${file.name}${propertyId}` })
-    )
-    await setFilesToUpload([...filesToUpload, ...newFiles]);
+  function removeUploadObject() {
+    return {
+      uploadedImages,
+      setUploadedImages,
+      formState,
+      setFormState,
+      filesToUpload,
+      setFilesToUpload
+    };
   }
 
   async function handleSignatureUpload() {
@@ -369,7 +349,7 @@ export default function RenderForm({
                   .length,
                 currentPropId: formState.currentPropId
               }}
-              upload={event => handleFileSelect(event, formPropertiesData.id)}
+              upload={event => handleFileSelect(event, createPropertyObj(formPropertiesData.id), t)}
               editable={editable}
               uploaded={!!uploadedFile}
               showDetails
@@ -400,12 +380,15 @@ export default function RenderForm({
             <UploadFileItem
               file={file}
               formPropertyId={formPropertiesData.id}
-              handleUpload={handleFileUpload}
+              handleUpload={() =>
+                handleFileUpload(file, handleSelectObject(formPropertiesData.id), t)
+              }
               handleRemoveFile={removeBeforeUpload}
               formState={{ ...formState, uploaded: uploadedImages }}
               isUploaded={isUploaded(uploadedImages, file, formPropertiesData.id)}
               key={file.fileNameId}
               translate={t}
+              removeUploadObject={removeUploadObject}
             />
           ))}
       </Grid>

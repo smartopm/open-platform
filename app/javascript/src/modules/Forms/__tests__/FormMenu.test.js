@@ -1,5 +1,5 @@
 import React from 'react';
-import { fireEvent, render } from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/react-testing';
@@ -8,8 +8,8 @@ import FormMenu from '../components/FormMenu';
 import MockedThemeProvider from '../../__mocks__/mock_theme';
 
 describe('TextInput component', () => {
-  it('should not break the text input', () => {
-  const { t } = useTranslation(['common', 'form']);
+  it('should not break the text input', async () => {
+    const { t } = useTranslation(['common', 'form']);
     const props = {
       handleClose: jest.fn(),
       formId: 'sjhef3042432',
@@ -28,10 +28,21 @@ describe('TextInput component', () => {
         </MockedProvider>
       </BrowserRouter>
     );
-    expect(rendered.queryByText('common:menu.edit')).toBeInTheDocument();
-    expect(rendered.queryByText('common:menu.publish')).toBeInTheDocument();
-    expect(rendered.queryByText('common:menu.delete')).toBeInTheDocument();
-    fireEvent.click(rendered.queryByText('common:menu.publish'));
-    expect(props.handleClose).toBeCalled();
+    await waitFor(() => {
+      expect(rendered.queryByText('common:menu.edit')).toBeInTheDocument();
+      expect(rendered.queryByText('common:menu.publish')).toBeInTheDocument();
+      expect(rendered.queryByText('common:menu.delete')).toBeInTheDocument();
+
+      fireEvent.click(rendered.queryByText('common:menu.view_entries'));
+      fireEvent.click(rendered.queryByText('common:menu.edit'));
+      fireEvent.click(rendered.queryByText('common:menu.delete'));
+      expect(props.handleClose).toBeCalled();
+
+      fireEvent.click(rendered.queryByText('common:menu.publish'));
+      expect(rendered.queryByText('form_actions.cancel')).toBeInTheDocument();
+      fireEvent.click(rendered.queryByText('form_actions.cancel'));
+      fireEvent.click(rendered.queryByTestId('proceed_button'));
+      expect(props.handleClose).toBeCalled();
+    })
   });
 });
