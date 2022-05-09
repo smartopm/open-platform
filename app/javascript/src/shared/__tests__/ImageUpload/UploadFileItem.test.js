@@ -32,6 +32,7 @@ describe('Image Area component', () => {
           formPropertyId={formPropertyId}
           isUploaded={isUploaded}
           translate={translate}
+          removeUploadObject={jest.fn()}
         />
       </MockedThemeProvider>
     );
@@ -58,11 +59,6 @@ describe('Image Area component', () => {
     // remove file
     fireEvent.click(container.queryByTestId('remove_upload_btn'));
     expect(handleRemoveFile).toBeCalled();
-    expect(handleRemoveFile).toBeCalledWith(
-      { name: 'nice_video.mp4', size: 2000000, type: 'video/mp4' },
-      false,
-      '0909'
-    );
   });
 
   it('should show checked icon when file is uploaded', () => {
@@ -92,6 +88,7 @@ describe('Image Area component', () => {
           formPropertyId={formPropertyId}
           isUploaded={isUploaded}
           translate={translate}
+          removeUploadObject={jest.fn()}
         />
       </MockedThemeProvider>
     );
@@ -125,6 +122,7 @@ describe('Image Area component', () => {
           formPropertyId={formPropertyId}
           isUploaded={isUploaded}
           translate={translate}
+          removeUploadObject={jest.fn()}
         />
       </MockedThemeProvider>
     );

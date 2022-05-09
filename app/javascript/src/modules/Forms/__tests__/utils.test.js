@@ -15,7 +15,7 @@ import {
   cleanFileName,
   fileTypes,
   isUploaded,
-  isFileNameSelect
+  isFileNameSelect,
 } from '../utils';
 
 describe('Utilities', () => {

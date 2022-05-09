@@ -400,6 +400,5 @@ export function removeBeforeUpload(file, isFileUploaded, formPropertyId, propert
   if (isFileUploaded) {
     return onImageRemove(formPropertyId, file, propertyObj);
   }
-  console.log(propertyObj.uploadedImages)
   return onNotUploadedImageRemove(file, propertyObj);
 }
