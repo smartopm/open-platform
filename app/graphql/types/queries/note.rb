@@ -341,7 +341,6 @@ module Types::Queries::Note
                           .limit(5)
   end
 
-  # rubocop:disable Metrics/MethodLength
   def task_sub_tasks(task_id:, limit: 3, offset: 0)
     unless permitted?(module: :note, permission: :can_fetch_task_by_id)
       raise GraphQL::ExecutionError,
@@ -352,11 +351,9 @@ module Types::Queries::Note
                             .sub_tasks
                             .includes(:sub_notes)
                             .eager_load(:assignee_notes, :assignees, :author, :user)
-                            .order(created_at: :asc)
                             .limit(limit).offset(offset)
                             .with_attached_documents
   end
-  # rubocop:enable Metrics/MethodLength
 
   def processes(offset: 0, limit: 50, query: nil)
     unless permitted?(module: :note, permission: :can_fetch_flagged_notes)

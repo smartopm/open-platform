@@ -37,10 +37,11 @@ module Notes
     has_many :assignees, through: :assignee_notes, source: :user
     has_many :note_comments, class_name: 'Comments::NoteComment', dependent: :destroy
     has_many :note_histories, dependent: :destroy
-    has_many :sub_notes, class_name: 'Notes::Note',
-                         foreign_key: 'parent_note_id',
-                         dependent: :destroy,
-                         inverse_of: :parent_note
+    has_many :sub_notes, -> { unscope(:order).order(order: :asc) },
+             class_name: 'Notes::Note',
+             foreign_key: 'parent_note_id',
+             dependent: :destroy,
+             inverse_of: :parent_note
     has_many_attached :documents, dependent: :destroy
     has_paper_trail
 
