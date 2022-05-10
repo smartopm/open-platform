@@ -10,6 +10,7 @@ import Divider from '@mui/material/Divider';
 import { useQuery } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import moment from 'moment-timezone';
+import { useTheme } from '@mui/material/styles';
 import { CommunityNewsPostsQuery } from '../../graphql/queries';
 import { Spinner } from '../../shared/Loading';
 import CenteredContent from '../../shared/CenteredContent';
@@ -21,6 +22,7 @@ export default function CommunityNews() {
   const limit = 4;
   const isMobile = useMediaQuery('(max-width:800px)');
   const history = useHistory();
+  const theme = useTheme();
   const { loading, error, data } = useQuery(CommunityNewsPostsQuery, {
     variables: { limit }
   });
@@ -41,7 +43,16 @@ export default function CommunityNews() {
       className="container"
       style={{ marginLeft: isMobile ? 5 : 25, paddingLeft: 0, paddingRight: 0 }}
     >
-      <Grid container spacing={1} style={{ justifyContent: 'center' }}>
+      <Grid
+        container
+        spacing={1}
+        style={{
+          justifyContent: 'center',
+          border: `1px solid ${theme.palette.secondary.main}`,
+          borderRadius: '8px',
+          paddingBottom: '20px'
+        }}
+      >
         <Grid item xs={12}>
           <Typography data-testid="disc_title" variant="h5" style={{ marginBottom: 10 }}>
             {t('headers.community_news_header')}
