@@ -19,7 +19,6 @@ import ImageAuth from '../../shared/ImageAuth';
 
 export default function CommunityNews() {
   const limit = 4;
-  const largerScreens = useMediaQuery('(min-width:1536)');
   const isMobile = useMediaQuery('(max-width:800px)');
   const history = useHistory();
   const { loading, error, data } = useQuery(CommunityNewsPostsQuery, {
@@ -103,25 +102,16 @@ export default function CommunityNews() {
         ) : (
           <p className="text-center">{t('common:misc.first_to_post')}</p>
         )}
-        <Grid container spacing={1}>
-          <Grid
-            item
-            xs={12}
-            style={{
-              justifyContent: 'center',
-              paddingLeft: largerScreens ? 350 : isMobile ? 40 : 200
-            }}
+        <Grid container justifyContent="center" style={{ marginTop: '20px' }}>
+          <Button
+            color="primary"
+            variant="outlined"
+            onClick={redirectToDiscussionsPage}
+            data-testid="load_more_button"
+            disabled={data.isLoading}
           >
-            <Button
-              color="primary"
-              variant="outlined"
-              onClick={redirectToDiscussionsPage}
-              data-testid="load_more_button"
-              disabled={data.isLoading}
-            >
-              {t('common:misc.see_more_discussion')}
-            </Button>
-          </Grid>
+            {t('common:misc.see_more_discussion')}
+          </Button>
         </Grid>
       </Grid>
     </div>
