@@ -37,7 +37,10 @@ export default function CommunityNews() {
   }
 
   return (
-    <div className="container" style={{ marginLeft: isMobile ? 5 : 25 }}>
+    <div
+      className="container"
+      style={{ marginLeft: isMobile ? 5 : 25, paddingLeft: 0, paddingRight: 0 }}
+    >
       <Grid container spacing={1} style={{ justifyContent: 'center' }}>
         <Grid item xs={12}>
           <Typography data-testid="disc_title" variant="h5" style={{ marginBottom: 10 }}>
@@ -123,7 +126,7 @@ const styles = StyleSheet.create({
     marginBottom: 5
   },
   postContentEllipsed: {
-    width: '100%',
+    // width: '100%',
     overflow: 'hidden',
     whiteSpace: 'normal',
     textOverflow: 'ellipsis',
