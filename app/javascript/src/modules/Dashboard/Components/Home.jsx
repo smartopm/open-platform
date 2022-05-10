@@ -67,11 +67,9 @@ const Home = () => {
                 </FeatureCheck>
               )}
               <br />
-              <Divider />
               <FeatureCheck features={authState.user.community.features} name="Tasks">
                 <TaskReminder translate={t} />
               </FeatureCheck>
-              {/* <Divider /> */}
               <FeatureCheck features={authState.user.community.features} name="News">
                 <NewsFeed wordpressEndpoint={authState.user?.community.wpLink} translate={t} />
               </FeatureCheck>
@@ -93,7 +91,6 @@ const Home = () => {
               <FeatureCheck features={authState.user.community.features} name="Properties">
                 <PlotDetail authState={authState.user} />
               </FeatureCheck>
-              {/* <Divider /> */}
               <FeatureCheck features={authState.user.community.features} name="News">
                 <NewsFeed wordpressEndpoint={authState.user?.community.wpLink} translate={t} />
               </FeatureCheck>
