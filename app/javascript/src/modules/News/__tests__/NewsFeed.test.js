@@ -25,7 +25,7 @@ describe('Details page for news post content', () => {
       </MockedThemeProvider>
     );
     expect(container.queryByText('Test title')).toBeInTheDocument();
-    expect(container.queryByTestId('recent_news')).toBeInTheDocument();
+    expect(container.queryByText('misc.recent_article')).toBeInTheDocument();
     expect(container.queryByText('Test Another title')).toBeInTheDocument();
     expect(container.queryAllByTestId('tile_image')[0]).toHaveAttribute(
       'src',

@@ -278,8 +278,9 @@
     "statistics": "Statistics",
     "timeframe": "Timeframe",
     "error": "Error",
-    "upload": "Upload"
-
+    "upload": "Upload",
+    "recent_article": "Recent Articles",
+    "see_more_articles": "See More Articles"
   },
   "menu": {
     "invoice": "Invoice",
