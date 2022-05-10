@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-duplicate-props */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable react/jsx-wrap-multilines */
 import React, { useContext, useState } from 'react';
@@ -5,6 +6,7 @@ import { ListItem, ListItemAvatar, ListItemText, Button, Grid, Typography } from
 import { StyleSheet, css } from 'aphrodite';
 import { Link, useHistory } from 'react-router-dom';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import Divider from '@mui/material/Divider';
 import { useQuery } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import { CommunityNewsPostsQuery } from '../../graphql/queries';
@@ -19,7 +21,7 @@ export default function CommunityNews() {
   const limit = 4;
   const authState = useContext(AuthStateContext);
   const [isEllipsis, setIsEllipsis] = useState(false);
-  const largerScreens = useMediaQuery('(min-width:1200px)');
+  const largerScreens = useMediaQuery('(min-width:1536)');
   const isMobile = useMediaQuery('(max-width:800px)');
   const history = useHistory();
   const { loading, error, data } = useQuery(CommunityNewsPostsQuery, {
@@ -33,7 +35,7 @@ export default function CommunityNews() {
   }
 
   function seeMorePostContent() {
-    setIsEllipsis(!isEllipsis);
+    setIsEllipsis(!!isEllipsis);
   }
 
   if (loading) return <Spinner />;
@@ -70,7 +72,6 @@ export default function CommunityNews() {
                       </Link>
                     }
                     secondary={
-                      // eslint-disable-next-line react/jsx-wrap-multilines
                       <>
                         <div>
                           <span data-testid="comment">
@@ -79,7 +80,11 @@ export default function CommunityNews() {
                             post?.imageUrls?.length >= 1 && (
                               <ImageAuth
                                 imageLink={post?.imageUrls[0]}
-                                className="img-responsive img-thumbnail"
+                                // className={css(styles.imageStyles)}
+                                style={{
+                                  marginTop: '15px',
+                                  marginLeft: '-65px'
+                                }}
                               />
                             )}
                           </span>
@@ -88,24 +93,20 @@ export default function CommunityNews() {
                             variant="body2"
                             data-testid="task_body"
                             component="p"
-                            className={
-                              post.content.length >= 50
-                                ? css(styles.postContentEllipsed)
-                                : css(styles.postContentVisible)
-                            }
+                            className={css(styles.postContentEllipsed)}
                             id="postContent"
                           >
                             {post.content}
                           </Typography>
                         </div>
-                        {post.content.length >= 50 && (
+                        {post.content.length >= 250 && (
                           <div>
                             <Grid
                               item
                               xs={12}
                               style={{
                                 justifyContent: 'center',
-                                // paddingLeft: largerScreens ? 890 : isMobile ? 580 : 0,
+                                paddingLeft: 420,
                                 marginTop: 2
                               }}
                             >
@@ -126,6 +127,7 @@ export default function CommunityNews() {
                   />
                 </ListItem>
               </Grid>
+              <Divider />
             </>
           ))
         ) : (
@@ -169,10 +171,15 @@ const styles = StyleSheet.create({
     paddingTop: '5px',
     display: '-webkit-box',
     '-webkit-box-orient': 'vertical',
-    ' -webkit-line-clamp': '3 !important'
+    ' -webkit-line-clamp': '3 !important',
+    marginLeft: '-65px'
   },
   postContentVisible: {
     width: '100%',
     overflow: 'visible'
+  },
+  imageStyles: {
+    marginTop: '15px',
+    marginLeft: '-65px'
   }
 });
