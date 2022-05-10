@@ -8,12 +8,12 @@ import { sanitizeText, truncateString } from '../utils/helpers';
 
 export default function MediaCard({ title, subtitle, imageUrl }) {
   return (
-    <Card elevation={0} style={{ border: '1px solid #DDDDDD' }}>
+    <Card elevation={0} style={{ border: '1px solid #DDDDDD', borderRadius: '7px' }}>
       <CardContent>
-        <Typography gutterBottom variant="body1" component="div">
+        <Typography gutterBottom variant="body2" component="div">
           {title}
         </Typography>
-        <Typography variant="body2" color="text.secondary" data-testid="subtitle" component='div'>
+        <Typography variant="caption" color="text.secondary" data-testid="subtitle" component='div'>
           <div
             // eslint-disable-next-line react/no-danger
             dangerouslySetInnerHTML={{

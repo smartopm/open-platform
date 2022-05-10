@@ -42,7 +42,7 @@ export function PostItemGrid({ data, loading }) {
         displayButton={data.length > 0}
         handleButton={() => history.push('/news')}
       >
-        <Grid container spacing={4}>
+        <Grid container spacing={2}>
           {(loading ? Array.from(new Array(5)) : data.length && data).map((tile, index) => (
             <React.Fragment key={tile?.ID || index}>
               {tile ? (

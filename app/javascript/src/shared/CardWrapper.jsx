@@ -11,7 +11,7 @@ export default function CardWrapper({ children, title, buttonName, displayButton
 
   return (
     <div className={classes.container}>
-      <Typography variant="h6" style={{ marginBottom: '20px' }} data-testid="card-title">
+      <Typography variant="h6" color='text.secondary' style={{ marginBottom: '20px' }}>
         {title}
       </Typography>
       {children}
@@ -23,8 +23,8 @@ export default function CardWrapper({ children, title, buttonName, displayButton
               color="primary"
               endIcon={<ArrowForwardIcon />}
               onClick={handleButton}
-              data-testid="button"
-              style={{ background: '#FFFFFF' }}
+              data-testid='button'
+              style={{background: '#FFFFFF'}}
             >
               {buttonName}
             </Button>
@@ -37,9 +37,9 @@ export default function CardWrapper({ children, title, buttonName, displayButton
 
 const useStyles = makeStyles(theme => ({
   container: {
-    padding: '20px',
-    border: `2px solid ${theme.palette.secondary.main}`,
-    borderRadius: '5px',
+    padding: '10px',
+    border: `1px solid ${theme.palette.secondary.main}`,
+    borderRadius: '10px',
     background: '#FBFBFA'
   }
 }));
