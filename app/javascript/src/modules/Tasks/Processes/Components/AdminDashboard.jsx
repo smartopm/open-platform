@@ -151,6 +151,7 @@ export default function AdminDashboard() {
     scheme_design_review: 0,
     detailed_design_review: 0,
     kiambu_county_submission: 0,
+    signing_of_contractor_code_of_conduct: 0,
     construction_starts: 0,
     inspections: 0,
     post_construction: 0

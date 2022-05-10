@@ -185,16 +185,20 @@ task :update_drc_task_template_descriptions, %i[community_name] => :environment 
     },
     {
       order: 5,
+      parent: 'Signing of contractor Code of Conduct',
+    },
+    {
+      order: 6,
       parent: 'Construction Starts',
       sub_tasks: [],
     },
     {
-      order: 6,
+      order: 7,
       parent: 'Inspections',
       sub_tasks: [],
     },
     {
-      order: 7,
+      order: 8,
       parent: 'Post Construction',
       sub_tasks: [],
     },
