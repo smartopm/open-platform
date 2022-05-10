@@ -20,7 +20,6 @@ import ImageAuth from '../../shared/ImageAuth';
 export default function CommunityNews() {
   const limit = 4;
   const authState = useContext(AuthStateContext);
-  const [isEllipsis, setIsEllipsis] = useState(false);
   const largerScreens = useMediaQuery('(min-width:1536)');
   const isMobile = useMediaQuery('(max-width:800px)');
   const history = useHistory();
@@ -32,10 +31,6 @@ export default function CommunityNews() {
 
   function redirectToDiscussionsPage() {
     history.push('/discussions');
-  }
-
-  function seeMorePostContent() {
-    setIsEllipsis(!!isEllipsis);
   }
 
   if (loading) return <Spinner />;
@@ -80,7 +75,6 @@ export default function CommunityNews() {
                             post?.imageUrls?.length >= 1 && (
                               <ImageAuth
                                 imageLink={post?.imageUrls[0]}
-                                // className={css(styles.imageStyles)}
                                 style={{
                                   marginTop: '15px',
                                   marginLeft: '-65px'
@@ -99,29 +93,6 @@ export default function CommunityNews() {
                             {post.content}
                           </Typography>
                         </div>
-                        {post.content.length >= 250 && (
-                          <div>
-                            <Grid
-                              item
-                              xs={12}
-                              style={{
-                                justifyContent: 'center',
-                                paddingLeft: 420,
-                                marginTop: 2
-                              }}
-                            >
-                              <Button
-                                color="primary"
-                                variant="outlined"
-                                onClick={seeMorePostContent}
-                                data-testid="load_more_button"
-                                disabled={data.isLoading}
-                              >
-                                {t('common:misc.see_more')}
-                              </Button>
-                            </Grid>
-                          </div>
-                        )}
                       </>
                     }
                   />
