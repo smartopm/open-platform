@@ -31,7 +31,8 @@ services:
   webpacker:
     image: doublegdp_rails:latest
     command: bash -c "yarn build --watch --progress --color"
-    mem_limit: 4g
+    cpu_shares: 75
+    mem_limit: 2g
     env_file:
       - '.env.docker'
     volumes:
