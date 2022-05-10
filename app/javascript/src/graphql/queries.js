@@ -497,6 +497,23 @@ export const DiscussionPostsQuery = gql`
   }
 `;
 
+export const CommunityNewsPostsQuery = gql`
+  query communityNewsPosts($limit: Int, $offset: Int) {
+    communityNewsPosts(limit: $limit, offset: $offset) {
+      content
+      createdAt
+      id
+      imageUrls
+      user {
+        id
+        name
+        avatarUrl
+        imageUrl
+      }
+    }
+  }
+`;
+
 export const DiscussionQuery = gql`
   query discussion($id: ID!) {
     discussion(id: $id) {

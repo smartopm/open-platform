@@ -4,7 +4,8 @@
       "no_discussions": "No Discussions Topics",
       "subscribe": "Subscribe to Discussion",
       "create_discussion":"Create a discussion topic",
-      "update_email_header":"Update Email"
+      "update_email_header":"Update Email",
+      "community_news_header": "Community news"
     },
     "form_actions": {
       "more_discussions": "Load more discussions",

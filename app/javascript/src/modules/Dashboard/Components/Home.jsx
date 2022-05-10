@@ -18,6 +18,7 @@ import SocialMediaLinks from '../../../components/SocialMediaLinks';
 import QuickLinks from '../../QuickLinks/Components/QuickLinks';
 import { filterQuickLinksByRole } from '../utils';
 import { Spinner } from '../../../shared/Loading';
+import CommunityNews from '../../../components/Discussion/CommunityNews';
 
 const Home = () => {
   const authState = useContext(AuthStateContext);
@@ -34,19 +35,23 @@ const Home = () => {
     <div style={{ marginTop: '-30px' }}>
       <Grid
         container
+        spacing={0}
         style={{ display: 'flex', justifyContent: 'center' }}
         columns={{ xs: 12, md: 12 }}
       >
         <Grid item md={12} xs={12}>
           <LanguageToggle />
+        </Grid>
+        <Grid item md={6} xs={10}>
           {['admin', 'developer', 'consultant'].includes(userType) && (
             <div>
-              <UserDetail user={authState.user} />
+              {userType === 'admin' && <CommunityNews />}
+              <br />
             </div>
           )}
         </Grid>
 
-        <Grid item md={8} xs={10}>
+        <Grid item md={6} xs={10}>
           {['admin', 'developer', 'consultant'].includes(userType) && (
             <div>
               {userType === 'admin' && (
