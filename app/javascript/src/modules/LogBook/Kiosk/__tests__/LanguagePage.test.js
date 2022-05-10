@@ -6,6 +6,17 @@ import { Context } from '../../../../containers/Provider/AuthStateProvider';
 import authState from '../../../../__mocks__/authstate';
 import LanguagePage from '../components/LanguagePage';
 
+jest.mock('react-i18next', () => ({
+  useTranslation: () => {
+    return {
+      t: str => str,
+      i18n: {
+        changeLanguage: () => new Promise(() => {})
+      }
+    };
+  }
+}));
+
 describe('Language Page', () => {
   const mockHistory = {
     push: jest.fn()
