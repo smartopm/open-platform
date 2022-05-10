@@ -40,7 +40,7 @@ export default function CommunityNews() {
     <div className="container" style={{ marginLeft: isMobile ? 5 : 25 }}>
       <Grid container spacing={1} style={{ justifyContent: 'center' }}>
         <Grid item xs={12}>
-          <Typography data-testid="disc_title" variant="body1" style={{ marginLeft: 25 }}>
+          <Typography data-testid="disc_title" variant="h5" style={{ marginLeft: 25 }}>
             {t('headers.community_news_header')}
           </Typography>
         </Grid>
@@ -103,7 +103,7 @@ export default function CommunityNews() {
             xs={12}
             style={{
               justifyContent: 'center',
-              paddingLeft: largerScreens ? 350 : isMobile ? 40 : 100
+              paddingLeft: largerScreens ? 350 : isMobile ? 40 : 200
             }}
           >
             <Button
