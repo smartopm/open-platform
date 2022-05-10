@@ -1,10 +1,12 @@
 import React from 'react';
-import { act, render, waitFor } from '@testing-library/react';
+import { act, render, waitFor, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom/';
 import { MockedProvider } from '@apollo/react-testing';
 import { DiscussionsQuery } from '../../graphql/queries';
 import Discussions from '../../containers/Discussions/Discussions';
+import { Context } from '../../containers/Provider/AuthStateProvider'
+import userMock from '../../__mocks__/authstate'
 
 describe('Discussions Component', () => {
   it('renders Discussion elements', async () => {
@@ -51,11 +53,13 @@ describe('Discussions Component', () => {
     let container;
     await act(async () => {
       container = render(
-        <MockedProvider mocks={mocks} addTypename={false}>
-          <BrowserRouter>
-            <Discussions />
-          </BrowserRouter>
-        </MockedProvider>
+        <Context.Provider value={userMock}>
+          <MockedProvider mocks={mocks} addTypename={false}>
+            <BrowserRouter>
+              <Discussions />
+            </BrowserRouter>
+          </MockedProvider>
+        </Context.Provider>
       );
     });
 
@@ -63,6 +67,9 @@ describe('Discussions Component', () => {
       expect(container.getByText(/MY Discussion/)).toBeInTheDocument();
       expect(container.getByText(/Nurudeen/)).toBeInTheDocument();
       expect(container.getByText(/My Description/)).toBeInTheDocument();
+
+      fireEvent.click(container.queryAllByText('headers.create_discussion')[0])
+      expect(container.queryAllByText('headers.create_discussion')[1]).toBeInTheDocument();
     }, 10)
   });
 

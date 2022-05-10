@@ -9,20 +9,12 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { Fragment, useRef, useState, useEffect } from 'react';
-import {
-  Button,
-  Container,
-  Grid,
-  Divider,
-  Typography,
-} from '@mui/material';
+import { Button, Grid, Divider, Typography } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import { useApolloClient, useMutation, useQuery } from 'react-apollo';
 import { useHistory } from 'react-router';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import CloseIcon from '@mui/icons-material/Close';
-import IconButton from '@mui/material/IconButton';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import DatePickerDialog, {
   DateAndTimePickers,
@@ -44,13 +36,15 @@ import SignaturePad from './FormProperties/SignaturePad';
 import useFileUpload from '../../../graphql/useFileUpload';
 import RadioInput from './FormProperties/RadioInput';
 import ImageAuth from '../../../shared/ImageAuth';
-import Loading, { Spinner } from '../../../shared/Loading';
+import Loading from '../../../shared/Loading';
 import FormTitle from './FormTitle';
 import CheckboxInput from './FormProperties/CheckboxInput';
 import ListWrapper from '../../../shared/ListWrapper';
 import CategoryItem from './Category/CategoryItem';
-import MessageAlert from "../../../components/MessageAlert"
+import MessageAlert from '../../../components/MessageAlert';
 import SubmittedFileItem from '../../../shared/imageUpload/SubmittedFileItem';
+import { handleFileSelect, handleFileUpload, removeBeforeUpload, isUploaded } from '../utils';
+import UploadFileItem from '../../../shared/imageUpload/UploadFileItem';
 
 // date
 // text input (TextField or TextArea)
@@ -63,11 +57,23 @@ const initialData = {
 };
 
 export default function FormUpdate({ formUserId, userId, authState, categoriesData }) {
+  const state = {
+    isSubmitting: false,
+    isUploading: false,
+    currentPropId: '',
+    previewable: false,
+    currentFileNames: []
+  };
+  const [imgUploadError, setImgUploadError] = useState(false);
   const [properties, setProperties] = useState(initialData);
   const [message, setMessage] = useState({ err: false, info: '', signed: false });
+  const [messageAlert, setMessageAlert] = useState('');
+  const [isSuccessAlert, setIsSuccessAlert] = useState(false);
+  const [uploadedImages, setUploadedImages] = useState([]);
   const [openModal, setOpenModal] = useState(false);
   const [isLoading, setLoading] = useState(false);
   const [formAction, setFormAction] = useState('');
+  const [filesToUpload, setFilesToUpload] = useState([]);
   const history = useHistory();
   const signRef = useRef(null);
   const { t } = useTranslation(['form', 'common']);
@@ -75,8 +81,7 @@ export default function FormUpdate({ formUserId, userId, authState, categoriesDa
   // create form user
   const [updateFormUser] = useMutation(FormUserUpdateMutation);
   const [updateFormUserStatus] = useMutation(FormUserStatusUpdateMutation);
-  const [uploadedFiles, setUploadedFiles] = useState([]);
-  const [formState, setFormState] = useState({});
+  const [formState, setFormState] = useState(state);
   const matches = useMediaQuery('(max-width:900px)');
 
   const { data, error, loading } = useQuery(UserFormPropertiesQuery, {
@@ -91,7 +96,7 @@ export default function FormUpdate({ formUserId, userId, authState, categoriesDa
     errorPolicy: 'all'
   });
 
-  const { onChange, status, url, signedBlobId, contentType } = useFileUpload({
+  const { status, url, signedBlobId, contentType, startUpload, filename } = useFileUpload({
     client: useApolloClient()
   });
   const {
@@ -101,6 +106,38 @@ export default function FormUpdate({ formUserId, userId, authState, categoriesDa
   } = useFileUpload({
     client: useApolloClient()
   });
+
+  function createPropertyObj(propertyId) {
+    return {
+      filesToUpload,
+      setFilesToUpload,
+      propertyId,
+      setMessageAlert,
+      setIsSuccessAlert
+    };
+  }
+
+  function handleSelectObject(propertyId) {
+    return {
+      setMessageAlert,
+      setIsSuccessAlert,
+      setFormState,
+      formState,
+      propertyId,
+      startUpload
+    };
+  }
+
+  function removeUploadObject() {
+    return {
+      uploadedImages,
+      setUploadedImages,
+      formState,
+      setFormState,
+      filesToUpload,
+      setFilesToUpload
+    };
+  }
 
   useEffect(() => {
     const checkboxProperties = data?.formUserProperties?.filter(
@@ -118,31 +155,19 @@ export default function FormUpdate({ formUserId, userId, authState, categoriesDa
   }, [data]);
 
   useEffect(() => {
-    if (
-      status === 'DONE' &&
-      formState.currentPropId &&
-      !uploadedFiles.find(im => im.propertyId === formState.currentPropId)
-    ) {
+    if (status === 'DONE' && formState.currentPropId) {
       setFormState({
         ...formState,
-        isUploading: false
+        isUploading: false,
+        currentFileNames: [...formState.currentFileNames, `${filename}${formState.currentPropId}`]
       });
-      setUploadedFiles([
-        ...uploadedFiles,
-        { blobId: signedBlobId, propertyId: formState.currentPropId, contentType, url }
+      setUploadedImages([
+        ...uploadedImages,
+        { blobId: signedBlobId, propertyId: formState.currentPropId, contentType, url, filename }
       ]);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
-
-  function onFileSelect(event, currentProperty) {
-    setFormState({
-      ...formState,
-      currentPropId: currentProperty,
-      isUploading: true
-    });
-    onChange(event.target.files[0]);
-  }
 
   async function handleSignatureUpload() {
     setMessage({ ...message, signed: true });
@@ -203,6 +228,14 @@ export default function FormUpdate({ formUserId, userId, authState, categoriesDa
       .catch(err => setMessage({ ...message, err: true, info: err.message }));
   }
 
+  function handleMessageAlertClose(_event, reason) {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setMessageAlert('');
+    setImgUploadError('');
+  }
+
   function saveFormData() {
     const fileSignType = data.formUserProperties.filter(
       item => item.formProperty.fieldType === 'signature'
@@ -224,8 +257,8 @@ export default function FormUpdate({ formUserId, userId, authState, categoriesDa
       filledInProperties.push(newValue);
     }
 
-    if (uploadedFiles.length > 0) {
-      uploadedFiles.forEach(upload => {
+    if (uploadedImages.length > 0) {
+      uploadedImages.forEach(upload => {
         filledInProperties.push({
           value: upload.blobId,
           form_property_id: upload.propertyId,
@@ -259,8 +292,12 @@ export default function FormUpdate({ formUserId, userId, authState, categoriesDa
 
   function handleActionClick(_event, action) {
     _event.preventDefault(); // especially on submission trigger
+    if (filesToUpload.length !== uploadedImages.length) {
+      return setImgUploadError(true);
+    }
     setFormAction(action);
     setOpenModal(!openModal);
+    return true
   }
 
   function handleAction() {
@@ -285,6 +322,7 @@ export default function FormUpdate({ formUserId, userId, authState, categoriesDa
       setLoading(false);
       history.goBack();
     }, 2000);
+    return true;
   }
 
   function downloadFile(event, path) {
@@ -292,17 +330,12 @@ export default function FormUpdate({ formUserId, userId, authState, categoriesDa
     secureFileDownload(path);
   }
 
-  function onImageRemove(filePropertyId) {
-    const filteredFiles = uploadedFiles.filter(im => im.propertyId !== filePropertyId);
-    setUploadedFiles(filteredFiles);
-  }
-
   function renderForm(formPropertiesData) {
     const editable = !formPropertiesData.formProperty.adminUse
       ? false
       : !(formPropertiesData.formProperty.adminUse && authState.user.userType === 'admin');
 
-    const uploadedFile = uploadedFiles.find(
+    const uploadedFile = uploadedImages.find(
       im => im.propertyId === formPropertiesData.formProperty.id
     );
     const fields = {
@@ -393,6 +426,27 @@ export default function FormUpdate({ formUserId, userId, authState, categoriesDa
       ),
       file_upload: (
         <div key={formPropertiesData.formProperty.id}>
+          <MessageAlert
+            type={!isSuccessAlert || imgUploadError ? 'error' : 'success'}
+            message={
+              messageAlert || (
+                <div>
+                  <Typography variant="body1">{t('misc.upload_error')}</Typography>
+                  {' '}
+                  <Typography variant="body2">{t('misc.upload_error_content_one')}</Typography>
+                  <Typography variant="body2">{t('misc.upload_error_content_two')}</Typography>
+                  <Typography variant="body2">
+                    {t('misc.upload_error_content_three')}
+                  </Typography>
+                  <Typography variant="body2">
+                    {t('misc.upload_error_content_four')}
+                  </Typography>
+                </div>
+              )
+            }
+            open={!!messageAlert || imgUploadError}
+            handleClose={handleMessageAlertClose}
+          />
           <Grid
             container
             direction="row"
@@ -400,73 +454,76 @@ export default function FormUpdate({ formUserId, userId, authState, categoriesDa
             alignItems="flex-start"
             className={classes.fileUploadField}
           >
-            {formState.isUploading &&
-            formState.currentPropId === formPropertiesData.formProperty.id ? (
-              <Spinner />
-            ) : (
-              (!!uploadedFile && (
-                <div className={matches ? classes.filePreviewMobile : classes.filePreview}>
-                  <IconButton
-                    className={classes.iconButton}
-                    onClick={() => onImageRemove(formPropertiesData.formProperty.id)}
-                    data-testid="image_close"
-                    size="large"
-                  >
-                    <CloseIcon className={classes.closeButton} />
-                  </IconButton>
-                  <ImageAuth
-                    type={uploadedFile.contentType.split('/')[0]}
-                    imageLink={uploadedFile.url}
-                  />
-                </div>
-              )) || (
-                <Grid item md={12} xs={12}>
-                  <div>
-                    {
-                      formPropertiesData.attachments?.length ?
-                      formPropertiesData.attachments.map(attachment => (
-                        <ListWrapper className={classes.space} key={attachment.id}>
-                          <SubmittedFileItem
-                            attachment={attachment}
-                            translate={t}
-                            downloadFile={downloadFile}
-                            classes={classes}
-                            legacyFile={formPropertiesData}
-                          />
-                        </ListWrapper>
-                      ))
-                      : (
-                        <ListWrapper className={classes.space}>
-                          <SubmittedFileItem
-                            translate={t}
-                            downloadFile={downloadFile}
-                            classes={classes}
-                            legacyFile={formPropertiesData}
-                          />
-                        </ListWrapper>
-                    )}
-                  </div>
-                </Grid>
-              )
-            )}
+            <Grid item md={12} xs={12}>
+              <div>
+                {formPropertiesData.attachments?.length ? (
+                  formPropertiesData.attachments.map(attachment => (
+                    <ListWrapper className={classes.space} key={attachment.id}>
+                      <SubmittedFileItem
+                        attachment={attachment}
+                        translate={t}
+                        downloadFile={downloadFile}
+                        classes={classes}
+                        legacyFile={formPropertiesData}
+                      />
+                    </ListWrapper>
+                  ))
+                ) : (
+                  <ListWrapper className={classes.space}>
+                    <SubmittedFileItem
+                      translate={t}
+                      downloadFile={downloadFile}
+                      classes={classes}
+                      legacyFile={formPropertiesData}
+                    />
+                  </ListWrapper>
+                )}
+              </div>
+            </Grid>
+            <ListWrapper className={classes.space} key={formPropertiesData.id}>
+              <UploadField
+                detail={{
+                  type: 'file',
+                  status,
+                  id: formPropertiesData.formProperty.id,
+                  label: formPropertiesData.formProperty.fieldName,
+                  required: formPropertiesData.formProperty.required,
+                  fileCount: uploadedImages.filter(
+                    file => file.propertyId === formPropertiesData.formProperty.id
+                  ).length,
+                  currentPropId: formState.currentPropId
+                }}
+                upload={evt =>
+                  handleFileSelect(evt, createPropertyObj(formPropertiesData.formProperty.id), t)
+                }
+                uploaded={!!uploadedFile}
+                editable={editable}
+                showDetails
+                btnColor="primary"
+              />
+            </ListWrapper>
+            {filesToUpload
+              .filter(file => file.propertyId === formPropertiesData.formProperty.id)
+              .map(file => (
+                <UploadFileItem
+                  file={file}
+                  formPropertyId={formPropertiesData.formProperty.id}
+                  handleUpload={() =>
+                    handleFileUpload(
+                      file,
+                      handleSelectObject(formPropertiesData.formProperty.id),
+                      t
+                    )
+                  }
+                  handleRemoveFile={removeBeforeUpload}
+                  formState={{ ...formState, uploaded: uploadedImages }}
+                  isUploaded={isUploaded(uploadedImages, file, formPropertiesData.formProperty.id)}
+                  key={file.fileNameId}
+                  translate={t}
+                  removeUploadObject={removeUploadObject}
+                />
+              ))}
           </Grid>
-          {
-            /* TODO: Disable file upload on submitted form */
-          }
-          <ListWrapper className={classes.space} key={formPropertiesData.id}>
-            <UploadField
-              detail={{
-                type: 'file',
-                status,
-                id: formPropertiesData.formProperty.id,
-                label: formPropertiesData.formProperty.fieldName
-              }}
-              upload={evt => onFileSelect(evt, formPropertiesData.formProperty.id)}
-              editable={editable}
-              style={{ flex: 1 }}
-              btnColor="primary"
-            />
-          </ListWrapper>
         </div>
       ),
       signature: (
@@ -544,12 +601,12 @@ export default function FormUpdate({ formUserId, userId, authState, categoriesDa
 
   return (
     <>
-      <Container>
+      <>
         <MessageAlert
           type={message.error ? 'error' : 'success'}
           message={message.info}
           open={!!message.info}
-          handleClose={() => setMessage({...message, info: '', error: false})} 
+          handleClose={() => setMessage({ ...message, info: '', error: false })}
         />
         <Grid style={!matches ? { padding: '0  100px 0 100px' } : {}}>
           <FormTitle
@@ -562,11 +619,13 @@ export default function FormUpdate({ formUserId, userId, authState, categoriesDa
             categoriesData.map(category => (
               <div key={category.id}>
                 <CategoryItem category={category} editMode={false}>
-                  <div style={!matches ? { padding: ' 20px  120px 0 120px' } : { paddingTop: '20px' }}>
+                  <div
+                    style={!matches ? { padding: ' 20px  120px 0 120px' } : { paddingTop: '20px' }}
+                  >
                     {data?.formUserProperties
-                    .sort(sortPropertyOrder)
-                    .filter(prop => category.id === prop.formProperty.category.id)
-                    .map(renderForm)}
+                      .sort(sortPropertyOrder)
+                      .filter(prop => category.id === prop.formProperty.category.id)
+                      .map(renderForm)}
                   </div>
                 </CategoryItem>
               </div>
@@ -592,7 +651,8 @@ export default function FormUpdate({ formUserId, userId, authState, categoriesDa
                     disabled={isLoading}
                     size="small"
                     fullWidth={matches}
-                    variant='outlined'
+                    variant="outlined"
+                    data-testid='approved'
                   >
                     {t('form_status_actions.approved')}
                   </Button>
@@ -605,7 +665,8 @@ export default function FormUpdate({ formUserId, userId, authState, categoriesDa
                     disabled={isLoading}
                     size="small"
                     fullWidth={matches}
-                    variant='outlined'
+                    variant="outlined"
+                    data-testid='rejected'
                   >
                     {t('form_status_actions.rejected')}
                   </Button>
@@ -621,6 +682,7 @@ export default function FormUpdate({ formUserId, userId, authState, categoriesDa
                 disabled={isLoading}
                 size="small"
                 fullWidth={matches}
+                data-testid='submit'
               >
                 {t('form_status_actions.submit_form')}
               </Button>
@@ -628,7 +690,7 @@ export default function FormUpdate({ formUserId, userId, authState, categoriesDa
           </Grid>
           <br />
         </form>
-      </Container>
+      </>
 
       {/* dialog */}
       <DialogueBox
@@ -692,7 +754,7 @@ const useStyles = makeStyles(() => ({
 
 FormUpdate.defaultProps = {
   categoriesData: []
-}
+};
 
 FormUpdate.propTypes = {
   userId: PropTypes.string.isRequired,
@@ -700,9 +762,11 @@ FormUpdate.propTypes = {
   authState: PropTypes.shape({
     user: PropTypes.shape({ userType: PropTypes.string })
   }).isRequired,
-  categoriesData: PropTypes.arrayOf(PropTypes.shape({
-    id: PropTypes.string,
-    fieldName: PropTypes.string,
-    headerVisible: PropTypes.bool
-  }))
+  categoriesData: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string,
+      fieldName: PropTypes.string,
+      headerVisible: PropTypes.bool
+    })
+  )
 };

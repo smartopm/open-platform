@@ -115,6 +115,7 @@
       "scheme_design_review": "Scheme Design Review",
       "detailed_design_review": "Detailed Design Review",
       "kiambu_county_submission": "Kiambu County Submission",
+      "signing_of_contractor_code_of_conduct": "Signing of contractor Code of Conduct",
       "construction_starts": "Construction Starts",
       "inspections": "Inspections",
       "post_construction": "Post Constructions"
@@ -149,7 +150,7 @@
     "step_2_sub_header": "Add tasks and sub tasks using the kabab menus. Your work is autosaved.",
     "save": "SAVE",
     "task_list_name": "Task List Name"
-    
+
   },
   "misc": {
     "confirm": "confirm",

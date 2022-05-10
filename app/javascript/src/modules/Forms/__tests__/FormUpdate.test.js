@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, waitFor, screen } from '@testing-library/react';
+import { render, waitFor, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom';
@@ -8,6 +8,8 @@ import { UserFormPropertiesQuery, FormUserQuery } from '../graphql/forms_queries
 import FormUpdate from '../components/FormUpdate';
 import FormContextProvider from '../Context';
 import MockedThemeProvider from '../../__mocks__/mock_theme';
+import { Context } from '../../../containers/Provider/AuthStateProvider'
+import userMock from '../../../__mocks__/authstate'
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 
@@ -342,24 +344,31 @@ describe('Form Component', () => {
     };
 
     render(
-      <MockedProvider mocks={[mocks, formUserMocks]} addTypename={false}>
-        <BrowserRouter>
-          <FormContextProvider>
-            <MockedThemeProvider>
-              <FormUpdate
-                formUserId="caea7b44-ee95-42a6-a42f-3e530432172e"
-                userId="162f7517-7cc8-42f9-b2d0-a83a16d59569"
-                authState={authState}
-                categoriesData={categoriesData}
-              />
-            </MockedThemeProvider>
-          </FormContextProvider>
-        </BrowserRouter>
-      </MockedProvider>
+      <Context.Provider value={userMock}>
+        <MockedProvider mocks={[mocks, formUserMocks]} addTypename={false}>
+          <BrowserRouter>
+            <FormContextProvider>
+              <MockedThemeProvider>
+                <FormUpdate
+                  formUserId="caea7b44-ee95-42a6-a42f-3e530432172e"
+                  userId="162f7517-7cc8-42f9-b2d0-a83a16d59569"
+                  authState={authState}
+                  categoriesData={categoriesData}
+                />
+              </MockedThemeProvider>
+            </FormContextProvider>
+          </BrowserRouter>
+        </MockedProvider>
+      </Context.Provider>
     );
 
     await waitFor(() => {
       expect(screen.queryAllByTestId('form-file-upload-btn')[0]).toHaveTextContent('form:misc.select_file');
+      expect(screen.queryByTestId('approved')).toBeInTheDocument();
+      expect(screen.queryByTestId('rejected')).toBeInTheDocument();
+      fireEvent.click(screen.queryByTestId('approved'));
+      fireEvent.click(screen.queryByTestId('rejected'));
+      fireEvent.click(screen.queryByTestId('submit'));
       expect(screen.queryByTestId('download-icon')).not.toBeInTheDocument();
     });
   });

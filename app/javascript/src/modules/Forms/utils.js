@@ -251,18 +251,16 @@ export function checkRequiredFormPropertyIsFilled(property, formData) {
   return false;
 }
 
-
 /**
  * Generate an iframe snippet that can be embedded elsewhere
- * @param {{id: String, name: String}} form 
- * @param {String} hostname 
- * @returns 
+ * @param {{id: String, name: String}} form
+ * @param {String} hostname
+ * @returns
  */
 export function generateIframeSnippet(form, hostname) {
   const url = `https://${hostname}/form/${form.id}/public`;
   return `<iframe src=${url} name=${form.name} title=${form.name} scrolling="auto" width="100%" height="500px" />`;
 }
-
 
 /**
  *
@@ -270,35 +268,33 @@ export function generateIframeSnippet(form, hostname) {
  * @returns the converted size of the file to upload
  *
  */
- export function convertUploadSize(bytes) {
-  const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
+export function convertUploadSize(bytes) {
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
   if (bytes === 0) {
-    return "N/A";
+    return 'N/A';
   }
   const convertedBytes = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)), 10);
-  const size = objectAccessor(sizes, convertedBytes)
+  const size = objectAccessor(sizes, convertedBytes);
   if (convertedBytes === 0) {
     return `${bytes} ${size}`;
   }
   return `${(bytes / 1024 ** convertedBytes).toFixed(0)} ${size}`;
 }
 
-
 /**
  * Remove extension from files and truncate them to save some space on mobile
- * @param {String} name 
+ * @param {String} name
  * @returns {String}
  */
-export function cleanFileName(name){
-  if(!name) return ''
-  const filename =  name.split('.')[0]
-  return titleCase(truncateString(filename, 18))
+export function cleanFileName(name) {
+  if (!name) return '';
+  const filename = name.split('.')[0];
+  return titleCase(truncateString(filename, 18));
 }
-
 
 /**
  * Return translated versions of the known file types
- * @param {Function} t 
+ * @param {Function} t
  * @returns
  */
 export function fileTypes(t) {
@@ -311,39 +307,98 @@ export function fileTypes(t) {
     'image/x-dwf': t('common:file_types.autocad'),
     'image/x-dxf': t('common:file_types.autocad'),
     'image/svg+xml': t('common:file_types.image'),
-    'wav': t('common:file_types.audio'),
+    wav: t('common:file_types.audio'),
     'audio/mpeg': t('common:file_types.audio'),
     'video/mp4': t('common:file_types.video'),
     'video/mpeg': t('common:file_types.video'),
     'application/pdf': t('common:file_types.pdf'),
     'application/zip': t('common:file_types.compressed_file'),
     'application/x-7z-compressed': t('common:file_types.compressed_file'),
-    'application/x-zip-compressed': t('common:file_types.compressed_file'),
-  }
+    'application/x-zip-compressed': t('common:file_types.compressed_file')
+  };
 }
 
-
 /**
- * 
- * @param {[object]} uploads 
- * @param {{name: String}} file 
- * @param {String} propertyId 
- * @returns 
+ *
+ * @param {[object]} uploads
+ * @param {{name: String}} file
+ * @param {String} propertyId
+ * @returns
  */
 export function isUploaded(uploads, file, propertyId) {
   if (!uploads || !file || !propertyId) {
-    return false
+    return false;
   }
-  return uploads.some(
-    upload => upload.filename === file.name && upload.propertyId === propertyId
-  );
+  return uploads.some(upload => upload.filename === file.name && upload.propertyId === propertyId);
 }
 
 export function isFileNameSelect(filenames, file, propertyId) {
   if (!filenames || !file || !propertyId) {
-    return false
+    return false;
   }
-  return filenames.some(
-    filename  => filename.name === file && filename.propertyId === propertyId
-  )
+  return filenames.some(filename => filename.name === file && filename.propertyId === propertyId);
+}
+
+export async function handleFileSelect(event, propertyObj, t) {
+  const checkSelectFile = await Object.values(event.target.files).some(file =>
+    isFileNameSelect(propertyObj.filesToUpload, file.name, propertyObj.propertyId)
+  );
+
+  if (checkSelectFile) {
+    propertyObj.setMessageAlert(t('form:errors.file_exists'));
+    propertyObj.setIsSuccessAlert(false);
+    return;
+  }
+  const newFiles = await Object.values(event.target.files).map(file =>
+    Object.assign(file, {
+      propertyId: propertyObj.propertyId,
+      fileNameId: `${file.name}${propertyObj.propertyId}`
+    })
+  );
+  await propertyObj.setFilesToUpload([...propertyObj.filesToUpload, ...newFiles]);
+}
+
+export function handleFileUpload(file, propertyObj, t) {
+  const fileType = ['pdf'];
+  const validType =
+  fileType.includes(file.type.split('/')[1]) || file.type.split('/')[0] === 'image';
+  if (!validType) {
+    propertyObj.setMessageAlert(t('form:errors.wrong_file_type'));
+    propertyObj.setIsSuccessAlert(false);
+    return;
+  }
+  propertyObj.setFormState({
+    ...propertyObj.formState,
+    currentPropId: propertyObj.propertyId,
+    isUploading: true,
+    currentFileNames: [...propertyObj.formState.currentFileNames, `${file.name}${file.propertyId}`]
+  });
+  propertyObj.startUpload(file);
+}
+
+export function onNotUploadedImageRemove(file, propertyObj) {
+  const filteredImages = propertyObj.filesToUpload.filter(
+    item => item.fileNameId !== file.fileNameId
+  );
+  propertyObj.setFilesToUpload(filteredImages);
+}
+
+export async function onImageRemove(imagePropertyId, file, propertyObj) {
+  const filteredImages = propertyObj.uploadedImages.filter(im => im.propertyId !== imagePropertyId);
+  const filtCurrentUploadedImg = propertyObj.uploadedImages.filter(
+    im => im.propertyId === imagePropertyId && im.filename !== file.name
+  );
+  await propertyObj.setUploadedImages([...filteredImages, ...filtCurrentUploadedImg]);
+  const filterFileName = propertyObj.formState.currentFileNames.filter(
+    im => im !== `${file.name}${file.propertyId}`
+  );
+  await propertyObj.setFormState({ ...propertyObj.formState, currentFileNames: filterFileName });
+  onNotUploadedImageRemove(file, propertyObj);
+}
+
+export function removeBeforeUpload(file, isFileUploaded, formPropertyId, propertyObj) {
+  if (isFileUploaded) {
+    return onImageRemove(formPropertyId, file, propertyObj);
+  }
+  return onNotUploadedImageRemove(file, propertyObj);
 }

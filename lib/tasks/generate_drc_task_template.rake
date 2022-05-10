@@ -65,6 +65,10 @@ task :generate_drc_task_template, %i[author_email] => :environment do |_t, args|
       subTasks: [],
     },
     {
+      parentTask: 'Signing of contractor Code of Conduct',
+      subTasks: [],
+    },
+    {
       parentTask: 'Construction Starts',
       subTasks: [],
     },
