@@ -10,6 +10,7 @@ import { Context } from '../../../../containers/Provider/AuthStateProvider';
 import CenteredContent from '../../../../shared/CenteredContent';
 import BorderedButton from '../../../../shared/buttons/BorderedButton';
 import { languages } from '../../../../utils/constants';
+import { defaultColors } from '../../../../themes/nkwashi/theme';
 
 export default function LanguagePage() {
   const authState = useContext(Context);
@@ -48,10 +49,10 @@ export default function LanguagePage() {
                 title={key}
                 data-testid={`${key}_kiosk_lang_btn`}
                 onClick={() => languageSelectHandler(val)}
-                borderColor="#1E4785"
-                className={`${val === 'en-US'
-                  ? classes.englishButton
-                  : classes.spanishButton} ${classes.default}`}
+                borderColor={defaultColors.info}
+                className={`${val === 'en-US' ? classes.englishButton : classes.spanishButton} ${
+                  classes.default
+                }`}
               />
             </CenteredContent>
           </div>
@@ -72,12 +73,12 @@ const styles = StyleSheet.create({
 
 const useStyles = makeStyles({
   englishButton: {
-    color: '#FFFFFF !important',
-    backgroundColor: '#1E4785 !important'
+    color: `${defaultColors.white} !important`,
+    backgroundColor: `${defaultColors.info} !important`
   },
   spanishButton: {
-    color: '#1E4785 !important',
-    backgroundColor: '#FFFFFF !important'
+    color: `${defaultColors.info} !important`,
+    backgroundColor: `${defaultColors.white} !important`
   },
   default: {
     textTransform: 'capitalize !important'
