@@ -711,29 +711,4 @@ RSpec.describe Users::User, type: :model do
       expect(resident.invitees.count).to eq(1)
     end
   end
-
-  describe '#send_welcome_sms' do
-    let(:community) { create(:community, name: 'Greenpark') }
-    let(:user) { build(:user, community: community) }
-
-    context 'when community other than Enyimba' do
-      it 'invokes SMS' do
-        url = "https://#{HostEnv.base_url(community)}"
-        expect(Sms).to receive(:send).with(
-          user.phone_number,
-          "Welcome to the Greenpark online community. Please access the app using #{url}",
-        )
-        user.save
-      end
-    end
-
-    context 'when community is Enyimba' do
-      before { community.update(name: 'Enyimba') }
-
-      it 'does not invokes SMS' do
-        expect(Sms).not_to receive(:send)
-        user.save
-      end
-    end
-  end
 end

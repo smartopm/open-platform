@@ -12,7 +12,7 @@ module ActionFlows
       ].freeze
 
       # rubocop:disable Metrics/MethodLength
-      def self.execute_action(data, field_config)
+      def self.execute_action(data, field_config, _event_log)
         emails = ActionFieldsFetchable.process_vars('email', data, field_config) || ''
         template = ActionFieldsFetchable.process_vars('template', data, field_config)
         template_obj = Notifications::EmailTemplate.find(template)
