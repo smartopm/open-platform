@@ -35,8 +35,9 @@ module Types::Queries::Post
             I18n.t('errors.unauthorized')
     end
 
-    discussion = context[:site_community].discussions.find_by(title: "Community News")
+    discussion = context[:site_community].discussions.find_by(title: 'Community News')
     return [] if discussion.nil?
+
     discussion.posts.offset(offset).limit(limit)
   end
 end

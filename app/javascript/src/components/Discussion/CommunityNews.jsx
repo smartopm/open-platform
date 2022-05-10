@@ -89,7 +89,7 @@ export default function CommunityNews() {
                             data-testid="task_body"
                             component="p"
                             className={
-                              isEllipsis
+                              post.content.length >= 50
                                 ? css(styles.postContentEllipsed)
                                 : css(styles.postContentVisible)
                             }
