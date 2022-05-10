@@ -19,6 +19,7 @@ import QuickLinks from '../../QuickLinks/Components/QuickLinks';
 import { filterQuickLinksByRole } from '../utils';
 import { Spinner } from '../../../shared/Loading';
 import CommunityNews from '../../../components/Discussion/CommunityNews';
+import { allUserTypes } from '../../../utils/constants';
 
 const Home = () => {
   const authState = useContext(AuthStateContext);
@@ -43,9 +44,9 @@ const Home = () => {
           <LanguageToggle />
         </Grid>
         <Grid item md={6} xs={10}>
-          {['admin', 'developer', 'consultant'].includes(userType) && (
+          {allUserTypes.includes(userType) && (
             <div>
-              {userType === 'admin' && <CommunityNews />}
+              <CommunityNews />
               <br />
             </div>
           )}

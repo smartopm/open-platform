@@ -133,7 +133,6 @@ const styles = StyleSheet.create({
     marginBottom: 5
   },
   postContentEllipsed: {
-    // width: '100%',
     overflow: 'hidden',
     whiteSpace: 'normal',
     textOverflow: 'ellipsis',

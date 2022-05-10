@@ -1,10 +1,9 @@
 import React from 'react';
-import { act, fireEvent, render, waitFor } from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom';
 import { CommunityNewsPostsQuery } from '../../graphql/queries';
-import { Spinner } from '../../shared/Loading';
 import CommunityNews from '../../components/Discussion/CommunityNews';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
@@ -88,21 +87,13 @@ describe('Community news with posts', () => {
       }
     ];
 
-    let container;
-
-    await act(async () => {
-      container = render(
-        <BrowserRouter>
-          <MockedProvider mocks={mocks} addTypename={false}>
-            <CommunityNews />
-          </MockedProvider>
-        </BrowserRouter>
-      );
-    });
-
-    const loader = render(<Spinner />);
-
-    expect(loader.queryAllByTestId('loader')[0]).toBeInTheDocument();
+    const container = render(
+      <BrowserRouter>
+        <MockedProvider mocks={mocks} addTypename={false}>
+          <CommunityNews />
+        </MockedProvider>
+      </BrowserRouter>
+    );
 
     await waitFor(() => {
       expect(container.queryByTestId('community_news_header')).toBeInTheDocument();
