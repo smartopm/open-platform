@@ -67,7 +67,7 @@ export default function CommunityNews() {
                     }
                     secondary={
                       <>
-                        <div>
+                        <div style={{ marginTop: '-15px' }}>
                           <span data-testid="comment">
                             <br />
                             {// eslint-disable-next-line react/prop-types
