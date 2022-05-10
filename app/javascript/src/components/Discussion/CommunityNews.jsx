@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-no-duplicate-props */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable react/jsx-wrap-multilines */
-import React, { useContext, useState } from 'react';
+import React, { useContext } from 'react';
 import { ListItem, ListItemAvatar, ListItemText, Button, Grid, Typography } from '@mui/material';
 import { StyleSheet, css } from 'aphrodite';
 import { Link, useHistory } from 'react-router-dom';
@@ -12,14 +12,12 @@ import { useTranslation } from 'react-i18next';
 import { CommunityNewsPostsQuery } from '../../graphql/queries';
 import { Spinner } from '../../shared/Loading';
 import CenteredContent from '../../shared/CenteredContent';
-import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider';
 import Avatar from '../Avatar';
 import { formatError } from '../../utils/helpers';
 import ImageAuth from '../../shared/ImageAuth';
 
 export default function CommunityNews() {
   const limit = 4;
-  const authState = useContext(AuthStateContext);
   const largerScreens = useMediaQuery('(min-width:1536)');
   const isMobile = useMediaQuery('(max-width:800px)');
   const history = useHistory();
@@ -42,7 +40,7 @@ export default function CommunityNews() {
     <div className="container" style={{ marginLeft: isMobile ? 5 : 25 }}>
       <Grid container spacing={1} style={{ justifyContent: 'center' }}>
         <Grid item xs={12}>
-          <Typography data-testid="disc_title" variant="h6" style={{ marginLeft: 25 }}>
+          <Typography data-testid="disc_title" variant="body1" style={{ marginLeft: 25 }}>
             {t('headers.community_news_header')}
           </Typography>
         </Grid>
@@ -57,14 +55,9 @@ export default function CommunityNews() {
                   </ListItemAvatar>
                   <ListItemText
                     primary={
-                      <Link
-                        style={{ cursor: 'pointer', textDecoration: 'none' }}
-                        to={authState.user.userType === 'admin' ? `/user/${post.user.id}` : '#'}
-                      >
-                        <Typography component="span" color="primary">
-                          {post.user.name}
-                        </Typography>
-                      </Link>
+                      <Typography component="span" variant="subtitle2">
+                        {post.user.name}
+                      </Typography>
                     }
                     secondary={
                       <>

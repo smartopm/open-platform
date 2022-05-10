@@ -5,7 +5,7 @@
       "subscribe": "Subscribe to Discussion",
       "create_discussion":"Create a discussion topic",
       "update_email_header":"Update Email",
-      "community_news_header": "Community news"
+      "community_news_header": "Community News"
     },
     "form_actions": {
       "more_discussions": "Load more discussions",
