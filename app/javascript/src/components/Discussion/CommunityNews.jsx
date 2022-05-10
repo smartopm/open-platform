@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable react/jsx-wrap-multilines */
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { ListItem, ListItemAvatar, ListItemText, Button, Grid, Typography } from '@mui/material';
 import { StyleSheet, css } from 'aphrodite';
 import { Link, useHistory } from 'react-router-dom';
@@ -18,6 +18,7 @@ import ImageAuth from '../../shared/ImageAuth';
 export default function CommunityNews() {
   const limit = 4;
   const authState = useContext(AuthStateContext);
+  const [isEllipsis, setIsEllipsis] = useState(false);
   const largerScreens = useMediaQuery('(min-width:1200px)');
   const isMobile = useMediaQuery('(max-width:800px)');
   const history = useHistory();
@@ -32,7 +33,7 @@ export default function CommunityNews() {
   }
 
   function seeMorePostContent() {
-    document.getElementById('postContent').style.overflow = 'visible';
+    setIsEllipsis(!isEllipsis);
   }
 
   if (loading) return <Spinner />;
@@ -87,33 +88,39 @@ export default function CommunityNews() {
                             variant="body2"
                             data-testid="task_body"
                             component="p"
-                            className={css(styles.postContent)}
+                            className={
+                              isEllipsis
+                                ? css(styles.postContentEllipsed)
+                                : css(styles.postContentVisible)
+                            }
                             id="postContent"
                           >
                             {post.content}
                           </Typography>
                         </div>
-                        <div>
-                          <Grid
-                            item
-                            xs={12}
-                            style={{
-                              justifyContent: 'center',
-                              // paddingLeft: largerScreens ? 890 : isMobile ? 580 : 0,
-                              marginTop: 2
-                            }}
-                          >
-                            <Button
-                              color="primary"
-                              variant="outlined"
-                              onClick={seeMorePostContent}
-                              data-testid="load_more_button"
-                              disabled={data.isLoading}
+                        {post.content.length >= 50 && (
+                          <div>
+                            <Grid
+                              item
+                              xs={12}
+                              style={{
+                                justifyContent: 'center',
+                                // paddingLeft: largerScreens ? 890 : isMobile ? 580 : 0,
+                                marginTop: 2
+                              }}
                             >
-                              {t('common:misc.see_more')}
-                            </Button>
-                          </Grid>
-                        </div>
+                              <Button
+                                color="primary"
+                                variant="outlined"
+                                onClick={seeMorePostContent}
+                                data-testid="load_more_button"
+                                disabled={data.isLoading}
+                              >
+                                {t('common:misc.see_more')}
+                              </Button>
+                            </Grid>
+                          </div>
+                        )}
                       </>
                     }
                   />
@@ -153,7 +160,7 @@ const styles = StyleSheet.create({
   deleteBtn: {
     marginBottom: 5
   },
-  postContent: {
+  postContentEllipsed: {
     width: '100%',
     overflow: 'hidden',
     whiteSpace: 'normal',
@@ -163,5 +170,9 @@ const styles = StyleSheet.create({
     display: '-webkit-box',
     '-webkit-box-orient': 'vertical',
     ' -webkit-line-clamp': '3 !important'
+  },
+  postContentVisible: {
+    width: '100%',
+    overflow: 'visible'
   }
 });
