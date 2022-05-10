@@ -2,11 +2,9 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React from 'react';
 import { useQuery } from 'react-apollo';
-import { useHistory } from 'react-router-dom'
+import { useHistory } from 'react-router-dom';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import Grid from '@mui/material/Grid';
-import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import PropTypes from 'prop-types';
 import { AssignedTaskQuery } from '../graphql/task_reminder_query';
@@ -39,22 +37,27 @@ export default function TaskReminderCard({ translate }) {
   }
   return (
     <div style={matches ? { padding: '20px' } : { padding: '20px 57px 20px 79px', width: '99%' }}>
-      <CardWrapper>
-        <Typography variant='h6' style={{ marginBottom: '20px' }}>
-          {translate('dashboard.task_reminders')}
-        </Typography>
+      <CardWrapper
+        title={translate('dashboard.task_reminders')}
+        buttonName={translate('dashboard.see_more_reminders')}
+        displayButton={data?.userTasks.length > 0}
+        handleButton={() => history.push('/tasks?filter=myOpenTasks')}
+      >
         {loading || data?.userTasks.length > 0 ? (
-          loading ? Array.from(new Array(5)) : data?.userTasks).map((tile, index) => (
+          (loading ? Array.from(new Array(5)) : data?.userTasks).map((tile, index) => (
             <div key={tile?.id || index}>
               {tile ? (
-                <Card clickData={{clickable: true, handleClick: () => history.push(`/tasks?taskId=${tile.id}`)}}>
+                <Card
+                  clickData={{
+                    clickable: true,
+                    handleClick: () => history.push(`/tasks?taskId=${tile.id}`)
+                  }}
+                >
                   <Grid container>
                     <Grid item md={3} xs={12}>
-                      <div
-                        style={checkDate(tile.dueDate) ? { color: 'red' } : null}
-                      >
+                      <div style={checkDate(tile.dueDate) ? { color: 'red' } : null}>
                         <Typography style={{ paddingBottom: '5px' }}>
-                          {translate('common:misc.due_text')}
+                          {translate('common:misc.due_text')} 
                           {' '}
                           {dateToString(tile.dueDate)}
                         </Typography>
@@ -80,21 +83,12 @@ export default function TaskReminderCard({ translate }) {
                 </div>
               )}
             </div>
-          )) : (
-            <EmptyCard
-              title={translate('dashboard.no_pending_tasks')}
-              subtitle={translate('dashboard.pending_tasks_text')}
-            />
-          )
-        }
-        {data?.userTasks.length > 0 && (
-          <CenteredContent>
-            <div style={{ marginTop: '20px' }}>
-              <Button variant='outlined' color='primary' endIcon={<ArrowForwardIcon />} onClick={() => history.push('/tasks?filter=myOpenTasks')}>
-                {translate('dashboard.see_more_reminders')}
-              </Button>
-            </div>
-          </CenteredContent>
+          ))
+        ) : (
+          <EmptyCard
+            title={translate('dashboard.no_pending_tasks')}
+            subtitle={translate('dashboard.pending_tasks_text')}
+          />
         )}
       </CardWrapper>
     </div>

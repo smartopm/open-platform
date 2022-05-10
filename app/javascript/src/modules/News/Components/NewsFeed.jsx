@@ -2,10 +2,10 @@
 /* eslint-disable no-use-before-define */
 import React from 'react';
 import makeStyles from '@mui/styles/makeStyles';
-import ImageList from '@mui/material/ImageList';
-import ImageListItem from '@mui/material/ImageListItem';
+import Card from '@mui/material/Card';
+import CardMedia from '@mui/material/CardMedia';
 import Grid from '@mui/material/Grid';
-import ImageListItemBar from '@mui/material/ImageListItemBar';
+import CardContent from '@mui/material/CardContent';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
@@ -14,29 +14,13 @@ import PropTypes from 'prop-types';
 import { useFetch } from '../../../utils/customHooks';
 import CustomSkeleton from '../../../shared/CustomSkeleton';
 import CenteredContent from '../../../shared/CenteredContent';
+import CardWrapper from '../../../shared/CardWrapper';
+import { sanitizeText, truncateString } from '../../../utils/helpers'
 
-const NUMBER_OF_POSTS_TO_DISPLAY = 5;
-const useStyles = makeStyles(theme => ({
-  root: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    justifyContent: 'space-around',
-    overflow: 'hidden',
-    backgroundColor: theme.palette.background.paper
-  },
-  gridList: {
-    flexWrap: 'nowrap',
-    transform: 'translateZ(0)'
-  },
-  title: {
-    color: theme.palette.primary.light
-  },
-  image: {
-    borderRadius: '8px',
-    width: '100%'
-  },
-  tile: {
-    borderRadius: '8px'
+const NUMBER_OF_POSTS_TO_DISPLAY = 2;
+const useStyles = makeStyles(() => ({
+  gridItem: {
+    cursor: 'pointer'
   }
 }));
 
@@ -50,56 +34,47 @@ export function PostItemGrid({ data, loading }) {
     history.push(`/news/post/${postId}`);
   }
   return (
-    <div>
-      <Typography
-        color="textPrimary"
-        data-testid="recent_news"
-        style={
-          matches
-            ? { margin: '20px 0 20px 20px', fontSize: '14px', fontWeight: 500, color: '#141414' }
-            : { margin: '40px 0 20px 79px', fontWeight: 500, fontSize: '22px', color: '#141414' }
-        }
+    <div style={matches ? { padding: '20px' } : { padding: '20px 57px 20px 79px', width: '99%' }}>
+      <CardWrapper
+        title={t('misc.recent_article')}
+        buttonName={t('misc.see_more_articles')}
+        displayButton={data.length > 0}
+        handleButton={() => history.push('/news')}
       >
-        {t('common:misc.recent_news')}
-      </Typography>
-      <div
-        className={classes.root}
-        style={matches ? { margin: '0 20px' } : { margin: '0 79px 26px 79px' }}
-      >
-        <ImageList
-          className={classes.gridList}
-          cols={matches ? 2 : 3}
-          spacing={5}
-          sx={{
-            gridAutoFlow: 'column',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(250px,1fr)) !important',
-            gridAutoColumns: 'minmax(200px, 1fr)'
-          }}
-        >
-          {(loading ? Array.from(new Array(5)) : data.length && data).map((tile, index) => (
-            <ImageListItem
-              key={tile?.ID || index}
-              onClick={tile ? () => routeToPost(tile.ID) : undefined}
-              style={tile ? { cursor: 'pointer' } : undefined}
-              classes={{ tile: classes.tile }}
-            >
-              {tile ? (
-                <Grid>
-                  <img
-                    data-testid="tile_image"
-                    src={tile.featured_image}
-                    alt={tile.title}
-                    className={classes.image}
+        <Grid container spacing={4}>
+          {(loading ? Array.from(new Array(5)) : data.length && data).map((tile, index) =>
+            tile ? (
+              <Grid item md={6} onClick={() => routeToPost(tile.ID)} className={classes.gridItem}>
+                <Card sx={{ width: '100%' }} elevation={0}>
+                  <CardMedia
+                    component="img"
+                    height="194"
+                    image={tile.featured_image}
+                    alt="Paella dish"
                   />
-                  <ImageListItemBar title={tile.title} />
-                </Grid>
-              ) : (
+                  <CardContent>
+                    <Typography variant="body1">{tile.title}</Typography>
+                    <br />
+                    <Typography variant="body2" color="text.secondary">
+                      <div
+                        // eslint-disable-next-line react/no-danger
+                        dangerouslySetInnerHTML={{
+                          __html: sanitizeText(truncateString(tile.excerpt, 200))
+                        }}
+                      />
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </Grid>
+            ) : (
+              // eslint-disable-next-line react/no-array-index-key
+              <div key={index}>
                 <CustomSkeleton variant="rectangular" width="100%" height="140px" />
-              )}
-            </ImageListItem>
-          ))}
-        </ImageList>
-      </div>
+              </div>
+            )
+          )}
+        </Grid>
+      </CardWrapper>
     </div>
   );
 }
