@@ -18,6 +18,8 @@ import SocialMediaLinks from '../../../components/SocialMediaLinks';
 import QuickLinks from '../../QuickLinks/Components/QuickLinks';
 import { filterQuickLinksByRole } from '../utils';
 import { Spinner } from '../../../shared/Loading';
+import CommunityNews from '../../../components/Discussion/CommunityNews';
+import { allUserTypes } from '../../../utils/constants';
 
 const Home = () => {
   const authState = useContext(AuthStateContext);
@@ -27,6 +29,7 @@ const Home = () => {
   );
   const { userType } = authState.user;
   const filteredQuickLinks = filterQuickLinksByRole(dashboardQuickLinks, userType);
+  const communityNewsUsers = allUserTypes.filter(role => role !== 'security_guard');
 
   if (!authState.loggedIn) return <Spinner />;
 
@@ -34,19 +37,23 @@ const Home = () => {
     <div style={{ marginTop: '-30px' }}>
       <Grid
         container
+        spacing={0}
         style={{ display: 'flex', justifyContent: 'center' }}
         columns={{ xs: 12, md: 12 }}
       >
         <Grid item md={12} xs={12}>
           <LanguageToggle />
-          {['admin', 'developer', 'consultant'].includes(userType) && (
+        </Grid>
+        <Grid item md={6} xs={10}>
+          {communityNewsUsers.includes(userType) && (
             <div>
-              <UserDetail user={authState.user} />
+              <CommunityNews />
+              <br />
             </div>
           )}
         </Grid>
 
-        <Grid item md={8} xs={10}>
+        <Grid item md={6} xs={10}>
           {['admin', 'developer', 'consultant'].includes(userType) && (
             <div>
               {userType === 'admin' && (
@@ -62,11 +69,9 @@ const Home = () => {
                 </FeatureCheck>
               )}
               <br />
-              <Divider />
               <FeatureCheck features={authState.user.community.features} name="Tasks">
                 <TaskReminder translate={t} />
               </FeatureCheck>
-              <Divider />
               <FeatureCheck features={authState.user.community.features} name="News">
                 <NewsFeed wordpressEndpoint={authState.user?.community.wpLink} translate={t} />
               </FeatureCheck>
@@ -88,7 +93,6 @@ const Home = () => {
               <FeatureCheck features={authState.user.community.features} name="Properties">
                 <PlotDetail authState={authState.user} />
               </FeatureCheck>
-              <Divider />
               <FeatureCheck features={authState.user.community.features} name="News">
                 <NewsFeed wordpressEndpoint={authState.user?.community.wpLink} translate={t} />
               </FeatureCheck>

@@ -18,11 +18,29 @@ RSpec.describe Types::Queries::Post do
     end
     let(:discussion) { create(:discussion, community: community, user_id: admin.id) }
     let!(:post) { create(:post, community: community, discussion: discussion, user: admin) }
+    let(:community_news_discussion) do
+      create(:discussion, community: community,
+                          title: 'Community News', user_id: admin.id)
+    end
+    let!(:community_news_post) do
+      create(:post, community: community, content: 'Community News post',
+                    discussion: community_news_discussion, user: admin)
+    end
 
     let(:query) do
       <<~GQL
         query DisucssionPosts($discussionId: ID!) {
           discussionPosts(discussionId: $discussionId) {
+            content
+          }
+        }
+      GQL
+    end
+
+    let(:community_news_query) do
+      <<~GQL
+        query CommunityNewsPosts {
+          communityNewsPosts {
             content
           }
         }
@@ -53,6 +71,34 @@ RSpec.describe Types::Queries::Post do
                                                   }).as_json
           expect(result['errors']).to_not be nil
           expect(result.dig('errors', 0, 'message')).to eql 'Discussion not found'
+        end
+      end
+
+      context 'when user is unauthorized' do
+        it 'raises unauthorized error' do
+          variables = { discussionId: discussion.id }
+          result = DoubleGdpSchema.execute(query, variables: variables,
+                                                  context: {
+                                                    current_user: user,
+                                                    site_community: community,
+                                                  }).as_json
+          expect(result['errors']).to_not be nil
+          expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'
+        end
+      end
+    end
+
+    describe '#community news discussion_posts' do
+      context 'when user is authorized' do
+        it 'retrives list of community posts' do
+          result = DoubleGdpSchema.execute(community_news_query, variables: {},
+                                                                 context: {
+                                                                   current_user: admin,
+                                                                   site_community: community,
+                                                                 }).as_json
+          expect(result['errors']).to be nil
+          expect(result.dig('data', 'communityNewsPosts', 0, 'content'))
+            .to eql 'Community News post'
         end
       end
 
