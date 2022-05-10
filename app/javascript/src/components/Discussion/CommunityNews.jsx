@@ -33,7 +33,7 @@ export default function CommunityNews() {
   function redirectToDiscussionsPage() {
     history.push('/discussions');
   }
-  console.log(data?.communityNewsPosts);
+
   if (loading) return <Spinner />;
   if (error) {
     return <CenteredContent>{formatError(error.message)}</CenteredContent>;
@@ -62,55 +62,51 @@ export default function CommunityNews() {
 
         {data?.communityNewsPosts.length >= 1 ? (
           data?.communityNewsPosts?.map(post => (
-            <div key={post.id}>
-              <Grid item xs={12}>
-                <ListItem alignItems="flex-start">
-                  <ListItemAvatar style={{ marginRight: 8 }}>
-                    <Avatar user={post.user} />
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={
-                      <>
-                        <Typography component="span" variant="subtitle2">
-                          {post.user.name}
-                        </Typography>
-                        <Typography component="p" variant="body2" style={{ color: '#575757' }}>
-                          {moment(post.createdAt).fromNow()}
-                        </Typography>
-                      </>
-                    }
-                    secondary={
-                      <>
-                        <div style={{ marginTop: '-15px' }}>
-                          <span data-testid="community_news_post_author_avatar">
-                            <br />
-                            {// eslint-disable-next-line react/prop-types
-                            post?.imageUrls?.length >= 1 && (
-                              <ImageAuth
-                                imageLink={post?.imageUrls[0]}
-                                style={{
-                                  marginTop: '15px',
-                                  marginLeft: '-65px'
-                                }}
-                              />
-                            )}
-                          </span>
+            <Grid item xs={12} key={post.id}>
+              <ListItem alignItems="flex-start">
+                <ListItemAvatar style={{ marginRight: 8 }}>
+                  <Avatar user={post.user} />
+                </ListItemAvatar>
+                <ListItemText
+                  primary={
+                    <>
+                      <Typography component="span" variant="subtitle2">
+                        {post.user.name}
+                      </Typography>
+                      <Typography component="p" variant="body2" style={{ color: '#575757' }}>
+                        {moment(post.createdAt).fromNow()}
+                      </Typography>
+                    </>
+                  }
+                  secondary={
+                    <>
+                      <span data-testid="community_news_post_author_avatar">
+                        {// eslint-disable-next-line react/prop-types
+                        post?.imageUrls?.length >= 1 && (
+                          <ImageAuth
+                            imageLink={post?.imageUrls[0]}
+                            style={{
+                              marginTop: '15px',
+                              marginLeft: '-65px'
+                            }}
+                          />
+                        )}
+                      </span>
 
-                          <Typography
-                            variant="body2"
-                            data-testid="task_body"
-                            className={css(styles.postContentEllipsed)}
-                          >
-                            {post.content}
-                          </Typography>
-                        </div>
-                      </>
-                    }
-                  />
-                </ListItem>
-                <Divider />
-              </Grid>
-            </div>
+                      <Typography
+                        variant="body2"
+                        data-testid="task_body"
+                        component="span"
+                        className={css(styles.postContentEllipsed)}
+                      >
+                        {post.content}
+                      </Typography>
+                    </>
+                  }
+                />
+              </ListItem>
+              <Divider />
+            </Grid>
           ))
         ) : (
           <CenteredContent>{t('common:misc.first_to_post')}</CenteredContent>
