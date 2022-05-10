@@ -29,6 +29,7 @@ const Home = () => {
   );
   const { userType } = authState.user;
   const filteredQuickLinks = filterQuickLinksByRole(dashboardQuickLinks, userType);
+  const communityNewsUsers = allUserTypes.filter(role => role !== 'security_guard');
 
   if (!authState.loggedIn) return <Spinner />;
 
@@ -44,7 +45,7 @@ const Home = () => {
           <LanguageToggle />
         </Grid>
         <Grid item md={6} xs={10}>
-          {allUserTypes.includes(userType) && (
+          {communityNewsUsers.includes(userType) && (
             <div>
               <CommunityNews />
               <br />
