@@ -7,6 +7,7 @@ import { StyleSheet, css } from 'aphrodite';
 import { useHistory } from 'react-router-dom';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Divider from '@mui/material/Divider';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { useQuery } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import moment from 'moment-timezone';
@@ -123,6 +124,7 @@ export default function CommunityNews() {
             onClick={redirectToDiscussionsPage}
             data-testid="load_more_button"
             disabled={data.isLoading}
+            endIcon={<ArrowForwardIcon />}
           >
             {t('common:misc.see_more_discussion')}
           </Button>
