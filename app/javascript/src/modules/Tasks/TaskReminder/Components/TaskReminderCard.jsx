@@ -54,7 +54,7 @@ export default function TaskReminderCard({ translate }) {
                   }}
                 >
                   <Grid container>
-                    <Grid item md={3} xs={12}>
+                    <Grid item sm={3} xs={12}>
                       <div style={checkDate(tile.dueDate) ? { color: 'red' } : null}>
                         <Typography style={{ paddingBottom: '5px' }}>
                           {translate('common:misc.due_text')} 
@@ -63,7 +63,7 @@ export default function TaskReminderCard({ translate }) {
                         </Typography>
                       </div>
                     </Grid>
-                    <Grid item md={9} xs={12}>
+                    <Grid item sm={9} xs={12}>
                       <Typography align="justify" data-testid="body">
                         <span
                           style={{ whiteSpace: 'pre-line' }}

@@ -15,9 +15,10 @@ import { useFetch } from '../../../utils/customHooks';
 import CustomSkeleton from '../../../shared/CustomSkeleton';
 import CenteredContent from '../../../shared/CenteredContent';
 import CardWrapper from '../../../shared/CardWrapper';
-import { sanitizeText, truncateString } from '../../../utils/helpers'
+import { sanitizeText, truncateString } from '../../../utils/helpers';
+import MediaCard from '../../../shared/MediaCard';
+import ControlledCard from '../../../shared/ControlledCard';
 
-const NUMBER_OF_POSTS_TO_DISPLAY = 2;
 const useStyles = makeStyles(() => ({
   gridItem: {
     cursor: 'pointer'
@@ -44,28 +45,52 @@ export function PostItemGrid({ data, loading }) {
         <Grid container spacing={4}>
           {(loading ? Array.from(new Array(5)) : data.length && data).map((tile, index) =>
             tile ? (
-              <Grid item md={6} onClick={() => routeToPost(tile.ID)} className={classes.gridItem}>
-                <Card sx={{ width: '100%' }} elevation={0}>
-                  <CardMedia
-                    component="img"
-                    height="194"
-                    image={tile.featured_image}
-                    alt="Paella dish"
+              !matches ? (
+                <Grid item md={6} onClick={() => routeToPost(tile.ID)} className={classes.gridItem}>
+                  <Card sx={{ width: '100%' }} elevation={0}>
+                    <CardMedia
+                      component="img"
+                      height="194"
+                      image={tile.featured_image}
+                      alt={tile.title}
+                    />
+                    <CardContent>
+                      <Typography variant="body1">{tile.title}</Typography>
+                      <br />
+                      <Typography variant="body2" color="text.secondary">
+                        <div
+                          // eslint-disable-next-line react/no-danger
+                          dangerouslySetInnerHTML={{
+                            __html: sanitizeText(truncateString(tile.excerpt, 190))
+                          }}
+                        />
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              ) : index === 0 ? (
+                <Grid
+                  item
+                  xs={12}
+                  onClick={() => routeToPost(tile.ID)}
+                  className={classes.gridItem}
+                >
+                  <MediaCard
+                    title={tile.title}
+                    subtitle={tile.excerpt}
+                    imageUrl={tile.featured_image}
                   />
-                  <CardContent>
-                    <Typography variant="body1">{tile.title}</Typography>
-                    <br />
-                    <Typography variant="body2" color="text.secondary">
-                      <div
-                        // eslint-disable-next-line react/no-danger
-                        dangerouslySetInnerHTML={{
-                          __html: sanitizeText(truncateString(tile.excerpt, 200))
-                        }}
-                      />
-                    </Typography>
-                  </CardContent>
-                </Card>
-              </Grid>
+                </Grid>
+              ) : (
+                <Grid
+                  item
+                  xs={12}
+                  onClick={() => routeToPost(tile.ID)}
+                  className={classes.gridItem}
+                >
+                  <ControlledCard subtitle={tile.excerpt} imageUrl={tile.featured_image} />
+                </Grid>
+              )
             ) : (
               // eslint-disable-next-line react/no-array-index-key
               <div key={index}>
@@ -80,6 +105,8 @@ export function PostItemGrid({ data, loading }) {
 }
 
 export default function NewsFeed({ wordpressEndpoint }) {
+  const matches = useMediaQuery('(max-width:600px)');
+  const NUMBER_OF_POSTS_TO_DISPLAY = matches ? 3 : 2;
   if (!wordpressEndpoint) return null;
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const { response, error } = useFetch(`${wordpressEndpoint}/posts`);
@@ -94,24 +121,22 @@ export default function NewsFeed({ wordpressEndpoint }) {
   }
 
   return (
-    <PostItemGrid data={postsToDisplay(response.posts)} loading={!response || !response.posts} />
+    <PostItemGrid
+      data={postsToDisplay(response.posts, NUMBER_OF_POSTS_TO_DISPLAY)}
+      loading={!response || !response.posts}
+    />
   );
 }
 
-function postsToDisplay(posts) {
+function postsToDisplay(posts, number) {
   const data = [];
   if (posts && posts.length) {
     const publicPosts = posts.filter(p => p.categories.Private == null);
-    const stickyPosts = publicPosts
-      .filter(_post => _post.sticky)
-      .slice(0, NUMBER_OF_POSTS_TO_DISPLAY);
+    const stickyPosts = publicPosts.filter(_post => _post.sticky).slice(0, number);
     data.push(...stickyPosts);
-    if (stickyPosts.length < NUMBER_OF_POSTS_TO_DISPLAY) {
+    if (stickyPosts.length < number) {
       const nonStickyPosts = publicPosts.filter(p => !p.sticky);
-      const moreToDisplay = nonStickyPosts.slice(
-        0,
-        NUMBER_OF_POSTS_TO_DISPLAY - stickyPosts.length
-      );
+      const moreToDisplay = nonStickyPosts.slice(0, number - stickyPosts.length);
       data.push(...moreToDisplay);
     }
   }
