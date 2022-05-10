@@ -43,61 +43,69 @@ export function PostItemGrid({ data, loading }) {
         handleButton={() => history.push('/news')}
       >
         <Grid container spacing={4}>
-          {(loading ? Array.from(new Array(5)) : data.length && data).map((tile, index) =>
-            tile ? (
-              !matches ? (
-                <Grid item md={6} onClick={() => routeToPost(tile.ID)} className={classes.gridItem}>
-                  <Card sx={{ width: '100%' }} elevation={0}>
-                    <CardMedia
-                      component="img"
-                      height="194"
-                      image={tile.featured_image}
-                      alt={tile.title}
+          {(loading ? Array.from(new Array(5)) : data.length && data).map((tile, index) => (
+            <div key={tile.ID}>
+              {tile ? (
+                !matches ? (
+                  <Grid
+                    item
+                    md={6}
+                    onClick={() => routeToPost(tile.ID)}
+                    className={classes.gridItem}
+                  >
+                    <Card sx={{ width: '100%' }} elevation={0}>
+                      <CardMedia
+                        component="img"
+                        height="194"
+                        image={tile.featured_image}
+                        alt={tile.title}
+                        data-testid="tile_image"
+                      />
+                      <CardContent>
+                        <Typography variant="body1">{tile.title}</Typography>
+                        <br />
+                        <Typography variant="body2" color="text.secondary" component="div">
+                          <div
+                            // eslint-disable-next-line react/no-danger
+                            dangerouslySetInnerHTML={{
+                              __html: sanitizeText(truncateString(tile.excerpt, 190))
+                            }}
+                          />
+                        </Typography>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                ) : index === 0 ? (
+                  <Grid
+                    item
+                    xs={12}
+                    onClick={() => routeToPost(tile.ID)}
+                    className={classes.gridItem}
+                  >
+                    <MediaCard
+                      title={tile.title}
+                      subtitle={tile.excerpt}
+                      imageUrl={tile.featured_image}
                     />
-                    <CardContent>
-                      <Typography variant="body1">{tile.title}</Typography>
-                      <br />
-                      <Typography variant="body2" color="text.secondary">
-                        <div
-                          // eslint-disable-next-line react/no-danger
-                          dangerouslySetInnerHTML={{
-                            __html: sanitizeText(truncateString(tile.excerpt, 190))
-                          }}
-                        />
-                      </Typography>
-                    </CardContent>
-                  </Card>
-                </Grid>
-              ) : index === 0 ? (
-                <Grid
-                  item
-                  xs={12}
-                  onClick={() => routeToPost(tile.ID)}
-                  className={classes.gridItem}
-                >
-                  <MediaCard
-                    title={tile.title}
-                    subtitle={tile.excerpt}
-                    imageUrl={tile.featured_image}
-                  />
-                </Grid>
+                  </Grid>
+                ) : (
+                  <Grid
+                    item
+                    xs={12}
+                    onClick={() => routeToPost(tile.ID)}
+                    className={classes.gridItem}
+                  >
+                    <ControlledCard subtitle={tile.excerpt} imageUrl={tile.featured_image} />
+                  </Grid>
+                )
               ) : (
-                <Grid
-                  item
-                  xs={12}
-                  onClick={() => routeToPost(tile.ID)}
-                  className={classes.gridItem}
-                >
-                  <ControlledCard subtitle={tile.excerpt} imageUrl={tile.featured_image} />
-                </Grid>
-              )
-            ) : (
-              // eslint-disable-next-line react/no-array-index-key
-              <div key={index}>
-                <CustomSkeleton variant="rectangular" width="100%" height="140px" />
-              </div>
-            )
-          )}
+                // eslint-disable-next-line react/no-array-index-key
+                <div key={index}>
+                  <CustomSkeleton variant="rectangular" width="100%" height="140px" />
+                </div>
+              )}
+            </div>
+          ))}
         </Grid>
       </CardWrapper>
     </div>

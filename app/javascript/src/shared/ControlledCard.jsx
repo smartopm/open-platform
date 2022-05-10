@@ -15,10 +15,11 @@ export default function ControlledCard({ subtitle, imageUrl }) {
         sx={{ width: '40%' }}
         image={imageUrl}
         alt={imageUrl}
+        data-testid='image'
       />
       <Box>
         <CardContent>
-          <Typography variant="body2" color="text.secondary">
+          <Typography variant="body2" color="text.secondary" component='div' data-testid='content'>
             <div
               // eslint-disable-next-line react/no-danger
               dangerouslySetInnerHTML={{
