@@ -33,7 +33,7 @@ export default function CommunityNews() {
   function redirectToDiscussionsPage() {
     history.push('/discussions');
   }
-
+  console.log(data?.communityNewsPosts);
   if (loading) return <Spinner />;
   if (error) {
     return <CenteredContent>{formatError(error.message)}</CenteredContent>;
@@ -55,14 +55,14 @@ export default function CommunityNews() {
         }}
       >
         <Grid item xs={12}>
-          <Typography data-testid="disc_title" variant="h5" style={{ marginBottom: 10 }}>
+          <Typography data-testid="community_news_header" variant="h5" style={{ marginBottom: 10 }}>
             {t('headers.community_news_header')}
           </Typography>
         </Grid>
 
         {data?.communityNewsPosts.length >= 1 ? (
           data?.communityNewsPosts?.map(post => (
-            <>
+            <div key={post.id}>
               <Grid item xs={12}>
                 <ListItem alignItems="flex-start">
                   <ListItemAvatar style={{ marginRight: 8 }}>
@@ -82,7 +82,7 @@ export default function CommunityNews() {
                     secondary={
                       <>
                         <div style={{ marginTop: '-15px' }}>
-                          <span data-testid="comment">
+                          <span data-testid="community_news_post_author_avatar">
                             <br />
                             {// eslint-disable-next-line react/prop-types
                             post?.imageUrls?.length >= 1 && (
@@ -99,9 +99,7 @@ export default function CommunityNews() {
                           <Typography
                             variant="body2"
                             data-testid="task_body"
-                            component="p"
                             className={css(styles.postContentEllipsed)}
-                            id="postContent"
                           >
                             {post.content}
                           </Typography>
@@ -112,17 +110,17 @@ export default function CommunityNews() {
                 </ListItem>
                 <Divider />
               </Grid>
-            </>
+            </div>
           ))
         ) : (
-          <p className="text-center">{t('common:misc.first_to_post')}</p>
+          <CenteredContent>{t('common:misc.first_to_post')}</CenteredContent>
         )}
         <Grid container justifyContent="center" style={{ marginTop: '20px' }}>
           <Button
             color="primary"
+            data-testid="load_more_discussion"
             variant="outlined"
             onClick={redirectToDiscussionsPage}
-            data-testid="load_more_button"
             disabled={data.isLoading}
             endIcon={<ArrowForwardIcon />}
           >
