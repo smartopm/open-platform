@@ -74,6 +74,7 @@ import Errorpage from '../src/modules/LogBook/Kiosk/components/ErrorPage';
 import ProcessList from '../src/modules/Processes/Components/ProcessList';
 import ProcessBuilderPage from '../src/modules/Processes/Components/ProcessBuilderPage';
 import ProcessCommentsPage from '../src/modules/Tasks/Processes/Components/ProcessCommentsPage'
+import LanguagePage from '../src/modules/LogBook/Kiosk/components/LanguagePage';
 // The routes defined here are carefully arranged, be mindful when changing them
 
 const LoggedInOnly = props => {
@@ -185,7 +186,8 @@ const App = () => {
 
                 <LoggedInOnly>
                   <Switch>
-                    <Route path="/logbook/kiosk" exact component={Welcome} />
+                    <Route path="/logbook/kiosk" exact component={LanguagePage} />
+                    <Route path="/logbook/kiosk/index" exact component={Welcome} />
                     <Route path="/logbook/kiosk/success" exact component={Accesspage} />
                     <Route path="/logbook/kiosk/error" exact component={Errorpage} />
                     <Route path="/logbook/kiosk/scan" exact component={ScanPage} />
@@ -399,7 +401,10 @@ const App = () => {
                                 <Route exact path="/qr/invite/:id" component={GuestQRPage} />
                                 <AdminRoutes>
                                   <Switch>
-                                    <Route path="/processes/comments" component={ProcessCommentsPage} />
+                                    <Route
+                                      path="/processes/comments"
+                                      component={ProcessCommentsPage}
+                                    />
                                     <Route path="/users/import" component={UsersImport} />
                                     <Route
                                       path="/users/leads/import"
