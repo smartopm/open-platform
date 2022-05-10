@@ -44,7 +44,7 @@ export function PostItemGrid({ data, loading }) {
       >
         <Grid container spacing={4}>
           {(loading ? Array.from(new Array(5)) : data.length && data).map((tile, index) => (
-            <div key={tile.ID}>
+            <React.Fragment key={tile?.ID || index}>
               {tile ? (
                 !matches ? (
                   <Grid
@@ -104,7 +104,7 @@ export function PostItemGrid({ data, loading }) {
                   <CustomSkeleton variant="rectangular" width="100%" height="140px" />
                 </div>
               )}
-            </div>
+            </React.Fragment>
           ))}
         </Grid>
       </CardWrapper>
