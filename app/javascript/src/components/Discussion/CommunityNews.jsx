@@ -1,14 +1,15 @@
 /* eslint-disable react/jsx-no-duplicate-props */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable react/jsx-wrap-multilines */
-import React, { useContext } from 'react';
+import React from 'react';
 import { ListItem, ListItemAvatar, ListItemText, Button, Grid, Typography } from '@mui/material';
 import { StyleSheet, css } from 'aphrodite';
-import { Link, useHistory } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Divider from '@mui/material/Divider';
 import { useQuery } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
+import moment from 'moment-timezone';
 import { CommunityNewsPostsQuery } from '../../graphql/queries';
 import { Spinner } from '../../shared/Loading';
 import CenteredContent from '../../shared/CenteredContent';
@@ -55,9 +56,14 @@ export default function CommunityNews() {
                   </ListItemAvatar>
                   <ListItemText
                     primary={
-                      <Typography component="span" variant="subtitle2">
-                        {post.user.name}
-                      </Typography>
+                      <>
+                        <Typography component="span" variant="subtitle2">
+                          {post.user.name}
+                        </Typography>
+                        <Typography component="p" variant="body2" style={{ color: '#575757' }}>
+                          {moment(post.createdAt).fromNow()}
+                        </Typography>
+                      </>
                     }
                     secondary={
                       <>
