@@ -96,8 +96,8 @@ export default function CommunityNews() {
                     }
                   />
                 </ListItem>
+                <Divider />
               </Grid>
-              <Divider />
             </>
           ))
         ) : (
