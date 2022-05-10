@@ -43,10 +43,15 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+CardWrapper.defaultProps = {
+  title: '',
+  buttonName: ''
+}
+
 CardWrapper.propTypes = {
   children: PropTypes.node.isRequired,
-  title: PropTypes.string.isRequired,
-  buttonName: PropTypes.string.isRequired,
+  title: PropTypes.string,
+  buttonName: PropTypes.string,
   displayButton: PropTypes.bool.isRequired,
   handleButton: PropTypes.func.isRequired
 };
