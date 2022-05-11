@@ -53,7 +53,9 @@ export default function CommunityNews({ userType, userImage, dashboardTranslatio
           justifyContent: 'center',
           border: `1px solid ${theme.palette.secondary.main}`,
           borderRadius: '8px',
-          paddingBottom: '20px'
+          paddingBottom: '20px',
+          marginLeft: '30px',
+          width: '90%'
         }}
       >
         <Grid item xs={12}>
