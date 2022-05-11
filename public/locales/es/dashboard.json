@@ -1,6 +1,8 @@
 {
   "dashboard": {
+    "add_photo": "Agregar una Foto",
     "call_manager": "Llamar a un Gerente",
+    "created_post": "Publicación creada con éxito",
     "entry_logs": "Libro de Registros",
     "explore": "Explorar",
     "finance": "Finanzas",
@@ -37,9 +39,12 @@
     "recent_news": "Ultimas Novedades",
     "request": "Peticiones",
     "scan": "Escanear",
+    "see_more_reminders": "Ver Más Recordatorios",
+    "start_post": "Comenzar una Publicación",
     "support": "Ayuda",
     "task_reminders": "Recordatorio de tareas",
     "view_customer_journey": "Ver Etapa del Cliente",
+    "whats_happening": "¿Qué está pasando cerca?",
     "your_customer_journey": "Su Etapa de Cliente"
   }
 }
