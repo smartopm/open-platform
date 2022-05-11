@@ -44,7 +44,7 @@ module Mutations
       end
 
       def raise_content_empty_error(vals)
-        return unless vals[:image_blob_ids].nil? && vals[:content].nil?
+        return unless vals[:image_blob_ids].nil? && vals[:content].blank?
 
         raise_error_message(I18n.t('errors.post.content_not_found'))
       end
