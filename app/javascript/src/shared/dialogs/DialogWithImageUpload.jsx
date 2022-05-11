@@ -53,7 +53,7 @@ export default function DialogWithImageUpload({
             </Box>
           </Box>
         </DialogTitle>
-        <DialogContent>
+        <DialogContent style={{ paddingTop: '10px' }}>
           {modalDetails.subTitle && <Typography gutterBottom>{modalDetails.subTitle}</Typography>}
           <TextField
             id="outlined-multiline-static"
