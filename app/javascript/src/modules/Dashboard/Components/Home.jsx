@@ -47,7 +47,6 @@ const Home = () => {
         <FeatureCheck features={authState.user.community.features} name="Discussions">
           {communityNewsUsers.includes(userType) && (
             <Grid item md={6} xs={10}>
-              (
               <div>
                 <CommunityNews
                   userType={userType}
