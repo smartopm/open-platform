@@ -5,6 +5,7 @@ import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom';
 import { CommunityNewsPostsQuery } from '../../graphql/queries';
 import CommunityNews from '../../components/Discussion/CommunityNews';
+import MockedThemeProvider from '../../modules/__mocks__/mock_theme';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 describe('Community news with posts', () => {
@@ -90,13 +91,15 @@ describe('Community news with posts', () => {
     const container = render(
       <BrowserRouter>
         <MockedProvider mocks={mocks} addTypename={false}>
-          <CommunityNews />
+          <MockedThemeProvider>
+            <CommunityNews />
+          </MockedThemeProvider>
         </MockedProvider>
       </BrowserRouter>
     );
 
     await waitFor(() => {
-      expect(container.queryByTestId('community_news_header')).toBeInTheDocument();
+      expect(container.queryByText('headers.community_news_header')).toBeInTheDocument();
       expect(container.queryAllByTestId('user_avatar')[0]).toBeInTheDocument();
 
       expect(
@@ -104,9 +107,9 @@ describe('Community news with posts', () => {
           /Sometimes you might want to have icons for certain… button you can label it with a dustbin icon/
         )
       ).toBeInTheDocument();
-      expect(container.queryByTestId('load_more_discussion')).toBeInTheDocument();
+      expect(container.queryByTestId('button')).toBeInTheDocument();
 
-      fireEvent.click(container.queryByTestId('load_more_discussion'));
+      fireEvent.click(container.queryByTestId('button'));
     }, 50);
   });
 });
