@@ -16,7 +16,7 @@ module Mutations
         # TODO: Find a better way to differentiate between 'Community News' and others
         discussions = context[:site_community].discussions
         discussion = discussions.find_by(id: vals[:discussion_id]) ||
-                    discussions.find_by(title: 'Community News')
+                     discussions.find_by(title: 'Community News')
 
         post = discussion.posts.create(vals.except(:image_blob_ids)
                                .merge(user_id: context[:current_user].id,
