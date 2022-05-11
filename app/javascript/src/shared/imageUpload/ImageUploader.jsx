@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import { Button, IconButton } from '@mui/material';
 import PropTypes from 'prop-types';
 
@@ -17,30 +17,32 @@ export default function ImageUploader({ handleChange, buttonText, style, icon, u
             />
           </IconButton>
         </>
-    ) : (
-      <Button
-        data-testid="upload_button"
-        style={style}
-        component="label"
-      >
-        {buttonText}
-        <input
-          type="file"
-          hidden
-          onChange={event => handleChange(event.target.files[0])}
-          accept="image/*"
-        />
-      </Button>
-    )}
+      ) : (
+        <Button
+          data-testid="upload_button"
+          color="primary"
+          variant="outlined"
+          style={style}
+          component="label"
+        >
+          {buttonText}
+          <input
+            type="file"
+            hidden
+            onChange={event => handleChange(event.target.files[0])}
+            accept="image/*"
+          />
+        </Button>
+      )}
     </>
-);
+  );
 }
 
 ImageUploader.defaultProps = {
   style: {},
   icon: <div />,
   useDefaultIcon: false
-}
+};
 
 ImageUploader.propTypes = {
   handleChange: PropTypes.func.isRequired,

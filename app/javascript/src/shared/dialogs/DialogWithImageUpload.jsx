@@ -3,6 +3,7 @@ import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
 import makeStyles from '@mui/styles/makeStyles';
 import Grid from '@mui/material/Grid';
+import Divider from '@mui/material/Divider';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import DialogTitle from '@mui/material/DialogTitle';
@@ -10,7 +11,6 @@ import PropTypes from 'prop-types';
 import Typography from '@mui/material/Typography';
 import { Box, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import useDialogStyles from './dialogStyles';
 import ImageUploader from '../imageUpload/ImageUploader';
 import ImageUploadPreview from '../imageUpload/ImageUploadPreview';
 import { Spinner } from '../Loading';
@@ -26,9 +26,8 @@ export default function DialogWithImageUpload({
   closeButtonData,
   modalDetails
 }) {
-  const classes = useDialogStyles();
   const styles = useStyles();
- 
+
   return (
     <>
       <Dialog
@@ -38,13 +37,11 @@ export default function DialogWithImageUpload({
         aria-labelledby="entry-dialog-title"
         data-testid="entry-dialog"
       >
-        <DialogTitle
-          id="entry-dialog-title"
-          className={classes.title}
-          data-testid="entry-dialog-title"
-        >
+        <DialogTitle id="entry-dialog-title" data-testid="entry-dialog-title">
           <Box display="flex" alignItems="center">
-            <Box flexGrow={1}>{modalDetails.title}</Box>
+            <Box flexGrow={1} style={{ color: '#575757' }}>
+              {modalDetails.title}
+            </Box>
             <Box>
               <IconButton
                 data-testid="entry-dialog-close-icon"
@@ -56,12 +53,8 @@ export default function DialogWithImageUpload({
             </Box>
           </Box>
         </DialogTitle>
-        <DialogContent dividers>
-          {
-            modalDetails.subTitle && (
-              <Typography gutterBottom>{modalDetails.subTitle}</Typography>
-            )
-          }
+        <DialogContent>
+          {modalDetails.subTitle && <Typography gutterBottom>{modalDetails.subTitle}</Typography>}
           <TextField
             id="outlined-multiline-static"
             rows={6}
@@ -70,42 +63,48 @@ export default function DialogWithImageUpload({
             value={observationHandler.value}
             onChange={event => observationHandler.handleChange(event.target.value)}
             inputProps={{
-            'data-testid': 'entry-dialog-field'
-          }}
+              'data-testid': 'entry-dialog-field'
+            }}
             multiline
             fullWidth
           />
           <Grid container className={styles.upload}>
-            {
-              modalDetails.uploadInstruction && (
-                <Grid item sm={8} data-testid='upload_label'>{modalDetails.uploadInstruction}</Grid>
-              )
-            }
-            <Grid item sm={4} className={modalDetails.uploadInstruction ? styles.uploadButton : ''} data-testid='upload_button'>
+            {modalDetails.uploadInstruction && (
+              <Grid item sm={8} data-testid="upload_label">
+                {modalDetails.uploadInstruction}
+              </Grid>
+            )}
+            <Grid
+              item
+              sm={4}
+              className={modalDetails.uploadInstruction ? styles.uploadButton : ''}
+              data-testid="upload_button"
+            >
               <ImageUploader
                 handleChange={imageOnchange}
                 buttonText={modalDetails.uploadBtnText}
-                style={{background: '#CACACA'}}
                 useDefaultIcon
               />
             </Grid>
             {imageUrls.length > 0 && (
-            <ImageUploadPreview
-              imageUrls={imageUrls}
-              sm={6}
-              xs={12}
-              style={{padding: '10px'}}
-              imgHeight='300px'
-              closeButtonData={closeButtonData}
-            />
-          )}
+              <ImageUploadPreview
+                imageUrls={imageUrls}
+                sm={6}
+                xs={12}
+                style={{ padding: '10px' }}
+                imgHeight="auto"
+                imgWidth="100%"
+                closeButtonData={closeButtonData}
+              />
+            )}
             {status !== 'INIT' && status !== 'DONE' && <Spinner />}
           </Grid>
         </DialogContent>
-        <DialogActions>{children}</DialogActions>
+        <Divider />
+        <DialogActions style={{ padding: '20px 24px' }}>{children}</DialogActions>
       </Dialog>
     </>
-);
+  );
 }
 
 const useStyles = makeStyles(() => ({

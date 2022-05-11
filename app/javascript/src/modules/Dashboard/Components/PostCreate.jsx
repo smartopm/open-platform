@@ -129,15 +129,12 @@ export default function PostCreate({
           <Spinner />
         ) : (
           <>
-            <Button
-              onClick={closeCreateModal}
-              color="secondary"
-              variant="outlined"
-              data-testid="cancel-btn"
-            >
+            <Button disableElevation onClick={closeCreateModal} data-testid="cancel-btn">
               {translate('common:form_actions.cancel')}
             </Button>
             <Button
+              disabled={!post}
+              disableElevation
               onClick={handlePostCreate}
               color="primary"
               variant="contained"

@@ -95,7 +95,11 @@ export default function CommunityNews({ userType, userImage, dashboardTranslatio
                               imageLink={post?.imageUrls[0]}
                               style={{
                                 marginTop: '15px',
-                                marginLeft: '-65px'
+                                marginLeft: '-65px',
+                                border: 'none',
+                                boxShadow: 'none',
+                                padding: 0,
+                                borderRadius: 0
                               }}
                             />
                           )}
