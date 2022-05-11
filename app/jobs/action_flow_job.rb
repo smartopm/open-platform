@@ -21,7 +21,11 @@ class ActionFlowJob < ApplicationJob
       event = af.event_object.new
       event.preload_data(event_log)
       cond = event.event_condition
-      af.action.execute_action(event.data_set, af.action_fields) if cond.run_condition(af.condition)
+      next unless cond.run_condition(af.condition)
+
+      af.action.execute_action(event.data_set,
+                               af.action_fields,
+                               event_log)
     end
   end
   # rubocop:enable Metrics/MethodLength

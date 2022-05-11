@@ -32,6 +32,6 @@ RSpec.describe ActionFlows::Actions::CustomEmail do
       template: template,
       template_data: [],
     )
-    described_class.execute_action(event.data_set, flow.action_fields)
+    described_class.execute_action(event.data_set, flow.action_fields, event_log)
   end
 end

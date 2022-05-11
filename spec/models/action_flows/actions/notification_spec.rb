@@ -33,6 +33,6 @@ RSpec.describe ActionFlows::Actions::Notification do
       label: 'com_news',
       user_id: '123',
     )
-    described_class.execute_action(event.data_set, flow.action_fields)
+    described_class.execute_action(event.data_set, flow.action_fields, event_log)
   end
 end

@@ -37,6 +37,6 @@ RSpec.describe ActionFlows::Actions::Task do
                                                            user_id: nil,
                                                            due_date: nil,
                                                          })
-    described_class.execute_action(event.data_set, flow.action_fields)
+    described_class.execute_action(event.data_set, flow.action_fields, event_log)
   end
 end
