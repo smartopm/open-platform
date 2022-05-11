@@ -44,9 +44,7 @@ describe('PostCreate component', () => {
       expect(container.queryByTestId('post-btn')).toBeInTheDocument();
       expect(container.queryByTestId('cancel-btn')).toBeInTheDocument();
 
-      fireEvent.click(container.queryByTestId('post-btn'));
-
-      expect(container.queryByTestId('loader')).toBeInTheDocument();
+      expect(container.queryByTestId('post-btn')).toBeDisabled();
     }, 10);
   });
 });
