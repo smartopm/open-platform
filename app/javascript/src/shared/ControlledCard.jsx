@@ -19,7 +19,7 @@ export default function ControlledCard({ subtitle, imageUrl }) {
       />
       <Box>
         <CardContent>
-          <Typography variant="body2" color="text.secondary" component='div' data-testid='content'>
+          <Typography variant="caption" color="text.secondary" component='div' data-testid='content'>
             <div
               // eslint-disable-next-line react/no-danger
               dangerouslySetInnerHTML={{
