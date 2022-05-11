@@ -47,7 +47,11 @@ const Home = () => {
         <Grid item md={6} xs={10}>
           {communityNewsUsers.includes(userType) && (
             <div>
-              <CommunityNews />
+              <CommunityNews
+                userType={userType}
+                userImage={authState.user.imageUrl}
+                dashboardTranslation={t}
+              />
               <br />
             </div>
           )}

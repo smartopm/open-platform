@@ -13,8 +13,10 @@ module Mutations
       # rubocop:disable Metrics/AbcSize
       def resolve(vals)
         raise_content_empty_error(vals)
-
-        discussion = context[:site_community].discussions.find(vals[:discussion_id])
+        # TODO: Find a better way to differentiate between 'Community News' and others
+        discussions = context[:site_community].discussions
+        discussion = discussions.find_by(id: vals[:discussion_id]) ||
+                    discussions.find_by(title: 'Community News')
 
         post = discussion.posts.create(vals.except(:image_blob_ids)
                                .merge(user_id: context[:current_user].id,

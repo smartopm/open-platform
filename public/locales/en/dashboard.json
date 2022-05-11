@@ -10,9 +10,13 @@
     "log_entry": "Manual",
     "scan": "Scan",
     "view_customer_journey": "View Customer Journey",
+    "start_post": "Start a Post",
     "your_customer_journey": "Your Customer Journey",
     "need_help_to_next_journey": "I need help in moving to the next stage",
     "make_new_payment": "Record New Payment",
+    "whats_happening": "What's happening nearby?",
+    "add_photo": "Add a Photo",
+    "created_post": "Post successfully created",
     "payment": {
       "today": "Total amount paid today",
       "oneWeek": "Total amount paid in the past 7 days",

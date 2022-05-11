@@ -9,6 +9,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import Divider from '@mui/material/Divider';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { useQuery } from 'react-apollo';
+import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import moment from 'moment-timezone';
 import { useTheme } from '@mui/material/styles';
@@ -18,13 +19,14 @@ import CenteredContent from '../../shared/CenteredContent';
 import Avatar from '../Avatar';
 import { formatError } from '../../utils/helpers';
 import ImageAuth from '../../shared/ImageAuth';
+import PostCreate from '../../modules/Dashboard/Components/PostCreate';
 
-export default function CommunityNews() {
+export default function CommunityNews({ userType, userImage, dashboardTranslation }) {
   const limit = 4;
   const isMobile = useMediaQuery('(max-width:800px)');
   const history = useHistory();
   const theme = useTheme();
-  const { loading, error, data } = useQuery(CommunityNewsPostsQuery, {
+  const { loading, error, data, refetch } = useQuery(CommunityNewsPostsQuery, {
     variables: { limit }
   });
 
@@ -58,6 +60,18 @@ export default function CommunityNews() {
           <Typography data-testid="community_news_header" variant="h5" style={{ marginBottom: 10 }}>
             {t('headers.community_news_header')}
           </Typography>
+        </Grid>
+
+        <Grid item xs={12} style={{ marginBottom: 10 }}>
+          {userType !== 'security_guard' && (
+            <PostCreate
+              translate={dashboardTranslation}
+              currentUserImage={userImage}
+              btnBorderColor={theme.palette.secondary.main}
+              refetchNews={refetch}
+              isMobile={isMobile}
+            />
+          )}
         </Grid>
 
         {data?.communityNewsPosts.length >= 1 ? (
@@ -152,3 +166,9 @@ const styles = StyleSheet.create({
     marginLeft: '-65px'
   }
 });
+
+CommunityNews.propTypes = {
+  dashboardTranslation: PropTypes.func.isRequired,
+  userType: PropTypes.string.isRequired,
+  userImage: PropTypes.string.isRequired
+};
