@@ -160,7 +160,9 @@ export default function PostCreate({
           borderRadius: '8px',
           fontWeight: 400,
           width: isMobile ? '98%' : '99%',
-          fontSize: '16px'
+          fontSize: '16px',
+          height: '56px',
+          background: '#FFFFFF'
         }}
         fullWidth
       >

@@ -41,7 +41,14 @@ export default function ImageUploadPreview({
             )}
             <ImageAuth
               imageLink={img}
-              style={{ height: imgHeight, width: imgWidth }}
+              style={{
+                height: imgHeight,
+                width: imgWidth,
+                border: 'none',
+                boxShadow: 'none',
+                padding: 0,
+                borderRadius: 0
+              }}
               className="img-responsive img-thumbnail"
             />
           </Grid>

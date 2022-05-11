@@ -117,7 +117,7 @@ export default function CommunityNews({ userType, userImage, dashboardTranslatio
                     }
                   />
                 </ListItem>
-                <Divider style={{ margin: '10px 0' }} />
+                <Divider style={{ margin: '16px 0' }} />
               </Grid>
             ))
           ) : (

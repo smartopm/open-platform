@@ -24,6 +24,7 @@ export default function CardWrapper({ children, title, buttonName, displayButton
               endIcon={<ArrowForwardIcon />}
               onClick={handleButton}
               data-testid="button"
+              style={{ background: '#FFFFFF' }}
             >
               {buttonName}
             </Button>

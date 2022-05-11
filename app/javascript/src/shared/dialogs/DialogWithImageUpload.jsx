@@ -39,7 +39,7 @@ export default function DialogWithImageUpload({
       >
         <DialogTitle id="entry-dialog-title" data-testid="entry-dialog-title">
           <Box display="flex" alignItems="center">
-            <Box flexGrow={1} style={{ color: '#575757' }}>
+            <Box flexGrow={1} style={{ color: '#575757', fontSize: '24px' }}>
               {modalDetails.title}
             </Box>
             <Box>
