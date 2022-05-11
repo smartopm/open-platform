@@ -5,7 +5,7 @@ import { css, StyleSheet } from 'aphrodite';
 import { useApolloClient, useMutation } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import CenteredContent from '../../../../components/CenteredContent';
-import EntryNoteDialog from '../../../../shared/dialogs/EntryNoteDialog';
+import DialogWithImageUpload from '../../../../shared/dialogs/DialogWithImageUpload';
 import { Spinner } from '../../../../shared/Loading';
 import useFileUpload from '../../../../graphql/useFileUpload';
 import { EntryRequestContext } from '../Context';
@@ -29,6 +29,14 @@ export default function ObservationDialog() {
   const { onChange, signedBlobId, url, status } = useFileUpload({
     client: useApolloClient()
   });
+
+  const modalDetails = {
+    title: t('observations.observation_title'),
+    inputPlaceholder: t('logbook.add_observation'),
+    uploadBtnText: t('observations.upload_image'),
+    subTitle: t('observations.add_your_observation'),
+    uploadInstruction: t('observations.upload_label')
+  };
 
   useEffect(() => {
     if (status === 'DONE') {
@@ -91,7 +99,7 @@ export default function ObservationDialog() {
         open={!!observationDetails.message}
         handleClose={() => setDetails({ ...observationDetails, message: '' })}
       />
-      <EntryNoteDialog
+      <DialogWithImageUpload
         open={request.isObservationOpen}
         handleDialogStatus={() =>
           updateRequest({ ...request, isObservationOpen: !request.isObservationOpen })
@@ -107,6 +115,7 @@ export default function ObservationDialog() {
           closeButton: true,
           handleCloseButton
         }}
+        modalDetails={modalDetails}
       >
         {isLoading ? (
           <Spinner />
@@ -144,7 +153,7 @@ export default function ObservationDialog() {
             </Button>
           </CenteredContent>
         )}
-      </EntryNoteDialog>
+      </DialogWithImageUpload>
     </>
   );
 }

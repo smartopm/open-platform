@@ -14,7 +14,7 @@ import { Divider, IconButton } from '@mui/material';
 import { StyledTabs, StyledTab, TabPanel, a11yProps } from '../../../components/Tabs';
 import LogEvents from './LogEvents';
 import SpeedDial from '../../../shared/buttons/SpeedDial';
-import EntryNoteDialog from '../../../shared/dialogs/EntryNoteDialog';
+import DialogWithImageUpload from '../../../shared/dialogs/DialogWithImageUpload';
 import useFileUpload from '../../../graphql/useFileUpload';
 import { Spinner } from '../../../shared/Loading';
 import AddObservationNoteMutation from '../graphql/logbook_mutations';
@@ -32,20 +32,15 @@ import useDebouncedValue from '../../../shared/hooks/useDebouncedValue';
 import { AllEventLogsQuery } from '../../../graphql/queries';
 import SearchInput from '../../../shared/search/SearchInput';
 
-
 const limit = 20;
 const subjects = ['user_entry', 'visitor_entry', 'user_temp', 'observation_log'];
 
-export default function LogBookItem({
-  router,
-  offset,
-  tabValue,
-  handleTabValue,
-}) {
+export default function LogBookItem({ router, offset, tabValue, handleTabValue }) {
   const authState = useContext(AuthStateContext);
   const allUserPermissions = authState.user?.permissions || [];
   const modulePerms = allUserPermissions.find(mod => mod.module === 'entry_request')?.permissions;
-  const eventLogPermissions = allUserPermissions.find(mod => mod.module === 'event_log')?.permissions;
+  const eventLogPermissions = allUserPermissions.find(mod => mod.module === 'event_log')
+    ?.permissions;
   const permissions = new Set(modulePerms);
   const { t } = useTranslation(['logbook', 'common', 'dashboard']);
   const [open, setOpen] = useState(false);
@@ -63,7 +58,14 @@ export default function LogBookItem({
   const classes = useStyles();
   const [imageUrls, setImageUrls] = useState([]);
   const [blobIds, setBlobIds] = useState([]);
-  const {value, dbcValue, setSearchValue}= useDebouncedValue()
+  const { value, dbcValue, setSearchValue } = useDebouncedValue();
+  const modalDetails = {
+    title: t('observations.observation_title'),
+    inputPlaceholder: t('logbook.add_observation'),
+    uploadBtnText: t('observations.upload_image'),
+    subTitle: t('observations.add_your_observation'),
+    uploadInstruction: t('observations.upload_label')
+  };
 
   const eventsData = useQuery(AllEventLogsQuery, {
     variables: {
@@ -189,8 +191,6 @@ export default function LogBookItem({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
 
-
-
   function handleCancelClose() {
     setIsObservationOpen(false);
     resetImageData();
@@ -209,7 +209,7 @@ export default function LogBookItem({
         open={!!observationDetails.message}
         handleClose={handleCloseAlert}
       />
-      <EntryNoteDialog
+      <DialogWithImageUpload
         open={isObservationOpen}
         handleDialogStatus={() => handleCancelClose()}
         observationHandler={{
@@ -223,6 +223,7 @@ export default function LogBookItem({
           closeButton: true,
           handleCloseButton
         }}
+        modalDetails={modalDetails}
       >
         {observationDetails.loading ? (
           <Spinner />
@@ -248,14 +249,19 @@ export default function LogBookItem({
             </Button>
           </>
         )}
-      </EntryNoteDialog>
+      </DialogWithImageUpload>
       <Grid container className={matches ? classes.containerMobile : classes.container}>
         <Grid item md={11} xs={11}>
           <Grid container spacing={1}>
             <Grid item md={11} xs={10}>
               <div className={classes.logbookTitleContainer}>
-                <Typography variant="h4">{t('logbook.log_book')}</Typography> 
-                <IconButton color='primary' data-testid="refresh_btn" className={classes.refreshBtn} onClick={() => eventsData.refetch()}>
+                <Typography variant="h4">{t('logbook.log_book')}</Typography>
+                <IconButton
+                  color="primary"
+                  data-testid="refresh_btn"
+                  className={classes.refreshBtn}
+                  onClick={() => eventsData.refetch()}
+                >
                   <RefreshIcon />
                 </IconButton>
               </div>
@@ -292,9 +298,13 @@ export default function LogBookItem({
               searchValue={value}
               filterRequired={false}
               handleSearch={event => setSearchValue(event.target.value)}
-              handleClear={() => setSearchValue("")}
+              handleClear={() => setSearchValue('')}
               filters={[dbcValue]}
-              fullWidthOnMobile={permissionsCheck(eventLogPermissions, ['can_download_logbook_events']) ? true : !open}
+              fullWidthOnMobile={
+                permissionsCheck(eventLogPermissions, ['can_download_logbook_events'])
+                  ? true
+                  : !open
+              }
               fullWidth={false}
             />
             <LogEvents
@@ -363,5 +373,5 @@ LogBookItem.propTypes = {
   }).isRequired,
   offset: PropTypes.number.isRequired,
   tabValue: PropTypes.number.isRequired,
-  handleTabValue: PropTypes.func.isRequired,
+  handleTabValue: PropTypes.func.isRequired
 };

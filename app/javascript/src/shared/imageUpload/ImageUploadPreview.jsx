@@ -30,25 +30,32 @@ export default function ImageUploadPreview({
             data-testid="upload_preview"
           >
             {closeButtonData.closeButton && (
-            <IconButton
-              className={classes.iconButton}
-              onClick={() => closeButtonData.handleCloseButton(img)}
-              data-testid="image_close"
-              size="large"
-            >
-              <CloseIcon className={classes.closeButton} />
-            </IconButton>
-          )}
+              <IconButton
+                className={classes.iconButton}
+                onClick={() => closeButtonData.handleCloseButton(img)}
+                data-testid="image_close"
+                size="large"
+              >
+                <CloseIcon className={classes.closeButton} />
+              </IconButton>
+            )}
             <ImageAuth
               imageLink={img}
-              style={{ height: imgHeight, width: imgWidth }}
+              style={{
+                height: imgHeight,
+                width: imgWidth,
+                border: 'none',
+                boxShadow: 'none',
+                padding: 0,
+                borderRadius: 0
+              }}
               className="img-responsive img-thumbnail"
             />
           </Grid>
-      ))}
+        ))}
       </Grid>
     </>
-);
+  );
 }
 
 const useStyles = makeStyles(() => ({
@@ -56,13 +63,19 @@ const useStyles = makeStyles(() => ({
     position: 'relative'
   },
   iconButton: {
-    right: 2,
+    right: -5,
+    top: -1,
+    color: 'white',
+    background: '#575757',
     marginRight: 5,
-    position: 'absolute'
+    position: 'absolute',
+    '&:hover': {
+      background: '#575757'
+    }
   },
   closeButton: {
-    height: '40px',
-    width: '40px'
+    height: '15px',
+    width: '15px'
   }
 }));
 

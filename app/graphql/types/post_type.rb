@@ -11,6 +11,7 @@ module Types
     field :image_urls, [String], null: true
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
+    field :discussion_id, ID, null: false
 
     def image_urls
       return nil unless object.images.attached?
@@ -22,5 +23,7 @@ module Types
         "https://#{base_url}#{path}"
       end
     end
+
+    delegate :discussion_id, to: :object
   end
 end

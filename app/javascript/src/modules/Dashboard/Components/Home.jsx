@@ -44,14 +44,20 @@ const Home = () => {
         <Grid item md={12} xs={12}>
           <LanguageToggle />
         </Grid>
-        <Grid item md={6} xs={10}>
+        <FeatureCheck features={authState.user.community.features} name="Discussions">
           {communityNewsUsers.includes(userType) && (
-            <div>
-              <CommunityNews />
-              <br />
-            </div>
+            <Grid item md={6} xs={10}>
+              <div>
+                <CommunityNews
+                  userType={userType}
+                  userImage={authState.user.imageUrl}
+                  dashboardTranslation={t}
+                />
+                <br />
+              </div>
+            </Grid>
           )}
-        </Grid>
+        </FeatureCheck>
 
         <Grid item md={6} xs={10}>
           {['admin', 'developer', 'consultant'].includes(userType) && (
