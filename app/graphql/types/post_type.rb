@@ -11,6 +11,7 @@ module Types
     field :image_urls, [String], null: true
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
+    field :discussion_id, ID, null: false
 
     def image_urls
       return nil unless object.images.attached?
@@ -21,6 +22,10 @@ module Types
         path = Rails.application.routes.url_helpers.rails_blob_path(image)
         "https://#{base_url}#{path}"
       end
+    end
+
+    def discussion_id
+      object.discussion_id
     end
   end
 end

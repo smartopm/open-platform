@@ -33,8 +33,10 @@ export default function CommunityNews({ userType, userImage, dashboardTranslatio
 
   const { t } = useTranslation('discussion');
 
+  const discussionId = data?.communityNewsPosts[0]?.discussionId;
+
   function redirectToDiscussionsPage() {
-    history.push('/discussions');
+    history.push(`/discussions/${discussionId}`);
   }
 
   if (loading) return <Spinner />;
