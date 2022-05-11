@@ -24,8 +24,6 @@ module Types
       end
     end
 
-    def discussion_id
-      object.discussion_id
-    end
+    delegate :discussion_id, to: :object
   end
 end

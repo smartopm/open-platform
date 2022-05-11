@@ -11,12 +11,18 @@ module Mutations
       field :post, Types::PostType, null: false
 
       # rubocop:disable Metrics/AbcSize
+      # rubocop:disable Metrics/MethodLength
       def resolve(vals)
         raise_content_empty_error(vals)
         # TODO: Find a better way to differentiate between 'Community News' and others
         discussions = context[:site_community].discussions
         discussion = discussions.find_by(id: vals[:discussion_id]) ||
                      discussions.find_by(title: 'Community News')
+
+        unless discussion
+          raise GraphQL::ExecutionError, I18n.t('errors.general.model_not_found',
+                                                model: 'Discussion')
+        end
 
         post = discussion.posts.create(vals.except(:image_blob_ids)
                                .merge(user_id: context[:current_user].id,
@@ -29,6 +35,7 @@ module Mutations
         { post: post }
       end
       # rubocop:enable Metrics/AbcSize
+      # rubocop:enable Metrics/MethodLength
 
       def attach_image(post, vals)
         vals[:image_blob_ids].each do |image_blob_id|
