@@ -81,7 +81,7 @@ export default function CommunityNews({ userType, userImage, dashboardTranslatio
                         <Typography component="span" variant="subtitle2">
                           {post.user.name}
                         </Typography>
-                        <Typography component="p" variant="body2" style={{ color: '#575757' }}>
+                        <Typography component="p" variant="caption" style={{ color: '#575757' }}>
                           {moment(post.createdAt).fromNow()}
                         </Typography>
                       </>
@@ -117,7 +117,7 @@ export default function CommunityNews({ userType, userImage, dashboardTranslatio
                     }
                   />
                 </ListItem>
-                <Divider />
+                <Divider style={{ margin: '10px 0' }} />
               </Grid>
             ))
           ) : (

@@ -159,7 +159,8 @@ export default function PostCreate({
           borderColor: btnBorderColor,
           borderRadius: '8px',
           fontWeight: 400,
-          width: isMobile ? '98%' : '99%'
+          width: isMobile ? '98%' : '99%',
+          fontSize: '16px'
         }}
         fullWidth
       >
