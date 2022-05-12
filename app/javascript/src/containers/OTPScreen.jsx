@@ -13,7 +13,7 @@ import { Spinner } from '../shared/Loading';
 // call the OTP function once this component renders
 // this is to be consistent with the rest of the menu
 export default function OTPFeedbackScreen() {
-  const [msg, setMessage] = useState('');
+  const [errorMessage, setMessage] = useState('');
   const [userDetails, setDetails] = useState({})
   const [loading, setLoading] = useState(true);
   const params = useParams()
@@ -70,9 +70,9 @@ export default function OTPFeedbackScreen() {
         </Tooltip>
         <br />
         <br />
-        {Boolean(msg.length) && (
-          <div className="alert alert-success" role="alert">
-            {msg}
+        {Boolean(errorMessage.length) && (
+          <div className="alert alert-danger" role="alert">
+            {errorMessage}
           </div>
         )}
       </div>
