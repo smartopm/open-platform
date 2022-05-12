@@ -160,5 +160,9 @@
     "sent": "Sent {{count}}",
     "received": "Received {{count}}",
     "resolved": "Resolved {{count}}"
+  },
+  "project": {
+    "add_new_project": "Add New Project",
+    "edit_template": "Edit Template"
   }
 }

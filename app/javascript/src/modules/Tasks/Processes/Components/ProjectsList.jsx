@@ -1,9 +1,11 @@
 /* eslint-disable max-statements */
 import React, { useState } from 'react';
 import { useQuery } from 'react-apollo';
-import { Grid, Typography, Breadcrumbs } from '@mui/material';
-import { Link } from 'react-router-dom'
+import { Grid, Typography, Breadcrumbs, TextField, Modal, Button } from '@mui/material';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import { Link, useHistory } from 'react-router-dom'
 import { useTranslation } from 'react-i18next';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import makeStyles from '@mui/styles/makeStyles';
 import { formatError, useParamsQuery } from '../../../../utils/helpers';
 import { Spinner } from '../../../../shared/Loading';
@@ -12,12 +14,15 @@ import { ProjectsQuery } from '../graphql/process_queries';
 import ProjectItem from './ProjectItem';
 import { Context as AuthStateContext } from '../../../../containers/Provider/AuthStateProvider';
 import Paginate from '../../../../components/Paginate';
+import SpeedDial from '../../../../shared/buttons/SpeedDial';
+import { accessibleMenus } from '../utils';
 
 export default function ProjectsList() {
-  const { t } = useTranslation('task');
+  const { t } = useTranslation(['task', 'common']);
   const limit = 50;
   const [offset, setOffset] = useState(0);
   const path = useParamsQuery()
+  const history = useHistory();
   const currentStep = path.get('current_step')
   const completedPerQuarter = path.get('completed_per_quarter')
   const submittedPerQuarter = path.get('submitted_per_quarter')
@@ -25,6 +30,25 @@ export default function ProjectsList() {
   const repliesRequestedStatus = path.get('replies_requested')
   const classes = useStyles();
   const authState = React.useContext(AuthStateContext);
+  const [openSpeedDial, setOpenSpeedDial] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+  const matches = useMediaQuery('(max-width:600px)');
+
+
+  const speedDialActions = [
+    {
+      icon: <VisibilityIcon />,
+      name: t('project.add_new_project'),
+      handleClick: () => setModalOpen(true),
+      isVisible: true,
+    },
+    {
+      icon: <VisibilityIcon />,
+      name: t('project.edit_template'),
+      handleClick: () => handleEditProjectTemplate(),
+      isVisible: true,
+    },
+  ];
 
   const { loading, error, data, refetch }
     = useQuery(ProjectsQuery, {
@@ -51,59 +75,165 @@ export default function ProjectsList() {
     }
   }
 
+  function handleEditProjectTemplate() {
+    history.push({
+      pathname: '/processes/templates/edit',
+      state: { process: history.location.state.process }
+    });
+  }
+
+  function dynamicFormUrl(){
+    const href = window.location.href.split('/');
+    const http = href[0];
+    const domain = href[2];
+    const { state } = history.location;
+    const formId = state.process.form.id;
+
+    const url = `${http}//${domain}/form/${formId}`
+
+    return url
+  }
+
   if (error) return <CenteredContent>{formatError(error.message)}</CenteredContent>;
-  if (loading) return <Spinner />;
+  // if (loading) return <Spinner />;
   return(
-    <div style={{padding: '0 8%'}}>
-      <Grid container>
-        {authState.user.userType === 'admin' && (
-          <Grid item md={12} xs={12} style={{paddingleft: '10px'}}>
-            <div role="presentation">
-              <Breadcrumbs aria-label="breadcrumb" style={{paddingBottom: '10px'}}>
-                <Link to="/processes">
-                  <Typography color="primary" style={{marginLeft: '5px'}}>{t('processes.processes')}</Typography>
-                </Link>
-                <Typography color="text.primary">{t('processes.drc_process')}</Typography>
-              </Breadcrumbs>
-            </div>
+    <>
+      <Modal
+        disablePortal
+        disableEnforceFocus
+        disableAutoFocus
+        open={modalOpen}
+        aria-labelledby="server-modal-title"
+        aria-describedby="server-modal-description"
+        className={classes.modal}
+        data-testid="new-project-modal"
+      >
+        <Grid container spacing={2} className={matches ? classes.paperMobile : classes.paper}>
+          <Grid item md={12} xs={12}>
+            <Typography variant="h6" color="text.primary">{t('project.add_new_project')}</Typography>
           </Grid>
-        )}
-        <Grid item md={12} xs={11} className={classes.header}>
-          <Grid container spacing={1}>
-            <Grid item md={9} xs={10}>
-              <Typography variant="h4" style={{marginLeft: '5px', marginBottom: '24px'}}>{t('processes.drc_process')}</Typography>
+          <Grid item md={12} xs={12}>
+            <Typography>
+              This Process uses a form to add a new project. Please copy and paste the below link to
+              send to the Developer you want to start a project with. A new project will be added when
+              the Developer submits the filled out form.
+            </Typography>
+          </Grid>
+          <Grid item md={12} xs={12}>
+            <TextField
+              fullWidth
+              label="Form Link"
+              type="text"
+              onChange={() => {}}
+              value={dynamicFormUrl()}
+              name="formLink"
+              inputProps={{ 'data-testid': 'formLink' }}
+            />
+          </Grid>
+          <Grid item md={12} xs={12} style={{ textAlign: 'center' }}>
+            <Button
+              variant="contained"
+              color="primary"
+              data-testid="close_project_modal"
+              onClick={() => setModalOpen(false)}
+            >
+              {t('common:misc.close')}
+            </Button>
+          </Grid>
+        </Grid>
+      </Modal>
+      <div style={{padding: '0 8%'}}>
+        <Grid container>
+          {authState.user.userType === 'admin' && (
+            <Grid item md={11} xs={11} style={{paddingleft: '10px'}}>
+              <div role="presentation">
+                <Breadcrumbs aria-label="breadcrumb" style={{paddingBottom: '10px'}}>
+                  <Link to="/processes">
+                    <Typography color="primary" style={{marginLeft: '5px'}}>{t('processes.processes')}</Typography>
+                  </Link>
+                  <Typography color="text.primary">{t('processes.drc_process')}</Typography>
+                </Breadcrumbs>
+              </div>
+            </Grid>
+          )}
+          <Grid
+            item
+            md={1}
+            xs={2}
+            data-testid="new-project-speed-dial"
+            style={{ marginTop: '-5px' }}
+          >
+            <SpeedDial
+              open={openSpeedDial}
+              handleSpeedDial={() => setOpenSpeedDial(!openSpeedDial)}
+              actions={accessibleMenus(speedDialActions)}
+            />
+          </Grid>
+          <Grid item md={12} xs={12} className={classes.header}>
+            <Grid container spacing={1}>
+              <Grid item md={9} xs={10}>
+                <Typography variant="h4" style={{marginLeft: '5px', marginBottom: '24px'}}>{t('processes.drc_process')}</Typography>
+              </Grid>
             </Grid>
           </Grid>
         </Grid>
-      </Grid>
-      {data?.projects?.length ?
-        (
-          <div>
-            {data.projects.map(task => (
-              <div key={task.id}>
-                <ProjectItem task={task} refetch={refetch} />
-              </div>
-          ))}
-          </div>
-        )
-        : (<CenteredContent>{t('processes.no_projects')}</CenteredContent>)
-      }
-      <br />
-      <CenteredContent>
-        <Paginate
-          count={data?.projects?.length}
-          offSet={offset}
-          limit={limit}
-          active={offset >= 1}
-          handlePageChange={paginate}
-        />
-      </CenteredContent>
-    </div>
+        {loading && <Spinner />}
+        {data?.projects?.length ?
+          (
+            <div>
+              {data.projects.map(task => (
+                <div key={task.id}>
+                  <ProjectItem task={task} refetch={refetch} />
+                </div>
+            ))}
+            </div>
+          )
+          : (<CenteredContent>{t('processes.no_projects')}</CenteredContent>)
+        }
+        <br />
+        <CenteredContent>
+          <Paginate
+            count={data?.projects?.length}
+            offSet={offset}
+            limit={limit}
+            active={offset >= 1}
+            handlePageChange={paginate}
+          />
+        </CenteredContent>
+      </div>
+    </>
   )
 }
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   header: {
     marginBottom: '10px'
   },
-});
+
+  paperMobile: {
+    width: '100%',
+    height: "100%",
+    backgroundColor: "#ffffff",
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4),
+  },
+  paper: {
+    width: '50%',
+    height: "60%",
+    backgroundColor: "#ffffff",
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4),
+  },
+
+  modal: {
+    display: "flex",
+    alignItems: "center",
+    overflow:'scroll',
+    justifyContent: "center",
+    userSelect: 'none',
+    "-webkit-user-select": " none",
+    "-webkit-touch-callout": " none",
+    "-ms-user-select": " none",
+    "-moz-user-select": "none",
+  },
+}));
