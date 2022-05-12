@@ -194,7 +194,7 @@ export default function LeadEvents({ userId }) {
         <CenteredContent>{t('lead_management.no_lead_events')}</CenteredContent>
       )}
 
-      <Grid item md={12} xs={12} style={{ marginBottom: '10px' }}>
+      <Grid item md={12} xs={12} style={{ marginBottom: '10px', marginTop: '10px' }}>
         <Divider />
       </Grid>
 
@@ -280,7 +280,7 @@ export default function LeadEvents({ userId }) {
         <CenteredContent>{t('lead_management.no_lead_meetings')}</CenteredContent>
       )}
 
-      <Grid item md={12} xs={12} style={{ marginBottom: '10px' }}>
+      <Grid item md={12} xs={12} style={{ marginBottom: '10px', marginTop: '10px' }}>
         <Divider />
       </Grid>
 

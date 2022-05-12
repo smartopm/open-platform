@@ -849,8 +849,11 @@ export const internationalizationLevels = [
 export const leadTemperatureOptions = ['Cold', 'Neutral', 'Warm', 'Hot'];
 
 export const leadStatusOptions = [
+  'Qualified Lead',
   'Interest shown',
   'Investment motive verified',
+  'Signed MOU',
+  'Signed Lease',
   'Evaluation',
   'Stakeholder meetings',
   'Site Visit',
