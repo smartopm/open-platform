@@ -9,7 +9,7 @@ import { LabelsQuery } from '../../../graphql/queries';
 import ErrorPage from '../../../components/Error';
 import Loading from '../../../shared/Loading';
 import LabelItem from './LabelItem';
-import CenteredContent from '../../../components/CenteredContent';
+import CenteredContent from '../../../shared/CenteredContent';
 import Paginate from '../../../components/Paginate';
 import ButtonComponent from '../../../shared/buttons/Button';
 import EditModal from './EditModal';

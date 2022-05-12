@@ -14,8 +14,12 @@ module Mutations
 
       def resolve(vals)
         raise_duplicate_label_error(vals[:short_desc])
-        vals[:short_desc], vals[:grouping_name] = get_label_details(vals[:short_desc])
-        label = context[:site_community].labels.create!(vals)
+        short_desc, grouping_name = get_label_details(vals[:short_desc])
+        label = context[:site_community].labels.create!(
+          short_desc: short_desc,
+          grouping_name: grouping_name,
+          color: vals[:color],
+        )
         return { label: label } if label.persisted?
 
         raise GraphQL::ExecutionError, label.errors.full_messages
