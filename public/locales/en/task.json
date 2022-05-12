@@ -71,7 +71,8 @@
     "project_overview": "Project Overview",
     "reply_submitted": "Reply Submitted",
     "reply_sent_to": "Reply Requested Sent To",
-    "no_comments": "No comments yet on this project"
+    "no_comments": "No comments yet on this project",
+    "updates": "Updates"
   },
   "document": {
     "uploaded_at": "Uploaded at",

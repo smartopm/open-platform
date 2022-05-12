@@ -99,10 +99,10 @@ describe('LeadManagementForm', () => {
 
       expect(screen.queryByText('John')).toBeInTheDocument();
 
-      expect(screen.queryByText('Sub Tasks')).toBeInTheDocument();
-      expect(screen.queryByText('Comments')).toBeInTheDocument();
-      expect(screen.queryByText('Documents')).toBeInTheDocument();
-      expect(screen.queryByText('Updates')).toBeInTheDocument();
+      expect(screen.queryByText('sub_task.sub_tasks')).toBeInTheDocument();
+      expect(screen.queryByText('common:misc.comments')).toBeInTheDocument();
+      expect(screen.queryByText('document.documents')).toBeInTheDocument();
+      expect(screen.queryByText('task.updates')).toBeInTheDocument();
 
       const subTaskMenuIcon = screen.queryAllByTestId('menu_item')[0];
       expect(subTaskMenuIcon).toBeInTheDocument();
