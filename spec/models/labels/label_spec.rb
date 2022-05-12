@@ -10,6 +10,7 @@ RSpec.describe Labels::Label, type: :model do
     it { is_expected.to have_db_column(:id).of_type(:uuid) }
     it { is_expected.to have_db_column(:short_desc).of_type(:string) }
     it { is_expected.to have_db_column(:community_id).of_type(:uuid) }
+    it { is_expected.to have_db_column(:grouping_name).of_type(:string) }
   end
 
   describe 'associations' do

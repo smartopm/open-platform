@@ -450,6 +450,7 @@ ActiveRecord::Schema.define(version: 2022_05_16_092627) do
     t.string "description"
     t.string "color", default: "#f07030"
     t.string "status", default: "active"
+    t.string "grouping_name"
     t.index ["community_id"], name: "index_labels_on_community_id"
   end
 
