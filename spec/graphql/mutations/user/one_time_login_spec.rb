@@ -70,5 +70,21 @@ RSpec.describe Mutations::User do
       expect(result.dig('data', 'result')).to be nil
       expect(result['errors']).not_to be_nil
     end
+
+    context 'when phone number is not present' do
+      before { resident.update(phone_number: nil) }
+
+      it 'raises error' do
+        variables = { userId: resident.id }
+        result = DoubleGdpSchema.execute(send_one_time_login, variables: variables,
+                                                              context: {
+                                                                current_user: admin,
+                                                                site_community: admin.community,
+                                                              }).as_json
+        error_message = 'No phone number to send one time code to'
+        expect(result['errors']).not_to be_nil
+        expect(result.dig('errors', 0, 'message')).to eql error_message
+      end
+    end
   end
 end
