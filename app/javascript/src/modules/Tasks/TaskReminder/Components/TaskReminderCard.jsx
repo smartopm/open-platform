@@ -52,18 +52,19 @@ export default function TaskReminderCard({ translate }) {
                     clickable: true,
                     handleClick: () => history.push(`/tasks?taskId=${tile.id}`)
                   }}
+                  styles={{borderRadius: '10px'}}
                 >
                   <Grid container>
-                    <Grid item sm={3} xs={12}>
+                    <Grid item md={3} xs={12}>
                       <div style={checkDate(tile.dueDate) ? { color: 'red' } : null}>
-                        <Typography style={{ paddingBottom: '5px' }}>
+                        <Typography>
                           {translate('common:misc.due_text')} 
                           {' '}
                           {dateToString(tile.dueDate)}
                         </Typography>
                       </div>
                     </Grid>
-                    <Grid item sm={9} xs={12}>
+                    <Grid item md={9} xs={12}>
                       <Typography align="justify" data-testid="body">
                         <span
                           style={{ whiteSpace: 'pre-line' }}

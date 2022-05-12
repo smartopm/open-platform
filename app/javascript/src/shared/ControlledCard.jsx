@@ -9,17 +9,17 @@ import { sanitizeText, truncateString } from '../utils/helpers';
 
 export default function ControlledCard({ subtitle, imageUrl }) {
   return (
-    <Card sx={{ display: 'flex' }} elevation={0} style={{border: '1px solid #DDDDDD'}}>
+    <Card sx={{ display: 'flex' }} elevation={0} style={{border: '1px solid #DDDDDD',  height: '100px', borderRadius: '7px' }}>
       <CardMedia
         component="img"
-        sx={{ width: '40%' }}
+        sx={{ width: '50%' }}
         image={imageUrl}
         alt={imageUrl}
         data-testid='image'
       />
       <Box>
         <CardContent>
-          <Typography variant="body2" color="text.secondary" component='div' data-testid='content'>
+          <Typography variant="caption" color="text.secondary" component='div' data-testid='content'>
             <div
               // eslint-disable-next-line react/no-danger
               dangerouslySetInnerHTML={{
