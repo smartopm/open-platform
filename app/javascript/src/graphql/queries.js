@@ -815,6 +815,7 @@ export const LabelsQuery = gql`
       userCount
       description
       color
+      groupingName
     }
   }
 `;
