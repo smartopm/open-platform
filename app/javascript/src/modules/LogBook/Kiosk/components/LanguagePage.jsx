@@ -18,6 +18,8 @@ export default function LanguagePage() {
   const history = useHistory();
   const classes = useStyles();
   const { i18n } = useTranslation();
+    const { userType } = authState.user;
+
 
   const languageSelectHandler = selectedLang => {
     localStorage.setItem('default-language', selectedLang);
@@ -27,11 +29,13 @@ export default function LanguagePage() {
 
   return (
     <VerticallyCentered isVerticallyCentered={false}>
-      <Box component="div" className={classes.closeBtnBox}>
-        <IconButton onClick={() => history.push('/')}>
-          <CloseIcon className={classes.closeBtn} />
-        </IconButton>
-      </Box>
+      {['admin'].includes(userType) && (
+        <Box component="div" className={classes.closeBtnBox}>
+          <IconButton onClick={() => history.push('/')} data-testid="exit_btn">
+            <CloseIcon className={classes.closeBtn} />
+          </IconButton>
+        </Box>
+      )}
 
       <Container maxWidth="xs">
         <Box component="div" sx={{ marginTop: '130px', marginLeft: '30px' }}>
