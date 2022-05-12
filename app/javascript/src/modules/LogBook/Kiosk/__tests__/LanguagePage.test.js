@@ -38,6 +38,7 @@ describe('Language Page', () => {
     expect(wrapper.queryByTestId('select_kiosk_language')).toBeInTheDocument();
     expect(wrapper.queryByTestId('English_kiosk_lang_btn')).toBeInTheDocument();
     expect(wrapper.queryByTestId('Español_kiosk_lang_btn')).toBeInTheDocument();
+    expect(wrapper.queryByTestId('exit_btn')).toBeInTheDocument();
 
     fireEvent.click(wrapper.queryByTestId('English_kiosk_lang_btn'));
     expect(mockHistory.push).toBeCalled()
@@ -46,5 +47,22 @@ describe('Language Page', () => {
     fireEvent.click(wrapper.queryByTestId('Español_kiosk_lang_btn'));
     expect(mockHistory.push).toBeCalled();
     expect(mockHistory.push).toBeCalledWith('/logbook/kiosk/index');
+
+    fireEvent.click(wrapper.queryByTestId('exit_btn'));
+    expect(mockHistory.push).toBeCalled();
+    expect(mockHistory.push).toBeCalledWith('/');
   });
+
+  it('should confirm the absence of the exit button for non-admin', () => {
+      authState.user.userType = 'site_worker';
+      const wrapper = render(
+        <MemoryRouter>
+          <Context.Provider value={authState}>
+            <LanguagePage />
+          </Context.Provider>
+        </MemoryRouter>
+      );
+    
+      expect(wrapper.queryByTestId('exit_btn')).not.toBeInTheDocument();
+    });
 });
