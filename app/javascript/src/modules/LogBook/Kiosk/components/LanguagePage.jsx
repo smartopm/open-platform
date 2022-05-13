@@ -23,7 +23,8 @@ export default function LanguagePage() {
   /** ensuring that the user is logged out only if:
   * the browser is closed (tab is rebooted) */
   window.addEventListener('load', e => {
-    if (userType !== 'admin' && (performance.navigation.type === 2)) {
+    const browserActionType = performance.getEntriesByType('navigation')[0].type;
+    if (userType !== 'admin' && browserActionType === 'back_forward') {
       e.preventDefault();
       history.push('/logout');
     }
