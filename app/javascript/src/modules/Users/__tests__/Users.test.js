@@ -16,10 +16,10 @@ describe('UserPage Component', () => {
     push: jest.fn()
   };
 
-  Object.defineProperty(navigator, "clipboard", {
+  Object.defineProperty(navigator, 'clipboard', {
     value: {
-      writeText: () => {},
-    },
+      writeText: () => {}
+    }
   });
 
   beforeEach(() => {
@@ -50,7 +50,8 @@ describe('UserPage Component', () => {
             labels: [
               {
                 id: '059956af-b346-4e0d-9d1e-56cf22379ad7',
-                shortDesc: 'weekly_point_reminder_email'
+                shortDesc: 'weekly_point_reminder_email',
+                groupingName: 'Status'
               }
             ]
           }
@@ -71,7 +72,8 @@ describe('UserPage Component', () => {
             shortDesc: 'weekly_point_reminder_email',
             userCount: 39,
             description: null,
-            color: '#f07030'
+            color: '#f07030',
+            groupingName: 'Status'
           }
         ]
       }
