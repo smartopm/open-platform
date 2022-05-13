@@ -18,8 +18,16 @@ export default function LanguagePage() {
   const history = useHistory();
   const classes = useStyles();
   const { i18n } = useTranslation();
-    const { userType } = authState.user;
+  const { userType } = authState.user;
 
+  /** ensuring that the user is logged out only if:
+  * the browser is closed (tab is rebooted) */
+  window.addEventListener('load', e => {
+    if (userType !== 'admin' && (performance.navigation.type === 2)) {
+      e.preventDefault();
+      history.push('/logout');
+    }
+  });
 
   const languageSelectHandler = selectedLang => {
     localStorage.setItem('default-language', selectedLang);
@@ -38,7 +46,10 @@ export default function LanguagePage() {
       )}
 
       <Container maxWidth="xs">
-        <Box component="div" sx={{ marginTop: '130px', marginLeft: '30px' }}>
+        <Box
+          component="div"
+          sx={{ marginTop: `${userType === 'admin' ? '90px' : '130px'}`, marginLeft: '30px' }}
+        >
           <CommunityName authState={authState} logoStyles={styles} />
         </Box>
 
