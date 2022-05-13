@@ -73,7 +73,6 @@ describe('Projects List', () => {
       expect(screen.queryAllByTestId('AddIcon')[0]).toBeInTheDocument();
       expect(screen.queryAllByTestId('speed_dial_action')[0]).toBeInTheDocument();
       expect(screen.queryAllByTestId('VisibilityIcon')[0]).toBeInTheDocument();
-      expect(screen.queryAllByText('processes.no_projects')[0]).toBeInTheDocument();
       expect(screen.queryAllByTestId('prev-btn')[0]).toBeInTheDocument();
       expect(screen.queryAllByTestId('next-btn')[0]).toBeInTheDocument();
       expect(screen.queryAllByText('misc.previous')[0]).toBeInTheDocument();
