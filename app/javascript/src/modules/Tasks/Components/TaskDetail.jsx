@@ -275,7 +275,7 @@ export default function TaskDetail({
           </div>
           <div className={classes.section} data-testid="task-subtasks-section" id="anchor-section">
             <TaskDetailAccordion
-              title="Sub Tasks"
+              title={t('sub_task.sub_tasks')}
               styles={{ background: '#FAFAFA' }}
               openDetails={!matches ? true : tab === 'subtasks'}
               addButton={(
@@ -300,7 +300,7 @@ export default function TaskDetail({
           </div>
           <div className={classes.section} data-testid="task-comments-section">
             <TaskDetailAccordion
-              title="Comments"
+              title={t('common:misc.comments')}
               styles={{ background: '#FAFAFA', padding: 0 }}
               component={(
                 <TaskComment
@@ -315,7 +315,7 @@ export default function TaskDetail({
           </div>
           <div className={classes.section} data-testid="task-documents-section">
             <TaskDetailAccordion
-              title="Documents"
+              title={t('document.documents')}
               styles={{ background: '#FAFAFA' }}
               addButton={(
                 <AddDocument
@@ -340,7 +340,7 @@ export default function TaskDetail({
           </div>
           <div className={classes.section} data-testid="task-updates-section">
             <TaskDetailAccordion
-              title="Updates"
+              title={t('task.updates')}
               styles={{ background: '#FAFAFA' }}
               component={<TaskUpdateList data={historyData} />}
               openDetails={!matches}

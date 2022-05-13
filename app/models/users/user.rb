@@ -504,7 +504,7 @@ module Users
     def send_phone_token
       return if deactivated?
 
-      raise UserError, 'No phone number to send one time code to' unless self[:phone_number]
+      raise UserError, I18n.t('errors.user.cannot_send_otp') unless self[:phone_number]
 
       token = create_new_phone_token
       raise TokenGenerationFailed, 'Token generation failed' if token.blank?
@@ -518,7 +518,7 @@ module Users
     def send_one_time_login
       return if deactivated?
 
-      raise UserError, 'No phone number to send one time code to' unless self[:phone_number]
+      raise UserError, I18n.t('errors.user.cannot_send_otp') unless self[:phone_number]
 
       token = create_new_phone_token
       raise TokenGenerationFailed, 'Token generation failed' if token.blank?

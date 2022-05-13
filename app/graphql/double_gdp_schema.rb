@@ -30,4 +30,8 @@ class DoubleGdpSchema < GraphQL::Schema
     raise GraphQL::ExecutionError, I18n.t('errors.general.model_not_found',
                                           model: err.model&.split('::')&.last)
   end
+
+  rescue_from(Users::User::UserError) do |err, _obj, _args, _ctx, _field|
+    raise GraphQL::ExecutionError, err
+  end
 end
