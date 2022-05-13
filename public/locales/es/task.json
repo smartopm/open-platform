@@ -160,6 +160,7 @@
     "toggle_preview_tooltip": "Alternar vista previa",
     "total_calls_open": "Total de llamadas abiertas",
     "total_forms_open": "Procesos",
-    "update_successful": "Tarea actualizada correctamente"
+    "update_successful": "Tarea actualizada correctamente",
+    "updates": "Actualizaciones"
   }
 }

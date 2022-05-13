@@ -464,6 +464,8 @@ es:
       not_found: Formulario de usuario de propiedad  no encontrada
     user:
       cannot_access_app: No tienes acceso a la aplicación
+      cannot_send_otp: No hay número de teléfono para enviar el código de un solo
+        uso
       cannot_send_otp_link: El usuario no tiene acceso a la aplicación.
       does_not_exist: El usuario no existe
       invalid_expired_token: Token de teléfono inválido o vencido
