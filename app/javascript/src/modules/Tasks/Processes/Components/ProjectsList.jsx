@@ -83,19 +83,15 @@ export default function ProjectsList() {
   }
 
   function dynamicFormUrl(){
-    const href = window.location.href.split('/');
-    const http = href[0];
-    const domain = href[2];
     const { state } = history.location;
     const formId = state.process.form.id;
 
-    const url = `${http}//${domain}/form/${formId}`
+    const url = `${window.location.origin}/form/${formId}`
 
     return url
   }
 
   if (error) return <CenteredContent>{formatError(error.message)}</CenteredContent>;
-  // if (loading) return <Spinner />;
   return(
     <>
       <Modal
@@ -108,15 +104,13 @@ export default function ProjectsList() {
         className={classes.modal}
         data-testid="new-project-modal"
       >
-        <Grid container spacing={2} className={matches ? classes.paperMobile : classes.paper}>
+        <Grid container spacing={1} className={matches ? classes.paperMobile : classes.paper}>
           <Grid item md={12} xs={12}>
             <Typography variant="h6" color="text.primary">{t('project.add_new_project')}</Typography>
           </Grid>
           <Grid item md={12} xs={12}>
             <Typography>
-              This Process uses a form to add a new project. Please copy and paste the below link to
-              send to the Developer you want to start a project with. A new project will be added when
-              the Developer submits the filled out form.
+              {t('project.new_project_description')}
             </Typography>
           </Grid>
           <Grid item md={12} xs={12}>
@@ -188,7 +182,7 @@ export default function ProjectsList() {
             ))}
             </div>
           )
-          : (<CenteredContent>{t('processes.no_projects')}</CenteredContent>)
+          : !loading && (<CenteredContent>{t('processes.no_projects')}</CenteredContent>)
         }
         <br />
         <CenteredContent>

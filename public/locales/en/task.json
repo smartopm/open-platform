@@ -163,6 +163,7 @@
   },
   "project": {
     "add_new_project": "Add New Project",
-    "edit_template": "Edit Template"
+    "edit_template": "Edit Template",
+    "new_project_description": "This Process uses a form to add a new project. Please copy and paste the below link to send to the Developer you want to start a project with. A new project will be added when the Developer submits the filled out form."
   }
 }
