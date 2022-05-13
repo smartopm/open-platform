@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import { Typography, Box, Container, IconButton } from '@mui/material';
 import { useHistory } from 'react-router-dom';
 import { StyleSheet } from 'aphrodite';
@@ -22,13 +22,12 @@ export default function LanguagePage() {
 
   /** ensuring that the user is logged out only if:
   * the browser is closed (tab is rebooted) */
-  window.addEventListener('load', e => {
-    const browserActionType = performance.getEntriesByType('navigation')[0].type;
-    if (userType !== 'admin' && browserActionType === 'back_forward') {
-      e.preventDefault();
+  useEffect(() => {
+    const browserActionType = window.performance.getEntriesByType('navigation')[0].type;
+    if (userType !== 'admin' && browserActionType === 'back_forward' && history.action === 'POP') {
       history.push('/logout');
     }
-  });
+  }, [history, userType])
 
   const languageSelectHandler = selectedLang => {
     localStorage.setItem('default-language', selectedLang);

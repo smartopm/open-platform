@@ -23,7 +23,14 @@ describe('Language Page', () => {
   };
   beforeEach(() => {
     jest.spyOn(routeData, 'useHistory').mockReturnValue(mockHistory);
+    Object.defineProperty(window, 'performance', {
+      value: {
+        getEntriesByType: jest.fn().mockReturnValue([{ type: 'navigation' }]),
+        measure: jest.fn()
+      }
+    });
   });
+
   it('should check if the page renders properly', () => {
     const wrapper = render(
       <MemoryRouter>
@@ -62,7 +69,7 @@ describe('Language Page', () => {
           </Context.Provider>
         </MemoryRouter>
       );
-    
+
       expect(wrapper.queryByTestId('exit_btn')).not.toBeInTheDocument();
     });
 });
