@@ -63,66 +63,67 @@ export default function CommunityNews({ userType, userImage, dashboardTranslatio
                 currentUserImage={userImage}
                 btnBorderColor={theme.palette.secondary.main}
                 refetchNews={refetch}
-                isMobile={isMobile}
               />
             )}
           </Grid>
 
           {data?.communityNewsPosts?.length >= 1 ? (
             data?.communityNewsPosts?.map(post => (
-              <Grid item xs={12} key={post.id}>
-                <ListItem alignItems="flex-start">
-                  <ListItemAvatar style={{ marginRight: 8 }}>
-                    <Avatar user={post.user} />
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={
-                      <>
-                        <Typography component="span" variant="subtitle2">
-                          {post.user.name}
-                        </Typography>
-                        <Typography component="p" variant="caption" style={{ color: '#575757' }}>
-                          {moment(post.createdAt).fromNow()}
-                        </Typography>
-                      </>
-                    }
-                    secondary={
-                      <>
-                        <span data-testid="community_news_post_author_avatar">
-                          {// eslint-disable-next-line react/prop-types
-                          post?.imageUrls?.length >= 1 && (
-                            <ImageAuth
-                              imageLink={post?.imageUrls[0]}
-                              style={{
-                                marginTop: '15px',
-                                marginLeft: '-65px',
-                                border: 'none',
-                                boxShadow: 'none',
-                                padding: 0,
-                                borderRadius: 0
-                              }}
-                            />
-                          )}
-                        </span>
+              <>
+                <Grid item xs={12} key={post.id}>
+                  <ListItem alignItems="flex-start">
+                    <ListItemAvatar style={{ marginRight: 8 }}>
+                      <Avatar user={post.user} />
+                    </ListItemAvatar>
+                    <ListItemText
+                      primary={
+                        <>
+                          <Typography component="span" variant="subtitle2">
+                            {post.user.name}
+                          </Typography>
+                          <Typography component="p" variant="caption" style={{ color: '#575757' }}>
+                            {moment(post.createdAt).fromNow()}
+                          </Typography>
+                        </>
+                      }
+                    />
+                  </ListItem>
+                </Grid>
+                <Grid item xs={12} data-testid="community_news_post_author_avatar" style={{ padding: '0 16px' }}>
 
-                        <Typography
-                          variant="body2"
-                          data-testid="task_body"
-                          component="span"
-                          className={css(styles.postContentEllipsed)}
-                        >
-                          {post.content}
-                        </Typography>
-                      </>
-                    }
-                  />
-                </ListItem>
-                <Divider style={{ margin: '16px 0' }} />
-              </Grid>
+                  {// eslint-disable-next-line react/prop-types
+                    post?.imageUrls?.length >= 1 && (
+                      <ImageAuth
+                        imageLink={post?.imageUrls[0]}
+                        style={{
+                          width: '100%',
+                          marginTop: '15px',
+                          border: 'none',
+                          boxShadow: 'none',
+                          padding: 0,
+                          borderRadius: 0
+                        }}
+                      />
+                    )}
+
+                </Grid>
+                <Grid item xs={12} style={{ padding: '0 16px' }}>
+
+                  <Typography
+                    variant="body2"
+                    data-testid="task_body"
+                    component="span"
+                    className={css(styles.postContentEllipsed)}
+                  >
+                    {post.content}
+                  </Typography>
+                  <Divider style={{ margin: '25px 0 16px 0px' }} />
+                </Grid>
+              </>
             ))
           ) : (
             <CenteredContent>{t('common:misc.first_to_post')}</CenteredContent>
-          )}
+            )}
         </Grid>
       </CardWrapper>
     </div>
@@ -134,15 +135,10 @@ const styles = StyleSheet.create({
     marginBottom: 5
   },
   postContentEllipsed: {
-    overflow: 'hidden',
     whiteSpace: 'normal',
-    textOverflow: 'ellipsis',
-    paddingLeft: '3px',
     paddingTop: '5px',
     display: '-webkit-box',
-    '-webkit-box-orient': 'vertical',
     ' -webkit-line-clamp': '3 !important',
-    marginLeft: '-65px'
   },
   postContentVisible: {
     width: '100%',
