@@ -69,8 +69,8 @@ export default function CommunityNews({ userType, userImage, dashboardTranslatio
 
           {data?.communityNewsPosts?.length >= 1 ? (
             data?.communityNewsPosts?.map(post => (
-              <>
-                <Grid item xs={12} key={post.id}>
+              <div key={post.id}>
+                <Grid item xs={12}>
                   <ListItem alignItems="flex-start">
                     <ListItemAvatar style={{ marginRight: 8 }}>
                       <Avatar user={post.user} />
@@ -119,7 +119,7 @@ export default function CommunityNews({ userType, userImage, dashboardTranslatio
                   </Typography>
                   <Divider style={{ margin: '25px 0 16px 0px' }} />
                 </Grid>
-              </>
+              </div>
             ))
           ) : (
             <CenteredContent>{t('common:misc.first_to_post')}</CenteredContent>
