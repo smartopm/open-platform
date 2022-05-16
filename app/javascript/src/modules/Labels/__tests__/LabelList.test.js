@@ -11,7 +11,7 @@ describe('Label List Component', () => {
     const mocks = {
       request: {
         query: LabelsQuery,
-        variables: { limit: 5, offset: 0 }
+        variables: { limit: 50, offset: 0 }
       },
       result: {
         data: {
@@ -43,28 +43,24 @@ describe('Label List Component', () => {
         </BrowserRouter>
       </MockedProvider>
     );
-    await waitFor(
-      () => {
-        expect(container.queryByText('common:table_headers.labels')).toBeInTheDocument();
-        expect(
-          container.queryByText('common:table_headers.labels_description')
-        ).toBeInTheDocument();
-        expect(
-          container.queryByText('common:table_headers.labels_total_no_of_users')
-        ).toBeInTheDocument();
-        expect(container.queryByTestId('button')).toBeInTheDocument();
-        fireEvent.click(container.queryByTestId('button'));
-        expect(container.queryByText('label.new_dialog_title')).toBeInTheDocument();
-        expect(container.queryByTestId('dialog_cancel')).toBeInTheDocument();
-        fireEvent.click(container.queryByTestId('dialog_cancel'));
-        expect(container.queryByText('com_news_sms')).toBeInTheDocument();
-        expect(container.queryByText('com_news_email')).toBeInTheDocument();
-        expect(container.queryAllByTestId('short_desc')).toHaveLength(2);
-        expect(container.queryByTestId('prev-btn')).toHaveTextContent('misc.previous');
-        expect(container.queryByTestId('prev-btn')).toBeDisabled();
-        expect(container.queryByTestId('next-btn')).toHaveTextContent('misc.next');
-        fireEvent.click(container.queryByTestId('next-btn'));
-      }
-    );
+    await waitFor(() => {
+      expect(container.queryByText('common:table_headers.labels')).toBeInTheDocument();
+      expect(container.queryByText('common:table_headers.labels_description')).toBeInTheDocument();
+      expect(
+        container.queryByText('common:table_headers.labels_total_no_of_users')
+      ).toBeInTheDocument();
+      expect(container.queryByTestId('button')).toBeInTheDocument();
+      fireEvent.click(container.queryByTestId('button'));
+      expect(container.queryByText('label.new_dialog_title')).toBeInTheDocument();
+      expect(container.queryByTestId('dialog_cancel')).toBeInTheDocument();
+      fireEvent.click(container.queryByTestId('dialog_cancel'));
+      expect(container.queryByText('com_news_sms')).toBeInTheDocument();
+      expect(container.queryByText('com_news_email')).toBeInTheDocument();
+      expect(container.queryAllByTestId('short_desc')).toHaveLength(2);
+      expect(container.queryByTestId('prev-btn')).toHaveTextContent('misc.previous');
+      expect(container.queryByTestId('prev-btn')).toBeDisabled();
+      expect(container.queryByTestId('next-btn')).toHaveTextContent('misc.next');
+      fireEvent.click(container.queryByTestId('next-btn'));
+    });
   });
 });
