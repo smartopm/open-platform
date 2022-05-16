@@ -53,7 +53,7 @@ export default function CommentTextField({
           variant="outlined"
           color="primary"
           type="submit"
-          disabled={!value.length || loading}
+          disabled={!value.trim() || loading}
           data-testid="comment_btn"
           style={{ height: '40px', width: '80px', padding: '5px' }}
           onClick={handleSubmit}

@@ -4,8 +4,10 @@
 class GraphqlController < ApplicationController
   skip_before_action :verify_authenticity_token, only: [:execute]
 
+  # rubocop:disable Metrics/MethodLength
   def execute
     variables = prep_variables(params[:variables])
+    variables.each_value { |value| value.strip! if value.instance_of?(String) }
     query = params[:query]
     operation_name = params[:operationName]
 
@@ -17,6 +19,7 @@ class GraphqlController < ApplicationController
   rescue StandardError => e
     handle_errors(e)
   end
+  # rubocop:enable Metrics/MethodLength
 
   private
 
