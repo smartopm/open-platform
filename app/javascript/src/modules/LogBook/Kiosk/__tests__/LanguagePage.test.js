@@ -61,15 +61,14 @@ describe('Language Page', () => {
   });
 
   it('should confirm the absence of the exit button for non-admin', () => {
-      authState.user.userType = 'site_worker';
-      const wrapper = render(
-        <MemoryRouter>
-          <Context.Provider value={authState}>
-            <LanguagePage />
-          </Context.Provider>
-        </MemoryRouter>
-      );
+    const wrapper = render(
+      <MemoryRouter>
+        <Context.Provider value={{ ...authState, user: { userType: 'site_worker' } }}>
+          <LanguagePage />
+        </Context.Provider>
+      </MemoryRouter>
+    );
 
-      expect(wrapper.queryByTestId('exit_btn')).not.toBeInTheDocument();
-    });
+    expect(wrapper.queryByTestId('exit_btn')).not.toBeInTheDocument();
+  });
 });
