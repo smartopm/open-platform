@@ -90,9 +90,12 @@ export default function PostCreate({
 
   function closeCreateModal() {
     setIsCreateModalOpen(false);
-    setPostData(null);
-    setEditModal(false);
-    setAnchorEl(null);
+    if (editModal) {
+      setPostData(null);
+      setAnchorEl(null);
+      setPost('');
+      setEditModal(false);
+    }
     resetImageData();
   }
 
@@ -127,7 +130,9 @@ export default function PostCreate({
           ...postDetails,
           loading: false,
           isError: false,
-          message: !editModal ? translate('dashboard.created_post') : translate('dashboard.updated_post')
+          message: !editModal
+            ? translate('dashboard.created_post')
+            : translate('dashboard.updated_post')
         });
         setPost('');
         closeCreateModal();
@@ -226,7 +231,7 @@ PostCreate.defaultProps = {
   setPostData: () => {},
   setEditModal: () => {},
   setAnchorEl: () => {}
-}
+};
 
 PostCreate.propTypes = {
   translate: PropTypes.func.isRequired,

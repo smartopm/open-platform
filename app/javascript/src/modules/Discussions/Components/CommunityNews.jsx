@@ -90,6 +90,7 @@ export default function CommunityNews({
         displayButton={data?.communityNewsPosts?.length >= limit}
         handleButton={redirectToDiscussionsPage}
       >
+        {console.log(postData)}
         <Grid container>
           <Grid item xs={12} style={{ marginBottom: 10 }}>
             {userType !== 'security_guard' && (
