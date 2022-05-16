@@ -1,35 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useMutation, useQuery } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import TextField from '@mui/material/TextField';
 import { Grid, Typography, Divider } from '@mui/material';
+import InputLabel from '@mui/material/InputLabel';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import OutlinedInput from '@mui/material/OutlinedInput';
 import CreateEvent from '../graphql/mutations';
-import { UserEventsQuery, UserMeetingsQuery, UserSignedDealsQuery } from '../graphql/queries';
+import { UserMeetingsQuery, UserSignedDealsQuery } from '../graphql/queries';
+import { UpdateUserMutation } from '../../../../graphql/mutations/user';
 import CenteredContent from '../../../../shared/CenteredContent';
 import { Spinner } from '../../../../shared/Loading';
 import MessageAlert from '../../../../components/MessageAlert';
 import { formatError } from '../../../../utils/helpers';
 import LeadEvent from './LeadEvent';
 import ButtonComponent from '../../../../shared/buttons/Button';
+import { MenuProps, initialLeadFormData, secondaryInfoUserObject } from '../../utils';
+import { divionOptions } from '../../../../utils/constants';
 
-export default function LeadEvents({ userId }) {
-  const [eventName, setEventName] = useState('');
+export default function LeadEvents({ userId, data }) {
   const [meetingName, setMeetingName] = useState('');
+  const [leadData, setLeadData] = useState(false);
   const [dealName, setDealName] = useState('');
   const [message, setMessage] = useState({ isError: false, detail: '' });
+  const [leadFormData, setLeadFormData] = useState(initialLeadFormData);
   const [eventCreate, { loading: isLoading }] = useMutation(CreateEvent);
+  const [leadDataUpdate, { loading: divisionLoading }] = useMutation(UpdateUserMutation);
   const { t } = useTranslation('common');
-  const {
-    data: eventsData,
-    loading: eventsLoading,
-    refetch: refetchEvents,
-    error: eventsError
-  } = useQuery(UserEventsQuery, {
-    variables: { userId },
-    fetchPolicy: 'cache-and-network'
-  });
-
   const {
     data: meetingsData,
     loading: meetingsLoading,
@@ -50,9 +50,14 @@ export default function LeadEvents({ userId }) {
     fetchPolicy: 'cache-and-network'
   });
 
-  function handleEventNameChange(event) {
-    setEventName(event.target.value);
+  function handleDivisionChange(event) {
+    setLeadData(true);
+    const { name, value } = event.target;
+    setLeadFormData({
+      user: { ...leadFormData?.user, [name]: value }
+    });
   }
+
   function handleMeetingNameChange(event) {
     setMeetingName(event.target.value);
   }
@@ -61,11 +66,9 @@ export default function LeadEvents({ userId }) {
     setDealName(event.target.value);
   }
 
-  function handleSubmitEvent(e) {
+  function handleSubmitDivision(e) {
     e.preventDefault();
-    const type = 'event';
-    handleSubmit(eventName, type);
-    setEventName('');
+    handleSubmit();
   }
 
   function handleSubmitMeeting(e) {
@@ -81,30 +84,66 @@ export default function LeadEvents({ userId }) {
     handleSubmit(dealName, type);
     setDealName('');
   }
-
-  function handleSubmit(name, logType) {
-    eventCreate({ variables: { userId, name, logType } })
-      .then(() => {
-        setMessage({
-          ...message,
-          isError: false,
-          detail: t('common:misc.misc_successfully_created', { type: t('common:menu.event') })
-        });
-
-        refetchEvents();
-        refetchMeetings();
-        refetchSignedDeals();
-      })
-      .catch(err => {
-        setMessage({ ...message, isError: true, detail: formatError(err.message) });
+  useEffect(() => {
+    if (data?.user) {
+      setLeadFormData({
+        user: {
+          ...data.user,
+          contactDetails: {
+            ...data.user.contactDetails,
+            secondaryContact1: {
+              ...data.user.contactDetails?.secondaryContact1
+            },
+            secondaryContact2: {
+              ...data.user.contactDetails?.secondaryContact2
+            }
+          }
+        }
       });
+    }
+  }, [data]);
+
+  function handleSubmit(name = '', logType = '') {
+    if (leadData) {
+      leadDataUpdate({
+        variables: {
+          ...leadFormData?.user,
+          secondaryInfo: leadFormData?.user?.contactInfos,
+          id: userId
+        }
+      })
+        .then(() => {
+          setMessage({
+            ...message,
+            isError: false,
+            detail: t('common:misc.misc_successfully_added', { type: t('common:menu.division') })
+          });
+        })
+        .catch(err => {
+          setMessage({ ...message, isError: true, detail: formatError(err.message) });
+        });
+    } else {
+      eventCreate({ variables: { userId, name, logType } })
+        .then(() => {
+          setMessage({
+            ...message,
+            isError: false,
+            detail: t('common:misc.misc_successfully_created', { type: t('common:menu.event') })
+          });
+          refetchMeetings();
+          refetchSignedDeals();
+        })
+        .catch(err => {
+          setMessage({ ...message, isError: true, detail: formatError(err.message) });
+        });
+    }
   }
 
-  const err = eventsError || meetingsError || signedDealsError || null;
+  const err = meetingsError || signedDealsError || null;
 
   if (err) return err.message;
 
-  if (isLoading || eventsLoading || signedDealsLoading || meetingsLoading) return <Spinner />;
+  if (isLoading || divisionLoading || signedDealsLoading || meetingsLoading) return <Spinner />;
 
   return (
     <div style={{ marginLeft: -23, marginRight: -24 }}>
@@ -116,7 +155,7 @@ export default function LeadEvents({ userId }) {
       />
       <Grid container>
         <Grid item md={12} xs={12}>
-          <Grid item md={12} xs={12}>
+          <Grid item md={6} xs={12}>
             <Typography variant="h6" data-testid="events">
               {t('lead_management.events')}
             </Typography>
@@ -125,49 +164,45 @@ export default function LeadEvents({ userId }) {
               {t('lead_management.events_header')}
             </Typography>
           </Grid>
-          <Grid item md={12} xs={12}>
+          <Grid item md={6} xs={12}>
             <Grid
               container
               spacing={2}
               style={{
                 display: 'flex',
-                alignItems: 'center'
+                alignItems: 'center',
+                paddingTop: 10
               }}
             >
               <Grid item md={10} xs={10}>
-                <TextField
-                  name="eventName"
-                  label={t('lead_management.event_name')}
-                  style={{ width: '100%' }}
-                  onChange={handleEventNameChange}
-                  value={eventName || ''}
-                  variant="outlined"
-                  fullWidth
-                  size="small"
-                  margin="normal"
-                  required
-                  inputProps={{
-                    'aria-label': t('lead_management.event_name'),
-                    style: { fontSize: '15px' }
-                  }}
-                  InputLabelProps={{ style: { fontSize: '12px' } }}
-                />
+                <FormControl fullWidth size="small">
+                  <InputLabel id="division">{t('lead_management.set_division')}</InputLabel>
+                  <Select
+                    labelId="demo-multiple-name-label"
+                    id="division"
+                    name="division"
+                    value={leadFormData?.user?.division || ''}
+                    onChange={handleDivisionChange}
+                    input={<OutlinedInput label={t('lead_management.set_division')} />}
+                    MenuProps={MenuProps}
+                  >
+                    <MenuItem value="" />
+                    {divionOptions.map(val => (
+                      <MenuItem key={val} value={val}>
+                        {val}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
               </Grid>
 
-              <Grid
-                item
-                md={2}
-                xs={2}
-                style={{
-                  paddingTop: '25px'
-                }}
-              >
+              <Grid item md={2} xs={2}>
                 <ButtonComponent
                   variant="contained"
                   color="primary"
                   buttonText={t('lead_management.add')}
-                  handleClick={handleSubmitEvent}
-                  disabled={!eventName.trim()}
+                  handleClick={handleSubmitDivision}
+                  disabled={!leadFormData?.user?.division?.trim()}
                   disableElevation
                 />
               </Grid>
@@ -175,24 +210,6 @@ export default function LeadEvents({ userId }) {
           </Grid>
         </Grid>
       </Grid>
-      <br />
-      {/* Lead Events Listing */}
-      {eventsData?.leadEvents.length > 0 ? (
-        <div>
-          {eventsData?.leadEvents.map(leadEvent => (
-            <div
-              key={leadEvent.id}
-              style={{
-                marginBottom: '20px'
-              }}
-            >
-              <LeadEvent key={leadEvent?.id} leadEvent={leadEvent} />
-            </div>
-          ))}
-        </div>
-      ) : (
-        <CenteredContent>{t('lead_management.no_lead_events')}</CenteredContent>
-      )}
 
       <Grid item md={12} xs={12} style={{ marginBottom: '10px', marginTop: '10px' }}>
         <Divider />
@@ -370,5 +387,6 @@ export default function LeadEvents({ userId }) {
 }
 
 LeadEvents.propTypes = {
-  userId: PropTypes.string.isRequired
+  userId: PropTypes.string.isRequired,
+  data: PropTypes.shape({ user: secondaryInfoUserObject }).isRequired
 };
