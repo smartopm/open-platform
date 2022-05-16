@@ -107,7 +107,7 @@ export default function CommunityNews({ userType, userImage, dashboardTranslatio
                     />
                   )}
                 </Grid>
-                <Grid item xs={12} style={{ padding: '0 16px' }}>
+                <Grid item xs={12} style={{ padding: '16px 16px 0 16px' }}>
                   <Typography
                     variant="body2"
                     data-testid="task_body"
