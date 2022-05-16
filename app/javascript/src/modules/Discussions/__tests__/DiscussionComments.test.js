@@ -3,9 +3,9 @@ import { act, fireEvent, render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom';
-import Discussion from '../../components/Discussion/Discussion';
-import { DiscussionPostsQuery } from '../../graphql/queries';
-import { Spinner } from '../../shared/Loading';
+import Discussion from '../Components/Discussion';
+import { DiscussionPostsQuery } from '../../../graphql/queries';
+import { Spinner } from '../../../shared/Loading';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 describe('Discussion with comments', () => {

@@ -3,11 +3,11 @@ import { render } from '@testing-library/react';
 import { ApolloProvider } from 'react-apollo';
 import { BrowserRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/react-testing';
-import { CommentMutation, UpdateCommentMutation } from '../../graphql/mutations';
-import { commentStatusAction } from '../../utils/constants';
-import Comments from '../../components/Discussion/Comment';
-import { Context } from '../../containers/Provider/AuthStateProvider';
-import { createClient } from '../../utils/apollo';
+import { CommentMutation, UpdateCommentMutation } from '../../../graphql/mutations';
+import { commentStatusAction } from '../../../utils/constants';
+import Comments from '../Components/Comment';
+import { Context } from '../../../containers/Provider/AuthStateProvider';
+import { createClient } from '../../../utils/apollo';
 import '@testing-library/jest-dom/extend-expect';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
