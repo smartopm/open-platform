@@ -414,7 +414,7 @@ export default function AdminDashboard() {
             </CenteredContent>
           ) : (
             <List data-testid="project-stages">
-              {Object.entries(stats).map(([stage, count]) => (
+              {Object.entries(stats).map(([stage, count], index) => (
                 <Fragment key={stage}>
                   <ListItem
                     onClick={() => routeToProjects('current_step', snakeCaseToSentence(stage))}
@@ -437,11 +437,14 @@ export default function AdminDashboard() {
                       </Grid>
                     </Grid>
                   </ListItem>
-                  <Divider variant="inset" className={classes.divider} />
+                  { (index + 1 < Object.keys(stats).length) && <Divider variant="inset" className={classes.divider} /> }
                 </Fragment>
               ))}
             </List>
           )}
+        </Grid>
+        <Grid item xs={12}>
+          <Divider variant='fullWidth' />
         </Grid>
       </Grid>
     </Container>
