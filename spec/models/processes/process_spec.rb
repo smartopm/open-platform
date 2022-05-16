@@ -19,4 +19,18 @@ RSpec.describe Processes::Process, type: :model do
   describe 'enums' do
     it { is_expected.to define_enum_for(:status).with_values(active: 0, deleted: 1) }
   end
+
+  describe 'validations' do
+    it 'validates name uniqueness per community' do
+      process1 = create(:process, name: 'Process Name')
+      process2 = described_class.new(
+        name: 'Process Name',
+        community: process1.community,
+        form: process1.form,
+      )
+
+      expect(process2.valid?).to be false
+      expect(process2.errors.messages.to_h).to include(name: ['has already been taken'])
+    end
+  end
 end
