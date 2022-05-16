@@ -255,7 +255,7 @@ phrase:
         file_format: i18next
         locale_id: fa26b7d00b593c4578f0e9749221cace
         tags: dashboard
-    - file: ./public/locales/en/discussion.json
+    - file: ./public/locales/es/discussion.json
       params:
         file_format: i18next
         locale_id: fa26b7d00b593c4578f0e9749221cace
