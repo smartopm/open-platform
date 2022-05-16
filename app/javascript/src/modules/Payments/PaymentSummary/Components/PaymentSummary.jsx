@@ -57,7 +57,7 @@ export default function PaymentSummary({ authState, translate }) {
           <Typography className={classes.mobile}>{translate('common:misc.payments')}</Typography>
         </div>
       ) : (
-        <div style={{ marginLeft: '79px', marginTop: '20px' }}>
+        <div style={{ marginLeft: '20px', marginTop: '20px' }}>
           <Grid container alignItems="center">
             <Typography
               className={classes.bold}
@@ -85,7 +85,7 @@ export default function PaymentSummary({ authState, translate }) {
         <Grid
           container
           spacing={2}
-          style={matches ? { padding: '20px' } : { padding: '20px 57px 20px 79px', width: '99%' }}
+          style={matches ? { padding: '20px' } : { padding: '20px 57px 20px 20px', width: '99%' }}
         >
           {Array.from(new Array(4)).map((_arr, index) => (
             // eslint-disable-next-line react/no-array-index-key
@@ -99,7 +99,7 @@ export default function PaymentSummary({ authState, translate }) {
           <Grid
             container
             spacing={2}
-            style={matches ? { padding: '20px' } : { padding: '20px 57px 20px 79px', width: '99%' }}
+            style={matches ? { padding: '20px' } : { padding: '20px 57px 20px 20px', width: '99%' }}
           >
             {// eslint-disable-next-line no-unused-vars
             Object.entries(paymentCardContent).map(([key, _val]) => (

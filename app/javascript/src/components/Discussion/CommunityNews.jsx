@@ -45,14 +45,11 @@ export default function CommunityNews({ userType, userImage, dashboardTranslatio
   }
 
   return (
-    <div
-      className="container"
-      style={isMobile ? { padding: '20px' } : { padding: '20px 57px 20px 79px', width: '99%' }}
-    >
+    <div style={isMobile ? { padding: '20px' } : { padding: '20px 20px 20px 79px', width: '99%' }}>
       <CardWrapper
         title={t('headers.community_news_header')}
         buttonName={t('common:misc.see_more_discussion')}
-        displayButton={data?.communityNewsPosts?.length > 0}
+        displayButton={data?.communityNewsPosts?.length >= limit}
         handleButton={redirectToDiscussionsPage}
       >
         <Grid container>
@@ -63,62 +60,65 @@ export default function CommunityNews({ userType, userImage, dashboardTranslatio
                 currentUserImage={userImage}
                 btnBorderColor={theme.palette.secondary.main}
                 refetchNews={refetch}
-                isMobile={isMobile}
               />
             )}
           </Grid>
 
           {data?.communityNewsPosts?.length >= 1 ? (
             data?.communityNewsPosts?.map(post => (
-              <Grid item xs={12} key={post.id}>
-                <ListItem alignItems="flex-start">
-                  <ListItemAvatar style={{ marginRight: 8 }}>
-                    <Avatar user={post.user} />
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={
-                      <>
-                        <Typography component="span" variant="subtitle2">
-                          {post.user.name}
-                        </Typography>
-                        <Typography component="p" variant="caption" style={{ color: '#575757' }}>
-                          {moment(post.createdAt).fromNow()}
-                        </Typography>
-                      </>
-                    }
-                    secondary={
-                      <>
-                        <span data-testid="community_news_post_author_avatar">
-                          {// eslint-disable-next-line react/prop-types
-                          post?.imageUrls?.length >= 1 && (
-                            <ImageAuth
-                              imageLink={post?.imageUrls[0]}
-                              style={{
-                                marginTop: '15px',
-                                marginLeft: '-65px',
-                                border: 'none',
-                                boxShadow: 'none',
-                                padding: 0,
-                                borderRadius: 0
-                              }}
-                            />
-                          )}
-                        </span>
-
-                        <Typography
-                          variant="body2"
-                          data-testid="task_body"
-                          component="span"
-                          className={css(styles.postContentEllipsed)}
-                        >
-                          {post.content}
-                        </Typography>
-                      </>
-                    }
-                  />
-                </ListItem>
-                <Divider style={{ margin: '16px 0' }} />
-              </Grid>
+              <div key={post.id} style={{ width: '100%' }}>
+                <Grid item xs={12}>
+                  <ListItem alignItems="flex-start">
+                    <ListItemAvatar style={{ marginRight: 8 }}>
+                      <Avatar user={post.user} />
+                    </ListItemAvatar>
+                    <ListItemText
+                      primary={
+                        <>
+                          <Typography component="span" variant="subtitle2">
+                            {post.user.name}
+                          </Typography>
+                          <Typography component="p" variant="caption" style={{ color: '#575757' }}>
+                            {moment(post.createdAt).fromNow()}
+                          </Typography>
+                        </>
+                      }
+                    />
+                  </ListItem>
+                </Grid>
+                <Grid
+                  item
+                  xs={12}
+                  data-testid="community_news_post_author_avatar"
+                  style={{ padding: '0 16px' }}
+                >
+                  {// eslint-disable-next-line react/prop-types
+                  post?.imageUrls?.length >= 1 && (
+                    <ImageAuth
+                      imageLink={post?.imageUrls[0]}
+                      style={{
+                        width: '100%',
+                        marginTop: '15px',
+                        border: 'none',
+                        boxShadow: 'none',
+                        padding: 0,
+                        borderRadius: 0
+                      }}
+                    />
+                  )}
+                </Grid>
+                <Grid item xs={12} style={{ padding: '16px 16px 0 16px' }}>
+                  <Typography
+                    variant="body2"
+                    data-testid="task_body"
+                    component="span"
+                    className={css(styles.postContentEllipsed)}
+                  >
+                    {post.content}
+                  </Typography>
+                  <Divider style={{ margin: '25px 0 16px 0px' }} />
+                </Grid>
+              </div>
             ))
           ) : (
             <CenteredContent>{t('common:misc.first_to_post')}</CenteredContent>
@@ -134,15 +134,10 @@ const styles = StyleSheet.create({
     marginBottom: 5
   },
   postContentEllipsed: {
-    overflow: 'hidden',
     whiteSpace: 'normal',
-    textOverflow: 'ellipsis',
-    paddingLeft: '3px',
     paddingTop: '5px',
     display: '-webkit-box',
-    '-webkit-box-orient': 'vertical',
-    ' -webkit-line-clamp': '3 !important',
-    marginLeft: '-65px'
+    ' -webkit-line-clamp': '3 !important'
   },
   postContentVisible: {
     width: '100%',
