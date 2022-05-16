@@ -49,7 +49,7 @@ export default function CommunityNews({ userType, userImage, dashboardTranslatio
       <CardWrapper
         title={t('headers.community_news_header')}
         buttonName={t('common:misc.see_more_discussion')}
-        displayButton={data?.communityNewsPosts?.length > 0}
+        displayButton={data?.communityNewsPosts?.length >= limit}
         handleButton={redirectToDiscussionsPage}
       >
         <Grid container>
