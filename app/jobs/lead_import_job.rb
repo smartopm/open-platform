@@ -175,6 +175,7 @@ class LeadImportJob < ApplicationJob
 
         if user.save
           current_user.create_lead_task(user)
+          create_lead_log(current_user, user)
         else
           errors[index + 1] = user.errors.full_messages
         end
@@ -193,6 +194,12 @@ class LeadImportJob < ApplicationJob
   # rubocop:enable Metrics/BlockLength
   # rubocop:enable Metrics/CyclomaticComplexity
   # rubocop:enable Metrics/PerceivedComplexity
+
+  def create_lead_log(current_user, user)
+    return unless user.user_type.eql?('lead') && user.lead_status.present?
+
+    current_user.create_lead_log(user.lead_status, user.id)
+  end
   # rubocop:enable Metrics/AbcSize
   # rubocop:enable Metrics/MethodLength
 end

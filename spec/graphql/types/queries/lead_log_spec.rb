@@ -8,10 +8,19 @@ RSpec.describe Types::Queries::LeadLog do
     let!(:permission) do
       create(:permission, module: 'lead_log',
                           role: admin_role,
-                          permissions: %w[can_fetch_lead_logs])
+                          permissions: %w[can_fetch_lead_logs can_access_lead_scorecard])
     end
-    let(:lead_user) { create(:lead) }
+    let(:lead_user) { create(:lead, lead_status: 'Signed MOU', country: 'India') }
     let(:community) { lead_user.community }
+    let(:another_lead_user) do
+      create(:user,
+             name: 'Mark',
+             community: community,
+             user_type: 'lead',
+             lead_status: 'Qualified Lead',
+             country: 'China')
+    end
+
     let(:admin) { create(:admin_user, community_id: community.id, role: admin_role) }
 
     let!(:event_lead_log) do
@@ -38,6 +47,33 @@ RSpec.describe Types::Queries::LeadLog do
              community: community,
              acting_user_id: admin.id,
              log_type: 'signed_deal')
+    end
+
+    let!(:qualified_lead_log) do
+      create(:lead_log,
+             user: lead_user,
+             community: community,
+             acting_user_id: admin.id,
+             log_type: 'lead_status',
+             name: 'Qualified Lead')
+    end
+
+    let!(:signed_mou_lead_log) do
+      create(:lead_log,
+             user: lead_user,
+             community: community,
+             acting_user_id: admin.id,
+             log_type: 'lead_status',
+             name: 'Signed MOU')
+    end
+
+    let!(:signed_lease_lead_log) do
+      create(:lead_log,
+             user: lead_user,
+             community: community,
+             acting_user_id: admin.id,
+             log_type: 'lead_status',
+             name: 'Signed Lease')
     end
 
     let(:events) do
@@ -75,38 +111,81 @@ RSpec.describe Types::Queries::LeadLog do
       GQL
     end
 
-    context 'when lead specific events are fetched' do
-      it 'returns events' do
-        variables = { userId: lead_user.id, limit: 2, offset: 0 }
-        result = DoubleGdpSchema.execute(events, variables: variables,
-                                                 context: { current_user: admin,
-                                                            site_community: community }).as_json
-        expect(result['errors']).to be nil
-        expect(result.dig('data', 'leadEvents').count).to eql 2
-      end
+    let(:lead_scorecard) do
+      <<~GQL
+        query {
+          leadScorecards
+        }
+      GQL
     end
 
-    context 'when lead specific meetings are fetched' do
-      it 'returns meetings' do
-        variables = { userId: lead_user.id, limit: 2, offset: 0 }
-        result = DoubleGdpSchema.execute(meetings, variables: variables,
+    describe '#lead_events' do
+      context 'when lead specific events are fetched' do
+        it 'returns events' do
+          variables = { userId: lead_user.id, limit: 2, offset: 0 }
+          result = DoubleGdpSchema.execute(events, variables: variables,
                                                    context: { current_user: admin,
                                                               site_community: community }).as_json
-        expect(result['errors']).to be nil
-        expect(result.dig('data', 'leadMeetings').count).to eql 2
+          expect(result['errors']).to be nil
+          expect(result.dig('data', 'leadEvents').count).to eql 2
+        end
       end
     end
 
-    context 'when signed deal for lead is fetched' do
-      it 'returns signed deals' do
-        variables = { userId: lead_user.id }
-        result = DoubleGdpSchema.execute(signed_deal, variables: variables,
-                                                      context: {
-                                                        current_user: admin,
-                                                        site_community: community,
-                                                      }).as_json
-        expect(result['errors']).to be nil
-        expect(result.dig('data', 'signedDeals').count).to eql 1
+    describe '#lead_meetings' do
+      context 'when lead specific meetings are fetched' do
+        it 'returns meetings' do
+          variables = { userId: lead_user.id, limit: 2, offset: 0 }
+          result = DoubleGdpSchema.execute(meetings, variables: variables,
+                                                     context: { current_user: admin,
+                                                                site_community: community }).as_json
+          expect(result['errors']).to be nil
+          expect(result.dig('data', 'leadMeetings').count).to eql 2
+        end
+      end
+    end
+
+    describe '#signed_deals' do
+      context 'when signed deal for lead is fetched' do
+        it 'returns signed deals' do
+          variables = { userId: lead_user.id }
+          result = DoubleGdpSchema.execute(signed_deal, variables: variables,
+                                                        context: {
+                                                          current_user: admin,
+                                                          site_community: community,
+                                                        }).as_json
+          expect(result['errors']).to be nil
+          expect(result.dig('data', 'signedDeals').count).to eql 1
+        end
+      end
+    end
+
+    describe '#lead_scorecard' do
+      context 'when lead statistics are fetched' do
+        before do
+          lead_user.update(created_at: "#{Time.zone.now.year}-01-01")
+          another_lead_user.update(created_at: "#{Time.zone.now.year}-01-01")
+          qualified_lead_log.update(updated_at: "#{Time.zone.now.year}-01-01")
+          signed_mou_lead_log.update(updated_at: "#{Time.zone.now.year}-01-01")
+          signed_lease_lead_log.update(updated_at: "#{Time.zone.now.year}-01-01")
+        end
+
+        it 'returns scorecard' do
+          result = DoubleGdpSchema.execute(lead_scorecard,
+                                           context: {
+                                             current_user: admin,
+                                             site_community: community,
+                                           }).as_json
+          expect(result['errors']).to be nil
+          scorecard = result.dig('data', 'leadScorecards')
+          expect(scorecard.dig('lead_status', 'Qualified Lead')).to eql 1
+          expect(scorecard.dig('lead_status', 'Signed MOU')).to eql 1
+          expect(scorecard.dig('leads_monthly_stats_by_division', 'India', '1')).to eql 1
+          expect(scorecard.dig('leads_monthly_stats_by_division', 'China', '1')).to eql 1
+          expect(scorecard.dig('leads_monthly_stats_by_status', 'Qualified Lead', '1')).to eql 1
+          expect(scorecard.dig('leads_monthly_stats_by_status', 'Signed MOU', '1')).to eql 1
+          expect(scorecard.dig('leads_monthly_stats_by_status', 'Signed Lease', '1')).to eql 1
+        end
       end
     end
 

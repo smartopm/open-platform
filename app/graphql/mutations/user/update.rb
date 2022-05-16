@@ -59,12 +59,16 @@ module Mutations
       argument :investment_timeline, String, required: false
       argument :decision_timeline, String, required: false
       argument :status, String, required: false
+      argument :lead_status, String, required: false
 
       field :user, Types::UserType, null: true
 
+      # rubocop:disable Metrics/MethodLength
+      # rubocop:disable Metrics/AbcSize
       def resolve(vals)
         ActiveRecord::Base.transaction do
           user = context[:site_community].users.find_by(id: vals.delete(:id))
+          create_lead_log(vals[:lead_status], context[:current_user], user)
           raise GraphQL::ExecutionError, I18n.t('errors.user.not_found') unless user
 
           attach_avatars(user, vals)
@@ -75,6 +79,14 @@ module Mutations
           user_to_update = user_with_substatus_log || user
           update_user(vals, user_to_update)
         end
+      end
+      # rubocop:enable Metrics/AbcSize
+      # rubocop:enable Metrics/MethodLength
+
+      def create_lead_log(lead_status, current_user, user)
+        return unless user.user_type.eql?('lead') && user.lead_status.present?
+
+        current_user.create_lead_log(lead_status, user.id)
       end
 
       def update_user(vals, user_to_update)

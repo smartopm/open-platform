@@ -22,6 +22,7 @@ module Users
 
     include SearchCop
     include QueryFetchable
+    include UsersHelper
 
     # rubocop:disable Style/RedundantInterpolation
     search_scope :search do
@@ -159,13 +160,6 @@ module Users
     # Track changes to the User
     has_paper_trail
 
-    VALID_USER_TYPES = %w[security_guard admin resident contractor
-                          prospective_client client visitor developer consultant
-                          custodian site_worker site_manager security_supervisor
-                          lead marketing_manager public_user code_scanner].freeze
-    VALID_STATES = %w[valid pending banned expired].freeze
-    DEFAULT_PREFERENCE = %w[com_news_sms com_news_email weekly_point_reminder_email].freeze
-
     enum sub_status: {
       plots_fully_purchased: 0,
       eligible_to_start_construction: 1,
@@ -181,6 +175,7 @@ module Users
     validates :user_type, inclusion: { in: VALID_USER_TYPES, allow_nil: true }
     validates :state, inclusion: { in: VALID_STATES, allow_nil: true }
     validates :sub_status, inclusion: { in: sub_statuses.keys, allow_nil: true }
+    validates :lead_status, inclusion: { in: VALID_LEAD_STATUSES, allow_nil: true }
     validates :name, presence: true
     validates :email, uniqueness: {
       scope: :community_id,
@@ -741,6 +736,13 @@ module Users
       user.update(task_id: task.id)
     end
     # rubocop:enable Metrics/MethodLength
+
+    def create_lead_log(lead_status, user_id)
+      community.lead_logs.find_or_create_by(log_type: :lead_status,
+                                            name: lead_status,
+                                            user_id: user_id,
+                                            acting_user_id: id).update(updated_at: Time.zone.now)
+    end
 
     private
 

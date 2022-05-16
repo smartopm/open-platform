@@ -22,7 +22,7 @@ RSpec.describe Logs::LeadLog, type: :model do
     it do
       is_expected.to define_enum_for(:log_type)
         .with_values(
-          event: 0, meeting: 1, signed_deal: 2,
+          event: 0, meeting: 1, signed_deal: 2, lead_status: 3,
         )
     end
   end
