@@ -45,10 +45,7 @@ export default function CommunityNews({ userType, userImage, dashboardTranslatio
   }
 
   return (
-    <div
-      className="container"
-      style={isMobile ? { padding: '20px' } : { padding: '20px 57px 20px 79px', width: '99%' }}
-    >
+    <div style={isMobile ? { padding: '20px' } : { padding: '20px 20px 20px 79px', width: '99%' }}>
       <CardWrapper
         title={t('headers.community_news_header')}
         buttonName={t('common:misc.see_more_discussion')}
@@ -69,7 +66,7 @@ export default function CommunityNews({ userType, userImage, dashboardTranslatio
 
           {data?.communityNewsPosts?.length >= 1 ? (
             data?.communityNewsPosts?.map(post => (
-              <div key={post.id}>
+              <div key={post.id} style={{ width: '100%' }}>
                 <Grid item xs={12}>
                   <ListItem alignItems="flex-start">
                     <ListItemAvatar style={{ marginRight: 8 }}>
@@ -89,26 +86,28 @@ export default function CommunityNews({ userType, userImage, dashboardTranslatio
                     />
                   </ListItem>
                 </Grid>
-                <Grid item xs={12} data-testid="community_news_post_author_avatar" style={{ padding: '0 16px' }}>
-
+                <Grid
+                  item
+                  xs={12}
+                  data-testid="community_news_post_author_avatar"
+                  style={{ padding: '0 16px' }}
+                >
                   {// eslint-disable-next-line react/prop-types
-                    post?.imageUrls?.length >= 1 && (
-                      <ImageAuth
-                        imageLink={post?.imageUrls[0]}
-                        style={{
-                          width: '100%',
-                          marginTop: '15px',
-                          border: 'none',
-                          boxShadow: 'none',
-                          padding: 0,
-                          borderRadius: 0
-                        }}
-                      />
-                    )}
-
+                  post?.imageUrls?.length >= 1 && (
+                    <ImageAuth
+                      imageLink={post?.imageUrls[0]}
+                      style={{
+                        width: '100%',
+                        marginTop: '15px',
+                        border: 'none',
+                        boxShadow: 'none',
+                        padding: 0,
+                        borderRadius: 0
+                      }}
+                    />
+                  )}
                 </Grid>
                 <Grid item xs={12} style={{ padding: '0 16px' }}>
-
                   <Typography
                     variant="body2"
                     data-testid="task_body"
@@ -123,7 +122,7 @@ export default function CommunityNews({ userType, userImage, dashboardTranslatio
             ))
           ) : (
             <CenteredContent>{t('common:misc.first_to_post')}</CenteredContent>
-            )}
+          )}
         </Grid>
       </CardWrapper>
     </div>
@@ -138,7 +137,7 @@ const styles = StyleSheet.create({
     whiteSpace: 'normal',
     paddingTop: '5px',
     display: '-webkit-box',
-    ' -webkit-line-clamp': '3 !important',
+    ' -webkit-line-clamp': '3 !important'
   },
   postContentVisible: {
     width: '100%',
