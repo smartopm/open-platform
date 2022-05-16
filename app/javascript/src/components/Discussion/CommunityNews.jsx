@@ -1,11 +1,19 @@
 /* eslint-disable react/jsx-no-duplicate-props */
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable react/jsx-wrap-multilines */
-import React from 'react';
-import { ListItem, ListItemAvatar, ListItemText, Grid, Typography } from '@mui/material';
+import React, { useState } from 'react';
+import {
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  Grid,
+  Typography,
+  IconButton
+} from '@mui/material';
 import { StyleSheet, css } from 'aphrodite';
 import { useHistory } from 'react-router-dom';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import MoreVertOutlined from '@mui/icons-material/MoreVertOutlined';
 import Divider from '@mui/material/Divider';
 import { useQuery } from 'react-apollo';
 import PropTypes from 'prop-types';
@@ -20,6 +28,7 @@ import { formatError } from '../../utils/helpers';
 import ImageAuth from '../../shared/ImageAuth';
 import PostCreate from '../../modules/Dashboard/Components/PostCreate';
 import CardWrapper from '../../shared/CardWrapper';
+import MenuList from '../../shared/MenuList';
 
 export default function CommunityNews({
   userType,
@@ -29,6 +38,10 @@ export default function CommunityNews({
 }) {
   const limit = 4;
   const isMobile = useMediaQuery('(max-width:800px)');
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [postData, setPostData] = useState(null);
+  const [editModal, setEditModal] = useState(false);
+  const anchorElOpen = Boolean(anchorEl);
   const history = useHistory();
   const theme = useTheme();
 
@@ -39,6 +52,26 @@ export default function CommunityNews({
   const { t } = useTranslation('discussion');
 
   const discussionId = data?.communityNewsPosts[0]?.discussionId;
+  const menuList = [{ content: 'Edit Post', isAdmin: true, color: '', handleClick: () => setEditModal(true) }];
+
+  const menuData = {
+    menuList,
+    handleMenu,
+    anchorEl,
+    open: anchorElOpen,
+    handleClose
+  };
+
+  function handleClose(event) {
+    event.stopPropagation();
+    setAnchorEl(null);
+  }
+
+  function handleMenu(event, post) {
+    event.stopPropagation();
+    setAnchorEl(event.currentTarget);
+    setPostData(post);
+  }
 
   function redirectToDiscussionsPage() {
     history.push(`/discussions/${discussionId}`);
@@ -66,21 +99,27 @@ export default function CommunityNews({
                 userPermissions={userPermissions}
                 btnBorderColor={theme.palette.secondary.main}
                 refetchNews={refetch}
+                isMobile={isMobile}
+                postData={postData}
+                setPostData={setPostData}
+                editModal={editModal}
+                setEditModal={setEditModal}
+                setAnchorEl={setAnchorEl}
               />
             )}
           </Grid>
 
           {data?.communityNewsPosts?.length >= 1 ? (
             data?.communityNewsPosts?.map(post => (
-              <div key={post.id} style={{ width: '100%' }}>
-                <Grid item xs={12}>
-                  <ListItem alignItems="flex-start">
-                    <ListItemAvatar style={{ marginRight: 8 }}>
-                      <Avatar user={post.user} />
-                    </ListItemAvatar>
-                    <ListItemText
-                      primary={
-                        <>
+              <Grid item xs={12} key={post.id}>
+                <ListItem alignItems="flex-start">
+                  <ListItemAvatar style={{ marginRight: 8 }}>
+                    <Avatar user={post.user} />
+                  </ListItemAvatar>
+                  <ListItemText
+                    primary={
+                      <Grid container>
+                        <Grid item md={6} xs={10}>
                           <Typography component="span" variant="subtitle2">
                             {post.user.name}
                           </Typography>
@@ -124,7 +163,11 @@ export default function CommunityNews({
                   </Typography>
                   <Divider style={{ margin: '25px 0 16px 0px' }} />
                 </Grid>
-              </div>
+                        
+                    }
+                  />
+                <Divider style={{ margin: '16px 0' }} />
+              </Grid>
             ))
           ) : (
             <CenteredContent>{t('common:misc.first_to_post')}</CenteredContent>
