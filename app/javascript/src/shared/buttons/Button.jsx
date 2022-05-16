@@ -10,6 +10,7 @@ export default function ButtonComponent({
   disabled,
   disableElevation,
   size,
+  testId,
   ...otherProps
 }) {
   return (
@@ -23,6 +24,7 @@ export default function ButtonComponent({
         disableElevation={disableElevation}
         role="button"
         onClick={handleClick}
+        data-testid={testId}
       >
         {buttonText}
       </Button>
@@ -35,7 +37,8 @@ ButtonComponent.defaultProps = {
   size: 'medium',
   color: 'default',
   disabled: false,
-  disableElevation: true
+  disableElevation: true,
+  testId: 'button'
 };
 
 ButtonComponent.propTypes = {
@@ -44,6 +47,7 @@ ButtonComponent.propTypes = {
   buttonText: PropTypes.string.isRequired,
   handleClick: PropTypes.func.isRequired,
   size: PropTypes.string,
+  testId: PropTypes.string,
   disabled: PropTypes.bool,
   disableElevation: PropTypes.bool
 };

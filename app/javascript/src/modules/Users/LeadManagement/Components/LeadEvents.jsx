@@ -105,6 +105,7 @@ export default function LeadEvents({ userId, data }) {
 
   function handleSubmit(name = '', logType = '') {
     if (leadData) {
+      console.log('Division mutation called');
       leadDataUpdate({
         variables: {
           ...leadFormData?.user,
@@ -156,12 +157,12 @@ export default function LeadEvents({ userId, data }) {
       <Grid container>
         <Grid item md={12} xs={12}>
           <Grid item md={6} xs={12}>
-            <Typography variant="h6" data-testid="events">
-              {t('lead_management.events')}
+            <Typography variant="h6" data-testid="division">
+              {t('lead_management.division')}
             </Typography>
 
-            <Typography variant="body2" data-testid="events_header">
-              {t('lead_management.events_header')}
+            <Typography variant="body2" data-testid="division_header">
+              {t('lead_management.division_header')}
             </Typography>
           </Grid>
           <Grid item md={6} xs={12}>
@@ -272,6 +273,7 @@ export default function LeadEvents({ userId, data }) {
                   handleClick={handleSubmitMeeting}
                   disabled={!meetingName.trim()}
                   disableElevation
+                  testId="add-meeting-button"
                 />
               </Grid>
             </Grid>

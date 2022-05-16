@@ -1,6 +1,7 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
+import selectEvent from 'react-select-event';
 import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min';
 import { MockedProvider } from '@apollo/react-testing';
 import userEvent from '@testing-library/user-event';
@@ -19,6 +20,7 @@ describe('LeadEvents Page', () => {
   afterEach(() => {
     jest.restoreAllMocks();
   });
+  const DOWN_ARROW = { keyCode: 40 };
 
   const dataMock = [
     {
@@ -146,7 +148,7 @@ describe('LeadEvents Page', () => {
     }
   ];
 
-  it('Creates an event', async () => {
+  it('Creates a meeting event', async () => {
     render(
       <MockedProvider mocks={eventRequestDataMock} addTypename={false}>
         <Context.Provider value={authState}>
@@ -166,17 +168,39 @@ describe('LeadEvents Page', () => {
       expect(screen.queryAllByTestId('meetings')[0]).toBeInTheDocument();
       expect(screen.queryByTestId('meetings_header')).toBeInTheDocument();
       expect(screen.queryByText('lead_management.meetings')).toBeInTheDocument();
-      expect(screen.queryByText('lead_management.events_header')).toBeInTheDocument();
       const eventTextField = screen.getByLabelText('lead_management.meeting_name');
       userEvent.type(eventTextField, 'First Tilisi meeting');
-      const saveButton = screen.getAllByRole('button')[1];
-      // user input should set add button enabled
+      const saveButton = screen.queryByTestId('add-meeting-button');
+      // // user input should set add button enabled
       expect(saveButton).toBeEnabled();
     });
 
     // clicking on the add button should submit current data
     await waitFor(() => {
-      fireEvent.click(screen.getAllByRole('button')[1]);
+      fireEvent.click(screen.queryByTestId('add-meeting-button'));
+    });
+  });
+
+  it('Adds a division', async () => {
+    render(
+      <MockedProvider mocks={eventRequestDataMock} addTypename={false}>
+        <Context.Provider value={authState}>
+          <BrowserRouter>
+            <MockedThemeProvider>
+              <LeadEvents
+                userId="c96f64bb-e3b4-42ff-b6a9-66889ec79e99"
+                data={dataMock[0].result.data}
+              />
+            </MockedThemeProvider>
+          </BrowserRouter>
+        </Context.Provider>
+      </MockedProvider>
+    );
+
+    await waitFor(() => {
+      expect(screen.queryAllByTestId('division')[0]).toBeInTheDocument();
+      expect(screen.queryByTestId('division_header')).toBeInTheDocument();
+      expect(screen.queryByText('lead_management.division')).toBeInTheDocument();
     });
   });
 });
