@@ -6,14 +6,15 @@ import makeStyles from '@mui/styles/makeStyles';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { LabelsQuery } from '../../../graphql/queries';
-import ErrorPage from '../../../components/Error';
-import Loading from '../../../shared/Loading';
 import LabelItem from './LabelItem';
 import CenteredContent from '../../../shared/CenteredContent';
 import Paginate from '../../../components/Paginate';
 import ButtonComponent from '../../../shared/buttons/Button';
 import EditModal from './EditModal';
 import ListHeader from '../../../shared/list/ListHeader';
+import { Spinner } from '../../../shared/Loading'
+import { formatError } from '../../../utils/helpers'
+
 
 export default function LabelList({ userType }) {
   const classes = useStyles();
@@ -50,10 +51,9 @@ export default function LabelList({ userType }) {
     }
   }
 
-  if (loading) return <Loading />;
-  if (error) {
-    return <ErrorPage title={error.message} />;
-  }
+  if (loading) return <Spinner />;
+  if (error) return <CenteredContent>{formatError(error.message)}</CenteredContent>;
+
   return (
     <Container>
       <div className={classes.labelButton}>

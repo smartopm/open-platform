@@ -21,7 +21,8 @@ describe('It should test the user label component', () => {
                 shortDesc: 'Client',
                 color: '#000',
                 userCount: 23,
-                description: 'some description'
+                description: 'some description',
+                groupingName: 'Status'
               }
             ]
           }
@@ -41,7 +42,8 @@ describe('It should test the user label component', () => {
               shortDesc: 'Client',
               color: '#000',
               userCount: 23,
-              description: 'some description'
+              description: 'some description',
+              groupingName: 'Status'
             }
           ]
         }
@@ -90,6 +92,6 @@ describe('It should test the user label component', () => {
     await waitFor(() => {
       expect(container.queryByTestId('no_labels')).toBeInTheDocument();
       expect(container.queryByText('label:label.no_user_labels')).toBeInTheDocument();
-    }, 10)
+    });
   });
 });

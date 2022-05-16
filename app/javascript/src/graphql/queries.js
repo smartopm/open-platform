@@ -803,6 +803,7 @@ export const UserLabelsQuery = gql`
       id
       shortDesc
       color
+      groupingName
     }
   }
 `;
