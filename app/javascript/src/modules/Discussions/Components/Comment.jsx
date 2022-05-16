@@ -19,15 +19,15 @@ import { Link } from 'react-router-dom';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useTranslation } from 'react-i18next';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
-import { Context } from '../../containers/Provider/AuthStateProvider';
-import { PostCreateMutation, PostDeleteMutation } from '../../graphql/mutations';
-import useFileUpload from '../../graphql/useFileUpload';
-import { findLinkAndReplace, sanitizeText } from '../../utils/helpers';
-import Avatar from '../Avatar';
-import DateContainer from '../DateContainer';
-import DeleteDialogueBox from '../../shared/dialogs/DeleteDialogue';
+import { Context } from '../../../containers/Provider/AuthStateProvider';
+import { PostCreateMutation, PostDeleteMutation } from '../../../graphql/mutations';
+import useFileUpload from '../../../graphql/useFileUpload';
+import { findLinkAndReplace, sanitizeText } from '../../../utils/helpers';
+import Avatar from '../../../components/Avatar';
+import DateContainer from '../../../components/DateContainer';
+import DeleteDialogueBox from '../../../shared/dialogs/DeleteDialogue';
 // import { commentStatusAction } from '../../utils/constants';
-import ImageAuth from '../../shared/ImageAuth';
+import ImageAuth from '../../../shared/ImageAuth';
 
 export default function Comments({ comments, refetch, discussionId }) {
   const init = {

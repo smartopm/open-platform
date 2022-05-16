@@ -1,5 +1,5 @@
 import React from 'react';
-import Discussions from '../../containers/Discussions/Discussions';
+import Discussions from './Containers/Discussions';
 import AccessCheck from '../Permissions/Components/AccessCheck';
 
 const discussionPermissions = ['can_access_all_discussions'];

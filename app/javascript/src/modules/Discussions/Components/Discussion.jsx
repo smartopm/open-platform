@@ -4,16 +4,16 @@ import { useQuery } from 'react-apollo';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import Comment from './Comment';
-import { DiscussionPostsQuery } from '../../graphql/queries';
-import DateContainer from '../DateContainer';
-import { Spinner } from '../../shared/Loading';
-import CenteredContent from '../../shared/CenteredContent';
-import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider';
+import { DiscussionPostsQuery } from '../../../graphql/queries';
+import DateContainer from '../../../components/DateContainer';
+import { Spinner } from '../../../shared/Loading';
+import CenteredContent from '../../../shared/CenteredContent';
+import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
 import FollowButton from './FollowButton';
 
-import Disclaimer from '../Disclaimer';
-import userProps from '../../shared/types/user';
-import { formatError } from '../../utils/helpers';
+import Disclaimer from '../../../components/Disclaimer';
+import userProps from '../../../shared/types/user';
+import { formatError } from '../../../utils/helpers';
 
 export default function Discussion({ discussionData }) {
   const limit = 20;

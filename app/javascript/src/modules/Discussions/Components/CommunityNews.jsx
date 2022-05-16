@@ -20,15 +20,15 @@ import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import moment from 'moment-timezone';
 import { useTheme } from '@mui/material/styles';
-import { CommunityNewsPostsQuery } from '../../graphql/queries';
-import { Spinner } from '../../shared/Loading';
-import CenteredContent from '../../shared/CenteredContent';
-import Avatar from '../Avatar';
-import { formatError } from '../../utils/helpers';
-import ImageAuth from '../../shared/ImageAuth';
-import PostCreate from '../../modules/Dashboard/Components/PostCreate';
-import CardWrapper from '../../shared/CardWrapper';
-import MenuList from '../../shared/MenuList';
+import { CommunityNewsPostsQuery } from '../../../graphql/queries';
+import { Spinner } from '../../../shared/Loading';
+import CenteredContent from '../../../shared/CenteredContent';
+import Avatar from '../../../components/Avatar';
+import { formatError } from '../../../utils/helpers';
+import ImageAuth from '../../../shared/ImageAuth';
+import PostCreate from '../../Dashboard/Components/PostCreate';
+import CardWrapper from '../../../shared/CardWrapper';
+import MenuList from '../../../shared/MenuList';
 
 export default function CommunityNews({
   userType,
