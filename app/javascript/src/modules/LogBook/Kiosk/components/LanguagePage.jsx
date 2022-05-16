@@ -1,9 +1,10 @@
-import React, { useContext } from 'react';
-import { Typography, Box, Container } from '@mui/material';
+import React, { useContext, useEffect } from 'react';
+import { Typography, Box, Container, IconButton } from '@mui/material';
 import { useHistory } from 'react-router-dom';
 import { StyleSheet } from 'aphrodite';
 import { makeStyles } from '@mui/styles';
 import { useTranslation } from 'react-i18next';
+import CloseIcon from '@mui/icons-material/Close';
 import VerticallyCentered from '../../../../shared/VerticallyCentered';
 import CommunityName from '../../../../shared/CommunityName';
 import { Context } from '../../../../containers/Provider/AuthStateProvider';
@@ -17,6 +18,16 @@ export default function LanguagePage() {
   const history = useHistory();
   const classes = useStyles();
   const { i18n } = useTranslation();
+  const { userType } = authState.user;
+
+  /** ensuring that the user is logged out only if:
+  * the browser is closed (tab is rebooted) */
+  useEffect(() => {
+    const browserActionType = window.performance.getEntriesByType('navigation')[0].type;
+    if (userType !== 'admin' && browserActionType === 'back_forward' && history.action === 'POP') {
+      history.push('/logout');
+    }
+  }, [history, userType])
 
   const languageSelectHandler = selectedLang => {
     localStorage.setItem('default-language', selectedLang);
@@ -26,8 +37,19 @@ export default function LanguagePage() {
 
   return (
     <VerticallyCentered isVerticallyCentered={false}>
+      {['admin'].includes(userType) && (
+        <Box component="div" className={classes.closeBtnBox}>
+          <IconButton onClick={() => history.push('/')} data-testid="exit_btn">
+            <CloseIcon className={classes.closeBtn} />
+          </IconButton>
+        </Box>
+      )}
+
       <Container maxWidth="xs">
-        <Box component="div" sx={{ marginTop: '130px', marginLeft: '30px' }}>
+        <Box
+          component="div"
+          sx={{ marginTop: `${userType === 'admin' ? '90px' : '130px'}`, marginLeft: '30px' }}
+        >
           <CommunityName authState={authState} logoStyles={styles} />
         </Box>
 
@@ -82,5 +104,14 @@ const useStyles = makeStyles({
   },
   default: {
     textTransform: 'capitalize !important'
-  }
+  },
+
+  closeBtn: {
+    color: `${defaultColors.info}`
+  },
+
+  closeBtnBox: {
+    margin: '2rem 2rem 0 0',
+    textAlign: 'right'
+  },
 });
