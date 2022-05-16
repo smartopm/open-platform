@@ -1,7 +1,6 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
-import selectEvent from 'react-select-event';
 import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min';
 import { MockedProvider } from '@apollo/react-testing';
 import userEvent from '@testing-library/user-event';
@@ -20,7 +19,6 @@ describe('LeadEvents Page', () => {
   afterEach(() => {
     jest.restoreAllMocks();
   });
-  const DOWN_ARROW = { keyCode: 40 };
 
   const dataMock = [
     {
