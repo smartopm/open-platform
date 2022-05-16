@@ -178,6 +178,7 @@ export default function PostCreate({
           closeButton: true,
           handleCloseButton
         }}
+        editModal={editModal}
       >
         {postDetails.loading ? (
           <Spinner />
