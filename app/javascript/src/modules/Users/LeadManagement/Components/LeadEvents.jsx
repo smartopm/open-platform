@@ -158,7 +158,7 @@ export default function LeadEvents({ userId, data }) {
       />
       <Grid container>
         <Grid item md={12} xs={12}>
-          <Grid container style={{ display: 'flex', alignItems: 'center' }}>
+          <Grid container style={{ display: 'flex', alignItems: 'center', width: '90%' }}>
             <Grid item md={6} xs={12}>
               <Typography variant="h6" data-testid="division">
                 {t('lead_management.division')}

@@ -72,6 +72,7 @@ describe('LeadEvents Page', () => {
             nextSteps: 'Move to South America',
             phoneNumber: '10234567876',
             region: 'Baltics',
+            division: 'China',
             relevantLink: 'today is hot',
             roleName: 'Admin',
             secondaryEmail: '',
