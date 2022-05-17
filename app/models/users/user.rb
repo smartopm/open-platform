@@ -6,6 +6,7 @@
 require 'email_msg'
 require 'merge_users'
 require 'host_env'
+require 'task_create'
 
 module Users
   # User should encompass all users of the system
@@ -723,6 +724,23 @@ module Users
         'received'
       end
     end
+
+    # rubocop:disable Metrics/MethodLength
+    def create_lead_task(user)
+      task_params = {
+        body: "Lead management task by #{user.name}",
+        description: 'Lead Management',
+        category: 'to_do',
+        flagged: true,
+        completed: false,
+        user_id: id,
+        author_id: id,
+        assignees: user.id,
+      }
+      task = TaskCreate.new_from_action(task_params)
+      user.update(task_id: task.id)
+    end
+    # rubocop:enable Metrics/MethodLength
 
     private
 
