@@ -157,6 +157,7 @@ export default function PostCreate({
 
   return (
     <div style={{ margin: '0 5px' }}>
+      {console.log(isMobile)}
       <MessageAlert
         type={!postDetails.isError ? 'success' : 'error'}
         message={postDetails.message}
@@ -214,6 +215,7 @@ export default function PostCreate({
           borderColor: btnBorderColor,
           borderRadius: '8px',
           fontWeight: 400,
+          width: isMobile ? '98%' : '99%',
           fontSize: '16px',
           height: '56px',
           background: '#FFFFFF'
