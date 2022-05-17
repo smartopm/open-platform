@@ -2,8 +2,6 @@
 import React from 'react';
 import { TextField } from '@mui/material';
 import PropTypes from 'prop-types';
-import CheckboxInput from './CheckboxInput';
-import { objectAccessor } from '../../../../utils/helpers';
 
 export default function TermsAndConditionInput({
   id,
@@ -11,13 +9,14 @@ export default function TermsAndConditionInput({
   properties,
   value,
   editable,
-  inputValidation
+  inputValidation,
 }) {
   return (
     <>
       <TextField
-        multiline
         id={id}
+        rows={5}
+        multiline
         label={properties.fieldName}
         fullWidth
         className={`form-txt-input-property-${properties.fieldName}`}
@@ -28,20 +27,9 @@ export default function TermsAndConditionInput({
         variant="outlined"
         aria-label="text-input"
         name={properties.fieldName}
-        inputProps={{ 'data-testid': `${properties.fieldName}-id`, readOnly: editable }}
+        inputProps={{ 'data-testid': `${properties.fieldName}-id`, readOnly: !editable }}
         {...inputValidation}
       />
-      
-      {/* 
-        <CheckboxInput
-            properties={properties}
-            checkboxState={objectAccessor(formProperties, properties.fieldName)}
-            handleValue={event => handleCheckobo(event, properties)}
-            inputValidation={{
-                    error: checkRequiredFormPropertyIsFilled(properties, formState)
-                }}
-        /> 
-      */}
     </>
   );
 }

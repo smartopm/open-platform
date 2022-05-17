@@ -193,7 +193,6 @@ export default function CategoryForm({
               inputProps={{ 'data-testid': 'description' }}
               margin="dense"
               multiline
-              required
             />
           </Grid>
           <Grid item xs={12} md={12} style={{ padding: '20px 0' }}>

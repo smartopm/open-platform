@@ -60,6 +60,7 @@ export default function RenderForm({
   const { t } = useTranslation(['form', 'common']);
   const [messageAlert, setMessageAlert] = useState('');
   const [isSuccessAlert, setIsSuccessAlert] = useState(false);
+
   function handleCheckboxSelect(event, property) {
     const { name, checked } = event.target;
     setFormProperties({
