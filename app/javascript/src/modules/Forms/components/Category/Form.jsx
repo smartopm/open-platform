@@ -268,9 +268,9 @@ export default function Form({
           )}
         </Grid>
       )}
-
+      
       {
-          !editMode && (
+          !editMode && formDetailData?.form?.hasTermsAndConditions && (
             <Grid style={{ padding: '0 120px' }}>
               <TermsAndCondition
                 categoriesData={categoriesData} 
@@ -344,7 +344,8 @@ Form.propTypes = {
       id: PropTypes.string,
       name: PropTypes.string,
       preview: PropTypes.bool,
-      isPublic: PropTypes.bool
+      isPublic: PropTypes.bool,
+      hasTermsAndConditions: PropTypes.bool,
     })
   }),
   formDetailRefetch: PropTypes.func,
