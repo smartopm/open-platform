@@ -2,8 +2,10 @@
 import React from 'react';
 import { TextField } from '@mui/material';
 import PropTypes from 'prop-types';
+import CheckboxInput from './CheckboxInput';
+import { objectAccessor } from '../../../../utils/helpers';
 
-export default function TermsInput({
+export default function TermsAndConditionInput({
   id,
   handleValue,
   properties,
@@ -27,12 +29,24 @@ export default function TermsInput({
         aria-label="text-input"
         name={properties.fieldName}
         inputProps={{ 'data-testid': `${properties.fieldName}-id`, readOnly: editable }}
+        {...inputValidation}
       />
+      
+      {/* 
+        <CheckboxInput
+            properties={properties}
+            checkboxState={objectAccessor(formProperties, properties.fieldName)}
+            handleValue={event => handleCheckobo(event, properties)}
+            inputValidation={{
+                    error: checkRequiredFormPropertyIsFilled(properties, formState)
+                }}
+        /> 
+      */}
     </>
   );
 }
 
-TermsInput.propTypes = {
+TermsAndConditionInput.propTypes = {
   handleValue: PropTypes.func.isRequired,
   properties: PropTypes.shape({
     fieldName: PropTypes.string,
@@ -46,5 +60,5 @@ TermsInput.propTypes = {
   id: PropTypes.string.isRequired,
   inputValidation: PropTypes.shape({
     error: PropTypes.bool
-  })
+  }).isRequired
 };

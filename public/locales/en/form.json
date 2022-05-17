@@ -129,7 +129,8 @@
     "date": "Date",
     "time": "Time",
     "datetime": "Date with Time",
-    "dropdown": "Dropdown"
+    "dropdown": "Dropdown",
+    "terms_and_condition": "Terms and Condition"
   },
   "conditions": {
     "===": "equals to",

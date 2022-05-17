@@ -35,7 +35,8 @@ const fieldTypes = {
   datetime: 'Date with Time',
   dropdown: 'Dropdown',
   signature: 'Signature',
-  file_upload: 'File Upload'
+  file_upload: 'File Upload',
+  terms_and_condition: 'Terms and Condition'
 };
 
 export default function FormPropertyCreateForm({
