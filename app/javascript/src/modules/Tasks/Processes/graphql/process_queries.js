@@ -18,6 +18,7 @@ export const ProcessesQuery = gql`
 
 export const ProjectsQuery = gql`
   query GetProjects(
+    $processName: String!
     $offset: Int
     $limit: Int
     $step: String
@@ -27,6 +28,7 @@ export const ProjectsQuery = gql`
     $repliesRequestedStatus: String
   ) {
     projects(
+      processName: $processName
       offset: $offset
       limit: $limit
       step: $step
@@ -207,8 +209,8 @@ export const ProjectRepliesRequestedComments = gql`
 `;
 
 export const ProcessReplyComments = gql`
-  query processReplyComments($processType: String) {
-    processReplyComments(processType: $processType) {
+  query processReplyComments($processName: String!) {
+    processReplyComments(processName: $processName) {
       sent {
         id
         body

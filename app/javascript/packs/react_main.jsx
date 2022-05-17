@@ -389,10 +389,10 @@ const App = () => {
                                 />
                                 <Route path="/processes/templates" component={ProcessList} />
                                 <Route
-                                  path="/processes/:type/projects/:id"
+                                  path="/processes/projects/:id"
                                   component={TaskProcessDetail}
                                 />
-                                <Route path="/processes/:type/projects" component={ProjectsList} />
+                                <Route path="/processes/projects" component={ProjectsList} />
                                 <Route
                                   exact
                                   path="/entry_logs"

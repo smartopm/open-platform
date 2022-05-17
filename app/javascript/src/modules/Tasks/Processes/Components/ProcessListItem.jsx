@@ -32,8 +32,7 @@ import {
   snakeCaseToSentence
 } from '../utils';
 
-export default function ProcessItem({ processName }) {
-  console.log('processName: ', processName)
+export default function ProcessListItem({ processName }) {
   const { t } = useTranslation(['task', 'process']);
   const matches = useMediaQuery('(max-width:800px)');
   const classes = useStyles();
@@ -105,7 +104,7 @@ export default function ProcessItem({ processName }) {
   }
 
   function routeToProjects(paramName, paramValue) {
-    history.push(`/processes/drc/projects?${paramName}=${paramValue}`);
+    history.push(`/processes/projects?process_name=${processName}&${paramName}=${paramValue}`);
   }
 
   function cardName(name) {
@@ -174,15 +173,15 @@ export default function ProcessItem({ processName }) {
     <>
       <Grid container style={{ marginTop: '10px' }}>
         <Grid item md={8} xs={12}>
-          <Link to="/processes/drc/projects" underline="hover">
+          <Link to={`/processes/projects?process_name=${processName}`} underline="hover">
             <Typography className={classes.processTitle} color="primary" variant="h5">
-              {t('processes.drc_process')}
+              {processName}
             </Typography>
           </Link>
         </Grid>
         <Grid item md={3} xs={12} style={!matches ? {textAlign: 'right'} : { padding: '10px 0'}}>
           {commentStatData && (
-          <Button color='primary' variant='outlined' data-testid='comments_button' onClick={() => history.push('/processes/comments')}>{t('processes.open_comments')}</Button>
+          <Button color='primary' variant='outlined' data-testid='comments_button' onClick={() => history.push(`/processes/comments?process_name=${processName}`)}>{t('processes.open_comments')}</Button>
           )}
         </Grid>
       </Grid>
@@ -462,6 +461,6 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-ProcessItem.propTypes = {
+ProcessListItem.propTypes = {
   processName: PropTypes.string.isRequired,
 }

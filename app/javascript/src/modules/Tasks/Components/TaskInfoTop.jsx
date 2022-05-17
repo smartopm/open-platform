@@ -102,7 +102,7 @@ export default function TaskInfoTop({
   function openParentLink(event, parent) {
     event.preventDefault();
     if (forProcess) {
-      history.push(`/processes/drc/projects/${parent.id}/tab=processes`);
+      history.push(`/processes/projects/${parent.id}/tab=processes`);
     } else {
       history.push(`/tasks/${parent.id}`);
     }

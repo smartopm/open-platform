@@ -80,7 +80,7 @@ export default function ProjectItem({ task, taskId, refetch, clientView }) {
   }
 
   function redirectToOverviewPage(id, tab = 'processes', detailTab) {
-    history.push(`/processes/drc/projects/${id}?tab=${tab}&detailTab=${detailTab}`);
+    history.push(`/processes/projects/${id}?tab=${tab}&detailTab=${detailTab}`);
   }
 
   return (

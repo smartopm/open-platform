@@ -45,7 +45,7 @@ export default function ClientPilotViewItem({ project, refetch }) {
   });
 
   function handleProjectStepClick(tab = 'processes') {
-    return history.push(`/processes/drc/projects/${taskId}?tab=${tab}`);
+    return history.push(`/processes/projects/${taskId}?tab=${tab}`);
   }
 
   return (

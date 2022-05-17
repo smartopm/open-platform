@@ -130,7 +130,7 @@ export default function ProjectDocument({ attachments, loading, refetch, error }
                     </Grid>
                     <Grid item md={12} xs={12}>
                       <Link
-                        href={`/processes/drc/projects/${att.task_id}?tab=processes`}
+                        href={`/processes/projects/${att.task_id}?tab=processes`}
                         color="primary"
                         underline="hover"
                       >

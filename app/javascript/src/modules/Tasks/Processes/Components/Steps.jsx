@@ -43,7 +43,7 @@ export default function ProjectSteps({
     handleProjectStepClick(stepItem);
     setSelectedStep({ ...stepItem });
     if (redirect) {
-      history.push(`/processes/drc/projects/${id}?tab=processes`)
+      history.push(`/processes/projects/${id}?tab=processes`)
     }
   }
 

@@ -17,7 +17,7 @@ import {
   accessibleMenus
 } from '../utils';
 import { ProcessTemplatesQuery } from '../../../Processes/graphql/process_list_queries';
-import ProcessItem from './ProcessItem';
+import ProcessListItem from './ProcessListItem';
 
 export default function AdminDashboard() {
   const { t } = useTranslation(['task', 'process']);
@@ -63,19 +63,14 @@ export default function AdminDashboard() {
           />
         </Grid>
       </Grid>
-      { processesError && <CenteredContent>{formatError(processesError.message)}</CenteredContent> }
-      { processesLoading ? <Spinner /> : ( // TODO: Check new way to render loading state
-        <>
-          {
-            processes?.processTemplates?.length > 0 ?
-              processes.processTemplates.map(process => (
-                <ProcessItem key={process.id} processName={process.name} />
-              )) :
-              <CenteredContent>{t('processes.no_processes')}</CenteredContent>
-          }
-        </>
-      ) }
-      <ProcessItem />
+      {processesError && <CenteredContent>{formatError(processesError.message)}</CenteredContent>}
+      {processesLoading ? <Spinner /> : ( // TODO: Check new way to render loading state
+         processes?.processTemplates?.length > 0 ?
+            processes.processTemplates.map(process => (
+              <ProcessListItem key={process.id} processName={process.name} />)
+              ) :
+            <CenteredContent>{t('processes.no_processes')}</CenteredContent>
+      )}
     </Container>
   );
 }

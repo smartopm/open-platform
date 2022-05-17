@@ -95,7 +95,7 @@ export default function ProcessCommentItem({ commentdata, commentType }) {
   );
 }
 
-const useStyles = makeStyles(() => ({ 
+const useStyles = makeStyles(() => ({
   card: {
     marginLeft: '-15px'
   }

@@ -137,7 +137,7 @@ export default function TaskProcessDetail() {
   function handleProjectStepClick(task, currentTab = 'processes', detailTab = 'subtasks') {
     setSplitScreenOpen(true);
     history.push({
-      pathname: `/processes/drc/projects/${task?.id}`,
+      pathname: `/processes/projects/${task?.id}`,
       search: `?tab=${currentTab}&detailTab=${detailTab}`,
       state: { from: history.location.pathname, search: history.location.search }
     });

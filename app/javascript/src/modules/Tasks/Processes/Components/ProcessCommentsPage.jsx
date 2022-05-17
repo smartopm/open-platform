@@ -7,7 +7,7 @@ import PageHeader from '../../../../shared/PageHeader';
 import { ProcessReplyComments } from '../graphql/process_queries';
 import { Spinner } from '../../../../shared/Loading';
 import CenteredContent from '../../../../shared/CenteredContent';
-import { formatError, objectAccessor } from '../../../../utils/helpers';
+import { formatError, objectAccessor, useParamsQuery } from '../../../../utils/helpers';
 import { StyledTabs, StyledTab, TabPanel, a11yProps } from '../../../../components/Tabs';
 import PageWrapper from '../../../../shared/PageWrapper';
 import ProcessCommentItem from './ProcessCommentItem';
@@ -15,10 +15,13 @@ import ProcessCommentItem from './ProcessCommentItem';
 export default function ProcessCommentsPage() {
   const matches = useMediaQuery('(max-width:600px)');
   const history = useHistory();
+  const path = useParamsQuery();
   const { t } = useTranslation(['process', 'task']);
   const [tabValue, setTabValue] = useState(0);
+  const processName = path.get('process_name');
 
   const { data, loading, error } = useQuery(ProcessReplyComments, {
+    variables: { processName },
     fetchPolicy: 'cache-and-network'
   });
 
@@ -30,7 +33,7 @@ export default function ProcessCommentsPage() {
 
   function handleTabValueChange(_event, newValue) {
     history.push(
-      `?tab=${Object.keys(TAB_VALUES).find(key => objectAccessor(TAB_VALUES, key) === newValue)}`
+      `?process_name=${processName}&tab=${Object.keys(TAB_VALUES).find(key => objectAccessor(TAB_VALUES, key) === newValue)}`
     );
     setTabValue(Number(newValue));
   }
@@ -42,7 +45,7 @@ export default function ProcessCommentsPage() {
         linkText={t('breadcrumbs.processes')}
         linkHref="/processes"
         pageName={t('breadcrumbs.comments')}
-        PageTitle={t('templates.drc_comments')}
+        PageTitle={t('templates.process_comments', { processName })}
       />
       {loading ? (
         <Spinner />

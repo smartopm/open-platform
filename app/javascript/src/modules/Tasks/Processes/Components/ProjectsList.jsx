@@ -18,6 +18,7 @@ export default function ProjectsList() {
   const limit = 50;
   const [offset, setOffset] = useState(0);
   const path = useParamsQuery()
+  const processName = path.get('process_name');
   const currentStep = path.get('current_step')
   const completedPerQuarter = path.get('completed_per_quarter')
   const submittedPerQuarter = path.get('submitted_per_quarter')
@@ -31,6 +32,7 @@ export default function ProjectsList() {
     variables: {
       offset,
       limit,
+      processName,
       step: currentStep,
       completedPerQuarter,
       submittedPerQuarter,
@@ -63,7 +65,7 @@ export default function ProjectsList() {
                 <Link to="/processes">
                   <Typography color="primary" style={{marginLeft: '5px'}}>{t('processes.processes')}</Typography>
                 </Link>
-                <Typography color="text.primary">{t('processes.drc_process')}</Typography>
+                <Typography color="text.primary">{processName}</Typography>
               </Breadcrumbs>
             </div>
           </Grid>
@@ -71,7 +73,7 @@ export default function ProjectsList() {
         <Grid item md={12} xs={11} className={classes.header}>
           <Grid container spacing={1}>
             <Grid item md={9} xs={10}>
-              <Typography variant="h4" style={{marginLeft: '5px', marginBottom: '24px'}}>{t('processes.drc_process')}</Typography>
+              <Typography variant="h4" style={{marginLeft: '5px', marginBottom: '24px'}}>{processName}</Typography>
             </Grid>
           </Grid>
         </Grid>
