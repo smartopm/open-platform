@@ -105,6 +105,7 @@ export default function EditModal({ open, handleClose, data, refetch, type }) {
               'data-testid': 'title'
             }}
           />
+          <span>{t('label.create_scoped_label_description')}</span>
           <TextField
             margin="dense"
             id="description"

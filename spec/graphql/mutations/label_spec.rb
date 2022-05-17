@@ -15,25 +15,28 @@ RSpec.describe Mutations::Label do
     let!(:admin) { create(:admin_user, user_type: 'admin', role: admin_role) }
 
     let!(:user) { create(:user_with_community, role: resident_role, user_type: 'resident') }
-    let(:query) do
+    let(:mutation) do
       <<~GQL
-        mutation {
-            labelCreate(shortDesc: "green") {
+        mutation labelCreate($shortDesc: String!) {
+          labelCreate(shortDesc: $shortDesc) {
             label {
-                shortDesc
-                id
+              shortDesc
+              groupingName
+              id
             }
-            }
+          }
         }
       GQL
     end
 
     it 'returns a created Label' do
-      result = DoubleGdpSchema.execute(query, context: {
+      variables = { shortDesc: 'green' }
+      result = DoubleGdpSchema.execute(mutation, variables: variables, context: {
                                          current_user: admin,
                                          site_community: user.community,
                                        }).as_json
-      dub_result = DoubleGdpSchema.execute(query, context: {
+
+      dub_result = DoubleGdpSchema.execute(mutation, variables: variables, context: {
                                              current_user: admin,
                                              site_community: user.community,
                                            }).as_json
@@ -47,11 +50,39 @@ RSpec.describe Mutations::Label do
       expect(dub_result.dig('errors', 0, 'message')).to include 'Duplicate label'
     end
 
+    context 'when scoped label is provided' do
+      it 'creates grouped label' do
+        variables = { shortDesc: 'Lead::Qualified' }
+        result = DoubleGdpSchema.execute(mutation, variables: variables, context: {
+                                           current_user: admin,
+                                           site_community: user.community,
+                                         }).as_json
+        expect(result['errors']).to be_nil
+        expect(result.dig('data', 'labelCreate', 'label', 'groupingName')).to eql 'Lead'
+        expect(result.dig('data', 'labelCreate', 'label', 'shortDesc')).to eql 'Qualified'
+      end
+    end
+
+    context 'when multi seperators are provided' do
+      it 'creates grouped label' do
+        variables = { shortDesc: 'Leads::Lead::Qualified' }
+        result = DoubleGdpSchema.execute(mutation, variables: variables, context: {
+                                           current_user: admin,
+                                           site_community: user.community,
+                                         }).as_json
+        expect(result['errors']).to be_nil
+        expect(result.dig('data', 'labelCreate', 'label', 'groupingName')).to eql 'Leads::Lead'
+        expect(result.dig('data', 'labelCreate', 'label', 'shortDesc')).to eql 'Qualified'
+      end
+    end
+
     it 'returns error when user is not admin' do
-      result = DoubleGdpSchema.execute(query,
-                                       context: {
-                                         current_user: user,
-                                       }).as_json
+      variables = { shortDesc: 'green' }
+      result = DoubleGdpSchema.execute(mutation, variables: variables,
+                                                 context: {
+                                                   current_user: user,
+                                                   site_community: user.community,
+                                                 }).as_json
       expect(result['errors']).not_to be_nil
       expect(result.dig('data', 'result', 'labelCreate', 'label', 'id')).to be_nil
       expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
@@ -219,7 +250,7 @@ RSpec.describe Mutations::Label do
     end
   end
 
-  describe 'creating a Label' do
+  describe 'Updating a Label' do
     let!(:admin_role) { create(:role, name: 'admin') }
     let!(:resident_role) { create(:role, name: 'resident') }
     let!(:permission) do
@@ -233,12 +264,13 @@ RSpec.describe Mutations::Label do
     end
     let!(:label) { create(:label, community_id: user.community_id) }
 
-    let(:query) do
+    let(:mutation) do
       <<~GQL
-        mutation {
-          labelUpdate(id: "#{label.id}", shortDesc: "green", color: "#fff", description: "this") {
+        mutation LabelUpdate($id: ID!, $shortDesc: String!, $color: String!){
+          labelUpdate(id: $id, shortDesc: $shortDesc, color: $color) {
           label {
               shortDesc
+              groupingName
             }
           }
         }
@@ -246,7 +278,12 @@ RSpec.describe Mutations::Label do
     end
 
     it 'returns the updated Label' do
-      result = DoubleGdpSchema.execute(query, context: {
+      variables = {
+        id: label.id,
+        shortDesc: 'green',
+        color: '#fff',
+      }
+      result = DoubleGdpSchema.execute(mutation, variables: variables, context: {
                                          current_user: admin,
                                          site_community: user.community,
                                        }).as_json
@@ -254,11 +291,52 @@ RSpec.describe Mutations::Label do
       expect(result['errors']).to be_nil
     end
 
+    context 'when scoped label is provided' do
+      it 'updates label' do
+        variables = {
+          id: label.id,
+          shortDesc: 'Campaigns::Sent',
+          color: '#fff',
+        }
+        result = DoubleGdpSchema.execute(mutation, variables: variables, context: {
+                                           current_user: admin,
+                                           site_community: user.community,
+                                         }).as_json
+        expect(result['errors']).to be_nil
+        expect(result.dig('data', 'labelUpdate', 'label', 'groupingName')).to eql 'Campaigns'
+        expect(result.dig('data', 'labelUpdate', 'label', 'shortDesc')).to eql 'Sent'
+      end
+    end
+
+    context 'when label is not scoped' do
+      before { label.update(grouping_name: 'something') }
+      it 'updates grouping name to nil' do
+        variables = {
+          id: label.id,
+          shortDesc: 'campaigns_sent',
+          color: '#fff',
+        }
+        result = DoubleGdpSchema.execute(mutation, variables: variables, context: {
+                                           current_user: admin,
+                                           site_community: user.community,
+                                         }).as_json
+        expect(result['errors']).to be_nil
+        expect(result.dig('data', 'labelUpdate', 'label', 'groupingName')).to eql nil
+        expect(result.dig('data', 'labelUpdate', 'label', 'shortDesc')).to eql 'campaigns_sent'
+      end
+    end
+
     it 'returns error when user is not admin' do
-      result = DoubleGdpSchema.execute(query,
-                                       context: {
-                                         current_user: user,
-                                       }).as_json
+      variables = {
+        id: label.id,
+        shortDesc: 'com_news_email',
+        color: '#fff',
+      }
+      result = DoubleGdpSchema.execute(mutation, variables: variables,
+                                                 context: {
+                                                   current_user: user,
+                                                   site_community: user.community,
+                                                 }).as_json
       expect(result['errors']).not_to be_nil
       expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
     end
