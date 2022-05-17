@@ -92,18 +92,19 @@ module Types::Queries::Note
 
     field :projects, [Types::NoteType], null: false do
       description 'Returns a list of projects under a process'
+      argument :process_name, String, required: true
       argument :offset, Integer, required: false
       argument :limit, Integer, required: false
       argument :step, String, required: false
       argument :completed_per_quarter, String, required: false
       argument :submitted_per_quarter, String, required: false
       argument :life_time_category, String, required: false
-      argument :process_type, String, required: false
       argument :replies_requested_status, String, required: false
     end
 
     field :project_stages, [GraphQL::Types::JSON], null: false do
       description 'Returns an aggregated list of projects'
+      argument :process_name, String, required: true
     end
 
     field :tasks_by_quarter, GraphQL::Types::JSON, null: false do
@@ -129,7 +130,7 @@ module Types::Queries::Note
 
     field :reply_comment_stats, Types::NoteCommentStatType, null: false do
       description 'Returns stats of reply-requested comments for a process'
-      argument :process_type, String, required: false
+      argument :process_name, String, required: true
     end
 
     field :replies_requested_comments, Types::CommentsByStatusType, null: false do
@@ -139,7 +140,7 @@ module Types::Queries::Note
 
     field :process_reply_comments, Types::ProcessReplyCommentsType, null: false do
       description 'Retuns all comments in a process grouped by comment status'
-      argument :process_type, String, required: false
+      argument :process_name, String, required: true
     end
   end
   # rubocop:enable Metrics/BlockLength
@@ -286,26 +287,30 @@ module Types::Queries::Note
     context[:current_user].tasks.by_completion(false).count
   end
 
-  def reply_comment_stats(process_type: 'drc')
+  def reply_comment_stats(process_name:)
     unless permitted?(module: :note, permission: :can_get_comment_stats)
       raise GraphQL::ExecutionError,
             I18n.t('errors.unauthorized')
     end
 
+    validate_process(process_name: process_name)
+
     current_user = context[:current_user]
     task_ids = []
-    projects_query(process_type).each do |project|
+    projects_query(process_name).each do |project|
       task_ids.concat(project_task_ids(parent_task: project))
     end
 
     user_replied_requested_comments(task_ids).status_stats(current_user)
   end
 
-  def process_reply_comments(process_type: 'drc')
+  def process_reply_comments(process_name:)
     unless permitted?(module: :note, permission: :can_fetch_process_comments)
       raise GraphQL::ExecutionError,
             I18n.t('errors.unauthorized')
     end
+
+    validate_process(process_name: process_name)
 
     process_task_ids = []
     process_reply_comments = {
@@ -314,7 +319,7 @@ module Types::Queries::Note
       resolved: [],
     }
 
-    projects_query(process_type).each do |project|
+    projects_query(process_name).each do |project|
       process_task_ids.concat(project_task_ids(parent_task: project))
     end
 
@@ -385,41 +390,40 @@ module Types::Queries::Note
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/CyclomaticComplexity
   # rubocop:disable Metrics/PerceivedComplexity
-  def projects(process_type: 'drc', **vals)
-    # This query only shows projects under the DRC process for now
-    # Our notes does not allow us to categorise processes by type
-    # This should be implemented in the future to allow us to fetch...
-    # projects by the process they belong to
+  def projects(process_name:, **vals)
     unless permitted?(module: :note, permission: :can_fetch_flagged_notes)
       raise GraphQL::ExecutionError,
             I18n.t('errors.unauthorized')
     end
+
+    validate_process(process_name: process_name)
+
     completed_per_quarter = vals[:completed_per_quarter]
     submitted_per_quarter = vals[:submitted_per_quarter]
     life_time_category = vals[:life_time_category]
     replies_requested_status = vals[:replies_requested_status]
     # TODO(Nurudeen): Make completed field defaults to false and not NIL
-    results = projects_query(process_type)
+    results = projects_query(process_name)
 
     results = results.where(completed: [false, nil], current_step_body: vals[:step]) if vals[:step]
 
     if completed_per_quarter
-      results = projects_query(process_type).by_quarter(completed_per_quarter)
+      results = projects_query(process_name).by_quarter(completed_per_quarter)
     end
 
     if submitted_per_quarter
-      results = projects_query(process_type).by_quarter(submitted_per_quarter,
+      results = projects_query(process_name).by_quarter(submitted_per_quarter,
                                                         task_category: :submitted)
     end
 
     if valid_life_time_category?(life_time_category)
-      results = projects_query(process_type)
+      results = projects_query(process_name)
                 .by_life_time_totals(task_category: life_time_category.to_sym)
     end
 
     if replies_requested_status
       results = []
-      projects_query(process_type).each do |project|
+      projects_query(process_name).each do |project|
         task_ids = project_task_ids(parent_task: project)
         note_comments = user_replied_requested_comments(task_ids)
 
@@ -468,15 +472,13 @@ module Types::Queries::Note
   end
   # rubocop:enable Metrics/MethodLength
 
-  def project_stages
-    # This will get the total project steps for each DRC process
-    # To be modified to allow for other types of processes
-    drc_projects = projects
+  def project_stages(process_name:)
+    projects = projects(process_name: process_name)
 
     context[:site_community]
       .notes
       .unscoped
-      .where(parent_note_id: drc_projects.pluck(:id), completed: true)
+      .where(parent_note_id: projects.pluck(:id), completed: true)
       .group(:body).count
   end
 
@@ -567,8 +569,7 @@ module Types::Queries::Note
   end
 
   def tasks_by_quarter(process_name:)
-    process = context[:site_community].processes.find_by(name: process_name)
-    raise ActiveRecord::RecordNotFound if process.blank?
+    validate_process(process_name: process_name)
 
     community_id = context[:site_community].id
 
@@ -634,9 +635,14 @@ module Types::Queries::Note
     end
   end
 
+  def validate_process(process_name:)
+    process = context[:site_community].processes.find_by(name: process_name)
+    raise ActiveRecord::RecordNotFound if process.blank?
+  end
+
   # rubocop:disable Metrics/MethodLength
-  def projects_query(process_type)
-    process_form_users = context[:site_community].process_form_users(process_type)&.pluck(:id)
+  def projects_query(process_name)
+    process_form_users = context[:site_community].process_form_users(process_name)&.pluck(:id)
 
     context[:site_community]
       .notes

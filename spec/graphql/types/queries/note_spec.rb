@@ -215,23 +215,23 @@ RSpec.describe Types::Queries::Note do
     let(:projects_query) do
       <<~GQL
         query GetProjects(
+          $processName: String!
           $offset: Int,
           $limit: Int,
           $step: String,
           $completedPerQuarter: String,
           $submittedPerQuarter: String,
           $lifeTimeCategory: String,
-          $processType: String,
           $repliesRequestedStatus: String
         ) {
           projects(
+            processName: $processName,
             offset: $offset,
             limit: $limit,
             step: $step,
             completedPerQuarter: $completedPerQuarter,
             submittedPerQuarter: $submittedPerQuarter,
             lifeTimeCategory: $lifeTimeCategory,
-            processType: $processType,
             repliesRequestedStatus: $repliesRequestedStatus
           ){
               #{task_fragment}
@@ -965,173 +965,6 @@ RSpec.describe Types::Queries::Note do
         expect(result.dig('errors', 0, 'message'))
           .to include('Unauthorized')
       end
-
-      describe 'Processes comments' do
-        let(:process_reply_comments_query) do
-          <<~GQL
-            query processReplyComments($processType: String) {
-              processReplyComments(processType: $processType) {
-                sent {
-                  id
-                  body
-                  createdAt
-                  replyFrom {
-                    id
-                    name
-                  }
-                }
-                received {
-                  id
-                  body
-                  repliedAt
-                }
-                resolved {
-                  id
-                  body
-                }
-              }
-            }
-          GQL
-        end
-
-        before do
-          community
-          site_worker
-          third_note
-
-          create(
-            :note_comment,
-            note: third_note,
-            body: 'Step 1',
-            user: site_worker,
-            status: 'active',
-            reply_required: true,
-            reply_from: admin,
-            grouping_id: '6d3f82c5-5d74-471d-a5a9-143f6e5ad3f1',
-          )
-
-          subtask1 = admin.notes.create!(
-            body: 'Step 1 subtask 1',
-            description: 'Step 1 subtask 1',
-            user_id: site_worker.id,
-            category: 'other',
-            flagged: true,
-            community_id: community.id,
-            author_id: site_worker.id,
-            parent_note_id: third_note.id,
-          )
-
-          create(
-            :note_comment,
-            note: subtask1,
-            body: 'Step 1 subtask 1 comment',
-            user: site_worker,
-            status: 'active',
-            reply_required: true,
-            reply_from: admin,
-            grouping_id: '5d3f82c5-5d74-471d-a5a9-143f6e5ad3f1',
-          )
-
-          subtask2 = admin.notes.create!(
-            body: 'Step 1 subtask 2',
-            description: 'Step 1 subtask 2',
-            user_id: site_worker.id,
-            category: 'other',
-            flagged: true,
-            community_id: community.id,
-            author_id: site_worker.id,
-            parent_note_id: subtask1.id,
-          )
-
-          create(
-            :note_comment,
-            note: subtask2,
-            body: 'Step 1 subtask 2 comment',
-            user: site_worker,
-            status: 'active',
-            reply_required: true,
-            reply_from: admin,
-            grouping_id: '4d3f82c5-5d74-471d-a5a9-143f6e5ad3f1',
-          )
-
-          create(
-            :note_comment,
-            note: subtask2,
-            body: 'Admin reply to Step 1 subtask 2 comment',
-            user: admin,
-            status: 'active',
-            reply_required: true,
-            reply_from: site_worker,
-            grouping_id: '4d3f82c5-5d74-471d-a5a9-143f6e5ad3f1',
-          )
-
-          subtask3 = admin.notes.create!(
-            body: 'Step 1 subtask 3',
-            description: 'Step 1 subtask 3',
-            user_id: site_worker.id,
-            category: 'other',
-            flagged: true,
-            community_id: community.id,
-            author_id: site_worker.id,
-            parent_note_id: third_note.id,
-          )
-
-          create(
-            :note_comment,
-            note: subtask3,
-            body: 'Step 1 subtask 3 comment',
-            user: site_worker,
-            status: 'active',
-            reply_required: true,
-            reply_from: admin,
-            grouping_id: '1d3f82c5-5d74-471d-a5a9-143f6e5ad3f1',
-            replied_at: 2.days.ago,
-          )
-          create(
-            :note_comment,
-            note: subtask3,
-            body: 'Step 1 subtask 3 comment',
-            user: admin,
-            status: 'active',
-            reply_required: true,
-            reply_from: site_worker,
-            grouping_id: '1d3f82c5-5d74-471d-a5a9-143f6e5ad3f1',
-            replied_at: 1.day.ago,
-          )
-        end
-
-        it 'raises error when user has no permissions' do
-          result = DoubleGdpSchema.execute(process_reply_comments_query, context: {
-                                             current_user: site_worker,
-                                             site_community: community,
-                                           }).as_json
-
-          expect(result.dig('errors', 0, 'message')).to include('Unauthorized')
-        end
-
-        it 'returns process comments by status' do
-          result = DoubleGdpSchema.execute(process_reply_comments_query, context: {
-                                             current_user: admin,
-                                             site_community: admin.community,
-                                           }).as_json
-
-          expect(result.dig('data', 'processReplyComments', 'sent').size).to eq 1
-          expect(
-            result.dig('data', 'processReplyComments', 'sent', 0, 'body'),
-          ).to eq 'Admin reply to Step 1 subtask 2 comment'
-          expect(
-            result.dig('data', 'processReplyComments', 'received').size,
-          ).to eq 2
-          expect(
-            result.dig('data', 'processReplyComments', 'received', 0, 'body'),
-          )
-            .to eq 'Step 1 subtask 1 comment'
-          expect(result.dig('data', 'processReplyComments', 'resolved').size).to eq 1
-          expect(
-            result.dig('data', 'processReplyComments', 'resolved', 0, 'body'),
-          ).to eq 'Step 1 subtask 3 comment'
-        end
-      end
     end
 
     describe '#projects' do
@@ -1174,8 +1007,8 @@ RSpec.describe Types::Queries::Note do
       end
 
       let(:process_comments_stats_query) do
-        %(query($processType: String) {
-          replyCommentStats(processType: $processType) {
+        %(query($processName: String!) {
+          replyCommentStats(processName: $processName) {
             sent
             received
             resolved
@@ -1228,8 +1061,19 @@ RSpec.describe Types::Queries::Note do
           second_note.update(form_user_id: another_form_user.id)
         end
 
+        it 'throws an error if process is not found' do
+          variables = { processName: 'Non existing process' }
+          result = DoubleGdpSchema.execute(projects_query, variables: variables,
+                                                           context: {
+                                                             current_user: site_worker,
+                                                             site_community: community,
+                                                           }).as_json
+          expect(result['errors']).not_to be_nil
+          expect(result.dig('errors', 0, 'message')).to include('not found')
+        end
+
         it 'returns the projects for DRC' do
-          variables = { processType: 'drc' }
+          variables = { processName: 'DRC' }
           result = DoubleGdpSchema.execute(projects_query, variables: variables,
                                                            context: {
                                                              current_user: site_worker,
@@ -1266,7 +1110,7 @@ RSpec.describe Types::Queries::Note do
                                            }).as_json
 
           expect(result['errors']).not_to be_nil
-          expect(result['errors'][0]['message']).to match('not found')
+          expect(result['errors'][0]['message']).to include('not found')
         end
 
         it 'retrieves project comments' do
@@ -1475,6 +1319,7 @@ RSpec.describe Types::Queries::Note do
                                                current_user: site_worker,
                                                site_community: community,
                                              }, variables: {
+                                               processName: 'DRC',
                                                completedPerQuarter: 'ytd',
                                              }).as_json
 
@@ -1488,6 +1333,7 @@ RSpec.describe Types::Queries::Note do
                                              current_user: site_worker,
                                              site_community: community,
                                            }, variables: {
+                                             processName: 'DRC',
                                              completedPerQuarter: 'Q1',
                                            }).as_json
 
@@ -1502,6 +1348,7 @@ RSpec.describe Types::Queries::Note do
                                       current_user: site_worker,
                                       site_community: community,
                                     }, variables: {
+                                      processName: 'DRC',
                                       completedPerQuarter: 'Q9',
                                     }).as_json
           end.to raise_error('Invalid argument. quarter should be either Q1, Q2, Q3 or Q4')
@@ -1528,6 +1375,7 @@ RSpec.describe Types::Queries::Note do
                                                current_user: site_worker,
                                                site_community: community,
                                              }, variables: {
+                                               processName: 'DRC',
                                                submittedPerQuarter: 'ytd',
                                              }).as_json
 
@@ -1541,6 +1389,7 @@ RSpec.describe Types::Queries::Note do
                                              current_user: site_worker,
                                              site_community: community,
                                            }, variables: {
+                                             processName: 'DRC',
                                              submittedPerQuarter: 'Q1',
                                            }).as_json
 
@@ -1555,6 +1404,7 @@ RSpec.describe Types::Queries::Note do
                                       current_user: site_worker,
                                       site_community: community,
                                     }, variables: {
+                                      processName: 'DRC',
                                       submittedPerQuarter: 'Q9',
                                     }).as_json
           end.to raise_error('Invalid argument. quarter should be either Q1, Q2, Q3 or Q4')
@@ -1588,6 +1438,7 @@ RSpec.describe Types::Queries::Note do
                                              current_user: site_worker,
                                              site_community: community,
                                            }, variables: {
+                                             processName: 'DRC',
                                              repliesRequestedStatus: 'sent',
                                            }).as_json
 
@@ -1615,6 +1466,7 @@ RSpec.describe Types::Queries::Note do
                                                current_user: site_worker,
                                                site_community: community,
                                              }, variables: {
+                                               processName: 'DRC',
                                                lifeTimeCategory: 'submitted',
                                              }).as_json
 
@@ -1629,6 +1481,7 @@ RSpec.describe Types::Queries::Note do
                                                current_user: site_worker,
                                                site_community: community,
                                              }, variables: {
+                                               processName: 'DRC',
                                                lifeTimeCategory: 'completed',
                                              }).as_json
 
@@ -1644,6 +1497,7 @@ RSpec.describe Types::Queries::Note do
                                                current_user: site_worker,
                                                site_community: community,
                                              }, variables: {
+                                               processName: 'DRC',
                                                lifeTimeCategory: 'outstanding',
                                              }).as_json
 
@@ -1693,7 +1547,7 @@ RSpec.describe Types::Queries::Note do
                                                                    }).as_json
 
           expect(result['errors']).not_to be_nil
-          expect(result.dig('errors', 0, 'message')).to match('not found')
+          expect(result.dig('errors', 0, 'message')).to include('not found')
         end
       end
 
@@ -1739,6 +1593,8 @@ RSpec.describe Types::Queries::Note do
           community
           site_worker
           third_note
+          process
+          third_note.update(form_user_id: form_user.id, completed: true)
 
           create(
             :note_comment,
@@ -1841,10 +1697,15 @@ RSpec.describe Types::Queries::Note do
         end
 
         it 'retrieves process comments' do
-          result = DoubleGdpSchema.execute(process_comments_stats_query, context: {
-                                             current_user: admin,
-                                             site_community: community,
-                                           }).as_json
+          variables = { processName: 'DRC' }
+          result = DoubleGdpSchema.execute(
+            process_comments_stats_query,
+            variables: variables,
+            context: {
+              current_user: admin,
+              site_community: community,
+            },
+          ).as_json
 
           expect(result['errors']).to be_nil
           expect(result.dig('data', 'replyCommentStats', 'sent')).to eq 1
@@ -1852,14 +1713,226 @@ RSpec.describe Types::Queries::Note do
           expect(result.dig('data', 'replyCommentStats', 'resolved')).to eq 1
         end
 
+        it 'raises error if process is not found' do
+          variables = { processName: 'Non exixtent process' }
+          result = DoubleGdpSchema.execute(
+            process_comments_stats_query,
+            variables: variables,
+            context: {
+              current_user: admin,
+              site_community: community,
+            },
+          ).as_json
+
+          expect(result.dig('errors', 0, 'message')).to include('not found')
+        end
+
         it 'raises unauthorized user if current-user does not have access' do
-          result = DoubleGdpSchema.execute(process_comments_stats_query, context: {
-                                             current_user: site_worker,
-                                             site_community: community,
-                                           }).as_json
+          variables = { processName: 'DRC' }
+          result = DoubleGdpSchema.execute(
+            process_comments_stats_query,
+            variables: variables,
+            context: {
+              current_user: site_worker,
+              site_community: community,
+            },
+          ).as_json
 
           expect(result.dig('errors', 0, 'message'))
             .to include('Unauthorized')
+        end
+      end
+
+      describe 'Processes comments' do
+        let(:process_reply_comments_query) do
+          <<~GQL
+            query processReplyComments($processName: String!) {
+              processReplyComments(processName: $processName) {
+                sent {
+                  id
+                  body
+                  createdAt
+                  replyFrom {
+                    id
+                    name
+                  }
+                }
+                received {
+                  id
+                  body
+                  repliedAt
+                }
+                resolved {
+                  id
+                  body
+                }
+              }
+            }
+          GQL
+        end
+
+        before do
+          community
+          site_worker
+          third_note
+          process
+          third_note.update(form_user_id: form_user.id, completed: true)
+
+          create(
+            :note_comment,
+            note: third_note,
+            body: 'Step 1',
+            user: site_worker,
+            status: 'active',
+            reply_required: true,
+            reply_from: admin,
+            grouping_id: '6d3f82c5-5d74-471d-a5a9-143f6e5ad3f1',
+          )
+
+          subtask1 = admin.notes.create!(
+            body: 'Step 1 subtask 1',
+            description: 'Step 1 subtask 1',
+            user_id: site_worker.id,
+            category: 'other',
+            flagged: true,
+            community_id: community.id,
+            author_id: site_worker.id,
+            parent_note_id: third_note.id,
+          )
+
+          create(
+            :note_comment,
+            note: subtask1,
+            body: 'Step 1 subtask 1 comment',
+            user: site_worker,
+            status: 'active',
+            reply_required: true,
+            reply_from: admin,
+            grouping_id: '5d3f82c5-5d74-471d-a5a9-143f6e5ad3f1',
+          )
+
+          subtask2 = admin.notes.create!(
+            body: 'Step 1 subtask 2',
+            description: 'Step 1 subtask 2',
+            user_id: site_worker.id,
+            category: 'other',
+            flagged: true,
+            community_id: community.id,
+            author_id: site_worker.id,
+            parent_note_id: subtask1.id,
+          )
+
+          create(
+            :note_comment,
+            note: subtask2,
+            body: 'Step 1 subtask 2 comment',
+            user: site_worker,
+            status: 'active',
+            reply_required: true,
+            reply_from: admin,
+            grouping_id: '4d3f82c5-5d74-471d-a5a9-143f6e5ad3f1',
+          )
+
+          create(
+            :note_comment,
+            note: subtask2,
+            body: 'Admin reply to Step 1 subtask 2 comment',
+            user: admin,
+            status: 'active',
+            reply_required: true,
+            reply_from: site_worker,
+            grouping_id: '4d3f82c5-5d74-471d-a5a9-143f6e5ad3f1',
+          )
+
+          subtask3 = admin.notes.create!(
+            body: 'Step 1 subtask 3',
+            description: 'Step 1 subtask 3',
+            user_id: site_worker.id,
+            category: 'other',
+            flagged: true,
+            community_id: community.id,
+            author_id: site_worker.id,
+            parent_note_id: third_note.id,
+          )
+
+          create(
+            :note_comment,
+            note: subtask3,
+            body: 'Step 1 subtask 3 comment',
+            user: site_worker,
+            status: 'active',
+            reply_required: true,
+            reply_from: admin,
+            grouping_id: '1d3f82c5-5d74-471d-a5a9-143f6e5ad3f1',
+            replied_at: 2.days.ago,
+          )
+          create(
+            :note_comment,
+            note: subtask3,
+            body: 'Step 1 subtask 3 comment',
+            user: admin,
+            status: 'active',
+            reply_required: true,
+            reply_from: site_worker,
+            grouping_id: '1d3f82c5-5d74-471d-a5a9-143f6e5ad3f1',
+            replied_at: 1.day.ago,
+          )
+        end
+
+        it 'raises error when user has no permissions' do
+          variables = { processName: 'DRC' }
+          result = DoubleGdpSchema.execute(
+            process_reply_comments_query,
+            variables: variables,
+            context: {
+              current_user: site_worker,
+              site_community: community,
+            },
+          ).as_json
+
+          expect(result.dig('errors', 0, 'message')).to include('Unauthorized')
+        end
+
+        it 'raises error if process is not found' do
+          variables = { processName: 'Non exixtent process' }
+          result = DoubleGdpSchema.execute(
+            process_reply_comments_query,
+            variables: variables,
+            context: {
+              current_user: admin,
+              site_community: admin.community,
+            },
+          ).as_json
+
+          expect(result.dig('errors', 0, 'message')).to include('not found')
+        end
+
+        it 'returns process comments by status' do
+          variables = { processName: 'DRC' }
+          result = DoubleGdpSchema.execute(
+            process_reply_comments_query,
+            variables: variables,
+            context: {
+              current_user: admin,
+              site_community: admin.community,
+            },
+          ).as_json
+
+          expect(result.dig('data', 'processReplyComments', 'sent').size).to eq 1
+          expect(
+            result.dig('data', 'processReplyComments', 'sent', 0, 'body'),
+          ).to eq 'Admin reply to Step 1 subtask 2 comment'
+          expect(
+            result.dig('data', 'processReplyComments', 'received').size,
+          ).to eq 2
+          expect(
+            result.dig('data', 'processReplyComments', 'received', 0, 'body'),
+          )
+            .to eq 'Step 1 subtask 1 comment'
+          expect(result.dig('data', 'processReplyComments', 'resolved').size).to eq 1
+          expect(
+            result.dig('data', 'processReplyComments', 'resolved', 0, 'body'),
+          ).to eq 'Step 1 subtask 3 comment'
         end
       end
 
