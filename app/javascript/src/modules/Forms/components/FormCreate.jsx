@@ -44,7 +44,7 @@ export default function FormCreate({
   const [expiresAt, setExpiresAtDate] = useState(null);
   const [multipleSubmissionsAllowed, setMultipleSubmissionsAllowed] = useState(true);
   const [preview, setPreview] = useState(false);
-  const [hasTermsAndCondition, setHasTermsAndConditions] = useState(false);
+  const [hasTermsAndConditions, setHasTermsAndConditions] = useState(false);
   const [isPublic, setIsPublic] = useState(false);
   const authState = useContext(AuthStateContext);
   const communityRoles = authState?.user?.community?.roles;
@@ -57,7 +57,7 @@ export default function FormCreate({
       expiresAt,
       description,
       multipleSubmissionsAllowed,
-      hasTermsAndCondition,
+      hasTermsAndConditions,
       preview,
       isPublic,
       roles
@@ -110,7 +110,7 @@ export default function FormCreate({
       setRoles(formData?.form?.roles);
       setExpiresAtDate(formData?.form?.expiresAt);
       setMultipleSubmissionsAllowed(formData?.form.multipleSubmissionsAllowed)
-      setMultipleSubmissionsAllowed(formData?.form.hasTermsAndCondition)
+      setHasTermsAndConditions(formData?.form.hasTermsAndConditions)
       setPreview(formData?.form.preview)
       setIsPublic(formData?.form.isPublic)
     }
@@ -204,11 +204,11 @@ export default function FormCreate({
             </Grid>
             <Grid item md={6} xs={12}>
               <SwitchInput
-                name="has_terms_and_condition"
-                label={t('actions.has_terms_and_condition')}
-                value={hasTermsAndCondition}
+                name="has_terms_and_conditions"
+                label={t('actions.has_terms_and_conditions')}
+                value={hasTermsAndConditions}
                 handleChange={event => setHasTermsAndConditions(event.target.checked)}
-                className="form-has_terms_and_condition-switch-btn"
+                className="form-has_terms_and_conditions-switch-btn"
                 labelPlacement="start"
               />
             </Grid>

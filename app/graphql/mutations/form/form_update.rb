@@ -12,7 +12,7 @@ module Mutations
       argument :preview, Boolean, required: false
       argument :is_public, Boolean, required: false
       argument :multiple_submissions_allowed, Boolean, required: false
-      argument :has_terms_and_condition, Boolean, required: false
+      argument :has_terms_and_conditions, Boolean, required: false
       argument :roles, [String, { null: true }], required: false
 
       field :form, Types::FormType, null: true

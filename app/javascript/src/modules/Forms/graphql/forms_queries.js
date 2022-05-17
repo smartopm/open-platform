@@ -10,7 +10,7 @@ export const FormQuery = gql`
       description
       expiresAt
       multipleSubmissionsAllowed
-      hasTermsAndCondition
+      hasTermsAndConditions
       preview
       isPublic
       roles
