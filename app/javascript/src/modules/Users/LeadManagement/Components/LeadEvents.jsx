@@ -24,7 +24,7 @@ import { divionOptions } from '../../../../utils/constants';
 export default function LeadEvents({ userId, data }) {
   const [meetingName, setMeetingName] = useState('');
   const [leadData, setLeadData] = useState(false);
-  const[disabled, setDisabled] = useState(true)
+  const [disabled, setDisabled] = useState(true);
   const [dealName, setDealName] = useState('');
   const [message, setMessage] = useState({ isError: false, detail: '' });
   const [leadFormData, setLeadFormData] = useState(initialLeadFormData);
@@ -53,7 +53,7 @@ export default function LeadEvents({ userId, data }) {
 
   function handleDivisionChange(event) {
     setLeadData(true);
-    setDisabled(false)
+    setDisabled(false);
     const { name, value } = event.target;
     setLeadFormData({
       user: { ...leadFormData?.user, [name]: value }
@@ -71,7 +71,7 @@ export default function LeadEvents({ userId, data }) {
   function handleSubmitDivision(e) {
     e.preventDefault();
     handleSubmit();
-    setDisabled(true)
+    setDisabled(true);
   }
 
   function handleSubmitMeeting(e) {
@@ -158,56 +158,58 @@ export default function LeadEvents({ userId, data }) {
       />
       <Grid container>
         <Grid item md={12} xs={12}>
-          <Grid item md={6} xs={12}>
-            <Typography variant="h6" data-testid="division">
-              {t('lead_management.division')}
-            </Typography>
+          <Grid container style={{ display: 'flex', alignItems: 'center' }}>
+            <Grid item md={6} xs={12}>
+              <Typography variant="h6" data-testid="division">
+                {t('lead_management.division')}
+              </Typography>
 
-            <Typography variant="body2" data-testid="division_header">
-              {t('lead_management.division_header')}
-            </Typography>
-          </Grid>
-          <Grid item md={6} xs={12}>
-            <Grid
-              container
-              spacing={2}
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                paddingTop: 10
-              }}
-            >
-              <Grid item md={10} xs={10}>
-                <FormControl fullWidth size="small">
-                  <InputLabel id="division">{t('lead_management.set_division')}</InputLabel>
-                  <Select
-                    labelId="demo-multiple-name-label"
-                    id="division"
-                    name="division"
-                    value={leadFormData?.user?.division || ''}
-                    onChange={handleDivisionChange}
-                    input={<OutlinedInput label={t('lead_management.set_division')} />}
-                    MenuProps={MenuProps}
-                  >
-                    <MenuItem value="" />
-                    {divionOptions.map(val => (
-                      <MenuItem key={val} value={val}>
-                        {val}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Grid>
+              <Typography variant="body2" data-testid="division_header">
+                {t('lead_management.division_header')}
+              </Typography>
+            </Grid>
+            <Grid item md={6} xs={12}>
+              <Grid
+                container
+                spacing={2}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  paddingTop: 10
+                }}
+              >
+                <Grid item md={10} xs={10}>
+                  <FormControl fullWidth size="small">
+                    <InputLabel id="division">{t('lead_management.set_division')}</InputLabel>
+                    <Select
+                      labelId="demo-multiple-name-label"
+                      id="division"
+                      name="division"
+                      value={leadFormData?.user?.division || ''}
+                      onChange={handleDivisionChange}
+                      input={<OutlinedInput label={t('lead_management.set_division')} />}
+                      MenuProps={MenuProps}
+                    >
+                      <MenuItem value="" />
+                      {divionOptions.map(val => (
+                        <MenuItem key={val} value={val}>
+                          {val}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
 
-              <Grid item md={2} xs={2}>
-                <ButtonComponent
-                  variant="contained"
-                  color="primary"
-                  buttonText={t('lead_management.add')}
-                  handleClick={handleSubmitDivision}
-                  disabled={disabled}
-                  disableElevation
-                />
+                <Grid item md={2} xs={2}>
+                  <ButtonComponent
+                    variant="contained"
+                    color="primary"
+                    buttonText={t('lead_management.add')}
+                    handleClick={handleSubmitDivision}
+                    disabled={disabled}
+                    disableElevation
+                  />
+                </Grid>
               </Grid>
             </Grid>
           </Grid>
