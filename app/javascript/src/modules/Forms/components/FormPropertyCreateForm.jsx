@@ -27,16 +27,16 @@ import { LiteFormCategories } from '../graphql/form_category_queries';
 
 // Replace this with translation and remove options on FormPropertySelector
 const fieldTypes = {
-  text: 'Text',
-  radio: 'Radio',
   checkbox: 'Checkbox',
   date: 'Date',
-  time: 'Time',
   datetime: 'Date with Time',
   dropdown: 'Dropdown',
-  signature: 'Signature',
   file_upload: 'File Upload',
-  terms_and_condition: 'Terms and Condition'
+  radio: 'Radio',
+  signature: 'Signature',
+  terms_and_condition: 'Terms and Condition',
+  text: 'Text',
+  time: 'Time',
 };
 
 export default function FormPropertyCreateForm({
