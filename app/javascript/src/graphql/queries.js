@@ -246,6 +246,7 @@ export const LeadDetailsQuery = gql`
       companyName
       country
       region
+      division
       companyDescription
       companyLinkedin
       companyWebsite
