@@ -35,6 +35,7 @@
     "completed": "Completado",
     "completed_by_quarter": "Completado por Trimestre",
     "documents": "Documentos",
+    "comments": "Comentarios",
     "drc_process": "Proceso de DRC",
     "drc_stages": {
       "concept_design_review": "Revisión del Diseño Conceptual",
@@ -127,6 +128,7 @@
     "overdue_tasks": "Tareas vencidas",
     "parent_task": "Tarea Principal",
     "project_overview": "Descripción del Proyecto",
+    "project_total_documents": "Documentos totales",
     "quick_search": "Búsqueda Rápida",
     "reminder_text": "Recuérdame más tarde",
     "replied": "respondió",

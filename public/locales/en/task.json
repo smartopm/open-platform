@@ -69,6 +69,7 @@
     "due_date_optional": "Due Date (Optional)",
     "task_created": "Task Successfully Created",
     "project_overview": "Project Overview",
+    "project_total_documents": "Total Documents",
     "reply_submitted": "Reply Submitted",
     "reply_sent_to": "Reply Requested Sent To",
     "no_comments": "No comments yet on this project",
@@ -103,6 +104,7 @@
   "processes": {
     "overview": "Overview",
     "processes": "Processes",
+    "comments": "Comments",
     "documents": "Documents",
     "drc_process": "DRC Process",
     "projects_by_quarter": "Projects by Quarter",
@@ -151,7 +153,6 @@
     "step_2_sub_header": "Add tasks and sub tasks using the kabab menus. Your work is autosaved.",
     "save": "SAVE",
     "task_list_name": "Task List Name"
-
   },
   "misc": {
     "confirm": "confirm",
