@@ -10,7 +10,7 @@ RSpec.describe Types::Queries::LeadLog do
                           role: admin_role,
                           permissions: %w[can_fetch_lead_logs can_access_lead_scorecard])
     end
-    let(:lead_user) { create(:lead, lead_status: 'Signed MOU', country: 'India') }
+    let(:lead_user) { create(:lead, lead_status: 'Signed MOU', division: 'India') }
     let(:community) { lead_user.community }
     let(:another_lead_user) do
       create(:user,
@@ -18,7 +18,7 @@ RSpec.describe Types::Queries::LeadLog do
              community: community,
              user_type: 'lead',
              lead_status: 'Qualified Lead',
-             country: 'China')
+             division: 'China')
     end
 
     let(:admin) { create(:admin_user, community_id: community.id, role: admin_role) }

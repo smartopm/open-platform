@@ -74,12 +74,14 @@ module Types::Queries::LeadLog
   def leads_monthly_stats_by_division
     result = context[:site_community].users
                                      .where(user_type: 'lead', created_at: current_year)
-                                     .group('country', '(EXTRACT(MONTH FROM created_at)::integer)')
+                                     .group('division', '(EXTRACT(MONTH FROM created_at)::integer)')
                                      .count
 
-    result.each_with_object({}) do |((country, month), users_count), data|
-      data[country] ||= {}
-      data[country][month] = users_count
+    result.each_with_object({}) do |((division, month), users_count), data|
+      next if division.nil?
+
+      data[division] ||= {}
+      data[division][month] = users_count
     end
   end
 
