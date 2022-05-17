@@ -69,10 +69,9 @@ export const ProjectStagesQuery = gql`
   }
 `;
 
-// TODO: olivier sync with Bonny to verify if this matches accordingly
 export const TaskQuarterySummaryQuery = gql`
-  query tasksByQuarter {
-    tasksByQuarter
+  query tasksByQuarter($processName: String!) {
+    tasksByQuarter(processName: $processName)
   }
 `;
 
@@ -101,6 +100,7 @@ export const ProjectCommentsQuery = gql`
 
 export const ProjectsStatsQuery = gql`
   query GetProjectsStatsQuery(
+    $processName: String!
     $offset: Int
     $limit: Int
     $step: String
@@ -108,6 +108,7 @@ export const ProjectsStatsQuery = gql`
     $submittedPerQuarter: String
   ) {
     projects(
+      processName: $processName
       offset: $offset
       limit: $limit
       step: $step
@@ -126,8 +127,8 @@ export const ProjectsStatsQuery = gql`
 `;
 
 export const ReplyCommentStatQuery = gql`
-  query replyCommentStats($processType: String) {
-    replyCommentStats(processType: $processType) {
+  query replyCommentStats($processName: String!) {
+    replyCommentStats(processName: $processName) {
       sent
       received
       resolved
