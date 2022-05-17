@@ -38,6 +38,7 @@ RSpec.describe Community, type: :model do
       is_expected.to have_db_column(:domains).of_type(:string)
                                              .with_options(default: [], array: true)
     end
+    it { is_expected.to have_db_column(:lead_monthly_targets).of_type(:json) }
   end
 
   describe 'associations' do

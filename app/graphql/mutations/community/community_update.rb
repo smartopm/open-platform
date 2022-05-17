@@ -26,6 +26,7 @@ module Mutations
       argument :templates, GraphQL::Types::JSON, required: false
       argument :features, GraphQL::Types::JSON, required: false
       argument :ga_id, String, required: false
+      argument :lead_monthly_targets, GraphQL::Types::JSON, required: false
 
       field :community, Types::CommunityType, null: true
 
