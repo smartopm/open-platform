@@ -120,7 +120,7 @@ export default function UserLabels({ userId, isLabelOpen }) {
                     avatar={
                       // eslint-disable-next-line react/jsx-wrap-multilines
                       <Avatar
-                        sx={{ height: '24px !important' }}
+                        sx={{ height: '31px !important' }}
                         style={{
                           width: 'fit-content',
                           color: lab.color,
@@ -134,8 +134,8 @@ export default function UserLabels({ userId, isLabelOpen }) {
                           borderTop: '1px solid',
                           borderLeft: '1px solid',
                           marginLeft: -1,
-                          paddingLeft: 2,
-                          paddingRight: 2
+                          paddingLeft: 8,
+                          paddingRight: 8
                         }}
                       >
                         {lab.groupingName}
@@ -150,7 +150,8 @@ export default function UserLabels({ userId, isLabelOpen }) {
                       marginRight: 5,
                       marginBottom: 5,
                       background: lab.color,
-                      color: 'white'
+                      color: 'white',
+                      height: '2rem'
                     }}
                   />
                 ) : (
@@ -164,8 +165,11 @@ export default function UserLabels({ userId, isLabelOpen }) {
                       width: isMobile && '40%',
                       marginRight: 5,
                       marginBottom: 5,
+                      paddingTop: '9px',
+                      paddingBottom: '9px',
                       background: lab.color,
-                      color: 'white'
+                      color: 'white',
+                      height: '2rem'
                     }}
                   />
                 )}
