@@ -242,8 +242,8 @@ RSpec.describe Types::Queries::Note do
 
     let(:projects_summary_query) do
       <<~GQL
-        query tasksByQuarter($processType: String) {
-          tasksByQuarter(processType: $processType)
+        query tasksByQuarter($processName: String!) {
+          tasksByQuarter(processName: $processName)
         }
       GQL
     end
@@ -1670,7 +1670,7 @@ RSpec.describe Types::Queries::Note do
         end
 
         it 'returns counts of the completed tasks per quarter' do
-          variables = { processType: 'drc' }
+          variables = { processName: process.name }
           result = DoubleGdpSchema.execute(projects_summary_query, variables: variables,
                                                                    context: {
                                                                      current_user: site_worker,
@@ -1682,6 +1682,18 @@ RSpec.describe Types::Queries::Note do
           expect(
             result.dig('data', 'tasksByQuarter', 'submitted'),
           ).to include([2022.0, 1.0, 1], [2022.0, 2.0, 1])
+        end
+
+        it 'throws error if process is not found' do
+          variables = { processName: 'A random name' }
+          result = DoubleGdpSchema.execute(projects_summary_query, variables: variables,
+                                                                   context: {
+                                                                     current_user: site_worker,
+                                                                     site_community: community,
+                                                                   }).as_json
+
+          expect(result['errors']).not_to be_nil
+          expect(result.dig('errors', 0, 'message')).to match('not found')
         end
       end
 

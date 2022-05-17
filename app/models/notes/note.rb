@@ -85,11 +85,11 @@ module Notes
     end
 
     # rubocop:disable Metrics/MethodLength
-    def self.tasks_by_quarter(community_id, process_type, task_category: :completed)
+    def self.tasks_by_quarter(community_id, process_name, task_category: :completed)
       community = Community.find_by(id: community_id)
       return unless community
 
-      process_form_users = community.process_form_users(process_type)&.pluck(:id)
+      process_form_users = community.process_form_users(process_name)&.pluck(:id)
       query = "
         SELECT DATE_PART('year', completed_at) as yr, DATE_PART('quarter', completed_at) as qtr, \
         count(*) FROM notes WHERE completed = true AND community_id=?

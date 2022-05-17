@@ -108,7 +108,7 @@ module Types::Queries::Note
 
     field :tasks_by_quarter, GraphQL::Types::JSON, null: false do
       description 'Completed tasks by quarter'
-      argument :process_type, String, required: false
+      argument :process_name, String, required: true
     end
 
     field :project, Types::NoteType, null: false do
@@ -566,12 +566,15 @@ module Types::Queries::Note
       .find(task_id)
   end
 
-  def tasks_by_quarter(process_type: 'drc')
+  def tasks_by_quarter(process_name:)
+    process = context[:site_community].processes.find_by(name: process_name)
+    raise ActiveRecord::RecordNotFound if process.blank?
+
     community_id = context[:site_community].id
 
     {
-      completed: Notes::Note.tasks_by_quarter(community_id, process_type),
-      submitted: Notes::Note.tasks_by_quarter(community_id, process_type,
+      completed: Notes::Note.tasks_by_quarter(community_id, process_name),
+      submitted: Notes::Note.tasks_by_quarter(community_id, process_name,
                                               task_category: :submitted),
     }
   end
