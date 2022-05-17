@@ -1289,4 +1289,4 @@ export const countries = [
   'Zimbabwe'
 ];
 
-export const divionOptions = ['China', 'Europe', 'India'];
+export const divisionOptions = ['China', 'Europe', 'India'];

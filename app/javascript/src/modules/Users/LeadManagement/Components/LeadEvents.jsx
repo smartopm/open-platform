@@ -19,7 +19,7 @@ import { formatError } from '../../../../utils/helpers';
 import LeadEvent from './LeadEvent';
 import ButtonComponent from '../../../../shared/buttons/Button';
 import { MenuProps, initialLeadFormData, secondaryInfoUserObject } from '../../utils';
-import { divionOptions } from '../../../../utils/constants';
+import { divisionOptions } from '../../../../utils/constants';
 
 export default function LeadEvents({ userId, data }) {
   const [meetingName, setMeetingName] = useState('');
@@ -191,7 +191,7 @@ export default function LeadEvents({ userId, data }) {
                       MenuProps={MenuProps}
                     >
                       <MenuItem value="" />
-                      {divionOptions.map(val => (
+                      {divisionOptions.map(val => (
                         <MenuItem key={val} value={val}>
                           {val}
                         </MenuItem>
