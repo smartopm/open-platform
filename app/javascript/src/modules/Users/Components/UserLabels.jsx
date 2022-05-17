@@ -147,10 +147,10 @@ export default function UserLabels({ userId, isLabelOpen }) {
                     label={truncateString(lab.shortDesc, 12)}
                     onDelete={() => handleDelete(lab.id)}
                     style={{
-                      width: isMobile && '40%',
                       marginRight: 5,
                       marginBottom: 5,
-                      background: lab.color
+                      background: lab.color,
+                      color: 'white'
                     }}
                   />
                 ) : (
@@ -164,7 +164,8 @@ export default function UserLabels({ userId, isLabelOpen }) {
                       width: isMobile && '40%',
                       marginRight: 5,
                       marginBottom: 5,
-                      background: lab.color
+                      background: lab.color,
+                      color: 'white'
                     }}
                   />
                 )}

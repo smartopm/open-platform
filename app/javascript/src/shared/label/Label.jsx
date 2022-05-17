@@ -32,7 +32,7 @@ export default function Label({ color, title, borderRadius, width, groupingName 
           color,
           marginTop: 20,
           fontSize: '12px',
-          width: 'fit-content',
+          width: '100%',
           padding: '8px',
           borderTop: '1px solid',
           borderLeft: '1px solid',
@@ -50,7 +50,7 @@ export default function Label({ color, title, borderRadius, width, groupingName 
           background: color,
           color: 'white',
           fontSize: '12px',
-          width: 'fit-content',
+          width: '100%',
           padding: '9px',
           borderTopRightRadius: '16px',
           borderBottomRightRadius: '16px'
@@ -64,7 +64,7 @@ export default function Label({ color, title, borderRadius, width, groupingName 
 
 Label.defaultProps = {
   borderRadius: '16px',
-  width: 'fit-content',
+  width: '100%',
   groupingName: ''
 };
 
