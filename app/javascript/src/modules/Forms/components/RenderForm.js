@@ -29,7 +29,6 @@ import {
 import MessageAlert from '../../../components/MessageAlert';
 import ListWrapper from '../../../shared/ListWrapper';
 import UploadFileItem from '../../../shared/imageUpload/UploadFileItem';
-import TermsAndConditionInput from './FormProperties/TermsAndConditionInput';
 
 export default function RenderForm({
   formPropertiesData,
@@ -555,47 +554,6 @@ export default function RenderForm({
         )}
       </Grid>
     ),
-    terms_and_condition: (
-      <Grid
-        container
-        spacing={3}
-        alignItems="center"
-        justifyContent="center"
-        key={formPropertiesData.id}
-      >
-        {editMode && (
-        <Grid item xs={1}>
-          <Typography color="textSecondary">{number}</Typography>
-        </Grid>
-        )}
-
-        <Grid item xs={editMode ? 10 : 12} className={classes.spaceBottom}>
-          <ListWrapper>
-            <TermsAndConditionInput
-              id={formPropertiesData.id}
-              properties={formPropertiesData}
-              value=""
-              handleValue={event => handleValueChange(event, formPropertiesData)}
-              editable={editMode}
-              inputValidation={{
-                error: checkRequiredFormPropertyIsFilled(formPropertiesData, formState)
-              }}
-            />
-          </ListWrapper>
-        </Grid>
-        {editMode && (
-          <Grid item xs={1}>
-            <FormPropertyAction
-              formId={formId}
-              editMode={editMode}
-              propertyId={formPropertiesData.id}
-              refetch={refetch}
-              categoryId={categoryId}
-            />
-          </Grid>
-        )}
-      </Grid>
-    )
   };
   return (
     <Grid style={!editMode && !matches ? { padding: '0 120px' } : {}}>
@@ -652,5 +610,4 @@ RenderForm.propTypes = {
   }).isRequired,
   number: PropTypes.number.isRequired,
   formDetailRefetch: PropTypes.func.isRequired,
-  categoriesData: PropTypes.object.isRequired
 };

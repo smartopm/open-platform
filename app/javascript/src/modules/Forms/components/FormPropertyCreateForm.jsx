@@ -34,7 +34,6 @@ const fieldTypes = {
   file_upload: 'File Upload',
   radio: 'Radio',
   signature: 'Signature',
-  terms_and_condition: 'Terms and Condition',
   text: 'Text',
   time: 'Time',
 };
