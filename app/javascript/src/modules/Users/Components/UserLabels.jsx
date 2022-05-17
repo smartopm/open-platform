@@ -129,6 +129,7 @@ export default function UserLabels({ userId, isLabelOpen }) {
                           borderTopLeftRadius: 16,
                           borderBottomLeftRadius: 16,
                           background: 'white',
+                          fontSize: '12px',
                           borderColor: lab.color,
                           borderBottom: '1px solid',
                           borderTop: '1px solid',
@@ -149,6 +150,7 @@ export default function UserLabels({ userId, isLabelOpen }) {
                     style={{
                       marginRight: 5,
                       marginBottom: 5,
+                      fontSize: '12px',
                       background: lab.color,
                       color: 'white',
                       height: '2rem'
@@ -167,6 +169,7 @@ export default function UserLabels({ userId, isLabelOpen }) {
                       marginBottom: 5,
                       paddingTop: '9px',
                       paddingBottom: '9px',
+                      fontSize: '12px',
                       background: lab.color,
                       color: 'white',
                       height: '2rem'
