@@ -72,7 +72,8 @@
     "confirm": "Confirm",
     "clear_condition": "Clear Condition",
     "add_property": "Add a Property",
-    "hide": "Hide"
+    "hide": "Hide",
+    "i_agree": "I agree"
   },
   "errors": {
     "no_forms": "No Forms to submit",

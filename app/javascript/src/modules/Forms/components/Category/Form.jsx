@@ -21,6 +21,7 @@ import { FormCategoryDeleteMutation } from '../../graphql/form_category_mutation
 import { formatError } from '../../../../utils/helpers';
 import FormTitle from '../FormTitle';
 import AccessCheck from '../../../Permissions/Components/AccessCheck';
+import TermsAndCondition from '../TermsAndCondition';
 
 export default function Form({
   editMode,
@@ -34,6 +35,7 @@ export default function Form({
 }) {
   const [categoryFormOpen, setCategoryFormOpen] = useState(false);
   const [propertyFormOpen, setPropertyFormOpen] = useState(false);
+  const [hasAgreedToTerms, setHasAgreedToTerms] = useState(false);
   const [data, setFormData] = useState({});
   const { t } = useTranslation(['common', 'form']);
   const [categoryId, setCategoryId] = useState('');
@@ -163,6 +165,7 @@ export default function Form({
         />
       )}
 
+
       <DetailsDialog
         handleClose={handleCancelPreview}
         open={formState.previewable && !imgUploadError && !formState.error}
@@ -265,6 +268,19 @@ export default function Form({
           )}
         </Grid>
       )}
+
+      {
+          !editMode && (
+            <Grid style={{ padding: '0 120px' }}>
+              <TermsAndCondition
+                categoriesData={categoriesData} 
+                isChecked={hasAgreedToTerms}
+                handleCheckTerms={event => setHasAgreedToTerms(event.target.checked)}
+              />
+            </Grid>
+          )
+      }
+
       {!editMode && (
         <Grid container style={matches ? {} : { padding: '0 120px 20px 120px' }}>
           <Grid item md={12} xs={12} style={{ marginTop: '20px' }}>
@@ -294,7 +310,7 @@ export default function Form({
               aria-label="form_submit"
               style={matches ? { marginTop: '20px' } : { marginTop: '25px' }}
               onClick={() => formSubmit(formData)}
-              disabled={formState.isSubmitting}
+              disabled={formState.isSubmitting || !hasAgreedToTerms}
               data-testid="submit_form_btn"
             >
               {!formState.isSubmitting

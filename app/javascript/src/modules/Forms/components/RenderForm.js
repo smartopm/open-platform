@@ -38,7 +38,7 @@ export default function RenderForm({
   editMode,
   categoryId,
   number,
-  formDetailRefetch
+  formDetailRefetch,
 }) {
   const classes = useStyles();
   const matches = useMediaQuery('(max-width:900px)');
@@ -651,5 +651,6 @@ RenderForm.propTypes = {
     required: PropTypes.bool
   }).isRequired,
   number: PropTypes.number.isRequired,
-  formDetailRefetch: PropTypes.func.isRequired
+  formDetailRefetch: PropTypes.func.isRequired,
+  categoriesData: PropTypes.object.isRequired
 };
