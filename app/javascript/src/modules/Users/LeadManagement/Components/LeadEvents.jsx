@@ -24,6 +24,7 @@ import { divionOptions } from '../../../../utils/constants';
 export default function LeadEvents({ userId, data }) {
   const [meetingName, setMeetingName] = useState('');
   const [leadData, setLeadData] = useState(false);
+  const[disabled, setDisabled] = useState(true)
   const [dealName, setDealName] = useState('');
   const [message, setMessage] = useState({ isError: false, detail: '' });
   const [leadFormData, setLeadFormData] = useState(initialLeadFormData);
@@ -52,6 +53,7 @@ export default function LeadEvents({ userId, data }) {
 
   function handleDivisionChange(event) {
     setLeadData(true);
+    setDisabled(false)
     const { name, value } = event.target;
     setLeadFormData({
       user: { ...leadFormData?.user, [name]: value }
@@ -69,6 +71,7 @@ export default function LeadEvents({ userId, data }) {
   function handleSubmitDivision(e) {
     e.preventDefault();
     handleSubmit();
+    setDisabled(true)
   }
 
   function handleSubmitMeeting(e) {
@@ -105,7 +108,6 @@ export default function LeadEvents({ userId, data }) {
 
   function handleSubmit(name = '', logType = '') {
     if (leadData) {
-      console.log('Division mutation called');
       leadDataUpdate({
         variables: {
           ...leadFormData?.user,
@@ -203,7 +205,7 @@ export default function LeadEvents({ userId, data }) {
                   color="primary"
                   buttonText={t('lead_management.add')}
                   handleClick={handleSubmitDivision}
-                  disabled={!leadFormData?.user?.division?.trim()}
+                  disabled={disabled}
                   disableElevation
                 />
               </Grid>
