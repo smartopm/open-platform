@@ -37,6 +37,7 @@ export const FormCreateMutation = gql`
     $expiresAt: String
     $description: String
     $multipleSubmissionsAllowed: Boolean!
+    $hasTermsAndCondition: Boolean!
     $preview: Boolean!
     $isPublic: Boolean!
     $roles: [String]
@@ -46,6 +47,7 @@ export const FormCreateMutation = gql`
       expiresAt: $expiresAt
       description: $description
       multipleSubmissionsAllowed: $multipleSubmissionsAllowed
+      hasTermsAndCondition: $hasTermsAndCondition
       preview: $preview
       isPublic: $isPublic
       roles: $roles
@@ -79,6 +81,7 @@ export const FormUpdateMutation = gql`
     $description: String
     $status: String
     $multipleSubmissionsAllowed: Boolean
+    $hasTermsAndCondition: Boolean
     $preview: Boolean
     $isPublic: Boolean
     $roles: [String]
@@ -90,6 +93,7 @@ export const FormUpdateMutation = gql`
       description: $description
       status: $status
       multipleSubmissionsAllowed: $multipleSubmissionsAllowed
+      hasTermsAndCondition: $hasTermsAndCondition
       preview: $preview
       isPublic: $isPublic
       roles: $roles
