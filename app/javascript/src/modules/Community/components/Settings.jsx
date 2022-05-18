@@ -1,3 +1,6 @@
+/* eslint-disable max-lines */
+/* eslint-disable max-statements */
+/* eslint-disable complexity */
 /* eslint-disable jsx-a11y/interactive-supports-focus */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useEffect, useState } from 'react';
@@ -48,6 +51,11 @@ export default function CommunitySettings({ data, refetch }) {
     category: ''
   };
 
+  const divisionTargets = {
+    division: '',
+    target: ''
+  };
+
   const menuItems = {
     menu_link: '',
     menu_name: '',
@@ -84,6 +92,7 @@ export default function CommunitySettings({ data, refetch }) {
   const [whatsappOptions, setWhatsappOptions] = useState([whatsapps]);
   const [socialLinkOptions, setSocialLinkOptions] = useState([socialLinks]);
   const [menuItemOptions, setMenuItemOptions] = useState([menuItems]);
+  const [divisionTargetsOptions, setDivisionTargetsOptions] = useState([divisionTargets]);
   const [behindTemplate, setBehindTemplate] = useState(
     data?.templates?.payment_reminder_template_behind || ''
   );
@@ -106,6 +115,7 @@ export default function CommunitySettings({ data, refetch }) {
   const [locale, setLocale] = useState('en-ZM');
   const [language, setLanguage] = useState('en-US');
   const [hasQuickLinksSettingChanged, setHasQuickLinksSettingChanged] = useState(false);
+  const [divisionTargetChanged, setDivisionTargetChanged] = useState(false);
   const [smsPhoneNumbers, setSMSPhoneNumbers] = useState(data?.smsPhoneNumbers?.join(',') || '');
   const [emergencyCallNumber, setEmergencyCallNumber] = useState(data?.emergencyCallNumber || '');
   const [communityFeatures, setCommunityFeatures] = useState(features);
@@ -151,6 +161,10 @@ export default function CommunitySettings({ data, refetch }) {
     setMenuItemOptions([...menuItemOptions, menuItems]);
   }
 
+  function handleAddDivisionTargetsOptions() {
+    setDivisionTargetsOptions([...divisionTargetsOptions, divisionTargets]);
+  }
+
   function updateOptions(index, newValue, options, type) {
     if (type === 'email') {
       handleSetOptions(setEmailOptions, index, newValue, options);
@@ -160,6 +174,8 @@ export default function CommunitySettings({ data, refetch }) {
       handleSetOptions(setSocialLinkOptions, index, newValue, options);
     } else if (type === 'menu_link') {
       handleSetOptions(setMenuItemOptions, index, newValue, options);
+    } else if (type === 'division_target') {
+      handleSetOptions(setDivisionTargetsOptions, index, newValue, options);
     } else {
       handleSetOptions(setNumberOptions, index, newValue, options);
     }
@@ -184,6 +200,16 @@ export default function CommunitySettings({ data, refetch }) {
   function handleMenuItemChange(event, index) {
     setHasQuickLinksSettingChanged(true);
     updateOptions(index, { [event.target.name]: event.target.value }, menuItemOptions, 'menu_link');
+  }
+
+  function handleDivisionTargetChange(event, index) {
+    setDivisionTargetChanged(true);
+    updateOptions(
+      index,
+      { [event.target.name]: event.target.value },
+      menuItemOptions,
+      'division_target'
+    );
   }
 
   function handleSocialLinkChange(event, index) {
@@ -236,6 +262,17 @@ export default function CommunitySettings({ data, refetch }) {
 
     values.splice(id, 1);
     setMenuItemOptions([...values]);
+  }
+
+  function handleDivisionTargetRemoveRow(id) {
+    const values = divisionTargetsOptions;
+    if (values.length === 1) {
+      setDivisionTargetsOptions([divisionTargets]);
+      return;
+    }
+
+    values.splice(id, 1);
+    setDivisionTargetsOptions([...values]);
   }
 
   function handleModuleFeatures(e, moduleName, feature) {
@@ -344,7 +381,9 @@ export default function CommunitySettings({ data, refetch }) {
         supportWhatsapp: whatsappOptions,
         socialLinks: socialLinkOptions,
         menuItems: menuItemOptions,
+        leadMonthlyTargets: divisionTargetsOptions,
         imageBlobId: signedBlobId,
+        // eslint-disable-next-line max-lines
         templates: templateOptions,
         gaId: analyticsId,
         currency,
@@ -373,7 +412,8 @@ export default function CommunitySettings({ data, refetch }) {
         // only reload if the primary color has changed
         if (
           themeColors.primaryColor !== data.themeColors?.primaryColor ||
-          hasQuickLinksSettingChanged
+          hasQuickLinksSettingChanged ||
+          divisionTargetChanged
         ) {
           window.location.reload();
         }
@@ -391,6 +431,7 @@ export default function CommunitySettings({ data, refetch }) {
     setWhatsappOptions(data.supportWhatsapp || [whatsapps]);
     setSocialLinkOptions(data.socialLinks || [socialLinks]);
     setMenuItemOptions(data.menuItems || [menuItems]);
+    setDivisionTargetsOptions(data.leadMonthlyTargets || [divisionTargets]);
     setTemplateOptions(data.templates || templateOptions);
     setCurrency(data.currency);
     setLocale(data.locale);
@@ -1004,6 +1045,64 @@ export default function CommunitySettings({ data, refetch }) {
           )}
         </div>
       </div>
+      {/* Division targets */}
+      <div className={classes.information} style={{ marginTop: '40px' }}>
+        <Typography variant="h6">{t('community.lead_management')}</Typography>
+        <Typography variant="subtitle1">{t('community.subtitle')}</Typography>
+        <Typography variant="caption">{t('community.division_description')}</Typography>
+
+        {divisionTargetsOptions.map((_menu, i) => (
+          // eslint-disable-next-line react/no-array-index-key
+          <div style={{ display: 'flex', flexDirection: 'row', margin: '10px 0' }} key={i}>
+            <div>
+              <div style={{ display: 'flex', flexDirection: 'row', margin: '10px 0' }}>
+                <TextField
+                  id={`${i}-division-input`}
+                  style={{ width: '300px' }}
+                  label={t('common:form_fields.division')}
+                  onChange={event => handleDivisionTargetChange(event, i)}
+                  value={objectAccessor(objectAccessor(divisionTargetsOptions, i), 'division')}
+                  name="division"
+                  data-testid="division-input"
+                />
+                <TextField
+                  id={`${i}-target-input`}
+                  style={{ width: '200px' }}
+                  className={classes.menuItemRight}
+                  label={t('common:form_fields.target')}
+                  onChange={event => handleDivisionTargetChange(event, i)}
+                  value={objectAccessor(objectAccessor(divisionTargetsOptions, i), 'target')}
+                  name="target"
+                  data-testid="target-input"
+                />
+              </div>
+            </div>
+            <div style={{ paddingTop: '20px' }}>
+              <IconButton
+                style={{ marginTop: -5 }}
+                onClick={() => handleDivisionTargetRemoveRow(i)}
+                aria-label="remove"
+                size="large"
+              >
+                <DeleteOutline />
+              </IconButton>
+            </div>
+          </div>
+        ))}
+        <div
+          className={classes.addIcon}
+          role="button"
+          onClick={handleAddDivisionTargetsOptions}
+          data-testid="division_target_click"
+        >
+          <AddCircleOutlineIcon />
+          <div style={{ marginLeft: '10px', color: 'secondary' }}>
+            <Typography align="center" variant="caption">
+              {t('common:form_fields.add_division')}
+            </Typography>
+          </div>
+        </div>
+      </div>
 
       <div className={classes.button}>
         <Button
@@ -1029,6 +1128,7 @@ CommunitySettings.propTypes = {
     supportWhatsapp: PropTypes.arrayOf(PropTypes.object),
     socialLinks: PropTypes.arrayOf(PropTypes.object),
     menuItems: PropTypes.arrayOf(PropTypes.object),
+    leadMonthlyTargets: PropTypes.arrayOf(PropTypes.object),
     templates: PropTypes.shape({
       payment_reminder_template_behind: PropTypes.string,
       payment_reminder_template_upcoming: PropTypes.string
