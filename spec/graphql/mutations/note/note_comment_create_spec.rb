@@ -131,7 +131,7 @@ RSpec.describe Mutations::Note::NoteCommentCreate do
         groupingId: '9fafaba8-ad19-4a08-97e4-9b670d482cfa',
       }
 
-      path = "/processes/projects/#{note.id}?tab=processes&detailTab=comments&replying_discussion=9fafaba8-ad19-4a08-97e4-9b670d482cfa"
+      path = "/processes/drc/projects/#{note.id}?tab=processes&detailTab=comments&replying_discussion=9fafaba8-ad19-4a08-97e4-9b670d482cfa"
       action_url = "https://#{HostEnv.base_url(admin.community)}#{path}"
       email_body = I18n.t('email_template.comment_reply.body',
                           note_body: note.body,

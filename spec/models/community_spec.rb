@@ -177,7 +177,7 @@ RSpec.describe Community, type: :model do
     let!(:form_user) { create(:form_user, form: form, user: admin, status_updated_by: admin) }
 
     it 'should return form users of drc process type' do
-      expect(community.process_form_users(process.name).first.form_id).to eql form.id
+      expect(community.process_form_users(process.id).first.form_id).to eql form.id
     end
   end
 end

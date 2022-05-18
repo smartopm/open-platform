@@ -268,7 +268,7 @@ export default function TaskInfoTop({
                       </IconButton>
                     </Grid>
                   )}
-                  {!fromLeadPage && location.pathname !== '/processes' && (
+                  {!fromLeadPage && !location.pathname.match(/\bprocesses\b/) && (
                     <Grid item md={4} xs={1} style={{ textAlign: 'right' }}>
                       <IconButton
                         edge="end"

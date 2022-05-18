@@ -100,7 +100,7 @@ export default function TodoItem({
     }
   ];
 
-  if (location.pathname.match(/\bprocesses\b/)) {
+  if (location.pathname === '/process') {
     menuList = [
       {
         content: t('menu.open_project_details'),

@@ -407,13 +407,11 @@ module Types::Queries::Note
 
     results = results.where(completed: [false, nil], current_step_body: vals[:step]) if vals[:step]
 
-    if completed_per_quarter
-      results = projects_query(process_id).by_quarter(completed_per_quarter)
-    end
+    results = projects_query(process_id).by_quarter(completed_per_quarter) if completed_per_quarter
 
     if submitted_per_quarter
       results = projects_query(process_id).by_quarter(submitted_per_quarter,
-                                                        task_category: :submitted)
+                                                      task_category: :submitted)
     end
 
     if valid_life_time_category?(life_time_category)
