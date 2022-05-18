@@ -58,7 +58,7 @@ module Mutations
         return if comment.reply_from.email.nil? || template.nil?
 
         base_url = HostEnv.base_url(context[:site_community])
-        path = "/processes/drc/projects/#{note.id}?tab=processes&detailTab=comments&replying_discussion=#{comment.grouping_id}"
+        path = "/processes/projects/#{note.id}?tab=processes&detailTab=comments&replying_discussion=#{comment.grouping_id}"
         action_url = "https://#{base_url}#{path}"
         email_body = I18n.t('email_template.comment_reply.body',
                             note_body: note.body,

@@ -115,7 +115,7 @@ export default function ProjectDetailsAccordion({ taskId }) {
                   </Grid>
                   <Grid item md={4} xs={12} style={!smDownHidden ? { textAlign: 'right' } : {}}>
                     <Link
-                      to={`/processes/drc/projects/${comment.note.id}?tab=processes&detailTab=comments&replying_discussion=${comment.groupingId}`}
+                      to={`/processes/projects/${comment.note.id}?tab=processes&detailTab=comments&replying_discussion=${comment.groupingId}`}
                     >
                       <Typography variant="caption">
                         <span

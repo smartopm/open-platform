@@ -7,7 +7,7 @@ import PropTypes from 'prop-types';
 import { useLazyQuery, useMutation } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import makeStyles from '@mui/styles/makeStyles';
-import { useLocation, useHistory, useParams } from 'react-router-dom';
+import { useLocation, useHistory } from 'react-router-dom';
 import TaskDataList from './TaskDataList';
 import FileUploader from './FileUploader';
 import { objectAccessor, sortTaskOrder , formatError } from '../../../utils/helpers';
@@ -47,7 +47,6 @@ export default function TodoItem({
   const { t } = useTranslation('common');
   const history = useHistory();
   const location = useLocation();
-  const urlParams = useParams();
   const authState = React.useContext(AuthStateContext);
   const taskPermissions = authState?.user?.permissions?.find(
     permissionObject => permissionObject.module === 'note'
@@ -145,7 +144,7 @@ export default function TodoItem({
 
   function handleTaskListDelete() {
     taskListDelete({
-      variables: { id: task.noteList?.id } 
+      variables: { id: task.noteList?.id }
     })
     .then(() => {
       setInfo({
@@ -165,7 +164,7 @@ export default function TodoItem({
       });
       setAlertOpen(true);
     })
-  }  
+  }
 
   function handleTodoMenu(event, taskItem) {
     event.stopPropagation();
@@ -279,7 +278,7 @@ export default function TodoItem({
               taskCommentHasReply={task?.taskCommentReply}
               handleOpenProjectClick={handleToggleProjectAccordionOverview}
               openProject={
-                urlParams.type === 'drc' && objectAccessor(projectsAccordionOpen, task?.id)
+                location.pathname === '/processes/projects' && objectAccessor(projectsAccordionOpen, task?.id)
               }
               showWidgetsIcon={showWidgetsIcon}
             />
@@ -291,7 +290,7 @@ export default function TodoItem({
         )}
       </div>
 
-      {urlParams.type === 'drc' && objectAccessor(projectsAccordionOpen, task?.id) && (
+      {location.pathname === '/processes/projects' && objectAccessor(projectsAccordionOpen, task?.id) && (
         <div className={classes.levelOne}>
           <ProjectDetailsAccordion
             taskId={task?.id}

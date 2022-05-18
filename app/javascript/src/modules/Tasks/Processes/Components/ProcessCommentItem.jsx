@@ -78,7 +78,7 @@ export default function ProcessCommentItem({ commentdata, commentType }) {
         </Grid>
         <Grid item md={12} xs={12} data-testid='task_link'>
           <Link
-            to={`/processes/drc/projects/${commentdata.note.id}?tab=processes&detailTab=comments&replying_discussion=${commentdata.groupingId}`}
+            to={`/processes/projects/${commentdata.note.id}?tab=processes&detailTab=comments&replying_discussion=${commentdata.groupingId}`}
           >
             <Typography variant="caption">
               <span

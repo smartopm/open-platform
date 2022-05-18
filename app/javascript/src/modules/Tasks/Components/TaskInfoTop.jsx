@@ -2,7 +2,7 @@
 /* eslint-disable max-lines */
 /* eslint-disable complexity */
 import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
 import { Button, Grid, Chip, Typography, IconButton, useMediaQuery, MenuItem } from '@mui/material';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
@@ -55,7 +55,7 @@ export default function TaskInfoTop({
   const classes = useStyles();
   const matches = useMediaQuery('(max-width:1000px)');
   const history = useHistory();
-  const urlParams = useParams();
+  const location = useLocation();
   const [taskUpdate] = useMutation(UpdateNote);
   const [editingBody, setEditingBody] = useState(false);
   const [editingDueDate, setEditingDueDate] = useState(false);
@@ -162,7 +162,7 @@ export default function TaskInfoTop({
                     data-testid='back-to-task'
                   >
                     {!fromLeadPage && <KeyboardBackspaceIcon style={{ marginRight: '4px' }} />}
-                    {urlParams.type === 'drc'
+                    {location.pathname === '/processes/projects'
                       ? t('task:bread_crumps.summary')
                       : !fromLeadPage
                       ? t('task:bread_crumps.my_tasks')
@@ -267,7 +267,7 @@ export default function TaskInfoTop({
                       </IconButton>
                     </Grid>
                   )}
-                  {!fromLeadPage && urlParams?.type !== 'drc' && (
+                  {!fromLeadPage && location.pathname !== '/processes/projects' && (
                     <Grid item md={4} xs={1} style={{ textAlign: 'right' }}>
                       <IconButton
                         edge="end"

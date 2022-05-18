@@ -155,7 +155,7 @@ export default function CommentCard({ comments, refetch, commentsRefetch, forAcc
   function goToReplyComment(groupingId, taskId) {
     if (projectId !== taskId) {
       history.push(
-        `/processes/drc/projects/${taskId}?tab=processes&detailTab=comments&replying_discussion=${groupingId}`
+        `/processes/projects/${taskId}?tab=processes&detailTab=comments&replying_discussion=${groupingId}`
       );
     } else {
       // TODO(Nurudeen): scroll reply into view without reloading
