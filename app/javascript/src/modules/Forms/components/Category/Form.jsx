@@ -45,8 +45,6 @@ export default function Form({
     fetchPolicy: 'no-cache'
   });
 
-  console.log(categoriesData);
-  console.log(categoriesData.data);
   const {
     formState,
     saveFormData,

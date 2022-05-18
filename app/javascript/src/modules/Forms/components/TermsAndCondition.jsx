@@ -13,6 +13,7 @@ export default function TermsAndCondition({ handleCheckTerms, categoriesData, is
           <Checkbox 
             color="primary"
             checked={isChecked}
+            data-testid="terms_agreement_check"
             onChange={event => handleCheckTerms(event.target.checked)}
             required
           />

@@ -16,7 +16,6 @@ export default function TextPreview({ children, categoriesData }) {
         // eslint-disable-next-line react/no-children-prop
           children={markdown}
         />
-
       </div>
       {children}
     </Container>
