@@ -51,7 +51,7 @@ export default function CommunitySettings({ data, refetch }) {
     category: ''
   };
 
-  const divisionTargets = {
+  const leadMonthlyTargets = {
     division: '',
     target: ''
   };
@@ -92,7 +92,7 @@ export default function CommunitySettings({ data, refetch }) {
   const [whatsappOptions, setWhatsappOptions] = useState([whatsapps]);
   const [socialLinkOptions, setSocialLinkOptions] = useState([socialLinks]);
   const [menuItemOptions, setMenuItemOptions] = useState([menuItems]);
-  const [divisionTargetsOptions, setDivisionTargetsOptions] = useState([divisionTargets]);
+  const [divisionTargetsOptions, setDivisionTargetsOptions] = useState([leadMonthlyTargets]);
   const [behindTemplate, setBehindTemplate] = useState(
     data?.templates?.payment_reminder_template_behind || ''
   );
@@ -162,7 +162,7 @@ export default function CommunitySettings({ data, refetch }) {
   }
 
   function handleAddDivisionTargetsOptions() {
-    setDivisionTargetsOptions([...divisionTargetsOptions, divisionTargets]);
+    setDivisionTargetsOptions([...divisionTargetsOptions, leadMonthlyTargets]);
   }
 
   function updateOptions(index, newValue, options, type) {
@@ -207,7 +207,7 @@ export default function CommunitySettings({ data, refetch }) {
     updateOptions(
       index,
       { [event.target.name]: event.target.value },
-      menuItemOptions,
+      divisionTargetsOptions,
       'division_target'
     );
   }
@@ -267,7 +267,7 @@ export default function CommunitySettings({ data, refetch }) {
   function handleDivisionTargetRemoveRow(id) {
     const values = divisionTargetsOptions;
     if (values.length === 1) {
-      setDivisionTargetsOptions([divisionTargets]);
+      setDivisionTargetsOptions([leadMonthlyTargets]);
       return;
     }
 
@@ -431,7 +431,7 @@ export default function CommunitySettings({ data, refetch }) {
     setWhatsappOptions(data.supportWhatsapp || [whatsapps]);
     setSocialLinkOptions(data.socialLinks || [socialLinks]);
     setMenuItemOptions(data.menuItems || [menuItems]);
-    setDivisionTargetsOptions(data.leadMonthlyTargets || [divisionTargets]);
+    setDivisionTargetsOptions(data.leadMonthlyTargets || [leadMonthlyTargets]);
     setTemplateOptions(data.templates || templateOptions);
     setCurrency(data.currency);
     setLocale(data.locale);
@@ -1081,7 +1081,7 @@ export default function CommunitySettings({ data, refetch }) {
               <IconButton
                 style={{ marginTop: -5 }}
                 onClick={() => handleDivisionTargetRemoveRow(i)}
-                aria-label="remove"
+                aria-label="remove-division-target"
                 size="large"
               >
                 <DeleteOutline />
