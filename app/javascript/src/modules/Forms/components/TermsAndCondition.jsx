@@ -26,6 +26,7 @@ export default function TermsAndCondition({ handleCheckTerms, categoriesData, is
 TermsAndCondition.defaultProps = {
     handleCheckTerms: () => {},
     isChecked: false,
+    categoriesData: []
 }
 TermsAndCondition.propTypes = {
   handleCheckTerms: PropTypes.func,
@@ -34,5 +35,5 @@ TermsAndCondition.propTypes = {
     PropTypes.shape({
       renderedText: PropTypes.string
     })
-  ).isRequired
+  )
 };

@@ -28,6 +28,9 @@ export default function FormPreview({ loading, handleFormSubmit, categoriesData}
   );
 }
 
+FormPreview.defaultProps = {
+  categoriesData: []
+}
 FormPreview.propTypes = {
   loading: PropTypes.bool.isRequired,
   handleFormSubmit: PropTypes.func.isRequired,
@@ -35,5 +38,5 @@ FormPreview.propTypes = {
     PropTypes.shape({
       renderedText: PropTypes.string
     })
-  ).isRequired
+  )
 };

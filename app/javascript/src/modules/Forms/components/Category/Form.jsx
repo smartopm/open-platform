@@ -45,6 +45,8 @@ export default function Form({
     fetchPolicy: 'no-cache'
   });
 
+  console.log(categoriesData);
+  console.log(categoriesData.data);
   const {
     formState,
     saveFormData,
@@ -194,7 +196,7 @@ export default function Form({
           </DialogContentText>
         </DialogContent>
       </DetailsDialog>
-      {loading && <Spinner />}
+      {(loading || categoriesData.loading) && <Spinner />}
       {!editMode && !loading && formDetailData && (
         <Grid style={matches ? {} : { padding: '0 0 0 100px' }}>
           <FormTitle name={formDetailData.form?.name} />
@@ -272,18 +274,6 @@ export default function Form({
           )}
         </Grid>
       )}
-
-      {/* {
-          !editMode && formDetailData?.form?.hasTermsAndConditions && (
-            <Grid>
-              <TermsAndCondition
-                categoriesData={categoriesData.data?.formCategories} 
-                isChecked={hasAgreedToTerms}
-                handleCheckTerms={isChecked => setHasAgreedToTerms(isChecked)}
-              />
-            </Grid>
-          )
-      } */}
 
       {!editMode && (
         <Grid container style={matches ? {} : { padding: '0 120px 20px 120px' }}>

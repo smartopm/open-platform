@@ -23,11 +23,15 @@ export default function TextPreview({ children, categoriesData }) {
   );
 }
 
+TextPreview.defaultProps = {
+  categoriesData: []
+}
+
 TextPreview.propTypes = {
   children: PropTypes.node.isRequired,
   categoriesData: PropTypes.arrayOf(
     PropTypes.shape({
       renderedText: PropTypes.string
     })
-  ).isRequired
+  )
 };

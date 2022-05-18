@@ -58,6 +58,7 @@ describe('TaskUpdate Component', () => {
               status: 'in_progress',
               formUser: {
                 id: 'some-id',
+                formId: '6a7e722a-id',
                 user: {
                   id: 'user-id',
                   name: 'Form User Name'
