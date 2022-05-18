@@ -5,6 +5,7 @@ query ProcessTemplates($offset: Int, $limit: Int) {
   processTemplates(offset: $offset, limit: $limit) {
    id
    name
+   processType
    form {
      id
    }

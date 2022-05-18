@@ -29,6 +29,7 @@ import {
   ProjectsStatsQuery,
   ReplyCommentStatQuery
 } from '../graphql/process_queries';
+import ProcessTemplatesQuery from '../../../Processes/graphql/process_list_queries'
 import {
   filterProjectAndStages,
   calculateOpenProjectsByStage,
@@ -53,6 +54,14 @@ export default function AdminDashboard() {
 
   const { loading: projectsLoading, error: projectsError, data: projectsData } = useQuery(
     ProjectsStatsQuery,
+    {
+      variables: { offset: 0, limit: 50 },
+      fetchPolicy: 'cache-and-network'
+    }
+  );
+
+  const { data: processListData } = useQuery(
+    ProcessTemplatesQuery,
     {
       variables: { offset: 0, limit: 50 },
       fetchPolicy: 'cache-and-network'
@@ -185,6 +194,9 @@ export default function AdminDashboard() {
   const filteredProjects = filterProjectAndStages(projectsData?.projects, projectStageLookup);
   const stats = calculateOpenProjectsByStage(filteredProjects, projectStageLookup);
 
+  // TODO: Update this after we list processes dynamically
+  const drcProcess = processListData?.processTemplates?.find(process => process.processType === 'drc');
+
   return (
     <Container maxWidth="xl" data-testid="processes-admin-dashboard">
       <Grid container>
@@ -203,7 +215,13 @@ export default function AdminDashboard() {
       </Grid>
       <Grid container style={{ marginTop: '10px' }}>
         <Grid item md={8} xs={12}>
-          <Link to="/processes/drc/projects" underline="hover">
+          <Link
+            to={{
+             pathname: '/processes/drc/projects',
+             state: { process: drcProcess }
+          }}
+            underline="hover"
+          >
             <Typography className={classes.processTitle} color="primary" variant="h5">
               {t('processes.drc_process')}
             </Typography>
