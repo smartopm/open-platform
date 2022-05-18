@@ -7,7 +7,6 @@ import CenteredContent from '../../../shared/CenteredContent';
 import TextPreview from './TextPreview';
 
 export default function FormPreview({ loading, handleFormSubmit, categoriesData}) {
-  console.log(categoriesData)
   const { t } = useTranslation('form')
   return (
     <TextPreview categoriesData={categoriesData}>

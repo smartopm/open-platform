@@ -6,7 +6,7 @@
   },
   "scripts": {
     "lint": "eslint app/javascript/src --ext .js --ext .jsx app/javascript/packs/react_main.jsx",
-    "test": "NODE_ENV=test jest app/javascript/src/modules/Forms/__tests__/Category/Form.test.js",
+    "test": "NODE_ENV=test jest",
     "build": "webpack --config ./webpack.config.js",
     "format": "prettier --no-semi --single-quote --write app/javascript/src/**/*.jsx"
   },
