@@ -58,6 +58,7 @@ export default function CommunityNews({ userType, userImage, dashboardTranslatio
               <PostCreate
                 translate={dashboardTranslation}
                 currentUserImage={userImage}
+                currentUserType={userType}
                 btnBorderColor={theme.palette.secondary.main}
                 refetchNews={refetch}
               />

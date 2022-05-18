@@ -9,7 +9,7 @@ import MessageAlert from '../../../components/MessageAlert';
 import { Spinner } from '../../../shared/Loading';
 import { objectAccessor } from '../../../utils/helpers';
 
-export default function PostCreate({ translate, currentUserImage, btnBorderColor, refetchNews }) {
+export default function PostCreate({ translate, currentUserImage, currentUserType, btnBorderColor, refetchNews }) {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [post, setPost] = useState('');
   const [visibilityOption, setVisibilityOption] = useState('Everyone');
@@ -33,12 +33,15 @@ export default function PostCreate({ translate, currentUserImage, btnBorderColor
   const modalDetails = {
     title: translate('dashboard.start_post'),
     inputPlaceholder: translate('dashboard.whats_happening'),
-    uploadBtnText: translate('dashboard.add_photo'),
-    actionVisibilityOptions,
-    actionVisibilityLabel: translate('dashboard.who_can_see_post'),
-    handleVisibilityOptions: option => setVisibilityOption(option),
-    visibilityValue: visibilityOption
+    uploadBtnText: translate('dashboard.add_photo')
   };
+
+  if (currentUserType === 'admin') {
+    modalDetails.actionVisibilityOptions = actionVisibilityOptions
+    modalDetails.actionVisibilityLabel = translate('dashboard.who_can_see_post')
+    modalDetails.handleVisibilityOptions = (option) => setVisibilityOption(option)
+    modalDetails.visibilityValue = visibilityOption
+  }
 
   useEffect(() => {
     if (status === 'DONE') {
@@ -182,6 +185,7 @@ export default function PostCreate({ translate, currentUserImage, btnBorderColor
 PostCreate.propTypes = {
   translate: PropTypes.func.isRequired,
   currentUserImage: PropTypes.string.isRequired,
+  currentUserType: PropTypes.string.isRequired,
   btnBorderColor: PropTypes.string.isRequired,
   refetchNews: PropTypes.func.isRequired
 };

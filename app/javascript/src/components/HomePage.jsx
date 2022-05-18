@@ -337,12 +337,12 @@ export default function Homepage({ authState, quickLinks }) {
                   {card.children}
                 </Card>
               ))}
-              <FeatureCheck features={authState.user.community.features} name="News">
-                <NewsFeed wordpressEndpoint={authState.user?.community.wpLink} />
-              </FeatureCheck>
             </div>
           </div>
         </div>
+        <FeatureCheck features={authState.user.community.features} name="News">
+          <NewsFeed wordpressEndpoint={authState.user?.community.wpLink} />
+        </FeatureCheck>
         <Footer position="5vh" />
         <SocialMediaLinks />
       </div>
