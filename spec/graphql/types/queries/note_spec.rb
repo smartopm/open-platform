@@ -1050,6 +1050,18 @@ RSpec.describe Types::Queries::Note do
         GQL
       end
 
+      let(:project_stages_query) do
+        <<~GQL
+          query projectStages($processName: String!) {
+            projectStages(processName: $processName)
+            {
+              id
+              body
+            }
+          }
+        GQL
+      end
+
       context 'when projects are fetched' do
         before do
           form
@@ -1548,6 +1560,82 @@ RSpec.describe Types::Queries::Note do
 
           expect(result['errors']).not_to be_nil
           expect(result.dig('errors', 0, 'message')).to include('not found')
+        end
+      end
+
+      describe 'project stages' do
+        let(:note_list) { create(:note_list, process: process, community: community) }
+
+        it 'raises an error if note list is not found' do
+          variables = { processName: process.name }
+          result = DoubleGdpSchema.execute(project_stages_query, variables: variables,
+                                                                 context: {
+                                                                   current_user: admin,
+                                                                   site_community: community,
+                                                                 }).as_json
+
+          expect(result.dig('errors', 0, 'message')).to include('not found')
+        end
+
+        it 'raises error if parent task is not found' do
+          note_list
+          variables = { processName: process.name }
+          result = DoubleGdpSchema.execute(project_stages_query, variables: variables,
+                                                                 context: {
+                                                                   current_user: admin,
+                                                                   site_community: community,
+                                                                 }).as_json
+
+          expect(result.dig('errors', 0, 'message')).to include('not found')
+        end
+
+        it 'returns project steps for the process' do
+          parent_task = admin.notes.create!(
+            body: 'Parent task for task list',
+            description: 'Parent task for task list',
+            user_id: admin.id,
+            category: 'task_list',
+            flagged: true,
+            community_id: community.id,
+            author_id: admin.id,
+            parent_note_id: nil,
+            note_list_id: note_list.id,
+          )
+
+          admin.notes.create!(
+            body: 'Step 1',
+            description: 'Step 1',
+            user_id: admin.id,
+            category: 'to_do',
+            flagged: true,
+            community_id: community.id,
+            author_id: admin.id,
+            parent_note_id: parent_task.id,
+            note_list_id: note_list.id,
+          )
+
+          admin.notes.create!(
+            body: 'Step 2',
+            description: 'Step 2',
+            user_id: admin.id,
+            category: 'to_do',
+            flagged: true,
+            community_id: community.id,
+            author_id: admin.id,
+            parent_note_id: parent_task.id,
+            note_list_id: note_list.id,
+          )
+
+          variables = { processName: process.name }
+          result = DoubleGdpSchema.execute(project_stages_query, variables: variables,
+                                                                 context: {
+                                                                   current_user: admin,
+                                                                   site_community: community,
+                                                                 }).as_json
+
+          expect(result['errors']).to be_nil
+          expect(result.dig('data', 'projectStages').size).to eq(2)
+          expect(result.dig('data', 'projectStages', 0, 'body')).to eq('Step 1')
         end
       end
 

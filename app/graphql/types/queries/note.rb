@@ -102,8 +102,8 @@ module Types::Queries::Note
       argument :replies_requested_status, String, required: false
     end
 
-    field :project_stages, [GraphQL::Types::JSON], null: false do
-      description 'Returns an aggregated list of projects'
+    field :project_stages, [Types::NoteType], null: false do
+      description 'Returns top level steps for a project'
       argument :process_name, String, required: true
     end
 
@@ -473,13 +473,20 @@ module Types::Queries::Note
   # rubocop:enable Metrics/MethodLength
 
   def project_stages(process_name:)
-    projects = projects(process_name: process_name)
+    unless permitted?(module: :note, permission: :can_fetch_flagged_notes)
+      raise GraphQL::ExecutionError,
+            I18n.t('errors.unauthorized')
+    end
 
-    context[:site_community]
-      .notes
-      .unscoped
-      .where(parent_note_id: projects.pluck(:id), completed: true)
-      .group(:body).count
+    validate_process(process_name: process_name)
+
+    note_list = context[:site_community].processes.find_by(name: process_name).note_list
+    raise ActiveRecord::RecordNotFound, 'NoteList not found' if note_list.blank?
+
+    parent_note = note_list.notes.find_by(category: 'task_list', parent_note_id: nil)
+    raise ActiveRecord::RecordNotFound, 'Parent note not found' if parent_note.blank?
+
+    parent_note.sub_tasks
   end
 
   # rubocop:disable Metrics/MethodLength
