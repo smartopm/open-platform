@@ -7,7 +7,7 @@ import userEvent from '@testing-library/user-event';
 import authState from '../../../../__mocks__/authstate';
 import { Context } from '../../../../containers/Provider/AuthStateProvider';
 import LeadEvents from '../Components/LeadEvents';
-import { UserMeetingsQuery, UserSignedDealsQuery } from '../graphql/queries';
+import { UserMeetingsQuery, UserEventsQuery } from '../graphql/queries';
 import { LeadDetailsQuery } from '../../../../graphql/queries';
 import CreateEvent from '../graphql/mutations';
 
@@ -106,15 +106,15 @@ describe('LeadEvents Page', () => {
     },
     {
       request: {
-        query: UserSignedDealsQuery,
+        query: UserEventsQuery,
         variables: { userId: 'c96f64bb-e3b4-42ff-b6a9-66889ec79e99' }
       },
       result: {
         data: {
-          signedDeals: [
+          leadEvents: [
             {
               id: 'c96f64bb-e3b4-42ff-b6a9-66889ec79e9990099',
-              name: 'Tilisi First Deal Signed',
+              name: 'Tilisi run 2022',
               createdAt: new Date(),
               actingUser: {
                 name: 'Daniel Mutuba'
