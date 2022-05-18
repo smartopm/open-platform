@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
@@ -9,49 +8,24 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useHistory } from 'react-router';
 import { makeStyles } from '@mui/styles';
 import Box from '@mui/material/Box';
-import { ProjectRepliesRequestedComments , ProjectQuery } from '../graphql/process_queries';
+import { ProjectRepliesRequestedComments } from '../graphql/process_queries';
 import CenteredContent from '../../../../shared/CenteredContent';
 import { sortRepliesRequestedComments } from '../utils';
 import { dateToString } from '../../../../components/DateContainer';
-import { objectAccessor, removeNewLines, sanitizeText, formatError , useParamsQuery } from '../../../../utils/helpers';
+import { objectAccessor, removeNewLines, sanitizeText, formatError } from '../../../../utils/helpers';
 import CustomSkeleton from '../../../../shared/CustomSkeleton';
 import TaskContextProvider from '../../Context';
-import { SubTasksQuery, TaskQuery, TaskDocumentsQuery } from '../../graphql/task_queries';
+import { TaskDocumentsQuery } from '../../graphql/task_queries';
 import { StyledTabs, StyledTab, TabPanel, a11yProps } from '../../../../components/Tabs';
-import ProjectOverview from './ProjectOverview';
-import ProjectProcesses from './ProjectProcesses';
 import ProjectDocument from './ProjectDocument';
-import useDebounce from '../../../../utils/useDebounce';
 
 export default function ProjectDetailsAccordion({ taskId }) {
-  const limit = 20;
   const { t } = useTranslation(['task', 'common']);
   const classes = useStyles();
-  const debouncedSearchText = useDebounce(searchText, 300);
-  const [searchText, setSearchText] = useState('');
   const history = useHistory();
   const [tabValue, setTabValue] = useState(0);
   const smDownHidden = useMediaQuery(theme => theme.breakpoints.down('sm'));
-  const matches = useMediaQuery('(max-width:1000px)');
-  const { data: projectData } = useQuery(
-    TaskQuery,
-    {
-      variables: { taskId },
-      fetchPolicy: 'cache-and-network',
-      errorPolicy: 'all'
-    }
-  );
-  const formUserId = projectData?.task?.formUserId;
-  const { data: projectItem } = useQuery(ProjectQuery, {
-    skip: !formUserId,
-    variables: { formUserId },
-    fetchPolicy: 'cache-and-network'
-  });
-  const mobileMatches = useMediaQuery('(max-width:900px)');
   const TAB_VALUES = { comments: 0, documents: 1 };
-  const filterDocuments = docData?.task?.attachments?.filter(document =>
-    document.filename.toLowerCase().includes(debouncedSearchText.toLowerCase())
-  );
 
   const handleTabValueChange = (_event, newValue) => {
     history.push(
@@ -60,15 +34,6 @@ export default function ProjectDetailsAccordion({ taskId }) {
     setTabValue(Number(newValue));
   };
 
-  const { data: stepsData, refetch } = useQuery(SubTasksQuery, {
-    skip: !projectItem,
-    variables: {
-      taskId: projectItem && projectItem?.project?.id,
-      limit: projectItem?.subTasksCount || limit
-    },
-    fetchPolicy: 'cache-and-network',
-    errorPolicy: 'all'
-  });
   const { data } = useQuery(ProjectRepliesRequestedComments, {
     variables: {
       taskId
@@ -116,20 +81,20 @@ export default function ProjectDetailsAccordion({ taskId }) {
         <Grid container data-testid="process-overview-section">
           <Grid item xs={12}>
             <Grid container>
-              <Grid item md={6} sm={6} xs={12} style={{ marginBottom: '35px' }}>
+              <Grid item sm={6} xs={12} style={{ marginBottom: '35px' }}>
                 <Box>
                   <Typography variant="h6" sx={{ marginRight: '0.4rem' }}>
                     {t('task.project_overview')}
                   </Typography>
-                  {smDownHidden && (
-                  <Box style={{ display: 'flex', marginTop: '10px' }}>
-                    <Typography variant="caption" style={{ marginTop: '0.3rem' }}>
-                      {t('task.project_total_documents')}
-                    </Typography>
-                    <Avatar className={classes.avatar} sx={{ width: 26, height: 26 }}>
-                      99
-                    </Avatar>
-                  </Box>
+                  {!loading && smDownHidden && (
+                    <Box style={{ display: 'flex', marginTop: '10px' }}>
+                      <Typography variant="caption" style={{ marginTop: '0.3rem' }}>
+                        {t('task.project_total_documents')}
+                      </Typography>
+                      <Avatar className={classes.avatar} sx={{ width: 26, height: 26 }}>
+                        {docData?.task?.attachments?.length}
+                      </Avatar>
+                    </Box>
                   )}
                 </Box>
 
@@ -161,15 +126,15 @@ export default function ProjectDetailsAccordion({ taskId }) {
                 </StyledTabs>
               </Grid>
 
-              <Grid item lg={5.5} md={4.5} sm={4} xs={12} />
+              <Grid item lg={5.3} sm={4} xs={12} />
 
-              {!smDownHidden && (
-              <Grid item lg={0.5} md={1.5} sm={2} xs={12} sx={{ textAlign: 'center' }}>
-                <Box>
-                  <Typography variant="caption">{t('task.project_total_documents')}</Typography>
-                </Box>
-                <Box className={classes.counterBox}>1</Box>
-              </Grid>
+              {!loading && !smDownHidden && (
+                <Grid item lg={0.7} sm={2} xs={12} sx={{ textAlign: 'center' }}>
+                  <Box>
+                    <Typography variant="caption">{t('task.project_total_documents')}</Typography>
+                  </Box>
+                  <Box className={classes.counterBox}>{docData?.task?.attachments?.length}</Box>
+                </Grid>
               )}
             </Grid>
 
@@ -259,24 +224,14 @@ export default function ProjectDetailsAccordion({ taskId }) {
               </Grid>
             </TabPanel>
             <TabPanel value={tabValue} index={1}>
-              <ProjectProcesses data={stepsData?.taskSubTasks} refetch={refetch} />
+              <ProjectDocument
+                attachments={docData?.task?.attachments}
+                loading={loading}
+                refetch={docRefetch}
+                error={error?.message}
+              />
             </TabPanel>
           </Grid>
-          {tabValue === 1 && (
-            <>
-              {mobileMatches && docData?.task?.attachments?.length > 0 && (
-                <Grid item xs={12}>
-                  <Typography
-                    variant="body2"
-                    style={{ padding: '20px 0 0 0' }}
-                    color="textSecondary"
-                  >
-                    {t('processes.documents')}
-                  </Typography>
-                </Grid>
-              )}
-            </>
-          )}
         </Grid>
       </TaskContextProvider>
     </Paper>
