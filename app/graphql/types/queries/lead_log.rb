@@ -1,10 +1,12 @@
 # frozen_string_literal: true
 
 # leadlog queries
+# rubocop:disable Metrics/ModuleLength
 module Types::Queries::LeadLog
   extend ActiveSupport::Concern
 
   VALID_LEAD_STATUSES = ['Qualified Lead', 'Signed MOU', 'Signed Lease'].freeze
+  VALID_LEAD_DIVISIONS = %w[India China Europe].freeze
 
   included do
     field :lead_events, [Types::LeadLogType], null: true do
@@ -64,6 +66,7 @@ module Types::Queries::LeadLog
       lead_status: leads_status_stats,
       leads_monthly_stats_by_division: leads_monthly_stats_by_division,
       leads_monthly_stats_by_status: leads_monthly_stats_by_status,
+      ytd_count: ytd_count,
     }
   end
 
@@ -87,12 +90,14 @@ module Types::Queries::LeadLog
 
   # rubocop:disable Metrics/MethodLength
   def leads_monthly_stats_by_status
-    result = context[:site_community].lead_logs.lead_status
+    result = context[:site_community].lead_logs
+                                     .lead_status
                                      .joins(:user)
-                                     .where(user: { user_type: 'lead' })
-                                     .where(name: VALID_LEAD_STATUSES, updated_at: current_year)
-                                     .group('name')
-                                     .group('(EXTRACT(MONTH FROM lead_logs.updated_at)::integer)')
+                                     .where(user: { user_type: 'lead' },
+                                            name: VALID_LEAD_STATUSES,
+                                            updated_at: current_year)
+                                     .group('name',
+                                            '(EXTRACT(MONTH FROM lead_logs.updated_at)::integer)')
                                      .count
 
     result.each_with_object({}) do |((lead_status, month), users_count), data|
@@ -101,6 +106,30 @@ module Types::Queries::LeadLog
     end
   end
   # rubocop:enable Metrics/MethodLength
+
+  def ytd_count
+    {
+      leads_by_division: leads_by_division_ytd_count,
+      qualified_lead: leads_status_ytd_count('Qualified Lead'),
+      signed_mou: leads_status_ytd_count('Signed MOU'),
+      signed_lease: leads_status_ytd_count('Signed Lease'),
+    }
+  end
+
+  def leads_by_division_ytd_count
+    context[:site_community].users
+                            .where(user_type: 'lead',
+                                   created_at: current_year,
+                                   division: VALID_LEAD_DIVISIONS).count
+  end
+
+  def leads_status_ytd_count(lead_status)
+    context[:site_community].lead_logs.lead_status
+                            .joins(:user)
+                            .where(user: { user_type: 'lead' },
+                                   name: lead_status,
+                                   updated_at: current_year).count
+  end
 
   def current_year
     Time.zone.now.beginning_of_year..Time.zone.now.end_of_year
@@ -112,3 +141,4 @@ module Types::Queries::LeadLog
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
   end
 end
+# rubocop:enable Metrics/ModuleLength
