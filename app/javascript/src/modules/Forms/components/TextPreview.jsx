@@ -8,7 +8,7 @@ import { FormContext } from '../Context';
 
 export default function TextPreview({ children, categoriesData }) {
   const { formProperties } = useContext(FormContext)
-  const markdown = parseRenderedText(categoriesData.data?.formCategories, formProperties)
+  const markdown = parseRenderedText(categoriesData, formProperties)
   return (
     <Container>
       <ReactMarkDown 
@@ -21,14 +21,10 @@ export default function TextPreview({ children, categoriesData }) {
 }
 
 TextPreview.propTypes = {
- children: PropTypes.node.isRequired,
-  categoriesData: PropTypes.shape({
-    data: PropTypes.shape({
-      formCategories: PropTypes.arrayOf(
-        PropTypes.shape({
-          renderedText: PropTypes.string
-        })
-      )
+  children: PropTypes.node.isRequired,
+  categoriesData: PropTypes.arrayOf(
+    PropTypes.shape({
+      renderedText: PropTypes.string
     })
-  }).isRequired
+  ).isRequired
 };

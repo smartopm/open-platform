@@ -7,6 +7,7 @@ import CenteredContent from '../../../shared/CenteredContent';
 import TextPreview from './TextPreview';
 
 export default function FormPreview({ loading, handleFormSubmit, categoriesData}) {
+  console.log(categoriesData)
   const { t } = useTranslation('form')
   return (
     <TextPreview categoriesData={categoriesData}>
@@ -30,13 +31,9 @@ export default function FormPreview({ loading, handleFormSubmit, categoriesData}
 FormPreview.propTypes = {
   loading: PropTypes.bool.isRequired,
   handleFormSubmit: PropTypes.func.isRequired,
-  categoriesData: PropTypes.shape({
-    data: PropTypes.shape({
-      formCategories: PropTypes.arrayOf(
-        PropTypes.shape({
-          renderedText: PropTypes.string
-        })
-      )
+  categoriesData: PropTypes.arrayOf(
+    PropTypes.shape({
+      renderedText: PropTypes.string
     })
-  }).isRequired
+  ).isRequired
 };

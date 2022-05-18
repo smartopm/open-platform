@@ -97,6 +97,7 @@ export const FormUserQuery = gql`
     formUser(userId: $userId, formUserId: $formUserId) {
       id
       status
+      hasAgreedToTerms
       form {
         id
         name

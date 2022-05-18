@@ -45,6 +45,7 @@ import MessageAlert from '../../../components/MessageAlert';
 import SubmittedFileItem from '../../../shared/imageUpload/SubmittedFileItem';
 import { handleFileSelect, handleFileUpload, removeBeforeUpload, isUploaded } from '../utils';
 import UploadFileItem from '../../../shared/imageUpload/UploadFileItem';
+import TermsAndCondition from './TermsAndCondition';
 
 // date
 // text input (TextField or TextArea)
@@ -630,6 +631,10 @@ export default function FormUpdate({ formUserId, userId, authState, categoriesDa
                 </CategoryItem>
               </div>
             ))}
+          <TermsAndCondition
+            categoriesData={categoriesData} 
+            isChecked={formUserData.data?.formUser.hasAgreedToTerms}
+          />
           <br />
           <Grid
             container

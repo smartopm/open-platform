@@ -44,6 +44,7 @@ export default function Form({
     variables: { formId },
     fetchPolicy: 'no-cache'
   });
+
   const {
     formState,
     saveFormData,
@@ -185,7 +186,7 @@ export default function Form({
                   categoriesData.data?.formCategories
                 )
               }
-              categoriesData={categoriesData}
+              categoriesData={categoriesData.data?.formCategories}
             />
           </DialogContentText>
         </DialogContent>
@@ -268,14 +269,14 @@ export default function Form({
           )}
         </Grid>
       )}
-      
+
       {
           !editMode && formDetailData?.form?.hasTermsAndConditions && (
             <Grid style={{ padding: '0 120px' }}>
               <TermsAndCondition
-                categoriesData={categoriesData} 
+                categoriesData={categoriesData.data?.formCategories} 
                 isChecked={hasAgreedToTerms}
-                handleCheckTerms={event => setHasAgreedToTerms(event.target.checked)}
+                handleCheckTerms={isChecked => setHasAgreedToTerms(isChecked)}
               />
             </Grid>
           )
