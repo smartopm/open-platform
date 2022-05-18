@@ -7,7 +7,6 @@ import { Context as AuthStateContext } from '../../../containers/Provider/AuthSt
 import Homepage from '../../../components/HomePage';
 import { TaskReminder } from '../../Tasks';
 import { PaymentSummary } from '../../Payments';
-import UserDetail from '../../Users/Components/UserDetail';
 import ViewCustomerJourney from '../../CustomerJourney/Components/ViewCustomerJourney';
 import LanguageToggle from '../../i18n/Components/LanguageToggle';
 import { PlotDetail } from '../../Plots';
@@ -85,7 +84,6 @@ const Home = () => {
           )}
           {authState.user.userType === 'client' && (
             <div>
-              <UserDetail user={authState.user} />
               <QuickLinks menuItems={filteredQuickLinks} translate={t} />
               {authState.user.subStatus && (
                 <FeatureCheck features={authState.user.community.features} name="Customer Journey">
@@ -105,9 +103,7 @@ const Home = () => {
             </div>
           )}
           {!['admin', 'client', 'developer', 'consultant'].includes(userType) && (
-            <div style={{ paddingTop: '50px' }}>
-              <Homepage authState={authState} quickLinks={filteredQuickLinks} />
-            </div>
+            <Homepage authState={authState} quickLinks={filteredQuickLinks} />
           )}
           <SocialMediaLinks
             data={authState.user.community.socialLinks}

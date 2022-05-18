@@ -311,13 +311,13 @@ export default function Homepage({ authState, quickLinks }) {
 
   return (
     <div>
-      <div className="container">
-        <div className={css(styles.QuickLinks)}>
+      <div>
+        <div>
           {authState.user.userType === 'resident' && (
             <QuickLinks menuItems={quickLinks} translate={t} />
           )}
         </div>
-        <div className="row justify-content-center">
+        <div className="row" style={{ marginLeft: '20PX'}}>
           <div className="col-4-lg col-12-sm index-cards">
             <div className="d-flex flex-row flex-wrap justify-content-center mb-3">
               {cards.map((card, index) => (
