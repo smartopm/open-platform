@@ -12,7 +12,6 @@ import { objectAccessor, sortTaskOrder } from '../../../../utils/helpers';
 
 export default function ProjectSteps({
   data,
-  processId,
   setSelectedStep,
   handleStepCompletion,
   handleProjectStepClick,
@@ -21,7 +20,7 @@ export default function ProjectSteps({
   const authState = React.useContext(AuthStateContext);
   const history = useHistory();
   const classes = useStyles();
-  const { id } = useParams();
+  const { processId, id } = useParams();
   const [stepsOpen, setStepsOpen] = useState({});
   const { t } = useTranslation('task');
 
@@ -130,7 +129,6 @@ const Step = {
 
   ProjectSteps.propTypes = {
   data: PropTypes.arrayOf(PropTypes.shape(Step)),
-  processId: PropTypes.string.isRequired,
   setSelectedStep: PropTypes.func,
   handleProjectStepClick: PropTypes.func.isRequired,
   handleStepCompletion: PropTypes.func.isRequired,

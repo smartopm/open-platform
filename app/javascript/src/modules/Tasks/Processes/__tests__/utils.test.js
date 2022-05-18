@@ -48,10 +48,16 @@ describe('calculateOpenProjectsByStage', () => {
       subTasks: [{ id: '123', completed: false, body: 'scheme design review' }]
     }
   ];
-  const stages = {
-    concept_design_review: 0,
-    scheme_design_review: 0
-  };
+  const stages = [
+    {
+      id: '8bf66897-4ee1-4e79-94b3-5f6280601af1',
+      body: 'Concept Design Review'
+    },
+    {
+      id: '05ce85a4-07ea-4432-b388-c5b3c22851f1',
+      body: 'Scheme Design Review'
+    },
+  ];
 
   it('returns default stages if no project is available', () => {
     expect(calculateOpenProjectsByStage(null, stages).concept_design_review).toEqual(0);
@@ -125,10 +131,10 @@ describe('isDiscussionResolved', () => {
 
 describe('checkLastItem', () => {
   it('returns true for last Item', () => {
-    
+
     const arr = checkLastItem(1, ['sample1', 'sample2']);
     expect(arr).toBe(true);
-    
+
     const arr2 = checkLastItem(0, ['sample1', 'sample2']);
     expect(arr2).toBe(false);
   });

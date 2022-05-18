@@ -65,12 +65,6 @@ export const ClientAssignedProjectsQuery = gql`
   ${TasksFragment.task}
 `;
 
-export const ProjectStagesQuery = gql`
-  query projectStages {
-    projectStages
-  }
-`;
-
 export const TaskQuarterySummaryQuery = gql`
   query tasksByQuarter($processId: ID!) {
     tasksByQuarter(processId: $processId)
@@ -264,7 +258,7 @@ export const ProcessReplyComments = gql`
   }
 `;
 
-export const ProjectStages = gql`
+export const ProjectStagesQuery = gql`
   query projectStages($processId: ID!) {
     projectStages(processId: $processId)
     {

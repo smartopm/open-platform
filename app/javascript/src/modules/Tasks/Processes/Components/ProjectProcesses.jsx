@@ -1,6 +1,5 @@
 import React, { useContext } from 'react'
 import PropTypes from 'prop-types';
-import { useParams } from 'react-router';
 import { Grid, Divider, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@mui/styles';
@@ -21,7 +20,6 @@ export default function ProjectProcesses({
   const classes = useStyles();
   const { setSelectedStep, handleStepCompletion } = useContext(TaskContext);
   const { t } = useTranslation('task');
-  const { processId } = useParams();
 
   return (
     <>
@@ -47,7 +45,6 @@ export default function ProjectProcesses({
         </Typography>
         <ProjectSteps
           data={data}
-          processId={processId}
           setSelectedStep={setSelectedStep}
           handleProjectStepClick={handleProjectStepClick}
           handleStepCompletion={(id, completed) => handleStepCompletion(id, completed, refetch)}

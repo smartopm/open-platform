@@ -24,7 +24,7 @@ import { Spinner } from '../../../../shared/Loading';
 import {
   TaskQuarterySummaryQuery,
   ProjectsStatsQuery,
-  ProjectStages,
+  ProjectStagesQuery,
   ReplyCommentStatQuery,
 } from '../graphql/process_queries';
 import {
@@ -53,7 +53,7 @@ export default function ProcessListItem({ processItem }) {
     fetchPolicy: 'cache-and-network'
   });
 
-  const { data: stagesData } = useQuery(ProjectStages, {
+  const { data: stagesData } = useQuery(ProjectStagesQuery, {
     variables: { processId },
     fetchPolicy: 'cache-and-network'
   });
