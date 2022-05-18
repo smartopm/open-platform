@@ -2,6 +2,7 @@
   "label": {
     "background_color_field_label": "Color de fondo",
     "create_label": "Crear una etiqueta",
+    "create_scoped_label_description": "Use :: para crear un conjunto de etiquetas con alcance (p. ej., Estado:: ClientePotencialCalificado)",
     "delete_dialog_title": "¿Estás seguro de que deseas eliminar esta etiqueta?",
     "delete_warning_text": "Estas proximo a borrar esta etiqueta \" {{shortDesc}}\"",
     "description_field_label": "Descripción",
