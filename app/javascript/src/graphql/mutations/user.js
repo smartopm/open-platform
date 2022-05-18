@@ -47,6 +47,7 @@ export const UpdateUserMutation = gql`
     $companyDescription: String
     $country: String
     $region: String
+    $division: String
     $companyName: String
     $contactDetails: JSON
     $africanPresence: String
@@ -102,6 +103,7 @@ export const UpdateUserMutation = gql`
       companyDescription: $companyDescription
       country: $country
       region: $region
+      division: $division
       companyName: $companyName
       contactDetails: $contactDetails
       africanPresence: $africanPresence

@@ -23,6 +23,7 @@ export const initialLeadFormData = {
     email: '',
     country: '',
     region: '',
+    division: '',
     companyDescription: '',
     companyLinkedin: '',
     companyWebsite: '',
@@ -102,6 +103,7 @@ export const userProps = PropTypes.shape({
   email: PropTypes.string,
   country: PropTypes.string,
   region: PropTypes.string,
+  division: PropTypes.string,
   companyDescription: PropTypes.string,
   companyLinkedin: PropTypes.string,
   companyWebsite: PropTypes.string,
@@ -615,17 +617,17 @@ const configObject = {
 };
 
 /**
- * 
- * @param {String} setSelectKey 
- * @param {Function} checkModule 
- * @param {Function} checkCommunityFeatures 
- * @param {{push: Function}} history 
- * @param {Object} data 
- * @param {Function} handleMenuItemClick 
- * @param {Function} handleMergeUserItemClick 
- * @param {Function} checkRole 
- * @param {Function} t 
- * @returns 
+ *
+ * @param {String} setSelectKey
+ * @param {Function} checkModule
+ * @param {Function} checkCommunityFeatures
+ * @param {{push: Function}} history
+ * @param {Object} data
+ * @param {Function} handleMenuItemClick
+ * @param {Function} handleMergeUserItemClick
+ * @param {Function} checkRole
+ * @param {Function} t
+ * @returns
  */
 export function selectOptions(
   setSelectKey,
@@ -740,7 +742,7 @@ export function selectOptions(
     {
       key: 'lead_management',
       value: 'LeadManagement',
-      name: t("common:misc.lead_details"),
+      name: t('common:misc.lead_details'),
       handleMenuItemClick,
       show: checkCommunityFeatures('Users') && checkModule('user')
     },
@@ -812,14 +814,14 @@ export async function readFileAsText(file) {
 
 export function userTabList(t) {
   return {
-    Contacts: t("common:menu.contact"),
-    Communication: t("common:right_menu.communications"),
-    Plans: t("common:misc.payments"),
-    Plots: t("common:misc.plots"),
-    LeadManagement: t("common:misc.lead_details"),
-    Invitations: t("common:menu.invitations"),
-    Forms: t("common:misc.forms"),
-    CustomerJourney: t("common:menu.customer_journey"),
+    Contacts: t('common:menu.contact'),
+    Communication: t('common:right_menu.communications'),
+    Plans: t('common:misc.payments'),
+    Plots: t('common:misc.plots'),
+    LeadManagement: t('common:misc.lead_details'),
+    Invitations: t('common:menu.invitations'),
+    Forms: t('common:misc.forms'),
+    CustomerJourney: t('common:menu.customer_journey'),
     Notes: t('common:misc.notes')
-  }
+  };
 }

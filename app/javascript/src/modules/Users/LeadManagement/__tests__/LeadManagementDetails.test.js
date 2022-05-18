@@ -59,6 +59,7 @@ describe('LeadManagementDetails Page', () => {
             nextSteps: 'Move to South America',
             phoneNumber: '10234567876',
             region: 'C.W. Of Ind. States',
+            division: 'China',
             relevantLink: 'today is hot',
             roleName: 'Admin',
             secondaryEmail: '',

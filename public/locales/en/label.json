@@ -14,6 +14,7 @@
     "create_label": "Create a Label",
     "no_user_labels": "No Labels yet. Create one by clicking the plus button. ",
     "labels": "Labels",
-    "no_labels": "No Labels yet."
+    "no_labels": "No Labels yet.",
+    "create_scoped_label_description": "Use :: to create a scoped Label set (eg. Status::QualifiedLead)"
   }
 }

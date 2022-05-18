@@ -3,20 +3,30 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import AddIcon from '@mui/icons-material/Add';
+import Avatar from '@mui/material/Avatar';
 import CloseIcon from '@mui/icons-material/Close';
 import { useQuery, useMutation } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import Autocomplete from '@mui/material/Autocomplete';
-import { TextField, IconButton, Chip, Container, useTheme, useMediaQuery , Tooltip } from '@mui/material';
+import {
+  TextField,
+  IconButton,
+  Chip,
+  Container,
+  useTheme,
+  useMediaQuery,
+  Tooltip
+} from '@mui/material';
 
 import { makeStyles } from '@mui/styles';
 import { UserLabelsQuery, LabelsQuery } from '../../../graphql/queries';
 import { LabelCreate, UserLabelCreate, UserLabelUpdate } from '../../../graphql/mutations';
 import useDebounce from '../../../utils/useDebounce';
-import Loading from '../../../shared/Loading';
 import { formatError, truncateString } from '../../../utils/helpers';
 import MessageAlert from '../../../components/MessageAlert';
 import ErrorPage from '../../../components/Error';
+import CenteredContent from '../../../shared/CenteredContent';
+import { Spinner } from '../../../shared/Loading';
 
 export default function UserLabels({ userId, isLabelOpen }) {
   const [showAddTextBox, setshowAddTextBox] = useState(false);
@@ -29,8 +39,9 @@ export default function UserLabels({ userId, isLabelOpen }) {
   const [isSuccessAlert, setIsSuccessAlert] = useState(false);
   const { t } = useTranslation(['common', 'label']);
   const classes = useStyles();
-  const theme = useTheme()
+  const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.only('sm'));
+  const isMobile = useMediaQuery('(max-width:800px)');
 
   useEffect(() => {
     setLabel(newUserLabel);
@@ -84,10 +95,10 @@ export default function UserLabels({ userId, isLabelOpen }) {
     }
   );
 
-  if (loading || _loading) return <Loading />;
-  if (error || _error) {
-    return <ErrorPage title={error.message || _error.message} />;
-  }
+  if (loading || _loading) return <Spinner />;
+  const err = error || _error;
+
+  if (err) return <CenteredContent>{formatError(err.message)}</CenteredContent>;
   return (
     <div className={classes.labelContainer}>
       <MessageAlert
@@ -97,26 +108,88 @@ export default function UserLabels({ userId, isLabelOpen }) {
         handleClose={handleMessageAlertClose}
       />
       {isLabelOpen && (
-        <Container maxWidth="xl">
+        <Container
+          maxWidth="xl"
+          style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}
+        >
           {userData.userLabels.length ? (
             userData?.userLabels.map(lab => (
               <Tooltip key={lab.id} title={lab.shortDesc} arrow>
-                <Chip
-                  data-testid="chip-label"
-                  size="medium"
-                  label={truncateString(lab.shortDesc, 12)}
-                  onDelete={() => handleDelete(lab.id)}
-                  style={{ marginRight: 5, marginBottom: 5 }}
-                />
+                {lab.groupingName ? (
+                  <Chip
+                    avatar={
+                      // eslint-disable-next-line react/jsx-wrap-multilines
+                      <Avatar
+                        sx={{ height: '31px !important' }}
+                        style={{
+                          width: 'fit-content',
+                          color: lab.color,
+                          borderTopRightRadius: 0,
+                          borderBottomRightRadius: 0,
+                          borderTopLeftRadius: 16,
+                          borderBottomLeftRadius: 16,
+                          background: 'white',
+                          fontSize: '12px',
+                          borderColor: lab.color,
+                          borderBottom: '1px solid',
+                          borderTop: '1px solid',
+                          borderLeft: '1px solid',
+                          marginLeft: -1,
+                          paddingLeft: 8,
+                          paddingRight: 8
+                        }}
+                      >
+                        {lab.groupingName}
+                      </Avatar>
+                    }
+                    data-testid="chip-label"
+                    size="small"
+                    variant="outlined"
+                    label={truncateString(lab.shortDesc, 12)}
+                    onDelete={() => handleDelete(lab.id)}
+                    style={{
+                      marginRight: 5,
+                      marginBottom: 5,
+                      fontSize: '12px',
+                      background: lab.color,
+                      color: 'white',
+                      height: '2rem'
+                    }}
+                  />
+                ) : (
+                  <Chip
+                    data-testid="chip-label"
+                    size="small"
+                    variant="outlined"
+                    label={truncateString(lab.shortDesc, 12)}
+                    onDelete={() => handleDelete(lab.id)}
+                    style={{
+                      width: isMobile && '40%',
+                      marginRight: 5,
+                      marginBottom: 5,
+                      paddingTop: '9px',
+                      paddingBottom: '9px',
+                      fontSize: '12px',
+                      background: lab.color,
+                      color: 'white',
+                      height: '2rem'
+                    }}
+                  />
+                )}
               </Tooltip>
             ))
           ) : (
             <span data-testid="no_labels">
-              {
-                matches ? t('label:label.no_labels') : t('label:label.no_user_labels')
-              }
+              {matches ? t('label:label.no_labels') : t('label:label.no_user_labels')}
             </span>
           )}
+        </Container>
+      )}
+      <div>
+        <Container
+          maxWidth="xl"
+          style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}
+        >
           <IconButton
             aria-label="add-label"
             onClick={() => setshowAddTextBox(!showAddTextBox)}
@@ -130,7 +203,7 @@ export default function UserLabels({ userId, isLabelOpen }) {
             )}
           </IconButton>
         </Container>
-      )}
+      </div>
       <div className="row d-flex justifiy-content-around align-items-center">
         {showAddTextBox ? (
           <Autocomplete

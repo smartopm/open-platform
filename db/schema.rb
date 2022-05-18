@@ -452,6 +452,7 @@ ActiveRecord::Schema.define(version: 2022_05_18_054244) do
     t.string "description"
     t.string "color", default: "#f07030"
     t.string "status", default: "active"
+    t.string "grouping_name"
     t.index ["community_id"], name: "index_labels_on_community_id"
   end
 
@@ -916,6 +917,7 @@ ActiveRecord::Schema.define(version: 2022_05_18_054244) do
     t.string "investment_timeline"
     t.string "decision_timeline"
     t.integer "status", default: 0
+    t.string "division"
     t.index ["community_id", "email"], name: "index_users_on_community_id_and_email", unique: true
     t.index ["latest_substatus_id"], name: "index_users_on_latest_substatus_id"
     t.index ["role_id"], name: "index_users_on_role_id"

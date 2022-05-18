@@ -94,6 +94,7 @@ module Types
     field :secondary_phone_number, String, null: true
     field :african_presence, String, null: true
     field :region, String, null: true
+    field :division, String, null: true
     field :task_id, String, null: true
     field :capex_amount, String, null: true
     field :jobs_created, String, null: true
