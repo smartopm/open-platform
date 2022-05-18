@@ -99,7 +99,7 @@ export default function CommunityNews({ userType, userImage, dashboardTranslatio
                       imageLink={post?.imageUrls[0]}
                       style={{
                         width: '100%',
-                        marginTop: '15px',
+                        marginBottom: '10px',
                         border: 'none',
                         boxShadow: 'none',
                         padding: 0,
@@ -108,7 +108,7 @@ export default function CommunityNews({ userType, userImage, dashboardTranslatio
                     />
                   )}
                 </Grid>
-                <Grid item xs={12} style={{ padding: '16px 16px 0 16px' }}>
+                <Grid item xs={12} style={{ padding: '0 16px 0 16px' }}>
                   <Typography
                     variant="body2"
                     data-testid="task_body"
@@ -136,7 +136,6 @@ const styles = StyleSheet.create({
   },
   postContentEllipsed: {
     whiteSpace: 'normal',
-    paddingTop: '5px',
     display: '-webkit-box',
     ' -webkit-line-clamp': '3 !important'
   },

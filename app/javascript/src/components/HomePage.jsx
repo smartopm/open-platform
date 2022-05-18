@@ -317,7 +317,7 @@ export default function Homepage({ authState, quickLinks }) {
             <QuickLinks menuItems={quickLinks} translate={t} />
           )}
         </div>
-        <div className="row" style={{ marginLeft: '20PX'}}>
+        <div className="row" style={{ marginLeft: '20px' }}>
           <div className="col-4-lg col-12-sm index-cards">
             <div className="d-flex flex-row flex-wrap justify-content-center mb-3">
               {cards.map((card, index) => (

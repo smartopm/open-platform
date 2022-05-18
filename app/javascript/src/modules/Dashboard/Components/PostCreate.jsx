@@ -104,6 +104,7 @@ export default function PostCreate({ translate, currentUserImage, currentUserTyp
           message: err.message
         });
         setPost('');
+        setVisibilityOption('Everyone');
         closeCreateModal();
       });
   }
