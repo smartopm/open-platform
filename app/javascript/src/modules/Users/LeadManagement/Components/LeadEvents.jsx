@@ -10,7 +10,7 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import CreateEvent from '../graphql/mutations';
-import { UserMeetingsQuery, UserSignedDealsQuery } from '../graphql/queries';
+import { UserMeetingsQuery, UserEventsQuery } from '../graphql/queries';
 import { UpdateUserMutation } from '../../../../graphql/mutations/user';
 import CenteredContent from '../../../../shared/CenteredContent';
 import { Spinner } from '../../../../shared/Loading';
@@ -25,7 +25,7 @@ export default function LeadEvents({ userId, data }) {
   const [meetingName, setMeetingName] = useState('');
   const [leadData, setLeadData] = useState(false);
   const [disabled, setDisabled] = useState(true);
-  const [dealName, setDealName] = useState('');
+  const [eventName, setEventName] = useState('');
   const [message, setMessage] = useState({ isError: false, detail: '' });
   const [leadFormData, setLeadFormData] = useState(initialLeadFormData);
   const [eventCreate, { loading: isLoading }] = useMutation(CreateEvent);
@@ -42,11 +42,11 @@ export default function LeadEvents({ userId, data }) {
   });
 
   const {
-    data: signedDealsData,
-    loading: signedDealsLoading,
-    refetch: refetchSignedDeals,
-    error: signedDealsError
-  } = useQuery(UserSignedDealsQuery, {
+    data: eventsData,
+    loading: eventsLoading,
+    refetch: refetchEvents,
+    error: eventsError
+  } = useQuery(UserEventsQuery, {
     variables: { userId },
     fetchPolicy: 'cache-and-network'
   });
@@ -64,8 +64,8 @@ export default function LeadEvents({ userId, data }) {
     setMeetingName(event.target.value);
   }
 
-  function handleDealNameChange(event) {
-    setDealName(event.target.value);
+  function handleEventNameChange(event) {
+    setEventName(event.target.value);
   }
 
   function handleSubmitDivision(e) {
@@ -81,11 +81,11 @@ export default function LeadEvents({ userId, data }) {
     setMeetingName('');
   }
 
-  function handleSubmitDeal(e) {
+  function handleSubmitEvent(e) {
     e.preventDefault();
-    const type = 'signed_deal';
-    handleSubmit(dealName, type);
-    setDealName('');
+    const type = 'event';
+    handleSubmit(eventName, type);
+    setEventName('');
   }
   useEffect(() => {
     if (data?.user) {
@@ -133,8 +133,8 @@ export default function LeadEvents({ userId, data }) {
             isError: false,
             detail: t('common:misc.misc_successfully_created', { type: t('common:menu.event') })
           });
+          refetchEvents();
           refetchMeetings();
-          refetchSignedDeals();
         })
         .catch(err => {
           setMessage({ ...message, isError: true, detail: formatError(err.message) });
@@ -142,11 +142,11 @@ export default function LeadEvents({ userId, data }) {
     }
   }
 
-  const err = meetingsError || signedDealsError || null;
+  const err = meetingsError || eventsError || null;
 
   if (err) return err.message;
 
-  if (isLoading || divisionLoading || signedDealsLoading || meetingsLoading) return <Spinner />;
+  if (isLoading || divisionLoading || eventsLoading || meetingsLoading) return <Spinner />;
 
   return (
     <div style={{ marginLeft: -23, marginRight: -24 }}>
@@ -156,6 +156,7 @@ export default function LeadEvents({ userId, data }) {
         open={!!message.detail}
         handleClose={() => setMessage({ ...message, detail: '' })}
       />
+
       <Grid container>
         <Grid item md={12} xs={12}>
           <Grid container style={{ display: 'flex', alignItems: 'center', width: '90%' }}>
@@ -217,6 +218,89 @@ export default function LeadEvents({ userId, data }) {
       </Grid>
 
       <Grid item md={12} xs={12} style={{ marginBottom: '10px', marginTop: '10px' }}>
+        <Divider />
+      </Grid>
+      <Grid container>
+        <Grid item md={12} xs={12}>
+          <Grid item md={12} xs={12}>
+            <Typography variant="h6" data-testid="events">
+              {t('lead_management.events')}
+            </Typography>
+
+            <Typography variant="body2" data-testid="events_header">
+              {t('lead_management.events_header')}
+            </Typography>
+          </Grid>
+          <Grid item md={12} xs={12}>
+            <Grid
+              container
+              spacing={2}
+              style={{
+                display: 'flex',
+                alignItems: 'center'
+              }}
+            >
+              <Grid item md={10} xs={10}>
+                <TextField
+                  name="eventName"
+                  label={t('lead_management.event_name')}
+                  style={{ width: '100%' }}
+                  onChange={handleEventNameChange}
+                  value={eventName || ''}
+                  variant="outlined"
+                  fullWidth
+                  size="small"
+                  margin="normal"
+                  required
+                  inputProps={{
+                    'aria-label': t('lead_management.event_name'),
+                    style: { fontSize: '15px' }
+                  }}
+                  InputLabelProps={{ style: { fontSize: '12px' } }}
+                />
+              </Grid>
+
+              <Grid
+                item
+                md={2}
+                xs={2}
+                style={{
+                  paddingTop: '25px'
+                }}
+              >
+                <ButtonComponent
+                  variant="contained"
+                  color="primary"
+                  buttonText={t('lead_management.add')}
+                  handleClick={handleSubmitEvent}
+                  disabled={!eventName.trim()}
+                  disableElevation
+                />
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+      </Grid>
+      <br />
+      {/* Lead Events Listing */}
+      {eventsData?.leadEvents.length > 0 ? (
+        <div>
+          {eventsData?.leadEvents.map(leadEvent => (
+            <div
+              key={leadEvent.id}
+              style={{
+                marginBottom: '20px'
+              }}
+            >
+              <LeadEvent key={leadEvent?.id} leadEvent={leadEvent} />
+            </div>
+          ))}
+        </div>
+      ) : (
+        <CenteredContent>{t('lead_management.no_lead_events')}</CenteredContent>
+      )}
+
+      <Grid item md={12} xs={12} style={{ marginBottom: '10px' }}>
         <Divider />
       </Grid>
 
@@ -306,88 +390,6 @@ export default function LeadEvents({ userId, data }) {
       <Grid item md={12} xs={12} style={{ marginBottom: '10px', marginTop: '10px' }}>
         <Divider />
       </Grid>
-
-      {/* Lead Deals section */}
-
-      <Grid container>
-        <Grid item md={12} xs={12}>
-          <Grid item md={12} xs={12}>
-            <Typography variant="h6" data-testid="deals">
-              {t('lead_management.signed_deal')}
-            </Typography>
-
-            <Typography variant="body2" data-testid="deals_header">
-              {t('lead_management.signed_deal_header')}
-            </Typography>
-          </Grid>
-          <Grid item md={12} xs={12}>
-            <Grid
-              container
-              spacing={2}
-              style={{
-                display: 'flex',
-                alignItems: 'center'
-              }}
-            >
-              <Grid item md={10} xs={10}>
-                <TextField
-                  name="dealName"
-                  label={t('lead_management.deal_name')}
-                  style={{ width: '100%' }}
-                  onChange={handleDealNameChange}
-                  value={dealName || ''}
-                  variant="outlined"
-                  fullWidth
-                  size="small"
-                  margin="normal"
-                  required
-                  inputProps={{
-                    'aria-label': t('lead_management.deal_name'),
-                    style: { fontSize: '15px' }
-                  }}
-                  InputLabelProps={{ style: { fontSize: '12px' } }}
-                />
-              </Grid>
-
-              <Grid
-                item
-                md={2}
-                xs={2}
-                style={{
-                  paddingTop: '25px'
-                }}
-              >
-                <ButtonComponent
-                  variant="contained"
-                  color="primary"
-                  buttonText={t('lead_management.add')}
-                  handleClick={handleSubmitDeal}
-                  disabled={!dealName.trim()}
-                  disableElevation
-                />
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
-      </Grid>
-      <br />
-      {/* Lead Deals Listing */}
-      {signedDealsData?.signedDeals.length > 0 ? (
-        <div>
-          {signedDealsData?.signedDeals.map(signedDeal => (
-            <div
-              key={signedDeal.id}
-              style={{
-                marginBottom: '20px'
-              }}
-            >
-              <LeadEvent key={signedDeal?.id} leadEvent={signedDeal} />
-            </div>
-          ))}
-        </div>
-      ) : (
-        <CenteredContent>{t('lead_management.no_lead_deal')}</CenteredContent>
-      )}
     </div>
   );
 }

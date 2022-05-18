@@ -601,6 +601,8 @@
     "entered_by": "entered by",
     "division": "Division",
     "division_header": "The value set here will be counted in the Monthly Leads By Division Section of the Scorecard.",
+    "events": "Event Attendance",
+    "events_header": "Events recorded here will be counted in the Event Attendance section of the Scorecard",
     "meetings": "Investor Meetings",
     "meetings_header": "Meetings recorded here will be counted in the Investor Meeting section of the scoreboard.",
     "signed_deal": "Signed Deal",
