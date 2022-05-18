@@ -31,6 +31,7 @@ module Mutations
         form = context[:site_community].forms.find_by(id: vals[:form_id])
         raise_form_not_found_error(form)
 
+
         vals = vals.merge(status_updated_by: context[:current_user])
         u_form = create_form_user(form, vals)
 

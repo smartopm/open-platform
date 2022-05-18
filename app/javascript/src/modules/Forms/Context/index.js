@@ -81,7 +81,7 @@ export default function FormContextProvider({ children }) {
    * @param {String} formId form being submitted
    * @param {String} userId  the currently logged in user
    */
-  function saveFormData(formData, formId, userId, categories, formStatus = null) {
+  function saveFormData(formData, formId, userId, categories, formStatus = null, hasAgreedToTerms) {
     if (filesToUpload.length !== uploadedImages.length) {
       return setImgUploadError(true);
     }
@@ -124,7 +124,8 @@ export default function FormContextProvider({ children }) {
         formId,
         userId,
         status: formStatus,
-        propValues: cleanFormData
+        propValues: cleanFormData,
+        hasAgreedToTerms
       }
     })
       // eslint-disable-next-line no-shadow

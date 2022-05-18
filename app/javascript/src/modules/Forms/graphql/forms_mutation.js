@@ -106,8 +106,8 @@ export const FormUpdateMutation = gql`
 `;
 
 export const FormUserCreateMutation = gql`
-  mutation formUserCreate($formId: ID!, $userId: ID!, $propValues: JSON!, $status: String) {
-    formUserCreate(formId: $formId, userId: $userId, propValues: $propValues, status: $status) {
+  mutation formUserCreate($formId: ID!, $userId: ID!, $propValues: JSON!, $status: String, $hasAgreedToTerms: Boolean) {
+    formUserCreate(formId: $formId, userId: $userId, propValues: $propValues, status: $status, hasAgreedToTerms: $hasAgreedToTerms) {
       formUser {
         id
       }

@@ -119,7 +119,8 @@ export default function Form({
       formId,
       authState.user.id,
       categoriesData.data?.formCategories,
-      status
+      status,
+      hasAgreedToTerms
     );
   }
 
@@ -183,7 +184,9 @@ export default function Form({
                   formData,
                   formId,
                   authState.user.id,
-                  categoriesData.data?.formCategories
+                  categoriesData.data?.formCategories,
+                  null,
+                  hasAgreedToTerms
                 )
               }
               categoriesData={categoriesData.data?.formCategories}
