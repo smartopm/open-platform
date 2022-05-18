@@ -32,7 +32,8 @@ import {
   snakeCaseToSentence
 } from '../utils';
 
-export default function ProcessListItem({ processName }) {
+export default function ProcessListItem({ processItem }) {
+  const { id: processId, name: processName } = processItem;
   const { t } = useTranslation(['task', 'process']);
   const matches = useMediaQuery('(max-width:800px)');
   const classes = useStyles();
@@ -42,25 +43,25 @@ export default function ProcessListItem({ processName }) {
   const { loading: summaryLoading, error: summaryError, data: summaryData } = useQuery(
     TaskQuarterySummaryQuery,
     {
-      variables: { processName },
+      variables: { processId },
       fetchPolicy: 'cache-and-network'
     }
   );
 
   const { data: commentStatData } = useQuery(ReplyCommentStatQuery, {
-    variables: { processName },
+    variables: { processId },
     fetchPolicy: 'cache-and-network'
   });
 
   const { data: stagesData } = useQuery(ProjectStages, {
-    variables: { processName },
+    variables: { processId },
     fetchPolicy: 'cache-and-network'
   });
 
   const { loading: projectsLoading, error: projectsError, data: projectsData } = useQuery(
     ProjectsStatsQuery,
     {
-      variables: { processName, offset: 0, limit: 50 },
+      variables: { processId: processItem.id, offset: 0, limit: 50 },
       fetchPolicy: 'cache-and-network'
     }
   );
@@ -99,7 +100,7 @@ export default function ProcessListItem({ processName }) {
   }
 
   function routeToProjects(paramName, paramValue) {
-    history.push(`/processes/projects?process_name=${processName}&${paramName}=${paramValue}`);
+    history.push(`/processes/${processId}/projects?process_name=${processName}&${paramName}=${paramValue}`);
   }
 
   function cardName(name) {
@@ -162,13 +163,11 @@ export default function ProcessListItem({ processName }) {
     }
   ];
 
-  if (!processName) return <div />;
-
   return (
     <>
       <Grid container style={{ marginTop: '10px' }}>
         <Grid item md={8} xs={12}>
-          <Link to={`/processes/projects?process_name=${processName}`} underline="hover">
+          <Link to={`/processes/${processId}/projects?process_name=${processName}`} underline="hover">
             <Typography className={classes.processTitle} color="primary" variant="h5">
               {processName}
             </Typography>
@@ -176,7 +175,7 @@ export default function ProcessListItem({ processName }) {
         </Grid>
         <Grid item md={3} xs={12} style={!matches ? {textAlign: 'right'} : { padding: '10px 0'}}>
           {commentStatData && (
-          <Button color='primary' variant='outlined' data-testid='comments_button' onClick={() => history.push(`/processes/comments?process_name=${processName}`)}>{t('processes.open_comments')}</Button>
+          <Button color='primary' variant='outlined' data-testid='comments_button' onClick={() => history.push(`/processes/${processId}/comments?process_name=${processName}`)}>{t('processes.open_comments')}</Button>
           )}
         </Grid>
       </Grid>
@@ -457,5 +456,8 @@ const useStyles = makeStyles(theme => ({
 }));
 
 ProcessListItem.propTypes = {
-  processName: PropTypes.string.isRequired,
+  processItem: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired
+  }).isRequired,
 }

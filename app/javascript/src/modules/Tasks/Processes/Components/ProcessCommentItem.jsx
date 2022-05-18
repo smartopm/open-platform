@@ -1,4 +1,5 @@
 import React from 'react';
+import { useParams } from 'react-router';
 import Grid from '@mui/material/Grid';
 import Avatar from '@mui/material/Avatar';
 import PropTypes from 'prop-types';
@@ -12,6 +13,7 @@ import { objectAccessor, sanitizeText, removeNewLines } from '../../../../utils/
 import { dateToString } from '../../../../components/DateContainer';
 
 export default function ProcessCommentItem({ commentdata, commentType }) {
+  const {  id: processId } = useParams();
   const statusColors = {
     Sent: 'info',
     Received: 'warning',
@@ -78,7 +80,7 @@ export default function ProcessCommentItem({ commentdata, commentType }) {
         </Grid>
         <Grid item md={12} xs={12} data-testid='task_link'>
           <Link
-            to={`/processes/projects/${commentdata.note.id}?tab=processes&detailTab=comments&replying_discussion=${commentdata.groupingId}`}
+            to={`/processes/${processId}/projects/${commentdata.note.id}?tab=processes&detailTab=comments&replying_discussion=${commentdata.groupingId}`}
           >
             <Typography variant="caption">
               <span

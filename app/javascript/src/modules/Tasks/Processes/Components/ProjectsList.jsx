@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { useQuery } from 'react-apollo';
 import { Grid, Typography, Breadcrumbs } from '@mui/material';
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next';
 import makeStyles from '@mui/styles/makeStyles';
 import { formatError, useParamsQuery } from '../../../../utils/helpers';
@@ -14,6 +14,7 @@ import { Context as AuthStateContext } from '../../../../containers/Provider/Aut
 import Paginate from '../../../../components/Paginate';
 
 export default function ProjectsList() {
+  const { id: processId } = useParams();
   const { t } = useTranslation('task');
   const limit = 50;
   const [offset, setOffset] = useState(0);
@@ -32,7 +33,7 @@ export default function ProjectsList() {
     variables: {
       offset,
       limit,
-      processName,
+      processId,
       step: currentStep,
       completedPerQuarter,
       submittedPerQuarter,
@@ -83,7 +84,7 @@ export default function ProjectsList() {
           <div>
             {data.projects.map(task => (
               <div key={task.id}>
-                <ProjectItem task={task} refetch={refetch} />
+                <ProjectItem task={task} processId={processId} refetch={refetch} />
               </div>
           ))}
           </div>

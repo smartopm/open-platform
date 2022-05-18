@@ -18,7 +18,7 @@ export const ProcessesQuery = gql`
 
 export const ProjectsQuery = gql`
   query GetProjects(
-    $processName: String!
+    $processId: ID!
     $offset: Int
     $limit: Int
     $step: String
@@ -28,7 +28,7 @@ export const ProjectsQuery = gql`
     $repliesRequestedStatus: String
   ) {
     projects(
-      processName: $processName
+      processId: $processId
       offset: $offset
       limit: $limit
       step: $step
@@ -72,8 +72,8 @@ export const ProjectStagesQuery = gql`
 `;
 
 export const TaskQuarterySummaryQuery = gql`
-  query tasksByQuarter($processName: String!) {
-    tasksByQuarter(processName: $processName)
+  query tasksByQuarter($processId: ID!) {
+    tasksByQuarter(processId: $processId)
   }
 `;
 
@@ -102,7 +102,7 @@ export const ProjectCommentsQuery = gql`
 
 export const ProjectsStatsQuery = gql`
   query GetProjectsStatsQuery(
-    $processName: String!
+    $processId: ID!
     $offset: Int
     $limit: Int
     $step: String
@@ -110,7 +110,7 @@ export const ProjectsStatsQuery = gql`
     $submittedPerQuarter: String
   ) {
     projects(
-      processName: $processName
+      processId: $processId
       offset: $offset
       limit: $limit
       step: $step
@@ -129,8 +129,8 @@ export const ProjectsStatsQuery = gql`
 `;
 
 export const ReplyCommentStatQuery = gql`
-  query replyCommentStats($processName: String!) {
-    replyCommentStats(processName: $processName) {
+  query replyCommentStats($processId: ID!) {
+    replyCommentStats(processId: $processId) {
       sent
       received
       resolved
@@ -209,8 +209,8 @@ export const ProjectRepliesRequestedComments = gql`
 `;
 
 export const ProcessReplyComments = gql`
-  query processReplyComments($processName: String!) {
-    processReplyComments(processName: $processName) {
+  query processReplyComments($processId: ID!) {
+    processReplyComments(processId: $processId) {
       sent {
         id
         body
@@ -265,8 +265,8 @@ export const ProcessReplyComments = gql`
 `;
 
 export const ProjectStages = gql`
-  query projectStages($processName: String!) {
-    projectStages(processName: $processName)
+  query projectStages($processId: ID!) {
+    projectStages(processId: $processId)
     {
       id
       body

@@ -219,7 +219,7 @@ export default function TaskDataList({
                 )}
               </Grid>
               <Grid item xs={1} style={{ marginLeft: '-5px' }}>
-                {location.pathname === '/processes/projects' && taskCommentHasReply && (
+                {location.pathname.match(/\bprocesses\b/) && taskCommentHasReply && (
                   <Badge
                     color="warning"
                     badgeContent={(
@@ -342,7 +342,7 @@ export default function TaskDataList({
                     )}
                   </Grid>
                   <Grid item md={1} style={{ marginLeft: '-17px' }}>
-                    {location.pathname === '/processes/projects' && taskCommentHasReply && (
+                    {location.pathname.match(/\bprocesses\b/) && taskCommentHasReply && (
                       <Badge
                         color="warning"
                         badgeContent={(
@@ -383,7 +383,7 @@ export default function TaskDataList({
                   style={{ display: 'flex', justifyContent: 'space-between' }}
                   className={classes.detailsContainer}
                 >
-                  {location.pathname !== '/processes/projects' && (
+                  {location.pathname !== '/processes' && (
                     <>
                       <Grid item md={2} xs={1}>
                         <IconButton
@@ -435,7 +435,7 @@ export default function TaskDataList({
                     xs={1}
                     className={classes.iconItem}
                     style={
-                      location.pathname === '/processes/projects' ? { marginLeft: '-53px' } : { marginLeft: '-11px' }
+                      location.pathname.match(/\bprocesses\b/) ? { marginLeft: '-53px' } : { marginLeft: '-11px' }
                     }
                   >
                     <span data-testid="task-comment">{data?.taskComments.length || 0}</span>
@@ -463,7 +463,7 @@ export default function TaskDataList({
                     xs={1}
                     className={classes.iconItem}
                     style={
-                      location.pathname === '/processes/projects' ? { marginLeft: '-58px' } : { marginLeft: '-16px' }
+                      location.pathname.match(/\bprocesses\b/) ? { marginLeft: '-58px' } : { marginLeft: '-16px' }
                     }
                   >
                     <span data-testid="file_attachments_total">

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useHistory } from 'react-router';
+import { useHistory, useParams } from 'react-router';
 import { useQuery } from 'react-apollo';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import PageHeader from '../../../../shared/PageHeader';
@@ -13,6 +13,7 @@ import PageWrapper from '../../../../shared/PageWrapper';
 import ProcessCommentItem from './ProcessCommentItem';
 
 export default function ProcessCommentsPage() {
+  const {  id: processId } = useParams();
   const matches = useMediaQuery('(max-width:600px)');
   const history = useHistory();
   const path = useParamsQuery();
@@ -21,7 +22,7 @@ export default function ProcessCommentsPage() {
   const processName = path.get('process_name');
 
   const { data, loading, error } = useQuery(ProcessReplyComments, {
-    variables: { processName },
+    variables: { processId },
     fetchPolicy: 'cache-and-network'
   });
 
@@ -33,7 +34,7 @@ export default function ProcessCommentsPage() {
 
   function handleTabValueChange(_event, newValue) {
     history.push(
-      `?process_name=${processName}&tab=${Object.keys(TAB_VALUES).find(key => objectAccessor(TAB_VALUES, key) === newValue)}`
+      `?&tab=${Object.keys(TAB_VALUES).find(key => objectAccessor(TAB_VALUES, key) === newValue)}`
     );
     setTabValue(Number(newValue));
   }

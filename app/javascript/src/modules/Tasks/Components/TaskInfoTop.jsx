@@ -2,7 +2,7 @@
 /* eslint-disable max-lines */
 /* eslint-disable complexity */
 import React, { useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useParams } from 'react-router-dom';
 import TextField from '@mui/material/TextField';
 import { Button, Grid, Chip, Typography, IconButton, useMediaQuery, MenuItem } from '@mui/material';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
@@ -51,11 +51,12 @@ export default function TaskInfoTop({
   forProcess,
   fromLeadPage
 }) {
-  const { t } = useTranslation(['task', 'common']);
+  const { t } = useTranslation(['task', 'common'])
   const classes = useStyles();
   const matches = useMediaQuery('(max-width:1000px)');
   const history = useHistory();
   const location = useLocation();
+  const { processId } = useParams()
   const [taskUpdate] = useMutation(UpdateNote);
   const [editingBody, setEditingBody] = useState(false);
   const [editingDueDate, setEditingDueDate] = useState(false);
@@ -102,7 +103,7 @@ export default function TaskInfoTop({
   function openParentLink(event, parent) {
     event.preventDefault();
     if (forProcess) {
-      history.push(`/processes/projects/${parent.id}/tab=processes`);
+      history.push(`/processes/${processId}/projects/${parent.id}/tab=processes`);
     } else {
       history.push(`/tasks/${parent.id}`);
     }
@@ -162,7 +163,7 @@ export default function TaskInfoTop({
                     data-testid='back-to-task'
                   >
                     {!fromLeadPage && <KeyboardBackspaceIcon style={{ marginRight: '4px' }} />}
-                    {location.pathname === '/processes/projects'
+                    {location.pathname.match(/\bprocesses\b/)
                       ? t('task:bread_crumps.summary')
                       : !fromLeadPage
                       ? t('task:bread_crumps.my_tasks')
@@ -267,7 +268,7 @@ export default function TaskInfoTop({
                       </IconButton>
                     </Grid>
                   )}
-                  {!fromLeadPage && location.pathname !== '/processes/projects' && (
+                  {!fromLeadPage && location.pathname !== '/processes' && (
                     <Grid item md={4} xs={1} style={{ textAlign: 'right' }}>
                       <IconButton
                         edge="end"

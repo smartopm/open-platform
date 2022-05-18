@@ -67,7 +67,7 @@ export default function AdminDashboard() {
       {processesLoading ? <Spinner /> : ( // TODO: Check new way to render loading state
          processes?.processTemplates?.length > 0 ?
             processes.processTemplates.map(process => (
-              <ProcessListItem key={process.id} processName={process.name} />)
+              <ProcessListItem key={process.id} processItem={process} />)
               ) :
             <CenteredContent>{t('processes.no_processes')}</CenteredContent>
       )}

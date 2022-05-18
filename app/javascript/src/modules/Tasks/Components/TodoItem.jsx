@@ -100,7 +100,7 @@ export default function TodoItem({
     }
   ];
 
-  if (location.pathname === '/processes') {
+  if (location.pathname.match(/\bprocesses\b/)) {
     menuList = [
       {
         content: t('menu.open_project_details'),
@@ -278,7 +278,7 @@ export default function TodoItem({
               taskCommentHasReply={task?.taskCommentReply}
               handleOpenProjectClick={handleToggleProjectAccordionOverview}
               openProject={
-                location.pathname === '/processes/projects' && objectAccessor(projectsAccordionOpen, task?.id)
+                location.pathname.match(/\bprocesses\b/) && objectAccessor(projectsAccordionOpen, task?.id)
               }
               showWidgetsIcon={showWidgetsIcon}
             />
@@ -290,7 +290,7 @@ export default function TodoItem({
         )}
       </div>
 
-      {location.pathname === '/processes/projects' && objectAccessor(projectsAccordionOpen, task?.id) && (
+      {location.pathname.match(/\bprocesses\b/) && objectAccessor(projectsAccordionOpen, task?.id) && (
         <div className={classes.levelOne}>
           <ProjectDetailsAccordion
             taskId={task?.id}

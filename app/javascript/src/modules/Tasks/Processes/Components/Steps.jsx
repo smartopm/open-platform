@@ -12,6 +12,7 @@ import { objectAccessor, sortTaskOrder } from '../../../../utils/helpers';
 
 export default function ProjectSteps({
   data,
+  processId,
   setSelectedStep,
   handleStepCompletion,
   handleProjectStepClick,
@@ -43,7 +44,7 @@ export default function ProjectSteps({
     handleProjectStepClick(stepItem);
     setSelectedStep({ ...stepItem });
     if (redirect) {
-      history.push(`/processes/projects/${id}?tab=processes`)
+      history.push(`/processes/${processId}/projects/${id}?tab=processes`)
     }
   }
 
@@ -129,6 +130,7 @@ const Step = {
 
   ProjectSteps.propTypes = {
   data: PropTypes.arrayOf(PropTypes.shape(Step)),
+  processId: PropTypes.string.isRequired,
   setSelectedStep: PropTypes.func,
   handleProjectStepClick: PropTypes.func.isRequired,
   handleStepCompletion: PropTypes.func.isRequired,
