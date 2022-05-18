@@ -263,3 +263,13 @@ export const ProcessReplyComments = gql`
     }
   }
 `;
+
+export const ProjectStages = gql`
+  query projectStages($processName: String!) {
+    projectStages(processName: $processName)
+    {
+      id
+      body
+    }
+  }
+`;

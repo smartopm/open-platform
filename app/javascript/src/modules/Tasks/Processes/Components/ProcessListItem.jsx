@@ -24,10 +24,10 @@ import { Spinner } from '../../../../shared/Loading';
 import {
   TaskQuarterySummaryQuery,
   ProjectsStatsQuery,
-  ReplyCommentStatQuery
+  ProjectStages,
+  ReplyCommentStatQuery,
 } from '../graphql/process_queries';
 import {
-  filterProjectAndStages,
   calculateOpenProjectsByStage,
   snakeCaseToSentence
 } from '../utils';
@@ -52,6 +52,11 @@ export default function ProcessListItem({ processName }) {
     fetchPolicy: 'cache-and-network'
   });
 
+  const { data: stagesData } = useQuery(ProjectStages, {
+    variables: { processName },
+    fetchPolicy: 'cache-and-network'
+  });
+
   const { loading: projectsLoading, error: projectsError, data: projectsData } = useQuery(
     ProjectsStatsQuery,
     {
@@ -60,19 +65,9 @@ export default function ProcessListItem({ processName }) {
     }
   );
 
-  const projectStageLookup = {
-    concept_design_review: 0,
-    scheme_design_review: 0,
-    detailed_design_review: 0,
-    kiambu_county_submission: 0,
-    signing_of_contractor_code_of_conduct: 0,
-    construction_starts: 0,
-    inspections: 0,
-    post_construction: 0
-  };
-
-  const filteredProjects = filterProjectAndStages(projectsData?.projects, projectStageLookup);
-  const stats = calculateOpenProjectsByStage(filteredProjects, projectStageLookup);
+  const projectStats = calculateOpenProjectsByStage(
+    projectsData?.projects, stagesData?.projectStages
+  );
 
   const currentYear = new Date().getFullYear();
   const completedResults = summaryData?.tasksByQuarter.completed || [];
@@ -387,7 +382,7 @@ export default function ProcessListItem({ processName }) {
             </CenteredContent>
           ) : (
             <List data-testid="project-stages">
-              {Object.entries(stats).map(([stage, count], index) => (
+              {Object.entries(projectStats).map(([stage, count], index) => (
                 <Fragment key={stage}>
                   <ListItem
                     onClick={() => routeToProjects('current_step', snakeCaseToSentence(stage))}
@@ -397,7 +392,7 @@ export default function ProcessListItem({ processName }) {
                       <Grid item xs={11}>
                         <ListItemText>
                           <Typography variant="body2">
-                            {t(`processes.drc_stages.${stage}`)}
+                            {snakeCaseToSentence(stage)}
                           </Typography>
                         </ListItemText>
                       </Grid>
@@ -410,7 +405,7 @@ export default function ProcessListItem({ processName }) {
                       </Grid>
                     </Grid>
                   </ListItem>
-                  { (index + 1 < Object.keys(stats).length) && <Divider variant="inset" className={classes.divider} /> }
+                  { (index + 1 < Object.keys(projectStats).length) && <Divider variant="inset" className={classes.divider} /> }
                 </Fragment>
               ))}
             </List>
