@@ -114,7 +114,9 @@ module Notes
     end
 
     def update_parent_current_step
-      parent_note.update(current_step_body: check_current_process_step&.body)
+      parent_note.update(
+        current_step_body: check_current_process_step&.body&.downcase&.tr(' ', '_'),
+      )
     end
 
     # rubocop:disable Layout/LineLength

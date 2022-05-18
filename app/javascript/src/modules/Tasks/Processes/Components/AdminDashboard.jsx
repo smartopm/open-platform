@@ -64,7 +64,7 @@ export default function AdminDashboard() {
         </Grid>
       </Grid>
       {processesError && <CenteredContent>{formatError(processesError.message)}</CenteredContent>}
-      {processesLoading ? <Spinner /> : ( // TODO: Check new way to render loading state
+      {processesLoading ? <Spinner /> : (
          processes?.processTemplates?.length > 0 ?
             processes.processTemplates.map(process => (
               <ProcessListItem key={process.id} processItem={process} />)

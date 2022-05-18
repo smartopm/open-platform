@@ -20,7 +20,7 @@ import { useQuery } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import CenteredContent from '../../../../shared/CenteredContent';
 import { formatError } from '../../../../utils/helpers';
-import { Spinner } from '../../../../shared/Loading';
+import CustomSkeleton from '../../../../shared/CustomSkeleton';
 import {
   TaskQuarterySummaryQuery,
   ProjectsStatsQuery,
@@ -186,7 +186,7 @@ export default function ProcessListItem({ processItem }) {
           </Typography>
           {summaryError && <CenteredContent>{formatError(summaryError.message)}</CenteredContent>}
           {summaryLoading ? (
-            <Spinner />
+            <CustomSkeleton variant="rectangular" width="100%" height="300px" />
           ) : (
             <>
               <Grid container spacing={1} className={classes.cards}>
@@ -377,14 +377,14 @@ export default function ProcessListItem({ processItem }) {
           {projectsError && <CenteredContent>{formatError(projectsError.message)}</CenteredContent>}
           {projectsLoading ? (
             <CenteredContent>
-              <Spinner />
+              <CustomSkeleton variant="rectangular" width="100%" height="300px" />
             </CenteredContent>
           ) : (
             <List data-testid="project-stages">
               {Object.entries(projectStats).map(([stage, count], index) => (
                 <Fragment key={stage}>
                   <ListItem
-                    onClick={() => routeToProjects('current_step', snakeCaseToSentence(stage))}
+                    onClick={() => routeToProjects('current_step', stage)}
                     className={classes.projectStageLink}
                   >
                     <Grid container>
@@ -411,7 +411,7 @@ export default function ProcessListItem({ processItem }) {
           )}
         </Grid>
         <Grid item xs={12}>
-          <Divider variant='fullWidth' />
+          <Divider className={classes.bottomDivider} variant='fullWidth' />
         </Grid>
       </Grid>
     </>
@@ -439,6 +439,9 @@ const useStyles = makeStyles(theme => ({
     marginLeft: '-2px',
     marginRight: '23px',
     marginBottom: '30px'
+  },
+  bottomDivider: {
+    marginBottom: '32px'
   },
   primaryCardsBackground: {
     backgroundColor: theme.palette?.primary?.main
