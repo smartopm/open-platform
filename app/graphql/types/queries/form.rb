@@ -179,7 +179,7 @@ module Types::Queries::Form
     form = Forms::Form.find_by(id: form_id)
     raise_form_not_found_error(form)
 
-    form.categories.eager_load(:form_properties, :form).order(:order)
+    form.categories.eager_load(:form_properties).order(:order)
   end
 
   private
