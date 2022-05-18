@@ -48,7 +48,7 @@ module Notes
     before_save :log_completed_at, if: -> { completed_changed? }
     after_create :log_create_event
     after_update :log_update_event
-    after_update :update_parent_current_step, if: -> { parent_note_id.present? }
+    after_save :update_parent_current_step, if: -> { parent_note_id.present? }
 
     default_scope { order(created_at: :desc) }
     scope :by_due_date, ->(date) { where('due_date <= ?', date) }
