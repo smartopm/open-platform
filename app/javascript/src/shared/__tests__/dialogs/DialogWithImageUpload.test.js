@@ -13,8 +13,14 @@ describe('It should render dialog-with-image-upload', () => {
       inputPlaceholder: 'Input placholder',
       uploadBtnText: 'Add a photo',
       subTitle: 'A dialog subtitle',
-      uploadInstruction: 'Please upload an image'
+      uploadInstruction: 'Please upload an image',
+      userType: 'admin',
+      actionVisibilityOptions: { admin: 'Admins Only', everyone: 'Everyone' },
+      actionVisibilityLabel: 'who can see this post?',
+      handleVisibilityOptions: () => {},
+      visibilityValue: 'Everyone'
     };
+
     const container = render(
       <MockedThemeProvider>
         <DialogWithImageUpload
@@ -43,5 +49,6 @@ describe('It should render dialog-with-image-upload', () => {
     expect(container.queryByTestId('upload_label')).toBeInTheDocument();
     expect(container.queryByTestId('entry-dialog-close-icon')).toBeInTheDocument();
     expect(container.queryAllByTestId('upload_button')[0]).toBeInTheDocument();
+    expect(container.queryByTestId('visibilty-select')).toBeInTheDocument();
   });
 });

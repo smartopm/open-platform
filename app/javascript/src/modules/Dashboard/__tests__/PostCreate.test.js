@@ -29,6 +29,7 @@ describe('PostCreate component', () => {
           <PostCreate
             translate={translate}
             currentUserImage="https://image-url.com"
+            currentUserType="admin"
             btnBorderColor="#575757"
             refetchNews={() => {}}
           />

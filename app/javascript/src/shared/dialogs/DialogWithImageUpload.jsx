@@ -93,13 +93,10 @@ export default function DialogWithImageUpload({
             </Grid>
             {!!modalDetails?.actionVisibilityOptions && (
               <Grid item sm={8}>
-                <FormControl variant="outlined">
+                <FormControl variant="outlined" data-testid="visibilty-select">
                   <InputLabel shrink>{modalDetails.actionVisibilityLabel}</InputLabel>
                   <Box>
                     <Select
-                      inputLabelProps={{
-                        shrink: true
-                      }}
                       style={{ width: '180px', height: '42px' }}
                       value={modalDetails.visibilityValue}
                       onChange={e => modalDetails.handleVisibilityOptions(e.target.value)}
