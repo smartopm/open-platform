@@ -273,9 +273,9 @@ export default function Form({
         </Grid>
       )}
 
-      {
+      {/* {
           !editMode && formDetailData?.form?.hasTermsAndConditions && (
-            <Grid style={{ padding: '0 120px' }}>
+            <Grid>
               <TermsAndCondition
                 categoriesData={categoriesData.data?.formCategories} 
                 isChecked={hasAgreedToTerms}
@@ -283,10 +283,21 @@ export default function Form({
               />
             </Grid>
           )
-      }
+      } */}
 
       {!editMode && (
         <Grid container style={matches ? {} : { padding: '0 120px 20px 120px' }}>
+          {
+            formDetailData?.form?.hasTermsAndConditions && (
+              <Grid item md={12} xs={12} style={{ marginTop: '20px' }}>
+                <TermsAndCondition
+                  categoriesData={categoriesData.data?.formCategories} 
+                  isChecked={hasAgreedToTerms}
+                  handleCheckTerms={isChecked => setHasAgreedToTerms(isChecked)}
+                />
+              </Grid>
+            )
+          }
           <Grid item md={12} xs={12} style={{ marginTop: '20px' }}>
             <Divider />
           </Grid>
