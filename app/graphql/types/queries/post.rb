@@ -38,6 +38,6 @@ module Types::Queries::Post
     discussion = context[:site_community].discussions.find_by(title: 'Community News')
     return [] if discussion.nil?
 
-    discussion.posts.offset(offset).limit(limit)
+    discussion.posts.by_accessibility(context[:current_user].user_type).offset(offset).limit(limit)
   end
 end

@@ -741,8 +741,8 @@ export const CommentMutation = gql`
 `;
 
 export const PostCreateMutation = gql`
-  mutation postCreate($discussionId: ID!, $content: String, $imageBlobIds: [String!]) {
-    postCreate(discussionId: $discussionId, content: $content, imageBlobIds: $imageBlobIds) {
+  mutation postCreate($discussionId: ID!, $content: String, $imageBlobIds: [String!], $accessibility: String) {
+    postCreate(discussionId: $discussionId, content: $content, imageBlobIds: $imageBlobIds, accessibility: $accessibility) {
       post {
         content
       }

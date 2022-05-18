@@ -7,15 +7,12 @@ import useFileUpload from '../../../graphql/useFileUpload';
 import { PostCreateMutation } from '../../../graphql/mutations';
 import MessageAlert from '../../../components/MessageAlert';
 import { Spinner } from '../../../shared/Loading';
+import { objectAccessor } from '../../../utils/helpers';
 
-export default function PostCreate({
-  translate,
-  currentUserImage,
-  btnBorderColor,
-  refetchNews
-}) {
+export default function PostCreate({ translate, currentUserImage, btnBorderColor, refetchNews }) {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [post, setPost] = useState('');
+  const [visibilityOption, setVisibilityOption] = useState('Everyone');
   const [imageUrls, setImageUrls] = useState([]);
   const [blobIds, setBlobIds] = useState([]);
   const [postDetails, setPostDetails] = useState({
@@ -27,11 +24,20 @@ export default function PostCreate({
   const { onChange, signedBlobId, url, status } = useFileUpload({
     client: useApolloClient()
   });
+
   const [createPost] = useMutation(PostCreateMutation);
+  const actionVisibilityOptions = {
+    admins: 'Admins Only',
+    everyone: 'Everyone'
+  };
   const modalDetails = {
     title: translate('dashboard.start_post'),
     inputPlaceholder: translate('dashboard.whats_happening'),
-    uploadBtnText: translate('dashboard.add_photo')
+    uploadBtnText: translate('dashboard.add_photo'),
+    actionVisibilityOptions,
+    actionVisibilityLabel: translate('dashboard.who_can_see_post'),
+    handleVisibilityOptions: option => setVisibilityOption(option),
+    visibilityValue: visibilityOption
   };
 
   useEffect(() => {
@@ -70,7 +76,10 @@ export default function PostCreate({
         content: post,
         // TODO: Remove this dummy ID
         discussionId: '12456484',
-        imageBlobIds: blobIds
+        imageBlobIds: blobIds,
+        accessibility: Object.keys(actionVisibilityOptions).find(
+          key => objectAccessor(actionVisibilityOptions, key) === visibilityOption
+        )
       }
     })
       .then(() => {
@@ -144,7 +153,7 @@ export default function PostCreate({
               {translate('common:misc.post')}
             </Button>
           </>
-          )}
+        )}
       </DialogWithImageUpload>
       <Button
         onClick={openCreateModal}
