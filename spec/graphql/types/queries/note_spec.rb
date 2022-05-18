@@ -215,7 +215,7 @@ RSpec.describe Types::Queries::Note do
     let(:projects_query) do
       <<~GQL
         query GetProjects(
-          $processName: String!
+          $processId: ID!
           $offset: Int,
           $limit: Int,
           $step: String,
@@ -225,7 +225,7 @@ RSpec.describe Types::Queries::Note do
           $repliesRequestedStatus: String
         ) {
           projects(
-            processName: $processName,
+            processId: $processId,
             offset: $offset,
             limit: $limit,
             step: $step,
@@ -242,8 +242,8 @@ RSpec.describe Types::Queries::Note do
 
     let(:projects_summary_query) do
       <<~GQL
-        query tasksByQuarter($processName: String!) {
-          tasksByQuarter(processName: $processName)
+        query tasksByQuarter($processId: ID!) {
+          tasksByQuarter(processId: $processId)
         }
       GQL
     end
@@ -1007,8 +1007,8 @@ RSpec.describe Types::Queries::Note do
       end
 
       let(:process_comments_stats_query) do
-        %(query($processName: String!) {
-          replyCommentStats(processName: $processName) {
+        %(query($processId: ID!) {
+          replyCommentStats(processId: $processId) {
             sent
             received
             resolved
@@ -1052,8 +1052,8 @@ RSpec.describe Types::Queries::Note do
 
       let(:project_stages_query) do
         <<~GQL
-          query projectStages($processName: String!) {
-            projectStages(processName: $processName)
+          query projectStages($processId: ID!) {
+            projectStages(processId: $processId)
             {
               id
               body
@@ -1074,7 +1074,7 @@ RSpec.describe Types::Queries::Note do
         end
 
         it 'throws an error if process is not found' do
-          variables = { processName: 'Non existing process' }
+          variables = { processId: 'Non existing process' }
           result = DoubleGdpSchema.execute(projects_query, variables: variables,
                                                            context: {
                                                              current_user: site_worker,
@@ -1085,7 +1085,7 @@ RSpec.describe Types::Queries::Note do
         end
 
         it 'returns the projects for DRC' do
-          variables = { processName: 'DRC' }
+          variables = { processId: process.id }
           result = DoubleGdpSchema.execute(projects_query, variables: variables,
                                                            context: {
                                                              current_user: site_worker,
@@ -1331,7 +1331,7 @@ RSpec.describe Types::Queries::Note do
                                                current_user: site_worker,
                                                site_community: community,
                                              }, variables: {
-                                               processName: 'DRC',
+                                               processId: process.id,
                                                completedPerQuarter: 'ytd',
                                              }).as_json
 
@@ -1345,7 +1345,7 @@ RSpec.describe Types::Queries::Note do
                                              current_user: site_worker,
                                              site_community: community,
                                            }, variables: {
-                                             processName: 'DRC',
+                                             processId: process.id,
                                              completedPerQuarter: 'Q1',
                                            }).as_json
 
@@ -1360,7 +1360,7 @@ RSpec.describe Types::Queries::Note do
                                       current_user: site_worker,
                                       site_community: community,
                                     }, variables: {
-                                      processName: 'DRC',
+                                      processId: process.id,
                                       completedPerQuarter: 'Q9',
                                     }).as_json
           end.to raise_error('Invalid argument. quarter should be either Q1, Q2, Q3 or Q4')
@@ -1387,7 +1387,7 @@ RSpec.describe Types::Queries::Note do
                                                current_user: site_worker,
                                                site_community: community,
                                              }, variables: {
-                                               processName: 'DRC',
+                                               processId: process.id,
                                                submittedPerQuarter: 'ytd',
                                              }).as_json
 
@@ -1401,7 +1401,7 @@ RSpec.describe Types::Queries::Note do
                                              current_user: site_worker,
                                              site_community: community,
                                            }, variables: {
-                                             processName: 'DRC',
+                                             processId: process.id,
                                              submittedPerQuarter: 'Q1',
                                            }).as_json
 
@@ -1416,7 +1416,7 @@ RSpec.describe Types::Queries::Note do
                                       current_user: site_worker,
                                       site_community: community,
                                     }, variables: {
-                                      processName: 'DRC',
+                                      processId: process.id,
                                       submittedPerQuarter: 'Q9',
                                     }).as_json
           end.to raise_error('Invalid argument. quarter should be either Q1, Q2, Q3 or Q4')
@@ -1450,7 +1450,7 @@ RSpec.describe Types::Queries::Note do
                                              current_user: site_worker,
                                              site_community: community,
                                            }, variables: {
-                                             processName: 'DRC',
+                                             processId: process.id,
                                              repliesRequestedStatus: 'sent',
                                            }).as_json
 
@@ -1478,7 +1478,7 @@ RSpec.describe Types::Queries::Note do
                                                current_user: site_worker,
                                                site_community: community,
                                              }, variables: {
-                                               processName: 'DRC',
+                                               processId: process.id,
                                                lifeTimeCategory: 'submitted',
                                              }).as_json
 
@@ -1493,7 +1493,7 @@ RSpec.describe Types::Queries::Note do
                                                current_user: site_worker,
                                                site_community: community,
                                              }, variables: {
-                                               processName: 'DRC',
+                                               processId: process.id,
                                                lifeTimeCategory: 'completed',
                                              }).as_json
 
@@ -1509,7 +1509,7 @@ RSpec.describe Types::Queries::Note do
                                                current_user: site_worker,
                                                site_community: community,
                                              }, variables: {
-                                               processName: 'DRC',
+                                               processId: process.id,
                                                lifeTimeCategory: 'outstanding',
                                              }).as_json
 
@@ -1536,7 +1536,7 @@ RSpec.describe Types::Queries::Note do
         end
 
         it 'returns counts of the completed tasks per quarter' do
-          variables = { processName: process.name }
+          variables = { processId: process.id }
           result = DoubleGdpSchema.execute(projects_summary_query, variables: variables,
                                                                    context: {
                                                                      current_user: site_worker,
@@ -1551,7 +1551,7 @@ RSpec.describe Types::Queries::Note do
         end
 
         it 'throws error if process is not found' do
-          variables = { processName: 'A random name' }
+          variables = { processId: 'A random process' }
           result = DoubleGdpSchema.execute(projects_summary_query, variables: variables,
                                                                    context: {
                                                                      current_user: site_worker,
@@ -1567,7 +1567,7 @@ RSpec.describe Types::Queries::Note do
         let(:note_list) { create(:note_list, process: process, community: community) }
 
         it 'raises an error if note list is not found' do
-          variables = { processName: process.name }
+          variables = { processId: process.id }
           result = DoubleGdpSchema.execute(project_stages_query, variables: variables,
                                                                  context: {
                                                                    current_user: admin,
@@ -1579,7 +1579,7 @@ RSpec.describe Types::Queries::Note do
 
         it 'raises error if parent task is not found' do
           note_list
-          variables = { processName: process.name }
+          variables = { processId: process.id }
           result = DoubleGdpSchema.execute(project_stages_query, variables: variables,
                                                                  context: {
                                                                    current_user: admin,
@@ -1626,7 +1626,7 @@ RSpec.describe Types::Queries::Note do
             note_list_id: note_list.id,
           )
 
-          variables = { processName: process.name }
+          variables = { processId: process.id }
           result = DoubleGdpSchema.execute(project_stages_query, variables: variables,
                                                                  context: {
                                                                    current_user: admin,
@@ -1785,7 +1785,7 @@ RSpec.describe Types::Queries::Note do
         end
 
         it 'retrieves process comments' do
-          variables = { processName: 'DRC' }
+          variables = { processId: process.id }
           result = DoubleGdpSchema.execute(
             process_comments_stats_query,
             variables: variables,
@@ -1802,7 +1802,7 @@ RSpec.describe Types::Queries::Note do
         end
 
         it 'raises error if process is not found' do
-          variables = { processName: 'Non exixtent process' }
+          variables = { processId: 'Non existent process' }
           result = DoubleGdpSchema.execute(
             process_comments_stats_query,
             variables: variables,
@@ -1816,7 +1816,7 @@ RSpec.describe Types::Queries::Note do
         end
 
         it 'raises unauthorized user if current-user does not have access' do
-          variables = { processName: 'DRC' }
+          variables = { processId: process.id }
           result = DoubleGdpSchema.execute(
             process_comments_stats_query,
             variables: variables,
@@ -1834,8 +1834,8 @@ RSpec.describe Types::Queries::Note do
       describe 'Processes comments' do
         let(:process_reply_comments_query) do
           <<~GQL
-            query processReplyComments($processName: String!) {
-              processReplyComments(processName: $processName) {
+            query processReplyComments($processId: ID!) {
+              processReplyComments(processId: $processId) {
                 sent {
                   id
                   body
@@ -1968,7 +1968,7 @@ RSpec.describe Types::Queries::Note do
         end
 
         it 'raises error when user has no permissions' do
-          variables = { processName: 'DRC' }
+          variables = { processId: process.id }
           result = DoubleGdpSchema.execute(
             process_reply_comments_query,
             variables: variables,
@@ -1982,7 +1982,7 @@ RSpec.describe Types::Queries::Note do
         end
 
         it 'raises error if process is not found' do
-          variables = { processName: 'Non exixtent process' }
+          variables = { processId: 'Non existent process' }
           result = DoubleGdpSchema.execute(
             process_reply_comments_query,
             variables: variables,
@@ -1996,7 +1996,7 @@ RSpec.describe Types::Queries::Note do
         end
 
         it 'returns process comments by status' do
-          variables = { processName: 'DRC' }
+          variables = { processId: process.id }
           result = DoubleGdpSchema.execute(
             process_reply_comments_query,
             variables: variables,
