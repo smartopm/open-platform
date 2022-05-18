@@ -102,6 +102,7 @@ export const FormUserQuery = gql`
         id
         name
         description
+        hasTermsAndConditions
       }
       statusUpdatedBy {
         id

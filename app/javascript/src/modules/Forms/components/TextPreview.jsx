@@ -11,10 +11,13 @@ export default function TextPreview({ children, categoriesData }) {
   const markdown = parseRenderedText(categoriesData, formProperties)
   return (
     <Container>
-      <ReactMarkDown 
+      <div style={{ overflow: 'auto', height: 200 }}>
+        <ReactMarkDown 
         // eslint-disable-next-line react/no-children-prop
-        children={markdown}
-      />
+          children={markdown}
+        />
+
+      </div>
       {children}
     </Container>
   );
