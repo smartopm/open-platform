@@ -115,7 +115,6 @@ export default function CommunitySettings({ data, refetch }) {
   const [locale, setLocale] = useState('en-ZM');
   const [language, setLanguage] = useState('en-US');
   const [hasQuickLinksSettingChanged, setHasQuickLinksSettingChanged] = useState(false);
-  const [divisionTargetChanged, setDivisionTargetChanged] = useState(false);
   const [smsPhoneNumbers, setSMSPhoneNumbers] = useState(data?.smsPhoneNumbers?.join(',') || '');
   const [emergencyCallNumber, setEmergencyCallNumber] = useState(data?.emergencyCallNumber || '');
   const [communityFeatures, setCommunityFeatures] = useState(features);
@@ -203,7 +202,6 @@ export default function CommunitySettings({ data, refetch }) {
   }
 
   function handleDivisionTargetChange(event, index) {
-    setDivisionTargetChanged(true);
     updateOptions(
       index,
       { [event.target.name]: event.target.value },
@@ -373,7 +371,6 @@ export default function CommunitySettings({ data, refetch }) {
       return;
     }
     setCallMutation(true);
-
     communityUpdate({
       variables: {
         supportNumber: numberOptions,
@@ -419,6 +416,7 @@ export default function CommunitySettings({ data, refetch }) {
         refetch();
       })
       .catch(error => {
+        console.log(error);
         setMessage({ isError: true, detail: formatError(error.message) });
         setAlertOpen(true);
         setCallMutation(false);
