@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 import React, { useContext } from 'react';
 import { useQuery } from 'react-apollo';
 import makeStyles from '@mui/styles/makeStyles';
@@ -56,7 +57,6 @@ export default function LeadsPage() {
   }
 
   function BS(status, month) {
-    console.log(data)
     if (!data?.leadScorecards.leads_monthly_stats_by_status[objectAccessor(statuses, status)]) {
       return '0';
     }
@@ -88,7 +88,6 @@ export default function LeadsPage() {
     );
   return (
     <div className={matches ? classes.containerMobile : classes.container}>
-      {console.log(data)}
       <Grid container>
         <Grid item md={12} xs={12} className={classes.title} data-testid="page_title">
           <Typography variant="h4">Leads</Typography>
@@ -102,7 +101,7 @@ export default function LeadsPage() {
           </Typography>
         </Grid>
         <Grid item md={2} xs={5} className={classes.title} style={{ textAlign: 'right' }}>
-          <Typography component="span" color="text.secondary">
+          <Typography component="span" color="text.secondary" style={{marginRight: "20px"}}>
             YTD Total
           </Typography>
           {'  '}
@@ -112,29 +111,29 @@ export default function LeadsPage() {
         </Grid>
       </Grid>
       <Grid container spacing={2} data-testid="card_one">
-        {buildScoreCardData(CS).map(score => (
-          <Grid item md={3} xs={12} key={score.stage}>
+        {buildScoreCardData(CS).map((score, index) => (
+          <Grid item md={3} xs={12} key={index}>
             <ScoreCard data={score} />
           </Grid>
         ))}
       </Grid>
       <Grid container spacing={2} data-testid="card_two">
-        {buildCurrentStatusCard(SL).map(score => (
-          <Grid item md={3} xs={12} key={score.score.col1}>
+        {buildCurrentStatusCard(SL).map((score, index) => (
+          <Grid item md={3} xs={12} key={index}>
             <Typography className={`${classes.cardTitle} ${classes.weight}`}>
               Current Status of leads
             </Typography>
             <ScoreCard data={score} currentStatus />
           </Grid>
         ))}
-        {buildStatusCard(BS).map(score => (
-          <Grid item md={3} xs={12} key={score.stage}>
+        {buildStatusCard(BS).map((score, index) => (
+          <Grid item md={3} xs={12} key={index}>
             <Grid container className={classes.cardTitle}>
               <Grid item md={6} xs={6} className={classes.weight}>
                 {objectAccessor(scoreCardTitle, score.name)}
               </Grid>
               <Grid item md={6} xs={6} style={{ textAlign: 'right' }}>
-                <Typography component="span" color="text.secondary">
+                <Typography component="span" color="text.secondary" style={{marginRight: "20px"}}>
                   YTD Total
                 </Typography>
                 {'  '}

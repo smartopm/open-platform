@@ -147,7 +147,7 @@ const useStyles = makeStyles(theme => ({
   container: {
     border: `1px solid ${theme.palette.secondary.main}`,
     borderRadius: '10px',
-    padding: '5px 0',
+    padding: '7px 0',
     marginBottom: '20px'
   },
   columnColor: {
