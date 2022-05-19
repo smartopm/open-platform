@@ -148,7 +148,7 @@ export default function ProjectDetailsAccordion({ taskId }) {
             </Grid>
 
             <TabPanel value={tabValue} index={0} pad>
-              <Grid item md={12} style={{ marginTop: '25px' }}>
+              <Grid item md={12}>
                 {loading ? (
                   <CustomSkeleton variant="rectangular" width="100%" height="300px" />
                 ) : sortedRepliesRequestedComments?.length === 0 ? (
@@ -232,12 +232,13 @@ export default function ProjectDetailsAccordion({ taskId }) {
                 )}
               </Grid>
             </TabPanel>
-            <TabPanel value={tabValue} index={1}>
+            <TabPanel value={tabValue} index={1} pad>
               <ProjectDocument
                 attachments={docData?.task?.attachments}
                 loading={docLoading}
                 refetch={docRefetch}
                 error={docError?.message}
+                heading={false}
               />
             </TabPanel>
           </Grid>

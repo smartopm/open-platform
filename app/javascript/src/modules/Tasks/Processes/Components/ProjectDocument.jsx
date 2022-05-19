@@ -24,7 +24,7 @@ import MessageAlert from '../../../../components/MessageAlert';
 import CenteredContent from '../../../../shared/CenteredContent';
 import { checkLastItem } from '../utils'
 
-export default function ProjectDocument({ attachments, loading, refetch, error }) {
+export default function ProjectDocument({ attachments, loading, refetch, error, heading }) {
   const classes = useStyles();
   const matches = useMediaQuery('(max-width:900px)');
   const [anchorEl, setAnchorEl] = useState(null);
@@ -100,7 +100,7 @@ export default function ProjectDocument({ attachments, loading, refetch, error }
         <Spinner />
       ) : Boolean(attachments) && attachments.length > 0 ? (
         <>
-          {!matches && (
+          {!matches && heading && (
             <Typography
               variant="subtitle1"
               className={classes.documents}
@@ -113,7 +113,7 @@ export default function ProjectDocument({ attachments, loading, refetch, error }
           {attachments.map((att, index) => (
             <Grid
               key={att.id}
-              className={classes.children}
+              className={`${classes.children} ${!heading && index === 0 && classes.firstChild}`}
               style={checkLastItem(index, attachments) ? { borderBottom: '2px solid #F7F8F7' } : {}}
             >
               <Grid
@@ -217,7 +217,8 @@ ProjectDocument.defaultProps = {
   loading: false,
   refetch: () => {},
   error: null,
-  attachments: []
+  attachments: [],
+  heading: true
 };
 
 ProjectDocument.propTypes = {
@@ -232,13 +233,18 @@ ProjectDocument.propTypes = {
   ),
   loading: PropTypes.bool,
   refetch: PropTypes.func,
-  error: PropTypes.string
+  error: PropTypes.string,
+  heading: PropTypes.bool
 };
 
 const useStyles = makeStyles(() => ({
   children: {
     padding: '10px 0',
     borderTop: '2px solid #F7F8F7'
+  },
+  firstChild: {
+    paddingTop: 'unset',
+    borderTop: 'unset'
   },
   fileName: {
     fontWeight: 600
