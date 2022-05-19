@@ -1,3 +1,4 @@
+/* eslint-disable max-statements */
 import React from 'react';
 import { fireEvent, render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
@@ -7,9 +8,8 @@ import { CommunityUpdateMutation } from '../graphql/community_mutations';
 import MockedThemeProvider from '../../__mocks__/mock_theme';
 import { EmailTemplatesQuery } from '../../Emails/graphql/email_queries';
 
-
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
-jest.setTimeout(10000)
+jest.setTimeout(10000);
 describe('Community settings page', () => {
   it('should have input field and a remove button', async () => {
     const data = {
@@ -35,12 +35,17 @@ describe('Community settings page', () => {
           category: 'sales'
         }
       ],
-      socialLinks: [
-        { social_link: 'www.facebook.com', category: 'facebook' },
-      ],
+      socialLinks: [{ social_link: 'www.facebook.com', category: 'facebook' }],
+
       menuItems: [
-        { menu_link: 'http://some-link.com', menu_name: 'Custom Menu', display_on: ['Menu'], roles: ['admin'] },
+        {
+          menu_link: 'http://some-link.com',
+          menu_name: 'Custom Menu',
+          display_on: ['Menu'],
+          roles: ['admin']
+        }
       ],
+      leadMonthlyTargets: [{ division: 'China', target: '20' }],
       templates: {},
       subAdministrator: {},
       logoUrl: null,
@@ -56,11 +61,11 @@ describe('Community settings page', () => {
         address: '11, Nalikwanda Rd,',
         city: 'Lusaka',
         country: '',
-        taxIdNo: '',
+        taxIdNo: ''
       },
-      smsPhoneNumbers: ["+254724821901", "+254723456789"],
-      emergencyCallNumber: "+94848584844",
-      features: { LogBook: { features: []} },
+      smsPhoneNumbers: ['+254724821901', '+254723456789'],
+      emergencyCallNumber: '+94848584844',
+      features: { LogBook: { features: [] } },
       themeColors: { primaryColor: '#69ABA4', secondaryColor: '#cf5628' },
       imageUrl: 'https://some-image.png'
     };
@@ -81,20 +86,26 @@ describe('Community settings page', () => {
           ],
           socialLinks: [
             { social_link: 'www.facebook.com', category: 'facebook' },
-            { social_link: '', category: '' },
+            { social_link: '', category: '' }
           ],
-          menuItems:[
-            { menu_link: "http://some-link.com", menu_name: "Custom Menu", display_on:["Menu"], roles: ["admin"] },
-            { menu_link: "", menu_name: "", display_on: ["Dashboard"], roles: [] }
+          menuItems: [
+            {
+              menu_link: 'http://some-link.com',
+              menu_name: 'Custom Menu',
+              display_on: ['Menu'],
+              roles: ['admin']
+            },
+            { menu_link: '', menu_name: '', display_on: ['Dashboard'], roles: [] }
           ],
+          leadMonthlyTargets: [{ division: 'China', target: '20' }],
           imageBlobId: null,
           templates: {},
-          locale: 'en-US',
+          gaId: '',
           currency: 'honduran_lempira',
+          locale: 'en-US',
           tagline: '',
           logoUrl: '',
           wpLink: '',
-          gaId: '',
           securityManager: '',
           subAdministratorId: '',
           themeColors: { primaryColor: '#69ABA4', secondaryColor: '#cf5628' },
@@ -108,11 +119,11 @@ describe('Community settings page', () => {
             address: '11, Nalikwanda Rd,',
             city: 'Lusaka',
             country: '',
-            taxIdNo: '',
+            taxIdNo: ''
           },
-          smsPhoneNumbers: ["+254724821901", "+254723456789"],
-          emergencyCallNumber: "+94848584844",
-          features: { LogBook: { features: []} }
+          smsPhoneNumbers: ['+254724821901', '+254723456789'],
+          emergencyCallNumber: '+94848584844',
+          features: { LogBook: { features: [] } }
         }
       },
       result: {
@@ -164,6 +175,7 @@ describe('Community settings page', () => {
     expect(container.queryByText('common:form_fields.add_whatsapp_number')).toBeInTheDocument();
     expect(container.queryByText('common:form_fields.add_social_link')).toBeInTheDocument();
     expect(container.queryByText('common:form_fields.add_menu_item')).toBeInTheDocument();
+    expect(container.queryByText('common:form_fields.add_division')).toBeInTheDocument();
     expect(container.queryByText('community.update_community')).toBeInTheDocument();
     expect(container.queryByText('community.update_community')).not.toBeDisabled();
     expect(container.queryAllByLabelText('common:form_fields.email')).toHaveLength(2);
@@ -201,18 +213,26 @@ describe('Community settings page', () => {
     await waitFor(() => {
       expect(container.queryByTestId('payment_reminder_template_behind')).toBeInTheDocument();
       expect(container.queryByTestId('payment_reminder_template_upcoming')).toBeInTheDocument();
-    }, 10)
+    }, 10);
 
     expect(container.queryByTestId('plan_status_behind')).toBeInTheDocument();
     expect(container.queryByTestId('plan_status_upcoming')).toBeInTheDocument();
     expect(container.queryByTestId('disable_deny_gate_access')).toBeInTheDocument();
     expect(container.queryByTestId('enable_automated_task_reminders')).toBeInTheDocument();
 
-    fireEvent.change(container.queryByTestId('payment_reminder_template_behind'), { target: { value: 'payment_reminder_template' } });
-    expect(container.queryByTestId('payment_reminder_template_behind').value).toBe('payment_reminder_template');
+    fireEvent.change(container.queryByTestId('payment_reminder_template_behind'), {
+      target: { value: 'payment_reminder_template' }
+    });
+    expect(container.queryByTestId('payment_reminder_template_behind').value).toBe(
+      'payment_reminder_template'
+    );
 
-    fireEvent.change(container.queryByTestId('payment_reminder_template_upcoming'), { target: { value: 'payment_reminder_template' } });
-    expect(container.queryByTestId('payment_reminder_template_upcoming').value).toBe('payment_reminder_template');
+    fireEvent.change(container.queryByTestId('payment_reminder_template_upcoming'), {
+      target: { value: 'payment_reminder_template' }
+    });
+    expect(container.queryByTestId('payment_reminder_template_upcoming').value).toBe(
+      'payment_reminder_template'
+    );
 
     fireEvent.change(container.queryByTestId('locale'), { target: { value: 'en-US' } });
     expect(container.queryByTestId('locale').value).toBe('en-US');
@@ -267,7 +287,7 @@ describe('Community settings page', () => {
     });
     expect(container.queryByTestId('logo_url').value).toBe('https://something.com');
 
-    const file = new Blob(['some text'], { type: 'image/png' })
+    const file = new Blob(['some text'], { type: 'image/png' });
     fireEvent.change(container.queryByTestId('logo-input'), { target: { files: [file] } });
 
     fireEvent.change(container.queryByTestId('tagline'), {
@@ -287,10 +307,14 @@ describe('Community settings page', () => {
 
     expect(container.queryByTestId('update_community')).toBeDisabled();
 
-    fireEvent.change(container.queryByTestId('emergencyCallNumber'), { target: { value: '+94848584844' } });
+    fireEvent.change(container.queryByTestId('emergencyCallNumber'), {
+      target: { value: '+94848584844' }
+    });
     expect(container.queryByTestId('emergencyCallNumber').value).toBe('+94848584844');
 
-    fireEvent.change(container.queryByTestId('google_analytics_id'), { target: { value: 'G-AIJDIWWI' } });
+    fireEvent.change(container.queryByTestId('google_analytics_id'), {
+      target: { value: 'G-AIJDIWWI' }
+    });
     expect(container.queryByTestId('google_analytics_id').value).toBe('G-AIJDIWWI');
 
     await waitFor(() => {

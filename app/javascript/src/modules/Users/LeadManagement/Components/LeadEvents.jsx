@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+/* eslint-disable max-lines */
+import React, { useState, useEffect, useContext } from 'react';
 import { useMutation, useQuery } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
@@ -19,13 +20,15 @@ import { formatError } from '../../../../utils/helpers';
 import LeadEvent from './LeadEvent';
 import ButtonComponent from '../../../../shared/buttons/Button';
 import { MenuProps, initialLeadFormData, secondaryInfoUserObject } from '../../utils';
-import { divisionOptions } from '../../../../utils/constants';
+import { Context as AuthStateContext } from '../../../../containers/Provider/AuthStateProvider';
 
 export default function LeadEvents({ userId, data }) {
   const [meetingName, setMeetingName] = useState('');
   const [leadData, setLeadData] = useState(false);
   const [disabled, setDisabled] = useState(true);
   const [eventName, setEventName] = useState('');
+  const authState = useContext(AuthStateContext);
+  const communityDivisionTargets = authState?.user?.community?.leadMonthlyTargets;
   const [message, setMessage] = useState({ isError: false, detail: '' });
   const [leadFormData, setLeadFormData] = useState(initialLeadFormData);
   const [eventCreate, { loading: isLoading }] = useMutation(CreateEvent);
@@ -159,61 +162,81 @@ export default function LeadEvents({ userId, data }) {
 
       <Grid container>
         <Grid item md={12} xs={12}>
-          <Grid container style={{ display: 'flex', alignItems: 'center', width: '90%' }}>
-            <Grid item md={6} xs={12}>
-              <Typography variant="h6" data-testid="division">
-                {t('lead_management.division')}
-              </Typography>
+          {communityDivisionTargets && communityDivisionTargets?.length >= 2 ? (
+            <Grid container style={{ display: 'flex', alignItems: 'center', width: '90%' }}>
+              <Grid item md={6} xs={12}>
+                <Typography variant="h6" data-testid="division">
+                  {t('lead_management.division')}
+                </Typography>
 
-              <Typography variant="body2" data-testid="division_header">
-                {t('lead_management.division_header')}
-              </Typography>
-            </Grid>
-            <Grid item md={6} xs={12}>
-              <Grid
-                container
-                spacing={2}
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  paddingTop: 10
-                }}
-              >
-                <Grid item md={10} xs={10}>
-                  <FormControl fullWidth size="small">
-                    <InputLabel id="division">{t('lead_management.set_division')}</InputLabel>
-                    <Select
-                      labelId="demo-multiple-name-label"
-                      id="division"
-                      name="division"
-                      value={leadFormData?.user?.division || ''}
-                      onChange={handleDivisionChange}
-                      input={<OutlinedInput label={t('lead_management.set_division')} />}
-                      MenuProps={MenuProps}
-                    >
-                      <MenuItem value="" />
-                      {divisionOptions.map(val => (
-                        <MenuItem key={val} value={val}>
-                          {val}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Grid>
+                <Typography variant="body2" data-testid="division_header">
+                  {t('lead_management.division_header')}
+                </Typography>
+              </Grid>
+              <Grid item md={6} xs={12}>
+                <Grid
+                  container
+                  spacing={2}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    paddingTop: 10
+                  }}
+                >
+                  <Grid item md={10} xs={10}>
+                    <FormControl fullWidth size="small">
+                      <InputLabel id="division">{t('lead_management.set_division')}</InputLabel>
+                      <Select
+                        labelId="demo-multiple-name-label"
+                        id="division"
+                        name="division"
+                        value={leadFormData?.user?.division || ''}
+                        onChange={handleDivisionChange}
+                        input={<OutlinedInput label={t('lead_management.set_division')} />}
+                        MenuProps={MenuProps}
+                      >
+                        <MenuItem value="" />
+                        {communityDivisionTargets.map(targetObject => (
+                          <MenuItem key={targetObject.division} value={targetObject.division}>
+                            {targetObject.division}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </Grid>
 
-                <Grid item md={2} xs={2}>
-                  <ButtonComponent
-                    variant="contained"
-                    color="primary"
-                    buttonText={t('lead_management.add')}
-                    handleClick={handleSubmitDivision}
-                    disabled={disabled}
-                    disableElevation
-                  />
+                  <Grid item md={2} xs={2}>
+                    <ButtonComponent
+                      variant="contained"
+                      color="primary"
+                      buttonText={t('lead_management.add')}
+                      handleClick={handleSubmitDivision}
+                      disabled={disabled}
+                      disableElevation
+                    />
+                  </Grid>
                 </Grid>
               </Grid>
             </Grid>
-          </Grid>
+          ) : (
+            <Grid container style={{ display: 'flex', alignItems: 'center', width: '90%' }}>
+              <Grid item md={12} xs={12}>
+                <Typography variant="h6" data-testid="division">
+                  {t('lead_management.division')}
+                </Typography>
+
+                <Typography variant="body2">
+                  {t('lead_management.go_settings')}
+                  <a href="/community">
+                    <Typography variant="subtitle1">
+                      {t('lead_management.community_settings_page')}
+                    </Typography>
+                  </a>
+                  {t('lead_management.to_set_up')}
+                </Typography>
+              </Grid>
+            </Grid>
+          )}
         </Grid>
       </Grid>
 

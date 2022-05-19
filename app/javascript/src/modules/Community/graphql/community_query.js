@@ -12,6 +12,7 @@ export const CurrentCommunityQuery = gql`
       supportEmail
       supportWhatsapp
       socialLinks
+      leadMonthlyTargets
       menuItems
       currency
       locale

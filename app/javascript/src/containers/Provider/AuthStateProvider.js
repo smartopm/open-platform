@@ -47,6 +47,7 @@ const QUERY = gql`
         supportWhatsapp
         socialLinks
         menuItems
+        leadMonthlyTargets
         imageUrl
         currency
         locale
