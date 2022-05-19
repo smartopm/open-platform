@@ -102,7 +102,7 @@ export default function ProjectDetailsAccordion({ taskId }) {
                         {t('task.project_total_documents')}
                       </Typography>
                       <Avatar className={classes.avatar} sx={{ width: 26, height: 26 }}>
-                        {docData?.task?.attachments?.length}
+                        {docData?.task?.attachments?.length || 0}
                       </Avatar>
                     </Box>
                   )}
@@ -143,7 +143,9 @@ export default function ProjectDetailsAccordion({ taskId }) {
                   <Box>
                     <Typography variant="caption">{t('task.project_total_documents')}</Typography>
                   </Box>
-                  <Box className={classes.counterBox}>{docData?.task?.attachments?.length}</Box>
+                  <Box className={classes.counterBox}>
+                    {docData?.task?.attachments?.length || 0}
+                  </Box>
                 </Grid>
               )}
             </Grid>
