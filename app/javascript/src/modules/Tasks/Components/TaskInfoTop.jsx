@@ -51,7 +51,7 @@ export default function TaskInfoTop({
   forProcess,
   fromLeadPage
 }) {
-  const { t } = useTranslation(['task', 'common'])
+  const { t } = useTranslation(['task', 'common']);
   const classes = useStyles();
   const matches = useMediaQuery('(max-width:1000px)');
   const history = useHistory();

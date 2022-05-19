@@ -34,7 +34,7 @@ export default function ProcessCommentsPage() {
 
   function handleTabValueChange(_event, newValue) {
     history.push(
-      `?&tab=${Object.keys(TAB_VALUES).find(key => objectAccessor(TAB_VALUES, key) === newValue)}`
+      `?tab=${Object.keys(TAB_VALUES).find(key => objectAccessor(TAB_VALUES, key) === newValue)}`
     );
     setTabValue(Number(newValue));
   }

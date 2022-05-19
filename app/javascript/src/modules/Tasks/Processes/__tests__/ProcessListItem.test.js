@@ -106,7 +106,7 @@ describe('ProcessListItem', () => {
       </MockedProvider>
     );
 
-    expect(screen.queryAllByTestId('loader')[0]).toBeInTheDocument();
+    expect(screen.queryAllByTestId('skeleton')[0]).toBeInTheDocument();
 
     await waitFor(() => {
       expect(screen.queryByText('DRC Process')).toBeInTheDocument();
