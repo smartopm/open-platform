@@ -72,7 +72,9 @@
     "confirm": "Confirm",
     "clear_condition": "Clear Condition",
     "add_property": "Add a Property",
-    "hide": "Hide"
+    "hide": "Hide",
+    "i_agree": "I agree",
+    "has_terms_and_conditions": "Form has Terms and Conditions"
   },
   "errors": {
     "no_forms": "No Forms to submit",
@@ -129,7 +131,8 @@
     "date": "Date",
     "time": "Time",
     "datetime": "Date with Time",
-    "dropdown": "Dropdown"
+    "dropdown": "Dropdown",
+    "terms_and_condition": "Terms and Condition"
   },
   "conditions": {
     "===": "equals to",

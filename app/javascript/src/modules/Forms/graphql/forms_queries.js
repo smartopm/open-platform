@@ -10,6 +10,7 @@ export const FormQuery = gql`
       description
       expiresAt
       multipleSubmissionsAllowed
+      hasTermsAndConditions
       preview
       isPublic
       roles
@@ -96,10 +97,12 @@ export const FormUserQuery = gql`
     formUser(userId: $userId, formUserId: $formUserId) {
       id
       status
+      hasAgreedToTerms
       form {
         id
         name
         description
+        hasTermsAndConditions
       }
       statusUpdatedBy {
         id

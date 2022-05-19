@@ -37,6 +37,7 @@ export const FormCreateMutation = gql`
     $expiresAt: String
     $description: String
     $multipleSubmissionsAllowed: Boolean!
+    $hasTermsAndConditions: Boolean!
     $preview: Boolean!
     $isPublic: Boolean!
     $roles: [String]
@@ -46,6 +47,7 @@ export const FormCreateMutation = gql`
       expiresAt: $expiresAt
       description: $description
       multipleSubmissionsAllowed: $multipleSubmissionsAllowed
+      hasTermsAndConditions: $hasTermsAndConditions
       preview: $preview
       isPublic: $isPublic
       roles: $roles
@@ -79,6 +81,7 @@ export const FormUpdateMutation = gql`
     $description: String
     $status: String
     $multipleSubmissionsAllowed: Boolean
+    $hasTermsAndConditions: Boolean
     $preview: Boolean
     $isPublic: Boolean
     $roles: [String]
@@ -90,6 +93,7 @@ export const FormUpdateMutation = gql`
       description: $description
       status: $status
       multipleSubmissionsAllowed: $multipleSubmissionsAllowed
+      hasTermsAndConditions: $hasTermsAndConditions
       preview: $preview
       isPublic: $isPublic
       roles: $roles
@@ -102,8 +106,8 @@ export const FormUpdateMutation = gql`
 `;
 
 export const FormUserCreateMutation = gql`
-  mutation formUserCreate($formId: ID!, $userId: ID!, $propValues: JSON!, $status: String) {
-    formUserCreate(formId: $formId, userId: $userId, propValues: $propValues, status: $status) {
+  mutation formUserCreate($formId: ID!, $userId: ID!, $propValues: JSON!, $status: String, $hasAgreedToTerms: Boolean) {
+    formUserCreate(formId: $formId, userId: $userId, propValues: $propValues, status: $status, hasAgreedToTerms: $hasAgreedToTerms) {
       formUser {
         id
       }

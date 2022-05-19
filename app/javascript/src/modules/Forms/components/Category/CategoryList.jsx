@@ -57,6 +57,7 @@ export default function CategoryList({
                 formPropertiesData={formProperty}
                 formId={formId}
                 refetch={categoriesData.refetch}
+                categoriesData={categoriesData}
                 categoryId={category.id}
                 editMode={editMode}
                 number={index + 1}

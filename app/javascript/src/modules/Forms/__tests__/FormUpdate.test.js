@@ -12,7 +12,7 @@ import { Context } from '../../../containers/Provider/AuthStateProvider'
 import userMock from '../../../__mocks__/authstate'
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
-
+jest.mock('react-markdown', () => 'div');
 describe('Form Component', () => {
   const formUserMocks = {
     request: {
@@ -27,9 +27,11 @@ describe('Form Component', () => {
         formUser: {
           id: '162f7517-7cc8-398542-b2d0-384sds',
           status: 'pending',
+          hasAgreedToTerms: false,
           form: {
             id: 'caea7b44-ee95-42a6-a42f-3e530432172e',
             name: 'Test Form',
+            hasTermsAndConditions: true, 
             description: 'Some description'
           },
           statusUpdatedBy: {

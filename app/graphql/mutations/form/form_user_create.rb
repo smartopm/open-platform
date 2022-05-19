@@ -8,6 +8,7 @@ module Mutations
       argument :user_id, ID, required: true
       argument :prop_values, GraphQL::Types::JSON, required: true
       argument :status, String, required: false
+      argument :has_agreed_to_terms, Boolean, required: false
 
       # Prop Values should be passed in this format
       # propValues: {

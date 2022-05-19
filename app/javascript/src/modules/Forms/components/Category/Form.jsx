@@ -21,6 +21,7 @@ import { FormCategoryDeleteMutation } from '../../graphql/form_category_mutation
 import { formatError } from '../../../../utils/helpers';
 import FormTitle from '../FormTitle';
 import AccessCheck from '../../../Permissions/Components/AccessCheck';
+import TermsAndCondition from '../TermsAndCondition';
 
 export default function Form({
   editMode,
@@ -34,6 +35,7 @@ export default function Form({
 }) {
   const [categoryFormOpen, setCategoryFormOpen] = useState(false);
   const [propertyFormOpen, setPropertyFormOpen] = useState(false);
+  const [hasAgreedToTerms, setHasAgreedToTerms] = useState(false);
   const [data, setFormData] = useState({});
   const { t } = useTranslation(['common', 'form']);
   const [categoryId, setCategoryId] = useState('');
@@ -42,6 +44,7 @@ export default function Form({
     variables: { formId },
     fetchPolicy: 'no-cache'
   });
+
   const {
     formState,
     saveFormData,
@@ -116,7 +119,8 @@ export default function Form({
       formId,
       authState.user.id,
       categoriesData.data?.formCategories,
-      status
+      status,
+      hasAgreedToTerms
     );
   }
 
@@ -163,6 +167,7 @@ export default function Form({
         />
       )}
 
+
       <DetailsDialog
         handleClose={handleCancelPreview}
         open={formState.previewable && !imgUploadError && !formState.error}
@@ -179,15 +184,17 @@ export default function Form({
                   formData,
                   formId,
                   authState.user.id,
-                  categoriesData.data?.formCategories
+                  categoriesData.data?.formCategories,
+                  null,
+                  hasAgreedToTerms
                 )
               }
-              categoriesData={categoriesData}
+              categoriesData={categoriesData.data?.formCategories}
             />
           </DialogContentText>
         </DialogContent>
       </DetailsDialog>
-      {loading && <Spinner />}
+      {(loading || categoriesData.loading) && <Spinner />}
       {!editMode && !loading && formDetailData && (
         <Grid style={matches ? {} : { padding: '0 0 0 100px' }}>
           <FormTitle name={formDetailData.form?.name} />
@@ -265,8 +272,20 @@ export default function Form({
           )}
         </Grid>
       )}
+
       {!editMode && (
         <Grid container style={matches ? {} : { padding: '0 120px 20px 120px' }}>
+          {
+            formDetailData?.form?.hasTermsAndConditions && (
+              <Grid item md={12} xs={12} style={{ marginTop: '20px' }}>
+                <TermsAndCondition
+                  categoriesData={categoriesData.data?.formCategories} 
+                  isChecked={hasAgreedToTerms}
+                  handleCheckTerms={isChecked => setHasAgreedToTerms(isChecked)}
+                />
+              </Grid>
+            )
+          }
           <Grid item md={12} xs={12} style={{ marginTop: '20px' }}>
             <Divider />
           </Grid>
@@ -294,7 +313,7 @@ export default function Form({
               aria-label="form_submit"
               style={matches ? { marginTop: '20px' } : { marginTop: '25px' }}
               onClick={() => formSubmit(formData)}
-              disabled={formState.isSubmitting}
+              disabled={formState.isSubmitting || !hasAgreedToTerms}
               data-testid="submit_form_btn"
             >
               {!formState.isSubmitting
@@ -328,7 +347,8 @@ Form.propTypes = {
       id: PropTypes.string,
       name: PropTypes.string,
       preview: PropTypes.bool,
-      isPublic: PropTypes.bool
+      isPublic: PropTypes.bool,
+      hasTermsAndConditions: PropTypes.bool,
     })
   }),
   formDetailRefetch: PropTypes.func,

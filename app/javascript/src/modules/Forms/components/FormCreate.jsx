@@ -44,6 +44,7 @@ export default function FormCreate({
   const [expiresAt, setExpiresAtDate] = useState(null);
   const [multipleSubmissionsAllowed, setMultipleSubmissionsAllowed] = useState(true);
   const [preview, setPreview] = useState(false);
+  const [hasTermsAndConditions, setHasTermsAndConditions] = useState(false);
   const [isPublic, setIsPublic] = useState(false);
   const authState = useContext(AuthStateContext);
   const communityRoles = authState?.user?.community?.roles;
@@ -56,6 +57,7 @@ export default function FormCreate({
       expiresAt,
       description,
       multipleSubmissionsAllowed,
+      hasTermsAndConditions,
       preview,
       isPublic,
       roles
@@ -101,12 +103,14 @@ export default function FormCreate({
     if (formId) {
       formDataQuery();
     }
+    // TODO: Wrap these in one state
     if (formData?.form) {
       setTitle(formData?.form?.name);
       setDescription(formData?.form?.description);
       setRoles(formData?.form?.roles);
       setExpiresAtDate(formData?.form?.expiresAt);
       setMultipleSubmissionsAllowed(formData?.form.multipleSubmissionsAllowed)
+      setHasTermsAndConditions(formData?.form.hasTermsAndConditions)
       setPreview(formData?.form.preview)
       setIsPublic(formData?.form.isPublic)
     }
@@ -178,8 +182,8 @@ export default function FormCreate({
           />
         </Grid>
         <Grid item xs={12}>
-          <Grid container direction="column">
-            <Grid item md={12} xs={12}>
+          <Grid container direction="row">
+            <Grid item md={6} xs={12}>
               <SwitchInput
                 name="multipleSubmissionsAllowed"
                 label={t('misc.limit_1_response')}
@@ -188,7 +192,7 @@ export default function FormCreate({
                 labelPlacement="start"
               />
             </Grid>
-            <Grid item md={12} xs={12}>
+            <Grid item md={6} xs={12}>
               <SwitchInput
                 name="previewable"
                 label={t('misc.previewable')}
@@ -198,7 +202,17 @@ export default function FormCreate({
                 labelPlacement="start"
               />
             </Grid>
-            <Grid item md={12} xs={12}>
+            <Grid item md={6} xs={12}>
+              <SwitchInput
+                name="has_terms_and_conditions"
+                label={t('actions.has_terms_and_conditions')}
+                value={hasTermsAndConditions}
+                handleChange={event => setHasTermsAndConditions(event.target.checked)}
+                className="form-has_terms_and_conditions-switch-btn"
+                labelPlacement="start"
+              />
+            </Grid>
+            <Grid item md={6} xs={12}>
               <SwitchInput
                 name="previewable"
                 label={t('misc.public')}

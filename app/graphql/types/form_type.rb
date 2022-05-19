@@ -15,6 +15,7 @@ module Types
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
     field :multiple_submissions_allowed, Boolean, null: true
+    field :has_terms_and_conditions, Boolean, null: true
     field :roles, [String], null: true
   end
 end
