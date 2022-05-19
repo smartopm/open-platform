@@ -31,8 +31,7 @@ const authState = {
       imageUrl: 'http://image.jpg',
       timezone: 'Africa/Maputo',
       wpLink: 'http://link.com',
-      roles: ['prospective_client'],
-      leadMonthlyTargets: [{division: 'China', target: 10}]
+      roles: ['prospective_client']
     },
     email: 'user@community.co',
     expiresAt: null,
