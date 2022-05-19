@@ -180,7 +180,7 @@ export default function ProjectsList() {
             <div>
               {data.projects.map(task => (
                 <div key={task.id}>
-                  <ProjectItem task={task} refetch={refetch} />
+                  <ProjectItem processId={processId} task={task} refetch={refetch} />
                 </div>
             ))}
             </div>
