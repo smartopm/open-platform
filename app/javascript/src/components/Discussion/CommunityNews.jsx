@@ -21,7 +21,12 @@ import ImageAuth from '../../shared/ImageAuth';
 import PostCreate from '../../modules/Dashboard/Components/PostCreate';
 import CardWrapper from '../../shared/CardWrapper';
 
-export default function CommunityNews({ userType, userImage, dashboardTranslation }) {
+export default function CommunityNews({
+  userType,
+  userImage,
+  userPermissions,
+  dashboardTranslation
+}) {
   const limit = 4;
   const isMobile = useMediaQuery('(max-width:800px)');
   const history = useHistory();
@@ -58,7 +63,7 @@ export default function CommunityNews({ userType, userImage, dashboardTranslatio
               <PostCreate
                 translate={dashboardTranslation}
                 currentUserImage={userImage}
-                currentUserType={userType}
+                userPermissions={userPermissions}
                 btnBorderColor={theme.palette.secondary.main}
                 refetchNews={refetch}
               />
@@ -152,5 +157,6 @@ const styles = StyleSheet.create({
 CommunityNews.propTypes = {
   dashboardTranslation: PropTypes.func.isRequired,
   userType: PropTypes.string.isRequired,
+  userPermissions: PropTypes.arrayOf(PropTypes.object).isRequired,
   userImage: PropTypes.string.isRequired
 };

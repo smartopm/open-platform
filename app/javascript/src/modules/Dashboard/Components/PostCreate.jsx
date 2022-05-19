@@ -9,7 +9,13 @@ import MessageAlert from '../../../components/MessageAlert';
 import { Spinner } from '../../../shared/Loading';
 import { objectAccessor } from '../../../utils/helpers';
 
-export default function PostCreate({ translate, currentUserImage, currentUserType, btnBorderColor, refetchNews }) {
+export default function PostCreate({
+  translate,
+  currentUserImage,
+  userPermissions,
+  btnBorderColor,
+  refetchNews
+}) {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [post, setPost] = useState('');
   const [visibilityOption, setVisibilityOption] = useState('Everyone');
@@ -20,6 +26,8 @@ export default function PostCreate({ translate, currentUserImage, currentUserTyp
     message: '',
     loading: false
   });
+  const modulePermission = userPermissions.find(mod => mod.module === 'discussion')?.permissions;
+  const permissions = new Set(modulePermission);
 
   const { onChange, signedBlobId, url, status } = useFileUpload({
     client: useApolloClient()
@@ -36,11 +44,11 @@ export default function PostCreate({ translate, currentUserImage, currentUserTyp
     uploadBtnText: translate('dashboard.add_photo')
   };
 
-  if (currentUserType === 'admin') {
-    modalDetails.actionVisibilityOptions = actionVisibilityOptions
-    modalDetails.actionVisibilityLabel = translate('dashboard.who_can_see_post')
-    modalDetails.handleVisibilityOptions = (option) => setVisibilityOption(option)
-    modalDetails.visibilityValue = visibilityOption
+  if (permissions.has('can_set_accessibility')) {
+    modalDetails.actionVisibilityOptions = actionVisibilityOptions;
+    modalDetails.actionVisibilityLabel = translate('dashboard.who_can_see_post');
+    modalDetails.handleVisibilityOptions = option => setVisibilityOption(option);
+    modalDetails.visibilityValue = visibilityOption;
   }
 
   useEffect(() => {
@@ -186,7 +194,7 @@ export default function PostCreate({ translate, currentUserImage, currentUserTyp
 PostCreate.propTypes = {
   translate: PropTypes.func.isRequired,
   currentUserImage: PropTypes.string.isRequired,
-  currentUserType: PropTypes.string.isRequired,
+  userPermissions: PropTypes.arrayOf(PropTypes.object).isRequired,
   btnBorderColor: PropTypes.string.isRequired,
   refetchNews: PropTypes.func.isRequired
 };

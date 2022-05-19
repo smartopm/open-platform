@@ -50,6 +50,7 @@ const Home = () => {
                 <CommunityNews
                   userType={userType}
                   userImage={authState.user.imageUrl}
+                  userPermissions={authState.user.permissions}
                   dashboardTranslation={t}
                 />
                 <br />
