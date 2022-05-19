@@ -88,11 +88,6 @@ describe('Community settings page', () => {
             { social_link: 'www.facebook.com', category: 'facebook' },
             { social_link: '', category: '' }
           ],
-          leadMonthlyTargets: [
-            { division: 'China', target: '20' },
-            { division: '', target: '' }
-          ],
-
           menuItems: [
             {
               menu_link: 'http://some-link.com',
@@ -102,14 +97,15 @@ describe('Community settings page', () => {
             },
             { menu_link: '', menu_name: '', display_on: ['Dashboard'], roles: [] }
           ],
+          leadMonthlyTargets: [{ division: 'China', target: '20' }],
           imageBlobId: null,
           templates: {},
-          locale: 'en-US',
+          gaId: '',
           currency: 'honduran_lempira',
+          locale: 'en-US',
           tagline: '',
           logoUrl: '',
           wpLink: '',
-          gaId: '',
           securityManager: '',
           subAdministratorId: '',
           themeColors: { primaryColor: '#69ABA4', secondaryColor: '#cf5628' },
