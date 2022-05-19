@@ -9,32 +9,35 @@ import { objectAccessor } from '../../../../utils/helpers';
 export default function ScoreCard({ data, statusCard, currentStatus }) {
   const classes = useStyles();
   const years = {
-    '01': "Jan",
-    "02": "Feb",
-    "03": "Mar",
-    "11": 'Apr',
-    "12": "May",
-    "13": "Jun",
-    "21": "Jul",
-    "22": "Aug",
-    "23": "Sep",
-    "31": "Oct",
-    "32": "Nov",
-    "33": "Dec" 
-  }
+    '01': 'Jan',
+    '02': 'Feb',
+    '03': 'Mar',
+    '11': 'Apr',
+    '12': 'May',
+    '13': 'Jun',
+    '21': 'Jul',
+    '22': 'Aug',
+    '23': 'Sep',
+    '31': 'Oct',
+    '32': 'Nov',
+    '33': 'Dec'
+  };
   return (
     <div className={classes.container}>
       {!currentStatus ? (
         <Grid container>
           {data.score.map((score, index) => (
-            <Grid item md={12} key={score.col1}>
+            <Grid item md={12} xs={12} key={score.col1}>
               <Grid container>
                 <Grid
                   item
                   md={3}
+                  xs={3}
                   className={`${classes.rightBorder} ${
                     index % 2 === 0 ? undefined : classes.columnColor
-                  } ${classes.colPadding} ${statusCard ? classes.padRow : undefined}`}
+                  } ${classes.colPadding} ${statusCard ? classes.padRow : undefined} ${
+                    !statusCard ? classes.statusPad : undefined
+                  } ${statusCard ? classes.firstCol : undefined}`}
                 >
                   <Typography color={index !== 0 ? 'text.secondary' : undefined}>
                     {score.col1}
@@ -43,14 +46,17 @@ export default function ScoreCard({ data, statusCard, currentStatus }) {
                 <Grid
                   item
                   md={3}
+                  xs={3}
                   className={`${classes.alignCenter} ${classes.rightBorder} ${
                     index % 2 === 0 ? undefined : classes.columnColor
                   } ${index === 0 ? undefined : classes.textColor} ${
                     statusCard ? classes.padRow : undefined
-                  }`}
+                  } ${!statusCard ? classes.statusPad : undefined}`}
                 >
                   {statusCard && (
-                    <Typography variant='caption' color='text.secondary'>{objectAccessor(years, `${index}1`)}</Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      {objectAccessor(years, `${index}1`)}
+                    </Typography>
                   )}
                   <Typography
                     color={index === 0 ? 'text.secondary' : undefined}
@@ -62,14 +68,17 @@ export default function ScoreCard({ data, statusCard, currentStatus }) {
                 <Grid
                   item
                   md={3}
+                  xs={3}
                   className={`${classes.alignCenter} ${classes.rightBorder} ${
                     index % 2 === 0 ? undefined : classes.columnColor
                   } ${index === 0 ? undefined : classes.textColor} ${
                     statusCard ? classes.padRow : undefined
-                  }`}
+                  } ${!statusCard ? classes.statusPad : undefined}`}
                 >
                   {statusCard && (
-                    <Typography variant='caption' color='text.secondary'>{objectAccessor(years, `${index}2`)}</Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      {objectAccessor(years, `${index}2`)}
+                    </Typography>
                   )}
                   <Typography
                     color={index === 0 ? 'text.secondary' : undefined}
@@ -81,14 +90,17 @@ export default function ScoreCard({ data, statusCard, currentStatus }) {
                 <Grid
                   item
                   md={3}
+                  xs={3}
                   className={`${classes.alignCenter} ${
                     index % 2 === 0 ? undefined : classes.columnColor
                   } ${index === 0 ? undefined : classes.textColor} ${
                     statusCard ? classes.padRow : undefined
-                  }`}
+                  } ${!statusCard ? classes.statusPad : undefined}`}
                 >
                   {statusCard && (
-                    <Typography variant='caption' color='text.secondary'>{objectAccessor(years, `${index}3`)}</Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      {objectAccessor(years, `${index}3`)}
+                    </Typography>
                   )}
                   <Typography
                     color={index === 0 ? 'text.secondary' : undefined}
@@ -104,13 +116,27 @@ export default function ScoreCard({ data, statusCard, currentStatus }) {
       ) : (
         <Grid container>
           {data.score.map((score, index) => (
-            <Grid item md={12} key={score.col1}>
+            <Grid item md={12} xs={12} key={score.col1}>
               <Grid container>
-                <Grid item md={10} className={`${classes.colPadding} ${index % 2 === 0 ? undefined : classes.columnColor} ${classes.textColor}`}>
-                  {score.col1}
+                <Grid
+                  item
+                  md={11}
+                  xs={11}
+                  className={`${classes.colPadding} ${
+                    index % 2 === 0 ? undefined : classes.columnColor
+                  } ${classes.statusPad}`}
+                >
+                  <Typography color="primary">{score.col1}</Typography>
                 </Grid>
-                <Grid item md={2} className={`${index % 2 === 0 ? undefined : classes.columnColor} ${classes.textColor}`}>
-                  {score.col2}
+                <Grid
+                  item
+                  md={1}
+                  xs={1}
+                  className={`${index % 2 === 0 ? undefined : classes.columnColor} ${
+                    classes.statusPad
+                  }`}
+                >
+                  <Typography color="primary">{score.col2}</Typography>
                 </Grid>
               </Grid>
             </Grid>
@@ -121,7 +147,7 @@ export default function ScoreCard({ data, statusCard, currentStatus }) {
   );
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
   alignCenter: {
     textAlign: 'center'
   },
@@ -129,7 +155,7 @@ const useStyles = makeStyles(() => ({
     borderRight: '1px solid #ECEBEB'
   },
   container: {
-    border: '1px solid #89A2C1',
+    border: `1px solid ${theme.palette.secondary.main}`,
     borderRadius: '10px',
     padding: '5px 0',
     marginBottom: '20px'
@@ -141,18 +167,25 @@ const useStyles = makeStyles(() => ({
     paddingLeft: '10px'
   },
   textColor: {
-    color: '#69ADC6'
+    color: theme.palette.primary.main
   },
   padRow: {
     paddingTop: '15px',
     paddingBottom: '15px'
+  },
+  statusPad: {
+    paddingTop: '5px',
+    paddingBottom: '6px'
+  },
+  firstCol: {
+    paddingTop: '25px'
   }
 }));
 
 ScoreCard.defaultProps = {
   statusCard: false,
   currentStatus: false
-}
+};
 
 ScoreCard.propTypes = {
   data: PropTypes.shape({

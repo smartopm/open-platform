@@ -1,7 +1,9 @@
 import React, { useContext } from 'react';
 import { useQuery } from 'react-apollo';
 import makeStyles from '@mui/styles/makeStyles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import Grid from '@mui/material/Grid';
+import { Typography } from '@mui/material';
 import { LeadScoreCardQuery } from '../graphql/queries';
 import { Spinner } from '../../../../shared/Loading';
 import ScoreCard from './ScoreCard';
@@ -9,9 +11,9 @@ import { Context as AuthStateContext } from '../../../../containers/Provider/Aut
 import { objectAccessor } from '../../../../utils/helpers';
 import CenteredContent from '../../../../shared/CenteredContent';
 
-
 export default function LeadsPage() {
   const classes = useStyles();
+  const matches = useMediaQuery('(max-width:900px)');
   const authState = useContext(AuthStateContext);
   const { data, loading, error } = useQuery(LeadScoreCardQuery, {
     fetchPolicy: 'cache-and-network'
@@ -57,38 +59,11 @@ export default function LeadsPage() {
     Im: 'Investment Motive Verified'
   };
 
-  // const division = {
-  //   Europe: data.leadScoreCards.leads_monthly_stats_by_division.Europe.
-  // }
-
-  // const data = {
-  //   leadScoreCards: {
-  //     lead_status: {},
-  //     leads_monthly_stats_by_division: {
-  //       China: {
-  //         "1": 3,
-  //         '5': 2,
-  //         '6': 1,
-  //         "2": 3,
-  //       },
-  //       India: {
-  //         '5': 1,
-  //         "3": 4,
-  //         "2": 3,
-  //         '12': 5,
-  //         "8": 10
-  //       },
-  //       Europe: {
-  //         '1': 2,
-  //         '12': 5,
-  //         '11': 5
-  //       }
-  //     },
-  //     leads_monthly_stats_by_status: {}
-  //   }
-  // };
-
-  // const d = data.leadScoreCards.leads_monthly_stats_by_division[division][month]
+  const scoreCardTitle = {
+    qualified_lead: 'Qualified Lead',
+    signed_lease: 'Signed Lease',
+    signed_mou: 'Signed MOU'
+  };
 
   function getMonthlyTarget(division) {
     const target = authState?.user.community.leadMonthlyTargets
@@ -140,17 +115,6 @@ export default function LeadsPage() {
   function SL(leadStatus) {
     return `${data?.leadScorecards.lead_status[objectAccessor(leadStatuses, leadStatus)] || '0'}`;
   }
-
-  // function scoreData(stage) {
-  //   return {
-  //     score: [
-  //       { col1: stage, col2: 'Jan', col3: 'Feb', col4: 'Mar' },
-  //       { col1: 'Europe', col2: '1/2', col3: '2/3', col4: '4/5' },
-  //       { col1: 'China', col2: '1/2', col3: '2/3', col4: '4/5' },
-  //       { col1: 'India', col2: '1/2', col3: '2/3', col4: '4/5' }
-  //     ]
-  //   }
-  // }
 
   function buildScoreCardData() {
     return [
@@ -224,41 +188,29 @@ export default function LeadsPage() {
       {
         score: [
           { col1: 'Q1', col2: BS('Ql', '1'), col3: BS('Ql', '2'), col4: BS('Ql', '3') },
-          {
-            col1: 'Q2',
-            col2: BS('Ql', '4'),
-            col3: BS('Ql', '5'),
-            col4: BS('Ql', '6')
-          },
+          { col1: 'Q2', col2: BS('Ql', '4'), col3: BS('Ql', '5'), col4: BS('Ql', '6') },
           { col1: 'Q3', col2: BS('Ql', '7'), col3: BS('Ql', '8'), col4: BS('Ql', '9') },
           { col1: 'Q4', col2: BS('Ql', '10'), col3: BS('Ql', '11'), col4: BS('Ql', '12') }
-        ]
+        ],
+        name: 'qualified_lead'
       },
       {
         score: [
           { col1: 'Q1', col2: BS('Sm', '1'), col3: BS('Sm', '2'), col4: BS('Sm', '3') },
-          {
-            col1: 'Q2',
-            col2: BS('Sm', '4'),
-            col3: BS('Sm', '5'),
-            col4: BS('Sm', '6')
-          },
+          { col1: 'Q2', col2: BS('Sm', '4'), col3: BS('Sm', '5'), col4: BS('Sm', '6') },
           { col1: 'Q3', col2: BS('Sm', '7'), col3: BS('Sm', '8'), col4: BS('Sm', '9') },
           { col1: 'Q4', col2: BS('Sm', '10'), col3: BS('Sm', '11'), col4: BS('Sm', '12') }
-        ]
+        ],
+        name: 'signed_lease'
       },
       {
         score: [
           { col1: 'Q1', col2: BS('Sl', '1'), col3: BS('Sl', '2'), col4: BS('Sl', '3') },
-          {
-            col1: 'Q2',
-            col2: BS('Sl', '4'),
-            col3: BS('Sl', '5'),
-            col4: BS('Sl', '6')
-          },
+          { col1: 'Q2', col2: BS('Sl', '4'), col3: BS('Sl', '5'), col4: BS('Sl', '6') },
           { col1: 'Q3', col2: BS('Sl', '7'), col3: BS('Sl', '8'), col4: BS('Sl', '9') },
           { col1: 'Q4', col2: BS('Sl', '10'), col3: BS('Sl', '11'), col4: BS('Sl', '12') }
-        ]
+        ],
+        name: 'signed_mou'
       }
     ];
   }
@@ -282,25 +234,57 @@ export default function LeadsPage() {
   }
 
   if (loading) return <Spinner />;
-  if (error) return  <CenteredContent><p>{error.message}</p></CenteredContent>
+  if (error)
+    return (
+      <CenteredContent>
+        <p>{error.message}</p>
+      </CenteredContent>
+    );
   return (
-    <div className={classes.container}>
-      {console.log(getMonthlyTarget('China'))}
+    <div className={matches ? classes.containerMobile : classes.container}>
+      <Grid container>
+        {console.log(data)}
+        <Grid item md={12} xs={12} className={classes.title}>
+          <Typography variant="h4">Leads</Typography>
+        </Grid>
+        <Grid item md={12} xs={12} className={classes.title}>
+          <Typography variant="h6">Scorecard</Typography>
+        </Grid>
+        <Grid item md={10} xs={7} className={classes.title}>
+          <Typography variant="body1" className={classes.weight}>Monthly Leads By Division</Typography>
+        </Grid>
+        <Grid item md={2} xs={5} className={classes.title} style={{ textAlign: 'right' }}>
+          <Typography component='span' color='text.secondary'>YTD Total</Typography>
+          {'  '}
+          <Typography color='primary' component='span'>{data.leadScorecards.ytd_count.leads_by_division}</Typography>
+        </Grid>
+      </Grid>
       <Grid container spacing={2}>
         {buildScoreCardData().map(score => (
-          <Grid item md={3} key={score.stage}>
+          <Grid item md={3} xs={12} key={score.stage}>
             <ScoreCard data={score} />
           </Grid>
         ))}
       </Grid>
       <Grid container spacing={2}>
         {buildCurrentStatusCard().map(score => (
-          <Grid item md={3} key={score.stage}>
+          <Grid item md={3} xs={12} key={score.score.col1}>
+            <Typography className={`${classes.cardTitle} ${classes.weight}`}>Current Status of leads</Typography>
             <ScoreCard data={score} currentStatus />
           </Grid>
         ))}
         {buildStatusCard().map(score => (
-          <Grid item md={3} key={score.stage}>
+          <Grid item md={3} xs={12} key={score.stage}>
+            <Grid container className={classes.cardTitle}>
+              <Grid item md={6} xs={6} className={classes.weight}>
+                {objectAccessor(scoreCardTitle, score.name)}
+              </Grid>
+              <Grid item md={6} xs={6} style={{ textAlign: 'right' }}>
+                <Typography component='span' color='text.secondary'>YTD Total</Typography>
+                {'  '}
+                <Typography color='primary' component='span'>{data.leadScorecards.ytd_count[score.name]}</Typography>
+              </Grid>
+            </Grid>
             <ScoreCard data={score} statusCard />
           </Grid>
         ))}
@@ -309,8 +293,23 @@ export default function LeadsPage() {
   );
 }
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles(theme => ({
   container: {
     padding: '0 100px'
+  },
+  containerMobile: {
+    padding: '0 20px'
+  },
+  title: {
+    paddingBottom: '20px'
+  },
+  cardTitle: {
+    padding: '20px 0'
+  },
+  addColor: {
+    color: theme.palette.primary.main
+  },
+  weight: {
+    fontWeight: 500
   }
 }));
