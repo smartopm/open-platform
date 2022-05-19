@@ -36,7 +36,6 @@ export default function ProjectsList() {
   const [modalOpen, setModalOpen] = useState(false);
   const matches = useMediaQuery('(max-width:600px)');
 
-
   const speedDialActions = [
     {
       icon: <VisibilityIcon />,

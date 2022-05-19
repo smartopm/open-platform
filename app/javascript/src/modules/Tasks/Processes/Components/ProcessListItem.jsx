@@ -100,7 +100,11 @@ export default function ProcessListItem({ processItem }) {
   }
 
   function routeToProjects(paramName, paramValue) {
-    history.push(`/processes/${processId}/projects?process_name=${processName}&${paramName}=${paramValue}`);
+    history.push({
+      pathname: `/processes/${processId}/projects`,
+      state: { process: processItem },
+      search: `?process_name=${processName}&${paramName}=${paramValue}`,
+    });
   }
 
   function cardName(name) {
@@ -169,8 +173,9 @@ export default function ProcessListItem({ processItem }) {
         <Grid item md={8} xs={12}>
           <Link
             to={{
-              pathname: `/processes/${processId}/projects?process_name=${processName}`,
-              state: { process: processItem }
+              pathname: `/processes/${processId}/projects`,
+              state: { process: processItem },
+              search: `?process_name=${processName}`,
             }}
             underline="hover"
           >
