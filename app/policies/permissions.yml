@@ -274,6 +274,7 @@ admin:
       - can_create_lead_log
       - can_update_lead_log
       - can_fetch_lead_logs
+      - can_access_lead_scorecard
 contractor:
   note:
     permissions:

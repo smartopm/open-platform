@@ -66,6 +66,7 @@ const QUERY = gql`
         emergencyCallNumber
         features
         roles
+        leadMonthlyTargets
       }
     }
   }

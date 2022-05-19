@@ -7,8 +7,8 @@ module Logs
     belongs_to :user, class_name: 'Users::User'
     belongs_to :acting_user, class_name: 'Users::User'
 
-    default_scope { order(created_at: :desc) }
+    scope :ordered, -> { order(created_at: :desc) }
 
-    enum log_type: { event: 0, meeting: 1, signed_deal: 2 }
+    enum log_type: { event: 0, meeting: 1, signed_deal: 2, lead_status: 3 }
   end
 end

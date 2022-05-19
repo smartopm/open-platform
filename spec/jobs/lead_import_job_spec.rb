@@ -8,8 +8,8 @@ RSpec.describe UserImportJob, type: :job do
   let!(:prospective_client_role) { create(:role, name: 'prospective_client') }
   let!(:lead_role) { create(:role, name: 'lead') }
   let!(:user) { create(:admin_user, community_id: non_admin.community_id) }
-  csv_string = "Name,Title,Email,Secondary Email,Secondary Phone\nThomas Shalongolo,CFO,thomas@gmail.com,'thomas_s@gmail.com,'9988776655"
-  semicolon_csv_string = "Name;Title;Email;Secondary Email;Secondary Phone\nJohn Doe;CFO;thomas@gmail.com;'thomas_s@gmail.com;'9988776655"
+  csv_string = "Name,Title,Email,Secondary Email,Secondary Phone;Lead Status\nThomas Shalongolo,CFO,thomas@gmail.com,'thomas_s@gmail.com,'9988776655;Signed MOU"
+  semicolon_csv_string = "Name;Title;Email;Secondary Email;Secondary Phone;Lead Status\nJohn Doe;CFO;thomas@gmail.com;'thomas_s@gmail.com;'9988776655;Signed MOU"
 
   describe '#perform_later' do
     before do
@@ -68,6 +68,7 @@ RSpec.describe UserImportJob, type: :job do
 
         expect(Users::User.count).to eql(prev_user_count + 1)
         expect(Notes::Note.count).to eql(prev_note_count + 1)
+        expect(Logs::LeadLog.count).to eql 1
       end
     end
   end
