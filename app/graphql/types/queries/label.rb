@@ -23,6 +23,11 @@ module Types::Queries::Label
       description 'Get users by the label ids, this should be a comma separated string'
       argument :labels, String, required: true
     end
+
+    field :lead_labels, [Types::LabelType], null: true do
+      argument :user_id, GraphQL::Types::ID, required: true
+      description 'Get division and status labels for leads'
+    end
   end
 
   def labels(offset: 0, limit: 50)
@@ -49,6 +54,19 @@ module Types::Queries::Label
     end
 
     context[:site_community].users.find(context[:current_user].id)&.find_label_users(labels)&.all
+  end
+
+  def lead_labels(user_id:)
+    unless permitted?(module: :label, permission: :can_view_lead_labels)
+      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+    end
+  
+    user = context[:site_community].users.find(user_id)
+
+    context[:site_community].labels
+                            .joins(:user_labels)
+                            .where(user_labels: { user_id: user.id },
+                                   grouping_name: %w[Division Status])
   end
 
   private

@@ -203,6 +203,7 @@ admin:
       - can_fetch_label_users
       - can_fetch_user_labels
       - can_see_menu_item
+      - can_view_lead_labels
   community:
     permissions:
       - can_see_menu_item

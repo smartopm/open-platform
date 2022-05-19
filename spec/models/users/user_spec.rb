@@ -341,6 +341,37 @@ RSpec.describe Users::User, type: :model do
         end
       end
     end
+
+    describe '#associate_lead_labels' do
+      let(:user) do
+        build(:lead, lead_status: 'Signed Lease', division: 'China')
+      end
+
+      context 'when user is created' do
+        before { user.save }
+
+        it 'creates labels for the lead user' do
+          expect(user.labels.where(grouping_name: 'Division').count).to eql 1
+          expect(user.labels.where(grouping_name: 'Status').count).to eql 1
+        end
+      end
+
+      context 'when user is updated' do
+        before { user.save }
+
+        it 'updates existing user label' do
+          expect(Labels::Label.count).to eql 5
+          # 3 notification labels are added by default
+          expect(user.user_labels.count).to eql 5
+
+          user.update(lead_status: 'Site Visit', division: 'Europe')
+
+          # 2 labels are created for Site Visit and Europe
+          expect(Labels::Label.count).to eql 7
+          expect(user.user_labels.count).to eql 5
+        end
+      end
+    end
   end
 
   describe 'Creating a user from a oauth authentication callback' do
