@@ -7,13 +7,13 @@ import Divider from '@mui/material/Divider';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
-import { Select, SvgIcon, MenuItem, OutlinedInput , Box, IconButton } from '@mui/material';
+import { Select, SvgIcon, MenuItem, OutlinedInput, Box, IconButton } from '@mui/material';
 import DialogContent from '@mui/material/DialogContent';
 import DialogActions from '@mui/material/DialogActions';
 import DialogTitle from '@mui/material/DialogTitle';
 import PropTypes from 'prop-types';
 import Typography from '@mui/material/Typography';
-
+import useMediaQuery from '@mui/material/useMediaQuery';
 import CloseIcon from '@mui/icons-material/Close';
 import ImageUploader from '../imageUpload/ImageUploader';
 import ImageUploadPreview from '../imageUpload/ImageUploadPreview';
@@ -31,6 +31,7 @@ export default function DialogWithImageUpload({
   modalDetails
 }) {
   const styles = useStyles();
+  const matches = useMediaQuery('(max-width:450px)');
 
   return (
     <>
@@ -92,7 +93,7 @@ export default function DialogWithImageUpload({
               />
             </Grid>
             {!!modalDetails?.actionVisibilityOptions && (
-              <Grid item sm={8}>
+              <Grid item sm={8} style={matches ? { marginTop: '15px' } : {}}>
                 <FormControl variant="outlined" data-testid="visibilty-select">
                   <InputLabel shrink>{modalDetails.actionVisibilityLabel}</InputLabel>
                   <Box>
