@@ -5,6 +5,7 @@ import makeStyles from '@mui/styles/makeStyles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Grid from '@mui/material/Grid';
 import { Typography } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import { LeadScoreCardQuery } from '../graphql/queries';
 import { Spinner } from '../../../../shared/Loading';
 import ScoreCard from './ScoreCard';
@@ -27,6 +28,8 @@ export default function LeadsPage() {
   const { data, loading, error } = useQuery(LeadScoreCardQuery, {
     fetchPolicy: 'cache-and-network'
   });
+  const { t } = useTranslation('common');
+  const communityDivisionTargets = authState?.user.community?.leadMonthlyTargets;
 
   function getMonthlyTarget(division) {
     const target = authState?.user.community.leadMonthlyTargets
@@ -100,22 +103,38 @@ export default function LeadsPage() {
             Monthly Leads By Division
           </Typography>
         </Grid>
-        <Grid item md={2} xs={5} className={classes.title} style={{ textAlign: 'right' }}>
-          <Typography component="span" color="text.secondary" style={{marginRight: "20px"}}>
-            YTD Total
-          </Typography>
-          {'  '}
-          <Typography color="primary" component="span">
-            {data.leadScorecards.ytd_count?.leads_by_division || 0}
-          </Typography>
-        </Grid>
+        {communityDivisionTargets && communityDivisionTargets?.length >= 2 && (
+          <Grid item md={2} xs={5} className={classes.title} style={{ textAlign: 'right' }}>
+            <Typography component="span" color="text.secondary" style={{ marginRight: '20px' }}>
+              YTD Total
+            </Typography>
+            {'  '}
+            <Typography color="primary" component="span">
+              {data.leadScorecards.ytd_count?.leads_by_division || 0}
+            </Typography>
+          </Grid>
+        )}
       </Grid>
       <Grid container spacing={2} data-testid="card_one">
-        {buildScoreCardData(CS).map((score, index) => (
-          <Grid item md={3} xs={12} key={index}>
-            <ScoreCard data={score} />
+        {communityDivisionTargets && communityDivisionTargets?.length >= 2 ? (
+          buildScoreCardData(CS).map((score, index) => (
+            <Grid item md={3} xs={12} key={index}>
+              <ScoreCard data={score} />
+            </Grid>
+          ))
+        ) : (
+          <Grid item md={12} xs={12}>
+            <Typography variant="body2">
+              {t('lead_management.go_settings')}
+              <a href="/community">
+                <Typography variant="subtitle1">
+                  {t('lead_management.community_settings_page')}
+                </Typography>
+              </a>
+              {t('lead_management.to_set_up')}
+            </Typography>
           </Grid>
-        ))}
+        )}
       </Grid>
       <Grid container spacing={2} data-testid="card_two">
         {buildCurrentStatusCard(SL).map((score, index) => (
@@ -133,7 +152,7 @@ export default function LeadsPage() {
                 {objectAccessor(scoreCardTitle, score.name)}
               </Grid>
               <Grid item md={6} xs={6} style={{ textAlign: 'right' }}>
-                <Typography component="span" color="text.secondary" style={{marginRight: "20px"}}>
+                <Typography component="span" color="text.secondary" style={{ marginRight: '20px' }}>
                   YTD Total
                 </Typography>
                 {'  '}
