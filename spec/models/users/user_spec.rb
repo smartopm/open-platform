@@ -364,12 +364,11 @@ RSpec.describe Users::User, type: :model do
           # 3 notification labels are added by default
           expect(user.user_labels.count).to eql 5
 
-          user.update(lead_status: 'Site Visit', division: nil)
+          user.update(lead_status: 'Site Visit', division: 'Europe')
 
           # 2 labels are created for Site Visit and Europe
-          expect(Labels::Label.count).to eql 6
-          # As division was updated to nil, the user_label association will be destroyed
-          expect(user.user_labels.count).to eql 4
+          expect(Labels::Label.count).to eql 7
+          expect(user.user_labels.count).to eql 5
         end
       end
     end
