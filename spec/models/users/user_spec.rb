@@ -711,4 +711,23 @@ RSpec.describe Users::User, type: :model do
       expect(resident.invitees.count).to eq(1)
     end
   end
+
+  describe '#create_lead_task' do
+    let(:lead_role) { create(:role, name: 'lead') }
+    let(:user) do
+      create(:user_with_community,
+             user_type: 'lead',
+             lead_status: 'Signed MOU',
+             role: lead_role)
+    end
+    let(:admin) { create(:admin_user, community_id: user.community_id) }
+
+    it 'creates note' do
+      expect(admin.notes.count).to eql 0
+      expect(user.tasks.count).to eql 0
+      admin.create_lead_task(user)
+      expect(admin.notes.count).to eql 1
+      expect(user.tasks.count).to eql 1
+    end
+  end
 end
