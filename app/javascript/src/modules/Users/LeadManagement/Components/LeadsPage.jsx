@@ -32,7 +32,7 @@ export default function LeadsPage() {
     const target = authState?.user.community.leadMonthlyTargets
       ?.filter(tar => tar.division === division)
       .map(tar => tar.target);
-    return target.join() || 0;
+    return target?.join() || 0;
   }
 
   function CS(division, month) {
