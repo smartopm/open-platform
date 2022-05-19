@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { Fragment, useState, useContext, useEffect } from 'react';
+import React, { Fragment, useState, useContext } from 'react';
 import {
   Grid,
   IconButton,
@@ -28,11 +28,12 @@ import { ActionDialog } from '../../../components/Dialog';
 import ProgressBar from '../../../shared/ProgressBar';
 
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
+import { useScroll, useRemoveBackground } from '../../../hooks/useDomActions';
 
 export default function TaskDocuments({ data, loading, error, refetch, status }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const [currentDoc, setCurrentDoc] = useState('');
-  const [isBgColor, setIsBgColor] = useState(true);
+  const isBgColor = useRemoveBackground('current-document', 4000);
   const [open, setOpen] = useState(false);
   const [taskDocumentDelete] = useMutation(DeleteNoteDocument);
   const authState = useContext(AuthStateContext);
@@ -88,15 +89,7 @@ export default function TaskDocuments({ data, loading, error, refetch, status })
       });
   }
 
-  useEffect(() => {
-    const docElement = window.document.getElementById('current-document');
-    let btTimer = false;
-    if (docElement) {
-      docElement.scrollIntoView({ behavior: 'smooth' });
-      btTimer = setTimeout(() => { setIsBgColor(false); }, 4000);
-    }
-    return () => { if (btTimer) { clearTimeout(btTimer); } }
-  }, [isBgColor])
+  useScroll('current-document');
 
   if (loading) return <Spinner />;
   if (error) return <CenteredContent>{formatError(error)}</CenteredContent>;
