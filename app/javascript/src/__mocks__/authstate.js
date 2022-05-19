@@ -14,7 +14,10 @@ const authState = {
           roles: ['admin', 'client']
         }
       ],
-      leadMonthlyTargets: [{ division: 'Africa', target: '15' }],
+      leadMonthlyTargets: [
+        { division: 'Africa', target: '15' },
+        { division: 'China', target: '15' }
+      ],
       smsPhoneNumbers: ['+254724821901', '+154724582391'],
       supportNumber: ['+254724821901', '+154724582391'],
       emergencyCallNumber: '254724821901',
