@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useQuery } from 'react-apollo';
 import { Grid, Typography, Breadcrumbs, TextField, Modal, Button } from '@mui/material';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { Link, useHistory } from 'react-router-dom'
+import { Link, useHistory, useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import makeStyles from '@mui/styles/makeStyles';
@@ -18,10 +18,12 @@ import SpeedDial from '../../../../shared/buttons/SpeedDial';
 import { accessibleMenus } from '../utils';
 
 export default function ProjectsList() {
+  const { id: processId } = useParams();
   const { t } = useTranslation(['task', 'common']);
   const limit = 50;
   const [offset, setOffset] = useState(0);
-  const path = useParamsQuery()
+  const path = useParamsQuery();
+  const processName = path.get('process_name');
   const history = useHistory();
   const currentStep = path.get('current_step')
   const completedPerQuarter = path.get('completed_per_quarter')
@@ -33,7 +35,6 @@ export default function ProjectsList() {
   const [openSpeedDial, setOpenSpeedDial] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const matches = useMediaQuery('(max-width:600px)');
-
 
   const speedDialActions = [
     {
@@ -55,6 +56,7 @@ export default function ProjectsList() {
     variables: {
       offset,
       limit,
+      processId,
       step: currentStep,
       completedPerQuarter,
       submittedPerQuarter,
@@ -145,7 +147,7 @@ export default function ProjectsList() {
                   <Link to="/processes">
                     <Typography color="primary" style={{marginLeft: '5px'}}>{t('processes.processes')}</Typography>
                   </Link>
-                  <Typography color="text.primary">{t('processes.drc_process')}</Typography>
+                  <Typography color="text.primary">{processName}</Typography>
                 </Breadcrumbs>
               </div>
             </Grid>
@@ -166,7 +168,7 @@ export default function ProjectsList() {
           <Grid item md={12} xs={12} className={classes.header}>
             <Grid container spacing={1}>
               <Grid item md={9} xs={10}>
-                <Typography variant="h4" style={{marginLeft: '5px', marginBottom: '24px'}}>{t('processes.drc_process')}</Typography>
+                <Typography variant="h4" style={{marginLeft: '5px', marginBottom: '24px'}}>{processName}</Typography>
               </Grid>
             </Grid>
           </Grid>
@@ -177,7 +179,7 @@ export default function ProjectsList() {
             <div>
               {data.projects.map(task => (
                 <div key={task.id}>
-                  <ProjectItem task={task} refetch={refetch} />
+                  <ProjectItem processId={processId} task={task} refetch={refetch} />
                 </div>
             ))}
             </div>

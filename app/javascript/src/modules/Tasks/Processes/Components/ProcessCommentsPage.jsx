@@ -1,24 +1,28 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useHistory } from 'react-router';
+import { useHistory, useParams } from 'react-router';
 import { useQuery } from 'react-apollo';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import PageHeader from '../../../../shared/PageHeader';
 import { ProcessReplyComments } from '../graphql/process_queries';
 import { Spinner } from '../../../../shared/Loading';
 import CenteredContent from '../../../../shared/CenteredContent';
-import { formatError, objectAccessor } from '../../../../utils/helpers';
+import { formatError, objectAccessor, useParamsQuery } from '../../../../utils/helpers';
 import { StyledTabs, StyledTab, TabPanel, a11yProps } from '../../../../components/Tabs';
 import PageWrapper from '../../../../shared/PageWrapper';
 import ProcessCommentItem from './ProcessCommentItem';
 
 export default function ProcessCommentsPage() {
+  const {  id: processId } = useParams();
   const matches = useMediaQuery('(max-width:600px)');
   const history = useHistory();
+  const path = useParamsQuery();
   const { t } = useTranslation(['process', 'task']);
   const [tabValue, setTabValue] = useState(0);
+  const processName = path.get('process_name');
 
   const { data, loading, error } = useQuery(ProcessReplyComments, {
+    variables: { processId },
     fetchPolicy: 'cache-and-network'
   });
 
@@ -42,7 +46,7 @@ export default function ProcessCommentsPage() {
         linkText={t('breadcrumbs.processes')}
         linkHref="/processes"
         pageName={t('breadcrumbs.comments')}
-        PageTitle={t('templates.drc_comments')}
+        PageTitle={t('templates.process_comments', { processName })}
       />
       {loading ? (
         <Spinner />

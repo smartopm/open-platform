@@ -2,7 +2,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import { Grid, Paper, Typography, Chip, Avatar } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useQuery } from 'react-apollo';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { ProjectRepliesRequestedComments } from '../graphql/process_queries';
@@ -14,6 +14,7 @@ import CustomSkeleton from '../../../../shared/CustomSkeleton';
 
 export default function ProjectDetailsAccordion({ taskId }) {
   const { t } = useTranslation(['task', 'common']);
+  const { id: processId } = useParams();
   const smDownHidden = useMediaQuery(theme => theme.breakpoints.down('sm'));
 
   const { data, loading, error } = useQuery(ProjectRepliesRequestedComments, {
@@ -115,7 +116,7 @@ export default function ProjectDetailsAccordion({ taskId }) {
                   </Grid>
                   <Grid item md={4} xs={12} style={!smDownHidden ? { textAlign: 'right' } : {}}>
                     <Link
-                      to={`/processes/drc/projects/${comment.note.id}?tab=processes&detailTab=comments&replying_discussion=${comment.groupingId}`}
+                      to={`/processes/${processId}/projects/${comment.note.id}?tab=processes&detailTab=comments&replying_discussion=${comment.groupingId}`}
                     >
                       <Typography variant="caption">
                         <span

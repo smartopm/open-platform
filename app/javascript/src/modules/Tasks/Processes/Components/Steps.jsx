@@ -20,7 +20,7 @@ export default function ProjectSteps({
   const authState = React.useContext(AuthStateContext);
   const history = useHistory();
   const classes = useStyles();
-  const { id } = useParams();
+  const { processId, id } = useParams();
   const [stepsOpen, setStepsOpen] = useState({});
   const { t } = useTranslation('task');
 
@@ -43,7 +43,7 @@ export default function ProjectSteps({
     handleProjectStepClick(stepItem);
     setSelectedStep({ ...stepItem });
     if (redirect) {
-      history.push(`/processes/drc/projects/${id}?tab=processes`)
+      history.push(`/processes/${processId}/projects/${id}?tab=processes`)
     }
   }
 

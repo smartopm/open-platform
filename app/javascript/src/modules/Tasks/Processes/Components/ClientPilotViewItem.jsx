@@ -17,7 +17,7 @@ import ProjectActivitySummary from './ProjectActivitySummary';
 import { SubTasksQuery } from '../../graphql/task_queries';
 
 export default function ClientPilotViewItem({ project, refetch }) {
-  const taskId = project?.id;
+  const taskId = project?.id; // TODO: Add query to fetch processIds for ClientPilotView
   const history = useHistory();
   const limit = 3;
   const classes = useStyles();
@@ -82,7 +82,12 @@ export default function ClientPilotViewItem({ project, refetch }) {
                 <Typography data-testid="assigned-task-title-header" variant="subtitle1">{t('processes.your_tasks')}</Typography>
                 <br />
                 <div>
-                  <ProjectItem taskId={taskId} refetch={refetch} clientView  />
+                  <ProjectItem
+                    clientView
+                    processId={project?.id}
+                    taskId={taskId}
+                    refetch={refetch}
+                  />
                 </div>
               </Grid>
             </Grid>

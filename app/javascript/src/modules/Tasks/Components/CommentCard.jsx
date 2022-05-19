@@ -49,7 +49,7 @@ export default function CommentCard({ comments, refetch, commentsRefetch, forAcc
   const authState = useContext(AuthStateContext);
   const classes = useStyles();
   const path = useParamsQuery();
-  const { id: projectId } = useParams();
+  const { processId, id: projectId } = useParams();
   const history = useHistory();
   const replyingDiscussion = path.get('replying_discussion');
   const [commentCreate] = useMutation(TaskComment);
@@ -155,7 +155,7 @@ export default function CommentCard({ comments, refetch, commentsRefetch, forAcc
   function goToReplyComment(groupingId, taskId) {
     if (projectId !== taskId) {
       history.push(
-        `/processes/drc/projects/${taskId}?tab=processes&detailTab=comments&replying_discussion=${groupingId}`
+        `/processes/${processId}/projects/${taskId}?tab=processes&detailTab=comments&replying_discussion=${groupingId}`
       );
     } else {
       // TODO(Nurudeen): scroll reply into view without reloading

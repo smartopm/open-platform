@@ -8,7 +8,7 @@ import { formatError } from '../../../utils/helpers';
 import CenteredContent from '../../../shared/CenteredContent';
 import Paginate from '../../../components/Paginate';
 import { Spinner } from '../../../shared/Loading';
-import ProcessTemplatesQuery from '../graphql/process_list_queries';
+import { ProcessTemplatesQuery } from '../graphql/process_list_queries';
 import ProcessItem from './ProcessItem';
 import MenuList from '../../../shared/MenuList';
 import SpeedDial from '../../../shared/buttons/SpeedDial';
@@ -124,7 +124,7 @@ export default function ProcessList() {
       });
       setAlertOpen(true);
     })
-  }  
+  }
 
   function handleMenu(event, process) {
     event.stopPropagation();

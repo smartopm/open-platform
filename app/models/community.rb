@@ -174,7 +174,7 @@ class Community < ApplicationRecord
   # rubocop:enable Rails/FindBy
   # rubocop:enable Metrics/ClassLength
 
-  def process_form_users(process_type)
-    forms.joins(:process).find_by(process: { process_type: process_type })&.form_users
+  def process_form_users(process_id)
+    forms.joins(:process).find_by(process: { id: process_id })&.form_users
   end
 end

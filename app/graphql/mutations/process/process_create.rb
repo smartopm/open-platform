@@ -22,7 +22,7 @@ module Mutations
 
         ActiveRecord::Base.transaction do
           process_template = context[:site_community].processes.create!(
-            vals.except(:note_list_id).merge(process_type: 'drc'),
+            vals.except(:note_list_id),
           )
 
           note_list.update!(process_id: process_template.id)

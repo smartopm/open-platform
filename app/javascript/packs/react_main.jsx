@@ -389,10 +389,10 @@ const App = () => {
                                 />
                                 <Route path="/processes/templates" component={ProcessList} />
                                 <Route
-                                  path="/processes/:type/projects/:id"
+                                  path="/processes/:processId/projects/:id"
                                   component={TaskProcessDetail}
                                 />
-                                <Route path="/processes/:type/projects" component={ProjectsList} />
+                                <Route path="/processes/:id/projects" component={ProjectsList} />
                                 <Route
                                   exact
                                   path="/entry_logs"
@@ -402,7 +402,7 @@ const App = () => {
                                 <AdminRoutes>
                                   <Switch>
                                     <Route
-                                      path="/processes/comments"
+                                      path="/processes/:id/comments"
                                       component={ProcessCommentsPage}
                                     />
                                     <Route path="/users/import" component={UsersImport} />

@@ -13,6 +13,7 @@ import MockedThemeProvider from '../../../__mocks__/mock_theme';
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 const props = {
   task: taskMock,
+  processId: '123-3456',
   refetch: () => {}
 };
 
