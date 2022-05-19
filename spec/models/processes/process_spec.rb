@@ -21,12 +21,13 @@ RSpec.describe Processes::Process, type: :model do
   end
 
   describe 'validations' do
+    let(:process) { create(:process, name: 'Process Name') }
+
     it 'validates name uniqueness per community' do
-      process1 = create(:process, name: 'Process Name')
       process2 = described_class.new(
         name: 'Process Name',
-        community: process1.community,
-        form: process1.form,
+        community: process.community,
+        form: process.form,
       )
 
       expect(process2.valid?).to be false

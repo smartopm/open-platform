@@ -1050,18 +1050,6 @@ RSpec.describe Types::Queries::Note do
         GQL
       end
 
-      let(:project_stages_query) do
-        <<~GQL
-          query projectStages($processId: ID!) {
-            projectStages(processId: $processId)
-            {
-              id
-              body
-            }
-          }
-        GQL
-      end
-
       context 'when projects are fetched' do
         before do
           form
@@ -1563,84 +1551,6 @@ RSpec.describe Types::Queries::Note do
         end
       end
 
-      describe 'project stages' do
-        let(:note_list) { create(:note_list, process: process, community: community) }
-
-        it 'raises an error if note list is not found' do
-          variables = { processId: process.id }
-          result = DoubleGdpSchema.execute(project_stages_query, variables: variables,
-                                                                 context: {
-                                                                   current_user: admin,
-                                                                   site_community: community,
-                                                                 }).as_json
-
-          expect(result.dig('errors', 0, 'message')).to include('not found')
-        end
-
-        it 'raises error if parent task is not found' do
-          note_list
-          variables = { processId: process.id }
-          result = DoubleGdpSchema.execute(project_stages_query, variables: variables,
-                                                                 context: {
-                                                                   current_user: admin,
-                                                                   site_community: community,
-                                                                 }).as_json
-
-          expect(result.dig('errors', 0, 'message')).to include('not found')
-        end
-
-        it 'returns project steps for the process' do
-          parent_task = admin.notes.create!(
-            body: 'Parent task for task list',
-            description: 'Parent task for task list',
-            user_id: admin.id,
-            category: 'task_list',
-            flagged: true,
-            community_id: community.id,
-            author_id: admin.id,
-            parent_note_id: nil,
-            note_list_id: note_list.id,
-          )
-
-          admin.notes.create!(
-            body: 'Step 1',
-            description: 'Step 1',
-            user_id: admin.id,
-            category: 'to_do',
-            order: 1,
-            flagged: true,
-            community_id: community.id,
-            author_id: admin.id,
-            parent_note_id: parent_task.id,
-            note_list_id: note_list.id,
-          )
-
-          admin.notes.create!(
-            body: 'Step 2',
-            description: 'Step 2',
-            user_id: admin.id,
-            category: 'to_do',
-            order: 2,
-            flagged: true,
-            community_id: community.id,
-            author_id: admin.id,
-            parent_note_id: parent_task.id,
-            note_list_id: note_list.id,
-          )
-
-          variables = { processId: process.id }
-          result = DoubleGdpSchema.execute(project_stages_query, variables: variables,
-                                                                 context: {
-                                                                   current_user: admin,
-                                                                   site_community: community,
-                                                                 }).as_json
-
-          expect(result['errors']).to be_nil
-          expect(result.dig('data', 'projectStages').size).to eq(2)
-          expect(result.dig('data', 'projectStages', 0, 'body')).to eq('Step 1')
-        end
-      end
-
       it 'should retrieve projectOpenTasks of a parent note' do
         admin.notes.create!(
           body: 'Subtask body',
@@ -1867,7 +1777,37 @@ RSpec.describe Types::Queries::Note do
           third_note
           process
           third_note.update(form_user_id: form_user.id, completed: true)
+        end
 
+        it 'raises error when user has no permissions' do
+          variables = { processId: process.id }
+          result = DoubleGdpSchema.execute(
+            process_reply_comments_query,
+            variables: variables,
+            context: {
+              current_user: site_worker,
+              site_community: community,
+            },
+          ).as_json
+
+          expect(result.dig('errors', 0, 'message')).to include('Unauthorized')
+        end
+
+        it 'raises error if process is not found' do
+          variables = { processId: 'Non existent process' }
+          result = DoubleGdpSchema.execute(
+            process_reply_comments_query,
+            variables: variables,
+            context: {
+              current_user: admin,
+              site_community: admin.community,
+            },
+          ).as_json
+
+          expect(result.dig('errors', 0, 'message')).to include('not found')
+        end
+
+        it 'returns process comments by status' do
           create(
             :note_comment,
             note: third_note,
@@ -1967,37 +1907,7 @@ RSpec.describe Types::Queries::Note do
             grouping_id: '1d3f82c5-5d74-471d-a5a9-143f6e5ad3f1',
             replied_at: 1.day.ago,
           )
-        end
 
-        it 'raises error when user has no permissions' do
-          variables = { processId: process.id }
-          result = DoubleGdpSchema.execute(
-            process_reply_comments_query,
-            variables: variables,
-            context: {
-              current_user: site_worker,
-              site_community: community,
-            },
-          ).as_json
-
-          expect(result.dig('errors', 0, 'message')).to include('Unauthorized')
-        end
-
-        it 'raises error if process is not found' do
-          variables = { processId: 'Non existent process' }
-          result = DoubleGdpSchema.execute(
-            process_reply_comments_query,
-            variables: variables,
-            context: {
-              current_user: admin,
-              site_community: admin.community,
-            },
-          ).as_json
-
-          expect(result.dig('errors', 0, 'message')).to include('not found')
-        end
-
-        it 'returns process comments by status' do
           variables = { processId: process.id }
           result = DoubleGdpSchema.execute(
             process_reply_comments_query,
@@ -2164,6 +2074,97 @@ RSpec.describe Types::Queries::Note do
               .to include('Unauthorized')
           end
         end
+      end
+    end
+
+    describe '#project stages' do
+      let(:process) { create(:process, community: community) }
+      let(:note_list) { create(:note_list, process: process, community: community) }
+
+      let(:project_stages_query) do
+        <<~GQL
+          query projectStages($processId: ID!) {
+            projectStages(processId: $processId)
+            {
+              id
+              body
+            }
+          }
+        GQL
+      end
+
+      it 'raises an error if note list is not found' do
+        variables = { processId: process.id }
+        result = DoubleGdpSchema.execute(project_stages_query, variables: variables,
+                                                               context: {
+                                                                 current_user: admin,
+                                                                 site_community: community,
+                                                               }).as_json
+
+        expect(result.dig('errors', 0, 'message')).to include('not found')
+      end
+
+      it 'raises error if parent task is not found' do
+        note_list
+        variables = { processId: process.id }
+        result = DoubleGdpSchema.execute(project_stages_query, variables: variables,
+                                                               context: {
+                                                                 current_user: admin,
+                                                                 site_community: community,
+                                                               }).as_json
+
+        expect(result.dig('errors', 0, 'message')).to include('not found')
+      end
+
+      it 'returns project steps for the process' do
+        parent_task = admin.notes.create!(
+          body: 'Parent task for task list',
+          description: 'Parent task for task list',
+          user_id: admin.id,
+          category: 'task_list',
+          flagged: true,
+          community_id: community.id,
+          author_id: admin.id,
+          parent_note_id: nil,
+          note_list_id: note_list.id,
+        )
+
+        admin.notes.create!(
+          body: 'Step 1',
+          description: 'Step 1',
+          user_id: admin.id,
+          category: 'to_do',
+          order: 1,
+          flagged: true,
+          community_id: community.id,
+          author_id: admin.id,
+          parent_note_id: parent_task.id,
+          note_list_id: note_list.id,
+        )
+
+        admin.notes.create!(
+          body: 'Step 2',
+          description: 'Step 2',
+          user_id: admin.id,
+          category: 'to_do',
+          order: 2,
+          flagged: true,
+          community_id: community.id,
+          author_id: admin.id,
+          parent_note_id: parent_task.id,
+          note_list_id: note_list.id,
+        )
+
+        variables = { processId: process.id }
+        result = DoubleGdpSchema.execute(project_stages_query, variables: variables,
+                                                               context: {
+                                                                 current_user: admin,
+                                                                 site_community: community,
+                                                               }).as_json
+
+        expect(result['errors']).to be_nil
+        expect(result.dig('data', 'projectStages').size).to eq(2)
+        expect(result.dig('data', 'projectStages', 0, 'body')).to eq('Step 1')
       end
     end
   end
