@@ -825,3 +825,120 @@ export function userTabList(t) {
     Notes: t('common:misc.notes')
   };
 }
+
+export function buildScoreCardData(CS) {
+  return [
+    {
+      score: [
+        { col1: 'Q1', col2: 'Jan', col3: 'Feb', col4: 'Mar' },
+        {
+          col1: 'Europe',
+          col2: CS('Europe', '1'),
+          col3: CS('Europe', '2'),
+          col4: CS('Europe', '2')
+        },
+        { col1: 'China', col2: CS('China', '1'), col3: CS('China', '2'), col4: CS('China', '3') },
+        { col1: 'India', col2: CS('India', '1'), col3: CS('India', '2'), col4: CS('India', '3') }
+      ]
+    },
+    {
+      score: [
+        { col1: 'Q2', col2: 'Apr', col3: 'May', col4: 'Jun' },
+        {
+          col1: 'Europe',
+          col2: CS('Europe', '4'),
+          col3: CS('Europe', '5'),
+          col4: CS('Europe', '6')
+        },
+        { col1: 'China', col2: CS('China', '4'), col3: CS('China', '5'), col4: CS('China', '6') },
+        { col1: 'India', col2: CS('India', '4'), col3: CS('India', '5'), col4: CS('India', '6') }
+      ]
+    },
+    {
+      score: [
+        { col1: 'Q3', col2: 'Jul', col3: 'Aug', col4: 'Sep' },
+        {
+          col1: 'Europe',
+          col2: CS('Europe', '7'),
+          col3: CS('Europe', '8'),
+          col4: CS('Europe', '9')
+        },
+        { col1: 'China', col2: CS('China', '7'), col3: CS('China', '8'), col4: CS('China', '9') },
+        { col1: 'India', col2: CS('India', '7'), col3: CS('India', '8'), col4: CS('India', '9') }
+      ]
+    },
+    {
+      score: [
+        { col1: 'Q4', col2: 'Oct', col3: 'Nov', col4: 'Dec' },
+        {
+          col1: 'Europe',
+          col2: CS('Europe', '10'),
+          col3: CS('Europe', '11'),
+          col4: CS('Europe', '12')
+        },
+        {
+          col1: 'China',
+          col2: CS('China', '10'),
+          col3: CS('China', '11'),
+          col4: CS('China', '12')
+        },
+        {
+          col1: 'India',
+          col2: CS('India', '10'),
+          col3: CS('India', '11'),
+          col4: CS('India', '12')
+        }
+      ]
+    }
+  ];
+}
+
+export function buildStatusCard(BS) {
+  return [
+    {
+      score: [
+        { col1: 'Q1', col2: BS('Ql', '1'), col3: BS('Ql', '2'), col4: BS('Ql', '3') },
+        { col1: 'Q2', col2: BS('Ql', '4'), col3: BS('Ql', '5'), col4: BS('Ql', '6') },
+        { col1: 'Q3', col2: BS('Ql', '7'), col3: BS('Ql', '8'), col4: BS('Ql', '9') },
+        { col1: 'Q4', col2: BS('Ql', '10'), col3: BS('Ql', '11'), col4: BS('Ql', '12') }
+      ],
+      name: 'qualified_lead'
+    },
+    {
+      score: [
+        { col1: 'Q1', col2: BS('Sm', '1'), col3: BS('Sm', '2'), col4: BS('Sm', '3') },
+        { col1: 'Q2', col2: BS('Sm', '4'), col3: BS('Sm', '5'), col4: BS('Sm', '6') },
+        { col1: 'Q3', col2: BS('Sm', '7'), col3: BS('Sm', '8'), col4: BS('Sm', '9') },
+        { col1: 'Q4', col2: BS('Sm', '10'), col3: BS('Sm', '11'), col4: BS('Sm', '12') }
+      ],
+      name: 'signed_lease'
+    },
+    {
+      score: [
+        { col1: 'Q1', col2: BS('Sl', '1'), col3: BS('Sl', '2'), col4: BS('Sl', '3') },
+        { col1: 'Q2', col2: BS('Sl', '4'), col3: BS('Sl', '5'), col4: BS('Sl', '6') },
+        { col1: 'Q3', col2: BS('Sl', '7'), col3: BS('Sl', '8'), col4: BS('Sl', '9') },
+        { col1: 'Q4', col2: BS('Sl', '10'), col3: BS('Sl', '11'), col4: BS('Sl', '12') }
+      ],
+      name: 'signed_mou'
+    }
+  ];
+}
+
+export function buildCurrentStatusCard(SL) {
+  return [
+    {
+      score: [
+        { col1: 'Interest Shown', col2: SL('Iv') },
+        { col1: 'Investment Motive Verified', col2: SL('Im') },
+        { col1: 'Qualified Lead', col2: SL('Ql') },
+        { col1: 'Evaluation', col2: SL('Ev') },
+        { col1: 'Stakeholder Meetings', col2: SL('St') },
+        { col1: 'Site Visit', col2: SL('Sv') },
+        { col1: 'Ready to Sign', col2: SL('Rs') },
+        { col1: 'Signed MOU', col2: SL('Sm') },
+        { col1: 'Signed Lease', col2: SL('Sl') }
+      ]
+    }
+  ];
+}

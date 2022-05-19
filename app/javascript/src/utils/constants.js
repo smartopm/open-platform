@@ -1290,3 +1290,64 @@ export const countries = [
 ];
 
 export const divisionOptions = ['China', 'Europe', 'India'];
+
+export const months = {
+  1: '1',
+  2: '2',
+  3: '3',
+  4: '4',
+  5: '5',
+  6: '6',
+  7: '7',
+  8: '8',
+  9: '9',
+  10: '10',
+  11: '11',
+  12: '12'
+};
+
+export const leadStatuses = {
+  Ql: 'Qualified Lead',
+  Is: 'Interest shown',
+  Iv: 'Interest shown',
+  Sm: 'Signed MOU',
+  Sl: 'Signed Lease',
+  Ev: 'Evaluation',
+  St: 'Stakeholder meetings',
+  Sv: 'Site Visit',
+  Rs: 'Ready to sign',
+  Im: 'Investment Motive Verified'
+};
+
+export const statuses = {
+  Ql: 'Qualified Lead',
+  Sl: 'Signed Lease',
+  Sm: 'Signed MOU'
+};
+
+export const scoreCardTitle = {
+  qualified_lead: 'Qualified Lead',
+  signed_lease: 'Signed Lease',
+  signed_mou: 'Signed MOU'
+};
+
+export const divisions = {
+  Europe: 'Europe',
+  China: 'China',
+  India: 'India'
+};
+
+export const years = {
+  '01': 'Jan',
+  '02': 'Feb',
+  '03': 'Mar',
+  '11': 'Apr',
+  '12': 'May',
+  '13': 'Jun',
+  '21': 'Jul',
+  '22': 'Aug',
+  '23': 'Sep',
+  '31': 'Oct',
+  '32': 'Nov',
+  '33': 'Dec'
+};

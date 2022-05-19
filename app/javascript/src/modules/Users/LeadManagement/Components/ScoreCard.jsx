@@ -5,23 +5,10 @@ import Grid from '@mui/material/Grid';
 import makeStyles from '@mui/styles/makeStyles';
 import PropTypes from 'prop-types';
 import { objectAccessor } from '../../../../utils/helpers';
+import { years } from '../../../../utils/constants'
 
 export default function ScoreCard({ data, statusCard, currentStatus }) {
   const classes = useStyles();
-  const years = {
-    '01': 'Jan',
-    '02': 'Feb',
-    '03': 'Mar',
-    '11': 'Apr',
-    '12': 'May',
-    '13': 'Jun',
-    '21': 'Jul',
-    '22': 'Aug',
-    '23': 'Sep',
-    '31': 'Oct',
-    '32': 'Nov',
-    '33': 'Dec'
-  };
   return (
     <div className={classes.container}>
       {!currentStatus ? (
@@ -39,7 +26,7 @@ export default function ScoreCard({ data, statusCard, currentStatus }) {
                     !statusCard ? classes.statusPad : undefined
                   } ${statusCard ? classes.firstCol : undefined}`}
                 >
-                  <Typography color={index !== 0 ? 'text.secondary' : undefined}>
+                  <Typography color={index !== 0 ? 'text.secondary' : undefined} data-testid='col1'>
                     {score.col1}
                   </Typography>
                 </Grid>
@@ -54,13 +41,14 @@ export default function ScoreCard({ data, statusCard, currentStatus }) {
                   } ${!statusCard ? classes.statusPad : undefined}`}
                 >
                   {statusCard && (
-                    <Typography variant="caption" color="text.secondary">
+                    <Typography variant="caption" color="text.secondary" data-testid='stat1'>
                       {objectAccessor(years, `${index}1`)}
                     </Typography>
                   )}
                   <Typography
                     color={index === 0 ? 'text.secondary' : undefined}
                     variant={!statusCard && index === 0 ? 'caption' : undefined}
+                    data-testid='col2'
                   >
                     {score.col2}
                   </Typography>
@@ -76,13 +64,14 @@ export default function ScoreCard({ data, statusCard, currentStatus }) {
                   } ${!statusCard ? classes.statusPad : undefined}`}
                 >
                   {statusCard && (
-                    <Typography variant="caption" color="text.secondary">
+                    <Typography variant="caption" color="text.secondary" data-testid='stat2'>
                       {objectAccessor(years, `${index}2`)}
                     </Typography>
                   )}
                   <Typography
                     color={index === 0 ? 'text.secondary' : undefined}
                     variant={!statusCard && index === 0 ? 'caption' : undefined}
+                    data-testid='col3'
                   >
                     {score.col3}
                   </Typography>
@@ -98,13 +87,14 @@ export default function ScoreCard({ data, statusCard, currentStatus }) {
                   } ${!statusCard ? classes.statusPad : undefined}`}
                 >
                   {statusCard && (
-                    <Typography variant="caption" color="text.secondary">
+                    <Typography variant="caption" color="text.secondary" data-testid='stat3'>
                       {objectAccessor(years, `${index}3`)}
                     </Typography>
                   )}
                   <Typography
                     color={index === 0 ? 'text.secondary' : undefined}
                     variant={!statusCard && index === 0 ? 'caption' : undefined}
+                    data-testid='col4'
                   >
                     {score.col4}
                   </Typography>
@@ -126,7 +116,7 @@ export default function ScoreCard({ data, statusCard, currentStatus }) {
                     index % 2 === 0 ? undefined : classes.columnColor
                   } ${classes.statusPad}`}
                 >
-                  <Typography color="primary">{score.col1}</Typography>
+                  <Typography color="primary" data-testid='col1'>{score.col1}</Typography>
                 </Grid>
                 <Grid
                   item
@@ -136,7 +126,7 @@ export default function ScoreCard({ data, statusCard, currentStatus }) {
                     classes.statusPad
                   }`}
                 >
-                  <Typography color="primary">{score.col2}</Typography>
+                  <Typography color="primary" data-testid='col2'>{score.col2}</Typography>
                 </Grid>
               </Grid>
             </Grid>
@@ -189,12 +179,9 @@ ScoreCard.defaultProps = {
 
 ScoreCard.propTypes = {
   data: PropTypes.shape({
-    score: PropTypes.arrayOf({
-      col1: PropTypes.string,
-      col2: PropTypes.string,
-      col3: PropTypes.string,
-      col4: PropTypes.string
-    })
+    score: PropTypes.arrayOf(PropTypes.shape({
+      col1: PropTypes.string
+    }))
   }).isRequired,
   statusCard: PropTypes.bool,
   currentStatus: PropTypes.bool
