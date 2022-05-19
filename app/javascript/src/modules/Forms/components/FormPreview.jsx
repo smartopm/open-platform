@@ -1,23 +1,15 @@
-import { Button, Container } from '@mui/material';
-import React, { useContext } from 'react';
-import ReactMarkDown from 'react-markdown';
+import React from 'react';
+import { Button } from '@mui/material';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import CenteredContent from '../../../components/CenteredContent';
 import { Spinner } from '../../../shared/Loading';
-import { parseRenderedText } from '../utils';
-import { FormContext } from '../Context';
+import CenteredContent from '../../../shared/CenteredContent';
+import TextPreview from './TextPreview';
 
-export default function FormPreview({ loading, handleFormSubmit, categoriesData }) {
+export default function FormPreview({ loading, handleFormSubmit, categoriesData}) {
   const { t } = useTranslation('form')
-  const { formProperties } = useContext(FormContext)
-  const markdown = parseRenderedText(categoriesData.data?.formCategories, formProperties)
   return (
-    <Container>
-      <ReactMarkDown 
-        // eslint-disable-next-line react/no-children-prop
-        children={markdown}
-      />
+    <TextPreview categoriesData={categoriesData}>
       <CenteredContent>
         <Button
           variant="outlined"
@@ -31,20 +23,19 @@ export default function FormPreview({ loading, handleFormSubmit, categoriesData 
           {t('actions.confirm')}
         </Button>
       </CenteredContent>
-    </Container>
+    </TextPreview>
   );
 }
 
+FormPreview.defaultProps = {
+  categoriesData: []
+}
 FormPreview.propTypes = {
   loading: PropTypes.bool.isRequired,
   handleFormSubmit: PropTypes.func.isRequired,
-  categoriesData: PropTypes.shape({
-    data: PropTypes.shape({
-      formCategories: PropTypes.arrayOf(
-        PropTypes.shape({
-          renderedText: PropTypes.string
-        })
-      )
+  categoriesData: PropTypes.arrayOf(
+    PropTypes.shape({
+      renderedText: PropTypes.string
     })
-  }).isRequired
+  )
 };

@@ -174,9 +174,7 @@ class LeadImportJob < ApplicationJob
         )
 
         if user.save
-          task = create_task(user, current_user)
-          user.task_id = task.id # assign user this task
-          user.save!
+          current_user.create_lead_task(user)
         else
           errors[index + 1] = user.errors.full_messages
         end
@@ -195,23 +193,6 @@ class LeadImportJob < ApplicationJob
   # rubocop:enable Metrics/BlockLength
   # rubocop:enable Metrics/CyclomaticComplexity
   # rubocop:enable Metrics/PerceivedComplexity
-
-  private
-
-  def create_task(user, current_user)
-    task_params = {
-      body: "Lead management task by #{user.name}",
-      description: 'Lead Management',
-      category: 'to_do',
-      flagged: true,
-      completed: false,
-      user_id: current_user.id,
-      author_id: current_user.id,
-      assignees: user.id,
-    }
-
-    TaskCreate.new_from_action(task_params)
-  end
   # rubocop:enable Metrics/AbcSize
   # rubocop:enable Metrics/MethodLength
 end

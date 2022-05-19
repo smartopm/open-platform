@@ -45,6 +45,7 @@ import MessageAlert from '../../../components/MessageAlert';
 import SubmittedFileItem from '../../../shared/imageUpload/SubmittedFileItem';
 import { handleFileSelect, handleFileUpload, removeBeforeUpload, isUploaded } from '../utils';
 import UploadFileItem from '../../../shared/imageUpload/UploadFileItem';
+import TermsAndCondition from './TermsAndCondition';
 
 // date
 // text input (TextField or TextArea)
@@ -630,6 +631,7 @@ export default function FormUpdate({ formUserId, userId, authState, categoriesDa
                 </CategoryItem>
               </div>
             ))}
+          
           <br />
           <Grid
             container
@@ -638,6 +640,16 @@ export default function FormUpdate({ formUserId, userId, authState, categoriesDa
             spacing={2}
             style={!matches ? { padding: ' 20px  120px 0 120px' } : {}}
           >
+            {
+              formUserData?.data?.formUser.form.hasTermsAndConditions && (
+              <Grid item xs={12} md={12} style={{ paddingBottom: '20px' }}>
+                <TermsAndCondition
+                  categoriesData={categoriesData} 
+                  isChecked={formUserData.data?.formUser.hasAgreedToTerms}
+                />
+              </Grid>
+            )
+          }
             <Grid item xs={12} md={12} style={{ paddingBottom: '20px' }}>
               <Divider />
             </Grid>

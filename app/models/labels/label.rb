@@ -38,6 +38,7 @@ module Labels
           short_desc,
           color,
           description,
+          grouping_name,
           COUNT(ul.id) AS user_count
         FROM labels l
         LEFT JOIN user_labels ul ON l.id = ul.label_id

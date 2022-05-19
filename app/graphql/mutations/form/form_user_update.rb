@@ -6,6 +6,7 @@ module Mutations
     class FormUserUpdate < BaseMutation
       argument :user_id, ID, required: true
       argument :form_user_id, ID, required: true
+      argument :has_agreed_to_terms, Boolean, required: false
       argument :prop_values, GraphQL::Types::JSON, required: true
 
       field :form_user, Types::FormUsersType, null: true

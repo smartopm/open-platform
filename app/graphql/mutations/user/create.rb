@@ -42,18 +42,27 @@ module Mutations
         marketing_manager: { except: %i[state user_type phone_number email status] },
       }.freeze
 
+      # rubocop:disable Metrics/MethodLength
       def resolve(vals)
         user = nil
         raise_duplicate_number_error(vals[:phone_number])
 
         begin
           user = context[:current_user].enroll_user(vals)
-          return { user: user } if user.present? && user.errors.blank?
+          if user.present? && user.errors.blank?
+            create_lead_task(context[:current_user], user)
+            return { user: user }
+          end
         rescue ActiveRecord::RecordNotUnique
           raise GraphQL::ExecutionError, I18n.t('errors.duplicate.email')
         end
 
         raise GraphQL::ExecutionError, user.errors.full_messages
+      end
+      # rubocop:enable Metrics/MethodLength
+
+      def create_lead_task(current_user, user)
+        current_user.create_lead_task(user) if user.user_type.eql?('lead')
       end
 
       def authorized?(_vals)

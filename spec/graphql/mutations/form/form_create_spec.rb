@@ -26,6 +26,7 @@ RSpec.describe Mutations::Form::FormCreate do
           $preview: Boolean!,
           $isPublic: Boolean!,
           $multipleSubmissionsAllowed: Boolean!
+          $hasTermsAndConditions: Boolean!
           $roles: [String]
         ){
           formCreate(
@@ -35,6 +36,7 @@ RSpec.describe Mutations::Form::FormCreate do
             preview: $preview,
             isPublic: $isPublic,
             multipleSubmissionsAllowed: $multipleSubmissionsAllowed
+            hasTermsAndConditions: $hasTermsAndConditions
             roles: $roles
           ){
             form {
@@ -56,6 +58,7 @@ RSpec.describe Mutations::Form::FormCreate do
           preview: true,
           isPublic: false,
           multipleSubmissionsAllowed: true,
+          hasTermsAndConditions: true,
           roles: %w[admin resident],
         }
         expect(Logs::EventLog.count).to eql 2
@@ -86,6 +89,7 @@ RSpec.describe Mutations::Form::FormCreate do
           preview: true,
           isPublic: true,
           multipleSubmissionsAllowed: true,
+          hasTermsAndConditions: true,
         }
         result = DoubleGdpSchema.execute(mutation, variables: variables,
                                                    context: {

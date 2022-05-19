@@ -50,6 +50,7 @@ module Mutations
       argument :contact_details, GraphQL::Types::JSON, required: false
       argument :african_presence, String, required: false
       argument :region, String, required: false
+      argument :division, String, required: false
       argument :capex_amount, String, required: false
       argument :jobs_created, String, required: false
       argument :jobs_timeline, String, required: false

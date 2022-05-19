@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_04_29_063820) do
+ActiveRecord::Schema.define(version: 2022_05_18_054244) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -373,6 +373,7 @@ ActiveRecord::Schema.define(version: 2022_04_29_063820) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.uuid "status_updated_by_id"
+    t.boolean "has_agreed_to_terms"
     t.index ["form_id"], name: "index_form_users_on_form_id"
     t.index ["status_updated_by_id"], name: "index_form_users_on_status_updated_by_id"
     t.index ["user_id"], name: "index_form_users_on_user_id"
@@ -392,6 +393,7 @@ ActiveRecord::Schema.define(version: 2022_04_29_063820) do
     t.boolean "preview"
     t.string "roles", default: [], array: true
     t.boolean "is_public"
+    t.boolean "has_terms_and_conditions"
     t.index ["community_id"], name: "index_forms_on_community_id"
   end
 
@@ -450,6 +452,7 @@ ActiveRecord::Schema.define(version: 2022_04_29_063820) do
     t.string "description"
     t.string "color", default: "#f07030"
     t.string "status", default: "active"
+    t.string "grouping_name"
     t.index ["community_id"], name: "index_labels_on_community_id"
   end
 
@@ -914,6 +917,7 @@ ActiveRecord::Schema.define(version: 2022_04_29_063820) do
     t.string "investment_timeline"
     t.string "decision_timeline"
     t.integer "status", default: 0
+    t.string "division"
     t.index ["community_id", "email"], name: "index_users_on_community_id_and_email", unique: true
     t.index ["latest_substatus_id"], name: "index_users_on_latest_substatus_id"
     t.index ["role_id"], name: "index_users_on_role_id"

@@ -37,7 +37,7 @@ export default function RenderForm({
   editMode,
   categoryId,
   number,
-  formDetailRefetch
+  formDetailRefetch,
 }) {
   const classes = useStyles();
   const matches = useMediaQuery('(max-width:900px)');
@@ -59,6 +59,7 @@ export default function RenderForm({
   const { t } = useTranslation(['form', 'common']);
   const [messageAlert, setMessageAlert] = useState('');
   const [isSuccessAlert, setIsSuccessAlert] = useState(false);
+
   function handleCheckboxSelect(event, property) {
     const { name, checked } = event.target;
     setFormProperties({
@@ -552,7 +553,7 @@ export default function RenderForm({
           </Grid>
         )}
       </Grid>
-    )
+    ),
   };
   return (
     <Grid style={!editMode && !matches ? { padding: '0 120px' } : {}}>
@@ -608,5 +609,5 @@ RenderForm.propTypes = {
     required: PropTypes.bool
   }).isRequired,
   number: PropTypes.number.isRequired,
-  formDetailRefetch: PropTypes.func.isRequired
+  formDetailRefetch: PropTypes.func.isRequired,
 };

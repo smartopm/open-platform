@@ -94,7 +94,7 @@ export default function LeadManagementDetails({ userId }) {
           </TabPanel>
 
           <TabPanel value={tabValue} index={2} data-testid="lead-management-event-tab">
-            <LeadEvents userId={userId} tabValue={tabValue} />
+            <LeadEvents userId={userId} data={data} />
           </TabPanel>
         </Item>
       </Grid>

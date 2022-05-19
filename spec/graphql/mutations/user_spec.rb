@@ -4,6 +4,7 @@ require 'rails_helper'
 
 RSpec.describe Mutations::User do
   describe 'create pending member' do
+    let!(:lead_role) { create(:role, name: 'lead') }
     let!(:current_user) { create(:security_guard) }
     let!(:user) { create(:client, community: current_user.community) }
     let!(:admin_user) { create(:admin_user, community: current_user.community) }
@@ -12,7 +13,7 @@ RSpec.describe Mutations::User do
       <<~GQL
         mutation CreateUserMutation(
             $name: String!,
-            $reason: String!,
+            $reason: String,
             $vehicle: String,
             $phoneNumber: String!
             $userType: String!
@@ -149,6 +150,26 @@ RSpec.describe Mutations::User do
       expect(result.dig('data', 'userCreate', 'user', 'id')).not_to be_nil
       # expect(result.dig('data', 'userCreate', 'user', 'name')).to eql 'Mark John'
       # expect(result.dig('data', 'userCreate', 'user', 'userType')).to eql 'client'
+    end
+
+    context 'when user type is lead' do
+      it 'creates task for lead user' do
+        variables = {
+          name: 'Mark Test',
+          phoneNumber: '26923422252',
+          userType: 'lead',
+          email: 'dummy@email.com',
+        }
+        result = DoubleGdpSchema.execute(query, variables: variables,
+                                                context: {
+                                                  current_user: admin_user,
+                                                  site_community: admin_user.community,
+                                                }).as_json
+        new_user = Users::User.find_by(email: 'dummy@email.com')
+        expect(result['errors']).to be nil
+        expect(admin_user.notes.count).to eql 1
+        expect(new_user.tasks.count).to eql 1
+      end
     end
   end
 
