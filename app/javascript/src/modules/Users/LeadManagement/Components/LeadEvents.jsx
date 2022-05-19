@@ -28,7 +28,7 @@ export default function LeadEvents({ userId, data }) {
   const [disabled, setDisabled] = useState(true);
   const [eventName, setEventName] = useState('');
   const authState = useContext(AuthStateContext);
-  const communityDivisionTargets = authState?.user.community?.leadMonthlyTargets;
+  const communityDivisionTargets = authState?.user?.community?.leadMonthlyTargets;
   const [message, setMessage] = useState({ isError: false, detail: '' });
   const [leadFormData, setLeadFormData] = useState(initialLeadFormData);
   const [eventCreate, { loading: isLoading }] = useMutation(CreateEvent);
