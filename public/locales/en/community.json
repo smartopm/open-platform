@@ -49,6 +49,6 @@
       "upload_error": "Selected image must not be greater than 600x160 in size",
       "guest_verification": "Disable Guest Verification",
       "google_analytics_id": "Set Google Analytics Id",
-      "minimum_divisions": "A minimum of 2 divisions are required to activate this feature"
+      "minimum_divisions": "A minimum of 2 divisions are required to activate this feature."
     }
 }
