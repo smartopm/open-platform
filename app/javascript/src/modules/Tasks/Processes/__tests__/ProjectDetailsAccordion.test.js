@@ -5,6 +5,7 @@ import '@testing-library/jest-dom/extend-expect';
 import { render, screen, waitFor } from '@testing-library/react';
 import MockedThemeProvider from '../../../__mocks__/mock_theme';
 import { ProjectRepliesRequestedComments } from '../graphql/process_queries';
+import { TaskDocumentsQuery } from '../../graphql/task_queries';
 import ProjectDetailsAccordion from '../Components/ProjectDetailsAccordion'
 
 describe('Admin processes dashboard', () => {
@@ -92,7 +93,21 @@ describe('Admin processes dashboard', () => {
           }
         }
       }
+    },
+    {
+    request: {
+      query: TaskDocumentsQuery,
+      variables: { taskId: '1345sfgh' }
+    },
+    result: {
+      data: {
+        project: {
+          id: 'f51a0723-59b7-416b-9280-9c2fee73ee66',
+          body: 'DoubleGDP'
+        }
+      }
     }
+  }
   ];
 
   it('renders the project overview page correctly', async () => {
@@ -109,9 +124,7 @@ describe('Admin processes dashboard', () => {
     await waitFor(() => {
       expect(screen.queryByText('task.project_overview')).toBeInTheDocument();
       expect(screen.queryByText('task:processes.comments')).toBeInTheDocument();
-      expect(
-        screen.queryByText('task:processes.documents')
-      ).toBeInTheDocument();
+      expect(screen.queryByText('task:processes.documents')).toBeInTheDocument();
 
       expect(screen.getByTestId('skeleton')).toBeInTheDocument();
       expect(screen.getByTestId('loader')).toBeInTheDocument();

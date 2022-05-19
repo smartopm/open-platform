@@ -34,13 +34,21 @@ export default function ProjectDetailsAccordion({ taskId }) {
     setTabValue(Number(newValue));
   };
 
-  const { data } = useQuery(ProjectRepliesRequestedComments, {
-    variables: {
-      taskId
-    },
-    fetchPolicy: 'cache-and-network'
-  });
-  const { data: docData, loading, error, refetch: docRefetch } = useQuery(TaskDocumentsQuery, {
+  const { data, loading, error } = useQuery(
+    ProjectRepliesRequestedComments,
+    {
+      variables: {
+        taskId
+      },
+      fetchPolicy: 'cache-and-network'
+    }
+  );
+  const {
+    data: docData,
+    loading: docLoading,
+    error: docError,
+    refetch: docRefetch
+  } = useQuery(TaskDocumentsQuery, {
     variables: { taskId },
     fetchPolicy: 'cache-and-network'
   });
@@ -67,6 +75,7 @@ export default function ProjectDetailsAccordion({ taskId }) {
   };
 
   if (error) return <CenteredContent>{formatError(error.message)}</CenteredContent>;
+  if (docError) return <CenteredContent>{formatError(docError.message)}</CenteredContent>;
 
   return (
     <Paper
@@ -86,7 +95,7 @@ export default function ProjectDetailsAccordion({ taskId }) {
                   <Typography variant="h6" sx={{ marginRight: '0.4rem' }}>
                     {t('task.project_overview')}
                   </Typography>
-                  {!loading && smDownHidden && (
+                  {!docLoading && smDownHidden && (
                     <Box style={{ display: 'flex', marginTop: '10px' }}>
                       <Typography variant="caption" style={{ marginTop: '0.3rem' }}>
                         {t('task.project_total_documents')}
@@ -128,7 +137,7 @@ export default function ProjectDetailsAccordion({ taskId }) {
 
               <Grid item lg={5.3} sm={4} xs={12} />
 
-              {!loading && !smDownHidden && (
+              {!docLoading && !smDownHidden && (
                 <Grid item lg={0.7} sm={2} xs={12} sx={{ textAlign: 'center' }}>
                   <Box>
                     <Typography variant="caption">{t('task.project_total_documents')}</Typography>
@@ -226,9 +235,9 @@ export default function ProjectDetailsAccordion({ taskId }) {
             <TabPanel value={tabValue} index={1}>
               <ProjectDocument
                 attachments={docData?.task?.attachments}
-                loading={loading}
+                loading={docLoading}
                 refetch={docRefetch}
-                error={error?.message}
+                error={docError?.message}
               />
             </TabPanel>
           </Grid>
