@@ -419,7 +419,6 @@ export default function CommunitySettings({ data, refetch }) {
         refetch();
       })
       .catch(error => {
-        console.log('Mutuba', error);
         setMessage({ isError: true, detail: formatError(error.message) });
         setAlertOpen(true);
         setCallMutation(false);

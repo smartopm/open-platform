@@ -36,7 +36,7 @@ describe('Community settings page', () => {
         }
       ],
       socialLinks: [{ social_link: 'www.facebook.com', category: 'facebook' }],
-      leadMonthlyTargets: [{ division: 'China', target: '20' }],
+
       menuItems: [
         {
           menu_link: 'http://some-link.com',
@@ -45,6 +45,7 @@ describe('Community settings page', () => {
           roles: ['admin']
         }
       ],
+      leadMonthlyTargets: [{ division: 'China', target: '20' }],
       templates: {},
       subAdministrator: {},
       logoUrl: null,
