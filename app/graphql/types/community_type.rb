@@ -33,6 +33,7 @@ module Types
     field :roles, [String, { null: true }], null: true
     field :ga_id, String, null: true
     field :hotjar, Integer, null: true
+    field :lead_monthly_targets, GraphQL::Types::JSON, null: true
 
     def image_url
       return nil unless object.image.attached?

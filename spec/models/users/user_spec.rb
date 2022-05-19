@@ -714,7 +714,7 @@ RSpec.describe Users::User, type: :model do
 
   describe '#create_lead_task' do
     let(:lead_role) { create(:role, name: 'lead') }
-    let(:user) do
+    let!(:user) do
       create(:user_with_community,
              user_type: 'lead',
              lead_status: 'Signed MOU',
@@ -728,6 +728,22 @@ RSpec.describe Users::User, type: :model do
       admin.create_lead_task(user)
       expect(admin.notes.count).to eql 1
       expect(user.tasks.count).to eql 1
+    end
+  end
+
+  describe '#create_lead_log' do
+    let(:lead_role) { create(:role, name: 'lead') }
+    let!(:user) do
+      create(:user_with_community,
+             user_type: 'lead',
+             lead_status: 'Signed MOU',
+             role: lead_role)
+    end
+
+    it 'creates lead log' do
+      expect(user.lead_logs.count).to eql 0
+      user.create_lead_log(user.lead_status, user.id)
+      expect(user.lead_logs.count).to eql 1
     end
   end
 end

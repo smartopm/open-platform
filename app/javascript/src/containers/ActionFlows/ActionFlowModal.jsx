@@ -532,7 +532,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
                   inputProps={{
                     name: 'phoneNumber',
                     required: true,
-                    'data-testId': 'primary_phone'
+                    'data-testid': 'primary_phone'
                   }}
                   placeholder={t('common:form_placeholders.phone_number')}
                   onChange={value => handlePhoneNumberInput({ name: actionField.name, value })}

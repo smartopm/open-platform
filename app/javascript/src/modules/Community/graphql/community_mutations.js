@@ -8,6 +8,7 @@ export const CommunityUpdateMutation = gql`
     $supportEmail: JSON
     $supportWhatsapp: JSON
     $socialLinks: JSON
+    $leadMonthlyTargets: JSON
     $menuItems: JSON
     $imageBlobId: String
     $templates: JSON
@@ -32,6 +33,7 @@ export const CommunityUpdateMutation = gql`
       supportEmail: $supportEmail
       supportWhatsapp: $supportWhatsapp
       socialLinks: $socialLinks
+      leadMonthlyTargets: $leadMonthlyTargets
       menuItems: $menuItems
       imageBlobId: $imageBlobId
       templates: $templates

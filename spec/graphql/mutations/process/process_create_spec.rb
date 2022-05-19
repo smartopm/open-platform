@@ -53,7 +53,7 @@ RSpec.describe Mutations::Process::ProcessCreate do
                                                    }).as_json
 
         expect(Processes::Process.count).to eql(prev_process_count + 1)
-        expect(Processes::Process.order(:created_at).last.process_type).to eql('drc')
+        expect(Processes::Process.order(:created_at).last.name).to eql(variables[:name])
         expect(result['errors']).to be_nil
       end
 

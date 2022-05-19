@@ -226,6 +226,7 @@ ActiveRecord::Schema.define(version: 2022_05_18_054244) do
     t.string "ga_id"
     t.string "domains", default: [], array: true
     t.integer "hotjar"
+    t.json "lead_monthly_targets"
     t.index ["slug"], name: "index_communities_on_slug", unique: true
   end
 

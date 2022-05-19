@@ -4,7 +4,6 @@ import { MockedProvider } from '@apollo/react-testing';
 import I18Initializer from '../Components/I18Initializer';
 import { CurrentCommunityQuery } from '../../Community/graphql/community_query';
 
-
 jest.mock('react-i18next', () => ({
   useTranslation: () => {
     return {
@@ -37,9 +36,10 @@ describe('I18n Initializer component', () => {
             tagline: 'This is a tagline for this community',
             logoUrl: '',
             language: 'en-US',
-            features: { Dashboard: { features: [] }},
+            features: { Dashboard: { features: [] } },
             socialLinks: null,
             menuItems: null,
+            leadMonthlyTargets: null,
             wpLink: null,
             themeColors: null,
             securityManager: null,
@@ -47,8 +47,7 @@ describe('I18n Initializer component', () => {
             subAdministrator: null,
             bankingDetails: null,
             smsPhoneNumbers: null,
-            emergencyCallNumber: null,
-
+            emergencyCallNumber: null
           }
         }
       }
@@ -60,7 +59,7 @@ describe('I18n Initializer component', () => {
       </MockedProvider>
     );
     await waitFor(() => {
-      expect(window.localStorage.getItem('default-language')).toEqual('en-US')
-    }, 20)
+      expect(window.localStorage.getItem('default-language')).toEqual('en-US');
+    }, 20);
   });
 });

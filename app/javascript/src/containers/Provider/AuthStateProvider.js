@@ -47,6 +47,7 @@ const QUERY = gql`
         supportWhatsapp
         socialLinks
         menuItems
+        leadMonthlyTargets
         imageUrl
         currency
         locale
@@ -65,6 +66,7 @@ const QUERY = gql`
         emergencyCallNumber
         features
         roles
+        leadMonthlyTargets
       }
     }
   }

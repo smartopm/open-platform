@@ -38,6 +38,7 @@ RSpec.describe Community, type: :model do
       is_expected.to have_db_column(:domains).of_type(:string)
                                              .with_options(default: [], array: true)
     end
+    it { is_expected.to have_db_column(:lead_monthly_targets).of_type(:json) }
   end
 
   describe 'associations' do
@@ -177,7 +178,7 @@ RSpec.describe Community, type: :model do
     let!(:form_user) { create(:form_user, form: form, user: admin, status_updated_by: admin) }
 
     it 'should return form users of drc process type' do
-      expect(community.process_form_users(process.process_type).first.form_id).to eql form.id
+      expect(community.process_form_users(process.id).first.form_id).to eql form.id
     end
   end
 end

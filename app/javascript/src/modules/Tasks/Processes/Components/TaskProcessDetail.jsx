@@ -33,7 +33,7 @@ import useDebounce from '../../../../utils/useDebounce';
 export default function TaskProcessDetail() {
   const limit = 20;
   const { t } = useTranslation(['task', 'common']);
-  const { id: taskId } = useParams();
+  const { processId, id: taskId } = useParams();
   const history = useHistory();
   const path = useParamsQuery();
   const tab = path.get('tab');
@@ -137,7 +137,7 @@ export default function TaskProcessDetail() {
   function handleProjectStepClick(task, currentTab = 'processes', detailTab = 'subtasks') {
     setSplitScreenOpen(true);
     history.push({
-      pathname: `/processes/drc/projects/${task?.id}`,
+      pathname: `/processes/${processId}/projects/${task?.id}`,
       search: `?tab=${currentTab}&detailTab=${detailTab}`,
       state: { from: history.location.pathname, search: history.location.search }
     });

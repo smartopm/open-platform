@@ -3,7 +3,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { Chip, Grid, IconButton, Typography, Badge } from '@mui/material';
 import { useQuery } from 'react-apollo';
 import { grey } from '@mui/material/colors';
@@ -47,10 +47,10 @@ export default function TaskDataList({
 }) {
   const classes = useStyles();
   const { t } = useTranslation('task');
+  const location = useLocation();
   const matches = useMediaQuery('(max-width:800px)');
   const mdUpHidden = useMediaQuery(theme => theme.breakpoints.up('md'));
   const mdDownHidden = useMediaQuery(theme => theme.breakpoints.down('md'));
-  const urlParams = useParams();
 
   const overDue = DateUtils.isExpired(task?.dueDate);
 
@@ -219,7 +219,7 @@ export default function TaskDataList({
                 )}
               </Grid>
               <Grid item xs={1} style={{ marginLeft: '-5px' }}>
-                {urlParams.type === 'drc' && taskCommentHasReply && (
+                {location.pathname.match(/\bprocesses\b/) && taskCommentHasReply && (
                   <Badge
                     color="warning"
                     badgeContent={(
@@ -342,7 +342,7 @@ export default function TaskDataList({
                     )}
                   </Grid>
                   <Grid item md={1} style={{ marginLeft: '-17px' }}>
-                    {urlParams.type === 'drc' && taskCommentHasReply && (
+                    {location.pathname.match(/\bprocesses\b/) && taskCommentHasReply && (
                       <Badge
                         color="warning"
                         badgeContent={(
@@ -383,7 +383,7 @@ export default function TaskDataList({
                   style={{ display: 'flex', justifyContent: 'space-between' }}
                   className={classes.detailsContainer}
                 >
-                  {urlParams.type !== 'drc' && (
+                  {location.pathname !== '/processes' && (
                     <>
                       <Grid item md={2} xs={1}>
                         <IconButton
@@ -435,7 +435,7 @@ export default function TaskDataList({
                     xs={1}
                     className={classes.iconItem}
                     style={
-                      urlParams.type === 'drc' ? { marginLeft: '-53px' } : { marginLeft: '-11px' }
+                      location.pathname.match(/\bprocesses\b/) ? { marginLeft: '-53px' } : { marginLeft: '-11px' }
                     }
                   >
                     <span data-testid="task-comment">{data?.taskComments.length || 0}</span>
@@ -463,7 +463,7 @@ export default function TaskDataList({
                     xs={1}
                     className={classes.iconItem}
                     style={
-                      urlParams.type === 'drc' ? { marginLeft: '-58px' } : { marginLeft: '-16px' }
+                      location.pathname.match(/\bprocesses\b/) ? { marginLeft: '-58px' } : { marginLeft: '-16px' }
                     }
                   >
                     <span data-testid="file_attachments_total">

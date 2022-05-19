@@ -14,6 +14,10 @@ const authState = {
           roles: ['admin', 'client']
         }
       ],
+      leadMonthlyTargets: [
+        { division: 'Africa', target: '15' },
+        { division: 'China', target: '15' }
+      ],
       smsPhoneNumbers: ['+254724821901', '+154724582391'],
       supportNumber: ['+254724821901', '+154724582391'],
       emergencyCallNumber: '254724821901',
@@ -64,9 +68,10 @@ const authState = {
       { module: 'discussion', permissions: ['can_see_menu_item'] },
       { module: 'community', permissions: ['can_see_menu_item'] },
       { module: 'community_settings', permissions: ['can_see_menu_item'] },
-      { module: 'process', permissions: ['can_update_process_template', 
-                                         'can_delete_process_template'
-                                        ]},
+      {
+        module: 'process',
+        permissions: ['can_update_process_template', 'can_delete_process_template']
+      },
       {
         module: 'business',
         permissions: [

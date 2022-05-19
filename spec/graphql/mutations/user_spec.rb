@@ -709,6 +709,89 @@ RSpec.describe Mutations::User do
     end
   end
 
+  describe 'updating a lead user' do
+    let(:admin_role) { create(:role, name: 'admin') }
+    let(:lead_role) { create(:role, name: 'lead') }
+    let!(:permission) do
+      create(:permission, module: 'user',
+                          role: admin_role,
+                          permissions: %w[can_update_user_details])
+    end
+    let(:admin) { create(:admin_user, role: admin_role, phone_number: '9988776655') }
+    let(:community) { admin.community }
+    let!(:user) do
+      create(:user,
+             community: community,
+             user_type: 'lead',
+             role: lead_role,
+             lead_status: 'Qualified Lead')
+    end
+
+    let(:mutation) do
+      <<~GQL
+        mutation UpdateUserMutation(
+            $id: ID!,
+            $userType: String
+            $name: String!,
+            $leadStatus: String
+          ) {
+          userUpdate(
+              id: $id,
+              userType: $userType,
+              name: $name,
+              leadStatus: $leadStatus
+            ) {
+            user {
+              id
+              leadStatus
+            }
+          }
+        }
+      GQL
+    end
+
+    context 'when lead user status is updated' do
+      it 'creates lead log' do
+        variables = {
+          id: user.id,
+          name: 'Mark',
+          leadStatus: 'Signed MOU',
+          userType: 'lead',
+        }
+
+        result = DoubleGdpSchema.execute(mutation, variables: variables,
+                                                   context: {
+                                                     current_user: admin,
+                                                     site_community: community,
+                                                   }).as_json
+        expect(result['errors']).to be_nil
+        expect(result.dig('data', 'userUpdate', 'user', 'id')).not_to be_nil
+        expect(result.dig('data', 'userUpdate', 'user', 'leadStatus')).to eql 'Signed MOU'
+        expect(user.lead_logs.count).to eql 1
+      end
+    end
+
+    context 'when user is lead and lead status is incorrect' do
+      it 'raises error' do
+        variables = {
+          id: user.id,
+          name: 'Mark John',
+          userType: 'lead',
+          leadStatus: 'Something',
+        }
+
+        result = DoubleGdpSchema.execute(mutation, variables: variables,
+                                                   context: {
+                                                     current_user: admin,
+                                                     site_community: community,
+                                                   }).as_json
+        error_message = 'Lead status is not included in the list'
+        expect(result['errors']).to_not be_nil
+        expect(result.dig('errors', 0, 'message')).to eql error_message
+      end
+    end
+  end
+
   describe 'creating avatars and adding them to the user' do
     let!(:admin_role) { create(:role, name: 'admin') }
     let!(:resident_role) { create(:role, name: 'resident') }

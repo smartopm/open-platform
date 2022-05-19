@@ -18,6 +18,7 @@ export const ProcessesQuery = gql`
 
 export const ProjectsQuery = gql`
   query GetProjects(
+    $processId: ID!
     $offset: Int
     $limit: Int
     $step: String
@@ -27,6 +28,7 @@ export const ProjectsQuery = gql`
     $repliesRequestedStatus: String
   ) {
     projects(
+      processId: $processId
       offset: $offset
       limit: $limit
       step: $step
@@ -63,16 +65,9 @@ export const ClientAssignedProjectsQuery = gql`
   ${TasksFragment.task}
 `;
 
-export const ProjectStagesQuery = gql`
-  query projectStages {
-    projectStages
-  }
-`;
-
-// TODO: olivier sync with Bonny to verify if this matches accordingly
 export const TaskQuarterySummaryQuery = gql`
-  query tasksByQuarter {
-    tasksByQuarter
+  query tasksByQuarter($processId: ID!) {
+    tasksByQuarter(processId: $processId)
   }
 `;
 
@@ -101,6 +96,7 @@ export const ProjectCommentsQuery = gql`
 
 export const ProjectsStatsQuery = gql`
   query GetProjectsStatsQuery(
+    $processId: ID!
     $offset: Int
     $limit: Int
     $step: String
@@ -108,6 +104,7 @@ export const ProjectsStatsQuery = gql`
     $submittedPerQuarter: String
   ) {
     projects(
+      processId: $processId
       offset: $offset
       limit: $limit
       step: $step
@@ -126,8 +123,8 @@ export const ProjectsStatsQuery = gql`
 `;
 
 export const ReplyCommentStatQuery = gql`
-  query replyCommentStats($processType: String) {
-    replyCommentStats(processType: $processType) {
+  query replyCommentStats($processId: ID!) {
+    replyCommentStats(processId: $processId) {
       sent
       received
       resolved
@@ -206,8 +203,8 @@ export const ProjectRepliesRequestedComments = gql`
 `;
 
 export const ProcessReplyComments = gql`
-  query processReplyComments($processType: String) {
-    processReplyComments(processType: $processType) {
+  query processReplyComments($processId: ID!) {
+    processReplyComments(processId: $processId) {
       sent {
         id
         body
@@ -257,6 +254,16 @@ export const ProcessReplyComments = gql`
           body
         }
       }
+    }
+  }
+`;
+
+export const ProjectStagesQuery = gql`
+  query projectStages($processId: ID!) {
+    projectStages(processId: $processId)
+    {
+      id
+      body
     }
   }
 `;

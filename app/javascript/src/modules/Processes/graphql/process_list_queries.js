@@ -1,11 +1,10 @@
 import gql from 'graphql-tag';
 
-const ProcessTemplatesQuery = gql`
+export const ProcessTemplatesQuery = gql`
 query ProcessTemplates($offset: Int, $limit: Int) {
   processTemplates(offset: $offset, limit: $limit) {
    id
    name
-   processType
    form {
      id
    }
@@ -33,5 +32,3 @@ export const ProcessTaskListsQuery = gql`
     }
   }
 `
-
-export default ProcessTemplatesQuery

@@ -95,7 +95,7 @@ RSpec.describe Notes::Note, type: :model do
       user_note.update!(completed: true)
       expect(admin_note.saved_changes?).to eq true
     end
-    it { is_expected.to callback(:update_parent_current_step).after(:update) }
+    it { is_expected.to callback(:update_parent_current_step).after(:save) }
   end
 
   describe 'attachments' do

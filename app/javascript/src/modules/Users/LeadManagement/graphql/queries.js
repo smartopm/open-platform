@@ -38,3 +38,9 @@ export const UserSignedDealsQuery = gql`
     }
   }
 `;
+
+export const LeadScoreCardQuery = gql`
+  query leadScorecards {
+    leadScorecards 
+  }
+`;

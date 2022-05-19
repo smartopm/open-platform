@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import { Grid, Paper, Typography, Chip, Avatar } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { useQuery } from 'react-apollo';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useHistory } from 'react-router';
@@ -24,6 +24,7 @@ export default function ProjectDetailsAccordion({ taskId }) {
   const classes = useStyles();
   const history = useHistory();
   const [tabValue, setTabValue] = useState(0);
+  const { id: processId } = useParams();
   const smDownHidden = useMediaQuery(theme => theme.breakpoints.down('sm'));
   const TAB_VALUES = { comments: 0, documents: 1 };
 
@@ -213,7 +214,7 @@ export default function ProjectDetailsAccordion({ taskId }) {
                           style={!smDownHidden ? { textAlign: 'right' } : {}}
                         >
                           <Link
-                            to={`/processes/drc/projects/${comment.note.id}?tab=processes&detailTab=comments&replying_discussion=${comment.groupingId}`}
+                            to={`/processes/${processId}/projects/${comment.note.id}?tab=processes&detailTab=comments&replying_discussion=${comment.groupingId}`}
                           >
                             <Typography variant="caption">
                               <span

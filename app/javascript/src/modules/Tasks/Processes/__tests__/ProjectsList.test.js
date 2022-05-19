@@ -61,10 +61,8 @@ describe('Projects List', () => {
       </MockedProvider>
     );
 
-    
     await waitFor(() => {
       expect(screen.queryAllByText('processes.processes')[0]).toBeInTheDocument();
-      expect(screen.queryAllByText('processes.drc_process')[0]).toBeInTheDocument();
       expect(screen.queryAllByTestId('new-project-speed-dial')[0]).toBeInTheDocument();
       expect(screen.queryAllByTestId('speed-dial')[0]).toBeInTheDocument();
       expect(screen.queryAllByTestId('speed_dial_btn')[0]).toBeInTheDocument();

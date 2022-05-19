@@ -7,7 +7,7 @@ import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import MockedThemeProvider from '../../__mocks__/mock_theme';
 import { Context } from '../../../containers/Provider/AuthStateProvider'
 import authState from '../../../__mocks__/authstate'
-import ProcessTemplatesQuery from '../graphql/process_list_queries';
+import { ProcessTemplatesQuery } from '../graphql/process_list_queries';
 import processMock from '../__mocks__/processMock';
 import ProcessList from '../Components/ProcessList';
 import { ProcessDeleteMutation } from '../graphql/process_list_mutation';
@@ -165,10 +165,10 @@ describe('Process Template Lists', () => {
         </Context.Provider>
       </MockedProvider>
     );
-    
+
     expect(screen.queryByTestId('loader')).toBeInTheDocument();
     await waitFor(() => {
-      
+
       const menuList = screen.queryByTestId('menu_list')
       const deleteProcessTemplate = screen.queryByText('common:menu.delete_process_template')
       const proceedButton = screen.queryByTestId('proceed_button')
@@ -178,7 +178,7 @@ describe('Process Template Lists', () => {
 
       expect(deleteProcessTemplate).toBeInTheDocument()
       fireEvent.click(deleteProcessTemplate)
-      
+
       expect(proceedButton).toBeInTheDocument()
       fireEvent.click(proceedButton)
     });

@@ -36,8 +36,24 @@ function getCurrentStage(project){
  return project.subTasks.find((subTask) => !subTask.completed)?.body
 }
 
-export function calculateOpenProjectsByStage(projects, stages){
-  const lookup = stages;
+function initialStagesData(stages) {
+  const initiaData = {}
+  if (!stages) return initiaData;
+  stages.forEach(stage => {
+    initiaData[sentenceToSnakeCase(stage.body)] = 0
+  });
+
+  return initiaData;
+};
+
+/**
+ * returns the total number of uncompleted projects per step
+ * @param {[object]} projects
+ *  @param {[object]} stages
+ * @returns {}
+ */
+export function calculateOpenProjectsByStage(projects, stages) {
+  const lookup = initialStagesData(stages);
 
   if (!projects) return lookup;
 

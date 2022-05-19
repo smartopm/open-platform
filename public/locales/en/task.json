@@ -113,6 +113,7 @@
     "outstanding": "Outstanding",
     "projects_by_stage": "Projects by Stage",
     "no_data": "No data to display",
+    "no_processes": "There are no processes to display yet",
     "drc_stages": {
       "concept_design_review": "Concept Design Review",
       "scheme_design_review": "Scheme Design Review",

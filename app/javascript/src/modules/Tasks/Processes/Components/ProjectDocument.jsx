@@ -4,6 +4,7 @@
 import React, { useState, useContext } from 'react';
 import { useMutation } from 'react-apollo';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { useParams } from 'react-router';
 import Grid from '@mui/material/Grid';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
@@ -25,6 +26,7 @@ import CenteredContent from '../../../../shared/CenteredContent';
 import { checkLastItem } from '../utils'
 
 export default function ProjectDocument({ attachments, loading, refetch, error, heading }) {
+  const { processId } = useParams();
   const classes = useStyles();
   const matches = useMediaQuery('(max-width:900px)');
   const [anchorEl, setAnchorEl] = useState(null);
@@ -130,7 +132,7 @@ export default function ProjectDocument({ attachments, loading, refetch, error, 
                     </Grid>
                     <Grid item md={12} xs={12}>
                       <Link
-                        href={`/processes/drc/projects/${att.task_id}?tab=processes&document=${att.id}`}
+                        href={`/processes/${processId}/projects/${att.task_id}?tab=processes&document=${att.id}`}
                         color="primary"
                         underline="hover"
                       >
