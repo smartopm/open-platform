@@ -80,20 +80,23 @@ export default function DialogWithImageUpload({
                 {modalDetails.uploadInstruction}
               </Grid>
             )}
-            <Grid
-              item
-              sm={4}
-              data-testid="upload_button"
-              style={modalDetails?.actionVisibilityOptions ? {} : { textAlign: 'right' }}
-            >
-              <ImageUploader
-                handleChange={imageOnchange}
-                buttonText={modalDetails.uploadBtnText}
-                useDefaultIcon
-              />
-            </Grid>
+
+            {!matches && (
+              <Grid
+                item
+                sm={4}
+                data-testid="upload_button"
+                style={modalDetails?.actionVisibilityOptions ? {} : { textAlign: 'right' }}
+              >
+                <ImageUploader
+                  handleChange={imageOnchange}
+                  buttonText={modalDetails.uploadBtnText}
+                  useDefaultIcon
+                />
+              </Grid>
+            )}
             {!!modalDetails?.actionVisibilityOptions && (
-              <Grid item sm={8} style={matches ? { marginTop: '15px' } : {}}>
+              <Grid item sm={8} style={matches ? { marginBottom: '15px' } : {}}>
                 <FormControl variant="outlined" data-testid="visibilty-select">
                   <InputLabel shrink>{modalDetails.actionVisibilityLabel}</InputLabel>
                   <Box>
@@ -127,6 +130,20 @@ export default function DialogWithImageUpload({
                     </Select>
                   </Box>
                 </FormControl>
+              </Grid>
+            )}
+            {matches && (
+              <Grid
+                item
+                sm={4}
+                data-testid="upload_button"
+                style={modalDetails?.actionVisibilityOptions ? {} : { textAlign: 'right' }}
+              >
+                <ImageUploader
+                  handleChange={imageOnchange}
+                  buttonText={modalDetails.uploadBtnText}
+                  useDefaultIcon
+                />
               </Grid>
             )}
             {imageUrls.length > 0 && (
