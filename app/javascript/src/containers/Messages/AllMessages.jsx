@@ -98,7 +98,7 @@ export default function AllMessages() {
           </FormControl>
         </div>
         <CenteredContent>
-          <FormControl className={classes.formControl} style={{width: '175px'}} data-testId='category-filter'>
+          <FormControl className={classes.formControl} style={{width: '175px'}} data-testid='category-filter'>
             <InputLabel id="category-filter">{t('common:misc.filter_message_by_category')}</InputLabel>
             <Select
               labelId="category-filter"
