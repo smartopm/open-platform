@@ -7,15 +7,18 @@ import useFileUpload from '../../../graphql/useFileUpload';
 import { PostCreateMutation } from '../../../graphql/mutations';
 import MessageAlert from '../../../components/MessageAlert';
 import { Spinner } from '../../../shared/Loading';
+import { objectAccessor } from '../../../utils/helpers';
 
 export default function PostCreate({
   translate,
   currentUserImage,
+  userPermissions,
   btnBorderColor,
   refetchNews
 }) {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [post, setPost] = useState('');
+  const [visibilityOption, setVisibilityOption] = useState('Everyone');
   const [imageUrls, setImageUrls] = useState([]);
   const [blobIds, setBlobIds] = useState([]);
   const [postDetails, setPostDetails] = useState({
@@ -23,16 +26,30 @@ export default function PostCreate({
     message: '',
     loading: false
   });
+  const modulePermission = userPermissions.find(mod => mod.module === 'discussion')?.permissions;
+  const permissions = new Set(modulePermission);
 
   const { onChange, signedBlobId, url, status } = useFileUpload({
     client: useApolloClient()
   });
+
   const [createPost] = useMutation(PostCreateMutation);
+  const actionVisibilityOptions = {
+    admins: 'Admins Only',
+    everyone: 'Everyone'
+  };
   const modalDetails = {
     title: translate('dashboard.start_post'),
     inputPlaceholder: translate('dashboard.whats_happening'),
     uploadBtnText: translate('dashboard.add_photo')
   };
+
+  if (permissions.has('can_set_accessibility')) {
+    modalDetails.actionVisibilityOptions = actionVisibilityOptions;
+    modalDetails.actionVisibilityLabel = translate('dashboard.who_can_see_post');
+    modalDetails.handleVisibilityOptions = option => setVisibilityOption(option);
+    modalDetails.visibilityValue = visibilityOption;
+  }
 
   useEffect(() => {
     if (status === 'DONE') {
@@ -70,7 +87,10 @@ export default function PostCreate({
         content: post,
         // TODO: Remove this dummy ID
         discussionId: '12456484',
-        imageBlobIds: blobIds
+        imageBlobIds: blobIds,
+        accessibility: Object.keys(actionVisibilityOptions).find(
+          key => objectAccessor(actionVisibilityOptions, key) === visibilityOption
+        )
       }
     })
       .then(() => {
@@ -92,6 +112,7 @@ export default function PostCreate({
           message: err.message
         });
         setPost('');
+        setVisibilityOption('Everyone');
         closeCreateModal();
       });
   }
@@ -144,7 +165,7 @@ export default function PostCreate({
               {translate('common:misc.post')}
             </Button>
           </>
-          )}
+        )}
       </DialogWithImageUpload>
       <Button
         onClick={openCreateModal}
@@ -173,6 +194,7 @@ export default function PostCreate({
 PostCreate.propTypes = {
   translate: PropTypes.func.isRequired,
   currentUserImage: PropTypes.string.isRequired,
+  userPermissions: PropTypes.arrayOf(PropTypes.object).isRequired,
   btnBorderColor: PropTypes.string.isRequired,
   refetchNews: PropTypes.func.isRequired
 };

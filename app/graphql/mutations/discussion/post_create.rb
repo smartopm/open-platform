@@ -7,6 +7,7 @@ module Mutations
       argument :discussion_id, ID, required: true
       argument :content, String, required: false
       argument :image_blob_ids, [String], required: false
+      argument :accessibility, String, required: false
 
       field :post, Types::PostType, null: false
 
@@ -49,10 +50,17 @@ module Mutations
         raise_error_message(I18n.t('errors.post.content_not_found'))
       end
 
-      def authorized?(_vals)
-        return true if permitted?(module: :discussion, permission: :can_create_post)
+      def authorized?(vals)
+        return true if user_authorized?(vals[:accessibility])
 
         raise_error_message(I18n.t('errors.unauthorized'))
+      end
+
+      def user_authorized?(accessibility)
+        can_create_post = permitted?(module: :discussion, permission: :can_create_post)
+        return can_create_post if accessibility.blank?
+
+        can_create_post && permitted?(module: :discussion, permission: :can_set_accessibility)
       end
     end
   end

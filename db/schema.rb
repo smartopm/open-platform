@@ -722,6 +722,7 @@ ActiveRecord::Schema.define(version: 2022_05_18_054244) do
     t.uuid "community_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "accessibility"
     t.index ["community_id"], name: "index_posts_on_community_id"
     t.index ["discussion_id"], name: "index_posts_on_discussion_id"
     t.index ["user_id"], name: "index_posts_on_user_id"

@@ -62,7 +62,7 @@ export default function PlotDetailCard({ authState }) {
             {t('dashboard.plot_detail', { count: 0 })}
           </Typography>
           <div>
-            {data?.userPlansWithPayments?.length > 0 ? (
+            {data?.userPlansWithPayments?.filter(plan => plan.status !== 'general').length > 0 ? (
               <div
                 className={classes.root}
                 style={
@@ -70,32 +70,36 @@ export default function PlotDetailCard({ authState }) {
                 }
               >
                 <ImageList className={classes.gridList} cols={matches ? 1 : 3}>
-                  {data?.userPlansWithPayments?.filter(plan => plan.status !== 'general')?.map(plan => (
-                    <ImageListItem key={plan.id}>
-                      <div
-                        className={matches ? classes.gridTileMobile : classes.gridTile}
-                        onClick={() => history.push(`/user/${authState.id}?tab=Plans`)}
-                      >
-                        <div>
-                          <Typography className={matches ? classes.plotMobile : classes.plot}>
-                            {t('dashboard.plot')}
-                            {' '}
-                            {plan.landParcel.parcelNumber}
-                          </Typography>
+                  {data?.userPlansWithPayments
+                    ?.filter(plan => plan.status !== 'general')
+                    ?.map(plan => (
+                      <ImageListItem key={plan.id}>
+                        <div
+                          className={matches ? classes.gridTileMobile : classes.gridTile}
+                          onClick={() => history.push(`/user/${authState.id}?tab=Plans`)}
+                        >
+                          <div>
+                            <Typography className={matches ? classes.plotMobile : classes.plot}>
+                              {t('dashboard.plot')} 
+                              {' '}
+                              {plan.landParcel.parcelNumber}
+                            </Typography>
+                          </div>
+                          <div>
+                            <Typography
+                              className={matches ? classes.balanceMobile : classes.balance}
+                            >
+                              {formatMoney(currencyData, plan.pendingBalance)}
+                            </Typography>
+                            <Typography
+                              className={matches ? classes.balanceTextMobile : classes.balanceText}
+                            >
+                              {t('payment:table_headers.balance_due')}
+                            </Typography>
+                          </div>
                         </div>
-                        <div>
-                          <Typography className={matches ? classes.balanceMobile : classes.balance}>
-                            {formatMoney(currencyData, plan.pendingBalance)}
-                          </Typography>
-                          <Typography
-                            className={matches ? classes.balanceTextMobile : classes.balanceText}
-                          >
-                            {t('payment:table_headers.balance_due')}
-                          </Typography>
-                        </div>
-                      </div>
-                    </ImageListItem>
-                  ))}
+                      </ImageListItem>
+                    ))}
                 </ImageList>
               </div>
             ) : (

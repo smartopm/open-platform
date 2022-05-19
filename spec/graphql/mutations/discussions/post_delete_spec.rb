@@ -49,7 +49,7 @@ RSpec.describe Mutations::Discussion::PostDelete do
       end
     end
 
-    context 'when post is of current user' do
+    context 'when post is of current user and post is accessible to everyone' do
       it 'deletes post' do
         variables = { id: post.id }
         result = DoubleGdpSchema.execute(mutation, variables: variables,
@@ -59,6 +59,21 @@ RSpec.describe Mutations::Discussion::PostDelete do
                                                    }).as_json
         expect(result['errors']).to be_nil
         expect(result.dig('data', 'postDelete', 'success')).to eql true
+      end
+    end
+
+    context 'when post is of current user but accessible only to admins' do
+      before { post.update(accessibility: 'admins') }
+      it 'raises error' do
+        variables = { id: post.id }
+        result = DoubleGdpSchema.execute(mutation, variables: variables,
+                                                   context: {
+                                                     current_user: resident,
+                                                     site_community: community,
+                                                   }).as_json
+
+        expect(result['errors']).to_not be_nil
+        expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'
       end
     end
 

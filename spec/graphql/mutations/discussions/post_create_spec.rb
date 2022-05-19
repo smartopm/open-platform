@@ -5,15 +5,28 @@ require 'rails_helper'
 RSpec.describe Mutations::Discussion::PostCreate do
   describe 'create a post for discussion' do
     let(:admin_role) { create(:role, name: 'admin') }
-    let!(:permission) do
+    let(:contractor_role) { create(:role, name: 'contractor') }
+    let!(:admin_permission) do
       create(:permission, module: 'discussion',
                           role: admin_role,
+                          permissions: %w[can_create_post can_set_accessibility])
+    end
+    let!(:contractor_permission) do
+      create(:permission, module: 'discussion',
+                          role: contractor_role,
                           permissions: %w[can_create_post])
     end
-
     let(:user) { create(:user_with_community) }
+
     let(:community) { user.community }
-    let!(:admin) do
+    let(:contractor) do
+      create(:user,
+             user_type: 'contractor',
+             community_id: community.id,
+             role: contractor_role)
+    end
+
+    let(:admin) do
       create(:admin_user, user_type: 'admin', community_id: community.id, role: admin_role)
     end
     let(:discussion) { create(:discussion, community: community, user_id: admin.id) }
@@ -29,10 +42,11 @@ RSpec.describe Mutations::Discussion::PostCreate do
 
     let(:mutation) do
       <<~GQL
-        mutation CreatePost($discussionId: ID!, $content: String, $imageBlobIds: [String!]) {
-          postCreate(content: $content, discussionId: $discussionId, imageBlobIds: $imageBlobIds){
+        mutation CreatePost($discussionId: ID!, $content: String, $imageBlobIds: [String!], $accessibility: String) {
+          postCreate(content: $content, discussionId: $discussionId, imageBlobIds: $imageBlobIds, accessibility: $accessibility){
             post {
               content
+              accessibility
               discussion {
                 title
               }
@@ -86,6 +100,61 @@ RSpec.describe Mutations::Discussion::PostCreate do
                                                    }).as_json
         expect(result['errors']).to_not be_nil
         expect(result.dig('errors', 0, 'message')).to eql 'Discussion not found'
+      end
+    end
+
+    context 'when user have permission to apply accessibility' do
+      it 'creates post with accessibility' do
+        variables = {
+          content: 'New post',
+          discussionId: discussion.id,
+          accessibility: 'admins',
+        }
+
+        result = DoubleGdpSchema.execute(mutation, variables: variables,
+                                                   context: {
+                                                     current_user: admin,
+                                                     site_community: community,
+                                                   }).as_json
+        expect(result['errors']).to be_nil
+        expect(result.dig('data', 'postCreate', 'post', 'accessibility')).to eql 'admins'
+      end
+    end
+
+    context 'when user can create post but does not have permission to apply accessibility' do
+      it 'raises error' do
+        variables = {
+          content: 'New post',
+          discussionId: discussion.id,
+          accessibility: 'admins',
+        }
+
+        result = DoubleGdpSchema.execute(mutation, variables: variables,
+                                                   context: {
+                                                     current_user: contractor,
+                                                     site_community: community,
+                                                   }).as_json
+        expect(result['errors']).to_not be_nil
+        expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'
+      end
+    end
+
+    context 'when accessibility is not valid' do
+      it 'raises error' do
+        variables = {
+          content: 'New post',
+          discussionId: discussion.id,
+          accessibility: 'me',
+        }
+
+        result = DoubleGdpSchema.execute(mutation, variables: variables,
+                                                   context: {
+                                                     current_user: admin,
+                                                     site_community: community,
+                                                   }).as_json
+        error_message = 'Accessibility is not included in the list'
+        expect(result['errors']).to_not be_nil
+        expect(result.dig('errors', 0, 'message')).to eql error_message
       end
     end
 

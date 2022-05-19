@@ -29,6 +29,7 @@ describe('PostCreate component', () => {
           <PostCreate
             translate={translate}
             currentUserImage="https://image-url.com"
+            userPermissions={[{ module: 'discussion', permissions: ['can_set_accessibility'] }]}
             btnBorderColor="#575757"
             refetchNews={() => {}}
           />
