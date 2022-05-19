@@ -61,7 +61,7 @@ export default function ProcessListItem({ processItem }) {
   const { loading: projectsLoading, error: projectsError, data: projectsData } = useQuery(
     ProjectsStatsQuery,
     {
-      variables: { processId: processItem.id, offset: 0, limit: 50 },
+      variables: { processId, offset: 0, limit: 50 },
       fetchPolicy: 'cache-and-network'
     }
   );
@@ -167,7 +167,13 @@ export default function ProcessListItem({ processItem }) {
     <>
       <Grid container style={{ marginTop: '10px' }}>
         <Grid item md={8} xs={12}>
-          <Link to={`/processes/${processId}/projects?process_name=${processName}`} underline="hover">
+          <Link
+            to={{
+              pathname: `/processes/${processId}/projects?process_name=${processName}`,
+              state: { process: processItem }
+            }}
+            underline="hover"
+          >
             <Typography className={classes.processTitle} color="primary" variant="h5">
               {processName}
             </Typography>

@@ -246,6 +246,7 @@ export const LeadDetailsQuery = gql`
       companyName
       country
       region
+      division
       companyDescription
       companyLinkedin
       companyWebsite
@@ -802,6 +803,7 @@ export const UserLabelsQuery = gql`
       id
       shortDesc
       color
+      groupingName
     }
   }
 `;
@@ -814,6 +816,7 @@ export const LabelsQuery = gql`
       userCount
       description
       color
+      groupingName
     }
   }
 `;

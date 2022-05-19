@@ -74,6 +74,11 @@
     "year_to_date": "Del año hasta la fecha",
     "your_tasks": "Tus Tareas"
   },
+  "project": {
+    "add_new_project": "Agregar Nuevo Proyecto",
+    "edit_template": "Editar Plantilla",
+    "new_project_description": "Este Proceso utiliza un formulario para agregar un nuevo proyecto. Copie y pegue el siguiente enlace para enviarlo al Desarrollador con el que desea iniciar un proyecto. Se agregará un nuevo proyecto cuando el Desarrollador envíe el formulario completo."
+  },
   "sub_task": {
     "due": "vence:",
     "no_sub_tasks": "Agregar una subtarea",

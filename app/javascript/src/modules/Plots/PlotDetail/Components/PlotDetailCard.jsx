@@ -52,7 +52,7 @@ export default function PlotDetailCard({ authState }) {
                     color: '#141414'
                   }
                 : {
-                    margin: '40px 0 20px 79px',
+                    margin: '40px 0 20px 20px',
                     fontWeight: 500,
                     fontSize: '22px',
                     color: '#141414'
@@ -66,7 +66,7 @@ export default function PlotDetailCard({ authState }) {
               <div
                 className={classes.root}
                 style={
-                  matches ? { marginLeft: '20px' } : { marginLeft: '79px', marginBottom: '40px' }
+                  matches ? { marginLeft: '20px' } : { marginLeft: '20px', marginBottom: '40px' }
                 }
               >
                 <ImageList className={classes.gridList} cols={matches ? 1 : 3}>

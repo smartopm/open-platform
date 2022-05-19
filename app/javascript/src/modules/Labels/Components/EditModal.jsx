@@ -65,7 +65,7 @@ export default function EditModal({ open, handleClose, data, refetch, type }) {
 
   function setDefaultValues() {
     setColor(data.color);
-    setShortDesc(data.shortDesc);
+    setShortDesc(data?.groupingName ? `${data.groupingName} :: ${data.shortDesc}` : data.shortDesc);
     setDescription(data.description);
   }
 
@@ -168,6 +168,7 @@ EditModal.propTypes = {
   data: PropTypes.shape({
     id: PropTypes.string,
     shortDesc: PropTypes.string,
+    groupingName: PropTypes.string,
     color: PropTypes.string,
     description: PropTypes.string
   }),

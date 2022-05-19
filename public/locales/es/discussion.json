@@ -1,0 +1,51 @@
+{
+  "discussion_board_disclaimer": {
+    "first_line": "Los comentarios y los foros de discusión se proporcionan como un servicio gratuito para los miembros de la comunidad que hayan iniciado sesión.",
+    "second_line": "Los usuarios deben mantener los comentarios constructivos, informativos, positivos y libres de blasfemias y obscenidades.",
+    "third_line": "Nos reservamos el derecho de eliminar publicaciones o tableros que se desvíen de estos principios."
+  },
+  "form_actions": {
+    "agree": "De Acuerdo",
+    "disagree": "Discrepar",
+    "more_discussions": "Agregar mas discusiones",
+    "more_posts": "Cargar más publicaciones",
+    "send": "Enviar"
+  },
+  "form_fields": {
+    "email_address": "Correo electrónico"
+  },
+  "headers": {
+    "comments": "Comentarios",
+    "community_news_header": "Noticias de la Comunidad",
+    "create_discussion": "Crea un tema de discusión",
+    "no_discussions": "No hay temas de discusión",
+    "posts": "Publicaciones",
+    "subscribe": "Suscribirse a la discusión",
+    "update_email_header": "Actualizar correo electrónico"
+  },
+  "helper_text": {
+    "invalid_email": "Correo electrónico inválido"
+  },
+  "label": {
+    "discussion_description": "Descripción de Discusión ",
+    "discussion_title": "Título de Discusión"
+  },
+  "messages": {
+    "contact_team": "contacta con nuestro equipo de soporte",
+    "discussion_created": "Discusión creada",
+    "discussion_topic_created": "Tema de discusión creado con éxito",
+    "image_uploaded": "Imagen cargada correctamente",
+    "no_description": "Sin Descripción",
+    "not_subscribed_first_part": "¡Gracias por seguir esta discusión! ",
+    "not_subscribed_second_part": "Comparta un correo electrónico para su cuenta",
+    "not_subscribed_third_part": "para recibir alertas diarias por correo electrónico sobre nuevos mensajes publicados por otros miembros de la comunidad en este foro. Para dejar de recibir las alertas, deje de seguir este foro.",
+    "share_email_req": "Por favor comparta un correo electrónico para su cuenta",
+    "subscribed_first_part": "¡Gracias por seguir esta discusión! Recibirá alertas diarias por correo electrónico de los nuevos mensajes publicados por otros miembros de la comunidad en este tablero para",
+    "subscribed_second_part": "Para dejar de recibir las alertas, deje de seguir este foro. Si este correo electrónico es incorrecto, por favor",
+    "unfolllow_ack_message": "Has dejado de seguir esta discusión. Ya no recibirás alertas de nuevos mensajes publicados por otros miembros de la comunidad en este foro. Envíenos un mensaje para enviarnos sus comentarios sobre su experiencia en la discusión. ¡Esperamos que participe en futuras discusiones con la comunidad de Nkwashi!",
+    "update_email_helper": "Para actualizar su correo electrónico, ingrese su correo electrónico en el campo a continuación y nuestro servicio de atención al cliente se comunicará con usted."
+  },
+  "place_holder": {
+    "type_comment": "Escriba un comentario aquí"
+  }
+}

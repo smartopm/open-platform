@@ -11,7 +11,7 @@ import Grid from '@mui/material/Grid';
 import { Container } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import MuiConfig from 'react-awesome-query-builder/lib/config/mui';
-import Loading from '../../../shared/Loading';
+import { Spinner } from '../../../shared/Loading';
 import ErrorPage from '../../../components/Error';
 import { UsersDetails, LabelsQuery, UsersCount } from '../../../graphql/queries';
 import { UserLabelCreate, CampaignCreateThroughUsers } from '../../../graphql/mutations';
@@ -291,9 +291,10 @@ export default function UsersList() {
     createCampaign();
   }
 
-  if (labelsLoading) return <Loading />;
-  if (error || labelsError) {
-    return <ErrorPage error={error?.message || labelsError?.message} />;
+  if (labelsLoading) return <Spinner />;
+  const err = error || labelsError;
+  if (err) {
+    return <ErrorPage error={err?.message} />;
   }
   if (redirect) {
     return (
@@ -326,7 +327,7 @@ export default function UsersList() {
         type: 'select',
         valueSources: ['value'],
         fieldSettings: {
-          listValues: labelsData.labels.map(label => {
+          listValues: labelsData?.labels?.map(label => {
             return { value: label.shortDesc, title: label.shortDesc };
           })
         }
@@ -463,7 +464,7 @@ export default function UsersList() {
         />
       </FixedHeader>
       {loading || labelsLoading || fetchingUsersCount ? (
-        <Loading />
+        <Spinner />
       ) : (
         <>
           <Container>

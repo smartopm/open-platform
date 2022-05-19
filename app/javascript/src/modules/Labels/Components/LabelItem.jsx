@@ -54,7 +54,11 @@ export function renderLabels(label, menuData, userType) {
     {
       Labels: (
         <Grid item xs={12} md={2} data-testid="short_desc">
-          <Label color={label.color} title={label.shortDesc} />
+          <Label
+            color={label.color}
+            title={label.shortDesc}
+            groupingName={label.groupingName}
+          />
         </Grid>
       ),
       'No of Users': (

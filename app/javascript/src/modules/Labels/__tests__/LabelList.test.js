@@ -4,7 +4,6 @@ import '@testing-library/jest-dom/extend-expect';
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom';
 import { LabelsQuery } from '../../../graphql/queries';
-import Loading from '../../../shared/Loading';
 import LabelList from '../Components/LabelList';
 
 describe('Label List Component', () => {
@@ -22,14 +21,16 @@ describe('Label List Component', () => {
               shortDesc: 'com_news_sms',
               color: '#fff',
               description: 'this',
-              userCount: 1
+              userCount: 1,
+              groupingName: 'Status'
             },
             {
               id: '2b3f902b-eb44-42a1-b2f',
               shortDesc: 'com_news_email',
               color: '#fff',
               description: 'this',
-              userCount: 3
+              userCount: 3,
+              groupingName: 'Status'
             }
           ]
         }
@@ -42,27 +43,24 @@ describe('Label List Component', () => {
         </BrowserRouter>
       </MockedProvider>
     );
-    const loader = render(<Loading />);
-    expect(loader.queryAllByTestId('loader')[0]).toBeInTheDocument();
-    await waitFor(
-      () => {
-        expect(container.queryByText('common:table_headers.labels')).toBeInTheDocument();
-        expect(container.queryByText('common:table_headers.labels_description')).toBeInTheDocument();
-        expect(container.queryByText('common:table_headers.labels_total_no_of_users')).toBeInTheDocument();
-        expect(container.queryByTestId('button')).toBeInTheDocument();
-        fireEvent.click(container.queryByTestId('button'))
-        expect(container.queryByText('label.new_dialog_title')).toBeInTheDocument();
-        expect(container.queryByTestId('dialog_cancel')).toBeInTheDocument();
-        fireEvent.click(container.queryByTestId('dialog_cancel'))
-        expect(container.queryByText('com_news_sms')).toBeInTheDocument();
-        expect(container.queryByText('com_news_email')).toBeInTheDocument();
-        expect(container.queryAllByTestId('short_desc')).toHaveLength(2);
-        expect(container.queryByTestId('prev-btn')).toHaveTextContent('misc.previous');
-        expect(container.queryByTestId('prev-btn')).toBeDisabled();
-        expect(container.queryByTestId('next-btn')).toHaveTextContent('misc.next');
-        fireEvent.click(container.queryByTestId('next-btn'))
-      },
-      { timeout: 100 }
-    );
+    await waitFor(() => {
+      expect(container.queryByText('common:table_headers.labels')).toBeInTheDocument();
+      expect(container.queryByText('common:table_headers.labels_description')).toBeInTheDocument();
+      expect(
+        container.queryByText('common:table_headers.labels_total_no_of_users')
+      ).toBeInTheDocument();
+      expect(container.queryByTestId('button')).toBeInTheDocument();
+      fireEvent.click(container.queryByTestId('button'));
+      expect(container.queryByText('label.new_dialog_title')).toBeInTheDocument();
+      expect(container.queryByTestId('dialog_cancel')).toBeInTheDocument();
+      fireEvent.click(container.queryByTestId('dialog_cancel'));
+      expect(container.queryByText('com_news_sms')).toBeInTheDocument();
+      expect(container.queryByText('com_news_email')).toBeInTheDocument();
+      expect(container.queryAllByTestId('short_desc')).toHaveLength(2);
+      expect(container.queryByTestId('prev-btn')).toHaveTextContent('misc.previous');
+      expect(container.queryByTestId('prev-btn')).toBeDisabled();
+      expect(container.queryByTestId('next-btn')).toHaveTextContent('misc.next');
+      fireEvent.click(container.queryByTestId('next-btn'));
+    });
   });
 });

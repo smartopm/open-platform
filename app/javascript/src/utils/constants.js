@@ -1288,3 +1288,5 @@ export const countries = [
   'Zambia',
   'Zimbabwe'
 ];
+
+export const divisionOptions = ['China', 'Europe', 'India'];

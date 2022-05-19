@@ -27,7 +27,7 @@ export default function QuickLinks({ menuItems, translate }) {
             </Typography>
           </div>
         ) : (
-          <div style={{ marginLeft: '79px', marginTop: '20px' }}>
+          <div style={{ marginLeft: '20px', marginTop: '20px' }}>
             <Grid container alignItems="center">
               <Typography
                 className={classes.bold}
@@ -42,7 +42,7 @@ export default function QuickLinks({ menuItems, translate }) {
         <Grid
           container
           spacing={2}
-          style={matches ? { padding: '20px' } : { padding: '20px 57px 20px 79px', width: '99%' }}
+          style={matches ? { padding: '20px' } : { padding: '20px 57px 20px 20px', width: '99%' }}
         >
           {menuItems.map(item => (
             <Grid item xs={6} sm={3} key={item.menu_link}>

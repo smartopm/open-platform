@@ -12,8 +12,7 @@ export default function PostCreate({
   translate,
   currentUserImage,
   btnBorderColor,
-  refetchNews,
-  isMobile
+  refetchNews
 }) {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [post, setPost] = useState('');
@@ -102,7 +101,7 @@ export default function PostCreate({
   }
 
   return (
-    <>
+    <div style={{ margin: '0 5px' }}>
       <MessageAlert
         type={!postDetails.isError ? 'success' : 'error'}
         message={postDetails.message}
@@ -145,7 +144,7 @@ export default function PostCreate({
               {translate('common:misc.post')}
             </Button>
           </>
-        )}
+          )}
       </DialogWithImageUpload>
       <Button
         onClick={openCreateModal}
@@ -159,7 +158,6 @@ export default function PostCreate({
           borderColor: btnBorderColor,
           borderRadius: '8px',
           fontWeight: 400,
-          width: isMobile ? '98%' : '99%',
           fontSize: '16px',
           height: '56px',
           background: '#FFFFFF'
@@ -168,7 +166,7 @@ export default function PostCreate({
       >
         {translate('dashboard.whats_happening')}
       </Button>
-    </>
+    </div>
   );
 }
 
@@ -176,6 +174,5 @@ PostCreate.propTypes = {
   translate: PropTypes.func.isRequired,
   currentUserImage: PropTypes.string.isRequired,
   btnBorderColor: PropTypes.string.isRequired,
-  refetchNews: PropTypes.func.isRequired,
-  isMobile: PropTypes.bool.isRequired
+  refetchNews: PropTypes.func.isRequired
 };

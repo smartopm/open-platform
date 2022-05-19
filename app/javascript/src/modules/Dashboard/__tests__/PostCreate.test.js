@@ -31,7 +31,6 @@ describe('PostCreate component', () => {
             currentUserImage="https://image-url.com"
             btnBorderColor="#575757"
             refetchNews={() => {}}
-            isMobile={false}
           />
         </MockedThemeProvider>
       </MockedProvider>
