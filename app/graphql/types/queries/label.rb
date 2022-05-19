@@ -31,9 +31,7 @@ module Types::Queries::Label
   end
 
   def labels(offset: 0, limit: 50)
-    unless permitted?(module: :label, permission: :can_fetch_all_labels)
-      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
-    end
+    validate_authorization(:label, :can_fetch_all_labels)
 
     Labels::Label.with_users_count(context[:site_community].id, limit, offset)
   end
@@ -49,20 +47,15 @@ module Types::Queries::Label
   end
 
   def label_users(labels:)
-    unless permitted?(module: :label, permission: :can_fetch_label_users)
-      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
-    end
+    validate_authorization(:label, :can_fetch_label_users)
 
     context[:site_community].users.find(context[:current_user].id)&.find_label_users(labels)&.all
   end
 
   def lead_labels(user_id:)
-    unless permitted?(module: :label, permission: :can_view_lead_labels)
-      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
-    end
-  
-    user = context[:site_community].users.find(user_id)
+    validate_authorization(:label, :can_view_lead_labels)
 
+    user = context[:site_community].users.find(user_id)
     context[:site_community].labels
                             .joins(:user_labels)
                             .where(user_labels: { user_id: user.id },

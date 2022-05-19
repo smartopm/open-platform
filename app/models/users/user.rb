@@ -801,24 +801,16 @@ module Users
     end
 
     def associate_lead_labels
-      associate_division_labels
-      associate_status_labels
+      associate_scoped_labels('division', 'Division')
+      associate_scoped_labels('lead_status', 'Status')
     end
 
-    def associate_division_labels
-      return unless saved_changes.key?('division')
+    def associate_scoped_labels(key, grouping_name)
+      return unless saved_changes.key?(key)
 
-      existing_division = saved_changes['division'].first
-      new_division = saved_changes['division'].last
-      update_user_label('Division', existing_division, new_division)
-    end
-
-    def associate_status_labels
-      return unless saved_changes.key?('lead_status')
-
-      existing_status = saved_changes['lead_status'].first
-      new_status = saved_changes['lead_status'].last
-      update_user_label('Status', existing_status, new_status)
+      existing_division = saved_changes[key].first
+      new_division = saved_changes[key].last
+      update_user_label(grouping_name, existing_division, new_division)
     end
 
     def update_user_label(grouping_name, old_desc, new_desc)
