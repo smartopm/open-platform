@@ -28,7 +28,8 @@ export default function DialogWithImageUpload({
   children,
   status,
   closeButtonData,
-  modalDetails
+  modalDetails,
+  editModal
 }) {
   const styles = useStyles();
   const matches = useMediaQuery('(max-width:450px)');
@@ -74,91 +75,93 @@ export default function DialogWithImageUpload({
             multiline
             fullWidth
           />
-          <Grid container className={styles.upload}>
-            {modalDetails.uploadInstruction && (
-              <Grid item sm={8} data-testid="upload_label">
-                {modalDetails.uploadInstruction}
-              </Grid>
-            )}
+          {!editModal && (
+            <Grid container className={styles.upload}>
+              {modalDetails.uploadInstruction && (
+                <Grid item sm={8} data-testid="upload_label">
+                  {modalDetails.uploadInstruction}
+                </Grid>
+              )}
 
-            {!matches && (
-              <Grid
-                item
-                sm={4}
-                data-testid="upload_button"
-                style={modalDetails?.actionVisibilityOptions ? {} : { textAlign: 'right' }}
-              >
-                <ImageUploader
-                  handleChange={imageOnchange}
-                  buttonText={modalDetails.uploadBtnText}
-                  useDefaultIcon
+              {!matches && (
+                <Grid
+                  item
+                  sm={4}
+                  data-testid="upload_button"
+                  style={modalDetails?.actionVisibilityOptions ? {} : { textAlign: 'right' }}
+                >
+                  <ImageUploader
+                    handleChange={imageOnchange}
+                    buttonText={modalDetails.uploadBtnText}
+                    useDefaultIcon
+                  />
+                </Grid>
+              )}
+              {!!modalDetails?.actionVisibilityOptions && (
+                <Grid item sm={8} style={matches ? { marginBottom: '15px' } : {}}>
+                  <FormControl variant="outlined" data-testid="visibilty-select">
+                    <InputLabel shrink>{modalDetails.actionVisibilityLabel}</InputLabel>
+                    <Box>
+                      <Select
+                        style={{ width: '180px', height: '42px' }}
+                        value={modalDetails.visibilityValue}
+                        onChange={e => modalDetails.handleVisibilityOptions(e.target.value)}
+                        input={(
+                          <OutlinedInput
+                            notched
+                            label={modalDetails.actionVisibilityLabel}
+                            className={styles.selectOutlinedInput}
+                          />
+                        )}
+                        renderValue={value => {
+                          return (
+                            <Box sx={{ display: 'flex', gap: 1 }}>
+                              <SvgIcon style={{ color: '#000000', opacity: 0.5 }}>
+                                <VisibilityIcon />
+                              </SvgIcon>
+                              {value}
+                            </Box>
+                          );
+                        }}
+                      >
+                        {Object.entries(modalDetails.actionVisibilityOptions).map(([key, val]) => (
+                          <MenuItem key={key} value={val}>
+                            {val}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </Box>
+                  </FormControl>
+                </Grid>
+              )}
+              {matches && (
+                <Grid
+                  item
+                  sm={4}
+                  data-testid="upload_button"
+                  style={modalDetails?.actionVisibilityOptions ? {} : { textAlign: 'right' }}
+                >
+                  <ImageUploader
+                    handleChange={imageOnchange}
+                    buttonText={modalDetails.uploadBtnText}
+                    useDefaultIcon
+                  />
+                </Grid>
+              )}
+              {imageUrls.length > 0 && (
+                <ImageUploadPreview
+                  imageUrls={imageUrls}
+                  sm={6}
+                  xs={12}
+                  style={{ padding: '10px' }}
+                  imgHeight="auto"
+                  imgWidth="100%"
+                  closeButtonData={closeButtonData}
                 />
-              </Grid>
-            )}
-            {!!modalDetails?.actionVisibilityOptions && (
-              <Grid item sm={8} style={matches ? { marginBottom: '15px' } : {}}>
-                <FormControl variant="outlined" data-testid="visibilty-select">
-                  <InputLabel shrink>{modalDetails.actionVisibilityLabel}</InputLabel>
-                  <Box>
-                    <Select
-                      style={{ width: '180px', height: '42px' }}
-                      value={modalDetails.visibilityValue}
-                      onChange={e => modalDetails.handleVisibilityOptions(e.target.value)}
-                      input={(
-                        <OutlinedInput
-                          notched
-                          label={modalDetails.actionVisibilityLabel}
-                          className={styles.selectOutlinedInput}
-                        />
-                      )}
-                      renderValue={value => {
-                        return (
-                          <Box sx={{ display: 'flex', gap: 1 }}>
-                            <SvgIcon style={{ color: '#000000', opacity: 0.5 }}>
-                              <VisibilityIcon />
-                            </SvgIcon>
-                            {value}
-                          </Box>
-                        );
-                      }}
-                    >
-                      {Object.entries(modalDetails.actionVisibilityOptions).map(([key, val]) => (
-                        <MenuItem key={key} value={val}>
-                          {val}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </Box>
-                </FormControl>
-              </Grid>
-            )}
-            {matches && (
-              <Grid
-                item
-                sm={4}
-                data-testid="upload_button"
-                style={modalDetails?.actionVisibilityOptions ? {} : { textAlign: 'right' }}
-              >
-                <ImageUploader
-                  handleChange={imageOnchange}
-                  buttonText={modalDetails.uploadBtnText}
-                  useDefaultIcon
-                />
-              </Grid>
-            )}
-            {imageUrls.length > 0 && (
-              <ImageUploadPreview
-                imageUrls={imageUrls}
-                sm={6}
-                xs={12}
-                style={{ padding: '10px' }}
-                imgHeight="auto"
-                imgWidth="100%"
-                closeButtonData={closeButtonData}
-              />
-            )}
-            {status !== 'INIT' && status !== 'DONE' && <Spinner />}
-          </Grid>
+              )}
+              {status !== 'INIT' && status !== 'DONE' && <Spinner />}
+            </Grid>
+          )}
         </DialogContent>
         <Divider />
         <DialogActions style={{ padding: '20px 24px' }}>{children}</DialogActions>
@@ -188,7 +191,8 @@ DialogWithImageUpload.defaultProps = {
     actionVisibilityLabel: null,
     visibilityValue: null,
     PropTypes: null
-  }
+  },
+  editModal: false
 };
 
 DialogWithImageUpload.propTypes = {
@@ -217,5 +221,6 @@ DialogWithImageUpload.propTypes = {
     handleVisibilityOptions: PropTypes.func,
     // eslint-disable-next-line react/forbid-prop-types
     actionVisibilityOptions: PropTypes.object
-  })
+  }),
+  editModal: PropTypes.bool
 };

@@ -90,10 +90,10 @@ export default function PostCreate({
   function closeCreateModal() {
     setIsCreateModalOpen(false);
     if (editModal) {
+      setEditModal(false);
       setPostData(null);
       setAnchorEl(null);
       setPost('');
-      setEditModal(false);
     }
     resetImageData();
   }
