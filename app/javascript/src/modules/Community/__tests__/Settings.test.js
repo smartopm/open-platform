@@ -36,7 +36,7 @@ describe('Community settings page', () => {
         }
       ],
       socialLinks: [{ social_link: 'www.facebook.com', category: 'facebook' }],
-      leadMonthlyTargets: [{ division: 'China', target: 5 }],
+      leadMonthlyTargets: [{ division: 'China', target: '20' }],
       menuItems: [
         {
           menu_link: 'http://some-link.com',
@@ -87,9 +87,9 @@ describe('Community settings page', () => {
             { social_link: 'www.facebook.com', category: 'facebook' },
             { social_link: '', category: '' }
           ],
-          divisionTargets: [
-            { division: 'Europe', target: 10 },
-            { division: 'China', target: 5 }
+          leadMonthlyTargets: [
+            { division: 'China', target: '20' },
+            { division: '', target: '' }
           ],
 
           menuItems: [
@@ -178,6 +178,7 @@ describe('Community settings page', () => {
     expect(container.queryByText('common:form_fields.add_whatsapp_number')).toBeInTheDocument();
     expect(container.queryByText('common:form_fields.add_social_link')).toBeInTheDocument();
     expect(container.queryByText('common:form_fields.add_menu_item')).toBeInTheDocument();
+    expect(container.queryByText('common:form_fields.add_division')).toBeInTheDocument();
     expect(container.queryByText('community.update_community')).toBeInTheDocument();
     expect(container.queryByText('community.update_community')).not.toBeDisabled();
     expect(container.queryAllByLabelText('common:form_fields.email')).toHaveLength(2);

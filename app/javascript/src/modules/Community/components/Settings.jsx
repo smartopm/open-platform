@@ -174,7 +174,7 @@ export default function CommunitySettings({ data, refetch }) {
       handleSetOptions(setSocialLinkOptions, index, newValue, options);
     } else if (type === 'menu_link') {
       handleSetOptions(setMenuItemOptions, index, newValue, options);
-    } else if (type === 'division_target') {
+    } else if (type === 'division') {
       handleSetOptions(setDivisionTargetsOptions, index, newValue, options);
     } else {
       handleSetOptions(setNumberOptions, index, newValue, options);
@@ -208,7 +208,7 @@ export default function CommunitySettings({ data, refetch }) {
       index,
       { [event.target.name]: event.target.value },
       divisionTargetsOptions,
-      'division_target'
+      'division'
     );
   }
 
@@ -412,14 +412,14 @@ export default function CommunitySettings({ data, refetch }) {
         // only reload if the primary color has changed
         if (
           themeColors.primaryColor !== data.themeColors?.primaryColor ||
-          hasQuickLinksSettingChanged ||
-          divisionTargetChanged
+          hasQuickLinksSettingChanged
         ) {
           window.location.reload();
         }
         refetch();
       })
       .catch(error => {
+        console.log('Mutuba', error);
         setMessage({ isError: true, detail: formatError(error.message) });
         setAlertOpen(true);
         setCallMutation(false);
@@ -1050,7 +1050,7 @@ export default function CommunitySettings({ data, refetch }) {
         <Typography variant="h6">{t('community.lead_management')}</Typography>
         <Typography variant="subtitle1">{t('community.subtitle')}</Typography>
         <Typography variant="caption">{t('community.division_description')}</Typography>
-
+        <Typography variant="caption">{t('community.minimum_divisions')}</Typography>
         {divisionTargetsOptions.map((_menu, i) => (
           // eslint-disable-next-line react/no-array-index-key
           <div style={{ display: 'flex', flexDirection: 'row', margin: '10px 0' }} key={i}>

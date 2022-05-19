@@ -612,7 +612,10 @@
     "signed_deal_header": "Signing here will be counted in the Signed Deal section of the scoreboard.",
     "no_lead_events": "You are yet to add events.",
     "no_lead_meetings": "You are yet to add meetings.",
-    "no_lead_deal": "You are yet to sign deals"
+    "no_lead_deal": "You are yet to sign deals",
+    "community_settings_page": "Community Settings page",
+    "go_settings": "Please go to the",
+    "to_set_up": "to set up this feature. This feature adds data to the Scorecard page."
   },
   "right_menu": {
     "edit_user": "Edit User",
