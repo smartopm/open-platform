@@ -10,11 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-<<<<<<< HEAD
 ActiveRecord::Schema.define(version: 2022_05_18_054244) do
-=======
-ActiveRecord::Schema.define(version: 2022_05_16_140147) do
->>>>>>> Add ability to set lead monthly targets
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
