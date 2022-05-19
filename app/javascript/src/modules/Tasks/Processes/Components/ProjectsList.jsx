@@ -86,7 +86,7 @@ export default function ProjectsList() {
 
   function dynamicFormUrl(){
     const { state } = history.location;
-    const formId = state.process.form.id;
+    const formId = state?.process?.form?.id;
 
     const url = `${window.location.origin}/form/${formId}`
 

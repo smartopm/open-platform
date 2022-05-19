@@ -22,16 +22,18 @@ import { dateToString } from '../../../components/DateContainer';
 import CenteredContent from '../../../shared/CenteredContent';
 import MessageAlert from '../../../components/MessageAlert';
 import { Spinner } from '../../../shared/Loading';
-import { formatError, secureFileDownload } from '../../../utils/helpers';
+import { formatError, secureFileDownload, useParamsQuery } from '../../../utils/helpers';
 import { DeleteNoteDocument } from '../../../graphql/mutations';
 import { ActionDialog } from '../../../components/Dialog';
 import ProgressBar from '../../../shared/ProgressBar';
 
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
+import { useScroll, useRemoveBackground } from '../../../hooks/useDomActions';
 
 export default function TaskDocuments({ data, loading, error, refetch, status }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const [currentDoc, setCurrentDoc] = useState('');
+  const isBgColor = useRemoveBackground('current-document', 4000);
   const [open, setOpen] = useState(false);
   const [taskDocumentDelete] = useMutation(DeleteNoteDocument);
   const authState = useContext(AuthStateContext);
@@ -44,6 +46,8 @@ export default function TaskDocuments({ data, loading, error, refetch, status })
   const canDeleteDocument = userTaskPermissions
     ? userTaskPermissions.permissions.includes('can_delete_note_document')
     : false;
+  const currentPath = useParamsQuery();
+  const currentDocId = currentPath.get('document');
 
   const menuOpen = Boolean(anchorEl);
 
@@ -85,6 +89,8 @@ export default function TaskDocuments({ data, loading, error, refetch, status })
       });
   }
 
+  useScroll('current-document');
+
   if (loading) return <Spinner />;
   if (error) return <CenteredContent>{formatError(error)}</CenteredContent>;
   const documents = data.task?.attachments;
@@ -109,63 +115,68 @@ export default function TaskDocuments({ data, loading, error, refetch, status })
         </Grid>
       </Grid>
       {documents?.length > 0 && (
-        <List sx={{padding: 0}}>
+        <List sx={{ padding: 0 }}>
           {documents.map((doc, index) => (
-            <Grid
-              container
+            <div
               key={doc.id}
-              style={!checkLastDocument(index) ? { borderBottom: '1px solid #EDEDED' } : {}}
+              id={doc.id === currentDocId ? 'current-document' : undefined}
+              className={(doc.id === currentDocId && isBgColor) ? classes.doc : undefined}
             >
-              <ListItem sx={{padding: 0}}>
-                <Grid container>
-                  <Grid item xs={11}>
-                    <ListItemText
-                      disableTypography
-                      primary={(
-                        <Typography
-                          variant="body1"
-                          style={{ fontWeight: 700 }}
-                          data-testid="filename"
-                        >
-                          {doc.filename}
-                        </Typography>
-                      )}
-                      secondary={(
-                        <>
-                          <Typography component="span" variant="body2" data-testid="uploaded_at">
-                            {`${t('document.uploaded_at')}: ${dateToString(doc.created_at)}`}
+              <Grid
+                container
+                style={!checkLastDocument(index) ? { borderBottom: '1px solid #EDEDED' } : {}}
+              >
+                <ListItem sx={{ padding: 0 }}>
+                  <Grid container>
+                    <Grid item xs={11}>
+                      <ListItemText
+                        disableTypography
+                        primary={(
+                          <Typography
+                            variant="body1"
+                            style={{ fontWeight: 700 }}
+                            data-testid="filename"
+                          >
+                            {doc.filename}
                           </Typography>
-                          {doc.uploaded_by && (
-                            <Typography
-                              component="span"
-                              variant="body2"
-                              data-testid="uploaded_by"
-                              style={{ marginLeft: '20px' }}
-                            >
-                              {`${t('document.uploaded_by')}: ${doc.uploaded_by}`}
+                        )}
+                        secondary={(
+                          <>
+                            <Typography component="span" variant="body2" data-testid="uploaded_at">
+                              {`${t('document.uploaded_at')}: ${dateToString(doc.created_at)}`}
                             </Typography>
-                          )}
-                        </>
-                      )}
-                    />
+                            {doc.uploaded_by && (
+                              <Typography
+                                component="span"
+                                variant="body2"
+                                data-testid="uploaded_by"
+                                style={{ marginLeft: '20px' }}
+                              >
+                                {`${t('document.uploaded_by')}: ${doc.uploaded_by}`}
+                              </Typography>
+                            )}
+                          </>
+                        )}
+                      />
+                    </Grid>
+                    <Grid item xs={1} className="">
+                      <ListItemSecondaryAction className={classes.menu}>
+                        <IconButton
+                          edge="end"
+                          aria-label="more_details"
+                          data-testid="more_details"
+                          onClick={event => handleOpenMenu(event, doc)}
+                          color="primary"
+                          size="large"
+                        >
+                          <MoreVertIcon />
+                        </IconButton>
+                      </ListItemSecondaryAction>
+                    </Grid>
                   </Grid>
-                  <Grid item xs={1} className="">
-                    <ListItemSecondaryAction className={classes.menu}>
-                      <IconButton
-                        edge="end"
-                        aria-label="more_details"
-                        data-testid="more_details"
-                        onClick={event => handleOpenMenu(event, doc)}
-                        color="primary"
-                        size="large"
-                      >
-                        <MoreVertIcon />
-                      </IconButton>
-                    </ListItemSecondaryAction>
-                  </Grid>
-                </Grid>
-              </ListItem>
-            </Grid>
+                </ListItem>
+              </Grid>
+            </div>
           ))}
         </List>
       )}
@@ -210,6 +221,11 @@ const useStyles = makeStyles(() => ({
   },
   noDocuments: {
     marginTop: '16px'
+  },
+  doc: {
+    borderRadius: '0.3rem',
+    backgroundColor: '#e9f3fc',
+    padding: '0 0.3rem'
   }
 }));
 
