@@ -95,7 +95,7 @@ describe('Admin processes dashboard', () => {
     }
   ];
 
-  it('renders the summary page correctly', async () => {
+  it('renders the project overview page correctly', async () => {
     render(
       <MockedProvider mocks={mocks} addTypename={false}>
         <BrowserRouter>
@@ -105,15 +105,16 @@ describe('Admin processes dashboard', () => {
         </BrowserRouter>
       </MockedProvider>
     );
-    expect(screen.queryAllByTestId('skeleton')[0]).toBeInTheDocument();
 
     await waitFor(() => {
-      expect(screen.queryByText('Sent User Name')).toBeInTheDocument()
-      expect(screen.queryByText('sent comment body')).toBeInTheDocument()
-      expect(screen.queryByText('received comment body')).toBeInTheDocument()
-      expect(screen.queryByText('Received User Name')).toBeInTheDocument()
-      expect(screen.queryByText('resolved comment body')).toBeInTheDocument()
-      expect(screen.queryByText('ordinary comment body')).toBeInTheDocument()
-    })
+      expect(screen.queryByText('task.project_overview')).toBeInTheDocument();
+      expect(screen.queryByText('task:processes.comments')).toBeInTheDocument();
+      expect(
+        screen.queryByText('task:processes.documents')
+      ).toBeInTheDocument();
+
+      expect(screen.getByTestId('skeleton')).toBeInTheDocument();
+      expect(screen.getByTestId('loader')).toBeInTheDocument();
+    });
   });
 });

@@ -126,8 +126,8 @@ export default function TaskDocuments({ data, loading, error, refetch, status })
           {documents.map((doc, index) => (
             <div
               key={doc.id}
-              id={doc.id === currentDocId && 'current-document'}
-              className={doc.id === currentDocId && isBgColor && classes.doc}
+              id={doc.id === currentDocId ? 'current-document' : undefined}
+              className={(doc.id === currentDocId && isBgColor) ? classes.doc : undefined}
             >
               <Grid
                 container
