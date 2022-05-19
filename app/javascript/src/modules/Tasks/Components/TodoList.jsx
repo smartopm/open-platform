@@ -421,7 +421,7 @@ export default function TodoList({
 
   return (
     <>
-      <div style={{padding: '0 8%'}} data-testid="todo-container">
+      <div style={{ padding: '0 8%' }} data-testid="todo-container">
         <MessageAlert
           type={taskUpdateStatus.success ? 'success' : 'error'}
           message={taskUpdateStatus.message}
@@ -461,14 +461,14 @@ export default function TodoList({
         </Dialog>
         <Grid container spacing={1}>
           <Grid item md={7} xs={12} style={{ display: 'flex', alignItems: 'center' }}>
-            <Grid container>
-              <Grid item md={4} xs={6} style={{ display: 'flex', alignItems: 'center' }}>
+            <Grid container spacing={2}>
+              <Grid item style={{ flexGrow: 0 }}>
                 <TaskQuickAction
                   checkedOptions={checkedOptions}
                   handleCheckOptions={handleCheckOptions}
                 />
               </Grid>
-              <Grid item md={6} xs={6} style={{ display: 'flex', alignItems: 'center' }}>
+              <Grid item style={{ flexGrow: 1 }}>
                 <TaskQuickSearch filterTasks={handleTaskFilter} currentTile={currentTile} />
               </Grid>
             </Grid>
