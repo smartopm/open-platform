@@ -13,6 +13,7 @@ describe('Community news with posts', () => {
     const props = {
       userType: 'admin',
       userImage: 'https://image.com',
+      userPermissions: [{ module: 'discussion', permissions: ['can_set_accessibility'] }],
       dashboardTranslation: () => 'some-text'
     };
     const mocks = [
