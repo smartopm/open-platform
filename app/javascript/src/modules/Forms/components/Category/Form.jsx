@@ -134,7 +134,8 @@ export default function Form({
   }, [formState.isDraft, formState.successfulSubmit]);
 
   const formData = flattenFormProperties(categoriesData.data?.formCategories);
-
+  const isTermsChecked = formDetailData?.form?.hasTermsAndConditions ? !hasAgreedToTerms : false
+  
   return (
     <>
       <MessageAlert
@@ -313,7 +314,7 @@ export default function Form({
               aria-label="form_submit"
               style={matches ? { marginTop: '20px' } : { marginTop: '25px' }}
               onClick={() => formSubmit(formData)}
-              disabled={formState.isSubmitting || !hasAgreedToTerms}
+              disabled={formState.isSubmitting || isTermsChecked}
               data-testid="submit_form_btn"
             >
               {!formState.isSubmitting
