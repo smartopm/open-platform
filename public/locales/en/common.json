@@ -616,7 +616,12 @@
     "no_lead_deal": "You are yet to sign deals",
     "community_settings_page": "Community Settings page",
     "go_settings": "Please go to the",
-    "to_set_up": "to set up this feature. This feature adds data to the Scorecard page."
+    "to_set_up": "to set up this feature. This feature adds data to the Scorecard page.",
+    "year_total": "YTD Total",
+    "monthly_leads_by_division": "Monthly Leads By Division",
+    "scorecard": "Scorecard",
+    "leads": "Leads",
+    "current_status_of_leads": "Current Status of Leads"
   },
   "right_menu": {
     "edit_user": "Edit User",

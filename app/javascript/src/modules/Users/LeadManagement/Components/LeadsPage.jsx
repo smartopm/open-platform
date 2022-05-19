@@ -93,20 +93,25 @@ export default function LeadsPage() {
     <div className={matches ? classes.containerMobile : classes.container}>
       <Grid container>
         <Grid item md={12} xs={12} className={classes.title} data-testid="page_title">
-          <Typography variant="h4">Leads</Typography>
+          <Typography variant="h4">{t('lead_management.leads')}</Typography>
         </Grid>
         <Grid item md={12} xs={12} className={classes.title} data-testid="subtitle">
-          <Typography variant="h6">Scorecard</Typography>
+          <Typography variant="h6">{t('lead_management.scorecard')}</Typography>
         </Grid>
         <Grid item md={10} xs={7} className={classes.title} data-testid="monthly_lead">
           <Typography variant="body1" className={classes.weight}>
-            Monthly Leads By Division
+            {t('lead_management.monthly_leads_by_division')}
           </Typography>
         </Grid>
         {communityDivisionTargets && communityDivisionTargets?.length >= 2 && (
           <Grid item md={2} xs={5} className={classes.title} style={{ textAlign: 'right' }}>
-            <Typography component="span" color="text.secondary" style={{ marginRight: '20px' }}>
-              YTD Total
+            <Typography
+              component="span"
+              variant="caption text"
+              color="text.secondary"
+              style={{ marginRight: '20px' }}
+            >
+              {t('lead_management.year_total')}
             </Typography>
             {'  '}
             <Typography color="primary" component="span">
@@ -140,7 +145,7 @@ export default function LeadsPage() {
         {buildCurrentStatusCard(SL).map((score, index) => (
           <Grid item md={3} xs={12} key={index}>
             <Typography className={`${classes.cardTitle} ${classes.weight}`}>
-              Current Status of leads
+              {t('lead_management.current_status_of_leads')}
             </Typography>
             <ScoreCard data={score} currentStatus />
           </Grid>
@@ -152,8 +157,13 @@ export default function LeadsPage() {
                 {objectAccessor(scoreCardTitle, score.name)}
               </Grid>
               <Grid item md={6} xs={6} style={{ textAlign: 'right' }}>
-                <Typography component="span" color="text.secondary" style={{ marginRight: '20px' }}>
-                  YTD Total
+                <Typography
+                  component="span"
+                  variant="caption text"
+                  color="text.secondary"
+                  style={{ marginRight: '20px' }}
+                >
+                  {t('lead_management.year_total')}
                 </Typography>
                 {'  '}
                 <Typography color="primary" component="span">
