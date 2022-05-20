@@ -89,6 +89,7 @@ const useStyles = makeStyles(theme => ({
   },
   card: {
     minHeight: '9em',
+    borderRadius: '8px',
     border: `1px solid ${theme.palette.primary.main}`,
     '&:hover': {
       backgroundColor: theme.palette.primary.main,
