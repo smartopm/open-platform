@@ -1326,9 +1326,9 @@ export const statuses = {
 };
 
 export const scoreCardTitle = {
-  qualified_lead: 'Qualified Lead',
-  signed_lease: 'Signed Lease',
-  signed_mou: 'Signed MOU'
+  qualified_lead: 'Qualified Leads',
+  signed_lease: 'Signed Leases',
+  signed_mou: 'Signed MOUs'
 };
 
 export const divisions = {
