@@ -115,6 +115,7 @@ export default function CommunitySettings({ data, refetch }) {
   const [locale, setLocale] = useState('en-ZM');
   const [language, setLanguage] = useState('en-US');
   const [hasQuickLinksSettingChanged, setHasQuickLinksSettingChanged] = useState(false);
+  const [divisionTargetChanged, setDivisionTargetChanged] = useState(false);
   const [smsPhoneNumbers, setSMSPhoneNumbers] = useState(data?.smsPhoneNumbers?.join(',') || '');
   const [emergencyCallNumber, setEmergencyCallNumber] = useState(data?.emergencyCallNumber || '');
   const [communityFeatures, setCommunityFeatures] = useState(features);
@@ -139,10 +140,6 @@ export default function CommunitySettings({ data, refetch }) {
   function handleAddNumberOption() {
     setNumberOptions([...numberOptions, numbers]);
   }
-
-  // function handleQuicklyDisplay(event) {
-  //   setQuickLinkOptions(event.target.value)
-  // }
 
   function handleAddEmailOption() {
     setEmailOptions([...emailOptions, emails]);
@@ -202,6 +199,7 @@ export default function CommunitySettings({ data, refetch }) {
   }
 
   function handleDivisionTargetChange(event, index) {
+    setDivisionTargetChanged(true);
     updateOptions(
       index,
       { [event.target.name]: event.target.value },
@@ -406,17 +404,17 @@ export default function CommunitySettings({ data, refetch }) {
         setLanguageInLocalStorage(language);
         setAlertOpen(true);
         setCallMutation(false);
-        // only reload if the primary color has changed
+        // reload if the primary color, quick links or division targets have changed
         if (
           themeColors.primaryColor !== data.themeColors?.primaryColor ||
-          hasQuickLinksSettingChanged
+          hasQuickLinksSettingChanged ||
+          divisionTargetChanged
         ) {
           window.location.reload();
         }
         refetch();
       })
       .catch(error => {
-        console.log(error);
         setMessage({ isError: true, detail: formatError(error.message) });
         setAlertOpen(true);
         setCallMutation(false);
