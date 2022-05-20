@@ -156,6 +156,7 @@ describe('LeadEvents Page', () => {
               <LeadEvents
                 userId="c96f64bb-e3b4-42ff-b6a9-66889ec79e99"
                 data={dataMock[0].result.data}
+                refetch={jest.fn()}
               />
             </MockedThemeProvider>
           </BrowserRouter>
@@ -189,6 +190,7 @@ describe('LeadEvents Page', () => {
               <LeadEvents
                 userId="c96f64bb-e3b4-42ff-b6a9-66889ec79e99"
                 data={dataMock[0].result.data}
+                refetch={jest.fn()}
               />
             </MockedThemeProvider>
           </BrowserRouter>

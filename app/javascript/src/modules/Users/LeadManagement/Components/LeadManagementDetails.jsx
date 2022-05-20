@@ -17,7 +17,7 @@ import LeadManagementTask from './LeadManagementTask';
 export default function LeadManagementDetails({ userId }) {
   const { t } = useTranslation('common');
   const [tabValue, setTabValue] = useState(0);
-  const { loading, error, data } = useQuery(LeadDetailsQuery, {
+  const { loading, error, data, refetch } = useQuery(LeadDetailsQuery, {
     variables: { id: userId },
     fetchPolicy: 'cache-and-network'
   });
@@ -87,14 +87,14 @@ export default function LeadManagementDetails({ userId }) {
           </Box>
 
           <TabPanel value={tabValue} index={0} data-testid="lead-management-details-tab">
-            {data && <LeadManagementForm data={data} />}
+            {data && <LeadManagementForm data={data} refetch={refetch} />}
           </TabPanel>
           <TabPanel value={tabValue} index={1} data-testid="lead-management-task-tab">
             <LeadManagementTask taskId={data?.user?.taskId} tabValue={tabValue} />
           </TabPanel>
 
           <TabPanel value={tabValue} index={2} data-testid="lead-management-event-tab">
-            <LeadEvents userId={userId} data={data} />
+            <LeadEvents userId={userId} data={data} refetch={refetch} />
           </TabPanel>
         </Item>
       </Grid>
