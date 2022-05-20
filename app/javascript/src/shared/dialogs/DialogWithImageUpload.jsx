@@ -148,7 +148,7 @@ export default function DialogWithImageUpload({
                   />
                 </Grid>
               )}
-              {imageUrls.length > 0 && (
+              {imageUrls?.length > 0 && (
                 <ImageUploadPreview
                   imageUrls={imageUrls}
                   sm={6}
