@@ -911,7 +911,7 @@ export function buildStatusCard(BS) {
         { col1: 'Q3', col2: BS('Sm', '7'), col3: BS('Sm', '8'), col4: BS('Sm', '9') },
         { col1: 'Q4', col2: BS('Sm', '10'), col3: BS('Sm', '11'), col4: BS('Sm', '12') }
       ],
-      name: 'signed_lease'
+      name: 'signed_mou'
     },
     {
       score: [
@@ -920,7 +920,7 @@ export function buildStatusCard(BS) {
         { col1: 'Q3', col2: BS('Sl', '7'), col3: BS('Sl', '8'), col4: BS('Sl', '9') },
         { col1: 'Q4', col2: BS('Sl', '10'), col3: BS('Sl', '11'), col4: BS('Sl', '12') }
       ],
-      name: 'signed_mou'
+      name: 'signed_lease'
     }
   ];
 }

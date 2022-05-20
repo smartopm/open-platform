@@ -740,8 +740,10 @@ module Users
     def create_lead_log(lead_status, user_id)
       community.lead_logs.find_or_create_by(log_type: :lead_status,
                                             name: lead_status,
-                                            user_id: user_id,
-                                            acting_user_id: id).update(updated_at: Time.zone.now)
+                                            user_id: user_id).update(
+                                              updated_at: Time.zone.now,
+                                              acting_user_id: id,
+                                            )
     end
 
     private
