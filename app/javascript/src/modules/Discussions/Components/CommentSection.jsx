@@ -27,7 +27,7 @@ export default function CommentSection({ data, handleDeleteComment, refetch }) {
   const { t } = useTranslation(['discussion', 'dashboard']);
   const [anchorEl, setAnchorEl] = useState(null);
   // const [postData, setPostData] = useState(null);
-  const [editModal, setEditModal] = useState(null);
+  const [editModal, setEditModal] = useState(false);
   const [post, setPost] = useState('');
   const [postDetails, setPostDetails] = useState({
     isError: false,
@@ -222,6 +222,10 @@ export default function CommentSection({ data, handleDeleteComment, refetch }) {
   );
 }
 
+CommentSection.defaultProps = {
+  refetch: () => {}
+}
+
 CommentSection.propTypes = {
   data: PropTypes.shape({
     user: PropTypes.shape({
@@ -232,10 +236,10 @@ CommentSection.propTypes = {
     comment: PropTypes.string.isRequired,
     isAdmin: PropTypes.bool,
     imageUrls: PropTypes.arrayOf(PropTypes.string),
-    id: PropTypes.string.isRequired
+    id: PropTypes.string
   }).isRequired,
   handleDeleteComment: PropTypes.func.isRequired,
-  refetch: PropTypes.func.isRequired
+  refetch: PropTypes.func
 };
 
 const styles = StyleSheet.create({

@@ -75,7 +75,7 @@ export default function DialogWithImageUpload({
             multiline
             fullWidth
           />
-          {!editModal && (
+          {open && !editModal && (
             <Grid container className={styles.upload}>
               {modalDetails.uploadInstruction && (
                 <Grid item sm={8} data-testid="upload_label">
@@ -192,7 +192,9 @@ DialogWithImageUpload.defaultProps = {
     visibilityValue: null,
     PropTypes: null
   },
-  editModal: false
+  editModal: false,
+  imageUrls: [],
+  imageOnchange: () => {}
 };
 
 DialogWithImageUpload.propTypes = {
@@ -203,8 +205,8 @@ DialogWithImageUpload.propTypes = {
   }).isRequired,
   handleDialogStatus: PropTypes.func.isRequired,
   children: PropTypes.node.isRequired,
-  imageOnchange: PropTypes.func.isRequired,
-  imageUrls: PropTypes.arrayOf(PropTypes.string).isRequired,
+  imageOnchange: PropTypes.func,
+  imageUrls: PropTypes.arrayOf(PropTypes.string),
   status: PropTypes.string,
   closeButtonData: PropTypes.shape({
     closeButton: PropTypes.bool,
@@ -213,7 +215,7 @@ DialogWithImageUpload.propTypes = {
   modalDetails: PropTypes.shape({
     title: PropTypes.string.isRequired,
     inputPlaceholder: PropTypes.string.isRequired,
-    uploadBtnText: PropTypes.string.isRequired,
+    uploadBtnText: PropTypes.string,
     subTitle: PropTypes.string,
     uploadInstruction: PropTypes.string,
     actionVisibilityLabel: PropTypes.string,
