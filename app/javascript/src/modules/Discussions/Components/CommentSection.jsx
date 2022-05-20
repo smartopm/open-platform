@@ -26,7 +26,6 @@ import { Spinner } from '../../../shared/Loading';
 export default function CommentSection({ data, handleDeleteComment, refetch }) {
   const { t } = useTranslation(['discussion', 'dashboard']);
   const [anchorEl, setAnchorEl] = useState(null);
-  // const [postData, setPostData] = useState(null);
   const [editModal, setEditModal] = useState(false);
   const [post, setPost] = useState('');
   const [postDetails, setPostDetails] = useState({
@@ -35,7 +34,6 @@ export default function CommentSection({ data, handleDeleteComment, refetch }) {
     loading: false
   });
   const [updatePost] = useMutation(PostUpdateMutation);
-  // const [editModal, setEditModal] = useState(false);
   const anchorElOpen = Boolean(anchorEl);
   const menuList = [
     {
@@ -162,7 +160,7 @@ export default function CommentSection({ data, handleDeleteComment, refetch }) {
           </>
         )}
       </DialogWithImageUpload>
-      <ListItem alignItems="flex-start" data-testid='comment_body'>
+      <ListItem alignItems="flex-start" data-testid="comment_body">
         <ListItemAvatar style={{ marginRight: 8 }}>
           <Avatar user={data.user} />
         </ListItemAvatar>
@@ -197,22 +195,26 @@ export default function CommentSection({ data, handleDeleteComment, refetch }) {
               </span>
               <span data-testid="delete_icon" className={css(styles.itemAction)}>
                 <DateContainer date={data.createdAt} />
-                <IconButton
-                  aria-controls="simple-menu"
-                  aria-haspopup="true"
-                  data-testid="post_options"
-                  onClick={event => menuData.handleMenu(event)}
-                  size="large"
-                  component="span"
-                >
-                  <MoreVertOutlined />
-                </IconButton>
-                <MenuList
-                  open={menuData.open}
-                  anchorEl={menuData.anchorEl}
-                  handleClose={menuData.handleClose}
-                  list={menuData.menuList}
-                />
+                {data.isAdmin && (
+                  <>
+                    <IconButton
+                      aria-controls="simple-menu"
+                      aria-haspopup="true"
+                      data-testid="post_options"
+                      onClick={event => menuData.handleMenu(event)}
+                      size="large"
+                      component="span"
+                    >
+                      <MoreVertOutlined />
+                    </IconButton>
+                    <MenuList
+                      open={menuData.open}
+                      anchorEl={menuData.anchorEl}
+                      handleClose={menuData.handleClose}
+                      list={menuData.menuList}
+                    />
+                  </>
+                )}
               </span>
             </>
           )}
@@ -224,7 +226,7 @@ export default function CommentSection({ data, handleDeleteComment, refetch }) {
 
 CommentSection.defaultProps = {
   refetch: () => {}
-}
+};
 
 CommentSection.propTypes = {
   data: PropTypes.shape({
