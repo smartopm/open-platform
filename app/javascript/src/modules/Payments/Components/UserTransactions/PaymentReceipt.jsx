@@ -6,7 +6,7 @@ import { dateToString } from '../../../../components/DateContainer';
 
 export default function PaymentReceipt({ paymentData, open, handleClose, currencyData }) {
   function printReceipt() {
-    document.title = `${paymentData?.user?.name}-${paymentData?.planPayments ? paymentData?.planPayments[0]?.receiptNumber :
+    document.title = `${paymentData?.user?.name}-${paymentData?.planPayments ? paymentData?.planPayments?.[0]?.receiptNumber :
       paymentData?.receiptNumber}-${dateToString(paymentData?.createdAt)}`;
     window.print();
   }
