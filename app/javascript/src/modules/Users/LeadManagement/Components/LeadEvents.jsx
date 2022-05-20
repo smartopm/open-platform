@@ -1,5 +1,5 @@
 /* eslint-disable max-lines */
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import { useMutation, useQuery } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
@@ -19,10 +19,10 @@ import MessageAlert from '../../../../components/MessageAlert';
 import { formatError } from '../../../../utils/helpers';
 import LeadEvent from './LeadEvent';
 import ButtonComponent from '../../../../shared/buttons/Button';
-import { MenuProps, initialLeadFormData, secondaryInfoUserObject } from '../../utils';
+import { MenuProps, secondaryInfoUserObject } from '../../utils';
 import { Context as AuthStateContext } from '../../../../containers/Provider/AuthStateProvider';
 
-export default function LeadEvents({ userId, data }) {
+export default function LeadEvents({ userId, data, refetch }) {
   const [meetingName, setMeetingName] = useState('');
   const [leadData, setLeadData] = useState(false);
   const [disabled, setDisabled] = useState(true);
@@ -30,7 +30,7 @@ export default function LeadEvents({ userId, data }) {
   const authState = useContext(AuthStateContext);
   const communityDivisionTargets = authState?.user?.community?.leadMonthlyTargets;
   const [message, setMessage] = useState({ isError: false, detail: '' });
-  const [leadFormData, setLeadFormData] = useState(initialLeadFormData);
+  const [leadFormData, setLeadFormData] = useState(data);
   const [eventCreate, { loading: isLoading }] = useMutation(CreateEvent);
   const [leadDataUpdate, { loading: divisionLoading }] = useMutation(UpdateUserMutation);
   const { t } = useTranslation('common');
@@ -90,31 +90,13 @@ export default function LeadEvents({ userId, data }) {
     handleSubmit(eventName, type);
     setEventName('');
   }
-  useEffect(() => {
-    if (data?.user) {
-      setLeadFormData({
-        user: {
-          ...data.user,
-          contactDetails: {
-            ...data.user.contactDetails,
-            secondaryContact1: {
-              ...data.user.contactDetails?.secondaryContact1
-            },
-            secondaryContact2: {
-              ...data.user.contactDetails?.secondaryContact2
-            }
-          }
-        }
-      });
-    }
-  }, [data]);
 
   function handleSubmit(name = '', logType = '') {
     if (leadData) {
       leadDataUpdate({
         variables: {
-          ...leadFormData?.user,
-          secondaryInfo: leadFormData?.user?.contactInfos,
+          name: leadFormData?.user.name,
+          division: leadFormData?.user?.division,
           id: userId
         }
       })
@@ -124,6 +106,7 @@ export default function LeadEvents({ userId, data }) {
             isError: false,
             detail: t('common:misc.misc_successfully_added', { type: t('common:menu.division') })
           });
+          refetch();
         })
         .catch(err => {
           setMessage({ ...message, isError: true, detail: formatError(err.message) });
@@ -419,5 +402,6 @@ export default function LeadEvents({ userId, data }) {
 
 LeadEvents.propTypes = {
   userId: PropTypes.string.isRequired,
-  data: PropTypes.shape({ user: secondaryInfoUserObject }).isRequired
+  data: PropTypes.shape({ user: secondaryInfoUserObject }).isRequired,
+  refetch: PropTypes.func.isRequired
 };
