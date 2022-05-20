@@ -58,7 +58,7 @@ export default function HomePageCard({
 }
 
 HomePageCard.defaultProps = {
-  children: <div />,
+  children: null,
   from: '',
   clientName: '',
   clientNumber: '',

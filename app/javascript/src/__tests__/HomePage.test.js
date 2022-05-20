@@ -13,7 +13,7 @@ describe('HomePage component', () => {
     setToken: jest.fn(),
     user: {
       avatarUrl: null,
-      community: { name: 'Nkwashi' },
+      community: { name: 'Nkwashi', wpLink: 'https://wordpress.com' },
       email: '9753942',
       expiresAt: null,
       id: '11cdad78',
@@ -23,12 +23,14 @@ describe('HomePage component', () => {
       userType: 'admin'
     }
   };
+  const quickLinks = [{ menu_name: 'Report an Issue', menu_link: 'https://report.com' }];
+
   it('should render without error and have all cards for admins', () => {
     const container = render(
       <MockedProvider>
         <BrowserRouter>
           <MockedThemeProvider>
-            <Homepage authState={adminAuthState} />
+            <Homepage authState={adminAuthState} quickLinks={quickLinks} />
           </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>
@@ -49,7 +51,7 @@ describe('HomePage component', () => {
       setToken: jest.fn(),
       user: {
         avatarUrl: null,
-        community: { name: 'Nkwashi' },
+        community: { name: 'Nkwashi', wpLink: 'https://wordpress.com' },
         email: '9753942',
         expiresAt: null,
         id: '11cdad78',
@@ -63,7 +65,7 @@ describe('HomePage component', () => {
       <MockedProvider>
         <BrowserRouter>
           <MockedThemeProvider>
-            <Homepage authState={custodianAuthState} />
+            <Homepage authState={custodianAuthState} quickLinks={quickLinks} />
           </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>
@@ -84,7 +86,7 @@ describe('HomePage component', () => {
       setToken: jest.fn(),
       user: {
         avatarUrl: null,
-        community: { name: 'Nkwashi' },
+        community: { name: 'Nkwashi', wpLink: 'https://wordpress.com' },
         email: '9753942',
         expiresAt: null,
         id: '11cdad78',
@@ -98,7 +100,7 @@ describe('HomePage component', () => {
       <MockedProvider>
         <BrowserRouter>
           <MockedThemeProvider>
-            <Homepage authState={clientAuthState} />
+            <Homepage authState={clientAuthState} quickLinks={quickLinks} />
           </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>
@@ -121,7 +123,7 @@ describe('HomePage component', () => {
       setToken: jest.fn(),
       user: {
         avatarUrl: null,
-        community: { name: 'Nkwashi' },
+        community: { name: 'Nkwashi', wpLink: 'https://wordpress.com' },
         email: '9753942',
         expiresAt: null,
         id: '11cdad78',
@@ -135,7 +137,7 @@ describe('HomePage component', () => {
       <MockedProvider>
         <BrowserRouter>
           <MockedThemeProvider>
-            <Homepage authState={prospectAuthState} />
+            <Homepage authState={prospectAuthState} quickLinks={quickLinks} />
           </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>
@@ -159,7 +161,7 @@ describe('HomePage component', () => {
       setToken: jest.fn(),
       user: {
         avatarUrl: null,
-        community: { name: 'Nkwashi' },
+        community: { name: 'Nkwashi', wpLink: 'https://wordpress.com' },
         email: '9753942',
         expiresAt: null,
         id: '11cdad78',
@@ -173,7 +175,7 @@ describe('HomePage component', () => {
       <MockedProvider>
         <BrowserRouter>
           <MockedThemeProvider>
-            <Homepage authState={guardAuthState} />
+            <Homepage authState={guardAuthState} quickLinks={quickLinks} />
           </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>
@@ -200,7 +202,8 @@ describe('HomePage component', () => {
               display_on: ['Dashboard'],
               roles: ['resident']
             }
-          ]
+          ],
+          wpLink: 'https://wordpress.com'
         },
         email: '9753942',
         expiresAt: null,
@@ -224,9 +227,9 @@ describe('HomePage component', () => {
           </BrowserRouter>
         </MockedProvider>
       );
-      const quickLinks = screen.queryAllByTestId('link-name');
+      const links = screen.queryAllByTestId('link-name');
 
-      expect(quickLinks[0]).toBeInTheDocument();
+      expect(links[0]).toBeInTheDocument();
     });
     it('renders no task menu for code scanner', () => {
       const scanner = {
@@ -241,23 +244,21 @@ describe('HomePage component', () => {
                 display_on: ['Dashboard'],
                 roles: ['resident']
               }
-            ]
-          },
+            ],
+            wpLink: 'https://wordpress.com'
+          }
         }
       };
       render(
         <MockedProvider>
           <BrowserRouter>
             <MockedThemeProvider>
-              <Homepage
-                authState={scanner}
-                quickLinks={scanner.user.community.menuItems}
-              />
+              <Homepage authState={scanner} quickLinks={scanner.user.community.menuItems} />
             </MockedThemeProvider>
           </BrowserRouter>
         </MockedProvider>
       );
-        expect(screen.queryByText('common:misc.tasks')).toBeNull();
+      expect(screen.queryByText('common:misc.tasks')).toBeNull();
     });
   });
 });
