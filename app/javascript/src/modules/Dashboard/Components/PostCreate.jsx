@@ -18,7 +18,11 @@ export default function PostCreate({
 }) {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [post, setPost] = useState('');
-  const [visibilityOption, setVisibilityOption] = useState('Everyone');
+
+  const modulePermission = userPermissions.find(mod => mod.module === 'discussion')?.permissions;
+  const permissions = new Set(modulePermission);
+
+  const [visibilityOption, setVisibilityOption] = useState(permissions.has('can_set_accessibility') ? 'Everyone' : null);
   const [imageUrls, setImageUrls] = useState([]);
   const [blobIds, setBlobIds] = useState([]);
   const [postDetails, setPostDetails] = useState({
@@ -26,8 +30,6 @@ export default function PostCreate({
     message: '',
     loading: false
   });
-  const modulePermission = userPermissions.find(mod => mod.module === 'discussion')?.permissions;
-  const permissions = new Set(modulePermission);
 
   const { onChange, signedBlobId, url, status } = useFileUpload({
     client: useApolloClient()

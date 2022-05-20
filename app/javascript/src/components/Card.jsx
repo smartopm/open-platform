@@ -1,13 +1,12 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { StyleSheet, css } from 'aphrodite';
 import PropTypes from 'prop-types';
-import { Context as ThemeContext } from '../../Themes/Nkwashi/ThemeProvider';
+import makeStyles from '@mui/styles/makeStyles';
+import { Card, CardContent, Grid, Typography } from '@mui/material';
 
-export default function Card({
+export default function HomePageCard({
   title,
   path,
-  icon,
   from,
   clientName,
   clientNumber,
@@ -16,7 +15,8 @@ export default function Card({
   access,
   authState
 }) {
-  const theme = useContext(ThemeContext);
+  const classes = useStyles();
+
   if (
     !access.includes(authState.user.userType.toLowerCase()) ||
     (id === 10 && authState.user.community.name !== 'Nkwashi') ||
@@ -26,77 +26,86 @@ export default function Card({
   }
 
   return (
-    <div className={`${css(styles.cardSize)} card align-self-center text-center`}>
-      <span>{children}</span>
-      <Link
-        to={{
-          pathname: path,
-          state: {
-            clientName,
-            clientNumber,
-            from
-          }
-        }}
-        id={id}
-        className="card-link"
-      >
-        <div className="card-body">
-          <h5 className="card-title">
-            <span style={{ color: theme.primaryColor }}>{icon}</span>
-          </h5>
-          <p className={css(styles.CardtextIcon)}>{title}</p>
-        </div>
-      </Link>
-    </div>
+    <Grid item xs={6} md={4}>
+      {children ? (
+        <Card variant="outlined" elevation={0} className={classes.card}>
+          <CardContent className={classes.cardContent}>{children}</CardContent>
+        </Card>
+      ) : (
+        <Link
+          to={{
+            pathname: path,
+            state: {
+              clientName,
+              clientNumber,
+              from
+            }
+          }}
+          id={id}
+          className={classes.cardLink}
+        >
+          <Card variant="outlined" elevation={0} className={classes.card}>
+            <CardContent className={classes.cardContent}>
+              <Typography color="textSecondary" className={classes.root} data-testid="link-name">
+                {title}
+              </Typography>
+            </CardContent>
+          </Card>
+        </Link>
+      )}
+    </Grid>
   );
 }
 
-export function SVGIcon({ image, alt }) {
-  return <img src={image} alt={alt} />;
-}
-
-SVGIcon.propTypes = {
-  image: PropTypes.node.isRequired,
-  alt: PropTypes.string.isRequired
-}
-
-Card.defaultProps = {
+HomePageCard.defaultProps = {
   children: <div />,
   from: '',
   clientName: '',
   clientNumber: '',
   id: '',
-  icon: <div />,
   title: '',
   path: null
 };
 
-Card.propTypes = {
-  icon: PropTypes.node,
+HomePageCard.propTypes = {
   children: PropTypes.node,
   title: PropTypes.string,
   path: PropTypes.string,
   from: PropTypes.string,
   clientName: PropTypes.string,
   clientNumber: PropTypes.string,
-  id: PropTypes.oneOfType([
-    PropTypes.string,
-    PropTypes.number
-  ]),
+  id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   access: PropTypes.arrayOf(PropTypes.string).isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   authState: PropTypes.object.isRequired
 };
 
-const styles = StyleSheet.create({
-  CardtextIcon: {
-    marginTop: '15.5%'
+const useStyles = makeStyles(theme => ({
+  root: {
+    fontSize: '0.9em',
+    fontWeight: 400,
+    lineHeight: 1.5,
+    color: theme.palette.primary.main
   },
-  CardtextImg: {
-    marginTop: '21%'
+  card: {
+    minHeight: '9em',
+    border: `1px solid ${theme.palette.primary.main}`,
+    '&:hover': {
+      backgroundColor: theme.palette.primary.main,
+      '& $root': {
+        color: '#FFFFFF'
+      }
+    }
   },
-  cardSize: {
-    width: 200,
-    height: 154
+  cardContent: {
+    textAlign: 'center',
+    paddingTop: '3.5em',
+    textOverflow: 'ellipsis'
+  },
+  cardLink: {
+    textDecorationLine: 'none',
+    '&:hover': {
+      textDecorationLine: 'none'
+    }
   }
-});
+}));
