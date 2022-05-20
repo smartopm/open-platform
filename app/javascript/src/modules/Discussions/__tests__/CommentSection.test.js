@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, fireEvent } from '@testing-library/react';
 import { MockedProvider } from '@apollo/react-testing';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom';
@@ -30,5 +30,10 @@ describe('CommentSection', () => {
     expect(container.queryByText('This is another comment')).toBeInTheDocument();
     expect(container.queryByTestId('delete_icon')).toBeInTheDocument();
     expect(container.queryByTestId('delete_icon').textContent).toContain('2020-08-08');
+    expect(container.queryByTestId('post_options')).toBeInTheDocument();
+
+    fireEvent.click(container.queryByText('form_actions.edit_post'))
+    fireEvent.click(container.queryByText('form_actions.delete_post'))
+    expect(commentsProps.handleDeleteComment).toBeCalled();
   });
 });

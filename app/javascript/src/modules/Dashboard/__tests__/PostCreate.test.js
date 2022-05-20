@@ -92,6 +92,7 @@ describe('PostCreate component', () => {
             setPostData={jest.fn()}
             setEditModal={jest.fn()}
             setAnchorEl={jest.fn()}
+            userPermissions={[{ module: 'discussion', permissions: ['can_set_accessibility'] }]}
           />
         </MockedThemeProvider>
       </MockedProvider>

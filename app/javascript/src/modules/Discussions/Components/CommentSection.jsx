@@ -162,7 +162,7 @@ export default function CommentSection({ data, handleDeleteComment, refetch }) {
           </>
         )}
       </DialogWithImageUpload>
-      <ListItem alignItems="flex-start">
+      <ListItem alignItems="flex-start" data-testid='comment_body'>
         <ListItemAvatar style={{ marginRight: 8 }}>
           <Avatar user={data.user} />
         </ListItemAvatar>
