@@ -6,7 +6,9 @@
   },
   "form_actions": {
     "agree": "De Acuerdo",
+    "delete_post": "Eliminar Publicación",
     "disagree": "Discrepar",
+    "edit_post": "Editar Publicación",
     "more_discussions": "Agregar mas discusiones",
     "more_posts": "Cargar más publicaciones",
     "send": "Enviar"
