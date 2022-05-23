@@ -103,6 +103,7 @@ Ciudad Morazán:
         - can_access_all_discussions
         - can_create_post
         - can_view_posts
+        - can_see_menu_item
     dashboard:
       permissions:
         - can_access_dashboard
@@ -123,6 +124,7 @@ Ciudad Morazán:
         - can_access_all_discussions
         - can_create_post
         - can_view_posts
+        - can_see_menu_item
     dashboard:
       permissions:
         - can_access_dashboard
@@ -358,6 +360,7 @@ DoubleGDP:
         - can_access_all_discussions
         - can_create_post
         - can_view_posts
+        - can_see_menu_item
     dashboard:
       permissions:
         - can_access_dashboard
@@ -499,6 +502,7 @@ DoubleGDP:
         - can_access_all_discussions
         - can_create_post
         - can_view_posts
+        - can_see_menu_item
     dashboard:
       permissions:
         - can_access_dashboard

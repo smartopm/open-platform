@@ -315,6 +315,7 @@ contractor:
       - can_access_all_discussions
       - can_create_post
       - can_view_posts
+      - can_see_menu_item
   business:
     permissions:
       - can_see_menu_item
@@ -328,6 +329,10 @@ contractor:
   user:
     permissions:
       - can_get_users_lite
+  dashboard:
+    permissions:
+      - can_access_dashboard
+      - can_see_menu_item
 custodian:
   note:
     permissions:
@@ -517,6 +522,7 @@ site_worker:
       - can_access_all_discussions
       - can_create_post
       - can_view_posts
+      - can_see_menu_item
   dashboard:
     permissions:
       - can_access_dashboard
@@ -611,6 +617,7 @@ resident:
       - can_access_all_discussions
       - can_create_post
       - can_view_posts
+      - can_see_menu_item
   business:
     permissions:
       - can_see_menu_item
@@ -638,6 +645,7 @@ prospective_client:
       - can_access_all_discussions
       - can_create_post
       - can_view_posts
+      - can_see_menu_item
   business:
     permissions:
       - can_see_menu_item
@@ -697,6 +705,7 @@ client:
       - can_access_all_discussions
       - can_create_post
       - can_view_posts
+      - can_see_menu_item
   business:
     permissions:
       - can_see_menu_item
@@ -739,6 +748,7 @@ site_manager:
       - can_access_all_discussions
       - can_create_post
       - can_view_posts
+      - can_see_menu_item
   dashboard:
     permissions:
       - can_access_dashboard
