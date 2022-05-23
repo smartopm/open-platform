@@ -1,10 +1,10 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery } from 'react-apollo';
-import { DiscussionQuery } from '../../graphql/queries';
-import Loading from '../../shared/Loading';
-import ErrorPage from '../../components/Error';
-import Discussion from '../../components/Discussion/Discussion';
+import { DiscussionQuery } from '../../../graphql/queries';
+import Loading from '../../../shared/Loading';
+import ErrorPage from '../../../components/Error';
+import Discussion from '../Components/Discussion';
 
 export default function DiscussonPage() {
   const { id } = useParams();

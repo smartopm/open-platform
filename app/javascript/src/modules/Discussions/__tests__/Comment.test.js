@@ -1,18 +1,25 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import { ApolloProvider } from 'react-apollo';
 import { BrowserRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/react-testing';
-import { CommentMutation, UpdateCommentMutation } from '../../graphql/mutations';
-import { commentStatusAction } from '../../utils/constants';
-import Comments from '../../components/Discussion/Comment';
-import { Context } from '../../containers/Provider/AuthStateProvider';
-import { createClient } from '../../utils/apollo';
+import { CommentMutation, UpdateCommentMutation } from '../../../graphql/mutations';
+import { commentStatusAction } from '../../../utils/constants';
+import Comments from '../Components/Comment';
+import { Context } from '../../../containers/Provider/AuthStateProvider';
+import { createClient } from '../../../utils/apollo';
 import '@testing-library/jest-dom/extend-expect';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
+jest.mock('react-router', () => ({
+  ...jest.requireActual('react-router'),
+  useParams: () => ({
+    id: 'edcickwe',
+    useRouteMatch: () => ({ url: '/discussions/edcickwe' })
+  }),
+}));
 describe('Main Discussion Comment Section', () => {
-  it('should check the whole comment part of the discussion', () => {
+  it('should check the whole comment part of the discussion', async () => {
     const comments = [
       {
         content: 'uploaded that beautiful image',
@@ -64,22 +71,23 @@ describe('Main Discussion Comment Section', () => {
       loaded: true,
       user: {
         userType: 'admin'
-      },
+      }
     };
-    // mock react router and add tests
-    // or find where the comments is being used and pass the id as a prop instead of direct access
-    render(
+    const container = render(
       <ApolloProvider client={createClient}>
         <BrowserRouter>
           <Context.Provider value={user}>
             <MockedProvider mocks={[createCommentMock, updateCommentMock]}>
-              <BrowserRouter>
-                <Comments refetch={refetch} comments={comments} discussionId={other.discussionId} />
-              </BrowserRouter>
+              <Comments refetch={refetch} comments={comments} discussionId={other.discussionId} />
             </MockedProvider>
           </Context.Provider>
         </BrowserRouter>
       </ApolloProvider>
     );
+
+    await waitFor(() => {
+      expect(container.queryByTestId('post_content')).toBeInTheDocument();
+      expect(container.queryAllByTestId('comment_body')[0]).toBeInTheDocument();
+    });
   });
 });

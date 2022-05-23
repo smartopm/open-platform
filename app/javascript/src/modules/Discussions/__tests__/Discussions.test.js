@@ -3,10 +3,10 @@ import { act, render, waitFor, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { BrowserRouter } from 'react-router-dom/';
 import { MockedProvider } from '@apollo/react-testing';
-import { DiscussionsQuery } from '../../graphql/queries';
-import Discussions from '../../containers/Discussions/Discussions';
-import { Context } from '../../containers/Provider/AuthStateProvider'
-import userMock from '../../__mocks__/authstate'
+import { DiscussionsQuery } from '../../../graphql/queries';
+import Discussions from '../Containers/Discussions';
+import { Context } from '../../../containers/Provider/AuthStateProvider'
+import userMock from '../../../__mocks__/authstate'
 
 describe('Discussions Component', () => {
   it('renders Discussion elements', async () => {

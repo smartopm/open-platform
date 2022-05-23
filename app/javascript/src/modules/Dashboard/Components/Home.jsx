@@ -17,7 +17,7 @@ import SocialMediaLinks from '../../../components/SocialMediaLinks';
 import QuickLinks from '../../QuickLinks/Components/QuickLinks';
 import { filterQuickLinksByRole } from '../utils';
 import { Spinner } from '../../../shared/Loading';
-import CommunityNews from '../../../components/Discussion/CommunityNews';
+import CommunityNews from '../../Discussions/Components/CommunityNews';
 import { allUserTypes } from '../../../utils/constants';
 
 const Home = () => {

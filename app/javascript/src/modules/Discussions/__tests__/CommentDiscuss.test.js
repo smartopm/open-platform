@@ -3,8 +3,8 @@ import { fireEvent, render, act } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect'
 import { BrowserRouter } from 'react-router-dom'
 import { MockedProvider } from '@apollo/react-testing'
-import Discuss from '../../components/Discussion/Discuss'
-import { DiscussionMutation } from '../../graphql/mutations'
+import Discuss from '../Components/Discuss'
+import { DiscussionMutation } from '../../../graphql/mutations'
 
 describe('Discuss component', () => {
   it('renders Discuss component correctly', async () => {

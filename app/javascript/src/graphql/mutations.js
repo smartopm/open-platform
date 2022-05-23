@@ -750,6 +750,16 @@ export const PostCreateMutation = gql`
   }
 `;
 
+export const PostUpdateMutation = gql`
+  mutation postUpdate($id: ID!, $content: String) {
+    postUpdate(id: $id, content: $content) {
+      post {
+        content
+      }
+    }
+  }
+`;
+
 export const PostDeleteMutation = gql`
   mutation postDelete($id: ID!) {
     postDelete(id: $id) {
