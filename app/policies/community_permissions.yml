@@ -193,6 +193,11 @@ Tilisi:
         - can_access_dashboard
         - can_see_menu_item
         - can_access_admin_processes_dashboard
+    discussion:
+      permissions:
+        - can_access_all_discussions
+        - can_create_post
+        - can_view_posts
 
   developer:
     note:
@@ -243,6 +248,12 @@ Tilisi:
     logout:
       permissions:
         - can_see_menu_item
+    discussion:
+      permissions:
+        - can_access_all_discussions
+        - can_create_post
+        - can_view_posts
+
 DoubleGDP:
   security_supervisor:
     note:
@@ -345,6 +356,8 @@ DoubleGDP:
     discussion:
       permissions:
         - can_access_all_discussions
+        - can_create_post
+        - can_view_posts
     dashboard:
       permissions:
         - can_access_dashboard
@@ -412,7 +425,12 @@ DoubleGDP:
         - can_access_dashboard
         - can_see_menu_item
         - can_access_admin_processes_dashboard
-
+    discussion:
+      permissions:
+        - can_access_all_discussions
+        - can_create_post
+        - can_view_posts
+  
   developer:
     note:
       permissions:
@@ -462,6 +480,12 @@ DoubleGDP:
     logout:
       permissions:
         - can_see_menu_item
+    discussion:
+      permissions:
+        - can_access_all_discussions
+        - can_create_post
+        - can_view_posts
+  
   site_worker:
     profile:
       permissions:
@@ -485,4 +509,8 @@ DoubleGDP:
     event_log:
       permissions:
         - can_fetch_logbook_events
-
+    discussion:
+      permissions:
+        - can_access_all_discussions
+        - can_create_post
+        - can_view_posts
