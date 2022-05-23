@@ -16,26 +16,45 @@ RSpec.describe Mutations::Process::ProcessUpdate do
     let(:admin) { create(:admin_user, community: community, role: admin_role) }
     let(:form) { create(:form, community: community) }
     let!(:process) { create(:process, community: community, form: form) }
+    let!(:note_list) { create(:note_list, community: community, process: process) }
 
     let(:mutation) do
       <<~GQL
-        mutation processUpdateMutation($id: ID!, $name: String, $process_type: String){
-          processUpdate(id: $id, name: $name, processType: $process_type){
-            process{
-              name
-              processType
-            }
+        mutation processUpdateMutation(
+          $id: ID!,
+          $name: String,
+          $formId: ID,
+          $noteListId: ID
+          ){
+            processUpdate(
+              id: $id,
+              name: $name,
+              formId: $formId,
+              noteListId: $noteListId
+              ){
+                process {
+                  name
+                  form {
+                    id
+                  }
+                  noteList {
+                    id
+                  }
+                }
+              }
           }
-        }
       GQL
     end
 
-    context 'when user is authorized and process is present' do
+    context 'when user is authorized and update params are present' do
+      let(:new_note_list) { create(:note_list, community: community) }
+
       it 'should update process' do
         variables = {
           id: process.id,
           name: 'DRC',
-          process_type: 'drc',
+          formId: form.id,
+          noteListId: new_note_list.id,
         }
 
         result = DoubleGdpSchema.execute(mutation, variables: variables,
@@ -43,9 +62,15 @@ RSpec.describe Mutations::Process::ProcessUpdate do
                                                      current_user: admin,
                                                      site_community: community,
                                                    }).as_json
+
         expect(result['errors']).to be_nil
         expect(result.dig('data', 'processUpdate', 'process', 'name')).to eql 'DRC'
-        expect(result.dig('data', 'processUpdate', 'process', 'processType')).to eql 'drc'
+        expect(
+          result.dig('data', 'processUpdate', 'process', 'form', 'id'),
+        ).to eql variables[:formId]
+        expect(
+          result.dig('data', 'processUpdate', 'process', 'noteList', 'id'),
+        ).to eql variables[:noteListId]
       end
     end
 
@@ -64,6 +89,26 @@ RSpec.describe Mutations::Process::ProcessUpdate do
                                                    }).as_json
         expect(result['errors']).to_not be_nil
         expect(result.dig('errors', 0, 'message')).to eql 'Process not found'
+      end
+    end
+
+    context 'when note list is not found' do
+      it 'raises and error' do
+        variables = {
+          id: process.id,
+          name: 'New process name',
+          formId: form.id,
+          noteListId: 'not found',
+        }
+
+        result = DoubleGdpSchema.execute(mutation, variables: variables,
+                                                   context: {
+                                                     current_user: admin,
+                                                     site_community: community,
+                                                   }).as_json
+
+        expect(result['errors']).to_not be_nil
+        expect(result.dig('errors', 0, 'message')).to eql 'Task List not found'
       end
     end
 

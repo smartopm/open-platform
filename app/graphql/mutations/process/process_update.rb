@@ -16,15 +16,31 @@ module Mutations
         process = context[:site_community].processes.find_by(id: vals[:id])
         raise_error_message(I18n.t('errors.process.not_found')) if process.nil?
 
-        return { process: process } if process.update(vals.except(:id, :note_list_id))
+        note_list = Notes::NoteList.find_by(id: vals[:note_list_id])
+        raise GraphQL::ExecutionError, I18n.t('errors.note_list.not_found') unless note_list
 
-        raise_error_message(process.errors.full_messages&.join(', '))
+        update_process(vals, process, note_list)
       end
 
       def authorized?(_vals)
         return true if permitted?(module: :process, permission: :can_update_process_template)
 
         raise_error_message(I18n.t('errors.unauthorized'))
+      end
+
+      private
+
+      def update_process(vals, process, note_list)
+        ActiveRecord::Base.transaction do
+          process.note_list = note_list
+          process.save!
+
+          return { process: process } if process.update(vals.except(:id, :note_list_id))
+
+          raise_error_message(process.errors.full_messages&.join(', '))
+        end
+      rescue StandardError => e
+        raise GraphQL::ExecutionError, e.message
       end
     end
   end
