@@ -37,15 +37,15 @@ export default function UserMessages() {
   function sendMessage() {
     setLoading(true)
     const receiver = (state && state.clientNumber) || ''
-    if (!message.length) {
-      setError(t("common:errors.empty_text"))
-      return
-    }
     messageCreate({ variables: { receiver, message, userId: id } }).then(() => {
       setMessage('')
       refetch()
       setLoading(false)
     })
+    .catch(err => {
+      setError(err.message.replace(/GraphQL error:/, ''));
+      setLoading(false);
+    });
   }
 
   function fetchMoreMessages() {
@@ -141,7 +141,7 @@ export default function UserMessages() {
       <Button
         color="primary"
         onClick={sendMessage}
-        disabled={isMsgLoading}
+        disabled={!message.trim() || isMsgLoading}
         style={{ marginTop: -37, marginRight: 34, float: 'right' }}
       >
         {t('common:misc.send')}
