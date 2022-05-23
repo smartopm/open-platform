@@ -531,6 +531,21 @@ export const DiscussionQuery = gql`
   }
 `;
 
+export const TopDiscussionTopicsQuery = gql`
+  query topDiscussionTopics {
+    topDiscussionTopics {
+      title
+      id
+      description
+      createdAt
+      user {
+        name
+        id
+      }
+    }
+  }
+`;
+
 export const ParcelsQuery = gql`
   query LandParcel($query: String, $limit: Int, $offset: Int) {
     fetchLandParcel(query: $query, limit: $limit, offset: $offset) {

@@ -23,6 +23,11 @@ module Types::Queries::Discussion
       description 'Get a discussion for wordpress pages using postId'
       argument :post_id, String, required: true
     end
+
+    # Get the 5 required discussion topics
+    field :top_discussion_topics, [Types::DiscussionType], null: true do
+      description 'Get top discussion topics for community'
+    end
   end
 
   def discussions(offset: 0, limit: 100)
@@ -50,5 +55,13 @@ module Types::Queries::Discussion
     return if id.nil?
 
     context[:current_user].find_user_discussion(id, type)
+  end
+
+  def top_discussion_topics
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:current_user].blank?
+
+    context[:site_community]
+      .discussions
+      .where(title: ['Safety', 'Events', 'Recommendations', 'Items for Sale', 'Family'])
   end
 end

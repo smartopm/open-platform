@@ -11,9 +11,13 @@ namespace :db do
     ActiveRecord::Base.transaction do
       Community.find_each do |community|
         puts "Creating discussions for #{community.name}..."
+
         DISCUSSION_TOPICS.each do |topic|
-          community.discussions.find_or_create_by!(title: topic, user_id: id)
+          unless community.discussions.find_by(title: topic)
+            community.discussions.create!(title: topic, user_id: id)
+          end
         end
+
       end
     end
     puts 'Created discussion topics.'
