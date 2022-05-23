@@ -32,8 +32,12 @@ module Mutations
 
       def update_process(vals, process, note_list)
         ActiveRecord::Base.transaction do
-          process.note_list = note_list
-          process.save!
+          # Delink previous task list
+          previous_task_list = process.note_list
+          previous_task_list.update!(process_id: nil)
+          # Link new task list
+          process.reload
+          note_list.update!(process_id: process.id)
 
           return { process: process } if process.update(vals.except(:id, :note_list_id))
 

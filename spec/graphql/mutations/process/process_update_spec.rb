@@ -71,6 +71,11 @@ RSpec.describe Mutations::Process::ProcessUpdate do
         expect(
           result.dig('data', 'processUpdate', 'process', 'noteList', 'id'),
         ).to eql variables[:noteListId]
+
+        # Confirm previous notelist is delinked with process
+        previous_task_list = community.note_lists.find_by(id: note_list.id, name: note_list.name)
+        expect(previous_task_list.present?).to eq(true)
+        expect(previous_task_list.process_id).to be_nil
       end
     end
 
