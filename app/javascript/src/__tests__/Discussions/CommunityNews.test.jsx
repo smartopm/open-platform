@@ -3,7 +3,7 @@ import { fireEvent, render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom';
-import { CommunityNewsPostsQuery } from '../../graphql/queries';
+import { CommunityNewsPostsQuery, TopDiscussionTopicsQuery } from '../../graphql/queries';
 import CommunityNews from '../../components/Discussion/CommunityNews';
 import MockedThemeProvider from '../../modules/__mocks__/mock_theme';
 
@@ -90,6 +90,27 @@ describe('Community news with posts', () => {
                   imageUrl:
                     'https://lh3.googleusercontent.com/a-/AOh14Ghj2JnWVlVC_cPrzJrAJ2YyV_UyVTXcEew8YKVp=s96-c',
                   __typename: 'User'
+                }
+              }
+            ]
+          }
+        }
+      },
+      {
+        request: {
+          query: TopDiscussionTopicsQuery
+        },
+        result: {
+          data: {
+            topDiscussionTopics: [
+              {
+                title: 'Family',
+                id: 'df956b37-227e-4a32-1p85-e3279aa7da0e122',
+                description: 'family - related discussions should be here...',
+                createdAt: '2022-05-10T08:57:24Z',
+                user: {
+                  name: 'Taofeek Olalere',
+                  id: 'df956b37-227e-4a32-9a85-e3279aa7da0e184'
                 }
               }
             ]

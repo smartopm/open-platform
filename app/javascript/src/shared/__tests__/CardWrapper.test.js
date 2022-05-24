@@ -13,7 +13,12 @@ describe('CardWrapper component', () => {
       title: 'sample title',
       buttonName: 'sample button name',
       displayButton: true,
-      handleButton: jest.fn()
+      handleButton: jest.fn(),
+      menuItems: [{
+        content: 'menu topics',
+        isAdmin: true,
+        handleClick: () => ({})
+      }]
     };
     const rendered = render(
       <BrowserRouter>
@@ -27,7 +32,10 @@ describe('CardWrapper component', () => {
 
     expect(rendered.queryByText('sample title')).toBeInTheDocument();
     expect(rendered.queryByTestId('button')).toHaveTextContent('sample button name');
+    expect(rendered.queryByTestId('discussion-menu')).toBeInTheDocument();
     fireEvent.click(rendered.queryByTestId('button'));
     expect(props.handleButton).toHaveBeenCalled();
+    fireEvent.click(rendered.queryByTestId('discussion-menu'));
+    expect(rendered.queryByTestId('menu_item')).toHaveTextContent('menu topics');
   });
 });
