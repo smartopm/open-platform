@@ -103,15 +103,15 @@ RSpec.describe Types::Queries::Comment do
 
     it 'should retrieve list of top discussion topics only' do
       expected_topic = current_user
-                        .community
-                        .discussions
-                        .create!(title: 'Safety', user_id: current_user.id)
+                       .community
+                       .discussions
+                       .create!(title: 'Safety', user_id: current_user.id)
 
       result = DoubleGdpSchema.execute(top_discussion_topics_query,
                                        context: {
                                          current_user: admin_user,
-                                         site_community: current_user.community
-                                        }).as_json
+                                         site_community: current_user.community,
+                                       }).as_json
 
       expect(result.dig('data', 'topDiscussionTopics').length).to eql 1
       expect(result.dig('data', 'topDiscussionTopics', 0, 'id')).to eql expected_topic.id

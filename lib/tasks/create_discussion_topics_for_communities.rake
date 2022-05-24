@@ -5,7 +5,7 @@ namespace :db do
   task create_discussion_topics: :environment do
     puts 'Starting creating discussion topics ...'
 
-    DISCUSSION_TOPICS = ['Safety', 'Events', 'Recommendations', 'Items for Sale', 'Family']
+    DISCUSSION_TOPICS = ['Safety', 'Events', 'Recommendations', 'Items for Sale', 'Family'].freeze
     id = Users::User.find_by(email: 'nicolas@doublegdp.com').id
 
     ActiveRecord::Base.transaction do
@@ -17,7 +17,6 @@ namespace :db do
             community.discussions.create!(title: topic, user_id: id)
           end
         end
-
       end
     end
     puts 'Created discussion topics.'
