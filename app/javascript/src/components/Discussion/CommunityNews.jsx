@@ -1,6 +1,3 @@
-/* eslint-disable react/jsx-no-duplicate-props */
-/* eslint-disable jsx-a11y/anchor-is-valid */
-/* eslint-disable react/jsx-wrap-multilines */
 import React from 'react';
 import { ListItem, ListItemAvatar, ListItemText, Grid, Typography } from '@mui/material';
 import { StyleSheet, css } from 'aphrodite';
@@ -12,7 +9,7 @@ import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import moment from 'moment-timezone';
 import { useTheme } from '@mui/material/styles';
-import { CommunityNewsPostsQuery } from '../../graphql/queries';
+import { CommunityNewsPostsQuery, TopDiscussionTopicsQuery } from '../../graphql/queries';
 import { Spinner } from '../../shared/Loading';
 import CenteredContent from '../../shared/CenteredContent';
 import Avatar from '../Avatar';
@@ -31,23 +28,39 @@ export default function CommunityNews({
   const isMobile = useMediaQuery('(max-width:800px)');
   const history = useHistory();
   const theme = useTheme();
-
+  const { t } = useTranslation('discussion');
   const { loading, error, data, refetch } = useQuery(CommunityNewsPostsQuery, {
     variables: { limit }
   });
-
-  const { t } = useTranslation('discussion');
-
   const discussionId = data?.communityNewsPosts[0]?.discussionId;
+  const { loading: tLoading, error: tError, data: tData } = useQuery(
+    TopDiscussionTopicsQuery
+  );
+  let structuredMenuList = [];
+  if(!tLoading) {
+    structuredMenuList = tData?.topDiscussionTopics.map(discussion => ({
+      content: discussion?.title,
+      isAdmin: true,
+      handleClick: () => history.push(`/discussions/${discussion?.id}`)
+    }));
+  }
+
+  const menuList = [
+    ...structuredMenuList,
+    {
+      content: 'More Topics',
+      isAdmin: true,
+      handleClick: () => history.push('/discussions')
+    }
+  ];
 
   function redirectToDiscussionsPage() {
     history.push(`/discussions/${discussionId}`);
   }
 
-  if (loading) return <Spinner />;
-  if (error) {
-    return <CenteredContent>{formatError(error.message)}</CenteredContent>;
-  }
+  if (loading || tLoading) return <Spinner />;
+  if (error) { return <CenteredContent>{formatError(error.message)}</CenteredContent>; }
+  if (tError) { return <CenteredContent>{formatError(error.message)}</CenteredContent>; }
 
   return (
     <div style={isMobile ? { padding: '20px' } : { padding: '20px 20px 20px 79px', width: '99%' }}>
@@ -56,6 +69,7 @@ export default function CommunityNews({
         buttonName={t('common:misc.see_more_discussion')}
         displayButton={data?.communityNewsPosts?.length >= limit}
         handleButton={redirectToDiscussionsPage}
+        menuItems={menuList}
       >
         <Grid container>
           <Grid item xs={12} style={{ marginBottom: 10 }}>
@@ -79,7 +93,7 @@ export default function CommunityNews({
                       <Avatar user={post.user} />
                     </ListItemAvatar>
                     <ListItemText
-                      primary={
+                      primary={(
                         <>
                           <Typography component="span" variant="subtitle2">
                             {post.user.name}
@@ -88,7 +102,7 @@ export default function CommunityNews({
                             {moment(post.createdAt).fromNow()}
                           </Typography>
                         </>
-                      }
+                      )}
                     />
                   </ListItem>
                 </Grid>
