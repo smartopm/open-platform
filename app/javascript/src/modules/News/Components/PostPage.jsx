@@ -21,7 +21,7 @@ import { Context as AuthStateContext } from '../../../containers/Provider/AuthSt
 import { Spinner } from '../../../shared/Loading';
 import IframeContainer from '../../../components/IframeContainer';
 import { PostDiscussionQuery, PostCommentsQuery } from '../../../graphql/queries';
-import Comments from '../../../components/Discussion/Comment';
+import Comments from '../../Discussions/Components/Comment';
 import { DiscussionMutation } from '../../../graphql/mutations';
 import CenteredContent from '../../../shared/CenteredContent';
 import TagsComponent from './Tags';

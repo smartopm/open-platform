@@ -1,5 +1,6 @@
-import React from 'react';
-import { ListItem, ListItemAvatar, ListItemText, Grid, Typography } from '@mui/material';
+import React, { useState } from 'react';
+import { ListItem, ListItemAvatar, ListItemText, Grid, Typography, IconButton } from '@mui/material';
+import MoreVertOutlined from '@mui/icons-material/MoreVertOutlined';
 import { StyleSheet, css } from 'aphrodite';
 import { useHistory } from 'react-router-dom';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -9,14 +10,15 @@ import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import moment from 'moment-timezone';
 import { useTheme } from '@mui/material/styles';
-import { CommunityNewsPostsQuery, TopDiscussionTopicsQuery } from '../../graphql/queries';
-import { Spinner } from '../../shared/Loading';
-import CenteredContent from '../../shared/CenteredContent';
-import Avatar from '../Avatar';
-import { formatError } from '../../utils/helpers';
-import ImageAuth from '../../shared/ImageAuth';
-import PostCreate from '../../modules/Dashboard/Components/PostCreate';
-import CardWrapper from '../../shared/CardWrapper';
+import { CommunityNewsPostsQuery, TopDiscussionTopicsQuery } from '../../../graphql/queries';
+import { Spinner } from '../../../shared/Loading';
+import CenteredContent from '../../../shared/CenteredContent';
+import Avatar from '../../../components/Avatar';
+import { formatError } from '../../../utils/helpers';
+import ImageAuth from '../../../shared/ImageAuth';
+import PostCreate from '../../Dashboard/Components/PostCreate';
+import CardWrapper from '../../../shared/CardWrapper';
+import MenuList from '../../../shared/MenuList';
 
 export default function CommunityNews({
   userType,
@@ -29,6 +31,11 @@ export default function CommunityNews({
   const history = useHistory();
   const theme = useTheme();
   const { t } = useTranslation('discussion');
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [postData, setPostData] = useState(null);
+  const [editModal, setEditModal] = useState(false);
+  const anchorElOpen = Boolean(anchorEl);
+
   const { loading, error, data, refetch } = useQuery(CommunityNewsPostsQuery, {
     variables: { limit }
   });
@@ -45,7 +52,7 @@ export default function CommunityNews({
     }));
   }
 
-  const menuList = [
+  const discussionMenuList = [
     ...structuredMenuList,
     {
       content: 'More Topics',
@@ -53,6 +60,34 @@ export default function CommunityNews({
       handleClick: () => history.push('/discussions')
     }
   ];
+
+  const menuList = [
+    {
+      content: t('form_actions.edit_post'),
+      isAdmin: true,
+      color: '',
+      handleClick: () => setEditModal(true)
+    }
+  ];
+
+  const menuData = {
+    menuList,
+    handleMenu,
+    anchorEl,
+    open: anchorElOpen,
+    handleClose
+  };
+
+  function handleClose(event) {
+    event.stopPropagation();
+    setAnchorEl(null);
+  }
+
+  function handleMenu(event, post) {
+    event.stopPropagation();
+    setAnchorEl(event.currentTarget);
+    setPostData(post);
+  }
 
   function redirectToDiscussionsPage() {
     history.push(`/discussions/${discussionId}`);
@@ -69,7 +104,7 @@ export default function CommunityNews({
         buttonName={t('common:misc.see_more_discussion')}
         displayButton={data?.communityNewsPosts?.length >= limit}
         handleButton={redirectToDiscussionsPage}
-        menuItems={menuList}
+        menuItems={discussionMenuList}
       >
         <Grid container>
           <Grid item xs={12} style={{ marginBottom: 10 }}>
@@ -80,6 +115,12 @@ export default function CommunityNews({
                 userPermissions={userPermissions}
                 btnBorderColor={theme.palette.secondary.main}
                 refetchNews={refetch}
+                isMobile={isMobile}
+                postData={postData}
+                setPostData={setPostData}
+                editModal={editModal}
+                setEditModal={setEditModal}
+                setAnchorEl={setAnchorEl}
               />
             )}
           </Grid>
@@ -94,14 +135,39 @@ export default function CommunityNews({
                     </ListItemAvatar>
                     <ListItemText
                       primary={(
-                        <>
-                          <Typography component="span" variant="subtitle2">
-                            {post.user.name}
-                          </Typography>
-                          <Typography component="p" variant="caption" style={{ color: '#575757' }}>
-                            {moment(post.createdAt).fromNow()}
-                          </Typography>
-                        </>
+                        <Grid container>
+                          <Grid item md={6} xs={10}>
+                            <Typography component="span" variant="subtitle2">
+                              {post.user.name}
+                            </Typography>
+                            <Typography
+                              component="p"
+                              variant="caption"
+                              style={{ color: '#575757' }}
+                            >
+                              {moment(post.createdAt).fromNow()}
+                            </Typography>
+                          </Grid>
+                          <Grid item md={6} xs={2} style={{ textAlign: 'right' }}>
+                            <IconButton
+                              aria-controls="simple-menu"
+                              aria-haspopup="true"
+                              data-testid="post_options"
+                              dataid={post.id}
+                              onClick={event => menuData.handleMenu(event, post)}
+                              size="large"
+                              component="span"
+                            >
+                              <MoreVertOutlined />
+                            </IconButton>
+                            <MenuList
+                              open={menuData.open && anchorEl.getAttribute('dataid') === post.id}
+                              anchorEl={menuData.anchorEl}
+                              handleClose={menuData.handleClose}
+                              list={menuData.menuList}
+                            />
+                          </Grid>
+                        </Grid>
                       )}
                     />
                   </ListItem>

@@ -80,7 +80,7 @@ export default function CardWrapper({
 
 const useStyles = makeStyles(theme => ({
   container: {
-    padding: '10px',
+    padding: '10px 10px 24px 10px',
     border: `1px solid ${theme.palette.secondary.main}`,
     borderRadius: '10px',
     background: '#FBFBFA'

@@ -3,11 +3,11 @@ import React, { useState, useEffect } from 'react'
 import {
   Chip
 } from '@mui/material'
-import { discussionUserQuery } from '../../graphql/queries'
+import { discussionUserQuery } from '../../../graphql/queries'
 import { useQuery, useMutation } from 'react-apollo'
-import { DiscussionSubscription } from '../../graphql/mutations'
+import { DiscussionSubscription } from '../../../graphql/mutations'
 import FollowDialogueBox from './FollowDialogueBox'
-import { validateEmail } from "../../utils/helpers"
+import { validateEmail } from "../../../utils/helpers"
 
 export default function FollowButton({ discussionId, authState }) {
   const id = discussionId

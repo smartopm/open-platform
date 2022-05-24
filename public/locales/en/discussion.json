@@ -12,7 +12,9 @@
       "send": "Send",
       "agree": "Agree",
       "disagree": "Disagree",
-      "more_posts": "Load more posts"
+      "more_posts": "Load more posts",
+      "edit_post": "Edit Post",
+      "delete_post": "Delete Post"
     },
     "form_fields": {
       "email_address": "Email Address"

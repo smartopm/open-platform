@@ -4,7 +4,7 @@ import { Button, Avatar } from '@mui/material';
 import PropTypes from 'prop-types';
 import DialogWithImageUpload from '../../../shared/dialogs/DialogWithImageUpload';
 import useFileUpload from '../../../graphql/useFileUpload';
-import { PostCreateMutation } from '../../../graphql/mutations';
+import { PostCreateMutation, PostUpdateMutation } from '../../../graphql/mutations';
 import MessageAlert from '../../../components/MessageAlert';
 import { Spinner } from '../../../shared/Loading';
 import { objectAccessor } from '../../../utils/helpers';
@@ -14,11 +14,20 @@ export default function PostCreate({
   currentUserImage,
   userPermissions,
   btnBorderColor,
-  refetchNews
+  refetchNews,
+  postData,
+  editModal,
+  setPostData,
+  setEditModal,
+  setAnchorEl
 }) {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [post, setPost] = useState('');
-  const [visibilityOption, setVisibilityOption] = useState('Everyone');
+
+  const modulePermission = userPermissions.find(mod => mod.module === 'discussion')?.permissions;
+  const permissions = new Set(modulePermission);
+
+  const [visibilityOption, setVisibilityOption] = useState(permissions.has('can_set_accessibility') ? 'Everyone' : null);
   const [imageUrls, setImageUrls] = useState([]);
   const [blobIds, setBlobIds] = useState([]);
   const [postDetails, setPostDetails] = useState({
@@ -26,8 +35,6 @@ export default function PostCreate({
     message: '',
     loading: false
   });
-  const modulePermission = userPermissions.find(mod => mod.module === 'discussion')?.permissions;
-  const permissions = new Set(modulePermission);
 
   const { onChange, signedBlobId, url, status } = useFileUpload({
     client: useApolloClient()
@@ -38,8 +45,9 @@ export default function PostCreate({
     admins: 'Admins Only',
     everyone: 'Everyone'
   };
+  const [updatePost] = useMutation(PostUpdateMutation);
   const modalDetails = {
-    title: translate('dashboard.start_post'),
+    title: editModal ? translate('dashboard.edit_post') : translate('dashboard.start_post'),
     inputPlaceholder: translate('dashboard.whats_happening'),
     uploadBtnText: translate('dashboard.add_photo')
   };
@@ -59,6 +67,13 @@ export default function PostCreate({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
 
+  useEffect(() => {
+    if (editModal) {
+      setPost(postData.content);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [editModal]);
+
   function handleCloseButton(imgUrl) {
     const images = [...imageUrls];
     const filteredImages = images.filter(img => img !== imgUrl);
@@ -76,13 +91,25 @@ export default function PostCreate({
 
   function closeCreateModal() {
     setIsCreateModalOpen(false);
+    if (editModal) {
+      setEditModal(false);
+      setPostData(null);
+      setAnchorEl(null);
+      setPost('');
+    }
     resetImageData();
   }
 
-  function handlePostCreate() {
-    setPostDetails({ ...postDetails, loading: true });
-
-    createPost({
+  function handleUpdateMutation() {
+    if (editModal) {
+      return updatePost({
+        variables: {
+          content: post,
+          id: postData.id
+        }
+      });
+    }
+    return createPost({
       variables: {
         content: post,
         // TODO: Remove this dummy ID
@@ -92,13 +119,21 @@ export default function PostCreate({
           key => objectAccessor(actionVisibilityOptions, key) === visibilityOption
         )
       }
-    })
+    });
+  }
+
+  function handlePostCreate() {
+    setPostDetails({ ...postDetails, loading: true });
+
+    handleUpdateMutation()
       .then(() => {
         setPostDetails({
           ...postDetails,
           loading: false,
           isError: false,
-          message: translate('dashboard.created_post')
+          message: !editModal
+            ? translate('dashboard.created_post')
+            : translate('dashboard.updated_post')
         });
         setPost('');
         closeCreateModal();
@@ -130,7 +165,7 @@ export default function PostCreate({
         handleClose={handleCloseAlert}
       />
       <DialogWithImageUpload
-        open={isCreateModalOpen}
+        open={isCreateModalOpen || editModal}
         handleDialogStatus={closeCreateModal}
         modalDetails={modalDetails}
         observationHandler={{
@@ -144,6 +179,7 @@ export default function PostCreate({
           closeButton: true,
           handleCloseButton
         }}
+        editModal={editModal}
       >
         {postDetails.loading ? (
           <Spinner />
@@ -191,10 +227,26 @@ export default function PostCreate({
   );
 }
 
+PostCreate.defaultProps = {
+  postData: {},
+  editModal: false,
+  setPostData: () => {},
+  setEditModal: () => {},
+  setAnchorEl: () => {}
+};
+
 PostCreate.propTypes = {
   translate: PropTypes.func.isRequired,
   currentUserImage: PropTypes.string.isRequired,
   userPermissions: PropTypes.arrayOf(PropTypes.object).isRequired,
   btnBorderColor: PropTypes.string.isRequired,
-  refetchNews: PropTypes.func.isRequired
+  refetchNews: PropTypes.func.isRequired,
+  postData: PropTypes.shape({
+    id: PropTypes.string,
+    content: PropTypes.string
+  }),
+  editModal: PropTypes.bool,
+  setPostData: PropTypes.func,
+  setEditModal: PropTypes.func,
+  setAnchorEl: PropTypes.func
 };

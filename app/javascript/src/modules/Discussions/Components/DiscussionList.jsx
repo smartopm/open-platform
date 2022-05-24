@@ -15,11 +15,11 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import { css, StyleSheet } from 'aphrodite'
 import PropTypes from 'prop-types'
 import { useMutation } from 'react-apollo'
-import { truncateString } from '../../utils/helpers'
-import Avatar from '../Avatar'
-import { DiscussionUpdateMutation } from '../../graphql/mutations'
-import DeleteDialogueBox from '../../shared/dialogs/DeleteDialogue'
-import CenteredContent from '../CenteredContent'
+import { truncateString } from '../../../utils/helpers'
+import Avatar from '../../../components/Avatar'
+import { DiscussionUpdateMutation } from '../../../graphql/mutations'
+import DeleteDialogueBox from '../../../shared/dialogs/DeleteDialogue'
+import CenteredContent from '../../../components/CenteredContent'
 
 export default function DiscussionList({ data, refetch, isAdmin }) {
   const [updateDiscussion] = useMutation(DiscussionUpdateMutation)

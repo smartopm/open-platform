@@ -44,7 +44,7 @@ import CampaignCreate from '../src/modules/Campaigns/containers/Campaigns';
 import Scan from '../src/containers/Scan';
 import WelcomePage from '../src/components/AuthScreens/WelcomePage';
 import CampaignUpdate from '../src/modules/Campaigns/containers/Campaigns';
-import DiscussonPage from '../src/containers/Discussions/DiscussionPage';
+import DiscussonPage from '../src/modules/Discussions/Containers/DiscussionPage';
 import GeoMap from '../src/containers/GeoMap';
 import Notifications from '../src/modules/Preferences/Components/Notifications';
 import { theme } from '../src/themes/nkwashi/theme';

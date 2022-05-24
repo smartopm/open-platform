@@ -3,9 +3,9 @@ import { fireEvent, render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom';
-import { CommunityNewsPostsQuery, TopDiscussionTopicsQuery } from '../../graphql/queries';
-import CommunityNews from '../../components/Discussion/CommunityNews';
-import MockedThemeProvider from '../../modules/__mocks__/mock_theme';
+import { CommunityNewsPostsQuery, TopDiscussionTopicsQuery } from '../../../graphql/queries';
+import CommunityNews from '../Components/CommunityNews';
+import MockedThemeProvider from '../../__mocks__/mock_theme';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 describe('Community news with posts', () => {
@@ -134,13 +134,17 @@ describe('Community news with posts', () => {
       expect(container.queryAllByTestId('user_avatar')[0]).toBeInTheDocument();
 
       expect(
-        container.queryByText(
+        container.queryAllByText(
           /Sometimes you might want to have icons for certain… button you can label it with a dustbin icon/
-        )
+        )[0]
       ).toBeInTheDocument();
       expect(container.queryByTestId('button')).toBeInTheDocument();
 
       fireEvent.click(container.queryByTestId('button'));
+
+      fireEvent.click(container.queryAllByTestId('post_options')[0]);
+      expect(container.queryAllByText('form_actions.edit_post')[0]).toBeInTheDocument();
+      fireEvent.click(container.queryAllByText('form_actions.edit_post')[0]);
     }, 50);
   });
 });

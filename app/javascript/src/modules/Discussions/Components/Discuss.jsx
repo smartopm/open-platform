@@ -5,7 +5,7 @@ import { Button, TextField, Snackbar } from '@mui/material';
 import { useMutation } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
-import { DiscussionMutation } from '../../graphql/mutations';
+import { DiscussionMutation } from '../../../graphql/mutations';
 
 export default function Discuss({ update }) {
   const [title, setTitle] = useState('');
