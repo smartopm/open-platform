@@ -54,6 +54,15 @@ RSpec.describe Types::Queries::Comment do
         })
     end
 
+    let(:top_discussion_topics_query) do
+      %(query {
+              topDiscussionTopics {
+                  id
+                  title
+                }
+        })
+    end
+
     it 'should retrieve list of discussions' do
       result = DoubleGdpSchema.execute(discussions_query,
                                        context: {
@@ -90,6 +99,23 @@ RSpec.describe Types::Queries::Comment do
                                        context: { current_user: current_user }).as_json
       expect(result.dig('data', 'discussion', 'id')).to eql user_discussion.id
       expect(result.dig('data', 'discussion', 'title')).to include 'Community Discussion'
+    end
+
+    it 'should retrieve list of top discussion topics only' do
+      expected_topic = current_user
+                        .community
+                        .discussions
+                        .create!(title: 'Safety', user_id: current_user.id)
+
+      result = DoubleGdpSchema.execute(top_discussion_topics_query,
+                                       context: {
+                                         current_user: admin_user,
+                                         site_community: current_user.community
+                                        }).as_json
+
+      expect(result.dig('data', 'topDiscussionTopics').length).to eql 1
+      expect(result.dig('data', 'topDiscussionTopics', 0, 'id')).to eql expected_topic.id
+      expect(result.dig('data', 'topDiscussionTopics', 0, 'title')).to eq expected_topic.title
     end
   end
 end
