@@ -55,7 +55,7 @@ export default function CommunityNews({
   const discussionMenuList = [
     ...structuredMenuList,
     {
-      content: 'More Topics',
+      content: t('label.more_topics'),
       isAdmin: true,
       handleClick: () => history.push('/discussions')
     }
