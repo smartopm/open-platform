@@ -394,6 +394,7 @@ en:
       cannot_access_app: You do not have access to the app
       cannot_send_otp_link: The user does not have access to the app
       cannot_send_otp: No phone number to send one time code to
+      cannot_send_message: No phone number to send message
     user_form_property:
       not_found: User form property not found
     visibility: You do not have permission to access %{field}
