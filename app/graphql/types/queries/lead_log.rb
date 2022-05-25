@@ -7,6 +7,7 @@ module Types::Queries::LeadLog
 
   VALID_LEAD_STATUSES = ['Qualified Lead', 'Signed MOU', 'Signed Lease'].freeze
 
+  # rubocop:disable Metrics/BlockLength
   included do
     field :lead_logs, [Types::LeadLogType], null: true do
       description 'Get lead logs'
@@ -24,7 +25,27 @@ module Types::Queries::LeadLog
       description 'Get lead investment stats'
       argument :user_id, GraphQL::Types::ID, required: true
     end
+
+    field :deal_details, [Types::LeadLogType], null: true do
+      description 'Get lead deal details'
+      argument :user_id, GraphQL::Types::ID, required: true
+      argument :limit, Integer, required: false
+      argument :offset, Integer, required: false
+    end
+
+    field :lead_investments, [Types::LeadLogType], null: true do
+      description 'Get lead investments'
+      argument :user_id, GraphQL::Types::ID, required: true
+      argument :limit, Integer, required: false
+      argument :offset, Integer, required: false
+    end
+
+    field :investment_stats, GraphQL::Types::JSON, null: true do
+      description 'Get lead investment stats'
+      argument :user_id, GraphQL::Types::ID, required: true
+    end
   end
+  # rubocop:enable Metrics/BlockLength
 
   def investment_stats(user_id:)
     lead_log = lead_logs(log_type: 'deal_details', user_id: user_id, limit: 1).first
