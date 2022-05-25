@@ -7,6 +7,7 @@ module Types::Queries::LeadLog
 
   VALID_LEAD_STATUSES = ['Qualified Lead', 'Signed MOU', 'Signed Lease'].freeze
 
+  # rubocop:disable Metrics/BlockLength
   included do
     field :lead_logs, [Types::LeadLogType], null: true do
       description 'Get lead logs'
@@ -18,6 +19,25 @@ module Types::Queries::LeadLog
 
     field :lead_scorecards, GraphQL::Types::JSON, null: true do
       description 'Get statistics for lead logs'
+    end
+
+    field :investment_stats, GraphQL::Types::JSON, null: true do
+      description 'Get lead investment stats'
+      argument :user_id, GraphQL::Types::ID, required: true
+    end
+
+    field :deal_details, [Types::LeadLogType], null: true do
+      description 'Get lead deal details'
+      argument :user_id, GraphQL::Types::ID, required: true
+      argument :limit, Integer, required: false
+      argument :offset, Integer, required: false
+    end
+
+    field :lead_investments, [Types::LeadLogType], null: true do
+      description 'Get lead investments'
+      argument :user_id, GraphQL::Types::ID, required: true
+      argument :limit, Integer, required: false
+      argument :offset, Integer, required: false
     end
 
     field :investment_stats, GraphQL::Types::JSON, null: true do
@@ -49,8 +69,8 @@ module Types::Queries::LeadLog
                             .limit(limit)
   end
 
-  def validate_log_type(log_type)
-    return if Logs::LeadLog.log_types.keys.include?(log_type)
+  def signed_deals(user_id:, offset: 0, limit: 3)
+    validate_authorization(:lead_log, :can_fetch_lead_logs)
 
     raise GraphQL::ExecutionError, I18n.t('errors.lead_log.invalid_log_type')
   end
@@ -168,31 +188,30 @@ module Types::Queries::LeadLog
                             .ordered
   end
 
-  # rubocop:disable Metrics/MethodLength
-  def investment_label(user_id, lead_log)
-    label = context[:site_community].labels.joins(:user_labels)
-                                    .find_by(user_labels: { user_id: user_id },
-                                             grouping_name: 'Investment',
-                                             short_desc: lead_log.investment_title)
-    return if label.nil?
+  def investment_stats(user_id:)
+    lead_log = deal_details(user_id: user_id, limit: 1).first
+    total_spent = context[:site_community].lead_logs.investment.where(user_id: user_id).sum(:amount)
 
     {
-      id: label.id,
-      short_desc: label.short_desc,
-      grouping_name: label.grouping_name,
-      color: label.color,
+      total_spent: total_spent,
+      percentage_of_target_used: percentage_of_target_used(total_spent, lead_log),
     }
   end
-  # rubocop:enable Metrics/MethodLength
 
-  def percentage_of_target_used(total_spent, lead_log)
-    return 100 if lead_log.investment_target.to_d.zero?
+  def deal_details(user_id:, offset: 0, limit: 3)
+    validate_authorization(:lead_log, :can_fetch_lead_logs)
 
-    ((total_spent / lead_log.investment_target) * 100).floor(2)
+    context[:site_community].lead_logs.where(user_id: user_id)
+                            .deal_details
+                            .offset(offset)
+                            .limit(limit)
+                            .ordered
   end
 
-  def valid_lead_divisions
-    context[:site_community].lead_monthly_targets&.map { |data| data['division'] }
+  def percentage_of_target_used(total_spent, lead_log)
+    return 100 if lead_log.deal_size.to_d.zero?
+
+    total_spent / lead_log.deal_size
   end
 end
 # rubocop:enable Metrics/ModuleLength
