@@ -218,15 +218,5 @@ module Types::Queries::LeadLog
 
     total_spent / lead_log.deal_size
   end
-
-  private
-
-  def current_year
-    Time.zone.now.beginning_of_year..Time.zone.now.end_of_year
-  end
-
-  def valid_lead_divisions
-    context[:site_community].lead_monthly_targets&.map { |data| data['division'] }
-  end
 end
 # rubocop:enable Metrics/ModuleLength
