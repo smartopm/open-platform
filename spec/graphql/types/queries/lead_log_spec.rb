@@ -82,6 +82,26 @@ RSpec.describe Types::Queries::LeadLog do
              name: 'Signed Lease')
     end
 
+    let!(:first_investment_lead_log) do
+      create(:lead_log,
+             user: lead_user,
+             community: community,
+             acting_user_id: admin.id,
+             log_type: 'investment',
+             name: 'first investment',
+             amount: 1200)
+    end
+
+    let!(:lead_log_for_deal) do
+      create(:lead_log,
+             user: lead_user,
+             community: community,
+             acting_user_id: admin.id,
+             log_type: 'deal_details',
+             name: 'its deal',
+             deal_size: 120_000,
+             investment_target: 15)
+    end
     let(:events) do
       <<~GQL
         query fetchEvents($userId: ID!, $limit: Int, $offset: Int){
@@ -121,6 +141,37 @@ RSpec.describe Types::Queries::LeadLog do
       <<~GQL
         query {
           leadScorecards
+        }
+      GQL
+    end
+
+    let(:lead_investments) do
+      <<~GQL
+        query LeadInvestments($userId: ID!){
+          leadInvestments(userId: $userId){
+            logType
+            amount
+          }
+        }
+      GQL
+    end
+
+    let(:deal_details) do
+      <<~GQL
+        query DealDetails($userId: ID!){
+          dealDetails(userId: $userId){
+            logType
+            dealSize
+            investmentTarget
+          }
+        }
+      GQL
+    end
+
+    let(:investment_stats) do
+      <<~GQL
+        query InvestmentStats($userId: ID!){
+          investmentStats(userId: $userId)
         }
       GQL
     end
@@ -197,6 +248,52 @@ RSpec.describe Types::Queries::LeadLog do
           expect(scorecard.dig('ytd_count', 'qualified_lead')).to eql 1
           expect(scorecard.dig('ytd_count', 'signed_mou')).to eql 1
           expect(scorecard.dig('ytd_count', 'signed_lease')).to eql 1
+        end
+      end
+    end
+
+    describe '#lead_investments' do
+      context 'when lead investments are fetched' do
+        it 'retrieves lead investments' do
+          variables = { userId: lead_user.id }
+          result = DoubleGdpSchema.execute(lead_investments, variables: variables,
+                                                             context: {
+                                                               current_user: admin,
+                                                               site_community: community,
+                                                             }).as_json
+          expect(result['errors']).to be nil
+          expect(result.dig('data', 'leadInvestments').count).to eql 1
+        end
+      end
+    end
+
+    describe '#deal_details' do
+      context 'when deal details are fetched' do
+        it 'retrieves deal details' do
+          variables = { userId: lead_user.id }
+          result = DoubleGdpSchema.execute(deal_details, variables: variables,
+                                                         context: {
+                                                           current_user: admin,
+                                                           site_community: community,
+                                                         }).as_json
+          expect(result['errors']).to be nil
+          expect(result.dig('data', 'dealDetails').count).to eql 1
+        end
+      end
+    end
+
+    describe '#investment_stats' do
+      context 'when lead investment stats are fetched' do
+        it 'retrieves lead investment stats' do
+          variables = { userId: lead_user.id }
+          result = DoubleGdpSchema.execute(investment_stats, variables: variables,
+                                                             context: {
+                                                               current_user: admin,
+                                                               site_community: community,
+                                                             }).as_json
+          expect(result['errors']).to be nil
+          expect(result.dig('data', 'investmentStats', 'total_spent')).to eql 1200.0
+          expect(result.dig('data', 'investmentStats', 'percentage_of_target_used')).to eql 0.01
         end
       end
     end

@@ -11,5 +11,8 @@ module Types
     field :acting_user, Types::UserType, null: false
     field :log_type, String, null: true
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
+    field :amount, GraphQL::Types::Float, null: true
+    field :investment_target, GraphQL::Types::Float, null: true
+    field :deal_size, GraphQL::Types::Float, null: true
   end
 end

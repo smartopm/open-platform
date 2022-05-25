@@ -16,8 +16,8 @@ RSpec.describe Mutations::Log::LeadLogCreate do
 
     let(:mutation) do
       <<~GQL
-        mutation LeadLogCreate($logType: String!, $name: String, $userId: ID!){
-          leadLogCreate(name: $name, userId: $userId, logType:$logType){
+        mutation LeadLogCreate($logType: String!, $name: String, $userId: ID!, $amount: Float, $dealSize: Float, $investmentTarget: Float){
+          leadLogCreate(name: $name, userId: $userId, logType:$logType, amount: $amount, dealSize: $dealSize, investmentTarget: $investmentTarget){
           success
           }
         }     
@@ -60,9 +60,66 @@ RSpec.describe Mutations::Log::LeadLogCreate do
 
     context 'when lead signs deal' do
       it 'creates signed_deal log' do
-        variables = { name: 'Signed Deal',
-                      logType: 'signed_deal',
-                      userId: lead_user.id }
+        variables = {
+          name: 'Signed Deal',
+          logType: 'signed_deal',
+          userId: lead_user.id,
+        }
+        result = DoubleGdpSchema.execute(mutation, variables: variables,
+                                                   context: {
+                                                     current_user: admin,
+                                                     site_community: community,
+                                                   }).as_json
+        expect(result['errors']).to be nil
+        expect(result.dig('data', 'leadLogCreate', 'success')).to eql true
+      end
+    end
+
+    context 'when deal details are provided' do
+      it 'creates lead log' do
+        variables = {
+          name: 'Its deal',
+          logType: 'deal_details',
+          dealSize: 120_000,
+          investmentTarget: 12,
+          userId: lead_user.id,
+        }
+        result = DoubleGdpSchema.execute(mutation, variables: variables,
+                                                   context: {
+                                                     current_user: admin,
+                                                     site_community: community,
+                                                   }).as_json
+        expect(result['errors']).to be nil
+        expect(result.dig('data', 'leadLogCreate', 'success')).to eql true
+      end
+    end
+
+    context 'when one of the deal attribute is blank' do
+      it 'raises error' do
+        variables = {
+          name: 'Its deal',
+          logType: 'deal_details',
+          deal_size: 12_000,
+          userId: lead_user.id,
+        }
+        result = DoubleGdpSchema.execute(mutation, variables: variables,
+                                                   context: {
+                                                     current_user: admin,
+                                                     site_community: community,
+                                                   }).as_json
+        expect(result['errors']).to_not be nil
+        expect(result.dig('errors', 0, 'message')).to eql 'Deal details cannot be empty'
+      end
+    end
+
+    context 'when investment are made for lead' do
+      it 'creates lead log' do
+        variables = {
+          name: 'first investment',
+          logType: 'investment',
+          amount: 1200.0,
+          userId: lead_user.id,
+        }
         result = DoubleGdpSchema.execute(mutation, variables: variables,
                                                    context: {
                                                      current_user: admin,
@@ -75,9 +132,11 @@ RSpec.describe Mutations::Log::LeadLogCreate do
 
     context 'when user is unauthorized' do
       it 'throws unauthorized error' do
-        variables = { name: 'New event',
-                      logType: 'event',
-                      userId: lead_user.id }
+        variables = {
+          name: 'New event',
+          logType: 'event',
+          userId: lead_user.id,
+        }
         result = DoubleGdpSchema.execute(mutation, variables: variables,
                                                    context: {
                                                      current_user: lead_user,

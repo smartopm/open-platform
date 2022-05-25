@@ -7,6 +7,7 @@ module Types::Queries::LeadLog
 
   VALID_LEAD_STATUSES = ['Qualified Lead', 'Signed MOU', 'Signed Lease'].freeze
 
+  # rubocop:disable Metrics/BlockLength
   included do
     field :lead_events, [Types::LeadLogType], null: true do
       description 'Get lead specific events'
@@ -32,10 +33,30 @@ module Types::Queries::LeadLog
     field :lead_scorecards, GraphQL::Types::JSON, null: true do
       description 'Get statistics for lead logs'
     end
+
+    field :deal_details, [Types::LeadLogType], null: true do
+      description 'Get lead deal details'
+      argument :user_id, GraphQL::Types::ID, required: true
+      argument :limit, Integer, required: false
+      argument :offset, Integer, required: false
+    end
+
+    field :lead_investments, [Types::LeadLogType], null: true do
+      description 'Get lead investments'
+      argument :user_id, GraphQL::Types::ID, required: true
+      argument :limit, Integer, required: false
+      argument :offset, Integer, required: false
+    end
+
+    field :investment_stats, GraphQL::Types::JSON, null: true do
+      description 'Get lead investment stats'
+      argument :user_id, GraphQL::Types::ID, required: true
+    end
   end
+  # rubocop:enable Metrics/BlockLength
 
   def lead_events(user_id:, offset: 0, limit: 3)
-    raise_unauthorized_error_for_lead_logs(:can_fetch_lead_logs)
+    validate_authorization(:lead_log, :can_fetch_lead_logs)
 
     context[:site_community].lead_logs.where(user_id: user_id)
                             .event.includes(:acting_user)
@@ -43,7 +64,7 @@ module Types::Queries::LeadLog
   end
 
   def lead_meetings(user_id:, offset: 0, limit: 3)
-    raise_unauthorized_error_for_lead_logs(:can_fetch_lead_logs)
+    validate_authorization(:lead_log, :can_fetch_lead_logs)
 
     context[:site_community].lead_logs.where(user_id: user_id)
                             .meeting.includes(:acting_user)
@@ -51,7 +72,7 @@ module Types::Queries::LeadLog
   end
 
   def signed_deals(user_id:, offset: 0, limit: 3)
-    raise_unauthorized_error_for_lead_logs(:can_fetch_lead_logs)
+    validate_authorization(:lead_log, :can_fetch_lead_logs)
 
     context[:site_community].lead_logs.where(user_id: user_id)
                             .signed_deal.includes(:acting_user)
@@ -59,7 +80,7 @@ module Types::Queries::LeadLog
   end
 
   def lead_scorecards
-    raise_unauthorized_error_for_lead_logs(:can_access_lead_scorecard)
+    validate_authorization(:lead_log, :can_access_lead_scorecard)
 
     {
       lead_status: leads_status_stats,
@@ -156,10 +177,44 @@ module Types::Queries::LeadLog
                                    updated_at: current_year).count
   end
 
-  def raise_unauthorized_error_for_lead_logs(permission)
-    return if permitted?(module: :lead_log, permission: permission)
+  def current_year
+    Time.zone.now.beginning_of_year..Time.zone.now.end_of_year
+  end
 
-    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+  def lead_investments(user_id:, offset: 0, limit: 3)
+    validate_authorization(:lead_log, :can_fetch_lead_logs)
+
+    context[:site_community].lead_logs.where(user_id: user_id)
+                            .investment
+                            .offset(offset)
+                            .limit(limit)
+                            .ordered
+  end
+
+  def investment_stats(user_id:)
+    lead_log = deal_details(user_id: user_id, limit: 1).first
+    total_spent = context[:site_community].lead_logs.investment.where(user_id: user_id).sum(:amount)
+
+    {
+      total_spent: total_spent,
+      percentage_of_target_used: percentage_of_target_used(total_spent, lead_log),
+    }
+  end
+
+  def deal_details(user_id:, offset: 0, limit: 3)
+    validate_authorization(:lead_log, :can_fetch_lead_logs)
+
+    context[:site_community].lead_logs.where(user_id: user_id)
+                            .deal_details
+                            .offset(offset)
+                            .limit(limit)
+                            .ordered
+  end
+
+  def percentage_of_target_used(total_spent, lead_log)
+    return 100 if lead_log.deal_size.to_d.zero?
+
+    total_spent / lead_log.deal_size
   end
 
   private
