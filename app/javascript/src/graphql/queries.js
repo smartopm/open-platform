@@ -531,9 +531,9 @@ export const DiscussionQuery = gql`
   }
 `;
 
-export const TopDiscussionTopicsQuery = gql`
-  query topDiscussionTopics {
-    topDiscussionTopics {
+export const SystemAuthoredDiscussionsQuery = gql`
+  query systemAuthoredDiscussions {
+    systemAuthoredDiscussions {
       title
       id
     }

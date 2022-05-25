@@ -3,7 +3,7 @@ import { fireEvent, render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom';
-import { CommunityNewsPostsQuery, TopDiscussionTopicsQuery } from '../../../graphql/queries';
+import { CommunityNewsPostsQuery, SystemAuthoredDiscussionsQuery } from '../../../graphql/queries';
 import CommunityNews from '../Components/CommunityNews';
 import MockedThemeProvider from '../../__mocks__/mock_theme';
 
@@ -98,11 +98,11 @@ describe('Community news with posts', () => {
       },
       {
         request: {
-          query: TopDiscussionTopicsQuery
+          query: SystemAuthoredDiscussionsQuery
         },
         result: {
           data: {
-            topDiscussionTopics: [
+            systemAuthoredDiscussions: [
               {
                 title: 'Family',
                 id: 'df956b37-227e-4a32-1p85-e3279aa7da0e122',

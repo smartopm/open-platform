@@ -54,9 +54,9 @@ RSpec.describe Types::Queries::Comment do
         })
     end
 
-    let(:top_discussion_topics_query) do
+    let(:system_authored_discussions_query) do
       %(query {
-              topDiscussionTopics {
+              systemAuthoredDiscussions {
                   id
                   title
                 }
@@ -105,17 +105,17 @@ RSpec.describe Types::Queries::Comment do
       expected_topic = current_user
                        .community
                        .discussions
-                       .create!(title: 'Safety', user_id: current_user.id)
+                       .create!(title: 'Safety', user_id: current_user.id, author: 'system')
 
-      result = DoubleGdpSchema.execute(top_discussion_topics_query,
+      result = DoubleGdpSchema.execute(system_authored_discussions_query,
                                        context: {
                                          current_user: admin_user,
                                          site_community: current_user.community,
                                        }).as_json
 
-      expect(result.dig('data', 'topDiscussionTopics').length).to eql 1
-      expect(result.dig('data', 'topDiscussionTopics', 0, 'id')).to eql expected_topic.id
-      expect(result.dig('data', 'topDiscussionTopics', 0, 'title')).to eq expected_topic.title
+      expect(result.dig('data', 'systemAuthoredDiscussions').length).to eql 1
+      expect(result.dig('data', 'systemAuthoredDiscussions', 0, 'id')).to eql expected_topic.id
+      expect(result.dig('data', 'systemAuthoredDiscussions', 0, 'title')).to eq expected_topic.title
     end
   end
 end

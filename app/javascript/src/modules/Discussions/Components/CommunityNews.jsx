@@ -10,7 +10,7 @@ import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import moment from 'moment-timezone';
 import { useTheme } from '@mui/material/styles';
-import { CommunityNewsPostsQuery, TopDiscussionTopicsQuery } from '../../../graphql/queries';
+import { CommunityNewsPostsQuery, SystemAuthoredDiscussionsQuery } from '../../../graphql/queries';
 import { Spinner } from '../../../shared/Loading';
 import CenteredContent from '../../../shared/CenteredContent';
 import Avatar from '../../../components/Avatar';
@@ -41,11 +41,11 @@ export default function CommunityNews({
   });
   const discussionId = data?.communityNewsPosts[0]?.discussionId;
   const { loading: tLoading, error: tError, data: tData } = useQuery(
-    TopDiscussionTopicsQuery
+    SystemAuthoredDiscussionsQuery
   );
   let structuredMenuList = [];
   if(!tLoading) {
-    structuredMenuList = tData?.topDiscussionTopics.map(discussion => ({
+    structuredMenuList = tData?.systemAuthoredDiscussions.map(discussion => ({
       content: discussion?.title,
       handleClick: () => history.push(`/discussions/${discussion?.id}`)
     }));
