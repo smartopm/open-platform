@@ -34,4 +34,8 @@ class DoubleGdpSchema < GraphQL::Schema
   rescue_from(Users::User::UserError) do |err, _obj, _args, _ctx, _field|
     raise GraphQL::ExecutionError, err
   end
+
+  rescue_from(Sms::SmsError) do |err, _obj, _args, _ctx, _field|
+    raise GraphQL::ExecutionError, err
+  end
 end
