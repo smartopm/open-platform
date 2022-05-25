@@ -169,7 +169,7 @@ const App = () => {
         <Router history={history}>
           <AuthStateProvider>
             <I18Initializer render={(community) => (
-              <MuiThemeProvider theme={theme(community?.themeColors)}>
+            <MuiThemeProvider theme={theme(community?.themeColors)}>
             <Analytics>
               {/* onboarding */}
               <Switch>

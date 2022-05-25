@@ -42,7 +42,6 @@ const useStyles = makeStyles(theme => ({
   },
   appBar: {
     height: 50,
-    backgroundColor: '#FFFFFF' // get this color from the theme
   },
   menuButton: {
     marginRight: theme.spacing(2)
@@ -121,7 +120,7 @@ export function MainNav({ authState }) {
 
   return (
     <div className={classes.root}>
-      <AppBar position="fixed" className={classes.appBar}>
+      <AppBar position="fixed" className={classes.appBar} style={{ backgroundColor: '#FFFFFF' }}>
         <Toolbar>
           <IconButton
             color="primary"
