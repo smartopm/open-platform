@@ -4,7 +4,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { Link, useLocation } from 'react-router-dom';
-import { Chip, Grid, IconButton, Typography, Badge } from '@mui/material';
+import { Chip, Grid, IconButton, Typography, Badge, Container } from '@mui/material';
 import { useQuery } from 'react-apollo';
 import { grey } from '@mui/material/colors';
 import Divider from '@mui/material/Divider';
@@ -307,15 +307,15 @@ export default function TaskDataList({
               style={{ display: 'flex', alignItems: 'center', justifyContent: 'right' }}
               data-testid="task_status"
             >
-              {(!isTaskList()) && (
-              <Chip
-                data-testid="task_status_chip"
-                label={task?.status ? t(`task.${task.status}`) : t('task.not_started')}
-                className={task?.status ? classes[task.status] : classes.not_started}
-                style={{ color: 'white' }}
-                size="small"
-              />
-)}
+              {!isTaskList() && (
+                <Chip
+                  data-testid="task_status_chip"
+                  label={task?.status ? t(`task.${task.status}`) : t('task.not_started')}
+                  className={task?.status ? classes[task.status] : classes.not_started}
+                  style={{ color: 'white' }}
+                  size="small"
+                />
+              )}
             </Grid>
           </>
         )}
@@ -384,36 +384,32 @@ export default function TaskDataList({
                   className={classes.detailsContainer}
                 >
                   {location.pathname !== '/processes' && (
-                    <>
-                      <Grid item md={2} xs={1}>
-                        <IconButton
-                          aria-controls="task-subtasks-icon"
-                          aria-haspopup="true"
-                          data-testid="task_subtasks"
-                          onClick={() => handleClick('subtasks')}
-                          color="primary"
-                          size="large"
-                        >
-                          <AccountTreeIcon
-                            fontSize="small"
-                            color={task?.subTasksCount ? 'primary' : 'disabled'}
-                          />
-                        </IconButton>
-                      </Grid>
-                      <Grid
-                        item
-                        md={1}
-                        xs={1}
-                        className={classes.iconItem}
-                        style={{ marginLeft: '-11px' }}
+                    <Grid item md={4} xs={3}>
+                      <IconButton
+                        aria-controls="task-subtasks-icon"
+                        aria-haspopup="true"
+                        data-testid="task_subtasks"
+                        onClick={() => handleClick('subtasks')}
                         color="primary"
+                        size="large"
                       >
-                        <span data-testid="task-subtasks-count">{task?.subTasksCount}</span>
-                      </Grid>
-                    </>
+                        <AccountTreeIcon
+                          fontSize="small"
+                          color={task?.subTasksCount ? 'primary' : 'disabled'}
+                        />
+                        <Container disableGutters className={classes.iconTag}>
+                          <span
+                            data-testid="task-subtasks-count"
+                            style={{ color: `${!task?.subTasksCount && '#B6B6B5'}` }}
+                          >
+                            {task?.subTasksCount}
+                          </span>
+                        </Container>
+                      </IconButton>
+                    </Grid>
                   )}
 
-                  <Grid item md={2} xs={1}>
+                  <Grid item md={4} xs={3}>
                     <IconButton
                       aria-controls="task-comment-icon"
                       aria-haspopup="true"
@@ -424,24 +420,20 @@ export default function TaskDataList({
                     >
                       <QuestionAnswerIcon
                         fontSize="small"
-                        color={data?.taskComments.length ? 'primary' : 'disabled'}
+                        color={data?.taskComments?.length ? 'primary' : 'disabled'}
                       />
+                      <Container disableGutters className={classes.iconTag}>
+                        <span
+                          data-testid="task-comment"
+                          style={{ color: `${!data?.taskComments?.length && '#B6B6B5'}` }}
+                        >
+                          {data?.taskComments?.length || 0}
+                        </span>
+                      </Container>
                     </IconButton>
                   </Grid>
 
-                  <Grid
-                    item
-                    md={1}
-                    xs={1}
-                    className={classes.iconItem}
-                    style={
-                      location.pathname.match(/\bprocesses\b/) ? { marginLeft: '-53px' } : { marginLeft: '-11px' }
-                    }
-                  >
-                    <span data-testid="task-comment">{data?.taskComments.length || 0}</span>
-                  </Grid>
-
-                  <Grid item md={2} xs={1}>
+                  <Grid item md={4} xs={3}>
                     <IconButton
                       key={task.id}
                       aria-controls="task-attach-file-icon"
@@ -455,20 +447,15 @@ export default function TaskDataList({
                         fontSize="small"
                         color={task?.attachments?.length ? 'primary' : 'disabled'}
                       />
+                      <Container disableGutters className={classes.iconTag}>
+                        <span
+                          data-testid="file_attachments_total"
+                          style={{ color: `${!data?.taskComments?.length && '#B6B6B5'}` }}
+                        >
+                          {task.attachments?.length || 0}
+                        </span>
+                      </Container>
                     </IconButton>
-                  </Grid>
-                  <Grid
-                    item
-                    md={1}
-                    xs={1}
-                    className={classes.iconItem}
-                    style={
-                      location.pathname.match(/\bprocesses\b/) ? { marginLeft: '-58px' } : { marginLeft: '-16px' }
-                    }
-                  >
-                    <span data-testid="file_attachments_total">
-                      {task.attachments?.length || 0}
-                    </span>
                   </Grid>
                 </Grid>
               </Grid>
@@ -557,6 +544,10 @@ TaskDataList.propTypes = {
 };
 
 const useStyles = makeStyles(theme => ({
+  iconTag: {
+    martinLeft: '3px',
+    fontSize: '12px'
+  },
   taskBody: {
     maxWidth: '42ch',
     overflow: 'hidden',
