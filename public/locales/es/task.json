@@ -32,10 +32,10 @@
   },
   "processes": {
     "activity_summary": "Resumen de la Actividad",
+    "comments": "Comentarios",
     "completed": "Completado",
     "completed_by_quarter": "Completado por Trimestre",
     "documents": "Documentos",
-    "comments": "Comentarios",
     "drc_process": "Proceso de DRC",
     "drc_stages": {
       "concept_design_review": "Revisión del Diseño Conceptual",
@@ -54,6 +54,7 @@
     "no_data": "No hay información que mostrar",
     "no_form_data": "No se encontró la información de envío del proyecto",
     "no_open_tasks": "El proyecto no tiene tareas abiertas",
+    "no_processes": "Aún no hay procesos para mostrar",
     "no_projects": "El proceso no tiene proyectos para mostrar",
     "no_ssigned_projects": "¡Aún no tiene ningún proyecto asignado!",
     "no_steps_assigned": "Actualmente no hay pasos asignados a este proceso.",
@@ -133,7 +134,6 @@
     "overdue_tasks": "Tareas vencidas",
     "parent_task": "Tarea Principal",
     "project_overview": "Descripción del Proyecto",
-    "project_total_documents": "Documentos totales",
     "quick_search": "Búsqueda Rápida",
     "reminder_text": "Recuérdame más tarde",
     "replied": "respondió",

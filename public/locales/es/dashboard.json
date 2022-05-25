@@ -3,6 +3,7 @@
     "add_photo": "Agregar una Foto",
     "call_manager": "Llamar a un Gerente",
     "created_post": "Publicación creada con éxito",
+    "edit_post": "Editar Publicación",
     "entry_logs": "Libro de Registros",
     "explore": "Explorar",
     "finance": "Finanzas",
@@ -45,6 +46,7 @@
     "task_reminders": "Recordatorio de tareas",
     "view_customer_journey": "Ver Etapa del Cliente",
     "whats_happening": "¿Qué está pasando cerca?",
+    "who_can_see_post": "¿Quién puede ver esta publicación?",
     "your_customer_journey": "Su Etapa de Cliente"
   }
 }
