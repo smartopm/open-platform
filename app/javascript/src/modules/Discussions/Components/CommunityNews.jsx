@@ -92,8 +92,9 @@ export default function CommunityNews({
   }
 
   if (loading || tLoading) return <Spinner />;
-  if (error) { return <CenteredContent>{formatError(error.message)}</CenteredContent>; }
-  if (tError) { return <CenteredContent>{formatError(error.message)}</CenteredContent>; }
+  if (error || tError) {
+    return <CenteredContent>{formatError(error?.message || tError?.message)}</CenteredContent>;
+  }
 
   return (
     <div style={isMobile ? { padding: '20px' } : { padding: '20px 20px 20px 79px', width: '99%' }}>
