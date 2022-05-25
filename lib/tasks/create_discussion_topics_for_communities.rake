@@ -5,7 +5,13 @@ namespace :db do
   task create_discussion_topics: :environment do
     puts 'Starting creating discussion topics ...'
 
-    DISCUSSION_TOPICS = ['Safety', 'Events', 'Recommendations', 'Items for Sale', 'Family'].freeze
+    DISCUSSION_TOPICS = [
+      I18n.t('discussion_title.safety'),
+      I18n.t('discussion_title.events'),
+      I18n.t('discussion_title.recommendations'),
+      I18n.t('discussion_title.items_for_sale'),
+      I18n.t('discussion_title.family'),
+    ].freeze
     id = Users::User.find_by(email: 'nicolas@doublegdp.com').id
 
     ActiveRecord::Base.transaction do
