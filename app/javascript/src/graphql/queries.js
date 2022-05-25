@@ -536,12 +536,6 @@ export const TopDiscussionTopicsQuery = gql`
     topDiscussionTopics {
       title
       id
-      description
-      createdAt
-      user {
-        name
-        id
-      }
     }
   }
 `;

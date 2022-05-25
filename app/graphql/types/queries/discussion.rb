@@ -60,8 +60,6 @@ module Types::Queries::Discussion
   def top_discussion_topics
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:current_user].blank?
 
-    context[:site_community]
-      .discussions
-      .where(title: ['Safety', 'Events', 'Recommendations', 'Items for Sale', 'Family'])
+    context[:site_community].discussions.where(author: 'system')
   end
 end

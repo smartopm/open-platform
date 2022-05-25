@@ -13,8 +13,8 @@ namespace :db do
         puts "Creating discussions for #{community.name}..."
 
         DISCUSSION_TOPICS.each do |topic|
-          unless community.discussions.find_by(title: topic)
-            community.discussions.create!(title: topic, user_id: id)
+          unless community.discussions.find_by(title: topic, author: 'system')
+            community.discussions.create!(title: topic, user_id: id, author: 'system')
           end
         end
       end
