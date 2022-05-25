@@ -40,12 +40,14 @@ export default function CommunityNews({
     variables: { limit }
   });
   const discussionId = data?.communityNewsPosts[0]?.discussionId;
-  const { loading: tLoading, error: tError, data: tData } = useQuery(
-    SystemAuthoredDiscussionsQuery
-  );
+  const {
+    loading: systemDiscussionLoading,
+    error: systemDiscussionError,
+    data: systemDiscussionData
+  } = useQuery(SystemAuthoredDiscussionsQuery);
   let structuredMenuList = [];
-  if(!tLoading) {
-    structuredMenuList = tData?.systemAuthoredDiscussions.map(discussion => ({
+  if (!systemDiscussionLoading) {
+    structuredMenuList = systemDiscussionData?.systemAuthoredDiscussions.map(discussion => ({
       content: discussion?.title,
       handleClick: () => history.push(`/discussions/${discussion?.id}`)
     }));
@@ -91,9 +93,13 @@ export default function CommunityNews({
     history.push(`/discussions/${discussionId}`);
   }
 
-  if (loading || tLoading) return <Spinner />;
-  if (error || tError) {
-    return <CenteredContent>{formatError(error?.message || tError?.message)}</CenteredContent>;
+  if (loading || systemDiscussionLoading) return <Spinner />;
+  if (error || systemDiscussionError) {
+    return (
+      <CenteredContent>
+        {formatError(error?.message || systemDiscussionError?.message)}
+      </CenteredContent>
+    );
   }
 
   return (

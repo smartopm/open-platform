@@ -12,11 +12,11 @@ namespace :db do
       I18n.t('discussion_title.items_for_sale'),
       I18n.t('discussion_title.family'),
     ].freeze
-    id = Users::User.find_by(email: 'nicolas@doublegdp.com').id
 
     ActiveRecord::Base.transaction do
       Community.find_each do |community|
         puts "Creating discussions for #{community.name}..."
+        id = community.default_users.first&.id || community.sub_administrator_id
 
         DISCUSSION_TOPICS.each do |topic|
           unless community.discussions.find_by(title: topic, author: 'system')
