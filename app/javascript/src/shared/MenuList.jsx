@@ -12,34 +12,34 @@ export default function MenuList({
 }) {
   let listData = list
   if (userType && userType !== 'admin') {
-    listData = list.filter(lis => lis.isAdmin === false) 
+    listData = list.filter(lis => lis.isAdmin === false)
   }
   return (
     <Menu
-      id='long-menu'
+      id="long-menu"
       anchorEl={anchorEl}
       open={open}
       keepMounted
       data-testid="menu_list"
-      onClose={(event) => handleClose(event)}
-      PaperProps={{
-          style: {
-            width: 200
-          }
-         }}
+      onClose={event => handleClose(event)}
     >
       {listData.map((menu, index) => (
         <MenuItem
           data-testid="menu_item"
           id={index}
           key={index}
-          style={menu.color ? {color: menu.color} : null}
-          onClick={(event) => menu.handleClick(event, anchorEl?.getAttribute('dataid'), anchorEl?.getAttribute('name'))}
+          style={menu.color ? { color: menu.color } : null}
+          onClick={event =>
+            menu.handleClick(
+              event,
+              anchorEl?.getAttribute('dataid'),
+              anchorEl?.getAttribute('name')
+            )
+          }
         >
           {menu.content}
         </MenuItem>
-        )
-      )}
+      ))}
     </Menu>
   );
 }

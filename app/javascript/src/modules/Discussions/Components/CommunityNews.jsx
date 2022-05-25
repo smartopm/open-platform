@@ -47,7 +47,6 @@ export default function CommunityNews({
   if(!tLoading) {
     structuredMenuList = tData?.topDiscussionTopics.map(discussion => ({
       content: discussion?.title,
-      isAdmin: true,
       handleClick: () => history.push(`/discussions/${discussion?.id}`)
     }));
   }
@@ -56,7 +55,6 @@ export default function CommunityNews({
     ...structuredMenuList,
     {
       content: t('label.more_topics'),
-      isAdmin: true,
       handleClick: () => history.push('/discussions')
     }
   ];
