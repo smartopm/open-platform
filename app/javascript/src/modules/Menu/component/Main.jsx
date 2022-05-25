@@ -42,7 +42,7 @@ const useStyles = makeStyles(theme => ({
   },
   appBar: {
     height: 50,
-    backgroundColor: '#FFFFFF'
+    backgroundColor: '#FFFFFF' // get this color from the theme
   },
   menuButton: {
     marginRight: theme.spacing(2)

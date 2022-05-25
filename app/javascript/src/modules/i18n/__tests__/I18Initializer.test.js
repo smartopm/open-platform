@@ -1,7 +1,8 @@
 import React from 'react';
-import { render, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { MockedProvider } from '@apollo/react-testing';
 import I18Initializer from '../Components/I18Initializer';
+import '@testing-library/jest-dom/extend-expect';
 import { CurrentCommunityQuery } from '../../Community/graphql/community_query';
 
 jest.mock('react-i18next', () => ({
@@ -55,11 +56,12 @@ describe('I18n Initializer component', () => {
     // this is a dummy component so we don't get expect much from it
     render(
       <MockedProvider mocks={[mock]} addTypename={false}>
-        <I18Initializer />
+        <I18Initializer render={() => <p>Some data rendered from community</p>} />
       </MockedProvider>
     );
     await waitFor(() => {
       expect(window.localStorage.getItem('default-language')).toEqual('en-US');
+      expect(screen.queryByText('Some data rendered from community')).toBeInTheDocument('');
     }, 20);
   });
 });
