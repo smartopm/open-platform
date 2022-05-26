@@ -531,6 +531,15 @@ export const DiscussionQuery = gql`
   }
 `;
 
+export const SystemDiscussionsQuery = gql`
+  query systemDiscussions {
+    systemDiscussions {
+      title
+      id
+    }
+  }
+`;
+
 export const ParcelsQuery = gql`
   query LandParcel($query: String, $limit: Int, $offset: Int) {
     fetchLandParcel(query: $query, limit: $limit, offset: $offset) {

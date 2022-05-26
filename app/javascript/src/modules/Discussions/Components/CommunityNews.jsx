@@ -1,6 +1,3 @@
-/* eslint-disable react/jsx-no-duplicate-props */
-/* eslint-disable jsx-a11y/anchor-is-valid */
-/* eslint-disable react/jsx-wrap-multilines */
 import React, { useState } from 'react';
 import { ListItem, ListItemAvatar, ListItemText, Grid, Typography, IconButton } from '@mui/material';
 import MoreVertOutlined from '@mui/icons-material/MoreVertOutlined';
@@ -13,7 +10,7 @@ import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import moment from 'moment-timezone';
 import { useTheme } from '@mui/material/styles';
-import { CommunityNewsPostsQuery } from '../../../graphql/queries';
+import { CommunityNewsPostsQuery, SystemDiscussionsQuery } from '../../../graphql/queries';
 import { Spinner } from '../../../shared/Loading';
 import CenteredContent from '../../../shared/CenteredContent';
 import Avatar from '../../../components/Avatar';
@@ -33,6 +30,7 @@ export default function CommunityNews({
   const isMobile = useMediaQuery('(max-width:800px)');
   const history = useHistory();
   const theme = useTheme();
+  const { t } = useTranslation('discussion');
   const [anchorEl, setAnchorEl] = useState(null);
   const [postData, setPostData] = useState(null);
   const [editModal, setEditModal] = useState(false);
@@ -41,10 +39,27 @@ export default function CommunityNews({
   const { loading, error, data, refetch } = useQuery(CommunityNewsPostsQuery, {
     variables: { limit }
   });
-
-  const { t } = useTranslation('discussion');
-
   const discussionId = data?.communityNewsPosts[0]?.discussionId;
+  const {
+    loading: systemDiscussionLoading,
+    error: systemDiscussionError,
+    data: systemDiscussionData
+  } = useQuery(SystemDiscussionsQuery);
+  let structuredMenuList = [];
+  if (!systemDiscussionLoading) {
+    structuredMenuList = systemDiscussionData?.systemDiscussions.map(discussion => ({
+      content: discussion?.title,
+      handleClick: () => history.push(`/discussions/${discussion?.id}`)
+    }));
+  }
+
+  const discussionMenuList = [
+    ...structuredMenuList,
+    {
+      content: t('label.more_topics'),
+      handleClick: () => history.push('/discussions')
+    }
+  ];
 
   const menuList = [
     {
@@ -78,9 +93,13 @@ export default function CommunityNews({
     history.push(`/discussions/${discussionId}`);
   }
 
-  if (loading) return <Spinner />;
-  if (error) {
-    return <CenteredContent>{formatError(error.message)}</CenteredContent>;
+  if (loading || systemDiscussionLoading) return <Spinner />;
+  if (error || systemDiscussionError) {
+    return (
+      <CenteredContent>
+        {formatError(error?.message || systemDiscussionError?.message)}
+      </CenteredContent>
+    );
   }
 
   return (
@@ -90,6 +109,7 @@ export default function CommunityNews({
         buttonName={t('common:misc.see_more_discussion')}
         displayButton={data?.communityNewsPosts?.length >= limit}
         handleButton={redirectToDiscussionsPage}
+        menuItems={discussionMenuList}
       >
         <Grid container>
           <Grid item xs={12} style={{ marginBottom: 10 }}>
@@ -119,7 +139,7 @@ export default function CommunityNews({
                       <Avatar user={post.user} />
                     </ListItemAvatar>
                     <ListItemText
-                      primary={
+                      primary={(
                         <Grid container>
                           <Grid item md={6} xs={10}>
                             <Typography component="span" variant="subtitle2">
@@ -153,7 +173,7 @@ export default function CommunityNews({
                             />
                           </Grid>
                         </Grid>
-                      }
+                      )}
                     />
                   </ListItem>
                 </Grid>

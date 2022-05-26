@@ -54,6 +54,17 @@ RSpec.describe Types::Queries::Comment do
         })
     end
 
+    let(:system_discussions_query) do
+      <<~GQL
+        query systemDiscussions {
+          systemDiscussions {
+            id
+            title
+          }
+        }
+      GQL
+    end
+
     it 'should retrieve list of discussions' do
       result = DoubleGdpSchema.execute(discussions_query,
                                        context: {
@@ -90,6 +101,26 @@ RSpec.describe Types::Queries::Comment do
                                        context: { current_user: current_user }).as_json
       expect(result.dig('data', 'discussion', 'id')).to eql user_discussion.id
       expect(result.dig('data', 'discussion', 'title')).to include 'Community Discussion'
+    end
+
+    describe '#system_discussions' do
+      let!(:expected_discussion) do
+        create(:discussion,
+               user_id: current_user.id, title: 'Safety',
+               community_id: current_user.community_id, tag: 'system')
+      end
+
+      it 'should retrieve list of system tagged discussion topics only' do
+        result = DoubleGdpSchema.execute(system_discussions_query,
+                                         context: {
+                                           current_user: admin_user,
+                                           site_community: current_user.community,
+                                         }).as_json
+
+        expect(result.dig('data', 'systemDiscussions').length).to eql 1
+        expect(result.dig('data', 'systemDiscussions', 0, 'id')).to eql expected_discussion.id
+        expect(result.dig('data', 'systemDiscussions', 0, 'title')).to eq expected_discussion.title
+      end
     end
   end
 end

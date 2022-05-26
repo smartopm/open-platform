@@ -3,7 +3,7 @@ import { fireEvent, render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom';
-import { CommunityNewsPostsQuery } from '../../../graphql/queries';
+import { CommunityNewsPostsQuery, SystemDiscussionsQuery } from '../../../graphql/queries';
 import CommunityNews from '../Components/CommunityNews';
 import MockedThemeProvider from '../../__mocks__/mock_theme';
 
@@ -91,6 +91,21 @@ describe('Community news with posts', () => {
                     'https://lh3.googleusercontent.com/a-/AOh14Ghj2JnWVlVC_cPrzJrAJ2YyV_UyVTXcEew8YKVp=s96-c',
                   __typename: 'User'
                 }
+              }
+            ]
+          }
+        }
+      },
+      {
+        request: {
+          query: SystemDiscussionsQuery
+        },
+        result: {
+          data: {
+            systemDiscussions: [
+              {
+                title: 'Family',
+                id: 'df956b37-227e-4a32-1p85-e3279aa7da0e122',
               }
             ]
           }
