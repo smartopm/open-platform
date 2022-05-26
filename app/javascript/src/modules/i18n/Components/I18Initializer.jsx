@@ -1,11 +1,11 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useQuery } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import ReactGA from 'react-ga';
 import { CurrentCommunityQuery } from '../../Community/graphql/community_query';
 
 
-export default function I18Initializer() {
+export default function I18Initializer(props) {
   const { i18n } = useTranslation();
   const { data, error, loading } = useQuery(CurrentCommunityQuery, {
     fetchPolicy: 'cache-first',
@@ -25,5 +25,5 @@ export default function I18Initializer() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [savedLang, loading]);
 
-  return <></>;
+  return props.render(data?.currentCommunity)
 }
