@@ -4,7 +4,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { Link, useLocation } from 'react-router-dom';
-import { Chip, Grid, IconButton, Typography, Badge, Container } from '@mui/material';
+import { Chip, Grid, IconButton, Typography, Badge } from '@mui/material';
 import { useQuery } from 'react-apollo';
 import { grey } from '@mui/material/colors';
 import Divider from '@mui/material/Divider';
@@ -28,6 +28,7 @@ import Card from '../../../shared/Card';
 import CustomProgressBar from '../../../shared/CustomProgressBar';
 import DateUtils from '../../../utils/dateutil';
 import { CommentQuery } from '../../../graphql/queries';
+import IconWithLabel from '../../../shared/label/IconWithLabel';
 
 export default function TaskDataList({
   task,
@@ -393,18 +394,14 @@ export default function TaskDataList({
                         color="primary"
                         size="large"
                       >
-                        <AccountTreeIcon
-                          fontSize="small"
-                          color={task?.subTasksCount ? 'primary' : 'disabled'}
+                        <IconWithLabel
+                          Icon={AccountTreeIcon}
+                          iconFontSize="small"
+                          iconColor={`${task?.subTasksCount ? 'primary' : 'disabled'}`}
+                          label
+                          data={task?.subTasksCount}
+                          testId="task-subtasks-count"
                         />
-                        <Container disableGutters className={classes.iconTag}>
-                          <span
-                            data-testid="task-subtasks-count"
-                            style={{ color: `${!task?.subTasksCount && '#B6B6B5'}` }}
-                          >
-                            {task?.subTasksCount}
-                          </span>
-                        </Container>
                       </IconButton>
                     </Grid>
                   )}
@@ -418,18 +415,14 @@ export default function TaskDataList({
                       color="primary"
                       size="large"
                     >
-                      <QuestionAnswerIcon
-                        fontSize="small"
-                        color={data?.taskComments?.length ? 'primary' : 'disabled'}
+                      <IconWithLabel
+                        Icon={QuestionAnswerIcon}
+                        iconFontSize="small"
+                        iconColor={`${data?.taskComments?.length ? 'primary' : 'disabled'}`}
+                        label
+                        data={data?.taskComments?.length}
+                        testId="task-comment"
                       />
-                      <Container disableGutters className={classes.iconTag}>
-                        <span
-                          data-testid="task-comment"
-                          style={{ color: `${!data?.taskComments?.length && '#B6B6B5'}` }}
-                        >
-                          {data?.taskComments?.length || 0}
-                        </span>
-                      </Container>
                     </IconButton>
                   </Grid>
 
@@ -443,18 +436,14 @@ export default function TaskDataList({
                       color="primary"
                       size="large"
                     >
-                      <AttachFileIcon
-                        fontSize="small"
-                        color={task?.attachments?.length ? 'primary' : 'disabled'}
+                      <IconWithLabel
+                        Icon={AttachFileIcon}
+                        iconFontSize="small"
+                        iconColor={`${task?.attachments?.length ? 'primary' : 'disabled'}`}
+                        label
+                        data={task?.attachments?.length}
+                        testId="task-comment"
                       />
-                      <Container disableGutters className={classes.iconTag}>
-                        <span
-                          data-testid="file_attachments_total"
-                          style={{ color: `${!data?.taskComments?.length && '#B6B6B5'}` }}
-                        >
-                          {task.attachments?.length || 0}
-                        </span>
-                      </Container>
                     </IconButton>
                   </Grid>
                 </Grid>
