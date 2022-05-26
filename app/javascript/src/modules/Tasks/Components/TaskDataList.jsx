@@ -444,7 +444,7 @@ export default function TaskDataList({
                       <IconWithLabel
                         isLabel
                         data={task?.attachments?.length}
-                        testId="task-comment"
+                        testId="file_attachments_total"
                       >
                         <AttachFileIcon
                           fontSize="small"
