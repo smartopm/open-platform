@@ -258,7 +258,7 @@ ActiveRecord::Schema.define(version: 2022_05_25_072248) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "status", default: "valid"
-    t.integer "author", default: 0
+    t.integer "tag", default: 0
     t.index ["community_id"], name: "index_discussions_on_community_id"
     t.index ["status"], name: "index_discussions_on_status"
     t.index ["user_id"], name: "index_discussions_on_user_id"

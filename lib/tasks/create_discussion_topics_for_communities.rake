@@ -3,7 +3,7 @@
 namespace :db do
   desc 'Create default discussion topics for existing communities'
   task create_discussion_topics: :environment do
-    puts 'Starting creating discussion topics ...'
+    puts 'Starting creating system discussion topics ...'
 
     DISCUSSION_TOPICS = [
       I18n.t('discussion_title.safety'),
@@ -15,17 +15,16 @@ namespace :db do
 
     ActiveRecord::Base.transaction do
       Community.find_each do |community|
-        puts "Creating discussions for #{community.name}..."
-        id = community.default_users.first&.id || community.sub_administrator_id
+        puts "Creating system discussions for #{community.name}..."
+        id = community.sub_administrator_id || community.users
+                                                        .find_by(email: 'nicolas@doublegdp.com')&.id
 
         DISCUSSION_TOPICS.each do |topic|
-          unless community.discussions.find_by(title: topic, author: 'system')
-            community.discussions.create!(title: topic, user_id: id, author: 'system')
-          end
+          community.discussions.find_or_create_by!(title: topic, user_id: id, tag: 'system')
         end
       end
     end
-    puts 'Created discussion topics.'
+    puts 'Created system discussion topics.'
   rescue StandardError => e
     puts 'Failed to create discussion topics for community'
     puts e.message.to_s

@@ -10,7 +10,7 @@ module Discussions
     has_many :users, class_name: 'Users::User', through: :discussion_users
     has_many :posts, dependent: :destroy
 
-    enum author: { user: 0, system: 1 }
+    enum tag: { user: 0, system: 1 }
 
     default_scope { order(created_at: :desc).where.not(status: 'deleted') }
 

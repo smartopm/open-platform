@@ -504,3 +504,9 @@ es:
     updated: Actualizado
   welcome_sms: Bienvenido a la comunidad en línea de %{community}. Por favor acceda
     a la aplicación usando %{url}
+  discussion_title:
+    safety: La seguridad
+    events: Eventos
+    recommendations: Recomendaciones
+    items_for_sale: Productos en venta
+    family: Familia

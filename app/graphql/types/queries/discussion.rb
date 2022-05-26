@@ -25,8 +25,8 @@ module Types::Queries::Discussion
     end
 
     # Get the 5 required discussion topics
-    field :system_authored_discussions, [Types::DiscussionType], null: true do
-      description 'Get top discussion topics for community'
+    field :system_tagged_discussions, [Types::DiscussionType], null: true do
+      description 'Get system discussion topics for community'
     end
   end
 
@@ -57,7 +57,7 @@ module Types::Queries::Discussion
     context[:current_user].find_user_discussion(id, type)
   end
 
-  def system_authored_discussions
+  def system_tagged_discussions
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:current_user].blank?
 
     context[:site_community].discussions.system
