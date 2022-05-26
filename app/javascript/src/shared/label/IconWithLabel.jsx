@@ -1,4 +1,3 @@
-/* eslint-disable react/forbid-prop-types */
 import React from 'react'
 import PropTypes from 'prop-types';
 import { Container } from '@mui/material';
@@ -34,6 +33,7 @@ IconWithLabel.defaultProps = {
 };
 
 IconWithLabel.propTypes = {
+  // eslint-disable-next-line react/forbid-prop-types
   Icon: PropTypes.object.isRequired,
   iconFontSize: PropTypes.string,
   iconColor: PropTypes.string.isRequired,
