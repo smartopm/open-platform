@@ -54,10 +54,10 @@ RSpec.describe Types::Queries::Comment do
         })
     end
 
-    let(:system_tagged_discussions_query) do
+    let(:system_discussions_query) do
       <<~GQL
-        query systemTaggedDiscussions {
-          systemTaggedDiscussions {
+        query systemDiscussions {
+          systemDiscussions {
             id
             title
           }
@@ -103,24 +103,23 @@ RSpec.describe Types::Queries::Comment do
       expect(result.dig('data', 'discussion', 'title')).to include 'Community Discussion'
     end
 
-    describe '#system_tagged_discussions' do
-      let!(:expected_topic) do
-        current_user
-          .community
-          .discussions
-          .create!(title: 'Safety', user_id: current_user.id, tag: 'system')
+    describe '#system_discussions' do
+      let!(:expected_discussion) do
+        create(:discussion,
+               user_id: current_user.id, title: 'Safety',
+               community_id: current_user.community_id, tag: 'system')
       end
 
       it 'should retrieve list of system tagged discussion topics only' do
-        result = DoubleGdpSchema.execute(system_tagged_discussions_query,
+        result = DoubleGdpSchema.execute(system_discussions_query,
                                          context: {
                                            current_user: admin_user,
                                            site_community: current_user.community,
                                          }).as_json
 
-        expect(result.dig('data', 'systemTaggedDiscussions').length).to eql 1
-        expect(result.dig('data', 'systemTaggedDiscussions', 0, 'id')).to eql expected_topic.id
-        expect(result.dig('data', 'systemTaggedDiscussions', 0, 'title')).to eq expected_topic.title
+        expect(result.dig('data', 'systemDiscussions').length).to eql 1
+        expect(result.dig('data', 'systemDiscussions', 0, 'id')).to eql expected_discussion.id
+        expect(result.dig('data', 'systemDiscussions', 0, 'title')).to eq expected_discussion.title
       end
     end
   end

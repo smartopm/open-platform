@@ -531,9 +531,9 @@ export const DiscussionQuery = gql`
   }
 `;
 
-export const SystemTaggedDiscussionsQuery = gql`
-  query systemTaggedDiscussions {
-    systemTaggedDiscussions {
+export const SystemDiscussionsQuery = gql`
+  query systemDiscussions {
+    systemDiscussions {
       title
       id
     }
