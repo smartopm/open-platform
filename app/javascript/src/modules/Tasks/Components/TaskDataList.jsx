@@ -396,13 +396,15 @@ export default function TaskDataList({
                         size="large"
                       >
                         <IconWithLabel
-                          Icon={AccountTreeIcon}
-                          iconFontSize="small"
-                          iconColor={`${task?.subTasksCount ? 'primary' : 'disabled'}`}
-                          label
+                          isLabel
                           data={task?.subTasksCount}
                           testId="task-subtasks-count"
-                        />
+                        >
+                          <AccountTreeIcon
+                            fontSize="small"
+                            color={`${task?.subTasksCount ? 'primary' : 'disabled'}`}
+                          />
+                        </IconWithLabel>
                       </IconButton>
                     </Grid>
                   )}
@@ -417,13 +419,15 @@ export default function TaskDataList({
                       size="large"
                     >
                       <IconWithLabel
-                        Icon={QuestionAnswerIcon}
-                        iconFontSize="small"
-                        iconColor={`${data?.taskComments?.length ? 'primary' : 'disabled'}`}
-                        label
+                        isLabel
                         data={data?.taskComments?.length}
                         testId="task-comment"
-                      />
+                      >
+                        <QuestionAnswerIcon
+                          fontSize="small"
+                          color={`${data?.taskComments?.length ? 'primary' : 'disabled'}`}
+                        />
+                      </IconWithLabel>
                     </IconButton>
                   </Grid>
 
@@ -438,13 +442,15 @@ export default function TaskDataList({
                       size="large"
                     >
                       <IconWithLabel
-                        Icon={AttachFileIcon}
-                        iconFontSize="small"
-                        iconColor={`${task?.attachments?.length ? 'primary' : 'disabled'}`}
-                        label
+                        isLabel
                         data={task?.attachments?.length}
                         testId="task-comment"
-                      />
+                      >
+                        <AttachFileIcon
+                          fontSize="small"
+                          color={`${data?.attachments?.length ? 'primary' : 'disabled'}`}
+                        />
+                      </IconWithLabel>
                     </IconButton>
                   </Grid>
                 </Grid>
