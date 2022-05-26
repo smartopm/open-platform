@@ -214,6 +214,7 @@ export default function TaskDataList({
                     onClick={handleOpenProjectClick}
                     data-testid="open_task_details"
                     disabled={openSubTask}
+                    style={{ marginTop: '8px' }}
                   >
                     <WidgetsIcon />
                   </IconButton>
@@ -533,10 +534,6 @@ TaskDataList.propTypes = {
 };
 
 const useStyles = makeStyles(theme => ({
-  iconTag: {
-    martinLeft: '3px',
-    fontSize: '12px'
-  },
   taskBody: {
     maxWidth: '42ch',
     overflow: 'hidden',
