@@ -523,6 +523,7 @@ export const DiscussionQuery = gql`
       id
       description
       createdAt
+      tag
       user {
         name
         id
@@ -764,6 +765,7 @@ export const DiscussionsQuery = gql`
       description
       createdAt
       id
+      tag
       user {
         name
         id
