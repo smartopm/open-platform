@@ -48,7 +48,7 @@ export default function CommunityNews({
   let structuredMenuList = [];
   if (!systemDiscussionLoading) {
     structuredMenuList = systemDiscussionData?.systemDiscussions.map(discussion => ({
-      content: discussion?.title,
+      content: t(`discussion_title.${discussion.title}`),
       handleClick: () => history.push(`/discussions/${discussion?.id}`)
     }));
   }
