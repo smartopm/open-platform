@@ -94,7 +94,7 @@ export default function ProjectsList() {
   }
 
   if (error) return <CenteredContent>{formatError(error.message)}</CenteredContent>;
-  return(
+  return (
     <>
       <Modal
         disablePortal
@@ -108,12 +108,12 @@ export default function ProjectsList() {
       >
         <Grid container spacing={1} className={matches ? classes.paperMobile : classes.paper}>
           <Grid item md={12} xs={12}>
-            <Typography variant="h6" color="text.primary">{t('project.add_new_project')}</Typography>
+            <Typography variant="h6" color="text.primary">
+              {t('project.add_new_project')}
+            </Typography>
           </Grid>
           <Grid item md={12} xs={12}>
-            <Typography>
-              {t('project.new_project_description')}
-            </Typography>
+            <Typography>{t('project.new_project_description')}</Typography>
           </Grid>
           <Grid item md={12} xs={12}>
             <TextField
@@ -138,26 +138,33 @@ export default function ProjectsList() {
           </Grid>
         </Grid>
       </Modal>
-      <div style={{padding: '0 8%'}}>
+      <div style={{ padding: '0 8%' }}>
+        {authState.user.userType === 'admin' && (
+          <Grid style={{ paddingleft: '10px' }}>
+            <div role="presentation">
+              <Breadcrumbs aria-label="breadcrumb" style={{ paddingBottom: '10px' }}>
+                <Link to="/processes">
+                  <Typography color="primary" style={{ marginLeft: '5px' }}>
+                    {t('processes.processes')}
+                  </Typography>
+                </Link>
+                <Typography color="text.primary">{processName}</Typography>
+              </Breadcrumbs>
+            </div>
+          </Grid>
+        )}
         <Grid container>
-          {authState.user.userType === 'admin' && (
-            <Grid item md={11} xs={11} style={{paddingleft: '10px'}}>
-              <div role="presentation">
-                <Breadcrumbs aria-label="breadcrumb" style={{paddingBottom: '10px'}}>
-                  <Link to="/processes">
-                    <Typography color="primary" style={{marginLeft: '5px'}}>{t('processes.processes')}</Typography>
-                  </Link>
-                  <Typography color="text.primary">{processName}</Typography>
-                </Breadcrumbs>
-              </div>
-            </Grid>
-          )}
+          <Grid item md={11} xs={10} className={classes.header}>
+            <Typography variant="h4" style={{ marginLeft: '5px', marginBottom: '24px' }}>
+              {processName}
+            </Typography>
+          </Grid>
           <Grid
             item
             md={1}
             xs={2}
             data-testid="new-project-speed-dial"
-            style={{ marginTop: '-5px' }}
+            style={{ marginTop: '-30px' }}
           >
             <SpeedDial
               open={openSpeedDial}
@@ -165,27 +172,19 @@ export default function ProjectsList() {
               actions={accessibleMenus(speedDialActions)}
             />
           </Grid>
-          <Grid item md={12} xs={12} className={classes.header}>
-            <Grid container spacing={1}>
-              <Grid item md={9} xs={10}>
-                <Typography variant="h4" style={{marginLeft: '5px', marginBottom: '24px'}}>{processName}</Typography>
-              </Grid>
-            </Grid>
-          </Grid>
         </Grid>
         {loading && <Spinner />}
-        {data?.projects?.length ?
-          (
-            <div>
-              {data.projects.map(task => (
-                <div key={task.id}>
-                  <ProjectItem processId={processId} task={task} refetch={refetch} />
-                </div>
+        {data?.projects?.length ? (
+          <div>
+            {data.projects.map(task => (
+              <div key={task.id}>
+                <ProjectItem processId={processId} task={task} refetch={refetch} />
+              </div>
             ))}
-            </div>
-          )
-          : !loading && (<CenteredContent>{t('processes.no_projects')}</CenteredContent>)
-        }
+          </div>
+        ) : (
+          !loading && <CenteredContent>{t('processes.no_projects')}</CenteredContent>
+        )}
         <br />
         <CenteredContent>
           <Paginate
@@ -198,7 +197,7 @@ export default function ProjectsList() {
         </CenteredContent>
       </div>
     </>
-  )
+  );
 }
 
 const useStyles = makeStyles((theme) => ({
