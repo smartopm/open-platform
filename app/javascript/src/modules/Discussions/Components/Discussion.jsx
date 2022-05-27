@@ -107,6 +107,6 @@ Discussion.propTypes = {
     user: userProps,
     description: PropTypes.string,
     title: PropTypes.string.isRequired,
-    tag: PropTypes.string.isRequired
+    tag: PropTypes.string
   }).isRequired
 };
