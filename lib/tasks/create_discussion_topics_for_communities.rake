@@ -5,17 +5,16 @@ namespace :db do
   task create_discussion_topics: :environment do
     puts 'Starting creating system discussion topics ...'
 
-    DISCUSSION_TOPICS = [
-      I18n.t('discussion_title.safety'),
-      I18n.t('discussion_title.events'),
-      I18n.t('discussion_title.recommendations'),
-      I18n.t('discussion_title.items_for_sale'),
-      I18n.t('discussion_title.family'),
-    ].freeze
+    # store keys of system generated discussion topics
+    DISCUSSION_TOPICS = %w[safety events recommendations items_for_sale family].freeze
 
     ActiveRecord::Base.transaction do
       Community.find_each do |community|
         puts "Creating system discussions for #{community.name}..."
+
+        # remove last MR created system discussions, since values are stored earlier
+        community.discussions.system&.delete_all
+
         id = community.sub_administrator_id || community.users
                                                         .find_by(email: 'nicolas@doublegdp.com')&.id
 
