@@ -22,7 +22,7 @@ export default {
         component: LeadsPage,
         exact: true
       },
-      name: t => t('menu.leads'),
+      name: t => t('lead_management.scorecard'),
       featureName: 'Users',
       moduleName: 'user',
       accessibleBy: []
