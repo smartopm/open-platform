@@ -23,12 +23,16 @@ namespace :db do
 
         discussion_topics.each do |topic|
           discussion = community.discussions.system.find_by(title: topic)
-          translated_topic = I18n.t("discussion_title.#{topic.downcase.tr(' ', '_')}", locale: community_locale)
+          translated_topic = I18n.t(
+            "discussion_title.#{topic.downcase.tr(' ', '_')}", locale: community_locale
+          )
 
           if discussion
             discussion.update(title: translated_topic)
           else
-            community.discussions.find_or_create_by!(title: translated_topic, user_id: id, tag: 'system')
+            community
+              .discussions
+              .find_or_create_by!(title: translated_topic, user_id: id, tag: 'system')
           end
         end
       end
