@@ -19,6 +19,7 @@ import ImageAuth from '../../../shared/ImageAuth';
 import PostCreate from '../../Dashboard/Components/PostCreate';
 import CardWrapper from '../../../shared/CardWrapper';
 import MenuList from '../../../shared/MenuList';
+import { PostDeleteMutation } from '../../../graphql/mutations';
 
 export default function CommunityNews({
   userType,
@@ -35,6 +36,7 @@ export default function CommunityNews({
   const [postData, setPostData] = useState(null);
   const [editModal, setEditModal] = useState(false);
   const anchorElOpen = Boolean(anchorEl);
+  const [deletePost] = useMutation(PostDeleteMutation);
 
   const { loading, error, data, refetch } = useQuery(CommunityNewsPostsQuery, {
     variables: { limit }
@@ -95,6 +97,22 @@ export default function CommunityNews({
     setPostData(post);
   }
 
+  function handleDeleteClick(id) {
+    setOpenModal(!openModal);
+    setCommentId(id);
+  }
+
+  function handleDeleteComment() {
+    deletePost({
+      variables: { id: commentId }
+    })
+      .then(() => {
+        refetch();
+        setOpenModal(!openModal);
+      })
+      .catch(err => setError(err.message));
+  }
+
   function redirectToDiscussionsPage() {
     history.push(`/discussions/${discussionId}`);
   }
@@ -110,6 +128,12 @@ export default function CommunityNews({
 
   return (
     <div style={isMobile ? { padding: '20px' } : { padding: '20px 20px 20px 79px', width: '99%' }}>
+      <DeleteDialogueBox
+        open={openModal}
+        handleClose={handleDeleteClick}
+        handleAction={handleDeleteComment}
+        title={t('common:misc.post', { count: 1 })}
+      />
       <CardWrapper
         title={t('headers.community_news_header')}
         buttonName={t('common:misc.see_more_discussion')}
