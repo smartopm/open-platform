@@ -277,7 +277,7 @@ export default function GeoMap() {
           width: 100%;
         }
         .leaflet-control-container .leaflet-top {
-          top: 10%;
+          top: 12%;
         }
         .leaflet-control-container .leaflet-control-zoom {
           display: ${matches ? 'none' : 'block'};
@@ -303,6 +303,7 @@ export default function GeoMap() {
            easeLinearity={0.35}
            onZoomEnd={handleMapZoom}
            maxZoom={40}
+           minZoom={11}
          >
            <MapLayers>
              {Array.isArray(properties) && properties?.length && (
@@ -334,6 +335,7 @@ export default function GeoMap() {
                    <MarkerClusterGroup
                      spiderfyDistanceMultiplier={2}
                      showCoverageOnHover={false}
+                     spiderfyOnMaxZoom
                    >
                      <GeoJSON
                        key={Math.random()}
@@ -395,16 +397,17 @@ export default function GeoMap() {
 export function MapLayers({ children }){
   return (
     <LayersControl position="topleft">
-      <LayersControl.BaseLayer name="Mapbox">
+      <LayersControl.BaseLayer checked name="Mapbox">
         <TileLayer
           attribution={attribution}
           url={`${mapboxStreets}${mapboxPublicToken}`}
         />
       </LayersControl.BaseLayer>
-      <LayersControl.BaseLayer checked name="OSM">
+      <LayersControl.BaseLayer name="OSM">
         <TileLayer
           attribution={attribution}
           url={openStreetMap}
+          maxZoom={18}
         />
       </LayersControl.BaseLayer>
       <LayersControl.BaseLayer name="Satellite">
