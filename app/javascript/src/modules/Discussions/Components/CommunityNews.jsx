@@ -67,6 +67,12 @@ export default function CommunityNews({
       isAdmin: true,
       color: '',
       handleClick: () => setEditModal(true)
+    },
+    {
+      content: t('form_actions.delete_post'),
+      isAdmin: true,
+      color: '',
+      handleClick: () => setEditModal(true)
     }
   ];
 
