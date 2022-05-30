@@ -38,7 +38,6 @@ describe('Discussions Component', () => {
               title: 'MY Discussion',
               description: 'My Description',
               createdAt: '2021-01-01',
-              tag: 'system',
               user: {
                 id: '1gye',
                 name: 'Nurudeen',

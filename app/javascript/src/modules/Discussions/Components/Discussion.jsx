@@ -55,9 +55,7 @@ export default function Discussion({ discussionData }) {
         <Grid container spacing={3}>
           <Grid item xs={12}>
             <Typography data-testid="disc_title" variant="h6">
-              {discussionData.tag === 'system'
-                ? t(`discussion_title.${discussionData.title}`)
-                : discussionData.title}
+              {discussionData.title}
             </Typography>
           </Grid>
           <Grid item xs={12}>
@@ -106,7 +104,6 @@ Discussion.propTypes = {
     createdAt: PropTypes.string.isRequired,
     user: userProps,
     description: PropTypes.string,
-    title: PropTypes.string.isRequired,
-    tag: PropTypes.string
+    title: PropTypes.string.isRequired
   }).isRequired
 };

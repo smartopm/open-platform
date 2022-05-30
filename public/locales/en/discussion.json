@@ -49,12 +49,5 @@
     "first_line": "Posts and discussion boards are provided as a free service for logged in community members.",
     "second_line": "Users must keep posts constructive, informative, positive, and free of profanity and obscenity.",
     "third_line": "We reserve the right to remove posts or boards that veer from these principles."
-  },
-  "discussion_title": {
-    "safety": "Safety",
-    "events": "Events",
-    "recommendations": "Recommendations",
-    "items_for_sale": "Items for Sale",
-    "family": "Family"
   }
 }

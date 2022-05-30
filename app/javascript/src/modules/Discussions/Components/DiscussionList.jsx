@@ -64,7 +64,7 @@ const { t } = useTranslation('discussion')
                       color="textSecondary"
                       data-testid="disc_title"
                     >
-                      {discussion.tag === 'system' ? t(`discussion_title.${discussion.title}`) : discussion.title}
+                      {discussion.title}
                     </Typography>
                     )}
                   secondary={(
