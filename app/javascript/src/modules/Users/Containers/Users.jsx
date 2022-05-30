@@ -54,6 +54,7 @@ export default function UsersList() {
     setAnchorEl(null);
   }
 
+  console.log(decodeURIComponent(location.search).replace('?', ''))
   const { loading, error, data, refetch } = useQuery(UsersDetails, {
     variables: {
       query:
@@ -118,8 +119,10 @@ export default function UsersList() {
         setSearchQuery(`sub_status = "${location?.state?.query - 1}"`);
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    if (location.pathname === '/leads/users') {
+      setSearchQuery(`user_type = "lead"`);
+    }
+  }, [location]);
 
   function handleDownloadCSV() {
     loadAllUsers();
@@ -167,7 +170,8 @@ export default function UsersList() {
           })
           .join(` ${conjugate} `);
         setSearchQuery(query);
-        history.push({ pathname: '/users', search: query });
+        // push from current pathname
+        history.push({ pathname: location.pathname, search: query });
         setFilterCount(availableConjugate.length);
       }
     }

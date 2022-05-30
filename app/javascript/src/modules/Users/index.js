@@ -11,7 +11,7 @@ const user = { module: 'user' }
 const userPermissions = ['can_access_all_users'];
 const profilePermissions = ['can_view_own_profile'];
 
-function RenderUsers() {
+export function RenderUsers() {
     return (
       <AccessCheck module={user.module} allowedPermissions={userPermissions}>
         <Users />
