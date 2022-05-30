@@ -6,6 +6,7 @@ import { act, render } from '@testing-library/react'
 import GeoMap from '../containers/GeoMap'
 
 jest.mock('react-leaflet')
+jest.mock('leaflet.markercluster')
 describe('GeoMap', () => {
   it('should mount component correctly', async () => {
     let container;
