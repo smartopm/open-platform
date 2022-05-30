@@ -137,7 +137,6 @@ export default function CommunityNews({
 
   return (
     <div style={isMobile ? { padding: '20px' } : { padding: '20px 20px 20px 79px', width: '99%' }}>
-      {console.log(data)}
       <MessageAlert
         type={!postDetails.isError ? 'success' : 'error'}
         message={postDetails.message}

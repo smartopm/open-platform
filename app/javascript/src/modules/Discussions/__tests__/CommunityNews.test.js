@@ -14,7 +14,8 @@ describe('Community news with posts', () => {
       userType: 'admin',
       userImage: 'https://image.com',
       userPermissions: [{ module: 'discussion', permissions: ['can_set_accessibility'] }],
-      dashboardTranslation: () => 'some-text'
+      dashboardTranslation: () => 'some-text',
+      userId: 'e23844f0-9985-438d-bdff-4f34a9e1897b'
     };
     const mocks = [
       {
@@ -139,6 +140,11 @@ describe('Community news with posts', () => {
       fireEvent.click(container.queryAllByTestId('post_options')[0]);
       expect(container.queryAllByText('form_actions.edit_post')[0]).toBeInTheDocument();
       fireEvent.click(container.queryAllByText('form_actions.edit_post')[0]);
+
+      expect(container.queryAllByText('form_actions.delete_post')[0]).toBeInTheDocument();
+      fireEvent.click(container.queryAllByText('form_actions.delete_post')[0]);
+      expect(container.queryByTestId('delete_dialog')).toBeInTheDocument();
+      fireEvent.click(container.queryByTestId('confirm_action'));
     }, 50);
   });
 });
