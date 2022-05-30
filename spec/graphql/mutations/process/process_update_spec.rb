@@ -17,6 +17,7 @@ RSpec.describe Mutations::Process::ProcessUpdate do
     let(:form) { create(:form, community: community) }
     let!(:process) { create(:process, community: community, form: form) }
     let!(:note_list) { create(:note_list, community: community, process: process) }
+    let(:new_note_list) { create(:note_list, community: community) }
 
     let(:mutation) do
       <<~GQL
@@ -47,8 +48,6 @@ RSpec.describe Mutations::Process::ProcessUpdate do
     end
 
     context 'when user is authorized and update params are present' do
-      let(:new_note_list) { create(:note_list, community: community) }
-
       it 'should update process' do
         variables = {
           id: process.id,
@@ -98,7 +97,7 @@ RSpec.describe Mutations::Process::ProcessUpdate do
     end
 
     context 'when note list is not found' do
-      it 'raises and error' do
+      it 'raises an error' do
         variables = {
           id: process.id,
           name: 'New process name',
@@ -114,6 +113,29 @@ RSpec.describe Mutations::Process::ProcessUpdate do
 
         expect(result['errors']).to_not be_nil
         expect(result.dig('errors', 0, 'message')).to eql 'Task List not found'
+      end
+    end
+
+    context 'when process has no task list' do
+      it 'updates process successfully' do
+        note_list.update(process_id: nil)
+        variables = {
+          id: process.id,
+          name: 'DRC',
+          formId: form.id,
+          noteListId: new_note_list.id,
+        }
+
+        result = DoubleGdpSchema.execute(mutation, variables: variables,
+                                                   context: {
+                                                     current_user: admin,
+                                                     site_community: community,
+                                                   }).as_json
+
+        expect(result['errors']).to be_nil
+        expect(
+          result.dig('data', 'processUpdate', 'process', 'noteList', 'id'),
+        ).to eql variables[:noteListId]
       end
     end
 

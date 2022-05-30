@@ -30,22 +30,23 @@ module Mutations
 
       private
 
+      # rubocop:disable Style/SafeNavigation
       def update_process(vals, process, note_list)
         ActiveRecord::Base.transaction do
           # Delink previous task list
           previous_task_list = process.note_list
-          previous_task_list.update!(process_id: nil)
+          previous_task_list.update!(process_id: nil) if previous_task_list
+
           # Link new task list
           process.reload
           note_list.update!(process_id: process.id)
 
-          return { process: process } if process.update(vals.except(:id, :note_list_id))
-
-          raise_error_message(process.errors.full_messages&.join(', '))
+          return { process: process } if process.update!(vals.except(:id, :note_list_id))
         end
       rescue StandardError => e
         raise GraphQL::ExecutionError, e.message
       end
+      # rubocop:enable Style/SafeNavigation
     end
   end
 end
