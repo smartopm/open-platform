@@ -53,13 +53,12 @@ export default function UsersList() {
     setSubstatusReportOpen(!substatusReportOpen);
     setAnchorEl(null);
   }
-
-  console.log(decodeURIComponent(location.search).replace('?', ''))
+  const currentQueryPath = decodeURIComponent(location.search).replace('?', '')
   const { loading, error, data, refetch } = useQuery(UsersDetails, {
     variables: {
       query:
         searchQuery.length === 0
-          ? decodeURIComponent(location.search).replace('?', '')
+          ? currentQueryPath
           : searchQuery,
       limit,
       offset
@@ -119,10 +118,10 @@ export default function UsersList() {
         setSearchQuery(`sub_status = "${location?.state?.query - 1}"`);
       }
     }
-    if (location.pathname === '/leads/users') {
-      setSearchQuery(`user_type = "lead"`);
+    if (location.pathname === '/leads/users' && !currentQueryPath) {
+      setSearchQuery(`user_type="lead"`);
     }
-  }, [location]);
+  }, [currentQueryPath, location]);
 
   function handleDownloadCSV() {
     loadAllUsers();
@@ -170,7 +169,7 @@ export default function UsersList() {
           })
           .join(` ${conjugate} `);
         setSearchQuery(query);
-        // push from current pathname
+        // push from current pathname to match both /users and /leads/users
         history.push({ pathname: location.pathname, search: query });
         setFilterCount(availableConjugate.length);
       }
