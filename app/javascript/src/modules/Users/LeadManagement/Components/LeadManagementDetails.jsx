@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { Grid, Typography } from '@mui/material';
-// import { styled } from '@mui/material/styles';
+import { Grid, Typography, Container } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-apollo';
 import Box from '@mui/material/Box';
@@ -22,17 +21,14 @@ export default function LeadManagementDetails({ userId }) {
     fetchPolicy: 'cache-and-network'
   });
 
-  const {
-    loading: leadLabelsLoading,
-    error: leadLabelsError,
-    data: LeadLabelsData
-    // refetch: refetchLeadLabels
-  } = useQuery(LeadLabelsQuery, {
-    variables: { userId },
-    fetchPolicy: 'cache-and-network'
-  });
+  const { loading: leadLabelsLoading, error: leadLabelsError, data: LeadLabelsData } = useQuery(
+    LeadLabelsQuery,
+    {
+      variables: { userId },
+      fetchPolicy: 'cache-and-network'
+    }
+  );
 
-  console.log('Mutuba', LeadLabelsData);
   const TAB_VALUES = {
     details: 0,
     tasks: 1,
@@ -41,10 +37,6 @@ export default function LeadManagementDetails({ userId }) {
   function handleTabValueChange(_event, newValue) {
     setTabValue(Number(newValue));
   }
-
-  // const Item = styled(Box)(({ theme }) => ({
-  //   padding: theme.spacing(1)
-  // }));
 
   if (loading || leadLabelsLoading) return <Spinner />;
   const err = error || leadLabelsError;
@@ -57,35 +49,56 @@ export default function LeadManagementDetails({ userId }) {
       columns={{ xs: 12, md: 12 }}
     >
       <Grid item md={6} xs={10} data-testid="lead-management-container-header">
-        {/* <Item> */}
         <Grid
           container
           style={{
             display: 'flex',
             justifyContent: 'space-between'
-            // gridTemplateColumns: 'repeat(2, 1fr)'
           }}
         >
           <Grid item md={6} xs={12}>
             <Typography variant="h5">{t('lead_management.main_header')}</Typography>
           </Grid>
-          <Grid item md={6} xs={6} style={{ justifyContent: 'flex-end' }}>
-            <Grid
-              container
-              style={{
-                display: 'flex',
-                // alignItems: 'center',
-                justifyContent: 'space-between'
-                // gridTemplateColumns: 'repeat(2, 1fr)'
-              }}
-            >
-              <Grid item md={6} xs={12}>
-                <Typography variant="h5">{t('lead_management.main_header')}</Typography>
-              </Grid>
-              <Grid item md={6} xs={12} style={{ padding: 0, justifyContent: 'flex-end' }}>
-                <Typography variant="h5">{t('lead_management.main_header')}</Typography>
-              </Grid>
-            </Grid>
+          <Grid item md={6} xs={6}>
+            <Container style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
+              {LeadLabelsData?.leadLabels?.map(labelsData => (
+                <p key={labelsData.id}>
+                  <span
+                    style={{
+                      background: 'white',
+                      color: labelsData.color,
+                      marginTop: 20,
+                      fontSize: '12px',
+                      width: '100%',
+                      padding: '8px',
+                      borderTop: '1px solid',
+                      borderLeft: '1px solid',
+                      borderColor: labelsData.color,
+                      borderBottom: '1px solid',
+                      borderTopLeftRadius: '16px',
+                      borderBottomLeftRadius: '16px'
+                    }}
+                  >
+                    {' '}
+                    {labelsData?.groupingName}
+                  </span>
+                  <span
+                    style={{
+                      background: labelsData?.color,
+                      color: 'white',
+                      fontSize: '12px',
+                      width: '100%',
+                      padding: '9px',
+                      borderTopRightRadius: '16px',
+                      borderBottomRightRadius: '16px',
+                      marginRight: '10px'
+                    }}
+                  >
+                    {labelsData?.shortDesc}
+                  </span>
+                </p>
+              ))}
+            </Container>
           </Grid>
         </Grid>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
