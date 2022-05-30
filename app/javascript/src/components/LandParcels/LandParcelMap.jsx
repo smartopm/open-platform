@@ -2,11 +2,15 @@ import React, { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { useMutation, useApolloClient, useLazyQuery } from 'react-apollo';
 import { Button, Grid, Divider } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import { Map, FeatureGroup, GeoJSON, LayersControl, TileLayer } from 'react-leaflet'
+import L from 'leaflet'
+import MarkerClusterGroup from 'react-leaflet-markercluster';
 import { useTranslation } from 'react-i18next';
 import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider';
 import NkwashiSuburbBoundaryData from '../../data/nkwashi_suburb_boundary.json';
+import poiIcon from '../../../../assets/images/poi-icon.png'
 import { LandParcel } from '../../graphql/queries';
 import {
   PointOfInterestDelete,
@@ -15,7 +19,6 @@ import {
 import useFileUpload from '../../graphql/useFileUpload';
 import { checkValidGeoJSON, formatError, objectAccessor } from '../../utils/helpers';
 import { emptyPolygonFeature, mapTiles, plotStatusColorPallete } from '../../utils/constants';
-import PointsOfInterestMarker from '../Map/PointsOfInterestMarker';
 import { ActionDialog } from '../Dialog';
 import MessageAlert from '../MessageAlert';
 import PointOfInterestDrawerDialog from '../Map/PointOfInterestDrawerDialog';
@@ -74,6 +77,7 @@ function getSubUrbanData(communityName) {
 
 /* istanbul ignore next */
 export default function LandParcelMap({ handlePlotClick, geoData }) {
+  const classes = useStyles()
   const authState = useContext(AuthStateContext);
   const [deletePointOfInterest] = useMutation(PointOfInterestDelete);
   const [uploadPoiImage] = useMutation(PointOfInterestImageCreate);
@@ -87,7 +91,7 @@ export default function LandParcelMap({ handlePlotClick, geoData }) {
     geoData?.filter(
       ({ geom, objectType, parcelType }) => geom && objectType === 'land' && parcelType !== 'poi'
     ) || null;
-  const poiData = geoData?.filter(({ geom, parcelType }) => geom && parcelType === 'poi') || null;
+  const poiData = geoData?.filter(({ geom, parcelType }) => geom && parcelType === 'poi' &&  checkValidGeoJSON(geom)) || [];
   const houseData =
     geoData?.filter(({ geom, objectType }) => geom && objectType === 'house') || null;
   const featureCollection = { type: 'FeatureCollection', features: [] };
@@ -102,6 +106,19 @@ export default function LandParcelMap({ handlePlotClick, geoData }) {
   const { onChange: handleFileUpload, status: uploadStatus, signedBlobId } = useFileUpload({
     client: useApolloClient()
   });
+
+    // reset the default icon size
+    L.Icon.Default.prototype.options.shadowSize = [0, 0];
+
+    poiData.map(({ id, geom, parcelNumber, parcelType }) => {
+      const feature = JSON.parse(geom)
+     
+      feature.properties.id = id
+      feature.properties.parcel_no = parcelNumber
+      feature.properties.parcel_type = parcelType
+      return poiFeatureCollection.features.push(feature)
+    });
+  
 
   /* istanbul ignore next */
   function handleOnPlotClick({ target }) {
@@ -242,6 +259,20 @@ export default function LandParcelMap({ handlePlotClick, geoData }) {
     }
   }
 
+  /* istanbul ignore next */
+  function onEachPoiPointToLayer(feature, latlng) {
+    const divIcon = L.divIcon({
+      html: `<div class=${classes.markerContainer}>
+              <div class=${classes.markerLabel}>${feature.properties.poi_name || 'POI'}</div>
+              <img src=${poiIcon} class=${classes.markerIcon} />
+            <div/>`
+    })
+
+    return L.marker(latlng, {
+      icon: divIcon,
+    })
+  }
+
   function getMapCenterPoint() {
     if (!communityName) {
       return [0, 0];
@@ -326,6 +357,10 @@ export default function LandParcelMap({ handlePlotClick, geoData }) {
             width: 100%;
             margin: 0 auto;
           }
+          .leaflet-div-icon{
+            background: none;
+            border: none;
+          }
           `
           }}
         />
@@ -340,7 +375,7 @@ export default function LandParcelMap({ handlePlotClick, geoData }) {
           dragging
           animate
           easeLinearity={0.35}
-          maxZoom={30}
+          maxZoom={40}
         >
           <LayersControl position="topleft">
             <LayersControl.BaseLayer checked name="OSM">
@@ -394,31 +429,18 @@ export default function LandParcelMap({ handlePlotClick, geoData }) {
             {Array.isArray(poiData) && poiData?.length && (
               <LayersControl.Overlay name="Points of Interest">
                 <FeatureGroup>
-                  {poiData?.map(({ id, geom, parcelNumber, parcelType }) => {
-                    if (checkValidGeoJSON(geom)) {
-                      const feature = JSON.parse(geom);
-                      const markerProps = {
-                        geoLatY: feature.properties.lat_y || 0,
-                        geoLongX: feature.properties.long_x || 0,
-                        iconUrl: feature.properties.icon || '',
-                        poiName:
-                          feature.properties.poi_name || t('property:misc.point_of_interest'),
-                        geomType: feature.geometry.type || t('property:misc.polygon')
-                      };
-                      feature.properties.id = id;
-                      feature.properties.parcel_no = parcelNumber;
-                      feature.properties.parcel_type = parcelType;
-                      poiFeatureCollection.features.push(feature);
-                      return <PointsOfInterestMarker key={id} markerProps={markerProps} />;
-                    }
-                    return poiFeatureCollection.features.push(JSON.parse(emptyPolygonFeature));
-                  })}
-                  <GeoJSON
-                    key={Math.random()}
-                    data={poiFeatureCollection}
-                    style={geoJSONPoiStyle}
-                    onEachFeature={onEachPoiLayerFeature}
-                  />
+                  <MarkerClusterGroup
+                    spiderfyDistanceMultiplier={2}
+                    showCoverageOnHover={false}
+                  >
+                    <GeoJSON
+                      key={Math.random()}
+                      data={poiFeatureCollection}
+                      style={geoJSONPoiStyle}
+                      onEachFeature={onEachPoiLayerFeature}
+                      pointToLayer={onEachPoiPointToLayer}
+                    />
+                  </MarkerClusterGroup>
                 </FeatureGroup>
               </LayersControl.Overlay>
             )}
@@ -469,6 +491,25 @@ export default function LandParcelMap({ handlePlotClick, geoData }) {
     </>
   );
 }
+
+const useStyles = makeStyles(() => ({
+  markerContainer: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '200px',
+  },
+  markerLabel: {
+    width: '170px',
+    textAlign: 'right',
+    color: '#080808',
+    padding: '3px',
+  },
+  markerIcon: {
+    height: '26px',
+    width: '26px',
+  },
+}));
 
 LandParcelMap.defaultProps = {
   geoData: []
