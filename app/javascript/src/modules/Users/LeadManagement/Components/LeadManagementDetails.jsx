@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Grid, Typography, Container } from '@mui/material';
+import { Grid, Typography, Container, useMediaQuery } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-apollo';
 import Box from '@mui/material/Box';
@@ -20,6 +20,8 @@ export default function LeadManagementDetails({ userId }) {
     variables: { id: userId },
     fetchPolicy: 'cache-and-network'
   });
+
+  const isMobile = useMediaQuery('(max-width:800px)');
 
   const { loading: leadLabelsLoading, error: leadLabelsError, data: LeadLabelsData } = useQuery(
     LeadLabelsQuery,
@@ -60,7 +62,14 @@ export default function LeadManagementDetails({ userId }) {
             <Typography variant="h5">{t('lead_management.main_header')}</Typography>
           </Grid>
           <Grid item md={6} xs={6}>
-            <Container style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center' }}>
+            <Container
+              style={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                marginRight: !isMobile && '-50px',
+                paddingLeft: isMobile && 0
+              }}
+            >
               {LeadLabelsData?.leadLabels?.map(labelsData => (
                 <p key={labelsData.id}>
                   <span
@@ -150,7 +159,6 @@ export default function LeadManagementDetails({ userId }) {
         <TabPanel value={tabValue} index={2} data-testid="lead-management-event-tab">
           <LeadEvents userId={userId} data={data} refetch={refetch} />
         </TabPanel>
-        {/* </Item> */}
       </Grid>
     </Grid>
   );
