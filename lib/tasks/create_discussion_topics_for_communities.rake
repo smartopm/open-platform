@@ -9,21 +9,27 @@ namespace :db do
       Community.find_each do |community|
         puts "Creating system discussions for #{community.name}..."
 
-        # remove last MR created system discussions, since values are stored earlier
-        community.discussions.system&.delete_all
+        # get current community language locale
         community_locale = (community&.language && community.language[/.*(?=-)|.*/]) || 'en'
         id = community.sub_administrator_id || community.users
                                                         .find_by(email: 'nicolas@doublegdp.com')&.id
         discussion_topics = [
-          I18n.t('discussion_title.safety', locale: community_locale),
-          I18n.t('discussion_title.events', locale: community_locale),
-          I18n.t('discussion_title.recommendations', locale: community_locale),
-          I18n.t('discussion_title.items_for_sale', locale: community_locale),
-          I18n.t('discussion_title.family', locale: community_locale),
+          I18n.t('discussion_title.safety'),
+          I18n.t('discussion_title.events'),
+          I18n.t('discussion_title.recommendations'),
+          I18n.t('discussion_title.items_for_sale'),
+          I18n.t('discussion_title.family'),
         ].freeze
 
         discussion_topics.each do |topic|
-          community.discussions.find_or_create_by!(title: topic, user_id: id, tag: 'system')
+          discussion = community.discussions.system.find_by(title: topic)
+          translated_topic = I18n.t("discussion_title.#{topic.downcase.tr(' ', '_')}", locale: community_locale)
+
+          if discussion
+            discussion.update(title: translated_topic)
+          else
+            community.discussions.find_or_create_by!(title: translated_topic, user_id: id, tag: 'system')
+          end
         end
       end
     end
