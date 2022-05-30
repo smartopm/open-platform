@@ -16,9 +16,10 @@ module Mutations
         process = context[:site_community].processes.find_by(id: vals[:id])
         raise_error_message(I18n.t('errors.process.not_found')) if process.nil?
 
-        return { process: process } if process.update(vals.except(:id, :note_list_id))
+        note_list = Notes::NoteList.find_by(id: vals[:note_list_id])
+        raise GraphQL::ExecutionError, I18n.t('errors.note_list.not_found') unless note_list
 
-        raise_error_message(process.errors.full_messages&.join(', '))
+        update_process(vals, process, note_list)
       end
 
       def authorized?(_vals)
@@ -26,6 +27,26 @@ module Mutations
 
         raise_error_message(I18n.t('errors.unauthorized'))
       end
+
+      private
+
+      # rubocop:disable Style/SafeNavigation
+      def update_process(vals, process, note_list)
+        ActiveRecord::Base.transaction do
+          # Delink previous task list
+          previous_task_list = process.note_list
+          previous_task_list.update!(process_id: nil) if previous_task_list
+
+          # Link new task list
+          process.reload
+          note_list.update!(process_id: process.id)
+
+          return { process: process } if process.update!(vals.except(:id, :note_list_id))
+        end
+      rescue StandardError => e
+        raise GraphQL::ExecutionError, e.message
+      end
+      # rubocop:enable Style/SafeNavigation
     end
   end
 end

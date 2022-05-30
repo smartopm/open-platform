@@ -105,10 +105,12 @@ const [processUpdate] = useMutation(ProcessUpdateMutation);
     })
   }
 
-  function handleProcessUpdate({ id, processName }) {
+  function handleProcessUpdate({ id, processName, formId, noteListId }) {
     processUpdate({
       variables: {
         id,
+        formId,
+        noteListId,
         name: processName,
       }
     })
@@ -146,7 +148,7 @@ const [processUpdate] = useMutation(ProcessUpdateMutation);
     if (action === 'edit') {
       const { id } = processData;
       if (!id) return;
-      handleProcessUpdate({ id, processName });
+      handleProcessUpdate(processData);
     } else {
       handleProcessCreate({ processName, formId, noteListId });
     }
