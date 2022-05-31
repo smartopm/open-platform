@@ -190,8 +190,12 @@
     "guest_name_required": "Guest Name or Company Name is required",
     "add_company": "Or add a Company",
     "guest_type": "Guest Type ",
-    "qr_code": "QR Code for Gate Access"
-    },
+    "qr_code": "QR Code for Gate Access",
+    "edit": "Edit Guest",
+    "start_day_time_of_visit": "Start Date and Time",
+    "end_day_time_of_visit": "End Date and Time",
+    "start_and_end_date_required": "Start/End date and time is required."
+  },
   "video_recording": {
     "add_video_text": "Add a Video with your phone",
     "create_video_text": "Create a video to your profile",
@@ -221,7 +225,7 @@
     "image_updated": "Images successfully updated"
   },
   "review_screen": {
-    "success_message": "Details Submtted Successfully",
+    "success_message": "Details Submitted Successfully",
     "review_title": "Review and Confirmation",
     "review_sub_title": "Please review and press submit to complete",
     "no_review": "Please fill out the previous steps",
