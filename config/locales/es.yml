@@ -315,6 +315,12 @@ es:
     metropolis: metropolis
     nkwashi: nkwashi
     tilisi: tilisi
+  discussion_title:
+    events: Eventos
+    family: Familia
+    items_for_sale: Productos en venta
+    recommendations: Recomendaciones
+    safety: La seguridad
   email_template:
     comment_reply:
       action: IR A COMENTARIO
@@ -464,6 +470,7 @@ es:
       not_found: Formulario de usuario de propiedad  no encontrada
     user:
       cannot_access_app: No tienes acceso a la aplicación
+      cannot_send_message: No hay número de teléfono para enviar mensaje
       cannot_send_otp: No hay número de teléfono para enviar el código de un solo
         uso
       cannot_send_otp_link: El usuario no tiene acceso a la aplicación.
@@ -504,9 +511,3 @@ es:
     updated: Actualizado
   welcome_sms: Bienvenido a la comunidad en línea de %{community}. Por favor acceda
     a la aplicación usando %{url}
-  discussion_title:
-    safety: La seguridad
-    events: Eventos
-    recommendations: Recomendaciones
-    items_for_sale: Productos en venta
-    family: Familia

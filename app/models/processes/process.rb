@@ -11,4 +11,6 @@ class Processes::Process < ApplicationRecord
   enum status: { active: 0, deleted: 1 }
 
   default_scope { where.not(status: 'deleted') }
+
+  alias task_list note_list
 end
