@@ -38,7 +38,7 @@ export default function InvitedGuests() {
   const { timezone } = authState.user.community;
   const theme = useTheme();
   const [anchorEl, setAnchorEl] = useState(null);
-  const [currentInvite, setCurrentInvite] = useState({ id: '', loading: false, status: null });
+  const [currentInvite, setCurrentInvite] = useState({ id: '', loading: false, status: null, start: null, end: null });
   const open = Boolean(anchorEl);
   const [details, setDetails] = useState({ message: '', isError: false });
   const [openEditModal, setOpenEditModal] = useState(false);
@@ -46,12 +46,17 @@ export default function InvitedGuests() {
   const [isLoading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
 
+  function handleEditOpen() {
+    handleMenuClose();
+    setOpenEditModal(!openEditModal);
+  }
+
   const menuList = [
     {
       content: currentInvite.status !== 'cancelled' && t('common:menu.edit'),
       isVisible: true,
       isAdmin: false,
-      handleClick: () => setOpenEditModal(!openEditModal)
+      handleClick: () => handleEditOpen()
     },
     {
       content:
@@ -65,14 +70,21 @@ export default function InvitedGuests() {
   ];
 
   function updateList() {
-      refetch();
-      setOpenEditModal(!openEditModal);
-    }
+    refetch();
+    setOpenEditModal(!openEditModal);
+  }
 
   function handleMenu(event, invite) {
     event.stopPropagation();
     setAnchorEl(event.currentTarget);
-    setCurrentInvite({ ...currentInvite, id: invite.id, status: invite.status });
+    setCurrentInvite(
+      {
+        ...currentInvite,
+        id: invite.id,
+        status: invite.status,
+        start: invite.entryTime.startsAt,
+        end: invite.entryTime.endsAt
+      });
   }
 
   function handleMenuClose() {
@@ -171,6 +183,8 @@ export default function InvitedGuests() {
               loading: isLoading,
               msg: message
             }}
+            start={currentInvite.start}
+            end={currentInvite.end}
           />
         </DialogContent>
       </Dialog>

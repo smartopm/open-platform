@@ -19,8 +19,8 @@ export default function DateAndTimeForm({
   data,
   children
 }) {
-  const [startDateTime, setStartDateTime] = React.useState(start);
-  const [endDateTime, setEndDateTime] = useState(end);
+  const [startDateTime, setStartDateTime] = React.useState(new Date(start));
+  const [endDateTime, setEndDateTime] = useState(new Date(end));
   const [open, setOpen] = useState(false);
   const { t } = useTranslation(['common', 'form', 'logbook']);
 
