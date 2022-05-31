@@ -76,7 +76,11 @@ describe('LeadManagementForm', () => {
       <Context.Provider value={authState}>
         <MockedProvider mocks={leadDataMock} addTypename={false}>
           <BrowserRouter>
-            <LeadManagementForm data={leadDataMock[0].result.data} refetch={jest.fn()} />
+            <LeadManagementForm
+              data={leadDataMock[0].result.data}
+              refetch={jest.fn()}
+              refetchLeadLabelsData={jest.fn()}
+            />
           </BrowserRouter>
         </MockedProvider>
       </Context.Provider>

@@ -153,7 +153,13 @@ export default function LeadManagementDetails({ userId }) {
         </Box>
 
         <TabPanel value={tabValue} index={0} data-testid="lead-management-details-tab">
-          {data && <LeadManagementForm data={data} refetch={refetchLeadLabelsData} />}
+          {data && (
+            <LeadManagementForm
+              data={data}
+              refetchLeadLabelsData={refetchLeadLabelsData}
+              refetch={refetch}
+            />
+          )}
         </TabPanel>
         <TabPanel value={tabValue} index={1} data-testid="lead-management-task-tab">
           <LeadManagementTask taskId={data?.user?.taskId} tabValue={tabValue} />

@@ -13,7 +13,7 @@ import CompanyInformation from './CompanyInformation';
 import MainContactInformation from './MainContactInformation';
 import SecondaryContactInformation from './SecondaryContactInformation';
 
-export default function LeadManagementForm({ data, refetch }) {
+export default function LeadManagementForm({ data, refetch, refetchLeadLabelsData }) {
   const [leadFormData, setLeadFormData] = useState(initialLeadFormData);
   const [loadingStatus, setLoadingStatus] = useState(false);
 
@@ -123,6 +123,7 @@ export default function LeadManagementForm({ data, refetch }) {
       .then(() => {
         setLoadingStatus(false);
         refetch();
+        refetchLeadLabelsData();
         setDisabled(true);
       })
       .catch(err => {
@@ -199,5 +200,6 @@ export default function LeadManagementForm({ data, refetch }) {
 
 LeadManagementForm.propTypes = {
   data: PropTypes.shape({ user: secondaryInfoUserObject }).isRequired,
-  refetch: PropTypes.func.isRequired
+  refetch: PropTypes.func.isRequired,
+  refetchLeadLabelsData: PropTypes.func.isRequired
 };
