@@ -10,6 +10,19 @@ RSpec.describe TaskCreate do
   let!(:form_property) { create(:form_property, form: form, category: category) }
   let!(:form_user) { create(:form_user, form: form, user: user, status_updated_by: user) }
   let!(:process) { create(:process, community: user.community, form: form) }
+  let(:note_list) do
+    create(:note_list, name: 'DRC LIST', community: user.community, status: 'active',
+                       process_id: process.id)
+  end
+  let!(:note) do
+    create(:note,
+           note_list_id: note_list.id,
+           parent_note_id: nil,
+           category: 'task_list',
+           body: note_list.name,
+           user_id: user.id,
+           author_id: user.id)
+  end
 
   data = {
     body: 'New Task',
@@ -28,20 +41,24 @@ RSpec.describe TaskCreate do
   it '#new_from_action should not create new task when author_id is blank' do
     data[:user_id] = ''
     data[:author_id] = ''
+    prev_note_count = Notes::Note.count
+    prev_assignee_note_count = Notes::AssigneeNote.count
 
     TaskCreate.new_from_action(data)
-    expect(Notes::Note.count).to eq 0
-    expect(Notes::AssigneeNote.count).to eq 0
+    expect(Notes::Note.count).to eq(prev_note_count)
+    expect(Notes::AssigneeNote.count).to eq(prev_assignee_note_count)
   end
 
   it '#new_from_action should not create new task when body is blank' do
     data[:body] = ''
     data[:user_id] = user.id
     data[:author_id] = user.id
+    prev_note_count = Notes::Note.count
+    prev_assignee_note_count = Notes::AssigneeNote.count
 
     TaskCreate.new_from_action(data)
-    expect(Notes::Note.count).to eq 0
-    expect(Notes::AssigneeNote.count).to eq 0
+    expect(Notes::Note.count).to eq(prev_note_count)
+    expect(Notes::AssigneeNote.count).to eq(prev_assignee_note_count)
   end
 
   it '#new_from_action should not create task without community' do
@@ -49,9 +66,11 @@ RSpec.describe TaskCreate do
     data[:user_id] = user.id
     data[:author_id] = '123'
 
+    prev_note_count = Notes::Note.count
+    prev_assignee_note_count = Notes::AssigneeNote.count
     TaskCreate.new_from_action(data)
-    expect(Notes::Note.count).to eq 0
-    expect(Notes::AssigneeNote.count).to eq 0
+    expect(Notes::Note.count).to eq(prev_note_count)
+    expect(Notes::AssigneeNote.count).to eq(prev_assignee_note_count)
   end
 
   it '#new_from_action should create a new task' do
@@ -83,5 +102,39 @@ RSpec.describe TaskCreate do
 
     expect(assigned_note[0]).not_to be_nil
     expect(assigned_note[0][:body]).to eq 'New Task'
+  end
+
+  context '#new_from_process' do
+    data = {
+      body: 'Task Triggered from Form',
+      category: 'form',
+      description: 'Description',
+      flagged: true,
+      due_date: nil,
+    }
+
+    it 'should not create task when author is blank' do
+      data[:author_id] = ''
+      expect do
+        TaskCreate.new_from_process(data, process)
+      end.not_to(change { Notes::Note.count })
+    end
+    it 'should not create task when body is blank' do
+      data[:body] = ''
+      expect do
+        TaskCreate.new_from_process(data, process)
+      end.not_to(change { Notes::Note.count })
+    end
+
+    it 'creates parent note' do
+      data[:user_id] = user.id
+      data[:author_id] = user.id
+      data[:body] = 'Task Triggered from Form'
+      data[:form_user_id] = form_user.id
+
+      expect do
+        TaskCreate.new_from_process(data, process)
+      end.to change { Notes::Note.where(parent_note_id: nil).count }.by(1)
+    end
   end
 end
