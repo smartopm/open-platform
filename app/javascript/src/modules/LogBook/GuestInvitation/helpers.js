@@ -29,3 +29,19 @@ export function formatReoccuringDays(days){
   if (!days || !days.length) return '-'
   return days.map(day => ` ${day.charAt(0).toUpperCase()} `)
 }
+
+export function validateStartAndEndDate({start, end, t}) {
+  if (!start || !end) {
+    return {
+      message: t('guest.start_and_end_date_required'),
+      valid: false
+    };
+  }
+
+  const current = new Date();
+  if ((start >= end) || (start < current) || (end <= current) || (end <= start)) {
+    return { message: t('common:errors.invalid_time'), valid: false };
+  }
+
+  return { message: null, valid: true };
+}
