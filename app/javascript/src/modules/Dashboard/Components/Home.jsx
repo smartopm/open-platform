@@ -52,6 +52,7 @@ const Home = () => {
                   userImage={authState.user.imageUrl}
                   userPermissions={authState.user.permissions}
                   dashboardTranslation={t}
+                  userId={authState.user.id}
                 />
                 <br />
               </div>
