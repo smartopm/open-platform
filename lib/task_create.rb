@@ -79,12 +79,12 @@ class TaskCreate
   # rubocop:enable Metrics/MethodLength
 
   def self.attach_form_documents(task)
-    task&.form_user&.user_form_properties&.each do |prop|
-      next unless prop.attachments.attached?
+    task&.form_user&.user_form_properties&.each do |property|
+      next unless property.attachments.attached?
 
-      prop.attachments.each do |att|
-        task.documents.attach(att.blob)
-        prop.user.note_documents.attach(att.blob)
+      property.attachments.each do |attachment|
+        task.documents.attach(attachment.blob)
+        property.user.note_documents.attach(attachment.blob)
       end
     end
   end
