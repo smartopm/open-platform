@@ -147,7 +147,7 @@ export default function CommunityNews({
         open={openModal}
         handleClose={handleDeleteClick}
         handleAction={handleDeleteComment}
-        title={t('common:misc.post', { count: 1 })}
+        title={t('common:misc.post')}
       />
       <CardWrapper
         title={t('headers.community_news_header')}
