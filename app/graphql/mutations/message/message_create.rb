@@ -42,10 +42,14 @@ module Mutations
         sender_id == user_id
       end
 
-      def message_notification(msg)
-        context[:site_community]
-          .notifications
-          .create(notifable_id: msg[:id], notifable_type: msg.class.name, user_id: msg[:user_id])
+      def message_notification(message)
+        NotificationCreateJob.perform_now(community_id: context[:site_community].id,
+                                          notifable_id: message.id,
+                                          notifable_type: message.class.name,
+                                          description: I18n.t('notification_description.message',
+                                                              user: context[:current_user].name),
+                                          category: :message,
+                                          user_id: message.user_id)
       end
 
       # TODO: Better auth here
