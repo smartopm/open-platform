@@ -1,5 +1,5 @@
 /* eslint-disable */
-// * global jest, module, require */
+// * global jest, module, global window, require */
 
 const L = require('leaflet')
 const LeafletMock = jest.genMockFromModule('leaflet')
