@@ -67,7 +67,8 @@ export default function LeadManagementDetails({ userId }) {
                 display: 'flex',
                 flexWrap: 'wrap',
                 marginRight: !isMobile && '-50px',
-                paddingLeft: isMobile && 0
+                paddingLeft: isMobile && 0,
+                marginTop: isMobile && 6
               }}
             >
               {LeadLabelsData?.leadLabels?.map(labelsData => (
