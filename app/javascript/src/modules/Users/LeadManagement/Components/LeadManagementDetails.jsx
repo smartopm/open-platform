@@ -63,7 +63,7 @@ export default function LeadManagementDetails({ userId }) {
           <Grid item md={6} xs={12}>
             <Typography variant="h5">{t('lead_management.main_header')}</Typography>
           </Grid>
-          <Grid item md={6} xs={6}>
+          <Grid item md={6} xs={12}>
             <Container
               style={{
                 display: 'flex',
