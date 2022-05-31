@@ -1,4 +1,4 @@
-import { Container, Grid, Typography } from '@mui/material';
+import { Container, Dialog, DialogContent, DialogTitle, Grid, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/styles';
 import React, { useContext, useState } from 'react';
 import { useQuery, useMutation } from 'react-apollo';
@@ -17,7 +17,10 @@ import { InvitationUpdateMutation } from '../graphql/mutations';
 import { useStyles } from '../styles';
 import GuestListCard from './GuestListCard';
 import MessageAlert from '../../../../components/MessageAlert';
-import { formatError } from '../../../../utils/helpers';
+import { formatError , ifNotTest } from '../../../../utils/helpers';
+import DateAndTimeForm from '../../../Forms/components/DateAndTimeForm';
+import { validateStartAndEndDate } from '../helpers';
+
 
 export default function InvitedGuests() {
   const history = useHistory();
@@ -38,8 +41,18 @@ export default function InvitedGuests() {
   const [currentInvite, setCurrentInvite] = useState({ id: '', loading: false, status: null });
   const open = Boolean(anchorEl);
   const [details, setDetails] = useState({ message: '', isError: false });
+  const [openEditModal, setOpenEditModal] = useState(false);
+  const fullScreen = useMediaQuery(theme.breakpoints.down('xs'));
+  const [isLoading, setLoading] = useState(false);
+  const [message, setMessage] = useState('');
 
   const menuList = [
+    {
+      content: currentInvite.status !== 'cancelled' && t('common:menu.edit'),
+      isVisible: true,
+      isAdmin: false,
+      handleClick: () => setOpenEditModal(!openEditModal)
+    },
     {
       content:
         currentInvite.status === 'cancelled'
@@ -50,6 +63,11 @@ export default function InvitedGuests() {
       handleClick: () => cancelInvitation()
     }
   ];
+
+  function updateList() {
+      refetch();
+      setOpenEditModal(!openEditModal);
+    }
 
   function handleMenu(event, invite) {
     event.stopPropagation();
@@ -81,6 +99,46 @@ export default function InvitedGuests() {
       });
   }
 
+  function updateGuest(startDate, endDate) {
+    const validInfo = validateStartAndEndDate({
+      start: startDate,
+      end: endDate,
+      t
+    })
+
+    if (!validInfo.valid && ifNotTest()) {
+      setDetails({ ...details, isError: true, message: validInfo.message });
+      setMessage(validInfo.message);
+      return;
+    }
+
+    setCurrentInvite({ ...currentInvite, loading: true });
+    setLoading(true);
+    inviteUpdate({
+      variables: {
+        inviteId: currentInvite.id,
+        startsAt: startDate,
+        endsAt: endDate,
+        visitEndDate: endDate,
+        visitationDate: startDate
+      }
+    })
+      .then(() => {
+        setDetails({
+          ...details,
+          isError: false,
+          message: t('logbook.invite_updated_successful')
+        });
+        setCurrentInvite({ ...currentInvite, loading: false });
+        updateList();
+      })
+      .catch(err => {
+        setCurrentInvite({ ...currentInvite, loading: false });
+        setDetails({ ...details, isError: true, message: formatError(err.message) });
+        setLoading(false);
+      });
+  }
+
   const menuData = {
     menuList,
     handleMenu,
@@ -91,6 +149,31 @@ export default function InvitedGuests() {
   };
   return (
     <Container maxWidth="xl">
+      <Dialog
+        fullScreen={fullScreen}
+        open={openEditModal}
+        fullWidth
+        maxWidth="xs"
+        onClose={() => setOpenEditModal(!openEditModal)}
+        aria-labelledby="responsive-edit-dialog-title"
+      >
+        <DialogTitle id="responsive-edit-dialog-title">
+          <CenteredContent>
+            <span>{t('guest.edit')}</span>
+          </CenteredContent>
+        </DialogTitle>
+        <DialogContent dividers>
+          <DateAndTimeForm
+            close={updateList}
+            type="guest"
+            update={updateGuest}
+            data={{
+              loading: isLoading,
+              msg: message
+            }}
+          />
+        </DialogContent>
+      </Dialog>
       <MessageAlert
         type={!details.isError ? 'success' : 'error'}
         message={details.message}
