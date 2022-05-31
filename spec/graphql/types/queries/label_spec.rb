@@ -36,12 +36,12 @@ RSpec.describe Types::Queries::Label do
       user2.user_labels.create!(label_id: second_label.id)
     end
 
-    let(:lead) { create(:lead, community: community) }
+    let(:lead) { create(:lead, community: community, lead_status: 'Site Visit', division: 'China') }
     let(:lead_status_label) do
-      create(:label, grouping_name: 'Status', short_desc: 'Site Visit', community: community)
+      create(:label, grouping_name: 'Status', short_desc: 'Evaluation', community: community)
     end
     let(:lead_division_label) do
-      create(:label, grouping_name: 'Division', short_desc: 'China', community: community)
+      create(:label, grouping_name: 'Division', short_desc: 'India', community: community)
     end
     let(:lead_user_label) { create(:user_label, user: lead, label: lead_status_label) }
     let(:other_lead_user_label) { create(:user_label, user: lead, label: lead_division_label) }
@@ -142,7 +142,7 @@ RSpec.describe Types::Queries::Label do
           other_lead_user_label
         end
 
-        it 'retrieves status and division labels for leads' do
+        it 'retrieves lead labels based on current division and status' do
           variables = { userId: lead.id }
           result = DoubleGdpSchema.execute(lead_labels_query, variables: variables,
                                                               context: {

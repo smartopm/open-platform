@@ -59,7 +59,8 @@ module Types::Queries::Label
     context[:site_community].labels
                             .joins(:user_labels)
                             .where(user_labels: { user_id: user.id },
-                                   grouping_name: %w[Division Status])
+                                   grouping_name: %w[Division Status],
+                                   short_desc: [user.lead_status, user.division])
   end
 
   private
