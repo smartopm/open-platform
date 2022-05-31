@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /* eslint-disable max-statements */
 /* eslint-disable complexity */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
@@ -326,7 +327,7 @@ export default function TodoItem({
               ) : (
                 <TaskListDataList
                   task={firstLevelSubTask}
-                  handleOpenSubTasksClick={handleParentTaskClick}
+                  handleOpenSubTasksClick={() => toggleTask(firstLevelSubTask)}
                   handleTodoClick={handleTodoClick}
                   handleAddSubTask={handleAddSubTask}
                   menuData={menuData}
@@ -361,14 +362,12 @@ export default function TodoItem({
                         />
                       ) : (
                         <TaskListDataList
+                          subTaskCard
+                          isSecondLevelSubTask
                           task={secondLevelSubTask}
-                          handleOpenSubTasksClick={handleParentTaskClick}
                           handleTodoClick={handleTodoClick}
-                          handleAddSubTask={handleAddSubTask}
                           menuData={menuData}
                           styles={{ backgroundColor: '#F5F5F4' }}
-                          openSubTask={objectAccessor(tasksOpen, secondLevelSubTask.id)}
-                          subTaskCard
                           alignStyles={{ marginLeft: '-32px' }}
                         />
                       )}
