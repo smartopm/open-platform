@@ -63,14 +63,15 @@ export default function LeadManagementDetails({ userId }) {
           <Grid item md={6} xs={12}>
             <Typography variant="h5">{t('lead_management.main_header')}</Typography>
           </Grid>
-          <Grid item md={6} xs={12}>
+          <Grid item md={6} xs={12} style={{ alignSelf: 'end' }}>
             <Container
               style={{
                 display: 'flex',
                 flexWrap: 'wrap',
                 marginRight: !isMobile && '-50px',
                 paddingLeft: isMobile && 0,
-                marginTop: isMobile && 6
+                marginTop: isMobile && 6,
+                justifyContent: !isMobile && 'end'
               }}
             >
               {LeadLabelsData?.leadLabels?.map(labelsData => (
