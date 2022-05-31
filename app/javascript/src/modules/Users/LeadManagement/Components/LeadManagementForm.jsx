@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Grid , Divider } from '@mui/material';
+import { Grid, Divider } from '@mui/material';
 import { useMutation } from 'react-apollo';
 
 import PropTypes from 'prop-types';
@@ -13,7 +13,7 @@ import CompanyInformation from './CompanyInformation';
 import MainContactInformation from './MainContactInformation';
 import SecondaryContactInformation from './SecondaryContactInformation';
 
-export default function LeadManagementForm({ data }) {
+export default function LeadManagementForm({ data, refetch }) {
   const [leadFormData, setLeadFormData] = useState(initialLeadFormData);
   const [loadingStatus, setLoadingStatus] = useState(false);
 
@@ -122,6 +122,7 @@ export default function LeadManagementForm({ data }) {
     })
       .then(() => {
         setLoadingStatus(false);
+        refetch();
         setDisabled(true);
       })
       .catch(err => {
@@ -197,5 +198,6 @@ export default function LeadManagementForm({ data }) {
 }
 
 LeadManagementForm.propTypes = {
-  data: PropTypes.shape({ user: secondaryInfoUserObject }).isRequired
+  data: PropTypes.shape({ user: secondaryInfoUserObject }).isRequired,
+  refetch: PropTypes.func.isRequired
 };

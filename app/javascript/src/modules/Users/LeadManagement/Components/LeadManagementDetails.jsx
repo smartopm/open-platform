@@ -23,13 +23,15 @@ export default function LeadManagementDetails({ userId }) {
 
   const isMobile = useMediaQuery('(max-width:800px)');
 
-  const { loading: leadLabelsLoading, error: leadLabelsError, data: LeadLabelsData } = useQuery(
-    LeadLabelsQuery,
-    {
-      variables: { userId },
-      fetchPolicy: 'cache-and-network'
-    }
-  );
+  const {
+    loading: leadLabelsLoading,
+    refetch: refetchLeadLabelsData,
+    error: leadLabelsError,
+    data: LeadLabelsData
+  } = useQuery(LeadLabelsQuery, {
+    variables: { userId },
+    fetchPolicy: 'cache-and-network'
+  });
 
   const TAB_VALUES = {
     details: 0,
@@ -151,14 +153,19 @@ export default function LeadManagementDetails({ userId }) {
         </Box>
 
         <TabPanel value={tabValue} index={0} data-testid="lead-management-details-tab">
-          {data && <LeadManagementForm data={data} refetch={refetch} />}
+          {data && <LeadManagementForm data={data} refetch={refetchLeadLabelsData} />}
         </TabPanel>
         <TabPanel value={tabValue} index={1} data-testid="lead-management-task-tab">
           <LeadManagementTask taskId={data?.user?.taskId} tabValue={tabValue} />
         </TabPanel>
 
         <TabPanel value={tabValue} index={2} data-testid="lead-management-event-tab">
-          <LeadEvents userId={userId} data={data} refetch={refetch} />
+          <LeadEvents
+            userId={userId}
+            data={data}
+            refetch={refetch}
+            refetchLeadLabelsData={refetchLeadLabelsData}
+          />
         </TabPanel>
       </Grid>
     </Grid>
