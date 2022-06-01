@@ -497,6 +497,11 @@ es:
     thanks_for_using_our_app: Gracias por usar nuestra aplicación, por favor use este
       enlace para darnos su opinión %{feedback_link}
   internet_off: Parece que no hay conexión de internet.
+  notification_description:
+    comment: "¡%{user} comentó!"
+    message: "%{user} te envió un mensaje de texto."
+    reply_requested: "%{user} pidió respuesta."
+    task: Se le asignó la tarea %{task}.
   offline: Huy.
   permission:
     bad_query: Consulta incorrecta, función o módulo no válido
