@@ -143,6 +143,7 @@ export default function InvitedGuests() {
         });
         setCurrentInvite({ ...currentInvite, loading: false });
         updateList();
+        setLoading(false);
       })
       .catch(err => {
         setCurrentInvite({ ...currentInvite, loading: false });
