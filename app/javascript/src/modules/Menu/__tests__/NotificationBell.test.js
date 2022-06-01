@@ -2,7 +2,7 @@ import React from 'react'
 import { render, screen, waitFor } from '@testing-library/react'
 import { BrowserRouter } from 'react-router-dom/'
 import { MockedProvider } from '@apollo/react-testing'
-import NotificationBell from '../components/NotificationBell'
+import NotificationBell from '../component/NotificationBell'
 
 
 describe('The Notification bell component', () => {

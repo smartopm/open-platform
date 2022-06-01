@@ -4,15 +4,15 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import PropTypes from 'prop-types';
 import { StyleSheet, css } from 'aphrodite';
 import Popover from '@mui/material/Popover';
-import { useHistory } from 'react-router-dom';
-import { useMutation, useQuery } from 'react-apollo';
+// import { useHistory } from 'react-router-dom';
+import { useQuery } from 'react-apollo';
 import Typography from '@mui/material/Typography';
 import PanToolIcon from '@mui/icons-material/PanTool';
-import { MsgNotificationUpdate } from '../graphql/mutations';
-import { MyTaskCountQuery, messageCountQuery } from '../graphql/queries';
+// import { MsgNotificationUpdate } from '../../../graphql/mutations';
+import { MyTaskCountQuery, messageCountQuery } from '../../../graphql/queries';
 
-export default function NotificationBell({ user }) {
-  const [msgUpdate] = useMutation(MsgNotificationUpdate);
+export default function NotificationBell({ user, setOpenDrawer, openDrawer }) {
+  // const [msgUpdate] = useMutation(MsgNotificationUpdate);
   const { data } = useQuery(MyTaskCountQuery, { fetchPolicy: 'cache-first' });
   const { data: messageCount } = useQuery(messageCountQuery, {
     fetchPolicy: 'cache-and-network',
@@ -20,18 +20,9 @@ export default function NotificationBell({ user }) {
   });
   const [open, setOpen] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const history = useHistory();
-  // eslint-disable-next-line consistent-return
-  function updateNotification(e) {
-    if (user?.userType === 'admin') {
-      history.push('/my_tasks');
-    } else {
-      if (messageCount?.msgNotificationCount === 0) {
-        setAnchorEl(e.currentTarget);
-        return setOpen(true);
-      }
-      msgUpdate().then(history.push(`/message/${user.id}`));
-    }
+  // const history = useHistory();
+  function updateNotification() {
+    setOpenDrawer(!openDrawer)
   }
 
   function handlePopClose() {
@@ -110,7 +101,9 @@ NotificationBell.defaultProps = {
   },
   messageCount: {
     msgNotificationCount: 0
-  }
+  },
+  setOpenDrawer: () => {},
+  openDrawer: false
 };
 NotificationBell.propTypes = {
   user: PropTypes.shape({
@@ -122,5 +115,7 @@ NotificationBell.propTypes = {
   }),
   messageCount: PropTypes.shape({
     msgNotificationCount: PropTypes.number
-  })
+  }),
+  setOpenDrawer: PropTypes.func,
+  openDrawer: PropTypes.bool
 };

@@ -304,3 +304,7 @@ body {
     overflow: hidden;
   }
 }
+
+div.drawer {
+  background: rgba(77, 77, 77, 0.7)
+}
