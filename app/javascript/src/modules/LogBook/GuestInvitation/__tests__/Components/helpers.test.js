@@ -1,9 +1,4 @@
-import {
-  filterEmptyObjectByKey,
-  validateGuest,
-  formatReoccuringDays,
-  validateStartAndEndDate
-} from '../../helpers';
+import { filterEmptyObjectByKey, validateGuest, formatReoccuringDays } from '../../helpers';
 
 describe('helpers', () => {
   it('should remove items that dont have certain keys values', () => {
@@ -62,44 +57,19 @@ describe('helpers', () => {
         guestData: { startsAt: new Date() }
       }).valid
     ).toBe(true);
+
+    expect(
+      validateGuest({
+        update: true,
+        t: t1,
+        guestData: { startsAt: new Date() }
+      }).valid
+    ).toBe(true);
   });
 
   it('formats days', () => {
     const occursOn = ['tuesday', 'monday', 'thursday']
     expect(formatReoccuringDays(occursOn)).toMatchObject([' T ', ' M ', ' T '])
     expect(formatReoccuringDays([])).toBe('-')
-  });
-  it('validates start and end date and time', () => {
-    const t1 = jest.fn(() => 'invalid');
-
-    expect(validateStartAndEndDate({ start: '', end: '', t: t1}).valid).toBe(
-      false
-    );
-
-    expect(validateStartAndEndDate({ start: '', end: '', t: t1 }).valid).toBe(false);
-
-    expect(
-      validateStartAndEndDate({
-        start: new Date('2015-03-25T12:00:00Z'),
-        end: new Date('2015-03-25T12:00:00Z'),
-        t: t1
-      }).valid
-    ).toBe(false);
-
-    expect(
-      validateStartAndEndDate({
-        start: new Date('2022-06-01T12:00:00Z'),
-        end: new Date('2015-06-01T12:00:00Z'),
-        t: t1
-      }).valid
-    ).toBe(false);
-
-    expect(
-      validateStartAndEndDate({
-        start: new Date('2022-06-25T12:00:00Z'),
-        end: new Date('2022-06-27T12:00:00Z'),
-        t: t1
-      }).valid
-    ).toBe(true);
   });
 });
