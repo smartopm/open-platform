@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
-import DateAndTimeForm from '../components/DateAndTimeForm';
+import GuestUpdateForm from '../../Components/GuestUpdateForm';
 
 describe('DateAndTimeForm component', () => {
   it('should contain the start and end date/time for the form', async () => {
@@ -9,9 +9,11 @@ describe('DateAndTimeForm component', () => {
       start: '2022-06-01T12:00:00Z',
       end: '2022-06-05T12:00:00Z',
       update: () => jest.fn(),
+      close: () => jest.fn(),
+      type: 'update',
       data: { loading: false, msg: '' }
     };
-    const rendered = render(<DateAndTimeForm {...props} />);
+    const rendered = render(<GuestUpdateForm {...props} />);
 
     expect(rendered.getByTestId('start_date_time')).toBeInTheDocument();
 

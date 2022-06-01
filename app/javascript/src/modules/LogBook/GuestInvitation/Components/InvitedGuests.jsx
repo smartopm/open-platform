@@ -18,8 +18,8 @@ import { useStyles } from '../styles';
 import GuestListCard from './GuestListCard';
 import MessageAlert from '../../../../components/MessageAlert';
 import { formatError , ifNotTest } from '../../../../utils/helpers';
-import DateAndTimeForm from '../../../Forms/components/DateAndTimeForm';
-import { validateStartAndEndDate } from '../helpers';
+import GuestUpdateForm from './GuestUpdateForm';
+import { validateGuest } from '../helpers';
 
 
 export default function InvitedGuests() {
@@ -82,8 +82,12 @@ export default function InvitedGuests() {
         ...currentInvite,
         id: invite.id,
         status: invite.status,
-        start: invite.entryTime.startsAt,
-        end: invite.entryTime.endsAt
+        startsAt: invite.entryTime.startsAt,
+        endsAt: invite.entryTime.endsAt,
+        occursOn: invite.entryTime.occursOn,
+        visitationDate: invite.entryTime.visitationDate,
+        visitEndDate: invite.entryTime.visitEndDate,
+        loading: isLoading
       });
   }
 
@@ -111,12 +115,16 @@ export default function InvitedGuests() {
       });
   }
 
-  function updateGuest(startDate, endDate) {
-    const validInfo = validateStartAndEndDate({
-      start: startDate,
-      end: endDate,
+  function updateGuest(guestData) {
+    const validInfo = validateGuest({
+      update: true,
+      guestData: {
+        visitationDate: guestData.visitationDate,
+        startsAt: guestData.startsAt,
+        endsAt: guestData.endsAt
+      },
       t
-    })
+    });
 
     if (!validInfo.valid && ifNotTest()) {
       setDetails({ ...details, isError: true, message: validInfo.message });
@@ -129,10 +137,11 @@ export default function InvitedGuests() {
     inviteUpdate({
       variables: {
         inviteId: currentInvite.id,
-        startsAt: startDate,
-        endsAt: endDate,
-        visitEndDate: endDate,
-        visitationDate: startDate
+        startsAt: guestData.startsAt,
+        endsAt: guestData.endsAt,
+        visitEndDate: guestData.visitEndDate,
+        visitationDate: guestData.visitationDate,
+        occursOn: guestData.occursOn
       }
     })
       .then(() => {
@@ -142,8 +151,8 @@ export default function InvitedGuests() {
           message: t('logbook.invite_updated_successful')
         });
         setCurrentInvite({ ...currentInvite, loading: false });
-        updateList();
         setLoading(false);
+        updateList();
       })
       .catch(err => {
         setCurrentInvite({ ...currentInvite, loading: false });
@@ -166,7 +175,7 @@ export default function InvitedGuests() {
         fullScreen={fullScreen}
         open={openEditModal}
         fullWidth
-        maxWidth="xs"
+        maxWidth="sm"
         onClose={() => setOpenEditModal(!openEditModal)}
         aria-labelledby="responsive-edit-dialog-title"
       >
@@ -176,16 +185,11 @@ export default function InvitedGuests() {
           </CenteredContent>
         </DialogTitle>
         <DialogContent dividers>
-          <DateAndTimeForm
+          <GuestUpdateForm
+            onUpdate={updateGuest}
+            data={currentInvite}
+            message={message}
             close={updateList}
-            type="guest"
-            update={updateGuest}
-            data={{
-              loading: isLoading,
-              msg: message
-            }}
-            start={currentInvite.start}
-            end={currentInvite.end}
           />
         </DialogContent>
       </Dialog>
