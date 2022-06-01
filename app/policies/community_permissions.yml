@@ -69,6 +69,7 @@ Ciudad Morazán:
       permissions:
         - can_access_dashboard
         - can_see_menu_item
+        - can_access_guard_dashboard
     logout:
       permissions:
         - can_see_menu_item
@@ -326,6 +327,7 @@ DoubleGDP:
       permissions:
         - can_access_dashboard
         - can_see_menu_item
+        - can_access_guard_dashboard
     logout:
       permissions:
         - can_see_menu_item
