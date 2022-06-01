@@ -232,12 +232,13 @@ PostCreate.defaultProps = {
   editModal: false,
   setPostData: () => {},
   setEditModal: () => {},
-  setAnchorEl: () => {}
+  setAnchorEl: () => {},
+  currentUserImage: null
 };
 
 PostCreate.propTypes = {
   translate: PropTypes.func.isRequired,
-  currentUserImage: PropTypes.string.isRequired,
+  currentUserImage: PropTypes.string,
   userPermissions: PropTypes.arrayOf(PropTypes.object).isRequired,
   btnBorderColor: PropTypes.string.isRequired,
   refetchNews: PropTypes.func.isRequired,

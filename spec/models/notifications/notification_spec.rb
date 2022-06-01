@@ -16,4 +16,13 @@ RSpec.describe Notifications::Notification, type: :model do
   describe 'Associations' do
     it { is_expected.to belong_to(:notifable) }
   end
+
+  describe 'enums' do
+    it do
+      is_expected.to define_enum_for(:category)
+        .with_values(
+          task: 0, comment: 1, reply_requested: 2, message: 3,
+        )
+    end
+  end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_05_25_072248) do
+ActiveRecord::Schema.define(version: 2022_05_30_120810) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -601,6 +601,7 @@ ActiveRecord::Schema.define(version: 2022_05_25_072248) do
     t.datetime "updated_at", precision: 6, null: false
     t.string "description"
     t.uuid "community_id"
+    t.integer "category"
     t.index ["community_id"], name: "index_notifications_on_community_id"
     t.index ["notifable_type", "notifable_id"], name: "index_notifications_on_notifable_type_and_notifable_id"
     t.index ["user_id"], name: "index_notifications_on_user_id"
