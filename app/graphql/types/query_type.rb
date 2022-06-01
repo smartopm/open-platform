@@ -33,6 +33,7 @@ module Types
     include Types::Queries::Process
     include Types::Queries::LeadLog
     include Types::Queries::Post
+    include Types::Queries::Notification
 
     # Add root-level fields here.
     # They will be entry points for queries on your schema.
