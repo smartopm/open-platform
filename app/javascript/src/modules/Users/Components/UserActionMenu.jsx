@@ -36,7 +36,7 @@ export default function UserActionMenu({
         }}
       >
         <div>
-          {['admin'].includes(userType) && (
+          {['admin', 'marketing_admin'].includes(userType) && (
             <>
               <MenuItem
                 key={'merge'}
@@ -94,7 +94,7 @@ export default function UserActionMenu({
                </MenuItem>
             </>
           )}
-          {['admin', 'client', 'resident'].includes(userType) && (
+          {['admin', 'client', 'resident', 'marketing_admin'].includes(userType) && (
             <>
               <MenuItem
                 id="edit_button"
