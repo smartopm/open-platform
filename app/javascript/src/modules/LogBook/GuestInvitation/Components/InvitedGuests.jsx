@@ -76,6 +76,7 @@ export default function InvitedGuests() {
 
   function handleMenu(event, invite) {
     event.stopPropagation();
+
     setAnchorEl(event.currentTarget);
     setCurrentInvite(
       {
@@ -87,7 +88,8 @@ export default function InvitedGuests() {
         occursOn: invite.entryTime.occursOn,
         visitationDate: invite.entryTime.visitationDate,
         visitEndDate: invite.entryTime.visitEndDate,
-        loading: isLoading
+        loading: isLoading,
+        name: invite.guest.name
       });
   }
 
@@ -181,7 +183,7 @@ export default function InvitedGuests() {
       >
         <DialogTitle id="responsive-edit-dialog-title">
           <CenteredContent>
-            <span>{t('guest.edit')}</span>
+            <span>{`${t('guest.edit')} - ${currentInvite.name}`}</span>
           </CenteredContent>
         </DialogTitle>
         <DialogContent dividers>

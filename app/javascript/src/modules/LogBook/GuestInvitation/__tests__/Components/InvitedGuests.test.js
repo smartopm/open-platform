@@ -72,7 +72,7 @@ describe('Invited Guests Component', () => {
         }
       }
     }
-    const { getByTestId, queryByText, queryAllByText, queryByTestId } = render(
+    const { getByTestId, queryByText, queryAllByText, queryByTestId, getByRole } = render(
       <Context.Provider value={userMock}>
         <MemoryRouter>
           <MockedProvider mocks={[invitedGuests, cancelInviteMutationMock]} addTypename={false}>
@@ -114,7 +114,8 @@ describe('Invited Guests Component', () => {
 
     fireEvent.click(queryByText('common:menu.edit'));
     await waitFor(() => {
-      expect(queryByText('guest.edit')).toBeInTheDocument();
+      expect(getByRole('dialog')).toBeInTheDocument();
+      expect(queryByText(/guest.edit/i)).toBeInTheDocument();
     }, 10);
 
     fireEvent.click(getByTestId('speed_dial_btn'))
