@@ -1,10 +1,12 @@
 import { Button, Container, TextField } from '@mui/material';
 import { closePaymentModal, useFlutterwave } from 'flutterwave-react-v3';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Context } from '../../../../containers/Provider/AuthStateProvider';
 
 export default function PaymentForm() {
   const { t } = useTranslation();
+  const authState  = useContext(Context)
   const [inputValue, setInputValue] = useState({
     name: '',
     invoiceNumber: '',
@@ -13,18 +15,18 @@ export default function PaymentForm() {
   });
 
   const config = {
-    public_key: 'FLWPUBK-1d8553f59c48fd4a07cf9a7f802f4fb6-X',
+    public_key: '',
     tx_ref: Date.now(),
     amount: inputValue.amount,
-    currency: 'ZMW',
+    currency: authState.user.community.currency,
     payment_options: 'card,mobilemoney,ussd',
     customer: {
-      email: 'olivier@doublegdp.com',
-      phonenumber: '+260971500748',
-      name: inputValue.name
+      email: authState.user.email,
+      phonenumber: authState.user.phonenumber,
+      name: authState.user.name
     },
     customizations: {
-      title: 'my Payment Title',
+      title: 'Pay For this item',
       description: inputValue.description,
       logo:
         'https://st2.depositphotos.com/4403291/7418/v/450/depositphotos_74189661-stock-illustration-online-shop-log.jpg'
