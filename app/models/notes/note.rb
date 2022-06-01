@@ -73,15 +73,26 @@ module Notes
                                    case_sensitive: false }, if: -> { category.eql?('template') }
     alias sub_tasks sub_notes
 
-    def assign_or_unassign_user(user_id)
-      a_notes = assignee_notes.find_by(user_id: user_id)
+    def assign_or_unassign_user(assignee_id)
+      a_notes = assignee_notes.find_by(user_id: assignee_id)
       if a_notes.present?
         a_notes.delete
       else
-        assign = assignee_notes.create!(user_id: user_id, note_id: self[:id])
+        assign = assignee_notes.create!(user_id: assignee_id, note_id: self[:id])
+        create_notification(assignee_id)
         user.generate_events('task_assign', assign)
         assign
       end
+    end
+
+    def create_notification(assignee_id)
+      NotificationCreateJob.perform_now(community_id: community.id,
+                                        notifable_id: id,
+                                        notifable_type: self.class.name,
+                                        description: I18n.t('notification_description.task',
+                                                            task: body),
+                                        category: :task,
+                                        user_id: assignee_id)
     end
 
     # rubocop:disable Metrics/MethodLength

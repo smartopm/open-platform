@@ -157,6 +157,24 @@ RSpec.describe Mutations::Note do
       expect(result['errors']).to be_nil
     end
 
+    context 'when task is assigned to user' do
+      it 'creates notification for the assigned user' do
+        variables = {
+          userId: user.id,
+          noteId: user_note.id,
+        }
+
+        result = DoubleGdpSchema.execute(note_assign_query, variables: variables,
+                                                            context: {
+                                                              current_user: admin,
+                                                              site_community: admin.community,
+                                                            }).as_json
+
+        expect(result['errors']).to be_nil
+        expect(user.notifications.count).to eql 1
+      end
+    end
+
     it 'assigns or unassigns user when current user is site worker' do
       variables = {
         userId: user.id,
