@@ -9,7 +9,7 @@ module Types
     field :id, ID, null: false
     field :community, Types::CommunityType, null: false
     field :email, String, null: true, visible: { roles: %i[admin security_guard custodian
-                                                           security_supervisor], user: :id }
+                                                           security_supervisor marketing_admin], user: :id }
     field :name, String, null: false
     field :address, String, null: true
     field :image_url, String, null: true
@@ -22,11 +22,11 @@ module Types
                                               user: :id }
     field :phone_number, String, null: true, visible: { roles: %i[admin security_guard
                                                                   client custodian
-                                                                  security_supervisor], user: :id }
+                                                                  security_supervisor marketing_admin], user: :id }
     field :request_note, String, null: true, visible: { roles: %i[admin security_guard custodian
                                                                   security_supervisor], user: :id }
     field :role_name, String, null: true, visible: { roles: %i[admin security_guard custodian
-                                                               security_supervisor], user: :id }
+                                                               security_supervisor marketing_admin], user: :id }
     field :state, String, null: true
     field :sub_status, String, null: true
     field :expires_at, GraphQL::Types::ISO8601DateTime, null: true
@@ -41,22 +41,22 @@ module Types
     field :owner_id, ID, null: true, visible: { roles: %i[admin security_guard
                                                           security_supervisor], user: :id }
     field :followup_at, GraphQL::Types::ISO8601DateTime, null: true
-    field :notes, [Types::NoteType], null: true, visible: { roles: %i[admin], user: :id }
-    field :tasks, [Types::NoteType], null: true, visible: { roles: %i[admin], user: :id }
-    field :accounts, [Types::AccountType], null: true, visible: { roles: %i[admin], user: :id }
+    field :notes, [Types::NoteType], null: true, visible: { roles: %i[admin marketing_admin], user: :id }
+    field :tasks, [Types::NoteType], null: true, visible: { roles: %i[admin marketing_admin], user: :id }
+    field :accounts, [Types::AccountType], null: true, visible: { roles: %i[admin marketing_admin], user: :id }
     field :messages, [Types::MessageType], null: true, visible: { roles: %i[admin], user: :id }
     field :time_sheets, [Types::TimeSheetType], null: true, visible: { roles: %i[admin custodian],
                                                                        user: :id }
-    field :businesses, [Types::BusinessType], null: true, visible: { roles: %i[admin], user: :id }
-    field :labels, [Types::LabelType], null: true, visible: { roles: %i[admin], user: :id }
+    field :businesses, [Types::BusinessType], null: true, visible: { roles: %i[admin marketing_admin], user: :id }
+    field :labels, [Types::LabelType], null: true, visible: { roles: %i[admin marketing_admin], user: :id }
     field :form_users, [Types::FormUsersType], null: true, visible: { roles: %i[admin], user: :id }
     field :contact_infos, [Types::ContactInfoType], null: true, visible: { roles: %i[admin],
                                                                            user: :id }
     field :invoices, [Types::InvoiceType], null: true, visible: { roles: %i[admin],
                                                                   user: :id }
-    field :substatus_logs, [Types::SubstatusLogType], null: true, visible: { roles: %i[admin],
+    field :substatus_logs, [Types::SubstatusLogType], null: true, visible: { roles: %i[admin marketing_admin],
                                                                              user: :id }
-    field :ext_ref_id, String, null: true, visible: { roles: %i[admin custodian], user: :id }
+    field :ext_ref_id, String, null: true, visible: { roles: %i[admin custodian marketing_admin], user: :id }
     field :payment_plan, Boolean, null: false
     field :permissions, [Types::PermissionType], null: false
     field :invites, [Types::InviteType], null: true, visible: { roles: %i[admin], user: :id }

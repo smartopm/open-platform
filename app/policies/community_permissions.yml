@@ -513,13 +513,43 @@ DoubleGDP:
     event_log:
       permissions:
         - can_fetch_logbook_events
-    discussion:
-      permissions:
-        - can_access_all_discussions
-        - can_create_post
-        - can_view_posts
 
   marketing_admin: 
+    note:
+    permissions:
+      - can_create_note
+      - can_see_menu_item
+      - can_update_note
+      - can_set_note_reminder
+      - can_assign_note
+      - can_bulk_assign_note
+      - can_create_note_comment
+      - can_update_note_comment
+      - can_delete_note_comment
+      - can_fetch_flagged_notes
+      - can_fetch_task_by_id
+      - can_fetch_task_comments
+      - can_fetch_task_histories
+      - can_get_task_count
+      - can_get_task_stats
+      - can_get_own_tasks
+      - can_fetch_all_notes
+      - can_fetch_user_notes
+      - can_view_create_task_button
+      - can_view_create_sub_task_button
+      - can_access_tasks
+      - can_access_processes
+      - can_delete_note_document
+      - can_resolve_note_comments
+      - can_access_project_steps
+      - can_mark_task_as_complete
+      - can_view_task_lists
+      - can_create_task_lists
+      - can_get_comment_stats
+      - can_edit_task_list
+      - can_delete_task_list
+      - can_get_replies_requested_comments
+      - can_fetch_process_comments
     forms:
       permissions:
         - can_see_menu_item
@@ -602,9 +632,10 @@ DoubleGDP:
         - can_get_user_count
         - can_get_users
         - can_get_users_lite
-        - can_see_menu_item
         - can_create_user
         - can_search_user_ids
+        - can_get_substatus_count
+        - can_get_substatus_distribution
     profile:
       permissions:
         - can_see_menu_item
@@ -615,3 +646,32 @@ DoubleGDP:
         - can_delete_lead
         - can_view_lead_profile
         - can_upload_lead_files
+        - can_see_menu_item
+    lead_log:
+      permissions:
+        - can_create_lead_log
+        - can_update_lead_log
+        - can_fetch_lead_logs
+        - can_access_lead_scorecard    
+    discussion:
+      permissions:
+        - can_create_discussion
+        - can_update_discussion
+        - can_access_all_discussions
+        - can_see_menu_item
+        - can_create_post
+        - can_view_posts
+        - can_delete_post_image
+        - can_update_post
+        - can_delete_post
+        - can_set_accessibility
+    comment:
+      permissions:
+        - can_fetch_all_comments
+    business:
+      permissions:
+        - can_see_menu_item
+        - can_access_business
+        - can_create_business
+        - can_delete_business
+        - can_update_business
