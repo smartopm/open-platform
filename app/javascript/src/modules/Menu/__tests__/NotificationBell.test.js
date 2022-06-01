@@ -4,7 +4,6 @@ import { BrowserRouter } from 'react-router-dom/'
 import { MockedProvider } from '@apollo/react-testing'
 import NotificationBell from '../component/NotificationBell'
 
-
 describe('The Notification bell component', () => {
   const data = {
     myTasksCount: 1
