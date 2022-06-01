@@ -1,4 +1,9 @@
-import { filterEmptyObjectByKey, validateGuest, formatReoccuringDays } from '../../helpers';
+import {
+  filterEmptyObjectByKey,
+  validateGuest,
+  formatReoccuringDays,
+  validateStartAndEndDate
+} from '../../helpers';
 
 describe('helpers', () => {
   it('should remove items that dont have certain keys values', () => {
@@ -23,7 +28,7 @@ describe('helpers', () => {
     ]);
     expect(filterEmptyObjectByKey(arr, 'name')).toHaveLength(3);
   });
-  it('should return empty arr if none is provied', () => {
+  it('should return empty arr if none is provided', () => {
     expect(filterEmptyObjectByKey([], 'id')).toHaveLength(0);
     expect(filterEmptyObjectByKey(null, 'id')).toEqual([]);
   });
@@ -63,5 +68,38 @@ describe('helpers', () => {
     const occursOn = ['tuesday', 'monday', 'thursday']
     expect(formatReoccuringDays(occursOn)).toMatchObject([' T ', ' M ', ' T '])
     expect(formatReoccuringDays([])).toBe('-')
-  })
+  });
+  it('validates start and end date and time', () => {
+    const t1 = jest.fn(() => 'invalid');
+
+    expect(validateStartAndEndDate({ start: '', end: '', t: t1}).valid).toBe(
+      false
+    );
+
+    expect(validateStartAndEndDate({ start: '', end: '', t: t1 }).valid).toBe(false);
+
+    expect(
+      validateStartAndEndDate({
+        start: new Date('2015-03-25T12:00:00Z'),
+        end: new Date('2015-03-25T12:00:00Z'),
+        t: t1
+      }).valid
+    ).toBe(false);
+
+    expect(
+      validateStartAndEndDate({
+        start: new Date('2022-06-01T12:00:00Z'),
+        end: new Date('2015-06-01T12:00:00Z'),
+        t: t1
+      }).valid
+    ).toBe(false);
+
+    expect(
+      validateStartAndEndDate({
+        start: new Date('2022-06-25T12:00:00Z'),
+        end: new Date('2022-06-27T12:00:00Z'),
+        t: t1
+      }).valid
+    ).toBe(true);
+  });
 });

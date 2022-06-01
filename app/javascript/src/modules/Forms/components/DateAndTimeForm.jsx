@@ -47,7 +47,7 @@ export default function DateAndTimeForm({
             onChange={newValue => {
               setStartDateTime(newValue);
             }}
-            renderInput={params => <TextField {...params} />}
+            renderInput={params => <TextField {...params} data-testid="start_date_time" />}
           />
 
           <MobileDateTimePicker
@@ -56,7 +56,7 @@ export default function DateAndTimeForm({
             onChange={newValue => {
               setEndDateTime(newValue);
             }}
-            renderInput={params => <TextField {...params} />}
+            renderInput={params => <TextField {...params} data-testid="end_date_time" />}
           />
         </Stack>
         {children}
