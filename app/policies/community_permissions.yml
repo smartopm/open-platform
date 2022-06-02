@@ -518,3 +518,58 @@ DoubleGDP:
         - can_access_all_discussions
         - can_create_post
         - can_view_posts
+
+
+Greenpark:
+  site_worker:
+    note:
+      permissions:
+        - can_see_menu_item
+        - can_create_note
+        - can_update_note
+        - can_set_note_reminder
+        - can_assign_note
+        - can_bulk_assign_note
+        - can_create_note_comment
+        - can_update_note_comment
+        - can_fetch_flagged_notes
+        - can_fetch_task_by_id
+        - can_fetch_task_comments
+        - can_fetch_task_histories
+        - can_get_task_count
+        - can_get_task_stats
+        - can_get_own_tasks
+        - can_view_create_sub_task_button
+        - can_access_tasks
+        - can_access_processes
+        - can_upload_documents
+        - can_fetch_comments_on_assigned_tasks
+        - can_access_project_steps
+        - can_mark_task_as_complete
+        - can_get_comment_stats
+  site_manager:
+    note:
+      permissions:
+        - can_see_menu_item
+        - can_create_note
+        - can_update_note
+        - can_set_note_reminder
+        - can_assign_note
+        - can_bulk_assign_note
+        - can_create_note_comment
+        - can_update_note_comment
+        - can_fetch_flagged_notes
+        - can_fetch_task_by_id
+        - can_fetch_task_comments
+        - can_fetch_task_histories
+        - can_get_task_count
+        - can_get_task_stats
+        - can_get_own_tasks
+        - can_view_create_sub_task_button
+        - can_access_tasks
+        - can_access_processes
+        - can_upload_documents
+        - can_fetch_comments_on_assigned_tasks
+        - can_access_project_steps
+        - can_mark_task_as_complete
+        - can_get_comment_stats
