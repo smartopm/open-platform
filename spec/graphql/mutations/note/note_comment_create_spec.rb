@@ -203,6 +203,7 @@ RSpec.describe Mutations::Note::NoteCommentCreate do
                                                 }).as_json
         expect(result['errors']).to be_nil
         expect(user.notifications.count).to eql 1
+        expect(user.notifications.first.description).to eql 'Mark Test requested reply.'
       end
     end
 
@@ -219,6 +220,7 @@ RSpec.describe Mutations::Note::NoteCommentCreate do
                                                 }).as_json
         expect(result['errors']).to be_nil
         expect(user.notifications.count).to eql 1
+        expect(user.notifications.first.description).to eql 'Comment body'
       end
     end
 

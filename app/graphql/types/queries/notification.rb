@@ -5,28 +5,37 @@ module Types::Queries::Notification
   extend ActiveSupport::Concern
 
   included do
-    field :seen_notifications, [Types::NotificationType], null: false do
-      description 'fetch seen notifications'
+    field :user_notifications, [Types::NotificationType], null: false do
+      description 'fetch user notifications'
+      argument :limit, Integer, required: false
+      argument :offset, Integer, required: false
     end
 
-    field :unseen_notifications, [Types::NotificationType], null: false do
-      description 'fetch unseen notifications'
+    field :notifications_count, Integer, null: false do
+      description 'fetch notifications count'
     end
   end
 
-  def seen_notifications
-    raise_unauthorized_error
-
-    context[:current_user].notifications.where('seen_at > ?', 24.hours.ago)
-  end
-
-  def unseen_notifications
-    raise_unauthorized_error
-
-    context[:current_user].notifications.where(seen_at: nil).where('created_at > ?', 24.hours.ago)
-  end
-
-  def raise_unauthorized_error
+  # rubocop:disable Metrics/AbcSize
+  def user_notifications(offset: 0, limit: 100)
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:current_user].blank?
+
+    unseen_notifications = context[:current_user].notifications
+                                                 .where(seen_at: nil)
+                                                 .offset(offset)
+                                                 .limit(limit)
+                                                 .ordered
+
+    seen_notifications = context[:current_user].notifications
+                                               .where('seen_at > ?', 24.hours.ago)
+                                               .ordered_by_seen_at
+    unseen_notifications.to_a.concat(seen_notifications)
+  end
+  # rubocop:enable Metrics/AbcSize
+
+  def notifications_count
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:current_user].blank?
+
+    context[:current_user].notifications.where(seen_at: nil).count
   end
 end

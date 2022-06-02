@@ -30,13 +30,13 @@ RSpec.describe Types::Queries::Notification do
              notifable_id: old_message.id,
              notifable_type: 'Notifications::Message',
              category: :message,
-             seen_at: 34.hours.ago)
+             seen_at: 12.hours.ago)
     end
 
-    let(:unseen_notifications_query) do
+    let(:query) do
       <<~GQL
         query{
-          unseenNotifications{
+          userNotifications{
             category
             description
             header
@@ -46,54 +46,50 @@ RSpec.describe Types::Queries::Notification do
       GQL
     end
 
-    let(:seen_notifications_query) do
+    let(:notifications_count) do
       <<~GQL
         query{
-          seenNotifications{
-            category
-            description
-            header
-            seenAt
-          }
+          notificationsCount
         }
       GQL
     end
 
-    describe '#unseen_notifcations' do
-      context 'when unseen notifications are fetched' do
-        it 'retreives upto 24 hours prior unseen notifications' do
-          result = DoubleGdpSchema.execute(unseen_notifications_query,
-                                           context: { current_user: user,
-                                                      site_community: community  }).as_json
+    describe '#user_notifications' do
+      context 'when notifications are fetched' do
+        it 'retreives notifications' do
+          result = DoubleGdpSchema.execute(query, context: {
+                                             current_user: user,
+                                             site_community: community,
+                                           }).as_json
           expect(result['errors']).to be_nil
-          expect(result.dig('data', 'unseenNotifications').count).to eql 1
-          expect(result.dig('data', 'unseenNotifications', 0, 'category')).to eql 'message'
-          expect(result.dig('data', 'unseenNotifications', 0, 'seenAt')).to eql nil
+          expect(result.dig('data', 'userNotifications').count).to eql 2
+          expect(result.dig('data', 'userNotifications', 0, 'category')).to eql 'message'
+          expect(result.dig('data', 'userNotifications', 0, 'seenAt')).to eql nil
+          expect(result.dig('data', 'userNotifications', 1, 'category')).to eql 'message'
+          expect(result.dig('data', 'userNotifications', 1, 'seenAt')).to_not be nil
         end
       end
     end
 
-    describe '#seen_notifcations' do
-      context 'when seen notifications are fetched' do
-        before { message_notification.update(seen_at: Time.zone.now) }
-
-        it 'retreives upto 24 hours prior seen notifications' do
-          result = DoubleGdpSchema.execute(seen_notifications_query,
-                                           context: { current_user: user,
-                                                      site_community: community  }).as_json
+    describe '#notifications_count' do
+      context 'when notifications are checked' do
+        it 'retrieves notifications count' do
+          result = DoubleGdpSchema.execute(notifications_count, context: {
+                                             current_user: user,
+                                             site_community: community,
+                                           }).as_json
           expect(result['errors']).to be_nil
-          expect(result.dig('data', 'seenNotifications').count).to eql 1
-          expect(result.dig('data', 'seenNotifications', 0, 'category')).to eql 'message'
-          expect(result.dig('data', 'seenNotifications', 0, 'seenAt')).to_not be nil
+          expect(result.dig('data', 'notificationsCount')).to eql 1
         end
       end
     end
 
     context 'when current user is blank' do
       it 'raises unauthorized error' do
-        result = DoubleGdpSchema.execute(seen_notifications_query,
-                                         context: { current_user: '',
-                                                    site_community: community }).as_json
+        result = DoubleGdpSchema.execute(query, context: {
+                                           current_user: '',
+                                           site_community: community,
+                                         }).as_json
         expect(result['errors']).to_not be_nil
         expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'
       end

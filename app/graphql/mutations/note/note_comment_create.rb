@@ -97,12 +97,10 @@ module Mutations
       end
 
       def notify_assignees(comment)
-        description = I18n.t('notification_description.reply_requested',
-                             user: context[:current_user].name)
         comment.note.assignees.each do |assignee|
           next if comment.user.id.eql?(assignee.id)
 
-          create_notification(comment, description, :comment, assignee.id)
+          create_notification(comment, comment.body, :comment, assignee.id)
         end
       end
 

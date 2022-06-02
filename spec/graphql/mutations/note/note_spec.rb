@@ -28,8 +28,11 @@ RSpec.describe Mutations::Note do
   end
 
   let(:user_note) do
-    create(:note, community_id: user.community_id,
-                  user_id: user.id, author_id: admin.id)
+    create(:note,
+           community_id: user.community_id,
+           user_id: user.id,
+           author_id: admin.id,
+           body: 'Feedback')
   end
   let(:create_query) do
     <<~GQL
@@ -172,6 +175,7 @@ RSpec.describe Mutations::Note do
 
         expect(result['errors']).to be_nil
         expect(user.notifications.count).to eql 1
+        expect(user.notifications.first.description).to eql 'Feedback task is assigned to you.'
       end
     end
 
