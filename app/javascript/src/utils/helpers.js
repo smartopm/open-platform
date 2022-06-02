@@ -616,5 +616,5 @@ export function extractHostname(urlString) {
   return {
     hostname: urlString.split('/')[2],
     userId: urlString.split('/')[4]
-  }
+  } 
 }

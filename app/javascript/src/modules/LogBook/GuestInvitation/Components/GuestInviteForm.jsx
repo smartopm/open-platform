@@ -273,7 +273,7 @@ export default function GuestInviteForm({inviteDetails, onUpdate, close, update}
               variant="contained"
               color="primary"
               onClick={update ? handleUpdateGuest : handleInviteGuest}
-              data-testid="invite_button"
+              data-testid={`${update ? 'update' : 'invite'}_button`}
               startIcon={guestData.isLoading && <Spinner />}
               disabled={guestData.isLoading}
             >
