@@ -1,5 +1,6 @@
 import React from 'react';
 import { useQuery } from 'react-apollo';
+import { Typography } from '@mui/material';
 import seenNotifications, { UnseenNotifications } from '../graphql/menu_query';
 import { Spinner } from '../../../shared/Loading';
 import NotificationCard from './NotificationCard';
@@ -7,7 +8,7 @@ import CenteredContent from '../../../shared/CenteredContent';
 import { formatError } from '../../../utils/helpers';
 
 export default function DrawerContent() {
-  const { data, loading, error } = useQuery(seenNotifications, {
+  const { data: seenData, loading: seenLoading, error: seenError } = useQuery(seenNotifications, {
     fetchPolicy: 'cache-and-network',
     errorPolicy: 'all'
   });
@@ -20,27 +21,35 @@ export default function DrawerContent() {
     }
   );
 
-  if (error || unseenError)
+  if (seenError || unseenError)
     return (
       <CenteredContent>
-        <p>{formatError(error || unseenError)}</p>
+        <p>{formatError(seenError || unseenError)}</p>
       </CenteredContent>
     );
 
-  if (loading || unseenLoading) return <Spinner />;
+  if (unseenLoading || seenLoading) return <Spinner />;
   return (
     <>
+      {(unseenData.unseenNotifications.length > 0 || seenData.seenNotifications.length > 0) ? (
+        <>
+          {unseenData?.unseenNotifications.map(notification => (
+            <React.Fragment key={notification.id}>
+              <NotificationCard notification={notification} />
+            </React.Fragment>
+          ))}
+          {seenData?.seenNotifications.map(notification => (
+            <React.Fragment key={notification.id}>
+              <NotificationCard notification={notification} />
+            </React.Fragment>
+          ))}
+        </>
+      ) : (
+        <CenteredContent>
+          <Typography variant='body2'>You do not have any notifications</Typography>
+        </CenteredContent>
+      )}
       {console.log(unseenData)}
-      {unseenData?.unseenNotifications.map(notification => (
-        <React.Fragment key={notification.id}>
-          <NotificationCard notification={notification} />
-        </React.Fragment>
-      ))}
-      {data?.seenNotifications.map(notification => (
-        <React.Fragment key={notification.id}>
-          <NotificationCard notification={notification} />
-        </React.Fragment>
-      ))}
     </>
   );
 }
