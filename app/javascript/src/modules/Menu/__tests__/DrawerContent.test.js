@@ -4,43 +4,24 @@ import { BrowserRouter } from 'react-router-dom/';
 import { MockedProvider } from '@apollo/react-testing';
 import '@testing-library/jest-dom/extend-expect';
 import DrawerContent from '../component/DrawerContent';
-import SeenNotifications, { UnseenNotifications } from '../graphql/menu_query';
+import UserNotifications from '../graphql/menu_query';
 
 describe('Drawer Content Component', () => {
   const mocks = [
     {
       request: {
-        query: UnseenNotifications
+        query: UserNotifications
       },
       result: {
         data: {
-          unseenNotifications: [
+          userNotifications: [
             {
               id: 'uyhgfdsferf',
               category: 'task',
               description: 'a task has been assigned to you',
               createdAt: '2022-10-10',
-              seenAt: '2022-10-10',
+              seenAt: null,
               header: 'sample header'
-            }
-          ]
-        }
-      }
-    },
-    {
-      request: {
-        query: SeenNotifications
-      },
-      result: {
-        data: {
-          seenNotifications: [
-            {
-              id: 'uyhgfdsfeergfegef',
-              category: 'comment',
-              description: 'sample comment',
-              createdAt: '2022-10-10',
-              seenAt: '2022-10-10',
-              header: 'sample header for comment'
             }
           ]
         }
@@ -69,28 +50,11 @@ describe('Drawer Content Component', () => {
     const newMocks = [
       {
         request: {
-          query: UnseenNotifications
+          query: UserNotifications
         },
         result: {
           data: {
-            unseenNotifications: {
-              id: 'uyhgfdsferf',
-              category: 'task',
-              description: 'a task has been assigned to you',
-              createdAt: '2022-10-10',
-              seenAt: '2022-10-10',
-              header: 'sample header'
-            }
-          }
-        }
-      },
-      {
-        request: {
-          query: SeenNotifications
-        },
-        result: {
-          data: {
-            seenNotifications: {
+            userNotifications: {
               id: 'uyhgfdsferf',
               category: 'task',
               description: 'a task has been assigned to you',
