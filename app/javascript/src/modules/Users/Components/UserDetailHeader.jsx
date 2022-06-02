@@ -33,6 +33,7 @@ export default function UserDetailHeader({ data, userType, currentTab, authState
     checkCommunityFeatures,
     history,
     data,
+    authState,
     handleMenuItemClick,
     handleMergeUserItemClick,
     checkRole,

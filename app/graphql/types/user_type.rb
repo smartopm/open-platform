@@ -19,7 +19,7 @@ module Types
                                                              custodian marketing_admin
                                                              security_supervisor], user: :id }
     field :request_reason, String, null: true,
-                                   visible: { roles: %i[admin security_guard
+                                   visible: { roles: %i[admin security_guard marketing_admin
                                                         security_supervisor custodian],
                                               user: :id }
     field :phone_number, String, null: true, visible: { roles: %i[admin security_guard
@@ -60,14 +60,14 @@ module Types
                                                          user: :id }
     field :labels, [Types::LabelType], null: true,
                                        visible: { roles: %i[admin marketing_admin], user: :id }
-    field :form_users, [Types::FormUsersType], null: true, visible: { roles: %i[admin], user: :id }
+    field :form_users, [Types::FormUsersType], null: true, visible: { roles: %i[admin marketing_admin], user: :id }
     field :contact_infos, [Types::ContactInfoType], null: true,
                                                     visible: { roles: %i[admin marketing_admin],
                                                                user: :id }
     field :invoices, [Types::InvoiceType], null: true, visible: { roles: %i[admin],
                                                                   user: :id }
     field :substatus_logs, [Types::SubstatusLogType], null: true,
-                                                      visible: { roles: %i[admin],
+                                                      visible: { roles: %i[admin marketing_admin],
                                                                  user: :id }
     field :ext_ref_id, String, null: true,
                                visible: { roles: %i[admin custodian marketing_admin], user: :id }

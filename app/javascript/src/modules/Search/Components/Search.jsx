@@ -24,7 +24,7 @@ export function NewRequestButton() {
       <Link className={css(styles.requestLink)} to="/new/user">
         <Button variant="contained" color="primary">
           {/* This should be renamed to Create a user */}
-          {t('search.create_request')}
+          {t('search.create_user_request')}
         </Button>
       </Link>
     </CenteredContent>

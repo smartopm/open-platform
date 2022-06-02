@@ -635,6 +635,7 @@ export function selectOptions(
   checkCommunityFeatures,
   history,
   data,
+  authState,
   handleMenuItemClick,
   handleMergeUserItemClick,
   checkRole,
@@ -646,35 +647,45 @@ export function selectOptions(
       value: 'User Settings',
       name: t('common:menu.user_settings'),
       handleMenuItemClick: key => setSelectKey(key),
-      show: checkCommunityFeatures('Users') && checkModule('user'),
+      show:
+        (checkCommunityFeatures('Users') && checkModule('user')) ||
+        (authState.user.roleName === 'Marketing Admin' && data.user.roleName !== 'Admin'),
       subMenu: [
         {
           key: 'edit_user',
           value: 'Edit User',
           name: t('common:right_menu.edit_user'),
           handleMenuItemClick: () => history.push(`/user/${data.user.id}/edit`),
-          show: checkCommunityFeatures('Users') && checkModule('user')
+          show:
+            (checkCommunityFeatures('Users') && checkModule('user')) ||
+            (authState.user.roleName === 'Marketing Admin' && data.user.roleName !== 'Admin')
         },
         {
           key: 'print_id',
           value: 'Print ID',
           name: t('common:menu.print_id'),
           handleMenuItemClick: () => history.push(`/print/${data.user.id}`),
-          show: checkCommunityFeatures('Users') && checkModule('user')
+          show:
+            (checkCommunityFeatures('Users') && checkModule('user')) ||
+            (authState.user.roleName === 'Marketing Admin' && data.user.roleName !== 'Admin')
         },
         {
           key: 'merge_user',
           value: 'Merge User',
           name: t('common:menu.merge_user'),
           handleMenuItemClick: () => handleMergeUserItemClick(),
-          show: checkCommunityFeatures('Users') && checkModule('user')
+          show:
+            (checkCommunityFeatures('Users') && checkModule('user')) ||
+            (authState.user.roleName === 'Marketing Admin' && data.user.roleName !== 'Admin')
         },
         {
           key: 'user_logs',
           value: 'User Logs',
           name: t('common:menu.user_logs'),
           handleMenuItemClick: () => history.push(`/user/${data.user.id}/logs`),
-          show: checkCommunityFeatures('LogBook') && checkModule('entry_request')
+          show:
+            (checkCommunityFeatures('LogBook') && checkModule('entry_request')) ||
+            (authState.user.roleName === 'Marketing Admin' && data.user.roleName !== 'Admin')
         }
       ]
     },
