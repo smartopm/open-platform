@@ -60,7 +60,9 @@ module Types
                                                          user: :id }
     field :labels, [Types::LabelType], null: true,
                                        visible: { roles: %i[admin marketing_admin], user: :id }
-    field :form_users, [Types::FormUsersType], null: true, visible: { roles: %i[admin marketing_admin], user: :id }
+    field :form_users, [Types::FormUsersType], null: true,
+                                               visible: { roles: %i[admin marketing_admin],
+                                                          user: :id }
     field :contact_infos, [Types::ContactInfoType], null: true,
                                                     visible: { roles: %i[admin marketing_admin],
                                                                user: :id }
