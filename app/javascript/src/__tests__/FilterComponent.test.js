@@ -2,7 +2,7 @@
 import React from 'react'
 import FilterComponent from '../components/FilterComponent'
 import { render } from '@testing-library/react'
-import '@testing-library/jest-dom/extend-expect'
+
 
 const labels = [
   {

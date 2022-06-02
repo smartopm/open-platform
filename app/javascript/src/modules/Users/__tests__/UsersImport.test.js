@@ -2,7 +2,7 @@ import React from 'react'
 import { render, waitFor, fireEvent } from '@testing-library/react'
 import { MockedProvider } from '@apollo/react-testing'
 import { BrowserRouter } from 'react-router-dom'
-import '@testing-library/jest-dom/extend-expect'
+
 import UsersImport from '../Containers/UsersImport'
 
 jest.mock('@rails/activestorage/src/file_checksum', async () => jest.fn())
