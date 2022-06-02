@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
-const SeenNotifications = gql`
-  query SeenNotifications {
-    seenNotifications {
+const UserNotifications = gql`
+  query UserNotifications {
+    userNotifications {
       id
       category
       description
@@ -13,17 +13,4 @@ const SeenNotifications = gql`
   }
 `;
 
-export const UnseenNotifications = gql`
-  query UnseenNotifications {
-    unseenNotifications {
-      id
-      category
-      description
-      createdAt
-      seenAt
-      header
-    }
-  }
-`;
-
-export default SeenNotifications;
+export default UserNotifications;
