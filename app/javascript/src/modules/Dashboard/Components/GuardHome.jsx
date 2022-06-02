@@ -25,7 +25,9 @@ import { AUTH_TOKEN_KEY } from '../../../utils/apollo';
 import { switchGuards } from '../../../graphql/mutations';
 import { Footer } from '../../../components/Footer';
 import FeatureCheck from '../../Features';
+import AccessCheck from '../../Permissions/Components/AccessCheck';
 
+// TODO: move to shared directory
 export const BootstrapInput = withStyles(() => ({
   input: {
     borderRadius: 6,
@@ -39,7 +41,11 @@ export const BootstrapInput = withStyles(() => ({
 
 export default function GuardHome() {
   const { t } = useTranslation(['dashboard', 'common']);
-  return <HomeGuard translate={t} />;
+  return (
+    <AccessCheck module="dashboard" allowedPermissions={['can_access_guard_dashboard']}>
+      <HomeGuard translate={t} />
+    </AccessCheck>
+  )
 }
 
 export function HomeGuard({ translate }) {
