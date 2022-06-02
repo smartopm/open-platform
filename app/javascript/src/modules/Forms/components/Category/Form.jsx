@@ -135,7 +135,7 @@ export default function Form({
 
   const formData = flattenFormProperties(categoriesData.data?.formCategories);
   const isTermsChecked = formDetailData?.form?.hasTermsAndConditions ? !hasAgreedToTerms : false
-  
+
   return (
     <>
       <MessageAlert
@@ -167,7 +167,6 @@ export default function Form({
           handleCategoryClose={handleCategoryClose}
         />
       )}
-
 
       <DetailsDialog
         handleClose={handleCancelPreview}
@@ -306,7 +305,9 @@ export default function Form({
               </Button>
             </Grid>
           </AccessCheck>
-          <AccessCheck module="forms" allowedPermissions={['can_create_form_user']}>
+          {(formDetailData?.form?.roles.includes(authState?.user?.userType?.toLowerCase())
+            || authState?.user?.userType === 'admin') &&
+            (
             <Grid item md={6} xs={6} style={{ textAlign: 'right' }}>
               <Button
                 variant="contained"
@@ -319,11 +320,12 @@ export default function Form({
                 data-testid="submit_form_btn"
               >
                 {!formState.isSubmitting
-                ? t('common:form_actions.submit')
-                : t('common:form_actions.submitting')}
+                  ? t('common:form_actions.submit')
+                  : t('common:form_actions.submitting')}
               </Button>
             </Grid>
-          </AccessCheck>
+            )
+          }
         </Grid>
       )}
     </>
@@ -352,6 +354,7 @@ Form.propTypes = {
       preview: PropTypes.bool,
       isPublic: PropTypes.bool,
       hasTermsAndConditions: PropTypes.bool,
+      roles: PropTypes.arrayOf(PropTypes.string),
     })
   }),
   formDetailRefetch: PropTypes.func,
