@@ -28,8 +28,10 @@ module Mutations
             comment.update!(grouping_id: comment.id)
           end
 
-          send_email_notification(comment) if vals[:reply_required]
-          notify(vals[:reply_required], comment)
+          if vals[:reply_required]
+            send_email_notification(comment)
+            notify_when_reply_requested(comment)
+          end
 
           comment.record_note_history(context[:current_user])
           { note_comment: comment }
@@ -84,24 +86,10 @@ module Mutations
       # rubocop:enable Metrics/MethodLength
       # rubocop:enable Metrics/AbcSize
 
-      def notify(reply_required, comment)
-        return notify_when_reply_requested(comment) if reply_required
-
-        notify_assignees(comment)
-      end
-
       def notify_when_reply_requested(comment)
         description = I18n.t('notification_description.reply_requested',
                              user: context[:current_user].name)
         create_notification(comment, description, :reply_requested, comment.reply_from_id)
-      end
-
-      def notify_assignees(comment)
-        comment.note.assignees.each do |assignee|
-          next if comment.user.id.eql?(assignee.id)
-
-          create_notification(comment, comment.body, :comment, assignee.id)
-        end
       end
 
       def create_notification(comment, description, category, user_id)

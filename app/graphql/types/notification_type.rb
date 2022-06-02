@@ -7,6 +7,7 @@ module Types
   class NotificationType < Types::BaseObject
     field :id, ID, null: false
     field :category, String, null: true
+    field :notifable_id, ID, null: true
     field :description, String, null: true
     field :created_at, GraphQL::Types::ISO8601DateTime, null: true
     field :seen_at, GraphQL::Types::ISO8601DateTime, null: true

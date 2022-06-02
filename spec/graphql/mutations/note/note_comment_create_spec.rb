@@ -207,23 +207,6 @@ RSpec.describe Mutations::Note::NoteCommentCreate do
       end
     end
 
-    context 'when commented on task and reply is not required' do
-      it 'creates notification for all the assignees' do
-        variables = {
-          noteId: note.id,
-          body: 'Comment body',
-        }
-        result = DoubleGdpSchema.execute(query, variables: variables,
-                                                context: {
-                                                  current_user: another_user,
-                                                  site_community: another_user.community,
-                                                }).as_json
-        expect(result['errors']).to be_nil
-        expect(user.notifications.count).to eql 1
-        expect(user.notifications.first.description).to eql 'Comment body'
-      end
-    end
-
     it 'raises unauthorized error if the context does not have current user' do
       variables = {
         noteId: note.id,
