@@ -609,6 +609,7 @@ DoubleGDP:
         - can_update_user_label
         - can_fetch_all_labels
         - can_fetch_label_users
+        - can_fetch_user_labels
         - can_see_menu_item
     community:
       permissions:
@@ -636,6 +637,7 @@ DoubleGDP:
         - can_search_user_ids
         - can_get_substatus_count
         - can_get_substatus_distribution
+        - can_see_menu_item
     profile:
       permissions:
         - can_see_menu_item

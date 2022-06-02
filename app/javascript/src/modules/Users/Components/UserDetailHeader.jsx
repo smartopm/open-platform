@@ -96,7 +96,7 @@ export default function UserDetailHeader({ data, userType, currentTab, authState
           data-testid="breadcrumb"
         >
           <Breadcrumbs aria-label="user-breadcrumb">
-            {userType === 'admin' && (
+            {userType === 'marketing_admin' && (
               <Link
                 color="primary"
                 href="/users"
@@ -119,7 +119,7 @@ export default function UserDetailHeader({ data, userType, currentTab, authState
         {!mdUpHidden && (
           <>
             <Grid item md={12} sm={2} xs={2} className={classes.labelTitle}>
-              {['admin'].includes(userType) && (
+              {['admin', 'marketing_admin'].includes(userType) && (
                 <UserLabelTitle isLabelOpen={isLabelOpen} setIsLabelOpen={setIsLabelOpen} />
               )}
             </Grid>
@@ -169,7 +169,7 @@ export default function UserDetailHeader({ data, userType, currentTab, authState
         {!smDownHidden && (
           <>
             <Grid item lg={2} md={2} sm={2} xs={2}>
-              {['admin'].includes(userType) && (
+              {['admin', 'marketing_admin'].includes(userType) && (
                 <UserLabelTitle isLabelOpen={isLabelOpen} setIsLabelOpen={setIsLabelOpen} />
               )}
             </Grid>

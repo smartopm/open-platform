@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Button from '@mui/material/Button';
 import PhoneIcon from '@mui/icons-material/Phone';
-import { Dialog, DialogTitle, DialogContent , Container } from '@mui/material';
+import { Dialog, DialogTitle, DialogContent, Container } from '@mui/material';
 import { css, StyleSheet } from 'aphrodite';
 import PropTypes from 'prop-types';
 
@@ -102,13 +102,14 @@ export default function UserInformation({
           {authState.user.userType === 'custodian' &&
             ['security_guard', 'contractor', 'security_supervisor', 'developer'].includes(
               data.user.userType
-            ) && data.user.status === 'active' && <ShiftButtons userId={userId} />}
+            ) &&
+            data.user.status === 'active' && <ShiftButtons userId={userId} />}
         </FeatureCheck>
 
         <TabPanel value={tabValue} index="Contacts">
           <UserInfo user={data.user} userType={userType} />
         </TabPanel>
-        {['admin', 'marketing_manager'].includes(userType) && (
+        {['admin', 'marketing_manager', 'marketing_admin'].includes(userType) && (
           <>
             <FeatureCheck features={authState.user.community.features} name="Messages">
               <TabPanel value={tabValue} index="Communication">
@@ -176,7 +177,7 @@ export default function UserInformation({
         </FeatureCheck>
 
         <div className="container d-flex justify-content-between">
-          { data.user.status === 'active' &&
+          {data.user.status === 'active' &&
           securityPersonnelList.includes(authState.user.userType) ? (
             <Button id="log-entry" className="log-entry-btn" color="primary" onClick={onLogEntry}>
               {t('common:misc.log_entry')}

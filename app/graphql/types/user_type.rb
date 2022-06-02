@@ -15,7 +15,9 @@ module Types
     field :address, String, null: true
     field :image_url, String, null: true
     field :user_type, String, null: true
-    field :vehicle, String, null: true, visible: { roles: %i[admin security_guard custodian
+    field :role, String, null: true
+    field :vehicle, String, null: true, visible: { roles: %i[admin security_guard
+                                                             custodian marketing_admin
                                                              security_supervisor], user: :id }
     field :request_reason, String, null: true,
                                    visible: { roles: %i[admin security_guard
@@ -60,8 +62,9 @@ module Types
     field :labels, [Types::LabelType], null: true,
                                        visible: { roles: %i[admin marketing_admin], user: :id }
     field :form_users, [Types::FormUsersType], null: true, visible: { roles: %i[admin], user: :id }
-    field :contact_infos, [Types::ContactInfoType], null: true, visible: { roles: %i[admin],
-                                                                           user: :id }
+    field :contact_infos, [Types::ContactInfoType], null: true,
+                                                    visible: { roles: %i[admin marketing_admin],
+                                                               user: :id }
     field :invoices, [Types::InvoiceType], null: true, visible: { roles: %i[admin],
                                                                   user: :id }
     field :substatus_logs, [Types::SubstatusLogType], null: true,
@@ -135,6 +138,10 @@ module Types
 
     def permissions
       context[:current_user].role.permissions
+    end
+
+    def role
+      object.role.name
     end
 
     # Field for lead secondary mail
