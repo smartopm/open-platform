@@ -18,8 +18,8 @@ import { useStyles } from '../styles';
 import GuestListCard from './GuestListCard';
 import MessageAlert from '../../../../components/MessageAlert';
 import { formatError , ifNotTest } from '../../../../utils/helpers';
-import GuestUpdateForm from './GuestUpdateForm';
 import { validateGuest } from '../helpers';
+import GuestInviteForm from './GuestInviteForm';
 
 
 export default function InvitedGuests() {
@@ -121,9 +121,9 @@ export default function InvitedGuests() {
     const validInfo = validateGuest({
       update: true,
       guestData: {
-        visitationDate: guestData.visitationDate,
-        startsAt: guestData.startsAt,
-        endsAt: guestData.endsAt
+        visitationDate: guestData?.visitationDate,
+        startsAt: guestData?.startsAt,
+        endsAt: guestData?.endsAt
       },
       t
     });
@@ -138,12 +138,12 @@ export default function InvitedGuests() {
     setLoading(true);
     inviteUpdate({
       variables: {
-        inviteId: currentInvite.id,
-        startsAt: guestData.startsAt,
-        endsAt: guestData.endsAt,
-        visitEndDate: guestData.visitEndDate,
-        visitationDate: guestData.visitationDate,
-        occursOn: guestData.occursOn
+        inviteId: currentInvite?.id,
+        startsAt: guestData?.startsAt,
+        endsAt: guestData?.endsAt,
+        visitEndDate: guestData?.visitEndDate,
+        visitationDate: guestData?.visitationDate,
+        occursOn: guestData?.occursOn
       }
     })
       .then(() => {
@@ -183,16 +183,17 @@ export default function InvitedGuests() {
       >
         <DialogTitle id="responsive-edit-dialog-title">
           <CenteredContent>
-            <span>{`${t('guest.edit')} - ${currentInvite.name}`}</span>
+            <span>{t('guest.edit')}</span>
           </CenteredContent>
         </DialogTitle>
         <DialogContent dividers>
-          <GuestUpdateForm
+          <GuestInviteForm
             onUpdate={updateGuest}
-            data={currentInvite}
-            message={message}
+            inviteDetails={currentInvite}
             close={updateList}
+            update
           />
+          {Boolean(message?.length) && <CenteredContent>{message}</CenteredContent>}
         </DialogContent>
       </Dialog>
       <MessageAlert

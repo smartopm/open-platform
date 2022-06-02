@@ -194,7 +194,8 @@
     "edit": "Edit Guest",
     "start_day_time_of_visit": "Start Date and Time",
     "end_day_time_of_visit": "End Date and Time",
-    "start_and_end_date_required": "Start/End date and time is required."
+    "start_and_end_date_required": "Start/End date and time is required.",
+    "name_print": "Guest Name: {{name}}"
   },
   "video_recording": {
     "add_video_text": "Add a Video with your phone",
