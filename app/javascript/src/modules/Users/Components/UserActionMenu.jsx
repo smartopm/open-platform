@@ -81,18 +81,6 @@ export default function UserActionMenu({
                 </a>
               </MenuItem>
             )}
-            {currentUserIsMarketingAdmin && !userIsAdmin && (
-              <MenuItem key={'user_logs'}>
-                <Link
-                  to={`/user/${data.user.id}/logs`}
-                  className={linkStyles}
-                  style={{ textDecoration: 'none' }}
-                >
-                  {t('menu.user_logs')}
-                </Link>
-              </MenuItem>
-            )}
-
             {!currentUserIsMarketingAdmin && (
               <>
                 <MenuItem key={'user_logs'}>

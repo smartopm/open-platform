@@ -683,9 +683,7 @@ export function selectOptions(
           value: 'User Logs',
           name: t('common:menu.user_logs'),
           handleMenuItemClick: () => history.push(`/user/${data.user.id}/logs`),
-          show:
-            (checkCommunityFeatures('LogBook') && checkModule('entry_request')) ||
-            (authState.user.roleName === 'Marketing Admin' && data.user.roleName !== 'Admin')
+          show: checkCommunityFeatures('LogBook') && checkModule('entry_request')
         }
       ]
     },

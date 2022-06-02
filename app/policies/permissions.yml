@@ -277,6 +277,11 @@ admin:
       - can_update_lead_log
       - can_fetch_lead_logs
       - can_access_lead_scorecard
+  messages:
+    permissions:
+      - can_see_menu_item
+      - can_access_messages
+      - can_access_user_messages
 contractor:
   note:
     permissions:

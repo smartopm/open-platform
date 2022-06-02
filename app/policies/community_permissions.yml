@@ -676,6 +676,11 @@ DoubleGDP:
         - can_create_business
         - can_delete_business
         - can_update_business
+    messages:
+      permissions:
+        - can_see_menu_item
+        - can_access_messages
+        - can_access_user_messages
 Enyimba:
   marketing_admin: 
     note:
@@ -839,3 +844,8 @@ Enyimba:
         - can_create_business
         - can_delete_business
         - can_update_business
+    messages:
+      permissions:
+        - can_see_menu_item
+        - can_access_messages
+        - can_access_user_messages
