@@ -7,6 +7,7 @@ import routeData, { MemoryRouter } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import FormLinkList from '../components/FormList';
 import { FormsQuery } from '../graphql/forms_queries';
+import { Context } from '../../../containers/Provider/AuthStateProvider';
 import userMock from '../../../__mocks__/authstate';
 
 describe('Form List Component', () => {
@@ -37,9 +38,8 @@ describe('Form List Component', () => {
     }
   };
 
-
   const mockHistory = {
-    push: jest.fn(),
+    push: jest.fn()
   };
   beforeEach(() => {
     jest.spyOn(routeData, 'useHistory').mockReturnValue(mockHistory);
@@ -50,18 +50,20 @@ describe('Form List Component', () => {
     const theme = createTheme();
     const container = render(
       <MockedProvider mocks={[mocks]} addTypename={false}>
-        <MemoryRouter>
-          <StyledEngineProvider injectFirst>
-            <ThemeProvider theme={theme}>
-              <FormLinkList
-                userType="admin"
-                community={userMock.user.community.name}
-                path="/forms"
-                t={t}
-              />
-            </ThemeProvider>
-          </StyledEngineProvider>
-        </MemoryRouter>
+        <Context.Provider value={userMock}>
+          <MemoryRouter>
+            <StyledEngineProvider injectFirst>
+              <ThemeProvider theme={theme}>
+                <FormLinkList
+                  userType="admin"
+                  community={userMock.user.community.name}
+                  path="/forms"
+                  t={t}
+                />
+              </ThemeProvider>
+            </StyledEngineProvider>
+          </MemoryRouter>
+        </Context.Provider>
       </MockedProvider>
     );
 
@@ -71,15 +73,15 @@ describe('Form List Component', () => {
         expect(container.queryAllByTestId('community_form')).toHaveLength(2);
         expect(container.queryAllByTestId('community_form_icon')).toHaveLength(2);
 
-        fireEvent.click(container.queryAllByTestId('community_form')[0])
-        expect(mockHistory.push).toBeCalledWith('/form/caea7b44-ee95-42a6/private')
+        fireEvent.click(container.queryAllByTestId('community_form')[0]);
+        expect(mockHistory.push).toBeCalledWith('/form/caea7b44-ee95-42a6/private');
 
         expect(container.queryAllByTestId('form_name')).toHaveLength(2);
         expect(container.queryAllByTestId('form_name')[0]).toHaveTextContent('Lease Form');
         expect(container.queryAllByTestId('form_name')[1]).toHaveTextContent('Another Form');
 
-        fireEvent.click(container.queryByText('actions.create_a_form'))
-        expect(mockHistory.push).toBeCalledWith('/forms/create')
+        fireEvent.click(container.queryByText('actions.create_a_form'));
+        expect(mockHistory.push).toBeCalledWith('/forms/create');
       },
       { timeout: 5 }
     );
@@ -89,26 +91,27 @@ describe('Form List Component', () => {
     const theme = createTheme();
     const container = render(
       <MockedProvider mocks={[mocks]} addTypename={false}>
-        <MemoryRouter>
-          <StyledEngineProvider injectFirst>
-            <ThemeProvider theme={theme}>
-              <FormLinkList
-                userType="admin"
-                community={userMock.user.community.name}
-                path="/forms/create"
-                id="qedhgwewwefwfwf"
-                t={t}
-              />
-            </ThemeProvider>
-          </StyledEngineProvider>
-        </MemoryRouter>
+        <Context.Provider value={userMock}>
+          <MemoryRouter>
+            <StyledEngineProvider injectFirst>
+              <ThemeProvider theme={theme}>
+                <FormLinkList
+                  userType="admin"
+                  community={userMock.user.community.name}
+                  path="/forms/create"
+                  id="qedhgwewwefwfwf"
+                  t={t}
+                />
+              </ThemeProvider>
+            </StyledEngineProvider>
+          </MemoryRouter>
+        </Context.Provider>
       </MockedProvider>
     );
 
-    await waitFor(
-      () => {
-        expect(container.queryByText('common:misc.forms')).toBeInTheDocument();
-        expect(container.queryAllByText('misc.create_form')[0]).toBeInTheDocument();
-      });
+    await waitFor(() => {
+      expect(container.queryByText('common:misc.forms')).toBeInTheDocument();
+      expect(container.queryAllByText('misc.create_form')[0]).toBeInTheDocument();
+    });
   });
 });

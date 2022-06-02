@@ -717,7 +717,7 @@ ActiveRecord::Schema.define(version: 2022_05_30_120810) do
   end
 
   create_table "posts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.string "content"
+    t.text "content"
     t.integer "status", default: 0
     t.uuid "discussion_id", null: false
     t.uuid "user_id", null: false
