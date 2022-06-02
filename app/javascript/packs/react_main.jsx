@@ -104,6 +104,14 @@ const AdminRoutes = props => {
   return <Redirect to="/" />;
 };
 
+const AdminMARoutes = props => {
+  const authState = useContext(AuthStateContext);
+  if (authState.user.userType === 'admin' || 'marketing_admin') {
+    return props.children;
+  }
+  return <Redirect to="/" />;
+};
+
 const Logout = () => {
   localStorage.removeItem(AUTH_TOKEN_KEY);
   const authState = useContext(AuthStateContext);
@@ -169,7 +177,7 @@ const App = () => {
           <AuthStateProvider>
             <Analytics>
               <I18Initializer
-                render={(community) => (
+                render={community => (
                   <StyledEngineProvider injectFirst>
                     <ThemeProvider theme={theme(community?.themeColors)}>
                       {/* onboarding */}
@@ -435,18 +443,24 @@ const App = () => {
                                         render={() => <Redirect to="/logbook" />}
                                       />
                                       <Route exact path="/qr/invite/:id" component={GuestQRPage} />
+
+                                      <AdminMARoutes>
+                                        <Switch>
+                                        <Route path="/users/import" component={UsersImport} />
+                                          <Route
+                                            path="/users/leads/import"
+                                            component={LeadManagementUserImport}
+                                          />
+                                        </Switch>
+                                      </AdminMARoutes>
+
                                       <AdminRoutes>
                                         <Switch>
                                           <Route
                                             path="/processes/:id/comments"
                                             component={ProcessCommentsPage}
                                           />
-                                          <Route path="/users/import" component={UsersImport} />
-                                          <Route
-                                            path="/users/leads/import"
-                                            component={LeadManagementUserImport}
-                                          />
-                                          <Route path="/showroom_logs" component={ShowroomLogs} />
+                                      <Route path="/showroom_logs" component={ShowroomLogs} />
                                           <Route path="/notes" component={AllNotes} />
                                           <Route
                                             exact
