@@ -38,7 +38,7 @@ export default function InvitedGuests() {
   const { timezone } = authState.user.community;
   const theme = useTheme();
   const [anchorEl, setAnchorEl] = useState(null);
-  const [currentInvite, setCurrentInvite] = useState({ id: '', loading: false, status: null, start: null, end: null });
+  const [currentInvite, setCurrentInvite] = useState({ id: '', loading: false, status: null });
   const open = Boolean(anchorEl);
   const [details, setDetails] = useState({ message: '', isError: false });
   const [openEditModal, setOpenEditModal] = useState(false);
