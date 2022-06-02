@@ -18,7 +18,7 @@ export default function PaymentForm() {
   });
 
   const config = {
-    public_key: 'FLWPUBK_TEST-b0c6086aa3f333d8cbd3e92cfbbb2380-X',
+    public_key: '',
     tx_ref: Date.now(),
     amount: inputValue.amount,
     currency: objectAccessor(currencies, authState.user.community.currency),
@@ -31,7 +31,6 @@ export default function PaymentForm() {
     customizations: {
       title: 'Pay For this item',
       description: inputValue.description,
-      // TODO: replace with community logo
       logo:
         'https://st2.depositphotos.com/4403291/7418/v/450/depositphotos_74189661-stock-illustration-online-shop-log.jpg'
     }
