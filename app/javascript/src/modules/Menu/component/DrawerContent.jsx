@@ -31,7 +31,8 @@ export default function DrawerContent() {
   if (unseenLoading || seenLoading) return <Spinner />;
   return (
     <>
-      {(unseenData.unseenNotifications.length > 0 || seenData.seenNotifications.length > 0) ? (
+      {console.log(unseenData)}
+      {(unseenData?.unseenNotifications.length > 0 || seenData?.seenNotifications.length > 0) ? (
         <>
           {unseenData?.unseenNotifications.map(notification => (
             <React.Fragment key={notification.id}>
@@ -49,7 +50,6 @@ export default function DrawerContent() {
           <Typography variant='body2'>You do not have any notifications</Typography>
         </CenteredContent>
       )}
-      {console.log(unseenData)}
     </>
   );
 }

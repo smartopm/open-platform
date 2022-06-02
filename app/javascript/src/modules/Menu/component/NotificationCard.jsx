@@ -22,8 +22,8 @@ export default function NotificationCard({ notification }) {
     message: '#67B387'
   };
   return (
-    <Grid container className={classes.container}>
-      <Grid item md={6} sm={6} xs={6}>
+    <Grid container className={classes.container} data-testid='card'>
+      <Grid item md={6} sm={6} xs={6} data-testid='chip'>
         <Chip
           size="small"
           label={objectAccessor(notificationTypes, notification.category)}
@@ -34,18 +34,18 @@ export default function NotificationCard({ notification }) {
           }}
         />
       </Grid>
-      <Grid item md={6} sm={6} xs={6} style={{ textAlign: 'right' }}>
+      <Grid item md={6} sm={6} xs={6} style={{ textAlign: 'right' }} data-testid='date'>
         <Typography variant="caption" color="text.secondary">
           {dateToString(notification.createdAt)}
         </Typography>
       </Grid>
-      <Grid item md={12} sm={12} xs={12}>
-        <Typography variant="caption" color="text.secondary">
+      <Grid item md={12} sm={12} xs={12} data-testid='header'>
+        <Typography variant="caption" color="text.secondary" data-testid='header_text'>
           {notification.header}
         </Typography>
       </Grid>
-      <Grid item md={12} sm={12} xs={12}>
-        <Typography variant="body2" color="text.secondary">
+      <Grid item md={12} sm={12} xs={12} data-testid='description'>
+        <Typography variant="body2" color="text.secondary" data-testid='description_text'>
           {notification.description}
         </Typography>
       </Grid>
@@ -63,14 +63,14 @@ const useStyles = makeStyles(() => ({
 }));
 
 NotificationCard.defaultProps = {
-  notification: []
+  notification: {}
 }
 
 NotificationCard.propTypes = {
-  notification: PropTypes.arrayOf(PropTypes.shape({
+  notification: PropTypes.shape({
     category: PropTypes.string,
     createdAt: PropTypes.string,
     description: PropTypes.string,
     header: PropTypes.string
-  }))
+  })
 };

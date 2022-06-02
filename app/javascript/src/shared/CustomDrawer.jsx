@@ -19,6 +19,7 @@ export default function CustomDrawer({ children, open }) {
             overflow: 'auto'
           }}
           className="drawer"
+          data-testid='drawer'
         >
           {children}
         </div>
@@ -29,5 +30,5 @@ export default function CustomDrawer({ children, open }) {
 
 CustomDrawer.propTypes = {
   children: PropTypes.node.isRequired,
-  open: PropTypes.string.isRequired
+  open: PropTypes.bool.isRequired
 };
