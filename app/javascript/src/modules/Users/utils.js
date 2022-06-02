@@ -755,7 +755,9 @@ export function selectOptions(
       value: 'LeadManagement',
       name: t('common:misc.lead_details'),
       handleMenuItemClick,
-      show: checkCommunityFeatures('Users') && checkModule('user')
+      show:
+        (checkCommunityFeatures('Users') && checkModule('user')) ||
+        (authState.user.roleName === 'Marketing Admin' && data.user.roleName !== 'Admin')
     },
     {
       key: 'invitations',

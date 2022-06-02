@@ -179,6 +179,8 @@ module Types::Queries::Note
   end
 
   def task(task_id:)
+    puts "Mutuba in BE #{permitted?(module: :note, permission: :can_fetch_task_by_id)}"
+   
     # Disable loading tasks by assignee to allow viewing of subtasks
     unless permitted?(module: :note, permission: :can_fetch_task_by_id)
       raise GraphQL::ExecutionError,

@@ -46,7 +46,7 @@ export default function FormLinkList({ userType, community, path, id, t }) {
     setFormId(Id);
   }
 
-  if (loading) return <Loading />
+  if (loading) return <Loading />;
   if (error) return <ErrorPage title={error.message} />;
 
   return (
@@ -133,13 +133,14 @@ export default function FormLinkList({ userType, community, path, id, t }) {
               </CenteredContent>
             )}
           </List>
-          {userType === 'admin' && (
-            <FloatButton
-              title={t('actions.create_a_form')}
-              handleClick={() => history.push('/forms/create')}
-              otherClassNames="new-permit-request-form-btn"
-            />
-          )}
+          {userType === 'admin' ||
+            ('marketing_admin' && (
+              <FloatButton
+                title={t('actions.create_a_form')}
+                handleClick={() => history.push('/forms/create')}
+                otherClassNames="new-permit-request-form-btn"
+              />
+            ))}
         </>
       )}
     </div>
@@ -148,7 +149,7 @@ export default function FormLinkList({ userType, community, path, id, t }) {
 
 FormLinkList.defaultProps = {
   id: null
-}
+};
 
 FormLinkList.propTypes = {
   userType: PropTypes.string.isRequired,

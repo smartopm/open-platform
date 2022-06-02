@@ -14,8 +14,8 @@ describe('new request button', () => {
         <NewRequestButton />
       </BrowserRouter>
     );
-    expect(container.queryByText('search.create_request')).not.toBeNull();
-    expect(container.queryByText('search.create_request')).toBeInTheDocument();
+    expect(container.queryByText('search.create_user_request')).not.toBeNull();
+    expect(container.queryByText('search.create_user_request')).toBeInTheDocument();
   });
 });
 
@@ -57,7 +57,7 @@ describe('search result component', () => {
       </Context.Provider>
     );
     await waitFor(() => {
-      expect(container.queryByText('search.create_request')).toBeInTheDocument();
+      expect(container.queryByText('search.create_user_request')).toBeInTheDocument();
     });
   });
 
