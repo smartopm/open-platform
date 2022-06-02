@@ -1,6 +1,6 @@
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
+
 import { MockedProvider } from '@apollo/react-testing';
 import CategoryItem from '../../components/Category/CategoryItem';
 import FormContextProvider, { FormContext } from '../../Context';

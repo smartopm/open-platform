@@ -4,7 +4,7 @@ import ReactTestUtils from 'react-dom/test-utils';
 import { BrowserRouter } from 'react-router-dom/';
 import { MockedProvider } from '@apollo/react-testing';
 import CommentField from '../modules/Tasks/Components/CommentField';
-import '@testing-library/jest-dom/extend-expect';
+
 import { TaskComment } from '../graphql/mutations';
 import { Spinner } from '../shared/Loading';
 import { Context } from '../containers/Provider/AuthStateProvider';

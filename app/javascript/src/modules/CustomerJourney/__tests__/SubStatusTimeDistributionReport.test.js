@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
+
 import SubStatusTimeDistributionReport from '../Components/SubStatusTimeDistributionReport';
 import { userSubStatus } from '../../../utils/constants';
 import MockedThemeProvider from '../../__mocks__/mock_theme';

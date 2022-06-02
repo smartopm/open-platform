@@ -2,7 +2,7 @@ import React from 'react';
 import { render, waitFor } from '@testing-library/react';
 import { MockedProvider } from '@apollo/react-testing';
 import UserStyledTabs from '../Components/UserTabs';
-import '@testing-library/jest-dom/extend-expect';
+
 import { UserActivePlanQuery } from '../../../graphql/queries/user';
 import { Spinner } from '../../../shared/Loading';
 import MockedThemeProvider from "../../__mocks__/mock_theme";

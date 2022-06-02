@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, waitFor } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
+
 import RouteData, { MemoryRouter } from 'react-router';
 import { MockedProvider } from '@apollo/react-testing';
 import FormPage from '../../containers/FormPage';

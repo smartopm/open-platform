@@ -3,7 +3,7 @@ import { fireEvent, render, waitFor } from '@testing-library/react';
 import routeData, { MemoryRouter } from 'react-router';
 import { MockedProvider } from '@apollo/react-testing';
 import MockedThemeProvider from '../../../../__mocks__/mock_theme';
-import '@testing-library/jest-dom/extend-expect';
+
 import InvitedGuests from '../../Components/InvitedGuests';
 import { MyInvitedGuestsQuery } from '../../graphql/queries';
 import { Context } from '../../../../../containers/Provider/AuthStateProvider';

@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import CustomDialog from "../../dialogs/CustomDialog";
-import '@testing-library/jest-dom/extend-expect';
+
 
 describe('Custom Dialog', () => {
   it('should render a custom dialog', () => {

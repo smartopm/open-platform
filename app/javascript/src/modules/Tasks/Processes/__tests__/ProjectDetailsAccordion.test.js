@@ -1,7 +1,7 @@
 import React from 'react';
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min';
-import '@testing-library/jest-dom/extend-expect';
+
 import { render, screen, waitFor } from '@testing-library/react';
 import MockedThemeProvider from '../../../__mocks__/mock_theme';
 import { ProjectRepliesRequestedComments } from '../graphql/process_queries';

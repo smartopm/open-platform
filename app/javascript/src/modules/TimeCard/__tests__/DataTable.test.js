@@ -4,7 +4,7 @@ import { MockedProvider } from '@apollo/react-testing';
 import { render } from '@testing-library/react';
 import DataTable from '../Components/DataTable';
 import MockedThemeProvider from "../../__mocks__/mock_theme";
-import '@testing-library/jest-dom/extend-expect';
+
 
 describe('test the datatabe', () => {
   const dataProps = {

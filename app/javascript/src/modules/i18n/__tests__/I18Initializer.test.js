@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
 import { MockedProvider } from '@apollo/react-testing';
 import I18Initializer from '../Components/I18Initializer';
-import '@testing-library/jest-dom/extend-expect';
+
 import { CurrentCommunityQuery } from '../../Community/graphql/community_query';
 
 jest.mock('react-i18next', () => ({
