@@ -1,13 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Badge } from '@mui/material';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import PropTypes from 'prop-types';
 import { StyleSheet, css } from 'aphrodite';
-import Popover from '@mui/material/Popover';
 // import { useHistory } from 'react-router-dom';
 import { useQuery } from 'react-apollo';
-import Typography from '@mui/material/Typography';
-import PanToolIcon from '@mui/icons-material/PanTool';
 // import { MsgNotificationUpdate } from '../../../graphql/mutations';
 import { MyTaskCountQuery, messageCountQuery } from '../../../graphql/queries';
 
@@ -18,16 +15,9 @@ export default function NotificationBell({ user, setOpenDrawer, openDrawer }) {
     fetchPolicy: 'cache-and-network',
     errorPolicy: 'all'
   });
-  const [open, setOpen] = useState(false);
-  const [anchorEl, setAnchorEl] = React.useState(null);
   // const history = useHistory();
   function updateNotification() {
     setOpenDrawer(!openDrawer)
-  }
-
-  function handlePopClose() {
-    setOpen(false);
-    setAnchorEl(null);
   }
   return (
     <>
@@ -45,15 +35,6 @@ export default function NotificationBell({ user, setOpenDrawer, openDrawer }) {
       >
         <NotificationsIcon color="primary" data-testid="notification_icon" />
       </Badge>
-      <Popover open={open} anchorEl={anchorEl} onClose={handlePopClose}>
-        <Typography align="center" className={`${css(styles.popup)}`}>
-          Notifications
-        </Typography>
-        <PanToolIcon className={`${css(styles.panTool)}`} />
-        <Typography align="center" className={`${css(styles.popup)}`}>
-          You have no new messages
-        </Typography>
-      </Popover>
     </>
   );
 }

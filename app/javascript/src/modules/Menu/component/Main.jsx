@@ -30,6 +30,7 @@ import { allUserTypes } from '../../../utils/constants';
 import BackArrow from './BackArrow';
 import { canAccessSOS } from '../utils';
 import CustomDrawer from '../../../shared/CustomDrawer';
+import DrawerContent from './DrawerContent'
 
 const drawerWidth = 260;
 
@@ -72,7 +73,7 @@ export default function Main() {
 
 export function MainNav({ authState }) {
   const matchesSmall = useMediaQuery('(max-width:500px)');
-  const [openDrawer, setOpenDrawer] = useState(false)
+  const [openDrawer, setOpenDrawer] = useState(false);
   const path = useLocation().pathname;
   const classes = useStyles();
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -128,15 +129,20 @@ export function MainNav({ authState }) {
 
   return (
     <div className={classes.root}>
-      <CustomDrawer open={openDrawer} anchor='right' handleClose={() => setOpenDrawer(false)}>
+      <CustomDrawer open={openDrawer} anchor="right" handleClose={() => setOpenDrawer(false)}>
         <Grid container>
-          <Grid item md={10}>
-            <Typography variant='h6' className={classes.notification}>Notifications</Typography>
+          <Grid item md={10} sm={10} xs={10}>
+            <Typography variant="h6" className={classes.notification}>
+              Notifications
+            </Typography>
           </Grid>
-          <Grid item md={2} style={{textAlign: 'right'}}>
+          <Grid item md={2} sm={2} xs={2} style={{ textAlign: 'right' }}>
             <IconButton onClick={() => setOpenDrawer(false)}>
               <CloseIcon className={classes.notification} />
             </IconButton>
+          </Grid>
+          <Grid item md={12} sm={12} xs={12}>
+            <DrawerContent />
           </Grid>
         </Grid>
       </CustomDrawer>
@@ -182,7 +188,11 @@ export function MainNav({ authState }) {
               <CommunityName authState={authState} />
             </CenteredContent>
           )}
-          <NotificationBell user={authState.user} openDrawer={openDrawer} setOpenDrawer={setOpenDrawer} />
+          <NotificationBell
+            user={authState.user}
+            openDrawer={openDrawer}
+            setOpenDrawer={setOpenDrawer}
+          />
           <UserActionOptions />
         </Toolbar>
       </AppBar>
