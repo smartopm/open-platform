@@ -3,7 +3,7 @@ import { render, waitFor } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom/';
 import { MockedProvider } from '@apollo/react-testing';
 import TaskReportDialog from '../Components/TaskReportDialog';
-import '@testing-library/jest-dom/extend-expect';
+
 import { TaskStatsQuery } from '../graphql/task_queries';
 import { Spinner } from '../../../shared/Loading';
 import MockedThemeProvider from '../../__mocks__/mock_theme';

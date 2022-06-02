@@ -3,7 +3,7 @@ import { render, fireEvent, waitFor } from '@testing-library/react'
 import { BrowserRouter } from 'react-router-dom/'
 import { MockedProvider } from '@apollo/react-testing'
 import ReactTestUtils from "react-dom/test-utils";
-import '@testing-library/jest-dom/extend-expect'
+
 import TaskCommentEdit from '../Components/TaskCommentEdit'
 import { TaskCommentUpdate } from '../../../graphql/mutations'
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import EmailEditor from 'react-email-editor';
 import { fireEvent, render, waitFor } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
+
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom';
 import EmailBuilderDialog from '../components/EmailBuilderDialog';

@@ -1,6 +1,6 @@
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
+
 import BorderedButton from '../../buttons/BorderedButton';
 
 describe('Button with custom border', () => {

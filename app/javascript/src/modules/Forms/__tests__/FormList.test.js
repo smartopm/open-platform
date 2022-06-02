@@ -3,7 +3,7 @@ import { fireEvent, render, waitFor } from '@testing-library/react';
 import { MockedProvider } from '@apollo/react-testing';
 import { createTheme, ThemeProvider, StyledEngineProvider } from '@mui/material';
 import routeData, { MemoryRouter } from 'react-router';
-import '@testing-library/jest-dom/extend-expect';
+
 import { useTranslation } from 'react-i18next';
 import FormLinkList from '../components/FormList';
 import { FormsQuery } from '../graphql/forms_queries';

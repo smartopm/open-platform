@@ -1,7 +1,7 @@
 import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
 import { render, fireEvent } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
+
 import { MockedProvider } from '@apollo/react-testing';
 import LoginScreen from '../components/AuthScreens/LoginScreen'
 import { loginPhoneMutation } from '../graphql/mutations'

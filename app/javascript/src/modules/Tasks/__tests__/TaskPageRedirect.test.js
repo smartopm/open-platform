@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom';
 import { render, waitFor } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
+
 import TaskPageRedirect from '../Components/TaskPageRedirect';
 
 jest.mock('react-router', () => ({

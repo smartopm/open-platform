@@ -6,7 +6,7 @@ import ActionFlowModal from '../containers/ActionFlows/ActionFlowModal';
 import { Events, Actions, ActionFields, RuleFields , UsersLiteQuery } from '../graphql/queries';
 import { EmailTemplatesQuery } from '../modules/Emails/graphql/email_queries';
 
-import '@testing-library/jest-dom/extend-expect';
+
 import MockedThemeProvider from '../modules/__mocks__/mock_theme';
 import { Context } from '../containers/Provider/AuthStateProvider';
 import userMock from '../__mocks__/userMock';

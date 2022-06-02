@@ -1,6 +1,6 @@
 import React from 'react';
 import { fireEvent, render, waitFor } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
+
 import { MockedProvider } from '@apollo/react-testing';
 import UserLabels from '../Components/UserLabels';
 import { LabelsQuery, UserLabelsQuery } from '../../../graphql/queries';

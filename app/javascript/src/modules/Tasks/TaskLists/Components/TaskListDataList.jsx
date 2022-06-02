@@ -21,7 +21,8 @@ export default function TaskListDataList({
   handleTodoClick,
   handleAddSubTask,
   styles,
-  openSubTask
+  openSubTask,
+  isSecondLevelSubTask,
 }) {
   const classes = useStyles();
   const isMobile = useMediaQuery('(max-width:800px)');
@@ -46,7 +47,7 @@ export default function TaskListDataList({
       handleClick: () => handleTaskDetails()
     },
     {
-      content: canCreateNote ? t('menu.add_subtask') : null,
+      content: !isSecondLevelSubTask && canCreateNote ? t('menu.add_subtask') : null,
       isAdmin: true,
       handleClick: () => handleCreateSubTask()
     }
@@ -234,8 +235,10 @@ TaskListDataList.defaultProps = {
   handleAddSubTask: null,
   styles: {},
   openSubTask: false,
-  handleOpenSubTasksClick: null
+  handleOpenSubTasksClick: null,
+  isSecondLevelSubTask: false,
 };
+
 TaskListDataList.propTypes = {
   task: PropTypes.shape(Task).isRequired,
   // eslint-disable-next-line react/forbid-prop-types
@@ -244,7 +247,8 @@ TaskListDataList.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   styles: PropTypes.object,
   openSubTask: PropTypes.bool,
-  handleOpenSubTasksClick: PropTypes.func
+  handleOpenSubTasksClick: PropTypes.func,
+  isSecondLevelSubTask: PropTypes.bool
 };
 
 const useStyles = makeStyles(() => ({

@@ -1,7 +1,7 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import { ActionDialog } from '../components/Dialog'
-import '@testing-library/jest-dom/extend-expect'
+
 import MockedThemeProvider from '../modules/__mocks__/mock_theme';
 
 const props = {

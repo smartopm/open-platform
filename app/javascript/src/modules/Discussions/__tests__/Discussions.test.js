@@ -1,6 +1,6 @@
 import React from 'react';
 import { act, render, waitFor, fireEvent } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
+
 import { BrowserRouter } from 'react-router-dom/';
 import { MockedProvider } from '@apollo/react-testing';
 import { DiscussionsQuery } from '../../../graphql/queries';

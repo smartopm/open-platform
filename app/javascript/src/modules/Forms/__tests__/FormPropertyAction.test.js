@@ -1,6 +1,6 @@
 import React from 'react';
 import { fireEvent, render, waitFor } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
+
 import { MockedProvider } from '@apollo/react-testing';
 import { FormPropertyQuery } from '../graphql/forms_queries';
 import { FormPropertyDeleteMutation } from '../graphql/forms_mutation';

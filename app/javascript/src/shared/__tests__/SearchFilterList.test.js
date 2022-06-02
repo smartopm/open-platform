@@ -1,6 +1,6 @@
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
+
 import SearchFilterList from '../search/SearchFilterList';
 
 describe('SearchFilterList', () => {

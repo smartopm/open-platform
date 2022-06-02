@@ -3,7 +3,7 @@ import { render, fireEvent, act } from '@testing-library/react'
 import { BrowserRouter } from 'react-router-dom/'
 import { MockedProvider } from '@apollo/react-testing'
 import LabelDelete from '../Components/LabelDelete'
-import '@testing-library/jest-dom/extend-expect'
+
 import { DeleteLabel } from '../../../graphql/mutations'
 
 describe('Label Delete Component', () => {
