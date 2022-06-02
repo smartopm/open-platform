@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react';
 import React from 'react';
 import LogsReportView from '../Components/LogsReportView';
-import '@testing-library/jest-dom/extend-expect';
+
 
 describe('LogsReportView', () => {
   it('should properly render the logs report view', () => {

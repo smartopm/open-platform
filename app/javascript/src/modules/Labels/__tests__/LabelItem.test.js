@@ -2,7 +2,7 @@ import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react';
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom/';
-import '@testing-library/jest-dom/extend-expect';
+
 import LabelItem from '../Components/LabelItem';
 
 describe('Label Item Component', () => {

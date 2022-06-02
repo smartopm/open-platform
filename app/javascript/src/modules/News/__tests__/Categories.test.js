@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-expressions */
 import React from 'react'
 import { render } from '@testing-library/react'
-import '@testing-library/jest-dom/extend-expect'
+
 import Categories from '../Components/Categories'
 import  { useFetch }  from '../../../utils/customHooks'
 

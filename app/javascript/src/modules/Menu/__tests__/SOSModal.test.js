@@ -1,7 +1,7 @@
 import React from 'react';
 import { act } from "react-dom/test-utils";
 import { render, fireEvent, waitFor } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
+
 import { createTheme, ThemeProvider, StyledEngineProvider } from '@mui/material';
 import { BrowserRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/react-testing';

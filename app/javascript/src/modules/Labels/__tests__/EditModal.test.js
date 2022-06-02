@@ -2,7 +2,7 @@ import React from 'react';
 import { render, act, fireEvent, waitFor } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom/';
 import { MockedProvider } from '@apollo/react-testing';
-import '@testing-library/jest-dom/extend-expect';
+
 import EditModal from '../Components/EditModal';
 import { LabelEdit, LabelCreate } from '../../../graphql/mutations';
 import { Spinner } from '../../../shared/Loading';

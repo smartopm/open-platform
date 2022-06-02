@@ -2,7 +2,7 @@ import React from 'react';
 import { render, waitFor } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom/';
 import { MockedProvider } from '@apollo/react-testing';
-import '@testing-library/jest-dom/extend-expect';
+
 import CampaignSplitScreen from '../components/CampaignSplitScreen';
 import { Campaign } from '../../../graphql/queries';
 import MockedThemeProvider from '../../__mocks__/mock_theme';

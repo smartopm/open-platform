@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
-import '@testing-library/jest-dom/extend-expect';
+
 import MockedThemeProvider from '../../../../__mocks__/mock_theme';
 import InviteListCard from '../../Components/InviteListCard';
 import { Context } from '../../../../../containers/Provider/AuthStateProvider';

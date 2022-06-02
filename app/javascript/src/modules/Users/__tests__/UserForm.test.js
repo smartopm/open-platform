@@ -1,7 +1,7 @@
 import React from 'react';
 import { act, fireEvent, render, waitFor, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event'
-import '@testing-library/jest-dom/extend-expect';
+
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom';
 import UserForm, { formatContactType } from '../Components/UserForm';

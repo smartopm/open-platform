@@ -3,7 +3,7 @@
 import React from 'react';
 import { render, waitFor } from '@testing-library/react';
 import ImageAuth from "../ImageAuth";
-import '@testing-library/jest-dom/extend-expect';
+
 
 describe('ImageAuth Component', () => {
   it('should render image or text', async () => {

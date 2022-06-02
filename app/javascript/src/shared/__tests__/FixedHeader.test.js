@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import FixedHeader from '../FixedHeader';
-import '@testing-library/jest-dom/extend-expect';
+
 
 describe('AddmoreButton', () => {
   it('should render the container fixed header', () => {

@@ -3,7 +3,7 @@ import { fireEvent, render } from '@testing-library/react'
 import { BrowserRouter } from 'react-router-dom/'
 import { MockedProvider } from '@apollo/react-testing'
 import TaskDetailAccordion from '../Components/TaskDetailAccordion'
-import '@testing-library/jest-dom/extend-expect'
+
 
 describe('Task detail accordion Component', () => {
 

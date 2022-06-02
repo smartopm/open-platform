@@ -3,7 +3,7 @@ import { render, waitFor } from '@testing-library/react';
 import { MockedProvider } from '@apollo/react-testing';
 import { createTheme, ThemeProvider, StyledEngineProvider } from '@mui/material';
 import { BrowserRouter } from 'react-router-dom';
-import '@testing-library/jest-dom/extend-expect';
+
 import Loading from '../../../shared/Loading';
 import FormEntries from '../components/FormEntries';
 import { FormEntriesQuery } from '../graphql/forms_queries';

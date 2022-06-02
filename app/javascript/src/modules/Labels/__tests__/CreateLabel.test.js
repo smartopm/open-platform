@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, waitFor, fireEvent, within } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
+
 import userEvent from '@testing-library/user-event'
 import { MockedProvider } from '@apollo/react-testing';
 import CreateLabel from '../Components/CreateLabel';

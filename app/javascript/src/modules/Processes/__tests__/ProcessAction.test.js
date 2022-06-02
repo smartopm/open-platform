@@ -1,7 +1,7 @@
 import React from 'react';
 import routeData, { BrowserRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/react-testing';
-import '@testing-library/jest-dom/extend-expect';
+
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import MockedThemeProvider from '../../__mocks__/mock_theme';
 import { Context } from '../../../containers/Provider/AuthStateProvider'

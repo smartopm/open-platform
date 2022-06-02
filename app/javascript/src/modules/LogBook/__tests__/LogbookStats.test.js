@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, waitFor, fireEvent } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
+
 import { MockedProvider } from '@apollo/react-testing';
 import { LogbookStatsQuery } from '../graphql/guestbook_queries';
 import LogbookStats from '../Components/LogbookStats';

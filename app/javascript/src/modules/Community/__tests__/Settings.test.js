@@ -1,7 +1,7 @@
 /* eslint-disable max-statements */
 import React from 'react';
 import { fireEvent, render, waitFor } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
+
 import { MockedProvider } from '@apollo/react-testing';
 import CommunitySettings from '../components/Settings';
 import { CommunityUpdateMutation } from '../graphql/community_mutations';

@@ -1,6 +1,6 @@
 import React from 'react'
 import { fireEvent, render } from '@testing-library/react'
-import '@testing-library/jest-dom/extend-expect'
+
 import FormOptionInput, { FormOptionWithOwnActions } from '../../components/FormOptionInput'
 
 // Note: There is an error that exit with code 0 Uncaught [TypeError: activeElement.attachEvent is not a function]
