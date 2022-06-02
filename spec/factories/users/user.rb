@@ -89,5 +89,11 @@ FactoryBot.define do
       user_type { 'lead' }
       role { create(:role, name: 'lead') }
     end
+
+    factory :marketing_admin do
+      community
+      user_type { 'marketing_admin' }
+      role { create(:role, name: 'marketing_admin') }
+    end
   end
 end

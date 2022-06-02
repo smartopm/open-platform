@@ -34,7 +34,12 @@ module Types::Queries::Label
   end
 
   def user_labels(user_id:)
-    user = verified_user(user_id)
+    unless permitted?(module: :label, permission: :can_fetch_user_labels) ||
+           context[:current_user]&.id == user_id
+      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+    end
+
+    user = verify_user(user_id)
     user.labels
   end
 
@@ -44,5 +49,14 @@ module Types::Queries::Label
     end
 
     context[:site_community].users.find(context[:current_user].id)&.find_label_users(labels)&.all
+  end
+
+  private
+
+  def verify_user(user_id)
+    user = Users::User.allowed_users(context[:current_user]).find_by(id: user_id)
+    return user if user.present?
+
+    raise GraphQL::ExecutionError, I18n.t('errors.user.does_not_exist')
   end
 end

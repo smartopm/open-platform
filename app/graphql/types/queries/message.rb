@@ -32,7 +32,8 @@ module Types::Queries::Message
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/MethodLength
   def messages(query: '', offset: 0, limit: 100, filter: nil)
-    unless context[:current_user]&.admin?
+    unless permitted?(admin: true, module: :messages,
+                      permission: :can_access_messages)
       raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
     end
 
@@ -50,7 +51,10 @@ module Types::Queries::Message
   end
 
   def user_messages(id:, offset: 0, limit: 50)
-    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless admin_or_self(id)
+    unless permitted?(admin: true, module: :messages,
+                      permission: :can_access_user_messages) || context[:current_user]&.id.eql?(id)
+      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+    end
 
     messages = Notifications::Message.includes(:sender).unscope(:order)
                                      .where('user_id = ? or sender_id = ?', id, id)

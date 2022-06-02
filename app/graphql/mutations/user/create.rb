@@ -40,6 +40,7 @@ module Mutations
         consultant: { except: %i[state user_type phone_number email status] },
         developer: { except: %i[state user_type phone_number email status] },
         marketing_manager: { except: %i[state user_type phone_number email status] },
+        marketing_admin: {}, # Everything
       }.freeze
 
       # rubocop:disable Metrics/MethodLength

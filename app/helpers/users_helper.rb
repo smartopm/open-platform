@@ -5,7 +5,7 @@ module UsersHelper
   VALID_USER_TYPES = %w[security_guard admin resident contractor
                         prospective_client client visitor developer consultant
                         custodian site_worker site_manager security_supervisor
-                        lead marketing_manager public_user code_scanner].freeze
+                        lead marketing_manager public_user code_scanner marketing_admin].freeze
 
   VALID_STATES = %w[valid pending banned expired].freeze
 

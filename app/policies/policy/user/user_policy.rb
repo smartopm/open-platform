@@ -43,6 +43,7 @@ module Policy
             'can_see_self' => true,
           },
           'marketing_manager' => { 'ability_list' => ['*@*'], 'can_see_self' => true },
+          'marketing_admin' => { 'ability_list' => ['*@*'], 'can_see_self' => true },
         }
       end
       # rubocop:enable Metrics/MethodLength
