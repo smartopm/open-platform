@@ -2,6 +2,7 @@ import React from 'react'
 import AccessCheck from '../../Permissions/Components/AccessCheck';
 import PaymentForm from './Components/PaymentForm';
 
+// TODO: Update this permission
 const paymentPermission = ['can_access_all_payments'];
 
 const currentModule = 'plan_payment'

@@ -17,7 +17,7 @@ function RenderPaymentsList() {
 }
 
 
-const RavePayment = [
+const PaymentRoutes = [
   {
     routeProps: {
       path: '/payments',
@@ -58,8 +58,8 @@ export default {
   moduleName: currentModule,
   name: t => t('menu.payment', { count: 0 }),
   featureName: 'Payments',
-  subRoutes: RavePayment,
-  subMenu: RavePayment,
+  subRoutes: PaymentRoutes,
+  subMenu: PaymentRoutes,
 };
 
 export { PaymentSummary }
