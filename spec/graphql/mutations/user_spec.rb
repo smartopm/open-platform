@@ -270,6 +270,7 @@ RSpec.describe Mutations::User do
 
   describe 'updating a user' do
     let!(:admin_role) { create(:role, name: 'admin') }
+    let(:marketing_admin_role) { create(:role, name: 'marketing_admin') }
     let!(:security_guard_role) { create(:role, name: 'security_guard') }
     let!(:client_role) { create(:role, name: 'client') }
     let!(:permission) do
@@ -277,7 +278,18 @@ RSpec.describe Mutations::User do
                           role: admin_role,
                           permissions: %w[can_update_user_details can_merge_users])
     end
+    let!(:marketing_admin_permission) do
+      create(:permission, module: 'user',
+                          role: marketing_admin_role,
+                          permissions: %w[can_update_user_details])
+    end
     let!(:admin) { create(:admin_user, role: admin_role, phone_number: '9988776655') }
+    let(:community) { admin.community }
+    let(:marketing_admin) do
+      create(:marketing_admin,
+             role: marketing_admin_role,
+             community: community)
+    end
     let!(:user) { create(:user, community: admin.community) }
     let!(:security_guard) do
       create(:security_guard, community_id: admin.community_id,
@@ -446,6 +458,40 @@ RSpec.describe Mutations::User do
 
       expect(result.dig('data', 'userUpdate', 'user', 'userType')).to eql nil
       expect(result['errors']).to_not be nil
+    end
+
+    context 'when current user is marketing admin and tries to update admin' do
+      it 'raises unauthorized error' do
+        variables = {
+          id: admin.id,
+          userType: 'lead',
+          name: 'Marry',
+        }
+        result = DoubleGdpSchema.execute(query, variables: variables,
+                                                context: {
+                                                  current_user: marketing_admin,
+                                                  site_community: community,
+                                                }).as_json
+        expect(result['errors']).to_not be_nil
+        expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'
+      end
+    end
+
+    context 'when current user is marketing admin and tries to update visitor' do
+      it 'updates user' do
+        variables = {
+          id: pending_user.id,
+          userType: 'client',
+          name: 'Marry',
+        }
+        result = DoubleGdpSchema.execute(query, variables: variables,
+                                                context: {
+                                                  current_user: marketing_admin,
+                                                  site_community: community,
+                                                }).as_json
+        expect(result['errors']).to be_nil
+        expect(result.dig('data', 'userUpdate', 'user', 'userType')).to eql 'client'
+      end
     end
 
     it 'should create user secondary information if not exists' do

@@ -194,16 +194,21 @@ module Mutations
 
       def authorized?(vals)
         check_params(Mutations::User::Create::ALLOWED_PARAMS_FOR_ROLES, vals)
-        user_record = Users::User.find(vals[:id])
-        current_user = context[:current_user]
+        user = context[:site_community].users.find(vals[:id])
         unless permissions_checks? || own_user?(vals)
           raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
         end
-        unless user_record.community_id == current_user.community_id
-          raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+
+        authorize_marketing_admin(user.user_type)
+        true
+      end
+
+      def authorize_marketing_admin(user_type)
+        unless context[:current_user].user_type.eql?('marketing_admin') && user_type.eql?('admin')
+          return
         end
 
-        true
+        raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end
 
       def permissions_checks?
