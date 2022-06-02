@@ -26,7 +26,7 @@ const QUERY = gql`
       email
       name
       userType
-      role
+      roleName
       status
       phoneNumber
       expiresAt

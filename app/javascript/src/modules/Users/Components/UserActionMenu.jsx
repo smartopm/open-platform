@@ -24,8 +24,8 @@ export default function UserActionMenu({
   const { t } = useTranslation('common');
   const authState = useContext(AuthStateContext);
 
-  const userIsAdmin = data?.user?.role === 'admin';
-  const currentUserIsMarketingAdmin = authState?.user?.role === 'marketing_admin';
+  const userIsAdmin = data?.user?.roleName === 'Admin';
+  const currentUserIsMarketingAdmin = authState?.user?.roleName === 'Marketing Admin';
 
   return (
     <Menu
@@ -43,9 +43,17 @@ export default function UserActionMenu({
       <div>
         {['admin', 'marketing_admin'].includes(userType) && (
           <>
-            <MenuItem key={'merge'} onClick={OpenMergeDialog}>
-              {t('menu.merge_user')}
-            </MenuItem>
+            {currentUserIsMarketingAdmin && !userIsAdmin && (
+              <MenuItem key={'merge'} onClick={OpenMergeDialog}>
+                {t('menu.merge_user')}
+              </MenuItem>
+            )}
+
+            {!currentUserIsMarketingAdmin && (
+              <MenuItem key={'merge'} onClick={OpenMergeDialog}>
+                {t('menu.merge_user')}
+              </MenuItem>
+            )}
             <MenuItem key={'send_sms'}>
               <Link
                 to={{
@@ -73,24 +81,42 @@ export default function UserActionMenu({
                 </a>
               </MenuItem>
             )}
-            <MenuItem key={'user_logs'}>
-              <Link
-                to={`/user/${data.user.id}/logs`}
-                className={linkStyles}
-                style={{ textDecoration: 'none' }}
-              >
-                {t('menu.user_logs')}
-              </Link>
-            </MenuItem>
-            <MenuItem
-              key={'view_plans'}
-              onClick={() => router.push(`/user/${data.user.id}?tab=Plans`)}
-            >
-              {t('menu.view_plans')}
-            </MenuItem>
-            <MenuItem key={'activation_menu'} onClick={handleActivationDialog}>
-              {data.user.status === 'active' ? t('menu.deactivate_user') : t('menu.activate_user')}
-            </MenuItem>
+            {currentUserIsMarketingAdmin && !userIsAdmin && (
+              <MenuItem key={'user_logs'}>
+                <Link
+                  to={`/user/${data.user.id}/logs`}
+                  className={linkStyles}
+                  style={{ textDecoration: 'none' }}
+                >
+                  {t('menu.user_logs')}
+                </Link>
+              </MenuItem>
+            )}
+
+            {!currentUserIsMarketingAdmin && (
+              <>
+                <MenuItem key={'user_logs'}>
+                  <Link
+                    to={`/user/${data.user.id}/logs`}
+                    className={linkStyles}
+                    style={{ textDecoration: 'none' }}
+                  >
+                    {t('menu.user_logs')}
+                  </Link>
+                </MenuItem>
+                <MenuItem
+                  key={'view_plans'}
+                  onClick={() => router.push(`/user/${data.user.id}?tab=Plans`)}
+                >
+                  {t('menu.view_plans')}
+                </MenuItem>
+                <MenuItem key={'activation_menu'} onClick={handleActivationDialog}>
+                  {data.user.status === 'active'
+                    ? t('menu.deactivate_user')
+                    : t('menu.activate_user')}
+                </MenuItem>
+              </>
+            )}
           </>
         )}
         {['admin', 'client', 'resident', 'marketing_admin'].includes(userType) && (
