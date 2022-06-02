@@ -222,7 +222,7 @@ export const NotesCategories = {
   to_do: 'To-Do',
   form: 'Form',
   emergency: 'Emergency SOS',
-  template: 'DRC Process Template',
+  template: 'Process Template',
   task_list: 'Task List'
 };
 

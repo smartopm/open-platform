@@ -20,7 +20,6 @@ export default function AddSubTasks() {
   const classes = useStyles();
   const [splitScreenOpen, setSplitScreenOpen] = useState(false);
   const [open, setModalOpen] = useState(false);
-
   const { taskId } = useParams();
   const [parentTaskId, setParentTaskId] = useState('');
   const [assignUserToNote] = useMutation(AssignUser);
@@ -43,7 +42,8 @@ export default function AddSubTasks() {
     errorPolicy: 'all'
   });
 
-  function handleTodoItemClick() {
+  function handleTodoItemClick(task) {
+    setParentTaskId(task?.id);
     setSplitScreenOpen(true);
   }
 
@@ -147,7 +147,7 @@ export default function AddSubTasks() {
       {taskListData?.taskList?.id !== undefined && (
         <SplitScreen open={splitScreenOpen} onClose={() => setSplitScreenOpen(false)}>
           <TaskUpdate
-            taskId={taskListData?.taskList?.id}
+            taskId={parentTaskId || taskListData?.taskList?.id}
             handleSplitScreenClose={handleSplitScreenClose}
           />
         </SplitScreen>
