@@ -280,7 +280,7 @@ export default function Form({
             formDetailData?.form?.hasTermsAndConditions && (
               <Grid item md={12} xs={12} style={{ marginTop: '20px' }}>
                 <TermsAndCondition
-                  categoriesData={categoriesData.data?.formCategories} 
+                  categoriesData={categoriesData.data?.formCategories}
                   isChecked={hasAgreedToTerms}
                   handleCheckTerms={isChecked => setHasAgreedToTerms(isChecked)}
                 />
@@ -306,22 +306,24 @@ export default function Form({
               </Button>
             </Grid>
           </AccessCheck>
-          <Grid item md={6} xs={6} style={{ textAlign: 'right' }}>
-            <Button
-              variant="contained"
-              type="submit"
-              color="primary"
-              aria-label="form_submit"
-              style={matches ? { marginTop: '20px' } : { marginTop: '25px' }}
-              onClick={() => formSubmit(formData)}
-              disabled={formState.isSubmitting || isTermsChecked}
-              data-testid="submit_form_btn"
-            >
-              {!formState.isSubmitting
+          <AccessCheck module="forms" allowedPermissions={['can_create_form_user']}>
+            <Grid item md={6} xs={6} style={{ textAlign: 'right' }}>
+              <Button
+                variant="contained"
+                type="submit"
+                color="primary"
+                aria-label="form_submit"
+                style={matches ? { marginTop: '20px' } : { marginTop: '25px' }}
+                onClick={() => formSubmit(formData)}
+                disabled={formState.isSubmitting || isTermsChecked}
+                data-testid="submit_form_btn"
+              >
+                {!formState.isSubmitting
                 ? t('common:form_actions.submit')
                 : t('common:form_actions.submitting')}
-            </Button>
-          </Grid>
+              </Button>
+            </Grid>
+          </AccessCheck>
         </Grid>
       )}
     </>
