@@ -3,6 +3,7 @@ import React, { useContext, useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import Drawer from '@mui/material/Drawer';
 import Grid from '@mui/material/Grid';
@@ -72,6 +73,7 @@ export default function Main() {
 }
 
 export function MainNav({ authState }) {
+  const { t } = useTranslation('notification');
   const matchesSmall = useMediaQuery('(max-width:500px)');
   const [openDrawer, setOpenDrawer] = useState(false);
   const path = useLocation().pathname;
@@ -133,7 +135,7 @@ export function MainNav({ authState }) {
         <Grid container>
           <Grid item md={10} sm={10} xs={10}>
             <Typography variant="h6" className={classes.notification}>
-              Notifications
+              {t('notification.notifications')}
             </Typography>
           </Grid>
           <Grid item md={2} sm={2} xs={2} style={{ textAlign: 'right' }}>

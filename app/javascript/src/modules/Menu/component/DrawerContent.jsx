@@ -1,6 +1,7 @@
 import React from 'react';
 import { useQuery } from 'react-apollo';
 import { Typography } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import seenNotifications, { UnseenNotifications } from '../graphql/menu_query';
 import { Spinner } from '../../../shared/Loading';
 import NotificationCard from './NotificationCard';
@@ -8,6 +9,7 @@ import CenteredContent from '../../../shared/CenteredContent';
 import { formatError } from '../../../utils/helpers';
 
 export default function DrawerContent() {
+  const { t } = useTranslation('notification');
   const { data: seenData, loading: seenLoading, error: seenError } = useQuery(seenNotifications, {
     fetchPolicy: 'cache-and-network',
     errorPolicy: 'all'
@@ -47,7 +49,7 @@ export default function DrawerContent() {
         </>
       ) : (
         <CenteredContent>
-          <Typography variant='body2'>You do not have any notifications</Typography>
+          <Typography variant='body2'>{t('notification.no_notifications')}</Typography>
         </CenteredContent>
       )}
     </>
