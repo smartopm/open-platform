@@ -49,7 +49,7 @@ export default function DrawerContent() {
         </>
       ) : (
         <CenteredContent>
-          <Typography variant='body2'>{t('notification.no_notifications')}</Typography>
+          <Typography variant='body2' data-testid='no_notifications'>{t('notification.no_notifications')}</Typography>
         </CenteredContent>
       )}
     </>
