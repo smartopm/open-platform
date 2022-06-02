@@ -7,7 +7,7 @@ import { useQuery } from 'react-apollo';
 import { NotificationsCount } from '../graphql/menu_query';
 
 export default function NotificationBell({ user, setOpenDrawer, openDrawer }) {
-  const { data, refetch } = useQuery(NotificationsCount, { fetchPolicy: 'no-cache' });
+  const { data, refetch } = useQuery(NotificationsCount, { fetchPolicy: 'network-only' });
   function updateNotification() {
     refetch();
     setOpenDrawer(!openDrawer);
