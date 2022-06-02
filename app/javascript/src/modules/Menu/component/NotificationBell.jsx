@@ -3,28 +3,19 @@ import { Badge } from '@mui/material';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import PropTypes from 'prop-types';
 import { StyleSheet, css } from 'aphrodite';
-// import { useHistory } from 'react-router-dom';
 import { useQuery } from 'react-apollo';
-// import { MsgNotificationUpdate } from '../../../graphql/mutations';
-import { MyTaskCountQuery, messageCountQuery } from '../../../graphql/queries';
+import { NotificationsCount } from '../graphql/menu_query';
 
 export default function NotificationBell({ user, setOpenDrawer, openDrawer }) {
-  // const [msgUpdate] = useMutation(MsgNotificationUpdate);
-  const { data } = useQuery(MyTaskCountQuery, { fetchPolicy: 'cache-first' });
-  const { data: messageCount } = useQuery(messageCountQuery, {
-    fetchPolicy: 'cache-and-network',
-    errorPolicy: 'all'
-  });
-  // const history = useHistory();
+  const { data, refetch } = useQuery(NotificationsCount, { fetchPolicy: 'no-cache' });
   function updateNotification() {
-    setOpenDrawer(!openDrawer)
+    refetch();
+    setOpenDrawer(!openDrawer);
   }
   return (
     <>
       <Badge
-        badgeContent={
-          user?.userType === 'admin' ? data?.myTasksCount : messageCount?.msgNotificationCount
-        }
+        badgeContent={data?.notificationsCount}
         color="secondary"
         className={`${css(
           user?.userType === 'security_guard'

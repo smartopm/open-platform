@@ -13,4 +13,10 @@ const UserNotifications = gql`
   }
 `;
 
+export const NotificationsCount = gql`
+  query NotificationsCount {
+    notificationsCount 
+  }
+`;
+
 export default UserNotifications;

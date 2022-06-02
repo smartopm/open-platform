@@ -25,7 +25,6 @@ export default function DrawerContent() {
   if (loading) return <Spinner />;
   return (
     <>
-      {console.log(data)}
       {data?.userNotifications.length > 0 ? (
         data?.userNotifications.map(notification => (
           <React.Fragment key={notification.id}>
@@ -34,7 +33,7 @@ export default function DrawerContent() {
         ))
       ) : (
         <CenteredContent>
-          <Typography variant="body2" data-testid="no_notifications">
+          <Typography variant="body2" style={{color: '#FFFFFF'}} data-testid="no_notifications">
             {t('notification.no_notifications')}
           </Typography>
         </CenteredContent>
