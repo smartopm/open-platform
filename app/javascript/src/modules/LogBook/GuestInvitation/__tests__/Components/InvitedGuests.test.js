@@ -59,7 +59,7 @@ describe('Invited Guests Component', () => {
     const cancelInviteMutationMock = {
       request: {
         query: InvitationUpdateMutation,
-        variables: { 
+        variables: {
           inviteId: invitedGuests.result.data.myGuests[0].id,
           status: 'active'
          }
@@ -72,7 +72,7 @@ describe('Invited Guests Component', () => {
         }
       }
     }
-    const { getByTestId, queryByText, queryAllByText, queryByTestId } = render(
+    const { getByTestId, queryByText, queryAllByText, queryByTestId, getByRole } = render(
       <Context.Provider value={userMock}>
         <MemoryRouter>
           <MockedProvider mocks={[invitedGuests, cancelInviteMutationMock]} addTypename={false}>
@@ -91,7 +91,7 @@ describe('Invited Guests Component', () => {
     expect(queryByText('common:menu.guest_list')).toBeInTheDocument();
     expect(getByTestId('speed_dial_add_guest')).toBeInTheDocument();
     expect(getByTestId('menu_list')).toBeInTheDocument();
-    
+
     await waitFor(() => {
       expect(queryAllByText('Test two')[0]).toBeInTheDocument();
       expect(queryAllByText('Test two')[0]).toBeInTheDocument();
@@ -101,15 +101,22 @@ describe('Invited Guests Component', () => {
       expect(queryAllByText('guest_book.start_of_visit')[0]).toBeInTheDocument();
 
     }, 20);
-    
-    fireEvent.click(getByTestId('guest_invite_menu'))
-    expect(getByTestId('menu_item')).toBeInTheDocument();
-    expect(getByTestId('menu_item').textContent).toContain('common:form_actions.cancel');
-    fireEvent.click(getByTestId('menu_item'))
 
+    fireEvent.click(getByTestId('guest_invite_menu'))
+    expect(getByTestId('menu_list')).toBeInTheDocument();
+    expect(queryByText('common:form_actions.cancel')).toBeInTheDocument();
+    expect(queryByText('common:menu.edit')).toBeInTheDocument();
+
+    fireEvent.click(queryByText('common:form_actions.cancel'));
     await waitFor(() => {
       expect(queryByTestId('loader')).toBeInTheDocument();
     }, 10)
+
+    fireEvent.click(queryByText('common:menu.edit'));
+    await waitFor(() => {
+      expect(getByRole('dialog')).toBeInTheDocument();
+      expect(queryByText(/guest.edit/i)).toBeInTheDocument();
+    }, 10);
 
     fireEvent.click(getByTestId('speed_dial_btn'))
     expect(mockHistory.push).toBeCalled()

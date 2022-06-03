@@ -4,11 +4,19 @@ import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import DatePickerDialog, { ThemedTimePicker } from '../../../components/DatePickerDialog';
 
-export default function GuestTime({ userData, handleChange, handleChangeOccurrence, disableEdit, smallDevice }) {
+export default function GuestTime(
+  { userData,
+    handleChange,
+    handleChangeOccurrence,
+    disableEdit,
+    smallDevice,
+    update
+  }
+) {
   const { t } = useTranslation(['logbook', 'common', 'days']);
   return (
     <Grid container direction="row" spacing={2}>
-      <Grid item xs={12} sm={4}>
+      <Grid item xs={12} sm={update ? 12 : 4}>
         <DatePickerDialog
           selectedDate={userData.visitationDate}
           handleDateChange={date => handleChange({ target: { name: 'visitationDate', value: date } })}
@@ -19,7 +27,7 @@ export default function GuestTime({ userData, handleChange, handleChangeOccurren
         />
         <br />
       </Grid>
-      <Grid item xs={6} sm={4}>
+      <Grid item xs={6} sm={update ? 6 : 4}>
         <ThemedTimePicker
           time={userData.startsAt || userData.startTime}
           handleTimeChange={date => handleChange({ target: { name: 'startsAt', value: date } })}
@@ -30,7 +38,7 @@ export default function GuestTime({ userData, handleChange, handleChangeOccurren
           fullWidth
         />
       </Grid>
-      <Grid item xs={6} sm={4}>
+      <Grid item xs={6} sm={update ? 6 : 4}>
         <ThemedTimePicker
           time={userData.endsAt || userData.endTime}
           handleTimeChange={date => handleChange({ target: { name: 'endsAt', value: date } })}
@@ -41,7 +49,7 @@ export default function GuestTime({ userData, handleChange, handleChangeOccurren
           fullWidth
         />
       </Grid>
-      <Grid item xs={12} md={6}>
+      <Grid item xs={12} md={update ? 12 : 6}>
         <Typography data-testid="guest_repeats_on" variant="subtitle2">{t('guest_book.repeats_on')}</Typography>
         {Object.entries(t('days:days', { returnObjects: true })).map(([key, value]) => (
           <IconButton
@@ -61,7 +69,7 @@ export default function GuestTime({ userData, handleChange, handleChangeOccurren
         ))}
 
       </Grid>
-      <Grid item xs={12} md={6}>
+      <Grid item xs={12} md={update ? 12 : 6}>
         {Boolean(userData.occursOn.length) && (
         <DatePickerDialog
           selectedDate={userData.visitEndDate}
@@ -81,7 +89,8 @@ export default function GuestTime({ userData, handleChange, handleChangeOccurren
 
 GuestTime.defaultProps = {
   disableEdit: () => {},
-  smallDevice: false
+  smallDevice: false,
+  update: false,
 }
 GuestTime.propTypes = {
   userData: PropTypes.shape({
@@ -97,4 +106,5 @@ GuestTime.propTypes = {
   handleChangeOccurrence: PropTypes.func.isRequired,
   disableEdit: PropTypes.func,
   smallDevice: PropTypes.bool,
+  update: PropTypes.bool
 };

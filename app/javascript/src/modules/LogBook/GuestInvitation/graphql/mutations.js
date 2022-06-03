@@ -32,13 +32,15 @@ mutation invitationUpdate(
   $startsAt: String
   $occursOn: [String!]
   $visitEndDate: String
+  $visitationDate: String
 ) {
   invitationUpdate(
     inviteId: $inviteId
     startsAt: $startsAt
     endsAt: $endsAt
     occursOn: $occursOn
-    visitEndDate: $visitEndDate
+    visitEndDate: $visitEndDate,
+    visitationDate: $visitationDate
     status: $status
   ) {
     success
