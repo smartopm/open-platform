@@ -364,8 +364,7 @@ module Users
     # rubocop:disable Metrics/AbcSize
     def generate_note(vals)
       note = community.notes.create(
-        # give the note to the author if no other user
-        user_id: vals[:user_id] || self[:id],
+        user_id: vals[:user_id] || self[:id], # give the note to the author if no other user
         body: vals[:body],
         category: vals[:category],
         description: vals[:description],
@@ -376,6 +375,7 @@ module Users
         form_user_id: vals[:form_user_id],
         parent_note_id: vals[:parent_note_id],
         status: vals[:status],
+        order: vals[:order],
       )
       note.documents.attach(vals[:attached_documents]) if vals[:attached_documents]
       note

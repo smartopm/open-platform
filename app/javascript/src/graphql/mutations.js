@@ -323,6 +323,7 @@ export const CreateNote = gql`
     $category: String
     $description: String
     $parentNoteId: ID
+    $order: Int
   ) {
     noteCreate(
       userId: $userId
@@ -333,6 +334,7 @@ export const CreateNote = gql`
       category: $category
       description: $description
       parentNoteId: $parentNoteId
+      order: $order
     ) {
       note {
         body

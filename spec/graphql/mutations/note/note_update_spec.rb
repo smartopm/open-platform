@@ -25,6 +25,7 @@ RSpec.describe Mutations::Note::NoteUpdate do
           $parentNoteId: ID
           $documentBlobId: String
           $status: String
+          $order: Int
         ) {
           noteUpdate(
             id: $id
@@ -35,6 +36,7 @@ RSpec.describe Mutations::Note::NoteUpdate do
             parentNoteId: $parentNoteId
             documentBlobId: $documentBlobId
             status: $status
+            order: $order
           ) {
             note {
               flagged
@@ -153,6 +155,23 @@ RSpec.describe Mutations::Note::NoteUpdate do
 
       expect(result.dig('data', 'noteUpdate', 'note', 'id')).not_to be_nil
       expect(result.dig('data', 'noteUpdate', 'note', 'parentNote')['id']).to eq(other_user_note.id)
+    end
+
+    it 'updates task order number' do
+      variable_updates = {
+        id: note.id,
+        body: 'Task with updated order',
+        order: 2,
+      }
+
+      result = DoubleGdpSchema.execute(update_query, variables: variable_updates,
+                                                     context: {
+                                                       current_user: admin,
+                                                       site_community: user.community,
+                                                     }).as_json
+
+      expect(result.dig('data', 'noteUpdate', 'note', 'id')).not_to be_nil
+      expect(note.reload.order).to eq(2)
     end
 
     it 'adds attachments to note' do

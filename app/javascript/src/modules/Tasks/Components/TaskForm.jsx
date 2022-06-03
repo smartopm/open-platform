@@ -39,6 +39,7 @@ export default function TaskForm({
   const [assignees, setAssignees] = useState([]);
   const [taskType, setTaskType] = useState('');
   const [selectedDate, setDate] = useState(new Date());
+  const [orderNumber, setOrderNumber] = useState('1');
   const [loading, setLoadingStatus] = useState(false);
   const [createTask] = useMutation(CreateNote);
   const [userData, setData] = useState(initialData);
@@ -61,6 +62,7 @@ export default function TaskForm({
         description,
         due: selectedDate ? selectedDate.toISOString() : null,
         category: taskType,
+        order: parseInt(orderNumber, 10) || 1,
         flagged: true,
         userId: userData.userId,
         parentNoteId: parentTaskId
@@ -181,6 +183,20 @@ export default function TaskForm({
                 margin="none"
               />
               <FormHelperText>{t('common:form_placeholders.note_due_date')}</FormHelperText>
+            </Grid>
+            <Grid item md={12} xs={12}>
+              <TextField
+                fullWidth
+                type="number"
+                id="task-order-number"
+                label={t('task.order_number')}
+                value={orderNumber}
+                onChange={event => setOrderNumber(event.target.value)}
+                variant="outlined"
+                size="small"
+                name="order"
+                inputProps={{ 'data-testid': 'order_number' }}
+              />
             </Grid>
             <Grid item md={6} xs={6} style={{ textAlign: 'right' }}>
               <Button

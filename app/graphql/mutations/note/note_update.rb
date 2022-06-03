@@ -15,6 +15,7 @@ module Mutations
       argument :parent_note_id, ID, required: false
       argument :document_blob_id, String, required: false
       argument :status, String, required: false
+      argument :order, Integer, required: false
 
       field :note, Types::NoteType, null: true
 
