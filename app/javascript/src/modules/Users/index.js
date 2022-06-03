@@ -5,26 +5,46 @@ import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import Users from './Containers/Users';
 import UserShow from './Containers/UserShow';
 import AccessCheck from '../Permissions/Components/AccessCheck';
+import UsersImport from './Containers/UsersImport';
+import LeadManagementUserImport from './LeadManagement/Containers/LeadManagementUserImport';
 
-const user = { module: 'user' }
+const user = { module: 'user' };
 
 const userPermissions = ['can_access_all_users'];
 const profilePermissions = ['can_view_own_profile'];
 
+const userImportPermissions = ['can_create_users_via_csv'];
+
 export function RenderUsers() {
-    return (
-      <AccessCheck module={user.module} allowedPermissions={userPermissions}>
-        <Users />
-      </AccessCheck>
-    )
+  return (
+    <AccessCheck module={user.module} allowedPermissions={userPermissions}>
+      <Users />
+    </AccessCheck>
+  );
+}
+
+export function RenderUserImport() {
+  return (
+    <AccessCheck module={user.module} allowedPermissions={userImportPermissions}>
+      <UsersImport />
+    </AccessCheck>
+  );
+}
+
+export function RenderUserLeadImport() {
+  return (
+    <AccessCheck module={user.module} allowedPermissions={userImportPermissions}>
+      <LeadManagementUserImport />
+    </AccessCheck>
+  );
 }
 
 function RenderUserProfile() {
-    return (
-      <AccessCheck module={user.module} allowedPermissions={profilePermissions}>
-        <UserShow />
-      </AccessCheck>
-    )
+  return (
+    <AccessCheck module={user.module} allowedPermissions={profilePermissions}>
+      <UserShow />
+    </AccessCheck>
+  );
 }
 
 // for nested links, I think these will likely be on the user
@@ -33,7 +53,41 @@ function RenderUserProfile() {
 // to: '/messages/:id',
 // to: '/plots/id:'
 // users menu
-  // ==> for admin
+// ==> for admin
+
+const UsersMenu = {
+  routeProps: {
+    path: '/users',
+    component: RenderUsers
+  },
+  styleProps: {
+    icon: <PersonIcon />,
+    className: 'users-menu-item'
+  },
+  name: t => t('misc.users'),
+  moduleName: user.module,
+  featureName: 'Users',
+  accessibleBy: [],
+  subRoutes: [
+    {
+      routeProps: {
+        path: '/users/import',
+        exact: true,
+        component: RenderUserImport
+      },
+      accessibleBy: []
+    },
+    {
+      routeProps: {
+        path: '/users/leads/import',
+        exact: true,
+        component: RenderUserLeadImport
+      },
+      accessibleBy: []
+    }
+  ]
+};
+
 export default {
   routeProps: {
     path: '/users',
@@ -46,7 +100,8 @@ export default {
   name: t => t('misc.users'),
   moduleName: user.module,
   featureName: 'Users',
-  accessibleBy: []
+  accessibleBy: [],
+  subMenu: [UsersMenu]
 };
 
 // temporarily export the user profile page here, these will be part of the core user module
@@ -64,7 +119,15 @@ export const Profile = {
   featureName: 'Profile',
   moduleName: 'profile',
   accessibleBy: []
-}
+};
+
+export const CSVUserImport = {
+  routeProps: {
+    path: '/users/import',
+    component: RenderUserImport
+  },
+  accessibleBy: []
+};
 
 export const Logout = {
   routeProps: {
@@ -78,4 +141,4 @@ export const Logout = {
   featureName: 'Logout',
   moduleName: 'logout',
   accessibleBy: []
-}
+};
