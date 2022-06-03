@@ -36,6 +36,8 @@ describe('Map page', () => {
       </ApolloProvider>
     );
 
-    await waitFor(() => expect(screen.queryByTestId('loader')).toBeInTheDocument())
+    await waitFor(() => {
+      expect(screen.queryByTestId('leaflet-map-container')).toBeInTheDocument()
+    })
   });
 });

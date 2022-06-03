@@ -23,6 +23,17 @@ export default function CustomCarousel({ imageUrls, videoUrls }) {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
+  const children = [];
+
+  if (imageUrls.length > 0) {
+   imageUrls.map((url) => children.push(<CardMedia key={url} component="img" height="194" src={url} />))
+  }
+
+  if (videoUrls.length > 0) {
+    videoUrls.map((url) => children.push(<CardMedia key={url} component="iframe" height="194" src={url} />))
+   }
+ 
+
   return (
     <div data-testid="carousel-container">
       <AutoPlaySwipeableViews
@@ -31,12 +42,7 @@ export default function CustomCarousel({ imageUrls, videoUrls }) {
         onChangeIndex={handleStepChange}
         enableMouseEvents
       >
-        {maxSteps > 0 && imageUrls.map((url) => (
-          <CardMedia key={url} component="img" height="194" src={url} />
-            ))}
-        {maxSteps > 0 && videoUrls.map((url) => (
-          <CardMedia key={url} component="iframe" height="194" src={url} />
-            ))}
+        {children}
       </AutoPlaySwipeableViews>
       {maxSteps > 0 && (
       <CustomMediaStepper

@@ -236,8 +236,6 @@ export default function GeoMap() {
     setTimeout(()=> window.dispatchEvent(new Event('resize')), 1000);
   })
 
-  // if (loadingCommunityData) return <Spinner />;
-
    return (
      <>
        {/* istanbul ignore next */}

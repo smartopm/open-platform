@@ -21,7 +21,7 @@ export default function CustomMediaStepper({
           className={classes.iconButton}
           size="small"
           onClick={handlePrevious}
-          disabled={activeStep === 0}
+          disabled={activeStep === maxSteps - 1}
           data-testid="previous-btn"
         >
           <KeyboardArrowLeft />
@@ -30,7 +30,7 @@ export default function CustomMediaStepper({
           className={classes.iconButton}
           size="small"
           onClick={handleNext}
-          disabled={activeStep === maxSteps - 1}
+          disabled={activeStep === 0}
           data-testid="next-btn"
         >
           <KeyboardArrowRight />

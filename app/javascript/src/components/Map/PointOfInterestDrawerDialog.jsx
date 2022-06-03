@@ -4,6 +4,7 @@ import { Drawer, Grid, Card, Typography, CardContent, CardActions } from '@mui/m
 import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@mui/styles';
 import CustomCarousel from '../../shared/CustomCarousel';
+import { Spinner } from '../../shared/Loading';
 
 export default function PointOfInterestDrawerDialog({ anchor, children, open, onClose, imageData, selectedPoi }){
   const classes = useStyles();
@@ -23,10 +24,13 @@ export default function PointOfInterestDrawerDialog({ anchor, children, open, on
             <Grid container>
               <Grid item md={12}>
                 <Card sx={{ width: '100%' }} elevation={0} data-testid="drawer-media">
-                  <CustomCarousel
-                    imageUrls={imageData.urls}
-                    videoUrls={selectedPoi.videoUrls}
-                  />
+                  {imageData.loading && <Spinner />}
+                  {!imageData.loading && (
+                    <CustomCarousel
+                      imageUrls={imageData.urls}
+                      videoUrls={selectedPoi.videoUrls}
+                    />
+)}
                   <CardContent data-testid="drawer-content">
                     <Typography variant="h6" color="text.secondary">
                       {selectedPoi.poiName}
