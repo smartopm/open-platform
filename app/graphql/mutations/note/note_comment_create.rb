@@ -11,6 +11,7 @@ module Mutations
       argument :reply_required, Boolean, required: false
       argument :reply_from_id, ID, required: false
       argument :grouping_id, ID, required: false
+      argument :tagged_documents, [ID, { null: true }], required: false
 
       field :note_comment, Types::NoteCommentType, null: true
 

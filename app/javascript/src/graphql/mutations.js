@@ -349,6 +349,7 @@ export const TaskComment = gql`
     $replyRequired: Boolean
     $replyFromId: ID
     $groupingId: ID
+    $taggedDocuments: [ID]
   ) {
     noteCommentCreate(
       noteId: $noteId
@@ -356,6 +357,7 @@ export const TaskComment = gql`
       replyRequired: $replyRequired
       replyFromId: $replyFromId
       groupingId: $groupingId
+      taggedDocuments: $taggedDocuments
     ) {
       noteComment {
         body

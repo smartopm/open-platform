@@ -28,8 +28,8 @@ export default function CommentField({
     event.preventDefault();
     let variables = {
       noteId: taskId,
-      body,
-      mentionedDocuments
+      taggedDocuments: mentionedDocuments,
+      body
     };
     if (replyFrom) {
       variables = {
@@ -44,6 +44,7 @@ export default function CommentField({
     })
       .then(() => {
         setBody('');
+        setMentionedDocuments([]);
         refetch();
         commentsRefetch();
         setReplyFrom(null);

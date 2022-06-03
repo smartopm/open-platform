@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_05_30_120810) do
+ActiveRecord::Schema.define(version: 2022_06_03_134055) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -533,6 +533,7 @@ ActiveRecord::Schema.define(version: 2022_05_30_120810) do
     t.datetime "replied_at"
     t.uuid "grouping_id"
     t.uuid "reply_from_id"
+    t.string "tagged_documents", default: [], array: true
     t.index ["note_id"], name: "index_note_comments_on_note_id"
     t.index ["user_id"], name: "index_note_comments_on_user_id"
   end
