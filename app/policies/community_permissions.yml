@@ -542,6 +542,7 @@ Greenpark:
         - can_view_create_task_button
         - can_view_create_sub_task_button
         - can_access_tasks
+        - can_view_task_lists
     forms:
       permissions:
         - can_see_menu_item
@@ -594,6 +595,7 @@ Greenpark:
         - can_view_create_task_button
         - can_view_create_sub_task_button
         - can_access_tasks
+        - can_view_task_lists
     forms:
       permissions:
         - can_see_menu_item
