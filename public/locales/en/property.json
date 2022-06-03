@@ -36,7 +36,8 @@
     "property_number": "Property Number",
     "property_type": "Property Type",
     "state_province": "State Province",
-    "youtube_video_url": "Video"
+    "youtube_video_url": "Video",
+    "add_youtube_url": "Add video url from YouTube."
   },
   "map_markers": {
     "available": "Available",

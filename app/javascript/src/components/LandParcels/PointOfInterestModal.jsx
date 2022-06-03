@@ -126,8 +126,8 @@ export default function PointOfInterestModal({
             onChange={e => setLatY(e.target.value)}
           />
           <FormControl>
-            <FormHelperText align="center" variant="caption">
-              Add video url from YouTube. 
+            <FormHelperText align="center" data-testid="poi-video-url">
+              {t('form_fields.add_youtube_url')} 
               <br />
               {' '}
               e.g https://www.youtube.com/watch?v=1234
