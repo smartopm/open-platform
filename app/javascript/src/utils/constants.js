@@ -852,14 +852,14 @@ export const leadTemperatureOptions = ['Cold', 'Neutral', 'Warm', 'Hot'];
 
 export const leadStatusOptions = [
   'Qualified Lead',
-  'Interest shown',
-  'Investment motive verified',
+  'Interest Shown',
+  'Investment Motive Verified',
   'Signed MOU',
   'Signed Lease',
   'Evaluation',
-  'Stakeholder meetings',
+  'Stakeholder Meetings',
   'Site Visit',
-  'Ready to sign'
+  'Ready to Sign'
 ];
 
 export const leadSourceOptions = [
@@ -1310,14 +1310,14 @@ export const months = {
 
 export const leadStatuses = {
   Ql: 'Qualified Lead',
-  Is: 'Interest shown',
-  Iv: 'Interest shown',
+  Is: 'Interest Shown',
+  Iv: 'Interest Shown',
   Sm: 'Signed MOU',
   Sl: 'Signed Lease',
   Ev: 'Evaluation',
-  St: 'Stakeholder meetings',
+  St: 'Stakeholder Meetings',
   Sv: 'Site Visit',
-  Rs: 'Ready to sign',
+  Rs: 'Ready to Sign',
   Im: 'Investment Motive Verified'
 };
 
