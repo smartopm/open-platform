@@ -30,7 +30,13 @@ import { useParamsQuery, objectAccessor, replaceDocumentMentions } from '../../.
 import { TaskComment } from '../../../graphql/mutations';
 import { ResolveComments } from '../graphql/task_mutation';
 
-export default function CommentCard({ comments, refetch, commentsRefetch, forAccordionSection, mentionsData }) {
+export default function CommentCard({
+  comments,
+  refetch,
+  commentsRefetch,
+  forAccordionSection,
+  mentionsData
+}) {
   const [open, setOpen] = useState(false);
   const [editId, setEditId] = useState(null);
   const [edit, setEdit] = useState(false);
@@ -42,6 +48,7 @@ export default function CommentCard({ comments, refetch, commentsRefetch, forAcc
   const [currentComment, setCurrentComment] = useState('');
   const [replyingGroupingId, setReplyingGroupingId] = useState(null);
   const [replyValue, setReplyValue] = useState('');
+  const [mentionedDocuments, setMentionedDocuments] = useState([]);
   const [highlightDiscussion, setHighlightDiscussion] = useState(false);
   const [error, setErrorMessage] = useState('');
   const [loading, setLoading] = useState(false);
@@ -137,6 +144,7 @@ export default function CommentCard({ comments, refetch, commentsRefetch, forAcc
         body: replyValue,
         replyRequired: true,
         replyFromId: lastRepliedComment(groupedComments, groupingId).user.id,
+        taggedDocuments: mentionedDocuments,
         groupingId
       }
     })
@@ -418,6 +426,8 @@ export default function CommentCard({ comments, refetch, commentsRefetch, forAcc
                         actionTitle={t('common:misc.comment')}
                         placeholder={t('common:misc.add_reply')}
                         loading={loading}
+                        mentionsData={mentionsData}
+                        setMentionedDocuments={setMentionedDocuments}
                       />
                     )}
                   </div>
