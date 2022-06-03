@@ -9,7 +9,7 @@ RSpec.describe Types::Queries::Label do
     let!(:permission) do
       create(:permission, module: 'label',
                           role: admin_role,
-                          permissions: %w[can_fetch_all_labels
+                          permissions: %w[can_fetch_all_labels can_fetch_user_labels
                                           can_fetch_label_users can_view_lead_labels])
     end
 
