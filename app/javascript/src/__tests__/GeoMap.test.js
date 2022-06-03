@@ -33,8 +33,7 @@ describe('GeoMap', () => {
       )
 
     await waitFor(() => {
-      screen.debug(undefined, 20000)
-      expect(container.queryByTestId('leaflet-map-container')).toBeTruthy()
+      expect(screen.queryByTestId('leaflet-map-container')).toBeTruthy()
     }, 10)
   });
 });
