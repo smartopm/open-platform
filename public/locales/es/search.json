@@ -2,6 +2,7 @@
   "search": {
     "clear_filters": "Limpiar Filtros",
     "create_request": "Crea una nueva solicitud",
+    "create_user_request": "Crear un nuevo usuario",
     "load_more": "Carga más",
     "no_results": "No se han encontrado resultados",
     "search_for": "Buscar {{title}}",
