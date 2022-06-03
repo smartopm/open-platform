@@ -135,7 +135,7 @@ export default function TaskForm({
                 }}
               />
             </Grid>
-            <Grid item md={6} xs={12}>
+            <Grid item md={12} xs={12}>
               <CustomAutoComplete
                 users={users}
                 isMultiple
@@ -148,10 +148,10 @@ export default function TaskForm({
                 label={t('task.task_search_placeholder')}
               />
             </Grid>
-            <Grid item md={6} xs={12}>
+            <Grid item md={12} xs={12}>
               <UserSearch userData={userData} update={setData} />
             </Grid>
-            <Grid item md={6} xs={12}>
+            <Grid item md={12} xs={12}>
               <FormControl fullWidth>
                 <InputLabel id="taskType">{t('task.task_type_label')}</InputLabel>
                 <Select
@@ -172,7 +172,7 @@ export default function TaskForm({
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item md={6} xs={12}>
+            <Grid item md={12} xs={12}>
               <DatePickerDialog
                 handleDateChange={date => setDate(date)}
                 selectedDate={selectedDate}
