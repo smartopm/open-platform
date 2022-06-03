@@ -639,3 +639,11 @@ export function decodeHtmlEntity(str) {
     return String.fromCharCode(dec);
   });
 };
+
+export function replaceDocumentMentions(text, path) {
+  if (!text) return;
+  const updatedText = text.replace(/\###(.*?)\###/g, (m) => {
+    return `<a href='${path}&document_id=${m.split("__")[1]}'>${m.split("__")[2]}</a>`
+  });
+  return sanitizeText(updatedText);
+}

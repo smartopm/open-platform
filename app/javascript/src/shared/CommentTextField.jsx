@@ -9,20 +9,22 @@ import { useTranslation } from 'react-i18next';
 import UserAutoResult from './UserAutoResult';
 import { UserChip } from '../modules/Tasks/Components/UserChip';
 import { Context as AuthStateContext } from '../containers/Provider/AuthStateProvider';
+import ReusableMentionsInput from './ReusableMentionsInput';
 
 export default function CommentTextField({
   value,
   setValue,
   handleSubmit,
   actionTitle,
-  placeholder,
   loading,
   forProcess,
   selectedUser,
   setSelectedUser,
   autoCompleteOpen,
   setAutoCompleteOpen,
-  taskAssignees
+  taskAssignees,
+  mentionsData,
+  setMentionedDocuments
 }) {
   const { t } = useTranslation(['task', 'common']);
   const authState = React.useContext(AuthStateContext);
@@ -31,21 +33,11 @@ export default function CommentTextField({
   return (
     <Grid container alignContent="space-between">
       <Grid item md={10} xs={8} style={{ paddingRight: '10px' }}>
-        <TextField
-          fullWidth
-          id="standard-full-width"
-          style={{ margin: 0 }}
-          label={placeholder}
-          value={value}
-          onChange={e => setValue(e.target.value)}
-          multiline
-          size="small"
-          margin="normal"
-          variant="outlined"
-          InputLabelProps={{
-            shrink: true
-          }}
-          inputProps={{ 'data-testid': 'body_input' }}
+        <ReusableMentionsInput
+          commentValue={value}
+          setCommentValue={setValue}
+          data={mentionsData}
+          setMentions={setMentionedDocuments}
         />
       </Grid>
       <Grid item md={2} xs={2}>
@@ -55,7 +47,7 @@ export default function CommentTextField({
           type="submit"
           disabled={!value.trim() || loading}
           data-testid="comment_btn"
-          style={{ height: '40px', width: '80px', padding: '5px' }}
+          style={{ height: '44px', width: '80px' }}
           onClick={handleSubmit}
           size="small"
           fullWidth
@@ -134,13 +126,13 @@ CommentTextField.defaultProps = {
   setSelectedUser: null,
   autoCompleteOpen: false,
   setAutoCompleteOpen: null,
-  taskAssignees: null
+  taskAssignees: null,
+  mentionsData: []
 };
 
 CommentTextField.propTypes = {
   value: PropTypes.string.isRequired,
   actionTitle: PropTypes.string.isRequired,
-  placeholder: PropTypes.string.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   setValue: PropTypes.func.isRequired,
   loading: PropTypes.bool,
@@ -149,5 +141,12 @@ CommentTextField.propTypes = {
   setSelectedUser: PropTypes.func,
   autoCompleteOpen: PropTypes.bool,
   setAutoCompleteOpen: PropTypes.func,
-  taskAssignees: PropTypes.array
+  taskAssignees: PropTypes.array,
+  setMentionedDocuments: PropTypes.func.isRequired,
+  mentionsData: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string,
+      display: PropTypes.string
+    })
+  )
 };

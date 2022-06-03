@@ -12,7 +12,8 @@ export default function CommentField({
   taskId,
   commentsRefetch,
   forProcess,
-  taskAssignees
+  taskAssignees,
+  taskDocuments
 }) {
   const [commentCreate] = useMutation(TaskComment);
   const [body, setBody] = useState('');
@@ -20,13 +21,15 @@ export default function CommentField({
   const [autoCompleteOpen, setAutoCompleteOpen] = useState(false);
   const [error, setErrorMessage] = useState('');
   const [loading, setLoading] = useState(false);
+  const [mentionedDocuments, setMentionedDocuments] = useState([]);
   const { t } = useTranslation('common');
 
   function handleSubmit(event) {
     event.preventDefault();
     let variables = {
       noteId: taskId,
-      body
+      body,
+      mentionedDocuments
     };
     if (replyFrom) {
       variables = {
@@ -52,6 +55,10 @@ export default function CommentField({
         setLoading(false);
       });
   }
+
+  const mentionsData = taskDocuments?.map(doc => {
+    return { id: doc.id, display: doc.filename };
+  });
   return (
     <>
       <CommentTextField
@@ -67,6 +74,8 @@ export default function CommentField({
         setAutoCompleteOpen={setAutoCompleteOpen}
         taskAssignees={taskAssignees}
         loading={loading}
+        mentionsData={mentionsData}
+        setMentionedDocuments={setMentionedDocuments}
       />
       <CommentCard
         comments={data.taskComments}
@@ -84,7 +93,8 @@ CommentField.defaultProps = {
   taskId: '',
   commentsRefetch: () => {},
   forProcess: false,
-  taskAssignees: null
+  taskAssignees: null,
+  taskDocuments: null
 };
 CommentField.propTypes = {
   data: PropTypes.shape({
@@ -94,5 +104,6 @@ CommentField.propTypes = {
   taskId: PropTypes.string,
   commentsRefetch: PropTypes.func,
   forProcess: PropTypes.bool,
-  taskAssignees: PropTypes.array
+  taskAssignees: PropTypes.array,
+  taskDocuments: PropTypes.arrayOf(PropTypes.object)
 };
