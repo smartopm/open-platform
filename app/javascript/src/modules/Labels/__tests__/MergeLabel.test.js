@@ -3,7 +3,7 @@ import { render, waitFor } from '@testing-library/react'
 import { BrowserRouter } from 'react-router-dom/'
 import { MockedProvider } from '@apollo/react-testing'
 import MergeLabel from '../Components/MergeLabel'
-import '@testing-library/jest-dom/extend-expect'
+
 
 describe('Merge Label Component', () => {
   const handleClose = jest.fn()

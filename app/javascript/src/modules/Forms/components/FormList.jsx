@@ -27,6 +27,7 @@ import FormHeader from '../../../shared/PageHeader';
 import FormMenu from './FormMenu';
 import CenteredContent from '../../../shared/CenteredContent';
 import PageWrapper from '../../../shared/PageWrapper';
+import AccessCheck from '../../Permissions/Components/AccessCheck';
 
 // here we get existing google forms and we mix them with our own created forms
 export default function FormLinkList({ userType, community, path, id, t }) {
@@ -46,7 +47,7 @@ export default function FormLinkList({ userType, community, path, id, t }) {
     setFormId(Id);
   }
 
-  if (loading) return <Loading />
+  if (loading) return <Loading />;
   if (error) return <ErrorPage title={error.message} />;
 
   return (
@@ -133,13 +134,13 @@ export default function FormLinkList({ userType, community, path, id, t }) {
               </CenteredContent>
             )}
           </List>
-          {userType === 'admin' && (
+          <AccessCheck module="forms" allowedPermissions={['can_create_form']}>
             <FloatButton
               title={t('actions.create_a_form')}
               handleClick={() => history.push('/forms/create')}
               otherClassNames="new-permit-request-form-btn"
             />
-          )}
+          </AccessCheck>
         </>
       )}
     </div>
@@ -148,7 +149,7 @@ export default function FormLinkList({ userType, community, path, id, t }) {
 
 FormLinkList.defaultProps = {
   id: null
-}
+};
 
 FormLinkList.propTypes = {
   userType: PropTypes.string.isRequired,

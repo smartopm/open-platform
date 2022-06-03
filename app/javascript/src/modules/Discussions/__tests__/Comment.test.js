@@ -8,7 +8,7 @@ import { commentStatusAction } from '../../../utils/constants';
 import Comments from '../Components/Comment';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import { createClient } from '../../../utils/apollo';
-import '@testing-library/jest-dom/extend-expect';
+
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 jest.mock('react-router', () => ({

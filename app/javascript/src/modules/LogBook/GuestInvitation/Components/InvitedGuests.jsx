@@ -1,4 +1,4 @@
-import { Container, Grid, Typography } from '@mui/material';
+import { Container, Dialog, DialogContent, DialogTitle, Grid, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/styles';
 import React, { useContext, useState } from 'react';
 import { useQuery, useMutation } from 'react-apollo';
@@ -17,7 +17,10 @@ import { InvitationUpdateMutation } from '../graphql/mutations';
 import { useStyles } from '../styles';
 import GuestListCard from './GuestListCard';
 import MessageAlert from '../../../../components/MessageAlert';
-import { formatError } from '../../../../utils/helpers';
+import { formatError , ifNotTest } from '../../../../utils/helpers';
+import { validateGuest } from '../helpers';
+import GuestInviteForm from './GuestInviteForm';
+
 
 export default function InvitedGuests() {
   const history = useHistory();
@@ -38,8 +41,23 @@ export default function InvitedGuests() {
   const [currentInvite, setCurrentInvite] = useState({ id: '', loading: false, status: null });
   const open = Boolean(anchorEl);
   const [details, setDetails] = useState({ message: '', isError: false });
+  const [openEditModal, setOpenEditModal] = useState(false);
+  const fullScreen = useMediaQuery(theme.breakpoints.down('xs'));
+  const [isLoading, setLoading] = useState(false);
+  const [message, setMessage] = useState('');
+
+  function handleEditOpen() {
+    handleMenuClose();
+    setOpenEditModal(!openEditModal);
+  }
 
   const menuList = [
+    {
+      content: currentInvite.status !== 'cancelled' && t('common:menu.edit'),
+      isVisible: true,
+      isAdmin: false,
+      handleClick: () => handleEditOpen()
+    },
     {
       content:
         currentInvite.status === 'cancelled'
@@ -51,10 +69,28 @@ export default function InvitedGuests() {
     }
   ];
 
+  function updateList() {
+    refetch();
+    setOpenEditModal(!openEditModal);
+  }
+
   function handleMenu(event, invite) {
     event.stopPropagation();
+
     setAnchorEl(event.currentTarget);
-    setCurrentInvite({ ...currentInvite, id: invite.id, status: invite.status });
+    setCurrentInvite(
+      {
+        ...currentInvite,
+        id: invite.id,
+        status: invite.status,
+        startsAt: invite.entryTime.startsAt,
+        endsAt: invite.entryTime.endsAt,
+        occursOn: invite.entryTime.occursOn,
+        visitationDate: invite.entryTime.visitationDate,
+        visitEndDate: invite.entryTime.visitEndDate,
+        loading: isLoading,
+        name: invite.guest.name
+      });
   }
 
   function handleMenuClose() {
@@ -81,6 +117,52 @@ export default function InvitedGuests() {
       });
   }
 
+  function updateGuest(guestData) {
+    const validInfo = validateGuest({
+      update: true,
+      guestData: {
+        visitationDate: guestData?.visitationDate,
+        startsAt: guestData?.startsAt,
+        endsAt: guestData?.endsAt
+      },
+      t
+    });
+
+    if (!validInfo.valid && ifNotTest()) {
+      setDetails({ ...details, isError: true, message: validInfo.message });
+      setMessage(validInfo.message);
+      return;
+    }
+
+    setCurrentInvite({ ...currentInvite, loading: true });
+    setLoading(true);
+    inviteUpdate({
+      variables: {
+        inviteId: currentInvite?.id,
+        startsAt: guestData?.startsAt,
+        endsAt: guestData?.endsAt,
+        visitEndDate: guestData?.visitEndDate,
+        visitationDate: guestData?.visitationDate,
+        occursOn: guestData?.occursOn
+      }
+    })
+      .then(() => {
+        setDetails({
+          ...details,
+          isError: false,
+          message: t('logbook.invite_updated_successful')
+        });
+        setCurrentInvite({ ...currentInvite, loading: false });
+        setLoading(false);
+        updateList();
+      })
+      .catch(err => {
+        setCurrentInvite({ ...currentInvite, loading: false });
+        setDetails({ ...details, isError: true, message: formatError(err.message) });
+        setLoading(false);
+      });
+  }
+
   const menuData = {
     menuList,
     handleMenu,
@@ -91,6 +173,29 @@ export default function InvitedGuests() {
   };
   return (
     <Container maxWidth="xl">
+      <Dialog
+        fullScreen={fullScreen}
+        open={openEditModal}
+        fullWidth
+        maxWidth="sm"
+        onClose={() => setOpenEditModal(!openEditModal)}
+        aria-labelledby="responsive-edit-dialog-title"
+      >
+        <DialogTitle id="responsive-edit-dialog-title">
+          <CenteredContent>
+            <span>{t('guest.edit')}</span>
+          </CenteredContent>
+        </DialogTitle>
+        <DialogContent dividers>
+          <GuestInviteForm
+            onUpdate={updateGuest}
+            inviteDetails={currentInvite}
+            close={updateList}
+            update
+          />
+          {Boolean(message?.length) && <CenteredContent>{message}</CenteredContent>}
+        </DialogContent>
+      </Dialog>
       <MessageAlert
         type={!details.isError ? 'success' : 'error'}
         message={details.message}

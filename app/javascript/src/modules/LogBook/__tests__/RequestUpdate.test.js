@@ -1,7 +1,7 @@
 /* eslint-disable jest/expect-expect */
 import React from 'react';
 import { act, render } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
+
 import { BrowserRouter } from 'react-router-dom';
 import { ApolloProvider } from 'react-apollo';
 import { MockedProvider } from '@apollo/react-testing';

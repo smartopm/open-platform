@@ -1,6 +1,6 @@
 import React from 'react'
 import { fireEvent, render } from '@testing-library/react'
-import '@testing-library/jest-dom/extend-expect'
+
 import TitleDescriptionForm from '../components/TitleDescriptionForm'
 
 describe('Form with a title and a description component', () => {

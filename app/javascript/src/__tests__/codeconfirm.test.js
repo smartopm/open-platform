@@ -4,7 +4,7 @@ import { MockedProvider } from '@apollo/react-testing'
 import { render, waitFor } from '@testing-library/react'
 import CodeScreen from '../components/AuthScreens/ConfirmCodeScreen'
 import currentCommunity from '../__mocks__/currentCommunity';
-import '@testing-library/jest-dom/extend-expect';
+
 
 describe('Code Confirmation Screen', () => {
   const params = {

@@ -2,7 +2,7 @@ import React from 'react';
 import { fireEvent, render } from '@testing-library/react';
 import routeData, { MemoryRouter } from 'react-router';
 import GuestListCard from '../../Components/GuestListCard';
-import '@testing-library/jest-dom/extend-expect';
+
 import MockedThemeProvider from '../../../../__mocks__/mock_theme';
 
 describe('Render Guest List Card Component', () => {

@@ -3,7 +3,7 @@ import { render } from '@testing-library/react';
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min';
 import ActionCard from '../components/ActionCard';
-import '@testing-library/jest-dom/extend-expect';
+
 import MockedThemeProvider from '../modules/__mocks__/mock_theme';
 
 const props = {

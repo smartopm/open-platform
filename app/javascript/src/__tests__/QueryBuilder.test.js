@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
+
 import MuiConfig from 'react-awesome-query-builder/lib/config/mui';
 import QueryBuilder from '../components/QueryBuilder';
 import { Context } from '../containers/Provider/AuthStateProvider';

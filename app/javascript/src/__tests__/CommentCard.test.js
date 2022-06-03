@@ -3,7 +3,7 @@ import { render, fireEvent } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom/';
 import { MockedProvider } from '@apollo/react-testing';
 import CommentCard from '../modules/Tasks/Components/CommentCard';
-import '@testing-library/jest-dom/extend-expect';
+
 import { Context } from '../containers/Provider/AuthStateProvider';
 import authState from '../__mocks__/authstate';
 

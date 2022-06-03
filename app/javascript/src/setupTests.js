@@ -6,6 +6,7 @@ import * as Aphrodite from 'aphrodite';
 import * as AphroditeNoImportant from 'aphrodite/no-important';
 import { JSDOM } from 'jsdom';
 import ReactGA from 'react-ga';
+import '@testing-library/jest-dom/extend-expect';
 
 ReactGA.initialize('dummy', { testMode: true });
 

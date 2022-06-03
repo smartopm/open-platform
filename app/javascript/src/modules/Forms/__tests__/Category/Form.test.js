@@ -1,6 +1,6 @@
 import React from 'react';
 import { fireEvent, render, waitFor } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
+
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom';
 import FormContextProvider from '../../Context';
@@ -148,7 +148,7 @@ describe('Form Component', () => {
       expect(wrapper.queryByTestId('submit_form_btn')).toBeInTheDocument();
     }, 1000);
   });
-  it('should not contain draft button if no user', async () => {
+  it('should not contain draft and submit button if no user', async () => {
     const wrapper = render(
       <Context.Provider value={{}}>
         <MockedProvider mocks={[formCategoriesMock]} addTypename={false}>
@@ -165,7 +165,7 @@ describe('Form Component', () => {
 
     await waitFor(() => {
       expect(wrapper.queryByTestId('save_as_draft')).not.toBeInTheDocument();
-      expect(wrapper.queryByTestId('submit_form_btn')).toBeInTheDocument();
+      expect(wrapper.queryByTestId('submit_form_btn')).not.toBeInTheDocument();
     });
   });
 });

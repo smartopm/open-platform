@@ -7,7 +7,7 @@ import 'leaflet';
 import 'leaflet-draw';
 import LandParcelPage from '../../containers/LandParcels/LandParcel';
 import LandParcelList from '../../components/LandParcels/LandParcel';
-import '@testing-library/jest-dom/extend-expect';
+
 import { LandParcel as LandParcelQuery, ParcelsQuery } from '../../graphql/queries';
 import { Spinner } from '../../shared/Loading';
 import MockedThemeProvider from '../../modules/__mocks__/mock_theme';

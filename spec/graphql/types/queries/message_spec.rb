@@ -4,10 +4,16 @@ require 'rails_helper'
 
 RSpec.describe Types::Queries::Message do
   describe 'message' do
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:permission) do
+      create(:permission, module: 'messages',
+                          role: admin_role,
+                          permissions: %w[can_access_user_messages can_access_messages])
+    end
     let!(:current_user) { create(:user_with_community) }
     let!(:role) { current_user.role }
     let!(:another_user) { create(:user, community_id: current_user.community_id, role: role) }
-    let!(:admin) { create(:admin_user, community_id: current_user.community_id) }
+    let!(:admin) { create(:admin_user, community_id: current_user.community_id, role: admin_role) }
     let!(:campaign) { create(:campaign, community_id: current_user.community_id) }
     # admin sends a message to current_user
     let!(:adm_cuser_msg) do

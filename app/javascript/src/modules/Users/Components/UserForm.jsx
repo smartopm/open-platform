@@ -1,3 +1,7 @@
+/* eslint-disable max-params */
+/* eslint-disable max-lines */
+/* eslint-disable max-statements */
+/* eslint-disable complexity */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import React from 'react';
 import MenuItem from '@mui/material/MenuItem';
@@ -10,18 +14,24 @@ import { useApolloClient, useLazyQuery, useMutation } from 'react-apollo';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import PhoneInput from 'react-phone-input-2';
-import { reasons, requiredFields, userState, userSubStatus, userStatus } from '../../../utils/constants';
+import {
+  reasons,
+  requiredFields,
+  userState,
+  userSubStatus,
+  userStatus
+} from '../../../utils/constants';
 import DatePickerDialog from '../../../components/DatePickerDialog';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
 import { UserQuery } from '../../../graphql/queries';
 import { CreateUserMutation, NonAdminUpdateMutation } from '../../../graphql/mutations';
 import useFileUpload from '../../../graphql/useFileUpload';
 import crudHandler from '../../../graphql/crud_handler';
-import Loading from '../../../shared/Loading';
+import { Spinner } from '../../../shared/Loading';
 import FormOptionInput, { FormOptionWithOwnActions } from '../../Forms/components/FormOptionInput';
 import { saniteError, validateEmail } from '../../../utils/helpers';
 import { ModalDialog } from '../../../components/Dialog';
-import CenteredContent from '../../../components/CenteredContent';
+import CenteredContent from '../../../shared/CenteredContent';
 import { UpdateUserMutation } from '../../../graphql/mutations/user';
 import ImageAuth from '../../../shared/ImageAuth';
 
@@ -46,7 +56,7 @@ export function formatContactType(value, type) {
   return { contactType: type, info: value };
 }
 
-export default function UserForm({ isEditing, isFromRef, isAdmin }) {
+export default function UserForm({ isEditing, isFromRef, isAdminOrMarketingAdmin }) {
   const { id } = useParams();
   const history = useHistory();
   const { t } = useTranslation('common');
@@ -65,7 +75,9 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
   const { isLoading, error, result, createOrUpdate, loadRecord } = crudHandler({
     typeName: 'user',
     readLazyQuery: useLazyQuery(UserQuery),
-    updateMutation: useMutation(isAdmin ? UpdateUserMutation : NonAdminUpdateMutation),
+    updateMutation: useMutation(
+      isAdminOrMarketingAdmin ? UpdateUserMutation : NonAdminUpdateMutation
+    ),
     createMutation: useMutation(CreateUserMutation)
   });
   const { onChange, status, signedBlobId } = useFileUpload({
@@ -85,9 +97,9 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
 
   function handleSubmit(event) {
     event.preventDefault();
-    if(!validateEmail(data.email)){
+    if (!validateEmail(data.email)) {
       setEmailValidationError(t('common:errors.invalid_email'));
-      return
+      return;
     }
     setSubmitting(true);
     const secondaryInfo = {
@@ -146,7 +158,7 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
 
   if (id) {
     if (isLoading) {
-      return <Loading />;
+      return <Spinner />;
     }
     if (!result.id && !error) {
       loadRecord({ variables: { id } });
@@ -181,58 +193,76 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
       });
   }
 
-  const phoneContactInfos = data?.contactInfos?.filter(c => c.contactType === 'phone')
-  const emailContactInfos = data?.contactInfos?.filter(c => c.contactType === 'email')
-  const addressContactInfos = data?.contactInfos?.filter(c => c.contactType === 'address')
+  const phoneContactInfos = data?.contactInfos?.filter(c => c.contactType === 'phone');
+  const emailContactInfos = data?.contactInfos?.filter(c => c.contactType === 'email');
+  const addressContactInfos = data?.contactInfos?.filter(c => c.contactType === 'address');
 
-  function changeOptionAndUpdate(index, value, optionsToUpdate, rest ){
+  function changeOptionAndUpdate(index, value, optionsToUpdate, rest) {
     const newValue = [...optionsToUpdate];
     newValue[Number(index)].info = value;
     setData({
       ...data,
-      contactInfos: [...newValue, ...rest ]
+      contactInfos: [...newValue, ...rest]
     });
   }
 
   function handleOptionChange(event, index, type) {
-    const {value} = event.target;
+    const { value } = event.target;
 
-    if(type === 'phone'){
-      changeOptionAndUpdate(index, value, phoneContactInfos, [...emailContactInfos, ...addressContactInfos])
+    if (type === 'phone') {
+      changeOptionAndUpdate(index, value, phoneContactInfos, [
+        ...emailContactInfos,
+        ...addressContactInfos
+      ]);
       return;
     }
 
-    if(type === 'email'){
-      changeOptionAndUpdate(index, value, emailContactInfos, [...phoneContactInfos, ...addressContactInfos]);
+    if (type === 'email') {
+      changeOptionAndUpdate(index, value, emailContactInfos, [
+        ...phoneContactInfos,
+        ...addressContactInfos
+      ]);
       return;
     }
 
-    if(type === 'address'){
-      changeOptionAndUpdate(index, value, addressContactInfos, [...phoneContactInfos, ...emailContactInfos]);
+    if (type === 'address') {
+      changeOptionAndUpdate(index, value, addressContactInfos, [
+        ...phoneContactInfos,
+        ...emailContactInfos
+      ]);
     }
   }
 
-  function removeOptionAndUpdate(index, optionsToUpdate, rest){
+  function removeOptionAndUpdate(index, optionsToUpdate, rest) {
     optionsToUpdate.splice(index, 1);
     setData({
       ...data,
-      contactInfos: [ ...optionsToUpdate, ...rest ]
-    })
+      contactInfos: [...optionsToUpdate, ...rest]
+    });
   }
 
   function handleRemoveOption(index, type) {
-    if(type === 'phone') {
-      removeOptionAndUpdate(index, phoneContactInfos, [...emailContactInfos, ...addressContactInfos])
+    if (type === 'phone') {
+      removeOptionAndUpdate(index, phoneContactInfos, [
+        ...emailContactInfos,
+        ...addressContactInfos
+      ]);
       return;
     }
 
-    if(type === 'email') {
-      removeOptionAndUpdate(index, emailContactInfos, [...phoneContactInfos, ...addressContactInfos])
+    if (type === 'email') {
+      removeOptionAndUpdate(index, emailContactInfos, [
+        ...phoneContactInfos,
+        ...addressContactInfos
+      ]);
       return;
     }
 
-    if(type === 'address') {
-      removeOptionAndUpdate(index, addressContactInfos, [...phoneContactInfos, ...emailContactInfos])
+    if (type === 'address') {
+      removeOptionAndUpdate(index, addressContactInfos, [
+        ...phoneContactInfos,
+        ...emailContactInfos
+      ]);
     }
   }
 
@@ -356,10 +386,9 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
             onChange={handleInputChange}
             value={data.email || ''}
             inputProps={{ 'data-testid': 'email' }}
-            disabled={!isFromRef && !isAdmin}
+            disabled={!isFromRef && !isAdminOrMarketingAdmin}
             error={!!emailError}
             helperText={emailError}
-
           />
         </div>
 
@@ -378,17 +407,19 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
             </div>
 
             {phoneContactInfos.length > 0 && (
-            <div>
-              <Typography align="center" variant="caption">{t('common:form_fields.secondary_number')}</Typography>
-              <FormOptionWithOwnActions
-                options={phoneContactInfos}
-                actions={{
-                        handleRemoveOption: (i) => handleRemoveOption(i, 'phone'),
-                        handleOptionChange: (event, index) => handleOptionChange(event, index, 'phone')
-                      }}
-              />
-            </div>
-)}
+              <div>
+                <Typography align="center" variant="caption">
+                  {t('common:form_fields.secondary_number')}
+                </Typography>
+                <FormOptionWithOwnActions
+                  options={phoneContactInfos}
+                  actions={{
+                    handleRemoveOption: i => handleRemoveOption(i, 'phone'),
+                    handleOptionChange: (event, index) => handleOptionChange(event, index, 'phone')
+                  }}
+                />
+              </div>
+            )}
 
             <FormOptionInput
               label={t('common:form_fields.secondary_number')}
@@ -396,17 +427,19 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
               setOptions={setPhoneNumbers}
             />
             {emailContactInfos.length > 0 && (
-            <div>
-              <Typography align="center" variant="caption">{t('common:form_fields.secondary_email')}</Typography>
-              <FormOptionWithOwnActions
-                options={emailContactInfos}
-                actions={{
-                      handleRemoveOption: (i) => handleRemoveOption(i, 'email'),
-                      handleOptionChange: (event, index) => handleOptionChange(event, index, 'email')
-                    }}
-              />
-            </div>
-)}
+              <div>
+                <Typography align="center" variant="caption">
+                  {t('common:form_fields.secondary_email')}
+                </Typography>
+                <FormOptionWithOwnActions
+                  options={emailContactInfos}
+                  actions={{
+                    handleRemoveOption: i => handleRemoveOption(i, 'email'),
+                    handleOptionChange: (event, index) => handleOptionChange(event, index, 'email')
+                  }}
+                />
+              </div>
+            )}
 
             <FormOptionInput
               label={t('common:form_fields.secondary_email')}
@@ -428,23 +461,26 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
 
             {addressContactInfos.length > 0 && (
               <div>
-                <Typography align="center" variant="caption">{t('common:form_fields.secondary_address')}</Typography>
+                <Typography align="center" variant="caption">
+                  {t('common:form_fields.secondary_address')}
+                </Typography>
                 <FormOptionWithOwnActions
                   options={addressContactInfos}
                   actions={{
-                        handleRemoveOption: (i) => handleRemoveOption(i, 'address'),
-                        handleOptionChange: (event, index) => handleOptionChange(event, index, 'address')
-                      }}
+                    handleRemoveOption: i => handleRemoveOption(i, 'address'),
+                    handleOptionChange: (event, index) =>
+                      handleOptionChange(event, index, 'address')
+                  }}
                 />
               </div>
-)}
+            )}
 
             <FormOptionInput
               label={t('common:form_fields.secondary_address')}
               options={address}
               setOptions={setAddress}
             />
-            {isAdmin && (
+            {isAdminOrMarketingAdmin && (
               <>
                 <div className="form-group">
                   <TextField
@@ -467,8 +503,7 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
                   </TextField>
                 </div>
                 <div className="form-group">
-                  {
-                    communityRoles && (
+                  {communityRoles && (
                     <TextField
                       id="userType"
                       select
@@ -482,15 +517,13 @@ export default function UserForm({ isEditing, isFromRef, isAdmin }) {
                       className={`${css(styles.selectInput)}`}
                     >
                       <MenuItem value="" />
-                      {
-                      communityRoles.map(key => (
+                      {communityRoles.map(key => (
                         <MenuItem key={key} value={key}>
                           {t(`user_types.${key}`)}
                         </MenuItem>
                       ))}
                     </TextField>
-                    )
-                  }
+                  )}
                 </div>
 
                 <div className="form-group">
@@ -670,5 +703,5 @@ const styles = StyleSheet.create({
 UserForm.propTypes = {
   isEditing: PropTypes.bool.isRequired,
   isFromRef: PropTypes.bool.isRequired,
-  isAdmin: PropTypes.bool.isRequired
+  isAdminOrMarketingAdmin: PropTypes.bool.isRequired
 };

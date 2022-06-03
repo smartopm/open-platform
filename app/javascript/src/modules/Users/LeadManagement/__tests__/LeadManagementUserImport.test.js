@@ -2,7 +2,7 @@ import React from 'react';
 import { render, waitFor, fireEvent, screen } from '@testing-library/react';
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom';
-import '@testing-library/jest-dom/extend-expect';
+
 import LeadManagementUserImport from '../Containers/LeadManagementUserImport';
 import * as utils from '../../utils';
 import { ImportCreate } from '../../../../graphql/mutations';

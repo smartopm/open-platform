@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
+
 import { MockedProvider } from '@apollo/react-testing';
 import routeData, { MemoryRouter } from 'react-router';
 import UserAvatarOptions from '../Components/UserActionOptions';

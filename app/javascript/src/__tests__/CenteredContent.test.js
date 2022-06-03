@@ -1,7 +1,7 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import CenteredContent from '../shared/CenteredContent'
-import '@testing-library/jest-dom/extend-expect'
+
 
 describe('component that centers divs', () => {
 

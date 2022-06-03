@@ -201,6 +201,7 @@ admin:
       - can_update_user_label
       - can_fetch_all_labels
       - can_fetch_label_users
+      - can_fetch_user_labels
       - can_see_menu_item
   community:
     permissions:
@@ -276,6 +277,11 @@ admin:
       - can_update_lead_log
       - can_fetch_lead_logs
       - can_access_lead_scorecard
+  messages:
+    permissions:
+      - can_see_menu_item
+      - can_access_messages
+      - can_access_user_messages
 contractor:
   note:
     permissions:
@@ -475,6 +481,7 @@ security_guard:
     permissions:
       - can_access_dashboard
       - can_see_menu_item
+      - can_access_guard_dashboard
   logout:
     permissions:
       - can_see_menu_item

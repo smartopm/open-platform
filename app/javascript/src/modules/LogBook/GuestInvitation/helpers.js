@@ -7,8 +7,8 @@ export function filterEmptyObjectByKey(arr, key) {
   return arr.filter(value => objectAccessor(value, key).length !== 0);
 }
 
-export function validateGuest({ guests, userIds, t, guestData }) {
-  if (!userIds?.length && !guests?.length) {
+export function validateGuest({ guests, userIds, t, guestData, update }) {
+  if (!update && !userIds?.length && !guests?.length) {
     return { msg: t('common:errors.no_guests_to_invite'), valid: false };
   }
   const values = Object.values(guestData);

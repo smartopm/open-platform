@@ -12,7 +12,7 @@ export default {
     icon: <FilterAltIcon />
   },
   name: t => t('menu.leads'),
-  moduleName: 'user',
+  moduleName: 'lead',
   featureName: 'Users',
   accessibleBy: [],
   subMenu: [
@@ -24,7 +24,7 @@ export default {
       },
       name: t => t('lead_management.scorecard'),
       featureName: 'Users',
-      moduleName: 'user',
+      moduleName: 'lead',
       accessibleBy: []
     },
     {
@@ -34,7 +34,7 @@ export default {
       },
       name: t => t('menu.lead_users'),
       featureName: 'Users',
-      moduleName: 'user',
+      moduleName: 'lead',
       accessibleBy: []
     }
   ]
