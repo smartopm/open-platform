@@ -182,6 +182,7 @@ admin:
       - can_view_hosts
       - can_update_invitation
       - can_search_user_ids
+      - can_create_users_via_csv
   profile:
     permissions:
       - can_see_menu_item

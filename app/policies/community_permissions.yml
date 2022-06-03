@@ -639,6 +639,7 @@ DoubleGDP:
         - can_search_user_ids
         - can_get_substatus_count
         - can_get_substatus_distribution
+        - can_create_users_via_csv
     profile:
       permissions:
         - can_see_menu_item
@@ -807,6 +808,7 @@ Enyimba:
         - can_search_user_ids
         - can_get_substatus_count
         - can_get_substatus_distribution
+        - can_create_users_via_csv
     profile:
       permissions:
         - can_see_menu_item
