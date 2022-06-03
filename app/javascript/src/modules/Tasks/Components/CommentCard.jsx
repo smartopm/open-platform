@@ -30,7 +30,7 @@ import { useParamsQuery, objectAccessor, replaceDocumentMentions } from '../../.
 import { TaskComment } from '../../../graphql/mutations';
 import { ResolveComments } from '../graphql/task_mutation';
 
-export default function CommentCard({ comments, refetch, commentsRefetch, forAccordionSection }) {
+export default function CommentCard({ comments, refetch, commentsRefetch, forAccordionSection, mentionsData }) {
   const [open, setOpen] = useState(false);
   const [editId, setEditId] = useState(null);
   const [edit, setEdit] = useState(false);
@@ -340,6 +340,7 @@ export default function CommentCard({ comments, refetch, commentsRefetch, forAcc
                       data={com}
                       refetch={refetch}
                       commentsRefetch={commentsRefetch}
+                      mentionsData={mentionsData}
                     />
                   )}
                 </Fragment>
@@ -446,14 +447,21 @@ export default function CommentCard({ comments, refetch, commentsRefetch, forAcc
 CommentCard.defaultProps = {
   comments: [],
   commentsRefetch: () => {},
-  forAccordionSection: null
+  forAccordionSection: null,
+  mentionsData: []
 };
 CommentCard.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   comments: PropTypes.array,
   refetch: PropTypes.func.isRequired,
   commentsRefetch: PropTypes.func,
-  forAccordionSection: PropTypes.bool
+  forAccordionSection: PropTypes.bool,
+  mentionsData: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string,
+      display: PropTypes.string
+    })
+  )
 };
 
 const useStyles = makeStyles(() => ({

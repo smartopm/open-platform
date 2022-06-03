@@ -82,6 +82,7 @@ export default function CommentField({
         comments={data.taskComments}
         refetch={refetch}
         commentsRefetch={commentsRefetch}
+        mentionsData={mentionsData}
         forAccordionSection
       />
       {Boolean(error.length) && <p className="text-center">{error}</p>}
