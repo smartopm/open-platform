@@ -31,10 +31,12 @@
     "icon_url": "icon-url",
     "owner": "Owner",
     "poi_name": "POI Name",
+    "poi_description": "Description",
     "postal_code":"Postal Code",
     "property_number": "Property Number",
     "property_type": "Property Type",
-    "state_province": "State Province"
+    "state_province": "State Province",
+    "youtube_video_url": "Video"
   },
   "map_markers": {
     "available": "Available",
@@ -89,7 +91,8 @@
     "in_construction": "In Construction",
     "view_plan": "View Plan",
     "view_results_on_map": "View results on map",
-    "yes": "Yes"
+    "yes": "Yes",
+    "no_description": "No Description"
   },
   "poi_list": {
     "id": "ID:",

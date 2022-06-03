@@ -15,6 +15,7 @@ export default function CreatePointOfInterest({ refetch }) {
   const [open, setOpen] = useState(false)
   const [isSuccessAlert, setIsSuccessAlert] = useState(false)
   const [messageAlert, setMessageAlert] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const history = useHistory()
   const path = useParamsQuery('')
   const type = path.get('type');
@@ -36,10 +37,12 @@ export default function CreatePointOfInterest({ refetch }) {
   }
 
   function handleSubmit(variables) {
+    setIsSubmitting(true)
     addPointOfInterest({ variables }).then(() => {
       setMessageAlert(t('messages.poi_added'))
       setIsSuccessAlert(true)
       setOpen(false);
+      setIsSubmitting(false)
       refetch();
       history.push('/land_parcels')
       window.location.reload()
@@ -73,6 +76,7 @@ export default function CreatePointOfInterest({ refetch }) {
       <PointOfInterestModal
         open={open}
         handleClose={closeNewPointOfInterestModal}
+        isSubmitting={isSubmitting}
         handleSubmit={handleSubmit}
       />
       <MessageAlert

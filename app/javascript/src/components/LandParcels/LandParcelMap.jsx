@@ -10,7 +10,7 @@ import MarkerClusterGroup from 'react-leaflet-markercluster';
 import { useTranslation } from 'react-i18next';
 import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider';
 import NkwashiSuburbBoundaryData from '../../data/nkwashi_suburb_boundary.json';
-import poiIcon from '../../../../assets/images/poi-icon.png'
+import poiIcon from '../../../../assets/images/poi-icon.svg'
 import { LandParcel } from '../../graphql/queries';
 import {
   PointOfInterestDelete,
@@ -18,13 +18,14 @@ import {
 } from '../../graphql/mutations/land_parcel';
 import useFileUpload from '../../graphql/useFileUpload';
 import { checkValidGeoJSON, formatError, objectAccessor } from '../../utils/helpers';
-import { emptyPolygonFeature, mapTiles, plotStatusColorPallete } from '../../utils/constants';
+import { emptyPolygonFeature, mapTiles, publicMapToken, plotStatusColorPallete } from '../../utils/constants';
 import { ActionDialog } from '../Dialog';
 import MessageAlert from '../MessageAlert';
 import PointOfInterestDrawerDialog from '../Map/PointOfInterestDrawerDialog';
 import SubUrbanLayer from '../Map/SubUrbanLayer';
 
-const { attribution, openStreetMap, centerPoint } = mapTiles;
+const { attribution, mapboxStreets, centerPoint } = mapTiles;
+const { mapbox: mapboxPublicToken } = publicMapToken
 
 /* istanbul ignore next */
 function getColor(plotSold) {
@@ -164,7 +165,8 @@ export default function LandParcelMap({ handlePlotClick, geoData }) {
         parcel_no: parcelNumber,
         parcel_type: parcelType,
         long_x: longX,
-        lat_y: latY
+        lat_y: latY,
+        video_urls: videoUrls
       }
     } = target.feature;
 
@@ -175,7 +177,8 @@ export default function LandParcelMap({ handlePlotClick, geoData }) {
       parcelNumber,
       parcelType,
       longX,
-      latY
+      latY,
+      videoUrls: videoUrls || []
     });
 
     loadParcel({ variables: { id } });
@@ -378,8 +381,11 @@ export default function LandParcelMap({ handlePlotClick, geoData }) {
           maxZoom={40}
         >
           <LayersControl position="topleft">
-            <LayersControl.BaseLayer checked name="OSM">
-              <TileLayer attribution={attribution} url={openStreetMap} />
+            <LayersControl.BaseLayer checked name="Mapbox">
+              <TileLayer
+                attribution={attribution}
+                url={`${mapboxStreets}${mapboxPublicToken}`}
+              />
             </LayersControl.BaseLayer>
             {Array.isArray(properties) && properties?.length && (
               <LayersControl.Overlay checked name="Land Parcels">
