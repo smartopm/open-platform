@@ -7,7 +7,7 @@ namespace :db do
   task add_permissions_to_community_roles: :environment do
     ActiveRecord::Base.transaction do
       valid_community_names = ['Nkwashi', 'Ciudad Morazán', 'DoubleGDP', 'Tilisi',
-                               'DAST', 'Enyimba']
+                               'DAST', 'Enyimba', 'Greenpark']
       community_hash = {}
       Community.find_each do |community|
         name = community.name

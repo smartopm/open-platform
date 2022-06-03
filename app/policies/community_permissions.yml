@@ -435,7 +435,7 @@ DoubleGDP:
         - can_access_all_discussions
         - can_create_post
         - can_view_posts
-  
+
   developer:
     note:
       permissions:
@@ -490,7 +490,7 @@ DoubleGDP:
         - can_access_all_discussions
         - can_create_post
         - can_view_posts
-  
+
   site_worker:
     profile:
       permissions:
@@ -516,7 +516,7 @@ DoubleGDP:
       permissions:
         - can_fetch_logbook_events
 
-  marketing_admin: 
+  marketing_admin:
     note:
       permissions:
         - can_create_note
@@ -655,7 +655,7 @@ DoubleGDP:
         - can_create_lead_log
         - can_update_lead_log
         - can_fetch_lead_logs
-        - can_access_lead_scorecard    
+        - can_access_lead_scorecard
     discussion:
       permissions:
         - can_create_discussion
@@ -684,7 +684,7 @@ DoubleGDP:
         - can_access_messages
         - can_access_user_messages
 Enyimba:
-  marketing_admin: 
+  marketing_admin:
     note:
       permissions:
         - can_create_note
@@ -823,7 +823,7 @@ Enyimba:
         - can_create_lead_log
         - can_update_lead_log
         - can_fetch_lead_logs
-        - can_access_lead_scorecard    
+        - can_access_lead_scorecard
     discussion:
       permissions:
         - can_create_discussion
@@ -851,3 +851,111 @@ Enyimba:
         - can_see_menu_item
         - can_access_messages
         - can_access_user_messages
+
+Greenpark:
+  site_manager:
+    note:
+      permissions:
+        - can_see_menu_item
+        - can_create_note
+        - can_update_note
+        - can_set_note_reminder
+        - can_assign_note
+        - can_bulk_assign_note
+        - can_create_note_comment
+        - can_update_note_comment
+        - can_fetch_flagged_notes
+        - can_fetch_task_by_id
+        - can_fetch_task_comments
+        - can_fetch_task_histories
+        - can_get_task_count
+        - can_get_task_stats
+        - can_get_own_tasks
+        - can_view_create_task_button
+        - can_view_create_sub_task_button
+        - can_access_tasks
+        - can_view_task_lists
+    forms:
+      permissions:
+        - can_see_menu_item
+        - can_access_forms
+        - can_fetch_form
+        - can_fetch_form_properties
+        - can_fetch_form_property
+        - can_fetch_form_categories
+        - can_save_draft_form
+    profile:
+      permissions:
+        - can_see_menu_item
+    community:
+      permissions:
+        - can_see_menu_item
+    discussion:
+      permissions:
+        - can_access_all_discussions
+        - can_create_post
+        - can_view_posts
+        - can_see_menu_item
+    dashboard:
+      permissions:
+        - can_access_dashboard
+        - can_see_menu_item
+    logout:
+      permissions:
+        - can_see_menu_item
+    user:
+      permissions:
+        - can_get_users_lite
+  site_worker:
+    note:
+      permissions:
+        - can_see_menu_item
+        - can_create_note
+        - can_update_note
+        - can_set_note_reminder
+        - can_assign_note
+        - can_bulk_assign_note
+        - can_create_note_comment
+        - can_update_note_comment
+        - can_fetch_flagged_notes
+        - can_fetch_task_by_id
+        - can_fetch_task_comments
+        - can_fetch_task_histories
+        - can_get_task_count
+        - can_get_task_stats
+        - can_get_own_tasks
+        - can_view_create_task_button
+        - can_view_create_sub_task_button
+        - can_access_tasks
+        - can_view_task_lists
+    forms:
+      permissions:
+        - can_see_menu_item
+        - can_access_forms
+        - can_fetch_form
+        - can_fetch_form_properties
+        - can_fetch_form_property
+        - can_fetch_form_categories
+        - can_save_draft_form
+    profile:
+      permissions:
+        - can_see_menu_item
+    community:
+      permissions:
+        - can_see_menu_item
+    discussion:
+      permissions:
+        - can_access_all_discussions
+        - can_create_post
+        - can_view_posts
+        - can_see_menu_item
+    dashboard:
+      permissions:
+        - can_access_dashboard
+        - can_see_menu_item
+    logout:
+      permissions:
+        - can_see_menu_item
+    user:
+      permissions:
+        - can_get_users_lite
