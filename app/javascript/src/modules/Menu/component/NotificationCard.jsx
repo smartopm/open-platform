@@ -1,6 +1,7 @@
 import React from 'react';
 import Grid from '@mui/material/Grid';
 import Chip from '@mui/material/Chip';
+import { useTranslation } from 'react-i18next';
 import makeStyles from '@mui/styles/makeStyles';
 import { Typography } from '@mui/material';
 import PropTypes from 'prop-types';
@@ -8,12 +9,13 @@ import { objectAccessor } from '../../../utils/helpers';
 import { dateToString } from '../../../components/DateContainer';
 
 export default function NotificationCard({ notification }) {
+  const { t } = useTranslation('notification');
   const classes = useStyles();
   const notificationTypes = {
-    task: 'TASK',
-    reply_requested: 'REPLY REQUESTED',
-    comment: 'COMMENT',
-    message: 'MESSAGE'
+    task: t('notification.task'),
+    reply_requested: t('notification.reply_requested'),
+    comment: t('notification.comment'),
+    message: t('notification.message')
   };
   const notificationColors = {
     task: '#1E4785',
