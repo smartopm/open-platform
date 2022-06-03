@@ -199,7 +199,7 @@ RSpec.describe MergeUsers do
     it 'transfers the payments of general plan and destroys the general plan and land parcel' do
       MergeUsers.merge(user.id, duplicate_user.id)
 
-      expect(duplicate_user.reload.land_parcels.unscope(where: :status).general.count).to eql 1
+      expect(duplicate_user.reload.land_parcels.general.count).to eql 1
       expect(duplicate_user.reload.payment_plans.general.count).to eql 1
       expect(duplicate_user.general_payment_plan.plan_payments.first.amount.to_f).to eql 50.0
     end

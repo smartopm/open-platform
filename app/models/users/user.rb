@@ -659,8 +659,8 @@ module Users
 
     def regular_and_govt_plots(property_number, gov_property_number)
       [
-        land_parcels.find_by(parcel_number: property_number),
-        land_parcels.find_by(parcel_number: gov_property_number),
+        land_parcels.excluding_general.find_by(parcel_number: property_number),
+        land_parcels.excluding_general.find_by(parcel_number: gov_property_number),
       ]
     end
 
@@ -690,7 +690,7 @@ module Users
     #
     # @return [Properties::LandParcel]
     def general_land_parcel
-      land_parcels.unscope(where: :status).general.first.presence || create_general_land_parcel
+      land_parcels.general.first.presence || create_general_land_parcel
     end
 
     # Return general payment plan associated with user
