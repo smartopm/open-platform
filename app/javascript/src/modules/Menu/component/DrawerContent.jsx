@@ -3,10 +3,10 @@ import { useQuery } from 'react-apollo';
 import { Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import UserNotifications from '../graphql/menu_query';
-import { Spinner } from '../../../shared/Loading';
 import NotificationCard from './NotificationCard';
 import CenteredContent from '../../../shared/CenteredContent';
 import { formatError } from '../../../utils/helpers';
+import CustomSkeleton from '../../../shared/CustomSkeleton';
 
 export default function DrawerContent() {
   const { t } = useTranslation('notification');
@@ -22,7 +22,17 @@ export default function DrawerContent() {
       </CenteredContent>
     );
 
-  if (loading) return <Spinner />;
+  if (loading)
+    return Array.from(new Array(10)).map(index => (
+      <div key={index}>
+        <CustomSkeleton
+          variant="rectangular"
+          width="100%"
+          height="80px"
+          style={{ marginBottom: '5px' }}
+        />
+      </div>
+    ));
   return (
     <>
       {data?.userNotifications.length > 0 ? (
@@ -33,7 +43,7 @@ export default function DrawerContent() {
         ))
       ) : (
         <CenteredContent>
-          <Typography variant="body2" style={{color: '#FFFFFF'}} data-testid="no_notifications">
+          <Typography variant="body2" style={{ color: '#FFFFFF' }} data-testid="no_notifications">
             {t('notification.no_notifications')}
           </Typography>
         </CenteredContent>
