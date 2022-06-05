@@ -19,13 +19,15 @@ export default function PaymentForm() {
     accountName: ''
   });
 
-  const currency = objectAccessor(currencies, authState.user.community.currency)
+  const communityCurrency = objectAccessor(currencies, authState.user.community.currency)
+  const currencyData = { locale: authState.user.community.locale, currency: communityCurrency }
+  const currency = extractCurrency(currencyData)
   const config = {
     public_key: 'FLWPUBK_TEST-75adcdab15fa9649636d067ff8618bff-X',
     tx_ref: Date.now(),
     amount: inputValue.amount,
-    currency,
-    payment_options: 'card,mobilemoney,ussd',
+    currency: communityCurrency,
+    payment_options: '',
     customer: {
       email: authState.user.email,
       phonenumber: authState.user.phonenumber,
@@ -75,7 +77,7 @@ export default function PaymentForm() {
         value={inputValue.amount}
         onChange={event => setInputValue({ ...inputValue, amount: event.target.value })}
         InputProps={{
-            startAdornment: <InputAdornment position="start">{extractCurrency({ locale: authState.user.community.locale })}</InputAdornment>,
+            startAdornment: <InputAdornment position="start">{currency}</InputAdornment>,
           }}
         fullWidth
       />
