@@ -15,14 +15,15 @@ module Mutations
       field :success, GraphQL::Types::Boolean, null: false
 
       def resolve(vals)
-        log = context[:site_community].transaction_logs.new(vals)
+        log_attributes = vals.merge(community_id: context[:site_community].id)
+        log = context[:current_user].transaction_logs.create!(log_attributes)
 
         return { success: true } if log.save!
 
-        raise GraphQL::ExecutionError, log.errors.full_messages&.join(', ')
+        raise GraphQL::ExecutionError, log.errors.full_messages
       end
 
-      # Verifies if current user is admin or not.
+    #   Verifies if current user is admin or not.
       def authorized?(_vals)
         return true if permitted?(module: :transaction, permission: :can_revert_transaction)
 

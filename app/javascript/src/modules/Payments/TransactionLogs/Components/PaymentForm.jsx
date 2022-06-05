@@ -3,15 +3,19 @@ import { closePaymentModal, useFlutterwave } from 'flutterwave-react-v3';
 import React, { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ArrowRightAltIcon from '@mui/icons-material/ArrowRightAlt';
+import { useMutation } from 'react-apollo';
 import { Context } from '../../../../containers/Provider/AuthStateProvider';
 import CenteredContent from '../../../../shared/CenteredContent';
 import PageWrapper from '../../../../shared/PageWrapper';
 import { currencies } from '../../../../utils/constants';
 import { extractCurrency, objectAccessor } from '../../../../utils/helpers';
+import { TransactionLogCreateMutation } from '../graphql/transaction_logs_mutation';
+
 
 export default function PaymentForm() {
   const { t } = useTranslation(['common', 'task']);
   const authState  = useContext(Context)
+  const [createTransactionLog] = useMutation(TransactionLogCreateMutation)
   const [inputValue, setInputValue] = useState({
     invoiceNumber: '',
     amount: '',
@@ -27,7 +31,7 @@ export default function PaymentForm() {
     tx_ref: Date.now(),
     amount: inputValue.amount,
     currency: communityCurrency,
-    payment_options: '',
+    payment_options: '', // add payment options we plan to support
     customer: {
       email: authState.user.email,
       phonenumber: authState.user.phonenumber,
@@ -45,7 +49,22 @@ export default function PaymentForm() {
 
   function verifyTransaction(response) {
     // use this response to verify before saving the transaction in our db
-    console.log(response)
+    console.log(response);
+    console.log(inputValue);
+    createTransactionLog({
+      variables: {
+        paidAmount: response.amount,
+        amount: parseFloat(inputValue.amount),
+        currency: response.currency,
+        invoiceNumber: inputValue.invoiceNumber,
+        transactionId: response.transaction_id,
+        transactionRef: response.tx_ref,
+        description: inputValue.description
+      }
+    })
+      .then(res => console.log(res))
+      .catch(error => console.log(error));
+
     closePaymentModal(response);
   }
 
