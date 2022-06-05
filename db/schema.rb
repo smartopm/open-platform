@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_05_18_054244) do
+ActiveRecord::Schema.define(version: 2022_06_03_121523) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -805,6 +805,23 @@ ActiveRecord::Schema.define(version: 2022_05_18_054244) do
     t.index ["user_id"], name: "index_time_sheets_on_user_id"
   end
 
+  create_table "transaction_logs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.decimal "paid_amount"
+    t.decimal "currency"
+    t.decimal "amount"
+    t.string "invoice_number"
+    t.integer "transaction_id"
+    t.integer "transaction_ref"
+    t.string "description"
+    t.integer "integration_type", default: 0
+    t.uuid "user_id", null: false
+    t.uuid "community_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["community_id"], name: "index_transaction_logs_on_community_id"
+    t.index ["user_id"], name: "index_transaction_logs_on_user_id"
+  end
+
   create_table "transactions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "source"
     t.integer "status"
@@ -1066,6 +1083,8 @@ ActiveRecord::Schema.define(version: 2022_05_18_054244) do
   add_foreign_key "substatus_logs", "users"
   add_foreign_key "substatus_logs", "users", column: "updated_by_id"
   add_foreign_key "time_sheets", "communities"
+  add_foreign_key "transaction_logs", "communities"
+  add_foreign_key "transaction_logs", "users"
   add_foreign_key "transactions", "communities"
   add_foreign_key "transactions", "users"
   add_foreign_key "user_form_properties", "form_properties"

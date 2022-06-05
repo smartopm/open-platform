@@ -18,7 +18,7 @@ export default function PaymentForm() {
   });
 
   const config = {
-    public_key: '',
+    public_key: 'FLWPUBK_TEST-75adcdab15fa9649636d067ff8618bff-X',
     tx_ref: Date.now(),
     amount: inputValue.amount,
     currency: objectAccessor(currencies, authState.user.community.currency),
@@ -40,6 +40,7 @@ export default function PaymentForm() {
 
   function verifyTransaction(response) {
     // use this response to verify before saving the transaction in our db
+    console.log(response)
     closePaymentModal(response);
   }
 
