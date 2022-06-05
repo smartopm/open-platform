@@ -1,27 +1,30 @@
-import { Button, TextField } from '@mui/material';
+import { Button, InputAdornment, TextField } from '@mui/material';
 import { closePaymentModal, useFlutterwave } from 'flutterwave-react-v3';
 import React, { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import ArrowRightAltIcon from '@mui/icons-material/ArrowRightAlt';
 import { Context } from '../../../../containers/Provider/AuthStateProvider';
 import CenteredContent from '../../../../shared/CenteredContent';
 import PageWrapper from '../../../../shared/PageWrapper';
 import { currencies } from '../../../../utils/constants';
-import { objectAccessor } from '../../../../utils/helpers';
+import { extractCurrency, objectAccessor } from '../../../../utils/helpers';
 
 export default function PaymentForm() {
-  const { t } = useTranslation();
+  const { t } = useTranslation(['common', 'task']);
   const authState  = useContext(Context)
   const [inputValue, setInputValue] = useState({
     invoiceNumber: '',
     amount: '',
-    description: ''
+    description: '',
+    accountName: ''
   });
 
+  const currency = objectAccessor(currencies, authState.user.community.currency)
   const config = {
     public_key: 'FLWPUBK_TEST-75adcdab15fa9649636d067ff8618bff-X',
     tx_ref: Date.now(),
     amount: inputValue.amount,
-    currency: objectAccessor(currencies, authState.user.community.currency),
+    currency,
     payment_options: 'card,mobilemoney,ussd',
     customer: {
       email: authState.user.email,
@@ -48,24 +51,38 @@ export default function PaymentForm() {
     <PageWrapper>
       <TextField
         margin="normal"
+        id="account-name"
+        label={t('form_fields.account_name')}
+        value={inputValue.accountName}
+        onChange={event => setInputValue({ ...inputValue, accountName: event.target.value })}
+        fullWidth
+      />
+      <TextField
+        margin="normal"
         id="invoice-number"
-        label={t('common:form_fields.invoice_number')}
+        label={t('form_fields.invoice_number')}
         value={inputValue.invoiceNumber}
         onChange={event => setInputValue({ ...inputValue, invoiceNumber: event.target.value })}
+        InputProps={{
+            startAdornment: <InputAdornment position="start">#</InputAdornment>,
+          }}
         fullWidth
       />
       <TextField
         margin="normal"
         id="payment-amount"
-        label={t('common:table_headers.amount')}
+        label={t('table_headers.amount')}
         value={inputValue.amount}
         onChange={event => setInputValue({ ...inputValue, amount: event.target.value })}
+        InputProps={{
+            startAdornment: <InputAdornment position="start">{extractCurrency({ locale: authState.user.community.locale })}</InputAdornment>,
+          }}
         fullWidth
       />
       <TextField
         margin="normal"
         id="description"
-        label={t('common:form_fields.description')}
+        label={t('task:task.optional_description')}
         value={inputValue.description}
         onChange={event => setInputValue({ ...inputValue, description: event.target.value })}
         fullWidth
@@ -78,6 +95,7 @@ export default function PaymentForm() {
           color="primary"
           disableElevation
           data-testid="make_a_payment_btn"
+          endIcon={<ArrowRightAltIcon />}
           onClick={() => {
           handleFlutterPayment({
             callback: (response) => {
@@ -86,8 +104,9 @@ export default function PaymentForm() {
             onClose: () => {}
           });
         }}
+
         >
-          {t('common:misc.make_a_payment')}
+          {t('misc.next')}
         </Button>
       </CenteredContent>
     </PageWrapper>
