@@ -3,7 +3,7 @@ import CreditCardIcon from '@mui/icons-material/CreditCard';
 import PaymentSummary from './PaymentSummary'
 import Payments from "./Components/Payments";
 import AccessCheck from '../Permissions/Components/AccessCheck';
-import  RenderPayment from './RavePayments';
+import  RenderPayment from './TransactionLogs';
 
 const paymentsPermissions = ['can_access_all_payments'];
 const currentModule = 'plan_payment';
