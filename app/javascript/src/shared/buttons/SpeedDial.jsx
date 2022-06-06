@@ -6,13 +6,15 @@ import SpeedDialIcon from '@mui/material/SpeedDialIcon';
 import SpeedDialAction from '@mui/material/SpeedDialAction';
 import CloseIcon from '@mui/icons-material/Close';
 import AddIcon from '@mui/icons-material/Add';
+import Typography from '@mui/material/Typography';
 
 export default function SpeedDialButton({
   open,
   actions,
   direction,
   handleAction,
-  handleSpeedDial
+  handleSpeedDial,
+  tooltipOpen
 }) {
   const classes = useStyles();
 
@@ -42,9 +44,11 @@ export default function SpeedDialButton({
           <SpeedDialAction
             key={action.name}
             icon={action.icon}
-            tooltipTitle={action.name}
+            tooltipTitle={tooltipOpen ? <Typography variant='caption'>{action.name}</Typography> : action.name}
             onClick={action.handleClick}
+            tooltipOpen={tooltipOpen}
             data-testid="speed_dial_action"
+            style={{marginBottom: '10px'}}
           />
         ))}
       </SpeedDial>
@@ -77,6 +81,7 @@ SpeedDialButton.defaultProps = {
   open: false,
   handleAction: () => {},
   handleSpeedDial: () => {},
+  tooltipOpen: false
 };
 
 SpeedDialButton.propTypes = {
@@ -89,4 +94,5 @@ SpeedDialButton.propTypes = {
   open: PropTypes.bool,
   handleAction: PropTypes.func,
   handleSpeedDial: PropTypes.func,
+  tooltipOpen: PropTypes.bool
 };

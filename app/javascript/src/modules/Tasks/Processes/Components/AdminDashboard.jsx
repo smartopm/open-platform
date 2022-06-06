@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
-import {
-  Typography,
-  Container,
-  Grid,
-} from '@mui/material';
+import { Typography, Container, Grid } from '@mui/material';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { useQuery } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@mui/styles';
@@ -13,9 +10,7 @@ import { formatError } from '../../../../utils/helpers';
 import CenteredContent from '../../../../shared/CenteredContent';
 import { Spinner } from '../../../../shared/Loading';
 import SpeedDial from '../../../../shared/buttons/SpeedDial';
-import {
-  accessibleMenus
-} from '../utils';
+import { accessibleMenus } from '../utils';
 import { ProcessTemplatesQuery } from '../../../Processes/graphql/process_list_queries';
 import ProcessListItem from './ProcessListItem';
 
@@ -23,6 +18,7 @@ export default function AdminDashboard() {
   const { t } = useTranslation(['task', 'process']);
   const classes = useStyles();
   const history = useHistory();
+  const matches = useMediaQuery('(max-width:600px)');
   const [openSpeedDial, setOpenSpeedDial] = useState(false);
 
   const { data: processes, loading: processesLoading, error: processesError } = useQuery(
@@ -44,42 +40,68 @@ export default function AdminDashboard() {
       name: t('process:templates.process_templates'),
       handleClick: () => history.push('/processes/templates'),
       isVisible: true // TODO: Use permission if needed
-    },
+    }
   ];
 
   return (
     <Container maxWidth="xl" data-testid="processes-admin-dashboard">
       <Grid container>
+        <Grid item md={11} />
         <Grid item md={11} xs={10}>
           <Typography variant="h4" className={classes.title}>
             {t('processes.processes')}
           </Typography>
+          {!matches && (
+            <>
+              {processesError && (
+              <CenteredContent>{formatError(processesError.message)}</CenteredContent>
+            )}
+              {processesLoading ? (
+                <Spinner />
+            ) : processes?.processTemplates?.length > 0 ? (
+              processes.processTemplates.map(process => (
+                <ProcessListItem key={process.id} processItem={process} />
+              ))
+            ) : (
+              <CenteredContent>{t('processes.no_processes')}</CenteredContent>
+            )}
+            </>
+          )}
         </Grid>
         <Grid item md={1} xs={2}>
           <SpeedDial
             open={openSpeedDial}
             handleSpeedDial={() => setOpenSpeedDial(!openSpeedDial)}
             actions={accessibleMenus(speedDialActions)}
+            tooltipOpen
           />
         </Grid>
       </Grid>
-      {processesError && <CenteredContent>{formatError(processesError.message)}</CenteredContent>}
-      {processesLoading ? <Spinner /> : (
-         processes?.processTemplates?.length > 0 ?
+      {matches && (
+        <>
+          {processesError && (
+            <CenteredContent>{formatError(processesError.message)}</CenteredContent>
+          )}
+          {processesLoading ? (
+            <Spinner />
+          ) : processes?.processTemplates?.length > 0 ? (
             processes.processTemplates.map(process => (
-              <ProcessListItem key={process.id} processItem={process} />)
-              ) :
+              <ProcessListItem key={process.id} processItem={process} />
+            ))
+          ) : (
             <CenteredContent>{t('processes.no_processes')}</CenteredContent>
+          )}
+        </>
       )}
     </Container>
   );
 }
 
-const useStyles = makeStyles(({
+const useStyles = makeStyles({
   title: {
     marginBottom: '24px'
   },
   processTitle: {
     marginBottom: '20px'
   }
-}));
+});
