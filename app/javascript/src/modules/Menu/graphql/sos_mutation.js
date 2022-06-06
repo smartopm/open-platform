@@ -16,3 +16,11 @@ export const CancelCommunityEmergencyMutation = gql`
     }
   }
 `;
+
+export const NotificationUpdate = gql`
+  mutation NotificationUpdate($id: ID!) {
+    notificationUpdate(id: $id) {
+      success
+    }
+  }
+`;

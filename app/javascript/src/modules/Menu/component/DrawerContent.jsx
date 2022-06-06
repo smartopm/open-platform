@@ -11,7 +11,7 @@ import CustomSkeleton from '../../../shared/CustomSkeleton';
 
 export default function DrawerContent({ userId }) {
   const { t } = useTranslation('notification');
-  const { data, loading, error } = useQuery(UserNotifications, {
+  const { data, loading, error, refetch } = useQuery(UserNotifications, {
     fetchPolicy: 'cache-and-network',
     errorPolicy: 'all'
   });
@@ -39,7 +39,7 @@ export default function DrawerContent({ userId }) {
       {data?.userNotifications.length > 0 ? (
         data?.userNotifications.map(notification => (
           <React.Fragment key={notification.id}>
-            <NotificationCard notification={notification} userId={userId} />
+            <NotificationCard notification={notification} userId={userId} refetch={refetch} />
           </React.Fragment>
         ))
       ) : (
