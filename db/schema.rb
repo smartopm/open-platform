@@ -811,8 +811,8 @@ ActiveRecord::Schema.define(version: 2022_06_06_080117) do
     t.string "currency"
     t.decimal "amount"
     t.string "invoice_number"
-    t.integer "transaction_id"
-    t.integer "transaction_ref"
+    t.string "transaction_id"
+    t.string "transaction_ref"
     t.string "description"
     t.string "account_name"
     t.integer "integration_type", default: 0

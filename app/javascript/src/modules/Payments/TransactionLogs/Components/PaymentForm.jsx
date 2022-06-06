@@ -1,4 +1,4 @@
-import { Button, Container, Grid, InputAdornment, TextField, Typography } from '@mui/material';
+import { Button, Container, InputAdornment, TextField, Typography } from '@mui/material';
 import { closePaymentModal, useFlutterwave } from 'flutterwave-react-v3';
 import React, { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -58,8 +58,8 @@ export default function PaymentForm() {
         amount: parseFloat(inputValue.amount),
         currency: response.currency,
         invoiceNumber: inputValue.invoiceNumber,
-        transactionId: response.transaction_id,
-        transactionRef: response.tx_ref,
+        transactionId: `${response.transaction_id}`,
+        transactionRef: `${response.tx_ref}`,
         description: inputValue.description,
         accountName: inputValue.accountName,
       }
@@ -69,7 +69,9 @@ export default function PaymentForm() {
         setInputValue(initialInputValue)
         closePaymentModal();
       })
-      .catch(error => setMessage({ isError: true, detail: formatError(error.message) }));
+      .catch(error => setMessage({ isError: true, detail: formatError(error.message) }))
+      .finally(() => closePaymentModal())
+      
   }
 
   return (

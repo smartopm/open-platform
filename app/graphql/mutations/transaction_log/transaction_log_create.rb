@@ -8,8 +8,8 @@ module Mutations
       argument :amount, Float, required: true
       argument :currency, String, required: true
       argument :invoice_number, String, required: true
-      argument :transaction_id, Integer, required: true
-      argument :transaction_ref, Integer, required: true
+      argument :transaction_id, String, required: true
+      argument :transaction_ref, String, required: true
       argument :description, String, required: false
       argument :account_name, String, required: false
 

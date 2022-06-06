@@ -11,8 +11,8 @@ RSpec.describe Payments::TransactionLog, type: :model do
     it { is_expected.to have_db_column(:paid_amount).of_type(:decimal) }
     it { is_expected.to have_db_column(:invoice_number).of_type(:string) }
     it { is_expected.to have_db_column(:integration_type).of_type(:integer) }
-    it { is_expected.to have_db_column(:transaction_id).of_type(:integer) }
-    it { is_expected.to have_db_column(:transaction_ref).of_type(:integer) }
+    it { is_expected.to have_db_column(:transaction_id).of_type(:string) }
+    it { is_expected.to have_db_column(:transaction_ref).of_type(:string) }
     it { is_expected.to have_db_column(:description).of_type(:string) }
     it { is_expected.to have_db_column(:currency).of_type(:string) }
     it { is_expected.to have_db_column(:account_name).of_type(:string) }

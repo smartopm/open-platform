@@ -7,8 +7,8 @@ export const TransactionLogCreateMutation = gql`
     $amount: Float!
     $currency: String!
     $invoiceNumber: String!
-    $transactionId: Int!
-    $transactionRef: Int!
+    $transactionId: String!
+    $transactionRef: String!
     $description: String!
     $accountName: String!
   ) {

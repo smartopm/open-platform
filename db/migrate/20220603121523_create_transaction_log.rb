@@ -5,8 +5,8 @@ class CreateTransactionLog < ActiveRecord::Migration[6.1]
       t.string :currency
       t.decimal :amount
       t.string :invoice_number
-      t.integer :transaction_id
-      t.integer :transaction_ref
+      t.string :transaction_id
+      t.string :transaction_ref
       t.string :description
       t.string :account_name
       t.integer :integration_type, default: 0
