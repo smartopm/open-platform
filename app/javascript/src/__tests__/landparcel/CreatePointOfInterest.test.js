@@ -12,9 +12,9 @@ describe('Create Point of Interest Component', () => {
     render(
       <MockedProvider>
         <BrowserRouter>
-        <MockedThemeProvider>
-          <CreatePointOfInterest refetch={refetch} />
-        </MockedThemeProvider>
+          <MockedThemeProvider>
+            <CreatePointOfInterest refetch={refetch} />
+          </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>)
 

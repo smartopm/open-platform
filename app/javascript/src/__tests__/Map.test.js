@@ -30,9 +30,9 @@ describe('Map page', () => {
         <Context.Provider value={data}>
           <MockedProvider mocks={[]} addTypename={false}>
             <BrowserRouter>
-            <MockedThemeProvider>
-              <Map />
-            </MockedThemeProvider>
+              <MockedThemeProvider>
+                <Map />
+              </MockedThemeProvider>
             </BrowserRouter>
           </MockedProvider>
         </Context.Provider>

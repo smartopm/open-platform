@@ -16,9 +16,9 @@ describe('Point Of Interest Modal Component', () => {
     render(
       <MockedProvider>
         <BrowserRouter>
-        <MockedThemeProvider>
-          <PointOfInterestModal {...props} />
-        </MockedThemeProvider>
+          <MockedThemeProvider>
+            <PointOfInterestModal {...props} />
+          </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>
     )
