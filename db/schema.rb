@@ -808,12 +808,13 @@ ActiveRecord::Schema.define(version: 2022_06_06_080117) do
 
   create_table "transaction_logs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.decimal "paid_amount"
-    t.decimal "currency"
+    t.string "currency"
     t.decimal "amount"
     t.string "invoice_number"
     t.integer "transaction_id"
     t.integer "transaction_ref"
     t.string "description"
+    t.string "account_name"
     t.integer "integration_type", default: 0
     t.uuid "user_id", null: false
     t.uuid "community_id", null: false
