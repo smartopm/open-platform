@@ -28,10 +28,7 @@ module Mutations
             comment.update!(grouping_id: comment.id)
           end
 
-          if vals[:reply_required]
-            send_email_notification(comment)
-            notify_when_reply_requested(comment)
-          end
+          send_email_notification(comment) if vals[:reply_required]
 
           comment.record_note_history(context[:current_user])
           { note_comment: comment }
@@ -85,21 +82,6 @@ module Mutations
       # rubocop:enable Layout/LineLength
       # rubocop:enable Metrics/MethodLength
       # rubocop:enable Metrics/AbcSize
-
-      def notify_when_reply_requested(comment)
-        description = I18n.t('notification_description.reply_requested',
-                             user: context[:current_user].name)
-        create_notification(comment, description, :reply_requested, comment.reply_from_id)
-      end
-
-      def create_notification(comment, description, category, user_id)
-        NotificationCreateJob.perform_now(community_id: context[:site_community].id,
-                                          notifable_id: comment.id,
-                                          notifable_type: comment.class.name,
-                                          description: description,
-                                          category: category,
-                                          user_id: user_id)
-      end
 
       def authorized?(_vals)
         return true if permitted?(module: :note, permission: :can_create_note_comment)

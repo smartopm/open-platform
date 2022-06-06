@@ -17,25 +17,30 @@ module Types::Queries::Notification
   end
 
   # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/MethodLength
   def user_notifications(offset: 0, limit: 100)
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:current_user].blank?
 
     unseen_notifications = context[:current_user].notifications
+                                                 .active
                                                  .where(seen_at: nil)
                                                  .offset(offset)
                                                  .limit(limit)
                                                  .ordered
-
+                                                 
     seen_notifications = context[:current_user].notifications
+                                               .active
                                                .where('seen_at > ?', 24.hours.ago)
                                                .ordered_by_seen_at
+
     unseen_notifications.to_a.concat(seen_notifications)
   end
   # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/MetricMethodLength
 
   def notifications_count
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:current_user].blank?
 
-    context[:current_user].notifications.where(seen_at: nil).count
+    context[:current_user].notifications.active.where(seen_at: nil).count
   end
 end
