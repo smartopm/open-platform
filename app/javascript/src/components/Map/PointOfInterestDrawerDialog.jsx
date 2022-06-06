@@ -32,44 +32,45 @@ export default function PointOfInterestDrawerDialog({ anchor, children, open, on
                     />
 )}
                   <CardContent data-testid="drawer-content">
-                    <Typography variant="h6" color="text.secondary">
-                      {selectedPoi.poiName}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary" component="div">
-                      {selectedPoi.description || t('misc.no_description')}
-                    </Typography>
-                    <br />
-                    <hr />
-                    <br />
-                    <Typography variant="h6" color="text.secondary">{t('dialog_headers.details')}</Typography>
-                    <Typography> 
-                      {' '}
-                      <b>
-                        {t('poi_list.type')}
+                    <div style={{ paddingLeft: '10px', marginTop: '45px' }}>
+                      <Typography variant="h6" color="text.secondary">
+                        {selectedPoi.poiName}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary" component="div">
+                        {selectedPoi.description || t('misc.no_description')}
+                      </Typography>
+                      <br />
+                      <hr />
+                      <br />
+                      <Typography variant="h6" color="text.secondary">{t('dialog_headers.details')}</Typography>
+                      <Typography>
                         {' '}
-                      </b> 
-                      {' '}
-                      {selectedPoi.parcelType}
-                    </Typography>
-                    <Typography> 
-                      {' '}
-                      <b>
-                        {t('poi_list.longitude_x')}
+                        <b>
+                          {t('poi_list.type')}
+                          {' '}
+                        </b>
                         {' '}
-                      </b>  
-                      {' '}
-                      {selectedPoi.longX}
-                    </Typography>
-                    <Typography> 
-                      {' '}
-                      <b>
-                        {t('poi_list.latitude_y')}
+                        {selectedPoi.parcelType}
+                      </Typography>
+                      <Typography>
                         {' '}
-                      </b>
-                      {selectedPoi.latY}
-                    </Typography>
-                    <hr />
-                    <br />
+                        <b>
+                          {t('poi_list.longitude_x')}
+                          {' '}
+                        </b>
+                        {' '}
+                        {selectedPoi.longX}
+                      </Typography>
+                      <Typography>
+                        {' '}
+                        <b>
+                          {t('poi_list.latitude_y')}
+                          {' '}
+                        </b>
+                        {selectedPoi.latY}
+                      </Typography>
+                      <br />
+                    </div>
                     <CardActions data-testid="drawer-actions">
                       {children}
                     </CardActions>
