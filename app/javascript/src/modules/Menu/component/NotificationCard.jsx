@@ -9,7 +9,7 @@ import PropTypes from 'prop-types';
 import { objectAccessor } from '../../../utils/helpers';
 import { dateToString } from '../../../components/DateContainer';
 
-export default function NotificationCard({ notification }) {
+export default function NotificationCard({ notification, userId }) {
   const { t } = useTranslation('notification');
   const classes = useStyles();
   const history = useHistory();
@@ -27,7 +27,7 @@ export default function NotificationCard({ notification }) {
   };
 
   function handleCardClick() {
-    history.push(`${notification.category === 'task' ? `/tasks?taskId=${notification.notifableId}` : `/message/${notification.notifableId}`}`)
+    history.push(`${notification.category === 'task' ? `/tasks?taskId=${notification.notifableId}` : `/message/${userId}`}`)
   }
   return (
     <Grid container className={classes.container} data-testid='card' onClick={() => handleCardClick()}>
@@ -66,12 +66,14 @@ const useStyles = makeStyles(() => ({
     background: '#FFFFFF',
     padding: '15px',
     borderRadius: '8px',
-    marginBottom: '5px'
+    marginBottom: '5px',
+    cursor: 'pointer'
   }
 }));
 
 NotificationCard.defaultProps = {
-  notification: {}
+  notification: {},
+  userId: null
 }
 
 NotificationCard.propTypes = {
@@ -81,5 +83,6 @@ NotificationCard.propTypes = {
     description: PropTypes.string,
     header: PropTypes.string,
     notifableId: PropTypes.string
-  })
+  }),
+  userId: PropTypes.string
 };

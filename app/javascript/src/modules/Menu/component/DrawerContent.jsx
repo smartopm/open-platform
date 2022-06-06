@@ -1,6 +1,7 @@
 import React from 'react';
 import { useQuery } from 'react-apollo';
 import { Typography } from '@mui/material';
+import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import UserNotifications from '../graphql/menu_query';
 import NotificationCard from './NotificationCard';
@@ -8,7 +9,7 @@ import CenteredContent from '../../../shared/CenteredContent';
 import { formatError } from '../../../utils/helpers';
 import CustomSkeleton from '../../../shared/CustomSkeleton';
 
-export default function DrawerContent() {
+export default function DrawerContent({ userId }) {
   const { t } = useTranslation('notification');
   const { data, loading, error } = useQuery(UserNotifications, {
     fetchPolicy: 'cache-and-network',
@@ -38,7 +39,7 @@ export default function DrawerContent() {
       {data?.userNotifications.length > 0 ? (
         data?.userNotifications.map(notification => (
           <React.Fragment key={notification.id}>
-            <NotificationCard notification={notification} />
+            <NotificationCard notification={notification} userId={userId} />
           </React.Fragment>
         ))
       ) : (
@@ -51,3 +52,11 @@ export default function DrawerContent() {
     </>
   );
 }
+
+DrawerContent.defaultProps = {
+  userId: null
+}
+
+DrawerContent.propTypes = {
+  userId: PropTypes.string
+};
