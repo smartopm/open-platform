@@ -19,6 +19,7 @@ import { filterQuickLinksByRole } from '../utils';
 import { Spinner } from '../../../shared/Loading';
 import CommunityNews from '../../Discussions/Components/CommunityNews';
 import { allUserTypes } from '../../../utils/constants';
+import UserDetail from '../../Users/Components/UserDetail';
 
 const Home = () => {
   const authState = useContext(AuthStateContext);
@@ -42,6 +43,9 @@ const Home = () => {
       >
         <Grid item md={12} xs={12}>
           <LanguageToggle />
+        </Grid>
+        <Grid item md={12} xs={12}>
+          <UserDetail user={authState.user} />
         </Grid>
         <FeatureCheck features={authState.user.community.features} name="Discussions">
           {communityNewsUsers.includes(userType) && (
