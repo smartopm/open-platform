@@ -31,8 +31,8 @@ RSpec.describe Mutations::TransactionLog::TransactionLogCreate do
             $amount: Float!
             $currency: String!
             $invoiceNumber: String!
-            $transactionId: Int!
-            $transactionRef: Int!
+            $transactionId: String!
+            $transactionRef: String!
             $description: String!
             $accountName: String!
         ) {
@@ -60,8 +60,8 @@ RSpec.describe Mutations::TransactionLog::TransactionLogCreate do
             amount: 70,
             currency: 'K',
             invoiceNumber: 'D898DWS',
-            transactionId: 23_423_424,
-            transactionRef: 23_423_424,
+            transactionId: '23_423_424',
+            transactionRef: '23_423_424',
             description: 'mock description',
             accountName: 'User Name',
           }
@@ -80,8 +80,8 @@ RSpec.describe Mutations::TransactionLog::TransactionLogCreate do
             amount: 70,
             currency: 'K',
             invoiceNumber: 'D898DWS',
-            transactionId: 23_423_424,
-            transactionRef: 23_423_424,
+            transactionId: '23_423_424',
+            transactionRef: '23_423_424',
             description: 'mock description',
             accountName: 'User Name',
           }
@@ -105,8 +105,8 @@ RSpec.describe Mutations::TransactionLog::TransactionLogCreate do
             amount: 70,
             currency: 'K',
             invoiceNumber: 'D898DWS',
-            transactionId: 23_423_424,
-            transactionRef: 23_423_424,
+            transactionId: '23_423_424',
+            transactionRef: '23_423_424',
             description: 'mock description',
             accountName: 'User Name',
           }

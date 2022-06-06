@@ -129,6 +129,7 @@ export default function PaymentForm() {
             variant="contained"
             color="primary"
             disableElevation
+            disabled={!inputValue.amount}
             data-testid="make_a_payment_btn"
             endIcon={<ArrowRightAltIcon />}
             onClick={() => {
