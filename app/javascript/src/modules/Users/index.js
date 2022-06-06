@@ -55,20 +55,7 @@ function RenderUserProfile() {
 // users menu
 // ==> for admin
 
-const UsersMenu = {
-  routeProps: {
-    path: '/users',
-    component: RenderUsers
-  },
-  styleProps: {
-    icon: <PersonIcon />,
-    className: 'users-menu-item'
-  },
-  name: t => t('misc.users'),
-  moduleName: user.module,
-  featureName: 'Users',
-  accessibleBy: [],
-  subRoutes: [
+const UsersMenu = [
     {
       routeProps: {
         path: '/users/import',
@@ -85,8 +72,7 @@ const UsersMenu = {
       },
       accessibleBy: []
     }
-  ]
-};
+  ];
 
 export default {
   routeProps: {
@@ -101,7 +87,7 @@ export default {
   moduleName: user.module,
   featureName: 'Users',
   accessibleBy: [],
-  subMenu: [UsersMenu]
+  subRoutes: UsersMenu
 };
 
 // temporarily export the user profile page here, these will be part of the core user module
