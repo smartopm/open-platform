@@ -8,20 +8,24 @@ import { Context } from '../../../../containers/Provider/AuthStateProvider';
 import CenteredContent from '../../../../shared/CenteredContent';
 import PageWrapper from '../../../../shared/PageWrapper';
 import { currencies } from '../../../../utils/constants';
-import { extractCurrency, objectAccessor } from '../../../../utils/helpers';
+import { extractCurrency, formatError, objectAccessor } from '../../../../utils/helpers';
 import { TransactionLogCreateMutation } from '../graphql/transaction_logs_mutation';
+import MessageAlert from '../../../../components/MessageAlert';
 
 
 export default function PaymentForm() {
-  const { t } = useTranslation(['common', 'task']);
+  const { t } = useTranslation(['common', 'task', 'payment']);
   const authState  = useContext(Context)
   const [createTransactionLog] = useMutation(TransactionLogCreateMutation)
-  const [inputValue, setInputValue] = useState({
+  const initialMessage = { isError: false, detail: '' }
+  const initialInputValue = {
     invoiceNumber: '',
     amount: '',
     description: '',
     accountName: ''
-  });
+  }
+  const [message, setMessage] = useState(initialMessage);
+  const [inputValue, setInputValue] = useState(initialInputValue);
 
   const communityCurrency = objectAccessor(currencies, authState.user.community.currency)
   const currencyData = { locale: authState.user.community.locale, currency: communityCurrency }
@@ -48,9 +52,6 @@ export default function PaymentForm() {
   const handleFlutterPayment = useFlutterwave(config);
 
   function verifyTransaction(response) {
-    // use this response to verify before saving the transaction in our db
-    console.log(response);
-    console.log(inputValue);
     createTransactionLog({
       variables: {
         paidAmount: response.amount,
@@ -62,14 +63,22 @@ export default function PaymentForm() {
         description: inputValue.description
       }
     })
-      .then(res => console.log(res))
-      .catch(error => console.log(error));
-
-    closePaymentModal(response);
+      .then(() => {
+        setMessage({ isError: false, detail: t('payment:misc.payment_successful') })
+        setInputValue(initialInputValue)
+        closePaymentModal();
+      })
+      .catch(error => setMessage({ isError: true, detail: formatError(error.message) }));
   }
 
   return (
     <PageWrapper>
+      <MessageAlert
+        type={!message.isError ? 'success' : 'error'}
+        message={message.detail}
+        open={!!message.detail}
+        handleClose={() => setMessage(initialMessage)}
+      />
       <TextField
         margin="normal"
         id="account-name"
