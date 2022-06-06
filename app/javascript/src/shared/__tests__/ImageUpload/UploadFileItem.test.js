@@ -1,6 +1,6 @@
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
+
 import UploadFileItem from '../../imageUpload/UploadFileItem';
 import MockedThemeProvider from '../../../modules/__mocks__/mock_theme';
 

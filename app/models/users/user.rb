@@ -157,6 +157,9 @@ module Users
     before_validation :add_default_state_type_and_role
     after_create :log_user_create_event
     after_create :add_notification_preference
+    after_update :update_associated_accounts_details, if: -> { saved_changes.key?('name') }
+    after_update :update_associated_request_details, if: -> { user_details_updated? }
+    after_save :associate_lead_labels, if: -> { user_type.eql?('lead') }
 
     # Track changes to the User
     has_paper_trail
@@ -189,8 +192,6 @@ module Users
     }
     validate :phone_number_valid?
     validate :public_user?
-    after_update :update_associated_accounts_details, if: -> { saved_changes.key?('name') }
-    after_update :update_associated_request_details, if: -> { user_details_updated? }
 
     devise :omniauthable, omniauth_providers: %i[google_oauth2 facebook]
 
@@ -798,6 +799,42 @@ module Users
                                                    start_date: Time.zone.now)
       payment_plan.save!(validate: false)
       payment_plan
+    end
+
+    def associate_lead_labels
+      associate_scoped_labels('division', 'Division')
+      associate_scoped_labels('lead_status', 'Status')
+    end
+
+    def associate_scoped_labels(key, grouping_name)
+      return unless saved_changes.key?(key)
+
+      existing_division = saved_changes[key].first
+      new_division = saved_changes[key].last
+      update_user_label(grouping_name, existing_division, new_division)
+    end
+
+    def update_user_label(grouping_name, old_desc, new_desc)
+      label = find_or_create_label(grouping_name, old_desc)
+      new_label = find_or_create_label(grouping_name, new_desc)
+
+      if label.nil?
+        user_labels.create(label_id: new_label.id)
+      elsif new_label.nil?
+        user_labels.find_by(label_id: label.id)&.destroy
+      else
+        user_labels.find_or_create_by(label_id: label.id).update(label_id: new_label.id)
+      end
+    end
+
+    def find_or_create_label(grouping_name, desc)
+      return if desc.blank?
+
+      community.labels.find_or_create_by(
+        grouping_name: grouping_name,
+        short_desc: desc,
+        color: community.theme_colors['secondaryColor'],
+      )
     end
   end
   # rubocop:enable Metrics/ClassLength

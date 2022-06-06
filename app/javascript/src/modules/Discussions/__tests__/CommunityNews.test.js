@@ -1,9 +1,9 @@
 import React from 'react';
 import { fireEvent, render, waitFor } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
+
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom';
-import { CommunityNewsPostsQuery } from '../../../graphql/queries';
+import { CommunityNewsPostsQuery, SystemDiscussionsQuery } from '../../../graphql/queries';
 import CommunityNews from '../Components/CommunityNews';
 import MockedThemeProvider from '../../__mocks__/mock_theme';
 
@@ -14,7 +14,8 @@ describe('Community news with posts', () => {
       userType: 'admin',
       userImage: 'https://image.com',
       userPermissions: [{ module: 'discussion', permissions: ['can_set_accessibility'] }],
-      dashboardTranslation: () => 'some-text'
+      dashboardTranslation: () => 'some-text',
+      userId: 'e23844f0-9985-438d-bdff-4f34a9e1897b'
     };
     const mocks = [
       {
@@ -95,6 +96,21 @@ describe('Community news with posts', () => {
             ]
           }
         }
+      },
+      {
+        request: {
+          query: SystemDiscussionsQuery
+        },
+        result: {
+          data: {
+            systemDiscussions: [
+              {
+                title: 'Family',
+                id: 'df956b37-227e-4a32-1p85-e3279aa7da0e122',
+              }
+            ]
+          }
+        }
       }
     ];
 
@@ -124,6 +140,11 @@ describe('Community news with posts', () => {
       fireEvent.click(container.queryAllByTestId('post_options')[0]);
       expect(container.queryAllByText('form_actions.edit_post')[0]).toBeInTheDocument();
       fireEvent.click(container.queryAllByText('form_actions.edit_post')[0]);
+
+      expect(container.queryAllByText('form_actions.delete_post')[0]).toBeInTheDocument();
+      fireEvent.click(container.queryAllByText('form_actions.delete_post')[0]);
+      expect(container.queryByTestId('delete_dialog')).toBeInTheDocument();
+      fireEvent.click(container.queryByTestId('confirm_action'));
     }, 50);
   });
 });

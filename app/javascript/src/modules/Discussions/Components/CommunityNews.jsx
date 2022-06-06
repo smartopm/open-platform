@@ -1,6 +1,3 @@
-/* eslint-disable react/jsx-no-duplicate-props */
-/* eslint-disable jsx-a11y/anchor-is-valid */
-/* eslint-disable react/jsx-wrap-multilines */
 import React, { useState } from 'react';
 import { ListItem, ListItemAvatar, ListItemText, Grid, Typography, IconButton } from '@mui/material';
 import MoreVertOutlined from '@mui/icons-material/MoreVertOutlined';
@@ -8,12 +5,12 @@ import { StyleSheet, css } from 'aphrodite';
 import { useHistory } from 'react-router-dom';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Divider from '@mui/material/Divider';
-import { useQuery } from 'react-apollo';
+import { useQuery, useMutation } from 'react-apollo';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import moment from 'moment-timezone';
 import { useTheme } from '@mui/material/styles';
-import { CommunityNewsPostsQuery } from '../../../graphql/queries';
+import { CommunityNewsPostsQuery, SystemDiscussionsQuery } from '../../../graphql/queries';
 import { Spinner } from '../../../shared/Loading';
 import CenteredContent from '../../../shared/CenteredContent';
 import Avatar from '../../../components/Avatar';
@@ -22,29 +19,58 @@ import ImageAuth from '../../../shared/ImageAuth';
 import PostCreate from '../../Dashboard/Components/PostCreate';
 import CardWrapper from '../../../shared/CardWrapper';
 import MenuList from '../../../shared/MenuList';
+import { PostDeleteMutation } from '../../../graphql/mutations';
+import DeleteDialogueBox from '../../../shared/dialogs/DeleteDialogue';
+import MessageAlert from '../../../components/MessageAlert';
 
 export default function CommunityNews({
   userType,
   userImage,
   userPermissions,
-  dashboardTranslation
+  dashboardTranslation,
+  userId
 }) {
   const limit = 4;
   const isMobile = useMediaQuery('(max-width:800px)');
+  const [openModal, setOpenModal] = useState(false);
   const history = useHistory();
   const theme = useTheme();
+  const { t } = useTranslation('discussion');
   const [anchorEl, setAnchorEl] = useState(null);
   const [postData, setPostData] = useState(null);
   const [editModal, setEditModal] = useState(false);
   const anchorElOpen = Boolean(anchorEl);
+  const [deletePost] = useMutation(PostDeleteMutation);
+  const [postDetails, setPostDetails] = useState({
+    isError: false,
+    message: '',
+    loading: false
+  });
 
   const { loading, error, data, refetch } = useQuery(CommunityNewsPostsQuery, {
     variables: { limit }
   });
-
-  const { t } = useTranslation('discussion');
-
   const discussionId = data?.communityNewsPosts[0]?.discussionId;
+  const {
+    loading: systemDiscussionLoading,
+    error: systemDiscussionError,
+    data: systemDiscussionData
+  } = useQuery(SystemDiscussionsQuery);
+  let structuredMenuList = [];
+  if (!systemDiscussionLoading) {
+    structuredMenuList = systemDiscussionData?.systemDiscussions.map(discussion => ({
+      content: discussion?.title,
+      handleClick: () => history.push(`/discussions/${discussion?.id}`)
+    }));
+  }
+
+  const discussionMenuList = [
+    ...structuredMenuList,
+    {
+      content: t('label.more_topics'),
+      handleClick: () => history.push('/discussions')
+    }
+  ];
 
   const menuList = [
     {
@@ -52,6 +78,12 @@ export default function CommunityNews({
       isAdmin: true,
       color: '',
       handleClick: () => setEditModal(true)
+    },
+    {
+      content: t('form_actions.delete_post'),
+      isAdmin: true,
+      color: '',
+      handleClick: () => setOpenModal(true)
     }
   ];
 
@@ -74,22 +106,55 @@ export default function CommunityNews({
     setPostData(post);
   }
 
+  function handleDeleteClick() {
+    setOpenModal(!openModal);
+  }
+
+  function handleDeleteComment() {
+    deletePost({
+      variables: { id: postData.id }
+    })
+      .then(() => {
+        refetch();
+        setOpenModal(!openModal);
+        setPostDetails({ ...postDetails, loading: false, message: t('messages.delete_post') })
+      })
+      .catch(err => setPostDetails({ ...postDetails, isError: err.message, loading: false }));
+  }
+
   function redirectToDiscussionsPage() {
     history.push(`/discussions/${discussionId}`);
   }
 
-  if (loading) return <Spinner />;
-  if (error) {
-    return <CenteredContent>{formatError(error.message)}</CenteredContent>;
+  if (loading || systemDiscussionLoading) return <Spinner />;
+  if (error || systemDiscussionError) {
+    return (
+      <CenteredContent>
+        {formatError(error?.message || systemDiscussionError?.message)}
+      </CenteredContent>
+    );
   }
 
   return (
     <div style={isMobile ? { padding: '20px' } : { padding: '20px 20px 20px 79px', width: '99%' }}>
+      <MessageAlert
+        type={!postDetails.isError ? 'success' : 'error'}
+        message={postDetails.message}
+        open={!!postDetails.message}
+        handleClose={() => setPostDetails({ ...postDetails, message: '' })}
+      />
+      <DeleteDialogueBox
+        open={openModal}
+        handleClose={handleDeleteClick}
+        handleAction={handleDeleteComment}
+        title={t('common:misc.post')}
+      />
       <CardWrapper
         title={t('headers.community_news_header')}
         buttonName={t('common:misc.see_more_discussion')}
         displayButton={data?.communityNewsPosts?.length >= limit}
         handleButton={redirectToDiscussionsPage}
+        menuItems={discussionMenuList}
       >
         <Grid container>
           <Grid item xs={12} style={{ marginBottom: 10 }}>
@@ -119,7 +184,7 @@ export default function CommunityNews({
                       <Avatar user={post.user} />
                     </ListItemAvatar>
                     <ListItemText
-                      primary={
+                      primary={(
                         <Grid container>
                           <Grid item md={6} xs={10}>
                             <Typography component="span" variant="subtitle2">
@@ -133,27 +198,29 @@ export default function CommunityNews({
                               {moment(post.createdAt).fromNow()}
                             </Typography>
                           </Grid>
-                          <Grid item md={6} xs={2} style={{ textAlign: 'right' }}>
-                            <IconButton
-                              aria-controls="simple-menu"
-                              aria-haspopup="true"
-                              data-testid="post_options"
-                              dataid={post.id}
-                              onClick={event => menuData.handleMenu(event, post)}
-                              size="large"
-                              component="span"
-                            >
-                              <MoreVertOutlined />
-                            </IconButton>
-                            <MenuList
-                              open={menuData.open && anchorEl.getAttribute('dataid') === post.id}
-                              anchorEl={menuData.anchorEl}
-                              handleClose={menuData.handleClose}
-                              list={menuData.menuList}
-                            />
-                          </Grid>
+                          {(userId === post.user.id || userType === 'admin') && (
+                            <Grid item md={6} xs={2} style={{ textAlign: 'right' }}>
+                              <IconButton
+                                aria-controls="simple-menu"
+                                aria-haspopup="true"
+                                data-testid="post_options"
+                                dataid={post.id}
+                                onClick={event => menuData.handleMenu(event, post)}
+                                size="large"
+                                component="span"
+                              >
+                                <MoreVertOutlined />
+                              </IconButton>
+                              <MenuList
+                                open={menuData.open && anchorEl.getAttribute('dataid') === post.id}
+                                anchorEl={menuData.anchorEl}
+                                handleClose={menuData.handleClose}
+                                list={menuData.menuList}
+                              />
+                            </Grid>
+                          )}
                         </Grid>
-                      }
+                      )}
                     />
                   </ListItem>
                 </Grid>
@@ -164,19 +231,19 @@ export default function CommunityNews({
                   style={{ padding: '0 16px' }}
                 >
                   {// eslint-disable-next-line react/prop-types
-                  post?.imageUrls?.length >= 1 && (
-                    <ImageAuth
-                      imageLink={post?.imageUrls[0]}
-                      style={{
-                        width: '100%',
-                        marginBottom: '10px',
-                        border: 'none',
-                        boxShadow: 'none',
-                        padding: 0,
-                        borderRadius: 0
-                      }}
-                    />
-                  )}
+                    post?.imageUrls?.length >= 1 && (
+                      <ImageAuth
+                        imageLink={post?.imageUrls[0]}
+                        style={{
+                          width: '100%',
+                          marginBottom: '10px',
+                          border: 'none',
+                          boxShadow: 'none',
+                          padding: 0,
+                          borderRadius: 0
+                        }}
+                      />
+                    )}
                 </Grid>
                 <Grid item xs={12} style={{ padding: '0 16px 0 16px' }}>
                   <Typography
@@ -219,9 +286,14 @@ const styles = StyleSheet.create({
   }
 });
 
+CommunityNews.defaultProps = {
+  userImage: null
+}
+
 CommunityNews.propTypes = {
   dashboardTranslation: PropTypes.func.isRequired,
   userType: PropTypes.string.isRequired,
   userPermissions: PropTypes.arrayOf(PropTypes.object).isRequired,
-  userImage: PropTypes.string.isRequired
+  userImage: PropTypes.string,
+  userId: PropTypes.string.isRequired
 };

@@ -1,6 +1,6 @@
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
+
 import routeData, { MemoryRouter } from 'react-router';
 import AccessPage from '../components/AccessPage';
 import { Context } from '../../../../containers/Provider/AuthStateProvider';

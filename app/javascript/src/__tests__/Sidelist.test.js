@@ -3,7 +3,7 @@ import { BrowserRouter } from 'react-router-dom/';
 import { render } from '@testing-library/react';
 import { MockedProvider } from '@apollo/react-testing';
 import { SideList } from '../components/SideList';
-import '@testing-library/jest-dom/extend-expect';
+
 
 describe('Sidelist component', () => {
   const sideProps = {

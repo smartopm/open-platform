@@ -23,26 +23,52 @@ module Types::Queries::Label
       description 'Get users by the label ids, this should be a comma separated string'
       argument :labels, String, required: true
     end
+
+    field :lead_labels, [Types::LabelType], null: true do
+      argument :user_id, GraphQL::Types::ID, required: true
+      description 'Get division and status labels for leads'
+    end
   end
 
   def labels(offset: 0, limit: 50)
-    unless permitted?(module: :label, permission: :can_fetch_all_labels)
-      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
-    end
+    validate_authorization(:label, :can_fetch_all_labels)
 
     Labels::Label.with_users_count(context[:site_community].id, limit, offset)
   end
 
   def user_labels(user_id:)
-    user = verified_user(user_id)
+    unless permitted?(module: :label, permission: :can_fetch_user_labels) ||
+           context[:current_user]&.id == user_id
+      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+    end
+
+    user = verify_user(user_id)
     user.labels
   end
 
   def label_users(labels:)
-    unless permitted?(module: :label, permission: :can_fetch_label_users)
-      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
-    end
+    validate_authorization(:label, :can_fetch_label_users)
 
     context[:site_community].users.find(context[:current_user].id)&.find_label_users(labels)&.all
+  end
+
+  def lead_labels(user_id:)
+    validate_authorization(:label, :can_view_lead_labels)
+
+    user = context[:site_community].users.find(user_id)
+    context[:site_community].labels
+                            .joins(:user_labels)
+                            .where(user_labels: { user_id: user.id },
+                                   grouping_name: %w[Division Status],
+                                   short_desc: [user.lead_status, user.division])
+  end
+
+  private
+
+  def verify_user(user_id)
+    user = Users::User.allowed_users(context[:current_user]).find_by(id: user_id)
+    return user if user.present?
+
+    raise GraphQL::ExecutionError, I18n.t('errors.user.does_not_exist')
   end
 end

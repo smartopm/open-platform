@@ -28,6 +28,7 @@ import Card from '../../../shared/Card';
 import CustomProgressBar from '../../../shared/CustomProgressBar';
 import DateUtils from '../../../utils/dateutil';
 import { CommentQuery } from '../../../graphql/queries';
+import IconWithLabel from '../../../shared/label/IconWithLabel';
 
 export default function TaskDataList({
   task,
@@ -213,6 +214,7 @@ export default function TaskDataList({
                     onClick={handleOpenProjectClick}
                     data-testid="open_task_details"
                     disabled={openSubTask}
+                    style={{ marginTop: '8px' }}
                   >
                     <WidgetsIcon />
                   </IconButton>
@@ -307,15 +309,15 @@ export default function TaskDataList({
               style={{ display: 'flex', alignItems: 'center', justifyContent: 'right' }}
               data-testid="task_status"
             >
-              {(!isTaskList()) && (
-              <Chip
-                data-testid="task_status_chip"
-                label={task?.status ? t(`task.${task.status}`) : t('task.not_started')}
-                className={task?.status ? classes[task.status] : classes.not_started}
-                style={{ color: 'white' }}
-                size="small"
-              />
-)}
+              {!isTaskList() && (
+                <Chip
+                  data-testid="task_status_chip"
+                  label={task?.status ? t(`task.${task.status}`) : t('task.not_started')}
+                  className={task?.status ? classes[task.status] : classes.not_started}
+                  style={{ color: 'white' }}
+                  size="small"
+                />
+              )}
             </Grid>
           </>
         )}
@@ -384,36 +386,30 @@ export default function TaskDataList({
                   className={classes.detailsContainer}
                 >
                   {location.pathname !== '/processes' && (
-                    <>
-                      <Grid item md={2} xs={1}>
-                        <IconButton
-                          aria-controls="task-subtasks-icon"
-                          aria-haspopup="true"
-                          data-testid="task_subtasks"
-                          onClick={() => handleClick('subtasks')}
-                          color="primary"
-                          size="large"
+                    <Grid item md={4} xs={3}>
+                      <IconButton
+                        aria-controls="task-subtasks-icon"
+                        aria-haspopup="true"
+                        data-testid="task_subtasks"
+                        onClick={() => handleClick('subtasks')}
+                        color="primary"
+                        size="large"
+                      >
+                        <IconWithLabel
+                          isLabel
+                          data={task?.subTasksCount}
+                          testId="task-subtasks-count"
                         >
                           <AccountTreeIcon
                             fontSize="small"
-                            color={task?.subTasksCount ? 'primary' : 'disabled'}
+                            color={`${task?.subTasksCount ? 'primary' : 'disabled'}`}
                           />
-                        </IconButton>
-                      </Grid>
-                      <Grid
-                        item
-                        md={1}
-                        xs={1}
-                        className={classes.iconItem}
-                        style={{ marginLeft: '-11px' }}
-                        color="primary"
-                      >
-                        <span data-testid="task-subtasks-count">{task?.subTasksCount}</span>
-                      </Grid>
-                    </>
+                        </IconWithLabel>
+                      </IconButton>
+                    </Grid>
                   )}
 
-                  <Grid item md={2} xs={1}>
+                  <Grid item md={4} xs={3}>
                     <IconButton
                       aria-controls="task-comment-icon"
                       aria-haspopup="true"
@@ -422,26 +418,20 @@ export default function TaskDataList({
                       color="primary"
                       size="large"
                     >
-                      <QuestionAnswerIcon
-                        fontSize="small"
-                        color={data?.taskComments.length ? 'primary' : 'disabled'}
-                      />
+                      <IconWithLabel
+                        isLabel
+                        data={data?.taskComments?.length}
+                        testId="task-comment"
+                      >
+                        <QuestionAnswerIcon
+                          fontSize="small"
+                          color={`${data?.taskComments?.length ? 'primary' : 'disabled'}`}
+                        />
+                      </IconWithLabel>
                     </IconButton>
                   </Grid>
 
-                  <Grid
-                    item
-                    md={1}
-                    xs={1}
-                    className={classes.iconItem}
-                    style={
-                      location.pathname.match(/\bprocesses\b/) ? { marginLeft: '-53px' } : { marginLeft: '-11px' }
-                    }
-                  >
-                    <span data-testid="task-comment">{data?.taskComments.length || 0}</span>
-                  </Grid>
-
-                  <Grid item md={2} xs={1}>
+                  <Grid item md={4} xs={3}>
                     <IconButton
                       key={task.id}
                       aria-controls="task-attach-file-icon"
@@ -451,24 +441,17 @@ export default function TaskDataList({
                       color="primary"
                       size="large"
                     >
-                      <AttachFileIcon
-                        fontSize="small"
-                        color={task?.attachments?.length ? 'primary' : 'disabled'}
-                      />
+                      <IconWithLabel
+                        isLabel
+                        data={task?.attachments?.length}
+                        testId="file_attachments_total"
+                      >
+                        <AttachFileIcon
+                          fontSize="small"
+                          color={`${data?.attachments?.length ? 'primary' : 'disabled'}`}
+                        />
+                      </IconWithLabel>
                     </IconButton>
-                  </Grid>
-                  <Grid
-                    item
-                    md={1}
-                    xs={1}
-                    className={classes.iconItem}
-                    style={
-                      location.pathname.match(/\bprocesses\b/) ? { marginLeft: '-58px' } : { marginLeft: '-16px' }
-                    }
-                  >
-                    <span data-testid="file_attachments_total">
-                      {task.attachments?.length || 0}
-                    </span>
                   </Grid>
                 </Grid>
               </Grid>

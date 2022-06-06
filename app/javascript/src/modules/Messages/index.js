@@ -7,5 +7,5 @@ export default {
   },
   name: t => t('menu.message', { count: 0 }),
   featureName: 'Messages',
-  accessibleBy: ['admin']
+  accessibleBy: ['admin', 'marketing_admin']
 };

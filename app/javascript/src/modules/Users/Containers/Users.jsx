@@ -53,12 +53,12 @@ export default function UsersList() {
     setSubstatusReportOpen(!substatusReportOpen);
     setAnchorEl(null);
   }
-
+  const currentQueryPath = decodeURIComponent(location.search).replace('?', '')
   const { loading, error, data, refetch } = useQuery(UsersDetails, {
     variables: {
       query:
         searchQuery.length === 0
-          ? decodeURIComponent(location.search).replace('?', '')
+          ? currentQueryPath
           : searchQuery,
       limit,
       offset
@@ -118,8 +118,10 @@ export default function UsersList() {
         setSearchQuery(`sub_status = "${location?.state?.query - 1}"`);
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    if (location.pathname === '/leads/users' && !currentQueryPath) {
+      setSearchQuery(`user_type="lead"`);
+    }
+  }, [currentQueryPath, location]);
 
   function handleDownloadCSV() {
     loadAllUsers();
@@ -167,7 +169,8 @@ export default function UsersList() {
           })
           .join(` ${conjugate} `);
         setSearchQuery(query);
-        history.push({ pathname: '/users', search: query });
+        // push from current pathname to match both /users and /leads/users
+        history.push({ pathname: location.pathname, search: query });
         setFilterCount(availableConjugate.length);
       }
     }

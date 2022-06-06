@@ -1,5 +1,5 @@
 import React from 'react';
-import '@testing-library/jest-dom/extend-expect';
+
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min';
 import { MockedProvider } from '@apollo/react-testing';
@@ -157,6 +157,7 @@ describe('LeadEvents Page', () => {
                 userId="c96f64bb-e3b4-42ff-b6a9-66889ec79e99"
                 data={dataMock[0].result.data}
                 refetch={jest.fn()}
+                refetchLeadLabelsData={jest.fn()}
               />
             </MockedThemeProvider>
           </BrowserRouter>

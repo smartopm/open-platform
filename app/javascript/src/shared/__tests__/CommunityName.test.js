@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
-import '@testing-library/jest-dom/extend-expect';
+
 import authState from '../../__mocks__/authstate';
 import CommunityName from "../CommunityName";
 import { Context } from '../../containers/Provider/AuthStateProvider';

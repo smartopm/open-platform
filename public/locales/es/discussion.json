@@ -30,10 +30,12 @@
   },
   "label": {
     "discussion_description": "Descripción de Discusión ",
-    "discussion_title": "Título de Discusión"
+    "discussion_title": "Título de Discusión",
+    "more_topics": "Más Temas"
   },
   "messages": {
     "contact_team": "contacta con nuestro equipo de soporte",
+    "delete_post": "Publicación Eliminada con Éxito",
     "discussion_created": "Discusión creada",
     "discussion_topic_created": "Tema de discusión creado con éxito",
     "image_uploaded": "Imagen cargada correctamente",

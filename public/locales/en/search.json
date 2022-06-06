@@ -1,6 +1,6 @@
 {
     "search": {
-      "create_request": "Create a new request",
+      "create_user_request": "Create a new user",
       "no_results": "No results Found",
       "load_more": "Load more",
       "type_your_search": "Type your search query",

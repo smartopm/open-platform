@@ -22,7 +22,7 @@ import ButtonComponent from '../../../../shared/buttons/Button';
 import { MenuProps, secondaryInfoUserObject } from '../../utils';
 import { Context as AuthStateContext } from '../../../../containers/Provider/AuthStateProvider';
 
-export default function LeadEvents({ userId, data, refetch }) {
+export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsData }) {
   const [meetingName, setMeetingName] = useState('');
   const [leadData, setLeadData] = useState(false);
   const [disabled, setDisabled] = useState(true);
@@ -107,6 +107,7 @@ export default function LeadEvents({ userId, data, refetch }) {
             detail: t('common:misc.misc_successfully_added', { type: t('common:menu.division') })
           });
           refetch();
+          refetchLeadLabelsData();
         })
         .catch(err => {
           setMessage({ ...message, isError: true, detail: formatError(err.message) });
@@ -403,5 +404,6 @@ export default function LeadEvents({ userId, data, refetch }) {
 LeadEvents.propTypes = {
   userId: PropTypes.string.isRequired,
   data: PropTypes.shape({ user: secondaryInfoUserObject }).isRequired,
-  refetch: PropTypes.func.isRequired
+  refetch: PropTypes.func.isRequired,
+  refetchLeadLabelsData: PropTypes.func.isRequired
 };

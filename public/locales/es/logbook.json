@@ -97,6 +97,7 @@
     "access_action": "Acción de Acceso",
     "access_time": "Hora de Acceso",
     "add_company": "O agregar una Empresa",
+    "edit": "Editar Invitado",
     "end_of_visit": "Fin de Visita",
     "guest_invited": "Creó una invitación exitosamente",
     "guest_name": "Nombre del Invitado",
@@ -106,6 +107,7 @@
     "invite_canceled": "Canceló con éxito una invitación",
     "invite_guest": "Crear Invitado",
     "invite_new_guest": "Crear Nuevo Invitado",
+    "name_print": "Nombre de Invitado: {{name}}",
     "qr_code": "Código QR para Acceso",
     "start_of_visit": "Inicio de Visita",
     "validity": "validez"

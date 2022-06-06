@@ -60,7 +60,8 @@ export const userType = {
   custodian: 'Store Custodian',
   site_worker: 'Site Worker',
   lead: 'Lead',
-  marketing_manager: 'Marketing Manager'
+  marketing_manager: 'Marketing Manager',
+  marketing_admin: 'Marketing Admin'
 };
 
 export const colorPallete = [
@@ -222,7 +223,7 @@ export const NotesCategories = {
   to_do: 'To-Do',
   form: 'Form',
   emergency: 'Emergency SOS',
-  template: 'DRC Process Template',
+  template: 'Process Template',
   task_list: 'Task List'
 };
 
@@ -764,7 +765,8 @@ export const allUserTypes = [
   'security_supervisor',
   'consultant',
   'developer',
-  'marketing_manager'
+  'marketing_manager',
+  'marketing_admin'
 ];
 
 export const siteManagers = [
@@ -850,14 +852,14 @@ export const leadTemperatureOptions = ['Cold', 'Neutral', 'Warm', 'Hot'];
 
 export const leadStatusOptions = [
   'Qualified Lead',
-  'Interest shown',
-  'Investment motive verified',
+  'Interest Shown',
+  'Investment Motive Verified',
   'Signed MOU',
   'Signed Lease',
   'Evaluation',
-  'Stakeholder meetings',
+  'Stakeholder Meetings',
   'Site Visit',
-  'Ready to sign'
+  'Ready to Sign'
 ];
 
 export const leadSourceOptions = [
@@ -1308,14 +1310,14 @@ export const months = {
 
 export const leadStatuses = {
   Ql: 'Qualified Lead',
-  Is: 'Interest shown',
-  Iv: 'Interest shown',
+  Is: 'Interest Shown',
+  Iv: 'Interest Shown',
   Sm: 'Signed MOU',
   Sl: 'Signed Lease',
   Ev: 'Evaluation',
-  St: 'Stakeholder meetings',
+  St: 'Stakeholder Meetings',
   Sv: 'Site Visit',
-  Rs: 'Ready to sign',
+  Rs: 'Ready to Sign',
   Im: 'Investment Motive Verified'
 };
 

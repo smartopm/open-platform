@@ -3,7 +3,7 @@ import React from 'react';
 import { act, render, fireEvent } from '@testing-library/react';
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom/';
-import '@testing-library/jest-dom/extend-expect';
+
 import 'leaflet';
 import 'leaflet-draw';
 import LandParcelModal from '../../components/LandParcels/LandParcelModal';

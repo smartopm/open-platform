@@ -23,7 +23,7 @@ describe('helpers', () => {
     ]);
     expect(filterEmptyObjectByKey(arr, 'name')).toHaveLength(3);
   });
-  it('should return empty arr if none is provied', () => {
+  it('should return empty arr if none is provided', () => {
     expect(filterEmptyObjectByKey([], 'id')).toHaveLength(0);
     expect(filterEmptyObjectByKey(null, 'id')).toEqual([]);
   });
@@ -57,11 +57,19 @@ describe('helpers', () => {
         guestData: { startsAt: new Date() }
       }).valid
     ).toBe(true);
+
+    expect(
+      validateGuest({
+        update: true,
+        t: t1,
+        guestData: { startsAt: new Date() }
+      }).valid
+    ).toBe(true);
   });
 
   it('formats days', () => {
     const occursOn = ['tuesday', 'monday', 'thursday']
     expect(formatReoccuringDays(occursOn)).toMatchObject([' T ', ' M ', ' T '])
     expect(formatReoccuringDays([])).toBe('-')
-  })
+  });
 });

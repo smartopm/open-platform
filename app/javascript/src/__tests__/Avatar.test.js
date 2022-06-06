@@ -3,7 +3,7 @@ import { render } from '@testing-library/react';
 import Avatar, { safeAvatarLink } from '../components/Avatar'
 import { Context } from '../containers/Provider/AuthStateProvider'
 import userMock from '../__mocks__/userMock'
-import '@testing-library/jest-dom/extend-expect';
+
 
 describe('Avatar component', () => {
   it('should render a users custom avatar if available', () => {

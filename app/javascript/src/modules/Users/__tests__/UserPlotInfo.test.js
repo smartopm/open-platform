@@ -3,7 +3,7 @@ import { BrowserRouter } from 'react-router-dom'
 import { cleanup, render, fireEvent } from '@testing-library/react'
 import { MockedProvider } from '@apollo/react-testing'
 import UserPlotInfo from '../Components/UserPlotInfo'
-import '@testing-library/jest-dom/extend-expect'
+
 import MockedThemeProvider from '../../__mocks__/mock_theme'
 
 describe('User Plot Info Page', () => {

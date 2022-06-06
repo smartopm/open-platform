@@ -259,6 +259,7 @@ ActiveRecord::Schema.define(version: 2022_06_06_080117) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "status", default: "valid"
+    t.integer "tag", default: 0
     t.index ["community_id"], name: "index_discussions_on_community_id"
     t.index ["status"], name: "index_discussions_on_status"
     t.index ["user_id"], name: "index_discussions_on_user_id"
@@ -601,6 +602,7 @@ ActiveRecord::Schema.define(version: 2022_06_06_080117) do
     t.datetime "updated_at", precision: 6, null: false
     t.string "description"
     t.uuid "community_id"
+    t.integer "category"
     t.index ["community_id"], name: "index_notifications_on_community_id"
     t.index ["notifable_type", "notifable_id"], name: "index_notifications_on_notifable_type_and_notifable_id"
     t.index ["user_id"], name: "index_notifications_on_user_id"

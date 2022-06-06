@@ -3,7 +3,7 @@ import React from 'react'
 import { act, render, fireEvent } from '@testing-library/react'
 import { MockedProvider } from '@apollo/react-testing'
 import { BrowserRouter } from 'react-router-dom/'
-import '@testing-library/jest-dom/extend-expect'
+
 import PointOfInterestModal from '../../components/LandParcels/PointOfInterestModal'
 
 describe('Point Of Interest Modal Component', () => {

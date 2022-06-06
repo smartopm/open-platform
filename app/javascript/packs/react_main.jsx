@@ -58,14 +58,12 @@ import UserRoutes from '../src/modules/Users/UserRoutes';
 import I18Initializer from '../src/modules/i18n/Components/I18Initializer';
 import PostPage from '../src/modules/News/Components/PostPage';
 import Posts from '../src/modules/News/Components/Posts';
-import UsersImport from '../src/modules/Users/Containers/UsersImport';
 import { checkAllowedCommunityFeatures } from '../src/utils/helpers';
 import BusinessProfile from '../src/modules/Business/Components/BusinessProfilePage';
 import EmployeeTimeSheetLog from '../src/modules/TimeCard/Components/EmployeeLogs';
 import EmailBuilderDialog from '../src/modules/Emails/components/EmailBuilderDialog';
 import { PRIMARY_DOMAINS } from '../src/utils/constants';
 import TaskProcessDetail from '../src/modules/Tasks/Processes/Components/TaskProcessDetail';
-import LeadManagementUserImport from '../src/modules/Users/LeadManagement/Containers/LeadManagementUserImport';
 import GuestQRPage from '../src/modules/LogBook/Components/GuestQRPage';
 import Welcome from '../src/modules/LogBook/Kiosk/components/Welcome';
 import Accesspage from '../src/modules/LogBook/Kiosk/components/AccessPage';
@@ -166,7 +164,7 @@ const App = () => {
           <AuthStateProvider>
             <Analytics>
               <I18Initializer
-                render={(community) => (
+                render={community => (
                   <StyledEngineProvider injectFirst>
                     <ThemeProvider theme={theme(community?.themeColors)}>
                       {/* onboarding */}
@@ -437,11 +435,6 @@ const App = () => {
                                           <Route
                                             path="/processes/:id/comments"
                                             component={ProcessCommentsPage}
-                                          />
-                                          <Route path="/users/import" component={UsersImport} />
-                                          <Route
-                                            path="/users/leads/import"
-                                            component={LeadManagementUserImport}
                                           />
                                           <Route path="/showroom_logs" component={ShowroomLogs} />
                                           <Route path="/notes" component={AllNotes} />

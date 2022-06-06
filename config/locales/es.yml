@@ -315,6 +315,12 @@ es:
     metropolis: metropolis
     nkwashi: nkwashi
     tilisi: tilisi
+  discussion_title:
+    events: Eventos
+    family: Familia
+    items_for_sale: Productos en venta
+    recommendations: Recomendaciones
+    safety: La seguridad
   email_template:
     comment_reply:
       action: IR A COMENTARIO
@@ -464,6 +470,7 @@ es:
       not_found: Formulario de usuario de propiedad  no encontrada
     user:
       cannot_access_app: No tienes acceso a la aplicación
+      cannot_send_message: No hay número de teléfono para enviar mensaje
       cannot_send_otp: No hay número de teléfono para enviar el código de un solo
         uso
       cannot_send_otp_link: El usuario no tiene acceso a la aplicación.
@@ -490,6 +497,11 @@ es:
     thanks_for_using_our_app: Gracias por usar nuestra aplicación, por favor use este
       enlace para darnos su opinión %{feedback_link}
   internet_off: Parece que no hay conexión de internet.
+  notification_description:
+    comment: "¡%{user} comentó!"
+    message: "%{user} te envió un mensaje de texto."
+    reply_requested: "%{user} pidió respuesta."
+    task: Se le asignó la tarea %{task}.
   offline: Huy.
   permission:
     bad_query: Consulta incorrecta, función o módulo no válido

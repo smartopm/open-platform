@@ -1,12 +1,12 @@
 import React from 'react';
-import '@testing-library/jest-dom/extend-expect';
+
 import { render, screen, waitFor } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min';
 import { MockedProvider } from '@apollo/react-testing';
 import authState from '../../../../__mocks__/authstate';
 import { Context } from '../../../../containers/Provider/AuthStateProvider';
 import LeadManagementDetails from '../Components/LeadManagementDetails';
-import { LeadDetailsQuery } from '../../../../graphql/queries';
+import { LeadDetailsQuery, LeadLabelsQuery } from '../../../../graphql/queries';
 import MockedThemeProvider from '../../../__mocks__/mock_theme';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
@@ -106,6 +106,32 @@ describe('LeadManagementDetails Page', () => {
               }
             }
           }
+        }
+      }
+    },
+    {
+      request: {
+        query: LeadLabelsQuery,
+        variables: { userId: 'c96f64bb-e3b4-42ff-b6a9-66889ec79e99' }
+      },
+      result: {
+        data: {
+          leadLabels: [
+            {
+              color: '#f07030',
+              groupingName: 'Status',
+              id: '50077585-b04e-445f-87b6-5aa752353a0b',
+              shortDesc: 'QualifiedLead',
+              __typename: 'Label'
+            },
+            {
+              color: '#2c8bd0',
+              groupingName: 'Division',
+              id: 'b7074b29-f63e-4c83-9884-8f95542069fe',
+              shortDesc: 'Europe',
+              __typename: 'Label'
+            }
+          ]
         }
       }
     }

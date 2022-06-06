@@ -3,7 +3,7 @@ import { render } from '@testing-library/react'
 import { MockedProvider } from '@apollo/react-testing'
 import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min'
 import ActionCardMenu from '../components/ActionCardMenu'
-import '@testing-library/jest-dom/extend-expect'
+
 
 const props = {
   open: true,

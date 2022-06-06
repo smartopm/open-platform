@@ -112,7 +112,7 @@ describe('Gate Access', () => {
       .click();
     cy.wait(200);
     cy.get('[data-testid=menu_item]')
-      .eq(0)
+      .eq(1)
       .click();
     cy.wait(2000);
     cy.contains('Cancelled').should('exist');

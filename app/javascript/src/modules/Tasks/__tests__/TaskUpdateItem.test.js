@@ -4,7 +4,7 @@ import { BrowserRouter } from 'react-router-dom/'
 import { MockedProvider } from '@apollo/react-testing'
 import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined'
 import TaskUpdateItem from '../Components/TaskUpdateItem'
-import '@testing-library/jest-dom/extend-expect'
+
 
 describe('Comment Card Component', () => {
   const mock = {

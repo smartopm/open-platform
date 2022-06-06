@@ -1,7 +1,7 @@
 import React from 'react'
 import { MockedProvider } from '@apollo/react-testing'
 import { act, render, fireEvent, waitFor } from '@testing-library/react'
-import '@testing-library/jest-dom/extend-expect'
+
 import Tag from '../Components/Tag'
 import TagPosts from '../Components/TagPosts'
 import { PostTagUser } from '../../../graphql/queries'

@@ -3,7 +3,7 @@ import { render, screen, waitFor } from '@testing-library/react'
 import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min'
 import { MockedProvider } from '@apollo/react-testing'
 import CommentsPage from '../containers/Comments/CommentPage'
-import '@testing-library/jest-dom/extend-expect'
+
 
 describe('Comments Page', () => {
   it('renders the comments page', async () => {

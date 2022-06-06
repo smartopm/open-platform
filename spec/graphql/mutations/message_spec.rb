@@ -15,7 +15,9 @@ RSpec.describe Mutations::Message do
              user_type: 'resident',
              community_id: non_admin.community_id)
     end
-    let!(:admin) { create(:admin_user, community_id: non_admin.community_id) }
+    let!(:admin) do
+      create(:admin_user, community_id: non_admin.community_id, phone_number: '260971500748')
+    end
     let!(:note) do
       admin.notes.create!(
         body: 'This is a note',
@@ -116,6 +118,23 @@ RSpec.describe Mutations::Message do
       expect(Notes::NoteHistory.last.note_id).to eql note.id
       expect(Notes::NoteHistory.last.user_id).to eql non_admin.id
       expect(result['errors']).to be_nil
+    end
+
+    context 'when message is sent' do
+      it 'creates notification for receiver' do
+        variables = {
+          receiver: admin.phone_number,
+          message: 'Hello You, hope you are well',
+          userId: admin.id,
+        }
+        result = DoubleGdpSchema.execute(query, variables: variables,
+                                                context: {
+                                                  site_community: non_admin.community,
+                                                  current_user: non_admin,
+                                                }).as_json
+        expect(result['errors']).to be_nil
+        expect(admin.notifications.count).to eql 1
+      end
     end
 
     context 'when receiver phone number is blank' do

@@ -42,6 +42,7 @@ export default function CreatePointOfInterest({ refetch }) {
       setOpen(false);
       refetch();
       history.push('/land_parcels')
+      window.location.reload()
     }).catch((err) => {
       setMessageAlert(formatError(err.message))
       setIsSuccessAlert(false)

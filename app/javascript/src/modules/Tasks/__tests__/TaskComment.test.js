@@ -3,7 +3,7 @@ import { render } from '@testing-library/react'
 import { BrowserRouter } from 'react-router-dom/'
 import { MockedProvider } from '@apollo/react-testing'
 import TaskComment from '../Components/TaskComment'
-import '@testing-library/jest-dom/extend-expect'
+
 import { CommentQuery } from '../../../graphql/queries';
 
 describe('Task Comment Component', () => {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react';
 import CustomSpeedDial from '../../buttons/SpeedDial';
-import '@testing-library/jest-dom/extend-expect';
+
 import MockedThemeProvider from '../../../modules/__mocks__/mock_theme';
 
 describe('Speed dial component', () => {

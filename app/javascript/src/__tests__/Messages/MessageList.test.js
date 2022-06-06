@@ -3,7 +3,7 @@ import React from 'react'
 import { render } from '@testing-library/react'
 import { BrowserRouter } from 'react-router-dom'
 import { MockedProvider } from '@apollo/react-testing'
-import '@testing-library/jest-dom/extend-expect'
+
 import MessageList from '../../components/Messaging/MessageList'
 
 describe('message list component', () => {

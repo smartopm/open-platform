@@ -2,7 +2,7 @@
 import React from 'react'
 import DateFilterComponent from '../components/DateFilterComponent'
 import { render, fireEvent } from '@testing-library/react'
-import '@testing-library/jest-dom/extend-expect'
+
 
 describe('filter users for campaign component', () => {
   it('should display logged in to option', () => {

@@ -450,3 +450,14 @@ en:
     nkwashi: nkwashi
     tilisi: tilisi
     metropolis: metropolis
+  discussion_title:
+    safety: Safety
+    events: Events
+    recommendations: Recommendations
+    items_for_sale: Items For Sale
+    family: Family
+  notification_description:
+    task: '%{task} task is assigned to you.'
+    message: '%{user} texted you.'
+    comment: '%{user} commented!'
+    reply_requested: '%{user} requested reply.'

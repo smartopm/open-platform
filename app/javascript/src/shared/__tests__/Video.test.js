@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, waitFor } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
+
 import { useFetchMedia } from '../../utils/customHooks';
 import Video from "../Video";
 import { Context } from '../../containers/Provider/AuthStateProvider';

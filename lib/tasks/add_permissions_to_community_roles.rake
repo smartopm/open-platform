@@ -6,7 +6,8 @@ namespace :db do
   desc 'Add permissions to role based on community_permissions.yml file'
   task add_permissions_to_community_roles: :environment do
     ActiveRecord::Base.transaction do
-      valid_community_names = ['Nkwashi', 'Ciudad Morazán', 'DoubleGDP', 'Tilisi', 'DAST']
+      valid_community_names = ['Nkwashi', 'Ciudad Morazán', 'DoubleGDP', 'Tilisi',
+                               'DAST', 'Enyimba', 'Greenpark']
       community_hash = {}
       Community.find_each do |community|
         name = community.name
@@ -21,7 +22,7 @@ namespace :db do
                          message settings showroom subscription_plan substatus_log
                          temparature timesheet transaction upload user gate_access dashboard
                          guest_list profile logout communication community_settings sos
-                         event_log].freeze
+                         event_log process lead lead_log messages].freeze
       communities = permission_list.keys
       communities.each do |community_name|
         next unless valid_community_names.include? community_name
