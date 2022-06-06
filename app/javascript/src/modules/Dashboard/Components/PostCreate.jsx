@@ -70,6 +70,9 @@ export default function PostCreate({
   useEffect(() => {
     if (editModal) {
       setPost(postData.content);
+      if (postData.accessibility) {
+        setVisibilityOption(actionVisibilityOptions[postData.accessibility]);
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editModal]);
@@ -89,6 +92,10 @@ export default function PostCreate({
     setIsCreateModalOpen(true);
   }
 
+  function setAccessibility(obj, option) {
+    return Object.keys(obj).find(key => objectAccessor(obj, key) === option);
+  }
+
   function closeCreateModal() {
     setIsCreateModalOpen(false);
     if (editModal) {
@@ -105,7 +112,8 @@ export default function PostCreate({
       return updatePost({
         variables: {
           content: post,
-          id: postData.id
+          id: postData.id,
+          accessibility: setAccessibility(actionVisibilityOptions, visibilityOption)
         }
       });
     }
@@ -115,9 +123,7 @@ export default function PostCreate({
         // TODO: Remove this dummy ID
         discussionId: '12456484',
         imageBlobIds: blobIds,
-        accessibility: Object.keys(actionVisibilityOptions).find(
-          key => objectAccessor(actionVisibilityOptions, key) === visibilityOption
-        )
+        accessibility: setAccessibility(actionVisibilityOptions, visibilityOption)
       }
     });
   }
@@ -244,7 +250,8 @@ PostCreate.propTypes = {
   refetchNews: PropTypes.func.isRequired,
   postData: PropTypes.shape({
     id: PropTypes.string,
-    content: PropTypes.string
+    content: PropTypes.string,
+    accessibility: PropTypes.string,
   }),
   editModal: PropTypes.bool,
   setPostData: PropTypes.func,

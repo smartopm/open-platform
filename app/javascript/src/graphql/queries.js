@@ -506,6 +506,7 @@ export const CommunityNewsPostsQuery = gql`
       id
       discussionId
       imageUrls
+      accessibility
       user {
         id
         name

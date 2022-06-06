@@ -75,15 +75,15 @@ export default function DialogWithImageUpload({
             multiline
             fullWidth
           />
-          {open && !editModal && (
+          {open && (
             <Grid container className={styles.upload}>
-              {modalDetails.uploadInstruction && (
+              {modalDetails.uploadInstruction && !editModal && (
                 <Grid item sm={8} data-testid="upload_label">
                   {modalDetails.uploadInstruction}
                 </Grid>
               )}
 
-              {!matches && (
+              {!matches && !editModal && (
                 <Grid
                   item
                   sm={4}

@@ -751,8 +751,8 @@ export const PostCreateMutation = gql`
 `;
 
 export const PostUpdateMutation = gql`
-  mutation postUpdate($id: ID!, $content: String) {
-    postUpdate(id: $id, content: $content) {
+  mutation postUpdate($id: ID!, $content: String, $accessibility: String) {
+    postUpdate(id: $id, content: $content, accessibility: $accessibility) {
       post {
         content
       }
