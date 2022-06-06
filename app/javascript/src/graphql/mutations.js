@@ -367,8 +367,8 @@ export const TaskComment = gql`
 `;
 
 export const TaskCommentUpdate = gql`
-  mutation noteCommentUpdate($id: ID!, $body: String!) {
-    noteCommentUpdate(id: $id, body: $body) {
+  mutation noteCommentUpdate($id: ID!, $body: String!, $taggedDocuments: [ID]) {
+    noteCommentUpdate(id: $id, body: $body, taggedDocuments: $taggedDocuments) {
       noteComment {
         body
       }

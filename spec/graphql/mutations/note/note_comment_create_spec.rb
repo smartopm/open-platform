@@ -56,8 +56,8 @@ RSpec.describe Mutations::Note::NoteCommentCreate do
     end
     let(:query) do
       <<~GQL
-        mutation noteCommentCreate($noteId: ID!, $body: String!, $replyRequired: Boolean, $replyFromId: ID, $groupingId: ID) {
-          noteCommentCreate(noteId: $noteId, body: $body, replyRequired: $replyRequired, replyFromId: $replyFromId, groupingId: $groupingId){
+        mutation noteCommentCreate($noteId: ID!, $body: String!, $replyRequired: Boolean, $replyFromId: ID, $groupingId: ID, $taggedDocuments: [ID]) {
+          noteCommentCreate(noteId: $noteId, body: $body, replyRequired: $replyRequired, replyFromId: $replyFromId, groupingId: $groupingId, taggedDocuments: $taggedDocuments){
             noteComment {
               id
               body

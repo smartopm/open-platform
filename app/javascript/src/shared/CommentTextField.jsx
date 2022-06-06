@@ -127,7 +127,8 @@ CommentTextField.defaultProps = {
   autoCompleteOpen: false,
   setAutoCompleteOpen: null,
   taskAssignees: null,
-  mentionsData: []
+  mentionsData: [],
+  setMentionedDocuments: () => {}
 };
 
 CommentTextField.propTypes = {
@@ -142,7 +143,7 @@ CommentTextField.propTypes = {
   autoCompleteOpen: PropTypes.bool,
   setAutoCompleteOpen: PropTypes.func,
   taskAssignees: PropTypes.array,
-  setMentionedDocuments: PropTypes.func.isRequired,
+  setMentionedDocuments: PropTypes.func,
   mentionsData: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string,

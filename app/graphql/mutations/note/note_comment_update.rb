@@ -6,15 +6,16 @@ module Mutations
     class NoteCommentUpdate < BaseMutation
       argument :id, ID, required: true
       argument :body, String, required: true
+      argument :tagged_documents, [ID, { null: true }], required: false
 
       field :note_comment, Types::NoteCommentType, null: true
 
-      def resolve(id:, body:)
+      def resolve(id:, body:, tagged_documents:)
         comment = Comments::NoteComment.find_by(id: id)
         return { note_comment: comment } if comment.body.eql?(body)
 
         updates_hash = { body: [comment.body, body] }
-        if comment.update(body: body)
+        if comment.update(body: body, tagged_documents: tagged_documents)
           comment.record_note_history(context[:current_user], updates_hash)
           return { note_comment: comment }
         end

@@ -642,8 +642,11 @@ export function decodeHtmlEntity(str) {
 
 export function replaceDocumentMentions(text, path) {
   if (!text) return;
+  if (!path) return text;
+
   const updatedText = text.replace(/\###(.*?)\###/g, (m) => {
     return `<a href='${path}&document_id=${m.split("__")[1]}'>${m.split("__")[2]}</a>`
   });
-  return sanitizeText(updatedText);
+
+  return updatedText;
 }

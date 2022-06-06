@@ -38,6 +38,7 @@ export default function CommentField({
         replyFromId: replyFrom.id
       };
     }
+
     setLoading(true);
     commentCreate({
       variables
@@ -83,6 +84,7 @@ export default function CommentField({
         refetch={refetch}
         commentsRefetch={commentsRefetch}
         mentionsData={mentionsData}
+        forProcess={forProcess}
         forAccordionSection
       />
       {Boolean(error.length) && <p className="text-center">{error}</p>}

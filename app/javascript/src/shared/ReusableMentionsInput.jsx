@@ -66,6 +66,7 @@ export default function ReusableMentionsInput({
       onChange={handleOnChange}
       style={defaultStyle}
       className="mentions-input"
+      data-testid="body_input"
       allowSpaceInQuery
     >
       <Mention

@@ -6,7 +6,7 @@ import {
   findLinkAndReplace, forceLinkHttps, titleCase, truncateString, removeNewLines, checkForHtmlTags,
   sanitizeText, getJustLabels, checkValidGeoJSON, getHexColor, getDrawPluginOptions,
   handleQueryOnChange, checkAccessibilityForUserType, extractHostname, getObjectKey,
-  decodeHtmlEntity
+  decodeHtmlEntity, replaceDocumentMentions
 } from '../../utils/helpers'
 
 jest.mock('dompurify')
@@ -273,5 +273,19 @@ describe('#decodeHtmlEntity', () => {
   it('decodes encoded HTML special characters and entity', () => {
     expect(decodeHtmlEntity('This Year &#8211; WINNERS')).toEqual('This Year – WINNERS');
     expect(decodeHtmlEntity('Copyright &#169; 2021 &#38; 2022')).toEqual('Copyright © 2021 & 2022');
+  });
+});
+
+describe('#replaceDocumentMentions', () => {
+  it('returns if no text is passed', () => {
+    expect(replaceDocumentMentions(null, 'https://url.com')).toBeUndefined()
+  });
+
+  it('returns text if no link is passed', () => {
+    expect(replaceDocumentMentions('Have you seen this doc ###__1234__doc-name__###', null)).toEqual('Have you seen this doc ###__1234__doc-name__###');
+  });
+
+  it('returns a text with replaced mentions', () => {
+    expect(replaceDocumentMentions('Have you seen this doc ###__1234__doc-name__### ?', '/projects/path')).toEqual(`Have you seen this doc <a href='/projects/path&document_id=1234'>doc-name</a> ?`);
   });
 });
