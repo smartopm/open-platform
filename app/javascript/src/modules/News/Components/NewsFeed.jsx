@@ -1,5 +1,3 @@
-/* eslint-disable react/prop-types */
-/* eslint-disable no-use-before-define */
 import React from 'react';
 import makeStyles from '@mui/styles/makeStyles';
 import Card from '@mui/material/Card';
@@ -62,16 +60,20 @@ export function PostItemGrid({ data, loading }) {
                         data-testid="tile_image"
                       />
                       <CardContent>
-                        <Typography variant="body1">{tile.title}</Typography>
-                        <br />
-                        <Typography variant="body2" color="text.secondary" component="div">
-                          <div
-                            // eslint-disable-next-line react/no-danger
-                            dangerouslySetInnerHTML={{
+                        <Typography
+                          variant="body1"
+                          dangerouslySetInnerHTML={{
+                                __html: sanitizeText(tile.title)
+                              }}
+                        />
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          component="div"
+                          dangerouslySetInnerHTML={{
                               __html: sanitizeText(truncateString(tile.excerpt, 190))
                             }}
-                          />
-                        </Typography>
+                        />
                       </CardContent>
                     </Card>
                   </Grid>
@@ -111,6 +113,17 @@ export function PostItemGrid({ data, loading }) {
     </div>
   );
 }
+
+PostItemGrid.defaultProps = {
+  loading: false,
+  data: []
+};
+
+PostItemGrid.propTypes = {
+  data: PropTypes.arrayOf(PropTypes.object),
+  loading: PropTypes.bool
+};
+
 
 export default function NewsFeed({ wordpressEndpoint }) {
   const matches = useMediaQuery('(max-width:600px)');
