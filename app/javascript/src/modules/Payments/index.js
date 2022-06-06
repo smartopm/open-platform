@@ -5,7 +5,7 @@ import Payments from "./Components/Payments";
 import AccessCheck from '../Permissions/Components/AccessCheck';
 import  RenderPayment from './TransactionLogs';
 
-const paymentsPermissions = ['can_access_all_payments'];
+const paymentsPermissions = ['can_access_all_payments', 'can_see_menu_item'];
 const currentModule = 'plan_payment';
 
 function RenderPaymentsList() {
@@ -34,7 +34,7 @@ const PaymentRoutes = [
   },
   {
     routeProps: {
-      path: '/payments/rave',
+      path: '/payments/pay',
       component: RenderPayment,
       exact: true,
     },

@@ -60,7 +60,8 @@ export default function PaymentForm() {
         invoiceNumber: inputValue.invoiceNumber,
         transactionId: response.transaction_id,
         transactionRef: response.tx_ref,
-        description: inputValue.description
+        description: inputValue.description,
+        accountName: inputValue.accountName,
       }
     })
       .then(() => {

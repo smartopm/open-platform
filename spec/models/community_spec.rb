@@ -34,6 +34,7 @@ RSpec.describe Community, type: :model do
     it { is_expected.to have_db_column(:sms_phone_numbers).of_type(:string) }
     it { is_expected.to have_db_column(:emergency_call_number).of_type(:string) }
     it { is_expected.to have_db_column(:ga_id).of_type(:string) }
+    it { is_expected.to have_db_column(:payment_keys).of_type(:json) }
     it do
       is_expected.to have_db_column(:domains).of_type(:string)
                                              .with_options(default: [], array: true)
@@ -116,6 +117,7 @@ RSpec.describe Community, type: :model do
       is_expected.to have_many(:time_sheets).class_name('Users::TimeSheet').dependent(:destroy)
     end
     it { is_expected.to have_many(:posts).class_name('Discussions::Post') }
+    it { is_expected.to have_many(:transaction_logs).class_name('Payments::TransactionLog') }
   end
 
   it 'should be associated with users' do

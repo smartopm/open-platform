@@ -10,6 +10,7 @@ export const TransactionLogCreateMutation = gql`
     $transactionId: Int!
     $transactionRef: Int!
     $description: String!
+    $accountName: String!
   ) {
     transactionLogCreate(
       paidAmount: $paidAmount
@@ -19,6 +20,7 @@ export const TransactionLogCreateMutation = gql`
       transactionId: $transactionId
       transactionRef: $transactionRef
       description: $description
+      accountName: $accountName
     ) {
       success
     }

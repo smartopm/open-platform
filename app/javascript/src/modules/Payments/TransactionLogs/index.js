@@ -3,9 +3,9 @@ import AccessCheck from '../../Permissions/Components/AccessCheck';
 import PaymentForm from './Components/PaymentForm';
 
 // TODO: Update this permission
-const paymentPermission = ['can_access_all_payments'];
+const paymentPermission = ['can_make_payment', 'can_see_menu_item'];
 
-const currentModule = 'plan_payment'
+const currentModule = 'transaction'
 
 export default function RenderPayment() {
   return (
