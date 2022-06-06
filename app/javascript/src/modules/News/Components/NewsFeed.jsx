@@ -13,7 +13,7 @@ import { useFetch } from '../../../utils/customHooks';
 import CustomSkeleton from '../../../shared/CustomSkeleton';
 import CenteredContent from '../../../shared/CenteredContent';
 import CardWrapper from '../../../shared/CardWrapper';
-import { sanitizeText, truncateString } from '../../../utils/helpers';
+import { decodeHtmlEntity, sanitizeText, truncateString } from '../../../utils/helpers';
 import MediaCard from '../../../shared/MediaCard';
 import ControlledCard from '../../../shared/ControlledCard';
 
@@ -56,23 +56,23 @@ export function PostItemGrid({ data, loading }) {
                         component="img"
                         height="194"
                         image={tile.featured_image}
-                        alt={tile.title}
+                        alt={decodeHtmlEntity(tile.title)}
                         data-testid="tile_image"
                       />
                       <CardContent>
                         <Typography
                           variant="body1"
                           dangerouslySetInnerHTML={{
-                                __html: sanitizeText(tile.title)
-                              }}
+                            __html: sanitizeText(tile.title)
+                          }}
                         />
                         <Typography
                           variant="body2"
                           color="text.secondary"
                           component="div"
                           dangerouslySetInnerHTML={{
-                              __html: sanitizeText(truncateString(tile.excerpt, 190))
-                            }}
+                            __html: sanitizeText(truncateString(tile.excerpt, 190))
+                          }}
                         />
                       </CardContent>
                     </Card>
@@ -85,7 +85,7 @@ export function PostItemGrid({ data, loading }) {
                     className={classes.gridItem}
                   >
                     <MediaCard
-                      title={tile.title}
+                      title={decodeHtmlEntity(tile.title)}
                       subtitle={tile.excerpt}
                       imageUrl={tile.featured_image}
                     />
