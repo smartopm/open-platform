@@ -19,7 +19,7 @@ module Mutations
         log_attributes = vals.merge(community_id: context[:site_community].id)
         log = context[:current_user].transaction_logs.create!(log_attributes)
 
-        return { success: true } if log.persisted!
+        return { success: true } if log.persisted?
 
         raise GraphQL::ExecutionError, log.errors.full_messages
       end
