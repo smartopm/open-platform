@@ -193,6 +193,8 @@ module Types::Queries::LeadLog
 
   def investment_stats(user_id:)
     lead_log = deal_details(user_id: user_id, limit: 1).first
+    return {} if lead_log.nil?
+
     total_spent = context[:site_community].lead_logs.investment.where(user_id: user_id).sum(:amount)
 
     {

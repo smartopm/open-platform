@@ -101,6 +101,10 @@ en:
       logs/substatus_log:
         community: Community
         user: User
+      logs/lead_log:
+        deal_size: Deal Size
+        investment_target: Investment Target
+        amount: Amount
       notes/assignee_note:
         note: Note
         user: User

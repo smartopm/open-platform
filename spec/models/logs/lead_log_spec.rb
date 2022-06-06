@@ -32,4 +32,27 @@ RSpec.describe Logs::LeadLog, type: :model do
         )
     end
   end
+
+  describe 'validations' do
+    context 'when log_type is investment' do
+      before { allow(subject).to receive(:log_type) { 'investment' } }
+      it { is_expected.to validate_presence_of(:amount) }
+      it { is_expected.to validate_numericality_of(:amount).is_greater_than_or_equal_to(0) }
+    end
+
+    context 'when log_type is deal_details' do
+      before { allow(subject).to receive(:log_type) { 'deal_details' } }
+      it { is_expected.to validate_presence_of(:deal_size) }
+      it { is_expected.to validate_presence_of(:investment_target) }
+      it do
+        is_expected.to validate_numericality_of(:deal_size).is_greater_than_or_equal_to(0)
+      end
+      it do
+        is_expected.to validate_numericality_of(:investment_target).is_greater_than_or_equal_to(0)
+      end
+      it do
+        is_expected.to validate_numericality_of(:investment_target).is_less_than_or_equal_to(100)
+      end
+    end
+  end
 end
