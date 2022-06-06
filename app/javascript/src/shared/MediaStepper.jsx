@@ -65,7 +65,14 @@ export function Pagination({ dots, index, onChangeIndex }) {
     );
   }
 
-  return <div data-testid="pagination-dot-container" className={classes.paginationContainer}>{children}</div>;
+  return (
+    <div
+      data-testid="pagination-dot-container"
+      className={classes.paginationContainer}
+    >
+      {children}
+    </div>
+    )
 }
 
 export function PaginationDot({ active, activeIndex, onClick }) {
@@ -86,8 +93,8 @@ export function PaginationDot({ active, activeIndex, onClick }) {
 const useStyles = makeStyles(() => ({
   root: {
     position: "absolute",
-    width: "100%", // "77% mob: 95%",
-    top: "12%", // desktop "40% mob: 24%",
+    width: "100%",
+    top: "12%",
     display: "flex",
     justifyContent: "space-between",
     paddingLeft: "4px",
@@ -99,9 +106,10 @@ const useStyles = makeStyles(() => ({
   },
   paginationContainer: {
     position: "absolute",
-    left: "30%",
+    width: "100%",
     display: "flex",
-    flexDirection: "row"
+    flexDirection: "row",
+    justifyContent: 'center',
   },
   paginationButton: {
     height: 18,

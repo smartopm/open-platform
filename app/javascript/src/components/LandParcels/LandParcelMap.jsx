@@ -1,9 +1,8 @@
 import React, { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { useMutation, useApolloClient, useLazyQuery } from 'react-apollo';
-import { Button, Grid, Divider } from '@mui/material';
+import { Button, Grid, Divider, Typography } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
-import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import { Map, FeatureGroup, GeoJSON, LayersControl, TileLayer } from 'react-leaflet'
 import L from 'leaflet'
 import MarkerClusterGroup from 'react-leaflet-markercluster';
@@ -305,14 +304,14 @@ export default function LandParcelMap({ handlePlotClick, geoData }) {
         }}
       >
         <Divider />
-        <Grid container direction="row" justify="space-around" alignItems="flex-start">
-          <Grid item>
-            <Button variant="contained" color="secondary" onClick={() => setConfirmDeletePoi(true)}>
-              Delete
+        <Grid container>
+          <Grid item md={4}>
+            <Button data-testid="delete-poi-btn" variant="text" color="primary" onClick={() => setConfirmDeletePoi(true)}>
+              {t('common:menu.delete')}
             </Button>
           </Grid>
-          <Grid item>
-            <label style={{ marginTop: 5 }} htmlFor="image">
+          <Grid item md={5}>
+            <label htmlFor="image">
               <input
                 type="file"
                 name="image"
@@ -321,19 +320,28 @@ export default function LandParcelMap({ handlePlotClick, geoData }) {
                 onChange={e => handleFileUpload(e.target.files[0])}
                 style={{ display: 'none' }}
               />
-              <AddPhotoAlternateIcon color="primary" style={{ cursor: 'pointer' }} />
+              <Button
+                component="span"
+                variant="contained"
+                color="primary"
+                data-testid="add-poi-photo"
+                disableElevation
+                style={{ color: '#ffffff'}}
+              >
+                {t('property:buttons.add_photo')}
+              </Button>
             </label>
           </Grid>
           {uploadStatus === 'DONE' && (
-          <Grid item>
-            <span style={{ marginTop: 5, marginRight: 35 }}>
+          <Grid item md={12}>
+            <Typography>
               {t('common:misc.image_uploaded')}
-            </span>
-            <Button variant="contained" color="secondary" onClick={handleSaveUploadedPhoto}>
+            </Typography>
+            <Button variant="contained" color="primary" onClick={handleSaveUploadedPhoto}>
               {t('common:form_actions.save_changes')}
             </Button>
           </Grid>
-        )}
+          )}
         </Grid>
       </PointOfInterestDrawerDialog>
       <div data-testid="leaflet-map-container">

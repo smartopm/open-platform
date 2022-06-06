@@ -1,13 +1,16 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Drawer, Grid, Card, Typography, CardContent, CardActions } from '@mui/material';
+import { Drawer, Grid, Card, Typography, CardContent, CardActions, useMediaQuery } from '@mui/material';
 import { useTranslation } from 'react-i18next';
-import { makeStyles } from '@mui/styles';
+import { makeStyles, useTheme } from '@mui/styles';
 import CustomCarousel from '../../shared/CustomCarousel';
 import { Spinner } from '../../shared/Loading';
 
 export default function PointOfInterestDrawerDialog({ anchor, children, open, onClose, imageData, selectedPoi }){
   const classes = useStyles();
+  const theme = useTheme();
+  const matchesSm = useMediaQuery(theme.breakpoints.only('sm'));
+  const matchesxs = useMediaQuery(theme.breakpoints.only('xs'));
   const { t } = useTranslation('property');
 
   return (
@@ -16,14 +19,14 @@ export default function PointOfInterestDrawerDialog({ anchor, children, open, on
         anchor={anchor}
         open={open}
         onClose={onClose}
-        classes={{paper: classes.drawerPaper }}
+        classes={{paper: (matchesSm || matchesxs) ? classes.drawerPaperMobile : classes.drawerPaper }}
         data-testid="poi-drawer"
       >
         {selectedPoi ? (
           <>
             <Grid container>
               <Grid item md={12}>
-                <Card sx={{ width: '100%' }} elevation={0} data-testid="drawer-media">
+                <Card sx={{ width: '100%' }} elevation={0} data-testid="drawer-media" style={{ borderRadius: 0 }}>
                   {imageData.loading && <Spinner />}
                   {!imageData.loading && (
                     <CustomCarousel
@@ -43,16 +46,16 @@ export default function PointOfInterestDrawerDialog({ anchor, children, open, on
                       <hr />
                       <br />
                       <Typography variant="h6" color="text.secondary">{t('dialog_headers.details')}</Typography>
-                      <Typography>
+                      <Typography variant="body2" color="text.secondary">
                         {' '}
                         <b>
                           {t('poi_list.type')}
                           {' '}
                         </b>
                         {' '}
-                        {selectedPoi.parcelType}
+                        Point of Interest
                       </Typography>
-                      <Typography>
+                      <Typography variant="body2" color="text.secondary">
                         {' '}
                         <b>
                           {t('poi_list.longitude_x')}
@@ -61,7 +64,7 @@ export default function PointOfInterestDrawerDialog({ anchor, children, open, on
                         {' '}
                         {selectedPoi.longX}
                       </Typography>
-                      <Typography>
+                      <Typography variant="body2" color="text.secondary">
                         {' '}
                         <b>
                           {t('poi_list.latitude_y')}
@@ -88,24 +91,17 @@ export default function PointOfInterestDrawerDialog({ anchor, children, open, on
 const useStyles = makeStyles(() => ({
   drawerPaper: {
     width: '25%',
-    background: '#FAFAFA !important',
     border: '0px !important',
     zIndex: 10
   },
   drawerPaperMobile: {
     width: '93%',
-    background: '#FFFFFF !important',
-  },
-  mdDrawerPaper: {
-    width: '40%',
-    background: '#FAFAFA !important',
-    border: '0px !important'
   },
 }));
 
 PointOfInterestDrawerDialog.defaultProps ={
   anchor: 'right',
-  children: [],
+  children: null,
   imageData: {
     url: '',
     loading: false,

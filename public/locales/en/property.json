@@ -4,7 +4,8 @@
     "merge_and_save": "Merge and Save",
     "new_owner": "New Owner",
     "new_property": "New Property",
-    "new_point_of_interest": "New Point of Interest"
+    "new_point_of_interest": "New Point of Interest",
+    "add_photo": "Add Photo"
   },
   "dialog_headers":{
     "details": "Details",

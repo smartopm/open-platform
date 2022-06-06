@@ -22,7 +22,8 @@ describe('PointOfInterestDrawerDialog', () => {
         longX: 28.123,
         latY: -15.123,
         videoUrls: [],
-      }
+      },
+      children: [],
     }
 
     render(
@@ -46,11 +47,49 @@ describe('PointOfInterestDrawerDialog', () => {
         expect(screen.getByText('Hotel Description')).toBeTruthy()
         expect(screen.getByText('dialog_headers.details')).toBeTruthy()
         expect(screen.getByText('poi_list.type')).toBeTruthy()
-        expect(screen.getByText('poi')).toBeTruthy()
+        expect(screen.getByText('Point of Interest')).toBeTruthy()
         expect(screen.getByText('poi_list.longitude_x')).toBeTruthy()
         expect(screen.getByText('-15.123')).toBeTruthy()
         expect(screen.getByText('poi_list.latitude_y')).toBeTruthy()
         expect(screen.getByText('28.123')).toBeTruthy()
+    }, 10)
+  });
+
+  it('should mount children components correctly', async () => {
+    const props = {
+      anchor: 'right',
+      open: true,
+      onClose: jest.fn,
+      imageData: { urls: [], loading: false },
+      selectedPoi: {
+        poiName: 'Hotel',
+        description: 'Hotel Description',
+        parcelNumber: 'poi-123',
+        parcelType: 'poi',
+        longX: 28.123,
+        latY: -15.123,
+        videoUrls: [],
+      },
+      children: [<p key="123" data-testid="child-component">Child Component</p>],
+    }
+
+    render(
+      <MockedProvider>
+        <AuthStateProvider>
+          <BrowserRouter>
+            <MockedThemeProvider>
+              <PointOfInterestDrawerDialog
+                {...props}
+              />
+            </MockedThemeProvider>
+          </BrowserRouter>
+        </AuthStateProvider>
+      </MockedProvider>
+      )
+
+    await waitFor(() => {
+        expect(screen.getByText('Child Component')).toBeTruthy()
+        expect(screen.queryByTestId('child-component')).toBeTruthy()
     }, 10)
   });
 

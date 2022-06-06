@@ -17,10 +17,7 @@ describe('LandParcelMap', () => {
       geoData: []
     };
 
-    let container;
-
-    await act(async () => {
-      container = render(
+      render(
         <MockedProvider>
           <BrowserRouter>
             <MockedThemeProvider>
@@ -29,11 +26,8 @@ describe('LandParcelMap', () => {
           </BrowserRouter>
         </MockedProvider>
       );
-    });
-
 
     await waitFor(() => {
-      screen.debug()
       expect(screen.queryByTestId('leaflet-map-container')).toBeInTheDocument()
     }, 10)
   });
@@ -76,7 +70,7 @@ describe('LandParcelMap', () => {
       expect(screen.getByText('Hotel Description')).toBeTruthy()
       expect(screen.getByText('dialog_headers.details')).toBeTruthy()
       expect(screen.getByText('poi_list.type')).toBeTruthy()
-      expect(screen.getByText('poi')).toBeTruthy()
+      expect(screen.getByText('Point of Interest')).toBeTruthy()
       expect(screen.getByText('poi_list.longitude_x')).toBeTruthy()
       expect(screen.getByText('-15.123')).toBeTruthy()
       expect(screen.getByText('poi_list.latitude_y')).toBeTruthy()
