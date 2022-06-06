@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_06_03_121523) do
+ActiveRecord::Schema.define(version: 2022_06_06_080117) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -227,6 +227,7 @@ ActiveRecord::Schema.define(version: 2022_06_03_121523) do
     t.string "domains", default: [], array: true
     t.integer "hotjar"
     t.json "lead_monthly_targets"
+    t.json "payment_keys"
     t.index ["slug"], name: "index_communities_on_slug", unique: true
   end
 

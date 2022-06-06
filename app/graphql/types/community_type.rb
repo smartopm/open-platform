@@ -27,6 +27,8 @@ module Types
     field :sub_administrator, Types::UserType, null: true
     field :banking_details, GraphQL::Types::JSON, null: true
     field :community_required_fields, GraphQL::Types::JSON, null: true
+    # TODO: remove this field or encrypt it before sending to f.e
+    field :payment_keys, GraphQL::Types::JSON, null: true
     field :sms_phone_numbers, [String, { null: true }], null: true
     field :emergency_call_number, String, null: true
     field :templates, GraphQL::Types::JSON, null: true
