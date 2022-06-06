@@ -14,7 +14,7 @@ import { Link } from 'react-router-dom';
 import MoreVertOutlined from '@mui/icons-material/MoreVertOutlined';
 import { useTranslation } from 'react-i18next';
 import { PostUpdateMutation } from '../../../graphql/mutations';
-import { findLinkAndReplace, sanitizeText } from '../../../utils/helpers';
+import { accessibilityOptions, findLinkAndReplace, sanitizeText, setAccessibilityValue } from '../../../utils/helpers';
 import Avatar from '../../../components/Avatar';
 import DateContainer from '../../../components/DateContainer';
 import ImageAuth from '../../../shared/ImageAuth';
@@ -33,6 +33,8 @@ export default function CommentSection({ data, handleDeleteComment, refetch }) {
     message: '',
     loading: false
   });
+  const [visibilityOption, setVisibilityOption] = useState('Everyone');
+  const actionVisibilityOptions = accessibilityOptions();
   const [updatePost] = useMutation(PostUpdateMutation);
   const anchorElOpen = Boolean(anchorEl);
   const menuList = [
@@ -52,7 +54,11 @@ export default function CommentSection({ data, handleDeleteComment, refetch }) {
 
   const modalDetails = {
     title: t('dashboard:dashboard.edit_post'),
-    inputPlaceholder: t('dashboard:dashboard.whats_happening')
+    inputPlaceholder: t('dashboard:dashboard.whats_happening'),
+    actionVisibilityOptions,
+    actionVisibilityLabel: t('dashboard:dashboard.who_can_see_post'),
+    handleVisibilityOptions: option => setVisibilityOption(option),
+    visibilityValue: visibilityOption
   };
 
   const menuData = {
@@ -75,6 +81,9 @@ export default function CommentSection({ data, handleDeleteComment, refetch }) {
 
   function handleEditClick() {
     setPost(data.comment);
+    if (data.accessibility) {
+      setVisibilityOption(actionVisibilityOptions[data.accessibility]);
+    }
     setEditModal(true);
   }
 
@@ -94,7 +103,8 @@ export default function CommentSection({ data, handleDeleteComment, refetch }) {
     updatePost({
       variables: {
         content: post,
-        id: data.id
+        id: data.id,
+        accessibility: setAccessibilityValue(actionVisibilityOptions, visibilityOption)
       }
     })
       .then(() => {
@@ -230,6 +240,7 @@ CommentSection.defaultProps = {
 
 CommentSection.propTypes = {
   data: PropTypes.shape({
+    accessibility: PropTypes.string,
     user: PropTypes.shape({
       name: PropTypes.string.isRequired,
       id: PropTypes.string.isRequired

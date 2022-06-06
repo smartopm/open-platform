@@ -616,5 +616,16 @@ export function extractHostname(urlString) {
   return {
     hostname: urlString.split('/')[2],
     userId: urlString.split('/')[4]
-  } 
+  }
+}
+
+export function accessibilityOptions() {
+  return {
+    admins: 'Admins Only',
+    everyone: 'Everyone'
+  }
+}
+
+export function setAccessibilityValue(obj, option) {
+  return Object.keys(obj).find(key => objectAccessor(obj, key) === option);
 }

@@ -488,6 +488,7 @@ export const DiscussionPostsQuery = gql`
       createdAt
       id
       imageUrls
+      accessibility
       user {
         id
         name
