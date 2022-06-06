@@ -20,7 +20,9 @@ import {
   checkAllowedCommunityFeatures,
   ifNotTest,
   toTitleCase,
-  splitCamelCase
+  splitCamelCase,
+  accessibilityOptions,
+  setAccessibilityValue
 } from '../utils/helpers'
 
 const message =
@@ -272,3 +274,24 @@ describe('slit camelCase', () => {
     expect(splitCamelCase('SampleCamel')).toBe('Sample Camel')
   })
 })
+
+describe('accessibilityOptions', () => {
+  it('should return an object of available accessibility options', () => {
+    const response = accessibilityOptions();
+    expect(response).toBeInstanceOf(Object);
+    expect(Object.keys(response).includes('admins')).toBeTruthy();
+    expect(Object.keys(response).includes('everyone')).toBeTruthy();
+  })
+});
+
+describe('setAccessibilityValue', () => {
+  it("should the key for an object's value if the key is found", () => {
+    const obj = { one: 'two', three: 'four' }
+    const response = setAccessibilityValue(obj, 'two');
+
+    expect(response).toBeTruthy();
+    expect(response).toEqual('one');
+
+    expect(setAccessibilityValue(obj, 'five')).toBe(undefined)
+  });
+});

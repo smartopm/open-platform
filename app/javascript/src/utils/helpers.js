@@ -619,6 +619,10 @@ export function extractHostname(urlString) {
   }
 }
 
+/**
+ *
+ * @returns object
+ */
 export function accessibilityOptions() {
   return {
     admins: 'Admins Only',
@@ -626,6 +630,12 @@ export function accessibilityOptions() {
   }
 }
 
+/**
+ *
+ * @param {Object} obj object
+ * @param {String} option word
+ * @returns string
+ */
 export function setAccessibilityValue(obj, option) {
   return Object.keys(obj).find(key => objectAccessor(obj, key) === option);
 }
