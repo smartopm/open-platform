@@ -25,6 +25,7 @@ export default function NotificationCard({ notification }) {
   };
   return (
     <Grid container className={classes.container} data-testid='card'>
+      {console.log(notification)}
       <Grid item md={6} sm={6} xs={6} data-testid='chip'>
         <Chip
           size="small"
