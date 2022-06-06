@@ -46,7 +46,6 @@ export default function AdminDashboard() {
   return (
     <Container maxWidth="xl" data-testid="processes-admin-dashboard">
       <Grid container>
-        <Grid item md={11} />
         <Grid item md={11} xs={10}>
           <Typography variant="h4" className={classes.title}>
             {t('processes.processes')}
