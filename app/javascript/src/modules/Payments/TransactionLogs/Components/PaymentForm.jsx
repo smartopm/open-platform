@@ -1,4 +1,4 @@
-import { Button, InputAdornment, TextField } from '@mui/material';
+import { Button, Container, Grid, InputAdornment, TextField, Typography } from '@mui/material';
 import { closePaymentModal, useFlutterwave } from 'flutterwave-react-v3';
 import React, { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -73,61 +73,63 @@ export default function PaymentForm() {
   }
 
   return (
-    <PageWrapper>
-      <MessageAlert
-        type={!message.isError ? 'success' : 'error'}
-        message={message.detail}
-        open={!!message.detail}
-        handleClose={() => setMessage(initialMessage)}
-      />
-      <TextField
-        margin="normal"
-        id="account-name"
-        label={t('form_fields.account_name')}
-        value={inputValue.accountName}
-        onChange={event => setInputValue({ ...inputValue, accountName: event.target.value })}
-        fullWidth
-      />
-      <TextField
-        margin="normal"
-        id="invoice-number"
-        label={t('form_fields.invoice_number')}
-        value={inputValue.invoiceNumber}
-        onChange={event => setInputValue({ ...inputValue, invoiceNumber: event.target.value })}
-        InputProps={{
+    <Container>
+      <Typography variant="h4">{t('payment:misc.make_a_payment')}</Typography>
+      <PageWrapper>
+        <MessageAlert
+          type={!message.isError ? 'success' : 'error'}
+          message={message.detail}
+          open={!!message.detail}
+          handleClose={() => setMessage(initialMessage)}
+        />
+        <TextField
+          margin="normal"
+          id="account-name"
+          label={t('form_fields.account_name')}
+          value={inputValue.accountName}
+          onChange={event => setInputValue({ ...inputValue, accountName: event.target.value })}
+          fullWidth
+        />
+        <TextField
+          margin="normal"
+          id="invoice-number"
+          label={t('form_fields.invoice_number')}
+          value={inputValue.invoiceNumber}
+          onChange={event => setInputValue({ ...inputValue, invoiceNumber: event.target.value })}
+          InputProps={{
             startAdornment: <InputAdornment position="start">#</InputAdornment>,
           }}
-        fullWidth
-      />
-      <TextField
-        margin="normal"
-        id="payment-amount"
-        label={t('table_headers.amount')}
-        value={inputValue.amount}
-        onChange={event => setInputValue({ ...inputValue, amount: event.target.value })}
-        InputProps={{
+          fullWidth
+        />
+        <TextField
+          margin="normal"
+          id="payment-amount"
+          label={t('table_headers.amount')}
+          value={inputValue.amount}
+          onChange={event => setInputValue({ ...inputValue, amount: event.target.value })}
+          InputProps={{
             startAdornment: <InputAdornment position="start">{currency}</InputAdornment>,
           }}
-        fullWidth
-      />
-      <TextField
-        margin="normal"
-        id="description"
-        label={t('task:task.optional_description')}
-        value={inputValue.description}
-        onChange={event => setInputValue({ ...inputValue, description: event.target.value })}
-        fullWidth
-      />
-      <br />
-      <br />
-      <CenteredContent>
-        <Button
-          variant="contained"
-          color="primary"
-          disableElevation
-          data-testid="make_a_payment_btn"
-          endIcon={<ArrowRightAltIcon />}
-          onClick={() => {
+          fullWidth
+        />
+        <TextField
+          margin="normal"
+          id="description"
+          label={t('task:task.optional_description')}
+          value={inputValue.description}
+          onChange={event => setInputValue({ ...inputValue, description: event.target.value })}
+          fullWidth
+        />
+        <br />
+        <br />
+        <CenteredContent>
+          <Button
+            variant="contained"
+            color="primary"
+            disableElevation
+            data-testid="make_a_payment_btn"
+            endIcon={<ArrowRightAltIcon />}
+            onClick={() => {
           handleFlutterPayment({
             callback: (response) => {
               verifyTransaction(response)
@@ -135,11 +137,11 @@ export default function PaymentForm() {
             onClose: () => {}
           });
         }}
-
-        >
-          {t('misc.next')}
-        </Button>
-      </CenteredContent>
-    </PageWrapper>
+          >
+            {t('misc.next')}
+          </Button>
+        </CenteredContent>
+      </PageWrapper>
+    </Container>
   );
 }
