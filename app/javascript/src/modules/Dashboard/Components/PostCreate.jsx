@@ -7,7 +7,7 @@ import useFileUpload from '../../../graphql/useFileUpload';
 import { PostCreateMutation, PostUpdateMutation } from '../../../graphql/mutations';
 import MessageAlert from '../../../components/MessageAlert';
 import { Spinner } from '../../../shared/Loading';
-import { objectAccessor } from '../../../utils/helpers';
+import { accessibilityOptions, setAccessibilityValue } from '../../../utils/helpers';
 
 export default function PostCreate({
   translate,
@@ -41,10 +41,7 @@ export default function PostCreate({
   });
 
   const [createPost] = useMutation(PostCreateMutation);
-  const actionVisibilityOptions = {
-    admins: 'Admins Only',
-    everyone: 'Everyone'
-  };
+  const actionVisibilityOptions = accessibilityOptions();
   const [updatePost] = useMutation(PostUpdateMutation);
   const modalDetails = {
     title: editModal ? translate('dashboard.edit_post') : translate('dashboard.start_post'),
@@ -92,10 +89,6 @@ export default function PostCreate({
     setIsCreateModalOpen(true);
   }
 
-  function setAccessibility(obj, option) {
-    return Object.keys(obj).find(key => objectAccessor(obj, key) === option);
-  }
-
   function closeCreateModal() {
     setIsCreateModalOpen(false);
     if (editModal) {
@@ -113,7 +106,7 @@ export default function PostCreate({
         variables: {
           content: post,
           id: postData.id,
-          accessibility: setAccessibility(actionVisibilityOptions, visibilityOption)
+          accessibility: setAccessibilityValue(actionVisibilityOptions, visibilityOption)
         }
       });
     }
@@ -123,7 +116,7 @@ export default function PostCreate({
         // TODO: Remove this dummy ID
         discussionId: '12456484',
         imageBlobIds: blobIds,
-        accessibility: setAccessibility(actionVisibilityOptions, visibilityOption)
+        accessibility: setAccessibilityValue(actionVisibilityOptions, visibilityOption)
       }
     });
   }
