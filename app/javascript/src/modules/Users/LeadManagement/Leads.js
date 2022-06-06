@@ -1,6 +1,6 @@
 import React from 'react';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
-import LeadsPage from './Components/LeadsPage'
+import LeadsPage from './Components/LeadsPage';
 import { RenderUsers } from '..';
 
 export default {
@@ -12,7 +12,7 @@ export default {
     icon: <FilterAltIcon />
   },
   name: t => t('menu.leads'),
-  moduleName: 'lead',
+  moduleName: 'user',
   featureName: 'Users',
   accessibleBy: [],
   subMenu: [
@@ -30,7 +30,7 @@ export default {
     {
       routeProps: {
         path: '/leads/users',
-        component: RenderUsers,
+        component: RenderUsers
       },
       name: t => t('menu.lead_users'),
       featureName: 'Users',
