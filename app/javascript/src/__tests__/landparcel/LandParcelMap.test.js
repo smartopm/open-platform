@@ -2,7 +2,7 @@
 import React from 'react';
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min';
-import { act, render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import { AuthStateProvider } from '../../containers/Provider/AuthStateProvider';
 import LandParcelMap from '../../components/LandParcels/LandParcelMap';
 import PointOfInterestDrawerDialog from '../../components/Map/PointOfInterestDrawerDialog';
