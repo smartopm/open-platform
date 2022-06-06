@@ -3,7 +3,7 @@ import React from 'react'
 import { render, fireEvent, screen, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/react-testing'
 import { BrowserRouter } from 'react-router-dom/'
-
+import MockedThemeProvider from '../../modules/__mocks__/mock_theme'
 import PointOfInterestModal from '../../components/LandParcels/PointOfInterestModal'
 
 describe('Point Of Interest Modal Component', () => {
@@ -16,7 +16,9 @@ describe('Point Of Interest Modal Component', () => {
     render(
       <MockedProvider>
         <BrowserRouter>
+        <MockedThemeProvider>
           <PointOfInterestModal {...props} />
+        </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>
     )

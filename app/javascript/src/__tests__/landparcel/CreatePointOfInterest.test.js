@@ -3,7 +3,7 @@ import React from 'react'
 import { render, fireEvent, waitFor, screen } from '@testing-library/react'
 import { MockedProvider } from '@apollo/react-testing'
 import { BrowserRouter } from 'react-router-dom/'
-
+import MockedThemeProvider from '../../modules/__mocks__/mock_theme'
 import CreatePointOfInterest from '../../components/LandParcels/CreatePointOfInterest'
 
 describe('Create Point of Interest Component', () => {
@@ -12,7 +12,9 @@ describe('Create Point of Interest Component', () => {
     render(
       <MockedProvider>
         <BrowserRouter>
+        <MockedThemeProvider>
           <CreatePointOfInterest refetch={refetch} />
+        </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>)
 

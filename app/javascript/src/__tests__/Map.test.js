@@ -7,6 +7,7 @@ import { MockedProvider } from '@apollo/react-testing';
 import { Context } from '../containers/Provider/AuthStateProvider';
 import { createClient } from '../utils/apollo';
 import Map from '../containers/Map';
+import MockedThemeProvider from '../modules/__mocks__/mock_theme';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 
@@ -29,7 +30,9 @@ describe('Map page', () => {
         <Context.Provider value={data}>
           <MockedProvider mocks={[]} addTypename={false}>
             <BrowserRouter>
+            <MockedThemeProvider>
               <Map />
+            </MockedThemeProvider>
             </BrowserRouter>
           </MockedProvider>
         </Context.Provider>

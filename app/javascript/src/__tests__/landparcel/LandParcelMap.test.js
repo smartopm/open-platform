@@ -4,9 +4,9 @@ import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min';
 import { render, screen, waitFor } from '@testing-library/react';
 import { AuthStateProvider } from '../../containers/Provider/AuthStateProvider';
+import MockedThemeProvider from '../../modules/__mocks__/mock_theme';
 import LandParcelMap from '../../components/LandParcels/LandParcelMap';
 import PointOfInterestDrawerDialog from '../../components/Map/PointOfInterestDrawerDialog';
-import MockedThemeProvider from '../../modules/__mocks__/mock_theme';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 jest.mock('react-leaflet');

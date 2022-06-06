@@ -109,9 +109,11 @@ describe('PointOfInterestDrawerDialog', () => {
         <MockedProvider>
           <AuthStateProvider>
             <BrowserRouter>
+            <MockedThemeProvider>
               <PointOfInterestDrawerDialog
                 {...props}
-              />
+                />
+              </MockedThemeProvider>
             </BrowserRouter>
           </AuthStateProvider>
         </MockedProvider>
