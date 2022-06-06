@@ -9,6 +9,7 @@ const UserNotifications = gql`
       createdAt
       seenAt
       header
+      notifableId
     }
   }
 `;

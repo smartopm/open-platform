@@ -3,6 +3,7 @@ import Grid from '@mui/material/Grid';
 import Chip from '@mui/material/Chip';
 import { useTranslation } from 'react-i18next';
 import makeStyles from '@mui/styles/makeStyles';
+import { useHistory } from 'react-router-dom'
 import { Typography } from '@mui/material';
 import PropTypes from 'prop-types';
 import { objectAccessor } from '../../../utils/helpers';
@@ -11,6 +12,7 @@ import { dateToString } from '../../../components/DateContainer';
 export default function NotificationCard({ notification }) {
   const { t } = useTranslation('notification');
   const classes = useStyles();
+  const history = useHistory();
   const notificationTypes = {
     task: t('notification.task'),
     reply_requested: t('notification.reply_requested'),
@@ -23,9 +25,12 @@ export default function NotificationCard({ notification }) {
     comment: '#578EC1',
     message: '#67B387'
   };
+
+  function handleCardClick() {
+    history.push(`${notification.category === 'task' ? `/tasks?taskId=${notification.notifableId}` : `/message/${notification.notifableId}`}`)
+  }
   return (
-    <Grid container className={classes.container} data-testid='card'>
-      {console.log(notification)}
+    <Grid container className={classes.container} data-testid='card' onClick={() => handleCardClick()}>
       <Grid item md={6} sm={6} xs={6} data-testid='chip'>
         <Chip
           size="small"
@@ -74,6 +79,7 @@ NotificationCard.propTypes = {
     category: PropTypes.string,
     createdAt: PropTypes.string,
     description: PropTypes.string,
-    header: PropTypes.string
+    header: PropTypes.string,
+    notifableId: PropTypes.string
   })
 };
