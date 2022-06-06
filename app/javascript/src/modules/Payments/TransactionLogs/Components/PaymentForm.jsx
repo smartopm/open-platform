@@ -31,7 +31,7 @@ export default function PaymentForm() {
   const currencyData = { locale: authState.user.community.locale, currency: communityCurrency }
   const currency = extractCurrency(currencyData)
   const config = {
-    public_key: '',
+    public_key: authState.user.community.paymentKeys?.public_key,
     tx_ref: Date.now(),
     amount: inputValue.amount,
     currency: communityCurrency,

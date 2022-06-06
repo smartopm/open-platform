@@ -67,6 +67,7 @@ const QUERY = gql`
         features
         roles
         leadMonthlyTargets
+        paymentKeys
       }
     }
   }
