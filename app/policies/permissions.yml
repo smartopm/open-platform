@@ -278,6 +278,7 @@ admin:
       - can_create_lead_log
       - can_update_lead_log
       - can_fetch_lead_logs
+      - can_access_lead_scorecard
   lead:
     permissions:
       - can_view_lead_users
