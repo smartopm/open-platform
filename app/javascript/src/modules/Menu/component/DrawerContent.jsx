@@ -9,7 +9,7 @@ import CenteredContent from '../../../shared/CenteredContent';
 import { formatError } from '../../../utils/helpers';
 import CustomSkeleton from '../../../shared/CustomSkeleton';
 
-export default function DrawerContent({ userId }) {
+export default function DrawerContent({ userId, setOpenDrawer }) {
   const { t } = useTranslation('notification');
   const { data, loading, error, refetch } = useQuery(UserNotifications, {
     fetchPolicy: 'cache-and-network',
@@ -40,7 +40,12 @@ export default function DrawerContent({ userId }) {
       {data?.userNotifications.length > 0 ? (
         data?.userNotifications.map(notification => (
           <React.Fragment key={notification.id}>
-            <NotificationCard notification={notification} userId={userId} refetch={refetch} />
+            <NotificationCard
+              notification={notification}
+              userId={userId}
+              refetch={refetch}
+              setOpenDrawer={setOpenDrawer}
+            />
           </React.Fragment>
         ))
       ) : (
@@ -55,9 +60,11 @@ export default function DrawerContent({ userId }) {
 }
 
 DrawerContent.defaultProps = {
-  userId: null
-}
+  userId: null,
+  setOpenDrawer: () => {}
+};
 
 DrawerContent.propTypes = {
-  userId: PropTypes.string
+  userId: PropTypes.string,
+  setOpenDrawer: PropTypes.func
 };

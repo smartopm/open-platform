@@ -144,7 +144,7 @@ export function MainNav({ authState }) {
             </IconButton>
           </Grid>
           <Grid item md={12} sm={12} xs={12}>
-            <DrawerContent userId={authState?.user?.id} />
+            <DrawerContent userId={authState?.user?.id} setOpenDrawer={setOpenDrawer} />
           </Grid>
         </Grid>
       </CustomDrawer>
