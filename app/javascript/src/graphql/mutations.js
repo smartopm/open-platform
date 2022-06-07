@@ -349,6 +349,7 @@ export const TaskComment = gql`
     $replyRequired: Boolean
     $replyFromId: ID
     $groupingId: ID
+    $taggedDocuments: [ID]
   ) {
     noteCommentCreate(
       noteId: $noteId
@@ -356,6 +357,7 @@ export const TaskComment = gql`
       replyRequired: $replyRequired
       replyFromId: $replyFromId
       groupingId: $groupingId
+      taggedDocuments: $taggedDocuments
     ) {
       noteComment {
         body
@@ -365,8 +367,8 @@ export const TaskComment = gql`
 `;
 
 export const TaskCommentUpdate = gql`
-  mutation noteCommentUpdate($id: ID!, $body: String!) {
-    noteCommentUpdate(id: $id, body: $body) {
+  mutation noteCommentUpdate($id: ID!, $body: String!, $taggedDocuments: [ID]) {
+    noteCommentUpdate(id: $id, body: $body, taggedDocuments: $taggedDocuments) {
       noteComment {
         body
       }

@@ -26,11 +26,22 @@ import { dateToString } from '../../../components/DateContainer';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
 import { groupComments, lastRepliedComment, isDiscussionResolved } from '../Processes/utils';
 import CommentTextField from '../../../shared/CommentTextField';
-import { useParamsQuery, objectAccessor } from '../../../utils/helpers';
+import {
+  useParamsQuery,
+  objectAccessor,
+  replaceDocumentMentions,
+  sanitizeText
+} from '../../../utils/helpers';
 import { TaskComment } from '../../../graphql/mutations';
 import { ResolveComments } from '../graphql/task_mutation';
 
-export default function CommentCard({ comments, refetch, commentsRefetch, forAccordionSection }) {
+export default function CommentCard({
+  comments,
+  refetch,
+  commentsRefetch,
+  forAccordionSection,
+  mentionsData
+}) {
   const [open, setOpen] = useState(false);
   const [editId, setEditId] = useState(null);
   const [edit, setEdit] = useState(false);
@@ -42,6 +53,7 @@ export default function CommentCard({ comments, refetch, commentsRefetch, forAcc
   const [currentComment, setCurrentComment] = useState('');
   const [replyingGroupingId, setReplyingGroupingId] = useState(null);
   const [replyValue, setReplyValue] = useState('');
+  const [mentionedDocuments, setMentionedDocuments] = useState([]);
   const [highlightDiscussion, setHighlightDiscussion] = useState(false);
   const [error, setErrorMessage] = useState('');
   const [loading, setLoading] = useState(false);
@@ -137,6 +149,7 @@ export default function CommentCard({ comments, refetch, commentsRefetch, forAcc
         body: replyValue,
         replyRequired: true,
         replyFromId: lastRepliedComment(groupedComments, groupingId).user.id,
+        taggedDocuments: mentionedDocuments,
         groupingId
       }
     })
@@ -215,127 +228,138 @@ export default function CommentCard({ comments, refetch, commentsRefetch, forAcc
               key={groupingId}
               id={forAccordionSection ? groupingId : ''}
               style={{
-              borderRadius: '10px',
-              paddingTop: '8px',
-              paddingLeft: '8px',
-              background: `${
-                forAccordionSection && highlightDiscussion && replyingDiscussion === groupingId
-                  ? '#e9f3fc'
-                  : ''
-              }`
-            }}
+                borderRadius: '10px',
+                paddingTop: '8px',
+                paddingLeft: '8px',
+                background: `${
+                  forAccordionSection && highlightDiscussion && replyingDiscussion === groupingId
+                    ? '#e9f3fc'
+                    : ''
+                }`
+              }}
             >
               {forAccordionSection && index === 0 && <hr />}
               {(groupingId === 'no-group'
-              ? objectAccessor(groupedComments, groupingId)
-              : objectAccessor(groupedComments, groupingId)?.reverse()
-            )?.map(com => (
-              <Fragment key={com.id}>
-                {!edit && editId !== com.id && (
-                  <ListItem style={{ marginBottom: '20px' }}>
-                    <ListItemText
-                      disableTypography
-                      secondary={(
-                        <>
-                          <div style={{ display: 'flex' }}>
-                            <Avatar
-                              src={com.user.imageUrl}
-                              alt="avatar-image"
-                              style={{ margin: '-7px 10px 0 0' }}
-                            />
-                            <div
-                              data-testid="comment-body"
-                              style={{
-                                color: '#575757',
-                                overflowWrap: 'anywhere',
-                                marginTop: '-20px'
-                              }}
-                            >
-                              <Typography
-                                component="span"
-                                variant="body2"
-                                style={{ fontSize: '12px' }}
+                ? objectAccessor(groupedComments, groupingId)
+                : objectAccessor(groupedComments, groupingId)?.reverse()
+              )?.map(com => (
+                <Fragment key={com.id}>
+                  {!edit && editId !== com.id && (
+                    <ListItem style={{ marginBottom: '20px' }}>
+                      <ListItemText
+                        disableTypography
+                        secondary={(
+                          <>
+                            <div style={{ display: 'flex' }}>
+                              <Avatar
+                                src={com.user.imageUrl}
+                                alt="avatar-image"
+                                style={{ margin: '-7px 10px 0 0' }}
+                              />
+                              <div
+                                data-testid="comment-body"
+                                style={{
+                                  color: '#575757',
+                                  overflowWrap: 'anywhere',
+                                  marginTop: '-20px'
+                                }}
                               >
-                                {dateToString(com.createdAt)}
-                              </Typography>
-                              {com.replyRequired && !com.repliedAt && (
                                 <Typography
-                                  data-testid="needs_reply_text"
                                   component="span"
                                   variant="body2"
-                                  style={{
-                                    marginLeft: '15px',
-                                    fontSize: '12px',
-                                    color: '#C5261B',
-                                    textDecoration: `${
-                                      !forAccordionSection ? 'underline' : 'none'
-                                    }`,
-                                    cursor: `${!forAccordionSection ? 'pointer' : ''}`
-                                  }}
-                                  onClick={() =>
-                                    !forAccordionSection
-                                      ? goToReplyComment(groupingId, com.noteId)
-                                      : {}
-                                  }
+                                  style={{ fontSize: '12px' }}
                                 >
-                                  {`${t('task.needs_reply_from')} ${com.replyFrom.name}`}
+                                  {dateToString(com.createdAt)}
                                 </Typography>
-                              )}
-                              {com.replyRequired && com.repliedAt && forAccordionSection && (
-                                <Typography
-                                  data-testid="replied_text"
-                                  component="span"
-                                  variant="body2"
-                                  style={{
-                                    marginLeft: '15px',
-                                    fontSize: '12px'
-                                  }}
-                                >
-                                  {`${com.replyFrom.name} ${t('task.replied')} ${dateToString(
-                                    com.repliedAt
-                                  )}`}
+                                {com.replyRequired && !com.repliedAt && (
+                                  <Typography
+                                    data-testid="needs_reply_text"
+                                    component="span"
+                                    variant="body2"
+                                    style={{
+                                      marginLeft: '15px',
+                                      fontSize: '12px',
+                                      color: '#C5261B',
+                                      textDecoration: `${
+                                        !forAccordionSection ? 'underline' : 'none'
+                                      }`,
+                                      cursor: `${!forAccordionSection ? 'pointer' : ''}`
+                                    }}
+                                    onClick={() =>
+                                      !forAccordionSection
+                                        ? goToReplyComment(groupingId, com.noteId)
+                                        : {}
+                                    }
+                                  >
+                                    {`${t('task.needs_reply_from')} ${com.replyFrom.name}`}
+                                  </Typography>
+                                )}
+                                {com.replyRequired && com.repliedAt && forAccordionSection && (
+                                  <Typography
+                                    data-testid="replied_text"
+                                    component="span"
+                                    variant="body2"
+                                    style={{
+                                      marginLeft: '15px',
+                                      fontSize: '12px'
+                                    }}
+                                  >
+                                    {`${com.replyFrom.name} ${t('task.replied')} ${dateToString(
+                                      com.repliedAt
+                                    )}`}
+                                  </Typography>
+                                )}
+                                <br />
+                                <Typography component="span" variant="body2">
+                                  {com.user.name}
                                 </Typography>
-                              )}
-                              <br />
-                              <Typography component="span" variant="body2">
-                                {com.user.name}
-                              </Typography>
-                              <br />
-                              <Typography component="span" variant="body2">
-                                {com.body}
-                              </Typography>
+                                <br />
+                                <Typography component="span" variant="body2">
+                                  <span
+                                    // eslint-disable-next-line react/no-danger
+                                    dangerouslySetInnerHTML={{
+                                      __html: sanitizeText(
+                                        replaceDocumentMentions(
+                                          com.body,
+                                          `/processes/${processId}/projects/${projectId}?tab=documents`
+                                        )
+                                      )
+                                    }}
+                                  />
+                                </Typography>
+                              </div>
                             </div>
-                          </div>
-                        </>
+                          </>
+                        )}
+                      />
+                      {(authState.user.userType === 'admin' ||
+                        com.user.id === authState.user.id) && (
+                        <ListItemSecondaryAction className={classes.kabab}>
+                          <IconButton
+                            edge="end"
+                            aria-label="more_details"
+                            data-testid="more_details"
+                            onClick={event => handleOpenMenu(event, com)}
+                            color="primary"
+                            size="large"
+                          >
+                            <MoreVertIcon />
+                          </IconButton>
+                        </ListItemSecondaryAction>
                       )}
+                    </ListItem>
+                  )}
+                  {editId === com.id && (
+                    <EditField
+                      handleClose={handleClose}
+                      data={com}
+                      refetch={refetch}
+                      commentsRefetch={commentsRefetch}
+                      mentionsData={mentionsData}
                     />
-                    {(authState.user.userType === 'admin' ||
-                      com.user.id === authState.user.id) && (
-                      <ListItemSecondaryAction className={classes.kabab}>
-                        <IconButton
-                          edge="end"
-                          aria-label="more_details"
-                          data-testid="more_details"
-                          onClick={event => handleOpenMenu(event, com)}
-                          color="primary"
-                          size="large"
-                        >
-                          <MoreVertIcon />
-                        </IconButton>
-                      </ListItemSecondaryAction>
-                    )}
-                  </ListItem>
-                )}
-                {editId === com.id && (
-                  <EditField
-                    handleClose={handleClose}
-                    data={com}
-                    refetch={refetch}
-                    commentsRefetch={commentsRefetch}
-                  />
-                )}
-              </Fragment>
-            ))}
+                  )}
+                </Fragment>
+              ))}
               {forAccordionSection && isDiscussionResolved(groupedComments, groupingId) ? (
                 <div style={{ marginTop: '-22px', color: '#575757' }}>
                   <IconButton
@@ -369,83 +393,92 @@ export default function CommentCard({ comments, refetch, commentsRefetch, forAcc
                     {dateToString(lastRepliedComment(groupedComments, groupingId)?.repliedAt)}
                   </Typography>
                 </div>
-            ) : (
-              forAccordionSection &&
-              groupingId !== 'no-group' &&
-              lastRepliedComment(groupedComments, groupingId).replyFrom.id ===
-                authState.user.id && (
-                <div style={{ marginTop: '-22px' }}>
-                  {replyingGroupingId !== groupingId ? (
-                    <>
-                      <Button
-                        variant="outlined"
-                        color="primary"
-                        data-testid="reply_btn"
-                        style={{ width: '50px' }}
-                        onClick={() => openReplyInput(groupingId)}
-                        size="small"
-                        fullWidth
-                      >
-                        {t('common:misc.reply')}
-                      </Button>
-                      {authState.user.userType === 'admin' && (
+              ) : (
+                forAccordionSection &&
+                groupingId !== 'no-group' &&
+                lastRepliedComment(groupedComments, groupingId).replyFrom.id ===
+                  authState.user.id && (
+                  <div style={{ marginTop: '-22px' }}>
+                    {replyingGroupingId !== groupingId ? (
+                      <>
                         <Button
                           variant="outlined"
                           color="primary"
-                          data-testid="resolve_btn"
-                          style={{ marginLeft: '25px' }}
-                          onClick={() => onResolveComments(groupingId)}
+                          data-testid="reply_btn"
+                          style={{ width: '50px' }}
+                          onClick={() => openReplyInput(groupingId)}
                           size="small"
+                          fullWidth
                         >
-                          {t('common:misc.resolve_comments')}
+                          {t('common:misc.reply')}
                         </Button>
-                      )}
-                    </>
-                  ) : (
-                    <CommentTextField
-                      value={replyValue}
-                      setValue={setReplyValue}
-                      handleSubmit={event => onReplySubmit(event, groupingId)}
-                      actionTitle={t('common:misc.comment')}
-                      placeholder={t('common:misc.add_reply')}
-                      loading={loading}
-                    />
-                  )}
-                </div>
-              )
-            )}
+                        {authState.user.userType === 'admin' && (
+                          <Button
+                            variant="outlined"
+                            color="primary"
+                            data-testid="resolve_btn"
+                            style={{ marginLeft: '25px' }}
+                            onClick={() => onResolveComments(groupingId)}
+                            size="small"
+                          >
+                            {t('common:misc.resolve_comments')}
+                          </Button>
+                        )}
+                      </>
+                    ) : (
+                      <CommentTextField
+                        value={replyValue}
+                        setValue={setReplyValue}
+                        handleSubmit={event => onReplySubmit(event, groupingId)}
+                        actionTitle={t('common:misc.comment')}
+                        placeholder={t('common:misc.add_reply')}
+                        loading={loading}
+                        mentionsData={mentionsData}
+                        setMentionedDocuments={setMentionedDocuments}
+                      />
+                    )}
+                  </div>
+                )
+              )}
               {forAccordionSection && <hr />}
             </div>
-        ))}
+          ))}
         </List>
       </>
       {open && (
-      <TaskDelete
-        open={open}
-        handleClose={() => setOpen(false)}
-        id={id}
-        name={name}
-        imageUrl={imageUrl}
-        refetch={refetch}
-        body={body}
-        commentsRefetch={commentsRefetch}
-      />
-    )}
+        <TaskDelete
+          open={open}
+          handleClose={() => setOpen(false)}
+          id={id}
+          name={name}
+          imageUrl={imageUrl}
+          refetch={refetch}
+          body={body}
+          commentsRefetch={commentsRefetch}
+        />
+      )}
     </>
-);
+  );
 }
 
 CommentCard.defaultProps = {
   comments: [],
   commentsRefetch: () => {},
-  forAccordionSection: null
+  forAccordionSection: null,
+  mentionsData: []
 };
 CommentCard.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   comments: PropTypes.array,
   refetch: PropTypes.func.isRequired,
   commentsRefetch: PropTypes.func,
-  forAccordionSection: PropTypes.bool
+  forAccordionSection: PropTypes.bool,
+  mentionsData: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string,
+      display: PropTypes.string
+    })
+  )
 };
 
 const useStyles = makeStyles(() => ({

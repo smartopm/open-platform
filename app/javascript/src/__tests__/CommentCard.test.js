@@ -27,6 +27,7 @@ describe('Comment Card Component', () => {
             <CommentCard
               comments={comments}
               refetch={jest.fn}
+              mentionsData={[{id: '3456728dfg', display: 'doc-1'}]}
             />
           </BrowserRouter>
         </MockedProvider>

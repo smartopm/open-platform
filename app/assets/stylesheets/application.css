@@ -296,6 +296,10 @@ body {
   background-size: 20px 20px;
 }
 
+.mentions-input__input:focus {
+  outline: none !important;
+}
+
 @media print {
   html, body {
     height:100vh;

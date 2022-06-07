@@ -12,7 +12,8 @@ export default function CommentField({
   taskId,
   commentsRefetch,
   forProcess,
-  taskAssignees
+  taskAssignees,
+  taskDocuments
 }) {
   const [commentCreate] = useMutation(TaskComment);
   const [body, setBody] = useState('');
@@ -20,12 +21,14 @@ export default function CommentField({
   const [autoCompleteOpen, setAutoCompleteOpen] = useState(false);
   const [error, setErrorMessage] = useState('');
   const [loading, setLoading] = useState(false);
+  const [mentionedDocuments, setMentionedDocuments] = useState([]);
   const { t } = useTranslation('common');
 
   function handleSubmit(event) {
     event.preventDefault();
     let variables = {
       noteId: taskId,
+      taggedDocuments: mentionedDocuments,
       body
     };
     if (replyFrom) {
@@ -35,12 +38,14 @@ export default function CommentField({
         replyFromId: replyFrom.id
       };
     }
+
     setLoading(true);
     commentCreate({
       variables
     })
       .then(() => {
         setBody('');
+        setMentionedDocuments([]);
         refetch();
         commentsRefetch();
         setReplyFrom(null);
@@ -52,6 +57,10 @@ export default function CommentField({
         setLoading(false);
       });
   }
+
+  const mentionsData = taskDocuments?.map(doc => {
+    return { id: doc.id, display: doc.filename };
+  });
   return (
     <>
       <CommentTextField
@@ -67,11 +76,15 @@ export default function CommentField({
         setAutoCompleteOpen={setAutoCompleteOpen}
         taskAssignees={taskAssignees}
         loading={loading}
+        mentionsData={mentionsData}
+        setMentionedDocuments={setMentionedDocuments}
       />
       <CommentCard
         comments={data.taskComments}
         refetch={refetch}
         commentsRefetch={commentsRefetch}
+        mentionsData={mentionsData}
+        forProcess={forProcess}
         forAccordionSection
       />
       {Boolean(error.length) && <p className="text-center">{error}</p>}
@@ -84,7 +97,8 @@ CommentField.defaultProps = {
   taskId: '',
   commentsRefetch: () => {},
   forProcess: false,
-  taskAssignees: null
+  taskAssignees: null,
+  taskDocuments: null
 };
 CommentField.propTypes = {
   data: PropTypes.shape({
@@ -94,5 +108,6 @@ CommentField.propTypes = {
   taskId: PropTypes.string,
   commentsRefetch: PropTypes.func,
   forProcess: PropTypes.bool,
-  taskAssignees: PropTypes.array
+  taskAssignees: PropTypes.array,
+  taskDocuments: PropTypes.arrayOf(PropTypes.object)
 };

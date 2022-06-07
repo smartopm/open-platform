@@ -885,6 +885,7 @@ export const CommentQuery = gql`
       }
       replyRequired
       groupingId
+      taggedDocuments
     }
   }
 `;

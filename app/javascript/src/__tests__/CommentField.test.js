@@ -6,7 +6,6 @@ import { MockedProvider } from '@apollo/react-testing';
 import CommentField from '../modules/Tasks/Components/CommentField';
 
 import { TaskComment } from '../graphql/mutations';
-import { Spinner } from '../shared/Loading';
 import { Context } from '../containers/Provider/AuthStateProvider';
 import authState from '../__mocks__/authstate';
 
@@ -44,27 +43,23 @@ describe('Comment Field Component', () => {
               data={data}
               refetch={jest.fn()}
               taskId="j83hdj3jhu334"
+              taskDocuments={[{ id: '3456728dfg', display: 'doc-1' }]}
             />
           </BrowserRouter>
         </MockedProvider>
       </Context.Provider>
     );
 
-    await waitFor(
-      () => {
-        const body = container.queryByTestId('body_input');
-        ReactTestUtils.Simulate.change(body, { target: { value: 'new body' } });
-        expect(body.value).toBe('new body');
+    const body = container.queryByTestId('body_input');
+    ReactTestUtils.Simulate.change(body, { target: { value: 'new body' } });
+    expect(body.value).toBe('new body');
+    const share = container.queryByTestId('comment_btn');
+    expect(share).toBeInTheDocument();
 
-        const share = container.queryByTestId('comment_btn');
-        expect(share).toBeInTheDocument();
-
-        fireEvent.click(share);
-        const loader = render(<Spinner />);
-
-        expect(loader.queryAllByTestId('loader')[0]).toBeInTheDocument();
-        expect(container.queryByText('new body')).toBeInTheDocument();
-      }, 20);
+    await waitFor(() => {
+      fireEvent.click(share);
+      expect(share).toBeDisabled();
+    }, 20);
   });
 
   it('render with error', async () => {
@@ -72,9 +67,9 @@ describe('Comment Field Component', () => {
       {
         request: {
           query: TaskComment,
-          variables: { noteId: '', body: '' }
+          variables: { noteId: '', body: '', taggedDocuments: [] }
         },
-        result: { data: { noteCommentCreate: { noteComment: { body: 'body' } } } }
+        result: { data: { noteCommentCreate: { noteComment: { body: '' } } } }
       }
     ];
     const container = render(
@@ -86,17 +81,18 @@ describe('Comment Field Component', () => {
               data={data}
               refetch={jest.fn}
               taskId="j83hdj3jhu334"
+              taskDocuments={[{ id: '3456728dfg', display: 'doc-1' }]}
             />
           </BrowserRouter>
         </MockedProvider>
       </Context.Provider>
     );
+
     const body = container.queryByTestId('body_input');
+    ReactTestUtils.Simulate.change(body, { target: { value: '' } });
+    expect(body.value).toBe('');
 
     await waitFor(() => {
-      ReactTestUtils.Simulate.change(body, { target: { value: 'new error body' } });
-      expect(body.value).toBe('new error body');
-
       const share = container.queryByTestId('comment_btn');
       expect(share).toBeInTheDocument();
 
