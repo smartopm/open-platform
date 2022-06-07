@@ -122,3 +122,4 @@ RSpec.describe Mutations::TransactionLog::TransactionLogCreate do
     end
   end
 end
+

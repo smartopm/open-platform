@@ -42,7 +42,7 @@ export default function PaymentForm() {
       name: authState.user.name
     },
     customizations: {
-      title: 'Pay For this item',
+      title: t('payment:misc.pay_for_item'),
       description: inputValue.description,
       logo:
         'https://st2.depositphotos.com/4403291/7418/v/450/depositphotos_74189661-stock-illustration-online-shop-log.jpg'
