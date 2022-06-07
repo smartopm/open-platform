@@ -326,6 +326,8 @@ RSpec.describe Types::Queries::LeadLog do
 
     describe '#investment_stats' do
       context 'when lead investment stats are fetched' do
+        before { investment_lead_log }
+
         it 'retrieves lead investment stats' do
           variables = { userId: lead_user.id }
           result = DoubleGdpSchema.execute(investment_stats, variables: variables,
@@ -334,8 +336,11 @@ RSpec.describe Types::Queries::LeadLog do
                                                                site_community: community,
                                                              }).as_json
           expect(result['errors']).to be nil
-          expect(result.dig('data', 'investmentStats', 'total_spent')).to eql 1200.0
-          expect(result.dig('data', 'investmentStats', 'percentage_of_target_used')).to eql 0.01
+          investment_stats = result.dig('data', 'investmentStats')
+          expect(investment_stats['total_spent']).to eql 2400.0
+          expect(investment_stats['percentage_of_target_used']).to eql 0.02
+          expect(investment_stats.dig('investment_label', 'short_desc')).to eql 'On Target'
+          expect(investment_stats.dig('investment_label', 'grouping_name')).to eql 'Investment'
         end
       end
     end
