@@ -164,8 +164,8 @@ const useStyles = makeStyles(theme => ({
     color: theme.palette.primary.main
   },
   padRow: {
-    paddingTop: '15px',
-    paddingBottom: '15px'
+    paddingTop: '11px',
+    paddingBottom: '11px'
   },
   statusPad: {
     paddingTop: '5px',

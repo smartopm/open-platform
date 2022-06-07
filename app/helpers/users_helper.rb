@@ -13,5 +13,5 @@ module UsersHelper
 
   VALID_LEAD_STATUSES = ['Qualified Lead', 'Interest Shown', 'Investment Motive Verified',
                          'Signed MOU', 'Signed Lease', 'Evaluation', 'Stakeholder Meetings',
-                         'Site Visit', 'Ready to Sign'].freeze
+                         'Site Visit'].freeze
 end

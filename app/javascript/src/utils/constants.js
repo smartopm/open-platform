@@ -858,8 +858,7 @@ export const leadStatusOptions = [
   'Signed Lease',
   'Evaluation',
   'Stakeholder Meetings',
-  'Site Visit',
-  'Ready to Sign'
+  'Site Visit'
 ];
 
 export const leadSourceOptions = [
@@ -1317,7 +1316,6 @@ export const leadStatuses = {
   Ev: 'Evaluation',
   St: 'Stakeholder Meetings',
   Sv: 'Site Visit',
-  Rs: 'Ready to Sign',
   Im: 'Investment Motive Verified'
 };
 
