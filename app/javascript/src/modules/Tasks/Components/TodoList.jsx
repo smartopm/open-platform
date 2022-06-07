@@ -253,8 +253,8 @@ export default function TodoList({
   }
 
   function handleAddSubTask(task) {
-    setParentTaskId(task.id);
-    setSubTasksCount(task.subTasksCount);
+    setParentTaskId(task?.id);
+    setSubTasksCount(task?.subTasksCount);
     openModal();
   }
 

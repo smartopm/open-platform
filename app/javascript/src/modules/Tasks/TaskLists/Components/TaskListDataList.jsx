@@ -80,7 +80,7 @@ export default function TaskListDataList({
 
   function handleCreateSubTask() {
     setAnchorEl(null);
-    handleAddSubTask({ id: selectedTask?.id });
+    handleAddSubTask(selectedTask);
   }
 
   return (

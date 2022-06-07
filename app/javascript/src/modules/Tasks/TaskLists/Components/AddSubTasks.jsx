@@ -22,6 +22,7 @@ export default function AddSubTasks() {
   const [open, setModalOpen] = useState(false);
   const { taskId } = useParams();
   const [parentTaskId, setParentTaskId] = useState('');
+  const [subTasksCount, setSubTasksCount] = useState(0);
   const [assignUserToNote] = useMutation(AssignUser);
   const { data: liteData } = useQuery(UsersLiteQuery, {
     variables: {
@@ -60,8 +61,9 @@ export default function AddSubTasks() {
     setModalOpen(!open);
   }
 
-  function handleAddSubTask({ id }) {
-    setParentTaskId(id);
+  function handleAddSubTask(task) {
+    setParentTaskId(task?.id);
+    setSubTasksCount(task?.subTasksCount);
     openModal();
   }
 
@@ -87,6 +89,7 @@ export default function AddSubTasks() {
               assignUser={assignUnassignUser}
               users={liteData?.usersLite}
               parentTaskId={parentTaskId}
+              subTasksCount={subTasksCount}
               createTaskListSubTask
             />
           </DialogContent>

@@ -11,7 +11,7 @@ import makeStyles from '@mui/styles/makeStyles';
 import { useLocation, useHistory } from 'react-router-dom';
 import TaskDataList from './TaskDataList';
 import FileUploader from './FileUploader';
-import { objectAccessor, formatError, useParamsQuery } from '../../../utils/helpers';
+import { objectAccessor, sortTaskOrder, formatError, useParamsQuery } from '../../../utils/helpers';
 import MenuList from '../../../shared/MenuList';
 import { SubTasksQuery } from '../graphql/task_queries';
 import { LinearSpinner } from '../../../shared/Loading';
@@ -260,7 +260,7 @@ export default function TodoItem({
             task={task}
             handleOpenSubTasksClick={handleParentTaskClick}
             handleTodoClick={handleTodoClick}
-            handleAddSubTask={handleAddSubTask}
+            handleAddSubTask={() => handleAddSubTask(task)}
             menuData={menuData}
             styles={{ backgroundColor: '#F5F5F4' }}
             openSubTask={objectAccessor(tasksOpen, task.id)}
@@ -316,7 +316,7 @@ export default function TodoItem({
 
       {objectAccessor(tasksOpen, task?.id) &&
         data?.taskSubTasks?.length > 0 &&
-        data?.taskSubTasks.map(firstLevelSubTask => (
+        data?.taskSubTasks?.sort(sortTaskOrder)?.map(firstLevelSubTask => (
           <>
             <div className={classes.levelOne} key={firstLevelSubTask.id}>
               {!createTaskListSubTask ? (
@@ -343,7 +343,7 @@ export default function TodoItem({
                   task={firstLevelSubTask}
                   handleOpenSubTasksClick={() => toggleTask(firstLevelSubTask)}
                   handleTodoClick={handleTodoClick}
-                  handleAddSubTask={handleAddSubTask}
+                  handleAddSubTask={() => handleAddSubTask(firstLevelSubTask)}
                   menuData={menuData}
                   styles={{ backgroundColor: '#F5F5F4' }}
                   openSubTask={objectAccessor(tasksOpen, firstLevelSubTask.id)}
@@ -355,7 +355,7 @@ export default function TodoItem({
             {firstLevelSubTask?.subTasksCount > 0 &&
               objectAccessor(tasksOpen, firstLevelSubTask?.id) && (
                 <>
-                  {firstLevelSubTask?.subTasks?.map(secondLevelSubTask => (
+                  {firstLevelSubTask?.subTasks?.sort(sortTaskOrder)?.map(secondLevelSubTask => (
                     <div className={classes.levelTwo} key={secondLevelSubTask.id}>
                       {!createTaskListSubTask ? (
                         <TaskDataList
