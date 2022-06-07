@@ -197,7 +197,7 @@ export default function TaskForm({
                 variant="outlined"
                 size="small"
                 name="order"
-                inputProps={{ 'data-testid': 'order_number' }}
+                inputProps={{ 'data-testid': 'order-number' }}
               />
             </Grid>
             <Grid item md={6} xs={6} style={{ textAlign: 'right' }}>

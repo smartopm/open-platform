@@ -418,7 +418,7 @@ export default function TaskInfoTop({
         {canUpdateNote && data.parentNote && data.parentNote.subTasksCount > 1 && (
           <Grid container className={classes.taskFieldItem}>
             <Grid item xs={5} md={3}>
-              <Typography variant="caption" color="textSecondary">
+              <Typography variant="caption" color="textSecondary" data-testid="order_number_title">
                 {t('task.order_number')}
               </Typography>
             </Grid>

@@ -31,6 +31,7 @@ describe('LeadManagementForm', () => {
             attachments: [],
             formUserId: '',
             status: 'in_progress',
+            order: 1,
             formUser: {
               id: 'some-id',
               formId: 'wrf8934r343r',
@@ -63,6 +64,7 @@ describe('LeadManagementForm', () => {
             parentNote: {
               id: 'fghs9',
               body: '',
+              subTasksCount: 1,
               formUserId: '12345',
               assignees: [{ id: '34567' }]
             }

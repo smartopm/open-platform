@@ -418,4 +418,32 @@ describe('Top part of the task form component', () => {
 
     expect(screen.queryByTestId('alarm')).toBeNull();
   });
+
+  it('renders sub task order field', () => {
+    const newProps = {
+      ...props,
+      data: {
+        ...props.data,
+        parentNote: {
+          ...props.data.parentNote,
+          subTasksCount: 2,
+        }
+      },
+      autoCompleteOpen: true,
+      refetch: jest.fn()
+    };
+
+    render(
+      <MockedProvider addTypename={false}>
+        <Context.Provider value={authState}>
+          <BrowserRouter>
+            <TaskInfoTop {...newProps} />
+          </BrowserRouter>
+        </Context.Provider>
+      </MockedProvider>
+    );
+
+    expect(screen.getByTestId('order_number_title')).toBeInTheDocument();
+    expect(screen.getByTestId('order_number')).toBeInTheDocument();
+  });
 });
