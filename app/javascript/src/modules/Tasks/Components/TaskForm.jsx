@@ -32,6 +32,7 @@ export default function TaskForm({
   users,
   assignUser,
   parentTaskId,
+  subTasksCount,
   createTaskListSubTask
 }) {
   const [title, setTitle] = useState('');
@@ -39,7 +40,7 @@ export default function TaskForm({
   const [assignees, setAssignees] = useState([]);
   const [taskType, setTaskType] = useState('');
   const [selectedDate, setDate] = useState(new Date());
-  const [orderNumber, setOrderNumber] = useState('1');
+  const [orderNumber, setOrderNumber] = useState(1);
   const [loading, setLoadingStatus] = useState(false);
   const [createTask] = useMutation(CreateNote);
   const [userData, setData] = useState(initialData);
@@ -51,7 +52,8 @@ export default function TaskForm({
     if (createTaskListSubTask) {
       setTaskType('template');
     }
-  }, [createTaskListSubTask]);
+    setOrderNumber(subTasksCount + 1);
+  }, [createTaskListSubTask, subTasksCount]);
 
   function handleSubmit(event) {
     event.preventDefault();
@@ -233,6 +235,7 @@ export default function TaskForm({
 TaskForm.defaultProps = {
   users: [],
   parentTaskId: '',
+  subTasksCount: 0,
   createTaskListSubTask: false
 };
 
@@ -242,5 +245,6 @@ TaskForm.propTypes = {
   refetch: PropTypes.func.isRequired,
   assignUser: PropTypes.func.isRequired,
   parentTaskId: PropTypes.string,
+  subTasksCount: PropTypes.number,
   createTaskListSubTask: PropTypes.bool
 };

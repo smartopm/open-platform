@@ -11,7 +11,7 @@ import makeStyles from '@mui/styles/makeStyles';
 import { useLocation, useHistory } from 'react-router-dom';
 import TaskDataList from './TaskDataList';
 import FileUploader from './FileUploader';
-import { objectAccessor, sortTaskOrder, formatError, useParamsQuery } from '../../../utils/helpers';
+import { objectAccessor, formatError, useParamsQuery } from '../../../utils/helpers';
 import MenuList from '../../../shared/MenuList';
 import { SubTasksQuery } from '../graphql/task_queries';
 import { LinearSpinner } from '../../../shared/Loading';
@@ -79,7 +79,7 @@ export default function TodoItem({
     {
       content: canCreateNote ? t('menu.add_subtask') : null,
       isAdmin: true,
-      handleClick: () => handleAddSubTask({ id: selectedTask.id })
+      handleClick: () => handleAddSubTask(selectedTask)
     },
     {
       content: <FileUploader handleFileInputChange={handleFileInputChange} />,
@@ -316,7 +316,7 @@ export default function TodoItem({
 
       {objectAccessor(tasksOpen, task?.id) &&
         data?.taskSubTasks?.length > 0 &&
-        data?.taskSubTasks.sort(sortTaskOrder)?.map(firstLevelSubTask => (
+        data?.taskSubTasks.map(firstLevelSubTask => (
           <>
             <div className={classes.levelOne} key={firstLevelSubTask.id}>
               {!createTaskListSubTask ? (
@@ -355,7 +355,7 @@ export default function TodoItem({
             {firstLevelSubTask?.subTasksCount > 0 &&
               objectAccessor(tasksOpen, firstLevelSubTask?.id) && (
                 <>
-                  {firstLevelSubTask?.subTasks?.sort(sortTaskOrder)?.map(secondLevelSubTask => (
+                  {firstLevelSubTask?.subTasks?.map(secondLevelSubTask => (
                     <div className={classes.levelTwo} key={secondLevelSubTask.id}>
                       {!createTaskListSubTask ? (
                         <TaskDataList
