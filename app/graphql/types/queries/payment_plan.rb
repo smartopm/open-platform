@@ -90,9 +90,11 @@ module Types::Queries::PaymentPlan
   def community_payment_plans(query: nil)
     raise_unauthorized_error_for_payment_plans(:can_fetch_community_payment_plans)
 
-    plans = Properties::PaymentPlan.includes(:land_parcel, :user, :plan_payments).where(
-      land_parcels: { community_id: context[:site_community].id },
-    ).order(:status)
+    plans = Properties::PaymentPlan.excluding_general_plans
+                                   .includes(:land_parcel, :user, :plan_payments)
+                                   .where(land_parcels:
+                                      { community_id: context[:site_community].id })
+                                   .order(:status)
     filtered_plans(plans, query).sort_by { |plan| [(plan.owing_amount * -1), plan.status] }
   end
 

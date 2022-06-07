@@ -25,7 +25,9 @@ module Mutations
       # rubocop:disable Metrics/MethodLength
       # rubocop:disable Metrics/AbcSize
       def resolve(vals)
-        land_parcel = context[:site_community].land_parcels.find_by(id: vals[:id])
+        land_parcel = context[:site_community].land_parcels
+                                              .excluding_general
+                                              .find_by(id: vals[:id])
         raise_land_parcel_not_found_error(land_parcel)
 
         ActiveRecord::Base.transaction do

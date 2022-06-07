@@ -94,7 +94,7 @@ module Properties
         self.status = :active if pending_balance.eql?(0)
         self.pending_balance = pending_balance + amount
       end
-      save
+      save!
     end
 
     # Returns maximum amount that can be allocated to plan.
@@ -127,6 +127,7 @@ module Properties
       payment.note = "Migrated to plan #{payment_plan_name} Id - #{id}"
       payment.status = :cancelled
       payment.save!
+      reload
       create_new_payment(plan, payment)
       plan.update_pending_balance(payment.amount, :revert)
     end
