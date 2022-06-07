@@ -1,10 +1,11 @@
 import dompurify from 'dompurify';
 import { paymentFilterFields } from '../../utils/constants'
 
-import { sentencizeAction, titleize, pluralizeCount,
-capitalize, validateEmail, invertArray,findLinkAndReplace,
-forceLinkHttps, titleCase, truncateString, removeNewLines, checkForHtmlTags, sanitizeText,
-getJustLabels, checkValidGeoJSON, getHexColor, getDrawPluginOptions, handleQueryOnChange, checkAccessibilityForUserType, extractHostname
+import {
+  sentencizeAction, titleize, pluralizeCount, capitalize, validateEmail, invertArray,
+  findLinkAndReplace, forceLinkHttps, titleCase, truncateString, removeNewLines, checkForHtmlTags,
+  sanitizeText, getJustLabels, checkValidGeoJSON, getHexColor, getDrawPluginOptions,
+  handleQueryOnChange, checkAccessibilityForUserType, extractHostname, setAccessibilityValue
 } from '../../utils/helpers'
 
 jest.mock('dompurify')
@@ -252,5 +253,17 @@ describe('#extractHostname', () => {
 
   it('does not explode if no arg is passed', () => {
     expect(extractHostname()).toBeUndefined()
+  });
+});
+
+describe('setAccessibilityValue', () => {
+  it("should the key for an object's value if the key is found", () => {
+    const obj = { one: 'two', three: 'four' };
+    const response = setAccessibilityValue(obj, 'two');
+
+    expect(response).toBeTruthy();
+    expect(response).toEqual('one');
+
+    expect(setAccessibilityValue(obj, 'five')).toBe(undefined);
   });
 });
