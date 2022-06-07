@@ -3,7 +3,6 @@ import React from 'react';
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min';
 import { MockedProvider } from '@apollo/react-testing';
-import userEvent from '@testing-library/user-event';
 import ReactTestUtils from 'react-dom/test-utils';
 import authState from '../../../../__mocks__/authstate';
 import { Context } from '../../../../containers/Provider/AuthStateProvider';
@@ -174,7 +173,7 @@ describe('LeadEvents Page', () => {
       ReactTestUtils.Simulate.change(eventTextField, { target: { value: 'First Tilisi meeting' } });
 
       const saveButton = screen.queryByTestId('add-meeting-button');
-      // // user input should set add button enabled
+      // user input should set add button enabled
       expect(saveButton).toBeEnabled();
     });
 
@@ -194,6 +193,7 @@ describe('LeadEvents Page', () => {
                 userId="c96f64bb-e3b4-42ff-b6a9-66889ec79e99"
                 data={dataMock[0].result.data}
                 refetch={jest.fn()}
+                refetchLeadLabelsData={jest.fn()}
               />
             </MockedThemeProvider>
           </BrowserRouter>

@@ -1,8 +1,7 @@
 import React from 'react';
 import { MockedProvider } from '@apollo/react-testing';
 import routeData, { MemoryRouter } from 'react-router';
-
-import userEvent from '@testing-library/user-event';
+import ReactTestUtils from 'react-dom/test-utils';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import MockedThemeProvider from '../../../__mocks__/mock_theme';
 import { Context } from '../../../../containers/Provider/AuthStateProvider';
@@ -50,7 +49,7 @@ describe('Task List Create', () => {
     expect(screen.getByTestId('task-list-name')).toBeInTheDocument();
 
     const nameField = screen.getByLabelText('task_lists.task_list_name');
-    userEvent.type(nameField, 'Sample task list');
+    ReactTestUtils.Simulate.change(nameField, { target:{ value: 'Sample task list' } });
 
     const saveButton = screen.getByRole('button');
 
@@ -115,7 +114,7 @@ describe('Task List Update', () => {
     const taskListNameField = screen.getByTestId('task-list-name');
     expect(taskListNameField).toBeInTheDocument();
 
-    fireEvent.change(taskListNameField, { target: { value: 'Updated task list name' } });
+    ReactTestUtils.Simulate.change(taskListNameField, { target: { value: 'Updated task list name' } });
     expect(taskListNameField.value).toBe('Updated task list name');
   });
 });
