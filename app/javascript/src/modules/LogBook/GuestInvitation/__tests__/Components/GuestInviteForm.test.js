@@ -122,7 +122,6 @@ describe('Guest Invitation Form', () => {
 
     expect(screen.getByText('guest.name_print')).toBeInTheDocument();
     expect(screen.getAllByText('common:misc.day_of_visit').length).toBeGreaterThan(1);
-    expect(screen.getByDisplayValue('12:00 PM')).toBeInTheDocument();
     expect(screen.getAllByTestId('date-picker')[0]).toBeInTheDocument();
     expect(screen.getByTestId('close_button')).toBeInTheDocument();
     expect(screen.getByTestId('update_button')).toBeInTheDocument();
