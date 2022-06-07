@@ -76,7 +76,11 @@ export default function DialogWithImageUpload({
             fullWidth
           />
           {open && (
-            <Grid container className={styles.upload}>
+            <Grid
+              container
+              sx={{ display: 'flex', mt: '20px' }}
+              className={editModal ? styles.edit : styles.upload}
+            >
               {modalDetails.uploadInstruction && !editModal && (
                 <Grid item sm={8} data-testid="upload_label">
                   {modalDetails.uploadInstruction}
@@ -172,9 +176,11 @@ export default function DialogWithImageUpload({
 
 const useStyles = makeStyles(() => ({
   upload: {
-    marginTop: '20px',
-    display: 'flex',
     justifyContent: 'space-between'
+  },
+  edit: {
+    justifyContent: 'flex-end',
+    textAlign: 'right'
   }
 }));
 
