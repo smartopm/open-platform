@@ -620,7 +620,16 @@ export function extractHostname(urlString) {
 }
 
 /**
- *
+ * Get a key from an object, given the object and value of the corresponding key.
+ * @param {Object} obj object
+ * @param {String} option word
+ * @returns key for a value, if such value exists or undefined otherwise.
+ */
+export function getObjectKey(obj, option) {
+  return Object.keys(obj).find(key => objectAccessor(obj, key) === option);
+}
+
+/**
  * @param {String} str a word or sentence consisting of
  * HTML special character (in form of entity number )
  * @returns decoded readable special character or symbol

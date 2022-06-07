@@ -75,15 +75,19 @@ export default function DialogWithImageUpload({
             multiline
             fullWidth
           />
-          {open && !editModal && (
-            <Grid container className={styles.upload}>
-              {modalDetails.uploadInstruction && (
+          {open && (
+            <Grid
+              container
+              sx={{ display: 'flex', mt: '20px' }}
+              className={editModal ? styles.edit : styles.upload}
+            >
+              {modalDetails.uploadInstruction && !editModal && (
                 <Grid item sm={8} data-testid="upload_label">
                   {modalDetails.uploadInstruction}
                 </Grid>
               )}
 
-              {!matches && (
+              {!matches && !editModal && (
                 <Grid
                   item
                   sm={4}
@@ -172,9 +176,11 @@ export default function DialogWithImageUpload({
 
 const useStyles = makeStyles(() => ({
   upload: {
-    marginTop: '20px',
-    display: 'flex',
     justifyContent: 'space-between'
+  },
+  edit: {
+    justifyContent: 'flex-end',
+    textAlign: 'right'
   }
 }));
 

@@ -1,11 +1,12 @@
 import dompurify from 'dompurify';
 import { paymentFilterFields } from '../../utils/constants'
 
-import { sentencizeAction, titleize, pluralizeCount,
-capitalize, validateEmail, invertArray,findLinkAndReplace,
-forceLinkHttps, titleCase, truncateString, removeNewLines, checkForHtmlTags, sanitizeText,
-  getJustLabels, checkValidGeoJSON, getHexColor, getDrawPluginOptions, handleQueryOnChange,
-  checkAccessibilityForUserType, extractHostname, decodeHtmlEntity
+import {
+  sentencizeAction, titleize, pluralizeCount, capitalize, validateEmail, invertArray,
+  findLinkAndReplace, forceLinkHttps, titleCase, truncateString, removeNewLines, checkForHtmlTags,
+  sanitizeText, getJustLabels, checkValidGeoJSON, getHexColor, getDrawPluginOptions,
+  handleQueryOnChange, checkAccessibilityForUserType, extractHostname, getObjectKey,
+  decodeHtmlEntity
 } from '../../utils/helpers'
 
 jest.mock('dompurify')
@@ -253,6 +254,18 @@ describe('#extractHostname', () => {
 
   it('does not explode if no arg is passed', () => {
     expect(extractHostname()).toBeUndefined()
+  });
+});
+
+describe('#getObjectKey', () => {
+  it("should the key for an object's value if the key is found", () => {
+    const obj = { one: 'two', three: 'four' };
+    const response = getObjectKey(obj, 'two');
+
+    expect(response).toBeTruthy();
+    expect(response).toEqual('one');
+
+    expect(getObjectKey(obj, 'five')).toBe(undefined);
   });
 });
 

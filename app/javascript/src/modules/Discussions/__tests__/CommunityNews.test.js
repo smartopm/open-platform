@@ -35,6 +35,7 @@ describe('Community news with posts', () => {
                 id: 'df956b37-227e-4a32-9a85-e3279aa7da0e122',
                 imageUrls: null,
                 discussionId: '123456',
+                accessibility: 'everyone',
                 user: {
                   id: 'e23844f0-9985-438d-bdff-4f34a9e1897b',
                   name: 'Daniel Mutuba',
@@ -52,6 +53,7 @@ describe('Community news with posts', () => {
                 id: '5acf905c-e4dd-4f13-89ae-f56d15f5f1d522xdh2',
                 imageUrls: null,
                 discussionId: '123456',
+                accessibility: 'admins',
                 user: {
                   id: 'e23844f0-9985-438d-bdff-4f34a9e1897b',
                   name: 'Daniel Mutuba',
@@ -68,6 +70,7 @@ describe('Community news with posts', () => {
                 id: 'cae2fd20-8e56-4c78-8f32-7df951fbf29522qqww2',
                 imageUrls: null,
                 discussionId: '123456',
+                accessibility: 'everyone',
                 user: {
                   id: 'e23844f0-9985-438d-bdff-4f34a9e1897b',
                   name: 'Daniel Mutuba',
@@ -84,6 +87,7 @@ describe('Community news with posts', () => {
                 id: 'cae2fd20-8e56-4c78-8f32-7df951fbf2951weeww',
                 imageUrls: null,
                 discussionId: '123456',
+                accessibility: 'admin',
                 user: {
                   id: 'e23844f0-9985-438d-bdff-4f34a9e1897b',
                   name: 'Daniel Mutuba',

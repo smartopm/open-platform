@@ -499,6 +499,7 @@ export const DiscussionPostsQuery = gql`
       createdAt
       id
       imageUrls
+      accessibility
       user {
         id
         name
@@ -517,6 +518,7 @@ export const CommunityNewsPostsQuery = gql`
       id
       discussionId
       imageUrls
+      accessibility
       user {
         id
         name

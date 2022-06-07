@@ -97,6 +97,7 @@ export default function Comments({ comments, refetch, discussionId }) {
               createdAt: comment.createdAt,
               comment: comment.content,
               imageUrls: comment.imageUrls,
+              accessibility: comment.accessibility,
               user: comment.user,
               id: comment.id
             }}

@@ -1351,3 +1351,8 @@ export const years = {
   '32': 'Nov',
   '33': 'Dec'
 };
+
+export const accessibilityOptions = {
+  admins: 'Admins Only',
+  everyone: 'Everyone'
+}

@@ -52,7 +52,8 @@ describe('PostCreate component', () => {
     const translate = () => 'some-text';
     const postData = {
       id: "bhdwkfdw",
-      content: "some content"
+      content: "some content",
+      accessibility: "everyone",
     }
 
     const mocks = [
@@ -104,6 +105,8 @@ describe('PostCreate component', () => {
     await waitFor(() => {
       expect(container.queryByTestId('post-btn')).toBeInTheDocument();
       expect(container.queryByTestId('cancel-btn')).toBeInTheDocument();
+      expect(container.queryByTestId('ArrowDropDownIcon')).toBeInTheDocument();
+      expect(container.queryByTestId('VisibilityIcon')).toBeInTheDocument();
 
       expect(container.queryByTestId('post-btn')).not.toBeDisabled();
     }, 10);
