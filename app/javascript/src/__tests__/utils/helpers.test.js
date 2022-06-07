@@ -4,7 +4,8 @@ import { paymentFilterFields } from '../../utils/constants'
 import { sentencizeAction, titleize, pluralizeCount,
 capitalize, validateEmail, invertArray,findLinkAndReplace,
 forceLinkHttps, titleCase, truncateString, removeNewLines, checkForHtmlTags, sanitizeText,
-getJustLabels, checkValidGeoJSON, getHexColor, getDrawPluginOptions, handleQueryOnChange, checkAccessibilityForUserType, extractHostname
+  getJustLabels, checkValidGeoJSON, getHexColor, getDrawPluginOptions, handleQueryOnChange,
+  checkAccessibilityForUserType, extractHostname, decodeHtmlEntity
 } from '../../utils/helpers'
 
 jest.mock('dompurify')
@@ -252,5 +253,12 @@ describe('#extractHostname', () => {
 
   it('does not explode if no arg is passed', () => {
     expect(extractHostname()).toBeUndefined()
+  });
+});
+
+describe('#decodeHtmlEntity', () => {
+  it('decodes encoded HTML special characters and entity', () => {
+    expect(decodeHtmlEntity('This Year &#8211; WINNERS')).toEqual('This Year – WINNERS');
+    expect(decodeHtmlEntity('Copyright &#169; 2021 &#38; 2022')).toEqual('Copyright © 2021 & 2022');
   });
 });

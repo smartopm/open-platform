@@ -616,5 +616,17 @@ export function extractHostname(urlString) {
   return {
     hostname: urlString.split('/')[2],
     userId: urlString.split('/')[4]
-  } 
+  }
 }
+
+/**
+ *
+ * @param {String} str a word or sentence consisting of
+ * HTML special character (in form of entity number )
+ * @returns decoded readable special character or symbol
+ */
+export function decodeHtmlEntity(str) {
+  return str.replace(/&#(\d+);/g, function(match, dec) {
+    return String.fromCharCode(dec);
+  });
+};
