@@ -435,6 +435,12 @@ custodian:
   logout:
     permissions:
       - can_see_menu_item
+  discussion:
+    permissions:
+      - can_access_all_discussions
+      - can_create_post
+      - can_view_posts
+      - can_see_menu_item
 security_guard:
   note:
     permissions:
@@ -594,6 +600,7 @@ visitor:
       - can_access_all_discussions
       - can_create_post
       - can_view_posts
+      - can_see_menu_item
   transaction:
     permission:
       - can_make_payment
