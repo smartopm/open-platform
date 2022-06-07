@@ -27,7 +27,7 @@ module Types::Queries::Notification
                                                  .offset(offset)
                                                  .limit(limit)
                                                  .ordered
-                                                 
+
     seen_notifications = context[:current_user].notifications
                                                .active
                                                .where('seen_at > ?', 24.hours.ago)
@@ -35,9 +35,9 @@ module Types::Queries::Notification
 
     unseen_notifications.to_a.concat(seen_notifications)
   end
-  # rubocop:enable Metrics/AbcSize
-  # rubocop:enable Metrics/MetricMethodLength
+  # rubocop:enable Metrics/MethodLength
 
+  # rubocop:enable Metrics/AbcSize
   def notifications_count
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:current_user].blank?
 
