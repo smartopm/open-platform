@@ -620,11 +620,11 @@ export function extractHostname(urlString) {
 }
 
 /**
- *
+ * Get a key from an object, given the object and value of the corresponding key.
  * @param {Object} obj object
  * @param {String} option word
- * @returns string
+ * @returns key for a value, if such value exists or undefined otherwise.
  */
-export function setAccessibilityValue(obj, option) {
+export function getObjectKey(obj, option) {
   return Object.keys(obj).find(key => objectAccessor(obj, key) === option);
 }

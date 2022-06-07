@@ -14,7 +14,7 @@ import { Link } from 'react-router-dom';
 import MoreVertOutlined from '@mui/icons-material/MoreVertOutlined';
 import { useTranslation } from 'react-i18next';
 import { PostUpdateMutation } from '../../../graphql/mutations';
-import { findLinkAndReplace, sanitizeText, setAccessibilityValue } from '../../../utils/helpers';
+import { findLinkAndReplace, getObjectKey, sanitizeText } from '../../../utils/helpers';
 import Avatar from '../../../components/Avatar';
 import DateContainer from '../../../components/DateContainer';
 import ImageAuth from '../../../shared/ImageAuth';
@@ -105,7 +105,7 @@ export default function CommentSection({ data, handleDeleteComment, refetch }) {
       variables: {
         content: post,
         id: data.id,
-        accessibility: setAccessibilityValue(actionVisibilityOptions, visibilityOption)
+        accessibility: getObjectKey(actionVisibilityOptions, visibilityOption)
       }
     })
       .then(() => {

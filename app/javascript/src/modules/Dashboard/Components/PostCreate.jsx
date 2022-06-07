@@ -7,7 +7,7 @@ import useFileUpload from '../../../graphql/useFileUpload';
 import { PostCreateMutation, PostUpdateMutation } from '../../../graphql/mutations';
 import MessageAlert from '../../../components/MessageAlert';
 import { Spinner } from '../../../shared/Loading';
-import { setAccessibilityValue } from '../../../utils/helpers';
+import { getObjectKey } from '../../../utils/helpers';
 import { accessibilityOptions } from '../../../utils/constants';
 
 export default function PostCreate({
@@ -107,7 +107,7 @@ export default function PostCreate({
         variables: {
           content: post,
           id: postData.id,
-          accessibility: setAccessibilityValue(actionVisibilityOptions, visibilityOption)
+          accessibility: getObjectKey(actionVisibilityOptions, visibilityOption)
         }
       });
     }
@@ -117,7 +117,7 @@ export default function PostCreate({
         // TODO: Remove this dummy ID
         discussionId: '12456484',
         imageBlobIds: blobIds,
-        accessibility: setAccessibilityValue(actionVisibilityOptions, visibilityOption)
+        accessibility: getObjectKey(actionVisibilityOptions, visibilityOption)
       }
     });
   }
