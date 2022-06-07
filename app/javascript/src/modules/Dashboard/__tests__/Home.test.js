@@ -2,6 +2,7 @@ import React from 'react';
 import { act, render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/react-testing';
+import routeData, { MemoryRouter } from 'react-router';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import Home from '../Components/Home';
 import authState from '../../../__mocks__/authstate';
@@ -10,16 +11,23 @@ import MockedThemeProvider from '../../__mocks__/mock_theme';
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 
 describe('Home main page', () => {
+  const mockHistory = {
+    push: jest.fn()
+  };
+  beforeEach(() => {
+    jest.spyOn(routeData, 'useHistory').mockReturnValue(mockHistory);
+  });
+
   it('renders the home main correctly', async () => {
     await act(async () => {
       render(
         <Context.Provider value={authState}>
           <MockedProvider mocks={[]} addTypename={false}>
-            <BrowserRouter>
+            <MemoryRouter>
               <MockedThemeProvider>
                 <Home />
               </MockedThemeProvider>
-            </BrowserRouter>
+            </MemoryRouter>
           </MockedProvider>
         </Context.Provider>
       );
@@ -27,6 +35,7 @@ describe('Home main page', () => {
       await waitFor(() => {
         expect(screen.queryByTestId('qr_button')).toBeInTheDocument();
         fireEvent.click(screen.queryByTestId('qr_button'));
+        expect(mockHistory.push).toBeCalledWith('/id/11cdad78');
       });
     });
   });
