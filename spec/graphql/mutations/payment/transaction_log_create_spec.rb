@@ -33,8 +33,8 @@ RSpec.describe Mutations::TransactionLog::TransactionLogCreate do
             $invoiceNumber: String!
             $transactionId: String!
             $transactionRef: String!
-            $description: String!
-            $accountName: String!
+            $description: String
+            $accountName: String
         ) {
             transactionLogCreate(
             paidAmount: $paidAmount
