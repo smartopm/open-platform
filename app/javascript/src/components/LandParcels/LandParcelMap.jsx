@@ -1,16 +1,15 @@
 import React, { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { useMutation, useApolloClient, useLazyQuery } from 'react-apollo';
-import { Button, Grid, Divider } from '@mui/material';
+import { Button, Grid, Divider, Typography } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
-import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import { Map, FeatureGroup, GeoJSON, LayersControl, TileLayer } from 'react-leaflet'
 import L from 'leaflet'
 import MarkerClusterGroup from 'react-leaflet-markercluster';
 import { useTranslation } from 'react-i18next';
 import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider';
 import NkwashiSuburbBoundaryData from '../../data/nkwashi_suburb_boundary.json';
-import poiIcon from '../../../../assets/images/poi-icon.png'
+import poiIcon from '../../../../assets/images/poi-icon.svg'
 import { LandParcel } from '../../graphql/queries';
 import {
   PointOfInterestDelete,
@@ -18,13 +17,14 @@ import {
 } from '../../graphql/mutations/land_parcel';
 import useFileUpload from '../../graphql/useFileUpload';
 import { checkValidGeoJSON, formatError, objectAccessor } from '../../utils/helpers';
-import { emptyPolygonFeature, mapTiles, plotStatusColorPallete } from '../../utils/constants';
+import { emptyPolygonFeature, mapTiles, publicMapToken, plotStatusColorPallete } from '../../utils/constants';
 import { ActionDialog } from '../Dialog';
 import MessageAlert from '../MessageAlert';
 import PointOfInterestDrawerDialog from '../Map/PointOfInterestDrawerDialog';
 import SubUrbanLayer from '../Map/SubUrbanLayer';
 
-const { attribution, openStreetMap, centerPoint } = mapTiles;
+const { attribution, mapboxStreets, centerPoint } = mapTiles;
+const { mapbox: mapboxPublicToken } = publicMapToken
 
 /* istanbul ignore next */
 function getColor(plotSold) {
@@ -164,7 +164,8 @@ export default function LandParcelMap({ handlePlotClick, geoData }) {
         parcel_no: parcelNumber,
         parcel_type: parcelType,
         long_x: longX,
-        lat_y: latY
+        lat_y: latY,
+        video_urls: videoUrls
       }
     } = target.feature;
 
@@ -175,7 +176,8 @@ export default function LandParcelMap({ handlePlotClick, geoData }) {
       parcelNumber,
       parcelType,
       longX,
-      latY
+      latY,
+      videoUrls: videoUrls || []
     });
 
     loadParcel({ variables: { id } });
@@ -302,14 +304,14 @@ export default function LandParcelMap({ handlePlotClick, geoData }) {
         }}
       >
         <Divider />
-        <Grid container direction="row" justify="space-around" alignItems="flex-start">
-          <Grid item>
-            <Button variant="contained" color="secondary" onClick={() => setConfirmDeletePoi(true)}>
-              Delete
+        <Grid container>
+          <Grid item md={4}>
+            <Button data-testid="delete-poi-btn" variant="text" color="primary" onClick={() => setConfirmDeletePoi(true)}>
+              {t('common:menu.delete')}
             </Button>
           </Grid>
-          <Grid item>
-            <label style={{ marginTop: 5 }} htmlFor="image">
+          <Grid item md={5}>
+            <label htmlFor="image">
               <input
                 type="file"
                 name="image"
@@ -318,19 +320,28 @@ export default function LandParcelMap({ handlePlotClick, geoData }) {
                 onChange={e => handleFileUpload(e.target.files[0])}
                 style={{ display: 'none' }}
               />
-              <AddPhotoAlternateIcon color="primary" style={{ cursor: 'pointer' }} />
+              <Button
+                component="span"
+                variant="contained"
+                color="primary"
+                data-testid="add-poi-photo"
+                disableElevation
+                style={{ color: '#ffffff'}}
+              >
+                {t('property:buttons.add_photo')}
+              </Button>
             </label>
           </Grid>
           {uploadStatus === 'DONE' && (
-          <Grid item>
-            <span style={{ marginTop: 5, marginRight: 35 }}>
+          <Grid item md={12}>
+            <Typography>
               {t('common:misc.image_uploaded')}
-            </span>
-            <Button variant="contained" color="secondary" onClick={handleSaveUploadedPhoto}>
+            </Typography>
+            <Button variant="contained" color="primary" onClick={handleSaveUploadedPhoto}>
               {t('common:form_actions.save_changes')}
             </Button>
           </Grid>
-        )}
+          )}
         </Grid>
       </PointOfInterestDrawerDialog>
       <div data-testid="leaflet-map-container">
@@ -378,8 +389,11 @@ export default function LandParcelMap({ handlePlotClick, geoData }) {
           maxZoom={40}
         >
           <LayersControl position="topleft">
-            <LayersControl.BaseLayer checked name="OSM">
-              <TileLayer attribution={attribution} url={openStreetMap} />
+            <LayersControl.BaseLayer checked name="Mapbox">
+              <TileLayer
+                attribution={attribution}
+                url={`${mapboxStreets}${mapboxPublicToken}`}
+              />
             </LayersControl.BaseLayer>
             {Array.isArray(properties) && properties?.length && (
               <LayersControl.Overlay checked name="Land Parcels">
