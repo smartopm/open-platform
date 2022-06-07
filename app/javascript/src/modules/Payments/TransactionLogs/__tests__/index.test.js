@@ -14,6 +14,6 @@ describe('FW Payments', () => {
         </MockedProvider>
       </Context.Provider>
     )
-    expect(container.queryByLabelText('form_fields.invoice_number')).toBeInTheDocument();
+    expect(container.queryByLabelText('form_fields.invoice_number *')).toBeInTheDocument();
   });
 });
