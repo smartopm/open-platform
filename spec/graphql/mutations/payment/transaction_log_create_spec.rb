@@ -94,6 +94,27 @@ RSpec.describe Mutations::TransactionLog::TransactionLogCreate do
           expect(result['errors']).to be_nil
           expect(result.dig('data', 'transactionLogCreate', 'success')).to eql true
         end
+        it 'throws an error when wrong data is provided' do
+          variables = {
+            paidAmount: '100',
+            amount: 70,
+            currency: 'K',
+            invoiceNumber: 'D898DWS',
+            transactionId: '23_423_424',
+            transactionRef: '23_423_424',
+            description: 'mock description',
+            accountName: 'User Name',
+          }
+          result = DoubleGdpSchema.execute(create_transaction_log,
+                                           variables: variables,
+                                           context: {
+                                             current_user: resident,
+                                             site_community: resident.community,
+                                           }).as_json
+          expect(result.dig('errors', 0, 'message'))
+            .to include 'Variable $paidAmount of type Float! was provided invalid value'
+          expect(result.dig('data', 'transactionLogCreate')).to be_nil
+        end
       end
     end
 
@@ -122,4 +143,3 @@ RSpec.describe Mutations::TransactionLog::TransactionLogCreate do
     end
   end
 end
-
