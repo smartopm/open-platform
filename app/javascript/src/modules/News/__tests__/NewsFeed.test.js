@@ -35,6 +35,7 @@ describe('Details page for news post content', () => {
       'src',
       'https://placeholder.com/2342'
     );
+    expect(container.queryByTestId('card-title')).toBeInTheDocument();
   });
 
   it('should not display anything when no data is available', () => {

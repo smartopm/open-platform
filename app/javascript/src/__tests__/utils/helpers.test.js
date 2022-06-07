@@ -1,10 +1,12 @@
 import dompurify from 'dompurify';
 import { paymentFilterFields } from '../../utils/constants'
 
-import { sentencizeAction, titleize, pluralizeCount,
-capitalize, validateEmail, invertArray,findLinkAndReplace,
-forceLinkHttps, titleCase, truncateString, removeNewLines, checkForHtmlTags, sanitizeText,
-getJustLabels, checkValidGeoJSON, getHexColor, getDrawPluginOptions, handleQueryOnChange, checkAccessibilityForUserType, extractHostname
+import {
+  sentencizeAction, titleize, pluralizeCount, capitalize, validateEmail, invertArray,
+  findLinkAndReplace, forceLinkHttps, titleCase, truncateString, removeNewLines, checkForHtmlTags,
+  sanitizeText, getJustLabels, checkValidGeoJSON, getHexColor, getDrawPluginOptions,
+  handleQueryOnChange, checkAccessibilityForUserType, extractHostname, getObjectKey,
+  decodeHtmlEntity, replaceDocumentMentions
 } from '../../utils/helpers'
 
 jest.mock('dompurify')
@@ -252,5 +254,38 @@ describe('#extractHostname', () => {
 
   it('does not explode if no arg is passed', () => {
     expect(extractHostname()).toBeUndefined()
+  });
+});
+
+describe('#getObjectKey', () => {
+  it("should the key for an object's value if the key is found", () => {
+    const obj = { one: 'two', three: 'four' };
+    const response = getObjectKey(obj, 'two');
+
+    expect(response).toBeTruthy();
+    expect(response).toEqual('one');
+
+    expect(getObjectKey(obj, 'five')).toBe(undefined);
+  });
+});
+
+describe('#decodeHtmlEntity', () => {
+  it('decodes encoded HTML special characters and entity', () => {
+    expect(decodeHtmlEntity('This Year &#8211; WINNERS')).toEqual('This Year – WINNERS');
+    expect(decodeHtmlEntity('Copyright &#169; 2021 &#38; 2022')).toEqual('Copyright © 2021 & 2022');
+  });
+});
+
+describe('#replaceDocumentMentions', () => {
+  it('returns if no text is passed', () => {
+    expect(replaceDocumentMentions(null, 'https://url.com')).toBeUndefined()
+  });
+
+  it('returns text if no link is passed', () => {
+    expect(replaceDocumentMentions('Have you seen this doc ###__1234__doc-name__###', null)).toEqual('Have you seen this doc ###__1234__doc-name__###');
+  });
+
+  it('returns a text with replaced mentions', () => {
+    expect(replaceDocumentMentions('Have you seen this doc ###__1234__doc-name__### ?', '/projects/path')).toEqual(`Have you seen this doc <a href='/projects/path&document_id=1234'>doc-name</a> ?`);
   });
 });

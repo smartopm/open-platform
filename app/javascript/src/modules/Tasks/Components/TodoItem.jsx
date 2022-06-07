@@ -3,7 +3,7 @@
 /* eslint-disable complexity */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useLazyQuery, useMutation } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
@@ -11,7 +11,7 @@ import makeStyles from '@mui/styles/makeStyles';
 import { useLocation, useHistory } from 'react-router-dom';
 import TaskDataList from './TaskDataList';
 import FileUploader from './FileUploader';
-import { objectAccessor, sortTaskOrder , formatError } from '../../../utils/helpers';
+import { objectAccessor, sortTaskOrder, formatError, useParamsQuery } from '../../../utils/helpers';
 import MenuList from '../../../shared/MenuList';
 import { SubTasksQuery } from '../graphql/task_queries';
 import { LinearSpinner } from '../../../shared/Loading';
@@ -36,7 +36,7 @@ export default function TodoItem({
   clientView,
   createTaskListSubTask,
   refetch,
-  showWidgetsIcon,
+  showWidgetsIcon
 }) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
@@ -67,6 +67,9 @@ export default function TodoItem({
   const [alertOpen, setAlertOpen] = useState(false);
   const [info, setInfo] = useState({ loading: false, error: false, message: '' });
   const [taskListDelete] = useMutation(DeleteTaskList);
+  const currentPath = useParamsQuery();
+  const currentProjectId = currentPath.get('project_id');
+
   let menuList = [
     {
       content: t('menu.open_task_details'),
@@ -117,17 +120,18 @@ export default function TodoItem({
       {
         content: t('menu.edit_task_list'),
         isAdmin: true,
-        handleClick: () => history.push({
-          pathname: `/tasks/task_lists/edit/${noteList?.id}`,
-          state: { noteList, task }
-        })
+        handleClick: () =>
+          history.push({
+            pathname: `/tasks/task_lists/edit/${noteList?.id}`,
+            state: { noteList, task }
+          })
       },
       {
         content: t('menu.delete_task_list'),
         isAdmin: true,
         handleClick: () => handleDeleteTaskList()
       }
-    ]
+    ];
   }
 
   const menuData = {
@@ -138,33 +142,42 @@ export default function TodoItem({
     handleClose
   };
 
+  useEffect(() => {
+    if (currentProjectId && currentProjectId === task?.id) {
+      setProjectsAccordionOpen({
+        ...projectsAccordionOpen,
+        [task.id]: !objectAccessor(projectsAccordionOpen, currentProjectId)
+      });
+    }
+  }, []);
+
   function handleDeleteTaskList() {
     setOpen(!isDialogOpen);
-    setAnchorEl(null)
+    setAnchorEl(null);
   }
 
   function handleTaskListDelete() {
     taskListDelete({
       variables: { id: task.noteList?.id }
     })
-    .then(() => {
-      setInfo({
-        ...info,
-        message: t('menu.task_list_deleted'),
-        loading: false,
+      .then(() => {
+        setInfo({
+          ...info,
+          message: t('menu.task_list_deleted'),
+          loading: false
+        });
+        setTimeout(refetch, 500);
+        setAlertOpen(true);
+        setOpen(!isDialogOpen);
+      })
+      .catch(err => {
+        setInfo({
+          ...info,
+          error: true,
+          message: formatError(err.message)
+        });
+        setAlertOpen(true);
       });
-      setTimeout(refetch, 500);
-      setAlertOpen(true);
-      setOpen(!isDialogOpen);
-    })
-    .catch(err => {
-      setInfo({
-        ...info,
-        error: true,
-        message: formatError(err.message),
-      });
-      setAlertOpen(true);
-    })
   }
 
   function handleTodoMenu(event, taskItem) {
@@ -279,7 +292,8 @@ export default function TodoItem({
               taskCommentHasReply={task?.taskCommentReply}
               handleOpenProjectClick={handleToggleProjectAccordionOverview}
               openProject={
-                location.pathname.match(/\bprocesses\b/) && objectAccessor(projectsAccordionOpen, task?.id)
+                location.pathname.match(/\bprocesses\b/) &&
+                objectAccessor(projectsAccordionOpen, task?.id)
               }
               showWidgetsIcon={showWidgetsIcon}
             />
@@ -419,7 +433,7 @@ TodoItem.defaultProps = {
   handleTodoClick: () => {},
   handleTaskCompletion: () => {},
   refetch: () => {},
-  showWidgetsIcon: false,
+  showWidgetsIcon: false
 };
 
 TodoItem.propTypes = {
@@ -435,7 +449,7 @@ TodoItem.propTypes = {
   createTaskListSubTask: PropTypes.bool,
   taskId: PropTypes.string,
   refetch: PropTypes.func,
-  showWidgetsIcon: PropTypes.bool,
+  showWidgetsIcon: PropTypes.bool
 };
 
 const useStyles = makeStyles(() => ({

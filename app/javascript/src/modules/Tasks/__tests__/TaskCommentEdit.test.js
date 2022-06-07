@@ -20,7 +20,7 @@ describe('Comment Edit Field Component', () => {
   const handleClose = jest.fn
   const data = {
     id: 'jwhekw',
-    body: 'whgeukhw',
+    body: '',
     createdAt: "2020-09-30T20:32:17Z",
     user: {
       imageUrl: '',
@@ -41,15 +41,16 @@ describe('Comment Edit Field Component', () => {
       </MockedProvider>
     )
 
+    const body = container.queryByTestId('body_input')
+    const commentButton = container.queryByTestId('button')
+    expect(body).toBeInTheDocument();
+    expect(commentButton).toBeInTheDocument();
+  
+    ReactTestUtils.Simulate.change(body, { target: { value: "new body" } });
+    expect(body.value).toBe('new body')
     await waitFor(() => {
-      const body = container.queryByTestId('body_input')
-      const commentButton = container.queryByTestId('button')
-      expect(body).toBeInTheDocument();
-      expect(commentButton).toBeInTheDocument();
-    
-      ReactTestUtils.Simulate.change(body, { target: { value: "new body" } });
-      expect(body.value).toBe('new body')
       fireEvent.click(commentButton)
+      expect(commentButton).not.toBeDisabled()
     }, 10)
 
   })
@@ -76,14 +77,14 @@ describe('Comment Edit Field Component', () => {
       </MockedProvider>
     )
 
+    const body = container.queryByTestId('body_input')
+    const commentButton = container.queryByTestId('button')
+    expect(body).toBeInTheDocument();
+    expect(commentButton).toBeInTheDocument();
+  
+    ReactTestUtils.Simulate.change(body, { target: { value: "" } });
+    expect(body.value).toBe('')
     await waitFor(() => {
-      const body = container.queryByTestId('body_input')
-      const commentButton = container.queryByTestId('button')
-      expect(body).toBeInTheDocument();
-      expect(commentButton).toBeInTheDocument();
-    
-      ReactTestUtils.Simulate.change(body, { target: { value: "new body" } });
-      expect(body.value).toBe('new body')
       fireEvent.click(commentButton)
     }, 10)
   })

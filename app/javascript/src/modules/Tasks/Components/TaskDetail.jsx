@@ -308,6 +308,7 @@ export default function TaskDetail({
                   commentsRefetch={commentsRefetch}
                   forProcess={forProcess}
                   taskAssignees={data.assignees}
+                  taskDocuments={data.attachments}
                 />
               )}
               openDetails={!matches ? true : tab === 'comments'}

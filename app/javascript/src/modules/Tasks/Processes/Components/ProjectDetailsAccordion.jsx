@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import { Grid, Paper, Typography, Chip, Avatar } from '@mui/material';
@@ -12,7 +12,14 @@ import { ProjectRepliesRequestedComments } from '../graphql/process_queries';
 import CenteredContent from '../../../../shared/CenteredContent';
 import { sortRepliesRequestedComments } from '../utils';
 import { dateToString } from '../../../../components/DateContainer';
-import { objectAccessor, removeNewLines, sanitizeText, formatError } from '../../../../utils/helpers';
+import {
+  objectAccessor,
+  removeNewLines,
+  sanitizeText,
+  formatError,
+  replaceDocumentMentions,
+  useParamsQuery
+} from '../../../../utils/helpers';
 import CustomSkeleton from '../../../../shared/CustomSkeleton';
 import TaskContextProvider from '../../Context';
 import { TaskDocumentsQuery } from '../../graphql/task_queries';
@@ -27,6 +34,8 @@ export default function ProjectDetailsAccordion({ taskId }) {
   const { id: processId } = useParams();
   const smDownHidden = useMediaQuery(theme => theme.breakpoints.down('sm'));
   const TAB_VALUES = { comments: 0, documents: 1 };
+  const currentPath = useParamsQuery();
+  const currentDocId = currentPath.get('document_id');
 
   const handleTabValueChange = (_event, newValue) => {
     history.push(
@@ -35,24 +44,19 @@ export default function ProjectDetailsAccordion({ taskId }) {
     setTabValue(Number(newValue));
   };
 
-  const { data, loading, error } = useQuery(
-    ProjectRepliesRequestedComments,
+  const { data, loading, error } = useQuery(ProjectRepliesRequestedComments, {
+    variables: {
+      taskId
+    },
+    fetchPolicy: 'cache-and-network'
+  });
+  const { data: docData, loading: docLoading, error: docError, refetch: docRefetch } = useQuery(
+    TaskDocumentsQuery,
     {
-      variables: {
-        taskId
-      },
+      variables: { taskId },
       fetchPolicy: 'cache-and-network'
     }
   );
-  const {
-    data: docData,
-    loading: docLoading,
-    error: docError,
-    refetch: docRefetch
-  } = useQuery(TaskDocumentsQuery, {
-    variables: { taskId },
-    fetchPolicy: 'cache-and-network'
-  });
 
   const replyRequestedComments = data?.repliesRequestedComments;
   const sentComments = replyRequestedComments?.sent.map(obj => {
@@ -74,6 +78,12 @@ export default function ProjectDetailsAccordion({ taskId }) {
     Received: 'warning',
     Resolved: 'success'
   };
+
+  useEffect(() => {
+    if (currentDocId) {
+      setTabValue(1);
+    }
+  }, []);
 
   if (error) return <CenteredContent>{formatError(error.message)}</CenteredContent>;
   if (docError) return <CenteredContent>{formatError(docError.message)}</CenteredContent>;
@@ -207,7 +217,19 @@ export default function ProjectDetailsAccordion({ taskId }) {
                               <Typography variant="caption">{comment.user.name}</Typography>
                             </div>
                           )}
-                          <Typography variant="caption">{comment.body}</Typography>
+                          <Typography variant="caption">
+                            <span
+                              // eslint-disable-next-line react/no-danger
+                              dangerouslySetInnerHTML={{
+                                __html: sanitizeText(
+                                  replaceDocumentMentions(
+                                    comment.body,
+                                    `/processes/${processId}/projects?tab=documents&project_id=${taskId}`
+                                  )
+                                )
+                              }}
+                            />
+                          </Typography>
                         </Grid>
                         <Grid
                           item

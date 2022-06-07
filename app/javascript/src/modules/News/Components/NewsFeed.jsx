@@ -1,5 +1,3 @@
-/* eslint-disable react/prop-types */
-/* eslint-disable no-use-before-define */
 import React from 'react';
 import makeStyles from '@mui/styles/makeStyles';
 import Card from '@mui/material/Card';
@@ -15,7 +13,7 @@ import { useFetch } from '../../../utils/customHooks';
 import CustomSkeleton from '../../../shared/CustomSkeleton';
 import CenteredContent from '../../../shared/CenteredContent';
 import CardWrapper from '../../../shared/CardWrapper';
-import { sanitizeText, truncateString } from '../../../utils/helpers';
+import { decodeHtmlEntity, sanitizeText, truncateString } from '../../../utils/helpers';
 import MediaCard from '../../../shared/MediaCard';
 import ControlledCard from '../../../shared/ControlledCard';
 
@@ -58,20 +56,24 @@ export function PostItemGrid({ data, loading }) {
                         component="img"
                         height="194"
                         image={tile.featured_image}
-                        alt={tile.title}
+                        alt={decodeHtmlEntity(tile.title)}
                         data-testid="tile_image"
                       />
                       <CardContent>
-                        <Typography variant="body1">{tile.title}</Typography>
-                        <br />
-                        <Typography variant="body2" color="text.secondary" component="div">
-                          <div
-                            // eslint-disable-next-line react/no-danger
-                            dangerouslySetInnerHTML={{
-                              __html: sanitizeText(truncateString(tile.excerpt, 190))
-                            }}
-                          />
-                        </Typography>
+                        <Typography
+                          variant="body1"
+                          dangerouslySetInnerHTML={{
+                            __html: sanitizeText(tile.title)
+                          }}
+                        />
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          component="div"
+                          dangerouslySetInnerHTML={{
+                            __html: sanitizeText(truncateString(tile.excerpt, 190))
+                          }}
+                        />
                       </CardContent>
                     </Card>
                   </Grid>
@@ -83,7 +85,7 @@ export function PostItemGrid({ data, loading }) {
                     className={classes.gridItem}
                   >
                     <MediaCard
-                      title={tile.title}
+                      title={decodeHtmlEntity(tile.title)}
                       subtitle={tile.excerpt}
                       imageUrl={tile.featured_image}
                     />
@@ -111,6 +113,17 @@ export function PostItemGrid({ data, loading }) {
     </div>
   );
 }
+
+PostItemGrid.defaultProps = {
+  loading: false,
+  data: []
+};
+
+PostItemGrid.propTypes = {
+  data: PropTypes.arrayOf(PropTypes.object),
+  loading: PropTypes.bool
+};
+
 
 export default function NewsFeed({ wordpressEndpoint }) {
   const matches = useMediaQuery('(max-width:600px)');

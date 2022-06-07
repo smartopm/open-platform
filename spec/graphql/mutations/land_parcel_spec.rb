@@ -159,7 +159,7 @@ RSpec.describe Mutations::LandParcel do
       expect(result.dig('data', 'PropertyCreate', 'landParcel', 'objectType')).to eq('house')
       expect(result.dig('data', 'PropertyCreate', 'landParcel', 'status')).to eq('planned')
       expect(result['errors']).to be_nil
-      house = current_user.community.land_parcels.unscoped.find_by(parcel_number: '12345')
+      house = current_user.community.land_parcels.find_by(parcel_number: '12345')
       expect(house.house_land_parcel_id).to eq(user_parcel.id)
     end
 

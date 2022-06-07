@@ -946,7 +946,6 @@ export function buildCurrentStatusCard(SL) {
         { col1: 'Evaluation', col2: SL('Ev') },
         { col1: 'Stakeholder Meetings', col2: SL('St') },
         { col1: 'Site Visit', col2: SL('Sv') },
-        { col1: 'Ready to Sign', col2: SL('Rs') },
         { col1: 'Signed MOU', col2: SL('Sm') },
         { col1: 'Signed Lease', col2: SL('Sl') }
       ]

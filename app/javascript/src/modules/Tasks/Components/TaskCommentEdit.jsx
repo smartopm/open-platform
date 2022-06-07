@@ -6,12 +6,13 @@ import { useTranslation } from 'react-i18next';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import makeStyles from '@mui/styles/makeStyles';
-import TextField from '@mui/material/TextField';
 import { TaskCommentUpdate } from '../../../graphql/mutations';
+import ReusableMentionsInput from '../../../shared/ReusableMentionsInput';
 
-export default function EditField({ handleClose, data, refetch, commentsRefetch }) {
+export default function EditField({ handleClose, data, refetch, commentsRefetch, mentionsData }) {
   const classes = useStyles();
   const [body, setBody] = useState('');
+  const [mentionedDocuments, setMentionedDocuments] = useState([]);
   const [commentUpdate] = useMutation(TaskCommentUpdate);
   const [error, setErrorMessage] = useState('');
   const { t } = useTranslation('common');
@@ -21,6 +22,7 @@ export default function EditField({ handleClose, data, refetch, commentsRefetch 
     commentUpdate({
       variables: {
         id: data.id,
+        taggedDocuments: mentionedDocuments,
         body
       }
     })
@@ -36,6 +38,7 @@ export default function EditField({ handleClose, data, refetch, commentsRefetch 
 
   useEffect(() => {
     setBody(data.body);
+    setMentionedDocuments(data.taggedDocuments);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -45,15 +48,11 @@ export default function EditField({ handleClose, data, refetch, commentsRefetch 
         <Avatar style={{ margin: '-7px 10px 0 0' }} src={data.user.imageUrl} alt="avatar-image" />
         <form className={classes.root}>
           <div style={{ display: 'flex', flexDirection: 'column' }}>
-            <TextField
-              multiline
-              value={body}
-              id="outlined-size-small"
-              variant="outlined"
-              label={t('form_actions.comment_edit')}
-              size="small"
-              onChange={e => setBody(e.target.value)}
-              inputProps={{ 'data-testid': 'body_input' }}
+            <ReusableMentionsInput
+              commentValue={body}
+              setCommentValue={setBody}
+              data={mentionsData}
+              setMentions={setMentionedDocuments}
             />
             <div style={{ display: 'flex', flexDirection: 'row', marginTop: '5px' }}>
               <Button
@@ -62,8 +61,9 @@ export default function EditField({ handleClose, data, refetch, commentsRefetch 
                 data-testid="button"
                 type="submit"
                 color="primary"
-                style={{ marginRight: '5px' }}
+                style={{ marginRight: '5px', color: '#FFFFFF' }}
                 onClick={handleSubmit}
+                disableElevation
               >
                 {t('form_actions.save_changes')}
               </Button>
@@ -99,7 +99,8 @@ const useStyles = makeStyles({
 
 EditField.defaultProps = {
   data: {},
-  commentsRefetch: () => {}
+  commentsRefetch: () => {},
+  mentionsData: []
 };
 
 EditField.propTypes = {
@@ -107,5 +108,11 @@ EditField.propTypes = {
   data: PropTypes.object,
   refetch: PropTypes.func.isRequired,
   handleClose: PropTypes.func.isRequired,
-  commentsRefetch: PropTypes.func
+  commentsRefetch: PropTypes.func,
+  mentionsData: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string,
+      display: PropTypes.string
+    })
+  )
 };

@@ -534,6 +534,7 @@ ActiveRecord::Schema.define(version: 2022_06_06_080117) do
     t.datetime "replied_at"
     t.uuid "grouping_id"
     t.uuid "reply_from_id"
+    t.string "tagged_documents", default: [], array: true
     t.index ["note_id"], name: "index_note_comments_on_note_id"
     t.index ["user_id"], name: "index_note_comments_on_user_id"
   end

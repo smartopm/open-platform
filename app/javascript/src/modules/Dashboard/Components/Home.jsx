@@ -1,8 +1,11 @@
 /* eslint-disable no-use-before-define */
 import React, { useContext } from 'react';
 import Divider from '@mui/material/Divider';
-import { Grid } from '@mui/material';
+import { useHistory } from 'react-router-dom';
+import { Grid, Button } from '@mui/material';
 import { useTranslation } from 'react-i18next';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import QrCode2Icon from '@mui/icons-material/QrCode2';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
 import Homepage from '../../../components/HomePage';
 import { TaskReminder } from '../../Tasks';
@@ -22,6 +25,8 @@ import { allUserTypes } from '../../../utils/constants';
 
 const Home = () => {
   const authState = useContext(AuthStateContext);
+  const matches = useMediaQuery('(max-width:900px)');
+  const history = useHistory();
   const { t } = useTranslation(['dashboard', 'common']);
   const dashboardQuickLinks = authState?.user?.community?.menuItems?.filter(quickLink =>
     quickLink?.display_on?.includes('Dashboard')
@@ -40,8 +45,16 @@ const Home = () => {
         style={{ display: 'flex', justifyContent: 'center' }}
         columns={{ xs: 12, md: 12 }}
       >
-        <Grid item md={12} xs={12}>
-          <LanguageToggle />
+        <Grid item md={6} sm={12} xs={12} />
+        <Grid item md={6} sm={12} xs={12} style={matches ? {padding: '0 7%'} : {}}>
+          <Grid container alignItems='center'>
+            <Grid item md={6} sm={6} xs={6} style={matches ? { padding: '6% 0 0 4%' } : { padding: "4% 0 0 2%" }}>
+              <Button startIcon={<QrCode2Icon />} onClick={() => history.push(`/id/${authState.user.id}`)} data-testid='qr_button'>MY QR CODE</Button>
+            </Grid>
+            <Grid item md={6} sm={6} xs={6}>
+              <LanguageToggle />
+            </Grid>
+          </Grid>
         </Grid>
         <FeatureCheck features={authState.user.community.features} name="Discussions">
           {communityNewsUsers.includes(userType) && (

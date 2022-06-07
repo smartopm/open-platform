@@ -12,7 +12,7 @@ import NkwashiCoverageData from '../data/nkwashi_coverage_boundary.json'
 import CMCoverageData from '../data/cm_coverage_boundary.json'
 import DGDPCoverageData from '../data/doublegdp_boundary.json'
 import NkwashiSuburbBoundaryData from '../data/nkwashi_suburb_boundary.json'
-import poiIcon from '../../../assets/images/poi-icon.png'
+import poiIcon from '../../../assets/images/poi-icon.svg'
 import { LandParcelGeoData, LandParcel } from '../graphql/queries'
 import LandParcelMarker from '../components/Map/LandParcelMarker'
 import LandParcelLegend from '../components/Map/LandParcelLegend'
@@ -129,7 +129,7 @@ export default function GeoMap() {
 
   /* istanbul ignore next */
   function handlePoiLayerClick({ target }){
-    const { properties: { id, icon, poi_name: poiName, parcel_no: parcelNumber, parcel_type: parcelType, long_x: longX, lat_y: latY }
+    const { properties: { id, icon, poi_name: poiName, parcel_no: parcelNumber, parcel_type: parcelType, long_x: longX, lat_y: latY, video_urls: videoUrls }
   } = target.feature
 
     setSelectedPoi({
@@ -140,6 +140,7 @@ export default function GeoMap() {
       parcelType,
       longX,
       latY,
+      videoUrls: videoUrls || [],
     })
 
     loadParcel({ variables: { id } });
@@ -205,7 +206,7 @@ export default function GeoMap() {
     const divIcon = L.divIcon({
       html: `<div class=${classes.markerContainer}>
               <div class=${classes.markerLabel}>${feature.properties.poi_name || 'POI'}</div>
-              <img src=${poiIcon} class=${classes.markerIcon} />
+              <img src="${poiIcon}" class=${classes.markerIcon} />
             <div/>`
     })
 
@@ -234,8 +235,6 @@ export default function GeoMap() {
     // TODO: Victor control map canvas re-size from useMap (v3.2.1)
     setTimeout(()=> window.dispatchEvent(new Event('resize')), 1000);
   })
-
-  if (loadingCommunityData) return <Spinner />;
 
    return (
      <>
@@ -303,7 +302,7 @@ export default function GeoMap() {
            easeLinearity={0.35}
            onZoomEnd={handleMapZoom}
            maxZoom={40}
-           minZoom={11}
+           minZoom={5}
          >
            <MapLayers>
              {Array.isArray(properties) && properties?.length && (
@@ -369,14 +368,16 @@ export default function GeoMap() {
                </FeatureGroup>
              </LayersControl.Overlay>
               )}
-             {subUrbanData && (
+             {loadingCommunityData && <Spinner />}
+             {!loadingCommunityData && subUrbanData && (
                <LayersControl.Overlay name="Sub-urban Areas">
                  <FeatureGroup>
                    <SubUrbanLayer data={subUrbanData} />
                  </FeatureGroup>
                </LayersControl.Overlay>
                )}
-             {coverageData && (
+             {loadingCommunityData && <Spinner />}
+             {!loadingCommunityData && coverageData && (
                <LayersControl.Overlay checked name="Coverage Area">
                  <FeatureGroup>
                    <Popup>

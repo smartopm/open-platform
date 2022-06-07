@@ -39,11 +39,12 @@ RSpec.describe Mutations::Note::NoteCommentUpdate do
 
     let(:query) do
       <<~GQL
-        mutation noteCommentUpdate($id: ID!, $body: String!) {
-          noteCommentUpdate(id: $id, body: $body){
+        mutation noteCommentUpdate($id: ID!, $body: String!, $taggedDocuments: [ID]) {
+          noteCommentUpdate(id: $id, body: $body, taggedDocuments: $taggedDocuments){
             noteComment {
               id
               body
+              taggedDocuments
             }
           }
         }
@@ -54,6 +55,7 @@ RSpec.describe Mutations::Note::NoteCommentUpdate do
       variables = {
         id: note_comment.id,
         body: 'Updated body',
+        taggedDocuments: ['t35672ghd8'],
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
@@ -61,6 +63,9 @@ RSpec.describe Mutations::Note::NoteCommentUpdate do
                                               }).as_json
       expect(result.dig('data', 'noteCommentUpdate', 'noteComment', 'id')).not_to be_nil
       expect(result.dig('data', 'noteCommentUpdate', 'noteComment', 'body')).to eql 'Updated body'
+      expect(result.dig('data', 'noteCommentUpdate', 'noteComment', 'taggedDocuments', 0)).to eql(
+        't35672ghd8',
+      )
       expect(result['errors']).to be_nil
     end
 
@@ -68,6 +73,7 @@ RSpec.describe Mutations::Note::NoteCommentUpdate do
       variables = {
         id: note_comment.id,
         body: 'Updated commment by site worker',
+        taggedDocuments: [],
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
@@ -83,6 +89,7 @@ RSpec.describe Mutations::Note::NoteCommentUpdate do
       variables = {
         id: note_comment.id,
         body: 'Updated body',
+        taggedDocuments: [],
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {

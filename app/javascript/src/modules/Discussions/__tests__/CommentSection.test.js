@@ -14,7 +14,8 @@ describe('CommentSection', () => {
       comment: 'This is another comment',
       imageUrl: 'https://dev.dgdp.site/activestorage',
       isAdmin: true,
-      createdAt: '2020-08-08'
+      createdAt: '2020-08-08',
+      accessibility: 'everyone'
     },
     handleDeleteComment: jest.fn()
   };

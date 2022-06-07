@@ -28,7 +28,7 @@ module Types
     field :status, String, null: true
 
     def image_urls
-      return nil unless object.images.attached?
+      return [] unless object.images.attached?
 
       object.images.map do |image|
         Rails.application.routes.url_helpers

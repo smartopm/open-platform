@@ -190,7 +190,7 @@ class MergeUsers
   end
 
   def self.merge_accounts_and_general_payments(user, duplicate_user)
-    if user.land_parcels.unscope(where: :status).general.first.present?
+    if user.land_parcels.general.first.present?
       # Updates plan payments of general plan
       general_plan = duplicate_user.general_payment_plan
       user.general_payment_plan.plan_payments.update_all(user_id: duplicate_user.id,

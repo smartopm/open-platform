@@ -616,5 +616,37 @@ export function extractHostname(urlString) {
   return {
     hostname: urlString.split('/')[2],
     userId: urlString.split('/')[4]
-  } 
+  }
+}
+
+/**
+ * Get a key from an object, given the object and value of the corresponding key.
+ * @param {Object} obj object
+ * @param {String} option word
+ * @returns key for a value, if such value exists or undefined otherwise.
+ */
+export function getObjectKey(obj, option) {
+  return Object.keys(obj).find(key => objectAccessor(obj, key) === option);
+}
+
+/**
+ * @param {String} str a word or sentence consisting of
+ * HTML special character (in form of entity number )
+ * @returns decoded readable special character or symbol
+ */
+export function decodeHtmlEntity(str) {
+  return str.replace(/&#(\d+);/g, function(match, dec) {
+    return String.fromCharCode(dec);
+  });
+};
+
+export function replaceDocumentMentions(text, path) {
+  if (!text) return;
+  if (!path) return text;
+
+  const updatedText = text.replace(/\###(.*?)\###/g, (m) => {
+    return `<a href='${path}&document_id=${m.split("__")[1]}'>${m.split("__")[2]}</a>`
+  });
+
+  return updatedText;
 }
