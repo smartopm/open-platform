@@ -7,7 +7,8 @@ import useFileUpload from '../../../graphql/useFileUpload';
 import { PostCreateMutation, PostUpdateMutation } from '../../../graphql/mutations';
 import MessageAlert from '../../../components/MessageAlert';
 import { Spinner } from '../../../shared/Loading';
-import { accessibilityOptions, setAccessibilityValue } from '../../../utils/helpers';
+import { setAccessibilityValue } from '../../../utils/helpers';
+import { accessibilityOptions } from '../../../utils/constants';
 
 export default function PostCreate({
   translate,
@@ -41,7 +42,7 @@ export default function PostCreate({
   });
 
   const [createPost] = useMutation(PostCreateMutation);
-  const actionVisibilityOptions = accessibilityOptions();
+  const actionVisibilityOptions = accessibilityOptions;
   const [updatePost] = useMutation(PostUpdateMutation);
   const modalDetails = {
     title: editModal ? translate('dashboard.edit_post') : translate('dashboard.start_post'),

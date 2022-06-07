@@ -14,7 +14,7 @@ import { Link } from 'react-router-dom';
 import MoreVertOutlined from '@mui/icons-material/MoreVertOutlined';
 import { useTranslation } from 'react-i18next';
 import { PostUpdateMutation } from '../../../graphql/mutations';
-import { accessibilityOptions, findLinkAndReplace, sanitizeText, setAccessibilityValue } from '../../../utils/helpers';
+import { findLinkAndReplace, sanitizeText, setAccessibilityValue } from '../../../utils/helpers';
 import Avatar from '../../../components/Avatar';
 import DateContainer from '../../../components/DateContainer';
 import ImageAuth from '../../../shared/ImageAuth';
@@ -22,6 +22,7 @@ import MenuList from '../../../shared/MenuList';
 import MessageAlert from '../../../components/MessageAlert';
 import DialogWithImageUpload from '../../../shared/dialogs/DialogWithImageUpload';
 import { Spinner } from '../../../shared/Loading';
+import { accessibilityOptions } from '../../../utils/constants';
 
 export default function CommentSection({ data, handleDeleteComment, refetch }) {
   const { t } = useTranslation(['discussion', 'dashboard']);
@@ -34,7 +35,7 @@ export default function CommentSection({ data, handleDeleteComment, refetch }) {
     loading: false
   });
   const [visibilityOption, setVisibilityOption] = useState('Everyone');
-  const actionVisibilityOptions = accessibilityOptions();
+  const actionVisibilityOptions = accessibilityOptions;
   const [updatePost] = useMutation(PostUpdateMutation);
   const anchorElOpen = Boolean(anchorEl);
   const menuList = [

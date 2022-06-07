@@ -621,17 +621,6 @@ export function extractHostname(urlString) {
 
 /**
  *
- * @returns object
- */
-export function accessibilityOptions() {
-  return {
-    admins: 'Admins Only',
-    everyone: 'Everyone'
-  }
-}
-
-/**
- *
  * @param {Object} obj object
  * @param {String} option word
  * @returns string
