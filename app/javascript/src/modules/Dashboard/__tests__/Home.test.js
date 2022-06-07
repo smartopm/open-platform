@@ -1,6 +1,5 @@
 import React from 'react';
-import { act, render, screen, waitFor } from '@testing-library/react';
-
+import { act, render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/react-testing';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
@@ -24,6 +23,11 @@ describe('Home main page', () => {
           </MockedProvider>
         </Context.Provider>
       );
+
+      await waitFor(() => {
+        expect(screen.queryByTestId('qr_button')).toBeInTheDocument();
+        fireEvent.click(screen.queryByTestId('qr_button'));
+      });
     });
   });
 });
