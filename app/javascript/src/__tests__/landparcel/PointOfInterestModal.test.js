@@ -1,6 +1,7 @@
 /* eslint-disable react/jsx-no-undef */
 import React from 'react'
-import { render, fireEvent, screen, waitFor } from '@testing-library/react'
+import ReactTestUtils from 'react-dom/test-utils';
+import { render, screen, waitFor } from '@testing-library/react'
 import { MockedProvider } from '@apollo/react-testing'
 import { BrowserRouter } from 'react-router-dom/'
 import MockedThemeProvider from '../../modules/__mocks__/mock_theme'
@@ -39,19 +40,19 @@ describe('Point Of Interest Modal Component', () => {
       expect(screen.queryByTestId('add_type')).toBeInTheDocument()
 
       const poiName = screen.getByTestId('poi-name')
-      fireEvent.change(poiName, { target: { value: 'Hotel' } })
+      ReactTestUtils.Simulate.change(poiName, { target: { value: 'Hotel' } })
       expect(poiName.value).toBe('Hotel')
 
       const poiDescription = screen.getByTestId('poi-description')
-      fireEvent.change(poiDescription, { target: { value: 'Hotel description' } })
+      ReactTestUtils.Simulate.change(poiDescription, { target: { value: 'Hotel description' } })
       expect(poiDescription.value).toBe('Hotel description')
   
       const GeoLongitudeX = screen.queryByTestId('long_x')
-      fireEvent.change(GeoLongitudeX, { target: { value: '28.535' } })
+      ReactTestUtils.Simulate.change(GeoLongitudeX, { target: { value: '28.535' } })
       expect(GeoLongitudeX.value).toBe('28.535')
   
       const GeoLatitudeY = screen.queryByTestId('lat_y')
-      fireEvent.change(GeoLatitudeY, { target: { value: '-15.255' } })
+      ReactTestUtils.Simulate.change(GeoLatitudeY, { target: { value: '-15.255' } })
       expect(GeoLatitudeY.value).toBe('-15.255')
     }, 10)
 
