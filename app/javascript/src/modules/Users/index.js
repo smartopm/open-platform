@@ -6,25 +6,25 @@ import Users from './Containers/Users';
 import UserShow from './Containers/UserShow';
 import AccessCheck from '../Permissions/Components/AccessCheck';
 
-const user = { module: 'user' }
+const user = { module: 'user' };
 
 const userPermissions = ['can_access_all_users'];
 const profilePermissions = ['can_view_own_profile'];
 
 export function RenderUsers() {
-    return (
-      <AccessCheck module={user.module} allowedPermissions={userPermissions}>
-        <Users />
-      </AccessCheck>
-    )
+  return (
+    <AccessCheck module={user.module} allowedPermissions={userPermissions}>
+      <Users />
+    </AccessCheck>
+  );
 }
 
 function RenderUserProfile() {
-    return (
-      <AccessCheck module={user.module} allowedPermissions={profilePermissions}>
-        <UserShow />
-      </AccessCheck>
-    )
+  return (
+    <AccessCheck module={user.module} allowedPermissions={profilePermissions}>
+      <UserShow />
+    </AccessCheck>
+  );
 }
 
 // for nested links, I think these will likely be on the user
@@ -33,7 +33,8 @@ function RenderUserProfile() {
 // to: '/messages/:id',
 // to: '/plots/id:'
 // users menu
-  // ==> for admin
+// ==> for admin
+
 export default {
   routeProps: {
     path: '/users',
@@ -64,7 +65,7 @@ export const Profile = {
   featureName: 'Profile',
   moduleName: 'profile',
   accessibleBy: []
-}
+};
 
 export const Logout = {
   routeProps: {
@@ -78,4 +79,4 @@ export const Logout = {
   featureName: 'Logout',
   moduleName: 'logout',
   accessibleBy: []
-}
+};

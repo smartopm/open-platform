@@ -5,7 +5,8 @@ import {
   sentencizeAction, titleize, pluralizeCount, capitalize, validateEmail, invertArray,
   findLinkAndReplace, forceLinkHttps, titleCase, truncateString, removeNewLines, checkForHtmlTags,
   sanitizeText, getJustLabels, checkValidGeoJSON, getHexColor, getDrawPluginOptions,
-  handleQueryOnChange, checkAccessibilityForUserType, extractHostname, getObjectKey
+  handleQueryOnChange, checkAccessibilityForUserType, extractHostname, getObjectKey,
+  decodeHtmlEntity
 } from '../../utils/helpers'
 
 jest.mock('dompurify')
@@ -256,7 +257,7 @@ describe('#extractHostname', () => {
   });
 });
 
-describe('getObjectKey', () => {
+describe('#getObjectKey', () => {
   it("should the key for an object's value if the key is found", () => {
     const obj = { one: 'two', three: 'four' };
     const response = getObjectKey(obj, 'two');
@@ -265,5 +266,12 @@ describe('getObjectKey', () => {
     expect(response).toEqual('one');
 
     expect(getObjectKey(obj, 'five')).toBe(undefined);
+  });
+});
+
+describe('#decodeHtmlEntity', () => {
+  it('decodes encoded HTML special characters and entity', () => {
+    expect(decodeHtmlEntity('This Year &#8211; WINNERS')).toEqual('This Year – WINNERS');
+    expect(decodeHtmlEntity('Copyright &#169; 2021 &#38; 2022')).toEqual('Copyright © 2021 & 2022');
   });
 });

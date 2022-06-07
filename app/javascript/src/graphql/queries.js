@@ -293,6 +293,17 @@ export const LeadDetailsQuery = gql`
   }
 `;
 
+export const LeadLabelsQuery = gql`
+  query leadLabels($userId: ID!) {
+    leadLabels(userId: $userId) {
+      id
+      shortDesc
+      groupingName
+      color
+    }
+  }
+`;
+
 export const UsersLiteQuery = gql`
   query usersLite($query: String!, $limit: Int) {
     usersLite(query: $query, limit: $limit) {

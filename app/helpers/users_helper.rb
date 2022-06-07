@@ -11,7 +11,7 @@ module UsersHelper
 
   DEFAULT_PREFERENCE = %w[com_news_sms com_news_email weekly_point_reminder_email].freeze
 
-  VALID_LEAD_STATUSES = ['Qualified Lead', 'Interest shown', 'Investment motive verified',
-                         'Signed MOU', 'Signed Lease', 'Evaluation', 'Stakeholder meetings',
-                         'Site Visit', 'Ready to sign'].freeze
+  VALID_LEAD_STATUSES = ['Qualified Lead', 'Interest Shown', 'Investment Motive Verified',
+                         'Signed MOU', 'Signed Lease', 'Evaluation', 'Stakeholder Meetings',
+                         'Site Visit', 'Ready to Sign'].freeze
 end

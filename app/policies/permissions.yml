@@ -182,6 +182,7 @@ admin:
       - can_view_hosts
       - can_update_invitation
       - can_search_user_ids
+      - can_create_users_via_csv
   profile:
     permissions:
       - can_see_menu_item
@@ -203,6 +204,7 @@ admin:
       - can_fetch_label_users
       - can_fetch_user_labels
       - can_see_menu_item
+      - can_view_lead_labels
   community:
     permissions:
       - can_see_menu_item
@@ -277,6 +279,14 @@ admin:
       - can_update_lead_log
       - can_fetch_lead_logs
       - can_access_lead_scorecard
+  lead:
+    permissions:
+      - can_view_lead_users
+      - can_edit_lead
+      - can_delete_lead
+      - can_view_lead_profile
+      - can_upload_lead_files
+      - can_see_menu_item
   messages:
     permissions:
       - can_see_menu_item

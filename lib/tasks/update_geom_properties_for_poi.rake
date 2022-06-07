@@ -19,7 +19,7 @@ namespace :db do
 
     ActiveRecord::Base.transaction do
       poi_id_list.each do |id|
-        poi = community.land_parcels.find_by(parcel_number: id)
+        poi = community.land_parcels.excluding_general.find_by(parcel_number: id)
 
         if poi.blank?
           puts "point of interest #{id} not found"

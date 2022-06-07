@@ -628,3 +628,14 @@ export function extractHostname(urlString) {
 export function getObjectKey(obj, option) {
   return Object.keys(obj).find(key => objectAccessor(obj, key) === option);
 }
+
+/**
+ * @param {String} str a word or sentence consisting of
+ * HTML special character (in form of entity number )
+ * @returns decoded readable special character or symbol
+ */
+export function decodeHtmlEntity(str) {
+  return str.replace(/&#(\d+);/g, function(match, dec) {
+    return String.fromCharCode(dec);
+  });
+};

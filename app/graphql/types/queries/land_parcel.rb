@@ -54,6 +54,7 @@ module Types::Queries::LandParcel
     raise_unauthorized_error_for_land_parcels(:can_fetch_land_parcels)
 
     context[:site_community].land_parcels
+                            .excluding_general
                             .search(query)
                             .includes(accounts: :user, payment_plans: %i[user plan_payments])
                             .with_attached_images
@@ -65,7 +66,7 @@ module Types::Queries::LandParcel
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:current_user].blank?
 
     user = verified_user(user_id)
-    user.land_parcels.includes(:accounts)
+    user.land_parcels.excluding_general.includes(:accounts)
   end
 
   def user_land_parcel_with_plan(user_id:)
@@ -79,6 +80,7 @@ module Types::Queries::LandParcel
     raise_unauthorized_error_for_land_parcels(:can_fetch_land_parcel)
 
     parcel = context[:site_community].land_parcels
+                                     .excluding_general
                                      .includes(accounts: :user, payment_plans:
                                       %i[user plan_payments])
                                      .with_attached_images
@@ -92,6 +94,7 @@ module Types::Queries::LandParcel
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') if context[:current_user].blank?
 
     properties = context[:site_community].land_parcels
+                                         .excluding_general
                                          .eager_load(:valuations, :accounts)
                                          .with_attached_images
 
@@ -102,6 +105,7 @@ module Types::Queries::LandParcel
     raise_unauthorized_error_for_land_parcels(:can_fetch_house)
 
     context[:site_community].land_parcels
+                            .excluding_general
                             .search(query)
                             .where(object_type: 'house')
                             .includes(accounts: :user, payment_plans: %i[user plan_payments])

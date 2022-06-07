@@ -9,7 +9,7 @@ namespace :migrate_deposits do
     community = Community.find_by(name: args.community_name)
 
     ActiveRecord::Base.transaction do
-      community.land_parcels.joins(:payment_plan).each do |parcel|
+      community.land_parcels.excluding_general.joins(:payment_plan).each do |parcel|
         plan = parcel.payment_plan
         wallet_transactions = plan.wallet_transactions
                                   .not_cancelled

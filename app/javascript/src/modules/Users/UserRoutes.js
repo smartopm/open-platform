@@ -11,7 +11,9 @@ import Preferences from '../Preferences/Components/Notifications';
 import { allUserTypes } from '../../utils/constants';
 import AccessCheck from '../Permissions/Components/AccessCheck';
 import LeadManagementDetails from './LeadManagement/Components/LeadManagementDetails';
-import EditForm from '../Forms/containers/FormLinks'
+import EditForm from '../Forms/containers/FormLinks';
+import UsersImport from './Containers/UsersImport';
+import LeadManagementUserImport from './LeadManagement/Containers/LeadManagementUserImport';
 // name in here is only used as key in routes, make sure it is unique
 
 const user = { module: 'user' };
@@ -28,14 +30,16 @@ const leadManagementPermissions = ['can_update_user_details'];
 
 const CommunityFormsPermissions = ['can_access_forms'];
 
-const currentModule = 'forms'
+const userImportPermissions = ['can_create_users_via_csv'];
+
+const currentModule = 'forms';
 
 function RenderCommunityForms() {
   return (
     <AccessCheck module={currentModule} allowedPermissions={CommunityFormsPermissions}>
       <EditForm />
     </AccessCheck>
-  )
+  );
 }
 
 function RenderUserEdit() {
@@ -66,6 +70,22 @@ function RenderLeadManagementTab() {
   return (
     <AccessCheck module={user.module} allowedPermissions={leadManagementPermissions}>
       <LeadManagementDetails />
+    </AccessCheck>
+  );
+}
+
+function RenderUserImport() {
+  return (
+    <AccessCheck module={user.module} allowedPermissions={userImportPermissions}>
+      <UsersImport />
+    </AccessCheck>
+  );
+}
+
+function RenderUserLeadImport() {
+  return (
+    <AccessCheck module={user.module} allowedPermissions={userImportPermissions}>
+      <LeadManagementUserImport />
     </AccessCheck>
   );
 }
@@ -183,6 +203,28 @@ const routes = [
     accessibleBy: allUserTypes,
     name: 'edit_forms',
     featureName: 'Forms'
+  },
+  {
+    routeProps: {
+      path: '/users/import',
+      exact: true,
+      component: RenderUserImport
+    },
+    accessibleBy: [],
+    name: 'user_import',
+    moduleName: 'user',
+    featureName: 'Users'
+  },
+  {
+    routeProps: {
+      path: '/users/leads/import',
+      exact: true,
+      component: RenderUserLeadImport
+    },
+    accessibleBy: [],
+    name: 'leads_import',
+    moduleName: 'user',
+    featureName: 'Users'
   }
 ];
 
