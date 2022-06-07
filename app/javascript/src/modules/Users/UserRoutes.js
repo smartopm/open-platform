@@ -74,7 +74,7 @@ function RenderLeadManagementTab() {
   );
 }
 
-export function RenderUserImport() {
+function RenderUserImport() {
   return (
     <AccessCheck module={user.module} allowedPermissions={userImportPermissions}>
       <UsersImport />
@@ -82,7 +82,7 @@ export function RenderUserImport() {
   );
 }
 
-export function RenderUserLeadImport() {
+function RenderUserLeadImport() {
   return (
     <AccessCheck module={user.module} allowedPermissions={userImportPermissions}>
       <LeadManagementUserImport />
