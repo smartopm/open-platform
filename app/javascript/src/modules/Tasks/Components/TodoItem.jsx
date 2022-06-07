@@ -143,7 +143,7 @@ export default function TodoItem({
   };
 
   useEffect(() => {
-    if (currentProjectId === task.id) {
+    if (currentProjectId && currentProjectId === task?.id) {
       setProjectsAccordionOpen({
         ...projectsAccordionOpen,
         [task.id]: !objectAccessor(projectsAccordionOpen, currentProjectId)
