@@ -5,36 +5,16 @@ import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import Users from './Containers/Users';
 import UserShow from './Containers/UserShow';
 import AccessCheck from '../Permissions/Components/AccessCheck';
-import UsersImport from './Containers/UsersImport';
-import LeadManagementUserImport from './LeadManagement/Containers/LeadManagementUserImport';
 
 const user = { module: 'user' };
 
 const userPermissions = ['can_access_all_users'];
 const profilePermissions = ['can_view_own_profile'];
 
-const userImportPermissions = ['can_create_users_via_csv'];
-
 export function RenderUsers() {
   return (
     <AccessCheck module={user.module} allowedPermissions={userPermissions}>
       <Users />
-    </AccessCheck>
-  );
-}
-
-export function RenderUserImport() {
-  return (
-    <AccessCheck module={user.module} allowedPermissions={userImportPermissions}>
-      <UsersImport />
-    </AccessCheck>
-  );
-}
-
-export function RenderUserLeadImport() {
-  return (
-    <AccessCheck module={user.module} allowedPermissions={userImportPermissions}>
-      <LeadManagementUserImport />
     </AccessCheck>
   );
 }
@@ -55,25 +35,6 @@ function RenderUserProfile() {
 // users menu
 // ==> for admin
 
-const UsersMenu = [
-    {
-      routeProps: {
-        path: '/users/import',
-        exact: true,
-        component: RenderUserImport
-      },
-      accessibleBy: []
-    },
-    {
-      routeProps: {
-        path: '/users/leads/import',
-        exact: true,
-        component: RenderUserLeadImport
-      },
-      accessibleBy: []
-    }
-  ];
-
 export default {
   routeProps: {
     path: '/users',
@@ -86,8 +47,7 @@ export default {
   name: t => t('misc.users'),
   moduleName: user.module,
   featureName: 'Users',
-  accessibleBy: [],
-  subRoutes: UsersMenu
+  accessibleBy: []
 };
 
 // temporarily export the user profile page here, these will be part of the core user module
@@ -104,14 +64,6 @@ export const Profile = {
   name: t => t('menu.my_profile'),
   featureName: 'Profile',
   moduleName: 'profile',
-  accessibleBy: []
-};
-
-export const CSVUserImport = {
-  routeProps: {
-    path: '/users/import',
-    component: RenderUserImport
-  },
   accessibleBy: []
 };
 
