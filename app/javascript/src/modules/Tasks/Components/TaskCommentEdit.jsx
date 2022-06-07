@@ -61,8 +61,9 @@ export default function EditField({ handleClose, data, refetch, commentsRefetch,
                 data-testid="button"
                 type="submit"
                 color="primary"
-                style={{ marginRight: '5px' }}
+                style={{ marginRight: '5px', color: '#FFFFFF' }}
                 onClick={handleSubmit}
+                disableElevation
               >
                 {t('form_actions.save_changes')}
               </Button>

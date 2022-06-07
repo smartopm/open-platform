@@ -26,7 +26,12 @@ import { dateToString } from '../../../components/DateContainer';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
 import { groupComments, lastRepliedComment, isDiscussionResolved } from '../Processes/utils';
 import CommentTextField from '../../../shared/CommentTextField';
-import { useParamsQuery, objectAccessor, replaceDocumentMentions } from '../../../utils/helpers';
+import {
+  useParamsQuery,
+  objectAccessor,
+  replaceDocumentMentions,
+  sanitizeText
+} from '../../../utils/helpers';
 import { TaskComment } from '../../../graphql/mutations';
 import { ResolveComments } from '../graphql/task_mutation';
 
@@ -313,9 +318,11 @@ export default function CommentCard({
                                   <span
                                     // eslint-disable-next-line react/no-danger
                                     dangerouslySetInnerHTML={{
-                                      __html: replaceDocumentMentions(
-                                        com.body,
-                                        `/processes/${processId}/projects/${projectId}?tab=documents`
+                                      __html: sanitizeText(
+                                        replaceDocumentMentions(
+                                          com.body,
+                                          `/processes/${processId}/projects/${projectId}?tab=documents`
+                                        )
                                       )
                                     }}
                                   />

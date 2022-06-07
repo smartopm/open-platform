@@ -15,6 +15,6 @@ module Types
     field :grouping_id, ID, null: true
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
-    field :tagged_documents, [String, { null: true }], null: true
+    field :tagged_documents, [ID, { null: true }], null: true
   end
 end

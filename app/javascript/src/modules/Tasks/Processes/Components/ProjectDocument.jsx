@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { useMutation } from 'react-apollo';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useParams } from 'react-router';
@@ -24,7 +24,6 @@ import { DeleteNoteDocument } from '../../../../graphql/mutations';
 import MessageAlert from '../../../../components/MessageAlert';
 import CenteredContent from '../../../../shared/CenteredContent';
 import { checkLastItem } from '../utils';
-import { useScroll, useRemoveBackground } from "../../../../hooks/useDomActions";
 
 export default function ProjectDocument({ attachments, loading, refetch, error, heading }) {
   const { processId } = useParams();
@@ -35,10 +34,10 @@ export default function ProjectDocument({ attachments, loading, refetch, error, 
   const [messageDetails, setMessageDetails] = useState({ isError: false, message: '' });
   const [taskDocumentDelete] = useMutation(DeleteNoteDocument);
   const [open, setOpen] = useState(false);
+  const [hasBgColor, setHasBgColor] = useState(true);
   const menuOpen = Boolean(anchorEl);
   const { t } = useTranslation('task');
   const authState = useContext(AuthStateContext);
-  const isBgColor = useRemoveBackground('current-document', 4000);
   const currentPath = useParamsQuery();
   const currentDocId = currentPath.get('document_id');
   const userTaskPermissions = authState.user?.permissions.find(
@@ -47,7 +46,19 @@ export default function ProjectDocument({ attachments, loading, refetch, error, 
   const canDeleteDocument = userTaskPermissions
     ? userTaskPermissions.permissions.includes('can_delete_note_document')
     : false;
-  useScroll('current-document');
+
+  useEffect(() => {
+    if (attachments?.length) {
+      // There's a custom hook for this effect but it's not working inside useEffect
+      if (document.getElementById(currentDocId)) {
+        document.getElementById(currentDocId).scrollIntoView({ behavior: 'smooth' });
+        setTimeout(() => {
+          setHasBgColor(false);
+        }, 4000);
+      }
+    }
+  }, [attachments]);
+
   function handleCloseMenu() {
     setAnchorEl(null);
     setCurrentDoc(null);
@@ -121,9 +132,11 @@ export default function ProjectDocument({ attachments, loading, refetch, error, 
               key={att.id}
               className={`${classes.children} ${!heading &&
                 index === 0 &&
-                classes.firstChild} ${att.id === currentDocId && isBgColor && classes.bgHighlight}`}
+                classes.firstChild} ${att.id === currentDocId &&
+                hasBgColor &&
+                classes.bgHighlight}`}
               style={checkLastItem(index, attachments) ? { borderBottom: '2px solid #F7F8F7' } : {}}
-              id={att.id === currentDocId && 'current-document'}
+              id={att.id}
             >
               <Grid
                 container
