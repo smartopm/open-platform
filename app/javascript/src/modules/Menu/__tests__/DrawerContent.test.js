@@ -2,7 +2,6 @@ import React from 'react';
 import { render, waitFor } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom/';
 import { MockedProvider } from '@apollo/react-testing';
-import '@testing-library/jest-dom/extend-expect';
 import DrawerContent from '../component/DrawerContent';
 import UserNotifications from '../graphql/menu_query';
 
@@ -21,7 +20,8 @@ describe('Drawer Content Component', () => {
               description: 'a task has been assigned to you',
               createdAt: '2022-10-10',
               seenAt: null,
-              header: 'sample header'
+              header: 'sample header',
+              notifableId: 'dwwerfwewewefdwe'
             }
           ]
         }
@@ -55,12 +55,13 @@ describe('Drawer Content Component', () => {
         result: {
           data: {
             userNotifications: {
-              id: 'uyhgfdsferf',
+              id: 'uyhgfdsferfesc',
               category: 'task',
               description: 'a task has been assigned to you',
               createdAt: '2022-10-10',
               seenAt: '2022-10-10',
-              header: 'sample header'
+              header: 'sample header',
+              notifableId: 'dwwerfwewewefdwe'
             }
           }
         }

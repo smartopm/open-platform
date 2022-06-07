@@ -35,7 +35,7 @@ export default function NotificationCard({ notification, userId, refetch }) {
       variables: { id }
     }).then(() => {
       refetch()
-      history.push(
+      history?.push(
         `${
           notification.category === 'task'
             ? `/tasks?taskId=${notification.notifableId}`
@@ -65,7 +65,7 @@ export default function NotificationCard({ notification, userId, refetch }) {
       </Grid>
       <Grid item md={6} sm={6} xs={6} style={{ textAlign: 'right' }} data-testid="date">
         {notification.seenAt ? (
-          <div style={{display: 'flex', alignItems: 'center', justifyContent: 'right'}}>
+          <div style={{display: 'flex', alignItems: 'center', justifyContent: 'right'}} data-testid='seen'>
             <DoneAllIcon style={{marginRight: '10px'}} />
             <Typography variant="caption" color="text.secondary">
               {dateToString(notification.seenAt)}

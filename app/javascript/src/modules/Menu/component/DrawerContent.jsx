@@ -24,7 +24,8 @@ export default function DrawerContent({ userId }) {
     );
 
   if (loading)
-    return Array.from(new Array(10)).map(index => (
+    return Array.from(new Array(10)).map((hii, index) => (
+      // eslint-disable-next-line react/no-array-index-key
       <div key={index}>
         <CustomSkeleton
           variant="rectangular"
