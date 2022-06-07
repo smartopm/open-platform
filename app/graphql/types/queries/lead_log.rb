@@ -25,25 +25,6 @@ module Types::Queries::LeadLog
       description 'Get lead investment stats'
       argument :user_id, GraphQL::Types::ID, required: true
     end
-
-    field :deal_details, [Types::LeadLogType], null: true do
-      description 'Get lead deal details'
-      argument :user_id, GraphQL::Types::ID, required: true
-      argument :limit, Integer, required: false
-      argument :offset, Integer, required: false
-    end
-
-    field :lead_investments, [Types::LeadLogType], null: true do
-      description 'Get lead investments'
-      argument :user_id, GraphQL::Types::ID, required: true
-      argument :limit, Integer, required: false
-      argument :offset, Integer, required: false
-    end
-
-    field :investment_stats, GraphQL::Types::JSON, null: true do
-      description 'Get lead investment stats'
-      argument :user_id, GraphQL::Types::ID, required: true
-    end
   end
   # rubocop:enable Metrics/BlockLength
 
@@ -53,8 +34,9 @@ module Types::Queries::LeadLog
 
     total_spent = context[:site_community].lead_logs.investment.where(user_id: user_id).sum(:amount)
     {
-      total_spent: total_spent.to_f,
-      percentage_of_target_used: percentage_of_target_used(total_spent, lead_log).to_f,
+      total_spent: total_spent,
+      percentage_of_target_used: percentage_of_target_used(total_spent, lead_log),
+      investment_label: investment_label(user_id, lead_log, total_spent),
     }
   end
 
@@ -189,11 +171,53 @@ module Types::Queries::LeadLog
                             .ordered
   end
 
+  # def investment_stats(user_id:)
+  #   lead_log = deal_details(user_id: user_id, limit: 1).first
+  #   return {} if lead_log.nil?
+
+  #   total_spent = context[:site_community].lead_logs.investment.where(user_id: user_id).sum(:amount)
+
+  #   {
+  #     total_spent: total_spent,
+  #     percentage_of_target_used: percentage_of_target_used(total_spent, lead_log),
+  #     investment_label: investment_label(user_id, lead_log, total_spent),
+  #   }
+  # end
+
+  # rubocop:disable Metrics/MethodLength
+  def investment_label(user_id, lead_log, total_spent)
+    label = context[:site_community].labels.joins(:user_labels)
+                                    .find_by(user_labels: { user_id: user_id },
+                                             grouping_name: 'Investment',
+                                             short_desc: investment_status(lead_log, total_spent))
+    return if label.nil?
+
+    {
+      id: label.id,
+      short_desc: label.short_desc,
+      grouping_name: label.grouping_name,
+      color: label.color,
+    }
+  end
+  # rubocop:enable Metrics/MethodLength
+
+  def investment_status(lead_log, total_spent)
+    investment_target = (lead_log.investment_target * lead_log.deal_size) / 100
+    total_spent > investment_target ? 'Over Target' : 'On Target'
+  end
+
   def percentage_of_target_used(total_spent, lead_log)
     return 100 if lead_log.investment_target.to_d.zero?
 
     ((total_spent / lead_log.investment_target) * 100).floor(2)
   end
+
+
+  # def deal_details(user_id:, offset: 0, limit: 3)
+  #   validate_authorization(:lead_log, :can_fetch_lead_logs)
+
+  #   ((total_spent / lead_log.investment_target) * 100).floor(2)
+  # end
 
   def valid_lead_divisions
     context[:site_community].lead_monthly_targets&.map { |data| data['division'] }
