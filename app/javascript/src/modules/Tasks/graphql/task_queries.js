@@ -30,6 +30,7 @@ export const TaskQuery = gql`
       description
       dueDate
       status
+      order
       user {
         id
         name
@@ -42,7 +43,7 @@ export const TaskQuery = gql`
         avatarUrl
         userType
       }
-      assigneeNotes{
+      assigneeNotes {
         id
         userId
         reminderTime
@@ -50,6 +51,7 @@ export const TaskQuery = gql`
       parentNote {
         id
         body
+        subTasksCount
         formUserId
         assignees {
           id
@@ -67,7 +69,8 @@ export const TaskQuery = gql`
       }
     }
   }
-`
+`;
+
 export const SubTasksQuery = gql`
   query subTasks($taskId: ID!, $offset: Int, $limit: Int) {
     taskSubTasks(taskId: $taskId, offset: $offset, limit: $limit) {

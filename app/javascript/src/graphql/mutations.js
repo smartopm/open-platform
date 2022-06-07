@@ -531,6 +531,7 @@ export const UpdateNote = gql`
     $parentNoteId: ID
     $documentBlobId: String
     $status: String
+    $order: Int
   ) {
     noteUpdate(
       id: $id
@@ -544,6 +545,7 @@ export const UpdateNote = gql`
       parentNoteId: $parentNoteId
       documentBlobId: $documentBlobId
       status: $status
+      order: $order
     ) {
       note {
         flagged

@@ -64,7 +64,7 @@ export default function TaskForm({
         description,
         due: selectedDate ? selectedDate.toISOString() : null,
         category: taskType,
-        order: parseInt(orderNumber, 10) || 1,
+        order: Number(orderNumber) || 1,
         flagged: true,
         userId: userData.userId,
         parentNoteId: parentTaskId
