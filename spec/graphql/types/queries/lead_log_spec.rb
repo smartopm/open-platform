@@ -163,6 +163,7 @@ RSpec.describe Types::Queries::LeadLog do
             logType
             dealSize
             investmentTarget
+            targetAmount
           }
         }
       GQL
@@ -278,6 +279,7 @@ RSpec.describe Types::Queries::LeadLog do
                                                          }).as_json
           expect(result['errors']).to be nil
           expect(result.dig('data', 'dealDetails').count).to eql 1
+          expect(result.dig('data', 'dealDetails', 0, 'targetAmount')).to eql 18_000.0
         end
       end
     end
