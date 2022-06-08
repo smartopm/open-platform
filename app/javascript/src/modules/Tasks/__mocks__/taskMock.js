@@ -46,6 +46,7 @@ export default {
     id: '90ba44ef-4306-416b-945f-1d2ea4eb4c50',
     formUserId: "816864d4-4815-4043-a9a5-def5282c9e2a",
     body: "Parent task body",
+    subTasksCount: 1,
     assignees: [{
       id: "9911784d4-4815-4043-a9a5-def5282fgat35"
     }],

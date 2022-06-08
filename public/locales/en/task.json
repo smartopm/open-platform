@@ -73,7 +73,8 @@
     "reply_submitted": "Reply Submitted",
     "reply_sent_to": "Reply Requested Sent To",
     "no_comments": "No comments yet on this project",
-    "updates": "Updates"
+    "updates": "Updates",
+    "order_number": "Order Number"
   },
   "document": {
     "uploaded_at": "Uploaded at",

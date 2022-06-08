@@ -60,6 +60,7 @@ export default function TaskInfoTop({
   const [taskUpdate] = useMutation(UpdateNote);
   const [editingBody, setEditingBody] = useState(false);
   const [editingDueDate, setEditingDueDate] = useState(false);
+  const [editingOrderNumber, setEditingOrderNumber] = useState(false);
   const [taskStatus, setTaskStatus] = useState(data?.status);
   const [updateDetails, setUpdateDetails] = useState({
     isError: false,
@@ -110,8 +111,12 @@ export default function TaskInfoTop({
   }
 
   function updateTask(property, value) {
+    let convertedValue = value;
+    if (property === 'order') {
+      convertedValue = Number(value);
+    };
     taskUpdate({
-      variables: { id: data.id, [property]: value }
+      variables: { id: data.id, [property]: convertedValue }
     })
       .then(() => {
         setUpdateDetails({ isError: false, message: t('task.update_successful') });
@@ -410,9 +415,38 @@ export default function TaskInfoTop({
             </Typography>
           </Grid>
         </Grid>
-
-        <br />
-        <br />
+        {canUpdateNote && data.parentNote && data.parentNote.subTasksCount > 1 && (
+          <Grid container className={classes.taskFieldItem}>
+            <Grid item xs={5} md={3}>
+              <Typography variant="caption" color="textSecondary" data-testid="order_number_title">
+                {t('task.order_number')}
+              </Typography>
+            </Grid>
+            <Grid
+              item
+              xs={7}
+              md={6}
+              onMouseOver={() => setEditingOrderNumber(true)}
+              onMouseLeave={() => setEditingOrderNumber(false)}
+              className={
+                editingOrderNumber ? classes.orderNumberEnabled : classes.orderNumberDisabled
+              }
+            >
+              {!editingOrderNumber && (
+                <Typography variant="subtitle1" data-testid="order_number">
+                  {data.order}
+                </Typography>
+              )}
+              {editingOrderNumber &&  (
+                <AutoSaveField
+                  value={data.order}
+                  mutationAction={value => updateTask('order', value)}
+                  label={t('task.order_number')}
+                />
+              )}
+            </Grid>
+          </Grid>
+        )}
         <Grid
           container
           className={matches ? classes.assigneesSectionMobile : classes.assigneesSection}
@@ -567,6 +601,10 @@ const useStyles = makeStyles(theme => ({
     alignItems: 'center',
     marginBottom: '8px'
   },
+  taskFieldItem: {
+    alignItems: 'center',
+    marginBottom: '8px'
+  },
   reminderSection: {
     alignItems: 'center',
     marginBottom: '8px'
@@ -591,6 +629,14 @@ const useStyles = makeStyles(theme => ({
     borderRadius: '4px'
   },
   dueDateDisabled: {
+    padding: '0 5px 0 0'
+  },
+  orderNumberEnabled: {
+    padding: '0 5px 0 5px',
+    marginLeft: '-5px',
+    borderRadius: '4px'
+  },
+  orderNumberDisabled: {
     padding: '0 5px 0 0'
   },
   selectLabel: {

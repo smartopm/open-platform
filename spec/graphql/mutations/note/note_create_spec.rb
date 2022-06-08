@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe Mutations::Note do
+RSpec.describe Mutations::Note::NoteCreate do
   let!(:admin_role) { create(:role, name: 'admin') }
   let!(:resident_role) { create(:role, name: 'resident') }
   let!(:site_worker_role) { create(:role, name: 'site_worker') }
@@ -34,6 +34,19 @@ RSpec.describe Mutations::Note do
            author_id: admin.id,
            body: 'Feedback')
   end
+
+  let(:task) do
+    create(:note,
+           body: 'A test task',
+           description: 'Test parent task',
+           user_id: site_worker.id,
+           category: 'to_do',
+           flagged: true,
+           community_id: user.community.id,
+           author_id: site_worker.id,
+           completed: false)
+  end
+
   let(:create_query) do
     <<~GQL
       mutation CreateNote(
@@ -43,7 +56,8 @@ RSpec.describe Mutations::Note do
         $parentNoteId: ID,
         $flagged: Boolean,
         $attachedDocuments: JSON,
-        $status: String
+        $status: String,
+        $order: Int,
         ) {
         result:  noteCreate(
           userId: $userId,
@@ -52,7 +66,8 @@ RSpec.describe Mutations::Note do
           flagged: $flagged,
           parentNoteId: $parentNoteId,
           attachedDocuments: $attachedDocuments,
-          status: $status
+          status: $status,
+          order: $order
           ){
           note {
               id
@@ -204,7 +219,7 @@ RSpec.describe Mutations::Note do
           body: 'A sub task',
           category: 'other',
           flagged: true,
-          parentNoteId: user_note.id,
+          parentNoteId: task.id,
         }
 
         result = DoubleGdpSchema.execute(
@@ -217,7 +232,30 @@ RSpec.describe Mutations::Note do
         ).as_json
 
         expect(result.dig('data', 'result', 'note', 'id')).not_to be_nil
-        expect(user_note.sub_tasks.first.id).to eq(result.dig('data', 'result', 'note', 'id'))
+        expect(task.sub_tasks.first.id).to eq(result.dig('data', 'result', 'note', 'id'))
+      end
+
+      it 'creates a task with order number' do
+        variables = {
+          userId: user.id,
+          body: 'Sub task with order number',
+          category: 'other',
+          flagged: true,
+          parentNoteId: task.id,
+          order: 2,
+        }
+
+        result = DoubleGdpSchema.execute(create_query, variables: variables,
+                                                       context: {
+                                                         current_user: admin,
+                                                         site_community: user.community,
+                                                       }).as_json
+
+        note_id = result.dig('data', 'result', 'note', 'id')
+
+        expect(note_id).not_to be_nil
+        note = user.community.notes.find(note_id)
+        expect(note.order).to eq(2)
       end
     end
   end

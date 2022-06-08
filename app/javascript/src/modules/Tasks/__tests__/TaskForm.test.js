@@ -24,7 +24,11 @@ describe('task form component', () => {
         </BrowserRouter>
       </MockedProvider>
     );
+
     expect(container.queryAllByText('common:form_actions.create_task')[0]).toBeInTheDocument();
+    expect(container.getByTestId('task-body')).toBeInTheDocument();
+    expect(container.getByTestId('task-type')).toBeInTheDocument();
+    expect(container.getByTestId('order-number')).toBeInTheDocument();
 
     const description = container.queryByLabelText('task_description');
     const submitBtn = container.queryByLabelText('task_submit');

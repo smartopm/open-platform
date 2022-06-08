@@ -79,7 +79,7 @@ export default function TodoItem({
     {
       content: canCreateNote ? t('menu.add_subtask') : null,
       isAdmin: true,
-      handleClick: () => handleAddSubTask({ id: selectedTask.id })
+      handleClick: () => handleAddSubTask(selectedTask)
     },
     {
       content: <FileUploader handleFileInputChange={handleFileInputChange} />,
@@ -260,7 +260,7 @@ export default function TodoItem({
             task={task}
             handleOpenSubTasksClick={handleParentTaskClick}
             handleTodoClick={handleTodoClick}
-            handleAddSubTask={handleAddSubTask}
+            handleAddSubTask={() => handleAddSubTask(task)}
             menuData={menuData}
             styles={{ backgroundColor: '#F5F5F4' }}
             openSubTask={objectAccessor(tasksOpen, task.id)}
@@ -316,7 +316,7 @@ export default function TodoItem({
 
       {objectAccessor(tasksOpen, task?.id) &&
         data?.taskSubTasks?.length > 0 &&
-        data?.taskSubTasks.sort(sortTaskOrder)?.map(firstLevelSubTask => (
+        data?.taskSubTasks?.sort(sortTaskOrder)?.map(firstLevelSubTask => (
           <>
             <div className={classes.levelOne} key={firstLevelSubTask.id}>
               {!createTaskListSubTask ? (
@@ -343,7 +343,7 @@ export default function TodoItem({
                   task={firstLevelSubTask}
                   handleOpenSubTasksClick={() => toggleTask(firstLevelSubTask)}
                   handleTodoClick={handleTodoClick}
-                  handleAddSubTask={handleAddSubTask}
+                  handleAddSubTask={() => handleAddSubTask(firstLevelSubTask)}
                   menuData={menuData}
                   styles={{ backgroundColor: '#F5F5F4' }}
                   openSubTask={objectAccessor(tasksOpen, firstLevelSubTask.id)}

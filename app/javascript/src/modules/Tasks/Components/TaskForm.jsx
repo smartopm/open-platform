@@ -32,6 +32,7 @@ export default function TaskForm({
   users,
   assignUser,
   parentTaskId,
+  subTasksCount,
   createTaskListSubTask
 }) {
   const [title, setTitle] = useState('');
@@ -39,6 +40,7 @@ export default function TaskForm({
   const [assignees, setAssignees] = useState([]);
   const [taskType, setTaskType] = useState('');
   const [selectedDate, setDate] = useState(new Date());
+  const [orderNumber, setOrderNumber] = useState(1);
   const [loading, setLoadingStatus] = useState(false);
   const [createTask] = useMutation(CreateNote);
   const [userData, setData] = useState(initialData);
@@ -50,7 +52,8 @@ export default function TaskForm({
     if (createTaskListSubTask) {
       setTaskType('template');
     }
-  }, [createTaskListSubTask]);
+    setOrderNumber(subTasksCount + 1);
+  }, [createTaskListSubTask, subTasksCount]);
 
   function handleSubmit(event) {
     event.preventDefault();
@@ -61,6 +64,7 @@ export default function TaskForm({
         description,
         due: selectedDate ? selectedDate.toISOString() : null,
         category: taskType,
+        order: Number(orderNumber) || 1,
         flagged: true,
         userId: userData.userId,
         parentNoteId: parentTaskId
@@ -135,7 +139,7 @@ export default function TaskForm({
                 }}
               />
             </Grid>
-            <Grid item md={6} xs={12}>
+            <Grid item md={12} xs={12}>
               <CustomAutoComplete
                 users={users}
                 isMultiple
@@ -148,10 +152,10 @@ export default function TaskForm({
                 label={t('task.task_search_placeholder')}
               />
             </Grid>
-            <Grid item md={6} xs={12}>
+            <Grid item md={12} xs={12}>
               <UserSearch userData={userData} update={setData} />
             </Grid>
-            <Grid item md={6} xs={12}>
+            <Grid item md={12} xs={12}>
               <FormControl fullWidth>
                 <InputLabel id="taskType">{t('task.task_type_label')}</InputLabel>
                 <Select
@@ -172,7 +176,7 @@ export default function TaskForm({
                 </Select>
               </FormControl>
             </Grid>
-            <Grid item md={6} xs={12}>
+            <Grid item md={12} xs={12}>
               <DatePickerDialog
                 handleDateChange={date => setDate(date)}
                 selectedDate={selectedDate}
@@ -181,6 +185,20 @@ export default function TaskForm({
                 margin="none"
               />
               <FormHelperText>{t('common:form_placeholders.note_due_date')}</FormHelperText>
+            </Grid>
+            <Grid item md={12} xs={12}>
+              <TextField
+                fullWidth
+                type="number"
+                id="task-order-number"
+                label={t('task.order_number')}
+                value={orderNumber}
+                onChange={event => setOrderNumber(event.target.value)}
+                variant="outlined"
+                size="small"
+                name="order"
+                inputProps={{ 'data-testid': 'order-number' }}
+              />
             </Grid>
             <Grid item md={6} xs={6} style={{ textAlign: 'right' }}>
               <Button
@@ -217,6 +235,7 @@ export default function TaskForm({
 TaskForm.defaultProps = {
   users: [],
   parentTaskId: '',
+  subTasksCount: 0,
   createTaskListSubTask: false
 };
 
@@ -226,5 +245,6 @@ TaskForm.propTypes = {
   refetch: PropTypes.func.isRequired,
   assignUser: PropTypes.func.isRequired,
   parentTaskId: PropTypes.string,
+  subTasksCount: PropTypes.number,
   createTaskListSubTask: PropTypes.bool
 };
