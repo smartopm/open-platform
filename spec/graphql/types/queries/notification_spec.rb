@@ -64,6 +64,7 @@ RSpec.describe Types::Queries::Notification do
           expect(result['errors']).to be_nil
           expect(result.dig('data', 'userNotifications').count).to eql 2
           expect(result.dig('data', 'userNotifications', 0, 'category')).to eql 'message'
+          expect(result.dig('data', 'userNotifications', 0, 'header')).to eql another_user.name
           expect(result.dig('data', 'userNotifications', 0, 'seenAt')).to eql nil
           expect(result.dig('data', 'userNotifications', 1, 'category')).to eql 'message'
           expect(result.dig('data', 'userNotifications', 1, 'seenAt')).to_not be nil
