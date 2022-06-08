@@ -2,6 +2,7 @@
   "form_fields": {
     "full_name": "Full Name",
     "full_first_name": "First Name",
+    "account_name": "Account Name",
     "full_last_name": "Last Name",
     "email": "Email",
     "phone_number": "Phone Number",
@@ -224,6 +225,7 @@
     "unallocated_funds": "Unallocated Funds",
     "total_transactions": "Total Transactions Made",
     "make_payment": "Record New Payment",
+    "make_a_payment": "Make a Payment",
     "add_invoice": "Add an Invoice",
     "no_description": "No Description",
     "profile": "Profile",

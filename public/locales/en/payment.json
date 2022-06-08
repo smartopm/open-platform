@@ -54,6 +54,7 @@
     "payment_cancelled": "Payment Plan successfully canceled",
     "payment_day": "Payment Day",
     "payment_plan_updated": "Payment Plan successfully updated",
+    "payment_successful": "Your Payment was successful",
     "pay_day_updated": "Payment Day successfully updated",
     "transaction_title": "Kindly find your transaction details below.",
     "subscription_plan_created": "Plan created successfuly",
@@ -86,7 +87,8 @@
     "no_payments_made": "No payments have been made yet",
     "payment_due_date": "Next Payment Due: {{date}}",
     "installment_amount": "Installment Amount: {{amount}}",
-    "payment_transferred_successfully": "Payment transferred successfully"
+    "payment_transferred_successfully": "Payment transferred successfully",
+    "pay_for_item": "Pay For this item"
   },
   "table_headers": {
     "receipt_number": "Receipt Number",

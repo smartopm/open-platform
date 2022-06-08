@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_06_03_134055) do
+ActiveRecord::Schema.define(version: 2022_06_06_080117) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -227,6 +227,7 @@ ActiveRecord::Schema.define(version: 2022_06_03_134055) do
     t.string "domains", default: [], array: true
     t.integer "hotjar"
     t.json "lead_monthly_targets"
+    t.json "payment_keys"
     t.index ["slug"], name: "index_communities_on_slug", unique: true
   end
 
@@ -808,6 +809,24 @@ ActiveRecord::Schema.define(version: 2022_06_03_134055) do
     t.index ["user_id"], name: "index_time_sheets_on_user_id"
   end
 
+  create_table "transaction_logs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.decimal "paid_amount"
+    t.string "currency"
+    t.decimal "amount"
+    t.string "invoice_number"
+    t.string "transaction_id"
+    t.string "transaction_ref"
+    t.string "description"
+    t.string "account_name"
+    t.integer "integration_type", default: 0
+    t.uuid "user_id", null: false
+    t.uuid "community_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["community_id"], name: "index_transaction_logs_on_community_id"
+    t.index ["user_id"], name: "index_transaction_logs_on_user_id"
+  end
+
   create_table "transactions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "source"
     t.integer "status"
@@ -1069,6 +1088,8 @@ ActiveRecord::Schema.define(version: 2022_06_03_134055) do
   add_foreign_key "substatus_logs", "users"
   add_foreign_key "substatus_logs", "users", column: "updated_by_id"
   add_foreign_key "time_sheets", "communities"
+  add_foreign_key "transaction_logs", "communities"
+  add_foreign_key "transaction_logs", "users"
   add_foreign_key "transactions", "communities"
   add_foreign_key "transactions", "users"
   add_foreign_key "user_form_properties", "form_properties"

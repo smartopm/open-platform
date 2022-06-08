@@ -124,7 +124,6 @@ const Analytics = props => {
 
     if (user) {
       if (liveAnalytics) {
-        console.debug('GA PRODUCTION MODE: UserData:', user.id, user.userType);
         gtag('set', { user_id: user.id });
         gtag('set', 'user_properties', { Role: user.userType });
         ReactGA.event({
@@ -133,8 +132,6 @@ const Analytics = props => {
           eventLabel: user.id,
           nonInteraction: true
         });
-      } else {
-        console.log('GA DEVELOPMENT MODE: log user', user);
       }
     }
     return history.listen(location => {

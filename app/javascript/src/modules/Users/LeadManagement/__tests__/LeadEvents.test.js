@@ -3,14 +3,13 @@ import React from 'react';
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min';
 import { MockedProvider } from '@apollo/react-testing';
-import userEvent from '@testing-library/user-event';
+import ReactTestUtils from 'react-dom/test-utils';
 import authState from '../../../../__mocks__/authstate';
 import { Context } from '../../../../containers/Provider/AuthStateProvider';
 import LeadEvents from '../Components/LeadEvents';
 import { UserMeetingsQuery, UserEventsQuery } from '../graphql/queries';
 import { LeadDetailsQuery } from '../../../../graphql/queries';
 import CreateEvent from '../graphql/mutations';
-
 import MockedThemeProvider from '../../../__mocks__/mock_theme';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
@@ -170,9 +169,11 @@ describe('LeadEvents Page', () => {
       expect(screen.queryByTestId('meetings_header')).toBeInTheDocument();
       expect(screen.queryByText('lead_management.meetings')).toBeInTheDocument();
       const eventTextField = screen.getByLabelText('lead_management.meeting_name');
-      userEvent.type(eventTextField, 'First Tilisi meeting');
+
+      ReactTestUtils.Simulate.change(eventTextField, { target: { value: 'First Tilisi meeting' } });
+
       const saveButton = screen.queryByTestId('add-meeting-button');
-      // // user input should set add button enabled
+      // user input should set add button enabled
       expect(saveButton).toBeEnabled();
     });
 

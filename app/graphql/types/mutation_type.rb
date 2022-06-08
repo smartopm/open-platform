@@ -171,6 +171,9 @@ module Types
     field :transaction_create, mutation: Mutations::Transaction::TransactionCreate
     field :transaction_revert, mutation: Mutations::Transaction::TransactionRevert
 
+    # transaction_log
+    field :transaction_log_create, mutation: Mutations::TransactionLog::TransactionLogCreate
+
     # email_template
     field :email_template_create, mutation: Mutations::EmailTemplate::TemplateCreate
     field :email_template_update, mutation: Mutations::EmailTemplate::TemplateUpdate

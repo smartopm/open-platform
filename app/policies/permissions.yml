@@ -72,6 +72,8 @@ admin:
       - can_create_wallet_transaction
       - can_update_wallet_transaction
       - can_revert_wallet_transaction
+      - can_make_payment
+      - can_see_menu_item
   entry_request:
     permissions:
       - can_see_menu_item
@@ -349,6 +351,9 @@ contractor:
     permissions:
       - can_access_dashboard
       - can_see_menu_item
+  transaction:
+    permission:
+      - can_make_payment
 custodian:
   note:
     permissions:
@@ -423,6 +428,10 @@ custodian:
     permissions:
       - can_access_dashboard
       - can_see_menu_item
+  transaction:
+    permission:
+      - can_make_payment
+      - can_see_menu_item 
   logout:
     permissions:
       - can_see_menu_item
@@ -550,6 +559,10 @@ site_worker:
   user:
     permissions:
       - can_get_users_lite
+  transaction:
+    permission:
+      - can_make_payment 
+      - can_see_menu_item 
 visitor:
   note:
     permissions:
@@ -581,6 +594,10 @@ visitor:
       - can_access_all_discussions
       - can_create_post
       - can_view_posts
+  transaction:
+    permission:
+      - can_make_payment
+      - can_see_menu_item  
 resident:
   gate_access:
     permissions:
@@ -642,6 +659,10 @@ resident:
   community:
     permissions:
       - can_see_menu_item
+  transaction:
+    permission:
+      - can_make_payment
+      - can_see_menu_item  
 prospective_client:
   note:
     permissions:
@@ -677,6 +698,10 @@ prospective_client:
   logout:
     permissions:
       - can_see_menu_item
+  transaction:
+    permission:
+      - can_make_payment
+      - can_see_menu_item  
 client:
   gate_access:
     permissions:
@@ -734,6 +759,10 @@ client:
     permissions:
       - can_see_menu_item
       - can_access_dashboard
+  transaction:
+    permission:
+      - can_make_payment
+      - can_see_menu_item  
 site_manager:
   gate_access:
     permissions:
@@ -788,7 +817,10 @@ site_manager:
   community:
     permissions:
       - can_see_menu_item
-
+  transaction:
+    permission:
+      - can_make_payment
+      - can_see_menu_item  
 marketing_manager:
   forms:
     permissions:
@@ -876,6 +908,10 @@ marketing_manager:
     permissions:
       - can_access_dashboard
       - can_see_menu_item
+  transaction:
+    permission:
+      - can_make_payment
+      - can_see_menu_item  
 public_user:
   forms:
     permissions:
