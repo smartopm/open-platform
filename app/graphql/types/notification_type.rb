@@ -13,7 +13,7 @@ module Types
     field :seen_at, GraphQL::Types::ISO8601DateTime, null: true
     field :header, String, null: true
 
-    # rubocop:disable Metrics/AbcSize
+    # rubocop:disable Metrics/CyclomaticComplexity
     def header
       case object.category
       when 'comment', 'reply_requested'
@@ -21,9 +21,9 @@ module Types
       when 'task'
         object.notifable&.body
       when 'message'
-        context[:site_community].users.find_by(id: object.notifable.sender_id).name
+        object.notifable&.sender&.name
       end
     end
-    # rubocop:enable Metrics/AbcSize
+    # rubocop:enable Metrics/CyclomaticComplexity
   end
 end
