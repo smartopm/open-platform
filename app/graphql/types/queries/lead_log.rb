@@ -169,11 +169,11 @@ module Types::Queries::LeadLog
   end
 
   # rubocop:disable Metrics/MethodLength
-  def investment_label(user_id, lead_log, total_spent)
+  def investment_label(user_id, lead_log)
     label = context[:site_community].labels.joins(:user_labels)
                                     .find_by(user_labels: { user_id: user_id },
                                              grouping_name: 'Investment',
-                                             short_desc: investment_status(lead_log, total_spent))
+                                             short_desc: investment_status(lead_log))
     return if label.nil?
 
     {

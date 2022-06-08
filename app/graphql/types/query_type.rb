@@ -97,5 +97,11 @@ module Types
 
       raise GraphQL::ExecutionError, I18n.t('errors.user.does_not_exist')
     end
+
+    def investment_status(deal_details_log)
+      total_spent = deal_details_log.user.lead_logs.investment.sum(:amount)
+      investment_target = (deal_details_log.investment_target * deal_details_log.deal_size) / 100
+      total_spent > investment_target ? 'Over Target' : 'On Target'
+    end
   end
 end

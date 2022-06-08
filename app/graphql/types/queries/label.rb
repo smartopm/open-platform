@@ -59,8 +59,23 @@ module Types::Queries::Label
     context[:site_community].labels
                             .joins(:user_labels)
                             .where(user_labels: { user_id: user.id },
-                                   grouping_name: %w[Division Status],
-                                   short_desc: [user.lead_status, user.division])
+                                   grouping_name: %w[Division Status Investment],
+                                   short_desc: [user.lead_status,
+                                                user.division,
+                                                investment_title(user)])
+  end
+
+  # Returns investment title
+  # * To retrieve latest deal size and investment target, we are using ordered and first
+  #
+  # @param user [User]
+  #
+  # @return [String]
+  def investment_title(user)
+    deal_details_log = user.lead_logs.deal_details.ordered.first
+    return if deal_details_log.nil?
+
+    investment_status(deal_details_log)
   end
 
   private

@@ -41,6 +41,11 @@ module Logs
       label.user_labels.find_or_create_by(user_id: user_id)
     end
 
+    # Destroys existing investment user label
+    #
+    # @param [String]
+    #
+    # @return [UserLabel]
     def destroy_existing_investment_user_label(investment_title)
       existing_label_status = investment_title.eql?('On Target') ? 'Over Target' : 'On Target'
       existing_label = community.labels.find_by(short_desc: existing_label_status,
@@ -51,6 +56,10 @@ module Logs
       user_label.destroy if user_label.present?
     end
 
+    # Returns label fields
+    # * To retrieve latest deal size and investment target, we are using ordered and first
+    #
+    # @return [Array]
     def label_fields
       deal_details_log = user.lead_logs.deal_details.ordered.first
       return if deal_details_log.nil?
