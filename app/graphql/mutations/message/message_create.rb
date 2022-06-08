@@ -46,8 +46,7 @@ module Mutations
         NotificationCreateJob.perform_now(community_id: context[:site_community].id,
                                           notifable_id: message.id,
                                           notifable_type: message.class.name,
-                                          description: I18n.t('notification_description.message',
-                                                              user: context[:current_user].name),
+                                          description: message.message,
                                           category: :message,
                                           user_id: message.user_id)
       end

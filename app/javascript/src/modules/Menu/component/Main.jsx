@@ -3,18 +3,21 @@ import React, { useContext, useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import Drawer from '@mui/material/Drawer';
+import Grid from '@mui/material/Grid';
 import MenuIcon from '@mui/icons-material/Menu';
 import { StyleSheet, css } from 'aphrodite';
-import { Button, IconButton, SvgIcon } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+import { Button, IconButton, SvgIcon, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import PropTypes from 'prop-types';
 import DoubleArrowOutlinedIcon from '@mui/icons-material/DoubleArrowOutlined';
 import SOSIcon from './SOSIcon';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
 import SideMenu from './SideMenu';
-import NotificationBell from '../../../components/NotificationBell';
+import NotificationBell from './NotificationBell';
 import modules from '../..';
 import CommunityName from '../../../shared/CommunityName';
 import CenteredContent from '../../../shared/CenteredContent';
@@ -27,6 +30,8 @@ import { filterQuickLinksByRole } from '../../Dashboard/utils';
 import { allUserTypes } from '../../../utils/constants';
 import BackArrow from './BackArrow';
 import { canAccessSOS } from '../utils';
+import CustomDrawer from '../../../shared/CustomDrawer';
+import DrawerContent from './DrawerContent'
 
 const drawerWidth = 260;
 
@@ -56,6 +61,9 @@ const useStyles = makeStyles(theme => ({
   content: {
     flexGrow: 1,
     padding: theme.spacing(3)
+  },
+  notification: {
+    color: '#FFFFFF'
   }
 }));
 
@@ -65,7 +73,9 @@ export default function Main() {
 }
 
 export function MainNav({ authState }) {
+  const { t } = useTranslation('notification');
   const matchesSmall = useMediaQuery('(max-width:500px)');
+  const [openDrawer, setOpenDrawer] = useState(false);
   const path = useLocation().pathname;
   const classes = useStyles();
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -121,6 +131,23 @@ export function MainNav({ authState }) {
 
   return (
     <div className={classes.root}>
+      <CustomDrawer open={openDrawer} anchor="right" handleClose={() => setOpenDrawer(false)}>
+        <Grid container>
+          <Grid item md={10} sm={10} xs={10}>
+            <Typography variant="h6" className={classes.notification}>
+              {t('notification.notifications')}
+            </Typography>
+          </Grid>
+          <Grid item md={2} sm={2} xs={2} style={{ textAlign: 'right' }}>
+            <IconButton onClick={() => setOpenDrawer(false)}>
+              <CloseIcon className={classes.notification} />
+            </IconButton>
+          </Grid>
+          <Grid item md={12} sm={12} xs={12}>
+            <DrawerContent userId={authState?.user?.id} setOpenDrawer={setOpenDrawer} />
+          </Grid>
+        </Grid>
+      </CustomDrawer>
       <AppBar position="fixed" className={classes.appBar}>
         <Toolbar>
           <IconButton
@@ -163,7 +190,11 @@ export function MainNav({ authState }) {
               <CommunityName authState={authState} />
             </CenteredContent>
           )}
-          <NotificationBell user={authState.user} />
+          <NotificationBell
+            user={authState.user}
+            openDrawer={openDrawer}
+            setOpenDrawer={setOpenDrawer}
+          />
           <UserActionOptions />
         </Toolbar>
       </AppBar>
