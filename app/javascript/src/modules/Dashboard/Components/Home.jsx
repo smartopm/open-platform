@@ -49,7 +49,7 @@ const Home = () => {
         <Grid item md={6} sm={12} xs={12} style={matches ? {padding: '0 7%'} : {}}>
           <Grid container alignItems='center'>
             <Grid item md={6} sm={6} xs={6} style={matches ? { padding: '6% 0 0 4%' } : { padding: "4% 0 0 2%" }}>
-              <Button startIcon={<QrCode2Icon />} onClick={() => history.push(`/id/${authState.user.id}`)} data-testid='qr_button'>MY QR CODE</Button>
+              <Button startIcon={<QrCode2Icon />} onClick={() => history.push(`/id/${authState.user.id}`)} data-testid='qr_button'>{t('dashboard.my_qr_code')}</Button>
             </Grid>
             <Grid item md={6} sm={6} xs={6}>
               <LanguageToggle />
