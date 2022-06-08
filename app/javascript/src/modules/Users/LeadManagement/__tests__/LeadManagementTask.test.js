@@ -1,8 +1,8 @@
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min';
-
-import { render, screen, waitFor, fireEvent } from '@testing-library/react';
+import { render, screen, waitFor, act } from '@testing-library/react';
 import { MockedProvider } from '@apollo/react-testing';
+import { fireEvent } from '@testing-library/dom';
 import { Context } from '../../../../containers/Provider/AuthStateProvider';
 import authState from '../../../../__mocks__/authstate';
 import { TaskQuery } from '../../../Tasks/graphql/task_queries';
@@ -108,7 +108,7 @@ describe('LeadManagementForm', () => {
 
       const subTaskMenuIcon = screen.queryAllByTestId('menu_item')[0];
       expect(subTaskMenuIcon).toBeInTheDocument();
-      fireEvent.click(subTaskMenuIcon);
+      act(() => { fireEvent.submit(subTaskMenuIcon) });
     }, 20);
   });
 

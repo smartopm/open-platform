@@ -69,9 +69,12 @@ describe('UserForm Component', () => {
 
     expect(container.queryByTestId('primary_phone').value).toContain('090909090909');
 
-    userEvent.type(container.queryByTestId('email'), 'abcdef.jkl');
+    fireEvent.change(container.queryByTestId('email'), {
+      target: { value: 'abcdef.jkl' }
+    });
 
-    expect(container.queryByTestId('email').value).toContain('abcdef.jkl');
+    expect(container.queryByTestId('email').value).toEqual('abcdef.jkl');
+    expect(container.queryByTestId('email').value).not.toEqual('abcdef.jklxyz');
 
     fireEvent.change(container.queryByTestId('address'), {
       target: { value: '24th street, west' }

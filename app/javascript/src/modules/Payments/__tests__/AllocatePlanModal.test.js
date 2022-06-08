@@ -1,5 +1,5 @@
 import React from 'react'
-import { render, fireEvent, waitFor } from '@testing-library/react'
+import { render, fireEvent, waitFor, act } from '@testing-library/react'
 
 import { MockedProvider } from '@apollo/react-testing'
 import { BrowserRouter } from 'react-router-dom/'
@@ -68,9 +68,9 @@ describe('It should test the allocate plan modal component', () => {
         expect(container.queryByTestId('radio-group')).toBeInTheDocument();
         expect(container.queryByTestId('confirmation')).toBeInTheDocument();
         expect(container.queryByTestId('et2u32')).toBeInTheDocument();
-        fireEvent.click(container.queryByTestId('et2u32'))
-        fireEvent.click(container.queryByTestId('confirmation'))
-        fireEvent.click(container.queryByTestId("custom-dialog-button"))
+        act(() => { fireEvent.click(container.queryByTestId('et2u32')) });
+        act(() => { fireEvent.click(container.queryByTestId('confirmation')) });
+        act(() => { fireEvent.submit(container.queryByTestId('custom-dialog-button')) });
       },10);
   });
 });
