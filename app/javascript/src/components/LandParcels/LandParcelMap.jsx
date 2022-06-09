@@ -185,6 +185,7 @@ export default function LandParcelMap({ handlePlotClick, geoData, refetch }) {
         id,
         icon,
         poi_name: poiName,
+        poi_description: description,
         parcel_no: parcelNumber,
         parcel_type: parcelType,
         long_x: longX,
@@ -197,6 +198,7 @@ export default function LandParcelMap({ handlePlotClick, geoData, refetch }) {
       id,
       icon,
       poiName,
+      description,
       parcelNumber,
       parcelType,
       longX,
@@ -330,7 +332,6 @@ export default function LandParcelMap({ handlePlotClick, geoData, refetch }) {
                 name="image"
                 id="image"
                 capture
-                // onChange={e => handleFileUpload(e.target.files[0])}
                 onChange={handleFileInputChange}
                 style={{ display: 'none' }}
               />
