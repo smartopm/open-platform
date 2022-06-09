@@ -2188,10 +2188,10 @@ RSpec.describe Types::Queries::Note do
       it 'raises an error if user is not authorized' do
         variables = { taggedDocumentId: '10bbb9ba-0123-3344-c56d-b16e532c8cd0' }
         result = DoubleGdpSchema.execute(document_comments_query, variables: variables,
-                                                               context: {
-                                                                 current_user: developer,
-                                                                 site_community: community,
-                                                               }).as_json
+                                                                  context: {
+                                                                    current_user: developer,
+                                                                    site_community: community,
+                                                                  }).as_json
 
         expect(result.dig('errors', 0, 'message')).to include('Unauthorized')
       end
@@ -2225,26 +2225,28 @@ RSpec.describe Types::Queries::Note do
           body: 'a comment with a tagged document',
           status: 'active',
           user_id: admin.id,
-          tagged_documents: ['10bbb9ba-0123-3344-c56d-b16e532c8cd0']
+          tagged_documents: ['10bbb9ba-0123-3344-c56d-b16e532c8cd0'],
         )
 
         note.note_comments.create!(
           body: 'another comment with a tagged document',
           status: 'active',
           user_id: admin.id,
-          tagged_documents: ['0091a9ba-0123-3344-c56d-b16e532c8cd0']
+          tagged_documents: ['0091a9ba-0123-3344-c56d-b16e532c8cd0'],
         )
 
         variables = { taggedDocumentId: '10bbb9ba-0123-3344-c56d-b16e532c8cd0' }
         result = DoubleGdpSchema.execute(document_comments_query, variables: variables,
-                                                               context: {
-                                                                 current_user: admin,
-                                                                 site_community: community,
-                                                               }).as_json
+                                                                  context: {
+                                                                    current_user: admin,
+                                                                    site_community: community,
+                                                                  }).as_json
 
         expect(result['errors']).to be_nil
         expect(result.dig('data', 'documentComments').size).to eq(1)
-        expect(result.dig('data', 'documentComments', 0, 'body')).to eq('a comment with a tagged document')
+        expect(result.dig('data', 'documentComments', 0, 'body')).to eq(
+          'a comment with a tagged document',
+        )
       end
     end
   end
