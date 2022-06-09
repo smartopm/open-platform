@@ -70,7 +70,7 @@ describe('It should test the allocate plan modal component', () => {
         expect(container.queryByTestId('et2u32')).toBeInTheDocument();
         act(() => { fireEvent.click(container.queryByTestId('et2u32')) });
         act(() => { fireEvent.click(container.queryByTestId('confirmation')) });
-        act(() => { fireEvent.submit(container.queryByTestId('custom-dialog-button')) });
+        act(() => { fireEvent.click(container.queryByTestId('custom-dialog-button')) });
       },10);
   });
 });

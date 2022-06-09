@@ -108,7 +108,7 @@ describe('LeadManagementForm', () => {
 
       const subTaskMenuIcon = screen.queryAllByTestId('menu_item')[0];
       expect(subTaskMenuIcon).toBeInTheDocument();
-      act(() => { fireEvent.submit(subTaskMenuIcon) });
+      act(() => { fireEvent.click(subTaskMenuIcon) });
     }, 20);
   });
 
