@@ -10,7 +10,7 @@ import Grid from '@mui/material/Grid';
 import MenuIcon from '@mui/icons-material/Menu';
 import { StyleSheet, css } from 'aphrodite';
 import CloseIcon from '@mui/icons-material/Close';
-import { Button, IconButton, SvgIcon, Typography } from '@mui/material';
+import { Button, IconButton, Skeleton, SvgIcon, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import PropTypes from 'prop-types';
 import DoubleArrowOutlinedIcon from '@mui/icons-material/DoubleArrowOutlined';
@@ -170,7 +170,9 @@ export function MainNav({ authState }) {
           </IconButton>
 
           {
-            showSOS && location.loaded && (
+            !location.loaded 
+            ? <Skeleton variant="rectangular" width={35} height={35} />  
+            : showSOS && (
               <SvgIcon
                 component={SOSIcon}
                 viewBox="0 0 384 512"
