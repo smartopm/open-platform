@@ -830,11 +830,12 @@ module Users
     def find_or_create_label(grouping_name, desc)
       return if desc.blank?
 
-      community.labels.find_or_create_by(
+      label = community.labels.find_or_create_by(
         grouping_name: grouping_name,
         short_desc: desc,
-        color: community.theme_colors['secondaryColor'],
       )
+      label.update(color: community.theme_colors['secondaryColor'])
+      label
     end
   end
   # rubocop:enable Metrics/ClassLength

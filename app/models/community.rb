@@ -79,11 +79,8 @@ class Community < ApplicationRecord
     end
   end
 
-  def label_exists?(label_name)
-    label = labels.find_by(short_desc: label_name)
-    return false if label.nil?
-
-    true
+  def label_exists?(label_name, grouping_name)
+    labels.exists?(short_desc: label_name, grouping_name: grouping_name)
   end
 
   def domain_admin?(domain)

@@ -4,7 +4,7 @@ require 'notifier'
 
 RSpec.describe Notifier do
   let!(:user) { create(:user_with_community) }
-  let!(:label) { create(:label, short_desc: 'com_news_sms', community_id: user.community_id) }
+  let!(:label) { create(:label, short_desc: 'com_news', community_id: user.community_id) }
 
   it 'should return a label' do
     expect(Notifier.label('com_news_sms')).not_to be_nil

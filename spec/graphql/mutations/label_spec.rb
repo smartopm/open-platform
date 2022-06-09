@@ -15,6 +15,10 @@ RSpec.describe Mutations::Label do
     let!(:admin) { create(:admin_user, user_type: 'admin', role: admin_role) }
 
     let!(:user) { create(:user_with_community, role: resident_role, user_type: 'resident') }
+    let(:community) { user.community }
+    let(:scoped_label) do
+      create(:label, short_desc: 'Qualified', grouping_name: 'Lead', community: community)
+    end
     let(:mutation) do
       <<~GQL
         mutation labelCreate($shortDesc: String!) {
@@ -60,6 +64,20 @@ RSpec.describe Mutations::Label do
         expect(result['errors']).to be_nil
         expect(result.dig('data', 'labelCreate', 'label', 'groupingName')).to eql 'Lead'
         expect(result.dig('data', 'labelCreate', 'label', 'shortDesc')).to eql 'Qualified'
+      end
+    end
+
+    context 'when label with same grouping name already exists' do
+      before { scoped_label }
+
+      it 'raises error' do
+        variables = { shortDesc: 'Lead::Qualified' }
+        result = DoubleGdpSchema.execute(mutation, variables: variables, context: {
+                                           current_user: admin,
+                                           site_community: community,
+                                         }).as_json
+        expect(result['errors']).not_to be_nil
+        expect(result.dig('errors', 0, 'message')).to eql 'Duplicate label'
       end
     end
 

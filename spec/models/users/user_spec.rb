@@ -357,6 +357,7 @@ RSpec.describe Users::User, type: :model do
       end
 
       context 'when user is updated' do
+        subject { user.labels }
         before { user.save }
 
         it 'updates existing user label' do
@@ -370,6 +371,8 @@ RSpec.describe Users::User, type: :model do
           expect(Labels::Label.count).to eql 6
           # As division was updated to nil, the user_label association will be destroyed
           expect(user.user_labels.count).to eql 4
+          expect(subject.pluck(:short_desc)).to include 'Site Visit'
+          expect(subject.pluck(:short_desc)).to_not include ['Signed Lease', 'China']
         end
       end
     end
