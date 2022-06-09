@@ -20,7 +20,6 @@ import CommunityName from '../../../shared/CommunityName';
 import CenteredContent from '../../../shared/CenteredContent';
 import userProps from '../../../shared/types/user';
 import UserActionOptions from '../../Users/Components/UserActionOptions';
-import Loading from '../../../shared/Loading';
 import SOSModal from './SOSModal';
 import useGeoLocation from '../../../hooks/useGeoLocation';
 import { filterQuickLinksByRole } from '../../Dashboard/utils';
@@ -117,7 +116,8 @@ export function MainNav({ authState }) {
     authState.user?.community?.smsPhoneNumbers?.filter(Boolean)?.length !== 0
   );
 
-  if (!location.loaded) return <Loading />;
+  const showSOS =
+    canAccessSOS({ authState }) && communityHasEmergencyNumber && communityHasEmergencySMSNumber; 
 
   return (
     <div className={classes.root}>
@@ -142,27 +142,30 @@ export function MainNav({ authState }) {
             )}
           </IconButton>
 
-          {canAccessSOS({ authState }) &&
-            communityHasEmergencyNumber &&
-            communityHasEmergencySMSNumber && (
+          {
+            showSOS && location.loaded && (
               <SvgIcon
                 component={SOSIcon}
                 viewBox="0 0 384 512"
                 setOpen={setOpen}
                 data-testid="sos-icon"
               />
-            )}
+            )
+          }
 
           <BackArrow path={path} />
           <SOSModal open={open} setOpen={setOpen} location={location} {...{ authState }} />
 
-          {matchesSmall ? (
-            <CommunityName authState={authState} logoStyles={styles} />
+          {
+            matchesSmall ? (
+              <CommunityName authState={authState} logoStyles={styles} />
           ) : (
             <CenteredContent>
               <CommunityName authState={authState} />
             </CenteredContent>
-          )}
+          )
+          }
+
           <NotificationBell user={authState.user} />
           <UserActionOptions />
         </Toolbar>
