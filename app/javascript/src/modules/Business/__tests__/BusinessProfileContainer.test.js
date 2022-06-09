@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, waitFor } from '@testing-library/react';
+import { render } from '@testing-library/react';
 
 import { BrowserRouter } from 'react-router-dom/';
 import { MockedProvider } from '@apollo/react-testing';
@@ -15,6 +15,6 @@ describe('Feedback Component', () => {
       </MockedProvider>
     );
 
-    await waitFor(() => { expect(container.queryByTestId('loader')).toBeInTheDocument() });
+    expect(container.queryByTestId('loader')).toBeInTheDocument();
   });
 });
