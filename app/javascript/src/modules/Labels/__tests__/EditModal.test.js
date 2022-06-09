@@ -75,20 +75,19 @@ describe('Label Edit Component', () => {
 
     await act(async () => {
 
-      act(() => { fireEvent.change(title, { target: { value: 'title' } }) });
-      expect(title.value).toBe('title');
+      fireEvent.change(title, { target: { value: 'title' } });
+      act(() => { expect(title.value).toBe('title'); });
 
-      act(() => { fireEvent.change(description, { target: { value: 'description' } }) });
-      expect(description.value).toBe('description');
+      fireEvent.change(description, { target: { value: 'description' } });
+      act(() => { expect(description.value).toBe('description') });
 
-      act(() => { fireEvent.change(color, { target: { value: '#fff' } })
-      })
-      expect(color.value).toBe('#fff')
+      fireEvent.change(color, { target: { value: '#fff' } });
+      act(() => { expect(color.value).toBe('#fff') });
 
       const button = container.queryByTestId('custom-dialog-button');
-      act(() => { fireEvent.submit(button) });
+      fireEvent.click(button);
       const loader = render(<Spinner />);
-      expect(loader.queryAllByTestId('loader')[0]).toBeInTheDocument();
+      expect(loader.queryByTestId('loader')).toBeInTheDocument();
 
       await waitFor(
         () => {
@@ -96,7 +95,7 @@ describe('Label Edit Component', () => {
         },
         { timeout: 100 }
       );
-    });
+      });
   });
 
   it('render with error', async () => {
