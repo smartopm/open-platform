@@ -1,5 +1,5 @@
 import React from 'react'
-import { render, waitFor, fireEvent, act } from '@testing-library/react'
+import { render, waitFor, fireEvent } from '@testing-library/react'
 import { MockedProvider } from '@apollo/react-testing'
 import { BrowserRouter } from 'react-router-dom'
 import UsersImport from '../Containers/UsersImport'
@@ -36,7 +36,7 @@ describe('UsersImport component', () => {
     const file = new Blob([rows.join('\n')], { type: 'csv' })
     const inputEl = container.queryByTestId('csv-input')
     Object.defineProperty(inputEl, 'files', { value: [file] })
-    act(() => { fireEvent.drop(inputEl) });
+    fireEvent.drop(inputEl);
     // eslint-disable-next-line jest/valid-expect
     await waitFor(() => expect(FileReader).toHaveBeenCalled, { timeout: 10 })
   })
@@ -56,11 +56,9 @@ describe('UsersImport component', () => {
     ]
     expect(container.queryByText(/You can upload a .csv file with users./)).toBeInTheDocument()
     const file = new Blob([rows.join('\n')], { type: 'csv' })
-    await waitFor(() => {
-      fireEvent.change(container.queryByTestId('csv-input'), { target: { files: [file] } });
-    });
+    fireEvent.change(container.queryByTestId('csv-input'), { target: { files: [file] } });
     await waitFor(() => {
       expect(container.getByTestId('csv-input')).toBeInTheDocument();
-    })
-  })
-})
+    });
+  });
+});
