@@ -24,6 +24,7 @@ RSpec.describe Types::Queries::Note do
                             can_get_comment_stats
                             can_get_replies_requested_comments
                             can_fetch_process_comments
+                            can_fetch_project_document_comments
                           ])
     end
     let!(:site_worker_permission) do
@@ -2165,6 +2166,85 @@ RSpec.describe Types::Queries::Note do
         expect(result['errors']).to be_nil
         expect(result.dig('data', 'projectStages').size).to eq(2)
         expect(result.dig('data', 'projectStages', 0, 'body')).to eq('Step 1')
+      end
+    end
+
+    describe '#document_comments' do
+      let(:process) { create(:process, community: community) }
+      let(:note_list) { create(:note_list, process: process, community: community) }
+
+      let(:document_comments_query) do
+        <<~GQL
+          query documentComments($taggedDocumentId: ID!) {
+            documentComments(taggedDocumentId: $taggedDocumentId)
+            {
+              id
+              body
+            }
+          }
+        GQL
+      end
+
+      it 'raises an error if user is not authorized' do
+        variables = { taggedDocumentId: '10bbb9ba-0123-3344-c56d-b16e532c8cd0' }
+        result = DoubleGdpSchema.execute(document_comments_query, variables: variables,
+                                                               context: {
+                                                                 current_user: developer,
+                                                                 site_community: community,
+                                                               }).as_json
+
+        expect(result.dig('errors', 0, 'message')).to include('Unauthorized')
+      end
+
+      # it 'raises error if parent task is not found' do
+      #   note_list
+      #   variables = { processId: process.id }
+      #   result = DoubleGdpSchema.execute(project_stages_query, variables: variables,
+      #                                                          context: {
+      #                                                            current_user: admin,
+      #                                                            site_community: community,
+      #                                                          }).as_json
+
+      #   expect(result.dig('errors', 0, 'message')).to include('not found')
+      # end
+
+      it 'returns comments for a tagged document' do
+        note = admin.notes.create!(
+          body: 'Parent task for task list',
+          description: 'Parent task for task list',
+          user_id: admin.id,
+          category: 'to_do',
+          flagged: true,
+          community_id: community.id,
+          author_id: admin.id,
+          parent_note_id: nil,
+          note_list_id: note_list.id,
+        )
+
+        note.note_comments.create!(
+          body: 'a comment with a tagged document',
+          status: 'active',
+          user_id: admin.id,
+          tagged_documents: ['10bbb9ba-0123-3344-c56d-b16e532c8cd0']
+        )
+
+        note.note_comments.create!(
+          body: 'another comment with a tagged document',
+          status: 'active',
+          user_id: admin.id,
+          tagged_documents: ['0091a9ba-0123-3344-c56d-b16e532c8cd0']
+        )
+
+        variables = { taggedDocumentId: '10bbb9ba-0123-3344-c56d-b16e532c8cd0' }
+        result = DoubleGdpSchema.execute(document_comments_query, variables: variables,
+                                                               context: {
+                                                                 current_user: admin,
+                                                                 site_community: community,
+                                                               }).as_json
+
+        expect(result['errors']).to be_nil
+        expect(result.dig('data', 'documentComments').size).to eq(1)
+        expect(result.dig('data', 'documentComments', 0, 'body')).to eq('a comment with a tagged document')
       end
     end
   end

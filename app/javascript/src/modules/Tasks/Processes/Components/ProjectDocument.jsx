@@ -61,12 +61,12 @@ export default function ProjectDocument({ attachments, loading, refetch, error, 
     ? userTaskPermissions.permissions.includes('can_delete_note_document')
     : false;
 
-  const [
-    loadComments,
-    { loading: commentsLoading, data: documentCommentsData }
-  ] = useLazyQuery(DocumentCommentsQuery, {
-    fetchPolicy: 'cache-and-network'
-  });
+  const [loadComments, { loading: commentsLoading, data: documentCommentsData }] = useLazyQuery(
+    DocumentCommentsQuery,
+    {
+      fetchPolicy: 'cache-and-network'
+    }
+  );
 
   useEffect(() => {
     if (attachments?.length) {
@@ -209,7 +209,11 @@ export default function ProjectDocument({ attachments, loading, refetch, error, 
                   </Typography>
                 </Grid>
                 <Grid item md={1} xs={1} style={matches ? { margin: '-80px 15px 0 -15px' } : {}}>
-                  <IconButton color="primary" onClick={() => openCommentAccordion(att.id)}>
+                  <IconButton
+                    color="primary"
+                    onClick={() => openCommentAccordion(att.id)}
+                    data-testid="open-comments"
+                  >
                     <ForumIcon />
                     <span style={{ fontSize: '12px' }}>{att.comment_count}</span>
                   </IconButton>
