@@ -136,7 +136,8 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
   if (isLoading || divisionLoading || eventsLoading || meetingsLoading) return <Spinner />;
 
   return (
-    <div style={{ marginLeft: -23, marginRight: -24 }}>
+    // <div style={{ marginLeft: -23, marginRight: -23 }}>
+    <Grid container>
       <MessageAlert
         type={message.isError ? 'error' : 'success'}
         message={message.detail}
@@ -288,6 +289,7 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
           </Grid>
         </Grid>
       </Grid>
+
       <br />
       {/* Lead Events Listing */}
       {eventsData?.leadEvents.length > 0 ? (
@@ -315,62 +317,60 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
 
       <Grid container>
         <Grid item md={12} xs={12}>
-          <Grid item md={12} xs={12}>
-            <Typography variant="h6" data-testid="meetings">
-              {t('lead_management.meetings')}
-            </Typography>
+          <Typography variant="h6" data-testid="meetings">
+            {t('lead_management.meetings')}
+          </Typography>
 
-            <Typography variant="body2" data-testid="meetings_header">
-              {t('lead_management.meetings_header')}
-            </Typography>
-          </Grid>
-          <Grid item md={12} xs={12}>
+          <Typography variant="body2" data-testid="meetings_header">
+            {t('lead_management.meetings_header')}
+          </Typography>
+        </Grid>
+        <Grid item md={12} xs={12}>
+          <Grid
+            container
+            spacing={2}
+            style={{
+              display: 'flex',
+              alignItems: 'center'
+            }}
+          >
+            <Grid item md={10} xs={10}>
+              <TextField
+                name="meetingName"
+                label={t('lead_management.meeting_name')}
+                style={{ width: '100%' }}
+                onChange={handleMeetingNameChange}
+                value={meetingName || ''}
+                variant="outlined"
+                fullWidth
+                size="small"
+                margin="normal"
+                required
+                inputProps={{
+                  'aria-label': t('lead_management.meeting_name'),
+                  style: { fontSize: '15px' }
+                }}
+                InputLabelProps={{ style: { fontSize: '12px' } }}
+              />
+            </Grid>
+
             <Grid
-              container
-              spacing={2}
+              item
+              md={2}
+              xs={2}
               style={{
-                display: 'flex',
-                alignItems: 'center'
+                paddingTop: '25px'
               }}
             >
-              <Grid item md={10} xs={10}>
-                <TextField
-                  name="meetingName"
-                  label={t('lead_management.meeting_name')}
-                  style={{ width: '100%' }}
-                  onChange={handleMeetingNameChange}
-                  value={meetingName || ''}
-                  variant="outlined"
-                  fullWidth
-                  size="small"
-                  margin="normal"
-                  required
-                  inputProps={{
-                    'aria-label': t('lead_management.meeting_name'),
-                    style: { fontSize: '15px' }
-                  }}
-                  InputLabelProps={{ style: { fontSize: '12px' } }}
-                />
-              </Grid>
-
-              <Grid
-                item
-                md={2}
-                xs={2}
-                style={{
-                  paddingTop: '25px'
-                }}
-              >
-                <ButtonComponent
-                  variant="contained"
-                  color="primary"
-                  buttonText={t('lead_management.add')}
-                  handleClick={handleSubmitMeeting}
-                  disabled={!meetingName.trim()}
-                  disableElevation
-                  testId="add-meeting-button"
-                />
-              </Grid>
+              <ButtonComponent
+                variant="contained"
+                color="primary"
+                buttonText={t('lead_management.add')}
+                handleClick={handleSubmitMeeting}
+                disabled={!meetingName.trim()}
+                disableElevation
+                testId="add-meeting-button"
+              />
             </Grid>
           </Grid>
         </Grid>
@@ -397,7 +397,186 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
       <Grid item md={12} xs={12} style={{ marginBottom: '10px', marginTop: '10px' }}>
         <Divider />
       </Grid>
-    </div>
+
+      {/* Lead Investiment section */}
+
+      <Grid container>
+        <Grid item md={12} xs={12} style={{ marginBottom: '10px' }}>
+          <Typography variant="h6" data-testid="investment">
+            {t('lead_management.investment')}
+          </Typography>
+
+          <Typography variant="body2" data-testid="investment_header">
+            {t('lead_management.investment_header')}
+          </Typography>
+        </Grid>
+
+        <Grid item md={12} xs={12}>
+          <Grid
+            container
+            style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between' }}
+          >
+            <Grid item md={6} xs={6}>
+              <Typography variant="body1" data-testid="deal_details">
+                {t('lead_management.deal_details')}
+              </Typography>
+
+              <Typography variant="body2" data-testid="deal_details_header">
+                {t('lead_management.deal_details_header')}
+              </Typography>
+            </Grid>
+
+            <Grid item md={6} xs={6} style={{ marginTop: '10px', textAlign: 'right' }}>
+              <Typography variant="body2" data-testid="deal_details_header">
+                {t('lead_management.% target_used')}
+              </Typography>
+            </Grid>
+          </Grid>
+        </Grid>
+
+        <Grid container spacing={2}>
+          <Grid item md={5} xs={12}>
+            <TextField
+              name="meetingName"
+              label={t('lead_management.deal_size')}
+              style={{ width: '100%' }}
+              onChange={handleMeetingNameChange}
+              value={meetingName || ''}
+              variant="outlined"
+              fullWidth
+              size="small"
+              margin="normal"
+              required
+              inputProps={{
+                'aria-label': t('lead_management.deal_size'),
+                style: { fontSize: '15px' }
+              }}
+              InputLabelProps={{ style: { fontSize: '12px' } }}
+            />
+          </Grid>
+
+          <Grid item md={5} xs={10}>
+            <TextField
+              name="meetingName"
+              label={t('lead_management.investment_target')}
+              style={{ width: '100%' }}
+              onChange={handleMeetingNameChange}
+              value={meetingName || ''}
+              variant="outlined"
+              fullWidth
+              size="small"
+              margin="normal"
+              required
+              inputProps={{
+                'aria-label': t('lead_management.investment_target'),
+                style: { fontSize: '15px' }
+              }}
+              InputLabelProps={{ style: { fontSize: '12px' } }}
+            />
+          </Grid>
+          <Grid
+            item
+            md={2}
+            xs={2}
+            style={{
+              paddingTop: '32px'
+            }}
+          >
+            <ButtonComponent
+              variant="contained"
+              color="primary"
+              buttonText={t('lead_management.add')}
+              handleClick={handleSubmitMeeting}
+              disabled={!meetingName.trim()}
+              disableElevation
+              testId="add-meeting-button"
+            />
+          </Grid>
+        </Grid>
+      </Grid>
+
+      <br />
+      <Grid container>
+        <Grid container spacing={2}>
+          <Grid item md={6} xs={6} style={{ marginBottom: '10px' }}>
+            <Typography variant="body1" data-testid="investment_size_input">
+              {t('lead_management.investment_size_input')}
+            </Typography>
+          </Grid>
+
+          <Grid item md={6} xs={6} style={{ marginTop: '10px', textAlign: 'right' }}>
+            <Typography variant="body2" data-testid="total_spent">
+              {t('lead_management.total_spent')}
+            </Typography>
+          </Grid>
+        </Grid>
+
+        <Grid item md={12} xs={12}>
+          <Typography variant="body2" data-testid="investment_size_header">
+            {t('lead_management.investment_size_header')}
+          </Typography>
+        </Grid>
+        <Grid container spacing={2}>
+          <Grid item md={5} xs={12}>
+            <TextField
+              name="meetingName"
+              label={t('lead_management.description')}
+              style={{ width: '100%' }}
+              onChange={handleMeetingNameChange}
+              value={meetingName || ''}
+              variant="outlined"
+              fullWidth
+              size="small"
+              margin="normal"
+              required
+              inputProps={{
+                'aria-label': t('lead_management.description'),
+                style: { fontSize: '15px' }
+              }}
+              InputLabelProps={{ style: { fontSize: '12px' } }}
+            />
+          </Grid>
+
+          <Grid item md={5} xs={10} style={{ textAlign: 'right' }}>
+            <TextField
+              name="meetingName"
+              label={t('lead_management.amount')}
+              style={{ width: '100%' }}
+              onChange={handleMeetingNameChange}
+              value={meetingName || ''}
+              variant="outlined"
+              fullWidth
+              size="small"
+              margin="normal"
+              required
+              inputProps={{
+                'aria-label': t('lead_management.amount'),
+                style: { fontSize: '15px' }
+              }}
+              InputLabelProps={{ style: { fontSize: '12px' } }}
+            />
+          </Grid>
+          <Grid
+            item
+            md={2}
+            xs={2}
+            style={{
+              paddingTop: '32px'
+            }}
+          >
+            <ButtonComponent
+              variant="contained"
+              color="primary"
+              buttonText={t('lead_management.add')}
+              handleClick={handleSubmitMeeting}
+              disabled={!meetingName.trim()}
+              disableElevation
+              testId="add-meeting-button"
+            />
+          </Grid>
+        </Grid>
+      </Grid>
+    </Grid>
   );
 }
 
