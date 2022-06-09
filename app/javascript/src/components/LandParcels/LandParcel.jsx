@@ -10,7 +10,7 @@ import { useTheme } from '@mui/material/styles';
 import RoomIcon from '@mui/icons-material/Room';
 import { useTranslation } from 'react-i18next';
 import { ParcelsQuery, LandParcel, LandParcelGeoData, HouseQuery } from '../../graphql/queries';
-import Loading, { Spinner } from '../../shared/Loading';
+import { Spinner } from '../../shared/Loading';
 import ErrorPage from '../Error';
 import ParcelItem from './LandParcelItem';
 import CreateLandParcel from './CreateLandParcel';
@@ -213,7 +213,7 @@ export default function LandParcelList() {
   }
 
 
-  if (parcelDataLoading) return <Loading />;
+  if (parcelDataLoading) return <Spinner />;
 
   if (error) {
     return <ErrorPage title={error.message} />;
@@ -339,11 +339,13 @@ export default function LandParcelList() {
           <LandParcelMap
             handlePlotClick={onParcelClick}
             geoData={data?.fetchLandParcel}
+            refetch={refetch}
           />
           ) : (
             <LandParcelMap
               handlePlotClick={onParcelClick}
               geoData={geoData?.landParcelGeoData}
+              refetch={refetchGeoData}
             />
           )}
       </div>
