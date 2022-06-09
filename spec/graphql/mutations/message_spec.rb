@@ -134,6 +134,7 @@ RSpec.describe Mutations::Message do
                                                 }).as_json
         expect(result['errors']).to be_nil
         expect(admin.notifications.count).to eql 1
+        expect(admin.notifications.first.description).to eql 'Hello You, hope you are well'
       end
     end
 

@@ -458,6 +458,4 @@ en:
     family: Family
   notification_description:
     task: '%{task} task is assigned to you.'
-    message: '%{user} texted you.'
-    comment: '%{user} commented!'
     reply_requested: '%{user} requested reply.'

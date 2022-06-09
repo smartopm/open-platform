@@ -323,6 +323,7 @@ export const CreateNote = gql`
     $category: String
     $description: String
     $parentNoteId: ID
+    $order: Int
   ) {
     noteCreate(
       userId: $userId
@@ -333,6 +334,7 @@ export const CreateNote = gql`
       category: $category
       description: $description
       parentNoteId: $parentNoteId
+      order: $order
     ) {
       note {
         body
@@ -529,6 +531,7 @@ export const UpdateNote = gql`
     $parentNoteId: ID
     $documentBlobId: String
     $status: String
+    $order: Int
   ) {
     noteUpdate(
       id: $id
@@ -542,6 +545,7 @@ export const UpdateNote = gql`
       parentNoteId: $parentNoteId
       documentBlobId: $documentBlobId
       status: $status
+      order: $order
     ) {
       note {
         flagged

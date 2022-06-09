@@ -57,6 +57,7 @@ export default function TodoList({
   const [, setFilterCount] = useState(0);
   const [filterQuery, setFilterQuery] = useState('');
   const [parentTaskId, setParentTaskId] = useState('');
+  const [subTasksCount, setSubTasksCount] = useState(0);
   const history = useHistory();
   const [userNameSearchTerm, setUserNameSearchTerm] = useState('');
   const [searchText, setSearchText] = useState('');
@@ -139,6 +140,7 @@ export default function TodoList({
   const [taskUpdate] = useMutation(UpdateNote);
   const [bulkUpdate] = useMutation(TaskBulkUpdateMutation);
   const taskListIds = data?.flaggedNotes.map(task => task.id);
+
   function openModal() {
     setModalOpen(!open);
   }
@@ -250,9 +252,18 @@ export default function TodoList({
       );
   }
 
-  function handleAddSubTask({ id }) {
-    setParentTaskId(id);
+  function handleAddSubTask(task) {
+    setParentTaskId(task?.id);
+    setSubTasksCount(task?.subTasksCount);
     openModal();
+  }
+
+  function handleCloseTaskForm() {
+    if (open) {
+      setParentTaskId('');
+      setSubTasksCount(0);
+    }
+    setModalOpen(!open);
   }
 
   function handleUploadDocument(event, todoItem) {
@@ -452,10 +463,11 @@ export default function TodoList({
           <DialogContent>
             <TaskForm
               refetch={handleRefetch}
-              close={() => setModalOpen(!open)}
+              close={() => handleCloseTaskForm()}
               assignUser={assignUnassignUser}
               users={liteData?.usersLite}
               parentTaskId={parentTaskId}
+              subTasksCount={subTasksCount}
             />
           </DialogContent>
         </Dialog>
