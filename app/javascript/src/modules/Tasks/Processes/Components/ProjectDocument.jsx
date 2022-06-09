@@ -2,28 +2,40 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useState, useContext, useEffect } from 'react';
-import { useMutation } from 'react-apollo';
+import { useMutation, useLazyQuery } from 'react-apollo';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useParams } from 'react-router';
 import Grid from '@mui/material/Grid';
 import Menu from '@mui/material/Menu';
+import Paper from '@mui/material/Paper';
 import MenuItem from '@mui/material/MenuItem';
+import Avatar from '@mui/material/Avatar';
 import PropTypes from 'prop-types';
 import IconButton from '@mui/material/IconButton';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import ForumIcon from '@mui/icons-material/Forum';
 import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@mui/styles';
 import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import { Spinner } from '../../../../shared/Loading';
 import { dateToString } from '../../../../components/DateContainer';
-import { formatError, secureFileDownload, useParamsQuery } from '../../../../utils/helpers';
+import {
+  formatError,
+  secureFileDownload,
+  useParamsQuery,
+  sanitizeText,
+  replaceDocumentMentions,
+  removeNewLines
+} from '../../../../utils/helpers';
 import { Context as AuthStateContext } from '../../../../containers/Provider/AuthStateProvider';
 import { ActionDialog } from '../../../../components/Dialog';
 import { DeleteNoteDocument } from '../../../../graphql/mutations';
 import MessageAlert from '../../../../components/MessageAlert';
 import CenteredContent from '../../../../shared/CenteredContent';
 import { checkLastItem } from '../utils';
+import { DocumentCommentsQuery } from '../graphql/process_queries';
+import CustomSkeleton from '../../../../shared/CustomSkeleton';
 
 export default function ProjectDocument({ attachments, loading, refetch, error, heading }) {
   const { processId } = useParams();
@@ -34,12 +46,14 @@ export default function ProjectDocument({ attachments, loading, refetch, error, 
   const [messageDetails, setMessageDetails] = useState({ isError: false, message: '' });
   const [taskDocumentDelete] = useMutation(DeleteNoteDocument);
   const [open, setOpen] = useState(false);
+  const [openDocuments, setOpenDocuments] = useState([]);
   const [hasBgColor, setHasBgColor] = useState(true);
   const menuOpen = Boolean(anchorEl);
   const { t } = useTranslation('task');
   const authState = useContext(AuthStateContext);
   const currentPath = useParamsQuery();
   const currentDocId = currentPath.get('document_id');
+  const commentId = currentPath.get('comment_id');
   const userTaskPermissions = authState.user?.permissions.find(
     permissionObject => permissionObject.module === 'note'
   );
@@ -47,15 +61,27 @@ export default function ProjectDocument({ attachments, loading, refetch, error, 
     ? userTaskPermissions.permissions.includes('can_delete_note_document')
     : false;
 
+  const [
+    loadComments,
+    { loading: commentsLoading, data: documentCommentsData }
+  ] = useLazyQuery(DocumentCommentsQuery, {
+    fetchPolicy: 'cache-and-network'
+  });
+
   useEffect(() => {
     if (attachments?.length) {
       // There's a custom hook for this effect but it's not working inside useEffect
-      if (document.getElementById(currentDocId)) {
-        document.getElementById(currentDocId).scrollIntoView({ behavior: 'smooth' });
-        setTimeout(() => {
-          setHasBgColor(false);
-        }, 4000);
+      if (currentDocId) {
+        loadComments({ variables: { taggedDocumentId: currentDocId } });
+        setOpenDocuments([...openDocuments, currentDocId]);
+
+        if (document.getElementById(commentId)) {
+          document.getElementById(commentId).scrollIntoView({ behavior: 'smooth' });
+        }
       }
+      setTimeout(() => {
+        setHasBgColor(false);
+      }, 6000);
     }
   }, [attachments]);
 
@@ -91,6 +117,17 @@ export default function ProjectDocument({ attachments, loading, refetch, error, 
         setMessageDetails({ isError: true, message: err.message });
         handleCloseDialog();
       });
+  }
+
+  function openCommentAccordion(docId) {
+    let updatedOpenDocuments = openDocuments;
+    if (openDocuments.includes(docId)) {
+      updatedOpenDocuments = updatedOpenDocuments.filter(id => id !== docId);
+    } else {
+      loadComments({ variables: { taggedDocumentId: docId } });
+      updatedOpenDocuments = [...updatedOpenDocuments, docId];
+    }
+    setOpenDocuments(updatedOpenDocuments);
   }
 
   return (
@@ -130,11 +167,7 @@ export default function ProjectDocument({ attachments, loading, refetch, error, 
           {attachments.map((att, index) => (
             <Grid
               key={att.id}
-              className={`${classes.children} ${!heading &&
-                index === 0 &&
-                classes.firstChild} ${att.id === currentDocId &&
-                hasBgColor &&
-                classes.bgHighlight}`}
+              className={`${classes.children} ${!heading && index === 0 && classes.firstChild}`}
               style={checkLastItem(index, attachments) ? { borderBottom: '2px solid #F7F8F7' } : {}}
               id={att.id}
             >
@@ -143,7 +176,7 @@ export default function ProjectDocument({ attachments, loading, refetch, error, 
                 justifyContent={!matches ? 'center' : undefined}
                 alignItems={!matches ? 'center' : undefined}
               >
-                <Grid item md={6} xs={11} style={{ textAlign: 'left' }}>
+                <Grid item md={5} xs={10} style={{ textAlign: 'left' }}>
                   <Grid container direction="column">
                     <Grid item md={12} xs={12}>
                       <Typography variant="body2" className={classes.fileName}>
@@ -161,19 +194,25 @@ export default function ProjectDocument({ attachments, loading, refetch, error, 
                     </Grid>
                   </Grid>
                 </Grid>
-                <Grid item md={2} xs={11}>
+                <Grid item md={2} xs={10}>
                   <Typography variant="caption" color="textSecondary">
                     {t('document.uploaded_at')}
                     :
                     {dateToString(att.created_at)}
                   </Typography>
                 </Grid>
-                <Grid item md={3} xs={11}>
+                <Grid item md={3} xs={10}>
                   <Typography variant="caption" color="textSecondary">
                     {t('document.uploaded_by')}
                     :
                     {att.uploaded_by}
                   </Typography>
+                </Grid>
+                <Grid item md={1} xs={1} style={matches ? { margin: '-80px 15px 0 -15px' } : {}}>
+                  <IconButton color="primary" onClick={() => openCommentAccordion(att.id)}>
+                    <ForumIcon />
+                    <span style={{ fontSize: '12px' }}>{att.comment_count}</span>
+                  </IconButton>
                 </Grid>
                 <Grid
                   item
@@ -194,6 +233,90 @@ export default function ProjectDocument({ attachments, loading, refetch, error, 
                   </IconButton>
                 </Grid>
               </Grid>
+              {openDocuments.includes(att.id) && (
+                <div style={{ backgroundColor: '#f5f5f4', margin: '8px 0 8px 16px' }}>
+                  <Paper
+                    style={{
+                      boxShadow: '0px 0px 0px 1px #E0E0E0',
+                      maxHeight: '500px',
+                      overflowY: 'auto',
+                      padding: '20px'
+                    }}
+                  >
+                    {commentsLoading ? (
+                      <CustomSkeleton variant="rectangular" width="100%" height="300px" />
+                    ) : documentCommentsData?.documentComments?.length === 0 ? (
+                      <CenteredContent>{t('task.no_comments_on_document')}</CenteredContent>
+                    ) : (
+                      documentCommentsData?.documentComments.map(comment => (
+                        <div key={comment.id}>
+                          <Grid
+                            container
+                            className={`${comment.id === commentId &&
+                              hasBgColor &&
+                              classes.bgHighlight}`}
+                          >
+                            <Grid item md={8} xs={12}>
+                              <Grid item xs={12} style={{ display: 'flex' }}>
+                                <Typography
+                                  variant="caption"
+                                  style={
+                                    comment.status ? { margin: '0 15px' } : { marginRight: '15px' }
+                                  }
+                                >
+                                  {dateToString(comment.createdAt)}
+                                </Typography>
+                                <>
+                                  <Avatar
+                                    src={comment.user.imageUrl}
+                                    alt="avatar-image"
+                                    style={{
+                                      margin: '-2px 10px 0 0',
+                                      width: '24px',
+                                      height: '24px'
+                                    }}
+                                  />
+                                  <Typography variant="caption">{comment.user.name}</Typography>
+                                </>
+                              </Grid>
+                              <Typography variant="caption">
+                                <span
+                                  // eslint-disable-next-line react/no-danger
+                                  dangerouslySetInnerHTML={{
+                                    __html: sanitizeText(
+                                      replaceDocumentMentions(
+                                        comment.body,
+                                        `/processes/${processId}/projects?tab=documents&project_id=${att.task_id}&comment_id=${comment.id}`
+                                      )
+                                    )
+                                  }}
+                                />
+                              </Typography>
+                            </Grid>
+                            <Grid item md={4} xs={12}>
+                              <Link
+                                href={`/processes/${processId}/projects/${comment.note.id}?tab=processes&detailTab=comment`}
+                                color="primary"
+                                underline="hover"
+                              >
+                                <Typography variant="caption">
+                                  <span
+                                    // eslint-disable-next-line react/no-danger
+                                    dangerouslySetInnerHTML={{
+                                      __html: sanitizeText(removeNewLines(comment.note.body))
+                                    }}
+                                  />
+                                </Typography>
+                              </Link>
+                            </Grid>
+                          </Grid>
+                          <hr />
+                        </div>
+                      ))
+                    )}
+                  </Paper>
+                </div>
+              )}
             </Grid>
           ))}
         </>

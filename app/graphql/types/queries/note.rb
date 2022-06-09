@@ -142,6 +142,11 @@ module Types::Queries::Note
       description 'Retuns all comments in a process grouped by comment status'
       argument :process_id, GraphQL::Types::ID, required: true
     end
+
+    field :document_comments, [Types::NoteCommentType], null: false do
+      description 'Retuns all comments where a document is tagged'
+      argument :tagged_document_id, GraphQL::Types::ID, required: true
+    end
   end
   # rubocop:enable Metrics/BlockLength
 
@@ -597,6 +602,15 @@ module Types::Queries::Note
     raise ActiveRecord::RecordNotFound if project.blank?
 
     project
+  end
+
+  def document_comments(tagged_document_id:)
+    unless permitted?(module: :note, permission: :can_fetch_project_document_comments)
+      raise GraphQL::ExecutionError,
+            I18n.t('errors.unauthorized')
+    end
+
+    Comments::NoteComment.tagged_document_comments(tagged_document_id)
   end
 
   private
