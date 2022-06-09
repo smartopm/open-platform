@@ -14,14 +14,15 @@ describe('LandParcelMap', () => {
   it('should mount component correctly', async () => {
     const props = {
       handlePlotClick: jest.fn(),
-      geoData: []
+      geoData: [],
+      refetch: jest.fn()
     };
 
       render(
         <MockedProvider>
           <BrowserRouter>
             <MockedThemeProvider>
-              <LandParcelMap handlePlotClick={props.handlePlotClick} geoData={props.geoData} />
+              <LandParcelMap handlePlotClick={props.handlePlotClick} geoData={props.geoData} refetch={props.refetch}/>
             </MockedThemeProvider>
           </BrowserRouter>
         </MockedProvider>
