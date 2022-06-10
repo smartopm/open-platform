@@ -61,7 +61,8 @@ export const userType = {
   site_worker: 'Site Worker',
   lead: 'Lead',
   marketing_manager: 'Marketing Manager',
-  marketing_admin: 'Marketing Admin'
+  marketing_admin: 'Marketing Admin',
+  public_user: 'Public User'
 };
 
 export const colorPallete = [
