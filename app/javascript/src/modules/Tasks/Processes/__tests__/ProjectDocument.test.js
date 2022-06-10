@@ -29,7 +29,8 @@ describe('Project Document Component', () => {
       task_id: 'wejdghjfewf',
       created_at: '2022-05-05',
       uploaded_by: 'sample name',
-      task_name: 'sample task name'
+      task_name: 'sample task name',
+      comment_count: 2
     }
   ];
 
