@@ -217,9 +217,14 @@ export default function ProjectDocument({ attachments, loading, refetch, error, 
                   >
                     <ForumIcon />
                   </IconButton>
-                  <span style={{ fontSize: '12px', marginLeft: '-6px' }} color="primary">
+                  <Typography
+                    variant="caption"
+                    component="span"
+                    color="primary"
+                    style={{ marginLeft: '-6px' }}
+                  >
                     {att.comment_count}
-                  </span>
+                  </Typography>
                 </Grid>
                 <Grid
                   item
