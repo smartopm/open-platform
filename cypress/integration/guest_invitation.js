@@ -106,6 +106,42 @@ describe('Gate Access', () => {
     cy.contains('Joe doe').should('exist');
     cy.contains('General Traders co. Ltd').should('exist');
 
+    // Edit guest's date and time
+    cy.get('[data-testid=guest_invite_menu]').eq(0).click();
+    cy.wait(200);
+    cy.get('[data-testid=menu_item]').eq(0).click();
+    cy.wait(1000);
+    cy.contains('Edit Guest').should('exist');
+    cy.contains('Cancel').should('exist');
+    cy.contains('Update Guest').should('exist');
+
+    cy.get('[data-testid=date-picker]').eq(0).click()
+    cy.get('.MuiPickersDay-today').click()
+    cy.contains('Ok').click();
+    cy.wait(500);
+
+    cy.get('[data-testid=time_picker]').eq(0).click();
+    cy.contains('Ok').click();
+    cy.wait(500);
+
+    cy.get('[data-testid=time_picker]').eq(1).click();
+    cy.contains('Ok').click();
+    cy.wait(500);
+
+    cy.get('[data-testid=week_days]').eq(0).click();
+    cy.get('[data-testid=week_days]').eq(1).click();
+    cy.wait(200);
+    cy.contains('Repeats Until').should('exist');
+
+    cy.get('[data-testid=date-picker]').eq(1).click();
+    cy.get('.MuiPickersDay-today').click();
+    cy.contains('Ok').click();
+    cy.wait(500);
+
+    cy.get('[data-testid=update_button]').click();
+    cy.wait(2000);
+    cy.get('.MuiDialog-paperScrollPaper').should('not.exist');
+
     // Cancel an invitation
     cy.get('[data-testid=guest_invite_menu]')
       .eq(0)

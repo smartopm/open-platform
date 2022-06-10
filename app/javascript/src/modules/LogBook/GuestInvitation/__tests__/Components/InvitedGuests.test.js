@@ -116,6 +116,13 @@ describe('Invited Guests Component', () => {
     await waitFor(() => {
       expect(getByRole('dialog')).toBeInTheDocument();
       expect(queryByText(/guest.edit/i)).toBeInTheDocument();
+      expect(queryByText('guest.name_print')).toBeInTheDocument();
+      expect(queryAllByText('common:misc.day_of_visit')[0]).toBeInTheDocument();
+      expect(queryAllByText('common:misc.start_time')[0]).toBeInTheDocument();
+      expect(queryAllByText('common:misc.end_time')[0]).toBeInTheDocument();
+      expect(queryByTestId('guest_repeats_on')).toBeInTheDocument();
+      expect(queryByTestId('close_button')).toBeInTheDocument();
+      expect(queryByTestId('update_button')).toBeInTheDocument();
     }, 10);
 
     fireEvent.click(getByTestId('speed_dial_btn'))
