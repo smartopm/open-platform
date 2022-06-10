@@ -1,10 +1,11 @@
+/* eslint-disable complexity */
 /* eslint-disable max-lines */
 import React, { useState, useContext } from 'react';
 import { useMutation, useQuery } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import TextField from '@mui/material/TextField';
-import { Grid, Typography, Divider } from '@mui/material';
+import { Grid, Typography, Divider, useMediaQuery } from '@mui/material';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
@@ -27,6 +28,8 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
   const [leadData, setLeadData] = useState(false);
   const [disabled, setDisabled] = useState(true);
   const [eventName, setEventName] = useState('');
+  const [dealSize, setDealSize] = useState('');
+  const [investmentTarget, setInvestmentTarget] = useState('');
   const authState = useContext(AuthStateContext);
   const communityDivisionTargets = authState?.user?.community?.leadMonthlyTargets;
   const [message, setMessage] = useState({ isError: false, detail: '' });
@@ -34,6 +37,7 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
   const [eventCreate, { loading: isLoading }] = useMutation(CreateEvent);
   const [leadDataUpdate, { loading: divisionLoading }] = useMutation(UpdateUserMutation);
   const { t } = useTranslation('common');
+  const mobile = useMediaQuery('(max-width:800px)');
   const {
     data: meetingsData,
     loading: meetingsLoading,
@@ -67,31 +71,47 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
     setMeetingName(event.target.value);
   }
 
+  function handleDealSizeChange(event) {
+    setDealSize(event.target.value);
+  }
+
+  function handleInvestmentTargetChange(event) {
+    setInvestmentTarget(event.target.value);
+  }
+
   function handleEventNameChange(event) {
     setEventName(event.target.value);
   }
 
   function handleSubmitDivision(e) {
     e.preventDefault();
-    handleSubmit();
+    handleSubmit({});
     setDisabled(true);
   }
 
   function handleSubmitMeeting(e) {
     e.preventDefault();
     const type = 'meeting';
-    handleSubmit(meetingName, type);
+    handleSubmit({ name: meetingName, logType: type });
     setMeetingName('');
   }
 
   function handleSubmitEvent(e) {
     e.preventDefault();
     const type = 'event';
-    handleSubmit(eventName, type);
+    handleSubmit({ name: eventName, logType: type });
     setEventName('');
   }
 
-  function handleSubmit(name = '', logType = '') {
+  function handleSubmitInvestment(e) {
+    e.preventDefault();
+    const type = 'deal_details';
+    handleSubmit({ logType: type });
+    setInvestmentTarget('');
+    setDealSize('');
+  }
+
+  function handleSubmit({ name = '', logType = '' }) {
     if (leadData) {
       leadDataUpdate({
         variables: {
@@ -108,6 +128,28 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
           });
           refetch();
           refetchLeadLabelsData();
+        })
+        .catch(err => {
+          setMessage({ ...message, isError: true, detail: formatError(err.message) });
+        });
+    }
+    if (logType === 'deal_details') {
+      eventCreate({
+        variables: {
+          userId,
+          logType,
+          dealSize: parseFloat(dealSize),
+          investmentTarget: parseFloat(investmentTarget)
+        }
+      })
+        .then(() => {
+          setMessage({
+            ...message,
+            isError: false,
+            detail: t('common:misc.misc_successfully_created', { type: t('common:menu.event') })
+          });
+          refetchEvents();
+          refetchMeetings();
         })
         .catch(err => {
           setMessage({ ...message, isError: true, detail: formatError(err.message) });
@@ -136,8 +178,7 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
   if (isLoading || divisionLoading || eventsLoading || meetingsLoading) return <Spinner />;
 
   return (
-    // <div style={{ marginLeft: -23, marginRight: -23 }}>
-    <Grid container>
+    <div style={{ marginLeft: -23, marginRight: -23 }}>
       <MessageAlert
         type={message.isError ? 'error' : 'success'}
         message={message.detail}
@@ -148,7 +189,7 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
       <Grid container>
         <Grid item md={12} xs={12}>
           {communityDivisionTargets && communityDivisionTargets?.length >= 2 ? (
-            <Grid container style={{ display: 'flex', alignItems: 'center', width: '90%' }}>
+            <Grid container style={{ display: 'flex', width: '90%' }}>
               <Grid item md={6} xs={12}>
                 <Typography variant="h6" data-testid="division">
                   {t('lead_management.division')}
@@ -164,7 +205,6 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
                   spacing={2}
                   style={{
                     display: 'flex',
-                    alignItems: 'center',
                     paddingTop: 10
                   }}
                 >
@@ -228,7 +268,7 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
       <Grid item md={12} xs={12} style={{ marginBottom: '10px', marginTop: '10px' }}>
         <Divider />
       </Grid>
-      <Grid container>
+      <Grid container style={{ display: 'flex', width: mobile ? '90%' : '100%' }}>
         <Grid item md={12} xs={12}>
           <Grid item md={12} xs={12}>
             <Typography variant="h6" data-testid="events">
@@ -248,7 +288,7 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
                 alignItems: 'center'
               }}
             >
-              <Grid item md={10} xs={10}>
+              <Grid item md={10} xs={9}>
                 <TextField
                   name="eventName"
                   label={t('lead_management.event_name')}
@@ -334,7 +374,7 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
               alignItems: 'center'
             }}
           >
-            <Grid item md={10} xs={10}>
+            <Grid item md={10} xs={9}>
               <TextField
                 name="meetingName"
                 label={t('lead_management.meeting_name')}
@@ -412,23 +452,21 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
         </Grid>
 
         <Grid item md={12} xs={12}>
-          <Grid
-            container
-            style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'space-between' }}
-          >
+          <Grid container spacing={2}>
             <Grid item md={6} xs={6}>
               <Typography variant="body1" data-testid="deal_details">
                 {t('lead_management.deal_details')}
               </Typography>
-
-              <Typography variant="body2" data-testid="deal_details_header">
-                {t('lead_management.deal_details_header')}
-              </Typography>
             </Grid>
 
-            <Grid item md={6} xs={6} style={{ marginTop: '10px', textAlign: 'right' }}>
+            <Grid item md={6} xs={6} style={{ textAlign: 'right' }}>
               <Typography variant="body2" data-testid="deal_details_header">
                 {t('lead_management.% target_used')}
+              </Typography>
+            </Grid>
+            <Grid item md={12} xs={12}>
+              <Typography variant="body2" data-testid="deal_details_header">
+                {t('lead_management.deal_details_header')}
               </Typography>
             </Grid>
           </Grid>
@@ -437,13 +475,14 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
         <Grid container spacing={2}>
           <Grid item md={5} xs={12}>
             <TextField
-              name="meetingName"
+              name="dealSize"
               label={t('lead_management.deal_size')}
               style={{ width: '100%' }}
-              onChange={handleMeetingNameChange}
-              value={meetingName || ''}
+              onChange={handleDealSizeChange}
+              value={dealSize || ''}
               variant="outlined"
               fullWidth
+              type="number"
               size="small"
               margin="normal"
               required
@@ -455,15 +494,16 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
             />
           </Grid>
 
-          <Grid item md={5} xs={10}>
+          <Grid item md={5} xs={9}>
             <TextField
-              name="meetingName"
+              name="investmentTarget"
               label={t('lead_management.investment_target')}
               style={{ width: '100%' }}
-              onChange={handleMeetingNameChange}
-              value={meetingName || ''}
+              onChange={handleInvestmentTargetChange}
+              value={investmentTarget || ''}
               variant="outlined"
               fullWidth
+              type="number"
               size="small"
               margin="normal"
               required
@@ -486,10 +526,10 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
               variant="contained"
               color="primary"
               buttonText={t('lead_management.add')}
-              handleClick={handleSubmitMeeting}
-              disabled={!meetingName.trim()}
+              handleClick={handleSubmitInvestment}
+              disabled={!investmentTarget.trim() && !dealSize.trim()}
               disableElevation
-              testId="add-meeting-button"
+              testId="add-investment-button"
             />
           </Grid>
         </Grid>
@@ -498,13 +538,13 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
       <br />
       <Grid container>
         <Grid container spacing={2}>
-          <Grid item md={6} xs={6} style={{ marginBottom: '10px' }}>
+          <Grid item md={6} xs={6}>
             <Typography variant="body1" data-testid="investment_size_input">
               {t('lead_management.investment_size_input')}
             </Typography>
           </Grid>
 
-          <Grid item md={6} xs={6} style={{ marginTop: '10px', textAlign: 'right' }}>
+          <Grid item md={6} xs={6} style={{ textAlign: 'right', marginRight: mobile && '-25px' }}>
             <Typography variant="body2" data-testid="total_spent">
               {t('lead_management.total_spent')}
             </Typography>
@@ -537,7 +577,7 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
             />
           </Grid>
 
-          <Grid item md={5} xs={10} style={{ textAlign: 'right' }}>
+          <Grid item md={5} xs={9}>
             <TextField
               name="meetingName"
               label={t('lead_management.amount')}
@@ -576,7 +616,7 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
           </Grid>
         </Grid>
       </Grid>
-    </Grid>
+    </div>
   );
 }
 
