@@ -837,69 +837,58 @@ export function userTabList(t) {
   };
 }
 
-export function buildScoreCardData(CS) {
+export function colNumber(quater, value, num, total) {
+  if (quater === 'Q1') {
+    if (num === 1) return `${value[1]}/${total}`;
+    if (num === 2) return `${value[2]}/${total}`;
+    if (num === 3) return `${value[3]}/${total}`;
+  }
+  if (quater === 'Q2') {
+    if (num === 1) return `${value[4]}/${total}`;
+    if (num === 2) return `${value[5]}/${total}`;
+    if (num === 3) return `${value[6]}/${total}`;
+  }
+  if (quater === 'Q3') {
+    if (num === 1) return `${value[7]}/${total}`;
+    if (num === 2) return `${value[8]}/${total}`;
+    if (num === 3) return `${value[9]}/${total}`;
+  }
+  if (quater === 'Q4') {
+    if (num === 1) return `${value[10]}/${total}`;
+    if (num === 2) return `${value[11]}/${total}`;
+    if (num === 3) return `${value[12]}/${total}`;
+  }
+  return true;
+}
+
+function divisionStat(obj, quarter, monthlyTarget) {
+  const allResult = [];
+  Object.entries(obj).forEach(([key, value]) => {
+    const result = {}
+    result.col1 = key;
+    result.col2 = colNumber(quarter, value, 1, monthlyTarget(key));
+    result.col3 = colNumber(quarter, value, 2, key, monthlyTarget(key));
+    result.col4 = colNumber(quarter, value, 3, key, monthlyTarget(key));
+
+    allResult.push(result)
+  });
+
+  return allResult;
+}
+
+export function buildScoreCardData(obj, monthlyTarget) {
   return [
     {
-      score: [
-        { col1: 'Q1', col2: 'Jan', col3: 'Feb', col4: 'Mar' },
-        {
-          col1: 'Europe',
-          col2: CS('Europe', '1'),
-          col3: CS('Europe', '2'),
-          col4: CS('Europe', '2')
-        },
-        { col1: 'China', col2: CS('China', '1'), col3: CS('China', '2'), col4: CS('China', '3') },
-        { col1: 'India', col2: CS('India', '1'), col3: CS('India', '2'), col4: CS('India', '3') }
-      ]
+      score: [{ col1: 'Q1', col2: 'Jan', col3: 'Feb', col4: 'Mar' }, ...divisionStat(obj, 'Q1', monthlyTarget)]
     },
     {
-      score: [
-        { col1: 'Q2', col2: 'Apr', col3: 'May', col4: 'Jun' },
-        {
-          col1: 'Europe',
-          col2: CS('Europe', '4'),
-          col3: CS('Europe', '5'),
-          col4: CS('Europe', '6')
-        },
-        { col1: 'China', col2: CS('China', '4'), col3: CS('China', '5'), col4: CS('China', '6') },
-        { col1: 'India', col2: CS('India', '4'), col3: CS('India', '5'), col4: CS('India', '6') }
-      ]
+      score: [{ col1: 'Q2', col2: 'Apr', col3: 'May', col4: 'Jun' }, ...divisionStat(obj, 'Q2', monthlyTarget)]
     },
     {
-      score: [
-        { col1: 'Q3', col2: 'Jul', col3: 'Aug', col4: 'Sep' },
-        {
-          col1: 'Europe',
-          col2: CS('Europe', '7'),
-          col3: CS('Europe', '8'),
-          col4: CS('Europe', '9')
-        },
-        { col1: 'China', col2: CS('China', '7'), col3: CS('China', '8'), col4: CS('China', '9') },
-        { col1: 'India', col2: CS('India', '7'), col3: CS('India', '8'), col4: CS('India', '9') }
-      ]
+      score: [{ col1: 'Q3', col2: 'Jul', col3: 'Aug', col4: 'Sep' }, ...divisionStat(obj, 'Q3', monthlyTarget)]
     },
     {
-      score: [
-        { col1: 'Q4', col2: 'Oct', col3: 'Nov', col4: 'Dec' },
-        {
-          col1: 'Europe',
-          col2: CS('Europe', '10'),
-          col3: CS('Europe', '11'),
-          col4: CS('Europe', '12')
-        },
-        {
-          col1: 'China',
-          col2: CS('China', '10'),
-          col3: CS('China', '11'),
-          col4: CS('China', '12')
-        },
-        {
-          col1: 'India',
-          col2: CS('India', '10'),
-          col3: CS('India', '11'),
-          col4: CS('India', '12')
-        }
-      ]
+      score: [{ col1: 'Q4', col2: 'Oct', col3: 'Nov', col4: 'Dec' }, ...divisionStat(obj, 'Q4', monthlyTarget)]
     }
   ];
 }

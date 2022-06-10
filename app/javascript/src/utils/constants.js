@@ -1332,12 +1332,6 @@ export const scoreCardTitle = {
   signed_mou: 'Signed MOUs'
 };
 
-export const divisions = {
-  Europe: 'Europe',
-  China: 'China',
-  India: 'India'
-};
-
 export const years = {
   '01': 'Jan',
   '02': 'Feb',

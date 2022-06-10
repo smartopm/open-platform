@@ -10,8 +10,14 @@ RSpec.describe Types::Queries::LeadLog do
                           role: admin_role,
                           permissions: %w[can_fetch_lead_logs can_access_lead_scorecard])
     end
-    let(:lead_user) { create(:lead, lead_status: 'Signed MOU', division: 'India') }
-    let(:community) { lead_user.community }
+    let(:community) do
+      create(:community,
+             lead_monthly_targets: [{ division: 'India', target: 3 },
+                                    { division: 'China', target: 4 }])
+    end
+    let(:lead_user) do
+      create(:lead, lead_status: 'Signed MOU', division: 'India', community_id: community.id)
+    end
     let(:another_lead_user) do
       create(:user,
              name: 'Mark',
@@ -181,8 +187,10 @@ RSpec.describe Types::Queries::LeadLog do
           expect(scorecard.dig('lead_status', 'Qualified Lead')).to eql 1
           expect(scorecard.dig('lead_status', 'Signed MOU')).to eql 1
           expect(scorecard.dig('leads_monthly_stats_by_division', 'India', '1')).to eql 1
+          expect(scorecard.dig('leads_monthly_stats_by_division', 'India').size).to eql 12
           expect(scorecard.dig('leads_monthly_stats_by_division', 'China', '1')).to eql 1
           expect(scorecard.dig('leads_monthly_stats_by_status', 'Qualified Lead', '1')).to eql 1
+          expect(scorecard.dig('leads_monthly_stats_by_status', 'Qualified Lead').size).to eql 12
           expect(scorecard.dig('leads_monthly_stats_by_status', 'Signed MOU', '1')).to eql 1
           expect(scorecard.dig('leads_monthly_stats_by_status', 'Signed Lease', '1')).to eql 1
           expect(scorecard.dig('ytd_count', 'leads_by_division')).to eql 2
