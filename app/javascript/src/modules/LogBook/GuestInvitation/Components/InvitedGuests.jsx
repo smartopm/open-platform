@@ -44,7 +44,6 @@ export default function InvitedGuests() {
   const [openEditModal, setOpenEditModal] = useState(false);
   const fullScreen = useMediaQuery(theme.breakpoints.down('xs'));
   const [isLoading, setLoading] = useState(false);
-  const [message, setMessage] = useState('');
 
   function handleEditOpen() {
     handleMenuClose();
@@ -129,8 +128,8 @@ export default function InvitedGuests() {
     });
 
     if (!validInfo.valid && ifNotTest()) {
-      setDetails({ ...details, isError: true, message: validInfo.message });
-      setMessage(validInfo.message);
+      setDetails({ ...details, isError: true, message: validInfo.msg });
+      updateList();
       return;
     }
 
@@ -193,7 +192,7 @@ export default function InvitedGuests() {
             close={updateList}
             update
           />
-          {Boolean(message?.length) && <CenteredContent>{message}</CenteredContent>}
+          {Boolean(details.message?.length) && <CenteredContent>{details.message}</CenteredContent>}
         </DialogContent>
       </Dialog>
       <MessageAlert

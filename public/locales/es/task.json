@@ -131,6 +131,7 @@
     "not_started": "No Iniciado",
     "open": "Abierto",
     "optional_description": "Descripción (Opcional)",
+    "order_number": "Número de orden",
     "overdue_tasks": "Tareas vencidas",
     "parent_task": "Tarea Principal",
     "project_overview": "Descripción del Proyecto",

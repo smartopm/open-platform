@@ -410,7 +410,8 @@
     "lead": "Lead",
     "marketing_manager": "Marketing Manager",
     "code_scanner": "Code Scanner",
-    "marketing_admin": "Marketing Admin"
+    "marketing_admin": "Marketing Admin",
+    "public_user": "Public User"
   },
   "table_headers": {
     "date_created": "Date Created",

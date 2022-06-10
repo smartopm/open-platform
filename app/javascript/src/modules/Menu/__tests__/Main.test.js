@@ -62,8 +62,12 @@ describe('Main Nav component', () => {
     );
 
     await waitFor(() => {
-      expect(wrapper.queryByTestId('loader')).toBeInTheDocument();
-    }, 10)
+      expect(wrapper.queryByTestId('community_logo')).toBeInTheDocument();
+      expect(wrapper.queryByTestId('notification_icon')).toBeInTheDocument();
+      expect(wrapper.queryByTestId('avatar_menu')).toBeInTheDocument();
+      expect(wrapper.queryByTestId('user_avatar')).toBeInTheDocument();
+      expect(wrapper.queryByTestId('nav-container')).toBeInTheDocument();
+    }, 20)
   });
   it('should test the ordinary nav', () => {
     const historyMock = { push: jest.fn() }
