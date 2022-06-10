@@ -97,7 +97,7 @@ export default function UserForm({ isEditing, isFromRef, isAdminOrMarketingAdmin
 
   function handleSubmit(event) {
     event.preventDefault();
-    if (!validateEmail(data.email)) {
+    if (data.email && !validateEmail(data.email)) {
       setEmailValidationError(t('common:errors.invalid_email'));
       return;
     }
