@@ -213,10 +213,13 @@ export default function ProjectDocument({ attachments, loading, refetch, error, 
                     color="primary"
                     onClick={() => openCommentAccordion(att.id)}
                     data-testid="open-comments"
+                    disabled={!(att.comment_count > 0)}
                   >
                     <ForumIcon />
-                    <span style={{ fontSize: '12px' }}>{att.comment_count}</span>
                   </IconButton>
+                  <span style={{ fontSize: '12px', marginLeft: '-6px' }} color="primary">
+                    {att.comment_count}
+                  </span>
                 </Grid>
                 <Grid
                   item
@@ -247,7 +250,7 @@ export default function ProjectDocument({ attachments, loading, refetch, error, 
                       padding: '20px'
                     }}
                   >
-                    {commentsLoading ? (
+                    {commentsLoading && openDocuments[openDocuments.length - 1] === att.id ? (
                       <CustomSkeleton variant="rectangular" width="100%" height="300px" />
                     ) : documentCommentsData?.documentComments?.length === 0 ? (
                       <CenteredContent>{t('task.no_comments_on_document')}</CenteredContent>
