@@ -69,9 +69,7 @@ describe('UserForm Component', () => {
 
     expect(container.queryByTestId('primary_phone').value).toContain('090909090909');
 
-    fireEvent.change(container.queryByTestId('email'), {
-      target: { value: 'abcdef.jkl' }
-    });
+    userEvent.type(container.queryByTestId('email'), 'abcdef.jkl');
 
     expect(container.queryByTestId('email').value).toEqual('abcdef.jkl');
     expect(container.queryByTestId('email').value).not.toEqual('abcdef.jklxyz');
