@@ -8,7 +8,6 @@ import Divider from '@mui/material/Divider';
 import { useQuery, useMutation } from 'react-apollo';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import moment from 'moment-timezone';
 import { useTheme } from '@mui/material/styles';
 import { CommunityNewsPostsQuery, SystemDiscussionsQuery } from '../../../graphql/queries';
 import { Spinner } from '../../../shared/Loading';
@@ -22,6 +21,7 @@ import MenuList from '../../../shared/MenuList';
 import { PostDeleteMutation } from '../../../graphql/mutations';
 import DeleteDialogueBox from '../../../shared/dialogs/DeleteDialogue';
 import MessageAlert from '../../../components/MessageAlert';
+import useMomentWithLocale from '../../../shared/hooks/useMomentWithLocale';
 
 export default function CommunityNews({
   userType,
@@ -63,6 +63,7 @@ export default function CommunityNews({
       handleClick: () => history.push(`/discussions/${discussion?.id}`)
     }));
   }
+  const moment = useMomentWithLocale();
 
   const discussionMenuList = [
     ...structuredMenuList,
