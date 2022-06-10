@@ -1,3 +1,4 @@
+/* eslint-disable max-statements */
 /* eslint-disable complexity */
 /* eslint-disable max-lines */
 import React, { useState, useContext } from 'react';
@@ -30,6 +31,8 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
   const [eventName, setEventName] = useState('');
   const [dealSize, setDealSize] = useState('');
   const [investmentTarget, setInvestmentTarget] = useState('');
+  const [description, setDescription] = useState('');
+  const [amount, setAmount] = useState('');
   const authState = useContext(AuthStateContext);
   const communityDivisionTargets = authState?.user?.community?.leadMonthlyTargets;
   const [message, setMessage] = useState({ isError: false, detail: '' });
@@ -79,6 +82,12 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
     setInvestmentTarget(event.target.value);
   }
 
+  function handleDescriptionChange(event) {
+    setDescription(event.target.value);
+  }
+  function handleAmountChange(event) {
+    setAmount(event.target.value);
+  }
   function handleEventNameChange(event) {
     setEventName(event.target.value);
   }
@@ -109,6 +118,14 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
     handleSubmit({ logType: type });
     setInvestmentTarget('');
     setDealSize('');
+  }
+
+  function handleSubmitInvestmentSize(e) {
+    e.preventDefault();
+    const type = 'investment';
+    handleSubmit({ logType: type, name: description, amount });
+    setDescription('');
+    setAmount('');
   }
 
   function handleSubmit({ name = '', logType = '' }) {
@@ -559,11 +576,11 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
         <Grid container spacing={2}>
           <Grid item md={5} xs={12}>
             <TextField
-              name="meetingName"
+              name="description"
               label={t('lead_management.description')}
               style={{ width: '100%' }}
-              onChange={handleMeetingNameChange}
-              value={meetingName || ''}
+              onChange={handleDescriptionChange}
+              value={description || ''}
               variant="outlined"
               fullWidth
               size="small"
@@ -579,11 +596,11 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
 
           <Grid item md={5} xs={9}>
             <TextField
-              name="meetingName"
+              name="amount"
               label={t('lead_management.amount')}
               style={{ width: '100%' }}
-              onChange={handleMeetingNameChange}
-              value={meetingName || ''}
+              onChange={handleAmountChange}
+              value={amount || ''}
               variant="outlined"
               fullWidth
               size="small"
@@ -608,7 +625,7 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
               variant="contained"
               color="primary"
               buttonText={t('lead_management.add')}
-              handleClick={handleSubmitMeeting}
+              handleClick={handleSubmitInvestmentSize}
               disabled={!meetingName.trim()}
               disableElevation
               testId="add-meeting-button"
