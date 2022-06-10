@@ -2196,18 +2196,6 @@ RSpec.describe Types::Queries::Note do
         expect(result.dig('errors', 0, 'message')).to include('Unauthorized')
       end
 
-      # it 'raises error if parent task is not found' do
-      #   note_list
-      #   variables = { processId: process.id }
-      #   result = DoubleGdpSchema.execute(project_stages_query, variables: variables,
-      #                                                          context: {
-      #                                                            current_user: admin,
-      #                                                            site_community: community,
-      #                                                          }).as_json
-
-      #   expect(result.dig('errors', 0, 'message')).to include('not found')
-      # end
-
       it 'returns comments for a tagged document' do
         note = admin.notes.create!(
           body: 'Parent task for task list',
