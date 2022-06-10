@@ -47,7 +47,7 @@ export const LogLabelColors = {
   other: '#608DBE'
 };
 
-export const requiredFields = ['userType', 'phoneNumber', 'name', 'email'];
+export const requiredFields = ['userType', 'phoneNumber', 'name'];
 
 export const userType = {
   admin: 'Admin',
