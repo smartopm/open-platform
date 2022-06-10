@@ -2172,6 +2172,21 @@ RSpec.describe Types::Queries::Note do
     describe '#document_comments' do
       let(:process) { create(:process, community: community) }
       let(:note_list) { create(:note_list, process: process, community: community) }
+      let(:note) do
+        create(:note, user: admin, category: 'to_do', flagged: true,
+                      community: admin.community, author: admin,
+                      parent_note_id: nil, note_list_id: note_list.id)
+      end
+      let!(:note_comment1) do
+        create(:note_comment, body: 'a comment with a tagged document',
+                              status: 'active', note: note, user: admin,
+                              tagged_documents: ['10bbb9ba-0123-3344-c56d-b16e532c8cd0'])
+      end
+      let!(:note_comment2) do
+        create(:note_comment, body: 'another comment with a tagged document',
+                              status: 'active', note: note, user: admin,
+                              tagged_documents: ['0091a9ba-0123-3344-c56d-b16e532c8cd0'])
+      end
 
       let(:document_comments_query) do
         <<~GQL
@@ -2185,56 +2200,34 @@ RSpec.describe Types::Queries::Note do
         GQL
       end
 
-      it 'raises an error if user is not authorized' do
-        variables = { taggedDocumentId: '10bbb9ba-0123-3344-c56d-b16e532c8cd0' }
-        result = DoubleGdpSchema.execute(document_comments_query, variables: variables,
-                                                                  context: {
-                                                                    current_user: developer,
-                                                                    site_community: community,
-                                                                  }).as_json
+      context 'when user is not authorized' do
+        it 'raises an error' do
+          variables = { taggedDocumentId: '10bbb9ba-0123-3344-c56d-b16e532c8cd0' }
+          result = DoubleGdpSchema.execute(document_comments_query, variables: variables,
+                                                                    context: {
+                                                                      current_user: developer,
+                                                                      site_community: community,
+                                                                    }).as_json
 
-        expect(result.dig('errors', 0, 'message')).to include('Unauthorized')
+          expect(result.dig('errors', 0, 'message')).to include('Unauthorized')
+        end
       end
 
-      it 'returns comments for a tagged document' do
-        note = admin.notes.create!(
-          body: 'Parent task for task list',
-          description: 'Parent task for task list',
-          user_id: admin.id,
-          category: 'to_do',
-          flagged: true,
-          community_id: community.id,
-          author_id: admin.id,
-          parent_note_id: nil,
-          note_list_id: note_list.id,
-        )
+      context 'when user is authorized' do
+        it 'returns comments for a tagged document' do
+          variables = { taggedDocumentId: '10bbb9ba-0123-3344-c56d-b16e532c8cd0' }
+          result = DoubleGdpSchema.execute(document_comments_query, variables: variables,
+                                                                    context: {
+                                                                      current_user: admin,
+                                                                      site_community: community,
+                                                                    }).as_json
 
-        note.note_comments.create!(
-          body: 'a comment with a tagged document',
-          status: 'active',
-          user_id: admin.id,
-          tagged_documents: ['10bbb9ba-0123-3344-c56d-b16e532c8cd0'],
-        )
-
-        note.note_comments.create!(
-          body: 'another comment with a tagged document',
-          status: 'active',
-          user_id: admin.id,
-          tagged_documents: ['0091a9ba-0123-3344-c56d-b16e532c8cd0'],
-        )
-
-        variables = { taggedDocumentId: '10bbb9ba-0123-3344-c56d-b16e532c8cd0' }
-        result = DoubleGdpSchema.execute(document_comments_query, variables: variables,
-                                                                  context: {
-                                                                    current_user: admin,
-                                                                    site_community: community,
-                                                                  }).as_json
-
-        expect(result['errors']).to be_nil
-        expect(result.dig('data', 'documentComments').size).to eq(1)
-        expect(result.dig('data', 'documentComments', 0, 'body')).to eq(
-          'a comment with a tagged document',
-        )
+          expect(result['errors']).to be_nil
+          expect(result.dig('data', 'documentComments').size).to eq(1)
+          expect(result.dig('data', 'documentComments', 0, 'body')).to eq(
+            'a comment with a tagged document',
+          )
+        end
       end
     end
   end

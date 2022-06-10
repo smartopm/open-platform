@@ -605,10 +605,7 @@ module Types::Queries::Note
   end
 
   def document_comments(tagged_document_id:)
-    unless permitted?(module: :note, permission: :can_fetch_project_document_comments)
-      raise GraphQL::ExecutionError,
-            I18n.t('errors.unauthorized')
-    end
+    validate_authorization(:note, :can_fetch_project_document_comments)
 
     Comments::NoteComment.tagged_document_comments(tagged_document_id)
   end
