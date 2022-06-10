@@ -46,10 +46,22 @@ const Home = () => {
         columns={{ xs: 12, md: 12 }}
       >
         <Grid item md={6} sm={12} xs={12} />
-        <Grid item md={6} sm={12} xs={12} style={matches ? {padding: '0 7%'} : {}}>
-          <Grid container alignItems='center'>
-            <Grid item md={6} sm={6} xs={6} style={matches ? { padding: '6% 0 0 4%' } : { padding: "4% 0 0 2%" }}>
-              <Button startIcon={<QrCode2Icon />} onClick={() => history.push(`/id/${authState.user.id}`)} data-testid='qr_button'>{t('dashboard.my_qr_code')}</Button>
+        <Grid item md={6} sm={12} xs={12} style={matches ? { padding: '0 7%' } : {}}>
+          <Grid container alignItems="center">
+            <Grid
+              item
+              md={6}
+              sm={6}
+              xs={6}
+              style={matches ? { padding: '6% 0 0 4%' } : { padding: '4% 0 0 2%' }}
+            >
+              <Button
+                startIcon={<QrCode2Icon />}
+                onClick={() => history.push(`/id/${authState.user.id}`)}
+                data-testid="qr_button"
+              >
+                {t('dashboard.my_qr_code')}
+              </Button>
             </Grid>
             <Grid item md={6} sm={6} xs={6}>
               <LanguageToggle />
@@ -72,8 +84,17 @@ const Home = () => {
             </Grid>
           )}
         </FeatureCheck>
-
+        {/* this is temporary fix. Need to start using permissions to display quicklinks */}
         <Grid item md={6} xs={10}>
+          {authState.user.userType === 'marketing_admin' && (
+            <div>
+              <QuickLinks menuItems={filteredQuickLinks} translate={t} />
+              <FeatureCheck features={authState.user.community.features} name="News">
+                <NewsFeed wordpressEndpoint={authState.user?.community.wpLink} translate={t} />
+              </FeatureCheck>
+            </div>
+          )}
+
           {['admin', 'developer', 'consultant'].includes(userType) && (
             <div>
               {userType === 'admin' && (
@@ -82,7 +103,6 @@ const Home = () => {
                 </FeatureCheck>
               )}
 
-              <QuickLinks menuItems={filteredQuickLinks} translate={t} />
               {userType === 'admin' && (
                 <FeatureCheck features={authState.user.community.features} name="Payments">
                   <PaymentSummary authState={authState} translate={t} />
@@ -117,9 +137,9 @@ const Home = () => {
               </FeatureCheck>
             </div>
           )}
-          {!['admin', 'client', 'developer', 'consultant'].includes(userType) && (
-            <Homepage authState={authState} quickLinks={filteredQuickLinks} />
-          )}
+          {!['admin', 'client', 'developer', 'consultant', 'marketing_admin'].includes(
+            userType
+          ) && <Homepage authState={authState} quickLinks={filteredQuickLinks} />}
           <SocialMediaLinks
             data={authState.user.community.socialLinks}
             communityName={authState.user.community.name}
