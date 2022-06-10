@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react';
+import { render, waitForElementToBeRemoved } from '@testing-library/react';
 
 import { BrowserRouter } from 'react-router-dom/';
 import { MockedProvider } from '@apollo/react-testing';
@@ -14,7 +14,7 @@ describe('Feedback Component', () => {
         </BrowserRouter>
       </MockedProvider>
     );
-
     expect(container.queryByTestId('loader')).toBeInTheDocument();
+    await waitForElementToBeRemoved(container.queryByTestId('loader'))
   });
 });
