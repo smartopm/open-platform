@@ -83,6 +83,10 @@ module Types::Queries::LeadLog
       leads_monthly_stats_by_division: leads_monthly_stats_by_division,
       leads_monthly_stats_by_status: leads_monthly_stats_by_status,
       ytd_count: ytd_count,
+      investment_status_stats: {
+        on_target: leads_investment_status_stats('On Target'),
+        over_target: leads_investment_status_stats('Over Target'),
+      },
     }
   end
 
@@ -172,6 +176,14 @@ module Types::Queries::LeadLog
                             .where(user: { user_type: 'lead' },
                                    name: lead_status,
                                    updated_at: current_year).count
+  end
+
+  def leads_investment_status_stats(status)
+    context[:site_community].users
+                            .joins(:labels)
+                            .where(user_type: 'lead',
+                                   labels: { grouping_name: 'Investment',
+                                             short_desc: status }).count
   end
 
   def current_year

@@ -102,6 +102,27 @@ RSpec.describe Types::Queries::LeadLog do
              amount: 1200)
     end
 
+    let!(:other_deal_log) do
+      create(:lead_log,
+             user: another_lead_user,
+             community: community,
+             acting_user_id: admin.id,
+             log_type: 'deal_details',
+             name: 'its deal',
+             deal_size: 120_000,
+             investment_target: 10)
+    end
+
+    let(:another_investment_lead_log) do
+      create(:lead_log,
+             user: another_lead_user,
+             community: community,
+             acting_user_id: admin.id,
+             log_type: 'investment',
+             name: 'new investment',
+             amount: 12_001)
+    end
+
     let!(:lead_log_for_deal) do
       create(:lead_log,
              user: lead_user,
@@ -232,6 +253,8 @@ RSpec.describe Types::Queries::LeadLog do
           qualified_lead_log.update(updated_at: "#{Time.zone.now.year}-01-01")
           signed_mou_lead_log.update(updated_at: "#{Time.zone.now.year}-01-01")
           signed_lease_lead_log.update(updated_at: "#{Time.zone.now.year}-01-01")
+          investment_lead_log
+          another_investment_lead_log
         end
 
         it 'returns scorecard' do
@@ -255,6 +278,8 @@ RSpec.describe Types::Queries::LeadLog do
           expect(scorecard.dig('ytd_count', 'qualified_lead')).to eql 1
           expect(scorecard.dig('ytd_count', 'signed_mou')).to eql 1
           expect(scorecard.dig('ytd_count', 'signed_lease')).to eql 1
+          expect(scorecard.dig('investment_status_stats', 'on_target')).to eql 1
+          expect(scorecard.dig('investment_status_stats', 'over_target')).to eql 1
         end
       end
 
