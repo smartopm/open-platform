@@ -15,8 +15,7 @@ import {
   months,
   leadStatuses,
   statuses,
-  scoreCardTitle,
-  divisions
+  scoreCardTitle
 } from '../../../../utils/constants';
 import CenteredContent from '../../../../shared/CenteredContent';
 import { buildScoreCardData, buildStatusCard, buildCurrentStatusCard } from '../../utils';
@@ -36,27 +35,6 @@ export default function LeadsPage() {
       ?.filter(tar => tar.division === division)
       .map(tar => tar.target);
     return target?.join() || 0;
-  }
-
-  function CS(division, month) {
-    if (
-      !data?.leadScorecards.leads_monthly_stats_by_division[objectAccessor(divisions, division)]
-    ) {
-      return `0/${getMonthlyTarget(division)}`;
-    }
-    if (
-      !data?.leadScorecards.leads_monthly_stats_by_division[objectAccessor(divisions, division)][
-        objectAccessor(months, month)
-      ]
-    ) {
-      return `0/${getMonthlyTarget(division)}`;
-    }
-
-    return `${
-      data?.leadScorecards.leads_monthly_stats_by_division[objectAccessor(divisions, division)][
-        objectAccessor(months, month)
-      ]
-    }/${getMonthlyTarget(division)}`;
   }
 
   function BS(status, month) {
@@ -122,11 +100,13 @@ export default function LeadsPage() {
       </Grid>
       <Grid container spacing={2} data-testid="card_one">
         {communityDivisionTargets && communityDivisionTargets?.length >= 2 ? (
-          buildScoreCardData(CS).map((score, index) => (
-            <Grid item md={3} xs={12} key={index}>
-              <ScoreCard data={score} />
-            </Grid>
-          ))
+          buildScoreCardData(data?.leadScorecards?.leads_monthly_stats_by_division, getMonthlyTarget).map(
+            (score, index) => (
+              <Grid item md={3} xs={12} key={index}>
+                <ScoreCard data={score} />
+              </Grid>
+            )
+          )
         ) : (
           <Grid item md={12} xs={12}>
             <Typography variant="body2">
