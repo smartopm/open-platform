@@ -86,6 +86,7 @@ const Home = () => {
         </FeatureCheck>
 
         <Grid item md={6} xs={10}>
+          {/* this is temporary fix. Need to start using permissions to display quicklinks */}
           {authState.user.userType === 'marketing_admin' && (
             <div>
               <QuickLinks menuItems={filteredQuickLinks} translate={t} />
