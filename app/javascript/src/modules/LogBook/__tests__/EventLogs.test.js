@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, waitFor } from '@testing-library/react';
+import { render, waitForElementToBeRemoved } from '@testing-library/react';
 
 
 import { BrowserRouter } from 'react-router-dom/';
@@ -16,6 +16,7 @@ describe('EventLogs Component', () => {
       </MockedProvider>
     );
 
-    await waitFor(() => { expect(container.queryByTestId('loader')).toBeInTheDocument() });
+    expect(container.queryByTestId('loader')).toBeInTheDocument();
+    await waitForElementToBeRemoved(container.queryByTestId('loader'));
   });
 });
