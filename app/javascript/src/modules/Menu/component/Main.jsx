@@ -10,7 +10,7 @@ import Grid from '@mui/material/Grid';
 import MenuIcon from '@mui/icons-material/Menu';
 import { StyleSheet, css } from 'aphrodite';
 import CloseIcon from '@mui/icons-material/Close';
-import { Button, IconButton, SvgIcon, Typography } from '@mui/material';
+import { Button, IconButton, Skeleton, SvgIcon, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import PropTypes from 'prop-types';
 import DoubleArrowOutlinedIcon from '@mui/icons-material/DoubleArrowOutlined';
@@ -23,7 +23,6 @@ import CommunityName from '../../../shared/CommunityName';
 import CenteredContent from '../../../shared/CenteredContent';
 import userProps from '../../../shared/types/user';
 import UserActionOptions from '../../Users/Components/UserActionOptions';
-import Loading from '../../../shared/Loading';
 import SOSModal from './SOSModal';
 import useGeoLocation from '../../../hooks/useGeoLocation';
 import { filterQuickLinksByRole } from '../../Dashboard/utils';
@@ -127,7 +126,8 @@ export function MainNav({ authState }) {
     authState.user?.community?.smsPhoneNumbers?.filter(Boolean)?.length !== 0
   );
 
-  if (!location.loaded) return <Loading />;
+  const showSOS =
+    canAccessSOS({ authState }) && communityHasEmergencyNumber && communityHasEmergencySMSNumber; 
 
   return (
     <div className={classes.root}>
@@ -169,22 +169,25 @@ export function MainNav({ authState }) {
             )}
           </IconButton>
 
-          {canAccessSOS({ authState }) &&
-            communityHasEmergencyNumber &&
-            communityHasEmergencySMSNumber && (
+          {
+            !location.loaded 
+            ? <Skeleton variant="rectangular" width={35} height={35} />  
+            : showSOS && (
               <SvgIcon
                 component={SOSIcon}
                 viewBox="0 0 384 512"
                 setOpen={setOpen}
                 data-testid="sos-icon"
               />
-            )}
+            )
+          }
 
           <BackArrow path={path} />
           <SOSModal open={open} setOpen={setOpen} location={location} {...{ authState }} />
 
-          {matchesSmall ? (
-            <CommunityName authState={authState} logoStyles={styles} />
+          {
+            matchesSmall ? (
+              <CommunityName authState={authState} logoStyles={styles} />
           ) : (
             <CenteredContent>
               <CommunityName authState={authState} />
