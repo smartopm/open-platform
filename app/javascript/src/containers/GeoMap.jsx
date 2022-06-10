@@ -129,13 +129,14 @@ export default function GeoMap() {
 
   /* istanbul ignore next */
   function handlePoiLayerClick({ target }){
-    const { properties: { id, icon, poi_name: poiName, parcel_no: parcelNumber, parcel_type: parcelType, long_x: longX, lat_y: latY, video_urls: videoUrls }
+    const { properties: { id, icon, poi_name: poiName, poi_description: description, parcel_no: parcelNumber, parcel_type: parcelType, long_x: longX, lat_y: latY, video_urls: videoUrls }
   } = target.feature
 
     setSelectedPoi({
       id,
       icon,
       poiName,
+      description,
       parcelNumber,
       parcelType,
       longX,

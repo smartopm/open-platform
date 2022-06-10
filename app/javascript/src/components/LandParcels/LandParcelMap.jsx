@@ -1,7 +1,7 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useMutation, useApolloClient, useLazyQuery } from 'react-apollo';
-import { Button, Grid, Divider, Typography } from '@mui/material';
+import { Button, Grid, Divider } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import { Map, FeatureGroup, GeoJSON, LayersControl, TileLayer } from 'react-leaflet'
 import L from 'leaflet'
@@ -22,6 +22,7 @@ import { ActionDialog } from '../Dialog';
 import MessageAlert from '../MessageAlert';
 import PointOfInterestDrawerDialog from '../Map/PointOfInterestDrawerDialog';
 import SubUrbanLayer from '../Map/SubUrbanLayer';
+import { Spinner } from '../../shared/Loading';
 
 const { attribution, mapboxStreets, centerPoint } = mapTiles;
 const { mapbox: mapboxPublicToken } = publicMapToken
@@ -76,7 +77,7 @@ function getSubUrbanData(communityName) {
 }
 
 /* istanbul ignore next */
-export default function LandParcelMap({ handlePlotClick, geoData }) {
+export default function LandParcelMap({ handlePlotClick, geoData, refetch }) {
   const classes = useStyles()
   const authState = useContext(AuthStateContext);
   const [deletePointOfInterest] = useMutation(PointOfInterestDelete);
@@ -85,6 +86,7 @@ export default function LandParcelMap({ handlePlotClick, geoData }) {
   const [isSuccessAlert, setIsSuccessAlert] = useState(false);
   const [messageAlert, setMessageAlert] = useState('');
   const [confirmDeletePoi, setConfirmDeletePoi] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
 
   const communityName = authState.user?.community?.name;
   const properties =
@@ -119,6 +121,28 @@ export default function LandParcelMap({ handlePlotClick, geoData }) {
       return poiFeatureCollection.features.push(feature)
     });
   
+
+  useEffect(() => {
+    if (uploadStatus === 'DONE') {
+      uploadPoiImage({
+        variables: { id: selectedPoi.id, imageBlobId: signedBlobId }
+      })
+        .then(() => {
+          setMessageAlert(t('property:messages.image_uploaded'));
+          setIsSuccessAlert(true);
+          setIsUpdating(false);
+          handleCloseDrawer();
+          refetch();
+        })
+        .catch(err => {
+          setMessageAlert(formatError(err.message));
+          setIsSuccessAlert(false);
+          setIsUpdating(false);
+          handleCloseDrawer();
+        });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [uploadStatus, signedBlobId, uploadPoiImage, refetch]);
 
   /* istanbul ignore next */
   function handleOnPlotClick({ target }) {
@@ -161,6 +185,7 @@ export default function LandParcelMap({ handlePlotClick, geoData }) {
         id,
         icon,
         poi_name: poiName,
+        poi_description: description,
         parcel_no: parcelNumber,
         parcel_type: parcelType,
         long_x: longX,
@@ -173,6 +198,7 @@ export default function LandParcelMap({ handlePlotClick, geoData }) {
       id,
       icon,
       poiName,
+      description,
       parcelNumber,
       parcelType,
       longX,
@@ -214,21 +240,10 @@ export default function LandParcelMap({ handlePlotClick, geoData }) {
     setMessageAlert('');
   }
 
-  /* istanbul ignore next */
-  function handleSaveUploadedPhoto() {
-    uploadPoiImage({
-      variables: { id: selectedPoi.id, imageBlobId: signedBlobId }
-    })
-      .then(() => {
-        setMessageAlert(t('property:messages.image_uploaded'));
-        setIsSuccessAlert(true);
-        handleCloseDrawer();
-      })
-      .catch(err => {
-        setMessageAlert(formatError(err.message));
-        setIsSuccessAlert(false);
-        handleCloseDrawer();
-      });
+  function handleFileInputChange(e){
+    e.stopPropagation();
+    setIsUpdating(true);
+    handleFileUpload(e.target.files[0]);
   }
 
   /* istanbul ignore next */
@@ -317,7 +332,7 @@ export default function LandParcelMap({ handlePlotClick, geoData }) {
                 name="image"
                 id="image"
                 capture
-                onChange={e => handleFileUpload(e.target.files[0])}
+                onChange={handleFileInputChange}
                 style={{ display: 'none' }}
               />
               <Button
@@ -327,21 +342,12 @@ export default function LandParcelMap({ handlePlotClick, geoData }) {
                 data-testid="add-poi-photo"
                 disableElevation
                 style={{ color: '#ffffff'}}
+                disabled={isUpdating}
               >
-                {t('property:buttons.add_photo')}
+                {isUpdating ? <Spinner /> : t('property:buttons.add_photo')}
               </Button>
             </label>
           </Grid>
-          {uploadStatus === 'DONE' && (
-          <Grid item md={12}>
-            <Typography>
-              {t('common:misc.image_uploaded')}
-            </Typography>
-            <Button variant="contained" color="primary" onClick={handleSaveUploadedPhoto}>
-              {t('common:form_actions.save_changes')}
-            </Button>
-          </Grid>
-          )}
         </Grid>
       </PointOfInterestDrawerDialog>
       <div data-testid="leaflet-map-container">
@@ -541,5 +547,6 @@ LandParcelMap.propTypes = {
       plotSold: PropTypes.bool
     })
   ),
-  handlePlotClick: PropTypes.func.isRequired
+  handlePlotClick: PropTypes.func.isRequired,
+  refetch: PropTypes.func.isRequired,
 };
