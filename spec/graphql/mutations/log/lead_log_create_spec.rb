@@ -81,7 +81,7 @@ RSpec.describe Mutations::Log::LeadLogCreate do
           name: 'Its deal',
           logType: 'deal_details',
           dealSize: 120_000,
-          investmentTarget: 12,
+          investmentTarget: 12_000,
           userId: lead_user.id,
         }
         result = DoubleGdpSchema.execute(mutation, variables: variables,

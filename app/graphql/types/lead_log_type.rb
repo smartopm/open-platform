@@ -14,12 +14,12 @@ module Types
     field :amount, GraphQL::Types::Float, null: true
     field :investment_target, GraphQL::Types::Float, null: true
     field :deal_size, GraphQL::Types::Float, null: true
-    field :target_amount, GraphQL::Types::Float, null: true
+    field :target_percent, GraphQL::Types::Float, null: true
 
-    def target_amount
+    def target_percent
       return unless object.log_type.eql?('deal_details')
 
-      (object.deal_size * object.investment_target) / 100
+      ((object.investment_target / object.deal_size) * 100).floor(2)
     end
   end
 end

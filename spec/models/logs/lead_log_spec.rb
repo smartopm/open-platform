@@ -50,9 +50,6 @@ RSpec.describe Logs::LeadLog, type: :model do
       it do
         is_expected.to validate_numericality_of(:investment_target).is_greater_than_or_equal_to(0)
       end
-      it do
-        is_expected.to validate_numericality_of(:investment_target).is_less_than_or_equal_to(100)
-      end
     end
   end
 end

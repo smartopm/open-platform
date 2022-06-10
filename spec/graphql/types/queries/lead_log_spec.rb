@@ -100,7 +100,7 @@ RSpec.describe Types::Queries::LeadLog do
              log_type: 'deal_details',
              name: 'its deal',
              deal_size: 120_000,
-             investment_target: 15)
+             investment_target: 15_001)
     end
     let(:events) do
       <<~GQL
@@ -163,7 +163,7 @@ RSpec.describe Types::Queries::LeadLog do
             logType
             dealSize
             investmentTarget
-            targetAmount
+            targetPercent
           }
         }
       GQL
@@ -279,7 +279,8 @@ RSpec.describe Types::Queries::LeadLog do
                                                          }).as_json
           expect(result['errors']).to be nil
           expect(result.dig('data', 'dealDetails').count).to eql 1
-          expect(result.dig('data', 'dealDetails', 0, 'targetAmount')).to eql 18_000.0
+          expect(result.dig('data', 'dealDetails', 0, 'investmentTarget')).to eql 15_001.0
+          expect(result.dig('data', 'dealDetails', 0, 'targetPercent')).to eql 12.5
         end
       end
     end
