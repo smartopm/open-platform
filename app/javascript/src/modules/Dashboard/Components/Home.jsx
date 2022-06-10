@@ -84,7 +84,7 @@ const Home = () => {
             </Grid>
           )}
         </FeatureCheck>
-        {/* this is temporary fix. Need to start using permissions to display quicklinks */}
+
         <Grid item md={6} xs={10}>
           {authState.user.userType === 'marketing_admin' && (
             <div>
@@ -94,7 +94,6 @@ const Home = () => {
               </FeatureCheck>
             </div>
           )}
-
           {['admin', 'developer', 'consultant'].includes(userType) && (
             <div>
               {userType === 'admin' && (
@@ -103,6 +102,7 @@ const Home = () => {
                 </FeatureCheck>
               )}
 
+              <QuickLinks menuItems={filteredQuickLinks} translate={t} />
               {userType === 'admin' && (
                 <FeatureCheck features={authState.user.community.features} name="Payments">
                   <PaymentSummary authState={authState} translate={t} />
@@ -137,9 +137,9 @@ const Home = () => {
               </FeatureCheck>
             </div>
           )}
-          {!['admin', 'client', 'developer', 'consultant', 'marketing_admin'].includes(
-            userType
-          ) && <Homepage authState={authState} quickLinks={filteredQuickLinks} />}
+          {!['admin', 'client', 'developer', 'consultant'].includes(userType) && (
+            <Homepage authState={authState} quickLinks={filteredQuickLinks} />
+          )}
           <SocialMediaLinks
             data={authState.user.community.socialLinks}
             communityName={authState.user.community.name}
