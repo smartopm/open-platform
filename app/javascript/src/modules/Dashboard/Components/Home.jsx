@@ -88,12 +88,12 @@ const Home = () => {
         <Grid item md={6} xs={10}>
           {/* this is temporary fix. Need to start using permissions to display quicklinks */}
           {authState.user.userType === 'marketing_admin' && (
-            <div>
+            <>
               <QuickLinks menuItems={filteredQuickLinks} translate={t} />
               <FeatureCheck features={authState.user.community.features} name="News">
                 <NewsFeed wordpressEndpoint={authState.user?.community.wpLink} translate={t} />
               </FeatureCheck>
-            </div>
+            </>
           )}
           {['admin', 'developer', 'consultant'].includes(userType) && (
             <div>
