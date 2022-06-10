@@ -26,6 +26,40 @@ export const UserMeetingsQuery = gql`
   }
 `;
 
+export const DealDetailsQuery = gql`
+  query dealDetails($userId: ID!) {
+    dealDetails(userId: $userId) {
+      id
+      name
+      amount
+      actingUser {
+        name
+      }
+      createdAt
+    }
+  }
+`;
+
+export const InvestmentStatsQuery = gql`
+  query investmentStats($userId: ID!) {
+    investmentStats(userId: $userId)
+  }
+`;
+
+export const LeadInvestmentsQuery = gql`
+  query leadInvestments($userId: ID!) {
+    leadInvestments(userId: $userId) {
+      id
+      name
+      amount
+      actingUser {
+        name
+      }
+      createdAt
+    }
+  }
+`;
+
 export const UserSignedDealsQuery = gql`
   query signedDeals($userId: ID!) {
     signedDeals(userId: $userId) {
@@ -41,6 +75,6 @@ export const UserSignedDealsQuery = gql`
 
 export const LeadScoreCardQuery = gql`
   query leadScorecards {
-    leadScorecards 
+    leadScorecards
   }
 `;

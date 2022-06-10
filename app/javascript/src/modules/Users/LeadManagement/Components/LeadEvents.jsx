@@ -13,7 +13,13 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import CreateEvent from '../graphql/mutations';
-import { UserMeetingsQuery, UserEventsQuery } from '../graphql/queries';
+import {
+  UserMeetingsQuery,
+  UserEventsQuery,
+  DealDetailsQuery,
+  LeadInvestmentsQuery,
+  InvestmentStatsQuery
+} from '../graphql/queries';
 import { UpdateUserMutation } from '../../../../graphql/mutations/user';
 import CenteredContent from '../../../../shared/CenteredContent';
 import { Spinner } from '../../../../shared/Loading';
@@ -61,6 +67,39 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
     fetchPolicy: 'cache-and-network'
   });
 
+  const {
+    data: dealDetails,
+    loading: dealDetailsLoading,
+    refetch: refetchdealDetails,
+    error: dealDetailsError
+  } = useQuery(DealDetailsQuery, {
+    variables: { userId },
+    fetchPolicy: 'cache-and-network'
+  });
+
+  const {
+    data: leadInvestments,
+    loading: leadInvestmentsLoading,
+    refetch: refetchleadInvestments,
+    error: leadInvestmentsError
+  } = useQuery(LeadInvestmentsQuery, {
+    variables: { userId },
+    fetchPolicy: 'cache-and-network'
+  });
+
+  const {
+    data: investmentStats,
+    loading: investmentStatsLoading,
+    refetch: refetchinvestmentStats,
+    error: investmentStatsError
+  } = useQuery(InvestmentStatsQuery, {
+    variables: { userId },
+    fetchPolicy: 'cache-and-network'
+  });
+
+  console.log('dealDetailsLoading', dealDetails);
+  console.log('leadInvestments', leadInvestments);
+  console.log('investmentStats', investmentStats);
   function handleDivisionChange(event) {
     setLeadData(true);
     setDisabled(false);
@@ -123,7 +162,7 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
   function handleSubmitInvestmentSize(e) {
     e.preventDefault();
     const type = 'investment';
-    handleSubmit({ logType: type, name: description, amount });
+    handleSubmit({ logType: type });
     setDescription('');
     setAmount('');
   }
@@ -171,8 +210,16 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
         .catch(err => {
           setMessage({ ...message, isError: true, detail: formatError(err.message) });
         });
-    } else {
-      eventCreate({ variables: { userId, name, logType } })
+    }
+    if (logType === 'investment') {
+      eventCreate({
+        variables: {
+          userId,
+          logType,
+          name: description,
+          amount: parseFloat(amount)
+        }
+      })
         .then(() => {
           setMessage({
             ...message,
@@ -185,14 +232,46 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
         .catch(err => {
           setMessage({ ...message, isError: true, detail: formatError(err.message) });
         });
+    } else {
+      eventCreate({ variables: { userId, name, logType } })
+        .then(() => {
+          setMessage({
+            ...message,
+            isError: false,
+            detail: t('common:misc.misc_successfully_created', { type: t('common:menu.event') })
+          });
+          refetchEvents();
+          refetchMeetings();
+          refetchdealDetails();
+          refetchleadInvestments();
+          refetchinvestmentStats();
+        })
+        .catch(err => {
+          setMessage({ ...message, isError: true, detail: formatError(err.message) });
+        });
     }
   }
 
-  const err = meetingsError || eventsError || null;
+  const err =
+    meetingsError ||
+    eventsError ||
+    dealDetailsError ||
+    leadInvestmentsError ||
+    investmentStatsError ||
+    null;
 
   if (err) return err.message;
 
-  if (isLoading || divisionLoading || eventsLoading || meetingsLoading) return <Spinner />;
+  if (
+    isLoading ||
+    divisionLoading ||
+    eventsLoading ||
+    meetingsLoading ||
+    dealDetailsLoading ||
+    leadInvestmentsLoading ||
+    investmentStatsLoading
+  )
+    return <Spinner />;
 
   return (
     <div style={{ marginLeft: -23, marginRight: -23 }}>
@@ -626,7 +705,7 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
               color="primary"
               buttonText={t('lead_management.add')}
               handleClick={handleSubmitInvestmentSize}
-              disabled={!meetingName.trim()}
+              disabled={!amount.trim()}
               disableElevation
               testId="add-meeting-button"
             />
