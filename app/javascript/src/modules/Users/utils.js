@@ -867,8 +867,8 @@ function divisionStat(obj, quarter, monthlyTarget) {
     const result = {}
     result.col1 = key;
     result.col2 = colNumber(quarter, value, 1, monthlyTarget(key));
-    result.col3 = colNumber(quarter, value, 2, key, monthlyTarget(key));
-    result.col4 = colNumber(quarter, value, 3, key, monthlyTarget(key));
+    result.col3 = colNumber(quarter, value, 2, monthlyTarget(key));
+    result.col4 = colNumber(quarter, value, 3, monthlyTarget(key));
 
     allResult.push(result)
   });
