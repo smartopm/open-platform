@@ -11,12 +11,7 @@ import { Spinner } from '../../../../shared/Loading';
 import ScoreCard from './ScoreCard';
 import { Context as AuthStateContext } from '../../../../containers/Provider/AuthStateProvider';
 import { objectAccessor } from '../../../../utils/helpers';
-import {
-  months,
-  leadStatuses,
-  statuses,
-  scoreCardTitle
-} from '../../../../utils/constants';
+import { months, leadStatuses, statuses, scoreCardTitle } from '../../../../utils/constants';
 import CenteredContent from '../../../../shared/CenteredContent';
 import { buildScoreCardData, buildStatusCard, buildCurrentStatusCard } from '../../utils';
 
@@ -100,13 +95,14 @@ export default function LeadsPage() {
       </Grid>
       <Grid container spacing={2} data-testid="card_one">
         {communityDivisionTargets && communityDivisionTargets?.length >= 2 ? (
-          buildScoreCardData(data?.leadScorecards?.leads_monthly_stats_by_division, getMonthlyTarget).map(
-            (score, index) => (
-              <Grid item md={3} xs={12} key={index}>
-                <ScoreCard data={score} />
-              </Grid>
-            )
-          )
+          buildScoreCardData(
+            data?.leadScorecards?.leads_monthly_stats_by_division,
+            getMonthlyTarget
+          ).map((score, index) => (
+            <Grid item md={3} xs={12} key={index}>
+              <ScoreCard data={score} />
+            </Grid>
+          ))
         ) : (
           <Grid item md={12} xs={12}>
             <Typography variant="body2">

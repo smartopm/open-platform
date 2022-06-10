@@ -1,4 +1,4 @@
-import { selectOptions } from '../utils';
+import { selectOptions, colNumber } from '../utils';
 import authState from '../../../__mocks__/authstate';
 
 describe('Test the selectOptions for menus', () => {
@@ -42,3 +42,26 @@ describe('Test the selectOptions for menus', () => {
     expect(options[8].key).toBe('customer_journey');
   });
 });
+
+describe('Test colNumber for scorecard', () => {
+  it('shoud return correct colNumber', () => {
+    expect(colNumber('Q1', {1: "1"}, 1, 10)).toBe('1/10');
+    expect(colNumber('Q1', {2: "2"}, 2, 10)).toBe('2/10');
+    expect(colNumber('Q1', {3: "3"}, 3, 10)).toBe('3/10');
+    
+    expect(colNumber('Q2', {4: "1"}, 1, 10)).toBe('1/10');
+    expect(colNumber('Q2', {5: "2"}, 2, 10)).toBe('2/10');
+    expect(colNumber('Q2', {6: "3"}, 3, 10)).toBe('3/10');
+
+    expect(colNumber('Q3', {7: "1"}, 1, 10)).toBe('1/10');
+    expect(colNumber('Q3', {8: "2"}, 2, 10)).toBe('2/10');
+    expect(colNumber('Q3', {9: "3"}, 3, 10)).toBe('3/10');
+
+    expect(colNumber('Q4', {10: "1"}, 1, 10)).toBe('1/10');
+    expect(colNumber('Q4', {11: "2"}, 2, 10)).toBe('2/10');
+    expect(colNumber('Q4', {12: "3"}, 3, 10)).toBe('3/10');
+
+    expect(colNumber('QA', {12: "3"}, 3, 10)).toBe(true);
+  });
+});
+

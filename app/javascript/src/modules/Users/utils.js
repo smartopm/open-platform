@@ -837,8 +837,7 @@ export function userTabList(t) {
   };
 }
 
-function colNumber(quater, value, num, key, mt) {
-  const total = mt(key)
+export function colNumber(quater, value, num, total) {
   if (quater === 'Q1') {
     if (num === 1) return `${value[1]}/${total}`;
     if (num === 2) return `${value[2]}/${total}`;
@@ -867,9 +866,9 @@ function divisionStat(obj, quarter, monthlyTarget) {
   Object.entries(obj).forEach(([key, value]) => {
     const result = {}
     result.col1 = key;
-    result.col2 = colNumber(quarter, value, 1, key, monthlyTarget);
-    result.col3 = colNumber(quarter, value, 2, key, monthlyTarget);
-    result.col4 = colNumber(quarter, value, 3, key, monthlyTarget);
+    result.col2 = colNumber(quarter, value, 1, monthlyTarget(key));
+    result.col3 = colNumber(quarter, value, 2, key, monthlyTarget(key));
+    result.col4 = colNumber(quarter, value, 3, key, monthlyTarget(key));
 
     allResult.push(result)
   });
