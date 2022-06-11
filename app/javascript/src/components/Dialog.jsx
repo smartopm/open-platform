@@ -90,7 +90,8 @@ export function CustomizedDialogs({
   actionable,
   actionLoading,
   displaySaveButton,
-  dividers
+  dividers,
+  ...rest
 }) {
   const { t } = useTranslation(['logbook', 'common']);
   return (
@@ -99,6 +100,7 @@ export function CustomizedDialogs({
       aria-labelledby="simple-dialog-title"
       open={open}
       data-testid="dialog"
+      {...rest}
     >
       <DialogTitle>
         <div className="d-flex justify-content-between">
