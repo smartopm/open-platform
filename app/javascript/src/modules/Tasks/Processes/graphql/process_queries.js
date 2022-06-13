@@ -267,3 +267,23 @@ export const ProjectStagesQuery = gql`
     }
   }
 `;
+
+export const DocumentCommentsQuery = gql`
+  query documentComments($taggedDocumentId: ID!) {
+    documentComments(taggedDocumentId: $taggedDocumentId)
+    {
+      id
+      body
+      createdAt
+      user {
+        id
+        name
+        imageUrl
+      }
+      note {
+        id
+        body
+      }
+    }
+  }
+`;

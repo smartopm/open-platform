@@ -59,6 +59,7 @@ module Types
           uploaded_by: ActiveStorage::Attachment.find_by(
             blob_id: doc.blob_id, record_type: 'Users::User',
           )&.record&.name,
+          comment_count: object.note_comments.tagged_document_comments(doc.id).size,
         }
         urls << file
       end

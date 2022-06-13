@@ -6,7 +6,6 @@ module Types::Queries::LeadLog
   extend ActiveSupport::Concern
 
   VALID_LEAD_STATUSES = ['Qualified Lead', 'Signed MOU', 'Signed Lease'].freeze
-  VALID_LEAD_DIVISIONS = %w[India China Europe].freeze
 
   included do
     field :lead_events, [Types::LeadLogType], null: true do
@@ -71,41 +70,67 @@ module Types::Queries::LeadLog
   end
 
   def leads_status_stats
-    context[:site_community].users.where(user_type: 'lead').group('lead_status').count
+    context[:site_community].users.where(user_type: 'lead')
+                            .where.not(lead_status: ['', nil])
+                            .group('lead_status').count
   end
 
   def leads_monthly_stats_by_division
-    result = context[:site_community].users
-                                     .where(user_type: 'lead', created_at: current_year)
-                                     .group('division', '(EXTRACT(MONTH FROM created_at)::integer)')
-                                     .count
+    lead_stats = context[:site_community].users
+                                         .where(user_type: 'lead', created_at: current_year)
+                                         .group('division',
+                                                '(EXTRACT(MONTH FROM created_at)::integer)')
+                                         .count
 
-    result.each_with_object({}) do |((division, month), users_count), data|
-      next if division.nil?
-
-      data[division] ||= {}
-      data[division][month] = users_count
-    end
+    monthly_stats(lead_stats, valid_lead_divisions)
   end
 
   # rubocop:disable Metrics/MethodLength
   def leads_monthly_stats_by_status
-    result = context[:site_community].lead_logs
-                                     .lead_status
-                                     .joins(:user)
-                                     .where(user: { user_type: 'lead' },
-                                            name: VALID_LEAD_STATUSES,
-                                            updated_at: current_year)
-                                     .group('name',
-                                            '(EXTRACT(MONTH FROM lead_logs.updated_at)::integer)')
-                                     .count
+    lead_stats = context[:site_community].lead_logs
+                                         .lead_status
+                                         .joins(:user)
+                                         .where(user: { user_type: 'lead' },
+                                                name: VALID_LEAD_STATUSES,
+                                                updated_at: current_year)
+                                         .group(
+                                           'name',
+                                           '(EXTRACT(MONTH FROM lead_logs.updated_at)::integer)',
+                                         ).count
 
-    result.each_with_object({}) do |((lead_status, month), users_count), data|
-      data[lead_status] ||= {}
-      data[lead_status][month] = users_count
-    end
+    monthly_stats(lead_stats, VALID_LEAD_STATUSES)
   end
   # rubocop:enable Metrics/MethodLength
+
+  # Returns monthly stats.
+  #
+  # @param lead_stats [Hash]
+  # Ex: ['India', 1] => 3
+  # @param valid_values [Array]
+  #
+  # @return [JSON]
+  # Ex: { 'India': { "1": 1, "2": 2, ... ,"12": 0 } }
+
+  def monthly_stats(lead_stats, valid_values)
+    stats = format_lead_stats(lead_stats)
+
+    valid_values.each do |value|
+      stats[value] = {} if stats[value].nil?
+      (1..12).each do |month|
+        stats[value][month] = 0 if stats[value][month].nil?
+      end
+    end
+    stats
+  end
+
+  def format_lead_stats(lead_stats)
+    lead_stats.each_with_object({}) do |((key, month), users_count), data|
+      next if key.nil?
+
+      data[key] ||= {}
+      data[key][month] = users_count
+    end
+  end
 
   def ytd_count
     {
@@ -120,7 +145,7 @@ module Types::Queries::LeadLog
     context[:site_community].users
                             .where(user_type: 'lead',
                                    created_at: current_year,
-                                   division: VALID_LEAD_DIVISIONS).count
+                                   division: valid_lead_divisions).count
   end
 
   def leads_status_ytd_count(lead_status)
@@ -131,14 +156,20 @@ module Types::Queries::LeadLog
                                    updated_at: current_year).count
   end
 
-  def current_year
-    Time.zone.now.beginning_of_year..Time.zone.now.end_of_year
-  end
-
   def raise_unauthorized_error_for_lead_logs(permission)
     return if permitted?(module: :lead_log, permission: permission)
 
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
+  end
+
+  private
+
+  def current_year
+    Time.zone.now.beginning_of_year..Time.zone.now.end_of_year
+  end
+
+  def valid_lead_divisions
+    context[:site_community].lead_monthly_targets&.map { |data| data['division'] }
   end
 end
 # rubocop:enable Metrics/ModuleLength
