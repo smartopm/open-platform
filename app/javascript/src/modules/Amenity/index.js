@@ -12,7 +12,7 @@ export default {
     path: '/amenities',
     component: AmenityList
   },
-  name: t => t('misc.amenity'),
+  name: t => t('misc.amenity', { count: 0 }),
   featureName: 'Business',
   moduleName: "business",
   accessibleBy: []
