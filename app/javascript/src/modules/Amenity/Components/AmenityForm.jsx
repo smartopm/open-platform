@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import { TextField } from '@mui/material';
 import PropTypes from 'prop-types';
+import { useMutation } from 'react-apollo';
 import { CustomizedDialogs as CustomizedDialog } from '../../../components/Dialog';
+import { objectAccessor } from '../../../utils/helpers';
+import { AmenityCreateMutation } from '../graphql/amenity_mutations';
+import { checkInValidRequiredFields } from '../../LogBook/utils';
 
 export default function AmenityForm({ isOpen, setOpen, refetch }) {
   const initialInputValue = {
@@ -12,15 +16,59 @@ export default function AmenityForm({ isOpen, setOpen, refetch }) {
     invitationLink: ''
   };
   const [amenityValue, setAmenityValue] = useState(initialInputValue);
+  const [createAmenity] = useMutation(AmenityCreateMutation);
+  const requiredFields = ['name', 'description', 'location', 'hours'];
+  const [amenityStatus, setAmenityStatus] = useState({
+    loading: false,
+    isError: false,
+    message: null
+  });
+  const [inputValidationMsg, setInputValidationMsg] = useState({
+    isError: false,
+    isSubmitting: false
+  });
   function handleUpdateFields(event) {
     const { name, value } = event.target;
     setAmenityValue({ [name]: value });
   }
 
   function handleSaveInfo() {
-    console.log('saving amenity');
-    // refetch and close the modal from here
-    console.log(refetch);
+    const isAnyInvalid = checkInValidRequiredFields(amenityValue, requiredFields);
+    if (isAnyInvalid) {
+      setInputValidationMsg({ isError: true });
+      return;
+    }
+    setAmenityStatus({ ...amenityStatus, loading: true });
+    createAmenity({ variables: { ...amenityValue } })
+      .then(() => {
+        setAmenityStatus({
+          ...amenityStatus,
+          loading: false,
+          isError: false,
+          message: 'all went well'
+        });
+        refetch();
+      })
+      .catch(err => {
+        setAmenityStatus({
+          ...amenityStatus,
+          loading: false,
+          isError: true,
+          message: err.message
+        });
+      });
+  }
+
+  // TODO: Move this to shared helpers
+  function validateRequiredField(fieldName) {
+    const validationError =
+      inputValidationMsg.isError &&
+      requiredFields.includes(fieldName) &&
+      !objectAccessor(amenityValue, fieldName);
+    return {
+      error: validationError,
+      helperText: validationError && 'This field is required'
+    };
   }
 
   return (
@@ -30,6 +78,7 @@ export default function AmenityForm({ isOpen, setOpen, refetch }) {
       dialogHeader="Configure Amenity"
       displaySaveButton
       handleBatchFilter={handleSaveInfo}
+      actionLoading={amenityStatus.loading}
       maxWidth="sm"
       fullWidth
     >
@@ -41,6 +90,7 @@ export default function AmenityForm({ isOpen, setOpen, refetch }) {
         name="name"
         onChange={handleUpdateFields}
         inputProps={{ 'data-testid': 'amenity_name' }}
+        {...validateRequiredField('name')}
         required
         fullWidth
       />
@@ -52,6 +102,8 @@ export default function AmenityForm({ isOpen, setOpen, refetch }) {
         value={amenityValue.description}
         onChange={handleUpdateFields}
         inputProps={{ 'data-testid': 'amenity_description' }}
+        {...validateRequiredField('description')}
+        required
         fullWidth
       />
       <TextField
@@ -62,6 +114,7 @@ export default function AmenityForm({ isOpen, setOpen, refetch }) {
         value={amenityValue.location}
         onChange={handleUpdateFields}
         inputProps={{ 'data-testid': 'amenity_location' }}
+        {...validateRequiredField('location')}
         required
         fullWidth
       />
@@ -73,6 +126,7 @@ export default function AmenityForm({ isOpen, setOpen, refetch }) {
         value={amenityValue.hours}
         onChange={handleUpdateFields}
         inputProps={{ 'data-testid': 'amenity_hours' }}
+        {...validateRequiredField('hours')}
         required
         fullWidth
       />
@@ -84,7 +138,6 @@ export default function AmenityForm({ isOpen, setOpen, refetch }) {
         value={amenityValue.invitationLink}
         onChange={handleUpdateFields}
         inputProps={{ 'data-testid': 'amenity_link' }}
-        required
         fullWidth
       />
     </CustomizedDialog>
