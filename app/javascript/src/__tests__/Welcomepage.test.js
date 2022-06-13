@@ -1,13 +1,14 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
+
 import { MemoryRouter } from 'react-router';
 import { MockedProvider } from '@apollo/react-testing';
 import WelcomePage from '../components/AuthScreens/WelcomePage';
+import currentCommunity from '../__mocks__/currentCommunity';
 
 describe('component that centers divs', () => {
   const Welcome = () => (
-    <MockedProvider mocks={[]} addTypename={false}>
+    <MockedProvider mocks={[currentCommunity]} addTypename={false}>
       <MemoryRouter>
         <WelcomePage />
       </MemoryRouter>

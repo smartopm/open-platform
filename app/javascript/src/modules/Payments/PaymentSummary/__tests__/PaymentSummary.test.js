@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, waitFor, fireEvent } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
+
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom';
 import PaymentSummary from '../Components/PaymentSummary';
@@ -52,7 +52,7 @@ describe('Payment Summary Component', () => {
   }
 
   it('should render the Payment Summary component', async () => {
-    const translate = jest.fn()
+    const translate = jest.fn(() => 'Some Title')
     const container = render(
       <MockedProvider mocks={[mock, secondMock]} addTypename={false}>
         <BrowserRouter>

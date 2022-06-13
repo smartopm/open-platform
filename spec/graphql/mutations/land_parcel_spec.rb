@@ -4,7 +4,14 @@ require 'rails_helper'
 
 RSpec.describe Mutations::LandParcel do
   describe 'creating a parcel number' do
-    let!(:current_user) { create(:user_with_community, user_type: 'admin') }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:permission) do
+      create(:permission, module: 'land_parcel',
+                          role: admin_role,
+                          permissions: %w[can_create_land_parcel can_update_land_parcel])
+    end
+    let!(:current_user) { create(:admin_user, role: admin_role) }
+
     let!(:user_parcel) do
       create(:land_parcel, community_id: current_user.community_id)
     end
@@ -152,7 +159,7 @@ RSpec.describe Mutations::LandParcel do
       expect(result.dig('data', 'PropertyCreate', 'landParcel', 'objectType')).to eq('house')
       expect(result.dig('data', 'PropertyCreate', 'landParcel', 'status')).to eq('planned')
       expect(result['errors']).to be_nil
-      house = current_user.community.land_parcels.unscoped.find_by(parcel_number: '12345')
+      house = current_user.community.land_parcels.find_by(parcel_number: '12345')
       expect(house.house_land_parcel_id).to eq(user_parcel.id)
     end
 
@@ -182,7 +189,6 @@ RSpec.describe Mutations::LandParcel do
           site_community: current_user.community,
         },
       ).as_json
-
       parcel = Properties::LandParcel.find(user_parcel.id)
       expect(parcel.parcel_number).to eq('#new123')
       expect(parcel.accounts.first.full_name).to eq('new name')
@@ -218,7 +224,14 @@ RSpec.describe Mutations::LandParcel do
   end
 
   describe 'merging land parcels' do
-    let!(:current_user) { create(:user_with_community, user_type: 'admin') }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:permission) do
+      create(:permission, module: 'land_parcel',
+                          role: admin_role,
+                          permissions: %w[can_merge_land_parcels])
+    end
+    let!(:current_user) { create(:admin_user, role: admin_role) }
+
     let!(:user_parcel) do
       create(:land_parcel, community_id: current_user.community_id)
     end
@@ -282,8 +295,18 @@ RSpec.describe Mutations::LandParcel do
   end
 
   describe 'adding and removing points of interest' do
-    let!(:current_user) { create(:user_with_community, user_type: 'admin') }
-    let!(:normal_user) { create(:user_with_community) }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:visitor_role) { create(:role, name: 'visitor') }
+    let!(:permission) do
+      create(:permission, module: 'land_parcel',
+                          role: admin_role,
+                          permissions: %w[
+                            can_create_point_of_interest
+                            can_delete_point_of_interest
+                          ])
+    end
+    let!(:current_user) { create(:admin_user, role: admin_role) }
+    let!(:normal_user) { create(:user_with_community, role: visitor_role) }
 
     let(:pointOfInterestCreateQuery) do
       <<~GQL
@@ -430,7 +453,13 @@ RSpec.describe Mutations::LandParcel do
   end
 
   describe 'poi image upload' do
-    let!(:current_user) { create(:user_with_community, user_type: 'admin') }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:permission) do
+      create(:permission, module: 'land_parcel',
+                          role: admin_role,
+                          permissions: %w[can_create_point_of_interest_image])
+    end
+    let!(:current_user) { create(:admin_user, role: admin_role) }
     let!(:user_parcel) do
       create(:land_parcel, community_id: current_user.community_id, parcel_type: 'poi')
     end

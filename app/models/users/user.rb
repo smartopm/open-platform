@@ -6,6 +6,7 @@
 require 'email_msg'
 require 'merge_users'
 require 'host_env'
+require 'task_create'
 
 module Users
   # User should encompass all users of the system
@@ -20,10 +21,18 @@ module Users
     class DecodeError < StandardError; end
 
     include SearchCop
+    include QueryFetchable
+    include UsersHelper
 
+    # rubocop:disable Style/RedundantInterpolation
     search_scope :search do
       attributes :name, :phone_number, :user_type, :email, :sub_status, :ext_ref_id
       attributes labels: ['labels.short_desc']
+
+      generator :matches do |column_name, raw_value|
+        pattern = "%#{raw_value}%"
+        QueryFetchable.accent_insensitive_search(column_name, "#{quote pattern}")
+      end
     end
 
     search_scope :heavy_search do
@@ -31,6 +40,11 @@ module Users
       attributes labels: ['labels.short_desc']
       attributes date_filter: ['acting_event_log.created_at']
       scope { joins(:acting_event_log).eager_load(:labels) }
+
+      generator :matches do |column_name, raw_value|
+        pattern = "%#{raw_value}%"
+        QueryFetchable.accent_insensitive_search(column_name, "#{quote pattern}")
+      end
     end
 
     search_scope :plot_number do
@@ -44,7 +58,22 @@ module Users
 
     search_scope :search_lite do
       attributes :name, :phone_number, :user_type, :email, :sub_status
+
+      generator :matches do |column_name, raw_value|
+        pattern = "%#{raw_value}%"
+        QueryFetchable.accent_insensitive_search(column_name, "#{quote pattern}")
+      end
     end
+
+    search_scope :search_guest do
+      attributes :phone_number, :email, :name
+
+      generator :matches do |column_name, raw_value|
+        pattern = "%#{raw_value}%"
+        QueryFetchable.accent_insensitive_search(column_name, "#{quote pattern}")
+      end
+    end
+    # rubocop:enable Style/RedundantInterpolation
 
     scope :allowed_users, lambda { |current_user|
       policy = ::Policy::User::UserPolicy.new(current_user, nil)
@@ -62,8 +91,10 @@ module Users
     scope :by_labels, lambda { |label|
                         joins(:labels).where(labels: { short_desc: label&.split(',') })
                       }
+    scope :excluding_leads, -> { where.not(user_type: :lead) }
 
     belongs_to :community
+    belongs_to :role
     has_many :entry_requests, class_name: 'Logs::EntryRequest', dependent: :destroy
     has_many :granted_entry_requests, class_name: 'Logs::EntryRequest', foreign_key: :grantor_id,
                                       dependent: :destroy, inverse_of: :user
@@ -105,19 +136,33 @@ module Users
     has_many :plan_ownerships, class_name: 'Properties::PlanOwnership', dependent: :destroy
     has_many :co_owned_plans, class_name: 'Properties::PaymentPlan', through: :plan_ownerships,
                               source: :payment_plan
-    has_one_attached :avatar
-    has_one_attached :document
+    # TODO: find more about the inverse_of association and if we really need that
+    # rubocop:disable Rails/InverseOf
+    has_one :request, class_name: 'Logs::EntryRequest', foreign_key: :guest_id,
+                      dependent: :destroy
+    has_many :invites, class_name: 'Logs::Invite', foreign_key: :guest_id,
+                       dependent: :destroy
+    has_many :invitees, class_name: 'Logs::Invite', foreign_key: :host_id,
+                        dependent: :destroy
+    has_many :reply_to, class_name: 'Comments::NoteComment', foreign_key: :reply_from_id,
+                        dependent: :destroy
+    has_many :lead_logs, class_name: 'Logs::LeadLog', dependent: :destroy
+    has_many :transaction_logs, class_name: 'Payments::TransactionLog', dependent: :destroy
 
-    before_save :ensure_default_state_and_type
-    after_create :send_email_msg
+    # rubocop:enable Rails/InverseOf
+    has_one_attached :avatar
+    has_many_attached :note_documents
+    has_many :posts, class_name: 'Discussions::Post', dependent: :destroy
+
+    before_validation :add_default_state_type_and_role
+    after_create :log_user_create_event
+    after_create :add_notification_preference
+    after_update :update_associated_accounts_details, if: -> { saved_changes.key?('name') }
+    after_update :update_associated_request_details, if: -> { user_details_updated? }
+    after_save :associate_lead_labels, if: -> { user_type.eql?('lead') }
 
     # Track changes to the User
     has_paper_trail
-
-    VALID_USER_TYPES = %w[security_guard admin resident contractor
-                          prospective_client client visitor custodian site_worker].freeze
-    VALID_STATES = %w[valid pending banned expired].freeze
-    DEFAULT_PREFERENCE = %w[com_news_sms com_news_email weekly_point_reminder_email].freeze
 
     enum sub_status: {
       plots_fully_purchased: 0,
@@ -129,18 +174,24 @@ module Users
       construction_in_progress_self_build: 6,
     }
 
+    enum status: { active: 0, deactivated: 1 }
+
     validates :user_type, inclusion: { in: VALID_USER_TYPES, allow_nil: true }
     validates :state, inclusion: { in: VALID_STATES, allow_nil: true }
     validates :sub_status, inclusion: { in: sub_statuses.keys, allow_nil: true }
+    validates :lead_status, inclusion: { in: VALID_LEAD_STATUSES, allow_nil: true }
     validates :name, presence: true
     validates :email, uniqueness: {
       scope: :community_id,
       case_sensitive: true,
       allow_nil: true,
     }
+    validates :phone_number, uniqueness: {
+      scope: :community_id,
+      allow_nil: true,
+    }
     validate :phone_number_valid?
-    after_create :add_notification_preference
-    after_update :update_associated_accounts_details, if: -> { saved_changes.key?('name') }
+    validate :public_user?
 
     devise :omniauthable, omniauth_providers: %i[google_oauth2 facebook]
 
@@ -149,6 +200,7 @@ module Users
 
     class PhoneTokenResultInvalid < StandardError; end
     class PhoneTokenResultExpired < StandardError; end
+    class TokenGenerationFailed < StandardError; end
 
     ATTACHMENTS = {
       avatar_blob_id: :avatar,
@@ -177,11 +229,13 @@ module Users
       security_guard: { except: %i[state user_type] },
     }.freeze
 
-    SITE_MANAGERS = %w[security_guard contractor custodian admin].freeze
+    SITE_MANAGERS = %w[security_guard contractor custodian admin site_manager].freeze
 
     def self.from_omniauth(auth, site_community)
       # Either create a User record or update it based on the provider (Google) and the UID
       user = find_or_initialize_from_oauth(auth, site_community)
+      return user unless user.new_record?
+
       OAUTH_FIELDS_MAP.each_key do |param|
         user[param] = OAUTH_FIELDS_MAP[param][auth]
       end
@@ -200,6 +254,11 @@ module Users
     # We may want to do a bit more work here massaing the number entered
     def self.find_any_via_phone_number(phone_number)
       find_by(phone_number: phone_number)
+    end
+
+    def self.find_any_via_email(email)
+      # exclude users authenticated via any oAuth provider
+      find_by(email: email, provider: nil)
     end
 
     # We may want to do a bit more work here massaing the number entered
@@ -245,7 +304,7 @@ module Users
     end
 
     def process_referral(enrolled_user, data)
-      return unless user_type != 'admin'
+      return if %w[visitor admin].include?(user_type)
 
       generate_events('user_referred', enrolled_user, data)
       referral_todo(enrolled_user)
@@ -289,6 +348,10 @@ module Users
       entry_request_object
     end
 
+    def log_user_create_event
+      generate_events('user_create', self)
+    end
+
     def generate_events(event_tag, target_obj, data = {})
       Logs::EventLog.create(acting_user_id: id,
                             community_id: community_id, subject: event_tag,
@@ -298,10 +361,10 @@ module Users
     end
 
     # rubocop:disable Metrics/MethodLength
+    # rubocop:disable Metrics/AbcSize
     def generate_note(vals)
-      community.notes.create(
-        # give the note to the author if no other user
-        user_id: vals[:user_id] || self[:id],
+      note = community.notes.create(
+        user_id: vals[:user_id] || self[:id], # give the note to the author if no other user
         body: vals[:body],
         category: vals[:category],
         description: vals[:description],
@@ -310,8 +373,14 @@ module Users
         completed: vals[:completed] || false,
         due_date: vals[:due_date],
         form_user_id: vals[:form_user_id],
+        parent_note_id: vals[:parent_note_id],
+        status: vals[:status],
+        order: vals[:order],
       )
+      note.documents.attach(vals[:attached_documents]) if vals[:attached_documents]
+      note
     end
+    # rubocop:enable Metrics/AbcSize
 
     def manage_shift(target_user_id, event_tag)
       user = find_a_user(target_user_id)
@@ -334,7 +403,7 @@ module Users
     # rubocop:enable Metrics/MethodLength
 
     def construct_message(vals)
-      mess = messages.new(vals)
+      mess = Notifications::Message.new(vals)
       mess[:user_id] = vals[:user_id]
       mess.sender_id = self[:id]
       mess
@@ -383,7 +452,7 @@ module Users
     end
 
     def pending?
-      self[:state] == 'pending'
+      state == 'pending'
     end
 
     def expired?
@@ -392,17 +461,22 @@ module Users
       self[:expires_at] < Time.zone.now
     end
 
-    def ensure_default_state_and_type
+    def add_default_state_type_and_role
       # TODO(Nurudeen): Move these to DB level as default values
-      self[:state] ||= 'pending'
-      self[:user_type] ||= 'visitor'
+      self.state ||= 'pending'
+      self.user_type ||= 'visitor'
+      community_role = Role.find_by(name: self.user_type, community_id: community_id)
+      self.role = (community_role || Role.find_by(name: self.user_type, community_id: nil))
     end
 
     def create_new_phone_token
       token = (Array.new(PHONE_TOKEN_LEN) { SecureRandom.random_number(10) }).join('')
-      update(phone_token: token,
-             phone_token_expires_at: PHONE_TOKEN_EXPIRATION_MINUTES.minutes.from_now)
-      token
+      return token if update(
+        phone_token: token,
+        phone_token_expires_at: PHONE_TOKEN_EXPIRATION_MINUTES.minutes.from_now,
+      )
+
+      nil
     end
 
     def domain
@@ -416,33 +490,70 @@ module Users
       return unless %w[google_oauth2 facebook].include?(self[:provider])
 
       if site_community.domain_admin?(domain)
-        update(community_id: site_community.id, user_type: 'admin')
+        update(community_id: site_community.id, user_type: 'admin',
+               role: Role.find_by(name: 'admin'))
       else
         update(community_id: site_community.id,
-               user_type: 'visitor',
+               user_type: 'visitor', role: Role.find_by(name: 'visitor'),
                expires_at: Time.current)
       end
     end
 
     def send_phone_token
-      raise UserError, 'No phone number to send one time code to' unless self[:phone_number]
+      return if deactivated?
+
+      raise UserError, I18n.t('errors.user.cannot_send_otp') if self[:phone_number].blank?
 
       token = create_new_phone_token
+      raise TokenGenerationFailed, 'Token generation failed' if token.blank?
+
       Rails.logger.info "Sending #{token} to #{self[:phone_number]}"
       Sms.send(self[:phone_number], "Your code is #{token}")
       # Send number via Nexmo
     end
 
+    # rubocop:disable Metrics/AbcSize
     def send_one_time_login
-      raise UserError, 'No phone number to send one time code to' unless self[:phone_number]
+      return if deactivated?
+      raise UserError, I18n.t('errors.user.cannot_send_otp') if self[:phone_number].blank?
 
       token = create_new_phone_token
+      raise TokenGenerationFailed, 'Token generation failed' if token.blank?
+
       url = "https://#{HostEnv.base_url(community)}/l/#{self[:id]}/#{token}"
       msg = "Your login link for #{community.name} is #{url}"
       Rails.logger.info "Sending '#{msg}' to #{self[:phone_number]}"
       Sms.send(self[:phone_number], msg)
       url
     end
+
+    # rubocop:disable Metrics/MethodLength
+    def send_one_time_login_email
+      return if deactivated?
+
+      raise UserError, 'No Email to send one time code to' if self[:email].blank?
+
+      token = create_new_phone_token
+      raise TokenGenerationFailed, 'Token generation failed' if token.blank?
+
+      url = "https://#{HostEnv.base_url(community)}/l/#{self[:id]}/#{token}"
+      msg = "Your login link for #{community.name} is #{url}"
+      template = community.email_templates
+      &.system_emails
+      &.find_by(name: 'one_time_login_template')
+      return unless template
+
+      template_data = [{ key: '%one_time_login%', value: msg }]
+      Rails.logger.info "Sending '#{msg}' to #{self[:email]}"
+      EmailMsg.send_mail_from_db(
+        email: self[:email],
+        template: template,
+        template_data: template_data,
+      )
+      url
+    end
+    # rubocop:enable Metrics/AbcSize
+    # rubocop:enable Metrics/MethodLength
 
     def role?(roles)
       user_type = self[:user_type]
@@ -504,18 +615,8 @@ module Users
           )
       ).uniq
     end
-
     # rubocop:enable Metrics/MethodLength
     # rubocop:enable Metrics/AbcSize
-    def send_email_msg
-      return if self[:email].nil?
-
-      template = community.email_templates.find_by(name: 'welcome')
-      return unless template
-
-      template_data = [{ key: '%login_url%', value: HostEnv.base_url(community) || '' }]
-      EmailMsg.send_mail_from_db(self[:email], template, template_data)
-    end
 
     # catch exceptions in here to be caught in the mutation
     def merge_user(dup_id)
@@ -560,8 +661,8 @@ module Users
 
     def regular_and_govt_plots(property_number, gov_property_number)
       [
-        land_parcels.find_by(parcel_number: property_number),
-        land_parcels.find_by(parcel_number: gov_property_number),
+        land_parcels.excluding_general.find_by(parcel_number: property_number),
+        land_parcels.excluding_general.find_by(parcel_number: gov_property_number),
       ]
     end
 
@@ -572,21 +673,89 @@ module Users
       accounts.where.not(accounts: { full_name: name }).update(full_name: name)
     end
 
+    def user_details_updated?
+      saved_changes.key?('name') || saved_changes.key?('email') ||
+        saved_changes.key?('phone_number')
+    end
+
+    def update_associated_request_details
+      return if request.nil?
+
+      company_name = name if request.company_name.present?
+      request.update(name: name,
+                     email: email,
+                     phone_number: phone_number,
+                     company_name: company_name)
+    end
+
     # Return general land parcel associated with user
     #
     # @return [Properties::LandParcel]
     def general_land_parcel
-      land_parcels.unscope(where: :status).general.first.presence || create_general_land_parcel
+      land_parcels.general.first.presence || create_general_land_parcel
     end
 
     # Return general payment plan associated with user
     #
     # @return [Properties::PaymentPlan]
     def general_payment_plan
-      payment_plans.unscope(where: :status).general.first.presence || create_general_plan
+      payment_plans.general.first.presence || create_general_plan
+    end
+
+    def invite_guest(guest_id, request_id)
+      return unless guest_id && request_id
+
+      invite = invitees.find_by(guest_id: guest_id)
+      return invite unless invite.nil?
+
+      Logs::Invite.create!(host_id: id, guest_id: guest_id, entry_request_id: request_id)
+    end
+
+    def comment_status(grouped_ordered_comments)
+      return 'resolved' if grouped_ordered_comments.all?(&:replied_at)
+
+      if grouped_ordered_comments.first.user_id == id
+        'sent'
+      else
+        'received'
+      end
+    end
+
+    # rubocop:disable Metrics/MethodLength
+    def create_lead_task(user)
+      task_params = {
+        body: "Lead management task by #{user.name}",
+        description: 'Lead Management',
+        category: 'to_do',
+        flagged: true,
+        completed: false,
+        user_id: id,
+        author_id: id,
+        assignees: user.id,
+      }
+      task = TaskCreate.new_from_action(task_params)
+      user.update(task_id: task.id)
+    end
+    # rubocop:enable Metrics/MethodLength
+
+    def create_lead_log(lead_status, user_id)
+      community.lead_logs.find_or_create_by(log_type: :lead_status,
+                                            name: lead_status,
+                                            user_id: user_id).update(
+                                              updated_at: Time.zone.now,
+                                              acting_user_id: id,
+                                            )
     end
 
     private
+
+    def public_user?
+      return if changes_to_save['name'].nil?
+      return unless changes_to_save['name'][1] == 'Public Submission'
+
+      user = community.users.find_by(name: 'Public Submission')
+      errors.add(:name, :user_already_exists) unless user.nil?
+    end
 
     def phone_number_valid?
       return if self[:phone_number].blank?
@@ -630,6 +799,42 @@ module Users
                                                    start_date: Time.zone.now)
       payment_plan.save!(validate: false)
       payment_plan
+    end
+
+    def associate_lead_labels
+      associate_scoped_labels('division', 'Division')
+      associate_scoped_labels('lead_status', 'Status')
+    end
+
+    def associate_scoped_labels(key, grouping_name)
+      return unless saved_changes.key?(key)
+
+      existing_division = saved_changes[key].first
+      new_division = saved_changes[key].last
+      update_user_label(grouping_name, existing_division, new_division)
+    end
+
+    def update_user_label(grouping_name, old_desc, new_desc)
+      label = find_or_create_label(grouping_name, old_desc)
+      new_label = find_or_create_label(grouping_name, new_desc)
+
+      if label.nil?
+        user_labels.create(label_id: new_label.id)
+      elsif new_label.nil?
+        user_labels.find_by(label_id: label.id)&.destroy
+      else
+        user_labels.find_or_create_by(label_id: label.id).update(label_id: new_label.id)
+      end
+    end
+
+    def find_or_create_label(grouping_name, desc)
+      return if desc.blank?
+
+      community.labels.find_or_create_by(
+        grouping_name: grouping_name,
+        short_desc: desc,
+        color: community.theme_colors['secondaryColor'],
+      )
     end
   end
   # rubocop:enable Metrics/ClassLength

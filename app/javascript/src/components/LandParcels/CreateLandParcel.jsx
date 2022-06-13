@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import Button from '@material-ui/core/Button';
+import Button from '@mui/material/Button';
 import PropTypes from 'prop-types'
 import { useMutation } from 'react-apollo';
 import { useHistory, useLocation } from 'react-router-dom'
-import { makeStyles } from "@material-ui/core/styles"
+import makeStyles from '@mui/styles/makeStyles';
 import { useTranslation } from 'react-i18next';
 import { AddNewProperty } from '../../graphql/mutations'
 import MessageAlert from "../MessageAlert"
@@ -74,7 +74,7 @@ export default function CreateLandParcel({ refetch, selectedLandParcel, newHouse
       <Button
         variant="contained"
         color="primary"
-        className={classes.parcelButton}
+        className={`${classes.parcelButton} new-property-btn`}
         onClick={openNewParcelModal}
         data-testid="parcel-button"
       >
@@ -98,7 +98,7 @@ export default function CreateLandParcel({ refetch, selectedLandParcel, newHouse
 
 const useStyles = makeStyles(() => ({
   parcelButton: {
-    margin: '10px 0  10px 5px'
+    margin: '10px 0  10px 16px'
   },
   parcelForm: {
     display: 'flex',

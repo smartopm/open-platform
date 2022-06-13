@@ -4,10 +4,23 @@ require 'rails_helper'
 
 RSpec.describe Mutations::Invoice::InvoiceCreate do
   describe 'create for invoice' do
-    let!(:user) { create(:user_with_community) }
-    let!(:user_with_balance) { create(:user, community_id: user.community_id) }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:resident_role) { create(:role, name: 'resident') }
+    let!(:permission) do
+      create(:permission, module: 'transaction',
+                          role: admin_role,
+                          permissions: %w[can_create_wallet_transaction])
+    end
+    let!(:user) { create(:user_with_community, user_type: 'resident', role: resident_role) }
+    let!(:user_with_balance) do
+      create(:user, community_id: user.community_id, user_type: 'resident',
+                    role: resident_role)
+    end
     let!(:user_wallet) { create(:wallet, user: user_with_balance, balance: 100) }
-    let!(:admin) { create(:admin_user, community_id: user.community_id) }
+    let!(:admin) do
+      create(:admin_user, community_id: user.community_id,
+                          role: admin_role)
+    end
     let!(:land_parcel) { create(:land_parcel, community_id: user.community_id) }
     let!(:payment_plan) do
       create(:payment_plan, duration: 2, installment_amount: 100, land_parcel_id: land_parcel.id,

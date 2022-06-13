@@ -14,18 +14,21 @@ import {
   Dialog,
   DialogTitle,
   DialogContent
-} from '@material-ui/core'
-import MoreVertIcon from '@material-ui/icons/MoreVert'
+} from '@mui/material'
+import MoreVertIcon from '@mui/icons-material/MoreVert'
 import { useTranslation } from 'react-i18next'
 import Avatar from '../../../components/Avatar'
 import BusinessActionMenu from './BusinessActionMenu'
 import { businessCategories } from '../../../utils/constants'
 import CenteredContent from '../../../components/CenteredContent'
 import BusinessForm from './BusinessForm'
+import {canDeleteBusiness, canCreateBusiness} from '../utils'
 
-export default function BusinessList({ businessData, userType, refetch }) {
+export default function BusinessList({ businessData, authState, refetch }) {
   const [anchorEl, setAnchorEl] = useState(null)
   const [modalOpen, setModalOpen] = useState(false)
+  const [action, setAction] = useState('create');
+  const [singleBusinessData, setSingleBusinessData] = useState(null);
   const { t } = useTranslation('common')
 
   const open = Boolean(anchorEl)
@@ -39,13 +42,25 @@ export default function BusinessList({ businessData, userType, refetch }) {
   }
 
   function openModal() {
-    setModalOpen(!modalOpen)
-    refetch()
+    setModalOpen(!modalOpen);
+    refetch();
+    setAnchorEl(null);
+    setSingleBusinessData(null);
+    setAction('create');
   }
 
   function handleClose() {
-    setAnchorEl(null)
+    setAnchorEl(null);
+    setSingleBusinessData(null);
+    setAction('create');
   }
+
+  function handleEditClick(business) {
+    setSingleBusinessData(business)
+    setAction('edit');
+    setModalOpen(true);
+  }
+
   return (
     <div className="container">
       <Dialog
@@ -57,11 +72,11 @@ export default function BusinessList({ businessData, userType, refetch }) {
       >
         <DialogTitle id="task_modal">
           <CenteredContent>
-            <span>{t('form_actions.create_business')}</span>
+            <span>{action === 'create' ? t('form_actions.create_business') : t('form_actions.update_business')}</span>
           </CenteredContent>
         </DialogTitle>
         <DialogContent>
-          <BusinessForm close={openModal} />
+          <BusinessForm close={openModal} action={action} businessData={singleBusinessData} />
         </DialogContent>
       </Dialog>
       <List>
@@ -102,7 +117,7 @@ export default function BusinessList({ businessData, userType, refetch }) {
               </Box>
               <Divider variant="middle" />
             </Link>
-            {userType === 'admin' && (
+            {canDeleteBusiness(authState) && (
               <IconButton
                 aria-label={`more-${business.name}`}
                 aria-controls="long-menu"
@@ -110,12 +125,13 @@ export default function BusinessList({ businessData, userType, refetch }) {
                 onClick={handleOpenMenu}
                 dataid={business.id}
                 data-testid='open_menu'
+                size="large"
               >
                 <MoreVertIcon />
               </IconButton>
             )}
             <BusinessActionMenu
-              userType={userType}
+              authState={authState}
               data={business}
               anchorEl={anchorEl}
               handleClose={handleClose}
@@ -123,12 +139,13 @@ export default function BusinessList({ businessData, userType, refetch }) {
               // eslint-disable-next-line no-use-before-define
               linkStyles={css(styles.linkItem)}
               refetch={refetch}
+              handleEditClick={() => handleEditClick(business)}
             />
           </ListItem>
         ))}
       </List>
 
-      {userType === 'admin' && (
+      {canCreateBusiness(authState) && (
         <Fab
           variant="extended"
           onClick={openModal}
@@ -140,7 +157,7 @@ export default function BusinessList({ businessData, userType, refetch }) {
         </Fab>
       )}
     </div>
-  )
+  );
 }
 
 const styles = StyleSheet.create({

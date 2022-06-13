@@ -20,15 +20,36 @@ module ActionFlows
         field_config[field]['value']
       end
 
-      def self.execute_action(data, field_config)
+      def self.execute_action(data, field_config, event_log)
+        hash = action_flow_fields(data, field_config)
+        if event_log.subject.eql?('user_create')
+          send_welcome_sms(event_log.community, hash[:phone_number])
+        end
+        send_sms_on_task_assign(data, hash) if event_log.subject.eql?('task_assign')
+      end
+
+      def self.send_welcome_sms(community, phone_number)
+        return if phone_number.blank?
+
+        url = "https://#{HostEnv.base_url(community)}"
+        send_sms(phone_number, I18n.t('welcome_sms',
+                                      community: community.name,
+                                      url: url))
+      end
+
+      def self.send_sms_on_task_assign(data, hash)
         assign_user = Users::User.find(data[:task_assign_user_id])
+        return if assign_user.user_type.eql?('lead')
+
         author_msg = generate_message(data, assign_user)
         assignee_msg = generate_assignee_msg(data, assign_user)
 
-        hash = action_flow_fields(data, field_config)
+        send_sms(assign_user.phone_number, author_msg) unless assign_user.phone_number.nil?
+        send_sms(hash[:phone_number], assignee_msg)
+      end
 
-        ::Sms.send(assign_user.phone_number, author_msg) unless assign_user.phone_number.nil?
-        ::Sms.send(hash[:phone_number], assignee_msg)
+      def self.send_sms(phone_number, message)
+        ::Sms.send(phone_number, message)
       end
 
       def self.generate_url(user, task_id)

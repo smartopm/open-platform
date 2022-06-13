@@ -1,6 +1,6 @@
 import React from 'react';
-import { act, render } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
+import { render, waitFor } from '@testing-library/react';
+
 import { BrowserRouter } from 'react-router-dom/';
 import { MockedProvider } from '@apollo/react-testing';
 import { allFeedback } from '../../graphql/queries';
@@ -9,7 +9,7 @@ import AllFeedback from '../../containers/Activity/AllFeedback';
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 
 describe('Feedback Component', () => {
-  it('renders loader when loading feedback', () => {
+  it('renders loader when loading feedback', async () => {
     const container = render(
       <MockedProvider>
         <BrowserRouter>
@@ -18,7 +18,9 @@ describe('Feedback Component', () => {
       </MockedProvider>
     );
 
-    expect(container.queryByTestId('loader')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(container.queryByTestId('loader')).toBeInTheDocument();
+    }, 10)
   });
 
   it('should display neccesary elements after fetching feedback', async () => {
@@ -50,19 +52,18 @@ describe('Feedback Component', () => {
       }
     ];
 
-    let container;
-    await act(async () => {
-      container = render(
-        <MockedProvider mocks={mocks} addTypename={false}>
-          <BrowserRouter>
-            <AllFeedback />
-          </BrowserRouter>
-        </MockedProvider>
+    const container = render(
+      <MockedProvider mocks={mocks} addTypename={false}>
+        <BrowserRouter>
+          <AllFeedback />
+        </BrowserRouter>
+      </MockedProvider>
       );
-    });
 
-    expect(container.queryByTestId('prev-link')).toBeInTheDocument();
-    expect(container.queryByTestId('next-link')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(container.queryByTestId('prev-link')).toBeInTheDocument();
+      expect(container.queryByTestId('next-link')).toBeInTheDocument();
+    }, 10)
   });
 
   it('should display no feedback if no result is fetched', async () => {
@@ -83,17 +84,17 @@ describe('Feedback Component', () => {
       }
     ];
 
-    let container;
-    await act(async () => {
-      container = render(
-        <MockedProvider mocks={mocks} addTypename={false}>
-          <BrowserRouter>
-            <AllFeedback />
-          </BrowserRouter>
-        </MockedProvider>
+    const container = render(
+      <MockedProvider mocks={mocks} addTypename={false}>
+        <BrowserRouter>
+          <AllFeedback />
+        </BrowserRouter>
+      </MockedProvider>
       );
-    });
+    // });
 
-    expect(container.queryByTestId('no-feedback-txt')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(container.queryByTestId('no-feedback-txt')).toBeInTheDocument();
+    }, 20)
   });
 });

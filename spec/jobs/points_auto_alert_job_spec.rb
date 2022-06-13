@@ -8,7 +8,7 @@ RSpec.describe PointsAutoAlertJob, type: :job do
              points_auto_alert_template_id: 'fgcagv5r2yr67',
            })
   end
-  let!(:user) { create(:user, community: community, user_type: 'client') }
+  let!(:user) { create(:client, community: community) }
 
   before { Rails.env.stub(production?: true) }
 

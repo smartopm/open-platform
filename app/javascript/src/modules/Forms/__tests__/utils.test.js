@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import {
   addPropWithValue,
   checkCondition,
@@ -9,7 +10,13 @@ import {
   propExists,
   requiredFieldIsEmpty,
   extractRenderedTextFromCategory,
-  checkRequiredFormPropertyIsFilled
+  checkRequiredFormPropertyIsFilled,
+  generateIframeSnippet,
+  convertUploadSize,
+  cleanFileName,
+  fileTypes,
+  isUploaded,
+  isFileNameSelect
 } from '../utils';
 
 describe('Utilities', () => {
@@ -24,6 +31,11 @@ describe('Utilities', () => {
     // add null values to array
     addPropWithValue(values, '34f');
     expect(values).toHaveLength(3);
+
+    // add nothing to the array
+    addPropWithValue(values, '34f');
+    expect(values).toHaveLength(3);
+
     // this should pass this time
     expect(propExists(values, '34f')).toBe(true);
   });
@@ -123,6 +135,7 @@ describe('Utilities', () => {
       },
 
     ]);
+    expect(extractValidFormPropertyValue({})).toHaveLength(0)
 
     expect(extractValidFormPropertyFieldNames(formProperties)).toMatchObject([
       {
@@ -142,6 +155,7 @@ describe('Utilities', () => {
         value: 'first, third'
       },
     ]);
+    expect(extractValidFormPropertyFieldNames({})).toHaveLength(0)
   });
 
   it('only shows a category if it matches the given display condition', () => {
@@ -212,34 +226,36 @@ describe('Utilities', () => {
     expect(extractRenderedTextFromCategory(properties, [category, categoryWithPropertyId, categoryWithWrongCondition])).toEqual('Some category  ')
     expect(extractRenderedTextFromCategory(properties, [category, categoryWithMatchingCondition])).toEqual('Some category  and this also matches  ')
     expect(extractRenderedTextFromCategory(properties, [])).toEqual('')
+    expect(extractRenderedTextFromCategory(properties, [])).toEqual('')
+    expect(extractRenderedTextFromCategory(properties, null)).toEqual('')
   })
 
   it('should parse and then find and replace variables in a string', () => {
     const text = `This is a nice string with #variables that has #name with #NAME, OR #variables. end of line \n#support \n\n#support`
     const sampleText = `And some other text riught here  with cook underscores #some_Dynamic_Values and another one here #some_dynamic_values or this \n\n#SOME_DYNAMIC_VALUES ## Another nice tile \n#some_Dynamic_Values`
-    
+
     const categories = [{
-        fieldName: 'Main Category',
-        headerVisible: true,
-        id: '34234234',
-        displayCondition: {
-          condition: '',
-          value: '',
-          groupingId: ''
-        },
-        renderedText: text
+      fieldName: 'Main Category',
+      headerVisible: true,
+      id: '34234234',
+      displayCondition: {
+        condition: '',
+        value: '',
+        groupingId: ''
       },
-      {
-        fieldName: 'Main Category',
-        headerVisible: true,
-        id: '878',
-        displayCondition: {
-          condition: '',
-          value: '',
-          groupingId: ''
-        },
-        renderedText: sampleText
-      }
+      renderedText: text
+    },
+    {
+      fieldName: 'Main Category',
+      headerVisible: true,
+      id: '878',
+      displayCondition: {
+        condition: '',
+        value: '',
+        groupingId: ''
+      },
+      renderedText: sampleText
+    }
     ]
 
     const data = {
@@ -260,6 +276,7 @@ describe('Utilities', () => {
     expect(parseRenderedText([categories[0]], data)).toContain('This is a nice string with And yes it is true that has  Joe with  Joe, OR And yes it is true. end of line \nyes \n\nyes')
     expect(parseRenderedText(categories, data)).toContain(`And some other text riught here  with cook underscores test one three and another one here test one three or this \n\ntest one three ## Another nice tile \ntest one three`)
     expect(parseRenderedText([], data)).toBe('')
+    expect(parseRenderedText(null, data)).toBe('')
   })
 
   it('checks for null values', () => {
@@ -269,12 +286,12 @@ describe('Utilities', () => {
     }
     expect(nonNullValues(item)).toBe(false)
     expect(nonNullValues({ value: 'some', form_property_id: 'wweqw' })).toBe(true)
-    expect(nonNullValues({ value: {checked: 'somed'}, form_property_id: '290384321' })).toBe(true)
-    expect(nonNullValues({ value: {checked: null}, form_property_id: null })).toBe(false)
+    expect(nonNullValues({ value: { checked: 'somed' }, form_property_id: '290384321' })).toBe(true)
+    expect(nonNullValues({ value: { checked: null }, form_property_id: null })).toBe(false)
   })
 
   it('checks for empty required fields', () => {
-    const formData  = [
+    const formData = [
       {
         id: '5d8a6fd7-3ebc-4d34-9562-00a2518cddda',
         fieldName: 'What is your location ?',
@@ -293,7 +310,7 @@ describe('Utilities', () => {
       {
         formId: '7d05e98e-e6bb-43cb-838e-e6d76005e326',
         displayCondition: null,
-        formProperties: formData 
+        formProperties: formData
       },
     ]
 
@@ -315,7 +332,7 @@ describe('Utilities', () => {
             fieldType: 'text',
             required: false
           },
-        ] 
+        ]
       },
     ]
 
@@ -326,9 +343,9 @@ describe('Utilities', () => {
     expect(checkRequiredFormPropertyIsFilled(
       {
         id: '5d8a6fd7-3ebc-4d34-9562-00a2518cddda',
-            fieldName: 'What is your location ?',
-            fieldType: 'text',
-            required: true
+        fieldName: 'What is your location ?',
+        fieldType: 'text',
+        required: true
       },
       {
         error: true,
@@ -337,7 +354,7 @@ describe('Utilities', () => {
         ],
         categories: [
           {
-            displayCondition: {condition: '', groupingId: '', value: ''},
+            displayCondition: { condition: '', groupingId: '', value: '' },
             formProperties: [{ id: '5d8a6fd7-3ebc-4d34-9562-00a2518cddda' }]
           }
         ],
@@ -349,9 +366,9 @@ describe('Utilities', () => {
     expect(checkRequiredFormPropertyIsFilled(
       {
         id: '5d8a6fd7-3ebc-4d34-9562-00a2518cddda',
-            fieldName: 'What is your location ?',
-            fieldType: 'text',
-            required: true
+        fieldName: 'What is your location ?',
+        fieldType: 'text',
+        required: true
       },
       {
         error: true,
@@ -360,7 +377,7 @@ describe('Utilities', () => {
         ],
         categories: [
           {
-            displayCondition: {condition: '', groupingId: '', value: ''},
+            displayCondition: { condition: '', groupingId: '', value: '' },
             formProperties: [{ id: '5d8a6fd7-3ebc-4d34-9562-00a2518cddda' }]
           }
         ],
@@ -372,9 +389,9 @@ describe('Utilities', () => {
     expect(checkRequiredFormPropertyIsFilled(
       {
         id: '5d8a6fd7-3ebc-4d34-9562-00a2518cddda',
-            fieldName: 'Qualifications',
-            fieldType: 'checkbox',
-            required: true
+        fieldName: 'Qualifications',
+        fieldType: 'checkbox',
+        required: true
       },
       {
         error: true,
@@ -383,7 +400,7 @@ describe('Utilities', () => {
         ],
         categories: [
           {
-            displayCondition: {condition: '', groupingId: '', value: ''},
+            displayCondition: { condition: '', groupingId: '', value: '' },
             formProperties: [{ id: '5d8a6fd7-3ebc-4d34-9562-00a2518cddda' }]
           }
         ],
@@ -406,7 +423,7 @@ describe('Utilities', () => {
         ],
         categories: [
           {
-            displayCondition: {condition: '===', groupingId: '5d8a6fd7-3ebc-4d34-9562-00a2518cddda', value: 'Lagos'},
+            displayCondition: { condition: '===', groupingId: '5d8a6fd7-3ebc-4d34-9562-00a2518cddda', value: 'Lagos' },
             formProperties: [{ id: '5d8a6fd7-3ebc-4d34-9562-00a2518cddda' }]
           }
         ],
@@ -429,7 +446,7 @@ describe('Utilities', () => {
         ],
         categories: [
           {
-            displayCondition: {condition: '===', groupingId: '5d8a6fd7-3ebc-4d34-9562-00a2518cddda', value: 'Lusaka'},
+            displayCondition: { condition: '===', groupingId: '5d8a6fd7-3ebc-4d34-9562-00a2518cddda', value: 'Lusaka' },
             formProperties: [{ id: '5d8a6fd7-3ebc-4d34-9562-00a2518cddda' }]
           }
         ],
@@ -439,8 +456,77 @@ describe('Utilities', () => {
 
   it('returns defaults to false if undefined', () => {
     expect(checkRequiredFormPropertyIsFilled(
-     undefined,
-     undefined
+      undefined,
+      undefined
     )).toBe(false)
+  });
+  it('should generate an iframe snippet', () => {
+    const data = { id: '23223', name: 'Some form' }
+    const snippet = generateIframeSnippet(data, 'dev.dgdp.site')
+    expect(snippet).toBe('<iframe src=https://dev.dgdp.site/form/23223/public name=Some form title=Some form scrolling="auto" width="100%" height="500px" />')
+  })
+
+  // convertUploadSize
+  it('should convert different sizes to readable format', () => {
+    const size1 = 2000
+    const size2 = 20000
+    const size3 = 2000000
+    const size4 = 20000000000
+
+    expect(convertUploadSize(0)).toBe('N/A')
+    expect(convertUploadSize(2)).toBe('2 Bytes')
+    expect(convertUploadSize(size1)).toBe('2 KB')
+    expect(convertUploadSize(size2)).toBe('20 KB')
+    expect(convertUploadSize(size3)).toBe('2 MB')
+    expect(convertUploadSize(size4)).toBe('19 GB')
+  });
+
+  it('should clean file names before uploading files', () => {
+    expect(cleanFileName()).toBe('')
+    expect(cleanFileName('someimage.jpg')).toBe('Someimage')
+    expect(cleanFileName('someimageanotherimageimage.jpg')).toBe('Someimageanotherim...')
+  });
+
+  it('should return translatable files', () => {
+    const translate = jest.fn(() => 'Translated type')
+    expect(fileTypes(translate)['application/pdf']).toBe('Translated type')
+  });
+
+  it('should check if file is uploaded per specific form property', () => {
+    const uploads = [
+      {
+        filename: "Image.jpg",
+        propertyId: "02394203da0923"
+      },
+      {
+        filename: "another.png",
+        propertyId: "12345678790"
+      },
+    ]
+    const file = { name: "another.png" }
+    expect(isUploaded(uploads, file, '12345678790')).toBe(true)
+    expect(isUploaded(uploads, file, '02394203da0923')).toBe(false)
+    expect(isUploaded(uploads, file, '9238423421312')).toBe(false)
+    expect(isUploaded([], undefined, '9238423421312')).toBe(false)
+    expect(isUploaded()).toBe(false)
+  });
+
+  it('should check if file is included in filesnames', () => {
+    const filenames = [
+      {
+        name: "Image.jpg",
+        propertyId: "02394203da0923"
+      },
+      {
+        name: "another.png",
+        propertyId: "12345678790"
+      },
+    ]
+    const name = 'another.png'
+    expect(isFileNameSelect(filenames, name, '12345678790')).toBe(true)
+    expect(isFileNameSelect(filenames, name, '02394203da0923')).toBe(false)
+    expect(isFileNameSelect(filenames, name, '9238423421312')).toBe(false)
+    expect(isFileNameSelect([], undefined, '9238423421312')).toBe(false)
+    expect(isFileNameSelect()).toBe(false)
   });
 });

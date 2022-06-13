@@ -4,9 +4,24 @@ require 'rails_helper'
 
 RSpec.describe Mutations::Label::UserLabelCreate do
   describe 'create pending member' do
-    let!(:admin_user) { create(:admin_user) }
-    let!(:first_user) { create(:user, community_id: admin_user.community_id) }
-    let!(:second_user) { create(:user, community_id: admin_user.community_id) }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:resident_role) { create(:role, name: 'resident') }
+    let!(:permission) do
+      create(:permission, module: 'label',
+                          role: admin_role,
+                          permissions: %w[can_create_user_label])
+    end
+
+    let!(:admin_user) { create(:admin_user, user_type: 'admin', role: admin_role) }
+
+    let!(:first_user) do
+      create(:user, community_id: admin_user.community_id, role: resident_role,
+                    user_type: 'resident')
+    end
+    let!(:second_user) do
+      create(:user, community_id: admin_user.community_id, role: resident_role,
+                    user_type: 'resident')
+    end
 
     let!(:first_label) { create(:label, community_id: admin_user.community_id) }
     let!(:second_label) { create(:label, community_id: admin_user.community_id) }

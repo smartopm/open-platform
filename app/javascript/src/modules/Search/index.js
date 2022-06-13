@@ -1,5 +1,5 @@
-import React from 'react'
-import { SearchOutlined } from '@material-ui/icons';
+import React from 'react';
+import { SearchOutlined } from '@mui/icons-material';
 import SearchContainer from './Components/Search';
 
 export default {
@@ -12,5 +12,5 @@ export default {
   },
   name: t => t('menu.search'),
   featureName: 'Search',
-  accessibleBy: ['admin', 'custodian', 'security_guard']
+  accessibleBy: ['admin', 'custodian', 'security_guard', 'security_supervisor', 'marketing_admin']
 };

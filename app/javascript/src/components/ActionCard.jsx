@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import { makeStyles, useTheme } from '@material-ui/core/styles'
+import { useTheme } from '@mui/material/styles';
+import makeStyles from '@mui/styles/makeStyles';
 import PropTypes from 'prop-types'
 import {
   Typography,
@@ -7,8 +8,8 @@ import {
   Avatar,
   CardContent,
   Card
-} from '@material-ui/core'
-import MoreHorizIcon from '@material-ui/icons/MoreHoriz'
+} from '@mui/material'
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz'
 import { useTranslation } from 'react-i18next';
 import ActionFlowIcon from './ActionFlows/ActionFlowIcon'
 import ActionCardMenu from './ActionCardMenu'
@@ -97,6 +98,7 @@ export default function ActionCard({ actionFlow, openFlowModal, refetch }) {
         className={classes.menuButton}
         onClick={handleOpenMenu}
         dataid={actionFlow.id}
+        size="large"
       >
         <MoreHorizIcon />
       </IconButton>
@@ -133,7 +135,7 @@ export default function ActionCard({ actionFlow, openFlowModal, refetch }) {
         </Typography>
       </CardContent>
     </Card>
-  )
+  );
 }
 
 ActionCard.propTypes = {

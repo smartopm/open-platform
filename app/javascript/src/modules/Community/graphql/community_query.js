@@ -12,6 +12,7 @@ export const CurrentCommunityQuery = gql`
       supportEmail
       supportWhatsapp
       socialLinks
+      leadMonthlyTargets
       menuItems
       currency
       locale
@@ -20,6 +21,7 @@ export const CurrentCommunityQuery = gql`
       wpLink
       themeColors
       features
+      gaId
       securityManager
       templates
       subAdministrator {

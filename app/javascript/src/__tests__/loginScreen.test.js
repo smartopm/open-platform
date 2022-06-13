@@ -1,18 +1,18 @@
 import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
-import { waitFor } from '@testing-library/react';
+import { render, fireEvent } from '@testing-library/react';
+
 import { MockedProvider } from '@apollo/react-testing';
-import { mount } from 'enzyme'
 import LoginScreen from '../components/AuthScreens/LoginScreen'
-import { loginPhone } from '../graphql/mutations'
+import { loginPhoneMutation } from '../graphql/mutations'
 import { CurrentCommunityQuery } from '../modules/Community/graphql/community_query';
 
-// Todo: update this to use testing-library for better tests
-describe('Login screen', () => {
+jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
+describe('Login Screen', () => {
   const mocks = [
     {
       request: {
-        query: loginPhone,
+        query: loginPhoneMutation,
         variables: { phoneNumber: '26000000748' }
       },
       result: {
@@ -55,48 +55,45 @@ describe('Login screen', () => {
     }
   ]
 
-  const loginWrapper = mount(
-    <MockedProvider mocks={mocks} addTypename={false}>
-      <BrowserRouter>
-        <LoginScreen />
-      </BrowserRouter>
-    </MockedProvider>
-    )
-  it('should have a title of an h4', () => {
-    expect(loginWrapper.find('h4')).toHaveLength(1);
-  })
-  it('should have a welcome text', async () => {
-    await waitFor(() => {
-      // using the example give here https://github.com/i18next/react-i18next/blob/master/example/test-jest/src/UseTranslation.test.js#L9
-      // files are tested by placeholders of translations
-      expect(loginWrapper.find('h4').text()).toContain('login.welcome')
-      expect(loginWrapper.find('#tagline')).toBeTruthy()
-      expect(loginWrapper.text()).toContain('login.login_text')
-      expect(loginWrapper.text()).toContain('login.login_google')
-      expect(loginWrapper.text()).toContain('login.login_facebook')
-      expect(loginWrapper.text()).toContain('login.request_account')
-    }, 10);
-  })
-  // it('should contain a nav with an arrow icon', () => {
-  //   expect(loginWrapper.find('nav')).toHaveLength(1)
-  //   expect(loginWrapper.find('nav').text()).toContain('arrow_back')
-  // })
-  it('should have an input field that accepts numbers', () => {
-    expect(loginWrapper.find('input')).toHaveLength(1)
-    loginWrapper.find('input').simulate('change', {
-      target: { value: '9297392' }
-    })
-    loginWrapper.find("input[type='tel']").getDOMNode().value = '9297392'
-    expect(loginWrapper.find("input[type='tel']").getDOMNode().value).toEqual(
-      '9297392'
-    )
-  })
-  it('should have a button', () => {
-    expect(loginWrapper.find('button')).toBeTruthy()
-  })
+  it('renders correctly', async () => {
+    const loginWrapper = render(
+      <MockedProvider mocks={mocks} addTypename={false}>
+        <BrowserRouter>
+          <LoginScreen />
+        </BrowserRouter>
+      </MockedProvider>
+      )
 
-  it('should show trouble logging in section', () => {
-    expect(loginWrapper.find('u').text()).toMatch('login.request_account')
-    expect(loginWrapper.find('#trouble-logging-div')).toBeTruthy()
-  })
-})
+    expect(loginWrapper.queryByText('login.login_text')).toBeInTheDocument()
+    expect(loginWrapper.queryByTestId('tagline')).toBeInTheDocument()
+    expect(loginWrapper.getByPlaceholderText('common:form_placeholders.phone_number')).toBeInTheDocument()
+    expect(loginWrapper.queryByTestId('email_text_input')).toBeInTheDocument()
+    expect(loginWrapper.queryAllByText('common:misc:or').length).toBeGreaterThan(0)
+    expect(loginWrapper.queryByText('login.login_google')).toBeInTheDocument()
+    expect(loginWrapper.queryByText('login.login_facebook')).toBeInTheDocument()
+    expect(loginWrapper.queryByText('login.login_button_text')).toBeInTheDocument()
+    expect(loginWrapper.queryByTestId('login-btn')).toBeInTheDocument()
+    expect(loginWrapper.queryByTestId('trouble-logging-div')).toBeInTheDocument()
+    expect(loginWrapper.queryByTestId('trouble-logging-in-btn')).toBeInTheDocument()
+    expect(loginWrapper.queryByText('login.request_account')).toBeInTheDocument()
+
+    fireEvent.change(loginWrapper.getByPlaceholderText('common:form_placeholders.phone_number'), {
+      target: { value: '12345' }
+    });
+    expect(loginWrapper.getByPlaceholderText('common:form_placeholders.phone_number').value).toBe('12345');
+
+    fireEvent.change(loginWrapper.getByPlaceholderText('login.login_email'), {
+      target: { value: 'example@example.com' }
+    });
+    expect(loginWrapper.getByPlaceholderText('login.login_email').value).toBe('example@example.com');
+
+    fireEvent.click(loginWrapper.queryByTestId('trouble-logging-in-btn'));
+
+    expect(loginWrapper.getByText('common:form_fields.full_name')).toBeInTheDocument()
+    expect(loginWrapper.getByText('common:form_fields.email')).toBeInTheDocument()
+    expect(loginWrapper.getByText('common:form_fields.phone_number')).toBeInTheDocument()
+    expect(loginWrapper.queryByTestId('interest')).toBeInTheDocument()
+    expect(loginWrapper.queryByTestId('impact')).toBeInTheDocument()
+    expect(loginWrapper.getByText('common:form_actions.send_email')).toBeInTheDocument()
+  });
+});

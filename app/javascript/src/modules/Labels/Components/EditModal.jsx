@@ -1,20 +1,20 @@
 /* eslint-disable react/no-array-index-key */
 import React, { useState, useEffect } from 'react';
-import TextField from '@material-ui/core/TextField';
+import TextField from '@mui/material/TextField';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import Paper from '@material-ui/core/Paper';
+import Paper from '@mui/material/Paper';
 import { useMutation } from 'react-apollo';
 import { LabelEdit, LabelCreate } from '../../../graphql/mutations';
 import { colorPallete } from '../../../utils/constants';
-import { formatError } from '../../../utils/helpers';
+import { formatError, ifNotTest } from '../../../utils/helpers';
 import { CustomizedDialogs } from '../../../components/Dialog';
 import MessageAlert from '../../../components/MessageAlert';
 
 export default function EditModal({ open, handleClose, data, refetch, type }) {
   const [editLabel] = useMutation(LabelEdit);
   const [createLabel] = useMutation(LabelCreate);
-  const [color, setColor] = useState(null);
+  const [color, setColor] = useState('');
   const [shortDesc, setShortDesc] = useState('');
   const [description, setDescription] = useState('');
   const [mutationLoading, setMutationLoading] = useState(false);
@@ -50,7 +50,7 @@ export default function EditModal({ open, handleClose, data, refetch, type }) {
         setMutationLoading(false);
         setShortDesc('');
         setDescription('');
-        setColor(null);
+        setColor('');
         setMessageAlert(t('label.label_created'));
         setIsSuccessAlert(true);
         handleClose();
@@ -65,15 +65,8 @@ export default function EditModal({ open, handleClose, data, refetch, type }) {
 
   function setDefaultValues() {
     setColor(data.color);
-    setShortDesc(data.shortDesc);
+    setShortDesc(data?.groupingName ? `${data.groupingName} :: ${data.shortDesc}` : data.shortDesc);
     setDescription(data.description);
-  }
-
-  function handleMessageAlertClose(_event, reason) {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setMessageAlert('');
   }
 
   useEffect(() => {
@@ -86,7 +79,7 @@ export default function EditModal({ open, handleClose, data, refetch, type }) {
         type={isSuccessAlert ? 'success' : 'error'}
         message={messageAlert}
         open={!!messageAlert}
-        handleClose={handleMessageAlertClose}
+        handleClose={() => setMessageAlert('')}
       />
       <CustomizedDialogs
         open={open}
@@ -131,7 +124,8 @@ export default function EditModal({ open, handleClose, data, refetch, type }) {
               style={{ height: '40px', width: '40px', margin: '5px', backgroundColor: `${color}` }}
             />
             <TextField
-              autoFocus
+              autoFocus={ifNotTest()}
+              variant="standard"
               margin="dense"
               id="color"
               type="text"
@@ -174,6 +168,7 @@ EditModal.propTypes = {
   data: PropTypes.shape({
     id: PropTypes.string,
     shortDesc: PropTypes.string,
+    groupingName: PropTypes.string,
     color: PropTypes.string,
     description: PropTypes.string
   }),

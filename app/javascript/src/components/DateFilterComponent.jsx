@@ -7,7 +7,7 @@ import {
   Grid,
   FormControl,
   InputLabel
-} from '@material-ui/core'
+} from '@mui/material'
 import { filterUserByLoggedin } from '../utils/constants'
 import DatePicker from "./DatePickerDialog"
 

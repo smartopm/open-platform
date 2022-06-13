@@ -1,14 +1,14 @@
 import React from 'react';
-import { TextField, Button, Grid } from '@material-ui/core';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogTitle from '@material-ui/core/DialogTitle';
+import { TextField, Button, Grid } from '@mui/material';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import DialogTitle from '@mui/material/DialogTitle';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/styles';
-import EmailIcon from '@material-ui/icons/Email';
+import Typography from '@mui/material/Typography';
+import { makeStyles } from '@mui/styles';
+import EmailIcon from '@mui/icons-material/Email';
 
 export default function QRCodeConfirmation({
   open,
@@ -114,6 +114,9 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+QRCodeConfirmation.defaultProps = {
+  guestEmail: ''
+}
 QRCodeConfirmation.propTypes = {
   open: PropTypes.bool.isRequired,
   emailHandler: PropTypes.shape({
@@ -122,7 +125,7 @@ QRCodeConfirmation.propTypes = {
   }).isRequired,
   closeModal: PropTypes.func.isRequired,
   sendQrCode: PropTypes.func.isRequired,
-  guestEmail: PropTypes.string.isRequired,
+  guestEmail: PropTypes.string,
   guestRequest: PropTypes.shape({
     id: PropTypes.string
   }).isRequired

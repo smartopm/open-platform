@@ -16,6 +16,8 @@ import Properties from './Plots/Properties';
 import UserPayments from './Payments/UserPayments';
 import MyMessages from './Messages/MyMessages'
 import Search from './Search';
+import Processes from './Tasks/Processes'
+import Leads from './Users/LeadManagement/Leads'
 
 // and exported back here
 export default [
@@ -28,9 +30,11 @@ export default [
   LogBook,
   Payments,
   UserPayments,
+  Leads,
+  Processes,
   Forms,
   CustomerJourney,
-  UserJourneyStats, 
+  UserJourneyStats,
   Users,
   Properties,
   Community,

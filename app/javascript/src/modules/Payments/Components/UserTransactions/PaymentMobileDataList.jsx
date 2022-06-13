@@ -1,8 +1,8 @@
 import React from 'react';
-import { Grid, Typography } from '@material-ui/core';
+import { Grid, Typography } from '@mui/material';
 import PropTypes from 'prop-types';
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
-import { makeStyles } from '@material-ui/core/styles';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import makeStyles from '@mui/styles/makeStyles';
 import { objectAccessor } from '../../../../utils/helpers';
 
 export default function PlanMobileDataList({ keys, data }) {
@@ -16,7 +16,10 @@ export default function PlanMobileDataList({ keys, data }) {
             <Grid item xs={6}>
               {objectAccessor(item, keys[3].title)}
             </Grid>
-            <Grid item xs={6} style={{ textAlign: 'right' }}>
+            <Grid item xs={4} style={{ textAlign: 'right' }}>
+              {objectAccessor(item, keys[4].title)}
+            </Grid>
+            <Grid item xs={2} style={{ textAlign: 'right' }}>
               {objectAccessor(item, keys[5].title)}
             </Grid>
           </Grid>

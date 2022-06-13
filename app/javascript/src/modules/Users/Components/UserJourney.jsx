@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import EditIcon from '@material-ui/icons/Edit';
+import EditIcon from '@mui/icons-material/Edit';
 import { useTranslation } from 'react-i18next';
-import Grid from '@material-ui/core/Grid';
-import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
+import Grid from '@mui/material/Grid';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import makeStyles from '@mui/styles/makeStyles';
 import { dateFormatter } from '../../../components/DateContainer';
 import { userSubStatus } from '../../../utils/constants';
 import UserJourneyDialog from './UserJourneyDialog';
@@ -121,10 +121,10 @@ export default function UserJourney({ data, refetch }) {
         refetch={refetch}
       />
       {
-        !formattedSubStatusLogs.length && (
-          <CenteredContent>{t("users.user_journey_message")}</CenteredContent>
-        )
-      }
+      !formattedSubStatusLogs.length && (
+        <CenteredContent>{t("users.user_journey_message")}</CenteredContent>
+      )
+    }
       {formattedSubStatusLogs.map(log => (
         <Grid container spacing={3} key={log.id}>
           <Grid item xs={10}>
@@ -132,13 +132,13 @@ export default function UserJourney({ data, refetch }) {
               <b>{data.user.name}</b>
               {log.content}
               {
-                log.updatedBy && (
-                  <span className={classes.changedBy}>
-                    Updated by &nbsp;
-                    <b>{log.updatedBy}</b>
-                  </span>
-                  )
-              }
+              log.updatedBy && (
+                <span className={classes.changedBy}>
+                  Updated by &nbsp;
+                  <b>{log.updatedBy}</b>
+                </span>
+                )
+            }
             </Typography>
           </Grid>
           <Grid item xs={2}>
@@ -147,14 +147,15 @@ export default function UserJourney({ data, refetch }) {
               color="primary"
               onClick={() => handleEdit(log)}
               data-testid="edit_journey"
+              size="large"
             >
               <EditIcon />
             </IconButton>
           </Grid>
         </Grid>
-      ))}
+    ))}
     </>
-  );
+);
 }
 
 const useStyles = makeStyles({

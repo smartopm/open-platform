@@ -4,8 +4,19 @@ require 'rails_helper'
 
 RSpec.describe Mutations::Transaction::TransactionRevert do
   describe 'revert a transaction' do
-    let!(:user) { create(:user_with_community) }
-    let!(:admin) { create(:admin_user, community_id: user.community.id) }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:resident_role) { create(:role, name: 'resident') }
+    let!(:permission) do
+      create(:permission, module: 'transaction',
+                          role: admin_role,
+                          permissions: %w[can_revert_transaction])
+    end
+
+    let!(:user) { create(:user_with_community, role: resident_role, user_type: 'resident') }
+    let!(:admin) do
+      create(:admin_user, community_id: user.community_id, role: admin_role, user_type: 'admin')
+    end
+
     let(:community) { user.community }
     let!(:land_parcel) { create(:land_parcel, community_id: community.id) }
     let(:payment_plan) do
@@ -35,6 +46,11 @@ RSpec.describe Mutations::Transaction::TransactionRevert do
       create(:plan_payment, user_id: user.id, community_id: community.id,
                             transaction_id: transaction.id, payment_plan_id: payment_plan.id,
                             amount: 1000)
+    end
+    let!(:general_payment) do
+      create(:plan_payment, user_id: user.id, community_id: community.id,
+                            transaction_id: transaction.id, amount: 500,
+                            payment_plan: user.general_payment_plan)
     end
     let(:transaction_revert_mutation) do
       <<~GQL
@@ -85,6 +101,7 @@ RSpec.describe Mutations::Transaction::TransactionRevert do
           expect(transaction_details['amount']).to eql 1500.0
           expect(transaction_details['planPayments'][0]['status']).to eql('cancelled')
           expect(payment_plan.reload.pending_balance).to eql 2000.0
+          expect(general_payment.reload.status).to eql 'cancelled'
         end
       end
 

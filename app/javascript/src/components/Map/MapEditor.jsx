@@ -1,6 +1,6 @@
 import React, { useEffect }  from 'react'
 import PropTypes from 'prop-types'
-import { Button } from '@material-ui/core'
+import { Button } from '@mui/material'
 import L from 'leaflet'
 import 'leaflet-draw'
 import { getDrawPluginOptions } from '../../utils/helpers'

@@ -14,5 +14,7 @@ FactoryBot.define do
         primaryColor: '#cf5628', secondaryColor: '#cf5628'
       }
     end
+    timezone { 'Africa/Lusaka' }
+    hotjar { 239_042 }
   end
 end

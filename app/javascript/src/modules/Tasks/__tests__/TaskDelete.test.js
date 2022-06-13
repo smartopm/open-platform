@@ -3,7 +3,7 @@ import { render, fireEvent } from '@testing-library/react'
 import { BrowserRouter } from 'react-router-dom/'
 import { MockedProvider } from '@apollo/react-testing'
 import TaskDelete from '../Components/TaskDelete'
-import '@testing-library/jest-dom/extend-expect'
+
 import { DeleteNoteComment } from '../../../graphql/mutations'
 
 describe('Comment Delete Component', () => {
@@ -16,8 +16,7 @@ describe('Comment Delete Component', () => {
       result: { data: { noteCommentDelete: { commentDelete: true } } },
     },
   ];
-  const handleClose = jest.fn
-  const open = jest.fn
+  const handleClose = jest.fn()
   const data = {
     id: 'jwhekw',
     body: 'whgeukhw',
@@ -34,15 +33,15 @@ describe('Comment Delete Component', () => {
             body={data.body}
             imageUrl={data.imageUrl}
             name={data.name}
-            open={open}
+            open
             handleClose={handleClose}
-            refetch={jest.fn}
+            refetch={jest.fn()}
           />
         </BrowserRouter>
       </MockedProvider>
     )
 
-    expect(container.queryByText('Are you sure you want to delete your comment?')).toBeInTheDocument()
+    expect(container.queryByText('task.delete_confirmation_text')).toBeInTheDocument()
     fireEvent.click(container.queryByTestId('button'))
   })
 })

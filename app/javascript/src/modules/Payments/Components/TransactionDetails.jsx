@@ -1,11 +1,11 @@
 /* eslint-disable no-underscore-dangle */
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import Typography from '@material-ui/core/Typography';
+import Typography from '@mui/material/Typography';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery } from 'react-apollo';
 import { useLocation } from 'react-router-dom';
-import { MenuItem } from '@material-ui/core';
+import { MenuItem } from '@mui/material';
 import { subDays } from 'date-fns';
 import { CustomizedDialogs } from '../../../components/Dialog';
 import DetailsField from '../../../shared/DetailField';
@@ -175,7 +175,7 @@ export default function TransactionDetails({ data, detailsOpen, handleClose, cur
               {
                 isEditing
                 ? (
-                  <DatePickerDialog 
+                  <DatePickerDialog
                     selectedDate={inputValues.PaymentDate}
                     label="Payment Date"
                     handleDateChange={date => setInputValues({...inputValues, PaymentDate: date})}

@@ -4,9 +4,34 @@ require 'rails_helper'
 
 RSpec.describe Mutations::Note::NoteBulkUpdate do
   describe 'bulk update on tasks' do
-    let!(:user) { create(:user_with_community) }
-    let!(:admin) { create(:admin_user, community_id: user.community_id) }
-    let!(:site_worker) { create(:site_worker, community_id: user.community_id) }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:resident_role) { create(:role, name: 'resident') }
+    let!(:site_worker_role) { create(:role, name: 'site_worker') }
+    let!(:permission) do
+      create(:permission, module: 'note',
+                          role: admin_role,
+                          permissions: %w[can_bulk_assign_note])
+    end
+    let!(:site_worker_permission) do
+      create(:permission, module: 'note',
+                          role: site_worker_role,
+                          permissions: %w[can_bulk_assign_note])
+    end
+
+    let!(:user) { create(:user_with_community, role: resident_role, user_type: 'resident') }
+    let!(:admin) do
+      create(:admin_user, community_id: user.community_id,
+                          role: admin_role, user_type: 'admin')
+    end
+    let!(:second_admin) do
+      create(:admin_user, community_id: user.community_id,
+                          role: admin_role, user_type: 'admin')
+    end
+    let!(:site_worker) do
+      create(:site_worker, community_id: user.community_id,
+                           role: site_worker_role, user_type: 'site_worker')
+    end
+
     let!(:note) do
       admin.notes.create!(
         body: 'Note body',

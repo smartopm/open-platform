@@ -10,15 +10,15 @@ import {
   Checkbox,
   FormControlLabel,
   FormLabel
-} from '@material-ui/core';
-import ToggleButton from '@material-ui/lab/ToggleButton';
-import ToggleButtonGroup from '@material-ui/lab/ToggleButtonGroup';
+} from '@mui/material';
+import ToggleButton from '@mui/material/ToggleButton';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import { CustomizedDialogs } from '../../../../components/Dialog';
 import DatePickerDialog from '../../../../components/DatePickerDialog';
 import { paymentPlanStatus, paymentPlanFrequency, subscriptionPlanType } from '../../../../utils/constants';
 import { PaymentPlanCreateMutation } from '../../../../graphql/mutations/land_parcel';
 import { dateToString } from '../../../../components/DateContainer';
-import { capitalize, formatError, titleize } from '../../../../utils/helpers';
+import { capitalize, formatError, ifNotTest, titleize } from '../../../../utils/helpers';
 import SwitchInput from '../../../Forms/components/FormProperties/SwitchInput';
 
 const initialPlanState = {
@@ -39,7 +39,9 @@ export default function PaymentPlanModal({
   paymentPlansRefetch,
   landParcelsData,
   setMessage,
-  openAlertMessage
+  openAlertMessage,
+  balanceRefetch,
+  genRefetch
 }) {
   const [landParcelId, setLandParcelId] = useState('');
   const { t } = useTranslation(['payment', 'common']);
@@ -50,6 +52,7 @@ export default function PaymentPlanModal({
   const [inputValue, setInputValues] = useState(initialPlanState);
   const [isError, setIsError] = useState(false);
   const [renewable, setRenewable] = useState(true);
+  const [mutationLoading, setMutationLoading] = useState(false);
 
   function handleInputChange(event) {
     const { name, value } = event.target;
@@ -135,6 +138,7 @@ export default function PaymentPlanModal({
     setInputValues(initialPlanState);
     setFrequency(2);
     setRenewable(true);
+    setMutationLoading(false);
   }
 
   function confirmSubmission(event) {
@@ -148,6 +152,7 @@ export default function PaymentPlanModal({
   }
 
   function handleSubmit() {
+    setMutationLoading(true);
     createPaymentPlan({
       variables: {
         userId,
@@ -165,10 +170,12 @@ export default function PaymentPlanModal({
     })
       .then(() => {
         cleanModal();
+        genRefetch();
         paymentPlansRefetch();
         setMessage({ isError: false, detail: 'Successfuly created payment plan' });
         openAlertMessage();
         handleModalClose();
+        balanceRefetch();
       })
       .catch(err => {
         setMessage({ isError: true, detail: formatError(err.message) });
@@ -183,6 +190,7 @@ export default function PaymentPlanModal({
       dialogHeader={t('misc.create_a_plan')}
       subHeader={t('misc.create_a_payment_plan')}
       handleBatchFilter={confirmSubmission}
+      disableActionBtn={mutationLoading}
     >
       <>
         <TextField
@@ -204,7 +212,7 @@ export default function PaymentPlanModal({
         />
         <div>
           <TextField
-            autoFocus
+            autoFocus={ifNotTest()}
             margin="normal"
             id="frequency"
             aria-label="frequency"
@@ -271,7 +279,7 @@ export default function PaymentPlanModal({
           </Typography>
         )}
         <TextField
-          autoFocus
+          autoFocus={ifNotTest()}
           margin="normal"
           id="status"
           aria-label="status"
@@ -292,7 +300,7 @@ export default function PaymentPlanModal({
           ))}
         </TextField>
         <TextField
-          autoFocus
+          autoFocus={ifNotTest()}
           margin="normal"
           id="purchase_plan"
           aria-label="purchase_plan"
@@ -324,7 +332,7 @@ export default function PaymentPlanModal({
           />
         </div>
         <TextField
-          autoFocus
+          autoFocus={ifNotTest()}
           margin="normal"
           id="plot"
           aria-label="plot"
@@ -440,7 +448,10 @@ export function FrequencyButton({ frequency, handleFrequency, data }) {
 PaymentPlanModal.defaultProps = {
   landParcelsData: {
     userLandParcels: []
-  }
+  },
+  genRefetch: () => {},
+  balanceRefetch: () => {},
+  paymentPlansRefetch: () => {}
 }
 
 FrequencyButton.defaultProps = {
@@ -457,7 +468,7 @@ PaymentPlanModal.propTypes = {
     name: PropTypes.string.isRequired
   }).isRequired,
   currency: PropTypes.string.isRequired,
-  paymentPlansRefetch: PropTypes.func.isRequired,
+  paymentPlansRefetch: PropTypes.func,
   landParcelsData: PropTypes.shape({
     userLandParcels: PropTypes.arrayOf(
       PropTypes.shape({
@@ -473,7 +484,9 @@ PaymentPlanModal.propTypes = {
     )
   }),
   setMessage: PropTypes.func.isRequired,
-  openAlertMessage: PropTypes.func.isRequired
+  openAlertMessage: PropTypes.func.isRequired,
+  balanceRefetch: PropTypes.func,
+  genRefetch: PropTypes.func
 };
 
 CoOwners.propTypes = {

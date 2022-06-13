@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import Button from '@material-ui/core/Button';
+import Button from '@mui/material/Button';
 import PropTypes from 'prop-types'
 import { useMutation } from 'react-apollo';
 import { useHistory } from 'react-router-dom'
-import { makeStyles } from "@material-ui/core/styles"
+import makeStyles from '@mui/styles/makeStyles';
 import { useTranslation } from 'react-i18next';
 import { PointOfInterestCreate } from '../../graphql/mutations/land_parcel';
 import MessageAlert from "../MessageAlert"
@@ -15,6 +15,7 @@ export default function CreatePointOfInterest({ refetch }) {
   const [open, setOpen] = useState(false)
   const [isSuccessAlert, setIsSuccessAlert] = useState(false)
   const [messageAlert, setMessageAlert] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const history = useHistory()
   const path = useParamsQuery('')
   const type = path.get('type');
@@ -36,12 +37,15 @@ export default function CreatePointOfInterest({ refetch }) {
   }
 
   function handleSubmit(variables) {
+    setIsSubmitting(true)
     addPointOfInterest({ variables }).then(() => {
       setMessageAlert(t('messages.poi_added'))
       setIsSuccessAlert(true)
       setOpen(false);
+      setIsSubmitting(false)
       refetch();
       history.push('/land_parcels')
+      window.location.reload()
     }).catch((err) => {
       setMessageAlert(formatError(err.message))
       setIsSuccessAlert(false)
@@ -72,6 +76,7 @@ export default function CreatePointOfInterest({ refetch }) {
       <PointOfInterestModal
         open={open}
         handleClose={closeNewPointOfInterestModal}
+        isSubmitting={isSubmitting}
         handleSubmit={handleSubmit}
       />
       <MessageAlert

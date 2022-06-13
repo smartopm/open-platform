@@ -6,24 +6,42 @@ require 'host_env'
 module Logs
   # Record of visitor entries to a community
   class EntryRequest < ApplicationRecord
+    has_one_attached :video
+    has_many_attached :images
     include SearchCop
 
     belongs_to :user, class_name: 'Users::User'
     belongs_to :community
     belongs_to :grantor, class_name: 'Users::User', optional: true
     belongs_to :revoker, class_name: 'Users::User', optional: true
+    belongs_to :guest, class_name: 'Users::User', optional: true
+    has_many :invites, dependent: :destroy
+    has_many :entry_times, through: :invites
 
     before_validation :attach_community
     validates :name, presence: true
+    enum status: { pending: 0, approved: 1 }
 
-    default_scope { order(created_at: :asc) }
+    # rubocop:disable Style/RedundantInterpolation
     search_scope :search do
       attributes :name, :phone_number, :visitation_date, :visit_end_date, :starts_at, :ends_at,
                  :end_time
+
+      generator :matches do |column_name, raw_value|
+        pattern = "%#{raw_value}%"
+        QueryFetchable.accent_insensitive_search(column_name, "#{quote pattern}")
+      end
     end
-    scope :by_end_time, lambda { |date|
-      where('(visit_end_date IS NOT NULL and visit_end_date > ?)
-      OR (visit_end_date IS NULL AND (ends_at > ? OR end_time > ?))', date, date, date)
+
+    search_scope :search_guest do
+      attributes guest: ['guest.phone_number', 'guest.email']
+    end
+    # rubocop:enable Style/RedundantInterpolation
+
+    scope :order_by_recent_invites, lambda {
+      includes(:entry_times, :invites)
+        .where(invites: { status: :active })
+        .order('entry_times.updated_at DESC')
     }
 
     has_paper_trail
@@ -34,13 +52,17 @@ module Logs
 
     ENTRY_REQUEST_STATE = %w[Active Revoked].freeze
 
-    def grant!(grantor)
+    # granted_state: 1 granted
+    # granted_state: 2 denied
+    # granted_state: 3 granted for a scanned entry
+    def grant!(grantor, type = 'event')
       update(
         grantor_id: grantor.id,
-        granted_state: 1,
+        granted_state: type == 'event' ? 1 : 3,
         granted_at: Time.zone.now,
+        exited_at: nil,
       )
-      log_entry_start('granted')
+      log_entry_start('granted') if type == 'event'
     end
 
     def deny!(grantor)
@@ -101,6 +123,14 @@ module Logs
       self[:entry_request_state].nil? || self[:entry_request_state].zero?
     end
 
+    def closest_entry_time
+      closest_start_entry = find_closest_entry(:start)
+      closest_end_entry = find_closest_entry(:end)
+      return if closest_start_entry.blank? && closest_end_entry.blank?
+
+      active_entry_time?(closest_end_entry) ? closest_end_entry : closest_start_entry
+    end
+
     def revoked?
       self[:entry_request_state] == 1
     end
@@ -117,9 +147,7 @@ module Logs
       feedback_link = "https://#{HostEnv.base_url(user.community)}/feedback"
       Rails.logger.info "Phone number to send #{number}"
       # disabled rubocop to keep the structure of the message
-      # rubocop:disable Layout/LineLength
-      Sms.send(number, "Thank you for using our app, kindly use this link to give us feedback #{feedback_link}")
-      # rubocop:enable Layout/LineLength
+      Sms.send(number, I18n.t('general.thanks_for_using_our_app', feedback_link: feedback_link))
     end
 
     private
@@ -168,6 +196,27 @@ module Logs
           type: 'showroom',
         }
       )
+    end
+
+    def find_closest_entry(for_time)
+      entry_times.where.not(visitation_date: nil).min do |a, b|
+        (Time.zone.now - visit_date_time(a, for_time)).abs <=>
+          (Time.zone.now - visit_date_time(b, for_time)).abs
+      end
+    end
+
+    def visit_date_time(entry_time, for_time)
+      return if entry_time.blank?
+
+      date = entry_time.visitation_date&.to_date
+      time = for_time.eql?(:start) ? entry_time.starts_at&.time : entry_time.ends_at&.time
+
+      (date + time.seconds_since_midnight.seconds).to_datetime
+    end
+
+    def active_entry_time?(entry_time)
+      Time.zone.now >= visit_date_time(entry_time, :start) &&
+        Time.zone.now <= visit_date_time(entry_time, :end)
     end
   end
   # rubocop:enable Metrics/ClassLength

@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require_relative './events/'
 module ActionFlows
   # Class to check for JSON rules for events and fire relevant action
   # rubocop:disable Metrics/ClassLength
@@ -23,6 +22,11 @@ module ActionFlows
         'body' => '',
         'assignees_emails' => '',
         'url' => '',
+        'updated_by' => '',
+        'updated_field' => '',
+        'updated_date' => '',
+        'new_updated_value' => '',
+        'due_at' => '',
       },
       'NoteComment' => {
         'id' => '',
@@ -31,6 +35,11 @@ module ActionFlows
         'body' => '',
         'assignees_emails' => '',
         'url' => '',
+        'user' => '',
+        'due_at' => '',
+        'updated_date' => '',
+        'note_body' => '',
+        'new_body' => '',
       },
       'FormUser' => {
         'id' => '',
@@ -73,6 +82,11 @@ module ActionFlows
         'note_id' => '',
         'author_id' => '',
         'body' => '',
+        'user_email' => '',
+        'updated_by' => '',
+        'updated_date' => '',
+        'due_at' => '',
+        'url' => '',
       },
     }.freeze
 

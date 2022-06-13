@@ -11,6 +11,10 @@ module Mutations
       argument :flagged, Boolean, required: false
       argument :completed, Boolean, required: false
       argument :due_date, String, required: false
+      argument :parent_note_id, ID, required: false
+      argument :attached_documents, GraphQL::Types::JSON, required: false
+      argument :status, String, required: false
+      argument :order, Integer, required: false
 
       field :note, Types::NoteType, null: true
 
@@ -24,11 +28,7 @@ module Mutations
 
       # Verifies if current user is admin or not.
       def authorized?(_vals)
-        return true if ::Policy::Note::NotePolicy.new(
-          context[:current_user], nil
-        ).permission?(
-          :can_create_note,
-        ) || context[:current_user]&.site_manager?
+        return true if permitted?(module: :note, permission: :can_create_note)
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end

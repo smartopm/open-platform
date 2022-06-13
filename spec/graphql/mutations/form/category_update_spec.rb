@@ -4,16 +4,28 @@ require 'rails_helper'
 
 RSpec.describe Mutations::Form::FormCreate do
   describe 'create categories' do
-    let!(:user) { create(:user_with_community) }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:resident_role) { create(:role, name: 'resident') }
+    let!(:permission) do
+      create(:permission, module: 'forms',
+                          role: admin_role,
+                          permissions: %w[can_update_category])
+    end
+
+    let!(:user) { create(:user_with_community, user_type: 'resident', role: resident_role) }
+    let!(:admin) do
+      create(:user, user_type: 'admin', community_id: user.community_id, role: admin_role)
+    end
     let!(:community) { user.community }
-    let!(:admin) { create(:admin_user, community: community) }
     let!(:form) { create(:form, community: community) }
     let!(:category) { create(:category, form: form, general: true, field_name: 'info') }
     let!(:form_property) do
       create(:form_property, form: form, field_type: 'text', category: category,
                              field_name: 'Select Business')
     end
-    let(:form_user) { create(:form_user, form: form, user: user, status: :approved) }
+    let(:form_user) do
+      create(:form_user, form: form, user: user, status: :approved, status_updated_by: admin)
+    end
 
     let(:mutation) do
       <<~GQL
@@ -61,6 +73,7 @@ RSpec.describe Mutations::Form::FormCreate do
                                                    context: {
                                                      current_user: admin,
                                                      site_community: community,
+                                                     user_role: admin.role,
                                                    }).as_json
         expect(result.dig('errors', 0, 'message')).to eql 'Category not found'
       end
@@ -80,6 +93,7 @@ RSpec.describe Mutations::Form::FormCreate do
                                                    context: {
                                                      current_user: admin,
                                                      site_community: community,
+                                                     user_role: admin.role,
                                                    }).as_json
         expect(result.dig('errors', 0, 'message')).to be_nil
         category_result = result.dig('data', 'categoryUpdate', 'category')
@@ -107,6 +121,7 @@ RSpec.describe Mutations::Form::FormCreate do
                                                    context: {
                                                      current_user: admin,
                                                      site_community: community,
+                                                     user_role: admin.role,
                                                    }).as_json
         expect(result.dig('errors', 0, 'message')).to be_nil
         expect(
@@ -133,6 +148,7 @@ RSpec.describe Mutations::Form::FormCreate do
                                                    context: {
                                                      current_user: user,
                                                      site_community: community,
+                                                     user_role: user.role,
                                                    }).as_json
         expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'
       end

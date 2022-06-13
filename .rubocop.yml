@@ -17,6 +17,7 @@ Layout/LineLength:
 Metrics/BlockLength:
   Exclude:
     - 'spec/**/*'
+    - 'lib/tasks/**/*'
 
 Style/ClassAndModuleChildren:
   Enabled: false

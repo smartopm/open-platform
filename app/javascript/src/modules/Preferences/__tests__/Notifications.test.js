@@ -1,6 +1,6 @@
 import React from 'react';
 import { act, render, fireEvent, waitFor } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
+
 import { BrowserRouter } from 'react-router-dom/';
 import { MockedProvider } from '@apollo/react-testing';
 import { UserLabelsQuery } from '../graphql/preferences_query';
@@ -50,8 +50,8 @@ describe('Notifications Component', () => {
         </MockedProvider>
       );
     });
-    expect(container.getByText(/Points and Rewards: Get weekly reminders/)).toBeInTheDocument();
-    expect(container.getByText(/News and Updates: Receive the latest news/)).toBeInTheDocument();
+    expect(container.getByText(/notification.points_and_rewards/)).toBeInTheDocument();
+    expect(container.getByText(/notification.news_and_updates/)).toBeInTheDocument();
   });
 
   it('should handle save-notification-preference', async () => {

@@ -4,9 +4,24 @@ require 'rails_helper'
 
 RSpec.describe Mutations::Discussion do
   describe 'creating a Discussion' do
-    let!(:current_user) { create(:user_with_community, user_type: 'admin') }
-    let!(:non_admin) { create(:user_with_community, user_type: 'resident') }
-    let!(:guard) { create(:user_with_community, user_type: 'security_guard') }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:resident_role) { create(:role, name: 'resident') }
+    let!(:guard_role) { create(:role, name: 'security_guard') }
+    let!(:permission) do
+      create(:permission, module: 'discussion',
+                          role: admin_role,
+                          permissions: %w[can_create_discussion can_update_discussion])
+    end
+
+    let!(:non_admin) { create(:user_with_community, user_type: 'resident', role: resident_role) }
+    let!(:current_user) do
+      create(:admin_user, community_id: non_admin.community_id, user_type: 'admin',
+                          role: admin_role)
+    end
+    let!(:guard) do
+      create(:user_with_community,
+             user_type: 'security_guard', role: guard_role)
+    end
     let!(:discussion) do
       create(:discussion, user_id: current_user.id,
                           community_id: current_user.community_id)

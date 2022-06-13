@@ -3,6 +3,45 @@
 require 'rails_helper'
 
 RSpec.describe Community, type: :model do
+  describe 'schema' do
+    it { is_expected.to have_db_column(:name).of_type(:string) }
+    it { is_expected.to have_db_column(:google_domain).of_type(:string) }
+    it { is_expected.to have_db_column(:created_at).of_type(:datetime) }
+    it { is_expected.to have_db_column(:updated_at).of_type(:datetime) }
+    it { is_expected.to have_db_column(:slug).of_type(:string) }
+    it { is_expected.to have_db_column(:logo_url).of_type(:string) }
+    it { is_expected.to have_db_column(:slack_webhook_url).of_type(:string) }
+    it { is_expected.to have_db_column(:timezone).of_type(:string) }
+    it { is_expected.to have_db_column(:default_users).of_type(:string) }
+    it { is_expected.to have_db_column(:templates).of_type(:json) }
+    it { is_expected.to have_db_column(:hostname).of_type(:string) }
+    it { is_expected.to have_db_column(:support_number).of_type(:json) }
+    it { is_expected.to have_db_column(:support_email).of_type(:json) }
+    it { is_expected.to have_db_column(:support_whatsapp).of_type(:json) }
+    it { is_expected.to have_db_column(:currency).of_type(:string) }
+    it { is_expected.to have_db_column(:locale).of_type(:string) }
+    it { is_expected.to have_db_column(:tagline).of_type(:string) }
+    it { is_expected.to have_db_column(:language).of_type(:string) }
+    it { is_expected.to have_db_column(:wp_link).of_type(:string) }
+    it { is_expected.to have_db_column(:features).of_type(:json) }
+    it { is_expected.to have_db_column(:theme_colors).of_type(:json) }
+    it { is_expected.to have_db_column(:security_manager).of_type(:string) }
+    it { is_expected.to have_db_column(:social_links).of_type(:json) }
+    it { is_expected.to have_db_column(:banking_details).of_type(:json) }
+    it { is_expected.to have_db_column(:community_required_fields).of_type(:json) }
+    it { is_expected.to have_db_column(:menu_items).of_type(:json) }
+    it { is_expected.to have_db_column(:sub_administrator_id).of_type(:uuid) }
+    it { is_expected.to have_db_column(:sms_phone_numbers).of_type(:string) }
+    it { is_expected.to have_db_column(:emergency_call_number).of_type(:string) }
+    it { is_expected.to have_db_column(:ga_id).of_type(:string) }
+    it { is_expected.to have_db_column(:payment_keys).of_type(:json) }
+    it do
+      is_expected.to have_db_column(:domains).of_type(:string)
+                                             .with_options(default: [], array: true)
+    end
+    it { is_expected.to have_db_column(:lead_monthly_targets).of_type(:json) }
+  end
+
   describe 'associations' do
     it { is_expected.to have_many(:users).class_name('Users::User').dependent(:destroy) }
     # Refer todo in model.
@@ -20,6 +59,7 @@ RSpec.describe Community, type: :model do
     it { is_expected.to have_many(:entry_requests).dependent(:destroy) }
     it { is_expected.to have_many(:notes).class_name('Notes::Note').dependent(:destroy) }
     it { is_expected.to have_many(:forms).class_name('Forms::Form').dependent(:destroy) }
+    it { is_expected.to have_many(:lead_logs).class_name('Logs::LeadLog').dependent(:destroy) }
     it do
       is_expected
         .to have_many(:land_parcels)
@@ -76,6 +116,8 @@ RSpec.describe Community, type: :model do
     it do
       is_expected.to have_many(:time_sheets).class_name('Users::TimeSheet').dependent(:destroy)
     end
+    it { is_expected.to have_many(:posts).class_name('Discussions::Post') }
+    it { is_expected.to have_many(:transaction_logs).class_name('Payments::TransactionLog') }
   end
 
   it 'should be associated with users' do
@@ -116,6 +158,29 @@ RSpec.describe Community, type: :model do
       new_community = create(:community)
       expect(new_community.features).to_not be_nil
       expect(new_community.features['Dashboard']).to_not be_nil
+      expect(new_community.features['Processes']).to_not be_nil
+    end
+  end
+
+  describe '#process_form_users' do
+    let(:community) { create(:community) }
+    let!(:admin) do
+      create(:admin_user, community: community, name: 'John Doe')
+    end
+    let(:form) do
+      create(:form, name: 'DRC Project Review Process', community: community)
+    end
+    let(:process) do
+      create(:process,
+             process_type: 'drc',
+             name: 'DRC',
+             form_id: form.id,
+             community: community)
+    end
+    let!(:form_user) { create(:form_user, form: form, user: admin, status_updated_by: admin) }
+
+    it 'should return form users of drc process type' do
+      expect(community.process_form_users(process.id).first.form_id).to eql form.id
     end
   end
 end

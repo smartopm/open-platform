@@ -5,7 +5,7 @@ import {
 } from '@testing-library/react'
 import { MemoryRouter } from 'react-router-dom'
 import { MockedProvider } from '@apollo/react-testing'
-import '@testing-library/jest-dom/extend-expect'
+
 import NkwashiAccountManagement from '../containers/NkwashiAccountManagement'
 
 describe('Mounts Page and tests button',()=>{

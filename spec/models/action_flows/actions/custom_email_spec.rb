@@ -4,7 +4,7 @@ require 'rails_helper'
 
 RSpec.describe ActionFlows::Actions::CustomEmail do
   let!(:user) { create(:user_with_community) }
-  let!(:acting_user) { create(:user_with_community, community: user.community) }
+  let!(:acting_user) { create(:user, community: user.community, role: user.role) }
   let!(:event_log) do
     create(:event_log, subject: 'user_login', ref_type: 'Users::User', ref_id: user.id,
                        acting_user: acting_user, community: user.community)
@@ -27,7 +27,11 @@ RSpec.describe ActionFlows::Actions::CustomEmail do
 
     event = flow.event_object.new
     event.preload_data(event_log)
-    expect(EmailMsg).to receive(:send_mail_from_db).with('email@gmail.com', template, [])
-    described_class.execute_action(event.data_set, flow.action_fields)
+    expect(EmailMsg).to receive(:send_mail_from_db).with(
+      email: 'email@gmail.com',
+      template: template,
+      template_data: [],
+    )
+    described_class.execute_action(event.data_set, flow.action_fields, event_log)
   end
 end

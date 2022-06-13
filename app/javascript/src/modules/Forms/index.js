@@ -1,10 +1,11 @@
 import React from 'react'
-import DescriptionIcon from '@material-ui/icons/Description';
-import { allUserTypes } from '../../utils/constants';
+import DescriptionIcon from '@mui/icons-material/Description';
 
 // There are 2 different types of forms
 // forms for the user and forms where admin manages and creates form
 // It would be nice to name them differently
+const currentModule = 'forms'
+
 export default {
   routeProps: {
     path: '/myforms', // myforms
@@ -15,5 +16,6 @@ export default {
   },
   name: t => t('menu.form', { count: 0 }),
   featureName: 'Forms',
-  accessibleBy: allUserTypes
+  moduleName: currentModule,
+  accessibleBy: []
 };

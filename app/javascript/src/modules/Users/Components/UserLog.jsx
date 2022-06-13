@@ -23,7 +23,7 @@ export default function UserLog({
     }
     function logs(eventLogs) {
       if (!eventLogs) {
-        return;
+        return <tr><td>No logs found</td></tr>;
       }
       return eventLogs.map(event => {
         return (
@@ -33,6 +33,7 @@ export default function UserLog({
             style={{
               cursor: "pointer"
             }}
+            data-testid="log_title"
           >
             <td>{dateToString(event.createdAt)}</td>
             <td>{dateTimeToString(event.createdAt)}</td>
@@ -63,7 +64,7 @@ export default function UserLog({
                 </a>
               </li>
               <li
-                className={`page-item ${data.result.length < limit &&
+                className={`page-item ${data.result?.length < limit &&
                     "disabled"}`}
               >
                 <a className="page-link" onClick={nextPage} href="#">

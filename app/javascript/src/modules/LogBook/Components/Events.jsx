@@ -2,11 +2,11 @@
 /* eslint-disable consistent-return */
 /* eslint-disable react/prop-types */
 import React from "react";
-import GetAppIcon from '@material-ui/icons/GetApp';
-import Fab from "@material-ui/core/Fab";
+import GetAppIcon from '@mui/icons-material/GetApp';
+import Fab from "@mui/material/Fab";
 import { useTranslation } from "react-i18next";
-import { Link } from "@material-ui/core";
-import { useTheme } from "@material-ui/styles";
+import { Link } from "@mui/material";
+import { useTheme } from "@mui/styles";
 import { dateToString, dateTimeToString } from "../../../components/DateContainer";
 
 
@@ -70,7 +70,7 @@ export default function Events({
             <nav aria-label="Page navigation">
               <ul className="pagination">
                 <li className={`page-item ${offset < limit && "disabled"}`}>
-                  <Link className="page-link" onClick={previousPage} href="#">
+                  <Link className="page-link" onClick={previousPage} href="#" underline="hover">
                     {t('common:misc.previous')}
                   </Link>
                 </li>
@@ -78,7 +78,7 @@ export default function Events({
                   className={`page-item ${data.result.length < limit &&
                     "disabled"}`}
                 >
-                  <Link className="page-link" href="#" onClick={nextPage}>
+                  <Link className="page-link" href="#" onClick={nextPage} underline="hover">
                     {t('common:misc.next')}
                   </Link>
                 </li>

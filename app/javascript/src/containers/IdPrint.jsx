@@ -1,90 +1,90 @@
 /* eslint-disable react/prop-types */
-import React, { useContext } from 'react'
-import { useQuery } from 'react-apollo'
-import { QRCode } from 'react-qr-svg'
-import Loading from '../shared/Loading'
-import DateUtil from '../utils/dateutil'
+import React, { useContext, useState, useRef, useCallback } from 'react';
+import { useQuery } from 'react-apollo';
+import { QRCode } from 'react-qr-svg';
+import { Button, Typography } from '@mui/material';
+import { useTranslation } from 'react-i18next';
+import { toPng } from 'html-to-image';
+import Loading, { Spinner } from '../shared/Loading';
+import { UserQuery } from '../graphql/queries';
+import ErrorPage from '../components/Error';
+import CommunityName from '../shared/CommunityName';
+import { Context } from './Provider/AuthStateProvider';
+import CenteredContent from '../shared/CenteredContent';
 
-import { UserQuery } from '../graphql/queries'
-import ErrorPage from '../components/Error'
-import CommunityName from '../shared/CommunityName'
-import { Context } from './Provider/AuthStateProvider'
-
-function expiresAtStr(datetime) {
-  if (datetime) {
-    const date = DateUtil.fromISO8601(datetime)
-    return (
-      `${date.getFullYear()  }-${  date.getMonth() + 1  }-${  date.getDate()}`
-    )
-  }
-  return 'Never'
+export function qrCodeAddress(userId) {
+  const timestamp = Date.now();
+  const linkUrl = `${window.location.protocol}//${window.location.hostname}/user/${userId}/${timestamp}`;
+  return linkUrl;
 }
 
-function qrCodeAddress(userId) {
-  const timestamp = Date.now()
-  const linkUrl = `${window.location.protocol}//${window.location.hostname}/user/${userId}/${timestamp}`
-  return linkUrl
-}
+export default function IdPrintPage({ match }) {
+  const { id } = match.params;
+  const { loading, error, data } = useQuery(UserQuery, { variables: { id } });
 
+  if (loading) return <Loading />;
+  if (error) return <ErrorPage title={error.message} />;
 
-export default function IdPrintPage({ match }){
-  const {id} = match.params
-  const { loading, error, data } = useQuery(UserQuery, { variables: { id } })
-
-  if (loading) return <Loading />
-  if (error) return <ErrorPage title={error.message} />
-
-  return <UserPrintDetail data={data} />
-}
-
-function toTitleCase(str) {
-// eslint-disable-next-line
-  return str.replace(/\w\S*/g, function (txt) {
-    return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
-  })
+  return <UserPrintDetail data={data} />;
 }
 
 export function UserPrintDetail({ data }) {
-  const authState = useContext(Context)
-  return (
-    <div>
-      <div className="row justify-content-center">
-        <div
-          id="idCard"
-          className="card id_card_box"
-          style={{ width: '325px' }}
-        >
-          <div
-            className="d-flex justify-content-center"
-            style={{ marginTop: '1.75em' }}
-          >
-            <CommunityName authState={authState} />
-          </div>
-          <div
-            className="d-flex justify-content-center"
-            style={{ marginTop: '1.5em' }}
-          >
-            <div className="member_type">{toTitleCase(data.user.userType)}</div>
-          </div>
-          <div className="d-flex justify-content-center">
-            <h1 style={{ fontWeight: '800' }}>{data.user.name}</h1>
-          </div>
-          <div className="d-flex justify-content-center">
-            <div className="expires">
-              Exp: 
-              {' '}
-              {expiresAtStr(data.user.expiresAt)}
-            </div>
-          </div>
+  const authState = useContext(Context);
+  const { t } = useTranslation('common');
+  const [downloading, setDownloading] = useState(false);
+  const [error, setError] = useState(null)
+  const ref = useRef(null);
 
-          <div className="d-flex justify-content-center qr_code">
-            <QRCode
-              style={{ width: 256 }}
-              value={qrCodeAddress(data.user.id)}
-            />
+  const onButtonClick = useCallback(() => {
+    if (ref.current === null) {
+      return;
+    }
+
+    setDownloading(true);
+    toPng(ref.current)
+      .then(dataUrl => {
+        const link = document.createElement('a');
+        link.download = 'my_id.png';
+        link.href = dataUrl;
+        link.click();
+        setDownloading(false);
+      })
+      .catch(() => {
+        setError(t('errors.something_wrong_qr_code'))
+        setDownloading(false);
+      });
+  }, [ref]);
+
+  return (
+    <>
+      <div className="row justify-content-center">
+        <div id="idCard" className="card id_card_box" style={{ width: '325px' }} ref={ref}>
+          <CenteredContent>
+            <CommunityName authState={authState} />
+          </CenteredContent>
+          <div style={{ display: 'flex', justifyContent: 'center', whiteSpace: 'nowrap' }}>
+            <Typography component="h1">{data.user.name}</Typography>
           </div>
+          <br />
+          <QRCode style={{ width: 256 }} value={qrCodeAddress(data.user.id)} />
         </div>
       </div>
-    </div>
-  )
+      <br />
+      <CenteredContent>
+        <Button
+          onClick={onButtonClick}
+          color="primary"
+          variant="contained"
+          disabled={downloading}
+          data-testid="download_button"
+          startIcon={downloading && <Spinner />}
+        >
+          {t('misc.download_id')}
+        </Button>
+      </CenteredContent>
+      <CenteredContent>
+        <Typography data-testid="error" color="error">{error}</Typography>
+      </CenteredContent>
+    </>
+  );
 }

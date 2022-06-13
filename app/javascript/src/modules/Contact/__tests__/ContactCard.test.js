@@ -36,9 +36,8 @@ describe('Contact page', () => {
       <MockedProvider>
         <BrowserRouter>
           <SupportCard
-            handleSendMessage={sendMessage}
+            handleSendMessage={jest.fn()}
             user={authState.user}
-            // authState={authState}
           />
         </BrowserRouter>
       </MockedProvider>
@@ -51,7 +50,7 @@ describe('Contact page', () => {
     const { getByTestId } = render(
       <BrowserRouter>
         <SupportCard
-          handleSendMessage={sendMessage}
+          handleSendMessage={jest.fn()}
           user={authState.user}
         />
       </BrowserRouter>
@@ -65,7 +64,7 @@ describe('Contact page', () => {
     const { getAllByTestId } = render(
       <BrowserRouter>
         <SupportCard
-          handleSendMessage={sendMessage}
+          handleSendMessage={jest.fn()}
           user={authState.user}
         />
       </BrowserRouter>
@@ -79,7 +78,7 @@ describe('Contact page', () => {
     const { getByTestId } = render(
       <BrowserRouter>
         <SupportCard
-          handleSendMessage={sendMessage}
+          handleSendMessage={jest.fn()}
           user={authState.user}
         />
       </BrowserRouter>

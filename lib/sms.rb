@@ -17,7 +17,7 @@ class Sms
   end
 
   def self.send(to, message)
-    raise SmsError, '`to` can\'t be nil or empty' if to.blank?
+    raise SmsError, I18n.t('errors.user.cannot_send_message') if to.blank?
 
     return if Rails.env.test?
 
@@ -27,7 +27,7 @@ class Sms
   end
 
   def self.send_from(to, from, message)
-    raise SmsError, '`to` can\'t be nil or empty' if to.blank?
+    raise SmsError, I18n.t('errors.user.cannot_send_message') if to.blank?
 
     return if Rails.env.test?
 

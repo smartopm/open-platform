@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Button, Grid, Typography, TextField } from '@material-ui/core';
+import { Button, Grid, Typography, TextField } from '@mui/material';
 import { useLazyQuery, useMutation } from 'react-apollo';
 import PropTypes from 'prop-types';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import Autocomplete from '@mui/material/Autocomplete';
 import { useTranslation } from 'react-i18next';
 import { MergeUsersMutation } from '../../../graphql/mutations';
 import { ModalDialog } from '../../../components/Dialog';
@@ -73,7 +73,7 @@ export default function UserMerge({ userId, close }) {
         open={open}
         handleClose={() => setConfirmOpen(!open)}
         handleConfirm={handleMerge}
-        action="proceed"
+        action={t('menu.proceed')}
       >
         <Typography variant="body1">
           {t('misc.user_merge_warning_text')}
@@ -85,7 +85,7 @@ export default function UserMerge({ userId, close }) {
         id="user_to_be_merged"
         options={data?.usersLite || []}
         getOptionLabel={option => option?.name}
-        getOptionSelected={(option, value) => option.name === value.name}
+        isOptionEqualToValue={(option, value) => option.name === value.name}
         onChange={(_event, user) => setDuplicateUserId(user.id)}
         renderInput={params => (
           <TextField
@@ -98,13 +98,13 @@ export default function UserMerge({ userId, close }) {
             placeholder={t('form_fields.user_name_merge')}
             helperText={t('misc.user_name_search_warning_text')}
           />
-        )}
+      )}
       />
       <br />
       <br />
       <br />
 
-      <Grid container direction="row-reverse" justify="space-around" alignItems="center">
+      <Grid container direction="row-reverse" justifyContent="space-around" alignItems="center">
         <Button variant="contained" aria-label="merge_cancel" color="secondary" onClick={close}>
           {t('form_actions.cancel')}
         </Button>
@@ -120,7 +120,7 @@ export default function UserMerge({ userId, close }) {
       </Grid>
       <br />
     </>
-  );
+);
 }
 UserMerge.propTypes = {
   userId: PropTypes.string.isRequired,

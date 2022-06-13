@@ -4,56 +4,95 @@ require 'rails_helper'
 
 RSpec.describe Types::Queries::User do
   describe 'user' do
-    let!(:current_user) { create(:user_with_community, user_type: 'client') }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:resident_role) { create(:role, name: 'resident') }
+    let!(:client_role) { create(:role, name: 'client') }
+    let!(:prospective_client_role) { create(:role, name: 'prospective_client') }
+
+    let!(:custodian_role) { create(:role, name: 'custodian') }
+    let!(:security_guard_role) { create(:role, name: 'security_guard') }
+    let!(:contractor_role) { create(:role, name: 'contractor') }
+    let!(:visitor_role) { create(:role, name: 'visitor') }
+    let!(:permission) do
+      create(:permission, module: 'user',
+                          role: admin_role,
+                          permissions: %w[can_view_admin_users can_get_users_lite can_get_users
+                                          can_search_user_ids])
+    end
+    let!(:current_user) { create(:user_with_community, user_type: 'client', role: client_role) }
+    let!(:secondary_number) do
+      create(:contact_info, contact_type: 'phone', info: '99887766', user: current_user)
+    end
+    let!(:secondary_email) do
+      create(:contact_info, contact_type: 'email', info: 'test@dgdp.com', user: current_user)
+    end
     let!(:another_user) do
       create(:user_with_community,
              user_type: 'client',
-             community_id: current_user.community_id)
+             community_id: current_user.community_id,
+             role: client_role)
     end
     let!(:prospective_client) do
       create(:user_with_community,
              user_type: 'prospective_client',
-             community_id: current_user.community_id)
+             community_id: current_user.community_id,
+             role: prospective_client_role)
     end
     let!(:client) do
       create(:user_with_community,
              user_type: 'client',
-             community_id: current_user.community_id)
+             community_id: current_user.community_id,
+             role: client_role)
     end
     let!(:custodian) do
       create(:user_with_community,
              user_type: 'custodian',
-             community_id: current_user.community_id)
+             community_id: current_user.community_id,
+             role: custodian_role)
     end
     let!(:security_guard) do
       create(:user_with_community,
              user_type: 'security_guard',
-             community_id: current_user.community_id)
+             community_id: current_user.community_id,
+             role: security_guard_role)
     end
     let!(:contractor) do
       create(:user_with_community,
              user_type: 'contractor',
-             community_id: current_user.community_id)
+             community_id: current_user.community_id,
+             role: contractor_role)
     end
     let!(:resident) do
       create(:user_with_community,
              user_type: 'resident',
-             community_id: current_user.community_id)
+             community_id: current_user.community_id,
+             role: resident_role)
     end
     let!(:visitor) do
       create(:user_with_community,
              user_type: 'visitor',
-             community_id: current_user.community_id)
+             community_id: current_user.community_id,
+             role: visitor_role)
     end
-    let!(:admin) { create(:admin_user, community_id: current_user.community_id, email: 'ab@dc.ef') }
+    let!(:admin) do
+      create(:admin_user, community_id: current_user.community_id,
+                          email: 'ab@dc.ef', state: 'valid', role: admin_role)
+    end
     let!(:another_admin) do
-      create(:admin_user, community_id: current_user.community_id, email: 'cd@dc.ef')
+      create(:admin_user, community_id: current_user.community_id,
+                          email: 'cd@dc.ef', state: 'valid', role: admin_role)
     end
 
     let(:query) do
       %(query {
         user(id:"#{current_user.id}") {
           id
+          avatarUrl
+          accounts {
+            id
+          }
+          secondaryEmail
+          secondaryPhoneNumber
         }
       })
     end
@@ -98,9 +137,24 @@ RSpec.describe Types::Queries::User do
           usersLite(query: $query, limit: $limit) {
             id
             name
+            avatarUrl
+            accounts {
+              id
+            }
           }
       })
     end
+
+    let(:admins_users_query) do
+      %(
+        query adminUsers{
+          adminUsers {
+            id
+            name
+          }
+      })
+    end
+
     let(:active_plan_query) do
       %(
         query plans {
@@ -109,10 +163,25 @@ RSpec.describe Types::Queries::User do
       )
     end
 
+    let(:search_ids_query) do
+      %(
+        query SearchUserId($query: String, $userIds: [String!]){
+          searchUserIds(query: $query, userIds: $userIds) {
+            id
+            name
+            imageUrl
+            avatarUrl
+          }
+      })
+    end
+
     it 'returns all items' do
       current_user.notes.create(author_id: admin.id, body: 'test')
       result = DoubleGdpSchema.execute(query, context: { current_user: current_user }).as_json
-      expect(result.dig('data', 'user', 'id')).to eql current_user.id
+      user_data = result.dig('data', 'user')
+      expect(user_data['id']).to eql current_user.id
+      expect(user_data['secondaryEmail']).to eq 'test@dgdp.com'
+      expect(user_data['secondaryPhoneNumber']).to eq '99887766'
     end
 
     it 'returns list of admins' do
@@ -126,6 +195,34 @@ RSpec.describe Types::Queries::User do
       expect(result.dig('data', 'usersLite').length).to eql 2 # only one admin
     end
 
+    it 'admin_users query' do
+      result = DoubleGdpSchema.execute(admins_users_query,
+                                       context: { current_user: admin,
+                                                  site_community: admin.community }).as_json
+      expect(result.dig('data', 'adminUsers', 0, 'id')).to_not be_nil
+      expect(result.dig('data', 'adminUsers', 0, 'name')).to_not be_nil
+      expect(result.dig('data', 'adminUsers').length).to eql 2 # admin with valid state
+    end
+
+    it 'admin_users query returns unauthorised if current user is not admin' do
+      result = DoubleGdpSchema.execute(admins_users_query,
+                                       context: { current_user: current_user,
+                                                  site_community: admin.community }).as_json
+      expect(result['errors']).to_not be_nil
+      expect(result['errors'][0]['message']).to eql 'Unauthorized'
+    end
+
+    it 'returns unauthorized when invalid current user' do
+      variables = {
+        query: 'user_type: admin',
+      }
+      result = DoubleGdpSchema.execute(admins_query,
+                                       variables: variables,
+                                       context: { current_user: current_user }).as_json
+      expect(result['errors']).to_not be_nil
+      expect(result['errors'][0]['message']).to eql 'Unauthorized'
+    end
+
     it 'returns limited number of users if limit is supplied' do
       variables = {
         query: 'user_type: admin', limit: 1
@@ -135,6 +232,19 @@ RSpec.describe Types::Queries::User do
       expect(result.dig('data', 'usersLite', 0, 'id')).to_not be_nil
       expect(result.dig('data', 'usersLite', 0, 'name')).to_not be_nil
       expect(result.dig('data', 'usersLite').length).to eql 1 # only one admin
+    end
+
+    it 'returns searched users from userids' do
+      variables = {
+        query: current_user.name, userIds: [current_user.id]
+      }
+      result = DoubleGdpSchema.execute(search_ids_query, variables: variables,
+                                                         context: { current_user: admin }).as_json
+
+      expect(result.dig('data', 'searchUserIds', 0, 'id')).to_not be_nil
+      expect(result.dig('data', 'searchUserIds', 0, 'name')).to_not be_nil
+      expect(result.dig('data', 'searchUserIds', 0, 'id')).to eql current_user.id
+      expect(result.dig('data', 'searchUserIds', 0, 'name')).to eql current_user.name
     end
 
     it 'checking individual permissions' do
@@ -326,19 +436,48 @@ RSpec.describe Types::Queries::User do
                                        }).as_json
       expect(result['errors'][0]['message']).to eql 'Unauthorized'
     end
+
+    it 'returns unauthorized when current user not an admin' do
+      variables = {
+        query: 'ab@dc.ef',
+      }
+      result = DoubleGdpSchema.execute(users_query, variables: variables,
+                                                    context: {
+                                                      current_user: current_user,
+                                                    }).as_json
+      expect(result['errors']).to_not be_nil
+      expect(result['errors'][0]['message']).to eql 'Unauthorized'
+    end
   end
 
   describe 'user_search' do
-    before :each do
-      @user = create(:user_with_community, name: 'Joe Test')
-      @user2 = create(:user_with_community, name: 'Doe Test', community: @user.community)
-      @admin_user = create(:user_with_community,
-                           user_type: 'admin',
-                           community_id: @user.community_id)
-      @current_user = @admin_user
+    let!(:visitor_role) { create(:role, name: 'visitor') }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:permission) do
+      create(:permission, module: 'user',
+                          role: admin_role,
+                          permissions: %w[can_search_guests can_view_guests can_view_hosts])
+    end
+    let!(:user) { create(:user_with_community, name: 'Jose', role: visitor_role) }
+    let!(:user2) do
+      create(:user_with_community, name: 'Josè', community: user.community, role: visitor_role)
+    end
+    let!(:admin_user) do
+      create(:user_with_community, name: 'Joe Test', user_type: 'admin',
+                                   role: admin_role, community_id: user.community_id)
+    end
+    let!(:visitor) do
+      create(:user_with_community, user_type: 'visitor', email: 'visiting@admin.com',
+                                   community_id: user.community_id, role: visitor_role)
+    end
 
-      @query =
-        %(query($query: String!) {
+    let!(:invite) do
+      entry = admin_user.entry_requests.create!(name: visitor.name)
+      Logs::Invite.create!(host_id: admin_user.id, guest_id: visitor.id, entry_request_id: entry.id)
+    end
+
+    let(:query) do
+      %(query($query: String!) {
           userSearch(query: $query) {
             id
             name
@@ -347,41 +486,159 @@ RSpec.describe Types::Queries::User do
         })
     end
 
+    let(:guest_search_query) do
+      %(
+          query searchGuest($query: String) {
+            searchGuests(query: $query) {
+              id
+              name
+              email
+              imageUrl
+              avatarUrl
+            }
+          }
+        )
+    end
+
+    let(:my_guest_search_query) do
+      %(
+          query guests($query: String){
+            myGuests(query: $query) {
+              id
+              guest {
+                id
+                name
+                imageUrl
+                avatarUrl
+              }
+              thumbnailUrl
+            }
+          }
+        )
+    end
+
+    let(:my_hosts_query) do
+      %(
+          query guests($userId: ID!){
+            myHosts(userId: $userId) {
+              id
+              host {
+                id
+                name
+                imageUrl
+                avatarUrl
+              }
+            }
+          }
+        )
+    end
+
+    context 'when users are present with special characters' do
+      it 'returns the list of users with name matching with normal and special character' do
+        result = DoubleGdpSchema.execute(query, context: {
+                                           current_user: admin_user,
+                                           site_community: admin_user.community,
+                                         }, variables: { query: 'Jose' }).as_json
+        user_data = result.dig('data', 'userSearch')
+        expect(result.dig('data', 'userSearch').length).to eql 2
+        expect(%w[Jose Josè]).to include(user_data[0]['name'])
+        expect(%w[Jose Josè]).to include(user_data[1]['name'])
+      end
+    end
+
     it 'returns user who matches the query ' do
-      result = DoubleGdpSchema.execute(@query, context: {
-                                         current_user: @current_user,
+      result = DoubleGdpSchema.execute(query, context: {
+                                         current_user: admin_user,
                                        },
-                                               variables: { query: 'Joe' }).as_json
+                                              variables: { query: 'Joe' }).as_json
 
       expect(result.dig('data', 'userSearch').length).to eql 1
       expect(result.dig('data', 'userSearch')[0]['name']).to eql 'Joe Test'
     end
 
     it 'searches by contact info' do
-      @user2.contact_infos.create(contact_type: 'phone', info: '09056783452')
-      result = DoubleGdpSchema.execute(@query, context: {
-                                         current_user: @current_user,
+      admin_user.contact_infos.create(contact_type: 'phone', info: '09056783452')
+      result = DoubleGdpSchema.execute(query, context: {
+                                         current_user: admin_user,
                                        },
-                                               variables: {
-                                                 query: 'contact_info: 09056783452',
-                                               }).as_json
+                                              variables: {
+                                                query: 'contact_info: 09056783452',
+                                              }).as_json
 
       expect(result.dig('data', 'userSearch').length).to eql 1
-      expect(result.dig('data', 'userSearch')[0]['name']).to eql 'Doe Test'
+      expect(result.dig('data', 'userSearch')[0]['name']).to eql 'Joe Test'
+    end
+
+    it 'searches visitors' do
+      result = DoubleGdpSchema.execute(guest_search_query, context: {
+                                         current_user: admin_user,
+                                         site_community: admin_user.community,
+                                       },
+                                                           variables: {
+                                                             query: 'visiting@admin.com',
+                                                           }).as_json
+
+      expect(result.dig('data', 'searchGuests').length).to eql 1
+      expect(result.dig('data', 'searchGuests')[0]['name']).to eql 'Mark Test'
+    end
+
+    it 'searches for guests I invited' do
+      result = DoubleGdpSchema.execute(my_guest_search_query, context: {
+                                         current_user: admin_user,
+                                       },
+                                                              variables: {
+                                                                query: 'visiting@admin.com',
+                                                              }).as_json
+
+      expect(result.dig('data', 'myGuests').length).to eql 1
+    end
+
+    it 'returns list of my hosts' do
+      result = DoubleGdpSchema.execute(my_hosts_query, context: {
+                                         current_user: admin_user,
+                                         site_community: admin_user.community,
+                                       },
+                                                       variables: {
+                                                         userId: visitor.id,
+                                                       }).as_json
+      expect(result.dig('data', 'myHosts').length).to eql 1
+    end
+
+    it 'returns nil when not authorized ' do
+      result = DoubleGdpSchema.execute(my_hosts_query, context: {
+                                         current_user: user,
+                                         site_community: admin_user.community,
+                                       },
+                                                       variables: {
+                                                         userId: visitor.id,
+                                                       }).as_json
+      expect(result.dig('data', 'myHosts')).to be_nil
+      expect(result['errors'][0]['message']).to eq('Unauthorized')
     end
 
     it 'should fail if no logged in' do
-      result = DoubleGdpSchema.execute(@query, context: { current_user: nil }).as_json
+      result = DoubleGdpSchema.execute(query, context: { current_user: nil }).as_json
       expect(result.dig('data', 'userSearch')).to be_nil
+    end
+
+    it ' guest_search_query should fail if no logged in' do
+      result = DoubleGdpSchema.execute(guest_search_query, context: { current_user: nil }).as_json
+      expect(result.dig('data', 'searchGuests')).to be_nil
+    end
+
+    it ' guest_search_query should fail if no logged in' do
+      result = DoubleGdpSchema.execute(my_guest_search_query, context:
+                                                { current_user: nil }).as_json
+      expect(result.dig('data', 'myGuests')).to be_nil
     end
   end
 
   describe 'user_activity_point' do
-    before :each do
-      @user = create(:user_with_community)
-      @activity_point = create(:activity_point, user: @user, article_read: 2, referral: 10)
-      @query =
-        %(query userActivityPoint {
+    let!(:visitor_role) { create(:role, name: 'visitor') }
+    let!(:user) { create(:user_with_community, role: visitor_role) }
+    let!(:activity_point) { create(:activity_point, user: user, article_read: 2, referral: 10) }
+    let(:query) do
+      %(query userActivityPoint {
           userActivityPoint {
             userId
             total
@@ -395,11 +652,11 @@ RSpec.describe Types::Queries::User do
     end
 
     it "returns user's current activity point" do
-      result = DoubleGdpSchema.execute(@query, context: {
-                                         current_user: @user,
+      result = DoubleGdpSchema.execute(query, context: {
+                                         current_user: user,
                                        }).as_json
 
-      expect(result.dig('data', 'userActivityPoint', 'userId')).to eq(@user.id)
+      expect(result.dig('data', 'userActivityPoint', 'userId')).to eq(user.id)
       expect(result.dig('data', 'userActivityPoint', 'total')).to eq(12)
       expect(result.dig('data', 'userActivityPoint', 'articleRead')).to eq(2)
       expect(result.dig('data', 'userActivityPoint', 'articleShared')).to eq(0)
@@ -409,7 +666,7 @@ RSpec.describe Types::Queries::User do
     end
 
     it "returns 'unauthorized' if user is not logged in" do
-      result = DoubleGdpSchema.execute(@query, context: {
+      result = DoubleGdpSchema.execute(query, context: {
                                          current_user: nil,
                                        }).as_json
 
@@ -418,13 +675,13 @@ RSpec.describe Types::Queries::User do
     end
 
     it "creates a new empty user's activity point if there's no current one" do
-      @activity_point.update!(created_at: 10.days.ago)
+      activity_point.update!(created_at: 10.days.ago)
       prev_activtity_point_count = Users::ActivityPoint.count
-      result = DoubleGdpSchema.execute(@query, context: {
-                                         current_user: @user,
+      result = DoubleGdpSchema.execute(query, context: {
+                                         current_user: user,
                                        }).as_json
 
-      expect(result.dig('data', 'userActivityPoint', 'userId')).to eq(@user.id)
+      expect(result.dig('data', 'userActivityPoint', 'userId')).to eq(user.id)
       expect(result.dig('data', 'userActivityPoint', 'total')).to eq(0)
       expect(result.dig('data', 'userActivityPoint', 'articleRead')).to eq(0)
       expect(result.dig('data', 'userActivityPoint', 'articleShared')).to eq(0)
@@ -436,14 +693,26 @@ RSpec.describe Types::Queries::User do
   end
 
   describe 'users_count' do
-    let!(:admin_user) { create(:admin_user) }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:client_role) { create(:role, name: 'client') }
+    let!(:resident_role) { create(:role, name: 'resident') }
+    let!(:permission) do
+      create(:permission, module: 'user',
+                          role: admin_role,
+                          permissions: %w[can_get_user_count can_get_users can_get_substatus_count
+                                          can_get_substatus_distribution])
+    end
+
+    let!(:admin_user) { create(:admin_user, role: admin_role) }
     let!(:client_user) do
       create(:user_with_community, user_type: 'client',
-                                   community: admin_user.community)
+                                   community: admin_user.community,
+                                   role: client_role)
     end
     let!(:resident) do
       create(:user_with_community, user_type: 'resident',
-                                   community: admin_user.community)
+                                   community: admin_user.community,
+                                   role: resident_role)
     end
     let!(:second_community) { create(:community) }
     let!(:second_community_user) { create(:user_with_community, community: second_community) }

@@ -4,8 +4,18 @@ require 'rails_helper'
 
 RSpec.describe Mutations::EmailTemplate::TemplateCreate do
   describe 'create an email template' do
-    let!(:user) { create(:user_with_community) }
-    let!(:admin) { create(:admin_user, community_id: user.community_id) }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:resident_role) { create(:role, name: 'resident') }
+    let!(:permission) do
+      create(:permission, module: 'email_template',
+                          role: admin_role,
+                          permissions: %w[can_create_email_template])
+    end
+
+    let!(:user) { create(:user_with_community, user_type: 'resident', role: resident_role) }
+    let!(:admin) do
+      create(:admin_user, user_type: 'admin', community_id: user.community_id, role: admin_role)
+    end
 
     let(:template_mutation) do
       <<~GQL
@@ -31,6 +41,7 @@ RSpec.describe Mutations::EmailTemplate::TemplateCreate do
                                                           context: {
                                                             current_user: admin,
                                                             site_community: user.community,
+                                                            user_role: admin.role,
                                                           }).as_json
       expect(result.dig('data', 'emailTemplateCreate', 'emailTemplate', 'id')).not_to be_nil
       expect(result.dig('data', 'emailTemplateCreate', 'emailTemplate', 'name')).to eql 'welcome'
@@ -48,6 +59,7 @@ RSpec.describe Mutations::EmailTemplate::TemplateCreate do
                                                           context: {
                                                             current_user: user,
                                                             site_community: user.community,
+                                                            user_role: user.role,
                                                           }).as_json
       expect(result.dig('data', 'emailTemplateCreate', 'emailTemplate', 'id')).to be_nil
       expect(result.dig('errors', 0, 'message')).to include 'Unauthorized'
@@ -63,6 +75,7 @@ RSpec.describe Mutations::EmailTemplate::TemplateCreate do
                                                           context: {
                                                             current_user: user,
                                                             site_community: user.community,
+                                                            user_role: user.role,
                                                           }).as_json
       expect(result.dig('data', 'emailTemplateCreate', 'emailTemplate', 'id')).to be_nil
       expect(result.dig('errors', 0, 'message')).to include 'String! was provided invalid value'

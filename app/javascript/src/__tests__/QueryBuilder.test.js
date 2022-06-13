@@ -1,12 +1,12 @@
-import React from 'react'
-import { render } from '@testing-library/react'
-import '@testing-library/jest-dom/extend-expect'
-import MaterialConfig from 'react-awesome-query-builder/lib/config/material'
-import QueryBuilder from '../components/QueryBuilder'
-import { Context } from '../containers/Provider/AuthStateProvider'
-import userMock from '../__mocks__/userMock'
+import React from 'react';
+import { render } from '@testing-library/react';
 
-const InitialConfig = MaterialConfig
+import MuiConfig from 'react-awesome-query-builder/lib/config/mui';
+import QueryBuilder from '../components/QueryBuilder';
+import { Context } from '../containers/Provider/AuthStateProvider';
+import userMock from '../__mocks__/userMock';
+
+const InitialConfig = MuiConfig;
 const queryBuilderConfig = {
   ...InitialConfig,
   fields: {
@@ -14,11 +14,11 @@ const queryBuilderConfig = {
       label: 'Role',
       type: 'select',
       fieldSettings: {
-        listValues: []
+        listValues: [{ value: '', title: '' }]
       }
     }
   }
-}
+};
 
 const queryBuilderInitialValue = {
   id: '99a8a9ba-0123-3344-c56d-b16e532c8cd0',
@@ -35,7 +35,7 @@ const queryBuilderInitialValue = {
       }
     }
   }
-}
+};
 
 describe('QueryBuilder component', () => {
   it('should render necessary filter fields', () => {
@@ -44,13 +44,13 @@ describe('QueryBuilder component', () => {
       initialQueryValue: queryBuilderInitialValue,
       filterFields: {},
       handleOnChange: jest.fn
-    }
+    };
 
     const rendered = render(
       <Context.Provider value={userMock}>
-        <QueryBuilder {...props} />
+        <QueryBuilder {...props} addRuleLabel="Add Filter" />
       </Context.Provider>
-    )
-    expect(rendered.queryByText('Role')).toBeInTheDocument()
-  })
-})
+    );
+    expect(rendered.queryByText('Add Filter')).toBeInTheDocument();
+  });
+});

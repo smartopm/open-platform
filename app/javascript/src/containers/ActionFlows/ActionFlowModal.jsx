@@ -6,7 +6,7 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useQuery, useLazyQuery } from 'react-apollo';
-import MaterialConfig from 'react-awesome-query-builder/lib/config/material';
+import MuiConfig from 'react-awesome-query-builder/lib/config/mui';
 import {
   Dialog,
   DialogTitle,
@@ -15,13 +15,14 @@ import {
   TextField,
   Button,
   Select,
+  useMediaQuery,
   MenuItem,
   InputLabel,
   FormControl,
   FormHelperText
-} from '@material-ui/core';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import { useTheme } from '@material-ui/styles';
+} from '@mui/material';
+import Autocomplete from '@mui/material/Autocomplete';
+import { useTheme } from '@mui/styles';
 import { useTranslation } from 'react-i18next';
 import PhoneInput from 'react-phone-input-2';
 import DatePickerDialog from '../../components/DatePickerDialog';
@@ -42,7 +43,8 @@ import {
   capitalize,
   sentencizeAction,
   objectAccessor,
-  setObjectValue
+  setObjectValue,
+  ifNotTest
 } from '../../utils/helpers';
 import { dateWidget, NotesCategories, defaultBusinessReasons } from '../../utils/constants';
 import UserAutoResult from '../../shared/UserAutoResult';
@@ -61,9 +63,10 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
   const [metaData, setMetaData] = useState({});
   const [selectedDate, setDate] = useState(new Date());
   const [assignees, setAssignees] = useState([]);
+  const [isError, setIsError] = useState(false);
   const theme = useTheme();
   const { t } = useTranslation(['actionflow', 'common']);
-
+  const matches = useMediaQuery('(max-width:800px)');
   const [loadLabelsLite, { data: labelsLiteData }] = useLazyQuery(LabelsQuery, {
     fetchPolicy: 'cache-and-network'
   });
@@ -94,7 +97,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
         actionFieldsValues = setObjectValue(
           actionFieldsValues,
           key,
-          val.value.includes('_') ? titleize(val.value) : val.value
+          val.type === 'variable' ? titleize(val.value) : val.value
         );
       });
       setMetaData(actionFieldsValues);
@@ -155,7 +158,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
     });
   }
 
-  const InitialConfig = MaterialConfig;
+  const InitialConfig = MuiConfig;
   const queryBuilderConfig = {
     ...InitialConfig,
     fields: ruleFieldsConfig,
@@ -286,6 +289,15 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
     return Object.keys(selectedActionFlow).length > 0;
   }
 
+  function confirmSubmission() {
+    if (!data.title || !data.eventType || !data.description) {
+      setIsError(true);
+      return;
+    }
+
+    handleSave(data, metaData);
+  }
+
   return (
     <Dialog open={open} onClose={closeModal} aria-labelledby="form-dialog-title">
       <DialogTitle
@@ -301,15 +313,18 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
       </DialogTitle>
       <DialogContent>
         <TextField
-          autoFocus
+          autoFocus={ifNotTest()}
           margin="dense"
           id="title"
           label={t('common:form_fields.title')}
           name="title"
           type="text"
           fullWidth
+          required
           value={data.title}
           onChange={handleInputChange}
+          error={isError && !data.title}
+          helperText={isError && !data.title && t('misc.fill_title')}
         />
         <TextField
           margin="dense"
@@ -318,16 +333,22 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
           name="description"
           type="text"
           fullWidth
+          required
           multiline
           value={data.description}
           onChange={handleInputChange}
+          error={isError && !data.description}
+          helperText={isError && !data.description && t('misc.fill_description')}
         />
         <FormControl fullWidth>
           {eventData.data && (
             <>
-              <InputLabel id="select-event">{t('actionflow:form_fields.select_event')}</InputLabel>
+              <InputLabel id="select-event" required>
+                {t('actionflow:form_fields.select_event')}
+              </InputLabel>
               <Select
                 labelId="select-event"
+                label={t('actionflow:form_fields.select_event')}
                 id="select-event"
                 data-testid="select-event-type"
                 name="eventType"
@@ -342,6 +363,11 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
                   </MenuItem>
                 ))}
               </Select>
+              {isError && !data.eventType && (
+                <FormHelperText error data-testid="error-msg">
+                  {t('misc.select_event_type')}
+                </FormHelperText>
+              )}
             </>
           )}
         </FormControl>
@@ -384,13 +410,14 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
             // REFACTOR THESE IF-ELSEs (Nurudeen)
             if (actionField.type === 'select' && actionField.name === 'label') {
               return (
-                <FormControl fullWidth>
+                <FormControl key={index} fullWidth>
                   <InputLabel id={`select-${actionField.name}`}>
                     {t('actionflow:form_actions.select', { name: capitalize(actionField.name) })}
                   </InputLabel>
                   <Select
                     labelId={`select-${actionField.name}`}
                     id={`${actionField.name}-id-section`}
+                    data-testid="select-label-action-field"
                     name={actionField.name}
                     value={objectAccessor(data, actionField.name) || ''}
                     onChange={handleSelect}
@@ -407,7 +434,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
             }
             if (actionField.type === 'select' && actionField.name === 'category') {
               return (
-                <FormControl fullWidth>
+                <FormControl key={index} fullWidth>
                   <InputLabel id={`select-${actionField.name}`}>
                     {t('actionflow:form_actions.select', { name: capitalize(actionField.name) })}
                   </InputLabel>
@@ -430,13 +457,14 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
             }
             if (actionField.type === 'select' && actionField.name === 'assignees') {
               return (
-                <FormControl fullWidth>
+                <FormControl key={index} fullWidth>
                   <FormHelperText>{t('actionflow:form_fields.assign_user')}</FormHelperText>
                   <Select
                     labelId={`select-${actionField.name}`}
                     id={`${actionField.name}-id-section`}
                     name={actionField.name}
                     value={assignees}
+                    style={{ width: matches && 300, marginLeft: matches && -18 }}
                     onChange={handleChooseAssignees}
                     fullWidth
                     multiple
@@ -451,7 +479,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
                   >
                     {assigneesLiteData?.usersLite.map(user => (
                       <MenuItem key={user.id} value={user} style={{ padding: 0 }}>
-                        <UserAutoResult user={user} />
+                        <UserAutoResult user={user} t={t} />
                       </MenuItem>
                     ))}
                   </Select>
@@ -460,7 +488,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
             }
             if (actionField.type === 'select' && actionField.name === 'template') {
               return (
-                <FormControl fullWidth>
+                <FormControl key={index} fullWidth>
                   <InputLabel id={`select-${actionField.name}`}>
                     {t('actionflow:form_actions.select', { name: capitalize(actionField.name) })}
                   </InputLabel>
@@ -483,7 +511,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
             }
             if (actionField.type === 'date' && actionField.name === 'due_date') {
               return (
-                <FormControl fullWidth>
+                <FormControl key={index} fullWidth>
                   <FormHelperText>{t('actionflow:form_fields.pick_date')}</FormHelperText>
                   <DatePickerDialog
                     handleDateChange={date =>
@@ -497,13 +525,14 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
             if (actionField.type === 'text' && actionField.name === 'phone_number') {
               return (
                 <PhoneInput
+                  key={index}
                   value={metaData.phone_number || ''}
                   inputStyle={{ width: '100%' }}
                   enableSearch
                   inputProps={{
                     name: 'phoneNumber',
                     required: true,
-                    'data-testId': 'primary_phone'
+                    'data-testid': 'primary_phone'
                   }}
                   placeholder={t('common:form_placeholders.phone_number')}
                   onChange={value => handlePhoneNumberInput({ name: actionField.name, value })}
@@ -534,7 +563,6 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
                       name={actionField.name}
                       margin="normal"
                       variant="outlined"
-                      multiline
                     />
                   );
                 }}
@@ -567,7 +595,6 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
                       name={varName}
                       margin="normal"
                       variant="outlined"
-                      multiline
                     />
                   );
                 }}
@@ -578,7 +605,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
         <Button onClick={closeModal} color="secondary" variant="outlined">
           {t('common:form_actions.cancel')}
         </Button>
-        <Button onClick={() => handleSave(data, metaData)} color="primary" variant="contained">
+        <Button onClick={() => confirmSubmission()} color="primary" variant="contained">
           {isEdit() ? t('common:form_actions.save_changes') : t('common:form_actions.save')}
         </Button>
       </DialogActions>

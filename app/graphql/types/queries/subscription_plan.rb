@@ -11,7 +11,10 @@ module Types::Queries::SubscriptionPlan
   end
 
   def subscription_plans
-    unless context[:current_user].admin?
+    unless permitted?(
+      module: :subscription_plan,
+      permission: :can_fetch_subscription_plans,
+    )
       raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
     end
 

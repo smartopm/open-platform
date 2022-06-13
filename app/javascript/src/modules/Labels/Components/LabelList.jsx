@@ -1,27 +1,46 @@
 import React, { useState } from 'react';
 import { useQuery } from 'react-apollo';
-import { Grid, Typography, Container } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { Container } from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import { LabelsQuery } from '../../../graphql/queries';
-import ErrorPage from '../../../components/Error';
-import Loading from '../../../shared/Loading';
 import LabelItem from './LabelItem';
-import CenteredContent from '../../../components/CenteredContent';
+import CenteredContent from '../../../shared/CenteredContent';
 import Paginate from '../../../components/Paginate';
 import ButtonComponent from '../../../shared/buttons/Button';
 import EditModal from './EditModal';
+import ListHeader from '../../../shared/list/ListHeader';
+import { Spinner } from '../../../shared/Loading'
+import { formatError } from '../../../utils/helpers'
+
 
 export default function LabelList({ userType }) {
   const classes = useStyles();
+  const matches = useMediaQuery('(max-width:600px)');
   const limit = 50;
   const [offset, setOffset] = useState(0);
   const [open, setOpen] = useState(false);
-  const { t } = useTranslation('label');
+  const { t } = useTranslation(['label', 'common']);
   const { data, error, loading, refetch } = useQuery(LabelsQuery, {
     variables: { limit, offset }
   });
+
+  const labelsHeader = [
+    {
+      title: 'Labels',
+      value: t('common:table_headers.labels'),
+      col: 2
+    },
+    { title: 'No of Users', value: t('common:table_headers.labels_total_no_of_users'), col: 2 },
+    {
+      title: 'Description',
+      value: t('common:table_headers.labels_description'),
+      col: 2
+    },
+    { title: 'Menu', value: t('common:table_headers.menu'), col: 1 }
+  ];
 
   function paginate(action) {
     if (action === 'prev') {
@@ -32,10 +51,9 @@ export default function LabelList({ userType }) {
     }
   }
 
-  if (loading) return <Loading />;
-  if (error) {
-    return <ErrorPage title={error.message} />;
-  }
+  if (loading) return <Spinner />;
+  if (error) return <CenteredContent>{formatError(error.message)}</CenteredContent>;
+
   return (
     <Container>
       <div className={classes.labelButton}>
@@ -45,49 +63,26 @@ export default function LabelList({ userType }) {
           buttonText={t('label.create_label')}
           handleClick={() => setOpen(true)}
           size="large"
+          data-testid='button'
         />
         <EditModal open={open} handleClose={() => setOpen(false)} refetch={refetch} type="new" />
       </div>
-      <LabelPageTitle />
-      <br />
-      {data?.labels.map(label => (
-        <LabelItem
-          key={label.id}
-          label={label}
-          userType={userType}
-          userCount={label.userCount}
-          refetch={refetch}
-        />
+      <div className={classes.container}>
+        {!matches && <ListHeader headers={labelsHeader} />}
+        {data?.labels.map(label => (
+          <LabelItem
+            key={label.id}
+            label={label}
+            userType={userType}
+            userCount={label.userCount}
+            refetch={refetch}
+          />
       ))}
+      </div>
       <CenteredContent>
         <Paginate offSet={offset} limit={limit} active={offset >= 1} handlePageChange={paginate} />
       </CenteredContent>
     </Container>
-  );
-}
-
-function LabelPageTitle() {
-  const classes = useStyles();
-  const { t } = useTranslation('common');
-
-  return (
-    <Grid container spacing={6} className={classes.labelTitle}>
-      <Grid item xs={3}>
-        <Typography variant="subtitle2" data-testid="label-name" className={classes.label}>
-          {t('table_headers.labels')}
-        </Typography>
-      </Grid>
-      <Grid item xs={3}>
-        <Typography variant="subtitle2" data-testid="label-name">
-          {t('table_headers.labels_total_no_of_users')}
-        </Typography>
-      </Grid>
-      <Grid item xs={3}>
-        <Typography variant="subtitle2" data-testid="label-name">
-          {t('table_headers.labels_description')}
-        </Typography>
-      </Grid>
-    </Grid>
   );
 }
 
@@ -103,5 +98,8 @@ const useStyles = makeStyles(() => ({
   },
   labelButton: {
     textAlign: 'right'
+  },
+  container: {
+    marginTop: '20px'
   }
 }));

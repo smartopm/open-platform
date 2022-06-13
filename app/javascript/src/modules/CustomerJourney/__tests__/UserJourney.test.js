@@ -1,11 +1,11 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import { MockedProvider } from '@apollo/react-testing';
-import '@testing-library/jest-dom/extend-expect';
+
 import UserJourney, { getSubStatusChangeContent, getInitialSubStatusContent, subsStatusLogsFormatter } from '../../Users/Components/UserJourney';
 
 const log =  {
-  id: '90849232-234234-sdfloeop34-',
+  id: '90849232-234234-sdfloeop34-9-',
   startDate: '2020-03-01',
   stopDate: '2020-03-03',
   previousStatus: 'plots_fully_purchased',
@@ -67,7 +67,7 @@ describe('user journey utils', () => {
   
   it('should render for first or last items that dont have stopDate', () => {
     const anotherLog =  {
-      id: '90849232-234234-sdfloeop34-',
+      id: '90849232-234234-sdfloeop34-9',
       date: '2020-03-01',
       previousStatus: 'plots_fully_purchased',
       newStatus: 'eligible_to_start_construction'

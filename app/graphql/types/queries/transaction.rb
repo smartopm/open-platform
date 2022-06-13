@@ -32,7 +32,10 @@ module Types::Queries::Transaction
   #
   # @return [Array<TransactionType>]
   # rubocop:disable Metrics/MethodLength
+  # rubocop:disable Metrics/AbcSize
   def user_transactions(user_id: nil, plan_id: nil, limit: nil, offset: 0)
+    validate_user_permissions_for_transactions(:can_fetch_user_transactions)
+
     user = verified_user(user_id)
     transactions =  user.transactions.not_cancelled.includes(:plan_payments, :depositor)
     return if plan_id == 'all'
@@ -48,17 +51,18 @@ module Types::Queries::Transaction
     end
   end
   # rubocop:enable Metrics/MethodLength
+  # rubocop:enable Metrics/AbcSize
 
   def payment_accounting_stats
+    validate_user_permissions_for_transactions(:can_fetch_accounting_stats)
+
     Payments::Transaction.payment_stat(context[:site_community])
   end
 
   # rubocop:disable Metrics/AbcSize
   # rubocop:disable Metrics/MethodLength
   def transaction_summary
-    unless context[:current_user]&.admin?
-      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
-    end
+    validate_user_permissions_for_transactions(:can_fetch_transaction_summary)
 
     transactions = context[:site_community].transactions.not_cancelled
     {
@@ -81,15 +85,6 @@ module Types::Queries::Transaction
 
   private
 
-  # Raises GraphQL execution error if transaction does not exist.
-  #
-  # @return [GraphQL::ExecutionError]
-  def raise_deposit_not_found_error(transaction)
-    return if transaction
-
-    raise GraphQL::ExecutionError, I18n.t('errors.transaction.not_found')
-  end
-
   # Raises GraphQL execution error if payment plan does not exist.
   #
   # @return [GraphQL::ExecutionError]
@@ -97,5 +92,14 @@ module Types::Queries::Transaction
     return if payment_plan
 
     raise GraphQL::ExecutionError, I18n.t('errors.payment_plan.not_found')
+  end
+
+  # Raises GrapQL execution error if the user if the current user does not have permission
+  #
+  # @return [GraphQL::ExecutionError]
+  def validate_user_permissions_for_transactions(permission)
+    return if permitted?(module: :transaction, permission: permission)
+
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
   end
 end

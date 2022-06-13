@@ -1,5 +1,5 @@
 import React from 'react'
-import LinearScaleIcon from '@material-ui/icons/LinearScale';
+import LinearScaleIcon from '@mui/icons-material/LinearScale';
 
 // TODO: @olivier This needs to be re-visited
 // a user should have access to their own journey but tabs on the user currently don't support 

@@ -1,49 +1,49 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import React from 'react'
+import React from 'react';
 import { useQuery } from 'react-apollo';
 import PropTypes, { shape } from 'prop-types';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import TrendingFlatIcon from '@material-ui/icons/TrendingFlat';
-import { Link, useHistory } from 'react-router-dom'
-import { Grid, Typography } from '@material-ui/core'
-import { PaymentSummaryQuery } from '../graphql/payment_summary_query'
-import { Spinner } from '../../../../shared/Loading';
-import PaymentSummaryCard from './PaymentSummaryCard'
-import { objectAccessor, formatError } from '../../../../utils/helpers'
-import CenteredContent from '../../../../components/CenteredContent';
+import { useTheme } from '@mui/material/styles';
+import makeStyles from '@mui/styles/makeStyles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import TrendingFlatIcon from '@mui/icons-material/TrendingFlat';
+import { Link, useHistory } from 'react-router-dom';
+import { Grid, Typography } from '@mui/material';
+import { PaymentSummaryQuery } from '../graphql/payment_summary_query';
+import PaymentSummaryCard from './PaymentSummaryCard';
+import { objectAccessor, formatError } from '../../../../utils/helpers';
+import CenteredContent from '../../../../shared/CenteredContent';
 import { currencies } from '../../../../utils/constants';
 import authStateProps from '../../../../shared/types/authState';
-
+import CustomSkeleton from '../../../../shared/CustomSkeleton';
 
 const paymentCardContent = {
-  today: 'Total amount in payment today',
-  oneWeek: 'Total amount in payment this week',
-  oneMonth: 'Total amount in payment this month',
-  overOneMonth: 'Total amount in payment this year'
-}
+  today: 'Total amount paid today',
+  oneWeek: 'Total amount paid in the past 7 days',
+  oneMonth: 'Total amount paid in the past 30 days',
+  overOneMonth: 'Total amount paid in this year'
+};
 
 export default function PaymentSummary({ authState, translate }) {
-  const matches = useMediaQuery('(max-width:600px)')
+  const matches = useMediaQuery('(max-width:600px)');
   const classes = useStyles();
-  const theme = useTheme()
+  const theme = useTheme();
 
   const currency = currencies[authState.user?.community.currency] || '';
-  const currencyData = { currency, locale: authState.user?.community.locale }
+  const currencyData = { currency, locale: authState.user?.community.locale };
 
   const { loading: payLoading, data: payData, error: payError } = useQuery(PaymentSummaryQuery, {
     fetchPolicy: 'cache-and-network',
     errorPolicy: 'all'
   });
 
-  const history = useHistory()
+  const history = useHistory();
 
   function handleClick(query, value) {
     if (value === 0) return;
     history.push({
       pathname: '/payments',
-      state: { from: 'dashboard', query },
+      state: { from: 'dashboard', query }
     });
   }
 
@@ -52,56 +52,88 @@ export default function PaymentSummary({ authState, translate }) {
   }
   return (
     <div>
-      {payLoading ? <Spinner /> : (
-        <div>
-          {matches ? (
-            <div style={{margin: '20px 20px 0 20px', display: 'flex'}}>
-              <Typography className={classes.mobile}>{translate('common:misc.payments')}</Typography>
-            </div>
-          ) : (
-            <div style={{marginLeft: '79px', marginTop: '20px'}}>
-              <Grid container alignItems="center">
-                <Typography
-                  className={classes.bold}
-                  style={{marginRight: '20px', width: '102px', cursor: 'pointer'}}
-                >
-                  {translate('common:misc.payments')}
-                </Typography>
-                <Typography style={{marginLeft: 'auto', marginRight: '81px', cursor: 'pointer', fontSize: '16px', fontWeight: 500}}>
-                  <Link to='/payments?type=new' style={{ color: theme.palette.primary.main }}>{translate('dashboard.make_new_payment')}</Link>
-                </Typography>
-              </Grid>
-            </div>
-          )}
-
-          <Grid container spacing={2} style={matches ? {padding: '20px'} : {padding: '20px 57px 20px 79px', width: '99%'}}>
-            {
-                // eslint-disable-next-line no-unused-vars
-                Object.entries(paymentCardContent).map(([key, _val]) => (
-                  <Grid item xs={6} sm={3} key={key}>
-                    <PaymentSummaryCard
-                      title={translate(`dashboard.payment.${key}`)}
-                      value={objectAccessor(payData?.transactionSummary, key)}
-                      currencyData={currencyData}
-                      handleClick={handleClick}
-                      query={key}
-                    />
-                  </Grid>
-                ))
-              }
+      {matches ? (
+        <div style={{ margin: '20px 20px 0 20px', display: 'flex' }}>
+          <Typography className={classes.mobile}>{translate('common:misc.payments')}</Typography>
+        </div>
+      ) : (
+        <div style={{ marginLeft: '20px', marginTop: '20px' }}>
+          <Grid container alignItems="center">
+            <Typography
+              className={classes.bold}
+              style={{ marginRight: '20px', width: '102px', cursor: 'pointer' }}
+            >
+              {translate('common:misc.payments')}
+            </Typography>
+            <Typography
+              style={{
+                marginLeft: 'auto',
+                marginRight: '81px',
+                cursor: 'pointer',
+                fontSize: '16px',
+                fontWeight: 500
+              }}
+            >
+              <Link to="/payments?type=new" style={{ color: theme.palette.primary.main }}>
+                {translate('dashboard.make_new_payment')}
+              </Link>
+            </Typography>
           </Grid>
-          {matches && (
-            <div style={{display: 'flex', marginLeft: '20px', cursor: 'pointer', fontSize: '14px', fontWeight: 500}}>
-              <Typography color='primary' style={{marginRight: '10px', fontWeight: 500}}>
-                <Link to='/payments?type=new'>{translate('dashboard.make_new_payment')}</Link>
-              </Typography>
-              <TrendingFlatIcon color="primary" />
-            </div>
-          )}
+        </div>
+      )}
+      {payLoading ? (
+        <Grid
+          container
+          spacing={2}
+          style={matches ? { padding: '20px' } : { padding: '20px 57px 20px 20px', width: '99%' }}
+        >
+          {Array.from(new Array(4)).map((_arr, index) => (
+            // eslint-disable-next-line react/no-array-index-key
+            <Grid item xs={6} sm={3} key={index}>
+              <CustomSkeleton variant="rectangular" width="100%" height="140px" />
+            </Grid>
+          ))}
+        </Grid>
+      ) : (
+        <div>
+          <Grid
+            container
+            spacing={2}
+            style={matches ? { padding: '20px' } : { padding: '20px 57px 20px 20px', width: '99%' }}
+          >
+            {// eslint-disable-next-line no-unused-vars
+            Object.entries(paymentCardContent).map(([key, _val]) => (
+              <Grid item xs={6} sm={3} key={key}>
+                <PaymentSummaryCard
+                  title={translate(`dashboard.payment.${key}`)}
+                  value={objectAccessor(payData?.transactionSummary, key)}
+                  currencyData={currencyData}
+                  handleClick={handleClick}
+                  query={key}
+                />
+              </Grid>
+            ))}
+          </Grid>
+        </div>
+      )}
+      {matches && (
+        <div
+          style={{
+            display: 'flex',
+            marginLeft: '20px',
+            cursor: 'pointer',
+            fontSize: '14px',
+            fontWeight: 500
+          }}
+        >
+          <Typography color="primary" style={{ marginRight: '10px', fontWeight: 500 }}>
+            <Link to="/payments?type=new">{translate('dashboard.make_new_payment')}</Link>
+          </Typography>
+          <TrendingFlatIcon color="primary" />
         </div>
       )}
     </div>
-  )
+  );
 }
 
 const useStyles = makeStyles(() => ({

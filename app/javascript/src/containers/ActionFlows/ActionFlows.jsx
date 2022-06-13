@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { StyleSheet, css } from 'aphrodite'
 import { useMutation, useQuery } from 'react-apollo'
 import { useHistory } from 'react-router-dom'
-import { Button } from '@material-ui/core'
+import { Button } from '@mui/material'
 import { useTranslation } from 'react-i18next';
 import { CreateActionFlow, UpdateActionFlow } from '../../graphql/mutations'
 import MessageAlert from '../../components/MessageAlert'
@@ -66,7 +66,7 @@ export default function ActionFlows() {
   /** whitelist some metadata fields that are not variables but contain whitespace
   e.g "message" field used by the notification action * */
   // TODO: Revisit this and remove potential complexity @Nurudeen and @Victor
-  const metaDataVariableWhiteList = Object.freeze(['message', 'body', 'description'])
+  const metaDataVariableWhiteList = Object.freeze(['message', 'body', 'description', 'title', 'action'])
 
   function isMetaDataAVariable({key, value}) {
     if(metaDataVariableWhiteList.indexOf(key) >= 0){
@@ -77,7 +77,7 @@ export default function ActionFlows() {
   }
 
   function metaDataVariableValue(value) {
-    return value.replace(/ /g, '_').toLowerCase()
+    return value.replace(/ /g, '_').toLowerCase();
   }
 
   // eslint-disable-next-line no-shadow

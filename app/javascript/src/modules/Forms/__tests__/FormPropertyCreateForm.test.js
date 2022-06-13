@@ -1,6 +1,6 @@
 import React from 'react';
 import { fireEvent, render, waitFor } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
+
 import { MockedProvider } from '@apollo/react-testing';
 import FormPropertyCreateForm from '../components/FormPropertyCreateForm';
 import { FormPropertyQuery } from '../graphql/forms_queries';
@@ -18,6 +18,7 @@ describe('Form that creates other forms component', () => {
         formProperty: {
           id: '5290d212-edf8-4c1e-a20b',
           fieldName: 'Last Name',
+          groupingId: 'Id-id2312',
           fieldType: 'text',
           fieldValue: [
             {
@@ -38,7 +39,7 @@ describe('Form that creates other forms component', () => {
       query: FormPropertyUpdateMutation,
       variables: {
         formPropertyId: '5290d212-edf8-4c1e-a20b',
-        categoryId: '394892348329',
+        categoryId: '',
         fieldName: 'This should be there',
         fieldType: 'text',
         required: false,
@@ -53,6 +54,7 @@ describe('Form that creates other forms component', () => {
           formProperty: {
             id: '5290d212-edf8-4c1e-a20b',
             fieldName: 'This should be there',
+            groupingId: '23421312',
           },
           newFormVersion: {
             id: '5290d212',
@@ -67,7 +69,7 @@ describe('Form that creates other forms component', () => {
       query: FormPropertyCreateMutation,
       variables: {
         formId: '39c3b38e-136d-42e0',
-        // categoryId: '394892348329',
+        // categoryId: '',
         fieldName: '',
         fieldType: '',
         required: false,
@@ -82,6 +84,7 @@ describe('Form that creates other forms component', () => {
         formPropertiesCreate: {
           formProperty: {
             id: '5290d212-edf8-4c1e-a20b',
+            groupingId: '529043d-edf8-4c1e-a20b',
             fieldName: '',
             fieldType: '',
           },
@@ -97,7 +100,7 @@ describe('Form that creates other forms component', () => {
         <FormPropertyCreateForm
           propertyId={mocks.request.variables.formPropertyId}
           formId="39c3b38e-136d-42e0"
-          categoryId="394892348329"
+          categoryId=""
           refetch={refetchMock}
           close={closeMock}
         />
@@ -130,7 +133,7 @@ describe('Form that creates other forms component', () => {
       <MockedProvider mocks={[mocks, createPropertyMock]} addTypename>
         <FormPropertyCreateForm
           formId={createPropertyMock.request.variables.formId}
-          categoryId="394892348329"
+          categoryId=""
           refetch={refetchMock}
           close={closeMock}
         />

@@ -27,9 +27,15 @@ module Types
     field :sub_administrator, Types::UserType, null: true
     field :banking_details, GraphQL::Types::JSON, null: true
     field :community_required_fields, GraphQL::Types::JSON, null: true
+    # TODO: remove this field or encrypt it before sending to f.e
+    field :payment_keys, GraphQL::Types::JSON, null: true
     field :sms_phone_numbers, [String, { null: true }], null: true
     field :emergency_call_number, String, null: true
     field :templates, GraphQL::Types::JSON, null: true
+    field :roles, [String, { null: true }], null: true
+    field :ga_id, String, null: true
+    field :hotjar, Integer, null: true
+    field :lead_monthly_targets, GraphQL::Types::JSON, null: true
 
     def image_url
       return nil unless object.image.attached?
@@ -37,6 +43,10 @@ module Types
       base_url = HostEnv.base_url(object)
       path = Rails.application.routes.url_helpers.rails_blob_path(object.image)
       "https://#{base_url}#{path}"
+    end
+
+    def roles
+      Role.where(community_id: [nil, context[:site_community].id]).pluck(:name).uniq
     end
   end
 end

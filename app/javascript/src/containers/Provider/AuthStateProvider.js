@@ -15,7 +15,8 @@ const initialState = {
   user: null,
   member: null,
   members: [],
-  loggedIn: false
+  loggedIn: false,
+  token: null
 };
 
 const QUERY = gql`
@@ -25,12 +26,18 @@ const QUERY = gql`
       email
       name
       userType
+      roleName
+      status
       phoneNumber
       expiresAt
       imageUrl
       avatarUrl
       subStatus
       paymentPlan
+      permissions {
+        module
+        permissions
+      }
       community {
         id
         name
@@ -41,6 +48,7 @@ const QUERY = gql`
         supportWhatsapp
         socialLinks
         menuItems
+        leadMonthlyTargets
         imageUrl
         currency
         locale
@@ -58,6 +66,9 @@ const QUERY = gql`
         smsPhoneNumbers
         emergencyCallNumber
         features
+        roles
+        leadMonthlyTargets
+        paymentKeys
       }
     }
   }

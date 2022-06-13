@@ -3,7 +3,8 @@ import { render, act, fireEvent } from '@testing-library/react'
 import { BrowserRouter } from 'react-router-dom/'
 import { MockedProvider } from '@apollo/react-testing'
 import Business from '../Components/BusinessList';
-import '@testing-library/jest-dom/extend-expect'
+import authState from '../../../__mocks__/authstate';
+
 
 describe('It tests the business directory list', () => {
 
@@ -22,7 +23,7 @@ describe('It tests the business directory list', () => {
                 }
             ]
         },
-        userType: 'admin',
+        authState,
         refetch: jest.fn()
     }
     it('should render business category', async () => {

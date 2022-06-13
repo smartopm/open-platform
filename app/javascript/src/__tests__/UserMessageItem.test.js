@@ -5,10 +5,10 @@ import { MockedProvider } from '@apollo/react-testing';
 import UserMessageItem, { checkRoute } from '../components/Messaging/MessageItem';
 
 describe('user message item component', () => {
-  const message = `Please share your feedback with this 30 seconds survey: https://app.doublegdp.com/news/posts/survey/ 
+  const message = `Please share your feedback with this 30 seconds survey: https://app.doublegdp.com/news/posts/survey/
     and your email test@testdotcom.com`;
   const data = {
-    id: 1,
+    id: "1",
     name: 'joen',
     user: {},
     category: 'SMS',
@@ -26,7 +26,7 @@ describe('user message item component', () => {
     </MockedProvider>
   );
   it('should render the user messages items with props', () => {
- 
+
     // enzyme has a funny way of passing props, more child nodes you have, the deeper it gets
     const { props } = messageItem.props().children.props.children
     expect(props.id).toBe(data.id);
@@ -78,7 +78,7 @@ describe('user message item component', () => {
   // new data
 
   const newData = {
-    id: 2,
+    id: "2",
     name: 'brieen',
     user: {
       userType: 'client'

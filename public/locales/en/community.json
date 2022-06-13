@@ -1,9 +1,12 @@
 {
     "community": {
       "community_logo": "Community Logo",
-      "change_community_logo": "You can change your community logo here",
+      "change_community_logo": "You can change your community logo here. Preview shows how your logo will display in the top navigation bar. Recommended format is a 600 x 160 px, 72dpi and PNG or JPEG",
       "upload_logo": "Upload new logo",
       "support_contact": "Support Contact Information",
+      "lead_management": "Lead Management/CRM",
+      "subtitle": "Lead Management Divisions",
+      "division_description": "Items set here will populate the Division selector on the Lead Management Scorecard tab and on Scorecard page.",
       "make_changes_support_contact": "Make changes to your contact information here.",
       "community_tagline": "Set Community Tagline",
       "community_logo_url": "Set Community Logo Url",
@@ -34,11 +37,18 @@
       "sms_phone_numbers_header": "Emergency Contacts",
       "select_template": "Select Template",
       "behind": "Behind",
+      "upcoming": "Upcoming",
       "status": "Status",
       "notification_templates": "Notification Templates",
       "gate_access_settings_header": "Gate Access Settings",
       "banking_details": "Banking Details",
-      "hide_deny_gate_access_button": "Hide Deny Access Button"
-
+      "hide_deny_gate_access_button": "Hide Deny Access Button",
+      "tasks_settings": "Tasks Settings",
+      "enable_auomated_reminders": "Enable Automated Task Reminders",
+      "crop_image": "click to crop image",
+      "upload_error": "Selected image must not be greater than 600x160 in size",
+      "guest_verification": "Disable Guest Verification",
+      "google_analytics_id": "Set Google Analytics Id",
+      "minimum_divisions": "A minimum of 2 divisions are required to activate this feature."
     }
 }

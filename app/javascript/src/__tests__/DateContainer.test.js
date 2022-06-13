@@ -7,7 +7,7 @@ describe('date container component', () => {
   it('renders a span element and has correct time', () => {
     // get today's date
     const date = new Date()
-    const time = dateTimeToString(date.toString())
+    const time = dateTimeToString(date)
     const component = mount(<DateContainer date={date} />)
     expect(component.find('span')).toHaveLength(1)
     expect(component.find('span').text()).toContain(`Today at ${time}`)
@@ -58,7 +58,7 @@ describe('date container component', () => {
     expect(DateUtils.formatDate(date)).toContain('2020-06-11')
   })
   it('should return never when date is null', () => {
-    expect(DateUtils.formatDate()).toContain('Never')
+    expect(DateUtils.formatDate()).toContain('misc.never')
   })
   it('should append time to the date', () => {
     const date1 = new Date('2021-09-07T15:39:00.000Z')

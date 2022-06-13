@@ -22,6 +22,7 @@ RSpec.describe TaskReminderJob, type: :job do
   end
   let!(:assignee_note) { create(:assignee_note, user: admin, note: note) }
 
+  before { Rails.env.stub(production?: true) }
   describe '#perform' do
     before do
       ActiveJob::Base.queue_adapter = :test
@@ -54,12 +55,15 @@ RSpec.describe TaskReminderJob, type: :job do
       ]
 
       expect(EmailMsg).to receive(:send_mail_from_db).with(
-        admin.email, template, template_data
+        email: admin.email,
+        template: template,
+        template_data: template_data,
       )
       perform_enqueued_jobs { described_class.perform_later('manual', assignee_note) }
     end
 
     it 'invokes EmailMsg and SMS' do
+      community.update(features: { 'Tasks' => { 'features' => ['Automated Task Reminders'] } })
       template = Notifications::EmailTemplate.system_emails
                                              .create!(
                                                name: 'task_reminder_template',
@@ -74,7 +78,9 @@ RSpec.describe TaskReminderJob, type: :job do
       due_date = note.due_date.to_date.to_s
 
       expect(EmailMsg).to receive(:send_mail_from_db).with(
-        admin.email, template, template_data
+        email: admin.email,
+        template: template,
+        template_data: template_data,
       )
       expect(Sms).to receive(:send).with(
         admin.phone_number, I18n.t('general.task_reminder', due_date: due_date,

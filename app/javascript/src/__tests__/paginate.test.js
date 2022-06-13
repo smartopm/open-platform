@@ -2,7 +2,7 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import Paginate from '../components/Paginate'
-import '@testing-library/jest-dom/extend-expect'
+
 
 describe('paginate component', () => {
   const props = {

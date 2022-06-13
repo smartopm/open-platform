@@ -1,13 +1,14 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable no-use-before-define */
 import React, { useEffect, useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
-import { Button, Typography } from '@material-ui/core';
+import makeStyles from '@mui/styles/makeStyles';
+import SwipeableDrawer from '@mui/material/SwipeableDrawer';
+import { Button, Typography } from '@mui/material';
 import PropTypes from 'prop-types'
 import { useLazyQuery, useMutation } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
-import { useFetch } from '../../../utils/customHooks'
+import { useHistory } from 'react-router-dom';
+import { useFetch } from '../../../utils/customHooks';
 import PostItem from './PostItem'
 import { dateToString } from '../../../components/DateContainer'
 import Tag from './Tag';
@@ -15,6 +16,7 @@ import MessageAlert from '../../../components/MessageAlert';
 import { PostTagUser } from '../../../graphql/queries';
 import { Spinner } from '../../../shared/Loading'
 import { FollowPostTag } from '../../../graphql/mutations';
+import CenteredContent from '../../../shared/CenteredContent';
 
 export default function TagPosts({ open, handleClose, tagName, wordpressEndpoint }) {
   const classes = useStyles();
@@ -26,6 +28,7 @@ export default function TagPosts({ open, handleClose, tagName, wordpressEndpoint
   const [loadUserTags, {  called, loading, data, error: lazyError, refetch } ] = useLazyQuery(PostTagUser)
   const [followTag] = useMutation(FollowPostTag)
   const { t } = useTranslation('news')
+  const history = useHistory();
 
   useEffect(() => {
       if (open && tagName) {
@@ -35,11 +38,11 @@ export default function TagPosts({ open, handleClose, tagName, wordpressEndpoint
   }, [tagName, open])
 
   if (error || lazyError) {
-    return error?.message || lazyError?.message
+    return <CenteredContent>{t('news.no_tags_found') || lazyError?.message}</CenteredContent>
   }
 
   function loadPostPage(postId) {
-    window.location.href = `/news/post/${postId}`
+    history.push(`/news/post/${postId}`);
   }
 
   function handleFollowTag(){
@@ -102,7 +105,9 @@ export default function TagPosts({ open, handleClose, tagName, wordpressEndpoint
               </Button>
             </div>
           </div>
-          {response.posts?.map((post) => (
+
+
+          { Boolean(response?.posts) && response.posts?.map((post) => (
             // eslint-disable-next-line jsx-a11y/no-static-element-interactions
             <div key={post.ID} onClick={() => loadPostPage(post.ID)}>
               <PostItem

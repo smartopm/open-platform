@@ -1,7 +1,7 @@
 import React from 'react'
 import { render } from '@testing-library/react'
 import MessageAlert from '../components/MessageAlert'
-import '@testing-library/jest-dom/extend-expect'
+
 
 describe('MessageAlert component', () => {
   it("should render alert message", () => {

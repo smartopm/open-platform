@@ -21,6 +21,7 @@ module Mutations
       argument :occurs_on, [String], required: false
       argument :visit_end_date, String, required: false
       argument :is_guest, Boolean, required: false
+      argument :guest_id, ID, required: false
 
       field :entry_request, Types::EntryRequestType, null: true
 
@@ -40,9 +41,7 @@ module Mutations
 
       # Verifies if current user admin or security guard.
       def authorized?(_vals)
-        if context[:current_user]&.role?(%i[security_guard admin custodian client resident])
-          return true
-        end
+        return true if permitted?(module: :entry_request, permission: :can_create_entry_request)
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end

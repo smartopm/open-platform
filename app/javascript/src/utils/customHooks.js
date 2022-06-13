@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { useState, useEffect } from 'react'
 
 /**
@@ -8,13 +7,14 @@ import { useState, useEffect } from 'react'
  * @description returns remaining time in seconds
  * @returns time in seconds
  */
-export default function useTimer(initialTime, delay) {
+export default function useTimer(initialTime, delay=1000) {
   const [time, setTime] = useState(initialTime)
   useEffect(() => {
     if (!time) return
     const intervalId = setInterval(() => {
       setTime(time - 1)
     }, delay)
+    // eslint-disable-next-line consistent-return
     return () => clearInterval(intervalId)
   }, [delay, time])
 
@@ -52,11 +52,11 @@ export function useWindowDimensions() {
 
 
 /**
- * 
+ *
  * @param {string} url API endpoint to fetch from
  * @param {object} options include headers and http method here [GET, POST, ...]
  * @returns {object} response and error
- * 
+ *
  */
 export function useFetch(url) {
   const [response, setData] = useState({});
@@ -68,14 +68,45 @@ export function useFetch(url) {
         const result = await fetch(url);
         const json = await result.json();
         setData(json);
-      } catch (error) {
-        setError(error);
+      } catch (err) {
+        setError(err);
       }
     };
     fetchData();
   }, [url]);
   return { response, error };
 }
+
+
+/**
+ * This is similar to the useFetch, only that the response in here does not need to be converted to json
+ * @param {String} url
+ * @returns
+ */
+export function useFetchMedia(url, options) {
+  const [response, setData] = useState({});
+  const [isError, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true)
+      try {
+        const result = await fetch(url, options)
+        setData(result)
+        setLoading(false)
+      } catch (_err) {
+        setError(true)
+        setLoading(false)
+      }
+    }
+    fetchData()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+  return { response, isError, loading };
+}
+
+
 
 export function useScript(src) {
   // Keep track of script status ("idle", "loading", "ready", "error")
@@ -123,6 +154,7 @@ export function useScript(src) {
       script.addEventListener("load", setStateFromEvent);
       script.addEventListener("error", setStateFromEvent);
       // Remove event listeners on cleanup
+      // eslint-disable-next-line consistent-return
       return () => {
         if (script) {
           script.removeEventListener("load", setStateFromEvent);

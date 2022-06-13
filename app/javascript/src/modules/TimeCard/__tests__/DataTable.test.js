@@ -1,27 +1,29 @@
-import React from 'react'
-import { mount } from 'enzyme'
-import DataTable from '../Components/DataTable'
+import React from 'react';
+import { BrowserRouter } from 'react-router-dom/';
+import { MockedProvider } from '@apollo/react-testing';
+import { render } from '@testing-library/react';
+import DataTable from '../Components/DataTable';
+import MockedThemeProvider from "../../__mocks__/mock_theme";
+
 
 describe('test the datatabe', () => {
+  const dataProps = {
+    columns: ['Name', 'Code'],
+    sticky: true
+  };
+  it('should render', () => {
+    const container = render(
+      <MockedProvider>
+        <BrowserRouter>
+          <MockedThemeProvider>
+            <DataTable {...dataProps} />
+          </MockedThemeProvider>
+        </BrowserRouter>
+      </MockedProvider>
+    );
 
-    const dataProps =
-    {
-        columns: ['Name', 'Code'],
-        sticky: true
-    }
-    it('should render', () => {
-
-        const wrapper = mount(<DataTable {...dataProps} />)
-        expect(wrapper.find('div')).toBeTruthy()
-        expect(wrapper.find('table')).toHaveLength(1)
-        
-    })
-    const dataPropsView= mount(<DataTable {...dataProps} />)
-    it('columns should not be null', () => {
-        const {columns, sticky} = dataPropsView.props()
-        expect(columns).toContain('Name')
-        expect(sticky).toBe(true)
-    });
-    
-
-})
+    expect(container.queryByTestId('data_table_container')).toBeInTheDocument();
+    expect(container.queryByText('Name')).toBeInTheDocument();
+    expect(container.queryByText('Code')).toBeInTheDocument();
+  });
+});

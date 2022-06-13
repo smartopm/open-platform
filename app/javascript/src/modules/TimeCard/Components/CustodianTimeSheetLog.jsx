@@ -2,7 +2,7 @@
 import React from 'react';
 import { useHistory } from 'react-router';
 import { StyleSheet, css } from 'aphrodite';
-import { Typography } from '@material-ui/core';
+import { Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { dateToString } from '../../../components/DateContainer';
 import { differenceInHours } from '../../../utils/dateutil';

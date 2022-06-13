@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Map, FeatureGroup, GeoJSON, LayersControl, TileLayer, Marker, Popup } from 'react-leaflet';
-import Typography from '@material-ui/core/Typography';
+import Typography from '@mui/material/Typography';
 import NkwashiCoverageData from '../../../data/nkwashi_coverage_boundary.json';
 import { checkValidGeoJSON } from '../../../utils/helpers';
 import { emptyPolygonFeature, mapTiles, publicMapToken } from '../../../utils/constants';

@@ -10,11 +10,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_30_181825) do
+ActiveRecord::Schema.define(version: 2022_06_06_080117) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
+  enable_extension "unaccent"
   enable_extension "uuid-ossp"
 
   create_table "accounts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -45,7 +46,7 @@ ActiveRecord::Schema.define(version: 2021_09_30_181825) do
     t.string "event_condition_query"
     t.string "status", default: "not_deleted"
     t.index ["community_id"], name: "index_action_flows_on_community_id"
-    t.index ["title"], name: "index_action_flows_on_title", unique: true
+    t.index ["title", "community_id"], name: "index_action_flows_on_title_and_community_id", unique: true
   end
 
   create_table "active_storage_attachments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -54,6 +55,7 @@ ActiveRecord::Schema.define(version: 2021_09_30_181825) do
     t.uuid "record_id", null: false
     t.uuid "blob_id", null: false
     t.datetime "created_at", null: false
+    t.integer "status", default: 0
     t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
     t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
   end
@@ -148,7 +150,7 @@ ActiveRecord::Schema.define(version: 2021_09_30_181825) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "total_sent"
-    t.integer "total_clicked"
+    t.integer "total_clicked", default: 0
     t.string "campaign_type", default: "sms", null: false
     t.string "subject"
     t.string "pre_header"
@@ -157,6 +159,7 @@ ActiveRecord::Schema.define(version: 2021_09_30_181825) do
     t.integer "message_count", default: 0
     t.boolean "include_reply_link", default: false
     t.uuid "email_templates_id"
+    t.integer "total_opened", default: 0
     t.index ["campaign_type"], name: "index_campaigns_on_campaign_type"
     t.index ["community_id", "status"], name: "index_campaigns_on_community_id_and_status"
     t.index ["community_id"], name: "index_campaigns_on_community_id"
@@ -220,6 +223,11 @@ ActiveRecord::Schema.define(version: 2021_09_30_181825) do
     t.uuid "sub_administrator_id"
     t.string "sms_phone_numbers", default: [], array: true
     t.string "emergency_call_number"
+    t.string "ga_id"
+    t.string "domains", default: [], array: true
+    t.integer "hotjar"
+    t.json "lead_monthly_targets"
+    t.json "payment_keys"
     t.index ["slug"], name: "index_communities_on_slug", unique: true
   end
 
@@ -251,6 +259,7 @@ ActiveRecord::Schema.define(version: 2021_09_30_181825) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "status", default: "valid"
+    t.integer "tag", default: 0
     t.index ["community_id"], name: "index_discussions_on_community_id"
     t.index ["status"], name: "index_discussions_on_status"
     t.index ["user_id"], name: "index_discussions_on_user_id"
@@ -300,6 +309,24 @@ ActiveRecord::Schema.define(version: 2021_09_30_181825) do
     t.integer "entry_request_state", default: 0
     t.uuid "revoker_id"
     t.datetime "revoked_at"
+    t.uuid "guest_id"
+    t.integer "status", default: 0
+    t.datetime "exited_at"
+  end
+
+  create_table "entry_times", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.datetime "visitation_date"
+    t.datetime "visit_end_date"
+    t.datetime "starts_at"
+    t.datetime "ends_at"
+    t.string "occurs_on", default: [], array: true
+    t.uuid "visitable_id"
+    t.string "visitable_type"
+    t.uuid "community_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["community_id"], name: "index_entry_times_on_community_id"
+    t.index ["visitable_id", "visitable_type"], name: "index_entry_times_on_visitable_id_and_visitable_type", unique: true
   end
 
   create_table "event_logs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -349,6 +376,7 @@ ActiveRecord::Schema.define(version: 2021_09_30_181825) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.uuid "status_updated_by_id"
+    t.boolean "has_agreed_to_terms"
     t.index ["form_id"], name: "index_form_users_on_form_id"
     t.index ["status_updated_by_id"], name: "index_form_users_on_status_updated_by_id"
     t.index ["user_id"], name: "index_form_users_on_user_id"
@@ -367,6 +395,8 @@ ActiveRecord::Schema.define(version: 2021_09_30_181825) do
     t.uuid "grouping_id"
     t.boolean "preview"
     t.string "roles", default: [], array: true
+    t.boolean "is_public"
+    t.boolean "has_terms_and_conditions"
     t.index ["community_id"], name: "index_forms_on_community_id"
   end
 
@@ -380,6 +410,18 @@ ActiveRecord::Schema.define(version: 2021_09_30_181825) do
     t.datetime "updated_at", precision: 6, null: false
     t.index ["community_id"], name: "index_import_logs_on_community_id"
     t.index ["user_id"], name: "index_import_logs_on_user_id"
+  end
+
+  create_table "invites", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "host_id"
+    t.uuid "guest_id"
+    t.datetime "revoked_at"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.uuid "entry_request_id"
+    t.integer "status", default: 0
+    t.index ["entry_request_id"], name: "index_invites_on_entry_request_id"
+    t.index ["host_id", "guest_id"], name: "index_invites_on_host_id_and_guest_id", unique: true
   end
 
   create_table "invoices", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -413,6 +455,7 @@ ActiveRecord::Schema.define(version: 2021_09_30_181825) do
     t.string "description"
     t.string "color", default: "#f07030"
     t.string "status", default: "active"
+    t.string "grouping_name"
     t.index ["community_id"], name: "index_labels_on_community_id"
   end
 
@@ -450,6 +493,18 @@ ActiveRecord::Schema.define(version: 2021_09_30_181825) do
     t.index ["status"], name: "index_land_parcels_on_status"
   end
 
+  create_table "lead_logs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name"
+    t.integer "log_type"
+    t.uuid "acting_user_id"
+    t.uuid "community_id", null: false
+    t.uuid "user_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["community_id"], name: "index_lead_logs_on_community_id"
+    t.index ["user_id"], name: "index_lead_logs_on_user_id"
+  end
+
   create_table "messages", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "receiver"
     t.text "message"
@@ -475,6 +530,11 @@ ActiveRecord::Schema.define(version: 2021_09_30_181825) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.string "status"
+    t.boolean "reply_required", default: false
+    t.datetime "replied_at"
+    t.uuid "grouping_id"
+    t.uuid "reply_from_id"
+    t.string "tagged_documents", default: [], array: true
     t.index ["note_id"], name: "index_note_comments_on_note_id"
     t.index ["user_id"], name: "index_note_comments_on_user_id"
   end
@@ -495,6 +555,18 @@ ActiveRecord::Schema.define(version: 2021_09_30_181825) do
     t.index ["user_id"], name: "index_note_histories_on_user_id"
   end
 
+  create_table "note_lists", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name"
+    t.uuid "community_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.uuid "process_id"
+    t.integer "status", default: 0
+    t.index ["community_id"], name: "index_note_lists_on_community_id"
+    t.index ["name", "community_id"], name: "index_note_lists_on_name_and_community_id", unique: true
+    t.index ["process_id"], name: "index_note_lists_on_process_id"
+  end
+
   create_table "notes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "user_id"
     t.uuid "author_id"
@@ -510,7 +582,16 @@ ActiveRecord::Schema.define(version: 2021_09_30_181825) do
     t.text "description"
     t.uuid "form_user_id"
     t.boolean "autogenerated", default: false
+    t.uuid "parent_note_id"
+    t.datetime "completed_at"
+    t.uuid "current_step"
+    t.string "current_step_body"
+    t.integer "status", default: 0
+    t.integer "order", default: 1
+    t.uuid "note_list_id"
     t.index ["form_user_id"], name: "index_notes_on_form_user_id"
+    t.index ["note_list_id"], name: "index_notes_on_note_list_id"
+    t.index ["parent_note_id"], name: "index_notes_on_parent_note_id"
   end
 
   create_table "notifications", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -522,6 +603,7 @@ ActiveRecord::Schema.define(version: 2021_09_30_181825) do
     t.datetime "updated_at", precision: 6, null: false
     t.string "description"
     t.uuid "community_id"
+    t.integer "category"
     t.index ["community_id"], name: "index_notifications_on_community_id"
     t.index ["notifable_type", "notifable_id"], name: "index_notifications_on_notifable_type_and_notifable_id"
     t.index ["user_id"], name: "index_notifications_on_user_id"
@@ -578,6 +660,16 @@ ActiveRecord::Schema.define(version: 2021_09_30_181825) do
     t.index ["user_id"], name: "index_payments_on_user_id"
   end
 
+  create_table "permissions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "module"
+    t.json "permissions"
+    t.uuid "role_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["module", "role_id"], name: "index_permissions_on_module_and_role_id", unique: true
+    t.index ["role_id"], name: "index_permissions_on_role_id"
+  end
+
   create_table "plan_ownerships", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "user_id", null: false
     t.uuid "payment_plan_id", null: false
@@ -626,8 +718,43 @@ ActiveRecord::Schema.define(version: 2021_09_30_181825) do
     t.index ["name"], name: "index_post_tags_on_name", unique: true
   end
 
+  create_table "posts", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.text "content"
+    t.integer "status", default: 0
+    t.uuid "discussion_id", null: false
+    t.uuid "user_id", null: false
+    t.uuid "community_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.string "accessibility"
+    t.index ["community_id"], name: "index_posts_on_community_id"
+    t.index ["discussion_id"], name: "index_posts_on_discussion_id"
+    t.index ["user_id"], name: "index_posts_on_user_id"
+  end
+
+  create_table "processes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "process_type"
+    t.string "name"
+    t.uuid "community_id", null: false
+    t.uuid "form_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.integer "status", default: 0
+    t.index ["community_id"], name: "index_processes_on_community_id"
+    t.index ["form_id"], name: "index_processes_on_form_id"
+  end
+
+  create_table "roles", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name"
+    t.uuid "community_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["community_id"], name: "index_roles_on_community_id"
+    t.index ["name", "community_id"], name: "index_roles_on_name_and_community_id", unique: true
+  end
+
   create_table "showrooms", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.uuid "userId"
+    t.uuid "user_id"
     t.string "name"
     t.string "email"
     t.string "home_address"
@@ -680,6 +807,24 @@ ActiveRecord::Schema.define(version: 2021_09_30_181825) do
     t.index ["shift_end_event_log_id"], name: "index_time_sheets_on_shift_end_event_log_id"
     t.index ["shift_start_event_log_id"], name: "index_time_sheets_on_shift_start_event_log_id"
     t.index ["user_id"], name: "index_time_sheets_on_user_id"
+  end
+
+  create_table "transaction_logs", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.decimal "paid_amount"
+    t.string "currency"
+    t.decimal "amount"
+    t.string "invoice_number"
+    t.string "transaction_id"
+    t.string "transaction_ref"
+    t.string "description"
+    t.string "account_name"
+    t.integer "integration_type", default: 0
+    t.uuid "user_id", null: false
+    t.uuid "community_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["community_id"], name: "index_transaction_logs_on_community_id"
+    t.index ["user_id"], name: "index_transaction_logs_on_user_id"
   end
 
   create_table "transactions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -757,8 +902,49 @@ ActiveRecord::Schema.define(version: 2021_09_30_181825) do
     t.string "address"
     t.uuid "latest_substatus_id"
     t.string "ext_ref_id"
+    t.uuid "role_id", null: false
+    t.string "region"
+    t.string "title"
+    t.string "linkedin_url"
+    t.string "company_name"
+    t.string "country"
+    t.string "company_description"
+    t.string "company_linkedin"
+    t.string "company_website"
+    t.string "company_employees"
+    t.string "company_annual_revenue"
+    t.string "company_contacted"
+    t.string "industry_sub_sector"
+    t.string "industry_business_activity"
+    t.string "industry"
+    t.string "level_of_internationalization"
+    t.string "lead_temperature"
+    t.string "lead_status"
+    t.string "lead_source"
+    t.string "lead_owner"
+    t.string "lead_type"
+    t.string "client_category"
+    t.text "next_steps"
+    t.datetime "last_contact_date"
+    t.string "modified_by"
+    t.datetime "first_contact_date"
+    t.string "created_by"
+    t.string "relevant_link"
+    t.jsonb "contact_details"
+    t.string "african_presence"
+    t.string "task_id"
+    t.string "capex_amount"
+    t.string "jobs_created"
+    t.string "jobs_timeline"
+    t.datetime "kick_off_date"
+    t.string "investment_size"
+    t.string "investment_timeline"
+    t.string "decision_timeline"
+    t.integer "status", default: 0
+    t.string "division"
     t.index ["community_id", "email"], name: "index_users_on_community_id_and_email", unique: true
     t.index ["latest_substatus_id"], name: "index_users_on_latest_substatus_id"
+    t.index ["role_id"], name: "index_users_on_role_id"
     t.index ["sub_status"], name: "index_users_on_sub_status"
     t.index ["uid", "provider", "community_id"], name: "index_users_on_uid_and_provider_and_community_id", unique: true
   end
@@ -841,6 +1027,7 @@ ActiveRecord::Schema.define(version: 2021_09_30_181825) do
   add_foreign_key "discussions", "communities"
   add_foreign_key "discussions", "users"
   add_foreign_key "email_templates", "communities"
+  add_foreign_key "entry_times", "communities"
   add_foreign_key "feedbacks", "communities"
   add_foreign_key "form_properties", "categories"
   add_foreign_key "form_properties", "forms"
@@ -850,6 +1037,7 @@ ActiveRecord::Schema.define(version: 2021_09_30_181825) do
   add_foreign_key "forms", "communities"
   add_foreign_key "import_logs", "communities"
   add_foreign_key "import_logs", "users"
+  add_foreign_key "invites", "entry_requests"
   add_foreign_key "invoices", "communities"
   add_foreign_key "invoices", "land_parcels"
   add_foreign_key "invoices", "payment_plans"
@@ -858,11 +1046,17 @@ ActiveRecord::Schema.define(version: 2021_09_30_181825) do
   add_foreign_key "land_parcel_accounts", "accounts"
   add_foreign_key "land_parcel_accounts", "land_parcels"
   add_foreign_key "land_parcels", "communities"
+  add_foreign_key "lead_logs", "communities"
+  add_foreign_key "lead_logs", "users"
   add_foreign_key "note_comments", "notes"
   add_foreign_key "note_comments", "users"
   add_foreign_key "note_histories", "notes"
   add_foreign_key "note_histories", "users"
+  add_foreign_key "note_lists", "communities"
+  add_foreign_key "note_lists", "processes"
   add_foreign_key "notes", "form_users"
+  add_foreign_key "notes", "note_lists"
+  add_foreign_key "notes", "notes", column: "parent_note_id"
   add_foreign_key "notifications", "communities"
   add_foreign_key "notifications", "users"
   add_foreign_key "payment_invoices", "invoices"
@@ -873,6 +1067,7 @@ ActiveRecord::Schema.define(version: 2021_09_30_181825) do
   add_foreign_key "payments", "communities"
   add_foreign_key "payments", "invoices"
   add_foreign_key "payments", "users"
+  add_foreign_key "permissions", "roles"
   add_foreign_key "plan_ownerships", "payment_plans"
   add_foreign_key "plan_ownerships", "users"
   add_foreign_key "plan_payments", "communities"
@@ -882,11 +1077,19 @@ ActiveRecord::Schema.define(version: 2021_09_30_181825) do
   add_foreign_key "post_tag_users", "post_tags"
   add_foreign_key "post_tag_users", "users"
   add_foreign_key "post_tags", "communities"
+  add_foreign_key "posts", "communities"
+  add_foreign_key "posts", "discussions"
+  add_foreign_key "posts", "users"
+  add_foreign_key "processes", "communities"
+  add_foreign_key "processes", "forms"
+  add_foreign_key "roles", "communities"
   add_foreign_key "subscription_plans", "communities"
   add_foreign_key "substatus_logs", "communities"
   add_foreign_key "substatus_logs", "users"
   add_foreign_key "substatus_logs", "users", column: "updated_by_id"
   add_foreign_key "time_sheets", "communities"
+  add_foreign_key "transaction_logs", "communities"
+  add_foreign_key "transaction_logs", "users"
   add_foreign_key "transactions", "communities"
   add_foreign_key "transactions", "users"
   add_foreign_key "user_form_properties", "form_properties"
@@ -894,6 +1097,7 @@ ActiveRecord::Schema.define(version: 2021_09_30_181825) do
   add_foreign_key "user_form_properties", "users"
   add_foreign_key "user_labels", "labels"
   add_foreign_key "user_labels", "users"
+  add_foreign_key "users", "roles"
   add_foreign_key "valuations", "land_parcels"
   add_foreign_key "wallet_transactions", "communities"
   add_foreign_key "wallet_transactions", "payment_plans"

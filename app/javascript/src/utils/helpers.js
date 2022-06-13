@@ -189,7 +189,7 @@ export function getJustLabels(labels) {
  * @returns {boolean} true or false
  */
 export function validateEmail(email) {
-  const re = /\S+@\S+\.\S+/;
+  const re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
   return re.test(String(email).toLowerCase());
 }
 
@@ -292,7 +292,7 @@ export const InvoiceType = {
 
 export function generateId() {
   if (!window.crypto) {
-    return ['233b1634-bf08-4ece-a213-b3f120a1e008', 'sdfsdfsdfsdfwerfwe']
+    return ['233b1634', 'bf08', '4ece', 'a213', 'b3f120a', '1e008', 'sdfsdfsdfsdfwerfwe', 1, 23, 4]
   }
   const array = new Uint32Array(10)
   return window.crypto.getRandomValues(array)
@@ -352,7 +352,7 @@ export function setObjectValue(object, key, value) {
  * @example snake_name ==> snakeName
  */
 export function toCamelCase(str){
-  return str.replace(/([-_]\w)/g, word => word[1].toUpperCase())
+  return str.replace(/([-_]\w)/g, word => word[1].toUpperCase());
 }
 
 /**
@@ -408,6 +408,7 @@ export function getHexColor (range) {
     currency: currencyData?.currency,
   })?.format(amount);
   return formatted;
+  return 10
  }
 
  /**
@@ -579,4 +580,73 @@ export function extractCountry(locale){
 
 export function ifNotTest(){
   return process.env.NODE_ENV !== 'test'
+}
+
+
+export function secureFileDownload(path) {
+  const link = document.createElement('a');
+  link.setAttribute('href', path);
+  link.setAttribute('download', '');
+  link.setAttribute('target', '_blank');
+  link.onclick = function(e) { e.preventDefault(); window.open(path, '_blank'); link.click(); };
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+/**
+ * split camelCase words
+ * @param {String} camelCase word
+ * @returns split words
+ */
+ export function splitCamelCase(word){
+  return word.replace(/([a-z])([A-Z])/g, '$1 $2');
+}
+
+export function sortTaskOrder(taskItem1, taskItem2){
+  if(!taskItem1 || !taskItem2) return;
+
+  return (
+    Number(taskItem1.order) - Number(taskItem2.order)
+  );
+}
+
+export function extractHostname(urlString) {
+  if (!urlString) return;
+  return {
+    hostname: urlString.split('/')[2],
+    userId: urlString.split('/')[4]
+  }
+}
+
+/**
+ * Get a key from an object, given the object and value of the corresponding key.
+ * @param {Object} obj object
+ * @param {String} option word
+ * @returns key for a value, if such value exists or undefined otherwise.
+ */
+export function getObjectKey(obj, option) {
+  return Object.keys(obj).find(key => objectAccessor(obj, key) === option);
+}
+
+/**
+ * @param {String} str a word or sentence consisting of
+ * HTML special character (in form of entity number )
+ * @returns decoded readable special character or symbol
+ */
+export function decodeHtmlEntity(str) {
+  return str.replace(/&#(\d+);/g, function(match, dec) {
+    return String.fromCharCode(dec);
+  });
+};
+
+export function replaceDocumentMentions(text, path) {
+  if (!text) return;
+  if (!path) return text;
+
+  const updatedText = text.replace(/\###(.*?)\###/g, (m) => {
+    return `<a href='${path}&document_id=${m.split("__")[1]}'>${m.split("__")[2]}</a>`
+  });
+
+  return updatedText;
 }

@@ -1,12 +1,12 @@
 /* eslint-disable react/require-default-props */
 import React from 'react'
 import PropTypes from 'prop-types'
-import ListItem from '@material-ui/core/ListItem'
+import ListItem from '@mui/material/ListItem'
 import { useTranslation } from 'react-i18next';
-import Badge from "@material-ui/core/Badge";
-import ListItemText from '@material-ui/core/ListItemText'
-import ListItemAvatar from '@material-ui/core/ListItemAvatar'
-import { useHistory, useLocation } from 'react-router-dom'
+import Badge from "@mui/material/Badge";
+import ListItemText from '@mui/material/ListItemText'
+import ListItemAvatar from '@mui/material/ListItemAvatar'
+import { useHistory, useLocation , Link } from 'react-router-dom'
 import { css, StyleSheet } from 'aphrodite'
 import Avatar from '../Avatar'
 import DateContainer from '../DateContainer'
@@ -46,13 +46,23 @@ export default function UserMessageItem({
   return (
     <ListItem alignItems="flex-start" onClick={handleReadMessages}>
       <ListItemAvatar style={{ marginRight: 8 }}>
-        <Avatar user={user} />
+        <Link
+          to={`/user/${user.id}`}
+          style={{ textDecoration: 'none', color: 'inherit' }}
+        >
+          <Avatar user={user} />
+        </Link>
       </ListItemAvatar>
       <ListItemText
         primary={(
           <>
             <span className="nz_msg_owner">
-              {name}
+              <Link
+                to={`/user/${user.id}`}
+                style={{ textDecoration: 'none', color: 'inherit' }}
+              >
+                {name}
+              </Link>
               {
                 checkRoute(location.pathname) !== 'is_post' && (
                   <Badge

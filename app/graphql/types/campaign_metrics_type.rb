@@ -9,5 +9,6 @@ module Types
     field :total_scheduled, String, null: true
     field :total_sent, String, null: true
     field :total_clicked, String, null: true
+    field :total_opened, String, null: true
   end
 end

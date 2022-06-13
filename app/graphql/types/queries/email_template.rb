@@ -24,7 +24,7 @@ module Types::Queries::EmailTemplate
   end
 
   def email_template(id:)
-    unless context[:current_user]&.admin?
+    unless permitted?(module: :email_template, permission: :can_view_email_template)
       raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
     end
 
@@ -35,7 +35,7 @@ module Types::Queries::EmailTemplate
   end
 
   def email_templates(offset: 0, limit: 50)
-    unless context[:current_user]&.admin?
+    unless permitted?(module: :email_template, permission: :can_view_email_templates)
       raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
     end
 
@@ -43,7 +43,7 @@ module Types::Queries::EmailTemplate
   end
 
   def email_template_variables(id:)
-    unless context[:current_user]&.admin?
+    unless permitted?(module: :email_template, permission: :can_view_email_template_variables)
       raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
     end
 

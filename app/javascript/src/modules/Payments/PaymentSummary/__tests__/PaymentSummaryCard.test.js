@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
+
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom';
 import PaymentSummaryCard from '../Components/PaymentSummaryCard';
@@ -11,7 +11,13 @@ describe('Payment Summary card Component', () => {
     const container = render(
       <MockedProvider>
         <BrowserRouter>
-          <PaymentSummaryCard value='value' title='title' handleClick={jest.fn} currencyData={currency} query="somequery" />
+          <PaymentSummaryCard 
+            value={910909}
+            title='title'
+            handleClick={jest.fn()}
+            currencyData={currency}
+            query="somequery"
+          />
         </BrowserRouter>
       </MockedProvider>
     );

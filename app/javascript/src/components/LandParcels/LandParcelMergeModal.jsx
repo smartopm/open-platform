@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Card, CardContent, CardHeader, Grid, Typography} from '@material-ui/core';
+import { Card, CardContent, CardHeader, Grid, Typography} from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { FullScreenDialog } from '../Dialog'
 

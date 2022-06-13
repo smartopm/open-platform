@@ -2,7 +2,7 @@ import React from 'react'
 import { render } from '@testing-library/react'
 import { MockedProvider } from '@apollo/react-testing'
 import { BrowserRouter } from 'react-router-dom/'
-import '@testing-library/jest-dom/extend-expect'
+
 import ActionMenu from '../../modules/Payments/Components/PaymentActionMenu'
 
 describe('Payment Action Menu', () => {
@@ -10,7 +10,7 @@ describe('Payment Action Menu', () => {
     const container = render(
       <MockedProvider>
         <BrowserRouter>
-          <ActionMenu>
+          <ActionMenu open handleClose={jest.fn()} anchorEl={document.createElement("button")}>
             <div>View</div>
           </ActionMenu>
         </BrowserRouter>

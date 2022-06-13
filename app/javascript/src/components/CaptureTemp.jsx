@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from 'react-apollo';
-import { Button, TextField, Snackbar, SnackbarContent , Grid } from '@material-ui/core';
+import { Button, TextField, Snackbar, SnackbarContent , Grid } from '@mui/material';
 import PropTypes from 'prop-types';
-import CheckCircleIconBase from '@material-ui/icons/CheckCircle';
+import CheckCircleIconBase from '@mui/icons-material/CheckCircle';
 import Loading from '../shared/Loading';
 import { TemperateRecord } from '../graphql/mutations';
 

@@ -1,6 +1,6 @@
 import React from 'react'
 import { render } from '@testing-library/react'
-import '@testing-library/jest-dom/extend-expect'
+
 import { BrowserRouter } from 'react-router-dom'
 import UserActionMenu from '../Components/UserActionMenu'
 
@@ -13,7 +13,8 @@ describe('user action menu component', () => {
           name: 'User Name',
           email: 'user@dgdp.com',
           id: '34543543rfsf3',
-          expiresAt: new Date('03-03-2020')
+          expiresAt: new Date('03-03-2020'),
+          status: 'active'
         }
       },
       userType: 'admin'
@@ -21,11 +22,11 @@ describe('user action menu component', () => {
     const container = render(
       <BrowserRouter>
         <UserActionMenu
-          data={props.data} 
-          router={jest.fn()} 
-          anchorEl={null} 
-          handleClose={jest.fn()} 
-          userType={props.userType} 
+          data={props.data}
+          router={jest.fn()}
+          anchorEl={document.createElement("button")}
+          handleClose={jest.fn()}
+          userType={props.userType}
           CSMNumber="353453"
           open
           OpenMergeDialog={jest.fn()}
@@ -38,5 +39,6 @@ describe('user action menu component', () => {
     expect(container.queryByText('menu.message_support')).toBeInTheDocument()
     expect(container.queryByText('menu.print_id')).toBeInTheDocument()
     expect(container.queryByText('menu.send_otp')).toBeInTheDocument()
+    expect(container.queryByText('menu.deactivate_user')).toBeInTheDocument()
   })
 })

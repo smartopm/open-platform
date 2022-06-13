@@ -1,12 +1,12 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
+import { render, waitFor } from '@testing-library/react';
+
 import { BrowserRouter } from 'react-router-dom/';
 import { MockedProvider } from '@apollo/react-testing';
 import ShowroomLogs from '../../containers/showroom/ShowroomLogs';
 
 describe('Home Component', () => {
-  it('renders Home texts', () => {
+  it('renders Home texts', async () => {
     const container = render(
       <MockedProvider>
         <BrowserRouter>
@@ -14,7 +14,6 @@ describe('Home Component', () => {
         </BrowserRouter>
       </MockedProvider>
     );
-
-    expect(container.queryByTestId('loader')).toBeInTheDocument();
+    await waitFor(() => expect(container.queryByTestId('loader')).toBeInTheDocument());
   });
 });

@@ -1,14 +1,14 @@
 /* eslint-disable react/no-array-index-key */
 /* eslint-disable prefer-spread */
 import React from 'react'
-import Grid from '@material-ui/core/Grid';
+import Grid from '@mui/material/Grid';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
+import makeStyles from '@mui/styles/makeStyles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next';
-import Typography from '@material-ui/core/Typography';
-import HeadsetMicIcon from '@material-ui/icons/HeadsetMic';
+import Typography from '@mui/material/Typography';
+import HeadsetMicIcon from '@mui/icons-material/HeadsetMic';
 import { customerJourneyBar, customerJourneyStatus, customerJourneyLink } from "../../../utils/constants"
 import CustomerJourneyStatusBar from './CustomerJourneyStatusBar'
 import { objectAccessor } from '../../../utils/helpers';

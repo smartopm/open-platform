@@ -4,11 +4,11 @@ import React, { useContext, useState } from 'react'
 import { useParams, useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next';
 import { useQuery, useMutation } from 'react-apollo'
-import TextField from '@material-ui/core/TextField'
-import { Button } from '@material-ui/core'
-import List from '@material-ui/core/List'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemAvatar from '@material-ui/core/ListItemAvatar'
+import TextField from '@mui/material/TextField'
+import { Button } from '@mui/material'
+import List from '@mui/material/List'
+import ListItem from '@mui/material/ListItem'
+import ListItemAvatar from '@mui/material/ListItemAvatar'
 import { css, StyleSheet } from 'aphrodite'
 import { UserMessageQuery } from '../../graphql/queries'
 import {Spinner} from '../../shared/Loading'
@@ -37,15 +37,15 @@ export default function UserMessages() {
   function sendMessage() {
     setLoading(true)
     const receiver = (state && state.clientNumber) || ''
-    if (!message.length) {
-      setError(t("common:errors.empty_text"))
-      return
-    }
     messageCreate({ variables: { receiver, message, userId: id } }).then(() => {
       setMessage('')
       refetch()
       setLoading(false)
     })
+    .catch(err => {
+      setError(err.message.replace(/GraphQL error:/, ''));
+      setLoading(false);
+    });
   }
 
   function fetchMoreMessages() {
@@ -73,7 +73,7 @@ export default function UserMessages() {
       <div className={css(styles.messageSection)}>
         <List>
           { loading ? (
-            <CenteredContent> 
+            <CenteredContent>
               {' '}
               <Spinner />
               {' '}
@@ -123,7 +123,7 @@ export default function UserMessages() {
         </ListItemAvatar>
         <TextField
           id="standard-full-width"
-          // label="Type message here"
+          label={t("common:form_placeholders.message")}
           style={{ width: '95vw', margin: 26, marginTop: 7 }}
           placeholder={t("common:form_placeholders.message")}
           value={message}
@@ -141,7 +141,7 @@ export default function UserMessages() {
       <Button
         color="primary"
         onClick={sendMessage}
-        disabled={isMsgLoading}
+        disabled={!message.trim() || isMsgLoading}
         style={{ marginTop: -37, marginRight: 34, float: 'right' }}
       >
         {t('common:misc.send')}

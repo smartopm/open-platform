@@ -10,9 +10,8 @@ module Notifications
     belongs_to :user, class_name: 'Users::User'
     belongs_to :sender, class_name: 'Users::User'
     belongs_to :note, class_name: 'Notes::Note', optional: true
-    belongs_to :note_entity, polymorphic: true, optional: true
     has_one :notification, as: :notifable, dependent: :destroy
-    has_one :campaign, dependent: :restrict_with_exception
+    belongs_to :campaign, optional: true
 
     default_scope { order(created_at: :asc) }
     after_create :update_campaign_message_count, if: :campaign_id?
@@ -53,7 +52,7 @@ module Notifications
       text = 'Click this link to reply to this message in our app '
       link = "https://#{HostEnv.base_url(user.community)}/message/#{id}"
       new_message = "#{sender[:name]} from #{user.community.name} said: \n" if add_prefix
-      new_message += message
+      new_message += message if message.present?
       new_message += "\n\n#{text} \n#{link}" if include_reply_link?
       Sms.send(receiver_phone_number, new_message)
     end

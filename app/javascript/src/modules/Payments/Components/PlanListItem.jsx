@@ -1,29 +1,38 @@
 import React, { useState } from 'react';
-import Grid from '@material-ui/core/Grid';
+import Grid from '@mui/material/Grid';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
-import Typography from '@material-ui/core/Typography';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
+import Typography from '@mui/material/Typography';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { Link } from 'react-router-dom';
-import Hidden from '@material-ui/core/Hidden';
-import Avatar from '@material-ui/core/Avatar';
-import { makeStyles } from '@material-ui/core/styles';
-import { IconButton } from '@material-ui/core';
-import { MoreHorizOutlined } from '@material-ui/icons';
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
-import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
+import Avatar from '@mui/material/Avatar';
+import makeStyles from '@mui/styles/makeStyles';
+import { Checkbox, IconButton } from '@mui/material';
+import { MoreHorizOutlined } from '@mui/icons-material';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import PaymentSlider from './PaymentSlider';
 import Label from '../../../shared/label/Label';
 import { toTitleCase, objectAccessor, formatMoney } from '../../../utils/helpers';
 import MenuList from '../../../shared/MenuList';
 import Text from '../../../shared/Text';
 import { dateToString } from '../../../components/DateContainer';
+import PaymentItem from './PaymentItem';
+import CenteredContent from '../../../shared/CenteredContent';
 
-export default function PlanListItem({ data, currencyData, menuData }) {
+export default function PlanListItem({
+  data,
+  currencyData,
+  menuData,
+  selectedPlans,
+  handlePlansSelect
+}) {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
-  const { t } = useTranslation('payment');
+  const { t } = useTranslation(['payment', 'common']);
   const matches = useMediaQuery('(max-width:600px)');
+  const smDownHidden = useMediaQuery(theme => theme.breakpoints.down('sm'));
+  const smUpHidden = useMediaQuery(theme => theme.breakpoints.up('sm'));
 
   const colors = {
     cancelled: '#e74540',
@@ -32,86 +41,103 @@ export default function PlanListItem({ data, currencyData, menuData }) {
     completed: '#29ec47'
   };
 
-  function planStatus(plan) {
-    if (plan.status !== 'active') {
-      return plan.status;
-    }
-    if (plan.owingAmount > 0) {
-      return 'behind';
-    }
-    return 'on track';
-  }
-
   return (
     <>
       <Grid container spacing={2} className={classes.container}>
-        <Grid item xs={6} sm={2} data-testid="landparcel" className={classes.bottom}>
-          <Typography className={classes.weight} variant="caption">
-            {data?.landParcel?.parcelNumber}
-          </Typography>
-          {' '}
-          -
-          {' '}
-          <Typography className={classes.weight} variant="caption">
-            {data?.planType}
-          </Typography>
+        <Grid item xs={8} sm={2} data-testid="landparcel" className={classes.bottom}>
+          <Grid container spacing={2}>
+            <Grid item sm={2}>
+              <Checkbox
+                checked={Boolean(
+                  selectedPlans?.find(
+                    obj => obj.paymentPlanId === data?.id && obj.userId === data?.user?.id
+                  )
+                )}
+                onChange={() => handlePlansSelect(data.id, data.user.id)}
+                name="includeReplyLink"
+                data-testid="reply_link"
+                color="primary"
+                style={{ padding: '0px', marginRight: '15px' }}
+              />
+            </Grid>
+            <Grid item sm={10}>
+              <Typography className={classes.weight} variant="caption">
+                {data?.landParcel?.parcelNumber}
+              </Typography>
+              {' '}
+              -
+              {' '}
+              <Typography className={classes.weight} variant="caption">
+                {data?.planType}
+              </Typography>
+            </Grid>
+          </Grid>
         </Grid>
-        <Hidden smUp>
-          <Grid
-            item
-            xs={6}
-            sm={1}
-            data-testid="menu"
-            style={{ textAlign: 'right', marginTop: '-10px' }}
-          >
-            {menuData?.userType === 'admin' && planStatus(data) === 'behind' && (
+        {
+          !smUpHidden && (
+            <Grid
+              item
+              xs={4}
+              sm={1}
+              data-testid="menu"
+              style={{ textAlign: 'right', marginTop: '-10px' }}
+            >
+              {(data?.planStatus === 'behind' || data?.planStatus === 'on_track') && (
               <IconButton
                 aria-controls="simple-menu"
                 aria-haspopup="true"
                 data-testid="plan-menu"
                 dataid={data.id}
                 onClick={event => menuData?.handleMenuClick(event, data)}
+                size="large"
               >
                 <MoreHorizOutlined />
               </IconButton>
             )}
-            <MenuList
-              open={menuData?.open && menuData?.anchorEl?.getAttribute('dataid') === data.id}
-              anchorEl={menuData?.anchorEl}
-              userType={menuData?.userType}
-              handleClose={menuData?.handleClose}
-              list={menuData?.menuList}
-            />
-          </Grid>
-        </Hidden>
+              <MenuList
+                open={menuData?.open && menuData?.anchorEl?.getAttribute('dataid') === data.id}
+                anchorEl={menuData?.anchorEl}
+                userType={menuData?.userType}
+                handleClose={menuData?.handleClose}
+                list={menuData?.menuList}
+              />
+            </Grid>
+          )
+        }
         <Grid item xs={12} sm={7} data-testid="payment-slider">
           <PaymentSlider data={data} currencyData={currencyData} />
         </Grid>
-        <Grid item xs={12} sm={2} data-testid='label'>
-          <Label title={toTitleCase(data.planStatus || '')} color={objectAccessor(colors, data.planStatus)} />
+        <Grid item xs={12} sm={2} data-testid="label">
+          <Label
+            title={toTitleCase(data.planStatus || '')}
+            color={objectAccessor(colors, data.planStatus)}
+          />
         </Grid>
-        <Hidden smDown>
-          <Grid item xs={12} sm={1} data-testid="menu">
-            {menuData?.userType === 'admin' && planStatus(data) === 'behind' && (
+        {
+          !smDownHidden && (
+            <Grid item xs={12} sm={1} data-testid="menu">
+              {(data?.planStatus === 'behind' || data?.planStatus === 'on_track') && (
               <IconButton
                 aria-controls="simple-menu"
                 aria-haspopup="true"
                 data-testid="plan-menu"
                 dataid={data.id}
                 onClick={event => menuData?.handleMenuClick(event, data)}
+                size="large"
               >
                 <MoreHorizOutlined />
               </IconButton>
             )}
-            <MenuList
-              open={menuData?.open && menuData?.anchorEl?.getAttribute('dataid') === data.id}
-              anchorEl={menuData?.anchorEl}
-              userType={menuData?.userType}
-              handleClose={menuData?.handleClose}
-              list={menuData?.menuList}
-            />
-          </Grid>
-        </Hidden>
+              <MenuList
+                open={menuData?.open && menuData?.anchorEl?.getAttribute('dataid') === data.id}
+                anchorEl={menuData?.anchorEl}
+                userType={menuData?.userType}
+                handleClose={menuData?.handleClose}
+                list={menuData?.menuList}
+              />
+            </Grid>
+          )
+        }
         <Grid
           item
           xs={6}
@@ -122,15 +148,32 @@ export default function PlanListItem({ data, currencyData, menuData }) {
           <Grid
             className={!matches ? classes.view : classes.viewMobile}
             onClick={() => setOpen(!open)}
+            data-testid="view-history"
           >
             <Typography className={!matches ? classes.typography : classes.typoMobile}>
-              VIEW HISTORY
+              {t('actions.view_history')}
             </Typography>
             <span className={classes.arrow}>
               {open ? <KeyboardArrowDownIcon /> : <KeyboardArrowRightIcon />}
             </span>
           </Grid>
         </Grid>
+        {data?.planStatus === 'on_track' && (
+          <Grid item xs={6} sm={7} data-testid="due-date">
+            <CenteredContent>
+              <Typography variant="caption">
+                {t('misc.payment_due_date', {
+                  date: dateToString(data?.upcomingInstallmentDueDate)
+                })}
+              </Typography>
+              <Typography variant="caption" style={!matches ? { marginLeft: '10px' } : {}}>
+                {t('misc.installment_amount', {
+                  amount: formatMoney(currencyData, data?.installmentAmount)
+                })}
+              </Typography>
+            </CenteredContent>
+          </Grid>
+        )}
         {open && (
           <>
             <Grid container className={classes.details}>
@@ -177,7 +220,12 @@ export default function PlanListItem({ data, currencyData, menuData }) {
               </Grid>
               <Grid item xs={12} md={3} data-testid="start-date">
                 {!matches ? (
-                  <Text content={`${t('misc.plan_values')}: ${formatMoney(currencyData, data?.planValue)}`} />
+                  <Text
+                    content={`${t('misc.plan_values')}: ${formatMoney(
+                      currencyData,
+                      data?.planValue
+                    )}`}
+                  />
                 ) : (
                   <Grid container>
                     <Grid item xs={6}>
@@ -190,6 +238,23 @@ export default function PlanListItem({ data, currencyData, menuData }) {
                 )}
               </Grid>
             </Grid>
+            {data?.planPayments?.length > 0 ? (
+              data?.planPayments
+                ?.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+                .map(payment => (
+                  <PaymentItem
+                    key={payment.id}
+                    payment={payment}
+                    matches={matches}
+                    currencyData={currencyData}
+                    t={t}
+                  />
+                ))
+            ) : (
+              <Grid container className={classes.details}>
+                <Text content={t('misc.no_payments_made')} />
+              </Grid>
+            )}
           </>
         )}
       </Grid>
@@ -211,14 +276,10 @@ const useStyles = makeStyles(() => ({
     marginBottom: '10px'
   },
   history: {
-    marginLeft: '-40px',
-    marginBottom: '-35px',
     textAlign: 'center',
     display: 'flex'
   },
   historyMobile: {
-    marginLeft: '-17px',
-    marginBottom: '-17px',
     textAlign: 'center'
   },
   view: {
@@ -248,13 +309,21 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
+PlanListItem.defaultProps = {
+  selectedPlans: []
+};
+
 PlanListItem.propTypes = {
+  selectedPlans: PropTypes.arrayOf(PropTypes.object),
+  handlePlansSelect: PropTypes.func.isRequired,
   data: PropTypes.shape({
     id: PropTypes.string,
     planType: PropTypes.string,
     planStatus: PropTypes.string,
     endDate: PropTypes.string,
     startDate: PropTypes.string,
+    upcomingInstallmentDueDate: PropTypes.string,
+    installmentAmount: PropTypes.string,
     planValue: PropTypes.number,
     user: PropTypes.shape({
       id: PropTypes.string,
@@ -264,7 +333,15 @@ PlanListItem.propTypes = {
     landParcel: PropTypes.shape({
       parcelNumber: PropTypes.string,
       parcelType: PropTypes.string
-    })
+    }),
+    planPayments: PropTypes.arrayOf(
+      PropTypes.shape({
+        amount: PropTypes.number,
+        receiptNumber: PropTypes.string,
+        createdAt: PropTypes.string,
+        status: PropTypes.string
+      })
+    )
   }).isRequired,
   currencyData: PropTypes.shape({
     currency: PropTypes.string,

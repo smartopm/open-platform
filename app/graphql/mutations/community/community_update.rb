@@ -25,6 +25,8 @@ module Mutations
       argument :emergency_call_number, String, required: false
       argument :templates, GraphQL::Types::JSON, required: false
       argument :features, GraphQL::Types::JSON, required: false
+      argument :ga_id, String, required: false
+      argument :lead_monthly_targets, GraphQL::Types::JSON, required: false
 
       field :community, Types::CommunityType, null: true
 
@@ -40,7 +42,8 @@ module Mutations
 
       # Verifies if current user is admin or not.
       def authorized?(_vals)
-        return true if context[:current_user]&.admin?
+        return true if permitted?(admin: true, module: :community,
+                                  permission: :can_update_community_details)
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end

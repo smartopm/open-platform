@@ -15,8 +15,8 @@ RSpec.describe MergeUsers do
 
   let!(:user) { create(:user_with_community) }
   let!(:community) { user.community }
-  let!(:duplicate_user) { create(:user, community: community, name: 'John Doe') }
-  let!(:other_user) { create(:user, community: community, name: 'John Doe') }
+  let!(:duplicate_user) { create(:user, community: community, name: 'John Doe', role: user.role) }
+  let!(:other_user) { create(:user, community: community, name: 'John Doe', role: user.role) }
   let!(:activity_point) { create(:activity_point, user: user, article_read: 2, referral: 10) }
 
   let!(:note) { create(:note, user: user, author: user) }
@@ -70,7 +70,7 @@ RSpec.describe MergeUsers do
   let!(:timesheet) { create(:time_sheet, user: user, community: community) }
   let!(:wallet) { create(:wallet, user: user) }
   let!(:wallet_transaction) { create(:wallet_transaction, user: user, community: community) }
-  let!(:showroom) { create(:showroom, userId: user.id) }
+  let!(:showroom) { create(:showroom, user_id: user.id) }
   let!(:user_label) { create(:user_label, user: user) }
   let!(:activity_log) do
     create(:activity_log, reporting_user_id: user.id, community: community)
@@ -110,6 +110,12 @@ RSpec.describe MergeUsers do
     create(:event_log, community_id: community.id, acting_user_id: user.id,
                        ref_type: 'Users::User', ref_id: user.id, subject: 'user_entry')
   end
+  let!(:other_contact_info) do
+    create(:contact_info, user: user, contact_type: 'phone', info: '99998888')
+  end
+  let!(:duplicate_contact_info) do
+    create(:contact_info, user: duplicate_user, contact_type: 'phone', info: '99998888')
+  end
 
   shared_examples 'merges_wallet_details_and_destroy_duplicate_user' do |pending_balance, balance|
     before { MergeUsers.merge(user.id, duplicate_user.id) }
@@ -124,6 +130,7 @@ RSpec.describe MergeUsers do
 
   it 'updates user_id on neccessary tables' do
     community.update(sub_administrator_id: user.id)
+    expect(Users::ContactInfo.count).to eq 3
     MergeUsers.merge(user.id, duplicate_user.id)
 
     expect(activity_point.reload.user_id).to eq(duplicate_user.id)
@@ -152,7 +159,7 @@ RSpec.describe MergeUsers do
     expect(user_label.reload.user_id).to eq(duplicate_user.id)
     expect(invoice.reload.user_id).to eq(duplicate_user.id)
     expect(payment_plan.reload.user_id).to eq(duplicate_user.id)
-    expect(showroom.reload.userId).to eq(duplicate_user.id)
+    expect(showroom.reload.user_id).to eq(duplicate_user.id)
     expect(activity_log.reload.reporting_user_id).to eq(duplicate_user.id)
     expect(plan_ownership.reload.user_id).to eq(duplicate_user.id)
     expect(Properties::PlanOwnership.count).to eql 1
@@ -164,6 +171,7 @@ RSpec.describe MergeUsers do
     expect(community.reload.sub_administrator_id).to eq(duplicate_user.id)
     expect(event_log.reload.acting_user_id).to eq(duplicate_user.id)
     expect(event_log.ref_id).to eq(duplicate_user.id)
+    expect(Users::ContactInfo.count).to eq 2
   end
 
   context 'when user have general plan and duplicate user do not have general plan' do
@@ -191,8 +199,8 @@ RSpec.describe MergeUsers do
     it 'transfers the payments of general plan and destroys the general plan and land parcel' do
       MergeUsers.merge(user.id, duplicate_user.id)
 
-      expect(duplicate_user.reload.land_parcels.unscope(where: :status).general.count).to eql 1
-      expect(duplicate_user.reload.payment_plans.unscope(where: :status).general.count).to eql 1
+      expect(duplicate_user.reload.land_parcels.general.count).to eql 1
+      expect(duplicate_user.reload.payment_plans.general.count).to eql 1
       expect(duplicate_user.general_payment_plan.plan_payments.first.amount.to_f).to eql 50.0
     end
   end

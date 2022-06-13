@@ -31,7 +31,7 @@ RSpec.describe Properties::PaymentPlan, type: :model do
       user_id: user.id,
       community_id: community.id,
       depositor_id: user.id,
-      amount: 500,
+      amount: 2600,
     )
   end
   let(:plan_payment) do
@@ -42,6 +42,42 @@ RSpec.describe Properties::PaymentPlan, type: :model do
       transaction_id: transaction.id,
       payment_plan_id: payment_plan.id,
       amount: 500,
+    )
+  end
+  let(:plan) do
+    Properties::PaymentPlan.new(
+      percentage: 50,
+      status: 'active',
+      plan_type: 'basic',
+      start_date: Time.zone.now,
+      user: user,
+      plot_balance: 0,
+      land_parcel: land_parcel,
+      total_amount: 100,
+      duration: 12,
+      installment_amount: 100,
+    )
+  end
+  let(:general_payment) do
+    create(
+      :plan_payment,
+      user_id: user.id,
+      community_id: community.id,
+      transaction_id: transaction.id,
+      payment_plan: user.general_payment_plan,
+      amount: 700,
+      manual_receipt_number: '1795',
+    )
+  end
+  let(:other_general_payment) do
+    create(
+      :plan_payment,
+      user_id: user.id,
+      community_id: community.id,
+      transaction_id: transaction.id,
+      payment_plan: user.general_payment_plan,
+      amount: 1400,
+      manual_receipt_number: '1796',
     )
   end
 
@@ -119,49 +155,93 @@ RSpec.describe Properties::PaymentPlan, type: :model do
       is_expected.to validate_numericality_of(:installment_amount)
         .is_greater_than_or_equal_to(1).on(:create)
     end
+
+    describe '#general_plan_existence' do
+      context 'when a payment plan with general status already exits' do
+        before do
+          user.general_payment_plan
+          plan.status = 'general'
+        end
+
+        it 'raises error' do
+          plan.save
+          expect(plan.errors.full_messages[0]).to eql 'User General plan exists for the user'
+        end
+      end
+    end
   end
 
   describe 'callbacks' do
-    let!(:user) { create(:user_with_community) }
-    let!(:land_parcel) { create(:land_parcel, community_id: user.community_id) }
-    let!(:valuation) { create(:valuation, land_parcel_id: land_parcel.id) }
     describe 'before_create' do
       describe '#set_pending_balance' do
-        it 'creates pending-balance on create' do
-          plan = Properties::PaymentPlan.create(
-            percentage: 50,
-            status: 'active',
-            plan_type: 'basic',
-            start_date: Time.zone.now,
-            user: user,
-            plot_balance: 0,
-            land_parcel: land_parcel,
-            total_amount: 100,
-            duration: 5,
-            installment_amount: 10,
-          )
-          expect(plan.pending_balance).to eql 50
+        context 'when a payment plan is created' do
+          before { plan.save! }
+
+          it 'sets pending-balance' do
+            expect(plan.pending_balance.to_f).to eql 1200.0
+          end
         end
       end
+    end
 
-      describe '#check_general_plan_existence' do
-        context 'when a payment plan with general status already exits' do
-          before { user.general_payment_plan }
-          it 'raises error' do
-            plan = Properties::PaymentPlan.create(
-              percentage: 50,
-              status: 'general',
-              plan_type: 'basic',
-              start_date: Time.zone.now,
-              user: user,
-              plot_balance: 0,
-              land_parcel: land_parcel,
-              total_amount: 100,
-              duration: 5,
-              installment_amount: 10,
-            )
-            expect(plan.persisted?).to eql false
-            expect(plan.errors.full_messages[0]).to eql 'User General plan exists for the user'
+    describe 'after_create' do
+      describe '#allocate_general_funds' do
+        context 'when a payment plan is created' do
+          context 'when general payment amount is less than or equal to pending balance' do
+            before do
+              general_payment
+              plan.save!
+            end
+
+            it 'allocates the general fund to the plan' do
+              expect(plan.pending_balance.to_f).to eql 500.0
+              expect(plan.plan_payments.count).to eql 1
+              expect(general_payment.reload.payment_plan_id).to eql plan.id
+            end
+          end
+
+          context 'when general payment amount is more than the pending balance' do
+            before do
+              other_general_payment
+              plan.save!
+            end
+
+            it 'allocates the general fund to the plan' do
+              expect(plan.pending_balance.to_f).to eql 0.0
+              expect(plan.plan_payments.count).to eql 1
+              payment = plan.plan_payments.first
+              expect(
+                payment.manual_receipt_number,
+              ).to eql "#{other_general_payment.manual_receipt_number}-1"
+              expect(
+                payment.automated_receipt_number,
+              ).to eql "#{other_general_payment.automated_receipt_number}-1"
+              expect(payment.status).to eql 'paid'
+              expect(payment.amount.to_f).to eql 1200.0
+              expect(payment.note).to eql 'Migrated from General Funds'
+              new_general_payment = user.general_payment_plan.plan_payments.paid.first
+              expect(new_general_payment.amount.to_f).to eql 200.0
+              expect(
+                new_general_payment.manual_receipt_number,
+              ).to eql "#{other_general_payment.manual_receipt_number}-2"
+              expect(
+                new_general_payment.automated_receipt_number,
+              ).to eql "#{other_general_payment.automated_receipt_number}-2"
+              expect(new_general_payment.status).to eql 'paid'
+              expect(other_general_payment.reload.status).to eql 'cancelled'
+            end
+          end
+
+          context 'when plan status is not active' do
+            before do
+              other_general_payment
+              plan.status = 'cancelled'
+              plan.save!
+            end
+
+            it 'does not allocates general fund' do
+              expect(plan.pending_balance.to_f).to eql 1200.0
+            end
           end
         end
       end

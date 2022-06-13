@@ -4,8 +4,37 @@ require 'rails_helper'
 
 RSpec.describe Types::Queries::Form do
   describe 'Form queries' do
-    let!(:admin) { create(:admin_user, community_id: current_user.community_id) }
-    let!(:current_user) { create(:user_with_community, name: 'John Test') }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:visitor_role) { create(:role, name: 'visitor') }
+    let!(:permission) do
+      create(:permission, module: 'forms',
+                          role: admin_role,
+                          permissions: %w[
+                            can_view_own_forms can_access_forms
+                            can_view_own_forms can_view_form_user
+                            can_view_form_user_properties
+                            can_view_form_form_submissions can_view_form_entries
+                            can_fetch_form
+                            can_fetch_form_property
+                            can_fetch_form_properties
+                            can_fetch_form_categories
+                          ])
+    end
+
+    let!(:current_user_permission) do
+      create(:permission, module: 'forms',
+                          role: visitor_role,
+                          permissions: %w[
+                            can_fetch_form
+                            can_fetch_form_property
+                            can_fetch_form_properties
+                            can_fetch_form_categories
+                          ])
+    end
+
+    let!(:current_user) { create(:user_with_community, name: 'John Test', role: visitor_role) }
+    let!(:admin) { create(:admin_user, community_id: current_user.community_id, role: admin_role) }
+
     let!(:form) do
       create(:form, community_id: current_user.community_id, status: :published,
                     roles: %w[client resident])
@@ -27,12 +56,52 @@ RSpec.describe Types::Queries::Form do
     let!(:form_property_date) do
       create(:form_property, form: form, category: other_category, field_type: 'date')
     end
-    let!(:form_user) { create(:form_user, form: form, user: current_user, status: 'approved') }
+    let!(:form_user) do
+      create(:form_user, form: form, user: current_user, status: 'approved',
+                         status_updated_by: admin)
+    end
     let(:user_form_property) do
       create(:user_form_property, form_property: form_property_text, form_user: form_user,
                                   user: current_user, value: 'name')
     end
-    let!(:another_form_user) { create(:form_user, form: form, user: admin, status: 'pending') }
+    let!(:blob) do
+      ActiveStorage::Blob.create(filename: 'doc.pdf', content_type: 'application/pdf',
+                                 byte_size: 2123, checksum: '9JiwSyvzZeqDSV')
+    end
+    let!(:attachment) { user_form_property.attachments.create(blob_id: blob.id) }
+    let!(:another_form_user) do
+      create(:form_user, form: form, user: admin, status: 'pending', status_updated_by: admin)
+    end
+    let!(:resident_role) { create(:role, name: 'resident') }
+    let!(:client_role) { create(:role, name: 'client') }
+
+    let!(:resident_permission) do
+      create(:permission, module: 'forms',
+                          role: resident_role,
+                          permissions: %w[
+                            can_access_forms
+                            can_view_own_forms can_view_form_user
+                            can_view_form_user_properties
+                            can_fetch_form
+                            can_fetch_form_property
+                            can_fetch_form_properties
+                            can_fetch_form_categories
+                          ])
+    end
+
+    let!(:client_permission) do
+      create(:permission, module: 'forms',
+                          role: client_role,
+                          permissions: %w[
+                            can_access_forms
+                            can_view_own_forms can_view_form_user
+                            can_view_form_user_properties
+                            can_fetch_form
+                            can_fetch_form_property
+                            can_fetch_form_properties
+                            can_fetch_form_categories
+                          ])
+    end
 
     let(:forms_query) do
       <<~GQL
@@ -64,6 +133,18 @@ RSpec.describe Types::Queries::Form do
           $formId: ID!
         ) {
           formProperties(formId: $formId) {
+            id
+          }
+        }
+      GQL
+    end
+
+    let(:form_property_query) do
+      <<~GQL
+        query formProperty (
+          $formId: ID!, $formPropertyId: ID!
+        ) {
+          formProperty(formId: $formId, formPropertyId: $formPropertyId) {
             id
           }
         }
@@ -102,8 +183,10 @@ RSpec.describe Types::Queries::Form do
         query userFormProperties($userId: ID!, $formUserId: ID!) {
           formUserProperties(userId: $userId, formUserId: $formUserId) {
             value
-            imageUrl
-            fileType
+            attachments
+            user {
+              name
+            }
             formProperty {
               fieldName
               fieldType
@@ -192,6 +275,35 @@ RSpec.describe Types::Queries::Form do
       expect(result.dig('data', 'formProperties', 1, 'id')).to eql form_property_date.id
     end
 
+    it 'should retrieve a form property by form id and it\'s form_property_id' do
+      community = current_user.community
+      variables = {
+        formPropertyId: form_property_text.id,
+        formId: form.id,
+      }
+      result = DoubleGdpSchema.execute(form_property_query, variables: variables,
+                                                            context: {
+                                                              current_user: current_user,
+                                                              site_community: community,
+                                                            }).as_json
+      expect(result['errors']).to be_nil
+      expect(result.dig('data', 'formProperty', 'id')).to eql form_property_text.id
+    end
+    it 'should throw an error when retrieving a form property without a user' do
+      community = current_user.community
+      variables = {
+        formPropertyId: form_property_text.id,
+        formId: form.id,
+      }
+      result = DoubleGdpSchema.execute(form_property_query, variables: variables,
+                                                            context: {
+                                                              current_user: nil,
+                                                              site_community: community,
+                                                            }).as_json
+      expect(result['errors']).to_not be_nil
+      expect(result.dig('data', 'formProperty', 'id')).to be_nil
+    end
+
     it 'should retrieve form user y form user id' do
       variables = { userId: current_user.id, formUserId: form_user.id }
       result = DoubleGdpSchema.execute(form_user_query, variables: variables,
@@ -200,6 +312,16 @@ RSpec.describe Types::Queries::Form do
                                                           site_community: current_user.community,
                                                         }).as_json
       expect(result.dig('data', 'formUser', 'id')).to eql form_user.id
+    end
+
+    it 'should not retrieve form user when not authorized' do
+      variables = { userId: current_user.id, formUserId: form_user.id }
+      result = DoubleGdpSchema.execute(form_user_query, variables: variables,
+                                                        context: {
+                                                          current_user: nil,
+                                                          site_community: current_user.community,
+                                                        }).as_json
+      expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'
     end
 
     context 'when current user is not an admin' do
@@ -241,6 +363,16 @@ RSpec.describe Types::Queries::Form do
         expect(form_entries['formUsers'][0]['user']['name']).to eql 'John Test'
       end
 
+      it 'returns no form found when wrong form is provided' do
+        variables = { formId: SecureRandom.uuid, query: 'John' }
+        result = DoubleGdpSchema.execute(form_entries_query, variables: variables,
+                                                             context: {
+                                                               current_user: admin,
+                                                               site_community: admin.community,
+                                                             }).as_json
+        expect(result.dig('errors', 0, 'message')).to eql 'Form not found'
+      end
+
       context 'when form entries are searched by status' do
         it 'returns list of all form users associated with that status' do
           variables = { formId: form.id, query: 'approved' }
@@ -271,6 +403,19 @@ RSpec.describe Types::Queries::Form do
           expect(user_property['value']).to eql 'name'
           expect(user_property['formProperty']['fieldName']).to eql form_property_text.field_name
           expect(user_property['formProperty']['category']['fieldName']).to eql category.field_name
+          expect(user_property['user']['name']).to eql current_user.name
+        end
+
+        it 'returns Unauthorized when no user for form user properties' do
+          variables = { userId: current_user.id, formUserId: form_user.id }
+          result = DoubleGdpSchema.execute(form_user_properties_query,
+                                           variables: variables,
+                                           context: {
+                                             current_user: nil,
+                                             site_community: admin.community,
+                                           }).as_json
+          expect(result['errors']).to_not be_nil
+          expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'
         end
       end
 

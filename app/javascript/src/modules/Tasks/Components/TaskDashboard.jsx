@@ -1,5 +1,8 @@
 import React from 'react'
-import { Grid, Typography } from '@material-ui/core'
+import {
+  Grid,
+  Typography,
+} from '@mui/material'
 import PropTypes from 'prop-types'
 import { useTranslation } from 'react-i18next';
 import TaskStatCard from './TaskStatCard'
@@ -16,7 +19,7 @@ export default function TaskDashboard({ taskData, filterTasks, currentTile }) {
     tasksOpenAndOverdue: t('task.overdue_tasks'),
     tasksWithNoDueDate: t('task.tasks_with_no_due_date'),
     totalCallsOpen: t('task.total_calls_open'),
-    totalFormsOpen: t('task.total_forms_open'),
+    processes: t('task.total_forms_open'),
     tasksOpen: t('task.tasks_open'),
     completedTasks: t('task.tasks_completed')
   });
@@ -50,6 +53,8 @@ export default function TaskDashboard({ taskData, filterTasks, currentTile }) {
 
 TaskDashboard.propTypes = {
   taskData: PropTypes.shape({
+    loading: PropTypes.boolean,
+    error: PropTypes.string,
     data: PropTypes.shape({
       taskStats: PropTypes.shape({
         myOpenTasks: PropTypes.number,
@@ -58,7 +63,7 @@ TaskDashboard.propTypes = {
         tasksOpenAndOverdue: PropTypes.number,
         tasksWithNoDueDate: PropTypes.number,
         totalCallsOpen: PropTypes.number,
-        totalFormsOpen: PropTypes.number,
+        processes: PropTypes.number,
         tasksOpen: PropTypes.number,
         completedTasks: PropTypes.number
       })

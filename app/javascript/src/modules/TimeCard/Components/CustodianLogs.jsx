@@ -1,13 +1,11 @@
-import React, { useContext, useState } from 'react'
+import React, { useState } from 'react'
 import { useQuery } from 'react-apollo'
-import { useHistory } from 'react-router/'
 import CustodianTimeSheetLogs from './CustodianTimeSheetLog'
-import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider'
-import Loading from '../../../shared/Loading'
-import ErrorPage from '../../../components/Error'
+import { Spinner } from '../../../shared/Loading'
 import Paginate from '../../../components/Paginate'
-import CenteredContent from '../../../components/CenteredContent'
+import CenteredContent from '../../../shared/CenteredContent'
 import { TimeSheetLogsQuery } from '../graphql/timecard_queries'
+import { formatError } from '../../../utils/helpers'
 
 const limit = 20
 export default function CustodianLogs() {
@@ -15,8 +13,6 @@ export default function CustodianLogs() {
   const { loading, data, error } = useQuery(TimeSheetLogsQuery, {
     fetchPolicy: 'no-cache'
   })
-  const authState = useContext(AuthStateContext)
-  const history = useHistory()
 
   function paginate(action) {
     if (action === 'prev') {
@@ -29,11 +25,8 @@ export default function CustodianLogs() {
     }
   }
 
-  if (!['admin', 'custodian'].includes(authState.user?.userType)) {
-    history.push('/')
-  }
-  if (loading) return <Loading />
- if (error) return <ErrorPage title={error.message} />
+  if (loading) return <Spinner />
+  if (error) return <CenteredContent>{formatError(error?.message)}</CenteredContent>;
 
   return (
     <>

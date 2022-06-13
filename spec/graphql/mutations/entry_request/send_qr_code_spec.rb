@@ -24,14 +24,16 @@ RSpec.describe Mutations::EntryRequest::SendQrCode do
         it 'returns a granted entry request' do
           variables = { id: entry_request.id, guestEmail: 'email@gmail.com' }
           expect(GuestQrCodeJob).to receive(:perform_now).with(
-            admin,
-            'email@gmail.com',
-            entry_request,
+            community: user.community,
+            contact_info: { email: 'email@gmail.com' },
+            entry_request: entry_request,
           )
           result = DoubleGdpSchema.execute(send_qr_code_mutation,
                                            variables: variables,
                                            context: {
                                              current_user: admin,
+                                             site_community: community,
+                                             user_role: admin.role,
                                            }).as_json
 
           expect(result.dig('data', 'result', 'message')).to eq('success')
@@ -45,9 +47,10 @@ RSpec.describe Mutations::EntryRequest::SendQrCode do
                                            variables: variables,
                                            context: {
                                              current_user: admin,
+                                             user_role: admin.role,
                                            }).as_json
           expect(result.dig('data', 'result')).to be_nil
-          expect(result.dig('errors', 0, 'message')).to eql 'Logs::EntryRequest not found'
+          expect(result.dig('errors', 0, 'message')).to eql 'EntryRequest not found'
         end
       end
     end

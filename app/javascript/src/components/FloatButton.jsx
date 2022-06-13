@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Fab } from '@material-ui/core'
+import { Fab } from '@mui/material'
 import { css, StyleSheet } from 'aphrodite'
 
 export default function FloatButton({ title, handleClick, extraStyles, otherClassNames }) {
@@ -9,6 +9,7 @@ export default function FloatButton({ title, handleClick, extraStyles, otherClas
       variant="extended"
       onClick={handleClick}
       color="primary"
+      data-testid="float_icon"
       style={extraStyles}
       // eslint-disable-next-line no-use-before-define
       className={`${css(styles.formButton)} ${otherClassNames}`}

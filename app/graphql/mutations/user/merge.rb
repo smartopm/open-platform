@@ -33,11 +33,15 @@ module Mutations
         user_record = context[:site_community].users.find_by(id: vals[:id])
         current_user = context[:current_user]
         comm_user = user_record&.community_id == current_user.community_id
-        unless comm_user && current_user&.admin?
+        unless comm_user && permissions_checks?
           raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
         end
 
         true
+      end
+
+      def permissions_checks?
+        permitted?(module: :user, permission: :can_merge_users)
       end
     end
   end

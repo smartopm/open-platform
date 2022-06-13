@@ -15,13 +15,13 @@ RSpec.describe DeployJob, type: :job do
 
     it 'enqueues the job' do
       expect do
-        described_class.perform_later
+        described_class.perform_later('token')
       end.to have_enqueued_job
     end
 
     it 'invokes Deploy class' do
-      expect(Deploy).to receive(:create_tag!)
-      perform_enqueued_jobs { described_class.perform_later }
+      expect(Deploy).to receive(:create_tag!).with('token')
+      perform_enqueued_jobs { described_class.perform_later('token') }
     end
   end
 end

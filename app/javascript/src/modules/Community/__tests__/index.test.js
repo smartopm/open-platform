@@ -1,5 +1,4 @@
 import Community from ".."
-import { allUserTypes } from '../../../utils/constants';
 import t from "../../__mocks__/t";
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
@@ -11,10 +10,4 @@ describe('Community', () => {
     expect(Community.styleProps.icon).toBeDefined()
     expect(Community.subMenu).toHaveLength(14)
   });
-
-  allUserTypes.forEach((userType) => {
-    it(`contains ${userType}`, () => {
-      expect(Community.accessibleBy).toContain(userType);
-    });
-  })
 });

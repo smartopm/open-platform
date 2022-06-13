@@ -1,74 +1,61 @@
-import React from 'react'
-import MenuBookIcon from '@material-ui/icons/MenuBook';
-import PeopleIcon from '@material-ui/icons/People';
-import EntryLogs from './Components/EntryLogs';
-import GuestList from './GuestList/Components/GuestList'
-import GuestUpdate from './GuestList/containers/GuestUpdate'
-import { guestListUsers } from '../../utils/constants';
+import React from 'react';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
+import LogBook from './Components/LogBook';
+import GuestsValidateRoutes from './GuestVerification';
+import AccessCheck from '../Permissions/Components/AccessCheck';
+import GuestInvitationRoutes from './GuestInvitation';
 
-import RequestUpdate from './Components/RequestUpdate';
+const logBookPermissions = ['can_access_logbook'];
 
+const gateAccessPermissions = ['can_see_menu_item'];
 
-const GuestsList =  {
-  routeProps: {
-    path: '/guest-list',
-    component: GuestList
-  },
-  styleProps: {
-    icon: <PeopleIcon />
-  },
-  name: t => t('menu.guest_list'),
-  featureName: 'Guest List',
-  accessibleBy: guestListUsers,
+const currentModule = 'entry_request'
 
-  subRoutes: [
-    {
-      routeProps: {
-        path: '/guest-list/:guestListEntryId',
-        exact: true,
-        component: GuestUpdate
-      },
-      name: 'GuestUpdate',
-      accessibleBy: guestListUsers
-    },
-    {
-      routeProps: {
-        path: '/guest-list/new-guest-entry',
-        exact: true,
-        component: RequestUpdate
-      },
-      name: 'RequestUpdate',
-      accessibleBy: guestListUsers
-    }
-  ]
+function GateAccessIcon() {
+  return (
+    <AccessCheck module={currentModule} allowedPermissions={gateAccessPermissions}>
+      <LogBook />
+    </AccessCheck>
+  )
+}
 
-};
-
+function RenderLogBook() {
+  return (
+    <AccessCheck module={currentModule} allowedPermissions={logBookPermissions}>
+      <LogBook />
+    </AccessCheck>
+  )
+}
 
 const LogBooks = {
   routeProps: {
-    path: '/entry_logs',
-    component: EntryLogs
+    path: '/logbook',
+    component: RenderLogBook,
+    exact: true,
   },
   styleProps: {
-    icon: <MenuBookIcon />
+    icon: <MenuBookIcon />,
   },
-  name: t => t('misc.log_book'),
+  name: (t) => t('misc.log_book'),
   featureName: 'LogBook',
-  accessibleBy: ['admin', 'security_guard'],
+  accessibleBy: [],
+  moduleName: currentModule,
+  subRoutes: [...GuestsValidateRoutes],
 };
-
 
 export default {
   routeProps: {
-    path: '/entry_logs',
-    component: EntryLogs
+    path: '/logbook',
+    component: GateAccessIcon,
+    exact: true
   },
   styleProps: {
-    icon: <MenuBookIcon />
+    icon: <MenuBookIcon />,
+    className: 'logbook-menu-item'
   },
-  name: t => t('misc.log_book'),
+  name: (t) => t('misc.log_book'),
   featureName: 'LogBook',
-  accessibleBy: ['admin', 'security_guard', 'resident', 'client', 'custodian'],
-  subMenu: [LogBooks, GuestsList]
+  moduleName: 'gate_access',
+  accessibleBy: [],
+  subMenu: [LogBooks, GuestInvitationRoutes],
 };

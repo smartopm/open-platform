@@ -2,8 +2,10 @@
 
 module Mutations
   module Label
-    # Create a new Label
+    # Update Label
     class LabelUpdate < BaseMutation
+      include Helpers::LabelHelper
+
       argument :id, ID, required: true
       argument :short_desc, String, required: true
       argument :description, String, required: false
@@ -14,7 +16,7 @@ module Mutations
       def resolve(vals)
         label = context[:site_community].labels.find_by(id: vals[:id])
         raise_label_not_found_error(label)
-
+        vals[:short_desc], vals[:grouping_name] = get_label_details(vals[:short_desc])
         return { label: label } if label.update(vals)
 
         raise GraphQL::ExecutionError, label.errors.full_messages
@@ -22,7 +24,7 @@ module Mutations
 
       # Verifies if current user is admin or not.
       def authorized?(_vals)
-        return true if context[:current_user]&.admin?
+        return true if permitted?(module: :label, permission: :can_update_label)
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end

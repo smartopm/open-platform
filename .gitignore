@@ -52,3 +52,5 @@ yarn-debug.log*
 coverage/
 .env
 .eslintcache
+/app/assets/builds/*
+!/app/assets/builds/.keep

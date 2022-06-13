@@ -13,7 +13,8 @@ export default function CategoryList({
   propertyFormOpen,
   categoryId,
   categoryItem,
-  loading
+  loading,
+  formDetailRefetch
 }) {
   // to only show a loader on category that is being deleted
   const [currentId, setCurrentId] = useState('');
@@ -40,24 +41,29 @@ export default function CategoryList({
             editMode={editMode}
             loading={loading}
             currentId={currentId}
+            formDetailRefetch={formDetailRefetch}
           >
-            {category.formProperties.sort(sortPropertyOrder).map(formProperty => (
-              <RenderForm
-                key={formProperty.id}
-                formPropertiesData={formProperty}
-                formId={formId}
-                refetch={categoriesData.refetch}
-                categoryId={category.id}
-                editMode={editMode}
-              />
-            ))}
             {propertyFormOpen && categoryId === category.id && editMode && (
               <FormPropertyCreateForm
                 formId={formId}
                 refetch={categoriesData.refetch}
                 categoryId={category.id}
+                formDetailRefetch={formDetailRefetch}
               />
             )}
+            {category.formProperties.sort(sortPropertyOrder).map((formProperty, index) => (
+              <RenderForm
+                key={formProperty.id}
+                formPropertiesData={formProperty}
+                formId={formId}
+                refetch={categoriesData.refetch}
+                categoriesData={categoriesData}
+                categoryId={category.id}
+                editMode={editMode}
+                number={index + 1}
+                formDetailRefetch={formDetailRefetch}
+              />
+            ))}
           </CategoryItem>
         ))}
     </>
@@ -65,7 +71,8 @@ export default function CategoryList({
 }
 
 CategoryList.defaultProps = {
-  propertyFormOpen: false
+  propertyFormOpen: false,
+  formDetailRefetch: () => {}
 };
 
 CategoryList.propTypes = {
@@ -91,4 +98,5 @@ CategoryList.propTypes = {
     handleEditCategory: PropTypes.func,
     handleDeleteCategory: PropTypes.func
   }).isRequired,
+  formDetailRefetch: PropTypes.func
 };

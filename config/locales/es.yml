@@ -1,5 +1,7 @@
 ---
 es:
+  action_flow:
+    never: Nunca
   activerecord:
     attributes:
       action_flows/action_flow:
@@ -215,7 +217,9 @@ es:
         user: Usuario
       users/user:
         community: Comunidad
+        email: Correo Electrónico
         name: Nombre
+        phone_number: Número de Teléfono
         state: Ciudad
         sub_status: Sub Estado
         user_type: Tipo de usuario
@@ -246,9 +250,11 @@ es:
               invalid_dates: debe ser mayor que la fecha de inicio
         users/user:
           attributes:
+            name:
+              user_already_exists: El usuario Envío Público ya existe
             phone_number:
               invalid_length: debe tener una longitud válida
-              invalid_phone_number: solo puede contener 0-9, '-', '+' y espacio
+              invalid_phone_number: sólo puede contener 0-9, '-', '+' y espacio
     models:
       action_flows/action_flow: Flujos de acción
       business: Empresa
@@ -302,12 +308,62 @@ es:
     default:
       message: Mensaje de campaña predeterminado
       name: Mensaje de campaña predeterminado
+  community_name:
+    ciudadmorazán: ciudadmorazan
+    doublegdp: doublegdp
+    greenpark: greenpark
+    metropolis: metropolis
+    nkwashi: nkwashi
+    tilisi: tilisi
+  discussion_title:
+    events: Eventos
+    family: Familia
+    items_for_sale: Productos en venta
+    recommendations: Recomendaciones
+    safety: La seguridad
+  email_template:
+    comment_reply:
+      action: IR A COMENTARIO
+      body: "<b>%{note_body}</b><br Vence: %{note_due_at}<br/><br/>%{user_name} requirió
+        una respuesta de comentario en %{comment_created_at}"
+      subject: "%{user_name} Requirió una Respuesta"
+      title: NOTIFICACIÓN
+    welcome_email:
+      action: INICIAR
+      body: Ciudad Morazán está construyendo un mejor lugar para vivir.<br/><br/>Esta
+        Aplicación nos ayudará a conectar con<br/>residentes, acelerar el crecimiento,
+        y brindar<br/>servicios públicos efectivamente.<br/><br/>Su usuario ha sido
+        creado en nuestra Aplicación. Presione aquí para ver más.
+      subject: Bienvenido a %{community_name}
+      title: Bienvenido</b><br/> a la comunidad en línea de %{community_name}
+  emergency_sos:
+    am_safe_message: Emergencia SOS %{user_name} está bien y ha cancelado la solicitud
+      de ayuda.
+    contact_not_found: y no tiene un número de contacto en nuestro sistema.
+    from_location_message: de este lugar aproximado %{google_map_url}
+    location_and_contact_not_found: y no tiene una ubicación aproximada ni un número
+      de contacto en nuestro sistema.
+    location_not_found: y no tiene una ubicación aproximada en nuestro sistema
+    reached_on_message: y seguramente puede ser localizable al %{phone_number}.
+    receiving_message: Usted está recibiendo este mensaje como parte de equipo de
+      respuesta de emergencia por %{name}. Por favor confirme que la persona está
+      bien y que la emergencia está resuelta, luego marque la tarea como completada
+      %{task_url}
+    user_initiated_message: Emergencia SOS %{user_name} ha iniciado una solicitud
+      de ayuda de emergencia
   errors:
     action_flow:
       invalid_action_name: Nombre de acción no válido
       invalid_event_type: Tipo de evento invalido
       not_found: Flujo de acción no encontrado
+    business:
+      not_found: Negocio no encontrado
     campaign:
+      campaign_completed: Las actualizaciones no se pueden realizar ya que la campaña
+        se ha enviado a los usuarios especificados.
+      create_new_campaign: Por favor cree una nueva campaña.
+      in_progress: Las actualizaciones no se pueden realizar ya que la campaña está
+        en curso.
       missing_parameter: 'Falta el parámetro: proporcione el parámetro% {atributo}'
     can_not_process_request: Por alguna razón, no puedo procesar su solicitud.
     category:
@@ -317,9 +373,12 @@ es:
       not_found: Comentario no encontrado
     duplicate:
       email: Correo electronico duplicado
+      guest: Duplicar Invitado
       phone: Teléfono duplicado
     email_template:
       not_found: Plantilla no encontrada
+    email:
+      found_blank: El correo electrónico no puede quedar en blanco
     entry_request:
       empty_note: La nota no puede estar vacía
       not_found: Solicitud de ingreso no encontrada
@@ -328,7 +387,11 @@ es:
     form_property:
       not_found: Formulario de Propiedad no encontrado
     form:
+      draft_exist: Envíe el formulario de borrador existente para hacer un nuevo envío
+        de borrador
       not_found: Formulario no encontrado
+    general:
+      model_not_found: "%{model} no encontrado"
     invalid_argument_value: Valor de argumento no válido
     invalid_value: Valor no válido
     invoice:
@@ -341,8 +404,14 @@ es:
     land_parcel:
       not_found: Parcela de tierra no encontrada
       poi_record_not_found: Registro de Poi no encontrado
+    lead_log:
+      not_found: Registro de Clientes Potenciales no encontrado
     not_found: No encontrado
+    note_list:
+      has_process: Esta Lista de Tareas ya está vinculada a un proceso
+      not_found: Lista de Tareas no encontrada
     note:
+      note_list_not_found: No existe tal lista de tareas
       task_not_found: No se encontró ninguna tarea, pruebe con una consulta diferente
       unable_to_update_tasks: Algo salió mal al actualizar las tareas seleccionadas
     notification:
@@ -350,9 +419,13 @@ es:
     payment_plan:
       amount_greater_than_pending_balance: La cantidad no puede ser mayor que el saldo
         pendiente del plan
+      cannot_allocate_funds: Los fondos sólo pueden ser asignados a planes de pago
+        activos
       cannot_transfer_to_cancelled_plan: No se puede transferir el plan a un plan
         de pago cancelado. Intente transferir a otros planes
       does_not_exist_for_property: El plan de pago no existe para la propiedad seleccionada
+      general_funds_does_not_exist: El usuario no dispone de fondos generales para
+        destinarlo a un plan de pago
       have_zero_pending_balance: El saldo pendiente es 0 para el plan de pago de la
         propiedad seleccionada
       not_found: Plan de Pago no encontrado
@@ -362,9 +435,18 @@ es:
     phone_number:
       found_blank: El número de teléfono no puede estar en blanco
     plan_payment:
+      cannot_transfer_cancelled_payment: No se puede realizar la transferencia del
+        pago cancelado
+      cannot_transfer_to_non_active_plan: La transferencia de pago de pago no se puede
+        realizar aun plan de pago que no está activo. Por favor intente transferir
+        a otros planes
       not_found: Pago no encontrado
     post_tag:
       not_found: Etiqueta no encontrada
+    post:
+      content_not_found: El contenido debe existir.
+    process:
+      not_found: Proceso no encontrado
     receipt_number:
       already_exists: El número de recibo ya existe
     record_not_found: Registro no encontrado
@@ -387,11 +469,19 @@ es:
     user_form_property:
       not_found: Formulario de usuario de propiedad  no encontrada
     user:
+      cannot_access_app: No tienes acceso a la aplicación
+      cannot_send_message: No hay número de teléfono para enviar mensaje
+      cannot_send_otp: No hay número de teléfono para enviar el código de un solo
+        uso
+      cannot_send_otp_link: El usuario no tiene acceso a la aplicación.
       does_not_exist: El usuario no existe
+      invalid_expired_token: Token de teléfono inválido o vencido
       merge_failed: Union Fallida
       not_found: Esta cuenta no existe. Envíe una solicitud para crear una cuenta
         o utilice la información de cuenta correcta para iniciar sesión
       not_found_with_id: No se puede encontrar al Usuario %{user_id}
+      token_generation_failed: "¡Lo sentimos! Su intento de acceso no pudo ser completado
+        en este momento. ¡Inténtelo de nuevo!"
       update_failed: Fallo al migrar los detalles del usuario
     visibility: Usted no tiene permiso para acceder %{field}
     wallet_transaction:
@@ -400,12 +490,22 @@ es:
     wallet:
       funds_not_sufficient: El monto asignado no es suficiente para el pago
   general:
+    guest_invite_message: Utilice el enlace de invitación %{invite_link} para acceder
+      a la plataforma. Gracias, %{community_name}
     task_reminder: RECORDATORIO, Por favor complete su tarea antes/a la fecha de finalización
       (%{due_date}). Revise su tarea en %{task_link}. Gracias, %{community_name}
     thanks_for_using_our_app: Gracias por usar nuestra aplicación, por favor use este
       enlace para darnos su opinión %{feedback_link}
+  internet_off: Parece que no hay conexión de internet.
+  notification_description:
+    comment: "¡%{user} comentó!"
+    message: "%{user} te envió un mensaje de texto."
+    reply_requested: "%{user} pidió respuesta."
+    task: Se le asignó la tarea %{task}.
+  offline: Huy.
   permission:
     bad_query: Consulta incorrecta, función o módulo no válido
+  reload_page: Volver a cargar página
   response:
     category_deleted: Categoría eliminada correctamente
     delete_failed: Eliminar Falló
@@ -414,3 +514,5 @@ es:
     success: Exito
     update_failed: 'Actualizar Falló '
     updated: Actualizado
+  welcome_sms: Bienvenido a la comunidad en línea de %{community}. Por favor acceda
+    a la aplicación usando %{url}

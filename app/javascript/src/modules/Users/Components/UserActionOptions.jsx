@@ -1,13 +1,14 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { useHistory } from 'react-router';
 import { useTranslation } from 'react-i18next'
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
-import IconButton from '@material-ui/core/IconButton';
-import { makeStyles } from '@material-ui/core/styles';
-import Popover from '@material-ui/core/Popover';
-import Typography from '@material-ui/core/Typography';
+import makeStyles from '@mui/styles/makeStyles';
+import Popover from '@mui/material/Popover';
+import Typography from '@mui/material/Typography';
+import UserAvatar from "./UserAvatar";
+import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
 
 export default function UserActionOptions(){
+  const authState = useContext(AuthStateContext);
   const [open, setOpen] = useState(false)
   const classes = useStyles();
   const { t } = useTranslation('users')
@@ -24,17 +25,26 @@ export default function UserActionOptions(){
     setOpen(false)
   }
 
+  function handleMenuItemLink(to){
+    history.push(to)
+    return handleClose()
+  }
+
   return (
-    <div className={classes.menuButton}>
-      <IconButton
-        aria-label="icons"
-        edge="start"
-        onClick={(e) => handleOpen(e)}
-      >
-        <KeyboardArrowDownIcon data-testid="icons"  />
-      </IconButton>
+    <div className={classes.menuButton} data-testid="avatar_menu">
+      <UserAvatar
+         // eslint-disable-next-line react/prop-types
+        imageUrl={authState?.user?.imageUrl}
+        handleOpenMenu={handleOpen}
+      />
       <Popover open={open} anchorEl={anchorEl} onClose={handleClose} className={classes.popOver}>
-        <Typography data-testid='text' align="center" className={classes.logOut} onClick={() => history.push('/logout')}>
+        <Typography data-testid='user_settings' align="center" className={classes.logOut} gutterBottom onClick={() => handleMenuItemLink('/user/settings')}>
+          {t('common:menu.user_settings')}
+        </Typography>
+        <Typography data-testid='my_profile' align="center" className={classes.logOut} gutterBottom onClick={() => handleMenuItemLink(`/user/${authState?.user?.id}`)}>
+          {t('common:menu.my_profile')}
+        </Typography>
+        <Typography data-testid='logout' align="center" className={classes.logOut} gutterBottom onClick={() => handleMenuItemLink('/logout')}>
           {t('common:menu.logout')}
         </Typography>
       </Popover>
@@ -46,8 +56,8 @@ const useStyles = makeStyles(() => ({
   menuButton: {
     cursor: 'pointer',
     position: 'absolute',
-    bottom: 20,
-    right: 10,
+    bottom: 4,
+    right: -31,
     height: '40px'
   },
   logOut: {

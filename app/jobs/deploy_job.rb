@@ -6,9 +6,7 @@ require 'deploy'
 class DeployJob < ApplicationJob
   queue_as :default
 
-  def perform
-    return unless Rails.env.production?
-
-    Deploy.create_tag!
+  def perform(gitlab_token)
+    Deploy.create_tag!(gitlab_token)
   end
 end

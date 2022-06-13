@@ -1,6 +1,6 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
+import { render, screen, waitFor } from '@testing-library/react';
+
 import { BrowserRouter } from 'react-router-dom/';
 import { MockedProvider } from '@apollo/react-testing';
 import FormLinks from '../../containers/FormLinks';
@@ -9,7 +9,7 @@ import userMock from '../../../../__mocks__/userMock'
 import { Context } from '../../../../containers/Provider/AuthStateProvider';
 
 describe('FormLinks Component', () => {
-  it('renders FormLinks text', () => {
+  it('renders FormLinks text', async () => {
     render(
       <Context.Provider value={userMock}>
         <MockedProvider>
@@ -21,5 +21,6 @@ describe('FormLinks Component', () => {
         </MockedProvider>
       </Context.Provider>
     );
+    await waitFor(() => expect(screen.queryByTestId('loader')).toBeInTheDocument())
   });
 });

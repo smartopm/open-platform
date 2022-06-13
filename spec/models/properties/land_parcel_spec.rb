@@ -3,7 +3,7 @@
 require 'rails_helper'
 
 RSpec.describe Properties::LandParcel, type: :model do
-  let!(:current_user) { create(:user_with_community, user_type: 'admin') }
+  let!(:current_user) { create(:admin_user) }
   let!(:land_parcel) do
     create(:land_parcel, community_id: current_user.community_id)
   end

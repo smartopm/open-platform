@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
 const AddObservationNoteMutation = gql`
-  mutation addObservationNote($id: ID, $note: String, $refType: String, $eventLogId: ID) {
-    entryRequestNote(id: $id, note: $note, refType: $refType, eventLogId: $eventLogId) {
+  mutation addObservationNoteToTheEntry($id: ID, $note: String, $refType: String, $eventLogId: ID, $attachedImages: JSON) {
+    entryRequestNote(id: $id, note: $note, refType: $refType, eventLogId: $eventLogId, attachedImages: $attachedImages) {
       event {
         id
       }
@@ -14,7 +14,7 @@ export default AddObservationNoteMutation;
 export const EntryRequestUpdateMutation = gql`
   mutation EntryRequestUpdateMutation(
     $id: ID!
-    $name: String!
+    $name: String
     $email: String
     $reason: String
     $vehiclePlate: String
@@ -28,6 +28,9 @@ export const EntryRequestUpdateMutation = gql`
     $temperature: String
     $occursOn: [String!]
     $visitEndDate: String
+    $videoBlobId: String
+    $imageBlobIds: [String!]
+    $status: String
   ) {
     result: entryRequestUpdate(
       id: $id
@@ -45,10 +48,23 @@ export const EntryRequestUpdateMutation = gql`
       temperature: $temperature
       occursOn: $occursOn
       visitEndDate: $visitEndDate
+      videoBlobId: $videoBlobId
+      imageBlobIds: $imageBlobIds
+      status: $status
     ) {
       entryRequest {
         id
         isGuest
+        videoUrl
+        imageUrls
+        status
+        name
+        email
+        nrc
+        phoneNumber
+        vehiclePlate
+        companyName
+        reason
       }
     }
   }

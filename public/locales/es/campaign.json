@@ -1,0 +1,65 @@
+{
+  "actions": {
+    "create_campaign": "Crear campaña",
+    "delete_campaign": "Borrar campaña ",
+    "edit_campaign": "Editar Campaña",
+    "new_campaign": "Nueva Campaña",
+    "update_campaign": "Actualizar campaña",
+    "use_id_lists": "LISTA DE ID DE USO",
+    "use_label": "USAR ETIQUETA"
+  },
+  "campaign": {
+    "campaign": "Campaña",
+    "campaign_detail": "Detalle de Campaña",
+    "campaigns": "Campañas",
+    "click_rate": "Tasa de Clics",
+    "communicate": "Comunicarse con la comunidad.",
+    "draft": "Borrador",
+    "more_details": "Más detalles",
+    "open_rate": "Rango Abierto",
+    "scheduled_date": "Fecha programada",
+    "scheduled_time": "Hora programada",
+    "status": "Estado",
+    "success": "Exito Total",
+    "total_clicked": "total de clics",
+    "total_scheduled": "Total programado",
+    "total_sent": "Total enviado"
+  },
+  "form_fields": {
+    "assign_label": "Asignar etiqueta",
+    "batch_time": "Tiempo de Lote",
+    "campaign_name": "Nombre de la campaña",
+    "campaign_type": "Tipo de campaña",
+    "done": "Hecho",
+    "draft": "Borrador",
+    "email": "Correo electrónico",
+    "include_link": "Incluir Enlace",
+    "link_reply": "Enlace de Respuesta",
+    "mailing_list": "Configurar Lista de Correos",
+    "message": "Mensaje",
+    "reply_link": "Incluir enlace de respuesta",
+    "scheduled": "Programado",
+    "select_label": "Seleccionar Etiqueta",
+    "sending": "Enviando",
+    "sms": "SMS",
+    "user_id_list": "Lista de usuarios"
+  },
+  "message": {
+    "add_a_campaign": "Agregar un Título de Campaña",
+    "add_a_message": "Agregar un mensaje",
+    "include_batch_time": "Incluya un tiempo de lote",
+    "include_email_template": "Incluya la plantilla de correo electrónico",
+    "include_message": "Por favor incluya un mensaje",
+    "include_name": "Por favor incluya un nombre",
+    "include_user_list": "Incluya lista de ID de usuario",
+    "no_campaigns": "Aún no se ha creado ninguna campaña.",
+    "paste_userid_list": "Para crear una lista de correos, pegue aquí la lista de ID de Usuarios obtenida de la página de Usuarios.",
+    "select_campaign": "Seleccione una campaña para editar o cree una nueva.",
+    "sure_to_delete": "¿Estás seguro de que deseas eliminar esta campaña?"
+  },
+  "misc": {
+    "no": "No",
+    "open_campaign_details": "Abrir Detalles de la Campaña",
+    "yes": "Si"
+  }
+}

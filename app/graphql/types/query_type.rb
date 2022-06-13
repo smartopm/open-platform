@@ -28,7 +28,12 @@ module Types
     include Types::Queries::PaymentPlan
     include Types::Queries::PlanPayment
     include Types::Queries::SubscriptionPlan
-    include Types::Queries::Permission
+    include Types::Queries::Discussion
+    include Types::Queries::Campaign
+    include Types::Queries::Process
+    include Types::Queries::LeadLog
+    include Types::Queries::Post
+    include Types::Queries::Notification
 
     # Add root-level fields here.
     # They will be entry points for queries on your schema.
@@ -56,29 +61,6 @@ module Types
 
       context[:site_community].feedbacks.all.order(created_at: :desc)
                               .limit(limit).offset(offset)
-    end
-
-    field :campaigns, [Types::CampaignType], null: true do
-      description 'Get a list of all Campaigns'
-      argument :offset, Integer, required: false
-      argument :limit, Integer, required: false
-    end
-
-    def campaigns(offset: 0, limit: 50)
-      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless current_user&.admin?
-
-      context[:site_community].campaigns.existing.offset(offset).limit(limit)
-    end
-
-    field :campaign, Types::CampaignType, null: true do
-      description 'Find Campaign by Id'
-      argument :id, ID, required: true
-    end
-
-    def campaign(id:)
-      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless current_user&.admin?
-
-      context[:site_community].campaigns.find_by(id: id)
     end
 
     def admin_or_self(id)
@@ -112,7 +94,7 @@ module Types
       user = Users::User.allowed_users(context[:current_user]).find_by(id: user_id)
       return user if user.present?
 
-      raise GraphQL::ExecutionError, I18n.t('errors.user.not_found')
+      raise GraphQL::ExecutionError, I18n.t('errors.user.does_not_exist')
     end
   end
 end

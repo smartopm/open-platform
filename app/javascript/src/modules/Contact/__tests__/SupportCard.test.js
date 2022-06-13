@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react'
-import '@testing-library/jest-dom/extend-expect'
+
 import { BrowserRouter } from 'react-router-dom/'
 import Support, {  SupportContact } from '../Components/SupportCard'
 
@@ -35,11 +35,16 @@ describe("Support card loads component", () => {
   })
 
   it('should render not render Pay with Mobile Money for CM community', () => {
-    user.community.name = 'Ciudad Morazán'
-
+    const updatedUser = {
+      ...user,
+      community: {
+        ...user.community,
+        name: "Ciudad Morazán"
+      }
+    }
     const container = render(
       <BrowserRouter>
-        <Support handleSendMessage={jest.fn()} user={user} />
+        <Support handleSendMessage={jest.fn()} user={updatedUser} />
       </BrowserRouter>
     )
     expect(container.queryByText(/Ciudad Morazán/i)).toBeInTheDocument()

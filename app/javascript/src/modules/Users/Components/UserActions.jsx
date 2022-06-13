@@ -2,18 +2,18 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useContext } from 'react'
-import { makeStyles } from '@material-ui/core/styles';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
+import makeStyles from '@mui/styles/makeStyles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTranslation } from 'react-i18next'
 import { useHistory } from 'react-router';
-import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
+import Typography from '@mui/material/Typography';
+import IconButton from '@mui/material/IconButton';
 import PropTypes from 'prop-types';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
-import Divider from '@material-ui/core/Divider';
-import SettingsIcon from '@material-ui/icons/Settings';
-import HeadsetMicIcon from '@material-ui/icons/HeadsetMic';
-import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import Divider from '@mui/material/Divider';
+import SettingsIcon from '@mui/icons-material/Settings';
+import HeadsetMicIcon from '@mui/icons-material/HeadsetMic';
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider'
 import Avatar from '../../../components/Avatar';
 
@@ -25,8 +25,10 @@ export default function UserAction() {
   const { t } = useTranslation(['users', 'common'])
   return (
     <div className={matches ? classes.bodyMobile : classes.body}>
-      <Avatar imageUrl={authState?.user?.imageUrl} user={authState.user} style="big" />
-      <Typography data-testid='text' className={matches ? classes.nameMobile : classes.name}>{authState?.user?.name}</Typography>
+      <div className={matches ? classes.avatarMobile : classes.avatar}>
+        <Avatar imageUrl={authState?.user?.imageUrl} user={authState.user} style="big" />
+      </div>
+      <Typography data-testid='text' className={matches ? classes.name : classes.name}>{authState?.user?.name}</Typography>
       <UserOptions 
         icon={<AccountCircleIcon style={{height: '36px', width: '36px'}} />} 
         primaryText={t('users.personal_details')} 
@@ -68,6 +70,7 @@ export function UserOptions({ icon, primaryText, secondaryText, handleClick}){
         edge="start"
         className={classes.menuButton}
         data-testid="icons"
+        size="large"
       >
         {icon}
       </IconButton>
@@ -76,7 +79,7 @@ export function UserOptions({ icon, primaryText, secondaryText, handleClick}){
         <Typography data-testid="caption" className={classes.secondaryText}>{secondaryText}</Typography>
       </div>
     </div>
-  )
+  );
 }
 
 const useStyles = makeStyles(() => ({
@@ -87,14 +90,10 @@ const useStyles = makeStyles(() => ({
     marginTop: '-40px'
   },
   avatar: {
-    width: '145px',
-    height: '145px',
-    marginLeft: '297px'
+    textAlign: 'center'
   },
   avatarMobile: {
-    height: '71px',
-    width: '71px',
-    marginLeft: '135px'
+    textAlign: 'center'
   },
   name: {
     padding: '29px 0 64px 0',

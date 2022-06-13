@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Grid,Typography, Avatar } from '@material-ui/core';
+import { Grid,Typography, Avatar } from '@mui/material';
 import { useQuery } from 'react-apollo';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
@@ -77,7 +77,7 @@ export default function FormEntries({ formId }) {
                 data={renderFormEntry(formUser)}
                 hasHeader={false}
                 clickable
-                handleClick={() => {history.push(`/user_form/${formUser.userId}/${formUser.id}`)}}
+                handleClick={() => {history.push(`/user_form/${formUser.userId}/${formUser.id}?formId=${formId}`)}}
               />
             )) : (
               <CenteredContent>{t('misc.no_form_entries')}</CenteredContent>
@@ -93,7 +93,7 @@ export default function FormEntries({ formId }) {
         />
       </CenteredContent>
     </div>
-    )
+  )
 }
 
 export function renderFormEntry(formUser) {

@@ -5,15 +5,17 @@ import PropTypes from 'prop-types';
 import { useQuery } from 'react-apollo';
 import { StyleSheet, css } from 'aphrodite';
 import { useTranslation } from 'react-i18next';
-import { Button } from '@material-ui/core';
-import Loading from '../../../shared/Loading';
+import { Button } from '@mui/material';
+
+import { Spinner } from '../../../shared/Loading';
 import ScanIcon from '../../../../../assets/images/shape.svg';
-import ErrorPage from '../../../components/Error';
+import { formatError } from '../../../utils/helpers';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
-import CenteredContent from '../../../components/CenteredContent';
+import CenteredContent from '../../../shared/CenteredContent';
 import { UserSearchQuery } from '../../../graphql/queries';
 import useDebounce from '../../../utils/useDebounce';
 import UserAutoResult from '../../../shared/UserAutoResult';
+import AccessCheck from '../../Permissions/Components/AccessCheck';
 
 export function NewRequestButton() {
   const { t } = useTranslation('search');
@@ -22,14 +24,14 @@ export function NewRequestButton() {
       <Link className={css(styles.requestLink)} to="/new/user">
         <Button variant="contained" color="primary">
           {/* This should be renamed to Create a user */}
-          {t('search.create_request')}
+          {t('search.create_user_request')}
         </Button>
       </Link>
     </CenteredContent>
   );
 }
 
-export function Results({ data, loading, called, authState }) {
+export function Results({ data, loading, called }) {
   const { t } = useTranslation(['search', 'common']);
   function memberList(users) {
     return (
@@ -41,7 +43,7 @@ export function Results({ data, loading, called, authState }) {
             data-testid="link_search_user"
             className={`${css(styles.linkStyles)} user-search-result`}
           >
-            <UserAutoResult user={user} />
+            <UserAutoResult user={user} t={t} />
           </Link>
         ))}
         <br />
@@ -49,7 +51,7 @@ export function Results({ data, loading, called, authState }) {
     );
   }
   if (called && loading) {
-    return <Loading />;
+    return <Spinner />;
   }
 
   if (called && data) {
@@ -64,7 +66,9 @@ export function Results({ data, loading, called, authState }) {
         )}
 
         {/* only show this when the user is admin */}
-        {authState.user?.userType === 'admin' && <NewRequestButton />}
+        <AccessCheck module="user" allowedPermissions={['can_create_user']}>
+          <NewRequestButton />
+        </AccessCheck>
       </div>
     );
   }
@@ -101,11 +105,15 @@ export default function SearchContainer({ location }) {
     setOffset(0);
   }
 
-  if (!['security_guard', 'admin', 'custodian'].includes(authState.user?.userType.toLowerCase())) {
+  if (
+    !['security_guard', 'admin', 'custodian', 'security_supervisor', 'marketing_admin'].includes(
+      authState.user?.userType.toLowerCase()
+    )
+  ) {
     return <Redirect to="/" />;
   }
   if (error && !/permission|permiso/.test(error.message)) {
-    return <ErrorPage title={error.message} />;
+    return <CenteredContent>{formatError(error.message)}</CenteredContent>;
   }
 
   return (

@@ -26,7 +26,7 @@ module ActionFlows
         field_config[field]['value']
       end
 
-      def self.execute_action(data, field_config)
+      def self.execute_action(data, field_config, _event_log)
         hash = {}
         ACTION_FIELDS.each do |field|
           field_name = field[:name]

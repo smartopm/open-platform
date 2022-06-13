@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'user_validator'
+
 # Execute user bulk import
 class UserImportJob < ApplicationJob
   queue_as :default
@@ -11,8 +13,9 @@ class UserImportJob < ApplicationJob
   # rubocop:disable Metrics/PerceivedComplexity
   def perform(csv_string, csv_file_name, current_user)
     errors = {}
+    separator = ACSV::Detect.separator(csv_string).presence || ','
+    csv = CSV.new(csv_string, headers: true, col_sep: separator)
 
-    csv = CSV.new(csv_string, headers: true)
     ActiveRecord::Base.transaction do
       csv.each_with_index do |row, index|
         name       = row['Name']&.strip
@@ -27,7 +30,12 @@ class UserImportJob < ApplicationJob
         notes      = row['Notes on client']&.strip
         phone_list = [phone, phone1, phone2].reject(&:blank?)
 
-        dup_user = duplicate_user(email, phone_list, current_user.community)
+        if phone_list.empty? && email.nil?
+          errors[index + 1] = ['A contact info must be present']
+          next
+        end
+
+        dup_user = UserValidator.duplicate_user(email, phone_list, current_user.community)
         if dup_user.present?
           labels.each do |lab|
             new_or_existing_label = dup_user.community.labels.find_or_create_by(short_desc: lab)
@@ -36,6 +44,7 @@ class UserImportJob < ApplicationJob
             Labels::UserLabel.create(user: dup_user, label: new_or_existing_label)
           end
 
+          errors[index + 1] = ['Contact info already exists']
           next
         end
 
@@ -76,20 +85,4 @@ class UserImportJob < ApplicationJob
   # rubocop:enable Metrics/BlockLength
   # rubocop:enable Metrics/CyclomaticComplexity
   # rubocop:enable Metrics/PerceivedComplexity
-
-  private
-
-  # rubocop:disable Metrics/AbcSize
-  def duplicate_user(email, phone_list, community)
-    users = Users::User.arel_table
-    Users::User.where.not(email: nil).where(community: community).where(
-      users[:email].matches("#{email}%"),
-    ).or(Users::User.where(phone_number: phone_list, community: community)).first ||
-      Users::User.where(community: community).joins(:contact_infos).where(contact_infos:
-        { contact_type: 'email', info: email }).or(
-          Users::User.where(community: community).joins(:contact_infos).where(contact_infos:
-          { contact_type: 'phone', info: phone_list }),
-        ).first
-  end
-  # rubocop:enable Metrics/AbcSize
 end

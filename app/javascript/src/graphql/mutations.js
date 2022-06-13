@@ -1,6 +1,6 @@
 /* eslint-disable */
-import gql from 'graphql-tag'
-import { UserFragment, EntryRequestFragment } from './fragments'
+import gql from 'graphql-tag';
+import { UserFragment, EntryRequestFragment } from './fragments';
 
 export const CreateUserMutation = gql`
   mutation CreateUserMutation(
@@ -34,12 +34,12 @@ export const CreateUserMutation = gql`
       extRefId: $extRefId
     ) {
       user {
-       id
+        id
       }
     }
   }
-  `
-  // ${UserFragment.publicFields}
+`;
+// ${UserFragment.publicFields}
 
 /**
  * @deprecated this is no longer used in favor of this mutations/user.js and should be deleted
@@ -47,7 +47,7 @@ export const CreateUserMutation = gql`
 export const UpdateUserMutation = gql`
   mutation UpdateUserMutation(
     $id: ID!
-    $name: String
+    $name: String!
     $email: String
     $phoneNumber: String
     $userType: String!
@@ -85,30 +85,29 @@ export const UpdateUserMutation = gql`
     }
   }
   ${UserFragment.publicFields}
-`
-
+`;
 
 export const NonAdminUpdateMutation = gql`
-mutation UpdateUserMutation(
-  $id: ID!
-  $name: String
-  $avatarBlobId: String
-  $address: String
-  $secondaryInfo: [JSON!]
-) {
-  result: userUpdate(
-    id: $id
-    name: $name
-    avatarBlobId: $avatarBlobId
-    address: $address
-    secondaryInfo: $secondaryInfo
+  mutation UpdateUserMutation(
+    $id: ID!
+    $name: String!
+    $avatarBlobId: String
+    $address: String
+    $secondaryInfo: [JSON!]
   ) {
-    user {
-      id
+    result: userUpdate(
+      id: $id
+      name: $name
+      avatarBlobId: $avatarBlobId
+      address: $address
+      secondaryInfo: $secondaryInfo
+    ) {
+      user {
+        id
+      }
     }
   }
-}
-`
+`;
 
 export const CreatePendingUserMutation = gql`
   mutation CreatePendingUserMutation(
@@ -129,7 +128,7 @@ export const CreatePendingUserMutation = gql`
     }
   }
   ${UserFragment.publicFields}
-`
+`;
 
 export const UpdatePendingUserMutation = gql`
   mutation UpdatePendingUserMutation(
@@ -152,7 +151,7 @@ export const UpdatePendingUserMutation = gql`
     }
   }
   ${UserFragment.publicFields}
-`
+`;
 
 export const CreateUpload = gql`
   mutation CreateUpload(
@@ -178,38 +177,29 @@ export const CreateUpload = gql`
       }
     }
   }
-`
+`;
 
 export const AttachAvatar = gql`
-  mutation AttachAvatar($id: ID!, $signedBlobId: String!) {
-    userUpdate(id: $id, avatarBlobId: $signedBlobId) {
+  mutation AttachAvatar($id: ID!, $name: String!, $signedBlobId: String!) {
+    userUpdate(id: $id, name: $name, avatarBlobId: $signedBlobId) {
       user {
         ...UserFields
       }
     }
   }
   ${UserFragment.publicFields}
-`
+`;
 
 export const AddActivityLog = gql`
-  mutation ActivityLogMutation(
-    $userId: ID!
-    $timestamp: String
-    $digital: Boolean
-    $note: String
-  ) {
-    activityLogAdd(
-      userId: $userId
-      timestamp: $timestamp
-      digital: $digital
-      note: $note
-    ) {
+  mutation ActivityLogMutation($userId: ID!, $timestamp: String, $digital: Boolean, $note: String) {
+    activityLogAdd(userId: $userId, timestamp: $timestamp, digital: $digital, note: $note) {
       user {
         id
       }
+      status
     }
   }
-`
+`;
 
 export const SendOneTimePasscode = gql`
   mutation SendOneTimePasscode($userId: ID!) {
@@ -218,8 +208,7 @@ export const SendOneTimePasscode = gql`
       url
     }
   }
-`
-
+`;
 
 export const EntryRequestCreate = gql`
   mutation EntryRequestCreateMutation(
@@ -264,11 +253,11 @@ export const EntryRequestCreate = gql`
     }
   }
   ${EntryRequestFragment.publicFields}
-`
+`;
 
 // Reduce the returned response load
 export const EntryRequestGrant = gql`
-  mutation EntryRequestGrantMutation($id: ID!) {
+  mutation EntryRequestGrantAccessMutation($id: ID!) {
     result: entryRequestGrant(id: $id) {
       entryRequest {
         ...EntryRequestFields
@@ -276,7 +265,7 @@ export const EntryRequestGrant = gql`
     }
   }
   ${EntryRequestFragment.publicFields}
-`
+`;
 
 export const EntryRequestDeny = gql`
   mutation EntryRequestGrantMutation($id: ID!) {
@@ -287,9 +276,9 @@ export const EntryRequestDeny = gql`
     }
   }
   ${EntryRequestFragment.publicFields}
-`
+`;
 
-export const loginPhone = gql`
+export const loginPhoneMutation = gql`
   mutation loginPhoneStart($phoneNumber: String) {
     loginPhoneStart(phoneNumber: $phoneNumber) {
       user {
@@ -297,7 +286,17 @@ export const loginPhone = gql`
       }
     }
   }
-`
+`;
+
+export const loginEmailMutation = gql`
+  mutation loginEmail($email: String) {
+    loginEmail(email: $email) {
+      user {
+        id
+      }
+    }
+  }
+`;
 
 export const loginPhoneConfirmCode = gql`
   mutation loginPhoneComplete($id: ID!, $token: String!) {
@@ -305,7 +304,7 @@ export const loginPhoneConfirmCode = gql`
       authToken
     }
   }
-`
+`;
 
 export const switchGuards = gql`
   mutation loginSwitchUser($id: ID!) {
@@ -313,43 +312,71 @@ export const switchGuards = gql`
       authToken
     }
   }
-`
+`;
 export const CreateNote = gql`
-  mutation noteCreate($userId: ID, $body: String!, $flagged: Boolean, $completed: Boolean, $due: String, $category: String, $description: String) {
-    noteCreate(userId: $userId, body: $body, flagged: $flagged, completed: $completed, dueDate: $due, category: $category, description: $description) {
+  mutation noteCreate(
+    $userId: ID
+    $body: String!
+    $flagged: Boolean
+    $completed: Boolean
+    $due: String
+    $category: String
+    $description: String
+    $parentNoteId: ID
+    $order: Int
+  ) {
+    noteCreate(
+      userId: $userId
+      body: $body
+      flagged: $flagged
+      completed: $completed
+      dueDate: $due
+      category: $category
+      description: $description
+      parentNoteId: $parentNoteId
+      order: $order
+    ) {
       note {
         body
         id
       }
     }
   }
-`
+`;
 
 export const TaskComment = gql`
-mutation noteCommentCreate($noteId: ID!, $body: String!) {
-  noteCommentCreate(
-    noteId: $noteId,,
-    body:$body
+  mutation noteCommentCreate(
+    $noteId: ID!
+    $body: String!
+    $replyRequired: Boolean
+    $replyFromId: ID
+    $groupingId: ID
+    $taggedDocuments: [ID]
   ) {
-    noteComment {
-      body
+    noteCommentCreate(
+      noteId: $noteId
+      body: $body
+      replyRequired: $replyRequired
+      replyFromId: $replyFromId
+      groupingId: $groupingId
+      taggedDocuments: $taggedDocuments
+    ) {
+      noteComment {
+        body
+      }
     }
   }
-}
-`
+`;
 
 export const TaskCommentUpdate = gql`
-mutation noteCommentUpdate($id: ID!, $body: String!) {
-  noteCommentUpdate(
-    id: $id,
-    body: $body
-  ) {
-    noteComment {
-      body
+  mutation noteCommentUpdate($id: ID!, $body: String!, $taggedDocuments: [ID]) {
+    noteCommentUpdate(id: $id, body: $body, taggedDocuments: $taggedDocuments) {
+      noteComment {
+        body
+      }
     }
   }
-}
-`
+`;
 
 export const DeleteNoteComment = gql`
   mutation noteCommentDelete($id: ID!) {
@@ -357,71 +384,87 @@ export const DeleteNoteComment = gql`
       commentDelete
     }
   }
-`
+`;
 
-export const AddNewProperty = gql`
-mutation AddNewProperty($parcelNumber: String!,
-  $address1: String,
-  $address2: String,
-  $city: String,
-  $postalCode: String,
-  $stateProvince: String,
-  $parcelType: String,
-  $country: String,
-  $ownershipFields: JSON
-  $objectType: String
-  $status: String
-  $houseLandParcelId: ID) {
-    PropertyCreate(parcelNumber: $parcelNumber,
-    address1: $address1,
-    address2: $address2,
-    city: $city,
-    postalCode: $postalCode,
-    stateProvince: $stateProvince,
-    parcelType: $parcelType,
-    country: $country,
-    ownershipFields: $ownershipFields
-    objectType: $objectType
-    status: $status
-    houseLandParcelId: $houseLandParcelId) {
-      landParcel {
-        id
+export const DeleteNoteDocument = gql`
+  mutation noteDocumentDelete($documentId: ID!) {
+    noteDocumentDelete(documentId: $documentId) {
+      documentDeleted
     }
   }
-}
-`
+`;
+
+export const AddNewProperty = gql`
+  mutation AddNewProperty(
+    $parcelNumber: String!
+    $address1: String
+    $address2: String
+    $city: String
+    $postalCode: String
+    $stateProvince: String
+    $parcelType: String
+    $country: String
+    $ownershipFields: JSON
+    $objectType: String
+    $status: String
+    $houseLandParcelId: ID
+  ) {
+    PropertyCreate(
+      parcelNumber: $parcelNumber
+      address1: $address1
+      address2: $address2
+      city: $city
+      postalCode: $postalCode
+      stateProvince: $stateProvince
+      parcelType: $parcelType
+      country: $country
+      ownershipFields: $ownershipFields
+      objectType: $objectType
+      status: $status
+      houseLandParcelId: $houseLandParcelId
+    ) {
+      landParcel {
+        id
+      }
+    }
+  }
+`;
 
 export const UpdateProperty = gql`
-mutation UpdateProperty($id: ID!,
-  $parcelNumber: String!,
-  $address1: String,
-  $address2: String,
-  $city: String,
-  $postalCode: String,
-  $stateProvince: String,
-  $parcelType: String,
-  $country: String,
-  $longX: Float,
-  $latY: Float,
-  $geom: JSON,
-  $ownershipFields: JSON
-  $status: String
-  $objectType: String) {
-    propertyUpdate(id: $id,
-    parcelNumber: $parcelNumber,
-    address1: $address1,
-    address2: $address2,
-    city: $city,
-    postalCode: $postalCode,
-    stateProvince: $stateProvince,
-    parcelType: $parcelType,
-    country: $country,
-    longX: $longX,
-    latY: $latY,
-    geom: $geom,
-    ownershipFields: $ownershipFields
-    status: $status
-    objectType: $objectType) {
+  mutation UpdateProperty(
+    $id: ID!
+    $parcelNumber: String!
+    $address1: String
+    $address2: String
+    $city: String
+    $postalCode: String
+    $stateProvince: String
+    $parcelType: String
+    $country: String
+    $longX: Float
+    $latY: Float
+    $geom: JSON
+    $ownershipFields: JSON
+    $status: String
+    $objectType: String
+  ) {
+    propertyUpdate(
+      id: $id
+      parcelNumber: $parcelNumber
+      address1: $address1
+      address2: $address2
+      city: $city
+      postalCode: $postalCode
+      stateProvince: $stateProvince
+      parcelType: $parcelType
+      country: $country
+      longX: $longX
+      latY: $latY
+      geom: $geom
+      ownershipFields: $ownershipFields
+      status: $status
+      objectType: $objectType
+    ) {
       landParcel {
         id
         accounts {
@@ -429,17 +472,17 @@ mutation UpdateProperty($id: ID!,
           fullName
           address1
         }
+      }
     }
   }
-}
-`
+`;
 export const LabelMerge = gql`
   mutation LabelMerge($labelId: ID!, $mergeLabelId: ID!) {
     labelMerge(labelId: $labelId, mergeLabelId: $mergeLabelId) {
       success
-   }
+    }
   }
-`
+`;
 
 export const DeleteLabel = gql`
   mutation LabelDelete($id: ID!) {
@@ -447,7 +490,7 @@ export const DeleteLabel = gql`
       labelDelete
     }
   }
-`
+`;
 
 export const DeleteActionFlow = gql`
   mutation ActionFlowDelete($id: ID!) {
@@ -455,7 +498,7 @@ export const DeleteActionFlow = gql`
       success
     }
   }
-`
+`;
 
 export const MsgNotificationUpdate = gql`
   mutation MsgNotificationUpdate {
@@ -463,17 +506,17 @@ export const MsgNotificationUpdate = gql`
       success
     }
   }
-`
+`;
 
 export const LabelEdit = gql`
-  mutation LabelEdit($id: ID! $shortDesc: String!, $description: String, $color: String!) {
-    labelUpdate(id: $id shortDesc: $shortDesc, description: $description, color: $color) {
+  mutation LabelEdit($id: ID!, $shortDesc: String!, $description: String, $color: String!) {
+    labelUpdate(id: $id, shortDesc: $shortDesc, description: $description, color: $color) {
       label {
         id
       }
     }
   }
-`
+`;
 
 export const UpdateNote = gql`
   mutation noteupdate(
@@ -485,6 +528,10 @@ export const UpdateNote = gql`
     $userId: ID
     $completed: Boolean
     $dueDate: String
+    $parentNoteId: ID
+    $documentBlobId: String
+    $status: String
+    $order: Int
   ) {
     noteUpdate(
       id: $id
@@ -495,16 +542,24 @@ export const UpdateNote = gql`
       userId: $userId
       completed: $completed
       dueDate: $dueDate
+      parentNoteId: $parentNoteId
+      documentBlobId: $documentBlobId
+      status: $status
+      order: $order
     ) {
       note {
         flagged
         body
         id
         dueDate
+        status
+        parentNote {
+          id
+        }
       }
     }
   }
-`
+`;
 export const AcknowledgeRequest = gql`
   mutation EntryRequestAcknowledgeMutation($id: ID!) {
     result: entryRequestAcknowledge(id: $id) {
@@ -514,7 +569,7 @@ export const AcknowledgeRequest = gql`
     }
   }
   ${EntryRequestFragment.publicFields}
-`
+`;
 
 export const createFeedback = gql`
   mutation FeedbackCreate($isThumbsUp: Boolean!, $review: String) {
@@ -529,7 +584,7 @@ export const createFeedback = gql`
       }
     }
   }
-`
+`;
 
 export const createShowroomEntry = gql`
   mutation ShowroomEntryCreate(
@@ -556,7 +611,7 @@ export const createShowroomEntry = gql`
       }
     }
   }
-`
+`;
 
 export const MessageCreate = gql`
   mutation messageCreate($receiver: String, $message: String!, $userId: ID!) {
@@ -567,27 +622,17 @@ export const MessageCreate = gql`
       }
     }
   }
-`
+`;
 
 export const TemperateRecord = gql`
-  mutation temperatureUpdate(
-    $refId: ID!
-    $temp: String!
-    $refName: String!
-    $refType: String!
-  ) {
-    temperatureUpdate(
-      refId: $refId
-      temp: $temp
-      refName: $refName
-      refType: $refType
-    ) {
+  mutation temperatureUpdate($refId: ID!, $temp: String!, $refName: String!, $refType: String!) {
+    temperatureUpdate(refId: $refId, temp: $temp, refName: $refName, refType: $refType) {
       eventLog {
         sentence
       }
     }
   }
-`
+`;
 
 export const UpdateLogMutation = gql`
   mutation activityLogUpdateLog($refId: ID!) {
@@ -597,7 +642,7 @@ export const UpdateLogMutation = gql`
       }
     }
   }
-`
+`;
 
 export const CampaignCreate = gql`
   mutation campaignCreate(
@@ -627,7 +672,7 @@ export const CampaignCreate = gql`
       }
     }
   }
-`
+`;
 
 export const CampaignUpdateMutation = gql`
   mutation campaignUpdate(
@@ -640,6 +685,7 @@ export const CampaignUpdateMutation = gql`
     $userIdList: String
     $labels: String
     $includeReplyLink: Boolean
+    $emailTemplatesId: ID
   ) {
     campaignUpdate(
       id: $id
@@ -651,6 +697,7 @@ export const CampaignUpdateMutation = gql`
       userIdList: $userIdList
       labels: $labels
       includeReplyLink: $includeReplyLink
+      emailTemplatesId: $emailTemplatesId
     ) {
       campaign {
         batchTime
@@ -676,18 +723,18 @@ export const CampaignUpdateMutation = gql`
       }
     }
   }
-`
+`;
 
 export const DeleteCampaign = gql`
-  mutation campaignDelete($id: ID!){
-    campaignDelete(id: $id){
+  mutation campaignDelete($id: ID!) {
+    campaignDelete(id: $id) {
       campaign {
         id
         status
       }
     }
   }
-`
+`;
 
 export const CommentMutation = gql`
   mutation commentCreate($discussionId: ID!, $content: String!, $imageBlobId: String) {
@@ -697,25 +744,45 @@ export const CommentMutation = gql`
       }
     }
   }
-`
+`;
+
+export const PostCreateMutation = gql`
+  mutation postCreate($discussionId: ID!, $content: String, $imageBlobIds: [String!], $accessibility: String) {
+    postCreate(discussionId: $discussionId, content: $content, imageBlobIds: $imageBlobIds, accessibility: $accessibility) {
+      post {
+        content
+      }
+    }
+  }
+`;
+
+export const PostUpdateMutation = gql`
+  mutation postUpdate($id: ID!, $content: String, $accessibility: String) {
+    postUpdate(id: $id, content: $content, accessibility: $accessibility) {
+      post {
+        content
+      }
+    }
+  }
+`;
+
+export const PostDeleteMutation = gql`
+  mutation postDelete($id: ID!) {
+    postDelete(id: $id) {
+      success
+    }
+  }
+`;
 
 export const DiscussionMutation = gql`
-  mutation discussionCreate(
-    $postId: String
-    $title: String!
-    $description: String
-  ) {
-    discussionCreate(
-      postId: $postId
-      title: $title
-      description: $description
-    ) {
+  mutation discussionCreate($postId: String, $title: String!, $description: String) {
+    discussionCreate(postId: $postId, title: $title, description: $description) {
       discussion {
         id
       }
     }
   }
-`
+`;
 
 export const InvoiceCreate = gql`
   mutation InvoiceCreate(
@@ -746,21 +813,17 @@ export const InvoiceCreate = gql`
       }
     }
   }
-`
+`;
 
 export const InvoiceCancel = gql`
-  mutation InvoiceCancel(
-    $invoiceId: ID!
-  ) {
-    invoiceCancel(
-      invoiceId: $invoiceId
-    ) {
+  mutation InvoiceCancel($invoiceId: ID!) {
+    invoiceCancel(invoiceId: $invoiceId) {
       invoice {
         id
       }
     }
   }
-`
+`;
 
 export const PaymentCreate = gql`
   mutation PaymentCreate(
@@ -820,33 +883,29 @@ export const PaymentCreate = gql`
       }
     }
   }
-`
+`;
 
 export const FollowPostTag = gql`
-    mutation followPostTag($tagName: String!){
-      followPostTag(tagName: $tagName){
-        postTagUser {
-          id
-        }
+  mutation followPostTag($tagName: String!) {
+    followPostTag(tagName: $tagName) {
+      postTagUser {
+        id
       }
     }
-`
+  }
+`;
 
 export const DiscussionSubscription = gql`
-  mutation discussionUserCreate(
-    $discussionId: ID!
-  ){
-    discussionUserCreate(
-      discussionId: $discussionId
-    ){
-      discussionUser{
+  mutation discussionUserCreate($discussionId: ID!) {
+    discussionUserCreate(discussionId: $discussionId) {
+      discussionUser {
         userId
         discussionId
         id
       }
     }
   }
-`
+`;
 
 export const LabelCreate = gql`
   mutation labelCreate($shortDesc: String!, $description: String, $color: String) {
@@ -857,18 +916,18 @@ export const LabelCreate = gql`
       }
     }
   }
-`
+`;
 
 // UserLabelCreate
 export const UserLabelCreate = gql`
-    mutation userLabelCreate($query: String, $limit: Int, $labelId: String!, $userList: String,){
-       userLabelCreate(query: $query, limit: $limit, labelId: $labelId, userList: $userList){
-         label {
-           labelId
-         }
-       }
+  mutation userLabelCreate($query: String, $limit: Int, $labelId: String!, $userList: String) {
+    userLabelCreate(query: $query, limit: $limit, labelId: $labelId, userList: $userList) {
+      label {
+        labelId
+      }
     }
-`
+  }
+`;
 
 export const UserLabelUpdate = gql`
   mutation userLabelUpdate($userId: ID!, $labelId: ID!) {
@@ -878,83 +937,112 @@ export const UserLabelUpdate = gql`
       }
     }
   }
-`
+`;
 
 export const AssignUser = gql`
-  mutation noteAssign($noteId: ID!, $userId: ID!){
-    noteAssign(noteId: $noteId, userId: $userId){
+  mutation noteAssign($noteId: ID!, $userId: ID!) {
+    noteAssign(noteId: $noteId, userId: $userId) {
       assigneeNote
     }
   }
-`
+`;
 
-export const CampaignCreateThroughUsers = gql `
-  mutation campaignCreateThroughUsers($query: String, $limit: Int, $userList: String){
-    campaignCreateThroughUsers(query: $query, limit: $limit, userList: $userList){
-      campaign{
+export const CampaignCreateThroughUsers = gql`
+  mutation campaignCreateThroughUsers($query: String, $limit: Int, $userList: String) {
+    campaignCreateThroughUsers(query: $query, limit: $limit, userList: $userList) {
+      campaign {
         id
       }
     }
   }
-`
+`;
 export const CampaignLabelRemoveMutation = gql`
-mutation labelRemove($campaignId: ID!, $labelId: ID!) {
-  campaignLabelRemove(campaignId: $campaignId, labelId: $labelId){
-    campaign {
-      id
+  mutation labelRemove($campaignId: ID!, $labelId: ID!) {
+    campaignLabelRemove(campaignId: $campaignId, labelId: $labelId) {
+      campaign {
+        id
+      }
     }
   }
-}
-`
+`;
 export const MergeUsersMutation = gql`
-mutation mergeUsers($id: ID!, $duplicateId: ID!){
-  userMerge(id: $id, duplicateId: $duplicateId){
-    success
+  mutation mergeUsers($id: ID!, $duplicateId: ID!) {
+    userMerge(id: $id, duplicateId: $duplicateId) {
+      success
+    }
   }
-}
-`
-
+`;
 
 export const UpdateCommentMutation = gql`
-mutation updateComment($commentId: ID!, $discussionId: ID!, $status: String!){
-  commentUpdate(commentId: $commentId, discussionId: $discussionId, status: $status){
-    success
+  mutation updateComment($commentId: ID!, $discussionId: ID!, $status: String!) {
+    commentUpdate(commentId: $commentId, discussionId: $discussionId, status: $status) {
+      success
+    }
   }
-}
-`
+`;
 
 export const ImportCreate = gql`
-  mutation usersImport($csvString: String!, $csvFileName: String!) {
-    usersImport(csvString: $csvString, csvFileName: $csvFileName) {
+  mutation usersImport($csvString: String!, $csvFileName: String!, $importType: String!) {
+    usersImport(csvString: $csvString, csvFileName: $csvFileName, importType: $importType) {
       success
     }
   }
-`
+`;
 
 export const DiscussionUpdateMutation = gql`
-  mutation discussionUpdate($discussionId: ID!, $status: String!){
-    discussionUpdate(discussionId: $discussionId, status: $status){
+  mutation discussionUpdate($discussionId: ID!, $status: String!) {
+    discussionUpdate(discussionId: $discussionId, status: $status) {
       success
     }
   }
-`
+`;
 
 export const CreateActionFlow = gql`
-  mutation actionFlowCreate($title: String!, $description: String!, $eventType: String!, $eventCondition: String, $eventConditionQuery: String, $eventAction: JSON){
-    actionFlowCreate(title: $title, description: $description, eventType: $eventType, eventCondition: $eventCondition, eventConditionQuery: $eventConditionQuery, eventAction: $eventAction){
+  mutation actionFlowCreate(
+    $title: String!
+    $description: String!
+    $eventType: String!
+    $eventCondition: String
+    $eventConditionQuery: String
+    $eventAction: JSON
+  ) {
+    actionFlowCreate(
+      title: $title
+      description: $description
+      eventType: $eventType
+      eventCondition: $eventCondition
+      eventConditionQuery: $eventConditionQuery
+      eventAction: $eventAction
+    ) {
       actionFlow {
         description
       }
     }
   }
-`
+`;
 
 export const UpdateActionFlow = gql`
-  mutation actionFlowUpdate($id: ID!, $title: String!, $description: String!, $eventType: String!, $eventCondition: String, $eventConditionQuery: String, $eventAction: JSON){
-    actionFlowUpdate(id: $id, title: $title, description: $description, eventType: $eventType, eventCondition: $eventCondition, eventConditionQuery: $eventConditionQuery, eventAction: $eventAction){
+  mutation actionFlowUpdate(
+    $id: ID!
+    $title: String!
+    $description: String!
+    $eventType: String!
+    $eventCondition: String
+    $eventConditionQuery: String
+    $eventAction: JSON
+  ) {
+    actionFlowUpdate(
+      id: $id
+      title: $title
+      description: $description
+      eventType: $eventType
+      eventCondition: $eventCondition
+      eventConditionQuery: $eventConditionQuery
+      eventAction: $eventAction
+    ) {
       actionFlow {
         description
       }
     }
   }
-`
+`;

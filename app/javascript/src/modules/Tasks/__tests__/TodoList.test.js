@@ -1,119 +1,176 @@
-import React from 'react'
-import { MockedProvider } from '@apollo/react-testing'
-import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min'
-import { render, fireEvent } from '@testing-library/react'
-import TodoList from '../Components/TodoList'
-import { flaggedNotes } from '../../../graphql/queries'
-import { TaskStatsQuery } from '../graphql/task_queries'
-import { Context } from '../../../containers/Provider/AuthStateProvider'
+/* eslint-disable import/prefer-default-export */
+import React from 'react';
+import { MockedProvider } from '@apollo/react-testing';
+import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min';
 
-jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn())
-const mck = jest.fn()
+import { render, fireEvent, screen, waitFor } from '@testing-library/react';
+import TodoList from '../Components/TodoList';
+import { Context } from '../../../containers/Provider/AuthStateProvider';
+import authState from '../../../__mocks__/authstate';
+import taskMock from '../__mocks__/taskMock';
+import { TasksLiteQuery } from '../graphql/task_queries';
+import MockedThemeProvider from '../../__mocks__/mock_theme';
+
+jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
+jest.mock('react-router', () => ({
+  ...jest.requireActual('react-router'),
+  useLocation: () => ({
+    pathname: '/tasks',
+    search: '?taskId=23',
+    state: { from: '/', search: '/' }
+  }),
+  useParams: () => ({ id: '23' })
+}));
+
+const mck = jest.fn();
 const props = {
-  currentUser: { name: 'Tester', id: '93sd45435' },
+  isDialogOpen: false,
+  currentUser: authState.user,
   handleModal: mck,
   saveDate: mck,
-  selectedDate: new Date(Date.now()).toISOString(),
+  selectedDate: new Date(),
   handleDateChange: mck,
   location: 'tasks'
-}
-
-// this should be moved to a an outside mock
-const user = {
-  user: {
-    community: {
-      themeColors: {
-        primaryColor: "#nnn",
-        secondaryColor: "#nnn"
-      }
-    }
-  }
-}
+};
 
 const mocks = [
   {
     request: {
-      query: TaskStatsQuery,
-      variables: { }
-    },
-    result: {
-      taskStats: {
-        completedTasks: 22,
-        tasksDueIn10Days: 7,
-        tasksDueIn30Days: 7,
-        tasksOpen: 8,
-        tasksOpenAndOverdue: 4,
-        overdueTasks: 4,
-        tasksWithNoDueDate: 6,
-        myOpenTasks: 2,
-        totalCallsOpen: 2
-      }
-    }
-  },
-  {
-    request: {
-      query: flaggedNotes,
+      query: TasksLiteQuery,
       variables: {
         offset: 0,
         limit: 50,
-        query: ''
+        query: 'assignees: John Doctor AND completed: false '
       }
     },
     result: {
-     flaggedNotes: [{
-      body: 'Note example',
-      id: '23',
-      createdAt: new Date('2020-08-01'),
-      author: {
-        name: 'Johnsc'
-      },
-      user: {
-        name: 'somebody'
-      },
-      assignees: [{ name: 'Tester', id: '93sd45435' }],
-      assigneeNotes: []
-     }]
+      data: {
+        flaggedNotes: [taskMock]
+      }
     }
   }
-]
+];
 
 describe('Test the Todo page', () => {
-  it('Mount the Todo component', () => {
-    const container = render(
-      <Context.Provider value={user}>
-        <MockedProvider mocks={mocks} addTypename={false}>
+  it('renders loader', async () => {
+    render(
+      <Context.Provider value={authState}>
+        <MockedProvider mocks={mocks} addTypename>
           <BrowserRouter>
-            <TodoList {...props} />
+            <MockedThemeProvider>
+              <TodoList {...props} />
+            </MockedThemeProvider>
           </BrowserRouter>
         </MockedProvider>
       </Context.Provider>
-    )
-    expect(container.queryByText('task.click_a_card_to_filter')).toBeTruthy()
-    expect(container.queryByText('common:form_actions.create_task')).toBeTruthy()
-    expect(container.queryByTestId('todo-container')).toBeTruthy()
-    expect(container.queryByTestId('search_input')).toBeTruthy()
-    expect(container.queryByTestId('toggle_filter_btn')).toBeTruthy()
-    
-   
-  })
-
-  it('renders task form modal', () => {
-    const container = render(
-      <Context.Provider value={user}>
-        <MockedProvider mocks={mocks} addTypename={false}>
-          <BrowserRouter>
-            <TodoList {...props} />
-          </BrowserRouter>
-        </MockedProvider>
-      </Context.Provider>
-    )
-
-    const createTaskBtn = container.queryByText('common:form_actions.create_task')
-    fireEvent.click(createTaskBtn)
-    
-    expect(container.queryByText('task.task_body_label')).toBeTruthy()
-    expect(container.queryByText('task.task_description_label')).toBeTruthy()
-    expect(container.queryByText('task.task_type_label')).toBeTruthy()
-    expect(container.queryByText('common:form_placeholders.note_due_date')).toBeTruthy()
+    );
+    await waitFor(() =>  expect(screen.getByTestId('loader')).toBeInTheDocument())
   });
-})
+
+  it('mounts the TodoList component', async () => {
+    render(
+      <Context.Provider value={authState}>
+        <MockedProvider mocks={mocks} addTypename>
+          <BrowserRouter>
+            <MockedThemeProvider>
+              <TodoList {...props} />
+            </MockedThemeProvider>
+          </BrowserRouter>
+        </MockedProvider>
+      </Context.Provider>
+    );
+
+    await waitFor(() => {
+      expect(screen.queryByTestId('create_task_btn')).toBeTruthy()
+      expect(screen.queryByTestId('todo-container')).toBeTruthy()
+      expect(screen.queryByTestId('search')).toBeTruthy()
+      expect(screen.queryByTestId('filter_container')).toBeInTheDocument();
+    })
+  });
+
+  it('renders todo list section', async () => {
+    render(
+      <Context.Provider value={authState}>
+        <MockedProvider mocks={mocks} addTypename>
+          <BrowserRouter>
+            <MockedThemeProvider>
+              <TodoList {...props} />
+            </MockedThemeProvider>
+          </BrowserRouter>
+        </MockedProvider>
+      </Context.Provider>
+    );
+
+    await waitFor(() => {
+      expect(screen.getByTestId('todo-list-container')).toBeInTheDocument();
+      expect(screen.queryAllByTestId('card')).toHaveLength(1);
+    });
+  });
+
+  it('renders task form modal', async () => {
+    render(
+      <Context.Provider value={authState}>
+        <MockedProvider mocks={mocks} addTypename>
+          <BrowserRouter>
+            <MockedThemeProvider>
+              <TodoList {...props} />
+            </MockedThemeProvider>
+          </BrowserRouter>
+        </MockedProvider>
+      </Context.Provider>
+    );
+
+    const createTaskBtn = screen.queryByTestId('create_task_btn');
+    fireEvent.click(createTaskBtn);
+
+    await waitFor(() => {
+      expect(screen.queryByText('task.task_name')).toBeInTheDocument();
+      expect(screen.queryAllByText('task.optional_description')[0]).toBeInTheDocument();
+      expect(screen.queryAllByText('task.task_type_label')[0]).toBeInTheDocument();
+      expect(screen.queryAllByText('task.due_date_optional')[0]).toBeInTheDocument();
+    });
+  });
+
+  describe('Task details', () => {
+    it('does not render split screen on initial page load', async () => {
+      render(
+        <Context.Provider value={authState}>
+          <MockedProvider mocks={mocks} addTypename>
+            <BrowserRouter>
+              <MockedThemeProvider>
+                <TodoList {...props} />
+              </MockedThemeProvider>
+            </BrowserRouter>
+          </MockedProvider>
+        </Context.Provider>
+      );
+
+      await waitFor(() => {
+        expect(screen.queryByTestId('drawer')).not.toBeInTheDocument();
+      });
+    });
+
+    it('opens split screen view', async () => {
+      render(
+        <Context.Provider value={authState}>
+          <MockedProvider mocks={mocks} addTypename>
+            <BrowserRouter>
+              <MockedThemeProvider>
+                <TodoList {...props} />
+              </MockedThemeProvider>
+            </BrowserRouter>
+          </MockedProvider>
+        </Context.Provider>
+      );
+
+      await waitFor(() => {
+        const card = screen.queryAllByTestId('card')[0];
+        fireEvent.click(card);
+        const openTaskDetailsMenu = screen.queryAllByTestId('show_task_subtasks')[0];
+        expect(openTaskDetailsMenu).toBeInTheDocument();
+        fireEvent.click(openTaskDetailsMenu);
+        expect(screen.queryByTestId('drawer')).toBeInTheDocument();
+      });
+    });
+  });
+});

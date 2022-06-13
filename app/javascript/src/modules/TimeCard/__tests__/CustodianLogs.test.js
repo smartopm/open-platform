@@ -1,12 +1,12 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
+import { render, waitFor } from '@testing-library/react';
+
 import { BrowserRouter } from 'react-router-dom/';
 import { MockedProvider } from '@apollo/react-testing';
 import CustodianLogs from '../Components/CustodianLogs';
 
 describe('CustodianLogs Component', () => {
-  it('renders loader when loading feedback', () => {
+  it('renders loader when loading custodian logs', async () => {
     const container = render(
       <MockedProvider>
         <BrowserRouter>
@@ -14,7 +14,6 @@ describe('CustodianLogs Component', () => {
         </BrowserRouter>
       </MockedProvider>
     );
-
-    expect(container.queryByTestId('loader')).toBeInTheDocument();
+    await waitFor(() => expect(container.queryByTestId('loader')).toBeInTheDocument());
   });
 });

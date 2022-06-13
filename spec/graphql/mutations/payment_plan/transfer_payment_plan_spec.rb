@@ -4,9 +4,20 @@ require 'rails_helper'
 
 RSpec.describe Mutations::PaymentPlan::TransferPaymentPlan do
   describe 'Transfers Payment Plan' do
-    let!(:user) { create(:user_with_community) }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:resident_role) { create(:role, name: 'resident') }
+    let!(:permission) do
+      create(:permission, module: 'payment_plan',
+                          role: admin_role,
+                          permissions: %w[can_transfer_payment_plan])
+    end
+
+    let!(:user) { create(:user_with_community, role: resident_role, user_type: 'resident') }
+    let!(:admin) do
+      create(:admin_user, community_id: user.community_id, role: admin_role, user_type: 'admin')
+    end
+
     let!(:community) { user.community }
-    let!(:admin) { create(:admin_user, community_id: community.id) }
     let!(:account) { create(:account, user_id: user.id, community_id: community.id) }
     let!(:land_parcel) { create(:land_parcel, community_id: community.id) }
     let!(:land_parcel_account) do
@@ -112,6 +123,7 @@ RSpec.describe Mutations::PaymentPlan::TransferPaymentPlan do
                 automatedReceiptNumber
                 manualReceiptNumber
                 status
+                createdAt
               }
             }
           }
@@ -196,6 +208,9 @@ RSpec.describe Mutations::PaymentPlan::TransferPaymentPlan do
             expect(plan_result['planPayments'].size).to eql 1
             expect(plan_result['planPayments'][0]['amount']).to eql 400.0
             expect(plan_result['planPayments'][0]['manualReceiptNumber']).to eql 'MI13977-1'
+            expect(
+              plan_result['planPayments'][0]['createdAt'].to_date,
+            ).to eql other_plan_payment.created_at.to_date
             expect(
               plan_result['planPayments'][0]['automatedReceiptNumber'],
             ).to eql "#{plan_payment.reload.automated_receipt_number}-1"

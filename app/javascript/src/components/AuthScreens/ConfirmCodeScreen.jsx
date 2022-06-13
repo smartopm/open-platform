@@ -6,17 +6,17 @@ import React, {
   useEffect,
   createRef
 } from 'react'
-import { Button, CircularProgress } from '@material-ui/core'
+import { Button, CircularProgress } from '@mui/material'
 import { StyleSheet, css } from 'aphrodite'
 import { Link, useLocation, Redirect } from 'react-router-dom'
 import { useMutation, useQuery } from 'react-apollo'
 import { useTranslation } from 'react-i18next'
-import { loginPhoneConfirmCode, loginPhone } from '../../graphql/mutations'
+import { loginPhoneConfirmCode, loginPhoneMutation } from '../../graphql/mutations'
 import { Context as AuthStateContext } from '../../containers/Provider/AuthStateProvider'
 import useTimer from '../../utils/customHooks'
 import { CurrentCommunityQuery } from '../../modules/Community/graphql/community_query'
 import { Spinner } from '../../shared/Loading'
-import { objectAccessor } from '../../utils/helpers';
+import { ifNotTest, objectAccessor } from '../../utils/helpers';
 
 const randomCodeData = [1, 2, 3, 4, 5, 6, 7]
 
@@ -25,7 +25,7 @@ export default function ConfirmCodeScreen({ match }) {
   const authState = useContext(AuthStateContext)
   const { id } = match.params
   const [loginPhoneComplete] = useMutation(loginPhoneConfirmCode)
-  const [resendCodeToPhone] = useMutation(loginPhone)
+  const [resendCodeToPhone] = useMutation(loginPhoneMutation)
   const { data: communityData, loading } = useQuery(CurrentCommunityQuery)
   const [error, setError] = useState(null)
   const [msg, setMsg] = useState(null)
@@ -102,7 +102,7 @@ export default function ConfirmCodeScreen({ match }) {
     <div style={{ height: '100vh' }}>
       <nav className={`${css(styles.navBar)} navbar`}>
         <Link to="/login">
-          <i className="material-icons">arrow_back</i>
+          <i className="material-icons" data-testid="arrow_back">arrow_back</i>
         </Link>
       </nav>
       <div className="container ">
@@ -111,9 +111,15 @@ export default function ConfirmCodeScreen({ match }) {
             styles.welcomeContainer
           )}`}
         >
-          <p data-testid="welcome" className={css(styles.welcomeText)}>
-            { loading ? <Spinner /> : t('login.welcome', { appName: communityData?.currentCommunity?.name  })}
-          </p>
+
+          { loading
+            ? <Spinner />
+            : (
+              <p data-testid="welcome" className={css(styles.welcomeText)}>
+                {t('login.welcome', { appName: communityData?.currentCommunity?.name  })}
+              </p>
+)
+            }
         </div>
         <br />
         <br />
@@ -125,7 +131,7 @@ export default function ConfirmCodeScreen({ match }) {
               maxLength="1"
               type="tel"
               // eslint-disable-next-line jsx-a11y/no-autofocus
-              autoFocus
+              autoFocus={ifNotTest()}
               // eslint-disable-next-line security/detect-object-injection
               ref={objectAccessor(elementsRef.current, item)}
               className={`${css(styles.newInput)} code-input-${index}`}
@@ -157,6 +163,7 @@ export default function ConfirmCodeScreen({ match }) {
             ref={submitRef}
             disabled={isLoading}
             color="primary"
+            data-testid="submit_btn"
           >
             {isLoading ? (
               <CircularProgress size={25} color="primary" />

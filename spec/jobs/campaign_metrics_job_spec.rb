@@ -4,7 +4,21 @@ require 'rails_helper'
 
 RSpec.describe CampaignMetricsJob, type: :job do
   let!(:current_user) { create(:user_with_community) }
-  let!(:campaign) { create(:campaign, community: current_user.community) }
+  let!(:campaign) do
+    create(:campaign, community: current_user.community, status: :done, campaign_type: 'email',
+                      end_time: Time.zone.now - 1.day)
+  end
+  let(:mock_response) do
+    [
+      OpenStruct.new(
+        opens_count: 4,
+        clicks_count: 2,
+      ), OpenStruct.new(
+        opens_count: 2,
+        clicks_count: 0,
+      )
+    ]
+  end
 
   describe '#perform_later' do
     before do
@@ -17,21 +31,20 @@ RSpec.describe CampaignMetricsJob, type: :job do
 
     it 'should enqueue a job to perform campaign metrics update' do
       expect do
-        CampaignMetricsJob.perform_later(campaign.id, current_user.id)
+        CampaignMetricsJob.perform_later(campaign.id, current_user.id, Time.zone.now)
       end.to have_enqueued_job
     end
 
-    it 'performs enqueued job' do
-      expect(Logs::EventLog).to receive_message_chain(
-        :since_date,
-        :by_user_activity,
-        :with_acting_user_id,
-        :group_by,
-        :count,
-      )
-      allow(described_class).to receive_message_chain(:set, :perform_later).and_return(nil)
+    context 'when job is executed' do
+      before do
+        allow(EmailMsg).to receive(:email_stats).with(any_args).and_return(mock_response)
+      end
 
-      perform_enqueued_jobs { described_class.perform_later(campaign.id, current_user.id) }
+      it 'updates campaign statistics' do
+        perform_enqueued_jobs { described_class.perform_now }
+        expect(campaign.reload.total_opened).to eql 2
+        expect(campaign.total_clicked).to eql 1
+      end
     end
   end
 end

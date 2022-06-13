@@ -4,15 +4,16 @@ require 'rails_helper'
 
 RSpec.describe Mutations::User do
   describe 'create pending member' do
-    let!(:current_user) { create(:user_with_community, user_type: 'security_guard') }
-    let!(:user) { create(:user_with_community, user_type: 'client') }
-    let!(:admin_user) { create(:user_with_community, user_type: 'admin') }
+    let!(:lead_role) { create(:role, name: 'lead') }
+    let!(:current_user) { create(:security_guard) }
+    let!(:user) { create(:client, community: current_user.community) }
+    let!(:admin_user) { create(:admin_user, community: current_user.community) }
 
     let(:query) do
       <<~GQL
         mutation CreateUserMutation(
             $name: String!,
-            $reason: String!,
+            $reason: String,
             $vehicle: String,
             $phoneNumber: String!
             $userType: String!
@@ -150,10 +151,38 @@ RSpec.describe Mutations::User do
       # expect(result.dig('data', 'userCreate', 'user', 'name')).to eql 'Mark John'
       # expect(result.dig('data', 'userCreate', 'user', 'userType')).to eql 'client'
     end
+
+    context 'when user type is lead' do
+      it 'creates task for lead user' do
+        variables = {
+          name: 'Mark Test',
+          phoneNumber: '26923422252',
+          userType: 'lead',
+          email: 'dummy@email.com',
+        }
+        result = DoubleGdpSchema.execute(query, variables: variables,
+                                                context: {
+                                                  current_user: admin_user,
+                                                  site_community: admin_user.community,
+                                                }).as_json
+        new_user = Users::User.find_by(email: 'dummy@email.com')
+        expect(result['errors']).to be nil
+        expect(admin_user.notes.count).to eql 1
+        expect(new_user.tasks.count).to eql 1
+      end
+    end
   end
 
   describe 'update pending user' do
-    let!(:current_user) { create(:user_with_community, user_type: 'admin') }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:client_role) { create(:role, name: 'client') }
+    let!(:permission) do
+      create(:permission, module: 'user',
+                          role: admin_role,
+                          permissions: %w[can_update_user_details])
+    end
+    let!(:current_user) { create(:admin_user, role: admin_role) }
+
     let!(:pending_user) { create(:pending_user, community_id: current_user.community_id) }
 
     let(:query) do
@@ -240,11 +269,40 @@ RSpec.describe Mutations::User do
   end
 
   describe 'updating a user' do
-    let!(:admin) { create(:admin_user) }
-    let!(:user) { create(:user_with_community) }
-    let!(:security_guard) { create(:security_guard, community_id: admin.community_id) }
-    let!(:pending_user) { create(:pending_user, community_id: admin.community_id) }
-    let!(:client) { create(:pending_user, community_id: admin.community_id, user_type: 'client') }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let(:marketing_admin_role) { create(:role, name: 'marketing_admin') }
+    let!(:security_guard_role) { create(:role, name: 'security_guard') }
+    let!(:client_role) { create(:role, name: 'client') }
+    let!(:permission) do
+      create(:permission, module: 'user',
+                          role: admin_role,
+                          permissions: %w[can_update_user_details can_merge_users])
+    end
+    let!(:marketing_admin_permission) do
+      create(:permission, module: 'user',
+                          role: marketing_admin_role,
+                          permissions: %w[can_update_user_details])
+    end
+    let!(:admin) { create(:admin_user, role: admin_role, phone_number: '9988776655') }
+    let(:community) { admin.community }
+    let(:marketing_admin) do
+      create(:marketing_admin,
+             role: marketing_admin_role,
+             community: community)
+    end
+    let!(:user) { create(:user, community: admin.community) }
+    let!(:security_guard) do
+      create(:security_guard, community_id: admin.community_id,
+                              role: security_guard_role)
+    end
+    let!(:pending_user) do
+      create(:pending_user, community_id: admin.community_id,
+                            role: user.role, phone_number: '0909090909')
+    end
+    let!(:client) do
+      create(:pending_user, community_id: admin.community_id,
+                            user_type: 'client', role: client_role)
+    end
 
     let(:query) do
       <<~GQL
@@ -252,8 +310,9 @@ RSpec.describe Mutations::User do
             $id: ID!,
             $userType: String
             $vehicle: String
-            $name: String,
+            $name: String!,
             $subStatus: String
+            $phoneNumber: String
           ) {
           userUpdate(
               id: $id,
@@ -261,6 +320,7 @@ RSpec.describe Mutations::User do
               vehicle: $vehicle,
               name: $name,
               subStatus: $subStatus
+              phoneNumber: $phoneNumber
             ) {
             user {
               id
@@ -268,6 +328,45 @@ RSpec.describe Mutations::User do
               roleName
               vehicle
               name
+              phoneNumber
+            }
+          }
+        }
+      GQL
+    end
+
+    let(:update_secondary_details_query) do
+      <<~GQL
+        mutation UpdateUserMutation(
+            $id: ID!,
+            $userType: String
+            $vehicle: String
+            $name: String!,
+            $subStatus: String
+            $phoneNumber: String
+            $secondaryInfo: [JSON!]
+          ) {
+          userUpdate(
+              id: $id,
+              userType: $userType,
+              vehicle: $vehicle,
+              name: $name,
+              subStatus: $subStatus
+              phoneNumber: $phoneNumber
+              secondaryInfo: $secondaryInfo
+            ) {
+            user {
+              id
+              userType
+              roleName
+              vehicle
+              name
+              phoneNumber
+              contactInfos {
+                id
+                info
+                contactType
+              }
             }
           }
         }
@@ -287,6 +386,7 @@ RSpec.describe Mutations::User do
     it 'should update the user' do
       variables = {
         id: pending_user.id,
+        name: 'Jane Doe',
         userType: 'security_guard',
         vehicle: 'Toyota Corolla',
       }
@@ -358,6 +458,128 @@ RSpec.describe Mutations::User do
 
       expect(result.dig('data', 'userUpdate', 'user', 'userType')).to eql nil
       expect(result['errors']).to_not be nil
+    end
+
+    context 'when current user is marketing admin and tries to update admin' do
+      it 'raises unauthorized error' do
+        variables = {
+          id: admin.id,
+          userType: 'lead',
+          name: 'Marry',
+        }
+        result = DoubleGdpSchema.execute(query, variables: variables,
+                                                context: {
+                                                  current_user: marketing_admin,
+                                                  site_community: community,
+                                                }).as_json
+        expect(result['errors']).to_not be_nil
+        expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'
+      end
+    end
+
+    context 'when current user is marketing admin and tries to update visitor' do
+      it 'updates user' do
+        variables = {
+          id: pending_user.id,
+          userType: 'client',
+          name: 'Marry',
+        }
+        result = DoubleGdpSchema.execute(query, variables: variables,
+                                                context: {
+                                                  current_user: marketing_admin,
+                                                  site_community: community,
+                                                }).as_json
+        expect(result['errors']).to be_nil
+        expect(result.dig('data', 'userUpdate', 'user', 'userType')).to eql 'client'
+      end
+    end
+
+    it 'should create user secondary information if not exists' do
+      variables = {
+        id: admin.id,
+        name: 'Jane Doe',
+        secondaryInfo: [
+          { info: '123 Zoo Estate', contactType: 'address' },
+          { info: '234980000000', contactType: 'phone' },
+          { info: 'jane@doe.com', contactType: 'email' },
+        ],
+      }
+      result = DoubleGdpSchema.execute(update_secondary_details_query,
+                                       variables: variables,
+                                       context: {
+                                         current_user: admin,
+                                         site_community: admin.community,
+                                       }).as_json
+      expect(result.dig('data', 'userUpdate', 'user', 'id')).not_to be_nil
+      expect(result['errors']).to be_nil
+
+      user_contact_infos = result.dig('data', 'userUpdate', 'user', 'contactInfos')
+      expect(user_contact_infos.size).to eq(3)
+      expect(user_contact_infos.first['info']).to eq('123 Zoo Estate')
+      expect(user_contact_infos.second['info']).to eq('234980000000')
+      expect(user_contact_infos.last['info']).to eq('jane@doe.com')
+    end
+
+    it 'should update and delete contact infos correctly' do
+      variables = {
+        id: admin.id,
+        name: 'Jane Doe',
+        secondaryInfo: [
+          { info: '123 Zoo Estate', contactType: 'address' },
+          { info: '234980000000', contactType: 'phone' },
+          { info: 'jane@doe.com', contactType: 'email' },
+        ],
+      }
+      before_update = DoubleGdpSchema.execute(update_secondary_details_query,
+                                              variables: variables,
+                                              context: {
+                                                current_user: admin,
+                                                site_community: admin.community,
+                                              }).as_json
+      expect(before_update.dig('data', 'userUpdate', 'user', 'id')).not_to be_nil
+      expect(before_update['errors']).to be_nil
+
+      user_contact_infos = before_update.dig('data', 'userUpdate', 'user', 'contactInfos')
+      expect(user_contact_infos.size).to eq(3)
+
+      # Update / Delete Contact Infos
+      user_contact_infos.first['id']
+      variables_to_update = {
+        id: admin.id,
+        name: 'Jane Doe',
+        secondaryInfo: [
+          { info: '456 Ziks Estate', contactType: 'address', id: user_contact_infos.first['id'] },
+          { info: 'admin@doe.com', contactType: 'email', id: user_contact_infos.last['id'] },
+        ],
+      }
+
+      after_update = DoubleGdpSchema.execute(update_secondary_details_query,
+                                             variables: variables_to_update,
+                                             context: {
+                                               current_user: admin,
+                                               site_community: admin.community,
+                                             }).as_json
+
+      contact_infos_after_update = after_update.dig('data', 'userUpdate', 'user', 'contactInfos')
+      expect(contact_infos_after_update.size).to eq(2)
+      expect(contact_infos_after_update.first['info']).to eq('456 Ziks Estate')
+      expect(contact_infos_after_update.last['info']).to eq('admin@doe.com')
+    end
+
+    context 'when a user in community exists with same phone number' do
+      it 'is expected to raise error' do
+        variables = {
+          id: pending_user.id,
+          name: 'Jane Doe',
+          phoneNumber: '9988776655',
+        }
+        result = DoubleGdpSchema.execute(query, variables: variables,
+                                                context: {
+                                                  current_user: admin,
+                                                  site_community: admin.community,
+                                                }).as_json
+        expect(result.dig('errors', 0, 'message')).to eql 'Phone Number has already been taken'
+      end
     end
 
     it 'should merge the 2 given users' do
@@ -435,7 +657,13 @@ RSpec.describe Mutations::User do
     end
 
     describe 'substatus change log' do
-      let(:current_user) { create(:admin_user, community_id: user.community.id) }
+      let!(:permission) do
+        create(:permission, module: 'user',
+                            role: admin_role,
+                            permissions: %w[can_update_user_details])
+      end
+      let!(:current_user) { create(:admin_user, community_id: user.community.id, role: admin_role) }
+
       let(:variables) do
         {
           id: user.id,
@@ -527,8 +755,99 @@ RSpec.describe Mutations::User do
     end
   end
 
+  describe 'updating a lead user' do
+    let(:admin_role) { create(:role, name: 'admin') }
+    let(:lead_role) { create(:role, name: 'lead') }
+    let!(:permission) do
+      create(:permission, module: 'user',
+                          role: admin_role,
+                          permissions: %w[can_update_user_details])
+    end
+    let(:admin) { create(:admin_user, role: admin_role, phone_number: '9988776655') }
+    let(:community) { admin.community }
+    let!(:user) do
+      create(:user,
+             community: community,
+             user_type: 'lead',
+             role: lead_role,
+             lead_status: 'Qualified Lead')
+    end
+
+    let(:mutation) do
+      <<~GQL
+        mutation UpdateUserMutation(
+            $id: ID!,
+            $userType: String
+            $name: String!,
+            $leadStatus: String
+          ) {
+          userUpdate(
+              id: $id,
+              userType: $userType,
+              name: $name,
+              leadStatus: $leadStatus
+            ) {
+            user {
+              id
+              leadStatus
+            }
+          }
+        }
+      GQL
+    end
+
+    context 'when lead user status is updated' do
+      it 'creates lead log' do
+        variables = {
+          id: user.id,
+          name: 'Mark',
+          leadStatus: 'Signed MOU',
+          userType: 'lead',
+        }
+
+        result = DoubleGdpSchema.execute(mutation, variables: variables,
+                                                   context: {
+                                                     current_user: admin,
+                                                     site_community: community,
+                                                   }).as_json
+        expect(result['errors']).to be_nil
+        expect(result.dig('data', 'userUpdate', 'user', 'id')).not_to be_nil
+        expect(result.dig('data', 'userUpdate', 'user', 'leadStatus')).to eql 'Signed MOU'
+        expect(user.lead_logs.count).to eql 1
+      end
+    end
+
+    context 'when user is lead and lead status is incorrect' do
+      it 'raises error' do
+        variables = {
+          id: user.id,
+          name: 'Mark John',
+          userType: 'lead',
+          leadStatus: 'Something',
+        }
+
+        result = DoubleGdpSchema.execute(mutation, variables: variables,
+                                                   context: {
+                                                     current_user: admin,
+                                                     site_community: community,
+                                                   }).as_json
+        error_message = 'Lead status is not included in the list'
+        expect(result['errors']).to_not be_nil
+        expect(result.dig('errors', 0, 'message')).to eql error_message
+      end
+    end
+  end
+
   describe 'creating avatars and adding them to the user' do
-    let!(:admin) { create(:admin_user) }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:resident_role) { create(:role, name: 'resident') }
+    let!(:permission) do
+      create(:permission, module: 'user',
+                          role: admin_role,
+                          permissions: %w[can_update_user_details])
+    end
+    let!(:admin) { create(:admin_user, role: admin_role) }
+
     let!(:pending_user) { create(:pending_user, community_id: admin.community_id) }
 
     let(:create_query) do
@@ -565,12 +884,14 @@ RSpec.describe Mutations::User do
       <<~GQL
         mutation UpdateUserMutation(
             $id: ID!,
+            $name: String!,
             $avatarBlobId: String,
             $phoneNumber: String!
             $userType: String!
           ) {
           userUpdate(
               id: $id,
+              name: $name,
               avatarBlobId: $avatarBlobId,
               phoneNumber: $phoneNumber
               userType: $userType
@@ -578,7 +899,6 @@ RSpec.describe Mutations::User do
             user {
               id
               avatarUrl
-              documentUrl
             }
           }
         }
@@ -620,6 +940,7 @@ RSpec.describe Mutations::User do
       )
       variables = {
         id: pending_user.id,
+        name: 'Jane Doe',
         avatarBlobId: avatar_blob.signed_id,
         phoneNumber: '26923422232',
         userType: 'resident',
@@ -629,55 +950,8 @@ RSpec.describe Mutations::User do
                                                        current_user: admin,
                                                        site_community: admin.community,
                                                      }).as_json
-
       expect(result.dig('data', 'userUpdate', 'user', 'avatarUrl')).not_to be_nil
       expect(result['errors']).to be_nil
-    end
-  end
-  describe 'sending a user a one time passcode' do
-    let!(:admin) { create(:admin_user) }
-    let!(:non_admin) { create(:user, community_id: admin.community_id) }
-    let!(:resident) { create(:user, community_id: admin.community_id) }
-
-    let(:send_one_time_login) do
-      <<~GQL
-        mutation SendOneTimePasscode(
-            $userId: ID!
-          ) {
-          result: oneTimeLogin(
-              userId: $userId
-            ) {
-            success
-          }
-        }
-      GQL
-    end
-
-    it 'should allow an admin to send a one time login code' do
-      variables = {
-        userId: resident.id,
-      }
-      expect(Sms).to receive(:send)
-      result = DoubleGdpSchema.execute(send_one_time_login, variables: variables,
-                                                            context: {
-                                                              current_user: admin,
-                                                              site_community: admin.community,
-                                                            }).as_json
-      expect(result.dig('data', 'result', 'success')).to be true
-      expect(result['errors']).to be_nil
-    end
-
-    it 'should not allow non-admins to send one time login codes' do
-      variables = {
-        userId: resident.id,
-      }
-      result = DoubleGdpSchema.execute(send_one_time_login, variables: variables,
-                                                            context: {
-                                                              current_user: non_admin,
-                                                              site_community: admin.community,
-                                                            }).as_json
-      expect(result.dig('data', 'result')).to be nil
-      expect(result['errors']).not_to be_nil
     end
   end
 end

@@ -1,4 +1,13 @@
 {
+  "misc": {
+    "decoding": "Decodificando...",
+    "off": "Apagado",
+    "visiting_hours": "Tenga en cuenta el horario de visita en la entrada principal:"
+  },
+  "qr_code": {
+    "message": "Este \"Código QR\" es un identificador único para su cuenta de ‪{{communityName}}‬ y puede ser usado en la entrada en lugar de dar su información manualmente. Nuestra meta es brindar un acceso rápido y seguro.",
+    "tilisi_message": "Este \"Código QR\" es un identificador único para su cuenta de ‪{{communityName}}‬ y puede ser usado para buscar rápidamente su cuenta en lugar de escribir su información manualmente. Nuestra meta es brindar un acceso rápido y seguro."
+  },
   "scan": {
     "button_key": "Button Keyooo",
     "torch": "Antorcha de palanca"

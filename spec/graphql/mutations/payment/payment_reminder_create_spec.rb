@@ -4,20 +4,29 @@ require 'rails_helper'
 
 RSpec.describe Mutations::PaymentPlan::PaymentReminderCreate do
   describe 'create for payment' do
-    let!(:user) { create(:user_with_community) }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:resident_role) { create(:role, name: 'resident') }
+    let!(:permission) do
+      create(:permission, module: 'payment_plan',
+                          role: admin_role,
+                          permissions: %w[can_send_payment_reminder])
+    end
+
+    let!(:user) { create(:user_with_community, role: resident_role, user_type: 'resident') }
+    let!(:admin) do
+      create(:admin_user, community_id: user.community_id, role: admin_role, user_type: 'admin')
+    end
+
     let!(:community) { user.community }
-    let!(:admin) { create(:admin_user, community_id: community.id) }
     let!(:land_parcel) { create(:land_parcel, community_id: community.id) }
     let!(:payment_plan) { create(:payment_plan, user: user, land_parcel: land_parcel) }
     let(:payment_reminder_mutation) do
       <<~GQL
         mutation paymentReminderCreate(
-            $userId: ID!
-            $paymentPlanId: ID!
+          $paymentReminderFields: [PaymentReminderInput!]!
         ) {
             paymentReminderCreate(
-              userId: $userId
-              paymentPlanId: $paymentPlanId
+              paymentReminderFields: $paymentReminderFields
             ) {
             message
           }
@@ -28,8 +37,10 @@ RSpec.describe Mutations::PaymentPlan::PaymentReminderCreate do
     context 'when current user is an admin' do
       it 'sends payment reminder email to the users' do
         variables = {
-          userId: user.id,
-          paymentPlanId: payment_plan.id,
+          paymentReminderFields: [{
+            userId: user.id,
+            paymentPlanId: payment_plan.id,
+          }],
         }
         result = DoubleGdpSchema.execute(payment_reminder_mutation, variables: variables,
                                                                     context: {
@@ -41,41 +52,13 @@ RSpec.describe Mutations::PaymentPlan::PaymentReminderCreate do
       end
     end
 
-    context 'when user id is invalid' do
-      it 'raises user does not exists error' do
-        variables = {
-          userId: 'zzzyyy111',
-          paymentPlanId: payment_plan.id,
-        }
-        result = DoubleGdpSchema.execute(payment_reminder_mutation, variables: variables,
-                                                                    context: {
-                                                                      current_user: admin,
-                                                                      site_community: community,
-                                                                    }).as_json
-        expect(result.dig('errors', 0, 'message')).to eql 'User does not exists'
-      end
-    end
-
-    context 'when payment plan id is invalid' do
-      it 'raise plan not found error' do
-        variables = {
-          userId: user.id,
-          paymentPlanId: 'zzzyy111',
-        }
-        result = DoubleGdpSchema.execute(payment_reminder_mutation, variables: variables,
-                                                                    context: {
-                                                                      current_user: admin,
-                                                                      site_community: community,
-                                                                    }).as_json
-        expect(result.dig('errors', 0, 'message')).to eql 'Payment Plan not found'
-      end
-    end
-
     context 'when current user is not an admin' do
       it 'raises unauthorized error' do
         variables = {
-          userId: user.id,
-          paymentPlanId: payment_plan.id,
+          paymentReminderFields: [{
+            userId: user.id,
+            paymentPlanId: payment_plan.id,
+          }],
         }
         result = DoubleGdpSchema.execute(payment_reminder_mutation, variables: variables,
                                                                     context: {

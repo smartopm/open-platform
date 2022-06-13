@@ -1,5 +1,6 @@
 {
   "buttons": {
+    "add_photo": "Añadir Foto",
     "edit_coordinates": "Editar Coordenadas",
     "merge_and_save": "Unir y Guardar",
     "new_owner": "Nuevo Propietario",
@@ -20,6 +21,7 @@
   },
   "form_fields": {
     "add_owner": "Agregar Propietario",
+    "add_youtube_url": "Agregue la URL del video de YouTube.",
     "address": "Dirección",
     "choose_icon": "Elija un tipo de icono",
     "city": "Ciudad",
@@ -28,11 +30,13 @@
     "geo_long_x": "Coordenadas geográficas Long_X",
     "icon_url": "icono-url",
     "owner": "Dueño",
+    "poi_description": "Descripción",
     "poi_name": "Nombre del Punto de Interes",
     "postal_code": "Código Postal",
     "property_number": "Número de Propiedad ",
     "property_type": "Tipo de Propiedad",
-    "state_province": "Estado Provincia"
+    "state_province": "Estado Provincia",
+    "youtube_video_url": "Video"
   },
   "map_markers": {
     "available": "Disponible",
@@ -71,6 +75,7 @@
     "merge_plot_to_remove": "Después de fusionar (parcela para remover)",
     "next": "Siguiente",
     "no": "No",
+    "no_description": "Sin Descripción",
     "no_details": "Sin Detalles",
     "no_payment_plans": "Aún no hay planes de pago",
     "parcel_merge_dialog": "Cuadro de diálogo Fusión de parcela de terreno",

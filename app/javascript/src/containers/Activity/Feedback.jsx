@@ -4,13 +4,15 @@
 /* eslint-disable no-console */
 import React, { useState } from 'react';
 import { StyleSheet, css } from 'aphrodite';
-import { withStyles } from '@material-ui/core/styles';
-import ThumbDownIcon from '@material-ui/icons/ThumbDown';
-import ThumbUpIcon from '@material-ui/icons/ThumbUp';
-import IconButton from '@material-ui/core/IconButton';
+import withStyles from '@mui/styles/withStyles';
+import ThumbDownIcon from '@mui/icons-material/ThumbDown';
+import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import IconButton from '@mui/material/IconButton';
 import { useMutation } from 'react-apollo';
-import { Button, CircularProgress, TextField } from '@material-ui/core';
+import { Button, CircularProgress, TextField } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import { createFeedback } from '../../graphql/mutations';
+import { ifNotTest } from '../../utils/helpers';
 
 const redLike = 'rgb(299, 63, 69)';
 const greenLike = 'rgb(37, 192, 176)';
@@ -44,7 +46,7 @@ export function Feedback(props) {
   const [feedback, setFeedback] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [feedbackCreate] = useMutation(createFeedback);
-
+  const { t } = useTranslation(['feedback', 'common']);
   function handleThumbDown() {
     setTextAreaOpen(!isTextAreaOpen);
   }
@@ -90,6 +92,7 @@ export function Feedback(props) {
               className={classes.thumbDownButton}
               aria-label="Thumb Down"
               data-testid="thumbdown-icon"
+              size="large"
             >
               <ThumbDownIcon className={classes.largeIcon} />
             </IconButton>
@@ -100,6 +103,7 @@ export function Feedback(props) {
               className={classes.thumbUpButton}
               aria-label="Thumb Up"
               data-testid="thumbup-icon"
+              size="large"
             >
               {isSubmitting ? (
                 <CircularProgress size={70} />
@@ -115,7 +119,7 @@ export function Feedback(props) {
           <form data-testid="feedback-form">
             <div className="form-group">
               <label htmlFor="feedback">
-                We value your feedback. Do you have a suggestion on how we can improve?
+                {t('feedback.value_your_feedback')}
               </label>
               <br />
               <TextField
@@ -124,7 +128,7 @@ export function Feedback(props) {
                 multiline
                 name="feedback"
                 value={feedback}
-                autoFocus
+                autoFocus={ifNotTest()}
                 onChange={event => setFeedback(event.target.value)}
               />
             </div>
@@ -134,7 +138,7 @@ export function Feedback(props) {
               onClick={handleSkipReview}
               color="secondary"
             >
-              Skip
+              {t('actions.skip')}
             </Button>
             <Button
               variant="outlined"
@@ -142,7 +146,7 @@ export function Feedback(props) {
               onClick={handleSubmitFeedback}
               color="primary"
             >
-              Submit
+              {t('common:form_actions.submit')}
             </Button>
           </form>
         )}

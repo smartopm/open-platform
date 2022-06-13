@@ -1,6 +1,6 @@
 import React from 'react'
 import { fireEvent, render, waitFor } from '@testing-library/react'
-import '@testing-library/jest-dom/extend-expect'
+
 import { MockedProvider } from '@apollo/react-testing'
 import { UserJourneyUpdateMutation } from '../../../graphql/mutations/user_journey'
 import UserJourneyDialog from '../../Users/Components/UserJourneyDialog'
@@ -9,8 +9,8 @@ import UserJourneyDialog from '../../Users/Components/UserJourneyDialog'
 describe('user journey dialog', () => {
     const log =  {
         id: '90849232-234234-sdfloeop34',
-        startDate: '2020-03-01',
-        stopDate: '2020-03-03',
+        startDate: new Date(2020, 2, 1),
+        stopDate: new Date(2020, 2, 3),
         userId: '90849232-234234-9238493284e9ewdx'
       }
     it('should call the mutation', async () => {
@@ -29,7 +29,7 @@ describe('user journey dialog', () => {
             startDate: log.startDate
            },
         },
-        result: { data: { substatusLogUpdate: { log: log.id } } },
+        result: { data: { substatusLogUpdate: { log: { id: log.id } } } },
       },
     ];
     const container = render(

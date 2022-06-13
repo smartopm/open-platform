@@ -4,6 +4,8 @@ module Mutations
   module Label
     # Create a new Label
     class LabelCreate < BaseMutation
+      include Helpers::LabelHelper
+
       argument :short_desc, String, required: true
       argument :description, String, required: false
       argument :color, String, required: false
@@ -12,8 +14,12 @@ module Mutations
 
       def resolve(vals)
         raise_duplicate_label_error(vals[:short_desc])
-
-        label = context[:site_community].labels.create!(vals)
+        short_desc, grouping_name = get_label_details(vals[:short_desc])
+        label = context[:site_community].labels.create!(
+          short_desc: short_desc,
+          grouping_name: grouping_name,
+          color: vals[:color],
+        )
         return { label: label } if label.persisted?
 
         raise GraphQL::ExecutionError, label.errors.full_messages
@@ -21,7 +27,7 @@ module Mutations
 
       # Verifies if current user is admin or not.
       def authorized?(_vals)
-        return true if context[:current_user]&.admin?
+        return true if permitted?(module: :label, permission: :can_create_label)
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end

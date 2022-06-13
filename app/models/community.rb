@@ -12,7 +12,7 @@ class Community < ApplicationRecord
     'Invoices', 'Transactions', 'Forms', 'Customer Journey', 'UserStats', 'Users',
     'Properties', 'News', 'Discussions', 'Campaigns', 'Labels', 'Tasks', 'Business',
     'Forms', 'Email Templates', 'Community', 'Contact', 'Referral', 'My Thebe Portal',
-    'Action Flows', 'Time Card', 'Logout', 'Showroom', 'DynamicMenu', 'Guest List'
+    'Action Flows', 'Time Card', 'Logout', 'Showroom', 'DynamicMenu', 'Guest List', 'Processes'
   ].freeze
 
   after_initialize :add_default_community_features
@@ -44,10 +44,17 @@ class Community < ApplicationRecord
   has_many :plan_payments, class_name: 'Payments::PlanPayment', dependent: :destroy
   has_many :feedbacks, class_name: 'Users::Feedback', dependent: :destroy
   has_many :subscription_plans, class_name: 'Payments::SubscriptionPlan', dependent: :destroy
+  has_many :processes, class_name: 'Processes::Process', dependent: :destroy
+  has_many :note_lists, class_name: 'Notes::NoteList', dependent: :destroy
   belongs_to :sub_administrator, class_name: 'Users::User', optional: true
   has_many :time_sheets, class_name: 'Users::TimeSheet', dependent: :destroy
+  has_many :entry_times, class_name: 'Logs::EntryTime', dependent: :destroy
+  has_many :lead_logs, class_name: 'Logs::LeadLog', dependent: :destroy
+  has_many :posts, class_name: 'Discussions::Post', dependent: :destroy
+  has_many :transaction_logs, class_name: 'Payments::TransactionLog', dependent: :destroy
 
-  VALID_CURRENCIES = %w[zambian_kwacha honduran_lempira].freeze
+  VALID_CURRENCIES = %w[zambian_kwacha honduran_lempira kenyan_shilling costa_rican_colon
+                        nigerian_naira american_dollar].freeze
 
   validates :currency, inclusion: { in: VALID_CURRENCIES, allow_nil: false }
 
@@ -55,6 +62,10 @@ class Community < ApplicationRecord
     'Nkwashi': ['doublegdp.com', 'thebe-im.com'],
     'DoubleGDP': ['doublegdp.com'],
     'Ciudad Morazán': ['doublegdp.com'],
+    'Tilisi': ['doublegdp.com'],
+    'Greenpark': ['doublegdp.com'],
+    'Enyimba': ['doublegdp.com'],
+    'Metropolis': ['doublegdp.com'],
     'DAST': ['doublegdp.com'],
   }.freeze
 
@@ -107,43 +118,43 @@ class Community < ApplicationRecord
     self.features = features
   end
 
-  # TODO: refactor this function and remove linter errors
-  # rubocop:disable Layout/LineLength
   # rubocop:disable Metrics/MethodLength
-  # rubocop:disable Metrics/CyclomaticComplexity
   # rubocop:disable Metrics/AbcSize
-  # rubocop:disable Metrics/PerceivedComplexity
   def craft_sms(**params)
     raise CommunityError, 'No phone numbers to send sms to' if sms_phone_numbers.blank?
 
     task_url = "https://#{HostEnv.base_url(self)}/tasks/#{params[:note_id]}"
-    if params[:current_user].phone_number.present? && params[:google_map_url]
+    user_initiated_message = I18n.t('emergency_sos.user_initiated_message',
+                                    user_name: params[:current_user].name)
+    from_location_message = I18n.t('emergency_sos.from_location_message',
+                                   google_map_url: params[:google_map_url])
+    can_be_reached_on_message = I18n.t('emergency_sos.reached_on_message',
+                                       phone_number: params[:current_user].phone_number)
 
-      message = "Emergency SOS #{params[:current_user].name} has initiated an emergency support request rom this approximate #{params[:google_map_url]} and can likely be reached on #{params[:current_user].phone_number}."
+    if params[:current_user].phone_number.present?
+      message = if params[:google_map_url].present?
+                  "#{user_initiated_message} #{from_location_message} #{can_be_reached_on_message}"
+                else
+                  "#{user_initiated_message} #{I18n.t('emergency_sos.location_not_found')} " \
+                  "#{can_be_reached_on_message}"
+                end
+    elsif params[:google_map_url].present?
+      message = "#{user_initiated_message} #{from_location_message} " \
+                "#{I18n.t('emergency_sos.contact_not_found')}"
+    else
+      message = "#{user_initiated_message} " \
+                "#{I18n.t('emergency_sos.location_and_contact_not_found')}"
     end
-
-    if params[:current_user].phone_number.present? && params[:google_map_url].nil?
-
-      message =  "Emergency SOS #{params[:current_user].name} has initiated an emergency support request and do not have approximate location in our system and can likely be reached on #{params[:current_user].phone_number}."
-
-    end
-
-    if params[:google_map_url] && params[:current_user].phone_number.blank?
-      message =  "Emergency SOS #{params[:current_user].name} has initiated an emergency support request from this approximate location #{params[:google_map_url]} and do not have a contact number in our system."
-    end
-
-    if params[:google_map_url].nil? && params[:current_user].phone_number.blank?
-      message =  "Emergency SOS #{params[:current_user].name} has initiated an emergency support request and do not have approximate location a contact number in our system."
-    end
-    message += " You are receiving this message as you are a member of the emergency escalation team for #{name}. Please confirm the person is safe and the emergency is resolved, then mark as complete #{task_url}"
+    message += " #{I18n.t('emergency_sos.receiving_message', name: name, task_url: task_url)}"
     send_sms(message)
   end
-
-  # rubocop:enable Layout/LineLength
   # rubocop:enable Metrics/MethodLength
-  # rubocop:enable Metrics/CyclomaticComplexity
   # rubocop:enable Metrics/AbcSize
-  # rubocop:enable Metrics/PerceivedComplexity
+
+  def craft_am_safe_sms(**params)
+    message = I18n.t('emergency_sos.am_safe_message', user_name: params[:current_user].name)
+    send_sms(message)
+  end
 
   def send_sms(message)
     sms_phone_numbers.each  do |sms_phone_number|
@@ -151,5 +162,20 @@ class Community < ApplicationRecord
       Sms.send(sms_phone_number, message)
     end
   end
+
+  # rubocop:disable Rails/FindBy
+  def drc_form_users
+    form_name = 'DRC Project Review Process'
+    drc_form = forms.where('name ILIKE ?', "#{form_name}%").first
+    return unless drc_form
+
+    drc_ids = forms.where(grouping_id: drc_form.grouping_id).pluck(:id)
+    Forms::FormUser.where(form_id: drc_ids)
+  end
+  # rubocop:enable Rails/FindBy
   # rubocop:enable Metrics/ClassLength
+
+  def process_form_users(process_id)
+    forms.joins(:process).find_by(process: { id: process_id })&.form_users
+  end
 end

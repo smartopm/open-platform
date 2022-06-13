@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react';
 import {
   Box,
   Grid,
@@ -9,9 +9,11 @@ import {
   FormControl,
   FormGroup,
   FormControlLabel
-} from '@material-ui/core'
-import PropTypes from 'prop-types'
-import CenteredContent from '../../../components/CenteredContent'
+} from '@mui/material';
+import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
+import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
+import CenteredContent from '../../../shared/CenteredContent';
 
 export default function NotificationPage({
   handleChange,
@@ -20,6 +22,9 @@ export default function NotificationPage({
   loading
 }) {
   const { smsChecked, emailChecked, weeklyEmailReminderChecked } = checkedState
+  const authState = useContext(AuthStateContext);
+  const { t } = useTranslation('notification');
+
   return (
     <Box style={{ height: 100, margin: 10 }}>
       <Box
@@ -31,17 +36,15 @@ export default function NotificationPage({
         }}
       >
         <Typography variant="h5" data-testid="notification-header">
-          Notification Settings
+          {t('notification.settings')}
         </Typography>
       </Box>
       <Divider />
       <br />
-      <Grid container alignItems="center" justify="center" spacing={3}>
+      <Grid container alignItems="center" justifyContent="center" spacing={3}>
         <Grid item xs={12} sm={6}>
           <Typography variant="body1" data-testid="notification-description">
-            News and Updates: Receive the latest news and updates on Nkwashi and
-            your account. Types of content include newsletters, community
-            interviews, construction progress, and account updates.
+            {t('notification.news_and_updates', { communityName: authState?.user?.community?.name })}
           </Typography>
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -80,10 +83,7 @@ export default function NotificationPage({
         </Grid>
         <Grid item xs={12} sm={6}>
           <Typography variant="body1" data-testid="points-and-rewards-description">
-            Points and Rewards: Get weekly reminders to collect and view the
-            points on your account. Points are a great way to engage with the
-            community and are sometimes used to grant awards and rewards to our
-            community members.
+            {t('notification.points_and_rewards')}
           </Typography>
         </Grid>
         <Grid item xs={12} sm={6}>
@@ -119,7 +119,7 @@ export default function NotificationPage({
         </Button>
       </CenteredContent>
     </Box>
-  )
+  );
 }
 
 NotificationPage.propTypes = {

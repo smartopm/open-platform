@@ -1,8 +1,8 @@
 import React, { useContext, useState } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
+import makeStyles from '@mui/styles/makeStyles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import PropTypes from 'prop-types';
-import { Typography, Fab } from '@material-ui/core';
+import { Typography, Fab } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { formatMoney } from '../../../../utils/helpers';
 import { currencies } from '../../../../utils/constants';
@@ -16,7 +16,8 @@ export default function Balance({
   refetch,
   balanceData,
   balanceRefetch,
-  transRefetch
+  transRefetch,
+  genRefetch
 }) {
   const authState = useContext(AuthStateContext);
   const classes = useStyles();
@@ -27,6 +28,8 @@ export default function Balance({
   const currency = currencies[user.community.currency] || '';
   const { locale } = user.community;
   const currencyData = { currency, locale };
+  const userTransactionPermissions = authState.user?.permissions.find(permissionObject => permissionObject.module === 'transaction')
+  const canCreateTransactions = userTransactionPermissions? userTransactionPermissions.permissions.includes('can_create_transaction'): false
 
   return (
     <div>
@@ -36,7 +39,7 @@ export default function Balance({
             <Typography variant={matches ? 'caption' : 'subtitle1'}>
               {t('common:misc.total_balance')}
             </Typography>
-            <Typography variant={matches ? 'body2' : 'h5'} color="primary">
+            <Typography variant={matches ? 'body2' : 'h5'} color="primary" data-testid="pending-balance">
               {balanceData?.pendingBalance === 0
                 ? formatMoney(currencyData, balanceData?.pendingBalance)
                 : `- ${formatMoney(currencyData, balanceData?.pendingBalance)}`}
@@ -68,7 +71,7 @@ export default function Balance({
             }
           >
             <Typography variant={matches ? 'caption' : 'subtitle1'}>
-              {t('common:misc.unallocated_funds')}
+              {t('common:misc.general_funds')}
             </Typography>
             <Typography variant={matches ? 'body2' : 'h5'} color="primary">
               {formatMoney(currencyData, balanceData?.balance)}
@@ -76,7 +79,7 @@ export default function Balance({
           </div>
         )}
       </div>
-      {authState.user?.userType === 'admin' && (
+      {canCreateTransactions && (
         <div>
           <Fab
             color="primary"
@@ -98,6 +101,7 @@ export default function Balance({
         walletRefetch={refetch}
         userData={userData}
         transRefetch={transRefetch}
+        genRefetch={genRefetch}
       />
     </div>
   );
@@ -119,6 +123,7 @@ Balance.defaultProps = {
   transRefetch: () => {},
   refetch: () => {},
   balanceRefetch: () => {},
+  genRefetch: () => {},
   balanceData: {}
 };
 
@@ -144,5 +149,6 @@ Balance.propTypes = {
   }),
   refetch: PropTypes.func,
   transRefetch: PropTypes.func,
-  balanceRefetch: PropTypes.func
+  balanceRefetch: PropTypes.func,
+  genRefetch: PropTypes.func,
 };

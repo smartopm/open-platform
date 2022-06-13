@@ -27,7 +27,7 @@ module Mutations
         campaign.campaign_type = 'sms'
         campaign.status = 'draft'
         campaign.message = I18n.t('campaign.default.message')
-        campaign.batch_time = 10.years.from_now
+        campaign.batch_time = Time.current
         campaign
       end
 
@@ -45,7 +45,8 @@ module Mutations
 
       # Verifies if current user is admin or not.
       def authorized?(_vals)
-        return true if context[:current_user]&.admin?
+        return true if permitted?(module: :campaign,
+                                  permission: :can_create_campaign_through_users)
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end

@@ -4,11 +4,45 @@ require 'rails_helper'
 
 RSpec.describe Types::Queries::TimeSheet do
   describe 'retrieving custodian retrieves employee list' do
-    let!(:user1) { create(:contractor) }
-    let!(:user2) { create(:user, user_type: user1.user_type, community_id: user1.community_id) }
-    let!(:admin) { create(:admin_user, community_id: user1.community_id) }
-    let!(:custodian) { create(:store_custodian, community_id: user1.community_id) }
-    let!(:security_guard) { create(:security_guard, community_id: user1.community_id) }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:contractor_role) { create(:role, name: 'contractor') }
+
+    let!(:custodian_role) { create(:role, name: 'custodian') }
+    let!(:security_guard_role) { create(:role, name: 'security_guard') }
+
+    perm_list = %w[can_access_all_timesheets can_fetch_user_last_shift
+                   can_fetch_user_time_sheet_logs can_fetch_time_sheet_logs]
+
+    let!(:permission) do
+      create(:permission, module: 'timesheet',
+                          role: admin_role,
+                          permissions: perm_list)
+    end
+    let!(:custodian_permission) do
+      create(:permission, module: 'timesheet',
+                          role: custodian_role,
+                          permissions: perm_list)
+    end
+    let!(:guard_permission) do
+      create(:permission, module: 'timesheet',
+                          role: security_guard_role,
+                          permissions: %w[can_fetch_user_time_sheet_logs])
+    end
+
+    let!(:user1) { create(:contractor, role: contractor_role) }
+    let!(:user2) do
+      create(:user, user_type: user1.user_type,
+                    community_id: user1.community_id, role: contractor_role)
+    end
+    let!(:admin) { create(:admin_user, community_id: user1.community_id, role: admin_role) }
+    let!(:custodian) do
+      create(:store_custodian,
+             community_id: user1.community_id, role: custodian_role)
+    end
+    let!(:security_guard) do
+      create(:security_guard,
+             community_id: user1.community_id, role: security_guard_role)
+    end
 
     let!(:time_minus_2days) { Time.current - 2.days }
     let!(:time_minus_1days) { Time.current - 1.day }
@@ -156,6 +190,24 @@ RSpec.describe Types::Queries::TimeSheet do
                                        }).as_json
       expect(result.dig('errors', 0, 'message')).to be_nil
       expect(result.dig('data', 'userLastShift')).not_to be_nil
+    end
+
+    context 'when current user is not an admin' do
+      it 'raises unauthorized error for user_last_shift_query' do
+        result = DoubleGdpSchema.execute(user_last_shift, context: {
+                                           current_user: user1,
+                                           site_community: custodian.community,
+                                         }).as_json
+        expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'
+      end
+
+      it 'raises unauthorized error time_sheet_logs_query' do
+        result = DoubleGdpSchema.execute(query, context: {
+                                           current_user: user1,
+                                           site_community: custodian.community,
+                                         }).as_json
+        expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'
+      end
     end
   end
 end

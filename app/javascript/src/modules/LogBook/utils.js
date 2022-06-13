@@ -1,7 +1,9 @@
+/* eslint-disable max-statements */
 /* eslint-disable import/prefer-default-export */
 import moment from 'moment-timezone'
-import { updateDateWithTime } from '../../components/DateContainer';
+import { dateToString, updateDateWithTime } from '../../components/DateContainer';
 import { getWeekDay } from '../../utils/dateutil';
+import { objectAccessor } from '../../utils/helpers';
 
 export function checkInValidRequiredFields(formData, requiredFields) {
   const values = requiredFields.map(field => formData[String(field)]);
@@ -22,13 +24,13 @@ export const defaultRequiredFields = ['name', 'phoneNumber', 'nrc', 'vehiclePlat
  * @param {String} tz
  * @returns
  */
+// eslint-disable-next-line complexity
 export function checkRequests(req, translate, tz) {
+  if (!req) {
+    return { title: translate('guest_book.invalid_now'), color: '#E74540', valid: false };
+  }
   /**
-   * moved the conversion here because:
-   *  - If a user updates a request's visitation date, the time wont be changed, this will fail our validity check
-   *  - If the guest is re-occuring then the visitation date won't be the same as the date for the endsAt or startsAt time
-   *  - moment's isSameOrAfter() and isSameOrBefore() rely on a full date instead of just time to validate the time.
-   *  - Having the updateDateWithTime here, allows us to always rely on today's date as the date for both the endsAt and startsAt times
+   *  Having the updateDateWithTime here, allows us to always rely on today's date as the date for both the endsAt and startsAt times
    */
 
   // today in the timezone of the current community
@@ -67,4 +69,98 @@ export function checkRequests(req, translate, tz) {
       return { title: translate('guest_book.invalid_now'), color: '#E74540', valid: false };
     }
     return { title: translate('guest_book.invalid_today'), color: '#E74540', valid: false };
+}
+
+
+export function resolveUserOrGuest(request){
+  if (!request) {
+    return null
+  }
+  const user =  request.user || request.guest
+  return user
+}
+
+/**
+ * check if any entry is valid
+ * @param {[object]} entries
+ */
+export function IsAnyRequestValid(entries, t, tz) {
+  return entries.some(entry => {
+     return checkRequests(entry, t, tz).valid
+  })
+}
+
+
+export function findClosestEntry(entries, tz) {
+  if(!entries || !entries.length) return []
+  const timeNow = moment.tz(tz);
+  return entries.sort((entry1, entry2) => {
+    const diffEntry1 = Math.abs(new Date(timeNow) - new Date(entry1.visitationDate));
+    const diffEntry2 = Math.abs(new Date(timeNow) - new Date(entry2.visitationDate));
+
+    return diffEntry1 - diffEntry2;
+  })[0];
+}
+
+
+/**
+ * return only menu items that should be visible to current user
+ * @param {[object]} menus
+ * @returns []
+ */
+export function accessibleMenus(menus){
+  if(!menus || !menus.length) return []
+  return menus.filter(menu => menu.isVisible)
+}
+
+
+/**
+ * find and return if a name is available from an event
+ * @param {object} entry
+ * @returns boolean
+ */
+export function checkVisitorsName(entry) {
+  const visitorName = entry.data.ref_name || entry.data.visitor_name || entry.data.name;
+  return !!visitorName;
+}
+
+
+/**
+ *
+ * @param {String} type
+ * @param {object} history
+ * @param {Number} tabValue
+ * @param {object} value
+ * @returns
+ */
+export function paginate(type, history, tabValue, value) {
+  if (type === 'prev') {
+    if (value.offset < value.limit) return;
+    history.push(`/logbook?tab=${tabValue}&offset=${value.offset - value.limit}`);
+  } else if (type === 'next') {
+    history.push(`/logbook?tab=${tabValue}&offset=${value.offset + value.limit}`);
+  }
+}
+
+
+/**
+ * Formats and structures the date to be downloaded in csv
+ * @param {[object]} csvData
+ * @param {object} subjects
+ * @returns {[object]}
+ */
+ export function formatCsvData(csvData, subjects) {
+  return csvData.map(val => ({
+    ...val,
+    logDate: dateToString(val.createdAt, 'YYYY-MM-DD HH:mm'),
+    guest: val.entryRequest?.name || val.data.ref_name || val.data.visitor_name || val.data.name,
+    guard: val.entryRequest?.grantor?.name || val.actingUser.name,
+    host:
+      val.entryRequest?.guestId && val.entryRequest?.grantedState === 1
+        ? val.entryRequest?.user?.name
+        : null,
+    type: objectAccessor(subjects, val.subject),
+    extraNote: val.data.note || '-',
+    reason: val.entryRequest?.reason
+  }));
 }

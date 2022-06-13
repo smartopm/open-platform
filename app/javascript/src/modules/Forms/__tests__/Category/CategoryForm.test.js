@@ -1,10 +1,11 @@
 import React from 'react';
 import { fireEvent, render, waitFor } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
+
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom';
 import CategoryForm from '../../components/Category/CategoryForm';
 import { FormCategoryUpdateMutation } from '../../graphql/form_category_mutations';
+import MockedThemeProvider from '../../../__mocks__/mock_theme';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => []);
 describe('CategoryForm Component', () => {
@@ -30,7 +31,9 @@ describe('CategoryForm Component', () => {
       }
     ],
     close: jest.fn(),
-    refetchCategories: jest.fn()
+    refetchCategories: jest.fn(),
+    handleCategoryClose: jest.fn(),
+    categoryFormOpen: true
   };
   const updateCategoryMock = {
     request: {
@@ -55,7 +58,9 @@ describe('CategoryForm Component', () => {
   const formWrapper = render(
     <MockedProvider mocks={[updateCategoryMock]} addTypename={false}>
       <BrowserRouter>
-        <CategoryForm {...props} />
+        <MockedThemeProvider>
+          <CategoryForm {...props} />
+        </MockedThemeProvider>
       </BrowserRouter>
     </MockedProvider>
   );
@@ -67,11 +72,11 @@ describe('CategoryForm Component', () => {
     expect(formWrapper.queryByText('form_fields.header_visible')).toBeInTheDocument();
     expect(formWrapper.queryByText('form_fields.general_category')).toBeInTheDocument();
     expect(formWrapper.queryAllByText('form_fields.order_number')[0]).toBeInTheDocument();
-    expect(formWrapper.queryByTestId('category_action_btn').textContent).toContain(
-      'actions.update_category'
+    expect(formWrapper.queryByTestId('dialog_cancel').textContent).toContain(
+      'common:form_actions.cancel'
     );
-    expect(formWrapper.queryByTestId('clear_condition')).toBeInTheDocument()
-    expect(formWrapper.queryByTestId('category_action_btn')).not.toBeDisabled();
+    expect(formWrapper.queryByTestId('clear_condition')).toBeInTheDocument();
+    expect(formWrapper.queryByTestId('custom-dialog-button')).not.toBeDisabled();
 
     fireEvent.change(formWrapper.queryByTestId('name'), {
       target: { value: 'This category form' }
@@ -93,7 +98,7 @@ describe('CategoryForm Component', () => {
     fireEvent.change(formWrapper.queryByTestId('order_number'), { target: { value: '2' } });
     expect(formWrapper.queryByTestId('order_number').value).toBe('2');
 
-    fireEvent.submit(formWrapper.queryByTestId('form_property_submit'));
+    fireEvent.click(formWrapper.queryByTestId('custom-dialog-button'));
 
     await waitFor(() => {
       expect(props.close).toBeCalled();

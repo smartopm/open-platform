@@ -1,9 +1,12 @@
 {
     "search": {
-      "create_request": "Create a new request",
+      "create_user_request": "Create a new user",
       "no_results": "No results Found",
       "load_more": "Load more",
       "type_your_search": "Type your search query",
-      "search_for": "Search for {{title}}"
+      "search_for": "Search for {{title}}",
+      "search_users": "Search Users",
+      "search_results": "Search Results",
+      "clear_filters": "Clear Filters"
     }
 }

@@ -2,8 +2,9 @@
 import React, { Fragment, useState } from 'react'
 import { useQuery } from 'react-apollo'
 import { formatISO9075 } from 'date-fns'
-import ThumbDownIcon from '@material-ui/icons/ThumbDown'
-import ThumbUpIcon from '@material-ui/icons/ThumbUp'
+import ThumbDownIcon from '@mui/icons-material/ThumbDown'
+import ThumbUpIcon from '@mui/icons-material/ThumbUp'
+import { useTranslation } from 'react-i18next';
 import { allFeedback } from '../../graphql/queries'
 import Loading from '../../shared/Loading'
 import ErrorPage from '../../components/Error'
@@ -16,6 +17,7 @@ export default function FeedbackPage() {
   const { loading, error, data } = useQuery(allFeedback, {
     variables: { limit, offset }
   })
+  const { t } = useTranslation(['feedback', 'common']);
   if (loading) return <Loading />
   if (error) return <ErrorPage error={error.message} />
 
@@ -44,25 +46,25 @@ export default function FeedbackPage() {
                   {' '}
                 </b>
                 {' '}
-                gave a thumbs
+                {t('misc.gave_thumbs')}
                 {' '}
                 {feedback.isThumbsUp ? (
                   <>
-                    Up 
+                    {t('misc.up')}
                     {' '}
                     <ThumbUpIcon />
                     {' '}
                   </>
                 ) : (
                   <>
-                    Down 
+                    {t('misc.down')}
                     {' '}
                     <ThumbDownIcon />
                     {' '}
                   </>
                 )}
                 {' '}
-                on
+                {t('misc.on')}
                 {' '}
                 <i style={{ color: 'grey' }}>
                   {formatISO9075(new Date(feedback.createdAt))}
@@ -71,7 +73,8 @@ export default function FeedbackPage() {
                 {feedback.review && (
                 <span>
                   {' '}
-                  Review:
+                  {t('misc.review')}
+                  :
                   {feedback.review} 
                 </span>
 )}
@@ -89,7 +92,7 @@ export default function FeedbackPage() {
             <ul className="pagination">
               <li className={`page-item ${offset < limit && 'disabled'}`}>
                 <a className="page-link" onClick={handlePreviousPage} href="#" data-testid="prev-link">
-                  Previous
+                  {t('common:misc.previous')}
                 </a>
               </li>
               <li
@@ -97,7 +100,7 @@ export default function FeedbackPage() {
                   'disabled'}`}
               >
                 <a className="page-link" onClick={handleNextPage} href="#" data-testid="next-link">
-                  Next
+                  {t('common:misc.next')}
                 </a>
               </li>
             </ul>

@@ -21,6 +21,7 @@ export const UserTransactions = gql`
         receiptNumber
         amount
         paymentPlan {
+          status
           pendingBalance
           landParcel {
             parcelNumber
@@ -71,14 +72,6 @@ export const UserPlans = gql`
         amount
         status
         receiptNumber
-        paymentPlan {
-          id
-          pendingBalance
-          landParcel {
-            id
-            parcelNumber
-          }
-        }
         userTransaction {
           id
           source
@@ -89,11 +82,51 @@ export const UserPlans = gql`
             name
           }
         }
+        paymentPlan {
+          id
+        }
       }
     }
   }
 `
 
+export const GeneralPlanQuery = gql`
+  query generalPlan($userId: ID!) {
+    userGeneralPlan(userId: $userId) {
+      id
+      generalPayments
+      planPayments {
+        id
+        createdAt
+        amount
+        status
+        receiptNumber
+        userTransaction {
+          id
+          source
+          transactionNumber
+          allocatedAmount
+          depositor {
+            id
+            name
+          }
+        }
+        user {
+          id
+          name
+          extRefId
+        }
+        community {
+          bankingDetails
+          currency
+          supportEmail
+          socialLinks
+          supportNumber
+        }
+      }
+    }
+  }
+`
 
 export const PlansPaymentsQuery = gql`
   query allPayments($limit: Int, $offset: Int, $query: String) {
@@ -128,8 +161,8 @@ export const PlansPaymentsQuery = gql`
 `
 
 export const ReceiptPayment = gql`
-  query PaymentReceipt($id: ID!) {
-    paymentReceipt(id: $id) {
+  query PaymentReceipt($userId: ID!, $id: ID!) {
+    paymentReceipt(userId: $userId, id: $id) {
       id
       amount
       receiptNumber
@@ -241,15 +274,25 @@ export const CommunityPlansQuery = gql`
       owingAmount
       planStatus
       installmentAmount
+      upcomingInstallmentDueDate
       user{
         id
         name
         imageUrl
         email
+        extRefId
+        phoneNumber
       }
       landParcel{
         parcelNumber
         parcelType
+      }
+      planPayments{
+        id
+        amount
+        status
+        createdAt
+        receiptNumber
       }
     }
   }

@@ -4,8 +4,19 @@ require 'rails_helper'
 
 RSpec.describe Mutations::Form::FormUserStatusUpdate do
   describe 'Update form status ' do
-    let!(:user) { create(:user_with_community) }
-    let!(:admin) { create(:admin_user, community_id: user.community_id) }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:resident_role) { create(:role, name: 'resident') }
+    let!(:permission) do
+      create(:permission, module: 'forms',
+                          role: admin_role,
+                          permissions: %w[can_update_form_user_status])
+    end
+
+    let!(:user) { create(:user_with_community, user_type: 'resident', role: resident_role) }
+    let!(:admin) do
+      create(:admin_user, community_id: user.community_id, role: admin_role, user_type: 'admin')
+    end
+
     let!(:form) { create(:form, community_id: user.community_id) }
     let!(:form_user) do
       user.form_users.create!(form_id: form.id, status: 1, status_updated_by_id: admin.id)
@@ -33,6 +44,7 @@ RSpec.describe Mutations::Form::FormUserStatusUpdate do
                                                  context: {
                                                    current_user: admin,
                                                    site_community: user.community,
+                                                   user_role: admin.role,
                                                  }).as_json
       expect(result.dig('data', 'formUserStatusUpdate', 'formUser', 'id')).to eql form_user.id
       expect(result.dig('data', 'formUserStatusUpdate', 'formUser', 'status')).to eql 'approved'
@@ -48,6 +60,7 @@ RSpec.describe Mutations::Form::FormUserStatusUpdate do
                                                  context: {
                                                    current_user: user,
                                                    site_community: user.community,
+                                                   user_role: user.role,
                                                  }).as_json
       expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'
     end
@@ -61,6 +74,7 @@ RSpec.describe Mutations::Form::FormUserStatusUpdate do
                                                  context: {
                                                    current_user: admin,
                                                    site_community: user.community,
+                                                   user_role: admin.role,
                                                  }).as_json
       expect(result.dig('errors', 0, 'message')).to eql 'Record not found'
     end

@@ -1,9 +1,9 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
 import { useLocation } from 'react-router';
-import Typography from '@material-ui/core/Typography';
+import Typography from '@mui/material/Typography';
 import { PropTypes } from 'prop-types';
-import Grid from '@material-ui/core/Grid';
+import Grid from '@mui/material/Grid';
 import { useTranslation } from 'react-i18next';
 import { differenceInHours } from '../../../utils/dateutil';
 import DataTable, { StyledTableCell, StyledTableRow } from './DataTable';
@@ -48,7 +48,7 @@ export default function EmployeeTimeSheetLog({ data, name, firstDay, lastDay }) 
           </Typography>
           <br />
 
-          <Grid container justify="flex-start">
+          <Grid container justifyContent="flex-start">
             <Grid item xs={10}>
               <strong data-testid="summary">
                 {t('timecard.worked_time_stats', { dayCount: days, hourCount: hours, firstDay, lastDay })}

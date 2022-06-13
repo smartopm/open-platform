@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# rubocop:disable Metrics/BlockLength
 # rubocop:disable Layout/LineLength
 namespace :migrate_deposits do
   desc 'Reset payment plan pending balance and migrate deposit entry in transactions table'
@@ -10,7 +9,7 @@ namespace :migrate_deposits do
     community = Community.find_by(name: args.community_name)
 
     ActiveRecord::Base.transaction do
-      community.land_parcels.joins(:payment_plan).each do |parcel|
+      community.land_parcels.excluding_general.joins(:payment_plan).each do |parcel|
         plan = parcel.payment_plan
         wallet_transactions = plan.wallet_transactions
                                   .not_cancelled
@@ -75,5 +74,4 @@ namespace :migrate_deposits do
     puts 'Records successfully migrated' if errors.empty?
   end
 end
-# rubocop:enable Metrics/BlockLength
 # rubocop:enable Layout/LineLength

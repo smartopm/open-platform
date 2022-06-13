@@ -22,6 +22,7 @@
     "created_form_category": "Successfully created a category",
     "updated_form_category": "Successfully updated a category",
     "form_submitted": "You have successfully submitted the form",
+    "saved_as_draft": "You have successfully saved the form as draft",
     "required_fields_empty": "Required fields must be filled",
     "no_form_entries": "No Form Entries Available",
     "submission_date": "Date of Submitted",
@@ -33,8 +34,28 @@
     "category": "Category",
     "display_condition": "Display Condition - Optional",
     "upload_file": "Upload File",
+    "select_file": "Select File(s)",
+    "download_file": "Download File",
     "file_uploaded": "File Uploaded",
-    "select_roles": "Select roles"
+    "file_uploaded_plural": "Files Uploaded",
+    "select_roles": "Select roles",
+    "public": "Make Public",
+    "form_builder": "Builder",
+    "form_settings": "Settings",
+    "update_history": "History",
+    "configure_form": "Configure Form",
+    "create_form": "Create a Form",
+    "submit_form": "Submit a Form",
+    "confirm_uploads": "Confirm your uploads",
+    "click_upload_btn": "Click the Upload button next to the file you wish to attach to this form..",
+    "add_category": "Add a Category",
+    "update_category": "Update a Category",
+    "upload_details": "Use the Select button to choose the file you want to upload. Then confirm them by clicking the Upload button(s). Use the 'X' icon to delete any unwanted files.",
+    "upload_error": "Files not Uploaded.",
+    "upload_error_content_one": "Oops. looks like some files",
+    "upload_error_content_two": "are not uploaded. Please",
+    "upload_error_content_three": "click the Upload button or",
+    "upload_error_content_four": "delete them."
   },
   "actions": {
     "create_a_form": "Create a form",
@@ -49,14 +70,20 @@
     "create_category": "Create Category",
     "add_category": "Add Category",
     "confirm": "Confirm",
-    "clear_condition": "Clear Condition"
+    "clear_condition": "Clear Condition",
+    "add_property": "Add a Property",
+    "hide": "Hide",
+    "i_agree": "I agree",
+    "has_terms_and_conditions": "Form has Terms and Conditions"
   },
   "errors": {
     "no_forms": "No Forms to submit",
     "required_field": "{{fieldName}} is Required",
     "admins_only": "For Admins Only",
     "required_field_for_admins_only": "{{fieldName}} is Required. For Admins only",
-    "date_time_in_the_future": "Please select a date and time in the future"
+    "date_time_in_the_future": "Please select a date and time in the future",
+    "wrong_file_type": "Wrong file type.",
+    "file_exists": "Oops. Looks like this file is already selected."
   },
   "form_status": {
     "rejected": "Rejected",
@@ -73,7 +100,8 @@
     "draft": "Mark as as draft",
     "publish": "publish",
     "delete": "delete",
-    "update": "Update"
+    "update": "Update",
+    "submit_form": "Submit"
   },
   "form_fields": {
     "field_name": "Field Name",
@@ -103,7 +131,8 @@
     "date": "Date",
     "time": "Time",
     "datetime": "Date with Time",
-    "dropdown": "Dropdown"
+    "dropdown": "Dropdown",
+    "terms_and_condition": "Terms and Condition"
   },
   "conditions": {
     "===": "equals to",

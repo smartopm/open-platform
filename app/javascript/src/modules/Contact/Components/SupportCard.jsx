@@ -1,9 +1,9 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import { Typography, Button, Grid } from '@material-ui/core';
-import MailOutlineIcon from '@material-ui/icons/MailOutline';
-import WhatsAppIcon from '@material-ui/icons/WhatsApp';
-import PhoneIcon from '@material-ui/icons/Phone';
+import makeStyles from '@mui/styles/makeStyles';
+import { Typography, Button, Grid } from '@mui/material';
+import MailOutlineIcon from '@mui/icons-material/MailOutline';
+import WhatsAppIcon from '@mui/icons-material/WhatsApp';
+import PhoneIcon from '@mui/icons-material/Phone';
 import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
@@ -148,7 +148,7 @@ export default function SupportCard({ handleSendMessage, user }) {
           </Button>
         </Grid>
 
-        {user.community && user.community.name && user.community.name !== 'Ciudad Morazán' && (
+        {user.community && user.community.name && user.community.name === 'Nkwashi' && (
           <Grid container direction="row" className={classes.root}>
             <Button
               data-testid="pwmm"
@@ -194,7 +194,7 @@ export default function SupportCard({ handleSendMessage, user }) {
             color="primary"
             onClick={() =>
               window.open(
-                'https://docs.google.com/document/d/1u740OKrB8jpK5pMZt-dVS3Xh4iMc9paAAVhZNldi3CQ/edit?ts=5fdd2107',
+                'https://handbook.doublegdp.com/product/05-platform-policies/#terms-of-use',
                 '_blank'
               )}
             style={{ fontSize: 14 }}
@@ -213,7 +213,8 @@ SupportContact.propTypes = {
     contact: PropTypes.string,
     type: PropTypes.string
   }).isRequired,
-  classes: PropTypes.objectOf(PropTypes.object).isRequired
+  // eslint-disable-next-line react/forbid-prop-types
+  classes: PropTypes.object.isRequired
 };
 SupportCard.propTypes = {
   user: PropTypes.shape({

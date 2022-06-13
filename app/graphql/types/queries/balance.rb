@@ -26,12 +26,10 @@ module Types::Queries::Balance
     user = context[:site_community].users.find_by(id: user_id)
     raise_user_not_found_error(user)
 
-    transactions_amount = user.transactions.not_cancelled.sum(:amount)
-    payments_amount = user.plan_payments.not_cancelled.sum(:amount)
     {
-      balance: transactions_amount - payments_amount,
-      pending_balance: user.payment_plans.sum(:pending_balance),
-      total_transactions: transactions_amount,
+      balance: general_fund_balance(user),
+      pending_balance: user.payment_plans.excluding_general_plans.sum(:pending_balance),
+      total_transactions: user.transactions.accepted.sum(:amount),
     }
   end
 
@@ -51,5 +49,15 @@ module Types::Queries::Balance
     return if user
 
     raise GraphQL::ExecutionError, I18n.t('errors.user.not_found')
+  end
+
+  # Returns sum of general funds
+  # * If general fund is not present returns 0
+  #
+  # @return [Float]
+  def general_fund_balance(user)
+    return 0 if user.payment_plans.general.blank?
+
+    user.general_payment_plan.plan_payments.paid.sum(:amount)
   end
 end

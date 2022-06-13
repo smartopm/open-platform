@@ -10,7 +10,9 @@ export const FormQuery = gql`
       description
       expiresAt
       multipleSubmissionsAllowed
+      hasTermsAndConditions
       preview
+      isPublic
       roles
     }
   }
@@ -72,10 +74,20 @@ export const UserFormPropertiesQuery = gql`
         order
         id
         adminUse
+        category {
+          id
+        }
       }
       value
       imageUrl
       fileType
+      fileName
+      attachments
+      createdAt
+      user {
+        id
+        name
+      }
     }
   }
 `
@@ -85,10 +97,12 @@ export const FormUserQuery = gql`
     formUser(userId: $userId, formUserId: $formUserId) {
       id
       status
+      hasAgreedToTerms
       form {
         id
         name
         description
+        hasTermsAndConditions
       }
       statusUpdatedBy {
         id

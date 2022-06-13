@@ -1,6 +1,6 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
+import { render, waitFor } from '@testing-library/react';
+
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom/';
 import TransferPlanModal from '../Components/UserTransactions/TransferPlanModal';
@@ -8,13 +8,13 @@ import currency from '../../../__mocks__/currency';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 describe('It should test the transfer plan modal component', () => {
-  const planData = [{
+  const planData = {
     amount: 1000,
     id: 'u3290u3u',
     status: 'paid'
-  }];
+  };
 
-  it('should render transfer plan modal', () => {
+  it('should render transfer plan modal', async () => {
     const container = render(
       <BrowserRouter>
         <MockedProvider>
@@ -27,11 +27,16 @@ describe('It should test the transfer plan modal component', () => {
             balanceRefetch={jest.fn}
             planData={planData}
             currencyData={currency}
+            transferType='plan'
+            paymentId='sda5s5ss'
+            paymentData={{}}
           />
         </MockedProvider>
       </BrowserRouter>
     );
-    expect(container.getByTestId('title')).toBeInTheDocument();
-    expect(container.getByTestId('plots')).toBeInTheDocument();
+    await waitFor(() => {
+      expect(container.getByTestId('title')).toBeInTheDocument();
+      expect(container.getByTestId('plots')).toBeInTheDocument();
+    }, 5)
   });
 });

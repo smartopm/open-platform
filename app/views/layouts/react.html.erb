@@ -2,13 +2,23 @@
 <html lang="en">
   <head>
     <!-- Global site tag (gtag.js) - Google Analytics - app.doublegdp.com stream -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-150647211-2"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=<%= current_community.ga_id %>"></script>
+    <%# TODO: Experiment if we really need this %>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
 
-      gtag('config', 'UA-150647211-2');
+      gtag('config', "<%= current_community.ga_id %>");
+
+      (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:<%= current_community.hotjar %>,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
     </script>
 
     <title><%= current_community.name %></title>
@@ -36,6 +46,7 @@
 
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.css" />
+    <link rel="stylesheet" href="https://unpkg.com/react-leaflet-markercluster/dist/styles.min.css" />
     <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"></script>
 
     <%= favicon_link_tag current_community.logo_url || asset_path('home_512.png'), rel: 'icon' %>
@@ -47,7 +58,7 @@
   <body>
     <div id="root">
     </div>
-    <%= javascript_pack_tag 'react_main' %>
+      <%= javascript_include_tag "application", defer: true %>
       <div class="alert text-center" id="btnSection" role="alert" style="background: <%= current_community.theme_colors["primaryColor"]%>">
         <span id="btn">Click here to add this application to your home screen </span> <span id="closeBtn">close</span>
       </div>

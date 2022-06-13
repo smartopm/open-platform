@@ -11,17 +11,31 @@ class DoubleGdpSchema < GraphQL::Schema
   rescue_from(Users::User::PhoneTokenResultInvalid,
               Users::User::PhoneTokenResultExpired) do |_err, _obj, _args, _ctx, _field|
     # Raise a graphql-friendly error with a custom message
-    raise GraphQL::ExecutionError, 'Invalid or expired phone token'
+    raise GraphQL::ExecutionError, I18n.t('errors.user.invalid_expired_token')
   end
 
   rescue_from(Users::User::ExpiredSignature,
               Users::User::DecodeError) do |_err, _obj, _args, _ctx, _field|
     # Raise a graphql-friendly error with a custom message
-    raise GraphQL::ExecutionError, 'Invalid or expired auth token'
+    raise GraphQL::ExecutionError, I18n.t('errors.user.invalid_expired_token')
+  end
+
+  rescue_from(Users::User::TokenGenerationFailed) do |_err, _obj, _args, _ctx, _field|
+    # Raise a graphql-friendly error with a custom message
+    raise GraphQL::ExecutionError, I18n.t('errors.user.token_generation_failed')
   end
 
   rescue_from(ActiveRecord::RecordNotFound) do |err|
     # Raise a graphql-friendly error with a custom message
-    raise GraphQL::ExecutionError, "#{err.model} not found"
+    raise GraphQL::ExecutionError, I18n.t('errors.general.model_not_found',
+                                          model: err.model&.split('::')&.last)
+  end
+
+  rescue_from(Users::User::UserError) do |err, _obj, _args, _ctx, _field|
+    raise GraphQL::ExecutionError, err
+  end
+
+  rescue_from(Sms::SmsError) do |err, _obj, _args, _ctx, _field|
+    raise GraphQL::ExecutionError, err
   end
 end

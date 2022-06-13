@@ -1,26 +1,27 @@
 /* eslint-disable no-use-before-define */
 import React from 'react'
-import { Grid, Box } from '@material-ui/core'
+import { Grid, Box } from '@mui/material'
 import { StyleSheet, css } from 'aphrodite'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { useTranslation } from 'react-i18next'
-import { useTheme } from '@material-ui/styles'
+import { useTheme } from '@mui/styles'
 import { useFetch } from '../../../utils/customHooks'
 import { Spinner } from '../../../shared/Loading'
+import CenteredContent from '../../../shared/CenteredContent'
 
 export default function Categories({ wordpressEndpoint }) {
   const { response, error } = useFetch(`${wordpressEndpoint}/categories`)
   const { t } = useTranslation('news')
   const theme = useTheme()
-  // TODO: @olivier ==> add better error page and loading component here
+
   if (error) {
-    return error.message
+    return <CenteredContent>{t('news.no_categories_found')}</CenteredContent>
   }
   if (!response || !response.found) {
     return <Spinner />
   }
-  const cats = response.categories.filter(
+  const cats = response?.categories.filter(
     // eslint-disable-next-line func-names
     function(cat) {
       // eslint-disable-next-line react/no-this-in-sfc

@@ -4,9 +4,9 @@ require 'rails_helper'
 
 RSpec.describe Mutations::Login::LoginSwitchUser do
   describe 'create user_switch log' do
-    let!(:user) { create(:user_with_community, user_type: 'security_guard') }
+    let!(:user) { create(:security_guard) }
     let!(:admin_user) do
-      create(:user_with_community, user_type: 'admin', community: user.community)
+      create(:admin_user, community: user.community)
     end
 
     let(:query) do

@@ -1,6 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
+
 import { BrowserRouter } from 'react-router-dom';
 import { ApolloProvider } from 'react-apollo';
 import { MockedProvider } from '@apollo/react-testing';
@@ -24,12 +24,18 @@ describe('UserEdit page', () => {
     }
   };
   it('renders UserEdit correctly', () => {
+    const locationMock = {
+      state: {
+        from: 'logs'
+      },
+      pathname: 'edit'
+    }
     render(
       <ApolloProvider client={createClient}>
         <Context.Provider value={data}>
           <MockedProvider mocks={[]} addTypename={false}>
             <BrowserRouter>
-              <UserEdit />
+              <UserEdit location={locationMock} />
             </BrowserRouter>
           </MockedProvider>
         </Context.Provider>

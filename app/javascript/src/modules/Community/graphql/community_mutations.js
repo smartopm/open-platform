@@ -8,6 +8,7 @@ export const CommunityUpdateMutation = gql`
     $supportEmail: JSON
     $supportWhatsapp: JSON
     $socialLinks: JSON
+    $leadMonthlyTargets: JSON
     $menuItems: JSON
     $imageBlobId: String
     $templates: JSON
@@ -24,6 +25,7 @@ export const CommunityUpdateMutation = gql`
     $smsPhoneNumbers: [String]
     $emergencyCallNumber: String
     $features: JSON
+    $gaId: String
   ) {
     communityUpdate(
       name: $name
@@ -31,6 +33,7 @@ export const CommunityUpdateMutation = gql`
       supportEmail: $supportEmail
       supportWhatsapp: $supportWhatsapp
       socialLinks: $socialLinks
+      leadMonthlyTargets: $leadMonthlyTargets
       menuItems: $menuItems
       imageBlobId: $imageBlobId
       templates: $templates
@@ -47,6 +50,7 @@ export const CommunityUpdateMutation = gql`
       smsPhoneNumbers: $smsPhoneNumbers
       emergencyCallNumber: $emergencyCallNumber
       features: $features
+      gaId: $gaId
     ) {
       community {
         id

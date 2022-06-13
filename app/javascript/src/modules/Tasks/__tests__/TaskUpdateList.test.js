@@ -3,7 +3,7 @@ import { render } from '@testing-library/react'
 import { BrowserRouter } from 'react-router-dom/'
 import { MockedProvider } from '@apollo/react-testing'
 import TaskUpdateList from '../Components/TaskUpdateList'
-import '@testing-library/jest-dom/extend-expect'
+
 
 describe('Comment Card Component', () => {
   const data = [
@@ -18,7 +18,7 @@ describe('Comment Card Component', () => {
   
 
   it('render updates without error', () => {
-    render(
+    const container = render(
       <MockedProvider>
         <BrowserRouter>
           <TaskUpdateList
@@ -27,6 +27,12 @@ describe('Comment Card Component', () => {
         </BrowserRouter>
       </MockedProvider>
     )
+
+    expect(container.queryByText('John')).toBeInTheDocument()
+    expect(container.queryByText(/task.history_create_new_note_comment/)).toBeInTheDocument()
+    expect(container.queryByText(/Today at/)).toBeInTheDocument()
+    expect(container.queryByTestId('history_update_divider')).toBeInTheDocument()
+
   })
 
   it('should render \'updates not available\' when no task updates', () => {
@@ -39,7 +45,6 @@ describe('Comment Card Component', () => {
         </BrowserRouter>
       </MockedProvider>
     )
-
     expect(container.queryByText('task.history_update_no_data')).toBeTruthy();
   });
 })

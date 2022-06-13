@@ -37,7 +37,7 @@ module Mutations
 
       # Verifies if current user is admin or not.
       def authorized?(_vals)
-        return true if context[:current_user]&.admin?
+        return true if permitted?(module: :payment_plan, permission: :can_create_payment_plan)
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end

@@ -1,7 +1,7 @@
 import React from 'react'
 import { startOfToday, startOfWeek, startOfYesterday } from 'date-fns'
 import { render } from '@testing-library/react'
-import '@testing-library/jest-dom/extend-expect'
+
 import EventTimeLine from '../shared/TimeLine'
 
 describe('Event Timeline component', () => {

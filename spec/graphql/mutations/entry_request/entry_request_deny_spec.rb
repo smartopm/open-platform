@@ -4,9 +4,18 @@ require 'rails_helper'
 
 RSpec.describe Mutations::EntryRequest::EntryRequestDeny do
   describe 'deny an entry request' do
-    let!(:user) { create(:user_with_community) }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:visitor_role) { create(:role, name: 'visitor') }
+    let!(:permission) do
+      create(:permission, module: 'entry_request',
+                          role: admin_role,
+                          permissions: %w[can_deny_entry])
+    end
+
+    let!(:user) { create(:user_with_community, role: visitor_role) }
+    let!(:admin) { create(:admin_user, community_id: user.community_id, role: admin_role) }
+
     let!(:community) { user.community }
-    let!(:admin) { create(:admin_user, community_id: user.community_id) }
     let!(:entry_request) { admin.entry_requests.create(name: 'John Doe', reason: 'Visiting') }
 
     let(:entry_request_deny_mutation) do
@@ -39,6 +48,7 @@ RSpec.describe Mutations::EntryRequest::EntryRequestDeny do
                                            variables: variables,
                                            context: {
                                              current_user: admin,
+                                             user_role: admin.role,
                                            }).as_json
           expect(result.dig('data', 'result', 'entryRequest', 'id')).not_to be_nil
           expect(result.dig('data', 'result', 'entryRequest', 'grantedState')).to eql 2
@@ -53,9 +63,10 @@ RSpec.describe Mutations::EntryRequest::EntryRequestDeny do
                                            variables: variables,
                                            context: {
                                              current_user: admin,
+                                             user_role: admin.role,
                                            }).as_json
           expect(result.dig('data', 'result')).to be_nil
-          expect(result.dig('errors', 0, 'message')).to eql 'Logs::EntryRequest not found'
+          expect(result.dig('errors', 0, 'message')).to eql 'EntryRequest not found'
         end
       end
     end
@@ -69,6 +80,7 @@ RSpec.describe Mutations::EntryRequest::EntryRequestDeny do
                                            context: {
                                              current_user: user,
                                              site_community: community,
+                                             user_role: user.role,
                                            }).as_json
           expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'
         end

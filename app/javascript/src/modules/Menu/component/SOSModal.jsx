@@ -1,22 +1,19 @@
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useMutation } from 'react-apollo'
-import { useTranslation } from 'react-i18next'; 
+import { useTranslation } from 'react-i18next';
 // eslint-disable-next-line import/no-unresolved
 import { useLongPress } from 'use-long-press';
 import PropTypes from 'prop-types'
-import { makeStyles } from "@material-ui/core/styles";
-import Modal from "@material-ui/core/Modal";
-import CloseIcon from "@material-ui/icons/Close";
-import Button from '@material-ui/core/Button';
-import PersonPinIcon from "@material-ui/icons/PersonPin";
-import EditIcon from "@material-ui/icons/Edit";
+import makeStyles from '@mui/styles/makeStyles';
+import Modal from "@mui/material/Modal";
+import CloseIcon from "@mui/icons-material/Close";
+import Button from '@mui/material/Button';
 import PanicButtonSVG from './PanicButtonSVG';
-import FeedbackButtonSVG from './FeedbackButtonSVG';
 import MessageAlert from '../../../components/MessageAlert';
 import { formatError } from '../../../utils/helpers';
-import {CommunityEmergencyMutation} from '../graphql/sos_mutation';
-import userProps from '../../../shared/types/user'; 
+import {CommunityEmergencyMutation, CancelCommunityEmergencyMutation} from '../graphql/sos_mutation';
+import userProps from '../../../shared/types/user';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -61,7 +58,7 @@ const useStyles = makeStyles((theme) => ({
     '@media (min-device-width: 414px) and (max-device-height: 736px)' : {
       marginTop: "1px",
     },
-   
+
     '@media  (min-device-width: 360px) and (max-device-height: 640px)' : {
       marginTop: "2px"
     }
@@ -78,11 +75,11 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "6rem",
     justifyContent: "space-between",
     '@media (min-device-width: 414px) and (max-device-height: 736px)' : {
-      marginTop: "1px",
+      marginTop: "6rem"
     },
-   
+
     '@media  (min-device-width: 360px) and (max-device-height: 640px)' : {
-      marginTop: "2px"
+      marginTop: "6rem"
     }
 
   },
@@ -91,6 +88,16 @@ const useStyles = makeStyles((theme) => ({
   header:{
     fontWeight: "bold",
     fontSize: "17px",
+  },
+
+  callLink:{
+    color: '#ffffff'
+  },
+
+  digitInSeconds:{
+    fontWeight: "bold",
+    fontSize: "94px",
+    lineHeight: '4.2rem'
   },
 
   info:{
@@ -102,18 +109,16 @@ const useStyles = makeStyles((theme) => ({
 
   },
 
-
   feedbackInfo:{
     fontWeight: "small",
-    marginTop: "8rem",
     fontSize: "1rem",
     '@media  (min-device-width: 360px) and (max-device-height: 640px)' : {
-      marginTop: "2rem"
+      fontSize: "1.2rem",
     }
-   
+
 },
 
-  
+
   CloseIcon: {
     color: "#fff",
     display: 'flex',
@@ -192,9 +197,9 @@ const useStyles = makeStyles((theme) => ({
     '@media  (min-device-width: 360px) and (max-device-height: 640px)' : {
       marginTop: "3rem"
     }
-   
+
   },
-  
+
   modal: {
     display: "flex",
     alignItems: "center",
@@ -214,15 +219,18 @@ const SOSModal=({open, setOpen, location, authState})=> {
   const [panicButtonMessage, setPanicButtonMessage] = useState({ isError: false, detail: '' });
   const [panicAlertOpen, setPanicAlertOpen] = useState(false);
   const [panicButtonPressed, setPanicButtonPressed] = useState(false);
+  const [iamSafeButtonPressed, setIamSafeButtonPressed] = useState(false);
+  const [counter, setCounter] = useState(-1);
   const [communityEmergency] = useMutation(CommunityEmergencyMutation)
+  const [communityEmergencyCancel] = useMutation(CancelCommunityEmergencyMutation)
 
   const { t } = useTranslation('panic_alerts')
-  
+
   const callback = () => {
+    setPanicButtonPressed(true)
     if (location.loaded && !location.error){
       const googleMapUrl = `https://www.google.com/maps/search/?api=1&query=${location.coordinates.lat},${location.coordinates.lng}`
       communityEmergency({ variables: { googleMapUrl } }).then(()=>{
-        setPanicButtonPressed(true)
         setPanicButtonMessage({
           isError: false,
           detail: t('panic_alerts.panic_success_alert')
@@ -232,12 +240,12 @@ const SOSModal=({open, setOpen, location, authState})=> {
       .catch(error => {
         setPanicButtonMessage({ isError: true, detail: formatError(error.message) });
         setPanicAlertOpen(true);
-      }) 
+        setPanicButtonPressed(false)
+      })
 
     }
     else{
       communityEmergency({ variables: { googleMapUrl: null } }).then(()=>{
-        setPanicButtonPressed(true)
         setPanicButtonMessage({
           isError: false,
           detail: t('panic_alerts.panic_success_alert')
@@ -247,15 +255,35 @@ const SOSModal=({open, setOpen, location, authState})=> {
       .catch(error => {
         setPanicButtonMessage({ isError: true, detail: formatError(error.message) });
         setPanicAlertOpen(true);
-      }) 
-      
+        setPanicButtonPressed(false)
+      })
+
     }
+
+  };
+
+
+  const cancelCommunityEmergency = () => {
+    setPanicButtonPressed(true)
+    communityEmergencyCancel().then(()=>{
+        setPanicButtonMessage({
+          isError: false,
+          detail: t('panic_alerts.cancel_emergency_success_alert')
+        });
+        setPanicAlertOpen(true);
+      })
+      .catch(error => {
+        setPanicButtonMessage({ isError: true, detail: formatError(error.message) });
+        setPanicAlertOpen(true);
+        setPanicButtonPressed(false)
+      })
 
   };
 
   const showPanicAlert = ()=> {
     setPanicButtonMessage({ isError: true, detail: t('panic_alerts.panic_error_alert') });
     setPanicAlertOpen(true);
+    setCounter(-1)
 
   }
 
@@ -264,17 +292,44 @@ const SOSModal=({open, setOpen, location, authState})=> {
     setPanicButtonPressed(false)
     setPanicButtonMessage({ isError: false, detail: '' })
     setPanicAlertOpen(false);
+    setCounter(-1)
+    setIamSafeButtonPressed(false);
+  }
+
+  const handleIamSafeButtonClick = () => {
+    setIamSafeButtonPressed(true);
+    cancelCommunityEmergency()
+    setPanicButtonPressed(false)
+  }
+
+  const handleLongPressStart = () => {
+    setPanicAlertOpen(false);
+    setPanicButtonMessage({ isError: false, detail: '' });
+    setCounter(0)
   }
 
   const bind = useLongPress(callback, {
-    // eslint-disable-next-line no-unused-vars
-    onCancel: _event => showPanicAlert(),
+    onCancel: () => showPanicAlert(),
     threshold: 3000,
     captureEvent: true,
     cancelOnMovement: true,
     detect: 'both',
+    onStart: () => handleLongPressStart()
   });
-  
+
+  useEffect(() => {
+    let timer;
+   if(counter >= 0) {
+     if(counter < 3) {
+      timer = setTimeout(() => { setCounter(counter + 1)}, 1000)
+     }
+   }
+
+   return function(){
+     clearTimeout(timer)
+   }
+  }, [counter])
+
   const classes = useStyles();
 
   return (
@@ -291,15 +346,14 @@ const SOSModal=({open, setOpen, location, authState})=> {
     >
       <div className={classes.paper}>
         <div className={classes.CloseIcon}>
-          <CloseIcon onClick={resetSOSModalState} />
           <p>
-            <a href={`tel: ${authState.user?.community.emergencyCallNumber}`}>
+            <a className={classes.callLink} href={`tel: ${authState.user?.community.emergencyCallNumber}`}>
               {t('panic_alerts.click_to_call')}
               {' '}
               {authState.user?.community.emergencyCallNumber}
             </a>
           </p>
-
+          <CloseIcon onClick={resetSOSModalState} data-testid="sos-modal-close-btn" />
         </div>
         <MessageAlert
           type={panicButtonMessage.isError ? 'error' : 'success'}
@@ -308,66 +362,60 @@ const SOSModal=({open, setOpen, location, authState})=> {
           handleClose={() => setPanicAlertOpen(false)}
         />
         <br />
-        { !panicButtonPressed ? (
+        { (!panicButtonPressed && !iamSafeButtonPressed) && (
           <div data-testid="modal-data">
             <div>
-
-
               <div className={classes.contents}>
+                <h4 className={classes.header}>{t('panic_alerts.sos_disclaimer_header')}</h4>
+                <p>
+                  {' '}
+                  {t('panic_alerts.sos_disclaimer_body')}
+                </p>
+                <br />
+                <br />
+                <h4 className={classes.header}>{t('panic_alerts.press_and_hold')}</h4>
+                <p>
+                  {' '}
+                  {t('panic_alerts.for_3_seconds')}
+                </p>
+                {((counter >= 0 && counter < 3) && !panicButtonMessage.isError)
+                  ? <h1 className={classes.digitInSeconds}>{Number(counter + 1)}</h1>
+                  : <p className={classes.info}>{t('panic_alerts.info')}</p>
+                  }
+                <br />
                 <div>
                   <PanicButtonSVG bind={bind} t={t} />
                 </div>
-
-                <br />
-
-                <h4 className={classes.header}>{t('panic_alerts.header')}</h4>
-                <p className={classes.info}>
-                  {t('panic_alerts.info')}
-                </p>
               </div>
-
-              <div className={classes.location}>
-                <div className={classes.locationPin}>
-                  <PersonPinIcon fontSize="large" />
-                </div>
-
-                <div className={classes.locationContent}>
-                  <p className={classes.curentLocation}>
-                    {" "}
-                    <small>{t('panic_alerts.user_location_heeader')}</small>
-                    <br />
-                    {t('panic_alerts.user_location')}
-                  </p>
-                </div>
-
-                <div className={classes.locationEditIcon}>
-                  <EditIcon />
-                </div>
-              </div>
-
-              <p className={classes.disclaimer}>
-                {t('panic_alerts.sos_disclaimer')}
-              </p>
             </div>
           </div>
-):(
-  <div>
-    <div className={classes.feedbackContents}>
-      <div>
-        <FeedbackButtonSVG t={t} />
-      </div>
+)}
+        {panicButtonPressed && (
+        <div className={classes.feedbackContents}>
+          <h4 className={classes.header}>{t('panic_alerts.sos_feedback_header')}</h4>
+          <p className={classes.feedbackInfo}>
+            {t('panic_alerts.sos_feedback_body')}
+          </p>
 
-      <br />
-      <p className={classes.feedbackInfo}>
-        {t('panic_alerts.sos_feedback')}
-      </p>
+          <Button
+            variant="outlined"
+            color="primary"
+            className={classes.iamSafeButton}
+            data-testid="sos-modal-iam-safe-button"
+            onClick={handleIamSafeButtonClick}
+          >
+            {t('panic_alerts.am_safe')}
+          </Button>
+        </div>
+)}
 
-      <Button variant="outlined" color="primary" className={classes.iamSafeButton} data-testid="sos-modal-iam-safe-button">
-        {t('panic_alerts.am_safe')}
-      </Button>
-    </div>
-
-  </div>
+        {iamSafeButtonPressed && !panicButtonMessage.isError && (
+        <div className={classes.feedbackContents} data-testid="sos-modal-iam-safe-body">
+          <h4 className={classes.header}>{t('panic_alerts.am_safe_feedback_header')}</h4>
+          <p className={classes.feedbackInfo}>
+            {t('panic_alerts.am_safe_feedback_body')}
+          </p>
+        </div>
 )}
       </div>
     </Modal>
@@ -385,10 +433,12 @@ const SOSModal=({open, setOpen, location, authState})=> {
     }).isRequired,
     location: PropTypes.shape({
       loaded: PropTypes.bool,
-      error: PropTypes.string,
+      error: PropTypes.shape({
+        message: PropTypes.string
+      }),
       coordinates: PropTypes.shape({
-        lat: PropTypes.string,
-        lng: PropTypes.string
+        lat: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+        lng: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
       })
     }).isRequired
 

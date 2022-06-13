@@ -4,9 +4,26 @@ require 'rails_helper'
 
 RSpec.describe Types::Queries::LandParcel do
   describe 'parcel queries' do
-    let!(:current_user) { create(:user_with_community) }
+    let!(:admin_role) { create(:role, name: 'admin') }
+    let!(:visitor_role) { create(:role, name: 'visitor') }
+    let!(:permission) do
+      create(:permission, module: 'land_parcel',
+                          role: admin_role,
+                          permissions: %w[
+                            can_view_all_land_parcels can_fetch_land_parcels_with_plans
+                            can_fetch_land_parcels can_fetch_land_parcel can_fetch_house
+                          ])
+    end
+
+    let!(:current_user) { create(:user_with_community, role: visitor_role) }
+    let!(:another_user) { create(:user_with_community, role: visitor_role) }
+    let!(:admin_user) do
+      create(:admin_user, community_id: current_user.community_id,
+                          role: admin_role)
+    end
+
     let!(:community) { current_user.community }
-    let!(:admin_user) { create(:admin_user, community_id: community.id) }
+    let!(:another_community) { another_user.community }
     let!(:account) { create(:account, user: current_user, community: community) }
     let!(:land_parcel) do
       current_user.community.land_parcels.create(address1: 'This address',
@@ -53,6 +70,10 @@ RSpec.describe Types::Queries::LandParcel do
           address1
           longX
           latY
+          imageUrls
+          accounts {
+            id
+          }
           paymentPlans{
             id
             startDate
@@ -65,6 +86,14 @@ RSpec.describe Types::Queries::LandParcel do
           }
         }
         })
+    end
+    let(:land_parcel_geo_data_query) do
+      %(query landParcelGeoData {
+        landParcelGeoData {
+          id
+          parcelNumber
+        }
+      })
     end
 
     it 'should retrieve list of all land parcels' do
@@ -80,16 +109,9 @@ RSpec.describe Types::Queries::LandParcel do
       expect(result.dig('data', 'fetchLandParcel', 0, 'latY')).to eql(-15.234)
       expect(result.dig('data', 'fetchLandParcel', 0, 'paymentPlans').size).to eql 2
       first_plan_result = result.dig('data', 'fetchLandParcel', 0, 'paymentPlans', 0)
-      expect(first_plan_result['id']).to eql payment_plan.id
-      expect(first_plan_result['startDate'].to_date).to eql payment_plan.start_date.to_date
-      expect(first_plan_result['user']['name']).to eql current_user.name
-      expect(first_plan_result['planPayments'][0]['amount']).to eql 500.0
+      expect([payment_plan.id, another_payment_plan.id]).to include(first_plan_result['id'])
       second_plan_result = result.dig('data', 'fetchLandParcel', 0, 'paymentPlans', 1)
-      expect(second_plan_result['id']).to eql another_payment_plan.id
-      expect(second_plan_result['startDate'].to_date)
-        .to eql another_payment_plan.start_date.to_date
-      expect(second_plan_result['user']['name']).to eql admin_user.name
-      expect(second_plan_result['planPayments'][0]['amount']).to eql 700.0
+      expect([payment_plan.id, another_payment_plan.id]).to include(second_plan_result['id'])
     end
 
     it 'should not retrieve list of all land parcels if user is not admin' do
@@ -111,12 +133,42 @@ RSpec.describe Types::Queries::LandParcel do
       expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'
     end
 
+    it 'should raise unauthorized error when no current-user for land parcel geo data' do
+      result = DoubleGdpSchema.execute(land_parcel_geo_data_query,
+                                       context: {
+                                         current_user: nil,
+                                         site_community: admin_user.community,
+                                       }).as_json
+      expect(result.dig('data', 'landParcelGeoData')).to be_nil
+      expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'
+    end
+
+    it 'should no land parcel geo data when community is wrong' do
+      result = DoubleGdpSchema.execute(land_parcel_geo_data_query,
+                                       context: {
+                                         current_user: admin_user,
+                                         site_community: another_community,
+                                       }).as_json
+      expect(result.dig('data', 'landParcelGeoData')).to eql []
+      expect(result.dig('errors', 0, 'message')).to be_nil
+    end
+
     describe 'land_parcel' do
       let(:land_parcel_query) do
         %(query {
           landParcel(id: "#{land_parcel.id}") {
             id
             address1
+            imageUrls
+            accounts {
+              id
+            }
+            paymentPlans{
+              id
+              planPayments{
+                id
+              }
+            }
           }
           })
       end
@@ -146,6 +198,56 @@ RSpec.describe Types::Queries::LandParcel do
       end
     end
 
+    describe 'Fetch House' do
+      let(:fetch_house_query) do
+        %(query house($query: String, $limit: Int, $offset: Int) {
+          fetchHouse(query: $query, limit: $limit, offset: $offset) {
+            id
+            parcelNumber
+            paymentPlans{
+              id
+            }
+          }
+        })
+      end
+      it 'should raise an unauthorized error' do
+        result = DoubleGdpSchema.execute(fetch_house_query,
+                                         context: {
+                                           current_user: another_user,
+                                           site_community: current_user.community,
+                                         }).as_json
+
+        expect(result.dig('data', 'fetchHouse')).to be_nil
+        expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'
+      end
+
+      it 'should return no houses for a wrong community' do
+        result = DoubleGdpSchema.execute(fetch_house_query,
+                                         context: {
+                                           current_user: admin_user,
+                                           site_community: another_user.community,
+                                         }).as_json
+
+        expect(result.dig('data', 'fetchHouse')).to eql []
+        expect(result.dig('errors', 0, 'message')).to be_nil
+      end
+
+      context 'when house is searched' do
+        before { land_parcel.house! }
+
+        it 'should return houses which matches with the search query' do
+          variables = { query: 'basic' }
+          result = DoubleGdpSchema.execute(fetch_house_query, variables: variables,
+                                                              context: {
+                                                                current_user: admin_user,
+                                                                site_community: community,
+                                                              }).as_json
+          expect(result.dig('errors', 0, 'message')).to be_nil
+          expect(result.dig('data', 'fetchHouse', 0, 'parcelNumber')).to eql 'basic-123'
+        end
+      end
+    end
+
     describe 'user_land_parcels' do
       let!(:land_parcel_2) { create(:land_parcel, community_id: current_user.community_id) }
       let!(:payment_plan) do
@@ -157,6 +259,9 @@ RSpec.describe Types::Queries::LandParcel do
         %(query {
             userLandParcels(userId: "#{current_user.id}"){
               id
+              accounts{
+                id
+              }
             }
           })
       end

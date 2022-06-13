@@ -3,7 +3,7 @@ import { render } from '@testing-library/react';
 import Avatar, { safeAvatarLink } from '../components/Avatar'
 import { Context } from '../containers/Provider/AuthStateProvider'
 import userMock from '../__mocks__/userMock'
-import '@testing-library/jest-dom/extend-expect';
+
 
 describe('Avatar component', () => {
   it('should render a users custom avatar if available', () => {
@@ -11,7 +11,7 @@ describe('Avatar component', () => {
     const userData = {
       imageUrl: customAvatar,
     }
-    
+
     const rendered = render(
       <Context.Provider value={userMock}>
         <Avatar user={userData} imageUrl={customAvatar} />
@@ -29,7 +29,7 @@ describe('Avatar component', () => {
     const searchedUser = {
       imageUrl: customAvatar,
     }
-    
+
     const rendered = render(
       <Context.Provider value={userMock}>
         <Avatar user={userData} imageUrl={customAvatar} searchedUser={searchedUser} />
@@ -43,13 +43,12 @@ describe('Avatar component', () => {
     const searchedUser = {
       avatarUrl: customAvatar,
     }
-    
-    const rendered = render(
+
+    render(
       <Context.Provider value={userMock}>
         <Avatar searchedUser={searchedUser} />
       </Context.Provider>
     )
-    expect(rendered.queryByTestId('loader')).toBeInTheDocument()
     expect(safeAvatarLink({ imageUrl: searchedUser.avatarUrl })).toContain('https')
   })
   it('should render a default avatar for searched user avatar if not available', () => {
@@ -62,7 +61,7 @@ describe('Avatar component', () => {
       avatarUrl: null,
       imageUrl: null,
     }
-    
+
     const rendered = render(
       <Context.Provider value={userMock}>
         <Avatar user={userData} imageUrl={customAvatar} searchedUser={searchedUser} />

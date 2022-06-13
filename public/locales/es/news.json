@@ -1,21 +1,28 @@
 {
-    "news": {
-      "recent_news": "Noticias recientes",
-      "read_more": "Lee mas",
-      "no_post": "No se encontraron publicaciones en esta categoría",
-      "news": "Noticias",
-      "post_discussion": "Publicar discusión",
-      "load_more_comments": "Cargar más comentarios",
-      "create_discussion": "Crear discusión",
-      "discussion_disabled": "Aún no se ha habilitado la discusión para esta publicación",
-      "following": "Ahora estás siguiendo {{tag}}",
-      "unfollowing": "ya no estás siguiendo {{tag}}",
-      "related_posts": "Artículos Relacionados",
-      "follow_tag": "Seguir etiqueta",
-      "unfollow_tag": "Dejar de seguir la etiqueta",
-      "filtered_categories": ["Private", "Uncategorized", "Noticias"],
-      "visit_news_page": "Hola, visita la página de {{communityName}}",
-      "posts": "Publicaciones"
-    }
+  "news": {
+    "create_discussion": "Crear discusión",
+    "discussion_disabled": "Aún no se ha habilitado la discusión para esta publicación",
+    "filtered_categories": [
+      "Private",
+      "Uncategorized",
+      "Noticias"
+    ],
+    "follow_tag": "Seguir etiqueta",
+    "following": "Ahora estás siguiendo {{tag}}",
+    "load_more_comments": "Cargar más comentarios",
+    "news": "Noticias",
+    "no_categories_found": "No se encontraron categorías",
+    "no_post": "No se encontraron publicaciones en esta categoría",
+    "no_post_found": "No se encontró ninguna publicación",
+    "no_posts": "No se han encontrado publicaciones",
+    "no_tags_found": "No se encontraron etiquetas",
+    "post_discussion": "Publicar discusión",
+    "posts": "Publicaciones",
+    "read_more": "Lee mas",
+    "recent_news": "Noticias recientes",
+    "related_posts": "Artículos Relacionados",
+    "unfollow_tag": "Dejar de seguir la etiqueta",
+    "unfollowing": "ya no estás siguiendo {{tag}}",
+    "visit_news_page": "Hola, visita la página de {{communityName}}"
+  }
 }
-  

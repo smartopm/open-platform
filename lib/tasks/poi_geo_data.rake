@@ -2,7 +2,6 @@
 
 require 'parcel_indexer'
 
-# rubocop:disable Metrics/BlockLength
 namespace :db do
   namespace :seed do
     desc 'Load GeoJSON Point of Interest data into database'
@@ -71,7 +70,6 @@ namespace :db do
                                          long_x: long_x,
                                          lat_y: lat_y)
         end
-        # rubocop:enable Metrics/BlockLength
       end
       puts "Done. Migrated #{features.size} records"
     end

@@ -20,15 +20,15 @@ module Mutations
           destination_payment_plan.lock!
           destination_payment_plan.transfer_payments(source_payment_plan)
           return { payment_plan: destination_payment_plan.reload } if source_payment_plan.cancel!
-
-          raise GraphQL::ExecutionError, source_payment_plan.errors.full_messages
         end
+      rescue StandardError => e
+        raise GraphQL::ExecutionError, e.message
       end
       # rubocop:enable Metrics/MethodLength
 
       # Verifies if current user is admin or not.
       def authorized?(_vals)
-        return true if context[:current_user]&.admin?
+        return true if permitted?(module: :payment_plan, permission: :can_transfer_payment_plan)
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end

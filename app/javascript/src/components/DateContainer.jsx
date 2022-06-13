@@ -45,7 +45,7 @@ export function futureDateAndTimeToString(days) {
   const currDate = new Date(dueIn10).getDate();
   const currMonth = new Date(dueIn10).getMonth() + 1;
   const currYear = new Date(dueIn10).getFullYear();
-  return `${currYear}-${currMonth}-${currDate} ${dateTimeToString(date.toString())}`;
+  return `${currYear}-${currMonth}-${currDate} ${dateTimeToString(date)}`;
 }
 
 /**

@@ -20,6 +20,7 @@ module Mutations
 
       # TODO: Rollback if Label fails to save - Saurabh
       # rubocop:disable Metrics/AbcSize
+      # rubocop:disable Metrics/MethodLength
       def resolve(vals)
         check_missing_args(vals) if vals[:status] == 'scheduled'
         campaign = context[:current_user].community.campaigns.new
@@ -28,9 +29,15 @@ module Mutations
 
         labels = Array(vals[:labels]&.split(',')).map(&:downcase)
         labels.each { |label| create_campaign_label(campaign, label) }
-        return { campaign: campaign } if campaign.persisted?
+        if campaign.persisted?
+          campaign.schedule_campaign_job
+          return { campaign: campaign }
+        end
+
+        raise GraphQL::ExecutionError, campaign.errors.full_message
       end
       # rubocop:enable Metrics/AbcSize
+      # rubocop:enable Metrics/MethodLength
 
       def add_attributes(campaign, vals)
         %w[name campaign_type message user_id_list batch_time
@@ -43,20 +50,10 @@ module Mutations
         campaign
       end
 
-      def check_missing_args(vals)
-        attributes = %w[name campaign_type message user_id_list batch_time status]
-        attributes.push('email_templates_id') if vals[:campaign_type].eql?('email')
-        attributes.each do |attr|
-          next if vals[attr.to_sym].present?
-
-          raise GraphQL::ExecutionError,
-                I18n.t('errors.campaign.missing_parameter', attribute: attr)
-        end
-      end
-
       # Verifies if current user is admin or not.
       def authorized?(_vals)
-        return true if context[:current_user]&.admin?
+        return true if permitted?(module: :campaign,
+                                  permission: :can_create_campaign)
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end

@@ -1,24 +1,26 @@
 /* eslint-disable import/no-cycle */
 /* eslint-disable no-use-before-define */
 import React from 'react'
-import Dialog from '@material-ui/core/Dialog';
+import Dialog from '@mui/material/Dialog';
 import PropTypes from 'prop-types'
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Divider from '@material-ui/core/Divider';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import Divider from '@mui/material/Divider';
 import { useMutation } from 'react-apollo'
-import Card from '@material-ui/core/Card';
-import Avatar from '@material-ui/core/Avatar';
-import CardContent from '@material-ui/core/CardContent';
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
-import { makeStyles } from '@material-ui/core/styles';
-import { DeleteNoteComment } from '../../../graphql/mutations'
+import Card from '@mui/material/Card';
+import Avatar from '@mui/material/Avatar';
+import CardContent from '@mui/material/CardContent';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import makeStyles from '@mui/styles/makeStyles';
+import { useTranslation } from 'react-i18next';
+import { DeleteNoteComment } from '../../../graphql/mutations';
 
-export default function TaskDelete({ open, handleClose, id, name, imageUrl, body, refetch }) {
+export default function TaskDelete({ open, handleClose, id, name, imageUrl, body, refetch, commentsRefetch }) {
   const classes = useStyles();
-  const [commentDelete] = useMutation(DeleteNoteComment)
+  const [commentDelete] = useMutation(DeleteNoteComment);
+  const { t } = useTranslation('task', 'common');
 
   function handleDelete(comId) {
     commentDelete({ variables: {
@@ -26,6 +28,7 @@ export default function TaskDelete({ open, handleClose, id, name, imageUrl, body
     }}).then(() => {
       handleClose()
       refetch()
+      commentsRefetch()
     })
   }
 
@@ -33,7 +36,7 @@ export default function TaskDelete({ open, handleClose, id, name, imageUrl, body
     <>
       <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
         <DialogTitle id="customized-dialog-title" onClose={handleClose} className={classes.title}>
-          Are you sure you want to delete your comment?
+          {t('task.delete_confirmation_text')}
         </DialogTitle>
         <DialogContent style={{ margin: '15px' }}>
           <Card style={{ display: 'flex' }} className={classes.root}>
@@ -53,10 +56,10 @@ export default function TaskDelete({ open, handleClose, id, name, imageUrl, body
         <Divider />
         <DialogActions style={{ margin: '10px' }}>
           <Button onClick={handleClose} variant="outlined" color="secondary" data-testid='cancel-delete'>
-            Cancel
+            {t('common:form_actions.cancel')}
           </Button>
           <Button autoFocus data-testid='button' onClick={() => handleDelete(id)} variant="contained" style={{ backgroundColor: '#dc402b', color: 'white' }}>
-            Save changes
+            {t('common:form_actions.save_changes')}
           </Button>
         </DialogActions>
       </Dialog>
@@ -85,12 +88,17 @@ const useStyles = makeStyles({
   }
 });
 
- TaskDelete.propTypes = {
+TaskDelete.defaultProps = {
+  commentsRefetch: () => {}
+}
+
+TaskDelete.propTypes = {
    id: PropTypes.string.isRequired,
    body: PropTypes.string.isRequired,
    imageUrl: PropTypes.string.isRequired,
    name: PropTypes.string.isRequired,
    refetch: PropTypes.func.isRequired,
    open: PropTypes.bool.isRequired,
-   handleClose: PropTypes.func.isRequired
+   handleClose: PropTypes.func.isRequired,
+   commentsRefetch: PropTypes.func
  }

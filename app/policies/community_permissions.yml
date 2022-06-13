@@ -1,0 +1,966 @@
+# Community permissions
+Ciudad Morazán:
+  security_supervisor:
+    note:
+      permissions:
+        - can_see_menu_item
+        - can_create_note
+        - can_update_note
+        - can_set_note_reminder
+        - can_assign_note
+        - can_bulk_assign_note
+        - can_create_note_comment
+        - can_create_note_comment
+        - can_update_note_comment
+        - can_fetch_flagged_notes
+        - can_fetch_task_by_id
+        - can_fetch_task_comments
+        - can_fetch_task_histories
+        - can_get_task_count
+        - can_get_task_stats
+        - can_get_own_tasks
+        - can_access_tasks
+    profile:
+      permissions:
+        - can_see_menu_item
+    gate_access:
+      permissions:
+        - can_see_menu_item
+    entry_request:
+      permissions:
+        - can_see_menu_item
+        - can_access_guest_list
+        - can_access_logbook
+        - can_access_guest_list
+        - can_create_entry_request
+        - can_update_entry_request
+        - can_update_guest_entry_request
+        - can_deny_entry
+        - can_grant_entry
+        - can_add_entry_request_note
+        - can_view_entry_requests
+        - can_view_entry_request
+        - can_revoke_entry_request
+        - can_invite_guest
+        - can_go_through_guest_verification
+        - can_update_invitation
+    user:
+      permissions:
+        - can_view_own_profile
+        - can_edit_own_profile
+        - can_view_guests
+        - can_search_guests
+    forms:
+      permissions:
+        - can_see_menu_item
+        - can_access_forms
+        - can_fetch_form
+        - can_fetch_form_properties
+        - can_fetch_form_property
+        - can_fetch_form_categories
+        - can_save_draft_form
+    community:
+      permissions:
+        - can_see_menu_item
+    timesheet:
+      permissions:
+        - can_fetch_user_time_sheet_logs
+    dashboard:
+      permissions:
+        - can_access_dashboard
+        - can_see_menu_item
+        - can_access_guard_dashboard
+    logout:
+      permissions:
+        - can_see_menu_item
+  site_manager:
+    gate_access:
+      permissions:
+        - can_see_menu_item
+    profile:
+      permissions:
+        - can_see_menu_item
+    entry_request:
+      permissions:
+        - can_access_guest_list
+        - can_create_entry_request
+        - can_update_entry_request
+        - can_view_entry_requests
+        - can_view_entry_request
+        - can_invite_guest
+        - can_go_through_guest_verification
+        - can_update_invitation
+    guest_list:
+      permissions:
+        - can_see_menu_item
+    user:
+      permissions:
+        - can_view_own_profile
+        - can_edit_own_profile
+        - can_view_guests
+        - can_search_guests
+    discussion:
+      permissions:
+        - can_access_all_discussions
+        - can_create_post
+        - can_view_posts
+        - can_see_menu_item
+    dashboard:
+      permissions:
+        - can_access_dashboard
+        - can_see_menu_item
+    logout:
+      permissions:
+        - can_see_menu_item
+  site_worker:
+    profile:
+      permissions:
+        - can_see_menu_item
+    user:
+      permissions:
+        - can_view_own_profile
+        - can_edit_own_profile
+    discussion:
+      permissions:
+        - can_access_all_discussions
+        - can_create_post
+        - can_view_posts
+        - can_see_menu_item
+    dashboard:
+      permissions:
+        - can_access_dashboard
+        - can_see_menu_item
+    logout:
+      permissions:
+        - can_see_menu_item
+    event_log:
+      permissions:
+        - can_fetch_logbook_events
+
+
+Tilisi:
+  consultant:
+    note:
+      permissions:
+        - can_see_menu_item
+        - can_create_note
+        - can_update_note
+        - can_set_note_reminder
+        - can_assign_note
+        - can_bulk_assign_note
+        - can_create_note_comment
+        - can_update_note_comment
+        - can_fetch_flagged_notes
+        - can_fetch_task_by_id
+        - can_fetch_task_comments
+        - can_fetch_task_histories
+        - can_get_task_count
+        - can_get_task_stats
+        - can_get_own_tasks
+        - can_view_create_sub_task_button
+        - can_access_tasks
+        - can_access_processes
+        - can_upload_documents
+        - can_fetch_comments_on_assigned_tasks
+        - can_access_project_steps
+        - can_mark_task_as_complete
+        - can_get_comment_stats
+        - can_fetch_project_document_comments
+    forms:
+      permissions:
+        - can_see_menu_item
+        - can_access_forms
+        - can_fetch_form
+        - can_fetch_form_properties
+        - can_fetch_form_property
+        - can_fetch_form_categories
+        - can_save_draft_form
+    user:
+      permissions:
+        - can_view_own_profile
+        - can_edit_own_profile
+        - can_get_users_lite
+    profile:
+      permissions:
+        - can_see_menu_item
+    logout:
+      permissions:
+        - can_see_menu_item
+    communication:
+      permissions:
+        - can_see_menu_item
+    community:
+      permissions:
+        - can_see_menu_item
+    dashboard:
+      permissions:
+        - can_access_dashboard
+        - can_see_menu_item
+        - can_access_admin_processes_dashboard
+    discussion:
+      permissions:
+        - can_access_all_discussions
+        - can_create_post
+        - can_view_posts
+
+  developer:
+    note:
+      permissions:
+        - can_see_menu_item
+        - can_set_note_reminder
+        - can_create_note_comment
+        - can_fetch_flagged_notes
+        - can_fetch_task_by_id
+        - can_fetch_task_comments
+        - can_fetch_task_histories
+        - can_get_task_count
+        - can_get_task_stats
+        - can_get_own_tasks
+        - can_upload_documents
+        - can_access_tasks
+        - can_access_processes
+        - can_upload_documents
+        - can_fetch_tagged_comments
+    forms:
+      permissions:
+        - can_see_menu_item
+        - can_access_forms
+        - can_fill_a_form
+        - can_update_form
+        - can_view_own_forms
+        - can_fetch_form
+        - can_fetch_form_properties
+        - can_fetch_form_property
+        - can_fetch_form_categories
+        - can_save_draft_form
+    profile:
+      permissions:
+        - can_see_menu_item
+    user:
+      permissions:
+        - can_view_own_profile
+        - can_edit_own_profile
+        - can_get_users_lite
+    community:
+      permissions:
+        - can_see_menu_item
+    dashboard:
+      permissions:
+        - can_access_dashboard
+        - can_see_menu_item
+        - can_access_client_processes_dashboard
+    logout:
+      permissions:
+        - can_see_menu_item
+    discussion:
+      permissions:
+        - can_access_all_discussions
+        - can_create_post
+        - can_view_posts
+
+DoubleGDP:
+  security_supervisor:
+    note:
+      permissions:
+        - can_see_menu_item
+        - can_create_note
+        - can_update_note
+        - can_set_note_reminder
+        - can_assign_note
+        - can_bulk_assign_note
+        - can_create_note_comment
+        - can_create_note_comment
+        - can_update_note_comment
+        - can_fetch_flagged_notes
+        - can_fetch_task_by_id
+        - can_fetch_task_comments
+        - can_fetch_task_histories
+        - can_get_task_count
+        - can_get_task_stats
+        - can_get_own_tasks
+        - can_access_tasks
+    profile:
+      permissions:
+        - can_see_menu_item
+    gate_access:
+      permissions:
+        - can_see_menu_item
+    entry_request:
+      permissions:
+        - can_see_menu_item
+        - can_access_guest_list
+        - can_access_logbook
+        - can_access_guest_list
+        - can_create_entry_request
+        - can_update_entry_request
+        - can_update_guest_entry_request
+        - can_deny_entry
+        - can_grant_entry
+        - can_add_entry_request_note
+        - can_view_entry_requests
+        - can_view_entry_request
+        - can_revoke_entry_request
+        - can_invite_guest
+        - can_go_through_guest_verification
+        - can_update_invitation
+    user:
+      permissions:
+        - can_view_own_profile
+        - can_edit_own_profile
+        - can_view_guests
+        - can_search_guests
+    forms:
+      permissions:
+        - can_see_menu_item
+        - can_access_forms
+        - can_fetch_form
+        - can_fetch_form_properties
+        - can_fetch_form_property
+        - can_fetch_form_categories
+        - can_save_draft_form
+    community:
+      permissions:
+        - can_see_menu_item
+    timesheet:
+      permissions:
+        - can_fetch_user_time_sheet_logs
+    dashboard:
+      permissions:
+        - can_access_dashboard
+        - can_see_menu_item
+        - can_access_guard_dashboard
+    logout:
+      permissions:
+        - can_see_menu_item
+  site_manager:
+    gate_access:
+      permissions:
+        - can_see_menu_item
+    profile:
+      permissions:
+        - can_see_menu_item
+    entry_request:
+      permissions:
+        - can_access_guest_list
+        - can_create_entry_request
+        - can_update_entry_request
+        - can_view_entry_requests
+        - can_view_entry_request
+        - can_invite_guest
+        - can_go_through_guest_verification
+        - can_update_invitation
+    guest_list:
+      permissions:
+        - can_see_menu_item
+    user:
+      permissions:
+        - can_view_own_profile
+        - can_edit_own_profile
+        - can_view_guests
+        - can_search_guests
+    discussion:
+      permissions:
+        - can_access_all_discussions
+        - can_create_post
+        - can_view_posts
+        - can_see_menu_item
+    dashboard:
+      permissions:
+        - can_access_dashboard
+        - can_see_menu_item
+    logout:
+      permissions:
+        - can_see_menu_item
+    event_log:
+      permissions:
+        - can_fetch_logbook_events
+  consultant:
+    note:
+      permissions:
+        - can_see_menu_item
+        - can_create_note
+        - can_update_note
+        - can_set_note_reminder
+        - can_assign_note
+        - can_bulk_assign_note
+        - can_create_note_comment
+        - can_update_note_comment
+        - can_fetch_flagged_notes
+        - can_fetch_task_by_id
+        - can_fetch_task_comments
+        - can_fetch_task_histories
+        - can_get_task_count
+        - can_get_task_stats
+        - can_get_own_tasks
+        - can_view_create_sub_task_button
+        - can_access_tasks
+        - can_access_processes
+        - can_upload_documents
+        - can_fetch_comments_on_assigned_tasks
+        - can_access_project_steps
+        - can_mark_task_as_complete
+    forms:
+      permissions:
+        - can_see_menu_item
+        - can_access_forms
+        - can_view_form_user
+        - can_fetch_form
+        - can_fetch_form_properties
+        - can_fetch_form_property
+        - can_fetch_form_categories
+        - can_save_draft_form
+    user:
+      permissions:
+        - can_view_own_profile
+        - can_edit_own_profile
+        - can_get_users_lite
+    profile:
+      permissions:
+        - can_see_menu_item
+    logout:
+      permissions:
+        - can_see_menu_item
+    communication:
+      permissions:
+        - can_see_menu_item
+    community:
+      permissions:
+        - can_see_menu_item
+    dashboard:
+      permissions:
+        - can_access_dashboard
+        - can_see_menu_item
+        - can_access_admin_processes_dashboard
+    discussion:
+      permissions:
+        - can_access_all_discussions
+        - can_create_post
+        - can_view_posts
+
+  developer:
+    note:
+      permissions:
+        - can_see_menu_item
+        - can_set_note_reminder
+        - can_create_note_comment
+        - can_fetch_flagged_notes
+        - can_fetch_task_by_id
+        - can_fetch_task_comments
+        - can_fetch_task_histories
+        - can_get_task_count
+        - can_get_task_stats
+        - can_get_own_tasks
+        - can_upload_documents
+        - can_access_tasks
+        - can_access_processes
+        - can_upload_documents
+        - can_fetch_tagged_comments
+    forms:
+      permissions:
+        - can_see_menu_item
+        - can_access_forms
+        - can_fill_a_form
+        - can_update_form
+        - can_view_own_forms
+        - can_fetch_form
+        - can_fetch_form_properties
+        - can_fetch_form_property
+        - can_fetch_form_categories
+        - can_save_draft_form
+    profile:
+      permissions:
+        - can_see_menu_item
+    user:
+      permissions:
+        - can_view_own_profile
+        - can_edit_own_profile
+        - can_get_users_lite
+    community:
+      permissions:
+        - can_see_menu_item
+    dashboard:
+      permissions:
+        - can_access_dashboard
+        - can_see_menu_item
+        - can_access_client_processes_dashboard
+    logout:
+      permissions:
+        - can_see_menu_item
+    discussion:
+      permissions:
+        - can_access_all_discussions
+        - can_create_post
+        - can_view_posts
+
+  site_worker:
+    profile:
+      permissions:
+        - can_see_menu_item
+    user:
+      permissions:
+        - can_view_own_profile
+        - can_edit_own_profile
+    discussion:
+      permissions:
+        - can_access_all_discussions
+        - can_create_post
+        - can_view_posts
+        - can_see_menu_item
+    dashboard:
+      permissions:
+        - can_access_dashboard
+        - can_see_menu_item
+    logout:
+      permissions:
+        - can_see_menu_item
+    event_log:
+      permissions:
+        - can_fetch_logbook_events
+
+  marketing_admin:
+    note:
+      permissions:
+        - can_create_note
+        - can_see_menu_item
+        - can_update_note
+        - can_set_note_reminder
+        - can_assign_note
+        - can_bulk_assign_note
+        - can_create_note_comment
+        - can_update_note_comment
+        - can_delete_note_comment
+        - can_fetch_flagged_notes
+        - can_fetch_task_by_id
+        - can_fetch_task_comments
+        - can_fetch_task_histories
+        - can_get_task_count
+        - can_get_task_stats
+        - can_get_own_tasks
+        - can_fetch_all_notes
+        - can_fetch_user_notes
+        - can_view_create_task_button
+        - can_view_create_sub_task_button
+        - can_access_tasks
+        - can_access_processes
+        - can_delete_note_document
+        - can_resolve_note_comments
+        - can_access_project_steps
+        - can_mark_task_as_complete
+        - can_view_task_lists
+        - can_create_task_lists
+        - can_get_comment_stats
+        - can_edit_task_list
+        - can_delete_task_list
+        - can_get_replies_requested_comments
+        - can_fetch_process_comments
+    forms:
+      permissions:
+        - can_see_menu_item
+        - can_create_category
+        - can_update_category
+        - can_delete_category
+        - can_create_form
+        - can_update_form
+        - can_create_form_properties
+        - can_update_form_properties
+        - can_delete_form_properties
+        - can_create_form_user
+        - can_update_form_user
+        - can_update_form_user_status
+        - can_create_user_form_properties
+        - can_update_user_form_properties
+        - can_view_form_entries
+        - can_view_form_form_submissions
+        - can_view_form_user_properties
+        - can_fill_a_form
+        - can_edit_a_form
+        - can_view_own_forms
+        - can_access_forms
+        - can_view_form_user
+        - can_fetch_form
+        - can_fetch_form_properties
+        - can_fetch_form_property
+        - can_fetch_form_categories
+        - can_save_draft_form
+    campaign:
+      permissions:
+        - can_see_menu_item
+        - can_access_campaign
+        - can_create_campaign
+        - can_delete_campaign
+        - can_create_campaign_through_users
+        - can_remove_campaign_label
+        - can_update_campaign
+        - can_list_campaigns
+        - can_get_campaign_details
+    email_template:
+      permissions:
+        - can_see_menu_item
+        - can_access_email_template
+        - can_create_email_template
+        - can_update_email_template
+        - can_view_email_template_variables
+        - can_view_email_templates
+        - can_view_email_template
+    label:
+      permissions:
+        - can_create_label
+        - can_delete_label
+        - can_merge_labels
+        - can_update_label
+        - can_create_user_label
+        - can_update_user_label
+        - can_fetch_all_labels
+        - can_fetch_label_users
+        - can_fetch_user_labels
+        - can_see_menu_item
+    community:
+      permissions:
+        - can_see_menu_item
+    dashboard:
+      permissions:
+        - can_access_dashboard
+        - can_see_menu_item
+    logout:
+      permissions:
+        - can_see_menu_item
+    user:
+      permissions:
+        - can_update_user_details
+        - can_merge_users
+        - can_import_users
+        - can_send_one_time_login
+        - can_access_all_users
+        - can_view_own_profile
+        - can_edit_own_profile
+        - can_get_user_count
+        - can_get_users
+        - can_get_users_lite
+        - can_create_user
+        - can_search_user_ids
+        - can_get_substatus_count
+        - can_get_substatus_distribution
+        - can_create_users_via_csv
+        - can_see_menu_item
+    profile:
+      permissions:
+        - can_see_menu_item
+    lead:
+      permissions:
+        - can_view_lead_users
+        - can_edit_lead
+        - can_delete_lead
+        - can_view_lead_profile
+        - can_upload_lead_files
+        - can_see_menu_item
+    lead_log:
+      permissions:
+        - can_create_lead_log
+        - can_update_lead_log
+        - can_fetch_lead_logs
+        - can_access_lead_scorecard
+    discussion:
+      permissions:
+        - can_create_discussion
+        - can_update_discussion
+        - can_access_all_discussions
+        - can_see_menu_item
+        - can_create_post
+        - can_view_posts
+        - can_delete_post_image
+        - can_update_post
+        - can_delete_post
+        - can_set_accessibility
+    comment:
+      permissions:
+        - can_fetch_all_comments
+    business:
+      permissions:
+        - can_see_menu_item
+        - can_access_business
+        - can_create_business
+        - can_delete_business
+        - can_update_business
+    messages:
+      permissions:
+        - can_see_menu_item
+        - can_access_messages
+        - can_access_user_messages
+Enyimba:
+  marketing_admin:
+    note:
+      permissions:
+        - can_create_note
+        - can_see_menu_item
+        - can_update_note
+        - can_set_note_reminder
+        - can_assign_note
+        - can_bulk_assign_note
+        - can_create_note_comment
+        - can_update_note_comment
+        - can_delete_note_comment
+        - can_fetch_flagged_notes
+        - can_fetch_task_by_id
+        - can_fetch_task_comments
+        - can_fetch_task_histories
+        - can_get_task_count
+        - can_get_task_stats
+        - can_get_own_tasks
+        - can_fetch_all_notes
+        - can_fetch_user_notes
+        - can_view_create_task_button
+        - can_view_create_sub_task_button
+        - can_access_tasks
+        - can_access_processes
+        - can_delete_note_document
+        - can_resolve_note_comments
+        - can_access_project_steps
+        - can_mark_task_as_complete
+        - can_view_task_lists
+        - can_create_task_lists
+        - can_get_comment_stats
+        - can_edit_task_list
+        - can_delete_task_list
+        - can_get_replies_requested_comments
+        - can_fetch_process_comments
+    forms:
+      permissions:
+        - can_see_menu_item
+        - can_create_category
+        - can_update_category
+        - can_delete_category
+        - can_create_form
+        - can_update_form
+        - can_create_form_properties
+        - can_update_form_properties
+        - can_delete_form_properties
+        - can_create_form_user
+        - can_update_form_user
+        - can_update_form_user_status
+        - can_create_user_form_properties
+        - can_update_user_form_properties
+        - can_view_form_entries
+        - can_view_form_form_submissions
+        - can_view_form_user_properties
+        - can_fill_a_form
+        - can_edit_a_form
+        - can_view_own_forms
+        - can_access_forms
+        - can_view_form_user
+        - can_fetch_form
+        - can_fetch_form_properties
+        - can_fetch_form_property
+        - can_fetch_form_categories
+        - can_save_draft_form
+    campaign:
+      permissions:
+        - can_see_menu_item
+        - can_access_campaign
+        - can_create_campaign
+        - can_delete_campaign
+        - can_create_campaign_through_users
+        - can_remove_campaign_label
+        - can_update_campaign
+        - can_list_campaigns
+        - can_get_campaign_details
+    email_template:
+      permissions:
+        - can_see_menu_item
+        - can_access_email_template
+        - can_create_email_template
+        - can_update_email_template
+        - can_view_email_template_variables
+        - can_view_email_templates
+        - can_view_email_template
+    label:
+      permissions:
+        - can_create_label
+        - can_delete_label
+        - can_merge_labels
+        - can_update_label
+        - can_create_user_label
+        - can_update_user_label
+        - can_fetch_all_labels
+        - can_fetch_label_users
+        - can_fetch_user_labels
+        - can_see_menu_item
+    community:
+      permissions:
+        - can_see_menu_item
+    dashboard:
+      permissions:
+        - can_access_dashboard
+        - can_see_menu_item
+    logout:
+      permissions:
+        - can_see_menu_item
+    user:
+      permissions:
+        - can_update_user_details
+        - can_merge_users
+        - can_import_users
+        - can_send_one_time_login
+        - can_access_all_users
+        - can_view_own_profile
+        - can_edit_own_profile
+        - can_get_user_count
+        - can_get_users
+        - can_get_users_lite
+        - can_create_user
+        - can_search_user_ids
+        - can_get_substatus_count
+        - can_get_substatus_distribution
+        - can_create_users_via_csv
+        - can_see_menu_item
+    profile:
+      permissions:
+        - can_see_menu_item
+    lead:
+      permissions:
+        - can_view_lead_users
+        - can_edit_lead
+        - can_delete_lead
+        - can_view_lead_profile
+        - can_upload_lead_files
+        - can_see_menu_item
+    lead_log:
+      permissions:
+        - can_create_lead_log
+        - can_update_lead_log
+        - can_fetch_lead_logs
+        - can_access_lead_scorecard
+    discussion:
+      permissions:
+        - can_create_discussion
+        - can_update_discussion
+        - can_access_all_discussions
+        - can_see_menu_item
+        - can_create_post
+        - can_view_posts
+        - can_delete_post_image
+        - can_update_post
+        - can_delete_post
+        - can_set_accessibility
+    comment:
+      permissions:
+        - can_fetch_all_comments
+    business:
+      permissions:
+        - can_see_menu_item
+        - can_access_business
+        - can_create_business
+        - can_delete_business
+        - can_update_business
+    messages:
+      permissions:
+        - can_see_menu_item
+        - can_access_messages
+        - can_access_user_messages
+
+Greenpark:
+  site_manager:
+    note:
+      permissions:
+        - can_see_menu_item
+        - can_create_note
+        - can_update_note
+        - can_set_note_reminder
+        - can_assign_note
+        - can_bulk_assign_note
+        - can_create_note_comment
+        - can_update_note_comment
+        - can_fetch_flagged_notes
+        - can_fetch_task_by_id
+        - can_fetch_task_comments
+        - can_fetch_task_histories
+        - can_get_task_count
+        - can_get_task_stats
+        - can_get_own_tasks
+        - can_view_create_task_button
+        - can_view_create_sub_task_button
+        - can_access_tasks
+        - can_view_task_lists
+    forms:
+      permissions:
+        - can_see_menu_item
+        - can_access_forms
+        - can_fetch_form
+        - can_fetch_form_properties
+        - can_fetch_form_property
+        - can_fetch_form_categories
+        - can_save_draft_form
+    profile:
+      permissions:
+        - can_see_menu_item
+    community:
+      permissions:
+        - can_see_menu_item
+    discussion:
+      permissions:
+        - can_access_all_discussions
+        - can_create_post
+        - can_view_posts
+        - can_see_menu_item
+    dashboard:
+      permissions:
+        - can_access_dashboard
+        - can_see_menu_item
+    logout:
+      permissions:
+        - can_see_menu_item
+    user:
+      permissions:
+        - can_get_users_lite
+  site_worker:
+    note:
+      permissions:
+        - can_see_menu_item
+        - can_create_note
+        - can_update_note
+        - can_set_note_reminder
+        - can_assign_note
+        - can_bulk_assign_note
+        - can_create_note_comment
+        - can_update_note_comment
+        - can_fetch_flagged_notes
+        - can_fetch_task_by_id
+        - can_fetch_task_comments
+        - can_fetch_task_histories
+        - can_get_task_count
+        - can_get_task_stats
+        - can_get_own_tasks
+        - can_view_create_task_button
+        - can_view_create_sub_task_button
+        - can_access_tasks
+        - can_view_task_lists
+    forms:
+      permissions:
+        - can_see_menu_item
+        - can_access_forms
+        - can_fetch_form
+        - can_fetch_form_properties
+        - can_fetch_form_property
+        - can_fetch_form_categories
+        - can_save_draft_form
+    profile:
+      permissions:
+        - can_see_menu_item
+    community:
+      permissions:
+        - can_see_menu_item
+    discussion:
+      permissions:
+        - can_access_all_discussions
+        - can_create_post
+        - can_view_posts
+        - can_see_menu_item
+    dashboard:
+      permissions:
+        - can_access_dashboard
+        - can_see_menu_item
+    logout:
+      permissions:
+        - can_see_menu_item
+    user:
+      permissions:
+        - can_get_users_lite

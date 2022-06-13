@@ -3,6 +3,9 @@
     "email_updated": "Email Template successfully updated",
     "email_saved": "Email Template successfully saved",
     "email_duplicated": "Email Template successfully duplicated",
-    "duplicate_email": "Duplicate Email Template"
+    "duplicate_email": "Duplicate Email Template",
+    "template_create_header": "Add Email Details",
+    "subject_update_header": "Update Email Subject",
+    "edit_subject": "Edit Subject"
   }
 }

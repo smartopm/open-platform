@@ -2,7 +2,7 @@
 import React from 'react'
 import DateFilterComponent from '../components/DateFilterComponent'
 import { render, fireEvent } from '@testing-library/react'
-import '@testing-library/jest-dom/extend-expect'
+
 
 describe('filter users for campaign component', () => {
   it('should display logged in to option', () => {
@@ -19,10 +19,10 @@ describe('filter users for campaign component', () => {
       resetFilter: jest.fn()
     }
     const container = render(<DateFilterComponent {...props} />)
-    const input = container.getByLabelText("to:")
-    fireEvent.change(input, { target: { value: '2020-08-16' } })
+    const toInput = container.queryAllByTestId('date-picker')[0].querySelector('input')
+    fireEvent.change(toInput, { target: { value: '2020-08-16' } })
 
-    expect(input.value).toBe('2020-08-16')
+    expect(toInput.value).toBe('2020-08-16')
     expect(container.queryByText('login before')).toBeInTheDocument()
   })
 
@@ -40,10 +40,10 @@ describe('filter users for campaign component', () => {
       resetFilter: jest.fn()
     }
     const container = render(<DateFilterComponent {...props} />)
-    const input = container.getByLabelText("on:")
-    fireEvent.change(input, { target: { value: '2020-08-16' } })
+    const onInput = container.queryAllByTestId('date-picker')[0].querySelector('input')
+    fireEvent.change(onInput, { target: { value: '2020-08-16' } })
 
-    expect(input.value).toBe('2020-08-16')
+    expect(onInput.value).toBe('2020-08-16')
     expect(container.queryByText('logged in on')).toBeInTheDocument()
   })
 
@@ -55,10 +55,10 @@ describe('filter users for campaign component', () => {
       handleDateChangeFrom: jest.fn()
     }
     const container = render(<DateFilterComponent {...props} />)
-    const input = container.getByLabelText("from:")
-    fireEvent.change(input, { target: { value: '2020-08-16' } })
+    const fromInput = container.queryAllByTestId('date-picker')[0].querySelector('input')
+    fireEvent.change(fromInput, { target: { value: '2020-08-16' } })
 
-    expect(input.value).toBe('2020-08-16')
+    expect(fromInput.value).toBe('2020-08-16')
     expect(container.queryByText('Filter for Campaign')).toBeInTheDocument()
     expect(container.queryByText('login after')).toBeInTheDocument()
     expect(container.queryByText('Clear Filter')).toBeInTheDocument()

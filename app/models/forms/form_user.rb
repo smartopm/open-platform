@@ -11,7 +11,7 @@ module Forms
     belongs_to :user, class_name: 'Users::User'
     belongs_to :status_updated_by, class_name: 'Users::User'
     has_many :user_form_properties, dependent: :destroy
-    has_one :note, class_name: 'Notes::Note', dependent: :destroy
+    has_many :note, class_name: 'Notes::Note', dependent: :destroy
 
     after_create :log_create_event
     after_update :log_update_event
@@ -25,13 +25,39 @@ module Forms
       attributes user: ['user.name']
     end
 
-    # rubocop:disable Metrics/AbcSize
+    def create_form_task
+      # TODO: Consider allowing other communities to engage processes
+      allowed_community = %w[DoubleGDP Tilisi].include?(form.community.name)
+      if allowed_community && form.associated_process?
+        return TaskCreate.new_from_process(task_params, form.process)
+      end
+
+      TaskCreate.new_from_action(task_params)
+    end
+
+    private
+
+    def description
+      return unless form.report_an_issue?
+
+      form_property = form.form_properties.find_by(field_name: 'Description')
+      user_form_properties.find_by(form_property_id: form_property&.id)&.value
+    end
+
+    def body
+      if form.process_type == 'drc'
+        project_developer_field = form.form_properties.find_by(field_name: 'Project Developer')
+        user_form_properties.find_by(form_property_id: project_developer_field&.id)&.value
+      else
+        form.name
+      end
+    end
+
     # rubocop:disable Metrics/MethodLength
-    def create_form_task(hostname)
-      task_params = {
-        body: "<a href=\"https://#{hostname}/user/#{user.id}\">#{user.name}</a> Submitted
-                <a href=\"https://#{hostname}/user_form/#{user.id}/#{id}/task\">
-                #{form.name}</a>",
+    def task_params
+      {
+        body: body || form.name,
+        description: description,
         category: 'form',
         form_user_id: id,
         flagged: true,
@@ -40,13 +66,8 @@ module Forms
         author_id: user.id,
         assignees: user.community.sub_administrator_id,
       }
-
-      TaskCreate.new_from_action(task_params)
     end
-    # rubocop:enable Metrics/AbcSize
     # rubocop:enable Metrics/MethodLength
-
-    private
 
     def log_create_event
       user.generate_events('form_submit', self)

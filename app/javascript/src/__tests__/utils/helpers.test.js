@@ -1,10 +1,12 @@
 import dompurify from 'dompurify';
 import { paymentFilterFields } from '../../utils/constants'
 
-import { sentencizeAction, titleize, pluralizeCount,
-capitalize, validateEmail, invertArray,findLinkAndReplace,
-forceLinkHttps, titleCase, truncateString, removeNewLines, checkForHtmlTags, sanitizeText,
-getJustLabels, checkValidGeoJSON, getHexColor, getDrawPluginOptions, handleQueryOnChange, checkAccessibilityForUserType
+import {
+  sentencizeAction, titleize, pluralizeCount, capitalize, validateEmail, invertArray,
+  findLinkAndReplace, forceLinkHttps, titleCase, truncateString, removeNewLines, checkForHtmlTags,
+  sanitizeText, getJustLabels, checkValidGeoJSON, getHexColor, getDrawPluginOptions,
+  handleQueryOnChange, checkAccessibilityForUserType, extractHostname, getObjectKey,
+  decodeHtmlEntity, replaceDocumentMentions
 } from '../../utils/helpers'
 
 jest.mock('dompurify')
@@ -60,6 +62,9 @@ describe('helper methods', () => {
       it('should return false for invalid email', () => {
         expect(validateEmail('invalid email')).toBe(false);
         expect(validateEmail('s1@example')).toBe(false);
+        expect(validateEmail('(s1@example.com)')).toBe(false);
+        expect(validateEmail('s1@example.da(2)213.co-2*i.23')).toBe(false);
+        expect(validateEmail('-(s{}1@example.da2213.co.2i.23')).toBe(false);
       });
        it('should return true for valid email', () => {
         expect(validateEmail('example@example.com')).toBe(true);
@@ -236,5 +241,51 @@ describe('handleQueryOnChange', () => {
     const result = handleQueryOnChange(selectedOptions, paymentFilterFields)
 
     expect(result).toEqual("user : 'John Test'");
+  });
+});
+
+describe('#extractHostname', () => {
+  it('extracts hostname from string URL', () => {
+    expect(extractHostname('https://demo-staging.doublegdp.com/user/019234-c36a-41a7-beeb-12784').hostname).toEqual('demo-staging.doublegdp.com');
+  });
+  it('extracts userid from string URL', () => {
+    expect(extractHostname('https://demo-staging.doublegdp.com/user/019234-c36a-41a7-beeb-12784').userId).toEqual('019234-c36a-41a7-beeb-12784');
+  });
+
+  it('does not explode if no arg is passed', () => {
+    expect(extractHostname()).toBeUndefined()
+  });
+});
+
+describe('#getObjectKey', () => {
+  it("should the key for an object's value if the key is found", () => {
+    const obj = { one: 'two', three: 'four' };
+    const response = getObjectKey(obj, 'two');
+
+    expect(response).toBeTruthy();
+    expect(response).toEqual('one');
+
+    expect(getObjectKey(obj, 'five')).toBe(undefined);
+  });
+});
+
+describe('#decodeHtmlEntity', () => {
+  it('decodes encoded HTML special characters and entity', () => {
+    expect(decodeHtmlEntity('This Year &#8211; WINNERS')).toEqual('This Year – WINNERS');
+    expect(decodeHtmlEntity('Copyright &#169; 2021 &#38; 2022')).toEqual('Copyright © 2021 & 2022');
+  });
+});
+
+describe('#replaceDocumentMentions', () => {
+  it('returns if no text is passed', () => {
+    expect(replaceDocumentMentions(null, 'https://url.com')).toBeUndefined()
+  });
+
+  it('returns text if no link is passed', () => {
+    expect(replaceDocumentMentions('Have you seen this doc ###__1234__doc-name__###', null)).toEqual('Have you seen this doc ###__1234__doc-name__###');
+  });
+
+  it('returns a text with replaced mentions', () => {
+    expect(replaceDocumentMentions('Have you seen this doc ###__1234__doc-name__### ?', '/projects/path')).toEqual(`Have you seen this doc <a href='/projects/path&document_id=1234'>doc-name</a> ?`);
   });
 });

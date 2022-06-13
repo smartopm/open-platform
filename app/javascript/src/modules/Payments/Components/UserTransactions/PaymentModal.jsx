@@ -5,18 +5,24 @@ import PropTypes from 'prop-types';
 import { useLazyQuery, useMutation } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import subDays from 'date-fns/subDays';
-import TextField from '@material-ui/core/TextField';
-import MenuItem from '@material-ui/core/MenuItem';
-import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import Grid from '@material-ui/core/Grid';
+import { useMediaQuery } from '@mui/material';
+import TextField from '@mui/material/TextField';
+import MenuItem from '@mui/material/MenuItem';
+import Typography from '@mui/material/Typography';
+import makeStyles from '@mui/styles/makeStyles';
+import InputAdornment from '@mui/material/InputAdornment';
+import Autocomplete from '@mui/material/Autocomplete';
+import Grid from '@mui/material/Grid';
 import { CustomizedDialogs } from '../../../../components/Dialog';
 import PaymentCreate from '../../graphql/payment_mutations';
 import { UserLandParcelWithPlan, UsersLiteQuery } from '../../../../graphql/queries';
 import MessageAlert from '../../../../components/MessageAlert';
-import { extractCurrency, formatError, formatMoney, objectAccessor } from '../../../../utils/helpers';
+import {
+  extractCurrency,
+  formatError,
+  formatMoney,
+  objectAccessor
+} from '../../../../utils/helpers';
 import ReceiptModal from './ReceiptModal';
 import { Spinner } from '../../../../shared/Loading';
 import DatePickerDialog from '../../../../components/DatePickerDialog';
@@ -49,7 +55,8 @@ export default function PaymentModal({
   refetch,
   walletRefetch,
   userData,
-  transRefetch
+  transRefetch,
+  genRefetch
 }) {
   const classes = useStyles();
   const [inputValue, setInputValue] = useState(initialValues);
@@ -67,7 +74,7 @@ export default function PaymentModal({
   const [paymentUserId, setPaymentUserId] = useState(userId);
   const [mutationLoading, setMutationStatus] = useState(false);
   const { t } = useTranslation(['payment', 'common']);
-
+  const matches = useMediaQuery('(max-width:800px)');
   function confirm(event) {
     event.preventDefault();
 
@@ -156,11 +163,11 @@ export default function PaymentModal({
   }
 
   function checkInputValues(id) {
-    const res = plotInputValue.find(ele => ele.paymentPlanId === id)
+    const res = plotInputValue.find(ele => ele.paymentPlanId === id);
     return {
       amount: res?.amount || '',
       receiptNumber: res?.receiptNumber || ''
-    }
+    };
   }
 
   function validatePlotInput(input) {
@@ -182,7 +189,7 @@ export default function PaymentModal({
     if (objectAccessor(fields, index)) {
       fields[Number(index)] = {
         ...objectAccessor(fields, index),
-        [name]: (name === 'amount' && value !== '') ? parseFloat(value) : value
+        [name]: name === 'amount' && value !== '' ? parseFloat(value) : value
       };
     } else {
       fields.push({ [name]: name === 'amount' ? parseFloat(value) : value, paymentPlanId });
@@ -196,6 +203,12 @@ export default function PaymentModal({
       return;
     }
     handleModalClose();
+  }
+
+  function handlePaymentData(payments) {
+    /* It filters out the payments made for plan and excludes the payment made for general fund */
+    const planPayments = payments.filter(payment => payment.paymentPlan);
+    setPaymentData({ planPayments });
   }
 
   function handleSubmit(event) {
@@ -223,8 +236,9 @@ export default function PaymentModal({
         refetch();
         walletRefetch();
         transRefetch();
+        genRefetch();
         paymentPlansRefetch();
-        setPaymentData(res.data.transactionCreate.transaction);
+        handlePaymentData(res.data.transactionCreate.transaction.planPayments);
         setInputValue(initialValues);
         setPromptOpen(!!userId);
         setIsConfirm(false);
@@ -238,19 +252,18 @@ export default function PaymentModal({
       });
   }
 
-  function validateAmount(plan){
-    const index = plotInputValue.findIndex((obj) => obj.paymentPlanId === plan.id);
-    if(index === -1 || plotInputValue[index].amount <= plan.pendingBalance){
+  function validateAmount(plan) {
+    const index = plotInputValue.findIndex(obj => obj.paymentPlanId === plan.id);
+    if (index === -1 || plotInputValue[index].amount <= plan.pendingBalance) {
       return 0;
     }
-      return plotInputValue[index].amount - plan.pendingBalance;
-
+    return plotInputValue[index].amount - plan.pendingBalance;
   }
 
   function amountHelperText(plan) {
     if (isError && totalAmount() === 0) return t('errors.amount_required');
-      const extraAmount = validateAmount(plan);
-    if (extraAmount > 0){
+    const extraAmount = validateAmount(plan);
+    if (extraAmount > 0) {
       return t('misc.payment_split_message', { amount: formatMoney(currencyData, extraAmount) });
     }
     return '';
@@ -288,12 +301,12 @@ export default function PaymentModal({
         dialogHeader={isConfirm ? t('misc.make_payment_details') : t('misc.make_a_payment')}
         handleBatchFilter={isConfirm ? handleSubmit : confirm}
         saveAction={
-          isConfirm && !mutationLoading
-            ? t('misc.confirm')
-            : mutationLoading
-            ? t('common:form_actions.submitting')
-            : t('actions.pay')
-        }
+        isConfirm && !mutationLoading
+          ? t('misc.confirm')
+          : mutationLoading
+          ? t('common:form_actions.submitting')
+          : t('actions.pay')
+      }
         cancelAction={isConfirm ? t('actions.go_back') : t('common:form_actions.cancel')}
         disableActionBtn={mutationLoading}
       >
@@ -303,194 +316,201 @@ export default function PaymentModal({
             totalAmount={totalAmount()}
             currencyData={currencyData}
           />
-        ) : (
-          <>
-            <div className={classes.invoiceForm}>
-              <Typography className={classes.title}>{t('misc.make_payment_towards')}</Typography>
-              <SwitchInput
-                name="pastPayment"
-                label={t('misc.manual_payment')}
-                value={inputValue.pastPayment}
-                handleChange={event =>
-                  setInputValue({ ...inputValue, pastPayment: event.target.checked })
+      ) : (
+        <>
+          <div className={classes.invoiceForm}>
+            <Typography className={classes.title}>{t('misc.make_payment_towards')}</Typography>
+            <SwitchInput
+              name="pastPayment"
+              label={t('misc.manual_payment')}
+              value={inputValue.pastPayment}
+              handleChange={event =>
+                setInputValue({ ...inputValue, pastPayment: event.target.checked })
+              }
+              labelPlacement="end"
+            />
+            {inputValue.pastPayment && (
+              <>
+                <DatePickerDialog
+                  selectedDate={inputValue.paidDate}
+                  label={t('table_headers.paid_date')}
+                  handleDateChange={date => setInputValue({ ...inputValue, paidDate: date })}
+                />
+              </>
+            )}
+            {!userId && (
+              <Grid container>
+                <Autocomplete
+                  style={{ width: matches ? 300 : '100%', marginLeft: matches && 2 }}
+                  id="payment-user-input"
+                  options={data?.usersLite || []}
+                  getOptionLabel={option => option?.name}
+                  isOptionEqualToValue={(option, value) => option.name === value.name}
+                  onChange={(_event, user) => handleSearchPlot(user)}
+                  classes={{
+                    option: classes.AutocompleteOption,
+                    listbox: classes.AutocompleteOption
+                  }}
+                  renderOption={(props, option) => (
+                    <li {...props}>
+                      <UserAutoResult user={option} t={t} />
+                    </li>
+                  )}
+                  renderInput={params => (
+                    <TextField
+                      {...params}
+                      label={t('table_headers.input_user_name')}
+                      style={{ width: '100%' }}
+                      name="name"
+                      onChange={event => setSearchUser(event.target.value)}
+                      onKeyDown={() => searchUser()}
+                    />
+                  )}
+                />
+              </Grid>
+            )}
+            {searchedUser && !paymentPlans?.userLandParcelWithPlan.length && (
+              <Typography color="secondary">{t('errors.selected_user')}</Typography>
+            )}
+            {loading && <Spinner />}
+            <div style={{ display: 'flex' }}>
+              <TextField
+                margin="normal"
+                id="transaction-type"
+                inputProps={{
+                  'data-testid': 'transaction-type',
+                  className: 'transaction-type-select-input'
+                }}
+                label={t('table_headers.transaction_type')}
+                value={inputValue.transactionType}
+                onChange={event =>
+                  setInputValue({ ...inputValue, transactionType: event.target.value })
                 }
-                labelPlacement="end"
+                required
+                select
+                error={isError && submitting && !inputValue.transactionType}
+                helperText={
+                  isError && !inputValue.transactionType && t('errors.transaction_required')
+                }
+                style={{ width: '50%', marginRight: '20px' }}
+              >
+                <MenuItem value="cash">Cash</MenuItem>
+                <MenuItem value="cheque/cashier_cheque">Cheque/Cashier Cheque</MenuItem>
+                <MenuItem value="mobile_money">Mobile Money</MenuItem>
+                <MenuItem value="bank_transfer/cash_deposit">Bank Transfer/Cash Deposit</MenuItem>
+                <MenuItem value="bank_transfer/eft">Bank Transfer/EFT</MenuItem>
+                <MenuItem value="pos">Point of Sale</MenuItem>
+              </TextField>
+              <TextField
+                margin="normal"
+                id="transaction-number"
+                label={t('common:table_headers.transaction_number')}
+                type="string"
+                style={{ width: '50%' }}
+                value={inputValue.transactionNumber}
+                onChange={event =>
+                  setInputValue({ ...inputValue, transactionNumber: event.target.value })
+                }
+                className="transaction-number-input"
               />
-              {inputValue.pastPayment && (
-                <>
-                  <DatePickerDialog
-                    selectedDate={inputValue.paidDate}
-                    label={t('table_headers.paid_date')}
-                    handleDateChange={date => setInputValue({ ...inputValue, paidDate: date })}
-                  />
-                </>
-              )}
-              {!userId && (
-                <Grid container>
-                  <Autocomplete
-                    style={{ width: '100%' }}
-                    id="payment-user-input"
-                    options={data?.usersLite || []}
-                    getOptionLabel={option => option?.name}
-                    getOptionSelected={(option, value) => option.name === value.name}
-                    onChange={(_event, user) => handleSearchPlot(user)}
-                    classes={{
-                      option: classes.AutocompleteOption,
-                      listbox: classes.AutocompleteOption
-                    }}
-                    renderOption={option => <UserAutoResult user={option} />}
-                    renderInput={params => (
-                      <TextField
-                        {...params}
-                        label={t('table_headers.input_user_name')}
-                        style={{ width: '100%' }}
-                        name="name"
-                        onChange={event => setSearchUser(event.target.value)}
-                        onKeyDown={() => searchUser()}
-                      />
-                    )}
-                  />
-                </Grid>
-              )}
-              {searchedUser && !paymentPlans?.userLandParcelWithPlan.length && (
-                <Typography color="secondary">{t('errors.selected_user')}</Typography>
-              )}
-              {loading && <Spinner />}
+            </div>
+
+            {inputValue.transactionType === 'cheque/cashier_cheque' && (
               <div style={{ display: 'flex' }}>
                 <TextField
+                  autoFocus
                   margin="normal"
-                  id="transaction-type"
-                  inputProps={{ 'data-testid': 'transaction-type', className: 'transaction-type-select-input' }}
-                  label={t('table_headers.transaction_type')}
-                  value={inputValue.transactionType}
-                  onChange={event =>
-                    setInputValue({ ...inputValue, transactionType: event.target.value })
-                  }
-                  required
-                  select
-                  error={isError && submitting && !inputValue.transactionType}
-                  helperText={
-                    isError && !inputValue.transactionType && t('errors.transaction_required')
-                  }
-                  style={{ width: '50%', marginRight: '20px' }}
-                >
-                  <MenuItem value="cash">Cash</MenuItem>
-                  <MenuItem value="cheque/cashier_cheque">Cheque/Cashier Cheque</MenuItem>
-                  <MenuItem value="mobile_money">Mobile Money</MenuItem>
-                  <MenuItem value="bank_transfer/cash_deposit">Bank Transfer/Cash Deposit</MenuItem>
-                  <MenuItem value="bank_transfer/eft">Bank Transfer/EFT</MenuItem>
-                  <MenuItem value="pos">Point of Sale</MenuItem>
-                </TextField>
-                <TextField
-                  margin="normal"
-                  id="transaction-number"
-                  label={t('common:table_headers.transaction_number')}
+                  id="bank-name"
+                  label={t('common:table_headers.bank_name')}
                   type="string"
-                  style={{ width: '50%' }}
-                  value={inputValue.transactionNumber}
+                  style={{ width: '50%', marginRight: '20px' }}
+                  value={inputValue.bankName}
                   onChange={event =>
-                    setInputValue({ ...inputValue, transactionNumber: event.target.value })
+                    setInputValue({ ...inputValue, bankName: event.target.value })
                   }
-                  className='transaction-number-input'
+                />
+                <TextField
+                  autoFocus
+                  margin="normal"
+                  id="cheque-number"
+                  label={t('common:table_headers.cheque_number')}
+                  type="string"
+                  value={inputValue.chequeNumber}
+                  style={{ width: '50%' }}
+                  onChange={event =>
+                    setInputValue({ ...inputValue, chequeNumber: event.target.value })
+                  }
                 />
               </div>
-
-              {inputValue.transactionType === 'cheque/cashier_cheque' && (
-                <div style={{ display: 'flex' }}>
-                  <TextField
-                    autoFocus
-                    margin="normal"
-                    id="bank-name"
-                    label={t('common:table_headers.bank_name')}
-                    type="string"
-                    style={{ width: '50%', marginRight: '20px' }}
-                    value={inputValue.bankName}
-                    onChange={event =>
-                      setInputValue({ ...inputValue, bankName: event.target.value })
-                    }
-                  />
-                  <TextField
-                    autoFocus
-                    margin="normal"
-                    id="cheque-number"
-                    label={t('common:table_headers.cheque_number')}
-                    type="string"
-                    value={inputValue.chequeNumber}
-                    style={{ width: '50%' }}
-                    onChange={event =>
-                      setInputValue({ ...inputValue, chequeNumber: event.target.value })
-                    }
-                  />
+            )}
+            {paymentPlans?.userLandParcelWithPlan?.map(plan => (
+              <div key={plan.id} className={classes.plotCard}>
+                <div style={{ width: '50%' }}>
+                  <Typography className={classes.plotNoTitle}>
+                    {t('table_headers.plot_no')}
+                  </Typography>
+                  <Typography className={classes.plotNo}>
+                    {plan?.landParcel?.parcelNumber.toUpperCase()}
+                  </Typography>
+                  <Typography className={classes.plotNoTitle}>
+                    {`${t('common:table_headers.start_date')}: ${dateToString(plan?.startDate)}`}
+                  </Typography>
+                  <Typography className={classes.plotNoTitle}>
+                    {t('table_headers.remaining_balance', {
+                      amount: formatMoney(currencyData, plan?.pendingBalance)
+                    })}
+                  </Typography>
+                  {inputValue.pastPayment && (
+                    <TextField
+                      margin="normal"
+                      id="receipt-number"
+                      label={t('table_headers.receipt_number')}
+                      type="string"
+                      value={checkInputValues(plan.id)?.receiptNumber}
+                      name="receiptNumber"
+                      onChange={event => onChangePlotInputFields(event, plan)}
+                    />
+                  )}
                 </div>
-              )}
-              {paymentPlans?.userLandParcelWithPlan?.map(plan => (
-                <div key={plan.id} className={classes.plotCard}>
-                  <div style={{ width: '50%' }}>
-                    <Typography className={classes.plotNoTitle}>
-                      {t('table_headers.plot_no')}
-                    </Typography>
-                    <Typography className={classes.plotNo}>
-                      {plan?.landParcel?.parcelNumber.toUpperCase()}
-                    </Typography>
-                    <Typography className={classes.plotNoTitle}>
-                      {`${t('common:table_headers.start_date')}: ${dateToString(plan?.startDate)}`}
-                    </Typography>
-                    <Typography className={classes.plotNoTitle}>
-                      {t('table_headers.remaining_balance', {
-                        amount: formatMoney(currencyData, plan?.pendingBalance)
-                      })}
-                    </Typography>
-                    {inputValue.pastPayment && (
-                      <TextField
-                        margin="normal"
-                        id="receipt-number"
-                        label={t('table_headers.receipt_number')}
-                        type="string"
-                        value={checkInputValues(plan.id)?.receiptNumber}
-                        name="receiptNumber"
-                        onChange={event => onChangePlotInputFields(event, plan)}
-                      />
-                    )}
-                  </div>
-                  <TextField
-                    margin="normal"
-                    id="amount"
-                    label={t('common:table_headers.amount')}
-                    type="number"
-                    name="amount"
-                    style={{ width: '50%' }}
-                    value={checkInputValues(plan.id)?.amount}
-                    onChange={event => onChangePlotInputFields(event, plan)}
-                    InputProps={{
-                      startAdornment: (
-                        <InputAdornment position="start">
-                          {extractCurrency(currencyData)}
-                        </InputAdornment>
-                      ),
-                      'data-testid': 'amount',
-                      step: 0.01
-                    }}
-                    className='transaction-amount-input'
-                    required
-                    error={isError && submitting && totalAmount() === 0}
-                    helperText={amountHelperText(plan)}
-                  />
-                </div>
-              ))}
-            </div>
-            <div className={classes.totalAmountBody}>
-              <Typography className={classes.plotNoTitle}>
-                {t('table_headers.total_amount')}
-              </Typography>
-              <Typography color="primary" className={classes.totalAmount}>
-                <b>{formatMoney(currencyData, totalAmount())}</b>
-              </Typography>
-            </div>
-          </>
-        )}
+                <TextField
+                  margin="normal"
+                  id="amount"
+                  label={t('common:table_headers.amount')}
+                  type="number"
+                  name="amount"
+                  style={{ width: '50%' }}
+                  value={checkInputValues(plan.id)?.amount}
+                  onChange={event => onChangePlotInputFields(event, plan)}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        {extractCurrency(currencyData)}
+                      </InputAdornment>
+                    ),
+                    'data-testid': 'amount',
+                    step: 0.01
+                  }}
+                  className="transaction-amount-input"
+                  required
+                  error={isError && submitting && totalAmount() === 0}
+                  helperText={amountHelperText(plan)}
+                />
+              </div>
+            ))}
+          </div>
+          <div className={classes.totalAmountBody}>
+            <Typography className={classes.plotNoTitle}>
+              {t('table_headers.total_amount')}
+            </Typography>
+            <Typography color="primary" className={classes.totalAmount}>
+              <b>{formatMoney(currencyData, totalAmount())}</b>
+            </Typography>
+          </div>
+        </>
+      )}
       </CustomizedDialogs>
     </>
-  );
+);
 }
 
 export function PaymentDetails({ inputValue, totalAmount, currencyData }) {
@@ -601,6 +621,7 @@ PaymentDetails.propTypes = {
 PaymentModal.defaultProps = {
   transRefetch: () => {},
   walletRefetch: () => {},
+  genRefetch: () => {},
   userData: {},
   userId: null
 };
@@ -615,6 +636,7 @@ PaymentModal.propTypes = {
   refetch: PropTypes.func.isRequired,
   transRefetch: PropTypes.func,
   walletRefetch: PropTypes.func,
+  genRefetch: PropTypes.func,
   currencyData: PropTypes.shape({
     currency: PropTypes.string,
     locale: PropTypes.string

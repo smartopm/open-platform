@@ -10,7 +10,7 @@ module Types
     field :percentage, String, null: true
     field :plot_balance, Float, null: true
     field :pending_balance, Float, null: true
-    field :land_parcel, Types::LandParcelType, null: false
+    field :land_parcel, Types::LandParcelType, null: true
     field :invoices, [Types::InvoiceType], null: false
     field :user, Types::UserType, null: false
     field :start_date, GraphQL::Types::ISO8601DateTime, null: true
@@ -35,6 +35,8 @@ module Types
     field :installments_due, Integer, null: true
     field :outstanding_days, Integer, null: true
     field :plan_status, String, null: true
+    field :upcoming_installment_due_date, GraphQL::Types::ISO8601DateTime, null: true
+    field :general_payments, Float, null: false
 
     # Returns total amount paid for plan statement
     #
@@ -56,6 +58,13 @@ module Types
 
     def paid_payments_exists
       object.plan_payments.exists?(status: :paid)
+    end
+
+    # Returns total amount for general fund
+    #
+    # @return [Float]
+    def general_payments
+      object.plan_payments.paid.sum(:amount)
     end
   end
 end

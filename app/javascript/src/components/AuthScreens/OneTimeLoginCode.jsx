@@ -7,13 +7,16 @@ import { Context as AuthStateContext } from "../../containers/Provider/AuthState
 
 /* istanbul ignore next */
 export default function OneTimeLoginCode({ match }) {
-  const { id, code } = match.params;
+  const { id, code, type, requestId } = match.params;
   const authState = useContext(AuthStateContext);
   const [error, setError] = useState(null);
   const [loginPhoneComplete, { called }] = useMutation(loginPhoneConfirmCode);
 
   // If logged in, redirect to dashboard
   if (authState.loggedIn) {
+    if (authState.user.status === 'deactivated') return <Redirect push to='/logout' />
+    if(type === 'request') return <Redirect push to={`/qr/invite/${requestId}`} />;
+
     return <Redirect push to="/" />;
   }
 

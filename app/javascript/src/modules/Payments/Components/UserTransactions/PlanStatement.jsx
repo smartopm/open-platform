@@ -1,12 +1,12 @@
 import React, { useContext } from 'react';
-import Grid from '@material-ui/core/Grid';
+import Grid from '@mui/material/Grid';
 import { useTranslation } from 'react-i18next';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
+import makeStyles from '@mui/styles/makeStyles';
 import { StyleSheet } from 'aphrodite';
-import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
+import Typography from '@mui/material/Typography';
+import Divider from '@mui/material/Divider';
 import { formatMoney, capitalize } from '../../../../utils/helpers';
 import { dateToString } from '../../../../components/DateContainer';
 import { FullScreenDialog } from '../../../../components/Dialog';
@@ -19,6 +19,7 @@ export default function PaymentStatement({ data, open, handleClose, currencyData
   const matches = useMediaQuery('(max-width:600px)');
   const authState = useContext(AuthStateContext);
   const { t } = useTranslation(['payment', 'common']);
+  const parcelNumberCheck = data?.paymentPlan?.landParcel?.parcelNumber;
 
   function printStatement() {
     document.title = `${data?.paymentPlan?.user?.name}-${
@@ -29,7 +30,7 @@ export default function PaymentStatement({ data, open, handleClose, currencyData
 
   return (
     <>
-      <div style={matches ? {overflowX: 'hidden'} : {}}>
+      <div style={matches ? { overflowX: 'hidden' } : {}}>
         <FullScreenDialog
           open={open}
           handleClose={handleClose}
@@ -37,7 +38,10 @@ export default function PaymentStatement({ data, open, handleClose, currencyData
           actionText={t('misc.print')}
           handleSubmit={printStatement}
         >
-          <div className="print" style={matches ? {overflowX: 'hidden'} : { margin: '57px 155px' }}>
+          <div
+            className="print"
+            style={matches ? { overflowX: 'hidden' } : { margin: '57px 155px' }}
+          >
             <CommunityName authState={authState} logoStyles={logoStyles} />
             <Typography className={classes.planTitle}>{t('misc.statement_for_plan')}</Typography>
             <div style={{ marginTop: '50px' }}>
@@ -47,7 +51,12 @@ export default function PaymentStatement({ data, open, handleClose, currencyData
                     <Grid item xs={4} className={matches ? classes.titleMobile : classes.title}>
                       {t('common:misc.client_name')}
                     </Grid>
-                    <Grid item xs={8} data-testid="client-name" className={matches ? classes.titleMobile : classes.title}>
+                    <Grid
+                      item
+                      xs={8}
+                      data-testid="client-name"
+                      className={matches ? classes.titleMobile : classes.title}
+                    >
                       {data?.paymentPlan?.user?.name}
                     </Grid>
                   </Grid>
@@ -55,71 +64,127 @@ export default function PaymentStatement({ data, open, handleClose, currencyData
                     <Grid item xs={4} className={matches ? classes.titleMobile : classes.title}>
                       NRC
                     </Grid>
-                    <Grid item xs={8} className={matches ? classes.titleMobile : classes.title} data-testid="nrc">
+                    <Grid
+                      item
+                      xs={8}
+                      className={matches ? classes.titleMobile : classes.title}
+                      data-testid="nrc"
+                    >
                       {data?.paymentPlan?.user?.extRefId || '-'}
                     </Grid>
                   </Grid>
                   <Grid container spacing={1}>
-                    <Grid item xs={4} className={matches ? classes.titleMobile : classes.title}>
-                      {t('common:table_headers.plot_number')}
-                    </Grid>
-                    <Grid item xs={8} className={matches ? classes.titleMobile : classes.title}>
-                      {data?.paymentPlan?.landParcel?.parcelType && data?.paymentPlan?.landParcel?.parcelType}
-                      {' '}
-                      {data?.paymentPlan?.landParcel?.parcelNumber}
-                    </Grid>
-                    <Grid container spacing={1}>
-                      <Grid item xs={4} className={matches ? classes.titleMobile : classes.title}>
-                        {t('common:table_headers.payment_plan')}
-                      </Grid>
-                      <Grid item xs={8} className={matches ? classes.titleMobile : classes.title}>
-                        {capitalize(t('misc.lease'))}
-                      </Grid>
-                    </Grid>
-                    <Grid container spacing={1}>
-                      <Grid item xs={4} className={matches ? classes.titleMobile : classes.title}>
-                        {t('misc.plan_value')}
-                      </Grid>
-                      <Grid item xs={8} className={matches ? classes.titleMobile : classes.title}>
-                        {formatMoney(currencyData, data?.paymentPlan?.planValue)}
-                        (
-                        {data?.paymentPlan?.duration}
-                        )
-                      </Grid>
-                    </Grid>
+                    {parcelNumberCheck && (
+                      <>
+                        <Grid item xs={4} className={matches ? classes.titleMobile : classes.title}>
+                          {t('common:table_headers.plot_number')}
+                        </Grid>
+                        <Grid item xs={8} className={matches ? classes.titleMobile : classes.title}>
+                          {data?.paymentPlan?.landParcel?.parcelType &&
+                            data?.paymentPlan?.landParcel?.parcelType}
+                          {' '}
+                          {data?.paymentPlan?.landParcel?.parcelNumber}
+                        </Grid>
+                        <Grid container spacing={1}>
+                          <Grid
+                            item
+                            xs={4}
+                            className={matches ? classes.titleMobile : classes.title}
+                          >
+                            {t('common:table_headers.payment_plan')}
+                          </Grid>
+                          <Grid
+                            item
+                            xs={8}
+                            className={matches ? classes.titleMobile : classes.title}
+                          >
+                            {capitalize(t('misc.lease'))}
+                          </Grid>
+                        </Grid>
+                        <Grid container spacing={1}>
+                          <Grid
+                            item
+                            xs={4}
+                            className={matches ? classes.titleMobile : classes.title}
+                          >
+                            {t('misc.plan_value')}
+                          </Grid>
+                          <Grid
+                            item
+                            xs={8}
+                            className={matches ? classes.titleMobile : classes.title}
+                          >
+                            {formatMoney(currencyData, data?.paymentPlan?.planValue)}
+                            (
+                            {data?.paymentPlan?.duration}
+                            )
+                          </Grid>
+                        </Grid>
+                      </>
+                    )}
                   </Grid>
                 </Grid>
                 <Grid item xs={6} style={{ textAlign: 'right' }}>
                   <Grid container spacing={1}>
-                    <Grid item xs={12} className={matches ? classes.titleMobile : classes.title} data-testid="account-name">
+                    <Grid
+                      item
+                      xs={12}
+                      className={matches ? classes.titleMobile : classes.title}
+                      data-testid="account-name"
+                    >
                       {data?.paymentPlan?.landParcel?.community?.bankingDetails?.accountName ||
                         'N/A'}
                     </Grid>
                   </Grid>
                   <Grid container spacing={1}>
-                    <Grid item xs={12} className={matches ? classes.titleMobile : classes.title} data-testid="tax-id-no">
+                    <Grid
+                      item
+                      xs={12}
+                      className={matches ? classes.titleMobile : classes.title}
+                      data-testid="tax-id-no"
+                    >
                       TPIN:
                       {' '}
                       {data?.paymentPlan?.landParcel?.community?.bankingDetails?.taxIdNo || 'N/A'}
                     </Grid>
                   </Grid>
                   <Grid container spacing={1}>
-                    <Grid item xs={12} className={matches ? classes.titleMobile : classes.title} data-testid="address">
+                    <Grid
+                      item
+                      xs={12}
+                      className={matches ? classes.titleMobile : classes.title}
+                      data-testid="address"
+                    >
                       {data?.paymentPlan?.landParcel?.community?.bankingDetails?.address || 'N/A'}
                     </Grid>
                   </Grid>
                   <Grid container spacing={1}>
-                    <Grid item xs={12} className={matches ? classes.titleMobile : classes.title} data-testid="city">
+                    <Grid
+                      item
+                      xs={12}
+                      className={matches ? classes.titleMobile : classes.title}
+                      data-testid="city"
+                    >
                       {data?.paymentPlan?.landParcel?.community?.bankingDetails?.city || 'N/A'}
                     </Grid>
                   </Grid>
                   <Grid container spacing={1}>
-                    <Grid item xs={12} className={matches ? classes.titleMobile : classes.title} data-testid="country">
+                    <Grid
+                      item
+                      xs={12}
+                      className={matches ? classes.titleMobile : classes.title}
+                      data-testid="country"
+                    >
                       {data?.paymentPlan?.landParcel?.community?.bankingDetails?.country || 'N/A'}
                     </Grid>
                   </Grid>
                   <Grid container spacing={1}>
-                    <Grid item xs={12} className={matches ? classes.titleMobile : classes.title} data-testid="support-email">
+                    <Grid
+                      item
+                      xs={12}
+                      className={matches ? classes.titleMobile : classes.title}
+                      data-testid="support-email"
+                    >
                       email:
                       {' '}
                       {data?.paymentPlan?.landParcel?.community?.supportEmail
@@ -128,7 +193,12 @@ export default function PaymentStatement({ data, open, handleClose, currencyData
                     </Grid>
                   </Grid>
                   <Grid container spacing={1}>
-                    <Grid item xs={12} className={matches ? classes.titleMobile : classes.title} data-testid="website">
+                    <Grid
+                      item
+                      xs={12}
+                      className={matches ? classes.titleMobile : classes.title}
+                      data-testid="website"
+                    >
                       web:
                       {' '}
                       {data?.paymentPlan?.landParcel?.community?.socialLinks
@@ -137,7 +207,12 @@ export default function PaymentStatement({ data, open, handleClose, currencyData
                     </Grid>
                   </Grid>
                   <Grid container spacing={1}>
-                    <Grid item xs={12} className={matches ? classes.titleMobile : classes.title} data-testid="support-phone-no">
+                    <Grid
+                      item
+                      xs={12}
+                      className={matches ? classes.titleMobile : classes.title}
+                      data-testid="support-phone-no"
+                    >
                       {t('misc.phone')}
                       :
                       {' '}
@@ -154,6 +229,7 @@ export default function PaymentStatement({ data, open, handleClose, currencyData
                     item
                     xs={2}
                     className={matches ? classes.titleMobile : classes.title}
+                    md={parcelNumberCheck ? 2 : 4}
                     key="receipt_number"
                     style={{ fontWeight: 700, color: '#2D2D2D' }}
                   >
@@ -163,8 +239,13 @@ export default function PaymentStatement({ data, open, handleClose, currencyData
                     item
                     xs={2}
                     className={matches ? classes.titleMobile : classes.title}
+                    md={parcelNumberCheck ? 2 : 4}
                     key="payment_date"
-                    style={{ fontWeight: 700, color: '#2D2D2D' }}
+                    style={
+                      parcelNumberCheck
+                        ? { fontWeight: 700, color: '#2D2D2D' }
+                        : { fontWeight: 700, color: '#2D2D2D', textAlign: 'center' }
+                    }
                   >
                     {t('common:table_headers.payment_date')}
                   </Grid>
@@ -172,47 +253,51 @@ export default function PaymentStatement({ data, open, handleClose, currencyData
                     item
                     xs={2}
                     className={matches ? classes.titleMobile : classes.title}
+                    md={parcelNumberCheck ? 2 : 4}
                     key="amount_paid"
-                    style={{ fontWeight: 700, color: '#2D2D2D' }}
+                    style={
+                      parcelNumberCheck
+                        ? { fontWeight: 700, color: '#2D2D2D' }
+                        : { fontWeight: 700, color: '#2D2D2D', textAlign: 'right' }
+                    }
                   >
                     {t('table_headers.amount_paid')}
                   </Grid>
-                  <Grid
-                    item
-                    xs={2}
-                    className={matches ? classes.titleMobile : classes.title}
-                    key="installment_amount"
-                    style={{ fontWeight: 700, color: '#2D2D2D' }}
-                  >
-                    {t('table_headers.installment_amount')}
-                  </Grid>
-                  <Grid
-                    item
-                    xs={matches ? 1 : 2}
-                    className={matches ? classes.titleMobile : classes.title}
-                    key="number_of_installements"
-                    style={{ fontWeight: 700, color: '#2D2D2D' }}
-                  >
-                    {t('table_headers.no_of_installments')}
-                  </Grid>
-                  <Grid
-                    item
-                    xs={1}
-                    className={matches ? classes.titleMobile : classes.title}
-                    key="debit"
-                    style={{ fontWeight: 700, color: '#2D2D2D' }}
-                  >
-                    {t('table_headers.debit')}
-                  </Grid>
-                  <Grid
-                    item
-                    xs={1}
-                    className={matches ? classes.titleMobile : classes.title}
-                    key="balance"
-                    style={{ fontWeight: 700, color: '#2D2D2D' }}
-                  >
-                    {t('table_headers.unallocated_balance')}
-                  </Grid>
+                  {parcelNumberCheck && (
+                    <>
+                      <Grid
+                        item
+                        xs={2}
+                        className={matches ? classes.titleMobile : classes.title}
+                        key="installment_amount"
+                        style={{ fontWeight: 700, color: '#2D2D2D' }}
+                      >
+                        {t('table_headers.installment_amount')}
+                        {' '}
+                        /
+                        {' '}
+                        {t('table_headers.no_of_installments')}
+                      </Grid>
+                      <Grid
+                        item
+                        xs={2}
+                        className={matches ? classes.titleMobile : classes.title}
+                        key="debit"
+                        style={{ fontWeight: 700, color: '#2D2D2D' }}
+                      >
+                        {t('table_headers.debit')}
+                      </Grid>
+                      <Grid
+                        item
+                        xs={2}
+                        className={matches ? classes.titleMobile : classes.title}
+                        key="balance"
+                        style={{ fontWeight: 700, color: '#2D2D2D' }}
+                      >
+                        {t('table_headers.unallocated_balance')}
+                      </Grid>
+                    </>
+                  )}
                 </Grid>
                 <Divider className={classes.divider} />
                 {data?.statements && Boolean(data?.statements?.length > 0) ? (
@@ -222,6 +307,7 @@ export default function PaymentStatement({ data, open, handleClose, currencyData
                       <Grid
                         item
                         xs={2}
+                        md={parcelNumberCheck ? 2 : 4}
                         className={matches ? classes.titleMobile : classes.title}
                         data-testid="receipt-no"
                       >
@@ -230,35 +316,52 @@ export default function PaymentStatement({ data, open, handleClose, currencyData
                       <Grid
                         item
                         xs={2}
+                        md={parcelNumberCheck ? 2 : 4}
                         className={matches ? classes.titleMobile : classes.title}
                         data-testid="pay-date"
+                        style={!parcelNumberCheck ? { textAlign: 'center' } : {}}
                       >
                         {plan.paymentDate && dateToString(plan.paymentDate)}
                       </Grid>
                       <Grid
                         item
                         xs={2}
+                        md={parcelNumberCheck ? 2 : 4}
                         className={matches ? classes.titleMobile : classes.title}
                         data-testid="amount"
+                        style={!parcelNumberCheck ? { textAlign: 'right' } : {}}
                       >
                         {formatMoney(currencyData, plan.amountPaid)}
                       </Grid>
-                      <Grid
-                        item
-                        xs={2}
-                        className={matches ? classes.titleMobile : classes.title}
-                      >
-                        {formatMoney(currencyData, plan.installmentAmount)}
-                      </Grid>
-                      <Grid item xs={matches ? 1 : 2} className={matches ? classes.titleMobile : classes.title}>
-                        {plan.settledInstallments}
-                      </Grid>
-                      <Grid item xs={1} className={matches ? classes.titleMobile : classes.title}>
-                        {formatMoney(currencyData, plan.debitAmount)}
-                      </Grid>
-                      <Grid item xs={1} className={matches ? classes.titleMobile : classes.title}>
-                        {formatMoney(currencyData, plan.unallocatedAmount)}
-                      </Grid>
+                      {parcelNumberCheck && (
+                        <>
+                          <Grid
+                            item
+                            xs={2}
+                            className={matches ? classes.titleMobile : classes.title}
+                          >
+                            {formatMoney(currencyData, plan.installmentAmount)}
+                            {' '}
+                            /
+                            {' '}
+                            {plan.settledInstallments}
+                          </Grid>
+                          <Grid
+                            item
+                            xs={2}
+                            className={matches ? classes.titleMobile : classes.title}
+                          >
+                            {formatMoney(currencyData, plan.debitAmount)}
+                          </Grid>
+                          <Grid
+                            item
+                            xs={2}
+                            className={matches ? classes.titleMobile : classes.title}
+                          >
+                            {formatMoney(currencyData, plan.unallocatedAmount)}
+                          </Grid>
+                        </>
+                      )}
                     </Grid>
                   ))
                 ) : (
@@ -326,38 +429,65 @@ export default function PaymentStatement({ data, open, handleClose, currencyData
                     </Grid>
                   </div>
                 </Grid>
-                <Grid item xs={6}>
-                  <Grid container spacing={1}>
-                    <Grid item xs={8} className={matches ? classes.titleMobile : classes.title} style={{ textAlign: 'right' }}>
-                      {t('table_headers.total_paid_installments')}
+                {parcelNumberCheck && (
+                  <Grid item xs={6}>
+                    <Grid container spacing={1}>
+                      <Grid
+                        item
+                        xs={8}
+                        className={matches ? classes.titleMobile : classes.title}
+                        style={{ textAlign: 'right' }}
+                      >
+                        {t('table_headers.total_paid_installments')}
+                      </Grid>
+                      <Grid
+                        item
+                        xs={4}
+                        data-testid="total-paid"
+                        className={matches ? classes.titleMobile : classes.title}
+                        style={{ textAlign: 'right' }}
+                      >
+                        {formatMoney(currencyData, data?.paymentPlan?.statementPaidAmount)}
+                      </Grid>
                     </Grid>
-                    <Grid
-                      item
-                      xs={4}
-                      data-testid="total-paid"
-                      className={matches ? classes.titleMobile : classes.title}
-                      style={{ textAlign: 'right' }}
-                    >
-                      {formatMoney(currencyData, data?.paymentPlan?.statementPaidAmount)}
+                    <Grid container spacing={1}>
+                      <Grid
+                        item
+                        xs={8}
+                        className={matches ? classes.titleMobile : classes.title}
+                        style={{ textAlign: 'right' }}
+                      >
+                        {t('table_headers.total_unallocated')}
+                      </Grid>
+                      <Grid
+                        item
+                        xs={4}
+                        className={matches ? classes.titleMobile : classes.title}
+                        style={{ textAlign: 'right' }}
+                      >
+                        {formatMoney(currencyData, data?.paymentPlan?.unallocatedAmount)}
+                      </Grid>
+                    </Grid>
+                    <Grid container spacing={1}>
+                      <Grid
+                        item
+                        xs={8}
+                        className={matches ? classes.titleMobile : classes.title}
+                        style={{ textAlign: 'right' }}
+                      >
+                        {t('table_headers.balance_due')}
+                      </Grid>
+                      <Grid
+                        item
+                        xs={4}
+                        className={matches ? classes.titleMobile : classes.title}
+                        style={{ textAlign: 'right' }}
+                      >
+                        {formatMoney(currencyData, data?.paymentPlan?.pendingBalance)}
+                      </Grid>
                     </Grid>
                   </Grid>
-                  <Grid container spacing={1}>
-                    <Grid item xs={8} className={matches ? classes.titleMobile : classes.title} style={{ textAlign: 'right' }}>
-                      {t('table_headers.total_unallocated')}
-                    </Grid>
-                    <Grid item xs={4} className={matches ? classes.titleMobile : classes.title} style={{ textAlign: 'right' }}>
-                      {formatMoney(currencyData, data?.paymentPlan?.unallocatedAmount)}
-                    </Grid>
-                  </Grid>
-                  <Grid container spacing={1}>
-                    <Grid item xs={8} className={matches ? classes.titleMobile : classes.title} style={{ textAlign: 'right' }}>
-                      {t('table_headers.balance_due')}
-                    </Grid>
-                    <Grid item xs={4} className={matches ? classes.titleMobile : classes.title} style={{ textAlign: 'right' }}>
-                      {formatMoney(currencyData, data?.paymentPlan?.pendingBalance)}
-                    </Grid>
-                  </Grid>
-                </Grid>
+                )}
               </Grid>
             </div>
           </div>
@@ -449,18 +579,24 @@ PaymentStatement.propTypes = {
             country: PropTypes.string,
             taxIdNo: PropTypes.string
           }),
-          socialLinks: PropTypes.arrayOf(PropTypes.shape({
-            category: PropTypes.string,
-            social_link: PropTypes.string
-          })),
-          supportEmail: PropTypes.arrayOf(PropTypes.shape({
-            category: PropTypes.string,
-            email: PropTypes.string
-          })),
-          supportNumber: PropTypes.arrayOf(PropTypes.shape({
-            category: PropTypes.string,
-            phone_no: PropTypes.string
-          }))
+          socialLinks: PropTypes.arrayOf(
+            PropTypes.shape({
+              category: PropTypes.string,
+              social_link: PropTypes.string
+            })
+          ),
+          supportEmail: PropTypes.arrayOf(
+            PropTypes.shape({
+              category: PropTypes.string,
+              email: PropTypes.string
+            })
+          ),
+          supportNumber: PropTypes.arrayOf(
+            PropTypes.shape({
+              category: PropTypes.string,
+              phone_no: PropTypes.string
+            })
+          )
         })
       })
     }),

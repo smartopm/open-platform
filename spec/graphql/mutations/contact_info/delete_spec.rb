@@ -26,6 +26,7 @@ RSpec.describe Mutations::ContactInfo::Delete do
                                                  context: {
                                                    current_user: user,
                                                    site_community: user.community,
+                                                   user_role: user.role,
                                                  }).as_json
       expect(result.dig('data', 'contactInfoDelete', 'success')).to be_truthy
       expect(result['errors']).to be_nil

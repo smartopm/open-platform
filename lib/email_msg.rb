@@ -6,6 +6,7 @@ require 'uri'
 require 'net/http'
 
 # class helper to help send emails to doublegdp users using sendgrid
+# rubocop: disable Metrics/ClassLength
 class EmailMsg
   include SendGrid
 
@@ -32,22 +33,40 @@ class EmailMsg
   # We should rename this to send_mail by the time we get rid of the send_mail() above
   # rubocop:disable Metrics/MethodLength
   # rubocop:disable Metrics/AbcSize
-  def self.send_mail_from_db(user_email, template, template_data = [{}])
+  # rubocop:disable Metrics/CyclomaticComplexity
+  def self.send_mail_from_db(**args)
     return if Rails.env.test?
-    raise EmailMsgError, 'Email & Template must be provided' if user_email.blank? || template.blank?
 
-    mail = SendGrid::Mail.new
-    mail.from = SendGrid::Email.new(email: 'support@doublegdp.com')
+    email = args[:email]
+    template = args[:template]
+    template_data = args[:template_data] || []
+    email_subject = args[:email_subject]
+    custom_key = args[:custom_key]
+    custom_value = args[:custom_value]
+    raise EmailMsgError, 'Email & Template must be provided' if email.blank? || template.blank?
+
+    sg_mail = SendGrid::Mail.new
+    sg_mail.from = SendGrid::Email.new(email: 'support@doublegdp.com')
     personalization = Personalization.new
-    personalization.add_to(SendGrid::Email.new(email: user_email))
+    personalization.add_to(SendGrid::Email.new(email: email))
     template_data.each { |data| personalization.add_substitution(Substitution.new(data)) }
-    personalization.subject = template.subject
-    mail.add_personalization(personalization)
-    mail.add_content(Content.new(type: 'text/html', value: template.body))
-    client.mail._('send').post(request_body: mail.to_json)
+    personalization.subject = email_subject || template.subject
+    sg_mail.add_personalization(personalization)
+    sg_mail.add_content(Content.new(type: 'text/html', value: template.body))
+    add_custom_args(sg_mail, custom_key, custom_value) if custom_args?(custom_key, custom_value)
+    client.mail._('send').post(request_body: sg_mail.to_json)
   end
   # rubocop:enable Metrics/AbcSize
   # rubocop:enable Metrics/MethodLength
+  # rubocop:enable Metrics/CyclomaticComplexity
+
+  def self.add_custom_args(sg_mail, custom_key, custom_value)
+    sg_mail.add_custom_arg(CustomArg.new(key: custom_key, value: custom_value))
+  end
+
+  def self.custom_args?(custom_key, custom_value)
+    custom_key.present? && custom_value.present?
+  end
 
   def self.sendgrid_api(api_link)
     url = URI(api_link)
@@ -160,6 +179,24 @@ class EmailMsg
       message.save!
     end
   end
+
+  def self.email_stats(key, value)
+    sg = SendGrid::API.new(api_key: Rails.application.credentials[:sendgrid_updated_api_key].to_s)
+
+    response = sg.client.messages.get(query_params: query_params(key, value))
+    JSON.parse(response.body.presence || '{}')['messages']
+  end
+
+  def self.query_params(key, value)
+    filter_key = "unique_args['#{key}']"
+    filter_operator = '='
+    filter_value = "'#{value}'"
+    params = {}
+    params['query'] = "#{filter_key}#{filter_operator}#{filter_value}"
+    params['limit'] = '1000'
+    params
+  end
   # rubocop:enable Metrics/AbcSize
   # rubocop:enable Metrics/MethodLength
 end
+# rubocop: enable Metrics/ClassLength

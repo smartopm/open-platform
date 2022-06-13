@@ -27,35 +27,43 @@ module Mutations
 
       ALLOWED_PARAMS_FOR_ROLES = {
         admin: {}, # Everything
-        security_guard: { except: %i[state user_type] },
-        client: { except: %i[state user_type phone_number email] },
-        resident: { except: %i[state user_type phone_number email] },
-        contractor: { except: %i[state user_type phone_number email] },
-        site_worker: { except: %i[state user_type phone_number email] },
-        custodian: { except: %i[state user_type phone_number email] },
-        prospective_client: { except: %i[state user_type phone_number email] },
-        visitor: { except: %i[state user_type phone_number email] },
+        security_guard: { except: %i[state user_type status] },
+        client: { except: %i[state user_type phone_number email status] },
+        resident: { except: %i[state user_type phone_number email status] },
+        contractor: { except: %i[state user_type phone_number email status] },
+        site_worker: { except: %i[state user_type phone_number email status] },
+        custodian: { except: %i[state user_type phone_number email status] },
+        prospective_client: { except: %i[state user_type phone_number email status] },
+        visitor: { except: %i[state user_type phone_number email status] },
+        site_manager: { except: %i[state user_type phone_number email status] },
+        security_supervisor: { except: %i[state user_type phone_number email status] },
+        consultant: { except: %i[state user_type phone_number email status] },
+        developer: { except: %i[state user_type phone_number email status] },
+        marketing_manager: { except: %i[state user_type phone_number email status] },
+        marketing_admin: {}, # Everything
       }.freeze
 
+      # rubocop:disable Metrics/MethodLength
       def resolve(vals)
         user = nil
         raise_duplicate_number_error(vals[:phone_number])
 
         begin
           user = context[:current_user].enroll_user(vals)
-          return { user: user } if user.present? && user.errors.blank?
+          if user.present? && user.errors.blank?
+            create_lead_task(context[:current_user], user)
+            return { user: user }
+          end
         rescue ActiveRecord::RecordNotUnique
           raise GraphQL::ExecutionError, I18n.t('errors.duplicate.email')
         end
 
         raise GraphQL::ExecutionError, user.errors.full_messages
       end
+      # rubocop:enable Metrics/MethodLength
 
-      def raise_duplicate_number_error(phone_number)
-        user = context[:current_user].find_via_phone_number(phone_number)
-        return if user.nil?
-
-        raise GraphQL::ExecutionError, I18n.t('errors.duplicate.phone')
+      def create_lead_task(current_user, user)
+        current_user.create_lead_task(user) if user.user_type.eql?('lead')
       end
 
       def authorized?(_vals)

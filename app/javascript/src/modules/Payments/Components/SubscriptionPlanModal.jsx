@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from 'react-apollo';
 import PropTypes from 'prop-types';
-import { MenuItem, TextField, Switch } from '@material-ui/core';
+import { MenuItem, TextField, Switch } from '@mui/material';
 import { CustomizedDialogs } from '../../../components/Dialog';
 import DatePickerDialog from '../../../components/DatePickerDialog';
 import { subscriptionPlanType } from '../../../utils/constants';

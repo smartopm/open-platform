@@ -22,11 +22,17 @@ module Types::Queries::EventLog
       argument :subject, [String, { null: true }], required: false
       argument :user_id, GraphQL::Types::ID, required: true
     end
+
+    field :logbook_event_logs, [Types::EventLogType], null: true do
+      description 'Get event logs for logbook'
+      argument :start_date, String, required: true
+      argument :end_date, String, required: true
+    end
   end
   # rubocop:disable Metrics/ParameterLists
 
   def all_event_logs(subject:, ref_id:, ref_type:, offset: 0, limit: 100, name: nil)
-    authorized = context[:current_user]&.role?(%i[security_guard admin])
+    authorized = context[:current_user]&.role?(%i[security_guard admin security_supervisor])
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless authorized
 
     query_all_logs(name, subject, ref_id, ref_type, limit, offset)
@@ -36,10 +42,10 @@ module Types::Queries::EventLog
     query = build_event_log_query(context[:current_user], subject, ref_id, ref_type)
     return query_logs_with_name(query, name, limit, offset) if name.present?
 
-    context[:site_community].event_logs.includes(:acting_user, :community,
-                                                 ref: %i[users entry_requests some_undefined])
+    context[:site_community].event_logs.includes(:acting_user, :ref)
                             .where(query)
                             .limit(limit).offset(offset)
+                            .with_attached_images
   end
   # rubocop:enable Metrics/ParameterLists
 
@@ -54,6 +60,17 @@ module Types::Queries::EventLog
     end
 
     query_user_logs(user, subject, limit, offset)
+  end
+
+  def logbook_event_logs(start_date:, end_date:)
+    raise GraphQL::ExecutionError, I18n.t('errors.unauthorized') unless can_fetch_logbook_logs?
+
+    window = start_date.to_datetime.beginning_of_day..end_date.to_datetime.end_of_day
+    context[:site_community].event_logs.includes(:ref)
+                            .where(
+                              subject: %w[user_entry visitor_entry observation_log],
+                              created_at: window,
+                            )
   end
 
   def build_event_log_query(user, subject, ref_id, ref_type)
@@ -83,5 +100,9 @@ module Types::Queries::EventLog
                             .where("data->>'ref_name' ILIKE ? OR data->>'note' ILIKE ?",
                                    "%#{name}%", "%#{name}%")
                             .limit(limit).offset(offset)
+  end
+
+  def can_fetch_logbook_logs?
+    permitted?(module: :event_log, permission: :can_fetch_logbook_events)
   end
 end

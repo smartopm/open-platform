@@ -2,7 +2,7 @@
 // we should migrate this file to individual file in a directory called Text or Typography
 
 import React from 'react';
-import { Grid, Hidden, Typography } from '@material-ui/core';
+import { Grid, Hidden, Typography } from '@mui/material';
 import { oneOfType, number, bool, string, node  } from 'prop-types';
 import { textProps } from './types/text';
 

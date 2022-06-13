@@ -23,7 +23,10 @@
     "active": "Active",
     "created": "Created:",
     "event_type": "Event Type: On {{eventType}}",
-    "inactive": "Inactive"
+    "inactive": "Inactive",
+    "fill_title": "Please fill the title",
+    "fill_description": "Please fill the description",
+    "select_event_type": "Please select an event type"
   }
   
 }
