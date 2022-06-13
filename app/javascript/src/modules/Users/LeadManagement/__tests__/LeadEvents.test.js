@@ -7,7 +7,13 @@ import ReactTestUtils from 'react-dom/test-utils';
 import authState from '../../../../__mocks__/authstate';
 import { Context } from '../../../../containers/Provider/AuthStateProvider';
 import LeadEvents from '../Components/LeadEvents';
-import { UserMeetingsQuery, UserEventsQuery } from '../graphql/queries';
+import {
+  UserMeetingsQuery,
+  UserEventsQuery,
+  DealDetailsQuery,
+  LeadInvestmentsQuery,
+  InvestmentStatsQuery
+} from '../graphql/queries';
 import { LeadDetailsQuery } from '../../../../graphql/queries';
 import CreateEvent from '../graphql/mutations';
 import MockedThemeProvider from '../../../__mocks__/mock_theme';
@@ -118,6 +124,65 @@ describe('LeadEvents Page', () => {
               actingUser: {
                 name: 'Daniel Mutuba'
               }
+            }
+          ]
+        }
+      }
+    },
+    {
+      request: {
+        query: DealDetailsQuery,
+        variables: { userId: 'c96f64bb-e3b4-42ff-b6a9-66889ec79e99' }
+      },
+      result: {
+        data: {
+          dealDetails: [
+            {
+              id: 'c96f64bb-e3b4-42ff-b6a9-66889ec79e9990099',
+              name: 'Tilisi run 2022',
+              dealSize: '$40000000',
+              investmentTarget: '$20000',
+              createdAt: new Date(),
+              actingUser: {
+                name: 'Daniel Mutuba'
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      request: {
+        query: LeadInvestmentsQuery,
+        variables: { userId: 'c96f64bb-e3b4-42ff-b6a9-66889ec79e99' }
+      },
+      result: {
+        data: {
+          leadInvestments: [
+            {
+              id: 'c96f64bb-e3b4-42ff-b6a9-66889ec79e9990099',
+              name: 'Tilisi run 2022',
+              amount: '$4000',
+              createdAt: new Date(),
+              actingUser: {
+                name: 'Daniel Mutuba'
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      request: {
+        query: InvestmentStatsQuery,
+        variables: { userId: 'c96f64bb-e3b4-42ff-b6a9-66889ec79e99' }
+      },
+      result: {
+        data: {
+          investmentStats: [
+            {
+              percentage_of_target_used: '0.000454',
+              total_spent: '$1500'
             }
           ]
         }

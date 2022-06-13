@@ -782,7 +782,7 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
               handleClick={handleSubmitInvestmentSize}
               disabled={!amount.trim()}
               disableElevation
-              testId="add-meeting-button"
+              testId="add-investment-button"
             />
           </Grid>
         </Grid>
