@@ -23,6 +23,10 @@ module Labels
 
     default_scope { where.not(status: 'deleted') }
 
+    validates :short_desc, presence: true,
+                           uniqueness: { scope: :community_id }, if: -> { grouping_name.blank? }
+    validates :short_desc, presence: true, uniqueness: { scope: %i[grouping_name community_id] }
+
     # Labels with associated users count.
     #
     # @param community_id [String]

@@ -25,13 +25,18 @@ module Mutations
       end
 
       def create_user_label(user, label_ids)
-        new_labels = label_ids - user.user_labels.pluck(:label_id)
-        return [] if new_labels.empty?
+        new_label_ids = label_ids - user.user_labels.pluck(:label_id)
+        return [] if new_label_ids.empty?
 
-        label_records = user.user_labels.create!(new_labels.map { |val| { label_id: val } })
-        raise GraphQL::ExecutionError, label.errors.full_messages if label_records.nil?
+        unassociated_label_ids = []
+        label_records = generate_user_labels(user, new_label_ids, unassociated_label_ids)
 
-        label_records
+        return label_records if unassociated_label_ids.empty?
+
+        label_titles = context[:site_community].labels.where(id: unassociated_label_ids)
+                                               .pluck(:short_desc)
+
+        raise_error_message(I18n.t('errors.user_label.exists', title: label_titles.join(', ')))
       end
 
       def list_of_user_ids(query, limit)
@@ -44,6 +49,19 @@ module Mutations
                 end
 
         users.order(name: :asc).limit(limit).pluck(:id).uniq
+      end
+
+      def generate_user_labels(user, new_label_ids, unassociated_label_ids)
+        user_labels = []
+        new_label_ids.each do |new_label_id|
+          user_label = user.user_labels.create(label_id: new_label_id)
+          if user_label.persisted?
+            user_labels.push(user_label)
+          else
+            unassociated_label_ids.push(new_label_id)
+          end
+        end
+        user_labels
       end
 
       # Verifies if current user is admin or not.
