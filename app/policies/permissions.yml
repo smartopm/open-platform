@@ -295,6 +295,13 @@ admin:
       - can_see_menu_item
       - can_access_messages
       - can_access_user_messages
+  amenity:
+    permissions:
+      - can_create_amenity
+      - can_access_amenities
+      - can_edit_amenities
+      - can_delete_amenities
+
 contractor:
   note:
     permissions:
@@ -432,7 +439,7 @@ custodian:
   transaction:
     permission:
       - can_make_payment
-      - can_see_menu_item 
+      - can_see_menu_item
   logout:
     permissions:
       - can_see_menu_item
@@ -568,8 +575,8 @@ site_worker:
       - can_get_users_lite
   transaction:
     permission:
-      - can_make_payment 
-      - can_see_menu_item 
+      - can_make_payment
+      - can_see_menu_item
 visitor:
   note:
     permissions:
@@ -605,7 +612,7 @@ visitor:
   transaction:
     permission:
       - can_make_payment
-      - can_see_menu_item  
+      - can_see_menu_item
 resident:
   gate_access:
     permissions:
@@ -670,7 +677,10 @@ resident:
   transaction:
     permission:
       - can_make_payment
-      - can_see_menu_item  
+      - can_see_menu_item
+  amenity:
+    permissions:
+      - can_access_amenities
 prospective_client:
   note:
     permissions:
@@ -709,7 +719,10 @@ prospective_client:
   transaction:
     permission:
       - can_make_payment
-      - can_see_menu_item  
+      - can_see_menu_item
+  amenity:
+    permissions:
+      - can_access_amenities
 client:
   gate_access:
     permissions:
@@ -770,7 +783,10 @@ client:
   transaction:
     permission:
       - can_make_payment
-      - can_see_menu_item  
+      - can_see_menu_item
+  amenity:
+    permissions:
+      - can_access_amenities
 site_manager:
   gate_access:
     permissions:
@@ -828,7 +844,10 @@ site_manager:
   transaction:
     permission:
       - can_make_payment
-      - can_see_menu_item  
+      - can_see_menu_item
+  amenity:
+    permissions:
+      - can_access_amenities
 marketing_manager:
   forms:
     permissions:
@@ -919,7 +938,10 @@ marketing_manager:
   transaction:
     permission:
       - can_make_payment
-      - can_see_menu_item  
+      - can_see_menu_item
+  amenity:
+    permissions:
+      - can_access_amenities
 public_user:
   forms:
     permissions:
