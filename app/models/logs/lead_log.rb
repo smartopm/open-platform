@@ -65,7 +65,7 @@ module Logs
       return if deal_details_log.nil?
 
       total_spent = user.lead_logs.investment.sum(:amount)
-      investment_target = (deal_details_log.investment_target * deal_details_log.deal_size) / 100
+      investment_target = deal_details_log.investment_target
       total_spent > investment_target ? ['Over Target', RED_COLOR] : ['On Target', GREEN_COLOR]
     end
   end

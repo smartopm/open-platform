@@ -35,7 +35,6 @@ RSpec.describe Types::Queries::Label do
     end
 
     let(:lead) { create(:lead, community: community, lead_status: 'Site Visit', division: 'China') }
-
     let(:labels_query) do
       %(query {
             labels {
