@@ -12,6 +12,7 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import OutlinedInput from '@mui/material/OutlinedInput';
+import InputAdornment from '@mui/material/InputAdornment';
 import CreateEvent from '../graphql/mutations';
 import { dateToString } from '../../../../components/DateContainer';
 import {
@@ -277,70 +278,7 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
         handleClose={() => setMessage({ ...message, detail: '' })}
       />
 
-      {/* <Grid container> */}
-      {/* <Grid item md={12} xs={12}> */}
       {communityDivisionTargets && communityDivisionTargets?.length >= 2 ? (
-        // <Grid container spacing={1}>
-        //   <Grid item md={12} xs={12}>
-        //     <Typography variant="h6" data-testid="division">
-        //       {t('lead_management.division')}
-        //     </Typography>
-        //   </Grid>
-
-        //   <Grid item md={12} xs={12}>
-        //     <Grid
-        //       container
-        //       spacing={2}
-        //       style={{
-        //         display: 'flex',
-        //         alignItems: 'center'
-        //         // paddingTop: 10
-        //       }}
-        //     >
-        //       <Grid md={6} xs={12}>
-        //         <Typography variant="body2" data-testid="division_header">
-        //           {t('lead_management.division_header')}
-        //         </Typography>
-        //       </Grid>
-        //       <Grid md={6} xs={12}>
-        //         <Grid container spacing={2}>
-        //           <Grid item md={10} xs={10}>
-        //             <FormControl fullWidth size="small">
-        //               <InputLabel id="division">{t('lead_management.set_division')}</InputLabel>
-        //               <Select
-        //                 labelId="demo-multiple-name-label"
-        //                 id="division"
-        //                 name="division"
-        //                 value={leadFormData?.user?.division || ''}
-        //                 onChange={handleDivisionChange}
-        //                 input={<OutlinedInput label={t('lead_management.set_division')} />}
-        //                 MenuProps={MenuProps}
-        //               >
-        //                 <MenuItem value="" />
-        //                 {communityDivisionTargets.map(targetObject => (
-        //                   <MenuItem key={targetObject.division} value={targetObject.division}>
-        //                     {targetObject.division}
-        //                   </MenuItem>
-        //                 ))}
-        //               </Select>
-        //             </FormControl>
-        //           </Grid>
-        //           <Grid item md={2} xs={2}>
-        //             <ButtonComponent
-        //               variant="contained"
-        //               color="primary"
-        //               fullWidth
-        //               buttonText={t('lead_management.add')}
-        //               handleClick={handleSubmitDivision}
-        //               disabled={disabled}
-        //               disableElevation
-        //             />
-        //           </Grid>
-        //         </Grid>
-        //       </Grid>
-        //     </Grid>
-        //   </Grid>
-        // </Grid>
         <Grid container>
           <Grid item md={12} xs={12}>
             <Grid item md={12} xs={12}>
@@ -364,25 +302,28 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
                 </Grid>
 
                 <Grid item md={6} xs={12}>
-                  <Grid container spacing={2}>
+                  <Grid container>
                     <Grid item md={10} xs={9}>
-                      <TextField
-                        name="eventName"
-                        label={t('lead_management.event_name')}
-                        style={{ width: '100%' }}
-                        onChange={handleEventNameChange}
-                        value={eventName || ''}
-                        variant="outlined"
-                        fullWidth
-                        size="small"
-                        margin="normal"
-                        required
-                        inputProps={{
-                          'aria-label': t('lead_management.event_name'),
-                          style: { fontSize: '15px' }
-                        }}
-                        InputLabelProps={{ style: { fontSize: '12px' } }}
-                      />
+                      <FormControl fullWidth size="small">
+                        <InputLabel id="division">{t('lead_management.set_division')}</InputLabel>
+                        <Select
+                          labelId="demo-multiple-name-label"
+                          id="division"
+                          name="division"
+                          style={{ width: '90%' }}
+                          value={leadFormData?.user?.division || ''}
+                          onChange={handleDivisionChange}
+                          input={<OutlinedInput label={t('lead_management.set_division')} />}
+                          MenuProps={MenuProps}
+                        >
+                          <MenuItem value="" />
+                          {communityDivisionTargets.map(targetObject => (
+                            <MenuItem key={targetObject.division} value={targetObject.division}>
+                              {targetObject.division}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
                     </Grid>
 
                     <Grid
@@ -390,7 +331,6 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
                       md={2}
                       xs={2}
                       style={{
-                        paddingTop: '25px',
                         justifyContent: 'flex-end'
                       }}
                     >
@@ -399,15 +339,12 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
                         variant="contained"
                         color="primary"
                         buttonText={t('lead_management.add')}
-                        handleClick={handleSubmitEvent}
+                        handleClick={handleSubmitDivision}
                         disabled={!eventName.trim()}
                         disableElevation
                       />
                     </Grid>
                   </Grid>
-                  {/* <Typography variant="body2" data-testid="division_header">
-                    {t('lead_management.division_header')}
-                  </Typography> */}
                 </Grid>
               </Grid>
             </Grid>
@@ -432,8 +369,6 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
           </Grid>
         </Grid>
       )}
-      {/* </Grid> */}
-      {/* </Grid> */}
 
       <Grid item md={12} xs={12} style={{ marginBottom: '10px', marginTop: '10px' }}>
         <Divider />
@@ -458,7 +393,7 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
                 alignItems: 'center'
               }}
             >
-              <Grid item md={10} xs={9}>
+              <Grid item md={11} xs={10}>
                 <TextField
                   name="eventName"
                   label={t('lead_management.event_name')}
@@ -480,8 +415,8 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
 
               <Grid
                 item
-                md={2}
-                xs={2}
+                md={1}
+                xs={1}
                 style={{
                   paddingTop: '25px',
                   justifyContent: 'flex-end'
@@ -546,7 +481,7 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
               alignItems: 'center'
             }}
           >
-            <Grid item md={10} xs={9}>
+            <Grid item md={11} xs={10}>
               <TextField
                 name="meetingName"
                 label={t('lead_management.meeting_name')}
@@ -568,8 +503,8 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
 
             <Grid
               item
-              md={2}
-              xs={2}
+              md={1}
+              xs={1}
               style={{
                 paddingTop: '25px'
               }}
@@ -577,6 +512,7 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
               <ButtonComponent
                 variant="contained"
                 color="primary"
+                fullWidth
                 buttonText={t('lead_management.add')}
                 handleClick={handleSubmitMeeting}
                 disabled={!meetingName.trim()}
@@ -614,15 +550,17 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
 
       <Grid container>
         <Grid item md={12} xs={12} style={{ marginBottom: '40px' }}>
-          <Typography variant="h6" data-testid="investment">
-            {t('lead_management.investment')}
-          </Typography>
+          <Grid item md={12} xs={12}>
+            <Typography variant="h6" data-testid="investment">
+              {t('lead_management.investment')}
+            </Typography>
 
-          <Typography variant="body2" data-testid="investment_header">
-            {t('lead_management.investment_header')}
-          </Typography>
+            <Typography variant="body2" data-testid="investment_header">
+              {t('lead_management.investment_header')}
+            </Typography>
+          </Grid>
         </Grid>
-        {/* <br /> */}
+
         <Grid item md={12} xs={12}>
           <Grid container spacing={2}>
             <Grid item md={6} xs={5}>
@@ -660,15 +598,14 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
               size="small"
               margin="normal"
               required
-              inputProps={{
-                'aria-label': t('lead_management.deal_size'),
-                style: { fontSize: '15px' }
+              InputProps={{
+                startAdornment: <InputAdornment position="start">$</InputAdornment>
               }}
               InputLabelProps={{ style: { fontSize: '12px' } }}
             />
           </Grid>
 
-          <Grid item md={5} xs={9}>
+          <Grid item md={6} xs={10}>
             <TextField
               name="investmentTarget"
               label={t('lead_management.investment_target')}
@@ -681,17 +618,16 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
               size="small"
               margin="normal"
               required
-              inputProps={{
-                'aria-label': t('lead_management.investment_target'),
-                style: { fontSize: '15px' }
+              InputProps={{
+                startAdornment: <InputAdornment position="start">$</InputAdornment>
               }}
               InputLabelProps={{ style: { fontSize: '12px' } }}
             />
           </Grid>
           <Grid
             item
-            md={2}
-            xs={2}
+            md={1}
+            xs={1}
             style={{
               paddingTop: '32px'
             }}
@@ -699,6 +635,7 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
             <ButtonComponent
               variant="contained"
               color="primary"
+              fullWidth
               buttonText={t('lead_management.add')}
               handleClick={handleSubmitInvestment}
               disabled={!investmentTarget.trim() && !dealSize.trim()}
@@ -731,17 +668,26 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
                           alignItems: 'center'
                         }}
                       >
-                        <Grid item md={5} xs={12}>
+                        <Grid item md={3} xs={12}>
                           <Typography variant="body2" data-testid="event-name">
                             {dealDetails?.dealSize}
                           </Typography>
                         </Grid>
-                        <Grid item md={3} xs={12}>
+
+                        <Grid item md={4} xs={12} style={{ textAlign: !mobile && 'right' }}>
+                          <Typography variant="body2" data-testid="event-created-by">
+                            {`${t('lead_management.investment_target_value')}  ${
+                              dealDetails?.investmentTarget
+                            }`}
+                          </Typography>
+                        </Grid>
+
+                        <Grid item md={2} xs={12} style={{ textAlign: !mobile && 'right' }}>
                           <Typography variant="body2" data-testid="event-date">
                             {dateToString(dealDetails?.createdAt)}
                           </Typography>
                         </Grid>
-                        <Grid item md={4} xs={12}>
+                        <Grid item md={3} xs={12} style={{ textAlign: !mobile && 'right' }}>
                           <Typography variant="body2" data-testid="event-created-by">
                             {`${t('lead_management.entered_by')}  ${dealDetails?.actingUser?.name}`}
                           </Typography>
@@ -801,7 +747,7 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
             />
           </Grid>
 
-          <Grid item md={5} xs={9}>
+          <Grid item md={6} xs={10}>
             <TextField
               name="amount"
               label={t('lead_management.amount')}
@@ -809,21 +755,21 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
               onChange={handleAmountChange}
               value={amount || ''}
               variant="outlined"
+              id="outlined-start-adornment"
               fullWidth
               size="small"
               margin="normal"
               required
-              inputProps={{
-                'aria-label': t('lead_management.amount'),
-                style: { fontSize: '15px' }
+              InputProps={{
+                startAdornment: <InputAdornment position="start">$</InputAdornment>
               }}
               InputLabelProps={{ style: { fontSize: '12px' } }}
             />
           </Grid>
           <Grid
             item
-            md={2}
-            xs={2}
+            md={1}
+            xs={1}
             style={{
               paddingTop: '32px'
             }}
@@ -831,6 +777,7 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
             <ButtonComponent
               variant="contained"
               color="primary"
+              fullWidth
               buttonText={t('lead_management.add')}
               handleClick={handleSubmitInvestmentSize}
               disabled={!amount.trim()}
@@ -868,17 +815,17 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
                             {leadInvestment?.amount}
                           </Typography>
                         </Grid>
-                        <Grid item md={3} xs={12}>
+                        <Grid item md={4} xs={12}>
                           <Typography variant="body2" data-testid="event-name">
                             {leadInvestment?.name}
                           </Typography>
                         </Grid>
-                        <Grid item md={3} xs={12}>
+                        <Grid item md={2} xs={12} style={{ textAlign: !mobile && 'right' }}>
                           <Typography variant="body2" data-testid="event-date">
                             {dateToString(leadInvestment?.createdAt)}
                           </Typography>
                         </Grid>
-                        <Grid item md={4} xs={12}>
+                        <Grid item md={4} xs={12} style={{ textAlign: !mobile && 'right' }}>
                           <Typography variant="body2" data-testid="event-created-by">
                             {`${t('lead_management.entered_by')}  ${
                               leadInvestment?.actingUser?.name

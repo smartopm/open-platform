@@ -31,6 +31,7 @@ export const DealDetailsQuery = gql`
     dealDetails(userId: $userId) {
       id
       dealSize
+      investmentTarget
       actingUser {
         name
       }

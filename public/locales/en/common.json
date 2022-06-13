@@ -619,6 +619,7 @@
     "deal_details": "Deal Details",
     "deal_size": "Deal Size",
     "investment_target": "Investment Target",
+    "investment_target_value": "Investment Target: ",
     "description": "Description",
     "amount": "Amount",
     "deal_details_header": "Amount of revenue the deal is worth",
