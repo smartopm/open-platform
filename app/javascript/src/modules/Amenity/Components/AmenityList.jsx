@@ -33,7 +33,7 @@ export default function AmenityList() {
           id="account-name"
           label="Amenity Name"
           defaultValue=""
-        //   onChange={event => setInputValue({ ...inputValue, accountName: event.target.value })}
+          //   onChange={event => setInputValue({ ...inputValue, accountName: event.target.value })}
           inputProps={{ 'data-testid': 'account_name' }}
           required
           fullWidth
@@ -83,7 +83,7 @@ export default function AmenityList() {
                 <Grid item xs={12} sm={6} md={4} lg={3} key={i}>
                   <AmenityItem amenity={amenity} />
                 </Grid>
-            ))}
+              ))}
             </Grid>
           </Grid>
           <Grid item xs={1}>
