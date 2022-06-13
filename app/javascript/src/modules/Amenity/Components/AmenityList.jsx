@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Container, Grid } from '@mui/material';
-
+import { useQuery } from 'react-apollo';
 import AmenityItem from './AmenityItem';
 import SpeedDialButton from '../../../shared/buttons/SpeedDial';
 import AmenityForm from './AmenityForm';
+import { AmenitiesQuery } from '../graphql/amenity_queries';
 
 const amenity = {
   title: 'Hello',
@@ -13,7 +14,8 @@ const amenity = {
 };
 export default function AmenityList() {
   const [open, setOpen] = useState(false);
-  const refetch = () => {};
+  const { refetch } = useQuery(AmenitiesQuery);
+
   return (
     <>
       <AmenityForm isOpen={open} setOpen={setOpen} refetch={refetch} />
