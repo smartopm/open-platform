@@ -10,6 +10,7 @@ export default function ButtonComponent({
   disabled,
   disableElevation,
   size,
+  fullWidth,
   testId,
   ...otherProps
 }) {
@@ -20,6 +21,7 @@ export default function ButtonComponent({
         variant={variant}
         color={color}
         size={size}
+        fullWidth={fullWidth}
         disabled={disabled}
         disableElevation={disableElevation}
         role="button"
@@ -38,6 +40,7 @@ ButtonComponent.defaultProps = {
   color: 'default',
   disabled: false,
   disableElevation: true,
+  fullWidth: false,
   testId: 'button'
 };
 
@@ -49,5 +52,6 @@ ButtonComponent.propTypes = {
   size: PropTypes.string,
   testId: PropTypes.string,
   disabled: PropTypes.bool,
+  fullWidth: PropTypes.bool,
   disableElevation: PropTypes.bool
 };

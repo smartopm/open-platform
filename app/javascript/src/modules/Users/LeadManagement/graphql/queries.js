@@ -30,7 +30,7 @@ export const DealDetailsQuery = gql`
   query dealDetails($userId: ID!) {
     dealDetails(userId: $userId) {
       id
-      amount
+      dealSize
       actingUser {
         name
       }
