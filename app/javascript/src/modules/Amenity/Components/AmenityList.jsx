@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Container, Grid, TextField } from '@mui/material';
+import { Container, Grid } from '@mui/material';
 
 import AmenityItem from './AmenityItem';
 import SpeedDialButton from '../../../shared/buttons/SpeedDial';
-import { CustomizedDialogs as CustomizedDialog } from '../../../components/Dialog';
+import AmenityForm from './AmenityForm';
 
 const amenity = {
   title: 'Hello',
@@ -13,68 +13,10 @@ const amenity = {
 };
 export default function AmenityList() {
   const [open, setOpen] = useState(false);
-
-  function handleSaveInfo() {
-    console.log('saving amenity');
-  }
+  const refetch = () => {};
   return (
     <>
-      <CustomizedDialog
-        open={open}
-        handleModal={() => setOpen(!open)}
-        dialogHeader="Configure Amenity"
-        displaySaveButton
-        handleBatchFilter={handleSaveInfo}
-        maxWidth="sm"
-        fullWidth
-      >
-        <TextField
-          margin="normal"
-          id="account-name"
-          label="Amenity Name"
-          defaultValue=""
-          //   onChange={event => setInputValue({ ...inputValue, accountName: event.target.value })}
-          inputProps={{ 'data-testid': 'account_name' }}
-          required
-          fullWidth
-        />
-        <TextField
-          margin="normal"
-          id="account-name"
-          label="Description"
-          defaultValue=""
-          inputProps={{ 'data-testid': 'account_name' }}
-          required
-          fullWidth
-        />
-        <TextField
-          margin="normal"
-          id="account-name"
-          label="Location"
-          defaultValue=""
-          inputProps={{ 'data-testid': 'account_name' }}
-          required
-          fullWidth
-        />
-        <TextField
-          margin="normal"
-          id="account-name"
-          label="Hours"
-          defaultValue=""
-          inputProps={{ 'data-testid': 'account_name' }}
-          required
-          fullWidth
-        />
-        <TextField
-          margin="normal"
-          id="account-name"
-          label="Calendly Link"
-          defaultValue=""
-          inputProps={{ 'data-testid': 'account_name' }}
-          required
-          fullWidth
-        />
-      </CustomizedDialog>
+      <AmenityForm isOpen={open} setOpen={setOpen} refetch={refetch} />
       <Container maxWidth="lg">
         <Grid container direction="row">
           <Grid item xs={11}>
