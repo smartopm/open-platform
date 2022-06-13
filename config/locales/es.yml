@@ -468,6 +468,11 @@ es:
     unauthorized: No autorizado
     user_form_property:
       not_found: Formulario de usuario de propiedad  no encontrada
+    user_label:
+      exists: Las etiquetas %{title} no se pueden asociar.
+      lead:
+        already_exist: Ya existe una etiqueta con el nombre de la agrupación.
+        reserved: Etiqueta reservada
     user:
       cannot_access_app: No tienes acceso a la aplicación
       cannot_send_message: No hay número de teléfono para enviar mensaje
