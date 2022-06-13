@@ -5,13 +5,8 @@ import AmenityItem from './AmenityItem';
 import SpeedDialButton from '../../../shared/buttons/SpeedDial';
 import AmenityForm from './AmenityForm';
 import { AmenitiesQuery } from '../graphql/amenity_queries';
+import { Spinner } from '../../../shared/Loading';
 
-// const amenity = {
-//   title: 'Hello',
-//   description: 'Description',
-//   location: '20 Street, Lsk',
-//   hours: '20:00'
-// };
 export default function AmenityList() {
   const [open, setOpen] = useState(false);
   const { refetch, data, loading } = useQuery(AmenitiesQuery);
@@ -23,11 +18,15 @@ export default function AmenityList() {
         <Grid container direction="row">
           <Grid item xs={11}>
             <Grid container spacing={2} direction="row">
-              {data?.amenities.map(amenity => (
-                <Grid item xs={12} sm={6} md={4} lg={3} key={amenity.id}>
-                  <AmenityItem amenity={amenity} />
-                </Grid>
-              ))}
+              {loading && !data ? (
+                <Spinner />
+              ) : (
+                data?.amenities.map(amenity => (
+                  <Grid item xs={12} sm={6} md={4} lg={3} key={amenity.id}>
+                    <AmenityItem amenity={amenity} />
+                  </Grid>
+                ))
+              )}
             </Grid>
           </Grid>
           <Grid item xs={1}>

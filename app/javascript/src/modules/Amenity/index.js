@@ -1,19 +1,22 @@
-// import React from 'react'
-// import AccessCheck from '../Permissions/Components/AccessCheck';
+import React from 'react';
+import AccessCheck from '../Permissions/Components/AccessCheck';
 import AmenityList from './Components/AmenityList';
 
-// const business = { module: 'amenity' }
-
-// const businessPermissions = ['can_access_amenity'];
-
+export function RenderAmenities() {
+  return (
+    <AccessCheck module="amenity" allowedPermissions={['can_access_amenities']}>
+      <AmenityList />
+    </AccessCheck>
+  );
+}
 
 export default {
   routeProps: {
     path: '/amenities',
-    component: AmenityList
+    component: RenderAmenities
   },
   name: t => t('misc.amenity', { count: 0 }),
   featureName: 'Business',
-  moduleName: "business",
+  moduleName: 'business',
   accessibleBy: []
 };

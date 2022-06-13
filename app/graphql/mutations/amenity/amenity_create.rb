@@ -2,7 +2,7 @@
 
 module Mutations
   module Amenity
-    # Create transactionlog
+    # Create Amenity
     class AmenityCreate < BaseMutation
       argument :name, String, required: true
       argument :description, String, required: false
