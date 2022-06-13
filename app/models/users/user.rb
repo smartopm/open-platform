@@ -148,6 +148,7 @@ module Users
                         dependent: :destroy
     has_many :lead_logs, class_name: 'Logs::LeadLog', dependent: :destroy
     has_many :transaction_logs, class_name: 'Payments::TransactionLog', dependent: :destroy
+    has_many :amenities, dependent: :destroy
 
     # rubocop:enable Rails/InverseOf
     has_one_attached :avatar

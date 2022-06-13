@@ -29,7 +29,7 @@ export default function AmenityForm({ isOpen, setOpen, refetch }) {
   });
   function handleUpdateFields(event) {
     const { name, value } = event.target;
-    setAmenityValue({ [name]: value });
+    setAmenityValue({ ...amenityValue, [name]: value });
   }
 
   function handleSaveInfo() {
@@ -48,6 +48,8 @@ export default function AmenityForm({ isOpen, setOpen, refetch }) {
           message: 'all went well'
         });
         refetch();
+        setOpen(!isOpen);
+        setAmenityValue(initialInputValue);
       })
       .catch(err => {
         setAmenityStatus({

@@ -3,6 +3,7 @@
 module Types
   # AmenityType
   class AmenityType < Types::BaseObject
+    field :id, ID, null: true
     field :name, String, null: true
     field :description, String, null: true
     field :location, String, null: true

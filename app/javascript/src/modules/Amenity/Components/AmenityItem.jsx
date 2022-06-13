@@ -4,11 +4,11 @@ import CardWrapper from '../../../shared/CardWrapper';
 
 export default function AmenityItem({ amenity }) {
   return (
-    <CardWrapper title={amenity.title} displayButton={false}>
+    <CardWrapper title={amenity.name} displayButton={false}>
       {`Description: ${amenity.description}`}
-      {`Location: ${amenity.location}`} 
+      {`Location: ${amenity.location}`}
       <br />
-      {`Hours: ${amenity.hours}`} 
+      {`Hours: ${amenity.hours}`}
       <br />
     </CardWrapper>
   );
@@ -16,7 +16,7 @@ export default function AmenityItem({ amenity }) {
 
 AmenityItem.propTypes = {
   amenity: PropTypes.shape({
-    title: PropTypes.string,
+    name: PropTypes.string,
     description: PropTypes.string,
     location: PropTypes.string,
     hours: PropTypes.string
