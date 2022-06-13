@@ -206,12 +206,11 @@ module Types::Queries::LeadLog
   def deal_details(user_id:, offset: 0, limit: 3)
     validate_authorization(:lead_log, :can_fetch_lead_logs)
 
-    result = context[:site_community].lead_logs.where(user_id: user_id)
+    context[:site_community].lead_logs.where(user_id: user_id)
                             .deal_details
                             .offset(offset)
                             .limit(limit)
                             .ordered
-    result
   end
 
   def percentage_of_target_used(total_spent, lead_log)
