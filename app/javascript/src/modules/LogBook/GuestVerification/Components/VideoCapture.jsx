@@ -152,7 +152,7 @@ export default function VideoCapture() {
             </Button>
           )}
           {!requestContext.isGuestRequest && !requestContext.request.isEdit && (
-            <AccessCheck module="entry_request" allowedPermissions={['can_grant_entry']}>
+            <AccessCheck module="entry_request" allowedPermissions={['can_grant_entry']} show404ForUnauthorized={false}>
               <Button
                 onClick={requestContext.grantAccess}
                 color="primary"
@@ -165,7 +165,7 @@ export default function VideoCapture() {
             </AccessCheck>
           )}
           {requestContext.request.isEdit && (
-            <AccessCheck module="entry_request" allowedPermissions={['can_update_entry_request']}>
+            <AccessCheck module="entry_request" allowedPermissions={['can_update_entry_request']} show404ForUnauthorized={false}>
               <Button
                 onClick={() => setRetakeVideo(true)}
                 color="primary"

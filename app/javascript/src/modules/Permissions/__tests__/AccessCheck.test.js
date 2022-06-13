@@ -32,7 +32,7 @@ describe('Permissions check', () => {
     render(
       <Context.Provider value={authState}>
         <BrowserRouter>
-          <AccessCheck module='note' allowedPermissions={['not_allowed', 'cant_see']}>
+          <AccessCheck module='note' allowedPermissions={['not_allowed', 'cant_see']} show404ForUnauthorized={false}>
             <h1>Test Component</h1>
           </AccessCheck>
         </BrowserRouter>
@@ -46,7 +46,7 @@ describe('Permissions check', () => {
     render(
       <Context.Provider value={authState}>
         <BrowserRouter>
-          <AccessCheck module='note' allowedPermissions={['can_get_user_tasks', 'missing_permission']}>
+          <AccessCheck module='note' allowedPermissions={['can_get_user_tasks', 'missing_permission']} show404ForUnauthorized={false}>
             <h1>Test Component</h1>
           </AccessCheck>
         </BrowserRouter>

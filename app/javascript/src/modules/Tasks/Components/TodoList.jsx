@@ -583,7 +583,7 @@ export default function TodoList({
             </CenteredContent>
           </div>
         )}
-        <AccessCheck module="note" allowedPermissions={['can_view_create_task_button']}>
+        <AccessCheck module="note" allowedPermissions={['can_view_create_task_button']} show404ForUnauthorized={false}>
           <FloatingButton
             variant="extended"
             handleClick={openModal}

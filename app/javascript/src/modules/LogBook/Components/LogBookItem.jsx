@@ -287,7 +287,7 @@ export default function LogBookItem({ router, offset, tabValue, handleTabValue }
             </Grid>
           </Grid>
           <TabPanel pad value={tabValue} index={0}>
-            <AccessCheck module="event_log" allowedPermissions={['can_download_logbook_events']}>
+            <AccessCheck module="event_log" allowedPermissions={['can_download_logbook_events']} show404ForUnauthorized={false}>
               <GateFlowReport />
               <br />
               <Divider />

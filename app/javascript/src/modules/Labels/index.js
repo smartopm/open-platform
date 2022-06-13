@@ -4,6 +4,7 @@ import Labels from './Containers/Labels';
 import AccessCheck from '../Permissions/Components/AccessCheck';
 
 const labelPermissions = ['can_fetch_all_labels'];
+// const labelPermissions = ['can_sing'];
 const currentModule = 'label';
 
 function RenderLabels() {

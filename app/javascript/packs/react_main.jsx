@@ -151,6 +151,8 @@ const Analytics = props => {
   return props.children;
 };
 
+const NotFound = () => <p>Not Found</p>
+
 const App = () => {
   const classes = useStyles();
   return (
@@ -161,6 +163,7 @@ const App = () => {
     >
       <ApolloProvider>
         <Router history={history}>
+          <Switch>
           <AuthStateProvider>
             <Analytics>
               <I18Initializer
@@ -436,7 +439,9 @@ const App = () => {
                                             path="/processes/:id/comments"
                                             component={ProcessCommentsPage}
                                           />
+                                          {/* TODO: Should deprecate ?*/}
                                           <Route path="/showroom_logs" component={ShowroomLogs} />
+                                          {/* TODO: Should deprecate ?*/}
                                           <Route path="/notes" component={AllNotes} />
                                           <Route
                                             exact
@@ -449,19 +454,22 @@ const App = () => {
                                             exact
                                             path="/todo"
                                             render={() => <Redirect to="/tasks" />}
-                                          />
+                                            />
+                                            {/* TODO: Should deprecate ?*/}
                                           <Route path="/feedbacks" component={FeedbackPage} />
                                           <Route path="/event_logs" component={EventLogs} />
+                                            {/* TODO: Should deprecate ?*/}
                                           <Route path="/comments" exact component={CommentsPage} />
                                         </Switch>
                                       </AdminRoutes>
                                       {/* we will also need a not found page for non-logged in user */}
                                       {/* if you are going to move this to another line carry it like an egg */}
-                                      <Route
-                                        render={() => (
-                                          <ErrorPage title="Sorry!! We couldn't find this page" />
-                                        )}
-                                      />
+                                      {/* <Route
+                                        // render={() => (
+                                        //   <ErrorPage title="Sorry!! We couldn't find this page" />
+                                        // )}
+                                        component={NotFound}
+                                      /> */}
                                     </Switch>
                                   </div>
                                 </>
@@ -473,9 +481,11 @@ const App = () => {
                     </ThemeProvider>
                   </StyledEngineProvider>
                 )}
-              />
+                />
             </Analytics>
           </AuthStateProvider>
+            <Route component={NotFound}/>
+          </Switch>
         </Router>
       </ApolloProvider>
     </Suspense>

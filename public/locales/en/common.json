@@ -642,5 +642,10 @@
     "video": "Video",
     "pdf": "PDF",
     "compressed_file": "Zipped file"
+  },
+  "404": {
+    "404": "404",
+    "oops": "Oops. Looks like we can't find your page.",
+    "action_text": "Go To Dashboard"
   }
 }

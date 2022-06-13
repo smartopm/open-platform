@@ -96,7 +96,7 @@ export default function TaskLists() {
           handlePageChange={paginate}
         />
       </CenteredContent>
-      <AccessCheck module="note" allowedPermissions={['can_view_create_task_button']}>
+      <AccessCheck module="note" allowedPermissions={['can_view_create_task_button']} show404ForUnauthorized={false}>
         <FloatingButton
           variant="extended"
           handleClick={redirectToTaskListCreatePage}

@@ -8,6 +8,7 @@ import { css, StyleSheet } from 'aphrodite'
  * @deprecated This will break the whole page. Prefer to render error within child component
  */
 export default function ErrorPage({ title }) {
+  console.log({ title })
   return (
     <div className={` ${css(styles.errorPage)}`}>
       <div className="container ">
