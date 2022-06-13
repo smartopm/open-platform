@@ -340,7 +340,7 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
                         color="primary"
                         buttonText={t('lead_management.add')}
                         handleClick={handleSubmitDivision}
-                        disabled={!eventName.trim()}
+                        disabled={disabled}
                         disableElevation
                       />
                     </Grid>
