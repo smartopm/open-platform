@@ -222,6 +222,5 @@ module Types::Queries::LeadLog
   def valid_lead_divisions
     context[:site_community].lead_monthly_targets&.map { |data| data['division'] }
   end
-
 end
 # rubocop:enable Metrics/ModuleLength
