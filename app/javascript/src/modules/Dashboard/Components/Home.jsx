@@ -38,39 +38,35 @@ const Home = () => {
   if (!authState.loggedIn) return <Spinner />;
 
   return (
-    <div style={{ marginTop: '-30px' }}>
-      <Grid
-        container
-        spacing={0}
-        style={{ display: 'flex', justifyContent: 'center' }}
-        columns={{ xs: 12, md: 12 }}
-      >
-        <Grid item md={6} sm={12} xs={12} />
-        <Grid item md={6} sm={12} xs={12} style={matches ? { padding: '0 7%' } : {}}>
-          <Grid container alignItems="center">
-            <Grid
-              item
-              md={6}
-              sm={6}
-              xs={6}
-              style={matches ? { padding: '6% 0 0 4%' } : { padding: '4% 0 0 2%' }}
-            >
-              <Button
-                startIcon={<QrCode2Icon />}
-                onClick={() => history.push(`/id/${authState.user.id}`)}
-                data-testid="qr_button"
+    <div>
+      <Grid container columns={{ xs: 12, md: 12 }}>
+        {matches && (
+          <Grid item sm={12} md={12} xs={12}>
+            <Grid container alignItems="center">
+              <Grid
+                item
+                md={6}
+                sm={6}
+                xs={6}
+                style={matches ? { paddingTop: '6%' } : { paddingTop: '4%' }}
               >
-                {t('dashboard.my_qr_code')}
-              </Button>
-            </Grid>
-            <Grid item md={6} sm={6} xs={6}>
-              <LanguageToggle />
+                <Button
+                  startIcon={<QrCode2Icon />}
+                  onClick={() => history.push(`/id/${authState.user.id}`)}
+                  data-testid="qr_button"
+                >
+                  {t('dashboard.my_qr_code')}
+                </Button>
+              </Grid>
+              <Grid item md={6} sm={6} xs={6}>
+                <LanguageToggle />
+              </Grid>
             </Grid>
           </Grid>
-        </Grid>
+        )}
         <FeatureCheck features={authState.user.community.features} name="Discussions">
           {communityNewsUsers.includes(userType) && (
-            <Grid item md={6} xs={10}>
+            <Grid item md={6} xs={12}>
               <div>
                 <CommunityNews
                   userType={userType}
@@ -84,67 +80,96 @@ const Home = () => {
             </Grid>
           )}
         </FeatureCheck>
+        <Grid item md={6} sm={12} xs={12}>
+          {!matches && (
+            <Grid container alignItems="center">
+              <Grid
+                item
+                md={6}
+                sm={6}
+                xs={6}
+                style={matches ? { paddingTop: '6%' } : { paddingTop: '4%' }}
+              >
+                <Button
+                  startIcon={<QrCode2Icon />}
+                  onClick={() => history.push(`/id/${authState.user.id}`)}
+                  data-testid="qr_button"
+                >
+                  {t('dashboard.my_qr_code')}
+                </Button>
+              </Grid>
+              <Grid item md={6} sm={6} xs={6}>
+                <LanguageToggle />
+              </Grid>
+            </Grid>
+          )}
+          <>
+            {/* this is temporary fix. Need to start using permissions to display quicklinks */}
+            {authState.user.userType === 'marketing_admin' && (
+              <>
+                <QuickLinks menuItems={filteredQuickLinks} translate={t} />
+                <FeatureCheck features={authState.user.community.features} name="News">
+                  <NewsFeed wordpressEndpoint={authState.user?.community.wpLink} translate={t} />
+                </FeatureCheck>
+              </>
+            )}
+            {['admin', 'developer', 'consultant'].includes(userType) && (
+              <div>
+                {userType === 'admin' && (
+                  <FeatureCheck
+                    features={authState.user.community.features}
+                    name="Customer Journey"
+                  >
+                    <ViewCustomerJourney translate={t} />
+                  </FeatureCheck>
+                )}
 
-        <Grid item md={6} xs={10}>
-          {/* this is temporary fix. Need to start using permissions to display quicklinks */}
-          {authState.user.userType === 'marketing_admin' && (
-            <>
-              <QuickLinks menuItems={filteredQuickLinks} translate={t} />
-              <FeatureCheck features={authState.user.community.features} name="News">
-                <NewsFeed wordpressEndpoint={authState.user?.community.wpLink} translate={t} />
-              </FeatureCheck>
-            </>
-          )}
-          {['admin', 'developer', 'consultant'].includes(userType) && (
-            <div>
-              {userType === 'admin' && (
-                <FeatureCheck features={authState.user.community.features} name="Customer Journey">
-                  <ViewCustomerJourney translate={t} />
+                <QuickLinks menuItems={filteredQuickLinks} translate={t} />
+                {userType === 'admin' && (
+                  <FeatureCheck features={authState.user.community.features} name="Payments">
+                    <PaymentSummary authState={authState} translate={t} />
+                  </FeatureCheck>
+                )}
+                <br />
+                <FeatureCheck features={authState.user.community.features} name="Tasks">
+                  <TaskReminder translate={t} />
                 </FeatureCheck>
-              )}
-
-              <QuickLinks menuItems={filteredQuickLinks} translate={t} />
-              {userType === 'admin' && (
-                <FeatureCheck features={authState.user.community.features} name="Payments">
-                  <PaymentSummary authState={authState} translate={t} />
+                <FeatureCheck features={authState.user.community.features} name="News">
+                  <NewsFeed wordpressEndpoint={authState.user?.community.wpLink} translate={t} />
                 </FeatureCheck>
-              )}
-              <br />
-              <FeatureCheck features={authState.user.community.features} name="Tasks">
-                <TaskReminder translate={t} />
-              </FeatureCheck>
-              <FeatureCheck features={authState.user.community.features} name="News">
-                <NewsFeed wordpressEndpoint={authState.user?.community.wpLink} translate={t} />
-              </FeatureCheck>
-            </div>
-          )}
-          {authState.user.userType === 'client' && (
-            <div>
-              <QuickLinks menuItems={filteredQuickLinks} translate={t} />
-              {authState.user.subStatus && (
-                <FeatureCheck features={authState.user.community.features} name="Customer Journey">
-                  <CustomerJourneyStatus
-                    subStatus={authState.user.subStatus}
-                    communityName={authState.user.community.name}
-                  />
+              </div>
+            )}
+            {authState.user.userType === 'client' && (
+              <div>
+                <QuickLinks menuItems={filteredQuickLinks} translate={t} />
+                {authState.user.subStatus && (
+                  <FeatureCheck
+                    features={authState.user.community.features}
+                    name="Customer Journey"
+                  >
+                    <CustomerJourneyStatus
+                      subStatus={authState.user.subStatus}
+                      communityName={authState.user.community.name}
+                    />
+                  </FeatureCheck>
+                )}
+                <Divider style={{ marginTop: '30px' }} />
+                <FeatureCheck features={authState.user.community.features} name="Properties">
+                  <PlotDetail authState={authState.user} />
                 </FeatureCheck>
-              )}
-              <Divider style={{ marginTop: '30px' }} />
-              <FeatureCheck features={authState.user.community.features} name="Properties">
-                <PlotDetail authState={authState.user} />
-              </FeatureCheck>
-              <FeatureCheck features={authState.user.community.features} name="News">
-                <NewsFeed wordpressEndpoint={authState.user?.community.wpLink} translate={t} />
-              </FeatureCheck>
-            </div>
-          )}
-          {!['admin', 'client', 'developer', 'consultant'].includes(userType) && (
-            <Homepage authState={authState} quickLinks={filteredQuickLinks} />
-          )}
-          <SocialMediaLinks
-            data={authState.user.community.socialLinks}
-            communityName={authState.user.community.name}
-          />
+                <FeatureCheck features={authState.user.community.features} name="News">
+                  <NewsFeed wordpressEndpoint={authState.user?.community.wpLink} translate={t} />
+                </FeatureCheck>
+              </div>
+            )}
+            {!['admin', 'client', 'developer', 'consultant'].includes(userType) && (
+              <Homepage authState={authState} quickLinks={filteredQuickLinks} />
+            )}
+            <SocialMediaLinks
+              data={authState.user.community.socialLinks}
+              communityName={authState.user.community.name}
+            />
+          </>
         </Grid>
       </Grid>
     </div>

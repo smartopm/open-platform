@@ -224,10 +224,6 @@ export function MainNav({ authState }) {
           </Drawer>
         </nav>
       )}
-      <br />
-      <br />
-      <br />
-      <br />
     </div>
   );
 }
