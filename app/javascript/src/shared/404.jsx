@@ -11,8 +11,8 @@ export default function Page404() {
     <div style={{ textAlign: 'center', paddingTop: '17vh'}}>
       <Typography color="textPrimary" variant="h2" data-testid="404-header-text">{t('404.404')}</Typography>
       <Typography color="textSecondary" variant="body1" data-testid="404-offline-text">{t('404.oops')}</Typography>
-      <br/>
-      <br/>
+      <br />
+      <br />
       <Button
         onClick={() => history.push('/')}
         variant="contained"
@@ -21,9 +21,9 @@ export default function Page404() {
           backgroundColor: '#598EC1',
           color: '#ffffff'
         }}
-        >
-          {t('404.action_text')}
-        </Button>
+      >
+        {t('404.action_text')}
+      </Button>
     </div>
   );
 }
