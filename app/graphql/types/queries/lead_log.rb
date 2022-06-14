@@ -112,8 +112,9 @@ module Types::Queries::LeadLog
   # Ex: { 'India': { "1": 1, "2": 2, ... ,"12": 0 } }
 
   def monthly_stats(lead_stats, valid_values)
-    stats = format_lead_stats(lead_stats)
+    return {} if valid_values.nil?
 
+    stats = format_lead_stats(lead_stats)
     valid_values.each do |value|
       stats[value] = {} if stats[value].nil?
       (1..12).each do |month|
