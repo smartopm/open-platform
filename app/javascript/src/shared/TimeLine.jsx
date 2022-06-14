@@ -31,7 +31,7 @@ export default function EventTimeLine({ data }) {
               {item.sentence}
             </Typography>
             <Typography variant="body2" data-testid="date">
-              {dateFormatter(item.createdAt)}
+              {dateFormatter(item.createdAt, t)}
             </Typography>
           </TimelineContent>
         </TimelineItem>

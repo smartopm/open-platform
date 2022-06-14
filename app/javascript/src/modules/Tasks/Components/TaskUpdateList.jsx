@@ -19,7 +19,7 @@ import { dateToString, dateFormatter } from "../../../components/DateContainer"
 
 export default function TaskUpdateList({ data }) {
   const classes = useStyles();
-  const { t } = useTranslation('task')
+  const { t } = useTranslation(['task', 'common'])
 
   return (
     <>
@@ -34,7 +34,7 @@ export default function TaskUpdateList({ data }) {
                       user={history.user.name}
                       icon={<AddBoxOutlinedIcon className={classes.icon} />}
                       content={t('task.history_create_new_note_comment')}
-                      date={dateFormatter(history.createdAt)}
+                      date={dateFormatter(history.createdAt, t)}
                     />
                   )}
                   {history.action === 'update' && history.attrChanged === 'description' && (
@@ -46,7 +46,7 @@ export default function TaskUpdateList({ data }) {
                         initialValue: history.initialValue || 'empty value',
                         updatedValue: history.updatedValue || 'empty value'
                       })}
-                      date={dateFormatter(history.createdAt)}
+                      date={dateFormatter(history.createdAt, t)}
                     />
                   )}
                   {history.action === 'update' && history.attrChanged === 'due_date' && (
@@ -58,7 +58,7 @@ export default function TaskUpdateList({ data }) {
                         initialValue: history.initialValue  !== null ? dateToString(history.initialValue) : 'empty value',
                         updatedValue: history.updatedValue || 'empty value'
                       })}
-                      date={dateFormatter(history.createdAt)}
+                      date={dateFormatter(history.createdAt, t)}
                     />
                   )}
                   {history.action === 'update' && history.attrChanged === 'completed' && (
@@ -70,7 +70,7 @@ export default function TaskUpdateList({ data }) {
                         initialValue: history.initialValue === 't' ? 'true' : 'false' || 'empty value',
                         updatedValue: history.updatedValue === 't' ? 'true' : 'false' || 'empty value'
                       })}
-                      date={dateFormatter(history.createdAt)}
+                      date={dateFormatter(history.createdAt, t)}
                     />
                   )}
                   {history.action === 'update' && history.attrChanged === 'body' && (
@@ -78,7 +78,7 @@ export default function TaskUpdateList({ data }) {
                       user={history.user.name}
                       icon={<CreateOutlinedIcon className={classes.icon} />}
                       content={t('task.history_update_body')}
-                      date={dateFormatter(history.createdAt)}
+                      date={dateFormatter(history.createdAt, t)}
                     />
                   )}
                   {history.action === 'update' && history.attrChanged === 'category' && (
@@ -90,7 +90,7 @@ export default function TaskUpdateList({ data }) {
                         initialValue: history.initialValue || 'empty value',
                         updatedValue: history.updatedValue || 'empty value'
                       })}
-                      date={dateFormatter(history.createdAt)}
+                      date={dateFormatter(history.createdAt, t)}
                     />
                   )}
                   {history.action === 'update' && history.attrChanged === 'flagged' && (
@@ -102,7 +102,7 @@ export default function TaskUpdateList({ data }) {
                         initialValue: history.initialValue === 't' ? 'true' : 'false' || 'empty value',
                         updatedValue: history.updatedValue === 't' ? 'true' : 'false' || 'empty value'
                       })}
-                      date={dateFormatter(history.createdAt)}
+                      date={dateFormatter(history.createdAt, t)}
                     />
                   )}
                   {history.action === 'update' && history.attrChanged === 'user_id' && (
@@ -114,7 +114,7 @@ export default function TaskUpdateList({ data }) {
                         initialValue: history.initialValue || 'empty value',
                         updatedValue: history.updatedValue || 'empty value'
                       })}
-                      date={dateFormatter(history.createdAt)}
+                      date={dateFormatter(history.createdAt, t)}
                     />
                   )}
                   {history.action === 'update' && history.attrChanged === 'assign' && (
@@ -126,7 +126,7 @@ export default function TaskUpdateList({ data }) {
                         initialValue: history.initialValue || 'empty value',
                         updatedValue: history.updatedValue || 'empty value'
                       })}
-                      date={dateFormatter(history.createdAt)}
+                      date={dateFormatter(history.createdAt, t)}
                     />
                   )}
                 </div>

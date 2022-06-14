@@ -14,6 +14,10 @@ module Comments
 
     default_scope { where.not(status: 'deleted').order(created_at: :desc) }
 
+    # rubocop:disable Layout/LineLength
+    scope :tagged_document_comments, ->(tagged_document_id) { where('tagged_documents @> ?', "{#{tagged_document_id}}") }
+    # rubocop:enable Layout/LineLength
+
     belongs_to :note_entity, polymorphic: true, optional: true
 
     class << self

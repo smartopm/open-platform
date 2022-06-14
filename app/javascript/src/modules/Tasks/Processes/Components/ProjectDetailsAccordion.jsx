@@ -224,7 +224,7 @@ export default function ProjectDetailsAccordion({ taskId }) {
                                 __html: sanitizeText(
                                   replaceDocumentMentions(
                                     comment.body,
-                                    `/processes/${processId}/projects?tab=documents&project_id=${taskId}`
+                                    `/processes/${processId}/projects?tab=documents&project_id=${taskId}&comment_id=${comment.id}`
                                   )
                                 )
                               }}

@@ -2,7 +2,7 @@ import React from 'react';
 import { isYesterday, isToday } from 'date-fns';
 import PropTypes from 'prop-types';
 import moment from 'moment-timezone'
-
+import { useTranslation } from 'react-i18next';
 
 // returns a stringified date
 export function dateTimeToString(date) {
@@ -51,21 +51,23 @@ export function futureDateAndTimeToString(days) {
 /**
  *
  * @param {Date} objDate
+ * @param {t} translation
  * @description works similary to DateContainer but returns a string instead
  * @returns {String}
  */
-export function dateFormatter(objDate) {
+export function dateFormatter(objDate, t) {
   if (!objDate) return null;
   // eslint-disable-next-line no-nested-ternary
   return isToday(new Date(objDate))
-    ? `Today at ${dateTimeToString(objDate)}`
+    ? `${t('misc.today_at')} ${dateTimeToString(objDate)}`
     : isYesterday(new Date(objDate))
-    ? `Yesterday at ${dateTimeToString(objDate)}`
+    ? `${t('misc.yesterday_at')} ${dateTimeToString(objDate)}`
     : dateToString(objDate);
 }
 
 export default function DateContainer({ date }) {
-  return <span style={{ fontSize: '12px' }}>{dateFormatter(date)}</span>;
+  const { t } = useTranslation('common');
+  return <span style={{ fontSize: '12px' }}>{dateFormatter(date, t)}</span>;
 }
 
 DateContainer.propTypes = {

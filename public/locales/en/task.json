@@ -74,7 +74,8 @@
     "reply_sent_to": "Reply Requested Sent To",
     "no_comments": "No comments yet on this project",
     "updates": "Updates",
-    "order_number": "Order Number"
+    "order_number": "Order Number",
+    "no_comments_on_document": "No comments yet on this document"
   },
   "document": {
     "uploaded_at": "Uploaded at",

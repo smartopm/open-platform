@@ -321,7 +321,7 @@ export default function CommentCard({
                                       __html: sanitizeText(
                                         replaceDocumentMentions(
                                           com.body,
-                                          `/processes/${processId}/projects/${projectId}?tab=documents`
+                                          `/processes/${processId}/projects/${projectId}?tab=documents&project_id=${projectId}&comment_id=${com.id}`
                                         )
                                       )
                                     }}
