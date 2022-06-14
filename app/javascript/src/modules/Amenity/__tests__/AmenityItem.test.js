@@ -10,7 +10,7 @@ describe('Amenity Item', () => {
       description: 'This is more details',
       location: '20st North',
       hours: '2pm',
-      invitationLink: ''
+      invitationLink: 'http://link'
     };
 
     const wrapper = render(
@@ -24,5 +24,6 @@ describe('Amenity Item', () => {
     );
     expect(wrapper.queryByTestId('amenity_location').textContent).toContain('20st North');
     expect(wrapper.queryByTestId('amenity_hours').textContent).toContain('2pm');
+    expect(wrapper.queryByTestId('button')).toBeInTheDocument();
   });
 });
