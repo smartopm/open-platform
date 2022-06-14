@@ -18,7 +18,6 @@ import KeyboardTabIcon from '@mui/icons-material/KeyboardTab';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import Autocomplete from '@mui/material/Autocomplete';
-import moment from 'moment-timezone';
 import { useMutation } from 'react-apollo';
 import DatePickerDialog from '../../../components/DatePickerDialog';
 import { UserChip } from './UserChip';
@@ -29,6 +28,7 @@ import AutoSaveField from '../../../shared/AutoSaveField';
 import { UpdateNote } from '../../../graphql/mutations';
 import MessageAlert from '../../../components/MessageAlert';
 import MenuList from '../../../shared/MenuList';
+import useMomentWithLocale from '../../../shared/hooks/useMomentWithLocale'
 
 export default function TaskInfoTop({
   currentUser,
@@ -100,6 +100,8 @@ export default function TaskInfoTop({
   const canViewFormUser = formPermissions
     ? formPermissions.permissions.includes('can_view_form_user')
     : false;
+
+  const moment = useMomentWithLocale();
 
   function openParentLink(event, parent) {
     event.preventDefault();
