@@ -1,5 +1,5 @@
 import React from 'react'
-import { render, fireEvent, waitFor, act } from '@testing-library/react'
+import { render, fireEvent, waitFor } from '@testing-library/react'
 
 import { MockedProvider } from '@apollo/react-testing'
 import { BrowserRouter } from 'react-router-dom/'
@@ -70,7 +70,7 @@ describe('It should test the allocate plan modal component', () => {
         expect(container.queryByTestId('et2u32')).toBeInTheDocument();
         fireEvent.click(container.queryByTestId('et2u32'));
         fireEvent.click(container.queryByTestId('confirmation'));
-        act(() => { fireEvent.click(container.queryByTestId('custom-dialog-button')) });
+        fireEvent.click(container.queryByTestId('custom-dialog-button'));
       },10);
   });
 });
