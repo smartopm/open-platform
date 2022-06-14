@@ -95,6 +95,10 @@ const authState = {
       {
         module: 'forms',
         permissions: ['can_view_form_user', 'can_save_draft_form', 'can_create_form']
+      },
+      {
+        module: 'amenity',
+        permissions: ['can_access_amenities']
       }
     ]
   }

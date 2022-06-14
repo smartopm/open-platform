@@ -19,7 +19,7 @@ export default function AmenityList() {
       <Container maxWidth="lg">
         <Grid container direction="row">
           <Grid item md={11} xs={10}>
-            <Typography variant="h3" color="text.secondary">
+            <Typography variant="h3" color="text.secondary" data-testid="amenity_title">
               {t('misc.amenity', { count: 0 })}
             </Typography>
           </Grid>

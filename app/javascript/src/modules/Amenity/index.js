@@ -16,7 +16,7 @@ export default {
     component: RenderAmenities
   },
   name: t => t('misc.amenity', { count: 0 }),
-  featureName: 'Business',
-  moduleName: 'business',
+  featureName: 'Amenity',
+  moduleName: 'amenity',
   accessibleBy: []
 };
