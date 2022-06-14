@@ -126,7 +126,7 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, direction, communityFeatu
       <List>
         {menuItems.map(menuItem =>
           communityFeatures.includes(menuItem.featureName) && checkMenuAccessibility(menuItem) ? (
-            <Fragment key={typeof menuItem.name === 'function' && menuItem.name(t)}>
+            <Fragment key={menuItem.name(t)}>
               <ListItem
                 button
                 onClick={event => routeTo(event, menuItem, menuItem, !!menuItem.subMenu)}
@@ -170,7 +170,7 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, direction, communityFeatu
                         {communityFeatures.includes(item.featureName) &&
                         checkSubMenuAccessibility({ authState, subMenuItem: item }) ? (
                           item.subMenu && item.subMenu.length > 0 ? (
-                            <>
+                            <Fragment key={item.name(t)}>
                               <ListItem
                                 button
                                 key={item.name(t)}
@@ -205,7 +205,8 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, direction, communityFeatu
                               >
                                 <List component="div" disablePadding>
                                   {item.subMenu.map(subMenuItem => (
-                                    communityFeatures.includes(subMenuItem.featureName) && checkSubMenuAccessibility({ authState, subMenuItem }) && (
+                                    communityFeatures.includes(subMenuItem.featureName) &&
+                                    checkSubMenuAccessibility({ authState, subMenuItem }) && (
                                       <ListItem
                                         button
                                         key={subMenuItem.name(t)}
@@ -232,7 +233,7 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, direction, communityFeatu
                                   ))}
                                 </List>
                               </Collapse>
-                            </>
+                            </Fragment>
                           ) : (
                             <ListItem
                               button
@@ -281,7 +282,9 @@ const menuItemProps = PropTypes.shape({
     icon: PropTypes.element
   }),
   // due to backward compatibility, accessibleBy can be an array or a function
-  accessibleBy: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func]).isRequired,
+  accessibleBy: PropTypes.oneOfType(
+                  [PropTypes.arrayOf(PropTypes.string), PropTypes.func]
+                ).isRequired,
   subMenu: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.func.isRequired,
