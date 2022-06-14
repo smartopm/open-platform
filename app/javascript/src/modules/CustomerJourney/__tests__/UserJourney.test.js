@@ -64,7 +64,7 @@ describe('user journey utils', () => {
     const subWrapper = render(getSubStatusChangeContent({ ...log }))
     expect(subWrapper.queryByTestId('log_content').textContent).toContain(' users.user_journey_status Plots Fully Purchased users.to Eligible to start Construction users.between 2020-03-01 users.and')
   })
-  
+
   it('should render for first or last items that dont have stopDate', () => {
     const anotherLog =  {
       id: '90849232-234234-sdfloeop34-9',
@@ -76,13 +76,14 @@ describe('user journey utils', () => {
     expect(subWrapper.queryByTestId('initial_log_content').textContent).toContain(' users.change users.from Plots Fully Purchased users.to Eligible to start Construction 2020-03-01')
   })
   it('should format the substatus', () => {
+    const t = jest.fn();
     const logs = [
       {
         ...log,
         userId: '2384923842'
       }
     ]
-    const formattedLogs = subsStatusLogsFormatter(logs)
+    const formattedLogs = subsStatusLogsFormatter(logs, t)
     expect(formattedLogs[0].previousStatus).toContain('plots_fully_purchased')
     expect(formattedLogs[0].startDate).toContain('2020-03-01')
     expect(formattedLogs[0].stopDate).toContain('2020-03-03')
