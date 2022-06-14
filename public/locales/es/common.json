@@ -506,6 +506,7 @@
     "temp_record": "Control de Temperatura",
     "time_card": "Tarjeta de tiempo",
     "timeframe": "Periodo de Tiempo",
+    "today_at": "Hoy a las ",
     "total_balance": "Balance Total",
     "total_transactions": "Total de transacciones realizadas",
     "transfer_payment_acceptance": "Acepto que al hacer click en el botón de transferencia, este pago quedará cancelado y el pago será migrado al nuevo plan.",
@@ -526,7 +527,8 @@
     "user_type": "Tipo de usuario",
     "users": "Usuarios",
     "web": "Red",
-    "website": "Pagina Web"
+    "website": "Pagina Web",
+    "yesterday_at": "Ayer a las "
   },
   "right_menu": {
     "communications": "Comunicaciones",
