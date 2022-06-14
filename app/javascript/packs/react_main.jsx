@@ -151,8 +151,6 @@ const Analytics = props => {
   return props.children;
 };
 
-const NotFound = () => <p>Not Found</p>
-
 const App = () => {
   const classes = useStyles();
   return (
@@ -163,7 +161,6 @@ const App = () => {
     >
       <ApolloProvider>
         <Router history={history}>
-          <Switch>
           <AuthStateProvider>
             <Analytics>
               <I18Initializer
@@ -464,12 +461,11 @@ const App = () => {
                                       </AdminRoutes>
                                       {/* we will also need a not found page for non-logged in user */}
                                       {/* if you are going to move this to another line carry it like an egg */}
-                                      {/* <Route
-                                        // render={() => (
-                                        //   <ErrorPage title="Sorry!! We couldn't find this page" />
-                                        // )}
-                                        component={NotFound}
-                                      /> */}
+                                      <Route
+                                        render={() => (
+                                          <ErrorPage title="Sorry!! We couldn't find this page" />
+                                        )}
+                                      />
                                     </Switch>
                                   </div>
                                 </>
@@ -484,8 +480,6 @@ const App = () => {
                 />
             </Analytics>
           </AuthStateProvider>
-            <Route component={NotFound}/>
-          </Switch>
         </Router>
       </ApolloProvider>
     </Suspense>
