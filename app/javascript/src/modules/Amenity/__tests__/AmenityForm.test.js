@@ -31,7 +31,7 @@ describe('Amenity Form', () => {
     };
     const wrapper = render(
       <MockedProvider mocks={[mock]} addTypename={false}>
-        <AmenityForm isOpen setOpen={openDialog} refetch={refetch} />
+        <AmenityForm isOpen setOpen={openDialog} refetch={refetch} t={jest.fn()} />
       </MockedProvider>
     );
     expect(wrapper.queryByTestId('amenity_name')).toBeInTheDocument();

@@ -68,10 +68,11 @@ const useStyles = makeStyles(theme => ({
       bottom: theme.spacing(2),
       right: theme.spacing(2)
     },
-    '&.MuiSpeedDial-directionDown, &.MuiSpeedDial-directionRight': {
-      top: theme.spacing(2),
-      left: theme.spacing(2)
-    }
+    // TODO: Confirm from Tolulope if we really need this
+    // '&.MuiSpeedDial-directionDown, &.MuiSpeedDial-directionRight': {
+    //   top: theme.spacing(2),
+    //   left: theme.spacing(2)
+    // }
   }
 }));
 

@@ -3,11 +3,11 @@ import { TextField } from '@mui/material';
 import PropTypes from 'prop-types';
 import { useMutation } from 'react-apollo';
 import { CustomizedDialogs as CustomizedDialog } from '../../../components/Dialog';
-import { objectAccessor } from '../../../utils/helpers';
+import { formatError, objectAccessor } from '../../../utils/helpers';
 import { AmenityCreateMutation } from '../graphql/amenity_mutations';
 import { checkInValidRequiredFields } from '../../LogBook/utils';
 
-export default function AmenityForm({ isOpen, setOpen, refetch }) {
+export default function AmenityForm({ isOpen, setOpen, refetch, t }) {
   const initialInputValue = {
     name: '',
     description: '',
@@ -41,7 +41,7 @@ export default function AmenityForm({ isOpen, setOpen, refetch }) {
           ...amenityStatus,
           loading: false,
           isError: false,
-          message: 'all went well'
+          message: t('amenity:misc.amenity_created')
         });
         refetch();
         setOpen(!isOpen);
@@ -52,7 +52,7 @@ export default function AmenityForm({ isOpen, setOpen, refetch }) {
           ...amenityStatus,
           loading: false,
           isError: true,
-          message: err.message
+          message: formatError(err.message)
         });
       });
   }
@@ -65,7 +65,9 @@ export default function AmenityForm({ isOpen, setOpen, refetch }) {
       !objectAccessor(amenityValue, fieldName);
     return {
       error: validationError,
-      helperText: validationError && 'This field is required'
+      helperText: validationError
+        ? t('form:errors.required_field', { fieldName })
+        : t(`amenity:helper_text.${fieldName}`)
     };
   }
 
@@ -73,7 +75,7 @@ export default function AmenityForm({ isOpen, setOpen, refetch }) {
     <CustomizedDialog
       open={isOpen}
       handleModal={() => setOpen(!isOpen)}
-      dialogHeader="Configure Amenity"
+      dialogHeader={t('amenity:misc.configure_amenity')}
       displaySaveButton
       handleBatchFilter={handleSaveInfo}
       actionLoading={amenityStatus.loading}
@@ -83,11 +85,11 @@ export default function AmenityForm({ isOpen, setOpen, refetch }) {
       <TextField
         margin="normal"
         id="amenity-name"
-        label="Amenity Name"
+        label={t('amenity:fields.amenity_name')}
         value={amenityValue.name}
         name="name"
         onChange={event => setAmenityValue({ ...amenityValue, name: event.target.value })}
-        inputProps={{ 'data-testid': 'amenity_name' }}
+        inputProps={{ 'data-testid': 'amenity_name', maxLength: 30 }}
         {...validateRequiredField('name')}
         required
         fullWidth
@@ -95,23 +97,25 @@ export default function AmenityForm({ isOpen, setOpen, refetch }) {
       <TextField
         margin="normal"
         id="amenity-description"
-        label="Description"
+        label={t('amenity:fields.amenity_description')}
         name="description"
         value={amenityValue.description}
         onChange={event => setAmenityValue({ ...amenityValue, description: event.target.value })}
-        inputProps={{ 'data-testid': 'amenity_description' }}
+        inputProps={{ 'data-testid': 'amenity_description', maxLength: 150 }}
         {...validateRequiredField('description')}
+        minRows={2}
+        multiline
         required
         fullWidth
       />
       <TextField
         margin="normal"
         id="amenity-location"
-        label="Location"
+        label={t('amenity:fields.amenity_location')}
         name="location"
         value={amenityValue.location}
         onChange={event => setAmenityValue({ ...amenityValue, location: event.target.value })}
-        inputProps={{ 'data-testid': 'amenity_location' }}
+        inputProps={{ 'data-testid': 'amenity_location', maxLength: 150 }}
         {...validateRequiredField('location')}
         required
         fullWidth
@@ -119,7 +123,7 @@ export default function AmenityForm({ isOpen, setOpen, refetch }) {
       <TextField
         margin="normal"
         id="amenity-hours"
-        label="Hours"
+        label={t('amenity:fields.amenity_hours')}
         name="hours"
         value={amenityValue.hours}
         onChange={event => setAmenityValue({ ...amenityValue, hours: event.target.value })}
@@ -131,11 +135,12 @@ export default function AmenityForm({ isOpen, setOpen, refetch }) {
       <TextField
         margin="normal"
         id="amenity-link"
-        label="Calendly Link"
+        label={t('amenity:fields.calendly_link')}
         name="invitationLink"
         value={amenityValue.invitationLink}
         onChange={event => setAmenityValue({ ...amenityValue, invitationLink: event.target.value })}
         inputProps={{ 'data-testid': 'amenity_link' }}
+        {...validateRequiredField('invitationLink')}
         fullWidth
       />
     </CustomizedDialog>
@@ -145,5 +150,6 @@ export default function AmenityForm({ isOpen, setOpen, refetch }) {
 AmenityForm.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   setOpen: PropTypes.func.isRequired,
-  refetch: PropTypes.func.isRequired
+  refetch: PropTypes.func.isRequired,
+  t: PropTypes.func.isRequired
 };

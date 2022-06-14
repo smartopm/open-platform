@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Typography } from '@mui/material';
 import CardWrapper from '../../../shared/CardWrapper';
-import { truncateString } from '../../../utils/helpers';
 
 export default function AmenityItem({ amenity }) {
   function handleReserve() {}
@@ -14,14 +13,20 @@ export default function AmenityItem({ amenity }) {
       buttonName="Reserve"
       cardStyles={{ height: 315 }}
     >
-      <Typography data-testid="amenity_description" component="p">
-        {`Description: ${truncateString(amenity.description, 100)}`}
-      </Typography>
+      <div style={{ height: 80 }}>
+        <Typography data-testid="amenity_description" component="p">
+          {`Description: ${amenity.description}`}
+        </Typography>
+      </div>
       <br />
-      <Typography data-testid="amenity_location" component="p">
-        {`Location: ${amenity.location}`}
-      </Typography>
-      <Typography data-testid="amenity_hours" component="p">{`Hours: ${amenity.hours}`}</Typography>
+      <div style={{ marginTop: 21 }}>
+        <Typography data-testid="amenity_location" component="p">
+          {`Location: ${amenity.location}`}
+        </Typography>
+        <Typography data-testid="amenity_hours" component="p">
+          {`Hours: ${amenity.hours}`}
+        </Typography>
+      </div>
     </CardWrapper>
   );
 }
