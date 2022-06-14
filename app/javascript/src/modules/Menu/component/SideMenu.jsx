@@ -205,28 +205,30 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, direction, communityFeatu
                               >
                                 <List component="div" disablePadding>
                                   {item.subMenu.map(subMenuItem => (
-                                    <ListItem
-                                      button
-                                      key={subMenuItem.name(t)}
-                                      onClick={event => routeTo(event, subMenuItem)}
-                                      selected={pathname === subMenuItem.routeProps.path}
-                                      className={`${subMenuItem.styleProps?.className} ${classes.menuItem}`}
-                                      style={{
+                                    communityFeatures.includes(subMenuItem.featureName) && checkSubMenuAccessibility({ authState, subMenuItem }) && (
+                                      <ListItem
+                                        button
+                                        key={subMenuItem.name(t)}
+                                        onClick={event => routeTo(event, subMenuItem)}
+                                        selected={pathname === subMenuItem.routeProps.path}
+                                        className={`${subMenuItem.styleProps?.className} ${classes.menuItem}`}
+                                        style={{
                                         backgroundColor:
                                           pathname === subMenuItem.routeProps.path &&
                                           theme.palette.primary.main,
                                       }}
-                                    >
-                                      <ListItemText
-                                        primary={subMenuItem.name(t)}
-                                        style={{
+                                      >
+                                        <ListItemText
+                                          primary={subMenuItem.name(t)}
+                                          style={{
                                           marginLeft: '73px',
                                           color:
                                             pathname === subMenuItem.routeProps.path && '#FFFFFF'
                                         }}
-                                        className={`${classes.menuItemText} ${classes.child}`}
-                                      />
-                                    </ListItem>
+                                          className={`${classes.menuItemText} ${classes.child}`}
+                                        />
+                                      </ListItem>
+                                    )
                                   ))}
                                 </List>
                               </Collapse>
