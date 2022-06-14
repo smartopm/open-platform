@@ -10,6 +10,7 @@ import { Spinner } from '../../../shared/Loading';
 import { StatusList } from '../../../shared/Status';
 import { userSubStatus } from '../../../utils/constants';
 import SubStatusTimeDistributionReport from './SubStatusTimeDistributionReport';
+import PageWrapper from '../../../shared/PageWrapper';
 
 export default function UserStats() {
   const classes = useStyles();
@@ -25,7 +26,7 @@ export default function UserStats() {
   }
 
   return (
-    <>
+    <PageWrapper>
       <div className={matches ? classes.statusSection : undefined}>
         <div className={classes.titleSection}>
           <h5 className={classes.title}>Customer Journey Stage</h5>
@@ -47,14 +48,14 @@ export default function UserStats() {
           subStatusDistributionData={subStatusDistributionData}
         />
       )}
-    </>
+    </PageWrapper>
   );
 }
 
 const useStyles = makeStyles(theme => ({
   statusSection: {
     width: '40%',
-    margin: '6%'
+    marginBottom: '6%'
   },
   titleSection: {
     // color: theme.palette.primary.main,

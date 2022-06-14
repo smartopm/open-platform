@@ -13,7 +13,7 @@ import PageWrapper from '../../../../shared/PageWrapper';
 import ProcessCommentItem from './ProcessCommentItem';
 
 export default function ProcessCommentsPage() {
-  const {  id: processId } = useParams();
+  const { id: processId } = useParams();
   const matches = useMediaQuery('(max-width:600px)');
   const history = useHistory();
   const path = useParamsQuery();
@@ -41,7 +41,7 @@ export default function ProcessCommentsPage() {
 
   if (loading) return <Spinner />;
   return (
-    <>
+    <PageWrapper oneCol>
       <PageHeader
         linkText={t('breadcrumbs.processes')}
         linkHref="/processes"
@@ -51,7 +51,7 @@ export default function ProcessCommentsPage() {
       {loading ? (
         <Spinner />
       ) : (
-        <PageWrapper>
+        <>
           <StyledTabs
             value={tabValue}
             onChange={handleTabValueChange}
@@ -126,9 +126,9 @@ export default function ProcessCommentsPage() {
               )}
             </div>
           </TabPanel>
-        </PageWrapper>
+        </>
       )}
       {error && <CenteredContent>{formatError(error.message)}</CenteredContent>}
-    </>
+    </PageWrapper>
   );
 }

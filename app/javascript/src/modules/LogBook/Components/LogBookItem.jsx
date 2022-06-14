@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import { useApolloClient, useMutation, useQuery } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import makeStyles from '@mui/styles/makeStyles';
@@ -54,7 +53,6 @@ export default function LogBookItem({ router, offset, tabValue, handleTabValue }
     refetch: false
   });
   const [addObservationNote] = useMutation(AddObservationNoteMutation);
-  const matches = useMediaQuery('(max-width:800px)');
   const classes = useStyles();
   const [imageUrls, setImageUrls] = useState([]);
   const [blobIds, setBlobIds] = useState([]);
@@ -250,7 +248,7 @@ export default function LogBookItem({ router, offset, tabValue, handleTabValue }
           </>
         )}
       </DialogWithImageUpload>
-      <Grid container className={matches ? classes.containerMobile : classes.container}>
+      <Grid container>
         <Grid item md={11} xs={11}>
           <Grid container spacing={1}>
             <Grid item md={11} xs={10}>
@@ -353,12 +351,6 @@ export default function LogBookItem({ router, offset, tabValue, handleTabValue }
 }
 
 const useStyles = makeStyles(() => ({
-  container: {
-    padding: '0 20px 50px 50px'
-  },
-  containerMobile: {
-    padding: '10px 0 10px 30px'
-  },
   logbookTitleContainer: {
     display: 'inline-flex'
   },

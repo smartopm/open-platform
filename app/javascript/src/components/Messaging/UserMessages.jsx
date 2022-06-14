@@ -9,7 +9,6 @@ import { Button } from '@mui/material'
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
 import ListItemAvatar from '@mui/material/ListItemAvatar'
-import { css, StyleSheet } from 'aphrodite'
 import { UserMessageQuery } from '../../graphql/queries'
 import {Spinner} from '../../shared/Loading'
 import ErrorPage from '../Error'
@@ -18,6 +17,7 @@ import { MessageCreate } from '../../graphql/mutations'
 import Avatar from '../Avatar'
 import UserMessageItem from './MessageItem'
 import CenteredContent from '../CenteredContent'
+import PageWrapper from '../../shared/PageWrapper';
 
 export default function UserMessages() {
   const { id } = useParams()
@@ -68,9 +68,8 @@ export default function UserMessages() {
   }
 
   return (
-    <>
-
-      <div className={css(styles.messageSection)}>
+    <PageWrapper>
+      <div>
         <List>
           { loading ? (
             <CenteredContent>
@@ -147,18 +146,6 @@ export default function UserMessages() {
         {t('common:misc.send')}
       </Button>
       {errmsg && <p className="text-center text-danger">{errmsg}</p>}
-    </>
+    </PageWrapper>
   )
 }
-
-const styles = StyleSheet.create({
-  timeStamp: {
-    float: 'right',
-    fontSize: 14,
-    color: '#737380'
-  },
-  messageSection: {
-    overflow: 'auto',
-    maxHeight: '74vh'
-  }
-})

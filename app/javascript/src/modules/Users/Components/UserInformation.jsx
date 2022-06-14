@@ -86,7 +86,7 @@ export default function UserInformation({
           </DialogContent>
         </Dialog>
         <div style={{ marginBottom: '160px' }}>
-          <FixedHeader fullWidth>
+          <FixedHeader>
             <UserDetailHeader
               data={data}
               userType={userType}

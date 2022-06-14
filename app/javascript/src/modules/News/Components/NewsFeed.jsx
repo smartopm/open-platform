@@ -33,7 +33,7 @@ export function PostItemGrid({ data, loading }) {
     history.push(`/news/post/${postId}`);
   }
   return (
-    <div style={matches ? { padding: '20px 0' } : { padding: '20px 0' }}>
+    <div style={{ paddingTop: '20px' }}>
       <CardWrapper
         title={t('misc.recent_article')}
         buttonName={t('misc.see_more_articles')}

@@ -22,6 +22,7 @@ import { filterQuickLinksByRole } from '../utils';
 import { Spinner } from '../../../shared/Loading';
 import CommunityNews from '../../Discussions/Components/CommunityNews';
 import { allUserTypes } from '../../../utils/constants';
+import PageWrapper from '../../../shared/PageWrapper';
 
 const Home = () => {
   const authState = useContext(AuthStateContext);
@@ -38,8 +39,8 @@ const Home = () => {
   if (!authState.loggedIn) return <Spinner />;
 
   return (
-    <div>
-      <Grid container columns={{ xs: 12, md: 12 }}>
+    <PageWrapper>
+      <Grid container columns={{ xs: 12, md: 12 }} spacing={3}>
         {matches && (
           <Grid item sm={12} md={12} xs={12}>
             <Grid container alignItems="center">
@@ -48,7 +49,6 @@ const Home = () => {
                 md={6}
                 sm={6}
                 xs={6}
-                style={matches ? { paddingTop: '6%' } : { paddingTop: '4%' }}
               >
                 <Button
                   startIcon={<QrCode2Icon />}
@@ -88,7 +88,6 @@ const Home = () => {
                 md={6}
                 sm={6}
                 xs={6}
-                style={matches ? { paddingTop: '6%' } : { paddingTop: '4%' }}
               >
                 <Button
                   startIcon={<QrCode2Icon />}
@@ -172,7 +171,7 @@ const Home = () => {
           </>
         </Grid>
       </Grid>
-    </div>
+    </PageWrapper>
   );
 };
 

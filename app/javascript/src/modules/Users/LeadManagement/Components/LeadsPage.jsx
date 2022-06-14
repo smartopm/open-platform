@@ -2,7 +2,6 @@
 import React, { useContext } from 'react';
 import { useQuery } from 'react-apollo';
 import makeStyles from '@mui/styles/makeStyles';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import Grid from '@mui/material/Grid';
 import { Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
@@ -14,10 +13,10 @@ import { objectAccessor } from '../../../../utils/helpers';
 import { months, leadStatuses, statuses, scoreCardTitle } from '../../../../utils/constants';
 import CenteredContent from '../../../../shared/CenteredContent';
 import { buildScoreCardData, buildStatusCard, buildCurrentStatusCard } from '../../utils';
+import PageWrapper from '../../../../shared/PageWrapper';
 
 export default function LeadsPage() {
   const classes = useStyles();
-  const matches = useMediaQuery('(max-width:900px)');
   const authState = useContext(AuthStateContext);
   const { data, loading, error } = useQuery(LeadScoreCardQuery, {
     fetchPolicy: 'cache-and-network'
@@ -63,7 +62,7 @@ export default function LeadsPage() {
       </CenteredContent>
     );
   return (
-    <div className={matches ? classes.containerMobile : classes.container}>
+    <PageWrapper>
       <Grid container>
         <Grid item md={12} xs={12} className={classes.title} data-testid="page_title">
           <Typography variant="h4">{t('lead_management.leads')}</Typography>
@@ -151,7 +150,7 @@ export default function LeadsPage() {
           </Grid>
         ))}
       </Grid>
-    </div>
+    </PageWrapper>
   );
 }
 

@@ -16,6 +16,7 @@ import { UserSearchQuery } from '../../../graphql/queries';
 import useDebounce from '../../../utils/useDebounce';
 import UserAutoResult from '../../../shared/UserAutoResult';
 import AccessCheck from '../../Permissions/Components/AccessCheck';
+import PageWrapper from '../../../shared/PageWrapper';
 
 export function NewRequestButton() {
   const { t } = useTranslation('search');
@@ -117,8 +118,8 @@ export default function SearchContainer({ location }) {
   }
 
   return (
-    <div className="container">
-      <div className={`row justify-content-center ${css(styles.inputGroup)}`}>
+    <PageWrapper oneCol>
+      <div className={`${css(styles.inputGroup)}`} style={{marginTop: '20px'}}>
         <input
           className={`form-control ${css(styles.input)} user-search-input`}
           onChange={updateSearch}
@@ -146,7 +147,7 @@ export default function SearchContainer({ location }) {
           </>
         )}
       </div>
-    </div>
+    </PageWrapper>
   );
 }
 

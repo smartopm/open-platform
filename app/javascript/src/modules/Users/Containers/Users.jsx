@@ -26,6 +26,7 @@ import { objectAccessor, toTitleCase } from '../../../utils/helpers';
 import SubStatusReportDialog from '../../CustomerJourney/Components/SubStatusReport';
 import UserHeader from '../Components/UserHeader';
 import FixedHeader from '../../../shared/FixedHeader';
+import PageWrapper from '../../../shared/PageWrapper'
 
 const limit = 25;
 const USERS_CAMPAIGN_WARNING_LIMIT = 2000;
@@ -455,7 +456,7 @@ export default function UsersList() {
   };
 
   return (
-    <>
+    <PageWrapper>
       <FixedHeader>
         <UserHeader
           setCampaignOption={setCampaignOption}
@@ -511,7 +512,7 @@ export default function UsersList() {
           </Container>
         </>
       )}
-    </>
+    </PageWrapper>
   );
 }
 

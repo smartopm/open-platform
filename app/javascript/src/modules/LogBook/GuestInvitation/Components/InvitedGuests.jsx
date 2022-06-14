@@ -1,4 +1,4 @@
-import { Container, Dialog, DialogContent, DialogTitle, Grid, Typography, useMediaQuery } from '@mui/material';
+import { Dialog, DialogContent, DialogTitle, Grid, Typography, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/styles';
 import React, { useContext, useState } from 'react';
 import { useQuery, useMutation } from 'react-apollo';
@@ -20,6 +20,7 @@ import MessageAlert from '../../../../components/MessageAlert';
 import { formatError , ifNotTest } from '../../../../utils/helpers';
 import { validateGuest } from '../helpers';
 import GuestInviteForm from './GuestInviteForm';
+import PageWrapper from '../../../../shared/PageWrapper';
 
 
 export default function InvitedGuests() {
@@ -171,7 +172,7 @@ export default function InvitedGuests() {
     handleClose: event => handleMenuClose(event)
   };
   return (
-    <Container maxWidth="xl">
+    <PageWrapper>
       <Dialog
         fullScreen={fullScreen}
         open={openEditModal}
@@ -249,6 +250,6 @@ export default function InvitedGuests() {
           />
           ))
         : !loading && <CenteredContent>{t('logbook.no_invited_guests')}</CenteredContent>}
-    </Container>
+    </PageWrapper>
   );
 }
