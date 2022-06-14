@@ -1,6 +1,4 @@
-/* eslint-disable max-statements */
 /* eslint-disable complexity */
-/* eslint-disable max-lines */
 import React, { useState, useContext } from 'react';
 import { useMutation, useQuery } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
@@ -29,7 +27,7 @@ import LeadEvent from './LeadEvent';
 import ButtonComponent from '../../../../shared/buttons/Button';
 import { MenuProps, secondaryInfoUserObject } from '../../utils';
 import { Context as AuthStateContext } from '../../../../containers/Provider/AuthStateProvider';
-import LeadInvestments from './LeadInvestments';
+import Investments from './Investments';
 
 export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsData }) {
   const [meetingName, setMeetingName] = useState('');
@@ -274,7 +272,14 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
 
                 <Grid item md={6} xs={12}>
                   <Grid container>
-                    <Grid item md={10} xs={9}>
+                    <Grid
+                      item
+                      md={10}
+                      xs={9}
+                      style={{
+                        paddingLeft: 2
+                      }}
+                    >
                       <FormControl fullWidth size="small">
                         <InputLabel id="division">{t('lead_management.set_division')}</InputLabel>
                         <Select
@@ -302,7 +307,8 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
                       md={2}
                       xs={2}
                       style={{
-                        justifyContent: 'flex-end'
+                        justifyContent: 'flex-end',
+                        paddingLeft: 2
                       }}
                     >
                       <ButtonComponent
@@ -360,7 +366,6 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
               container
               spacing={2}
               style={{
-                display: 'flex',
                 alignItems: 'center'
               }}
             >
@@ -368,7 +373,7 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
                 <TextField
                   name="eventName"
                   label={t('lead_management.event_name')}
-                  style={{ width: '100%' }}
+                  style={{ width: '95%' }}
                   onChange={handleEventNameChange}
                   value={eventName || ''}
                   variant="outlined"
@@ -390,7 +395,7 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
                 xs={1}
                 style={{
                   paddingTop: '25px',
-                  justifyContent: 'flex-end'
+                  paddingLeft: 0
                 }}
               >
                 <ButtonComponent
@@ -457,7 +462,7 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
               <TextField
                 name="meetingName"
                 label={t('lead_management.meeting_name')}
-                style={{ width: '100%' }}
+                style={{ width: '95%' }}
                 onChange={handleMeetingNameChange}
                 value={meetingName || ''}
                 variant="outlined"
@@ -478,7 +483,8 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
               md={1}
               xs={1}
               style={{
-                paddingTop: '25px'
+                paddingTop: '25px',
+                paddingLeft: 0
               }}
             >
               <ButtonComponent
@@ -518,7 +524,7 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
         <Divider />
       </Grid>
 
-      <LeadInvestments
+      <Investments
         handleSubmit={handleSubmit}
         dealDetailsData={dealDetailsData}
         investmentStatsData={investmentStatsData}

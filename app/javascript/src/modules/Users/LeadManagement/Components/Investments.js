@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -9,7 +8,7 @@ import { dateToString } from '../../../../components/DateContainer';
 import ButtonComponent from '../../../../shared/buttons/Button';
 import CenteredContent from '../../../../shared/CenteredContent';
 
-export default function LeadInvestments({
+export default function Investments({
   handleSubmit,
   dealDetailsData,
   investmentStatsData,
@@ -52,10 +51,7 @@ export default function LeadInvestments({
     setAmount('');
   }
   return (
-    // <div>
     <>
-      {/* Lead Investiment section */}
-
       <Grid container>
         <Grid item md={12} xs={12} style={{ marginBottom: '40px' }}>
           <Grid item md={12} xs={12}>
@@ -99,7 +95,7 @@ export default function LeadInvestments({
             <TextField
               name="dealSize"
               label={t('lead_management.deal_size')}
-              style={{ width: '100%' }}
+              style={{ width: '95%' }}
               onChange={handleDealSizeChange}
               value={dealSize || ''}
               variant="outlined"
@@ -119,7 +115,7 @@ export default function LeadInvestments({
             <TextField
               name="investmentTarget"
               label={t('lead_management.investment_target')}
-              style={{ width: '100%' }}
+              style={{ width: '95%', paadingLeft: 0 }}
               onChange={handleInvestmentTargetChange}
               value={investmentTarget || ''}
               variant="outlined"
@@ -139,7 +135,8 @@ export default function LeadInvestments({
             md={1}
             xs={1}
             style={{
-              paddingTop: '32px'
+              paddingTop: '32px',
+              paddingLeft: 0
             }}
           >
             <ButtonComponent
@@ -155,8 +152,6 @@ export default function LeadInvestments({
           </Grid>
         </Grid>
       </Grid>
-
-      {/* Investment listings */}
 
       {dealDetailsData?.dealDetails.length > 0 ? (
         <div>
@@ -180,7 +175,7 @@ export default function LeadInvestments({
                       >
                         <Grid item md={3} xs={12}>
                           <Typography variant="body2" data-testid="investment-deal-size">
-                            {dealDetails?.dealSize}
+                            $ {dealDetails?.dealSize}
                           </Typography>
                         </Grid>
 
@@ -243,7 +238,7 @@ export default function LeadInvestments({
             <TextField
               name="description"
               label={t('lead_management.description')}
-              style={{ width: '100%' }}
+              style={{ width: '95%' }}
               onChange={handleDescriptionChange}
               value={description || ''}
               variant="outlined"
@@ -263,7 +258,7 @@ export default function LeadInvestments({
             <TextField
               name="amount"
               label={t('lead_management.amount')}
-              style={{ width: '100%' }}
+              style={{ width: '95%' }}
               onChange={handleAmountChange}
               value={amount || ''}
               variant="outlined"
@@ -283,7 +278,8 @@ export default function LeadInvestments({
             md={1}
             xs={1}
             style={{
-              paddingTop: '32px'
+              paddingTop: '32px',
+              paddingLeft: 0
             }}
           >
             <ButtonComponent
@@ -299,9 +295,6 @@ export default function LeadInvestments({
           </Grid>
         </Grid>
       </Grid>
-
-      {/* Investment expenses */}
-
       {leadInvestmentData?.leadInvestments.length > 0 ? (
         <div>
           {leadInvestmentData?.leadInvestments.map(leadInvestment => (
@@ -356,11 +349,10 @@ export default function LeadInvestments({
         <CenteredContent>{t('lead_management.no_investments')}</CenteredContent>
       )}
     </>
-    // </div>
   );
 }
 
-const leadInvestment = {
+const Investment = {
   id: PropTypes.string,
   amount: PropTypes.string,
   name: PropTypes.string,
@@ -384,7 +376,7 @@ const investmentStats = {
   total_spent: PropTypes.string
 };
 
-LeadInvestments.propTypes = {
+Investments.propTypes = {
   leadInvestmentData: PropTypes.shape(leadInvestment).isRequired,
   dealDetailsData: PropTypes.shape(dealDetails).isRequired,
   investmentStatsData: PropTypes.shape(investmentStats).isRequired,
