@@ -57,6 +57,7 @@ export default {
   moduleName: 'community',
   accessibleBy: [],
   subMenu: [
+    Amenity,
     News,
     Message,
     Discussions,
@@ -71,6 +72,5 @@ export default {
     Contact,
     Referral,
     Showroom,
-    Amenity
   ]
 };

@@ -3,7 +3,7 @@ import { TextField } from '@mui/material';
 import PropTypes from 'prop-types';
 import { useMutation } from 'react-apollo';
 import { CustomizedDialogs as CustomizedDialog } from '../../../components/Dialog';
-import { formatError, objectAccessor } from '../../../utils/helpers';
+import { formatError, validateRequiredField } from '../../../utils/helpers';
 import { AmenityCreateMutation } from '../graphql/amenity_mutations';
 import { checkInValidRequiredFields } from '../../LogBook/utils';
 
@@ -57,20 +57,6 @@ export default function AmenityForm({ isOpen, setOpen, refetch, t }) {
       });
   }
 
-  // TODO: Move this to shared helpers
-  function validateRequiredField(fieldName) {
-    const validationError =
-      inputValidationMsg.isError &&
-      requiredFields.includes(fieldName) &&
-      !objectAccessor(amenityValue, fieldName);
-    return {
-      error: validationError,
-      helperText: validationError
-        ? t('form:errors.required_field', { fieldName })
-        : t(`amenity:helper_text.${fieldName}`)
-    };
-  }
-
   return (
     <CustomizedDialog
       open={isOpen}
@@ -90,7 +76,7 @@ export default function AmenityForm({ isOpen, setOpen, refetch, t }) {
         name="name"
         onChange={event => setAmenityValue({ ...amenityValue, name: event.target.value })}
         inputProps={{ 'data-testid': 'amenity_name', maxLength: 30 }}
-        {...validateRequiredField('name')}
+        {...validateRequiredField('name', inputValidationMsg, requiredFields, amenityValue, t)}
         required
         fullWidth
       />
@@ -102,7 +88,7 @@ export default function AmenityForm({ isOpen, setOpen, refetch, t }) {
         value={amenityValue.description}
         onChange={event => setAmenityValue({ ...amenityValue, description: event.target.value })}
         inputProps={{ 'data-testid': 'amenity_description', maxLength: 150 }}
-        {...validateRequiredField('description')}
+        {...validateRequiredField('description', inputValidationMsg, requiredFields, amenityValue, t)}
         minRows={2}
         multiline
         required
@@ -116,7 +102,7 @@ export default function AmenityForm({ isOpen, setOpen, refetch, t }) {
         value={amenityValue.location}
         onChange={event => setAmenityValue({ ...amenityValue, location: event.target.value })}
         inputProps={{ 'data-testid': 'amenity_location', maxLength: 150 }}
-        {...validateRequiredField('location')}
+        {...validateRequiredField('location', inputValidationMsg, requiredFields, amenityValue, t)}
         required
         fullWidth
       />
@@ -128,7 +114,7 @@ export default function AmenityForm({ isOpen, setOpen, refetch, t }) {
         value={amenityValue.hours}
         onChange={event => setAmenityValue({ ...amenityValue, hours: event.target.value })}
         inputProps={{ 'data-testid': 'amenity_hours' }}
-        {...validateRequiredField('hours')}
+        {...validateRequiredField('hours', inputValidationMsg, requiredFields, amenityValue, t)}
         required
         fullWidth
       />
@@ -140,7 +126,7 @@ export default function AmenityForm({ isOpen, setOpen, refetch, t }) {
         value={amenityValue.invitationLink}
         onChange={event => setAmenityValue({ ...amenityValue, invitationLink: event.target.value })}
         inputProps={{ 'data-testid': 'amenity_link' }}
-        {...validateRequiredField('invitationLink')}
+        {...validateRequiredField('invitationLink', inputValidationMsg, requiredFields, amenityValue, t)}
         fullWidth
       />
     </CustomizedDialog>
