@@ -105,7 +105,8 @@ export default function Investments({
               margin="normal"
               required
               InputProps={{
-                startAdornment: <InputAdornment position="start">$</InputAdornment>
+                startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                'aria-label': t('lead_management.deal_size')
               }}
               InputLabelProps={{ style: { fontSize: '12px' } }}
             />
@@ -125,7 +126,8 @@ export default function Investments({
               margin="normal"
               required
               InputProps={{
-                startAdornment: <InputAdornment position="start">$</InputAdornment>
+                startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                'aria-label': t('lead_management.investment_target')
               }}
               InputLabelProps={{ style: { fontSize: '12px' } }}
             />
@@ -145,7 +147,7 @@ export default function Investments({
               fullWidth
               buttonText={t('lead_management.add')}
               handleClick={handleSubmitInvestment}
-              disabled={!investmentTarget.trim() && !dealSize.trim()}
+              disabled={!investmentTarget.trim()}
               disableElevation
               testId="add-investment-button"
             />
@@ -175,7 +177,9 @@ export default function Investments({
                       >
                         <Grid item md={3} xs={12}>
                           <Typography variant="body2" data-testid="investment-deal-size">
-                            $ {dealDetails?.dealSize}
+                            $ 
+                            {' '}
+                            {dealDetails?.dealSize}
                           </Typography>
                         </Grid>
 
@@ -290,7 +294,7 @@ export default function Investments({
               handleClick={handleSubmitInvestmentSize}
               disabled={!amount.trim()}
               disableElevation
-              testId="add-investment-button"
+              testId="add-investment-size-button"
             />
           </Grid>
         </Grid>
@@ -352,7 +356,7 @@ export default function Investments({
   );
 }
 
-const Investment = {
+const leadInvestment = {
   id: PropTypes.string,
   amount: PropTypes.string,
   name: PropTypes.string,

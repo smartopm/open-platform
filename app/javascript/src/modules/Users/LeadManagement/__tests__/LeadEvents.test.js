@@ -226,25 +226,6 @@ describe('LeadEvents Page', () => {
           }
         }
       }
-    },
-
-    {
-      request: {
-        query: CreateEvent,
-        variables: {
-          userId: 'c96f64bb-e3b4-42ff-b6a9-66889ec79e99',
-          dealSize: parseFloat(45000000),
-          investmentTarget: parseFloat(25000),
-          logType: 'deal_details'
-        }
-      },
-      result: {
-        data: {
-          leadLogCreate: {
-            success: true
-          }
-        }
-      }
     }
   ];
 
@@ -312,7 +293,6 @@ describe('LeadEvents Page', () => {
       ReactTestUtils.Simulate.change(eventTextField, {
         target: { value: 'First Tilisi run 2022' }
       });
-
       const saveButton = screen.queryByTestId('add-event-button');
       // user input should set add button enabled
       expect(saveButton).toBeEnabled();
@@ -348,43 +328,4 @@ describe('LeadEvents Page', () => {
       expect(screen.queryByText('lead_management.division')).toBeInTheDocument();
     });
   });
-
-  // it('Creates an investment entry', async () => {
-  //   render(
-  //     <MockedProvider mocks={eventRequestDataMock} addTypename={false}>
-  //       <Context.Provider value={authState}>
-  //         <BrowserRouter>
-  //           <MockedThemeProvider>
-  //             <LeadEvents
-  //               userId="c96f64bb-e3b4-42ff-b6a9-66889ec79e99"
-  //               data={dataMock[0].result.data}
-  //               refetch={jest.fn()}
-  //               refetchLeadLabelsData={jest.fn()}
-  //             />
-  //           </MockedThemeProvider>
-  //         </BrowserRouter>
-  //       </Context.Provider>
-  //     </MockedProvider>
-  //   );
-
-  //   await waitFor(() => {
-  //     expect(screen.queryAllByTestId('investment')[0]).toBeInTheDocument();
-  //     expect(screen.queryByTestId('investment_header')).toBeInTheDocument();
-  //     expect(screen.queryByText('lead_management.investment')).toBeInTheDocument();
-  //     const eventTextField = screen.getByLabelText('lead_management.deal_size');
-
-  //     ReactTestUtils.Simulate.change(eventTextField, {
-  //       target: { value: 459000000 }
-  //     });
-
-  //     // const saveButton = screen.queryByTestId('add-event-button');
-  //     // // user input should set add button enabled
-  //     // expect(saveButton).toBeEnabled();
-  //   });
-
-  //   // clicking on the add button should submit current data
-  //   await waitFor(() => {
-  //     fireEvent.click(screen.queryByTestId('add-event-button'));
-  //   });
-  // });
 });
