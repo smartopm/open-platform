@@ -17,7 +17,7 @@ export default function AmenityList() {
       <Container maxWidth="lg">
         <Grid container direction="row">
           <Grid item xs={11}>
-            <Grid container spacing={2} direction="row">
+            <Grid container spacing={3} direction="row">
               {loading && !data ? (
                 <Spinner />
               ) : (

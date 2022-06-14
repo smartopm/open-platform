@@ -27,10 +27,6 @@ export default function AmenityForm({ isOpen, setOpen, refetch }) {
     isError: false,
     isSubmitting: false
   });
-  function handleUpdateFields(event) {
-    const { name, value } = event.target;
-    setAmenityValue({ ...amenityValue, [name]: value });
-  }
 
   function handleSaveInfo() {
     const isAnyInvalid = checkInValidRequiredFields(amenityValue, requiredFields);
@@ -90,7 +86,7 @@ export default function AmenityForm({ isOpen, setOpen, refetch }) {
         label="Amenity Name"
         value={amenityValue.name}
         name="name"
-        onChange={handleUpdateFields}
+        onChange={event => setAmenityValue({ ...amenityValue, name: event.target.value })}
         inputProps={{ 'data-testid': 'amenity_name' }}
         {...validateRequiredField('name')}
         required
@@ -102,7 +98,7 @@ export default function AmenityForm({ isOpen, setOpen, refetch }) {
         label="Description"
         name="description"
         value={amenityValue.description}
-        onChange={handleUpdateFields}
+        onChange={event => setAmenityValue({ ...amenityValue, description: event.target.value })}
         inputProps={{ 'data-testid': 'amenity_description' }}
         {...validateRequiredField('description')}
         required
@@ -114,7 +110,7 @@ export default function AmenityForm({ isOpen, setOpen, refetch }) {
         label="Location"
         name="location"
         value={amenityValue.location}
-        onChange={handleUpdateFields}
+        onChange={event => setAmenityValue({ ...amenityValue, location: event.target.value })}
         inputProps={{ 'data-testid': 'amenity_location' }}
         {...validateRequiredField('location')}
         required
@@ -126,7 +122,7 @@ export default function AmenityForm({ isOpen, setOpen, refetch }) {
         label="Hours"
         name="hours"
         value={amenityValue.hours}
-        onChange={handleUpdateFields}
+        onChange={event => setAmenityValue({ ...amenityValue, hours: event.target.value })}
         inputProps={{ 'data-testid': 'amenity_hours' }}
         {...validateRequiredField('hours')}
         required
@@ -138,7 +134,7 @@ export default function AmenityForm({ isOpen, setOpen, refetch }) {
         label="Calendly Link"
         name="invitationLink"
         value={amenityValue.invitationLink}
-        onChange={handleUpdateFields}
+        onChange={event => setAmenityValue({ ...amenityValue, invitationLink: event.target.value })}
         inputProps={{ 'data-testid': 'amenity_link' }}
         fullWidth
       />
