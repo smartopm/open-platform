@@ -15,7 +15,7 @@ describe('Comment Card Component', () => {
       createdAt: new Date()
     }
   ]
-  
+
 
   it('render updates without error', () => {
     const container = render(
@@ -30,7 +30,7 @@ describe('Comment Card Component', () => {
 
     expect(container.queryByText('John')).toBeInTheDocument()
     expect(container.queryByText(/task.history_create_new_note_comment/)).toBeInTheDocument()
-    expect(container.queryByText(/Today at/)).toBeInTheDocument()
+    expect(container.queryByText(/misc.today_at/)).toBeInTheDocument()
     expect(container.queryByTestId('history_update_divider')).toBeInTheDocument()
 
   })
