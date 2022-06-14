@@ -1,5 +1,4 @@
 import { renderHook } from '@testing-library/react-hooks';
-import authState from '../../../__mocks__/authstate';
 import useMomentWithLocale from '../../hooks/useMomentWithLocale';
 
 describe('useMomentWithLocale hook', () => {
