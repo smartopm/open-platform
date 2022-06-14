@@ -8,7 +8,8 @@
   },
   "misc": {
     "configure_amenity": "Configure Amenity",
-    "amenity_created": "Amenity Created Successfully"
+    "amenity_created": "Amenity Created Successfully",
+    "reserve": "Reserve"
   },
   "helper_text": {
     "description": "Note that character count shouldn't exceed 150",

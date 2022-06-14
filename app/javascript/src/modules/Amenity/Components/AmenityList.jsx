@@ -35,15 +35,12 @@ export default function AmenityList() {
                 <Spinner />
               ) : (
                 data?.amenities.map(amenity => (
-                  <Grid item xs={12} sm={6} md={4} lg={3} key={amenity.id}>
-                    <AmenityItem amenity={amenity} />
+                  <Grid item xs={12} sm={6} md={4} key={amenity.id}>
+                    <AmenityItem amenity={amenity} translate={t} />
                   </Grid>
                 ))
               )}
             </Grid>
-          </Grid>
-          <Grid item xs={1}>
-            {/* <SpeedDialButton handleAction={() => setOpen(!open)} /> */}
           </Grid>
         </Grid>
       </Container>

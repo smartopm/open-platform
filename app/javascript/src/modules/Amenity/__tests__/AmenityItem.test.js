@@ -1,4 +1,4 @@
-import { render } from '@testing-library/react';
+import { fireEvent, render } from '@testing-library/react';
 import React from 'react';
 import AmenityItem from '../Components/AmenityItem';
 import MockedThemeProvider from '../../__mocks__/mock_theme';
@@ -12,10 +12,10 @@ describe('Amenity Item', () => {
       hours: '2pm',
       invitationLink: 'http://link'
     };
-
+    window.open = jest.fn()
     const wrapper = render(
       <MockedThemeProvider>
-        <AmenityItem amenity={amenity} />
+        <AmenityItem amenity={amenity} translate={jest.fn()} />
       </MockedThemeProvider>
     );
     expect(wrapper.queryByTestId('amenity_description')).toBeInTheDocument();
@@ -25,5 +25,12 @@ describe('Amenity Item', () => {
     expect(wrapper.queryByTestId('amenity_location').textContent).toContain('20st North');
     expect(wrapper.queryByTestId('amenity_hours').textContent).toContain('2pm');
     expect(wrapper.queryByTestId('button')).toBeInTheDocument();
+
+    fireEvent.click(wrapper.queryByTestId('button'));
+    // eslint-disable-next-line security/detect-non-literal-fs-filename
+    expect(window.open).toHaveBeenCalled();
+    // eslint-disable-next-line security/detect-non-literal-fs-filename
+    expect(window.open).toHaveBeenCalledWith('http://link', '_blank');
+
   });
 });
