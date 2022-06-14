@@ -90,6 +90,7 @@ describe('UserForm Component', () => {
     fireEvent.submit(container.queryByTestId('submit-form'));
 
     expect(container.queryByTestId('submit_btn')).toBeInTheDocument();
+    expect(container.queryByTestId('submit_btn')).not.toBeDisabled();
     expect(container.queryByText('common:errors.invalid_email')).toBeInTheDocument();
 
     // update with valid email and hit submit again

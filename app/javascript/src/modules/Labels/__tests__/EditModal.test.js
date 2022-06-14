@@ -76,18 +76,18 @@ describe('Label Edit Component', () => {
     await act(async () => {
 
       fireEvent.change(title, { target: { value: 'title' } });
-      act(() => { expect(title.value).toBe('title'); });
+      expect(title.value).toBe('title');
 
       fireEvent.change(description, { target: { value: 'description' } });
-      act(() => { expect(description.value).toBe('description') });
+      expect(description.value).toBe('description');
 
       fireEvent.change(color, { target: { value: '#fff' } });
-      act(() => { expect(color.value).toBe('#fff') });
+      expect(color.value).toBe('#fff');
 
       const button = container.queryByTestId('custom-dialog-button');
       fireEvent.click(button);
       const loader = render(<Spinner />);
-      expect(loader.queryByTestId('loader')).toBeInTheDocument();
+      expect(loader.queryAllByTestId('loader')[0]).toBeInTheDocument();
 
       await waitFor(
         () => {
