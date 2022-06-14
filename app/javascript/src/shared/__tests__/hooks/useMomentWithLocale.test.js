@@ -16,12 +16,4 @@ describe('useMomentWithLocale hook', () => {
       expect(result.current.locale()).toEqual('en');
     });
   });
-
-  it('should return moment with authenticated user default language', async () => {
-    const auth = { ...authState, user: { community: { locale: 'es' } } };
-    const { result, waitFor } = renderHook(() => useMomentWithLocale(auth));
-    await waitFor(() => {
-      expect(result.current.locale()).toEqual('es');
-    });
-  });
 });
