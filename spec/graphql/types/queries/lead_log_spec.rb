@@ -199,6 +199,20 @@ RSpec.describe Types::Queries::LeadLog do
           expect(scorecard.dig('ytd_count', 'signed_lease')).to eql 1
         end
       end
+
+      context 'when divisions are not set' do
+        before { community.update(lead_monthly_targets: nil) }
+
+        it 'returns empty stats for divisions' do
+          result = DoubleGdpSchema.execute(lead_scorecard,
+                                           context: {
+                                             current_user: admin,
+                                             site_community: community,
+                                           }).as_json
+          expect(result['errors']).to be nil
+          expect(result.dig('data', 'leadScorecards', 'leads_monthly_stats_by_division')).to eq({})
+        end
+      end
     end
 
     context 'when user is unauthorized' do
