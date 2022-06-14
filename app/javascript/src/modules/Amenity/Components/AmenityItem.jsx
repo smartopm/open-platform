@@ -5,13 +5,14 @@ import CardWrapper from '../../../shared/CardWrapper';
 import { truncateString } from '../../../utils/helpers';
 
 export default function AmenityItem({ amenity }) {
+  function handleReserve() {}
   return (
     <CardWrapper
       title={amenity.name}
-      displayButton
+      displayButton={!!amenity.invitationLink}
+      handleButton={handleReserve}
       buttonName="Reserve"
       cardStyles={{ height: 315 }}
-      // buttonStyles={{ marginTop: '64%' }}
     >
       <Typography data-testid="amenity_description" component="p">
         {`Description: ${truncateString(amenity.description, 100)}`}
@@ -30,6 +31,7 @@ AmenityItem.propTypes = {
     name: PropTypes.string,
     description: PropTypes.string,
     location: PropTypes.string,
-    hours: PropTypes.string
+    hours: PropTypes.string,
+    invitationLink: PropTypes.string
   }).isRequired
 };

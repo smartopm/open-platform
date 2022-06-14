@@ -1,6 +1,6 @@
+import React from 'react';
 import { MockedProvider } from '@apollo/react-testing';
 import { waitFor, render } from '@testing-library/react';
-import React from 'react';
 import ReactTestUtils from 'react-dom/test-utils';
 import AmenityForm from '../Components/AmenityForm';
 import { AmenityCreateMutation } from '../graphql/amenity_mutations';
