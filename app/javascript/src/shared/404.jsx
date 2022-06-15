@@ -17,8 +17,8 @@ export default function Page404() {
         onClick={() => history.push('/')}
         variant="contained"
         data-testid="404-action-btn"
+        color="primary"
         style={{
-          backgroundColor: '#598EC1',
           color: '#ffffff'
         }}
       >
