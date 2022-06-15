@@ -1,4 +1,3 @@
-/* eslint-disable complexity */
 import React, { useState, useContext } from 'react';
 import { useMutation, useQuery } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
@@ -11,13 +10,7 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import CreateEvent from '../graphql/mutations';
-import {
-  UserMeetingsQuery,
-  UserEventsQuery,
-  DealDetailsQuery,
-  LeadInvestmentsQuery,
-  InvestmentStatsQuery
-} from '../graphql/queries';
+import { UserMeetingsQuery, UserEventsQuery } from '../graphql/queries';
 import { UpdateUserMutation } from '../../../../graphql/mutations/user';
 import CenteredContent from '../../../../shared/CenteredContent';
 import { Spinner } from '../../../../shared/Loading';
@@ -47,7 +40,7 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
     refetch: refetchMeetings,
     error: meetingsError
   } = useQuery(UserMeetingsQuery, {
-    variables: { userId },
+    variables: { userId, logType: 'meeting' },
     fetchPolicy: 'cache-and-network'
   });
 
@@ -57,37 +50,7 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
     refetch: refetchEvents,
     error: eventsError
   } = useQuery(UserEventsQuery, {
-    variables: { userId },
-    fetchPolicy: 'cache-and-network'
-  });
-
-  const {
-    data: dealDetailsData,
-    loading: dealDetailsLoading,
-    refetch: refetchDealDetails,
-    error: dealDetailsError
-  } = useQuery(DealDetailsQuery, {
-    variables: { userId },
-    fetchPolicy: 'cache-and-network'
-  });
-
-  const {
-    data: leadInvestmentData,
-    loading: leadInvestmentsLoading,
-    refetch: refetchLeadInvestments,
-    error: leadInvestmentsError
-  } = useQuery(LeadInvestmentsQuery, {
-    variables: { userId },
-    fetchPolicy: 'cache-and-network'
-  });
-
-  const {
-    data: investmentStatsData,
-    loading: investmentStatsLoading,
-    refetch: refetchInvestmentStats,
-    error: investmentStatsError
-  } = useQuery(InvestmentStatsQuery, {
-    variables: { userId },
+    variables: { userId, logType: 'event' },
     fetchPolicy: 'cache-and-network'
   });
 
@@ -100,14 +63,6 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
     });
   }
 
-  function handleMeetingNameChange(event) {
-    setMeetingName(event.target.value);
-  }
-
-  function handleEventNameChange(event) {
-    setEventName(event.target.value);
-  }
-
   function handleSubmitDivision(e) {
     e.preventDefault();
     handleSubmit({});
@@ -118,7 +73,6 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
     e.preventDefault();
     const type = 'meeting';
     handleSubmit({ name: meetingName, logType: type });
-    setMeetingName('');
   }
 
   function handleSubmitEvent(e) {
@@ -126,16 +80,9 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
     const type = 'event';
 
     handleSubmit({ name: eventName, logType: type });
-    setEventName('');
   }
 
-  function handleSubmit({
-    name = '',
-    logType = '',
-    dealSize = '',
-    investmentTarget = '',
-    amount = ''
-  }) {
+  function handleSubmit({ name = '', logType = '' }) {
     if (leadData) {
       leadDataUpdate({
         variables: {
@@ -156,50 +103,6 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
         .catch(err => {
           setMessage({ ...message, isError: true, detail: formatError(err.message) });
         });
-    }
-    if (logType === 'deal_details') {
-      eventCreate({
-        variables: {
-          userId,
-          logType,
-          dealSize: parseFloat(dealSize),
-          investmentTarget: parseFloat(investmentTarget)
-        }
-      })
-        .then(() => {
-          setMessage({
-            ...message,
-            isError: false,
-            detail: t('common:misc.misc_successfully_created', { type: t('common:menu.event') })
-          });
-          refetchDealDetails();
-          refetchLeadInvestments();
-        })
-        .catch(err => {
-          setMessage({ ...message, isError: true, detail: formatError(err.message) });
-        });
-    }
-    if (logType === 'investment') {
-      eventCreate({
-        variables: {
-          userId,
-          logType,
-          name,
-          amount: parseFloat(amount)
-        }
-      })
-        .then(() => {
-          setMessage({
-            ...message,
-            isError: false,
-            detail: t('common:misc.misc_successfully_created', { type: t('common:menu.event') })
-          });
-          refetchLeadInvestments();
-          refetchInvestmentStats();
-        })
-        .catch(err => {
-          setMessage({ ...message, isError: true, detail: formatError(err.message) });
-        });
     } else {
       eventCreate({ variables: { userId, name, logType } })
         .then(() => {
@@ -208,6 +111,8 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
             isError: false,
             detail: t('common:misc.misc_successfully_created', { type: t('common:menu.event') })
           });
+          setMeetingName('');
+          setEventName('');
           refetchEvents();
           refetchMeetings();
         })
@@ -217,29 +122,14 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
     }
   }
 
-  const err =
-    meetingsError ||
-    eventsError ||
-    dealDetailsError ||
-    leadInvestmentsError ||
-    investmentStatsError ||
-    null;
+  const err = meetingsError || eventsError || null;
 
   if (err) return err.message;
 
-  if (
-    isLoading ||
-    divisionLoading ||
-    eventsLoading ||
-    meetingsLoading ||
-    dealDetailsLoading ||
-    leadInvestmentsLoading ||
-    investmentStatsLoading
-  )
-    return <Spinner />;
+  if (isLoading || divisionLoading || meetingsLoading || eventsLoading) return <Spinner />;
 
   return (
-    <form onSubmit={handleSubmit} style={{ margin: '0 -25px 0 -25px' }}>
+    <form style={{ margin: '0 -25px 0 -25px' }}>
       <MessageAlert
         type={message.isError ? 'error' : 'success'}
         message={message.detail}
@@ -275,7 +165,7 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
                     <Grid
                       item
                       md={10}
-                      xs={9}
+                      xs={10}
                       style={{
                         paddingLeft: 2
                       }}
@@ -375,7 +265,7 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
                   name="eventName"
                   label={t('lead_management.event_name')}
                   style={{ width: '95%' }}
-                  onChange={handleEventNameChange}
+                  onChange={event => setEventName(event.target.value)}
                   value={eventName || ''}
                   variant="outlined"
                   fullWidth
@@ -417,9 +307,9 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
 
       <br />
       {/* Lead Events Listing */}
-      {eventsData?.leadEvents.length > 0 ? (
+      {eventsData?.leadLogs.length > 0 ? (
         <div>
-          {eventsData?.leadEvents.map(leadEvent => (
+          {eventsData?.leadLogs.map(leadEvent => (
             <div
               key={leadEvent.id}
               style={{
@@ -464,7 +354,7 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
                 name="meetingName"
                 label={t('lead_management.meeting_name')}
                 style={{ width: '95%' }}
-                onChange={handleMeetingNameChange}
+                onChange={event => setMeetingName(event.target.value)}
                 value={meetingName || ''}
                 variant="outlined"
                 fullWidth
@@ -504,9 +394,9 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
       </Grid>
       <br />
       {/* Lead Meetings Listing */}
-      {meetingsData?.leadMeetings.length > 0 ? (
+      {meetingsData?.leadLogs.length > 0 ? (
         <div>
-          {meetingsData?.leadMeetings.map(leadMeeting => (
+          {meetingsData?.leadLogs.map(leadMeeting => (
             <div
               key={leadMeeting.id}
               style={{
@@ -525,12 +415,7 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
         <Divider />
       </Grid>
 
-      <Investments
-        handleSubmit={handleSubmit}
-        dealDetailsData={dealDetailsData}
-        investmentStatsData={investmentStatsData}
-        leadInvestmentData={leadInvestmentData}
-      />
+      <Investments userId={userId} />
     </form>
   );
 }

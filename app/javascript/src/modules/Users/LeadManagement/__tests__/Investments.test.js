@@ -1,7 +1,7 @@
 /* eslint-disable max-lines */
 import React from 'react';
-
-import { render, screen, waitFor } from '@testing-library/react';
+import ReactTestUtils from 'react-dom/test-utils';
+import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min';
 import { MockedProvider } from '@apollo/react-testing';
 import authState from '../../../../__mocks__/authstate';
@@ -18,15 +18,15 @@ describe('LeadEvents Page', () => {
     jest.restoreAllMocks();
   });
 
-  const DealDetailsDataMock = [
+  const queriesMock = [
     {
       request: {
         query: DealDetailsQuery,
-        variables: { userId: 'c96f64bb-e3b4-42ff-b6a9-66889ec79e99' }
+        variables: { userId: 'c96f64bb-e3b4-42ff-b6a9-66889ec79e99', logType: 'deal_details' }
       },
       result: {
         data: {
-          dealDetails: [
+          leadLogs: [
             {
               id: 'c96f64bb-e3b4-42ff-b6a9-66889ec79e9990099',
               name: 'Tilisi run 2022',
@@ -40,18 +40,15 @@ describe('LeadEvents Page', () => {
           ]
         }
       }
-    }
-  ];
-
-  const LeadInvestmentsDataMock = [
+    },
     {
       request: {
         query: LeadInvestmentsQuery,
-        variables: { userId: 'c96f64bb-e3b4-42ff-b6a9-66889ec79e99' }
+        variables: { userId: 'c96f64bb-e3b4-42ff-b6a9-66889ec79e99', logType: 'investment' }
       },
       result: {
         data: {
-          leadInvestments: [
+          leadLogs: [
             {
               id: 'c96f64bb-e3b4-42ff-b6a9-66889ec79e9990099',
               name: 'Tilisi run 2022',
@@ -64,9 +61,7 @@ describe('LeadEvents Page', () => {
           ]
         }
       }
-    }
-  ];
-  const InvestmentStatsDataMock = [
+    },
     {
       request: {
         query: InvestmentStatsQuery,
@@ -86,14 +81,33 @@ describe('LeadEvents Page', () => {
   ];
 
   const eventRequestDataMock = [
+    ...queriesMock,
     {
       request: {
         query: CreateEvent,
         variables: {
           userId: 'c96f64bb-e3b4-42ff-b6a9-66889ec79e99',
-          dealSize: parseFloat(45000000),
-          investmentTarget: parseFloat(25000),
+          dealSize: 45000000,
+          investmentTarget: 105000,
           logType: 'deal_details'
+        }
+      },
+      result: {
+        data: {
+          leadLogCreate: {
+            success: true
+          }
+        }
+      }
+    },
+    {
+      request: {
+        query: CreateEvent,
+        variables: {
+          userId: 'c96f64bb-e3b4-42ff-b6a9-66889ec79e99',
+          name: 'Flight to Paris',
+          amount: 85000,
+          logType: 'investment'
         }
       },
       result: {
@@ -112,12 +126,7 @@ describe('LeadEvents Page', () => {
         <Context.Provider value={authState}>
           <BrowserRouter>
             <MockedThemeProvider>
-              <Investments
-                dealDetailsData={DealDetailsDataMock[0].result.data}
-                leadInvestmentData={LeadInvestmentsDataMock[0].result.data}
-                investmentStatsData={InvestmentStatsDataMock[0].result.data}
-                handleSubmit={jest.fn()}
-              />
+              <Investments userId="c96f64bb-e3b4-42ff-b6a9-66889ec79e99" />
             </MockedThemeProvider>
           </BrowserRouter>
         </Context.Provider>
@@ -128,6 +137,61 @@ describe('LeadEvents Page', () => {
       expect(screen.queryAllByTestId('investment')[0]).toBeInTheDocument();
       expect(screen.queryByTestId('investment_header')).toBeInTheDocument();
       expect(screen.queryByText('lead_management.investment')).toBeInTheDocument();
+      const dealSizeTextField = screen.getByLabelText('lead_management.deal_size');
+
+      ReactTestUtils.Simulate.change(dealSizeTextField, {
+        target: { value: '45000000' }
+      });
+
+      const investmentTargetTextField = screen.getByLabelText('lead_management.investment_target');
+
+      ReactTestUtils.Simulate.change(investmentTargetTextField, {
+        target: { value: '25000' }
+      });
+
+      const saveButton = screen.queryByTestId('add-investment-button');
+      // // user input should set add button enabled
+      expect(saveButton).toBeEnabled();
+    });
+    // clicking on the add button should submit current data
+    await waitFor(() => {
+      fireEvent.click(screen.queryByTestId('add-investment-button'));
+    });
+  });
+
+  it('Creates an investment expense', async () => {
+    render(
+      <MockedProvider mocks={eventRequestDataMock} addTypename={false}>
+        <Context.Provider value={authState}>
+          <BrowserRouter>
+            <MockedThemeProvider>
+              <Investments userId="c96f64bb-e3b4-42ff-b6a9-66889ec79e99" />
+            </MockedThemeProvider>
+          </BrowserRouter>
+        </Context.Provider>
+      </MockedProvider>
+    );
+
+    await waitFor(() => {
+      const descriptionTextField = screen.getByLabelText('lead_management.description');
+
+      ReactTestUtils.Simulate.change(descriptionTextField, {
+        target: { value: 'Flight to Paris' }
+      });
+
+      const investmentTargetTextField = screen.getByLabelText('lead_management.amount');
+
+      ReactTestUtils.Simulate.change(investmentTargetTextField, {
+        target: { value: '85000' }
+      });
+
+      const saveButton = screen.queryByTestId('add-investment-size-button');
+      // // user input should set add button enabled
+      expect(saveButton).toBeEnabled();
+    });
+    // clicking on the add button should submit current data
+    await waitFor(() => {
+      fireEvent.click(screen.queryByTestId('add-investment-size-button'));
     });
   });
 });
