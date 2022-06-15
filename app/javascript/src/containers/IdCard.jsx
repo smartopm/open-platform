@@ -11,6 +11,7 @@ import DateUtil from '../utils/dateutil'
 import { UserQuery } from '../graphql/queries'
 import { Context } from './Provider/AuthStateProvider'
 import ErrorPage from '../components/Error'
+import PageWrapper from '../shared/PageWrapper'
 
 function qrCodeAddress(id_card_token) {
   const timestamp = Date.now()
@@ -36,8 +37,7 @@ export default function IdCardPage(){
 export function UserIDDetail({ data, communityName }) {
   const { t } = useTranslation(['scan', 'days', 'common']);
   return (
-    <div>
-
+    <PageWrapper PageTitle={t('misc.my_id')}>
       <div className="row justify-content-center">
         <div className="card id_card_box col-10 col-sm-10 col-md-6">
           <div
@@ -141,6 +141,6 @@ export function UserIDDetail({ data, communityName }) {
             : null}
         </div>
       </div>
-    </div>
+    </PageWrapper>
   )
 }
