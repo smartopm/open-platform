@@ -169,9 +169,9 @@ module Types::Queries::LeadLog
   end
 
   def percentage_of_target_used(total_spent, lead_log)
-    return 100 if lead_log.deal_size.to_d.zero?
+    return 100 if lead_log.investment_target.to_d.zero?
 
-    (total_spent / lead_log.deal_size).floor(2)
+    ((total_spent / lead_log.investment_target) * 100).floor(2)
   end
 
   def valid_lead_divisions

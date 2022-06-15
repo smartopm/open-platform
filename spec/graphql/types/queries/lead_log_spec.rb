@@ -260,7 +260,7 @@ RSpec.describe Types::Queries::LeadLog do
                                                              }).as_json
           expect(result['errors']).to be nil
           expect(result.dig('data', 'investmentStats', 'total_spent')).to eql 1200.0
-          expect(result.dig('data', 'investmentStats', 'percentage_of_target_used')).to eql 0.01
+          expect(result.dig('data', 'investmentStats', 'percentage_of_target_used')).to eql 7.99
         end
       end
     end
