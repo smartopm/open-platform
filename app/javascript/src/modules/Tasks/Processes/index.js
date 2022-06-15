@@ -21,8 +21,7 @@ function RenderProcesses() {
 
 function RenderProcessComments() {
   return (
-    // <AccessCheck module={currentModule} allowedPermissions={[...processesPermissions]}>
-    <AccessCheck module={currentModule} allowedPermissions={['can_sing']}>
+    <AccessCheck module={currentModule} allowedPermissions={[...processesPermissions]}>
       <ProcessCommentsPage />
     </AccessCheck>
   );
