@@ -74,20 +74,15 @@ describe('Label Edit Component', () => {
     expect(color).toBeInTheDocument();
 
     await act(async () => {
-      fireEvent.change(title, {
-        target: { value: 'title' }
-      })
+
+      fireEvent.change(title, { target: { value: 'title' } });
       expect(title.value).toBe('title');
 
-      fireEvent.change(description, {
-        target: { value: 'description' }
-      })
+      fireEvent.change(description, { target: { value: 'description' } });
       expect(description.value).toBe('description');
 
-      fireEvent.change(color, {
-        target: { value: '#fff' }
-      })
-      expect(color.value).toBe('#fff')
+      fireEvent.change(color, { target: { value: '#fff' } });
+      expect(color.value).toBe('#fff');
 
       const button = container.queryByTestId('custom-dialog-button');
       fireEvent.click(button);
@@ -100,7 +95,7 @@ describe('Label Edit Component', () => {
         },
         { timeout: 100 }
       );
-    });
+      });
   });
 
   it('render with error', async () => {

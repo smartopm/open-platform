@@ -148,14 +148,6 @@ export default function UserForm({ isEditing, isFromRef, isAdminOrMarketingAdmin
       });
   }
 
-  function handleInputChange(event) {
-    const { name, value } = event.target;
-    setData({
-      ...data,
-      [name]: value
-    });
-  }
-
   if (id) {
     if (isLoading) {
       return <Spinner />;
@@ -331,7 +323,7 @@ export default function UserForm({ isEditing, isFromRef, isAdminOrMarketingAdmin
               className="form-control"
               label={t('common:form_fields.client_name')}
               type="text"
-              onChange={handleInputChange}
+              onChange={event => setData({ ...data, name: event.target.value })}
               value={authState.user?.name || ''}
               disabled
               name="name"
@@ -345,7 +337,7 @@ export default function UserForm({ isEditing, isFromRef, isAdminOrMarketingAdmin
             fullWidth
             label={t('common:form_fields.full_name')}
             type="text"
-            onChange={handleInputChange}
+            onChange={event => setData({ ...data, name: event.target.value })}
             value={data.name || ''}
             name="name"
             inputProps={{ 'data-testid': 'username' }}
@@ -383,7 +375,7 @@ export default function UserForm({ isEditing, isFromRef, isAdminOrMarketingAdmin
             label={t('common:form_fields.primary_email')}
             name="email"
             type="email"
-            onChange={handleInputChange}
+            onChange={event => setData({ ...data, email: event.target.value })}
             value={data.email || ''}
             inputProps={{ 'data-testid': 'email' }}
             disabled={!isFromRef && !isAdminOrMarketingAdmin}
@@ -400,7 +392,7 @@ export default function UserForm({ isEditing, isFromRef, isAdminOrMarketingAdmin
                 label={t('common:form_fields.external_reference')}
                 name="extRefId"
                 type="text"
-                onChange={handleInputChange}
+                onChange={event => setData({ ...data, extRefId: event.target.value })}
                 value={data.extRefId || ''}
                 inputProps={{ 'data-testid': 'ext-ref-id' }}
               />
@@ -453,7 +445,7 @@ export default function UserForm({ isEditing, isFromRef, isAdminOrMarketingAdmin
                 label={t('common:form_fields.primary_address')}
                 name="primaryAddress"
                 type="text"
-                onChange={handleInputChange}
+                onChange={event => setData({ ...data, primaryAddress: event.target.value })}
                 value={data.primaryAddress || ''}
                 inputProps={{ 'data-testid': 'address' }}
               />
@@ -489,7 +481,7 @@ export default function UserForm({ isEditing, isFromRef, isAdminOrMarketingAdmin
                     label={t('common:form_fields.reason')}
                     name="requestReason"
                     value={data.requestReason || ''}
-                    onChange={handleInputChange}
+                    onChange={event => setData({ ...data, requestReason: event.target.value })}
                     margin="normal"
                     inputProps={{ 'aria-label': 'requestReason' }}
                     className={`${css(styles.selectInput)}`}
@@ -509,7 +501,7 @@ export default function UserForm({ isEditing, isFromRef, isAdminOrMarketingAdmin
                       select
                       label={t('common:form_fields.user_type')}
                       value={data.userType || ''}
-                      onChange={handleInputChange}
+                      onChange={event => setData({ ...data, userType: event.target.value })}
                       margin="normal"
                       name="userType"
                       inputProps={{ 'aria-label': 'User Type' }}
@@ -532,7 +524,7 @@ export default function UserForm({ isEditing, isFromRef, isAdminOrMarketingAdmin
                     select
                     label={t('common:form_fields.state')}
                     value={data.state || ''}
-                    onChange={handleInputChange}
+                    onChange={event => setData({ ...data, state: event.target.value })}
                     margin="normal"
                     name="state"
                     inputProps={{ 'aria-label': 'state' }}
@@ -552,7 +544,7 @@ export default function UserForm({ isEditing, isFromRef, isAdminOrMarketingAdmin
                     select
                     label={t('common:form_fields.status')}
                     value={data.status || ''}
-                    onChange={handleInputChange}
+                    onChange={event => setData({ ...data, status: event.target.value })}
                     margin="normal"
                     name="status"
                     inputProps={{ 'aria-label': 'status' }}
@@ -572,7 +564,7 @@ export default function UserForm({ isEditing, isFromRef, isAdminOrMarketingAdmin
                     select
                     label={t('common:misc.customer_journey_stage')}
                     value={data.subStatus || ''}
-                    onChange={handleInputChange}
+                    onChange={event => setData({ ...data, subStatus: event.target.value })}
                     margin="normal"
                     name="subStatus"
                     inputProps={{ 'aria-label': 'subStatus' }}

@@ -165,9 +165,9 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, direction, communityFeatu
               >
                 <List component="div" disablePadding>
                   {menuItem.subMenu &&
-                    menuItem.subMenu.map(item => {
-                      return(
-                        communityFeatures.includes(item.featureName) &&
+                    menuItem.subMenu.map(item => (
+                      <Fragment key={item.routeProps.path}>
+                        {communityFeatures.includes(item.featureName) &&
                         checkSubMenuAccessibility({ authState, subMenuItem: item }) ? (
                           item.subMenu && item.subMenu.length > 0 ? (
                             <>
@@ -178,24 +178,24 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, direction, communityFeatu
                                 selected={pathname === item.routeProps.path}
                                 className={`${item.styleProps?.className} ${classes.menuItem}`}
                                 style={{
-                                backgroundColor:
-                                  pathname === item.routeProps.path && theme.palette.primary.main,
-                              }}
+                                  backgroundColor:
+                                    pathname === item.routeProps.path && theme.palette.primary.main
+                                }}
                               >
                                 <ListItemText
                                   primary={item.name(t)}
                                   style={{
-                                  marginLeft: `${menuItem.styleProps?.icon ? '55px' : '17px'}`,
-                                  color: pathname === item.routeProps.path && '#FFFFFF'
+                                    marginLeft: `${menuItem.styleProps?.icon ? '55px' : '17px'}`,
+                                    color: pathname === item.routeProps.path && '#FFFFFF'
                                   }}
                                   className={`${classes.menuItemText} ${classes.child}`}
                                 />
                                 {currentMenu.name === item.name(t) && currentMenu.isOpen ? (
                                   <ExpandLess color="primary" className={classes.child} />
-                                  ) : // Avoid showing toggle icon on menus with no submenus
-                                  item.subMenu ? (
-                                    <ExpandMore color="primary" className={classes.child} />
-                                  ) : null}
+                                ) : // Avoid showing toggle icon on menus with no submenus
+                                item.subMenu ? (
+                                  <ExpandMore color="primary" className={classes.child} />
+                                ) : null}
                               </ListItem>
                               <Collapse
                                 key={item}
@@ -221,7 +221,8 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, direction, communityFeatu
                                         primary={subMenuItem.name(t)}
                                         style={{
                                           marginLeft: '73px',
-                                          color: pathname === subMenuItem.routeProps.path && '#FFFFFF'
+                                          color:
+                                            pathname === subMenuItem.routeProps.path && '#FFFFFF'
                                         }}
                                         className={`${classes.menuItemText} ${classes.child}`}
                                       />
@@ -238,15 +239,15 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, direction, communityFeatu
                               selected={pathname === item.routeProps.path}
                               className={`${item.styleProps?.className} ${classes.menuItem}`}
                               style={{
-                              backgroundColor:
-                                pathname === item.routeProps.path && theme.palette.primary.main,
-                            }}
+                                backgroundColor:
+                                  pathname === item.routeProps.path && theme.palette.primary.main
+                              }}
                             >
                               <ListItemText
                                 primary={item.name(t)}
                                 style={{
-                                marginLeft: `${menuItem.styleProps?.icon ? '55px' : '17px'}`,
-                                color: pathname === item.routeProps.path && '#FFFFFF'
+                                  marginLeft: `${menuItem.styleProps?.icon ? '55px' : '17px'}`,
+                                  color: pathname === item.routeProps.path && '#FFFFFF'
                                 }}
                                 className={`${classes.menuItemText} ${classes.child}`}
                               />
@@ -254,11 +255,9 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, direction, communityFeatu
                           )
                         ) : (
                           <span key={item.name(t)} />
-                        )
-                      )
-                    }
-                    )
-                  }
+                        )}
+                      </Fragment>
+                    ))}
                 </List>
               </Collapse>
             </Fragment>

@@ -1,6 +1,5 @@
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min';
-
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { MockedProvider } from '@apollo/react-testing';
 import { Context } from '../../../../containers/Provider/AuthStateProvider';
