@@ -100,8 +100,7 @@ const AdminRoutes = props => {
   if (authState.user.userType === 'admin') {
     return props.children;
   }
-  return props.children;
-  // return <Redirect to="/" />;
+  return <Redirect to="/" />;
 };
 
 const Logout = () => {
