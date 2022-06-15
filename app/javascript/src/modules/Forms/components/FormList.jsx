@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useContext, useState } from 'react';
 import {
   List,
   ListItem,
@@ -28,6 +28,7 @@ import FormMenu from './FormMenu';
 import CenteredContent from '../../../shared/CenteredContent';
 import PageWrapper from '../../../shared/PageWrapper';
 import AccessCheck from '../../Permissions/Components/AccessCheck';
+import { Context } from '../../../containers/Provider/AuthStateProvider';
 
 // here we get existing google forms and we mix them with our own created forms
 export default function FormLinkList({ userType, community, path, id, t }) {
@@ -40,11 +41,18 @@ export default function FormLinkList({ userType, community, path, id, t }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const [formId, setFormId] = useState('');
   const menuOpen = Boolean(anchorEl);
+  const authState = useContext(Context);
 
   function handleOpenMenu(event, Id) {
     event.stopPropagation();
     setAnchorEl(event.currentTarget);
     setFormId(Id);
+  }
+
+  function canAccessFormMenu(roles) {
+    if (userType === 'admin' ) return true;
+    if (roles && roles.length > 0) return roles.includes(authState.user.userType);
+    return false;
   }
 
   if (loading) return <Loading />;
@@ -99,7 +107,7 @@ export default function FormLinkList({ userType, community, path, id, t }) {
                         </Box>
                       </Grid>
                       <Grid item xs={2}>
-                        {userType === 'admin' && (
+                        {canAccessFormMenu(form?.roles) && (
                           <IconButton
                             className={`${css(styles.menuButton)} form-menu-open-btn`}
                             aria-label={`more-${form.name}`}
@@ -123,6 +131,7 @@ export default function FormLinkList({ userType, community, path, id, t }) {
                       open={menuOpen}
                       refetch={refetch}
                       t={t}
+                      userType={userType}
                     />
                   )}
                   <Divider variant="middle" />
