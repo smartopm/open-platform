@@ -86,7 +86,7 @@ export default function TaskForm({
   }
 
   return (
-    <div style={{paddingTop: '50px'}}>
+    <div>
       <MessageAlert
         type={isSuccessAlert ? 'success' : 'error'}
         message={messageAlert}

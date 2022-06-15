@@ -5,7 +5,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useEffect, useState } from 'react';
 import Typography from '@mui/material/Typography';
-import { Button, TextField, MenuItem, Container, Grid, IconButton, Checkbox } from '@mui/material';
+import { Button, TextField, MenuItem, Grid, IconButton, Checkbox } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import { DeleteOutline } from '@mui/icons-material';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
@@ -31,6 +31,7 @@ import { validateThemeColor } from '../helpers';
 import { AdminUsersQuery } from '../../Users/graphql/user_query';
 import MultiSelect from '../../../shared/MultiSelect';
 import { EmailTemplatesQuery } from '../../Emails/graphql/email_queries';
+import PageWrapper from '../../../shared/PageWrapper';
 
 export default function CommunitySettings({ data, refetch }) {
   const numbers = {
@@ -444,7 +445,7 @@ export default function CommunitySettings({ data, refetch }) {
   }
 
   return (
-    <Container>
+    <PageWrapper oneCol>
       <MessageAlert
         type={message.isError ? 'error' : 'success'}
         message={message.detail}
@@ -1111,7 +1112,7 @@ export default function CommunitySettings({ data, refetch }) {
           {mutationLoading ? <Spinner /> : t('community.update_community')}
         </Button>
       </div>
-    </Container>
+    </PageWrapper>
   );
 }
 

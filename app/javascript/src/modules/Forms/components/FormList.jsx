@@ -52,7 +52,7 @@ export default function FormLinkList({ userType, community, path, id, t }) {
   if (error) return <CenteredContent>{formatError(error.message)}</CenteredContent>;
 
   return (
-    <div>
+    <PageWrapper>
       {(path === '/forms/create' || id) && (
         <>
           <FormHeader
@@ -144,7 +144,7 @@ export default function FormLinkList({ userType, community, path, id, t }) {
           </AccessCheck>
         </>
       )}
-    </div>
+    </PageWrapper>
   );
 }
 

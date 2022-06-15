@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
-import { css, StyleSheet } from 'aphrodite'
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { css, StyleSheet } from 'aphrodite';
 import {
   List,
   ListItem,
@@ -14,31 +14,32 @@ import {
   Dialog,
   DialogTitle,
   DialogContent
-} from '@mui/material'
-import MoreVertIcon from '@mui/icons-material/MoreVert'
-import { useTranslation } from 'react-i18next'
-import Avatar from '../../../components/Avatar'
-import BusinessActionMenu from './BusinessActionMenu'
-import { businessCategories } from '../../../utils/constants'
-import CenteredContent from '../../../components/CenteredContent'
-import BusinessForm from './BusinessForm'
-import {canDeleteBusiness, canCreateBusiness} from '../utils'
+} from '@mui/material';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { useTranslation } from 'react-i18next';
+import Avatar from '../../../components/Avatar';
+import BusinessActionMenu from './BusinessActionMenu';
+import { businessCategories } from '../../../utils/constants';
+import CenteredContent from '../../../components/CenteredContent';
+import BusinessForm from './BusinessForm';
+import { canDeleteBusiness, canCreateBusiness } from '../utils';
+import PageWrapper from '../../../shared/PageWrapper';
 
 export default function BusinessList({ businessData, authState, refetch }) {
-  const [anchorEl, setAnchorEl] = useState(null)
-  const [modalOpen, setModalOpen] = useState(false)
+  const [anchorEl, setAnchorEl] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
   const [action, setAction] = useState('create');
   const [singleBusinessData, setSingleBusinessData] = useState(null);
-  const { t } = useTranslation('common')
+  const { t } = useTranslation('common');
 
-  const open = Boolean(anchorEl)
+  const open = Boolean(anchorEl);
 
   const avatarStyle = {
     style: 'medium'
-  }
+  };
 
   function handleOpenMenu(event) {
-    setAnchorEl(event.currentTarget)
+    setAnchorEl(event.currentTarget);
   }
 
   function openModal() {
@@ -56,13 +57,13 @@ export default function BusinessList({ businessData, authState, refetch }) {
   }
 
   function handleEditClick(business) {
-    setSingleBusinessData(business)
+    setSingleBusinessData(business);
     setAction('edit');
     setModalOpen(true);
   }
 
   return (
-    <div className="container">
+    <PageWrapper>
       <Dialog
         open={modalOpen}
         fullWidth
@@ -72,7 +73,11 @@ export default function BusinessList({ businessData, authState, refetch }) {
       >
         <DialogTitle id="task_modal">
           <CenteredContent>
-            <span>{action === 'create' ? t('form_actions.create_business') : t('form_actions.update_business')}</span>
+            <span>
+              {action === 'create'
+                ? t('form_actions.create_business')
+                : t('form_actions.update_business')}
+            </span>
           </CenteredContent>
         </DialogTitle>
         <DialogContent>
@@ -80,8 +85,8 @@ export default function BusinessList({ businessData, authState, refetch }) {
         </DialogContent>
       </Dialog>
       <List>
-        {businessData.businesses.map((business) => (
-          <ListItem key={business.id} data-testid='business_list'>
+        {businessData.businesses.map(business => (
+          <ListItem key={business.id} data-testid="business_list">
             <Link
               key={business.id}
               to={`/business/${business.id}`}
@@ -94,10 +99,7 @@ export default function BusinessList({ businessData, authState, refetch }) {
               }}
             >
               <ListItemAvatar>
-                <Avatar
-                  user={business}
-                  style={avatarStyle.style}
-                />
+                <Avatar user={business} style={avatarStyle.style} />
               </ListItemAvatar>
               <Box
                 style={{
@@ -124,7 +126,7 @@ export default function BusinessList({ businessData, authState, refetch }) {
                 aria-haspopup="true"
                 onClick={handleOpenMenu}
                 dataid={business.id}
-                data-testid='open_menu'
+                data-testid="open_menu"
                 size="large"
               >
                 <MoreVertIcon />
@@ -156,7 +158,7 @@ export default function BusinessList({ businessData, authState, refetch }) {
           {t('form_actions.create_business')}
         </Fab>
       )}
-    </div>
+    </PageWrapper>
   );
 }
 
@@ -174,4 +176,4 @@ const styles = StyleSheet.create({
     color: '#000000',
     textDecoration: 'none'
   }
-})
+});

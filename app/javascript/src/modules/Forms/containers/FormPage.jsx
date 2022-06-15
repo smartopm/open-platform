@@ -16,6 +16,7 @@ import CenteredContent from '../../../shared/CenteredContent';
 import AccessCheck from '../../Permissions/Components/AccessCheck';
 import { FormCategoriesQuery } from '../graphql/form_category_queries';
 import { savePdf, useParamsQuery } from '../../../utils/helpers';
+import PageWrapper from '../../../shared/PageWrapper';
 
 export default function FormPage() {
   const { userId, formUserId, formId } = useParams();
@@ -27,7 +28,7 @@ export default function FormPage() {
   const id = path.get('formId');
   const download = path.get('download')
   const { data: formDetailData, loading } = useQuery(FormQuery, { variables: { id: formId } });
-  const [loginPublicUser] = useMutation(PublicUserMutation)
+  const [loginPublicUser] = useMutation(PublicUserMutation);
   const categoriesData = useQuery(FormCategoriesQuery, {
     variables: { formId: id },
     fetchPolicy: 'no-cache'
@@ -38,15 +39,15 @@ export default function FormPage() {
   useEffect(() => {
     // check route and auto log the user
     if (!authState.user && pathname.includes('public')) {
-        loginPublicUser()
-          .then(({ data }) => {
-            localStorage.setItem(AUTH_TOKEN_KEY, data.loginPublicUser.authToken)
-            // This causes a blink in the screen, but needed for public user permission
-            window.location.reload()
-          })
-          .catch(() => setIsError(true))
+      loginPublicUser()
+        .then(({ data }) => {
+          localStorage.setItem(AUTH_TOKEN_KEY, data.loginPublicUser.authToken);
+          // This causes a blink in the screen, but needed for public user permission
+          window.location.reload();
+        })
+        .catch(() => setIsError(true));
     }
-  }, [authState.user, loginPublicUser, pathname])
+  }, [authState.user, loginPublicUser, pathname]);
 
   useEffect(() => {
     if (!loading && formDetailData?.form) {
@@ -81,7 +82,7 @@ export default function FormPage() {
   }
 
   return (
-    <>
+    <PageWrapper>
       <br />
       {isFormFilled ? (
         <FormContextProvider>
@@ -116,6 +117,6 @@ export default function FormPage() {
           </Container>
         </FormContextProvider>
       )}
-    </>
+    </PageWrapper>
   );
 }

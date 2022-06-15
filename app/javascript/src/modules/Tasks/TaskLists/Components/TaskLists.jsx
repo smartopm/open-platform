@@ -12,6 +12,7 @@ import { TaskListsQuery } from '../graphql/task_lists_queries';
 import TodoItem from '../../Components/TodoItem';
 import AccessCheck from '../../../Permissions/Components/AccessCheck';
 import FloatingButton from '../../../../shared/buttons/FloatingButton';
+import PageWrapper from '../../../../shared/PageWrapper';
 
 export default function TaskLists() {
   const { t } = useTranslation('task');
@@ -46,13 +47,12 @@ export default function TaskLists() {
   if (loading) return <Spinner />;
 
   return (
-    <div style={{padding: '3% 8%'}}>
+    <PageWrapper>
       <Grid container spacing={1}>
         <Grid item md={12} xs={12} style={{ paddingleft: '10px' }}>
           <div role="presentation">
             <Breadcrumbs
               aria-label="breadcrumb"
-              style={{ paddingBottom: '10px', marginTop: '-45px' }}
             >
               <Link to="/tasks/task_lists">
                 <Typography color="primary" style={{ marginLeft: '5px' }}>
@@ -104,7 +104,7 @@ export default function TaskLists() {
           data-testid="create_task_btn"
         />
       </AccessCheck>
-    </div>
+    </PageWrapper>
   );
 }
 

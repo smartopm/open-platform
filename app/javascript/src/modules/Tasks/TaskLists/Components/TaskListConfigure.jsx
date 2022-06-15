@@ -10,6 +10,7 @@ import CenteredContent from '../../../../shared/CenteredContent';
 import { formatError } from '../../../../utils/helpers';
 import { Spinner } from '../../../../shared/Loading';
 import useStateIfMounted from '../../../../shared/hooks/useStateIfMounted';
+import PageWrapper from '../../../../shared/PageWrapper';
 
 export default function TaskListConfigure() {
   const { t } = useTranslation('task');
@@ -88,13 +89,12 @@ export default function TaskListConfigure() {
   if (errors) return <CenteredContent>{formatError(errors.message)}</CenteredContent>;
 
   return (
-    <div className="container">
+    <PageWrapper>
       <Grid container spacing={1}>
         <Grid item md={12} xs={12} style={{ paddingleft: '10px' }}>
           <div role="presentation">
             <Breadcrumbs
               aria-label="breadcrumb"
-              style={{ paddingBottom: '10px', marginTop: '-45px' }}
             >
               <Link to="/tasks/task_lists">
                 <Typography color="primary" style={{ marginLeft: '5px' }}>
@@ -176,7 +176,7 @@ export default function TaskListConfigure() {
         <br />
         <br />
       </Grid>
-    </div>
+    </PageWrapper>
   );
 }
 

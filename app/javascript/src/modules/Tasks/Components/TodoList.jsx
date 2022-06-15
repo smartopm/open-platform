@@ -37,6 +37,7 @@ import {
 } from '../../../utils/constants';
 import AccessCheck from '../../Permissions/Components/AccessCheck';
 import { TasksLiteQuery } from '../graphql/task_queries';
+import PageWrapper from '../../../shared/PageWrapper';
 
 export default function TodoList({
   isDialogOpen,
@@ -431,8 +432,8 @@ export default function TodoList({
   if (tasksError) return <ErrorPage error={tasksError.message} />;
 
   return (
-    <>
-      <div style={{ padding: '0 8%' }} data-testid="todo-container">
+    <PageWrapper>
+      <div data-testid="todo-container">
         <MessageAlert
           type={taskUpdateStatus.success ? 'success' : 'error'}
           message={taskUpdateStatus.message}
@@ -451,15 +452,7 @@ export default function TodoList({
             label={t('common:form_placeholders.note_due_date')}
           />
         </ModalDialog>
-
-        <Dialog
-          fullScreen
-          open={open}
-          fullWidth
-          maxWidth="lg"
-          onClose={openModal}
-          aria-labelledby="task_modal"
-        >
+        <Dialog fullScreen open={open} fullWidth onClose={openModal} aria-labelledby="task_modal">
           <DialogContent>
             <TaskForm
               refetch={handleRefetch}
@@ -593,7 +586,7 @@ export default function TodoList({
           />
         </AccessCheck>
       </div>
-    </>
+    </PageWrapper>
   );
 }
 
