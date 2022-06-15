@@ -6,6 +6,7 @@ import { CustomizedDialogs as CustomizedDialog } from '../../../components/Dialo
 import { formatError, validateRequiredField } from '../../../utils/helpers';
 import { AmenityCreateMutation } from '../graphql/amenity_mutations';
 import { checkInValidRequiredFields } from '../../LogBook/utils';
+import MessageAlert from '../../../components/MessageAlert';
 
 export default function AmenityForm({ isOpen, setOpen, refetch, t }) {
   const initialInputValue = {
@@ -15,14 +16,16 @@ export default function AmenityForm({ isOpen, setOpen, refetch, t }) {
     hours: '',
     invitationLink: ''
   };
+
+  const initialStatus = {
+    loading: false,
+    isError: false,
+    message: ''
+  }
   const [amenityValue, setAmenityValue] = useState(initialInputValue);
   const [createAmenity] = useMutation(AmenityCreateMutation);
   const requiredFields = ['name', 'description', 'location', 'hours'];
-  const [amenityStatus, setAmenityStatus] = useState({
-    loading: false,
-    isError: false,
-    message: null
-  });
+  const [amenityStatus, setAmenityStatus] = useState(initialStatus);
   const [inputValidationMsg, setInputValidationMsg] = useState({
     isError: false,
     isSubmitting: false
@@ -38,7 +41,6 @@ export default function AmenityForm({ isOpen, setOpen, refetch, t }) {
     createAmenity({ variables: { ...amenityValue } })
       .then(() => {
         setAmenityStatus({
-          ...amenityStatus,
           loading: false,
           isError: false,
           message: t('amenity:misc.amenity_created')
@@ -49,7 +51,6 @@ export default function AmenityForm({ isOpen, setOpen, refetch, t }) {
       })
       .catch(err => {
         setAmenityStatus({
-          ...amenityStatus,
           loading: false,
           isError: true,
           message: formatError(err.message)
@@ -58,78 +59,106 @@ export default function AmenityForm({ isOpen, setOpen, refetch, t }) {
   }
 
   return (
-    <CustomizedDialog
-      open={isOpen}
-      handleModal={() => setOpen(!isOpen)}
-      dialogHeader={t('amenity:misc.configure_amenity')}
-      displaySaveButton
-      handleBatchFilter={handleSaveInfo}
-      actionLoading={amenityStatus.loading}
-      maxWidth="sm"
-      fullWidth
-    >
-      <TextField
-        margin="normal"
-        id="amenity-name"
-        label={t('amenity:fields.amenity_name')}
-        value={amenityValue.name}
-        name="name"
-        onChange={event => setAmenityValue({ ...amenityValue, name: event.target.value })}
-        inputProps={{ 'data-testid': 'amenity_name', maxLength: 30 }}
-        {...validateRequiredField('name', inputValidationMsg, requiredFields, amenityValue, t)}
-        required
-        fullWidth
+    <>
+      <MessageAlert
+        type={!amenityStatus.isError ? 'success' : 'error'}
+        message={amenityStatus.message}
+        open={!!amenityStatus.message}
+        handleClose={() => setAmenityStatus(initialStatus)}
       />
-      <TextField
-        margin="normal"
-        id="amenity-description"
-        label={t('amenity:fields.amenity_description')}
-        name="description"
-        value={amenityValue.description}
-        onChange={event => setAmenityValue({ ...amenityValue, description: event.target.value })}
-        inputProps={{ 'data-testid': 'amenity_description', maxLength: 150 }}
-        {...validateRequiredField('description', inputValidationMsg, requiredFields, amenityValue, t)}
-        minRows={2}
-        multiline
-        required
+      <CustomizedDialog
+        open={isOpen}
+        handleModal={() => setOpen(!isOpen)}
+        dialogHeader={t('amenity:misc.configure_amenity')}
+        displaySaveButton
+        handleBatchFilter={handleSaveInfo}
+        actionLoading={amenityStatus.loading}
+        maxWidth="sm"
         fullWidth
-      />
-      <TextField
-        margin="normal"
-        id="amenity-location"
-        label={t('amenity:fields.amenity_location')}
-        name="location"
-        value={amenityValue.location}
-        onChange={event => setAmenityValue({ ...amenityValue, location: event.target.value })}
-        inputProps={{ 'data-testid': 'amenity_location', maxLength: 150 }}
-        {...validateRequiredField('location', inputValidationMsg, requiredFields, amenityValue, t)}
-        required
-        fullWidth
-      />
-      <TextField
-        margin="normal"
-        id="amenity-hours"
-        label={t('amenity:fields.amenity_hours')}
-        name="hours"
-        value={amenityValue.hours}
-        onChange={event => setAmenityValue({ ...amenityValue, hours: event.target.value })}
-        inputProps={{ 'data-testid': 'amenity_hours' }}
-        {...validateRequiredField('hours', inputValidationMsg, requiredFields, amenityValue, t)}
-        required
-        fullWidth
-      />
-      <TextField
-        margin="normal"
-        id="amenity-link"
-        label={t('amenity:fields.calendly_link')}
-        name="invitationLink"
-        value={amenityValue.invitationLink}
-        onChange={event => setAmenityValue({ ...amenityValue, invitationLink: event.target.value })}
-        inputProps={{ 'data-testid': 'amenity_link' }}
-        {...validateRequiredField('invitationLink', inputValidationMsg, requiredFields, amenityValue, t)}
-        fullWidth
-      />
-    </CustomizedDialog>
+      >
+        <TextField
+          margin="normal"
+          id="amenity-name"
+          label={t('amenity:fields.amenity_name')}
+          value={amenityValue.name}
+          name="name"
+          onChange={event => setAmenityValue({ ...amenityValue, name: event.target.value })}
+          inputProps={{ 'data-testid': 'amenity_name', maxLength: 30 }}
+          {...validateRequiredField('name', inputValidationMsg, requiredFields, amenityValue, t)}
+          required
+          fullWidth
+        />
+        <TextField
+          margin="normal"
+          id="amenity-description"
+          label={t('amenity:fields.amenity_description')}
+          name="description"
+          value={amenityValue.description}
+          onChange={event => setAmenityValue({ ...amenityValue, description: event.target.value })}
+          inputProps={{ 'data-testid': 'amenity_description', maxLength: 150 }}
+          {...validateRequiredField(
+            'description',
+            inputValidationMsg,
+            requiredFields,
+            amenityValue,
+            t
+          )}
+          minRows={2}
+          multiline
+          required
+          fullWidth
+        />
+        <TextField
+          margin="normal"
+          id="amenity-location"
+          label={t('amenity:fields.amenity_location')}
+          name="location"
+          value={amenityValue.location}
+          onChange={event => setAmenityValue({ ...amenityValue, location: event.target.value })}
+          inputProps={{ 'data-testid': 'amenity_location', maxLength: 150 }}
+          {...validateRequiredField(
+            'location',
+            inputValidationMsg,
+            requiredFields,
+            amenityValue,
+            t
+          )}
+          required
+          fullWidth
+        />
+        <TextField
+          margin="normal"
+          id="amenity-hours"
+          label={t('amenity:fields.amenity_hours')}
+          name="hours"
+          value={amenityValue.hours}
+          onChange={event => setAmenityValue({ ...amenityValue, hours: event.target.value })}
+          inputProps={{ 'data-testid': 'amenity_hours' }}
+          {...validateRequiredField('hours', inputValidationMsg, requiredFields, amenityValue, t)}
+          required
+          fullWidth
+        />
+        <TextField
+          margin="normal"
+          id="amenity-link"
+          label={t('amenity:fields.calendly_link')}
+          name="invitationLink"
+          value={amenityValue.invitationLink}
+          onChange={event =>
+            setAmenityValue({ ...amenityValue, invitationLink: event.target.value })
+          }
+          inputProps={{ 'data-testid': 'amenity_link' }}
+          {...validateRequiredField(
+            'invitationLink',
+            inputValidationMsg,
+            requiredFields,
+            amenityValue,
+            t
+          )}
+          fullWidth
+        />
+      </CustomizedDialog>
+    </>
   );
 }
 

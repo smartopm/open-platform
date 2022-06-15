@@ -6,10 +6,10 @@ import AmenityForm from '../Components/AmenityForm';
 import { AmenityCreateMutation } from '../graphql/amenity_mutations';
 
 describe('Amenity Form', () => {
+  const openDialog = jest.fn();
+  const refetch = jest.fn();
+  const userEvent = ReactTestUtils.Simulate;
   it('should render the form properly', async () => {
-    const openDialog = jest.fn();
-    const refetch = jest.fn();
-    const userEvent = ReactTestUtils.Simulate;
     const mock = {
       request: {
         query: AmenityCreateMutation,
@@ -60,6 +60,32 @@ describe('Amenity Form', () => {
       // expect dialog to be closed and data to be refetched
       expect(openDialog).toBeCalled();
       expect(refetch).toBeCalled();
+    }, 20);
+  });
+  it('should error when provided with wrong variables', async () => {
+    const mock = {
+      request: {
+        query: AmenityCreateMutation,
+        variables: {
+          name: 'Example Title',
+          description: 'Example',
+          location: 'LSK',
+          hours: '10:00',
+          invitationLink: 'http'
+        }
+      },
+      result: null,
+      error: new Error('Something went wrong')
+    };
+    const wrapper = render(
+      <MockedProvider mocks={[mock]} addTypename={false}>
+        <AmenityForm isOpen setOpen={openDialog} refetch={refetch} t={jest.fn()} />
+      </MockedProvider>
+    );
+    // Submit a form
+    userEvent.click(wrapper.queryByTestId('custom-dialog-button'));
+    await waitFor(() => {
+      expect(refetch).not.toBeCalled();
     }, 20);
   });
 });
