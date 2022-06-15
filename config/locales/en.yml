@@ -405,11 +405,6 @@ en:
       payment_not_found: Payment not found
     post:
       content_not_found: Content must exist.
-    user_label:
-      lead:
-        already_exist: 'Label with grouping name already exists'
-        reserved: 'Reserved label'
-      exists: '%{title} labels cannot be associated.'
   general:
     thanks_for_using_our_app: Thank you for using our app, kindly use this link to give us feedback %{feedback_link}
     task_reminder: REMINDER, Please complete your task before/by the due date (%{due_date}). Check out your task on %{task_link}. Thanks, %{community_name}

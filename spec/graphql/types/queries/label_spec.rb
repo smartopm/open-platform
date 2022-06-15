@@ -37,6 +37,14 @@ RSpec.describe Types::Queries::Label do
     end
 
     let(:lead) { create(:lead, community: community, lead_status: 'Site Visit', division: 'China') }
+    let(:lead_status_label) do
+      create(:label, grouping_name: 'Status', short_desc: 'Evaluation', community: community)
+    end
+    let(:lead_division_label) do
+      create(:label, grouping_name: 'Division', short_desc: 'India', community: community)
+    end
+    let(:lead_user_label) { create(:user_label, user: lead, label: lead_status_label) }
+    let(:other_lead_user_label) { create(:user_label, user: lead, label: lead_division_label) }
 
     let(:labels_query) do
       %(query {
@@ -129,6 +137,11 @@ RSpec.describe Types::Queries::Label do
 
     describe '#lead_labels' do
       context 'when user is authorized' do
+        before do
+          lead_user_label
+          other_lead_user_label
+        end
+
         it 'retrieves lead labels based on current division and status' do
           variables = { userId: lead.id }
           result = DoubleGdpSchema.execute(lead_labels_query, variables: variables,
