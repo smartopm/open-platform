@@ -347,6 +347,7 @@ en:
     lead_log:
       not_found: Lead log not found
       empty_deal_details: Deal details cannot be empty
+      invalid_log_type: Invalid log type 
     not_found: Not found
     note:
       task_not_found: No Task Found, Try a different query

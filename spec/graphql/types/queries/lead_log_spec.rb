@@ -102,36 +102,17 @@ RSpec.describe Types::Queries::LeadLog do
              deal_size: 120_000,
              investment_target: 15_001)
     end
-    let(:events) do
+    let(:lead_logs_query) do
       <<~GQL
-        query fetchEvents($userId: ID!, $limit: Int, $offset: Int){
-          leadEvents(userId: $userId, limit: $limit, offset: $offset){
+        query leadLogs($userId: ID!, $logType: String!, $limit: Int, $offset: Int){
+          leadLogs(userId: $userId, logType: $logType, limit: $limit, offset: $offset){
             id
             name
             logType
-          }
-        }
-      GQL
-    end
-
-    let(:meetings) do
-      <<~GQL
-        query fetchMeetings($userId: ID!, $limit: Int, $offset: Int){
-          leadMeetings(userId: $userId, limit: $limit, offset: $offset){
-            id
-            name
-            logType
-          }
-        }
-      GQL
-    end
-
-    let(:signed_deal) do
-      <<~GQL
-        query fetchSignedDeals($userId: ID!){
-          signedDeals(userId: $userId){
-            id
-            logType
+            investmentTarget
+            amount
+            dealSize
+            targetPercent
           }
         }
       GQL
@@ -145,30 +126,6 @@ RSpec.describe Types::Queries::LeadLog do
       GQL
     end
 
-    let(:lead_investments) do
-      <<~GQL
-        query LeadInvestments($userId: ID!){
-          leadInvestments(userId: $userId){
-            logType
-            amount
-          }
-        }
-      GQL
-    end
-
-    let(:deal_details) do
-      <<~GQL
-        query DealDetails($userId: ID!){
-          dealDetails(userId: $userId){
-            logType
-            dealSize
-            investmentTarget
-            targetPercent
-          }
-        }
-      GQL
-    end
-
     let(:investment_stats) do
       <<~GQL
         query InvestmentStats($userId: ID!){
@@ -177,43 +134,82 @@ RSpec.describe Types::Queries::LeadLog do
       GQL
     end
 
-    describe '#lead_events' do
+    describe '#lead_logs' do
       context 'when lead specific events are fetched' do
         it 'returns events' do
-          variables = { userId: lead_user.id, limit: 2, offset: 0 }
-          result = DoubleGdpSchema.execute(events, variables: variables,
-                                                   context: { current_user: admin,
-                                                              site_community: community }).as_json
+          variables = { userId: lead_user.id, logType: 'event', limit: 2, offset: 0 }
+          result = DoubleGdpSchema.execute(lead_logs_query, variables: variables, context: {
+                                             current_user: admin,
+                                             site_community: community,
+                                           }).as_json
           expect(result['errors']).to be nil
-          expect(result.dig('data', 'leadEvents').count).to eql 2
+          expect(result.dig('data', 'leadLogs').count).to eql 2
         end
       end
-    end
 
-    describe '#lead_meetings' do
       context 'when lead specific meetings are fetched' do
         it 'returns meetings' do
-          variables = { userId: lead_user.id, limit: 2, offset: 0 }
-          result = DoubleGdpSchema.execute(meetings, variables: variables,
-                                                     context: { current_user: admin,
-                                                                site_community: community }).as_json
+          variables = { userId: lead_user.id, logType: 'meeting', limit: 2, offset: 0 }
+          result = DoubleGdpSchema.execute(lead_logs_query, variables: variables, context: {
+                                             current_user: admin,
+                                             site_community: community,
+                                           }).as_json
           expect(result['errors']).to be nil
-          expect(result.dig('data', 'leadMeetings').count).to eql 2
+          expect(result.dig('data', 'leadLogs').count).to eql 2
         end
       end
-    end
 
-    describe '#signed_deals' do
       context 'when signed deal for lead is fetched' do
         it 'returns signed deals' do
-          variables = { userId: lead_user.id }
-          result = DoubleGdpSchema.execute(signed_deal, variables: variables,
-                                                        context: {
-                                                          current_user: admin,
-                                                          site_community: community,
-                                                        }).as_json
+          variables = { userId: lead_user.id, logType: 'signed_deal' }
+          result = DoubleGdpSchema.execute(lead_logs_query, variables: variables,
+                                                            context: {
+                                                              current_user: admin,
+                                                              site_community: community,
+                                                            }).as_json
           expect(result['errors']).to be nil
-          expect(result.dig('data', 'signedDeals').count).to eql 1
+          expect(result.dig('data', 'leadLogs').count).to eql 1
+        end
+      end
+
+      context 'when lead investments are fetched' do
+        it 'retrieves lead investments' do
+          variables = { userId: lead_user.id, logType: 'investment' }
+          result = DoubleGdpSchema.execute(lead_logs_query, variables: variables,
+                                                            context: {
+                                                              current_user: admin,
+                                                              site_community: community,
+                                                            }).as_json
+          expect(result['errors']).to be nil
+          expect(result.dig('data', 'leadLogs').count).to eql 1
+        end
+      end
+
+      context 'when deal details are fetched' do
+        it 'retrieves deal details' do
+          variables = { userId: lead_user.id, logType: 'deal_details' }
+          result = DoubleGdpSchema.execute(lead_logs_query, variables: variables,
+                                                            context: {
+                                                              current_user: admin,
+                                                              site_community: community,
+                                                            }).as_json
+          expect(result['errors']).to be nil
+          expect(result.dig('data', 'leadLogs').count).to eql 1
+          expect(result.dig('data', 'leadLogs', 0, 'investmentTarget')).to eql 15_001.0
+          expect(result.dig('data', 'leadLogs', 0, 'targetPercent')).to eql 12.5
+        end
+      end
+
+      context 'when log type is invalid' do
+        it 'raises error' do
+          variables = { userId: lead_user.id, logType: 'abc' }
+          result = DoubleGdpSchema.execute(lead_logs_query, variables: variables,
+                                                            context: {
+                                                              current_user: admin,
+                                                              site_community: community,
+                                                            }).as_json
+          expect(result['errors']).to_not be nil
+          expect(result.dig('errors', 0, 'message')).to eql 'Invalid log type'
         end
       end
     end
@@ -253,38 +249,6 @@ RSpec.describe Types::Queries::LeadLog do
       end
     end
 
-    describe '#lead_investments' do
-      context 'when lead investments are fetched' do
-        it 'retrieves lead investments' do
-          variables = { userId: lead_user.id }
-          result = DoubleGdpSchema.execute(lead_investments, variables: variables,
-                                                             context: {
-                                                               current_user: admin,
-                                                               site_community: community,
-                                                             }).as_json
-          expect(result['errors']).to be nil
-          expect(result.dig('data', 'leadInvestments').count).to eql 1
-        end
-      end
-    end
-
-    describe '#deal_details' do
-      context 'when deal details are fetched' do
-        it 'retrieves deal details' do
-          variables = { userId: lead_user.id }
-          result = DoubleGdpSchema.execute(deal_details, variables: variables,
-                                                         context: {
-                                                           current_user: admin,
-                                                           site_community: community,
-                                                         }).as_json
-          expect(result['errors']).to be nil
-          expect(result.dig('data', 'dealDetails').count).to eql 1
-          expect(result.dig('data', 'dealDetails', 0, 'investmentTarget')).to eql 15_001.0
-          expect(result.dig('data', 'dealDetails', 0, 'targetPercent')).to eql 12.5
-        end
-      end
-    end
-
     describe '#investment_stats' do
       context 'when lead investment stats are fetched' do
         it 'retrieves lead investment stats' do
@@ -303,12 +267,12 @@ RSpec.describe Types::Queries::LeadLog do
 
     context 'when user is unauthorized' do
       it 'throws unauthroized error' do
-        variables = { userId: lead_user.id }
-        result = DoubleGdpSchema.execute(events, variables: variables,
-                                                 context: {
-                                                   current_user: lead_user,
-                                                   site_community: community,
-                                                 }).as_json
+        variables = { userId: lead_user.id, logType: 'event' }
+        result = DoubleGdpSchema.execute(lead_logs_query, variables: variables,
+                                                          context: {
+                                                            current_user: lead_user,
+                                                            site_community: community,
+                                                          }).as_json
         expect(result['errors']).to_not be nil
         expect(result.dig('errors', 0, 'message')).to eql 'Unauthorized'
       end

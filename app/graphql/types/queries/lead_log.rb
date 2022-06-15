@@ -7,25 +7,11 @@ module Types::Queries::LeadLog
 
   VALID_LEAD_STATUSES = ['Qualified Lead', 'Signed MOU', 'Signed Lease'].freeze
 
-  # rubocop:disable Metrics/BlockLength
   included do
-    field :lead_events, [Types::LeadLogType], null: true do
-      description 'Get lead specific events'
+    field :lead_logs, [Types::LeadLogType], null: true do
+      description 'Get lead logs'
       argument :user_id, GraphQL::Types::ID, required: true
-      argument :limit, Integer, required: false
-      argument :offset, Integer, required: false
-    end
-
-    field :lead_meetings, [Types::LeadLogType], null: true do
-      description 'Get lead specific meetings'
-      argument :user_id, GraphQL::Types::ID, required: true
-      argument :limit, Integer, required: false
-      argument :offset, Integer, required: false
-    end
-
-    field :signed_deals, [Types::LeadLogType], null: true do
-      description 'Get signed deal for lead'
-      argument :user_id, GraphQL::Types::ID, required: true
+      argument :log_type, String, required: true
       argument :limit, Integer, required: false
       argument :offset, Integer, required: false
     end
@@ -34,49 +20,40 @@ module Types::Queries::LeadLog
       description 'Get statistics for lead logs'
     end
 
-    field :deal_details, [Types::LeadLogType], null: true do
-      description 'Get lead deal details'
-      argument :user_id, GraphQL::Types::ID, required: true
-      argument :limit, Integer, required: false
-      argument :offset, Integer, required: false
-    end
-
-    field :lead_investments, [Types::LeadLogType], null: true do
-      description 'Get lead investments'
-      argument :user_id, GraphQL::Types::ID, required: true
-      argument :limit, Integer, required: false
-      argument :offset, Integer, required: false
-    end
-
     field :investment_stats, GraphQL::Types::JSON, null: true do
       description 'Get lead investment stats'
       argument :user_id, GraphQL::Types::ID, required: true
     end
   end
-  # rubocop:enable Metrics/BlockLength
 
-  def lead_events(user_id:, offset: 0, limit: 3)
-    validate_authorization(:lead_log, :can_fetch_lead_logs)
+  def investment_stats(user_id:)
+    lead_log = lead_logs(log_type: 'deal_details', user_id: user_id, limit: 1).first
+    return {} if lead_log.nil?
 
-    context[:site_community].lead_logs.where(user_id: user_id)
-                            .event.includes(:acting_user)
-                            .offset(offset).limit(limit).ordered
+    total_spent = context[:site_community].lead_logs.investment.where(user_id: user_id).sum(:amount)
+
+    {
+      total_spent: total_spent,
+      percentage_of_target_used: percentage_of_target_used(total_spent, lead_log),
+    }
   end
 
-  def lead_meetings(user_id:, offset: 0, limit: 3)
+  def lead_logs(offset: 0, limit: 3, **args)
     validate_authorization(:lead_log, :can_fetch_lead_logs)
+    validate_log_type(args[:log_type])
 
-    context[:site_community].lead_logs.where(user_id: user_id)
-                            .meeting.includes(:acting_user)
-                            .offset(offset).limit(limit).ordered
+    context[:site_community].lead_logs
+                            .includes(:acting_user)
+                            .where(user_id: args[:user_id], log_type: args[:log_type])
+                            .ordered
+                            .offset(offset)
+                            .limit(limit)
   end
 
-  def signed_deals(user_id:, offset: 0, limit: 3)
-    validate_authorization(:lead_log, :can_fetch_lead_logs)
+  def validate_log_type(log_type)
+    return if Logs::LeadLog.log_types.keys.include?(log_type)
 
-    context[:site_community].lead_logs.where(user_id: user_id)
-                            .signed_deal.includes(:acting_user)
-                            .offset(offset).limit(limit).ordered
+    raise GraphQL::ExecutionError, I18n.t('errors.lead_log.invalid_log_type')
   end
 
   def lead_scorecards
@@ -191,32 +168,10 @@ module Types::Queries::LeadLog
                             .ordered
   end
 
-  def investment_stats(user_id:)
-    lead_log = deal_details(user_id: user_id, limit: 1).first
-    return {} if lead_log.nil?
-
-    total_spent = context[:site_community].lead_logs.investment.where(user_id: user_id).sum(:amount)
-
-    {
-      total_spent: total_spent,
-      percentage_of_target_used: percentage_of_target_used(total_spent, lead_log),
-    }
-  end
-
-  def deal_details(user_id:, offset: 0, limit: 3)
-    validate_authorization(:lead_log, :can_fetch_lead_logs)
-
-    context[:site_community].lead_logs.where(user_id: user_id)
-                            .deal_details
-                            .offset(offset)
-                            .limit(limit)
-                            .ordered
-  end
-
   def percentage_of_target_used(total_spent, lead_log)
     return 100 if lead_log.deal_size.to_d.zero?
 
-    total_spent / lead_log.deal_size
+    (total_spent / lead_log.deal_size).floor(2)
   end
 
   def valid_lead_divisions
