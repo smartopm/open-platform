@@ -615,10 +615,14 @@ module Types::Queries::Note
   def flagged_notes_query(query)
     search = search_method(query)
 
+    tasks = tasks_query
+
+    tasks = tasks.where(parent_note_id: nil) if search != 'search_assignee'
+
     if query&.include?('due_date:nil')
-      tasks_query.where(due_date: nil)
+      tasks.where(due_date: nil)
     else
-      tasks_query.send(search, query)
+      tasks.send(search, query)
     end
   end
 
@@ -633,7 +637,7 @@ module Types::Queries::Note
         :form_user,
         { user: %i[avatar_attachment] },
       )
-      .where(flagged: true, parent_note_id: nil) # Return only parent tasks
+      .where(flagged: true)
       .where.not(category: %w[template task_list])
       .order(completed: :desc, created_at: :desc)
       .with_attached_documents
