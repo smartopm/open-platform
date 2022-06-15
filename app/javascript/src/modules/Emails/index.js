@@ -9,7 +9,7 @@ const currentModule = 'email_template'
 
 function renderMailTemplateList() {
   return (
-    <AccessCheck module={currentModule} allowedPermissions={MailTemplateListPermissions} show404ForUnauthorized>
+    <AccessCheck module={currentModule} allowedPermissions={MailTemplateListPermissions}>
       <MailTemplateList />
     </AccessCheck>
   )
