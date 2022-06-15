@@ -22,6 +22,7 @@ import CenteredContent from '../../../shared/CenteredContent';
 import { ProcessCreateMutation, ProcessUpdateMutation } from '../graphql/process_list_mutation';
 import { formatError } from '../../../utils/helpers';
 import MessageAlert from '../../../components/MessageAlert';
+import PageWrapper from '../../../shared/PageWrapper';
 
 export default function ProcessAction() {
   const classes = useStyles();
@@ -155,7 +156,7 @@ const [processUpdate] = useMutation(ProcessUpdateMutation);
   }
 
   return(
-    <>
+    <PageWrapper>
       <MessageAlert
         type={info.error ? 'error' : 'success'}
         message={info.message}
@@ -282,7 +283,7 @@ const [processUpdate] = useMutation(ProcessUpdateMutation);
           </Grid>
         </Grid>
       </Container>
-    </>
+    </PageWrapper>
   )
 }
 

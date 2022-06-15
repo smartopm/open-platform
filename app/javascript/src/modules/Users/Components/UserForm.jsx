@@ -34,6 +34,7 @@ import { ModalDialog } from '../../../components/Dialog';
 import CenteredContent from '../../../shared/CenteredContent';
 import { UpdateUserMutation } from '../../../graphql/mutations/user';
 import ImageAuth from '../../../shared/ImageAuth';
+import PageWrapper from '../../../shared/PageWrapper';
 
 const initialValues = {
   name: '',
@@ -263,7 +264,7 @@ export default function UserForm({ isEditing, isFromRef, isAdminOrMarketingAdmin
   }
 
   return (
-    <div className="container">
+    <PageWrapper>
       <ModalDialog
         handleClose={handleModal}
         handleConfirm={handleModalConfirm}
@@ -647,7 +648,7 @@ export default function UserForm({ isEditing, isFromRef, isAdminOrMarketingAdmin
           )
         ) : null}
       </form>
-    </div>
+    </PageWrapper>
   );
 }
 

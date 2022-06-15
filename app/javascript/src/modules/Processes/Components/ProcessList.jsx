@@ -16,6 +16,7 @@ import { ActionDialog } from '../../../components/Dialog';
 import { ProcessDeleteMutation } from '../graphql/process_list_mutation';
 import MessageAlert from '../../../components/MessageAlert';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
+import PageWrapper from '../../../shared/PageWrapper';
 
 export default function ProcessList() {
   const classes = useStyles();
@@ -141,8 +142,8 @@ export default function ProcessList() {
   if (loading) return <Spinner />;
 
   return (
-    <>
-      <div className="container">
+    <PageWrapper>
+      <div>
         <Grid container spacing={1}>
           <Grid item md={12} xs={12} style={{ paddingLeft: '10px' }}>
             <div role="presentation">
@@ -220,7 +221,7 @@ export default function ProcessList() {
         handleClose={menuData.handleClose}
         list={menuData.menuList.filter(menuItem => menuItem.content !== null)}
       />
-    </>
+    </PageWrapper>
   );
 }
 

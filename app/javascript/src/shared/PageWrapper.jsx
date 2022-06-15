@@ -5,13 +5,13 @@ import Grid from '@mui/material/Grid';
 import { makeStyles } from '@mui/styles';
 
 export default function PageWrapper({ children, oneCol }) {
-  const matches = useMediaQuery('(max-width:600px)');
+  const matches = useMediaQuery('(max-width:900px)');
   const classes = useStyles();
   return (
     <Grid
       container
       className={`${classes.containerStyles} ${classes.topStyle}`}
-      style={matches ? { paddingTop: '10%' } : { paddingTop: '6%' }}
+      style={matches ? { paddingTop: '15%' } : { paddingTop: '6%' }}
     >
       <Grid
         item

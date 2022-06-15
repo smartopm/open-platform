@@ -9,6 +9,7 @@ import CenteredContent from '../../../components/CenteredContent';
 import Loading from '../../../shared/Loading';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import MessageAlert from '../../../components/MessageAlert';
+import PageWrapper from '../../../shared/PageWrapper'
 
 export default function UsersImport() {
   const [importCreate] = useMutation(ImportCreate);
@@ -71,7 +72,7 @@ export default function UsersImport() {
   const hasErrors = errorMessage;
 
   return (
-    <>
+    <PageWrapper>
       <MessageAlert
         type={isSuccessAlert ? 'success' : 'error'}
         message={messageAlert}
@@ -143,7 +144,7 @@ export default function UsersImport() {
         )}
         </Grid>
       </Grid>
-    </>
+    </PageWrapper>
 );
 }
 
