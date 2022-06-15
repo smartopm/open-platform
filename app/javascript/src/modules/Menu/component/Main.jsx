@@ -127,7 +127,7 @@ export function MainNav({ authState }) {
   );
 
   const showSOS =
-    canAccessSOS({ authState }) && communityHasEmergencyNumber && communityHasEmergencySMSNumber; 
+    canAccessSOS({ authState }) && communityHasEmergencyNumber && communityHasEmergencySMSNumber;
 
   return (
     <div className={classes.root}>
@@ -170,8 +170,8 @@ export function MainNav({ authState }) {
           </IconButton>
 
           {
-            !location.loaded 
-            ? <Skeleton variant="rectangular" width={35} height={35} />  
+            !location.loaded
+            ? <Skeleton variant="rectangular" width={35} height={35} />
             : showSOS && (
               <SvgIcon
                 component={SOSIcon}
