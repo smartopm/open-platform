@@ -11,15 +11,10 @@ RSpec.describe Types::Queries::Amenity do
                           role: admin_role,
                           permissions: %w[can_access_amenities])
     end
-    let!(:permission) do
-      create(:permission, module: 'amenity',
-                          role: client_role,
-                          permissions: %w[can_access_something_else])
-    end
 
     let!(:admin) { create(:user_with_community, role: admin_role, user_type: 'admin') }
     let!(:client) { create(:user_with_community, role: client_role, user_type: 'client') }
-    let!(:amenities) do
+    let!(:amenity) do
       admin.community.amenities.create!(name: 'Some name', user: admin)
     end
     let(:amenities_query) do
@@ -42,7 +37,7 @@ RSpec.describe Types::Queries::Amenity do
                                          current_user: admin,
                                          site_community: admin.community,
                                        }).as_json
-      expect(result.dig('data', 'amenities', 0, 'id')).to eql admin.id
+      expect(result.dig('data', 'amenities', 0, 'id')).to eql amenity.id
       expect(result.dig('data', 'amenities').length).to eql 1
     end
 

@@ -43,7 +43,7 @@ export default function AmenityForm({ isOpen, setOpen, refetch, t }) {
         setAmenityStatus({
           loading: false,
           isError: false,
-          message: t('amenity:misc.amenity_created')
+          message: t('amenity:misc.amenity_created') || '' // Empty string to fix jest warnings
         });
         refetch();
         setOpen(!isOpen);
