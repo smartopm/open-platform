@@ -12,7 +12,8 @@ class Community < ApplicationRecord
     'Invoices', 'Transactions', 'Forms', 'Customer Journey', 'UserStats', 'Users',
     'Properties', 'News', 'Discussions', 'Campaigns', 'Labels', 'Tasks', 'Business',
     'Forms', 'Email Templates', 'Community', 'Contact', 'Referral', 'My Thebe Portal',
-    'Action Flows', 'Time Card', 'Logout', 'Showroom', 'DynamicMenu', 'Guest List', 'Processes'
+    'Action Flows', 'Time Card', 'Logout', 'Showroom', 'DynamicMenu', 'Guest List', 'Processes',
+    'Task Lists'
   ].freeze
 
   after_initialize :add_default_community_features
