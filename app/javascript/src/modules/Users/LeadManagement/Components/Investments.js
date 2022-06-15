@@ -268,9 +268,7 @@ export default function Investments({ userId }) {
                       >
                         <Grid item md={3} xs={12}>
                           <Typography variant="body2" data-testid="investment-deal-size">
-                            $ 
-                            {' '}
-                            {dealDetails?.dealSize}
+                            $ {dealDetails?.dealSize}
                           </Typography>
                         </Grid>
 
@@ -333,7 +331,7 @@ export default function Investments({ userId }) {
             <TextField
               name="description"
               label={t('lead_management.description')}
-              style={{ width: '95%' }}
+              style={{ width: '100%' }}
               onChange={event => setDescription(event.target.value)}
               value={description || ''}
               variant="outlined"
@@ -357,7 +355,7 @@ export default function Investments({ userId }) {
               <OutlinedInput
                 id="outlined-adornment-amount"
                 name="amount"
-                style={{ width: mobile ? '80%' : '95%' }}
+                style={{ width: mobile ? '85%' : '95%' }}
                 onChange={event => setAmount(event.target.value)}
                 value={amount || ''}
                 startAdornment={<InputAdornment position="start">$</InputAdornment>}
@@ -376,7 +374,7 @@ export default function Investments({ userId }) {
             style={{
               paddingTop: '33px',
               paddingLeft: 0,
-              marginLeft: mobile && '-26px'
+              marginLeft: mobile && '-12px'
             }}
           >
             <ButtonComponent
@@ -414,9 +412,7 @@ export default function Investments({ userId }) {
                       >
                         <Grid item md={2} xs={12}>
                           <Typography variant="body2" data-testid="event-name">
-                            $ 
-                            {' '}
-                            {leadInvestment?.amount}
+                            $ {leadInvestment?.amount}
                           </Typography>
                         </Grid>
                         <Grid item md={4} xs={12}>
@@ -445,7 +441,7 @@ export default function Investments({ userId }) {
           ))}
         </div>
       ) : (
-        <CenteredContent>{t('lead_management.no_investments')}</CenteredContent>
+        <CenteredContent>{t('lead_management.no_investments_expenses')}</CenteredContent>
       )}
     </>
   );
