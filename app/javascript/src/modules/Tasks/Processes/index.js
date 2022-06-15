@@ -27,9 +27,6 @@ function RenderProcessComments() {
   );
 }
 
-
-// This will be in use when processes is added as a menu it
-// Processes page is currently accessible via quick link
 export default {
   routeProps: {
     path: '/processes',
