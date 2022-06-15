@@ -535,7 +535,7 @@ ActiveRecord::Schema.define(version: 2022_06_15_170437) do
     t.uuid "grouping_id"
     t.uuid "reply_from_id"
     t.string "tagged_documents", default: [], array: true
-    t.boolean "sent_to_resident"
+    t.boolean "send_to_resident"
     t.index ["note_id"], name: "index_note_comments_on_note_id"
     t.index ["user_id"], name: "index_note_comments_on_user_id"
   end

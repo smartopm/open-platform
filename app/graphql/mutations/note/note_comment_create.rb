@@ -9,6 +9,7 @@ module Mutations
       argument :note_id, ID, required: true
       argument :body, String, required: true
       argument :reply_required, Boolean, required: false
+      argument :send_to_resident, Boolean, required: false
       argument :reply_from_id, ID, required: false
       argument :grouping_id, ID, required: false
       argument :tagged_documents, [ID, { null: true }], required: false

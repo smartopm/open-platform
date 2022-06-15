@@ -54,7 +54,6 @@ export default function CommentField({
         refetch();
         commentsRefetch();
         setReplyFrom(null);
-        // setAutoCompleteOpen(false);
         setCommentOptions(initialOptions);
         setLoading(false);
       })
@@ -78,7 +77,6 @@ export default function CommentField({
         forProcess={forProcess}
         selectedUser={replyFrom}
         setSelectedUser={setReplyFrom}
-        // autoCompleteOpen={autoCompleteOpen}
         setCommentOptions={setCommentOptions}
         commentOptions={commentOptions}
         taskAssignees={taskAssignees}
