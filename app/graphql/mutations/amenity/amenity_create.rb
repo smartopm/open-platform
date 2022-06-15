@@ -14,7 +14,7 @@ module Mutations
 
       def resolve(vals)
         amenity_attributes = vals.merge(community_id: context[:site_community].id)
-        amenity = context[:current_user].amenities.create!(amenity_attributes)
+        amenity = context[:current_user].amenities.create(amenity_attributes)
 
         return { success: true } if amenity.persisted?
 

@@ -12,10 +12,7 @@ module Types::Queries::Amenity
   end
 
   def amenities
-    unless permitted?(admin: true, module: :amenity,
-                      permission: :can_access_amenities)
-      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
-    end
+    validate_authorization(:amenity, :can_access_amenities)
 
     context[:site_community].amenities
   end
