@@ -3,7 +3,7 @@ import { useMutation, useQuery } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import TextField from '@mui/material/TextField';
-import { Grid, Typography, Divider } from '@mui/material';
+import { Grid, Typography, Divider, useMediaQuery } from '@mui/material';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
@@ -34,6 +34,7 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
   const [eventCreate, { loading: isLoading }] = useMutation(CreateEvent);
   const [leadDataUpdate, { loading: divisionLoading }] = useMutation(UpdateUserMutation);
   const { t } = useTranslation('common');
+  const mobile = useMediaQuery('(max-width:800px)');
   const {
     data: meetingsData,
     loading: meetingsLoading,
@@ -160,14 +161,14 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
                   </Typography>
                 </Grid>
 
-                <Grid item md={6} xs={12}>
+                <Grid item md={6} xs={12} style={{ paddingLeft: 0 }}>
                   <Grid container>
                     <Grid
                       item
                       md={10}
                       xs={10}
                       style={{
-                        paddingLeft: 2
+                        paddingLeft: 1
                       }}
                     >
                       <FormControl fullWidth size="small">
@@ -176,7 +177,7 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
                           labelId="demo-multiple-name-label"
                           id="division"
                           name="division"
-                          style={{ width: '90%' }}
+                          style={{ width: mobile ? '85%' : '90%' }}
                           value={leadFormData?.user?.division || ''}
                           onChange={handleDivisionChange}
                           input={<OutlinedInput label={t('lead_management.set_division')} />}
@@ -198,7 +199,8 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
                       xs={2}
                       style={{
                         justifyContent: 'flex-end',
-                        paddingLeft: 2
+                        paddingLeft: 2,
+                        marginLeft: mobile ? '-18px' : '-5px'
                       }}
                     >
                       <ButtonComponent
@@ -264,7 +266,7 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
                 <TextField
                   name="eventName"
                   label={t('lead_management.event_name')}
-                  style={{ width: '95%' }}
+                  style={{ width: mobile ? '85%' : '95%' }}
                   onChange={event => setEventName(event.target.value)}
                   value={eventName || ''}
                   variant="outlined"
@@ -286,7 +288,8 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
                 xs={1}
                 style={{
                   paddingTop: '25px',
-                  paddingLeft: 0
+                  paddingLeft: 0,
+                  marginLeft: mobile && '-18px'
                 }}
               >
                 <ButtonComponent
@@ -353,7 +356,7 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
               <TextField
                 name="meetingName"
                 label={t('lead_management.meeting_name')}
-                style={{ width: '95%' }}
+                style={{ width: mobile ? '85%' : '95%' }}
                 onChange={event => setMeetingName(event.target.value)}
                 value={meetingName || ''}
                 variant="outlined"
@@ -375,7 +378,8 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
               xs={1}
               style={{
                 paddingTop: '25px',
-                paddingLeft: 0
+                paddingLeft: 0,
+                marginLeft: mobile && -18
               }}
             >
               <ButtonComponent

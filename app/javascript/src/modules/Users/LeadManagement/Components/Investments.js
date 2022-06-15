@@ -136,7 +136,7 @@ export default function Investments({ userId }) {
     return <Spinner />;
 
   return (
-    <form>
+    <>
       <MessageAlert
         type={message.isError ? 'error' : 'success'}
         message={message.detail}
@@ -210,7 +210,7 @@ export default function Investments({ userId }) {
               <OutlinedInput
                 id="outlined-adornment-investment_target"
                 name="investmentTarget"
-                style={{ width: '95%' }}
+                style={{ width: mobile ? '85%' : '95%' }}
                 onChange={event => setInvestmentTarget(event.target.value)}
                 value={investmentTarget || ''}
                 startAdornment={<InputAdornment position="start">$</InputAdornment>}
@@ -227,8 +227,9 @@ export default function Investments({ userId }) {
             md={1}
             xs={1}
             style={{
-              paddingTop: '32px',
-              paddingLeft: 0
+              paddingTop: '33px',
+              paddingLeft: 0,
+              marginLeft: mobile && '-12px'
             }}
           >
             <ButtonComponent
@@ -267,7 +268,9 @@ export default function Investments({ userId }) {
                       >
                         <Grid item md={3} xs={12}>
                           <Typography variant="body2" data-testid="investment-deal-size">
-                            $ {dealDetails?.dealSize}
+                            $ 
+                            {' '}
+                            {dealDetails?.dealSize}
                           </Typography>
                         </Grid>
 
@@ -354,7 +357,7 @@ export default function Investments({ userId }) {
               <OutlinedInput
                 id="outlined-adornment-amount"
                 name="amount"
-                style={{ width: '95%' }}
+                style={{ width: mobile ? '80%' : '95%' }}
                 onChange={event => setAmount(event.target.value)}
                 value={amount || ''}
                 startAdornment={<InputAdornment position="start">$</InputAdornment>}
@@ -371,8 +374,9 @@ export default function Investments({ userId }) {
             md={1}
             xs={1}
             style={{
-              paddingTop: '32px',
-              paddingLeft: 0
+              paddingTop: '33px',
+              paddingLeft: 0,
+              marginLeft: mobile && '-26px'
             }}
           >
             <ButtonComponent
@@ -410,7 +414,9 @@ export default function Investments({ userId }) {
                       >
                         <Grid item md={2} xs={12}>
                           <Typography variant="body2" data-testid="event-name">
-                            $ {leadInvestment?.amount}
+                            $ 
+                            {' '}
+                            {leadInvestment?.amount}
                           </Typography>
                         </Grid>
                         <Grid item md={4} xs={12}>
@@ -441,7 +447,7 @@ export default function Investments({ userId }) {
       ) : (
         <CenteredContent>{t('lead_management.no_investments')}</CenteredContent>
       )}
-    </form>
+    </>
   );
 }
 
