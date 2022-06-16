@@ -1,5 +1,5 @@
 import React from 'react';
-import { ListItem, Box, Typography, Grid, IconButton, ListItemText } from '@mui/material';
+import { ListItem, Typography, IconButton, ListItemText } from '@mui/material';
 import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import ForumIcon from '@mui/icons-material/Forum';
@@ -11,7 +11,6 @@ export default function FormItem({ formUser, handleShowComments, currentFormUser
       <ListItem
         key={formUser.id}
         data-testid="community_form"
-        // onClick={() => history.push(`/form/${formUser.id}/private`)}
         onClick={() =>
           history.push(`/user_form/${userId}/${formUser.id}?formId=${formUser.form.id}`)
         }

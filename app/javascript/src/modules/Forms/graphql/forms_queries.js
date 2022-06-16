@@ -136,3 +136,13 @@ export const FormEntriesQuery = gql`
     }
   }
 `
+
+export const SubmittedFormCommentsQuery = gql`
+  query comments($formUserId: ID!) {
+    formComments(formUserId: $formUserId) {
+      id
+      body
+      taggedDocuments
+    }
+  }
+`;

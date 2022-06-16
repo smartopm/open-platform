@@ -54,7 +54,7 @@ module Types::Queries::Note
       argument :offset, Integer, required: false
     end
 
-    field :form_comments, [Types::NoteCommentType], null: false do
+    field :form_comments, [Types::NoteCommentType], null: true do
       description 'return comments for one task'
       argument :form_user_id, GraphQL::Types::ID, required: true
     end
@@ -220,9 +220,7 @@ module Types::Queries::Note
     end
 
     Forms::FormUser.find_by(id: form_user_id)
-      .note.first
-      .note_comments
-      .eager_load(:user)
+      .note&.first&.note_comments&.eager_load(:user)
   end
 
   # rubocop:disable Metrics/AbcSize
