@@ -54,6 +54,11 @@ module Types::Queries::Note
       argument :offset, Integer, required: false
     end
 
+    field :form_comments, [Types::NoteCommentType], null: false do
+      description 'return comments for one task'
+      argument :form_user_id, GraphQL::Types::ID, required: true
+    end
+
     field :project_comments, [Types::NoteCommentType], null: false do
       description 'return comments for a project'
       argument :task_id, GraphQL::Types::ID, required: true
@@ -206,6 +211,18 @@ module Types::Queries::Note
       .note_comments
       .eager_load(:user)
       .limit(limit).offset(offset)
+  end
+
+  def form_comments(form_user_id:)
+    unless permitted?(module: :note, permission: :can_fetch_task_comments)
+      raise GraphQL::ExecutionError,
+            I18n.t('errors.unauthorized')
+    end
+
+    Forms::FormUser.find_by(id: form_user_id)
+      .note.first
+      .note_comments
+      .eager_load(:user)
   end
 
   # rubocop:disable Metrics/AbcSize
