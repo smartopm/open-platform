@@ -13,7 +13,7 @@ module Mutations
 
         return { business_delete: business_delete } if business_delete
 
-        raise GraphQL::ExecutionError, business_delete.errors.full_message
+        raise GraphQL::ExecutionError, business_delete.errors.full_messages&.join(', ')
       end
 
       # Verifies if current user is admin or not.

@@ -13,7 +13,7 @@ module Mutations
         campaign&.deleted!
         return { campaign: campaign.reload } if campaign
 
-        raise GraphQL::ExecutionError, campaign.errors.full_message
+        raise GraphQL::ExecutionError, campaign.errors.full_messages&.join(', ')
       end
 
       # Verifies if current user is admin or not.
