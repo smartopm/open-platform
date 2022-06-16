@@ -309,6 +309,7 @@ admin:
     permissions:
       - can_create_amenity
       - can_access_amenities
+      - can_see_menu_item
       - can_edit_amenities
       - can_delete_amenities
 
@@ -691,6 +692,7 @@ resident:
   amenity:
     permissions:
       - can_access_amenities
+      - can_see_menu_item
 prospective_client:
   note:
     permissions:
@@ -733,6 +735,7 @@ prospective_client:
   amenity:
     permissions:
       - can_access_amenities
+      - can_see_menu_item
 client:
   gate_access:
     permissions:
@@ -797,6 +800,7 @@ client:
   amenity:
     permissions:
       - can_access_amenities
+      - can_see_menu_item
 site_manager:
   gate_access:
     permissions:
@@ -858,6 +862,7 @@ site_manager:
   amenity:
     permissions:
       - can_access_amenities
+      - can_see_menu_item
 marketing_manager:
   forms:
     permissions:
@@ -952,6 +957,7 @@ marketing_manager:
   amenity:
     permissions:
       - can_access_amenities
+      - can_see_menu_item
 public_user:
   forms:
     permissions:
