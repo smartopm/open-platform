@@ -4,22 +4,22 @@ import DateContainer, { dateFormatter, dateTimeToString, dateToString, isDateVal
 import DateUtils, { lastDayOfTheMonth, getMonthName, getWeekDay, differenceInHours } from '../utils/dateutil'
 
 describe('date container component', () => {
+  const t = jest.fn();
   it('renders a span element and has correct time', () => {
     // get today's date
     const date = new Date()
     const time = dateTimeToString(date)
     const component = mount(<DateContainer date={date} />)
     expect(component.find('span')).toHaveLength(1)
-    expect(component.find('span').text()).toContain(`Today at ${time}`)
-    expect(dateFormatter(date)).toContain(`Today at ${time}`)
+    expect(component.find('span').text()).toEqual(`misc.today_at ${time}`)
+    expect(dateFormatter(date, t)).toContain(time)
   })
   it('renders a span just yesterday time if date was from yesterday', () => {
     // get yesterday's date
     const date = new Date()
     const previousDate = date.setDate(date.getDate() - 1)
     const component = mount(<DateContainer date={new Date(previousDate)} />)
-    expect(component.find('span').text()).toContain('Yesterday')
-    expect(dateFormatter(previousDate)).toContain('Yesterday')
+    expect(component.find('span').text()).toEqual(`misc.yesterday_at ${dateTimeToString(previousDate)}`);
   })
 
  it('renders date for older dates', () => {

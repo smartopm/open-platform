@@ -13,7 +13,7 @@ class Community < ApplicationRecord
     'Properties', 'News', 'Discussions', 'Campaigns', 'Labels', 'Tasks', 'Business',
     'Forms', 'Email Templates', 'Community', 'Contact', 'Referral', 'My Thebe Portal',
     'Action Flows', 'Time Card', 'Logout', 'Showroom', 'DynamicMenu', 'Guest List', 'Processes',
-    'Amenity'
+    'Task Lists', 'Amenity'
   ].freeze
 
   after_initialize :add_default_community_features

@@ -37,10 +37,20 @@ admin:
       - can_fetch_project_document_comments
   process:
     permissions:
+      - can_see_menu_item
+      - can_access_tasks
+      - can_access_processes
       - can_view_process_templates
       - can_create_process_template
       - can_update_process_template
       - can_delete_process_template
+  task_list:
+    permissions:
+      - can_see_menu_item
+      - can_view_task_lists
+      - can_create_task_lists
+      - can_edit_task_list
+      - can_delete_task_list
   payment_plan:
     permissions:
       - can_cancel_payment_plan

@@ -126,6 +126,7 @@
     "needs_reply_from": "NECESITA RESPUESTA de",
     "no_assignee": "Sin Designado",
     "no_comments": "Aún no hay comentarios sobre este proyecto",
+    "no_comments_on_document": "Aún no hay comentarios sobre este documento",
     "no_tasks": "No hay tareas",
     "none": "Ninguno",
     "not_started": "No Iniciado",

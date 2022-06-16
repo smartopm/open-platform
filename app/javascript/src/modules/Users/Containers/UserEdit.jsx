@@ -12,7 +12,7 @@ export default function UserEdit() {
   const isFromRef = pathname.includes('/referral');
   const isEditing = pathname.includes('edit');
   const authState = useContext(Context);
-  const isAdminOrMarketingAdmin = authState.user.roleName === 'Admin' || 'Marketing Admin';
+  const isAdminOrMarketingAdmin = (authState.user.roleName === 'Admin') || (authState.user.roleName === 'Marketing Admin');
 
   return (
     <UserForm

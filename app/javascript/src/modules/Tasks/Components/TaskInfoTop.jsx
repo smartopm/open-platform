@@ -18,8 +18,8 @@ import KeyboardTabIcon from '@mui/icons-material/KeyboardTab';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import Autocomplete from '@mui/material/Autocomplete';
-import moment from 'moment-timezone';
 import { useMutation } from 'react-apollo';
+import moment from 'moment-timezone'
 import DatePickerDialog from '../../../components/DatePickerDialog';
 import { UserChip } from './UserChip';
 import { formatError, removeNewLines, sanitizeText } from '../../../utils/helpers';

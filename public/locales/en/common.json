@@ -106,6 +106,8 @@
     "copy": "Copy"
   },
   "misc": {
+    "today_at": "Today at",
+    "yesterday_at": "Yesterday at",
     "or": "OR",
     "created_at": "Created At",
     "no_forms": "No Forms",
@@ -246,7 +248,7 @@
     "plan_transfer_confirmation_message_2": "payments with a total value of",
     "plan_transfer_confirmation_message_3": "By transferring your plan, you will be transferring all payments associated to this plan. Click the 'Continue' button to transfer plan",
     "payment_transfer_confirmation_message_1": "You are about to transfer payment of amount",
-    "payment_transfer_confirmation_message_2": "to the selected plan. Click the 'Continue' button to transfer payment" ,
+    "payment_transfer_confirmation_message_2": "to the selected plan. Click the 'Continue' button to transfer payment",
     "select_frequency": "Please select frequency",
     "select_plan_type": "Please select a plan type",
     "select_transfer_plan": "Select the Plan you want to migrate this plan to?",
