@@ -1,8 +1,5 @@
 import React, { Fragment, useState } from 'react';
-import {
-  MenuItem,
-  Menu
-} from '@mui/material';
+import { MenuItem, Menu } from '@mui/material';
 import { useMutation } from 'react-apollo';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router';
@@ -105,9 +102,9 @@ export default function FormMenu({ formId, formName, anchorEl, handleClose, open
           <MenuItem
             id="view_entries_button"
             key="view_entries"
-            onClick={() => history.push(`/form/${formId}/${formName}/entries`)}
+            onClick={() => history.push(`/form/${formId}/private`)}
           >
-            {t('common:menu.view_entries')}
+            {t('common:menu.submit_form')}
           </MenuItem>
         </div>
       </Menu>
