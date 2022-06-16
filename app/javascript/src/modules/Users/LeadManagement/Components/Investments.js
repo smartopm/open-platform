@@ -51,6 +51,10 @@ export default function Investments({ userId }) {
     fetchPolicy: 'cache-and-network'
   });
 
+  function validateForm(event) {
+    event.preventDefault();
+  }
+
   const {
     data: leadInvestmentData,
     loading: leadInvestmentsLoading,
@@ -137,7 +141,7 @@ export default function Investments({ userId }) {
     return <Spinner />;
 
   return (
-    <>
+    <form onSubmit={validateForm}>
       <MessageAlert
         type={message.isError ? 'error' : 'success'}
         message={message.detail}
@@ -212,6 +216,7 @@ export default function Investments({ userId }) {
                 id="outlined-adornment-investment_target"
                 name="investmentTarget"
                 style={{ width: mobile ? '85%' : '95%' }}
+                required
                 onChange={event => setInvestmentTarget(event.target.value)}
                 value={investmentTarget || ''}
                 startAdornment={<InputAdornment position="start">$</InputAdornment>}
@@ -339,7 +344,6 @@ export default function Investments({ userId }) {
               fullWidth
               size="small"
               margin="normal"
-              required
               inputProps={{
                 'aria-label': t('lead_management.description'),
                 style: { fontSize: '15px' }
@@ -348,7 +352,14 @@ export default function Investments({ userId }) {
             />
           </Grid>
 
-          <Grid item md={6} xs={10}>
+          <Grid
+            item
+            md={6}
+            xs={10}
+            style={{
+              paddingTop: mobile && '10px'
+            }}
+          >
             <FormControl fullWidth sx={{ mt: 2 }}>
               <InputLabel htmlFor="outlined-adornment-amount">
                 {t('lead_management.amount')}
@@ -373,7 +384,7 @@ export default function Investments({ userId }) {
             md={1}
             xs={1}
             style={{
-              paddingTop: '33px',
+              paddingTop: mobile ? '25px' : '33px',
               paddingLeft: 0,
               marginLeft: mobile && '-12px'
             }}
@@ -444,7 +455,7 @@ export default function Investments({ userId }) {
       ) : (
         <CenteredContent>{t('lead_management.no_investments_expenses')}</CenteredContent>
       )}
-    </>
+    </form>
   );
 }
 

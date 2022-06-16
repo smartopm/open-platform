@@ -161,16 +161,9 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
                   </Typography>
                 </Grid>
 
-                <Grid item md={6} xs={12} style={{ paddingLeft: 0 }}>
+                <Grid item md={6} xs={12} style={{ paddingLeft: mobile && 12 }}>
                   <Grid container>
-                    <Grid
-                      item
-                      md={10}
-                      xs={10}
-                      style={{
-                        paddingLeft: 1
-                      }}
-                    >
+                    <Grid item md={10} xs={10}>
                       <FormControl fullWidth size="small">
                         <InputLabel id="division">{t('lead_management.set_division')}</InputLabel>
                         <Select
