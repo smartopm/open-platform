@@ -1,5 +1,5 @@
 /* eslint-disable no-use-before-define */
-import React, { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
 import ListItem from '@mui/material/ListItem';
 import Badge from '@mui/material/Badge';
@@ -15,15 +15,18 @@ import FormItem from '../../Forms/UserForms/Components/FormItem';
 
 const { gray } = colors;
 export default function UserFilledForms({ userFormsFilled, userId, currentUser }) {
-  const history = useHistory();
   const { t } = useTranslation('common');
+  const [currentFormUserId, setCurrentFormUserId] = useState(null);
+
+  function handleShowComments(event, formId){
+    event.stopPropagation();
+    setCurrentFormUserId(formId);
+  }
+
   if (!userFormsFilled || !userFormsFilled.length) {
     return <CenteredContent>{t('misc.no_forms')}</CenteredContent>;
   }
 
-  function handleViewForm(formUserId, formId) {
-    history.push(`/user_form/${userId}/${formUserId}?formId=${formId}`);
-  }
   return (
     <div className="container">
       {userFormsFilled.length &&
@@ -31,7 +34,12 @@ export default function UserFilledForms({ userFormsFilled, userId, currentUser }
           userForm =>
             (userForm.status !== 'draft' || userForm.userId === currentUser) && (
               <Fragment key={userForm.id}>
-                <FormItem form={userForm.form} />
+                <FormItem
+                  formUser={userForm}
+                  handleShowComments={handleShowComments}
+                  currentFormUserId={currentFormUserId}
+                  userId={userId}
+                />
                 <Divider />
               </Fragment>
             )
