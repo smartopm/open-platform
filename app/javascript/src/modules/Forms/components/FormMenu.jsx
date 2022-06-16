@@ -9,7 +9,7 @@ import { ActionDialog } from '../../../components/Dialog';
 import MessageAlert from '../../../components/MessageAlert';
 import { objectAccessor } from '../../../utils/helpers';
 
-export default function FormMenu({ formId, formName, anchorEl, handleClose, open, refetch, t }) {
+export default function FormMenu({ formId, anchorEl, handleClose, open, refetch, t }) {
   const history = useHistory();
   const [isDialogOpen, setOpen] = useState(false);
   const [alertOpen, setAlertOpen] = useState(false);
@@ -100,7 +100,8 @@ export default function FormMenu({ formId, formName, anchorEl, handleClose, open
             {t('common:menu.delete')}
           </MenuItem>
           <MenuItem
-            id="view_entries_button"
+            id="submit_form"
+            className="submit_form"
             key="view_entries"
             onClick={() => history.push(`/form/${formId}/private`)}
           >
@@ -117,7 +118,6 @@ FormMenu.defaultProps = {
 };
 FormMenu.propTypes = {
   formId: PropTypes.string.isRequired,
-  formName: PropTypes.string.isRequired,
   open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
   refetch: PropTypes.func.isRequired,
