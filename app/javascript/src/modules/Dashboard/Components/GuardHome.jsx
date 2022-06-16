@@ -42,7 +42,7 @@ export const BootstrapInput = withStyles(() => ({
 export default function GuardHome() {
   const { t } = useTranslation(['dashboard', 'common']);
   return (
-    <AccessCheck module="dashboard" allowedPermissions={['can_access_guard_dashboard']}>
+    <AccessCheck module="dashboard" allowedPermissions={['can_access_guard_dashboard']} show404ForUnauthorized={false}>
       <HomeGuard translate={t} />
     </AccessCheck>
   )

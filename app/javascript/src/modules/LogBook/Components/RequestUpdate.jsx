@@ -625,7 +625,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
              <Grid container justifyContent="center" spacing={4} className={css(styles.grantSection)}>
                {
               Boolean(id || requestContext.request.id ) && (
-                <AccessCheck module="entry_request" allowedPermissions={['can_update_entry_request']}>
+                <AccessCheck module="entry_request" allowedPermissions={['can_update_entry_request']} show404ForUnauthorized={false}>
                   <Grid item>
                     <Button
                       onClick={event => handleModal(event, 'update')}
@@ -643,7 +643,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
                     )
               }
                { requestContext.request?.guest?.status !== 'deactivated' && (
-               <AccessCheck module="entry_request" allowedPermissions={['can_grant_entry']}>
+               <AccessCheck module="entry_request" allowedPermissions={['can_grant_entry']} show404ForUnauthorized={false}>
                  <Grid item>
                    <Button
                      onClick={event => handleModal(event, 'grant')}
@@ -664,7 +664,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
                <FeatureCheck features={authState?.user?.community?.features} name="LogBook" subFeature={CommunityFeaturesWhiteList.denyGateAccessButton}>
                  <>
                    {!requestContext.request.isEdit && (
-                   <AccessCheck module="entry_request" allowedPermissions={['can_grant_entry']}>
+                   <AccessCheck module="entry_request" allowedPermissions={['can_grant_entry']} show404ForUnauthorized={false}>
                      <Grid item>
                        <Button
                          variant="contained"
@@ -681,7 +681,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
                      </Grid>
                    </AccessCheck>
               )}
-                   <AccessCheck module="entry_request" allowedPermissions={['can_grant_entry']}>
+                   <AccessCheck module="entry_request" allowedPermissions={['can_grant_entry']} show404ForUnauthorized={false}>
                      <Grid item>
                        <a
                          href={`tel:${authState.user.community.securityManager}`}
@@ -695,7 +695,7 @@ export default function RequestUpdate({ id, previousRoute, guestListRequest, isG
                    </AccessCheck>
                  </>
                </FeatureCheck>
-               <AccessCheck module="entry_request" allowedPermissions={['can_update_entry_request']}>
+               <AccessCheck module="entry_request" allowedPermissions={['can_update_entry_request']} show404ForUnauthorized={false}>
                  <FeatureCheck features={authState?.user?.community?.features} name="LogBook" subFeature={CommunityFeaturesWhiteList.guestVerification}>
                    <Grid item>
                      <Button

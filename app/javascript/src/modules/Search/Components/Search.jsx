@@ -66,7 +66,7 @@ export function Results({ data, loading, called }) {
         )}
 
         {/* only show this when the user is admin */}
-        <AccessCheck module="user" allowedPermissions={['can_create_user']}>
+        <AccessCheck module="user" allowedPermissions={['can_create_user']} show404ForUnauthorized={false}>
           <NewRequestButton />
         </AccessCheck>
       </div>
