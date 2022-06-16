@@ -170,8 +170,8 @@ CommentTextField.propTypes = {
   taskAssignees: PropTypes.array,
   setMentionedDocuments: PropTypes.func,
   commentOptions: PropTypes.shape({
-      autoCompleteOpen: PropTypes.string,
-      sendToResident: PropTypes.string
+      autoCompleteOpen: PropTypes.bool,
+      sendToResident: PropTypes.bool
   }), 
   mentionsData: PropTypes.arrayOf(
     PropTypes.shape({
