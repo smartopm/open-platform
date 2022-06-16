@@ -32,6 +32,7 @@ import IconWithLabel from '../../../shared/label/IconWithLabel';
 
 export default function TaskDataList({
   task,
+  query,
   menuData,
   handleClick,
   styles,
@@ -465,7 +466,7 @@ export default function TaskDataList({
           style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}
           className={classes.arrowDownUpIcon}
         >
-          {task?.subTasksCount > 0 && (
+          {task?.subTasksCount > 0 && !query.includes('assignees') && (
             <IconButton
               aria-controls="show-task-subtasks-icon"
               aria-haspopup="true"
@@ -509,6 +510,7 @@ const Task = {
 TaskDataList.defaultProps = {
   handleClick: null,
   styles: {},
+  query: '',
   openSubTask: false,
   handleOpenSubTasksClick: null,
   clientView: false,
@@ -519,8 +521,10 @@ TaskDataList.defaultProps = {
   openProject: false,
   showWidgetsIcon: false,
 };
+
 TaskDataList.propTypes = {
   task: PropTypes.shape(Task).isRequired,
+  query: PropTypes.string,
   // eslint-disable-next-line react/forbid-prop-types
   menuData: PropTypes.object.isRequired,
   handleClick: PropTypes.func,
