@@ -11,6 +11,7 @@ import {
   Input
 } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
+import { titleize } from '../utils/helpers';
 
 export default function MultiSelect({
   labelName,
@@ -54,7 +55,7 @@ export default function MultiSelect({
         {options.map(option => (
           <MenuItem key={option} value={option}>
             <Checkbox checked={selectedOptions?.indexOf(option) > -1} color="primary" />
-            <ListItemText primary={option} />
+            <ListItemText primary={titleize(option)} />
           </MenuItem>
         ))}
       </Select>
