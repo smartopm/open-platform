@@ -13,7 +13,7 @@ class Community < ApplicationRecord
     'Properties', 'News', 'Discussions', 'Campaigns', 'Labels', 'Tasks', 'Business',
     'Forms', 'Email Templates', 'Community', 'Contact', 'Referral', 'My Thebe Portal',
     'Action Flows', 'Time Card', 'Logout', 'Showroom', 'DynamicMenu', 'Guest List', 'Processes',
-    'Task Lists'
+    'Task Lists', 'Amenity'
   ].freeze
 
   after_initialize :add_default_community_features
@@ -53,6 +53,7 @@ class Community < ApplicationRecord
   has_many :lead_logs, class_name: 'Logs::LeadLog', dependent: :destroy
   has_many :posts, class_name: 'Discussions::Post', dependent: :destroy
   has_many :transaction_logs, class_name: 'Payments::TransactionLog', dependent: :destroy
+  has_many :amenities, dependent: :destroy
 
   VALID_CURRENCIES = %w[zambian_kwacha honduran_lempira kenyan_shilling costa_rican_colon
                         nigerian_naira american_dollar].freeze

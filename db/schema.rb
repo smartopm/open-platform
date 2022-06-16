@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_06_06_080117) do
+ActiveRecord::Schema.define(version: 2022_06_13_160746) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -99,6 +99,19 @@ ActiveRecord::Schema.define(version: 2022_06_06_080117) do
     t.index ["user_id"], name: "index_activity_points_on_user_id"
   end
 
+  create_table "amenities", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.string "location"
+    t.string "hours"
+    t.string "invitation_link"
+    t.uuid "user_id", null: false
+    t.uuid "community_id", null: false
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["community_id"], name: "index_amenities_on_community_id"
+    t.index ["user_id"], name: "index_amenities_on_user_id"
+  end
   create_table "assignee_notes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "user_id", null: false
     t.uuid "note_id", null: false
@@ -1011,6 +1024,8 @@ ActiveRecord::Schema.define(version: 2022_06_06_080117) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "activity_points", "users"
+  add_foreign_key "amenities", "communities"
+  add_foreign_key "amenities", "users"
   add_foreign_key "assignee_notes", "notes"
   add_foreign_key "assignee_notes", "users"
   add_foreign_key "businesses", "communities"

@@ -305,6 +305,14 @@ admin:
       - can_see_menu_item
       - can_access_messages
       - can_access_user_messages
+  amenity:
+    permissions:
+      - can_create_amenity
+      - can_access_amenities
+      - can_see_menu_item
+      - can_edit_amenities
+      - can_delete_amenities
+
 contractor:
   note:
     permissions:
@@ -681,6 +689,10 @@ resident:
     permission:
       - can_make_payment
       - can_see_menu_item
+  amenity:
+    permissions:
+      - can_access_amenities
+      - can_see_menu_item
 prospective_client:
   note:
     permissions:
@@ -719,6 +731,10 @@ prospective_client:
   transaction:
     permission:
       - can_make_payment
+      - can_see_menu_item
+  amenity:
+    permissions:
+      - can_access_amenities
       - can_see_menu_item
 client:
   gate_access:
@@ -781,6 +797,10 @@ client:
     permission:
       - can_make_payment
       - can_see_menu_item
+  amenity:
+    permissions:
+      - can_access_amenities
+      - can_see_menu_item
 site_manager:
   gate_access:
     permissions:
@@ -838,6 +858,10 @@ site_manager:
   transaction:
     permission:
       - can_make_payment
+      - can_see_menu_item
+  amenity:
+    permissions:
+      - can_access_amenities
       - can_see_menu_item
 marketing_manager:
   forms:
@@ -929,6 +953,10 @@ marketing_manager:
   transaction:
     permission:
       - can_make_payment
+      - can_see_menu_item
+  amenity:
+    permissions:
+      - can_access_amenities
       - can_see_menu_item
 public_user:
   forms:
