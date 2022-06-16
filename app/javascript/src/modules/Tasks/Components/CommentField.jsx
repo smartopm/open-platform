@@ -15,13 +15,17 @@ export default function CommentField({
   taskAssignees,
   taskDocuments
 }) {
+  const initialOptions = {
+    autoCompleteOpen: false,
+    sendToResident: false
+  };
   const [commentCreate] = useMutation(TaskComment);
   const [body, setBody] = useState('');
   const [replyFrom, setReplyFrom] = useState(null);
-  const [autoCompleteOpen, setAutoCompleteOpen] = useState(false);
   const [error, setErrorMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const [mentionedDocuments, setMentionedDocuments] = useState([]);
+  const [commentOptions, setCommentOptions] = useState(initialOptions);
   const { t } = useTranslation('common');
 
   function handleSubmit(event) {
@@ -29,6 +33,7 @@ export default function CommentField({
     let variables = {
       noteId: taskId,
       taggedDocuments: mentionedDocuments,
+      sendToResident: commentOptions.sendToResident,
       body
     };
     if (replyFrom) {
@@ -49,7 +54,7 @@ export default function CommentField({
         refetch();
         commentsRefetch();
         setReplyFrom(null);
-        setAutoCompleteOpen(false);
+        setCommentOptions(initialOptions);
         setLoading(false);
       })
       .catch(err => {
@@ -72,8 +77,8 @@ export default function CommentField({
         forProcess={forProcess}
         selectedUser={replyFrom}
         setSelectedUser={setReplyFrom}
-        autoCompleteOpen={autoCompleteOpen}
-        setAutoCompleteOpen={setAutoCompleteOpen}
+        setCommentOptions={setCommentOptions}
+        commentOptions={commentOptions}
         taskAssignees={taskAssignees}
         loading={loading}
         mentionsData={mentionsData}

@@ -20,10 +20,10 @@ export default function CommentTextField({
   forProcess,
   selectedUser,
   setSelectedUser,
-  autoCompleteOpen,
-  setAutoCompleteOpen,
+  setCommentOptions,
   taskAssignees,
   mentionsData,
+  commentOptions,
   setMentionedDocuments
 }) {
   const { t } = useTranslation(['task', 'common']);
@@ -58,22 +58,48 @@ export default function CommentTextField({
       <>
         <Grid item xs={4}>
           {forProcess && authState?.user?.userType === 'admin' && (
-            <FormControlLabel
-              control={(
-                <Checkbox
-                  checked={autoCompleteOpen}
-                  onChange={() => setAutoCompleteOpen(!autoCompleteOpen)}
-                  name="require-reply"
-                  data-testid="require_reply"
-                  color="primary"
-                />
-              )}
-              label={<Typography variant="body2">{t('task.require_a_reply')}</Typography>}
-            />
+            <>
+              <FormControlLabel
+                control={(
+                  <Checkbox
+                    checked={commentOptions.autoCompleteOpen}
+                    onChange={() =>
+                      setCommentOptions({
+                        ...commentOptions,
+                        autoCompleteOpen: !commentOptions.autoCompleteOpen,
+                        sendToResident: commentOptions.autoCompleteOpen && false
+                      })
+                    }
+                    name="require-reply"
+                    data-testid="require_reply"
+                    color="primary"
+                  />
+                )}
+                label={<Typography variant="body2">{t('task.require_a_reply')}</Typography>}
+              />
+              <FormControlLabel
+                control={(
+                  <Checkbox
+                    checked={commentOptions.sendToResident}
+                    onChange={() =>
+                      setCommentOptions({
+                        ...commentOptions,
+                        sendToResident: !commentOptions.sendToResident,
+                        autoCompleteOpen: commentOptions.sendToResident && false
+                      })
+                    }
+                    name="send_to_resident"
+                    data-testid="send_to_resident"
+                    color="primary"
+                  />
+                )}
+                label={<Typography variant="body2">{t('task.send_to_resident')}</Typography>}
+              />
+            </>
           )}
         </Grid>
-        <Grid item xs={8} style={autoCompleteOpen ? { marginBottom: '15px' } : {}}>
-          {selectedUser && autoCompleteOpen && (
+        <Grid item xs={8} style={commentOptions.autoCompleteOpen ? { marginBottom: '15px' } : {}}>
+          {selectedUser && commentOptions.autoCompleteOpen && (
             <UserChip
               user={selectedUser}
               size="medium"
@@ -82,7 +108,7 @@ export default function CommentTextField({
               }}
             />
           )}
-          {autoCompleteOpen && !selectedUser && (
+          {commentOptions.autoCompleteOpen && !selectedUser && (
             <Autocomplete
               data-testid="users_autocomplete"
               style={{
@@ -124,11 +150,11 @@ CommentTextField.defaultProps = {
   forProcess: false,
   selectedUser: null,
   setSelectedUser: null,
-  autoCompleteOpen: false,
-  setAutoCompleteOpen: null,
+  setCommentOptions: null,
   taskAssignees: null,
   mentionsData: [],
-  setMentionedDocuments: () => {}
+  setMentionedDocuments: () => {},
+  commentOptions: {}
 };
 
 CommentTextField.propTypes = {
@@ -140,10 +166,13 @@ CommentTextField.propTypes = {
   forProcess: PropTypes.bool,
   selectedUser: PropTypes.object,
   setSelectedUser: PropTypes.func,
-  autoCompleteOpen: PropTypes.bool,
-  setAutoCompleteOpen: PropTypes.func,
+  setCommentOptions: PropTypes.func,
   taskAssignees: PropTypes.array,
   setMentionedDocuments: PropTypes.func,
+  commentOptions: PropTypes.shape({
+      autoCompleteOpen: PropTypes.bool,
+      sendToResident: PropTypes.bool
+  }), 
   mentionsData: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string,
