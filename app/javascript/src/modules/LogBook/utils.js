@@ -1,10 +1,11 @@
 /* eslint-disable max-statements */
 /* eslint-disable import/prefer-default-export */
-import moment from 'moment-timezone'
+import moment from 'moment-timezone';
 import { dateToString, updateDateWithTime } from '../../components/DateContainer';
 import { getWeekDay } from '../../utils/dateutil';
 import { objectAccessor } from '../../utils/helpers';
 
+// TODO: move to the global helper file
 export function checkInValidRequiredFields(formData, requiredFields) {
   const values = requiredFields.map(field => formData[String(field)]);
 
@@ -34,15 +35,14 @@ export function checkRequests(req, translate, tz) {
    */
 
   // today in the timezone of the current community
-  const timeNow = moment.tz(tz)
+  const timeNow = moment.tz(tz);
 
-  const startTime = updateDateWithTime(new Date(), req.startsAt || req.startTime, tz)
-  const endTime = updateDateWithTime(new Date(), req.endsAt || req.endTime, tz)
+  const startTime = updateDateWithTime(new Date(), req.startsAt || req.startTime, tz);
+  const endTime = updateDateWithTime(new Date(), req.endsAt || req.endTime, tz);
 
   const dayOfTheWeek = getWeekDay(timeNow);
-  if(req.revoked){
+  if (req.revoked) {
     return { title: translate('guest_book.revoked'), color: '#BA000D', valid: false };
-
   }
 
   if (req.occursOn.length) {
@@ -50,34 +50,32 @@ export function checkRequests(req, translate, tz) {
       return { title: translate('guest_book.expired'), color: '#DA1414', valid: false };
     }
     if (req.occursOn.includes(dayOfTheWeek.toLowerCase())) {
-      if (
-        timeNow.isSameOrAfter(startTime) && timeNow.isSameOrBefore(endTime)
-      ) {
+      if (timeNow.isSameOrAfter(startTime) && timeNow.isSameOrBefore(endTime)) {
         return { title: translate('guest_book.valid'), color: '#00A98B', valid: true };
       }
       return { title: translate('guest_book.invalid_now'), color: '#E74540', valid: false };
     }
     return { title: translate('guest_book.invalid_today'), color: '#E74540', valid: false };
   }
-    // is today the right date
-    if (moment.tz(req.visitationDate, tz).isSame(timeNow, 'day')) {
-      if (
-        timeNow.isSameOrAfter(moment.tz(startTime, tz)) && timeNow.isSameOrBefore(moment.tz(endTime, tz))
-      ) {
-        return { title: translate('guest_book.valid'), color: '#00A98B', valid: true };
-      }
-      return { title: translate('guest_book.invalid_now'), color: '#E74540', valid: false };
+  // is today the right date
+  if (moment.tz(req.visitationDate, tz).isSame(timeNow, 'day')) {
+    if (
+      timeNow.isSameOrAfter(moment.tz(startTime, tz)) &&
+      timeNow.isSameOrBefore(moment.tz(endTime, tz))
+    ) {
+      return { title: translate('guest_book.valid'), color: '#00A98B', valid: true };
     }
-    return { title: translate('guest_book.invalid_today'), color: '#E74540', valid: false };
+    return { title: translate('guest_book.invalid_now'), color: '#E74540', valid: false };
+  }
+  return { title: translate('guest_book.invalid_today'), color: '#E74540', valid: false };
 }
 
-
-export function resolveUserOrGuest(request){
+export function resolveUserOrGuest(request) {
   if (!request) {
-    return null
+    return null;
   }
-  const user =  request.user || request.guest
-  return user
+  const user = request.user || request.guest;
+  return user;
 }
 
 /**
@@ -86,13 +84,12 @@ export function resolveUserOrGuest(request){
  */
 export function IsAnyRequestValid(entries, t, tz) {
   return entries.some(entry => {
-     return checkRequests(entry, t, tz).valid
-  })
+    return checkRequests(entry, t, tz).valid;
+  });
 }
 
-
 export function findClosestEntry(entries, tz) {
-  if(!entries || !entries.length) return []
+  if (!entries || !entries.length) return [];
   const timeNow = moment.tz(tz);
   return entries.sort((entry1, entry2) => {
     const diffEntry1 = Math.abs(new Date(timeNow) - new Date(entry1.visitationDate));
@@ -102,17 +99,15 @@ export function findClosestEntry(entries, tz) {
   })[0];
 }
 
-
 /**
  * return only menu items that should be visible to current user
  * @param {[object]} menus
  * @returns []
  */
-export function accessibleMenus(menus){
-  if(!menus || !menus.length) return []
-  return menus.filter(menu => menu.isVisible)
+export function accessibleMenus(menus) {
+  if (!menus || !menus.length) return [];
+  return menus.filter(menu => menu.isVisible);
 }
-
 
 /**
  * find and return if a name is available from an event
@@ -123,7 +118,6 @@ export function checkVisitorsName(entry) {
   const visitorName = entry.data.ref_name || entry.data.visitor_name || entry.data.name;
   return !!visitorName;
 }
-
 
 /**
  *
@@ -142,14 +136,13 @@ export function paginate(type, history, tabValue, value) {
   }
 }
 
-
 /**
  * Formats and structures the date to be downloaded in csv
  * @param {[object]} csvData
  * @param {object} subjects
  * @returns {[object]}
  */
- export function formatCsvData(csvData, subjects) {
+export function formatCsvData(csvData, subjects) {
   return csvData.map(val => ({
     ...val,
     logDate: dateToString(val.createdAt, 'YYYY-MM-DD HH:mm'),

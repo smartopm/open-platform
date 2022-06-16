@@ -553,6 +553,13 @@ DoubleGDP:
         - can_delete_task_list
         - can_get_replies_requested_comments
         - can_fetch_process_comments
+    task_list:
+      permissions:
+        - can_see_menu_item
+        - can_view_task_lists
+        - can_create_task_lists
+        - can_edit_task_list
+        - can_delete_task_list
     forms:
       permissions:
         - can_see_menu_item
@@ -723,6 +730,13 @@ Enyimba:
         - can_delete_task_list
         - can_get_replies_requested_comments
         - can_fetch_process_comments
+    task_list:
+      permissions:
+        - can_see_menu_item
+        - can_view_task_lists
+        - can_create_task_lists
+        - can_edit_task_list
+        - can_delete_task_list
     forms:
       permissions:
         - can_see_menu_item
@@ -880,6 +894,13 @@ Greenpark:
         - can_view_create_sub_task_button
         - can_access_tasks
         - can_view_task_lists
+    task_list:
+      permissions:
+        - can_see_menu_item
+        - can_view_task_lists
+        - can_create_task_lists
+        - can_edit_task_list
+        - can_delete_task_list
     forms:
       permissions:
         - can_see_menu_item
@@ -932,6 +953,10 @@ Greenpark:
         - can_view_create_task_button
         - can_view_create_sub_task_button
         - can_access_tasks
+        - can_view_task_lists
+    task_list:
+      permissions:
+        - can_see_menu_item
         - can_view_task_lists
     forms:
       permissions:

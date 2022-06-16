@@ -8,6 +8,7 @@ export default function AccessCheck({ allowedPermissions, children, module }) {
   const userPermissionsModule = authState.user?.permissions.find(
     permissionObject => permissionObject.module === module
   );
+
   if (userPermissionsModule === undefined) {
     return null;
   }

@@ -146,6 +146,12 @@ phrase:
         locale_id: 5c6c3e050e8493da0e428087555a7b00
         tags: news
         update_translations: true
+    - file: ./public/locales/en/amenity.json
+      params:
+        file_format: i18next
+        locale_id: 5c6c3e050e8493da0e428087555a7b00
+        tags: amenity
+        update_translations: true
     - file: ./config/locales/en.yml
       params:
         file_format: yml
@@ -238,6 +244,11 @@ phrase:
         file_format: i18next
         locale_id: fa26b7d00b593c4578f0e9749221cace
         tags: news
+    - file: ./public/locales/es/amenity.json
+      params:
+        file_format: i18next
+        locale_id: fa26b7d00b593c4578f0e9749221cace
+        tags: amenity
     - file: ./config/locales/es.yml
       params:
         file_format: yml
@@ -360,6 +371,11 @@ phrase:
         file_format: i18next
         locale_id: fa26b7d00b593c4578f0e9749221cace
         tags: news
+    - file: ./public/locales/es/amenity.json
+      params:
+        file_format: i18next
+        locale_id: fa26b7d00b593c4578f0e9749221cace
+        tags: amenity
     - file: ./config/locales/es.yml
       params:
         file_format: yml

@@ -291,7 +291,9 @@
     "error": "Error",
     "upload": "Upload",
     "recent_article": "Recent Articles",
-    "see_more_articles": "See More Articles"
+    "see_more_articles": "See More Articles",
+    "amenity": "Amenity",
+    "amenity_plural": "Amenities"
   },
   "menu": {
     "invoice": "Invoice",

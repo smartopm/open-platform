@@ -37,10 +37,20 @@ admin:
       - can_fetch_project_document_comments
   process:
     permissions:
+      - can_see_menu_item
+      - can_access_tasks
+      - can_access_processes
       - can_view_process_templates
       - can_create_process_template
       - can_update_process_template
       - can_delete_process_template
+  task_list:
+    permissions:
+      - can_see_menu_item
+      - can_view_task_lists
+      - can_create_task_lists
+      - can_edit_task_list
+      - can_delete_task_list
   payment_plan:
     permissions:
       - can_cancel_payment_plan
@@ -295,6 +305,14 @@ admin:
       - can_see_menu_item
       - can_access_messages
       - can_access_user_messages
+  amenity:
+    permissions:
+      - can_create_amenity
+      - can_access_amenities
+      - can_see_menu_item
+      - can_edit_amenities
+      - can_delete_amenities
+
 contractor:
   note:
     permissions:
@@ -432,7 +450,7 @@ custodian:
   transaction:
     permission:
       - can_make_payment
-      - can_see_menu_item 
+      - can_see_menu_item
   logout:
     permissions:
       - can_see_menu_item
@@ -568,8 +586,8 @@ site_worker:
       - can_get_users_lite
   transaction:
     permission:
-      - can_make_payment 
-      - can_see_menu_item 
+      - can_make_payment
+      - can_see_menu_item
 visitor:
   note:
     permissions:
@@ -605,7 +623,7 @@ visitor:
   transaction:
     permission:
       - can_make_payment
-      - can_see_menu_item  
+      - can_see_menu_item
 resident:
   gate_access:
     permissions:
@@ -670,7 +688,11 @@ resident:
   transaction:
     permission:
       - can_make_payment
-      - can_see_menu_item  
+      - can_see_menu_item
+  amenity:
+    permissions:
+      - can_access_amenities
+      - can_see_menu_item
 prospective_client:
   note:
     permissions:
@@ -709,7 +731,11 @@ prospective_client:
   transaction:
     permission:
       - can_make_payment
-      - can_see_menu_item  
+      - can_see_menu_item
+  amenity:
+    permissions:
+      - can_access_amenities
+      - can_see_menu_item
 client:
   gate_access:
     permissions:
@@ -770,7 +796,11 @@ client:
   transaction:
     permission:
       - can_make_payment
-      - can_see_menu_item  
+      - can_see_menu_item
+  amenity:
+    permissions:
+      - can_access_amenities
+      - can_see_menu_item
 site_manager:
   gate_access:
     permissions:
@@ -828,7 +858,11 @@ site_manager:
   transaction:
     permission:
       - can_make_payment
-      - can_see_menu_item  
+      - can_see_menu_item
+  amenity:
+    permissions:
+      - can_access_amenities
+      - can_see_menu_item
 marketing_manager:
   forms:
     permissions:
@@ -919,7 +953,11 @@ marketing_manager:
   transaction:
     permission:
       - can_make_payment
-      - can_see_menu_item  
+      - can_see_menu_item
+  amenity:
+    permissions:
+      - can_access_amenities
+      - can_see_menu_item
 public_user:
   forms:
     permissions:

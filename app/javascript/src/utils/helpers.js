@@ -650,3 +650,25 @@ export function replaceDocumentMentions(text, path) {
 
   return updatedText;
 }
+
+
+
+/**
+ * Check if required fields are satisfied and return an error with a helper text
+ * @param {String} fieldName 
+ * @param {{isError: Boolean}} inputValidationMsg 
+ * @param {[String]} requiredFields 
+ * @returns {{ error: Boolean, helperText: String }}
+ */
+export function validateRequiredField(fieldName, inputValidationMsg={}, requiredFields=[], inputData={}, t) {
+  const validationError =
+    inputValidationMsg.isError &&
+    requiredFields.includes(fieldName) &&
+    !objectAccessor(inputData, fieldName);
+  return {
+    error: validationError,
+    helperText: validationError
+      ? t('form:errors.required_field', { fieldName })
+      : t(`amenity:helper_text.${fieldName}`)
+  };
+}
