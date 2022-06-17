@@ -363,8 +363,9 @@ contractor:
       - can_access_dashboard
       - can_see_menu_item
   transaction:
-    permission:
+    permissions:
       - can_make_payment
+      - can_see_menu_item
 custodian:
   note:
     permissions:
@@ -440,7 +441,7 @@ custodian:
       - can_access_dashboard
       - can_see_menu_item
   transaction:
-    permission:
+    permissions:
       - can_make_payment
       - can_see_menu_item
   logout:
@@ -577,7 +578,7 @@ site_worker:
     permissions:
       - can_get_users_lite
   transaction:
-    permission:
+    permissions:
       - can_make_payment
       - can_see_menu_item
 visitor:
@@ -613,7 +614,7 @@ visitor:
       - can_view_posts
       - can_see_menu_item
   transaction:
-    permission:
+    permissions:
       - can_make_payment
       - can_see_menu_item
 resident:
@@ -678,7 +679,7 @@ resident:
     permissions:
       - can_see_menu_item
   transaction:
-    permission:
+    permissions:
       - can_make_payment
       - can_see_menu_item
 prospective_client:
@@ -717,7 +718,7 @@ prospective_client:
     permissions:
       - can_see_menu_item
   transaction:
-    permission:
+    permissions:
       - can_make_payment
       - can_see_menu_item
 client:
@@ -778,7 +779,7 @@ client:
       - can_see_menu_item
       - can_access_dashboard
   transaction:
-    permission:
+    permissions:
       - can_make_payment
       - can_see_menu_item
 site_manager:
@@ -836,7 +837,7 @@ site_manager:
     permissions:
       - can_see_menu_item
   transaction:
-    permission:
+    permissions:
       - can_make_payment
       - can_see_menu_item
 marketing_manager:
@@ -927,7 +928,7 @@ marketing_manager:
       - can_access_dashboard
       - can_see_menu_item
   transaction:
-    permission:
+    permissions:
       - can_make_payment
       - can_see_menu_item
 public_user:
@@ -972,7 +973,7 @@ lead:
     permissions:
       - can_see_menu_item
   transaction:
-    permission:
+    permissions:
       - can_make_payment
       - can_see_menu_item
   forms:
