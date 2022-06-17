@@ -209,7 +209,6 @@ module Types::Queries::Form
     Forms::FormUser.find_by(id: form_user_id)
                    .comments.eager_load(:user).order(created_at: :desc)
   end
-  
 
   private
 
