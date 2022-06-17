@@ -33,7 +33,7 @@ const Home = () => {
   );
   const { userType } = authState.user;
   const filteredQuickLinks = filterQuickLinksByRole(dashboardQuickLinks, userType);
-  const communityNewsUsers = allUserTypes.filter(role => role !== 'security_guard');
+  const communityNewsUsers = allUserTypes.filter(role => !['security_guard', 'lead'].includes(role) );
 
   if (!authState.loggedIn) return <Spinner />;
 

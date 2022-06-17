@@ -371,8 +371,9 @@ contractor:
       - can_access_dashboard
       - can_see_menu_item
   transaction:
-    permission:
+    permissions:
       - can_make_payment
+      - can_see_menu_item
 custodian:
   note:
     permissions:
@@ -448,7 +449,7 @@ custodian:
       - can_access_dashboard
       - can_see_menu_item
   transaction:
-    permission:
+    permissions:
       - can_make_payment
       - can_see_menu_item
   logout:
@@ -585,7 +586,7 @@ site_worker:
     permissions:
       - can_get_users_lite
   transaction:
-    permission:
+    permissions:
       - can_make_payment
       - can_see_menu_item
 visitor:
@@ -621,7 +622,7 @@ visitor:
       - can_view_posts
       - can_see_menu_item
   transaction:
-    permission:
+    permissions:
       - can_make_payment
       - can_see_menu_item
 resident:
@@ -686,7 +687,7 @@ resident:
     permissions:
       - can_see_menu_item
   transaction:
-    permission:
+    permissions:
       - can_make_payment
       - can_see_menu_item
   amenity:
@@ -729,7 +730,7 @@ prospective_client:
     permissions:
       - can_see_menu_item
   transaction:
-    permission:
+    permissions:
       - can_make_payment
       - can_see_menu_item
   amenity:
@@ -794,7 +795,7 @@ client:
       - can_see_menu_item
       - can_access_dashboard
   transaction:
-    permission:
+    permissions:
       - can_make_payment
       - can_see_menu_item
   amenity:
@@ -856,7 +857,7 @@ site_manager:
     permissions:
       - can_see_menu_item
   transaction:
-    permission:
+    permissions:
       - can_make_payment
       - can_see_menu_item
   amenity:
@@ -951,7 +952,7 @@ marketing_manager:
       - can_access_dashboard
       - can_see_menu_item
   transaction:
-    permission:
+    permissions:
       - can_make_payment
       - can_see_menu_item
   amenity:
@@ -973,3 +974,42 @@ code_scanner:
   entry_request:
     permissions:
       - can_access_scan_screen
+lead:
+  note:
+    permissions:
+  profile:
+    permissions:
+      - can_see_menu_item
+  entry_request:
+    permissions:
+      - can_update_entry_request
+      - can_view_entry_request
+      - can_go_through_guest_verification
+  user:
+    permissions:
+      - can_view_own_profile
+      - can_edit_own_profile
+      - can_view_hosts
+  community:
+    permissions:
+      - can_see_menu_item
+  dashboard:
+    permissions:
+      - can_access_dashboard
+      - can_see_menu_item
+  logout:
+    permissions:
+      - can_see_menu_item
+  transaction:
+    permissions:
+      - can_make_payment
+      - can_see_menu_item
+  forms:
+    permissions:
+      - can_see_menu_item
+      - can_access_forms
+      - can_fetch_form
+      - can_fetch_form_properties
+      - can_fetch_form_property
+      - can_fetch_form_categories
+      - can_save_draft_form
