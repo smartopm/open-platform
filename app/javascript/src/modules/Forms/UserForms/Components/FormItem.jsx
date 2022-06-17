@@ -24,6 +24,7 @@ export default function FormItem({
       <ListItem
         key={formUser.id}
         data-testid="community_form"
+        style={{ cursor: 'pointer' }}
         onClick={() =>
           history.push(`/user_form/${userId}/${formUser.id}?formId=${formUser.form.id}`)
         }
@@ -60,8 +61,7 @@ export default function FormItem({
       {hasComments ? (
         <CommentCard
           comments={formData.data.formComments}
-          refetch={formData.refetch()}
-          commentsRefetch={formData.refetch()}
+          refetch={formData.refetch}
         />
       ) : (
         hasNoComments && (
