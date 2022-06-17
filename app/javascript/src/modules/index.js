@@ -3,7 +3,7 @@ import Payments from './Payments';
 import Users, { Logout, Profile } from './Users';
 import Dashboard from './Dashboard';
 import Community from './Community';
-import Forms from './Forms';
+import MyForms from './Forms/UserForms';
 import Plots, { Maps } from './Plots';
 import Communication from './Communication';
 import CustomerJourney from './CustomerJourney';
@@ -32,7 +32,7 @@ export default [
   UserPayments,
   Leads,
   Processes,
-  Forms,
+  MyForms,
   CustomerJourney,
   UserJourneyStats,
   Users,

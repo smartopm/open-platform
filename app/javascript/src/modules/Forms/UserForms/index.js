@@ -1,15 +1,26 @@
 import React from 'react'
 import DescriptionIcon from '@mui/icons-material/Description';
+import AccessCheck from '../../Permissions/Components/AccessCheck';
 
 // There are 2 different types of forms
 // forms for the user and forms where admin manages and creates form
 // It would be nice to name them differently
-const currentModule = 'forms'
+const currentModule = 'my_forms'
+const myFormsPermissions = ['can_access_own_forms'];
+
+
+function RenderMyForms() {
+  return (
+    <AccessCheck module={currentModule} allowedPermissions={myFormsPermissions}>
+      <p>Forms will be here</p>
+    </AccessCheck>
+  );
+}
 
 export default {
   routeProps: {
     path: '/myforms', // myforms
-    component: <span />,
+    component: RenderMyForms
   },
   styleProps: {
     icon: <DescriptionIcon />

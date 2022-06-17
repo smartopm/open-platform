@@ -313,7 +313,10 @@ admin:
       - can_see_menu_item
       - can_edit_amenities
       - can_delete_amenities
-
+  my_forms:
+    permissions:
+      - can_see_menu_item
+      - can_access_own_forms
 contractor:
   note:
     permissions:
@@ -376,6 +379,10 @@ contractor:
     permissions:
       - can_make_payment
       - can_see_menu_item
+  my_forms:
+    permissions:
+      - can_see_menu_item
+      - can_access_own_forms
 custodian:
   note:
     permissions:
@@ -464,6 +471,10 @@ custodian:
       - can_create_post
       - can_view_posts
       - can_see_menu_item
+  my_forms:
+    permissions:
+      - can_see_menu_item
+      - can_access_own_forms
 security_guard:
   note:
     permissions:
@@ -537,6 +548,10 @@ security_guard:
   event_log:
     permissions:
       - can_fetch_logbook_events
+  my_forms:
+    permissions:
+      - can_see_menu_item
+      - can_access_own_forms
 site_worker:
   note:
     permissions:
@@ -594,6 +609,10 @@ site_worker:
     permissions:
       - can_make_payment
       - can_see_menu_item
+  my_forms:
+    permissions:
+      - can_see_menu_item
+      - can_access_own_forms
 visitor:
   note:
     permissions:
@@ -703,6 +722,10 @@ resident:
     permissions:
       - can_fetch_form_task_comments
       - can_update_note_comment
+  my_forms:
+    permissions:
+      - can_see_menu_item
+      - can_access_own_forms
 prospective_client:
   note:
     permissions:
@@ -748,6 +771,10 @@ prospective_client:
     permissions:
       - can_access_amenities
       - can_see_menu_item
+  my_forms:
+    permissions:
+      - can_see_menu_item
+      - can_access_own_forms
 client:
   gate_access:
     permissions:
@@ -817,6 +844,10 @@ client:
     permissions:
       - can_fetch_form_task_comments
       - can_update_note_comment
+  my_forms:
+    permissions:
+      - can_see_menu_item
+      - can_access_own_forms
 site_manager:
   gate_access:
     permissions:
@@ -879,6 +910,10 @@ site_manager:
     permissions:
       - can_access_amenities
       - can_see_menu_item
+  my_forms:
+    permissions:
+      - can_see_menu_item
+      - can_access_own_forms
 marketing_manager:
   forms:
     permissions:
@@ -974,6 +1009,10 @@ marketing_manager:
     permissions:
       - can_access_amenities
       - can_see_menu_item
+  my_forms:
+    permissions:
+      - can_see_menu_item
+      - can_access_own_forms
 public_user:
   forms:
     permissions:
@@ -1030,3 +1069,7 @@ lead:
       - can_fetch_form_property
       - can_fetch_form_categories
       - can_save_draft_form
+  my_forms:
+    permissions:
+      - can_see_menu_item
+      - can_access_own_forms
