@@ -300,7 +300,6 @@ export default function Form({
                 onClick={() => formSubmit(formData, 'draft')}
                 disabled={formState.isSubmitting}
                 data-testid="save_as_draft"
-                id="save_as_draft_btn"
               >
                 {t('common:form_actions.save_as_draft')}
               </Button>
@@ -319,7 +318,6 @@ export default function Form({
                 onClick={() => formSubmit(formData)}
                 disabled={formState.isSubmitting || isTermsChecked}
                 data-testid="submit_form_btn"
-                id="submit_form_btn"
               >
                 {!formState.isSubmitting
                   ? t('common:form_actions.submit')
