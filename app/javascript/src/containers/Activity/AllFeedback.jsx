@@ -19,7 +19,7 @@ export default function FeedbackPage() {
   })
   const { t } = useTranslation(['feedback', 'common']);
   if (loading) return <Loading />
-  if (error) return <ErrorPage error={error.message} />
+  if (error) return <ErrorPage title={error.message} />
 
   function handleNextPage() {
     setOffset(offset + limit)

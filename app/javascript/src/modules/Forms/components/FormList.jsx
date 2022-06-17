@@ -134,7 +134,7 @@ export default function FormLinkList({ userType, community, path, id, t }) {
               </CenteredContent>
             )}
           </List>
-          <AccessCheck module="forms" allowedPermissions={['can_create_form']}>
+          <AccessCheck module="forms" allowedPermissions={['can_create_form']} show404ForUnauthorized={false}>
             <FloatButton
               title={t('actions.create_a_form')}
               handleClick={() => history.push('/forms/create')}

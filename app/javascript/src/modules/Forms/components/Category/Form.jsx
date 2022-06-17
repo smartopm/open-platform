@@ -289,7 +289,7 @@ export default function Form({
           <Grid item md={12} xs={12} style={{ marginTop: '20px' }}>
             <Divider />
           </Grid>
-          <AccessCheck module="forms" allowedPermissions={['can_save_draft_form']}>
+          <AccessCheck module="forms" allowedPermissions={['can_save_draft_form']} show404ForUnauthorized={false}>
             <Grid item md={6} xs={6} style={{ textAlign: 'left' }}>
               <Button
                 variant="outlined"

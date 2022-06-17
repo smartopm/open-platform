@@ -10,7 +10,13 @@ import CenteredContent from './CenteredContent';
 import MenuList from './MenuList';
 
 export default function CardWrapper({
-  children, title, buttonName, displayButton, handleButton, menuItems
+  children,
+  title,
+  buttonName,
+  displayButton,
+  handleButton,
+  menuItems,
+  cardStyles
 }) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState(null);
@@ -25,7 +31,7 @@ export default function CardWrapper({
   };
 
   return (
-    <div className={classes.container}>
+    <div className={classes.container} style={{ ...cardStyles }}>
       <Box
         sx={{
           display: 'flex',
@@ -90,7 +96,8 @@ const useStyles = makeStyles(theme => ({
 CardWrapper.defaultProps = {
   title: '',
   buttonName: '',
-  menuItems: []
+  menuItems: [],
+  cardStyles: {}
 };
 
 CardWrapper.propTypes = {
@@ -99,5 +106,7 @@ CardWrapper.propTypes = {
   buttonName: PropTypes.string,
   displayButton: PropTypes.bool.isRequired,
   handleButton: PropTypes.func.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  cardStyles: PropTypes.object,
   menuItems: PropTypes.arrayOf(PropTypes.object)
 };

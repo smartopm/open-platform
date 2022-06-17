@@ -40,7 +40,7 @@ export default function AddSubTask({ refetch, assignUser, users, taskId}) {
           />
         </DialogContent>
       </Dialog>
-      <AccessCheck module="note" allowedPermissions={['can_view_create_sub_task_button']}>
+      <AccessCheck module="note" allowedPermissions={['can_view_create_sub_task_button']} show404ForUnauthorized={false}>
         <IconButton
           edge="end"
           onClick={handleAddSubTask}

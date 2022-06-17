@@ -145,7 +145,7 @@ export default function IDCapture({ handleNext }) {
           />
         </Grid>
         <CenteredContent>
-          <AccessCheck module="entry_request" allowedPermissions={['can_update_entry_request']}>
+          <AccessCheck module="entry_request" allowedPermissions={['can_update_entry_request']} show404ForUnauthorized={false}>
             <Button
               variant="contained"
               color="primary"
@@ -160,7 +160,7 @@ export default function IDCapture({ handleNext }) {
             </Button>
           </AccessCheck>
           {!requestContext.isGuestRequest && !requestContext.request.isEdit && (
-          <AccessCheck module="entry_request" allowedPermissions={['can_grant_entry']}>
+          <AccessCheck module="entry_request" allowedPermissions={['can_grant_entry']} show404ForUnauthorized={false}>
             <Button
               className={classes.skipToNextBtn}
               onClick={requestContext.grantAccess}

@@ -737,7 +737,7 @@ export function selectOptions(
       name: t('common:misc.payments'),
       handleMenuItemClick,
       show:
-        checkCommunityFeatures('Payments') && checkRole(['admin', 'client', 'resident'], 'Payments')
+        checkCommunityFeatures('Payments') && checkRole(['admin', 'client', 'resident', 'lead'], 'Payments')
     },
     {
       key: 'plots',

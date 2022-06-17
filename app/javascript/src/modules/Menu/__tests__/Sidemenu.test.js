@@ -1,6 +1,5 @@
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react';
-
 import { BrowserRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/react-testing';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
@@ -32,6 +31,7 @@ describe('Side Nav component', () => {
     Labels: { features: [] },
     News: { features: [] },
     Tasks: { features: []},
+    'Tasks Lists': { features: []},
     'Email Templates': { features: [] },
     Processes: { features: [] }
   }
@@ -42,7 +42,6 @@ describe('Side Nav component', () => {
         <MockedProvider>
           <BrowserRouter>
             <MockedThemeProvider>
-
               <SideMenu
                 toggleDrawer={handleDrawerToggle}
                 menuItems={modules}
@@ -68,9 +67,7 @@ describe('Side Nav component', () => {
     expect(container.queryByText('menu.dashboard')).toBeInTheDocument();
     expect(container.queryByText('menu.payment')).toBeInTheDocument();
     expect(container.queryByText('menu.processes')).toBeInTheDocument();
-
     expect(container.queryByText('misc.news')).not.toBeInTheDocument() // should not be initially visible
-
 
     // toggle the menu and make sure new menus will show
     fireEvent.click(container.queryByText('menu.community'));
@@ -139,7 +136,8 @@ describe('Side Nav component', () => {
 
     // toggle the menu and make sure new menus will show
     fireEvent.click(container.queryByText('menu.community'));
-    expect(container.queryByText('misc.tasks')).not.toBeInTheDocument()
-    expect(container.queryByText('menu.email_templates')).not.toBeInTheDocument()
+    expect(container.queryByText('misc.tasks')).not.toBeInTheDocument();
+    expect(container.queryByText('menu.processes')).not.toBeInTheDocument();
+    expect(container.queryByText('menu.email_templates')).not.toBeInTheDocument();
   });
 });

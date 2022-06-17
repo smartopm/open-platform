@@ -57,6 +57,18 @@ const authState = {
           'can_create_task_lists'
         ]
       },
+      {
+        module: 'process',
+        permissions: [
+          'can_see_menu_item',
+          'can_access_tasks',
+          'can_access_processes',
+          'can_view_process_templates',
+          'can_create_process_template',
+          'can_update_process_template',
+          'can_delete_process_template',
+        ]
+      },
       { module: 'gate_access', permissions: ['can_see_menu_item'] },
       { module: 'email_template', permissions: ['can_see_menu_item'] },
       { module: 'land_parcel', permissions: ['can_see_menu_item'] },
@@ -95,6 +107,10 @@ const authState = {
       {
         module: 'forms',
         permissions: ['can_view_form_user', 'can_save_draft_form', 'can_create_form']
+      },
+      {
+        module: 'amenity',
+        permissions: ['can_access_amenities']
       }
     ]
   }

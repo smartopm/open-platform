@@ -73,6 +73,7 @@ import ProcessList from '../src/modules/Processes/Components/ProcessList';
 import ProcessBuilderPage from '../src/modules/Processes/Components/ProcessBuilderPage';
 import ProcessCommentsPage from '../src/modules/Tasks/Processes/Components/ProcessCommentsPage';
 import LanguagePage from '../src/modules/LogBook/Kiosk/components/LanguagePage';
+import Page404 from '../src/shared/404';
 // The routes defined here are carefully arranged, be mindful when changing them
 
 const LoggedInOnly = props => {
@@ -254,10 +255,15 @@ const App = () => {
                                         exact
                                         path="/tasks/task_lists/edit/:taskId"
                                         component={TaskListConfigure}
-                                      />
+                                        />
                                       <Route
+                                        exact
                                         path="/tasks/task_lists/:taskId"
                                         component={AddSubTasks}
+                                      />
+                                      <Route
+                                        path="/processes/:id/comments"
+                                        component={ProcessCommentsPage}
                                       />
 
                                       {/* end of redirects */}
@@ -430,29 +436,32 @@ const App = () => {
                                         render={() => <Redirect to="/logbook" />}
                                       />
                                       <Route exact path="/qr/invite/:id" component={GuestQRPage} />
+                                      <Route
+                                        exact
+                                        path="/todo/:taskId"
+                                        render={({ match }) => (
+                                          <Redirect to={`/tasks/${match.params.taskId}`} />
+                                        )}
+                                      />
+                                      <Route
+                                        exact
+                                        path="/todo"
+                                        render={() => <Redirect to="/tasks" />}
+                                        />
+                                      {/* Deprecated Routes */}
+                                      <Route path="/showroom_logs" render={() => (
+                                        <Page404 />
+                                      )} /> 
+                                      <Route path="/notes" render={() => (
+                                        <Page404 />
+                                      )} />
+                                      {/* TODO: Remove this wrapper after routes move to their modules */}
                                       <AdminRoutes>
                                         <Switch>
-                                          <Route
-                                            path="/processes/:id/comments"
-                                            component={ProcessCommentsPage}
-                                          />
-                                          <Route path="/showroom_logs" component={ShowroomLogs} />
-                                          <Route path="/notes" component={AllNotes} />
-                                          <Route
-                                            exact
-                                            path="/todo/:taskId"
-                                            render={({ match }) => (
-                                              <Redirect to={`/tasks/${match.params.taskId}`} />
-                                            )}
-                                          />
-                                          <Route
-                                            exact
-                                            path="/todo"
-                                            render={() => <Redirect to="/tasks" />}
-                                          />
-                                          <Route path="/feedbacks" component={FeedbackPage} />
+                                          {/* TODO: Migrate to EventLogs module */}
                                           <Route path="/event_logs" component={EventLogs} />
-                                          <Route path="/comments" exact component={CommentsPage} />
+                                            {/* TODO: Migrate to Feedback module */}
+                                          <Route path="/feedbacks" component={FeedbackPage} />
                                         </Switch>
                                       </AdminRoutes>
                                       {/* we will also need a not found page for non-logged in user */}
@@ -473,7 +482,7 @@ const App = () => {
                     </ThemeProvider>
                   </StyledEngineProvider>
                 )}
-              />
+                />
             </Analytics>
           </AuthStateProvider>
         </Router>

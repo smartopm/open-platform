@@ -767,7 +767,8 @@ export const allUserTypes = [
   'consultant',
   'developer',
   'marketing_manager',
-  'marketing_admin'
+  'marketing_admin',
+  'lead'
 ];
 
 export const siteManagers = [

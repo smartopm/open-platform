@@ -5,7 +5,7 @@ import TaskListConfigure from './Components/TaskListConfigure';
 import AddSubTasks from './Components/AddSubTasks';
 
 const taskListPermissions = ['can_view_task_lists'];
-const currentModule = 'note';
+const currentModule = 'task_list';
 
 function RenderTaskLists() {
   return (

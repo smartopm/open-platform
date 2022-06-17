@@ -37,10 +37,20 @@ admin:
       - can_fetch_project_document_comments
   process:
     permissions:
+      - can_see_menu_item
+      - can_access_tasks
+      - can_access_processes
       - can_view_process_templates
       - can_create_process_template
       - can_update_process_template
       - can_delete_process_template
+  task_list:
+    permissions:
+      - can_see_menu_item
+      - can_view_task_lists
+      - can_create_task_lists
+      - can_edit_task_list
+      - can_delete_task_list
   payment_plan:
     permissions:
       - can_cancel_payment_plan
@@ -295,6 +305,14 @@ admin:
       - can_see_menu_item
       - can_access_messages
       - can_access_user_messages
+  amenity:
+    permissions:
+      - can_create_amenity
+      - can_access_amenities
+      - can_see_menu_item
+      - can_edit_amenities
+      - can_delete_amenities
+
 contractor:
   note:
     permissions:
@@ -353,8 +371,9 @@ contractor:
       - can_access_dashboard
       - can_see_menu_item
   transaction:
-    permission:
+    permissions:
       - can_make_payment
+      - can_see_menu_item
 custodian:
   note:
     permissions:
@@ -430,9 +449,9 @@ custodian:
       - can_access_dashboard
       - can_see_menu_item
   transaction:
-    permission:
+    permissions:
       - can_make_payment
-      - can_see_menu_item 
+      - can_see_menu_item
   logout:
     permissions:
       - can_see_menu_item
@@ -567,9 +586,9 @@ site_worker:
     permissions:
       - can_get_users_lite
   transaction:
-    permission:
-      - can_make_payment 
-      - can_see_menu_item 
+    permissions:
+      - can_make_payment
+      - can_see_menu_item
 visitor:
   note:
     permissions:
@@ -603,9 +622,9 @@ visitor:
       - can_view_posts
       - can_see_menu_item
   transaction:
-    permission:
+    permissions:
       - can_make_payment
-      - can_see_menu_item  
+      - can_see_menu_item
 resident:
   gate_access:
     permissions:
@@ -668,9 +687,13 @@ resident:
     permissions:
       - can_see_menu_item
   transaction:
-    permission:
+    permissions:
       - can_make_payment
-      - can_see_menu_item  
+      - can_see_menu_item
+  amenity:
+    permissions:
+      - can_access_amenities
+      - can_see_menu_item
 prospective_client:
   note:
     permissions:
@@ -707,9 +730,13 @@ prospective_client:
     permissions:
       - can_see_menu_item
   transaction:
-    permission:
+    permissions:
       - can_make_payment
-      - can_see_menu_item  
+      - can_see_menu_item
+  amenity:
+    permissions:
+      - can_access_amenities
+      - can_see_menu_item
 client:
   gate_access:
     permissions:
@@ -768,9 +795,13 @@ client:
       - can_see_menu_item
       - can_access_dashboard
   transaction:
-    permission:
+    permissions:
       - can_make_payment
-      - can_see_menu_item  
+      - can_see_menu_item
+  amenity:
+    permissions:
+      - can_access_amenities
+      - can_see_menu_item
 site_manager:
   gate_access:
     permissions:
@@ -826,9 +857,13 @@ site_manager:
     permissions:
       - can_see_menu_item
   transaction:
-    permission:
+    permissions:
       - can_make_payment
-      - can_see_menu_item  
+      - can_see_menu_item
+  amenity:
+    permissions:
+      - can_access_amenities
+      - can_see_menu_item
 marketing_manager:
   forms:
     permissions:
@@ -917,9 +952,13 @@ marketing_manager:
       - can_access_dashboard
       - can_see_menu_item
   transaction:
-    permission:
+    permissions:
       - can_make_payment
-      - can_see_menu_item  
+      - can_see_menu_item
+  amenity:
+    permissions:
+      - can_access_amenities
+      - can_see_menu_item
 public_user:
   forms:
     permissions:
@@ -935,3 +974,42 @@ code_scanner:
   entry_request:
     permissions:
       - can_access_scan_screen
+lead:
+  note:
+    permissions:
+  profile:
+    permissions:
+      - can_see_menu_item
+  entry_request:
+    permissions:
+      - can_update_entry_request
+      - can_view_entry_request
+      - can_go_through_guest_verification
+  user:
+    permissions:
+      - can_view_own_profile
+      - can_edit_own_profile
+      - can_view_hosts
+  community:
+    permissions:
+      - can_see_menu_item
+  dashboard:
+    permissions:
+      - can_access_dashboard
+      - can_see_menu_item
+  logout:
+    permissions:
+      - can_see_menu_item
+  transaction:
+    permissions:
+      - can_make_payment
+      - can_see_menu_item
+  forms:
+    permissions:
+      - can_see_menu_item
+      - can_access_forms
+      - can_fetch_form
+      - can_fetch_form_properties
+      - can_fetch_form_property
+      - can_fetch_form_categories
+      - can_save_draft_form

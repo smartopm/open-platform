@@ -40,7 +40,7 @@ const PaymentRoutes = [
     },
     name: t => t('common:misc.make_a_payment'),
     featureName: 'Payments',
-    moduleName: currentModule,
+    moduleName: 'transaction',
     accessibleBy: [],
   },
 ]
@@ -49,17 +49,17 @@ const PaymentRoutes = [
 export default {
   routeProps: {
     path: '/payments',
-    component: RenderPaymentsList,
+    component: <span />
   },
   styleProps: {
     icon: <CreditCardIcon />
   },
   accessibleBy: [],
-  moduleName: currentModule,
+  moduleName: 'transaction',
   name: t => t('menu.payment', { count: 0 }),
   featureName: 'Payments',
   subRoutes: PaymentRoutes,
-  subMenu: PaymentRoutes,
+  subMenu: PaymentRoutes
 };
 
 export { PaymentSummary }

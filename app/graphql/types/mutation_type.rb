@@ -186,9 +186,12 @@ module Types
     field :process_create, mutation: Mutations::Process::ProcessCreate
     field :process_delete, mutation: Mutations::Process::ProcessDelete
 
-    # logs
+    # lead logs
     field :lead_log_create, mutation: Mutations::Log::LeadLogCreate
     field :lead_log_update, mutation: Mutations::Log::LeadLogUpdate
+
+    # amenity
+    field :amenity_create, mutation: Mutations::Amenity::AmenityCreate
   end
   # rubocop: enable Metrics/ClassLength
 end

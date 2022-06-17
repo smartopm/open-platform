@@ -1,4 +1,9 @@
 {
+  "404": {
+    "404": "404",
+    "action_text": "Ir al Menú Principal",
+    "oops": "Ups. Parece que no podemos encontrar tu página."
+  },
   "dialogs": {
     "dialog_action": "Estas seguro que quieres {{action}} este {{title}}?",
     "dialog_content": "Estas proximo a {{action}}{{title}}"
