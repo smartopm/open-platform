@@ -1,13 +1,10 @@
-/* eslint-disable new-cap */
-/* eslint-disable no-param-reassign */
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useContext, useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { Container, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery } from 'react-apollo';
-import { jsPDF } from 'jspdf';
+import { jsPDF as JsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 import FormUpdate from '../components/FormUpdate';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
@@ -63,31 +60,39 @@ export default function FormPage() {
 
   useEffect(() => {
     function savePdf() {
-      const domElement = document.querySelector('#form_container');
-      html2canvas(domElement, {
-        scale: '1',
-        onclone: (doc) => {
-          doc.querySelector('#save_as_draft_btn').style.visibility = 'hidden';
-          doc.querySelector('#submit_form_btn').style.visibility = 'hidden';
-        }
-      }).then(canvas => {
+      const domElement = document.querySelector('#form_update_container');
+      html2canvas(domElement).then(canvas => {
         const img = canvas.toDataURL('image/jpeg');
-        const pdf = new jsPDF('p', 'pt', 'a4');
-        const imgProps = pdf.getImageProperties(img);
-        const width = pdf.internal.pageSize.getWidth();
-        const height = (imgProps.height * width) / imgProps.width;
-        pdf.addImage(img, 'JPEG', 0, 20, width, height);
-        pdf.save('download.pdf');
+        const pdf = new JsPDF('pt', 'mm', 'a4');
+        const imgWidth = 190;
+        const pageHeight = 280;
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        let heightLeft = imgHeight;
+        let position = 0;
+        pdf.addImage(img, 'JPEG', 10, 15, imgWidth, imgHeight + 25);
+        heightLeft -= pageHeight;
+        while (heightLeft >= 0) {
+          position = heightLeft - imgHeight;
+          pdf.addPage();
+          pdf.addImage(img, 'JPEG', 10, position + 10, imgWidth, imgHeight + 25);
+          heightLeft -= pageHeight;
+        }
+        pdf.save('form.pdf');
       });
     }
     let timer;
-    if (download === 'true' && !loading) {
+    if (download === 'true' && !categoriesData.loading) {
+      const viewPort = document.querySelector('[name=viewport]');
+      if (viewPort) {
+        viewPort.setAttribute('content', 'width=1024');
+      }
       timer = window.setTimeout(() => {
         savePdf();
-      }, 500)
+        window.setTimeout(() => { window.close() }, 500);
+      }, 1000);
     }
-    return () => { window.clearTimeout(timer) }
-  }, [download, loading]);
+    return () => window.clearTimeout(timer);
+  }, [download, categoriesData?.loading]);
 
   if (isError) {
    return (
@@ -102,7 +107,7 @@ export default function FormPage() {
       <br />
       {isFormFilled ? (
         <FormContextProvider>
-          <Container maxWidth="md">
+          <Container maxWidth="md" id="form_update_container">
             <FormUpdate
               userId={userId}
               formUserId={formUserId}
@@ -123,7 +128,7 @@ export default function FormPage() {
               />
             </AccessCheck>
           </div>
-          <Container maxWidth="md" id="form_container">
+          <Container maxWidth="md">
             <Form
               editMode={false}
               formId={formId}
