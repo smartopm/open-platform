@@ -80,6 +80,8 @@ module Mutations
           log_lead_update(user_to_update, vals)
           update_user(vals, user_to_update)
         end
+      rescue StandardError => e
+        raise GraphQL::ExecutionError, e.message
       end
       # rubocop:enable Metrics/AbcSize
       # rubocop:enable Metrics/MethodLength

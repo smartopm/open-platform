@@ -15,7 +15,7 @@ module Mutations
 
         return { success: true } if msg_notify
 
-        raise GraphQL::ExecutionError, msg_notify.errors.full_message
+        raise GraphQL::ExecutionError, msg_notify.errors.full_messages&.join(', ')
       end
       # rubocop:enable Rails/SkipsModelValidations
 

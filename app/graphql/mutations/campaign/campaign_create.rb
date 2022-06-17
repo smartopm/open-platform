@@ -21,11 +21,13 @@ module Mutations
       # TODO: Rollback if Label fails to save - Saurabh
       # rubocop:disable Metrics/AbcSize
       # rubocop:disable Metrics/MethodLength
+      # rubocop:disable Metrics/CyclomaticComplexity
+      # rubocop:disable Metrics/PerceivedComplexity
       def resolve(vals)
         check_missing_args(vals) if vals[:status] == 'scheduled'
         campaign = context[:current_user].community.campaigns.new
         campaign = add_attributes(campaign, vals)
-        raise GraphQL::ExecutionError, campaign.errors.full_message unless campaign.save!
+        raise_error_message(campaign.errors.full_messages&.join(', ')) unless campaign.save!
 
         labels = Array(vals[:labels]&.split(',')).map(&:downcase)
         labels.each { |label| create_campaign_label(campaign, label) }
@@ -34,10 +36,12 @@ module Mutations
           return { campaign: campaign }
         end
 
-        raise GraphQL::ExecutionError, campaign.errors.full_message
+        raise GraphQL::ExecutionError, campaign.errors.full_messages&.join(', ')
       end
       # rubocop:enable Metrics/AbcSize
       # rubocop:enable Metrics/MethodLength
+      # rubocop:enable Metrics/CyclomaticComplexity
+      # rubocop:enable Metrics/PerceivedComplexity
 
       def add_attributes(campaign, vals)
         %w[name campaign_type message user_id_list batch_time

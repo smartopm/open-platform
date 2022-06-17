@@ -85,7 +85,7 @@ class Notifier
 
       # fail gracefully
     rescue StandardError => e
-      Rails.logger.warn e.full_message
+      Rails.logger.warn e.full_messages&.join(', ')
     end
   end
   # rubocop:enable Metrics/MethodLength
