@@ -13,7 +13,6 @@ admin:
       - can_fetch_flagged_notes
       - can_fetch_task_by_id
       - can_fetch_task_comments
-      - can_fetch_form_task_comments
       - can_fetch_task_histories
       - can_get_task_count
       - can_get_task_stats
@@ -317,6 +316,7 @@ admin:
     permissions:
       - can_see_menu_item
       - can_access_own_forms
+      - can_fetch_form_task_comments
 contractor:
   note:
     permissions:
@@ -332,7 +332,6 @@ contractor:
       - can_fetch_flagged_notes
       - can_fetch_task_by_id
       - can_fetch_task_comments
-      - can_fetch_form_task_comments
       - can_fetch_task_histories
       - can_get_task_count
       - can_get_task_stats
@@ -383,6 +382,7 @@ contractor:
     permissions:
       - can_see_menu_item
       - can_access_own_forms
+      - can_fetch_form_task_comments
 custodian:
   note:
     permissions:
@@ -397,7 +397,6 @@ custodian:
       - can_fetch_flagged_notes
       - can_fetch_task_by_id
       - can_fetch_task_comments
-      - can_fetch_form_task_comments
       - can_fetch_task_histories
       - can_get_task_count
       - can_get_task_stats
@@ -475,6 +474,7 @@ custodian:
     permissions:
       - can_see_menu_item
       - can_access_own_forms
+      - can_fetch_form_task_comments
 security_guard:
   note:
     permissions:
@@ -490,7 +490,6 @@ security_guard:
       - can_fetch_flagged_notes
       - can_fetch_task_by_id
       - can_fetch_task_comments
-      - can_fetch_form_task_comments
       - can_fetch_task_histories
       - can_get_task_count
       - can_get_task_stats
@@ -552,6 +551,7 @@ security_guard:
     permissions:
       - can_see_menu_item
       - can_access_own_forms
+      - can_fetch_form_task_comments
 site_worker:
   note:
     permissions:
@@ -566,7 +566,6 @@ site_worker:
       - can_fetch_flagged_notes
       - can_fetch_task_by_id
       - can_fetch_task_comments
-      - can_fetch_form_task_comments
       - can_fetch_task_histories
       - can_get_task_count
       - can_get_task_stats
@@ -613,6 +612,7 @@ site_worker:
     permissions:
       - can_see_menu_item
       - can_access_own_forms
+      - can_fetch_form_task_comments
 visitor:
   note:
     permissions:
@@ -720,16 +720,15 @@ resident:
       - can_see_menu_item
   note:
     permissions:
-      - can_fetch_form_task_comments
       - can_update_note_comment
   my_forms:
     permissions:
       - can_see_menu_item
       - can_access_own_forms
+      - can_fetch_form_task_comments
 prospective_client:
   note:
     permissions:
-      - can_fetch_form_task_comments
       - can_update_note_comment
   forms:
     permissions:
@@ -775,6 +774,7 @@ prospective_client:
     permissions:
       - can_see_menu_item
       - can_access_own_forms
+      - can_fetch_form_task_comments
 client:
   gate_access:
     permissions:
@@ -842,12 +842,12 @@ client:
       - can_see_menu_item
   note:
     permissions:
-      - can_fetch_form_task_comments
       - can_update_note_comment
   my_forms:
     permissions:
       - can_see_menu_item
       - can_access_own_forms
+      - can_fetch_form_task_comments
 site_manager:
   gate_access:
     permissions:
@@ -914,6 +914,7 @@ site_manager:
     permissions:
       - can_see_menu_item
       - can_access_own_forms
+      - can_fetch_form_task_comments
 marketing_manager:
   forms:
     permissions:
@@ -1013,6 +1014,7 @@ marketing_manager:
     permissions:
       - can_see_menu_item
       - can_access_own_forms
+      - can_fetch_form_task_comments
 public_user:
   forms:
     permissions:
@@ -1031,7 +1033,6 @@ code_scanner:
 lead:
   note:
     permissions:
-      - can_fetch_form_task_comments
       - can_update_note_comment
   profile:
     permissions:
@@ -1073,3 +1074,4 @@ lead:
     permissions:
       - can_see_menu_item
       - can_access_own_forms
+      - can_fetch_form_task_comments
