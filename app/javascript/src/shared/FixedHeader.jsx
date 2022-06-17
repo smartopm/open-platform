@@ -14,7 +14,7 @@ export default function FixedHeader({ children }) {
         <Grid
           item
           className={classes.container}
-          style={matches ? { paddingRight: '10%' } : { paddingRight: '18%' }}
+          style={matches ? { paddingRight: '10%' } : { paddingRight: '24%' }}
         >
           {children}
           <Divider className={classes.divider} />

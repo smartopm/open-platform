@@ -26,7 +26,8 @@ export default function SelectButton({
   options,
   selectedKey,
   handleClick,
-  style
+  style,
+  mobileIcon
 }) {
   const [openSubMenu, setOpenSubMenu] = useState({ isOpen: false, name: '' });
   const [buttonText, setButtonText] = useState(null);
@@ -60,6 +61,9 @@ export default function SelectButton({
     <>
       {matches ? (
         <IconButton onClick={e => handleClick(e)} color="primary">
+          {mobileIcon}
+          {' '}
+          ||
           <MoreVertIcon />
         </IconButton>
       ) : (
@@ -163,7 +167,8 @@ SelectButton.defaultProps = {
   selectedKey: '',
   anchorEl: {},
   anchorRef: {},
-  style: {}
+  style: {},
+  mobileIcon: undefined
 };
 
 SelectButton.propTypes = {
@@ -190,5 +195,6 @@ SelectButton.propTypes = {
   ).isRequired,
   selectedKey: PropTypes.string,
   handleClick: PropTypes.func.isRequired,
-  style: PropTypes.shape({})
+  style: PropTypes.shape({}),
+  mobileIcon: PropTypes.node
 };
