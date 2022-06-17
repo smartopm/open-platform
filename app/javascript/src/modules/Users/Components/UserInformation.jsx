@@ -127,16 +127,16 @@ export default function UserInformation({
 
   const rightPanelObj = [
     {
-      mainElement: ['admin', 'marketing_admin'].includes(userType) ? (
-        <UserLabelTitle isLabelOpen={isLabelOpen} setIsLabelOpen={setIsLabelOpen} />
-      ) : (
-        undefined
-      ),
-      key: 1
-    },
-    {
       mainElement,
       key: 2
+    },
+    { 
+      mainElement: ['admin', 'marketing_admin'].includes(userType) ? (
+      <UserLabelTitle isLabelOpen={isLabelOpen} setIsLabelOpen={setIsLabelOpen} />
+      ) : (
+          undefined
+      ),
+      key: 1
     }
   ];
 

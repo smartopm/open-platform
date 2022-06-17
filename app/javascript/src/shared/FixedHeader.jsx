@@ -1,15 +1,21 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import makeStyles from '@mui/styles/makeStyles';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import Grid from '@mui/material/Grid';
 import Divider from '@mui/material/Divider';
 
 export default function FixedHeader({ children }) {
   const classes = useStyles();
+  const matches = useMediaQuery('(max-width:900px)');
   return (
     <div data-testid="contained-header">
       <Grid container>
-        <Grid item className={classes.container}>
+        <Grid
+          item
+          className={classes.container}
+          style={matches ? { paddingRight: '10%' } : { paddingRight: '18%' }}
+        >
           {children}
           <Divider className={classes.divider} />
         </Grid>
@@ -25,8 +31,7 @@ const useStyles = makeStyles(() => ({
     zIndex: 10,
     background: '#FFFFFF',
     top: 50,
-    width: '100%',
-    paddingRight: '18%'
+    width: '100%'
     // left: 0
     // paddingRight: '23%',
     // '@media (max-width: 600px)': {

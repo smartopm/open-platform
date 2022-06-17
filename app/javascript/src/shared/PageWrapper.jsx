@@ -36,7 +36,7 @@ export default function PageWrapper({
       <Grid item lg={10} md={10} xs={12} sm={12}>
         <FixedHeader>
           <Grid container>
-            <Grid item md={12}>
+            <Grid item md={12} xs={12} sm={12} lg={12}>
               {showBreadCrumb && (
                 <Breadcrumbs aria-label="breadcrumb" data-testid="breadcrumb">
                   {breadCrumbObj?.extraBreadCrumb && (
@@ -59,7 +59,7 @@ export default function PageWrapper({
                 </Breadcrumbs>
               )}
             </Grid>
-            <Grid item md={6} lg={6}>
+            <Grid item md={6} lg={6} sm={8} xs={9}>
               {pageTitle && (
                 <Typography variant="h4" color="textSecondary">
                   {pageTitle}
@@ -79,10 +79,10 @@ export default function PageWrapper({
               )}
             </Grid>
             {rightPanelObj && (
-              <Grid item md={6} lg={6}>
+              <Grid item md={6} lg={6} xs={3} sm={4}>
                 <div style={{ display: 'flex', justifyContent: 'right' }}>
                   {rightPanelObj.map(data => (
-                    <div style={{ paddingLeft: '15px' }} key={data.key}>
+                    <div style={matches ? {paddingLeft: '4px'} : { paddingLeft: '15px' }} key={data.key}>
                       {data.mainElement}
                     </div>
                   ))}
