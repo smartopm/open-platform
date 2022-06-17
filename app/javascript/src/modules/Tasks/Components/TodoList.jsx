@@ -558,6 +558,7 @@ export default function TodoList({
                   <TodoItem
                     key={task.id}
                     task={task}
+                    query={joinedTaskQuery}
                     handleChange={handleChange}
                     selectedTasks={selectedTasks}
                     isSelected={checkedOptions === 'all'}
