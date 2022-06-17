@@ -43,8 +43,8 @@ export default function FormItem({
                 aria-label="delete"
                 size="large"
               >
-                <Badge badgeContent={2} color="secondary">
-                  <ForumIcon color={hasComments ? 'primary' : ''} />
+                <Badge badgeContent={formUser.commentsCount} color="secondary">
+                  <ForumIcon color={formUser.commentsCount ? 'primary' : ''} />
                 </Badge>
               </IconButton>
             </>
@@ -81,6 +81,7 @@ FormItem.propTypes = {
   formUser: PropTypes.shape({
     id: PropTypes.string.isRequired,
     createdAt: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.string]).isRequired,
+    commentsCount: PropTypes.number.isRequired,
     form: PropTypes.shape({
       name: PropTypes.string.isRequired,
       id: PropTypes.string.isRequired
@@ -92,5 +93,6 @@ FormItem.propTypes = {
   formComments: PropTypes.arrayOf(PropTypes.object),
   t: PropTypes.func.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
-  formData: PropTypes.object.isRequired
+  formData: PropTypes.object.isRequired,
+  
 };

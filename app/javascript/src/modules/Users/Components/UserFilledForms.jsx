@@ -10,7 +10,7 @@ import CenteredContent from '../../../shared/CenteredContent';
 export default function UserFilledForms({ userFormsFilled, userId, currentUser }) {
   const { t } = useTranslation(['common', 'task']);
   const [currentFormUserId, setCurrentFormUserId] = useState(null);
-  const [fetchComments, formData] = useLazyQuery(SubmittedFormCommentsQuery);
+  const [fetchComments, formData] = useLazyQuery(SubmittedFormCommentsQuery, { fetchPolicy: 'cache-and-network' });
 
   function handleShowComments(event, formId){
     event.stopPropagation();
