@@ -61,10 +61,7 @@ export default function SelectButton({
     <>
       {matches ? (
         <IconButton onClick={e => handleClick(e)} color="primary">
-          {mobileIcon}
-          {' '}
-          ||
-          <MoreVertIcon />
+          {mobileIcon || <MoreVertIcon />}
         </IconButton>
       ) : (
         <ButtonGroup color="primary" aria-label="outlined select button" data-testid="button">

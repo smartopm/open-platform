@@ -9,6 +9,7 @@ import makeStyles from '@mui/styles/makeStyles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Grid from '@mui/material/Grid';
 import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
 import { Container } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { useTranslation } from 'react-i18next';
@@ -461,7 +462,7 @@ export default function UsersList() {
 
   const rightPanelObj = [
     {
-      mainElement: (
+      mainElement: matches ? (<IconButton color='primary' onClick={() => setSearchOpen(!searchOpen)}><SearchIcon /></IconButton>) : (
         <Button startIcon={<SearchIcon />} onClick={() => setSearchOpen(!searchOpen)}>
           {t('common:menu.search')}
         </Button>

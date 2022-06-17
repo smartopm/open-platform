@@ -6,6 +6,8 @@ import makeStyles from '@mui/styles/makeStyles';
 import { useTranslation } from 'react-i18next';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import MoreVertOutlined from '@mui/icons-material/MoreVertOutlined';
 import { CSVLink } from 'react-csv';
 import SelectButton from '../../../shared/buttons/SelectButton';
@@ -238,6 +240,7 @@ export default function UserSelectButton({ setCampaignOption }) {
       selectedKey={selectedKey}
       handleMenuItemClick={handleMenuItemClick}
       handleClick={handleSelectButtonClick}
+      mobileIcon={<CheckBoxIcon />}
     />
   );
 }
@@ -260,6 +263,7 @@ export function UserSearch({ handleSearchClick, filterObject }) {
 export function UserProcessCSV({ csvObject }) {
   const classes = useStyles();
   const { t } = useTranslation(['users', 'common']);
+  const matches = useMediaQuery('(max-width:900px)');
   return (
     <Button
       variant="contained"
@@ -276,7 +280,7 @@ export function UserProcessCSV({ csvObject }) {
           style={{ color: 'white' }}
           onClick={csvObject.handleDownloadCSV}
         >
-          {csvObject.usersLoading ? <Spinner /> : t('users.process_csv')}
+          {csvObject.usersLoading ? <Spinner /> : matches ? 'CSV' : t('users.process_csv')}
         </span>
       ) : (
         <CSVLink
@@ -286,7 +290,7 @@ export function UserProcessCSV({ csvObject }) {
           filename={`user-data-${dateToString(new Date())}.csv`}
           data-testid="download-csv"
         >
-          {csvObject.usersLoading ? <Spinner /> : t('users.download_csv')}
+          {csvObject.usersLoading ? <Spinner /> : matches ? 'CSV' : t('users.download_csv')}
         </CSVLink>
       )}
     </Button>
