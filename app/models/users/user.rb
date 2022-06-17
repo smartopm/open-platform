@@ -354,11 +354,11 @@ module Users
     end
 
     def generate_events(event_tag, target_obj, data = {})
-      Logs::EventLog.create(acting_user_id: id,
-                            community_id: community_id, subject: event_tag,
-                            ref_id: target_obj&.id,
-                            ref_type: target_obj&.class&.to_s,
-                            data: data)
+      Logs::EventLog.create!(acting_user_id: id,
+                             community_id: community_id, subject: event_tag,
+                             ref_id: target_obj&.id,
+                             ref_type: target_obj&.class&.to_s,
+                             data: data)
     end
 
     # rubocop:disable Metrics/MethodLength

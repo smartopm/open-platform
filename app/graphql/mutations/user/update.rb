@@ -77,6 +77,7 @@ module Mutations
 
           user_with_substatus_log = update_sub_status_log(user, vals) if vals[:sub_status]
           user_to_update = user_with_substatus_log || user
+          log_lead_update(user_to_update, vals)
           update_user(vals, user_to_update)
         end
       end
@@ -96,6 +97,28 @@ module Mutations
         end
         raise GraphQL::ExecutionError, user_to_update.errors.full_messages&.join(', ')
       end
+
+      # rubocop:disable Metrics/AbcSize
+      # rubocop:disable Metrics/MethodLength
+      def log_lead_update(user, vals)
+        return unless user.user_type.eql?('lead')
+
+        lead_info = %i[lead_status lead_temperature lead_source lead_owner lead_type]
+        lead_info.each do |field|
+          user.send("#{field}=", vals[field])
+        end
+
+        return unless lead_info.any? { |field| user.send("#{field}_changed?") }
+
+        params = user.lead_status_changed? ? changes_params(user.changes_to_save[:lead_status]) : {}
+        context[:current_user].generate_events('lead_update', user, {
+                                                 previous_status: params[:previous_status],
+                                                 current_status: params[:new_status],
+                                                 has_status_changed: user.lead_status_changed?,
+                                               })
+      end
+      # rubocop:enable Metrics/MethodLength
+      # rubocop:enable Metrics/AbcSize
 
       def attach_avatars(user, vals)
         ATTACHMENTS.each_pair do |key, attr|
@@ -146,13 +169,13 @@ module Mutations
         user.sub_status = vals[:sub_status]
         return unless user.sub_status_changed?
 
-        params = sub_status_log_params(user.changes_to_save[:sub_status])
+        params = changes_params(user.changes_to_save[:sub_status])
         substatus_log = create_sub_status_log(user, params[:previous_status], params[:new_status])
         user.latest_substatus_id = substatus_log.id
         user
       end
 
-      def sub_status_log_params(changes)
+      def changes_params(changes)
         {
           new_status: changes.last,
           previous_status: changes.first,
