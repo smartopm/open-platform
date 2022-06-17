@@ -26,7 +26,7 @@ export default function Discussions() {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const authState = useContext(AuthStateContext);
-  const { t } = useTranslation('discussion');
+  const { t } = useTranslation(['discussion', 'common']);
   function openModal() {
     setOpen(!open);
   }
@@ -72,7 +72,7 @@ export default function Discussions() {
     return <ErrorPage title={error.message || error} />;
   }
   return (
-    <PageWrapper>
+    <PageWrapper pageTitle={t('common:misc.discussions')}>
       <Dialog
         fullScreen={fullScreen}
         open={open}

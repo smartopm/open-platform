@@ -50,7 +50,7 @@ export default function Discussion({ discussionData }) {
   }
 
   return (
-    <PageWrapper oneCol>
+    <PageWrapper oneCol pageTitle={discussionData?.title}>
       <Grid container spacing={3}>
         <Grid item xs={12}>
           <Typography data-testid="disc_title" variant="h6">

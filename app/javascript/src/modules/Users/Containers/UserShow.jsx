@@ -9,7 +9,6 @@ import Loading from '../../../shared/Loading';
 import { UserQuery, UserAccountQuery } from '../../../graphql/queries';
 import { AddActivityLog, SendOneTimePasscode } from '../../../graphql/mutations';
 import ErrorPage from '../../../components/Error';
-import PageWrapper from '../../../shared/PageWrapper';
 
 export default function UserShow({ history }) {
   const { id, dg, tm } = useParams(); // get timestamp and dg
@@ -48,18 +47,16 @@ export default function UserShow({ history }) {
     return <ErrorPage title={error.message || error} />; // error could be a string sometimes
   }
   return (
-    <PageWrapper>
-      <UserInformation
-        data={data}
-        accountData={accountData}
-        accountRefetch={accountRefetch}
-        authState={authState}
-        onLogEntry={addLogEntry}
-        sendOneTimePasscode={sendOneTimePasscode}
-        refetch={refetch}
-        userId={id}
-        router={history}
-      />
-    </PageWrapper>
+    <UserInformation
+      data={data}
+      accountData={accountData}
+      accountRefetch={accountRefetch}
+      authState={authState}
+      onLogEntry={addLogEntry}
+      sendOneTimePasscode={sendOneTimePasscode}
+      refetch={refetch}
+      userId={id}
+      router={history}
+    />
   );
 }

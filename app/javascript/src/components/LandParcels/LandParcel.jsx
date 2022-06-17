@@ -224,7 +224,7 @@ export default function LandParcelList() {
   }
 
   return (
-    <PageWrapper>
+    <PageWrapper pageTitle={t('misc.properties')}>
       <Grid
         container
         style={{ padding: '20px 0 20px 20px' }}

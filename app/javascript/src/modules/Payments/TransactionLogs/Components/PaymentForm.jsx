@@ -1,4 +1,4 @@
-import { Button, InputAdornment, TextField, Typography } from '@mui/material';
+import { Button, InputAdornment, TextField } from '@mui/material';
 import { closePaymentModal, useFlutterwave } from 'flutterwave-react-v3';
 import React, { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -87,8 +87,7 @@ export default function PaymentForm() {
   }
 
   return (
-    <PageWrapper oneCol>
-      <Typography variant="h4">{t('payment:misc.make_a_payment')}</Typography>
+    <PageWrapper oneCol pageTitle={t('payment:misc.make_a_payment')}>
       <MessageAlert
         type={!message.isError ? 'success' : 'error'}
         message={message.detail}

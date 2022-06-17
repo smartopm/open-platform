@@ -39,7 +39,7 @@ const Home = () => {
   if (!authState.loggedIn) return <Spinner />;
 
   return (
-    <PageWrapper PageTitle='dashboard'>
+    <PageWrapper pageTitle={t('dashboard.dashboard')}>
       <Grid container columns={{ xs: 12, md: 12 }} spacing={3}>
         {matches && (
           <Grid item sm={12} md={12} xs={12}>

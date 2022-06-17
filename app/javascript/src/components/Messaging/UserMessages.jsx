@@ -21,7 +21,7 @@ import PageWrapper from '../../shared/PageWrapper';
 
 export default function UserMessages() {
   const { id } = useParams()
-  const { t } = useTranslation('users')
+  const { t } = useTranslation(['users', 'common'])
   const limit = 50
   const { loading, error, data, refetch, fetchMore } = useQuery(UserMessageQuery, {
     variables: { id, limit }
@@ -68,7 +68,7 @@ export default function UserMessages() {
   }
 
   return (
-    <PageWrapper>
+    <PageWrapper pageTitle={t('common:menu.my_messages')}>
       <div>
         <List>
           { loading ? (

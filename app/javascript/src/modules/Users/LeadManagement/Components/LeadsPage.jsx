@@ -62,11 +62,8 @@ export default function LeadsPage() {
       </CenteredContent>
     );
   return (
-    <PageWrapper>
+    <PageWrapper pageTitle={t('lead_management.leads')}>
       <Grid container>
-        <Grid item md={12} xs={12} className={classes.title} data-testid="page_title">
-          <Typography variant="h4">{t('lead_management.leads')}</Typography>
-        </Grid>
         <Grid item md={12} xs={12} className={classes.title} data-testid="subtitle">
           <Typography variant="h6">{t('lead_management.scorecard')}</Typography>
         </Grid>

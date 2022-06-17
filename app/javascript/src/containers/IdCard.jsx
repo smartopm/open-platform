@@ -37,7 +37,7 @@ export default function IdCardPage(){
 export function UserIDDetail({ data, communityName }) {
   const { t } = useTranslation(['scan', 'days', 'common']);
   return (
-    <PageWrapper PageTitle={t('misc.my_id')}>
+    <PageWrapper pageTitle={t('misc.my_id')}>
       <div className="row justify-content-center">
         <div className="card id_card_box col-10 col-sm-10 col-md-6">
           <div

@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { Typography, Grid } from '@mui/material';
+import { Grid } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useQuery } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
-import { makeStyles } from '@mui/styles';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import { useHistory } from 'react-router-dom';
 import { formatError } from '../../../../utils/helpers';
@@ -17,7 +16,6 @@ import PageWrapper from '../../../../shared/PageWrapper';
 
 export default function AdminDashboard() {
   const { t } = useTranslation(['task', 'process']);
-  const classes = useStyles();
   const history = useHistory();
   const matches = useMediaQuery('(max-width:600px)');
   const [openSpeedDial, setOpenSpeedDial] = useState(false);
@@ -45,13 +43,10 @@ export default function AdminDashboard() {
   ];
 
   return (
-    <PageWrapper>
+    <PageWrapper pageTitle={t('process:breadcrumbs.processes')}>
       <div data-testid="processes-admin-dashboard">
         <Grid container>
           <Grid item md={11} xs={10}>
-            <Typography variant="h4" className={classes.title}>
-              {t('processes.processes')}
-            </Typography>
             {!matches && (
               <>
                 {processesError && (
@@ -98,12 +93,3 @@ export default function AdminDashboard() {
     </PageWrapper>
   );
 }
-
-const useStyles = makeStyles({
-  title: {
-    marginBottom: '24px'
-  },
-  processTitle: {
-    marginBottom: '20px'
-  }
-});

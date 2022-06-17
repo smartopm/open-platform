@@ -68,7 +68,7 @@ export default function AllMessages() {
   }
 
   return (
-    <PageWrapper>
+    <PageWrapper pageTitle={t('common:menu.message_plural')}>
       <div className={width > 1000 ? 'container' : 'container-fluid'}>
         <FormControl fullWidth>
           <InputLabel htmlFor="search-messages">

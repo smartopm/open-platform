@@ -118,8 +118,8 @@ export default function SearchContainer({ location }) {
   }
 
   return (
-    <PageWrapper oneCol>
-      <div className={`${css(styles.inputGroup)}`} style={{marginTop: '20px'}}>
+    <PageWrapper oneCol pageTitle={t('search.search')}>
+      <div className={`${css(styles.inputGroup)}`} style={{marginTop: '100px'}}>
         <input
           className={`form-control ${css(styles.input)} user-search-input`}
           onChange={updateSearch}

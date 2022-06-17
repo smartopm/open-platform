@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useParamsQuery } from '../../../utils/helpers';
 import LogBookItem from './LogBookItem';
-import PageWrapper from '../../../shared/PageWrapper';
 
 export default function LogBook() {
   const history = useHistory();
@@ -30,13 +29,6 @@ export default function LogBook() {
     history.push(`/logbook?tab=${newValue}&offset=${0}`);
   }
   return (
-    <PageWrapper>
-      <LogBookItem
-        offset={offset}
-        router={history}
-        handleTabValue={handleChange}
-        tabValue={value}
-      />
-    </PageWrapper>
+    <LogBookItem offset={offset} router={history} handleTabValue={handleChange} tabValue={value} />
   );
 }

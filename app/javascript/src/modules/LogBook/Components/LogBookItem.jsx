@@ -30,6 +30,7 @@ import permissionsCheck from '../../Permissions/utils';
 import useDebouncedValue from '../../../shared/hooks/useDebouncedValue';
 import { AllEventLogsQuery } from '../../../graphql/queries';
 import SearchInput from '../../../shared/search/SearchInput';
+import PageWrapper from '../../../shared/PageWrapper';
 
 const limit = 20;
 const subjects = ['user_entry', 'visitor_entry', 'user_temp', 'observation_log'];
@@ -200,7 +201,7 @@ export default function LogBookItem({ router, offset, tabValue, handleTabValue }
   }
 
   return (
-    <>
+    <PageWrapper pageTitle={t('common:misc.log_book')}>
       <MessageAlert
         type={!observationDetails.isError ? 'success' : 'error'}
         message={observationDetails.message}
@@ -346,7 +347,7 @@ export default function LogBookItem({ router, offset, tabValue, handleTabValue }
           />
         </CenteredContent>
       )}
-    </>
+    </PageWrapper>
   );
 }
 

@@ -47,7 +47,7 @@ export default function PostsList({ wordpressEndpoint, communityName }) {
   const publicPosts =
     Boolean(totalPosts) && response.posts.filter(post => post.categories.Private == null);
   return (
-    <PageWrapper>
+    <PageWrapper pageTitle={t('news.news')}>
       <Box style={{ display: 'flex', justifyContent: 'center' }}>
         <Typography variant="h4" color="textSecondary">
           {titleize(slug || t('news.posts'))}

@@ -1,6 +1,7 @@
 // This component will house the customer journey dashboard
 import React from 'react';
 import { useTheme } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import makeStyles from '@mui/styles/makeStyles';
 import { useQuery } from 'react-apollo';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -14,6 +15,7 @@ import PageWrapper from '../../../shared/PageWrapper';
 
 export default function UserStats() {
   const classes = useStyles();
+  const { t } = useTranslation('users')
   const history = useHistory();
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
@@ -26,7 +28,7 @@ export default function UserStats() {
   }
 
   return (
-    <PageWrapper>
+    <PageWrapper pageTitle={t('users.user_journey')}>
       <div className={matches ? classes.statusSection : undefined}>
         <div className={classes.titleSection}>
           <h5 className={classes.title}>Customer Journey Stage</h5>
