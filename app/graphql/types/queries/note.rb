@@ -220,7 +220,7 @@ module Types::Queries::Note
     end
 
     Forms::FormUser.find_by(id: form_user_id)
-      .note&.first&.note_comments&.eager_load(:user)
+                   .note&.first&.note_comments&.eager_load(:user)
   end
 
   # rubocop:disable Metrics/AbcSize

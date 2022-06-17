@@ -1,6 +1,4 @@
 /* eslint-disable max-statements */
-/* eslint-disable import/no-cycle */
-/* eslint-disable no-use-before-define */
 import React, { Fragment, useState, useContext, useEffect } from 'react';
 import {
   IconButton,
