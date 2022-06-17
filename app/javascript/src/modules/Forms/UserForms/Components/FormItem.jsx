@@ -3,9 +3,22 @@ import { ListItem, Typography, IconButton, ListItemText } from '@mui/material';
 import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import ForumIcon from '@mui/icons-material/Forum';
+import CommentCard from '../../../Tasks/Components/CommentCard';
+import CenteredContent from '../../../../shared/CenteredContent';
+import { Spinner } from '../../../../shared/Loading';
 
-export default function FormItem({ formUser, handleShowComments, currentFormUserId, userId }) {
+export default function FormItem({
+  formUser,
+  handleShowComments,
+  currentFormUserId,
+  userId,
+  formData,
+  t
+}) {
   const history = useHistory();
+  const currentForm = currentFormUserId === formUser.id;
+  const hasComments = currentForm && formData.data && formData.data?.formComments?.length;
+  const hasNoComments = currentForm && !formData.loading && !hasComments;
   return (
     <>
       <ListItem
@@ -43,7 +56,15 @@ export default function FormItem({ formUser, handleShowComments, currentFormUser
           )}
         />
       </ListItem>
-      {currentFormUserId === formUser.id && 'I am a list of comments just for this one here'}
+      {currentForm && formData.loading && <Spinner />}
+      {hasComments ? (
+        <CommentCard comments={formData.data.formComments} refetch={() => {}} />
+      ) : (
+        hasNoComments && (
+          <CenteredContent>{t('task:task.no_comments_on_this_form')}</CenteredContent>
+        )
+      )}
+      <br />
     </>
   );
 }
@@ -58,5 +79,9 @@ FormItem.propTypes = {
   }).isRequired,
   handleShowComments: PropTypes.func.isRequired,
   currentFormUserId: PropTypes.string.isRequired,
-  userId: PropTypes.string.isRequired
+  userId: PropTypes.string.isRequired,
+  formComments: PropTypes.arrayOf(PropTypes.object).isRequired,
+  t: PropTypes.func.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  formData: PropTypes.object.isRequired
 };

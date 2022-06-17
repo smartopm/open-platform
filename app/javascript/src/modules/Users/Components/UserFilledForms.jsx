@@ -8,9 +8,9 @@ import FormItem from '../../Forms/UserForms/Components/FormItem';
 import { SubmittedFormCommentsQuery } from '../../Forms/graphql/forms_queries';
 
 export default function UserFilledForms({ userFormsFilled, userId, currentUser }) {
-  const { t } = useTranslation('common');
+  const { t } = useTranslation(['common', 'task']);
   const [currentFormUserId, setCurrentFormUserId] = useState(null);
-  const [fetchComments, { data }] = useLazyQuery(SubmittedFormCommentsQuery)
+  const [fetchComments, formData] = useLazyQuery(SubmittedFormCommentsQuery);
 
   function handleShowComments(event, formId){
     event.stopPropagation();
@@ -18,7 +18,6 @@ export default function UserFilledForms({ userFormsFilled, userId, currentUser }
     fetchComments({ variables: { formUserId: formId } });
   }
 
-  console.log(data);
   if (!userFormsFilled || !userFormsFilled.length) {
     return <CenteredContent>{t('misc.no_forms')}</CenteredContent>;
   }
@@ -34,7 +33,9 @@ export default function UserFilledForms({ userFormsFilled, userId, currentUser }
                   formUser={userForm}
                   handleShowComments={handleShowComments}
                   currentFormUserId={currentFormUserId}
+                  formData={formData}
                   userId={userId}
+                  t={t}
                 />
                 <Divider />
               </Fragment>
