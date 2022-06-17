@@ -1,11 +1,12 @@
 import React from 'react';
-import { ListItem, Typography, IconButton, ListItemText } from '@mui/material';
+import { ListItem, Typography, IconButton, ListItemText, Badge } from '@mui/material';
 import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import ForumIcon from '@mui/icons-material/Forum';
 import CommentCard from '../../../Tasks/Components/CommentCard';
 import CenteredContent from '../../../../shared/CenteredContent';
 import { Spinner } from '../../../../shared/Loading';
+import DateContainer from '../../../../components/DateContainer';
 
 export default function FormItem({
   formUser,
@@ -42,7 +43,9 @@ export default function FormItem({
                 aria-label="delete"
                 size="large"
               >
-                <ForumIcon />
+                <Badge badgeContent={2} color="secondary">
+                  <ForumIcon color={hasComments ? 'primary' : ''} />
+                </Badge>
               </IconButton>
             </>
           )}
@@ -51,7 +54,7 @@ export default function FormItem({
               <Typography component="span" variant="body2" color="textPrimary">
                 Submitted: 
                 {' '}
-                {new Date().toDateString()}
+                <DateContainer date={formUser.createdAt} />
               </Typography>
             </>
           )}
@@ -59,10 +62,7 @@ export default function FormItem({
       </ListItem>
       {currentForm && formData.loading && <Spinner />}
       {hasComments ? (
-        <CommentCard
-          comments={formData.data.formComments}
-          refetch={formData.refetch}
-        />
+        <CommentCard comments={formData.data?.formComments} refetch={formData.refetch} />
       ) : (
         hasNoComments && (
           <CenteredContent>{t('task:task.no_comments_on_this_form')}</CenteredContent>
@@ -73,18 +73,23 @@ export default function FormItem({
   );
 }
 
+FormItem.defaultProps = {
+  currentFormUserId: null,
+  formComments: []
+};
 FormItem.propTypes = {
   formUser: PropTypes.shape({
     id: PropTypes.string.isRequired,
+    createdAt: PropTypes.oneOfType([PropTypes.instanceOf(Date), PropTypes.string]).isRequired,
     form: PropTypes.shape({
       name: PropTypes.string.isRequired,
       id: PropTypes.string.isRequired
     })
   }).isRequired,
   handleShowComments: PropTypes.func.isRequired,
-  currentFormUserId: PropTypes.string.isRequired,
+  currentFormUserId: PropTypes.string,
   userId: PropTypes.string.isRequired,
-  formComments: PropTypes.arrayOf(PropTypes.object).isRequired,
+  formComments: PropTypes.arrayOf(PropTypes.object),
   t: PropTypes.func.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   formData: PropTypes.object.isRequired

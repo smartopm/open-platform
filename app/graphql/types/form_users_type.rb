@@ -10,8 +10,13 @@ module Types
     field :form, Types::FormType, null: true
     field :status, String, null: true
     field :has_agreed_to_terms, Boolean, null: true
+    field :comments_count, Integer, null: true
     field :status_updated_by, Types::UserType, null: true
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
+
+    def comments_count
+      object.comments.count
+    end
   end
 end

@@ -61,6 +61,15 @@ module Types::Queries::Form
       description 'Get all categories of a form'
       argument :form_id, GraphQL::Types::ID, required: true
     end
+
+    field :submitted_forms, [Types::FormUsersType], null: true do
+      description 'Get all form submissions for current user'
+    end
+
+    field :form_comments, [Types::NoteCommentType], null: true do
+      description 'return comments for one task'
+      argument :form_user_id, GraphQL::Types::ID, required: true
+    end
   end
   # rubocop:enable Metrics/BlockLength
 
@@ -181,6 +190,26 @@ module Types::Queries::Form
 
     form.categories.eager_load(:form_properties).order(:order)
   end
+
+  # Returns all form submissions for current user
+  #
+  # @return [Array<Forms::FormUsers>]
+  def submitted_forms
+    validate_authorization(:my_forms, :can_access_own_forms)
+
+    context[:current_user].form_users.eager_load(:form).order(created_at: :desc)
+  end
+
+  def form_comments(form_user_id:)
+    unless permitted?(module: :note, permission: :can_fetch_form_task_comments)
+      raise GraphQL::ExecutionError,
+            I18n.t('errors.unauthorized')
+    end
+
+    Forms::FormUser.find_by(id: form_user_id)
+                   .comments.eager_load(:user).order(created_at: :desc)
+  end
+  
 
   private
 

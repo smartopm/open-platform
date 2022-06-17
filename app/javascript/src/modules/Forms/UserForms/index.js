@@ -1,6 +1,7 @@
 import React from 'react'
 import DescriptionIcon from '@mui/icons-material/Description';
 import AccessCheck from '../../Permissions/Components/AccessCheck';
+import FormUserList from './Components/FormUserList';
 
 // There are 2 different types of forms
 // forms for the user and forms where admin manages and creates form
@@ -12,7 +13,7 @@ const myFormsPermissions = ['can_access_own_forms'];
 function RenderMyForms() {
   return (
     <AccessCheck module={currentModule} allowedPermissions={myFormsPermissions}>
-      <p>Forms will be here</p>
+      <FormUserList />
     </AccessCheck>
   );
 }
@@ -26,7 +27,7 @@ export default {
     icon: <DescriptionIcon />
   },
   name: t => t('menu.form', { count: 0 }),
-  featureName: 'Forms',
+  featureName: 'MyForms',
   moduleName: currentModule,
   accessibleBy: []
 };
