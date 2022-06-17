@@ -26,6 +26,7 @@ const useStyles = makeStyles(() => ({
     background: '#FFFFFF',
     top: 50,
     width: '100%',
+    paddingRight: '18%'
     // left: 0
     // paddingRight: '23%',
     // '@media (max-width: 600px)': {

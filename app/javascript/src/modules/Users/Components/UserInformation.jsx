@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import Button from '@mui/material/Button';
+import { useHistory } from 'react-router-dom';
 import PhoneIcon from '@mui/icons-material/Phone';
 import { Dialog, DialogTitle, DialogContent, Container } from '@mui/material';
 import { css, StyleSheet } from 'aphrodite';
@@ -13,19 +14,24 @@ import { TabPanel } from '../../../components/Tabs';
 import UserFilledForms from './UserFilledForms';
 import UserMessages from '../../../components/Messaging/UserMessages';
 import UserJourney from './UserJourney';
-import { useParamsQuery, objectAccessor } from '../../../utils/helpers';
+import {
+  useParamsQuery,
+  objectAccessor,
+  checkAccessibilityForUserType as handler
+} from '../../../utils/helpers';
 import FeatureCheck from '../../Features';
 import PaymentPlans from '../../Payments/Components/UserTransactions/Plans';
 import ShiftButtons from '../../TimeCard/Components/ShiftButtons';
 import InviteHistoryList from '../../LogBook/GuestInvitation/Components/InviteHistoryList';
 import LeadManagementDetails from '../LeadManagement/Components/LeadManagementDetails';
-import UserDetailHeader from './UserDetailHeader';
-import FixedHeader from '../../../shared/FixedHeader';
 import UserNotes from './UserNotes';
 import UserInfo from './UserInfo';
 import CenteredContent from '../../../shared/CenteredContent';
 import PageWrapper from '../../../shared/PageWrapper';
-import { userTabList } from '../utils';
+import { userTabList, selectOptions, createMenuContext } from '../utils';
+import SelectButton from '../../../shared/buttons/SelectButton';
+import UserLabelTitle from './UserLabelTitle';
+import UserLabels from './UserLabels';
 
 export default function UserInformation({
   data,
@@ -37,6 +43,9 @@ export default function UserInformation({
   accountData
 }) {
   const path = useParamsQuery();
+  const history = useHistory();
+  const [isLabelOpen, setIsLabelOpen] = useState(false);
+  const [open, setOpen] = useState(false);
   const tab = path.get('tab');
   const subtab = path.get('subtab');
   const type = path.get('type');
@@ -44,6 +53,100 @@ export default function UserInformation({
   const [tabValue, setValue] = useState(tab || 'Contacts');
   const [isDialogOpen, setDialogOpen] = useState(false);
   const securityPersonnelList = ['security_guard', 'security_supervisor'];
+  const [selectedKey, setSelectKey] = useState('');
+  const [anchorEl, setAnchorEl] = useState(null);
+  const userType = authState.user.userType.toLowerCase();
+  const options = selectOptions(
+    setSelectKey,
+    checkModule,
+    checkCommunityFeatures,
+    history,
+    data,
+    authState,
+    handleMenuItemClick,
+    handleMergeUserItemClick,
+    checkRole,
+    t
+  );
+
+  const mainElement = (
+    <SelectButton
+      options={options}
+      open={open}
+      anchorEl={anchorEl}
+      handleClose={handleClose}
+      handleClick={handleSelectButtonClick}
+      selectedKey={selectedKey}
+      defaultButtonText={t('common:right_menu.contact_info')}
+    />
+  );
+
+  function handleClose() {
+    setAnchorEl(null);
+    setOpen(false);
+  }
+
+  function handleSelectButtonClick(e) {
+    setOpen(!open);
+    setAnchorEl(e.currentTarget);
+  }
+
+  function checkOtherRoles(featureName, roles) {
+    const ctx = createMenuContext(featureName, data, userType, authState);
+    return handler({ userTypes: roles, ctx }).includes(userType);
+  }
+
+  function checkCommunityFeatures(featureName) {
+    return Object.keys(authState.user?.community.features || []).includes(featureName);
+  }
+
+  function checkModule(moduleName) {
+    const userPermissionsModule = authState.user?.permissions.find(
+      permissionObject => permissionObject.module === moduleName
+    );
+    return userPermissionsModule?.permissions.includes('can_see_menu_item') || false;
+  }
+
+  function handleMenuItemClick(key, val) {
+    setSelectKey(key);
+    history.push(`/user/${data.user.id}?tab=${val}`);
+    setOpen(false);
+  }
+
+  function handleMergeUserItemClick() {
+    history.push(`/user/${data.user.id}?type=MergeUser`);
+    setOpen(false);
+  }
+
+  function checkRole(roles, featureName) {
+    if (['Properties', 'Users', 'Payments', 'LogBook'].includes(featureName)) {
+      checkOtherRoles(featureName, roles);
+    }
+    return roles.includes(userType);
+  }
+
+  const rightPanelObj = [
+    {
+      mainElement: ['admin', 'marketing_admin'].includes(userType) ? (
+        <UserLabelTitle isLabelOpen={isLabelOpen} setIsLabelOpen={setIsLabelOpen} />
+      ) : (
+        undefined
+      ),
+      key: 1
+    },
+    {
+      mainElement,
+      key: 2
+    }
+  ];
+
+  const breadCrumbObj = {
+    extraBreadCrumb: userType === 'marketing_admin' ? t('common:misc.users') : undefined,
+    extraBreadCrumbLink: '/users',
+    linkText: tabValue !== 'Contacts' ? t('common:misc.user_detail') : undefined,
+    linkHref: tabValue !== 'Contacts' ? `/user/${data.user.id}` : undefined,
+    pageName: objectAccessor(userTabList(t), tabValue),
+  }
 
   useEffect(() => {
     if (tab) {
@@ -60,8 +163,6 @@ export default function UserInformation({
     }
   }, [type]);
 
-  const userType = authState.user.userType.toLowerCase();
-
   function handleMergeDialog() {
     setDialogOpen(false);
     router.push(`/user/${userId}?tab=${tabValue}`);
@@ -69,14 +170,11 @@ export default function UserInformation({
 
   return (
     <PageWrapper
-      extraBreadCrumb={userType === 'marketing_admin' ? t('common:misc.users') : undefined}
-      extraBreadCrumbLink="/users"
-      linkText={tabValue !== 'Contacts' ? t('common:misc.user_detail') : undefined}
-      linkHref={tabValue !== 'Contacts' ? `/user/${data.user.id}` : undefined}
-      pageName={objectAccessor(userTabList(t), tabValue)}
+      breadCrumbObj={breadCrumbObj}
       showBreadCrumb
-      avatarObj={{userType, data}}
+      avatarObj={{ data }}
       showAvatar
+      rightPanelObj={rightPanelObj}
     >
       <div style={{ overflow: 'hidden' }}>
         <>
@@ -97,19 +195,16 @@ export default function UserInformation({
               <UserMerge close={handleMergeDialog} userId={userId} />
             </DialogContent>
           </Dialog>
-          {/* <div style={{ marginBottom: '160px' }}>
-            <FixedHeader>
-              <UserDetailHeader
-                data={data}
-                userType={userType}
-                userId={userId}
-                currentTab={tabValue}
-                authState={authState}
-              />
-            </FixedHeader>
-          </div> */}
-
           <br />
+          {isLabelOpen && (
+            <Container maxWidth="md">
+              <UserLabels
+                userId={data.user.id}
+                isLabelOpen={isLabelOpen}
+                setIsLabelOpen={setIsLabelOpen}
+              />
+            </Container>
+          )}
           <FeatureCheck features={authState.user.community.features} name="Time Card">
             {authState.user.userType === 'custodian' &&
               ['security_guard', 'contractor', 'security_supervisor', 'developer'].includes(
@@ -223,6 +318,7 @@ const User = PropTypes.shape({
   status: PropTypes.string,
   accounts: PropTypes.arrayOf(PropTypes.object),
   formUsers: PropTypes.arrayOf(PropTypes.object),
+  permissions: PropTypes.arrayOf(PropTypes.object),
   community: PropTypes.shape({
     // eslint-disable-next-line react/forbid-prop-types
     features: PropTypes.object,

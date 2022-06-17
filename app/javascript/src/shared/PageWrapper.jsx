@@ -6,7 +6,6 @@ import { Link } from 'react-router-dom';
 import Container from '@mui/material/Container';
 import { makeStyles } from '@mui/styles';
 import FixedHeader from './FixedHeader';
-import PageHeader from './PageHeader';
 import Avatar from '../components/Avatar';
 import UserDetail from '../modules/Users/Components/UserProfileDetail';
 
@@ -14,14 +13,11 @@ export default function PageWrapper({
   children,
   oneCol,
   pageTitle,
-  linkText,
-  pageName,
-  linkHref,
   showAvatar,
-  extraBreadCrumb,
-  extraBreadCrumbLink,
+  breadCrumbObj,
   showBreadCrumb,
-  avatarObj
+  avatarObj,
+  rightPanelObj
 }) {
   const matches = useMediaQuery('(max-width:900px)');
   const classes = useStyles();
@@ -43,41 +39,56 @@ export default function PageWrapper({
             <Grid item md={12}>
               {showBreadCrumb && (
                 <Breadcrumbs aria-label="breadcrumb" data-testid="breadcrumb">
-                  {extraBreadCrumb && (
+                  {breadCrumbObj?.extraBreadCrumb && (
                     <Typography color="primary" variant="caption">
-                      <Link className={classes.linkColor} to={extraBreadCrumbLink}>
-                        {extraBreadCrumb}
+                      <Link className={classes.linkColor} to={breadCrumbObj?.extraBreadCrumbLink}>
+                        {breadCrumbObj?.extraBreadCrumb}
                       </Link>
                     </Typography>
                   )}
-                  {linkText && (
+                  {breadCrumbObj?.linkText && (
                     <Typography color="primary" variant="caption">
-                      <Link className={classes.linkColor} to={linkHref}>
-                        {linkText}
+                      <Link className={classes.linkColor} to={breadCrumbObj?.linkHref}>
+                        {breadCrumbObj?.linkText}
                       </Link>
                     </Typography>
                   )}
                   <Typography color="text.primary" variant="caption">
-                    {pageName}
+                    {breadCrumbObj?.pageName}
                   </Typography>
                 </Breadcrumbs>
               )}
             </Grid>
-            <Grid item md={6}>
-              {pageTitle && <PageHeader PageTitle={pageTitle} />}
+            <Grid item md={6} lg={6}>
+              {pageTitle && (
+                <Typography variant="h4" color="textSecondary">
+                  {pageTitle}
+                </Typography>
+              )}
               {showAvatar && (
                 <div style={{ display: 'flex' }}>
                   <Avatar
-                    user={avatarObj.data.user}
+                    user={avatarObj?.data.user}
                     // eslint-disable-next-line react/style-prop-object
                     style="small"
                   />
                   <div style={{ marginLeft: '15px' }}>
-                    <UserDetail data={avatarObj.data} userType={avatarObj.userType} />
+                    <UserDetail data={avatarObj?.data} />
                   </div>
                 </div>
               )}
             </Grid>
+            {rightPanelObj && (
+              <Grid item md={6} lg={6}>
+                <div style={{ display: 'flex', justifyContent: 'right' }}>
+                  {rightPanelObj.map(data => (
+                    <div style={{ paddingLeft: '15px' }} key={data.key}>
+                      {data.mainElement}
+                    </div>
+                  ))}
+                </div>
+              </Grid>
+            )}
           </Grid>
         </FixedHeader>
         {oneCol ? <Container maxWidth="md">{children}</Container> : <div>{children}</div>}
@@ -106,11 +117,40 @@ const useStyles = makeStyles(theme => ({
 }));
 
 PageWrapper.defaultProps = {
-  oneCol: false
+  oneCol: false,
+  showAvatar: false,
+  pageTitle: undefined,
+  breadCrumbObj: undefined,
+  showBreadCrumb: false,
+  avatarObj: undefined,
+  rightPanelObj: undefined
 };
 
 PageWrapper.propTypes = {
   children: PropTypes.node.isRequired,
   oneCol: PropTypes.bool,
-  pageTitle: PropTypes.string.isRequired
+  pageTitle: PropTypes.string,
+  showAvatar: PropTypes.bool,
+  breadCrumbObj: PropTypes.shape({
+    extraBreadCrumb: PropTypes.string,
+    extraBreadCrumbLink: PropTypes.string,
+    linkText: PropTypes.string,
+    linkHref: PropTypes.string,
+    pageName: PropTypes.string
+  }),
+  showBreadCrumb: PropTypes.bool,
+  avatarObj: PropTypes.shape({
+    data: PropTypes.shape({
+      user: PropTypes.shape({
+        imageUrl: PropTypes.string,
+        avatarUrl: PropTypes.string,
+        name: PropTypes.string,
+        userType: PropTypes.string
+      })
+    })
+  }),
+  rightPanelObj: PropTypes.arrayOf({
+    key: PropTypes.number,
+    mainElement: PropTypes.oneOfType([PropTypes.node, PropTypes.string])
+  })
 };
