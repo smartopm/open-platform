@@ -378,6 +378,7 @@ module Users
         status: vals[:status],
         order: vals[:order],
       )
+      note.update(note_list_id: note.parent_note&.note_list_id)
       note.documents.attach(vals[:attached_documents]) if vals[:attached_documents]
       note
     end
