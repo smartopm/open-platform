@@ -12,9 +12,7 @@ import { ActionDialog } from '../../../components/Dialog';
 import MessageAlert from '../../../components/MessageAlert';
 import { objectAccessor } from '../../../utils/helpers';
 
-export default function FormMenu(
-  { formId, formName, anchorEl, handleClose, open, refetch, t, userType }
-) {
+export default function FormMenu({ formId, formName, anchorEl, handleClose, open, refetch, t }) {
   const history = useHistory();
   const [isDialogOpen, setOpen] = useState(false);
   const [alertOpen, setAlertOpen] = useState(false);
@@ -85,45 +83,34 @@ export default function FormMenu(
         keepMounted={false}
       >
         <div>
-          {userType === 'admin' && (
-            <>
-              <MenuItem
-                id="edit_button"
-                className="edit-form-btn"
-                key="edit_form"
-                onClick={routeToEdit}
-              >
-                {t('common:menu.edit')}
-              </MenuItem>
-              <MenuItem
-                id="publish_button"
-                key="publish_form"
-                onClick={() => handleConfirm('publish')}
-              >
-                {t('common:menu.publish')}
-              </MenuItem>
-              <MenuItem
-                id="delete_button"
-                key="delete_form"
-                onClick={() => handleConfirm('delete')}
-              >
-                {t('common:menu.delete')}
-              </MenuItem>
-              <MenuItem
-                id="view_entries_button"
-                key="view_entries"
-                onClick={() => history.push(`/form/${formId}/${formName}/entries`)}
-              >
-                {t('common:menu.view_entries')}
-              </MenuItem>
-            </>
-          )}
           <MenuItem
-            id="download_form_button"
-            key="download_form"
-            onClick={() => { history.push(`/form/${formId}/private?download=true`)}}
+            id="edit_button"
+            className="edit-form-btn"
+            key="edit_form"
+            onClick={routeToEdit}
           >
-            {t('common:misc.download')}
+            {t('common:menu.edit')}
+          </MenuItem>
+          <MenuItem
+            id="publish_button"
+            key="publish_form"
+            onClick={() => handleConfirm('publish')}
+          >
+            {t('common:menu.publish')}
+          </MenuItem>
+          <MenuItem
+            id="delete_button"
+            key="delete_form"
+            onClick={() => handleConfirm('delete')}
+          >
+            {t('common:menu.delete')}
+          </MenuItem>
+          <MenuItem
+            id="view_entries_button"
+            key="view_entries"
+            onClick={() => history.push(`/form/${formId}/${formName}/entries`)}
+          >
+            {t('common:menu.view_entries')}
           </MenuItem>
         </div>
       </Menu>
@@ -142,6 +129,5 @@ FormMenu.propTypes = {
   refetch: PropTypes.func.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   anchorEl: PropTypes.object,
-  t: PropTypes.func.isRequired,
-  userType: PropTypes.string.isRequired
+  t: PropTypes.func.isRequired
 };
