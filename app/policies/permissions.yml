@@ -13,6 +13,7 @@ admin:
       - can_fetch_flagged_notes
       - can_fetch_task_by_id
       - can_fetch_task_comments
+      - can_fetch_form_task_comments
       - can_fetch_task_histories
       - can_get_task_count
       - can_get_task_stats
@@ -328,6 +329,7 @@ contractor:
       - can_fetch_flagged_notes
       - can_fetch_task_by_id
       - can_fetch_task_comments
+      - can_fetch_form_task_comments
       - can_fetch_task_histories
       - can_get_task_count
       - can_get_task_stats
@@ -388,6 +390,7 @@ custodian:
       - can_fetch_flagged_notes
       - can_fetch_task_by_id
       - can_fetch_task_comments
+      - can_fetch_form_task_comments
       - can_fetch_task_histories
       - can_get_task_count
       - can_get_task_stats
@@ -476,6 +479,7 @@ security_guard:
       - can_fetch_flagged_notes
       - can_fetch_task_by_id
       - can_fetch_task_comments
+      - can_fetch_form_task_comments
       - can_fetch_task_histories
       - can_get_task_count
       - can_get_task_stats
@@ -547,6 +551,7 @@ site_worker:
       - can_fetch_flagged_notes
       - can_fetch_task_by_id
       - can_fetch_task_comments
+      - can_fetch_form_task_comments
       - can_fetch_task_histories
       - can_get_task_count
       - can_get_task_stats
@@ -694,9 +699,13 @@ resident:
     permissions:
       - can_access_amenities
       - can_see_menu_item
+  note:
+    permissions:
+      - can_fetch_form_task_comments
 prospective_client:
   note:
     permissions:
+      - can_fetch_form_task_comments
   forms:
     permissions:
       - can_see_menu_item
@@ -802,6 +811,9 @@ client:
     permissions:
       - can_access_amenities
       - can_see_menu_item
+  note:
+    permissions:
+      - can_fetch_form_task_comments
 site_manager:
   gate_access:
     permissions:
@@ -977,6 +989,7 @@ code_scanner:
 lead:
   note:
     permissions:
+      - can_fetch_form_task_comments
   profile:
     permissions:
       - can_see_menu_item

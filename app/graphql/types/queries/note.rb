@@ -214,7 +214,7 @@ module Types::Queries::Note
   end
 
   def form_comments(form_user_id:)
-    unless permitted?(module: :note, permission: :can_fetch_task_comments)
+    unless permitted?(module: :note, permission: :can_fetch_form_task_comments)
       raise GraphQL::ExecutionError,
             I18n.t('errors.unauthorized')
     end

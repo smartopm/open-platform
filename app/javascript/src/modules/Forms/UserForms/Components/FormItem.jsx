@@ -58,7 +58,11 @@ export default function FormItem({
       </ListItem>
       {currentForm && formData.loading && <Spinner />}
       {hasComments ? (
-        <CommentCard comments={formData.data.formComments} refetch={() => {}} />
+        <CommentCard
+          comments={formData.data.formComments}
+          refetch={formData.refetch()}
+          commentsRefetch={formData.refetch()}
+        />
       ) : (
         hasNoComments && (
           <CenteredContent>{t('task:task.no_comments_on_this_form')}</CenteredContent>
