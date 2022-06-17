@@ -10,12 +10,19 @@ RSpec.describe Logs::LeadLog, type: :model do
     it { is_expected.to have_db_column(:acting_user_id).of_type(:uuid) }
     it { is_expected.to have_db_column(:name).of_type(:string) }
     it { is_expected.to have_db_column(:log_type).of_type(:integer) }
-    it { is_expected.to have_db_column(:amount).of_type(:float).with_options(default: 0.0) }
-    it { is_expected.to have_db_column(:deal_size).of_type(:float).with_options(default: 0.0) }
-    it {
-      is_expected.to have_db_column(:investment_target).of_type(:float)
-                                                       .with_options(default: 0.0)
-    }
+    it do
+      is_expected.to have_db_column(:amount).of_type(:decimal)
+                                            .with_options(default: 0.0, precision: 11, scale: 2)
+    end
+    it do
+      is_expected.to have_db_column(:deal_size).of_type(:decimal)
+                                               .with_options(default: 0.0, precision: 11, scale: 2)
+    end
+    it do
+      is_expected.to have_db_column(:investment_target)
+        .of_type(:decimal)
+        .with_options(default: 0.0, precision: 11, scale: 2)
+    end
   end
 
   describe 'associations' do
