@@ -86,11 +86,11 @@ describe('LeadEvents Page', () => {
     {
       request: {
         query: UserMeetingsQuery,
-        variables: { userId: 'c96f64bb-e3b4-42ff-b6a9-66889ec79e99' }
+        variables: { userId: 'c96f64bb-e3b4-42ff-b6a9-66889ec79e99', logType: 'meeting' }
       },
       result: {
         data: {
-          leadMeetings: [
+          leadLogs: [
             {
               id: 'c96f64bb-e3b4-42ff-b6a9-66889ec79e9990099',
               name: 'Tilisi Stakeholders Meeting',
@@ -106,11 +106,11 @@ describe('LeadEvents Page', () => {
     {
       request: {
         query: UserEventsQuery,
-        variables: { userId: 'c96f64bb-e3b4-42ff-b6a9-66889ec79e99' }
+        variables: { userId: 'c96f64bb-e3b4-42ff-b6a9-66889ec79e99', logType: 'event' }
       },
       result: {
         data: {
-          leadEvents: [
+          leadLogs: [
             {
               id: 'c96f64bb-e3b4-42ff-b6a9-66889ec79e9990099',
               name: 'Tilisi run 2022',
@@ -134,6 +134,23 @@ describe('LeadEvents Page', () => {
           userId: 'c96f64bb-e3b4-42ff-b6a9-66889ec79e99',
           name: 'First Tilisi meeting',
           logType: 'meeting'
+        }
+      },
+      result: {
+        data: {
+          leadLogCreate: {
+            success: true
+          }
+        }
+      }
+    },
+    {
+      request: {
+        query: CreateEvent,
+        variables: {
+          userId: 'c96f64bb-e3b4-42ff-b6a9-66889ec79e99',
+          name: 'First Tilisi run 2022',
+          logType: 'event'
         }
       },
       result: {
@@ -180,6 +197,44 @@ describe('LeadEvents Page', () => {
     // clicking on the add button should submit current data
     await waitFor(() => {
       fireEvent.click(screen.queryByTestId('add-meeting-button'));
+    });
+  });
+
+  it('Creates an event', async () => {
+    render(
+      <MockedProvider mocks={eventRequestDataMock} addTypename={false}>
+        <Context.Provider value={authState}>
+          <BrowserRouter>
+            <MockedThemeProvider>
+              <LeadEvents
+                userId="c96f64bb-e3b4-42ff-b6a9-66889ec79e99"
+                data={dataMock[0].result.data}
+                refetch={jest.fn()}
+                refetchLeadLabelsData={jest.fn()}
+              />
+            </MockedThemeProvider>
+          </BrowserRouter>
+        </Context.Provider>
+      </MockedProvider>
+    );
+
+    await waitFor(() => {
+      expect(screen.queryAllByTestId('events')[0]).toBeInTheDocument();
+      expect(screen.queryByTestId('events_header')).toBeInTheDocument();
+      expect(screen.queryByText('lead_management.events')).toBeInTheDocument();
+      const eventTextField = screen.getByLabelText('lead_management.event_name');
+
+      ReactTestUtils.Simulate.change(eventTextField, {
+        target: { value: 'First Tilisi run 2022' }
+      });
+      const saveButton = screen.queryByTestId('add-event-button');
+      // user input should set add button enabled
+      expect(saveButton).toBeEnabled();
+    });
+
+    // clicking on the add button should submit current data
+    await waitFor(() => {
+      fireEvent.click(screen.queryByTestId('add-event-button'));
     });
   });
 

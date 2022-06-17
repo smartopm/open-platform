@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
 export const UserEventsQuery = gql`
-  query leadEvents($userId: ID!) {
-    leadEvents(userId: $userId) {
+  query leadLogs($userId: ID!, $logType: String!) {
+    leadLogs(userId: $userId, logType: $logType) {
       id
       name
       actingUser {
@@ -14,10 +14,44 @@ export const UserEventsQuery = gql`
 `;
 
 export const UserMeetingsQuery = gql`
-  query leadMeetings($userId: ID!) {
-    leadMeetings(userId: $userId) {
+  query leadLogs($userId: ID!, $logType: String!) {
+    leadLogs(userId: $userId, logType: $logType) {
       id
       name
+      actingUser {
+        name
+      }
+      createdAt
+    }
+  }
+`;
+
+export const DealDetailsQuery = gql`
+  query leadLogs($userId: ID!, $logType: String!) {
+    leadLogs(userId: $userId, logType: $logType) {
+      id
+      dealSize
+      investmentTarget
+      actingUser {
+        name
+      }
+      createdAt
+    }
+  }
+`;
+
+export const InvestmentStatsQuery = gql`
+  query investmentStats($userId: ID!) {
+    investmentStats(userId: $userId)
+  }
+`;
+
+export const LeadInvestmentsQuery = gql`
+  query leadLogs($userId: ID!, $logType: String!) {
+    leadLogs(userId: $userId, logType: $logType) {
+      id
+      name
+      amount
       actingUser {
         name
       }
@@ -41,6 +75,6 @@ export const UserSignedDealsQuery = gql`
 
 export const LeadScoreCardQuery = gql`
   query leadScorecards {
-    leadScorecards 
+    leadScorecards
   }
 `;

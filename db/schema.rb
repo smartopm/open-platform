@@ -514,6 +514,9 @@ ActiveRecord::Schema.define(version: 2022_06_15_170437) do
     t.uuid "user_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.decimal "amount", precision: 11, scale: 2, default: "0.0"
+    t.decimal "deal_size", precision: 11, scale: 2, default: "0.0"
+    t.decimal "investment_target", precision: 11, scale: 2, default: "0.0"
     t.index ["community_id"], name: "index_lead_logs_on_community_id"
     t.index ["user_id"], name: "index_lead_logs_on_user_id"
   end

@@ -102,6 +102,10 @@ en:
       logs/substatus_log:
         community: Community
         user: User
+      logs/lead_log:
+        deal_size: Deal Size
+        investment_target: Investment Target
+        amount: Amount
       notes/assignee_note:
         note: Note
         user: User
@@ -343,6 +347,8 @@ en:
       poi_record_not_found: Poi Record not found
     lead_log:
       not_found: Lead log not found
+      empty_deal_details: Deal details cannot be empty
+      invalid_log_type: Invalid log type 
     not_found: Not found
     note:
       task_not_found: No Task Found, Try a different query
