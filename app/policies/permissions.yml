@@ -702,10 +702,12 @@ resident:
   note:
     permissions:
       - can_fetch_form_task_comments
+      - can_update_note_comment
 prospective_client:
   note:
     permissions:
       - can_fetch_form_task_comments
+      - can_update_note_comment
   forms:
     permissions:
       - can_see_menu_item
@@ -814,6 +816,7 @@ client:
   note:
     permissions:
       - can_fetch_form_task_comments
+      - can_update_note_comment
 site_manager:
   gate_access:
     permissions:
@@ -990,6 +993,7 @@ lead:
   note:
     permissions:
       - can_fetch_form_task_comments
+      - can_update_note_comment
   profile:
     permissions:
       - can_see_menu_item
