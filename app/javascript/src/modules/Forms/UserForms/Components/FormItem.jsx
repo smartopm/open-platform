@@ -2,6 +2,7 @@ import React from 'react';
 import { ListItem, Typography, IconButton, ListItemText, Badge } from '@mui/material';
 import { useHistory } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { grey } from '@mui/material/colors';
 import ForumIcon from '@mui/icons-material/Forum';
 import CommentCard from '../../../Tasks/Components/CommentCard';
 import CenteredContent from '../../../../shared/CenteredContent';
@@ -18,7 +19,7 @@ export default function FormItem({
 }) {
   const history = useHistory();
   const currentForm = currentFormUserId === formUser.id;
-  const hasComments = currentForm && formData.data && formData.data?.formComments?.length;
+  const hasComments = currentForm && formData.data && Boolean(formData.data?.formComments?.length);
   const hasNoComments = currentForm && !formData.loading && !hasComments;
   return (
     <>
@@ -44,7 +45,10 @@ export default function FormItem({
                 size="large"
               >
                 <Badge badgeContent={formUser.commentsCount} color="secondary">
-                  <ForumIcon color={formUser.commentsCount ? 'primary' : ''} />
+                  <ForumIcon
+                    color={formUser.commentsCount ? 'primary' : ''}
+                    style={{ color: !formUser.commentsCount && grey[300] }}
+                  />
                 </Badge>
               </IconButton>
             </>
@@ -52,8 +56,7 @@ export default function FormItem({
           secondary={(
             <>
               <Typography component="span" variant="body2" color="textPrimary">
-                Submitted: 
-                {' '}
+                {`${t('task:processes.submitted')}: `}
                 <DateContainer date={formUser.createdAt} />
               </Typography>
             </>
