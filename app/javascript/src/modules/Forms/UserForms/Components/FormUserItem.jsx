@@ -25,7 +25,7 @@ export default function FormItem({
     <>
       <ListItem
         key={formUser.id}
-        data-testid="community_form"
+        data-testid="form_user_item"
         style={{ cursor: 'pointer' }}
         onClick={() =>
           history.push(`/user_form/${userId}/${formUser.id}?formId=${formUser.form.id}`)
@@ -40,14 +40,20 @@ export default function FormItem({
               <IconButton
                 onClick={event => handleShowComments(event, formUser.id)}
                 style={{ float: 'right', marginTop: -40 }}
+                data-testid="show_comments"
                 edge="end"
                 aria-label="delete"
                 size="large"
               >
-                <Badge badgeContent={formUser.commentsCount} color="secondary">
+                <Badge
+                  badgeContent={formUser.commentsCount}
+                  color="secondary"
+                  data-testid="comments_badge"
+                >
                   <ForumIcon
                     color={formUser.commentsCount ? 'primary' : ''}
                     style={{ color: !formUser.commentsCount && grey[300] }}
+                    data-testid="comments_icon"
                   />
                 </Badge>
               </IconButton>
@@ -55,7 +61,12 @@ export default function FormItem({
           )}
           secondary={(
             <>
-              <Typography component="span" variant="body2" color="textPrimary">
+              <Typography
+                component="span"
+                variant="body2"
+                color="textPrimary"
+                data-testid="submitted_at"
+              >
                 {`${t('task:processes.submitted')}: `}
                 <DateContainer date={formUser.createdAt} />
               </Typography>
