@@ -4,8 +4,6 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { Container, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery } from 'react-apollo';
-import { jsPDF as JsPDF } from 'jspdf';
-import html2canvas from 'html2canvas';
 import FormUpdate from '../components/FormUpdate';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import FormContextProvider from '../Context';
@@ -17,7 +15,7 @@ import { AUTH_TOKEN_KEY } from '../../../utils/apollo';
 import CenteredContent from '../../../shared/CenteredContent';
 import AccessCheck from '../../Permissions/Components/AccessCheck';
 import { FormCategoriesQuery } from '../graphql/form_category_queries';
-import { useParamsQuery } from '../../../utils/helpers';
+import { savePdf, useParamsQuery } from '../../../utils/helpers';
 
 export default function FormPage() {
   const { userId, formUserId, formId } = useParams();
@@ -59,27 +57,6 @@ export default function FormPage() {
   }, [authState?.user?.userType, formDetailData?.form.isPublic]);
 
   useEffect(() => {
-    function savePdf() {
-      const domElement = document.querySelector('#form_update_container');
-      html2canvas(domElement).then(canvas => {
-        const img = canvas.toDataURL('image/jpeg');
-        const pdf = new JsPDF('pt', 'mm', 'a4');
-        const imgWidth = 190;
-        const pageHeight = 280;
-        const imgHeight = (canvas.height * imgWidth) / canvas.width;
-        let heightLeft = imgHeight;
-        let position = 0;
-        pdf.addImage(img, 'JPEG', 10, 15, imgWidth, imgHeight + 25);
-        heightLeft -= pageHeight;
-        while (heightLeft >= 0) {
-          position = heightLeft - imgHeight;
-          pdf.addPage();
-          pdf.addImage(img, 'JPEG', 10, position + 10, imgWidth, imgHeight + 25);
-          heightLeft -= pageHeight;
-        }
-        pdf.save('form.pdf');
-      });
-    }
     let timer;
     if (download === 'true' && !categoriesData.loading) {
       const viewPort = document.querySelector('[name=viewport]');
@@ -87,7 +64,7 @@ export default function FormPage() {
         viewPort.setAttribute('content', 'width=1024');
       }
       timer = window.setTimeout(() => {
-        savePdf();
+        savePdf(document.querySelector('#form_update_container'));
         window.setTimeout(() => { window.close() }, 500);
       }, 1000);
     }

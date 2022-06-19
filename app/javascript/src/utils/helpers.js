@@ -2,6 +2,8 @@
 import dompurify from 'dompurify';
 import { useLocation } from 'react-router';
 import { dateToString } from '../components/DateContainer';
+import { jsPDF as JsPDF } from 'jspdf';
+import html2canvas from 'html2canvas';
 // keep string methods [helpers]
 
 /**
@@ -649,4 +651,30 @@ export function replaceDocumentMentions(text, path) {
   });
 
   return updatedText;
+}
+
+/**
+ * Captures a page screenshot and convert to pdf,
+ * handles multiple pages
+ * @param {NodeElement} domElement the DOM container to captured
+ */
+export function savePdf(domElement) {
+  html2canvas(domElement).then(canvas => {
+    const img = canvas.toDataURL('image/jpeg');
+    const pdf = new JsPDF('pt', 'mm', 'a4');
+    const imgWidth = 190;
+    const pageHeight = 280;
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+    let heightLeft = imgHeight;
+    let position = 0;
+    pdf.addImage(img, 'JPEG', 10, 15, imgWidth, imgHeight + 25);
+    heightLeft -= pageHeight;
+    while (heightLeft >= 0) {
+      position = heightLeft - imgHeight;
+      pdf.addPage();
+      pdf.addImage(img, 'JPEG', 10, position + 10, imgWidth, imgHeight + 25);
+      heightLeft -= pageHeight;
+    }
+    pdf.save('form.pdf');
+  });
 }
