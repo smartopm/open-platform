@@ -130,7 +130,7 @@ export function renderFormEntry(formUser, history, formId) {
         </Grid>
       ),
       Status: (
-        <Grid item xs={12} md={2} data-testid="status" align='center'>
+        <Grid item xs={12} md={1} data-testid="status">
           <Text content={formUser.status} />
         </Grid>
       ),
@@ -148,5 +148,3 @@ export function renderFormEntry(formUser, history, formId) {
 FormEntries.propTypes = {
   formId: PropTypes.string.isRequired
 }
-
-
