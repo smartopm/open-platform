@@ -11,9 +11,10 @@ export default function FormUserList() {
   const authState = useContext(Context)
   const { data, loading } = useQuery(SubmittedFormsQuery)
   const { t } = useTranslation(['common']);
+
   return (
     <Container>
-      <Typography variant="h3" color="text.secondary" data-testid="my_title">
+      <Typography variant="h3" color="text.secondary" data-testid="my_form_title">
         {t('menu.form', { count: 0 })}
       </Typography>
       {

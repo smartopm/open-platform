@@ -10,7 +10,7 @@ const currentModule = 'my_forms'
 const myFormsPermissions = ['can_access_own_forms'];
 
 
-function RenderMyForms() {
+export function RenderMyForms() {
   return (
     <AccessCheck module={currentModule} allowedPermissions={myFormsPermissions}>
       <FormUserList />
