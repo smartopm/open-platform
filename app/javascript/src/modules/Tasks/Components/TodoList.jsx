@@ -3,10 +3,14 @@
 /* eslint-disable complexity */
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Dialog, DialogContent, Grid } from '@mui/material';
+import { Dialog, DialogContent, Grid, Button } from '@mui/material';
 import { useMutation, useLazyQuery, useApolloClient } from 'react-apollo';
 import { useHistory } from 'react-router';
 import { useTranslation } from 'react-i18next';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import IconButton from '@mui/material/IconButton';
+import AddIcon from '@mui/icons-material/Add';
+import SearchIcon from '@mui/icons-material/Search';
 import { UsersLiteQuery } from '../../../graphql/queries';
 import { AssignUser, UpdateNote } from '../../../graphql/mutations';
 import useFileUpload from '../../../graphql/useFileUpload';
@@ -50,6 +54,7 @@ export default function TodoList({
 }) {
   const limit = 50;
   const [offset, setOffset] = useState(0);
+  const [searchOpen, setSearchOpen] = useState(false);
   const [open, setModalOpen] = useState(false);
   const [filterOpen, setOpenFilter] = useState(false);
   const [query, setQuery] = useState('');
@@ -66,6 +71,7 @@ export default function TodoList({
   const debouncedFilterInputText = useDebounce(userNameSearchTerm, 500);
   const [taskUpdateStatus, setTaskUpdateStatus] = useState({ message: '', success: false });
   const [checkedOptions, setCheckOptions] = useState('none');
+  const matches = useMediaQuery('(max-width:959px)');
   const taskQuery = {
     completedTasks: 'completed: true',
     tasksDueIn10Days: `due_date >= '${dateToString(
@@ -429,10 +435,63 @@ export default function TodoList({
     setTaskUpdateStatus({ ...taskUpdateStatus, message: formatError(error.message) });
     history.push('/tasks');
   }
+
+  const rightPanelObj = [
+    {
+      mainElement: matches ? (
+        <IconButton color="primary" onClick={() => setSearchOpen(!searchOpen)}>
+          <SearchIcon />
+        </IconButton>
+      ) : (
+        <Button startIcon={<SearchIcon />} onClick={() => setSearchOpen(!searchOpen)}>
+          {t('common:menu.search')}
+        </Button>
+      ),
+      key: 1
+    },
+    {
+      mainElement: (
+        <TaskQuickAction checkedOptions={checkedOptions} handleCheckOptions={handleCheckOptions} />
+      ),
+      key: 2
+    },
+    {
+      mainElement: (
+        <AccessCheck module="note" allowedPermissions={['can_view_create_task_button']}>
+          {matches ? (
+            <Button
+              onClick={openModal}
+              variant="contained"
+              color="primary"
+              style={{ color: '#FFFFFF' }}
+            >
+              <AddIcon />
+            </Button>
+          ) : (
+            <Button
+              startIcon={<AddIcon />}
+              onClick={openModal}
+              variant="contained"
+              color="primary"
+              style={{ color: '#FFFFFF' }}
+            >
+              {t('common:misc.add_new')}
+            </Button>
+          )}
+        </AccessCheck>
+      ),
+      key: 3
+    },
+    {
+      mainElement: <TaskQuickSearch filterTasks={handleTaskFilter} currentTile={currentTile} />,
+      key: 4
+    }
+  ];
+
   if (tasksError) return <ErrorPage error={tasksError.message} />;
 
   return (
-    <PageWrapper>
+    <PageWrapper pageTitle={t('common:table_headers.task')} rightPanelObj={rightPanelObj}>
       <div data-testid="todo-container">
         <MessageAlert
           type={taskUpdateStatus.success ? 'success' : 'error'}
@@ -465,7 +524,7 @@ export default function TodoList({
           </DialogContent>
         </Dialog>
         <Grid container spacing={1}>
-          <Grid item md={7} xs={12} style={{ display: 'flex', alignItems: 'center' }}>
+          {/* <Grid item md={7} xs={12} style={{ display: 'flex', alignItems: 'center' }}>
             <Grid container spacing={2}>
               <Grid item style={{ flexGrow: 0 }}>
                 <TaskQuickAction
@@ -477,51 +536,55 @@ export default function TodoList({
                 <TaskQuickSearch filterTasks={handleTaskFilter} currentTile={currentTile} />
               </Grid>
             </Grid>
-          </Grid>
-          <Grid
-            item
-            md={4}
-            xs={8}
-            style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}
-          >
-            <SearchInput
-              filterRequired
-              title={t('common:form_placeholders.search_tasks')}
-              searchValue={searchText}
-              handleSearch={inputToSearch}
-              handleFilter={toggleFilterMenu}
-              handleClear={() => setSearchText('')}
-              data-testid="search_input"
-            />
-          </Grid>
+          </Grid> */}
+          {searchOpen && (
+            <>
+              <Grid
+                item
+                md={4}
+                xs={8}
+                style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}
+              >
+                <SearchInput
+                  filterRequired
+                  title={t('common:form_placeholders.search_tasks')}
+                  searchValue={searchText}
+                  handleSearch={inputToSearch}
+                  handleFilter={toggleFilterMenu}
+                  handleClear={() => setSearchText('')}
+                  data-testid="search_input"
+                />
+              </Grid>
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  position: 'relative'
+                }}
+                data-testid="filter_container"
+              >
+                <Grid
+                  container
+                  // justifyContent="flex-end"
+                  style={{
+                    width: '200%',
+                    position: 'absolute',
+                    zIndex: 1,
+                    marginTop: '-2px',
+                    display: displayBuilder
+                  }}
+                >
+                  <QueryBuilder
+                    handleOnChange={handleQueryOnChange}
+                    builderConfig={builderConfig}
+                    initialQueryValue={tasksQueryBuilderInitialValue}
+                    addRuleLabel="Add filter"
+                  />
+                </Grid>
+              </div>
+            </>
+          )}
         </Grid>
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            position: 'relative'
-          }}
-          data-testid="filter_container"
-        >
-          <Grid
-            container
-            justifyContent="flex-end"
-            style={{
-              width: '100.5%',
-              position: 'absolute',
-              zIndex: 1,
-              marginTop: '-2px',
-              display: displayBuilder
-            }}
-          >
-            <QueryBuilder
-              handleOnChange={handleQueryOnChange}
-              builderConfig={builderConfig}
-              initialQueryValue={tasksQueryBuilderInitialValue}
-              addRuleLabel="Add filter"
-            />
-          </Grid>
-        </div>
         <br />
         {isLoading ? (
           <Spinner />
@@ -577,14 +640,14 @@ export default function TodoList({
             </CenteredContent>
           </div>
         )}
-        <AccessCheck module="note" allowedPermissions={['can_view_create_task_button']} show404ForUnauthorized={false}>
+        {/* <AccessCheck module="note" allowedPermissions={['can_view_create_task_button']} show404ForUnauthorized={false}>
           <FloatingButton
             variant="extended"
             handleClick={openModal}
             color="primary"
             data-testid="create_task_btn"
           />
-        </AccessCheck>
+        </AccessCheck> */}
       </div>
     </PageWrapper>
   );

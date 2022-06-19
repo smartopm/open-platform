@@ -8,19 +8,19 @@ import {
   Typography,
   Button,
   Checkbox,
-  ButtonGroup,
   ClickAwayListener,
   Grow,
   Paper,
   Popper,
   MenuList,
+  useMediaQuery,
+  IconButton
 } from '@mui/material';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import PropTypes from 'prop-types';
-import { useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next';
 import { Spinner } from '../../../shared/Loading';
 import { objectAccessor } from '../../../utils/helpers';
 
@@ -34,7 +34,7 @@ export default function TaskActionMenu({
   bulkUpdating,
   handleBulkUpdate
 }) {
-  const { t } = useTranslation('common')
+  const { t } = useTranslation('common');
 
   return (
     <Grid container spacing={3}>
@@ -50,7 +50,7 @@ export default function TaskActionMenu({
               style={{ padding: '0px', marginRight: '15px' }}
             />
           </Grid>
-          <Typography>
+          <Typography> 
             {' '}
             {t('misc.select')}
             {' '}
@@ -87,7 +87,11 @@ export default function TaskActionMenu({
               disabled={bulkUpdating}
               data-testid="bulk_update"
             >
-              {`${currentTile === 'completedTasks' ? t('form_actions.note_incomplete') : t('form_actions.note_complete')} `}
+              {`${
+                currentTile === 'completedTasks'
+                  ? t('form_actions.note_incomplete')
+                  : t('form_actions.note_complete')
+              } `}
             </Button>
           )}
         </Grid>
@@ -96,26 +100,23 @@ export default function TaskActionMenu({
   );
 }
 
-export function TaskQuickAction({
-  checkedOptions,
-  handleCheckOptions,
- }){
+export function TaskQuickAction({ checkedOptions, handleCheckOptions }) {
   const [open, setOpen] = useState(false);
   const [selectedKey, setSelectedKey] = useState('');
+  const matches = useMediaQuery('(max-width:900px)');
   const anchorRef = useRef(null);
-  const { t } = useTranslation('common')
-  const matches = useMediaQuery('(max-width:800px)');
+  const { t } = useTranslation('common');
   const options = {
     all: t('misc.all'),
-    'all_on_the_page': t('misc.all_this_page'),
+    all_on_the_page: t('misc.all_this_page'),
     none: t('misc.none')
-  }
-
-  const handleToggle = () => {
-    setOpen((prevOpen) => !prevOpen);
   };
 
-  const handleClose = (event) => {
+  const handleToggle = () => {
+    setOpen(prevOpen => !prevOpen);
+  };
+
+  const handleClose = event => {
     if (anchorRef.current && anchorRef.current.contains(event.target)) {
       return;
     }
@@ -123,39 +124,30 @@ export function TaskQuickAction({
     setOpen(false);
   };
 
-  function handleMenuItemClick(key){
-    setSelectedKey(key)
+  function handleMenuItemClick(key) {
+    setSelectedKey(key);
     setOpen(false);
-    handleCheckOptions(key)
+    handleCheckOptions(key);
   }
 
   return (
     <>
-      <ButtonGroup color="primary" ref={anchorRef} aria-label="outlined primary button group split button">
-        <Button style={matches ? {fontSize: '9px'} : { width: '159px'}}>
-          {(checkedOptions === 'none')
-          ? t('misc.select')
-          :  objectAccessor(options, selectedKey)}
+      {matches ? (
+        <IconButton color="primary" onClick={handleToggle} ref={anchorRef}>
+          <CheckBoxIcon />
+        </IconButton>
+      ) : (
+        <Button startIcon={<CheckBoxIcon />} ref={anchorRef} onClick={handleToggle}>
+          {checkedOptions === 'none' ? t('misc.select') : objectAccessor(options, selectedKey)}
         </Button>
-        <Button
-          color="primary"
-          size="small"
-          aria-controls={open ? 'split-button-menu' : undefined}
-          aria-expanded={open ? 'true' : undefined}
-          aria-label="select merge strategy"
-          aria-haspopup="menu"
-          onClick={handleToggle}
-        >
-          <ArrowDropDownIcon />
-        </Button>
-      </ButtonGroup>
-      <Popper open={open} anchorEl={anchorRef.current} transition>
+      )}
+      <Popper open={open} anchorEl={anchorRef.current} transition style={{ zIndex: 100 }}>
         {({ TransitionProps, placement }) => (
           <Grow
             {...TransitionProps}
             style={{
-                transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom',
-              }}
+              transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom'
+            }}
           >
             <Paper>
               <ClickAwayListener onClickAway={handleClose}>
@@ -169,15 +161,15 @@ export function TaskQuickAction({
                     >
                       {val}
                     </MenuItem>
-                    ))}
+                  ))}
                 </MenuList>
               </ClickAwayListener>
             </Paper>
           </Grow>
-          )}
+        )}
       </Popper>
     </>
-  )
+  );
 }
 
 export function TaskBulkUpdateAction({
@@ -186,15 +178,15 @@ export function TaskBulkUpdateAction({
   handleBulkUpdate,
   currentTile,
   selectedTasks
-}){
-  const { t } = useTranslation('common')
+}) {
+  const { t } = useTranslation('common');
 
   return (
     <>
       {(checkedOptions !== 'none' || selectedTasks.length > 0) && (
-      <Grid item style={{ marginLeft: '20px', marginTop: '-4px' }}>
-        {bulkUpdating ? (
-          <Spinner />
+        <Grid item style={{ marginLeft: '20px', marginTop: '-4px' }}>
+          {bulkUpdating ? (
+            <Spinner />
           ) : (
             <Button
               onClick={handleBulkUpdate}
@@ -206,31 +198,34 @@ export function TaskBulkUpdateAction({
               disabled={bulkUpdating}
               data-testid="bulk_update"
             >
-              {`${currentTile === 'completedTasks' ? t('form_actions.note_incomplete') : t('form_actions.note_complete')} `}
+              {`${
+                currentTile === 'completedTasks'
+                  ? t('form_actions.note_incomplete')
+                  : t('form_actions.note_complete')
+              } `}
             </Button>
           )}
-      </Grid>
+        </Grid>
       )}
     </>
-  )
+  );
 }
 
 TaskActionMenu.propTypes = {
-    currentTile: PropTypes.string.isRequired,
-    setSelectAllOption: PropTypes.func.isRequired,
-    selectedTasks: PropTypes.arrayOf(PropTypes.string).isRequired,
-    taskListIds: PropTypes.arrayOf(PropTypes.string).isRequired,
-    checkedOptions: PropTypes.string.isRequired,
-    handleCheckOptions: PropTypes.func.isRequired,
-    bulkUpdating: PropTypes.bool.isRequired,
-    handleBulkUpdate: PropTypes.func.isRequired
-}
-
+  currentTile: PropTypes.string.isRequired,
+  setSelectAllOption: PropTypes.func.isRequired,
+  selectedTasks: PropTypes.arrayOf(PropTypes.string).isRequired,
+  taskListIds: PropTypes.arrayOf(PropTypes.string).isRequired,
+  checkedOptions: PropTypes.string.isRequired,
+  handleCheckOptions: PropTypes.func.isRequired,
+  bulkUpdating: PropTypes.bool.isRequired,
+  handleBulkUpdate: PropTypes.func.isRequired
+};
 
 TaskQuickAction.propTypes = {
   checkedOptions: PropTypes.string.isRequired,
-  handleCheckOptions: PropTypes.func.isRequired,
-}
+  handleCheckOptions: PropTypes.func.isRequired
+};
 
 TaskBulkUpdateAction.propTypes = {
   currentTile: PropTypes.string.isRequired,
@@ -238,4 +233,4 @@ TaskBulkUpdateAction.propTypes = {
   checkedOptions: PropTypes.string.isRequired,
   bulkUpdating: PropTypes.bool.isRequired,
   handleBulkUpdate: PropTypes.func.isRequired
-}
+};

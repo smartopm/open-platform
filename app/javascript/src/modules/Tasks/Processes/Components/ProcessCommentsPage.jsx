@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router';
 import { useQuery } from 'react-apollo';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import PageHeader from '../../../../shared/PageHeader';
+// import PageHeader from '../../../../shared/PageHeader';
 import { ProcessReplyComments } from '../graphql/process_queries';
 import { Spinner } from '../../../../shared/Loading';
 import CenteredContent from '../../../../shared/CenteredContent';
@@ -42,12 +42,12 @@ export default function ProcessCommentsPage() {
   if (loading) return <Spinner />;
   return (
     <PageWrapper oneCol>
-      <PageHeader
+      {/* <PageHeader
         linkText={t('breadcrumbs.processes')}
         linkHref="/processes"
         pageName={t('breadcrumbs.comments')}
         PageTitle={t('templates.process_comments', { processName })}
-      />
+      /> */}
       {loading ? (
         <Spinner />
       ) : (

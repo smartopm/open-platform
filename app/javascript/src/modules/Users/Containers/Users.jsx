@@ -478,22 +478,13 @@ export default function UsersList() {
       key: 3
     },
     {
-      mainElement: <UserMenuitems actionObject={actionObject} menuObject={menuObject} />
+      mainElement: <UserMenuitems actionObject={actionObject} menuObject={menuObject} />,
+      key: 4
     }
   ];
 
   return (
     <PageWrapper pageTitle={t('common:misc.users')} rightPanelObj={rightPanelObj}>
-      {/* <FixedHeader>
-        <UserHeader
-          setCampaignOption={setCampaignOption}
-          handleSearchClick={inputToSearch}
-          filterObject={filterObject}
-          csvObject={csvObject}
-          menuObject={menuObject}
-          actionObject={actionObject}
-        />
-      </FixedHeader> */}
       {loading || labelsLoading || fetchingUsersCount ? (
         <Spinner />
       ) : (

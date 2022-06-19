@@ -8,7 +8,7 @@ import FormUpdate from '../components/FormUpdate';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import FormContextProvider from '../Context';
 import Form from '../components/Category/Form';
-import FormHeader from '../../../shared/PageHeader';
+// import FormHeader from '../../../shared/PageHeader';
 import { FormQuery } from '../graphql/forms_queries';
 import { PublicUserMutation } from '../graphql/forms_mutation';
 import { AUTH_TOKEN_KEY } from '../../../utils/apollo';
