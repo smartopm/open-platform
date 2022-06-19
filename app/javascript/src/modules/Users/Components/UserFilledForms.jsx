@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Divider from '@mui/material/Divider';
 import { useTranslation } from 'react-i18next';
 import { useLazyQuery } from 'react-apollo';
-import FormItem from '../../Forms/UserForms/Components/FormItem';
+import FormItem from '../../Forms/UserForms/Components/FormUserItem';
 import { SubmittedFormCommentsQuery } from '../../Forms/graphql/forms_queries';
 import CenteredContent from '../../../shared/CenteredContent';
 
