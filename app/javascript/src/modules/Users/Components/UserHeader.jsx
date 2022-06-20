@@ -108,7 +108,7 @@ export function UserSearch({ handleSearchClick, filterObject }) {
 export function UserProcessCSV({ csvObject }) {
   const classes = useStyles();
   const { t } = useTranslation(['users', 'common']);
-  const matches = useMediaQuery('(max-width:900px)');
+  const smMatches = useMediaQuery('(max-width:1300px)');
   return (
     <Button
       variant="contained"
@@ -125,7 +125,7 @@ export function UserProcessCSV({ csvObject }) {
           style={{ color: 'white' }}
           onClick={csvObject.handleDownloadCSV}
         >
-          {csvObject.usersLoading ? <Spinner /> : matches ? 'CSV' : t('users.process_csv')}
+          {csvObject.usersLoading ? <Spinner /> : smMatches ? 'CSV' : t('users.process_csv')}
         </span>
       ) : (
         <CSVLink
@@ -135,7 +135,7 @@ export function UserProcessCSV({ csvObject }) {
           filename={`user-data-${dateToString(new Date())}.csv`}
           data-testid="download-csv"
         >
-          {csvObject.usersLoading ? <Spinner /> : matches ? 'CSV' : t('users.download_csv')}
+          {csvObject.usersLoading ? <Spinner /> : smMatches ? 'CSV' : t('users.download_csv')}
         </CSVLink>
       )}
     </Button>

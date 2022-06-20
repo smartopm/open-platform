@@ -71,6 +71,7 @@ export default function TodoList({
   const [taskUpdateStatus, setTaskUpdateStatus] = useState({ message: '', success: false });
   const [checkedOptions, setCheckOptions] = useState('none');
   const matches = useMediaQuery('(max-width:959px)');
+  const smMatches = useMediaQuery('(max-width:1020px)');
   const taskQuery = {
     completedTasks: 'completed: true',
     tasksDueIn10Days: `due_date >= '${dateToString(
@@ -457,7 +458,7 @@ export default function TodoList({
     {
       mainElement: (
         <AccessCheck module="note" allowedPermissions={['can_view_create_task_button']}>
-          {matches ? (
+          {smMatches ? (
             <Button
               onClick={openModal}
               variant="contained"

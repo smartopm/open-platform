@@ -72,7 +72,7 @@ export default function UsersList() {
   });
 
   const matches = useMediaQuery('(max-width:959px)');
-
+  
   const [loadAllUsers, { loading: usersLoading, data: usersData, called }] = useLazyQuery(
     UsersDetails,
     {
