@@ -15,7 +15,6 @@ export default function AccessCheck({ allowedPermissions, children, module, show
   }
 
   const hasPermissions = permissionsCheck(userPermissionsModule.permissions, allowedPermissions);
-console.log({ hasPermissions, userPermissionsModule, authState, allowedPermissions })
   if (hasPermissions) {
     return children;
   }

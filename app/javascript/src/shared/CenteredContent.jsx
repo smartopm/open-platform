@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 
 export default function CenteredContent({children}) {
     return (
-      <Grid container direction="row" justifyContent="center" alignItems="center">
+      <Grid container direction="row" justifyContent="center" alignItems="center" data-testid="centered_content">
         {children}
       </Grid>
     )

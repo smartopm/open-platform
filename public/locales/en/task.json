@@ -76,7 +76,8 @@
     "no_comments": "No comments yet on this project",
     "updates": "Updates",
     "order_number": "Order Number",
-    "no_comments_on_document": "No comments yet on this document"
+    "no_comments_on_document": "No comments yet on this document",
+    "no_comments_on_this_form": "No comments yet on this form"
   },
   "document": {
     "uploaded_at": "Uploaded at",

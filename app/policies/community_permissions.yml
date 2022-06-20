@@ -73,6 +73,11 @@ Ciudad Morazán:
     logout:
       permissions:
         - can_see_menu_item
+    my_forms:
+      permissions:
+        - can_see_menu_item
+        - can_access_own_forms
+        - can_fetch_form_task_comments
   site_manager:
     gate_access:
       permissions:
@@ -202,7 +207,11 @@ Tilisi:
         - can_access_all_discussions
         - can_create_post
         - can_view_posts
-
+    my_forms:
+      permissions:
+        - can_see_menu_item
+        - can_access_own_forms
+        - can_fetch_form_task_comments
   developer:
     note:
       permissions:
@@ -257,7 +266,11 @@ Tilisi:
         - can_access_all_discussions
         - can_create_post
         - can_view_posts
-
+    my_forms:
+      permissions:
+        - can_see_menu_item
+        - can_access_own_forms
+        - can_fetch_form_task_comments
 DoubleGDP:
   security_supervisor:
     note:
@@ -332,6 +345,11 @@ DoubleGDP:
     logout:
       permissions:
         - can_see_menu_item
+    my_forms:
+      permissions:
+        - can_see_menu_item
+        - can_access_own_forms
+        - can_fetch_form_task_comments    
   site_manager:
     gate_access:
       permissions:
@@ -436,7 +454,11 @@ DoubleGDP:
         - can_access_all_discussions
         - can_create_post
         - can_view_posts
-
+    my_forms:
+      permissions:
+        - can_see_menu_item
+        - can_access_own_forms
+        - can_fetch_form_task_comments
   developer:
     note:
       permissions:
@@ -491,7 +513,11 @@ DoubleGDP:
         - can_access_all_discussions
         - can_create_post
         - can_view_posts
-
+    my_forms:
+      permissions:
+        - can_see_menu_item
+        - can_access_own_forms
+        - can_fetch_form_task_comments
   site_worker:
     profile:
       permissions:
@@ -693,6 +719,15 @@ DoubleGDP:
         - can_see_menu_item
         - can_access_messages
         - can_access_user_messages
+    my_forms:
+      permissions:
+        - can_see_menu_item
+        - can_access_own_forms
+        - can_fetch_form_task_comments
+  transaction:
+    permissions:
+      - can_make_payment
+      - can_see_menu_item
 Enyimba:
   marketing_admin:
     note:
@@ -870,7 +905,15 @@ Enyimba:
         - can_see_menu_item
         - can_access_messages
         - can_access_user_messages
-
+    my_forms:
+      permissions:
+        - can_see_menu_item
+        - can_access_own_forms
+        - can_fetch_form_task_comments
+    transaction:
+      permissions:
+        - can_make_payment
+        - can_see_menu_item       
 Greenpark:
   site_manager:
     note:
@@ -932,6 +975,11 @@ Greenpark:
     user:
       permissions:
         - can_get_users_lite
+    my_forms:
+      permissions:
+        - can_see_menu_item
+        - can_access_own_forms
+        - can_fetch_form_task_comments        
   site_worker:
     note:
       permissions:
@@ -989,3 +1037,8 @@ Greenpark:
     user:
       permissions:
         - can_get_users_lite
+    my_forms:
+      permissions:
+        - can_see_menu_item
+        - can_access_own_forms
+        - can_fetch_form_task_comments        

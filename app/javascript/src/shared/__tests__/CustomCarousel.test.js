@@ -23,7 +23,6 @@ describe('CustomCarousel component', () => {
     );
 
     await waitFor(() => {
-      screen.debug(undefined, 20000)
       expect(screen.queryByTestId('carousel-container')).toBeInTheDocument()
     }, 10)
   });
