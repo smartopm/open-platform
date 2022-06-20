@@ -100,7 +100,9 @@ describe('Custom Forms', () => {
     cy.wait(500);
     cy.get('.left-menu-collapsible').click();
     cy.wait(500);
-    cy.contains('Cypress Form').click();
+    cy.get('.form-menu-open-btn').click();
+    cy.wait(500);
+    cy.get('.submit_form').click();
     cy.wait(2000);
 
     // Trigger Validation
