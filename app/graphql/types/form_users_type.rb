@@ -16,7 +16,7 @@ module Types
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
 
     def comments_count
-      object.comments.count
+      object.comments.size
     end
   end
 end

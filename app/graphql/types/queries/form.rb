@@ -201,12 +201,9 @@ module Types::Queries::Form
   end
 
   def form_comments(form_user_id:)
-    unless permitted?(module: :my_forms, permission: :can_fetch_form_task_comments)
-      raise GraphQL::ExecutionError,
-            I18n.t('errors.unauthorized')
-    end
+    validate_authorization(:my_forms, :can_fetch_form_task_comments)
 
-    Forms::FormUser.find_by(id: form_user_id)
+    Forms::FormUser.find(form_user_id)
                    .comments.eager_load(:user).order(created_at: :desc)
   end
 
