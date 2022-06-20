@@ -14,7 +14,7 @@ describe('Side Nav component', () => {
   const features = {
     Search: { features: [] },
     Referral: { features: [] },
-    Payments: { features: [] },
+    Transactions: { features: [] },
     'Time Card': { features: [] },
     Logout: { features: [] },
     Community: { features: [] },

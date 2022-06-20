@@ -13,7 +13,7 @@ describe('TextInput component', () => {
     const props = {
       handleClose: jest.fn(),
       formId: 'sjhef3042432',
-      anchorEl: document.createElement("button"),
+      anchorEl: document.createElement('button'),
       open: true,
       refetch: jest.fn(),
       formName: 'sexample',
@@ -33,7 +33,7 @@ describe('TextInput component', () => {
       expect(rendered.queryByText('common:menu.publish')).toBeInTheDocument();
       expect(rendered.queryByText('common:menu.delete')).toBeInTheDocument();
 
-      fireEvent.click(rendered.queryByText('common:menu.view_entries'));
+      fireEvent.click(rendered.queryByText('common:menu.submit_form'));
       fireEvent.click(rendered.queryByText('common:menu.edit'));
       fireEvent.click(rendered.queryByText('common:menu.delete'));
       expect(props.handleClose).toBeCalled();
@@ -43,6 +43,6 @@ describe('TextInput component', () => {
       fireEvent.click(rendered.queryByText('form_actions.cancel'));
       fireEvent.click(rendered.queryByTestId('proceed_button'));
       expect(props.handleClose).toBeCalled();
-    })
+    });
   });
 });

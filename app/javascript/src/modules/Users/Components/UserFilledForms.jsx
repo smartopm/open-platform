@@ -1,61 +1,44 @@
-/* eslint-disable no-use-before-define */
-import React from 'react';
+import React, { Fragment, useState } from 'react';
 import PropTypes from 'prop-types';
-import ListItem from '@mui/material/ListItem';
-import Badge from '@mui/material/Badge';
-import ListItemText from '@mui/material/ListItemText';
-import { css, StyleSheet } from 'aphrodite';
-import { useHistory } from 'react-router';
+import Divider from '@mui/material/Divider';
 import { useTranslation } from 'react-i18next';
-import DateContainer from '../../../components/DateContainer';
-import colors from '../../../themes/nkwashi/colors';
-import CenteredContent from '../../../components/CenteredContent';
+import { useLazyQuery } from 'react-apollo';
+import FormItem from '../../Forms/UserForms/Components/FormUserItem';
+import { SubmittedFormCommentsQuery } from '../../Forms/graphql/forms_queries';
+import CenteredContent from '../../../shared/CenteredContent';
 
-const { gray } = colors;
 export default function UserFilledForms({ userFormsFilled, userId, currentUser }) {
-  const history = useHistory();
-  const { t } = useTranslation('common');
+  const { t } = useTranslation(['common', 'task']);
+  const [currentFormUserId, setCurrentFormUserId] = useState(null);
+  const [fetchComments, formData] = useLazyQuery(SubmittedFormCommentsQuery, { fetchPolicy: 'cache-and-network' });
+
+  function handleShowComments(event, formId){
+    event.stopPropagation();
+    setCurrentFormUserId(formId);
+    fetchComments({ variables: { formUserId: formId } });
+  }
+
   if (!userFormsFilled || !userFormsFilled.length) {
     return <CenteredContent>{t('misc.no_forms')}</CenteredContent>;
   }
 
-  function handleViewForm(formUserId, formId) {
-    history.push(`/user_form/${userId}/${formUserId}?formId=${formId}`);
-  }
   return (
     <div className="container">
       {userFormsFilled.length &&
         userFormsFilled.map(
           userForm =>
             (userForm.status !== 'draft' || userForm.userId === currentUser) && (
-              <ListItem
-                alignItems="flex-start"
-                key={userForm.id}
-                button
-                data-testid="form_item"
-                onClick={() => handleViewForm(userForm.id, userForm.form.id)}
-              >
-                <ListItemText
-                  primary={(
-                    <>
-                      <span className="nz_msg_owner">
-                        {userForm.form?.name}
-                        <Badge
-                          color="secondary"
-                          badgeContent={<span>{userForm.status}</span>}
-                          style={{ marginLeft: 35 }}
-                        />
-
-                        <span className={css(styles.timeStamp)}>
-                          {t('misc.created_at')}
-                          :
-                          <DateContainer date={userForm.createdAt} />
-                        </span>
-                      </span>
-                    </>
-                  )}
+              <Fragment key={userForm.id}>
+                <FormItem
+                  formUser={userForm}
+                  handleShowComments={handleShowComments}
+                  currentFormUserId={currentFormUserId}
+                  formData={formData}
+                  userId={userId}
+                  t={t}
                 />
-              </ListItem>
+                <Divider />
+              </Fragment>
             )
         )}
     </div>
@@ -78,11 +61,3 @@ UserFilledForms.propTypes = {
   userId: PropTypes.string.isRequired,
   currentUser: PropTypes.string.isRequired
 };
-
-const styles = StyleSheet.create({
-  timeStamp: {
-    float: 'right',
-    fontSize: 14,
-    color: gray
-  }
-});

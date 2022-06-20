@@ -35,6 +35,10 @@ module Forms
       TaskCreate.new_from_action(task_params)
     end
 
+    def comments
+      Comments::NoteComment.joins(:note).where(note: { form_user_id: id }, send_to_resident: true)
+    end
+
     private
 
     def description

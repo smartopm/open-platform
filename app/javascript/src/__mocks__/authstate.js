@@ -66,7 +66,7 @@ const authState = {
           'can_view_process_templates',
           'can_create_process_template',
           'can_update_process_template',
-          'can_delete_process_template',
+          'can_delete_process_template'
         ]
       },
       { module: 'gate_access', permissions: ['can_see_menu_item'] },
@@ -111,6 +111,10 @@ const authState = {
       {
         module: 'amenity',
         permissions: ['can_access_amenities']
+      },
+      {
+        module: 'my_forms',
+        permissions: ['can_access_own_forms']
       }
     ]
   }

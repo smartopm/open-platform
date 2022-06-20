@@ -1,8 +1,5 @@
 import React, { Fragment, useState } from 'react';
-import {
-  MenuItem,
-  Menu
-} from '@mui/material';
+import { MenuItem, Menu } from '@mui/material';
 import { useMutation } from 'react-apollo';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router';
@@ -12,7 +9,7 @@ import { ActionDialog } from '../../../components/Dialog';
 import MessageAlert from '../../../components/MessageAlert';
 import { objectAccessor } from '../../../utils/helpers';
 
-export default function FormMenu({ formId, formName, anchorEl, handleClose, open, refetch, t }) {
+export default function FormMenu({ formId, anchorEl, handleClose, open, refetch, t }) {
   const history = useHistory();
   const [isDialogOpen, setOpen] = useState(false);
   const [alertOpen, setAlertOpen] = useState(false);
@@ -106,11 +103,12 @@ export default function FormMenu({ formId, formName, anchorEl, handleClose, open
             {t('common:menu.delete')}
           </MenuItem>
           <MenuItem
-            id="view_entries_button"
+            id="submit_form"
+            className="submit_form"
             key="view_entries"
-            onClick={() => history.push(`/form/${formId}/${formName}/entries`)}
+            onClick={() => history.push(`/form/${formId}/private`)}
           >
-            {t('common:menu.view_entries')}
+            {t('common:menu.submit_form')}
           </MenuItem>
         </div>
       </Menu>
@@ -123,7 +121,6 @@ FormMenu.defaultProps = {
 };
 FormMenu.propTypes = {
   formId: PropTypes.string.isRequired,
-  formName: PropTypes.string.isRequired,
   open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
   refetch: PropTypes.func.isRequired,

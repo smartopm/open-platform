@@ -49,6 +49,7 @@ export const UserFragment = {
         status
         createdAt
         userId
+        commentsCount
         form {
           id
           name

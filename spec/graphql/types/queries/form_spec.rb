@@ -20,6 +20,14 @@ RSpec.describe Types::Queries::Form do
                             can_fetch_form_categories
                           ])
     end
+    let!(:other_permission) do
+      create(:permission, module: 'my_forms',
+                          role: admin_role,
+                          permissions: %w[
+                            can_access_own_forms
+                            can_fetch_form_task_comments
+                          ])
+    end
 
     let!(:current_user_permission) do
       create(:permission, module: 'forms',
@@ -72,9 +80,16 @@ RSpec.describe Types::Queries::Form do
     let!(:another_form_user) do
       create(:form_user, form: form, user: admin, status: 'pending', status_updated_by: admin)
     end
+
     let!(:resident_role) { create(:role, name: 'resident') }
     let!(:client_role) { create(:role, name: 'client') }
-
+    let!(:resident) do
+      create(:admin_user, community_id: current_user.community_id,
+                          role: resident_role)
+    end
+    let!(:form_user_by_resident) do
+      create(:form_user, form: form, user: resident, status: 'pending', status_updated_by: admin)
+    end
     let!(:resident_permission) do
       create(:permission, module: 'forms',
                           role: resident_role,
@@ -86,6 +101,24 @@ RSpec.describe Types::Queries::Form do
                             can_fetch_form_property
                             can_fetch_form_properties
                             can_fetch_form_categories
+                          ])
+    end
+
+    let!(:other_resident_permission) do
+      create(:permission, module: 'my_forms',
+                          role: resident_role,
+                          permissions: %w[
+                            can_access_own_forms
+                            can_fetch_form_task_comments
+                          ])
+    end
+
+    let!(:other_client_permission) do
+      create(:permission, module: 'my_forms',
+                          role: client_role,
+                          permissions: %w[
+                            can_access_own_forms
+                            can_fetch_form_task_comments
                           ])
     end
 
@@ -222,6 +255,36 @@ RSpec.describe Types::Queries::Form do
       GQL
     end
 
+    let(:submitted_forms_query) do
+      <<~GQL
+        query forms {
+          submittedForms {
+            id
+            status
+            createdAt
+            userId
+            commentsCount
+            form {
+              id
+              name
+            }
+          }
+        }
+      GQL
+    end
+
+    let(:form_comments_query) do
+      <<~GQL
+        query comments($formUserId: ID!) {
+          formComments(formUserId: $formUserId) {
+            id
+            body
+            taggedDocuments
+          }
+        }
+      GQL
+    end
+
     context 'when current user is an admin' do
       it 'retrieves all list of forms' do
         result = DoubleGdpSchema.execute(forms_query, context: {
@@ -314,6 +377,28 @@ RSpec.describe Types::Queries::Form do
       expect(result.dig('data', 'formUser', 'id')).to eql form_user.id
     end
 
+    it 'should retrieve forms submitted by this user' do
+      result = DoubleGdpSchema.execute(submitted_forms_query,
+                                       context: {
+                                         current_user: resident,
+                                         site_community: resident.community,
+                                       }).as_json
+      expect(result.dig('data', 'submittedForms', 0, 'id')).to eql form_user_by_resident.id
+      expect(result.dig('data', 'submittedForms', 0, 'commentsCount')).to eql 0
+      expect(result.dig('errors', 0, 'message')).to be_nil
+    end
+
+    it 'should retrieve forms comments by this user' do
+      variables = { formUserId: form_user_by_resident.id }
+      result = DoubleGdpSchema.execute(form_comments_query, variables: variables,
+                                                            context: {
+                                                              current_user: admin,
+                                                              site_community: admin.community,
+                                                            }).as_json
+      expect(result.dig('errors', 0, 'message')).to be_nil
+      expect(result.dig('data', 'formComments').length).to eql 0
+    end
+
     it 'should not retrieve form user when not authorized' do
       variables = { userId: current_user.id, formUserId: form_user.id }
       result = DoubleGdpSchema.execute(form_user_query, variables: variables,
@@ -345,8 +430,8 @@ RSpec.describe Types::Queries::Form do
                                                              }).as_json
         form_entries = result.dig('data', 'formEntries')
         expect(form_entries['formName']).to eql form.name
-        expect(form_entries['formUsers'].size).to eql 2
-        expect(form_entries['formUsers'][0]['id']).to eql another_form_user.id
+        expect(form_entries['formUsers'].size).to eql 3
+        expect(form_entries['formUsers'][0]['id']).to eql form_user_by_resident.id
       end
     end
 

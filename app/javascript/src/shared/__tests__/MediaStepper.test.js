@@ -103,7 +103,6 @@ describe('PaginationDot component', () => {
     );
 
     await waitFor(() => {
-      screen.debug(undefined, 2000)
       expect(screen.queryByTestId('pagination_dot_btn')).toBeInTheDocument()
     }, 10)
   });
