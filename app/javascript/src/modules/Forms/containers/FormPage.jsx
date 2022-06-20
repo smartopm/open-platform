@@ -64,6 +64,7 @@ export default function FormPage() {
         viewPort.setAttribute('content', 'width=1024');
       }
       timer = window.setTimeout(() => {
+        document.querySelector('#form_update_actions').style.visibility = 'hidden';
         savePdf(document.querySelector('#form_update_container'), 'form');
         window.setTimeout(() => { window.close() }, 500);
       }, 1000);
