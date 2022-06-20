@@ -804,6 +804,7 @@ RSpec.describe Mutations::User do
           leadStatus: 'Signed MOU',
           userType: 'lead',
         }
+        prev_lead_update_logs = Logs::EventLog.where(subject: 'lead_update').count
 
         result = DoubleGdpSchema.execute(mutation, variables: variables,
                                                    context: {
@@ -814,6 +815,7 @@ RSpec.describe Mutations::User do
         expect(result.dig('data', 'userUpdate', 'user', 'id')).not_to be_nil
         expect(result.dig('data', 'userUpdate', 'user', 'leadStatus')).to eql 'Signed MOU'
         expect(user.lead_logs.count).to eql 1
+        expect(Logs::EventLog.where(subject: 'lead_update').count).to eql(prev_lead_update_logs + 1)
       end
     end
 

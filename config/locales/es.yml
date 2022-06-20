@@ -55,6 +55,7 @@ es:
         label: Etiqueta
       labels/label:
         community: Comunidad
+        short_desc: Breve Descripción
       labels/user_label:
         label: Etiqueta
         user: Usuario
@@ -113,6 +114,10 @@ es:
         community: Comunidad
         file_name: Nombre del archivo
         user: Usuario
+      logs/lead_log:
+        amount: Cantidad
+        deal_size: Tamaño del Trato
+        investment_target: Objetivo de Inversión
       logs/substatus_log:
         community: Comunidad
         user: Usuario
@@ -405,6 +410,7 @@ es:
       not_found: Parcela de tierra no encontrada
       poi_record_not_found: Registro de Poi no encontrado
     lead_log:
+      invalid_log_type: Tipo de registro no válido
       not_found: Registro de Clientes Potenciales no encontrado
     not_found: No encontrado
     note_list:

@@ -1,10 +1,9 @@
-/* eslint-disable max-lines */
 import React, { useState, useContext } from 'react';
 import { useMutation, useQuery } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import TextField from '@mui/material/TextField';
-import { Grid, Typography, Divider } from '@mui/material';
+import { Grid, Typography, Divider, useMediaQuery } from '@mui/material';
 import InputLabel from '@mui/material/InputLabel';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
@@ -21,6 +20,7 @@ import LeadEvent from './LeadEvent';
 import ButtonComponent from '../../../../shared/buttons/Button';
 import { MenuProps, secondaryInfoUserObject } from '../../utils';
 import { Context as AuthStateContext } from '../../../../containers/Provider/AuthStateProvider';
+import Investments from './Investments';
 
 export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsData }) {
   const [meetingName, setMeetingName] = useState('');
@@ -34,13 +34,14 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
   const [eventCreate, { loading: isLoading }] = useMutation(CreateEvent);
   const [leadDataUpdate, { loading: divisionLoading }] = useMutation(UpdateUserMutation);
   const { t } = useTranslation('common');
+  const mobile = useMediaQuery('(max-width:800px)');
   const {
     data: meetingsData,
     loading: meetingsLoading,
     refetch: refetchMeetings,
     error: meetingsError
   } = useQuery(UserMeetingsQuery, {
-    variables: { userId },
+    variables: { userId, logType: 'meeting' },
     fetchPolicy: 'cache-and-network'
   });
 
@@ -50,7 +51,7 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
     refetch: refetchEvents,
     error: eventsError
   } = useQuery(UserEventsQuery, {
-    variables: { userId },
+    variables: { userId, logType: 'event' },
     fetchPolicy: 'cache-and-network'
   });
 
@@ -63,35 +64,26 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
     });
   }
 
-  function handleMeetingNameChange(event) {
-    setMeetingName(event.target.value);
-  }
-
-  function handleEventNameChange(event) {
-    setEventName(event.target.value);
-  }
-
   function handleSubmitDivision(e) {
     e.preventDefault();
-    handleSubmit();
+    handleSubmit({});
     setDisabled(true);
   }
 
   function handleSubmitMeeting(e) {
     e.preventDefault();
     const type = 'meeting';
-    handleSubmit(meetingName, type);
-    setMeetingName('');
+    handleSubmit({ name: meetingName, logType: type });
   }
 
   function handleSubmitEvent(e) {
     e.preventDefault();
     const type = 'event';
-    handleSubmit(eventName, type);
-    setEventName('');
+
+    handleSubmit({ name: eventName, logType: type });
   }
 
-  function handleSubmit(name = '', logType = '') {
+  function handleSubmit({ name = '', logType = '' }) {
     if (leadData) {
       leadDataUpdate({
         variables: {
@@ -120,6 +112,8 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
             isError: false,
             detail: t('common:misc.misc_successfully_created', { type: t('common:menu.event') })
           });
+          setMeetingName('');
+          setEventName('');
           refetchEvents();
           refetchMeetings();
         })
@@ -133,10 +127,10 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
 
   if (err) return err.message;
 
-  if (isLoading || divisionLoading || eventsLoading || meetingsLoading) return <Spinner />;
+  if (isLoading || divisionLoading || meetingsLoading || eventsLoading) return <Spinner />;
 
   return (
-    <div style={{ marginLeft: -23, marginRight: -24 }}>
+    <form style={{ margin: '0 -25px 0 -25px' }}>
       <MessageAlert
         type={message.isError ? 'error' : 'success'}
         message={message.detail}
@@ -144,85 +138,100 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
         handleClose={() => setMessage({ ...message, detail: '' })}
       />
 
-      <Grid container>
-        <Grid item md={12} xs={12}>
-          {communityDivisionTargets && communityDivisionTargets?.length >= 2 ? (
-            <Grid container style={{ display: 'flex', alignItems: 'center', width: '90%' }}>
-              <Grid item md={6} xs={12}>
-                <Typography variant="h6" data-testid="division">
-                  {t('lead_management.division')}
-                </Typography>
+      {communityDivisionTargets && communityDivisionTargets?.length >= 2 ? (
+        <Grid container>
+          <Grid item md={12} xs={12}>
+            <Grid item md={12} xs={12}>
+              <Typography variant="h6" data-testid="division">
+                {t('lead_management.division')}
+              </Typography>
+            </Grid>
+            <Grid item md={12} xs={12}>
+              <Grid
+                container
+                spacing={2}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center'
+                }}
+              >
+                <Grid item md={6} xs={12}>
+                  <Typography variant="body2" data-testid="division_header">
+                    {t('lead_management.division_header')}
+                  </Typography>
+                </Grid>
 
-                <Typography variant="body2" data-testid="division_header">
-                  {t('lead_management.division_header')}
-                </Typography>
-              </Grid>
-              <Grid item md={6} xs={12}>
-                <Grid
-                  container
-                  spacing={2}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    paddingTop: 10
-                  }}
-                >
-                  <Grid item md={10} xs={10}>
-                    <FormControl fullWidth size="small">
-                      <InputLabel id="division">{t('lead_management.set_division')}</InputLabel>
-                      <Select
-                        labelId="demo-multiple-name-label"
-                        id="division"
-                        name="division"
-                        value={leadFormData?.user?.division || ''}
-                        onChange={handleDivisionChange}
-                        input={<OutlinedInput label={t('lead_management.set_division')} />}
-                        MenuProps={MenuProps}
-                      >
-                        <MenuItem value="" />
-                        {communityDivisionTargets.map(targetObject => (
-                          <MenuItem key={targetObject.division} value={targetObject.division}>
-                            {targetObject.division}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  </Grid>
+                <Grid item md={6} xs={12} style={{ paddingLeft: mobile && 12 }}>
+                  <Grid container>
+                    <Grid item md={10} xs={10}>
+                      <FormControl fullWidth size="small">
+                        <InputLabel id="division">{t('lead_management.set_division')}</InputLabel>
+                        <Select
+                          labelId="demo-multiple-name-label"
+                          id="division"
+                          name="division"
+                          style={{ width: mobile ? '85%' : '90%' }}
+                          value={leadFormData?.user?.division || ''}
+                          onChange={handleDivisionChange}
+                          input={<OutlinedInput label={t('lead_management.set_division')} />}
+                          MenuProps={MenuProps}
+                        >
+                          <MenuItem value="" />
+                          {communityDivisionTargets.map(targetObject => (
+                            <MenuItem key={targetObject.division} value={targetObject.division}>
+                              {targetObject.division}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </FormControl>
+                    </Grid>
 
-                  <Grid item md={2} xs={2}>
-                    <ButtonComponent
-                      variant="contained"
-                      color="primary"
-                      buttonText={t('lead_management.add')}
-                      handleClick={handleSubmitDivision}
-                      disabled={disabled}
-                      disableElevation
-                    />
+                    <Grid
+                      item
+                      md={2}
+                      xs={2}
+                      style={{
+                        justifyContent: 'flex-end',
+                        paddingLeft: 2,
+                        marginLeft: mobile ? '-18px' : '-5px'
+                      }}
+                    >
+                      <ButtonComponent
+                        fullWidth
+                        variant="contained"
+                        color="primary"
+                        buttonText={t('lead_management.add')}
+                        handleClick={handleSubmitDivision}
+                        disabled={disabled}
+                        disableElevation
+                        // eslint-disable-next-line max-lines
+                      />
+                    </Grid>
                   </Grid>
                 </Grid>
               </Grid>
             </Grid>
-          ) : (
-            <Grid container style={{ display: 'flex', alignItems: 'center', width: '90%' }}>
-              <Grid item md={12} xs={12}>
-                <Typography variant="h6" data-testid="division">
-                  {t('lead_management.division')}
-                </Typography>
-
-                <Typography variant="body2">
-                  {t('lead_management.go_settings')}
-                  <a href="/community">
-                    <Typography variant="subtitle1">
-                      {t('lead_management.community_settings_page')}
-                    </Typography>
-                  </a>
-                  {t('lead_management.to_set_up')}
-                </Typography>
-              </Grid>
-            </Grid>
-          )}
+          </Grid>
         </Grid>
-      </Grid>
+      ) : (
+        <Grid container style={{ display: 'flex', alignItems: 'center', width: '90%' }}>
+          <Grid item md={12} xs={12}>
+            <Typography variant="h6" data-testid="division">
+              {t('lead_management.division')}
+            </Typography>
+
+            <Typography variant="body2">
+              {t('lead_management.go_settings')}
+              <a href="/community">
+                <Typography variant="subtitle1">
+                  {t('lead_management.community_settings_page')}
+                </Typography>
+              </a>
+              {t('lead_management.to_set_up')}
+            </Typography>
+          </Grid>
+        </Grid>
+      )}
 
       <Grid item md={12} xs={12} style={{ marginBottom: '10px', marginTop: '10px' }}>
         <Divider />
@@ -243,16 +252,15 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
               container
               spacing={2}
               style={{
-                display: 'flex',
                 alignItems: 'center'
               }}
             >
-              <Grid item md={10} xs={10}>
+              <Grid item md={11} xs={10}>
                 <TextField
                   name="eventName"
                   label={t('lead_management.event_name')}
-                  style={{ width: '100%' }}
-                  onChange={handleEventNameChange}
+                  style={{ width: mobile ? '85%' : '95%' }}
+                  onChange={event => setEventName(event.target.value)}
                   value={eventName || ''}
                   variant="outlined"
                   fullWidth
@@ -269,18 +277,22 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
 
               <Grid
                 item
-                md={2}
-                xs={2}
+                md={1}
+                xs={1}
                 style={{
-                  paddingTop: '25px'
+                  paddingTop: '25px',
+                  paddingLeft: 0,
+                  marginLeft: mobile && '-18px'
                 }}
               >
                 <ButtonComponent
+                  fullWidth
                   variant="contained"
                   color="primary"
                   buttonText={t('lead_management.add')}
                   handleClick={handleSubmitEvent}
                   disabled={!eventName.trim()}
+                  testId="add-event-button"
                   disableElevation
                 />
               </Grid>
@@ -288,11 +300,12 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
           </Grid>
         </Grid>
       </Grid>
+
       <br />
       {/* Lead Events Listing */}
-      {eventsData?.leadEvents.length > 0 ? (
+      {eventsData?.leadLogs.length > 0 ? (
         <div>
-          {eventsData?.leadEvents.map(leadEvent => (
+          {eventsData?.leadLogs.map(leadEvent => (
             <div
               key={leadEvent.id}
               style={{
@@ -315,71 +328,72 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
 
       <Grid container>
         <Grid item md={12} xs={12}>
-          <Grid item md={12} xs={12}>
-            <Typography variant="h6" data-testid="meetings">
-              {t('lead_management.meetings')}
-            </Typography>
+          <Typography variant="h6" data-testid="meetings">
+            {t('lead_management.meetings')}
+          </Typography>
 
-            <Typography variant="body2" data-testid="meetings_header">
-              {t('lead_management.meetings_header')}
-            </Typography>
-          </Grid>
-          <Grid item md={12} xs={12}>
+          <Typography variant="body2" data-testid="meetings_header">
+            {t('lead_management.meetings_header')}
+          </Typography>
+        </Grid>
+        <Grid item md={12} xs={12}>
+          <Grid
+            container
+            spacing={2}
+            style={{
+              display: 'flex',
+              alignItems: 'center'
+            }}
+          >
+            <Grid item md={11} xs={10}>
+              <TextField
+                name="meetingName"
+                label={t('lead_management.meeting_name')}
+                style={{ width: mobile ? '85%' : '95%' }}
+                onChange={event => setMeetingName(event.target.value)}
+                value={meetingName || ''}
+                variant="outlined"
+                fullWidth
+                size="small"
+                margin="normal"
+                required
+                inputProps={{
+                  'aria-label': t('lead_management.meeting_name'),
+                  style: { fontSize: '15px' }
+                }}
+                InputLabelProps={{ style: { fontSize: '12px' } }}
+              />
+            </Grid>
+
             <Grid
-              container
-              spacing={2}
+              item
+              md={1}
+              xs={1}
               style={{
-                display: 'flex',
-                alignItems: 'center'
+                paddingTop: '25px',
+                paddingLeft: 0,
+                marginLeft: mobile && -18
               }}
             >
-              <Grid item md={10} xs={10}>
-                <TextField
-                  name="meetingName"
-                  label={t('lead_management.meeting_name')}
-                  style={{ width: '100%' }}
-                  onChange={handleMeetingNameChange}
-                  value={meetingName || ''}
-                  variant="outlined"
-                  fullWidth
-                  size="small"
-                  margin="normal"
-                  required
-                  inputProps={{
-                    'aria-label': t('lead_management.meeting_name'),
-                    style: { fontSize: '15px' }
-                  }}
-                  InputLabelProps={{ style: { fontSize: '12px' } }}
-                />
-              </Grid>
-
-              <Grid
-                item
-                md={2}
-                xs={2}
-                style={{
-                  paddingTop: '25px'
-                }}
-              >
-                <ButtonComponent
-                  variant="contained"
-                  color="primary"
-                  buttonText={t('lead_management.add')}
-                  handleClick={handleSubmitMeeting}
-                  disabled={!meetingName.trim()}
-                  disableElevation
-                  testId="add-meeting-button"
-                />
-              </Grid>
+              <ButtonComponent
+                variant="contained"
+                color="primary"
+                fullWidth
+                buttonText={t('lead_management.add')}
+                handleClick={handleSubmitMeeting}
+                disabled={!meetingName.trim()}
+                disableElevation
+                testId="add-meeting-button"
+              />
             </Grid>
           </Grid>
         </Grid>
       </Grid>
       <br />
       {/* Lead Meetings Listing */}
-      {meetingsData?.leadMeetings.length > 0 ? (
+      {meetingsData?.leadLogs.length > 0 ? (
         <div>
-          {meetingsData?.leadMeetings.map(leadMeeting => (
+          {meetingsData?.leadLogs.map(leadMeeting => (
             <div
               key={leadMeeting.id}
               style={{
@@ -397,7 +411,9 @@ export default function LeadEvents({ userId, data, refetch, refetchLeadLabelsDat
       <Grid item md={12} xs={12} style={{ marginBottom: '10px', marginTop: '10px' }}>
         <Divider />
       </Grid>
-    </div>
+
+      <Investments userId={userId} />
+    </form>
   );
 }
 

@@ -145,8 +145,8 @@ export default function LeadManagementDetails({ userId }) {
               label={t('lead_management.event_header')}
               style={
                 tabValue === objectAccessor(TAB_VALUES, 'events')
-                  ? { fontSize: '10px', borderBottom: 'solid 1px' }
-                  : { fontSize: '10px' }
+                  ? { fontSize: '10px', textAlign: 'left', borderBottom: 'solid 1px' }
+                  : { fontSize: '10px', textAlign: 'left' }
               }
               {...a11yProps(1)}
             />

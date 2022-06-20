@@ -1,11 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Grid, Typography } from '@mui/material';
+import { Grid, Typography, useMediaQuery } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { dateToString } from '../../../../components/DateContainer';
 
 export default function LeadEvent({ leadEvent }) {
   const { t } = useTranslation('common');
+  const mobile = useMediaQuery('(max-width:800px)');
   return (
     <div>
       {leadEvent !== undefined && (
@@ -24,12 +25,12 @@ export default function LeadEvent({ leadEvent }) {
                     {leadEvent?.name}
                   </Typography>
                 </Grid>
-                <Grid item md={3} xs={12}>
+                <Grid item md={3} xs={12} style={{ textAlign: !mobile && 'right' }}>
                   <Typography variant="body2" data-testid="event-date">
                     {dateToString(leadEvent?.createdAt)}
                   </Typography>
                 </Grid>
-                <Grid item md={4} xs={12}>
+                <Grid item md={4} xs={12} style={{ textAlign: !mobile && 'right' }}>
                   <Typography variant="body2" data-testid="event-created-by">
                     {`${t('lead_management.entered_by')}  ${leadEvent?.actingUser?.name}`}
                   </Typography>

@@ -247,7 +247,7 @@ export default function Homepage({ authState, quickLinks }) {
     <div>
       <div>
         <div>
-          {authState.user.userType === 'resident' && (
+          {['resident', 'lead'].includes(authState.user.userType) && (
             <QuickLinks menuItems={quickLinks} translate={t} />
           )}
         </div>

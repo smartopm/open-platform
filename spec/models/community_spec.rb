@@ -118,6 +118,7 @@ RSpec.describe Community, type: :model do
     end
     it { is_expected.to have_many(:posts).class_name('Discussions::Post') }
     it { is_expected.to have_many(:transaction_logs).class_name('Payments::TransactionLog') }
+    it { is_expected.to have_many(:amenities) }
   end
 
   it 'should be associated with users' do

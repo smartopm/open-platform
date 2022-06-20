@@ -6,7 +6,7 @@ import {
   findLinkAndReplace, forceLinkHttps, titleCase, truncateString, removeNewLines, checkForHtmlTags,
   sanitizeText, getJustLabels, checkValidGeoJSON, getHexColor, getDrawPluginOptions,
   handleQueryOnChange, checkAccessibilityForUserType, extractHostname, getObjectKey,
-  decodeHtmlEntity, replaceDocumentMentions
+  decodeHtmlEntity, replaceDocumentMentions, validateRequiredField
 } from '../../utils/helpers'
 
 jest.mock('dompurify')
@@ -309,3 +309,19 @@ describe('#replaceDocumentMentions', () => {
 //     expect(savePdf(dom)).toBeUndefined();
 //   });
 // });
+// any tests can fall into this category
+
+describe('Anonymous', () => {
+  it('should return error and validation helper', () => {
+    const validation = validateRequiredField('name', { isError: false}, ['name'], { name: "some value"}, jest.fn(() => 'no error'));
+    expect(validation).toEqual({ error: false, helperText: 'no error' });
+    const validation1 = validateRequiredField(
+      'name',
+      { isError: true },
+      ['name'],
+      { name: '' },
+      jest.fn(() => 'error')
+    );
+    expect(validation1).toEqual({ error: true, helperText: 'error' });
+  });
+})

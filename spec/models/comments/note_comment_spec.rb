@@ -34,6 +34,7 @@ RSpec.describe Comments::NoteComment, type: :model do
     it { is_expected.to have_db_column(:body).of_type(:text) }
     it { is_expected.to have_db_column(:created_at).of_type(:datetime) }
     it { is_expected.to have_db_column(:updated_at).of_type(:datetime) }
+    it { is_expected.to have_db_column(:send_to_resident).of_type(:boolean) }
     it do
       is_expected.to have_db_column(:tagged_documents).of_type(:string)
                                                       .with_options(default: [], array: true)

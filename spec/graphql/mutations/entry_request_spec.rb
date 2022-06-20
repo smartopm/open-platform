@@ -278,7 +278,7 @@ RSpec.describe Mutations::EntryRequest do
     let!(:another_user) { create(:user, community_id: user.community_id, role: visitor_role) }
     let!(:entry_request) { admin.entry_requests.create(name: 'Mark Percival', reason: 'Visiting') }
     let!(:event) do
-      user.generate_events('visitor_entry', entry_request)
+      user.generate_events('visitor_entry', entry_request, ref_name: entry_request.name)
     end
     let!(:contractor) { create(:contractor, community_id: user.community_id) }
 

@@ -96,7 +96,7 @@ export default function FormPage() {
       ) : (
         <FormContextProvider>
           <div style={matches ? {marginTop: '-40px'} : {}}>
-            <AccessCheck module='forms' allowedPermissions={['can_access_forms']}>
+            <AccessCheck module='forms' allowedPermissions={['can_access_forms']} show404ForUnauthorized={false}>
               <FormHeader
                 linkText={t('common:misc.forms')}
                 linkHref="/forms"

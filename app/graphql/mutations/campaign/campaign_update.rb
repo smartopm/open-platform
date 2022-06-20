@@ -36,7 +36,7 @@ module Mutations
           return { campaign: campaign.reload }
         end
 
-        raise GraphQL::ExecutionError, campaign.errors.full_message
+        raise GraphQL::ExecutionError, campaign.errors.full_messages&.join(', ')
       end
 
       def update_campaign_label(campaign, labels)
@@ -54,7 +54,9 @@ module Mutations
           label_record = context[:site_community].labels.find_by(short_desc: label)
           relation = Labels::CampaignLabel.find_by(campaign_id: campaign.id,
                                                    label_id: label_record.id)
-          raise GraphQL::ExecutionError, relation.errors.full_message unless relation.destroy
+          unless relation.destroy
+            raise GraphQL::ExecutionError, relation.errors.full_messages&.join(', ')
+          end
         end
       end
 

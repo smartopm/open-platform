@@ -166,10 +166,11 @@ describe('Test the Todo page', () => {
       await waitFor(() => {
         const card = screen.queryAllByTestId('card')[0];
         fireEvent.click(card);
-        const openTaskDetailsMenu = screen.queryAllByTestId('show_task_subtasks')[0];
+        const menuButton = screen.queryAllByTestId('task-item-menu')[0];
+        expect(menuButton).toBeInTheDocument();
+        fireEvent.click(menuButton);
+        const openTaskDetailsMenu = screen.getByText('menu.open_task_details');
         expect(openTaskDetailsMenu).toBeInTheDocument();
-        fireEvent.click(openTaskDetailsMenu);
-        expect(screen.queryByTestId('drawer')).toBeInTheDocument();
       });
     });
   });

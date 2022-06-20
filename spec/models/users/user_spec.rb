@@ -234,6 +234,8 @@ RSpec.describe Users::User, type: :model do
     it { is_expected.to have_many(:plan_ownerships).class_name('Properties::PlanOwnership') }
     it { is_expected.to have_many(:reply_to).class_name('Comments::NoteComment') }
     it { is_expected.to have_many(:posts).class_name('Discussions::Post') }
+    it { is_expected.to have_many(:transaction_logs).class_name('Payments::TransactionLog') }
+    it { is_expected.to have_many(:amenities) }
   end
 
   describe 'enums' do
@@ -357,6 +359,7 @@ RSpec.describe Users::User, type: :model do
       end
 
       context 'when user is updated' do
+        subject { user.labels }
         before { user.save }
 
         it 'updates existing user label' do
@@ -370,6 +373,8 @@ RSpec.describe Users::User, type: :model do
           expect(Labels::Label.count).to eql 6
           # As division was updated to nil, the user_label association will be destroyed
           expect(user.user_labels.count).to eql 4
+          expect(subject.pluck(:short_desc)).to include 'Site Visit'
+          expect(subject.pluck(:short_desc)).to_not include ['Signed Lease', 'China']
         end
       end
     end

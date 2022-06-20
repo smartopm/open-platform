@@ -53,6 +53,7 @@ en:
         label: Label
       labels/label:
         community: Community
+        short_desc: Short Description
       labels/user_label:
         label: Label
         user: User
@@ -101,6 +102,10 @@ en:
       logs/substatus_log:
         community: Community
         user: User
+      logs/lead_log:
+        deal_size: Deal Size
+        investment_target: Investment Target
+        amount: Amount
       notes/assignee_note:
         note: Note
         user: User
@@ -342,6 +347,8 @@ en:
       poi_record_not_found: Poi Record not found
     lead_log:
       not_found: Lead log not found
+      empty_deal_details: Deal details cannot be empty
+      invalid_log_type: Invalid log type 
     not_found: Not found
     note:
       task_not_found: No Task Found, Try a different query
@@ -405,6 +412,11 @@ en:
       payment_not_found: Payment not found
     post:
       content_not_found: Content must exist.
+    user_label:
+      lead:
+        already_exist: 'Label with grouping name already exists'
+        reserved: 'Reserved label'
+      exists: '%{title} labels cannot be associated.'
   general:
     thanks_for_using_our_app: Thank you for using our app, kindly use this link to give us feedback %{feedback_link}
     task_reminder: REMINDER, Please complete your task before/by the due date (%{due_date}). Check out your task on %{task_link}. Thanks, %{community_name}

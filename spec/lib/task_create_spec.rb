@@ -104,7 +104,7 @@ RSpec.describe TaskCreate do
     expect(assigned_note[0][:body]).to eq 'New Task'
   end
 
-  context '#new_from_process' do
+  describe '#new_from_process' do
     data = {
       body: 'Task Triggered from Form',
       category: 'form',
@@ -135,6 +135,20 @@ RSpec.describe TaskCreate do
       expect do
         TaskCreate.new_from_process(data, process)
       end.to change { Notes::Note.where(parent_note_id: nil).count }.by(1)
+    end
+
+    it 'assignes note list id to respective notes' do
+      data = {
+        body: 'Task Triggered from Form',
+        category: 'form',
+        description: 'Description',
+        author_id: user.id,
+        user_id: user.id,
+        form_user_id: form_user.id,
+      }
+      expect do
+        TaskCreate.new_from_process(data, process)
+      end.to change { Notes::NoteList.first.notes.count }.by(1)
     end
   end
 end

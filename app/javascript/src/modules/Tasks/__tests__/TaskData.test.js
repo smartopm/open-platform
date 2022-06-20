@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import React from 'react';
 import { MockedProvider } from '@apollo/react-testing';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
@@ -350,5 +351,46 @@ describe('Task Data components', () => {
       expect(screen.getByTestId('task_attach_file')).toBeInTheDocument();
       expect(screen.getByTestId('file_attachments_total')).toHaveTextContent('1');
     }, 10);
+  });
+
+  it('does not render subtasks dropdown for My Tasks filter', async () => {
+    const taskWithSubTasks = {
+      ...task,
+      subTasksCount: 3,
+      subTasks: [
+        { body: 'Sub Step 1', order: 1, ...task },
+        { body: 'Sub Step 2', order: 2, ...task },
+        { body: 'Sub Step 3', order: 3, ...task }
+      ]
+    };
+
+    const container = render(
+      <BrowserRouter>
+        <MockedProvider>
+          <Context.Provider value={authState}>
+            <MockedThemeProvider>
+              <TodoItem
+                task={taskWithSubTasks}
+                query={`assignees: ${authState.user.name}`}
+                handleChange={() => {}}
+                selectedTasks={[]}
+                isSelected={false}
+                handleTaskDetails={() => {}}
+                handleCompleteNote={() => {}}
+                handleAddSubTask={jest.fn()}
+                handleTodoClick={jest.fn}
+                handleTaskCompletion={jest.fn}
+                handleUploadDocument={jest.fn}
+                showWidgetsIcon
+              />
+            </MockedThemeProvider>
+          </Context.Provider>
+        </MockedProvider>
+      </BrowserRouter>
+    );
+
+    await waitFor(async () => {
+      expect(container.queryByTestId('show_task_subtasks')).toBeNull();
+    });
   });
 });

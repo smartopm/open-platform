@@ -558,6 +558,7 @@ export default function TodoList({
                   <TodoItem
                     key={task.id}
                     task={task}
+                    query={joinedTaskQuery}
                     handleChange={handleChange}
                     selectedTasks={selectedTasks}
                     isSelected={checkedOptions === 'all'}
@@ -583,7 +584,7 @@ export default function TodoList({
             </CenteredContent>
           </div>
         )}
-        <AccessCheck module="note" allowedPermissions={['can_view_create_task_button']}>
+        <AccessCheck module="note" allowedPermissions={['can_view_create_task_button']} show404ForUnauthorized={false}>
           <FloatingButton
             variant="extended"
             handleClick={openModal}

@@ -26,6 +26,7 @@ import ProjectDetailsAccordion from '../Processes/Components/ProjectDetailsAccor
 export default function TodoItem({
   task,
   taskId,
+  query,
   handleChange,
   selectedTasks,
   isSelected,
@@ -279,6 +280,7 @@ export default function TodoItem({
             <TaskDataList
               key={task?.id}
               task={task}
+              query={query}
               handleChange={handleChange}
               selectedTasks={selectedTasks}
               isSelected={isSelected}
@@ -425,6 +427,7 @@ TodoItem.defaultProps = {
   createTaskListSubTask: false,
   taskId: null,
   task: null,
+  query: '',
   handleChange: () => {},
   selectedTasks: [],
   isSelected: false,
@@ -438,6 +441,7 @@ TodoItem.defaultProps = {
 
 TodoItem.propTypes = {
   task: PropTypes.shape(Task),
+  query: PropTypes.string,
   handleChange: PropTypes.func,
   selectedTasks: PropTypes.arrayOf(PropTypes.string),
   isSelected: PropTypes.bool,

@@ -26,6 +26,7 @@
     "task_assignee_label": "Assign this task to users",
     "search_users": "Search Users",
     "require_a_reply": "Require a reply",
+    "send_to_resident": "Send to Resident",
     "needs_reply_from": "NEEDS REPLY from",
     "all_comments_resolved": "ALL COMMENTS RESOLVED",
     "replied": "replied",

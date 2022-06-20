@@ -17,7 +17,7 @@ module Mutations
 
         return { label_delete: label } if label.update(status: 'deleted')
 
-        raise GraphQL::ExecutionError, label.errors.full_message
+        raise GraphQL::ExecutionError, label.errors.full_messages&.join(', ')
       end
 
       def check_label(id)

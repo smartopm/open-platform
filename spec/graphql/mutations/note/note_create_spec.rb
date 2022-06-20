@@ -18,6 +18,7 @@ RSpec.describe Mutations::Note::NoteCreate do
   end
 
   let!(:user) { create(:user_with_community, role: resident_role, user_type: 'resident') }
+  let(:community) { user.community }
   let!(:admin) do
     create(:admin_user, community_id: user.community_id, role: admin_role, user_type: 'admin')
   end
@@ -35,7 +36,8 @@ RSpec.describe Mutations::Note::NoteCreate do
            body: 'Feedback')
   end
 
-  let(:task) do
+  let(:note_list) { create(:note_list, name: 'DRC LIST', community: community, status: 'active') }
+  let(:parent_task) do
     create(:note,
            body: 'A test task',
            description: 'Test parent task',
@@ -44,7 +46,9 @@ RSpec.describe Mutations::Note::NoteCreate do
            flagged: true,
            community_id: user.community.id,
            author_id: site_worker.id,
-           completed: false)
+           completed: false,
+           parent_note_id: nil,
+           note_list_id: note_list.id)
   end
 
   let(:create_query) do
@@ -74,6 +78,12 @@ RSpec.describe Mutations::Note::NoteCreate do
               body
               category
               status
+              parentNote {
+                id
+              }
+              noteList {
+                id
+              }
           }
         }
       }
@@ -219,7 +229,7 @@ RSpec.describe Mutations::Note::NoteCreate do
           body: 'A sub task',
           category: 'other',
           flagged: true,
-          parentNoteId: task.id,
+          parentNoteId: parent_task.id,
         }
 
         result = DoubleGdpSchema.execute(
@@ -232,7 +242,27 @@ RSpec.describe Mutations::Note::NoteCreate do
         ).as_json
 
         expect(result.dig('data', 'result', 'note', 'id')).not_to be_nil
-        expect(task.sub_tasks.first.id).to eq(result.dig('data', 'result', 'note', 'id'))
+        expect(parent_task.sub_tasks.first.id).to eq(result.dig('data', 'result', 'note', 'id'))
+      end
+
+      context 'when sub task is created' do
+        it 'associates sub task with respective note list' do
+          variables = {
+            userId: user.id,
+            body: 'A sub task',
+            category: 'to_do',
+            flagged: true,
+            parentNoteId: parent_task.id,
+          }
+          result = DoubleGdpSchema.execute(create_query, variables: variables,
+                                                         context: {
+                                                           current_user: site_worker,
+                                                           site_community: community,
+                                                         }).as_json
+          expect(result['errors']).to be nil
+          expect(result.dig('data', 'result', 'note', 'parentNote', 'id')).to eql parent_task.id
+          expect(result.dig('data', 'result', 'note', 'noteList', 'id')).to eql note_list.id
+        end
       end
 
       it 'creates a task with order number' do
@@ -241,7 +271,7 @@ RSpec.describe Mutations::Note::NoteCreate do
           body: 'Sub task with order number',
           category: 'other',
           flagged: true,
-          parentNoteId: task.id,
+          parentNoteId: parent_task.id,
           order: 2,
         }
 

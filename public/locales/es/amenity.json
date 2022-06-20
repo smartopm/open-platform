@@ -1,0 +1,19 @@
+{
+  "fields": {
+    "amenity_description": "Descripción",
+    "amenity_hours": "Horas",
+    "amenity_location": "Ubicación",
+    "amenity_name": "Nombre de la Amenidad",
+    "calendly_link": "Enlace de Calendly"
+  },
+  "helper_text": {
+    "description": "Tenga en cuenta que el número de caracteres no debe exceder los 150",
+    "invitationLink": "Agregar un enlace de calendario aquí activará un botón \"Reservar la Amenidad\" y abrirá una pestaña separada cuando se haga clic",
+    "name": "Tenga en cuenta que el número de caracteres no debe exceder los 30"
+  },
+  "misc": {
+    "amenity_created": "Amenidad Creada con Éxito",
+    "configure_amenity": "Configurar Amenidad",
+    "reserve": "Reservar"
+  }
+}
