@@ -22,7 +22,7 @@ namespace :db do
                          message settings showroom subscription_plan substatus_log
                          temparature timesheet transaction upload user gate_access dashboard
                          guest_list profile logout communication community_settings sos
-                         event_log process lead lead_log messages task_list].freeze
+                         event_log process lead lead_log messages task_list amenity my_forms].freeze
       communities = permission_list.keys
       communities.each do |community_name|
         next unless valid_community_names.include? community_name
@@ -46,7 +46,7 @@ namespace :db do
             permission = Permission.find_by(role: role, module: role_module)
             if permission
               permission.update!(permissions: role_permissions)
-            else
+            els
               Permission.create!(role: role, module: role_module, permissions: role_permissions)
             end
           end

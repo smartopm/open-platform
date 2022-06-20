@@ -58,40 +58,38 @@ export default function UserFilledForms({ userFormsFilled, userId, currentUser }
 
   return (
     <div className="container">
-      {data?.forms?.length && (
+      <Grid
+        container
+        spacing={1}
+        style={{
+          marginTop:
+            !mobile && userFormsFilled.length === 0
+              ? -80
+              : !mobile && userFormsFilled.length >= 1 && -60
+        }}
+      >
         <Grid
-          container
-          spacing={1}
+          item
+          md={12}
+          xs={12}
           style={{
-            marginTop:
-              !mobile && userFormsFilled.length === 0
-                ? -80
-                : !mobile && userFormsFilled.length >= 1 && -60
+            display: 'flex',
+            marginTop: !mobile && userFormsFilled.length >= 1 && -40,
+            marginBottom: 12,
+            justifyContent: 'center'
           }}
         >
-          <Grid
-            item
-            md={12}
-            xs={12}
-            style={{
-              display: 'flex',
-              marginTop: !mobile && userFormsFilled.length >= 1 && -40,
-              marginBottom: 12,
-              justifyContent: 'center'
-            }}
-          >
-            <SelectButton
-              options={menuOptions}
-              open={open}
-              anchorEl={anchorEl}
-              handleClose={handleClose}
-              handleClick={handleSelectButtonClick}
-              defaultButtonText={t('common:menu.submit_form')}
-              style={{ marginLeft: mobile && '-40px' }}
-            />
-          </Grid>
+          <SelectButton
+            options={menuOptions}
+            open={open}
+            anchorEl={anchorEl}
+            handleClose={handleClose}
+            handleClick={handleSelectButtonClick}
+            defaultButtonText={t('common:menu.submit_form')}
+            style={{ marginLeft: mobile && '-40px' }}
+          />
         </Grid>
-      )}
+      </Grid>
       {!userFormsFilled ||
         (!userFormsFilled.length && (
           <>
