@@ -49,6 +49,12 @@ export default function FormEntries({ formId }) {
     }
   }
 
+  function handleDownload(event, user, id) {
+    event.stopPropagation();
+    // eslint-disable-next-line security/detect-non-literal-fs-filename
+    window.open(`/user_form/${user.userId}/${user.id}?formId=${id}&download=true`);
+  }
+
   if (loading) return <Loading />
   if (error) return <ErrorPage title={error.message} />
 
@@ -76,7 +82,7 @@ export default function FormEntries({ formId }) {
               <DataList
                 key={formUser.id}
                 keys={entriesHeaders}
-                data={renderFormEntry(formUser, history, formId)}
+                data={renderFormEntry(formUser, formId, handleDownload)}
                 hasHeader={false}
                 clickable
                 handleClick={() => {history.push(`/user_form/${formUser.userId}/${formUser.id}?formId=${formId}`)}}
@@ -98,15 +104,7 @@ export default function FormEntries({ formId }) {
   )
 }
 
-export function renderFormEntry(formUser, history, formId) {
-  function handleDownload(event) {
-    event.stopPropagation();
-    // eslint-disable-next-line security/detect-non-literal-fs-filename
-    window.open(
-      `/user_form/${formUser.userId}/${formUser.id}?formId=${formId}&download=true`
-    );
-  }
-
+export function renderFormEntry(formUser, formId, handleDownload) {
   return [
     {
       'Date of Submission': (
@@ -136,7 +134,7 @@ export function renderFormEntry(formUser, history, formId) {
       ),
       Menu: (
         <Grid item xs={12} md={2} align='center' data-testid="download">
-          <IconButton onClick={handleDownload}>
+          <IconButton onClick={event => handleDownload(event, formUser, formId)}>
             <DownloadIcon />
           </IconButton>
         </Grid>
