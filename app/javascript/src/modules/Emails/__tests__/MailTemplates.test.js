@@ -5,6 +5,7 @@ import { BrowserRouter } from 'react-router-dom/';
 import { MockedProvider } from '@apollo/react-testing';
 import MailTemplates from '../components/MailTemplateList';
 import { EmailTemplatesQuery } from '../graphql/email_queries';
+import MockedThemeProvider from '../../__mocks__/mock_theme';
 
 describe('Mail Templates Component', () => {
   it('renders Mail Templates', async () => {
@@ -33,7 +34,9 @@ describe('Mail Templates Component', () => {
       const container = render(
         <MockedProvider mocks={[templateMock]} addTypename={false}>
           <BrowserRouter>
-            <MailTemplates />
+            <MockedThemeProvider>
+              <MailTemplates />
+            </MockedThemeProvider>
           </BrowserRouter>
         </MockedProvider>
       );

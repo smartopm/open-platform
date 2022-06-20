@@ -23,7 +23,7 @@ export default function CustodianTimeSheetLog({ data }) {
 
   return (
     <PageWrapper pageTitle={t('misc.time_card')}>
-      {data.timeSheetLogs.map(shift => (
+      {data?.timeSheetLogs.map(shift => (
         <React.Fragment key={shift.id}>
           <div className="row justify-content-between">
             <div className="col-xs-8 nz_user shift-user-name">

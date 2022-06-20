@@ -4,6 +4,7 @@ import { fireEvent, render } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom/';
 import { MockedProvider } from '@apollo/react-testing';
 import UserLog from '../Components/UserLog';
+import MockedThemeProvider from '../../__mocks__/mock_theme';
 
 describe('User infromation component loads', () => {
   const data = {
@@ -24,7 +25,9 @@ describe('User infromation component loads', () => {
     const { getByText, getByTestId } = render(
       <MockedProvider mock={[]}>
         <BrowserRouter>
-          <UserLog data={data} router={routerMock} />
+          <MockedThemeProvider>
+            <UserLog data={data} router={routerMock} />
+          </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>
     );
@@ -53,7 +56,9 @@ describe('User infromation component loads', () => {
     const { getByText, getByTestId } = render(
       <MockedProvider mock={[]}>
         <BrowserRouter>
-          <UserLog data={userData} router={routerMock} />
+          <MockedThemeProvider>
+            <UserLog data={userData} router={routerMock} />
+          </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>
     );
@@ -71,7 +76,9 @@ describe('User infromation component loads', () => {
     const { getByText } = render(
       <MockedProvider mock={[]}>
         <BrowserRouter>
-          <UserLog data={noData} router={routerMock} />
+          <MockedThemeProvider>
+            <UserLog data={noData} router={routerMock} />
+          </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>
     );

@@ -462,11 +462,11 @@ export default function UsersList() {
   const rightPanelObj = [
     {
       mainElement: matches ? (
-        <IconButton color="primary" onClick={() => setSearchOpen(!searchOpen)}>
+        <IconButton color="primary" data-testid='search' onClick={() => setSearchOpen(!searchOpen)}>
           <SearchIcon />
         </IconButton>
       ) : (
-        <Button startIcon={<SearchIcon />} onClick={() => setSearchOpen(!searchOpen)}>
+        <Button startIcon={<SearchIcon />} data-testid='search' onClick={() => setSearchOpen(!searchOpen)}>
           {t('common:menu.search')}
         </Button>
       ),

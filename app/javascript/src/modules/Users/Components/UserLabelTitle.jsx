@@ -24,7 +24,7 @@ export default function UserLabelTitle({ isLabelOpen, setIsLabelOpen }) {
       <Button>{t('label:label.labels')}</Button>
       <Button
         onClick={() => setIsLabelOpen(!isLabelOpen)}
-        data-testid="select_icon"
+        data-testid="label_toggler"
         className="label_select"
       >
         {isLabelOpen ? (
@@ -35,21 +35,6 @@ export default function UserLabelTitle({ isLabelOpen, setIsLabelOpen }) {
       </Button>
     </ButtonGroup>
   );
-  // <Typography
-  //   variant="subtitle1"
-  //   className={classes.wrapIcon}
-  //   onClick={() => setIsLabelOpen(!isLabelOpen)}
-  //   data-testid="label_toggler"
-  // >
-  //   {t('label:label.labels')}
-  //   {' '}
-  //   {'  '}
-  //   {isLabelOpen ? (
-  //     <KeyboardArrowUpIcon className={classes.linkIcon} data-testid="labels_open_icon" />
-  //     ) : (
-  //       <KeyboardArrowDownIcon className={classes.linkIcon} data-testid="labels_closed_icon" />
-  //     )}
-  // </Typography>
 }
 
 const useStyles = makeStyles(() => ({

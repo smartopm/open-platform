@@ -7,6 +7,7 @@ import IdPrintPage, { qrCodeAddress, UserPrintDetail } from '../../containers/Id
 import { Context } from '../../containers/Provider/AuthStateProvider';
 import { UserQuery } from '../../graphql/queries';
 import authState from '../../__mocks__/authstate';
+import MockedThemeProvider from '../../modules/__mocks__/mock_theme';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 describe('UserPrint Detail component', () => {
@@ -19,15 +20,17 @@ describe('UserPrint Detail component', () => {
     }
   };
   it('should render correctly', async () => {
-      const container = render(
-        <Context.Provider value={authState}>
-          <MockedProvider>
-            <BrowserRouter>
+    const container = render(
+      <Context.Provider value={authState}>
+        <MockedProvider>
+          <BrowserRouter>
+            <MockedThemeProvider>
               <UserPrintDetail data={data} />
-            </BrowserRouter>
-          </MockedProvider>
-        </Context.Provider>
-      );
+            </MockedThemeProvider>
+          </BrowserRouter>
+        </MockedProvider>
+      </Context.Provider>
+    );
     await waitFor(() => {
       expect(container.queryByText('Another somebodyy')).toBeInTheDocument();
       expect(container.getByTestId('download_button')).toBeInTheDocument();
@@ -50,7 +53,7 @@ describe('UserPrint Detail component', () => {
           user: {
             id: matchProps.params.id,
             name: 'some user',
-            __typename:"User",
+            __typename: 'User',
             contactInfos: null,
             substatusLogs: null,
             formUsers: null,
@@ -70,8 +73,8 @@ describe('UserPrint Detail component', () => {
             roleName: null,
             phoneNumber: null,
             lastActivityAt: null,
-            userType: "client",
-            status: 'active',
+            userType: 'client',
+            status: 'active'
           }
         }
       }
@@ -80,7 +83,9 @@ describe('UserPrint Detail component', () => {
       <Context.Provider value={authState}>
         <MockedProvider mocks={[mock]} addTypename>
           <BrowserRouter>
-            <IdPrintPage match={matchProps} />
+            <MockedThemeProvider>
+              <IdPrintPage match={matchProps} />
+            </MockedThemeProvider>
           </BrowserRouter>
         </MockedProvider>
       </Context.Provider>
@@ -107,13 +112,15 @@ describe('UserPrint Detail component', () => {
           user: null
         }
       },
-      error: new Error("Something wrong happened")
+      error: new Error('Something wrong happened')
     };
     const container = render(
       <Context.Provider value={authState}>
         <MockedProvider mocks={[mock]} addTypename>
           <BrowserRouter>
-            <IdPrintPage match={matchProps} />
+            <MockedThemeProvider>
+              <IdPrintPage match={matchProps} />
+            </MockedThemeProvider>
           </BrowserRouter>
         </MockedProvider>
       </Context.Provider>
@@ -131,6 +138,6 @@ describe('UserPrint Detail component', () => {
     jest.useFakeTimers('modern');
     jest.setSystemTime(new Date('2021-01-01 01:00'));
     const link = qrCodeAddress('somefsuhdw83928329');
-    expect(link).toContain('http://localhost/user/somefsuhdw83928329/1609462800000');
+    expect(link).toContain('http://localhost/user/somefsuhdw83928329/1609459200000');
   });
 });

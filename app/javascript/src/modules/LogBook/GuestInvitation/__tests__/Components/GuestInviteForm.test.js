@@ -8,6 +8,7 @@ import InvitationCreateMutation from '../../graphql/mutations';
 import { Context } from '../../../../../containers/Provider/AuthStateProvider';
 import userMock from '../../../../../__mocks__/authstate';
 import { SearchGuestsQuery } from '../../graphql/queries';
+import MockedThemeProvider from '../../../../__mocks__/mock_theme';
 
 describe('Guest Invitation Form', () => {
   const mockHistory = {
@@ -71,7 +72,9 @@ describe('Guest Invitation Form', () => {
       <MemoryRouter>
         <Context.Provider value={userMock}>
           <MockedProvider mocks={[createInviteMock, searchGuestsMock]} addTypename={false}>
-            <GuestInviteForm />
+            <MockedThemeProvider>
+              <GuestInviteForm />
+            </MockedThemeProvider>
           </MockedProvider>
         </Context.Provider>
       </MemoryRouter>
@@ -83,7 +86,7 @@ describe('Guest Invitation Form', () => {
     expect(getAllByText('common:misc.start_time')[0]).toBeInTheDocument();
     expect(getAllByText('common:misc.end_time')[0]).toBeInTheDocument();
 
-    fireEvent.change(getByTestId('search'), { target: { value: '090909090' } })
+    fireEvent.change(getByTestId('search'), { target: { value: '090909090' } });
 
     fireEvent.click(getByTestId('invite_button'));
     await waitFor(() => {
@@ -114,7 +117,9 @@ describe('Guest Invitation Form', () => {
       <MemoryRouter>
         <Context.Provider value={userMock}>
           <MockedProvider mocks={[createInviteMock, searchGuestsMock]} addTypename={false}>
-            <GuestInviteForm {...props} />
+            <MockedThemeProvider>
+              <GuestInviteForm {...props} />
+            </MockedThemeProvider>
           </MockedProvider>
         </Context.Provider>
       </MemoryRouter>

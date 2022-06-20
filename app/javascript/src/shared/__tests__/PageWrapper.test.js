@@ -1,9 +1,9 @@
 import React from 'react';
 import { render } from '@testing-library/react';
-
 import { BrowserRouter } from 'react-router-dom';
 import { MockedProvider } from '@apollo/react-testing';
 import PageWrapper from '../PageWrapper';
+import MockedThemeProvider from '../../modules/__mocks__/mock_theme';
 
 describe('PageWrapper component', () => {
   it('should render without error', () => {
@@ -13,7 +13,9 @@ describe('PageWrapper component', () => {
     const rendered = render(
       <BrowserRouter>
         <MockedProvider>
-          <PageWrapper {...props} />
+          <MockedThemeProvider>
+            <PageWrapper {...props} />
+          </MockedThemeProvider>
         </MockedProvider>
       </BrowserRouter>
     );

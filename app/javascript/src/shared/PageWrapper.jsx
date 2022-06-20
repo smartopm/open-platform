@@ -23,10 +23,7 @@ export default function PageWrapper({
   const matches = useMediaQuery('(max-width:900px)');
   const classes = useStyles();
   return (
-    <Grid
-      container
-      className={`${classes.containerStyles} ${classes.topStyle}`}
-    >
+    <Grid container className={`${classes.containerStyles} ${classes.topStyle}`}>
       <Grid
         item
         lg={1}
@@ -175,8 +172,10 @@ PageWrapper.propTypes = {
       })
     })
   }),
-  rightPanelObj: PropTypes.arrayOf({
-    key: PropTypes.number,
-    mainElement: PropTypes.oneOfType([PropTypes.node, PropTypes.string])
-  })
+  rightPanelObj: PropTypes.arrayOf(
+    PropTypes.shape({
+      key: PropTypes.number,
+      mainElement: PropTypes.oneOfType([PropTypes.node, PropTypes.string])
+    })
+  )
 };

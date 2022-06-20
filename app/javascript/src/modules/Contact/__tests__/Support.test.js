@@ -1,12 +1,12 @@
 import React from 'react';
-import { act, render, waitFor  } from '@testing-library/react';
-
+import { act, render, waitFor } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom';
 import { ApolloProvider } from 'react-apollo';
 import { MockedProvider } from '@apollo/react-testing';
 import Support from '../Components/Support';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import { createClient } from '../../../utils/apollo';
+import MockedThemeProvider from '../../__mocks__/mock_theme';
 
 describe('Support main page', () => {
   const data = {
@@ -17,29 +17,31 @@ describe('Support main page', () => {
       expiresAt: null,
       community: {
         name: 'Nkwashi',
-        supportName: "Support Officer"
+        supportName: 'Support Officer'
       }
     }
   };
 
   it('should enders the support page correctly', async () => {
     let container;
-    await(act(async () => {
+    await act(async () => {
       container = render(
         <ApolloProvider client={createClient}>
           <Context.Provider value={data}>
             <MockedProvider>
               <BrowserRouter>
-                <Support />
+                <MockedThemeProvider>
+                  <Support />
+                </MockedThemeProvider>
               </BrowserRouter>
             </MockedProvider>
           </Context.Provider>
         </ApolloProvider>
-      )
-    }))
+      );
+    });
 
     await waitFor(() => {
-      expect(container.queryByText('misc.sales_support')).toBeInTheDocument()
+      expect(container.queryByText('misc.sales_support')).toBeInTheDocument();
     }, 50);
   });
 });

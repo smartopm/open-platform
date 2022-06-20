@@ -438,11 +438,11 @@ export default function TodoList({
   const rightPanelObj = [
     {
       mainElement: matches ? (
-        <IconButton color="primary" onClick={() => setSearchOpen(!searchOpen)}>
+        <IconButton color="primary" data-testid='search' onClick={() => setSearchOpen(!searchOpen)}>
           <SearchIcon />
         </IconButton>
       ) : (
-        <Button startIcon={<SearchIcon />} onClick={() => setSearchOpen(!searchOpen)}>
+        <Button startIcon={<SearchIcon />} data-testid='search' onClick={() => setSearchOpen(!searchOpen)}>
           {t('common:menu.search')}
         </Button>
       ),
@@ -463,6 +463,7 @@ export default function TodoList({
               variant="contained"
               color="primary"
               style={{ color: '#FFFFFF' }}
+              data-testid='create_task_btn'
             >
               <AddIcon />
             </Button>
@@ -473,6 +474,7 @@ export default function TodoList({
               variant="contained"
               color="primary"
               style={{ color: '#FFFFFF' }}
+              data-testid='create_task_btn'
             >
               {t('common:misc.add_new')}
             </Button>
