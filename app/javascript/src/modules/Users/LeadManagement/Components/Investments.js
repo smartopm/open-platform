@@ -141,7 +141,7 @@ export default function Investments({ userId }) {
     return <Spinner />;
 
   return (
-    <form onSubmit={validateForm}>
+    <>
       <MessageAlert
         type={message.isError ? 'error' : 'success'}
         message={message.detail}
@@ -455,7 +455,7 @@ export default function Investments({ userId }) {
       ) : (
         <CenteredContent>{t('lead_management.no_investments_expenses')}</CenteredContent>
       )}
-    </form>
+    </>
   );
 }
 

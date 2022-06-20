@@ -1,5 +1,6 @@
 import React from 'react';
-import DescriptionIcon from '@mui/icons-material/Description';
+// import DescriptionIcon from '@mui/icons-material/Description';
+import DynamicFormIcon from '@mui/icons-material/DynamicForm';
 import CommunityForms from './containers/FormLinks';
 import AccessCheck from '../Permissions/Components/AccessCheck';
 
@@ -24,10 +25,10 @@ export default {
     component: RenderCommunityForms
   },
   styleProps: {
-    icon: <DescriptionIcon />,
-    className: 'permit-request-form-menu-item'
+    icon: <DynamicFormIcon />,
+    className: 'manage-forms-form-menu-item'
   },
-  name: t => t('menu.request_forms'),
+  name: t => t('menu.manage_forms'),
   featureName: 'Forms',
   moduleName: currentModule,
   accessibleBy: []
