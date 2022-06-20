@@ -8,7 +8,7 @@ import t from '../../../__mocks__/t';
 import MockedThemeProvider from '../../../__mocks__/mock_theme';
 
 describe('My Forms', () => {
-  it('renders amenity form properly', async () => {
+  it('renders submitted forms properly', async () => {
     const container = render(
       <Context.Provider value={authState}>
         <MockedThemeProvider>
