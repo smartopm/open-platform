@@ -22,28 +22,28 @@ const PaymentRoutes = [
     routeProps: {
       path: '/payments',
       component: RenderPaymentsList,
-      exact: true,
+      exact: true
     },
     styleProps: {
-      icon: <CreditCardIcon />,
+      icon: <CreditCardIcon />
     },
     name: t => t('menu.payment', { count: 1 }),
     featureName: 'Payments',
     accessibleBy: [],
-    moduleName: currentModule,
+    moduleName: currentModule
   },
   {
     routeProps: {
       path: '/payments/pay',
       component: RenderPayment,
-      exact: true,
+      exact: true
     },
     name: t => t('common:misc.make_a_payment'),
-    featureName: 'Payments',
+    featureName: 'Transactions',
     moduleName: 'transaction',
-    accessibleBy: [],
-  },
-]
+    accessibleBy: []
+  }
+];
 
 
 export default {
@@ -57,7 +57,7 @@ export default {
   accessibleBy: [],
   moduleName: 'transaction',
   name: t => t('menu.payment', { count: 0 }),
-  featureName: 'Payments',
+  featureName: 'Transactions',
   subRoutes: PaymentRoutes,
   subMenu: PaymentRoutes
 };
