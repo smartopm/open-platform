@@ -153,6 +153,7 @@ export function UserMenuitems({ menuObject }) {
         data-testid="menu-list"
         className={classes.reportBtn}
         size="large"
+        color='primary'
       >
         <MoreVertOutlined />
       </IconButton>

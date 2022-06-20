@@ -127,16 +127,16 @@ export default function UserInformation({
 
   const rightPanelObj = [
     {
-      mainElement,
-      key: 2
-    },
-    { 
       mainElement: ['admin', 'marketing_admin'].includes(userType) ? (
-      <UserLabelTitle isLabelOpen={isLabelOpen} setIsLabelOpen={setIsLabelOpen} />
+        <UserLabelTitle isLabelOpen={isLabelOpen} setIsLabelOpen={setIsLabelOpen} />
       ) : (
-          undefined
+        undefined
       ),
       key: 1
+    },
+    {
+      mainElement,
+      key: 2
     }
   ];
 
@@ -145,8 +145,8 @@ export default function UserInformation({
     extraBreadCrumbLink: '/users',
     linkText: tabValue !== 'Contacts' ? t('common:misc.user_detail') : undefined,
     linkHref: tabValue !== 'Contacts' ? `/user/${data.user.id}` : undefined,
-    pageName: objectAccessor(userTabList(t), tabValue),
-  }
+    pageName: objectAccessor(userTabList(t), tabValue)
+  };
 
   useEffect(() => {
     if (tab) {

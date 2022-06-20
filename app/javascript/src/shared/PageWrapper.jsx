@@ -132,7 +132,7 @@ const useStyles = makeStyles(theme => ({
     marginTop: '8%'
   },
   divider: {
-    margin: '20px 0 0  0'
+    margin: '20px -4% 0  -4%'
   },
   dividerBig: {
     margin: '20px -11% 0  -11%'
