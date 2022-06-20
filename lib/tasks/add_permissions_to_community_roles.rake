@@ -44,11 +44,11 @@ namespace :db do
             next unless role_permissions
 
             permission = Permission.find_by(role: role, module: role_module)
-            if permission
-              permission.update!(permissions: role_permissions)
+            next unless permission
+
+            permission.update!(permissions: role_permissions)
             els
-              Permission.create!(role: role, module: role_module, permissions: role_permissions)
-            end
+            Permission.create!(role: role, module: role_module, permissions: role_permissions)
           end
         end
       end
