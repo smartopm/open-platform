@@ -11,7 +11,7 @@ module Mutations
         label = context[:site_community].labels.new(short_desc: label)
         return map_campaign_to_label(campaign, label) if label.save!
 
-        raise GraphQL::ExecutionError, label.errors.full_message
+        raise GraphQL::ExecutionError, label.errors.full_messages&.join(', ')
       end
 
       def map_campaign_to_label(campaign, existing_label)

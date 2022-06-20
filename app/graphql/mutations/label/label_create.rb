@@ -13,8 +13,8 @@ module Mutations
       field :label, Types::LabelType, null: true
 
       def resolve(vals)
-        raise_duplicate_label_error(vals[:short_desc])
         short_desc, grouping_name = get_label_details(vals[:short_desc])
+        raise_duplicate_label_error(short_desc, grouping_name)
         label = context[:site_community].labels.create!(
           short_desc: short_desc,
           grouping_name: grouping_name,
@@ -37,8 +37,8 @@ module Mutations
       # Raises GraphQL execution error if label already exist with short_desc.
       #
       # @return [GraphQL::ExecutionError]
-      def raise_duplicate_label_error(short_desc)
-        return unless context[:site_community].label_exists?(short_desc)
+      def raise_duplicate_label_error(short_desc, grouping_name)
+        return unless context[:site_community].label_exists?(short_desc, grouping_name)
 
         raise GraphQL::ExecutionError, I18n.t('errors.label.duplicate_label')
       end

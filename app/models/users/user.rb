@@ -354,11 +354,11 @@ module Users
     end
 
     def generate_events(event_tag, target_obj, data = {})
-      Logs::EventLog.create(acting_user_id: id,
-                            community_id: community_id, subject: event_tag,
-                            ref_id: target_obj&.id,
-                            ref_type: target_obj&.class&.to_s,
-                            data: data)
+      Logs::EventLog.create!(acting_user_id: id,
+                             community_id: community_id, subject: event_tag,
+                             ref_id: target_obj&.id,
+                             ref_type: target_obj&.class&.to_s,
+                             data: data)
     end
 
     # rubocop:disable Metrics/MethodLength
@@ -378,6 +378,7 @@ module Users
         status: vals[:status],
         order: vals[:order],
       )
+      note.update(note_list_id: note.parent_note&.note_list_id)
       note.documents.attach(vals[:attached_documents]) if vals[:attached_documents]
       note
     end
@@ -831,11 +832,12 @@ module Users
     def find_or_create_label(grouping_name, desc)
       return if desc.blank?
 
-      community.labels.find_or_create_by(
+      label = community.labels.find_or_create_by(
         grouping_name: grouping_name,
         short_desc: desc,
-        color: community.theme_colors['secondaryColor'],
       )
+      label.update(color: community.theme_colors['secondaryColor'])
+      label
     end
   end
   # rubocop:enable Metrics/ClassLength

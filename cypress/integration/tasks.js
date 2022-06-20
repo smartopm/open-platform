@@ -103,7 +103,7 @@ describe('Tasks page', () => {
       cy.get('[data-testid=task-info-section]').should('not.be.visible');
 
       // Add Sub Task
-      cy.visit('/tasks');
+      cy.visit('/tasks?filter=tasksOpen');
       cy.get('[data-testid=task-item-menu]').click();
       cy.contains('Add Sub Task').click();
       cy.contains('Create a task');
@@ -113,7 +113,7 @@ describe('Tasks page', () => {
       cy.get('[data-testid=task-type]').type('To-Do{enter}');
       cy.get('[data-testid=task-submit-button]').click();
 
-      cy.visit('/tasks');
+      cy.visit('/tasks?filter=tasksOpen');
       cy.contains('Cypress test task');
       cy.get('[data-testid=show_task_subtasks]').click();
       cy.contains('Cypress test sub task');

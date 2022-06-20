@@ -17,7 +17,7 @@ RSpec.describe Forms::FormUser, type: :model do
     it { is_expected.to belong_to(:user).class_name('Users::User') }
     it { is_expected.to belong_to(:status_updated_by).class_name('Users::User') }
     it { is_expected.to have_many(:user_form_properties).dependent(:destroy) }
-    it { is_expected.to have_many(:note).class_name('Notes::Note').dependent(:destroy) }
+    it { is_expected.to have_many(:notes).class_name('Notes::Note').dependent(:destroy) }
   end
 
   describe '#create_form_task' do

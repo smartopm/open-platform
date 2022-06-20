@@ -88,6 +88,17 @@ module ActionFlows
         'due_at' => '',
         'url' => '',
       },
+      'Lead' => {
+        'name' => '',
+        'email' => '',
+        'temperature' => '',
+        'source' => '',
+        'owner' => '',
+        'type' => '',
+        'previous_status' => '',
+        'current_status' => '',
+        'has_status_changed' => '',
+      },
     }.freeze
 
     attr_accessor :data_set
