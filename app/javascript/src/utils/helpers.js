@@ -677,5 +677,5 @@ export function savePdf(domElement, docName = 'download') {
       heightLeft -= pageHeight;
     }
     pdf.save(`${docName}.pdf`);
-  });
+  }).catch((error) => { return error });
 }
