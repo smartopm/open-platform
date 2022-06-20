@@ -6,7 +6,6 @@ import Discussions from '../Discussions';
 import Business from '../Business';
 import Labels from '../Labels';
 import Campaigns from '../Campaigns';
-import ManageForms from '../Forms/ManageForms';
 import Emails from '../Emails';
 import CommunitySettings from './components/SettingsPage';
 import Tasks from '../Tasks';
@@ -57,7 +56,6 @@ export default {
   moduleName: 'community',
   accessibleBy: [],
   subMenu: [
-    ManageForms,
     Amenity,
     News,
     Message,

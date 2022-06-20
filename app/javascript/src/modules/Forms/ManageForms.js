@@ -1,5 +1,4 @@
 import React from 'react';
-// import DescriptionIcon from '@mui/icons-material/Description';
 import DynamicFormIcon from '@mui/icons-material/DynamicForm';
 import CommunityForms from './containers/FormLinks';
 import AccessCheck from '../Permissions/Components/AccessCheck';
