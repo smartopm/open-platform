@@ -51,10 +51,6 @@ export default function Investments({ userId }) {
     fetchPolicy: 'cache-and-network'
   });
 
-  function validateForm(event) {
-    event.preventDefault();
-  }
-
   const {
     data: leadInvestmentData,
     loading: leadInvestmentsLoading,
