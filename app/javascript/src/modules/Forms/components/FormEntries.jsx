@@ -135,7 +135,7 @@ export function renderFormEntry(formUser, history, formId) {
         </Grid>
       ),
       Menu: (
-        <Grid item xs={12} md={2} align='center'>
+        <Grid item xs={12} md={2} align='center' data-testid="download">
           <IconButton onClick={handleDownload}>
             <DownloadIcon />
           </IconButton>

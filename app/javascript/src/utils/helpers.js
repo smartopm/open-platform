@@ -657,8 +657,9 @@ export function replaceDocumentMentions(text, path) {
  * Captures a page screenshot and convert to pdf,
  * handles multiple pages
  * @param {NodeElement} domElement the DOM container to captured
+ * @param {String} docName what to name the pdf document
  */
-export function savePdf(domElement) {
+export function savePdf(domElement, docName = 'download') {
   html2canvas(domElement).then(canvas => {
     const img = canvas.toDataURL('image/jpeg');
     const pdf = new JsPDF('pt', 'mm', 'a4');
@@ -675,6 +676,6 @@ export function savePdf(domElement) {
       pdf.addImage(img, 'JPEG', 10, position + 10, imgWidth, imgHeight + 25);
       heightLeft -= pageHeight;
     }
-    pdf.save('form.pdf');
+    pdf.save(`${docName}.pdf`);
   });
 }
