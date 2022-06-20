@@ -138,6 +138,6 @@ describe('UserPrint Detail component', () => {
     jest.useFakeTimers('modern');
     jest.setSystemTime(new Date('2021-01-01 01:00'));
     const link = qrCodeAddress('somefsuhdw83928329');
-    expect(link).toContain('http://localhost/user/somefsuhdw83928329/1609459200000');
+    expect(link).toContain('http://localhost/user/somefsuhdw83928329/1609462800000');
   });
 });
