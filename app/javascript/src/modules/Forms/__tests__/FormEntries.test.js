@@ -66,7 +66,8 @@ describe('Form Entries Component', () => {
         expect(container.queryAllByTestId('submitted_by')).toHaveLength(1);
         expect(container.queryAllByTestId('submitted_on')).toHaveLength(1);
         expect(container.queryAllByTestId('status')).toHaveLength(1);
-        expect(container.queryAllByTestId('submitted_by')[0].textContent).toEqual('John Test');
+        expect(container.queryAllByTestId('download')).toHaveLength(1);
+        expect(container.queryAllByTestId('DownloadIcon')).toHaveLength(1);
         expect(container.queryAllByTestId('submitted_on')[0].textContent).toEqual('2021-07-08');
         expect(container.queryAllByTestId('status')[0].textContent).toEqual('pending');
         expect(container.queryAllByTestId('versionNumber')[0].textContent).toEqual("2");
