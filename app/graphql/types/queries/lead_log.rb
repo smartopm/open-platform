@@ -7,7 +7,6 @@ module Types::Queries::LeadLog
 
   VALID_LEAD_STATUSES = ['Qualified Lead', 'Signed MOU', 'Signed Lease'].freeze
 
-  # rubocop:disable Metrics/BlockLength
   included do
     field :lead_logs, [Types::LeadLogType], null: true do
       description 'Get lead logs'
@@ -26,8 +25,6 @@ module Types::Queries::LeadLog
       argument :user_id, GraphQL::Types::ID, required: true
     end
   end
-  # rubocop:enable Metrics/BlockLength
-
   def investment_stats(user_id:)
     lead_log = lead_logs(log_type: 'deal_details', user_id: user_id, limit: 1).first
     return {} if lead_log.nil?
@@ -171,19 +168,6 @@ module Types::Queries::LeadLog
                             .ordered
   end
 
-  # def investment_stats(user_id:)
-  #   lead_log = deal_details(user_id: user_id, limit: 1).first
-  #   return {} if lead_log.nil?
-
-  #   total_spent = context[:site_community].lead_logs.investment.where(user_id: user_id).sum(:amount)
-
-  #   {
-  #     total_spent: total_spent,
-  #     percentage_of_target_used: percentage_of_target_used(total_spent, lead_log),
-  #     investment_label: investment_label(user_id, lead_log, total_spent),
-  #   }
-  # end
-
   # rubocop:disable Metrics/MethodLength
   def investment_label(user_id, lead_log, total_spent)
     label = context[:site_community].labels.joins(:user_labels)
@@ -211,13 +195,6 @@ module Types::Queries::LeadLog
 
     ((total_spent / lead_log.investment_target) * 100).floor(2)
   end
-
-
-  # def deal_details(user_id:, offset: 0, limit: 3)
-  #   validate_authorization(:lead_log, :can_fetch_lead_logs)
-
-  #   ((total_spent / lead_log.investment_target) * 100).floor(2)
-  # end
 
   def valid_lead_divisions
     context[:site_community].lead_monthly_targets&.map { |data| data['division'] }
