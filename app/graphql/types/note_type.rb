@@ -31,6 +31,7 @@ module Types
     field :task_comments_count, Integer, null: true
     field :status, String, null: true
     field :submitted_by, Types::UserType, null: true
+    field :message, Types::MessageType, null: true
     field :task_comment_reply, Boolean, null: true
     field :order, Integer, null: true
     field :note_list, Types::NoteListType, null: true
@@ -99,6 +100,10 @@ module Types
                                     note_id: task_ids,
                                     reply_required: true,
                                     replied_at: nil)
+    end
+
+    def message
+      Notifications::Message.find_by(note_id: object.id)
     end
   end
 end
