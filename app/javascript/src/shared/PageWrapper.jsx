@@ -23,7 +23,7 @@ export default function PageWrapper({
   const matches = useMediaQuery('(max-width:900px)');
   const classes = useStyles();
   return (
-    <Grid container className={`${classes.containerStyles} ${classes.topStyle}`}>
+    <Grid container className={`${classes.containerStyles} ${classes.topStyle}`} data-testid='page_container'>
       <Grid
         item
         lg={1}
@@ -39,7 +39,7 @@ export default function PageWrapper({
           <Grid container>
             <Grid item md={12} xs={12} sm={12} lg={12}>
               {showBreadCrumb && (
-                <Breadcrumbs aria-label="breadcrumb" role="presentation" data-testid="breadcrumb">
+                <Breadcrumbs aria-label="breadcrumb" role="presentation" data-testid="page_breadcrumb">
                   {breadCrumbObj?.extraBreadCrumb && (
                     <Typography color="primary" variant="caption">
                       <Link className={classes.linkColor} to={breadCrumbObj?.extraBreadCrumbLink}>
@@ -54,7 +54,7 @@ export default function PageWrapper({
                       </Link>
                     </Typography>
                   )}
-                  <Typography color="text.primary" variant="caption">
+                  <Typography color="text.primary" variant="caption" data-testid='page_name'>
                     {breadCrumbObj?.pageName}
                   </Typography>
                 </Breadcrumbs>
@@ -62,12 +62,12 @@ export default function PageWrapper({
             </Grid>
             <Grid item md={6} lg={6} sm={8} xs={9}>
               {pageTitle && (
-                <Typography variant="h4" color="textSecondary">
+                <Typography variant="h4" color="textSecondary" data-testid='page_title'>
                   {pageTitle}
                 </Typography>
               )}
               {showAvatar && (
-                <div style={{ display: 'flex' }}>
+                <div style={{ display: 'flex' }} data-testid='page_avatar'>
                   <Avatar
                     user={avatarObj?.data.user}
                     // eslint-disable-next-line react/style-prop-object
@@ -80,7 +80,7 @@ export default function PageWrapper({
               )}
             </Grid>
             {rightPanelObj && (
-              <Grid item md={6} lg={6} xs={3} sm={4}>
+              <Grid item md={6} lg={6} xs={3} sm={4} data-testid='right_panel'>
                 <div style={{ display: 'flex', justifyContent: 'right' }}>
                   {rightPanelObj.map(data => (
                     <div
