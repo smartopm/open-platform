@@ -16,13 +16,14 @@ describe('Custom Forms', () => {
             'can_fetch_form',
             'can_fetch_form_properties',
             'can_fetch_form_property',
-            'can_fetch_form_categories'
+            'can_fetch_form_categories',
+            'can_view_form_entries'
           ],
           role_id: roleRes.body.id
         });
         cy.factory('permission', {
           module: 'community',
-          permissions: ['can_see_menu_item'],
+          permissions: ['can_see_menu_item', 'can_view_form_entries'],
           role_id: roleRes.body.id
         });
         cy.factory('admin_user', {
@@ -150,5 +151,35 @@ describe('Custom Forms', () => {
     // Check if form was submitted successfully with a reload
     cy.get('.form-txt-input-property-TextField').should('not.have.value', '12345');
     cy.wait(1000);
+
+    cy.window().then(win => {
+      cy.spy(win, 'open').as('redirect');
+    });
+
+    // To Download a form -
+    // Go to Permits & Request Forms
+    cy.get('.left-menu-collapsible').click();
+    cy.wait(1000);
+    cy.get('.community-menu-item').click();
+    cy.wait(1000);
+    cy.get('.community-menu-item').click();
+    cy.wait(1000);
+    cy.get('.permit-request-form-menu-item').click();
+    cy.wait(1000);
+
+    // Click on view entries button
+    cy.get('.form-menu-open-btn').click();
+    cy.wait(500);
+    cy.get('#view_entries_button').click();
+    cy.wait(1000);
+    cy.get('[data-testid=DownloadIcon]').should('exist')
+
+    // Click the first download button - should be clickable
+    cy.get('[data-testid=DownloadIcon]')
+      .eq(0)
+      .click();
+    cy.wait(1000);
+    cy.get('@redirect').should('be.called');
+
   });
 });

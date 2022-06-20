@@ -289,3 +289,23 @@ describe('#replaceDocumentMentions', () => {
     expect(replaceDocumentMentions('Have you seen this doc ###__1234__doc-name__### ?', '/projects/path')).toEqual(`Have you seen this doc <a href='/projects/path&document_id=1234'>doc-name</a> ?`);
   });
 });
+
+// describe('#savePdf', () => {
+
+//   const dom = document.createElement('div');
+//   dom.innerHTML = "<h1>Welcome to DoubleGDP</h1><p>This is your converted document.<p>";
+//   document.body.append(dom)
+
+//   window.getComputedStyle = () => jest.fn();
+//   window.scrollTo = jest.fn();
+
+//   it('convert the passed domElement to pdf', () => {
+    /*
+    * TODO this is expected to fail because mocking some needed global window method
+    * e.g. window.scrollTo, by html2canvas is not being effective
+    * we are yet to find a solution to mock window.scrollTo for html2canvas.
+    */
+//     const response = savePdf(dom);
+//     expect(savePdf(dom)).toBeUndefined();
+//   });
+// });
