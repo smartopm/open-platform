@@ -88,6 +88,7 @@ const stepsDataMock = {
               id: 'c8b16e54-095e-4b92-bf51-b197f6b916a6',
               name: 'Bonny Mwenda'
             },
+            message: null,
             assignees: [
               {
                 __typename: 'Assignee',
