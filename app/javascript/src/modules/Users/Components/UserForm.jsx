@@ -264,7 +264,7 @@ export default function UserForm({ isEditing, isFromRef, isAdminOrMarketingAdmin
   }
 
   return (
-    <PageWrapper>
+    <PageWrapper pageTitle={t('menu.user_edit')}>
       <ModalDialog
         handleClose={handleModal}
         handleConfirm={handleModalConfirm}
@@ -290,14 +290,11 @@ export default function UserForm({ isEditing, isFromRef, isAdminOrMarketingAdmin
               />
             )}
             <div>
-              <br />
               <Typography color="primary">
                 {status !== 'INIT' && t(`common:upload_state.${status}`)}
               </Typography>
-              <br />
             </div>
             <div>
-              <br />
 
               <label htmlFor="file" className={`${css(styles.photoUpload)}`}>
                 <span>

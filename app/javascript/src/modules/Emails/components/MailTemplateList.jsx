@@ -122,7 +122,7 @@ export default function MailTemplateList() {
   if (error) return <CenteredContent>{formatError(error?.message)}</CenteredContent>;
 
   return (
-    <PageWrapper>
+    <PageWrapper pageTitle={t('common:menu.email_templates')}>
       <MessageAlert
         type={message.isError ? 'error' : 'success'}
         message={message.detail}

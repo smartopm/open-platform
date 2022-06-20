@@ -63,7 +63,7 @@ export default function BusinessList({ businessData, authState, refetch }) {
   }
 
   return (
-    <PageWrapper>
+    <PageWrapper pageTitle={t('misc.business')}>
       <Dialog
         open={modalOpen}
         fullWidth

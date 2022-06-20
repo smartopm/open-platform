@@ -55,7 +55,8 @@
     "upload_error_content_one": "Oops. looks like some files",
     "upload_error_content_two": "are not uploaded. Please",
     "upload_error_content_three": "click the Upload button or",
-    "upload_error_content_four": "delete them."
+    "upload_error_content_four": "delete them.",
+    "form_entries": "Form Entries"
   },
   "actions": {
     "create_a_form": "Create a form",

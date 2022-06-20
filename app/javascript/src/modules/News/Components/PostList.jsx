@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 import React, { useState } from 'react';
-import { Typography, Box, Divider, Grid, Pagination } from '@mui/material';
+import { Box, Grid, Pagination } from '@mui/material';
 import { useLocation, useHistory } from 'react-router-dom';
 
 import PropTypes from 'prop-types';
@@ -14,7 +14,6 @@ import Categories from './Categories';
 import { ShareButton } from '../../../components/ShareButton';
 import { Spinner } from '../../../shared/Loading';
 import CenteredContent from '../../../shared/CenteredContent';
-import { titleize } from '../../../utils/helpers';
 import PageWrapper from '../../../shared/PageWrapper';
 
 export default function PostsList({ wordpressEndpoint, communityName }) {
@@ -48,16 +47,8 @@ export default function PostsList({ wordpressEndpoint, communityName }) {
     Boolean(totalPosts) && response.posts.filter(post => post.categories.Private == null);
   return (
     <PageWrapper pageTitle={t('news.news')}>
-      <Box style={{ display: 'flex', justifyContent: 'center' }}>
-        <Typography variant="h4" color="textSecondary">
-          {titleize(slug || t('news.posts'))}
-        </Typography>
-      </Box>
       <Categories wordpressEndpoint={wordpressEndpoint} />
       <div>
-        <br />
-        <Divider light variant="middle" />
-        <br />
         <Grid container direction="row" justifyContent="center">
           {totalPosts ? (
             publicPosts.map(post => (

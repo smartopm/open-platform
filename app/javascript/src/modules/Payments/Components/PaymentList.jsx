@@ -49,6 +49,7 @@ import { dateToString } from '../../../components/DateContainer';
 import { StyledTabs, StyledTab, TabPanel, a11yProps } from '../../../components/Tabs';
 import MessageAlert from '../../../components/MessageAlert';
 import { PlansList, SubscriptionPlans } from './PlansList';
+import PageWrapper from '../../../shared/PageWrapper';
 
 const csvHeaders = [
   { label: 'Receipt Number', key: 'receiptNumber' },
@@ -255,7 +256,7 @@ export default function PaymentList({ currencyData }) {
   }
 
   return (
-    <div>
+    <PageWrapper pageTitle={t('common:menu.payment_plural')}>
       <MessageAlert
         type={message.isError ? 'error' : 'success'}
         message={message.detail}
@@ -433,7 +434,7 @@ export default function PaymentList({ currencyData }) {
           />
         )}
       </TabPanel>
-    </div>
+    </PageWrapper>
   );
 }
 

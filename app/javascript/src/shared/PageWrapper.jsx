@@ -26,7 +26,6 @@ export default function PageWrapper({
     <Grid
       container
       className={`${classes.containerStyles} ${classes.topStyle}`}
-      style={matches ? { paddingTop: '15%' } : {}}
     >
       <Grid
         item
@@ -37,13 +36,13 @@ export default function PageWrapper({
       <Grid item lg={10} md={10} xs={12} sm={12}>
         <AppBar
           position="sticky"
-          style={{ background: '#FFFFFF', top: '50px', padding: '30px 0' }}
+          style={{ background: '#FFFFFF', top: '50px', paddingTop: '30px' }}
           elevation={0}
         >
           <Grid container>
             <Grid item md={12} xs={12} sm={12} lg={12}>
               {showBreadCrumb && (
-                <Breadcrumbs aria-label="breadcrumb" data-testid="breadcrumb">
+                <Breadcrumbs aria-label="breadcrumb" role="presentation" data-testid="breadcrumb">
                   {breadCrumbObj?.extraBreadCrumb && (
                     <Typography color="primary" variant="caption">
                       <Link className={classes.linkColor} to={breadCrumbObj?.extraBreadCrumbLink}>
@@ -98,14 +97,14 @@ export default function PageWrapper({
               </Grid>
             )}
           </Grid>
-          <Divider className={classes.divider} />
+          <Divider className={matches ? classes.divider : classes.dividerBig} />
         </AppBar>
         {oneCol ? (
-          <Container maxWidth="md" className={classes.children}>
+          <Container maxWidth="md" className={matches ? classes.children : classes.childrenBig}>
             {children}
           </Container>
         ) : (
-          <div className={classes.children}>{children}</div>
+          <div className={matches ? classes.children : classes.childrenBig}>{children}</div>
         )}
       </Grid>
       <Grid
@@ -130,10 +129,16 @@ const useStyles = makeStyles(theme => ({
     color: theme.palette.primary.main
   },
   children: {
-    paddingTop: '5%'
+    marginTop: '15%'
+  },
+  childrenBig: {
+    marginTop: '8%'
   },
   divider: {
-    margin: '20px -1000px 0 -1000px'
+    margin: '20px 0 0  0'
+  },
+  dividerBig: {
+    margin: '20px -11% 0  -11%'
   }
 }));
 

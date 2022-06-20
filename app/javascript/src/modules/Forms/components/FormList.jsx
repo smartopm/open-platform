@@ -8,7 +8,8 @@ import {
   Typography,
   Box,
   Grid,
-  IconButton
+  IconButton,
+  Container
 } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import AssignmentIcon from '@mui/icons-material/Assignment';
@@ -51,25 +52,17 @@ export default function FormLinkList({ userType, community, path, id, t }) {
   if (error) return <CenteredContent>{formatError(error.message)}</CenteredContent>;
 
   return (
-    <PageWrapper>
+    <PageWrapper pageTitle={t('common:misc.forms')}>
       {(path === '/forms/create' || id) && (
-        <>
-          {/* <FormHeader
-            linkText={t('common:misc.forms')}
-            linkHref="/forms"
-            pageName={t('misc.create_form')}
-            PageTitle={t('misc.create_form')}
-          /> */}
-          <PageWrapper>
-            <FormCreate
-              formMutation={createForm}
-              refetch={refetch}
-              actionType={id ? 'update' : undefined}
-              formId={id}
-              t={t}
-            />
-          </PageWrapper>
-        </>
+        <Container>
+          <FormCreate
+            formMutation={createForm}
+            refetch={refetch}
+            actionType={id ? 'update' : undefined}
+            formId={id}
+            t={t}
+          />
+        </Container>
       )}
       {path === '/forms' && (
         <>

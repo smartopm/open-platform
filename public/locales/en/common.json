@@ -294,7 +294,8 @@
     "see_more_articles": "See More Articles",
     "amenity": "Amenity",
     "amenity_plural": "Amenities",
-    "add_new": "Add New"
+    "add_new": "Add New",
+    "otp": "OTP"
   },
   "menu": {
     "invoice": "Invoice",

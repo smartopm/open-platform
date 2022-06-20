@@ -54,7 +54,7 @@ export default function LabelList({ userType }) {
   if (error) return <CenteredContent>{formatError(error.message)}</CenteredContent>;
 
   return (
-    <PageWrapper>
+    <PageWrapper pageTitle={t('common:table_headers.labels')}>
       <div className={classes.labelButton}>
         <ButtonComponent
           variant="contained"

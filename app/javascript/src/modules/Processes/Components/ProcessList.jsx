@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Breadcrumbs, Grid, Typography } from '@mui/material';
-import { Link , useHistory, useLocation } from 'react-router-dom';
+import  Grid from '@mui/material/Grid';
+import { useHistory, useLocation } from 'react-router-dom';
 import makeStyles from '@mui/styles/makeStyles';
 import { useQuery, useMutation } from 'react-apollo';
 import { formatError } from '../../../utils/helpers';
@@ -46,18 +46,19 @@ export default function ProcessList() {
     if (location?.state?.from === '/processes/templates/edit') {
       refetch();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [location?.state?.from, refetch])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location?.state?.from, refetch]);
 
   function isPermitted(permission) {
     if (!authState) return false;
-    const userPermissionsModule = authState.user?.permissions.find(permissionObject => permissionObject.module === 'process');
-    if (!userPermissionsModule){
+    const userPermissionsModule = authState.user?.permissions.find(
+      permissionObject => permissionObject.module === 'process'
+    );
+    if (!userPermissionsModule) {
       return false;
     }
-    return userPermissionsModule?.permissions?.includes(permission)
+    return userPermissionsModule?.permissions?.includes(permission);
   }
-
 
   function paginate(action) {
     if (action === 'prev') {
@@ -72,12 +73,16 @@ export default function ProcessList() {
 
   const menuList = [
     {
-      content: isPermitted('can_update_process_template') ? t('common:menu.edit_process_template') : null,
+      content: isPermitted('can_update_process_template')
+        ? t('common:menu.edit_process_template')
+        : null,
       isAdmin: true,
       handleClick: () => handleEditProcessTemplate()
     },
     {
-      content: isPermitted('can_delete_process_template') ? t('common:menu.delete_process_template') : null,
+      content: isPermitted('can_delete_process_template')
+        ? t('common:menu.delete_process_template')
+        : null,
       isAdmin: true,
       handleClick: () => handleDeleteProcessTemplate()
     }
@@ -100,31 +105,31 @@ export default function ProcessList() {
 
   function handleDeleteProcessTemplate() {
     setOpen(!isDialogOpen);
-    setAnchorEl(null)
+    setAnchorEl(null);
   }
 
   function handleProcessDelete() {
     processDelete({
       variables: { id: processItem?.id }
     })
-    .then(() => {
-      setInfo({
-        ...info,
-        message: t('templates.process_deleted'),
-        loading: false,
+      .then(() => {
+        setInfo({
+          ...info,
+          message: t('templates.process_deleted'),
+          loading: false
+        });
+        setAlertOpen(true);
+        setOpen(!isDialogOpen);
+        refetch();
+      })
+      .catch(err => {
+        setInfo({
+          ...info,
+          error: true,
+          message: formatError(err.message)
+        });
+        setAlertOpen(true);
       });
-      setAlertOpen(true);
-      setOpen(!isDialogOpen);
-      refetch()
-    })
-    .catch(err => {
-      setInfo({
-        ...info,
-        error: true,
-        message: formatError(err.message),
-      });
-      setAlertOpen(true);
-    })
   }
 
   function handleMenu(event, process) {
@@ -138,45 +143,22 @@ export default function ProcessList() {
     setAnchorEl(null);
   }
 
+  const breadCrumbObj = {
+    linkText: t('breadcrumbs.processes'),
+    linkHref: '/processes',
+    pageName: t('breadcrumbs.template_list')
+  };
+
   if (error) return <CenteredContent>{formatError(error.message)}</CenteredContent>;
   if (loading) return <Spinner />;
 
   return (
-    <PageWrapper>
+    <PageWrapper pageTitle={t('templates.template_list')} breadCrumbObj={breadCrumbObj} showBreadCrumb>
       <div>
         <Grid container spacing={1}>
-          <Grid item md={12} xs={12} style={{ paddingLeft: '10px' }}>
-            <div role="presentation">
-              <Breadcrumbs aria-label="breadcrumb" style={{ paddingBottom: '10px' }}>
-                <Link to="/processes">
-                  <Typography color="primary" style={{ marginLeft: '5px' }}>
-                    {t('breadcrumbs.processes')}
-                  </Typography>
-                </Link>
-                <Typography color="text.primary">{t('breadcrumbs.template_list')}</Typography>
-              </Breadcrumbs>
-            </div>
-          </Grid>
-          <Grid container>
-            <Grid item md={11} xs={10} className={classes.header}>
-              <Grid container>
-                <Grid item md={9} xs={10}>
-                  <Typography variant="h4" style={{ marginLeft: '5px', marginBottom: '24px' }}>
-                    {t('templates.template_list')}
-                  </Typography>
-                </Grid>
-              </Grid>
-            </Grid>
-
-            <Grid
-              item
-              md={1}
-              xs={2}
-              data-testid="template-speed-dial"
-              style={{ marginTop: '-20px' }}
-            >
-              <SpeedDial handleAction={() => history.push('/processes/templates/create')} />
-            </Grid>
+          <Grid item md={11} xs={10} className={classes.header} />
+          <Grid item md={1} xs={2} data-testid="template-speed-dial" style={{ marginTop: '-40px' }}>
+            <SpeedDial handleAction={() => history.push('/processes/templates/create')} />
           </Grid>
         </Grid>
         {data?.processTemplates?.length > 0 ? (

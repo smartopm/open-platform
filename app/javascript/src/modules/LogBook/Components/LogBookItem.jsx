@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import { useApolloClient, useMutation, useQuery } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
@@ -254,7 +253,6 @@ export default function LogBookItem({ router, offset, tabValue, handleTabValue }
           <Grid container spacing={1}>
             <Grid item md={11} xs={10}>
               <div className={classes.logbookTitleContainer}>
-                <Typography variant="h4">{t('logbook.log_book')}</Typography>
                 <IconButton
                   color="primary"
                   data-testid="refresh_btn"

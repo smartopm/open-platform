@@ -11,7 +11,6 @@ import Tooltip from '@mui/material/Tooltip';
 import { useHistory, useParams, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { makeStyles, useTheme } from '@mui/styles';
-import { Typography } from '@mui/material';
 import { allCampaigns } from '../../../graphql/queries';
 import { Spinner } from '../../../shared/Loading';
 import ErrorPage from '../../../components/Error';
@@ -150,7 +149,7 @@ export default function CampaignList() {
   if (loading) return <Spinner />;
   if (error) return <ErrorPage />;
   return (
-    <PageWrapper>
+    <PageWrapper pageTitle={t('campaign.campaigns')}>
       <Grid container data-testid="container">
         {deleteError && (
           <CenteredContent>
@@ -169,11 +168,7 @@ export default function CampaignList() {
           <Grid container>
             <Grid item sm={12} style={{ marginBottom: '20px' }}>
               <Grid container>
-                <Grid item sm={10} xs={10}>
-                  <Typography data-testid="campaign-title" variant="h4">
-                    {t('campaign.campaigns')}
-                  </Typography>
-                </Grid>
+                <Grid item sm={10} xs={10} />
                 <Grid item sm={2} xs={2} style={{ textAlign: 'right' }}>
                   <Tooltip title={t('actions.new_campaign')} placement="top">
                     <IconButton
@@ -186,9 +181,6 @@ export default function CampaignList() {
                       <AddCircleIcon />
                     </IconButton>
                   </Tooltip>
-                </Grid>
-                <Grid item sm={12} xs={12}>
-                  <Typography variant="body2">{t('campaign.communicate')}</Typography>
                 </Grid>
               </Grid>
             </Grid>

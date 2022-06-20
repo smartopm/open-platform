@@ -46,10 +46,10 @@ export default function SplitScreen({ children, open, onClose }) {
 const useStyles = makeStyles(() => ({
   drawerPaper: {
     width: '48%',
-    marginTop: '50px',
+    marginTop: '145px',
     background: '#FAFAFA !important',
     border: '0px !important',
-    zIndex: 10
+    zIndex: 10000
   },
   drawerPaperMobile: {
     width: '100%',
@@ -58,7 +58,7 @@ const useStyles = makeStyles(() => ({
   },
   mdDrawerPaper: {
     width: '40%',
-    marginTop: '50px',
+    marginTop: '145px',
     background: '#FAFAFA !important',
     border: '0px !important'
   },

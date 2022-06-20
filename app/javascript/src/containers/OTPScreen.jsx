@@ -6,9 +6,11 @@ import { StyleSheet, css } from 'aphrodite';
 import Tooltip from '@mui/material/Tooltip';
 import { useParams } from 'react-router-dom';
 import { useMutation } from 'react-apollo';
+import { useTranslation } from 'react-i18next'
 import { SendOneTimePasscode } from '../graphql/mutations';
 import { formatError } from '../utils/helpers';
 import { Spinner } from '../shared/Loading';
+import PageWrapper from '../shared/PageWrapper';
 
 // call the OTP function once this component renders
 // this is to be consistent with the rest of the menu
@@ -16,7 +18,8 @@ export default function OTPFeedbackScreen() {
   const [errorMessage, setMessage] = useState('');
   const [userDetails, setDetails] = useState({})
   const [loading, setLoading] = useState(true);
-  const params = useParams()
+  const params = useParams();
+  const { t } = useTranslation('common');
   const [sendOneTimePasscode] = useMutation(SendOneTimePasscode);
 
   function sendOTP() {
@@ -51,7 +54,7 @@ export default function OTPFeedbackScreen() {
       {
         loading && <Spinner />
       }
-      <div className={css(styles.passcodeSection)} data-testid="feedback">
+      <PageWrapper pageTitle={t('misc.otp')} className={css(styles.passcodeSection)} data-testid="feedback">
         {userDetails?.success && (
           <p>
             The One Time Pass code was successfully sent
@@ -75,7 +78,7 @@ export default function OTPFeedbackScreen() {
             {errorMessage}
           </div>
         )}
-      </div>
+      </PageWrapper>
     </>
   );
 }

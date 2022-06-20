@@ -65,7 +65,7 @@ export default function FormEntries({ formId }) {
 
 
   return (
-    <PageWrapper>
+    <PageWrapper pageTitle={t('misc.form_entries')}>
       <div style={{ marginLeft: '10px' }}>
         <Typography variant="h6" gutterBottom>
           {data?.formEntries?.formName}

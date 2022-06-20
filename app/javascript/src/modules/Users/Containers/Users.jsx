@@ -40,7 +40,6 @@ const USERS_CAMPAIGN_WARNING_LIMIT = 2000;
 
 export default function UsersList() {
   const [redirect, setRedirect] = useState(false);
-  const classes = useStyles();
   const [offset, setOffset] = useState(0);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -462,7 +461,11 @@ export default function UsersList() {
 
   const rightPanelObj = [
     {
-      mainElement: matches ? (<IconButton color='primary' onClick={() => setSearchOpen(!searchOpen)}><SearchIcon /></IconButton>) : (
+      mainElement: matches ? (
+        <IconButton color="primary" onClick={() => setSearchOpen(!searchOpen)}>
+          <SearchIcon />
+        </IconButton>
+      ) : (
         <Button startIcon={<SearchIcon />} onClick={() => setSearchOpen(!searchOpen)}>
           {t('common:menu.search')}
         </Button>
@@ -540,17 +543,15 @@ export default function UsersList() {
               handleClose={handleReportDialog}
               handleFilter={handleFilterUserBySubstatus}
             />
-            <div className={matches ? classes.userCardMobile : classes.userCard}>
-              <UserListCard
-                userData={data}
-                currentUserType={authState.user.userType}
-                handleUserSelect={handleUserSelect}
-                selectedUsers={selectedUsers}
-                offset={offset}
-                selectCheckBox={selectCheckBox}
-                refetch={refetch}
-              />
-            </div>
+            <UserListCard
+              userData={data}
+              currentUserType={authState.user.userType}
+              handleUserSelect={handleUserSelect}
+              selectedUsers={selectedUsers}
+              offset={offset}
+              selectCheckBox={selectCheckBox}
+              refetch={refetch}
+            />
             <Grid
               container
               direction="row"

@@ -98,22 +98,20 @@ export default function FormBuilder({ formId }) {
       });
   }
 
+  const breadCrumbObj = {
+    linkText: t('common:misc.forms'),
+    linkHref: '/forms',
+    pageName: t('misc.configure_form')
+  };
+
   if (loading || formLogs.loading || formData.loading) return <Spinner />;
   if (error || formLogs.error || formData.error)
     return <ErrorPage title={error?.message || formLogs?.error?.message} />;
 
   return (
-    <PageWrapper oneCol>
+    <PageWrapper oneCol pageTitle={t('misc.configure_form')} breadCrumbObj={breadCrumbObj} showBreadCrumb>
       {formDetailLoading && <Spinner />}
       <FormContextProvider>
-        {/* <div style={{ paddingBottom: '20px' }}>
-          <FormHeader
-            linkText={t('common:misc.forms')}
-            linkHref="/forms"
-            pageName={t('misc.configure_form')}
-            PageTitle={t('misc.configure_form')}
-          />
-        </div> */}
         <Container>
           <ActionDialog
             open={open}

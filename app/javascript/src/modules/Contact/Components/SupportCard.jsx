@@ -47,7 +47,7 @@ export default function SupportCard({ handleSendMessage, user }) {
   // eslint-disable-next-line no-use-before-define
   const classes = useStyles();
   const history = useHistory();
-  const { t } = useTranslation('support_contact');
+  const { t } = useTranslation(['support_contact', 'common']);
 
   function supports() {
     let result = handlePopulateSupports([], [], 'supportNumber', 'phone');
@@ -89,7 +89,7 @@ export default function SupportCard({ handleSendMessage, user }) {
   }
 
   return (
-    <PageWrapper>
+    <PageWrapper pageTitle={t('common:right_menu.contact_info')}>
       <div>
         <Typography paragraph variant="body1" color="textSecondary" data-testid="new">
           {`${user?.community?.name} ${t('partnership.about_app_partnership')} ${t(

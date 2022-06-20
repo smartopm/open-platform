@@ -11,6 +11,7 @@ import { extractHostname } from '../utils/helpers'
 import { AddActivityLog } from '../graphql/mutations'
 import useTimer from '../utils/customHooks'
 import CenteredContent from '../shared/CenteredContent'
+import PageWrapper from '../shared/PageWrapper'
 
 /* istanbul ignore next */
 export default function QRScan({ isKiosk }) {
@@ -120,7 +121,7 @@ export default function QRScan({ isKiosk }) {
 
   // TODO: Update elements to MUI
   return (
-    <div>
+    <PageWrapper pageTitle={t('misc.scan')}>
       {scanned ? (
         <h1 className="text-center">{t('misc.decoding')}</h1>
       ) : (
@@ -160,7 +161,7 @@ export default function QRScan({ isKiosk }) {
         <Footer position="5vh" />
         )
       }
-    </div>
+    </PageWrapper>
   );
 }
 

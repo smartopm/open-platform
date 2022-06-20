@@ -3,11 +3,10 @@ import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router';
 import { useQuery } from 'react-apollo';
 import useMediaQuery from '@mui/material/useMediaQuery';
-// import PageHeader from '../../../../shared/PageHeader';
 import { ProcessReplyComments } from '../graphql/process_queries';
 import { Spinner } from '../../../../shared/Loading';
 import CenteredContent from '../../../../shared/CenteredContent';
-import { formatError, objectAccessor, useParamsQuery } from '../../../../utils/helpers';
+import { formatError, objectAccessor } from '../../../../utils/helpers';
 import { StyledTabs, StyledTab, TabPanel, a11yProps } from '../../../../components/Tabs';
 import PageWrapper from '../../../../shared/PageWrapper';
 import ProcessCommentItem from './ProcessCommentItem';
@@ -41,7 +40,8 @@ export default function ProcessCommentsPage() {
 
   if (loading) return <Spinner />;
   return (
-    <PageWrapper oneCol>
+    <PageWrapper oneCol pageTitle={t('breadcrumbs.comments')}>
+      {/* will add use this to add breadcrumb */}
       {/* <PageHeader
         linkText={t('breadcrumbs.processes')}
         linkHref="/processes"

@@ -26,7 +26,7 @@ export default function ActionFlows() {
   const history = useHistory();
   const [createActionFlow] = useMutation(CreateActionFlow);
   const [updateActionFlow] = useMutation(UpdateActionFlow);
-  const { t } = useTranslation(['actionflow']);
+  const { t } = useTranslation(['actionflow', 'common']);
 
   const pathQuery = useParamsQuery('');
   const type = pathQuery.get('type');
@@ -169,7 +169,7 @@ export default function ActionFlows() {
   if (error) return <ErrorPage title={error.message} />;
 
   return (
-    <PageWrapper>
+    <PageWrapper pageTitle={t('common:misc.action_flows')}>
       <div>
         <ActionFlowModal
           open={open}

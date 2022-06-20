@@ -445,7 +445,7 @@ export default function CommunitySettings({ data, refetch }) {
   }
 
   return (
-    <PageWrapper oneCol>
+    <PageWrapper oneCol pageTitle={t('community.community_settings')}>
       <MessageAlert
         type={message.isError ? 'error' : 'success'}
         message={message.detail}
