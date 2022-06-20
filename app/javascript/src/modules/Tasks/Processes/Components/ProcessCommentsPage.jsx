@@ -16,10 +16,10 @@ export default function ProcessCommentsPage() {
   const { id: processId } = useParams();
   const matches = useMediaQuery('(max-width:600px)');
   const history = useHistory();
-  const path = useParamsQuery();
+  // const path = useParamsQuery();
   const { t } = useTranslation(['process', 'task']);
   const [tabValue, setTabValue] = useState(0);
-  const processName = path.get('process_name');
+  // const processName = path.get('process_name');
 
   const { data, loading, error } = useQuery(ProcessReplyComments, {
     variables: { processId },

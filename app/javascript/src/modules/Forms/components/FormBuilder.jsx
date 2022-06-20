@@ -19,7 +19,6 @@ import ErrorPage from '../../../components/Error';
 import { StyledTabs, StyledTab, TabPanel, a11yProps } from '../../../components/Tabs';
 import FormTitle from './FormTitle';
 import FormCreate from './FormCreate';
-// import FormHeader from '../../../shared/PageHeader';
 import PageWrapper from '../../../shared/PageWrapper';
 
 /**
@@ -107,14 +106,14 @@ export default function FormBuilder({ formId }) {
     <PageWrapper oneCol>
       {formDetailLoading && <Spinner />}
       <FormContextProvider>
-        <div style={{ paddingBottom: '20px' }}>
+        {/* <div style={{ paddingBottom: '20px' }}>
           <FormHeader
             linkText={t('common:misc.forms')}
             linkHref="/forms"
             pageName={t('misc.configure_form')}
             PageTitle={t('misc.configure_form')}
           />
-        </div>
+        </div> */}
         <Container>
           <ActionDialog
             open={open}

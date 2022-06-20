@@ -23,7 +23,6 @@ import { formatError } from '../../../utils/helpers';
 import { FormCreateMutation } from '../graphql/forms_mutation';
 import FloatButton from '../../../components/FloatButton';
 import FormCreate from './FormCreate';
-// import FormHeader from '../../../shared/PageHeader';
 import FormMenu from './FormMenu';
 import CenteredContent from '../../../shared/CenteredContent';
 import PageWrapper from '../../../shared/PageWrapper';
@@ -55,12 +54,12 @@ export default function FormLinkList({ userType, community, path, id, t }) {
     <PageWrapper>
       {(path === '/forms/create' || id) && (
         <>
-          <FormHeader
+          {/* <FormHeader
             linkText={t('common:misc.forms')}
             linkHref="/forms"
             pageName={t('misc.create_form')}
             PageTitle={t('misc.create_form')}
-          />
+          /> */}
           <PageWrapper>
             <FormCreate
               formMutation={createForm}

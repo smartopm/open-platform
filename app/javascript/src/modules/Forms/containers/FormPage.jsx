@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router';
-import useMediaQuery from '@mui/material/useMediaQuery';
+// import useMediaQuery from '@mui/material/useMediaQuery';
 import { Container, Typography } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery } from 'react-apollo';
@@ -13,7 +13,7 @@ import { FormQuery } from '../graphql/forms_queries';
 import { PublicUserMutation } from '../graphql/forms_mutation';
 import { AUTH_TOKEN_KEY } from '../../../utils/apollo';
 import CenteredContent from '../../../shared/CenteredContent';
-import AccessCheck from '../../Permissions/Components/AccessCheck';
+// import AccessCheck from '../../Permissions/Components/AccessCheck';
 import { FormCategoriesQuery } from '../graphql/form_category_queries';
 import { savePdf, useParamsQuery } from '../../../utils/helpers';
 import PageWrapper from '../../../shared/PageWrapper';
@@ -21,7 +21,7 @@ import PageWrapper from '../../../shared/PageWrapper';
 export default function FormPage() {
   const { userId, formUserId, formId } = useParams();
   const { pathname } = useLocation();
-  const matches = useMediaQuery('(max-width:900px)');
+  // const matches = useMediaQuery('(max-width:900px)');
   const authState = useContext(Context);
   const { t } = useTranslation(['common', 'form']);
   const path = useParamsQuery('');
@@ -97,7 +97,7 @@ export default function FormPage() {
         </FormContextProvider>
       ) : (
         <FormContextProvider>
-          <div style={matches ? {marginTop: '-40px'} : {}}>
+          {/* <div style={matches ? {marginTop: '-40px'} : {}}>
             <AccessCheck module='forms' allowedPermissions={['can_access_forms']} show404ForUnauthorized={false}>
               <FormHeader
                 linkText={t('common:misc.forms')}
@@ -106,7 +106,7 @@ export default function FormPage() {
                 PageTitle={t('form:misc.submit_form')}
               />
             </AccessCheck>
-          </div>
+          </div> */}
           <Container maxWidth="md">
             <Form
               editMode={false}

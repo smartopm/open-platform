@@ -5,7 +5,8 @@ import { Typography, Breadcrumbs, Grid } from '@mui/material';
 import { Link } from 'react-router-dom';
 import Container from '@mui/material/Container';
 import { makeStyles } from '@mui/styles';
-import FixedHeader from './FixedHeader';
+import AppBar from '@mui/material/AppBar';
+import Divider from '@mui/material/Divider';
 import Avatar from '../components/Avatar';
 import UserDetail from '../modules/Users/Components/UserProfileDetail';
 
@@ -25,7 +26,7 @@ export default function PageWrapper({
     <Grid
       container
       className={`${classes.containerStyles} ${classes.topStyle}`}
-      style={matches ? { paddingTop: '15%' } : { paddingTop: '12%' }}
+      style={matches ? { paddingTop: '15%' } : {}}
     >
       <Grid
         item
@@ -34,7 +35,11 @@ export default function PageWrapper({
         sx={{ display: { xs: 'none', sm: 'none', md: 'block', lg: 'block' } }}
       />
       <Grid item lg={10} md={10} xs={12} sm={12}>
-        <FixedHeader>
+        <AppBar
+          position="sticky"
+          style={{ background: '#FFFFFF', top: '50px', padding: '30px 0' }}
+          elevation={0}
+        >
           <Grid container>
             <Grid item md={12} xs={12} sm={12} lg={12}>
               {showBreadCrumb && (
@@ -82,7 +87,10 @@ export default function PageWrapper({
               <Grid item md={6} lg={6} xs={3} sm={4}>
                 <div style={{ display: 'flex', justifyContent: 'right' }}>
                   {rightPanelObj.map(data => (
-                    <div style={matches ? {paddingLeft: '4px'} : { paddingLeft: '15px' }} key={data.key}>
+                    <div
+                      style={matches ? { paddingLeft: '4px' } : { paddingLeft: '15px' }}
+                      key={data.key}
+                    >
                       {data.mainElement}
                     </div>
                   ))}
@@ -90,8 +98,15 @@ export default function PageWrapper({
               </Grid>
             )}
           </Grid>
-        </FixedHeader>
-        {oneCol ? <Container maxWidth="md">{children}</Container> : <div>{children}</div>}
+          <Divider className={classes.divider} />
+        </AppBar>
+        {oneCol ? (
+          <Container maxWidth="md" className={classes.children}>
+            {children}
+          </Container>
+        ) : (
+          <div className={classes.children}>{children}</div>
+        )}
       </Grid>
       <Grid
         item
@@ -113,6 +128,12 @@ const useStyles = makeStyles(theme => ({
   },
   linkColor: {
     color: theme.palette.primary.main
+  },
+  children: {
+    paddingTop: '5%'
+  },
+  divider: {
+    margin: '20px -1000px 0 -1000px'
   }
 }));
 

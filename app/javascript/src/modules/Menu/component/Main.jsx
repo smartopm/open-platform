@@ -148,7 +148,7 @@ export function MainNav({ authState }) {
           </Grid>
         </Grid>
       </CustomDrawer>
-      <AppBar position="fixed" className={classes.appBar}>
+      <AppBar position="fixed" className={classes.appBar} elevation={0}>
         <Toolbar>
           <IconButton
             color="primary"

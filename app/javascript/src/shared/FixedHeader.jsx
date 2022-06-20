@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import makeStyles from '@mui/styles/makeStyles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Grid from '@mui/material/Grid';
-import Divider from '@mui/material/Divider';
 
 export default function FixedHeader({ children }) {
   const classes = useStyles();
@@ -17,7 +16,7 @@ export default function FixedHeader({ children }) {
           style={matches ? { paddingRight: '10%' } : { paddingRight: '24%' }}
         >
           {children}
-          <Divider className={classes.divider} />
+          
         </Grid>
       </Grid>
     </div>
@@ -43,9 +42,6 @@ const useStyles = makeStyles(() => ({
     // '@media (min-width: 1536px) and (max-width: 5000px)': {
     //   paddingRight: '35%'
     // }
-  },
-  divider: {
-    margin: '20px -1000px 0 -1000px'
   }
   // fullWidthContainer: {
   //   position: 'fixed',

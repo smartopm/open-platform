@@ -32,7 +32,6 @@ import MessageAlert from '../../../components/MessageAlert';
 import { TaskBulkUpdateMutation } from '../graphql/task_mutation';
 import { TaskBulkUpdateAction, TaskQuickAction } from './TaskActionMenu';
 import TodoItem from './TodoItem';
-import FloatingButton from '../../../shared/buttons/FloatingButton';
 import SplitScreen from '../../../shared/SplitScreen';
 import {
   tasksQueryBuilderInitialValue,
@@ -524,19 +523,6 @@ export default function TodoList({
           </DialogContent>
         </Dialog>
         <Grid container spacing={1}>
-          {/* <Grid item md={7} xs={12} style={{ display: 'flex', alignItems: 'center' }}>
-            <Grid container spacing={2}>
-              <Grid item style={{ flexGrow: 0 }}>
-                <TaskQuickAction
-                  checkedOptions={checkedOptions}
-                  handleCheckOptions={handleCheckOptions}
-                />
-              </Grid>
-              <Grid item style={{ flexGrow: 1 }}>
-                <TaskQuickSearch filterTasks={handleTaskFilter} currentTile={currentTile} />
-              </Grid>
-            </Grid>
-          </Grid> */}
           {searchOpen && (
             <>
               <Grid
