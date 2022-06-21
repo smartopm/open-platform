@@ -172,7 +172,7 @@ describe('Custom Forms', () => {
     // Click on view entries button
     cy.get('.form-menu-open-btn').click();
     cy.wait(500);
-    cy.get('#view_entries_button').click();
+    cy.get('[data-testid=community_form]').click({force: true});
     cy.wait(1000);
     cy.get('[data-testid=DownloadIcon]').should('exist')
 
