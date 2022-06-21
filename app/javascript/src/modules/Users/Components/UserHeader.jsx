@@ -108,7 +108,7 @@ export function UserSearch({ handleSearchClick, filterObject }) {
 export function UserProcessCSV({ csvObject }) {
   const classes = useStyles();
   const { t } = useTranslation(['users', 'common']);
-  const smMatches = useMediaQuery('(max-width:960px)');
+  const smMatches = useMediaQuery('(max-width:900px)');
   return (
     <Button
       variant="contained"

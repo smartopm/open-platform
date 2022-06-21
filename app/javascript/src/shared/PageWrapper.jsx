@@ -59,7 +59,7 @@ export default function PageWrapper({
                 </Breadcrumbs>
               )}
             </Grid>
-            <Grid item md={4} lg={4} sm={6} xs={9}>
+            <Grid item md={3} lg={4} sm={4} xs={9}>
               {pageTitle && (
                 <Typography variant="h4" color="textSecondary" data-testid='page_title'>
                   {pageTitle}
@@ -79,7 +79,7 @@ export default function PageWrapper({
               )}
             </Grid>
             {rightPanelObj && (
-              <Grid item md={8} lg={8} xs={3} sm={6} data-testid='right_panel'>
+              <Grid item md={9} lg={8} xs={3} sm={8} data-testid='right_panel'>
                 <div style={{ display: 'flex', justifyContent: 'right' }}>
                   {rightPanelObj.map(data => (
                     <div

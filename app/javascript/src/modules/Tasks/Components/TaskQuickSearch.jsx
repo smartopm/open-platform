@@ -50,7 +50,7 @@ export default function TaskQuickSearch({ filterTasks, currentTile }){
   return (
     <div data-testid='task-quick-search'>
       <IconButton ref={anchorRef} onClick={handleToggle} color='primary'><MoreVertIcon /></IconButton>
-      <Popper open={open} anchorEl={anchorRef.current} transition style={{zIndex: 100}}>
+      <Popper open={open} anchorEl={anchorRef.current} transition style={{zIndex: 10000}}>
         {({ TransitionProps, placement }) => (
           <Grow
             {...TransitionProps}

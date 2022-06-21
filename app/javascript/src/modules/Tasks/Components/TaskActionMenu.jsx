@@ -141,7 +141,7 @@ export function TaskQuickAction({ checkedOptions, handleCheckOptions }) {
           {checkedOptions === 'none' ? t('misc.select') : objectAccessor(options, selectedKey)}
         </Button>
       )}
-      <Popper open={open} anchorEl={anchorRef.current} transition style={{ zIndex: 100 }}>
+      <Popper open={open} anchorEl={anchorRef.current} transition style={{ zIndex: 10000 }}>
         {({ TransitionProps, placement }) => (
           <Grow
             {...TransitionProps}
