@@ -11,6 +11,7 @@ import { styled } from '@mui/material/styles';
  * @param {String} label label  used to identify the field name
  * @param {String} value current state of the switch
  * @param {Function} handleChange this helps control the current state of the switch
+ * @param {String} toolTip if present, renders tooltip with switch
  * @description basic switch component
  * @returns {Node}
  */
