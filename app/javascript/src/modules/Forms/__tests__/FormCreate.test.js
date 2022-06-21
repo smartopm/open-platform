@@ -66,13 +66,14 @@ describe('FormCreate Component', () => {
 
       expect(wrapper.queryByLabelText('misc.limit_1_response')).toBeInTheDocument();
       expect(wrapper.queryByLabelText('misc.previewable')).toBeInTheDocument();
-      expect(wrapper.queryByLabelText('misc.public')).toBeInTheDocument();
+      expect(wrapper.queryByLabelText('misc.public_with_qrcode')).toBeInTheDocument();
+      expect(wrapper.queryByTestId('HelpCenterRoundedIcon')).toBeInTheDocument();
 
-      fireEvent.change(wrapper.queryByLabelText('misc.public'), { target: { checked: true } })
-      expect(wrapper.queryByLabelText('misc.public').checked).toBe(true);
+      fireEvent.change(wrapper.queryByLabelText('misc.public_with_qrcode'), { target: { checked: true } })
+      expect(wrapper.queryByLabelText('misc.public_with_qrcode').checked).toBe(true);
 
-      fireEvent.change(wrapper.queryByLabelText('misc.public'), { target: { checked: false } })
-      expect(wrapper.queryByLabelText('misc.public').checked).toBe(false);
+      fireEvent.change(wrapper.queryByLabelText('misc.public_with_qrcode'), { target: { checked: false } })
+      expect(wrapper.queryByLabelText('misc.public_with_qrcode').checked).toBe(false);
 
       fireEvent.change(wrapper.queryByLabelText('misc.previewable'), { target: { checked: true } })
       expect(wrapper.queryByLabelText('misc.previewable').checked).toBe(true);

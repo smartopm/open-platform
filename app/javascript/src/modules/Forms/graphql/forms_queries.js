@@ -26,6 +26,7 @@ export const FormsQuery = gql`
       expiresAt
       createdAt
       roles
+      isPublic
     }
   }
 `

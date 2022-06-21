@@ -215,11 +215,12 @@ export default function FormCreate({
             <Grid item md={6} xs={12}>
               <SwitchInput
                 name="previewable"
-                label={t('misc.public')}
+                label={t('misc.public_with_qrcode')}
                 value={isPublic}
                 handleChange={event => setIsPublic(event.target.checked)}
                 className="form-public-switch-btn"
                 labelPlacement="start"
+                toolTip={t('misc.public_with_qrcode_tip')}
               />
             </Grid>
           </Grid>
