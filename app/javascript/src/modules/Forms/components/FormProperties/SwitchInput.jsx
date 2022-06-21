@@ -1,6 +1,9 @@
 import { FormControlLabel, Switch } from '@mui/material';
 import React from 'react';
 import PropTypes from 'prop-types';
+import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
+import HelpCenterRoundedIcon from '@mui/icons-material/HelpCenterRounded';
+import { styled } from '@mui/material/styles';
 
 /**
  *
@@ -18,31 +21,40 @@ export default function SwitchInput({
   required,
   handleChange,
   labelPlacement,
-  className
+  className,
+  toolTip
 }) {
   return (
-    <FormControlLabel
-      labelPlacement={labelPlacement}
-      control={(
-        <Switch
-          checked={value}
-          onChange={handleChange}
-          name={name}
-          color="primary"
-          required={required}
-          className={className}
-          size="small"
-        />
+    <>
+      <FormControlLabel
+        labelPlacement={labelPlacement}
+        control={(
+          <Switch
+            checked={value}
+            onChange={handleChange}
+            name={name}
+            color="primary"
+            required={required}
+            className={className}
+            size="small"
+          />
+        )}
+        label={label}
+      />
+      {toolTip && toolTip.length > 0 && (
+        <CustomWidthTooltip title={toolTip}>
+          <HelpCenterRoundedIcon />
+        </CustomWidthTooltip>
       )}
-      label={label}
-    />
+    </>
   );
 }
 
 SwitchInput.defaultProps = {
   labelPlacement: 'start',
   required: false,
-  className: ''
+  className: '',
+  toolTip: null
 };
 
 SwitchInput.propTypes = {
@@ -55,5 +67,19 @@ SwitchInput.propTypes = {
   value: PropTypes.bool.isRequired,
   required: PropTypes.bool,
   handleChange: PropTypes.func.isRequired,
-  className: PropTypes.string
+  className: PropTypes.string,
+  toolTip: PropTypes.string
 };
+
+const CustomWidthTooltip = styled(({ className, ...props }) => (
+  <Tooltip
+    {...props}
+    classes={{ popper: className }}
+    placement="right"
+    sx={{ display: 'inline-block', ml: '15px', pt: '5px' }}
+  />
+))({
+  [`& .${tooltipClasses.tooltip}`]: {
+    maxWidth: 200
+  }
+});

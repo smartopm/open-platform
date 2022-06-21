@@ -41,6 +41,7 @@
     "select_roles": "Select roles",
     "public": "Make Public",
     "public_with_qrcode": "Make Public / QR Code",
+    "public_with_qrcode_tip": "When enabled, this makes the form public. It also makes the QR code menu option available for view and download.",
     "form_builder": "Builder",
     "form_settings": "Settings",
     "update_history": "History",

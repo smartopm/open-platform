@@ -220,6 +220,7 @@ export default function FormCreate({
                 handleChange={event => setIsPublic(event.target.checked)}
                 className="form-public-switch-btn"
                 labelPlacement="start"
+                toolTip={t('misc.public_with_qrcode_tip')}
               />
             </Grid>
           </Grid>
