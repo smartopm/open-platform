@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-no-undef */
 import React from 'react'
 import ReactTestUtils from 'react-dom/test-utils';
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen, waitFor, fireEvent } from '@testing-library/react'
 import { MockedProvider } from '@apollo/react-testing'
 import { BrowserRouter } from 'react-router-dom/'
 import MockedThemeProvider from '../../modules/__mocks__/mock_theme'
@@ -46,19 +46,19 @@ describe('Point Of Interest Modal Component', () => {
       expect(screen.getAllByText('form_fields.add_photo')[0]).toBeInTheDocument()
 
       const poiName = screen.getByTestId('poi-name')
-      ReactTestUtils.Simulate.change(poiName, { target: { value: 'Hotel' } })
+      fireEvent.change(poiName, { target: { value: 'Hotel' } })
       expect(poiName.value).toBe('Hotel')
 
       const poiDescription = screen.getByTestId('poi-description')
-      ReactTestUtils.Simulate.change(poiDescription, { target: { value: 'Hotel description' } })
+      fireEvent.change(poiDescription, { target: { value: 'Hotel description' } })
       expect(poiDescription.value).toBe('Hotel description')
   
       const GeoLongitudeX = screen.queryByTestId('long_x')
-      ReactTestUtils.Simulate.change(GeoLongitudeX, { target: { value: '28.535' } })
+      fireEvent.change(GeoLongitudeX, { target: { value: '28.535' } })
       expect(GeoLongitudeX.value).toBe('28.535')
   
       const GeoLatitudeY = screen.queryByTestId('lat_y')
-      ReactTestUtils.Simulate.change(GeoLatitudeY, { target: { value: '-15.255' } })
+      fireEvent.change(GeoLatitudeY, { target: { value: '-15.255' } })
       expect(GeoLatitudeY.value).toBe('-15.255')
     }, 10)
 
@@ -121,7 +121,6 @@ describe('Point Of Interest Modal Component', () => {
       expect(screen.getAllByText('form_actions.add_type')[0]).toBeInTheDocument()
       expect(screen.queryByTestId('add_type')).toBeInTheDocument()
       expect(screen.queryByTestId('upload-image-url')).toBeInTheDocument()
-      expect(screen.getAllByText('form_fields.upload_image_url')[0]).toBeInTheDocument()
       expect(screen.queryByTestId('upload_button')).toBeInTheDocument()
       expect(screen.getAllByText('form_fields.add_photo')[0]).toBeInTheDocument()
       expect(screen.queryByTestId('upload_preview')).toBeInTheDocument()

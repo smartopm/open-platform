@@ -296,7 +296,7 @@ export default function LandParcelMap({ handlePlotClick, geoData, refetch }) {
           ...selectedPoi,
           imageUrls: parcelData?.landParcel?.imageUrls,
         }}
-        title="Edit Point of Interest"
+        title={t('dialog_headers.update_point_of_interest')}
         open={editMode}
         editMode={editMode}
         isSubmitting={isUpdating}

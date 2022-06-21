@@ -10,6 +10,7 @@
   "dialog_headers":{
     "details": "Details",
     "new_point_of_interest": "New Point of Interest",
+    "update_point_of_interest": "Edit Point of Interest",
     "new_property": "New Property",
     "new_house": "New House",
     "ownership": "Ownership",
