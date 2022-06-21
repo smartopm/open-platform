@@ -189,6 +189,13 @@ export const TasksFragment = {
         imageUrl
         avatarUrl
       }
+      message {
+        id
+        sender {
+            id
+            name
+        }
+      }
     }
   `
 }

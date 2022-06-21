@@ -165,7 +165,10 @@
     "add_description": "Add a description",
     "sent": "Sent {{count}}",
     "received": "Received {{count}}",
-    "resolved": "Resolved {{count}}"
+    "resolved": "Resolved {{count}}",
+    "submitted_by": "Submitted By",
+    "sent_by": "Sent By",
+    "reply_to_message": "Reply"
   },
   "project": {
     "add_new_project": "Add New Project",

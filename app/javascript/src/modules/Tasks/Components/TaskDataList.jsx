@@ -145,24 +145,41 @@ export default function TaskDataList({
                   </Typography>
                 </Tooltip>
               ) : (
-                <Typography
-                  variant="body2"
-                  data-testid="task_body"
-                  component="p"
-                  className={matches ? classes.taskBodyMobile : classes.taskBody}
-                >
-                  <span
-                    data-testid="task-title"
-                    // eslint-disable-next-line react/no-danger
-                    dangerouslySetInnerHTML={{
-                      __html: sanitizeText(removeNewLines(task.body))
-                    }}
-                  />
-                </Typography>
+                <>
+                  {task.message ? (
+                    <Link to={`/message/${task.message?.sender?.id}`}>
+                      <Typography variant="body2">{task.body}</Typography>
+                    </Link>
+                  ) : (
+                    <Typography
+                      variant="body2"
+                      data-testid="task_body"
+                      component="p"
+                      className={matches ? classes.taskBodyMobile : classes.taskBody}
+                    >
+                      <span
+                        data-testid="task-title"
+                      // eslint-disable-next-line react/no-danger
+                        dangerouslySetInnerHTML={{
+                        __html: sanitizeText(removeNewLines(task.body))
+                      }}
+                      />
+                    </Typography>
+                  )}
+                </>
+              )}
+              {task?.message && task?.message?.sender && !mdDownHidden && (
+                <>
+                  <Typography variant="caption">{t('misc.sent_by')}</Typography>
+                  <span>&nbsp;</span>
+                  <Link to={`/user/${task.message?.sender?.id}`}>
+                    <Typography variant="caption">{task.message?.sender?.name}</Typography>
+                  </Link>
+                </>
               )}
               {task.submittedBy && !mdDownHidden && (
                 <>
-                  <Typography variant="caption">Submitted by</Typography>
+                  <Typography variant="caption">{t('misc.submitted_by')}</Typography>
                   {' '}
                   <Link to={`/user/${task.submittedBy?.id}`}>
                     <Typography variant="caption">{task.submittedBy?.name}</Typography>
@@ -188,9 +205,18 @@ export default function TaskDataList({
             {!clientView && !mdDownHidden && (
               <Divider orientation="vertical" flexItem sx={{ margin: '-20px 10px' }} />
             )}
+            {task?.message && task?.message?.sender && !mdUpHidden && (
+              <Grid item xs={12} className={classes.submitedBy}>
+                <Typography variant="caption">{t('misc.sent_by')}</Typography>
+                <span>&nbsp;</span>
+                <Link to={`/user/${task.message?.sender?.id}`}>
+                  <Typography variant="caption">{task.message?.sender?.name}</Typography>
+                </Link>
+              </Grid>
+              )}
             {task.submittedBy && !mdUpHidden && (
               <Grid item sm={12} md={12} lg={12} xs={12} className={classes.submitedBy}>
-                <Typography variant="caption">Submitted by</Typography>
+                <Typography variant="caption">{t('misc.submitted_by')}</Typography>
                 {' '}
                 <Link to={`/user/${task.submittedBy.id}`}>
                   <Typography variant="caption">{task.submittedBy?.name}</Typography>
