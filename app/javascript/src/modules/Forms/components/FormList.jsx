@@ -19,8 +19,8 @@ import PropTypes from 'prop-types';
 import { useHistory } from 'react-router';
 import FormLinks, { useStyles } from './FormLinks';
 import { FormsQuery } from '../graphql/forms_queries';
-import Loading from '../../../shared/Loading';
-import ErrorPage from '../../../components/Error';
+import { Spinner } from '../../../shared/Loading';
+import { formatError } from '../../../utils/helpers';
 import { FormCreateMutation } from '../graphql/forms_mutation';
 import FloatButton from '../../../components/FloatButton';
 import FormCreate from './FormCreate';
@@ -48,8 +48,8 @@ export default function FormLinkList({ userType, community, path, id, t }) {
     setFormId(Id);
   }
 
-  if (loading) return <Loading />;
-  if (error) return <ErrorPage title={error.message} />;
+  if (loading) return <Spinner />;
+  if (error) return <CenteredContent>{formatError(error.message)}</CenteredContent>;
 
   return (
     <PageWrapper pageTitle={t('common:misc.forms')}>
@@ -74,7 +74,7 @@ export default function FormLinkList({ userType, community, path, id, t }) {
                   <ListItem
                     key={form.id}
                     data-testid="community_form"
-                    onClick={() => history.push(`/form/${form.id}/private`)}
+                    onClick={() => history.push(`/form/${form.id}/${form.name}/entries`)}
                   >
                     <Grid container spacing={1} style={{ marginTop: '8px' }}>
                       <Grid item xs={1}>

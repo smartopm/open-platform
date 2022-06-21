@@ -77,7 +77,7 @@ describe('Form List Component', () => {
         expect(container.queryAllByTestId('community_form_icon')).toHaveLength(2);
 
         fireEvent.click(container.queryAllByTestId('community_form')[0]);
-        expect(mockHistory.push).toBeCalledWith('/form/caea7b44-ee95-42a6/private');
+        expect(mockHistory.push).toBeCalledWith('/form/caea7b44-ee95-42a6/Lease Form/entries');
 
         expect(container.queryAllByTestId('form_name')).toHaveLength(2);
         expect(container.queryAllByTestId('form_name')[0]).toHaveTextContent('Lease Form');
