@@ -1,6 +1,6 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
-import { useMutation, useApolloClient, useLazyQuery } from 'react-apollo';
+import { useMutation, useLazyQuery } from 'react-apollo';
 import { Button, Grid, Divider } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import { Map, FeatureGroup, GeoJSON, LayersControl, TileLayer } from 'react-leaflet'
@@ -12,17 +12,15 @@ import NkwashiSuburbBoundaryData from '../../data/nkwashi_suburb_boundary.json';
 import poiIcon from '../../../../assets/images/poi-icon.svg'
 import { LandParcel } from '../../graphql/queries';
 import {
-  PointOfInterestDelete,
-  PointOfInterestImageCreate
+  PointOfInterestDelete, PointOfInterestUpdate,
 } from '../../graphql/mutations/land_parcel';
-import useFileUpload from '../../graphql/useFileUpload';
 import { checkValidGeoJSON, formatError, objectAccessor } from '../../utils/helpers';
 import { emptyPolygonFeature, mapTiles, publicMapToken, plotStatusColorPallete } from '../../utils/constants';
 import { ActionDialog } from '../Dialog';
 import MessageAlert from '../MessageAlert';
 import PointOfInterestDrawerDialog from '../Map/PointOfInterestDrawerDialog';
 import SubUrbanLayer from '../Map/SubUrbanLayer';
-import { Spinner } from '../../shared/Loading';
+import PointOfInterestModal from './PointOfInterestModal'
 
 const { attribution, mapboxStreets, centerPoint } = mapTiles;
 const { mapbox: mapboxPublicToken } = publicMapToken
@@ -81,12 +79,13 @@ export default function LandParcelMap({ handlePlotClick, geoData, refetch }) {
   const classes = useStyles()
   const authState = useContext(AuthStateContext);
   const [deletePointOfInterest] = useMutation(PointOfInterestDelete);
-  const [uploadPoiImage] = useMutation(PointOfInterestImageCreate);
+  const [updatePointOfInterest] = useMutation(PointOfInterestUpdate);
   const [selectedPoi, setSelectedPoi] = useState(null);
   const [isSuccessAlert, setIsSuccessAlert] = useState(false);
   const [messageAlert, setMessageAlert] = useState('');
   const [confirmDeletePoi, setConfirmDeletePoi] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
+  const [editMode, setEditMode] = useState(false);
 
   const communityName = authState.user?.community?.name;
   const properties =
@@ -105,10 +104,6 @@ export default function LandParcelMap({ handlePlotClick, geoData, refetch }) {
     fetchPolicy: 'cache-and-network'
   });
 
-  const { onChange: handleFileUpload, status: uploadStatus, signedBlobId } = useFileUpload({
-    client: useApolloClient()
-  });
-
     // reset the default icon size
     L.Icon.Default.prototype.options.shadowSize = [0, 0];
 
@@ -121,28 +116,6 @@ export default function LandParcelMap({ handlePlotClick, geoData, refetch }) {
       return poiFeatureCollection.features.push(feature)
     });
   
-
-  useEffect(() => {
-    if (uploadStatus === 'DONE') {
-      uploadPoiImage({
-        variables: { id: selectedPoi.id, imageBlobId: signedBlobId }
-      })
-        .then(() => {
-          setMessageAlert(t('property:messages.image_uploaded'));
-          setIsSuccessAlert(true);
-          setIsUpdating(false);
-          handleCloseDrawer();
-          refetch();
-        })
-        .catch(err => {
-          setMessageAlert(formatError(err.message));
-          setIsSuccessAlert(false);
-          setIsUpdating(false);
-          handleCloseDrawer();
-        });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [uploadStatus, signedBlobId, uploadPoiImage, refetch]);
 
   /* istanbul ignore next */
   function handleOnPlotClick({ target }) {
@@ -240,12 +213,6 @@ export default function LandParcelMap({ handlePlotClick, geoData, refetch }) {
     setMessageAlert('');
   }
 
-  function handleFileInputChange(e){
-    e.stopPropagation();
-    setIsUpdating(true);
-    handleFileUpload(e.target.files[0]);
-  }
-
   /* istanbul ignore next */
   /* eslint-disable consistent-return */
   function onEachLandParcelFeature(feature, layer) {
@@ -298,6 +265,23 @@ export default function LandParcelMap({ handlePlotClick, geoData, refetch }) {
     return objectAccessor(centerPoint, communityName.toLowerCase());
   }
 
+
+  function handleSubmit(params) {
+    const variables = { ...params, id: selectedPoi.id }
+    setIsUpdating(true)
+    updatePointOfInterest({ variables }).then(() => {
+      setMessageAlert(t('property:messages.poi_updated'))
+      setIsSuccessAlert(true)
+      setEditMode(false);
+      setIsUpdating(false)
+      refetch();
+      setSelectedPoi(null)
+    }).catch((err) => {
+      setMessageAlert(formatError(err.message))
+      setIsSuccessAlert(false)
+    })
+  }
+
   return (
     <>
       <ActionDialog
@@ -306,6 +290,18 @@ export default function LandParcelMap({ handlePlotClick, geoData, refetch }) {
         message={t('property:messages.poi_delete_warning')}
         handleClose={handleCloseDrawer}
         handleOnSave={handleClickDelete}
+      />
+      <PointOfInterestModal
+        selectedPoi={{
+          ...selectedPoi,
+          imageUrls: parcelData?.landParcel?.imageUrls,
+        }}
+        title={t('dialog_headers.update_point_of_interest')}
+        open={editMode}
+        editMode={editMode}
+        isSubmitting={isUpdating}
+        handleSubmit={handleSubmit}
+        handleClose={() => setEditMode(false)}
       />
       {/* istanbul ignore next */}
       <PointOfInterestDrawerDialog
@@ -325,28 +321,17 @@ export default function LandParcelMap({ handlePlotClick, geoData, refetch }) {
               {t('common:menu.delete')}
             </Button>
           </Grid>
-          <Grid item md={5}>
-            <label htmlFor="image">
-              <input
-                type="file"
-                name="image"
-                id="image"
-                capture
-                onChange={handleFileInputChange}
-                style={{ display: 'none' }}
-              />
-              <Button
-                component="span"
-                variant="contained"
-                color="primary"
-                data-testid="add-poi-photo"
-                disableElevation
-                style={{ color: '#ffffff'}}
-                disabled={isUpdating}
-              >
-                {isUpdating ? <Spinner /> : t('property:buttons.add_photo')}
-              </Button>
-            </label>
+          <Grid item md={3}>
+            <Button
+              variant="contained"
+              color="primary"
+              data-testid="edit-poi"
+              disableElevation
+              style={{ color: '#ffffff'}}
+              onClick={() => setEditMode(true)}
+            >
+              Edit
+            </Button>
           </Grid>
         </Grid>
       </PointOfInterestDrawerDialog>

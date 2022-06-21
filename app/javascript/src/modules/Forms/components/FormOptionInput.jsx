@@ -140,6 +140,7 @@ export function FormOptionWithOwnActions({ actions, options }) {
         required
         style={{ width: 300 }}
         data-testid="option-text-field"
+        inputProps={{ 'data-testid': 'option-input-field' }}
       />
       <IconButton
         style={{ marginTop: 13 }}

@@ -10,6 +10,7 @@
   "dialog_headers":{
     "details": "Details",
     "new_point_of_interest": "New Point of Interest",
+    "update_point_of_interest": "Edit Point of Interest",
     "new_property": "New Property",
     "new_house": "New House",
     "ownership": "Ownership",
@@ -38,7 +39,9 @@
     "property_type": "Property Type",
     "state_province": "State Province",
     "youtube_video_url": "Video",
-    "add_youtube_url": "Add video url from YouTube."
+    "add_youtube_url": "Add video url from YouTube.",
+    "upload_image_url": "Upload Images to Point of Interest",
+    "add_photo": "Add Photo"
   },
   "map_markers": {
     "available": "Available",
@@ -56,6 +59,7 @@
     "no_owner_yet": "No owner yet",
     "parcel_number_exists": "Parcel Number Already exists. Do you want to merge these plots?",
     "poi_added": "'Point of Interest added successfully'",
+    "poi_updated": "'Point of Interest updated successfully'",
     "poi_delete_warning": "You are about to delete a Point of Interest!. Cancel if you are not sure.",
     "poi_removed": "Point of Interest removed successfully",
     "property_added": "Property added successfully",

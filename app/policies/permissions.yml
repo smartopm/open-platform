@@ -163,6 +163,7 @@ admin:
       - can_update_land_parcel
       - can_view_all_land_parcels
       - can_create_point_of_interest
+      - can_update_point_of_interest
       - can_create_point_of_interest_image
       - can_delete_point_of_interest
       - can_see_menu_item
