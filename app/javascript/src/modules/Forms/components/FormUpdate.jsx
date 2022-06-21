@@ -631,7 +631,7 @@ export default function FormUpdate({ formUserId, userId, authState, categoriesDa
                 </CategoryItem>
               </div>
             ))}
-          
+
           <br />
           <Grid
             container
@@ -639,6 +639,7 @@ export default function FormUpdate({ formUserId, userId, authState, categoriesDa
             direction="row"
             spacing={2}
             style={!matches ? { padding: ' 20px  120px 0 120px' } : {}}
+            id="form_update_actions"
           >
             {
               formUserData?.data?.formUser.form.hasTermsAndConditions && (
