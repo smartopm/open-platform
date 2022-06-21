@@ -54,10 +54,6 @@ export default function FormMenu({ formId, anchorEl, handleClose, open, refetch,
     history.push(`/edit_form/${formId}`);
   }
 
-  function handleQRCodeRender(event) {
-    event.stopPropagation();
-  }
-
   return (
     <>
       <ActionDialog
@@ -111,7 +107,7 @@ export default function FormMenu({ formId, anchorEl, handleClose, open, refetch,
               id="form_qrcode"
               className="form_qrcode"
               key="view_qrcode"
-              onClick={handleQRCodeRender}
+              onClick={(event) => { event.stopPropagation() }}
             >
               {t('common:menu.form_qrcode')}
             </MenuItem>
