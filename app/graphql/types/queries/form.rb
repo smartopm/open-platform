@@ -77,14 +77,13 @@ module Types::Queries::Form
   # rubocop:enable Metrics/BlockLength
 
   def forms(user_id: nil)
-    if !user_id.nil? 
-      user = find_user_by_id(user_id)
-    else
-     user = context[:current_user]
-    end
+    user = if !user_id.nil?
+             find_user_by_id(user_id)
+           else
+             context[:current_user]
+           end
     unless permitted?(module: :forms, permission: :can_access_forms)
-      raise GraphQL::ExecutionError,
-            I18n.t('errors.unauthorized')
+      raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
     end
 
     context[:site_community].forms.not_deprecated.by_published(user)
@@ -238,7 +237,7 @@ module Types::Queries::Form
 
   def find_user_by_id(user_id)
     user = Users::User.find_by(id: user_id)
-    return  user if user.present?
+    return user if user.present?
 
     raise GraphQL::ExecutionError, I18n.t('errors.user.not_found_with_id', user_id: user_id)
   end

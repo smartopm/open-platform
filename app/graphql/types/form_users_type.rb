@@ -21,7 +21,7 @@ module Types
     end
 
     def submitted_by
-      Users::User.find(object.submitted_by_id)  
+      Users::User.find(object.submitted_by_id)
     end
   end
 end
