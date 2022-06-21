@@ -56,7 +56,6 @@ export default function FormMenu({ formId, anchorEl, handleClose, open, refetch,
 
   function handleQRCodeRender(event) {
     event.stopPropagation();
-    console.log(event)
   }
 
   return (
