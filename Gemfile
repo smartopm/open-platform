@@ -93,6 +93,9 @@ gem 'httparty'
 # For CSV delimiters detection
 gem 'acsv'
 
+# For integrating flutterwave api
+gem 'flutterwave_sdk'
+
 group :development, :test do
   gem 'bullet'
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
@@ -126,6 +129,7 @@ group :test do
   gem 'simplecov'
   gem 'shoulda-matchers'
   gem 'shoulda-callback-matchers', '~> 1.1.1'
+  gem 'webmock'
 end
 
 

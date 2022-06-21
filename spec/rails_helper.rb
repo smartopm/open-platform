@@ -18,6 +18,7 @@ require File.expand_path('support/controller_spec_helper.rb', __dir__)
 require File.expand_path('support/model_spec_helper.rb', __dir__)
 
 require 'devise'
+require 'webmock/rspec'
 
 # Add additional requires below this line. Rails is not loaded until this point!
 

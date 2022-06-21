@@ -8,10 +8,12 @@ RSpec.describe CommunityPostTagsJob, type: :job do
   describe '#perform_later get community tags' do
     before do
       ActiveJob::Base.queue_adapter = :test
+      WebMock.allow_net_connect!
     end
     after do
       clear_enqueued_jobs
       clear_performed_jobs
+      WebMock.disable_net_connect!
     end
     it 'should enqueue a job check list of all community tags' do
       community = FactoryBot.create(:community)
