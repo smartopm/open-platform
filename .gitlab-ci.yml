@@ -2,7 +2,7 @@ stages:
   - build
   - test
   - report
-  - staging
+  # - staging
   - deploy
   - dast
 
@@ -96,7 +96,7 @@ cypress:
   image: docker:latest
   services:
     - docker:dind
-  stage: staging
+  stage: test
   before_script:
     - apk --update add nodejs~=12.22 --repository="http://dl-cdn.alpinelinux.org/alpine/v3.12/main/"
     - apk add yarn
@@ -111,10 +111,10 @@ cypress:
       - "tmp/cypress/"
     name: "Cypress $CI_PIPELINE_ID Visual Report"
     expire_in: 24 hours
-  only:
-    - master
-  except:
-    - schedules
+  # only:
+  #   - master
+  # except:
+  #   - schedules
 
 start_prod_push:
   extends: .base_db
