@@ -771,8 +771,6 @@ RSpec.describe Mutations::LandParcel do
         },
       ).as_json
 
-      puts "#{updated_poi_data}"
-
       expect(updated_poi_data.dig('data', 'landParcel', 'id')).to eq(poi_id_to_update)
       expect(updated_poi_data.dig('data', 'landParcel', 'imageUrls', 0)).to match(/apple2\.(png)/)
     end

@@ -270,7 +270,7 @@ export default function LandParcelMap({ handlePlotClick, geoData, refetch }) {
     const variables = { ...params, id: selectedPoi.id }
     setIsUpdating(true)
     updatePointOfInterest({ variables }).then(() => {
-      setMessageAlert(t('messages.poi_updated'))
+      setMessageAlert(t('property:messages.poi_updated'))
       setIsSuccessAlert(true)
       setEditMode(false);
       setIsUpdating(false)
