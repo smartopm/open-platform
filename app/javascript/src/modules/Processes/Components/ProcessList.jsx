@@ -153,7 +153,7 @@ export default function ProcessList() {
   if (loading) return <Spinner />;
 
   return (
-    <PageWrapper pageTitle={t('templates.template_list')} breadCrumbObj={breadCrumbObj} showBreadCrumb>
+    <PageWrapper pageTitle={t('templates.template_list')} breadCrumbObj={breadCrumbObj}>
       <div>
         <Grid container spacing={1}>
           <Grid item md={11} xs={10} className={classes.header} />

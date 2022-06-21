@@ -16,7 +16,6 @@ export default function PageWrapper({
   pageTitle,
   showAvatar,
   breadCrumbObj,
-  showBreadCrumb,
   avatarObj,
   rightPanelObj
 }) {
@@ -38,7 +37,7 @@ export default function PageWrapper({
         >
           <Grid container>
             <Grid item md={12} xs={12} sm={12} lg={12}>
-              {showBreadCrumb && (
+              {!!breadCrumbObj && (
                 <Breadcrumbs aria-label="breadcrumb" role="presentation" data-testid="page_breadcrumb">
                   {breadCrumbObj?.extraBreadCrumb && (
                     <Typography color="primary" variant="caption">
@@ -144,7 +143,6 @@ PageWrapper.defaultProps = {
   showAvatar: false,
   pageTitle: undefined,
   breadCrumbObj: undefined,
-  showBreadCrumb: false,
   avatarObj: undefined,
   rightPanelObj: undefined
 };
@@ -161,7 +159,6 @@ PageWrapper.propTypes = {
     linkHref: PropTypes.string,
     pageName: PropTypes.string
   }),
-  showBreadCrumb: PropTypes.bool,
   avatarObj: PropTypes.shape({
     data: PropTypes.shape({
       user: PropTypes.shape({

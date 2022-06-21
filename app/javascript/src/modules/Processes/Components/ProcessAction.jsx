@@ -161,7 +161,6 @@ export default function ProcessAction() {
     <PageWrapper
       pageTitle={action === 'edit' ? t('templates.edit_process') : t('templates.create_process')}
       breadCrumbObj={breadCrumbObj}
-      showBreadCrumb
     >
       <MessageAlert
         type={info.error ? 'error' : 'success'}

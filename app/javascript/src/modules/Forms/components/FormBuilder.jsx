@@ -109,7 +109,7 @@ export default function FormBuilder({ formId }) {
     return <ErrorPage title={error?.message || formLogs?.error?.message} />;
 
   return (
-    <PageWrapper oneCol pageTitle={t('misc.configure_form')} breadCrumbObj={breadCrumbObj} showBreadCrumb>
+    <PageWrapper oneCol pageTitle={t('misc.configure_form')} breadCrumbObj={breadCrumbObj}>
       {formDetailLoading && <Spinner />}
       <FormContextProvider>
         <Container>

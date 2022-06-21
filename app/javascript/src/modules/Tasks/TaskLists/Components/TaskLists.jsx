@@ -50,7 +50,7 @@ export default function TaskLists() {
   if (loading) return <Spinner />;
 
   return (
-    <PageWrapper pageTitle={t('task_lists.task_lists')} breadCrumbObj={breadCrumbObj} showBreadCrumb>
+    <PageWrapper pageTitle={t('task_lists.task_lists')} breadCrumbObj={breadCrumbObj}>
       {data?.taskLists?.length > 0 ? (
         <div>
           {data.taskLists.map(taskList => (

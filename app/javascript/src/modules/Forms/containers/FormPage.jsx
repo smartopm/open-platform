@@ -84,7 +84,7 @@ export default function FormPage() {
   }
 
   return (
-    <PageWrapper pageTitle={t('form:misc.submit_form')} breadCrumbObj={breadCrumbObj} showBreadCrumb>
+    <PageWrapper pageTitle={t('form:misc.submit_form')} breadCrumbObj={breadCrumbObj}>
       <br />
       {isFormFilled ? (
         <FormContextProvider>
@@ -99,16 +99,6 @@ export default function FormPage() {
         </FormContextProvider>
       ) : (
         <FormContextProvider>
-          {/* <div style={matches ? {marginTop: '-40px'} : {}}>
-            <AccessCheck module='forms' allowedPermissions={['can_access_forms']} show404ForUnauthorized={false}>
-              <FormHeader
-                linkText={t('common:misc.forms')}
-                linkHref="/forms"
-                pageName={t('form:misc.submit_form')}
-                PageTitle={t('form:misc.submit_form')}
-              />
-            </AccessCheck>
-          </div> */}
           <Container maxWidth="md">
             <Form
               editMode={false}

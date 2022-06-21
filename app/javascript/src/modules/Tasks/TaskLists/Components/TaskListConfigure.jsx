@@ -93,7 +93,7 @@ export default function TaskListConfigure() {
   if (errors) return <CenteredContent>{formatError(errors.message)}</CenteredContent>;
 
   return (
-    <PageWrapper pageTitle={t('task_lists.configure_task_list')} breadCrumbObj={breadCrumbObj} showBreadCrumb>
+    <PageWrapper pageTitle={t('task_lists.configure_task_list')} breadCrumbObj={breadCrumbObj}>
       <Grid container spacing={1}>
         <Grid item md={12} xs={12}>
           <Grid container spacing={2}>

@@ -50,7 +50,6 @@ export default function ProcessCommentsPage() {
       oneCol
       pageTitle={t('templates.process_comments', { processName })}
       breadCrumbObj={breadCrumbObj}
-      showBreadCrumb
     >
       {loading ? (
         <Spinner />

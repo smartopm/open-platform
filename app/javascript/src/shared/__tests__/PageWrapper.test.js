@@ -18,7 +18,6 @@ describe('PageWrapper component', () => {
         linkHref: '/samplehref',
         pageName: 'sample_page'
       },
-      showBreadCrumb: true,
       avatarObj: {
         data: {
           user: {

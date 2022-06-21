@@ -171,7 +171,6 @@ export default function UserInformation({
   return (
     <PageWrapper
       breadCrumbObj={breadCrumbObj}
-      showBreadCrumb
       avatarObj={{ data }}
       showAvatar
       rightPanelObj={rightPanelObj}
