@@ -7,7 +7,7 @@ import { BrowserRouter } from 'react-router-dom/'
 import MockedThemeProvider from '../../modules/__mocks__/mock_theme'
 import PointOfInterestModal from '../../components/LandParcels/PointOfInterestModal'
 
-describe('Point Of Interest Modal Component', () => {
+describe('Point Of Interest Component - Create Dialog', () => {
   it('should render as create dialog', async () => {
     const props = {
       open: true,
@@ -60,10 +60,12 @@ describe('Point Of Interest Modal Component', () => {
       const GeoLatitudeY = screen.queryByTestId('lat_y')
       fireEvent.change(GeoLatitudeY, { target: { value: '-15.255' } })
       expect(GeoLatitudeY.value).toBe('-15.255')
-    }, 10)
+    }, 100)
 
   })
+})
 
+describe('Point of Interest - Edit Dialog', () => {
   it('should render as edit dialog', async () => {
     const props = {
       open: true,
@@ -136,7 +138,7 @@ describe('Point Of Interest Modal Component', () => {
       const saveBtn = screen.queryByTestId('custom-dialog-button')
       ReactTestUtils.Simulate.click(saveBtn)
       expect(props.handleSubmit).toHaveBeenCalled();
-    }, 10)
+    }, 100)
 
   })
 })
