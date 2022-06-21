@@ -7,7 +7,7 @@ import MockedThemeProvider from '../../modules/__mocks__/mock_theme'
 import CreatePointOfInterest from '../../components/LandParcels/CreatePointOfInterest'
 
 describe('Create Point of Interest Component', () => {
-  it('should render add new point of interest form', async () => {
+  it('should render new poi button', async () => {
     const refetch = jest.fn()
     render(
       <MockedProvider>
@@ -24,7 +24,7 @@ describe('Create Point of Interest Component', () => {
       }, 10)
   })
 
-  it('should render dialog when button is clicked', async () => {
+  it('should render dialog when new poi button is clicked', async () => {
     const refetch = jest.fn()
     render(
       <MockedProvider>
