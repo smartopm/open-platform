@@ -635,6 +635,7 @@ module Types::Queries::Note
         :assignee_notes,
         :note_comments,
         :form_user,
+        :message,
         { user: %i[avatar_attachment] },
       )
       .where(flagged: true)
