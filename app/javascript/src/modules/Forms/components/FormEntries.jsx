@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Grid,Typography, Avatar, IconButton } from '@mui/material';
+import { Grid, Typography, Avatar, IconButton } from '@mui/material';
 import { useQuery } from 'react-apollo';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
@@ -11,7 +11,7 @@ import ErrorPage from '../../../components/Error';
 import SearchInput from '../../../shared/search/SearchInput';
 import ListHeader from '../../../shared/list/ListHeader';
 import DataList from '../../../shared/list/DataList';
-import CenteredContent from '../../../components/CenteredContent';
+import CenteredContent from '../../../shared/CenteredContent';
 import { dateToString } from '../../../components/DateContainer';
 import Text from '../../../shared/Text';
 import useDebounce from '../../../utils/useDebounce';
@@ -60,9 +60,8 @@ export default function FormEntries({ formId }) {
     window.open(`/user_form/${user.userId}/${user.id}?formId=${id}&download=true`);
   }
 
-  if (loading) return <Loading />
-  if (error) return <ErrorPage title={error.message} />
-
+  if (loading) return <Loading />;
+  if (error) return <ErrorPage title={error.message} />;
 
   return (
     <PageWrapper pageTitle={t('misc.form_entries')}>
@@ -81,20 +80,22 @@ export default function FormEntries({ formId }) {
         </div>
       </div>
       <ListHeader headers={entriesHeaders} />
-      {
-            data?.formEntries?.formUsers?.length > 0 ? data?.formEntries?.formUsers?.map(formUser => (
-              <DataList
-                key={formUser.id}
-                keys={entriesHeaders}
-                data={renderFormEntry(formUser, formId, handleDownload)}
-                hasHeader={false}
-                clickable
-                handleClick={() => {history.push(`/user_form/${formUser.userId}/${formUser.id}?formId=${formId}`)}}
-              />
-            )) : (
-              <CenteredContent>{t('misc.no_form_entries')}</CenteredContent>
-            )
-        }
+      {data?.formEntries?.formUsers?.length > 0 ? (
+        data?.formEntries?.formUsers?.map(formUser => (
+          <DataList
+            key={formUser.id}
+            keys={entriesHeaders}
+            data={renderFormEntry(formUser, formId, handleDownload)}
+            hasHeader={false}
+            clickable
+            handleClick={() => {
+              history.push(`/user_form/${formUser.userId}/${formUser.id}?formId=${formId}`);
+            }}
+          />
+        ))
+      ) : (
+        <CenteredContent>{t('misc.no_form_entries')}</CenteredContent>
+      )}
       <CenteredContent>
         <Paginate
           offSet={pageNumber}
@@ -126,18 +127,20 @@ export function renderFormEntry(formUser, formId, handleDownload) {
           <div style={{ display: 'flex' }}>
             <Avatar src={formUser.user.imageUrl} alt="avatar-image" />
             <Typography color="primary" style={{ margin: '7px', fontSize: '12px' }}>
-              {formUser.user.name}
+              {formUser?.submittedBy?.name !== undefined
+                ? formUser?.submittedBy?.name
+                : formUser?.user?.name}
             </Typography>
           </div>
         </Grid>
       ),
       Status: (
-        <Grid item xs={12} md={1} data-testid="status">
+        <Grid item xs={12} md={2} data-testid="status">
           <Text content={formUser.status} />
         </Grid>
       ),
       Menu: (
-        <Grid item xs={12} md={2} align='center' data-testid="download">
+        <Grid item xs={12} md={2} align="center" data-testid="download">
           <IconButton onClick={event => handleDownload(event, formUser, formId)}>
             <DownloadIcon />
           </IconButton>
@@ -149,4 +152,4 @@ export function renderFormEntry(formUser, formId, handleDownload) {
 
 FormEntries.propTypes = {
   formId: PropTypes.string.isRequired
-}
+};

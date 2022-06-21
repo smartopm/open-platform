@@ -15,6 +15,7 @@ import { formatError } from '../../../utils/helpers';
 
 export default function UserFilledForms({ userFormsFilled, userId, currentUser }) {
   const { data, error, loading } = useQuery(FormsQuery, {
+    variables: { userId: userId !== currentUser ? userId : null },
     fetchPolicy: 'cache-and-network'
   });
 
@@ -38,7 +39,10 @@ export default function UserFilledForms({ userFormsFilled, userId, currentUser }
     key: form.id,
     value: form.name,
     name: form.name,
-    handleMenuItemClick: () => history.push(`/form/${form.id}/private`),
+    handleMenuItemClick: () =>
+      userId !== currentUser
+        ? history.push(`/form/${form.id}/private?userId=${userId}`)
+        : history.push(`/form/${form.id}/private`),
     show: true
   }));
 

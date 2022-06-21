@@ -10,6 +10,9 @@ module Types::Queries::Form
     # Get form entries
     field :forms, [Types::FormType], null: true do
       description 'Get all forms'
+      # this optional argument, will be passed when an admin is loading a user profile
+      # to submit forms on users behalf
+      argument :user_id, GraphQL::Types::ID, required: false
     end
 
     # Get form, using the form id
@@ -20,7 +23,7 @@ module Types::Queries::Form
     # Get form properties
     field :form_properties, [Types::FormPropertiesType], null: true do
       description 'Get form properties by form id'
-      argument :form_id, GraphQL::Types::ID, required: true
+      argument :form_id, GraphQL::Types::ID, required: false
     end
     # Get form property
     field :form_property, Types::FormPropertiesType, null: true do
@@ -73,8 +76,12 @@ module Types::Queries::Form
   end
   # rubocop:enable Metrics/BlockLength
 
-  def forms
-    user = context[:current_user]
+  def forms(user_id: nil)
+    if !user_id.nil? 
+      user = find_user_by_id(user_id)
+    else
+     user = context[:current_user]
+    end
     unless permitted?(module: :forms, permission: :can_access_forms)
       raise GraphQL::ExecutionError,
             I18n.t('errors.unauthorized')
@@ -227,6 +234,13 @@ module Types::Queries::Form
     return if form.present?
 
     raise GraphQL::ExecutionError, I18n.t('errors.form.not_found')
+  end
+
+  def find_user_by_id(user_id)
+    user = Users::User.find_by(id: user_id)
+    return  user if user.present?
+
+    raise GraphQL::ExecutionError, I18n.t('errors.user.not_found_with_id', user_id: user_id)
   end
 
   def form_permissions_check?

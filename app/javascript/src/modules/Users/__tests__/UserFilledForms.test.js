@@ -9,7 +9,8 @@ import userMock from '../../../__mocks__/authstate';
 describe('UserFilledForms component', () => {
   const mocks = {
     request: {
-      query: FormsQuery
+      query: FormsQuery,
+      variables: { userId: '3954jefsdfs' }
     },
     result: {
       data: {

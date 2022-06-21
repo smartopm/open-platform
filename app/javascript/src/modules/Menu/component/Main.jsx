@@ -30,7 +30,7 @@ import { allUserTypes } from '../../../utils/constants';
 import BackArrow from './BackArrow';
 import { canAccessSOS } from '../utils';
 import CustomDrawer from '../../../shared/CustomDrawer';
-import DrawerContent from './DrawerContent'
+import DrawerContent from './DrawerContent';
 
 const drawerWidth = 260;
 
@@ -162,10 +162,10 @@ export function MainNav({ authState }) {
             )}
           </IconButton>
 
-          {
-            !location.loaded
-            ? <Skeleton variant="rectangular" width={35} height={35} />
-            : showSOS && (
+          {!location.loaded ? (
+            <Skeleton variant="rectangular" width={35} height={35} />
+          ) : (
+            showSOS && (
               <SvgIcon
                 component={SOSIcon}
                 viewBox="0 0 384 512"
@@ -173,14 +173,13 @@ export function MainNav({ authState }) {
                 data-testid="sos-icon"
               />
             )
-          }
+          )}
 
           <BackArrow path={path} />
           <SOSModal open={open} setOpen={setOpen} location={location} {...{ authState }} />
 
-          {
-            matchesSmall ? (
-              <CommunityName authState={authState} logoStyles={styles} />
+          {matchesSmall ? (
+            <CommunityName authState={authState} logoStyles={styles} />
           ) : (
             <CenteredContent>
               <CommunityName authState={authState} />

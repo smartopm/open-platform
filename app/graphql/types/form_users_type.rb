@@ -7,6 +7,7 @@ module Types
     field :form_id, ID, null: false
     field :user_id, ID, null: false
     field :user, Types::UserType, null: false
+    field :submitted_by, Types::UserType, null: true
     field :form, Types::FormType, null: true
     field :status, String, null: true
     field :has_agreed_to_terms, Boolean, null: true
@@ -17,6 +18,10 @@ module Types
 
     def comments_count
       object.comments.size
+    end
+
+    def submitted_by
+      Users::User.find(object.submitted_by_id)  
     end
   end
 end
