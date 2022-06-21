@@ -2,11 +2,10 @@ stages:
   - build
   - test
   - report
-  # - staging
   - deploy
   - dast
 
-image: "ruby:2.6"
+image: 'ruby:2.6'
 
 include:
   - template: Dependency-Scanning.gitlab-ci.yml
@@ -15,7 +14,7 @@ include:
 
 semgrep-sast:
   variables:
-    SAST_ANALYZER_IMAGE_TAG: "2.13.3"
+    SAST_ANALYZER_IMAGE_TAG: '2.13.3'
 
 .default-cache: &default-cache
   cache:
@@ -37,7 +36,7 @@ semgrep-sast:
   variables:
     POSTGRES_DB: dgdp_test
     POSTGRES_USER: postgres
-    POSTGRES_PASSWORD: "6f5e79b56aca56ecc1cdaa46f126370f"
+    POSTGRES_PASSWORD: '6f5e79b56aca56ecc1cdaa46f126370f'
     REDIS_URL: redis://redis:6379
   before_script:
     - apt-get update -qq && apt-get install -y -qq postgresql postgresql-contrib libpq-dev cmake nodejs
@@ -60,15 +59,14 @@ test:rspec:
     - bundle exec rake
   artifacts:
     paths:
-      - "coverage/"
-    name: "Rails $CI_PIPELINE_ID Coverage Report"
+      - 'coverage/'
+    name: 'Rails $CI_PIPELINE_ID Coverage Report'
     expire_in: 24 hours
   cache:
     policy: pull-push
   except:
     - tags
     - schedules
-
 
 test:jest:
   extends: .base_db
@@ -85,8 +83,8 @@ test:jest:
     - bundle exec rake jest_log:get_issue_count[$CI_JOB_ID,$GITLAB_TOKEN]
   artifacts:
     paths:
-      - "coverage/"
-    name: "Jest $CI_PIPELINE_ID Coverage Report"
+      - 'coverage/'
+    name: 'Jest $CI_PIPELINE_ID Coverage Report'
     expire_in: 24 hours
   except:
     - tags
@@ -108,8 +106,8 @@ cypress:
   artifacts:
     when: always
     paths:
-      - "tmp/cypress/"
-    name: "Cypress $CI_PIPELINE_ID Visual Report"
+      - 'tmp/cypress/'
+    name: 'Cypress $CI_PIPELINE_ID Visual Report'
     expire_in: 24 hours
   # only:
   #   - master
