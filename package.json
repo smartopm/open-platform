@@ -57,6 +57,7 @@
     "i18next-http-backend": "^1.2.6",
     "i18next-phrase-in-context-editor-post-processor": "^1.2.1",
     "isomorphic-unfetch": "^3.0.0",
+    "jest-canvas-mock": "^2.4.0",
     "jquery": "^3.4.1",
     "jsdom": "^19.0.0",
     "jspdf": "^2.5.1",
