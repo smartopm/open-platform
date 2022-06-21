@@ -45,10 +45,9 @@ describe('It should test the comments component', () => {
 
     await waitFor(() => {
       expect(container.queryAllByTestId('container')[0]).toBeInTheDocument();
+      fireEvent.click(container.queryAllByTestId('previous')[0])
+      fireEvent.click(container.queryAllByTestId('next')[0])
     }, { timeout: 100 }
     )
-
-    fireEvent.click(container.queryAllByTestId('previous')[0])
-    fireEvent.click(container.queryAllByTestId('next')[0])
   });
 });
