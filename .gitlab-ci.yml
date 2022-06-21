@@ -2,6 +2,7 @@ stages:
   - build
   - test
   - report
+  - staging
   - deploy
   - dast
 
