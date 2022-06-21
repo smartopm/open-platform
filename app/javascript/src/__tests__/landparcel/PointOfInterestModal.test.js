@@ -60,12 +60,10 @@ describe('Point Of Interest Component - Create Dialog', () => {
       const GeoLatitudeY = screen.queryByTestId('lat_y')
       fireEvent.change(GeoLatitudeY, { target: { value: '-15.255' } })
       expect(GeoLatitudeY.value).toBe('-15.255')
-    }, 100)
+    }, 10)
 
   })
-})
 
-describe('Point of Interest - Edit Dialog', () => {
   it('should render as edit dialog', async () => {
     const props = {
       open: true,
@@ -138,7 +136,7 @@ describe('Point of Interest - Edit Dialog', () => {
       const saveBtn = screen.queryByTestId('custom-dialog-button')
       ReactTestUtils.Simulate.click(saveBtn)
       expect(props.handleSubmit).toHaveBeenCalled();
-    }, 100)
+    }, 10)
 
   })
 })
