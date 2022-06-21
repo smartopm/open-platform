@@ -112,14 +112,6 @@ export function MainNav({ authState }) {
 
   const handleDrawerToggle = () => {
     setDrawerOpen(!drawerOpen);
-
-    // if (window.screen.width > 768) {
-    //   // A hack to dynamically change app-container's margin-left
-    //   // There's a react-way of doing it but it re-renders the whole <App /> component
-    //   document.getElementById('app-container').style.marginLeft = drawerOpen
-    //     ? 0
-    //     : `${drawerWidth}px`;
-    // }
   };
 
   const communityHasEmergencyNumber = Boolean(authState.user?.community?.emergencyCallNumber);

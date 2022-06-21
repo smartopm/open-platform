@@ -108,7 +108,7 @@ export function UserSearch({ handleSearchClick, filterObject }) {
 export function UserProcessCSV({ csvObject }) {
   const classes = useStyles();
   const { t } = useTranslation(['users', 'common']);
-  const smMatches = useMediaQuery('(max-width:1300px)');
+  const smMatches = useMediaQuery('(max-width:960px)');
   return (
     <Button
       variant="contained"
@@ -116,6 +116,7 @@ export function UserProcessCSV({ csvObject }) {
       data-testid="download_csv_btn"
       className={classes.csvButton}
       disableElevation
+      style={{margin: '0 5px 0 8px'}}
     >
       {!csvObject.called ? (
         // eslint-disable-next-line jsx-a11y/click-events-have-key-events

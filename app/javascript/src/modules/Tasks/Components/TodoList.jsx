@@ -463,7 +463,7 @@ export default function TodoList({
               onClick={openModal}
               variant="contained"
               color="primary"
-              style={{ color: '#FFFFFF' }}
+              style={{ color: '#FFFFFF', margin: '0 5px 0 8px' }}
               data-testid='create_task_btn'
               disableElevation
             >
