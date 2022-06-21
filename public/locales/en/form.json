@@ -40,6 +40,7 @@
     "file_uploaded_plural": "Files Uploaded",
     "select_roles": "Select roles",
     "public": "Make Public",
+    "public_with_qrcode": "Make Public / QR Code",
     "form_builder": "Builder",
     "form_settings": "Settings",
     "update_history": "History",

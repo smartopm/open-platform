@@ -9,7 +9,7 @@ import { ActionDialog } from '../../../components/Dialog';
 import MessageAlert from '../../../components/MessageAlert';
 import { objectAccessor } from '../../../utils/helpers';
 
-export default function FormMenu({ formId, anchorEl, handleClose, open, refetch, t }) {
+export default function FormMenu({ formId, anchorEl, handleClose, open, refetch, t, isPublic }) {
   const history = useHistory();
   const [isDialogOpen, setOpen] = useState(false);
   const [alertOpen, setAlertOpen] = useState(false);
@@ -54,6 +54,11 @@ export default function FormMenu({ formId, anchorEl, handleClose, open, refetch,
     history.push(`/edit_form/${formId}`);
   }
 
+  function handleQRCodeRender(event) {
+    event.stopPropagation();
+    console.log(event)
+  }
+
   return (
     <>
       <ActionDialog
@@ -78,11 +83,6 @@ export default function FormMenu({ formId, anchorEl, handleClose, open, refetch,
         open={open}
         onClose={handleClose}
         keepMounted={false}
-        PaperProps={{
-          style: {
-            width: 200
-          }
-        }}
       >
         <div>
           <MenuItem
@@ -107,6 +107,16 @@ export default function FormMenu({ formId, anchorEl, handleClose, open, refetch,
           >
             {t('common:menu.submit_form')}
           </MenuItem>
+          {isPublic && (
+            <MenuItem
+              id="form_qrcode"
+              className="form_qrcode"
+              key="view_qrcode"
+              onClick={handleQRCodeRender}
+            >
+              {t('common:menu.form_qrcode')}
+            </MenuItem>
+          )}
         </div>
       </Menu>
     </>
@@ -114,7 +124,8 @@ export default function FormMenu({ formId, anchorEl, handleClose, open, refetch,
 }
 
 FormMenu.defaultProps = {
-  anchorEl: {}
+  anchorEl: {},
+  isPublic: false,
 };
 FormMenu.propTypes = {
   formId: PropTypes.string.isRequired,
@@ -123,5 +134,6 @@ FormMenu.propTypes = {
   refetch: PropTypes.func.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   anchorEl: PropTypes.object,
-  t: PropTypes.func.isRequired
+  t: PropTypes.func.isRequired,
+  isPublic: PropTypes.bool
 };
