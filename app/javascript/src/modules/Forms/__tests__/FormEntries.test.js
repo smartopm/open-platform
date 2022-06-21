@@ -3,7 +3,6 @@ import { fireEvent, render, waitFor } from '@testing-library/react';
 import { MockedProvider } from '@apollo/react-testing';
 import { createTheme, ThemeProvider, StyledEngineProvider } from '@mui/material';
 import { BrowserRouter } from 'react-router-dom';
-
 import Loading from '../../../shared/Loading';
 import FormEntries from '../components/FormEntries';
 import { FormEntriesQuery } from '../graphql/forms_queries';
@@ -32,6 +31,10 @@ describe('Form Entries Component', () => {
                     formId: "7g556934545dd",
                     status: "pending",
                     createdAt: "2021-07-08T12:07:56+02:00",
+                    submittedBy: {
+                      id: "4e530435dse",
+                      name: "John Test"
+                    },
                     user: {
                         id: "410ec828efgs",
                         name: "John Test",
