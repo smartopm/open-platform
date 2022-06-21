@@ -32,6 +32,7 @@ import AccessCheck from '../../Permissions/Components/AccessCheck';
 // here we get existing google forms and we mix them with our own created forms
 export default function FormLinkList({ userType, community, path, id, t }) {
   const { data, error, loading, refetch } = useQuery(FormsQuery, {
+    variables: { userId: null },
     fetchPolicy: 'cache-and-network'
   });
   const [createForm] = useMutation(FormCreateMutation);
