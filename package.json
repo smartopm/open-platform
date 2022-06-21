@@ -41,7 +41,6 @@
     "babel-runtime": "^6.26.0",
     "bootstrap": "^4.3.1",
     "browser-image-compression": "^1.0.16",
-    "canvas": "2.9.0",
     "core-js": "^3.19.1",
     "csv-file-validator": "^1.13.1",
     "date-fns": "^2.11.1",
