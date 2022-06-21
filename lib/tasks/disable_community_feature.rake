@@ -11,8 +11,6 @@ task :disable_community_feature, %i[community_name feature] => :environment do |
 
   feature_name = args.feature
 
-  feature_name = feature_name.titleize unless feature_name == feature_name.titleize
-
   abort('Feature not found in community') unless community.features.include?(feature_name)
 
   features_copy = community.features # assumption: features is stored as array list

@@ -2,6 +2,8 @@
 import dompurify from 'dompurify';
 import { useLocation } from 'react-router';
 import { dateToString } from '../components/DateContainer';
+import { jsPDF as JsPDF } from 'jspdf';
+import html2canvas from 'html2canvas';
 // keep string methods [helpers]
 
 /**
@@ -651,13 +653,38 @@ export function replaceDocumentMentions(text, path) {
   return updatedText;
 }
 
-
+/**
+ * Captures a page screenshot and convert to pdf,
+ * handles multiple pages
+ * @param {NodeElement} domElement the DOM container to captured
+ * @param {String} docName what to name the pdf document
+ */
+export function savePdf(domElement, docName = 'download') {
+  html2canvas(domElement).then(canvas => {
+    const img = canvas.toDataURL('image/jpeg');
+    const pdf = new JsPDF('pt', 'mm', 'a4');
+    const imgWidth = 190;
+    const pageHeight = 280;
+    const imgHeight = (canvas.height * imgWidth) / canvas.width;
+    let heightLeft = imgHeight;
+    let position = 0;
+    pdf.addImage(img, 'JPEG', 10, 15, imgWidth, imgHeight + 25);
+    heightLeft -= pageHeight;
+    while (heightLeft >= 0) {
+      position = heightLeft - imgHeight;
+      pdf.addPage();
+      pdf.addImage(img, 'JPEG', 10, position + 10, imgWidth, imgHeight + 25);
+      heightLeft -= pageHeight;
+    }
+    pdf.save(`${docName}.pdf`);
+  }).catch((error) => { return error });
+}
 
 /**
  * Check if required fields are satisfied and return an error with a helper text
- * @param {String} fieldName 
- * @param {{isError: Boolean}} inputValidationMsg 
- * @param {[String]} requiredFields 
+ * @param {String} fieldName
+ * @param {{isError: Boolean}} inputValidationMsg
+ * @param {[String]} requiredFields
  * @returns {{ error: Boolean, helperText: String }}
  */
 export function validateRequiredField(fieldName, inputValidationMsg={}, requiredFields=[], inputData={}, t) {

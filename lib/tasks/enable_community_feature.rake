@@ -11,15 +11,13 @@ task :enable_community_feature, %i[community_name feature] => :environment do |_
 
   feature_name = args.feature
 
-  feature_name = feature_name.titleize unless feature_name == feature_name.titleize
-
   abort('Feature already exists in community') if community.features.include?(feature_name)
 
   features_copy = community.features # assumption: features is stored as array list
   ActiveRecord::Base.transaction do
     puts "Total features before update:  #{features_copy.size}"
 
-    features_copy << feature_name
+    features_copy[feature_name] = { features: [] }
     community.update!(features: features_copy)
   end
 

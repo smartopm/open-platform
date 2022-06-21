@@ -290,7 +290,27 @@ describe('#replaceDocumentMentions', () => {
   });
 });
 
+// describe('#savePdf', () => {
+
+//   const dom = document.createElement('div');
+//   dom.innerHTML = "<h1>Welcome to DoubleGDP</h1><p>This is your converted document.<p>";
+//   document.body.append(dom)
+
+//   window.getComputedStyle = () => jest.fn();
+//   window.scrollTo = jest.fn();
+
+//   it('convert the passed domElement to pdf', () => {
+    /*
+    * TODO this is expected to fail because mocking some needed global window method
+    * e.g. window.scrollTo, by html2canvas is not being effective
+    * we are yet to find a solution to mock window.scrollTo for html2canvas.
+    */
+//     const response = savePdf(dom);
+//     expect(savePdf(dom)).toBeUndefined();
+//   });
+// });
 // any tests can fall into this category
+
 describe('Anonymous', () => {
   it('should return error and validation helper', () => {
     const validation = validateRequiredField('name', { isError: false}, ['name'], { name: "some value"}, jest.fn(() => 'no error'));

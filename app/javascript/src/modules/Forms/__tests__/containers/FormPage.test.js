@@ -53,8 +53,9 @@ describe('FormPage Component', () => {
       </Context.Provider>
     );
     expect(container.queryAllByTestId('loader')[0]).toBeInTheDocument();
-    
+
     await waitFor(() => {
+      expect(container.queryByTestId('save_as_draft')).toBeInTheDocument();
       expect(container.queryByTestId('submit_form_btn')).toBeInTheDocument();
     }, 10);
   });

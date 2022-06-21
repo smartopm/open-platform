@@ -78,11 +78,6 @@ export default function FormMenu({ formId, anchorEl, handleClose, open, refetch,
         open={open}
         onClose={handleClose}
         keepMounted={false}
-        PaperProps={{
-          style: {
-            width: 200
-          }
-        }}
       >
         <div>
           <MenuItem
@@ -93,10 +88,18 @@ export default function FormMenu({ formId, anchorEl, handleClose, open, refetch,
           >
             {t('common:menu.edit')}
           </MenuItem>
-          <MenuItem id="publish_button" key="publish_form" onClick={() => handleConfirm('publish')}>
+          <MenuItem
+            id="publish_button"
+            key="publish_form"
+            onClick={() => handleConfirm('publish')}
+          >
             {t('common:menu.publish')}
           </MenuItem>
-          <MenuItem id="delete_button" key="delete_form" onClick={() => handleConfirm('delete')}>
+          <MenuItem
+            id="delete_button"
+            key="delete_form"
+            onClick={() => handleConfirm('delete')}
+          >
             {t('common:menu.delete')}
           </MenuItem>
           <MenuItem

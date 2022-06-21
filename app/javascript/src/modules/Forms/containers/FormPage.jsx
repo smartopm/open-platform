@@ -15,7 +15,7 @@ import { AUTH_TOKEN_KEY } from '../../../utils/apollo';
 import CenteredContent from '../../../shared/CenteredContent';
 import AccessCheck from '../../Permissions/Components/AccessCheck';
 import { FormCategoriesQuery } from '../graphql/form_category_queries';
-import { useParamsQuery } from '../../../utils/helpers';
+import { savePdf, useParamsQuery } from '../../../utils/helpers';
 
 export default function FormPage() {
   const { userId, formUserId, formId } = useParams();
@@ -25,6 +25,7 @@ export default function FormPage() {
   const { t } = useTranslation(['common', 'form']);
   const path = useParamsQuery('');
   const id = path.get('formId');
+  const download = path.get('download')
   const { data: formDetailData, loading } = useQuery(FormQuery, { variables: { id: formId } });
   const [loginPublicUser] = useMutation(PublicUserMutation)
   const categoriesData = useQuery(FormCategoriesQuery, {
@@ -32,7 +33,7 @@ export default function FormPage() {
     fetchPolicy: 'no-cache'
   });
   const isFormFilled = pathname.includes('user_form');
-  const [isError, setIsError] = useState()
+  const [isError, setIsError] = useState();
 
   useEffect(() => {
     // check route and auto log the user
@@ -55,12 +56,28 @@ export default function FormPage() {
     }
   }, [authState?.user?.userType, formDetailData?.form.isPublic]);
 
-  if(isError) {
+  useEffect(() => {
+    let timer;
+    if (download === 'true' && !categoriesData.loading) {
+      const viewPort = document.querySelector('[name=viewport]');
+      if (viewPort) {
+        viewPort.setAttribute('content', 'width=1024');
+      }
+      timer = window.setTimeout(() => {
+        document.querySelector('#form_update_actions').style.visibility = 'hidden';
+        savePdf(document.querySelector('#form_update_container'), 'form');
+        window.setTimeout(() => { window.close() }, 500);
+      }, 1000);
+    }
+    return () => window.clearTimeout(timer);
+  }, [download, categoriesData?.loading]);
+
+  if (isError) {
    return (
      <CenteredContent>
        <Typography>{t('errors.something_went_wrong_forms')}</Typography>
      </CenteredContent>
-     ) 
+     )
   }
 
   return (
@@ -68,7 +85,7 @@ export default function FormPage() {
       <br />
       {isFormFilled ? (
         <FormContextProvider>
-          <Container maxWidth="md">
+          <Container maxWidth="md" id="form_update_container">
             <FormUpdate
               userId={userId}
               formUserId={formUserId}
