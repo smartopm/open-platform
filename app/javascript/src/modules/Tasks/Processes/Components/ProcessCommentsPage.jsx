@@ -6,7 +6,7 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { ProcessReplyComments } from '../graphql/process_queries';
 import { Spinner } from '../../../../shared/Loading';
 import CenteredContent from '../../../../shared/CenteredContent';
-import { formatError, objectAccessor } from '../../../../utils/helpers';
+import { formatError, objectAccessor, useParamsQuery } from '../../../../utils/helpers';
 import { StyledTabs, StyledTab, TabPanel, a11yProps } from '../../../../components/Tabs';
 import PageWrapper from '../../../../shared/PageWrapper';
 import ProcessCommentItem from './ProcessCommentItem';
@@ -15,10 +15,10 @@ export default function ProcessCommentsPage() {
   const { id: processId } = useParams();
   const matches = useMediaQuery('(max-width:600px)');
   const history = useHistory();
-  // const path = useParamsQuery();
+  const path = useParamsQuery();
   const { t } = useTranslation(['process', 'task']);
   const [tabValue, setTabValue] = useState(0);
-  // const processName = path.get('process_name');
+  const processName = path.get('process_name');
 
   const { data, loading, error } = useQuery(ProcessReplyComments, {
     variables: { processId },
@@ -38,16 +38,20 @@ export default function ProcessCommentsPage() {
     setTabValue(Number(newValue));
   }
 
+  const breadCrumbObj = {
+    linkText: t('breadcrumbs.processes'),
+    linkHref: '/processes',
+    pageName: t('breadcrumbs.comments')
+  };
+
   if (loading) return <Spinner />;
   return (
-    <PageWrapper oneCol pageTitle={t('breadcrumbs.comments')}>
-      {/* will add use this to add breadcrumb */}
-      {/* <PageHeader
-        linkText={t('breadcrumbs.processes')}
-        linkHref="/processes"
-        pageName={t('breadcrumbs.comments')}
-        PageTitle={t('templates.process_comments', { processName })}
-      /> */}
+    <PageWrapper
+      oneCol
+      pageTitle={t('templates.process_comments', { processName })}
+      breadCrumbObj={breadCrumbObj}
+      showBreadCrumb
+    >
       {loading ? (
         <Spinner />
       ) : (

@@ -556,7 +556,6 @@ export default function TodoList({
               >
                 <Grid
                   container
-                  // justifyContent="flex-end"
                   style={{
                     width: '200%',
                     position: 'absolute',
@@ -631,14 +630,6 @@ export default function TodoList({
             </CenteredContent>
           </div>
         )}
-        {/* <AccessCheck module="note" allowedPermissions={['can_view_create_task_button']} show404ForUnauthorized={false}>
-          <FloatingButton
-            variant="extended"
-            handleClick={openModal}
-            color="primary"
-            data-testid="create_task_btn"
-          />
-        </AccessCheck> */}
       </div>
     </PageWrapper>
   );
