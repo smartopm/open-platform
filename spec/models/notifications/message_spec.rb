@@ -39,9 +39,10 @@ RSpec.describe Notifications::Message, type: :model do
         sender_id: non_admin.id,
         category: 'sms',
       )
-      create_task = message.create_message_task
+      assigned_message_task = message.create_message_task
 
-      expect(create_task[:user_id]).to eql non_admin.id
+      expect(assigned_message_task.user_id).to eql non_admin.id
+      expect(assigned_message_task.note_id).to eq(community.notes.last.id)
       allow(message).to receive(:create_message_task)
     end
 

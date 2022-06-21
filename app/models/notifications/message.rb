@@ -58,21 +58,11 @@ module Notifications
     end
     # rubocop:enable Metrics/AbcSize:
 
-    # rubocop:disable Metrics/MethodLength
-    def create_message_task(body = nil)
-      msg_obj = {
-        body: "Reply to
-        <a href=\"https://#{HostEnv.base_url(user.community)}/message/#{user.id}\">message</a>
-        from: #{user.name} \n #{body}",
-        category: 'message',
-        flagged: true,
-        completed: false,
-        due_date: 5.days.from_now,
-      }
-      note_id = user.generate_note(msg_obj).id
+    def create_message_task
+      note_id = user.generate_note(message_task_params).id
+      update(note_id: note_id) if note_id
       assign_message_task(note_id)
     end
-    # rubocop:enable Metrics/MethodLength
 
     def assign_message_task(note_id)
       assign = user.community.notes.find(note_id)
@@ -104,6 +94,18 @@ module Notifications
       return true if campaign_id.nil?
 
       Campaign.find(campaign_id).include_reply_link
+    end
+
+    private
+
+    def message_task_params
+      {
+        body: 'Reply to message',
+        category: 'message',
+        flagged: true,
+        completed: false,
+        due_date: 5.days.from_now,
+      }
     end
   end
 end

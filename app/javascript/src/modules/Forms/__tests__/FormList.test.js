@@ -24,14 +24,16 @@ describe('Form List Component', () => {
             name: 'Lease Form',
             expiresAt: '2020-12-31T23:59:59Z',
             createdAt: '2020-10-07T09:37:03Z',
-            roles: ['client']
+            roles: ['client'],
+            isPublic: true
           },
           {
             id: '3e530432172e',
             name: 'Another Form',
             expiresAt: '2020-12-31T23:59:59Z',
             createdAt: '2020-10-07T09:37:03Z',
-            roles: ['admin', 'resident']
+            roles: ['admin', 'resident'],
+            isPublic: false
           }
         ]
       }

@@ -20,6 +20,7 @@ export default {
     name: 'some name',
     __typename: 'SubmittedBy'
   },
+  message: null,
   formUser: {
     id: "0358e014-1440-46ee-988d-d5338f019ba3",
     user: {

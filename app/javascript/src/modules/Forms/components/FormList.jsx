@@ -124,6 +124,7 @@ export default function FormLinkList({ userType, community, path, id, t }) {
                       open={menuOpen}
                       refetch={refetch}
                       t={t}
+                      isPublic={form.isPublic}
                     />
                   )}
                   <Divider variant="middle" />

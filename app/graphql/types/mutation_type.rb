@@ -128,6 +128,7 @@ module Types
     field :property_update, mutation: Mutations::LandParcel::PropertyUpdate
     field :property_merge, mutation: Mutations::LandParcel::PropertyMerge
     field :point_of_interest_create, mutation: Mutations::LandParcel::PointOfInterestCreate
+    field :point_of_interest_update, mutation: Mutations::LandParcel::PointOfInterestUpdate
     field :point_of_interest_delete, mutation: Mutations::LandParcel::PointOfInterestDelete
     field :poi_image_upload, mutation: Mutations::LandParcel::PointOfInterestImageCreate
 

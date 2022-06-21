@@ -190,6 +190,50 @@ describe('Task Data components', () => {
     }, 10);
   });
 
+  it('renders message task correctly', async () => {
+    const taskMock = {
+      ...task,
+      submittedBy: null,
+      message: {
+        __typename: 'Message',
+        id: 'c6fc0572-fbcf-48ab-8f16-061afabf831b',
+        sender: {
+          __typename: 'User',
+          id: 'fe4a184a-9794-4726-9876-8ecca9a7995f',
+          name: 'Test User'
+        },
+      },
+    };
+
+    render(
+      <BrowserRouter>
+        <MockedProvider>
+          <Context.Provider value={authState}>
+            <MockedThemeProvider>
+              <TodoItem
+                task={taskMock}
+                handleChange={() => {}}
+                selectedTasks={[]}
+                isSelected={false}
+                handleTaskDetails={() => {}}
+                handleCompleteNote={() => {}}
+                handleAddSubTask={jest.fn()}
+                handleTodoClick={jest.fn}
+                handleTaskCompletion={jest.fn}
+                handleUploadDocument={jest.fn}
+                showWidgetsIcon
+              />
+            </MockedThemeProvider>
+          </Context.Provider>
+        </MockedProvider>
+      </BrowserRouter>
+    );
+
+    await waitFor(() => {
+      expect(screen.queryAllByText('misc.sent_by')[0]).toBeInTheDocument();
+    });
+  });
+
   it('should render TaskDataList', async () => {
     const container = render(
       <BrowserRouter>

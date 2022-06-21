@@ -17,7 +17,8 @@ describe('TextInput component', () => {
       open: true,
       refetch: jest.fn(),
       formName: 'sexample',
-      t
+      t,
+      isPublic: true
     };
     const rendered = render(
       <BrowserRouter>
@@ -32,6 +33,7 @@ describe('TextInput component', () => {
       expect(rendered.queryByText('common:menu.edit')).toBeInTheDocument();
       expect(rendered.queryByText('common:menu.publish')).toBeInTheDocument();
       expect(rendered.queryByText('common:menu.delete')).toBeInTheDocument();
+      expect(rendered.queryByText('common:menu.form_qrcode')).toBeInTheDocument();
 
       fireEvent.click(rendered.queryByText('common:menu.submit_form'));
       fireEvent.click(rendered.queryByText('common:menu.edit'));

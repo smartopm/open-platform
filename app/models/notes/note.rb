@@ -33,6 +33,7 @@ module Notes
     belongs_to :form_user, class_name: 'Forms::FormUser', optional: true
     belongs_to :parent_note, class_name: 'Notes::Note', optional: true
     belongs_to :note_list, class_name: 'Notes::NoteList', optional: true
+    has_one :message, class_name: 'Notifications::Message', dependent: :destroy
     has_many :assignee_notes, dependent: :destroy
     has_many :assignees, through: :assignee_notes, source: :user
     has_many :note_comments, class_name: 'Comments::NoteComment', dependent: :destroy
