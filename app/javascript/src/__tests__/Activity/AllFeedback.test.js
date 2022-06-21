@@ -1,6 +1,5 @@
 import React from 'react';
-import { render, waitFor } from '@testing-library/react';
-
+import { render, waitFor, fireEvent } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom/';
 import { MockedProvider } from '@apollo/react-testing';
 import { allFeedback } from '../../graphql/queries';
@@ -63,6 +62,8 @@ describe('Feedback Component', () => {
     await waitFor(() => {
       expect(container.queryByTestId('prev-link')).toBeInTheDocument();
       expect(container.queryByTestId('next-link')).toBeInTheDocument();
+      fireEvent.click(container.queryByTestId('prev-link'));
+      fireEvent.click(container.queryByTestId('next-link'));
     }, 10)
   });
 

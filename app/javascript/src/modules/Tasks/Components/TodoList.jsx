@@ -465,6 +465,7 @@ export default function TodoList({
               color="primary"
               style={{ color: '#FFFFFF' }}
               data-testid='create_task_btn'
+              disableElevation
             >
               <AddIcon />
             </Button>
@@ -476,6 +477,7 @@ export default function TodoList({
               color="primary"
               style={{ color: '#FFFFFF' }}
               data-testid='create_task_btn'
+              disableElevation
             >
               {t('common:misc.add_new')}
             </Button>

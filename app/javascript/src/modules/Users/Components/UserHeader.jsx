@@ -115,6 +115,7 @@ export function UserProcessCSV({ csvObject }) {
       color="primary"
       data-testid="download_csv_btn"
       className={classes.csvButton}
+      disableElevation
     >
       {!csvObject.called ? (
         // eslint-disable-next-line jsx-a11y/click-events-have-key-events
