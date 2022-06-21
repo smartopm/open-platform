@@ -11,7 +11,9 @@ export default function FormUserList() {
   const authState = useContext(Context);
   const { data, loading } = useQuery(SubmittedFormsQuery);
   const { t } = useTranslation(['common']);
-  console.log('Mutuba', authState);
+
+  // console.log(error)
+
   return (
     <Container>
       <Typography variant="h3" color="text.secondary" data-testid="my_form_title">

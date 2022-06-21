@@ -35,7 +35,7 @@ describe('FormUser Item', () => {
     {
       request: {
         query: FormsQuery,
-        variables: { userId: '11cdad78de' }
+        variables: { userId: '11cdad78' }
       },
       result: {
         data: {

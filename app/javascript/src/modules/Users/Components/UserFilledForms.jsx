@@ -15,7 +15,7 @@ import { formatError } from '../../../utils/helpers';
 
 export default function UserFilledForms({ userFormsFilled, userId, currentUser }) {
   const { data, error, loading } = useQuery(FormsQuery, {
-    variables: { userId: userId !== currentUser ? userId : null },
+    variables: { userId: userId !== currentUser ? userId : currentUser },
     fetchPolicy: 'cache-and-network'
   });
 
