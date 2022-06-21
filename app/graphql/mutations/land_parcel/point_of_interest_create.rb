@@ -9,6 +9,7 @@ module Mutations
       argument :long_x, Float, required: true
       argument :lat_y, Float, required: true
       argument :geom, String, required: true
+      argument :image_blob_ids, [String], required: false
 
       field :land_parcel, Types::LandParcelType, null: true
 
@@ -26,10 +27,16 @@ module Mutations
             geom: vals[:geom],
           )
 
+          attach_image(land_parcel, vals)
+
           { land_parcel: land_parcel }
         end
       rescue ActiveRecord::RecordInvalid => e
         raise GraphQL::ExecutionError, e.message
+      end
+
+      def attach_image(land_parcel, vals)
+        land_parcel.images.attach(vals[:image_blob_ids]) if vals[:image_blob_ids].present?
       end
 
       # rubocop:enable Metrics/MethodLength

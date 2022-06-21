@@ -87,6 +87,7 @@ export function CustomizedDialogs({
   saveAction,
   disableActionBtn,
   cancelAction,
+  cancelActionBtnVariant,
   actionable,
   actionLoading,
   displaySaveButton,
@@ -120,7 +121,7 @@ export function CustomizedDialogs({
               <Grid item md={6} xs={6}>
                 <Button
                   onClick={handleModal}
-                  variant="outlined"
+                  variant={cancelActionBtnVariant || 'outlined'}
                   color="primary"
                   data-testid="dialog_cancel"
                 >
@@ -379,6 +380,7 @@ CustomizedDialogs.defaultProps = {
   saveAction: '',
   disableActionBtn: false,
   cancelAction: '',
+  cancelActionBtnVariant: '',
   actionable: true,
   actionLoading: false,
   displaySaveButton: true,
@@ -394,6 +396,7 @@ CustomizedDialogs.propTypes = {
   subHeader: PropTypes.string,
   saveAction: PropTypes.string,
   cancelAction: PropTypes.string,
+  cancelActionBtnVariant: PropTypes.string,
   disableActionBtn: PropTypes.bool,
   actionable: PropTypes.bool,
   actionLoading: PropTypes.bool,
