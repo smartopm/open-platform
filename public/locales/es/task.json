@@ -24,8 +24,11 @@
     "confirm": "Confirmar",
     "received": "Recibido {{count}}",
     "reply": "Responder",
+    "reply_to_message": "Responder",
     "resolved": "Resuelto {{count}}",
-    "sent": "Enviado"
+    "sent": "Enviado",
+    "sent_by": "Enviado por",
+    "submitted_by": "Enviado por"
   },
   "process": {
     "processes": "Procesos"
