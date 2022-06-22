@@ -8,8 +8,8 @@ import { UserFormPropertiesQuery, FormUserQuery } from '../graphql/forms_queries
 import FormUpdate from '../components/FormUpdate';
 import FormContextProvider from '../Context';
 import MockedThemeProvider from '../../__mocks__/mock_theme';
-import { Context } from '../../../containers/Provider/AuthStateProvider'
-import userMock from '../../../__mocks__/authstate'
+import { Context } from '../../../containers/Provider/AuthStateProvider';
+import userMock from '../../../__mocks__/authstate';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 jest.mock('react-markdown', () => 'div');
@@ -31,7 +31,7 @@ describe('Form Component', () => {
           form: {
             id: 'caea7b44-ee95-42a6-a42f-3e530432172e',
             name: 'Test Form',
-            hasTermsAndConditions: true, 
+            hasTermsAndConditions: true,
             description: 'Some description'
           },
           statusUpdatedBy: {
@@ -83,10 +83,10 @@ describe('Form Component', () => {
               },
               attachments: [
                 {
-                  id: "290834032",
+                  id: '290834032',
                   image_url: 'https://image.com',
                   file_type: null,
-                  file_name: 'img.jpg',
+                  file_name: 'img.jpg'
                 }
               ],
               imageUrl: 'https://image.com',
@@ -95,7 +95,7 @@ describe('Form Component', () => {
               value: '7th Street',
               createdAt: '2020-10-07T09:37:03Z',
               user: {
-                id: "some_ids",
+                id: 'some_ids',
                 name: 'John Does'
               }
             },
@@ -114,10 +114,10 @@ describe('Form Component', () => {
               },
               attachments: [
                 {
-                  id: "290834032",
+                  id: '290834032',
                   image_url: 'https://another_image.com',
                   file_type: 'null',
-                  file_name: 'img2.jpg',
+                  file_name: 'img2.jpg'
                 }
               ],
               value: null,
@@ -126,7 +126,7 @@ describe('Form Component', () => {
               fileName: 'img2.jpg',
               createdAt: '2020-10-07T09:37:03Z',
               user: {
-                id: "some_ids",
+                id: 'some_ids',
                 name: 'John Doe'
               }
             },
@@ -145,10 +145,10 @@ describe('Form Component', () => {
               },
               attachments: [
                 {
-                  id: "290834032",
+                  id: '290834032',
                   image_url: 'https://another2_image.com',
                   file_type: 'image/jpg',
-                  file_name: 'img3.jpg',
+                  file_name: 'img3.jpg'
                 }
               ],
               imageUrl: 'https://another2_image.com',
@@ -157,7 +157,7 @@ describe('Form Component', () => {
               value: 'some values',
               createdAt: '2020-10-07T09:37:03Z',
               user: {
-                id: "some_ids",
+                id: 'some_ids',
                 name: 'John Doe'
               }
             },
@@ -181,7 +181,7 @@ describe('Form Component', () => {
               value: null,
               createdAt: '2020-10-07T09:37:03Z',
               user: {
-                id: "some_ids",
+                id: 'some_ids',
                 name: 'John Doe'
               }
             },
@@ -214,7 +214,7 @@ describe('Form Component', () => {
               value: '{"checked"=>"Yes", "label"=>"Would you rather?"}',
               createdAt: '2020-10-07T09:37:03Z',
               user: {
-                id: "some_ids",
+                id: 'some_ids',
                 name: 'John Doe'
               }
             },
@@ -251,7 +251,7 @@ describe('Form Component', () => {
               value: '{"Red"=>true, "Blue"=>true}',
               createdAt: '2020-10-07T09:37:03Z',
               user: {
-                id: "some_ids",
+                id: 'some_ids',
                 name: 'John Doe'
               }
             }
@@ -336,7 +336,7 @@ describe('Form Component', () => {
               value: null,
               createdAt: '2020-10-07T09:37:03Z',
               user: {
-                id: "somes",
+                id: 'somes',
                 name: 'John Doe'
               }
             }
@@ -365,7 +365,9 @@ describe('Form Component', () => {
     );
 
     await waitFor(() => {
-      expect(screen.queryAllByTestId('form-file-upload-btn')[0]).toHaveTextContent('form:misc.select_file');
+      expect(screen.queryAllByTestId('form-file-upload-btn')[0]).toHaveTextContent(
+        'form:misc.select_file'
+      );
       expect(screen.queryByTestId('approved')).toBeInTheDocument();
       expect(screen.queryByTestId('rejected')).toBeInTheDocument();
       fireEvent.click(screen.queryByTestId('approved'));
