@@ -20,12 +20,14 @@ describe('UserFilledForms component', () => {
             name: 'Lease Form',
             expiresAt: '2020-12-31T23:59:59Z',
             createdAt: '2020-10-07T09:37:03Z',
+            isPublic: false,
             roles: ['client']
           },
           {
             id: '3e530432172e',
             name: 'Another Form',
             expiresAt: '2020-12-31T23:59:59Z',
+            isPublic: false,
             createdAt: '2020-10-07T09:37:03Z',
             roles: ['admin', 'resident']
           }
