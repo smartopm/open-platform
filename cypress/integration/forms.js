@@ -41,11 +41,8 @@ describe('Custom Forms', () => {
     cy.login('2348167740149');
 
     // Go to Permits & Request Forms
-    // cy.get('.left-menu-collapsible').click();
-    // cy.wait(1000);
-    // cy.get('.community-menu-item').click();
-    // cy.wait(1000);
-    // it is now a top level menu item
+    cy.get('.left-menu-collapsible').click();
+    cy.wait(1000);
     cy.get('.manage-forms-form-menu-item').click();
     cy.wait(1000);
 
@@ -100,7 +97,7 @@ describe('Custom Forms', () => {
     /** Submit a Form * */
     cy.get('.left-menu-collapsible').click();
     cy.wait(500);
-    cy.get('.permit-request-form-menu-item').click();
+    cy.get('.manage-forms-form-menu-item').click();
     cy.wait(500);
     cy.get('.form-menu-open-btn').click();
     cy.wait(500);
@@ -163,19 +160,15 @@ describe('Custom Forms', () => {
     // Go to Permits & Request Forms
     cy.get('.left-menu-collapsible').click();
     cy.wait(1000);
-    cy.get('.community-menu-item').click();
-    cy.wait(1000);
-    cy.get('.community-menu-item').click();
-    cy.wait(1000);
-    cy.get('.permit-request-form-menu-item').click();
+    cy.get('.manage-forms-form-menu-item').click();
     cy.wait(1000);
 
     // Click on view entries button
     cy.get('.form-menu-open-btn').click();
     cy.wait(500);
-    cy.get('[data-testid=community_form]').click({force: true});
+    cy.get('[data-testid=community_form]').click({ force: true });
     cy.wait(1000);
-    cy.get('[data-testid=DownloadIcon]').should('exist')
+    cy.get('[data-testid=DownloadIcon]').should('exist');
 
     // Click the first download button - should be clickable
     cy.get('[data-testid=DownloadIcon]')
@@ -183,6 +176,5 @@ describe('Custom Forms', () => {
       .click();
     cy.wait(1000);
     cy.get('@redirect').should('be.called');
-
   });
 });
