@@ -32,8 +32,6 @@ export default function TagPosts({ open, handleClose, tagName, wordpressEndpoint
   const { t } = useTranslation('news');
   const history = useHistory();
 
-  console.log('Mutuba data', wordpressEndpoint);
-
   useEffect(() => {
     if (open && tagName) {
       loadUserTags({ variables: { tagName } });
