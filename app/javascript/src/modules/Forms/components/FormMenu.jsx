@@ -1,8 +1,21 @@
 import React, { Fragment, useState } from 'react';
-import { MenuItem, Menu } from '@mui/material';
+import {
+  MenuItem,
+  Menu,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  useMediaQuery,
+  DialogActions,
+  IconButton,
+  Button,
+  Grid
+} from '@mui/material';
 import { useMutation } from 'react-apollo';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router';
+import { useTheme } from '@mui/styles';
+import CloseIcon from '@mui/icons-material/Close';
 import { FormUpdateMutation } from '../graphql/forms_mutation';
 import { formStatus } from '../../../utils/constants';
 import { ActionDialog } from '../../../components/Dialog';
@@ -15,6 +28,9 @@ export default function FormMenu({ formId, anchorEl, handleClose, open, refetch,
   const [alertOpen, setAlertOpen] = useState(false);
   const [actionType, setActionType] = useState('');
   const [message, setMessage] = useState({ isError: false, detail: '' });
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down('xs'));
+  const [openQRCodeModal, setOpenQRCodeModal] = useState(false);
 
   const [publish] = useMutation(FormUpdateMutation);
 
@@ -54,6 +70,11 @@ export default function FormMenu({ formId, anchorEl, handleClose, open, refetch,
     history.push(`/edit_form/${formId}`);
   }
 
+  function toggleQRModal(event) {
+    event.stopPropagation();
+    setOpenQRCodeModal(!openQRCodeModal);
+  }
+
   return (
     <>
       <ActionDialog
@@ -72,6 +93,31 @@ export default function FormMenu({ formId, anchorEl, handleClose, open, refetch,
         open={alertOpen}
         handleClose={handleAlertClose}
       />
+
+      <Dialog
+        fullScreen={fullScreen}
+        open={openQRCodeModal}
+        fullWidth
+        maxWidth="md"
+        onClose={toggleQRModal}
+        aria-labelledby="responsive-edit-dialog-title"
+      >
+        <DialogTitle id="responsive-edit-dialog-title">
+          <Grid sx={{ display: 'flex', justifyContent: 'space-between' }}>
+            <span>{t('common:menu.form_qrcode_header')}</span>
+            <IconButton aria-label="close" onClick={toggleQRModal}>
+              <CloseIcon />
+            </IconButton>
+          </Grid>
+        </DialogTitle>
+        <DialogContent dividers>
+          <p>QRCode here...</p>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => {}}>{t('common:form_actions.copy')}</Button>
+          <Button onClick={toggleQRModal}>{t('common:form_actions.cancel')}</Button>
+        </DialogActions>
+      </Dialog>
       <Menu
         id={`long-menu-${formId}`}
         anchorEl={anchorEl}
@@ -88,18 +134,10 @@ export default function FormMenu({ formId, anchorEl, handleClose, open, refetch,
           >
             {t('common:menu.edit')}
           </MenuItem>
-          <MenuItem
-            id="publish_button"
-            key="publish_form"
-            onClick={() => handleConfirm('publish')}
-          >
+          <MenuItem id="publish_button" key="publish_form" onClick={() => handleConfirm('publish')}>
             {t('common:menu.publish')}
           </MenuItem>
-          <MenuItem
-            id="delete_button"
-            key="delete_form"
-            onClick={() => handleConfirm('delete')}
-          >
+          <MenuItem id="delete_button" key="delete_form" onClick={() => handleConfirm('delete')}>
             {t('common:menu.delete')}
           </MenuItem>
           <MenuItem
@@ -115,7 +153,9 @@ export default function FormMenu({ formId, anchorEl, handleClose, open, refetch,
               id="form_qrcode"
               className="form_qrcode"
               key="view_qrcode"
-              onClick={(event) => { event.stopPropagation() }}
+              onClick={event => {
+                toggleQRModal(event);
+              }}
             >
               {t('common:menu.form_qrcode')}
             </MenuItem>
