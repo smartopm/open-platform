@@ -5,7 +5,7 @@ FactoryBot.define do
     status { %w[draft pending approved rejected].sample }
     form
     user
-    submitted_by_id { admin_user.id }
+    submitted_by_id { user.id }
     status_updated_by { create(:admin_user) }
   end
 end
