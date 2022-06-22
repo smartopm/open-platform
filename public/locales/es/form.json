@@ -106,6 +106,7 @@
     "form_builder": "Constructor",
     "form_confirm_message": "¿Estás seguro de {{actionType}} este formulario?",
     "form_created": "Formulario creado con éxito",
+    "form_entries": "Entradas del Formulario",
     "form_expiry_date": "Fecha de vencimiento del formulario",
     "form_settings": "Ajustes",
     "form_submitted": "Ha enviado correctamente el formulario",
