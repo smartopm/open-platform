@@ -1,9 +1,12 @@
-import React from 'react';
-import { Button } from '@mui/material';
+import React, { useContext, useState } from 'react';
+import { Alert, Button } from '@mui/material';
 import PropTypes from 'prop-types';
+import { useFlutterwave } from 'flutterwave-react-v3';
 import TextInput from './TextInput';
+import flutterwaveConfig from '../../../Payments/TransactionLogs/utils';
+import { Context } from '../../../../containers/Provider/AuthStateProvider';
 
-// Input and button
+// Due to payment info, this component will have to manage its state
 export default function PaymentInput({
   id,
   handleValue,
@@ -11,8 +14,23 @@ export default function PaymentInput({
   value,
   editable,
   inputValidation,
-  handlePayment
+  t
 }) {
+  const authState = useContext(Context);
+  const [paymentInfo, setPaymentInfo] = useState({ loading: false, paid: false })
+  const paymentConfig = flutterwaveConfig(authState, {amount: value}, t);
+  const handlePayment = useFlutterwave(paymentConfig);
+  
+  function pay() {
+    handlePayment({
+      callback: response => {
+        console.log(response)
+        if (response.status === 'successful') setPaymentInfo({ loading: false, paid: true });
+      },
+      onClose: () => setPaymentInfo({ ...paymentInfo, loading: false, })
+    });
+  }
+
   return (
     <>
       <TextInput
@@ -22,8 +40,20 @@ export default function PaymentInput({
         value={value}
         editable={editable}
         inputValidation={inputValidation}
+        placeholder="Pay this amount"
+        type="number"
       />
-      <Button color="primary" onClick={() => handlePayment(value)} data-testid="qr_button" />
+      <Button
+        color="primary"
+        variant="outlined"
+        onClick={pay}
+        disabled={!value || paymentInfo.hasPaid || paymentInfo.loading}
+        data-testid="form_payment_btn"
+      >
+        Pay
+      </Button>
+      <br />
+      {paymentInfo.paid && <Alert severity="success">{t('payment:misc.payment_successful')}</Alert>}
     </>
   );
 }
@@ -32,7 +62,7 @@ PaymentInput.defaultProps = {
 };
 PaymentInput.propTypes = {
   handleValue: PropTypes.func.isRequired,
-  handlePayment: PropTypes.func.isRequired,
+  t: PropTypes.func.isRequired,
   properties: PropTypes.shape({
     fieldName: PropTypes.string,
     required: PropTypes.bool,

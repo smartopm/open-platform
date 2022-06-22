@@ -3,7 +3,7 @@ import { TextField, MenuItem } from '@mui/material'
 import PropTypes from 'prop-types'
 import { useTranslation } from 'react-i18next';
 
-export default function TextInput({id, handleValue, properties, value, editable, inputValidation }) {
+export default function TextInput({id, handleValue, properties, value, editable, inputValidation, ...rest }) {
     const { t } = useTranslation('form');
     return (
       <TextField
@@ -30,6 +30,7 @@ export default function TextInput({id, handleValue, properties, value, editable,
              : inputValidation.error
                ? t('errors.required_field', { fieldName: properties.fieldName })
                : ''}
+        {...rest}
       >
         { properties.fieldType === 'dropdown' &&
          (

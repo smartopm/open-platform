@@ -11,6 +11,7 @@ import { currencies } from '../../../../utils/constants';
 import { extractCurrency, formatError, objectAccessor } from '../../../../utils/helpers';
 import { TransactionLogCreateMutation } from '../graphql/transaction_logs_mutation';
 import MessageAlert from '../../../../components/MessageAlert';
+import flutterwaveConfig from '../utils';
 
 
 export default function PaymentForm() {
@@ -31,25 +32,7 @@ export default function PaymentForm() {
   const communityCurrency = objectAccessor(currencies, authState.user.community.currency)
   const currencyData = { locale: authState.user.community.locale, currency: communityCurrency }
   const currency = extractCurrency(currencyData)
-  const config = {
-    public_key: authState.user.community.paymentKeys?.public_key,
-    tx_ref: Date.now(),
-    amount: inputValue.amount,
-    currency: communityCurrency,
-    payment_options: '', // add payment options we plan to support
-    customer: {
-      email: authState.user.email,
-      phonenumber: authState.user.phonenumber,
-      name: authState.user.name
-    },
-    customizations: {
-      title: t('payment:misc.pay_for_item'),
-      description: inputValue.description,
-      logo:
-        'https://st2.depositphotos.com/4403291/7418/v/450/depositphotos_74189661-stock-illustration-online-shop-log.jpg'
-    }
-  };
-
+  const config = flutterwaveConfig(authState, inputValue, t)
   const handleFlutterPayment = useFlutterwave(config);
 
   function handlePayment(event) {

@@ -57,9 +57,10 @@ export default function RenderForm({
     setFilesToUpload
   } = useContext(FormContext);
 
-  const { t } = useTranslation(['form', 'common']);
+  const { t } = useTranslation(['form', 'common', 'payment']);
   const [messageAlert, setMessageAlert] = useState('');
   const [isSuccessAlert, setIsSuccessAlert] = useState(false);
+  
 
   function handleCheckboxSelect(event, property) {
     const { name, checked } = event.target;
@@ -88,6 +89,7 @@ export default function RenderForm({
     });
   }
 
+
   function handleDateChange(date, property) {
     setFormProperties({
       ...formProperties,
@@ -107,10 +109,6 @@ export default function RenderForm({
         form_property_id: property.id
       }
     });
-  }
-
-  function handlePayment(value) {
-    console.log(value);
   }
 
   function createPropertyObj(propertyId) {
@@ -577,13 +575,14 @@ export default function RenderForm({
             <PaymentInput
               id={formPropertiesData.id}
               properties={formPropertiesData}
-              value=""
+              value={formProperties[formPropertiesData.fieldName]?.value}
               handleValue={event => handleValueChange(event, formPropertiesData)}
               editable={editable}
               inputValidation={{
                 error: checkRequiredFormPropertyIsFilled(formPropertiesData, formState)
               }}
-              handlePayment={handlePayment}
+              // handlePayment={handlePayment}
+              t={t}
             />
           </ListWrapper>
         </Grid>
