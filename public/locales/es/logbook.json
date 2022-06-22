@@ -72,6 +72,8 @@
     "invite_history": "Historial de Invitaciones",
     "manual_entry": "Registro Manual",
     "multiple": "Múltiple",
+    "new_guest": "Nuevo Invitado",
+    "new_guest_plural": "Nuevos Invitados",
     "no_hosts": "No hay invitaciones para este usuario.",
     "pending": "Pendiente",
     "phone_number_not_available": "Número de teléfono no disponible",
