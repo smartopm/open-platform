@@ -126,7 +126,14 @@ export function renderFormEntry(formUser, formId, handleDownload) {
       'Submitted by': (
         <Grid item xs={12} md={2} data-testid="submitted_by">
           <div style={{ display: 'flex' }}>
-            <Avatar src={formUser.user.imageUrl} alt="avatar-image" />
+            <Avatar
+              src={
+                formUser?.submittedBy?.imageUrl !== undefined
+                  ? formUser?.submittedBy?.imageUrl
+                  : formUser.user.imageUrl
+              }
+              alt="avatar-image"
+            />
             <Typography color="primary" style={{ margin: '7px', fontSize: '12px' }}>
               {formUser?.submittedBy?.name !== undefined
                 ? formUser?.submittedBy?.name

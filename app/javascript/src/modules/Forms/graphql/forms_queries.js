@@ -126,6 +126,7 @@ export const FormEntriesQuery = gql`
         submittedBy {
           id
           name
+          imageUrl
         }
         user {
           id

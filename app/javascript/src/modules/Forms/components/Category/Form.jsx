@@ -118,7 +118,7 @@ export default function Form({
     saveFormData(
       propertiesData,
       formId,
-      userId !== null ? userId : authState.user.id,
+      userId || authState.user.id,
       categoriesData.data?.formCategories,
       status,
       hasAgreedToTerms
@@ -145,8 +145,7 @@ export default function Form({
           formState.info ||
           formatError(error?.message) || (
             <div>
-              <Typography variant="body1">{t('form:misc.upload_error')}</Typography>
-              {' '}
+              <Typography variant="body1">{t('form:misc.upload_error')}</Typography>{' '}
               <Typography variant="body2">{t('form:misc.upload_error_content_one')}</Typography>
               <Typography variant="body2">{t('form:misc.upload_error_content_two')}</Typography>
               <Typography variant="body2">{t('form:misc.upload_error_content_three')}</Typography>
