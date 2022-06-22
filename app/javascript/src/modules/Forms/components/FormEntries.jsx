@@ -6,17 +6,18 @@ import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import DownloadIcon from '@mui/icons-material/Download';
 import { FormEntriesQuery } from '../graphql/forms_queries';
-import Loading from '../../../shared/Loading';
-import ErrorPage from '../../../components/Error';
+
 import SearchInput from '../../../shared/search/SearchInput';
 import ListHeader from '../../../shared/list/ListHeader';
 import DataList from '../../../shared/list/DataList';
+import { Spinner } from '../../../shared/Loading';
 import CenteredContent from '../../../shared/CenteredContent';
 import { dateToString } from '../../../components/DateContainer';
 import Text from '../../../shared/Text';
 import useDebounce from '../../../utils/useDebounce';
 import Paginate from '../../../components/Paginate';
-import { useParamsQuery } from '../../../utils/helpers';
+import { useParamsQuery, formatError } from '../../../utils/helpers';
+
 import PageWrapper from '../../../shared/PageWrapper';
 
 export default function FormEntries({ formId }) {
@@ -60,8 +61,8 @@ export default function FormEntries({ formId }) {
     window.open(`/user_form/${user.userId}/${user.id}?formId=${id}&download=true`);
   }
 
-  if (loading) return <Loading />;
-  if (error) return <ErrorPage title={error.message} />;
+  if (loading) return <Spinner />;
+  if (error) return <CenteredContent>{formatError(error.message)}</CenteredContent>;
 
   return (
     <PageWrapper pageTitle={t('misc.form_entries')}>
