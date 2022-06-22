@@ -292,6 +292,8 @@
     "see_more_articles": "See More Articles",
     "amenity": "Amenity",
     "amenity_plural": "Amenities",
+    "copy_info": "Copy link to the QR Code for web or email use.",
+    "download_info": "Download file of the QR Code to print out.",
     "add_new": "Add New",
     "otp": "OTP"
   },
@@ -375,6 +377,7 @@
     "view_entries": "View Entries",
     "submit_form": "Submit Form",
     "form_qrcode": "QR Code",
+    "form_qrcode_header": "{{formName}} QR Code",
     "report": "Reports",
     "cancel_plan": "Cancel Plan",
     "view_statement": "View Statement",
