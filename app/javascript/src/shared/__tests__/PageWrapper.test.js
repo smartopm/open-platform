@@ -55,11 +55,15 @@ describe('PageWrapper component', () => {
   });
 
   it('should hide the pageWrapper', () => {
+    const props = {
+      children: <div>sampleText</div>,
+      hideWrapper: true
+    }
     const rendered = render(
       <BrowserRouter>
         <MockedProvider>
           <MockedThemeProvider>
-            <PageWrapper hideWrapper />
+            <PageWrapper {...props} />
           </MockedThemeProvider>
         </MockedProvider>
       </BrowserRouter>
