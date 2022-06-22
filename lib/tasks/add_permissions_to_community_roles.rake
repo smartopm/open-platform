@@ -47,7 +47,7 @@ namespace :db do
             next unless permission
 
             permission.update!(permissions: role_permissions)
-            els
+          else
             Permission.create!(role: role, module: role_module, permissions: role_permissions)
           end
         end
