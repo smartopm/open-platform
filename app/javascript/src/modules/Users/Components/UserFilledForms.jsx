@@ -61,24 +61,15 @@ export default function UserFilledForms({ userFormsFilled, userId, currentUser }
   if (error) return <CenteredContent>{formatError(error.message)}</CenteredContent>;
 
   return (
-    <div className="container">
-      <Grid
-        container
-        spacing={1}
-        style={{
-          marginTop:
-            !mobile && userFormsFilled.length === 0
-              ? -80
-              : !mobile && userFormsFilled.length >= 1 && -60
-        }}
-      >
+    <div className="container" style={{ marginTop: !mobile && -60 }}>
+      <Grid container>
         <Grid
           item
           md={12}
           xs={12}
           style={{
             display: 'flex',
-            marginTop: !mobile && userFormsFilled.length >= 1 && -40,
+            marginTop: mobile && -40,
             marginBottom: 12,
             justifyContent: 'center'
           }}
