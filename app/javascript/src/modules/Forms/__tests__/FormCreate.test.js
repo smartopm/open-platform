@@ -24,6 +24,7 @@ describe('FormCreate Component', () => {
         form: {
           id: '7d05e98e-e6bb-43cb-838e-e6d76005e326',
           name: 'Another Registry V2',
+          hasTermsAndConditions: true,
           preview: true,
           isPublic: true,
           description: 'This is a customs form',
@@ -61,7 +62,9 @@ describe('FormCreate Component', () => {
       fireEvent.change(wrapper.queryByTestId('title'), { target: { value: 'This is a title' } });
       expect(wrapper.queryByTestId('title').value).toBe('This is a title');
 
-      fireEvent.change(wrapper.queryByTestId('description'), { target: { value: 'This is a description' } });
+      fireEvent.change(wrapper.queryByTestId('description'), {
+        target: { value: 'This is a description' }
+      });
       expect(wrapper.queryByTestId('description').value).toBe('This is a description');
 
       expect(wrapper.queryByLabelText('misc.limit_1_response')).toBeInTheDocument();
@@ -69,25 +72,31 @@ describe('FormCreate Component', () => {
       expect(wrapper.queryByLabelText('misc.public_with_qrcode')).toBeInTheDocument();
       expect(wrapper.queryByTestId('HelpCenterRoundedIcon')).toBeInTheDocument();
 
-      fireEvent.change(wrapper.queryByLabelText('misc.public_with_qrcode'), { target: { checked: true } })
+      fireEvent.change(wrapper.queryByLabelText('misc.public_with_qrcode'), {
+        target: { checked: true }
+      });
       expect(wrapper.queryByLabelText('misc.public_with_qrcode').checked).toBe(true);
 
-      fireEvent.change(wrapper.queryByLabelText('misc.public_with_qrcode'), { target: { checked: false } })
+      fireEvent.change(wrapper.queryByLabelText('misc.public_with_qrcode'), {
+        target: { checked: false }
+      });
       expect(wrapper.queryByLabelText('misc.public_with_qrcode').checked).toBe(false);
 
-      fireEvent.change(wrapper.queryByLabelText('misc.previewable'), { target: { checked: true } })
+      fireEvent.change(wrapper.queryByLabelText('misc.previewable'), { target: { checked: true } });
       expect(wrapper.queryByLabelText('misc.previewable').checked).toBe(true);
 
-      fireEvent.change(wrapper.queryByLabelText('misc.limit_1_response'), { target: { checked: true } })
+      fireEvent.change(wrapper.queryByLabelText('misc.limit_1_response'), {
+        target: { checked: true }
+      });
       expect(wrapper.queryByLabelText('misc.limit_1_response').checked).toBe(true);
 
-      fireEvent.click(wrapper.queryByTestId('submit'))
+      fireEvent.click(wrapper.queryByTestId('submit'));
       expect(props.formMutation).toHaveBeenCalled();
     });
   });
 
   it('should render when Id present', async () => {
-    const newProps = {...props, id: 'sdfwe8f9fuwfmeni34jnw', actionType: 'update' }
+    const newProps = { ...props, id: 'sdfwe8f9fuwfmeni34jnw', actionType: 'update' };
     const wrapper = render(
       <MockedProvider mocks={[formMock]} addTypename={false}>
         <BrowserRouter>
@@ -104,7 +113,7 @@ describe('FormCreate Component', () => {
       expect(wrapper.queryByTestId('title')).toBeInTheDocument();
       expect(wrapper.queryByTestId('description')).toBeInTheDocument();
 
-      fireEvent.click(wrapper.queryByTestId('submit'))
+      fireEvent.click(wrapper.queryByTestId('submit'));
       expect(props.formMutation).toHaveBeenCalled();
     });
   });

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_06_15_170437) do
+ActiveRecord::Schema.define(version: 2022_06_21_051047) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -112,6 +112,7 @@ ActiveRecord::Schema.define(version: 2022_06_15_170437) do
     t.index ["community_id"], name: "index_amenities_on_community_id"
     t.index ["user_id"], name: "index_amenities_on_user_id"
   end
+
   create_table "assignee_notes", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.uuid "user_id", null: false
     t.uuid "note_id", null: false
@@ -390,6 +391,7 @@ ActiveRecord::Schema.define(version: 2022_06_15_170437) do
     t.datetime "updated_at", precision: 6, null: false
     t.uuid "status_updated_by_id"
     t.boolean "has_agreed_to_terms"
+    t.uuid "submitted_by_id"
     t.index ["form_id"], name: "index_form_users_on_form_id"
     t.index ["status_updated_by_id"], name: "index_form_users_on_status_updated_by_id"
     t.index ["user_id"], name: "index_form_users_on_user_id"

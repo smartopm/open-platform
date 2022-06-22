@@ -1,4 +1,3 @@
-
 // This cleans up and avoids any jest warnings and errors
 export default {
   __typename: 'Note',
@@ -14,7 +13,7 @@ export default {
   taskCommentReply: true,
   order: 1,
   status: 'in_progress',
-  formUserId: "0358e014-1440-46ee-988d-d5338f019ba3",
+  formUserId: '0358e014-1440-46ee-988d-d5338f019ba3',
   submittedBy: {
     id: '0358e014-1440-46ee-988d-d5338f019b',
     name: 'some name',
@@ -22,11 +21,12 @@ export default {
   },
   message: null,
   formUser: {
-    id: "0358e014-1440-46ee-988d-d5338f019ba3",
+    id: '0358e014-1440-46ee-988d-d5338f019ba3',
+    formId: '9348923',
     user: {
       __typename: 'User',
-      id: "c8b16e54-095e-4b92-bf51-b197f6b916a6",
-      name: "Test User"
+      id: 'c8b16e54-095e-4b92-bf51-b197f6b916a6',
+      name: 'Test User'
     }
   },
   progress: {
@@ -45,12 +45,14 @@ export default {
   attachments: [],
   parentNote: {
     id: '90ba44ef-4306-416b-945f-1d2ea4eb4c50',
-    formUserId: "816864d4-4815-4043-a9a5-def5282c9e2a",
-    body: "Parent task body",
+    formUserId: '816864d4-4815-4043-a9a5-def5282c9e2a',
+    body: 'Parent task body',
     subTasksCount: 1,
-    assignees: [{
-      id: "9911784d4-4815-4043-a9a5-def5282fgat35"
-    }],
+    assignees: [
+      {
+        id: '9911784d4-4815-4043-a9a5-def5282fgat35'
+      }
+    ],
     __typename: 'Note'
   },
   author: {
@@ -72,7 +74,7 @@ export default {
       dueDate: '2022-01-22T21:00:00Z',
       subTasksCount: 4,
       order: 1,
-      formUserId: "65b665e0-959c-4c08-aaef-3f4b70e85495",
+      formUserId: '65b665e0-959c-4c08-aaef-3f4b70e85495',
       progress: {
         complete: 1,
         total: 0,
@@ -142,5 +144,5 @@ export default {
       reminderTime: null,
       __typename: 'AssigneeNote'
     }
-  ],
+  ]
 };

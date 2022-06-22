@@ -41,11 +41,12 @@ describe('Custom Forms', () => {
     cy.login('2348167740149');
 
     // Go to Permits & Request Forms
-    cy.get('.left-menu-collapsible').click();
-    cy.wait(1000);
-    cy.get('.community-menu-item').click();
-    cy.wait(1000);
-    cy.get('.permit-request-form-menu-item').click();
+    // cy.get('.left-menu-collapsible').click();
+    // cy.wait(1000);
+    // cy.get('.community-menu-item').click();
+    // cy.wait(1000);
+    // it is now a top level menu item
+    cy.get('.manage-forms-form-menu-item').click();
     cy.wait(1000);
 
     // The 'No Forms' text should be present initially
@@ -97,7 +98,7 @@ describe('Custom Forms', () => {
     cy.addFormProperty('DateTimeField', 'datetime', false);
 
     /** Submit a Form * */
-    cy.get('.permit-request-form-menu-item').click();
+    cy.get('.manage-forms-form-menu-item').click();
     cy.wait(500);
     cy.get('.left-menu-collapsible').click();
     cy.wait(500);
@@ -110,7 +111,7 @@ describe('Custom Forms', () => {
     cy.get('[data-testid=submit_form_btn]').click();
     cy.wait(1000);
     cy.get('[data-testid=confirm_contract]').click();
-    cy.contains('Close').click({force: true});
+    cy.contains('Close').click({ force: true });
 
     // Fields Should be Required, Form submit terminated
     cy.contains('Required').should('exist');
@@ -126,8 +127,8 @@ describe('Custom Forms', () => {
     cy.get('[type="checkbox"]')
       .first()
       .check();
-    cy.get('[data-testid=date-picker]').click()
-    cy.get('.MuiPickersDay-today').click()
+    cy.get('[data-testid=date-picker]').click();
+    cy.get('.MuiPickersDay-today').click();
     cy.contains('Ok').click();
 
     cy.get('[data-testid=time_picker]').click();

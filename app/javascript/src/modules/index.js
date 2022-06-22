@@ -18,6 +18,7 @@ import MyMessages from './Messages/MyMessages';
 import Search from './Search';
 import Processes from './Tasks/Processes';
 import Leads from './Users/LeadManagement/Leads';
+import ManageForms from './Forms/ManageForms';
 
 // and exported back here
 export default [
@@ -37,6 +38,7 @@ export default [
   UserJourneyStats,
   Users,
   Properties,
+  ManageForms,
   Community,
   Portal,
   ActionFlows,

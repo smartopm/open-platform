@@ -32,9 +32,9 @@ import AccessCheck from '../../Permissions/Components/AccessCheck';
 // here we get existing google forms and we mix them with our own created forms
 export default function FormLinkList({ userType, community, path, id, t }) {
   const { data, error, loading, refetch } = useQuery(FormsQuery, {
+    variables: { userId: null },
     fetchPolicy: 'cache-and-network'
   });
-
   const [createForm] = useMutation(FormCreateMutation);
   const history = useHistory();
   const classes = useStyles();
@@ -128,7 +128,11 @@ export default function FormLinkList({ userType, community, path, id, t }) {
               </CenteredContent>
             )}
           </List>
-          <AccessCheck module="forms" allowedPermissions={['can_create_form']} show404ForUnauthorized={false}>
+          <AccessCheck
+            module="forms"
+            allowedPermissions={['can_create_form']}
+            show404ForUnauthorized={false}
+          >
             <FloatButton
               title={t('actions.create_a_form')}
               handleClick={() => history.push('/forms/create')}

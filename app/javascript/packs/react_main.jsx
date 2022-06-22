@@ -248,7 +248,7 @@ const App = () => {
                                         exact
                                         path="/tasks/task_lists/edit/:taskId"
                                         component={TaskListConfigure}
-                                        />
+                                      />
                                       <Route
                                         exact
                                         path="/tasks/task_lists/:taskId"
@@ -258,7 +258,6 @@ const App = () => {
                                         path="/processes/:id/comments"
                                         component={ProcessCommentsPage}
                                       />
-
                                       {/* end of redirects */}
                                       {[...modules, ...UserRoutes].map(module => {
                                         if (module.subMenu) {
@@ -331,9 +330,7 @@ const App = () => {
                                           (module.moduleName !== undefined ||
                                             module.accessibleBy.includes(user.userType))
                                         ) {
-                                          return (
-                                            <Route exact {...module.routeProps} key={module.name} />
-                                          );
+                                          return <Route {...module.routeProps} key={module.name} />;
                                         }
                                       })}
 
@@ -440,20 +437,16 @@ const App = () => {
                                         exact
                                         path="/todo"
                                         render={() => <Redirect to="/tasks" />}
-                                        />
+                                      />
                                       {/* Deprecated Routes */}
-                                      <Route path="/showroom_logs" render={() => (
-                                        <Page404 />
-                                      )} /> 
-                                      <Route path="/notes" render={() => (
-                                        <Page404 />
-                                      )} />
+                                      <Route path="/showroom_logs" render={() => <Page404 />} />
+                                      <Route path="/notes" render={() => <Page404 />} />
                                       {/* TODO: Remove this wrapper after routes move to their modules */}
                                       <AdminRoutes>
                                         <Switch>
                                           {/* TODO: Migrate to EventLogs module */}
                                           <Route path="/event_logs" component={EventLogs} />
-                                            {/* TODO: Migrate to Feedback module */}
+                                          {/* TODO: Migrate to Feedback module */}
                                           <Route path="/feedbacks" component={FeedbackPage} />
                                         </Switch>
                                       </AdminRoutes>
@@ -475,7 +468,7 @@ const App = () => {
                     </ThemeProvider>
                   </StyledEngineProvider>
                 )}
-                />
+              />
             </Analytics>
           </AuthStateProvider>
         </Router>

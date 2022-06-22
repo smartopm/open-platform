@@ -14,7 +14,8 @@ describe('Form List Component', () => {
   const { t } = useTranslation(['common', 'form']);
   const mocks = {
     request: {
-      query: FormsQuery
+      query: FormsQuery,
+      variables: { userId: null }
     },
     result: {
       data: {
