@@ -4,6 +4,7 @@ import { useLocation } from 'react-router';
 import { dateToString } from '../components/DateContainer';
 import { jsPDF as JsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
+import { toPng } from 'html-to-image';
 // keep string methods [helpers]
 
 /**
@@ -698,4 +699,21 @@ export function validateRequiredField(fieldName, inputValidationMsg={}, required
       ? t('form:errors.required_field', { fieldName })
       : t(`amenity:helper_text.${fieldName}`)
   };
+}
+
+/**
+ * This converts a DOM element/container to a png image.
+ * @param {DOMElement} currentRef is the current container to be converted to image
+ * @param {String} name is the proposed name for the prepared image
+ */
+export function downloadAsImage(currentRef, name) {
+  toPng(currentRef)
+    .then(dataUrl => {
+      const link = document.createElement('a');
+      link.download = `${name.replace(/ /g, '_')}.png`;
+      link.href = dataUrl;
+      link.click();
+    })
+    .catch(() => { return { error: true };
+    });
 }
