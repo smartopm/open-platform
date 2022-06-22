@@ -59,9 +59,11 @@ export const FormPropertyQuery = gql`
       required
       adminUse
       order
+      shortDesc
+      longDesc
     }
   }
-  `
+`;
 
 
 export const UserFormPropertiesQuery = gql`

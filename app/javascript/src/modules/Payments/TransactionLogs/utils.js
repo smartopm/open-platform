@@ -22,5 +22,8 @@ export default function flutterwaveConfig(authState, inputValue, t) {
     }
   };
 
-  return config;
+  return {
+    config,
+    communityCurrency
+  };
 }

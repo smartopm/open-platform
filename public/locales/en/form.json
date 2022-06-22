@@ -108,7 +108,9 @@
   "form_fields": {
     "field_name": "Field Name",
     "field_type": "Field Type",
+    "short_desc": "Short Description",
     "option": "Option",
+    "amount_to_pay": "Amount to Pay",
     "required_field": "This field is required",
     "admins_only": "Only for admins",
     "order_number": "Order Number",

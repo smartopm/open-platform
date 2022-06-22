@@ -54,7 +54,9 @@ export default function FormPropertyCreateForm({
     adminUse: false,
     order: '1',
     fieldValue: [],
-    categoryId
+    categoryId,
+    shortDesc: '',
+    longDesc: ''
   };
   const [propertyData, setProperty] = useState(initData);
   const [isLoading, setMutationLoading] = useState(false);
@@ -110,6 +112,7 @@ export default function FormPropertyCreateForm({
     formPropertyCreate({
       variables: {
         ...propertyData,
+        shortDesc: String(propertyData.shortDesc),
         fieldValue,
         formId
       }
@@ -137,7 +140,8 @@ export default function FormPropertyCreateForm({
       variables: {
         ...propertyData,
         fieldValue,
-        formPropertyId: propertyId
+        formPropertyId: propertyId,
+        shortDesc: String(propertyData.shortDesc)
       }
     })
       .then(res => {
@@ -220,6 +224,38 @@ export default function FormPropertyCreateForm({
                 ))}
               </Select>
             </FormControl>
+          </Grid>
+          {propertyData.fieldType === 'payment' && (
+            <Grid item md={12} xs={12}>
+              <TextField
+                id="standard-short_desc"
+                label={t('form_fields.amount_to_pay')}
+                variant="outlined"
+                value={propertyData.shortDesc}
+                onChange={handlePropertyValueChange}
+                name="shortDesc"
+                type="number"
+                style={{ width: '100%' }}
+                className="form-property-field-name-txt-input"
+                inputProps={{ 'data-testid': 'short_desc' }}
+                margin="normal"
+              />
+            </Grid>
+          )}
+          <Grid item md={12} xs={12}>
+            <TextField
+              id="standard-short_desc"
+              label={t('form_fields.long_desc')}
+              variant="outlined"
+              value={propertyData.longDesc}
+              onChange={handlePropertyValueChange}
+              name="longDesc"
+              style={{ width: '100%' }}
+              className="form-property-field-name-txt-input"
+              inputProps={{ 'data-testid': 'long_desc' }}
+              margin="normal"
+              multiline
+            />
           </Grid>
           <Grid item md={12} xs={12}>
             {(propertyData.fieldType === 'radio' ||
