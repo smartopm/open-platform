@@ -63,9 +63,6 @@ Cypress.Commands.add("visitMainMenu", (menuItem) => {
   cy.get('.left-menu-collapsible').click();
   cy.wait(1000);
   cy.get(`${menuItem}`).click();
-  cy.wait(1000);
-  cy.get('.left-menu-collapsible').click();
-  cy.wait(1000);
 })
 Cypress.Commands.add("visitSubMenu", (menuItem, subMenuItem) => {
   cy.get('.left-menu-collapsible').click();
@@ -73,9 +70,6 @@ Cypress.Commands.add("visitSubMenu", (menuItem, subMenuItem) => {
   cy.get(`${menuItem}`).click();
   cy.wait(1000);
   cy.get(`${subMenuItem}`).click();
-  cy.wait(1000);
-  cy.get('.left-menu-collapsible').click();
-  cy.wait(1000);
 })
 
 Cypress.Commands.add("myProfile", () => {

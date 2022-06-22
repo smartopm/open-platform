@@ -17,12 +17,21 @@ export default function PageWrapper({
   showAvatar,
   breadCrumbObj,
   avatarObj,
-  rightPanelObj
+  rightPanelObj,
+  hideWrapper
 }) {
   const matches = useMediaQuery('(max-width:900px)');
   const classes = useStyles();
-  return (
-    <Grid container className={`${classes.containerStyles} ${classes.topStyle}`} data-testid='page_container'>
+  return hideWrapper ? (
+    <div data-testid='noWrapper'>
+      {children}
+    </div>
+  ) : (
+    <Grid
+      container
+      className={`${classes.containerStyles} ${classes.topStyle}`}
+      data-testid="page_container"
+    >
       <Grid
         item
         lg={1}
@@ -38,7 +47,11 @@ export default function PageWrapper({
           <Grid container>
             <Grid item md={12} xs={12} sm={12} lg={12}>
               {!!breadCrumbObj && (
-                <Breadcrumbs aria-label="breadcrumb" role="presentation" data-testid="page_breadcrumb">
+                <Breadcrumbs
+                  aria-label="breadcrumb"
+                  role="presentation"
+                  data-testid="page_breadcrumb"
+                >
                   {breadCrumbObj?.extraBreadCrumb && (
                     <Typography color="primary" variant="caption">
                       <Link className={classes.linkColor} to={breadCrumbObj?.extraBreadCrumbLink}>
@@ -53,7 +66,7 @@ export default function PageWrapper({
                       </Link>
                     </Typography>
                   )}
-                  <Typography color="text.primary" variant="caption" data-testid='page_name'>
+                  <Typography color="text.primary" variant="caption" data-testid="page_name">
                     {breadCrumbObj?.pageName}
                   </Typography>
                 </Breadcrumbs>
@@ -61,12 +74,12 @@ export default function PageWrapper({
             </Grid>
             <Grid item md={3} lg={4} sm={4} xs={9}>
               {pageTitle && (
-                <Typography variant="h4" color="textSecondary" data-testid='page_title'>
+                <Typography variant="h4" color="textSecondary" data-testid="page_title">
                   {pageTitle}
                 </Typography>
               )}
               {showAvatar && (
-                <div style={{ display: 'flex' }} data-testid='page_avatar'>
+                <div style={{ display: 'flex' }} data-testid="page_avatar">
                   <Avatar
                     user={avatarObj?.data.user}
                     // eslint-disable-next-line react/style-prop-object
@@ -79,7 +92,7 @@ export default function PageWrapper({
               )}
             </Grid>
             {rightPanelObj && (
-              <Grid item md={9} lg={8} xs={3} sm={8} data-testid='right_panel'>
+              <Grid item md={9} lg={8} xs={3} sm={8} data-testid="right_panel">
                 <div style={{ display: 'flex', justifyContent: 'right' }}>
                   {rightPanelObj.map(data => (
                     <div
@@ -144,7 +157,8 @@ PageWrapper.defaultProps = {
   pageTitle: undefined,
   breadCrumbObj: undefined,
   avatarObj: undefined,
-  rightPanelObj: undefined
+  rightPanelObj: undefined,
+  hideWrapper: false
 };
 
 PageWrapper.propTypes = {
@@ -174,5 +188,6 @@ PageWrapper.propTypes = {
       key: PropTypes.number,
       mainElement: PropTypes.oneOfType([PropTypes.node, PropTypes.string])
     })
-  )
+  ),
+  hideWrapper: PropTypes.bool
 };
