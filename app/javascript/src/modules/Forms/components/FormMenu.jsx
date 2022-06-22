@@ -126,7 +126,11 @@ export default function FormMenu(
         <DialogTitle id="responsive-edit-dialog-title" sx={{ pb: '0' }}>
           <Grid sx={{ display: 'flex', justifyContent: 'space-between' }}>
             <span>{t('common:menu.form_qrcode_header', { formName })}</span>
-            <IconButton aria-label="close" onClick={toggleQRModal}>
+            <IconButton
+              aria-label="close"
+              onClick={toggleQRModal}
+              data-testid="qrcode_form_modal_close_icon"
+            >
               <CloseIcon color="primary" />
             </IconButton>
           </Grid>
@@ -136,29 +140,34 @@ export default function FormMenu(
           sx={{ display: 'flex', justifyContent: 'center', p: '30px' }}
           ref={ref}
         >
-          <QRCode style={{ width: 275 }} value={qrCodeAddress(formId)} />
+          <QRCode style={{ width: 275 }} value={qrCodeAddress(formId)} data-testid="main_qrcode" />
         </DialogContent>
         <DialogActions
           sx={{
             flexDirection: `${matches ? 'column' : 'row'}`,
             justifyContent: 'space-around',
-            rowGap: `${matches ? '25px' : '0' }`,
+            rowGap: `${matches ? '25px' : '0'}`,
             p: '30px'
           }}
         >
           <Grid item xs={12} md={4} sx={{ textAlign: 'center' }}>
-            <Button onClick={handleTextCopy} variant="outlined">
+            <Button onClick={handleTextCopy} variant="outlined" data-testid="qrcode_copy_btn">
               {t('common:form_actions.copy')}
             </Button>
-            <Typography variant="caption" sx={{ mt: '10px' }} display="block">
+            <Typography variant="caption" sx={{ mt: '10px' }} display="block" data-testid="copy_detail">
               {t(`${isCopied ? 'common:misc.copied' : 'common:misc.copy_info'}`)}
             </Typography>
           </Grid>
           <Grid item xs={12} md={4} sx={{ textAlign: 'center' }}>
-            <Button color="primary" onClick={downloadQRCode} variant="contained">
+            <Button
+              color="primary"
+              onClick={downloadQRCode}
+              variant="contained"
+              data-testid="qrcode_download_btn"
+            >
               {t('common:misc.download')}
             </Button>
-            <Typography variant="caption" sx={{ mt: '10px' }} display="block">
+            <Typography variant="caption" sx={{ mt: '10px' }} display="block" data-testid="download_detail">
               {message.isError ? message.detail : t('common:misc.download_info')}
             </Typography>
           </Grid>
