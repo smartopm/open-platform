@@ -140,16 +140,18 @@ export default function SupportCard({ handleSendMessage, user }) {
           </Grid>
         </Grid>
 
-        <Grid container direction="row" className={classes.root}>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleSendMessage}
-            className={classes.chatButton}
-          >
-            {t('buttons.support_chat')}
-          </Button>
-        </Grid>
+        {user?.community?.name !== 'Tilisi' && (
+          <Grid container direction="row" className={classes.root}>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={handleSendMessage}
+              className={classes.chatButton}
+            >
+              {t('buttons.support_chat')}
+            </Button>
+          </Grid>
+        )}
 
         {user.community && user.community.name && user.community.name === 'Nkwashi' && (
           <Grid container direction="row" className={classes.root}>
