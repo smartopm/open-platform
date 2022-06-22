@@ -23,7 +23,7 @@ export default function PageWrapper({
   const matches = useMediaQuery('(max-width:900px)');
   const classes = useStyles();
   return hideWrapper ? (
-    <div>
+    <div data-testId='noWrapper'>
       {children}
     </div>
   ) : (

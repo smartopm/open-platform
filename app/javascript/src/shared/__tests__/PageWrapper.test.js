@@ -53,4 +53,18 @@ describe('PageWrapper component', () => {
     expect(rendered.queryByTestId('page_avatar')).toBeInTheDocument();
     expect(rendered.queryByTestId('right_panel')).toBeInTheDocument();
   });
+
+  it('should hide the pageWrapper', () => {
+    const rendered = render(
+      <BrowserRouter>
+        <MockedProvider>
+          <MockedThemeProvider>
+            <PageWrapper hideWrapper />
+          </MockedThemeProvider>
+        </MockedProvider>
+      </BrowserRouter>
+    );
+
+    expect(rendered.queryByTestId('noWrapper')).toBeInTheDocument();
+  });
 });
