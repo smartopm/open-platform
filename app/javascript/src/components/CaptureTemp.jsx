@@ -81,15 +81,17 @@ export default function CaptureTemp({ refId, refName, refType }) {
       >
         <SnackbarContent
           color="primary"
-          message={
+          message={(
             <div className="row d-flex m-20">
               {' '}
-              <CheckCircleIconBase />{' '}
+              <CheckCircleIconBase />
+              {' '}
               <span className="justify-content-center" id="client-snackbar">
                 {t('logbook:logbook.temperature_recorded')}
-              </span>{' '}
+              </span>
+              {' '}
             </div>
-          }
+          )}
         />
       </Snackbar>
     </div>
