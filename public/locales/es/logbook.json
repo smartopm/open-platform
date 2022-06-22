@@ -186,6 +186,7 @@
     "granting": "Concesión",
     "guest_entry_created_successful": "Exitoso: Invitado agregado a la lista de invitados exitosamente",
     "guest_entry_updated_successful": "Exitoso: registro de lista de Invitados actualizado exitosamente",
+    "guest_invite": "Invitación del Invitado",
     "host": "Anfitrión: ",
     "invite_updated_successful": "Invitación actualizada con éxito",
     "last_30_days": "Últimos 30 días",
@@ -233,7 +234,7 @@
   },
   "observations": {
     "add_your_observation": "¿Tiene alguna observación que le gustaría agregar?",
-    "close_go_dashboard": "Cerrar y volver al Menu Principal",
+    "close_go_dashboard": "Cerrar y Volver a Inicio",
     "created_observation": "Las observaciones fueron agregadas con exito",
     "created_observation_exit": "La observación de salida se ha registrado correctamente",
     "observation_title": "Observaciones",

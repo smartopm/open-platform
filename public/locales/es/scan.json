@@ -1,7 +1,9 @@
 {
   "misc": {
     "decoding": "Decodificando...",
+    "my_id": "Mi ID",
     "off": "Apagado",
+    "scan": "Escanear",
     "visiting_hours": "Tenga en cuenta el horario de visita en la entrada principal:"
   },
   "qr_code": {

@@ -515,6 +515,10 @@ es:
     reply_requested: "%{user} pidió respuesta."
     task: Se le asignó la tarea %{task}.
   offline: Huy.
+  payment:
+    pay_for_item: Pagar por este artículo
+    transaction_error: No se puede procesar la transacción en este momento.
+    transaction_failed: Transacción Fallida
   permission:
     bad_query: Consulta incorrecta, función o módulo no válido
   reload_page: Volver a cargar página
