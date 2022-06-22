@@ -16,13 +16,16 @@ import PropTypes from 'prop-types';
 import { useHistory } from 'react-router';
 import { useTheme } from '@mui/styles';
 import CloseIcon from '@mui/icons-material/Close';
+import { QRCode } from 'react-qr-svg';
 import { FormUpdateMutation } from '../graphql/forms_mutation';
 import { formStatus } from '../../../utils/constants';
 import { ActionDialog } from '../../../components/Dialog';
 import MessageAlert from '../../../components/MessageAlert';
 import { objectAccessor } from '../../../utils/helpers';
 
-export default function FormMenu({ formId, anchorEl, handleClose, open, refetch, t, isPublic }) {
+export default function FormMenu(
+  { formId, anchorEl, handleClose, open, refetch, t, isPublic, formName }
+) {
   const history = useHistory();
   const [isDialogOpen, setOpen] = useState(false);
   const [alertOpen, setAlertOpen] = useState(false);
@@ -75,6 +78,10 @@ export default function FormMenu({ formId, anchorEl, handleClose, open, refetch,
     setOpenQRCodeModal(!openQRCodeModal);
   }
 
+  function qrCodeAddress(id) {
+    return `${window.location.protocol}//${window.location.hostname}/form/${id}/public`;
+  }
+
   return (
     <>
       <ActionDialog
@@ -98,22 +105,22 @@ export default function FormMenu({ formId, anchorEl, handleClose, open, refetch,
         fullScreen={fullScreen}
         open={openQRCodeModal}
         fullWidth
-        maxWidth="md"
+        maxWidth="sm"
         onClose={toggleQRModal}
         aria-labelledby="responsive-edit-dialog-title"
       >
-        <DialogTitle id="responsive-edit-dialog-title">
+        <DialogTitle id="responsive-edit-dialog-title" sx={{ pb: '0' }}>
           <Grid sx={{ display: 'flex', justifyContent: 'space-between' }}>
-            <span>{t('common:menu.form_qrcode_header')}</span>
+            <span>{t('common:menu.form_qrcode_header', { formName })}</span>
             <IconButton aria-label="close" onClick={toggleQRModal}>
               <CloseIcon />
             </IconButton>
           </Grid>
         </DialogTitle>
-        <DialogContent dividers>
-          <p>QRCode here...</p>
+        <DialogContent dividers sx={{ display: 'flex', justifyContent: 'center', p: '30px' }}>
+          <QRCode style={{ width: 280 }} value={qrCodeAddress(formId)} />
         </DialogContent>
-        <DialogActions>
+        <DialogActions sx={{ justifyContent: 'center', p: '30px' }}>
           <Button onClick={() => {}}>{t('common:form_actions.copy')}</Button>
           <Button onClick={toggleQRModal}>{t('common:form_actions.cancel')}</Button>
         </DialogActions>
@@ -169,6 +176,7 @@ export default function FormMenu({ formId, anchorEl, handleClose, open, refetch,
 FormMenu.defaultProps = {
   anchorEl: {},
   isPublic: false,
+  formName: ''
 };
 FormMenu.propTypes = {
   formId: PropTypes.string.isRequired,
@@ -178,5 +186,6 @@ FormMenu.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   anchorEl: PropTypes.object,
   t: PropTypes.func.isRequired,
-  isPublic: PropTypes.bool
+  isPublic: PropTypes.bool,
+  formName: PropTypes.string
 };
