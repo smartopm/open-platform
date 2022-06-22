@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useMutation } from 'react-apollo';
-import { Button, TextField, Snackbar, SnackbarContent , Grid } from '@mui/material';
+import { Button, TextField, Snackbar, SnackbarContent, Grid } from '@mui/material';
 import PropTypes from 'prop-types';
 import CheckCircleIconBase from '@mui/icons-material/CheckCircle';
 import Loading from '../shared/Loading';
@@ -32,10 +32,7 @@ export default function CaptureTemp({ refId, refName, refType }) {
   }
   return (
     <div style={{ pointerEvents: disabled }}>
-      <Grid
-        container
-        spacing={2}
-      >
+      <Grid container spacing={2}>
         <Grid item xs={10} sm={8}>
           <TextField
             required
@@ -50,10 +47,19 @@ export default function CaptureTemp({ refId, refName, refType }) {
             helperText={tempErrorMessage}
             color="primary"
             type="number"
+            inputProps={{
+              'data-testid': 'temp-input'
+            }}
           />
         </Grid>
         <Grid item xs={2} sm={4}>
-          <Button className="button" variant="contained" color="primary" onClick={handleClick}>
+          <Button
+            className="button"
+            variant="contained"
+            color="primary"
+            onClick={handleClick}
+            data-testid="log-btn"
+          >
             {t('common:misc.log')}
           </Button>
         </Grid>
@@ -75,17 +81,15 @@ export default function CaptureTemp({ refId, refName, refType }) {
       >
         <SnackbarContent
           color="primary"
-          message={(
+          message={
             <div className="row d-flex m-20">
               {' '}
-              <CheckCircleIconBase />
-              {' '}
+              <CheckCircleIconBase />{' '}
               <span className="justify-content-center" id="client-snackbar">
                 {t('logbook:logbook.temperature_recorded')}
-              </span>
-              {' '}
+              </span>{' '}
             </div>
-          )}
+          }
         />
       </Snackbar>
     </div>

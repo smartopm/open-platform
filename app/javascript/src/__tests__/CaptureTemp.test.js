@@ -1,20 +1,25 @@
 import React from 'react';
-import { shallow, mount } from 'enzyme';
+import { render, fireEvent, waitFor } from '@testing-library/react';
 import { MockedProvider } from '@apollo/react-testing';
 import CaptureTemp from '../components/CaptureTemp';
 import { TemperateRecord } from '../graphql/mutations';
 
 describe('temperature component', () => {
   const screenProps = {
-    refId: '1',
-    refType: 'Logs::Temperature',
-    refName: 'Test name'
+    refId: '123456asdfgh',
+    refType: 'Users::User',
+    refName: 'Test Name'
   };
   const mock = [
     {
       request: {
         query: TemperateRecord,
-        variable: { refId: 1, temp: '36.5', refName: 'Test Name', refType: 'Users::User' }
+        variable: {
+          refId: '123456asdfgh',
+          temp: '36',
+          refName: 'Test Name',
+          refType: 'Users::User'
+        }
       },
       result: {
         data: {
@@ -29,31 +34,25 @@ describe('temperature component', () => {
   ];
 
   it('component is mounted', () => {
-    const wrapper = shallow(
+    const wrapper = render(
       <MockedProvider mock={[]}>
         <CaptureTemp {...screenProps} />
       </MockedProvider>
     );
-    expect(wrapper.find('.button')).toBeTruthy();
+    expect(wrapper.queryByTestId('log-btn')).toBeInTheDocument();
   });
-  const wrapper = shallow(
-    <MockedProvider mock={[]} addTypename={false}>
-      <CaptureTemp {...screenProps} />
-    </MockedProvider>
-  );
-  it('should get the temperature value', () => {
-    const { refId, refName } = wrapper.props();
-    expect(refId).toBe(refId);
-    expect(refName).toBe(refName);
-  });
-  it('should run mutation', async () => {
-    const componentWrapper = mount(
-      <MockedProvider mock={mock} addTypename={false}>
+
+  it('runs mutation', async () => {
+    const componentWrapper = render(
+      <MockedProvider mock={mock}>
         <CaptureTemp {...screenProps} />
       </MockedProvider>
     );
-    await componentWrapper.find('button').simulate('click');
-    expect(componentWrapper.find('tempvalue')).toMatchObject({});
-    componentWrapper.update();
+
+    fireEvent.click(componentWrapper.queryByTestId('log-btn'));
+
+    await waitFor(() => {
+      expect(componentWrapper.queryByText('common:errors.empty_input')).toBeInTheDocument();
+    }, 10);
   });
 });
