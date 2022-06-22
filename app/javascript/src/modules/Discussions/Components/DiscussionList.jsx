@@ -12,7 +12,6 @@ import {
 import { useHistory } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import DeleteIcon from '@mui/icons-material/Delete'
-import { css, StyleSheet } from 'aphrodite'
 import PropTypes from 'prop-types'
 import { useMutation } from 'react-apollo'
 import { truncateString } from '../../../utils/helpers'
@@ -44,7 +43,7 @@ const { t } = useTranslation('discussion')
       .catch(err => setError(err.message))
   }
   return (
-    <div className={css(styles.discussionList)}>
+    <div>
       <List>
         {data.length
           ? data.map(discussion => (
@@ -86,7 +85,6 @@ const { t } = useTranslation('discussion')
                              onClick={event => handleDeleteClick(event, discussion.id)}
                              edge="end"
                              aria-label="delete"
-                             className={css(styles.deleteBtn)}
                              size="large"
                            >
                              <DeleteIcon />
@@ -120,14 +118,3 @@ DiscussionList.propTypes = {
   refetch: PropTypes.func.isRequired,
   isAdmin: PropTypes.bool.isRequired
 }
-
-const styles = StyleSheet.create({
-  discussionList: {
-    marginLeft: '11%',
-    marginRight: '12%',
-    '@media (max-width: 700px)': {
-      marginLeft: '2%',
-      marginRight: '2%'
-    }
-  }
-})

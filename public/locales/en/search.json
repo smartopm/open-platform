@@ -7,6 +7,7 @@
       "search_for": "Search for {{title}}",
       "search_users": "Search Users",
       "search_results": "Search Results",
-      "clear_filters": "Clear Filters"
+      "clear_filters": "Clear Filters",
+      "search": "Search"
     }
 }

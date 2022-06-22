@@ -1,7 +1,6 @@
 import React, { useState, useRef } from 'react'
 import {
-  ButtonGroup,
-  Button,
+  IconButton,
   ClickAwayListener,
   Grow,
   Paper,
@@ -10,16 +9,13 @@ import {
   MenuList,
 } from '@mui/material'
 import PropTypes from 'prop-types'
-import useMediaQuery from '@mui/material/useMediaQuery';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { useTranslation } from 'react-i18next';
-import { objectAccessor } from '../../../utils/helpers'
 
 export default function TaskQuickSearch({ filterTasks, currentTile }){
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
-  const { t } = useTranslation('task')
-  const matches = useMediaQuery('(max-width:800px)');
+  const { t } = useTranslation('task');
 
   const tiles = Object.freeze({
     myOpenTasks: t('task.my_tasks'),
@@ -38,10 +34,6 @@ export default function TaskQuickSearch({ filterTasks, currentTile }){
     filterTasks(event, key)
   }
 
-  function handleClick(event){
-    filterTasks(event, currentTile)
-  };
-
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
   };
@@ -57,21 +49,8 @@ export default function TaskQuickSearch({ filterTasks, currentTile }){
 
   return (
     <div data-testid='task-quick-search'>
-      <ButtonGroup color="primary" ref={anchorRef} aria-label="outlined primary button group split button">
-        <Button onClick={handleClick} disabled={!currentTile} style={matches ? {fontSize: '9px'} : {}}>{!currentTile ?  t('task.quick_search') : objectAccessor(tiles, currentTile)}</Button>
-        <Button
-          color="primary"
-          size="small"
-          aria-controls={open ? 'split-button-menu' : undefined}
-          aria-expanded={open ? 'true' : undefined}
-          aria-label="select merge strategy"
-          aria-haspopup="menu"
-          onClick={handleToggle}
-        >
-          <ArrowDropDownIcon />
-        </Button>
-      </ButtonGroup>
-      <Popper open={open} anchorEl={anchorRef.current} transition>
+      <IconButton ref={anchorRef} onClick={handleToggle} color='primary'><MoreVertIcon /></IconButton>
+      <Popper open={open} anchorEl={anchorRef.current} transition style={{zIndex: 10000}}>
         {({ TransitionProps, placement }) => (
           <Grow
             {...TransitionProps}

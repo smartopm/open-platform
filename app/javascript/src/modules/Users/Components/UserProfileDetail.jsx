@@ -15,13 +15,6 @@ export default function UserDetail({ data }) {
           <Typography className={classes.name} variant='h6'>{data.user.name}</Typography>
         </Grid>
         <Grid item>
-          {data?.user?.phoneNumber && (
-          <Typography data-testid="phone" variant="caption" color='textSecondary'>
-            {data.user.phoneNumber}
-          </Typography>
-          )}
-        </Grid>
-        <Grid item>
           <Typography variant="caption" color='textSecondary'>{t(`common:user_types.${data?.user?.userType}`)}</Typography>
         </Grid>
       </Grid>

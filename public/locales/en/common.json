@@ -293,7 +293,9 @@
     "recent_article": "Recent Articles",
     "see_more_articles": "See More Articles",
     "amenity": "Amenity",
-    "amenity_plural": "Amenities"
+    "amenity_plural": "Amenities",
+    "add_new": "Add New",
+    "otp": "OTP"
   },
   "menu": {
     "invoice": "Invoice",
@@ -654,7 +656,7 @@
   "right_menu": {
     "edit_user": "Edit User",
     "communications": "Communications",
-    "contact_info": "Contact Info"
+    "contact_info": "Contact"
   },
   "file_types": {
     "image": "Image",

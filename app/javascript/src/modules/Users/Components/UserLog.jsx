@@ -3,6 +3,7 @@
 /* eslint-disable react/prop-types */
 import React from "react"
 import { dateToString, dateTimeToString } from "../../../components/DateContainer";
+import PageWrapper from "../../../shared/PageWrapper";
 
 
 export default function UserLog({
@@ -44,8 +45,8 @@ export default function UserLog({
     }
 
     return (
-      <div className="row justify-content-center">
-        <div className="col-10 col-sm-10 col-md-6 table-responsive">
+      <PageWrapper>
+        <div className="col-10 col-sm-10 col-md-12 table-responsive">
           <table className="table">
             <thead>
               <tr>
@@ -74,6 +75,6 @@ export default function UserLog({
             </ul>
           </nav>
         </div>
-      </div>
+      </PageWrapper>
     );
   }

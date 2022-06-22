@@ -75,8 +75,6 @@ describe('Leads Page', () => {
     );
 
     await waitFor(() => {
-      
-      expect(screen.queryByTestId('page_title')).toBeInTheDocument();
       expect(screen.queryByTestId('subtitle')).toBeInTheDocument();
       expect(screen.queryByTestId('monthly_lead')).toBeInTheDocument();
       expect(screen.queryByTestId('card_one')).toBeInTheDocument();

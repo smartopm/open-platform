@@ -8,7 +8,8 @@ import {
   Typography,
   Box,
   Grid,
-  IconButton
+  IconButton,
+  Container
 } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import AssignmentIcon from '@mui/icons-material/Assignment';
@@ -23,7 +24,6 @@ import { formatError } from '../../../utils/helpers';
 import { FormCreateMutation } from '../graphql/forms_mutation';
 import FloatButton from '../../../components/FloatButton';
 import FormCreate from './FormCreate';
-import FormHeader from '../../../shared/PageHeader';
 import FormMenu from './FormMenu';
 import CenteredContent from '../../../shared/CenteredContent';
 import PageWrapper from '../../../shared/PageWrapper';
@@ -52,25 +52,17 @@ export default function FormLinkList({ userType, community, path, id, t }) {
   if (error) return <CenteredContent>{formatError(error.message)}</CenteredContent>;
 
   return (
-    <div>
+    <PageWrapper pageTitle={t('common:misc.forms')}>
       {(path === '/forms/create' || id) && (
-        <>
-          <FormHeader
-            linkText={t('common:misc.forms')}
-            linkHref="/forms"
-            pageName={t('misc.create_form')}
-            PageTitle={t('misc.create_form')}
+        <Container>
+          <FormCreate
+            formMutation={createForm}
+            refetch={refetch}
+            actionType={id ? 'update' : undefined}
+            formId={id}
+            t={t}
           />
-          <PageWrapper>
-            <FormCreate
-              formMutation={createForm}
-              refetch={refetch}
-              actionType={id ? 'update' : undefined}
-              formId={id}
-              t={t}
-            />
-          </PageWrapper>
-        </>
+        </Container>
       )}
       {path === '/forms' && (
         <>
@@ -145,7 +137,7 @@ export default function FormLinkList({ userType, community, path, id, t }) {
           </AccessCheck>
         </>
       )}
-    </div>
+    </PageWrapper>
   );
 }
 

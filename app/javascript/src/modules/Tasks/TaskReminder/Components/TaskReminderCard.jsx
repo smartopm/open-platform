@@ -36,7 +36,7 @@ export default function TaskReminderCard({ translate }) {
     return <CenteredContent>{formatError(error.message)}</CenteredContent>;
   }
   return (
-    <div style={matches ? { padding: '20px' } : { padding: '20px 57px 20px 20px', width: '99%' }}>
+    <div style={matches ? { padding: '20px 0' } : { padding: '20px 0' }}>
       <CardWrapper
         title={translate('dashboard.task_reminders')}
         buttonName={translate('dashboard.see_more_reminders')}

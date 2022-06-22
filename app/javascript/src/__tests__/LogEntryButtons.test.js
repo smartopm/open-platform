@@ -100,7 +100,6 @@ describe('Should check if the buttons are functional on userinformation', () => 
       expect(wrapper.queryAllByTestId('user_avatar')[0]).toBeInTheDocument();
       expect(wrapper.queryByText('common:user_types.admin')).toBeInTheDocument();
       expect(wrapper.queryByText('x JM J')).toBeInTheDocument();
-      expect(wrapper.queryByText('260971500909090')).toBeInTheDocument();
     }, 10);
   });
 });

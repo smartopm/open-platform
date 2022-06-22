@@ -14,6 +14,7 @@ import { TaskListQuery } from '../graphql/task_lists_queries';
 import { UsersLiteQuery } from '../../../../graphql/queries';
 import { AssignUser } from '../../../../graphql/mutations';
 import TaskForm from '../../Components/TaskForm';
+import PageWrapper from '../../../../shared/PageWrapper';
 
 export default function AddSubTasks() {
   const { t } = useTranslation('task');
@@ -72,7 +73,7 @@ export default function AddSubTasks() {
     return <CenteredContent>{formatError(taskListDataError.message)}</CenteredContent>;
 
   return (
-    <div className="container">
+    <PageWrapper>
       <Grid container spacing={1}>
         <Dialog
           open={open}
@@ -99,7 +100,6 @@ export default function AddSubTasks() {
           <div role="presentation">
             <Breadcrumbs
               aria-label="breadcrumb"
-              style={{ paddingBottom: '10px', marginTop: '-45px' }}
             >
               <Link to="/tasks/task_lists">
                 <Typography color="primary" style={{ marginLeft: '5px' }}>
@@ -155,7 +155,7 @@ export default function AddSubTasks() {
           />
         </SplitScreen>
       )}
-    </div>
+    </PageWrapper>
   );
 }
 

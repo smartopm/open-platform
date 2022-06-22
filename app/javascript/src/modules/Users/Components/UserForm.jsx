@@ -34,6 +34,7 @@ import { ModalDialog } from '../../../components/Dialog';
 import CenteredContent from '../../../shared/CenteredContent';
 import { UpdateUserMutation } from '../../../graphql/mutations/user';
 import ImageAuth from '../../../shared/ImageAuth';
+import PageWrapper from '../../../shared/PageWrapper';
 
 const initialValues = {
   name: '',
@@ -263,7 +264,7 @@ export default function UserForm({ isEditing, isFromRef, isAdminOrMarketingAdmin
   }
 
   return (
-    <div className="container">
+    <PageWrapper pageTitle={t('menu.user_edit')}>
       <ModalDialog
         handleClose={handleModal}
         handleConfirm={handleModalConfirm}
@@ -289,14 +290,11 @@ export default function UserForm({ isEditing, isFromRef, isAdminOrMarketingAdmin
               />
             )}
             <div>
-              <br />
               <Typography color="primary">
                 {status !== 'INIT' && t(`common:upload_state.${status}`)}
               </Typography>
-              <br />
             </div>
             <div>
-              <br />
 
               <label htmlFor="file" className={`${css(styles.photoUpload)}`}>
                 <span>
@@ -647,7 +645,7 @@ export default function UserForm({ isEditing, isFromRef, isAdminOrMarketingAdmin
           )
         ) : null}
       </form>
-    </div>
+    </PageWrapper>
   );
 }
 

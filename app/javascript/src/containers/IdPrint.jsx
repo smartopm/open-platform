@@ -11,6 +11,7 @@ import ErrorPage from '../components/Error';
 import CommunityName from '../shared/CommunityName';
 import { Context } from './Provider/AuthStateProvider';
 import CenteredContent from '../shared/CenteredContent';
+import PageWrapper from '../shared/PageWrapper'
 
 export function qrCodeAddress(userId) {
   const timestamp = Date.now();
@@ -56,7 +57,7 @@ export function UserPrintDetail({ data }) {
   }, [ref]);
 
   return (
-    <>
+    <PageWrapper>
       <div className="row justify-content-center">
         <div id="idCard" className="card id_card_box" style={{ width: '325px' }} ref={ref}>
           <CenteredContent>
@@ -85,6 +86,6 @@ export function UserPrintDetail({ data }) {
       <CenteredContent>
         <Typography data-testid="error" color="error">{error}</Typography>
       </CenteredContent>
-    </>
+    </PageWrapper>
   );
 }

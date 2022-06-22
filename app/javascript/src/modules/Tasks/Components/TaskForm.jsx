@@ -19,7 +19,6 @@ import { NotesCategories } from '../../../utils/constants';
 import UserSearch from '../../Users/Components/UserSearch';
 import CustomAutoComplete from '../../../shared/autoComplete/CustomAutoComplete';
 import PageWrapper from '../../../shared/PageWrapper';
-import PageHeader from '../../../shared/PageHeader';
 import MessageAlert from '../../../components/MessageAlert';
 
 const initialData = {
@@ -86,18 +85,12 @@ export default function TaskForm({
   }
 
   return (
-    <div style={{paddingTop: '50px'}}>
+    <div>
       <MessageAlert
         type={isSuccessAlert ? 'success' : 'error'}
         message={messageAlert}
         open={!!messageAlert}
         handleClose={() => setMessageAlert('')}
-      />
-      <PageHeader
-        linkText={t('common:misc.tasks')}
-        linkHref="/tasks"
-        pageName={t('common:form_actions.create_task')}
-        PageTitle={t('task.task_modal_create_text')}
       />
       <PageWrapper>
         <form onSubmit={handleSubmit}>

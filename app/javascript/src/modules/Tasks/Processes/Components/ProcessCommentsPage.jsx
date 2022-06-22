@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router';
 import { useQuery } from 'react-apollo';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import PageHeader from '../../../../shared/PageHeader';
 import { ProcessReplyComments } from '../graphql/process_queries';
 import { Spinner } from '../../../../shared/Loading';
 import CenteredContent from '../../../../shared/CenteredContent';
@@ -13,7 +12,7 @@ import PageWrapper from '../../../../shared/PageWrapper';
 import ProcessCommentItem from './ProcessCommentItem';
 
 export default function ProcessCommentsPage() {
-  const {  id: processId } = useParams();
+  const { id: processId } = useParams();
   const matches = useMediaQuery('(max-width:600px)');
   const history = useHistory();
   const path = useParamsQuery();
@@ -39,19 +38,23 @@ export default function ProcessCommentsPage() {
     setTabValue(Number(newValue));
   }
 
+  const breadCrumbObj = {
+    linkText: t('breadcrumbs.processes'),
+    linkHref: '/processes',
+    pageName: t('breadcrumbs.comments')
+  };
+
   if (loading) return <Spinner />;
   return (
-    <>
-      <PageHeader
-        linkText={t('breadcrumbs.processes')}
-        linkHref="/processes"
-        pageName={t('breadcrumbs.comments')}
-        PageTitle={t('templates.process_comments', { processName })}
-      />
+    <PageWrapper
+      oneCol
+      pageTitle={t('templates.process_comments', { processName })}
+      breadCrumbObj={breadCrumbObj}
+    >
       {loading ? (
         <Spinner />
       ) : (
-        <PageWrapper>
+        <>
           <StyledTabs
             value={tabValue}
             onChange={handleTabValueChange}
@@ -126,9 +129,9 @@ export default function ProcessCommentsPage() {
               )}
             </div>
           </TabPanel>
-        </PageWrapper>
+        </>
       )}
       {error && <CenteredContent>{formatError(error.message)}</CenteredContent>}
-    </>
+    </PageWrapper>
   );
 }

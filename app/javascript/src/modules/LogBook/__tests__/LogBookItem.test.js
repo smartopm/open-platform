@@ -88,7 +88,6 @@ describe('LogBook Component', () => {
     await waitFor(() => {
       expect(container.queryAllByTestId('card')[0]).toBeInTheDocument();
       expect(container.queryByTestId('name')).toBeInTheDocument();
-      expect(container.queryByText('logbook.log_book')).toBeInTheDocument();
       expect(container.queryByTestId('speed_dial_btn')).toBeInTheDocument();
       expect(container.queryByTestId('add_icon')).toBeInTheDocument();
       expect(container.queryByTestId('logbook_tabs')).toBeInTheDocument();

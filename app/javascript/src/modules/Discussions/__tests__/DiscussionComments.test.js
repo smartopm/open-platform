@@ -6,6 +6,7 @@ import { BrowserRouter } from 'react-router-dom';
 import Discussion from '../Components/Discussion';
 import { DiscussionPostsQuery } from '../../../graphql/queries';
 import { Spinner } from '../../../shared/Loading';
+import MockedThemeProvider from '../../__mocks__/mock_theme';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 describe('Discussion with comments', () => {
@@ -43,7 +44,9 @@ describe('Discussion with comments', () => {
       container = render(
         <BrowserRouter>
           <MockedProvider mocks={mocks} addTypename={false}>
-            <Discussion discussionData={data} />
+            <MockedThemeProvider>
+              <Discussion discussionData={data} />
+            </MockedThemeProvider>
           </MockedProvider>
         </BrowserRouter>
       );
@@ -55,7 +58,7 @@ describe('Discussion with comments', () => {
 
     await waitFor(() => {
       expect(container.queryByText(/Some description/)).toBeInTheDocument();
-      expect(container.queryByText(/Last discussion/)).toBeInTheDocument();
+      expect(container.queryAllByText(/Last discussion/)[0]).toBeInTheDocument();
       expect(container.queryByText('A note about your activity')).toBeInTheDocument();
       expect(container.queryByText('follow')).toBeInTheDocument();
 

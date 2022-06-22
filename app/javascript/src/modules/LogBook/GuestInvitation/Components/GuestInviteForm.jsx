@@ -20,6 +20,7 @@ import GuestSearchCard from './GuestSearchCard';
 import { UserChip } from '../../../Tasks/Components/UserChip';
 import {  validateGuest } from '../helpers';
 import useGuests from '../hooks/useGuests';
+import PageWrapper from '../../../../shared/PageWrapper';
 
 export default function GuestInviteForm({inviteDetails, onUpdate, close, update}) {
   const initialData = { firstName: '', lastName: '', companyName: '', phoneNumber: null, isAdded: false };
@@ -149,7 +150,7 @@ export default function GuestInviteForm({inviteDetails, onUpdate, close, update}
 
   const noUserFound = searchValue && !loading && !data?.searchGuests.length;
   return (
-    <>
+    <PageWrapper pageTitle={t('logbook.guest_invite')}>
       <MessageAlert
         type={!details.isError ? 'success' : 'error'}
         message={details.message}
@@ -282,7 +283,7 @@ export default function GuestInviteForm({inviteDetails, onUpdate, close, update}
           </>
         )}
       </CenteredContent>
-    </>
+    </PageWrapper>
   );
 }
 

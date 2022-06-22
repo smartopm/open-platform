@@ -46,7 +46,8 @@ const useStyles = makeStyles(theme => ({
   },
   appBar: {
     height: 50,
-    backgroundColor: '#FFFFFF' // get this color from the theme
+    backgroundColor: '#FFFFFF', // get this color from the theme
+    borderBottom: '1px solid #E0E0E0'
   },
   menuButton: {
     marginRight: theme.spacing(2)
@@ -111,14 +112,6 @@ export function MainNav({ authState }) {
 
   const handleDrawerToggle = () => {
     setDrawerOpen(!drawerOpen);
-
-    if (window.screen.width > 768) {
-      // A hack to dynamically change app-container's margin-left
-      // There's a react-way of doing it but it re-renders the whole <App /> component
-      document.getElementById('app-container').style.marginLeft = drawerOpen
-        ? 0
-        : `${drawerWidth}px`;
-    }
   };
 
   const communityHasEmergencyNumber = Boolean(authState.user?.community?.emergencyCallNumber);
@@ -148,7 +141,7 @@ export function MainNav({ authState }) {
           </Grid>
         </Grid>
       </CustomDrawer>
-      <AppBar position="fixed" className={classes.appBar}>
+      <AppBar position="fixed" className={classes.appBar} elevation={0}>
         <Toolbar>
           <IconButton
             color="primary"
@@ -204,7 +197,7 @@ export function MainNav({ authState }) {
       {authState.loggedIn && (
         <nav className={classes.drawer} aria-label="mailbox folders" data-testid="nav-container">
           <Drawer
-            variant={window.screen.width <= 1200 ? 'temporary' : 'persistent'}
+            variant='temporary'
             anchor="left"
             open={drawerOpen}
             onClose={handleDrawerToggle}
@@ -224,10 +217,6 @@ export function MainNav({ authState }) {
           </Drawer>
         </nav>
       )}
-      <br />
-      <br />
-      <br />
-      <br />
     </div>
   );
 }

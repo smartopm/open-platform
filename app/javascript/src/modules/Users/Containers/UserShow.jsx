@@ -47,18 +47,16 @@ export default function UserShow({ history }) {
     return <ErrorPage title={error.message || error} />; // error could be a string sometimes
   }
   return (
-    <>
-      <UserInformation
-        data={data}
-        accountData={accountData}
-        accountRefetch={accountRefetch}
-        authState={authState}
-        onLogEntry={addLogEntry}
-        sendOneTimePasscode={sendOneTimePasscode}
-        refetch={refetch}
-        userId={id}
-        router={history}
-      />
-    </>
+    <UserInformation
+      data={data}
+      accountData={accountData}
+      accountRefetch={accountRefetch}
+      authState={authState}
+      onLogEntry={addLogEntry}
+      sendOneTimePasscode={sendOneTimePasscode}
+      refetch={refetch}
+      userId={id}
+      router={history}
+    />
   );
 }
