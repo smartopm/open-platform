@@ -5,6 +5,7 @@
     "create_user_request": "Crear un nuevo usuario",
     "load_more": "Carga más",
     "no_results": "No se han encontrado resultados",
+    "search": "Buscar",
     "search_for": "Buscar {{title}}",
     "search_results": "Resultados de Búsqueda",
     "search_users": "Buscar Usuarios",
