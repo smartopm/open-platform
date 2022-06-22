@@ -32,7 +32,8 @@ describe('Form Entries Component', () => {
                 createdAt: '2021-07-08T12:07:56+02:00',
                 submittedBy: {
                   id: '4e530435dse',
-                  name: 'John Test'
+                  name: 'John Test',
+                  imageUrl: 'http://host.com/image.jpg'
                 },
                 user: {
                   id: '410ec828efgs',
