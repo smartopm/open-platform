@@ -28,6 +28,7 @@ import TagsComponent from './Tags';
 import MessageAlert from '../../../components/MessageAlert';
 import { NewsNav } from '../../Menu';
 import { CurrentCommunityQuery } from '../../Community/graphql/community_query';
+import useStateIfMounted from '../../../shared/hooks/useStateIfMounted';
 
 // TODO: Reuse this component
 // eslint-disable-next-line
@@ -55,7 +56,7 @@ export default function PostPage() {
   const [isSuccessAlert, setIsSuccessAlert] = useState(false);
   const [messageAlert, setMessageAlert] = useState('');
   const [response, setData] = useState({});
-  const [error, setError] = useState(null);
+  const [error, setError] = useStateIfMounted(null);
   const { t } = useTranslation(['news', 'common']);
   const fetchData = async url => {
     try {
@@ -140,7 +141,7 @@ export default function PostPage() {
         </CenteredContent>
         <TagsComponent
           tags={response?.tags}
-          wordpressEndpoint={communityQuery.data?.currentCommunity.wpLink}
+          wordpressEndpoint={communityQuery.data?.currentCommunity?.wpLink}
         />
         <ShareButton
           url={currentUrl}
@@ -158,8 +159,7 @@ export default function PostPage() {
           className={`${css(styles.getStartedButton)} `}
           color="primary"
         >
-          {t('common:misc.comment', { count: 0 })}
-          {' '}
+          {t('common:misc.comment', { count: 0 })}{' '}
           <Avatar>{data ? data.postComments.length : 0}</Avatar>
         </Fab>
       </div>
@@ -191,9 +191,7 @@ export default function PostPage() {
             <>
               <CenteredContent>
                 <h4>
-                  {queryResponse.data.postDiscussion.title} 
-                  {' '}
-                  {t('news.post_discussion')}
+                  {queryResponse.data.postDiscussion.title} {t('news.post_discussion')}
                 </h4>
               </CenteredContent>
               <Comments
