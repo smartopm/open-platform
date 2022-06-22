@@ -37,7 +37,7 @@ RSpec.describe FlutterwaveCharger do
     {
       tx_ref: time,
       amount: 10.0,
-      currency: I18n.t("currencies.#{community.currency}"),
+      currency: 'ZMW',
       redirect_url: 'http://localhost:3000/payments/pay',
       customer: customer,
       meta: meta_data,
@@ -59,10 +59,12 @@ RSpec.describe FlutterwaveCharger do
 
   before do
     ENV["#{community.name.parameterize.upcase}_FLUTTERWAVE"] = '{ "PRIVATE_KEY": "xzs-12-as"}'
+    ENV['FLUTTERWAVE_PAYMENT_URL'] = 'https://api.flutterwave.com/v3/payments'
+    ENV['FLUTTERWAVE_TRANSACTION_VERIFY_URL'] = 'https://api.flutterwave.com/v3/transactions'
   end
 
   describe '#generate_link' do
-    let(:base_uri) { 'https://api.flutterwave.com/v3/payments' }
+    let(:base_uri) { ENV['FLUTTERWAVE_PAYMENT_URL'] }
     let(:response_body) do
       {
         status: 'success',
@@ -105,7 +107,7 @@ RSpec.describe FlutterwaveCharger do
   end
 
   describe '#verify_transaction' do
-    let(:base_uri) { 'https://api.flutterwave.com/v3/transactions/12345/verify' }
+    let(:base_uri) { "#{ENV['FLUTTERWAVE_TRANSACTION_VERIFY_URL']}/12345/verify" }
     let(:response_body) { File.open('./spec/webmock/transaction_response_body.json') }
     let(:failed_response) do
       {

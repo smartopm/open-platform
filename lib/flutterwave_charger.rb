@@ -6,7 +6,7 @@ require 'uri'
 # flutterwave charger
 class FlutterwaveCharger
   def self.generate_link(payload, community_id)
-    url = URI('https://api.flutterwave.com/v3/payments')
+    url = URI(ENV['FLUTTERWAVE_PAYMENT_URL'])
     http = generate_http(url)
     request = Net::HTTP::Post.new(url)
     request['Authorization'] = auth_key(community_id)
@@ -17,7 +17,7 @@ class FlutterwaveCharger
   end
 
   def self.verify_transaction(transaction_id, community_id)
-    url = URI("https://api.flutterwave.com/v3/transactions/#{transaction_id}/verify")
+    url = URI("#{ENV['FLUTTERWAVE_TRANSACTION_VERIFY_URL']}/#{transaction_id}/verify")
     http = generate_http(url)
     request = Net::HTTP::Get.new(url)
     request['Authorization'] = auth_key(community_id)

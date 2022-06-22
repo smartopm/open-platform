@@ -21,7 +21,7 @@ RSpec.describe Mutations::Flutterwave::TransactionVerify do
         }
       GQL
     end
-    let(:base_uri) { 'https://api.flutterwave.com/v3/transactions/12345/verify' }
+    let(:base_uri) { "#{ENV['FLUTTERWAVE_TRANSACTION_VERIFY_URL']}/12345/verify" }
     let(:headers) do
       {
         'Accept' => '*/*',
@@ -50,9 +50,13 @@ RSpec.describe Mutations::Flutterwave::TransactionVerify do
       }
     end
 
+    before do
+      ENV["#{community.name.parameterize.upcase}_FLUTTERWAVE"] = '{ "PRIVATE_KEY": "xzs-12-as"}'
+      ENV['FLUTTERWAVE_TRANSACTION_VERIFY_URL'] = 'https://api.flutterwave.com/v3/transactions'
+    end
+
     context 'when transaction succeeds' do
       before do
-        ENV["#{community.name.parameterize.upcase}_FLUTTERWAVE"] = '{ "PRIVATE_KEY": "xzs-12-as"}'
         stub_request(:get, base_uri)
           .with(headers: headers)
           .to_return(status: 200, body: response_body)
@@ -72,7 +76,6 @@ RSpec.describe Mutations::Flutterwave::TransactionVerify do
 
     context 'when secret key is invalid' do
       before do
-        ENV["#{community.name.parameterize.upcase}_FLUTTERWAVE"] = '{ "PRIVATE_KEY": "xzs-12-as" }'
         stub_request(:get, base_uri)
           .with(headers: headers)
           .to_return(status: 400, body: failed_response.to_json)
@@ -91,7 +94,6 @@ RSpec.describe Mutations::Flutterwave::TransactionVerify do
 
     context 'when transaction id is invalid' do
       before do
-        ENV["#{community.name.parameterize.upcase}_FLUTTERWAVE"] = '{ "PRIVATE_KEY": "xzs-12-as" }'
         stub_request(:get, base_uri)
           .with(headers: headers)
           .to_return(status: 400, body: wrong_transaction_id.to_json)

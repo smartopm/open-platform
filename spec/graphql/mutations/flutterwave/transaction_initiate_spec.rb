@@ -22,7 +22,7 @@ RSpec.describe Mutations::Flutterwave::TransactionInitiate do
         }
       GQL
     end
-    let(:base_uri) { 'https://api.flutterwave.com/v3/payments' }
+    let(:base_uri) { ENV['FLUTTERWAVE_PAYMENT_URL'] }
     let(:customer) do
       {
         email: admin.email,
@@ -48,7 +48,7 @@ RSpec.describe Mutations::Flutterwave::TransactionInitiate do
       {
         tx_ref: time,
         amount: 10.0,
-        currency: I18n.t("currencies.#{community.currency}"),
+        currency: 'ZMW',
         redirect_url: 'http://localhost:3000/payments/pay',
         customer: customer,
         meta: meta_data,
@@ -88,6 +88,7 @@ RSpec.describe Mutations::Flutterwave::TransactionInitiate do
       allow(Time).to receive(:zone).and_return(zone)
       allow(zone).to receive(:now).and_return(time)
       ENV["#{community.name.parameterize.upcase}_FLUTTERWAVE"] = '{ "PRIVATE_KEY": "xzs-12-as"}'
+      ENV['FLUTTERWAVE_PAYMENT_URL'] = 'https://api.flutterwave.com/v3/payments'
     end
 
     context 'when user makes a payment' do
