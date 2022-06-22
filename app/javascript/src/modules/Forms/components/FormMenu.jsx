@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useState, useRef } from 'react';
 import {
   MenuItem,
   Menu,
@@ -9,7 +9,8 @@ import {
   DialogActions,
   IconButton,
   Button,
-  Grid
+  Grid,
+  Typography
 } from '@mui/material';
 import { useMutation } from 'react-apollo';
 import PropTypes from 'prop-types';
@@ -21,7 +22,7 @@ import { FormUpdateMutation } from '../graphql/forms_mutation';
 import { formStatus } from '../../../utils/constants';
 import { ActionDialog } from '../../../components/Dialog';
 import MessageAlert from '../../../components/MessageAlert';
-import { objectAccessor } from '../../../utils/helpers';
+import { copyText, downloadAsImage, objectAccessor } from '../../../utils/helpers';
 
 export default function FormMenu(
   { formId, anchorEl, handleClose, open, refetch, t, isPublic, formName }
@@ -34,6 +35,9 @@ export default function FormMenu(
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('xs'));
   const [openQRCodeModal, setOpenQRCodeModal] = useState(false);
+  const [isCopied, setIsCopied] = useState(false);
+  const ref = useRef(null);
+  const matches = useMediaQuery('(max-width:600px)');
 
   const [publish] = useMutation(FormUpdateMutation);
 
@@ -78,9 +82,19 @@ export default function FormMenu(
     setOpenQRCodeModal(!openQRCodeModal);
   }
 
-  function qrCodeAddress(id) {
-    return `${window.location.protocol}//${window.location.hostname}/form/${id}/public`;
+  function qrCodeAddress() {
+    return `${window.location.protocol}//${window.location.hostname}/form/${formId}/public`;
   }
+
+  async function handleTextCopy() {
+    await copyText(qrCodeAddress(formId));
+    setIsCopied(true);
+  }
+
+  const downloadQRCode = () => {
+    const response = downloadAsImage(ref.current, formName);
+    if (response?.error) setMessage({ isError: true, detail: t('errors.something_wrong_qr_code') });
+  };
 
   return (
     <>
@@ -113,16 +127,41 @@ export default function FormMenu(
           <Grid sx={{ display: 'flex', justifyContent: 'space-between' }}>
             <span>{t('common:menu.form_qrcode_header', { formName })}</span>
             <IconButton aria-label="close" onClick={toggleQRModal}>
-              <CloseIcon />
+              <CloseIcon color="primary" />
             </IconButton>
           </Grid>
         </DialogTitle>
-        <DialogContent dividers sx={{ display: 'flex', justifyContent: 'center', p: '30px' }}>
-          <QRCode style={{ width: 280 }} value={qrCodeAddress(formId)} />
+        <DialogContent
+          dividers
+          sx={{ display: 'flex', justifyContent: 'center', p: '30px' }}
+          ref={ref}
+        >
+          <QRCode style={{ width: 275 }} value={qrCodeAddress(formId)} />
         </DialogContent>
-        <DialogActions sx={{ justifyContent: 'center', p: '30px' }}>
-          <Button onClick={() => {}}>{t('common:form_actions.copy')}</Button>
-          <Button onClick={toggleQRModal}>{t('common:form_actions.cancel')}</Button>
+        <DialogActions
+          sx={{
+            flexDirection: `${matches ? 'column' : 'row'}`,
+            justifyContent: 'space-around',
+            rowGap: `${matches ? '25px' : '0' }`,
+            p: '30px'
+          }}
+        >
+          <Grid item xs={12} md={4} sx={{ textAlign: 'center' }}>
+            <Button onClick={handleTextCopy} variant="outlined">
+              {t('common:form_actions.copy')}
+            </Button>
+            <Typography variant="caption" sx={{ mt: '10px' }} display="block">
+              {t(`${isCopied ? 'common:misc.copied' : 'common:misc.copy_info'}`)}
+            </Typography>
+          </Grid>
+          <Grid item xs={12} md={4} sx={{ textAlign: 'center' }}>
+            <Button color="primary" onClick={downloadQRCode} variant="contained">
+              {t('common:misc.download')}
+            </Button>
+            <Typography variant="caption" sx={{ mt: '10px' }} display="block">
+              {message.isError ? message.detail : t('common:misc.download_info')}
+            </Typography>
+          </Grid>
         </DialogActions>
       </Dialog>
       <Menu
