@@ -83,7 +83,7 @@ export default function FormMenu(
   }
 
   function qrCodeAddress() {
-    return `${window.location.protocol}//${window.location.hostname}/form/${formId}/public`;
+    return `${window.location.protocol}/${window.location.hostname}/form/${formId}/public`;
   }
 
   async function handleTextCopy() {
@@ -91,7 +91,7 @@ export default function FormMenu(
     setIsCopied(true);
   }
 
-  const downloadQRCode = () => {
+  function downloadQRCode() {
     const response = downloadAsImage(ref.current, formName);
     if (response?.error) setMessage({ isError: true, detail: t('errors.something_wrong_qr_code') });
   };
