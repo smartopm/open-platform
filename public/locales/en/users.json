@@ -36,7 +36,8 @@
     "add_invoice": "Add an Invoice",
     "process_csv": "Process CSV Data",
     "download_csv": "Download CSV",
-    "copy_id_message": "Id Lists Successfully Copied to Clipboard"
+    "copy_id_message": "Id Lists Successfully Copied to Clipboard",
+    "user_journey": " User Journey"
   },
   "messages": {
     "activation_confirmation": "Are you sure you want to activate {{userName}}. By clicking the Activate User button, this user will have access to the app",

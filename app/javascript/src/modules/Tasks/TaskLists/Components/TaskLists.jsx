@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Breadcrumbs, Grid, Typography } from '@mui/material';
-import { useHistory, Link } from 'react-router-dom';
-import makeStyles from '@mui/styles/makeStyles';
+import { useHistory } from 'react-router-dom';
 import { useQuery } from 'react-apollo';
 import { formatError } from '../../../../utils/helpers';
 import CenteredContent from '../../../../shared/CenteredContent';
@@ -12,10 +10,10 @@ import { TaskListsQuery } from '../graphql/task_lists_queries';
 import TodoItem from '../../Components/TodoItem';
 import AccessCheck from '../../../Permissions/Components/AccessCheck';
 import FloatingButton from '../../../../shared/buttons/FloatingButton';
+import PageWrapper from '../../../../shared/PageWrapper';
 
 export default function TaskLists() {
   const { t } = useTranslation('task');
-  const classes = useStyles();
   const [offset, setOffset] = useState(0);
   const limit = 50;
   const history = useHistory();
@@ -42,40 +40,17 @@ export default function TaskLists() {
     }
   }
 
+  const breadCrumbObj = {
+    linkText: t('task_lists.task_lists'),
+    linkHref: '/tasks/task_lists',
+    pageName: t('task_lists.task_lists')
+  };
+
   if (error) return <CenteredContent>{formatError(error.message)}</CenteredContent>;
   if (loading) return <Spinner />;
 
   return (
-    <div style={{padding: '3% 8%'}}>
-      <Grid container spacing={1}>
-        <Grid item md={12} xs={12} style={{ paddingleft: '10px' }}>
-          <div role="presentation">
-            <Breadcrumbs
-              aria-label="breadcrumb"
-              style={{ paddingBottom: '10px', marginTop: '-45px' }}
-            >
-              <Link to="/tasks/task_lists">
-                <Typography color="primary" style={{ marginLeft: '5px' }}>
-                  {t('task_lists.task_lists')}
-                </Typography>
-              </Link>
-              <Typography color="text.primary">{t('task_lists.task_lists')}</Typography>
-            </Breadcrumbs>
-          </div>
-        </Grid>
-        <Grid item md={12} xs={11} className={classes.header}>
-          <Grid container spacing={1}>
-            <Grid item md={9} xs={10}>
-              <Typography
-                variant="h4"
-                style={{ marginLeft: '5px', marginBottom: '10px', marginTop: '-10px' }}
-              >
-                {t('task_lists.task_lists')}
-              </Typography>
-            </Grid>
-          </Grid>
-        </Grid>
-      </Grid>
+    <PageWrapper pageTitle={t('task_lists.task_lists')} breadCrumbObj={breadCrumbObj}>
       {data?.taskLists?.length > 0 ? (
         <div>
           {data.taskLists.map(taskList => (
@@ -104,12 +79,6 @@ export default function TaskLists() {
           data-testid="create_task_btn"
         />
       </AccessCheck>
-    </div>
+    </PageWrapper>
   );
 }
-
-const useStyles = makeStyles({
-  header: {
-    marginBottom: '10px'
-  }
-});

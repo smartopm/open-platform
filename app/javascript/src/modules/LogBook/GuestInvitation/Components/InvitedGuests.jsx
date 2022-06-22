@@ -1,4 +1,4 @@
-import { Container, Dialog, DialogContent, DialogTitle, Grid, Typography, useMediaQuery } from '@mui/material';
+import { Dialog, DialogContent, DialogTitle, Grid, useMediaQuery } from '@mui/material';
 import { useTheme } from '@mui/styles';
 import React, { useContext, useState } from 'react';
 import { useQuery, useMutation } from 'react-apollo';
@@ -20,6 +20,7 @@ import MessageAlert from '../../../../components/MessageAlert';
 import { formatError , ifNotTest } from '../../../../utils/helpers';
 import { validateGuest } from '../helpers';
 import GuestInviteForm from './GuestInviteForm';
+import PageWrapper from '../../../../shared/PageWrapper';
 
 
 export default function InvitedGuests() {
@@ -171,7 +172,7 @@ export default function InvitedGuests() {
     handleClose: event => handleMenuClose(event)
   };
   return (
-    <Container maxWidth="xl">
+    <PageWrapper pageTitle={t('common:menu.guest_list')}>
       <Dialog
         fullScreen={fullScreen}
         open={openEditModal}
@@ -202,9 +203,7 @@ export default function InvitedGuests() {
         handleClose={() => setDetails({ ...details, message: '' })}
       />
       <Grid container>
-        <Grid item xs={10} sm={11}>
-          <Typography variant="h4">{t('common:menu.guest_list')}</Typography>
-        </Grid>
+        <Grid item xs={10} sm={11} />
         <Grid item xs={2} sm={1} data-testid="speed_dial_add_guest">
           <CustomSpeedDial handleAction={() => history.push('/logbook/guests/invite')} />
         </Grid>
@@ -222,7 +221,7 @@ export default function InvitedGuests() {
       <br />
       <Grid container>
         <Grid item xs={6} />
-        <Grid item sm={12} xs={12} md={6}>
+        <Grid item sm={12} xs={12} md={6} style={{marginTop: '30px'}}>
           <SearchInput
             title="Guests"
             filterRequired={false}
@@ -249,6 +248,6 @@ export default function InvitedGuests() {
           />
           ))
         : !loading && <CenteredContent>{t('logbook.no_invited_guests')}</CenteredContent>}
-    </Container>
+    </PageWrapper>
   );
 }

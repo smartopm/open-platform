@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import { useParamsQuery } from '../../../utils/helpers';
-import LogBookItem from './LogBookItem'
+import LogBookItem from './LogBookItem';
 
 export default function LogBook() {
-  const history = useHistory()
+  const history = useHistory();
   const [offset, setOffset] = useState(0);
   const path = useParamsQuery();
   const tabValue = path.get('tab');
@@ -23,18 +23,12 @@ export default function LogBook() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [offset]);
 
-
   function handleChange(_event, newValue) {
     setvalue(newValue);
     // reset pagination after changing the tab
     history.push(`/logbook?tab=${newValue}&offset=${0}`);
   }
   return (
-    <LogBookItem
-      offset={offset}
-      router={history}
-      handleTabValue={handleChange}
-      tabValue={value}
-    />
+    <LogBookItem offset={offset} router={history} handleTabValue={handleChange} tabValue={value} />
   );
 }

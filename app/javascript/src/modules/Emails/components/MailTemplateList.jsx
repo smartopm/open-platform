@@ -16,6 +16,7 @@ import CenteredContent from '../../../components/CenteredContent';
 import { formatError, useParamsQuery } from '../../../utils/helpers';
 import Paginate from '../../../components/Paginate';
 import ListHeader from '../../../shared/list/ListHeader';
+import PageWrapper from '../../../shared/PageWrapper';
 
 export default function MailTemplateList() {
   const [currentEmail, setCurrentEmail] = useState({});
@@ -121,7 +122,7 @@ export default function MailTemplateList() {
   if (error) return <CenteredContent>{formatError(error?.message)}</CenteredContent>;
 
   return (
-    <div className="container">
+    <PageWrapper pageTitle={t('common:menu.email_templates')}>
       <MessageAlert
         type={message.isError ? 'error' : 'success'}
         message={message.detail}
@@ -175,6 +176,6 @@ export default function MailTemplateList() {
         <AddIcon />
         {t('common:menu.create')}
       </Fab>
-    </div>
+    </PageWrapper>
   );
 }

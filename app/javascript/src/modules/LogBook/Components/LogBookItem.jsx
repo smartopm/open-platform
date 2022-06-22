@@ -1,8 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import { useApolloClient, useMutation, useQuery } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import makeStyles from '@mui/styles/makeStyles';
@@ -31,6 +29,7 @@ import permissionsCheck from '../../Permissions/utils';
 import useDebouncedValue from '../../../shared/hooks/useDebouncedValue';
 import { AllEventLogsQuery } from '../../../graphql/queries';
 import SearchInput from '../../../shared/search/SearchInput';
+import PageWrapper from '../../../shared/PageWrapper';
 
 const limit = 20;
 const subjects = ['user_entry', 'visitor_entry', 'user_temp', 'observation_log'];
@@ -54,7 +53,6 @@ export default function LogBookItem({ router, offset, tabValue, handleTabValue }
     refetch: false
   });
   const [addObservationNote] = useMutation(AddObservationNoteMutation);
-  const matches = useMediaQuery('(max-width:800px)');
   const classes = useStyles();
   const [imageUrls, setImageUrls] = useState([]);
   const [blobIds, setBlobIds] = useState([]);
@@ -202,7 +200,7 @@ export default function LogBookItem({ router, offset, tabValue, handleTabValue }
   }
 
   return (
-    <>
+    <PageWrapper pageTitle={t('common:misc.log_book')}>
       <MessageAlert
         type={!observationDetails.isError ? 'success' : 'error'}
         message={observationDetails.message}
@@ -250,12 +248,11 @@ export default function LogBookItem({ router, offset, tabValue, handleTabValue }
           </>
         )}
       </DialogWithImageUpload>
-      <Grid container className={matches ? classes.containerMobile : classes.container}>
+      <Grid container>
         <Grid item md={11} xs={11}>
           <Grid container spacing={1}>
             <Grid item md={11} xs={10}>
               <div className={classes.logbookTitleContainer}>
-                <Typography variant="h4">{t('logbook.log_book')}</Typography>
                 <IconButton
                   color="primary"
                   data-testid="refresh_btn"
@@ -348,17 +345,11 @@ export default function LogBookItem({ router, offset, tabValue, handleTabValue }
           />
         </CenteredContent>
       )}
-    </>
+    </PageWrapper>
   );
 }
 
 const useStyles = makeStyles(() => ({
-  container: {
-    padding: '0 20px 50px 50px'
-  },
-  containerMobile: {
-    padding: '10px 0 10px 30px'
-  },
   logbookTitleContainer: {
     display: 'inline-flex'
   },

@@ -10,6 +10,7 @@ import { StyledTabs, TabPanel } from '../../../components/Tabs'
 import Status from '../../../components/StatusBadge'
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider'
 import Avatar from '../../../components/Avatar'
+import PageWrapper from '../../../shared/PageWrapper';
 
 export const StyledTab = withStyles({
   root: {
@@ -45,7 +46,7 @@ export default function BusinessProfile({ profileData }) {
     setValue(newValue)
   }
   return (
-    <div className="container">
+    <PageWrapper>
       <div className="row d-flex justify-content-between">
         <div className="col-4 d-flex justify-content-end align-items-center">
           <Avatar user={profileData} style={profileData.imageUrl ? 'big' : 'medium'} />
@@ -138,6 +139,6 @@ export default function BusinessProfile({ profileData }) {
           </Button>
         </div>
       </div>
-    </div>
+    </PageWrapper>
   )
 }

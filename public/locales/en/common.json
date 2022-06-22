@@ -295,7 +295,9 @@
     "amenity": "Amenity",
     "amenity_plural": "Amenities",
     "copy_info": "Copy link to the QR Code for web or email use.",
-    "download_info": "Download file of the QR Code to print out."
+    "download_info": "Download file of the QR Code to print out.",
+    "add_new": "Add New",
+    "otp": "OTP"
   },
   "menu": {
     "invoice": "Invoice",
@@ -657,7 +659,7 @@
   "right_menu": {
     "edit_user": "Edit User",
     "communications": "Communications",
-    "contact_info": "Contact Info"
+    "contact_info": "Contact"
   },
   "file_types": {
     "image": "Image",

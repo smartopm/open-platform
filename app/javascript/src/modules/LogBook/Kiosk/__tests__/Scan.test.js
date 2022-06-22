@@ -1,11 +1,11 @@
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react';
-
 import routeData, { MemoryRouter } from 'react-router';
 import { MockedProvider } from '@apollo/react-testing';
 import { Context } from '../../../../containers/Provider/AuthStateProvider';
 import authState from '../../../../__mocks__/authstate';
 import Scan from '../components/Scan';
+import MockedThemeProvider from '../../../__mocks__/mock_theme';
 
 jest.mock('react-qr-reader')
 
@@ -23,7 +23,9 @@ describe('Scan Page', () => {
       <MemoryRouter>
         <Context.Provider value={authState}>
           <MockedProvider>
-            <Scan /> 
+            <MockedThemeProvider>
+              <Scan /> 
+            </MockedThemeProvider>
           </MockedProvider>
         </Context.Provider>
       </MemoryRouter>

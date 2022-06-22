@@ -43,7 +43,7 @@ export default function UsersActionMenu({
   }
 
   return (
-    <Grid container>
+    <Grid container data-testid='user_action'>
       <MessageAlert
         type={message.isError ? 'error' : 'success'}
         message={message.detail}

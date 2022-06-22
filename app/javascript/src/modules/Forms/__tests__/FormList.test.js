@@ -113,7 +113,6 @@ describe('Form List Component', () => {
 
     await waitFor(() => {
       expect(container.queryByText('common:misc.forms')).toBeInTheDocument();
-      expect(container.queryAllByText('misc.create_form')[0]).toBeInTheDocument();
     });
   });
 });

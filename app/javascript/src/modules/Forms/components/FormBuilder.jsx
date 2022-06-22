@@ -19,7 +19,6 @@ import ErrorPage from '../../../components/Error';
 import { StyledTabs, StyledTab, TabPanel, a11yProps } from '../../../components/Tabs';
 import FormTitle from './FormTitle';
 import FormCreate from './FormCreate';
-import FormHeader from '../../../shared/PageHeader';
 import PageWrapper from '../../../shared/PageWrapper';
 
 /**
@@ -99,20 +98,20 @@ export default function FormBuilder({ formId }) {
       });
   }
 
+  const breadCrumbObj = {
+    linkText: t('common:misc.forms'),
+    linkHref: '/forms',
+    pageName: t('misc.configure_form')
+  };
+
   if (loading || formLogs.loading || formData.loading) return <Spinner />;
   if (error || formLogs.error || formData.error)
     return <ErrorPage title={error?.message || formLogs?.error?.message} />;
 
   return (
-    <>
+    <PageWrapper oneCol pageTitle={t('misc.configure_form')} breadCrumbObj={breadCrumbObj}>
       {formDetailLoading && <Spinner />}
       <FormContextProvider>
-        <FormHeader
-          linkText={t('common:misc.forms')}
-          linkHref="/forms"
-          pageName={t('misc.configure_form')}
-          PageTitle={t('misc.configure_form')}
-        />
         <Container>
           <ActionDialog
             open={open}
@@ -129,74 +128,70 @@ export default function FormBuilder({ formId }) {
             handleClose={handleAlertClose}
           />
           {loading && <Spinner />}
-          <PageWrapper>
-            {!loading && formDetailData && <FormTitle name={formDetailData.form?.name} />}
-            <StyledTabs
-              value={tabValue}
-              onChange={handleTabValueChange}
-              aria-label="form_builder"
-              variant="standard"
-              style={{ borderBottom: 'solid 1px #ececea' }}
-            >
-              <StyledTab
-                label={t('misc.form_builder')}
-                style={
-                  tabValue === objectAccessor(TAB_VALUES, 'form_builder')
-                    ? { fontSize: '14px', textAlign: 'left', borderBottom: 'solid 1px' }
-                    : { fontSize: '14px', textAlign: 'left' }
-                }
-                {...a11yProps(0)}
-              />
-              <StyledTab
-                label={t('misc.form_settings')}
-                style={
-                  tabValue === objectAccessor(TAB_VALUES, 'form_settings')
-                    ? { fontSize: '14px', borderBottom: 'solid 1px' }
-                    : { fontSize: '14px' }
-                }
-                {...a11yProps(1)}
-              />
-              <StyledTab
-                label={t('misc.update_history')}
-                style={
-                  tabValue === objectAccessor(TAB_VALUES, 'update_history')
-                    ? { fontSize: '14px', borderBottom: 'solid 1px' }
-                    : { fontSize: '14px' }
-                }
-                {...a11yProps(2)}
-              />
-            </StyledTabs>
-          </PageWrapper>
-          <PageWrapper>
-            <TabPanel value={tabValue} index={0} pad>
-              <div style={{paddingBottom: '20px'}}>
-                <Form
-                  formId={formId}
-                  editMode
-                  property={Boolean(data.formProperties.length)}
-                  publishForm={publishForm}
-                  isPublishing={isPublishing}
-                  handleConfirmPublish={handleConfirmPublish}
-                  formDetailRefetch={dataRefetch}
-                />
-              </div>
-            </TabPanel>
-            <TabPanel value={tabValue} index={1} pad>
-              <FormCreate
-                formMutation={updateForm}
-                refetch={formDetailRefetch}
-                actionType="update"
+          {!loading && formDetailData && <FormTitle name={formDetailData.form?.name} />}
+          <StyledTabs
+            value={tabValue}
+            onChange={handleTabValueChange}
+            aria-label="form_builder"
+            variant="standard"
+            style={{ borderBottom: 'solid 1px #ececea' }}
+          >
+            <StyledTab
+              label={t('misc.form_builder')}
+              style={
+                tabValue === objectAccessor(TAB_VALUES, 'form_builder')
+                  ? { fontSize: '14px', textAlign: 'left', borderBottom: 'solid 1px' }
+                  : { fontSize: '14px', textAlign: 'left' }
+              }
+              {...a11yProps(0)}
+            />
+            <StyledTab
+              label={t('misc.form_settings')}
+              style={
+                tabValue === objectAccessor(TAB_VALUES, 'form_settings')
+                  ? { fontSize: '14px', borderBottom: 'solid 1px' }
+                  : { fontSize: '14px' }
+              }
+              {...a11yProps(1)}
+            />
+            <StyledTab
+              label={t('misc.update_history')}
+              style={
+                tabValue === objectAccessor(TAB_VALUES, 'update_history')
+                  ? { fontSize: '14px', borderBottom: 'solid 1px' }
+                  : { fontSize: '14px' }
+              }
+              {...a11yProps(2)}
+            />
+          </StyledTabs>
+          <TabPanel value={tabValue} index={0} pad>
+            <div style={{ paddingBottom: '20px' }}>
+              <Form
                 formId={formId}
-                t={t}
+                editMode
+                property={Boolean(data.formProperties.length)}
+                publishForm={publishForm}
+                isPublishing={isPublishing}
+                handleConfirmPublish={handleConfirmPublish}
+                formDetailRefetch={dataRefetch}
               />
-            </TabPanel>
-            <TabPanel value={tabValue} index={2} pad>
-              <FormTimeline data={formLogs.data?.result} />
-            </TabPanel>
-          </PageWrapper>
+            </div>
+          </TabPanel>
+          <TabPanel value={tabValue} index={1} pad>
+            <FormCreate
+              formMutation={updateForm}
+              refetch={formDetailRefetch}
+              actionType="update"
+              formId={formId}
+              t={t}
+            />
+          </TabPanel>
+          <TabPanel value={tabValue} index={2} pad>
+            <FormTimeline data={formLogs.data?.result} />
+          </TabPanel>
         </Container>
       </FormContextProvider>
-    </>
+    </PageWrapper>
   );
 }
 

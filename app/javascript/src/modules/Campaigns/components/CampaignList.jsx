@@ -11,7 +11,6 @@ import Tooltip from '@mui/material/Tooltip';
 import { useHistory, useParams, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { makeStyles, useTheme } from '@mui/styles';
-import { Typography } from '@mui/material';
 import { allCampaigns } from '../../../graphql/queries';
 import { Spinner } from '../../../shared/Loading';
 import ErrorPage from '../../../components/Error';
@@ -25,10 +24,11 @@ import CampaignCard from './CampaignCard';
 import CampaignSplitScreen from './CampaignSplitScreen';
 import DeleteDialogueBox from '../../../shared/dialogs/DeleteDialogue';
 import SplitScreen from '../../../shared/SplitScreen';
+import PageWrapper from '../../../shared/PageWrapper';
 
 export default function CampaignList() {
   const classes = useStyles();
-  const path = useLocation().pathname
+  const path = useLocation().pathname;
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('md'));
   const { id } = useParams();
@@ -43,7 +43,7 @@ export default function CampaignList() {
   const [show, setShow] = useState(false);
   const [deleteCampaign] = useMutation(DeleteCampaign);
   const anchorElOpen = Boolean(anchorEl);
-  const [deleteError, setDeleteError] = useState(null)
+  const [deleteError, setDeleteError] = useState(null);
   const debouncedSearchText = useDebounce(searchText, 500);
   const { data, error, loading, refetch } = useQuery(allCampaigns, {
     variables: { limit, offset, query: debouncedSearchText },
@@ -81,7 +81,7 @@ export default function CampaignList() {
   }
 
   function showMenu() {
-    return (campaign?.status === 'draft' || campaign?.status === 'scheduled')
+    return campaign?.status === 'draft' || campaign?.status === 'scheduled';
   }
 
   function handleMenuClose() {
@@ -106,14 +106,16 @@ export default function CampaignList() {
     setDeletingCampaign(true);
     deleteCampaign({
       variables: { id: campaign.id }
-    }).then(() => {
-      setDeletingCampaign(false);
-      handleMenuClose();
-      handleDeleteClick();
-      refetch();
-    }).catch(err => {
-      setDeleteError(err.message)
     })
+      .then(() => {
+        setDeletingCampaign(false);
+        handleMenuClose();
+        handleDeleteClick();
+        refetch();
+      })
+      .catch(err => {
+        setDeleteError(err.message);
+      });
   }
 
   function routeToAction(camId) {
@@ -138,42 +140,47 @@ export default function CampaignList() {
   }
 
   useEffect(() => {
-    if((id || path === '/campaign-create') && !matches) {
+    if ((id || path === '/campaign-create') && !matches) {
       setShow(true);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (loading) return <Spinner />;
   if (error) return <ErrorPage />;
   return (
-    <Grid container data-testid='container'>
-      {deleteError && (
-        <CenteredContent><p>{deleteError}</p></CenteredContent>
-      )}
-      <Grid item lg={5} md={5} sm={12} xs={12} data-testid='campaign-list' className={classes.campaignList} style={{ paddingRight: '10px' }}>
-        <div className="container">
+    <PageWrapper pageTitle={t('campaign.campaigns')}>
+      <Grid container data-testid="container">
+        {deleteError && (
+          <CenteredContent>
+            <p>{deleteError}</p>
+          </CenteredContent>
+        )}
+        <Grid
+          item
+          lg={5}
+          md={5}
+          sm={12}
+          xs={12}
+          data-testid="campaign-list"
+          className={classes.campaignList}
+        >
           <Grid container>
             <Grid item sm={12} style={{ marginBottom: '20px' }}>
               <Grid container>
-                <Grid item sm={10} xs={10}>
-                  <Typography data-testid='campaign-title' variant="h4">{t('campaign.campaigns')}</Typography>
-                </Grid>
+                <Grid item sm={10} xs={10} />
                 <Grid item sm={2} xs={2} style={{ textAlign: 'right' }}>
                   <Tooltip title={t('actions.new_campaign')} placement="top">
                     <IconButton
                       aria-label="new-campaign"
                       color="primary"
-                      data-testid='new-campaign'
+                      data-testid="new-campaign"
                       onClick={() => handleCreateCampaign()}
                       size="large"
                     >
                       <AddCircleIcon />
                     </IconButton>
                   </Tooltip>
-                </Grid>
-                <Grid item sm={12} xs={12}>
-                  <Typography variant="body2">{t('campaign.communicate')}</Typography>
                 </Grid>
               </Grid>
             </Grid>
@@ -230,21 +237,19 @@ export default function CampaignList() {
               )}
             </Grid>
           </Grid>
-        </div>
+        </Grid>
+        <Grid item lg={6} md={12} sm={12} xs={12}>
+          <SplitScreen open={matches ? true : show}>
+            <CampaignSplitScreen
+              campaignId={id}
+              campaignLength={data?.campaigns.length}
+              refetch={refetch}
+              setShow={setShow}
+            />
+          </SplitScreen>
+        </Grid>
       </Grid>
-      <Grid item lg={6} md={12} sm={12} xs={12}>
-        <SplitScreen
-          open={matches ? true : show}
-        >
-          <CampaignSplitScreen
-            campaignId={id}
-            campaignLength={data?.campaigns.length}
-            refetch={refetch}
-            setShow={setShow}
-          />
-        </SplitScreen>
-      </Grid>
-    </Grid>
+    </PageWrapper>
   );
 }
 

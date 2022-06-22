@@ -2,10 +2,10 @@ import React from 'react';
 import { render, waitFor } from '@testing-library/react';
 import { MockedProvider } from '@apollo/react-testing';
 import { MemoryRouter } from 'react-router';
-
 import GuestSearch from '../../Components/GuestSearch';
 import { Context } from '../../../../../containers/Provider/AuthStateProvider';
 import userMock from '../../../../../__mocks__/authstate';
+import MockedThemeProvider from '../../../../__mocks__/mock_theme';
 
 describe('Guest Search Component', () => {
   it('should render the guest search component', async () => {
@@ -13,7 +13,9 @@ describe('Guest Search Component', () => {
       <MockedProvider>
         <Context.Provider value={userMock}>
           <MemoryRouter>
-            <GuestSearch />
+            <MockedThemeProvider>
+              <GuestSearch />
+            </MockedThemeProvider>
           </MemoryRouter>
         </Context.Provider>
       </MockedProvider>

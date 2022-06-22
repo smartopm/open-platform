@@ -35,11 +35,11 @@ export default function Comments() {
   return (
     <>
       <CommentList data={data.fetchComments} />
-      <div className="d-flex justify-content-center">
+      <div className="d-flex justify-content-center" data-testid='container'>
         <nav aria-label="center Page navigation">
           <ul className="pagination">
             <li className={`page-item ${offset < limit && 'disabled'}`}>
-              <a className="page-link" onClick={handlePreviousPage} href="#">
+              <a className="page-link" onClick={handlePreviousPage} href="#" data-testid='previous'>
                 Previous
               </a>
             </li>
@@ -47,7 +47,7 @@ export default function Comments() {
               className={`page-item ${data.fetchComments.length < limit &&
                   'disabled'}`}
             >
-              <a className="page-link" onClick={handleNextPage} href="#">
+              <a className="page-link" onClick={handleNextPage} href="#" data-testid='next'>
                 Next
               </a>
             </li>

@@ -16,6 +16,7 @@ import { Context as AuthStateContext } from '../../../../containers/Provider/Aut
 import Paginate from '../../../../components/Paginate';
 import SpeedDial from '../../../../shared/buttons/SpeedDial';
 import { accessibleMenus } from '../utils';
+import PageWrapper from '../../../../shared/PageWrapper';
 
 export default function ProjectsList() {
   const { id: processId } = useParams();
@@ -95,7 +96,7 @@ export default function ProjectsList() {
 
   if (error) return <CenteredContent>{formatError(error.message)}</CenteredContent>;
   return (
-    <>
+    <PageWrapper>
       <Modal
         disablePortal
         disableEnforceFocus
@@ -138,7 +139,7 @@ export default function ProjectsList() {
           </Grid>
         </Grid>
       </Modal>
-      <div style={{ padding: '0 8%' }}>
+      <div>
         {authState.user.userType === 'admin' && (
           <Grid style={{ paddingleft: '10px' }}>
             <div role="presentation">
@@ -196,7 +197,7 @@ export default function ProjectsList() {
           />
         </CenteredContent>
       </div>
-    </>
+    </PageWrapper>
   );
 }
 

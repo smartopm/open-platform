@@ -17,6 +17,7 @@ import Text from '../../../shared/Text';
 import useDebounce from '../../../utils/useDebounce';
 import Paginate from '../../../components/Paginate';
 import { useParamsQuery } from '../../../utils/helpers';
+import PageWrapper from '../../../shared/PageWrapper';
 
 export default function FormEntries({ formId }) {
   const limit = 50;
@@ -26,11 +27,11 @@ export default function FormEntries({ formId }) {
   const history = useHistory();
   const [searchValue, setSearchValue] = useState('');
   const debouncedValue = useDebounce(searchValue, 500);
-  const { t } = useTranslation('form')
+  const { t } = useTranslation('form');
   const { data, error, loading } = useQuery(FormEntriesQuery, {
-      variables : {formId, query: debouncedValue, limit, offset: pageNumber },
-      fetchPolicy: 'cache-and-network'
-  })
+    variables: { formId, query: debouncedValue, limit, offset: pageNumber },
+    fetchPolicy: 'cache-and-network'
+  });
   const entriesHeaders = [
     { title: 'Date of Submission', col: 1, value: t('misc.submission_date') },
     { title: 'Version Number', col: 1, value: t('misc.version_number') },
@@ -42,10 +43,14 @@ export default function FormEntries({ formId }) {
   function paginate(action) {
     if (action === 'prev') {
       if (pageNumber < limit) return;
-      history.push(`/form/${formId}/${data?.formEntries?.formName}/entries?page=${pageNumber - limit}`);
+      history.push(
+        `/form/${formId}/${data?.formEntries?.formName}/entries?page=${pageNumber - limit}`
+      );
     } else if (action === 'next' && data?.formEntries?.formUsers?.length) {
       if (data?.formEntries?.formUsers?.length < limit) return;
-      history.push(`/form/${formId}/${data?.formEntries?.formName}/entries?page=${pageNumber + limit}`);
+      history.push(
+        `/form/${formId}/${data?.formEntries?.formName}/entries?page=${pageNumber + limit}`
+      );
     }
   }
 
@@ -60,13 +65,12 @@ export default function FormEntries({ formId }) {
 
 
   return (
-
-    <div>
-      <div style={{marginLeft: '10px'}}>
+    <PageWrapper pageTitle={t('misc.form_entries')}>
+      <div style={{ marginLeft: '10px' }}>
         <Typography variant="h6" gutterBottom>
           {data?.formEntries?.formName}
         </Typography>
-        <div style={{marginBottom: '20px'}}>
+        <div style={{ marginBottom: '20px' }}>
           <SearchInput
             title="Entries"
             searchValue={searchValue}
@@ -100,8 +104,8 @@ export default function FormEntries({ formId }) {
           count={data?.formEntries?.formUsers?.length}
         />
       </CenteredContent>
-    </div>
-  )
+    </PageWrapper>
+  );
 }
 
 export function renderFormEntry(formUser, formId, handleDownload) {

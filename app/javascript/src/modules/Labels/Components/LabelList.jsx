@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useQuery } from 'react-apollo';
 import useMediaQuery from '@mui/material/useMediaQuery';
-import { Container } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
@@ -12,9 +11,9 @@ import Paginate from '../../../components/Paginate';
 import ButtonComponent from '../../../shared/buttons/Button';
 import EditModal from './EditModal';
 import ListHeader from '../../../shared/list/ListHeader';
-import { Spinner } from '../../../shared/Loading'
-import { formatError } from '../../../utils/helpers'
-
+import { Spinner } from '../../../shared/Loading';
+import { formatError } from '../../../utils/helpers';
+import PageWrapper from '../../../shared/PageWrapper';
 
 export default function LabelList({ userType }) {
   const classes = useStyles();
@@ -55,7 +54,7 @@ export default function LabelList({ userType }) {
   if (error) return <CenteredContent>{formatError(error.message)}</CenteredContent>;
 
   return (
-    <Container>
+    <PageWrapper pageTitle={t('common:table_headers.labels')}>
       <div className={classes.labelButton}>
         <ButtonComponent
           variant="contained"
@@ -63,7 +62,7 @@ export default function LabelList({ userType }) {
           buttonText={t('label.create_label')}
           handleClick={() => setOpen(true)}
           size="large"
-          data-testid='button'
+          data-testid="button"
         />
         <EditModal open={open} handleClose={() => setOpen(false)} refetch={refetch} type="new" />
       </div>
@@ -77,12 +76,12 @@ export default function LabelList({ userType }) {
             userCount={label.userCount}
             refetch={refetch}
           />
-      ))}
+        ))}
       </div>
       <CenteredContent>
         <Paginate offSet={offset} limit={limit} active={offset >= 1} handlePageChange={paginate} />
       </CenteredContent>
-    </Container>
+    </PageWrapper>
   );
 }
 

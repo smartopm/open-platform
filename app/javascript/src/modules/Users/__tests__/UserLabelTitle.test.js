@@ -15,7 +15,7 @@ describe('User Label Title Component', () => {
       </MockedProvider>
     );
 
-    expect(container.queryByTestId('label_toggler')).toHaveTextContent('label:label.labels');
+    expect(container.queryByTestId('label_toggler')).toBeInTheDocument();
     expect(container.queryByTestId('labels_open_icon')).toBeInTheDocument();
   });
 
