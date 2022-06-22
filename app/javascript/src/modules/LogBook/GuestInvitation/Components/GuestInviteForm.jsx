@@ -150,7 +150,7 @@ export default function GuestInviteForm({inviteDetails, onUpdate, close, update}
 
   const noUserFound = searchValue && !loading && !data?.searchGuests.length;
   return (
-    <PageWrapper pageTitle={t('logbook.guest_invite')}>
+    <PageWrapper pageTitle={t('logbook.guest_invite')} hideWrapper={update}>
       <MessageAlert
         type={!details.isError ? 'success' : 'error'}
         message={details.message}

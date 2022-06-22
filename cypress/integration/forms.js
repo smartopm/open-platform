@@ -98,9 +98,9 @@ describe('Custom Forms', () => {
     cy.addFormProperty('DateTimeField', 'datetime', false);
 
     /** Submit a Form * */
-    cy.get('.manage-forms-form-menu-item').click();
-    cy.wait(500);
     cy.get('.left-menu-collapsible').click();
+    cy.wait(500);
+    cy.get('.permit-request-form-menu-item').click();
     cy.wait(500);
     cy.get('.form-menu-open-btn').click();
     cy.wait(500);
