@@ -109,13 +109,13 @@ export default function LandParcelMap({ handlePlotClick, geoData, refetch }) {
 
     poiData.map(({ id, geom, parcelNumber, parcelType }) => {
       const feature = JSON.parse(geom)
-     
+
       feature.properties.id = id
       feature.properties.parcel_no = parcelNumber
       feature.properties.parcel_type = parcelType
       return poiFeatureCollection.features.push(feature)
     });
-  
+
 
   /* istanbul ignore next */
   function handleOnPlotClick({ target }) {
@@ -294,9 +294,9 @@ export default function LandParcelMap({ handlePlotClick, geoData, refetch }) {
       <PointOfInterestModal
         selectedPoi={{
           ...selectedPoi,
-          imageUrls: parcelData?.landParcel?.imageUrls,
+          imageUrls: parcelData?.landParcel?.imageUrls
         }}
-        title={t('dialog_headers.update_point_of_interest')}
+        title={t('property:dialog_headers.update_point_of_interest')}
         open={editMode}
         editMode={editMode}
         isSubmitting={isUpdating}
@@ -317,7 +317,12 @@ export default function LandParcelMap({ handlePlotClick, geoData, refetch }) {
         <Divider />
         <Grid container>
           <Grid item md={4}>
-            <Button data-testid="delete-poi-btn" variant="text" color="primary" onClick={() => setConfirmDeletePoi(true)}>
+            <Button
+              data-testid="delete-poi-btn"
+              variant="text"
+              color="primary"
+              onClick={() => setConfirmDeletePoi(true)}
+            >
               {t('common:menu.delete')}
             </Button>
           </Grid>
@@ -327,7 +332,7 @@ export default function LandParcelMap({ handlePlotClick, geoData, refetch }) {
               color="primary"
               data-testid="edit-poi"
               disableElevation
-              style={{ color: '#ffffff'}}
+              style={{ color: '#ffffff' }}
               onClick={() => setEditMode(true)}
             >
               Edit
@@ -381,10 +386,7 @@ export default function LandParcelMap({ handlePlotClick, geoData, refetch }) {
         >
           <LayersControl position="topleft">
             <LayersControl.BaseLayer checked name="Mapbox">
-              <TileLayer
-                attribution={attribution}
-                url={`${mapboxStreets}${mapboxPublicToken}`}
-              />
+              <TileLayer attribution={attribution} url={`${mapboxStreets}${mapboxPublicToken}`} />
             </LayersControl.BaseLayer>
             {Array.isArray(properties) && properties?.length && (
               <LayersControl.Overlay checked name="Land Parcels">
@@ -434,10 +436,7 @@ export default function LandParcelMap({ handlePlotClick, geoData, refetch }) {
             {Array.isArray(poiData) && poiData?.length && (
               <LayersControl.Overlay name="Points of Interest">
                 <FeatureGroup>
-                  <MarkerClusterGroup
-                    spiderfyDistanceMultiplier={2}
-                    showCoverageOnHover={false}
-                  >
+                  <MarkerClusterGroup spiderfyDistanceMultiplier={2} showCoverageOnHover={false}>
                     <GeoJSON
                       key={Math.random()}
                       data={poiFeatureCollection}
@@ -478,12 +477,12 @@ export default function LandParcelMap({ handlePlotClick, geoData, refetch }) {
               </LayersControl.Overlay>
             )}
             {subUrbanData && (
-            <LayersControl.Overlay name="Sub-urban Areas">
-              <FeatureGroup>
-                <SubUrbanLayer data={subUrbanData} />
-              </FeatureGroup>
-            </LayersControl.Overlay>
-          )}
+              <LayersControl.Overlay name="Sub-urban Areas">
+                <FeatureGroup>
+                  <SubUrbanLayer data={subUrbanData} />
+                </FeatureGroup>
+              </LayersControl.Overlay>
+            )}
           </LayersControl>
         </Map>
       </div>
