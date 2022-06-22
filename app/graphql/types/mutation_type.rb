@@ -193,6 +193,10 @@ module Types
 
     # amenity
     field :amenity_create, mutation: Mutations::Amenity::AmenityCreate
+
+    # flutterwave
+    field :transaction_initiate, mutation: Mutations::Flutterwave::TransactionInitiate
+    field :transaction_verify, mutation: Mutations::Flutterwave::TransactionVerify
   end
   # rubocop: enable Metrics/ClassLength
 end

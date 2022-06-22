@@ -471,3 +471,7 @@ en:
   notification_description:
     task: '%{task} task is assigned to you.'
     reply_requested: '%{user} requested reply.'
+  payment:
+    pay_for_item: Pay For this item
+    transaction_error: Cannot process transaction at the moment.
+    transaction_failed: Transaction Failed
