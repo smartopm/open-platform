@@ -7,6 +7,7 @@ import userMock from '../../../../__mocks__/authstate';
 import FormUserList from '../Components/FormUserList';
 import { FormsQuery } from '../../graphql/forms_queries';
 import { SubmittedFormsQuery } from '../graphql/userform_queries';
+import MockedThemeProvider from '../../../__mocks__/mock_theme';
 
 describe('FormUser Item', () => {
   const mocks = [
@@ -66,7 +67,9 @@ describe('FormUser Item', () => {
       <Context.Provider value={userMock}>
         <MockedProvider mocks={mocks} addTypename={false}>
           <MemoryRouter>
-            <FormUserList />
+            <MockedThemeProvider>
+              <FormUserList />
+            </MockedThemeProvider>
           </MemoryRouter>
         </MockedProvider>
       </Context.Provider>
@@ -74,7 +77,6 @@ describe('FormUser Item', () => {
     await waitFor(() => {
       expect(wrapper.queryByTestId('form_user_item')).toBeInTheDocument();
       expect(wrapper.queryByTestId('disc_title')).toBeInTheDocument();
-      expect(wrapper.queryByTestId('my_form_title')).toBeInTheDocument();
     }, 20);
   });
   it('should render loader before fetching data', async () => {
@@ -82,7 +84,9 @@ describe('FormUser Item', () => {
       <Context.Provider value={userMock}>
         <MockedProvider mocks={mocks} addTypename={false}>
           <MemoryRouter>
-            <FormUserList />
+            <MockedThemeProvider>
+              <FormUserList />
+            </MockedThemeProvider>
           </MemoryRouter>
         </MockedProvider>
       </Context.Provider>

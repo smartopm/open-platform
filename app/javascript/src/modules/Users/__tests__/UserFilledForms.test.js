@@ -5,6 +5,7 @@ import UserFilledForms from '../Components/UserFilledForms';
 import { FormsQuery } from '../../Forms/graphql/forms_queries';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import userMock from '../../../__mocks__/authstate';
+import MockedThemeProvider from '../../__mocks__/mock_theme';
 
 describe('UserFilledForms component', () => {
   const mocks = {
@@ -52,11 +53,13 @@ describe('UserFilledForms component', () => {
     const rendered = render(
       <MockedProvider mocks={[mocks]} addTypename={false}>
         <Context.Provider value={userMock}>
-          <UserFilledForms
-            userFormsFilled={userFormsFilled}
-            userId="3954jefsdfs"
-            currentUser="9238492318921"
-          />
+          <MockedThemeProvider>
+            <UserFilledForms
+              userFormsFilled={userFormsFilled}
+              userId="3954jefsdfs"
+              currentUser="9238492318921"
+            />
+          </MockedThemeProvider>
         </Context.Provider>
       </MockedProvider>
     );
@@ -71,7 +74,13 @@ describe('UserFilledForms component', () => {
     const rendered = render(
       <MockedProvider mocks={[mocks]} addTypename={false}>
         <Context.Provider value={userMock}>
-          <UserFilledForms userFormsFilled={[]} userId="3954jefsdfs" currentUser="9238492318921" />
+          <MockedThemeProvider>
+            <UserFilledForms
+              userFormsFilled={[]}
+              userId="3954jefsdfs"
+              currentUser="9238492318921"
+            />
+          </MockedThemeProvider>
         </Context.Provider>
       </MockedProvider>
     );
