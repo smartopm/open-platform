@@ -29,6 +29,7 @@ import {
 import MessageAlert from '../../../components/MessageAlert';
 import ListWrapper from '../../../shared/ListWrapper';
 import UploadFileItem from '../../../shared/imageUpload/UploadFileItem';
+import PaymentInput from './FormProperties/PaymentInput';
 
 export default function RenderForm({
   formPropertiesData,
@@ -106,6 +107,10 @@ export default function RenderForm({
         form_property_id: property.id
       }
     });
+  }
+
+  function handlePayment(value) {
+    console.log(value);
   }
 
   function createPropertyObj(propertyId) {
@@ -554,6 +559,47 @@ export default function RenderForm({
         )}
       </Grid>
     ),
+    payment: (
+      <Grid
+        container
+        spacing={3}
+        alignItems="center"
+        justifyContent="center"
+        key={formPropertiesData.id}
+      >
+        {editMode && (
+          <Grid item xs={1}>
+            <Typography color="textSecondary">{number}</Typography>
+          </Grid>
+        )}
+        <Grid item xs={editMode ? 10 : 12} className={classes.spaceBottom}>
+          <ListWrapper>
+            <PaymentInput
+              id={formPropertiesData.id}
+              properties={formPropertiesData}
+              value=""
+              handleValue={event => handleValueChange(event, formPropertiesData)}
+              editable={editable}
+              inputValidation={{
+                error: checkRequiredFormPropertyIsFilled(formPropertiesData, formState)
+              }}
+              handlePayment={handlePayment}
+            />
+          </ListWrapper>
+        </Grid>
+        {editMode && (
+          <Grid item xs={1}>
+            <FormPropertyAction
+              formId={formId}
+              editMode={editMode}
+              propertyId={formPropertiesData.id}
+              refetch={refetch}
+              categoryId={categoryId}
+            />
+          </Grid>
+        )}
+      </Grid>
+    )
   };
   return (
     <Grid style={!editMode && !matches ? { padding: '0 120px' } : {}}>

@@ -134,7 +134,8 @@
     "time": "Time",
     "datetime": "Date with Time",
     "dropdown": "Dropdown",
-    "terms_and_condition": "Terms and Condition"
+    "terms_and_condition": "Terms and Condition",
+    "payment": "Payment"
   },
   "conditions": {
     "===": "equals to",

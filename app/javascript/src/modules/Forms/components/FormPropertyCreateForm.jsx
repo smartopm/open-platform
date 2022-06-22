@@ -36,6 +36,7 @@ const fieldTypes = {
   signature: 'Signature',
   text: 'Text',
   time: 'Time',
+  payment: 'Payment'
 };
 
 export default function FormPropertyCreateForm({
