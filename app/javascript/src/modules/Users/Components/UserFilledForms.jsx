@@ -12,6 +12,7 @@ import CenteredContent from '../../../shared/CenteredContent';
 import SelectButton from '../../../shared/buttons/SelectButton';
 import { Spinner } from '../../../shared/Loading';
 import { formatError } from '../../../utils/helpers';
+import PageWrapper from '../../../shared/PageWrapper';
 
 export default function UserFilledForms({ userFormsFilled, userId, currentUser }) {
   const { data, error, loading } = useQuery(FormsQuery, {
@@ -57,34 +58,28 @@ export default function UserFilledForms({ userFormsFilled, userId, currentUser }
     setAnchorEl(e.currentTarget);
   }
 
+  const rightPanelObj = [
+    {
+      mainElement: (
+        <SelectButton
+          options={menuOptions}
+          open={open}
+          anchorEl={anchorEl}
+          handleClose={handleClose}
+          handleClick={handleSelectButtonClick}
+          defaultButtonText={t('common:menu.submit_form')}
+          style={{ marginLeft: mobile && '-40px' }}
+        />
+      ),
+      key: 1
+    }
+  ];
+
   if (loading) return <Spinner />;
   if (error) return <CenteredContent>{formatError(error.message)}</CenteredContent>;
 
   return (
-    <div className="container" style={{ marginTop: !mobile && -60 }}>
-      <Grid container>
-        <Grid
-          item
-          md={12}
-          xs={12}
-          style={{
-            display: 'flex',
-            marginTop: mobile && -40,
-            marginBottom: 12,
-            justifyContent: 'center'
-          }}
-        >
-          <SelectButton
-            options={menuOptions}
-            open={open}
-            anchorEl={anchorEl}
-            handleClose={handleClose}
-            handleClick={handleSelectButtonClick}
-            defaultButtonText={t('common:menu.submit_form')}
-            style={{ marginLeft: mobile && '-40px' }}
-          />
-        </Grid>
-      </Grid>
+    <PageWrapper pageTitle={t('menu.form', { count: 0 })} rightPanelObj={rightPanelObj}>
       {!userFormsFilled ||
         (!userFormsFilled.length && (
           <>
@@ -119,7 +114,7 @@ export default function UserFilledForms({ userFormsFilled, userId, currentUser }
               )
           )}
       </div>
-    </div>
+    </PageWrapper>
   );
 }
 

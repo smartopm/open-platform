@@ -165,7 +165,8 @@ SelectButton.defaultProps = {
   anchorEl: {},
   anchorRef: {},
   style: {},
-  mobileIcon: undefined
+  mobileIcon: undefined,
+  options: []
 };
 
 SelectButton.propTypes = {
@@ -189,7 +190,7 @@ SelectButton.propTypes = {
         })
       )
     })
-  ).isRequired,
+  ),
   selectedKey: PropTypes.string,
   handleClick: PropTypes.func.isRequired,
   style: PropTypes.shape({}),
