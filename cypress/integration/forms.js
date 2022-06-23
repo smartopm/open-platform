@@ -164,7 +164,7 @@ describe('Custom Forms', () => {
     cy.wait(1000);
 
     // Click on view entries button
-    cy.get('.form-menu-open-btn').click();
+    cy.get('.form-menu-open-btn').click({ force: true });
     cy.wait(500);
     cy.get('[data-testid=community_form]').click({ force: true });
     cy.wait(1000);
