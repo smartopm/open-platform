@@ -94,9 +94,15 @@ export default function ProjectsList() {
     return url
   }
 
+  const breadCrumbObj = {
+    linkText: t('processes.processes'),
+    linkHref: '/processes',
+    pageName: processName
+  }
+
   if (error) return <CenteredContent>{formatError(error.message)}</CenteredContent>;
   return (
-    <PageWrapper>
+    <PageWrapper pageTitle={processName} breadCrumbObj={authState.user.userType === 'admin' ? breadCrumbObj : undefined}>
       <Modal
         disablePortal
         disableEnforceFocus
@@ -140,26 +146,8 @@ export default function ProjectsList() {
         </Grid>
       </Modal>
       <div>
-        {authState.user.userType === 'admin' && (
-          <Grid style={{ paddingleft: '10px' }}>
-            <div role="presentation">
-              <Breadcrumbs aria-label="breadcrumb" style={{ paddingBottom: '10px' }}>
-                <Link to="/processes">
-                  <Typography color="primary" style={{ marginLeft: '5px' }}>
-                    {t('processes.processes')}
-                  </Typography>
-                </Link>
-                <Typography color="text.primary">{processName}</Typography>
-              </Breadcrumbs>
-            </div>
-          </Grid>
-        )}
         <Grid container>
-          <Grid item md={11} xs={10} className={classes.header}>
-            <Typography variant="h4" style={{ marginLeft: '5px', marginBottom: '24px' }}>
-              {processName}
-            </Typography>
-          </Grid>
+          <Grid item md={11} xs={10} className={classes.header} />
           <Grid
             item
             md={1}
@@ -176,7 +164,7 @@ export default function ProjectsList() {
         </Grid>
         {loading && <Spinner />}
         {data?.projects?.length ? (
-          <div>
+          <div style={{marginTop: '30px'}}>
             {data.projects.map(task => (
               <div key={task.id}>
                 <ProjectItem processId={processId} task={task} refetch={refetch} />
