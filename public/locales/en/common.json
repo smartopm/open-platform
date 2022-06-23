@@ -295,7 +295,8 @@
     "copy_info": "Copy link to the QR Code for web or email use.",
     "download_info": "Download file of the QR Code to print out.",
     "add_new": "Add New",
-    "otp": "OTP"
+    "otp": "OTP",
+    "entry_request": "Entry Request"
   },
   "menu": {
     "invoice": "Invoice",
