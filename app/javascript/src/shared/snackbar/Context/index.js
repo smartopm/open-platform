@@ -18,7 +18,7 @@ export default function SnackbarProvider({ children }) {
   /**
  *
  * @param {{type: String, message: String, style: object }} [{ type: 'success', message: '', style: {} }] params
- * @returns <MessageAlert> success message with severity level: success / error
+ * @returns <MessageAlert> message with severity level: success / error
  * @description triggers the snack bar
  */
   function showSnackbar({ type, message, style }){
