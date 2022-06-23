@@ -113,6 +113,7 @@ export default function Form({
       setFormState({ ...formState, previewable: formDetailData.form?.preview });
       return;
     }
+    
 
     saveFormData(
       propertiesData,
