@@ -9,7 +9,7 @@ import MockedThemeProvider from '../../../__mocks__/mock_theme';
 
 describe('My Forms', () => {
   it('renders submitted forms properly', async () => {
-    const container = render(
+    render(
       <Context.Provider value={authState}>
         <MockedThemeProvider>
           <MockedProvider>
@@ -19,11 +19,8 @@ describe('My Forms', () => {
       </Context.Provider>
     );
     await waitFor(() => {
-      expect(container.queryByTestId('my_form_title')).toBeInTheDocument();
+      expect(MyRoutesInfo.routeProps.path).toBe('/myforms');
+      expect(MyRoutesInfo.name(t)).toBe('menu.form');
     }, 10);
-  });
-  it('exports necessary info', () => {
-    expect(MyRoutesInfo.routeProps.path).toBe('/myforms');
-    expect(MyRoutesInfo.name(t)).toBe('menu.form');
   });
 });

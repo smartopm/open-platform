@@ -58,7 +58,6 @@ describe('Admin processes dashboard', () => {
     expect(screen.queryAllByTestId('AddIcon')[0]).toBeInTheDocument();
     expect(screen.queryAllByTestId('VisibilityIcon')[0]).toBeInTheDocument();
     expect(screen.queryAllByTestId('speed_dial_action')[0]).toBeInTheDocument();
-    expect(screen.queryByText('processes.processes')).toBeInTheDocument();
   });
 
   it('renders Process list items', async () => {

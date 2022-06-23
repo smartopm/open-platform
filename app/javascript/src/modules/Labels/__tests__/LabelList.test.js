@@ -5,6 +5,7 @@ import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom';
 import { LabelsQuery } from '../../../graphql/queries';
 import LabelList from '../Components/LabelList';
+import MockedThemeProvider from '../../__mocks__/mock_theme';
 
 describe('Label List Component', () => {
   it('should render without error', async () => {
@@ -39,12 +40,14 @@ describe('Label List Component', () => {
     const container = render(
       <MockedProvider mocks={[mocks]} addTypename={false}>
         <BrowserRouter>
-          <LabelList userType="admin" />
+          <MockedThemeProvider>
+            <LabelList userType="admin" />
+          </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>
     );
     await waitFor(() => {
-      expect(container.queryByText('common:table_headers.labels')).toBeInTheDocument();
+      expect(container.queryAllByText('common:table_headers.labels')[0]).toBeInTheDocument();
       expect(container.queryByText('common:table_headers.labels_description')).toBeInTheDocument();
       expect(
         container.queryByText('common:table_headers.labels_total_no_of_users')

@@ -1,6 +1,7 @@
 // This component will house the customer journey dashboard
 import React from 'react';
 import { useTheme } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import makeStyles from '@mui/styles/makeStyles';
 import { useQuery } from 'react-apollo';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -10,9 +11,11 @@ import { Spinner } from '../../../shared/Loading';
 import { StatusList } from '../../../shared/Status';
 import { userSubStatus } from '../../../utils/constants';
 import SubStatusTimeDistributionReport from './SubStatusTimeDistributionReport';
+import PageWrapper from '../../../shared/PageWrapper';
 
 export default function UserStats() {
   const classes = useStyles();
+  const { t } = useTranslation('users')
   const history = useHistory();
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
@@ -25,7 +28,7 @@ export default function UserStats() {
   }
 
   return (
-    <>
+    <PageWrapper pageTitle={t('users.user_journey')}>
       <div className={matches ? classes.statusSection : undefined}>
         <div className={classes.titleSection}>
           <h5 className={classes.title}>Customer Journey Stage</h5>
@@ -47,14 +50,14 @@ export default function UserStats() {
           subStatusDistributionData={subStatusDistributionData}
         />
       )}
-    </>
+    </PageWrapper>
   );
 }
 
 const useStyles = makeStyles(theme => ({
   statusSection: {
     width: '40%',
-    margin: '6%'
+    marginBottom: '6%'
   },
   titleSection: {
     // color: theme.palette.primary.main,

@@ -43,9 +43,7 @@ describe('Custom Forms', () => {
     // Go to Permits & Request Forms
     cy.get('.left-menu-collapsible').click();
     cy.wait(1000);
-    cy.get('.community-menu-item').click();
-    cy.wait(1000);
-    cy.get('.permit-request-form-menu-item').click();
+    cy.get('.manage-forms-form-menu-item').click();
     cy.wait(1000);
 
     // The 'No Forms' text should be present initially
@@ -97,9 +95,9 @@ describe('Custom Forms', () => {
     cy.addFormProperty('DateTimeField', 'datetime', false);
 
     /** Submit a Form * */
-    cy.get('.permit-request-form-menu-item').click();
-    cy.wait(500);
     cy.get('.left-menu-collapsible').click();
+    cy.wait(500);
+    cy.get('.manage-forms-form-menu-item').click();
     cy.wait(500);
     cy.get('.form-menu-open-btn').click();
     cy.wait(500);
@@ -110,7 +108,7 @@ describe('Custom Forms', () => {
     cy.get('[data-testid=submit_form_btn]').click();
     cy.wait(1000);
     cy.get('[data-testid=confirm_contract]').click();
-    cy.contains('Close').click({force: true});
+    cy.contains('Close').click({ force: true });
 
     // Fields Should be Required, Form submit terminated
     cy.contains('Required').should('exist');
@@ -126,8 +124,8 @@ describe('Custom Forms', () => {
     cy.get('[type="checkbox"]')
       .first()
       .check();
-    cy.get('[data-testid=date-picker]').click()
-    cy.get('.MuiPickersDay-today').click()
+    cy.get('[data-testid=date-picker]').click();
+    cy.get('.MuiPickersDay-today').click();
     cy.contains('Ok').click();
 
     cy.get('[data-testid=time_picker]').click();
@@ -162,19 +160,15 @@ describe('Custom Forms', () => {
     // Go to Permits & Request Forms
     cy.get('.left-menu-collapsible').click();
     cy.wait(1000);
-    cy.get('.community-menu-item').click();
-    cy.wait(1000);
-    cy.get('.community-menu-item').click();
-    cy.wait(1000);
-    cy.get('.permit-request-form-menu-item').click();
+    cy.get('.manage-forms-form-menu-item').click();
     cy.wait(1000);
 
     // Click on view entries button
     cy.get('.form-menu-open-btn').click();
     cy.wait(500);
-    cy.get('[data-testid=community_form]').click({force: true});
+    cy.get('[data-testid=community_form]').click({ force: true });
     cy.wait(1000);
-    cy.get('[data-testid=DownloadIcon]').should('exist')
+    cy.get('[data-testid=DownloadIcon]').should('exist');
 
     // Click the first download button - should be clickable
     cy.get('[data-testid=DownloadIcon]')
@@ -182,6 +176,5 @@ describe('Custom Forms', () => {
       .click();
     cy.wait(1000);
     cy.get('@redirect').should('be.called');
-
   });
 });

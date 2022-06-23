@@ -4,7 +4,12 @@ require 'rails_helper'
 require 'email_msg'
 
 RSpec.describe EmailMsg do
-  before { Rails.env.stub(test?: false) }
+  before do
+    Rails.env.stub(test?: false)
+    WebMock.allow_net_connect!
+  end
+
+  after {  WebMock.disable_net_connect! }
 
   describe '.send_email' do
     it 'initializes sendgrid email class' do

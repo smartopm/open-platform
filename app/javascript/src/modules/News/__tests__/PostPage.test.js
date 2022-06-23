@@ -13,20 +13,20 @@ jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 describe('NewsPage Component', () => {
   it('should display loader', async () => {
     const mocks = {
-        request: {
-          query: PostDiscussionQuery,
-          variables: {
-            postId: '2gg0'
-          }
-        },
-        result: {
-          data: {
-            postDiscussion: {
-              title: 'A post here'
-            }
+      request: {
+        query: PostDiscussionQuery,
+        variables: {
+          postId: '2gg0'
+        }
+      },
+      result: {
+        data: {
+          postDiscussion: {
+            title: 'A post here'
           }
         }
       }
+    };
 
     let container;
     await act(async () => {
@@ -43,6 +43,6 @@ describe('NewsPage Component', () => {
 
     await waitFor(() => {
       expect(container.getByText(/common:misc.comment/)).toBeInTheDocument();
-    }, 10)
+    }, 10);
   });
 });

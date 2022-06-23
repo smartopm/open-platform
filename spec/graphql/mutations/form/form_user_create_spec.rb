@@ -38,6 +38,7 @@ RSpec.describe Mutations::Form::FormUserCreate do
       create(:form_user,
              form: new_form,
              user: another_user,
+             submitted_by_id: another_user.id,
              status_updated_by: another_user,
              status: 'draft')
     end
@@ -80,6 +81,7 @@ RSpec.describe Mutations::Form::FormUserCreate do
         variables = {
           formId: form.id,
           userId: current_user.id,
+          submitted_by_id: current_user.id,
           propValues: values.to_json,
         }
 
@@ -121,6 +123,7 @@ RSpec.describe Mutations::Form::FormUserCreate do
         variables = {
           formId: new_form.id,
           userId: another_user.id,
+          submitted_by_id: another_user.id,
           propValues: values.to_json,
         }
         result = DoubleGdpSchema.execute(mutation, variables: variables,
@@ -148,6 +151,7 @@ RSpec.describe Mutations::Form::FormUserCreate do
         variables = {
           formId: form.id,
           userId: current_user.id,
+          submitted_by_id: current_user.id,
           propValues: values.to_json,
         }
 
@@ -190,6 +194,7 @@ RSpec.describe Mutations::Form::FormUserCreate do
       variables = {
         formId: '3453rsnjsdi-43rdf34-sdf43',
         userId: current_user.id,
+        submitted_by_id: current_user.id,
         propValues: values.to_json,
       }
       result = DoubleGdpSchema.execute(mutation, variables: variables,
@@ -213,6 +218,7 @@ RSpec.describe Mutations::Form::FormUserCreate do
       variables = {
         formId: form.id,
         userId: current_user.id,
+        submitted_by_id: current_user.id,
         propValues: values.to_json,
       }
       result = DoubleGdpSchema.execute(mutation, variables: variables,
@@ -236,6 +242,7 @@ RSpec.describe Mutations::Form::FormUserCreate do
       variables = {
         formId: form.id,
         userId: current_user.id,
+        submitted_by_id: current_user.id,
         propValues: values.to_json,
         status: 'draft',
       }
@@ -263,6 +270,7 @@ RSpec.describe Mutations::Form::FormUserCreate do
         variables = {
           formId: report_an_issue_form.id,
           userId: current_user.id,
+          submitted_by_id: current_user.id,
           propValues: values.to_json,
         }
         result = DoubleGdpSchema.execute(mutation, variables: variables,

@@ -4,7 +4,12 @@ import { Context as AuthStateContext } from '../../../containers/Provider/AuthSt
 import permissionsCheck from '../utils';
 import Page404 from '../../../shared/404';
 
-export default function AccessCheck({ allowedPermissions, children, module, show404ForUnauthorized }) {
+export default function AccessCheck({
+  allowedPermissions,
+  children,
+  module,
+  show404ForUnauthorized
+}) {
   const authState = useContext(AuthStateContext);
   const userPermissionsModule = authState.user?.permissions.find(
     permissionObject => permissionObject.module === module
@@ -19,16 +24,16 @@ export default function AccessCheck({ allowedPermissions, children, module, show
     return children;
   }
 
-  if(show404ForUnauthorized) {
-    return <Page404 />
+  if (show404ForUnauthorized) {
+    return <Page404 />;
   }
 
   return null;
 }
 
 AccessCheck.defaultProps = {
-  show404ForUnauthorized: true,
-}
+  show404ForUnauthorized: true
+};
 
 AccessCheck.propTypes = {
   module: PropTypes.string.isRequired,

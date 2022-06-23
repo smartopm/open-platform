@@ -49,7 +49,8 @@ module Mutations
         raise_error_message(I18n.t('errors.form.draft_exist')) if form_user.present?
 
         form_user = form.form_users.new(vals.except(:form_id, :prop_values)
-                                            .merge(status: (vals[:status] || 'pending')))
+                                            .merge(status: (vals[:status] || 'pending'),
+                                                   submitted_by_id: context[:current_user].id))
         ActiveRecord::Base.transaction do
           return add_user_form_properties(form_user, vals) if form_user.save
 

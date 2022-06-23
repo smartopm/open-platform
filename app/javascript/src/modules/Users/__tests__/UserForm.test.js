@@ -3,11 +3,12 @@ import { act, fireEvent, render, waitFor, screen } from '@testing-library/react'
 import '@testing-library/jest-dom/extend-expect';
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom';
-import ReactTestUtils from 'react-dom/test-utils'
+import ReactTestUtils from 'react-dom/test-utils';
 import UserForm, { formatContactType } from '../Components/UserForm';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import { UserQuery } from '../../../graphql/queries';
 import authState from '../../../__mocks__/authstate';
+import MockedThemeProvider from '../../__mocks__/mock_theme';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 describe('UserForm Component', () => {
@@ -36,11 +37,13 @@ describe('UserForm Component', () => {
       <MockedProvider mocks={mocks}>
         <Context.Provider value={authState}>
           <BrowserRouter>
-            <UserForm
-              isEditing={props.isEditing}
-              isFromRef={props.isFromRef}
-              isAdminOrMarketingAdmin
-            />
+            <MockedThemeProvider>
+              <UserForm
+                isEditing={props.isEditing}
+                isFromRef={props.isFromRef}
+                isAdminOrMarketingAdmin
+              />
+            </MockedThemeProvider>
           </BrowserRouter>
         </Context.Provider>
       </MockedProvider>
@@ -129,11 +132,13 @@ describe('UserForm Component', () => {
         {/* use it as a mock for authState */}
         <Context.Provider value={authState}>
           <BrowserRouter>
-            <UserForm
-              isEditing={props.isEditing}
-              isFromRef={props.isFromRef}
-              isAdminOrMarketingAdmin={false}
-            />
+            <MockedThemeProvider>
+              <UserForm
+                isEditing={props.isEditing}
+                isFromRef={props.isFromRef}
+                isAdminOrMarketingAdmin={false}
+              />
+            </MockedThemeProvider>
           </BrowserRouter>
         </Context.Provider>
       </MockedProvider>
@@ -195,11 +200,13 @@ describe('UserForm Component', () => {
     render(
       <MockedProvider mocks={mocks}>
         <BrowserRouter>
-          <UserForm
-            isEditing={props.isEditing}
-            isFromRef={props.isFromRef}
-            isAdminOrMarketingAdmin
-          />
+          <MockedThemeProvider>
+            <UserForm
+              isEditing={props.isEditing}
+              isFromRef={props.isFromRef}
+              isAdminOrMarketingAdmin
+            />
+          </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>
     );

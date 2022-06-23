@@ -33,14 +33,14 @@ ViewCustomerJourney.propTypes = {
 const useStyles = makeStyles(() => ({
   view: {
     display: 'flex',
-    margin: '20px 0 0 20px',
+    marginTop: '20px',
     cursor: 'pointer',
     fontSize: '16px',
     fontWeight: 600
   },
   viewMobile: {
     display: 'flex',
-    margin: '20px 0 0 20px',
+    marginTop: '20px',
     cursor: 'pointer',
     fontSize: '14px',
     fontWeight: 500

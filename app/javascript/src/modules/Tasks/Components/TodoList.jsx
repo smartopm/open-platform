@@ -3,10 +3,14 @@
 /* eslint-disable complexity */
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Dialog, DialogContent, Grid } from '@mui/material';
+import { Dialog, Grid, Button } from '@mui/material';
 import { useMutation, useLazyQuery, useApolloClient } from 'react-apollo';
 import { useHistory } from 'react-router';
 import { useTranslation } from 'react-i18next';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import IconButton from '@mui/material/IconButton';
+import AddIcon from '@mui/icons-material/Add';
+import SearchIcon from '@mui/icons-material/Search';
 import { UsersLiteQuery } from '../../../graphql/queries';
 import { AssignUser, UpdateNote } from '../../../graphql/mutations';
 import useFileUpload from '../../../graphql/useFileUpload';
@@ -28,7 +32,6 @@ import MessageAlert from '../../../components/MessageAlert';
 import { TaskBulkUpdateMutation } from '../graphql/task_mutation';
 import { TaskBulkUpdateAction, TaskQuickAction } from './TaskActionMenu';
 import TodoItem from './TodoItem';
-import FloatingButton from '../../../shared/buttons/FloatingButton';
 import SplitScreen from '../../../shared/SplitScreen';
 import {
   tasksQueryBuilderInitialValue,
@@ -37,6 +40,7 @@ import {
 } from '../../../utils/constants';
 import AccessCheck from '../../Permissions/Components/AccessCheck';
 import { TasksLiteQuery } from '../graphql/task_queries';
+import PageWrapper from '../../../shared/PageWrapper';
 
 export default function TodoList({
   isDialogOpen,
@@ -49,6 +53,7 @@ export default function TodoList({
 }) {
   const limit = 50;
   const [offset, setOffset] = useState(0);
+  const [searchOpen, setSearchOpen] = useState(false);
   const [open, setModalOpen] = useState(false);
   const [filterOpen, setOpenFilter] = useState(false);
   const [query, setQuery] = useState('');
@@ -65,6 +70,8 @@ export default function TodoList({
   const debouncedFilterInputText = useDebounce(userNameSearchTerm, 500);
   const [taskUpdateStatus, setTaskUpdateStatus] = useState({ message: '', success: false });
   const [checkedOptions, setCheckOptions] = useState('none');
+  const matches = useMediaQuery('(max-width:959px)');
+  const smMatches = useMediaQuery('(max-width:1020px)');
   const taskQuery = {
     completedTasks: 'completed: true',
     tasksDueIn10Days: `due_date >= '${dateToString(
@@ -428,171 +435,206 @@ export default function TodoList({
     setTaskUpdateStatus({ ...taskUpdateStatus, message: formatError(error.message) });
     history.push('/tasks');
   }
+
+  const rightPanelObj = [
+    {
+      mainElement: matches ? (
+        <IconButton color="primary" data-testid="search" onClick={() => setSearchOpen(!searchOpen)}>
+          <SearchIcon />
+        </IconButton>
+      ) : (
+        <Button
+          startIcon={<SearchIcon />}
+          data-testid="search"
+          onClick={() => setSearchOpen(!searchOpen)}
+        >
+          {t('common:menu.search')}
+        </Button>
+      ),
+      key: 1
+    },
+    {
+      mainElement: (
+        <TaskQuickAction checkedOptions={checkedOptions} handleCheckOptions={handleCheckOptions} />
+      ),
+      key: 2
+    },
+    {
+      mainElement: (
+        <AccessCheck module="note" allowedPermissions={['can_view_create_task_button']}>
+          {smMatches ? (
+            <Button
+              onClick={openModal}
+              variant="contained"
+              color="primary"
+              style={{ color: '#FFFFFF', margin: '0 5px 0 8px' }}
+              data-testid="create_task_btn"
+              disableElevation
+            >
+              <AddIcon />
+            </Button>
+          ) : (
+            <Button
+              startIcon={<AddIcon />}
+              onClick={openModal}
+              variant="contained"
+              color="primary"
+              style={{ color: '#FFFFFF' }}
+              data-testid="create_task_btn"
+              disableElevation
+            >
+              {t('common:misc.add_new')}
+            </Button>
+          )}
+        </AccessCheck>
+      ),
+      key: 3
+    },
+    {
+      mainElement: <TaskQuickSearch filterTasks={handleTaskFilter} currentTile={currentTile} />,
+      key: 4
+    }
+  ];
+
   if (tasksError) return <ErrorPage error={tasksError.message} />;
 
   return (
     <>
-      <div style={{ padding: '0 8%' }} data-testid="todo-container">
-        <MessageAlert
-          type={taskUpdateStatus.success ? 'success' : 'error'}
-          message={taskUpdateStatus.message}
-          open={!!taskUpdateStatus.message}
-          handleClose={handleMessageAlertClose}
+      <Dialog fullScreen open={open} fullWidth onClose={openModal} aria-labelledby="task_modal">
+        <TaskForm
+          refetch={handleRefetch}
+          close={() => handleCloseTaskForm()}
+          assignUser={assignUnassignUser}
+          users={liteData?.usersLite}
+          parentTaskId={parentTaskId}
+          subTasksCount={subTasksCount}
         />
-        <ModalDialog
-          open={isDialogOpen}
-          handleClose={handleModal}
-          handleConfirm={saveDate}
-          action="save"
-        >
-          <DatePickerDialog
-            selectedDate={selectedDate}
-            handleDateChange={handleDateChange}
-            label={t('common:form_placeholders.note_due_date')}
+      </Dialog>
+      <PageWrapper pageTitle={t('common:table_headers.task')} rightPanelObj={rightPanelObj}>
+        <div data-testid="todo-container">
+          <MessageAlert
+            type={taskUpdateStatus.success ? 'success' : 'error'}
+            message={taskUpdateStatus.message}
+            open={!!taskUpdateStatus.message}
+            handleClose={handleMessageAlertClose}
           />
-        </ModalDialog>
-
-        <Dialog
-          fullScreen
-          open={open}
-          fullWidth
-          maxWidth="lg"
-          onClose={openModal}
-          aria-labelledby="task_modal"
-        >
-          <DialogContent>
-            <TaskForm
-              refetch={handleRefetch}
-              close={() => handleCloseTaskForm()}
-              assignUser={assignUnassignUser}
-              users={liteData?.usersLite}
-              parentTaskId={parentTaskId}
-              subTasksCount={subTasksCount}
-            />
-          </DialogContent>
-        </Dialog>
-        <Grid container spacing={1}>
-          <Grid item md={7} xs={12} style={{ display: 'flex', alignItems: 'center' }}>
-            <Grid container spacing={2}>
-              <Grid item style={{ flexGrow: 0 }}>
-                <TaskQuickAction
-                  checkedOptions={checkedOptions}
-                  handleCheckOptions={handleCheckOptions}
-                />
-              </Grid>
-              <Grid item style={{ flexGrow: 1 }}>
-                <TaskQuickSearch filterTasks={handleTaskFilter} currentTile={currentTile} />
-              </Grid>
-            </Grid>
-          </Grid>
-          <Grid
-            item
-            md={4}
-            xs={8}
-            style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}
+          <ModalDialog
+            open={isDialogOpen}
+            handleClose={handleModal}
+            handleConfirm={saveDate}
+            action="save"
           >
-            <SearchInput
-              filterRequired
-              title={t('common:form_placeholders.search_tasks')}
-              searchValue={searchText}
-              handleSearch={inputToSearch}
-              handleFilter={toggleFilterMenu}
-              handleClear={() => setSearchText('')}
-              data-testid="search_input"
+            <DatePickerDialog
+              selectedDate={selectedDate}
+              handleDateChange={handleDateChange}
+              label={t('common:form_placeholders.note_due_date')}
             />
-          </Grid>
-        </Grid>
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            position: 'relative'
-          }}
-          data-testid="filter_container"
-        >
-          <Grid
-            container
-            justifyContent="flex-end"
-            style={{
-              width: '100.5%',
-              position: 'absolute',
-              zIndex: 1,
-              marginTop: '-2px',
-              display: displayBuilder
-            }}
-          >
-            <QueryBuilder
-              handleOnChange={handleQueryOnChange}
-              builderConfig={builderConfig}
-              initialQueryValue={tasksQueryBuilderInitialValue}
-              addRuleLabel="Add filter"
-            />
-          </Grid>
-        </div>
-        <br />
-        {isLoading ? (
-          <Spinner />
-        ) : (
-          <div data-testid="todo-list-container">
-            <TaskBulkUpdateAction
-              checkedOptions={checkedOptions}
-              bulkUpdating={bulkUpdating}
-              handleBulkUpdate={handleBulkUpdate}
-              selectedTasks={selectedTasks}
-              currentTile={currentTile}
-            />
-            {Boolean(data?.flaggedNotes.length) && (
-              <SplitScreen open={splitScreenOpen} onClose={() => setSplitScreenOpen(false)}>
-                <TaskUpdate
-                  taskId={redirectedTaskId || data?.flaggedNotes[0].id}
-                  handleSplitScreenOpen={handleTodoItemClick}
-                  handleSplitScreenClose={handleSplitScreenClose}
-                  handleTaskCompletion={handleTaskCompletion}
-                  handleTaskNotFoundError={handleTaskNotFoundError}
-                />
-              </SplitScreen>
-            )}
-            {data?.flaggedNotes.length ? (
-              <div>
-                {data?.flaggedNotes.map(task => (
-                  <TodoItem
-                    key={task.id}
-                    task={task}
-                    query={joinedTaskQuery}
-                    handleChange={handleChange}
-                    selectedTasks={selectedTasks}
-                    isSelected={checkedOptions === 'all'}
-                    handleAddSubTask={handleAddSubTask}
-                    handleUploadDocument={handleUploadDocument}
-                    handleTodoClick={handleTodoItemClick}
-                    handleTaskCompletion={handleTaskCompletion}
+          </ModalDialog>
+          <Grid container spacing={1}>
+            {searchOpen && (
+              <>
+                <Grid
+                  item
+                  md={4}
+                  xs={8}
+                  style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}
+                >
+                  <SearchInput
+                    filterRequired
+                    title={t('common:form_placeholders.search_tasks')}
+                    searchValue={searchText}
+                    handleSearch={inputToSearch}
+                    handleFilter={toggleFilterMenu}
+                    handleClear={() => setSearchText('')}
+                    data-testid="search_input"
                   />
-                ))}
-              </div>
-            ) : (
-              <CenteredContent>{t('task.no_tasks')}</CenteredContent>
+                </Grid>
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    position: 'relative'
+                  }}
+                  data-testid="filter_container"
+                >
+                  <Grid
+                    container
+                    style={{
+                      width: '200%',
+                      position: 'absolute',
+                      zIndex: 1,
+                      marginTop: '-2px',
+                      display: displayBuilder
+                    }}
+                  >
+                    <QueryBuilder
+                      handleOnChange={handleQueryOnChange}
+                      builderConfig={builderConfig}
+                      initialQueryValue={tasksQueryBuilderInitialValue}
+                      addRuleLabel="Add filter"
+                    />
+                  </Grid>
+                </div>
+              </>
             )}
-            <br />
-            <CenteredContent>
-              <Paginate
-                count={data?.flaggedNotes?.length}
-                offSet={offset}
-                limit={limit}
-                active={offset >= 1}
-                handlePageChange={paginate}
+          </Grid>
+          <br />
+          {isLoading ? (
+            <Spinner />
+          ) : (
+            <div data-testid="todo-list-container">
+              <TaskBulkUpdateAction
+                checkedOptions={checkedOptions}
+                bulkUpdating={bulkUpdating}
+                handleBulkUpdate={handleBulkUpdate}
+                selectedTasks={selectedTasks}
+                currentTile={currentTile}
               />
-            </CenteredContent>
-          </div>
-        )}
-        <AccessCheck module="note" allowedPermissions={['can_view_create_task_button']} show404ForUnauthorized={false}>
-          <FloatingButton
-            variant="extended"
-            handleClick={openModal}
-            color="primary"
-            data-testid="create_task_btn"
-          />
-        </AccessCheck>
-      </div>
+              {Boolean(data?.flaggedNotes.length) && (
+                <SplitScreen open={splitScreenOpen} onClose={() => setSplitScreenOpen(false)}>
+                  <TaskUpdate
+                    taskId={redirectedTaskId || data?.flaggedNotes[0].id}
+                    handleSplitScreenOpen={handleTodoItemClick}
+                    handleSplitScreenClose={handleSplitScreenClose}
+                    handleTaskCompletion={handleTaskCompletion}
+                    handleTaskNotFoundError={handleTaskNotFoundError}
+                  />
+                </SplitScreen>
+              )}
+              {data?.flaggedNotes.length ? (
+                <div>
+                  {data?.flaggedNotes.map(task => (
+                    <TodoItem
+                      key={task.id}
+                      task={task}
+                      query={joinedTaskQuery}
+                      handleChange={handleChange}
+                      selectedTasks={selectedTasks}
+                      isSelected={checkedOptions === 'all'}
+                      handleAddSubTask={handleAddSubTask}
+                      handleUploadDocument={handleUploadDocument}
+                      handleTodoClick={handleTodoItemClick}
+                      handleTaskCompletion={handleTaskCompletion}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <CenteredContent>{t('task.no_tasks')}</CenteredContent>
+              )}
+              <br />
+              <CenteredContent>
+                <Paginate
+                  count={data?.flaggedNotes?.length}
+                  offSet={offset}
+                  limit={limit}
+                  active={offset >= 1}
+                  handlePageChange={paginate}
+                />
+              </CenteredContent>
+            </div>
+          )}
+        </div>
+      </PageWrapper>
     </>
   );
 }

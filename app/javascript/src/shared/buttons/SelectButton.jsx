@@ -14,6 +14,9 @@ import ListItemText from '@mui/material/ListItemText';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import makeStyles from '@mui/styles/makeStyles';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import IconButton from '@mui/material/IconButton';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 export default function SelectButton({
   defaultButtonText,
@@ -23,11 +26,13 @@ export default function SelectButton({
   options,
   selectedKey,
   handleClick,
-  style
+  style,
+  mobileIcon
 }) {
   const [openSubMenu, setOpenSubMenu] = useState({ isOpen: false, name: '' });
   const [buttonText, setButtonText] = useState(null);
   const classes = useStyles();
+  const matches = useMediaQuery('(max-width:900px)');
 
   function handleOpenSubMenuClick(opt) {
     setOpenSubMenu({ isOpen: !openSubMenu.isOpen, name: opt.key });
@@ -40,7 +45,7 @@ export default function SelectButton({
   }
 
   function handleMenuItemClick(opt) {
-    opt.handleMenuItemClick(opt.key, opt.value)
+    opt.handleMenuItemClick(opt.key, opt.value);
     setButtonText(opt.name);
   }
 
@@ -54,16 +59,22 @@ export default function SelectButton({
 
   return (
     <>
-      <ButtonGroup
-        color="primary"
-        aria-label="outlined select button"
-        data-testid="button"
-      >
-        <Button>{buttonText || defaultButtonText}</Button>
-        <Button onClick={(e) => handleClick(e)} data-testid="arrow-icon" className="option_menu_toggler">
-          <ArrowDropDownIcon />
-        </Button>
-      </ButtonGroup>
+      {matches ? (
+        <IconButton onClick={e => handleClick(e)} color="primary">
+          {mobileIcon || <MoreVertIcon />}
+        </IconButton>
+      ) : (
+        <ButtonGroup color="primary" aria-label="outlined select button" data-testid="button">
+          <Button>{buttonText || defaultButtonText}</Button>
+          <Button
+            onClick={e => handleClick(e)}
+            data-testid="arrow-icon"
+            className="option_menu_toggler"
+          >
+            <ArrowDropDownIcon />
+          </Button>
+        </ButtonGroup>
+      )}
       <Popper
         open={open}
         anchorEl={anchorEl}
@@ -75,9 +86,9 @@ export default function SelectButton({
           {
             name: 'offset',
             options: {
-              offset: [-40, 0],
-            },
-          },
+              offset: [-40, 0]
+            }
+          }
         ]}
       >
         {({ TransitionProps, placement }) => (
@@ -147,13 +158,15 @@ const useStyles = makeStyles(() => ({
   poper: {
     zIndex: 2000
   }
- }))
+}));
 
 SelectButton.defaultProps = {
   selectedKey: '',
   anchorEl: {},
   anchorRef: {},
-  style: {}
+  style: {},
+  mobileIcon: undefined,
+  options: []
 };
 
 SelectButton.propTypes = {
@@ -177,8 +190,9 @@ SelectButton.propTypes = {
         })
       )
     })
-  ).isRequired,
+  ),
   selectedKey: PropTypes.string,
   handleClick: PropTypes.func.isRequired,
-  style:  PropTypes.shape({})
+  style: PropTypes.shape({}),
+  mobileIcon: PropTypes.node
 };

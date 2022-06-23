@@ -6,7 +6,7 @@ import {
   findLinkAndReplace, forceLinkHttps, titleCase, truncateString, removeNewLines, checkForHtmlTags,
   sanitizeText, getJustLabels, checkValidGeoJSON, getHexColor, getDrawPluginOptions,
   handleQueryOnChange, checkAccessibilityForUserType, extractHostname, getObjectKey,
-  decodeHtmlEntity, replaceDocumentMentions, validateRequiredField
+  decodeHtmlEntity, replaceDocumentMentions, validateRequiredField, downloadAsImage
 } from '../../utils/helpers'
 
 jest.mock('dompurify')
@@ -323,5 +323,19 @@ describe('Anonymous', () => {
       jest.fn(() => 'error')
     );
     expect(validation1).toEqual({ error: true, helperText: 'error' });
+  });
+
+  describe('#downloadAsImage', () => {
+    window.getComputedStyle = () => { };
+    jest.mock('../../utils/helpers', () => ({
+      downloadAsImage: jest.fn().mockReturnValue(Promise.resolve(true))
+    }));
+
+    it('convert html to image', () => {
+      const dom = document.createElement('div');
+      dom.innerHTML = "<h1>Welcome to DoubleGDP</h1><p>This is your converted document.<p>";
+      document.body.append(dom);
+      expect(downloadAsImage(dom, 'form')).toBeUndefined();
+    });
   });
 })

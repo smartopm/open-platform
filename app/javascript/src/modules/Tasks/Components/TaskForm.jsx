@@ -8,7 +8,9 @@ import {
   Select,
   InputLabel,
   FormControl,
-  Grid
+  Grid,
+  Typography,
+  Container
 } from '@mui/material';
 import { useMutation } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
@@ -18,8 +20,6 @@ import { NotesCategories } from '../../../utils/constants';
 // TODO: This should be moved to the shared directory
 import UserSearch from '../../Users/Components/UserSearch';
 import CustomAutoComplete from '../../../shared/autoComplete/CustomAutoComplete';
-import PageWrapper from '../../../shared/PageWrapper';
-import PageHeader from '../../../shared/PageHeader';
 import MessageAlert from '../../../components/MessageAlert';
 
 const initialData = {
@@ -86,149 +86,148 @@ export default function TaskForm({
   }
 
   return (
-    <div style={{paddingTop: '50px'}}>
+    <Container>
       <MessageAlert
         type={isSuccessAlert ? 'success' : 'error'}
         message={messageAlert}
         open={!!messageAlert}
         handleClose={() => setMessageAlert('')}
       />
-      <PageHeader
-        linkText={t('common:misc.tasks')}
-        linkHref="/tasks"
-        pageName={t('common:form_actions.create_task')}
-        PageTitle={t('task.task_modal_create_text')}
-      />
-      <PageWrapper>
-        <form onSubmit={handleSubmit}>
-          <Grid container spacing={4}>
-            <Grid item md={12} xs={12}>
-              <TextField
-                name="task_body"
-                label={t('task.task_name')}
-                style={{ width: '100%' }}
-                onChange={e => setTitle(e.target.value)}
-                value={title}
-                fullWidth
-                data-testid="task-body"
-                inputProps={{
-                  'aria-label': 'task_body'
-                }}
-                InputLabelProps={{
-                  shrink: true
-                }}
-                required
-              />
-            </Grid>
-            <Grid item md={12} xs={12}>
-              <TextField
-                name="task_description"
-                label={t('task.optional_description')}
-                style={{ width: '100%' }}
-                onChange={e => setDescription(e.target.value)}
-                value={description}
-                multiline
-                fullWidth
-                rows={2}
-                data-testid="task-description"
-                inputProps={{
-                  'aria-label': 'task_description'
-                }}
-                InputLabelProps={{
-                  shrink: true
-                }}
-              />
-            </Grid>
-            <Grid item md={12} xs={12}>
-              <CustomAutoComplete
-                users={users}
-                isMultiple
-                onChange={(_evt, value) => {
-                  if (!value) {
-                    return;
-                  }
-                  setAssignees(value);
-                }}
-                label={t('task.task_search_placeholder')}
-              />
-            </Grid>
-            <Grid item md={12} xs={12}>
-              <UserSearch userData={userData} update={setData} />
-            </Grid>
-            <Grid item md={12} xs={12}>
-              <FormControl fullWidth>
-                <InputLabel id="taskType">{t('task.task_type_label')}</InputLabel>
-                <Select
-                  id="taskType"
-                  label={t('task.task_type_label')}
-                  value={taskType}
-                  onChange={event => setTaskType(event.target.value)}
-                  name="taskType"
-                  data-testid="task-type"
-                  fullWidth
-                  disabled={createTaskListSubTask}
-                >
-                  {Object.entries(NotesCategories).map(([key, val]) => (
-                    <MenuItem key={key} value={key}>
-                      {val}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-            <Grid item md={12} xs={12}>
-              <DatePickerDialog
-                handleDateChange={date => setDate(date)}
-                selectedDate={selectedDate}
-                inputVariant="outlined"
-                label={t('task.due_date_optional')}
-                margin="none"
-              />
-              <FormHelperText>{t('common:form_placeholders.note_due_date')}</FormHelperText>
-            </Grid>
-            <Grid item md={12} xs={12}>
-              <TextField
-                fullWidth
-                type="number"
-                id="task-order-number"
-                label={t('task.order_number')}
-                value={orderNumber}
-                onChange={event => setOrderNumber(event.target.value)}
-                variant="outlined"
-                size="small"
-                name="order"
-                inputProps={{ 'data-testid': 'order-number' }}
-              />
-            </Grid>
-            <Grid item md={6} xs={6} style={{ textAlign: 'right' }}>
-              <Button
-                variant="outlined"
-                aria-label="task_cancel"
-                color="primary"
-                onClick={close}
-                data-testid="task-cancel-button"
-              >
-                {t('common:form_actions.cancel')}
-              </Button>
-            </Grid>
-            <Grid item md={6} xs={6}>
-              <Button
-                variant="contained"
-                type="submit"
-                color="primary"
-                disabled={loading}
-                aria-label="task_submit"
-                data-testid="task-submit-button"
-              >
-                {loading
-                  ? t('common:form_actions.creating_task')
-                  : t('common:form_actions.create_task')}
-              </Button>
-            </Grid>
+      <Grid container>
+        <Grid item sm={12} md={12} xs={12} style={{padding: '50px 0'}}>
+          <Typography variant="h4" color="text.secondary">
+            {t('task.task_modal_create_text')}
+          </Typography>
+        </Grid>
+      </Grid>
+      <form onSubmit={handleSubmit}>
+        <Grid container spacing={4}>
+          <Grid item md={12} xs={12}>
+            <TextField
+              name="task_body"
+              label={t('task.task_name')}
+              style={{ width: '100%' }}
+              onChange={e => setTitle(e.target.value)}
+              value={title}
+              fullWidth
+              data-testid="task-body"
+              inputProps={{
+                'aria-label': 'task_body'
+              }}
+              InputLabelProps={{
+                shrink: true
+              }}
+              required
+            />
           </Grid>
-        </form>
-      </PageWrapper>
-    </div>
+          <Grid item md={12} xs={12}>
+            <TextField
+              name="task_description"
+              label={t('task.optional_description')}
+              style={{ width: '100%' }}
+              onChange={e => setDescription(e.target.value)}
+              value={description}
+              multiline
+              fullWidth
+              rows={2}
+              data-testid="task-description"
+              inputProps={{
+                'aria-label': 'task_description'
+              }}
+              InputLabelProps={{
+                shrink: true
+              }}
+            />
+          </Grid>
+          <Grid item md={12} xs={12}>
+            <CustomAutoComplete
+              users={users}
+              isMultiple
+              onChange={(_evt, value) => {
+                if (!value) {
+                  return;
+                }
+                setAssignees(value);
+              }}
+              label={t('task.task_search_placeholder')}
+            />
+          </Grid>
+          <Grid item md={12} xs={12}>
+            <UserSearch userData={userData} update={setData} />
+          </Grid>
+          <Grid item md={12} xs={12}>
+            <FormControl fullWidth>
+              <InputLabel id="taskType">{t('task.task_type_label')}</InputLabel>
+              <Select
+                id="taskType"
+                label={t('task.task_type_label')}
+                value={taskType}
+                onChange={event => setTaskType(event.target.value)}
+                name="taskType"
+                data-testid="task-type"
+                fullWidth
+                disabled={createTaskListSubTask}
+              >
+                {Object.entries(NotesCategories).map(([key, val]) => (
+                  <MenuItem key={key} value={key}>
+                    {val}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item md={12} xs={12}>
+            <DatePickerDialog
+              handleDateChange={date => setDate(date)}
+              selectedDate={selectedDate}
+              inputVariant="outlined"
+              label={t('task.due_date_optional')}
+              margin="none"
+            />
+            <FormHelperText>{t('common:form_placeholders.note_due_date')}</FormHelperText>
+          </Grid>
+          <Grid item md={12} xs={12}>
+            <TextField
+              fullWidth
+              type="number"
+              id="task-order-number"
+              label={t('task.order_number')}
+              value={orderNumber}
+              onChange={event => setOrderNumber(event.target.value)}
+              variant="outlined"
+              size="small"
+              name="order"
+              inputProps={{ 'data-testid': 'order-number' }}
+            />
+          </Grid>
+          <Grid item md={6} xs={6} style={{ textAlign: 'right' }}>
+            <Button
+              variant="outlined"
+              aria-label="task_cancel"
+              color="primary"
+              onClick={close}
+              data-testid="task-cancel-button"
+            >
+              {t('common:form_actions.cancel')}
+            </Button>
+          </Grid>
+          <Grid item md={6} xs={6}>
+            <Button
+              variant="contained"
+              type="submit"
+              color="primary"
+              disabled={loading}
+              aria-label="task_submit"
+              data-testid="task-submit-button"
+            >
+              {loading
+                ? t('common:form_actions.creating_task')
+                : t('common:form_actions.create_task')}
+            </Button>
+          </Grid>
+        </Grid>
+      </form>
+    </Container>
   );
 }
 

@@ -41,7 +41,6 @@ describe('Amenity List', () => {
         </MockedThemeProvider>
       </MockedProvider>
     );
-    expect(wrapper.queryByTestId('amenity_title')).toBeInTheDocument();
     expect(wrapper.queryByTestId('loader')).toBeInTheDocument();
     await waitFor(() => {
       expect(wrapper.queryAllByTestId('amenity_description')[0]).toBeInTheDocument();

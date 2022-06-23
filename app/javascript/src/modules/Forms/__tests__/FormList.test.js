@@ -14,7 +14,8 @@ describe('Form List Component', () => {
   const { t } = useTranslation(['common', 'form']);
   const mocks = {
     request: {
-      query: FormsQuery
+      query: FormsQuery,
+      variables: { userId: null }
     },
     result: {
       data: {
@@ -113,7 +114,6 @@ describe('Form List Component', () => {
 
     await waitFor(() => {
       expect(container.queryByText('common:misc.forms')).toBeInTheDocument();
-      expect(container.queryAllByText('misc.create_form')[0]).toBeInTheDocument();
     });
   });
 });

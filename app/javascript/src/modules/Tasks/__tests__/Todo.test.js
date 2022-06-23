@@ -10,13 +10,13 @@ import Todo from '../containers/Todo';
 import { TaskStatsQuery } from '../graphql/task_queries';
 import { flaggedNotes } from '../../../graphql/queries';
 import taskMock from '../__mocks__/taskMock';
-import authState from '../../../__mocks__/authstate'
-
+import authState from '../../../__mocks__/authstate';
+import MockedThemeProvider from '../../__mocks__/mock_theme';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 
 describe('Todo list main page', () => {
-  it('renders the todo list page correctly',  async () => {
+  it('renders the todo list page correctly', async () => {
     const mocks = [
       {
         request: {
@@ -39,42 +39,39 @@ describe('Todo list main page', () => {
           }
         }
       },
-        {
-          request: {
-            query: flaggedNotes,
-            variables: {
-              offset: 0,
-              limit: 50,
-              query: 'assignees: Another somebodyy AND completed: false '
-            }
-          },
-          result: {
-           flaggedNotes: [
-            taskMock
-           ]
+      {
+        request: {
+          query: flaggedNotes,
+          variables: {
+            offset: 0,
+            limit: 50,
+            query: 'assignees: Another somebodyy AND completed: false '
           }
+        },
+        result: {
+          flaggedNotes: [taskMock]
         }
+      }
     ];
 
-      const container = render(
-        <ApolloProvider client={createClient}>
-          <Context.Provider value={authState}>
-            <MockedProvider mocks={mocks} addTypename={false}>
-              <BrowserRouter>
+    const container = render(
+      <ApolloProvider client={createClient}>
+        <Context.Provider value={authState}>
+          <MockedProvider mocks={mocks} addTypename={false}>
+            <BrowserRouter>
+              <MockedThemeProvider>
                 <Todo />
-              </BrowserRouter>
-            </MockedProvider>
-          </Context.Provider>
-        </ApolloProvider>
-      );
-      await waitFor(() => {
-        expect(container.queryByTestId('filter')).toBeInTheDocument();
-        expect(container.queryByTestId('filter_container')).toBeInTheDocument();
-        expect(container.queryByTestId('create_task_btn')).toBeInTheDocument();
-        expect(container.queryByTestId('search')).toBeInTheDocument();
-      }, 10)
+              </MockedThemeProvider>
+            </BrowserRouter>
+          </MockedProvider>
+        </Context.Provider>
+      </ApolloProvider>
+    );
+    await waitFor(() => {
+      expect(container.queryByTestId('todo-container')).toBeInTheDocument();
+    }, 10);
 
-      /*
+    /*
       TODO: Bonny & Victor
       With the TodoList component now rendering asynchronously, we need to wait for
       some elements to render.

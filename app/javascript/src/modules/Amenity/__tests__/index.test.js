@@ -19,7 +19,7 @@ describe('Amenity List', () => {
       </Context.Provider>
     );
     await waitFor(() => {
-      expect(container.queryByTestId('amenity_title')).toBeInTheDocument();
+      expect(container.queryByText('common:misc.amenity_plural')).toBeInTheDocument();
     }, 10);
   });
   it('exports necessary info', () => {

@@ -8,7 +8,10 @@ import { Redirect, useLocation, useHistory } from 'react-router-dom';
 import makeStyles from '@mui/styles/makeStyles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import Grid from '@mui/material/Grid';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
 import { Container } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
 import { useTranslation } from 'react-i18next';
 import MuiConfig from 'react-awesome-query-builder/lib/config/mui';
 import { Spinner } from '../../../shared/Loading';
@@ -20,20 +23,25 @@ import { userType, subStatus } from '../../../utils/constants';
 import Paginate from '../../../components/Paginate';
 import UserListCard from '../Components/UserListCard';
 import { dateToString } from '../../../utils/dateutil';
-
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
 import { objectAccessor, toTitleCase } from '../../../utils/helpers';
 import SubStatusReportDialog from '../../CustomerJourney/Components/SubStatusReport';
-import UserHeader from '../Components/UserHeader';
-import FixedHeader from '../../../shared/FixedHeader';
+import UserSelectButton, {
+  UserSearch,
+  UserProcessCSV,
+  UserMenuitems,
+  UserActionSelectMenu
+} from '../Components/UserHeader';
+import QueryBuilder from '../../../components/QueryBuilder';
+import PageWrapper from '../../../shared/PageWrapper';
 
 const limit = 25;
 const USERS_CAMPAIGN_WARNING_LIMIT = 2000;
 
 export default function UsersList() {
   const [redirect, setRedirect] = useState(false);
-  const classes = useStyles();
   const [offset, setOffset] = useState(0);
+  const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [displayBuilder, setDisplayBuilder] = useState('none');
   const [filterCount, setFilterCount] = useState(0);
@@ -53,13 +61,10 @@ export default function UsersList() {
     setSubstatusReportOpen(!substatusReportOpen);
     setAnchorEl(null);
   }
-  const currentQueryPath = decodeURIComponent(location.search).replace('?', '')
+  const currentQueryPath = decodeURIComponent(location.search).replace('?', '');
   const { loading, error, data, refetch } = useQuery(UsersDetails, {
     variables: {
-      query:
-        searchQuery.length === 0
-          ? currentQueryPath
-          : searchQuery,
+      query: searchQuery.length === 0 ? currentQueryPath : searchQuery,
       limit,
       offset
     },
@@ -67,7 +72,7 @@ export default function UsersList() {
   });
 
   const matches = useMediaQuery('(max-width:959px)');
-
+  
   const [loadAllUsers, { loading: usersLoading, data: usersData, called }] = useLazyQuery(
     UsersDetails,
     {
@@ -454,23 +459,79 @@ export default function UsersList() {
     labelsRefetch
   };
 
+  const rightPanelObj = [
+    {
+      mainElement: matches ? (
+        <IconButton color="primary" data-testid='search' onClick={() => setSearchOpen(!searchOpen)}>
+          <SearchIcon />
+        </IconButton>
+      ) : (
+        <Button startIcon={<SearchIcon />} data-testid='search' onClick={() => setSearchOpen(!searchOpen)}>
+          {t('common:menu.search')}
+        </Button>
+      ),
+      key: 1
+    },
+    {
+      mainElement: <UserSelectButton setCampaignOption={setCampaignOption} />,
+      key: 2
+    },
+    {
+      mainElement: <UserProcessCSV csvObject={csvObject} />,
+      key: 3
+    },
+    {
+      mainElement: <UserMenuitems actionObject={actionObject} menuObject={menuObject} />,
+      key: 4
+    }
+  ];
+
   return (
-    <>
-      <FixedHeader>
-        <UserHeader
-          setCampaignOption={setCampaignOption}
-          handleSearchClick={inputToSearch}
-          filterObject={filterObject}
-          csvObject={csvObject}
-          menuObject={menuObject}
-          actionObject={actionObject}
-        />
-      </FixedHeader>
+    <PageWrapper pageTitle={t('common:misc.users')} rightPanelObj={rightPanelObj}>
       {loading || labelsLoading || fetchingUsersCount ? (
         <Spinner />
       ) : (
         <>
           <Container>
+            <UserActionSelectMenu actionObject={actionObject} />
+            {searchOpen && (
+              <>
+                <div style={{ width: '50%' }}>
+                  <UserSearch handleSearchClick={inputToSearch} filterObject={filterObject} />
+                </div>
+                <div
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    position: 'relative'
+                  }}
+                >
+                  <Grid container alignItems="center" style={{ width: '40%' }}>
+                    <div className="d-flex justify-content-center row" data-testid="label_error">
+                      <span>{filterObject.labelError}</span>
+                    </div>
+                  </Grid>
+
+                  <Grid
+                    container
+                    style={{
+                      width: '200%',
+                      position: 'absolute',
+                      zIndex: 1,
+                      marginTop: '-2px',
+                      display: filterObject.displayBuilder
+                    }}
+                  >
+                    <QueryBuilder
+                      handleOnChange={filterObject.handleQueryOnChange}
+                      builderConfig={filterObject.queryBuilderConfig}
+                      initialQueryValue={filterObject.queryBuilderInitialValue}
+                      addRuleLabel="add filter"
+                    />
+                  </Grid>
+                </div>
+              </>
+            )}
             <ActionDialog
               open={openCampaignWarning}
               handleClose={() => setOpenCampaignWarning(false)}
@@ -482,17 +543,15 @@ export default function UsersList() {
               handleClose={handleReportDialog}
               handleFilter={handleFilterUserBySubstatus}
             />
-            <div className={matches ? classes.userCardMobile : classes.userCard}>
-              <UserListCard
-                userData={data}
-                currentUserType={authState.user.userType}
-                handleUserSelect={handleUserSelect}
-                selectedUsers={selectedUsers}
-                offset={offset}
-                selectCheckBox={selectCheckBox}
-                refetch={refetch}
-              />
-            </div>
+            <UserListCard
+              userData={data}
+              currentUserType={authState.user.userType}
+              handleUserSelect={handleUserSelect}
+              selectedUsers={selectedUsers}
+              offset={offset}
+              selectCheckBox={selectCheckBox}
+              refetch={refetch}
+            />
             <Grid
               container
               direction="row"
@@ -511,7 +570,7 @@ export default function UsersList() {
           </Container>
         </>
       )}
-    </>
+    </PageWrapper>
   );
 }
 

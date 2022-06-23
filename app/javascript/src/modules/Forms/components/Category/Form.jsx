@@ -18,7 +18,7 @@ import CategoryList from './CategoryList';
 import FormPreview from '../FormPreview';
 import MessageAlert from '../../../../components/MessageAlert';
 import { FormCategoryDeleteMutation } from '../../graphql/form_category_mutations';
-import { formatError } from '../../../../utils/helpers';
+import { formatError, useParamsQuery } from '../../../../utils/helpers';
 import FormTitle from '../FormTitle';
 import AccessCheck from '../../../Permissions/Components/AccessCheck';
 import TermsAndCondition from '../TermsAndCondition';
@@ -53,10 +53,9 @@ export default function Form({
     uploadedImages,
     filesToUpload,
     setImgUploadError
-  } = useContext(
-    FormContext
-  );
+  } = useContext(FormContext);
   const authState = useContext(Context);
+
   const history = useHistory();
   const [categoryDelete, { loading: isDeleting, error }] = useMutation(FormCategoryDeleteMutation);
 
@@ -69,6 +68,8 @@ export default function Form({
     setFormData({});
   }
 
+  const path = useParamsQuery('');
+  const userId = path.get('userId');
   function handleDeleteCategory(category) {
     categoryDelete({
       variables: { categoryId: category, formId }
@@ -118,7 +119,7 @@ export default function Form({
     saveFormData(
       propertiesData,
       formId,
-      authState.user.id,
+      userId || authState.user.id,
       categoriesData.data?.formCategories,
       status,
       hasAgreedToTerms
@@ -130,12 +131,12 @@ export default function Form({
       // TODO: Enable form redirect on form creation
       setTimeout(() => {
         history.push('/');
-      }, 5000)
+      }, 5000);
     }
   }, [formState.isDraft, formState.successfulSubmit]);
 
   const formData = flattenFormProperties(categoriesData.data?.formCategories);
-  const isTermsChecked = formDetailData?.form?.hasTermsAndConditions ? !hasAgreedToTerms : false
+  const isTermsChecked = formDetailData?.form?.hasTermsAndConditions ? !hasAgreedToTerms : false;
 
   return (
     <>
@@ -276,21 +277,23 @@ export default function Form({
 
       {!editMode && (
         <Grid container style={matches ? {} : { padding: '0 120px 20px 120px' }}>
-          {
-            formDetailData?.form?.hasTermsAndConditions && (
-              <Grid item md={12} xs={12} style={{ marginTop: '20px' }}>
-                <TermsAndCondition
-                  categoriesData={categoriesData.data?.formCategories}
-                  isChecked={hasAgreedToTerms}
-                  handleCheckTerms={isChecked => setHasAgreedToTerms(isChecked)}
-                />
-              </Grid>
-            )
-          }
+          {formDetailData?.form?.hasTermsAndConditions && (
+            <Grid item md={12} xs={12} style={{ marginTop: '20px' }}>
+              <TermsAndCondition
+                categoriesData={categoriesData.data?.formCategories}
+                isChecked={hasAgreedToTerms}
+                handleCheckTerms={isChecked => setHasAgreedToTerms(isChecked)}
+              />
+            </Grid>
+          )}
           <Grid item md={12} xs={12} style={{ marginTop: '20px' }}>
             <Divider />
           </Grid>
-          <AccessCheck module="forms" allowedPermissions={['can_save_draft_form']} show404ForUnauthorized={false}>
+          <AccessCheck
+            module="forms"
+            allowedPermissions={['can_save_draft_form']}
+            show404ForUnauthorized={false}
+          >
             <Grid item md={6} xs={6} style={{ textAlign: 'left' }}>
               <Button
                 variant="outlined"
@@ -306,9 +309,8 @@ export default function Form({
               </Button>
             </Grid>
           </AccessCheck>
-          {(formDetailData?.form?.roles.includes(authState?.user?.userType?.toLowerCase())
-            || authState?.user?.userType === 'admin') &&
-            (
+          {(formDetailData?.form?.roles.includes(authState?.user?.userType?.toLowerCase()) ||
+            authState?.user?.userType === 'admin') && (
             <Grid item md={6} xs={6} style={{ textAlign: 'right' }}>
               <Button
                 variant="contained"
@@ -325,8 +327,7 @@ export default function Form({
                   : t('common:form_actions.submitting')}
               </Button>
             </Grid>
-            )
-          }
+          )}
         </Grid>
       )}
     </>
@@ -355,7 +356,7 @@ Form.propTypes = {
       preview: PropTypes.bool,
       isPublic: PropTypes.bool,
       hasTermsAndConditions: PropTypes.bool,
-      roles: PropTypes.arrayOf(PropTypes.string),
+      roles: PropTypes.arrayOf(PropTypes.string)
     })
   }),
   formDetailRefetch: PropTypes.func,

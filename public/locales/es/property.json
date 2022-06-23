@@ -14,13 +14,15 @@
     "new_property": "Nueva Propiedad",
     "ownership": "Propiedad",
     "plan_history": "Historial del plan",
-    "property": "Propiedad {{parcelNumber}}"
+    "property": "Propiedad {{parcelNumber}}",
+    "update_point_of_interest": "Editar Punto de Interés"
   },
   "form_actions": {
     "edit_property": "Editar Propiedad"
   },
   "form_fields": {
     "add_owner": "Agregar Propietario",
+    "add_photo": "Añadir Foto",
     "add_youtube_url": "Agregue la URL del video de YouTube.",
     "address": "Dirección",
     "choose_icon": "Elija un tipo de icono",
@@ -36,6 +38,7 @@
     "property_number": "Número de Propiedad ",
     "property_type": "Tipo de Propiedad",
     "state_province": "Estado Provincia",
+    "upload_image_url": "Subir imágenes al punto de interés",
     "youtube_video_url": "Video"
   },
   "map_markers": {
@@ -58,6 +61,7 @@
     "poi_added": "'Punto de interés agregado correctamente'",
     "poi_delete_warning": "¡Está a punto de eliminar un Punto de interés !. Cancele si no está seguro.",
     "poi_removed": "Punto de interés eliminado con éxito",
+    "poi_updated": "Punto de interés actualizado con éxito",
     "property_added": "Propiedad agregada correctamente",
     "property_updated": "Propiedad actualizada correctamente"
   },

@@ -1,9 +1,9 @@
 import React from 'react';
 import { render, screen, waitFor } from '@testing-library/react';
-
 import RouteData, { MemoryRouter } from 'react-router';
 import { MockedProvider } from '@apollo/react-testing';
 import UserMessagePage from '../../containers/Messages/UserMessagePage';
+import MockedThemeProvider from '../../modules/__mocks__/mock_theme';
 
 describe('AllMessages Component', () => {
   const mockParams = {
@@ -16,7 +16,9 @@ describe('AllMessages Component', () => {
     render(
       <MockedProvider>
         <MemoryRouter>
-          <UserMessagePage />
+          <MockedThemeProvider>
+            <UserMessagePage />
+          </MockedThemeProvider>
         </MemoryRouter>
       </MockedProvider>
     );

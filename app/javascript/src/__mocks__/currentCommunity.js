@@ -9,6 +9,10 @@ const currentCommunityMock = {
       currentCommunity: {
         imageUrl: 'https://dev.dgdp.site/rails/active_storage/blobs/eyJ.png',
         id: '8d66a68a-ded4-4f95-b9e2-62811d2f395f',
+        leadMonthlyTargets: [
+          { division: 'Africa', target: '15' },
+          { division: 'China', target: '15' }
+        ],
         name: 'Test Community',
         supportEmail: [{ email: 'support@test.com', category: 'customer_care' }],
         supportWhatsapp: [{ email: 'support@test.com', category: 'customer_care' }],

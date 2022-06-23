@@ -1,10 +1,10 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react';
+import { render } from '@testing-library/react';
 
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom';
 import MuiConfig from 'react-awesome-query-builder/lib/config/mui';
-import UserHeader from '../Components/UserHeader';
+import UserSelectButton, { UserProcessCSV, UserMenuitems, UserActionSelectMenu, UserSearch } from '../Components/UserHeader';
 import MockedThemeProvider from '../../__mocks__/mock_theme';
 
 describe('User Detail Component', () => {
@@ -79,17 +79,60 @@ describe('User Detail Component', () => {
     userList: []
   };
 
-  it('should render the user header component', () => {
+  it('should render the userSelectComponent', () => {
     const container = render(
       <MockedProvider>
         <BrowserRouter>
           <MockedThemeProvider>
-            <UserHeader
+            <UserSelectButton
               setCampaignOption={jest.fn()}
-              handleSearchClick={jest.fn()}
-              filterObject={filterObject}
+            />
+          </MockedThemeProvider>
+        </BrowserRouter>
+      </MockedProvider>
+    );
+
+    expect(container.queryByTestId('button')).toBeInTheDocument();
+  });
+
+  it('should render the userProcessCSV component', () => {
+    const container = render(
+      <MockedProvider>
+        <BrowserRouter>
+          <MockedThemeProvider>
+            <UserProcessCSV
               csvObject={csvObject}
+            />
+          </MockedThemeProvider>
+        </BrowserRouter>
+      </MockedProvider>
+    );
+
+    expect(container.queryByTestId('download_csv_btn')).toBeInTheDocument();
+  });
+
+  it('should render the userMenuItem component', () => {
+    const container = render(
+      <MockedProvider>
+        <BrowserRouter>
+          <MockedThemeProvider>
+            <UserMenuitems
               menuObject={menuObject}
+            />
+          </MockedThemeProvider>
+        </BrowserRouter>
+      </MockedProvider>
+    );
+
+    expect(container.queryByTestId('menu-list')).toBeInTheDocument();
+  });
+
+  it('should render the userActionSelect component', () => {
+    const container = render(
+      <MockedProvider>
+        <BrowserRouter>
+          <MockedThemeProvider>
+            <UserActionSelectMenu
               actionObject={actionObject}
             />
           </MockedThemeProvider>
@@ -97,13 +140,23 @@ describe('User Detail Component', () => {
       </MockedProvider>
     );
 
-    expect(container.queryByTestId('title')).toBeInTheDocument();
-    expect(container.queryByTestId('select')).toBeInTheDocument();
-    expect(container.queryAllByTestId('button')[0]).toBeInTheDocument();
-    expect(container.queryAllByTestId('arrow-icon')[0]).toBeInTheDocument();
-    fireEvent.click(container.queryAllByTestId('arrow-icon')[0]);
-    expect(container.queryAllByText('common:misc.all')[0]).toBeInTheDocument();
-    fireEvent.click(container.queryAllByText('common:misc.all')[0]);
-    expect(container.queryAllByTestId('button')[0]).toBeInTheDocument();
+    expect(container.queryByTestId('user_action')).toBeInTheDocument();
+  });
+
+  it('should render the userSearch component', () => {
+    const container = render(
+      <MockedProvider>
+        <BrowserRouter>
+          <MockedThemeProvider>
+            <UserSearch
+              handleSearchClick={jest.fn()}
+              filterObject={filterObject}
+            />
+          </MockedThemeProvider>
+        </BrowserRouter>
+      </MockedProvider>
+    );
+
+    expect(container.queryByTestId('search')).toBeInTheDocument();
   });
 });

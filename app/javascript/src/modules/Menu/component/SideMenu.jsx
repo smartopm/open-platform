@@ -6,7 +6,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import { useHistory, useLocation, useParams } from 'react-router-dom';
-import { Collapse , useTheme } from '@mui/material';
+import { Collapse, useTheme } from '@mui/material';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import { useTranslation } from 'react-i18next';
@@ -19,10 +19,15 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, direction, communityFeatu
   const history = useHistory();
   const { pathname } = useLocation();
   const params = useParams();
-  const { t } = useTranslation('common')
-  const [currentMenu, setCurrentMenu] = useState({ parentName: '', parentIsOpen: false, isOpen: false, name: '' });
-  const classes = useStyles()
-  const theme = useTheme()
+  const { t } = useTranslation('common');
+  const [currentMenu, setCurrentMenu] = useState({
+    parentName: '',
+    parentIsOpen: false,
+    isOpen: false,
+    name: ''
+  });
+  const classes = useStyles();
+  const theme = useTheme();
   /**
    * @param {Event} event browser event from clicked icon
    * @param {object} item a menu object containing details about the menu and its sub menu
@@ -32,22 +37,19 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, direction, communityFeatu
    * @todo automatically open new menu when another is clicked while current is still open
    */
   // eslint-disable-next-line max-params
-  function routeTo(event, item, parentItem, isParent=false) {
+  function routeTo(event, item, parentItem, isParent = false) {
     if (item.subMenu) {
       setCurrentMenu({
-        parentIsOpen: parentItem.name(t) === item.name(t) && isParent ?
-                      !currentMenu.parentIsOpen : true,
+        parentIsOpen:
+          parentItem.name(t) === item.name(t) && isParent ? !currentMenu.parentIsOpen : true,
         parentName: parentItem.name(t),
-        isOpen: parentItem.name(t) !== item.name(t) &&
-                currentMenu.parentIsOpen && !currentMenu.isOpen,
+        isOpen:
+          parentItem.name(t) !== item.name(t) && currentMenu.parentIsOpen && !currentMenu.isOpen,
         name: item.name(t)
       });
       return;
     }
-    // close the menu and route  only when it is open and it is on small screens
-    if (direction === 'right' || window.screen.width <= 1200) {
-      toggleDrawer(event);
-    }
+    toggleDrawer(event);
     // check the direct and route differently
     // check current pathname and direction of the drawer if it has id then use
     //  that as new path for all left side based routes
@@ -66,30 +68,30 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, direction, communityFeatu
     history.push(item.routeProps.path);
   }
 
-   /**
+  /**
    * @param {string} type
    * @description dynamically create necessary context to determine menu accessibility.
    * based on Feature type, Context will be injected into the accessibility
    * logic check handler on demand
    * @returns {object} object || undefined
    */
-  function createMenuContext(type){
+  function createMenuContext(type) {
     // context for LogBook and User Feature
-    if(['LogBook', 'Users'].includes(type)){
+    if (['LogBook', 'Users'].includes(type)) {
       return {
         userId: params.id,
         userType,
-        loggedInUserId: authState.user.id,
-      }
+        loggedInUserId: authState.user.id
+      };
     }
 
     // context for Payments & Payment Plans
-    if(['Payments'].includes(type)){
+    if (['Payments'].includes(type)) {
       return {
         userType,
         paymentCheck: true,
-        loggedInUserPaymentPlan: authState.user?.paymentPlan,
-      }
+        loggedInUserPaymentPlan: authState.user?.paymentPlan
+      };
     }
 
     return undefined;
@@ -103,6 +105,13 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, direction, communityFeatu
       );
       if (userPermissionsModule === undefined) {
         return false;
+      }
+      // exclude Manage Forms from roles that dont create forms
+      if (menuItem.moduleName === 'forms') {
+        return (
+          userPermissionsModule?.permissions.includes('can_see_menu_item') &&
+          userPermissionsModule?.permissions.includes('can_create_form')
+        );
       }
       return userPermissionsModule?.permissions.includes('can_see_menu_item');
     }
@@ -134,7 +143,7 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, direction, communityFeatu
                 className={`${menuItem.styleProps?.className} ${classes.menuItem}`}
                 style={{
                   backgroundColor:
-                    pathname === menuItem.routeProps.path && theme.palette.primary.main,
+                    pathname === menuItem.routeProps.path && theme.palette.primary.main
                 }}
               >
                 {menuItem.styleProps?.icon && (
@@ -148,7 +157,7 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, direction, communityFeatu
                 <ListItemText
                   primary={menuItem.name(t)}
                   className={`${classes.menuItemText} ${classes.child}`}
-                  style={{ color: pathname === menuItem.routeProps.path && '#FFFFFF'}}
+                  style={{ color: pathname === menuItem.routeProps.path && '#FFFFFF' }}
                 />
                 {currentMenu.name === menuItem.name(t) && currentMenu.isOpen ? (
                   <ExpandLess color="primary" className={classes.child} />
@@ -204,33 +213,35 @@ const SideMenu = ({ toggleDrawer, menuItems, userType, direction, communityFeatu
                                 unmountOnExit
                               >
                                 <List component="div" disablePadding>
-                                  {item.subMenu.map(subMenuItem => (
-                                    communityFeatures.includes(subMenuItem.featureName) &&
-                                    checkSubMenuAccessibility({ authState, subMenuItem }) && (
-                                      <ListItem
-                                        button
-                                        key={subMenuItem.name(t)}
-                                        onClick={event => routeTo(event, subMenuItem)}
-                                        selected={pathname === subMenuItem.routeProps.path}
-                                        className={`${subMenuItem.styleProps?.className} ${classes.menuItem}`}
-                                        style={{
-                                        backgroundColor:
-                                          pathname === subMenuItem.routeProps.path &&
-                                          theme.palette.primary.main,
-                                      }}
-                                      >
-                                        <ListItemText
-                                          primary={subMenuItem.name(t)}
+                                  {item.subMenu.map(
+                                    subMenuItem =>
+                                      communityFeatures.includes(subMenuItem.featureName) &&
+                                      checkSubMenuAccessibility({ authState, subMenuItem }) && (
+                                        <ListItem
+                                          button
+                                          key={subMenuItem.name(t)}
+                                          onClick={event => routeTo(event, subMenuItem)}
+                                          selected={pathname === subMenuItem.routeProps.path}
+                                          className={`${subMenuItem.styleProps?.className} ${classes.menuItem}`}
                                           style={{
-                                          marginLeft: '73px',
-                                          color:
-                                            pathname === subMenuItem.routeProps.path && '#FFFFFF'
-                                        }}
-                                          className={`${classes.menuItemText} ${classes.child}`}
-                                        />
-                                      </ListItem>
-                                    )
-                                  ))}
+                                            backgroundColor:
+                                              pathname === subMenuItem.routeProps.path &&
+                                              theme.palette.primary.main
+                                          }}
+                                        >
+                                          <ListItemText
+                                            primary={subMenuItem.name(t)}
+                                            style={{
+                                              marginLeft: '73px',
+                                              color:
+                                                pathname === subMenuItem.routeProps.path &&
+                                                '#FFFFFF'
+                                            }}
+                                            className={`${classes.menuItemText} ${classes.child}`}
+                                          />
+                                        </ListItem>
+                                      )
+                                  )}
                                 </List>
                               </Collapse>
                             </Fragment>
@@ -282,9 +293,8 @@ const menuItemProps = PropTypes.shape({
     icon: PropTypes.element
   }),
   // due to backward compatibility, accessibleBy can be an array or a function
-  accessibleBy: PropTypes.oneOfType(
-                  [PropTypes.arrayOf(PropTypes.string), PropTypes.func]
-                ).isRequired,
+  accessibleBy: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.func])
+    .isRequired,
   subMenu: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.func.isRequired,
@@ -292,7 +302,7 @@ const menuItemProps = PropTypes.shape({
         path: PropTypes.string.isRequired
       })
     })
-  ),
+  )
 });
 
 SideMenu.propTypes = {
@@ -301,7 +311,6 @@ SideMenu.propTypes = {
   userType: PropTypes.string.isRequired,
   direction: PropTypes.oneOf(['left', 'right']).isRequired,
   communityFeatures: PropTypes.arrayOf(PropTypes.string).isRequired
-
 };
 
 const useStyles = makeStyles(theme => ({
@@ -328,7 +337,7 @@ const useStyles = makeStyles(theme => ({
     }
   },
   // This allow the menuItem to populate the hover state to the children
-  child: {},
+  child: {}
 }));
 
 export default SideMenu;

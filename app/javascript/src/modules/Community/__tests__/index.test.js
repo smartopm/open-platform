@@ -8,6 +8,7 @@ describe('Community', () => {
     expect(Community.routeProps.path).toBe('');
     expect(Community.name(t)).toBe('menu.community');
     expect(Community.styleProps.icon).toBeDefined();
-    expect(Community.subMenu).toHaveLength(15);
+    // removed permits and request forms menu item
+    expect(Community.subMenu).toHaveLength(14);
   });
 });
