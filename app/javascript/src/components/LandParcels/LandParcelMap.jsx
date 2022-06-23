@@ -17,10 +17,10 @@ import {
 import { checkValidGeoJSON, formatError, objectAccessor } from '../../utils/helpers';
 import { emptyPolygonFeature, mapTiles, publicMapToken, plotStatusColorPallete } from '../../utils/constants';
 import { ActionDialog } from '../Dialog';
-import MessageAlert from '../MessageAlert';
 import PointOfInterestDrawerDialog from '../Map/PointOfInterestDrawerDialog';
 import SubUrbanLayer from '../Map/SubUrbanLayer';
 import PointOfInterestModal from './PointOfInterestModal'
+import { SnackbarContext } from '../../shared/snackbar/Context';
 
 const { attribution, mapboxStreets, centerPoint } = mapTiles;
 const { mapbox: mapboxPublicToken } = publicMapToken
@@ -81,11 +81,11 @@ export default function LandParcelMap({ handlePlotClick, geoData, refetch }) {
   const [deletePointOfInterest] = useMutation(PointOfInterestDelete);
   const [updatePointOfInterest] = useMutation(PointOfInterestUpdate);
   const [selectedPoi, setSelectedPoi] = useState(null);
-  const [isSuccessAlert, setIsSuccessAlert] = useState(false);
-  const [messageAlert, setMessageAlert] = useState('');
   const [confirmDeletePoi, setConfirmDeletePoi] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
   const [editMode, setEditMode] = useState(false);
+
+  const { showSnackbar, messageType } = useContext(SnackbarContext);
 
   const communityName = authState.user?.community?.name;
   const properties =
@@ -194,23 +194,13 @@ export default function LandParcelMap({ handlePlotClick, geoData, refetch }) {
       variables: { id: selectedPoi.id }
     })
       .then(() => {
-        setMessageAlert(t('property:messages.poi_removed'));
-        setIsSuccessAlert(true);
+        showSnackbar({ type: messageType.success, message: t('property:messages.poi_removed') })
         handleCloseDrawer();
       })
       .catch(err => {
-        setMessageAlert(formatError(err.message));
-        setIsSuccessAlert(false);
+        showSnackbar({ type: messageType.error, message: formatError(err.message) })
         handleCloseDrawer();
       });
-  }
-
-  /* istanbul ignore next */
-  function handleMessageAlertClose(_event, reason) {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setMessageAlert('');
   }
 
   /* istanbul ignore next */
@@ -270,15 +260,13 @@ export default function LandParcelMap({ handlePlotClick, geoData, refetch }) {
     const variables = { ...params, id: selectedPoi.id }
     setIsUpdating(true)
     updatePointOfInterest({ variables }).then(() => {
-      setMessageAlert(t('property:messages.poi_updated'))
-      setIsSuccessAlert(true)
+      showSnackbar({ type: messageType.success, message: t('property:messages.poi_updated') })
       setEditMode(false);
       setIsUpdating(false)
       refetch();
       setSelectedPoi(null)
     }).catch((err) => {
-      setMessageAlert(formatError(err.message))
-      setIsSuccessAlert(false)
+      showSnackbar({ type: messageType.error, message: formatError(err.message) })
     })
   }
 
@@ -486,12 +474,6 @@ export default function LandParcelMap({ handlePlotClick, geoData, refetch }) {
           </LayersControl>
         </Map>
       </div>
-      <MessageAlert
-        type={isSuccessAlert ? 'success' : 'error'}
-        message={messageAlert}
-        open={!!messageAlert}
-        handleClose={handleMessageAlertClose}
-      />
     </>
   );
 }
