@@ -39,7 +39,7 @@ const Home = () => {
   if (!authState.loggedIn) return <Spinner />;
 
   return (
-    <PageWrapper pageTitle={t('dashboard.dashboard')}>
+    <PageWrapper pageTitle={t('dashboard.dashboard')} oneCol={!communityNewsUsers.includes(userType)}>
       <Grid container columns={{ xs: 12, md: 12 }} spacing={3}>
         {matches && (
           <Grid item sm={12} md={12} xs={12}>
@@ -80,7 +80,7 @@ const Home = () => {
             </Grid>
           )}
         </FeatureCheck>
-        <Grid item md={6} sm={12} xs={12}>
+        <Grid item md={communityNewsUsers.includes(userType) ? 6 : 12} sm={12} xs={12}>
           {!matches && (
             <Grid container alignItems="center">
               <Grid
