@@ -33,8 +33,8 @@ module Logs
       label = community.labels.find_or_create_by(short_desc: investment_title,
                                                  grouping_name: 'Investment')
       label.update(color: color)
-      generate_user_label(label)
       destroy_existing_investment_user_label(investment_title)
+      generate_user_label(label)
     end
 
     def generate_user_label(label)

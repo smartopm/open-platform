@@ -31,8 +31,8 @@ module Types::Queries::LeadLog
 
     total_spent = context[:site_community].lead_logs.investment.where(user_id: user_id).sum(:amount)
     {
-      total_spent: total_spent,
-      percentage_of_target_used: percentage_of_target_used(total_spent, lead_log),
+      total_spent: total_spent.to_f,
+      percentage_of_target_used: percentage_of_target_used(total_spent, lead_log).to_f,
       investment_label: investment_label(user_id, lead_log, total_spent),
     }
   end
