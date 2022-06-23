@@ -1,7 +1,4 @@
 /* eslint-disable */
-// Enzyme setup
-import { configure } from 'enzyme';
-import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import * as Aphrodite from 'aphrodite';
 import * as AphroditeNoImportant from 'aphrodite/no-important';
 import { JSDOM } from 'jsdom';
@@ -16,8 +13,6 @@ AphroditeNoImportant.StyleSheetTestUtils.suppressStyleInjection();
 global.File = () => {
   console.log('File called');
 };
-
-configure({ adapter: new Adapter() });
 
 const url = 'http://localhost';
 
