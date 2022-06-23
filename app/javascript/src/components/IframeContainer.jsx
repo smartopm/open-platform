@@ -5,6 +5,7 @@ export default function IframeContainer({ link, height, width }) {
   return (
     <div>
       <iframe
+        title={`iframe-${width}-${height}`}
         data-testid="iframe"
         src={link}
         height={height}
