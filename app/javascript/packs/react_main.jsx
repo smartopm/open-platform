@@ -330,7 +330,7 @@ const App = () => {
                                           (module.moduleName !== undefined ||
                                             module.accessibleBy.includes(user.userType))
                                         ) {
-                                          return <Route {...module.routeProps} key={module.name} />;
+                                          return <Route exact {...module.routeProps} key={module.name} />;
                                         }
                                       })}
 
