@@ -96,7 +96,7 @@ export default function UserFilledForms({ userFormsFilled, userId, currentUser }
         ))}
 
       <div>
-        {userFormsFilled.length >= 1 &&
+        {userFormsFilled?.length >= 1 &&
           userFormsFilled.map(
             userForm =>
               (userForm.status !== 'draft' || userForm.userId === currentUser) && (
