@@ -8,7 +8,7 @@ export default function PaymentInput({ properties, communityCurrency }) {
       <Typography variant="caption">{properties.fieldName}</Typography>
       <Typography variant="h5">{`${communityCurrency}  ${properties.shortDesc} `}</Typography>
       <br />
-      <Typography variant="caption">{properties.longDesc}</Typography>
+      <Typography variant="body2">{properties.longDesc}</Typography>
     </>
   );
 }
@@ -19,6 +19,5 @@ PaymentInput.propTypes = {
     fieldName: PropTypes.string,
     shortDesc: PropTypes.string,
     longDesc: PropTypes.string,
-    fieldValue: PropTypes.oneOfType([PropTypes.string, PropTypes.array])
-  }).isRequired
+  }).isRequired,
 };

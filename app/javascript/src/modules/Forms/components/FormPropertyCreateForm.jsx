@@ -245,7 +245,7 @@ export default function FormPropertyCreateForm({
           <Grid item md={12} xs={12}>
             <TextField
               id="standard-short_desc"
-              label={t('form_fields.long_desc')}
+              label={t('form_fields.description')}
               variant="outlined"
               value={propertyData.longDesc}
               onChange={handlePropertyValueChange}
