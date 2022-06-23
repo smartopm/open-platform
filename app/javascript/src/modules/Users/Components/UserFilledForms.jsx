@@ -22,7 +22,7 @@ export default function UserFilledForms({ userFormsFilled, userId, currentUser }
 
   const history = useHistory();
   const path = useParamsQuery();
-  const tab = path.get('tab');
+  const tab = path.get('tab') || 'MyForms';
   const { t } = useTranslation('common');
   const [anchorEl, setAnchorEl] = useState(null);
   const [open, setOpen] = useState(false);
