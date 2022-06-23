@@ -10,7 +10,7 @@ const CommunityFormsPermissions = ['can_create_form'];
 
 const currentModule = 'forms';
 
-function RenderCommunityForms() {
+export function RenderCommunityForms() {
   return (
     <AccessCheck module={currentModule} allowedPermissions={CommunityFormsPermissions}>
       <CommunityForms />

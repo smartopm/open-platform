@@ -74,6 +74,7 @@ import ProcessBuilderPage from '../src/modules/Processes/Components/ProcessBuild
 import ProcessCommentsPage from '../src/modules/Tasks/Processes/Components/ProcessCommentsPage';
 import LanguagePage from '../src/modules/LogBook/Kiosk/components/LanguagePage';
 import Page404 from '../src/shared/404';
+import { RenderCommunityForms } from '../src/modules/Forms/ManageForms';
 // The routes defined here are carefully arranged, be mindful when changing them
 
 const LoggedInOnly = props => {
@@ -334,6 +335,7 @@ const App = () => {
                                         }
                                       })}
 
+                                      <Route exact path='/forms/create' component={RenderCommunityForms} />
                                       <Route exact path="/scan" component={Scan} />
                                       <Route path="/id/:id" component={IDCard} />
                                       <Route path="/map" component={Map} />

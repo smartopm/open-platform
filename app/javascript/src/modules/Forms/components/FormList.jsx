@@ -16,7 +16,7 @@ import AssignmentIcon from '@mui/icons-material/Assignment';
 import { useMutation, useQuery } from 'react-apollo';
 import { StyleSheet, css } from 'aphrodite';
 import PropTypes from 'prop-types';
-import { useHistory } from 'react-router';
+import { useHistory } from 'react-router-dom';
 import FormLinks, { useStyles } from './FormLinks';
 import { FormsQuery } from '../graphql/forms_queries';
 import { Spinner } from '../../../shared/Loading';
