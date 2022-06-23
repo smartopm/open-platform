@@ -164,7 +164,7 @@ PageWrapper.defaultProps = {
 PageWrapper.propTypes = {
   children: PropTypes.node.isRequired,
   oneCol: PropTypes.bool,
-  pageTitle: PropTypes.string,
+  pageTitle: PropTypes.oneOfType([PropTypes.node, PropTypes.string]),
   showAvatar: PropTypes.bool,
   breadCrumbObj: PropTypes.shape({
     extraBreadCrumb: PropTypes.string,

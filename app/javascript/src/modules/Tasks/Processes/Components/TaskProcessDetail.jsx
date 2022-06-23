@@ -1,3 +1,4 @@
+/* eslint-disable max-statements */
 import React, { useState, useEffect } from 'react';
 import { useHistory, useParams } from 'react-router';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -21,14 +22,15 @@ import {
 import ProjectProcesses from './ProjectProcesses';
 import ProjectProcessesSplitView from './ProjectProcessesSplitView';
 import CenteredContent from '../../../../shared/CenteredContent';
-import { Spinner }  from '../../../../shared/Loading';
+import { Spinner } from '../../../../shared/Loading';
 import { getFormUrl } from '../utils';
 import MessageAlert from '../../../../components/MessageAlert';
 import { ProjectQuery, ProjectCommentsQuery } from '../graphql/process_queries';
-import ProjectDocument from './ProjectDocument'
+import ProjectDocument from './ProjectDocument';
 import { SubTasksQuery, TaskQuery, TaskDocumentsQuery } from '../../graphql/task_queries';
 import SearchInput from '../../../../shared/search/SearchInput';
 import useDebounce from '../../../../utils/useDebounce';
+import PageWrapper from '../../../../shared/PageWrapper';
 
 export default function TaskProcessDetail() {
   const limit = 20;
@@ -57,13 +59,11 @@ export default function TaskProcessDetail() {
   );
 
   const formUserId = projectData?.task?.formUserId;
-  const { data: projectItem } = useQuery(
-    ProjectQuery, {
-      skip: !formUserId,
-      variables: { formUserId },
-      fetchPolicy: 'cache-and-network'
-    }
-  );
+  const { data: projectItem } = useQuery(ProjectQuery, {
+    skip: !formUserId,
+    variables: { formUserId },
+    fetchPolicy: 'cache-and-network'
+  });
 
   const { data: stepsData, loading: subStepsLoading, refetch } = useQuery(SubTasksQuery, {
     skip: !projectItem,
@@ -98,10 +98,9 @@ export default function TaskProcessDetail() {
     documents: 2
   };
 
-
   const DETAIL_TAB_VALUES = {
     subtasks: 'subtasks',
-    comments: 'comments',
+    comments: 'comments'
   };
 
   function handleTabValueChange(_event, newValue) {
@@ -144,13 +143,23 @@ export default function TaskProcessDetail() {
     window.document.getElementById('anchor-section')?.scrollIntoView();
   }
 
+  const pageTitle = (
+    <span
+      data-testid="task-title"
+      // eslint-disable-next-line react/no-danger
+      dangerouslySetInnerHTML={{
+        __html: sanitizeText(removeNewLines(projectItem?.project?.body))
+      }}
+    />
+  );
+
   if (projectDataLoading || subStepsLoading) return <Spinner />;
   if (projectDataError) {
-    return <CenteredContent>{formatError(projectDataError.message)}</CenteredContent>
-  };
+    return <CenteredContent>{formatError(projectDataError.message)}</CenteredContent>;
+  }
 
   return (
-    <div>
+    <PageWrapper pageTitle={pageTitle}>
       <MessageAlert
         type="success"
         message={messageAlert}
@@ -165,19 +174,45 @@ export default function TaskProcessDetail() {
         >
           <Grid item md={5} xs={12}>
             <Grid container>
-              <Grid item md={11} xs={10} data-testid="project-title" style={{ paddingTop: '20px' }}>
-                <Typography variant="h4">
-                  <span
-                    data-testid="task-title"
-                    // eslint-disable-next-line react/no-danger
-                    dangerouslySetInnerHTML={{
-                      __html: sanitizeText(removeNewLines(projectItem?.project?.body))
-                    }}
+              <Grid item md={11} xs={10} data-testid="project-title">
+                <StyledTabs
+                  value={tabValue}
+                  onChange={handleTabValueChange}
+                  aria-label="process-tabs"
+                  variant="standard"
+                  style={{ borderBottom: 'solid 1px #ececea' }}
+                >
+                  <StyledTab
+                    label={t('task:processes.overview')}
+                    style={
+                      tabValue === objectAccessor(TAB_VALUES, 'overview')
+                        ? { fontSize: '12px', textAlign: 'left', borderBottom: 'solid 1px' }
+                        : { fontSize: '12px', textAlign: 'left' }
+                    }
+                    {...a11yProps(0)}
                   />
-                </Typography>
+                  <StyledTab
+                    label={t('task:processes.processes')}
+                    style={
+                      tabValue === objectAccessor(TAB_VALUES, 'processes')
+                        ? { fontSize: '12px', borderBottom: 'solid 1px' }
+                        : { fontSize: '12px' }
+                    }
+                    {...a11yProps(1)}
+                  />
+                  <StyledTab
+                    label={t('task:processes.documents')}
+                    style={
+                      tabValue === objectAccessor(TAB_VALUES, 'documents')
+                        ? { fontSize: '12px', borderBottom: 'solid 1px' }
+                        : { fontSize: '12px' }
+                    }
+                    {...a11yProps(1)}
+                  />
+                </StyledTabs>
               </Grid>
-              <Grid item md={1} xs={2} style={{textAlign: 'right', marginTop: '20px'}}>
-                <IconButton color='primary' onClick={shareOnclick} size="large">
+              <Grid item md={1} xs={2} style={{ textAlign: 'right', marginTop: '20px' }}>
+                <IconButton color="primary" onClick={shareOnclick} size="large">
                   <ShareIcon />
                 </IconButton>
                 {matches && (
@@ -191,41 +226,6 @@ export default function TaskProcessDetail() {
                 )}
               </Grid>
             </Grid>
-            <StyledTabs
-              value={tabValue}
-              onChange={handleTabValueChange}
-              aria-label="process-tabs"
-              variant="standard"
-              style={{ borderBottom: 'solid 1px #ececea' }}
-            >
-              <StyledTab
-                label={t('task:processes.overview')}
-                style={
-                  tabValue === objectAccessor(TAB_VALUES, 'overview')
-                    ? { fontSize: '12px', textAlign: 'left', borderBottom: 'solid 1px' }
-                    : { fontSize: '12px', textAlign: 'left' }
-                }
-                {...a11yProps(0)}
-              />
-              <StyledTab
-                label={t('task:processes.processes')}
-                style={
-                  tabValue === objectAccessor(TAB_VALUES, 'processes')
-                    ? { fontSize: '12px', borderBottom: 'solid 1px' }
-                    : { fontSize: '12px' }
-                }
-                {...a11yProps(1)}
-              />
-              <StyledTab
-                label={t('task:processes.documents')}
-                style={
-                  tabValue === objectAccessor(TAB_VALUES, 'documents')
-                    ? { fontSize: '12px', borderBottom: 'solid 1px' }
-                    : { fontSize: '12px' }
-                }
-                {...a11yProps(1)}
-              />
-            </StyledTabs>
 
             <TabPanel value={tabValue} index={0}>
               <ProjectOverview data={projectData?.task} />
@@ -304,6 +304,6 @@ export default function TaskProcessDetail() {
           </Grid>
         </Grid>
       </TaskContextProvider>
-    </div>
+    </PageWrapper>
   );
 }
