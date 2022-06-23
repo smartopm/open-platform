@@ -88,6 +88,9 @@ admin:
       - can_create_wallet_transaction
       - can_update_wallet_transaction
       - can_revert_wallet_transaction
+      - can_make_payment
+      - can_see_menu_item
+      - can_view_transaction_logs
   entry_request:
     permissions:
       - can_see_menu_item
@@ -722,6 +725,7 @@ resident:
     permissions:
       - can_make_payment
       - can_see_menu_item
+      - can_view_transaction_logs
   amenity:
     permissions:
       - can_access_amenities
@@ -844,6 +848,7 @@ client:
     permissions:
       - can_make_payment
       - can_see_menu_item
+      - can_view_transaction_logs
   amenity:
     permissions:
       - can_access_amenities
