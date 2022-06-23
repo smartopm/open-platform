@@ -31,7 +31,7 @@ export default function PaymentForm() {
   const communityCurrency = objectAccessor(currencies, authState.user.community.currency)
   const currencyData = { locale: authState.user.community.locale, currency: communityCurrency }
   const currency = extractCurrency(currencyData)
-  const config = flutterwaveConfig(authState, inputValue, t)
+  const { config } = flutterwaveConfig(authState, inputValue, t)
   const handleFlutterPayment = useFlutterwave(config);
 
   function handlePayment(event) {

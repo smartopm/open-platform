@@ -12,6 +12,7 @@ module Mutations
       argument :amount, Float, required: true
       argument :invoice_number, String, required: true
       argument :description, String, required: false
+      argument :redirect_to, String, required: true
 
       field :link, String, null: true
 
@@ -33,7 +34,8 @@ module Mutations
           tx_ref: Time.zone.now,
           amount: vals[:amount],
           currency: currency_codes[current_community.currency.to_sym],
-          redirect_url: "#{HostEnv.base_url(current_community)}/payments/pay",
+          # redirect_url: "#{HostEnv.base_url(current_community)}#{vals[:redirect_to]}",
+          redirect_url: "https://dev.dgdp.site/form/472231e0-ef07-4067-ac91-4563f693b69d/private",
           customer: customer,
           meta: meta_data(vals),
           customizations: customization(vals[:description]),

@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /* eslint-disable complexity */
 import React, { useState, useContext, useEffect } from 'react';
 import { Button, DialogContent, DialogContentText, Grid, Divider, Typography } from '@mui/material';
@@ -18,10 +19,13 @@ import CategoryList from './CategoryList';
 import FormPreview from '../FormPreview';
 import MessageAlert from '../../../../components/MessageAlert';
 import { FormCategoryDeleteMutation } from '../../graphql/form_category_mutations';
-import { formatError, useParamsQuery } from '../../../../utils/helpers';
+import { formatError, useParamsQuery, } from '../../../../utils/helpers';
 import FormTitle from '../FormTitle';
 import AccessCheck from '../../../Permissions/Components/AccessCheck';
 import TermsAndCondition from '../TermsAndCondition';
+import flutterwaveConfig from '../../../Payments/TransactionLogs/utils';
+import { TransactionLogCreateMutation } from '../../../Payments/TransactionLogs/graphql/transaction_logs_mutation';
+
 
 export default function Form({
   editMode,
@@ -37,7 +41,7 @@ export default function Form({
   const [propertyFormOpen, setPropertyFormOpen] = useState(false);
   const [hasAgreedToTerms, setHasAgreedToTerms] = useState(false);
   const [data, setFormData] = useState({});
-  const { t } = useTranslation(['common', 'form']);
+  const { t } = useTranslation(['common', 'form', 'payment']);
   const [categoryId, setCategoryId] = useState('');
   const matches = useMediaQuery('(max-width:900px)');
   const categoriesData = useQuery(FormCategoriesQuery, {
@@ -58,6 +62,19 @@ export default function Form({
 
   const history = useHistory();
   const [categoryDelete, { loading: isDeleting, error }] = useMutation(FormCategoryDeleteMutation);
+  const [createTransactionLog] = useMutation(TransactionLogCreateMutation);
+  const path = useParamsQuery('');
+  const userId = path.get('userId');
+  const formData = flattenFormProperties(categoriesData.data?.formCategories);
+
+  useEffect(() => {
+    if (formState?.successfulSubmit && !formState?.isDraft) {
+      // TODO: Enable form redirect on form creation
+      setTimeout(() => {
+        history.push('/');
+      }, 5000);
+    }
+  }, [formState.isDraft, formState.successfulSubmit]);
 
   function handleEditCategory(category) {
     setCategoryFormOpen(true);
@@ -68,8 +85,7 @@ export default function Form({
     setFormData({});
   }
 
-  const path = useParamsQuery('');
-  const userId = path.get('userId');
+
   function handleDeleteCategory(category) {
     categoryDelete({
       variables: { categoryId: category, formId }
@@ -104,6 +120,22 @@ export default function Form({
     setFormState({ ...formState, previewable: false });
   }
 
+  async function saveTransactionLog(response, amount, value) {
+   return  createTransactionLog({
+      variables: {
+        paidAmount: response.amount,
+        amount: parseFloat(value.amount),
+        currency: response.currency,
+        invoiceNumber: '-',
+        transactionId: `${response.transaction_id}`,
+        transactionRef: `${response.tx_ref}`,
+        description: value.description,
+        accountName: authState.user.name,
+      },
+    });
+  }
+
+  
   function formSubmit(propertiesData, status) {
     if (filesToUpload.length !== uploadedImages.length) {
       setImgUploadError(true);
@@ -114,28 +146,63 @@ export default function Form({
       setFormState({ ...formState, previewable: formDetailData.form?.preview });
       return;
     }
-    
-
-    saveFormData(
-      propertiesData,
-      formId,
-      userId || authState.user.id,
-      categoriesData.data?.formCategories,
-      status,
-      hasAgreedToTerms
-    );
+    // check if this submission includes a payment type
+    const hasPayment = propertiesData.some(field => field.fieldType === 'payment');
+    // Find the property that has a payment
+    const payment = propertiesData.find(field => field.fieldType === 'payment');
+    const value = {
+      amount: payment?.shortDesc,
+      description: payment?.description,
+    };
+    const { config } = flutterwaveConfig(authState, value, t);
+    if (hasPayment) {
+      window.FlutterwaveCheckout({
+        ...config,
+        callback(response) {
+          console.log(response);
+          saveTransactionLog(response, payment?.shortDesc, value)
+            .then(() => {
+              saveFormData(
+                propertiesData,
+                formId,
+                userId || authState.user.id,
+                categoriesData.data?.formCategories,
+                status,
+                hasAgreedToTerms
+              );
+            })
+            .catch(err => {
+              setFormState({
+                ...formState,
+                error: true,
+                info: formatError(err),
+                alertOpen: true,
+                isSubmitting: false,
+              });
+            });
+        },
+        onclose() {
+          setFormState({
+            ...formState,
+            error: false,
+          });
+        },
+      });
+    } else {
+      saveFormData(
+        propertiesData,
+        formId,
+        userId || authState.user.id,
+        categoriesData.data?.formCategories,
+        status,
+        hasAgreedToTerms
+      );
+    }
   }
 
-  useEffect(() => {
-    if (formState?.successfulSubmit && !formState?.isDraft) {
-      // TODO: Enable form redirect on form creation
-      setTimeout(() => {
-        history.push('/');
-      }, 5000);
-    }
-  }, [formState.isDraft, formState.successfulSubmit]);
 
-  const formData = flattenFormProperties(categoriesData.data?.formCategories);
+
+  // const formData = flattenFormProperties(categoriesData.data?.formCategories);
   const isTermsChecked = formDetailData?.form?.hasTermsAndConditions ? !hasAgreedToTerms : false;
 
   return (

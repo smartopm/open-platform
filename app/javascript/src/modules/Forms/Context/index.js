@@ -1,13 +1,10 @@
-import React, { createContext, useState, useEffect, useContext } from 'react';
+import React, { createContext, useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { useApolloClient, useMutation } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
-import { useFlutterwave } from 'flutterwave-react-v3';
 import useFileUpload from '../../../graphql/useFileUpload';
 import { FormUserCreateMutation } from '../graphql/forms_mutation';
 import { addPropWithValue, extractValidFormPropertyValue, requiredFieldIsEmpty } from '../utils';
-import flutterwaveConfig from '../../Payments/TransactionLogs/utils';
-import { Context } from '../../../containers/Provider/AuthStateProvider';
 
 export const FormContext = createContext({});
 
@@ -42,16 +39,8 @@ export default function FormContextProvider({ children }) {
   );
   const [createFormUser] = useMutation(FormUserCreateMutation);
   const { t } = useTranslation('form');
-  const authState = useContext(Context)
   const signature = useFileUpload({ client: useApolloClient() });
-  const inputValue = {
-    amount: 1000,
-    description: ''
-  }
-  const config = flutterwaveConfig(authState, inputValue, t);
-  const handleFlutterPayment = useFlutterwave(config);
 
-  console.log(formProperties);
   useEffect(() => {
     if (
       status === 'DONE' &&
@@ -101,8 +90,6 @@ export default function FormContextProvider({ children }) {
       isSubmitting: true
     });
 
-    console.log(formProperties);
-    console.log(formData);
     // eslint-disable-next-line no-unreachable
     const fileSignType = formData.filter(item => item.fieldType === 'signature')[0];
     const filledInProperties = extractValidFormPropertyValue(formProperties, 'submit');
@@ -132,48 +119,48 @@ export default function FormContextProvider({ children }) {
 
     if (!validateFormFields(filledInProperties, categories, formStatus)) return false;
 
-    // createFormUser({
-    //   variables: {
-    //     formId,
-    //     userId,
-    //     status: formStatus,
-    //     propValues: cleanFormData,
-    //     hasAgreedToTerms
-    //   }
-    // })
-    //   // eslint-disable-next-line no-shadow
-    //   .then(({ data }) => {
-    //     if (data.formUserCreate.formUser === null) {
-    //       setFormState({
-    //         ...formState,
-    //         error: true,
-    //         info: data.formUserCreate.error,
-    //         alertOpen: true,
-    //         isSubmitting: false
-    //       });
-    //       return;
-    //     }
+    createFormUser({
+      variables: {
+        formId,
+        userId,
+        status: formStatus,
+        propValues: cleanFormData,
+        hasAgreedToTerms
+      }
+    })
+      // eslint-disable-next-line no-shadow
+      .then(({ data }) => {
+        if (data.formUserCreate.formUser === null) {
+          setFormState({
+            ...formState,
+            error: true,
+            info: data.formUserCreate.error,
+            alertOpen: true,
+            isSubmitting: false
+          });
+          return;
+        }
 
-    //     setFormState({
-    //       ...formState,
-    //       error: false,
-    //       info: formStatus === 'draft' ? t('misc.saved_as_draft') : t('misc.form_submitted'),
-    //       alertOpen: true,
-    //       isSubmitting: false,
-    //       previewable: false,
-    //       successfulSubmit: true,
-    //       isDraft: formStatus === 'draft'
-    //     });
-    //   })
-    //   .catch(err => {
-    //     setFormState({
-    //       ...formState,
-    //       error: true,
-    //       info: err.message.replace(/GraphQL error:/, ''),
-    //       alertOpen: true,
-    //       isSubmitting: false
-    //     });
-    //   });
+        setFormState({
+          ...formState,
+          error: false,
+          info: formStatus === 'draft' ? t('misc.saved_as_draft') : t('misc.form_submitted'),
+          alertOpen: true,
+          isSubmitting: false,
+          previewable: false,
+          successfulSubmit: true,
+          isDraft: formStatus === 'draft'
+        });
+      })
+      .catch(err => {
+        setFormState({
+          ...formState,
+          error: true,
+          info: err.message.replace(/GraphQL error:/, ''),
+          alertOpen: true,
+          isSubmitting: false
+        });
+      });
     return false
   }
   return (
