@@ -117,7 +117,7 @@ export default function UserFilledForms({ userFormsFilled, userId, currentUser }
                 handleClose={handleClose}
                 handleClick={handleSelectButtonClick}
                 defaultButtonText={t('common:menu.submit_form')}
-                style={{ marginLeft: mobile && '-40px' }}
+                style={{ marginLeft: mobile && '-40px', zIndex: 1 }}
               />
             </Grid>
           </Grid>
