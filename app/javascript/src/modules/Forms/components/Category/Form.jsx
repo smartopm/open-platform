@@ -75,7 +75,7 @@ export default function Form({
       // TODO: Enable form redirect on form creation
       setTimeout(() => {
         history.push('/');
-      }, 5000);
+      }, 3000);
     }
   }, [formState.isDraft, formState.successfulSubmit]);
 
@@ -183,11 +183,10 @@ export default function Form({
             })
             .finally(() => closeFlutterwaveModal())
         },
-        onclose: () => {
-          setFormState({
-            ...formState,
-            error: false,
-          });
+        // If the modal was closed before proceeding with the payment, 
+        // then we should allow to resubmit the payment
+        onclose: (inComplete) => {
+          setSubmittingPayment(!inComplete);
         },
       });
     } else {
