@@ -7,7 +7,7 @@ const paymentPermission = ['can_make_payment', 'can_see_menu_item'];
 
 const currentModule = 'transaction';
 
-function RenderPayment() {
+export function RenderPayment() {
   return (
     <AccessCheck module={currentModule} allowedPermissions={paymentPermission}>
       <PaymentForm />
@@ -15,16 +15,32 @@ function RenderPayment() {
   );
 }
 
+const TransactionRoutes = [
+  {
+    routeProps: {
+      path: '/payments/pay',
+      component: RenderPayment,
+      exact: true
+    },
+    name: t => t('common:misc.make_a_payment'),
+    featureName: 'Transactions',
+    moduleName: currentModule,
+    accessibleBy: []
+  }
+];
+
 export default {
   routeProps: {
-    path: '/payments/pay',
-    component: RenderPayment
+    path: '',
+    component: <span />
   },
   styleProps: {
     icon: <CreditCardIcon />
   },
-  name: t => t('common:misc.make_a_payment'),
+  accessibleBy: [],
+  moduleName: 'transaction',
+  name: t => t('common:menu.transaction_plural'),
   featureName: 'Transactions',
-  moduleName: currentModule,
-  accessibleBy: []
+  subRoutes: TransactionRoutes,
+  subMenu: TransactionRoutes
 };
