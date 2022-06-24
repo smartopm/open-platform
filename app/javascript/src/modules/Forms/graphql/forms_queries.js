@@ -72,6 +72,8 @@ export const UserFormPropertiesQuery = gql`
         fieldName
         fieldType
         fieldValue
+        longDesc
+        shortDesc
         groupingId
         order
         id

@@ -12,7 +12,6 @@ module Mutations
       argument :amount, Float, required: true
       argument :invoice_number, String, required: true
       argument :description, String, required: false
-      argument :redirect_to, String, required: true
 
       field :link, String, null: true
 
@@ -34,7 +33,7 @@ module Mutations
           tx_ref: Time.zone.now,
           amount: vals[:amount],
           currency: currency_codes[current_community.currency.to_sym],
-          redirect_url: "https://#{HostEnv.base_url(current_community)}#{vals[:redirect_to]}",
+          redirect_url: "#{HostEnv.base_url(current_community)}/payments/pay",
           customer: customer,
           meta: meta_data(vals),
           customizations: customization(vals[:description]),

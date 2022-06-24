@@ -38,6 +38,8 @@ describe('Project Processes Split View', () => {
               ],
               id: '3145c47e-1279-47b0-9dac-dc4a7e30562e',
               groupingId: '3145c47e-1279-47b0-9dac',
+              longDesc: 'soe',
+              shortDesc: '0001',
               adminUse: false,
               order: '1'
             },
