@@ -201,19 +201,19 @@ export default function FormPropertyCreateForm({
               label={t('form_fields.field_type')}
               name="fieldType"
               value={propertyData.fieldType}
-              handleChange={handlePropertyValueChange}
+              handleChange={evt => setProperty({ ...propertyData, fieldType: evt.target.value })}
               options={fieldTypes}
             />
           </Grid>
           <Grid item md={6} xs={12} style={{ marginTop: '-8px' }}>
             <FormControl variant="outlined" style={{ width: '100%' }} margin="normal">
-              <InputLabel>Category</InputLabel>
+              <InputLabel>{t('misc.category')}</InputLabel>
               <Select
                 labelId="select-category"
                 id="category"
                 value={propertyData.categoryId}
                 onChange={handlePropertyValueChange}
-                label="Choose Category"
+                label={t('misc.choose_category')}
                 name="categoryId"
                 required
               >

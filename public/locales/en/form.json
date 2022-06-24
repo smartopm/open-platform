@@ -52,6 +52,7 @@
     "click_upload_btn": "Click the Upload button next to the file you wish to attach to this form..",
     "add_category": "Add a Category",
     "update_category": "Update a Category",
+    "choose_category": "Choose Category",
     "upload_details": "Use the Select button to choose the file you want to upload. Then confirm them by clicking the Upload button(s). Use the 'X' icon to delete any unwanted files.",
     "upload_error": "Files not Uploaded.",
     "upload_error_content_one": "Oops. looks like some files",
