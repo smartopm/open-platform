@@ -21,22 +21,22 @@ export default function PaymentForm() {
     invoiceNumber: '',
     amount: '',
     description: '',
-    accountName: ''
+    accountName: '',
   };
   const [message, setMessage] = useState(initialMessage);
   const [inputValue, setInputValue] = useState(initialInputValue);
   const [hasSubmitted, setHasSubmitted] = useState(false);
 
-  const communityCurrency = objectAccessor(currencies, authState.user.community.currency)
-  const currencyData = { locale: authState.user.community.locale, currency: communityCurrency }
-  const currency = extractCurrency(currencyData)
-  const { config } = flutterwaveConfig(authState, inputValue, t)
+  const communityCurrency = objectAccessor(currencies, authState.user.community.currency);
+  const currencyData = { locale: authState.user.community.locale, currency: communityCurrency };
+  const currency = extractCurrency(currencyData);
+  const { config } = flutterwaveConfig(authState, inputValue, t);
 
   function handlePayment(event) {
     event.preventDefault();
     setHasSubmitted(true);
     window.FlutterwaveCheckout({
-      ...config, 
+      ...config,
       callback: response => {
         verifyTransaction(response);
       },
@@ -54,8 +54,8 @@ export default function PaymentForm() {
         transactionId: `${response.transaction_id}`,
         transactionRef: `${response.tx_ref}`,
         description: inputValue.description,
-        accountName: inputValue.accountName
-      }
+        accountName: inputValue.accountName,
+      },
     })
       .then(() => {
         setMessage({ isError: false, detail: t('payment:misc.payment_successful') });
@@ -64,7 +64,7 @@ export default function PaymentForm() {
       .catch(error => setMessage({ isError: true, detail: formatError(error.message) }))
       .finally(() => {
         setHasSubmitted(false);
-        closeFlutterwaveModal()
+        closeFlutterwaveModal();
       });
   }
 
@@ -95,7 +95,7 @@ export default function PaymentForm() {
           onChange={event => setInputValue({ ...inputValue, invoiceNumber: event.target.value })}
           InputProps={{
             startAdornment: <InputAdornment position="start">#</InputAdornment>,
-            'data-testid': 'invoice_number'
+            'data-testid': 'invoice_number',
           }}
           required
           fullWidth
@@ -109,7 +109,7 @@ export default function PaymentForm() {
           onChange={event => setInputValue({ ...inputValue, amount: event.target.value })}
           InputProps={{
             startAdornment: <InputAdornment position="start">{currency}</InputAdornment>,
-            'data-testid': 'amount'
+            'data-testid': 'amount',
           }}
           required
           fullWidth
