@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import Button from '@mui/material/Button';
 import PropTypes from 'prop-types'
 import { useMutation } from 'react-apollo';
@@ -6,33 +6,27 @@ import { useHistory, useLocation } from 'react-router-dom'
 import makeStyles from '@mui/styles/makeStyles';
 import { useTranslation } from 'react-i18next';
 import { AddNewProperty } from '../../graphql/mutations'
-import MessageAlert from "../MessageAlert"
 import LandParcelModal from './LandParcelModal'
 import { formatError, useParamsQuery } from '../../utils/helpers'
+import { SnackbarContext } from '../../shared/snackbar/Context';
 
 export default function CreateLandParcel({ refetch, selectedLandParcel, newHouse, refetchHouseData}) {
   const classes = useStyles()
   const location = useLocation()
   const [open, setOpen] = useState(false)
-  const [isSuccessAlert, setIsSuccessAlert] = useState(false)
-  const [messageAlert, setMessageAlert] = useState('')
   const history = useHistory()
   const path = useParamsQuery('')
   const type = path.get('type');
   const [addProperty] = useMutation(AddNewProperty);
   const { t } = useTranslation('property')
+
+  const { showSnackbar, messageType } = useContext(SnackbarContext);
+
   useEffect(() => {
     if (type === 'new') {
       setOpen(true)
     }
   }, [type])
-
-  function handleMessageAlertClose(_event, reason) {
-    if (reason === 'clickaway') {
-      return
-    }
-    setMessageAlert('')
-  }
 
   function handleSubmit(variables) {
     let variableSave = { ...variables }
@@ -45,8 +39,7 @@ export default function CreateLandParcel({ refetch, selectedLandParcel, newHouse
     }
 
     addProperty({  variables: variableSave  }).then(() => {
-      setMessageAlert(t('messages.property_added'))
-      setIsSuccessAlert(true)
+      showSnackbar({ type: messageType.success, message: t('messages.property_added') })
       closeNewParcelModal();
       if(location?.state?.from === 'users') {
         history.push(`user/${location?.state?.user?.userId}?tab=Plots`);
@@ -54,8 +47,7 @@ export default function CreateLandParcel({ refetch, selectedLandParcel, newHouse
       refetch();
       refetchHouseData();
     }).catch((err) => {
-      setMessageAlert(formatError(err.message))
-      setIsSuccessAlert(false)
+      showSnackbar({ type: messageType.error, message: formatError(err.message) })
     })
   }
 
@@ -85,12 +77,6 @@ export default function CreateLandParcel({ refetch, selectedLandParcel, newHouse
         handleClose={closeNewParcelModal}
         handleSubmit={handleSubmit}
         modalType={newHouse ? 'new_house' : 'new'}
-      />
-      <MessageAlert
-        type={isSuccessAlert ? 'success' : 'error'}
-        message={messageAlert}
-        open={!!messageAlert}
-        handleClose={handleMessageAlertClose}
       />
     </>
   )

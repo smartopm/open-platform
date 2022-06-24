@@ -75,6 +75,7 @@ import ProcessCommentsPage from '../src/modules/Tasks/Processes/Components/Proce
 import LanguagePage from '../src/modules/LogBook/Kiosk/components/LanguagePage';
 import Page404 from '../src/shared/404';
 import { RenderCommunityForms } from '../src/modules/Forms/ManageForms';
+import SnackbarProvider from '../src/shared/snackbar/Context';
 // The routes defined here are carefully arranged, be mindful when changing them
 
 const LoggedInOnly = props => {
@@ -169,6 +170,7 @@ const App = () => {
                 render={community => (
                   <StyledEngineProvider injectFirst>
                     <ThemeProvider theme={theme(community?.themeColors)}>
+                      <SnackbarProvider>
                       {/* onboarding */}
                       <Switch>
                         <Route path="/welcome" component={WelcomePage} />
@@ -467,6 +469,7 @@ const App = () => {
                           </Switch>
                         </LoggedInOnly>
                       </Switch>
+                      </SnackbarProvider>
                     </ThemeProvider>
                   </StyledEngineProvider>
                 )}

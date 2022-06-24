@@ -9,6 +9,7 @@ import CreateLandParcel from '../components/LandParcels/CreateLandParcel';
 import { AddNewProperty } from '../graphql/mutations';
 import { Spinner } from '../shared/Loading';
 import MockedThemeProvider from '../modules/__mocks__/mock_theme';
+import MockedSnackbarProvider from '../modules/__mocks__/mock_snackbar';
 
 jest.mock('leaflet-draw');
 describe('Land Property Component', () => {
@@ -42,12 +43,14 @@ describe('Land Property Component', () => {
       <MockedProvider mocks={[mocks]} addTypename={false}>
         <BrowserRouter>
           <MockedThemeProvider>
-            <CreateLandParcel
-              refetch={refetch}
-              newHouse={false}
-              refetchHouseData={refetchHouseData}
-              selectedLandParcel={selectedLandParcel}
-            />
+            <MockedSnackbarProvider>
+              <CreateLandParcel
+                refetch={refetch}
+                newHouse={false}
+                refetchHouseData={refetchHouseData}
+                selectedLandParcel={selectedLandParcel}
+              />
+            </MockedSnackbarProvider>
           </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>
@@ -92,15 +95,9 @@ describe('Land Property Component', () => {
     expect(container.queryByTestId('custom-dialog-button')).toBeInTheDocument();
 
     fireEvent.click(container.queryByTestId('custom-dialog-button'));
-
+    
     const loader = render(<Spinner />);
     expect(loader.queryAllByTestId('loader')[0]).toBeInTheDocument();
-    await waitFor(
-      () => {
-        expect(container.queryByText('messages.property_added')).toBeInTheDocument();
-      },
-      { timeout: 500 }
-    );
     fireEvent.click(container.queryByTestId('dialog_cancel'));
   });
 
@@ -129,12 +126,14 @@ describe('Land Property Component', () => {
       <MockedProvider mocks={[errorMocks]} addTypename={false}>
         <BrowserRouter>
           <MockedThemeProvider>
-            <CreateLandParcel
-              refetch={refetch}
-              newHouse={false}
-              refetchHouseData={refetchHouseData}
-              selectedLandParcel={selectedLandParcel}
-            />
+            <MockedSnackbarProvider>
+              <CreateLandParcel
+                refetch={refetch}
+                newHouse={false}
+                refetchHouseData={refetchHouseData}
+                selectedLandParcel={selectedLandParcel}
+              />
+            </MockedSnackbarProvider>
           </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>

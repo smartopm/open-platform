@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useQuery, useLazyQuery, useMutation } from 'react-apollo';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
@@ -18,7 +18,6 @@ import CreatePointOfInterest from './CreatePointOfInterest';
 import LandParcelModal from './LandParcelModal';
 import { UpdateProperty } from '../../graphql/mutations';
 import { MergeProperty } from '../../graphql/mutations/land_parcel';
-import MessageAlert from '../MessageAlert';
 import { formatError, handleQueryOnChange, useParamsQuery } from '../../utils/helpers';
 import SearchInput from '../../shared/search/SearchInput';
 import { MultipleToggler } from '../../modules/Campaigns/components/ToggleButton';
@@ -32,6 +31,7 @@ import {
 } from '../../utils/constants';
 import ListHeader from '../../shared/list/ListHeader';
 import PageWrapper from '../../shared/PageWrapper';
+import { SnackbarContext } from '../../shared/snackbar/Context';
 
 const parcelHeaders = [
   { title: 'Property Number/Type', col: 2 },
@@ -46,8 +46,6 @@ export default function LandParcelList() {
   const limit = 20;
   const [offset, setOffset] = useState(0);
   const [open, setDetailsModalOpen] = useState(false);
-  const [messageAlert, setMessageAlert] = useState('');
-  const [isSuccessAlert, setIsSuccessAlert] = useState(false);
   const [propertyUpdateLoading, setPropertyUpdateLoading] = useState(false);
   const [selectedLandParcel, setSelectedLandParcel] = useState({});
   const [searchValue, setSearchValue] = useState('');
@@ -61,6 +59,8 @@ export default function LandParcelList() {
   const [searchQuery, setSearchQuery] = useState('');
   const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up('sm'));
+
+  const { showSnackbar, messageType } = useContext(SnackbarContext);
 
   const location = useLocation();
   const { t } = useTranslation(['common', 'property']);
@@ -163,8 +163,7 @@ export default function LandParcelList() {
     variableUpdates.id = selectedLandParcel.id;
     updateProperty({ variables: variableUpdates })
       .then(() => {
-        setMessageAlert(t('property:messages.property_updated'));
-        setIsSuccessAlert(true);
+        showSnackbar({ type: messageType.success, message: t('property:messages.property_updated') })
         handleDetailsModalClose();
         if (location?.state?.from === 'users') {
           history.push(`user/${location?.state?.userId}?tab=Plots`);
@@ -181,8 +180,7 @@ export default function LandParcelList() {
           fetchConflictingLandParcel();
           setConfirmMergeOpen(true);
         }
-        setMessageAlert(formatError(err.message));
-        setIsSuccessAlert(false);
+        showSnackbar({ type: messageType.error, message: formatError(err.message) })
         setPropertyUpdateLoading(false);
       });
   }
@@ -190,23 +188,14 @@ export default function LandParcelList() {
   function handleMergeLandParcel(variables) {
     mergeProperty({ variables })
       .then(() => {
-        setMessageAlert(t('property:messages.merge_successful'));
-        setIsSuccessAlert(true);
+        showSnackbar({ type: messageType.success, message: t('property:messages.merge_successful') })
         handleDetailsModalClose();
         refetch();
       })
       .catch(err => {
-        setMessageAlert(formatError(err.message));
-        setIsSuccessAlert(false);
+        showSnackbar({ type: messageType.error, message: formatError(err.message) })
         handleDetailsModalClose();
       });
-  }
-
-  function handleMessageAlertClose(_event, reason) {
-    if (reason === 'clickaway') {
-      return;
-    }
-    setMessageAlert('');
   }
 
   function queryOnChange(selectedOptions) {
@@ -262,12 +251,6 @@ export default function LandParcelList() {
         confirmMergeOpen={confirmMergeOpen}
         handleSubmitMerge={handleMergeLandParcel}
         propertyUpdateLoading={propertyUpdateLoading}
-      />
-      <MessageAlert
-        type={isSuccessAlert ? 'success' : 'error'}
-        message={messageAlert}
-        open={!!messageAlert}
-        handleClose={handleMessageAlertClose}
       />
       {showFilter && (
         <Grid
