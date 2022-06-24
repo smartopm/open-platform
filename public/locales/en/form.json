@@ -58,7 +58,8 @@
     "upload_error_content_two": "are not uploaded. Please",
     "upload_error_content_three": "click the Upload button or",
     "upload_error_content_four": "delete them.",
-    "form_entries": "Form Entries"
+    "form_entries": "Form Entries",
+    "flutterwave_notice": "When the Make a Payment (submit) button is clicked on this form, you will be auto-directed to the Flutterwave payment gateway. When done, Flutterwave should auto-direct back and submit this form. If this does not happen within 5 seconds, please click the close modal (X) button."
   },
   "actions": {
     "create_a_form": "Create a form",

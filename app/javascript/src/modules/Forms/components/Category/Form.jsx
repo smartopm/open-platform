@@ -19,13 +19,13 @@ import CategoryList from './CategoryList';
 import FormPreview from '../FormPreview';
 import MessageAlert from '../../../../components/MessageAlert';
 import { FormCategoryDeleteMutation } from '../../graphql/form_category_mutations';
-import { formatError, useParamsQuery, } from '../../../../utils/helpers';
+import { formatError, useParamsQuery } from '../../../../utils/helpers';
 import FormTitle from '../FormTitle';
 import AccessCheck from '../../../Permissions/Components/AccessCheck';
 import TermsAndCondition from '../TermsAndCondition';
 import flutterwaveConfig from '../../../Payments/TransactionLogs/utils';
 import { TransactionLogCreateMutation } from '../../../Payments/TransactionLogs/graphql/transaction_logs_mutation';
-
+import ListWrapper from '../../../../shared/ListWrapper';
 
 export default function Form({
   editMode,
@@ -35,18 +35,19 @@ export default function Form({
   handleConfirmPublish,
   formDetailData,
   formDetailRefetch,
-  loading
+  loading,
 }) {
   const [categoryFormOpen, setCategoryFormOpen] = useState(false);
   const [propertyFormOpen, setPropertyFormOpen] = useState(false);
   const [hasAgreedToTerms, setHasAgreedToTerms] = useState(false);
+  const [submittingPayment, setSubmittingPayment] = useState(false)
   const [data, setFormData] = useState({});
   const { t } = useTranslation(['common', 'form', 'payment']);
   const [categoryId, setCategoryId] = useState('');
   const matches = useMediaQuery('(max-width:900px)');
   const categoriesData = useQuery(FormCategoriesQuery, {
     variables: { formId },
-    fetchPolicy: 'no-cache'
+    fetchPolicy: 'no-cache',
   });
 
   const {
@@ -56,7 +57,7 @@ export default function Form({
     imgUploadError,
     uploadedImages,
     filesToUpload,
-    setImgUploadError
+    setImgUploadError,
   } = useContext(FormContext);
   const authState = useContext(Context);
 
@@ -66,6 +67,8 @@ export default function Form({
   const path = useParamsQuery('');
   const userId = path.get('userId');
   const formData = flattenFormProperties(categoriesData.data?.formCategories);
+  // check if this submission includes a payment type
+  const hasPayment = formData.some(field => field.fieldType === 'payment');
 
   useEffect(() => {
     if (formState?.successfulSubmit && !formState?.isDraft) {
@@ -85,10 +88,9 @@ export default function Form({
     setFormData({});
   }
 
-
   function handleDeleteCategory(category) {
     categoryDelete({
-      variables: { categoryId: category, formId }
+      variables: { categoryId: category, formId },
     }).then(res => {
       const formPropResponse = res.data.categoryDelete;
       if (formPropResponse.message === 'New version created') {
@@ -121,7 +123,7 @@ export default function Form({
   }
 
   async function saveTransactionLog(response, amount, value) {
-   return  createTransactionLog({
+    return createTransactionLog({
       variables: {
         paidAmount: response.amount,
         amount: parseFloat(value.amount),
@@ -135,7 +137,6 @@ export default function Form({
     });
   }
 
-  
   function formSubmit(propertiesData, status) {
     if (filesToUpload.length !== uploadedImages.length) {
       setImgUploadError(true);
@@ -145,9 +146,7 @@ export default function Form({
     if (formDetailData?.form?.preview) {
       setFormState({ ...formState, previewable: formDetailData.form?.preview });
       return;
-    }
-    // check if this submission includes a payment type
-    const hasPayment = propertiesData.some(field => field.fieldType === 'payment');
+    }    
     // Find the property that has a payment
     const payment = propertiesData.find(field => field.fieldType === 'payment');
     const value = {
@@ -156,10 +155,10 @@ export default function Form({
     };
     const { config } = flutterwaveConfig(authState, value, t);
     if (hasPayment) {
+      setSubmittingPayment(true);
       window.FlutterwaveCheckout({
         ...config,
         callback(response) {
-          console.log(response);
           saveTransactionLog(response, payment?.shortDesc, value)
             .then(() => {
               saveFormData(
@@ -170,6 +169,7 @@ export default function Form({
                 status,
                 hasAgreedToTerms
               );
+            setSubmittingPayment(false);
             })
             .catch(err => {
               setFormState({
@@ -179,6 +179,7 @@ export default function Form({
                 alertOpen: true,
                 isSubmitting: false,
               });
+            setSubmittingPayment(false);
             });
         },
         onclose() {
@@ -200,9 +201,6 @@ export default function Form({
     }
   }
 
-
-
-  // const formData = flattenFormProperties(categoriesData.data?.formCategories);
   const isTermsChecked = formDetailData?.form?.hasTermsAndConditions ? !hasAgreedToTerms : false;
 
   return (
@@ -353,6 +351,13 @@ export default function Form({
               />
             </Grid>
           )}
+
+          {hasPayment && (
+            <ListWrapper>
+              <Typography variant="caption">{t('form:misc.flutterwave_notice')}</Typography>
+              <br />
+            </ListWrapper>
+          )}
           <Grid item md={12} xs={12} style={{ marginTop: '20px' }}>
             <Divider />
           </Grid>
@@ -386,12 +391,11 @@ export default function Form({
                 aria-label="form_submit"
                 style={matches ? { marginTop: '20px' } : { marginTop: '25px' }}
                 onClick={() => formSubmit(formData)}
-                disabled={formState.isSubmitting || isTermsChecked}
+                disabled={formState.isSubmitting || submittingPayment || isTermsChecked}
+                startIcon={(formState.isSubmitting || submittingPayment) && <Spinner />}
                 data-testid="submit_form_btn"
               >
-                {!formState.isSubmitting
-                  ? t('common:form_actions.submit')
-                  : t('common:form_actions.submitting')}
+                {hasPayment ? t('common:misc.make_a_payment') : t('common:form_actions.submit')}
               </Button>
             </Grid>
           )}
@@ -407,7 +411,7 @@ Form.defaultProps = {
   handleConfirmPublish: () => {},
   formDetailRefetch: () => {},
   loading: false,
-  formDetailData: null
+  formDetailData: null,
 };
 
 Form.propTypes = {
@@ -423,9 +427,9 @@ Form.propTypes = {
       preview: PropTypes.bool,
       isPublic: PropTypes.bool,
       hasTermsAndConditions: PropTypes.bool,
-      roles: PropTypes.arrayOf(PropTypes.string)
-    })
+      roles: PropTypes.arrayOf(PropTypes.string),
+    }),
   }),
   formDetailRefetch: PropTypes.func,
-  loading: PropTypes.bool
+  loading: PropTypes.bool,
 };
