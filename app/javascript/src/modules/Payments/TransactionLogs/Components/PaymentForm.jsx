@@ -1,5 +1,4 @@
 import { Button, InputAdornment, TextField } from '@mui/material';
-import { closePaymentModal, useFlutterwave } from 'flutterwave-react-v3';
 import React, { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ArrowRightAltIcon from '@mui/icons-material/ArrowRightAlt';
@@ -11,7 +10,7 @@ import { currencies } from '../../../../utils/constants';
 import { extractCurrency, formatError, objectAccessor } from '../../../../utils/helpers';
 import { TransactionLogCreateMutation } from '../graphql/transaction_logs_mutation';
 import MessageAlert from '../../../../components/MessageAlert';
-import flutterwaveConfig from '../utils';
+import flutterwaveConfig, { closeFlutterwaveModal } from '../utils';
 
 export default function PaymentForm() {
   const { t } = useTranslation(['common', 'task', 'payment']);
@@ -32,16 +31,16 @@ export default function PaymentForm() {
   const currencyData = { locale: authState.user.community.locale, currency: communityCurrency }
   const currency = extractCurrency(currencyData)
   const { config } = flutterwaveConfig(authState, inputValue, t)
-  const handleFlutterPayment = useFlutterwave(config);
 
   function handlePayment(event) {
     event.preventDefault();
     setHasSubmitted(true);
-    handleFlutterPayment({
+    window.FlutterwaveCheckout({
+      ...config, 
       callback: response => {
         verifyTransaction(response);
       },
-      onClose: () => setHasSubmitted(false)
+      onClose: () => setHasSubmitted(false),
     });
   }
 
@@ -65,7 +64,7 @@ export default function PaymentForm() {
       .catch(error => setMessage({ isError: true, detail: formatError(error.message) }))
       .finally(() => {
         setHasSubmitted(false);
-        closePaymentModal();
+        closeFlutterwaveModal()
       });
   }
 

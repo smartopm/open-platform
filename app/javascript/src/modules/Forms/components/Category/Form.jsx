@@ -23,7 +23,7 @@ import { formatError, useParamsQuery } from '../../../../utils/helpers';
 import FormTitle from '../FormTitle';
 import AccessCheck from '../../../Permissions/Components/AccessCheck';
 import TermsAndCondition from '../TermsAndCondition';
-import flutterwaveConfig from '../../../Payments/TransactionLogs/utils';
+import flutterwaveConfig, { closeFlutterwaveModal } from '../../../Payments/TransactionLogs/utils';
 import { TransactionLogCreateMutation } from '../../../Payments/TransactionLogs/graphql/transaction_logs_mutation';
 import ListWrapper from '../../../../shared/ListWrapper';
 
@@ -122,7 +122,7 @@ export default function Form({
     setFormState({ ...formState, previewable: false });
   }
 
-  async function saveTransactionLog(response, amount, value) {
+  async function saveTransactionLog(response, value) {
     return createTransactionLog({
       variables: {
         paidAmount: response.amount,
@@ -158,8 +158,8 @@ export default function Form({
       setSubmittingPayment(true);
       window.FlutterwaveCheckout({
         ...config,
-        callback(response) {
-          saveTransactionLog(response, payment?.shortDesc, value)
+        callback: response =>  {
+          saveTransactionLog(response, value)
             .then(() => {
               saveFormData(
                 propertiesData,
@@ -180,9 +180,10 @@ export default function Form({
                 isSubmitting: false,
               });
             setSubmittingPayment(false);
-            });
+            })
+            .finally(() => closeFlutterwaveModal())
         },
-        onclose() {
+        onclose: () => {
           setFormState({
             ...formState,
             error: false,
