@@ -30,6 +30,7 @@ export default function DatePickerDialog({
   disabled,
   textFieldStyle,
   margin,
+  size,
   ...others
 }) {
   const { t } = useTranslation(['logbook', 'form']);
@@ -50,6 +51,7 @@ export default function DatePickerDialog({
               placeholder="YYYY-MM-DD"
               variant={inputVariant}
               margin={margin}
+              size={size}
               data-testid="date-picker"
               style={
                 textFieldStyle
@@ -200,7 +202,8 @@ DatePickerDialog.defaultProps = {
   },
   disabled: false,
   textFieldStyle: undefined,
-  inputVariant: 'standard'
+  inputVariant: 'standard',
+  size: undefined
 };
 
 DateAndTimePickers.defaultProps = {
@@ -230,7 +233,8 @@ DatePickerDialog.propTypes = {
   }),
   disabled: PropTypes.bool,
   textFieldStyle: PropTypes.shape({}),
-  inputVariant: PropTypes.string
+  inputVariant: PropTypes.string,
+  size: PropTypes.string
 };
 
 DateAndTimePickers.propTypes = {
