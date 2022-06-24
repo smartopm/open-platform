@@ -79,7 +79,7 @@ export default function PaymentPlans({ userId, user, userData }) {
   const { locale } = user.community;
   const currencyData = { currency, locale };
 
-  const userTransactionPermissions = user?.permissions?.find(permissionObject => permissionObject.module === 'transaction')
+  const userTransactionPermissions = user?.permissions?.find(permissionObject => permissionObject.module === 'transaction_plan')
   const canFetchUserTransactions = userTransactionPermissions? userTransactionPermissions.permissions.includes('can_fetch_user_transactions'): false
 
   const userPaymentPlanPermissions = user?.permissions.find(permissionObject => permissionObject.module === 'payment_plan')

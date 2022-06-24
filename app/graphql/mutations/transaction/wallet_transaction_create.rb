@@ -51,7 +51,9 @@ module Mutations
 
       # Verifies if current user is admin or not.
       def authorized?(_vals)
-        return true if permitted?(module: :transaction, permission: :can_create_wallet_transaction)
+        if permitted?(module: :transaction_plan, permission: :can_create_wallet_transaction)
+          return true
+        end
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end

@@ -98,7 +98,7 @@ module Types::Queries::Transaction
   #
   # @return [GraphQL::ExecutionError]
   def validate_user_permissions_for_transactions(permission)
-    return if permitted?(module: :transaction, permission: permission)
+    return if permitted?(module: :transaction_plan, permission: permission)
 
     raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
   end

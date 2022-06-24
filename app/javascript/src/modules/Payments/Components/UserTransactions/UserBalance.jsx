@@ -28,7 +28,7 @@ export default function Balance({
   const currency = currencies[user.community.currency] || '';
   const { locale } = user.community;
   const currencyData = { currency, locale };
-  const userTransactionPermissions = authState.user?.permissions.find(permissionObject => permissionObject.module === 'transaction')
+  const userTransactionPermissions = authState.user?.permissions.find(permissionObject => permissionObject.module === 'transaction_plan')
   const canCreateTransactions = userTransactionPermissions? userTransactionPermissions.permissions.includes('can_create_transaction'): false
 
   return (

@@ -75,6 +75,10 @@ admin:
       - can_transfer_plan_payment
   transaction:
     permissions:
+      - can_make_payment
+      - can_see_menu_item
+  transaction_plan:
+    permissions:
       - can_create_transaction
       - can_revert_transaction
       - can_fetch_accounting_stats
@@ -83,8 +87,6 @@ admin:
       - can_create_wallet_transaction
       - can_update_wallet_transaction
       - can_revert_wallet_transaction
-      - can_make_payment
-      - can_see_menu_item
   entry_request:
     permissions:
       - can_see_menu_item

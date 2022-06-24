@@ -7,7 +7,7 @@ RSpec.describe Mutations::Transaction::WalletTransactionUpdate do
     let!(:admin_role) { create(:role, name: 'admin') }
     let!(:resident_role) { create(:role, name: 'resident') }
     let!(:permission) do
-      create(:permission, module: 'transaction',
+      create(:permission, module: 'transaction_plan',
                           role: admin_role,
                           permissions: %w[can_update_wallet_transaction])
     end

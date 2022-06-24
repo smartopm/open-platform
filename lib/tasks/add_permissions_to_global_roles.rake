@@ -13,7 +13,8 @@ namespace :db do
                          message settings showroom subscription_plan substatus_log
                          temparature timesheet transaction upload user gate_access dashboard
                          guest_list profile logout communication community_settings sos
-                         event_log process lead lead_log messages task_list amenity my_forms].freeze
+                         event_log process lead lead_log messages task_list amenity my_forms
+                         transaction_plan].freeze
       Role.where(community_id: nil).find_each do |role|
         puts "Adding/updating permissions for #{role.name}"
         valid_modules.each do |valid_module|
