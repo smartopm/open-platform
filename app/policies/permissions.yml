@@ -91,6 +91,7 @@ admin:
       - can_make_payment
       - can_see_menu_item
       - can_view_transaction_logs
+      - can_view_all_transaction_logs
   entry_request:
     permissions:
       - can_see_menu_item
