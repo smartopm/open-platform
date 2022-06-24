@@ -61,7 +61,7 @@ export default function RenderForm({
   const { t } = useTranslation(['form', 'common']);
   const [messageAlert, setMessageAlert] = useState('');
   const [isSuccessAlert, setIsSuccessAlert] = useState(false);
-  const communityCurrency = objectAccessor(currencies, authState.user.community.currency) ;
+  const communityCurrency = objectAccessor(currencies, authState.user?.community?.currency) || '';
 
   function handleCheckboxSelect(event, property) {
     const { name, checked } = event.target;
