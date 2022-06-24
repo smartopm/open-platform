@@ -296,7 +296,8 @@
     "download_info": "Download file of the QR Code to print out.",
     "add_new": "Add New",
     "otp": "OTP",
-    "entry_request": "Entry Request"
+    "entry_request": "Entry Request",
+    "lead_import": "Lead Import"
   },
   "menu": {
     "invoice": "Invoice",
