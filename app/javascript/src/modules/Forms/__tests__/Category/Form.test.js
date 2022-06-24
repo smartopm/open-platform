@@ -1,6 +1,5 @@
 import React from 'react';
 import { fireEvent, render, waitFor } from '@testing-library/react';
-
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom';
 import FormContextProvider from '../../Context';
@@ -118,25 +117,24 @@ describe('Form Component', () => {
       </Context.Provider>
     );
 
-    await waitFor(() => {
-      expect(wrapper.queryByTestId('category-list-container')).toBeInTheDocument();
-      expect(wrapper.queryByTestId('add_category').textContent).toContain(
-        'form:actions.add_category'
-      );
-      fireEvent.click(wrapper.queryByTestId('add_category'));
+    expect(wrapper.queryByTestId('category-list-container')).toBeInTheDocument();
+    expect(wrapper.queryByTestId('add_category').textContent).toContain(
+      'form:actions.add_category'
+    );
+    fireEvent.click(wrapper.queryByTestId('add_category'));
 
-      expect(wrapper.queryByText('form_fields.name')).toBeInTheDocument();
-      expect(wrapper.queryByText('form_fields.description')).toBeInTheDocument();
-      expect(wrapper.queryByText('form:misc.flutterwave_notice')).toBeInTheDocument();
-      expect(wrapper.queryAllByText('form_fields.rendered_text')[0]).toBeInTheDocument();
-      expect(wrapper.queryAllByTestId('loader')[0]).toBeInTheDocument();
-      expect(wrapper.queryByTestId('add_category')).toBeInTheDocument();
-      expect(wrapper.queryByTestId('publishing')).toBeInTheDocument();
+    expect(wrapper.queryByText('form_fields.name')).toBeInTheDocument();
+    expect(wrapper.queryByText('form_fields.description')).toBeInTheDocument();
+    expect(wrapper.queryAllByText('form_fields.rendered_text')[0]).toBeInTheDocument();
+    expect(wrapper.queryAllByTestId('loader')[0]).toBeInTheDocument();
+    expect(wrapper.queryByTestId('add_category')).toBeInTheDocument();
+    expect(wrapper.queryByTestId('publishing')).toBeInTheDocument();
+
 
       // Temporarily removed, causes jest to run longer unnecessarily
       // fireEvent.click(wrapper.queryByTestId('publishing'));
       // expect(props.handleConfirmPublish).toHaveBeenCalled();
-    }, 10);
+    // }, 10);
   });
 
   it('should render without crashing if editMode is false', async () => {
@@ -165,6 +163,7 @@ describe('Form Component', () => {
       );
       expect(wrapper.queryByTestId('save_as_draft')).toBeInTheDocument();
       expect(wrapper.queryByTestId('submit_form_btn')).toBeInTheDocument();
+      expect(wrapper.queryByText('form:misc.flutterwave_notice')).toBeInTheDocument();
     }, 10);
   });
   it('should not contain draft and submit button if no user', async () => {
@@ -252,6 +251,6 @@ describe('Form Component', () => {
       expect(wrapper.queryByTestId('submit_form_btn').textContent).toContain(
         'common:form_actions.submit'
       );
-    });
+    }, 10);
   });
 });

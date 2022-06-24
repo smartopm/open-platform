@@ -510,6 +510,7 @@
     "invalid_time": "Invitation time is invalid",
     "invalid_email": "Email is invalid",
     "something_went_wrong_forms": "Something went wrong while accessing this form",
+    "something_went_wrong_payment": "Something went wrong with your payment",
     "device_not_supported": "Device not supported or check the camera permissions"
   },
   "dialogs": {

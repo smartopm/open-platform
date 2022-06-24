@@ -187,6 +187,13 @@ export default function Form({
         // then we should allow to resubmit the payment
         onclose: (inComplete) => {
           setSubmittingPayment(!inComplete);
+          setFormState({
+            ...formState,
+            error: inComplete,
+            info: inComplete && t('common:errors.something_went_wrong_payment'),
+            alertOpen: inComplete,
+            isSubmitting: false,
+          });
         },
       });
     } else {
@@ -351,7 +358,7 @@ export default function Form({
               />
             </Grid>
           )}
-
+          
           {hasPayment && (
             <ListWrapper>
               <Typography variant="caption">{t('form:misc.flutterwave_notice')}</Typography>
