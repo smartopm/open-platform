@@ -175,6 +175,14 @@ class Community < ApplicationRecord
   # rubocop:enable Metrics/ClassLength
 
   def process_form_users(process_id)
-    forms.joins(:process).find_by(process: { id: process_id })&.form_users
+    process = processes.find_by(id: process_id)
+    return [] unless process
+
+    # Get form users including those for deprecated forms
+    associated_form = process.form
+    return [] unless associated_form
+
+    process_form_ids = forms.where(grouping_id: associated_form.grouping_id).pluck(:id)
+    Forms::FormUser.where(form_id: process_form_ids)
   end
 end

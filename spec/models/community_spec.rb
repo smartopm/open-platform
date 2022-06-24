@@ -171,6 +171,9 @@ RSpec.describe Community, type: :model do
     let(:form) do
       create(:form, name: 'DRC Project Review Process', community: community)
     end
+    let(:deprecated_form) do
+      create(:form, name: 'DRC Project Review Process V1', community: community, status: 3)
+    end
     let(:process) do
       create(:process,
              process_type: 'drc',
@@ -180,8 +183,25 @@ RSpec.describe Community, type: :model do
     end
     let!(:form_user) { create(:form_user, form: form, user: admin, status_updated_by: admin) }
 
-    it 'should return form users of drc process type' do
+    it 'should return form users for the process' do
       expect(community.process_form_users(process.id).first.form_id).to eql form.id
+    end
+
+    it 'returns form users including those for deprecated forms' do
+      form_user = create(:form_user, form: deprecated_form, user: admin, status_updated_by: admin)
+      process_form_users = community.process_form_users(process.id)
+
+      expect(process_form_users.size).to eq(2)
+      expect(process_form_users.pluck(:id)).to include(form_user.id)
+    end
+
+    it 'does not fail when process is not found' do
+      expect(community.process_form_users('1234')).to eq([])
+    end
+
+    it 'does not fail when form is not found' do
+      process.update(form_id: nil)
+      expect(community.process_form_users(process.id)).to eq([])
     end
   end
 end
