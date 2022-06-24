@@ -132,6 +132,32 @@ RSpec.describe Mutations::Form::FormCreate do
         updated_category = new_form.categories.first
         expect(updated_category.field_name).to eql 'personal info'
       end
+
+      it 'retains associated process for new form version' do
+        process = create(:process, form_id: form.id, name: 'Test Process', community: community)
+        create(:note_list, community: community, process_id: process.id, name: 'Test Note List')
+        expect(form.associated_process?).to eq(true)
+
+        variables = {
+          categoryId: category.id,
+          fieldName: 'Updated Category',
+          order: 1,
+          headerVisible: true,
+          general: false,
+        }
+
+        result = DoubleGdpSchema.execute(mutation, variables: variables,
+                                                   context: {
+                                                     current_user: admin,
+                                                     site_community: community,
+                                                     user_role: admin.role,
+                                                   }).as_json
+
+        expect(result.dig('errors', 0, 'message')).to be_nil
+        new_form = Forms::Form.where.not(id: form.id).first
+        expect(process.reload.form_id).to eq(new_form.id)
+        expect(new_form.associated_process?).to eq(true)
+      end
     end
 
     context 'when current user is not admin' do

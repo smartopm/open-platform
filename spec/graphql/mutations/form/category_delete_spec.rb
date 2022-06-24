@@ -138,6 +138,28 @@ RSpec.describe Mutations::Form::FormCreate do
         expect(new_form.categories.reload.count).to eql 1
         expect(new_form.form_properties.reload.count).to eql 1
       end
+
+      it 'retains associated process for new form version' do
+        process = create(:process, form_id: form.id, name: 'Test Process', community: community)
+        create(:note_list, community: community, process_id: process.id, name: 'Test Note List')
+
+        variables = {
+          formId: form.id,
+          categoryId: category.id,
+        }
+
+        result = DoubleGdpSchema.execute(mutation, variables: variables,
+                                                   context: {
+                                                     current_user: admin,
+                                                     site_community: community,
+                                                     user_role: admin.role,
+                                                   }).as_json
+
+        expect(result.dig('errors', 0, 'message')).to be_nil
+        new_form = Forms::Form.where.not(id: form.id).first
+        expect(process.reload.form_id).to eq(new_form.id)
+        expect(new_form.associated_process?).to eq(true)
+      end
     end
 
     context 'when current user is not admin' do

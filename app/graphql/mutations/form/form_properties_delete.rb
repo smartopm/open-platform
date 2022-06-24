@@ -4,6 +4,8 @@ module Mutations
   module Form
     # remove a form property from a form
     class FormPropertiesDelete < BaseMutation
+      include Helpers::FormHelper
+
       argument :form_id, ID, required: true
       argument :form_property_id, ID, required: true
 
@@ -23,7 +25,7 @@ module Mutations
         args = { grouping_id: form_property.grouping_id, field_value: form_property.field_value }
 
         if form.entries?
-          new_form = duplicate_form(form, vals)
+          new_form = duplicate_form(form, vals, :property_delete)
           update_category_display_condition(args.merge(form: new_form))
           { message: 'New version created', new_form_version: new_form } if new_form.persisted?
         else
@@ -67,30 +69,6 @@ module Mutations
 
         raise GraphQL::ExecutionError, I18n.t('errors.form_property.not_found')
       end
-
-      # rubocop:disable Metrics/MethodLength
-      # Duplicates form with new version number
-      #
-      # @param form [Forms::Form]
-      # @param vals [Hash]
-      #
-      # @return new_form [Forms::Form]
-      def duplicate_form(form, vals)
-        ActiveRecord::Base.transaction do
-          last_version_number = form.last_version
-          new_form = form.dup
-          new_form.version_number = (last_version_number + 1)
-          new_name = form.name.gsub(/\s(V)\d*/, '')
-          new_form.name = "#{new_name} V#{last_version_number + 1}"
-
-          if new_form.save!
-            form.duplicate(new_form, vals, :property_delete)
-            form.deprecated!
-          end
-          new_form
-        end
-      end
-      # rubocop:enable Metrics/MethodLength
 
       # Resets the grouping_id in display condition for categories which have grouping_id same as
       # the form property which is being deleted
