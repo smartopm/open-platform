@@ -94,6 +94,7 @@
     "configure_task_list": "Configurar Lista de Tareas",
     "no_task_lists": "No hay Listas de Tareas disponibles",
     "save": "SALVAR",
+    "step": "Paso 1: Agregue un nombre a su Lista de Tareas.",
     "step_2_sub_header": "Agregue tareas y subtareas usando los menús kabab. Su trabajo se guarda automáticamente.",
     "task_list_name": "Nombre de la Lista de Tareas",
     "task_lists": "Lista de Tareas"
