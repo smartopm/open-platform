@@ -11,6 +11,7 @@ import { Spinner } from '../../../../shared/Loading';
 import { Context } from '../../../../containers/Provider/AuthStateProvider';
 import MessageAlert from '../../../../components/MessageAlert';
 import { csvValidate, readFileAsText } from '../../utils';
+import PageWrapper from '../../../../shared/PageWrapper';
 
 export default function UsersImport() {
   const [importCreate] = useMutation(ImportCreate);
@@ -85,7 +86,7 @@ export default function UsersImport() {
   }
 
   return (
-    <>
+    <PageWrapper pageTitle={t('misc.lead_import')}>
       <MessageAlert
         type={isSuccessAlert ? 'success' : 'error'}
         message={messageAlert}
@@ -326,7 +327,7 @@ export default function UsersImport() {
           </ol>
         </Grid>
       </Grid>
-    </>
+    </PageWrapper>
 );
 }
 

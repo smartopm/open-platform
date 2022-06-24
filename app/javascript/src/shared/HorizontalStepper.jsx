@@ -1,13 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { useTranslation } from 'react-i18next';
 import { useHistory } from 'react-router-dom';
 import { objectAccessor, useParamsQuery } from '../utils/helpers';
 import CustomStepper from './CustomStepper';
+import PageWrapper from './PageWrapper';
 
 export default function HorizontalStepper({ steps, communityFeatures, request }) {
   const params = useParamsQuery();
   const currentStep = parseInt(params.get('step'), 10) || 0;
   const history = useHistory();
+  const { t } = useTranslation('common');
   const listOfSteps = steps(handleNext, handleGotoStep, communityFeatures, request);
   const validSteps = Boolean(listOfSteps?.length);
 
@@ -37,9 +40,11 @@ export default function HorizontalStepper({ steps, communityFeatures, request })
     };
   }
   return (
-    <CustomStepper activeStep={currentStep} handleStep={handleStep} steps={listOfSteps}>
-      {validSteps && objectAccessor(listOfSteps, currentStep).component}
-    </CustomStepper>
+    <PageWrapper pageTitle={t('misc.entry_request')}>
+      <CustomStepper activeStep={currentStep} handleStep={handleStep} steps={listOfSteps}>
+        {validSteps && objectAccessor(listOfSteps, currentStep).component}
+      </CustomStepper>
+    </PageWrapper>
   );
 }
 

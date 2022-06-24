@@ -16,7 +16,6 @@ import ExpandMore from '@mui/icons-material/ExpandMore';
 import makeStyles from '@mui/styles/makeStyles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import IconButton from '@mui/material/IconButton';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 export default function SelectButton({
   defaultButtonText,
@@ -59,9 +58,9 @@ export default function SelectButton({
 
   return (
     <>
-      {matches ? (
+      {(mobileIcon && matches) ? (
         <IconButton onClick={e => handleClick(e)} color="primary">
-          {mobileIcon || <MoreVertIcon />}
+          {mobileIcon}
         </IconButton>
       ) : (
         <ButtonGroup color="primary" aria-label="outlined select button" data-testid="button">

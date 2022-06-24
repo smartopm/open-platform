@@ -1,6 +1,7 @@
 import React from 'react';
 import { render, waitFor } from '@testing-library/react';
 import { MockedProvider } from '@apollo/react-testing';
+import { BrowserRouter } from 'react-router-dom/';
 import UserFilledForms from '../Components/UserFilledForms';
 import { FormsQuery } from '../../Forms/graphql/forms_queries';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
@@ -53,13 +54,15 @@ describe('UserFilledForms component', () => {
     const rendered = render(
       <MockedProvider mocks={[mocks]} addTypename={false}>
         <Context.Provider value={userMock}>
-          <MockedThemeProvider>
-            <UserFilledForms
-              userFormsFilled={userFormsFilled}
-              userId="3954jefsdfs"
-              currentUser="9238492318921"
-            />
-          </MockedThemeProvider>
+          <BrowserRouter>
+            <MockedThemeProvider>
+              <UserFilledForms
+                userFormsFilled={userFormsFilled}
+                userId="3954jefsdfs"
+                currentUser="9238492318921"
+              />
+            </MockedThemeProvider>
+          </BrowserRouter>
         </Context.Provider>
       </MockedProvider>
     );
@@ -74,13 +77,15 @@ describe('UserFilledForms component', () => {
     const rendered = render(
       <MockedProvider mocks={[mocks]} addTypename={false}>
         <Context.Provider value={userMock}>
-          <MockedThemeProvider>
-            <UserFilledForms
-              userFormsFilled={[]}
-              userId="3954jefsdfs"
-              currentUser="9238492318921"
-            />
-          </MockedThemeProvider>
+          <BrowserRouter>
+            <MockedThemeProvider>
+              <UserFilledForms
+                userFormsFilled={[]}
+                userId="3954jefsdfs"
+                currentUser="9238492318921"
+              />
+            </MockedThemeProvider>
+          </BrowserRouter>
         </Context.Provider>
       </MockedProvider>
     );
