@@ -23,7 +23,7 @@ describe('FormPage Component', () => {
   const formMock = {
     request: {
       query: FormQuery,
-      variables: { id: mockParams.formId }
+      variables: { id: mockParams.formId },
     },
     result: {
       data: {
@@ -35,11 +35,12 @@ describe('FormPage Component', () => {
           description: 'This is a customs form',
           expiresAt: '2021-12-31T23:59:59Z',
           multipleSubmissionsAllowed: true,
-          roles: []
-        }
-      }
-    }
-  }
+          hasTermsAndConditions: false,
+          roles: [],
+        },
+      },
+    },
+  };
   it('renders loader when loading form', async () => {
     const container = render(
       <Context.Provider value={authState}>

@@ -19,6 +19,8 @@ describe('Form that creates other forms component', () => {
         formProperty: {
           id: '5290d212-edf8-4c1e-a20b',
           fieldName: 'Last Name',
+          shortDesc: '40',
+          longDesc: 'Hsdfss',
           groupingId: 'Id-id2312',
           fieldType: 'text',
           fieldValue: [
