@@ -33,7 +33,7 @@ module Types::Queries::LeadLog
     {
       total_spent: total_spent.to_f,
       percentage_of_target_used: percentage_of_target_used(total_spent, lead_log).to_f,
-      investment_label: investment_label(user_id, lead_log, total_spent),
+      investment_label: investment_label(user_id, lead_log),
     }
   end
 
