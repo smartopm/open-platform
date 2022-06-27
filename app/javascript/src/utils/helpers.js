@@ -663,18 +663,22 @@ export function replaceDocumentMentions(text, path) {
 export function savePdf(domElement, docName = 'download') {
   html2canvas(domElement).then(canvas => {
     const img = canvas.toDataURL('image/jpeg');
-    const pdf = new JsPDF('pt', 'mm', 'a4');
-    const imgWidth = 190;
-    const pageHeight = 280;
+    const pdf = new JsPDF({
+      orientation: 'portrait',
+      unit: 'mm',
+      format: 'a4'
+    });
+    const imgWidth = 190; //a4 has 210mm, we used 190mm so as to leave space to left/right
+    const pageHeight = 270; // a4 has 297mm height, we used 270mm to leave space on top of page-1
     const imgHeight = (canvas.height * imgWidth) / canvas.width;
     let heightLeft = imgHeight;
     let position = 0;
-    pdf.addImage(img, 'JPEG', 10, 15, imgWidth, imgHeight + 25);
+    pdf.addImage(img, 'JPEG', 10, 15, imgWidth, imgHeight);
     heightLeft -= pageHeight;
     while (heightLeft >= 0) {
       position = heightLeft - imgHeight;
       pdf.addPage();
-      pdf.addImage(img, 'JPEG', 10, position + 10, imgWidth, imgHeight + 25);
+      pdf.addImage(img, 'JPEG', 10, position + 10, imgWidth, imgHeight);
       heightLeft -= pageHeight;
     }
     pdf.save(`${docName}.pdf`);

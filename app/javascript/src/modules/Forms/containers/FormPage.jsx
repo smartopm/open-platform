@@ -64,7 +64,7 @@ export default function FormPage() {
         const actionButtons = document.querySelector('#form_update_actions');
         if (actionButtons) { actionButtons.style.visibility = 'hidden'; }
         savePdf(document.querySelector('#form_update_container'), 'form');
-        window.setTimeout(() => { window.close() }, 500);
+        window.setTimeout(() => { window.close() }, 1000);
       }, 1000);
     }
     return () => window.clearTimeout(timer);
