@@ -107,7 +107,7 @@ module Mutations
 
         lead_info = %i[lead_status lead_temperature lead_source lead_owner lead_type]
         lead_info.each do |field|
-          user.send("#{field}=", vals[field])
+          user.send("#{field}=", vals[field]) if vals[field].present?
         end
 
         return unless lead_info.any? { |field| user.send("#{field}_changed?") }
