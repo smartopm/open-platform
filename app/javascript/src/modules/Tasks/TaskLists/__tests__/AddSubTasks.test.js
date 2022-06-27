@@ -20,7 +20,7 @@ const taskDataMock = [
   {
     request: {
       query: TaskListQuery,
-      variables: { taskId: '6a7e722a-9bd5-48d4-aaf7-f3285ccff4a3' }
+      variables: { taskId: '6a7e722a-9bd5-48d4-aaf7-f3285ccff4a3' },
     },
     result: {
       data: {
@@ -45,15 +45,15 @@ const taskDataMock = [
             user: {
               __typename: 'User',
               id: 'c8b16e54-095e-4b92-bf51-b197f6b916a6',
-              name: 'Test User'
+              name: 'Test User',
             },
-            __typename: 'User'
+            __typename: 'User',
           },
           user: {
             id: '5678fgd',
             name: 'Joe',
             imageUrl: '',
-            __typename: 'User'
+            __typename: 'User',
           },
           assignees: [
             {
@@ -62,16 +62,16 @@ const taskDataMock = [
               imageUrl: '',
               avatarUrl: '',
               userType: 'admin',
-              __typename: 'User'
-            }
+              __typename: 'User',
+            },
           ],
           assigneeNotes: [
             {
               id: 'dfghsj8',
               userId: '567dfg',
               reminderTime: '',
-              __typename: 'AssigneeNote'
-            }
+              __typename: 'AssigneeNote',
+            },
           ],
           subTasks: [
             {
@@ -88,7 +88,7 @@ const taskDataMock = [
               progress: {
                 complete: 1,
                 total: 0,
-                progress_percentage: null
+                progress_percentage: null,
               },
               __typename: 'Note',
               user: {
@@ -96,7 +96,7 @@ const taskDataMock = [
                 name: 'Daniel Mutuba',
                 imageUrl:
                   'https://lh3.googleusercontent.com/a-/AOh14Ghj2JnWVlVC_cPrzJrAJ2YyV_UyVTXcEew8YKVp=s96-c',
-                __typename: 'User'
+                __typename: 'User',
               },
               author: {
                 id: 'a7b3e608-5ca8-44da-b0f2-8f94239f5a1f',
@@ -104,7 +104,7 @@ const taskDataMock = [
                 imageUrl:
                   'https://lh3.googleusercontent.com/a-/AOh14Gjnom4vf1f-DPzmjQ4JyU0Jt88Bz0ShVC73LBDCqQ=s96-c',
                 avatarUrl: null,
-                __typename: 'User'
+                __typename: 'User',
               },
               subTasks: [],
 
@@ -112,23 +112,24 @@ const taskDataMock = [
               assigneeNotes: [],
               parentNote: {
                 id: '90ba44ef-4306-416b-945f-1d2ea4eb4c46',
-                __typename: 'Note'
+                __typename: 'Note',
               },
               documents: [],
-              attachments: []
-            }
+              attachments: [],
+            },
           ],
           parentNote: {
             id: 'fghs9',
             body: '',
             formUserId: '12345',
+            subTasksCount: 1,
             assignees: [{ id: '34567', __typename: 'User' }],
-            __typename: 'Note'
-          }
-        }
-      }
-    }
-  }
+            __typename: 'Note',
+          },
+        },
+      },
+    },
+  },
 ];
 
 describe('Test the AddSubTasks page', () => {

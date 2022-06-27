@@ -89,6 +89,7 @@ describe('TaskUpdate Component', () => {
                 id: 'fghs9',
                 body: '',
                 formUserId: '12345',
+                subTasksCount: 1,
                 assignees: [{ id: '34567' }]
               }
             }

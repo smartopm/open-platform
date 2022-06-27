@@ -1,7 +1,9 @@
+/* eslint-disable max-lines */
+/* eslint-disable complexity */
 import React from 'react';
 import TextField from '@mui/material/TextField';
 import makeStyles from '@mui/styles/makeStyles';
-import { Grid, Typography , useMediaQuery } from '@mui/material';
+import { Grid, Typography, useMediaQuery } from '@mui/material';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
 import InputLabel from '@mui/material/InputLabel';

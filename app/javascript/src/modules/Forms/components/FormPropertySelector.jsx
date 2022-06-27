@@ -23,6 +23,7 @@ export default function FormPropertySelector({
         name={name}
         required
         className="form-property-field-type-select-input"
+        inputProps={{'data-testid': "field_type_selector"}}
       >
         {Object.entries(options).map(([key]) => (
           <MenuItem key={key} value={key}>

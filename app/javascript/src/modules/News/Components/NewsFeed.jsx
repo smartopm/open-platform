@@ -48,6 +48,7 @@ export function PostItemGrid({ data, loading }) {
                   <Grid
                     item
                     md={6}
+                    data-testid="post_grid_item"
                     onClick={() => routeToPost(tile.ID)}
                     className={classes.gridItem}
                   >
@@ -149,7 +150,8 @@ export default function NewsFeed({ wordpressEndpoint }) {
   );
 }
 
-function postsToDisplay(posts, number) {
+// TODO: Move this to shared directory
+export function postsToDisplay(posts, number) {
   const data = [];
   if (posts && posts.length) {
     const publicPosts = posts.filter(p => p.categories.Private == null);

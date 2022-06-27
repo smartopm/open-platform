@@ -6,7 +6,7 @@ import { useMutation, useQuery } from 'react-apollo';
 import InputLabel from '@mui/material/InputLabel';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import FormControl from '@mui/material/FormControl';
-import { Grid, Typography, useMediaQuery } from '@mui/material';
+import { Grid, Typography, useMediaQuery, Container } from '@mui/material';
 
 import TextField from '@mui/material/TextField';
 import { useTranslation } from 'react-i18next';
@@ -146,14 +146,73 @@ export default function Investments({ userId }) {
       />
       <Grid container>
         <Grid item md={12} xs={12} style={{ marginBottom: '30px' }}>
-          <Grid item md={12} xs={12}>
-            <Typography variant="h6" data-testid="investment">
-              {t('lead_management.investment')}
-            </Typography>
+          <Grid
+            container
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between'
+            }}
+          >
+            <Grid item md={6} xs={12}>
+              <Typography variant="h6" data-testid="investment">
+                {t('lead_management.investment')}
+              </Typography>
 
-            <Typography variant="body2" data-testid="investment_header">
-              {t('lead_management.investment_header')}
-            </Typography>
+              <Typography variant="body2" data-testid="investment_header">
+                {t('lead_management.investment_header')}
+              </Typography>
+            </Grid>
+            <Grid item md={6} xs={12} style={{}}>
+              <Container
+                style={{
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  marginRight: !mobile && '-50px',
+                  paddingLeft: mobile && 0,
+                  marginTop: mobile && 8,
+                  justifyContent: !mobile && 'end'
+                }}
+              >
+                {investmentStatsData?.investmentStats?.investment_label && (
+                  <p key={investmentStatsData?.investmentStats?.investment_label?.id}>
+                    <span
+                      style={{
+                        background: 'white',
+                        color: investmentStatsData?.investmentStats?.investment_label.color,
+                        marginTop: 20,
+                        fontSize: '12px',
+                        width: '100%',
+                        padding: '8px',
+                        borderTop: '1px solid',
+                        borderLeft: '1px solid',
+                        borderColor: investmentStatsData?.investmentStats?.investment_label.color,
+                        borderBottom: '1px solid',
+                        borderTopLeftRadius: '16px',
+                        borderBottomLeftRadius: '16px'
+                      }}
+                    >
+                      {' '}
+                      {investmentStatsData?.investmentStats?.investment_label?.grouping_name}
+                    </span>
+                    <span
+                      style={{
+                        background: investmentStatsData?.investmentStats?.investment_label?.color,
+                        color: 'white',
+                        fontSize: '12px',
+                        width: '100%',
+                        padding: '9px',
+                        borderTopRightRadius: '16px',
+                        borderBottomRightRadius: '16px',
+                        marginRight: '10px'
+                      }}
+                    >
+                      {investmentStatsData?.investmentStats?.investment_label?.short_desc}
+                    </span>
+                  </p>
+                )}
+              </Container>
+            </Grid>
           </Grid>
         </Grid>
 
@@ -380,7 +439,7 @@ export default function Investments({ userId }) {
             md={1}
             xs={1}
             style={{
-              paddingTop: mobile ? '25px' : '33px',
+              paddingTop: mobile ? '27px' : '33px',
               paddingLeft: 0,
               marginLeft: mobile && '-12px'
             }}

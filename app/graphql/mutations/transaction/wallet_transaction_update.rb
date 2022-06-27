@@ -25,7 +25,9 @@ module Mutations
       end
 
       def authorized?(_vals)
-        return true if permitted?(module: :transaction, permission: :can_update_wallet_transaction)
+        if permitted?(module: :payment_records, permission: :can_update_wallet_transaction)
+          return true
+        end
 
         raise GraphQL::ExecutionError, I18n.t('errors.unauthorized')
       end

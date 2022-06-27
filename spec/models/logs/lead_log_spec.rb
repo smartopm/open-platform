@@ -59,4 +59,61 @@ RSpec.describe Logs::LeadLog, type: :model do
       end
     end
   end
+
+  describe 'callbacks' do
+    describe '#associate_investment_label' do
+      let(:user) { create(:user_with_community) }
+      let(:community) { user.community }
+      let(:admin) { create(:admin_user, community: community) }
+      let(:lead) { create(:lead, community: community) }
+      let(:label) do
+        create(:label, short_desc: 'On Target', grouping_name: 'Investment', community: community)
+      end
+      let(:user_label) { create(:user_label, label: label, user: lead) }
+      let!(:deal_details_lead_log) do
+        create(:lead_log,
+               log_type: 'deal_details',
+               deal_size: 120_000,
+               investment_target: 10,
+               user: lead,
+               community: community,
+               acting_user_id: admin.id)
+      end
+
+      let(:investment_lead_log) do
+        create(:lead_log,
+               log_type: 'investment',
+               amount: amount,
+               user: lead,
+               community: community,
+               acting_user_id: admin.id)
+      end
+
+      context "when existing 'On Target' label is present" do
+        let(:amount) { 14_000 }
+        before do
+          user_label
+          investment_lead_log
+        end
+
+        it "destroys existing 'On Target label" do
+          expect(lead.labels.find_by(grouping_name: 'Investment',
+                                     short_desc: 'On Target')).to eql nil
+        end
+
+        it "associates 'Over Target' investment label to lead" do
+          expect(lead.labels.find_by(grouping_name: 'Investment').short_desc).to eql 'Over Target'
+        end
+      end
+
+      context 'when total investment made is less than investment target' do
+        let(:amount) { 100 }
+        before { investment_lead_log }
+
+        it "associates lead with 'On Target' label" do
+          expect(lead.labels.find_by(grouping_name: 'Investment').short_desc).to eql 'On Target'
+        end
+      end
+    end
+  end
 end

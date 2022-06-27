@@ -1,9 +1,8 @@
-import React from 'react'
-import CreditCardIcon from '@mui/icons-material/CreditCard';
-import PaymentSummary from './PaymentSummary'
-import Payments from "./Components/Payments";
+import React from 'react';
+import PaymentsIcon from '@mui/icons-material/Payments';
+import PaymentSummary from './PaymentSummary';
+import Payments from './Components/Payments';
 import AccessCheck from '../Permissions/Components/AccessCheck';
-import  RenderPayment from './TransactionLogs';
 
 const paymentsPermissions = ['can_access_all_payments', 'can_see_menu_item'];
 const currentModule = 'plan_payment';
@@ -13,53 +12,21 @@ function RenderPaymentsList() {
     <AccessCheck module={currentModule} allowedPermissions={paymentsPermissions}>
       <Payments />
     </AccessCheck>
-  )
+  );
 }
-
-
-const PaymentRoutes = [
-  {
-    routeProps: {
-      path: '/payments',
-      component: RenderPaymentsList,
-      exact: true
-    },
-    styleProps: {
-      icon: <CreditCardIcon />
-    },
-    name: t => t('menu.payment', { count: 1 }),
-    featureName: 'Payments',
-    accessibleBy: [],
-    moduleName: currentModule
-  },
-  {
-    routeProps: {
-      path: '/payments/pay',
-      component: RenderPayment,
-      exact: true
-    },
-    name: t => t('common:misc.make_a_payment'),
-    featureName: 'Transactions',
-    moduleName: 'transaction',
-    accessibleBy: []
-  }
-];
-
 
 export default {
   routeProps: {
     path: '/payments',
-    component: <span />
+    component: RenderPaymentsList
   },
   styleProps: {
-    icon: <CreditCardIcon />
+    icon: <PaymentsIcon />
   },
-  accessibleBy: [],
-  moduleName: 'transaction',
   name: t => t('menu.payment', { count: 0 }),
-  featureName: 'Transactions',
-  subRoutes: PaymentRoutes,
-  subMenu: PaymentRoutes
+  featureName: 'Payments',
+  accessibleBy: [],
+  moduleName: currentModule
 };
 
-export { PaymentSummary }
+export { PaymentSummary };
