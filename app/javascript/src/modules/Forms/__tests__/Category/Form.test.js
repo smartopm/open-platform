@@ -186,7 +186,7 @@ describe('Form Component', () => {
       expect(wrapper.queryByTestId('submit_form_btn')).not.toBeInTheDocument();
     });
   });
-  it('should submit button when there is no payment field', async () => {
+  it('should show submit button when there is no payment field', async () => {
     const categoriesMock = {
       request: {
         query: FormCategoriesQuery,

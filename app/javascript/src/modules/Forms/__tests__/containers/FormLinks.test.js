@@ -5,7 +5,7 @@ import { BrowserRouter } from 'react-router-dom/';
 import { MockedProvider } from '@apollo/react-testing';
 import FormLinks from '../../containers/FormLinks';
 import MockedThemeProvider from '../../../__mocks__/mock_theme';
-import userMock from '../../../../__mocks__/userMock'
+import userMock from '../../../../__mocks__/authstate'
 import { Context } from '../../../../containers/Provider/AuthStateProvider';
 
 describe('FormLinks Component', () => {
@@ -21,6 +21,6 @@ describe('FormLinks Component', () => {
         </MockedProvider>
       </Context.Provider>
     );
-    await waitFor(() => expect(screen.queryByTestId('loader')).toBeInTheDocument())
+    await waitFor(() => expect(screen.queryByText('common:misc.forms')).toBeInTheDocument());
   });
 });
