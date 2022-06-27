@@ -15,6 +15,8 @@ RSpec.describe Comments::NoteComment, type: :model do
       )
     end
     let(:note_comment) { create(:note_comment, note: note, user: current_user) }
+    let!(:form) { create(:form, community: admin.community) }
+    let!(:form_user) { create(:form_user, form: form, user: admin, status_updated_by: admin) }
 
     it 'should create a comment on a note' do
       current_user.note_comments.create!(note_id: note.id, body: 'Test Comment', status: 'active')
@@ -25,6 +27,64 @@ RSpec.describe Comments::NoteComment, type: :model do
     it 'should update a comment on a note' do
       note_comment.update!(body: 'Comment Body')
       expect(note_comment.body).to eql 'Comment Body'
+    end
+
+    context '#new_body' do
+      it 'truncates note comment body to 5 words' do
+        note_comment = current_user.note_comments.create!(
+          note_id: note.id,
+          body: 'word1 word2 word3 word4 word5 word6',
+          status: 'active',
+        )
+
+        expect(note_comment.new_body).to eq('word1 word2 word3 word4 word5...')
+      end
+
+      it 'substitutes attached documents with direct link for process comments' do
+        create(:process, form_id: form.id, process_type: 'drc', name: 'DRC')
+        note.update!(form_user_id: form_user.id)
+
+        note_comment = current_user.note_comments.create!(
+          note_id: note.id, body: 'See attached ###__123__image.png__###',
+          status: 'active',
+          tagged_documents: [123]
+        )
+
+        expect(note_comment.new_body).to include('<a href')
+        expect(note_comment.new_body).to include('&document_id=123')
+        expect(note_comment.new_body).to include('image.png')
+      end
+
+      it 'does not substitute with no attached documents' do
+        create(:process, form_id: form.id, process_type: 'drc', name: 'DRC')
+        note.update!(form_user_id: form_user.id)
+
+        note_comment = current_user.note_comments.create!(
+          note_id: note.id, body: 'process comment no attachment',
+          status: 'active',
+          tagged_documents: []
+        )
+
+        expect(note_comment.new_body).not_to include('<a href')
+        expect(note_comment.new_body).not_to include('&document_id=123')
+        expect(note_comment.new_body).not_to include('image.png')
+        expect(note_comment.new_body).to include('process comment no attachment')
+      end
+
+      it 'does not substitute when not associated to a process' do
+        note.update!(form_user_id: form_user.id)
+
+        note_comment = current_user.note_comments.create!(
+          note_id: note.id, body: 'regular form task with attachment',
+          status: 'active',
+          tagged_documents: [123]
+        )
+
+        expect(note_comment.new_body).not_to include('<a href')
+        expect(note_comment.new_body).not_to include('&document_id=123')
+        expect(note_comment.new_body).not_to include('image.png')
+        expect(note_comment.new_body).to include('regular form task with attachment')
+      end
     end
   end
 
