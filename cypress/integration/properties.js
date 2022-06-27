@@ -34,7 +34,7 @@ describe('Properties & Co-ownership Payment Plan', () => {
           role_id: roleRes.body.id
         });
         cy.factory('permission', {
-          module: 'transaction_plan',
+          module: 'payment_records',
           permissions: ['can_fetch_transaction_summary', 'can_fetch_user_transactions'],
           role_id: roleRes.body.id
         });

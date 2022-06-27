@@ -25,7 +25,7 @@ module Mutations
       end
 
       def authorized?(_vals)
-        if permitted?(module: :transaction_plan, permission: :can_update_wallet_transaction)
+        if permitted?(module: :payment_records, permission: :can_update_wallet_transaction)
           return true
         end
 

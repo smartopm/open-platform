@@ -14,7 +14,7 @@ namespace :db do
                          temparature timesheet transaction upload user gate_access dashboard
                          guest_list profile logout communication community_settings sos
                          event_log process lead lead_log messages task_list amenity my_forms
-                         transaction_plan].freeze
+                         payment_records].freeze
       Role.where(community_id: nil).find_each do |role|
         puts "Adding/updating permissions for #{role.name}"
         valid_modules.each do |valid_module|

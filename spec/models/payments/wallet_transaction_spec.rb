@@ -6,7 +6,7 @@ RSpec.describe Payments::WalletTransaction, type: :model do
   let!(:admin_role) { create(:role, name: 'admin') }
   let!(:resident_role) { create(:role, name: 'resident') }
   let!(:permission) do
-    create(:permission, module: 'transaction_plan',
+    create(:permission, module: 'payment_records',
                         role: admin_role,
                         permissions: %w[can_create_wallet_transaction])
   end

@@ -19,7 +19,7 @@ module Mutations
 
       # Verifies if current user is admin or not.
       def authorized?(_vals)
-        if permitted?(module: :transaction_plan, permission: :can_revert_wallet_transaction)
+        if permitted?(module: :payment_records, permission: :can_revert_wallet_transaction)
           return true
         end
 

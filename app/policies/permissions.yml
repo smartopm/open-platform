@@ -77,7 +77,7 @@ admin:
     permissions:
       - can_make_payment
       - can_see_menu_item
-  transaction_plan:
+  payment_records:
     permissions:
       - can_create_transaction
       - can_revert_transaction
