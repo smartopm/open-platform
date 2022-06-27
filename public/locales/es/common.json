@@ -25,6 +25,7 @@
     "no_result_found": "No se encontraron resultados para ‪{{searchValue}}‬",
     "no_user_selected": "Tienes que seleccionar un usuario",
     "something_went_wrong_forms": "Algo salió mal al acceder a este formulario",
+    "something_went_wrong_payment": "Algo salió mal con su pago",
     "something_wrong_qr_code": "Se produjo un error al tratar de descargar el Código QR",
     "user_name_search_not_found": "{{username}} usuario no encontrado",
     "user_not_found_add_new": "Usuario no encontrado - Por favor agregue Nuevo Invitado",
