@@ -38,6 +38,7 @@ global.navigator = {
   userAgent: 'node.js',
   platform: 'Win32'
 };
+window.FlutterwaveCheckout = jest.fn();
 global.requestAnimationFrame = function(callback) {
   return setTimeout(callback, 0);
 };

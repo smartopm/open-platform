@@ -48,7 +48,6 @@ export default function FormLinkList({ userType, community, path, id, t }) {
     setFormId(Id);
   }
 
-  if (loading) return <Spinner />;
   if (error) return <CenteredContent>{formatError(error.message)}</CenteredContent>;
 
   return (
@@ -68,8 +67,11 @@ export default function FormLinkList({ userType, community, path, id, t }) {
         <>
           <List data-testid="forms-link-holder" style={{ cursor: 'pointer' }}>
             <FormLinks community={community} t={t} />
-            {data.forms.length ? (
-              data.forms.map(form => (
+            {
+              loading && <Spinner />
+            }
+            {data?.forms.length ? (
+              data?.forms.map(form => (
                 <Fragment key={form.id}>
                   <ListItem
                     key={form.id}

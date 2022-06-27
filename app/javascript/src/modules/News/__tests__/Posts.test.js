@@ -1,18 +1,34 @@
 import React from 'react';
-import { render } from '@testing-library/react';
-import PostItem from '../Components/PostItem';
+import { render, waitFor } from '@testing-library/react';
+import { MemoryRouter } from 'react-router';
+import Posts from '../Components/Posts';
+import { Context } from '../../../containers/Provider/AuthStateProvider';
+import authState from '../../../__mocks__/authstate';
+import MockedThemeProvider from '../../__mocks__/mock_theme';
 
-describe('Testing the posts Card', () => {
-  const data = {
-    title: 'Test title',
-    imageUrl: 'https://placeholder.com',
-    datePosted: '2020-06-18T07:18:21-07:00',
-    subTitle: 'Test content for the Nkwashi news'
-  };
+describe('Testing the posts list', () => {
+  global.fetch = jest.fn(() =>
+    Promise.resolve({
+      json: () => Promise.resolve({}),
+    })
+  );
+  beforeEach(() => {
+    fetch.mockClear();
+  });
+  it('should always render list of posts', async () => {
+    const container = render(
+      <Context.Provider value={authState}>
+        <MockedThemeProvider>
+          <MemoryRouter>
+            <Posts />
+          </MemoryRouter>
+        </MockedThemeProvider>
+      </Context.Provider>
+    );
 
-  it('should always render', () => {
-    const container = render(<PostItem {...data} />);
-    expect(container.queryByText('Test title')).toBeTruthy();
-    expect(container.queryByText('Test content for the Nkwashi news')).toBeTruthy();
+    await waitFor(() => {
+      expect(container.queryByText('news.no_post')).toBeInTheDocument();
+      expect(container.queryByText('news.news')).toBeInTheDocument();
+    }, 10);
   });
 });

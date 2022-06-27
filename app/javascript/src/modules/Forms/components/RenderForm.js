@@ -29,6 +29,8 @@ import {
 import MessageAlert from '../../../components/MessageAlert';
 import ListWrapper from '../../../shared/ListWrapper';
 import UploadFileItem from '../../../shared/imageUpload/UploadFileItem';
+import PaymentInput from './FormProperties/PaymentInput';
+import { currencies } from '../../../utils/constants';
 
 export default function RenderForm({
   formPropertiesData,
@@ -59,6 +61,7 @@ export default function RenderForm({
   const { t } = useTranslation(['form', 'common']);
   const [messageAlert, setMessageAlert] = useState('');
   const [isSuccessAlert, setIsSuccessAlert] = useState(false);
+  const communityCurrency = objectAccessor(currencies, authState.user?.community?.currency) || '';
 
   function handleCheckboxSelect(event, property) {
     const { name, checked } = event.target;
@@ -107,6 +110,7 @@ export default function RenderForm({
       }
     });
   }
+
 
   function createPropertyObj(propertyId) {
     return {
@@ -554,6 +558,38 @@ export default function RenderForm({
         )}
       </Grid>
     ),
+       payment: (
+         <Grid
+           container
+           spacing={3}
+           alignItems="center"
+           justifyContent="center"
+           key={formPropertiesData.id}
+         >
+           {editMode && (
+             <Grid item xs={1}>
+               <Typography color="textSecondary">{number}</Typography>
+             </Grid>
+           )}
+           <Grid item xs={editMode ? 10 : 12} className={classes.spaceBottom}>
+             <PaymentInput
+               properties={formPropertiesData}
+               communityCurrency={communityCurrency}
+             />
+           </Grid>
+           {editMode && (
+             <Grid item xs={1}>
+               <FormPropertyAction
+                 formId={formId}
+                 editMode={editMode}
+                 propertyId={formPropertiesData.id}
+                 refetch={refetch}
+                 categoryId={categoryId}
+               />
+             </Grid>
+           )}
+         </Grid>
+       )
   };
   return (
     <Grid style={!editMode && !matches ? { padding: '0 120px' } : {}}>

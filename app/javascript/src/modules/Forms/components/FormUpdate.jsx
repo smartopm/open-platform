@@ -3,7 +3,6 @@
 /* eslint-disable max-statements */
 /* eslint-disable no-use-before-define */
 /* eslint-disable security/detect-object-injection */
-/* eslint-disable no-unused-expressions */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
@@ -46,6 +45,8 @@ import SubmittedFileItem from '../../../shared/imageUpload/SubmittedFileItem';
 import { handleFileSelect, handleFileUpload, removeBeforeUpload, isUploaded } from '../utils';
 import UploadFileItem from '../../../shared/imageUpload/UploadFileItem';
 import TermsAndCondition from './TermsAndCondition';
+import PaymentInput from './FormProperties/PaymentInput';
+import { currencies } from '../../../utils/constants';
 
 // date
 // text input (TextField or TextArea)
@@ -84,6 +85,7 @@ export default function FormUpdate({ formUserId, userId, authState, categoriesDa
   const [updateFormUserStatus] = useMutation(FormUserStatusUpdateMutation);
   const [formState, setFormState] = useState(state);
   const matches = useMediaQuery('(max-width:900px)');
+  const communityCurrency = objectAccessor(currencies, authState.user?.community?.currency) || '';
 
   const { data, error, loading } = useQuery(UserFormPropertiesQuery, {
     variables: { userId, formUserId },
@@ -591,7 +593,15 @@ export default function FormUpdate({ formUserId, userId, authState, categoriesDa
             name={formPropertiesData.formProperty.fieldName}
           />
         </ListWrapper>
-      )
+      ),
+      payment: (
+        <ListWrapper className={classes.space} key={formPropertiesData.formProperty.id}>
+          <PaymentInput
+            properties={formPropertiesData.formProperty}
+            communityCurrency={communityCurrency}
+          />
+        </ListWrapper>
+      ),
     };
     return objectAccessor(fields, formPropertiesData.formProperty.fieldType);
   }
@@ -773,7 +783,12 @@ FormUpdate.propTypes = {
   userId: PropTypes.string.isRequired,
   formUserId: PropTypes.string.isRequired,
   authState: PropTypes.shape({
-    user: PropTypes.shape({ userType: PropTypes.string })
+    user: PropTypes.shape({ 
+      userType: PropTypes.string,
+      community: PropTypes.shape({
+        currency: PropTypes.string
+      })
+    })
   }).isRequired,
   categoriesData: PropTypes.arrayOf(
     PropTypes.shape({
