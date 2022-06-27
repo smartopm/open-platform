@@ -31,20 +31,6 @@ RSpec.describe Forms::Form, type: :model do
       expect(current_user.community.forms.first.name).to eql 'Form Name'
     end
 
-    it 'should create a form record with a name similar to a deleted one' do
-      form_one = current_user.community.forms.create!(
-        name: 'Form Name',
-        expires_at: (rand * 10).to_i.day.from_now,
-      )
-      form_one.update!(status: 2)
-      current_user.community.forms.create!(
-        name: 'Form Name',
-        expires_at: (rand * 10).to_i.day.from_now,
-      )
-      expect(current_user.community.forms.count).to eql 1
-      expect(current_user.community.forms.first.name).to eql 'Form Name'
-    end
-
     it 'should validate case sensitive' do
       current_user.community.forms.create!(
         name: 'Form Name',
