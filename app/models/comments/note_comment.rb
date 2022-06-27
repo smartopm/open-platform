@@ -39,7 +39,7 @@ module Comments
       if process_comment? && tagged_documents?
         new_body = replace_document_mentions
 
-        return new_body.truncate_words(5)
+        return new_body
       end
 
       body.truncate_words(5)
