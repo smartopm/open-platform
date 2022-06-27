@@ -14,6 +14,7 @@ import LogBook from './LogBook';
 import Portal from './Portal'; // thebe portal
 import Properties from './Plots/Properties';
 import UserPayments from './Payments/UserPayments';
+import MakeAPayment from './Payments/TransactionLogs';
 import MyMessages from './Messages/MyMessages';
 import Search from './Search';
 import Processes from './Tasks/Processes';
@@ -31,6 +32,7 @@ export default [
   Communication,
   LogBook,
   Payments,
+  MakeAPayment,
   UserPayments,
   Leads,
   Processes,

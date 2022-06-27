@@ -97,7 +97,7 @@ const authState = {
       },
       { module: 'campaign', permissions: ['can_see_menu_item'] },
       { module: 'entry_request', permissions: ['can_grant_entry', 'can_update_entry_request'] },
-      { module: 'transaction', permissions: ['can_fetch_user_transactions'] },
+      { module: 'payment_records', permissions: ['can_fetch_user_transactions'] },
       {
         module: 'payment_plan',
         permissions: ['can_update_payment_day', 'can_view_menu_list', 'can_create_payment_plan']

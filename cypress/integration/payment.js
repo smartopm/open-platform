@@ -25,7 +25,7 @@ describe('Payment', () => {
           role_id: roleRes.body.id
         });
         cy.factory('permission', {
-          module: 'transaction',
+          module: 'payment_records',
           permissions: ['can_create_transaction', 'can_fetch_user_transactions'],
           role_id: roleRes.body.id
         });
