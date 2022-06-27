@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 /* eslint-disable max-statements */
 import React, { useState, useEffect } from 'react';
 import { useHistory, useParams } from 'react-router';
@@ -59,7 +60,7 @@ export default function TaskProcessDetail() {
   );
 
   const formUserId = projectData?.task?.formUserId;
-  const { data: projectItem } = useQuery(ProjectQuery, {
+  const { data: projectItem, loading: projectItemLoading } = useQuery(ProjectQuery, {
     skip: !formUserId,
     variables: { formUserId },
     fetchPolicy: 'cache-and-network'
@@ -143,17 +144,19 @@ export default function TaskProcessDetail() {
     window.document.getElementById('anchor-section')?.scrollIntoView();
   }
 
-  const pageTitle = (
-    <span
-      data-testid="task-title"
+  const pageTitle = projectItemLoading
+    ? <Spinner />
+    : (
+      <span
+        data-testid="task-title"
       // eslint-disable-next-line react/no-danger
-      dangerouslySetInnerHTML={{
+        dangerouslySetInnerHTML={{
         __html: sanitizeText(removeNewLines(projectItem?.project?.body))
       }}
-    />
-  );
+      />
+    );
 
-  if (projectDataLoading || subStepsLoading) return <Spinner />;
+  if (projectDataLoading) return <Spinner />;
   if (projectDataError) {
     return <CenteredContent>{formatError(projectDataError.message)}</CenteredContent>;
   }
@@ -278,11 +281,15 @@ export default function TaskProcessDetail() {
           )}
           <Grid item md={tabValue === 2 ? 12 : 7} xs={12}>
             <TabPanel value={tabValue} index={0}>
-              <ProjectOverviewSplitView
-                data={stepsData?.taskSubTasks || []}
-                refetch={refetch}
-                handleProjectStepClick={handleProjectStepClick}
-              />
+              {subStepsLoading ? (
+                <Spinner />
+              ) : (
+                <ProjectOverviewSplitView
+                  data={stepsData?.taskSubTasks || []}
+                  refetch={refetch}
+                  handleProjectStepClick={handleProjectStepClick}
+                />
+              )}
             </TabPanel>
             <TabPanel value={tabValue} index={1} pad>
               <ProjectProcessesSplitView
