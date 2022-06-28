@@ -60,4 +60,45 @@ describe('FormPage Component', () => {
       expect(container.queryByTestId('submit_form_btn')).toBeInTheDocument();
     }, 10);
   });
+
+  it('renders breadcrumb when loading form for non public users', async () => {
+    const container = render(
+      <Context.Provider value={authState}>
+        <MockedProvider mocks={[formMock]} addTypename={false}>
+          <MemoryRouter>
+            <MockedThemeProvider>
+              <FormPage />
+            </MockedThemeProvider>
+          </MemoryRouter>
+        </MockedProvider>
+      </Context.Provider>
+    );
+
+    await waitFor(() => {
+      expect(container.queryByText('common:misc.forms')).toBeInTheDocument();
+      expect(container.queryByTestId('page_name')).toBeInTheDocument();
+      expect(container.queryByTestId('page_title')).toBeInTheDocument();
+    });
+  });
+
+  it('does not render breadcrumb when loading form for public users', async () => {
+    authState.user.userType = 'public_user'
+    const container = render(
+      <Context.Provider value={authState}>
+        <MockedProvider mocks={[formMock]} addTypename={false}>
+          <MemoryRouter>
+            <MockedThemeProvider>
+              <FormPage />
+            </MockedThemeProvider>
+          </MemoryRouter>
+        </MockedProvider>
+      </Context.Provider>
+    );
+
+    await waitFor(() => {
+      expect(container.queryByText('common:misc.forms')).not.toBeInTheDocument();
+      expect(container.queryByTestId('page_name')).not.toBeInTheDocument();
+      expect(container.queryByTestId('page_title')).not.toBeInTheDocument();
+    });
+  });
 });
