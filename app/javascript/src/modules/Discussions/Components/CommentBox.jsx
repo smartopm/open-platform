@@ -64,6 +64,7 @@ export default function CommentBox({ authState, sendComment, data, handleComment
                 capture
                 onChange={event => upload.handleFileUpload(event.target.files[0])}
                 style={{ display: 'none' }}
+                data-testid="discussion_upload"
               />
               <AddPhotoAlternateIcon color="primary" className={css(styles.uploadIcon)} />
             </label>
