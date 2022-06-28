@@ -6,7 +6,6 @@ import { useHistory } from 'react-router';
 import { UsersLiteQuery, HistoryQuery } from '../../../graphql/queries';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
 import CenteredContent from '../../../shared/CenteredContent';
-import { Spinner } from '../../../shared/Loading';
 import { formatError, ifNotTest } from '../../../utils/helpers';
 import TaskDetail from '../Components/TaskDetail';
 import { AssignUser } from '../../../graphql/mutations';
@@ -64,10 +63,11 @@ export default function TaskUpdate({
     return <CenteredContent>{formatError(error.message)}</CenteredContent>;
   }
 
-  // The next line is to override the error-
+  // The next line is a temporary fix for the error-
   // "Can't perform a React state update on an unmounted component."
-  // Figure out a way to have it removed without the jest console error.
-  if (loading && !ifNotTest()) return <Spinner />;
+  // that occurred after re-rendering fix (i.e. rendering the spinner if loading is true)
+  // We should find a way to have it removed without the jest console error.
+  if (loading && !ifNotTest()) return null;
   if (error) return showTaskNotFoundError();
 
   return (
