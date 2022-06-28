@@ -2,12 +2,10 @@ import React from 'react';
 import { render, fireEvent, waitFor } from '@testing-library/react';
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom/';
-
 import 'leaflet';
 import 'leaflet-draw';
 import CreateLandParcel from '../components/LandParcels/CreateLandParcel';
 import { AddNewProperty } from '../graphql/mutations';
-import { Spinner } from '../shared/Loading';
 import MockedThemeProvider from '../modules/__mocks__/mock_theme';
 import MockedSnackbarProvider from '../modules/__mocks__/mock_snackbar';
 
@@ -17,14 +15,14 @@ describe('Land Property Component', () => {
     request: {
       query: AddNewProperty,
       variables: {
-        parcelNumber: '',
-        address1: '',
-        address2: '',
-        city: '',
-        postalCode: '',
-        stateProvince: '',
-        parcelType: '',
-        country: '',
+        parcelNumber: 'This is a parcel number',
+        address1: 'This is a address1',
+        address2: 'This is a address2',
+        city: 'This is a city',
+        postalCode: '123',
+        stateProvince: 'This is state province',
+        parcelType: 'This is parcel type',
+        country: 'This is country',
         longX: 0,
         latY: 0,
         geom: null,
@@ -95,9 +93,13 @@ describe('Land Property Component', () => {
     expect(container.queryByTestId('custom-dialog-button')).toBeInTheDocument();
 
     fireEvent.click(container.queryByTestId('custom-dialog-button'));
-    
-    const loader = render(<Spinner />);
-    expect(loader.queryAllByTestId('loader')[0]).toBeInTheDocument();
+
+    await waitFor(
+      () => {
+        expect(container.queryByText('messages.property_added')).toBeInTheDocument();
+      },
+      { timeout: 500 }
+    );
     fireEvent.click(container.queryByTestId('dialog_cancel'));
   });
 
