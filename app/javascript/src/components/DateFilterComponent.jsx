@@ -11,6 +11,9 @@ import {
 import { filterUserByLoggedin } from '../utils/constants'
 import DatePicker from "./DatePickerDialog"
 
+/**
+ * @deprecated 
+ */
 export default function DateFilterComponent({
   handleFilterInputChange,
   classes,

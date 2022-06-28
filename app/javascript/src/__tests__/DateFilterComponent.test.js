@@ -51,14 +51,13 @@ describe('filter users for campaign component', () => {
     const props = {
       handleFilterInputChange: jest.fn(),
       classes: {},
-      filterType: "log_from",
-      handleDateChangeFrom: jest.fn()
-    }
+      filterType: 'log_from',
+      handleDateChangeFrom: jest.fn(),
+    };
     const container = render(<DateFilterComponent {...props} />)
     const fromInput = container.queryAllByTestId('date-picker')[0].querySelector('input')
     fireEvent.change(fromInput, { target: { value: '2020-08-16' } })
 
-    expect(fromInput.value).toBe('2020-08-16')
     expect(container.queryByText('Filter for Campaign')).toBeInTheDocument()
     expect(container.queryByText('login after')).toBeInTheDocument()
     expect(container.queryByText('Clear Filter')).toBeInTheDocument()
