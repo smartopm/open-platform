@@ -46,6 +46,7 @@ module Types
     field :note_comments_resolve, mutation: Mutations::Note::NoteCommentsResolve
     field :note_list_update, mutation: Mutations::Note::NoteListUpdate
     field :note_list_delete, mutation: Mutations::Note::NoteListDelete
+    field :note_delete, mutation: Mutations::Note::NoteDelete
 
     # Process
     field :process_update, mutation: Mutations::Process::ProcessUpdate

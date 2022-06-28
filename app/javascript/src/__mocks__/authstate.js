@@ -56,7 +56,8 @@ const authState = {
           'can_mark_task_as_complete',
           'can_access_project_steps',
           'can_create_task_lists',
-        ],
+          'can_delete_note'
+        ]
       },
       {
         module: 'process',

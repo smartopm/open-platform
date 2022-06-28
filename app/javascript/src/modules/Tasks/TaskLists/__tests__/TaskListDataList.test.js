@@ -9,6 +9,7 @@ import MockedThemeProvider from '../../../__mocks__/mock_theme';
 import { Context } from '../../../../containers/Provider/AuthStateProvider';
 import authState from '../../../../__mocks__/authstate';
 import { SubTasksQuery } from '../../graphql/task_queries';
+import { DeleteTask } from '../../graphql/task_mutation';
 
 describe('Task Data components', () => {
   const task = {
@@ -22,6 +23,7 @@ describe('Task Data components', () => {
       imageUrl: '',
       avatarUrl: ''
     },
+    authorId: '23453435',
     user: {
       name: 'somebody'
     },
@@ -64,6 +66,15 @@ describe('Task Data components', () => {
     taskCommentReply: true,
     order: 1
   };
+  const mocks = [
+    {
+      request: {
+        query: DeleteTask,
+        variables: { id: task.id } 
+      },
+      result: { data: { noteDelete: { success: true } } },
+    }
+  ]
 
   it('renders stripped down version of task menu options', async () => {
     render(
@@ -97,7 +108,7 @@ describe('Task Data components', () => {
   it('should render TaskListDataList', async () => {
     render(
       <BrowserRouter>
-        <MockedProvider>
+        <MockedProvider mocks={mocks} addTypename={false}>
           <Context.Provider value={authState}>
             <MockedThemeProvider>
               <TaskListDataList
@@ -122,6 +133,12 @@ describe('Task Data components', () => {
       const taskDetailsMenuItem = screen.getByText('menu.open_task_details');
       expect(taskDetailsMenuItem).toBeInTheDocument();
       fireEvent.click(taskDetailsMenuItem);
+      const deleteTask = screen.getByText('menu.delete_task');
+      expect(deleteTask).toBeInTheDocument();
+      fireEvent.click(deleteTask);
+      const proceedButton = screen.queryByTestId('proceed_button');
+      expect(proceedButton).toBeInTheDocument();
+      fireEvent.click(proceedButton);
     });
   });
 

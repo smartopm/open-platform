@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { Grid, IconButton, Typography } from '@mui/material';
+import { useMutation } from 'react-apollo';
 import Divider from '@mui/material/Divider';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Box from '@mui/material/Box';
@@ -11,9 +12,12 @@ import PropTypes from 'prop-types';
 import { makeStyles } from '@mui/styles';
 import Tooltip from '@mui/material/Tooltip';
 import { Context as AuthContext } from '../../../../containers/Provider/AuthStateProvider';
-import { removeNewLines, sanitizeText } from '../../../../utils/helpers';
+import { removeNewLines, sanitizeText, formatError } from '../../../../utils/helpers';
 import Card from '../../../../shared/Card';
 import MenuList from '../../../../shared/MenuList';
+import { DeleteTask } from '../../graphql/task_mutation';
+import MessageAlert from '../../../../components/MessageAlert';
+import { ActionDialog } from '../../../../components/Dialog';
 
 export default function TaskListDataList({
   task,
@@ -23,6 +27,7 @@ export default function TaskListDataList({
   styles,
   openSubTask,
   isSecondLevelSubTask,
+  refetch
 }) {
   const classes = useStyles();
   const isMobile = useMediaQuery('(max-width:800px)');
@@ -32,14 +37,20 @@ export default function TaskListDataList({
   const [selectedTask, setSelectedTask] = useState(null);
   const anchorElOpen = Boolean(anchorEl);
   const { t } = useTranslation('common');
+  const [taskDelete] = useMutation(DeleteTask);
+  const [isDialogOpen, setOpen] = useState(false);
   const authState = React.useContext(AuthContext);
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [info, setInfo] = useState({ loading: false, error: false, message: '' });
   const taskPermissions = authState?.user?.permissions?.find(
     permissionObject => permissionObject.module === 'note'
   );
   const canCreateNote = taskPermissions
     ? taskPermissions.permissions.includes('can_create_note')
     : false;
-
+  const canDeleteNote = taskPermissions
+    ? taskPermissions.permissions.includes('can_delete_note')
+    : false;
   const menuList = [
     {
       content: t('menu.open_task_details'),
@@ -50,6 +61,11 @@ export default function TaskListDataList({
       content: !isSecondLevelSubTask && canCreateNote ? t('menu.add_subtask') : null,
       isAdmin: true,
       handleClick: () => handleCreateSubTask()
+    },
+    {
+      content: canDeleteNote && userAuthorized() && !isTaskList() ? t('menu.delete_task') : null,
+      isAdmin: true,
+      handleClick: () => handleDeleteTask()
     }
   ];
 
@@ -64,6 +80,19 @@ export default function TaskListDataList({
   function handleTaskDetails() {
     setAnchorEl(null);
     handleTodoClick(selectedTask);
+  }
+
+  function userAuthorized() {
+    return authState?.user?.user_type === 'admin' || authState?.user.id === task?.authorId;
+  }
+
+  function isTaskList(){
+    return task?.category === 'task_list';
+  }
+
+  function handleDeleteTask() {
+    setOpen(!isDialogOpen);
+    setAnchorEl(null);
   }
 
   function handleTodoMenu(event, taskItem) {
@@ -83,9 +112,46 @@ export default function TaskListDataList({
     handleAddSubTask(selectedTask);
   }
 
+  function handleTaskDelete() {
+    taskDelete({
+      variables: { id: task.id }
+    })
+      .then(() => {
+        setInfo({
+          ...info,
+          message: t('menu.task_deleted'),
+          loading: false,
+        });
+        setTimeout(refetch, 500)
+        setAlertOpen(true);
+        setOpen(!isDialogOpen);
+      })
+      .catch(err => {
+        setInfo({
+          ...info,
+          error: true,
+          message: formatError(err.message)
+        });
+        setAlertOpen(true);
+        setOpen(!isDialogOpen);
+      });
+  }
   return (
     <Card styles={styles} contentStyles={{ padding: '4px' }}>
       <Grid container>
+        <MessageAlert
+          type={info.error ? 'error' : 'success'}
+          message={info.message}
+          open={alertOpen}
+          handleClose={() => setAlertOpen(false)}
+        />
+
+        <ActionDialog
+          open={isDialogOpen}
+          handleClose={handleDeleteTask}
+          handleOnSave={handleTaskDelete}
+          message={t('menu.task_delete_confirmation_message')}
+        />
         <Grid item md={6} xs={12} data-testid="task_list_body_section">
           <Grid container style={{ display: 'flex', alignItems: 'center' }}>
             <Grid item md={8} xs={10}>
@@ -237,6 +303,7 @@ TaskListDataList.defaultProps = {
   openSubTask: false,
   handleOpenSubTasksClick: null,
   isSecondLevelSubTask: false,
+  refetch: () => {}
 };
 
 TaskListDataList.propTypes = {
@@ -244,6 +311,7 @@ TaskListDataList.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   handleTodoClick: PropTypes.func,
   handleAddSubTask: PropTypes.func,
+  refetch: PropTypes.func,
   // eslint-disable-next-line react/forbid-prop-types
   styles: PropTypes.object,
   openSubTask: PropTypes.bool,

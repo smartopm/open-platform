@@ -615,6 +615,7 @@ export default function TodoList({
                       handleUploadDocument={handleUploadDocument}
                       handleTodoClick={handleTodoItemClick}
                       handleTaskCompletion={handleTaskCompletion}
+                      refetch={refetch}
                     />
                   ))}
                 </div>

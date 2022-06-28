@@ -196,6 +196,7 @@ export const TasksFragment = {
             name
         }
       }
+      authorId
     }
   `
 }
