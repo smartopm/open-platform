@@ -1,4 +1,3 @@
-
 import React, { useContext } from 'react';
 import { Container } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
@@ -8,17 +7,21 @@ import { parseRenderedText } from '../utils';
 import { FormContext } from '../Context';
 
 export default function TextPreview({ children, categoriesData }) {
-  const { formProperties } = useContext(FormContext)
-  const markdown = parseRenderedText(categoriesData, formProperties)
-  const classes = useStyles()
+  const { formProperties } = useContext(FormContext);
+  const markdown = parseRenderedText(categoriesData, formProperties);
+  // If there is no renderedText, the parser above returns 'null ' 
+  const validMarkdown = markdown.trim() !== 'null'
+  const classes = useStyles();
   return (
     <Container>
-      <div className={classes.termsWrapper}>
-        <ReactMarkDown 
-        // eslint-disable-next-line react/no-children-prop
-          children={markdown}
-        />
-      </div>
+      {validMarkdown && (
+        <div className={classes.termsWrapper} data-testid="markdown_previewer">
+          <ReactMarkDown
+            // eslint-disable-next-line react/no-children-prop
+            children={markdown}
+          />
+        </div>
+      )}
       <br />
       {children}
     </Container>
@@ -31,19 +34,19 @@ const useStyles = makeStyles(() => ({
     overflowY: 'scroll',
     borderRadius: 4,
     padding: 16,
-    height: 200
-  }
-}))
+    height: 200,
+  },
+}));
 
 TextPreview.defaultProps = {
-  categoriesData: []
-}
+  categoriesData: [],
+};
 
 TextPreview.propTypes = {
   children: PropTypes.node.isRequired,
   categoriesData: PropTypes.arrayOf(
     PropTypes.shape({
-      renderedText: PropTypes.string
+      renderedText: PropTypes.string,
     })
-  )
+  ),
 };
