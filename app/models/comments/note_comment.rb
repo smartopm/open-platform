@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'host_env'
+
 module Comments
   # Notes specific Comments
   class NoteComment < ApplicationRecord
@@ -33,6 +35,12 @@ module Comments
       end
     end
 
+    def formatted_body
+      return replace_document_mentions if process_comment? && tagged_documents?
+
+      body.truncate_words(5)
+    end
+
     private
 
     def log_create_event
@@ -41,6 +49,29 @@ module Comments
 
     def log_update_event
       user.generate_events('note_comment_update', self)
+    end
+
+    def process_comment?
+      note.form_user&.form&.process.present?
+    end
+
+    def tagged_documents?
+      tagged_documents.present?
+    end
+
+    def replace_document_mentions
+      process_id = note.form_user.form.process.id
+      project_id = note_id
+      base_url = HostEnv.base_url(note.community)
+      # TODO: make path dynamic to accomodate comments on regular tasks
+      path = "/processes/#{process_id}/projects/#{project_id}
+                    ?tab=documents&project_id=#{project_id}&comment_id=#{id}"
+      action_url = "https://#{base_url}#{path}"
+
+      body.gsub(/\###(.*?)\###/) do |text|
+        split_text = text.split('__')
+        "<a href='#{action_url}&document_id=#{split_text[1]}'>#{split_text[2]}</a>"
+      end
     end
   end
 end
