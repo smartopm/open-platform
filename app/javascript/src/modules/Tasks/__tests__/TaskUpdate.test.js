@@ -20,15 +20,81 @@ const props = {
 };
 
 describe('TaskUpdate Component', () => {
+
+  const mocks = [
+    {
+      request: {
+        query: TaskQuery,
+        variables: { taskId: '6a7e722a-9bd5-48d4-aaf7-f3285ccff4a3' }
+      },
+      result: {
+        data: {
+          task: {
+            id: '6a7e722a-9bd5-48d4-aaf7-f3285ccff4a3',
+            body: '',
+            createdAt: '',
+            completed: false,
+            category: '',
+            description: '',
+            dueDate: '',
+            attachments: [],
+            formUserId: '',
+            status: 'in_progress',
+            order: '1',
+            formUser: {
+              id: 'some-id',
+              formId: '6a7e722a-id',
+              user: {
+                id: 'user-id',
+                name: 'Form User Name'
+              }
+            },
+            user: {
+              id: '5678fgd',
+              name: 'Joe',
+              imageUrl: ''
+            },
+            assignees: [
+              {
+                id: '567age',
+                name: 'John',
+                imageUrl: '',
+                avatarUrl: '',
+                userType: 'admin'
+              }
+            ],
+            assigneeNotes: [
+              {
+                id: 'dfghsj8',
+                userId: '567dfg',
+                reminderTime: ''
+              }
+            ],
+            parentNote: {
+              id: 'fghs9',
+              body: '',
+              formUserId: '12345',
+              subTasksCount: 1,
+              assignees: [{ id: '34567' }]
+            }
+          }
+        }
+      }
+    }
+  ];
+
+
   it('redirects to / and do not render task', async () => {
     const container = render(
-      <MockedProvider>
-        <BrowserRouter>
-          <MockedThemeProvider>
-            <TaskUpdate {...props} />
-          </MockedThemeProvider>
-        </BrowserRouter>
-      </MockedProvider>
+      <Context.Provider value={authState}>
+        <MockedProvider mocks={mocks} addTypename={false}>
+          <BrowserRouter>
+            <MockedThemeProvider>
+              <TaskUpdate {...props} />
+            </MockedThemeProvider>
+          </BrowserRouter>
+        </MockedProvider>
+      </Context.Provider>
     );
 
     await waitFor(() => {
@@ -37,67 +103,6 @@ describe('TaskUpdate Component', () => {
   });
 
   it('renders task details', async () => {
-    const mocks = [
-      {
-        request: {
-          query: TaskQuery,
-          variables: { taskId: '6a7e722a-9bd5-48d4-aaf7-f3285ccff4a3' }
-        },
-        result: {
-          data: {
-            task: {
-              id: '6a7e722a-9bd5-48d4-aaf7-f3285ccff4a3',
-              body: '',
-              createdAt: '',
-              completed: false,
-              category: '',
-              description: '',
-              dueDate: '',
-              attachments: [],
-              formUserId: '',
-              status: 'in_progress',
-              formUser: {
-                id: 'some-id',
-                formId: '6a7e722a-id',
-                user: {
-                  id: 'user-id',
-                  name: 'Form User Name'
-                }
-              },
-              user: {
-                id: '5678fgd',
-                name: 'Joe',
-                imageUrl: ''
-              },
-              assignees: [
-                {
-                  id: '567age',
-                  name: 'John',
-                  imageUrl: '',
-                  avatarUrl: '',
-                  userType: 'admin'
-                }
-              ],
-              assigneeNotes: [
-                {
-                  id: 'dfghsj8',
-                  userId: '567dfg',
-                  reminderTime: ''
-                }
-              ],
-              parentNote: {
-                id: 'fghs9',
-                body: '',
-                formUserId: '12345',
-                subTasksCount: 1,
-                assignees: [{ id: '34567' }]
-              }
-            }
-          }
-        }
-      }
-    ];
-
     const container = render(
       <Context.Provider value={authState}>
         <MockedProvider mocks={mocks} addTypename={false}>
@@ -116,7 +121,7 @@ describe('TaskUpdate Component', () => {
   });
 
   it('renders error page if there is an error', async () => {
-    const mocks = [
+    const mock = [
       {
         request: {
           query: TaskQuery,
@@ -128,7 +133,7 @@ describe('TaskUpdate Component', () => {
 
     const container = render(
       <Context.Provider value={authState}>
-        <MockedProvider mocks={mocks} addTypename={false}>
+        <MockedProvider mocks={mock} addTypename={false}>
           <BrowserRouter>
             <MockedThemeProvider>
               <TaskUpdate {...props} />
