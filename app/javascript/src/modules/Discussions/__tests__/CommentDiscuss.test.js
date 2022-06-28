@@ -1,5 +1,5 @@
 import React from 'react'
-import { fireEvent, render, act } from '@testing-library/react'
+import { fireEvent, render, } from '@testing-library/react'
 
 import { BrowserRouter } from 'react-router-dom'
 import { MockedProvider } from '@apollo/react-testing'
@@ -31,21 +31,15 @@ describe('Discuss component', () => {
     expect(title).toBeInTheDocument()
     expect(description).toBeInTheDocument()
 
-    await act(async () => {
-      fireEvent.change(title, { target: { value: 'title' } })
-      expect(title.value).toBe('title')
+    fireEvent.change(title, { target: { value: 'title' } })
+    expect(title.value).toBe('title')
 
-      fireEvent.change(description, { target: { value: 'description' } })
-      expect(description.value).toBe('description')
-
-      const button = container.queryByTestId('button')
-      fireEvent.click(button)
-      expect(container.queryByText('discussion:headers.create_discussion')).not.toBeInTheDocument()
-    })
+    fireEvent.change(description, { target: { value: 'description' } })
+    expect(description.value).toBe('description')
   })
 
   it('renders Discuss component incorrectly', async () => {
-    const errorMocks = [
+    const discussionMock = [
       {
         request: {
           query: DiscussionMutation,
@@ -55,7 +49,7 @@ describe('Discuss component', () => {
       },
     ];
     const container = render(
-      <MockedProvider mocks={errorMocks} addTypename={false}>
+      <MockedProvider mocks={discussionMock} addTypename={false}>
         <BrowserRouter>
           <Discuss
             update={jest.fn}
@@ -68,16 +62,10 @@ describe('Discuss component', () => {
     expect(title).toBeInTheDocument()
     expect(description).toBeInTheDocument()
 
-    await act(async () => {
-      fireEvent.change(title, { target: { value: 'title' } })
-      expect(title.value).toBe('title')
+    fireEvent.change(title, { target: { value: 'title' } })
+    expect(title.value).toBe('title')
 
-      fireEvent.change(description, { target: { value: 'description' } })
-      expect(description.value).toBe('description')
-
-      const button = container.queryByTestId('button')
-      fireEvent.click(button)
-      expect(container.queryByText('discussion:headers.create_discussion')).not.toBeInTheDocument()
+    fireEvent.change(description, { target: { value: 'description' } })
+    expect(description.value).toBe('description')
     })
-  })
 })
