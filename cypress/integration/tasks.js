@@ -99,7 +99,7 @@ describe('Tasks page', () => {
       cy.get('[data-testid=drawer]').should('be.visible');
 
       // Close task details split view
-      cy.get('[data-testid=back-to-task]').click();
+      cy.get('[data-testid=close-drawer-button]').click({ force: true });
       cy.get('[data-testid=task-info-section]').should('not.be.visible');
 
       // Add Sub Task
@@ -134,6 +134,7 @@ describe('Tasks page', () => {
       cy.get('[data-testid=comment-body]').contains('This is a test comment');
 
       // Set reminder
+      cy.get('[data-testid=drawer-paper]').scrollTo('top');
       cy.get('[data-testid=alarm]').click();
       cy.contains('Remind Me in 1 hour').click();
       cy.wait(1000);
