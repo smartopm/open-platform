@@ -35,6 +35,7 @@ describe('Land Property Component', () => {
   const selectedLandParcel = {
     id: '7867943'
   };
+
   it('should render add property form', async () => {
     const refetch = jest.fn();
     const container = render(

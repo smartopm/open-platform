@@ -1,6 +1,5 @@
 import React from 'react';
 import { fireEvent, render, waitFor } from '@testing-library/react';
-
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom';
 import CategoryForm from '../../components/Category/CategoryForm';
@@ -38,7 +37,17 @@ describe('CategoryForm Component', () => {
   const updateCategoryMock = {
     request: {
       query: FormCategoryUpdateMutation,
-      variables: { ...props.data, categoryId: props.data.id }
+      variables: {
+        id: '2938423942',
+        fieldName: 'This category form',
+        order: 2,
+        description: 'This describes this category',
+        headerVisible: false,
+        renderedText: 'Some long paragraph should be here',
+        general: false,
+        displayCondition: { condition: '', groupingId: '', value: '' },
+        categoryId: '2938423942',
+      }
     },
     result: {
       data: {
