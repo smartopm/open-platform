@@ -5,6 +5,7 @@ import { Container } from '@mui/material';
 import { useHistory } from 'react-router';
 import { UsersLiteQuery, HistoryQuery } from '../../../graphql/queries';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
+import { Spinner } from '../../../shared/Loading';
 import CenteredContent from '../../../shared/CenteredContent';
 import { formatError, ifNotTest } from '../../../utils/helpers';
 import TaskDetail from '../Components/TaskDetail';
@@ -67,7 +68,7 @@ export default function TaskUpdate({
   // "Can't perform a React state update on an unmounted component."
   // that occurred after re-rendering fix (i.e. rendering the spinner if loading is true)
   // We should find a way to have it removed without the jest console error.
-  if (loading && !ifNotTest()) return null;
+  if (loading && !ifNotTest()) return <Spinner />;
   if (error) return showTaskNotFoundError();
 
   return (
