@@ -35,11 +35,11 @@ module Comments
       end
     end
 
-    def new_body
+    def formatted_body
       if process_comment? && tagged_documents?
-        new_body = replace_document_mentions
+        formatted_body = replace_document_mentions
 
-        return new_body
+        return formatted_body
       end
 
       body.truncate_words(5)

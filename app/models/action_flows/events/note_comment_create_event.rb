@@ -37,7 +37,7 @@ module ActionFlows
                       I18n.t('action_flow.never')),
           'updated_date' => eventlog.created_at.strftime('%Y-%m-%d'),
           'note_body' => note_comment.note.body,
-          'new_body' => note_comment.new_body,
+          'new_body' => note_comment.formatted_body,
         )
       end
       # rubocop:enable Metrics/AbcSize

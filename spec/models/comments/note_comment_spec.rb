@@ -29,7 +29,7 @@ RSpec.describe Comments::NoteComment, type: :model do
       expect(note_comment.body).to eql 'Comment Body'
     end
 
-    context '#new_body' do
+    context '#formatted_body' do
       it 'truncates note comment body to 5 words' do
         note_comment = current_user.note_comments.create!(
           note_id: note.id,
@@ -37,7 +37,7 @@ RSpec.describe Comments::NoteComment, type: :model do
           status: 'active',
         )
 
-        expect(note_comment.new_body).to eq('word1 word2 word3 word4 word5...')
+        expect(note_comment.formatted_body).to eq('word1 word2 word3 word4 word5...')
       end
 
       it 'substitutes attached documents with direct link for process comments' do
@@ -50,9 +50,9 @@ RSpec.describe Comments::NoteComment, type: :model do
           tagged_documents: [123]
         )
 
-        expect(note_comment.new_body).to include('<a href')
-        expect(note_comment.new_body).to include('&document_id=123')
-        expect(note_comment.new_body).to include('image.png')
+        expect(note_comment.formatted_body).to include('<a href')
+        expect(note_comment.formatted_body).to include('&document_id=123')
+        expect(note_comment.formatted_body).to include('image.png')
       end
 
       it 'does not substitute with no attached documents' do
@@ -65,10 +65,10 @@ RSpec.describe Comments::NoteComment, type: :model do
           tagged_documents: []
         )
 
-        expect(note_comment.new_body).not_to include('<a href')
-        expect(note_comment.new_body).not_to include('&document_id=123')
-        expect(note_comment.new_body).not_to include('image.png')
-        expect(note_comment.new_body).to include('process comment no attachment')
+        expect(note_comment.formatted_body).not_to include('<a href')
+        expect(note_comment.formatted_body).not_to include('&document_id=123')
+        expect(note_comment.formatted_body).not_to include('image.png')
+        expect(note_comment.formatted_body).to include('process comment no attachment')
       end
 
       it 'does not substitute when not associated to a process' do
@@ -80,10 +80,10 @@ RSpec.describe Comments::NoteComment, type: :model do
           tagged_documents: [123]
         )
 
-        expect(note_comment.new_body).not_to include('<a href')
-        expect(note_comment.new_body).not_to include('&document_id=123')
-        expect(note_comment.new_body).not_to include('image.png')
-        expect(note_comment.new_body).to include('regular form task with attachment')
+        expect(note_comment.formatted_body).not_to include('<a href')
+        expect(note_comment.formatted_body).not_to include('&document_id=123')
+        expect(note_comment.formatted_body).not_to include('image.png')
+        expect(note_comment.formatted_body).to include('regular form task with attachment')
       end
     end
   end
