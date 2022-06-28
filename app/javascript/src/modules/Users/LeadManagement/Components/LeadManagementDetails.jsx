@@ -4,6 +4,8 @@ import { useTranslation } from 'react-i18next';
 import { useQuery } from 'react-apollo';
 import Box from '@mui/material/Box';
 import PropTypes from 'prop-types';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import orderBy from 'lodash/orderBy';
 import { LeadDetailsQuery, LeadLabelsQuery } from '../../../../graphql/queries';
 import { Spinner } from '../../../../shared/Loading';
 import CenteredContent from '../../../../shared/CenteredContent';
@@ -33,6 +35,16 @@ export default function LeadManagementDetails({ userId }) {
     fetchPolicy: 'cache-and-network'
   });
 
+  const sortedLabels = orderBy(
+    LeadLabelsData?.leadLabels,
+    [
+      function(item) {
+        return item.groupingName === 'Investment';
+      }
+    ],
+    ['asc']
+  );
+
   const TAB_VALUES = {
     details: 0,
     tasks: 1,
@@ -60,10 +72,10 @@ export default function LeadManagementDetails({ userId }) {
             justifyContent: 'space-between'
           }}
         >
-          <Grid item md={6} xs={12}>
+          <Grid item md={4} xs={12}>
             <Typography variant="h5">{t('lead_management.main_header')}</Typography>
           </Grid>
-          <Grid item md={6} xs={12}>
+          <Grid item md={8} xs={12}>
             <Container
               style={{
                 display: 'flex',
@@ -74,7 +86,7 @@ export default function LeadManagementDetails({ userId }) {
                 justifyContent: !isMobile && 'end'
               }}
             >
-              {LeadLabelsData?.leadLabels?.map(labelsData => (
+              {sortedLabels.map(labelsData => (
                 <p key={labelsData.id}>
                   <span
                     style={{
