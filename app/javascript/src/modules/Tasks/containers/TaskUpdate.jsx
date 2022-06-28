@@ -5,7 +5,6 @@ import { Container } from '@mui/material';
 import { useHistory } from 'react-router';
 import { UsersLiteQuery, HistoryQuery } from '../../../graphql/queries';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
-import { Spinner } from '../../../shared/Loading';
 import CenteredContent from '../../../shared/CenteredContent';
 import { formatError } from '../../../utils/helpers';
 import TaskDetail from '../Components/TaskDetail';
@@ -24,7 +23,7 @@ export default function TaskUpdate({
 }) {
   const authState = useContext(AuthStateContext);
   const history = useHistory();
-  const { data, error, loading, refetch } = useQuery(TaskQuery, {
+  const { data, error, refetch } = useQuery(TaskQuery, {
     variables: { taskId },
     fetchPolicy: 'cache-and-network',
     errorPolicy: 'all'
@@ -64,7 +63,6 @@ export default function TaskUpdate({
     return <CenteredContent>{formatError(error.message)}</CenteredContent>;
   }
 
-  if (loading) return <Spinner />;
   if (error) return showTaskNotFoundError();
 
   return (
