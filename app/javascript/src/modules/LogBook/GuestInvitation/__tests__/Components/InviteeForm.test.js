@@ -1,7 +1,6 @@
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
-
 import { Context } from '../../../../../containers/Provider/AuthStateProvider';
 import userMock from '../../../../../__mocks__/authstate';
 import InviteeForm from '../../Components/InviteeForm';
@@ -37,14 +36,14 @@ describe('Guest Invitation Form', () => {
     expect(getByText('logbook:guest_book.new_guest #1')).toBeInTheDocument();
 
     fireEvent.change(firstName, { target: { value: 'Some random firstName' } });
-    expect(firstName.value).toBe('Some random firstName');
+    expect(handleInputChange).toBeCalled();
 
     fireEvent.change(lastName, { target: { value: 'Some random lastName' } });
-    expect(lastName.value).toBe('Some random lastName');
+    expect(handleInputChange).toBeCalled();
 
     expect(phoneNumber).not.toBeDisabled();
     fireEvent.change(phoneNumber, { target: { value: '090909090' } });
-    expect(phoneNumber.value).toBe('090909090');
+    expect(handleInputChange).toBeCalled();
 
     expect(getByTestId('add_remove_guest_btn')).toBeInTheDocument();
     expect(getByTestId('add_remove_guest_btn').textContent).toContain('misc.remove');
@@ -71,12 +70,12 @@ describe('Guest Invitation Form', () => {
     fireEvent.change(getByTestId('guest_entry_first_name'), {
       target: { value: 'Some random firstName' }
     });
-    expect(getByTestId('guest_entry_first_name').value).toBe('Some random firstName');
+    expect(handleInputChange).toBeCalled();
 
     fireEvent.change(getByTestId('guest_entry_last_name'), {
       target: { value: 'Some random Last Name' }
     });
-    expect(getByTestId('guest_entry_last_name').value).toBe('Some random Last Name');
+    expect(handleInputChange).toBeCalled();
 
     expect(getByTestId('add_remove_guest_btn')).toBeInTheDocument();
     expect(getByTestId('add_remove_guest_btn').textContent).toContain('misc.add');

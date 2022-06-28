@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, act, fireEvent, waitFor } from '@testing-library/react';
+import { render, fireEvent, waitFor } from '@testing-library/react';
 import { BrowserRouter } from 'react-router-dom/';
 import { MockedProvider } from '@apollo/react-testing';
 
@@ -73,8 +73,6 @@ describe('Label Edit Component', () => {
     expect(description).toBeInTheDocument();
     expect(color).toBeInTheDocument();
 
-    await act(async () => {
-
       fireEvent.change(title, { target: { value: 'title' } });
       expect(title.value).toBe('title');
 
@@ -95,7 +93,6 @@ describe('Label Edit Component', () => {
         },
         { timeout: 100 }
       );
-      });
   });
 
   it('render with error', async () => {
@@ -135,7 +132,6 @@ describe('Label Edit Component', () => {
     expect(description).toBeInTheDocument();
     expect(color).toBeInTheDocument();
 
-    await act(async () => {
       fireEvent.change(title, { target: { value: 'title' } });
       expect(title.value).toBe('title');
 
@@ -156,7 +152,6 @@ describe('Label Edit Component', () => {
         },
         { timeout: 100 }
       );
-    });
   });
 
   it('render editModal components', async () => {
@@ -182,7 +177,6 @@ describe('Label Edit Component', () => {
     expect(description).toBeInTheDocument();
     expect(color).toBeInTheDocument();
 
-    await act(async () => {
       const button = container.queryByTestId('custom-dialog-button');
       fireEvent.click(button);
       const loader = render(<Spinner />);
@@ -194,7 +188,6 @@ describe('Label Edit Component', () => {
         },
         { timeout: 100 }
       );
-    });
   });
 
   it('render with  create label error', async () => {
@@ -234,27 +227,16 @@ describe('Label Edit Component', () => {
     expect(description).toBeInTheDocument();
     expect(color).toBeInTheDocument();
 
-    await act(async () => {
-      // fireEvent.change(title, { target: { value: 'title' } });
-      // expect(title.value).toBe('title');
+    const button = container.queryByTestId('custom-dialog-button');
+    fireEvent.click(button);
+    const loader = render(<Spinner />);
+    expect(loader.queryAllByTestId('loader')[0]).toBeInTheDocument();
 
-      // fireEvent.change(description, { target: { value: 'description' } });
-      // expect(description.value).toBe('description');
-
-      // fireEvent.change(color, { target: { value: 'color' } });
-      // expect(color.value).toBe('color');
-
-      const button = container.queryByTestId('custom-dialog-button');
-      fireEvent.click(button);
-      const loader = render(<Spinner />);
-      expect(loader.queryAllByTestId('loader')[0]).toBeInTheDocument();
-
-      await waitFor(
-        () => {
-          expect(container.queryByText('Delete Campaign')).not.toBeInTheDocument();
-        },
-        { timeout: 100 }
-      );
-    });
+    await waitFor(
+      () => {
+        expect(container.queryByText('Delete Campaign')).not.toBeInTheDocument();
+      },
+      { timeout: 100 }
+    );
   });
 });
