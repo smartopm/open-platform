@@ -137,13 +137,13 @@ export default function Form({
     });
   }
 
-  function formSubmit(propertiesData, status) {
+  function formSubmit(propertiesData, status, isPreview=false) {
     if (filesToUpload.length !== uploadedImages.length) {
       setImgUploadError(true);
       return;
     }
 
-    if (formDetailData?.form?.preview) {
+    if (formDetailData?.form?.preview && !isPreview) {
       setFormState({ ...formState, previewable: formDetailData.form?.preview });
       return;
     }    
@@ -252,17 +252,8 @@ export default function Form({
         <DialogContent dividers>
           <DialogContentText component="div">
             <FormPreview
-              loading={formState.isSubmitting}
-              handleFormSubmit={() =>
-                saveFormData(
-                  formData,
-                  formId,
-                  authState.user.id,
-                  categoriesData.data?.formCategories,
-                  null,
-                  hasAgreedToTerms
-                )
-              }
+              loading={formState.isSubmitting || submittingPayment}
+              handleFormSubmit={() => formSubmit(formData, null, true)}
               categoriesData={categoriesData.data?.formCategories}
             />
           </DialogContentText>
@@ -358,7 +349,7 @@ export default function Form({
               />
             </Grid>
           )}
-          
+
           {hasPayment && (
             <ListWrapper>
               <Typography variant="caption">{t('form:misc.flutterwave_notice')}</Typography>
@@ -381,7 +372,7 @@ export default function Form({
                 aria-label="form_draft"
                 style={matches ? { marginTop: '20px' } : { margin: '25px 25px 0 0' }}
                 onClick={() => formSubmit(formData, 'draft')}
-                disabled={formState.isSubmitting}
+                disabled={formState.isSubmitting || submittingPayment}
                 data-testid="save_as_draft"
               >
                 {t('common:form_actions.save_as_draft')}
@@ -397,7 +388,7 @@ export default function Form({
                 color="primary"
                 aria-label="form_submit"
                 style={matches ? { marginTop: '20px' } : { marginTop: '25px' }}
-                onClick={() => formSubmit(formData)}
+                onClick={() => formSubmit(formData, null)}
                 disabled={formState.isSubmitting || submittingPayment || isTermsChecked}
                 startIcon={(formState.isSubmitting || submittingPayment) && <Spinner />}
                 data-testid="submit_form_btn"
