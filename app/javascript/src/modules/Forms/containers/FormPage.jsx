@@ -55,12 +55,16 @@ export default function FormPage() {
   }, [authState?.user?.userType, formDetailData?.form.isPublic]);
 
   function handleDownload() {
-    const viewPort = document.querySelector('[name=viewport]');
-    if (viewPort) { viewPort.setAttribute('content', 'width=1024'); }
     const actionButtons = document.querySelector('#form_update_actions');
-    if (actionButtons) { actionButtons.style.visibility = 'hidden'; }
+    const viewPort = document.querySelector('[name=viewport]');
+
+    if (viewPort) viewPort.setAttribute('content', 'width=1024');
+    if (actionButtons) actionButtons.style.visibility = 'hidden';
+
     savePdf(document.querySelector('#form_update_container'), 'form');
-    if (actionButtons) { actionButtons.style.visibility = 'visible'; }
+
+    if (actionButtons) actionButtons.style.visibility = 'visible';
+    if (viewPort) viewPort.setAttribute('content', 'width=device-width, initial-scale=1.0');
   }
 
   const breadCrumbObj =
