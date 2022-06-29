@@ -1,14 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TextField } from '@mui/material';
 import PropTypes from 'prop-types';
-import { useMutation } from 'react-apollo';
 import { CustomizedDialogs as CustomizedDialog } from '../../../components/Dialog';
-import { formatError, validateRequiredField } from '../../../utils/helpers';
-import { AmenityCreateMutation } from '../graphql/amenity_mutations';
+import { validateRequiredField } from '../../../utils/helpers';
+import { AmenityCreateMutation, AmenityUpdateMutation } from '../graphql/amenity_mutations';
 import { checkInValidRequiredFields } from '../../LogBook/utils';
-import MessageAlert from '../../../components/MessageAlert';
+import useMutationWrapper from '../../../shared/hooks/useMutationWrapper';
 
-export default function AmenityForm({ isOpen, setOpen, refetch, t }) {
+export default function AmenityForm({ isOpen, setOpen, refetch, t, amenityData }) {
   const initialInputValue = {
     name: '',
     description: '',
@@ -16,20 +15,26 @@ export default function AmenityForm({ isOpen, setOpen, refetch, t }) {
     hours: '',
     invitationLink: ''
   };
-
-  const initialStatus = {
-    loading: false,
-    isError: false,
-    message: ''
-  }
   const [amenityValue, setAmenityValue] = useState(initialInputValue);
-  const [createAmenity] = useMutation(AmenityCreateMutation);
   const requiredFields = ['name', 'description', 'location', 'hours'];
-  const [amenityStatus, setAmenityStatus] = useState(initialStatus);
+  const [createAmenity, isCreating] = useMutationWrapper(AmenityCreateMutation, resetFunction);
+  const [updateAmenity, isUpdating] = useMutationWrapper(AmenityUpdateMutation, resetFunction);
   const [inputValidationMsg, setInputValidationMsg] = useState({
     isError: false,
     isSubmitting: false
   });
+
+  function resetFunction() {
+    refetch();
+    setOpen(!isOpen);
+    setAmenityValue({ ...initialInputValue });
+  }
+
+  useEffect(() => {
+    if(amenityData){
+      setAmenityValue({ ...amenityData});
+    }
+  }, [amenityData])
 
   function handleSaveInfo() {
     const isAnyInvalid = checkInValidRequiredFields(amenityValue, requiredFields);
@@ -37,42 +42,21 @@ export default function AmenityForm({ isOpen, setOpen, refetch, t }) {
       setInputValidationMsg({ isError: true });
       return;
     }
-    setAmenityStatus({ ...amenityStatus, loading: true });
-    createAmenity({ variables: { ...amenityValue } })
-      .then(() => {
-        setAmenityStatus({
-          loading: false,
-          isError: false,
-          message: t('amenity:misc.amenity_created') || '' // Empty string to fix jest warnings
-        });
-        refetch();
-        setOpen(!isOpen);
-        setAmenityValue(initialInputValue);
-      })
-      .catch(err => {
-        setAmenityStatus({
-          loading: false,
-          isError: true,
-          message: formatError(err.message)
-        });
-      });
+    if (amenityData) {
+      createAmenity(amenityValue);
+    }
+    updateAmenity(amenityValue);
   }
 
   return (
     <>
-      <MessageAlert
-        type={!amenityStatus.isError ? 'success' : 'error'}
-        message={amenityStatus.message}
-        open={!!amenityStatus.message}
-        handleClose={() => setAmenityStatus(initialStatus)}
-      />
       <CustomizedDialog
         open={isOpen}
-        handleModal={() => setOpen(!isOpen)}
+        handleModal={resetFunction}
         dialogHeader={t('amenity:misc.configure_amenity')}
         displaySaveButton
         handleBatchFilter={handleSaveInfo}
-        actionLoading={amenityStatus.loading}
+        actionLoading={isUpdating || isCreating}
         maxWidth="sm"
         fullWidth
       >
@@ -162,9 +146,19 @@ export default function AmenityForm({ isOpen, setOpen, refetch, t }) {
   );
 }
 
+AmenityForm.defaultProps = {
+  amenityData: null
+};
 AmenityForm.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   setOpen: PropTypes.func.isRequired,
   refetch: PropTypes.func.isRequired,
-  t: PropTypes.func.isRequired
+  t: PropTypes.func.isRequired,
+  amenityData: PropTypes.shape({
+    name: PropTypes.string,
+    description: PropTypes.string,
+    location: PropTypes.string,
+    hours: PropTypes.string,
+    invitationLink: PropTypes.string
+  })
 };

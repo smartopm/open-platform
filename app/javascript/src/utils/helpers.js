@@ -5,6 +5,11 @@ import { dateToString } from '../components/DateContainer';
 import { jsPDF as JsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 import { toPng } from 'html-to-image';
+import { useMutation } from 'react-apollo';
+import { useContext } from 'react';
+import { SnackbarContext } from '../shared/snackbar/Context';
+import { useTranslation } from 'react-i18next';
+
 // keep string methods [helpers]
 
 /**
@@ -738,3 +743,4 @@ export async function fetchMoreRecords(fetcher, dataKey, variables) {
     }
   });
 }
+

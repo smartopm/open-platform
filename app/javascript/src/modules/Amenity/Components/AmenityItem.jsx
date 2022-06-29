@@ -3,11 +3,18 @@ import PropTypes from 'prop-types';
 import { Typography } from '@mui/material';
 import CardWrapper from '../../../shared/CardWrapper';
 
-export default function AmenityItem({ amenity, translate }) {
+export default function AmenityItem({ amenity, translate, handleEditAmenity }) {
   function handleReserve(reserveLink) {
      // eslint-disable-next-line security/detect-non-literal-fs-filename
      return window.open(reserveLink, '_blank');
   }
+    const amenityMenu = [
+      {
+        content: translate('menu.edit'),
+        handleClick: () => handleEditAmenity(amenity)
+      }
+    ];
+
   return (
     <CardWrapper
       title={amenity.name}
@@ -15,6 +22,7 @@ export default function AmenityItem({ amenity, translate }) {
       handleButton={() => handleReserve(amenity.invitationLink)}
       buttonName={translate('amenity:misc.reserve')}
       cardStyles={{ height: 315 }}
+      menuItems={amenityMenu}
     >
       <div style={{ height: 80 }}>
         <Typography data-testid="amenity_description" component="p">
@@ -36,11 +44,13 @@ export default function AmenityItem({ amenity, translate }) {
 
 AmenityItem.propTypes = {
   amenity: PropTypes.shape({
+    id: PropTypes.string,
     name: PropTypes.string,
     description: PropTypes.string,
     location: PropTypes.string,
     hours: PropTypes.string,
     invitationLink: PropTypes.string
   }).isRequired,
-  translate: PropTypes.func.isRequired
+  translate: PropTypes.func.isRequired,
+  handleEditAmenity: PropTypes.func.isRequired,
 };

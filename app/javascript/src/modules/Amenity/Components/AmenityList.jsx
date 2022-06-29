@@ -15,6 +15,7 @@ import { fetchMoreRecords } from '../../../utils/helpers';
 export default function AmenityList() {
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false)
+  const [amenityData, setAmenityData] = useState(null)
   const { refetch, data, loading, fetchMore } = useQuery(AmenitiesQuery, {
     variables: { offset: 0 }
   });
@@ -26,13 +27,29 @@ export default function AmenityList() {
     fetchMoreRecords(fetchMore, 'amenities', variables).then(() => setIsLoading(false));
   }
 
+  function handleEditAmenity(amenity) {
+    setAmenityData(amenity)
+    setOpen(true)
+  }
+
+  function handleAddAmenity() {
+    setAmenityData(null);
+     setOpen(true);
+  }
+
   return (
     <PageWrapper pageTitle={t('common:misc.amenity_plural')}>
-      <AmenityForm isOpen={open} setOpen={setOpen} refetch={refetch} t={t} />
+      <AmenityForm
+        isOpen={open}
+        setOpen={setOpen}
+        refetch={refetch}
+        amenityData={amenityData}
+        t={t}
+      />
       <Grid container direction="row">
         <Grid item md={11} xs={10} />
         <Grid item md={1} xs={2}>
-          <SpeedDialButton handleAction={() => setOpen(!open)} />
+          <SpeedDialButton handleAction={handleAddAmenity} />
         </Grid>
       </Grid>
       <br />
@@ -44,7 +61,11 @@ export default function AmenityList() {
             ) : (
               data?.amenities.map(amenity => (
                 <Grid item xs={12} sm={6} md={4} key={amenity.id}>
-                  <AmenityItem amenity={amenity} translate={t} />
+                  <AmenityItem
+                    amenity={amenity}
+                    translate={t}
+                    handleEditAmenity={handleEditAmenity}
+                  />
                 </Grid>
               ))
             )}

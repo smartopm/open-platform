@@ -20,3 +20,28 @@ export const AmenityCreateMutation = gql`
     }
   }
 `;
+
+
+export const AmenityUpdateMutation = gql`
+  mutation amenityUpdate(
+    $id: ID!
+    $name: String
+    $description: String
+    $location: String
+    $hours: String
+    $invitationLink: String
+  ) {
+    amenityCreate(
+      id: $id
+      name: $name
+      description: $description
+      location: $location
+      hours: $hours
+      invitationLink: $invitationLink
+    ) {
+      amenity {
+        id
+      }
+    }
+  }
+`;
