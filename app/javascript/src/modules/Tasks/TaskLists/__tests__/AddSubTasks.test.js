@@ -3,7 +3,7 @@ import React from 'react';
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min';
 
-import { render, fireEvent, screen, waitFor } from '@testing-library/react';
+import { render, fireEvent, screen, waitFor, waitForElementToBeRemoved } from '@testing-library/react';
 import AddSubTasks from '../Components/AddSubTasks';
 import { Context } from '../../../../containers/Provider/AuthStateProvider';
 import authState from '../../../../__mocks__/authstate';
@@ -161,17 +161,17 @@ describe('Test the AddSubTasks page', () => {
       </Context.Provider>
     );
 
-    await waitFor(() => {
-      expect(screen.queryByText('task_lists.task_lists')).toBeInTheDocument();
-      expect(screen.queryAllByText('task_lists.configure_task_list')[0]).toBeInTheDocument();
+    await waitForElementToBeRemoved(screen.queryByTestId('loader'));
 
-      expect(screen.queryByTestId('task_list_body_section')).toBeInTheDocument();
-      // the caret icon should be available since the task has subtasks
-      expect(screen.queryByTestId('show_task_list_subtasks')).toBeInTheDocument();
-      // assert two menu options
-      expect(screen.queryByText('menu.open_task_details')).toBeInTheDocument();
-      expect(screen.queryByText('menu.add_subtask')).toBeInTheDocument();
-    });
+    expect(screen.queryByText('task_lists.task_lists')).toBeInTheDocument();
+    expect(screen.queryAllByText('task_lists.configure_task_list')[0]).toBeInTheDocument();
+
+    expect(screen.queryByTestId('task_list_body_section')).toBeInTheDocument();
+    // the caret icon should be available since the task has subtasks
+    expect(screen.queryByTestId('show_task_list_subtasks')).toBeInTheDocument();
+    // assert two menu options
+    expect(screen.queryByText('menu.open_task_details')).toBeInTheDocument();
+    expect(screen.queryByText('menu.add_subtask')).toBeInTheDocument();
   });
 
   it('renders task form modal', async () => {
