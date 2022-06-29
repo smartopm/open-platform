@@ -10,17 +10,7 @@ import { AmenitiesQuery } from '../graphql/amenity_queries';
 import { Spinner } from '../../../shared/Loading';
 import PageWrapper from '../../../shared/PageWrapper';
 import CenteredContent from '../../../shared/CenteredContent';
-
-export async function fetchMoreRecords(fetcher, dataKey, variables) {
-  fetcher({
-    variables: { ...variables },
-    updateQuery: (prev, { fetchMoreResult }) => {
-      if (!fetchMoreResult) return prev;
-      // eslint-disable-next-line security/detect-object-injection
-      return { ...prev, [dataKey]: [...prev[dataKey], ...fetchMoreResult[dataKey]] };
-    }
-  });
-}
+import { fetchMoreRecords } from '../../../utils/helpers';
 
 export default function AmenityList() {
   const [open, setOpen] = useState(false);

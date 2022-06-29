@@ -717,3 +717,24 @@ export function downloadAsImage(currentRef, name) {
     .catch(() => { return { error: true };
     });
 }
+
+
+/**
+ * A wrapper around apollo fetchMore function
+ * @param {Function} fetcher - Apollo fetchMore function that retries new data - const { data, fetchMore } = useQuery(Query)
+ * @param {String} dataKey - Identifier in your GraphQL Query, what's referred to as data.dataKey in your query
+ * @param {{ offset: Number, ...rest: object }} variables - Your new variables that should be used for new data being called, offset should be provided
+ * @return {Promise}
+ */
+export async function fetchMoreRecords(fetcher, dataKey, variables) {
+  fetcher({
+    variables: { ...variables },
+    updateQuery: (prev, { fetchMoreResult }) => {
+      if (!fetchMoreResult) return prev;
+      return {
+        ...prev,
+        [dataKey]: [...objectAccessor(prev, dataKey), ...objectAccessor(fetchMoreResult, dataKey)]
+      };
+    }
+  });
+}
