@@ -19,7 +19,7 @@ import { dateToString, dateFormatter } from "../../../components/DateContainer"
 
 export default function TaskUpdateList({ data }) {
   const classes = useStyles();
-  const { t } = useTranslation(['task', 'common'])
+  const { t } = useTranslation(['task', 'common']);
 
   return (
     <>

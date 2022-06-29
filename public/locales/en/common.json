@@ -302,7 +302,9 @@
     "add_new": "Add New",
     "otp": "OTP",
     "entry_request": "Entry Request",
-    "lead_import": "Lead Import"
+    "lead_import": "Lead Import",
+    "today_at": "Today at",
+    "yesterday_at": "Yesterday at"
   },
   "menu": {
     "invoice": "Invoice",
