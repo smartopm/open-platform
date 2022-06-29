@@ -354,7 +354,7 @@ en:
       task_not_found: No Task Found, Try a different query
       unable_to_update_tasks: Something went wrong while updating selected tasks
       note_list_not_found: No such task list exists
-      cannot_delete: Cannot delete this task as sub-tasks are present
+      cannot_delete: Cannot delete this task as sub tasks are present
     notification:
       preference_update_failed: Preference Update Failed
     payment_plan:

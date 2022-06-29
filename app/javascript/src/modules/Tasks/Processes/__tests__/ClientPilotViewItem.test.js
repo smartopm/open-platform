@@ -70,6 +70,7 @@ const stepsDataMock = {
             id: '31e883da-a5af-4b56-8870-2db4876ef698',
             body: 'Concept Design Review',
             dueDate: null,
+            authorId: 'c8b16e54-095e-4b92-bf51-b197f6b916a6',
             progress: {
               complete: 0,
               total: 5,

@@ -10,6 +10,7 @@ import { Context } from '../../../../containers/Provider/AuthStateProvider';
 import authState from '../../../../__mocks__/authstate';
 import { SubTasksQuery } from '../../graphql/task_queries';
 import { DeleteTask } from '../../graphql/task_mutation';
+import SnackbarProvider from '../../../../shared/snackbar/Context';
 
 describe('Task Data components', () => {
   const task = {
@@ -25,7 +26,8 @@ describe('Task Data components', () => {
     },
     authorId: '23453435',
     user: {
-      name: 'somebody'
+      name: 'somebody',
+      userType: 'admin'
     },
     assignees: [
       {
@@ -111,13 +113,15 @@ describe('Task Data components', () => {
         <MockedProvider mocks={mocks} addTypename={false}>
           <Context.Provider value={authState}>
             <MockedThemeProvider>
-              <TaskListDataList
-                task={task}
-                handleTodoClick={jest.fn()}
-                handleAddSubTask={jest.fn()}
-                openSubTask
-                handleOpenSubTasksClick={jest.fn()}
-              />
+              <SnackbarProvider>
+                <TaskListDataList
+                  task={task}
+                  handleTodoClick={jest.fn()}
+                  handleAddSubTask={jest.fn()}
+                  openSubTask
+                  handleOpenSubTasksClick={jest.fn()}
+                />
+              </SnackbarProvider>
             </MockedThemeProvider>
           </Context.Provider>
         </MockedProvider>

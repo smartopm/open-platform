@@ -83,7 +83,7 @@ RSpec.describe Mutations::Note::NoteDelete do
                                          current_user: admin,
                                          site_community: community,
                                        }).as_json
-      error_message = 'Cannot delete this task as sub-tasks are present'
+      error_message = 'Cannot delete this task as sub tasks are present'
       expect(result['errors']).to_not be_nil
       expect(result.dig('errors', 0, 'message')).to eql error_message
     end

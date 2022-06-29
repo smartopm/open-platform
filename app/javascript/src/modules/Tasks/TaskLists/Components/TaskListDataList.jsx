@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useTranslation } from 'react-i18next';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { Grid, IconButton, Typography } from '@mui/material';
@@ -16,8 +16,8 @@ import { removeNewLines, sanitizeText, formatError } from '../../../../utils/hel
 import Card from '../../../../shared/Card';
 import MenuList from '../../../../shared/MenuList';
 import { DeleteTask } from '../../graphql/task_mutation';
-import MessageAlert from '../../../../components/MessageAlert';
 import { ActionDialog } from '../../../../components/Dialog';
+import { SnackbarContext } from '../../../../shared/snackbar/Context';
 
 export default function TaskListDataList({
   task,
@@ -40,8 +40,7 @@ export default function TaskListDataList({
   const [taskDelete] = useMutation(DeleteTask);
   const [isDialogOpen, setOpen] = useState(false);
   const authState = React.useContext(AuthContext);
-  const [alertOpen, setAlertOpen] = useState(false);
-  const [info, setInfo] = useState({ loading: false, error: false, message: '' });
+  const { showSnackbar, messageType } = useContext(SnackbarContext);
   const taskPermissions = authState?.user?.permissions?.find(
     permissionObject => permissionObject.module === 'note'
   );
@@ -83,7 +82,7 @@ export default function TaskListDataList({
   }
 
   function userAuthorized() {
-    return authState?.user?.user_type === 'admin' || authState?.user.id === task?.authorId;
+    return authState?.user?.userType === 'admin' || authState?.user.id === task?.authorId;
   }
 
   function isTaskList(){
@@ -117,34 +116,16 @@ export default function TaskListDataList({
       variables: { id: task.id }
     })
       .then(() => {
-        setInfo({
-          ...info,
-          message: t('menu.task_deleted'),
-          loading: false,
-        });
+        showSnackbar({ type: messageType.success, message: t('menu.task_deleted') })
         setTimeout(refetch, 500)
-        setAlertOpen(true);
-        setOpen(!isDialogOpen);
       })
       .catch(err => {
-        setInfo({
-          ...info,
-          error: true,
-          message: formatError(err.message)
-        });
-        setAlertOpen(true);
-        setOpen(!isDialogOpen);
+        showSnackbar({ type: messageType.error, message: formatError(err.message) })
       });
   }
   return (
     <Card styles={styles} contentStyles={{ padding: '4px' }}>
       <Grid container>
-        <MessageAlert
-          type={info.error ? 'error' : 'success'}
-          message={info.message}
-          open={alertOpen}
-          handleClose={() => setAlertOpen(false)}
-        />
 
         <ActionDialog
           open={isDialogOpen}
