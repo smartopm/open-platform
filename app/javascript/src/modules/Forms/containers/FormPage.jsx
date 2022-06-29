@@ -31,7 +31,7 @@ export default function FormPage() {
   });
   const isFormFilled = pathname.includes('user_form');
   const [isError, setIsError] = useState();
-  const smMatches = useMediaQuery('(max-width:1020px)');
+  const smMatches = useMediaQuery('(max-width:900px)');
 
   useEffect(() => {
     // check route and auto log the user
@@ -64,7 +64,7 @@ export default function FormPage() {
     savePdf(document.querySelector('#form_update_container'), 'form');
 
     if (actionButtons) actionButtons.style.visibility = 'visible';
-    if (viewPort) viewPort.setAttribute('content', 'width=device-width, initial-scale=1.0');
+    if (viewPort) viewPort.setAttribute('content', 'width=device-width');
   }
 
   const breadCrumbObj =
