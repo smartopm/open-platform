@@ -135,9 +135,8 @@ describe('Tasks page', () => {
 
       // Set reminder
       cy.get('[data-testid=drawer-paper]').scrollTo('top');
-      cy.get('[data-testid=alarm]').click({ force: true });
+      cy.get('[data-testid=set-reminder-button]').click({ force: true });
       cy.contains('Remind Me in 1 hour').click();
-      cy.wait(1000);
       cy.get('[data-testid=task-info-section]').contains('None').should('not.exist');
 
       // Mark as complete
