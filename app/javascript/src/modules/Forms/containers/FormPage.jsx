@@ -32,6 +32,7 @@ export default function FormPage() {
   const isFormFilled = pathname.includes('user_form');
   const [isError, setIsError] = useState();
   const smMatches = useMediaQuery('(max-width:900px)');
+  const [downloading, setDownloading] = useState(false);
 
   useEffect(() => {
     // check route and auto log the user
@@ -55,6 +56,7 @@ export default function FormPage() {
   }, [authState?.user?.userType, formDetailData?.form.isPublic]);
 
   function handleDownload() {
+    setDownloading(true);
     const actionButtons = document.querySelector('#form_update_actions');
     const viewPort = document.querySelector('[name=viewport]');
 
@@ -89,7 +91,7 @@ export default function FormPage() {
                 style={{ color: '#FFFFFF' }}
                 data-testid="download_form_btn"
                 disableElevation
-                disabled={categoriesData?.loading}
+                disabled={categoriesData?.loading || downloading}
               >
                 {smMatches ? <DownloadIcon /> : t('common:misc.download')}
               </Button>
