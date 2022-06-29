@@ -41,7 +41,7 @@ export default function FormItem({
         }
       >
         <ListItemText
-          primary={
+          primary={(
             <>
               <Typography variant="h6" color="textSecondary" data-testid="disc_title">
                 {formUser.form.name}
@@ -67,8 +67,8 @@ export default function FormItem({
                 </Badge>
               </IconButton>
             </>
-          }
-          secondary={
+          )}
+          secondary={(
             <>
               <Typography
                 component="span"
@@ -80,7 +80,7 @@ export default function FormItem({
                 <DateContainer date={formUser.createdAt} />
               </Typography>
             </>
-          }
+          )}
         />
       </ListItem>
       {currentForm && formData.loading && <Spinner />}

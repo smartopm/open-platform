@@ -192,6 +192,7 @@ export default function CommentCard({
     if (processId && projectId) {
       return `/processes/${processId}/projects/${projectId}?tab=documents&project_id=${projectId}&comment_id=${commentId}`;
     }
+    return null;
   }
 
   return (
@@ -249,7 +250,7 @@ export default function CommentCard({
                     <ListItem style={{ marginBottom: '20px' }}>
                       <ListItemText
                         disableTypography
-                        secondary={
+                        secondary={(
                           <>
                             <div style={{ display: 'flex' }}>
                               <Avatar
@@ -325,7 +326,7 @@ export default function CommentCard({
                               </div>
                             </div>
                           </>
-                        }
+                        )}
                       />
                       {(authState.user.userType === 'admin' ||
                         com.user.id === authState.user.id) && (
