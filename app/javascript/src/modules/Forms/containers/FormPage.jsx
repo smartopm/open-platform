@@ -1,8 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useLocation, useParams } from 'react-router';
-import { Container, Typography } from '@mui/material';
+import { Container, Typography, useMediaQuery, Button } from '@mui/material';
 import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery } from 'react-apollo';
+import DownloadIcon from '@mui/icons-material/Download';
 import FormUpdate from '../components/FormUpdate';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import FormContextProvider from '../Context';
@@ -22,7 +23,6 @@ export default function FormPage() {
   const { t } = useTranslation(['common', 'form']);
   const path = useParamsQuery('');
   const id = path.get('formId');
-  const download = path.get('download')
   const { data: formDetailData, loading } = useQuery(FormQuery, { variables: { id: formId } });
   const [loginPublicUser] = useMutation(PublicUserMutation);
   const categoriesData = useQuery(FormCategoriesQuery, {
@@ -31,6 +31,7 @@ export default function FormPage() {
   });
   const isFormFilled = pathname.includes('user_form');
   const [isError, setIsError] = useState();
+  const smMatches = useMediaQuery('(max-width:1020px)');
 
   useEffect(() => {
     // check route and auto log the user
@@ -53,21 +54,14 @@ export default function FormPage() {
     }
   }, [authState?.user?.userType, formDetailData?.form.isPublic]);
 
-  useEffect(() => {
-    let timer;
-    if (download === 'true' && !categoriesData.loading) {
-      const viewPort = document.querySelector('[name=viewport]');
-      if (viewPort) {
-        viewPort.setAttribute('content', 'width=1024');
-      }
-      timer = window.setTimeout(() => {
-        const actionButtons = document.querySelector('#form_update_actions');
-        if (actionButtons) { actionButtons.style.visibility = 'hidden'; }
-        savePdf(document.querySelector('#form_update_container'), 'form');
-      }, 1500);
-    }
-    return () => window.clearTimeout(timer);
-  }, [download, categoriesData?.loading]);
+  function handleDownload() {
+    const viewPort = document.querySelector('[name=viewport]');
+    if (viewPort) { viewPort.setAttribute('content', 'width=1024'); }
+    const actionButtons = document.querySelector('#form_update_actions');
+    if (actionButtons) { actionButtons.style.visibility = 'hidden'; }
+    savePdf(document.querySelector('#form_update_container'), 'form');
+    if (actionButtons) { actionButtons.style.visibility = 'visible'; }
+  }
 
   const breadCrumbObj =
     (authState?.user?.userType === 'public_user' && pathname.includes('public'))
@@ -78,6 +72,29 @@ export default function FormPage() {
           pageName: t('form:misc.submit_form'),
         };
 
+  const rightPanelObj =
+    authState?.user?.userType === 'admin'
+      ? [
+          {
+            mainElement: (
+              <Button
+                startIcon={!smMatches && <DownloadIcon />}
+                onClick={handleDownload}
+                variant="contained"
+                color="primary"
+                style={{ color: '#FFFFFF' }}
+                data-testid="download_form_btn"
+                disableElevation
+                disabled={categoriesData?.loading}
+              >
+                {smMatches ? <DownloadIcon /> : t('common:misc.download')}
+              </Button>
+            ),
+            key: 1,
+          },
+        ]
+      : [];
+
   if (isError) {
    return (
      <CenteredContent>
@@ -87,7 +104,11 @@ export default function FormPage() {
   }
 
   return (
-    <PageWrapper pageTitle={t('form:misc.submit_form')} breadCrumbObj={breadCrumbObj}>
+    <PageWrapper
+      pageTitle={t('form:misc.submit_form')}
+      breadCrumbObj={breadCrumbObj}
+      rightPanelObj={rightPanelObj}
+    >
       <br />
       {isFormFilled ? (
         <FormContextProvider>
