@@ -461,7 +461,7 @@ export default function TodoList({
     },
     {
       mainElement: (
-        <AccessCheck module="note" allowedPermissions={['can_view_create_task_button']}>
+        <AccessCheck module="note" allowedPermissions={['can_view_create_task_button']} show404ForUnauthorized={false}>
           {smMatches ? (
             <Button
               onClick={openModal}
