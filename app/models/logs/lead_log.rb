@@ -27,13 +27,15 @@ module Logs
               if: -> { log_type.eql?('investment') }
 
     def associate_investment_label
-      investment_title, color = label_fields
-      return if investment_title.nil?
+      deal_details_log = user.lead_logs.deal_details.ordered.first
+      return if deal_details_log.nil?
 
-      label = community.labels.find_or_create_by(short_desc: investment_title,
+      label_title = investment_status(deal_details_log)
+      color = label_title.eql?('On Target') ? GREEN_COLOR : RED_COLOR
+      label = community.labels.find_or_create_by(short_desc: label_title,
                                                  grouping_name: 'Investment')
       label.update(color: color)
-      destroy_existing_investment_user_label(investment_title)
+      destroy_existing_investment_user_label(label_title)
       generate_user_label(label)
     end
 
@@ -46,8 +48,8 @@ module Logs
     # @param [String]
     #
     # @return [UserLabel]
-    def destroy_existing_investment_user_label(investment_title)
-      existing_label_status = investment_title.eql?('On Target') ? 'Over Target' : 'On Target'
+    def destroy_existing_investment_user_label(label_title)
+      existing_label_status = label_title.eql?('On Target') ? 'Over Target' : 'On Target'
       existing_label = community.labels.find_by(short_desc: existing_label_status,
                                                 grouping_name: 'Investment')
       return if existing_label.nil?
@@ -56,17 +58,16 @@ module Logs
       user_label.destroy if user_label.present?
     end
 
-    # Returns label fields
-    # * To retrieve latest deal size and investment target, we are using ordered and first
-    #
-    # @return [Array]
-    def label_fields
-      deal_details_log = user.lead_logs.deal_details.ordered.first
-      return if deal_details_log.nil?
+    def investment_title
+      return unless log_type.eql?('deal_details')
 
+      investment_status(self)
+    end
+
+    def investment_status(deal_details_log)
       total_spent = user.lead_logs.investment.sum(:amount)
       investment_target = deal_details_log.investment_target
-      total_spent > investment_target ? ['Over Target', RED_COLOR] : ['On Target', GREEN_COLOR]
+      total_spent > investment_target ? 'Over Target' : 'On Target'
     end
   end
 end

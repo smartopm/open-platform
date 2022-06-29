@@ -75,7 +75,7 @@ module Types::Queries::Label
     deal_details_log = user.lead_logs.deal_details.ordered.first
     return if deal_details_log.nil?
 
-    investment_status(deal_details_log)
+    deal_details_log.investment_title
   end
 
   private

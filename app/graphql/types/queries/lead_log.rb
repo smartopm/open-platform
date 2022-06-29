@@ -173,7 +173,7 @@ module Types::Queries::LeadLog
     label = context[:site_community].labels.joins(:user_labels)
                                     .find_by(user_labels: { user_id: user_id },
                                              grouping_name: 'Investment',
-                                             short_desc: investment_status(lead_log))
+                                             short_desc: lead_log.investment_title)
     return if label.nil?
 
     {
@@ -184,11 +184,6 @@ module Types::Queries::LeadLog
     }
   end
   # rubocop:enable Metrics/MethodLength
-
-  def investment_status(lead_log, total_spent)
-    investment_target = (lead_log.investment_target * lead_log.deal_size) / 100
-    total_spent > investment_target ? 'Over Target' : 'On Target'
-  end
 
   def percentage_of_target_used(total_spent, lead_log)
     return 100 if lead_log.investment_target.to_d.zero?
