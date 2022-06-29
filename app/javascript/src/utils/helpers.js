@@ -681,7 +681,11 @@ export function savePdf(domElement, docName = 'download') {
       pdf.addImage(img, 'JPEG', 10, position + 10, imgWidth, imgHeight);
       heightLeft -= pageHeight;
     }
-    pdf.save(`${docName}.pdf`);
+    pdf.save(`${docName}.pdf`, { returnPromise: true }).then(
+      window.setTimeout(() => {
+        window.close();
+      }, 500)
+    );
   }).catch((error) => { return error });
 }
 
