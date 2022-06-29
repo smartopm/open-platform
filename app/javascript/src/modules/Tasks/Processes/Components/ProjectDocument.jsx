@@ -26,7 +26,7 @@ import {
   useParamsQuery,
   sanitizeText,
   replaceDocumentMentions,
-  removeNewLines
+  removeNewLines,
 } from '../../../../utils/helpers';
 import { Context as AuthStateContext } from '../../../../containers/Provider/AuthStateProvider';
 import { ActionDialog } from '../../../../components/Dialog';
@@ -64,7 +64,7 @@ export default function ProjectDocument({ attachments, loading, refetch, error, 
   const [loadComments, { loading: commentsLoading, data: documentCommentsData }] = useLazyQuery(
     DocumentCommentsQuery,
     {
-      fetchPolicy: 'cache-and-network'
+      fetchPolicy: 'cache-and-network',
     }
   );
 
@@ -196,16 +196,12 @@ export default function ProjectDocument({ attachments, loading, refetch, error, 
                 </Grid>
                 <Grid item md={2} xs={10}>
                   <Typography variant="caption" color="textSecondary">
-                    {t('document.uploaded_at')}
-                    :
-                    {dateToString(att.created_at)}
+                    {t('document.uploaded_at')}:{dateToString(att.created_at)}
                   </Typography>
                 </Grid>
                 <Grid item md={3} xs={10}>
                   <Typography variant="caption" color="textSecondary">
-                    {t('document.uploaded_by')}
-                    :
-                    {att.uploaded_by}
+                    {t('document.uploaded_by')}:{att.uploaded_by}
                   </Typography>
                 </Grid>
                 <Grid item md={1} xs={1} style={matches ? { margin: '-80px 15px 0 -15px' } : {}}>
@@ -252,7 +248,7 @@ export default function ProjectDocument({ attachments, loading, refetch, error, 
                       boxShadow: '0px 0px 0px 1px #E0E0E0',
                       maxHeight: '500px',
                       overflowY: 'auto',
-                      padding: '20px'
+                      padding: '20px',
                     }}
                   >
                     {commentsLoading && openDocuments[openDocuments.length - 1] === att.id ? (
@@ -285,24 +281,17 @@ export default function ProjectDocument({ attachments, loading, refetch, error, 
                                     style={{
                                       margin: '-2px 10px 0 0',
                                       width: '24px',
-                                      height: '24px'
+                                      height: '24px',
                                     }}
                                   />
                                   <Typography variant="caption">{comment.user.name}</Typography>
                                 </>
                               </Grid>
                               <Typography variant="caption">
-                                <span
-                                  // eslint-disable-next-line react/no-danger
-                                  dangerouslySetInnerHTML={{
-                                    __html: sanitizeText(
-                                      replaceDocumentMentions(
-                                        comment.body,
-                                        `/processes/${processId}/projects?tab=documents&project_id=${att.task_id}&comment_id=${comment.id}`
-                                      )
-                                    )
-                                  }}
-                                />
+                                {replaceDocumentMentions(
+                                  comment,
+                                  `/processes/${processId}/projects?tab=documents&project_id=${att.task_id}&comment_id=${comment.id}`
+                                )}
                               </Typography>
                             </Grid>
                             <Grid item md={4} xs={12}>
@@ -315,7 +304,7 @@ export default function ProjectDocument({ attachments, loading, refetch, error, 
                                   <span
                                     // eslint-disable-next-line react/no-danger
                                     dangerouslySetInnerHTML={{
-                                      __html: sanitizeText(removeNewLines(comment.note.body))
+                                      __html: sanitizeText(removeNewLines(comment.note.body)),
                                     }}
                                   />
                                 </Typography>
@@ -373,7 +362,7 @@ ProjectDocument.defaultProps = {
   refetch: () => {},
   error: null,
   attachments: [],
-  heading: true
+  heading: true,
 };
 
 ProjectDocument.propTypes = {
@@ -383,32 +372,32 @@ ProjectDocument.propTypes = {
       task_id: PropTypes.string,
       created_at: PropTypes.string,
       uploaded_by: PropTypes.string,
-      task_name: PropTypes.string
+      task_name: PropTypes.string,
     })
   ),
   loading: PropTypes.bool,
   refetch: PropTypes.func,
   error: PropTypes.string,
-  heading: PropTypes.bool
+  heading: PropTypes.bool,
 };
 
 const useStyles = makeStyles(() => ({
   children: {
     padding: '10px 0',
-    borderTop: '2px solid #F7F8F7'
+    borderTop: '2px solid #F7F8F7',
   },
   firstChild: {
     paddingTop: 'unset',
-    borderTop: 'unset'
+    borderTop: 'unset',
   },
   fileName: {
-    fontWeight: 600
+    fontWeight: 600,
   },
   documents: {
-    padding: '20px 0'
+    padding: '20px 0',
   },
   bgHighlight: {
     borderRadius: '5px',
-    backgroundColor: '#e9f3fc'
-  }
+    backgroundColor: '#e9f3fc',
+  },
 }));

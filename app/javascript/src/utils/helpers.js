@@ -1,4 +1,5 @@
 /* eslint-disable */
+import React from 'react';
 import dompurify from 'dompurify';
 import { useLocation } from 'react-router';
 import { dateToString } from '../components/DateContainer';
@@ -643,15 +644,31 @@ export function decodeHtmlEntity(str) {
   });
 };
 
-export function replaceDocumentMentions(text, path) {
+export function replaceDocumentMentions(comment, path, onDocClick) {
+  const text = comment?.body;
   if (!text) return;
-  if (!path) return text;
+  if (!path && !onDocClick) return text;
 
-  const updatedText = text.replace(/\###(.*?)\###/g, (m) => {
-    return `<a href='${path}&document_id=${m.split("__")[1]}'>${m.split("__")[2]}</a>`
-  });
+  const formattedText = text
+    .trim()
+    .split(/(###.*?###)/)
+    .map((word, index) => {
+      if (/\###(.*?)\###/.test(word)) {
+        const documentId = word.split('__')[1];
+        const linkOptions = { key: index, href: path ? `${path}&document_id=${documentId}` : '' };
+        if (onDocClick) {
+          linkOptions['onClick'] = e => {
+            e.preventDefault();
+            onDocClick(comment.id, documentId);
+          };
+        }
 
-  return updatedText;
+        return React.createElement('a', linkOptions, word.split('__')[2]);
+      }
+      return React.createElement('span', { key: index }, word);
+    });
+
+  return React.createElement('div', {}, formattedText);
 }
 
 /**

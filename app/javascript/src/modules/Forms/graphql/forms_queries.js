@@ -165,6 +165,7 @@ export const SubmittedFormCommentsQuery = gql`
       replyRequired
       groupingId
       taggedDocuments
+      taggedAttachments
     }
   }
 `;

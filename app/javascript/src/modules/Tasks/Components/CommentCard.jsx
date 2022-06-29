@@ -8,7 +8,7 @@ import {
   ListItemText,
   Menu,
   MenuItem,
-  Button
+  Button,
 } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import Avatar from '@mui/material/Avatar';
@@ -25,12 +25,7 @@ import { dateToString } from '../../../components/DateContainer';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
 import { groupComments, lastRepliedComment, isDiscussionResolved } from '../Processes/utils';
 import CommentTextField from '../../../shared/CommentTextField';
-import {
-  useParamsQuery,
-  objectAccessor,
-  replaceDocumentMentions,
-  sanitizeText
-} from '../../../utils/helpers';
+import { useParamsQuery, objectAccessor, replaceDocumentMentions } from '../../../utils/helpers';
 import { TaskComment } from '../../../graphql/mutations';
 import { ResolveComments } from '../graphql/task_mutation';
 
@@ -39,7 +34,8 @@ export default function CommentCard({
   refetch,
   commentsRefetch,
   forAccordionSection,
-  mentionsData
+  mentionsData,
+  taggedDocOnClick,
 }) {
   const [open, setOpen] = useState(false);
   const [editId, setEditId] = useState(null);
@@ -98,7 +94,7 @@ export default function CommentCard({
   function scrollDiscussionIntoView(groupingId) {
     document.getElementById(groupingId)?.scrollIntoView({
       behavior: 'smooth',
-      block: 'center'
+      block: 'center',
     });
   }
 
@@ -149,8 +145,8 @@ export default function CommentCard({
         replyRequired: true,
         replyFromId: lastRepliedComment(groupedComments, groupingId).user.id,
         taggedDocuments: mentionedDocuments,
-        groupingId
-      }
+        groupingId,
+      },
     })
       .then(() => {
         setReplyValue('');
@@ -179,8 +175,8 @@ export default function CommentCard({
     resolveComments({
       variables: {
         noteId: projectId,
-        groupingId
-      }
+        groupingId,
+      },
     })
       .then(() => {
         setReplyValue('');
@@ -190,6 +186,12 @@ export default function CommentCard({
       .catch(err => {
         setErrorMessage(err);
       });
+  }
+
+  function documentRedirectPath(commentId) {
+    if (processId && projectId) {
+      return `/processes/${processId}/projects/${projectId}?tab=documents&project_id=${projectId}&comment_id=${commentId}`;
+    }
   }
 
   return (
@@ -234,7 +236,7 @@ export default function CommentCard({
                   forAccordionSection && highlightDiscussion && replyingDiscussion === groupingId
                     ? '#e9f3fc'
                     : ''
-                }`
+                }`,
               }}
             >
               {forAccordionSection && index === 0 && <hr />}
@@ -247,7 +249,7 @@ export default function CommentCard({
                     <ListItem style={{ marginBottom: '20px' }}>
                       <ListItemText
                         disableTypography
-                        secondary={(
+                        secondary={
                           <>
                             <div style={{ display: 'flex' }}>
                               <Avatar
@@ -260,7 +262,7 @@ export default function CommentCard({
                                 style={{
                                   color: '#575757',
                                   overflowWrap: 'anywhere',
-                                  marginTop: '-20px'
+                                  marginTop: '-20px',
                                 }}
                               >
                                 <Typography
@@ -282,7 +284,7 @@ export default function CommentCard({
                                       textDecoration: `${
                                         !forAccordionSection ? 'underline' : 'none'
                                       }`,
-                                      cursor: `${!forAccordionSection ? 'pointer' : ''}`
+                                      cursor: `${!forAccordionSection ? 'pointer' : ''}`,
                                     }}
                                     onClick={() =>
                                       !forAccordionSection
@@ -300,7 +302,7 @@ export default function CommentCard({
                                     variant="body2"
                                     style={{
                                       marginLeft: '15px',
-                                      fontSize: '12px'
+                                      fontSize: '12px',
                                     }}
                                   >
                                     {`${com.replyFrom.name} ${t('task.replied')} ${dateToString(
@@ -314,22 +316,16 @@ export default function CommentCard({
                                 </Typography>
                                 <br />
                                 <Typography component="span" variant="body2">
-                                  <span
-                                    // eslint-disable-next-line react/no-danger
-                                    dangerouslySetInnerHTML={{
-                                      __html: sanitizeText(
-                                        replaceDocumentMentions(
-                                          com.body,
-                                          `/processes/${processId}/projects/${projectId}?tab=documents&project_id=${projectId}&comment_id=${com.id}`
-                                        )
-                                      )
-                                    }}
-                                  />
+                                  {replaceDocumentMentions(
+                                    com,
+                                    documentRedirectPath(com.id),
+                                    taggedDocOnClick
+                                  )}
                                 </Typography>
                               </div>
                             </div>
                           </>
-                        )}
+                        }
                       />
                       {(authState.user.userType === 'admin' ||
                         com.user.id === authState.user.id) && (
@@ -464,27 +460,29 @@ CommentCard.defaultProps = {
   comments: [],
   commentsRefetch: () => {},
   forAccordionSection: null,
-  mentionsData: []
+  mentionsData: [],
+  taggedDocOnClick: null,
 };
 CommentCard.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
   comments: PropTypes.array,
   refetch: PropTypes.func.isRequired,
   commentsRefetch: PropTypes.func,
+  taggedDocOnClick: PropTypes.func,
   forAccordionSection: PropTypes.bool,
   mentionsData: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string,
-      display: PropTypes.string
+      display: PropTypes.string,
     })
-  )
+  ),
 };
 
 const useStyles = makeStyles(() => ({
   kabab: {
     '@media (min-device-width: 375px) and (max-device-height: 900px)': {
-      top: '40%'
+      top: '40%',
     },
-    marginTop: '-20px'
-  }
+    marginTop: '-20px',
+  },
 }));
