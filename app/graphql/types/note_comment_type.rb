@@ -21,7 +21,7 @@ module Types
     field :tagged_attachments, [GraphQL::Types::JSON], null: true
 
     def tagged_attachments
-      return unless object.tagged_documents.present?
+      return if object.tagged_documents.blank?
 
       urls = []
       ActiveStorage::Attachment.where(id: object.tagged_documents).each do |doc|
