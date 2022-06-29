@@ -70,11 +70,14 @@ export default function FormPage() {
     return () => window.clearTimeout(timer);
   }, [download, categoriesData?.loading]);
 
-  const breadCrumbObj = {
-    linkText: t('common:misc.forms'),
-    linkHref: '/forms',
-    pageName: t('form:misc.submit_form')
-  };
+  const breadCrumbObj =
+    (authState?.user?.userType === 'public_user' && pathname.includes('public'))
+      ? {}
+      : {
+          linkText: t('common:misc.forms'),
+          linkHref: '/forms',
+          pageName: t('form:misc.submit_form'),
+        };
 
   if (isError) {
    return (
