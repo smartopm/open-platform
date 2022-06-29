@@ -2,17 +2,39 @@ import React, { useState } from 'react';
 import Grid from '@mui/material/Grid';
 import { useQuery } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
+import { Button } from '@mui/material';
 import AmenityItem from './AmenityItem';
 import SpeedDialButton from '../../../shared/buttons/SpeedDial';
 import AmenityForm from './AmenityForm';
 import { AmenitiesQuery } from '../graphql/amenity_queries';
 import { Spinner } from '../../../shared/Loading';
 import PageWrapper from '../../../shared/PageWrapper';
+import CenteredContent from '../../../shared/CenteredContent';
+
+export async function fetchMoreRecords(fetcher, dataKey, variables) {
+  fetcher({
+    variables: { ...variables },
+    updateQuery: (prev, { fetchMoreResult }) => {
+      if (!fetchMoreResult) return prev;
+      // eslint-disable-next-line security/detect-object-injection
+      return { ...prev, [dataKey]: [...prev[dataKey], ...fetchMoreResult[dataKey]] };
+    }
+  });
+}
 
 export default function AmenityList() {
   const [open, setOpen] = useState(false);
-  const { refetch, data, loading } = useQuery(AmenitiesQuery);
-  const { t } = useTranslation(['common', 'amenity', 'form']);
+  const [isLoading, setIsLoading] = useState(false)
+  const { refetch, data, loading, fetchMore } = useQuery(AmenitiesQuery, {
+    variables: { offset: 0 }
+  });
+  const { t } = useTranslation(['common', 'amenity', 'form', 'search']);
+
+  function loadMore() {
+    setIsLoading(true);
+    const variables = { offset: data.amenities.length };
+    fetchMoreRecords(fetchMore, 'amenities', variables).then(() => setIsLoading(false));
+  }
 
   return (
     <PageWrapper pageTitle={t('common:misc.amenity_plural')}>
@@ -39,6 +61,17 @@ export default function AmenityList() {
           </Grid>
         </Grid>
       </Grid>
+      <br />
+      <CenteredContent>
+        <Button
+          variant="outlined"
+          onClick={loadMore}
+          startIcon={isLoading && <Spinner />}
+          disabled={isLoading}
+        >
+          {t('search:search.load_more')}
+        </Button>
+      </CenteredContent>
     </PageWrapper>
   );
 }

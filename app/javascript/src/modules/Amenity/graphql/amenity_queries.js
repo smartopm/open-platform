@@ -2,8 +2,8 @@
 import gql from 'graphql-tag';
 
 export const AmenitiesQuery = gql`
-  query amenities {
-    amenities {
+  query amenities($offset: Int) {
+    amenities(offset: $offset) {
       id
       name
       description

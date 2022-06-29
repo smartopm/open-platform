@@ -8,12 +8,16 @@ module Types::Queries::Amenity
     # get list of amenities
     field :amenities, [Types::AmenityType], null: true do
       description 'List of all amenities'
+      argument :offset, Integer, required: false
+      argument :limit, Integer, required: false
     end
   end
 
-  def amenities
+  def amenities(offset: 0, limit: 2)
     validate_authorization(:amenity, :can_access_amenities)
 
     context[:site_community].amenities
+                            .limit(limit)
+                            .offset(offset)
   end
 end
