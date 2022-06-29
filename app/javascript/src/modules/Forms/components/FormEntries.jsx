@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import { Grid, Typography, Avatar, IconButton } from '@mui/material';
+import { Grid, Typography, Avatar } from '@mui/material';
 import { useQuery } from 'react-apollo';
 import PropTypes from 'prop-types';
 import { useHistory } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import DownloadIcon from '@mui/icons-material/Download';
 import { FormEntriesQuery } from '../graphql/forms_queries';
 
 import SearchInput from '../../../shared/search/SearchInput';
@@ -37,8 +36,7 @@ export default function FormEntries({ formId }) {
     { title: 'Date of Submission', col: 1, value: t('misc.submission_date') },
     { title: 'Version Number', col: 1, value: t('misc.version_number') },
     { title: 'Submitted by', col: 1, value: t('misc.submitted_by') },
-    { title: 'Status', col: 1, value: t('misc.status') },
-    { title: 'Menu', col: 1, value: 'Menu' }
+    { title: 'Status', col: 1, value: t('misc.status') }
   ];
 
   function paginate(action) {
@@ -53,12 +51,6 @@ export default function FormEntries({ formId }) {
         `/form/${formId}/${data?.formEntries?.formName}/entries?page=${pageNumber + limit}`
       );
     }
-  }
-
-  function handleDownload(event, user, id) {
-    event.stopPropagation();
-    // eslint-disable-next-line security/detect-non-literal-fs-filename
-    window.open(`/user_form/${user.userId}/${user.id}?formId=${id}&download=true`);
   }
 
   if (loading) return <Spinner />;
@@ -86,7 +78,7 @@ export default function FormEntries({ formId }) {
           <DataList
             key={formUser.id}
             keys={entriesHeaders}
-            data={renderFormEntry(formUser, formId, handleDownload)}
+            data={renderFormEntry(formUser)}
             hasHeader={false}
             clickable
             handleClick={() => {
@@ -110,7 +102,7 @@ export default function FormEntries({ formId }) {
   );
 }
 
-export function renderFormEntry(formUser, formId, handleDownload) {
+export function renderFormEntry(formUser) {
   return [
     {
       'Date of Submission': (
@@ -139,13 +131,6 @@ export function renderFormEntry(formUser, formId, handleDownload) {
       Status: (
         <Grid item xs={12} md={2} data-testid="status">
           <Text content={formUser.status} />
-        </Grid>
-      ),
-      Menu: (
-        <Grid item xs={12} md={2} align="center" data-testid="download">
-          <IconButton onClick={event => handleDownload(event, formUser, formId)}>
-            <DownloadIcon />
-          </IconButton>
         </Grid>
       )
     }
