@@ -23,22 +23,22 @@ export default function LabelList({ userType }) {
   const [open, setOpen] = useState(false);
   const { t } = useTranslation(['label', 'common']);
   const { data, error, loading, refetch } = useQuery(LabelsQuery, {
-    variables: { limit, offset }
+    variables: { limit, offset },
   });
 
   const labelsHeader = [
     {
       title: 'Labels',
       value: t('common:table_headers.labels'),
-      col: 2
+      col: 2,
     },
     { title: 'No of Users', value: t('common:table_headers.labels_total_no_of_users'), col: 2 },
     {
       title: 'Description',
       value: t('common:table_headers.labels_description'),
-      col: 2
+      col: 2,
     },
-    { title: 'Menu', value: t('common:table_headers.menu'), col: 1 }
+    { title: 'Menu', value: t('common:table_headers.menu'), col: 1 },
   ];
 
   function paginate(action) {
@@ -50,55 +50,70 @@ export default function LabelList({ userType }) {
     }
   }
 
-  if (loading) return <Spinner />;
   if (error) return <CenteredContent>{formatError(error.message)}</CenteredContent>;
 
   return (
     <PageWrapper pageTitle={t('common:table_headers.labels')}>
-      <div className={classes.labelButton}>
-        <ButtonComponent
-          variant="contained"
-          color="primary"
-          buttonText={t('label.create_label')}
-          handleClick={() => setOpen(true)}
-          size="large"
-          data-testid="button"
-        />
-        <EditModal open={open} handleClose={() => setOpen(false)} refetch={refetch} type="new" />
-      </div>
-      <div className={classes.container}>
-        {!matches && <ListHeader headers={labelsHeader} />}
-        {data?.labels.map(label => (
-          <LabelItem
-            key={label.id}
-            label={label}
-            userType={userType}
-            userCount={label.userCount}
-            refetch={refetch}
-          />
-        ))}
-      </div>
-      <CenteredContent>
-        <Paginate offSet={offset} limit={limit} active={offset >= 1} handlePageChange={paginate} />
-      </CenteredContent>
+      {loading ? (
+        <Spinner />
+      ) : (
+        <>
+          <div className={classes.labelButton}>
+            <ButtonComponent
+              variant="contained"
+              color="primary"
+              buttonText={t('label.create_label')}
+              handleClick={() => setOpen(true)}
+              size="large"
+              data-testid="button"
+            />
+            <EditModal
+              open={open}
+              handleClose={() => setOpen(false)}
+              refetch={refetch}
+              type="new"
+            />
+          </div>
+          <div className={classes.container}>
+            {!matches && <ListHeader headers={labelsHeader} />}
+            {data?.labels.map(label => (
+              <LabelItem
+                key={label.id}
+                label={label}
+                userType={userType}
+                userCount={label.userCount}
+                refetch={refetch}
+              />
+            ))}
+          </div>
+          <CenteredContent>
+            <Paginate
+              offSet={offset}
+              limit={limit}
+              active={offset >= 1}
+              handlePageChange={paginate}
+            />
+          </CenteredContent>
+        </>
+      )}
     </PageWrapper>
   );
 }
 
 LabelList.propTypes = {
-  userType: PropTypes.string.isRequired
+  userType: PropTypes.string.isRequired,
 };
 const useStyles = makeStyles(() => ({
   labelTitle: {
-    marginTop: '5%'
+    marginTop: '5%',
   },
   label: {
-    marginLeft: 20
+    marginLeft: 20,
   },
   labelButton: {
-    textAlign: 'right'
+    textAlign: 'right',
   },
   container: {
-    marginTop: '20px'
-  }
+    marginTop: '20px',
+  },
 }));

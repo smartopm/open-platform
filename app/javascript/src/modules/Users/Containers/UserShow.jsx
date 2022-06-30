@@ -5,10 +5,11 @@ import { useQuery, useMutation } from 'react-apollo';
 import ReactGA from 'react-ga';
 import UserInformation from '../Components/UserInformation';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
-import Loading from '../../../shared/Loading';
+import { Spinner } from '../../../shared/Loading';
 import { UserQuery, UserAccountQuery } from '../../../graphql/queries';
 import { AddActivityLog, SendOneTimePasscode } from '../../../graphql/mutations';
 import ErrorPage from '../../../components/Error';
+import CenteredContent from '../../../shared/CenteredContent';
 
 export default function UserShow({ history }) {
   const { id, dg, tm } = useParams(); // get timestamp and dg
@@ -41,7 +42,7 @@ export default function UserShow({ history }) {
 
   const [sendOneTimePasscode] = useMutation(SendOneTimePasscode);
 
-  if (loading || entry.loading) return <Loading />;
+  if (loading || entry.loading) return <CenteredContent><Spinner /></CenteredContent>;
   if (entry.data) return <Redirect to="/" />;
   if (error && !error.message.includes('permission')) {
     return <ErrorPage title={error.message || error} />; // error could be a string sometimes

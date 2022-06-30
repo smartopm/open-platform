@@ -10,14 +10,14 @@ import FormItem from '../../Forms/UserForms/Components/FormUserItem';
 import { FormsQuery, SubmittedFormCommentsQuery } from '../../Forms/graphql/forms_queries';
 import CenteredContent from '../../../shared/CenteredContent';
 import SelectButton from '../../../shared/buttons/SelectButton';
-import { Spinner } from '../../../shared/Loading';
 import { formatError, useParamsQuery } from '../../../utils/helpers';
 import PageWrapper from '../../../shared/PageWrapper';
+import { Spinner } from '../../../shared/Loading';
 
 export default function UserFilledForms({ userFormsFilled, userId, currentUser }) {
   const { data, error, loading } = useQuery(FormsQuery, {
     variables: { userId: userId !== currentUser ? userId : currentUser },
-    fetchPolicy: 'network-only'
+    fetchPolicy: 'network-only',
   });
 
   const history = useHistory();
@@ -28,7 +28,7 @@ export default function UserFilledForms({ userFormsFilled, userId, currentUser }
   const [open, setOpen] = useState(false);
   const [currentFormUserId, setCurrentFormUserId] = useState(null);
   const [fetchComments, formData] = useLazyQuery(SubmittedFormCommentsQuery, {
-    fetchPolicy: 'network-only'
+    fetchPolicy: 'network-only',
   });
 
   const mobile = useMediaQuery('(max-width:800px)');
@@ -46,7 +46,7 @@ export default function UserFilledForms({ userFormsFilled, userId, currentUser }
       userId !== currentUser
         ? history.push(`/form/${form.id}/private?userId=${userId}`)
         : history.push(`/form/${form.id}/private`),
-    show: true
+    show: true,
   }));
 
   function handleShowComments(event, formId) {
@@ -73,13 +73,12 @@ export default function UserFilledForms({ userFormsFilled, userId, currentUser }
           style={{ marginLeft: mobile && '-40px' }}
         />
       ),
-      key: 1
-    }
+      key: 1,
+    },
   ];
 
   const isProfileForms = tab === 'Forms';
 
-  if (loading) return <Spinner />;
   if (error) return <CenteredContent>{formatError(error.message)}</CenteredContent>;
 
   return (
@@ -88,67 +87,72 @@ export default function UserFilledForms({ userFormsFilled, userId, currentUser }
       rightPanelObj={rightPanelObj}
       hideWrapper={isProfileForms}
     >
-      <div style={isProfileForms && !mobile ? { padding: '0 15%' } : {}}>
-        {!userFormsFilled ||
-          (!userFormsFilled.length && (
-            <>
-              <Grid
-                container
-                direction="row"
-                justifyContent="center"
-                alignItems="center"
-                style={{ marginTop: 20 }}
-              >
-                {t('misc.no_forms')}
+      {loading ? (
+        <Spinner />
+      ) : (
+        <div style={isProfileForms && !mobile ? { padding: '0 15%' } : {}}>
+          {!userFormsFilled ||
+            (!userFormsFilled.length && (
+              <>
+                <Grid
+                  container
+                  direction="row"
+                  justifyContent="center"
+                  alignItems="center"
+                  style={{ marginTop: 20 }}
+                >
+                  {t('misc.no_forms')}
+                </Grid>
+              </>
+            ))}
+
+          {isProfileForms && (
+            <Grid container style={{ marginBottom: '50px' }}>
+              <Grid item lg={4} md={4} sm={6} xs={6}>
+                <Typography variant="h6">{t('menu.form', { count: 0 })}</Typography>
               </Grid>
-            </>
-          ))}
-
-        {isProfileForms && (
-          <Grid container style={{ marginBottom: '50px' }}>
-            <Grid item lg={4} md={4} sm={6} xs={6}>
-              <Typography variant="h6">{t('menu.form', { count: 0 })}</Typography>
+              <Grid item lg={8} md={8} sm={6} xs={6} style={{ textAlign: 'right' }}>
+                <SelectButton
+                  options={menuOptions}
+                  open={open}
+                  anchorEl={anchorEl}
+                  handleClose={handleClose}
+                  handleClick={handleSelectButtonClick}
+                  defaultButtonText={t('common:menu.submit_form')}
+                  style={{ marginLeft: mobile && '-40px', zIndex: 1 }}
+                />
+              </Grid>
             </Grid>
-            <Grid item lg={8} md={8} sm={6} xs={6} style={{ textAlign: 'right' }}>
-              <SelectButton
-                options={menuOptions}
-                open={open}
-                anchorEl={anchorEl}
-                handleClose={handleClose}
-                handleClick={handleSelectButtonClick}
-                defaultButtonText={t('common:menu.submit_form')}
-                style={{ marginLeft: mobile && '-40px', zIndex: 1 }}
-              />
-            </Grid>
-          </Grid>
-        )}
+          )}
 
-        <div>
-          {userFormsFilled?.length >= 1 &&
-            userFormsFilled.map(
-              userForm =>
-                (userForm.status !== 'draft' || userForm.userId === currentUser) && (userForm.form) && (
-                  <Fragment key={userForm.id}>
-                    <FormItem
-                      formUser={userForm}
-                      handleShowComments={handleShowComments}
-                      currentFormUserId={currentFormUserId}
-                      formData={formData}
-                      userId={userId}
-                      t={t}
-                    />
-                    <Divider />
-                  </Fragment>
-                )
-            )}
+          <div>
+            {userFormsFilled?.length >= 1 &&
+              userFormsFilled.map(
+                userForm =>
+                  (userForm.status !== 'draft' || userForm.userId === currentUser) &&
+                  userForm.form && (
+                    <Fragment key={userForm.id}>
+                      <FormItem
+                        formUser={userForm}
+                        handleShowComments={handleShowComments}
+                        currentFormUserId={currentFormUserId}
+                        formData={formData}
+                        userId={userId}
+                        t={t}
+                      />
+                      <Divider />
+                    </Fragment>
+                  )
+              )}
+          </div>
         </div>
-      </div>
+      )}
     </PageWrapper>
   );
 }
 
 UserFilledForms.defaultProps = {
-  userFormsFilled: []
+  userFormsFilled: [],
 };
 
 UserFilledForms.propTypes = {
@@ -156,10 +160,10 @@ UserFilledForms.propTypes = {
     PropTypes.shape({
       form: PropTypes.shape({
         id: PropTypes.string,
-        name: PropTypes.string
-      })
+        name: PropTypes.string,
+      }),
     })
   ),
   userId: PropTypes.string.isRequired,
-  currentUser: PropTypes.string.isRequired
+  currentUser: PropTypes.string.isRequired,
 };

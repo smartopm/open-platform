@@ -9,7 +9,6 @@ import AppBar from '@mui/material/AppBar';
 import Divider from '@mui/material/Divider';
 import Avatar from '../components/Avatar';
 import UserDetail from '../modules/Users/Components/UserProfileDetail';
-import { Spinner } from './Loading';
 
 export default function PageWrapper({
   children,
@@ -20,7 +19,6 @@ export default function PageWrapper({
   avatarObj,
   rightPanelObj,
   hideWrapper,
-  loading,
 }) {
   const matches = useMediaQuery('(max-width:900px)');
   const classes = useStyles();
@@ -110,11 +108,11 @@ export default function PageWrapper({
         </AppBar>
         {oneCol ? (
           <Container maxWidth="md" className={matches ? classes.children : classes.childrenBig}>
-            {loading ? <Spinner /> : children}
+            {children}
           </Container>
         ) : (
           <div className={matches ? classes.children : classes.childrenBig}>
-            {loading ? <Spinner /> : children}
+            {children}
           </div>
         )}
       </Grid>
@@ -161,7 +159,6 @@ PageWrapper.defaultProps = {
   avatarObj: undefined,
   rightPanelObj: undefined,
   hideWrapper: false,
-  loading: false,
 };
 
 PageWrapper.propTypes = {
@@ -193,5 +190,4 @@ PageWrapper.propTypes = {
     })
   ),
   hideWrapper: PropTypes.bool,
-  loading: PropTypes.bool,
 };
