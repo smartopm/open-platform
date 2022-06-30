@@ -10,7 +10,7 @@ import { EmailTemplatesQuery } from '../../Emails/graphql/email_queries';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 // TODO(Nurudeen): Check why this requires more time
-jest.setTimeout(14000);
+jest.setTimeout(15000);
 describe('Community settings page', () => {
   it('should have input field and a remove button', async () => {
     const data = {

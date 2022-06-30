@@ -4,6 +4,8 @@ import { fireEvent, render } from '@testing-library/react';
 import MockedThemeProvider from '../../__mocks__/mock_theme';
 import GuestTime from '../Components/GuestTime';
 
+jest.mock('@mui/lab/MobileDatePicker', () => jest.requireActual('@mui/lab/DesktopDatePicker'));
+jest.mock('@mui/lab/MobileTimePicker', () => jest.requireActual('@mui/lab/DesktopTimePicker'));
 describe('Should render Guest Time Component', () => {
   it('should render proper data', async () => {
     const change = jest.fn();

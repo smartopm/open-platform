@@ -69,6 +69,7 @@ export default function DatePickerDialog({
         clearable
         id={`date-picker-dialog-${label}`}
         label={label}
+        disableMaskedInput={true}
         inputFormat="yyyy-MM-dd"
         inputProps={inputProps}
         value={selectedDate}
