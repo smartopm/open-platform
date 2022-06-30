@@ -141,12 +141,13 @@ describe('Custom Forms', () => {
     cy.contains('Cypress Form');
 
     // To Download a form -
-    // Go to Permits & Request Forms
     cy.get('[data-testid=community_form]').click();
     cy.get('[data-testid=search]').should('exist');
 
      // Click the first download button - should be clickable
-    cy.get('[data-testid=download]').click();
-    cy.get('@redirect').should('be.called');
+    cy.get('[data-testid=status]').click();
+    cy.get('[data-testid=download_form_btn]').should('exist');
+    cy.get('[data-testid=download_form_btn]').click();
+    cy.get('[data-testid=download_form_btn]').should('be.disabled');
   });
 });
