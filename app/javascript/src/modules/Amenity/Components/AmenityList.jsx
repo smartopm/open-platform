@@ -48,8 +48,8 @@ export default function AmenityList() {
         t={t}
       />
       <Grid container direction="row">
-        <Grid item md={11} xs={10} />
-        <Grid item md={1} xs={2}>
+        <Grid item xs={10} />
+        <Grid item xs={2} style={{ marginTop: -45 }}>
           <SpeedDialButton handleAction={handleAddAmenity} />
         </Grid>
       </Grid>
