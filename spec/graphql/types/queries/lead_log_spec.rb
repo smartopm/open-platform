@@ -288,7 +288,7 @@ RSpec.describe Types::Queries::LeadLog do
           expect(result['errors']).to be nil
           investment_stats = result.dig('data', 'investmentStats')
           expect(investment_stats['total_spent']).to eql 2400.0
-          expect(investment_stats['percentage_of_target_used']).to eql 0.02
+          expect(investment_stats['percentage_of_target_used']).to eql 15.99
           expect(investment_stats.dig('investment_label', 'short_desc')).to eql 'On Target'
           expect(investment_stats.dig('investment_label', 'grouping_name')).to eql 'Investment'
         end
