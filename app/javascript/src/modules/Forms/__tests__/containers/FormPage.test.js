@@ -103,6 +103,7 @@ describe('FormPage Component', () => {
   });
 
   it('renders download button for admin users', async () => {
+    authState.user.userType = 'admin';
     const container = render(
       <Context.Provider value={authState}>
         <MockedProvider mocks={[formMock]} addTypename={false}>
@@ -116,7 +117,7 @@ describe('FormPage Component', () => {
     );
 
     await waitFor(() => {
-      console.log(container.debug());
+      expect(container.queryByText('common:misc.download')).toBeInTheDocument();
       expect(container.queryByTestId('download_form_btn')).toBeInTheDocument();
     });
   });
