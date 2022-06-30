@@ -989,9 +989,7 @@ export default function CommunitySettings({ data, refetch }) {
               value={behindTemplate}
               onChange={handleTemplates}
               name="behindTemplate"
-              inputProps={{
-                'data-testid': 'payment_reminder_template_behind'
-              }}
+              data-testid='payment_reminder_template_behind'
               style={{ width: '200px', marginLeft: '40px' }}
               select
             >
@@ -1026,9 +1024,7 @@ export default function CommunitySettings({ data, refetch }) {
               value={upcomingTemplate}
               onChange={handleTemplates}
               name="upcomingTemplate"
-              inputProps={{
-                'data-testid': 'payment_reminder_template_upcoming'
-              }}
+              data-testid='payment_reminder_template_upcoming'
               style={{ width: '200px', marginLeft: '40px' }}
               select
             >
