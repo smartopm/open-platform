@@ -9,7 +9,8 @@ describe('Amenity List', () => {
   it('should render the Amenity List', async () => {
     const mock = {
       request: {
-        query: AmenitiesQuery
+        query: AmenitiesQuery,
+        variables: { offset: 0 }
       },
       result: {
         data: {
