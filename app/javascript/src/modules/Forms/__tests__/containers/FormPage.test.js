@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, waitFor } from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 
 import RouteData, { MemoryRouter } from 'react-router';
 import { MockedProvider } from '@apollo/react-testing';
@@ -119,6 +119,10 @@ describe('FormPage Component', () => {
     await waitFor(() => {
       expect(container.queryByText('common:misc.download')).toBeInTheDocument();
       expect(container.queryByTestId('download_form_btn')).toBeInTheDocument();
+      expect(container.queryByTestId('DownloadIcon')).toBeInTheDocument();
+
+      fireEvent.click(container.queryByTestId('download_form_btn'));
+      expect(container.queryByTestId('download_form_btn')).toBeDisabled();
     });
   });
 
