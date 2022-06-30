@@ -5,15 +5,16 @@ import CardWrapper from '../../../shared/CardWrapper';
 
 export default function AmenityItem({ amenity, translate, handleEditAmenity }) {
   function handleReserve(reserveLink) {
-     // eslint-disable-next-line security/detect-non-literal-fs-filename
-     return window.open(reserveLink, '_blank');
+    // eslint-disable-next-line security/detect-non-literal-fs-filename
+    return window.open(reserveLink, '_blank');
   }
-    const amenityMenu = [
-      {
-        content: translate('menu.edit'),
-        handleClick: () => handleEditAmenity(amenity)
-      }
-    ];
+  const amenityMenu = [
+    {
+      content: translate('menu.edit'),
+      handleClick: () => handleEditAmenity(amenity),
+      isAdmin: true
+    }
+  ];
 
   return (
     <CardWrapper
@@ -52,5 +53,5 @@ AmenityItem.propTypes = {
     invitationLink: PropTypes.string
   }).isRequired,
   translate: PropTypes.func.isRequired,
-  handleEditAmenity: PropTypes.func.isRequired,
+  handleEditAmenity: PropTypes.func.isRequired
 };
