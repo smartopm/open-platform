@@ -12,7 +12,7 @@ import CustomSkeleton from '../../../shared/CustomSkeleton';
 export default function DrawerContent({ userId, setOpenDrawer }) {
   const { t } = useTranslation('notification');
   const { data, loading, error, refetch } = useQuery(UserNotifications, {
-    fetchPolicy: 'cache-and-network',
+    fetchPolicy: 'network-only',
     errorPolicy: 'all'
   });
 
