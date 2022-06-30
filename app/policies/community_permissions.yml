@@ -771,10 +771,10 @@ DoubleGDP:
         - can_see_menu_item
         - can_access_own_forms
         - can_fetch_form_task_comments
-  transaction:
-    permissions:
-      - can_make_payment
-      - can_see_menu_item
+    transaction:
+      permissions:
+        - can_make_payment
+        - can_see_menu_item
 Enyimba:
   marketing_admin:
     note:

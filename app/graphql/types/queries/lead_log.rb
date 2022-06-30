@@ -25,26 +25,8 @@ module Types::Queries::LeadLog
       description 'Get lead investment stats'
       argument :user_id, GraphQL::Types::ID, required: true
     end
-
-    field :deal_details, [Types::LeadLogType], null: true do
-      description 'Get lead deal details'
-      argument :user_id, GraphQL::Types::ID, required: true
-      argument :limit, Integer, required: false
-      argument :offset, Integer, required: false
-    end
-
-    field :lead_investments, [Types::LeadLogType], null: true do
-      description 'Get lead investments'
-      argument :user_id, GraphQL::Types::ID, required: true
-      argument :limit, Integer, required: false
-      argument :offset, Integer, required: false
-    end
-
-    field :investment_stats, GraphQL::Types::JSON, null: true do
-      description 'Get lead investment stats'
-      argument :user_id, GraphQL::Types::ID, required: true
-    end
   end
+
   def investment_stats(user_id:)
     lead_log = lead_logs(log_type: 'deal_details', user_id: user_id, limit: 1).first
     return {} if lead_log.nil?
@@ -69,8 +51,8 @@ module Types::Queries::LeadLog
                             .limit(limit)
   end
 
-  def signed_deals(user_id:, offset: 0, limit: 3)
-    validate_authorization(:lead_log, :can_fetch_lead_logs)
+  def validate_log_type(log_type)
+    return if Logs::LeadLog.log_types.keys.include?(log_type)
 
     raise GraphQL::ExecutionError, I18n.t('errors.lead_log.invalid_log_type')
   end
@@ -190,33 +172,12 @@ module Types::Queries::LeadLog
     Time.zone.now.beginning_of_year..Time.zone.now.end_of_year
   end
 
-  def lead_investments(user_id:, offset: 0, limit: 3)
-    validate_authorization(:lead_log, :can_fetch_lead_logs)
-
-    context[:site_community].lead_logs.where(user_id: user_id)
-                            .investment
-                            .offset(offset)
-                            .limit(limit)
-                            .ordered
-  end
-
-  def investment_stats(user_id:)
-    lead_log = deal_details(user_id: user_id, limit: 1).first
-    total_spent = context[:site_community].lead_logs.investment.where(user_id: user_id).sum(:amount)
-
-    {
-      total_spent: total_spent,
-      percentage_of_target_used: percentage_of_target_used(total_spent, lead_log),
-      investment_label: investment_label(user_id, lead_log, total_spent),
-    }
-  end
-
   # rubocop:disable Metrics/MethodLength
-  def investment_label(user_id, lead_log, total_spent)
+  def investment_label(user_id, lead_log)
     label = context[:site_community].labels.joins(:user_labels)
                                     .find_by(user_labels: { user_id: user_id },
                                              grouping_name: 'Investment',
-                                             short_desc: investment_status(lead_log, total_spent))
+                                             short_desc: lead_log.investment_title)
     return if label.nil?
 
     {
@@ -228,25 +189,16 @@ module Types::Queries::LeadLog
   end
   # rubocop:enable Metrics/MethodLength
 
-  def investment_status(lead_log, total_spent)
-    investment_target = (lead_log.investment_target * lead_log.deal_size) / 100
-    total_spent > investment_target ? 'Over Target' : 'On Target'
-  end
-
-  def deal_details(user_id:, offset: 0, limit: 3)
-    validate_authorization(:lead_log, :can_fetch_lead_logs)
-
-    context[:site_community].lead_logs.where(user_id: user_id)
-                            .deal_details
-                            .offset(offset)
-                            .limit(limit)
-                            .ordered
-  end
 
   def percentage_of_target_used(total_spent, lead_log)
     return 100 if lead_log.deal_size.to_d.zero?
 
     total_spent / lead_log.deal_size
   end
+
+  def valid_lead_divisions
+    context[:site_community].lead_monthly_targets&.map { |data| data['division'] }
+  end
+
 end
 # rubocop:enable Metrics/ModuleLength
