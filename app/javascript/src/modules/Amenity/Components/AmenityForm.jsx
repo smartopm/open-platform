@@ -17,8 +17,17 @@ export default function AmenityForm({ isOpen, setOpen, refetch, t, amenityData }
   };
   const [amenityValue, setAmenityValue] = useState(initialInputValue);
   const requiredFields = ['name', 'description', 'location', 'hours'];
-  const [createAmenity, isCreating] = useMutationWrapper(AmenityCreateMutation, resetFunction);
-  const [updateAmenity, isUpdating] = useMutationWrapper(AmenityUpdateMutation, resetFunction);
+
+  const [createAmenity, isCreating] = useMutationWrapper(
+    AmenityCreateMutation,
+    resetFunction,
+    t('amenity:misc.amenity_created')
+  );
+  const [updateAmenity, isUpdating] = useMutationWrapper(
+    AmenityUpdateMutation,
+    resetFunction,
+    t('amenity:misc.amenity_updated')
+  );
   const [inputValidationMsg, setInputValidationMsg] = useState({
     isError: false,
     isSubmitting: false

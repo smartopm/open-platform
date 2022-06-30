@@ -28,7 +28,6 @@ import {
   replaceDocumentMentions,
   validateRequiredField,
   downloadAsImage,
-  fetchMoreRecords
 } from '../../utils/helpers';
 
 jest.mock('dompurify')
@@ -366,10 +365,6 @@ describe('Anonymous', () => {
       jest.fn(() => 'error')
     );
     expect(validation1).toEqual({ error: true, helperText: 'error' });
-  });
-  it('should return a promise for fetch more records', async () => {
-    const record = fetchMoreRecords(jest.fn(), 'data', { offset: 10 });
-    expect(record).toBeInstanceOf(Promise)
   });
 });
   describe('#downloadAsImage', () => {

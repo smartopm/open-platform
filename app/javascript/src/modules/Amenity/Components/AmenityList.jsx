@@ -10,23 +10,18 @@ import { AmenitiesQuery } from '../graphql/amenity_queries';
 import { Spinner } from '../../../shared/Loading';
 import PageWrapper from '../../../shared/PageWrapper';
 import CenteredContent from '../../../shared/CenteredContent';
-import { fetchMoreRecords } from '../../../utils/helpers';
+import useFetchMoreRecords from '../../../shared/hooks/useFetchMoreRecords';
 
 export default function AmenityList() {
   const [open, setOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false)
   const [amenityData, setAmenityData] = useState(null)
   const { refetch, data, loading, fetchMore } = useQuery(AmenitiesQuery, {
     variables: { offset: 0 },
     fetchPolicy: 'cache-and-network'
   });
   const { t } = useTranslation(['common', 'amenity', 'form', 'search']);
-
-  function loadMore() {
-    setIsLoading(true);
-    const variables = { offset: data.amenities.length };
-    fetchMoreRecords(fetchMore, 'amenities', variables).then(() => setIsLoading(false));
-  }
+  const variables = { offset: data?.amenities?.length };
+  const { loadMore, hasMoreRecord } = useFetchMoreRecords(fetchMore, 'amenities', variables);
 
   function handleEditAmenity(amenity) {
     setAmenityData(amenity)
@@ -78,8 +73,8 @@ export default function AmenityList() {
         <Button
           variant="outlined"
           onClick={loadMore}
-          startIcon={isLoading && <Spinner />}
-          disabled={isLoading}
+          startIcon={loading && <Spinner />}
+          disabled={loading || !hasMoreRecord}
         >
           {t('search:search.load_more')}
         </Button>

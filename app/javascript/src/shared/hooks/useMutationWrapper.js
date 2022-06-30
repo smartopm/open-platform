@@ -1,6 +1,5 @@
 import { useContext } from 'react';
 import { useMutation } from 'react-apollo';
-import { useTranslation } from 'react-i18next';
 import { formatError } from '../../utils/helpers';
 import { SnackbarContext } from '../snackbar/Context';
 
@@ -9,12 +8,12 @@ import { SnackbarContext } from '../snackbar/Context';
  *  while returning the status of the mutation
  * @param {GraphQLNode} query - This should be a valid mutation from GraphQL
  * @param {Function} reset - Function to be called when a mutation is successful
+ * @param {String} message - Translated message to be shown when action is completed
  * @returns {Array} Array First argument being a function and loading status of the mutation
  */
-export default function useMutationWrapper(mutation, reset) {
+export default function useMutationWrapper(mutation, reset, message) {
   const [createOrUpdate, { loading }] = useMutation(mutation);
   const { showSnackbar, messageType } = useContext(SnackbarContext);
-  const { t } = useTranslation('common');
 
   /**
    * Perform GraphQL Mutation and Show snackbar accordingly
@@ -26,7 +25,7 @@ export default function useMutationWrapper(mutation, reset) {
     createOrUpdate({ variables: { ...variables } })
       .then(() => {
         // Find a better generic message that can work for all actions
-        showSnackbar({ type: messageType.success, message: t('misc.update_successful') });
+        showSnackbar({ type: messageType.success, message });
         reset();
       })
       .catch(err => {

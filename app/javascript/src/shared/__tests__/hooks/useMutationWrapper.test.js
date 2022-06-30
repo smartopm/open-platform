@@ -26,7 +26,7 @@ describe('useMutationWrapper hook', () => {
       </MockedProvider>
     );
     const { result, waitForNextUpdate, waitFor } = renderHook(
-      () => useMutationWrapper(AmenityCreateMutation, reset),
+      () => useMutationWrapper(AmenityCreateMutation, reset, 'Success message'),
       { wrapper }
     );
     return { result, waitForNextUpdate, waitFor };
