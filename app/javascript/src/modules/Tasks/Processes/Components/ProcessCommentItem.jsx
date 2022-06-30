@@ -13,7 +13,7 @@ import {
   objectAccessor,
   sanitizeText,
   removeNewLines,
-  replaceDocumentMentions
+  replaceDocumentMentions,
 } from '../../../../utils/helpers';
 import { dateToString } from '../../../../components/DateContainer';
 
@@ -22,7 +22,7 @@ export default function ProcessCommentItem({ commentdata, commentType }) {
   const statusColors = {
     Sent: 'info',
     Received: 'warning',
-    Resolved: 'success'
+    Resolved: 'success',
   };
   const matches = useMediaQuery('(max-width:600px)');
   const { t } = useTranslation(['process', 'task']);
@@ -30,7 +30,7 @@ export default function ProcessCommentItem({ commentdata, commentType }) {
   const statusLabel = {
     Sent: t('comments.sent'),
     Received: t('comments.received'),
-    Resolved: t('comments.resolved')
+    Resolved: t('comments.resolved'),
   };
   return (
     <>
@@ -85,17 +85,10 @@ export default function ProcessCommentItem({ commentdata, commentType }) {
         </Grid>
         <Grid item md={12} xs={12}>
           <Typography variant="caption" color="textSecondary" data-testid="body">
-            <span
-              // eslint-disable-next-line react/no-danger
-              dangerouslySetInnerHTML={{
-                __html: sanitizeText(
-                  replaceDocumentMentions(
-                    commentdata.body,
-                    `/processes/${processId}/projects?tab=documents&project_id=${commentdata.note.id}&comment_id=${commentdata.id}`
-                  )
-                )
-              }}
-            />
+            {replaceDocumentMentions(
+              commentdata,
+              `/processes/${processId}/projects?tab=documents&project_id=${commentdata.note.id}&comment_id=${commentdata.id}`
+            )}
           </Typography>
         </Grid>
         <Grid item md={12} xs={12} data-testid="task_link">
@@ -106,7 +99,7 @@ export default function ProcessCommentItem({ commentdata, commentType }) {
               <span
                 // eslint-disable-next-line react/no-danger
                 dangerouslySetInnerHTML={{
-                  __html: sanitizeText(removeNewLines(commentdata.note.body))
+                  __html: sanitizeText(removeNewLines(commentdata.note.body)),
                 }}
               />
             </Typography>
@@ -119,8 +112,8 @@ export default function ProcessCommentItem({ commentdata, commentType }) {
 
 const useStyles = makeStyles(() => ({
   card: {
-    marginLeft: '-15px'
-  }
+    marginLeft: '-15px',
+  },
 }));
 
 ProcessCommentItem.propTypes = {
@@ -130,17 +123,17 @@ ProcessCommentItem.propTypes = {
     groupingId: PropTypes.string,
     body: PropTypes.string,
     replyFrom: PropTypes.shape({
-      name: PropTypes.string
+      name: PropTypes.string,
     }),
     user: PropTypes.shape({
       imageUrl: PropTypes.string,
       avatarUrl: PropTypes.string,
-      name: PropTypes.string
+      name: PropTypes.string,
     }),
     note: PropTypes.shape({
       id: PropTypes.string,
-      body: PropTypes.string
-    })
+      body: PropTypes.string,
+    }),
   }).isRequired,
-  commentType: PropTypes.string.isRequired
+  commentType: PropTypes.string.isRequired,
 };

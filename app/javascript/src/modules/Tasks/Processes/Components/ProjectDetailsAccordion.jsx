@@ -18,7 +18,7 @@ import {
   sanitizeText,
   formatError,
   replaceDocumentMentions,
-  useParamsQuery
+  useParamsQuery,
 } from '../../../../utils/helpers';
 import CustomSkeleton from '../../../../shared/CustomSkeleton';
 import TaskContextProvider from '../../Context';
@@ -46,15 +46,15 @@ export default function ProjectDetailsAccordion({ taskId }) {
 
   const { data, loading, error } = useQuery(ProjectRepliesRequestedComments, {
     variables: {
-      taskId
+      taskId,
     },
-    fetchPolicy: 'cache-and-network'
+    fetchPolicy: 'cache-and-network',
   });
   const { data: docData, loading: docLoading, error: docError, refetch: docRefetch } = useQuery(
     TaskDocumentsQuery,
     {
       variables: { taskId },
-      fetchPolicy: 'cache-and-network'
+      fetchPolicy: 'cache-and-network',
     }
   );
 
@@ -76,7 +76,7 @@ export default function ProjectDetailsAccordion({ taskId }) {
   const statusColors = {
     Sent: 'info',
     Received: 'warning',
-    Resolved: 'success'
+    Resolved: 'success',
   };
 
   useEffect(() => {
@@ -94,7 +94,7 @@ export default function ProjectDetailsAccordion({ taskId }) {
         boxShadow: '0px 0px 0px 1px #E0E0E0',
         maxHeight: '500px',
         overflowY: 'auto',
-        padding: '20px'
+        padding: '20px',
       }}
     >
       <TaskContextProvider>
@@ -218,17 +218,10 @@ export default function ProjectDetailsAccordion({ taskId }) {
                             </div>
                           )}
                           <Typography variant="caption">
-                            <span
-                              // eslint-disable-next-line react/no-danger
-                              dangerouslySetInnerHTML={{
-                                __html: sanitizeText(
-                                  replaceDocumentMentions(
-                                    comment.body,
-                                    `/processes/${processId}/projects?tab=documents&project_id=${taskId}&comment_id=${comment.id}`
-                                  )
-                                )
-                              }}
-                            />
+                            {replaceDocumentMentions(
+                              comment,
+                              `/processes/${processId}/projects?tab=documents&project_id=${taskId}&comment_id=${comment.id}`
+                            )}
                           </Typography>
                         </Grid>
                         <Grid
@@ -244,7 +237,7 @@ export default function ProjectDetailsAccordion({ taskId }) {
                               <span
                                 // eslint-disable-next-line react/no-danger
                                 dangerouslySetInnerHTML={{
-                                  __html: sanitizeText(removeNewLines(comment.note.body))
+                                  __html: sanitizeText(removeNewLines(comment.note.body)),
                                 }}
                               />
                             </Typography>
@@ -274,7 +267,7 @@ export default function ProjectDetailsAccordion({ taskId }) {
 }
 
 ProjectDetailsAccordion.propTypes = {
-  taskId: PropTypes.string.isRequired
+  taskId: PropTypes.string.isRequired,
 };
 
 const useStyles = makeStyles(theme => ({
@@ -285,12 +278,12 @@ const useStyles = makeStyles(theme => ({
     color: '#fff',
     fontWeight: 700,
     padding: '0.4rem 1.6rem',
-    borderRadius: '0.3rem'
+    borderRadius: '0.3rem',
   },
 
   avatar: {
     backgroundColor: theme.palette?.primary?.main,
     fontSize: '1rem',
-    marginLeft: '0.5rem'
-  }
+    marginLeft: '0.5rem',
+  },
 }));

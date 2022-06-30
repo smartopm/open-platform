@@ -292,17 +292,10 @@ export default function ProjectDocument({ attachments, loading, refetch, error, 
                                 </>
                               </Grid>
                               <Typography variant="caption">
-                                <span
-                                  // eslint-disable-next-line react/no-danger
-                                  dangerouslySetInnerHTML={{
-                                    __html: sanitizeText(
-                                      replaceDocumentMentions(
-                                        comment.body,
-                                        `/processes/${processId}/projects?tab=documents&project_id=${att.task_id}&comment_id=${comment.id}`
-                                      )
-                                    )
-                                  }}
-                                />
+                              {replaceDocumentMentions(
+                                  comment,
+                                  `/processes/${processId}/projects?tab=documents&project_id=${att.task_id}&comment_id=${comment.id}`
+                                )}
                               </Typography>
                             </Grid>
                             <Grid item md={4} xs={12}>

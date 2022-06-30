@@ -35,6 +35,11 @@ RSpec.describe Mutations::Note::NoteCommentUpdate do
         author_id: admin.id,
       )
     end
+    let!(:blob) do
+      ActiveStorage::Blob.create(filename: 'tagged_doc.pdf', content_type: 'application/pdf',
+                                 byte_size: 2123, checksum: '9JiwSyvzZeqDSV')
+    end
+    let!(:attachment) { note.documents.create(blob_id: blob.id) }
     let(:note_comment) { create(:note_comment, note: note, user: user, status: 'active') }
 
     let(:query) do
@@ -45,6 +50,7 @@ RSpec.describe Mutations::Note::NoteCommentUpdate do
               id
               body
               taggedDocuments
+              taggedAttachments
             }
           }
         }
@@ -55,7 +61,7 @@ RSpec.describe Mutations::Note::NoteCommentUpdate do
       variables = {
         id: note_comment.id,
         body: 'Updated body',
-        taggedDocuments: ['t35672ghd8'],
+        taggedDocuments: [attachment.id],
       }
       result = DoubleGdpSchema.execute(query, variables: variables,
                                               context: {
@@ -64,7 +70,12 @@ RSpec.describe Mutations::Note::NoteCommentUpdate do
       expect(result.dig('data', 'noteCommentUpdate', 'noteComment', 'id')).not_to be_nil
       expect(result.dig('data', 'noteCommentUpdate', 'noteComment', 'body')).to eql 'Updated body'
       expect(result.dig('data', 'noteCommentUpdate', 'noteComment', 'taggedDocuments', 0)).to eql(
-        't35672ghd8',
+        attachment.id,
+      )
+      expect(
+        result.dig('data', 'noteCommentUpdate', 'noteComment', 'taggedAttachments', 0, 'id'),
+      ).to eql(
+        attachment.id,
       )
       expect(result['errors']).to be_nil
     end
