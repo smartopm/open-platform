@@ -335,7 +335,6 @@ const SOSModal=({open, setOpen, location, authState})=> {
   return (
 
     <Modal
-      disablePortal
       disableEnforceFocus
       disableAutoFocus
       open={open}

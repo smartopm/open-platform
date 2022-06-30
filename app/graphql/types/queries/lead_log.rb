@@ -25,7 +25,6 @@ module Types::Queries::LeadLog
       argument :user_id, GraphQL::Types::ID, required: true
     end
   end
-
   def investment_stats(user_id:)
     lead_log = lead_logs(log_type: 'deal_details', user_id: user_id, limit: 1).first
     return {} if lead_log.nil?
@@ -34,6 +33,7 @@ module Types::Queries::LeadLog
     {
       total_spent: total_spent.to_f,
       percentage_of_target_used: percentage_of_target_used(total_spent, lead_log).to_f,
+      investment_label: investment_label(user_id, lead_log),
     }
   end
 
@@ -167,6 +167,23 @@ module Types::Queries::LeadLog
                             .limit(limit)
                             .ordered
   end
+
+  # rubocop:disable Metrics/MethodLength
+  def investment_label(user_id, lead_log)
+    label = context[:site_community].labels.joins(:user_labels)
+                                    .find_by(user_labels: { user_id: user_id },
+                                             grouping_name: 'Investment',
+                                             short_desc: lead_log.investment_title)
+    return if label.nil?
+
+    {
+      id: label.id,
+      short_desc: label.short_desc,
+      grouping_name: label.grouping_name,
+      color: label.color,
+    }
+  end
+  # rubocop:enable Metrics/MethodLength
 
   def percentage_of_target_used(total_spent, lead_log)
     return 100 if lead_log.investment_target.to_d.zero?

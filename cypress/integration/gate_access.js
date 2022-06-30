@@ -55,22 +55,19 @@ describe('Gate Access', () => {
     cy.login('2347065834175');
     cy.visit('/search');
 
+    // Search should work
     cy.get('.user-search-input')
       .type('An Admin User')
       .type('{enter}');
-    cy.wait(2000);
-    cy.get('.user-search-result').click();
-    cy.wait(1000);
+    cy.contains('An Admin User').should('exist');
 
     // Refresh the page with current timestamp in the url to immitate scanning
     cy.fetchUser('2348167740149').then(response => {
       cy.visit(`/user/${response.body.id}/${Date.now()}/dg`);
-      cy.wait(1000);
     });
 
     cy.get('#closeBtn').click();
     cy.get('.log-entry-btn').click();
-    cy.wait(1000);
     cy.visit('/logout');
 
     // Login: Admin

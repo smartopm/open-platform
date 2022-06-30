@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 /* eslint-disable complexity */
 import React, { useState, useContext, useEffect } from 'react';
 import { Button, DialogContent, DialogContentText, Grid, Divider, Typography } from '@mui/material';
@@ -22,6 +23,9 @@ import { formatError, useParamsQuery } from '../../../../utils/helpers';
 import FormTitle from '../FormTitle';
 import AccessCheck from '../../../Permissions/Components/AccessCheck';
 import TermsAndCondition from '../TermsAndCondition';
+import flutterwaveConfig, { closeFlutterwaveModal } from '../../../Payments/TransactionLogs/utils';
+import { TransactionLogCreateMutation } from '../../../Payments/TransactionLogs/graphql/transaction_logs_mutation';
+import ListWrapper from '../../../../shared/ListWrapper';
 
 export default function Form({
   editMode,
@@ -31,18 +35,19 @@ export default function Form({
   handleConfirmPublish,
   formDetailData,
   formDetailRefetch,
-  loading
+  loading,
 }) {
   const [categoryFormOpen, setCategoryFormOpen] = useState(false);
   const [propertyFormOpen, setPropertyFormOpen] = useState(false);
   const [hasAgreedToTerms, setHasAgreedToTerms] = useState(false);
+  const [submittingPayment, setSubmittingPayment] = useState(false)
   const [data, setFormData] = useState({});
-  const { t } = useTranslation(['common', 'form']);
+  const { t } = useTranslation(['common', 'form', 'payment']);
   const [categoryId, setCategoryId] = useState('');
   const matches = useMediaQuery('(max-width:900px)');
   const categoriesData = useQuery(FormCategoriesQuery, {
     variables: { formId },
-    fetchPolicy: 'no-cache'
+    fetchPolicy: 'no-cache',
   });
 
   const {
@@ -52,12 +57,27 @@ export default function Form({
     imgUploadError,
     uploadedImages,
     filesToUpload,
-    setImgUploadError
+    setImgUploadError,
   } = useContext(FormContext);
   const authState = useContext(Context);
 
   const history = useHistory();
   const [categoryDelete, { loading: isDeleting, error }] = useMutation(FormCategoryDeleteMutation);
+  const [createTransactionLog] = useMutation(TransactionLogCreateMutation);
+  const path = useParamsQuery('');
+  const userId = path.get('userId');
+  const formData = flattenFormProperties(categoriesData.data?.formCategories);
+  // check if this submission includes a payment type
+  const hasPayment = formData.some(field => field.fieldType === 'payment');
+
+  useEffect(() => {
+    if (formState?.successfulSubmit && !formState?.isDraft) {
+      // TODO: Enable form redirect on form creation
+      setTimeout(() => {
+        history.push('/');
+      }, 3000);
+    }
+  }, [formState.isDraft, formState.successfulSubmit]);
 
   function handleEditCategory(category) {
     setCategoryFormOpen(true);
@@ -68,11 +88,9 @@ export default function Form({
     setFormData({});
   }
 
-  const path = useParamsQuery('');
-  const userId = path.get('userId');
   function handleDeleteCategory(category) {
     categoryDelete({
-      variables: { categoryId: category, formId }
+      variables: { categoryId: category, formId },
     }).then(res => {
       const formPropResponse = res.data.categoryDelete;
       if (formPropResponse.message === 'New version created') {
@@ -104,37 +122,92 @@ export default function Form({
     setFormState({ ...formState, previewable: false });
   }
 
-  function formSubmit(propertiesData, status) {
+  async function saveTransactionLog(response, value) {
+    return createTransactionLog({
+      variables: {
+        paidAmount: response.amount,
+        amount: parseFloat(value.amount),
+        currency: response.currency,
+        invoiceNumber: '-',
+        transactionId: `${response.transaction_id}`,
+        transactionRef: `${response.tx_ref}`,
+        description: value.description,
+        accountName: authState.user.name,
+      },
+    });
+  }
+
+  function formSubmit(propertiesData, status, isPreview=false) {
     if (filesToUpload.length !== uploadedImages.length) {
       setImgUploadError(true);
       return;
     }
 
-    if (formDetailData?.form?.preview) {
+    if (formDetailData?.form?.preview && !isPreview) {
       setFormState({ ...formState, previewable: formDetailData.form?.preview });
       return;
+    }    
+    // Find the property that has a payment
+    const payment = propertiesData.find(field => field.fieldType === 'payment');
+    const value = {
+      amount: payment?.shortDesc,
+      description: payment?.description,
+    };
+    const { config } = flutterwaveConfig(authState, value, t);
+    if (hasPayment) {
+      setSubmittingPayment(true);
+      window.FlutterwaveCheckout({
+        ...config,
+        callback: response =>  {
+          saveTransactionLog(response, value)
+            .then(() => {
+              saveFormData(
+                propertiesData,
+                formId,
+                userId || authState.user.id,
+                categoriesData.data?.formCategories,
+                status,
+                hasAgreedToTerms
+              );
+            setSubmittingPayment(false);
+            })
+            .catch(err => {
+              setFormState({
+                ...formState,
+                error: true,
+                info: formatError(err),
+                alertOpen: true,
+                isSubmitting: false,
+              });
+            setSubmittingPayment(false);
+            })
+            .finally(() => closeFlutterwaveModal())
+        },
+        // If the modal was closed before proceeding with the payment, 
+        // then we should allow to resubmit the payment
+        onclose: (inComplete) => {
+          setSubmittingPayment(!inComplete);
+          setFormState({
+            ...formState,
+            error: inComplete,
+            info: inComplete && t('common:errors.something_went_wrong_payment'),
+            alertOpen: inComplete,
+            isSubmitting: false,
+          });
+        },
+      });
+    } else {
+      saveFormData(
+        propertiesData,
+        formId,
+        userId || authState.user.id,
+        categoriesData.data?.formCategories,
+        status,
+        hasAgreedToTerms
+      );
     }
-
-    saveFormData(
-      propertiesData,
-      formId,
-      userId || authState.user.id,
-      categoriesData.data?.formCategories,
-      status,
-      hasAgreedToTerms
-    );
   }
 
-  useEffect(() => {
-    if (formState?.successfulSubmit && !formState?.isDraft) {
-      // TODO: Enable form redirect on form creation
-      setTimeout(() => {
-        history.push('/');
-      }, 5000);
-    }
-  }, [formState.isDraft, formState.successfulSubmit]);
-
-  const formData = flattenFormProperties(categoriesData.data?.formCategories);
   const isTermsChecked = formDetailData?.form?.hasTermsAndConditions ? !hasAgreedToTerms : false;
 
   return (
@@ -179,17 +252,8 @@ export default function Form({
         <DialogContent dividers>
           <DialogContentText component="div">
             <FormPreview
-              loading={formState.isSubmitting}
-              handleFormSubmit={() =>
-                saveFormData(
-                  formData,
-                  formId,
-                  authState.user.id,
-                  categoriesData.data?.formCategories,
-                  null,
-                  hasAgreedToTerms
-                )
-              }
+              loading={formState.isSubmitting || submittingPayment}
+              handleFormSubmit={() => formSubmit(formData, null, true)}
               categoriesData={categoriesData.data?.formCategories}
             />
           </DialogContentText>
@@ -285,6 +349,13 @@ export default function Form({
               />
             </Grid>
           )}
+
+          {hasPayment && (
+            <ListWrapper>
+              <Typography variant="caption">{t('form:misc.flutterwave_notice')}</Typography>
+              <br />
+            </ListWrapper>
+          )}
           <Grid item md={12} xs={12} style={{ marginTop: '20px' }}>
             <Divider />
           </Grid>
@@ -301,7 +372,7 @@ export default function Form({
                 aria-label="form_draft"
                 style={matches ? { marginTop: '20px' } : { margin: '25px 25px 0 0' }}
                 onClick={() => formSubmit(formData, 'draft')}
-                disabled={formState.isSubmitting}
+                disabled={formState.isSubmitting || submittingPayment}
                 data-testid="save_as_draft"
               >
                 {t('common:form_actions.save_as_draft')}
@@ -317,13 +388,12 @@ export default function Form({
                 color="primary"
                 aria-label="form_submit"
                 style={matches ? { marginTop: '20px' } : { marginTop: '25px' }}
-                onClick={() => formSubmit(formData)}
-                disabled={formState.isSubmitting || isTermsChecked}
+                onClick={() => formSubmit(formData, null)}
+                disabled={formState.isSubmitting || submittingPayment || isTermsChecked}
+                startIcon={(formState.isSubmitting || submittingPayment) && <Spinner />}
                 data-testid="submit_form_btn"
               >
-                {!formState.isSubmitting
-                  ? t('common:form_actions.submit')
-                  : t('common:form_actions.submitting')}
+                {hasPayment ? t('common:misc.make_a_payment') : t('common:form_actions.submit')}
               </Button>
             </Grid>
           )}
@@ -339,7 +409,7 @@ Form.defaultProps = {
   handleConfirmPublish: () => {},
   formDetailRefetch: () => {},
   loading: false,
-  formDetailData: null
+  formDetailData: null,
 };
 
 Form.propTypes = {
@@ -355,9 +425,9 @@ Form.propTypes = {
       preview: PropTypes.bool,
       isPublic: PropTypes.bool,
       hasTermsAndConditions: PropTypes.bool,
-      roles: PropTypes.arrayOf(PropTypes.string)
-    })
+      roles: PropTypes.arrayOf(PropTypes.string),
+    }),
   }),
   formDetailRefetch: PropTypes.func,
-  loading: PropTypes.bool
+  loading: PropTypes.bool,
 };

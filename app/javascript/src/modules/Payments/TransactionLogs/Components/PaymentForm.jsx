@@ -1,5 +1,4 @@
 import { Button, InputAdornment, TextField } from '@mui/material';
-import { closePaymentModal, useFlutterwave } from 'flutterwave-react-v3';
 import React, { useContext, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ArrowRightAltIcon from '@mui/icons-material/ArrowRightAlt';
@@ -11,6 +10,7 @@ import { currencies } from '../../../../utils/constants';
 import { extractCurrency, formatError, objectAccessor } from '../../../../utils/helpers';
 import { TransactionLogCreateMutation } from '../graphql/transaction_logs_mutation';
 import MessageAlert from '../../../../components/MessageAlert';
+import flutterwaveConfig, { closeFlutterwaveModal } from '../utils';
 
 export default function PaymentForm() {
   const { t } = useTranslation(['common', 'task', 'payment']);
@@ -21,7 +21,7 @@ export default function PaymentForm() {
     invoiceNumber: '',
     amount: '',
     description: '',
-    accountName: ''
+    accountName: '',
   };
   const [message, setMessage] = useState(initialMessage);
   const [inputValue, setInputValue] = useState(initialInputValue);
@@ -30,35 +30,17 @@ export default function PaymentForm() {
   const communityCurrency = objectAccessor(currencies, authState.user.community.currency);
   const currencyData = { locale: authState.user.community.locale, currency: communityCurrency };
   const currency = extractCurrency(currencyData);
-  const config = {
-    public_key: authState.user.community.paymentKeys?.public_key,
-    tx_ref: Date.now(),
-    amount: inputValue.amount,
-    currency: communityCurrency,
-    payment_options: '', // add payment options we plan to support
-    customer: {
-      email: authState.user.email,
-      phonenumber: authState.user.phonenumber,
-      name: authState.user.name
-    },
-    customizations: {
-      title: t('payment:misc.pay_for_item'),
-      description: inputValue.description,
-      logo:
-        'https://st2.depositphotos.com/4403291/7418/v/450/depositphotos_74189661-stock-illustration-online-shop-log.jpg'
-    }
-  };
-
-  const handleFlutterPayment = useFlutterwave(config);
+  const { config } = flutterwaveConfig(authState, inputValue, t);
 
   function handlePayment(event) {
     event.preventDefault();
     setHasSubmitted(true);
-    handleFlutterPayment({
+    window.FlutterwaveCheckout({
+      ...config,
       callback: response => {
         verifyTransaction(response);
       },
-      onClose: () => setHasSubmitted(false)
+      onClose: () => setHasSubmitted(false),
     });
   }
 
@@ -72,8 +54,8 @@ export default function PaymentForm() {
         transactionId: `${response.transaction_id}`,
         transactionRef: `${response.tx_ref}`,
         description: inputValue.description,
-        accountName: inputValue.accountName
-      }
+        accountName: inputValue.accountName,
+      },
     })
       .then(() => {
         setMessage({ isError: false, detail: t('payment:misc.payment_successful') });
@@ -82,7 +64,7 @@ export default function PaymentForm() {
       .catch(error => setMessage({ isError: true, detail: formatError(error.message) }))
       .finally(() => {
         setHasSubmitted(false);
-        closePaymentModal();
+        closeFlutterwaveModal();
       });
   }
 
@@ -113,7 +95,7 @@ export default function PaymentForm() {
           onChange={event => setInputValue({ ...inputValue, invoiceNumber: event.target.value })}
           InputProps={{
             startAdornment: <InputAdornment position="start">#</InputAdornment>,
-            'data-testid': 'invoice_number'
+            'data-testid': 'invoice_number',
           }}
           required
           fullWidth
@@ -127,7 +109,7 @@ export default function PaymentForm() {
           onChange={event => setInputValue({ ...inputValue, amount: event.target.value })}
           InputProps={{
             startAdornment: <InputAdornment position="start">{currency}</InputAdornment>,
-            'data-testid': 'amount'
+            'data-testid': 'amount',
           }}
           required
           fullWidth

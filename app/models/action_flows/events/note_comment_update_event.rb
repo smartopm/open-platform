@@ -36,7 +36,7 @@ module ActionFlows
           'due_at' => (note_comment.note.due_date&.strftime('%Y-%m-%d') || 'Never'),
           'updated_date' => eventlog.created_at.strftime('%Y-%m-%d'),
           'note_body' => note_comment.note.body,
-          'new_body' => note_comment.body.truncate_words(5),
+          'new_body' => note_comment.formatted_body,
         )
       end
       # rubocop:enable Metrics/AbcSize

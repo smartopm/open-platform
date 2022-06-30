@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import Button from '@mui/material/Button';
 import { useHistory } from 'react-router-dom';
 import PhoneIcon from '@mui/icons-material/Phone';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { Dialog, DialogTitle, DialogContent, Container } from '@mui/material';
 import { css, StyleSheet } from 'aphrodite';
 import PropTypes from 'prop-types';
@@ -78,6 +79,7 @@ export default function UserInformation({
       handleClick={handleSelectButtonClick}
       selectedKey={selectedKey}
       defaultButtonText={t('common:right_menu.contact_info')}
+      mobileIcon={<MoreVertIcon />}
     />
   );
 

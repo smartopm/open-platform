@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'host_env'
+
 module Types
   # NoteCommentType
   class NoteCommentType < Types::BaseObject
@@ -16,5 +18,26 @@ module Types
     field :created_at, GraphQL::Types::ISO8601DateTime, null: false
     field :updated_at, GraphQL::Types::ISO8601DateTime, null: false
     field :tagged_documents, [ID, { null: true }], null: true
+    field :tagged_attachments, [GraphQL::Types::JSON], null: true
+
+    def tagged_attachments
+      return if object.tagged_documents.blank?
+
+      urls = []
+      ActiveStorage::Attachment.where(id: object.tagged_documents).each do |doc|
+        file = {
+          id: doc.id,
+          url: host_url(doc),
+        }
+        urls << file
+      end
+      urls
+    end
+
+    def host_url(doc)
+      base_url = HostEnv.base_url(object.note.community)
+      path = Rails.application.routes.url_helpers.rails_blob_path(doc)
+      "https://#{base_url}#{path}"
+    end
   end
 end

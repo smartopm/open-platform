@@ -59,6 +59,8 @@ export const FormPropertyQuery = gql`
       required
       adminUse
       order
+      shortDesc
+      longDesc
     }
   }
 `;
@@ -70,6 +72,8 @@ export const UserFormPropertiesQuery = gql`
         fieldName
         fieldType
         fieldValue
+        longDesc
+        shortDesc
         groupingId
         order
         id
@@ -161,6 +165,7 @@ export const SubmittedFormCommentsQuery = gql`
       replyRequired
       groupingId
       taggedDocuments
+      taggedAttachments
     }
   }
 `;

@@ -1,4 +1,9 @@
 {
+  "404": {
+    "404": "404",
+    "action_text": "Go To Dashboard",
+    "oops": "Oops. Looks like we can't find your page."
+  },
   "form_fields": {
     "full_name": "Full Name",
     "full_first_name": "First Name",
@@ -296,7 +301,11 @@
     "download_info": "Download file of the QR Code to print out.",
     "add_new": "Add New",
     "otp": "OTP",
-    "update_successful": "Updated Successfully"
+    "update_successful": "Updated Successfully",
+    "entry_request": "Entry Request",
+    "lead_import": "Lead Import",
+    "today_at": "Today at",
+    "yesterday_at": "Yesterday at"
   },
   "menu": {
     "invoice": "Invoice",
@@ -510,6 +519,7 @@
     "invalid_time": "Invitation time is invalid",
     "invalid_email": "Email is invalid",
     "something_went_wrong_forms": "Something went wrong while accessing this form",
+    "something_went_wrong_payment": "Something went wrong with your payment",
     "device_not_supported": "Device not supported or check the camera permissions"
   },
   "dialogs": {
@@ -556,7 +566,7 @@
     "detail_header": "DETAILS",
     "note_header": "NOTE",
     "event_header": "SCORECARD",
-    "main_header": "Lead Management",
+    "main_header": "Lead Details",
     "contact_info": "Contact Info",
     "primary_info": "Primary Contact",
     "save": "Save",

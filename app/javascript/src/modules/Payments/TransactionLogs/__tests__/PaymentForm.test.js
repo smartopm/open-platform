@@ -57,7 +57,8 @@ describe('PaymentForm', () => {
     expect(container.queryByLabelText('form_fields.account_name *').value).toContain('JU');
 
     userEvent.submit(container.queryByTestId('payment_form'));
-    // after submitting, it should be disabled again
+    // after submitting, it should be disabled again and flutterwave modal to be called
     expect(container.queryByTestId('make_a_payment_btn')).toBeDisabled();
+    expect(window.FlutterwaveCheckout).toBeCalled();
   });
 });

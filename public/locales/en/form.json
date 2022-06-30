@@ -52,13 +52,15 @@
     "click_upload_btn": "Click the Upload button next to the file you wish to attach to this form..",
     "add_category": "Add a Category",
     "update_category": "Update a Category",
+    "choose_category": "Choose Category",
     "upload_details": "Use the Select button to choose the file you want to upload. Then confirm them by clicking the Upload button(s). Use the 'X' icon to delete any unwanted files.",
     "upload_error": "Files not Uploaded.",
     "upload_error_content_one": "Oops. looks like some files",
     "upload_error_content_two": "are not uploaded. Please",
     "upload_error_content_three": "click the Upload button or",
     "upload_error_content_four": "delete them.",
-    "form_entries": "Form Entries"
+    "form_entries": "Form Entries",
+    "flutterwave_notice": "When the Make a Payment (submit) button is clicked on this form, you will be auto-directed to the Flutterwave payment gateway. When done, Flutterwave should auto-direct back and submit this form. If this does not happen within 5 seconds, please click the close modal (X) button."
   },
   "actions": {
     "create_a_form": "Create a form",
@@ -109,7 +111,9 @@
   "form_fields": {
     "field_name": "Field Name",
     "field_type": "Field Type",
+    "short_desc": "Short Description",
     "option": "Option",
+    "amount_to_pay": "Amount to Pay",
     "required_field": "This field is required",
     "admins_only": "Only for admins",
     "order_number": "Order Number",
@@ -135,7 +139,8 @@
     "time": "Time",
     "datetime": "Date with Time",
     "dropdown": "Dropdown",
-    "terms_and_condition": "Terms and Condition"
+    "terms_and_condition": "Terms and Condition",
+    "payment": "Payment"
   },
   "conditions": {
     "===": "equals to",

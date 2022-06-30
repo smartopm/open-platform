@@ -13,6 +13,7 @@ RSpec.describe Mutations::Form::FormPropertiesUpdate do
     end
 
     let!(:user) { create(:user_with_community, user_type: 'resident', role: resident_role) }
+    let(:community) { user.community }
     let!(:admin) do
       create(:admin_user, community_id: user.community_id, role: admin_role, user_type: 'admin')
     end
@@ -114,6 +115,30 @@ RSpec.describe Mutations::Form::FormPropertiesUpdate do
         expect(updated_form_property.field_name).to eql 'Updated Name'
         updated_category = new_form.categories.where.not(display_condition: nil).first
         expect(updated_category.reload.display_condition['grouping_id']).to eql ''
+      end
+
+      it 'retains associated process for new form version' do
+        process = create(:process, form_id: form.id, name: 'Test Process', community: community)
+        create(:note_list, community: community, process_id: process.id, name: 'Test Note List')
+
+        variables = {
+          formPropertyId: form_property.id,
+          fieldName: 'Updated Name',
+          fieldType: %w[date file_upload signature display_text display_image].sample,
+          fieldValue: [{ 'value': 'Farming' }],
+        }
+
+        result = DoubleGdpSchema.execute(mutation, variables: variables,
+                                                   context: {
+                                                     current_user: admin,
+                                                     site_community: community,
+                                                     user_role: admin.role,
+                                                   }).as_json
+
+        expect(result.dig('errors', 0, 'message')).to be_nil
+        new_form = Forms::Form.where.not(id: form.id).first
+        expect(process.reload.form_id).to eq(new_form.id)
+        expect(new_form.associated_process?).to eq(true)
       end
     end
 

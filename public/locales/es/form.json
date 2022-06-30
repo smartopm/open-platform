@@ -41,6 +41,7 @@
     "dropdown": "Desplegar",
     "file_upload": "Subir archivo",
     "image": "Imagen",
+    "payment": "Pago",
     "radio": "Radio",
     "signature": "Firma",
     "terms_and_condition": "Términos y Condiciones",
@@ -49,6 +50,7 @@
   },
   "form_fields": {
     "admins_only": "Solo para Administradores",
+    "amount_to_pay": "Monto a Pagar",
     "condition": "Condición ",
     "condition_value": "Valor",
     "description": "Descripción",
@@ -64,7 +66,8 @@
     "property_field_name": "Nombre de la Propiedad",
     "rendered_text": "Texto renderizado",
     "rendered_text_helper": "Pista: Agregar espacio después de los títulos de marcado",
-    "required_field": "Este campo es obligatorio"
+    "required_field": "Este campo es obligatorio",
+    "short_desc": "Breve Descripción"
   },
   "form_status_actions": {
     "approved": "Aprobar",
@@ -90,6 +93,7 @@
     "attachments": "Archivos adjuntos",
     "building_permit": "Permiso de construcción",
     "category": "Categoría",
+    "choose_category": "Elegir la Categoría",
     "click_upload_btn": "Haga clic en el botón Cargar junto al archivo que desea adjuntar a este formulario.",
     "client_request_form": "Formulario de Solicitud de Cliente",
     "configure_form": "Configurar Formulario",
@@ -103,6 +107,7 @@
     "download_file": "Descargar Archivo",
     "file_uploaded": "Archivo Subido",
     "file_uploaded_plural": "Archivos Subidos",
+    "flutterwave_notice": "Cuando se hace clic en el botón \"Realizar un Pago\" (enviar) en este formulario, se le dirigirá automáticamente a la pasarela de pago de Flutterwave. Cuando haya terminado, Flutterwave debería volver a dirigirle automáticamente y enviar este formulario. Si esto no sucede dentro de 5 segundos, haga clic en el botón Cerrar (X).",
     "form": "Formulario",
     "form_action_success": "El Formulario {{status}} con éxito",
     "form_builder": "Constructor",

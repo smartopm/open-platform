@@ -1,7 +1,7 @@
 import { MockedProvider } from '@apollo/react-testing';
-import { render } from '@testing-library/react';
+import { fireEvent, render } from '@testing-library/react';
 import React from 'react';
-import { MemoryRouter } from 'react-router-dom';
+import routeData, { MemoryRouter } from 'react-router';
 import { Context } from '../../../../containers/Provider/AuthStateProvider';
 import FormUserItem from '../Components/FormUserItem';
 import userMock from '../../../../__mocks__/authstate';
@@ -39,6 +39,12 @@ describe('FormUser Item', () => {
     }
   };
   const translate = jest.fn(() => 'Translated');
+  const mockHistory = {
+    push: jest.fn(),
+  };
+  beforeEach(() => {
+    jest.spyOn(routeData, 'useHistory').mockReturnValue(mockHistory);
+  });
   it('should render with no errors', () => {
     const wrapper = render(
       <Context.Provider value={userMock}>
@@ -57,6 +63,10 @@ describe('FormUser Item', () => {
     expect(wrapper.queryByTestId('comments_icon')).toBeInTheDocument();
     expect(wrapper.queryByTestId('submitted_at')).toBeInTheDocument();
     expect(wrapper.queryByText('This is a test comment')).toBeInTheDocument();
+
+    fireEvent.click(wrapper.queryByTestId('form_user_item'));
+    expect(mockHistory.push).toBeCalled()
+    expect(mockHistory.push).toBeCalledWith('/user_form/902384023-2343/1?formId=34243242');
   });
   it('should render with no comments', () => {
     const noCommentsProps = {

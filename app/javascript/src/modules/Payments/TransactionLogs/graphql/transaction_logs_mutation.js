@@ -27,3 +27,28 @@ export const TransactionLogCreateMutation = gql`
   }
 `;
 
+export const TransactionInitiateMutation = gql`
+  mutation TransactionInitiate(
+    $amount: Float!
+    $invoiceNumber: String!
+    $redirectTo: String!
+    $description: String
+  ) {
+    transactionInitiate(
+      amount: $amount
+      invoiceNumber: $invoiceNumber
+      description: $description
+      redirectTo: $redirectTo
+    ) {
+      link
+    }
+  }
+`;
+
+export const TransactionVerifyMutation = gql`
+  mutation TransactionVerify($transactionId: String!) {
+    transactionVerify(transactionId: $transactionId) {
+      success
+    }
+  }
+`;

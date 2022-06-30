@@ -21,6 +21,8 @@ describe('Form that creates other forms component', () => {
           fieldName: 'Last Name',
           fieldType: 'text',
           groupingId: '6789-tyu4762',
+          shortDesc: '50',
+          longDesc: 'This is another description',
           fieldValue: [
             {
               value: '',

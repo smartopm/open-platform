@@ -6,7 +6,7 @@ import { useMutation, useQuery } from 'react-apollo';
 import InputLabel from '@mui/material/InputLabel';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import FormControl from '@mui/material/FormControl';
-import { Grid, Typography, useMediaQuery } from '@mui/material';
+import { Grid, Typography, useMediaQuery, Container } from '@mui/material';
 
 import TextField from '@mui/material/TextField';
 import { useTranslation } from 'react-i18next';
@@ -45,30 +45,30 @@ export default function Investments({ userId }) {
     data: dealDetailsData,
     loading: dealDetailsLoading,
     refetch: refetchDealDetails,
-    error: dealDetailsError
+    error: dealDetailsError,
   } = useQuery(DealDetailsQuery, {
     variables: { userId, logType: 'deal_details' },
-    fetchPolicy: 'cache-and-network'
+    fetchPolicy: 'cache-and-network',
   });
 
   const {
     data: leadInvestmentData,
     loading: leadInvestmentsLoading,
     refetch: refetchLeadInvestments,
-    error: leadInvestmentsError
+    error: leadInvestmentsError,
   } = useQuery(LeadInvestmentsQuery, {
     variables: { userId, logType: 'investment' },
-    fetchPolicy: 'cache-and-network'
+    fetchPolicy: 'cache-and-network',
   });
 
   const {
     data: investmentStatsData,
     loading: investmentStatsLoading,
     refetch: refetchInvestmentStats,
-    error: investmentStatsError
+    error: investmentStatsError,
   } = useQuery(InvestmentStatsQuery, {
     variables: { userId },
-    fetchPolicy: 'cache-and-network'
+    fetchPolicy: 'cache-and-network',
   });
 
   function handleSubmit({ name = '', logType = '' }) {
@@ -80,16 +80,16 @@ export default function Investments({ userId }) {
           // given 23 000, remove spaces and submit 23000
           dealSize: parseFloat(dealSize.replace(/ /g, '')),
           // given 23 000, remove spaces and submit 23000
-          investmentTarget: parseFloat(investmentTarget.replace(/ /g, ''))
-        }
+          investmentTarget: parseFloat(investmentTarget.replace(/ /g, '')),
+        },
       })
         .then(() => {
           setMessage({
             ...message,
             isError: false,
             detail: t('common:misc.misc_successfully_created', {
-              type: t('common:menu.investment')
-            })
+              type: t('common:menu.investment'),
+            }),
           });
           setInvestmentTarget('');
           setDealSize('');
@@ -107,16 +107,16 @@ export default function Investments({ userId }) {
           logType,
           name,
           // given 23 000, remove spaces and submit 23000
-          amount: parseFloat(amount.replace(/ /g, ''))
-        }
+          amount: parseFloat(amount.replace(/ /g, '')),
+        },
       })
         .then(() => {
           setMessage({
             ...message,
             isError: false,
             detail: t('common:misc.misc_successfully_created', {
-              type: t('common:menu.investment_expense')
-            })
+              type: t('common:menu.investment_expense'),
+            }),
           });
           setDescription('');
           setAmount('');
@@ -146,14 +146,73 @@ export default function Investments({ userId }) {
       />
       <Grid container>
         <Grid item md={12} xs={12} style={{ marginBottom: '30px' }}>
-          <Grid item md={12} xs={12}>
-            <Typography variant="h6" data-testid="investment">
-              {t('lead_management.investment')}
-            </Typography>
+          <Grid
+            container
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}
+          >
+            <Grid item md={6} xs={12}>
+              <Typography variant="h6" data-testid="investment">
+                {t('lead_management.investment')}
+              </Typography>
 
-            <Typography variant="body2" data-testid="investment_header">
-              {t('lead_management.investment_header')}
-            </Typography>
+              <Typography variant="body2" data-testid="investment_header">
+                {t('lead_management.investment_header')}
+              </Typography>
+            </Grid>
+            <Grid item md={6} xs={12} style={{}}>
+              <Container
+                style={{
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  marginRight: !mobile && '-50px',
+                  paddingLeft: mobile && 0,
+                  marginTop: mobile && 8,
+                  justifyContent: !mobile && 'end',
+                }}
+              >
+                {investmentStatsData?.investmentStats?.investment_label && (
+                  <p key={investmentStatsData?.investmentStats?.investment_label?.id}>
+                    <span
+                      style={{
+                        background: 'white',
+                        color: investmentStatsData?.investmentStats?.investment_label.color,
+                        marginTop: 20,
+                        fontSize: '12px',
+                        width: '100%',
+                        padding: '8px',
+                        borderTop: '1px solid',
+                        borderLeft: '1px solid',
+                        borderColor: investmentStatsData?.investmentStats?.investment_label.color,
+                        borderBottom: '1px solid',
+                        borderTopLeftRadius: '16px',
+                        borderBottomLeftRadius: '16px',
+                      }}
+                    >
+                      {' '}
+                      {investmentStatsData?.investmentStats?.investment_label?.grouping_name}
+                    </span>
+                    <span
+                      style={{
+                        background: investmentStatsData?.investmentStats?.investment_label?.color,
+                        color: 'white',
+                        fontSize: '12px',
+                        width: '100%',
+                        padding: '9px',
+                        borderTopRightRadius: '16px',
+                        borderBottomRightRadius: '16px',
+                        marginRight: '10px',
+                      }}
+                    >
+                      {investmentStatsData?.investmentStats?.investment_label?.short_desc}
+                    </span>
+                  </p>
+                )}
+              </Container>
+            </Grid>
           </Grid>
         </Grid>
 
@@ -197,7 +256,7 @@ export default function Investments({ userId }) {
                 label={t('lead_management.deal_size')}
                 size="small"
                 inputProps={{
-                  'aria-label': t('lead_management.deal_size')
+                  'aria-label': t('lead_management.deal_size'),
                 }}
               />
             </FormControl>
@@ -218,7 +277,7 @@ export default function Investments({ userId }) {
                 startAdornment={<InputAdornment position="start">$</InputAdornment>}
                 label={t('lead_management.investment_target')}
                 inputProps={{
-                  'aria-label': t('lead_management.investment_target')
+                  'aria-label': t('lead_management.investment_target'),
                 }}
                 size="small"
               />
@@ -231,7 +290,7 @@ export default function Investments({ userId }) {
             style={{
               paddingTop: '33px',
               paddingLeft: 0,
-              marginLeft: mobile && '-12px'
+              marginLeft: mobile && '-12px',
             }}
           >
             <ButtonComponent
@@ -254,7 +313,7 @@ export default function Investments({ userId }) {
             <div
               key={dealDetails.id}
               style={{
-                marginBottom: '20px'
+                marginBottom: '20px',
               }}
             >
               <div>
@@ -265,29 +324,23 @@ export default function Investments({ userId }) {
                         container
                         style={{
                           display: 'flex',
-                          alignItems: 'center'
+                          alignItems: 'center',
                         }}
                       >
-                        <Grid item md={3} xs={12}>
+                        <Grid item md={2} xs={12}>
                           <Typography variant="body2" data-testid="investment-deal-size">
                             $ {dealDetails?.dealSize}
                           </Typography>
                         </Grid>
 
-                        <Grid item md={4} xs={12} style={{ textAlign: !mobile && 'right' }}>
+                        <Grid item md={6} xs={12} style={{ textAlign: !mobile && 'center' }}>
                           <Typography variant="body2" data-testid="investment_target_value">
                             {`${t('lead_management.investment_target_value')}  ${
                               dealDetails?.investmentTarget
                             }`}
                           </Typography>
                         </Grid>
-
-                        <Grid item md={2} xs={12} style={{ textAlign: !mobile && 'right' }}>
-                          <Typography variant="body2" data-testid="event-date">
-                            {dateToString(dealDetails?.createdAt)}
-                          </Typography>
-                        </Grid>
-                        <Grid item md={3} xs={12} style={{ textAlign: !mobile && 'right' }}>
+                        <Grid item md={4} xs={12} style={{ textAlign: !mobile && 'right' }}>
                           <Typography variant="body2" data-testid="investment-created-by">
                             {`${t('lead_management.entered_by')}  ${dealDetails?.actingUser?.name}`}
                           </Typography>
@@ -342,7 +395,7 @@ export default function Investments({ userId }) {
               margin="normal"
               inputProps={{
                 'aria-label': t('lead_management.description'),
-                style: { fontSize: '15px' }
+                style: { fontSize: '15px' },
               }}
               InputLabelProps={{ style: { fontSize: '12px' } }}
             />
@@ -353,7 +406,7 @@ export default function Investments({ userId }) {
             md={6}
             xs={10}
             style={{
-              paddingTop: mobile && '10px'
+              paddingTop: mobile && '10px',
             }}
           >
             <FormControl fullWidth sx={{ mt: 2 }}>
@@ -369,7 +422,7 @@ export default function Investments({ userId }) {
                 startAdornment={<InputAdornment position="start">$</InputAdornment>}
                 label={t('lead_management.amount')}
                 inputProps={{
-                  'aria-label': t('lead_management.amount')
+                  'aria-label': t('lead_management.amount'),
                 }}
                 size="small"
               />
@@ -380,9 +433,9 @@ export default function Investments({ userId }) {
             md={1}
             xs={1}
             style={{
-              paddingTop: mobile ? '25px' : '33px',
+              paddingTop: mobile ? '27px' : '33px',
               paddingLeft: 0,
-              marginLeft: mobile && '-12px'
+              marginLeft: mobile && '-12px',
             }}
           >
             <ButtonComponent
@@ -404,7 +457,7 @@ export default function Investments({ userId }) {
             <div
               key={leadInvestment.id}
               style={{
-                marginBottom: '20px'
+                marginBottom: '20px',
               }}
             >
               <div>
@@ -415,7 +468,7 @@ export default function Investments({ userId }) {
                         container
                         style={{
                           display: 'flex',
-                          alignItems: 'center'
+                          alignItems: 'center',
                         }}
                       >
                         <Grid item md={2} xs={12}>
@@ -456,5 +509,5 @@ export default function Investments({ userId }) {
 }
 
 Investments.propTypes = {
-  userId: PropTypes.string.isRequired
+  userId: PropTypes.string.isRequired,
 };

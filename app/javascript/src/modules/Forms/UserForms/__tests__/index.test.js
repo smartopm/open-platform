@@ -1,6 +1,7 @@
 import React from 'react';
 import { render, waitFor } from '@testing-library/react';
 import { MockedProvider } from '@apollo/react-testing';
+import { BrowserRouter } from 'react-router-dom/';
 import MyRoutesInfo, { RenderMyForms } from '..';
 import { Context } from '../../../../containers/Provider/AuthStateProvider';
 import authState from '../../../../__mocks__/authstate';
@@ -11,11 +12,13 @@ describe('My Forms', () => {
   it('renders submitted forms properly', async () => {
     render(
       <Context.Provider value={authState}>
-        <MockedThemeProvider>
-          <MockedProvider>
-            <RenderMyForms />
-          </MockedProvider>
-        </MockedThemeProvider>
+        <BrowserRouter>
+          <MockedThemeProvider>
+            <MockedProvider>
+              <RenderMyForms />
+            </MockedProvider>
+          </MockedThemeProvider>
+        </BrowserRouter>
       </Context.Provider>
     );
     await waitFor(() => {

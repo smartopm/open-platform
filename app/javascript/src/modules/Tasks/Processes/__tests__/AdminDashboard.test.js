@@ -4,6 +4,8 @@ import { BrowserRouter } from 'react-router-dom/cjs/react-router-dom.min';
 
 import { render, screen, waitFor } from '@testing-library/react';
 import MockedThemeProvider from '../../../__mocks__/mock_theme';
+import { Context } from '../../../../containers/Provider/AuthStateProvider';
+import authState from '../../../../__mocks__/authstate';
 import { ProcessTemplatesQuery } from '../../../Processes/graphql/process_list_queries';
 import AdminDashboard from '../Components/AdminDashboard';
 
@@ -44,13 +46,15 @@ describe('Admin processes dashboard', () => {
 
   it('renders main dashboard elements', () => {
     render(
-      <MockedProvider mocks={mocks} addTypename={false}>
-        <BrowserRouter>
-          <MockedThemeProvider>
-            <AdminDashboard />
-          </MockedThemeProvider>
-        </BrowserRouter>
-      </MockedProvider>
+      <Context.Provider value={authState}>
+        <MockedProvider mocks={mocks} addTypename={false}>
+          <BrowserRouter>
+            <MockedThemeProvider>
+              <AdminDashboard />
+            </MockedThemeProvider>
+          </BrowserRouter>
+        </MockedProvider>
+      </Context.Provider>
     );
 
     expect(screen.queryAllByTestId('speed_dial_icon')[0]).toBeInTheDocument();
@@ -62,13 +66,15 @@ describe('Admin processes dashboard', () => {
 
   it('renders Process list items', async () => {
     render(
-      <MockedProvider mocks={mocks} addTypename={false}>
-        <BrowserRouter>
-          <MockedThemeProvider>
-            <AdminDashboard />
-          </MockedThemeProvider>
-        </BrowserRouter>
-      </MockedProvider>
+      <Context.Provider value={authState}>
+        <MockedProvider mocks={mocks} addTypename={false}>
+          <BrowserRouter>
+            <MockedThemeProvider>
+              <AdminDashboard />
+            </MockedThemeProvider>
+          </BrowserRouter>
+        </MockedProvider>
+      </Context.Provider>
     );
 
     await waitFor(() => {

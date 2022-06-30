@@ -2,10 +2,10 @@ import React from 'react';
 import { render, waitFor, fireEvent, screen } from '@testing-library/react';
 import { MockedProvider } from '@apollo/react-testing';
 import { BrowserRouter } from 'react-router-dom';
-
 import LeadManagementUserImport from '../Containers/LeadManagementUserImport';
 import * as utils from '../../utils';
 import { ImportCreate } from '../../../../graphql/mutations';
+import MockedThemeProvider from '../../../__mocks__/mock_theme';
 
 jest.mock('@rails/activestorage/src/file_checksum', async () => jest.fn());
 describe('LeadManagementUserImport component', () => {
@@ -46,7 +46,9 @@ describe('LeadManagementUserImport component', () => {
     const container = render(
       <MockedProvider mocks={importCreateMutationMock} addTypename={false}>
         <BrowserRouter>
-          <LeadManagementUserImport />
+          <MockedThemeProvider>
+            <LeadManagementUserImport />
+          </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>
     );
@@ -132,7 +134,9 @@ describe('LeadManagementUserImport component', () => {
     const container = render(
       <MockedProvider mocks={[]} addTypename={false}>
         <BrowserRouter>
-          <LeadManagementUserImport />
+          <MockedThemeProvider>
+            <LeadManagementUserImport />
+          </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>
     );
@@ -217,7 +221,9 @@ describe('LeadManagementUserImport component', () => {
     const container = render(
       <MockedProvider mocks={[]} addTypename={false}>
         <BrowserRouter>
-          <LeadManagementUserImport />
+          <MockedThemeProvider>
+            <LeadManagementUserImport />
+          </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>
     );
@@ -338,7 +344,9 @@ describe('LeadManagementUserImport component', () => {
     const container = render(
       <MockedProvider mocks={[]} addTypename={false}>
         <BrowserRouter>
-          <LeadManagementUserImport />
+          <MockedThemeProvider>
+            <LeadManagementUserImport />
+          </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>
     );

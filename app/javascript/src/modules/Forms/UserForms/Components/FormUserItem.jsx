@@ -8,6 +8,7 @@ import CommentCard from '../../../Tasks/Components/CommentCard';
 import CenteredContent from '../../../../shared/CenteredContent';
 import { Spinner } from '../../../../shared/Loading';
 import DateContainer from '../../../../components/DateContainer';
+import { secureFileDownload } from '../../../../utils/helpers';
 
 export default function FormItem({
   formUser,
@@ -15,12 +16,20 @@ export default function FormItem({
   currentFormUserId,
   userId,
   formData,
-  t
+  t,
 }) {
   const history = useHistory();
   const currentForm = currentFormUserId === formUser.id;
   const hasComments = currentForm && formData.data && Boolean(formData.data?.formComments?.length);
   const hasNoComments = currentForm && !formData.loading && !hasComments;
+  const commentsData = formData.data?.formComments;
+
+  function downloadFile(commentId, fileId) {
+    const currentComment = commentsData?.find(com => com.id === commentId);
+    const clickedDoc = currentComment?.taggedAttachments.find(doc => doc.id === fileId);
+    secureFileDownload(clickedDoc.url);
+  }
+
   return (
     <>
       <ListItem
@@ -76,7 +85,11 @@ export default function FormItem({
       </ListItem>
       {currentForm && formData.loading && <Spinner />}
       {hasComments ? (
-        <CommentCard comments={formData.data?.formComments} refetch={formData.refetch} />
+        <CommentCard
+          comments={commentsData}
+          refetch={formData.refetch}
+          taggedDocOnClick={downloadFile}
+        />
       ) : (
         hasNoComments && (
           <CenteredContent>{t('task:task.no_comments_on_this_form')}</CenteredContent>
@@ -89,7 +102,7 @@ export default function FormItem({
 
 FormItem.defaultProps = {
   currentFormUserId: null,
-  formComments: []
+  formComments: [],
 };
 FormItem.propTypes = {
   formUser: PropTypes.shape({
@@ -98,8 +111,8 @@ FormItem.propTypes = {
     commentsCount: PropTypes.number.isRequired,
     form: PropTypes.shape({
       name: PropTypes.string.isRequired,
-      id: PropTypes.string.isRequired
-    })
+      id: PropTypes.string.isRequired,
+    }),
   }).isRequired,
   handleShowComments: PropTypes.func.isRequired,
   currentFormUserId: PropTypes.string,
@@ -108,5 +121,4 @@ FormItem.propTypes = {
   t: PropTypes.func.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   formData: PropTypes.object.isRequired,
-  
 };

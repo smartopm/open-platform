@@ -7,7 +7,7 @@ RSpec.describe Mutations::Invoice::InvoiceCreate do
     let!(:admin_role) { create(:role, name: 'admin') }
     let!(:resident_role) { create(:role, name: 'resident') }
     let!(:permission) do
-      create(:permission, module: 'transaction',
+      create(:permission, module: 'payment_records',
                           role: admin_role,
                           permissions: %w[can_create_wallet_transaction])
     end

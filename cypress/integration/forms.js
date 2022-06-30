@@ -42,16 +42,13 @@ describe('Custom Forms', () => {
 
     // Go to Permits & Request Forms
     cy.get('.left-menu-collapsible').click();
-    cy.wait(1000);
     cy.get('.manage-forms-form-menu-item').click();
-    cy.wait(1000);
 
     // The 'No Forms' text should be present initially
     cy.get('[data-testid=no-form-available]').should('contain', 'No Forms');
 
     // Create a new Form
     cy.get('.new-permit-request-form-btn').click();
-    cy.wait(1000);
     cy.get('[data-testid=title]').type('Cypress Form');
     cy.get('[data-testid=description]').type('Simple Cypress Form');
 
@@ -67,11 +64,8 @@ describe('Custom Forms', () => {
 
     // Add Category
     cy.get('.form-menu-open-btn').click();
-    cy.wait(500);
     cy.get('.edit-form-btn').click();
-    cy.wait(1000);
     cy.get('[data-testid=add_category]').click();
-    cy.wait(1000);
     cy.get('.form-category-name-txt-input').type('Category 1');
     cy.get('.form-category-description-txt-input').type('Category 1 description');
 
@@ -81,11 +75,9 @@ describe('Custom Forms', () => {
     );
     cy.get('.form-category-header-visible-switch-btn').click();
     cy.get('[data-testid=custom-dialog-button]').click();
-    cy.wait(2000);
 
     // Add Form Properties to Category
     cy.get('.form-category-add-field-btn').click();
-    cy.wait(500);
     cy.addFormProperty('TextField', 'text', true);
     cy.addFormProperty('Radio', 'radio', false, ['Female', 'Male']);
     cy.addFormProperty('Dropdown', 'dropdown', false, ['CA', 'Lusaka']);
@@ -96,23 +88,17 @@ describe('Custom Forms', () => {
 
     /** Submit a Form * */
     cy.get('.left-menu-collapsible').click();
-    cy.wait(500);
     cy.get('.manage-forms-form-menu-item').click();
-    cy.wait(500);
     cy.get('.form-menu-open-btn').click();
-    cy.wait(500);
     cy.get('.submit_form').click();
-    cy.wait(2000);
 
     // Trigger Validation
     cy.get('[data-testid=submit_form_btn]').click();
-    cy.wait(1000);
     cy.get('[data-testid=confirm_contract]').click();
     cy.contains('Close').click({ force: true });
 
     // Fields Should be Required, Form submit terminated
     cy.contains('Required').should('exist');
-    cy.wait(1000);
 
     // Fill the Form
     cy.get('.form-txt-input-property-TextField').type('12345');
@@ -130,51 +116,33 @@ describe('Custom Forms', () => {
 
     cy.get('[data-testid=time_picker]').click();
     cy.contains('Ok').click();
-    cy.wait(1000);
 
     // Click Submit
     cy.get('[data-testid=submit_form_btn]').click();
-    cy.wait(2000);
 
     // Check For Contract Preview
     cy.contains('Contract Preview').should('exist');
-    cy.wait(1000);
     cy.contains('Previewing: TextField Value: 12345, Checkbox Value: Red').should('exist');
-    cy.wait(1000);
     cy.get('[data-testid=confirm_contract]').should('exist');
-    cy.wait(1000);
 
     // Click Confirm Preview
     cy.get('[data-testid=confirm_contract]').click();
-    cy.wait(3000);
 
     // Check if form was submitted successfully with a reload
     cy.get('.form-txt-input-property-TextField').should('not.have.value', '12345');
-    cy.wait(1000);
 
-    cy.window().then(win => {
-      cy.spy(win, 'open').as('redirect');
-    });
+    // View form entry
+    cy.get('.left-menu-collapsible').click();
+    cy.get('.manage-forms-form-menu-item').click();
+    cy.contains('Cypress Form');
 
     // To Download a form -
-    // Go to Permits & Request Forms
-    cy.get('.left-menu-collapsible').click();
-    cy.wait(1000);
-    cy.get('.manage-forms-form-menu-item').click();
-    cy.wait(1000);
+    cy.get('[data-testid=community_form]').click();
+    cy.get('[data-testid=search]').should('exist');
 
-    // Click on view entries button
-    cy.get('.form-menu-open-btn').click();
-    cy.wait(500);
-    cy.get('[data-testid=community_form]').click({ force: true });
-    cy.wait(1000);
-    cy.get('[data-testid=DownloadIcon]').should('exist');
+     // Click the first download button - should be clickable
+    cy.get('[data-testid=status]').click();
 
-    // Click the first download button - should be clickable
-    cy.get('[data-testid=DownloadIcon]')
-      .eq(0)
-      .click();
-    cy.wait(1000);
-    cy.get('@redirect').should('be.called');
+    cy.get('[data-testid=download_form_btn]').click();
   });
 });

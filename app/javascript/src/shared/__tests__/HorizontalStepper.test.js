@@ -1,9 +1,9 @@
 import React from 'react';
 import { fireEvent, render } from '@testing-library/react';
-
 import routeData, { MemoryRouter } from 'react-router';
-import HorizontalStepper from "../HorizontalStepper";
-import CustomStepper from "../CustomStepper";
+import HorizontalStepper from '../HorizontalStepper';
+import CustomStepper from '../CustomStepper';
+import MockedThemeProvider from '../../modules/__mocks__/mock_theme';
 
 describe('HorizontalStepper component', () => {
   // mocks
@@ -13,15 +13,19 @@ describe('HorizontalStepper component', () => {
   beforeEach(() => {
     jest.spyOn(routeData, 'useHistory').mockReturnValue(mockHistory);
   });
-  const features = { LogBook: { features: ['Guest Verification'] }};
+  const features = { LogBook: { features: ['Guest Verification'] } };
   const request = {
     id: '9328129321',
-    imageUrls: "https://image.com"
-  }
+    imageUrls: 'https://image.com'
+  };
   const steps = jest.fn(next => [
     {
       title: 'First Step',
-      component: <button type="button" onClick={() => next(true)} data-testid="only_step">First Step Contents</button>
+      component: (
+        <button type="button" onClick={() => next(true)} data-testid="only_step">
+          First Step Contents
+        </button>
+      )
     }
   ]);
 
@@ -42,11 +46,9 @@ describe('HorizontalStepper component', () => {
   it('should not show step buttons when its just one step', () => {
     const container = render(
       <MemoryRouter>
-        <HorizontalStepper
-          steps={steps}
-          communityFeatures={features}
-          request={request}
-        />
+        <MockedThemeProvider>
+          <HorizontalStepper steps={steps} communityFeatures={features} request={request} />
+        </MockedThemeProvider>
       </MemoryRouter>
     );
     expect(container.queryByTestId('stepper_container')).toBeInTheDocument();
@@ -54,17 +56,15 @@ describe('HorizontalStepper component', () => {
     expect(container.queryByText('First Step Contents')).toBeInTheDocument();
     fireEvent.click(container.queryByTestId('only_step'));
     expect(container.queryByText('First Step Contents')).toBeInTheDocument();
-    expect(mockHistory.push).toBeCalled()
+    expect(mockHistory.push).toBeCalled();
   });
 
   it('should show all steps correctly', () => {
     const container = render(
       <MemoryRouter>
-        <HorizontalStepper
-          steps={manySteps}
-          communityFeatures={features}
-          request={request}
-        />
+        <MockedThemeProvider>
+          <HorizontalStepper steps={manySteps} communityFeatures={features} request={request} />
+        </MockedThemeProvider>
       </MemoryRouter>
     );
     expect(container.queryAllByTestId('step_button')[0]).toBeInTheDocument();
@@ -73,22 +73,18 @@ describe('HorizontalStepper component', () => {
     expect(container.queryByText('Other Step Contents')).not.toBeInTheDocument();
     // click to move to next step
     fireEvent.click(container.queryByTestId('first_step'));
-    expect(mockHistory.push).toBeCalled()
-    expect(mockHistory.push).toBeCalledWith({"search": "?step=1"})
+    expect(mockHistory.push).toBeCalled();
+    expect(mockHistory.push).toBeCalledWith({ search: '?step=1' });
 
     // clicking the step should take you to that step's content
     fireEvent.click(container.queryAllByTestId('step_button')[0]);
-    expect(mockHistory.push).toBeCalled()
-    expect(mockHistory.push).toBeCalledWith({"search": "?step=1"})
+    expect(mockHistory.push).toBeCalled();
+    expect(mockHistory.push).toBeCalledWith({ search: '?step=1' });
   });
 
   it('should render the custom stepper', () => {
     const container = render(
-      <CustomStepper
-        steps={manySteps()}
-        activeStep={1}
-        handleStep={jest.fn()}
-      >
+      <CustomStepper steps={manySteps()} activeStep={1} handleStep={jest.fn()}>
         <p>This is some child</p>
       </CustomStepper>
     );
@@ -96,5 +92,5 @@ describe('HorizontalStepper component', () => {
     expect(container.queryAllByTestId('step_button')[0]).toBeInTheDocument();
     expect(container.queryAllByTestId('step_button')).toHaveLength(2);
     expect(container.queryByText('This is some child')).toBeInTheDocument();
-  })
+  });
 });
