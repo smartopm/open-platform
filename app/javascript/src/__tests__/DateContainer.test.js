@@ -10,7 +10,7 @@ describe('date container component', () => {
     const date = new Date()
     const time = dateTimeToString(date)
     const component = render(<DateContainer date={date} />)
-    expect(component.queryByText(`misc.today_at ${time}`)).toBeInTheDocument();
+    expect(component.queryByText(`common:misc.today_at ${time}`)).toBeInTheDocument();
     expect(dateFormatter(date, t)).toContain(time)
   })
   it('renders a span just yesterday time if date was from yesterday', () => {
@@ -18,7 +18,7 @@ describe('date container component', () => {
     const date = new Date()
     const previousDate = date.setDate(date.getDate() - 1)
     const component = render(<DateContainer date={new Date(previousDate)} />)
-    expect(component.queryByText(`misc.yesterday_at ${dateTimeToString(previousDate)}`)).toBeInTheDocument();
+    expect(component.queryByText(`common:misc.yesterday_at ${dateTimeToString(previousDate)}`)).toBeInTheDocument();
   })
 
  it('renders date for older dates', () => {

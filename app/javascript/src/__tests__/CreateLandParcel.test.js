@@ -94,13 +94,6 @@ describe('Land Property Component', () => {
     expect(container.queryByTestId('custom-dialog-button')).toBeInTheDocument();
 
     fireEvent.click(container.queryByTestId('custom-dialog-button'));
-
-    await waitFor(
-      () => {
-        expect(container.queryByText('messages.property_added')).toBeInTheDocument();
-      },
-      { timeout: 500 }
-    );
     fireEvent.click(container.queryByTestId('dialog_cancel'));
   });
 
