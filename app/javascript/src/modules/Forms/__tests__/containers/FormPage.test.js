@@ -101,4 +101,43 @@ describe('FormPage Component', () => {
       expect(container.queryByTestId('page_title')).not.toBeInTheDocument();
     });
   });
+
+  it('renders download button for admin users', async () => {
+    const container = render(
+      <Context.Provider value={authState}>
+        <MockedProvider mocks={[formMock]} addTypename={false}>
+          <MemoryRouter>
+            <MockedThemeProvider>
+              <FormPage />
+            </MockedThemeProvider>
+          </MemoryRouter>
+        </MockedProvider>
+      </Context.Provider>
+    );
+
+    await waitFor(() => {
+      console.log(container.debug());
+      expect(container.queryByTestId('download_form_btn')).toBeInTheDocument();
+    });
+  });
+
+  it('does not render download button for non-admin users', async () => {
+    authState.user.userType = 'resident';
+    const container = render(
+      <Context.Provider value={authState}>
+        <MockedProvider mocks={[formMock]} addTypename={false}>
+          <MemoryRouter>
+            <MockedThemeProvider>
+              <FormPage />
+            </MockedThemeProvider>
+          </MemoryRouter>
+        </MockedProvider>
+      </Context.Provider>
+    );
+
+    await waitFor(() => {
+      expect(container.queryByText('common:misc.download')).not.toBeInTheDocument();
+      expect(container.queryByTestId('download_form_btn')).not.toBeInTheDocument();
+    });
+  });
 });
