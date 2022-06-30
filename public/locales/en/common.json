@@ -680,5 +680,12 @@
     "video": "Video",
     "pdf": "PDF",
     "compressed_file": "Zipped file"
+  },
+  "date_picker": {
+    "required_field": "{{fieldName}} is Required",
+    "ok_label": "Ok",
+    "clear": "Clear",
+    "cancel": "Cancel",
+    "date_time_in_the_future": "Please select a date and time in the future"
   }
 }

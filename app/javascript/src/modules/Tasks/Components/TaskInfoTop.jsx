@@ -378,9 +378,10 @@ export default function TaskInfoTop({
                   disableUnderline: true,
                   style: { color: moment().isAfter(selectedDate) ? 'red' : '#575757' }
                 }}
+                t={t}
               />
             ) : (
-              <DatePickerDialog disabled />
+              <DatePickerDialog disabled t={t} />
             )}
           </Grid>
         </Grid>

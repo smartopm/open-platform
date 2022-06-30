@@ -2,17 +2,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import TextField from '@mui/material/TextField';
-import AdapterDateFns from '@mui/lab/AdapterDateFns';
-import {
-  MobileDatePicker,
-  MobileDateTimePicker,
-  MobileTimePicker,
-  LocalizationProvider
-} from '@mui/lab';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
+import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
+import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import enUS from 'date-fns/locale/en-US';
 import es from 'date-fns/locale/es';
 import FormHelperText from '@mui/material/FormHelperText';
-import { useTranslation } from 'react-i18next';
+// import { useTranslation } from 'react-i18next';
 import { checkPastDate } from '../utils/dateutil';
 import { getCurrentLng } from '../modules/i18n/util';
 
@@ -31,13 +29,14 @@ export default function DatePickerDialog({
   textFieldStyle,
   margin,
   size,
+  t,
   ...others
 }) {
-  const { t } = useTranslation(['logbook', 'form']);
+  // const { t } = useTranslation(['logbook', 'form']);
   return (
     <LocalizationProvider
       dateAdapter={AdapterDateFns}
-      locale={getCurrentLng().includes('es') ? es : enUS}
+      adapterLocale={getCurrentLng().includes('es') ? es : enUS}
     >
       <MobileDatePicker
         renderInput={params => (
@@ -46,7 +45,7 @@ export default function DatePickerDialog({
               {...params}
               helperText={
                 inputValidation.error &&
-                t('form:errors.required_field', { fieldName: inputValidation.fieldName })
+                t('common:date_picker.required_field', { fieldName: inputValidation.fieldName })
               }
               placeholder="YYYY-MM-DD"
               variant={inputVariant}
@@ -61,9 +60,9 @@ export default function DatePickerDialog({
             />
           </div>
         )}
-        okText={t('date_picker.ok_label')}
-        clearText={t('date_picker.clear')}
-        cancelText={t('date_picker.cancel')}
+        okText={t('common:date_picker.ok_label')}
+        clearText={t('common:date_picker.clear')}
+        cancelText={t('common:date_picker.cancel')}
         data-testid="date-picker"
         style={{ width: `${width || '100%'}`, ...styles }}
         clearable
@@ -89,9 +88,10 @@ export function DateAndTimePickers({
   pastDate,
   inputValidation,
   inputVariant,
-  textFieldStyle
+  textFieldStyle,
+  t
 }) {
-  const { t } = useTranslation(['logbook', 'form']);
+  // const { t } = useTranslation(['logbook', 'form']);
   return (
     <LocalizationProvider
       dateAdapter={AdapterDateFns}
@@ -105,9 +105,9 @@ export function DateAndTimePickers({
               /* eslint-disable no-nested-ternary */
               helperText={
                 pastDate
-                  ? t('form:errors.date_time_in_the_future')
+                  ? t('common:date_picker.date_time_in_the_future')
                   : inputValidation.error
-                  ? t('form:errors.required_field', { fieldName: inputValidation.fieldName })
+                  ? t('common:date_picker.required_field', { fieldName: inputValidation.fieldName })
                   : ''
               }
               placeholder="YYYY-MM-DD hh:mm a"
@@ -120,9 +120,9 @@ export function DateAndTimePickers({
             />
           </div>
         )}
-        okText={t('date_picker.ok_label')}
-        clearText={t('date_picker.clear')}
-        cancelText={t('date_picker.cancel')}
+        okText={t('common:date_picker.ok_label')}
+        clearText={t('common:date_picker.clear')}
+        cancelText={t('common:date_picker.cancel')}
         data-testid="datetime-picker"
         label={label}
         value={selectedDateTime}
@@ -144,9 +144,10 @@ export function ThemedTimePicker({
   disabled,
   textFieldStyle,
   inputVariant,
+  t,
   ...otherProps
 }) {
-  const { t } = useTranslation(['logbook', 'form']);
+  // const { t } = useTranslation(['logbook', 'form']);
   return (
     <>
       <LocalizationProvider
@@ -175,9 +176,9 @@ export function ThemedTimePicker({
               />
             )
           }
-          okText={t('date_picker.ok_label')}
-          clearText={t('date_picker.clear')}
-          cancelText={t('date_picker.cancel')}
+          okText={t('common:date_picker.ok_label')}
+          clearText={t('common:date_picker.clear')}
+          cancelText={t('common:date_picker.cancel')}
           data-testid="time_picker"
           clearable
           label={label}
@@ -189,7 +190,7 @@ export function ThemedTimePicker({
       {/* Moved the validation error outside to silence the MUI error */}
       {inputValidation.error && (
         <FormHelperText error>
-          {t('form:errors.required_field', { fieldName: inputValidation.fieldName })}
+          {t('common:date_picker.required_field', { fieldName: inputValidation.fieldName })}
         </FormHelperText>
       )}
     </>
@@ -199,61 +200,61 @@ export function ThemedTimePicker({
 DatePickerDialog.defaultProps = {
   inputValidation: {
     error: false,
-    fieldName: ''
+    fieldName: '',
   },
   disabled: false,
   textFieldStyle: undefined,
   inputVariant: 'standard',
-  size: undefined
+  size: undefined,
 };
 
 DateAndTimePickers.defaultProps = {
   inputValidation: {
     error: false,
-    fieldName: ''
+    fieldName: '',
   },
   inputVariant: 'standard',
   textFieldStyle: undefined,
-  margin: 'dense'
+  margin: 'dense',
 };
 
 ThemedTimePicker.defaultProps = {
   inputValidation: {
     error: false,
-    fieldName: ''
+    fieldName: '',
   },
   disabled: false,
   textFieldStyle: null,
-  inputVariant: 'standard'
+  inputVariant: 'standard',
 };
 
 DatePickerDialog.propTypes = {
   inputValidation: PropTypes.shape({
     error: PropTypes.bool,
-    fieldName: PropTypes.string
+    fieldName: PropTypes.string,
   }),
   disabled: PropTypes.bool,
   textFieldStyle: PropTypes.shape({}),
   inputVariant: PropTypes.string,
-  size: PropTypes.string
+  size: PropTypes.string,
 };
 
 DateAndTimePickers.propTypes = {
   inputValidation: PropTypes.shape({
     error: PropTypes.bool,
-    fieldName: PropTypes.string
+    fieldName: PropTypes.string,
   }),
   inputVariant: PropTypes.string,
   textFieldStyle: PropTypes.shape({}),
-  margin: PropTypes.string
+  margin: PropTypes.string,
 };
 
 ThemedTimePicker.propTypes = {
   inputValidation: PropTypes.shape({
     error: PropTypes.bool,
-    fieldName: PropTypes.string
+    fieldName: PropTypes.string,
   }),
   disabled: PropTypes.bool,
   textFieldStyle: PropTypes.shape({}),
-  inputVariant: PropTypes.string
+  inputVariant: PropTypes.string,
 };

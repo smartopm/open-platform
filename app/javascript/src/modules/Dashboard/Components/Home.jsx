@@ -19,7 +19,6 @@ import FeatureCheck from '../../Features';
 import SocialMediaLinks from '../../../components/SocialMediaLinks';
 import QuickLinks from '../../QuickLinks/Components/QuickLinks';
 import { filterQuickLinksByRole } from '../utils';
-import { Spinner } from '../../../shared/Loading';
 import CommunityNews from '../../Discussions/Components/CommunityNews';
 import { allUserTypes } from '../../../utils/constants';
 import PageWrapper from '../../../shared/PageWrapper';
@@ -39,10 +38,8 @@ const Home = () => {
     role => !excludedCommunityNewsRoles.includes(role)
   );
 
-  if (!authState.loggedIn) return <Spinner />;
-
   return (
-    <PageWrapper pageTitle={t('dashboard.dashboard')} oneCol={!communityNewsUsers.includes(userType)}>
+    <PageWrapper pageTitle={t('dashboard.dashboard')} oneCol={!communityNewsUsers.includes(userType)} loading={!authState.loggedIn}>
       <Grid container columns={{ xs: 12, md: 12 }} spacing={3}>
         {matches && (
           <Grid item sm={12} md={12} xs={12}>

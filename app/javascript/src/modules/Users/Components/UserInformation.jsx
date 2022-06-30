@@ -225,7 +225,7 @@ export default function UserInformation({
                 </TabPanel>
               </FeatureCheck>
               <TabPanel value={tabValue} index="LeadManagement">
-                <LeadManagementDetails tabValue={tabValue} userId={data.user.id} />
+                <LeadManagementDetails tabValue={tabValue} userId={data.user?.id} />
               </TabPanel>
             </>
           )}

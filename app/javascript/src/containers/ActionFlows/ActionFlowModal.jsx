@@ -518,6 +518,7 @@ export default function ActionFlowModal({ open, closeModal, handleSave, selected
                       handleDateChange({ name: actionField.name, value: date })
                     }
                     selectedDate={selectedDate}
+                    t={t}
                   />
                 </FormControl>
               );

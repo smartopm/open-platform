@@ -12,6 +12,7 @@ describe('Mounts date picker', () => {
           selectedDate="2020/05/12"
           handleDateChange={jest.fn()}
           label="Expiration Date"
+          t={jest.fn()}
         />
       </MockedThemeProvider>
     );
@@ -27,6 +28,7 @@ describe('Mounts date picker', () => {
           handleDateChange={jest.fn()}
           label="Expiration Date"
           inputValidation={{ error: true, fieldName: 'Expiration Date' }}
+          t={jest.fn()}
         />
       </MockedThemeProvider>
     );

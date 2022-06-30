@@ -583,6 +583,7 @@ export default function UserForm({ isEditing, isFromRef, isAdminOrMarketingAdmin
                     selectedDate={selectedDate}
                     label={t('common:misc.expiration_date')}
                     handleDateChange={handleDateChange}
+                    t={t}
                   />
                 </div>
               </>

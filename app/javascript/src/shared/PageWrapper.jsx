@@ -9,6 +9,7 @@ import AppBar from '@mui/material/AppBar';
 import Divider from '@mui/material/Divider';
 import Avatar from '../components/Avatar';
 import UserDetail from '../modules/Users/Components/UserProfileDetail';
+import { Spinner } from './Loading';
 
 export default function PageWrapper({
   children,
@@ -18,14 +19,13 @@ export default function PageWrapper({
   breadCrumbObj,
   avatarObj,
   rightPanelObj,
-  hideWrapper
+  hideWrapper,
+  loading,
 }) {
   const matches = useMediaQuery('(max-width:900px)');
   const classes = useStyles();
   return hideWrapper ? (
-    <div data-testid='noWrapper'>
-      {children}
-    </div>
+    <div data-testid="noWrapper">{children}</div>
   ) : (
     <Grid
       container
@@ -110,10 +110,12 @@ export default function PageWrapper({
         </AppBar>
         {oneCol ? (
           <Container maxWidth="md" className={matches ? classes.children : classes.childrenBig}>
-            {children}
+            {loading ? <Spinner /> : children}
           </Container>
         ) : (
-          <div className={matches ? classes.children : classes.childrenBig}>{children}</div>
+          <div className={matches ? classes.children : classes.childrenBig}>
+            {loading ? <Spinner /> : children}
+          </div>
         )}
       </Grid>
       <Grid
@@ -128,27 +130,27 @@ export default function PageWrapper({
 
 const useStyles = makeStyles(theme => ({
   topStyle: {
-    paddingBottom: '4%'
+    paddingBottom: '4%',
   },
   containerStyles: {
     paddingLeft: '16px',
-    paddingRight: '16px'
+    paddingRight: '16px',
   },
   linkColor: {
-    color: theme.palette.primary.main
+    color: theme.palette.primary.main,
   },
   children: {
-    marginTop: '15%'
+    marginTop: '15%',
   },
   childrenBig: {
-    marginTop: '8%'
+    marginTop: '8%',
   },
   divider: {
-    margin: '20px -4% 0  -4%'
+    margin: '20px -4% 0  -4%',
   },
   dividerBig: {
-    margin: '20px -11% 0  -11%'
-  }
+    margin: '20px -11% 0  -11%',
+  },
 }));
 
 PageWrapper.defaultProps = {
@@ -158,7 +160,8 @@ PageWrapper.defaultProps = {
   breadCrumbObj: undefined,
   avatarObj: undefined,
   rightPanelObj: undefined,
-  hideWrapper: false
+  hideWrapper: false,
+  loading: false,
 };
 
 PageWrapper.propTypes = {
@@ -171,7 +174,7 @@ PageWrapper.propTypes = {
     extraBreadCrumbLink: PropTypes.string,
     linkText: PropTypes.string,
     linkHref: PropTypes.string,
-    pageName: PropTypes.string
+    pageName: PropTypes.string,
   }),
   avatarObj: PropTypes.shape({
     data: PropTypes.shape({
@@ -179,15 +182,16 @@ PageWrapper.propTypes = {
         imageUrl: PropTypes.string,
         avatarUrl: PropTypes.string,
         name: PropTypes.string,
-        userType: PropTypes.string
-      })
-    })
+        userType: PropTypes.string,
+      }),
+    }),
   }),
   rightPanelObj: PropTypes.arrayOf(
     PropTypes.shape({
       key: PropTypes.number,
-      mainElement: PropTypes.oneOfType([PropTypes.node, PropTypes.string])
+      mainElement: PropTypes.oneOfType([PropTypes.node, PropTypes.string]),
     })
   ),
-  hideWrapper: PropTypes.bool
+  hideWrapper: PropTypes.bool,
+  loading: PropTypes.bool,
 };

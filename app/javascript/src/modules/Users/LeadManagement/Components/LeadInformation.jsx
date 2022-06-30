@@ -20,7 +20,7 @@ import {
   leadTemperatureOptions,
   leadStatusOptions,
   leadSourceOptions,
-  leadTypeOptions
+  leadTypeOptions,
 } from '../../../../utils/constants';
 
 export default function LeadInformation({ leadFormData, handleChange, handleTimeInputChange }) {
@@ -28,8 +28,8 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
   const matches = useMediaQuery('(max-width:800px)');
   const useStyles = makeStyles(() => ({
     input: {
-      height: 40
-    }
+      height: 40,
+    },
   }));
 
   const classes = useStyles();
@@ -168,7 +168,7 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
             fullWidth
             InputProps={{
               className: classes.input,
-              'aria-label': 'company_contacted'
+              'aria-label': 'company_contacted',
             }}
             rows={2}
             size="small"
@@ -202,6 +202,7 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
             selectedDate={leadFormData?.user?.kickOffDate}
             inputVariant="outlined"
             size="small"
+            t={t}
           />
         </Grid>
 
@@ -333,7 +334,7 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          placeContent: 'center'
+          placeContent: 'center',
         }}
       >
         <Grid item md={6} xs={12}>
@@ -360,6 +361,7 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
             inputProps={{ 'data-testid': 'start_time_input' }}
             inputVariant="outlined"
             size="small"
+            t={t}
           />
         </Grid>
 
@@ -387,6 +389,7 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
             selectedDate={leadFormData?.user?.lastContactDate}
             inputVariant="outlined"
             size="small"
+            t={t}
           />
         </Grid>
 
@@ -416,6 +419,7 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
             selectedDate={leadFormData?.user?.followupAt}
             inputVariant="outlined"
             size="small"
+            t={t}
           />
         </Grid>
       </Grid>
@@ -426,5 +430,5 @@ export default function LeadInformation({ leadFormData, handleChange, handleTime
 LeadInformation.propTypes = {
   leadFormData: PropTypes.shape({ user: userProps }).isRequired,
   handleChange: PropTypes.func.isRequired,
-  handleTimeInputChange: PropTypes.func.isRequired
+  handleTimeInputChange: PropTypes.func.isRequired,
 };

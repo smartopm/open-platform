@@ -30,7 +30,7 @@ export default function Report() {
   const [reportingDate, setReportingDate] = useState({ startDate: null, endDate: null });
   const [rangerPickerOpen, setRangePickerOpen] = useState(true);
   const [alertOpen, setAlertOpen] = useState(false)
-  const { t } = useTranslation('report')
+  const { t } = useTranslation(['report', 'common'])
   const history = useHistory();
   const [loadReportData, { data, error, loading, called }] = useLazyQuery(FormSubmissionsQuery, {
     variables: {
@@ -91,6 +91,7 @@ export default function Report() {
                 selectedDate={reportingDate.startDate}
                 handleDateChange={date => setReportingDate({ ...reportingDate, startDate: date })}
                 label={t('misc.pick_start_date')}
+                t={t}
               />
             </Grid>
             <Grid item>
@@ -98,6 +99,7 @@ export default function Report() {
                 selectedDate={reportingDate.endDate}
                 handleDateChange={date => setReportingDate({ ...reportingDate, endDate: date })}
                 label={t('misc.pick_end_date')}
+                t={t}
               />
             </Grid>
           </Grid>
