@@ -17,7 +17,8 @@ export default function AmenityList() {
   const [isLoading, setIsLoading] = useState(false)
   const [amenityData, setAmenityData] = useState(null)
   const { refetch, data, loading, fetchMore } = useQuery(AmenitiesQuery, {
-    variables: { offset: 0 }
+    variables: { offset: 0 },
+    fetchPolicy: 'cache-and-network'
   });
   const { t } = useTranslation(['common', 'amenity', 'form', 'search']);
 
