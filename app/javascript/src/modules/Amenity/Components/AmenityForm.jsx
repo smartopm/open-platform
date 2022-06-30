@@ -43,9 +43,10 @@ export default function AmenityForm({ isOpen, setOpen, refetch, t, amenityData }
       return;
     }
     if (amenityData) {
-      createAmenity(amenityValue);
+      updateAmenity({ ...amenityValue, id: amenityData.id });
+      return 
     }
-    updateAmenity(amenityValue);
+    createAmenity(amenityValue);
   }
 
   return (
@@ -155,6 +156,7 @@ AmenityForm.propTypes = {
   refetch: PropTypes.func.isRequired,
   t: PropTypes.func.isRequired,
   amenityData: PropTypes.shape({
+    id: PropTypes.string,
     name: PropTypes.string,
     description: PropTypes.string,
     location: PropTypes.string,

@@ -31,7 +31,7 @@ export const AmenityUpdateMutation = gql`
     $hours: String
     $invitationLink: String
   ) {
-    amenityCreate(
+    amenityUpdate(
       id: $id
       name: $name
       description: $description

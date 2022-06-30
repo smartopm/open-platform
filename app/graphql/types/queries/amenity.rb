@@ -13,7 +13,7 @@ module Types::Queries::Amenity
     end
   end
 
-  def amenities(offset: 0, limit: 2)
+  def amenities(offset: 0, limit: 50)
     validate_authorization(:amenity, :can_access_amenities)
 
     context[:site_community].amenities
