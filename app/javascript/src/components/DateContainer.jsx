@@ -59,9 +59,9 @@ export function dateFormatter(objDate, t) {
   if (!objDate) return null;
   // eslint-disable-next-line no-nested-ternary
   return isToday(new Date(objDate))
-    ? `${t('misc.today_at')} ${dateTimeToString(objDate)}`
+    ? `${t('common:misc.today_at')} ${dateTimeToString(objDate)}`
     : isYesterday(new Date(objDate))
-    ? `${t('misc.yesterday_at')} ${dateTimeToString(objDate)}`
+    ? `${t('common:misc.yesterday_at')} ${dateTimeToString(objDate)}`
     : dateToString(objDate);
 }
 

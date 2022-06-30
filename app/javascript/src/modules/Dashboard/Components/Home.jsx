@@ -34,7 +34,10 @@ const Home = () => {
   );
   const { userType } = authState.user;
   const filteredQuickLinks = filterQuickLinksByRole(dashboardQuickLinks, userType);
-  const communityNewsUsers = allUserTypes.filter(role => !['security_guard', 'lead'].includes(role) );
+  const excludedCommunityNewsRoles = Object.freeze(['security_guard', 'lead', 'developer']);
+  const communityNewsUsers = allUserTypes.filter(
+    role => !excludedCommunityNewsRoles.includes(role)
+  );
 
   if (!authState.loggedIn) return <Spinner />;
 

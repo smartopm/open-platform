@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Grid } from '@mui/material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useQuery } from 'react-apollo';
@@ -13,12 +13,14 @@ import { accessibleMenus } from '../utils';
 import { ProcessTemplatesQuery } from '../../../Processes/graphql/process_list_queries';
 import ProcessListItem from './ProcessListItem';
 import PageWrapper from '../../../../shared/PageWrapper';
+import { Context as AuthStateProvider } from '../../../../containers/Provider/AuthStateProvider';
 
 export default function AdminDashboard() {
   const { t } = useTranslation(['task', 'process']);
   const history = useHistory();
   const matches = useMediaQuery('(max-width:600px)');
   const [openSpeedDial, setOpenSpeedDial] = useState(false);
+  const authState = useContext(AuthStateProvider);
 
   const { data: processes, loading: processesLoading, error: processesError } = useQuery(
     ProcessTemplatesQuery,
@@ -26,6 +28,12 @@ export default function AdminDashboard() {
       fetchPolicy: 'cache-and-network'
     }
   );
+
+  const processesPagePermissions = authState?.user?.permissions?.find((permission) => (
+    permission.module === 'process'
+  ));
+
+  const canCreateProcess = Boolean(processesPagePermissions && processesPagePermissions.permissions?.includes('can_create_process_template'));
 
   const speedDialActions = [
     {
@@ -64,14 +72,16 @@ export default function AdminDashboard() {
               </>
             )}
           </Grid>
-          <Grid item md={1} xs={2}>
-            <SpeedDial
-              open={openSpeedDial}
-              handleSpeedDial={() => setOpenSpeedDial(!openSpeedDial)}
-              actions={accessibleMenus(speedDialActions)}
-              tooltipOpen
-            />
-          </Grid>
+          {canCreateProcess && (
+            <Grid item md={1} xs={2}>
+              <SpeedDial
+                open={openSpeedDial}
+                handleSpeedDial={() => setOpenSpeedDial(!openSpeedDial)}
+                actions={accessibleMenus(speedDialActions)}
+                tooltipOpen
+              />
+            </Grid>
+          )}
         </Grid>
         {matches && (
           <>

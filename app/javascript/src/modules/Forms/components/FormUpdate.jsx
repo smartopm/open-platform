@@ -20,14 +20,14 @@ import DatePickerDialog, {
   ThemedTimePicker
 } from '../../../components/DatePickerDialog';
 import { FormUserQuery, UserFormPropertiesQuery } from '../graphql/forms_queries';
-import ErrorPage from '../../../components/Error';
 import { FormUserStatusUpdateMutation, FormUserUpdateMutation } from '../graphql/forms_mutation';
 import TextInput from './FormProperties/TextInput';
 import {
   convertBase64ToFile,
   sortPropertyOrder,
   objectAccessor,
-  secureFileDownload
+  secureFileDownload,
+  formatError
 } from '../../../utils/helpers';
 import DialogueBox from '../../../shared/dialogs/DeleteDialogue';
 import UploadField from './FormProperties/UploadField';
@@ -35,7 +35,7 @@ import SignaturePad from './FormProperties/SignaturePad';
 import useFileUpload from '../../../graphql/useFileUpload';
 import RadioInput from './FormProperties/RadioInput';
 import ImageAuth from '../../../shared/ImageAuth';
-import Loading from '../../../shared/Loading';
+import { Spinner } from '../../../shared/Loading';
 import FormTitle from './FormTitle';
 import CheckboxInput from './FormProperties/CheckboxInput';
 import ListWrapper from '../../../shared/ListWrapper';
@@ -47,6 +47,7 @@ import UploadFileItem from '../../../shared/imageUpload/UploadFileItem';
 import TermsAndCondition from './TermsAndCondition';
 import PaymentInput from './FormProperties/PaymentInput';
 import { currencies } from '../../../utils/constants';
+import CenteredContent from '../../../shared/CenteredContent';
 
 // date
 // text input (TextField or TextArea)
@@ -606,9 +607,14 @@ export default function FormUpdate({ formUserId, userId, authState, categoriesDa
     return objectAccessor(fields, formPropertiesData.formProperty.fieldType);
   }
 
-  if (loading || formUserData.loading) return <Loading />;
-  if (error || formUserData.error)
-    return <ErrorPage title={error?.message || formUserData.error?.message} />;
+  if (loading || formUserData.loading) return <Spinner />;
+  if (error || formUserData.error) {
+    return(
+      <CenteredContent>
+        {formatError(error?.message || formUserData.error?.message )}
+      </CenteredContent>
+    )
+  }
 
   return (
     <>
@@ -655,7 +661,7 @@ export default function FormUpdate({ formUserId, userId, authState, categoriesDa
               formUserData?.data?.formUser.form.hasTermsAndConditions && (
               <Grid item xs={12} md={12} style={{ paddingBottom: '20px' }}>
                 <TermsAndCondition
-                  categoriesData={categoriesData} 
+                  categoriesData={categoriesData}
                   isChecked={formUserData.data?.formUser.hasAgreedToTerms}
                 />
               </Grid>
@@ -783,7 +789,7 @@ FormUpdate.propTypes = {
   userId: PropTypes.string.isRequired,
   formUserId: PropTypes.string.isRequired,
   authState: PropTypes.shape({
-    user: PropTypes.shape({ 
+    user: PropTypes.shape({
       userType: PropTypes.string,
       community: PropTypes.shape({
         currency: PropTypes.string

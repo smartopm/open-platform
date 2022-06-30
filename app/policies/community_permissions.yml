@@ -149,6 +149,7 @@ Tilisi:
       permissions:
         - can_see_menu_item
         - can_create_note
+        - can_view_create_task_button
         - can_update_note
         - can_set_note_reminder
         - can_assign_note
@@ -171,6 +172,14 @@ Tilisi:
         - can_mark_task_as_complete
         - can_get_comment_stats
         - can_fetch_project_document_comments
+        - can_fetch_process_comments
+        - can_get_replies_requested_comments
+    process:
+      permissions:
+        - can_see_menu_item
+        - can_access_tasks
+        - can_access_processes
+        - can_view_process_templates
     forms:
       permissions:
         - can_see_menu_item
@@ -180,6 +189,8 @@ Tilisi:
         - can_fetch_form_property
         - can_fetch_form_categories
         - can_save_draft_form
+        - can_view_form_user
+        - can_view_form_user_properties
     user:
       permissions:
         - can_view_own_profile
@@ -216,6 +227,10 @@ Tilisi:
     note:
       permissions:
         - can_see_menu_item
+        - can_create_note
+        - can_update_note
+        - can_view_create_task_button
+        - can_assign_note
         - can_set_note_reminder
         - can_create_note_comment
         - can_fetch_flagged_notes
@@ -230,6 +245,11 @@ Tilisi:
         - can_access_processes
         - can_upload_documents
         - can_fetch_tagged_comments
+    process:
+      permissions:
+        - can_see_menu_item
+        - can_access_tasks
+        - can_access_processes
     forms:
       permissions:
         - can_see_menu_item
@@ -349,7 +369,7 @@ DoubleGDP:
       permissions:
         - can_see_menu_item
         - can_access_own_forms
-        - can_fetch_form_task_comments    
+        - can_fetch_form_task_comments
   site_manager:
     gate_access:
       permissions:
@@ -397,6 +417,7 @@ DoubleGDP:
       permissions:
         - can_see_menu_item
         - can_create_note
+        - - can_view_create_task_button
         - can_update_note
         - can_set_note_reminder
         - can_assign_note
@@ -417,6 +438,15 @@ DoubleGDP:
         - can_fetch_comments_on_assigned_tasks
         - can_access_project_steps
         - can_mark_task_as_complete
+        - can_fetch_project_document_comments
+        - can_fetch_process_comments
+        - can_get_replies_requested_comments
+    process:
+      permissions:
+        - can_see_menu_item
+        - can_access_tasks
+        - can_access_processes
+        - can_view_process_templates
     forms:
       permissions:
         - can_see_menu_item
@@ -427,6 +457,7 @@ DoubleGDP:
         - can_fetch_form_property
         - can_fetch_form_categories
         - can_save_draft_form
+        - can_view_form_user_properties
     user:
       permissions:
         - can_view_own_profile
@@ -463,6 +494,10 @@ DoubleGDP:
     note:
       permissions:
         - can_see_menu_item
+        - can_create_note
+        - can_update_note
+        - can_view_create_task_button
+        - can_assign_note
         - can_set_note_reminder
         - can_create_note_comment
         - can_fetch_flagged_notes
@@ -477,6 +512,11 @@ DoubleGDP:
         - can_access_processes
         - can_upload_documents
         - can_fetch_tagged_comments
+    process:
+      permissions:
+        - can_see_menu_item
+        - can_access_tasks
+        - can_access_processes
     forms:
       permissions:
         - can_see_menu_item
@@ -913,7 +953,7 @@ Enyimba:
     transaction:
       permissions:
         - can_make_payment
-        - can_see_menu_item       
+        - can_see_menu_item
 Greenpark:
   site_manager:
     note:
@@ -979,7 +1019,7 @@ Greenpark:
       permissions:
         - can_see_menu_item
         - can_access_own_forms
-        - can_fetch_form_task_comments        
+        - can_fetch_form_task_comments
   site_worker:
     note:
       permissions:
@@ -1041,4 +1081,4 @@ Greenpark:
       permissions:
         - can_see_menu_item
         - can_access_own_forms
-        - can_fetch_form_task_comments        
+        - can_fetch_form_task_comments
