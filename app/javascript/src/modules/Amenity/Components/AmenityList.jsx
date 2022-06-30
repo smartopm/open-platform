@@ -69,6 +69,7 @@ export default function AmenityList() {
         </Grid>
       </Grid>
       <br />
+      {data?.amenities.length && (
       <CenteredContent>
         <Button
           variant="outlined"
@@ -79,6 +80,7 @@ export default function AmenityList() {
           {t('search:search.load_more')}
         </Button>
       </CenteredContent>
+      )}
     </PageWrapper>
   );
 }
