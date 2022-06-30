@@ -142,7 +142,7 @@ describe('Custom Forms', () => {
 
      // Click the first download button - should be clickable
     cy.get('[data-testid=status]').click();
-    cy.get('[data-testid=download_form_btn]').should('exist');
+
     cy.get('[data-testid=download_form_btn]').click();
   });
 });
