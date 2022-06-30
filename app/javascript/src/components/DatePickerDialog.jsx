@@ -10,7 +10,6 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import enUS from 'date-fns/locale/en-US';
 import es from 'date-fns/locale/es';
 import FormHelperText from '@mui/material/FormHelperText';
-// import { useTranslation } from 'react-i18next';
 import { checkPastDate } from '../utils/dateutil';
 import { getCurrentLng } from '../modules/i18n/util';
 
@@ -91,7 +90,6 @@ export function DateAndTimePickers({
   textFieldStyle,
   t
 }) {
-  // const { t } = useTranslation(['logbook', 'form']);
   return (
     <LocalizationProvider
       dateAdapter={AdapterDateFns}

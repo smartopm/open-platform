@@ -6,6 +6,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { ProcessesQuery } from '../graphql/process_queries';
 import ClientPilotViewList from '../Components/ClientPilotViewList';
 import taskMock from '../../__mocks__/taskMock';
+import MockedThemeProvider from '../../../__mocks__/mock_theme';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 
@@ -27,7 +28,9 @@ describe('Client processes dashboard', () => {
     render(
       <MockedProvider mocks={mocks} addTypename={false}>
         <BrowserRouter>
-          <ClientPilotViewList />
+          <MockedThemeProvider>
+            <ClientPilotViewList />
+          </MockedThemeProvider>
         </BrowserRouter>
       </MockedProvider>
     );

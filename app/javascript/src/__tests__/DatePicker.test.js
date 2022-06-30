@@ -21,6 +21,7 @@ describe('Mounts date picker', () => {
   });
 
   it('Render date component with validation error', () => {
+    const translation = jest.fn()
     const rendered = render(
       <MockedThemeProvider>
         <DatePickerDialog
@@ -28,11 +29,11 @@ describe('Mounts date picker', () => {
           handleDateChange={jest.fn()}
           label="Expiration Date"
           inputValidation={{ error: true, fieldName: 'Expiration Date' }}
-          t={jest.fn()}
+          t={translation}
         />
       </MockedThemeProvider>
     );
-    expect(rendered.queryByText('form:errors.required_field')).toBeTruthy();
+    expect(translation).toBeCalled();
   });
 
   afterEach(cleanup);
