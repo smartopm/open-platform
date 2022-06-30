@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, waitFor } from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 
 import RouteData, { MemoryRouter } from 'react-router';
 import { MockedProvider } from '@apollo/react-testing';
@@ -99,6 +99,50 @@ describe('FormPage Component', () => {
       expect(container.queryByText('common:misc.forms')).not.toBeInTheDocument();
       expect(container.queryByTestId('page_name')).not.toBeInTheDocument();
       expect(container.queryByTestId('page_title')).not.toBeInTheDocument();
+    });
+  });
+
+  it('renders download button for admin users', async () => {
+    authState.user.userType = 'admin';
+    const container = render(
+      <Context.Provider value={authState}>
+        <MockedProvider mocks={[formMock]} addTypename={false}>
+          <MemoryRouter>
+            <MockedThemeProvider>
+              <FormPage />
+            </MockedThemeProvider>
+          </MemoryRouter>
+        </MockedProvider>
+      </Context.Provider>
+    );
+
+    await waitFor(() => {
+      expect(container.queryByText('common:misc.download')).toBeInTheDocument();
+      expect(container.queryByTestId('download_form_btn')).toBeInTheDocument();
+      expect(container.queryByTestId('DownloadIcon')).toBeInTheDocument();
+
+      fireEvent.click(container.queryByTestId('download_form_btn'));
+      expect(container.queryByTestId('download_form_btn')).toBeDisabled();
+    });
+  });
+
+  it('does not render download button for non-admin users', async () => {
+    authState.user.userType = 'resident';
+    const container = render(
+      <Context.Provider value={authState}>
+        <MockedProvider mocks={[formMock]} addTypename={false}>
+          <MemoryRouter>
+            <MockedThemeProvider>
+              <FormPage />
+            </MockedThemeProvider>
+          </MemoryRouter>
+        </MockedProvider>
+      </Context.Provider>
+    );
+
+    await waitFor(() => {
+      expect(container.queryByText('common:misc.download')).not.toBeInTheDocument();
+      expect(container.queryByTestId('download_form_btn')).not.toBeInTheDocument();
     });
   });
 });

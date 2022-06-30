@@ -131,22 +131,18 @@ describe('Custom Forms', () => {
     // Check if form was submitted successfully with a reload
     cy.get('.form-txt-input-property-TextField').should('not.have.value', '12345');
 
-    cy.window().then(win => {
-      cy.spy(win, 'open').as('redirect');
-    });
-
     // View form entry
     cy.get('.left-menu-collapsible').click();
     cy.get('.manage-forms-form-menu-item').click();
     cy.contains('Cypress Form');
 
     // To Download a form -
-    // Go to Permits & Request Forms
     cy.get('[data-testid=community_form]').click();
     cy.get('[data-testid=search]').should('exist');
 
      // Click the first download button - should be clickable
-    cy.get('[data-testid=download]').click();
-    cy.get('@redirect').should('be.called');
+    cy.get('[data-testid=status]').click();
+
+    cy.get('[data-testid=download_form_btn]').click();
   });
 });
