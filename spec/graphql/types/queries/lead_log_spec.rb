@@ -234,7 +234,6 @@ RSpec.describe Types::Queries::LeadLog do
           signed_lease_lead_log.update(updated_at: "#{Time.zone.now.year}-01-01")
         end
 
-
         it 'returns scorecard' do
           result = DoubleGdpSchema.execute(lead_scorecard,
                                            context: {
@@ -273,7 +272,7 @@ RSpec.describe Types::Queries::LeadLog do
         end
       end
     end
-    
+
     describe '#investment_stats' do
       context 'when lead investment stats are fetched' do
         before { investment_lead_log }

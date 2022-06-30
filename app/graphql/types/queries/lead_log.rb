@@ -2,12 +2,12 @@
 
 # leadlog queries
 # rubocop:disable Metrics/ModuleLength
+# rubocop:disable Metrics/MethodLength
 module Types::Queries::LeadLog
   extend ActiveSupport::Concern
 
   VALID_LEAD_STATUSES = ['Qualified Lead', 'Signed MOU', 'Signed Lease'].freeze
 
-  # rubocop:disable Metrics/BlockLength
   included do
     field :lead_logs, [Types::LeadLogType], null: true do
       description 'Get lead logs'
@@ -88,7 +88,6 @@ module Types::Queries::LeadLog
     monthly_stats(lead_stats, valid_lead_divisions)
   end
 
-  # rubocop:disable Metrics/MethodLength
   def leads_monthly_stats_by_status
     lead_stats = context[:site_community].lead_logs
                                          .lead_status
@@ -103,7 +102,6 @@ module Types::Queries::LeadLog
 
     monthly_stats(lead_stats, VALID_LEAD_STATUSES)
   end
-  # rubocop:enable Metrics/MethodLength
 
   # Returns monthly stats.
   #
@@ -172,7 +170,6 @@ module Types::Queries::LeadLog
     Time.zone.now.beginning_of_year..Time.zone.now.end_of_year
   end
 
-  # rubocop:disable Metrics/MethodLength
   def investment_label(user_id, lead_log)
     label = context[:site_community].labels.joins(:user_labels)
                                     .find_by(user_labels: { user_id: user_id },
@@ -187,8 +184,6 @@ module Types::Queries::LeadLog
       color: label.color,
     }
   end
-  # rubocop:enable Metrics/MethodLength
-
 
   def percentage_of_target_used(total_spent, lead_log)
     return 100 if lead_log.investment_target.to_d.zero?
@@ -199,6 +194,6 @@ module Types::Queries::LeadLog
   def valid_lead_divisions
     context[:site_community].lead_monthly_targets&.map { |data| data['division'] }
   end
-
 end
+# rubocop:enable Metrics/MethodLength
 # rubocop:enable Metrics/ModuleLength
