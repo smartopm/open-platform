@@ -72,7 +72,7 @@ export default function TaskUpdate({
   if (error) return showTaskNotFoundError();
 
   return (
-    <Container maxWidth="xl">
+    <Container maxWidth="xl" data-testid='task-update'>
       <TaskDetail
         data={data?.task}
         refetch={refetch}

@@ -6,6 +6,7 @@ import { MockedProvider } from '@apollo/react-testing';
 import TaskDetail from '../Components/TaskDetail';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import authState from '../../../__mocks__/authstate';
+import MockedThemeProvider from '../../__mocks__/mock_theme';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 const data = {
@@ -49,7 +50,9 @@ describe('task form component', () => {
         <MockedProvider>
           <Context.Provider value={authState}>
             <BrowserRouter>
-              <TaskDetail {...props} />
+              <MockedThemeProvider>
+                <TaskDetail {...props} />
+              </MockedThemeProvider>
             </BrowserRouter>
           </Context.Provider>
         </MockedProvider>
@@ -71,7 +74,9 @@ describe('task form component', () => {
         <MockedProvider>
           <Context.Provider value={authState}>
             <BrowserRouter>
-              <TaskDetail {...newProps} />
+              <MockedThemeProvider>
+                <TaskDetail {...newProps} />
+              </MockedThemeProvider>
             </BrowserRouter>
           </Context.Provider>
         </MockedProvider>
@@ -94,7 +99,9 @@ describe('task form component', () => {
         <MockedProvider>
           <Context.Provider value={authState}>
             <BrowserRouter>
-              <TaskDetail {...props} />
+              <MockedThemeProvider>
+                <TaskDetail {...props} />
+              </MockedThemeProvider>
             </BrowserRouter>
           </Context.Provider>
         </MockedProvider>

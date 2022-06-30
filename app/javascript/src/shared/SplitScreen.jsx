@@ -37,6 +37,7 @@ export default function SplitScreen({ children, open, onClose }) {
       data-testid='drawer'
       elevation={0}
       classes={{ paper: drawerStyles() }}
+      PaperProps={{ 'data-testid': 'drawer-paper' }}
     >
       {children}
     </Drawer>
