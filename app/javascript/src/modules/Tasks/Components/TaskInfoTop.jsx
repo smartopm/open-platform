@@ -8,7 +8,7 @@ import { Button, Grid, Chip, Typography, IconButton, useMediaQuery, MenuItem } f
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import AccessAlarmIcon from '@mui/icons-material/AccessAlarm';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles, useTheme } from '@mui/styles';
 import { useHistory } from 'react-router';
 import PropTypes from 'prop-types';
 import { useTranslation } from 'react-i18next';
@@ -53,7 +53,8 @@ export default function TaskInfoTop({
 }) {
   const { t } = useTranslation(['task', 'common']);
   const classes = useStyles();
-  const matches = useMediaQuery('(max-width:1000px)');
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.down('md'));
   const history = useHistory();
   const location = useLocation();
   const { processId } = useParams()

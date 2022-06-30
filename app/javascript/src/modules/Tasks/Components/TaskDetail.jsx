@@ -1,7 +1,7 @@
 /* eslint-disable max-statements */
 import React, { useState, useEffect } from 'react';
 import { Grid, Snackbar } from '@mui/material';
-import makeStyles from '@mui/styles/makeStyles';
+import { makeStyles, useTheme } from '@mui/styles';
 import { useMutation, useLazyQuery, useApolloClient, useQuery } from 'react-apollo';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import PropTypes from 'prop-types';
@@ -61,7 +61,8 @@ export default function TaskDetail({
   const classes = useStyles();
   const path = useParamsQuery();
   const tab = path.get('detailTab');
-  const matches = useMediaQuery('(max-width:600px)');
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.down('sm'));
 
   const [anchorEl, setAnchorEl] = useState(null);
   const anchorElOpen = Boolean(anchorEl);
@@ -239,7 +240,7 @@ export default function TaskDetail({
   }, []);
 
   return (
-    <>
+    <div data-testid='task-detail'>
       <form>
         <Snackbar
           open={updated}
@@ -349,7 +350,7 @@ export default function TaskDetail({
           </div>
         </Grid>
       </form>
-    </>
+    </div>
   );
 }
 

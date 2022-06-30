@@ -11,7 +11,7 @@ describe('date container component', () => {
     const time = dateTimeToString(date)
     const component = mount(<DateContainer date={date} />)
     expect(component.find('span')).toHaveLength(1)
-    expect(component.find('span').text()).toEqual(`misc.today_at ${time}`)
+    expect(component.find('span').text()).toEqual(`common:misc.today_at ${time}`)
     expect(dateFormatter(date, t)).toContain(time)
   })
   it('renders a span just yesterday time if date was from yesterday', () => {
@@ -19,7 +19,7 @@ describe('date container component', () => {
     const date = new Date()
     const previousDate = date.setDate(date.getDate() - 1)
     const component = mount(<DateContainer date={new Date(previousDate)} />)
-    expect(component.find('span').text()).toEqual(`misc.yesterday_at ${dateTimeToString(previousDate)}`);
+    expect(component.find('span').text()).toEqual(`common:misc.yesterday_at ${dateTimeToString(previousDate)}`);
   })
 
  it('renders date for older dates', () => {
