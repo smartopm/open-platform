@@ -137,12 +137,16 @@ describe('Custom Forms', () => {
     cy.contains('Cypress Form');
 
     // To Download a form -
+    cy.visit('/forms');
     cy.get('[data-testid=community_form]').click();
     cy.get('[data-testid=search]').should('exist');
 
      // Click the first download button - should be clickable
     cy.get('[data-testid=status]').click();
+    cy.get('[data-testid=download_form_btn]').should('exist');
 
     cy.get('[data-testid=download_form_btn]').click();
+    cy.wait(1000);
+    cy.get('[data-testid=download_form_btn]').should('be.disabled');
   });
 });
