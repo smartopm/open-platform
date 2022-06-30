@@ -16,8 +16,6 @@ RSpec.describe Types::Queries::Label do
     let!(:current_user) { create(:user_with_community, role: visitor_role) }
     let!(:community) { current_user.community }
     let!(:admin) { create(:admin_user, community_id: community.id, role: admin_role) }
-
-    let!(:admin) { create(:admin_user, community_id: community.id, role: admin_role) }
     let!(:user2) { create(:user, community_id: community.id, role: visitor_role) }
 
     # create a label for the user
@@ -37,7 +35,24 @@ RSpec.describe Types::Queries::Label do
     end
 
     let(:lead) { create(:lead, community: community, lead_status: 'Site Visit', division: 'China') }
+    let(:deal_details_lead_log) do
+      create(:lead_log,
+             log_type: 'deal_details',
+             deal_size: 120_000,
+             investment_target: 10_000,
+             user: lead,
+             community: community,
+             acting_user_id: admin.id)
+    end
 
+    let(:investment_lead_log) do
+      create(:lead_log,
+             log_type: 'investment',
+             amount: 120,
+             user: lead,
+             community: community,
+             acting_user_id: admin.id)
+    end
     let(:labels_query) do
       %(query {
             labels {
@@ -129,7 +144,11 @@ RSpec.describe Types::Queries::Label do
 
     describe '#lead_labels' do
       context 'when user is authorized' do
-        it 'retrieves lead labels based on current division and status' do
+        before do
+          deal_details_lead_log
+          investment_lead_log
+        end
+        it 'retrieves lead labels based on current division, status and investment' do
           variables = { userId: lead.id }
           result = DoubleGdpSchema.execute(lead_labels_query, variables: variables,
                                                               context: {
@@ -137,7 +156,7 @@ RSpec.describe Types::Queries::Label do
                                                                 site_community: community,
                                                               }).as_json
           expect(result['errors']).to be_nil
-          expect(result.dig('data', 'leadLabels').length).to eql 2
+          expect(result.dig('data', 'leadLabels').length).to eql 3
         end
       end
 

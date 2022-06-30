@@ -74,7 +74,7 @@ RSpec.describe Logs::LeadLog, type: :model do
         create(:lead_log,
                log_type: 'deal_details',
                deal_size: 120_000,
-               investment_target: 10,
+               investment_target: 10_000,
                user: lead,
                community: community,
                acting_user_id: admin.id)
