@@ -131,10 +131,6 @@ describe('Custom Forms', () => {
     // Check if form was submitted successfully with a reload
     cy.get('.form-txt-input-property-TextField').should('not.have.value', '12345');
 
-    cy.window().then(win => {
-      cy.spy(win, 'open').as('redirect');
-    });
-
     // View form entry
     cy.get('.left-menu-collapsible').click();
     cy.get('.manage-forms-form-menu-item').click();
@@ -148,6 +144,5 @@ describe('Custom Forms', () => {
     cy.get('[data-testid=status]').click();
     cy.get('[data-testid=download_form_btn]').should('exist');
     cy.get('[data-testid=download_form_btn]').click();
-    cy.get('[data-testid=download_form_btn]').should('be.disabled');
   });
 });

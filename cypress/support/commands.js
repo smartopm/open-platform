@@ -36,7 +36,9 @@ Cypress.Commands.add("login", (phoneNumber) => {
 })
 
 Cypress.Commands.add("addFormProperty", (fieldName, fieldType, isRequired, options = []) => {
-  cy.get('.form-property-field-name-txt-input').type(fieldName);
+  cy.get('.form-property-field-name-txt-input')
+    .eq(0)
+    .type(fieldName);
   cy.get('.form-property-field-type-select-input').click();
   cy.get(`[data-value=${fieldType}]`).click();
 
