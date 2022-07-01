@@ -16,7 +16,6 @@ import { AmenityUpdateMutation } from '../graphql/amenity_mutations';
 import { ActionDialog } from '../../../components/Dialog';
 
 export default function AmenityList() {
-  const [open, setOpen] = useState(false);
   const [dialog, setOpenDialog] = useState({ isOpen: false, type: null })
   const [amenityData, setAmenityData] = useState(null)
   const { refetch, data, loading, fetchMore } = useQuery(AmenitiesQuery, {
@@ -31,19 +30,18 @@ export default function AmenityList() {
   function handleEditAmenity(amenity, type) {
     setAmenityData(amenity)
     setOpenDialog({ isOpen: true, type })
-    // setOpen(true)
   }
 
   function handleClose() {
     setOpenDialog({ isOpen: true, type: null });
   }
+
   function reset() {
 
   }
 
   function handleAddAmenity() {
     setAmenityData(null);
-    //  setOpen(true);
      setOpenDialog({ isOpen: true, type: 'edit' });
   }
 
@@ -59,7 +57,7 @@ export default function AmenityList() {
       />
       <AmenityForm
         isOpen={dialog.isOpen && dialog.type === 'edit'}
-        setOpen={setOpen}
+        handleClose={handleClose}
         refetch={refetch}
         amenityData={amenityData}
         t={t}
