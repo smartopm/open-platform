@@ -24,7 +24,7 @@ export default function CommentTextField({
   taskAssignees,
   mentionsData,
   commentOptions,
-  setMentionedDocuments
+  setMentionedDocuments,
 }) {
   const { t } = useTranslation(['task', 'common']);
   const authState = React.useContext(AuthStateContext);
@@ -57,35 +57,37 @@ export default function CommentTextField({
       </Grid>
       <>
         <Grid item xs={4}>
-          {forProcess && authState?.user?.userType === 'admin' && (
+          {authState?.user?.userType === 'admin' && (
             <>
+              {forProcess && (
+                <FormControlLabel
+                  control={(
+                    <Checkbox
+                      checked={commentOptions.autoCompleteOpen}
+                      onChange={() =>
+                        setCommentOptions({
+                          ...commentOptions,
+                          autoCompleteOpen: !commentOptions.autoCompleteOpen,
+                          sendToFormOwner: commentOptions.autoCompleteOpen && false,
+                        })
+                      }
+                      name="require-reply"
+                      data-testid="require_reply"
+                      color="primary"
+                    />
+                  )}
+                  label={<Typography variant="body2">{t('task.require_a_reply')}</Typography>}
+                />
+              )}
               <FormControlLabel
                 control={(
                   <Checkbox
-                    checked={commentOptions.autoCompleteOpen}
+                    checked={commentOptions.sendToFormOwner}
                     onChange={() =>
                       setCommentOptions({
                         ...commentOptions,
-                        autoCompleteOpen: !commentOptions.autoCompleteOpen,
-                        sendToResident: commentOptions.autoCompleteOpen && false
-                      })
-                    }
-                    name="require-reply"
-                    data-testid="require_reply"
-                    color="primary"
-                  />
-                )}
-                label={<Typography variant="body2">{t('task.require_a_reply')}</Typography>}
-              />
-              <FormControlLabel
-                control={(
-                  <Checkbox
-                    checked={commentOptions.sendToResident}
-                    onChange={() =>
-                      setCommentOptions({
-                        ...commentOptions,
-                        sendToResident: !commentOptions.sendToResident,
-                        autoCompleteOpen: commentOptions.sendToResident && false
+                        sendToFormOwner: !commentOptions.sendToFormOwner,
+                        autoCompleteOpen: commentOptions.sendToFormOwner && false,
                       })
                     }
                     name="send_to_resident"
@@ -114,7 +116,7 @@ export default function CommentTextField({
               style={{
                 width: matches ? 320 : '100%',
                 marginLeft: matches && -100,
-                marginTop: matches && 50
+                marginTop: matches && 50,
               }}
               id="reply-user"
               options={taskAssignees || []}
@@ -154,7 +156,7 @@ CommentTextField.defaultProps = {
   taskAssignees: null,
   mentionsData: [],
   setMentionedDocuments: () => {},
-  commentOptions: {}
+  commentOptions: {},
 };
 
 CommentTextField.propTypes = {
@@ -170,13 +172,13 @@ CommentTextField.propTypes = {
   taskAssignees: PropTypes.array,
   setMentionedDocuments: PropTypes.func,
   commentOptions: PropTypes.shape({
-      autoCompleteOpen: PropTypes.bool,
-      sendToResident: PropTypes.bool
-  }), 
+    autoCompleteOpen: PropTypes.bool,
+    sendToFormOwner: PropTypes.bool,
+  }),
   mentionsData: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string,
-      display: PropTypes.string
+      display: PropTypes.string,
     })
-  )
+  ),
 };

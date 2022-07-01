@@ -17,7 +17,7 @@ export default function CommentField({
 }) {
   const initialOptions = {
     autoCompleteOpen: false,
-    sendToResident: false
+    sendToFormOwner: false
   };
   const [commentCreate] = useMutation(TaskComment);
   const [body, setBody] = useState('');
@@ -33,7 +33,7 @@ export default function CommentField({
     let variables = {
       noteId: taskId,
       taggedDocuments: mentionedDocuments,
-      sendToResident: commentOptions.sendToResident,
+      sendToResident: commentOptions.sendToFormOwner,
       body
     };
     if (replyFrom) {
