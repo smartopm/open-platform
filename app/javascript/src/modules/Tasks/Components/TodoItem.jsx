@@ -59,7 +59,7 @@ export default function TodoItem({
   const canUpdateNote = taskPermissions
     ? taskPermissions.permissions.includes('can_update_note')
     : false;
-  const [loadSubTasks, { data, loading: isLoadingSubTasks }] = useLazyQuery(SubTasksQuery, {
+  const [loadSubTasks, { data, loading: isLoadingSubTasks, refetch: subTasksRefetch }] = useLazyQuery(SubTasksQuery, {
     variables: { taskId: task?.id, limit: task?.subTasksCount },
     fetchPolicy: 'cache-and-network',
     errorPolicy: 'all'
@@ -265,6 +265,7 @@ export default function TodoItem({
             menuData={menuData}
             styles={{ backgroundColor: '#F5F5F4' }}
             openSubTask={objectAccessor(tasksOpen, task.id)}
+            refetch={subTasksRefetch}
           />
         )}
 
@@ -351,6 +352,7 @@ export default function TodoItem({
                   openSubTask={objectAccessor(tasksOpen, firstLevelSubTask.id)}
                   subTaskCard
                   alignStyles={{ marginLeft: '-12px' }}
+                  refetch={subTasksRefetch}
                 />
               )}
             </div>
@@ -385,6 +387,7 @@ export default function TodoItem({
                           menuData={menuData}
                           styles={{ backgroundColor: '#F5F5F4' }}
                           alignStyles={{ marginLeft: '-32px' }}
+                          refetch={subTasksRefetch}
                         />
                       )}
                     </div>

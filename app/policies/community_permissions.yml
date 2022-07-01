@@ -20,6 +20,7 @@ Ciudad Morazán:
         - can_get_task_stats
         - can_get_own_tasks
         - can_access_tasks
+        - can_delete_note
     profile:
       permissions:
         - can_see_menu_item
@@ -174,12 +175,15 @@ Tilisi:
         - can_fetch_project_document_comments
         - can_fetch_process_comments
         - can_get_replies_requested_comments
+        - can_delete_note
+
     process:
       permissions:
         - can_see_menu_item
         - can_access_tasks
         - can_access_processes
         - can_view_process_templates
+
     forms:
       permissions:
         - can_see_menu_item
@@ -312,6 +316,7 @@ DoubleGDP:
         - can_get_task_stats
         - can_get_own_tasks
         - can_access_tasks
+        - can_delete_note
     profile:
       permissions:
         - can_see_menu_item
@@ -441,6 +446,7 @@ DoubleGDP:
         - can_fetch_project_document_comments
         - can_fetch_process_comments
         - can_get_replies_requested_comments
+        - can_delete_note
     process:
       permissions:
         - can_see_menu_item
@@ -619,6 +625,7 @@ DoubleGDP:
         - can_delete_task_list
         - can_get_replies_requested_comments
         - can_fetch_process_comments
+        - can_delete_note
     task_list:
       permissions:
         - can_see_menu_item
@@ -805,6 +812,7 @@ Enyimba:
         - can_delete_task_list
         - can_get_replies_requested_comments
         - can_fetch_process_comments
+        - can_delete_note
     task_list:
       permissions:
         - can_see_menu_item
@@ -977,6 +985,7 @@ Greenpark:
         - can_view_create_sub_task_button
         - can_access_tasks
         - can_view_task_lists
+        - can_delete_note
     task_list:
       permissions:
         - can_see_menu_item
@@ -1042,6 +1051,7 @@ Greenpark:
         - can_view_create_sub_task_button
         - can_access_tasks
         - can_view_task_lists
+        - can_delete_note
     task_list:
       permissions:
         - can_see_menu_item

@@ -25,7 +25,8 @@ module Notes
       attributes :current_step_body
     end
 
-    enum status: { not_started: 0, in_progress: 1, needs_attention: 2, at_risk: 3, completed: 4 }
+    enum status: { not_started: 0, in_progress: 1, needs_attention: 2,
+                   at_risk: 3, completed: 4, deleted: 5 }
 
     belongs_to :community
     belongs_to :user, class_name: 'Users::User'
@@ -51,7 +52,12 @@ module Notes
     after_update :log_update_event
     after_save :update_parent_current_step, if: -> { parent_note_id.present? }
 
-    default_scope { order(created_at: :desc) }
+    default_scope do
+      where(status: statuses.keys.append(nil))
+        .where.not(status: :deleted)
+        .order(created_at: :desc)
+    end
+
     scope :by_due_date, ->(date) { where('due_date <= ?', date) }
     scope :by_completion, ->(is_complete) { where(completed: is_complete) }
     scope :by_category, ->(category) { where(category: category) }

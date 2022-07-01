@@ -8,6 +8,7 @@ module Types
     field :id, ID, null: false
     field :user, Types::UserType, null: false
     field :user_id, ID, null: false
+    field :author_id, ID, null: false
     field :assigned_to, ID, null: true
     field :author, Types::UserType, null: false
     field :assignees, [Types::UserType], null: true

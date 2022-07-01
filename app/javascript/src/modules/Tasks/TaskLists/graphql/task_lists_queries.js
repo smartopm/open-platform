@@ -19,6 +19,7 @@ export const TaskListQuery = gql`
       id
       body
       subTasksCount
+      category
     }
   }
 `;

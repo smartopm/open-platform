@@ -66,3 +66,11 @@ export const ResolveComments = gql`
     }
   }
 `
+
+export const DeleteTask = gql`
+  mutation noteDelete($id: ID!){
+    noteDelete(id: $id){
+      success
+    }
+  }
+`

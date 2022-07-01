@@ -375,7 +375,7 @@ module Users
         due_date: vals[:due_date],
         form_user_id: vals[:form_user_id],
         parent_note_id: vals[:parent_note_id],
-        status: vals[:status],
+        status: vals[:status] || :not_started,
         order: vals[:order],
       )
       note.update(note_list_id: note.parent_note&.note_list_id)

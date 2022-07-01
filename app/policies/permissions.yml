@@ -35,6 +35,7 @@ admin:
       - can_get_replies_requested_comments
       - can_fetch_process_comments
       - can_fetch_project_document_comments
+      - can_delete_note
   process:
     permissions:
       - can_see_menu_item
@@ -342,6 +343,7 @@ contractor:
       - can_view_create_task_button
       - can_view_create_sub_task_button
       - can_access_tasks
+      - can_delete_note
   forms:
     permissions:
       - can_see_menu_item
@@ -407,6 +409,7 @@ custodian:
       - can_view_create_task_button
       - can_view_create_sub_task_button
       - can_access_tasks
+      - can_delete_note
   gate_access:
     permissions:
       - can_see_menu_item
@@ -500,6 +503,7 @@ security_guard:
       - can_view_create_task_button
       - can_view_create_sub_task_button
       - can_access_tasks
+      - can_delete_note
   entry_request:
     permissions:
       - can_see_menu_item
@@ -576,6 +580,7 @@ site_worker:
       - can_view_create_task_button
       - can_view_create_sub_task_button
       - can_access_tasks
+      - can_delete_note
   forms:
     permissions:
       - can_see_menu_item

@@ -144,5 +144,6 @@ export default {
       reminderTime: null,
       __typename: 'AssigneeNote'
     }
-  ]
+  ],
+  authorId: 'a7b3e608-5ca8-44da-b0f2-8f94239f5a1f'
 };
