@@ -6,6 +6,8 @@ import { dateToString } from '../components/DateContainer';
 import { jsPDF as JsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 import { toPng } from 'html-to-image';
+
+
 // keep string methods [helpers]
 
 /**
@@ -738,3 +740,4 @@ export function downloadAsImage(currentRef, name) {
     .catch(() => { return { error: true };
     });
 }
+

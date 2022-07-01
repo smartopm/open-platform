@@ -9,6 +9,7 @@
   "misc": {
     "configure_amenity": "Configure Amenity",
     "amenity_created": "Amenity Created Successfully",
+    "amenity_updated": "Amenity Updated Successfully",
     "reserve": "Reserve"
   },
   "helper_text": {

@@ -301,6 +301,7 @@
     "download_info": "Download file of the QR Code to print out.",
     "add_new": "Add New",
     "otp": "OTP",
+    "update_successful": "Updated Successfully",
     "entry_request": "Entry Request",
     "lead_import": "Lead Import",
     "today_at": "Today at",

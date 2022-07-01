@@ -9,7 +9,8 @@ describe('Amenity List', () => {
   it('should render the Amenity List', async () => {
     const mock = {
       request: {
-        query: AmenitiesQuery
+        query: AmenitiesQuery,
+        variables: { offset: 0 }
       },
       result: {
         data: {
@@ -48,6 +49,7 @@ describe('Amenity List', () => {
 
       // The reserve button should be present
       expect(wrapper.queryByTestId('button')).toBeInTheDocument();
+      expect(wrapper.queryByText('search:search.load_more')).toBeInTheDocument();
     }, 20);
   });
 });

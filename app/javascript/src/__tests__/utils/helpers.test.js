@@ -1,13 +1,34 @@
+/* eslint-disable max-lines */
 import dompurify from 'dompurify';
 import { paymentFilterFields } from '../../utils/constants'
 
 import {
-  sentencizeAction, titleize, pluralizeCount, capitalize, validateEmail, invertArray,
-  findLinkAndReplace, forceLinkHttps, titleCase, truncateString, removeNewLines, checkForHtmlTags,
-  sanitizeText, getJustLabels, checkValidGeoJSON, getHexColor, getDrawPluginOptions,
-  handleQueryOnChange, checkAccessibilityForUserType, extractHostname, getObjectKey,
-  decodeHtmlEntity, replaceDocumentMentions, validateRequiredField, downloadAsImage
-} from '../../utils/helpers'
+  sentencizeAction,
+  titleize,
+  pluralizeCount,
+  capitalize,
+  validateEmail,
+  invertArray,
+  findLinkAndReplace,
+  forceLinkHttps,
+  titleCase,
+  truncateString,
+  removeNewLines,
+  checkForHtmlTags,
+  sanitizeText,
+  getJustLabels,
+  checkValidGeoJSON,
+  getHexColor,
+  getDrawPluginOptions,
+  handleQueryOnChange,
+  checkAccessibilityForUserType,
+  extractHostname,
+  getObjectKey,
+  decodeHtmlEntity,
+  replaceDocumentMentions,
+  validateRequiredField,
+  downloadAsImage,
+} from '../../utils/helpers';
 
 jest.mock('dompurify')
 describe('helper methods', () => {
@@ -328,7 +349,13 @@ describe('#replaceDocumentMentions', () => {
 
 describe('Anonymous', () => {
   it('should return error and validation helper', () => {
-    const validation = validateRequiredField('name', { isError: false}, ['name'], { name: "some value"}, jest.fn(() => 'no error'));
+    const validation = validateRequiredField(
+      'name',
+      { isError: false },
+      ['name'],
+      { name: 'some value' },
+      jest.fn(() => 'no error')
+    );
     expect(validation).toEqual({ error: false, helperText: 'no error' });
     const validation1 = validateRequiredField(
       'name',
@@ -339,7 +366,7 @@ describe('Anonymous', () => {
     );
     expect(validation1).toEqual({ error: true, helperText: 'error' });
   });
-
+});
   describe('#downloadAsImage', () => {
     window.getComputedStyle = () => { };
     jest.mock('../../utils/helpers', () => ({
@@ -352,5 +379,5 @@ describe('Anonymous', () => {
       document.body.append(dom);
       expect(downloadAsImage(dom, 'form')).toBeUndefined();
     });
-  });
+
 })

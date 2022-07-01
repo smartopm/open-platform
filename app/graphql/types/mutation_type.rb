@@ -194,6 +194,7 @@ module Types
 
     # amenity
     field :amenity_create, mutation: Mutations::Amenity::AmenityCreate
+    field :amenity_update, mutation: Mutations::Amenity::AmenityUpdate
 
     # flutterwave
     field :transaction_initiate, mutation: Mutations::Flutterwave::TransactionInitiate

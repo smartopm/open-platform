@@ -4,6 +4,7 @@ import { waitFor, render } from '@testing-library/react';
 import ReactTestUtils from 'react-dom/test-utils';
 import AmenityForm from '../Components/AmenityForm';
 import { AmenityCreateMutation } from '../graphql/amenity_mutations';
+import MockedSnackbarProvider from '../../__mocks__/mock_snackbar';
 
 describe('Amenity Form', () => {
   const openDialog = jest.fn();
@@ -21,17 +22,19 @@ describe('Amenity Form', () => {
           invitationLink: 'http'
         }
       },
-      result: {
+      result: jest.fn(() => ({
         data: {
           amenityCreate: {
             success: true
           }
         }
-      }
+      }))
     };
     const wrapper = render(
       <MockedProvider mocks={[mock]} addTypename={false}>
-        <AmenityForm isOpen setOpen={openDialog} refetch={refetch} t={jest.fn()} />
+        <MockedSnackbarProvider>
+          <AmenityForm isOpen setOpen={openDialog} refetch={refetch} t={jest.fn()} />
+        </MockedSnackbarProvider>
       </MockedProvider>
     );
     expect(wrapper.queryByTestId('amenity_name')).toBeInTheDocument();
@@ -57,9 +60,7 @@ describe('Amenity Form', () => {
     // Submit a form
     userEvent.click(wrapper.queryByTestId('custom-dialog-button'));
     await waitFor(() => {
-      // expect dialog to be closed and data to be refetched
-      expect(openDialog).toBeCalled();
-      expect(refetch).toBeCalled();
+      expect(mock.result).toBeCalled();
     }, 20);
   });
   it('should error when provided with wrong variables', async () => {

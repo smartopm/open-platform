@@ -5,6 +5,7 @@ import useGuests from '../../hooks/useGuests';
 import { SearchGuestsQuery } from '../../graphql/queries';
 
 describe('test useGuests', () => {
+  // TODO: find ways to share this hookWrapper 
   function apolloHookWrapper(mocks = []) {
     const wrapper = ({ children }) => (
       <MockedProvider mocks={mocks} addTypename={false}>
