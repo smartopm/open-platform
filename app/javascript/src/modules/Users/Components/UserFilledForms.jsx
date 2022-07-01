@@ -17,7 +17,7 @@ import PageWrapper from '../../../shared/PageWrapper';
 export default function UserFilledForms({ userFormsFilled, userId, currentUser }) {
   const { data, error, loading } = useQuery(FormsQuery, {
     variables: { userId: userId !== currentUser ? userId : currentUser },
-    fetchPolicy: 'cache-and-network'
+    fetchPolicy: 'network-only'
   });
 
   const history = useHistory();
@@ -28,7 +28,7 @@ export default function UserFilledForms({ userFormsFilled, userId, currentUser }
   const [open, setOpen] = useState(false);
   const [currentFormUserId, setCurrentFormUserId] = useState(null);
   const [fetchComments, formData] = useLazyQuery(SubmittedFormCommentsQuery, {
-    fetchPolicy: 'cache-and-network'
+    fetchPolicy: 'network-only'
   });
 
   const mobile = useMediaQuery('(max-width:800px)');
