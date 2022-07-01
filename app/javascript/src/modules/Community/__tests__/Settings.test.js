@@ -1,6 +1,6 @@
 /* eslint-disable max-statements */
 import React from 'react';
-import { fireEvent, render, waitFor } from '@testing-library/react';
+import { fireEvent, render, waitFor, within } from '@testing-library/react';
 
 import { MockedProvider } from '@apollo/react-testing';
 import CommunitySettings from '../components/Settings';
@@ -9,7 +9,8 @@ import MockedThemeProvider from '../../__mocks__/mock_theme';
 import { EmailTemplatesQuery } from '../../Emails/graphql/email_queries';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
-jest.setTimeout(10000);
+// TODO(Nurudeen): Check why this requires more time
+jest.setTimeout(15000);
 describe('Community settings page', () => {
   it('should have input field and a remove button', async () => {
     const data = {
@@ -99,27 +100,30 @@ describe('Community settings page', () => {
           ],
           leadMonthlyTargets: [{ division: 'China', target: '20' }],
           imageBlobId: null,
-          templates: {},
+          templates: {
+            payment_reminder_template_behind: '501b718c-8687-4e78-60b732df534ab1',
+            payment_reminder_template_upcoming: '501b718c-8687-4e78-60b732df534ab1'
+          },
           gaId: '',
-          currency: 'honduran_lempira',
+          currency: 'zambian_kwacha',
           locale: 'en-US',
-          tagline: '',
-          logoUrl: '',
-          wpLink: '',
+          tagline: 'This is our tagline',
+          logoUrl: 'https://something.com',
+          wpLink: 'https://wordpress.com',
           securityManager: '',
           subAdministratorId: '',
           themeColors: { primaryColor: '#69ABA4', secondaryColor: '#cf5628' },
           bankingDetails: {
-            bankName: 'Test bank name',
+            bankName: 'UBA',
             accountName: 'Thebe',
             accountNo: '1234',
-            branch: 'Test branch',
-            swiftCode: '032',
-            sortCode: '456',
-            address: '11, Nalikwanda Rd,',
-            city: 'Lusaka',
-            country: '',
-            taxIdNo: ''
+            branch: 'LU',
+            swiftCode: 'xyz',
+            sortCode: '067',
+            address: '11 Sub',
+            city: 'woodlands',
+            country: 'zambia',
+            taxIdNo: '432'
           },
           smsPhoneNumbers: ['+254724821901', '+254723456789'],
           emergencyCallNumber: '+94848584844',
@@ -220,17 +224,21 @@ describe('Community settings page', () => {
     expect(container.queryByTestId('disable_deny_gate_access')).toBeInTheDocument();
     expect(container.queryByTestId('enable_automated_task_reminders')).toBeInTheDocument();
 
-    fireEvent.change(container.queryByTestId('payment_reminder_template_behind'), {
-      target: { value: 'payment_reminder_template' }
+    // Idea from https://stackoverflow.com/a/61491607/6139537
+    const selectTemplateDiv = container.getAllByRole('button', {
+      name: 'community.select_template ​'
     });
-    expect(container.queryByTestId('payment_reminder_template_behind').value).toBe(
+    fireEvent.mouseDown(selectTemplateDiv[0]);
+    const listboxBehind = within(container.getByRole('listbox'));
+    fireEvent.click(listboxBehind.getByText('payment_reminder_template'));
+    expect(container.getByTestId('payment_reminder_template_behind')).toHaveTextContent(
       'payment_reminder_template'
     );
 
-    fireEvent.change(container.queryByTestId('payment_reminder_template_upcoming'), {
-      target: { value: 'payment_reminder_template' }
-    });
-    expect(container.queryByTestId('payment_reminder_template_upcoming').value).toBe(
+    fireEvent.mouseDown(selectTemplateDiv[1]);
+    const listboxUpcoming = within(container.getByRole('listbox'));
+    fireEvent.click(listboxUpcoming.getByText('payment_reminder_template'));
+    expect(container.getByTestId('payment_reminder_template_upcoming')).toHaveTextContent(
       'payment_reminder_template'
     );
 

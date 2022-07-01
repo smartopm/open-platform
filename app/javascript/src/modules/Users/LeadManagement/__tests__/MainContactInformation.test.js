@@ -49,8 +49,9 @@ describe('LeadManagementDetails Page', () => {
     }
   };
 
+  const handleChange = jest.fn()
   it('LeadManagementDetails component', async () => {
-    render(<MainContactInformation leadFormData={data} handleChange={jest.fn()} disabled />);
+    render(<MainContactInformation leadFormData={data} handleChange={handleChange} disabled />);
 
     expect(screen.queryByTestId('lead-management-main-contact-section')).toBeInTheDocument();
     expect(screen.queryByTestId('contact_info')).toBeInTheDocument();
@@ -67,12 +68,13 @@ describe('LeadManagementDetails Page', () => {
     expect(screen.queryAllByText('lead_management.secondary_phone')[0]).toBeInTheDocument();
     expect(screen.queryByLabelText('linkedin')).toBeInTheDocument();
 
+    const titleField = screen.queryByTestId('main-section-title-input');
+    fireEvent.change(titleField, { target: { value: 'The New Updated Boss' } });
+    expect(handleChange).toBeCalled();
+
     // simulate input
     await waitFor(
       () => {
-        const titleField = screen.queryByTestId('main-section-title-input');
-        fireEvent.change(titleField, { target: { value: 'The New Updated Boss' } });
-        expect(titleField.value).toBe('The New Updated Boss');
         const button = screen.queryByTestId('main-section-title-input');
         expect(button).toBeEnabled();
       },

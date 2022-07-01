@@ -67,7 +67,7 @@ export function dateFormatter(objDate, t) {
 
 export default function DateContainer({ date }) {
   const { t } = useTranslation('common');
-  return <span style={{ fontSize: '12px' }}>{dateFormatter(date, t)}</span>;
+  return <span style={{ fontSize: '12px' }} data-testid="date-value">{dateFormatter(date, t)}</span>;
 }
 
 DateContainer.propTypes = {

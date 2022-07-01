@@ -80,7 +80,7 @@ describe('Login Screen', () => {
     fireEvent.change(loginWrapper.getByPlaceholderText('common:form_placeholders.phone_number'), {
       target: { value: '12345' }
     });
-    expect(loginWrapper.getByPlaceholderText('common:form_placeholders.phone_number').value).toBe('12345');
+    expect(loginWrapper.getByPlaceholderText('common:form_placeholders.phone_number').value).toBe('+1 (234) 5');
 
     fireEvent.change(loginWrapper.getByPlaceholderText('login.login_email'), {
       target: { value: 'example@example.com' }

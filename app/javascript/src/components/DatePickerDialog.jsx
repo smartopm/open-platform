@@ -76,6 +76,7 @@ export default function DatePickerDialog({
         onChange={date => handleDateChange(date)}
         {...others}
         disabled={disabled}
+        disableMaskedInput
       />
     </LocalizationProvider>
   );

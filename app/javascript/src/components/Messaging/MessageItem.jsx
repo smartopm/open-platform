@@ -56,7 +56,7 @@ export default function UserMessageItem({
       <ListItemText
         primary={(
           <>
-            <span className="nz_msg_owner">
+            <span className="nz_msg_owner" data-testid='msg-owner'>
               <Link
                 to={`/user/${user.id}`}
                 style={{ textDecoration: 'none', color: 'inherit' }}
@@ -101,7 +101,7 @@ export default function UserMessageItem({
         )}
         secondary={(
           <>
-            <span className="nz_msg">
+            <span className="nz_msg" data-testid="msg-body">
               {isTruncate ? (
                 truncateString(message, count)
               ) : (
