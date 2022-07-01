@@ -41,7 +41,13 @@ export default function AmenityForm({ isOpen, handleClose, refetch, t, amenityDa
 
   useEffect(() => {
     if(amenityData){
-      setAmenityValue({ ...amenityData});
+      setAmenityValue({
+        name: amenityData.name || '',
+        description: amenityData.description || '',
+        location: amenityData.location || '',
+        hours: amenityData.hours || '',
+        invitationLink: amenityData.invitationLink || '',
+      });
     }
   }, [amenityData])
 
