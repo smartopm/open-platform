@@ -7,7 +7,7 @@ import { MockedProvider } from '@apollo/react-testing';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import { createClient } from '../../../utils/apollo';
 import Home from '../Components/Home';
-import userMock from '../../../__mocks__/userMock';
+import authstate from '../../../__mocks__/authstate';
 import MockedThemeProvider from '../../__mocks__/mock_theme';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
@@ -17,7 +17,7 @@ describe('Home main page', () => {
     await act(async () => {
       render(
         <ApolloProvider client={createClient}>
-          <Context.Provider value={userMock}>
+          <Context.Provider value={authstate}>
             <MockedProvider mocks={[]} addTypename={false}>
               <BrowserRouter>
                 <MockedThemeProvider>

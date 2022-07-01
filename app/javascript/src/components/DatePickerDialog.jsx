@@ -31,7 +31,6 @@ export default function DatePickerDialog({
   t,
   ...others
 }) {
-  // const { t } = useTranslation(['logbook', 'form']);
   return (
     <LocalizationProvider
       dateAdapter={AdapterDateFns}
@@ -145,7 +144,6 @@ export function ThemedTimePicker({
   t,
   ...otherProps
 }) {
-  // const { t } = useTranslation(['logbook', 'form']);
   return (
     <>
       <LocalizationProvider
