@@ -91,7 +91,7 @@ export default function SearchContainer({ location }) {
   }
 
   const { called, loading, error, data, fetchMore } = useQuery(UserSearchQuery, {
-    variables: { query: `${searchQuery} AND ${debouncedValue}`, limit, offset },
+    variables: { query: finalQuery(), limit, offset },
     errorPolicy: 'all',
   });
 
@@ -100,6 +100,10 @@ export default function SearchContainer({ location }) {
       setSearchQuery(currentQueryPath);
     }
   }, [currentQueryPath]);
+
+  function finalQuery() {
+    return searchQuery ? `${searchQuery} AND ${debouncedValue}` : debouncedValue;
+  }
 
   const authState = useContext(Context);
 
