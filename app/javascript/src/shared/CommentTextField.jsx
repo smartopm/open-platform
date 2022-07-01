@@ -61,7 +61,7 @@ export default function CommentTextField({
             <>
               {forProcess && (
                 <FormControlLabel
-                  control={
+                  control={(
                     <Checkbox
                       checked={commentOptions.autoCompleteOpen}
                       onChange={() =>
@@ -75,12 +75,12 @@ export default function CommentTextField({
                       data-testid="require_reply"
                       color="primary"
                     />
-                  }
+                  )}
                   label={<Typography variant="body2">{t('task.require_a_reply')}</Typography>}
                 />
               )}
               <FormControlLabel
-                control={
+                control={(
                   <Checkbox
                     checked={commentOptions.sendToResident}
                     onChange={() =>
@@ -94,7 +94,7 @@ export default function CommentTextField({
                     data-testid="send_to_resident"
                     color="primary"
                   />
-                }
+                )}
                 label={<Typography variant="body2">{t('task.send_to_resident')}</Typography>}
               />
             </>
