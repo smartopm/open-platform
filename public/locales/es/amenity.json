@@ -13,6 +13,7 @@
   },
   "misc": {
     "amenity_created": "Amenidad Creada con Éxito",
+    "amenity_updated": "Servicio Actualizado con Éxito",
     "configure_amenity": "Configurar Amenidad",
     "reserve": "Reservar"
   }
