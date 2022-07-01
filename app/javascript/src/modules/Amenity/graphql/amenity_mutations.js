@@ -30,6 +30,7 @@ export const AmenityUpdateMutation = gql`
     $location: String
     $hours: String
     $invitationLink: String
+    $status: String
   ) {
     amenityUpdate(
       id: $id
@@ -38,6 +39,7 @@ export const AmenityUpdateMutation = gql`
       location: $location
       hours: $hours
       invitationLink: $invitationLink
+      status: $status
     ) {
       amenity {
         id

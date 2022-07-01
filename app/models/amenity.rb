@@ -7,5 +7,6 @@ class Amenity < ApplicationRecord
 
   default_scope { order(created_at: :desc) }
 
+  enum status: { published: 0, deleted: 1, deprecated: 1 }
   has_paper_trail
 end

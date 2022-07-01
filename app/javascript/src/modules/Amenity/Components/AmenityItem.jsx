@@ -11,9 +11,15 @@ export default function AmenityItem({ amenity, translate, handleEditAmenity }) {
   const amenityMenu = [
     {
       content: translate('menu.edit'),
-      handleClick: () => handleEditAmenity(amenity),
+      handleClick: () => handleEditAmenity(amenity, 'edit'),
       isAdmin: true
-    }
+    },
+    {
+      content: translate('menu.delete'),
+      handleClick: () => handleEditAmenity(amenity, 'delete'),
+      isAdmin: true
+    },
+
   ];
 
   return (
