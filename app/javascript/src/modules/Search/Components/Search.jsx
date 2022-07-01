@@ -1,5 +1,5 @@
 /* eslint-disable react/forbid-prop-types */
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { useQuery } from 'react-apollo';
@@ -82,6 +82,8 @@ export default function SearchContainer({ location }) {
   const debouncedValue = useDebounce(name, 500);
   const { t } = useTranslation(['search', 'common']);
   const limit = 50;
+  const currentQueryPath = decodeURIComponent(location?.search).replace('?', '');
+  const [searchQuery, setSearchQuery] = useState('');
 
   function updateSearch(e) {
     const { value } = e.target;
@@ -89,9 +91,16 @@ export default function SearchContainer({ location }) {
   }
 
   const { called, loading, error, data, fetchMore } = useQuery(UserSearchQuery, {
-    variables: { query: debouncedValue, limit, offset },
-    errorPolicy: 'all'
+    variables: { query: `${searchQuery} AND ${debouncedValue}`, limit, offset },
+    errorPolicy: 'all',
   });
+
+  useEffect(() => {
+    if (currentQueryPath) {
+      setSearchQuery(currentQueryPath);
+    }
+  }, [currentQueryPath]);
+
   const authState = useContext(Context);
 
   function loadMoreResults() {
