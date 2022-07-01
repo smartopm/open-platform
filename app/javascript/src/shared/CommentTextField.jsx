@@ -68,7 +68,7 @@ export default function CommentTextField({
                         setCommentOptions({
                           ...commentOptions,
                           autoCompleteOpen: !commentOptions.autoCompleteOpen,
-                          sendToResident: commentOptions.autoCompleteOpen && false,
+                          sendToFormOwner: commentOptions.autoCompleteOpen && false,
                         })
                       }
                       name="require-reply"
@@ -82,12 +82,12 @@ export default function CommentTextField({
               <FormControlLabel
                 control={(
                   <Checkbox
-                    checked={commentOptions.sendToResident}
+                    checked={commentOptions.sendToFormOwner}
                     onChange={() =>
                       setCommentOptions({
                         ...commentOptions,
-                        sendToResident: !commentOptions.sendToResident,
-                        autoCompleteOpen: commentOptions.sendToResident && false,
+                        sendToFormOwner: !commentOptions.sendToFormOwner,
+                        autoCompleteOpen: commentOptions.sendToFormOwner && false,
                       })
                     }
                     name="send_to_resident"
@@ -173,7 +173,7 @@ CommentTextField.propTypes = {
   setMentionedDocuments: PropTypes.func,
   commentOptions: PropTypes.shape({
     autoCompleteOpen: PropTypes.bool,
-    sendToResident: PropTypes.bool,
+    sendToFormOwner: PropTypes.bool,
   }),
   mentionsData: PropTypes.arrayOf(
     PropTypes.shape({

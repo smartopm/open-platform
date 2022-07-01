@@ -59,7 +59,7 @@ describe('CommentText Field component', () => {
       },
       commentOptions: {
         autoCompleteOpen: true,
-        sendToResident: false
+        sendToFormOwner: false
       }
     };
 
