@@ -92,7 +92,7 @@ export function DateAndTimePickers({
   return (
     <LocalizationProvider
       dateAdapter={AdapterDateFns}
-      locale={getCurrentLng().includes('es') ? es : enUS}
+      adapterLocale={getCurrentLng().includes('es') ? es : enUS}
     >
       <MobileDateTimePicker
         renderInput={params => (
@@ -148,7 +148,7 @@ export function ThemedTimePicker({
     <>
       <LocalizationProvider
         dateAdapter={AdapterDateFns}
-        locale={getCurrentLng().includes('es') ? es : enUS}
+        adapterLocale={getCurrentLng().includes('es') ? es : enUS}
       >
         <MobileTimePicker
           renderInput={params =>
