@@ -72,7 +72,7 @@ export default function UsersList() {
   });
 
   const matches = useMediaQuery('(max-width:959px)');
-  
+
   const [loadAllUsers, { loading: usersLoading, data: usersData, called }] = useLazyQuery(
     UsersDetails,
     {
@@ -310,7 +310,8 @@ export default function UsersList() {
         push
         to={{
           pathname: redirect,
-          state: { from: '/users' }
+          search: searchQuery.replace(/"/g, ''),
+          state: { from: '/users' },
         }}
       />
     );
@@ -487,7 +488,14 @@ export default function UsersList() {
   ];
 
   return (
-    <PageWrapper pageTitle={t('common:misc.users')} rightPanelObj={rightPanelObj}>
+    <PageWrapper
+      pageTitle={
+        t(`${location.pathname === '/leads/users'
+          ? 'common:menu.lead_users'
+          : 'common:misc.users'}`)
+      }
+      rightPanelObj={rightPanelObj}
+    >
       {loading || labelsLoading || fetchingUsersCount ? (
         <Spinner />
       ) : (
