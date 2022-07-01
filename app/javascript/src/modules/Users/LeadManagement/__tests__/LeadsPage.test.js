@@ -15,50 +15,54 @@ describe('Leads Page', () => {
   const dataMock = [
     {
       request: {
-        query: LeadScoreCardQuery
+        query: LeadScoreCardQuery,
       },
       result: {
         data: {
           leadScorecards: {
             lead_status: {
               Evaluation: 2,
-              'Qualified Lead': 5
+              'Qualified Lead': 5,
             },
             leads_monthly_stats_by_division: {
               China: {
                 5: 2,
-                1: 5
+                1: 5,
               },
               Europe: {
                 2: 6,
-                7: 8
+                7: 8,
               },
               India: {
                 3: 7,
-                8: 4
-              }
+                8: 4,
+              },
             },
             leads_monthly_stats_by_status: {
               'Qualified Lead': {
-                5: 1
+                5: 1,
               },
-              "Signed Lease": {
-                5: 1
+              'Signed Lease': {
+                5: 1,
               },
-              "Signed MOU": {
-                5: 1
-              }
+              'Signed MOU': {
+                5: 1,
+              },
             },
             ytd_count: {
               leads_by_division: 4,
               qualified_lead: 3,
               signed_lease: 5,
-              signed_mou: 5
-            }
-          }
-        }
-      }
-    }
+              signed_mou: 5,
+            },
+            investment_status_stats: {
+              on_target: 0,
+              over_target: 1,
+            },
+          },
+        },
+      },
+    },
   ];
 
   it('LeadsPage component', async () => {
@@ -76,6 +80,8 @@ describe('Leads Page', () => {
 
     await waitFor(() => {
       expect(screen.queryByTestId('subtitle')).toBeInTheDocument();
+      expect(screen.queryByTestId('scorecard-title')).toBeInTheDocument();
+      expect(screen.queryByTestId('scorecard-label')).toBeInTheDocument();
       expect(screen.queryByTestId('monthly_lead')).toBeInTheDocument();
       expect(screen.queryByTestId('card_one')).toBeInTheDocument();
       expect(screen.queryByTestId('card_two')).toBeInTheDocument();
