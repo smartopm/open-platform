@@ -1,5 +1,5 @@
 import { MockedProvider } from '@apollo/react-testing';
-import { render, waitFor } from '@testing-library/react';
+import { fireEvent, render, waitFor } from '@testing-library/react';
 import React from 'react';
 import MockedThemeProvider from '../../__mocks__/mock_theme';
 import AmenityList from '../Components/AmenityList';
@@ -45,11 +45,31 @@ describe('Amenity List', () => {
     expect(wrapper.queryByTestId('loader')).toBeInTheDocument();
     await waitFor(() => {
       expect(wrapper.queryAllByTestId('amenity_description')[0]).toBeInTheDocument();
-      expect(wrapper.queryAllByTestId('amenity_description')).toHaveLength(2);
+      // expect(wrapper.queryAllByTestId('amenity_description')).toHaveLength(2);
 
       // The reserve button should be present
       expect(wrapper.queryByTestId('button')).toBeInTheDocument();
       expect(wrapper.queryByText('search:search.load_more')).toBeInTheDocument();
+
+      expect(wrapper.queryAllByTestId('discussion-menu')).toHaveLength(2);
+
+      fireEvent.click(wrapper.queryAllByTestId('discussion-menu')[0]);
+
+      // click the edit menu item 
+      fireEvent.click(wrapper.queryAllByTestId('menu_item')[0]);
+      // The edit form should be visible
+      expect(wrapper.queryByTestId('amenity_name')).toBeInTheDocument();
+      
+      // click the delete menu item
+      fireEvent.click(wrapper.queryAllByTestId('menu_item')[1]);
+      // The delete warning message should be visible
+      expect(wrapper.queryByText('amenity:misc.delete_warning')).toBeInTheDocument();
+      expect(wrapper.queryByTestId('proceed_button')).toBeInTheDocument();
+      
+      fireEvent.click(wrapper.queryByTestId('speed-dial'));
+      // The add form should be visible
+      expect(wrapper.queryByTestId('amenity_name')).toBeInTheDocument();
+      expect(wrapper.queryByText('common:form_actions.save')).toBeInTheDocument();
     }, 20);
   });
 });

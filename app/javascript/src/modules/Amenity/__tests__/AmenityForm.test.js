@@ -33,7 +33,7 @@ describe('Amenity Form', () => {
     const wrapper = render(
       <MockedProvider mocks={[mock]} addTypename={false}>
         <MockedSnackbarProvider>
-          <AmenityForm isOpen setOpen={openDialog} refetch={refetch} t={jest.fn()} />
+          <AmenityForm isOpen handleClose={openDialog} refetch={refetch} t={jest.fn()} />
         </MockedSnackbarProvider>
       </MockedProvider>
     );
@@ -80,7 +80,7 @@ describe('Amenity Form', () => {
     };
     const wrapper = render(
       <MockedProvider mocks={[mock]} addTypename={false}>
-        <AmenityForm isOpen setOpen={openDialog} refetch={refetch} t={jest.fn()} />
+        <AmenityForm isOpen handleClose={openDialog} refetch={refetch} t={jest.fn()} />
       </MockedProvider>
     );
     // Submit a form
