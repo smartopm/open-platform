@@ -45,7 +45,6 @@ describe('Amenity List', () => {
     expect(wrapper.queryByTestId('loader')).toBeInTheDocument();
     await waitFor(() => {
       expect(wrapper.queryAllByTestId('amenity_description')[0]).toBeInTheDocument();
-      // expect(wrapper.queryAllByTestId('amenity_description')).toHaveLength(2);
 
       // The reserve button should be present
       expect(wrapper.queryByTestId('button')).toBeInTheDocument();
