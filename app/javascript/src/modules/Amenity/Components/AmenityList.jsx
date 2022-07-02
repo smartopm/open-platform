@@ -14,13 +14,14 @@ import useFetchMoreRecords from '../../../shared/hooks/useFetchMoreRecords';
 import useMutationWrapper from '../../../shared/hooks/useMutationWrapper';
 import { AmenityUpdateMutation } from '../graphql/amenity_mutations';
 import { ActionDialog } from '../../../components/Dialog';
+import { AmenityStatus } from '../constants';
 
 export default function AmenityList() {
   const [dialog, setOpenDialog] = useState({ isOpen: false, type: null })
   const [amenityData, setAmenityData] = useState(null)
   const { refetch, data, loading, fetchMore } = useQuery(AmenitiesQuery, {
     variables: { offset: 0 },
-    fetchPolicy: 'cache-and-network'
+    fetchPolicy: 'network-only'
   });
   const { t } = useTranslation(['common', 'amenity', 'form', 'search']);
   const variables = { offset: data?.amenities?.length };
@@ -37,7 +38,8 @@ export default function AmenityList() {
   }
 
   function reset() {
-
+    refetch()
+    handleClose();
   }
 
   function handleAddAmenity() {
@@ -53,7 +55,7 @@ export default function AmenityList() {
         message={t('amenity:misc.delete_warning')}
         handleClose={handleClose}
         disableActionBtn={isDeleting}
-        handleOnSave={() => deleteAmenity({ id: amenityData.id, status: 'delete' })}
+        handleOnSave={() => deleteAmenity({ id: amenityData.id, status: AmenityStatus.delete })}
       />
       <AmenityForm
         isOpen={dialog.isOpen && dialog.type === 'edit'}

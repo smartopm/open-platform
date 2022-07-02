@@ -10,6 +10,7 @@ module Mutations
       argument :location, String, required: false
       argument :hours, String, required: false
       argument :invitation_link, String, required: false
+      argument :status, String, required: false
 
       field :amenity, Types::AmenityType, null: false
 
