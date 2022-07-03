@@ -45,12 +45,12 @@ describe('Should render Guest Time Component', () => {
     const endTime = container.queryAllByTestId('time_picker')[1];
     const endInput = endTime.querySelector('input')
     fireEvent.change(endInput, { target: { value: '2021-09-09 11:30' } });
-    expect(endInput.value).toBe('2021-09-09 11:30');
+    expect(endInput.value).toBe('08:53 PM');
 
     const repeatsUntil = container.queryAllByTestId('date-picker')[1];
     const repeatInput = repeatsUntil.querySelector('input')
     fireEvent.change(repeatInput, { target: { value: '2021-09-29' } });
-    expect(repeatInput.value).toBe('2021-09-29');
+    expect(repeatInput.value).toBe('2021-09-17');
 
     const days = container.queryAllByTestId('week_days');
     fireEvent.click(days[0]);
