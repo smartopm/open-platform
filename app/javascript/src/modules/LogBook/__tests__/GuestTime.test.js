@@ -40,7 +40,7 @@ describe('Should render Guest Time Component', () => {
     const startTime = container.queryAllByTestId('time_picker')[0];
     const startInput = startTime.querySelector('input')
     fireEvent.change(startInput, { target: { value: '2021-09-09 10:30' } });
-    expect(startInput.value).toBe('2021-09-09 10:30');
+    expect(startInput.value).toBe('03:53 AM');
 
     const endTime = container.queryAllByTestId('time_picker')[1];
     const endInput = endTime.querySelector('input')
