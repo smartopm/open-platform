@@ -40,5 +40,6 @@ describe('user action menu component', () => {
     expect(container.queryByText('menu.print_id')).toBeInTheDocument()
     expect(container.queryByText('menu.send_otp')).toBeInTheDocument()
     expect(container.queryByText('menu.deactivate_user')).toBeInTheDocument()
+    expect(container.queryByText('menu.view_plans')).toBeInTheDocument();
   })
 })
