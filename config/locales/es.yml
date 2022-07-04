@@ -418,6 +418,7 @@ es:
       has_process: Esta Lista de Tareas ya está vinculada a un proceso
       not_found: Lista de Tareas no encontrada
     note:
+      cannot_delete: No se puede eliminar esta tarea porque hay subtareas presentes
       note_list_not_found: No existe tal lista de tareas
       task_not_found: No se encontró ninguna tarea, pruebe con una consulta diferente
       unable_to_update_tasks: Algo salió mal al actualizar las tareas seleccionadas
