@@ -14,5 +14,6 @@ module Types
     field :account_name, String, null: true
     field :integration_type, String, null: true
     field :user, Types::UserType, null: true
+    field :created_at, GraphQL::Types::ISO8601DateTime, null: false
   end
 end

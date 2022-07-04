@@ -306,7 +306,10 @@
     "lead_import": "Lead Import",
     "today_at": "Today at",
     "yesterday_at": "Yesterday at",
-    "history": "History"
+    "history": "History",
+    "id": "ID",
+    "references": "References",
+    "form_amount": "Form Amount"
   },
   "menu": {
     "invoice": "Invoice",
