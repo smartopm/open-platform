@@ -34,7 +34,7 @@ gem 'dotenv'
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', '~> 1.2021', '>= 1.2021.2', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
-gem "nexmo", "~> 5.9"
+gem 'vonage', "~> 7.7.0"
 gem 'sendgrid-ruby', "~> 6.6.1"
 
 # For S3 file uploads in ActiveStorage
