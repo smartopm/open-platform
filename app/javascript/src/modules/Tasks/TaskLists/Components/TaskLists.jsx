@@ -40,17 +40,11 @@ export default function TaskLists() {
     }
   }
 
-  const breadCrumbObj = {
-    linkText: t('task_lists.task_lists'),
-    linkHref: '/tasks/task_lists',
-    pageName: t('task_lists.task_lists')
-  };
-
   if (error) return <CenteredContent>{formatError(error.message)}</CenteredContent>;
   if (loading) return <Spinner />;
 
   return (
-    <PageWrapper pageTitle={t('task_lists.task_lists')} breadCrumbObj={breadCrumbObj}>
+    <PageWrapper pageTitle={t('task_lists.task_lists')}>
       {data?.taskLists?.length > 0 ? (
         <div>
           {data.taskLists.map(taskList => (
