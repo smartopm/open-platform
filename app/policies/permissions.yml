@@ -78,6 +78,8 @@ admin:
     permissions:
       - can_make_payment
       - can_see_menu_item
+      - can_view_all_transaction_logs
+      - can_view_transaction_logs
   payment_records:
     permissions:
       - can_create_transaction
@@ -661,6 +663,7 @@ visitor:
     permissions:
       - can_make_payment
       - can_see_menu_item
+      - can_view_transaction_logs
 resident:
   gate_access:
     permissions:

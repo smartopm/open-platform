@@ -1,6 +1,7 @@
+/* eslint-disable complexity */
 import React, { useState, useContext, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useQuery, useLazyQuery } from 'react-apollo';
+import { useLazyQuery } from 'react-apollo';
 import Grid from '@mui/material/Grid';
 import makeStyles from '@mui/styles/makeStyles';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -43,6 +44,8 @@ export default function TransactionLogs() {
     pageName: t('misc.history'),
   };
 
+  const transactionLogs = data?.transactionLogs || userLogData?.userTransactionLogs;
+
   function handleMoreDetailsClick(id) {
     setCurrentId(id);
     setOpenDetails(!openDetails);
@@ -64,28 +67,26 @@ export default function TransactionLogs() {
     if (admin) {
       getAllLogs();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
     <PageWrapper pageTitle={t('misc.history')} breadCrumbObj={breadCrumbObj} oneCol>
-      {console.log(authState?.user.id)}
-      {console.log(userLogData)}
       {(error || userLogError) && (
         <CenteredContent>
           <p>{error.message || userLogError.message}</p>
         </CenteredContent>
       )}
-      {(loading || userLogsLoading) ? (
+      {loading || userLogsLoading ? (
         <Spinner />
-      ) : data?.transactionLogs.length > 0 ? (
+      ) : data?.transactionLogs.length > 0 || userLogData?.userTransactionLogs.length > 0 ? (
         <>
-          {data.transactionLogs.map(trans => (
+          {transactionLogs.map(trans => (
             <Grid container key={trans.id} className={classes.container} alignItems="center">
-              <Grid item md={!admin ? 7 : 3} lg={!admin ? 7 : 3} xs={10} sm={!admin ? 6 : 3}>
+              <Grid item md={!admin ? 7 : 3} lg={!admin ? 7 : 3} xs={6} sm={!admin ? 7 : 3}>
                 <Typography variant="h6">{`${trans.currency} ${trans.paidAmount}`}</Typography>
               </Grid>
-              {matches && (
+              {admin && matches && (
                 <Grid item xs={2} style={{ textAlign: 'right' }}>
                   <IconButton onClick={() => handleMoreDetailsClick(trans.id)}>
                     {openDetails && currentId === trans.id ? (
@@ -101,11 +102,18 @@ export default function TransactionLogs() {
                   <Typography variant="subtitle1">{trans.accountName}</Typography>
                 </Grid>
               )}
-              <Grid item md={3} lg={3} sm={3} xs={6} style={{ textAlign: 'right' }}>
+              <Grid item md={3} lg={3} sm={3} xs={4} style={{ textAlign: 'right' }}>
                 <Typography variant="subtitle1">{dateToString(trans.createdAt)}</Typography>
               </Grid>
-              {!matches && (
-                <Grid item md={1} lg={1} sm={1} style={{ textAlign: 'right' }}>
+              {(!matches || (!admin && matches)) && (
+                <Grid
+                  item
+                  md={admin ? 1 : 2}
+                  lg={admin ? 1 : 2}
+                  sm={admin ? 1 : 2}
+                  xs={2}
+                  style={{ textAlign: 'right' }}
+                >
                   <IconButton onClick={() => handleMoreDetailsClick(trans.id)}>
                     {openDetails && currentId === trans.id ? (
                       <KeyboardArrowUpIcon />
@@ -132,11 +140,13 @@ export default function TransactionLogs() {
                       {`${t('misc.references')}# ${trans.transactionRef}`}
                     </Typography>
                   </Grid>
-                  <Grid item md={12} lg={12} sm={12} xs={12}>
-                    <Typography variant="subtitle1" color="text.secondary">
-                      {`${t('misc.form_amount')} ${trans.currency}${trans.amount}`}
-                    </Typography>
-                  </Grid>
+                  {admin && (
+                    <Grid item md={12} lg={12} sm={12} xs={12}>
+                      <Typography variant="subtitle1" color="text.secondary">
+                        {`${t('misc.form_amount')} ${trans.currency}${trans.amount}`}
+                      </Typography>
+                    </Grid>
+                  )}
                   {trans.description && (
                     <Grid item style={{ paddingTop: '16px' }}>
                       <Typography variant="subtitle1" md={12} lg={12} sm={12} xs={12}>
