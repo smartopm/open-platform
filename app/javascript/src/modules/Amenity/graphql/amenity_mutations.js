@@ -21,7 +21,6 @@ export const AmenityCreateMutation = gql`
   }
 `;
 
-
 export const AmenityUpdateMutation = gql`
   mutation amenityUpdate(
     $id: ID!
@@ -43,6 +42,17 @@ export const AmenityUpdateMutation = gql`
     ) {
       amenity {
         id
+      }
+    }
+  }
+`;
+
+export const AmenityDeleteMutation = gql`
+  mutation amenityDelete($id: ID!, $status: String!) {
+    amenityDelete(id: $id, status: $status) {
+      amenity {
+        id
+        name
       }
     }
   }

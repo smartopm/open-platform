@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Grid from '@mui/material/Grid';
 import { useQuery } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
-import { Button } from '@mui/material';
+import { Button, Typography } from '@mui/material';
 import AmenityItem from './AmenityItem';
 import SpeedDialButton from '../../../shared/buttons/SpeedDial';
 import AmenityForm from './AmenityForm';
@@ -12,7 +12,7 @@ import PageWrapper from '../../../shared/PageWrapper';
 import CenteredContent from '../../../shared/CenteredContent';
 import useFetchMoreRecords from '../../../shared/hooks/useFetchMoreRecords';
 import useMutationWrapper from '../../../shared/hooks/useMutationWrapper';
-import { AmenityUpdateMutation } from '../graphql/amenity_mutations';
+import { AmenityDeleteMutation } from '../graphql/amenity_mutations';
 import { ActionDialog } from '../../../components/Dialog';
 import { AmenityStatus } from '../constants';
 
@@ -26,7 +26,7 @@ export default function AmenityList() {
   const { t } = useTranslation(['common', 'amenity', 'form', 'search']);
   const variables = { offset: data?.amenities?.length };
   const { loadMore, hasMoreRecord } = useFetchMoreRecords(fetchMore, 'amenities', variables);
-  const [deleteAmenity, isDeleting] = useMutationWrapper(AmenityUpdateMutation, reset, t('amenity:misc.amenity_deleted'));
+  const [deleteAmenity, isDeleting] = useMutationWrapper(AmenityDeleteMutation, reset, t('amenity:misc.amenity_deleted'));
 
   function handleEditAmenity(amenity, type) {
     setAmenityData(amenity)
@@ -91,7 +91,7 @@ export default function AmenityList() {
         </Grid>
       </Grid>
       <br />
-      {data?.amenities.length && (
+      {data?.amenities.length ? (
         <CenteredContent>
           <Button
             variant="outlined"
@@ -102,7 +102,13 @@ export default function AmenityList() {
             {t('search:search.load_more')}
           </Button>
         </CenteredContent>
-      )}
+      )
+      : (
+        <CenteredContent>
+          <Typography>{t('amenity:misc.no_amenity_added')}</Typography>
+        </CenteredContent>
+      )
+    }
     </PageWrapper>
   );
 }

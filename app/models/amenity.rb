@@ -7,7 +7,6 @@ class Amenity < ApplicationRecord
 
   default_scope { order(created_at: :desc) }
   enum status: { published: 0, deleted: 1, deprecated: 2 }
-  scope :existing, -> { where.not(status: 1) }
 
   has_paper_trail
 end

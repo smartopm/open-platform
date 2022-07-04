@@ -54,21 +54,46 @@ describe('Amenity List', () => {
 
       fireEvent.click(wrapper.queryAllByTestId('discussion-menu')[0]);
 
-      // click the edit menu item 
+      // click the edit menu item
       fireEvent.click(wrapper.queryAllByTestId('menu_item')[0]);
       // The edit form should be visible
       expect(wrapper.queryByTestId('amenity_name')).toBeInTheDocument();
-      
+
       // click the delete menu item
       fireEvent.click(wrapper.queryAllByTestId('menu_item')[1]);
       // The delete warning message should be visible
       expect(wrapper.queryByText('amenity:misc.delete_warning')).toBeInTheDocument();
       expect(wrapper.queryByTestId('proceed_button')).toBeInTheDocument();
-      
+
       fireEvent.click(wrapper.queryByTestId('speed-dial'));
       // The add form should be visible
       expect(wrapper.queryByTestId('amenity_name')).toBeInTheDocument();
       expect(wrapper.queryByText('common:form_actions.save')).toBeInTheDocument();
     }, 20);
   });
+  it('should show no amenities found', async () => {
+    const noAmenityMock = {
+      request: {
+        query: AmenitiesQuery,
+        variables: { offset: 0 }
+      },
+      result: {
+        data: {
+          amenities: []
+        }
+      }
+    };
+    const wrapper = render(
+      <MockedProvider mocks={[noAmenityMock]} addTypename={false}>
+        <MockedThemeProvider>
+          <AmenityList />
+        </MockedThemeProvider>
+      </MockedProvider>
+    );
+
+    await waitFor(() => {
+      expect(wrapper.queryByText('search:search.load_more')).not.toBeInTheDocument();
+      expect(wrapper.queryByText('amenity:misc.no_amenity_added')).toBeInTheDocument();
+    }, 5)
+  })
 });

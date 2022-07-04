@@ -17,7 +17,7 @@ module Types::Queries::Amenity
     validate_authorization(:amenity, :can_access_amenities)
 
     context[:site_community].amenities
-                            .existing
+                            .not_deleted
                             .limit(limit)
                             .offset(offset)
   end
