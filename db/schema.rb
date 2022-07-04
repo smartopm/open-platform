@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_07_01_150502) do
+ActiveRecord::Schema.define(version: 2022_07_04_124056) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -243,6 +243,7 @@ ActiveRecord::Schema.define(version: 2022_07_01_150502) do
     t.integer "hotjar"
     t.json "lead_monthly_targets"
     t.json "payment_keys"
+    t.json "supported_languages"
     t.index ["slug"], name: "index_communities_on_slug", unique: true
   end
 
@@ -324,8 +325,8 @@ ActiveRecord::Schema.define(version: 2022_07_01_150502) do
     t.integer "entry_request_state", default: 0
     t.uuid "revoker_id"
     t.datetime "revoked_at"
-    t.uuid "guest_id"
     t.integer "status", default: 0
+    t.uuid "guest_id"
     t.datetime "exited_at"
   end
 
@@ -923,7 +924,6 @@ ActiveRecord::Schema.define(version: 2022_07_01_150502) do
     t.uuid "latest_substatus_id"
     t.string "ext_ref_id"
     t.uuid "role_id", null: false
-    t.string "region"
     t.string "title"
     t.string "linkedin_url"
     t.string "company_name"
@@ -952,6 +952,7 @@ ActiveRecord::Schema.define(version: 2022_07_01_150502) do
     t.string "relevant_link"
     t.jsonb "contact_details"
     t.string "african_presence"
+    t.string "region"
     t.string "task_id"
     t.string "capex_amount"
     t.string "jobs_created"
