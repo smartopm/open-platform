@@ -26,6 +26,7 @@ export default function UserActionMenu({
 
   const userIsAdmin = data?.user?.roleName === 'Admin';
   const currentUserIsMarketingAdmin = authState?.user?.roleName === 'Marketing Admin';
+  const currentUserCommunityIsEnyimba = authState?.user?.community?.name === 'Enyimba';
 
   return (
     <Menu
@@ -92,12 +93,14 @@ export default function UserActionMenu({
                     {t('menu.user_logs')}
                   </Link>
                 </MenuItem>
-                <MenuItem
-                  key={'view_plans'}
-                  onClick={() => router.push(`/user/${data.user.id}?tab=Plans`)}
-                >
-                  {t('menu.view_plans')}
-                </MenuItem>
+                {!currentUserCommunityIsEnyimba && (
+                  <MenuItem
+                    key={'view_plans'}
+                    onClick={() => router.push(`/user/${data.user.id}?tab=Plans`)}
+                  >
+                    {t('menu.view_plans')}
+                  </MenuItem>
+                )}
                 <MenuItem key={'activation_menu'} onClick={handleActivationDialog}>
                   {data.user.status === 'active'
                     ? t('menu.deactivate_user')
