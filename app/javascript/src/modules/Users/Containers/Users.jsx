@@ -30,7 +30,7 @@ import UserSelectButton, {
   UserSearch,
   UserProcessCSV,
   UserMenuitems,
-  UserActionSelectMenu
+  UserActionSelectMenu,
 } from '../Components/UserHeader';
 import QueryBuilder from '../../../components/QueryBuilder';
 import PageWrapper from '../../../shared/PageWrapper';
@@ -66,9 +66,9 @@ export default function UsersList() {
     variables: {
       query: searchQuery.length === 0 ? currentQueryPath : searchQuery,
       limit,
-      offset
+      offset,
     },
-    fetchPolicy: 'cache-and-network'
+    fetchPolicy: 'cache-and-network',
   });
 
   const matches = useMediaQuery('(max-width:959px)');
@@ -79,9 +79,9 @@ export default function UsersList() {
       // TODO: have a separate query with no limits
       variables: {
         limit: 2000,
-        query: searchQuery
+        query: searchQuery,
       },
-      errorPolicy: 'all'
+      errorPolicy: 'all',
     }
   );
 
@@ -123,8 +123,12 @@ export default function UsersList() {
         setSearchQuery(`sub_status = "${location?.state?.query - 1}"`);
       }
     }
-    if (location.pathname === '/leads/users' && !currentQueryPath) {
-      setSearchQuery(`user_type="lead"`);
+    if (location.pathname === '/leads/users') {
+      setSearchQuery(
+        `${
+          searchQuery || currentQueryPath ? `${searchQuery || currentQueryPath} AND` : ''
+        } user_type="lead"`
+      );
     }
   }, [currentQueryPath, location]);
 
@@ -138,13 +142,13 @@ export default function UsersList() {
     loading: labelsLoading,
     error: labelsError,
     data: labelsData,
-    refetch: labelsRefetch
+    refetch: labelsRefetch,
   } = useQuery(LabelsQuery);
 
   const [fetchUsersCount, { data: usersCountData, loading: fetchingUsersCount }] = useLazyQuery(
     UsersCount,
     {
-      variables: { query: searchQuery }
+      variables: { query: searchQuery },
     }
   );
 
@@ -231,8 +235,8 @@ export default function UsersList() {
           query: searchQuery,
           limit: createLimit,
           labelId: labels.flatMap(l => l.id || []).toString(),
-          userList: selectedUsers.toString()
-        }
+          userList: selectedUsers.toString(),
+        },
       })
         .then(() => {
           refetch();
@@ -276,7 +280,7 @@ export default function UsersList() {
     let createLimit = null;
     if (campaignCreateOption === 'all_on_the_page') createLimit = limit;
     campaignCreate({
-      variables: { query: searchQuery, limit: createLimit, userList: selectedUsers.toString() }
+      variables: { query: searchQuery, limit: createLimit, userList: selectedUsers.toString() },
     })
       .then(res => {
         // eslint-disable-next-line no-shadow
@@ -328,8 +332,8 @@ export default function UsersList() {
         fieldSettings: {
           listValues: Object.entries(userType).map(([key, val]) => {
             return { value: key, title: val };
-          })
-        }
+          }),
+        },
       },
       label: {
         label: 'Label',
@@ -338,19 +342,19 @@ export default function UsersList() {
         fieldSettings: {
           listValues: labelsData?.labels?.map(label => {
             return { value: label.shortDesc, title: label.shortDesc };
-          })
-        }
+          }),
+        },
       },
       phoneNumber: {
         label: 'Phone Number',
         type: 'text',
-        valueSources: ['value']
+        valueSources: ['value'],
       },
       loginAfter: {
         label: 'Login After',
         type: 'date',
         valueSources: ['value'],
-        excludeOperators: ['not_equal']
+        excludeOperators: ['not_equal'],
       },
       subStatus: {
         label: 'Sub Status',
@@ -359,19 +363,24 @@ export default function UsersList() {
         fieldSettings: {
           listValues: Object.entries(subStatus).map(([key, val]) => {
             return { value: key, title: val };
-          })
-        }
-      }
+          }),
+        },
+      },
     },
     widgets: {
       ...InitialConfig.widgets,
       date: {
         ...InitialConfig.widgets.date,
         dateFormat: 'YYYY.MM.DD',
-        valueFormat: 'YYYY-MM-DD'
-      }
-    }
+        valueFormat: 'YYYY-MM-DD',
+      },
+    },
   };
+
+  if (location.pathname === '/leads/users') {
+    // role field shouldn't show up for leads page
+    delete queryBuilderConfig.fields.role;
+  }
 
   const queryBuilderInitialValue = {
     // Just any random UUID
@@ -385,10 +394,10 @@ export default function UsersList() {
           operator: 'equal',
           value: [''],
           valueSrc: ['value'],
-          valueType: ['text']
-        }
-      }
-    }
+          valueType: ['text'],
+        },
+      },
+    },
   };
 
   const filterFields = {
@@ -396,31 +405,31 @@ export default function UsersList() {
     label: 'labels',
     phoneNumber: 'phone_number',
     loginAfter: 'date_filter',
-    subStatus: 'sub_status'
+    subStatus: 'sub_status',
   };
 
   const menuData = [
     {
       content: t('users.upload'),
       isVisible: true,
-      handleClick: () => history.push('/users/import')
+      handleClick: () => history.push('/users/import'),
     },
     {
       content: t('users.lead_management_upload'),
       isVisible: true,
-      handleClick: () => history.push('/users/leads/import')
+      handleClick: () => history.push('/users/leads/import'),
     },
 
     {
       content: t('users.create_report'),
       isVisible: true,
-      handleClick: () => handleReportDialog()
+      handleClick: () => handleReportDialog(),
     },
     {
       content: t('users.user_stats'),
       isVisible: true,
-      handleClick: () => history.push('/users/stats')
-    }
+      handleClick: () => history.push('/users/stats'),
+    },
   ];
 
   function handleMenu(event) {
@@ -433,21 +442,21 @@ export default function UsersList() {
     handleQueryOnChange,
     queryBuilderConfig,
     queryBuilderInitialValue,
-    toggleFilterMenu
+    toggleFilterMenu,
   };
 
   const csvObject = {
     called,
     handleDownloadCSV,
     usersLoading,
-    csvUserData
+    csvUserData,
   };
 
   const menuObject = {
     handleMenu,
     menuAnchorEl,
     setAnchorEl,
-    menuData
+    menuData,
   };
 
   const actionObject = {
@@ -457,136 +466,140 @@ export default function UsersList() {
     usersCountData,
     selectedUsers,
     labelsData,
-    labelsRefetch
+    labelsRefetch,
   };
 
   const rightPanelObj = [
     {
       mainElement: matches ? (
-        <IconButton color="primary" data-testid='search' onClick={() => setSearchOpen(!searchOpen)}>
+        <IconButton color="primary" data-testid="search" onClick={() => setSearchOpen(!searchOpen)}>
           <SearchIcon />
         </IconButton>
       ) : (
-        <Button startIcon={<SearchIcon />} data-testid='search' onClick={() => setSearchOpen(!searchOpen)}>
+        <Button
+          startIcon={<SearchIcon />}
+          data-testid="search"
+          onClick={() => setSearchOpen(!searchOpen)}
+        >
           {t('common:menu.search')}
         </Button>
       ),
-      key: 1
+      key: 1,
     },
     {
       mainElement: <UserSelectButton setCampaignOption={setCampaignOption} />,
-      key: 2
+      key: 2,
     },
     {
       mainElement: <UserProcessCSV csvObject={csvObject} />,
-      key: 3
+      key: 3,
     },
     {
       mainElement: <UserMenuitems actionObject={actionObject} menuObject={menuObject} />,
-      key: 4
-    }
+      key: 4,
+    },
   ];
 
   return (
     <PageWrapper
-      pageTitle={
-        t(`${location.pathname === '/leads/users'
-          ? 'common:menu.lead_users'
-          : 'common:misc.users'}`)
-      }
+      pageTitle={t(
+        `${location.pathname === '/leads/users' ? 'common:menu.lead_users' : 'common:misc.users'}`
+      )}
       rightPanelObj={rightPanelObj}
     >
-      {loading || labelsLoading || fetchingUsersCount ? (
-        <Spinner />
-      ) : (
-        <>
-          <Container>
-            <UserActionSelectMenu actionObject={actionObject} />
-            {searchOpen && (
-              <>
-                <div style={{ width: '50%' }}>
-                  <UserSearch handleSearchClick={inputToSearch} filterObject={filterObject} />
-                </div>
-                <div
+      <>
+        <Container>
+          {searchOpen && (
+            <>
+              <div style={{ width: '50%' }}>
+                <UserSearch handleSearchClick={inputToSearch} filterObject={filterObject} />
+              </div>
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  position: 'relative',
+                }}
+              >
+                <Grid container alignItems="center" style={{ width: '40%' }}>
+                  <div className="d-flex justify-content-center row" data-testid="label_error">
+                    <span>{filterObject.labelError}</span>
+                  </div>
+                </Grid>
+
+                <Grid
+                  container
                   style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    position: 'relative'
+                    width: '200%',
+                    position: 'absolute',
+                    zIndex: 1,
+                    marginTop: '-2px',
+                    display: filterObject.displayBuilder,
                   }}
                 >
-                  <Grid container alignItems="center" style={{ width: '40%' }}>
-                    <div className="d-flex justify-content-center row" data-testid="label_error">
-                      <span>{filterObject.labelError}</span>
-                    </div>
-                  </Grid>
-
-                  <Grid
-                    container
-                    style={{
-                      width: '200%',
-                      position: 'absolute',
-                      zIndex: 1,
-                      marginTop: '-2px',
-                      display: filterObject.displayBuilder
-                    }}
-                  >
-                    <QueryBuilder
-                      handleOnChange={filterObject.handleQueryOnChange}
-                      builderConfig={filterObject.queryBuilderConfig}
-                      initialQueryValue={filterObject.queryBuilderInitialValue}
-                      addRuleLabel="add filter"
-                    />
-                  </Grid>
-                </div>
-              </>
-            )}
-            <ActionDialog
-              open={openCampaignWarning}
-              handleClose={() => setOpenCampaignWarning(false)}
-              handleOnSave={createCampaign}
-              message={t('users.message_campaign')}
-            />
-            <SubStatusReportDialog
-              open={substatusReportOpen}
-              handleClose={handleReportDialog}
-              handleFilter={handleFilterUserBySubstatus}
-            />
-            <UserListCard
-              userData={data}
-              currentUserType={authState.user.userType}
-              handleUserSelect={handleUserSelect}
-              selectedUsers={selectedUsers}
-              offset={offset}
-              selectCheckBox={selectCheckBox}
-              refetch={refetch}
-            />
-            <Grid
-              container
-              direction="row"
-              justifyContent="center"
-              alignItems="center"
-              data-testid="pagination_section"
-            >
-              <Paginate
-                count={data.users.length}
-                active={offset >= 1}
-                offset={offset}
-                handlePageChange={paginate}
-                limit={limit}
+                  <QueryBuilder
+                    handleOnChange={filterObject.handleQueryOnChange}
+                    builderConfig={filterObject.queryBuilderConfig}
+                    initialQueryValue={filterObject.queryBuilderInitialValue}
+                    addRuleLabel="add filter"
+                  />
+                </Grid>
+              </div>
+            </>
+          )}
+          {loading || labelsLoading || fetchingUsersCount ? (
+            <Spinner />
+          ) : (
+            <>
+              <UserActionSelectMenu actionObject={actionObject} />
+              <ActionDialog
+                open={openCampaignWarning}
+                handleClose={() => setOpenCampaignWarning(false)}
+                handleOnSave={createCampaign}
+                message={t('users.message_campaign')}
               />
-            </Grid>
-          </Container>
-        </>
-      )}
+              <SubStatusReportDialog
+                open={substatusReportOpen}
+                handleClose={handleReportDialog}
+                handleFilter={handleFilterUserBySubstatus}
+              />
+              <UserListCard
+                userData={data}
+                currentUserType={authState.user.userType}
+                handleUserSelect={handleUserSelect}
+                selectedUsers={selectedUsers}
+                offset={offset}
+                selectCheckBox={selectCheckBox}
+                refetch={refetch}
+              />
+              <Grid
+                container
+                direction="row"
+                justifyContent="center"
+                alignItems="center"
+                data-testid="pagination_section"
+              >
+                <Paginate
+                  count={data.users.length}
+                  active={offset >= 1}
+                  offset={offset}
+                  handlePageChange={paginate}
+                  limit={limit}
+                />
+              </Grid>
+            </>
+          )}
+        </Container>
+      </>
     </PageWrapper>
   );
 }
 
 export const useStyles = makeStyles(() => ({
   userCard: {
-    marginTop: '160px'
+    marginTop: '160px',
   },
   userCardMobile: {
-    marginTop: '260px'
-  }
+    marginTop: '260px',
+  },
 }));
