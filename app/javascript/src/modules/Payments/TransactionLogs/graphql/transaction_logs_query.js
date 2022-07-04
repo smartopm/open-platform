@@ -2,8 +2,8 @@
 import gql from 'graphql-tag';
 
 export const TransactionLogsQuery = gql`
-  query transactionLogsQuery {
-    transactionLogs {
+  query transactionLogsQuery($limit: Int, $offset: Int) {
+    transactionLogs(limit: $limit, offset: $offset) {
       id
       paidAmount
       currency
@@ -13,6 +13,26 @@ export const TransactionLogsQuery = gql`
       amount
       description
       accountName
+      integrationType
+      createdAt
+      user {
+        id
+        name
+      }
+    }
+  }
+`;
+
+export const UserTransactionLogsQuery = gql`
+  query userTransactionLogsQuery($userId: ID!, $limit: Int, $offset: Int) {
+    userTransactionLogs(userId: $userId, limit: $limit, offset: $offset) {
+      id
+      paidAmount
+      currency
+      invoiceNumber
+      transactionRef
+      transactionId
+      description
       integrationType
       createdAt
       user {

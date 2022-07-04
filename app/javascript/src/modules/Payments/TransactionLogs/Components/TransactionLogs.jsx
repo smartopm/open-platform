@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useQuery } from 'react-apollo';
+import { useQuery, useLazyQuery } from 'react-apollo';
 import Grid from '@mui/material/Grid';
 import makeStyles from '@mui/styles/makeStyles';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -9,22 +9,32 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import IconButton from '@mui/material/IconButton';
 import PageWrapper from '../../../../shared/PageWrapper';
-import { TransactionLogsQuery } from '../graphql/transaction_logs_query';
+import { TransactionLogsQuery, UserTransactionLogsQuery } from '../graphql/transaction_logs_query';
 import { Spinner } from '../../../../shared/Loading';
 import { dateToString } from '../../../../components/DateContainer';
 import CenteredContent from '../../../../shared/CenteredContent';
 import Paginate from '../../../../components/Paginate';
+import { Context as AuthStateContext } from '../../../../containers/Provider/AuthStateProvider';
 
 export default function TransactionLogs() {
   const { t } = useTranslation('common');
   const matches = useMediaQuery('(max-width:600px)');
+  const authState = useContext(AuthStateContext);
+  const admin = authState?.user.userType === 'admin';
   const classes = useStyles();
   const [offset, setOffset] = useState(0);
   const [openDetails, setOpenDetails] = useState(false);
   const [currentId, setCurrentId] = useState('');
   const limit = 10;
-  const { data, error, loading } = useQuery(TransactionLogsQuery, {
+  const [getAllLogs, { data, error, loading }] = useLazyQuery(TransactionLogsQuery, {
     variables: { offset, limit },
+    fetchPolicy: 'cache-and-network',
+  });
+  const [
+    getUserLogs,
+    { loading: userLogsLoading, data: userLogData, error: userLogError },
+  ] = useLazyQuery(UserTransactionLogsQuery, {
+    variables: { offset, limit, userId: authState?.user.id },
     fetchPolicy: 'cache-and-network',
   });
   const breadCrumbObj = {
@@ -47,20 +57,32 @@ export default function TransactionLogs() {
     }
   }
 
+  useEffect(() => {
+    if (!admin) {
+      getUserLogs();
+    }
+    if (admin) {
+      getAllLogs();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <PageWrapper pageTitle={t('misc.history')} breadCrumbObj={breadCrumbObj} oneCol>
-      {error && (
+      {console.log(authState?.user.id)}
+      {console.log(userLogData)}
+      {(error || userLogError) && (
         <CenteredContent>
-          <p>{error.message}</p>
+          <p>{error.message || userLogError.message}</p>
         </CenteredContent>
       )}
-      {loading ? (
+      {(loading || userLogsLoading) ? (
         <Spinner />
-      ) : (
+      ) : data?.transactionLogs.length > 0 ? (
         <>
           {data.transactionLogs.map(trans => (
             <Grid container key={trans.id} className={classes.container} alignItems="center">
-              <Grid item md={3} lg={3} xs={10} sm={3}>
+              <Grid item md={!admin ? 7 : 3} lg={!admin ? 7 : 3} xs={10} sm={!admin ? 6 : 3}>
                 <Typography variant="h6">{`${trans.currency} ${trans.paidAmount}`}</Typography>
               </Grid>
               {matches && (
@@ -74,9 +96,11 @@ export default function TransactionLogs() {
                   </IconButton>
                 </Grid>
               )}
-              <Grid item md={5} lg={5} sm={5} xs={6} style={{ textAlign: !matches ? 'right' : 'left' }}>
-                <Typography variant="subtitle1">{trans.accountName}</Typography>
-              </Grid>
+              {admin && (
+                <Grid item md={5} lg={5} sm={5} xs={6}>
+                  <Typography variant="subtitle1">{trans.accountName}</Typography>
+                </Grid>
+              )}
               <Grid item md={3} lg={3} sm={3} xs={6} style={{ textAlign: 'right' }}>
                 <Typography variant="subtitle1">{dateToString(trans.createdAt)}</Typography>
               </Grid>
@@ -136,6 +160,8 @@ export default function TransactionLogs() {
             </CenteredContent>
           )}
         </>
+      ) : (
+        <CenteredContent>{t('misc.no_history')}</CenteredContent>
       )}
     </PageWrapper>
   );
