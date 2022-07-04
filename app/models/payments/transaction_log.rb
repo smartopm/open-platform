@@ -8,6 +8,7 @@ module Payments
     belongs_to :community
 
     enum integration_type: { flutterwave: 0 }
+    enum status: { pending: 0, successful: 1, failed: 2, cancelled: 3 }
     has_paper_trail
   end
 end

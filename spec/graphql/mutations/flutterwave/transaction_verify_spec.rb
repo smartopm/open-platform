@@ -14,12 +14,36 @@ RSpec.describe Mutations::Flutterwave::TransactionVerify do
 
     let(:mutation) do
       <<~GQL
-        mutation TransactionVerify($transactionId: String!) {
-          transactionVerify(transactionId: $transactionId) {
-            success
+        mutation TransactionVerify($transactionId: ID, $transactionRef: String!) {
+          transactionVerify(transactionId: $transactionId, transactionRef: $transactionRef) {
+            status
           }
         }
       GQL
+    end
+    let(:transaction_ref) { '12-as-21' }
+    let(:failed_response_tx_ref) { '1ad-23-23' }
+    let(:cancelled_repsonse_tx_ref) { '54a-1223-1' }
+    let!(:transaction_log) do
+      create(:transaction_log,
+             transaction_id: '12345',
+             transaction_ref: transaction_ref,
+             community: community,
+             user: admin)
+    end
+    let(:failed_transaction_log) do
+      create(:transaction_log,
+             transaction_id: '123',
+             transaction_ref: failed_response_tx_ref,
+             community: community,
+             user: admin,
+             status: 'failed')
+    end
+    let(:cancelled_transaction_log) do
+      create(:transaction_log,
+             transaction_ref: cancelled_repsonse_tx_ref,
+             community: community,
+             user: admin)
     end
     let(:base_uri) { "#{ENV['FLUTTERWAVE_TRANSACTION_VERIFY_URL']}/12345/verify" }
     let(:headers) do
@@ -49,28 +73,60 @@ RSpec.describe Mutations::Flutterwave::TransactionVerify do
         data: nil,
       }
     end
+    let(:private_key) { '{ "PRIVATE_KEY": "xzs-12-as"}' }
 
     before do
-      ENV["#{community.name.parameterize.upcase}_FLUTTERWAVE"] = '{ "PRIVATE_KEY": "xzs-12-as"}'
+      allow_any_instance_of(ApplicationHelper).to receive(:flutterwave_keys)
+        .with(community.name).and_return(JSON.parse(private_key))
       ENV['FLUTTERWAVE_TRANSACTION_VERIFY_URL'] = 'https://api.flutterwave.com/v3/transactions'
     end
 
-    context 'when transaction succeeds' do
-      before do
-        stub_request(:get, base_uri)
-          .with(headers: headers)
-          .to_return(status: 200, body: response_body)
-      end
+    context 'when webhook response is recieved' do
+      before { failed_transaction_log }
 
-      it 'creates transaction log' do
-        variables = { transactionId: '12345' }
+      it 'returns failed as transaction status' do
+        variables = { transactionId: '123', transactionRef: failed_response_tx_ref }
         result = DoubleGdpSchema.execute(mutation, variables: variables, context: {
                                            site_community: community,
                                            current_user: admin,
                                          }).as_json
         expect(result['errors']).to be nil
-        expect(result.dig('data', 'transactionVerify', 'success')).to eql true
-        expect(community.transaction_logs.count).to eql 1
+        expect(result.dig('data', 'transactionVerify', 'status')).to eql 'failed'
+      end
+    end
+
+    context 'when webhook response is not recieved and verification is performed through API' do
+      context 'and transaction is successful' do
+        before do
+          stub_request(:get, base_uri)
+            .with(headers: headers)
+            .to_return(status: 200, body: response_body)
+        end
+
+        it 'returns successful as transaction status' do
+          variables = { transactionId: '12345', transactionRef: transaction_ref }
+          expect(community.transaction_logs.first.status).to eql 'pending'
+          result = DoubleGdpSchema.execute(mutation, variables: variables, context: {
+                                             site_community: community,
+                                             current_user: admin,
+                                           }).as_json
+          expect(result['errors']).to be nil
+          expect(result.dig('data', 'transactionVerify', 'status')).to eql 'successful'
+        end
+      end
+
+      context 'and transaction is cancelled' do
+        before { cancelled_transaction_log }
+
+        it 'returns cancelled as transaction status' do
+          variables = { transactionRef: cancelled_repsonse_tx_ref }
+          result = DoubleGdpSchema.execute(mutation, variables: variables, context: {
+                                             site_community: community,
+                                             current_user: admin,
+                                           }).as_json
+          expect(result['errors']).to be nil
+          expect(result.dig('data', 'transactionVerify', 'status')).to eql 'cancelled'
+        end
       end
     end
 
@@ -82,7 +138,7 @@ RSpec.describe Mutations::Flutterwave::TransactionVerify do
       end
 
       it 'raises error' do
-        variables = { transactionId: '12345' }
+        variables = { transactionId: '12345', transactionRef: transaction_ref }
         result = DoubleGdpSchema.execute(mutation, variables: variables, context: {
                                            site_community: community,
                                            current_user: admin,
@@ -100,7 +156,7 @@ RSpec.describe Mutations::Flutterwave::TransactionVerify do
       end
 
       it 'raises error' do
-        variables = { transactionId: '12345' }
+        variables = { transactionId: '12345', transactionRef: transaction_ref }
         result = DoubleGdpSchema.execute(mutation, variables: variables, context: {
                                            site_community: community,
                                            current_user: admin,
@@ -112,7 +168,7 @@ RSpec.describe Mutations::Flutterwave::TransactionVerify do
 
     context 'when user is unauthorized' do
       it 'raises unauthorized error' do
-        variables = { transactionId: '12345' }
+        variables = { transactionId: '12345', transactionRef: transaction_ref }
         result = DoubleGdpSchema.execute(mutation, variables: variables, context: {
                                            site_community: community,
                                            current_user: security_guard,

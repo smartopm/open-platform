@@ -56,9 +56,11 @@ RSpec.describe FlutterwaveCharger do
       'User-Agent' => 'Ruby',
     }
   end
+  let(:private_key) { '{ "PRIVATE_KEY": "xzs-12-as"}' }
 
   before do
-    ENV["#{community.name.parameterize.upcase}_FLUTTERWAVE"] = '{ "PRIVATE_KEY": "xzs-12-as"}'
+    allow_any_instance_of(ApplicationHelper).to receive(:flutterwave_keys)
+      .with(community.name).and_return(JSON.parse(private_key))
     ENV['FLUTTERWAVE_PAYMENT_URL'] = 'https://api.flutterwave.com/v3/payments'
     ENV['FLUTTERWAVE_TRANSACTION_VERIFY_URL'] = 'https://api.flutterwave.com/v3/transactions'
   end

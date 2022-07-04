@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_07_04_124056) do
+ActiveRecord::Schema.define(version: 2022_07_04_125407) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -844,6 +844,9 @@ ActiveRecord::Schema.define(version: 2022_07_04_124056) do
     t.uuid "community_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "status", default: 0
+    t.string "payment_link"
+    t.json "meta_data"
     t.index ["community_id"], name: "index_transaction_logs_on_community_id"
     t.index ["user_id"], name: "index_transaction_logs_on_user_id"
   end
