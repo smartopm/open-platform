@@ -2,11 +2,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import TextField from '@mui/material/TextField';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { MobileDatePicker } from '@mui/x-date-pickers/MobileDatePicker';
-import { MobileDateTimePicker } from '@mui/x-date-pickers/MobileDateTimePicker';
-import { MobileTimePicker } from '@mui/x-date-pickers/MobileTimePicker';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import AdapterDateFns from '@mui/lab/AdapterDateFns';
+import {
+  MobileDatePicker,
+  MobileDateTimePicker,
+  MobileTimePicker,
+  LocalizationProvider
+} from '@mui/lab';
 import enUS from 'date-fns/locale/en-US';
 import es from 'date-fns/locale/es';
 import FormHelperText from '@mui/material/FormHelperText';
@@ -34,7 +36,7 @@ export default function DatePickerDialog({
   return (
     <LocalizationProvider
       dateAdapter={AdapterDateFns}
-      adapterLocale={getCurrentLng().includes('es') ? es : enUS}
+      locale={getCurrentLng().includes('es') ? es : enUS}
     >
       <MobileDatePicker
         renderInput={params => (
@@ -92,7 +94,7 @@ export function DateAndTimePickers({
   return (
     <LocalizationProvider
       dateAdapter={AdapterDateFns}
-      adapterLocale={getCurrentLng().includes('es') ? es : enUS}
+      locale={getCurrentLng().includes('es') ? es : enUS}
     >
       <MobileDateTimePicker
         renderInput={params => (
@@ -148,7 +150,7 @@ export function ThemedTimePicker({
     <>
       <LocalizationProvider
         dateAdapter={AdapterDateFns}
-        adapterLocale={getCurrentLng().includes('es') ? es : enUS}
+        locale={getCurrentLng().includes('es') ? es : enUS}
       >
         <MobileTimePicker
           renderInput={params =>
