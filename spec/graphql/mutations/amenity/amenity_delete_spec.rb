@@ -47,7 +47,7 @@ RSpec.describe Mutations::Amenity::AmenityDelete do
 
     context 'when amenity does not exist' do
       it 'raises error' do
-        variables = { id:  '123', status: 'deleted' }
+        variables = { id: '123', status: 'deleted' }
         result = DoubleGdpSchema.execute(mutation, variables: variables,
                                                    context: {
                                                      current_user: admin,
@@ -60,7 +60,7 @@ RSpec.describe Mutations::Amenity::AmenityDelete do
 
     context 'when user is unauthorized' do
       it 'raises unauthorized error' do
-        variables = { id:  amenity.id, status: 'deleted' }
+        variables = { id: amenity.id, status: 'deleted' }
         result = DoubleGdpSchema.execute(mutation, variables: variables,
                                                    context: {
                                                      current_user: user,
