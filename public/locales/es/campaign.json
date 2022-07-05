@@ -47,6 +47,8 @@
   "message": {
     "add_a_campaign": "Agregar un Título de Campaña",
     "add_a_message": "Agregar un mensaje",
+    "campaign_successfully_created": "Campaña creada con éxito",
+    "campaign_successfully_updated": "Campaña actualizada con éxito",
     "include_batch_time": "Incluya un tiempo de lote",
     "include_email_template": "Incluya la plantilla de correo electrónico",
     "include_message": "Por favor incluya un mensaje",
