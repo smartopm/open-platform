@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 import { useLazyQuery, useMutation } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
 import makeStyles from '@mui/styles/makeStyles';
-import { useLocation, useHistory } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import TaskDataList from './TaskDataList';
 import FileUploader from './FileUploader';
 import { objectAccessor, sortTaskOrder, formatError, useParamsQuery } from '../../../utils/helpers';
@@ -47,7 +47,6 @@ export default function TodoItem({
   const [isUpdating, setIsUpdating] = useState(false);
   const anchorElOpen = Boolean(anchorEl);
   const { t } = useTranslation('common');
-  const history = useHistory();
   const location = useLocation();
   const authState = React.useContext(AuthStateContext);
   const taskPermissions = authState?.user?.permissions?.find(
@@ -116,16 +115,16 @@ export default function TodoItem({
   }
 
   if (location.pathname === '/tasks/task_lists') {
-    const { noteList } = task;
     menuList = [
       {
-        content: t('menu.edit_task_list'),
+        content: t('menu.open_details'),
         isAdmin: true,
-        handleClick: () =>
-          history.push({
-            pathname: `/tasks/task_lists/edit/${noteList?.id}`,
-            state: { noteList, task }
-          })
+        handleClick: () => handleTaskDetails(),
+      },
+      {
+        content: canCreateNote ? t('menu.add_subtask') : null,
+        isAdmin: true,
+        handleClick: () => handleAddSubTask(selectedTask),
       },
       {
         content: t('menu.delete_task_list'),

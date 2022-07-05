@@ -407,6 +407,7 @@
     "task_lists": "Task Lists",
     "edit_process_template": "Edit Process Template",
     "edit_task_list": "Edit Task List",
+    "open_details": "Open Details",
     "delete_task_list": "Delete Task List",
     "delete_process_template": "Delete Process Template",
     "task_list_deleted": "Task list deleted Successfully",
