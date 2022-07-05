@@ -4,6 +4,7 @@ import { Menu, MenuItem } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Context as AuthStateContext } from '../../../containers/Provider/AuthStateProvider';
+import { checkAllowedCommunityFeatures } from '../../../utils/helpers';
 
 /**
  *
@@ -92,12 +93,17 @@ export default function UserActionMenu({
                     {t('menu.user_logs')}
                   </Link>
                 </MenuItem>
-                <MenuItem
-                  key={'view_plans'}
-                  onClick={() => router.push(`/user/${data.user.id}?tab=Plans`)}
-                >
-                  {t('menu.view_plans')}
-                </MenuItem>
+                {checkAllowedCommunityFeatures(
+                  authState?.user?.community?.features,
+                  'Payments'
+                ) && (
+                  <MenuItem
+                    key={'view_plans'}
+                    onClick={() => router.push(`/user/${data.user.id}?tab=Plans`)}
+                  >
+                    {t('menu.view_plans')}
+                  </MenuItem>
+                )}
                 <MenuItem key={'activation_menu'} onClick={handleActivationDialog}>
                   {data.user.status === 'active'
                     ? t('menu.deactivate_user')
