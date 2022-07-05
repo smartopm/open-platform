@@ -639,7 +639,8 @@ export function selectOptions(
   handleMenuItemClick,
   handleMergeUserItemClick,
   checkRole,
-  t
+  t,
+  userId
 ) {
   return [
     {
@@ -784,6 +785,13 @@ export function selectOptions(
       name: t('common:menu.customer_journey'),
       handleMenuItemClick,
       show: checkCommunityFeatures('Customer Journey') && checkRole(['admin'], 'Customer Journey')
+    },
+    {
+      key: 'transaction_logs',
+      value: 'Transactions',
+      name: t('common:misc.transaction_logs'),
+      handleMenuItemClick: () => history.push(`/transaction_logs?userId=${userId}`),
+      show: checkCommunityFeatures('Transactions') && checkModule('transaction')
     }
   ];
 }

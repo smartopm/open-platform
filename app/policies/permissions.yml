@@ -80,6 +80,9 @@ admin:
       - can_see_menu_item
       - can_view_all_transaction_logs
       - can_view_transaction_logs
+  transaction_history:
+    permissions:
+      - can_see_menu_item
   payment_records:
     permissions:
       - can_create_transaction

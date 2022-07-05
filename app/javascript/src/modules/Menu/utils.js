@@ -17,6 +17,7 @@ export default function checkSubMenuAccessibility({ authState, subMenuItem }) {
     if (userPermissionsModule === undefined) {
       return false;
     }
+
     // a quick way to exclude permits & request forms and still show my forms on the main menu,
     // as they both use the same persmission (can_see_menu_item) to show up
     if (subMenuItem.moduleName === 'forms') {

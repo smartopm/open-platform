@@ -310,7 +310,8 @@
     "id": "ID",
     "references": "References",
     "form_amount": "Form Amount",
-    "no_history": "No Transaction Log Available"
+    "no_history": "No Transaction Log Available",
+    "transaction_logs": "Transaction Logs"
   },
   "menu": {
     "invoice": "Invoice",

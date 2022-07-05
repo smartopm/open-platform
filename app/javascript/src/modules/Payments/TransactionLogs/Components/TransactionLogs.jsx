@@ -1,6 +1,7 @@
 /* eslint-disable complexity */
 import React, { useState, useContext, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useLocation } from 'react-router-dom'
 import { useLazyQuery } from 'react-apollo';
 import Grid from '@mui/material/Grid';
 import makeStyles from '@mui/styles/makeStyles';
@@ -16,12 +17,14 @@ import { dateToString } from '../../../../components/DateContainer';
 import CenteredContent from '../../../../shared/CenteredContent';
 import Paginate from '../../../../components/Paginate';
 import { Context as AuthStateContext } from '../../../../containers/Provider/AuthStateProvider';
+import { useParamsQuery } from '../../../../utils/helpers';
 
 export default function TransactionLogs() {
   const { t } = useTranslation('common');
   const matches = useMediaQuery('(max-width:600px)');
+  const path = useParamsQuery('');
+  const userId = path.get('userId');
   const authState = useContext(AuthStateContext);
-  const admin = authState?.user.userType === 'admin';
   const classes = useStyles();
   const [offset, setOffset] = useState(0);
   const [openDetails, setOpenDetails] = useState(false);
@@ -35,7 +38,7 @@ export default function TransactionLogs() {
     getUserLogs,
     { loading: userLogsLoading, data: userLogData, error: userLogError },
   ] = useLazyQuery(UserTransactionLogsQuery, {
-    variables: { offset, limit, userId: authState?.user.id },
+    variables: { offset, limit, userId },
     fetchPolicy: 'cache-and-network',
   });
   const breadCrumbObj = {
@@ -61,14 +64,14 @@ export default function TransactionLogs() {
   }
 
   useEffect(() => {
-    if (!admin) {
+    if (userId) {
       getUserLogs();
     }
-    if (admin) {
+    if (!userId) {
       getAllLogs();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [userId]);
 
   return (
     <PageWrapper pageTitle={t('misc.history')} breadCrumbObj={breadCrumbObj} oneCol>
@@ -83,10 +86,10 @@ export default function TransactionLogs() {
         <>
           {transactionLogs.map(trans => (
             <Grid container key={trans.id} className={classes.container} alignItems="center">
-              <Grid item md={!admin ? 7 : 3} lg={!admin ? 7 : 3} xs={6} sm={!admin ? 7 : 3}>
+              <Grid item md={userId ? 7 : 3} lg={userId ? 7 : 3} xs={6} sm={userId ? 7 : 3}>
                 <Typography variant="h6">{`${trans.currency} ${trans.paidAmount}`}</Typography>
               </Grid>
-              {admin && matches && (
+              {!userId && matches && (
                 <Grid item xs={2} style={{ textAlign: 'right' }}>
                   <IconButton onClick={() => handleMoreDetailsClick(trans.id)}>
                     {openDetails && currentId === trans.id ? (
@@ -97,7 +100,7 @@ export default function TransactionLogs() {
                   </IconButton>
                 </Grid>
               )}
-              {admin && (
+              {!userId && (
                 <Grid item md={5} lg={5} sm={5} xs={6}>
                   <Typography variant="subtitle1">{trans.accountName}</Typography>
                 </Grid>
@@ -105,12 +108,12 @@ export default function TransactionLogs() {
               <Grid item md={3} lg={3} sm={3} xs={4} style={{ textAlign: 'right' }}>
                 <Typography variant="subtitle1">{dateToString(trans.createdAt)}</Typography>
               </Grid>
-              {(!matches || (!admin && matches)) && (
+              {(!matches || (userId && matches)) && (
                 <Grid
                   item
-                  md={admin ? 1 : 2}
-                  lg={admin ? 1 : 2}
-                  sm={admin ? 1 : 2}
+                  md={!userId ? 1 : 2}
+                  lg={!userId ? 1 : 2}
+                  sm={!userId ? 1 : 2}
                   xs={2}
                   style={{ textAlign: 'right' }}
                 >
@@ -140,7 +143,7 @@ export default function TransactionLogs() {
                       {`${t('misc.references')}# ${trans.transactionRef}`}
                     </Typography>
                   </Grid>
-                  {admin && (
+                  {!userId && (
                     <Grid item md={12} lg={12} sm={12} xs={12}>
                       <Typography variant="subtitle1" color="text.secondary">
                         {`${t('misc.form_amount')} ${trans.currency}${trans.amount}`}
