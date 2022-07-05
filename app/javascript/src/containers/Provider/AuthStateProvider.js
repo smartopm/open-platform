@@ -69,6 +69,7 @@ const QUERY = gql`
         roles
         leadMonthlyTargets
         paymentKeys
+        supportedLanguages
       }
     }
   }
