@@ -4,6 +4,13 @@
     "action_text": "Ir al Menú Principal",
     "oops": "Ups. Parece que no podemos encontrar tu página."
   },
+  "date_picker": {
+    "cancel": "Cancelar",
+    "clear": "Limpiar",
+    "date_time_in_the_future": "Seleccione una fecha y hora en el futuro",
+    "ok_label": "Listo",
+    "required_field": "{{fieldName}} es requerido"
+  },
   "dialogs": {
     "dialog_action": "Estas seguro que quieres {{action}} este {{title}}?",
     "dialog_content": "Estas proximo a {{action}}{{title}}"
