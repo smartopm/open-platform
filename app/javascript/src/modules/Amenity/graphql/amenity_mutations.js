@@ -21,7 +21,6 @@ export const AmenityCreateMutation = gql`
   }
 `;
 
-
 export const AmenityUpdateMutation = gql`
   mutation amenityUpdate(
     $id: ID!
@@ -30,6 +29,7 @@ export const AmenityUpdateMutation = gql`
     $location: String
     $hours: String
     $invitationLink: String
+    $status: String
   ) {
     amenityUpdate(
       id: $id
@@ -38,9 +38,21 @@ export const AmenityUpdateMutation = gql`
       location: $location
       hours: $hours
       invitationLink: $invitationLink
+      status: $status
     ) {
       amenity {
         id
+      }
+    }
+  }
+`;
+
+export const AmenityDeleteMutation = gql`
+  mutation amenityDelete($id: ID!, $status: String!) {
+    amenityDelete(id: $id, status: $status) {
+      amenity {
+        id
+        name
       }
     }
   }

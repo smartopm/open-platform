@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Grid from '@mui/material/Grid';
 import { useQuery } from 'react-apollo';
 import { useTranslation } from 'react-i18next';
-import { Button } from '@mui/material';
+import { Button, Typography } from '@mui/material';
 import AmenityItem from './AmenityItem';
 import SpeedDialButton from '../../../shared/buttons/SpeedDial';
 import AmenityForm from './AmenityForm';
@@ -11,33 +11,55 @@ import { Spinner } from '../../../shared/Loading';
 import PageWrapper from '../../../shared/PageWrapper';
 import CenteredContent from '../../../shared/CenteredContent';
 import useFetchMoreRecords from '../../../shared/hooks/useFetchMoreRecords';
+import useMutationWrapper from '../../../shared/hooks/useMutationWrapper';
+import { AmenityDeleteMutation } from '../graphql/amenity_mutations';
+import { ActionDialog } from '../../../components/Dialog';
+import { AmenityStatus } from '../constants';
 
 export default function AmenityList() {
-  const [open, setOpen] = useState(false);
+  const [dialog, setOpenDialog] = useState({ isOpen: false, type: null })
   const [amenityData, setAmenityData] = useState(null)
   const { refetch, data, loading, fetchMore } = useQuery(AmenitiesQuery, {
     variables: { offset: 0 },
-    fetchPolicy: 'cache-and-network'
+    fetchPolicy: 'network-only'
   });
   const { t } = useTranslation(['common', 'amenity', 'form', 'search']);
   const variables = { offset: data?.amenities?.length };
   const { loadMore, hasMoreRecord } = useFetchMoreRecords(fetchMore, 'amenities', variables);
+  const [deleteAmenity, isDeleting] = useMutationWrapper(AmenityDeleteMutation, reset, t('amenity:misc.amenity_deleted'));
 
-  function handleEditAmenity(amenity) {
+  function handleEditAmenity(amenity, type) {
     setAmenityData(amenity)
-    setOpen(true)
+    setOpenDialog({ isOpen: true, type })
+  }
+
+  function handleClose() {
+    setOpenDialog({ isOpen: true, type: null });
+  }
+
+  function reset() {
+    refetch()
+    handleClose();
   }
 
   function handleAddAmenity() {
     setAmenityData(null);
-     setOpen(true);
+     setOpenDialog({ isOpen: true, type: 'edit' });
   }
 
   return (
     <PageWrapper pageTitle={t('common:misc.amenity_plural')}>
+      <ActionDialog
+        open={dialog.isOpen && dialog.type === 'delete'}
+        type="warning"
+        message={t('amenity:misc.delete_warning')}
+        handleClose={handleClose}
+        disableActionBtn={isDeleting}
+        handleOnSave={() => deleteAmenity({ id: amenityData.id, status: AmenityStatus.delete })}
+      />
       <AmenityForm
-        isOpen={open}
-        setOpen={setOpen}
+        isOpen={dialog.isOpen && dialog.type === 'edit'}
+        handleClose={handleClose}
         refetch={refetch}
         amenityData={amenityData}
         t={t}
@@ -69,18 +91,24 @@ export default function AmenityList() {
         </Grid>
       </Grid>
       <br />
-      {data?.amenities.length && (
-      <CenteredContent>
-        <Button
-          variant="outlined"
-          onClick={loadMore}
-          startIcon={loading && <Spinner />}
-          disabled={loading || !hasMoreRecord}
-        >
-          {t('search:search.load_more')}
-        </Button>
-      </CenteredContent>
-      )}
+      {data?.amenities.length ? (
+        <CenteredContent>
+          <Button
+            variant="outlined"
+            onClick={loadMore}
+            startIcon={loading && <Spinner />}
+            disabled={loading || !hasMoreRecord}
+          >
+            {t('search:search.load_more')}
+          </Button>
+        </CenteredContent>
+      )
+      : (
+        <CenteredContent>
+          <Typography>{t('amenity:misc.no_amenity_added')}</Typography>
+        </CenteredContent>
+      )
+    }
     </PageWrapper>
   );
 }

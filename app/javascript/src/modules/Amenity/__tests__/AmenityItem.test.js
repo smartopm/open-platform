@@ -13,9 +13,10 @@ describe('Amenity Item', () => {
       invitationLink: 'http://link'
     };
     window.open = jest.fn()
+    const handleEdit = jest.fn()
     const wrapper = render(
       <MockedThemeProvider>
-        <AmenityItem amenity={amenity} translate={jest.fn()} />
+        <AmenityItem amenity={amenity} translate={jest.fn()} handleEditAmenity={handleEdit} />
       </MockedThemeProvider>
     );
     expect(wrapper.queryByTestId('amenity_description')).toBeInTheDocument();
@@ -25,6 +26,20 @@ describe('Amenity Item', () => {
     expect(wrapper.queryByTestId('amenity_location').textContent).toContain('20st North');
     expect(wrapper.queryByTestId('amenity_hours').textContent).toContain('2pm');
     expect(wrapper.queryByTestId('button')).toBeInTheDocument();
+
+    expect(wrapper.queryByTestId('discussion-menu')).toBeInTheDocument();
+
+    fireEvent.click(wrapper.queryByTestId('discussion-menu'));
+
+    // click the edit menu item 
+    fireEvent.click(wrapper.queryAllByTestId('menu_item')[0]);
+    expect(handleEdit).toHaveBeenCalled();
+    expect(handleEdit).toHaveBeenCalledWith(amenity, 'edit');
+
+    // click the delete menu item
+    fireEvent.click(wrapper.queryAllByTestId('menu_item')[1]);
+    expect(handleEdit).toHaveBeenCalled();
+    expect(handleEdit).toHaveBeenCalledWith(amenity, 'delete');
 
     fireEvent.click(wrapper.queryByTestId('button'));
     // eslint-disable-next-line security/detect-non-literal-fs-filename
