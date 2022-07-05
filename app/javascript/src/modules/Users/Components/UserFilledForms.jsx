@@ -127,7 +127,7 @@ export default function UserFilledForms({ userFormsFilled, userId, currentUser }
           {userFormsFilled?.length >= 1 &&
             userFormsFilled.map(
               userForm =>
-                (userForm.status !== 'draft' || userForm.userId === currentUser) && (
+                (userForm.status !== 'draft' || userForm.userId === currentUser) && (userForm.form) && (
                   <Fragment key={userForm.id}>
                     <FormItem
                       formUser={userForm}
