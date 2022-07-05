@@ -219,6 +219,7 @@ export default function RenderForm({
               error: checkRequiredFormPropertyIsFilled(formPropertiesData, formState),
               fieldName: formPropertiesData.fieldName
             }}
+            t={t}
           />
         </Grid>
         {editMode && (
@@ -260,6 +261,7 @@ export default function RenderForm({
               error: checkRequiredFormPropertyIsFilled(formPropertiesData, formState),
               fieldName: formPropertiesData.fieldName
             }}
+            t={t}
           />
         </Grid>
         {editMode && (
@@ -302,6 +304,7 @@ export default function RenderForm({
               error: checkRequiredFormPropertyIsFilled(formPropertiesData, formState),
               fieldName: formPropertiesData.fieldName
             }}
+            t={t}
           />
         </Grid>
         {editMode && (

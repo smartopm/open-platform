@@ -6,6 +6,7 @@ import { MockedProvider } from '@apollo/react-testing';
 import Labels from '../Containers/Labels';
 import { Context } from '../../../containers/Provider/AuthStateProvider';
 import userMock from '../../../__mocks__/authstate';
+import MockedThemeProvider from '../../__mocks__/mock_theme';
 
 jest.mock('@rails/activestorage/src/file_checksum', () => jest.fn());
 
@@ -15,7 +16,9 @@ describe('Labels Component', () => {
       <MockedProvider>
         <Context.Provider value={userMock}>
           <BrowserRouter>
-            <Labels />
+            <MockedThemeProvider>
+              <Labels />
+            </MockedThemeProvider>
           </BrowserRouter>
         </Context.Provider>
       </MockedProvider>

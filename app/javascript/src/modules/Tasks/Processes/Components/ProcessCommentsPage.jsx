@@ -44,7 +44,6 @@ export default function ProcessCommentsPage() {
     pageName: t('breadcrumbs.comments')
   };
 
-  if (loading) return <Spinner />;
   return (
     <PageWrapper
       oneCol

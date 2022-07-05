@@ -528,6 +528,7 @@ export default function TodoList({
               selectedDate={selectedDate}
               handleDateChange={handleDateChange}
               label={t('common:form_placeholders.note_due_date')}
+              t={t}
             />
           </ModalDialog>
           <Grid container spacing={1}>

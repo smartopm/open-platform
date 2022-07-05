@@ -24,6 +24,7 @@ export default function GuestTime(
           inputProps={{ 'data-testid': 'day_of_visit_input' }}
           disabled={disableEdit()}
           inputVariant="outlined"
+          t={t}
         />
         <br />
       </Grid>
@@ -36,6 +37,7 @@ export default function GuestTime(
           disabled={disableEdit()}
           inputVariant="outlined"
           fullWidth
+          t={t}
         />
       </Grid>
       <Grid item xs={6} sm={update ? 6 : 4}>
@@ -47,6 +49,7 @@ export default function GuestTime(
           disabled={disableEdit()}
           inputVariant="outlined"
           fullWidth
+          t={t}
         />
       </Grid>
       <Grid item xs={12} md={update ? 12 : 6}>
@@ -80,6 +83,7 @@ export default function GuestTime(
           disabled={disableEdit()}
           inputVariant="outlined"
           styles={{ marginTop: !smallDevice && 16 }}
+          t={t}
         />
       )}
       </Grid>

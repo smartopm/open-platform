@@ -353,6 +353,7 @@ export default function CampaignSplitScreenContent({ refetch, campaign, handleCl
             selectedDateTime={formData.batchTime}
             handleDateChange={handleDateChange}
             pastDate
+            t={t}
           />
         </Grid>
       </Grid>

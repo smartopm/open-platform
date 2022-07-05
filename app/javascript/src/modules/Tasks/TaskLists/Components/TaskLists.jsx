@@ -20,9 +20,9 @@ export default function TaskLists() {
   const { data, loading, refetch, error } = useQuery(TaskListsQuery, {
     variables: {
       offset,
-      limit
+      limit,
     },
-    fetchPolicy: 'cache-and-network'
+    fetchPolicy: 'cache-and-network',
   });
 
   function redirectToTaskListCreatePage() {
@@ -43,42 +43,56 @@ export default function TaskLists() {
   const breadCrumbObj = {
     linkText: t('task_lists.task_lists'),
     linkHref: '/tasks/task_lists',
-    pageName: t('task_lists.task_lists')
+    pageName: t('task_lists.task_lists'),
   };
 
   if (error) return <CenteredContent>{formatError(error.message)}</CenteredContent>;
-  if (loading) return <Spinner />;
 
   return (
     <PageWrapper pageTitle={t('task_lists.task_lists')} breadCrumbObj={breadCrumbObj}>
-      {data?.taskLists?.length > 0 ? (
-        <div>
-          {data.taskLists.map(taskList => (
-            <div key={taskList.id}>
-              <TodoItem key={taskList?.id} task={taskList} taskId={taskList.id} refetch={refetch} />
-            </div>
-          ))}
-        </div>
+      {loading ? (
+        <Spinner />
       ) : (
-        <CenteredContent>{t('task_lists.no_task_lists')}</CenteredContent>
+        <>
+          {data?.taskLists?.length > 0 ? (
+            <div>
+              {data.taskLists.map(taskList => (
+                <div key={taskList.id}>
+                  <TodoItem
+                    key={taskList?.id}
+                    task={taskList}
+                    taskId={taskList.id}
+                    refetch={refetch}
+                  />
+                </div>
+              ))}
+            </div>
+          ) : (
+            <CenteredContent>{t('task_lists.no_task_lists')}</CenteredContent>
+          )}
+          <CenteredContent>
+            <Paginate
+              count={data?.taskLists?.length}
+              offSet={offset}
+              limit={limit}
+              active={offset > 1}
+              handlePageChange={paginate}
+            />
+          </CenteredContent>
+          <AccessCheck
+            module="note"
+            allowedPermissions={['can_view_create_task_button']}
+            show404ForUnauthorized={false}
+          >
+            <FloatingButton
+              variant="extended"
+              handleClick={redirectToTaskListCreatePage}
+              color="primary"
+              data-testid="create_task_btn"
+            />
+          </AccessCheck>
+        </>
       )}
-      <CenteredContent>
-        <Paginate
-          count={data?.taskLists?.length}
-          offSet={offset}
-          limit={limit}
-          active={offset > 1}
-          handlePageChange={paginate}
-        />
-      </CenteredContent>
-      <AccessCheck module="note" allowedPermissions={['can_view_create_task_button']} show404ForUnauthorized={false}>
-        <FloatingButton
-          variant="extended"
-          handleClick={redirectToTaskListCreatePage}
-          color="primary"
-          data-testid="create_task_btn"
-        />
-      </AccessCheck>
     </PageWrapper>
   );
 }

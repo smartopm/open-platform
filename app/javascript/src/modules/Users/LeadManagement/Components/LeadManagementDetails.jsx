@@ -20,7 +20,7 @@ export default function LeadManagementDetails({ userId }) {
   const [tabValue, setTabValue] = useState(0);
   const { loading, error, data, refetch } = useQuery(LeadDetailsQuery, {
     variables: { id: userId },
-    fetchPolicy: 'cache-and-network'
+    fetchPolicy: 'cache-and-network',
   });
 
   const isMobile = useMediaQuery('(max-width:800px)');
@@ -29,10 +29,10 @@ export default function LeadManagementDetails({ userId }) {
     loading: leadLabelsLoading,
     refetch: refetchLeadLabelsData,
     error: leadLabelsError,
-    data: LeadLabelsData
+    data: LeadLabelsData,
   } = useQuery(LeadLabelsQuery, {
     variables: { userId },
-    fetchPolicy: 'cache-and-network'
+    fetchPolicy: 'cache-and-network',
   });
 
   const sortedLabels = orderBy(
@@ -48,7 +48,7 @@ export default function LeadManagementDetails({ userId }) {
   const TAB_VALUES = {
     details: 0,
     tasks: 1,
-    events: 2
+    events: 2,
   };
   function handleTabValueChange(_event, newValue) {
     setTabValue(Number(newValue));
@@ -69,7 +69,7 @@ export default function LeadManagementDetails({ userId }) {
           container
           style={{
             display: 'flex',
-            justifyContent: 'space-between'
+            justifyContent: 'space-between',
           }}
         >
           <Grid item md={4} xs={12}>
@@ -83,7 +83,7 @@ export default function LeadManagementDetails({ userId }) {
                 marginRight: !isMobile && '-50px',
                 paddingLeft: isMobile && 0,
                 marginTop: isMobile && 6,
-                justifyContent: !isMobile && 'end'
+                justifyContent: !isMobile && 'end',
               }}
             >
               {sortedLabels.map(labelsData => (
@@ -101,7 +101,7 @@ export default function LeadManagementDetails({ userId }) {
                       borderColor: labelsData.color,
                       borderBottom: '1px solid',
                       borderTopLeftRadius: '16px',
-                      borderBottomLeftRadius: '16px'
+                      borderBottomLeftRadius: '16px',
                     }}
                   >
                     {' '}
@@ -116,7 +116,7 @@ export default function LeadManagementDetails({ userId }) {
                       padding: '9px',
                       borderTopRightRadius: '16px',
                       borderBottomRightRadius: '16px',
-                      marginRight: '10px'
+                      marginRight: '10px',
                     }}
                   >
                     {labelsData?.shortDesc}
@@ -192,5 +192,5 @@ export default function LeadManagementDetails({ userId }) {
 }
 
 LeadManagementDetails.propTypes = {
-  userId: PropTypes.string.isRequired
+  userId: PropTypes.string.isRequired,
 };

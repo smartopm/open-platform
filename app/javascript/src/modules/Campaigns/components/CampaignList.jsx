@@ -47,7 +47,7 @@ export default function CampaignList() {
   const debouncedSearchText = useDebounce(searchText, 500);
   const { data, error, loading, refetch } = useQuery(allCampaigns, {
     variables: { limit, offset, query: debouncedSearchText },
-    fetchPolicy: 'cache-and-network'
+    fetchPolicy: 'cache-and-network',
   });
   const { t } = useTranslation(['campaign', 'common']);
 
@@ -56,14 +56,14 @@ export default function CampaignList() {
       content: t('misc.open_campaign_details'),
       isAdmin: true,
       handleClick: () => openDetailsClick(),
-      show: true
+      show: true,
     },
     {
       content: t('actions.delete_campaign'),
       isAdmin: true,
       handleClick: () => handleDeleteClick(),
-      show: showMenu()
-    }
+      show: showMenu(),
+    },
   ];
 
   const menuData = {
@@ -71,7 +71,7 @@ export default function CampaignList() {
     anchorEl,
     handleMenu,
     open: anchorElOpen,
-    handleMenuClose
+    handleMenuClose,
   };
 
   function handleMenu(event, camp) {
@@ -105,7 +105,7 @@ export default function CampaignList() {
   function handleDelete() {
     setDeletingCampaign(true);
     deleteCampaign({
-      variables: { id: campaign.id }
+      variables: { id: campaign.id },
     })
       .then(() => {
         setDeletingCampaign(false);
@@ -146,109 +146,115 @@ export default function CampaignList() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (loading) return <Spinner />;
   if (error) return <ErrorPage />;
   return (
     <PageWrapper pageTitle={t('campaign.campaigns')}>
-      <Grid container data-testid="container">
-        {deleteError && (
-          <CenteredContent>
-            <p>{deleteError}</p>
-          </CenteredContent>
-        )}
-        <Grid
-          item
-          lg={5}
-          md={5}
-          sm={12}
-          xs={12}
-          data-testid="campaign-list"
-          className={classes.campaignList}
-        >
-          <Grid container>
-            <Grid item sm={12} style={{ marginBottom: '20px' }}>
+      {loading ? (
+        <Spinner />
+      ) : (
+        <>
+          <Grid container data-testid="container">
+            {deleteError && (
+              <CenteredContent>
+                <p>{deleteError}</p>
+              </CenteredContent>
+            )}
+            <Grid
+              item
+              lg={5}
+              md={5}
+              sm={12}
+              xs={12}
+              data-testid="campaign-list"
+              className={classes.campaignList}
+            >
               <Grid container>
-                <Grid item sm={10} xs={10} />
-                <Grid item sm={2} xs={2} style={{ textAlign: 'right' }}>
-                  <Tooltip title={t('actions.new_campaign')} placement="top">
-                    <IconButton
-                      aria-label="new-campaign"
-                      color="primary"
-                      data-testid="new-campaign"
-                      onClick={() => handleCreateCampaign()}
-                      size="large"
-                    >
-                      <AddCircleIcon />
-                    </IconButton>
-                  </Tooltip>
+                <Grid item sm={12} style={{ marginBottom: '20px' }}>
+                  <Grid container>
+                    <Grid item sm={10} xs={10} />
+                    <Grid item sm={2} xs={2} style={{ textAlign: 'right' }}>
+                      <Tooltip title={t('actions.new_campaign')} placement="top">
+                        <IconButton
+                          aria-label="new-campaign"
+                          color="primary"
+                          data-testid="new-campaign"
+                          onClick={() => handleCreateCampaign()}
+                          size="large"
+                        >
+                          <AddCircleIcon />
+                        </IconButton>
+                      </Tooltip>
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <Grid item sm={12} xs={12} style={{ marginBottom: '20px' }}>
+                  <SearchInput
+                    filterRequired={false}
+                    title={t('common:misc.campaigns')}
+                    searchValue={searchText}
+                    handleSearch={handleSearchText}
+                    handleClear={() => setSearchText('')}
+                    data-testid="search_input"
+                  />
+                </Grid>
+                <Grid item lg={12} sm={12} md={12} xs={12}>
+                  {data?.campaigns.length > 0 && (
+                    <>
+                      {openDeleteModal && (
+                        <DeleteDialogueBox
+                          open={openDeleteModal}
+                          handleClose={handleDeleteClick}
+                          handleAction={handleDelete}
+                          title={t('campaign.campaign')}
+                          action={t('common:menu.delete')}
+                          loading={deletingCampaign}
+                        />
+                      )}
+                      {data.campaigns.map(camp => (
+                        <Fragment key={camp.id}>
+                          <CampaignCard
+                            camp={camp}
+                            handleClick={() => routeToAction(camp.id)}
+                            menuData={menuData}
+                          />
+                          <MenuList
+                            open={
+                              menuData.open &&
+                              menuData?.anchorEl?.getAttribute('dataid') === camp.id
+                            }
+                            anchorEl={menuData.anchorEl}
+                            handleClose={menuData.handleMenuClose}
+                            list={menuData.menuList.filter(menuItem => menuItem.show)}
+                          />
+                        </Fragment>
+                      ))}
+                      <br />
+                      <CenteredContent>
+                        <Paginate
+                          offSet={offset}
+                          limit={limit}
+                          active={offset >= 1}
+                          handlePageChange={paginate}
+                        />
+                      </CenteredContent>
+                    </>
+                  )}
                 </Grid>
               </Grid>
             </Grid>
-            <Grid item sm={12} xs={12} style={{ marginBottom: '20px' }}>
-              <SearchInput
-                filterRequired={false}
-                title={t('common:misc.campaigns')}
-                searchValue={searchText}
-                handleSearch={handleSearchText}
-                handleClear={() => setSearchText('')}
-                data-testid="search_input"
-              />
-            </Grid>
-            <Grid item lg={12} sm={12} md={12} xs={12}>
-              {data?.campaigns.length > 0 && (
-                <>
-                  {openDeleteModal && (
-                    <DeleteDialogueBox
-                      open={openDeleteModal}
-                      handleClose={handleDeleteClick}
-                      handleAction={handleDelete}
-                      title={t('campaign.campaign')}
-                      action={t('common:menu.delete')}
-                      loading={deletingCampaign}
-                    />
-                  )}
-                  {data.campaigns.map(camp => (
-                    <Fragment key={camp.id}>
-                      <CampaignCard
-                        camp={camp}
-                        handleClick={() => routeToAction(camp.id)}
-                        menuData={menuData}
-                      />
-                      <MenuList
-                        open={
-                          menuData.open && menuData?.anchorEl?.getAttribute('dataid') === camp.id
-                        }
-                        anchorEl={menuData.anchorEl}
-                        handleClose={menuData.handleMenuClose}
-                        list={menuData.menuList.filter(menuItem => menuItem.show)}
-                      />
-                    </Fragment>
-                  ))}
-                  <br />
-                  <CenteredContent>
-                    <Paginate
-                      offSet={offset}
-                      limit={limit}
-                      active={offset >= 1}
-                      handlePageChange={paginate}
-                    />
-                  </CenteredContent>
-                </>
-              )}
+            <Grid item lg={6} md={12} sm={12} xs={12}>
+              <SplitScreen open={matches ? true : show}>
+                <CampaignSplitScreen
+                  campaignId={id}
+                  campaignLength={data?.campaigns.length}
+                  refetch={refetch}
+                  setShow={setShow}
+                />
+              </SplitScreen>
             </Grid>
           </Grid>
-        </Grid>
-        <Grid item lg={6} md={12} sm={12} xs={12}>
-          <SplitScreen open={matches ? true : show}>
-            <CampaignSplitScreen
-              campaignId={id}
-              campaignLength={data?.campaigns.length}
-              refetch={refetch}
-              setShow={setShow}
-            />
-          </SplitScreen>
-        </Grid>
-      </Grid>
+        </>
+      )}
     </PageWrapper>
   );
 }
@@ -256,6 +262,6 @@ export default function CampaignList() {
 const useStyles = makeStyles(() => ({
   campaignList: {
     overflowX: 'hidden',
-    overflowY: 'auto'
-  }
+    overflowY: 'auto',
+  },
 }));

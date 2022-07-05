@@ -32,7 +32,7 @@ export default function TaskListConfigure() {
       setBody(location?.state?.noteList?.name);
       setAction('edit');
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [location.pathname]);
 
   function handleChange(event) {
@@ -42,35 +42,35 @@ export default function TaskListConfigure() {
   function handleCreate() {
     createTaskList({
       variables: {
-        body
-      }
+        body,
+      },
     })
-    .then(data => {
-      setParentTaskData(data?.data?.taskListCreate?.note);
-      history.push(`/tasks/task_lists/${data?.data?.taskListCreate?.note?.id}`);
-      setLoadingStatus(false);
-    })
-    .catch(err => {
-      setErr(err);
-    });
+      .then(data => {
+        setParentTaskData(data?.data?.taskListCreate?.note);
+        history.push(`/tasks/task_lists/${data?.data?.taskListCreate?.note?.id}`);
+        setLoadingStatus(false);
+      })
+      .catch(err => {
+        setErr(err);
+      });
   }
 
   function handleUpdate() {
     updateTaskList({
       variables: {
         id: noteList.id,
-        name: body
-      }
+        name: body,
+      },
     })
-    .then(() => {
-      history.push({
-        pathname: `/tasks/task_lists/${parentTaskData?.id}`,
-        state: { task: parentTaskData }
+      .then(() => {
+        history.push({
+          pathname: `/tasks/task_lists/${parentTaskData?.id}`,
+          state: { task: parentTaskData },
+        });
       })
-    })
-    .catch(err => {
-      setErr(err)
-    });
+      .catch(err => {
+        setErr(err);
+      });
   }
 
   function handleSubmit(event) {
@@ -86,74 +86,77 @@ export default function TaskListConfigure() {
   const breadCrumbObj = {
     linkText: t('task_lists.task_lists'),
     linkHref: '/tasks/task_lists',
-    pageName: t('task_lists.configure_task_list')
+    pageName: t('task_lists.configure_task_list'),
   };
 
-  if (loadingStatus) return <Spinner />;
   if (errors) return <CenteredContent>{formatError(errors.message)}</CenteredContent>;
 
   return (
     <PageWrapper pageTitle={t('task_lists.configure_task_list')} breadCrumbObj={breadCrumbObj}>
-      <Grid container spacing={1}>
-        <Grid item md={12} xs={12}>
-          <Grid container spacing={2}>
-            <Grid item md={6} xs={12}>
-              <Grid container spacing={2}>
-                <Grid item md={12} xs={12}>
-                  <Typography variant="body1">{t('task_lists.step_1')}</Typography>
-                </Grid>
-                <Grid item md={12} xs={12} style={{ paddingTop: 0 }}>
-                  <TextField
-                    name="body"
-                    label={t('task_lists.task_list_name')}
-                    style={{ width: '100%' }}
-                    onChange={handleChange}
-                    value={body || ''}
-                    variant="outlined"
-                    role="textbox"
-                    fullWidth
-                    size="small"
-                    margin="normal"
-                    required
-                    inputProps={{
-                      'aria-label': t('task_lists.task_list_name'),
-                      'data-testid': 'task-list-name',
-                      style: { fontSize: '15px' }
-                    }}
-                    InputLabelProps={{ style: { fontSize: '12px' } }}
-                  />
+      {loadingStatus ? (
+        <Spinner />
+      ) : (
+        <Grid container spacing={1}>
+          <Grid item md={12} xs={12}>
+            <Grid container spacing={2}>
+              <Grid item md={6} xs={12}>
+                <Grid container spacing={2}>
+                  <Grid item md={12} xs={12}>
+                    <Typography variant="body1">{t('task_lists.step_1')}</Typography>
+                  </Grid>
+                  <Grid item md={12} xs={12} style={{ paddingTop: 0 }}>
+                    <TextField
+                      name="body"
+                      label={t('task_lists.task_list_name')}
+                      style={{ width: '100%' }}
+                      onChange={handleChange}
+                      value={body || ''}
+                      variant="outlined"
+                      role="textbox"
+                      fullWidth
+                      size="small"
+                      margin="normal"
+                      required
+                      inputProps={{
+                        'aria-label': t('task_lists.task_list_name'),
+                        'data-testid': 'task-list-name',
+                        style: { fontSize: '15px' },
+                      }}
+                      InputLabelProps={{ style: { fontSize: '12px' } }}
+                    />
+                  </Grid>
                 </Grid>
               </Grid>
-            </Grid>
-            <Grid item md={6} xs={12}>
-              <Grid container spacing={2}>
-                <Grid
-                  item
-                  md={12}
-                  xs={12}
-                  style={{ marginLeft: isMobile ? 0 : 8, marginTop: !isMobile && 41 }}
-                >
-                  <Button
-                    variant="contained"
-                    type="submit"
-                    role="button"
-                    disabled={!body.length}
-                    disableElevation
-                    color="primary"
-                    aria-label={t('task_lists.save')}
-                    data-testid="task-list-save-button"
-                    onClick={handleSubmit}
+              <Grid item md={6} xs={12}>
+                <Grid container spacing={2}>
+                  <Grid
+                    item
+                    md={12}
+                    xs={12}
+                    style={{ marginLeft: isMobile ? 0 : 8, marginTop: !isMobile && 41 }}
                   >
-                    {t('task_lists.save')}
-                  </Button>
+                    <Button
+                      variant="contained"
+                      type="submit"
+                      role="button"
+                      disabled={!body.length}
+                      disableElevation
+                      color="primary"
+                      aria-label={t('task_lists.save')}
+                      data-testid="task-list-save-button"
+                      onClick={handleSubmit}
+                    >
+                      {t('task_lists.save')}
+                    </Button>
+                  </Grid>
                 </Grid>
               </Grid>
             </Grid>
           </Grid>
+          <br />
+          <br />
         </Grid>
-        <br />
-        <br />
-      </Grid>
+      )}
     </PageWrapper>
   );
 }

@@ -182,6 +182,7 @@ export default function TransactionDetails({ data, detailsOpen, handleClose, cur
                     maxDate={subDays(new Date(), 1)}
                     width="89%"
                     styles={{ marginLeft: 23 }}
+                    t={t}
                   />
               )
                   : (

@@ -18,49 +18,52 @@ export default function ClientPilotViewList() {
   const { loading, error, data, refetch } = useQuery(ClientAssignedProjectsQuery, {
     variables: {
       offset,
-      limit
+      limit,
     },
-    fetchPolicy: 'cache-and-network'
+    fetchPolicy: 'cache-and-network',
   });
   if (error) return <CenteredContent>{formatError(error.message)}</CenteredContent>;
-  if (loading) return <Spinner />;
 
   return (
     <PageWrapper pageTitle={t('process:breadcrumbs.processes')}>
-      <div data-testid="processes-client-dashboard">
-        <Grid container>
-          <Grid item md={11} xs={11} className={classes.header}>
-            <Grid container spacing={1}>
-              <Grid item md={9} xs={10}>
-                <Typography
-                  variant="h4"
-                  style={{ marginLeft: '5px', marginBottom: '24px' }}
-                  data-testid="processes-header"
-                >
-                  {t('processes.processes')}
-                </Typography>
+      {loading ? (
+        <Spinner />
+      ) : (
+        <div data-testid="processes-client-dashboard">
+          <Grid container>
+            <Grid item md={11} xs={11} className={classes.header}>
+              <Grid container spacing={1}>
+                <Grid item md={9} xs={10}>
+                  <Typography
+                    variant="h4"
+                    style={{ marginLeft: '5px', marginBottom: '24px' }}
+                    data-testid="processes-header"
+                  >
+                    {t('processes.processes')}
+                  </Typography>
+                </Grid>
               </Grid>
             </Grid>
           </Grid>
-        </Grid>
-        <Grid container data-testid="project-information">
-          {data?.clientAssignedProjects?.length ? (
-            <div>
-              {data?.clientAssignedProjects?.map(project => (
-                <ClientPilotViewItem key={project.id} project={project} refetch={refetch} />
-              ))}
-            </div>
-          ) : (
-            <CenteredContent>{t('processes.no_assigned_projects')}</CenteredContent>
-          )}
-        </Grid>
-      </div>
+          <Grid container data-testid="project-information">
+            {data?.clientAssignedProjects?.length ? (
+              <div>
+                {data?.clientAssignedProjects?.map(project => (
+                  <ClientPilotViewItem key={project.id} project={project} refetch={refetch} />
+                ))}
+              </div>
+            ) : (
+              <CenteredContent>{t('processes.no_assigned_projects')}</CenteredContent>
+            )}
+          </Grid>
+        </div>
+      )}
     </PageWrapper>
   );
 }
 
 const useStyles = makeStyles({
   header: {
-    marginBottom: '10px'
-  }
+    marginBottom: '10px',
+  },
 });
