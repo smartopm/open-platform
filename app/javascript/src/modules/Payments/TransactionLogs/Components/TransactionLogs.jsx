@@ -1,5 +1,6 @@
 /* eslint-disable complexity */
 import React, { useState, useEffect } from 'react';
+import { useHistory } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { useLazyQuery } from 'react-apollo';
 import Grid from '@mui/material/Grid';
@@ -21,6 +22,7 @@ import { useParamsQuery } from '../../../../utils/helpers';
 
 export default function TransactionLogs() {
   const { t } = useTranslation('common');
+  const history = useHistory();
   const matches = useMediaQuery('(max-width:600px)');
   const path = useParamsQuery('');
   const classes = useStyles();
@@ -50,7 +52,7 @@ export default function TransactionLogs() {
 
   function handleMoreDetailsClick(id) {
     if (currentId && currentId !== id && openDetails) {
-      return
+      return;
     }
     setCurrentId(id);
     setOpenDetails(!openDetails);
@@ -68,7 +70,7 @@ export default function TransactionLogs() {
   const rightPanelObj = [
     {
       mainElement: (
-        <Button style={{ color: '#FFFFFF' }} variant="contained">
+        <Button style={{ color: '#FFFFFF' }} variant="contained" onClick={() => history.push('/payments/pay')}>
           {matches ? <AddIcon /> : t('common:misc.add_payment')}
         </Button>
       ),
@@ -105,9 +107,26 @@ export default function TransactionLogs() {
       ) : data?.transactionLogs.length > 0 || userLogData?.userTransactionLogs.length > 0 ? (
         <>
           {transactionLogs.map(trans => (
-            <Grid container key={trans.id} className={classes.container} alignItems="center" data-testid='container'>
-              <Grid item md={userId ? 7 : 3} lg={userId ? 7 : 3} xs={6} sm={userId ? 7 : 3}>
-                <Typography variant="h6" data-testid='amount'>{`${trans.currency} ${trans.paidAmount}`}</Typography>
+            <Grid
+              container
+              key={trans.id}
+              className={classes.container}
+              alignItems="center"
+              data-testid="container"
+            >
+              <Grid
+                item
+                md={userId ? 7 : 3}
+                lg={userId ? 7 : 3}
+                xs={userId ? 6 : 10}
+                sm={userId ? 7 : 3}
+              >
+                <Typography
+                  variant="h6"
+                  data-testid="amount"
+                >
+                  {`${trans.currency} ${trans.paidAmount}`}
+                </Typography>
               </Grid>
               {!userId && matches && (
                 <Grid item xs={2} style={{ textAlign: 'right' }}>
@@ -125,7 +144,7 @@ export default function TransactionLogs() {
                   <Typography variant="subtitle1">{trans.accountName}</Typography>
                 </Grid>
               )}
-              <Grid item md={3} lg={3} sm={3} xs={4} style={{ textAlign: 'right' }}>
+              <Grid item md={3} lg={3} sm={3} xs={userId ? 4 : 6} style={{ textAlign: 'right' }}>
                 <Typography variant="subtitle1">{dateToString(trans.createdAt)}</Typography>
               </Grid>
               {(!matches || (userId && matches)) && (
@@ -137,7 +156,7 @@ export default function TransactionLogs() {
                   xs={2}
                   style={{ textAlign: 'right' }}
                 >
-                  <IconButton onClick={() => handleMoreDetailsClick(trans.id)} data-testid='icon'>
+                  <IconButton onClick={() => handleMoreDetailsClick(trans.id)} data-testid="icon">
                     {openDetails && currentId === trans.id ? (
                       <KeyboardArrowUpIcon />
                     ) : (
@@ -148,12 +167,20 @@ export default function TransactionLogs() {
               )}
               {openDetails && currentId === trans.id && (
                 <>
-                  <Grid item md={12} lg={12} sm={12} xs={12} style={{ paddingTop: '16px' }} data-testid='invoice'>
+                  <Grid
+                    item
+                    md={12}
+                    lg={12}
+                    sm={12}
+                    xs={12}
+                    style={{ paddingTop: '16px' }}
+                    data-testid="invoice"
+                  >
                     <Typography variant="subtitle1" color="text.secondary">
                       {`${t('menu.invoice')}# ${trans.invoiceNumber}`}
                     </Typography>
                   </Grid>
-                  <Grid item md={12} lg={12} sm={12} xs={12} data-testid='transaction'>
+                  <Grid item md={12} lg={12} sm={12} xs={12} data-testid="transaction">
                     <Typography variant="subtitle1" color="text.secondary">
                       {`${t('misc.id')}# ${trans.transactionId}`}
                     </Typography>
@@ -171,7 +198,7 @@ export default function TransactionLogs() {
                     </Grid>
                   )}
                   {trans.description && (
-                    <Grid item style={{ paddingTop: '16px' }} data-testid='description'>
+                    <Grid item style={{ paddingTop: '16px' }} data-testid="description">
                       <Typography variant="subtitle1" md={12} lg={12} sm={12} xs={12}>
                         {trans.description}
                       </Typography>
