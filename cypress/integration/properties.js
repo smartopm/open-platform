@@ -124,7 +124,9 @@ describe('Properties & Co-ownership Payment Plan', () => {
 
     // Verify User 2 does not have payment plan initially
     cy.visitUserProfile('John Doe');
+    cy.wait(1000);
     cy.visitUserMenu('#payments');
+    cy.wait(1000);
 
     // User 2 has no payment plan initially
     cy.contains('Total Balance').should('not.exist');
@@ -133,7 +135,9 @@ describe('Properties & Co-ownership Payment Plan', () => {
 
     // Add Payment plan under Primary Owner (User 1)
     cy.myProfile();
+    cy.wait(1000);
     cy.visitUserMenu('#payments');
+    cy.wait(1000);
     cy.addNewPaymentPlanFromUserProfile({
       duration: 12,
       amount: 500,
@@ -149,7 +153,9 @@ describe('Properties & Co-ownership Payment Plan', () => {
 
     // Verify Pending balance & payment plan for Co-owner (User 2)
     cy.visitUserProfile('John Doe');
+    cy.wait(1000);
     cy.visitUserMenu('#payments');
+    cy.wait(1000);
     cy.get('[data-testid=no-plan-available]').should('not.exist');
     cy.wait(1000);
 
