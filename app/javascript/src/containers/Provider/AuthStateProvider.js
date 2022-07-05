@@ -7,7 +7,7 @@ import gql from 'graphql-tag';
 import { useApolloClient } from 'react-apollo';
 
 import { AUTH_TOKEN_KEY } from '../../utils/apollo';
-import { Spinner } from '../../shared/Loading';
+import Loading from '../../shared/Loading';
 import CenteredContent from '../../shared/CenteredContent';
 
 export const MEMBER_ID_KEY = 'CURRENT_MEMBER_ID';
@@ -155,7 +155,7 @@ export function AuthStateProvider({ children, token, setToken }) {
   }
 
   if (!state.loaded) {
-    return <CenteredContent><div><Spinner /></div></CenteredContent>;
+    return <Loading />;
   }
 
   return <AuthStateContext.Provider value={state}>{children}</AuthStateContext.Provider>;
