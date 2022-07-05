@@ -55,7 +55,7 @@ export default function EditModal({ open, handleClose, data, refetch, type }) {
       })
       .catch(err => {
         setMutationLoading(false);
-        showSnackbar({ type: messageType.success, message: formatError(err.message) });
+        showSnackbar({ type: messageType.error, message: formatError(err.message) });
       });
   }
 
