@@ -2,8 +2,8 @@
   "status": "success",
   "message": "Transaction fetched successfully",
   "data": {
-    "id": 3503250,
-    "tx_ref": "2022-06-21T07:18:46.421Z",
+    "id": 12345,
+    "tx_ref": "12-as-21",
     "flw_ref": "FLW-MOCK-50dfecffe0c33243",
     "device_fingerprint": "7373192d7e1c9540e01fc43",
     "amount": 10,

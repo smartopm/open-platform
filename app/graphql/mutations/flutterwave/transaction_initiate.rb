@@ -13,14 +13,16 @@ module Mutations
       argument :invoice_number, String, required: true
       argument :description, String, required: false
 
-      field :link, String, null: true
+      field :payment_link, String, null: true
 
       def resolve(vals)
         validate_authorization(:transaction, :can_make_payment)
         response = FlutterwaveCharger.generate_link(payload(vals), context[:site_community].id)
-        return { link: response.dig('data', 'link') } if response['status'].eql?('success')
+        raise_error_message(error_message(response)) unless response['status'].eql?('success')
 
-        raise_error_message(error_message(response))
+        payment_link = response.dig('data', 'link')
+        create_transaction_log(payment_link, vals)
+        { payment_link: payment_link }
       rescue StandardError => e
         raise GraphQL::ExecutionError, e.message
       end
@@ -30,12 +32,11 @@ module Mutations
       def payload(vals)
         current_community = context[:site_community]
         {
-          tx_ref: Time.zone.now,
+          tx_ref: transaction_ref,
           amount: vals[:amount],
           currency: currency_codes[current_community.currency.to_sym],
-          redirect_url: "#{HostEnv.base_url(current_community)}/payments/pay",
+          redirect_url: "https://#{HostEnv.base_url(current_community)}/payments/pay",
           customer: customer,
-          meta: meta_data(vals),
           customizations: customization(vals[:description]),
         }
       end
@@ -46,14 +47,6 @@ module Mutations
           email: current_user.email,
           phonenumber: current_user.phone_number,
           name: current_user.name,
-        }
-      end
-
-      def meta_data(vals)
-        {
-          invoice_number: vals[:invoice_number],
-          description: vals[:description],
-          input_amount: vals[:amount],
         }
       end
 
@@ -69,6 +62,19 @@ module Mutations
         response['message'] ||
           response.dig('errors', 0, 'message') ||
           I18n.t('payment.transaction_error')
+      end
+
+      def create_transaction_log(link, vals)
+        context[:site_community].transaction_logs.create(vals.merge(
+                                                           user_id: context[:current_user].id,
+                                                           transaction_ref: transaction_ref,
+                                                           payment_link: link,
+                                                           status: :pending,
+                                                         ))
+      end
+
+      def transaction_ref
+        @transaction_ref ||= SecureRandom.urlsafe_base64(nil, false)
       end
     end
   end

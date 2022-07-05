@@ -5,7 +5,7 @@ require 'webmock/rspec'
 
 RSpec.describe Mutations::Flutterwave::TransactionInitiate do
   describe 'generate payment link' do
-    let(:community) { create(:community, name: 'DoubleGDP', hostname: 'http://localhost:3000') }
+    let(:community) { create(:community, name: 'DoubleGDP', hostname: 'localhost:3000') }
     let(:security_guard) { create(:security_guard, community: community) }
     let(:admin) { create(:admin_user, community: community) }
     let!(:permission) do
@@ -17,7 +17,7 @@ RSpec.describe Mutations::Flutterwave::TransactionInitiate do
       <<~GQL
         mutation TransactionInitiate($amount: Float!, $invoiceNumber: String!, $description: String) {
           transactionInitiate(amount: $amount, invoiceNumber: $invoiceNumber, description: $description) {
-            link
+            paymentLink
           }
         }
       GQL
@@ -30,13 +30,6 @@ RSpec.describe Mutations::Flutterwave::TransactionInitiate do
         name: admin.name,
       }
     end
-    let(:meta_data) do
-      {
-        invoice_number: '232',
-        description: 'transaction',
-        input_amount: 10.0,
-      }
-    end
     let(:customization) do
       {
         title: I18n.t('payment.pay_for_item'),
@@ -44,20 +37,18 @@ RSpec.describe Mutations::Flutterwave::TransactionInitiate do
         logo: 'https://st2.depositphotos.com/4403291/7418/v/450/depositphotos_74189661-stock-illustration-online-shop-log.jpg',
       }
     end
+    let(:tx_ref) { SecureRandom.urlsafe_base64(nil, false) }
     let(:payload) do
       {
-        tx_ref: time,
+        tx_ref: tx_ref,
         amount: 10.0,
         currency: 'ZMW',
-        redirect_url: 'http://localhost:3000/payments/pay',
+        redirect_url: 'https://localhost:3000/payments/pay',
         customer: customer,
-        meta: meta_data,
         customizations: customization,
       }
     end
 
-    let(:zone) { Time.zone }
-    let(:time) { Time.zone.now }
     let(:headers) do
       {
         'Content-Type' => 'application/json',
@@ -84,10 +75,12 @@ RSpec.describe Mutations::Flutterwave::TransactionInitiate do
         data: nil,
       }
     end
+    let(:private_key) { '{ "PRIVATE_KEY": "xzs-12-as"}' }
+
     before do
-      allow(Time).to receive(:zone).and_return(zone)
-      allow(zone).to receive(:now).and_return(time)
-      ENV["#{community.name.parameterize.upcase}_FLUTTERWAVE"] = '{ "PRIVATE_KEY": "xzs-12-as"}'
+      allow(SecureRandom).to receive(:urlsafe_base64).and_return(tx_ref)
+      allow_any_instance_of(ApplicationHelper).to receive(:flutterwave_keys)
+        .with(community.name).and_return(JSON.parse(private_key))
       ENV['FLUTTERWAVE_PAYMENT_URL'] = 'https://api.flutterwave.com/v3/payments'
     end
 
@@ -105,7 +98,8 @@ RSpec.describe Mutations::Flutterwave::TransactionInitiate do
                                            current_user: admin,
                                          }).as_json
         expect(result['errors']).to be_nil
-        expect(result.dig('data', 'transactionInitiate', 'link')).to_not be_nil
+        expect(result.dig('data', 'transactionInitiate', 'paymentLink')).to_not be_nil
+        expect(community.transaction_logs.first.status).to eql 'pending'
       end
     end
 
